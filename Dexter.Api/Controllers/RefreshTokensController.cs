@@ -8,11 +8,11 @@
     [RoutePrefix("api/RefreshTokens")]
     public class RefreshTokensController : ApiController
     {
-        private readonly AuthenticationRepository repository;
+        private readonly IAuthenticationRepository authenticationRepository;
 
-        public RefreshTokensController()
+        public RefreshTokensController(IAuthenticationRepository authenticationRepository)
         {
-            this.repository = new AuthenticationRepository();
+            this.authenticationRepository = authenticationRepository;
         }
 
         [RequireHttps]
@@ -20,7 +20,7 @@
         [Route("")]
         public IHttpActionResult Get()
         {
-            return this.Ok(this.repository.GetAllRefreshTokens());
+            return this.Ok(this.authenticationRepository.GetAllRefreshTokens());
         }
 
         [RequireHttps]
@@ -28,7 +28,7 @@
         [Route("")]
         public async Task<IHttpActionResult> Delete(string tokenId)
         {
-            var result = await this.repository.RemoveRefreshToken(tokenId);
+            var result = await this.authenticationRepository.RemoveRefreshToken(tokenId);
             if (result)
             {
                 return this.Ok();
@@ -41,7 +41,7 @@
         {
             if (disposing)
             {
-                this.repository.Dispose();
+                this.authenticationRepository.Dispose();
             }
 
             base.Dispose(disposing);

@@ -11,7 +11,7 @@
     using Microsoft.AspNet.Identity;
     using Microsoft.AspNet.Identity.EntityFramework;
 
-    public class AuthenticationRepository : IDisposable
+    public class AuthenticationRepository : IDisposable, IAuthenticationRepository
     {
         private readonly DexterDbContext dexterDbContext;
 

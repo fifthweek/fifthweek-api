@@ -134,6 +134,7 @@
   <ItemGroup>
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="DexterDbContext.cs" />
+    <Compile Include="LogRequestModule.cs" />
     <Compile Include="Models\Order.cs" />
     <Compile Include="Models\SignInData.cs" />
     <Compile Include="Repositories\AuthenticationRepository.cs" />
@@ -153,6 +154,7 @@
     <Compile Include="Providers\DexterFacebookAuthenticationProvider.cs" />
     <Compile Include="Providers\SimpleAuthorizationServerProvider.cs" />
     <Compile Include="Providers\SimpleRefreshTokenProvider.cs" />
+    <Compile Include="Repositories\IAuthenticationRepository.cs" />
     <Compile Include="RequireHttpsAttribute.cs" />
     <Compile Include="Results\ChallengeResult.cs" />
     <Compile Include="Startup.cs" />

@@ -2,14 +2,20 @@
 namespace Dexter.Api
 {
     using System;
+    using System.Collections;
+    using System.Collections.Generic;
     using System.Data.Entity;
+    using System.Linq;
     using System.Reflection;
     using System.Web.Http;
+    using System.Web.Http.Dependencies;
 
     using Autofac;
     using Autofac.Integration.WebApi;
 
+    using Dexter.Api.Controllers;
     using Dexter.Api.Providers;
+    using Dexter.Api.Repositories;
 
     using Microsoft.Owin;
     using Microsoft.Owin.Logging;
@@ -26,14 +32,14 @@ namespace Dexter.Api
  
         public void Configuration(IAppBuilder app)
         {
-            this.ConfigureAutofac();
+            var httpConfiguration = new HttpConfiguration();
+            this.ConfigureAutofac(httpConfiguration);
             this.ConfigureOAuth(app);
             this.ConfigureDatabase();
 
-            var config = new HttpConfiguration();
-            WebApiConfig.Register(config);
+            WebApiConfig.Register(httpConfiguration);
             app.UseCors(Microsoft.Owin.Cors.CorsOptions.AllowAll);
-            app.UseWebApi(config);
+            app.UseWebApi(httpConfiguration);
         }
 
         private void ConfigureDatabase()
@@ -41,18 +47,17 @@ namespace Dexter.Api
             Database.SetInitializer(new DatabaseInitializer());
         }
 
-        private void ConfigureAutofac()
+        private void ConfigureAutofac(HttpConfiguration httpConfiguration)
         {
             var builder = new ContainerBuilder();
             builder.RegisterApiControllers(Assembly.GetExecutingAssembly());
-
-            // Register other dependencies.
-            ////builder.Register(c => new Logger()).As<ILogger>().InstancePerApiRequest();
+            builder.RegisterType<AuthenticationRepository>().As<IAuthenticationRepository>().InstancePerRequest();
+            builder.RegisterModule<LogRequestModule>();
 
             var container = builder.Build();
-
+            
             var resolver = new AutofacWebApiDependencyResolver(container);
-            GlobalConfiguration.Configuration.DependencyResolver = resolver;
+            GlobalConfiguration.Configuration.DependencyResolver = httpConfiguration.DependencyResolver = resolver;
         }
 
         public void ConfigureOAuth(IAppBuilder app)

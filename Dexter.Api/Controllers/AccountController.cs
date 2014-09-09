@@ -25,11 +25,11 @@ namespace Dexter.Api.Controllers
     [RoutePrefix("api/Account")]
     public class AccountController : ApiController
     {
-        private readonly AuthenticationRepository repository = null;
+        private readonly IAuthenticationRepository authenticationRepository;
 
-        public AccountController()
+        public AccountController(IAuthenticationRepository authenticationRepository)
         {
-            this.repository = new AuthenticationRepository();
+            this.authenticationRepository = authenticationRepository;
         }
 
         // POST api/Account/RegisterInternalUser
@@ -43,7 +43,7 @@ namespace Dexter.Api.Controllers
                 return this.BadRequest(this.ModelState);
             }
 
-            var result = await this.repository.RegisterUser(userModel);
+            var result = await this.authenticationRepository.RegisterUser(userModel);
 
             var errorResult = this.GetErrorResult(result);
 
@@ -72,7 +72,7 @@ namespace Dexter.Api.Controllers
                 return this.BadRequest("Invalid Provider or External Access Token");
             }
 
-            var user = await this.repository.FindAsync(new SignInData(model.Provider, verifiedAccessToken.UserId));
+            var user = await this.authenticationRepository.FindAsync(new SignInData(model.Provider, verifiedAccessToken.UserId));
 
             bool hasRegistered = user != null;
 
@@ -83,7 +83,7 @@ namespace Dexter.Api.Controllers
 
             user = new IdentityUser() { UserName = model.Username };
 
-            var result = await this.repository.CreateAsync(user);
+            var result = await this.authenticationRepository.CreateAsync(user);
             if (!result.Succeeded)
             {
                 return this.GetErrorResult(result);
@@ -91,7 +91,7 @@ namespace Dexter.Api.Controllers
 
             var signInData = new SignInData(model.Provider, verifiedAccessToken.UserId);
 
-            result = await this.repository.AddUserSignInDataAsync(user.Id, signInData);
+            result = await this.authenticationRepository.AddUserSignInDataAsync(user.Id, signInData);
             if (!result.Succeeded)
             {
                 return this.GetErrorResult(result);
@@ -142,7 +142,7 @@ namespace Dexter.Api.Controllers
                 return new ChallengeResult(provider, this.Request);
             }
 
-            var user = await this.repository.FindAsync(new SignInData(externalSignInData.Provider, externalSignInData.ProviderKey));
+            var user = await this.authenticationRepository.FindAsync(new SignInData(externalSignInData.Provider, externalSignInData.ProviderKey));
 
             bool hasRegistered = user != null;
 
@@ -174,7 +174,7 @@ namespace Dexter.Api.Controllers
                 return this.BadRequest("Invalid Provider or External Access Token");
             }
 
-            IdentityUser user = await this.repository.FindAsync(new SignInData(provider, verifiedAccessToken.UserId));
+            IdentityUser user = await this.authenticationRepository.FindAsync(new SignInData(provider, verifiedAccessToken.UserId));
 
             bool hasRegistered = user != null;
 
@@ -192,7 +192,7 @@ namespace Dexter.Api.Controllers
         {
             if (disposing)
             {
-                this.repository.Dispose();
+                this.authenticationRepository.Dispose();
             }
 
             base.Dispose(disposing);
@@ -257,7 +257,7 @@ namespace Dexter.Api.Controllers
                 return "client_Id is required";
             }
 
-            var client = this.repository.FindClient(clientId);
+            var client = this.authenticationRepository.FindClient(clientId);
 
             if (client == null)
             {
