@@ -13,110 +13,63 @@
 
     public class AuthenticationRepository : IDisposable, IAuthenticationRepository
     {
-        private readonly DexterDbContext dexterDbContext;
-
         private readonly UserManager<IdentityUser> userManager;
 
-        public AuthenticationRepository()
+        public AuthenticationRepository(IDexterDbContext dexterDbContext)
         {
-            this.dexterDbContext = new DexterDbContext();
-            this.userManager = new UserManager<IdentityUser>(new UserStore<IdentityUser>(this.dexterDbContext));
+            this.userManager = new UserManager<IdentityUser>(new UserStore<IdentityUser>((DexterDbContext)dexterDbContext));
         }
- 
-        public async Task<IdentityResult> RegisterUser(InternalRegistrationData userModel)
+
+        public async Task AddInternalUserAsync(string username, string password)
         {
             var user = new IdentityUser
             {
-                UserName = userModel.Username
+                UserName = username
             };
- 
-            var result = await this.userManager.CreateAsync(user, userModel.Password);
- 
-            return result;
-        }
- 
-        public async Task<IdentityUser> FindUser(string username, string password)
-        {
-            IdentityUser user = await this.userManager.FindAsync(username, password);
- 
-            return user;
+
+            var result = await this.userManager.CreateAsync(user, password);
+            
+            ThrowIfFailed(result, "Failed to create internal user: " + user);
         }
 
-        public Client FindClient(string clientId)
+        public async Task AddExternalUserAsync(string username, string provider, string providerKey)
         {
-            var client = this.dexterDbContext.Clients.Find(clientId);
+            var user = new IdentityUser() { UserName = username };
+            
+            var createResult = await this.userManager.CreateAsync(user);
+            ThrowIfFailed(createResult, "Failed to create external user: " + user);
 
-            return client;
+            var loginInfo = new UserLoginInfo(provider, providerKey);
+            var updateResult = await this.userManager.AddLoginAsync(user.Id, loginInfo);
+            ThrowIfFailed(updateResult, "Failed to add external login data for " + user);
         }
 
-        public async Task<bool> AddRefreshToken(RefreshToken token)
+        public async Task<IdentityUser> FindInternalUserAsync(string username, string password)
         {
-
-            var existingToken = this.dexterDbContext.RefreshTokens.Where(r => r.Username == token.Username && r.ClientId == token.ClientId).SingleOrDefault();
-
-            if (existingToken != null)
-            {
-                await this.RemoveRefreshToken(existingToken);
-            }
-
-            this.dexterDbContext.RefreshTokens.Add(token);
-
-            return await this.dexterDbContext.SaveChangesAsync() > 0;
+            return await this.userManager.FindAsync(username, password);
         }
 
-        public async Task<bool> RemoveRefreshToken(string refreshTokenId)
+        public async Task<IdentityUser> FindExternalUserAsync(string provider, string providerKey)
         {
-            var refreshToken = await this.dexterDbContext.RefreshTokens.FindAsync(refreshTokenId);
-
-            if (refreshToken != null)
-            {
-                this.dexterDbContext.RefreshTokens.Remove(refreshToken);
-                return await this.dexterDbContext.SaveChangesAsync() > 0;
-            }
-
-            return false;
-        }
-
-        public async Task<bool> RemoveRefreshToken(RefreshToken refreshToken)
-        {
-            this.dexterDbContext.RefreshTokens.Remove(refreshToken);
-            return await this.dexterDbContext.SaveChangesAsync() > 0;
-        }
-
-        public async Task<RefreshToken> FindRefreshToken(string refreshTokenId)
-        {
-            var refreshToken = await this.dexterDbContext.RefreshTokens.FindAsync(refreshTokenId);
-
-            return refreshToken;
-        }
-
-        public List<RefreshToken> GetAllRefreshTokens()
-        {
-            return this.dexterDbContext.RefreshTokens.ToList();
-        }
-
-        public async Task<IdentityUser> FindAsync(SignInData signInData)
-        {
-            IdentityUser user = await this.userManager.FindAsync(signInData.ToUserLoginInfo());
-            return user;
-        }
- 
-        public async Task<IdentityResult> CreateAsync(IdentityUser user)
-        {
-            var result = await this.userManager.CreateAsync(user);
-            return result;
-        }
-
-        public async Task<IdentityResult> AddUserSignInDataAsync(string userId, SignInData signInData)
-        {
-            var result = await this.userManager.AddLoginAsync(userId, signInData.ToUserLoginInfo());
-            return result;
+            return await this.userManager.FindAsync(new UserLoginInfo(provider, providerKey));
         }
 
         public void Dispose()
         {
-            this.dexterDbContext.Dispose();
             this.userManager.Dispose();
+        }
+
+        private static void ThrowIfFailed(IdentityResult result, string errorMessage)
+        {
+            if (!result.Succeeded)
+            {
+                if (result.Errors == null)
+                {
+                    throw new Exception(errorMessage);
+                }
+
+                throw new AggregateException(errorMessage, result.Errors.Select(v => new Exception(v)));
+            }
         }
     }
 }

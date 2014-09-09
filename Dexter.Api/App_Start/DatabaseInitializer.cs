@@ -5,6 +5,7 @@
 
     using Dexter.Api.Entities;
     using Dexter.Api.Models;
+    using Dexter.Api.Repositories;
 
     public class DatabaseInitializer : System.Data.Entity.DropCreateDatabaseIfModelChanges<DexterDbContext>
     {

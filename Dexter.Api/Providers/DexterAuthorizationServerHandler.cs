@@ -6,22 +6,36 @@
 
     using Dexter.Api.Entities;
     using Dexter.Api.Models;
+    using Dexter.Api.Queries;
+    using Dexter.Api.QueryHandlers;
     using Dexter.Api.Repositories;
 
     using Microsoft.AspNet.Identity.EntityFramework;
-    using Microsoft.Owin;
     using Microsoft.Owin.Security;
     using Microsoft.Owin.Security.OAuth;
 
-    public class SimpleAuthorizationServerProvider : OAuthAuthorizationServerProvider
+    public class DexterAuthorizationServerHandler : IDexterAuthorizationServerHandler
     {
-        public override Task ValidateClientAuthentication(OAuthValidateClientAuthenticationContext context)
+        private readonly IQueryHandler<GetClientQuery, Client> getClient;
+
+        private readonly IQueryHandler<GetUserQuery, IdentityUser> getUser;
+
+        public DexterAuthorizationServerHandler(
+            IQueryHandler<GetClientQuery, Client> getClient,
+            IQueryHandler<GetUserQuery, IdentityUser> getUser)
+        {
+            this.getClient = getClient;
+            this.getUser = getUser;
+        }
+
+        public delegate IDexterAuthorizationServerHandler Factory();
+
+        public async Task ValidateClientAuthenticationAsync(OAuthValidateClientAuthenticationContext context)
         {
             Helper.SetAccessControlAllowOrigin(context.OwinContext);
 
             string clientId;
             string clientSecret;
-            Client client = null;
 
             if (!context.TryGetBasicCredentials(out clientId, out clientSecret))
             {
@@ -31,18 +45,15 @@
             if (context.ClientId == null)
             {
                 context.SetError("invalid_clientId", "ClientId should be sent.");
-                return Task.FromResult<object>(null);
+                return;
             }
 
-            using (var repository = new AuthenticationRepository())
-            {
-                client = repository.FindClient(context.ClientId);
-            }
+            var client = await this.getClient.HandleAsync(new GetClientQuery(new ClientId(context.ClientId)));
 
             if (client == null)
             {
                 context.SetError("invalid_clientId", string.Format("Client '{0}' is not registered in the system.", context.ClientId));
-                return Task.FromResult<object>(null);
+                return;
             }
 
             Helper.SetAccessControlAllowOrigin(context.OwinContext, client.AllowedOrigin);
@@ -52,14 +63,14 @@
                 if (string.IsNullOrWhiteSpace(clientSecret))
                 {
                     context.SetError("invalid_clientId", "Client secret should be sent.");
-                    return Task.FromResult<object>(null);
+                    return;
                 }
                 else
                 {
                     if (client.Secret != Helper.GetHash(clientSecret))
                     {
                         context.SetError("invalid_clientId", "Client secret is invalid.");
-                        return Task.FromResult<object>(null);
+                        return;
                     }
                 }
             }
@@ -67,31 +78,27 @@
             if (!client.Active)
             {
                 context.SetError("invalid_clientId", "Client is inactive.");
-                return Task.FromResult<object>(null);
+                return;
             }
 
             context.OwinContext.Set<string>(Constants.TokenAllowedOriginKey, client.AllowedOrigin);
             context.OwinContext.Set<string>(Constants.TokenRefreshTokenLifeTimeKey, client.RefreshTokenLifeTime.ToString());
 
             context.Validated();
-            return Task.FromResult<object>(null);
         }
 
 
-        public override async Task GrantResourceOwnerCredentials(OAuthGrantResourceOwnerCredentialsContext context)
+        public async Task GrantResourceOwnerCredentialsAsync(OAuthGrantResourceOwnerCredentialsContext context)
         {
             var allowedOrigin = context.OwinContext.Get<string>(Constants.TokenAllowedOriginKey) ?? "*";
             Helper.SetAccessControlAllowOrigin(context.OwinContext, allowedOrigin);
 
-            using (var repository = new AuthenticationRepository())
-            {
-                var user = await repository.FindUser(context.UserName, context.Password);
+            var user = await this.getUser.HandleAsync(new GetUserQuery(context.UserName, context.Password));
 
-                if (user == null)
-                {
-                    context.SetError("invalid_grant", "The user name or password is incorrect.");
-                    return;
-                }
+            if (user == null)
+            {
+                context.SetError("invalid_grant", "The user name or password is incorrect.");
+                return;
             }
 
             var identity = new ClaimsIdentity(context.Options.AuthenticationType);
@@ -113,7 +120,7 @@
             context.Validated(ticket);
         }
 
-        public override Task TokenEndpoint(OAuthTokenEndpointContext context)
+        public Task TokenEndpointAsync(OAuthTokenEndpointContext context)
         {
             foreach (var property in context.Properties.Dictionary)
             {
@@ -123,7 +130,7 @@
             return Task.FromResult<object>(null);
         }
 
-        public override Task GrantRefreshToken(OAuthGrantRefreshTokenContext context)
+        public Task GrantRefreshTokenAsync(OAuthGrantRefreshTokenContext context)
         {
             var originalClient = context.Ticket.Properties.Dictionary[Constants.TokenClientIdKey];
             var currentClient = context.ClientId;
@@ -134,7 +141,6 @@
                 return Task.FromResult<object>(null);
             }
 
-            // Change auth ticket for refresh token requests
             var newIdentity = new ClaimsIdentity(context.Ticket.Identity);
             ////newIdentity.AddClaim(new Claim("newClaim", "newValue"));
 

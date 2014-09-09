@@ -5,7 +5,7 @@
 
     using Microsoft.Owin;
 
-    public class Helper
+    public static class Helper
     {
         public static string GetHash(string input)
         {

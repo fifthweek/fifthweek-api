@@ -1,18 +1,30 @@
 ﻿namespace Dexter.Api.Controllers
 {
+    using System.Collections.Generic;
     using System.Threading.Tasks;
     using System.Web.Http;
 
+    using Dexter.Api.CommandHandlers;
+    using Dexter.Api.Commands;
+    using Dexter.Api.Entities;
+    using Dexter.Api.Models;
+    using Dexter.Api.Queries;
+    using Dexter.Api.QueryHandlers;
     using Dexter.Api.Repositories;
 
     [RoutePrefix("api/RefreshTokens")]
     public class RefreshTokensController : ApiController
     {
-        private readonly IAuthenticationRepository authenticationRepository;
+        private readonly ICommandHandler<RemoveRefreshTokenCommand> removeRefreshToken;
 
-        public RefreshTokensController(IAuthenticationRepository authenticationRepository)
+        private readonly IQueryHandler<GetAllRefreshTokensQuery, List<RefreshToken>> getAllRefreshTokens;
+
+        public RefreshTokensController(
+            ICommandHandler<RemoveRefreshTokenCommand> removeRefreshToken,
+            IQueryHandler<GetAllRefreshTokensQuery, List<RefreshToken>> getAllRefreshTokens)
         {
-            this.authenticationRepository = authenticationRepository;
+            this.removeRefreshToken = removeRefreshToken;
+            this.getAllRefreshTokens = getAllRefreshTokens;
         }
 
         [RequireHttps]
@@ -20,7 +32,8 @@
         [Route("")]
         public IHttpActionResult Get()
         {
-            return this.Ok(this.authenticationRepository.GetAllRefreshTokens());
+            var result = this.getAllRefreshTokens.HandleAsync(GetAllRefreshTokensQuery.Default);
+            return this.Ok(result);
         }
 
         [RequireHttps]
@@ -28,23 +41,8 @@
         [Route("")]
         public async Task<IHttpActionResult> Delete(string tokenId)
         {
-            var result = await this.authenticationRepository.RemoveRefreshToken(tokenId);
-            if (result)
-            {
-                return this.Ok();
-            }
-
-            return this.BadRequest("Token Id does not exist");
-        }
-
-        protected override void Dispose(bool disposing)
-        {
-            if (disposing)
-            {
-                this.authenticationRepository.Dispose();
-            }
-
-            base.Dispose(disposing);
+            await this.removeRefreshToken.HandleAsync(new RemoveRefreshTokenCommand(new RefreshTokenId(tokenId)));
+            return this.Ok();
         }
     }
 }

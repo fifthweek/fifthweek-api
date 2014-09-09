@@ -10,7 +10,11 @@ namespace Dexter.Api.Controllers
     using System.Security.Claims;
     using System.Threading.Tasks;
 
+    using Dexter.Api.CommandHandlers;
+    using Dexter.Api.Commands;
     using Dexter.Api.Models;
+    using Dexter.Api.Queries;
+    using Dexter.Api.QueryHandlers;
     using Dexter.Api.Repositories;
     using Dexter.Api.Results;
 
@@ -27,78 +31,59 @@ namespace Dexter.Api.Controllers
     {
         private readonly IAuthenticationRepository authenticationRepository;
 
-        public AccountController(IAuthenticationRepository authenticationRepository)
+        private readonly IClientRepository clientRepository;
+
+        private readonly ICommandHandler<RegisterInternalUserCommand> registerInternalUser;
+
+        private readonly ICommandHandler<RegisterExternalUserCommand> registerExternalUser;
+
+        private readonly IQueryHandler<GetUsernameFromExternalAccessTokenQuery, string> getUsernameFromExternalAccessToken;
+
+        public AccountController(
+            IAuthenticationRepository authenticationRepository,
+            IClientRepository clientRepository,
+            ICommandHandler<RegisterInternalUserCommand> registerInternalUser,
+            ICommandHandler<RegisterExternalUserCommand> registerExternalUser,
+            IQueryHandler<GetUsernameFromExternalAccessTokenQuery, string> getUsernameFromExternalAccessToken)
         {
             this.authenticationRepository = authenticationRepository;
+            this.clientRepository = clientRepository;
+            this.registerInternalUser = registerInternalUser;
+            this.registerExternalUser = registerExternalUser;
+            this.getUsernameFromExternalAccessToken = getUsernameFromExternalAccessToken;
         }
 
         // POST api/Account/RegisterInternalUser
         [RequireHttps]
+        [ValidateModel]
         [AllowAnonymous]
         [Route("RegisterInternalUser")]
-        public async Task<IHttpActionResult> RegisterInternalUser(InternalRegistrationData userModel)
+        public async Task<IHttpActionResult> RegisterInternalUser(InternalRegistrationData registrationData)
         {
-            if (!this.ModelState.IsValid)
-            {
-                return this.BadRequest(this.ModelState);
-            }
-
-            var result = await this.authenticationRepository.RegisterUser(userModel);
-
-            var errorResult = this.GetErrorResult(result);
-
-            if (errorResult != null)
-            {
-                return errorResult;
-            }
-
+            await this.registerInternalUser.HandleAsync(new RegisterInternalUserCommand(registrationData));
             return this.Ok();
         }
 
         // POST api/Account/RegisterExternalUser
         [RequireHttps]
+        [ValidateModel]
         [AllowAnonymous]
         [Route("RegisterExternalUser")]
-        public async Task<IHttpActionResult> RegisterExternalUser(ExternalRegistrationData model)
+        public async Task<IHttpActionResult> RegisterExternalUser(ExternalRegistrationData registrationData)
         {
-            if (!ModelState.IsValid)
-            {
-                return this.BadRequest(this.ModelState);
-            }
+            await this.registerExternalUser.HandleAsync(new RegisterExternalUserCommand(registrationData));
+            var accessTokenResponse = this.GenerateLocalAccessTokenResponse(registrationData.Username);
+            return this.Ok(accessTokenResponse);
+        }
 
-            var verifiedAccessToken = await this.VerifyExternalAccessToken(model.Provider, model.ExternalAccessToken);
-            if (verifiedAccessToken == null)
-            {
-                return this.BadRequest("Invalid Provider or External Access Token");
-            }
-
-            var user = await this.authenticationRepository.FindAsync(new SignInData(model.Provider, verifiedAccessToken.UserId));
-
-            bool hasRegistered = user != null;
-
-            if (hasRegistered)
-            {
-                return this.BadRequest("External user is already registered");
-            }
-
-            user = new IdentityUser() { UserName = model.Username };
-
-            var result = await this.authenticationRepository.CreateAsync(user);
-            if (!result.Succeeded)
-            {
-                return this.GetErrorResult(result);
-            }
-
-            var signInData = new SignInData(model.Provider, verifiedAccessToken.UserId);
-
-            result = await this.authenticationRepository.AddUserSignInDataAsync(user.Id, signInData);
-            if (!result.Succeeded)
-            {
-                return this.GetErrorResult(result);
-            }
-
-            var accessTokenResponse = this.GenerateLocalAccessTokenResponse(model.Username);
-
+        [RequireHttps]
+        [AllowAnonymous]
+        [HttpGet]
+        [Route("ObtainAccessTokenForExternalUser")]
+        public async Task<IHttpActionResult> ObtainAccessTokenForExternalUser(string provider, string externalAccessToken)
+        {
+            var username = await this.getUsernameFromExternalAccessToken.HandleAsync(new GetUsernameFromExternalAccessTokenQuery(provider, externalAccessToken));
+            var accessTokenResponse = this.GenerateLocalAccessTokenResponse(username);
             return this.Ok(accessTokenResponse);
         }
 
@@ -122,11 +107,13 @@ namespace Dexter.Api.Controllers
                 return new ChallengeResult(provider, this.Request);
             }
 
-            var redirectUriValidationResult = this.ValidateClientAndRedirectUri(ref redirectUri);
-
-            if (!string.IsNullOrWhiteSpace(redirectUriValidationResult))
+            try
             {
-                return this.BadRequest(redirectUriValidationResult);
+                redirectUri = await this.ValidateClientAndRedirectionUriAsync();
+            }
+            catch (BadRequestException t)
+            {
+                return this.BadRequest(t.Message);
             }
 
             var externalSignInData = ExternalSignInData.FromIdentity(this.User.Identity as ClaimsIdentity);
@@ -138,11 +125,11 @@ namespace Dexter.Api.Controllers
 
             if (externalSignInData.Provider != provider)
             {
-                this.GetAuthenticationManager().SignOut(DefaultAuthenticationTypes.ExternalCookie);
+                this.Request.GetOwinContext().Authentication.SignOut(DefaultAuthenticationTypes.ExternalCookie);
                 return new ChallengeResult(provider, this.Request);
             }
 
-            var user = await this.authenticationRepository.FindAsync(new SignInData(externalSignInData.Provider, externalSignInData.ProviderKey));
+            var user = await this.authenticationRepository.FindExternalUserAsync(externalSignInData.Provider, externalSignInData.ProviderKey);
 
             bool hasRegistered = user != null;
 
@@ -156,83 +143,8 @@ namespace Dexter.Api.Controllers
 
             return this.Redirect(redirectUri);
         }
-
-        [RequireHttps]
-        [AllowAnonymous]
-        [HttpGet]
-        [Route("ObtainAccessTokenForExternalUser")]
-        public async Task<IHttpActionResult> ObtainAccessTokenForExternalUser(string provider, string externalAccessToken)
-        {
-            if (string.IsNullOrWhiteSpace(provider) || string.IsNullOrWhiteSpace(externalAccessToken))
-            {
-                return this.BadRequest("Provider or external access token is not sent");
-            }
-
-            var verifiedAccessToken = await this.VerifyExternalAccessToken(provider, externalAccessToken);
-            if (verifiedAccessToken == null)
-            {
-                return this.BadRequest("Invalid Provider or External Access Token");
-            }
-
-            IdentityUser user = await this.authenticationRepository.FindAsync(new SignInData(provider, verifiedAccessToken.UserId));
-
-            bool hasRegistered = user != null;
-
-            if (!hasRegistered)
-            {
-                return this.BadRequest("External user is not registered");
-            }
-
-            var accessTokenResponse = this.GenerateLocalAccessTokenResponse(user.UserName);
-
-            return this.Ok(accessTokenResponse);
-        }
-
-        protected override void Dispose(bool disposing)
-        {
-            if (disposing)
-            {
-                this.authenticationRepository.Dispose();
-            }
-
-            base.Dispose(disposing);
-        }
-
-        private IAuthenticationManager GetAuthenticationManager()
-        {
-            return Request.GetOwinContext().Authentication;
-        }   
-
-        private IHttpActionResult GetErrorResult(IdentityResult result)
-        {
-            if (result == null)
-            {
-                return this.InternalServerError();
-            }
-
-            if (!result.Succeeded)
-            {
-                if (result.Errors != null)
-                {
-                    foreach (string error in result.Errors)
-                    {
-                        this.ModelState.AddModelError(string.Empty, error);
-                    }
-                }
-
-                if (ModelState.IsValid)
-                {
-                    // No ModelState errors are available to send, so just return an empty BadRequest.
-                    return this.BadRequest();
-                }
-
-                return this.BadRequest(this.ModelState);
-            }
-
-            return null;
-        }
-
-        private string ValidateClientAndRedirectUri(ref string redirectUriOutput)
+        
+        private async Task<string> ValidateClientAndRedirectionUriAsync()
         {
             Uri redirectUri;
 
@@ -240,38 +152,36 @@ namespace Dexter.Api.Controllers
 
             if (string.IsNullOrWhiteSpace(redirectUriString))
             {
-                return "redirect_uri is required";
+                throw new BadRequestException("redirect_uri is required");
             }
 
             bool validUri = Uri.TryCreate(redirectUriString, UriKind.Absolute, out redirectUri);
 
             if (!validUri)
             {
-                return "redirect_uri is invalid";
+                throw new BadRequestException("redirect_uri is invalid");
             }
 
             var clientId = this.GetQueryString(this.Request, "client_id");
 
             if (string.IsNullOrWhiteSpace(clientId))
             {
-                return "client_Id is required";
+                throw new BadRequestException("client_Id is required");
             }
 
-            var client = this.authenticationRepository.FindClient(clientId);
+            var client = await this.clientRepository.TryGetClientAsync(clientId);
 
             if (client == null)
             {
-                return string.Format("Client_id '{0}' is not registered in the system.", clientId);
+                throw new BadRequestException(string.Format("Client_id '{0}' is not registered in the system.", clientId));
             }
 
             if (!string.Equals(client.AllowedOrigin, redirectUri.GetLeftPart(UriPartial.Authority), StringComparison.OrdinalIgnoreCase))
             {
-                return string.Format("The given URL is not allowed by Client_id '{0}' configuration.", clientId);
+                throw new BadRequestException(string.Format("The given URL is not allowed by Client_id '{0}' configuration.", clientId));
             }
 
-            redirectUriOutput = redirectUri.AbsoluteUri;
-
-            return string.Empty;
+            return redirectUri.AbsoluteUri;
         }
 
         private string GetQueryString(HttpRequestMessage request, string key)
@@ -293,50 +203,6 @@ namespace Dexter.Api.Controllers
             return match.Value;
         }
 
-        private async Task<ParsedExternalAccessToken> VerifyExternalAccessToken(string provider, string accessToken)
-        {
-            ParsedExternalAccessToken parsedToken = null;
-
-            string verifyTokenEndPoint;
-
-            if (provider == "Facebook")
-            {
-                // You can get it from here: https://developers.facebook.com/tools/accesstoken/
-                // More about debug_tokn here: http://stackoverflow.com/questions/16641083/how-does-one-get-the-app-access-token-for-debug-token-inspection-on-facebook
-                const string AppToken = "561913473930746|O1q3gr_5LfSgVyJy4aR1eWH0nEk";
-                verifyTokenEndPoint = string.Format(@"https://graph.facebook.com/debug_token?input_token={0}&access_token={1}", accessToken, AppToken);
-            }
-            else
-            {
-                return null;
-            }
-
-            var client = new HttpClient();
-            var uri = new Uri(verifyTokenEndPoint);
-            var response = await client.GetAsync(uri);
-
-            if (response.IsSuccessStatusCode)
-            {
-                var content = await response.Content.ReadAsStringAsync();
-
-                dynamic jsonObject = Newtonsoft.Json.JsonConvert.DeserializeObject(content);
-
-                parsedToken = new ParsedExternalAccessToken();
-
-                if (provider == "Facebook")
-                {
-                    parsedToken.UserId = jsonObject["data"]["user_id"];
-                    parsedToken.ApplicationId = jsonObject["data"]["app_id"];
-
-                    if (!string.Equals(Startup.FacebookAuthenticationOptions.AppId, parsedToken.ApplicationId, StringComparison.OrdinalIgnoreCase))
-                    {
-                        return null;
-                    }
-                }
-            }
-
-            return parsedToken;
-        }
 
         private JObject GenerateLocalAccessTokenResponse(string username)
         {
@@ -355,7 +221,7 @@ namespace Dexter.Api.Controllers
 
             var ticket = new AuthenticationTicket(identity, props);
 
-            var accessToken = Startup.OAuthBearerOptions.AccessTokenFormat.Protect(ticket);
+            var accessToken = OAuthConfig.OAuthBearerOptions.AccessTokenFormat.Protect(ticket);
 
             var tokenResponse = new JObject(
                 new JProperty("username", username),
