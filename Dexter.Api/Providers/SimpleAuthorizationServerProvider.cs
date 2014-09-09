@@ -6,6 +6,7 @@
 
     using Dexter.Api.Entities;
     using Dexter.Api.Models;
+    using Dexter.Api.Repositories;
 
     using Microsoft.AspNet.Identity.EntityFramework;
     using Microsoft.Owin;
@@ -18,8 +19,8 @@
         {
             Helper.SetAccessControlAllowOrigin(context.OwinContext);
 
-            string clientId = string.Empty;
-            string clientSecret = string.Empty;
+            string clientId;
+            string clientSecret;
             Client client = null;
 
             if (!context.TryGetBasicCredentials(out clientId, out clientSecret))
@@ -104,7 +105,7 @@
                         Constants.TokenClientIdKey, context.ClientId ?? string.Empty
                     },
                     { 
-                        "userName", context.UserName
+                        "username", context.UserName
                     }
                 });
 

@@ -1,8 +1,13 @@
 ﻿namespace Dexter.Api.Models
 {
+    using Newtonsoft.Json;
+
     public class ParsedExternalAccessToken
     {
-        public string user_id { get; set; }
-        public string app_id { get; set; }
+        [JsonProperty("user_id")]
+        public string UserId { get; set; }
+
+        [JsonProperty("app_id")]
+        public string ApplicationId { get; set; }
     }
 }

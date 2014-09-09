@@ -4,6 +4,7 @@
     using System.Threading.Tasks;
 
     using Dexter.Api.Entities;
+    using Dexter.Api.Repositories;
 
     using Microsoft.Owin.Security.Infrastructure;
 
@@ -33,7 +34,7 @@
                 {
                     Id = Helper.GetHash(refreshTokenId),
                     ClientId = clientid,
-                    UserName = context.Ticket.Identity.Name,
+                    Username = context.Ticket.Identity.Name,
                     IssuedUtc = DateTime.UtcNow,
                     ExpiresUtc = DateTime.UtcNow.AddMinutes(Convert.ToDouble(refreshTokenLifeTime))
                 };
@@ -49,7 +50,6 @@
                 {
                     context.SetToken(refreshTokenId);
                 }
-
             }
         }
 

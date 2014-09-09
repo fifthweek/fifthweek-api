@@ -3,11 +3,12 @@
     using System.Threading.Tasks;
     using System.Web.Http;
 
+    using Dexter.Api.Repositories;
+
     [RoutePrefix("api/RefreshTokens")]
     public class RefreshTokensController : ApiController
     {
-
-        private AuthenticationRepository repository = null;
+        private readonly AuthenticationRepository repository;
 
         public RefreshTokensController()
         {
@@ -19,7 +20,7 @@
         [Route("")]
         public IHttpActionResult Get()
         {
-            return Ok(this.repository.GetAllRefreshTokens());
+            return this.Ok(this.repository.GetAllRefreshTokens());
         }
 
         [RequireHttps]
@@ -30,10 +31,10 @@
             var result = await this.repository.RemoveRefreshToken(tokenId);
             if (result)
             {
-                return Ok();
+                return this.Ok();
             }
-            return BadRequest("Token Id does not exist");
 
+            return this.BadRequest("Token Id does not exist");
         }
 
         protected override void Dispose(bool disposing)

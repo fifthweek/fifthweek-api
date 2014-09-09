@@ -1,10 +1,10 @@
 ﻿namespace Dexter.Api
 {
-    public class Constants
+    public static class Constants
     {
         public const string AdministratorUsers = "Admin";
 
-        public const string DexterWebsiteOrigin = "https://localhost:44300";
+        public const string DexterWebsiteOrigin = "http://localhost:9000";
 
         public const string DefaultAllowedOrigin = "*";
         

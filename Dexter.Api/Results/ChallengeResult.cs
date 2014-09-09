@@ -8,21 +8,22 @@
 
     public class ChallengeResult : IHttpActionResult
     {
-        public string LoginProvider { get; set; }
-        public HttpRequestMessage Request { get; set; }
+        private readonly string signInProvider;
 
-        public ChallengeResult(string loginProvider, ApiController controller)
+        private readonly HttpRequestMessage request;
+
+        public ChallengeResult(string signInProvider, HttpRequestMessage request)
         {
-            LoginProvider = loginProvider;
-            Request = controller.Request;
+            this.signInProvider = signInProvider;
+            this.request = request;
         }
 
         public Task<HttpResponseMessage> ExecuteAsync(CancellationToken cancellationToken)
         {
-            Request.GetOwinContext().Authentication.Challenge(LoginProvider);
+            this.request.GetOwinContext().Authentication.Challenge(this.signInProvider);
 
             var response = new HttpResponseMessage(HttpStatusCode.Unauthorized);
-            response.RequestMessage = Request;
+            response.RequestMessage = this.request;
             return Task.FromResult(response);
         }
     }

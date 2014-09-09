@@ -58,7 +58,7 @@ namespace Dexter.Api
         public void ConfigureOAuth(IAppBuilder app)
         {
             // Use a cookie to temporarily store information about 
-            // a user logging in with a third party login provider
+            // a user signing in with a third party provider
             app.UseExternalSignInCookie(Microsoft.AspNet.Identity.DefaultAuthenticationTypes.ExternalCookie);
             
             OAuthBearerOptions = new OAuthBearerAuthenticationOptions();
@@ -80,6 +80,7 @@ namespace Dexter.Api
                 Provider = new SimpleAuthorizationServerProvider(),
                 RefreshTokenProvider = new SimpleRefreshTokenProvider(),
             };
+
             app.UseOAuthAuthorizationServer(serverOptions);
         }
     }

@@ -1,4 +1,4 @@
-﻿namespace Dexter.Api
+﻿namespace Dexter.Api.Repositories
 {
     using System;
     using System.Collections.Generic;
@@ -23,11 +23,11 @@
             this.userManager = new UserManager<IdentityUser>(new UserStore<IdentityUser>(this.dexterDbContext));
         }
  
-        public async Task<IdentityResult> RegisterUser(UserModel userModel)
+        public async Task<IdentityResult> RegisterUser(InternalRegistrationData userModel)
         {
             var user = new IdentityUser
             {
-                UserName = userModel.UserName
+                UserName = userModel.Username
             };
  
             var result = await this.userManager.CreateAsync(user, userModel.Password);
@@ -35,9 +35,9 @@
             return result;
         }
  
-        public async Task<IdentityUser> FindUser(string userName, string password)
+        public async Task<IdentityUser> FindUser(string username, string password)
         {
-            IdentityUser user = await this.userManager.FindAsync(userName, password);
+            IdentityUser user = await this.userManager.FindAsync(username, password);
  
             return user;
         }
@@ -52,11 +52,11 @@
         public async Task<bool> AddRefreshToken(RefreshToken token)
         {
 
-            var existingToken = this.dexterDbContext.RefreshTokens.Where(r => r.UserName == token.UserName && r.ClientId == token.ClientId).SingleOrDefault();
+            var existingToken = this.dexterDbContext.RefreshTokens.Where(r => r.Username == token.Username && r.ClientId == token.ClientId).SingleOrDefault();
 
             if (existingToken != null)
             {
-                await RemoveRefreshToken(existingToken);
+                await this.RemoveRefreshToken(existingToken);
             }
 
             this.dexterDbContext.RefreshTokens.Add(token);
@@ -95,24 +95,21 @@
             return this.dexterDbContext.RefreshTokens.ToList();
         }
 
-        public async Task<IdentityUser> FindAsync(UserLoginInfo loginInfo)
+        public async Task<IdentityUser> FindAsync(SignInData signInData)
         {
-            IdentityUser user = await this.userManager.FindAsync(loginInfo);
- 
+            IdentityUser user = await this.userManager.FindAsync(signInData.ToUserLoginInfo());
             return user;
         }
  
         public async Task<IdentityResult> CreateAsync(IdentityUser user)
         {
             var result = await this.userManager.CreateAsync(user);
- 
             return result;
         }
- 
-        public async Task<IdentityResult> AddLoginAsync(string userId, UserLoginInfo login)
+
+        public async Task<IdentityResult> AddUserSignInDataAsync(string userId, SignInData signInData)
         {
-            var result = await this.userManager.AddLoginAsync(userId, login);
- 
+            var result = await this.userManager.AddLoginAsync(userId, signInData.ToUserLoginInfo());
             return result;
         }
 
