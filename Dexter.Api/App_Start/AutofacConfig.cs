@@ -13,9 +13,11 @@
     using Dexter.Api.QueryHandlers;
     using Dexter.Api.Repositories;
 
+    using Owin;
+
     public static class AutofacConfig
     {
-        public static void Register(HttpConfiguration httpConfiguration)
+        public static void Register(HttpConfiguration httpConfiguration, IAppBuilder app)
         {
             var executingAssembly = Assembly.GetExecutingAssembly();
 
@@ -25,7 +27,7 @@
             builder.RegisterAssemblyTypes(executingAssembly)
                 .As(t => t.GetInterfaces()
                     .Where(v => v.IsClosedTypeOf(typeof(ICommandHandler<>)))
-                    .Select(v => new KeyedService(typeof(ICommandHandler<>), v))).InstancePerRequest();
+                    .Select(v => new KeyedService(typeof(ICommandHandler<>).Name, v))).InstancePerRequest();
 
             builder.RegisterGenericDecorator(
                 typeof(TransactionCommandHandlerDecorator<>),
@@ -40,21 +42,31 @@
             builder.RegisterAssemblyTypes(executingAssembly)
                 .As(t => t.GetInterfaces()
                     .Where(v => v.IsClosedTypeOf(typeof(IQueryHandler<,>)))
-                    .Select(v => new KeyedService(typeof(IQueryHandler<,>), v))).InstancePerRequest();
+                    .Select(v => new KeyedService(typeof(IQueryHandler<,>).Name, v))).InstancePerRequest();
+
+            builder.RegisterGenericDecorator(
+                typeof(ValidationQueryHandlerDecorator<,>),
+                typeof(IQueryHandler<,>),
+                typeof(IQueryHandler<,>).Name);
 
             builder.RegisterType<DexterDbContext>().As<IDexterDbContext>().InstancePerRequest();
             builder.RegisterType<AuthenticationRepository>().As<IAuthenticationRepository>().InstancePerRequest();
             builder.RegisterType<RefreshTokenRepository>().As<IRefreshTokenRepository>().InstancePerRequest();
             builder.RegisterType<ClientRepository>().As<IClientRepository>().InstancePerRequest();
-            
+
+            builder.RegisterType<DexterAuthorizationServerProvider>().SingleInstance();
             builder.RegisterType<DexterAuthorizationServerHandler>().As<IDexterAuthorizationServerHandler>().InstancePerRequest();
+            builder.RegisterType<DexterRefreshTokenProvider>().SingleInstance();
             builder.RegisterType<DexterRefreshTokenHandler>().As<IDexterRefreshTokenHandler>().InstancePerRequest();
 
             builder.RegisterModule<LogRequestModule>();
 
             var container = builder.Build();
 
-            var resolver = new AutofacWebApiDependencyResolver(container);
+            app.UseAutofacMiddleware(container);
+            app.UseAutofacWebApi(httpConfiguration);
+
+            var resolver = new ErrorLoggingWebApiDependencyResolver(new AutofacWebApiDependencyResolver(container), container);
             GlobalConfiguration.Configuration.DependencyResolver = httpConfiguration.DependencyResolver = resolver;
         }
     }

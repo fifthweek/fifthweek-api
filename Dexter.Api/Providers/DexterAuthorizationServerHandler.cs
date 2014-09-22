@@ -28,8 +28,6 @@
             this.getUser = getUser;
         }
 
-        public delegate IDexterAuthorizationServerHandler Factory();
-
         public async Task ValidateClientAuthenticationAsync(OAuthValidateClientAuthenticationContext context)
         {
             Helper.SetAccessControlAllowOrigin(context.OwinContext);

@@ -17,8 +17,7 @@
 
         public Task<RefreshToken> HandleAsync(GetRefreshTokenQuery query)
         {
-            string hashedTokenId = Helper.GetHash(query.RefreshTokenId.Value);
-            return this.refreshTokenRepository.TryGetRefreshTokenAsync(hashedTokenId);
+            return this.refreshTokenRepository.TryGetRefreshTokenAsync(query.HashedRefreshTokenId.Value);
         }
     }
 }

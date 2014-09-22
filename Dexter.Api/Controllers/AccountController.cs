@@ -55,6 +55,7 @@ namespace Dexter.Api.Controllers
 
         // POST api/Account/RegisterInternalUser
         [RequireHttps]
+        [ConvertExceptionsToResponses]
         [ValidateModel]
         [AllowAnonymous]
         [Route("RegisterInternalUser")]
@@ -66,6 +67,7 @@ namespace Dexter.Api.Controllers
 
         // POST api/Account/RegisterExternalUser
         [RequireHttps]
+        [ConvertExceptionsToResponses]
         [ValidateModel]
         [AllowAnonymous]
         [Route("RegisterExternalUser")]
@@ -77,6 +79,7 @@ namespace Dexter.Api.Controllers
         }
 
         [RequireHttps]
+        [ConvertExceptionsToResponses]
         [AllowAnonymous]
         [HttpGet]
         [Route("ObtainAccessTokenForExternalUser")]
@@ -89,6 +92,7 @@ namespace Dexter.Api.Controllers
 
         // GET api/Account/InitiateExternalSignIn
         [RequireHttps]
+        [ConvertExceptionsToResponses]
         [OverrideAuthentication]
         [HostAuthentication(DefaultAuthenticationTypes.ExternalCookie)]
         [AllowAnonymous]

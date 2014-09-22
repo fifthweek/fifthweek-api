@@ -1,7 +1,12 @@
 ﻿namespace Dexter.Api
 {
     using System;
+    using System.Collections;
+    using System.EnterpriseServices;
     using System.Security.Cryptography;
+    using System.Web;
+
+    using Autofac.Core.Lifetime;
 
     using Microsoft.Owin;
 
@@ -24,6 +29,26 @@
         {
             owinContext.Response.Headers[Constants.AllowedOriginHeaderKey] 
                 = allowedOrigin ?? Constants.DefaultAllowedOrigin;
+        }
+
+        public static LifetimeScope GetOwinRequestLifetimeScope()
+        {
+            const string OwinLifetimeScopeKey = "autofac:OwinLifetimeScope";
+            var owinContext = HttpContext.Current.Request.GetOwinContext();
+
+            if (owinContext.Environment.ContainsKey(OwinLifetimeScopeKey) == false)
+            {
+                throw new Exception("Request lifetime scope not found.");
+            }
+
+            object requestScopeObject = owinContext.Environment[OwinLifetimeScopeKey];
+
+            if (requestScopeObject == null)
+            {
+                throw new Exception("Request lifetime scope cannot be null.");
+            }
+
+            return (LifetimeScope)requestScopeObject;
         }
     }
 }

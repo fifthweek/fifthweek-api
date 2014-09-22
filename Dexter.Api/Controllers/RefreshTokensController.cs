@@ -28,6 +28,7 @@
         }
 
         [RequireHttps]
+        [ConvertExceptionsToResponses]
         [Authorize(Users = Constants.AdministratorUsers)]
         [Route("")]
         public IHttpActionResult Get()
@@ -37,11 +38,12 @@
         }
 
         [RequireHttps]
+        [ConvertExceptionsToResponses]
         [Authorize(Users = Constants.AdministratorUsers)]
         [Route("")]
         public async Task<IHttpActionResult> Delete(string tokenId)
         {
-            await this.removeRefreshToken.HandleAsync(new RemoveRefreshTokenCommand(new RefreshTokenId(tokenId)));
+            await this.removeRefreshToken.HandleAsync(new RemoveRefreshTokenCommand(new HashedRefreshTokenId(tokenId)));
             return this.Ok();
         }
     }

@@ -12,7 +12,7 @@ namespace Dexter.Api
         {
             var httpConfiguration = new HttpConfiguration();
 
-            AutofacConfig.Register(httpConfiguration);
+            AutofacConfig.Register(httpConfiguration, app);
             OAuthConfig.Register(httpConfiguration, app);
             DatabaseConfig.Register();
             WebApiConfig.Register(httpConfiguration);

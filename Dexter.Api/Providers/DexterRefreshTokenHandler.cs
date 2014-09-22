@@ -31,8 +31,6 @@
             this.getRefreshToken = getRefreshToken;
         }
 
-        public delegate IDexterRefreshTokenHandler Factory();
-
         public async Task CreateAsync(AuthenticationTokenCreateContext context)
         {
             var refreshTokenId = RefreshTokenId.Create();
@@ -48,7 +46,7 @@
 
             var token = new RefreshToken()
             {
-                Id = Helper.GetHash(refreshTokenId.Value),
+                HashedId = Helper.GetHash(refreshTokenId.Value),
                 ClientId = clientid,
                 Username = context.Ticket.Identity.Name,
                 IssuedUtc = DateTime.UtcNow,
@@ -70,8 +68,8 @@
             var allowedOrigin = context.OwinContext.Get<string>(Constants.TokenAllowedOriginKey);
             Helper.SetAccessControlAllowOrigin(context.OwinContext, allowedOrigin);
 
-            var refreshTokenId = new RefreshTokenId(context.Token);
-            var refreshToken = await this.getRefreshToken.HandleAsync(new GetRefreshTokenQuery(refreshTokenId));
+            var hashedRefreshTokenId = HashedRefreshTokenId.FromRefreshToken(context.Token);
+            var refreshToken = await this.getRefreshToken.HandleAsync(new GetRefreshTokenQuery(hashedRefreshTokenId));
 
             if (refreshToken != null)
             {
@@ -81,7 +79,7 @@
                 // We can remove the current refresh token because a new one
                 // is created in the CreateAsync method when a new auth token
                 // is requested using the refresh token.
-                await this.removeRefreshToken.HandleAsync(new RemoveRefreshTokenCommand(refreshTokenId));
+                await this.removeRefreshToken.HandleAsync(new RemoveRefreshTokenCommand(hashedRefreshTokenId));
             }
         }
     }

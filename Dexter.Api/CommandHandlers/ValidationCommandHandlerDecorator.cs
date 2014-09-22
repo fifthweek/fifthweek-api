@@ -14,11 +14,11 @@
         }
  
         [DebuggerStepThrough]
-        public Task HandleAsync(TCommand query)
+        public Task HandleAsync(TCommand command)
         {
-            var validationContext = new ValidationContext(query, null, null);
-            Validator.ValidateObject(query, validationContext, true);
-            return this.decorated.HandleAsync(query);
+            var validationContext = new ValidationContext(command, null, null);
+            Validator.ValidateObject(command, validationContext, true);
+            return this.decorated.HandleAsync(command);
         }
     }
 }

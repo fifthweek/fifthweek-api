@@ -42,9 +42,15 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\Autofac.3.5.0\lib\net40\Autofac.dll</HintPath>
     </Reference>
+    <Reference Include="Autofac.Integration.Owin">
+      <HintPath>..\packages\Autofac.Owin.3.1.0\lib\net45\Autofac.Integration.Owin.dll</HintPath>
+    </Reference>
     <Reference Include="Autofac.Integration.WebApi, Version=3.4.0.0, Culture=neutral, PublicKeyToken=17863af14b0044da, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\Autofac.WebApi2.3.4.0\lib\net45\Autofac.Integration.WebApi.dll</HintPath>
+    </Reference>
+    <Reference Include="Autofac.Integration.WebApi.Owin">
+      <HintPath>..\packages\Autofac.WebApi2.Owin.3.2.0\lib\net45\Autofac.Integration.WebApi.Owin.dll</HintPath>
     </Reference>
     <Reference Include="EntityFramework">
       <HintPath>..\packages\EntityFramework.6.1.0\lib\net45\EntityFramework.dll</HintPath>
@@ -62,8 +68,9 @@
       <HintPath>..\packages\Microsoft.AspNet.Identity.Owin.2.1.0\lib\net45\Microsoft.AspNet.Identity.Owin.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.CSharp" />
-    <Reference Include="Microsoft.Owin">
-      <HintPath>..\packages\Microsoft.Owin.2.1.0\lib\net45\Microsoft.Owin.dll</HintPath>
+    <Reference Include="Microsoft.Owin, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Microsoft.Owin.3.0.0\lib\net45\Microsoft.Owin.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Owin.Cors">
       <HintPath>..\packages\Microsoft.Owin.Cors.2.1.0\lib\net45\Microsoft.Owin.Cors.dll</HintPath>
@@ -136,6 +143,7 @@
     <Compile Include="ApiException.cs" />
     <Compile Include="App_Start\AutofacConfig.cs" />
     <Compile Include="App_Start\DatabaseConfig.cs" />
+    <Compile Include="App_Start\ErrorLoggingWebApiDependencyResolver.cs" />
     <Compile Include="App_Start\OAuthConfig.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="BadRequestException.cs" />
@@ -153,8 +161,10 @@
     <Compile Include="Commands\RegisterInternalUserCommand.cs" />
     <Compile Include="Commands\RemoveRefreshTokenCommand.cs" />
     <Compile Include="Commands\SaveChangesCommand.cs" />
+    <Compile Include="ConvertExceptionsToResponsesAttribute.cs" />
     <Compile Include="Extensions.cs" />
     <Compile Include="Models\ClientId.cs" />
+    <Compile Include="Models\HashedRefreshTokenId.cs" />
     <Compile Include="Models\Order.cs" />
     <Compile Include="Models\RefreshTokenId.cs" />
     <Compile Include="Providers\DexterAuthorizationServerHandler.cs" />
@@ -175,6 +185,7 @@
     <Compile Include="QueryHandlers\GetUserQueryHandler.cs" />
     <Compile Include="QueryHandlers\GetVerifiedAccessTokenQueryHandler.cs" />
     <Compile Include="QueryHandlers\IQueryHandler.cs" />
+    <Compile Include="QueryHandlers\ValidationQueryHandlerDecorator.cs" />
     <Compile Include="Repositories\AuthenticationRepository.cs" />
     <Compile Include="Constants.cs" />
     <Compile Include="Controllers\AccountController.cs" />
@@ -231,7 +242,7 @@
           <AutoAssignPort>True</AutoAssignPort>
           <DevelopmentServerPort>15376</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>
-          <IISUrl>https://localhost:44301/</IISUrl>
+          <IISUrl>https://10.211.55.3:44301/</IISUrl>
           <NTLMAuthentication>False</NTLMAuthentication>
           <UseCustomServer>False</UseCustomServer>
           <CustomServerUrl>

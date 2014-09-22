@@ -35,7 +35,7 @@
 
             if (existingToken != null)
             {
-                await this.removeRefreshToken.HandleAsync(new RemoveRefreshTokenCommand(new RefreshTokenId(existingToken.Id)));
+                await this.removeRefreshToken.HandleAsync(new RemoveRefreshTokenCommand(new HashedRefreshTokenId(existingToken.HashedId)));
             }
 
             await this.refreshTokenRepository.AddRefreshTokenAsync(token);

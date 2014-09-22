@@ -10,11 +10,8 @@
 
     public class DexterRefreshTokenProvider : IAuthenticationTokenProvider
     {
-        private readonly DexterRefreshTokenHandler.Factory handlerFactory;
-
-        public DexterRefreshTokenProvider(DexterRefreshTokenHandler.Factory handlerFactory)
+        public DexterRefreshTokenProvider()
         {
-            this.handlerFactory = handlerFactory;
         }
 
         public void Create(AuthenticationTokenCreateContext context)
@@ -24,7 +21,7 @@
 
         public Task CreateAsync(AuthenticationTokenCreateContext context)
         {
-            return this.handlerFactory().CreateAsync(context);
+            return GetAuthorizationServerHandler().CreateAsync(context);
         }
 
         public void Receive(AuthenticationTokenReceiveContext context)
@@ -34,7 +31,14 @@
 
         public Task ReceiveAsync(AuthenticationTokenReceiveContext context)
         {
-            return this.handlerFactory().ReceiveAsync(context);
+            return GetAuthorizationServerHandler().ReceiveAsync(context);
+        }
+
+        private static IDexterRefreshTokenHandler GetAuthorizationServerHandler()
+        {
+            var handler = (IDexterRefreshTokenHandler)
+                Helper.GetOwinRequestLifetimeScope().GetService(typeof(IDexterRefreshTokenHandler));
+            return handler;
         }
     }
 }

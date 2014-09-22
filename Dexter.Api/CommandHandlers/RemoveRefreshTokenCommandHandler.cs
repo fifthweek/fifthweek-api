@@ -22,14 +22,13 @@
 
         public async Task HandleAsync(RemoveRefreshTokenCommand command)
         {
-            var refreshTokenId = command.RefreshTokenId;
-            var hashedTokenId = Helper.GetHash(refreshTokenId.Value);
+            var hashedId = command.HashedRefreshTokenId;
 
-            var refreshToken = await this.refreshTokenRepository.TryGetRefreshTokenAsync(hashedTokenId);
+            var refreshToken = await this.refreshTokenRepository.TryGetRefreshTokenAsync(hashedId.Value);
 
             if (refreshToken == null)
             {
-                throw new ApplicationException("Refresh token not found: " + refreshTokenId);
+                throw new ApplicationException("Refresh token not found: " + hashedId);
             }
 
             await this.refreshTokenRepository.RemoveRefreshTokenAsync(refreshToken);

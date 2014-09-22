@@ -1,8 +1,13 @@
 ﻿namespace Dexter.Api.Providers
 {
+    using System;
     using System.Collections.Generic;
+    using System.Linq;
     using System.Security.Claims;
     using System.Threading.Tasks;
+    using System.Web;
+
+    using Autofac.Core.Lifetime;
 
     using Dexter.Api.Entities;
     using Dexter.Api.Models;
@@ -15,31 +20,36 @@
 
     public class DexterAuthorizationServerProvider : OAuthAuthorizationServerProvider
     {
-        private readonly DexterAuthorizationServerHandler.Factory handlerFactory;
-
-        public DexterAuthorizationServerProvider(DexterAuthorizationServerHandler.Factory handlerFactory)
+        public DexterAuthorizationServerProvider()
         {
-            this.handlerFactory = handlerFactory;
         }
 
         public override Task ValidateClientAuthentication(OAuthValidateClientAuthenticationContext context)
         {
-            return this.handlerFactory().ValidateClientAuthenticationAsync(context);
+            return GetAuthorizationServerHandler().ValidateClientAuthenticationAsync(context);
         }
 
         public override Task GrantResourceOwnerCredentials(OAuthGrantResourceOwnerCredentialsContext context)
         {
-            return this.handlerFactory().GrantResourceOwnerCredentialsAsync(context);
+            return GetAuthorizationServerHandler().GrantResourceOwnerCredentialsAsync(context);
         }
 
         public override Task TokenEndpoint(OAuthTokenEndpointContext context)
         {
-            return this.handlerFactory().TokenEndpointAsync(context);
+            return GetAuthorizationServerHandler().TokenEndpointAsync(context);
         }
 
         public override Task GrantRefreshToken(OAuthGrantRefreshTokenContext context)
         {
-            return this.handlerFactory().GrantRefreshTokenAsync(context);
+            return GetAuthorizationServerHandler().GrantRefreshTokenAsync(context);
+        }
+
+        private static IDexterAuthorizationServerHandler GetAuthorizationServerHandler()
+        {
+            var handler =
+                (IDexterAuthorizationServerHandler)
+                Helper.GetOwinRequestLifetimeScope().GetService(typeof(IDexterAuthorizationServerHandler));
+            return handler;
         }
     }
 }

@@ -6,7 +6,7 @@
     public class RefreshToken
     {
         [Key]
-        public string Id { get; set; }
+        public string HashedId { get; set; }
 
         [Required]
         [MaxLength(50)]

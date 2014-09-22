@@ -12,6 +12,7 @@ namespace Dexter.Api.Controllers
     public class OrdersController : ApiController
     {
         [RequireHttps]
+        [ConvertExceptionsToResponses]
         [Authorize]
         [Route("")]
         public IHttpActionResult Get()

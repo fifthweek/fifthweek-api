@@ -5,11 +5,11 @@
 
     public class RemoveRefreshTokenCommand
     {
-        public RemoveRefreshTokenCommand(RefreshTokenId refreshTokenId)
+        public RemoveRefreshTokenCommand(HashedRefreshTokenId hashedRefreshTokenId)
         {
-            this.RefreshTokenId = refreshTokenId;
+            this.HashedRefreshTokenId = hashedRefreshTokenId;
         }
 
-        public RefreshTokenId RefreshTokenId { get; private set; }
+        public HashedRefreshTokenId HashedRefreshTokenId { get; private set; }
     }
 }

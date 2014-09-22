@@ -5,11 +5,11 @@
 
     public class GetRefreshTokenQuery : IQuery<RefreshToken>
     {
-        public GetRefreshTokenQuery(RefreshTokenId refreshTokenId)
+        public GetRefreshTokenQuery(HashedRefreshTokenId hashedRefreshTokenId)
         {
-            this.RefreshTokenId = refreshTokenId;
+            this.HashedRefreshTokenId = hashedRefreshTokenId;
         }
 
-        public RefreshTokenId RefreshTokenId { get; private set; }
+        public HashedRefreshTokenId HashedRefreshTokenId { get; private set; }
     }
 }
