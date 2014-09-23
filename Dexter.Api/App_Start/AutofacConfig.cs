@@ -1,6 +1,7 @@
 ﻿namespace Dexter.Api
 {
     using System.Linq;
+    using System.Net.Http;
     using System.Reflection;
     using System.Web.Http;
 
@@ -58,6 +59,8 @@
             builder.RegisterType<DexterAuthorizationServerHandler>().As<IDexterAuthorizationServerHandler>().InstancePerRequest();
             builder.RegisterType<DexterRefreshTokenProvider>().SingleInstance();
             builder.RegisterType<DexterRefreshTokenHandler>().As<IDexterRefreshTokenHandler>().InstancePerRequest();
+
+            builder.RegisterType<HttpClient>().InstancePerDependency();
 
             builder.RegisterModule<LogRequestModule>();
 

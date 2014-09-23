@@ -14,6 +14,8 @@
 
     public static class OAuthConfig
     {
+        public static readonly string FacebookAppId = "561913473930746";
+
         public static OAuthBearerAuthenticationOptions OAuthBearerOptions { get; private set; }
 
         public static FacebookAuthenticationOptions FacebookAuthenticationOptions { get; private set; }
@@ -29,7 +31,7 @@
 
             FacebookAuthenticationOptions = new FacebookAuthenticationOptions()
             {
-                AppId = "561913473930746",
+                AppId = FacebookAppId,
                 AppSecret = "269c38dc36e569a435e4f0abd3f72b78",
                 Provider = new DexterFacebookAuthenticationProvider(),
             };

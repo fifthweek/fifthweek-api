@@ -9,6 +9,13 @@
 
     public class GetVerifiedAccessTokenQueryHandler : IQueryHandler<GetVerifiedAccessTokenQuery, ParsedExternalAccessToken>
     {
+        private readonly HttpClient httpClient;
+
+        public GetVerifiedAccessTokenQueryHandler(HttpClient httpClient)
+        {
+            this.httpClient = httpClient;
+        }
+
         public async Task<ParsedExternalAccessToken> HandleAsync(GetVerifiedAccessTokenQuery query)
         {
             ParsedExternalAccessToken parsedToken = null;
@@ -30,9 +37,8 @@
                 return null;
             }
 
-            var client = new HttpClient();
             var uri = new Uri(verifyTokenEndPoint);
-            var response = await client.GetAsync(uri);
+            var response = await this.httpClient.GetAsync(uri);
 
             if (response.IsSuccessStatusCode)
             {
@@ -47,7 +53,7 @@
                     parsedToken.UserId = jsonObject["data"]["user_id"];
                     parsedToken.ApplicationId = jsonObject["data"]["app_id"];
 
-                    if (!string.Equals(OAuthConfig.FacebookAuthenticationOptions.AppId, parsedToken.ApplicationId, StringComparison.OrdinalIgnoreCase))
+                    if (!string.Equals(OAuthConfig.FacebookAppId, parsedToken.ApplicationId, StringComparison.OrdinalIgnoreCase))
                     {
                         return null;
                     }

@@ -28,7 +28,7 @@
 
             if (refreshToken == null)
             {
-                throw new ApplicationException("Refresh token not found: " + hashedId);
+                throw new BadRequestException("Refresh token not found: " + hashedId);
             }
 
             await this.refreshTokenRepository.RemoveRefreshTokenAsync(refreshToken);

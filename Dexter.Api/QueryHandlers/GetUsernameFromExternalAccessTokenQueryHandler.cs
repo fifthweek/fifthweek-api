@@ -41,9 +41,7 @@
 
             IdentityUser user = await this.authenticationRepository.FindExternalUserAsync(provider, verifiedAccessToken.UserId);
 
-            bool hasRegistered = user != null;
-
-            if (!hasRegistered)
+            if (user == null)
             {
                 throw new BadRequestException("External user is not registered");
             }

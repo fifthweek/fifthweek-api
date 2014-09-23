@@ -8,27 +8,25 @@
     using Dexter.Api.QueryHandlers;
     using Dexter.Api.Repositories;
 
-    using Microsoft.AspNet.Identity.EntityFramework;
-
     public class RegisterExternalUserCommandHandler : ICommandHandler<RegisterExternalUserCommand>
     {
         private readonly IAuthenticationRepository authenticationRepository;
 
-        private readonly IQueryHandler<GetVerifiedAccessTokenQuery, ParsedExternalAccessToken> verifyAccessToken;
+        private readonly IQueryHandler<GetVerifiedAccessTokenQuery, ParsedExternalAccessToken> getVerifiedAccessToken;
 
         public RegisterExternalUserCommandHandler(
             IAuthenticationRepository authenticationRepository,
-            IQueryHandler<GetVerifiedAccessTokenQuery, ParsedExternalAccessToken> verifyAccessToken)
+            IQueryHandler<GetVerifiedAccessTokenQuery, ParsedExternalAccessToken> getVerifiedAccessToken)
         {
             this.authenticationRepository = authenticationRepository;
-            this.verifyAccessToken = verifyAccessToken;
+            this.getVerifiedAccessToken = getVerifiedAccessToken;
         }
 
         public async Task HandleAsync(RegisterExternalUserCommand command)
         {
             var registrationData = command.ExternalRegistrationData;
 
-            var verifiedAccessToken = await this.verifyAccessToken.HandleAsync(new GetVerifiedAccessTokenQuery(registrationData.Provider, registrationData.ExternalAccessToken));
+            var verifiedAccessToken = await this.getVerifiedAccessToken.HandleAsync(new GetVerifiedAccessTokenQuery(registrationData.Provider, registrationData.ExternalAccessToken));
             if (verifiedAccessToken == null)
             {
                 throw new BadRequestException("Invalid Provider or External Access Token");
