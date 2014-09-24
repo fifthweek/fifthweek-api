@@ -1,5 +1,6 @@
 ﻿namespace Dexter.Api.Tests.QueryHandlers
 {
+    using System.Net;
     using System.Net.Http;
     using System.Threading.Tasks;
 
@@ -34,6 +35,38 @@
             Assert.IsNotNull(result);
             Assert.AreEqual("UserId", result.UserId);
             Assert.AreEqual(OAuthConfig.FacebookAppId, result.ApplicationId);
+        }
+
+        [TestMethod]
+        public async Task ItShouldReturnNullForAnUnrecognisedProvider()
+        {
+            var mockHttp = new MockHttpMessageHandler();
+            var httpClient = new HttpClient(mockHttp);
+
+            var handler = new GetVerifiedAccessTokenQueryHandler(httpClient);
+            var query = new GetVerifiedAccessTokenQuery("XYZ", "ABC");
+
+            var result = await handler.HandleAsync(query);
+
+            Assert.IsNull(result);
+        }
+
+        [TestMethod]
+        public async Task ItShouldReturnNullIfStatusCodeIsNotSuccess()
+        {
+            var mockHttp = new MockHttpMessageHandler();
+
+            mockHttp.When("https://graph.facebook.com/*")
+                .Respond(HttpStatusCode.BadRequest);
+
+            var httpClient = new HttpClient(mockHttp);
+
+            var handler = new GetVerifiedAccessTokenQueryHandler(httpClient);
+            var query = new GetVerifiedAccessTokenQuery("Facebook", "ABC");
+
+            var result = await handler.HandleAsync(query);
+
+            Assert.IsNull(result);
         }
     }
 }

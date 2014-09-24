@@ -1,5 +1,6 @@
 ﻿namespace Dexter.Api
 {
+    using System;
     using System.Linq;
     using System.Net.Http;
     using System.Reflection;
@@ -20,35 +21,30 @@
     {
         public static void Register(HttpConfiguration httpConfiguration, IAppBuilder app)
         {
-            var executingAssembly = Assembly.GetExecutingAssembly();
+            var container = CreateContainer();
 
+            app.UseAutofacMiddleware(container);
+            app.UseAutofacWebApi(httpConfiguration);
+
+            var resolver = new ErrorLoggingWebApiDependencyResolver(new AutofacWebApiDependencyResolver(container), container);
+            GlobalConfiguration.Configuration.DependencyResolver = httpConfiguration.DependencyResolver = resolver;
+        }
+
+        internal static IContainer CreateContainer()
+        {
             var builder = new ContainerBuilder();
-            builder.RegisterApiControllers(executingAssembly);
+            builder.RegisterApiControllers(Assembly.GetExecutingAssembly());
 
-            builder.RegisterAssemblyTypes(executingAssembly)
-                .As(t => t.GetInterfaces()
-                    .Where(v => v.IsClosedTypeOf(typeof(ICommandHandler<>)))
-                    .Select(v => new KeyedService(typeof(ICommandHandler<>).Name, v))).InstancePerRequest();
-
-            builder.RegisterGenericDecorator(
+            RegisterHandlers(
+                builder, 
+                typeof(ICommandHandler<>),
                 typeof(TransactionCommandHandlerDecorator<>),
-                typeof(ICommandHandler<>),
-                typeof(ICommandHandler<>).Name);
+                typeof(ValidationCommandHandlerDecorator<>));
 
-            builder.RegisterGenericDecorator(
-                typeof(ValidationCommandHandlerDecorator<>),
-                typeof(ICommandHandler<>),
-                typeof(ICommandHandler<>).Name);
-
-            builder.RegisterAssemblyTypes(executingAssembly)
-                .As(t => t.GetInterfaces()
-                    .Where(v => v.IsClosedTypeOf(typeof(IQueryHandler<,>)))
-                    .Select(v => new KeyedService(typeof(IQueryHandler<,>).Name, v))).InstancePerRequest();
-
-            builder.RegisterGenericDecorator(
-                typeof(ValidationQueryHandlerDecorator<,>),
+            RegisterHandlers(
+                builder, 
                 typeof(IQueryHandler<,>),
-                typeof(IQueryHandler<,>).Name);
+                typeof(ValidationQueryHandlerDecorator<,>));
 
             builder.RegisterType<DexterDbContext>().As<IDexterDbContext>().InstancePerRequest();
             builder.RegisterType<AuthenticationRepository>().As<IAuthenticationRepository>().InstancePerRequest();
@@ -56,7 +52,9 @@
             builder.RegisterType<ClientRepository>().As<IClientRepository>().InstancePerRequest();
 
             builder.RegisterType<DexterAuthorizationServerProvider>().SingleInstance();
-            builder.RegisterType<DexterAuthorizationServerHandler>().As<IDexterAuthorizationServerHandler>().InstancePerRequest();
+            builder.RegisterType<DexterAuthorizationServerHandler>()
+                .As<IDexterAuthorizationServerHandler>()
+                .InstancePerRequest();
             builder.RegisterType<DexterRefreshTokenProvider>().SingleInstance();
             builder.RegisterType<DexterRefreshTokenHandler>().As<IDexterRefreshTokenHandler>().InstancePerRequest();
 
@@ -65,12 +63,52 @@
             builder.RegisterModule<LogRequestModule>();
 
             var container = builder.Build();
+            return container;
+        }
 
-            app.UseAutofacMiddleware(container);
-            app.UseAutofacWebApi(httpConfiguration);
+        private static void RegisterHandlers(
+            ContainerBuilder builder, 
+            Type handlerType,
+            params Type[] decorators)
+        {
+            RegisterHandlers(builder, handlerType);
 
-            var resolver = new ErrorLoggingWebApiDependencyResolver(new AutofacWebApiDependencyResolver(container), container);
-            GlobalConfiguration.Configuration.DependencyResolver = httpConfiguration.DependencyResolver = resolver;
+            for (int i = 0; i < decorators.Length; i++)
+            {
+                RegisterGenericDecorator(
+                    builder,
+                    decorators[i],
+                    handlerType,
+                    i == 0 ? handlerType : decorators[i - 1],
+                    i != decorators.Length - 1);
+            }
+        }
+
+        private static void RegisterHandlers(ContainerBuilder builder, Type handlerType)
+        {
+            builder.RegisterAssemblyTypes(Assembly.GetExecutingAssembly())
+                .As(t => t.GetInterfaces()
+                        .Where(v => v.IsClosedTypeOf(handlerType))
+                        .Select(v => new KeyedService(handlerType.Name, v)))
+                .InstancePerRequest();
+        }
+
+        private static void RegisterGenericDecorator(
+            ContainerBuilder builder,
+            Type decoratorType,
+            Type decoratedServiceType,
+            Type fromKeyType,
+            bool hasKey)
+        {
+            var result = builder.RegisterGenericDecorator(
+               decoratorType,
+               decoratedServiceType,
+               fromKeyType.Name);
+
+            if (hasKey)
+            {
+                result.Keyed(decoratorType.Name, decoratedServiceType);
+            }
         }
     }
 }

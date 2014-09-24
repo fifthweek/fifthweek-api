@@ -155,6 +155,7 @@
     <Compile Include="BadRequestException.cs" />
     <Compile Include="CommandHandlers\AddRefreshTokenCommandHandler.cs" />
     <Compile Include="CommandHandlers\ICommandHandler.cs" />
+    <Compile Include="CommandHandlers\NullCommandHandler.cs" />
     <Compile Include="CommandHandlers\RegisterExternalUserCommandHandler.cs" />
     <Compile Include="CommandHandlers\RegisterInternalUserCommandHandler.cs" />
     <Compile Include="CommandHandlers\RemoveRefreshTokenCommandHandler.cs" />
@@ -163,6 +164,7 @@
     <Compile Include="CommandHandlers\ValidationCommandHandlerDecorator.cs" />
     <Compile Include="App_Start\LogRequestModule.cs" />
     <Compile Include="Commands\AddRefreshTokenCommand.cs" />
+    <Compile Include="Commands\NullCommand.cs" />
     <Compile Include="Commands\RegisterExternalUserCommand.cs" />
     <Compile Include="Commands\RegisterInternalUserCommand.cs" />
     <Compile Include="Commands\RemoveRefreshTokenCommand.cs" />
@@ -184,6 +186,7 @@
     <Compile Include="Queries\GetUserQuery.cs" />
     <Compile Include="Queries\GetVerifiedAccessTokenQuery.cs" />
     <Compile Include="Queries\IQuery.cs" />
+    <Compile Include="Queries\NullQuery.cs" />
     <Compile Include="QueryHandlers\GetAllRefreshTokensQueryHandler.cs" />
     <Compile Include="QueryHandlers\GetClientQueryHandler.cs" />
     <Compile Include="QueryHandlers\GetRefreshTokenQueryHandler.cs" />
@@ -191,6 +194,7 @@
     <Compile Include="QueryHandlers\GetUserQueryHandler.cs" />
     <Compile Include="QueryHandlers\GetVerifiedAccessTokenQueryHandler.cs" />
     <Compile Include="QueryHandlers\IQueryHandler.cs" />
+    <Compile Include="QueryHandlers\NullQueryHandler.cs" />
     <Compile Include="QueryHandlers\ValidationQueryHandlerDecorator.cs" />
     <Compile Include="Repositories\AuthenticationRepository.cs" />
     <Compile Include="Constants.cs" />

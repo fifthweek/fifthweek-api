@@ -12,7 +12,15 @@
         {
             this.decorated = decorated;
         }
- 
+
+        internal ICommandHandler<TCommand> Decorated
+        {
+            get
+            {
+                return this.decorated;
+            }
+        }
+
         [DebuggerStepThrough]
         public Task HandleAsync(TCommand command)
         {
