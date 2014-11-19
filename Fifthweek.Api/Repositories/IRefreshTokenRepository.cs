@@ -1,0 +1,20 @@
+﻿namespace Fifthweek.Api.Repositories
+{
+    using System.Collections.Generic;
+    using System.Threading.Tasks;
+
+    using Fifthweek.Api.Entities;
+
+    public interface IRefreshTokenRepository
+    {
+        Task<RefreshToken> TryGetRefreshTokenAsync(string username, string clientId);
+
+        Task AddRefreshTokenAsync(RefreshToken refreshToken);
+
+        Task<RefreshToken> TryGetRefreshTokenAsync(string hashedTokenId);
+
+        Task RemoveRefreshTokenAsync(RefreshToken refreshToken);
+
+        Task<List<RefreshToken>> GetAllRefreshTokensAsync();
+    }
+}
