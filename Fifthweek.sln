@@ -1,11 +1,16 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2013
-VisualStudioVersion = 12.0.30723.0
+VisualStudioVersion = 12.0.31101.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fifthweek.Api", "Fifthweek.Api\Fifthweek.Api.csproj", "{F90DC407-DC1E-4EF6-BBEC-B5598810660A}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fifthweek.Api.Tests", "Fifthweek.Api.Tests\Fifthweek.Api.Tests.csproj", "{4B4C008B-48CE-43F3-AB20-8A148500DA4B}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{707B8A39-8E28-4ECD-8CC3-BA34225675C8}"
+	ProjectSection(SolutionItems) = preProject
+		deploy.cmd = deploy.cmd
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

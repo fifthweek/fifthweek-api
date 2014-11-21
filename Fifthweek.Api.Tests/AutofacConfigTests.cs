@@ -40,5 +40,11 @@
             handler = ((ValidationQueryHandlerDecorator<NullQuery, bool>)handler).Decorated;
             Assert.IsInstanceOfType(handler, typeof(NullQueryHandler));
         }
+
+        [TestMethod]
+        public void FailingTest()
+        {
+            Assert.IsFalse(true, "This will always fail.");
+        }
     }
 }
