@@ -23,13 +23,14 @@
 
             var registrationData = new InternalRegistrationData
             {
+                Email = "Email",
                 Username = "Username",
                 Password = "Password",
             };
 
             await handler.HandleAsync(new RegisterInternalUserCommand(registrationData));
 
-            authenticationRepository.Verify(v => v.AddInternalUserAsync("Username", "Password"));
+            authenticationRepository.Verify(v => v.AddInternalUserAsync("Email", "Username", "Password"));
         }
     }
 }

@@ -20,11 +20,12 @@
             this.userManager = new UserManager<IdentityUser>(new UserStore<IdentityUser>((FifthweekDbContext)fifthweekDbContext));
         }
 
-        public async Task AddInternalUserAsync(string username, string password)
+        public async Task AddInternalUserAsync(string email, string username, string password)
         {
             var user = new IdentityUser
             {
-                UserName = username
+                UserName = username,
+                Email = email,
             };
 
             var result = await this.userManager.CreateAsync(user, password);
@@ -32,26 +33,9 @@
             ThrowIfFailed(result, "Failed to create internal user: " + user);
         }
 
-        public async Task AddExternalUserAsync(string username, string provider, string providerKey)
-        {
-            var user = new IdentityUser() { UserName = username };
-            
-            var createResult = await this.userManager.CreateAsync(user);
-            ThrowIfFailed(createResult, "Failed to create external user: " + user);
-
-            var loginInfo = new UserLoginInfo(provider, providerKey);
-            var updateResult = await this.userManager.AddLoginAsync(user.Id, loginInfo);
-            ThrowIfFailed(updateResult, "Failed to add external login data for " + user);
-        }
-
         public async Task<IdentityUser> FindInternalUserAsync(string username, string password)
         {
             return await this.userManager.FindAsync(username, password);
-        }
-
-        public async Task<IdentityUser> FindExternalUserAsync(string provider, string providerKey)
-        {
-            return await this.userManager.FindAsync(new UserLoginInfo(provider, providerKey));
         }
 
         public void Dispose()

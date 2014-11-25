@@ -22,20 +22,8 @@
 
         public static void Register(HttpConfiguration httpConfiguration, IAppBuilder app)
         {
-            // Use a cookie to temporarily store information about 
-            // a user signing in with a third party provider
-            app.UseExternalSignInCookie(DefaultAuthenticationTypes.ExternalCookie);
-
             OAuthBearerOptions = new OAuthBearerAuthenticationOptions();
             app.UseOAuthBearerAuthentication(OAuthBearerOptions);
-
-            FacebookAuthenticationOptions = new FacebookAuthenticationOptions()
-            {
-                AppId = FacebookAppId,
-                AppSecret = "269c38dc36e569a435e4f0abd3f72b78",
-                Provider = new FifthweekFacebookAuthenticationProvider(),
-            };
-            app.UseFacebookAuthentication(FacebookAuthenticationOptions);
 
             var authorizationServerProvider = httpConfiguration.DependencyResolver.GetService<FifthweekAuthorizationServerProvider>();
             var refreshTokenProvider = httpConfiguration.DependencyResolver.GetService<FifthweekRefreshTokenProvider>();

@@ -8,7 +8,7 @@
 
     public class LogRequestModule : Autofac.Module
     {
-        public static int depth = 0;
+        private int depth = 0;
 
         protected override void AttachToComponentRegistration(IComponentRegistry componentRegistry, IComponentRegistration registration)
         {
@@ -20,7 +20,7 @@
         private string GetPrefix()
         {
             var sb = new StringBuilder();
-            for (int i = 0; i < depth; i++)
+            for (int i = 0; i < this.depth; i++)
             {
                 sb.Append("-");
             }
@@ -33,17 +33,17 @@
             Trace.Write(this.GetPrefix());
             Trace.Write("Resolving ");
             Trace.Write(preparingEventArgs.Component.Activator.LimitType);
-            Trace.WriteLine(String.Empty);
-            depth++;
+            Trace.WriteLine(string.Empty);
+            this.depth++;
         }
 
         private void RegistrationOnActivating(object sender, ActivatingEventArgs<object> activatingEventArgs)
         {
-            depth--;
+            this.depth--;
             Trace.Write(this.GetPrefix());
             Trace.Write("Activating ");
             Trace.Write(activatingEventArgs.Component.Activator.LimitType);
-            Trace.WriteLine(String.Empty);
+            Trace.WriteLine(string.Empty);
         }
     }
 }

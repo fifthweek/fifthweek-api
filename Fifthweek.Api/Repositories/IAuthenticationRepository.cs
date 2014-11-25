@@ -9,11 +9,7 @@
 
     public interface IAuthenticationRepository
     {
-        Task AddInternalUserAsync(string username, string password);
-
-        Task AddExternalUserAsync(string username, string provider, string providerKey);
-
-        Task<IdentityUser> FindExternalUserAsync(string provider, string providerKey);
+        Task AddInternalUserAsync(string email, string username, string password);
         
         Task<IdentityUser> FindInternalUserAsync(string username, string password);
     }

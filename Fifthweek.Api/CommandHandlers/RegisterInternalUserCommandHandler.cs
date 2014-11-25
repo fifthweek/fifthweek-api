@@ -17,6 +17,7 @@
         public Task HandleAsync(RegisterInternalUserCommand command)
         {
             return this.authenticationRepository.AddInternalUserAsync(
+                command.InternalRegistrationData.Email,
                 command.InternalRegistrationData.Username,
                 command.InternalRegistrationData.Password);
         }
