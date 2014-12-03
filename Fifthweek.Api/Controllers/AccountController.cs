@@ -26,7 +26,7 @@ namespace Fifthweek.Api.Controllers
 
     using Newtonsoft.Json.Linq;
 
-    [RoutePrefix("api/Account")]
+    [RoutePrefix("Account")]
     public class AccountController : ApiController
     {
         private readonly IAuthenticationRepository authenticationRepository;
