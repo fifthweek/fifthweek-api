@@ -1,20 +1,22 @@
 ﻿namespace Fifthweek.Api
 {
+    using System;
     using System.Net;
     using System.Net.Http;
+    using System.Threading;
+    using System.Threading.Tasks;
     using System.Web.Http.Filters;
+
+    using Fifthweek.Api.Services;
 
     public class ConvertExceptionsToResponsesAttribute : ActionFilterAttribute
     {
-        public override void OnActionExecuted(HttpActionExecutedContext actionExecutedContext)
+        public override async Task OnActionExecutedAsync(HttpActionExecutedContext actionExecutedContext, CancellationToken cancellationToken)
         {
-            if (actionExecutedContext.Exception != null)
+            var exception = actionExecutedContext.Exception;
+            if (exception != null)
             {
-                if (actionExecutedContext.Exception is BadRequestException)
-                {
-                    actionExecutedContext.Response = actionExecutedContext.Request.CreateErrorResponse(
-                        HttpStatusCode.BadRequest, actionExecutedContext.Exception.Message);
-                }
+                actionExecutedContext.Response = await RequestExceptionHandler.ReportExceptionAndCreateResponseAsync(actionExecutedContext.Request, exception);
             }
         }
     }

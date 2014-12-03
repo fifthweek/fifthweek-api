@@ -14,6 +14,7 @@
     using Fifthweek.Api.Providers;
     using Fifthweek.Api.QueryHandlers;
     using Fifthweek.Api.Repositories;
+    using Fifthweek.Api.Services;
 
     using Owin;
 
@@ -50,6 +51,9 @@
             builder.RegisterType<AuthenticationRepository>().As<IAuthenticationRepository>().InstancePerRequest();
             builder.RegisterType<RefreshTokenRepository>().As<IRefreshTokenRepository>().InstancePerRequest();
             builder.RegisterType<ClientRepository>().As<IClientRepository>().InstancePerRequest();
+
+            builder.RegisterInstance(Constants.DefaultSendEmailService).As<ISendEmailService>().SingleInstance();
+            builder.RegisterInstance(Constants.DefaultReportingService).As<IReportingService>().SingleInstance();
 
             builder.RegisterType<FifthweekAuthorizationServerProvider>().SingleInstance();
             builder.RegisterType<FifthweekAuthorizationServerHandler>()

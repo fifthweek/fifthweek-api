@@ -103,6 +103,12 @@
     <Reference Include="Owin">
       <HintPath>..\packages\Owin.1.0\lib\net40\Owin.dll</HintPath>
     </Reference>
+    <Reference Include="SendGrid.SmtpApi">
+      <HintPath>..\packages\SendGrid.SmtpApi.1.1.3\lib\net40\SendGrid.SmtpApi.dll</HintPath>
+    </Reference>
+    <Reference Include="SendGridMail">
+      <HintPath>..\packages\Sendgrid.5.0.0\lib\SendGridMail.dll</HintPath>
+    </Reference>
     <Reference Include="System.Net.Http" />
     <Reference Include="System.Net.Http.Formatting, Version=5.2.2.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -143,7 +149,9 @@
     <Reference Include="System.EnterpriseServices" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Web.config" />
+    <Content Include="Web.config">
+      <SubType>Designer</SubType>
+    </Content>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ApiException.cs" />
@@ -172,6 +180,7 @@
     <Compile Include="Models\ClientId.cs" />
     <Compile Include="Models\HashedRefreshTokenId.cs" />
     <Compile Include="Models\RefreshTokenId.cs" />
+    <Compile Include="ModelValidationException.cs" />
     <Compile Include="Providers\FifthweekAuthorizationServerHandler.cs" />
     <Compile Include="Providers\FifthweekRefreshTokenHandler.cs" />
     <Compile Include="Providers\IFifthweekAuthorizationServerHandler.cs" />
@@ -206,13 +215,22 @@
     <Compile Include="Repositories\IRefreshTokenRepository.cs" />
     <Compile Include="Repositories\RefreshTokenRepository.cs" />
     <Compile Include="Repositories\IFifthweekDbContext.cs" />
+    <Compile Include="RequestExceptionHandler.cs" />
     <Compile Include="RequireHttpsAttribute.cs" />
     <Compile Include="Results\ChallengeResult.cs" />
+    <Compile Include="Services\AggregateReportingService.cs" />
+    <Compile Include="Services\EmailReportingService.cs" />
+    <Compile Include="Services\IReportingService.cs" />
+    <Compile Include="Services\ISendEmailService.cs" />
+    <Compile Include="Services\SendGridEmailService.cs" />
+    <Compile Include="Services\TraceReportingService.cs" />
     <Compile Include="Startup.cs" />
     <Compile Include="ValidateModelAttribute.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="packages.config" />
+    <Content Include="packages.config">
+      <SubType>Designer</SubType>
+    </Content>
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
