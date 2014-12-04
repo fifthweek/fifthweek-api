@@ -7,18 +7,22 @@
     using System.Web.Http.Controllers;
     using System.Web.Http.Filters;
 
+    using Microsoft.Owin.Security.OAuth;
+
     public static class RequestExceptionHandler
     {
         public static async Task<HttpResponseMessage> ReportExceptionAndCreateResponseAsync(
             HttpRequestMessage request,
             Exception exception)
         {
-            // I don't want to use Autofac here as it may be the dependency resolution
-            // causing the error.
-            var reportingService = Constants.DefaultReportingService;
-            var identifier = exception.GetExceptionIdentifier();
+            string identifier = string.Empty;
             try
             {
+                // I don't want to use Autofac here as it may be the dependency resolution
+                // causing the error.
+                var reportingService = Constants.DefaultReportingService;
+                identifier = exception.GetExceptionIdentifier();
+
                 await reportingService.ReportErrorAsync(exception, identifier);
             }
             catch (Exception t)
@@ -46,6 +50,45 @@
                 return request.CreateErrorResponse(
                         HttpStatusCode.InternalServerError,
                         "Something went wrong: " + identifier);
+            }
+        }
+
+        public static async Task ReportExceptionAndCreateResponseAsync<T>(
+            BaseValidatingContext<T> context,
+            Exception exception)
+        {
+            string identifier = string.Empty;
+            try
+            {
+                // I don't want to use Autofac here as it may be the dependency resolution
+                // causing the error.
+                var reportingService = Constants.DefaultReportingService;
+                identifier = exception.GetExceptionIdentifier();
+
+                await reportingService.ReportErrorAsync(exception, identifier);
+                context.SetError("internal_error", "Something went wrong: " + identifier);
+            }
+            catch (Exception t)
+            {
+                System.Diagnostics.Trace.WriteLine("Failed to report errors: " + t);
+                context.SetError("internal_error", "An error occured and could not be reported: " + identifier);
+            }
+        }
+
+        public static async void ReportExceptionAsync(Exception exception)
+        {
+            try
+            {
+                // I don't want to use Autofac here as it may be the dependency resolution
+                // causing the error.
+                var reportingService = Constants.DefaultReportingService;
+                var identifier = exception.GetExceptionIdentifier();
+
+                await reportingService.ReportErrorAsync(exception, identifier);
+            }
+            catch (Exception t)
+            {
+                System.Diagnostics.Trace.WriteLine("Failed to report errors: " + t);
             }
         }
     }

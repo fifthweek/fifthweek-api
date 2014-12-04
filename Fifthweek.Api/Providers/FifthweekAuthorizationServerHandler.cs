@@ -1,5 +1,6 @@
 ﻿namespace Fifthweek.Api.Providers
 {
+    using System;
     using System.Collections.Generic;
     using System.Security.Claims;
     using System.Threading.Tasks;
@@ -124,7 +125,7 @@
             {
                 context.AdditionalResponseParameters.Add(property.Key, property.Value);
             }
-
+            
             return Task.FromResult<object>(null);
         }
 

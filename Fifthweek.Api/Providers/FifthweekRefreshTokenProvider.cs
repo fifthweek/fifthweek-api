@@ -21,7 +21,8 @@
 
         public Task CreateAsync(AuthenticationTokenCreateContext context)
         {
-            return GetAuthorizationServerHandler().CreateAsync(context);
+            return ProviderErrorHandler.CallAndHandleError(
+                () => GetAuthorizationServerHandler().CreateAsync(context));
         }
 
         public void Receive(AuthenticationTokenReceiveContext context)
@@ -31,7 +32,8 @@
 
         public Task ReceiveAsync(AuthenticationTokenReceiveContext context)
         {
-            return GetAuthorizationServerHandler().ReceiveAsync(context);
+            return ProviderErrorHandler.CallAndHandleError(
+                () => GetAuthorizationServerHandler().ReceiveAsync(context));
         }
 
         private static IFifthweekRefreshTokenHandler GetAuthorizationServerHandler()

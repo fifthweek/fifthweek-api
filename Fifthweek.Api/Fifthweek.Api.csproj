@@ -185,6 +185,7 @@
     <Compile Include="Providers\FifthweekRefreshTokenHandler.cs" />
     <Compile Include="Providers\IFifthweekAuthorizationServerHandler.cs" />
     <Compile Include="Providers\IFifthweekRefreshTokenHandler.cs" />
+    <Compile Include="Providers\ProviderErrorHandler.cs" />
     <Compile Include="Queries\GetClientQuery.cs" />
     <Compile Include="Queries\GetRefreshTokenQuery.cs" />
     <Compile Include="Queries\GetUserQuery.cs" />

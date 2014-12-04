@@ -26,22 +26,29 @@
 
         public override Task ValidateClientAuthentication(OAuthValidateClientAuthenticationContext context)
         {
-            return GetAuthorizationServerHandler().ValidateClientAuthenticationAsync(context);
+            return ProviderErrorHandler.CallAndHandleError(
+                () => GetAuthorizationServerHandler().ValidateClientAuthenticationAsync(context), 
+                context);
         }
 
         public override Task GrantResourceOwnerCredentials(OAuthGrantResourceOwnerCredentialsContext context)
         {
-            return GetAuthorizationServerHandler().GrantResourceOwnerCredentialsAsync(context);
+            return ProviderErrorHandler.CallAndHandleError(
+                () => GetAuthorizationServerHandler().GrantResourceOwnerCredentialsAsync(context), 
+                context);
         }
 
         public override Task TokenEndpoint(OAuthTokenEndpointContext context)
         {
-            return GetAuthorizationServerHandler().TokenEndpointAsync(context);
+            return ProviderErrorHandler.CallAndHandleError(
+               () => GetAuthorizationServerHandler().TokenEndpointAsync(context));
         }
 
         public override Task GrantRefreshToken(OAuthGrantRefreshTokenContext context)
         {
-            return GetAuthorizationServerHandler().GrantRefreshTokenAsync(context);
+            return ProviderErrorHandler.CallAndHandleError(
+                () => GetAuthorizationServerHandler().GrantRefreshTokenAsync(context),
+                context);
         }
 
         private static IFifthweekAuthorizationServerHandler GetAuthorizationServerHandler()
