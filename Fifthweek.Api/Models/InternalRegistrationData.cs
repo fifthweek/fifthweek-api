@@ -12,7 +12,7 @@
         [Required]
         [Display(Name = "Username")]
         [StringLength(100, MinimumLength = 6)]
-        [RegularExpression(@"[a-zA-Z0-9-]+", ErrorMessage = "Only alphanumeric characters and hyphens are allowed in the username.")]
+        [RegularExpression(@"[a-zA-Z0-9-_]+", ErrorMessage = "Only alphanumeric characters, underscores and hyphens are allowed in the username.")]
         public string Username { get; set; }
 
         [Required]

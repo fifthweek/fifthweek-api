@@ -15,7 +15,7 @@
         public Task ReportErrorAsync(Exception t, string identifier)
         {
             return this.sendEmailService.SendEmailAsync(
-                "james@fifthweek.com",
+                Constants.ErrorEmailAddress,
                 "An error occured: " + identifier,
                 t.ToString());
         }

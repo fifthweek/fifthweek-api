@@ -18,6 +18,8 @@
 
         public const string TokenClientIdKey = "fifthweek:client_id";
 
+        public const string ErrorEmailAddress = "james@fifthweek.com";
+
         public static readonly string FifthweekWebsiteOrigin = GetWebsiteOrigin();
 
         public static readonly MailAddress FifthweekEmailAddress = new MailAddress("hello@fifthweek.com", "Fifthweek");
