@@ -16,7 +16,7 @@
             if (actionContext.ModelState.IsValid == false)
             {
                 var exception = new ModelValidationException(actionContext.ModelState);
-                actionContext.Response = await RequestExceptionHandler.ReportExceptionAndCreateResponseAsync(actionContext.Request, exception);
+                actionContext.Response = await ExceptionHandlerUtilities.ReportExceptionAndCreateResponseAsync(actionContext.Request, exception);
             }
         }
     }

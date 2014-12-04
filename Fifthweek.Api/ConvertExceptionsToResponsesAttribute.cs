@@ -16,7 +16,7 @@
             var exception = actionExecutedContext.Exception;
             if (exception != null)
             {
-                actionExecutedContext.Response = await RequestExceptionHandler.ReportExceptionAndCreateResponseAsync(actionExecutedContext.Request, exception);
+                actionExecutedContext.Response = await ExceptionHandlerUtilities.ReportExceptionAndCreateResponseAsync(actionExecutedContext.Request, exception);
             }
         }
     }

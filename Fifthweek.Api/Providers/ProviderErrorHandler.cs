@@ -21,7 +21,7 @@
 
             if (exception != null)
             {
-                await RequestExceptionHandler.ReportExceptionAndCreateResponseAsync(context, exception);
+                await ExceptionHandlerUtilities.ReportExceptionAndCreateResponseAsync(context, exception);
             }
         }
 
@@ -33,7 +33,7 @@
             }
             catch (Exception t)
             {
-                RequestExceptionHandler.ReportExceptionAsync(t);
+                ExceptionHandlerUtilities.ReportExceptionAsync(t);
                 throw;
             }
         }

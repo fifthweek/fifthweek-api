@@ -177,6 +177,11 @@
     <Compile Include="Commands\SaveChangesCommand.cs" />
     <Compile Include="ConvertExceptionsToResponsesAttribute.cs" />
     <Compile Include="Extensions.cs" />
+    <Compile Include="Migrations\201412041523081_InitialCreate.cs" />
+    <Compile Include="Migrations\201412041523081_InitialCreate.Designer.cs">
+      <DependentUpon>201412041523081_InitialCreate.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\ClientId.cs" />
     <Compile Include="Models\HashedRefreshTokenId.cs" />
     <Compile Include="Models\RefreshTokenId.cs" />
@@ -200,7 +205,6 @@
     <Compile Include="Repositories\AuthenticationRepository.cs" />
     <Compile Include="Constants.cs" />
     <Compile Include="Controllers\AccountController.cs" />
-    <Compile Include="App_Start\DatabaseInitializer.cs" />
     <Compile Include="Models\Client.cs" />
     <Compile Include="Entities\RefreshToken.cs" />
     <Compile Include="Helper.cs" />
@@ -216,7 +220,7 @@
     <Compile Include="Repositories\IRefreshTokenRepository.cs" />
     <Compile Include="Repositories\RefreshTokenRepository.cs" />
     <Compile Include="Repositories\IFifthweekDbContext.cs" />
-    <Compile Include="RequestExceptionHandler.cs" />
+    <Compile Include="ExceptionHandlerUtilities.cs" />
     <Compile Include="RequireHttpsAttribute.cs" />
     <Compile Include="Results\ChallengeResult.cs" />
     <Compile Include="Services\AggregateReportingService.cs" />
@@ -241,6 +245,11 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Migrations\201412041523081_InitialCreate.resx">
+      <DependentUpon>201412041523081_InitialCreate.cs</DependentUpon>
+    </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

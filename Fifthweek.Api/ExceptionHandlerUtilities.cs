@@ -9,7 +9,7 @@
 
     using Microsoft.Owin.Security.OAuth;
 
-    public static class RequestExceptionHandler
+    public static class ExceptionHandlerUtilities
     {
         public static async Task<HttpResponseMessage> ReportExceptionAndCreateResponseAsync(
             HttpRequestMessage request,

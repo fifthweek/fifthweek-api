@@ -2,6 +2,7 @@
 
 namespace Fifthweek.Api
 {
+    using System;
     using System.Web.Http;
 
     using Owin;
@@ -10,15 +11,23 @@ namespace Fifthweek.Api
     {
         public void Configuration(IAppBuilder app)
         {
-            var httpConfiguration = new HttpConfiguration();
+            try
+            {
+                var httpConfiguration = new HttpConfiguration();
 
-            AutofacConfig.Register(httpConfiguration, app);
-            OAuthConfig.Register(httpConfiguration, app);
-            DatabaseConfig.Register();
-            WebApiConfig.Register(httpConfiguration);
+                AutofacConfig.Register(httpConfiguration, app);
+                OAuthConfig.Register(httpConfiguration, app);
+                DatabaseConfig.Register();
+                WebApiConfig.Register(httpConfiguration);
 
-            app.UseCors(Microsoft.Owin.Cors.CorsOptions.AllowAll);
-            app.UseWebApi(httpConfiguration);
+                app.UseCors(Microsoft.Owin.Cors.CorsOptions.AllowAll);
+                app.UseWebApi(httpConfiguration);
+            }
+            catch (Exception t)
+            {
+                ExceptionHandlerUtilities.ReportExceptionAsync(t);
+                throw;
+            }
         }
     }
 }
