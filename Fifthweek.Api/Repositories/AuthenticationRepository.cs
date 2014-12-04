@@ -22,6 +22,18 @@
 
         public async Task AddInternalUserAsync(string email, string username, string password)
         {
+            var userByEmail = await this.userManager.FindByEmailAsync(email);
+            if (userByEmail != null)
+            {
+                throw new RecoverableException("The email address '" + email + "' is already taken.");
+            }
+           
+            var userByUsername = await this.userManager.FindByNameAsync(username);
+            if (userByUsername != null)
+            {
+                throw new RecoverableException("The username '" + username + "' is already taken.");
+            }
+
             var user = new IdentityUser
             {
                 UserName = username,

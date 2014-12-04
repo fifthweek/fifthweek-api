@@ -34,7 +34,7 @@
                         "An error occured and could not be reported: " + identifier);
             }
 
-            if (exception is ModelValidationException || exception is BadRequestException)
+            if (exception is RecoverableException)
             {
                 // A bad request means there was a problem with the input, so we need
                 // to tell them what the error was.

@@ -2,7 +2,7 @@
 {
     using System;
 
-    public class BadRequestException : Exception
+    public class BadRequestException : RecoverableException
     {
         public BadRequestException(string message)
             : base(message)
