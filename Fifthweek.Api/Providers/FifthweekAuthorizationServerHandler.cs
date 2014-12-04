@@ -81,7 +81,7 @@
             }
 
             context.OwinContext.Set<string>(Constants.TokenAllowedOriginKey, client.AllowedOrigin);
-            context.OwinContext.Set<string>(Constants.TokenRefreshTokenLifeTimeKey, client.RefreshTokenLifeTime.ToString());
+            context.OwinContext.Set<string>(Constants.TokenRefreshTokenLifeTimeKey, client.RefreshTokenLifeTimeMinutes.ToString());
 
             context.Validated();
         }

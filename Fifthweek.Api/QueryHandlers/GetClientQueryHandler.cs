@@ -3,6 +3,7 @@
     using System.Threading.Tasks;
 
     using Fifthweek.Api.Entities;
+    using Fifthweek.Api.Models;
     using Fifthweek.Api.Queries;
     using Fifthweek.Api.Repositories;
 
@@ -17,7 +18,7 @@
 
         public Task<Client> HandleAsync(GetClientQuery query)
         {
-            return this.clientRepository.TryGetClientAsync(query.ClientId.Value);
+            return this.clientRepository.TryGetClientAsync(query.ClientId);
         }
     }
 }

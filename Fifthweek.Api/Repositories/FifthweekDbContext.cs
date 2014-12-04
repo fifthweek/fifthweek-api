@@ -13,8 +13,6 @@
         {
         }
 
-        public IDbSet<Client> Clients { get; set; }
-
         public IDbSet<RefreshToken> RefreshTokens { get; set; }
     }
 }

@@ -11,8 +11,6 @@
 
     public interface IFifthweekDbContext : IDisposable
     {
-        IDbSet<Client> Clients { get; set; }
-
         IDbSet<RefreshToken> RefreshTokens { get; set; }
 
         IDbSet<IdentityUser> Users { get; set; }

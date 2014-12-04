@@ -201,7 +201,7 @@
     <Compile Include="Constants.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="App_Start\DatabaseInitializer.cs" />
-    <Compile Include="Entities\Client.cs" />
+    <Compile Include="Models\Client.cs" />
     <Compile Include="Entities\RefreshToken.cs" />
     <Compile Include="Helper.cs" />
     <Compile Include="Models\ApplicationType.cs" />
