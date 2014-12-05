@@ -1,6 +1,5 @@
 ﻿namespace Fifthweek.Api.Providers
 {
-    using System;
     using System.Collections.Generic;
     using System.Security.Claims;
     using System.Threading.Tasks;
@@ -9,9 +8,6 @@
     using Fifthweek.Api.Models;
     using Fifthweek.Api.Queries;
     using Fifthweek.Api.QueryHandlers;
-    using Fifthweek.Api.Repositories;
-
-    using Microsoft.AspNet.Identity.EntityFramework;
     using Microsoft.Owin.Security;
     using Microsoft.Owin.Security.OAuth;
 
@@ -19,11 +15,11 @@
     {
         private readonly IQueryHandler<GetClientQuery, Client> getClient;
 
-        private readonly IQueryHandler<GetUserQuery, IdentityUser> getUser;
+        private readonly IQueryHandler<GetUserQuery, ApplicationUser> getUser;
 
         public FifthweekAuthorizationServerHandler(
             IQueryHandler<GetClientQuery, Client> getClient,
-            IQueryHandler<GetUserQuery, IdentityUser> getUser)
+            IQueryHandler<GetUserQuery, ApplicationUser> getUser)
         {
             this.getClient = getClient;
             this.getUser = getUser;

@@ -26,3 +26,9 @@
         BROWSER_STACK_USERNAME=<email>
 
 4.  Run Visual Studio 2013 as *admin* to avoid IIS Express related errors.
+
+## Temporary database
+
+Data is stored in `App_Data` and is persisted between builds of the application.
+
+This directory must be manually cleared to reset the database.

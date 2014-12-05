@@ -1,4 +1,8 @@
-﻿namespace Fifthweek.Api
+﻿using Fifthweek.Api.Entities;
+using Microsoft.AspNet.Identity;
+using Microsoft.AspNet.Identity.EntityFramework;
+
+namespace Fifthweek.Api
 {
     using System;
     using System.Linq;
@@ -48,9 +52,13 @@
                 typeof(ValidationQueryHandlerDecorator<,>));
 
             builder.RegisterType<FifthweekDbContext>().As<IFifthweekDbContext>().InstancePerRequest();
-            builder.RegisterType<AuthenticationRepository>().As<IAuthenticationRepository>().InstancePerRequest();
             builder.RegisterType<RefreshTokenRepository>().As<IRefreshTokenRepository>().InstancePerRequest();
             builder.RegisterType<ClientRepository>().As<IClientRepository>().InstancePerRequest();
+            builder.Register(c =>
+                new UserManagerImpl(
+                new UserManager<ApplicationUser>(
+                    new UserStore<ApplicationUser>((FifthweekDbContext)c.Resolve<IFifthweekDbContext>()))))
+                    .As<IUserManager>();
 
             builder.RegisterInstance(Constants.DefaultSendEmailService).As<ISendEmailService>().SingleInstance();
             builder.RegisterInstance(Constants.DefaultReportingService).As<IReportingService>().SingleInstance();

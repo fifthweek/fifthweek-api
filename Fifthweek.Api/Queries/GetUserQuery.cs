@@ -1,8 +1,10 @@
-﻿namespace Fifthweek.Api.Queries
+﻿using Fifthweek.Api.Entities;
+
+namespace Fifthweek.Api.Queries
 {
     using Microsoft.AspNet.Identity.EntityFramework;
 
-    public class GetUserQuery : IQuery<IdentityUser>
+    public class GetUserQuery : IQuery<ApplicationUser>
     {
         public GetUserQuery(string username, string password)
         {

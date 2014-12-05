@@ -13,7 +13,7 @@
     {
         IDbSet<RefreshToken> RefreshTokens { get; set; }
 
-        IDbSet<IdentityUser> Users { get; set; }
+        IDbSet<ApplicationUser> Users { get; set; }
 
         IDbSet<IdentityRole> Roles { get; set; }
 

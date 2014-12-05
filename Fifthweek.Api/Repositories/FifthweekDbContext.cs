@@ -6,7 +6,7 @@
 
     using Microsoft.AspNet.Identity.EntityFramework;
 
-    public class FifthweekDbContext : IdentityDbContext<IdentityUser>, IFifthweekDbContext
+    public class FifthweekDbContext : IdentityDbContext<ApplicationUser>, IFifthweekDbContext
     {
         public FifthweekDbContext()
             : base("FifthweekDbContext")

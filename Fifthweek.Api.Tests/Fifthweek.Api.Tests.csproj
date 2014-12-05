@@ -107,7 +107,6 @@
   <ItemGroup>
     <Compile Include="AutofacConfigTests.cs" />
     <Compile Include="CommandHandlers\AddRefreshTokenCommandHandlerTests.cs" />
-    <Compile Include="CommandHandlers\RegisterInternalUserCommandHandlerTests.cs" />
     <Compile Include="CommandHandlers\RemoveRefreshTokenCommandHandlerTests.cs" />
     <Compile Include="CommandHandlers\SaveChangesCommandHandlerTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

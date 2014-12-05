@@ -1,4 +1,6 @@
-﻿namespace Fifthweek.Api.QueryHandlers
+﻿using Fifthweek.Api.Entities;
+
+namespace Fifthweek.Api.QueryHandlers
 {
     using System.Threading.Tasks;
 
@@ -8,18 +10,18 @@
     using Microsoft.AspNet.Identity;
     using Microsoft.AspNet.Identity.EntityFramework;
 
-    public class GetUserQueryHandler : IQueryHandler<GetUserQuery, IdentityUser>
+    public class GetUserQueryHandler : IQueryHandler<GetUserQuery, ApplicationUser>
     {
-        private readonly IAuthenticationRepository authenticationRepository;
+        private readonly IUserManager userManager;
 
-        public GetUserQueryHandler(IAuthenticationRepository authenticationRepository)
+        public GetUserQueryHandler(IUserManager userManager)
         {
-            this.authenticationRepository = authenticationRepository;
+            this.userManager = userManager;
         }
 
-        public Task<IdentityUser> HandleAsync(GetUserQuery query)
+        public Task<ApplicationUser> HandleAsync(GetUserQuery query)
         {
-            return this.authenticationRepository.FindInternalUserAsync(query.Username, query.Password);
+            return this.userManager.FindAsync(query.Username, query.Password);
         }
     }
 }

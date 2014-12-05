@@ -29,31 +29,23 @@ namespace Fifthweek.Api.Controllers
     [RoutePrefix("Account")]
     public class AccountController : ApiController
     {
-        private readonly IAuthenticationRepository authenticationRepository;
-
-        private readonly IClientRepository clientRepository;
-
-        private readonly ICommandHandler<RegisterInternalUserCommand> registerInternalUser;
+        private readonly ICommandHandler<RegisterUserCommand> registerUser;
 
         public AccountController(
-            IAuthenticationRepository authenticationRepository,
-            IClientRepository clientRepository,
-            ICommandHandler<RegisterInternalUserCommand> registerInternalUser)
+            ICommandHandler<RegisterUserCommand> registerUser)
         {
-            this.authenticationRepository = authenticationRepository;
-            this.clientRepository = clientRepository;
-            this.registerInternalUser = registerInternalUser;
+            this.registerUser = registerUser;
         }
 
-        // POST api/Account/RegisterInternalUser
+        // POST api/Account/RegisterUser
         [RequireHttps]
         [ConvertExceptionsToResponses]
         [ValidateModel]
         [AllowAnonymous]
-        [Route("RegisterInternalUser")]
-        public async Task<IHttpActionResult> RegisterInternalUser(InternalRegistrationData registrationData)
+        [Route("RegisterUser")]
+        public async Task<IHttpActionResult> RegisterUser(RegistrationData registrationData)
         {
-            await this.registerInternalUser.HandleAsync(new RegisterInternalUserCommand(registrationData));
+            await this.registerUser.HandleAsync(new RegisterUserCommand(registrationData));
             return this.Ok();
         }
     }
