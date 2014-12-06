@@ -183,6 +183,10 @@
     <Compile Include="Migrations\201412041523081_InitialCreate.Designer.cs">
       <DependentUpon>201412041523081_InitialCreate.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201412061138102_AddExampleWork.cs" />
+    <Compile Include="Migrations\201412061138102_AddExampleWork.Designer.cs">
+      <DependentUpon>201412061138102_AddExampleWork.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\ClientId.cs" />
     <Compile Include="Models\HashedRefreshTokenId.cs" />
@@ -251,6 +255,9 @@
   <ItemGroup>
     <EmbeddedResource Include="Migrations\201412041523081_InitialCreate.resx">
       <DependentUpon>201412041523081_InitialCreate.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201412061138102_AddExampleWork.resx">
+      <DependentUpon>201412061138102_AddExampleWork.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
