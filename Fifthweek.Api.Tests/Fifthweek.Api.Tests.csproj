@@ -110,6 +110,7 @@
     <Compile Include="CommandHandlers\RemoveRefreshTokenCommandHandlerTests.cs" />
     <Compile Include="CommandHandlers\SaveChangesCommandHandlerTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="QueryHandlers\GetUsernameAvailabilityQueryHandler.cs" />
     <Compile Include="QueryHandlers\GetClientQueryHandlerTests.cs" />
     <Compile Include="QueryHandlers\GetRefreshTokenQueryHandlerTests.cs" />
     <Compile Include="QueryHandlers\GetUserQueryHandlerTests.cs" />
