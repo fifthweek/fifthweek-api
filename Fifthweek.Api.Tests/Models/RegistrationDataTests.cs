@@ -16,7 +16,7 @@ namespace Fifthweek.Api.Tests.Models
         }
 
         [TestMethod]
-        public void ItShouldRecogniseDifferentxampleWork()
+        public void ItShouldRecogniseDifferentExampleWork()
         {
             var registration1 = NewRegistrationData();
             var registration2 = NewRegistrationData();
@@ -36,7 +36,7 @@ namespace Fifthweek.Api.Tests.Models
         }
 
         [TestMethod]
-        public void ItShouldRecogniseDifferentUsernamel()
+        public void ItShouldRecogniseDifferentUsername()
         {
             var registration1 = NewRegistrationData();
             var registration2 = NewRegistrationData();
@@ -55,7 +55,7 @@ namespace Fifthweek.Api.Tests.Models
             Assert.AreNotEqual(registration1, registration2);
         }
 
-        private static RegistrationData NewRegistrationData()
+        public static RegistrationData NewRegistrationData()
         {
             return new RegistrationData
             {
