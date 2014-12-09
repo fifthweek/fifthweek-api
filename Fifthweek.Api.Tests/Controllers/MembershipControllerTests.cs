@@ -9,6 +9,7 @@ using Fifthweek.Api.Controllers;
 using Fifthweek.Api.Models;
 using Fifthweek.Api.Queries;
 using Fifthweek.Api.QueryHandlers;
+using Fifthweek.Api.Tests.Models;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 
@@ -20,13 +21,7 @@ namespace Fifthweek.Api.Tests
         [TestMethod]
         public async Task ItShouldIssueRegisterUserCommandForPostedRegistration()
         {
-            var registration = new RegistrationData
-            {
-                ExampleWork = "TestExampleWork",
-                Email = "test@test.com",
-                Username = "TestUsername",
-                Password = "TestPassword"
-            };
+            var registration = RegistrationDataTests.NewRegistrationData();
             var command = new RegisterUserCommand(registration);
             var commandHandler = new Mock<ICommandHandler<RegisterUserCommand>>();
             var queryHandler = new Mock<IQueryHandler<GetUsernameAvailabilityQuery, bool>>();
