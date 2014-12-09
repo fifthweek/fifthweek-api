@@ -1,4 +1,5 @@
 ﻿using Fifthweek.Api.Entities;
+using Fifthweek.Api.Queries;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
 
@@ -51,6 +52,7 @@ namespace Fifthweek.Api
                 typeof(IQueryHandler<,>),
                 typeof(ValidationQueryHandlerDecorator<,>));
 
+            builder.RegisterType<UserInputNormalization>().As<IUserInputNormalization>().SingleInstance();
             builder.RegisterType<FifthweekDbContext>().As<IFifthweekDbContext>().InstancePerRequest();
             builder.RegisterType<RefreshTokenRepository>().As<IRefreshTokenRepository>().InstancePerRequest();
             builder.RegisterType<ClientRepository>().As<IClientRepository>().InstancePerRequest();

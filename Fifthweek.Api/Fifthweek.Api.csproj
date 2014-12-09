@@ -179,6 +179,7 @@
     <Compile Include="Entities\ApplicationUser.cs" />
     <Compile Include="Entities\FifthweekClaimTypes.cs" />
     <Compile Include="Extensions.cs" />
+    <Compile Include="IUserInputNormalization.cs" />
     <Compile Include="Migrations\201412041523081_InitialCreate.cs" />
     <Compile Include="Migrations\201412041523081_InitialCreate.Designer.cs">
       <DependentUpon>201412041523081_InitialCreate.cs</DependentUpon>
@@ -238,6 +239,7 @@
     <Compile Include="Services\SendGridEmailService.cs" />
     <Compile Include="Services\TraceReportingService.cs" />
     <Compile Include="Startup.cs" />
+    <Compile Include="UserInputNormalization.cs" />
     <Compile Include="ValidateModelAttribute.cs" />
   </ItemGroup>
   <ItemGroup>

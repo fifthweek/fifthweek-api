@@ -121,10 +121,12 @@
     <Compile Include="Controllers\MembershipControllerTests.cs" />
     <Compile Include="Models\RegistrationDataTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Queries\GetUsernameAvailabilityQueryTests.cs" />
     <Compile Include="QueryHandlers\GetUsernameAvailabilityQueryHandler.cs" />
     <Compile Include="QueryHandlers\GetClientQueryHandlerTests.cs" />
     <Compile Include="QueryHandlers\GetRefreshTokenQueryHandlerTests.cs" />
     <Compile Include="QueryHandlers\GetUserQueryHandlerTests.cs" />
+    <Compile Include="UserInputNormalizationTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

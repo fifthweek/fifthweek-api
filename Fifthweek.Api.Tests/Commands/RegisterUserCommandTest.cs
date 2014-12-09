@@ -10,20 +10,20 @@ namespace Fifthweek.Api.Tests.Commands
         [TestMethod]
         public void ItShouldRecogniseEqualObjects()
         {
-            var registration1 = NewRegisterUserCommand();
-            var registration2 = NewRegisterUserCommand();
+            var command1 = NewRegisterUserCommand();
+            var command2 = NewRegisterUserCommand();
 
-            Assert.AreEqual(registration1, registration2);
+            Assert.AreEqual(command1, command2);
         }
 
         [TestMethod]
         public void ItShouldRecogniseDifferentRegistrationData()
         {
-            var registration1 = NewRegisterUserCommand();
-            var registration2 = NewRegisterUserCommand();
-            registration2.RegistrationData.ExampleWork = "Different";
+            var command1 = NewRegisterUserCommand();
+            var command2 = NewRegisterUserCommand();
+            command2.RegistrationData.ExampleWork = "Different";
 
-            Assert.AreNotEqual(registration1, registration2);
+            Assert.AreNotEqual(command1, command2);
         }
 
         public static RegisterUserCommand NewRegisterUserCommand()
