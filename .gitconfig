@@ -1,0 +1,3 @@
+[core]
+    autocrlf = true
+    safecrlf = false
