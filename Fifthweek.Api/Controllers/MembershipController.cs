@@ -42,7 +42,7 @@ namespace Fifthweek.Api.Controllers
         [ValidateModel]
         [AllowAnonymous]
         [Route("registrations")]
-        public async Task<IHttpActionResult> PostRegistration(RegistrationData registrationData)
+        public async Task<IHttpActionResult> PostRegistrationAsync(RegistrationData registrationData)
         {
             await this.registerUser.HandleAsync(new RegisterUserCommand(registrationData));
             return this.Ok();
@@ -55,7 +55,7 @@ namespace Fifthweek.Api.Controllers
         [AllowAnonymous]
         [Route("availableUsernames/{username}")]
         [ResponseType(typeof(bool))]
-        public async Task<IHttpActionResult> GetUsernameAvailability(string username)
+        public async Task<IHttpActionResult> GetUsernameAvailabilityAsync(string username)
         {
             var usernameAvailable = await this.getUsernameAvailability.HandleAsync(new GetUsernameAvailabilityQuery(username));
             if (usernameAvailable)
