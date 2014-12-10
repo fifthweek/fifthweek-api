@@ -65,3 +65,5 @@ components depend on it.
 
 There is no procedure for when you *absolutely must* implement a breaking change. Just remember there's 15 minutes 
 between builds on Travis CI!
+
+[full-ci-issue]: https://github.com/fifthweek/fifthweek-web/issues/40 "Issue #40: Full Continuous Integration"
