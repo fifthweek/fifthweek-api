@@ -57,7 +57,11 @@ deployed before pushing any dependent components to master. Example:
 #### Breaking changes
 
 Dependencies must not introduce breaking changes. This means older versions of `fifthweek-web` must work with newer 
-versions of `fifthweek-api`.
+versions of `fifthweek-api`. 
+
+This is achieved by introducing changes as additions, whereby existing functionality becomes deprecated instead of being 
+removed or overwritten with incompatible modifications. The deprecated functionality can be removed when no live 
+components depend on it.
 
 There is no procedure for when you *absolutely must* implement a breaking change. Just remember there's 15 minutes 
 between builds on Travis CI!
