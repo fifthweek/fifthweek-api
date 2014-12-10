@@ -41,3 +41,23 @@ The following must succeed locally before any changes are pushed:
     git pull
     grunt pltest
 
+### Cross-repository changes
+
+*Extra care must be taken until we have [full continuous integration][full-ci-issue].*
+
+Components must be deployed in their dependency order. You must wait until a dependency has passed through CI / been 
+deployed before pushing any dependent components to master. Example:
+ 
+> `fifthweek-web` depends on `fifthweek-api`, 
+
+> Let's assume changes are made to API that are required by Web.
+
+> `fifthweek-api` must be pushed *and become live* before pushing `fifthweek-web` to `master`.
+
+#### Breaking changes
+
+Dependencies must not introduce breaking changes. This means older versions of `fifthweek-web` must work with newer 
+versions of `fifthweek-api`.
+
+There is no procedure for when you *absolutely must* implement a breaking change. Just remember there's 15 minutes 
+between builds on Travis CI!
