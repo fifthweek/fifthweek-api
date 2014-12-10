@@ -1,7 +1,10 @@
 ﻿namespace Fifthweek.Api.Providers
 {
+    using System;
     using System.Collections.Generic;
+    using System.Linq;
     using System.Security.Claims;
+    using System.Text.RegularExpressions;
     using System.Threading.Tasks;
 
     using Fifthweek.Api.Entities;
@@ -51,7 +54,9 @@
                 return;
             }
 
-            Helper.SetAccessControlAllowOrigin(context.OwinContext, client.AllowedOrigin);
+            var allowedOrigin = this.GetAllowedOrigin(context, client);
+
+            Helper.SetAccessControlAllowOrigin(context.OwinContext, allowedOrigin);
 
             if (client.ApplicationType == ApplicationType.NativeConfidential)
             {
@@ -76,12 +81,11 @@
                 return;
             }
 
-            context.OwinContext.Set<string>(Constants.TokenAllowedOriginKey, client.AllowedOrigin);
+            context.OwinContext.Set<string>(Constants.TokenAllowedOriginKey, allowedOrigin);
             context.OwinContext.Set<string>(Constants.TokenRefreshTokenLifeTimeKey, client.RefreshTokenLifeTimeMinutes.ToString());
 
             context.Validated();
         }
-
 
         public async Task GrantResourceOwnerCredentialsAsync(OAuthGrantResourceOwnerCredentialsContext context)
         {
@@ -143,6 +147,44 @@
             context.Validated(newTicket);
 
             return Task.FromResult<object>(null);
+        }
+
+        private string GetAllowedOrigin(OAuthValidateClientAuthenticationContext context, Client client)
+        {
+            var allowedOrigin = client.DefaultAllowedOrigin;
+
+            string origin = this.GetOriginFromHeader(context);
+            if (!string.IsNullOrWhiteSpace(origin))
+            {
+                try
+                {
+                    if (Regex.IsMatch(origin, client.AllowedOriginRegex))
+                    {
+                        allowedOrigin = origin;
+                    }
+                    else
+                    {
+                        allowedOrigin = "*"; // TODO: Remove this line once Travis CI origin is determined.
+                        throw new Exception("Unexpected origin: " + origin);
+                    }
+                }
+                catch (Exception t)
+                {
+                    ExceptionHandlerUtilities.ReportExceptionAsync(t);
+                }
+            }
+            return allowedOrigin;
+        }
+
+        private string GetOriginFromHeader(OAuthValidateClientAuthenticationContext context)
+        {
+            string[] origins;
+            if (context.Request.Headers.TryGetValue("Origin", out origins))
+            {
+                return origins.FirstOrDefault();
+            }
+
+            return null;
         }
     }
 }

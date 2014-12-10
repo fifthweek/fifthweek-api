@@ -20,7 +20,7 @@
         {
             var clientRepository = new Mock<IClientRepository>();
 
-            clientRepository.Setup(v => v.TryGetClientAsync(new ClientId("X"))).ReturnsAsync(new Client(new ClientId("X"), null, null, ApplicationType.JavaScript, true, 100, null));
+            clientRepository.Setup(v => v.TryGetClientAsync(new ClientId("X"))).ReturnsAsync(new Client(new ClientId("X"), null, null, ApplicationType.JavaScript, true, 100, null, null));
 
             var handler = new GetClientQueryHandler(clientRepository.Object);
 

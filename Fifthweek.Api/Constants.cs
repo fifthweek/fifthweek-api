@@ -20,7 +20,8 @@
 
         public const string ErrorEmailAddress = "services@fifthweek.com";
 
-        public static readonly string FifthweekWebsiteOrigin = GetWebsiteOrigin();
+        public static readonly string FifthweekWebsiteOriginRegex = GetWebsiteOriginRegex();
+        public static readonly string FifthweekWebsiteOriginDefault = GetWebsiteOriginDefault();
 
         public static readonly MailAddress FifthweekEmailAddress = new MailAddress("hello@fifthweek.com", "Fifthweek");
 
@@ -32,9 +33,14 @@
             ? (IReportingService)new TraceReportingService()
             : (IReportingService)new AggregateReportingService(new TraceReportingService(), new EmailReportingService(DefaultSendEmailService));
 
-        private static string GetWebsiteOrigin()
+        private static string GetWebsiteOriginDefault()
         {
-            return System.Configuration.ConfigurationManager.AppSettings["ACCESS_CONTROL_ALLOW_ORIGIN"];
+            return System.Configuration.ConfigurationManager.AppSettings["ACCESS_CONTROL_ALLOW_ORIGIN_DEFAULT"];
+        }
+
+        private static string GetWebsiteOriginRegex()
+        {
+            return System.Configuration.ConfigurationManager.AppSettings["ACCESS_CONTROL_ALLOW_ORIGIN_REGEX"];
         }
     }
 }

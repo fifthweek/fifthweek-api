@@ -21,7 +21,8 @@
                 ApplicationType.JavaScript,
                 true,
                 (int)TimeSpan.FromDays(365).TotalMinutes,
-                Constants.FifthweekWebsiteOrigin));
+                Constants.FifthweekWebsiteOriginRegex,
+                Constants.FifthweekWebsiteOriginDefault));
         }
 
         public Task<Client> TryGetClientAsync(ClientId clientId)

@@ -6,7 +6,15 @@
 
     public class Client
     {
-        public Client(ClientId clientId, string secret, string name, ApplicationType applicationType, bool active, int refreshTokenLifeTimeMinutes, string allowedOrigin)
+        public Client(
+            ClientId clientId,
+            string secret,
+            string name,
+            ApplicationType applicationType,
+            bool active,
+            int refreshTokenLifeTimeMinutes,
+            string allowedOriginRegex,
+            string defaultAllowedOrigin)
         {
             this.ClientId = clientId;
             this.Secret = secret;
@@ -14,7 +22,8 @@
             this.ApplicationType = applicationType;
             this.Active = active;
             this.RefreshTokenLifeTimeMinutes = refreshTokenLifeTimeMinutes;
-            this.AllowedOrigin = allowedOrigin;
+            this.AllowedOriginRegex = allowedOriginRegex;
+            this.DefaultAllowedOrigin = defaultAllowedOrigin;
         }
 
         public ClientId ClientId { get; private set; }
@@ -29,6 +38,8 @@
 
         public int RefreshTokenLifeTimeMinutes { get; private set; }
 
-        public string AllowedOrigin { get; private set; }
+        public string AllowedOriginRegex { get; private set; }
+
+        public string DefaultAllowedOrigin { get; private set; }
     }
 }
