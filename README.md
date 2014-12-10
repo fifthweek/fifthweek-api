@@ -32,3 +32,12 @@
 Data is stored in `App_Data` and is persisted between builds of the application.
 
 This directory must be manually cleared to reset the database.
+
+## Check-in procedure
+
+The following must succeed locally before any changes are pushed:
+
+    cd ../fifthweek-web
+    git pull
+    grunt pltest
+
