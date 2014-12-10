@@ -1,0 +1,32 @@
+# Set the default behavior, in case people don't have core.autocrlf set.
+* text=auto
+
+*.cs        eol=crlf
+*.resx      eol=crlf
+*.resw      eol=crlf
+*.xsd       eol=crlf
+*.wsdl      eol=crlf
+*.xaml      eol=crlf
+*.xml       eol=crlf
+*.htm       eol=crlf
+*.html      eol=crlf
+*.css       eol=crlf
+*.vb        eol=crlf
+*.aspx      eol=crlf
+*.ascx      eol=crlf
+*.asmx      eol=crlf
+*.svc       eol=crlf
+*.asax      eol=crlf
+*.config    eol=crlf
+*.asp       eol=crlf
+*.asa       eol=crlf
+*.cshtml    eol=crlf
+*.vbhtml    eol=crlf
+*.txt       eol=crlf
+*.sln       eol=crlf
+*.cmd       eol=crlf
+*.bat       eol=crlf
+*.csproj    eol=crlf
+*.vcproj    eol=crlf
+
+*.ico       -text
