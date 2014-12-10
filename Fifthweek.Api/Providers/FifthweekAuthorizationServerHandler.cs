@@ -153,10 +153,10 @@
         {
             var allowedOrigin = client.DefaultAllowedOrigin;
 
-            string origin = this.GetOriginFromHeader(context);
-            if (!string.IsNullOrWhiteSpace(origin))
+            try
             {
-                try
+                string origin = this.GetOriginFromHeader(context);
+                if (!string.IsNullOrWhiteSpace(origin))
                 {
                     if (Regex.IsMatch(origin, client.AllowedOriginRegex))
                     {
@@ -168,11 +168,17 @@
                         throw new Exception("Unexpected origin: " + origin);
                     }
                 }
-                catch (Exception t)
+                else
                 {
-                    ExceptionHandlerUtilities.ReportExceptionAsync(t);
+                    allowedOrigin = "*"; // TODO: Remove this line once Travis CI origin is determined.
+                    throw new Exception("Origin header not found.");
                 }
             }
+            catch (Exception t)
+            {
+                ExceptionHandlerUtilities.ReportExceptionAsync(t);
+            }
+
             return allowedOrigin;
         }
 
