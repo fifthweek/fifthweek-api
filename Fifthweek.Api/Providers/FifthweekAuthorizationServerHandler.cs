@@ -153,11 +153,9 @@
         private string GetAllowedOrigin(OAuthValidateClientAuthenticationContext context, Client client)
         {
             var allowedOrigin = client.DefaultAllowedOrigin;
-            Trace.WriteLine("Default allowed origin: " + allowedOrigin);
             try
             {
                 string origin = this.GetOriginFromHeader(context);
-                Trace.WriteLine("Origin: " + allowedOrigin);
                 if (!string.IsNullOrWhiteSpace(origin))
                 {
                     if (Regex.IsMatch(origin, client.AllowedOriginRegex))
@@ -166,13 +164,11 @@
                     }
                     else
                     {
-                        allowedOrigin = "*"; // TODO: Remove this line once Travis CI origin is determined.
                         throw new Exception("Unexpected origin: " + origin);
                     }
                 }
                 else
                 {
-                    allowedOrigin = "*"; // TODO: Remove this line once Travis CI origin is determined.
                     throw new Exception("Origin header not found.");
                 }
             }
@@ -181,7 +177,6 @@
                 ExceptionHandlerUtilities.ReportExceptionAsync(t);
             }
 
-            Trace.WriteLine("Allowed origin: " + allowedOrigin);
             return allowedOrigin;
         }
 

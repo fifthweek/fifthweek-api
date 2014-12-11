@@ -33,6 +33,18 @@ Data is stored in `App_Data` and is persisted between builds of the application.
 
 This directory must be manually cleared to reset the database.
 
+## Trace Logging on Azure
+
+The trace log can be viewed via the Kudu interface for the relevant project, or using curl.
+
+For example, you can use curl to connect to the fifthweek-api project as follows:
+
+    curl -u [AZURE_ADMIN_USERNAME] https://fifthweek-api.scm.azurewebsites.net/logstream -k
+
+Azure enables tracing when you connect, and disables it after 30 minutes.  You may need to check
+the Azure portal to set the logging level you require.
+
+
 ## Check-in procedure
 
 The following must succeed locally before any changes are pushed:
