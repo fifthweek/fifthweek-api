@@ -45,7 +45,7 @@ namespace Fifthweek.Api.CommandHandlers
 
             if (!result.Succeeded)
             {
-                var errorMessage = "Failed to create user: " + user;
+                var errorMessage = "Failed to create user: " + user.UserName;
                 if (result.Errors == null)
                 {
                     throw new Exception(errorMessage);
