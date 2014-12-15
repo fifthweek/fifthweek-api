@@ -83,6 +83,7 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Data" />
     <Reference Include="System.Net.Http" />
     <Reference Include="System.Net.Http.Extensions">
       <HintPath>..\packages\Microsoft.Net.Http.2.1.10\lib\net45\System.Net.Http.Extensions.dll</HintPath>
@@ -99,6 +100,7 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\Microsoft.AspNet.WebApi.Core.5.2.2\lib\net45\System.Web.Http.dll</HintPath>
     </Reference>
+    <Reference Include="System.Xml" />
   </ItemGroup>
   <Choose>
     <When Condition="('$(VisualStudioVersion)' == '10.0' or '$(VisualStudioVersion)' == '') and '$(TargetFrameworkVersion)' == 'v3.5'">
@@ -115,9 +117,11 @@
   <ItemGroup>
     <Compile Include="AutofacConfigTests.cs" />
     <Compile Include="CommandHandlers\AddRefreshTokenCommandHandlerTests.cs" />
+    <Compile Include="MockIdentityResult.cs" />
     <Compile Include="CommandHandlers\RegisterUserCommandHandlerTests.cs" />
     <Compile Include="CommandHandlers\RemoveRefreshTokenCommandHandlerTests.cs" />
     <Compile Include="CommandHandlers\SaveChangesCommandHandlerTests.cs" />
+    <Compile Include="CommandHandlers\UpdateLastAccessTokenDateCommandHandlerTests.cs" />
     <Compile Include="Commands\RegisterUserCommandTest.cs" />
     <Compile Include="Controllers\MembershipControllerTests.cs" />
     <Compile Include="Models\RegistrationDataTests.cs" />

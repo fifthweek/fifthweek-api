@@ -6,6 +6,7 @@ using Microsoft.AspNet.Identity.EntityFramework;
 
 namespace Fifthweek.Api.CommandHandlers
 {
+    using System.Data.SqlTypes;
     using System.Threading.Tasks;
 
     using Fifthweek.Api.Commands;
@@ -38,20 +39,17 @@ namespace Fifthweek.Api.CommandHandlers
             {
                 UserName = command.RegistrationData.Username,
                 Email = command.RegistrationData.Email,
-                ExampleWork = command.RegistrationData.ExampleWork
+                ExampleWork = command.RegistrationData.ExampleWork,
+                RegistrationDate = DateTime.UtcNow,
+                LastSignInDate = SqlDateTime.MinValue.Value,
+                LastAccessTokenDate = SqlDateTime.MinValue.Value,
             };
 
             var result = await this.userManager.CreateAsync(user, command.RegistrationData.Password);
 
             if (!result.Succeeded)
             {
-                var errorMessage = "Failed to create user: " + user.UserName;
-                if (result.Errors == null)
-                {
-                    throw new Exception(errorMessage);
-                }
-
-                throw new AggregateException(errorMessage, result.Errors.Select(v => new Exception(v)));
+                throw new AggregateException("Failed to create user: " + user.UserName, result.Errors.Select(v => new Exception(v)));
             }
         }
     }

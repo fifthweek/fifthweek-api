@@ -168,6 +168,7 @@
     <Compile Include="CommandHandlers\RemoveRefreshTokenCommandHandler.cs" />
     <Compile Include="CommandHandlers\SaveChangesCommandHandler.cs" />
     <Compile Include="CommandHandlers\TransactionCommandHandlerDecorator.cs" />
+    <Compile Include="CommandHandlers\UpdateLastAccessTokenDateCommandHandler.cs" />
     <Compile Include="CommandHandlers\ValidationCommandHandlerDecorator.cs" />
     <Compile Include="App_Start\LogRequestModule.cs" />
     <Compile Include="Commands\AddRefreshTokenCommand.cs" />
@@ -175,6 +176,7 @@
     <Compile Include="Commands\RegisterUserCommand.cs" />
     <Compile Include="Commands\RemoveRefreshTokenCommand.cs" />
     <Compile Include="Commands\SaveChangesCommand.cs" />
+    <Compile Include="Commands\UpdateLastAccessTokenDateCommand.cs" />
     <Compile Include="ConvertExceptionsToResponsesAttribute.cs" />
     <Compile Include="Entities\ApplicationUser.cs" />
     <Compile Include="Entities\FifthweekClaimTypes.cs" />
@@ -187,6 +189,10 @@
     <Compile Include="Migrations\201412061138102_AddExampleWork.cs" />
     <Compile Include="Migrations\201412061138102_AddExampleWork.Designer.cs">
       <DependentUpon>201412061138102_AddExampleWork.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201412151012583_AddApplicationUserTimestamps.cs" />
+    <Compile Include="Migrations\201412151012583_AddApplicationUserTimestamps.Designer.cs">
+      <DependentUpon>201412151012583_AddApplicationUserTimestamps.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\ClientId.cs" />
@@ -262,6 +268,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201412061138102_AddExampleWork.resx">
       <DependentUpon>201412061138102_AddExampleWork.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201412151012583_AddApplicationUserTimestamps.resx">
+      <DependentUpon>201412151012583_AddApplicationUserTimestamps.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

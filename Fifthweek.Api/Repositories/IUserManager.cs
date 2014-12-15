@@ -14,6 +14,8 @@ namespace Fifthweek.Api.Repositories
         Task<ApplicationUser> FindByEmailAsync(string email);
 
         Task<ApplicationUser> FindByNameAsync(string userName);
+
+        Task<IdentityResult> UpdateAsync(ApplicationUser user);
     }
 
     public class UserManagerImpl : IUserManager
@@ -48,6 +50,11 @@ namespace Fifthweek.Api.Repositories
         public Task<ApplicationUser> FindByNameAsync(string userName)
         {
             return this.userManager.FindByNameAsync(userName);
+        }
+
+        public Task<IdentityResult> UpdateAsync(ApplicationUser user)
+        {
+            return this.userManager.UpdateAsync(user);
         }
     }
 }

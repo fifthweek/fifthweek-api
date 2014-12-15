@@ -60,7 +60,7 @@ namespace Fifthweek.Api
                 new UserManagerImpl(
                 new UserManager<ApplicationUser>(
                     new UserStore<ApplicationUser>((FifthweekDbContext)c.Resolve<IFifthweekDbContext>()))))
-                    .As<IUserManager>();
+                    .As<IUserManager>().InstancePerRequest();
 
             builder.RegisterInstance(Constants.DefaultSendEmailService).As<ISendEmailService>().SingleInstance();
             builder.RegisterInstance(Constants.DefaultReportingService).As<IReportingService>().SingleInstance();

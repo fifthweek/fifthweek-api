@@ -3,6 +3,8 @@
     using System;
     using System.Web.Http.Dependencies;
 
+    using Fifthweek.Api.CommandHandlers;
+
     public static class Extensions
     {
         public static TResult GetService<TResult>(this IDependencyResolver resolver)

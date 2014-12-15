@@ -1,6 +1,7 @@
 ﻿namespace Fifthweek.Api.Tests.CommandHandlers
 {
     using System;
+    using System.Data.SqlTypes;
     using System.Linq;
     using System.Threading.Tasks;
 
@@ -10,7 +11,6 @@
     using Fifthweek.Api.Models;
     using Fifthweek.Api.Repositories;
 
-    using Microsoft.AspNet.Identity;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
 
     using Moq;
@@ -95,7 +95,9 @@
             Assert.IsNotNull(applicationUser);
             Assert.AreEqual(this.registrationData.Email, applicationUser.Email);
             Assert.AreEqual(this.registrationData.Username, applicationUser.UserName);
-            Assert.AreEqual(this.registrationData.ExampleWork, applicationUser.ExampleWork);
+            Assert.AreNotEqual(DateTime.MinValue, applicationUser.RegistrationDate);
+            Assert.AreEqual(SqlDateTime.MinValue.Value, applicationUser.LastSignInDate);
+            Assert.AreEqual(SqlDateTime.MinValue.Value, applicationUser.LastAccessTokenDate);
         }
 
         [TestMethod]
@@ -126,22 +128,6 @@
             Assert.AreEqual(2, ae.InnerExceptions.Count);
             Assert.IsTrue(ae.InnerExceptions.Any(v => v.Message == "One"));
             Assert.IsTrue(ae.InnerExceptions.Any(v => v.Message == "Two"));
-        }
-
-        /// <summary>
-        /// This is required as the constructor for IdentityResult that indicates success is protected.
-        /// </summary>
-        private class MockIdentityResult : IdentityResult
-        {
-            public MockIdentityResult()
-                : base(true)
-            {
-            }
-
-            public MockIdentityResult(params string[] errors)
-                : base(errors)
-            {
-            }
         }
     }
 }

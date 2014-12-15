@@ -8,6 +8,8 @@
     using System.Text.RegularExpressions;
     using System.Threading.Tasks;
 
+    using Fifthweek.Api.CommandHandlers;
+    using Fifthweek.Api.Commands;
     using Fifthweek.Api.Entities;
     using Fifthweek.Api.Models;
     using Fifthweek.Api.Queries;
@@ -21,12 +23,16 @@
 
         private readonly IQueryHandler<GetUserQuery, ApplicationUser> getUser;
 
+        private readonly ICommandHandler<UpdateLastAccessTokenDateCommand> updateLastAccessTokenDate;
+
         public FifthweekAuthorizationServerHandler(
             IQueryHandler<GetClientQuery, Client> getClient,
-            IQueryHandler<GetUserQuery, ApplicationUser> getUser)
+            IQueryHandler<GetUserQuery, ApplicationUser> getUser,
+            ICommandHandler<UpdateLastAccessTokenDateCommand> updateLastAccessTokenDate)
         {
             this.getClient = getClient;
             this.getUser = getUser;
+            this.updateLastAccessTokenDate = updateLastAccessTokenDate;
         }
 
         public async Task ValidateClientAuthenticationAsync(OAuthValidateClientAuthenticationContext context)
@@ -101,6 +107,9 @@
                 return;
             }
 
+            await this.updateLastAccessTokenDate.HandleAsync(
+                new UpdateLastAccessTokenDateCommand(context.UserName, DateTime.UtcNow, UpdateLastAccessTokenDateCommand.AccessTokenCreationType.SignIn));
+
             var identity = new ClaimsIdentity(context.Options.AuthenticationType);
             identity.AddClaim(new Claim(ClaimTypes.Name, context.UserName));
             identity.AddClaim(new Claim("sub", context.UserName));
@@ -130,7 +139,7 @@
             return Task.FromResult<object>(null);
         }
 
-        public Task GrantRefreshTokenAsync(OAuthGrantRefreshTokenContext context)
+        public async Task GrantRefreshTokenAsync(OAuthGrantRefreshTokenContext context)
         {
             var originalClient = context.Ticket.Properties.Dictionary[Constants.TokenClientIdKey];
             var currentClient = context.ClientId;
@@ -138,16 +147,17 @@
             if (originalClient != currentClient)
             {
                 context.SetError("invalid_clientId", "Refresh token is issued to a different clientId.");
-                return Task.FromResult<object>(null);
+                return;
             }
+
+            await this.updateLastAccessTokenDate.HandleAsync(
+                new UpdateLastAccessTokenDateCommand(context.Ticket.Identity.Name, DateTime.UtcNow, UpdateLastAccessTokenDateCommand.AccessTokenCreationType.RefreshToken));
 
             var newIdentity = new ClaimsIdentity(context.Ticket.Identity);
             ////newIdentity.AddClaim(new Claim("newClaim", "newValue"));
 
             var newTicket = new AuthenticationTicket(newIdentity, context.Ticket.Properties);
             context.Validated(newTicket);
-
-            return Task.FromResult<object>(null);
         }
 
         private string GetAllowedOrigin(OAuthValidateClientAuthenticationContext context, Client client)
