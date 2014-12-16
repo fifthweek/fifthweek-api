@@ -190,6 +190,7 @@
     <Compile Include="Commands\RemoveRefreshTokenCommand.cs" />
     <Compile Include="Commands\SaveChangesCommand.cs" />
     <Compile Include="Commands\UpdateLastAccessTokenDateCommand.cs" />
+    <Compile Include="Controllers\AvailabilityController.cs" />
     <Compile Include="ConvertExceptionsToResponsesAttribute.cs" />
     <Compile Include="Entities\ApplicationUser.cs" />
     <Compile Include="Entities\FifthweekClaimTypes.cs" />
@@ -208,6 +209,7 @@
       <DependentUpon>201412151012583_AddApplicationUserTimestamps.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
+    <Compile Include="Models\AvailabilityResult.cs" />
     <Compile Include="Models\ClientId.cs" />
     <Compile Include="Models\HashedRefreshTokenId.cs" />
     <Compile Include="Models\RefreshTokenId.cs" />
@@ -217,12 +219,14 @@
     <Compile Include="Providers\IFifthweekAuthorizationServerHandler.cs" />
     <Compile Include="Providers\IFifthweekRefreshTokenHandler.cs" />
     <Compile Include="Providers\ProviderErrorHandler.cs" />
+    <Compile Include="Queries\GetAvailabilityQuery.cs" />
     <Compile Include="Queries\GetClientQuery.cs" />
     <Compile Include="Queries\GetRefreshTokenQuery.cs" />
     <Compile Include="Queries\GetUsernameAvailabilityQuery.cs" />
     <Compile Include="Queries\GetUserQuery.cs" />
     <Compile Include="Queries\IQuery.cs" />
     <Compile Include="Queries\NullQuery.cs" />
+    <Compile Include="QueryHandlers\GetAvailabilityQueryHandler.cs" />
     <Compile Include="QueryHandlers\GetClientQueryHandler.cs" />
     <Compile Include="QueryHandlers\GetRefreshTokenQueryHandler.cs" />
     <Compile Include="QueryHandlers\GetUsernameAvailabilityQueryHandler.cs" />
