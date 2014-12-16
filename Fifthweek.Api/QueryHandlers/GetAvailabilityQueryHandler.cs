@@ -32,7 +32,7 @@
                 ExceptionHandlerUtilities.ReportExceptionAsync(t);
             }
 
-            return new AvailabilityResult(true, false);
+            return new AvailabilityResult(true, database);
         }
     }
 }
