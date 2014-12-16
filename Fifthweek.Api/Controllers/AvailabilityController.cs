@@ -27,9 +27,26 @@ namespace Fifthweek.Api.Controllers
         [RequireHttps]
         [ConvertExceptionsToResponses]
         [AllowAnonymous]
-        public Task<AvailabilityResult> Get()
+        public async Task<HttpResponseMessage> Get()
         {
-            return this.getAvailability.HandleAsync(new GetAvailabilityQuery());
+            var result = await this.getAvailability.HandleAsync(new GetAvailabilityQuery());
+            
+            if (!result.IsOk())
+            {
+                return this.Request.CreateResponse(HttpStatusCode.ServiceUnavailable, result);
+            }
+
+            return this.Request.CreateResponse(result);
+        }
+
+        // GET: availability
+        [RequireHttps]
+        [ConvertExceptionsToResponses]
+        [AllowAnonymous]
+        [AcceptVerbs("HEAD")]
+        public Task<HttpResponseMessage> Head()
+        {
+            return this.Get();
         }
     }
 }
