@@ -30,8 +30,8 @@
 
         // This is used for reporting errors, as we can't rely on AutoFac being in a good state.
         public static readonly IReportingService DefaultReportingService = System.Diagnostics.Debugger.IsAttached 
-            ? (IReportingService)new TraceReportingService()
-            : (IReportingService)new AggregateReportingService(new TraceReportingService(), new EmailReportingService(DefaultSendEmailService));
+            ? (IReportingService)new AggregateReportingService(new TraceReportingService())
+            : (IReportingService)new AggregateReportingService(new TraceReportingService(), new EmailReportingService(DefaultSendEmailService), new SlackReportingService());
 
         private static string GetWebsiteOriginDefault()
         {

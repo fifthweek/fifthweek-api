@@ -196,6 +196,7 @@
     <Compile Include="Entities\ApplicationUser.cs" />
     <Compile Include="Entities\FifthweekClaimTypes.cs" />
     <Compile Include="Extensions.cs" />
+    <Compile Include="ExternalErrorException.cs" />
     <Compile Include="IUserInputNormalization.cs" />
     <Compile Include="Migrations\201412041523081_InitialCreate.cs" />
     <Compile Include="Migrations\201412041523081_InitialCreate.Designer.cs">
@@ -265,6 +266,7 @@
     <Compile Include="Services\ISendEmailService.cs" />
     <Compile Include="Services\ITraceService.cs" />
     <Compile Include="Services\SendGridEmailService.cs" />
+    <Compile Include="Services\SlackReportingService.cs" />
     <Compile Include="Services\TraceReportingService.cs" />
     <Compile Include="Services\TraceService.cs" />
     <Compile Include="Startup.cs" />

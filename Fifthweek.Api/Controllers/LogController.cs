@@ -66,7 +66,7 @@
 
                 if (level == TraceLevel.Error)
                 {
-                    this.exceptionHandler.ReportExceptionAsync(new Exception(logMessage.Payload.ToString()));
+                    this.exceptionHandler.ReportExceptionAsync(new ExternalErrorException(logMessage.Payload.ToString()));
                 }
                 else
                 {
