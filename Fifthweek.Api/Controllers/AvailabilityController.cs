@@ -39,7 +39,7 @@ namespace Fifthweek.Api.Controllers
             return this.Request.CreateResponse(result);
         }
 
-        // GET: availability
+        // HEAD: availability
         [RequireHttps]
         [ConvertExceptionsToResponses]
         [AllowAnonymous]

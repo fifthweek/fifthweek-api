@@ -62,6 +62,8 @@ namespace Fifthweek.Api
                     new UserStore<ApplicationUser>((FifthweekDbContext)c.Resolve<IFifthweekDbContext>()))))
                     .As<IUserManager>().InstancePerRequest();
 
+            builder.RegisterType<TraceService>().As<ITraceService>().SingleInstance();
+            builder.RegisterType<ExceptionHandler>().As<IExceptionHandler>().SingleInstance();
             builder.RegisterInstance(Constants.DefaultSendEmailService).As<ISendEmailService>().SingleInstance();
             builder.RegisterInstance(Constants.DefaultReportingService).As<IReportingService>().SingleInstance();
 

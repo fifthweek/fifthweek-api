@@ -8,8 +8,8 @@
     {
         public Task ReportErrorAsync(Exception t, string identifier)
         {
-            Trace.WriteLine("Error Identifier: " + identifier);
-            Trace.WriteLine(t.ToString());
+            Trace.TraceError("Error Identifier: " + identifier);
+            Trace.TraceError(t.ToString());
             return Task.FromResult(false);
         }
     }

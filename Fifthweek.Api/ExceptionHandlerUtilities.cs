@@ -4,6 +4,7 @@
     using System.Net;
     using System.Net.Http;
     using System.Threading.Tasks;
+    using System.Web.Hosting;
     using System.Web.Http.Controllers;
     using System.Web.Http.Filters;
 
@@ -27,7 +28,7 @@
             }
             catch (Exception t)
             {
-                System.Diagnostics.Trace.WriteLine("Failed to report errors: " + t);
+                System.Diagnostics.Trace.TraceError("Failed to report errors: " + t);
 
                 return request.CreateErrorResponse(
                         HttpStatusCode.InternalServerError,
@@ -70,12 +71,12 @@
             }
             catch (Exception t)
             {
-                System.Diagnostics.Trace.WriteLine("Failed to report errors: " + t);
+                System.Diagnostics.Trace.TraceError("Failed to report errors: " + t);
                 context.SetError("internal_error", "An error occured and could not be reported: " + identifier);
             }
         }
 
-        public static async void ReportExceptionAsync(Exception exception)
+        public static void ReportExceptionAsync(Exception exception)
         {
             try
             {
@@ -84,11 +85,11 @@
                 var reportingService = Constants.DefaultReportingService;
                 var identifier = exception.GetExceptionIdentifier();
 
-                await reportingService.ReportErrorAsync(exception, identifier);
+                HostingEnvironment.QueueBackgroundWorkItem(ct => reportingService.ReportErrorAsync(exception, identifier));
             }
             catch (Exception t)
             {
-                System.Diagnostics.Trace.WriteLine("Failed to report errors: " + t);
+                System.Diagnostics.Trace.TraceError("Failed to report errors: " + t);
             }
         }
     }

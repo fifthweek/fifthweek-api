@@ -13,12 +13,13 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Fifthweek.Api</RootNamespace>
     <AssemblyName>Fifthweek.Api</AssemblyName>
-    <TargetFrameworkVersion>v4.5.1</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <UseIISExpress>true</UseIISExpress>
     <IISExpressSSLPort>44301</IISExpressSSLPort>
     <IISExpressAnonymousAuthentication />
     <IISExpressWindowsAuthentication />
     <IISExpressUseClassicPipelineMode />
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -112,6 +113,7 @@
     <Reference Include="SendGridMail">
       <HintPath>..\packages\Sendgrid.5.0.0\lib\SendGridMail.dll</HintPath>
     </Reference>
+    <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="System.Net.Http" />
     <Reference Include="System.Net.Http.Formatting, Version=5.2.2.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -128,8 +130,6 @@
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System" />
     <Reference Include="System.Data" />
-    <Reference Include="System.Core" />
-    <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="System.Web.Extensions" />
     <Reference Include="System.Web.Http, Version=5.2.2.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -143,13 +143,13 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\Microsoft.AspNet.WebApi.WebHost.5.2.2\lib\net45\System.Web.Http.WebHost.dll</HintPath>
     </Reference>
-    <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Web" />
     <Reference Include="System.Xml" />
     <Reference Include="System.Configuration" />
     <Reference Include="System.Web.Services" />
     <Reference Include="System.EnterpriseServices" />
+    <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="newrelic\extensions\CoreInstrumentation.xml" />
@@ -191,6 +191,7 @@
     <Compile Include="Commands\SaveChangesCommand.cs" />
     <Compile Include="Commands\UpdateLastAccessTokenDateCommand.cs" />
     <Compile Include="Controllers\AvailabilityController.cs" />
+    <Compile Include="Controllers\LogController.cs" />
     <Compile Include="ConvertExceptionsToResponsesAttribute.cs" />
     <Compile Include="Entities\ApplicationUser.cs" />
     <Compile Include="Entities\FifthweekClaimTypes.cs" />
@@ -210,6 +211,7 @@
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AvailabilityResult.cs" />
+    <Compile Include="Models\BrowserLogMessage.cs" />
     <Compile Include="Models\ClientId.cs" />
     <Compile Include="Models\HashedRefreshTokenId.cs" />
     <Compile Include="Models\RefreshTokenId.cs" />
@@ -257,10 +259,14 @@
     <Compile Include="Results\ChallengeResult.cs" />
     <Compile Include="Services\AggregateReportingService.cs" />
     <Compile Include="Services\EmailReportingService.cs" />
+    <Compile Include="Services\ExceptionHandler.cs" />
+    <Compile Include="Services\IExceptionHandler.cs" />
     <Compile Include="Services\IReportingService.cs" />
     <Compile Include="Services\ISendEmailService.cs" />
+    <Compile Include="Services\ITraceService.cs" />
     <Compile Include="Services\SendGridEmailService.cs" />
     <Compile Include="Services\TraceReportingService.cs" />
+    <Compile Include="Services\TraceService.cs" />
     <Compile Include="Startup.cs" />
     <Compile Include="UserInputNormalization.cs" />
     <Compile Include="ValidateModelAttribute.cs" />

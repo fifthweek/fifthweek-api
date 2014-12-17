@@ -8,7 +8,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Fifthweek.Api.Tests</RootNamespace>
     <AssemblyName>Fifthweek.Api.Tests</AssemblyName>
-    <TargetFrameworkVersion>v4.5.1</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{3AC096D0-A1C2-E12C-1390-A8335801FDAB};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
@@ -118,6 +118,7 @@
     <Compile Include="AutofacConfigTests.cs" />
     <Compile Include="CommandHandlers\AddRefreshTokenCommandHandlerTests.cs" />
     <Compile Include="Controllers\AvailabilityControllerTests.cs" />
+    <Compile Include="Controllers\LogControllerTests.cs" />
     <Compile Include="MockIdentityResult.cs" />
     <Compile Include="CommandHandlers\RegisterUserCommandHandlerTests.cs" />
     <Compile Include="CommandHandlers\RemoveRefreshTokenCommandHandlerTests.cs" />
