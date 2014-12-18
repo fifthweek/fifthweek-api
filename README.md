@@ -51,7 +51,7 @@ The following must succeed locally before any changes are pushed:
 
     cd ../fifthweek-web
     git pull
-    grunt pltest
+    grunt test:local:dist
 
 ### Cross-repository changes
 
