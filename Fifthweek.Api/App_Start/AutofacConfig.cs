@@ -64,6 +64,7 @@ namespace Fifthweek.Api
 
             builder.RegisterType<TraceService>().As<ITraceService>().SingleInstance();
             builder.RegisterType<ExceptionHandler>().As<IExceptionHandler>().SingleInstance();
+            builder.RegisterInstance(Constants.DefaultDeveloperRepository).As<IDeveloperRepository>().SingleInstance();
             builder.RegisterInstance(Constants.DefaultSendEmailService).As<ISendEmailService>().SingleInstance();
             builder.RegisterInstance(Constants.DefaultReportingService).As<IReportingService>().SingleInstance();
 

@@ -3,10 +3,15 @@
     using System;
     using System.Net;
     using System.Net.Http;
+    using System.Threading;
     using System.Threading.Tasks;
+    using System.Web;
     using System.Web.Hosting;
     using System.Web.Http.Controllers;
     using System.Web.Http.Filters;
+
+    using Fifthweek.Api.Models;
+    using Fifthweek.Api.Services;
 
     using Microsoft.Owin.Security.OAuth;
 
@@ -21,10 +26,10 @@
             {
                 // I don't want to use Autofac here as it may be the dependency resolution
                 // causing the error.
-                var reportingService = Constants.DefaultReportingService;
+                var developer = await Constants.DefaultDeveloperRepository.TryGetByGitNameAsync(GetDeveloperName());
                 identifier = exception.GetExceptionIdentifier();
 
-                await reportingService.ReportErrorAsync(exception, identifier);
+                await Constants.DefaultReportingService.ReportErrorAsync(exception, identifier, developer);
             }
             catch (Exception t)
             {
@@ -63,10 +68,10 @@
             {
                 // I don't want to use Autofac here as it may be the dependency resolution
                 // causing the error.
-                var reportingService = Constants.DefaultReportingService;
+                var developer = await Constants.DefaultDeveloperRepository.TryGetByGitNameAsync(GetDeveloperName());
                 identifier = exception.GetExceptionIdentifier();
 
-                await reportingService.ReportErrorAsync(exception, identifier);
+                await Constants.DefaultReportingService.ReportErrorAsync(exception, identifier, developer);
                 context.SetError("internal_error", "Something went wrong: " + identifier);
             }
             catch (Exception t)
@@ -80,17 +85,33 @@
         {
             try
             {
-                // I don't want to use Autofac here as it may be the dependency resolution
-                // causing the error.
-                var reportingService = Constants.DefaultReportingService;
+                var developerName = GetDeveloperName();
                 var identifier = exception.GetExceptionIdentifier();
 
-                HostingEnvironment.QueueBackgroundWorkItem(ct => reportingService.ReportErrorAsync(exception, identifier));
+                HostingEnvironment.QueueBackgroundWorkItem(ct => ReportErrorInBackground(developerName, exception, identifier));
             }
             catch (Exception t)
             {
                 System.Diagnostics.Trace.TraceError("Failed to report errors: " + t);
             }
+        }
+
+        private static async Task ReportErrorInBackground(string developerName, Exception exception, string exceptionIdentifier)
+        {
+            // I don't want to use Autofac here as it may be the dependency resolution
+            // causing the error.
+            var developer = await Constants.DefaultDeveloperRepository.TryGetByGitNameAsync(developerName);
+            await Constants.DefaultReportingService.ReportErrorAsync(exception, exceptionIdentifier, developer);
+        }
+
+        private static string GetDeveloperName()
+        {
+            if (HttpContext.Current != null)
+            {
+                return HttpContext.Current.Request.Headers[Constants.DeveloperNameRequestHeaderKey];
+            }
+
+            return null;
         }
     }
 }

@@ -44,6 +44,7 @@
                 switch (logMessage.Level.ToLower())
                 {
                     case "verbose":
+                    case "debug":
                         level = TraceLevel.Verbose;
                         break;
 

@@ -2,6 +2,7 @@
 {
     using System.Net.Mail;
 
+    using Fifthweek.Api.Repositories;
     using Fifthweek.Api.Services;
 
     public static class Constants
@@ -20,10 +21,15 @@
 
         public const string ErrorEmailAddress = "services@fifthweek.com";
 
+        public const string DeveloperNameRequestHeaderKey = "Developer-Name";
+
         public static readonly string FifthweekWebsiteOriginRegex = GetWebsiteOriginRegex();
         public static readonly string FifthweekWebsiteOriginDefault = GetWebsiteOriginDefault();
 
         public static readonly MailAddress FifthweekEmailAddress = new MailAddress("hello@fifthweek.com", "Fifthweek");
+
+        // This is used for reporting errors, as we can't rely on AutoFac being in a good state.
+        public static readonly IDeveloperRepository DefaultDeveloperRepository = new DeveloperRepository();
 
         // This is used for reporting errors, as we can't rely on AutoFac being in a good state.
         public static readonly ISendEmailService DefaultSendEmailService = new SendGridEmailService();

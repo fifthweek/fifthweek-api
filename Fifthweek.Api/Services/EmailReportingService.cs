@@ -3,6 +3,8 @@
     using System;
     using System.Threading.Tasks;
 
+    using Fifthweek.Api.Models;
+
     public class EmailReportingService : IReportingService
     {
         private readonly ISendEmailService sendEmailService;
@@ -12,10 +14,10 @@
             this.sendEmailService = sendEmailService;
         }
 
-        public Task ReportErrorAsync(Exception t, string identifier)
+        public Task ReportErrorAsync(Exception t, string identifier, Developer developer)
         {
             return this.sendEmailService.SendEmailAsync(
-                Constants.ErrorEmailAddress,
+                developer == null ? Constants.ErrorEmailAddress : developer.FifthweekEmail,
                 "An error occured: " + identifier,
                 t.ToString());
         }

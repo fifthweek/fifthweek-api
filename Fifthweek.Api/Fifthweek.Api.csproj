@@ -214,6 +214,7 @@
     <Compile Include="Models\AvailabilityResult.cs" />
     <Compile Include="Models\BrowserLogMessage.cs" />
     <Compile Include="Models\ClientId.cs" />
+    <Compile Include="Models\Developer.cs" />
     <Compile Include="Models\HashedRefreshTokenId.cs" />
     <Compile Include="Models\RefreshTokenId.cs" />
     <Compile Include="ModelValidationException.cs" />
@@ -249,8 +250,10 @@
     <Compile Include="Providers\FifthweekAuthorizationServerProvider.cs" />
     <Compile Include="Providers\FifthweekRefreshTokenProvider.cs" />
     <Compile Include="Repositories\ClientRepository.cs" />
+    <Compile Include="Repositories\DeveloperRepository.cs" />
     <Compile Include="Repositories\FifthweekDbContext.cs" />
     <Compile Include="Repositories\IClientRepository.cs" />
+    <Compile Include="Repositories\IDeveloperRepository.cs" />
     <Compile Include="Repositories\IRefreshTokenRepository.cs" />
     <Compile Include="Repositories\IUserManager.cs" />
     <Compile Include="Repositories\RefreshTokenRepository.cs" />

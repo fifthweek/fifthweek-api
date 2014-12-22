@@ -6,12 +6,15 @@
     using System.Net.Http.Headers;
     using System.Text;
     using System.Threading.Tasks;
+    using System.Web;
+
+    using Fifthweek.Api.Models;
 
     using Newtonsoft.Json;
 
     public class SlackReportingService : IReportingService
     {
-        public async Task ReportErrorAsync(Exception exception, string identifier)
+        public async Task ReportErrorAsync(Exception exception, string identifier, Developer developer)
         {
             var client = new HttpClient();
             var uri = "https://hooks.slack.com/services/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";
@@ -21,18 +24,20 @@
             {
                 sb.AppendLine("An error was reported via the Fifthweek API:");
                 sb.Append("```");
-                sb.Append(exception.Message);
+                sb.Append(TruncateError(exception.Message));
                 sb.Append("```");
             }
             else
             {
                 sb.AppendLine("An exception occured:");
                 sb.Append("```");
-                sb.Append(exception.ToString());
+                sb.Append(TruncateError(exception.ToString()));
                 sb.Append("```");
             }
 
-            var content = new SlackContent(sb.ToString().Replace("\r", string.Empty));
+            var content = new SlackContent(
+                sb.ToString().Replace("\r", string.Empty),
+                developer == null ? null : "@" + developer.SlackName);
             
             var response = await client.PostAsync(uri, content, new JsonMediaTypeFormatter());
 
@@ -43,15 +48,30 @@
             }
         }
 
+        private static string TruncateError(string errorString)
+        {
+            const int MaxLength = 4000;
+            if (errorString.Length > MaxLength)
+            {
+                errorString = errorString.Substring(0, MaxLength) + " [Truncated]";
+            }
+
+            return errorString;
+        }
+
         private class SlackContent
         {
-            public SlackContent(string text)
+            public SlackContent(string text, string channel)
             {
                 this.Text = text;
+                this.Channel = channel;
             }
 
             [JsonProperty("text")]
             public string Text { get; private set; }
+
+            [JsonProperty("channel", DefaultValueHandling = DefaultValueHandling.Ignore)]
+            public string Channel { get; private set; }
         }
     }
 }
