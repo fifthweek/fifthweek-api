@@ -16,6 +16,11 @@
     {
         public async Task ReportErrorAsync(Exception exception, string identifier, Developer developer)
         {
+            if (developer != null && string.IsNullOrWhiteSpace(developer.SlackName))
+            {
+                return;
+            }
+
             var client = new HttpClient();
             var uri = "https://hooks.slack.com/services/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";
 

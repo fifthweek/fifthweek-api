@@ -16,6 +16,11 @@
 
         public Task ReportErrorAsync(Exception t, string identifier, Developer developer)
         {
+            if (developer != null && string.IsNullOrWhiteSpace(developer.FifthweekEmail))
+            {
+                return Task.FromResult(true);
+            }
+
             return this.sendEmailService.SendEmailAsync(
                 developer == null ? Constants.ErrorEmailAddress : developer.FifthweekEmail,
                 "An error occured: " + identifier,

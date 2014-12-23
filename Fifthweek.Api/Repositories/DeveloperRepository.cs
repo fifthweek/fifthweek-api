@@ -14,9 +14,9 @@
         {
             var developers = new List<Developer> 
             {
-                new Developer("James Thurley", "james", "james@fifthweek.com"),
-                new Developer("Lawrence Wagerfield", "lawrence", "lawrence@fifthweek.com"),
-                new Developer("ttbarnes", "tony", "tony@tonybarnes.me"),
+                new Developer("James Thurley", "james", "james+devapierror@fifthweek.com"),
+                new Developer("Lawrence Wagerfield", "lawrence", "lawrence+devapierror@fifthweek.com"),
+                new Developer("ttbarnes", null, "tony@tonybarnes.me"), // Tony doesn't want slack notifications.
             };
 
             this.developersByGitName = developers.ToDictionary(v => v.GitName);
