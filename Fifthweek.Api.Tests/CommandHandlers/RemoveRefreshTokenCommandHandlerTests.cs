@@ -17,53 +17,21 @@
     public class RemoveRefreshTokenCommandHandlerTests
     {
         [TestMethod]
-        public async Task ItShouldRemoveTheRefreshTokenAndSave()
+        public async Task ItShouldRemoveTheRefreshToken()
         {
-            var refreshTokenRepository = new Mock<IRefreshTokenRepository>();
-            var saveChanges = new Mock<ICommandHandler<SaveChangesCommand>>();
+            var command = new RemoveRefreshTokenCommand(new HashedRefreshTokenId("ABC"));
 
-            refreshTokenRepository.Setup(v => v.TryGetRefreshTokenAsync(It.IsAny<string>()))
-                .ReturnsAsync(new RefreshToken());
+            var refreshTokenRepository = new Mock<IRefreshTokenRepository>();
+
+            refreshTokenRepository.Setup(v => v.RemoveRefreshToken(command.HashedRefreshTokenId.Value))
+                .Returns(Task.FromResult(0)).Verifiable();
 
             var handler = new RemoveRefreshTokenCommandHandler(
-                refreshTokenRepository.Object,
-                saveChanges.Object);
+                refreshTokenRepository.Object);
 
-            await handler.HandleAsync(new RemoveRefreshTokenCommand(new HashedRefreshTokenId("ABC")));
+            await handler.HandleAsync(command);
 
-            refreshTokenRepository.Verify(v => v.TryGetRefreshTokenAsync(It.IsAny<string>()));
-            refreshTokenRepository.Verify(v => v.RemoveRefreshTokenAsync(It.IsAny<RefreshToken>()));
-            saveChanges.Verify(v => v.HandleAsync(It.IsAny<SaveChangesCommand>()));
-        }
-
-        [TestMethod]
-        public async Task ItShouldThrowAnExceptionIfTheRefreshTokenDoesNotExist()
-        {
-            var refreshTokenRepository = new Mock<IRefreshTokenRepository>();
-            var saveChanges = new Mock<ICommandHandler<SaveChangesCommand>>();
-
-            refreshTokenRepository.Setup(v => v.TryGetRefreshTokenAsync(It.IsAny<string>()))
-                .ReturnsAsync(null);
-
-            var handler = new RemoveRefreshTokenCommandHandler(
-                refreshTokenRepository.Object,
-                saveChanges.Object);
-
-            Exception exception = null;
-            try
-            {
-                await handler.HandleAsync(new RemoveRefreshTokenCommand(new HashedRefreshTokenId("ABC")));
-            }
-            catch (BadRequestException t)
-            {
-                exception = t;
-            }
-
-            Assert.IsNotNull(exception);
-
-            refreshTokenRepository.Verify(v => v.TryGetRefreshTokenAsync(It.IsAny<string>()));
-            refreshTokenRepository.Verify(v => v.RemoveRefreshTokenAsync(It.IsAny<RefreshToken>()), Times.Never());
-            saveChanges.Verify(v => v.HandleAsync(It.IsAny<SaveChangesCommand>()), Times.Never());
+            refreshTokenRepository.Verify();
         }
     }
 }

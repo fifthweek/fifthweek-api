@@ -10,30 +10,15 @@
     {
         private readonly IRefreshTokenRepository refreshTokenRepository;
 
-        private readonly ICommandHandler<SaveChangesCommand> saveChanges;
-
         public RemoveRefreshTokenCommandHandler(
-            IRefreshTokenRepository refreshTokenRepository,
-            ICommandHandler<SaveChangesCommand> saveChanges)
+            IRefreshTokenRepository refreshTokenRepository)
         {
             this.refreshTokenRepository = refreshTokenRepository;
-            this.saveChanges = saveChanges;
         }
 
         public async Task HandleAsync(RemoveRefreshTokenCommand command)
         {
-            var hashedId = command.HashedRefreshTokenId;
-
-            var refreshToken = await this.refreshTokenRepository.TryGetRefreshTokenAsync(hashedId.Value);
-
-            if (refreshToken == null)
-            {
-                throw new BadRequestException("Refresh token not found: " + hashedId);
-            }
-
-            await this.refreshTokenRepository.RemoveRefreshTokenAsync(refreshToken);
-
-            await this.saveChanges.HandleAsync(SaveChangesCommand.Default);
+            await this.refreshTokenRepository.RemoveRefreshToken(command.HashedRefreshTokenId.Value);
         }
     }
 }

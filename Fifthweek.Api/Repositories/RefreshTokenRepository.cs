@@ -5,6 +5,8 @@
     using System.Linq;
     using System.Threading.Tasks;
 
+    using Dapper;
+
     using Fifthweek.Api.Entities;
 
     public class RefreshTokenRepository : IRefreshTokenRepository
@@ -21,30 +23,31 @@
             return this.fifthweekDbContext.RefreshTokens.SingleOrDefaultAsync(r => r.Username == username && r.ClientId == clientId);
         }
 
-        public Task<RefreshToken> TryGetRefreshTokenAsync(string hashedTokenId)
+        public async Task<RefreshToken> TryGetRefreshTokenAsync(string hashedTokenId)
         {
-            // TODO: This cast is dodgy. Perhaps use solution such as these:
-            // http://stackoverflow.com/questions/21800967/no-findasync-method-on-idbsett
-            // http://stackoverflow.com/questions/23730949/adapter-pattern-for-idbset-properties-of-a-dbcontext-class
-            var set = (DbSet<RefreshToken>)this.fifthweekDbContext.RefreshTokens;
-            return set.FindAsync(hashedTokenId);
+            var results = await this.fifthweekDbContext.Database.Connection.QueryAsync<RefreshToken>(
+                @"SELECT * FROM RefreshTokens WHERE HashedId=@hashedTokenId", new { hashedTokenId });
+            return results.Single();
         }
 
         public Task AddRefreshTokenAsync(RefreshToken refreshToken)
         {
             this.fifthweekDbContext.RefreshTokens.Add(refreshToken);
-            return Task.FromResult(0);
+            return this.fifthweekDbContext.SaveChangesAsync();
         }
 
-        public Task RemoveRefreshTokenAsync(RefreshToken refreshToken)
+        public Task RemoveRefreshTokens(string username, string clientId)
         {
-            this.fifthweekDbContext.RefreshTokens.Remove(refreshToken);
-            return Task.FromResult(0);
+            return this.fifthweekDbContext.Database.Connection.ExecuteAsync(
+                @"DELETE FROM RefreshTokens WHERE Username=@username AND ClientId=@clientId", 
+                new { username, clientId });
         }
 
-        public Task<List<RefreshToken>> GetAllRefreshTokensAsync()
+        public Task RemoveRefreshToken(string hashedTokenId)
         {
-            return Task.FromResult(this.fifthweekDbContext.RefreshTokens.ToList());
+            return this.fifthweekDbContext.Database.Connection.ExecuteAsync(
+                @"DELETE FROM RefreshTokens WHERE HashedId=@hashedTokenId",
+                new { hashedTokenId });
         }
     }
 }

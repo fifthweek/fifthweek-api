@@ -4,6 +4,8 @@
 
     using Fifthweek.Api.Commands;
 
+    [Decorator(typeof(RetryOnSqlDeadlockOrTimeoutCommandHandlerDecorator<>))]
+    [Decorator(typeof(TransactionCommandHandlerDecorator<>))]
     public class NullCommandHandler : ICommandHandler<NullCommand>
     {
         public Task HandleAsync(NullCommand command)

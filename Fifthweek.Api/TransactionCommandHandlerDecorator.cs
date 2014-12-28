@@ -1,8 +1,10 @@
-﻿namespace Fifthweek.Api.CommandHandlers
+namespace Fifthweek.Api
 {
     using System.Diagnostics;
     using System.Threading.Tasks;
     using System.Transactions;
+
+    using Fifthweek.Api.CommandHandlers;
 
     public class TransactionCommandHandlerDecorator<TCommand> : ICommandHandler<TCommand>
     {

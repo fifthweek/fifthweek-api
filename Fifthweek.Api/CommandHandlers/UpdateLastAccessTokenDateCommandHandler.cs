@@ -9,34 +9,23 @@
 
     public class UpdateLastAccessTokenDateCommandHandler : ICommandHandler<UpdateLastAccessTokenDateCommand>
     {
-        private readonly IUserManager userManager;
+        private readonly IUserRepository userRepository;
 
         public UpdateLastAccessTokenDateCommandHandler(
-            IUserManager userManager)
+            IUserRepository userRepository)
         {
-            this.userManager = userManager;
+            this.userRepository = userRepository;
         }
 
         public async Task HandleAsync(UpdateLastAccessTokenDateCommand command)
         {
-            var user = await this.userManager.FindByNameAsync(command.Username);
-            if (user == null)
-            {
-                throw new Exception("The username '" + command.Username + "' was not found when updating last access token date.");
-            }
-
             if (command.CreationType == UpdateLastAccessTokenDateCommand.AccessTokenCreationType.SignIn)
             {
-                user.LastSignInDate = command.Timestamp;
+                await this.userRepository.UpdateLastSignInDateAndAccessTokenDateAsync(command.Username, command.Timestamp);
             }
-
-            user.LastAccessTokenDate = command.Timestamp;
-
-            var result = await this.userManager.UpdateAsync(user);
-
-            if (!result.Succeeded)
+            else
             {
-                throw new AggregateException("Failed to update timestamps for user " + command.Username, result.Errors.Select(v => new Exception(v)));
+                await this.userRepository.UpdateLastAccessTokenDateAsync(command.Username, command.Timestamp);
             }
         }
     }

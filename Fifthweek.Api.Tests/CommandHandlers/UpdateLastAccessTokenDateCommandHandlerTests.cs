@@ -19,130 +19,41 @@
         private string testUsername = "TestUsername";
 
         [TestMethod]
-        public async Task WhenTheUsernameIsNotFoundItShouldThrowAnException()
-        {
-            var userManager = new Mock<IUserManager>();
-            userManager.Setup(v => v.FindByNameAsync(this.testUsername)).ReturnsAsync(null);
-
-            var target = new UpdateLastAccessTokenDateCommandHandler(userManager.Object);
-
-            Exception exception = null;
-            try
-            {
-                var command = new UpdateLastAccessTokenDateCommand(
-                    this.testUsername,
-                    DateTime.UtcNow,
-                    UpdateLastAccessTokenDateCommand.AccessTokenCreationType.SignIn);
-                await target.HandleAsync(command);
-            }
-            catch (Exception t)
-            {
-                exception = t;
-            }
-
-            Assert.IsNotNull(exception);
-            Assert.IsTrue(exception.Message.Contains("username"));
-            Assert.IsTrue(exception.Message.Contains(this.testUsername));
-            Assert.IsTrue(exception.Message.Contains("not found"));
-        }
-
-        [TestMethod]
         public async Task WhenTheCreationTypeIsSignInItSouldUpdateBothTimestamps()
         {
-            var applicationUser = new ApplicationUser
-            {
-                LastAccessTokenDate = DateTime.MinValue,
-                LastSignInDate = DateTime.MinValue,
-            };
-
-            var userManager = new Mock<IUserManager>();
-            userManager.Setup(v => v.FindByNameAsync(this.testUsername)).ReturnsAsync(applicationUser);
-            userManager.Setup(v => v.UpdateAsync(applicationUser)).ReturnsAsync(new MockIdentityResult()).Verifiable();
-
-            var target = new UpdateLastAccessTokenDateCommandHandler(userManager.Object);
-
             var command = new UpdateLastAccessTokenDateCommand(
                 this.testUsername,
                 DateTime.UtcNow,
                 UpdateLastAccessTokenDateCommand.AccessTokenCreationType.SignIn);
 
+            var userRepository = new Mock<IUserRepository>();
+            userRepository.Setup(v => v.UpdateLastSignInDateAndAccessTokenDateAsync(command.Username, command.Timestamp))
+                .Returns(Task.FromResult(0)).Verifiable();
+
+            var target = new UpdateLastAccessTokenDateCommandHandler(userRepository.Object);
+
             await target.HandleAsync(command);
 
-            userManager.Verify();
-
-            Assert.AreEqual(command.Timestamp, applicationUser.LastAccessTokenDate);
-            Assert.AreEqual(command.Timestamp, applicationUser.LastSignInDate);
+            userRepository.Verify();
         }
 
         [TestMethod]
         public async Task WhenTheCreationTypeIsRefreshTokenItSouldUpdateAccessTokenTimestampOnly()
         {
-            var applicationUser = new ApplicationUser
-            {
-                LastAccessTokenDate = DateTime.MinValue,
-                LastSignInDate = DateTime.MinValue,
-            };
-
-            var userManager = new Mock<IUserManager>();
-            userManager.Setup(v => v.FindByNameAsync(this.testUsername)).ReturnsAsync(applicationUser);
-            userManager.Setup(v => v.UpdateAsync(applicationUser)).ReturnsAsync(new MockIdentityResult()).Verifiable();
-
-            var target = new UpdateLastAccessTokenDateCommandHandler(userManager.Object);
-
             var command = new UpdateLastAccessTokenDateCommand(
                 this.testUsername,
                 DateTime.UtcNow,
                 UpdateLastAccessTokenDateCommand.AccessTokenCreationType.RefreshToken);
 
+            var userRepository = new Mock<IUserRepository>();
+            userRepository.Setup(v => v.UpdateLastAccessTokenDateAsync(command.Username, command.Timestamp))
+                .Returns(Task.FromResult(0)).Verifiable();
+
+            var target = new UpdateLastAccessTokenDateCommandHandler(userRepository.Object);
+
             await target.HandleAsync(command);
 
-            userManager.Verify();
-
-            Assert.AreEqual(command.Timestamp, applicationUser.LastAccessTokenDate);
-            Assert.AreEqual(DateTime.MinValue, applicationUser.LastSignInDate);
-        }
-
-        [TestMethod]
-        public async Task WhenUpdatingTheUserFailsItShouldThrowAnException()
-        {
-            var applicationUser = new ApplicationUser
-            {
-                LastAccessTokenDate = DateTime.MinValue,
-                LastSignInDate = DateTime.MinValue,
-            };
-
-            var userManager = new Mock<IUserManager>();
-            userManager.Setup(v => v.FindByNameAsync(this.testUsername)).ReturnsAsync(applicationUser);
-            userManager.Setup(v => v.UpdateAsync(applicationUser)).ReturnsAsync(
-                new MockIdentityResult("One", "Two")).Verifiable();
-
-            var target = new UpdateLastAccessTokenDateCommandHandler(userManager.Object);
-
-            Exception exception = null;
-            try
-            {
-                var command = new UpdateLastAccessTokenDateCommand(
-                    this.testUsername,
-                    DateTime.UtcNow,
-                    UpdateLastAccessTokenDateCommand.AccessTokenCreationType.SignIn);
-
-                await target.HandleAsync(command);
-            }
-            catch (Exception t)
-            {
-                exception = t;
-            }
-            
-            userManager.Verify();
-
-            Assert.IsNotNull(exception);
-            Assert.IsTrue(exception.Message.Contains(this.testUsername));
-            Assert.IsInstanceOfType(exception, typeof(AggregateException));
-
-            var ae = (AggregateException)exception;
-            Assert.AreEqual(2, ae.InnerExceptions.Count);
-            Assert.IsTrue(ae.InnerExceptions.Any(v => v.Message == "One"));
-            Assert.IsTrue(ae.InnerExceptions.Any(v => v.Message == "Two"));
+            userRepository.Verify();
         }
     }
 }

@@ -4,6 +4,7 @@
 
     using Fifthweek.Api.Queries;
 
+    [Decorator(typeof(RetryOnSqlDeadlockOrTimeoutQueryHandlerDecorator<,>))]
     public class NullQueryHandler : IQueryHandler<NullQuery, bool>
     {
         public Task<bool> HandleAsync(NullQuery query)

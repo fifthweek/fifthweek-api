@@ -96,6 +96,7 @@
       <HintPath>..\packages\Microsoft.Net.Http.2.1.10\lib\net45\System.Net.Http.Primitives.dll</HintPath>
     </Reference>
     <Reference Include="System.Net.Http.WebRequest" />
+    <Reference Include="System.Transactions" />
     <Reference Include="System.Web.Http, Version=5.2.2.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\Microsoft.AspNet.WebApi.Core.5.2.2\lib\net45\System.Web.Http.dll</HintPath>
@@ -122,7 +123,6 @@
     <Compile Include="MockIdentityResult.cs" />
     <Compile Include="CommandHandlers\RegisterUserCommandHandlerTests.cs" />
     <Compile Include="CommandHandlers\RemoveRefreshTokenCommandHandlerTests.cs" />
-    <Compile Include="CommandHandlers\SaveChangesCommandHandlerTests.cs" />
     <Compile Include="CommandHandlers\UpdateLastAccessTokenDateCommandHandlerTests.cs" />
     <Compile Include="Commands\RegisterUserCommandTest.cs" />
     <Compile Include="Controllers\MembershipControllerTests.cs" />
@@ -134,6 +134,9 @@
     <Compile Include="QueryHandlers\GetClientQueryHandlerTests.cs" />
     <Compile Include="QueryHandlers\GetRefreshTokenQueryHandlerTests.cs" />
     <Compile Include="QueryHandlers\GetUserQueryHandlerTests.cs" />
+    <Compile Include="RetryOnSqlDeadlockOrTimeoutDecoratorTests.cs" />
+    <Compile Include="SqlExceptionMocker.cs" />
+    <Compile Include="TransactionCommandHandlerDecoratorTests.cs" />
     <Compile Include="UserInputNormalizationTests.cs" />
   </ItemGroup>
   <ItemGroup>

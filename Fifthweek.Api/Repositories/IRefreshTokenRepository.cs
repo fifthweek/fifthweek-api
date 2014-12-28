@@ -7,14 +7,12 @@
 
     public interface IRefreshTokenRepository
     {
-        Task<RefreshToken> TryGetRefreshTokenAsync(string username, string clientId);
+        Task<RefreshToken> TryGetRefreshTokenAsync(string hashedTokenId);
 
         Task AddRefreshTokenAsync(RefreshToken refreshToken);
 
-        Task<RefreshToken> TryGetRefreshTokenAsync(string hashedTokenId);
+        Task RemoveRefreshTokens(string username, string clientId);
 
-        Task RemoveRefreshTokenAsync(RefreshToken refreshToken);
-
-        Task<List<RefreshToken>> GetAllRefreshTokensAsync();
+        Task RemoveRefreshToken(string hashedTokenId);
     }
 }

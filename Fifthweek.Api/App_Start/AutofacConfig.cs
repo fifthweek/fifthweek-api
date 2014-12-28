@@ -6,6 +6,7 @@ using Microsoft.AspNet.Identity.EntityFramework;
 namespace Fifthweek.Api
 {
     using System;
+    using System.Collections.Generic;
     using System.Linq;
     using System.Net.Http;
     using System.Reflection;
@@ -41,21 +42,13 @@ namespace Fifthweek.Api
             var builder = new ContainerBuilder();
             builder.RegisterApiControllers(Assembly.GetExecutingAssembly());
 
-            RegisterHandlers(
-                builder, 
-                typeof(ICommandHandler<>),
-                typeof(TransactionCommandHandlerDecorator<>),
-                typeof(ValidationCommandHandlerDecorator<>));
-
-            RegisterHandlers(
-                builder, 
-                typeof(IQueryHandler<,>),
-                typeof(ValidationQueryHandlerDecorator<,>));
+            RegisterHandlers(builder);
 
             builder.RegisterType<UserInputNormalization>().As<IUserInputNormalization>().SingleInstance();
             builder.RegisterType<FifthweekDbContext>().As<IFifthweekDbContext>().InstancePerRequest();
             builder.RegisterType<RefreshTokenRepository>().As<IRefreshTokenRepository>().InstancePerRequest();
             builder.RegisterType<ClientRepository>().As<IClientRepository>().InstancePerRequest();
+            builder.RegisterType<UserRepository>().As<IUserRepository>().InstancePerRequest();
             builder.Register(c =>
                 new UserManagerImpl(
                 new UserManager<ApplicationUser>(
@@ -84,48 +77,57 @@ namespace Fifthweek.Api
         }
 
         private static void RegisterHandlers(
-            ContainerBuilder builder, 
-            Type handlerType,
-            params Type[] decorators)
+            ContainerBuilder builder)
         {
-            RegisterHandlers(builder, handlerType);
+            var types = Assembly.GetExecutingAssembly().GetTypes();
 
-            for (int i = 0; i < decorators.Length; i++)
+            var commandHandlers = (from t in types
+                                   where t.IsClass
+                                   from i in t.GetInterfaces()
+                                   where i.IsClosedTypeOf(typeof(ICommandHandler<>))
+                                   select new { Type = t, Interface = i, Decorators = GetDecoratorTypes(t) }).ToList();
+
+            var queryHandlers = (from t in types
+                                  where t.IsClass
+                                  from i in t.GetInterfaces()
+                                  where i.IsClosedTypeOf(typeof(IQueryHandler<,>))
+                                 select new { Type = t, Interface = i, Decorators = GetDecoratorTypes(t) }).ToList();
+
+            foreach (var item in commandHandlers.Concat(queryHandlers))
             {
-                RegisterGenericDecorator(
-                    builder,
-                    decorators[i],
-                    handlerType,
-                    i == 0 ? handlerType : decorators[i - 1],
-                    i != decorators.Length - 1);
+                var decoratorTypes = GetDecoratorTypes(item.Type);
+
+                if (decoratorTypes.Count == 0)
+                {
+                    builder.RegisterType(item.Type).As(item.Interface);
+                }
+                else
+                {
+                    builder.RegisterType(item.Type)
+                        .As(new KeyedService(GetDecoratedTypeName(item.Type, decoratorTypes.Count), item.Interface));
+
+                    var decoratedType = item.Interface.GetGenericTypeDefinition();
+                    for (int i = decoratorTypes.Count - 1; i >= 0; i--)
+                    {
+                        var decorator = decoratorTypes[i];
+                        builder.RegisterGenericDecorator(
+                            decorator,
+                            decoratedType,
+                            GetDecoratedTypeName(item.Type, i + 1),
+                            i == 0 ? null : GetDecoratedTypeName(item.Type, i));
+                    }
+                }
             }
         }
 
-        private static void RegisterHandlers(ContainerBuilder builder, Type handlerType)
+        private static List<Type> GetDecoratorTypes(Type item)
         {
-            builder.RegisterAssemblyTypes(Assembly.GetExecutingAssembly())
-                .As(t => t.GetInterfaces()
-                        .Where(v => v.IsClosedTypeOf(handlerType))
-                        .Select(v => new KeyedService(handlerType.Name, v)))
-                .InstancePerRequest();
+            return item.GetCustomAttributes<DecoratorAttribute>(false).Select(v => v.DecoratorType).ToList();
         }
 
-        private static void RegisterGenericDecorator(
-            ContainerBuilder builder,
-            Type decoratorType,
-            Type decoratedServiceType,
-            Type fromKeyType,
-            bool hasKey)
+        private static string GetDecoratedTypeName(Type type, int level)
         {
-            var result = builder.RegisterGenericDecorator(
-               decoratorType,
-               decoratedServiceType,
-               fromKeyType.Name);
-
-            if (hasKey)
-            {
-                result.Keyed(decoratorType.Name, decoratedServiceType);
-            }
+            return type.FullName + "{" + level + "}";
         }
     }
 }

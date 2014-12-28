@@ -53,6 +53,9 @@
     <Reference Include="Autofac.Integration.WebApi.Owin">
       <HintPath>..\packages\Autofac.WebApi2.Owin.3.2.0\lib\net45\Autofac.Integration.WebApi.Owin.dll</HintPath>
     </Reference>
+    <Reference Include="Dapper">
+      <HintPath>..\packages\Dapper.1.38\lib\net45\Dapper.dll</HintPath>
+    </Reference>
     <Reference Include="EntityFramework">
       <HintPath>..\packages\EntityFramework.6.1.0\lib\net45\EntityFramework.dll</HintPath>
     </Reference>
@@ -179,20 +182,17 @@
     <Compile Include="CommandHandlers\NullCommandHandler.cs" />
     <Compile Include="CommandHandlers\RegisterUserCommandHandler.cs" />
     <Compile Include="CommandHandlers\RemoveRefreshTokenCommandHandler.cs" />
-    <Compile Include="CommandHandlers\SaveChangesCommandHandler.cs" />
-    <Compile Include="CommandHandlers\TransactionCommandHandlerDecorator.cs" />
     <Compile Include="CommandHandlers\UpdateLastAccessTokenDateCommandHandler.cs" />
-    <Compile Include="CommandHandlers\ValidationCommandHandlerDecorator.cs" />
     <Compile Include="App_Start\LogRequestModule.cs" />
     <Compile Include="Commands\AddRefreshTokenCommand.cs" />
     <Compile Include="Commands\NullCommand.cs" />
     <Compile Include="Commands\RegisterUserCommand.cs" />
     <Compile Include="Commands\RemoveRefreshTokenCommand.cs" />
-    <Compile Include="Commands\SaveChangesCommand.cs" />
     <Compile Include="Commands\UpdateLastAccessTokenDateCommand.cs" />
     <Compile Include="Controllers\AvailabilityController.cs" />
     <Compile Include="Controllers\LogController.cs" />
     <Compile Include="ConvertExceptionsToResponsesAttribute.cs" />
+    <Compile Include="DecoratorAttribute.cs" />
     <Compile Include="Entities\ApplicationUser.cs" />
     <Compile Include="Entities\FifthweekClaimTypes.cs" />
     <Compile Include="Extensions.cs" />
@@ -209,6 +209,10 @@
     <Compile Include="Migrations\201412151012583_AddApplicationUserTimestamps.cs" />
     <Compile Include="Migrations\201412151012583_AddApplicationUserTimestamps.Designer.cs">
       <DependentUpon>201412151012583_AddApplicationUserTimestamps.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201412232020572_AddRefreshTokensIndexForUsernameClientId.cs" />
+    <Compile Include="Migrations\201412232020572_AddRefreshTokensIndexForUsernameClientId.Designer.cs">
+      <DependentUpon>201412232020572_AddRefreshTokensIndexForUsernameClientId.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AvailabilityResult.cs" />
@@ -237,7 +241,6 @@
     <Compile Include="QueryHandlers\GetUserQueryHandler.cs" />
     <Compile Include="QueryHandlers\IQueryHandler.cs" />
     <Compile Include="QueryHandlers\NullQueryHandler.cs" />
-    <Compile Include="QueryHandlers\ValidationQueryHandlerDecorator.cs" />
     <Compile Include="RecoverableException.cs" />
     <Compile Include="Constants.cs" />
     <Compile Include="Controllers\MembershipController.cs" />
@@ -256,11 +259,16 @@
     <Compile Include="Repositories\IDeveloperRepository.cs" />
     <Compile Include="Repositories\IRefreshTokenRepository.cs" />
     <Compile Include="Repositories\IUserManager.cs" />
+    <Compile Include="Repositories\IUserRepository.cs" />
     <Compile Include="Repositories\RefreshTokenRepository.cs" />
     <Compile Include="Repositories\IFifthweekDbContext.cs" />
     <Compile Include="ExceptionHandlerUtilities.cs" />
+    <Compile Include="Repositories\UserRepository.cs" />
     <Compile Include="RequireHttpsAttribute.cs" />
     <Compile Include="Results\ChallengeResult.cs" />
+    <Compile Include="RetryOnSqlDeadlockOrTimeoutCommandHandlerDecorator.cs" />
+    <Compile Include="RetryOnSqlDeadlockOrTimeoutDecoratorBase.cs" />
+    <Compile Include="RetryOnSqlDeadlockOrTimeoutQueryHandlerDecorator.cs" />
     <Compile Include="Services\AggregateReportingService.cs" />
     <Compile Include="Services\EmailReportingService.cs" />
     <Compile Include="Services\ExceptionHandler.cs" />
@@ -273,6 +281,7 @@
     <Compile Include="Services\TraceReportingService.cs" />
     <Compile Include="Services\TraceService.cs" />
     <Compile Include="Startup.cs" />
+    <Compile Include="TransactionCommandHandlerDecorator.cs" />
     <Compile Include="UserInputNormalization.cs" />
     <Compile Include="ValidateModelAttribute.cs" />
   </ItemGroup>
@@ -306,6 +315,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201412151012583_AddApplicationUserTimestamps.resx">
       <DependentUpon>201412151012583_AddApplicationUserTimestamps.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201412232020572_AddRefreshTokensIndexForUsernameClientId.resx">
+      <DependentUpon>201412232020572_AddRefreshTokensIndexForUsernameClientId.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
