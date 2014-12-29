@@ -17,6 +17,8 @@ using Moq;
 
 namespace Fifthweek.Api.Tests
 {
+    using Fifthweek.Api.Tests.Commands;
+
     [TestClass]
     public class MembershipControllerTests
     {
@@ -24,7 +26,7 @@ namespace Fifthweek.Api.Tests
         public async Task ItShouldIssueRegisterUserCommand_WhenPostingRegistrations()
         {
             var registration = RegistrationDataTests.NewRegistrationData();
-            var command = new RegisterUserCommand(registration);
+            var command = RegisterUserCommandTests.NewRegisterUserCommand(registration);
             var commandHandler = new Mock<ICommandHandler<RegisterUserCommand>>();
             var queryHandler = new Mock<IQueryHandler<GetUsernameAvailabilityQuery, bool>>();
             var normalization = new Mock<IUserInputNormalization>();
@@ -46,7 +48,7 @@ namespace Fifthweek.Api.Tests
             const string emailTransformation = "!";
             const string usernameTransformation = "?";
             var registration = RegistrationDataTests.NewRegistrationData();
-            var command = new RegisterUserCommand(registration);
+            var command = RegisterUserCommandTests.NewRegisterUserCommand(registration);
             var commandHandler = new Mock<ICommandHandler<RegisterUserCommand>>();
             var queryHandler = new Mock<IQueryHandler<GetUsernameAvailabilityQuery, bool>>();
             var normalization = new Mock<IUserInputNormalization>();
@@ -61,7 +63,7 @@ namespace Fifthweek.Api.Tests
             var expectedRegistration = RegistrationDataTests.NewRegistrationData();
             expectedRegistration.Email += emailTransformation;
             expectedRegistration.Username += usernameTransformation;
-            var expectedCommand = new RegisterUserCommand(expectedRegistration);
+            var expectedCommand = RegisterUserCommandTests.NewRegisterUserCommand(expectedRegistration);
 
             Assert.IsInstanceOfType(result, typeof(OkResult));
             commandHandler.Verify(v => v.HandleAsync(expectedCommand));
@@ -87,15 +89,16 @@ namespace Fifthweek.Api.Tests
 
             var result = await controller.PostRegistrationAsync(registration);
 
-            Assert.IsFalse(
-                Object.ReferenceEquals(actualCommand.RegistrationData, registration), 
-                "Objects received through method parameters must not be mutated.");
+            Assert.AreEqual(registration.ExampleWork, actualCommand.ExampleWork);
+            Assert.AreEqual(registration.Password, actualCommand.Password);
+            Assert.AreNotEqual(registration.Email, actualCommand.Email);
+            Assert.AreNotEqual(registration.Username, actualCommand.Username);
             Assert.IsInstanceOfType(result, typeof(OkResult));
 
             var expectedRegistration = RegistrationDataTests.NewRegistrationData();
             expectedRegistration.Email += emailTransformation;
             expectedRegistration.Username += usernameTransformation;
-            var expectedCommand = new RegisterUserCommand(expectedRegistration);
+            var expectedCommand = RegisterUserCommandTests.NewRegisterUserCommand(expectedRegistration);
 
             commandHandler.Verify(v => v.HandleAsync(expectedCommand));
         }

@@ -1,26 +1,25 @@
 ﻿namespace Fifthweek.Api
 {
     using System;
+    using System.Collections.Generic;
+    using System.Linq;
 
-    [AttributeUsage(AttributeTargets.Class, AllowMultiple = true)]
+    [AttributeUsage(AttributeTargets.Class, AllowMultiple = false)]
     public class DecoratorAttribute : Attribute
     {
-        public DecoratorAttribute(Type decoratorType)
+        public DecoratorAttribute(params Type[] decoratorTypes)
         {
-            if (decoratorType.IsGenericType)
+            foreach (var item in decoratorTypes)
             {
-                this.DecoratorType = decoratorType.GetGenericTypeDefinition();
+                if (!item.IsGenericTypeDefinition)
+                {
+                    throw new ArgumentException("The decoratorTypes should be a open generic types.");
+                }
             }
-            else if (decoratorType.IsGenericTypeDefinition)
-            {
-                this.DecoratorType = decoratorType;
-            }
-            else
-            {
-                throw new ArgumentException("The decoratorType should be a generic type or an open generic type.");
-            }
+
+            this.DecoratorTypes = decoratorTypes.ToList().AsReadOnly();
         }
 
-        public Type DecoratorType { get; private set; }
+        public IReadOnlyList<Type> DecoratorTypes { get; private set; }
     }
 }

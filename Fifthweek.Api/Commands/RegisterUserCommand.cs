@@ -1,20 +1,22 @@
 ﻿namespace Fifthweek.Api.Commands
 {
-    using Fifthweek.Api.Models;
-
     public class RegisterUserCommand
     {
-        public RegisterUserCommand(RegistrationData registrationData)
+        public RegisterUserCommand(string exampleWork, string email, string username, string password)
         {
-            this.RegistrationData = registrationData;
+            this.ExampleWork = exampleWork;
+            this.Email = email;
+            this.Username = username;
+            this.Password = password;
         }
 
-        public RegistrationData RegistrationData { get; private set; }
+        public string ExampleWork { get; private set; }
 
-        protected bool Equals(RegisterUserCommand other)
-        {
-            return Equals(this.RegistrationData, other.RegistrationData);
-        }
+        public string Email { get; private set; }
+
+        public string Username { get; private set; }
+
+        public string Password { get; private set; }
 
         public override bool Equals(object obj)
         {
@@ -22,20 +24,35 @@
             {
                 return false;
             }
+
             if (ReferenceEquals(this, obj))
             {
                 return true;
             }
+
             if (obj.GetType() != this.GetType())
             {
                 return false;
             }
-            return Equals((RegisterUserCommand) obj);
+
+            return this.Equals((RegisterUserCommand)obj);
         }
 
         public override int GetHashCode()
         {
-            return (this.RegistrationData != null ? this.RegistrationData.GetHashCode() : 0);
+            unchecked
+            {
+                int hashCode = this.ExampleWork != null ? this.ExampleWork.GetHashCode() : 0;
+                hashCode = (hashCode * 397) ^ (this.Email != null ? this.Email.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.Username != null ? this.Username.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.Password != null ? this.Password.GetHashCode() : 0);
+                return hashCode;
+            }
+        }
+
+        protected bool Equals(RegisterUserCommand other)
+        {
+            return string.Equals(this.ExampleWork, other.ExampleWork) && string.Equals(this.Email, other.Email) && string.Equals(this.Username, other.Username) && string.Equals(this.Password, other.Password);
         }
     }
 }

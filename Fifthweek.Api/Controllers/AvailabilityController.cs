@@ -24,8 +24,6 @@ namespace Fifthweek.Api.Controllers
         }
 
         // GET: availability
-        [RequireHttps]
-        [ConvertExceptionsToResponses]
         [AllowAnonymous]
         public async Task<HttpResponseMessage> Get()
         {
@@ -40,8 +38,6 @@ namespace Fifthweek.Api.Controllers
         }
 
         // HEAD: availability
-        [RequireHttps]
-        [ConvertExceptionsToResponses]
         [AllowAnonymous]
         [AcceptVerbs("HEAD")]
         public Task<HttpResponseMessage> Head()

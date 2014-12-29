@@ -23,29 +23,29 @@ namespace Fifthweek.Api.CommandHandlers
 
         public async Task HandleAsync(RegisterUserCommand command)
         {
-            var userByEmail = await this.userManager.FindByEmailAsync(command.RegistrationData.Email);
+            var userByEmail = await this.userManager.FindByEmailAsync(command.Email);
             if (userByEmail != null)
             {
-                throw new RecoverableException("The email address '" + command.RegistrationData.Email + "' is already taken.");
+                throw new RecoverableException("The email address '" + command.Email + "' is already taken.");
             }
 
-            var userByUsername = await this.userManager.FindByNameAsync(command.RegistrationData.Username);
+            var userByUsername = await this.userManager.FindByNameAsync(command.Username);
             if (userByUsername != null)
             {
-                throw new RecoverableException("The username '" + command.RegistrationData.Username + "' is already taken.");
+                throw new RecoverableException("The username '" + command.Username + "' is already taken.");
             }
 
             var user = new ApplicationUser
             {
-                UserName = command.RegistrationData.Username,
-                Email = command.RegistrationData.Email,
-                ExampleWork = command.RegistrationData.ExampleWork,
+                UserName = command.Username,
+                Email = command.Email,
+                ExampleWork = command.ExampleWork,
                 RegistrationDate = DateTime.UtcNow,
                 LastSignInDate = SqlDateTime.MinValue.Value,
                 LastAccessTokenDate = SqlDateTime.MinValue.Value,
             };
 
-            var result = await this.userManager.CreateAsync(user, command.RegistrationData.Password);
+            var result = await this.userManager.CreateAsync(user, command.Password);
 
             if (!result.Succeeded)
             {

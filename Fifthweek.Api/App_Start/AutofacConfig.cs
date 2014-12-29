@@ -122,7 +122,14 @@ namespace Fifthweek.Api
 
         private static List<Type> GetDecoratorTypes(Type item)
         {
-            return item.GetCustomAttributes<DecoratorAttribute>(false).Select(v => v.DecoratorType).ToList();
+            var result = new List<Type>();
+            var decoratorAttribute = item.GetCustomAttribute<DecoratorAttribute>(false);
+            if (decoratorAttribute != null)
+            {
+                result.AddRange(decoratorAttribute.DecoratorTypes);
+            }
+
+            return result;
         }
 
         private static string GetDecoratedTypeName(Type type, int level)

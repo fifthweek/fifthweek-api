@@ -10,6 +10,7 @@
     using Fifthweek.Api.Entities;
     using Fifthweek.Api.Models;
     using Fifthweek.Api.Repositories;
+    using Fifthweek.Api.Tests.Commands;
 
     using Microsoft.VisualStudio.TestTools.UnitTesting;
 
@@ -43,7 +44,7 @@
             Exception exception = null;
             try
             {
-                await target.HandleAsync(new RegisterUserCommand(this.registrationData));
+                await target.HandleAsync(this.CreateRegisterUserCommand());
             }
             catch (Exception t)
             {
@@ -66,7 +67,7 @@
             Exception exception = null;
             try
             {
-                await target.HandleAsync(new RegisterUserCommand(this.registrationData));
+                await target.HandleAsync(this.CreateRegisterUserCommand());
             }
             catch (Exception t)
             {
@@ -90,7 +91,7 @@
                 .ReturnsAsync(new MockIdentityResult());
 
             var target = new RegisterUserCommandHandler(userManager.Object);
-            await target.HandleAsync(new RegisterUserCommand(this.registrationData));
+            await target.HandleAsync(this.CreateRegisterUserCommand());
 
             Assert.IsNotNull(applicationUser);
             Assert.AreEqual(this.registrationData.Email, applicationUser.Email);
@@ -113,7 +114,7 @@
             Exception exception = null;
             try
             {
-                await target.HandleAsync(new RegisterUserCommand(this.registrationData));
+                await target.HandleAsync(this.CreateRegisterUserCommand());
             }
             catch (Exception t)
             {
@@ -128,6 +129,11 @@
             Assert.AreEqual(2, ae.InnerExceptions.Count);
             Assert.IsTrue(ae.InnerExceptions.Any(v => v.Message == "One"));
             Assert.IsTrue(ae.InnerExceptions.Any(v => v.Message == "Two"));
+        }
+
+        private RegisterUserCommand CreateRegisterUserCommand()
+        {
+            return RegisterUserCommandTests.NewRegisterUserCommand(this.registrationData);
         }
     }
 }

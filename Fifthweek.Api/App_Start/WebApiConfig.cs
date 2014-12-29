@@ -10,6 +10,10 @@
     {
         public static void Register(HttpConfiguration config)
         {
+            config.Filters.Add(new RequireHttpsAttribute());
+            config.Filters.Add(new ValidateModelAttribute());
+            config.Filters.Add(new ConvertExceptionsToResponsesAttribute());
+
             // Web API routes
             config.MapHttpAttributeRoutes();
 

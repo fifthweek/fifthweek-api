@@ -48,10 +48,6 @@
                             throw;
                     }
                 }
-                catch (Exception t)
-                {
-                    throw;
-                }
 
                 await Task.Delay(Random.Next(MaxRetryInterval));
                 ++tryCount;

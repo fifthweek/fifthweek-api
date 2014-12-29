@@ -45,47 +45,35 @@ namespace Fifthweek.Api.Controllers
         }
 
         // POST membership/registrations
-        [RequireHttps]
-        [ConvertExceptionsToResponses]
-        [ValidateModel]
         [AllowAnonymous]
         [Route("registrations")]
         public async Task<IHttpActionResult> PostRegistrationAsync(RegistrationData registrationData)
         {
-            var normalizedEmail = this.userInputNormalization.NormalizeEmailAddress(registrationData.Email);
-            var normalizedUsername = this.userInputNormalization.NormalizeUsername(registrationData.Username);
-            if (normalizedEmail != registrationData.Email ||
-                normalizedUsername != registrationData.Username)
-            {
-                registrationData = new RegistrationData
-                {
-                    Email = normalizedEmail,
-                    Username = normalizedUsername,
-                    ExampleWork = registrationData.ExampleWork,
-                    Password = registrationData.Password
-                };
-            }
+            var command = new RegisterUserCommand(
+                registrationData.ExampleWork,
+                this.userInputNormalization.NormalizeEmailAddress(registrationData.Email),
+                this.userInputNormalization.NormalizeUsername(registrationData.Username),
+                registrationData.Password);
 
-            await this.registerUser.HandleAsync(new RegisterUserCommand(registrationData));
+            await this.registerUser.HandleAsync(command);
             return this.Ok();
         }
 
         // GET membership/availableUsernames
-        [RequireHttps]
-        [ConvertExceptionsToResponses]
-        [ValidateModel]
         [AllowAnonymous]
         [Route("availableUsernames/{username}")]
         [ResponseType(typeof(bool))]
         public async Task<IHttpActionResult> GetUsernameAvailabilityAsync(string username)
         {
-            var normalizedUsername = this.userInputNormalization.NormalizeUsername(username);
-            var usernameAvailable = await this.getUsernameAvailability.HandleAsync(new GetUsernameAvailabilityQuery(normalizedUsername));
+            var query = new GetUsernameAvailabilityQuery(
+                this.userInputNormalization.NormalizeUsername(username));
+
+            var usernameAvailable = await this.getUsernameAvailability.HandleAsync(query);
             if (usernameAvailable)
             {
                 return this.Ok();
             }
-                
+
             return this.NotFound();
         }
     }

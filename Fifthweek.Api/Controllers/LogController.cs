@@ -22,8 +22,6 @@
         }
 
         // POST: log
-        [RequireHttps]
-        [ConvertExceptionsToResponses]
         [AllowAnonymous]
         public void Post(BrowserLogMessage logMessage)
         {
