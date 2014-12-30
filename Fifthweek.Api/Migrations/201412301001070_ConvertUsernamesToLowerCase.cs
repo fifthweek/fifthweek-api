@@ -7,8 +7,8 @@ namespace Fifthweek.Api.Migrations
     {
         public override void Up()
         {
-            this.Sql("UPDATE AspNetUsers SET UserName = LOWER(UserName)");
-            this.Sql("UPDATE RefreshTokens SET Username = LOWER(Username)");
+            //this.Sql("UPDATE AspNetUsers SET UserName = LOWER(UserName)");
+            //this.Sql("UPDATE RefreshTokens SET Username = LOWER(Username)");
         }
         
         public override void Down()
