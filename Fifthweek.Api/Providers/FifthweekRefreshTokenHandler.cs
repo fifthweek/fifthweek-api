@@ -21,14 +21,18 @@
 
         private readonly IQueryHandler<GetRefreshTokenQuery, RefreshToken> getRefreshToken;
 
+        private readonly IUserInputNormalization userInputNormalization;
+
         public FifthweekRefreshTokenHandler(
             ICommandHandler<AddRefreshTokenCommand> addRefreshToken,
             ICommandHandler<RemoveRefreshTokenCommand> removeRefreshToken,
-            IQueryHandler<GetRefreshTokenQuery, RefreshToken> getRefreshToken)
+            IQueryHandler<GetRefreshTokenQuery, RefreshToken> getRefreshToken,
+            IUserInputNormalization userInputNormalization)
         {
             this.addRefreshToken = addRefreshToken;
             this.removeRefreshToken = removeRefreshToken;
             this.getRefreshToken = getRefreshToken;
+            this.userInputNormalization = userInputNormalization;
         }
 
         public async Task CreateAsync(AuthenticationTokenCreateContext context)
@@ -44,11 +48,13 @@
 
             var refreshTokenLifeTime = context.OwinContext.Get<string>(Constants.TokenRefreshTokenLifeTimeKey);
 
+            var normalizedUserName = this.userInputNormalization.NormalizeUsername(context.Ticket.Identity.Name);
+
             var token = new RefreshToken()
             {
                 HashedId = Helper.GetHash(refreshTokenId.Value),
                 ClientId = clientid,
-                Username = context.Ticket.Identity.Name,
+                Username = normalizedUserName,
                 IssuedUtc = DateTime.UtcNow,
                 ExpiresUtc = DateTime.UtcNow.AddMinutes(Convert.ToDouble(refreshTokenLifeTime))
             };

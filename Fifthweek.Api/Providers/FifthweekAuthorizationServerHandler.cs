@@ -25,14 +25,18 @@
 
         private readonly ICommandHandler<UpdateLastAccessTokenDateCommand> updateLastAccessTokenDate;
 
+        private readonly IUserInputNormalization userInputNormalization;
+
         public FifthweekAuthorizationServerHandler(
             IQueryHandler<GetClientQuery, Client> getClient,
             IQueryHandler<GetUserQuery, ApplicationUser> getUser,
-            ICommandHandler<UpdateLastAccessTokenDateCommand> updateLastAccessTokenDate)
+            ICommandHandler<UpdateLastAccessTokenDateCommand> updateLastAccessTokenDate,
+            IUserInputNormalization userInputNormalization)
         {
             this.getClient = getClient;
             this.getUser = getUser;
             this.updateLastAccessTokenDate = updateLastAccessTokenDate;
+            this.userInputNormalization = userInputNormalization;
         }
 
         public async Task ValidateClientAuthenticationAsync(OAuthValidateClientAuthenticationContext context)
@@ -99,7 +103,9 @@
             var allowedOrigin = context.OwinContext.Get<string>(Constants.TokenAllowedOriginKey) ?? "*";
             Helper.SetAccessControlAllowOrigin(context.OwinContext, allowedOrigin);
 
-            var user = await this.getUser.HandleAsync(new GetUserQuery(context.UserName, context.Password));
+            var normalizedUserName = this.userInputNormalization.NormalizeUsername(context.UserName);
+
+            var user = await this.getUser.HandleAsync(new GetUserQuery(normalizedUserName, context.Password));
 
             if (user == null)
             {
@@ -108,11 +114,11 @@
             }
 
             await this.updateLastAccessTokenDate.HandleAsync(
-                new UpdateLastAccessTokenDateCommand(context.UserName, DateTime.UtcNow, UpdateLastAccessTokenDateCommand.AccessTokenCreationType.SignIn));
+                new UpdateLastAccessTokenDateCommand(normalizedUserName, DateTime.UtcNow, UpdateLastAccessTokenDateCommand.AccessTokenCreationType.SignIn));
 
             var identity = new ClaimsIdentity(context.Options.AuthenticationType);
-            identity.AddClaim(new Claim(ClaimTypes.Name, context.UserName));
-            identity.AddClaim(new Claim("sub", context.UserName));
+            identity.AddClaim(new Claim(ClaimTypes.Name, normalizedUserName));
+            identity.AddClaim(new Claim("sub", normalizedUserName));
             identity.AddClaim(new Claim("role", "user"));
 
             var props = new AuthenticationProperties(new Dictionary<string, string>
@@ -121,7 +127,7 @@
                         Constants.TokenClientIdKey, context.ClientId ?? string.Empty
                     },
                     { 
-                        "username", context.UserName
+                        "username", normalizedUserName
                     },
                     {
                         "user_id", user.Id
@@ -153,8 +159,10 @@
                 return;
             }
 
+            var normalizedUserName = this.userInputNormalization.NormalizeUsername(context.Ticket.Identity.Name);
+
             await this.updateLastAccessTokenDate.HandleAsync(
-                new UpdateLastAccessTokenDateCommand(context.Ticket.Identity.Name, DateTime.UtcNow, UpdateLastAccessTokenDateCommand.AccessTokenCreationType.RefreshToken));
+                new UpdateLastAccessTokenDateCommand(normalizedUserName, DateTime.UtcNow, UpdateLastAccessTokenDateCommand.AccessTokenCreationType.RefreshToken));
 
             var newIdentity = new ClaimsIdentity(context.Ticket.Identity);
             ////newIdentity.AddClaim(new Claim("newClaim", "newValue"));

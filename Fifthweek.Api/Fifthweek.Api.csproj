@@ -214,6 +214,10 @@
     <Compile Include="Migrations\201412232020572_AddRefreshTokensIndexForUsernameClientId.Designer.cs">
       <DependentUpon>201412232020572_AddRefreshTokensIndexForUsernameClientId.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201412301001070_ConvertUsernamesToLowerCase.cs" />
+    <Compile Include="Migrations\201412301001070_ConvertUsernamesToLowerCase.Designer.cs">
+      <DependentUpon>201412301001070_ConvertUsernamesToLowerCase.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AvailabilityResult.cs" />
     <Compile Include="Models\BrowserLogMessage.cs" />
@@ -252,7 +256,6 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Providers\FifthweekAuthorizationServerProvider.cs" />
     <Compile Include="Providers\FifthweekRefreshTokenProvider.cs" />
-    <Compile Include="RegistrationDataModelBinder.cs" />
     <Compile Include="Repositories\ClientRepository.cs" />
     <Compile Include="Repositories\DeveloperRepository.cs" />
     <Compile Include="Repositories\FifthweekDbContext.cs" />
@@ -319,6 +322,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201412232020572_AddRefreshTokensIndexForUsernameClientId.resx">
       <DependentUpon>201412232020572_AddRefreshTokensIndexForUsernameClientId.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201412301001070_ConvertUsernamesToLowerCase.resx">
+      <DependentUpon>201412301001070_ConvertUsernamesToLowerCase.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
