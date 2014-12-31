@@ -214,10 +214,6 @@
     <Compile Include="Migrations\201412232020572_AddRefreshTokensIndexForUsernameClientId.Designer.cs">
       <DependentUpon>201412232020572_AddRefreshTokensIndexForUsernameClientId.cs</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\201412301001070_ConvertUsernamesToLowerCase.cs" />
-    <Compile Include="Migrations\201412301001070_ConvertUsernamesToLowerCase.Designer.cs">
-      <DependentUpon>201412301001070_ConvertUsernamesToLowerCase.cs</DependentUpon>
-    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AvailabilityResult.cs" />
     <Compile Include="Models\BrowserLogMessage.cs" />
@@ -322,9 +318,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201412232020572_AddRefreshTokensIndexForUsernameClientId.resx">
       <DependentUpon>201412232020572_AddRefreshTokensIndexForUsernameClientId.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201412301001070_ConvertUsernamesToLowerCase.resx">
-      <DependentUpon>201412301001070_ConvertUsernamesToLowerCase.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
