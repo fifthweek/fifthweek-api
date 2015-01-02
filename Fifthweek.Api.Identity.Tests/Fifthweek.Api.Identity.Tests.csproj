@@ -96,6 +96,7 @@
     <Compile Include="Membership\Queries\GetUsernameAvailabilityQueryHandlerTests.cs" />
     <Compile Include="Membership\Queries\GetUsernameAvailabilityQueryTests.cs" />
     <Compile Include="Membership\Queries\GetUserQueryHandlerTests.cs" />
+    <Compile Include="Membership\EmailTests.cs" />
     <Compile Include="OAuth\Commands\AddRefreshTokenCommandHandlerTests.cs" />
     <Compile Include="OAuth\Commands\RemoveRefreshTokenCommandHandlerTests.cs" />
     <Compile Include="OAuth\Queries\GetClientQueryHandlerTests.cs" />
