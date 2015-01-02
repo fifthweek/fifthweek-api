@@ -1,20 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
-using System.Web.Http.Results;
-
-using Fifthweek.Api.Tests.Models;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Moq;
-
-namespace Fifthweek.Api.Tests
+﻿namespace Fifthweek.Api.Identity.Tests
 {
+    using System.Threading.Tasks;
+    using System.Web.Http.Results;
+
     using Fifthweek.Api.Core;
-    using Fifthweek.Api.Identity;
-    using Fifthweek.Api.Tests.Commands;
+
+    using Microsoft.VisualStudio.TestTools.UnitTesting;
+
+    using Moq;
 
     [TestClass]
     public class MembershipControllerTests

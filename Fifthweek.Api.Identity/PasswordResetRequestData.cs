@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Fifthweek.Api.Models
+﻿namespace Fifthweek.Api.Identity
 {
     using System.ComponentModel.DataAnnotations;
 

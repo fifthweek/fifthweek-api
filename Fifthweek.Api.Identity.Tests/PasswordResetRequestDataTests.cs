@@ -1,8 +1,7 @@
-﻿using Fifthweek.Api.Models;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-
-namespace Fifthweek.Api.Tests.Models
+﻿namespace Fifthweek.Api.Identity.Tests
 {
+    using Microsoft.VisualStudio.TestTools.UnitTesting;
+
     [TestClass]
     public class PasswordResetRequestDataTests
     {

@@ -1,8 +1,7 @@
-﻿namespace Fifthweek.Api.Tests.QueryHandlers
+﻿namespace Fifthweek.Api.Identity.Tests
 {
     using System.Threading.Tasks;
 
-    using Fifthweek.Api.Identity;
     using Fifthweek.Api.Persistence;
 
     using Microsoft.VisualStudio.TestTools.UnitTesting;

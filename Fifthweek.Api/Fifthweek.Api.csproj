@@ -194,7 +194,6 @@
       <DependentUpon>201412232020572_AddRefreshTokensIndexForUsernameClientId.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
-    <Compile Include="Models\PasswordResetRequestData.cs" />
     <Compile Include="ModelValidationException.cs" />
     <Compile Include="NullCommand.cs" />
     <Compile Include="NullCommandHandler.cs" />
@@ -227,6 +226,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="Models\" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Migrations\201412041523081_InitialCreate.resx">

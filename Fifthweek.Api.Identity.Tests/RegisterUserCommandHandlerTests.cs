@@ -1,13 +1,11 @@
-﻿namespace Fifthweek.Api.Tests.CommandHandlers
+﻿namespace Fifthweek.Api.Identity.Tests
 {
     using System;
     using System.Data.SqlTypes;
     using System.Linq;
     using System.Threading.Tasks;
 
-    using Fifthweek.Api.Identity;
     using Fifthweek.Api.Persistence;
-    using Fifthweek.Api.Tests.Commands;
 
     using Microsoft.VisualStudio.TestTools.UnitTesting;
 
@@ -91,11 +89,11 @@
             await target.HandleAsync(this.CreateRegisterUserCommand());
 
             Assert.IsNotNull(applicationUser);
-            Assert.AreEqual(this.registrationData.Email, applicationUser.Email);
-            Assert.AreEqual(this.registrationData.Username, applicationUser.UserName);
-            Assert.AreNotEqual(DateTime.MinValue, applicationUser.RegistrationDate);
-            Assert.AreEqual(SqlDateTime.MinValue.Value, applicationUser.LastSignInDate);
-            Assert.AreEqual(SqlDateTime.MinValue.Value, applicationUser.LastAccessTokenDate);
+            Assert.AreEqual<string>(this.registrationData.Email, applicationUser.Email);
+            Assert.AreEqual<string>(this.registrationData.Username, applicationUser.UserName);
+            Assert.AreNotEqual<DateTime>(DateTime.MinValue, applicationUser.RegistrationDate);
+            Assert.AreEqual<DateTime>(SqlDateTime.MinValue.Value, applicationUser.LastSignInDate);
+            Assert.AreEqual<DateTime>(SqlDateTime.MinValue.Value, applicationUser.LastAccessTokenDate);
         }
 
         [TestMethod]

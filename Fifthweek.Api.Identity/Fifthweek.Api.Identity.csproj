@@ -124,6 +124,7 @@
     <Compile Include="IUserManager.cs" />
     <Compile Include="IUserRepository.cs" />
     <Compile Include="MembershipController.cs" />
+    <Compile Include="PasswordResetRequestData.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ProviderErrorHandler.cs" />
     <Compile Include="RefreshTokenId.cs" />

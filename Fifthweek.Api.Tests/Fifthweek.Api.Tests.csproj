@@ -117,25 +117,11 @@
   </Choose>
   <ItemGroup>
     <Compile Include="AutofacConfigTests.cs" />
-    <Compile Include="CommandHandlers\AddRefreshTokenCommandHandlerTests.cs" />
     <Compile Include="ControllerConfigurationTests.cs" />
     <Compile Include="Controllers\AvailabilityControllerTests.cs" />
     <Compile Include="Controllers\LogControllerTests.cs" />
-    <Compile Include="MockIdentityResult.cs" />
-    <Compile Include="CommandHandlers\RegisterUserCommandHandlerTests.cs" />
-    <Compile Include="CommandHandlers\RemoveRefreshTokenCommandHandlerTests.cs" />
-    <Compile Include="CommandHandlers\UpdateLastAccessTokenDateCommandHandlerTests.cs" />
-    <Compile Include="Commands\RegisterUserCommandTests.cs" />
-    <Compile Include="Controllers\MembershipControllerTests.cs" />
     <Compile Include="Models\AvailabilityResultTests.cs" />
-    <Compile Include="Models\PasswordResetRequestDataTests.cs" />
-    <Compile Include="Models\RegistrationDataTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Queries\GetUsernameAvailabilityQueryTests.cs" />
-    <Compile Include="QueryHandlers\GetUsernameAvailabilityQueryHandlerTests.cs" />
-    <Compile Include="QueryHandlers\GetClientQueryHandlerTests.cs" />
-    <Compile Include="QueryHandlers\GetRefreshTokenQueryHandlerTests.cs" />
-    <Compile Include="QueryHandlers\GetUserQueryHandlerTests.cs" />
     <Compile Include="UserInputNormalizationTests.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -171,6 +157,12 @@
       <Project>{f90dc407-dc1e-4ef6-bbec-b5598810660a}</Project>
       <Name>Fifthweek.Api</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="CommandHandlers\" />
+    <Folder Include="Commands\" />
+    <Folder Include="Queries\" />
+    <Folder Include="QueryHandlers\" />
   </ItemGroup>
   <Choose>
     <When Condition="'$(VisualStudioVersion)' == '10.0' And '$(IsCodedUITest)' == 'True'">

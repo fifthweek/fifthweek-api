@@ -1,4 +1,4 @@
-namespace Fifthweek.Api.Tests
+namespace Fifthweek.Api.Identity.Tests
 {
     using Microsoft.AspNet.Identity;
 

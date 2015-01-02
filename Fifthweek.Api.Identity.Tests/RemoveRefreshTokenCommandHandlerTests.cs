@@ -1,9 +1,6 @@
-﻿namespace Fifthweek.Api.Tests.CommandHandlers
+﻿namespace Fifthweek.Api.Identity.Tests
 {
-    using System;
     using System.Threading.Tasks;
-
-    using Fifthweek.Api.Identity;
 
     using Microsoft.VisualStudio.TestTools.UnitTesting;
 
