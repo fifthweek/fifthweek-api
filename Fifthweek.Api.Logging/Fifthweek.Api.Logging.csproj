@@ -65,14 +65,14 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AggregateReportingService.cs" />
-    <Compile Include="BrowserLogMessage.cs" />
+    <Compile Include="Controllers\BrowserLogMessage.cs" />
+    <Compile Include="Controllers\LogController.cs" />
     <Compile Include="Developer.cs" />
     <Compile Include="DeveloperRepository.cs" />
     <Compile Include="EmailReportingService.cs" />
     <Compile Include="Extensions.cs" />
     <Compile Include="IDeveloperRepository.cs" />
     <Compile Include="IReportingService.cs" />
-    <Compile Include="LogController.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SlackReportingService.cs" />
     <Compile Include="TraceReportingService.cs" />

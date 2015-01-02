@@ -1,10 +1,11 @@
-﻿namespace Fifthweek.Api.Availability
+﻿namespace Fifthweek.Api.Availability.Controllers
 {
     using System.Net;
     using System.Net.Http;
     using System.Threading.Tasks;
     using System.Web.Http;
 
+    using Fifthweek.Api.Availability.Queries;
     using Fifthweek.Api.Core;
 
     [RoutePrefix("availability")]

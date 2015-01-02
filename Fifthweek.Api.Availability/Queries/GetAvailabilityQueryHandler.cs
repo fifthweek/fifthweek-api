@@ -1,4 +1,4 @@
-﻿namespace Fifthweek.Api.Availability
+﻿namespace Fifthweek.Api.Availability.Queries
 {
     using System;
     using System.Data.Entity;

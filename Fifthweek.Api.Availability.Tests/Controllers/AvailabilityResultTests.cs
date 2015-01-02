@@ -1,4 +1,4 @@
-﻿namespace Fifthweek.Api.Availability.Tests
+﻿namespace Fifthweek.Api.Availability.Tests.Controllers
 {
     using Microsoft.VisualStudio.TestTools.UnitTesting;
 

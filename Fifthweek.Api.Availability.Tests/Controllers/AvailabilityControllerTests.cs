@@ -1,9 +1,11 @@
-﻿namespace Fifthweek.Api.Availability.Tests
+﻿namespace Fifthweek.Api.Availability.Tests.Controllers
 {
     using System.Net;
     using System.Net.Http;
     using System.Threading.Tasks;
 
+    using Fifthweek.Api.Availability.Controllers;
+    using Fifthweek.Api.Availability.Queries;
     using Fifthweek.Api.Core;
 
     using Microsoft.VisualStudio.TestTools.UnitTesting;

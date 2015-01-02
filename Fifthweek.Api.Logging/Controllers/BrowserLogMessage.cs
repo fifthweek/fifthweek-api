@@ -1,4 +1,4 @@
-﻿namespace Fifthweek.Api.Logging
+﻿namespace Fifthweek.Api.Logging.Controllers
 {
     using Newtonsoft.Json.Linq;
 
