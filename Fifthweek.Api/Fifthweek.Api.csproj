@@ -221,6 +221,7 @@
     <Compile Include="Models\Developer.cs" />
     <Compile Include="Models\HashedRefreshTokenId.cs" />
     <Compile Include="Models\RefreshTokenId.cs" />
+    <Compile Include="Models\PasswordResetRequestData.cs" />
     <Compile Include="ModelValidationException.cs" />
     <Compile Include="Providers\FifthweekAuthorizationServerHandler.cs" />
     <Compile Include="Providers\FifthweekRefreshTokenHandler.cs" />

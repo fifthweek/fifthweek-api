@@ -128,6 +128,7 @@
     <Compile Include="Commands\RegisterUserCommandTests.cs" />
     <Compile Include="Controllers\MembershipControllerTests.cs" />
     <Compile Include="Models\AvailabilityResultTests.cs" />
+    <Compile Include="Models\PasswordResetRequestDataTests.cs" />
     <Compile Include="Models\RegistrationDataTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Queries\GetUsernameAvailabilityQueryTests.cs" />
