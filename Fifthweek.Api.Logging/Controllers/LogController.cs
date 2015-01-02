@@ -61,8 +61,7 @@
 
                 this.traceService.Log(level, "External log:");
 
-                if (level == TraceLevel.Error)gst
-
+                if (level == TraceLevel.Error)
                 {
                     this.exceptionHandler.ReportExceptionAsync(new ExternalErrorException(logMessage.Payload.ToString()));
                 }
