@@ -16,6 +16,7 @@ namespace Fifthweek.Api
 
     using Fifthweek.Api.Core;
     using Fifthweek.Api.Identity;
+    using Fifthweek.Api.Identity.OAuth;
     using Fifthweek.Api.Logging;
     using Fifthweek.Api.Persistence;
 

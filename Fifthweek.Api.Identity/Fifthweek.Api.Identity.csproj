@@ -95,47 +95,47 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AddRefreshTokenCommand.cs" />
-    <Compile Include="AddRefreshTokenCommandHandler.cs" />
-    <Compile Include="ApplicationType.cs" />
-    <Compile Include="ChallengeResult.cs" />
-    <Compile Include="Client.cs" />
-    <Compile Include="ClientId.cs" />
-    <Compile Include="ClientRepository.cs" />
-    <Compile Include="FifthweekAuthorizationServerHandler.cs" />
-    <Compile Include="FifthweekAuthorizationServerProvider.cs" />
-    <Compile Include="FifthweekClaimTypes.cs" />
-    <Compile Include="FifthweekRefreshTokenHandler.cs" />
-    <Compile Include="FifthweekRefreshTokenProvider.cs" />
-    <Compile Include="GetClientQuery.cs" />
-    <Compile Include="GetClientQueryHandler.cs" />
-    <Compile Include="GetRefreshTokenQuery.cs" />
-    <Compile Include="GetRefreshTokenQueryHandler.cs" />
-    <Compile Include="GetUsernameAvailabilityQuery.cs" />
-    <Compile Include="GetUsernameAvailabilityQueryHandler.cs" />
-    <Compile Include="GetUserQuery.cs" />
-    <Compile Include="GetUserQueryHandler.cs" />
-    <Compile Include="HashedRefreshTokenId.cs" />
-    <Compile Include="Helper.cs" />
-    <Compile Include="IClientRepository.cs" />
-    <Compile Include="IFifthweekAuthorizationServerHandler.cs" />
-    <Compile Include="IFifthweekRefreshTokenHandler.cs" />
-    <Compile Include="IRefreshTokenRepository.cs" />
+    <Compile Include="Commands\RegisterUserCommand.cs" />
+    <Compile Include="Commands\RegisterUserCommandHandler.cs" />
+    <Compile Include="Commands\UpdateLastAccessTokenDateCommand.cs" />
+    <Compile Include="Commands\UpdateLastAccessTokenDateCommandHandler.cs" />
+    <Compile Include="Controllers\MembershipController.cs" />
+    <Compile Include="Controllers\PasswordResetRequestData.cs" />
+    <Compile Include="Controllers\RegistrationData.cs" />
     <Compile Include="IUserManager.cs" />
     <Compile Include="IUserRepository.cs" />
-    <Compile Include="MembershipController.cs" />
-    <Compile Include="PasswordResetRequestData.cs" />
+    <Compile Include="OAuth\ApplicationType.cs" />
+    <Compile Include="OAuth\ChallengeResult.cs" />
+    <Compile Include="OAuth\Client.cs" />
+    <Compile Include="OAuth\ClientId.cs" />
+    <Compile Include="OAuth\ClientRepository.cs" />
+    <Compile Include="OAuth\Commands\AddRefreshTokenCommand.cs" />
+    <Compile Include="OAuth\Commands\AddRefreshTokenCommandHandler.cs" />
+    <Compile Include="OAuth\Commands\RemoveRefreshTokenCommand.cs" />
+    <Compile Include="OAuth\Commands\RemoveRefreshTokenCommandHandler.cs" />
+    <Compile Include="OAuth\FifthweekAuthorizationServerHandler.cs" />
+    <Compile Include="OAuth\FifthweekAuthorizationServerProvider.cs" />
+    <Compile Include="OAuth\FifthweekClaimTypes.cs" />
+    <Compile Include="OAuth\FifthweekRefreshTokenHandler.cs" />
+    <Compile Include="OAuth\FifthweekRefreshTokenProvider.cs" />
+    <Compile Include="OAuth\HashedRefreshTokenId.cs" />
+    <Compile Include="OAuth\Helper.cs" />
+    <Compile Include="OAuth\IClientRepository.cs" />
+    <Compile Include="OAuth\IFifthweekAuthorizationServerHandler.cs" />
+    <Compile Include="OAuth\IFifthweekRefreshTokenHandler.cs" />
+    <Compile Include="OAuth\IRefreshTokenRepository.cs" />
+    <Compile Include="OAuth\ProviderErrorHandler.cs" />
+    <Compile Include="OAuth\Queries\GetClientQuery.cs" />
+    <Compile Include="OAuth\Queries\GetClientQueryHandler.cs" />
+    <Compile Include="OAuth\Queries\GetRefreshTokenQuery.cs" />
+    <Compile Include="OAuth\Queries\GetRefreshTokenQueryHandler.cs" />
+    <Compile Include="OAuth\RefreshTokenId.cs" />
+    <Compile Include="OAuth\RefreshTokenRepository.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="ProviderErrorHandler.cs" />
-    <Compile Include="RefreshTokenId.cs" />
-    <Compile Include="RefreshTokenRepository.cs" />
-    <Compile Include="RegisterUserCommand.cs" />
-    <Compile Include="RegisterUserCommandHandler.cs" />
-    <Compile Include="RegistrationData.cs" />
-    <Compile Include="RemoveRefreshTokenCommand.cs" />
-    <Compile Include="RemoveRefreshTokenCommandHandler.cs" />
-    <Compile Include="UpdateLastAccessTokenDateCommand.cs" />
-    <Compile Include="UpdateLastAccessTokenDateCommandHandler.cs" />
+    <Compile Include="Queries\GetUsernameAvailabilityQuery.cs" />
+    <Compile Include="Queries\GetUsernameAvailabilityQueryHandler.cs" />
+    <Compile Include="Queries\GetUserQuery.cs" />
+    <Compile Include="Queries\GetUserQueryHandler.cs" />
     <Compile Include="UserRepository.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -152,6 +152,7 @@
     <None Include="App.config" />
     <None Include="packages.config" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

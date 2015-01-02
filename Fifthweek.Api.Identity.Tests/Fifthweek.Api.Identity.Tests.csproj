@@ -85,21 +85,21 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
-    <Compile Include="AddRefreshTokenCommandHandlerTests.cs" />
-    <Compile Include="GetClientQueryHandlerTests.cs" />
-    <Compile Include="GetRefreshTokenQueryHandlerTests.cs" />
-    <Compile Include="GetUsernameAvailabilityQueryHandlerTests.cs" />
-    <Compile Include="GetUsernameAvailabilityQueryTests.cs" />
-    <Compile Include="GetUserQueryHandlerTests.cs" />
-    <Compile Include="MembershipControllerTests.cs" />
+    <Compile Include="Commands\RegisterUserCommandHandlerTests.cs" />
+    <Compile Include="Commands\RegisterUserCommandTests.cs" />
+    <Compile Include="Commands\UpdateLastAccessTokenDateCommandHandlerTests.cs" />
+    <Compile Include="Controllers\MembershipControllerTests.cs" />
+    <Compile Include="Controllers\PasswordResetRequestDataTests.cs" />
+    <Compile Include="Controllers\RegistrationDataTests.cs" />
     <Compile Include="MockIdentityResult.cs" />
-    <Compile Include="PasswordResetRequestDataTests.cs" />
+    <Compile Include="OAuth\Commands\AddRefreshTokenCommandHandlerTests.cs" />
+    <Compile Include="OAuth\Commands\RemoveRefreshTokenCommandHandlerTests.cs" />
+    <Compile Include="OAuth\Queries\GetClientQueryHandlerTests.cs" />
+    <Compile Include="OAuth\Queries\GetRefreshTokenQueryHandlerTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="RegisterUserCommandHandlerTests.cs" />
-    <Compile Include="RegisterUserCommandTests.cs" />
-    <Compile Include="RegistrationDataTests.cs" />
-    <Compile Include="RemoveRefreshTokenCommandHandlerTests.cs" />
-    <Compile Include="UpdateLastAccessTokenDateCommandHandlerTests.cs" />
+    <Compile Include="Queries\GetUsernameAvailabilityQueryHandlerTests.cs" />
+    <Compile Include="Queries\GetUsernameAvailabilityQueryTests.cs" />
+    <Compile Include="Queries\GetUserQueryHandlerTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Fifthweek.Api.Core\Fifthweek.Api.Core.csproj">
@@ -119,6 +119,7 @@
     <None Include="app.config" />
     <None Include="packages.config" />
   </ItemGroup>
+  <ItemGroup />
   <Choose>
     <When Condition="'$(VisualStudioVersion)' == '10.0' And '$(IsCodedUITest)' == 'True'">
       <ItemGroup>

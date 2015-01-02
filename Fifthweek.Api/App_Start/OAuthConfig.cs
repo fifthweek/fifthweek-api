@@ -5,6 +5,7 @@
 
     using Fifthweek.Api.Core;
     using Fifthweek.Api.Identity;
+    using Fifthweek.Api.Identity.OAuth;
 
     using Microsoft.AspNet.Identity;
     using Microsoft.Owin;
