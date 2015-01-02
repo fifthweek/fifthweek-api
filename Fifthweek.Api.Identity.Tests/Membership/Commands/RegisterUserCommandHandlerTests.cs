@@ -32,7 +32,7 @@
         }
 
         [TestMethod]
-        public async Task WhenUserManagerFindsEmailShouldThrowAnException()
+        public async Task WhenUserManagerFindsEmail_ItShouldThrowAnException()
         {
             var userManager = new Mock<IUserManager>();
             userManager.Setup(v => v.FindByEmailAsync(this.registrationData.Email)).ReturnsAsync(new ApplicationUser());
@@ -55,7 +55,7 @@
         }
 
         [TestMethod]
-        public async Task WhenUserManagerFindsUsernameShouldThrowAnException()
+        public async Task WhenUserManagerFindsUsername_ItShouldThrowAnException()
         {
             var userManager = new Mock<IUserManager>();
             userManager.Setup(v => v.FindByEmailAsync(this.registrationData.Email)).ReturnsAsync(null);
@@ -78,7 +78,7 @@
         }
 
         [TestMethod]
-        public async Task WhenCredentialsAcceptedShouldCreateUser()
+        public async Task WhenCredentialsAccepted_ItShouldCreateUser()
         {
             ApplicationUser applicationUser = null;
             var userManager = new Mock<IUserManager>();
@@ -100,7 +100,7 @@
         }
 
         [TestMethod]
-        public async Task WhenUserCreationFailsShouldThrowAnException()
+        public async Task WhenUserCreationFails_ItShouldThrowAnException()
         {
             var userManager = new Mock<IUserManager>();
             userManager.Setup(v => v.FindByEmailAsync(this.registrationData.Email)).ReturnsAsync(null);

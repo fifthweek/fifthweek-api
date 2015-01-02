@@ -31,7 +31,7 @@
         }
 
         [TestMethod]
-        public async Task WhenAvailibilityIsOkResponseShouldBeOk()
+        public async Task WhenAvailibilityIsOk_ResponseShouldBeOk()
         {
             this.getAvailability.Setup(v => v.HandleAsync(It.IsAny<GetAvailabilityQuery>()))
                 .ReturnsAsync(new AvailabilityResult(true, true));
@@ -45,7 +45,7 @@
         }
 
         [TestMethod]
-        public async Task WhenAvailibilityIsNotOkResponseShouldBeServiceUnavailable()
+        public async Task WhenAvailibilityIsNotOk_ResponseShouldBeServiceUnavailable()
         {
             this.getAvailability.Setup(v => v.HandleAsync(It.IsAny<GetAvailabilityQuery>()))
                 .ReturnsAsync(new AvailabilityResult(true, false));

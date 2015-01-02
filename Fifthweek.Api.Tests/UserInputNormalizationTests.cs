@@ -6,7 +6,7 @@ namespace Fifthweek.Api.Tests
     public class UserInputNormalizationTests
     {
         [TestMethod]
-        public void ItShouldTrim_WhenNormalizingUsername()
+        public void WhenNormalizingUsername_ItShouldTrim()
         {
             const string validUsername = "lawrence";
             var normalization = new UserInputNormalization();
@@ -21,7 +21,7 @@ namespace Fifthweek.Api.Tests
         }
 
         [TestMethod]
-        public void ItShouldConvertToLowercase_WhenNormalizingUsername()
+        public void WhenNormalizingUsername_ItShouldConvertToLowercase()
         {
             const string mixedCaseUsername = "Lawrence";
             const string lowerCaseUsername = "lawrence";
@@ -37,7 +37,7 @@ namespace Fifthweek.Api.Tests
         }
 
         [TestMethod]
-        public void ItShouldTrim_WhenNormalizingEmailAddress()
+        public void WhenNormalizingEmailAddress_ItShouldTrim()
         {
             const string validEmail = "lawrence@fifthweek.com";
             var normalization = new UserInputNormalization();
@@ -52,7 +52,7 @@ namespace Fifthweek.Api.Tests
         }
 
         [TestMethod]
-        public void ItShouldConvertToLowercase_WhenNormalizingEmailAddress()
+        public void WhenNormalizingEmailAddress_ItShouldConvertToLowercase()
         {
             const string mixedCaseEmail = "Lawrence@Fifthweek.com";
             const string lowerCaseEmail = "lawrence@fifthweek.com";

@@ -17,7 +17,7 @@
         private static readonly GetUsernameAvailabilityQuery query = new GetUsernameAvailabilityQuery(username);
 
         [TestMethod]
-        public async Task ItShouldReturnTrueWhenUsernameNotRegistered()
+        public async Task WhenUsernameNotRegistered_ItShouldReturnTrue()
         {
             var userManager = new Mock<IUserManager>();
             userManager.Setup(v => v.FindByNameAsync(username)).ReturnsAsync(null);
@@ -27,7 +27,7 @@
         }
 
         [TestMethod]
-        public async Task ItShouldReturnFalseWhenUsernameRegistered()
+        public async Task WhenUsernameRegistered_ItShouldReturnFalse()
         {
             var userManager = new Mock<IUserManager>();
             userManager.Setup(v => v.FindByNameAsync(username)).ReturnsAsync(new ApplicationUser());

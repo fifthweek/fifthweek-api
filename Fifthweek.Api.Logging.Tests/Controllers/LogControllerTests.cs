@@ -24,7 +24,7 @@
         }
 
         [TestMethod]
-        public void WhenLogMessageIsNullItShouldDoNothing()
+        public void WhenLogMessageIsNull_ItShouldDoNothing()
         {
             var exceptionHandler = new Mock<IExceptionHandler>(MockBehavior.Strict);
             var traceService = new Mock<ITraceService>(MockBehavior.Strict);
@@ -34,7 +34,7 @@
         }
 
         [TestMethod]
-        public void WhenPayloadIsNullItShouldDoNothing()
+        public void WhenPayloadIsNull_ItShouldDoNothing()
         {
             var exceptionHandler = new Mock<IExceptionHandler>(MockBehavior.Strict);
             var traceService = new Mock<ITraceService>(MockBehavior.Strict);
@@ -47,49 +47,49 @@
         }
 
         [TestMethod]
-        public void WhenLevelIsVerboseShouldTraceVerboseMessage()
+        public void WhenLevelIsVerbose_ItShouldTraceVerboseMessage()
         {
             this.sampleMessage.Level = "verbose";
             this.EnsureTrace(this.sampleMessage, TraceLevel.Verbose);
         }
 
         [TestMethod]
-        public void WhenLevelIsVerbose2ShouldTraceVerboseMessage()
+        public void WhenLevelIsVerbose2_ItShouldTraceVerboseMessage()
         {
             this.sampleMessage.Level = "veRBOse";
             this.EnsureTrace(this.sampleMessage, TraceLevel.Verbose);
         }
 
         [TestMethod]
-        public void WhenLevelIsWarnShouldTraceVerboseMessage()
+        public void WhenLevelIsWarn_ItShouldTraceVerboseMessage()
         {
             this.sampleMessage.Level = "warn";
             this.EnsureTrace(this.sampleMessage, TraceLevel.Warning);
         }
 
         [TestMethod]
-        public void WhenLevelIsWarningShouldTraceVerboseMessage()
+        public void WhenLevelIsWarning_ItShouldTraceVerboseMessage()
         {
             this.sampleMessage.Level = "WARNING";
             this.EnsureTrace(this.sampleMessage, TraceLevel.Warning);
         }
 
         [TestMethod]
-        public void WhenLevelIsInfoShouldTraceVerboseMessage()
+        public void WhenLevelIsInfo_ItShouldTraceVerboseMessage()
         {
             this.sampleMessage.Level = "info";
             this.EnsureTrace(this.sampleMessage, TraceLevel.Info);
         }
 
         [TestMethod]
-        public void WhenLevelIsInformationShouldTraceVerboseMessage()
+        public void WhenLevelIsInformation_ItShouldTraceVerboseMessage()
         {
             this.sampleMessage.Level = "information";
             this.EnsureTrace(this.sampleMessage, TraceLevel.Info);
         }
 
         [TestMethod]
-        public void WhenLevelIsNotRecognisedShouldReportError()
+        public void WhenLevelIsNotRecognised_ItShouldReportError()
         {
             this.sampleMessage.Level = "fdsafdsaf";
 
@@ -104,7 +104,7 @@
         }
 
         [TestMethod]
-        public void WhenExceptionIsThrowsShouldReportError()
+        public void WhenExceptionIsThrows_ItShouldReportError()
         {
             this.sampleMessage.Level = "info";
 

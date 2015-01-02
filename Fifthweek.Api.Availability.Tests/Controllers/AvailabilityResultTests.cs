@@ -6,14 +6,14 @@
     public class AvailabilityResultTests
     {
         [TestMethod]
-        public void WhenAllContentIsTrueIsOkShouldReturnTrue()
+        public void WhenAllContentIsTrue_IsOkShouldReturnTrue()
         {
             var item = new AvailabilityResult(true, true);
             Assert.IsTrue(item.IsOk());
         }
 
         [TestMethod]
-        public void WhenAnyContentIsFalseIsOkShouldReturnFalse()
+        public void WhenAnyContentIsFalse_IsOkShouldReturnFalse()
         {
             var item = new AvailabilityResult(false, true);
             Assert.IsFalse(item.IsOk());

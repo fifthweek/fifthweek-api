@@ -17,7 +17,7 @@
     public class MembershipControllerTests
     {
         [TestMethod]
-        public async Task ItShouldIssueRegisterUserCommand_WhenPostingRegistrations()
+        public async Task WhenPostingRegistrations_ItShouldIssueRegisterUserCommand()
         {
             var registration = RegistrationDataTests.NewRegistrationData();
             var command = RegisterUserCommandTests.NewRegisterUserCommand(registration);
@@ -37,7 +37,7 @@
         }
 
         [TestMethod]
-        public async Task ItShouldNormalizeUsernameAndEmail_WhenPostingRegistrations()
+        public async Task WhenPostingRegistrations_ItShouldNormalizeUsernameAndEmail()
         {
             const string emailTransformation = "!";
             const string usernameTransformation = "?";
@@ -64,7 +64,7 @@
         }
 
         [TestMethod]
-        public async Task ItShouldNormalizeWithoutMutatingRegistration_WhenPostingRegistrations()
+        public async Task WhenPostingRegistrations_ItShouldNormalizeWithoutMutatingRegistration()
         {
             const string emailTransformation = "!";
             const string usernameTransformation = "?";
@@ -98,7 +98,7 @@
         }
 
         [TestMethod]
-        public async Task ItShouldYieldOkIfUsernameAvailable_WhenGettingUsernameAvailability()
+        public async Task WhenGettingUsernameAvailability_ItShouldYieldOkIfUsernameAvailable()
         {
             const string username = "Lawrence";
             var query = new GetUsernameAvailabilityQuery(username);
@@ -116,7 +116,7 @@
         }
 
         [TestMethod]
-        public async Task ItShouldYieldNotFoundIfUsernameUnavailable_WhenGettingUsernameAvailability()
+        public async Task WhenGettingUsernameAvailability_ItShouldYieldNotFoundIfUsernameUnavailable()
         {
             const string username = "Lawrence";
             var query = new GetUsernameAvailabilityQuery(username);
@@ -134,7 +134,7 @@
         }
 
         [TestMethod]
-        public async Task ItShouldNormalizeUsername_WhenGettingUsernameAvailability()
+        public async Task WhenGettingUsernameAvailability_ItShouldNormalizeUsername()
         {
             const string usernameTransformation = "?";
             const string username = "Lawrence";
@@ -154,7 +154,7 @@
         }
 
         [TestMethod]
-        public async Task ItShouldIssueRequestPasswordResetCommand_WhenPostingPasswordResetRequests()
+        public async Task WhenPostingPasswordResetRequests_ItShouldIssueRequestPasswordResetCommand()
         {
             var passwordResetRequest = PasswordResetRequestDataTests.NewPasswordResetRequestData();
             var command = RequestPasswordResetCommandTests.NewRequestPasswordResetCommand(passwordResetRequest);

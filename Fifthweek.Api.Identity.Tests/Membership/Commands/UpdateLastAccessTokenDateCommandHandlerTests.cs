@@ -16,7 +16,7 @@
         private string testUsername = "TestUsername";
 
         [TestMethod]
-        public async Task WhenTheCreationTypeIsSignInItSouldUpdateBothTimestamps()
+        public async Task WhenTheCreationTypeIsSignIn_ItSouldUpdateBothTimestamps()
         {
             var command = new UpdateLastAccessTokenDateCommand(
                 this.testUsername,
@@ -35,7 +35,7 @@
         }
 
         [TestMethod]
-        public async Task WhenTheCreationTypeIsRefreshTokenItSouldUpdateAccessTokenTimestampOnly()
+        public async Task WhenTheCreationTypeIsRefreshToken_ItSouldUpdateAccessTokenTimestampOnly()
         {
             var command = new UpdateLastAccessTokenDateCommand(
                 this.testUsername,
