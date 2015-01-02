@@ -1,10 +1,9 @@
-﻿namespace Fifthweek.Api.Tests
+﻿namespace Fifthweek.Api.Logging.Tests
 {
     using System;
     using System.Diagnostics;
 
     using Fifthweek.Api.Core;
-    using Fifthweek.Api.Logging;
 
     using Microsoft.VisualStudio.TestTools.UnitTesting;
 

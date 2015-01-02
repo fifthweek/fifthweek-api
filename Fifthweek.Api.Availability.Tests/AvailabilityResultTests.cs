@@ -1,7 +1,5 @@
-﻿namespace Fifthweek.Api.Tests.Models
+﻿namespace Fifthweek.Api.Availability.Tests
 {
-    using Fifthweek.Api.Availability;
-
     using Microsoft.VisualStudio.TestTools.UnitTesting;
 
     [TestClass]
