@@ -1,9 +1,7 @@
-﻿namespace Fifthweek.Api.Tests
+﻿namespace Fifthweek.Api.Core.Tests
 {
     using System.Threading.Tasks;
     using System.Transactions;
-
-    using Fifthweek.Api.Core;
 
     using Microsoft.VisualStudio.TestTools.UnitTesting;
 

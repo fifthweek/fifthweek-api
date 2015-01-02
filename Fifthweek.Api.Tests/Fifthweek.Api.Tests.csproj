@@ -136,9 +136,6 @@
     <Compile Include="QueryHandlers\GetClientQueryHandlerTests.cs" />
     <Compile Include="QueryHandlers\GetRefreshTokenQueryHandlerTests.cs" />
     <Compile Include="QueryHandlers\GetUserQueryHandlerTests.cs" />
-    <Compile Include="RetryOnSqlDeadlockOrTimeoutDecoratorTests.cs" />
-    <Compile Include="SqlExceptionMocker.cs" />
-    <Compile Include="TransactionCommandHandlerDecoratorTests.cs" />
     <Compile Include="UserInputNormalizationTests.cs" />
   </ItemGroup>
   <ItemGroup>
