@@ -5,7 +5,7 @@ namespace Fifthweek.Api.Migrations
     using System.Data.Entity.Migrations;
     using System.Linq;
 
-    internal sealed class Configuration : DbMigrationsConfiguration<Fifthweek.Api.Repositories.FifthweekDbContext>
+    internal sealed class Configuration : DbMigrationsConfiguration<FifthweekDbContext>
     {
         public Configuration()
         {
@@ -13,7 +13,7 @@ namespace Fifthweek.Api.Migrations
             ContextKey = "Fifthweek.Api.Repositories.FifthweekDbContext";
         }
 
-        protected override void Seed(Fifthweek.Api.Repositories.FifthweekDbContext context)
+        protected override void Seed(FifthweekDbContext context)
         {
             //  This method will be called after migrating to the latest version.
 

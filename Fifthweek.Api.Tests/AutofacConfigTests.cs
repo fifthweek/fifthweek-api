@@ -2,10 +2,7 @@
 {
     using Autofac;
 
-    using Fifthweek.Api.CommandHandlers;
-    using Fifthweek.Api.Commands;
-    using Fifthweek.Api.Queries;
-    using Fifthweek.Api.QueryHandlers;
+    using Fifthweek.Api.Core;
 
     using Microsoft.VisualStudio.TestTools.UnitTesting;
 

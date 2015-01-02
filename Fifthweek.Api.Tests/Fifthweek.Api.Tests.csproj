@@ -146,6 +146,30 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Fifthweek.Api.Availability\Fifthweek.Api.Availability.csproj">
+      <Project>{f42bec68-554b-4c11-8533-92bec56f23a4}</Project>
+      <Name>Fifthweek.Api.Availability</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Fifthweek.Api.Core\Fifthweek.Api.Core.csproj">
+      <Project>{bd52863e-063d-45a5-9ca8-7541804d1313}</Project>
+      <Name>Fifthweek.Api.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Fifthweek.Api.Identity\Fifthweek.Api.Identity.csproj">
+      <Project>{6a2af270-e4d4-4c4e-a88f-807f7b9a03b7}</Project>
+      <Name>Fifthweek.Api.Identity</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Fifthweek.Api.Logging\Fifthweek.Api.Logging.csproj">
+      <Project>{22d85c74-3001-4930-95d7-8f2526452dd6}</Project>
+      <Name>Fifthweek.Api.Logging</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Fifthweek.Api.Persistence\Fifthweek.Api.Persistence.csproj">
+      <Project>{9c18bee3-fab5-4a00-8a94-a1faea370175}</Project>
+      <Name>Fifthweek.Api.Persistence</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Fifthweek.Api.SendGrid\Fifthweek.Api.SendGrid.csproj">
+      <Project>{5f5df240-536a-41b6-bfec-4f89940eb053}</Project>
+      <Name>Fifthweek.Api.SendGrid</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Fifthweek.Api\Fifthweek.Api.csproj">
       <Project>{f90dc407-dc1e-4ef6-bbec-b5598810660a}</Project>
       <Name>Fifthweek.Api</Name>

@@ -1,10 +1,9 @@
-﻿using Fifthweek.Api.Commands;
-using Fifthweek.Api.Tests.Models;
+﻿using Fifthweek.Api.Tests.Models;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Fifthweek.Api.Tests.Commands
 {
-    using Fifthweek.Api.Models;
+    using Fifthweek.Api.Identity;
 
     [TestClass]
     public class RegisterUserCommandTests

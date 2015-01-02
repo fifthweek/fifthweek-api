@@ -1,5 +1,7 @@
 namespace Fifthweek.Api
 {
+    using Fifthweek.Api.Core;
+
     public class UserInputNormalization : IUserInputNormalization
     {
         public string NormalizeEmailAddress(string emailAddress)

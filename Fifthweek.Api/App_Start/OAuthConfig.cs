@@ -3,7 +3,8 @@
     using System;
     using System.Web.Http;
 
-    using Fifthweek.Api.Providers;
+    using Fifthweek.Api.Core;
+    using Fifthweek.Api.Identity;
 
     using Microsoft.AspNet.Identity;
     using Microsoft.Owin;

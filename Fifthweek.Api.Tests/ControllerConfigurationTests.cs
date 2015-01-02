@@ -6,7 +6,7 @@
     using System.Reflection;
     using System.Web.Http;
 
-    using Fifthweek.Api.Controllers;
+    using Fifthweek.Api.Identity;
 
     using Microsoft.VisualStudio.TestTools.UnitTesting;
 

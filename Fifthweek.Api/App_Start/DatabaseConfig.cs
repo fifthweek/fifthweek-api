@@ -6,7 +6,6 @@
     using System.Web.Http;
 
     using Fifthweek.Api.Migrations;
-    using Fifthweek.Api.Repositories;
 
     public static class DatabaseConfig
     {

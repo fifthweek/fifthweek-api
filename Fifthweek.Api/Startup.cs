@@ -4,6 +4,9 @@ namespace Fifthweek.Api
 {
     using System;
     using System.Web.Http;
+    using System.Web.Http.Dispatcher;
+
+    using Fifthweek.Api.Core;
 
     using Owin;
 

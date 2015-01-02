@@ -1,12 +1,9 @@
-﻿using Fifthweek.Api.Entities;
-
-namespace Fifthweek.Api.Tests.QueryHandlers
+﻿namespace Fifthweek.Api.Tests.QueryHandlers
 {
     using System.Threading.Tasks;
 
-    using Fifthweek.Api.Queries;
-    using Fifthweek.Api.QueryHandlers;
-    using Fifthweek.Api.Repositories;
+    using Fifthweek.Api.Identity;
+    using Fifthweek.Api.Persistence;
 
     using Microsoft.AspNet.Identity.EntityFramework;
     using Microsoft.VisualStudio.TestTools.UnitTesting;

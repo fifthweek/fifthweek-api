@@ -3,15 +3,12 @@
     using System;
     using System.Net;
     using System.Net.Http;
-    using System.Threading;
     using System.Threading.Tasks;
     using System.Web;
     using System.Web.Hosting;
-    using System.Web.Http.Controllers;
-    using System.Web.Http.Filters;
 
-    using Fifthweek.Api.Models;
-    using Fifthweek.Api.Services;
+    using Fifthweek.Api.Core;
+    using Fifthweek.Api.Logging;
 
     using Microsoft.Owin.Security.OAuth;
 

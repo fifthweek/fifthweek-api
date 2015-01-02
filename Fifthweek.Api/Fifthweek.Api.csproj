@@ -110,12 +110,6 @@
     <Reference Include="Owin">
       <HintPath>..\packages\Owin.1.0\lib\net40\Owin.dll</HintPath>
     </Reference>
-    <Reference Include="SendGrid.SmtpApi">
-      <HintPath>..\packages\SendGrid.SmtpApi.1.1.3\lib\net40\SendGrid.SmtpApi.dll</HintPath>
-    </Reference>
-    <Reference Include="SendGridMail">
-      <HintPath>..\packages\Sendgrid.5.0.0\lib\SendGridMail.dll</HintPath>
-    </Reference>
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="System.Net.Http" />
     <Reference Include="System.Net.Http.Formatting, Version=5.2.2.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
@@ -170,34 +164,19 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ApiException.cs" />
     <Compile Include="App_Start\AutofacConfig.cs" />
     <Compile Include="App_Start\DatabaseConfig.cs" />
     <Compile Include="App_Start\ErrorLoggingWebApiDependencyResolver.cs" />
     <Compile Include="App_Start\OAuthConfig.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
-    <Compile Include="BadRequestException.cs" />
-    <Compile Include="CommandHandlers\AddRefreshTokenCommandHandler.cs" />
-    <Compile Include="CommandHandlers\ICommandHandler.cs" />
-    <Compile Include="CommandHandlers\NullCommandHandler.cs" />
-    <Compile Include="CommandHandlers\RegisterUserCommandHandler.cs" />
-    <Compile Include="CommandHandlers\RemoveRefreshTokenCommandHandler.cs" />
-    <Compile Include="CommandHandlers\UpdateLastAccessTokenDateCommandHandler.cs" />
     <Compile Include="App_Start\LogRequestModule.cs" />
-    <Compile Include="Commands\AddRefreshTokenCommand.cs" />
-    <Compile Include="Commands\NullCommand.cs" />
-    <Compile Include="Commands\RegisterUserCommand.cs" />
-    <Compile Include="Commands\RemoveRefreshTokenCommand.cs" />
-    <Compile Include="Commands\UpdateLastAccessTokenDateCommand.cs" />
-    <Compile Include="Controllers\AvailabilityController.cs" />
-    <Compile Include="Controllers\LogController.cs" />
+    <Compile Include="Constants.cs" />
     <Compile Include="ConvertExceptionsToResponsesAttribute.cs" />
     <Compile Include="DecoratorAttribute.cs" />
-    <Compile Include="Entities\ApplicationUser.cs" />
-    <Compile Include="Entities\FifthweekClaimTypes.cs" />
-    <Compile Include="Extensions.cs" />
-    <Compile Include="ExternalErrorException.cs" />
-    <Compile Include="IUserInputNormalization.cs" />
+    <Compile Include="ExceptionHandler.cs" />
+    <Compile Include="ExceptionHandlerUtilities.cs" />
+    <Compile Include="FifthweekAssembliesResolver.cs" />
+    <Compile Include="FifthweekDbContext.cs" />
     <Compile Include="Migrations\201412041523081_InitialCreate.cs" />
     <Compile Include="Migrations\201412041523081_InitialCreate.Designer.cs">
       <DependentUpon>201412041523081_InitialCreate.cs</DependentUpon>
@@ -215,74 +194,16 @@
       <DependentUpon>201412232020572_AddRefreshTokensIndexForUsernameClientId.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
-    <Compile Include="Models\AvailabilityResult.cs" />
-    <Compile Include="Models\BrowserLogMessage.cs" />
-    <Compile Include="Models\ClientId.cs" />
-    <Compile Include="Models\Developer.cs" />
-    <Compile Include="Models\HashedRefreshTokenId.cs" />
-    <Compile Include="Models\RefreshTokenId.cs" />
     <Compile Include="Models\PasswordResetRequestData.cs" />
     <Compile Include="ModelValidationException.cs" />
-    <Compile Include="Providers\FifthweekAuthorizationServerHandler.cs" />
-    <Compile Include="Providers\FifthweekRefreshTokenHandler.cs" />
-    <Compile Include="Providers\IFifthweekAuthorizationServerHandler.cs" />
-    <Compile Include="Providers\IFifthweekRefreshTokenHandler.cs" />
-    <Compile Include="Providers\ProviderErrorHandler.cs" />
-    <Compile Include="Queries\GetAvailabilityQuery.cs" />
-    <Compile Include="Queries\GetClientQuery.cs" />
-    <Compile Include="Queries\GetRefreshTokenQuery.cs" />
-    <Compile Include="Queries\GetUsernameAvailabilityQuery.cs" />
-    <Compile Include="Queries\GetUserQuery.cs" />
-    <Compile Include="Queries\IQuery.cs" />
-    <Compile Include="Queries\NullQuery.cs" />
-    <Compile Include="QueryHandlers\GetAvailabilityQueryHandler.cs" />
-    <Compile Include="QueryHandlers\GetClientQueryHandler.cs" />
-    <Compile Include="QueryHandlers\GetRefreshTokenQueryHandler.cs" />
-    <Compile Include="QueryHandlers\GetUsernameAvailabilityQueryHandler.cs" />
-    <Compile Include="QueryHandlers\GetUserQueryHandler.cs" />
-    <Compile Include="QueryHandlers\IQueryHandler.cs" />
-    <Compile Include="QueryHandlers\NullQueryHandler.cs" />
-    <Compile Include="RecoverableException.cs" />
-    <Compile Include="Constants.cs" />
-    <Compile Include="Controllers\MembershipController.cs" />
-    <Compile Include="Models\Client.cs" />
-    <Compile Include="Entities\RefreshToken.cs" />
-    <Compile Include="Helper.cs" />
-    <Compile Include="Models\ApplicationType.cs" />
-    <Compile Include="Models\RegistrationData.cs" />
+    <Compile Include="NullCommand.cs" />
+    <Compile Include="NullCommandHandler.cs" />
+    <Compile Include="NullQuery.cs" />
+    <Compile Include="NullQueryHandler.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Providers\FifthweekAuthorizationServerProvider.cs" />
-    <Compile Include="Providers\FifthweekRefreshTokenProvider.cs" />
-    <Compile Include="Repositories\ClientRepository.cs" />
-    <Compile Include="Repositories\DeveloperRepository.cs" />
-    <Compile Include="Repositories\FifthweekDbContext.cs" />
-    <Compile Include="Repositories\IClientRepository.cs" />
-    <Compile Include="Repositories\IDeveloperRepository.cs" />
-    <Compile Include="Repositories\IRefreshTokenRepository.cs" />
-    <Compile Include="Repositories\IUserManager.cs" />
-    <Compile Include="Repositories\IUserRepository.cs" />
-    <Compile Include="Repositories\RefreshTokenRepository.cs" />
-    <Compile Include="Repositories\IFifthweekDbContext.cs" />
-    <Compile Include="ExceptionHandlerUtilities.cs" />
-    <Compile Include="Repositories\UserRepository.cs" />
     <Compile Include="RequireHttpsAttribute.cs" />
-    <Compile Include="Results\ChallengeResult.cs" />
-    <Compile Include="RetryOnSqlDeadlockOrTimeoutCommandHandlerDecorator.cs" />
-    <Compile Include="RetryOnSqlDeadlockOrTimeoutDecoratorBase.cs" />
-    <Compile Include="RetryOnSqlDeadlockOrTimeoutQueryHandlerDecorator.cs" />
-    <Compile Include="Services\AggregateReportingService.cs" />
-    <Compile Include="Services\EmailReportingService.cs" />
-    <Compile Include="Services\ExceptionHandler.cs" />
-    <Compile Include="Services\IExceptionHandler.cs" />
-    <Compile Include="Services\IReportingService.cs" />
-    <Compile Include="Services\ISendEmailService.cs" />
-    <Compile Include="Services\ITraceService.cs" />
-    <Compile Include="Services\SendGridEmailService.cs" />
-    <Compile Include="Services\SlackReportingService.cs" />
-    <Compile Include="Services\TraceReportingService.cs" />
-    <Compile Include="Services\TraceService.cs" />
     <Compile Include="Startup.cs" />
-    <Compile Include="TransactionCommandHandlerDecorator.cs" />
+    <Compile Include="TraceService.cs" />
     <Compile Include="UserInputNormalization.cs" />
     <Compile Include="ValidateModelAttribute.cs" />
   </ItemGroup>
@@ -320,6 +241,32 @@
     <EmbeddedResource Include="Migrations\201412232020572_AddRefreshTokensIndexForUsernameClientId.resx">
       <DependentUpon>201412232020572_AddRefreshTokensIndexForUsernameClientId.cs</DependentUpon>
     </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Fifthweek.Api.Availability\Fifthweek.Api.Availability.csproj">
+      <Project>{f42bec68-554b-4c11-8533-92bec56f23a4}</Project>
+      <Name>Fifthweek.Api.Availability</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Fifthweek.Api.Core\Fifthweek.Api.Core.csproj">
+      <Project>{bd52863e-063d-45a5-9ca8-7541804d1313}</Project>
+      <Name>Fifthweek.Api.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Fifthweek.Api.Identity\Fifthweek.Api.Identity.csproj">
+      <Project>{6a2af270-e4d4-4c4e-a88f-807f7b9a03b7}</Project>
+      <Name>Fifthweek.Api.Identity</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Fifthweek.Api.Logging\Fifthweek.Api.Logging.csproj">
+      <Project>{22d85c74-3001-4930-95d7-8f2526452dd6}</Project>
+      <Name>Fifthweek.Api.Logging</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Fifthweek.Api.Persistence\Fifthweek.Api.Persistence.csproj">
+      <Project>{9c18bee3-fab5-4a00-8a94-a1faea370175}</Project>
+      <Name>Fifthweek.Api.Persistence</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Fifthweek.Api.SendGrid\Fifthweek.Api.SendGrid.csproj">
+      <Project>{5f5df240-536a-41b6-bfec-4f89940eb053}</Project>
+      <Name>Fifthweek.Api.SendGrid</Name>
+    </ProjectReference>
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

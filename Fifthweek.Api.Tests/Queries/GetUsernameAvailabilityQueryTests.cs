@@ -1,8 +1,9 @@
-﻿using Fifthweek.Api.Queries;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Fifthweek.Api.Tests.Queries
 {
+    using Fifthweek.Api.Identity;
+
     [TestClass]
     public class GetUsernameAvailabilityQueryTests
     {

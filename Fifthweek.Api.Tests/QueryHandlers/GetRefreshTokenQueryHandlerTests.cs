@@ -2,11 +2,8 @@
 {
     using System.Threading.Tasks;
 
-    using Fifthweek.Api.Entities;
-    using Fifthweek.Api.Models;
-    using Fifthweek.Api.Queries;
-    using Fifthweek.Api.QueryHandlers;
-    using Fifthweek.Api.Repositories;
+    using Fifthweek.Api.Identity;
+    using Fifthweek.Api.Persistence;
 
     using Microsoft.VisualStudio.TestTools.UnitTesting;
 

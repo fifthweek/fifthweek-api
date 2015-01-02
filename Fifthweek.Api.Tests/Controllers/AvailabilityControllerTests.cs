@@ -4,10 +4,8 @@
     using System.Net.Http;
     using System.Threading.Tasks;
 
-    using Fifthweek.Api.Controllers;
-    using Fifthweek.Api.Models;
-    using Fifthweek.Api.Queries;
-    using Fifthweek.Api.QueryHandlers;
+    using Fifthweek.Api.Availability;
+    using Fifthweek.Api.Core;
 
     using Microsoft.VisualStudio.TestTools.UnitTesting;
 

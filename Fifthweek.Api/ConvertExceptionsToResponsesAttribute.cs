@@ -4,6 +4,8 @@
     using System.Threading.Tasks;
     using System.Web.Http.Filters;
 
+    using Fifthweek.Api.Core;
+
     public class ConvertExceptionsToResponsesAttribute : ActionFilterAttribute
     {
         public override async Task OnActionExecutedAsync(HttpActionExecutedContext actionExecutedContext, CancellationToken cancellationToken)

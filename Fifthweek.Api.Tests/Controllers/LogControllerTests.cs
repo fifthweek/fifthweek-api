@@ -3,9 +3,8 @@
     using System;
     using System.Diagnostics;
 
-    using Fifthweek.Api.Controllers;
-    using Fifthweek.Api.Models;
-    using Fifthweek.Api.Services;
+    using Fifthweek.Api.Core;
+    using Fifthweek.Api.Logging;
 
     using Microsoft.VisualStudio.TestTools.UnitTesting;
 

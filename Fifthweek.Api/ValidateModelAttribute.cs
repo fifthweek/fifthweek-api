@@ -5,6 +5,8 @@
     using System.Web.Http.Controllers;
     using System.Web.Http.Filters;
 
+    using Fifthweek.Api.Core;
+
     public class ValidateModelAttribute : ActionFilterAttribute
     {
         public override async Task OnActionExecutingAsync(HttpActionContext actionContext, CancellationToken cancellationToken)

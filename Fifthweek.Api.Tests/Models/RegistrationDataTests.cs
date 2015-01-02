@@ -1,8 +1,9 @@
-﻿using Fifthweek.Api.Models;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Fifthweek.Api.Tests.Models
 {
+    using Fifthweek.Api.Identity;
+
     [TestClass]
     public class RegistrationDataTests
     {

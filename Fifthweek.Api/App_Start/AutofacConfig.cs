@@ -1,6 +1,4 @@
-﻿using Fifthweek.Api.Entities;
-using Fifthweek.Api.Queries;
-using Microsoft.AspNet.Identity;
+﻿using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
 
 namespace Fifthweek.Api
@@ -16,11 +14,10 @@ namespace Fifthweek.Api
     using Autofac.Core;
     using Autofac.Integration.WebApi;
 
-    using Fifthweek.Api.CommandHandlers;
-    using Fifthweek.Api.Providers;
-    using Fifthweek.Api.QueryHandlers;
-    using Fifthweek.Api.Repositories;
-    using Fifthweek.Api.Services;
+    using Fifthweek.Api.Core;
+    using Fifthweek.Api.Identity;
+    using Fifthweek.Api.Logging;
+    using Fifthweek.Api.Persistence;
 
     using Owin;
 
@@ -40,7 +37,8 @@ namespace Fifthweek.Api
         internal static IContainer CreateContainer()
         {
             var builder = new ContainerBuilder();
-            builder.RegisterApiControllers(Assembly.GetExecutingAssembly());
+
+            RegisterControllerAssemblies(builder);
 
             RegisterHandlers(builder);
 
@@ -76,10 +74,15 @@ namespace Fifthweek.Api
             return container;
         }
 
+        private static void RegisterControllerAssemblies(ContainerBuilder builder)
+        {
+            builder.RegisterApiControllers(FifthweekAssembliesResolver.GetAssemblies().ToArray());
+        }
+
         private static void RegisterHandlers(
             ContainerBuilder builder)
         {
-            var types = Assembly.GetExecutingAssembly().GetTypes();
+            var types = FifthweekAssembliesResolver.GetAssemblies().SelectMany(v => v.GetTypes()).ToList();
 
             var commandHandlers = (from t in types
                                    where t.IsClass

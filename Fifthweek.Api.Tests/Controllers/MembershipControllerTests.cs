@@ -5,18 +5,15 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Web.Http.Results;
-using Fifthweek.Api.CommandHandlers;
-using Fifthweek.Api.Commands;
-using Fifthweek.Api.Controllers;
-using Fifthweek.Api.Models;
-using Fifthweek.Api.Queries;
-using Fifthweek.Api.QueryHandlers;
+
 using Fifthweek.Api.Tests.Models;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 
 namespace Fifthweek.Api.Tests
 {
+    using Fifthweek.Api.Core;
+    using Fifthweek.Api.Identity;
     using Fifthweek.Api.Tests.Commands;
 
     [TestClass]
