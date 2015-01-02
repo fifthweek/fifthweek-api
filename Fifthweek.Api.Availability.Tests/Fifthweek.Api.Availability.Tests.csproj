@@ -67,8 +67,8 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
-    <Compile Include="AvailabilityControllerTests.cs" />
-    <Compile Include="AvailabilityResultTests.cs" />
+    <Compile Include="Controllers\AvailabilityControllerTests.cs" />
+    <Compile Include="Controllers\AvailabilityResultTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
