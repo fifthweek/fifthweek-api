@@ -7,11 +7,11 @@ namespace Fifthweek.Api.Identity.Membership
 {
     public class Email
     {
-        private Email()
+        protected Email()
         {
         }
 
-        public string Value { get; private set; }
+        public string Value { get; protected set; }
 
         protected bool Equals(Email other)
         {
@@ -66,13 +66,6 @@ namespace Fifthweek.Api.Identity.Membership
             if (value.Contains("\""))
             {
                 // Quoted names are valid, but to keep things sane we're not accepting them.
-                email = null;
-                return false;
-            }
-
-            if (value.Any(c => char.IsUpper(c) || char.IsWhiteSpace(c)))
-            {
-                // Email addresses must be normalised to trimmed lowercase.
                 email = null;
                 return false;
             }

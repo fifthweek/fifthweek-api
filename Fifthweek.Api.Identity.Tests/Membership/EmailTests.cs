@@ -10,69 +10,50 @@ namespace Fifthweek.Api.Identity.Tests.Membership
         [TestMethod]
         public void ItShouldAllowBasicEmailAddresses()
         {
-            GoodEmail("joe@bloggs.com");
+            this.GoodEmail("joe@bloggs.com");
         }
 
         [TestMethod]
         public void ItShouldAllowTokens()
         {
-            GoodEmail("joe+token@bloggs.com");
+            this.GoodEmail("joe+token@bloggs.com");
         }
 
         [TestMethod]
         public void ItShouldAllowSmallTlds()
         {
-            GoodEmail("joe@bloggs.co");
+            this.GoodEmail("joe@bloggs.co");
         }
 
         [TestMethod]
         public void ItShouldAllowLargeTlds()
         {
-            GoodEmail("joe@bloggs.museum");
+            this.GoodEmail("joe@bloggs.museum");
         }
 
         [TestMethod]
         public void ItShouldAllowIPAddresses()
         {
-            GoodEmail("joe@[127.0.0.1]");
-            GoodEmail("joe@127.0.0.1");
+            this.GoodEmail("joe@[127.0.0.1]");
+            this.GoodEmail("joe@127.0.0.1");
         }
 
         [TestMethod]
         public void ItShouldAllowSubdomains()
         {
-            GoodEmail("joe@sub.bloggs.com");
+            this.GoodEmail("joe@sub.bloggs.com");
         }
 
         [TestMethod]
         public void ItShouldAllowNumbers()
         {
-            GoodEmail("joe123@bloggs456.com");
+            this.GoodEmail("joe123@bloggs456.com");
         }
 
         [TestMethod]
         public void ItShouldNotAllowQuotedNames()
         {
-            BadEmail("\"joe bloggs\"@bloggs.com");
-        }
-
-        [TestMethod]
-        public void ItShouldNotAllowWhitespace()
-        {
-            BadEmail(" joe@bloggs.com");
-            BadEmail("joe@bloggs.com ");
-            BadEmail("joe @bloggs.com");
-            BadEmail("joe@ bloggs.com");
-            BadEmail("jo e@bloggs.com");
-            BadEmail("joe@blo ggs.com");
-            BadEmail("joe@bloggs .com");
-            BadEmail("joe@bloggs. com");
-        }
-
-        [TestMethod]
-        public void ItShouldNotAllowUppercase()
-        {
-            BadEmail("Joe@Bloggs.com");
+            this.BadEmail("\"joe bloggs\"@bloggs.com");
         }
 
         [TestMethod]
@@ -93,19 +74,29 @@ namespace Fifthweek.Api.Identity.Tests.Membership
             Assert.AreNotEqual(email1, email2);
         }
 
-        private static void GoodEmail(string emailValue)
+        protected virtual Email Parse(string emailValue)
+        {
+            return Email.Parse(emailValue);
+        }
+
+        protected virtual bool TryParse(string emailValue, out Email email)
+        {
+            return Email.TryParse(emailValue, out email);
+        }
+
+        protected void GoodEmail(string emailValue)
         {
             Email email;
-            var emailValid = Email.TryParse(emailValue, out email);
+            var emailValid = this.TryParse(emailValue, out email);
 
             Assert.IsTrue(emailValid);
             Assert.AreEqual(emailValue, email.Value);
         }
 
-        private static void BadEmail(string emailValue)
+        protected void BadEmail(string emailValue)
         {
             Email email;
-            var emailValid = Email.TryParse(emailValue, out email);
+            var emailValid = this.TryParse(emailValue, out email);
 
             Assert.IsFalse(emailValid);
         }
