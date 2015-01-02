@@ -17,20 +17,6 @@
     [TestClass]
     public class RegisterUserCommandHandlerTests
     {
-        private RegistrationData registrationData;
-
-        [TestInitialize]
-        public void TestInitialize()
-        {
-            this.registrationData = new RegistrationData
-            {
-                Email = "test@testing.fifthweek.com",
-                ExampleWork = "testing.fifthweek.com",
-                Password = "TestPassword",
-                Username = "TestUsername",
-            };
-        }
-
         [TestMethod]
         public async Task WhenUserManagerFindsEmail_ItShouldThrowAnException()
         {
@@ -133,5 +119,19 @@
         {
             return RegisterUserCommandTests.NewRegisterUserCommand(this.registrationData);
         }
+
+        [TestInitialize]
+        public void TestInitialize()
+        {
+            this.registrationData = new RegistrationData
+            {
+                Email = "test@testing.fifthweek.com",
+                ExampleWork = "testing.fifthweek.com",
+                Password = "TestPassword",
+                Username = "TestUsername",
+            };
+        }
+
+        private RegistrationData registrationData;
     }
 }
