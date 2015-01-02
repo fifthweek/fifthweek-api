@@ -95,6 +95,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Membership\Commands\PasswordResetRequestCommand.cs" />
     <Compile Include="Membership\Commands\RegisterUserCommand.cs" />
     <Compile Include="Membership\Commands\RegisterUserCommandHandler.cs" />
     <Compile Include="Membership\Commands\UpdateLastAccessTokenDateCommand.cs" />

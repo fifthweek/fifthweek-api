@@ -86,6 +86,7 @@
   </Choose>
   <ItemGroup>
     <Compile Include="Membership\Commands\RegisterUserCommandHandlerTests.cs" />
+    <Compile Include="Membership\Commands\PasswordResetRequestCommand.cs" />
     <Compile Include="Membership\Commands\RegisterUserCommandTests.cs" />
     <Compile Include="Membership\Commands\UpdateLastAccessTokenDateCommandHandlerTests.cs" />
     <Compile Include="Membership\Controllers\MembershipControllerTests.cs" />
