@@ -1,8 +1,8 @@
 ﻿namespace Fifthweek.Api.Identity.Membership.Commands
 {
-    public class PasswordResetRequestCommand
+    public class RequestPasswordResetCommand
     {
-        public PasswordResetRequestCommand(string email, string username)
+        public RequestPasswordResetCommand(string email, string username)
         {
             this.Email = email;
             this.Username = username;
@@ -29,7 +29,7 @@
                 return false;
             }
 
-            return this.Equals((PasswordResetRequestCommand)obj);
+            return this.Equals((RequestPasswordResetCommand)obj);
         }
 
         public override int GetHashCode()
@@ -42,7 +42,7 @@
             }
         }
 
-        protected bool Equals(PasswordResetRequestCommand other)
+        protected bool Equals(RequestPasswordResetCommand other)
         {
             return string.Equals(this.Email, other.Email) && 
                 string.Equals(this.Username, other.Username);

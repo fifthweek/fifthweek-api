@@ -7,14 +7,14 @@
     using Microsoft.VisualStudio.TestTools.UnitTesting;
 
     [TestClass]
-    public class PasswordResetRequestCommandTests
+    public class RequestPasswordResetCommandTests
     {
         [TestMethod]
         public void ItShouldRecogniseEqualObjects()
         {
             var registrationData = PasswordResetRequestDataTests.NewPasswordResetRequestData();
-            var command1 = NewPasswordResetRequestCommand(registrationData);
-            var command2 = NewPasswordResetRequestCommand(registrationData);
+            var command1 = NewRequestPasswordResetCommand(registrationData);
+            var command2 = NewRequestPasswordResetCommand(registrationData);
 
             Assert.AreEqual(command1, command2);
         }
@@ -23,17 +23,17 @@
         public void ItShouldRecogniseDifferentRegistrationData()
         {
             var registrationData = PasswordResetRequestDataTests.NewPasswordResetRequestData();
-            var command1 = NewPasswordResetRequestCommand(registrationData);
+            var command1 = NewRequestPasswordResetCommand(registrationData);
 
             registrationData.Username = "Different";
-            var command2 = NewPasswordResetRequestCommand(registrationData);
+            var command2 = NewRequestPasswordResetCommand(registrationData);
 
             Assert.AreNotEqual(command1, command2);
         }
 
-        public static PasswordResetRequestCommand NewPasswordResetRequestCommand(PasswordResetRequestData registrationData)
+        public static RequestPasswordResetCommand NewRequestPasswordResetCommand(PasswordResetRequestData registrationData)
         {
-            return new PasswordResetRequestCommand(
+            return new RequestPasswordResetCommand(
                 registrationData.Email,
                 registrationData.Username);
         }

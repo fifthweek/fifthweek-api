@@ -13,17 +13,23 @@
     public class MembershipController : ApiController
     {
         private readonly ICommandHandler<RegisterUserCommand> registerUser;
+        private readonly ICommandHandler<RequestPasswordResetCommand> requestPasswordReset;
         private readonly IQueryHandler<GetUsernameAvailabilityQuery, bool> getUsernameAvailability;
         private readonly IUserInputNormalization userInputNormalization;
 
         public MembershipController(
             ICommandHandler<RegisterUserCommand> registerUser,
+            ICommandHandler<RequestPasswordResetCommand> requestPasswordReset,
             IQueryHandler<GetUsernameAvailabilityQuery, bool> getUsernameAvailability,
             IUserInputNormalization userInputNormalization)
         {
             if (registerUser == null)
             {
                 throw new ArgumentNullException("registerUser");
+            }
+            if (requestPasswordReset == null)
+            {
+                throw new ArgumentNullException("requestPasswordReset");
             }
 
             if (getUsernameAvailability == null)
@@ -37,6 +43,7 @@
             }
 
             this.registerUser = registerUser;
+            this.requestPasswordReset = requestPasswordReset;
             this.getUsernameAvailability = getUsernameAvailability;
             this.userInputNormalization = userInputNormalization;
         }
@@ -72,6 +79,21 @@
             }
 
             return this.NotFound();
+        }
+
+        // POST membership/passwordResetRequests
+        [AllowAnonymous]
+        [Route("passwordResetRequests")]
+        public async Task<IHttpActionResult> PostPasswordResetRequestAsync(PasswordResetRequestData passwordResetRequest)
+        {
+            var command = new RequestPasswordResetCommand(
+                passwordResetRequest.Email,
+                passwordResetRequest.Username
+            );
+
+            await this.requestPasswordReset.HandleAsync(command);
+
+            return this.Ok();
         }
     }
 }
