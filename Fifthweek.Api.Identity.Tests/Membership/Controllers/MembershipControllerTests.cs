@@ -22,14 +22,14 @@
             var registration = RegistrationDataTests.NewRegistrationData();
             var command = RegisterUserCommandTests.NewRegisterUserCommand(registration);
 
-            this.Normalization.Setup(v => v.NormalizeEmailAddress(registration.Email)).Returns(registration.Email);
-            this.Normalization.Setup(v => v.NormalizeUsername(registration.Username)).Returns(registration.Username);
-            this.RegisterUser.Setup(v => v.HandleAsync(command)).Returns(Task.FromResult(0));
+            this.normalization.Setup(v => v.NormalizeEmailAddress(registration.Email)).Returns(registration.Email);
+            this.normalization.Setup(v => v.NormalizeUsername(registration.Username)).Returns(registration.Username);
+            this.registerUser.Setup(v => v.HandleAsync(command)).Returns(Task.FromResult(0));
 
-            var result = await this.Controller.PostRegistrationAsync(registration);
+            var result = await this.controller.PostRegistrationAsync(registration);
 
             Assert.IsInstanceOfType(result, typeof(OkResult));
-            this.RegisterUser.Verify(v => v.HandleAsync(command));
+            this.registerUser.Verify(v => v.HandleAsync(command));
         }
 
         [TestMethod]
@@ -40,11 +40,11 @@
             var registration = RegistrationDataTests.NewRegistrationData();
             var command = RegisterUserCommandTests.NewRegisterUserCommand(registration);
 
-            this.Normalization.Setup(v => v.NormalizeEmailAddress(registration.Email)).Returns(registration.Email + emailTransformation);
-            this.Normalization.Setup(v => v.NormalizeUsername(registration.Username)).Returns(registration.Username + usernameTransformation);
-            this.RegisterUser.Setup(v => v.HandleAsync(command)).Returns(Task.FromResult(0));
+            this.normalization.Setup(v => v.NormalizeEmailAddress(registration.Email)).Returns(registration.Email + emailTransformation);
+            this.normalization.Setup(v => v.NormalizeUsername(registration.Username)).Returns(registration.Username + usernameTransformation);
+            this.registerUser.Setup(v => v.HandleAsync(command)).Returns(Task.FromResult(0));
 
-            var result = await this.Controller.PostRegistrationAsync(registration);
+            var result = await this.controller.PostRegistrationAsync(registration);
 
             var expectedRegistration = RegistrationDataTests.NewRegistrationData();
             expectedRegistration.Email += emailTransformation;
@@ -52,7 +52,7 @@
             var expectedCommand = RegisterUserCommandTests.NewRegisterUserCommand(expectedRegistration);
 
             Assert.IsInstanceOfType(result, typeof(OkResult));
-            this.RegisterUser.Verify(v => v.HandleAsync(expectedCommand));
+            this.registerUser.Verify(v => v.HandleAsync(expectedCommand));
         }
 
         [TestMethod]
@@ -63,13 +63,13 @@
             var registration = RegistrationDataTests.NewRegistrationData();
             RegisterUserCommand actualCommand = null;
 
-            this.Normalization.Setup(v => v.NormalizeEmailAddress(registration.Email)).Returns(registration.Email + emailTransformation);
-            this.Normalization.Setup(v => v.NormalizeUsername(registration.Username)).Returns(registration.Username + usernameTransformation);
-            this.RegisterUser.Setup(v => v.HandleAsync(It.IsAny<RegisterUserCommand>()))
+            this.normalization.Setup(v => v.NormalizeEmailAddress(registration.Email)).Returns(registration.Email + emailTransformation);
+            this.normalization.Setup(v => v.NormalizeUsername(registration.Username)).Returns(registration.Username + usernameTransformation);
+            this.registerUser.Setup(v => v.HandleAsync(It.IsAny<RegisterUserCommand>()))
                 .Returns(Task.FromResult(0))
                 .Callback<RegisterUserCommand>(c => actualCommand = c);
 
-            var result = await this.Controller.PostRegistrationAsync(registration);
+            var result = await this.controller.PostRegistrationAsync(registration);
 
             Assert.AreEqual(registration.ExampleWork, actualCommand.ExampleWork);
             Assert.AreEqual(registration.Password, actualCommand.Password);
@@ -82,7 +82,7 @@
             expectedRegistration.Username += usernameTransformation;
             var expectedCommand = RegisterUserCommandTests.NewRegisterUserCommand(expectedRegistration);
 
-            this.RegisterUser.Verify(v => v.HandleAsync(expectedCommand));
+            this.registerUser.Verify(v => v.HandleAsync(expectedCommand));
         }
 
         [TestMethod]
@@ -91,10 +91,10 @@
             const string username = "Lawrence";
             var query = new GetUsernameAvailabilityQuery(username);
 
-            this.Normalization.Setup(v => v.NormalizeUsername(username)).Returns(username);
-            this.GetUsernameAvailability.Setup(v => v.HandleAsync(query)).Returns(Task.FromResult(true));
+            this.normalization.Setup(v => v.NormalizeUsername(username)).Returns(username);
+            this.getUsernameAvailability.Setup(v => v.HandleAsync(query)).Returns(Task.FromResult(true));
 
-            var result = await this.Controller.GetUsernameAvailabilityAsync(username);
+            var result = await this.controller.GetUsernameAvailabilityAsync(username);
 
             Assert.IsInstanceOfType(result, typeof(OkResult));
         }
@@ -105,10 +105,10 @@
             const string username = "Lawrence";
             var query = new GetUsernameAvailabilityQuery(username);
 
-            this.Normalization.Setup(v => v.NormalizeUsername(username)).Returns(username);
-            this.GetUsernameAvailability.Setup(v => v.HandleAsync(query)).Returns(Task.FromResult(false));
+            this.normalization.Setup(v => v.NormalizeUsername(username)).Returns(username);
+            this.getUsernameAvailability.Setup(v => v.HandleAsync(query)).Returns(Task.FromResult(false));
 
-            var result = await this.Controller.GetUsernameAvailabilityAsync(username);
+            var result = await this.controller.GetUsernameAvailabilityAsync(username);
 
             Assert.IsInstanceOfType(result, typeof(NotFoundResult));
         }
@@ -120,13 +120,13 @@
             const string username = "Lawrence";
             var expectedQuery = new GetUsernameAvailabilityQuery(username + usernameTransformation);
 
-            this.Normalization.Setup(v => v.NormalizeUsername(username)).Returns(username + usernameTransformation);
-            this.GetUsernameAvailability.Setup(v => v.HandleAsync(expectedQuery)).Returns(Task.FromResult(true));
+            this.normalization.Setup(v => v.NormalizeUsername(username)).Returns(username + usernameTransformation);
+            this.getUsernameAvailability.Setup(v => v.HandleAsync(expectedQuery)).Returns(Task.FromResult(true));
 
-            var result = await this.Controller.GetUsernameAvailabilityAsync(username);
+            var result = await this.controller.GetUsernameAvailabilityAsync(username);
 
             Assert.IsInstanceOfType(result, typeof(OkResult));
-            this.GetUsernameAvailability.Verify(v => v.HandleAsync(expectedQuery));
+            this.getUsernameAvailability.Verify(v => v.HandleAsync(expectedQuery));
         }
 
         [TestMethod]
@@ -135,26 +135,26 @@
             var passwordResetRequest = PasswordResetRequestDataTests.NewPasswordResetRequestData();
             var command = RequestPasswordResetCommandTests.NewRequestPasswordResetCommand(passwordResetRequest);
 
-            var result = await this.Controller.PostPasswordResetRequestAsync(passwordResetRequest);
+            var result = await this.controller.PostPasswordResetRequestAsync(passwordResetRequest);
 
             Assert.IsInstanceOfType(result, typeof(OkResult));
-            this.RequestPasswordReset.Verify(v => v.HandleAsync(command));
+            this.requestPasswordReset.Verify(v => v.HandleAsync(command));
         }
 
         [TestInitialize]
         public void TestInitialize()
         {
-            this.RegisterUser = new Mock<ICommandHandler<RegisterUserCommand>>();
-            this.RequestPasswordReset = new Mock<ICommandHandler<RequestPasswordResetCommand>>();
-            this.GetUsernameAvailability = new Mock<IQueryHandler<GetUsernameAvailabilityQuery, bool>>();
-            this.Normalization = new Mock<IUserInputNormalization>();
-            this.Controller = new MembershipController(this.RegisterUser.Object, this.RequestPasswordReset.Object, this.GetUsernameAvailability.Object, this.Normalization.Object);
+            this.registerUser = new Mock<ICommandHandler<RegisterUserCommand>>();
+            this.requestPasswordReset = new Mock<ICommandHandler<RequestPasswordResetCommand>>();
+            this.getUsernameAvailability = new Mock<IQueryHandler<GetUsernameAvailabilityQuery, bool>>();
+            this.normalization = new Mock<IUserInputNormalization>();
+            this.controller = new MembershipController(this.registerUser.Object, this.requestPasswordReset.Object, this.getUsernameAvailability.Object, this.normalization.Object);
         }
 
-        public Mock<ICommandHandler<RegisterUserCommand>> RegisterUser { get; private set; }
-        public Mock<ICommandHandler<RequestPasswordResetCommand>> RequestPasswordReset { get; private set; }
-        public Mock<IQueryHandler<GetUsernameAvailabilityQuery, bool>> GetUsernameAvailability { get; private set; }
-        public Mock<IUserInputNormalization> Normalization { get; private set; }
-        public MembershipController Controller { get; private set; }
+        private Mock<ICommandHandler<RegisterUserCommand>> registerUser;
+        private Mock<ICommandHandler<RequestPasswordResetCommand>> requestPasswordReset;
+        private Mock<IQueryHandler<GetUsernameAvailabilityQuery, bool>> getUsernameAvailability;
+        private Mock<IUserInputNormalization> normalization;
+        private MembershipController controller;
     }
 }
