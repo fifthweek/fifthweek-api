@@ -18,6 +18,12 @@
         Task<ApplicationUser> FindByNameAsync(string userName);
 
         Task<IdentityResult> UpdateAsync(ApplicationUser user);
+
+        Task<string> GeneratePasswordResetTokenAsync(string userId);
+        
+        Task<IdentityResult> ResetPasswordAsync(string userId, string token, string newPassword);
+        
+        Task SendEmailAsync(string userId, string subject, string body);
     }
 
     public class UserManagerImpl : IUserManager
@@ -57,6 +63,21 @@
         public Task<IdentityResult> UpdateAsync(ApplicationUser user)
         {
             return this.userManager.UpdateAsync(user);
+        }
+
+        public Task<string> GeneratePasswordResetTokenAsync(string userId)
+        {
+            return this.userManager.GeneratePasswordResetTokenAsync(userId);
+        }
+
+        public Task<IdentityResult> ResetPasswordAsync(string userId, string token, string newPassword)
+        {
+            return this.userManager.ResetPasswordAsync(userId, token, newPassword);
+        }
+
+        public Task SendEmailAsync(string userId, string subject, string body)
+        {
+            return this.userManager.SendEmailAsync(userId, subject, body);
         }
     }
 }
