@@ -1,8 +1,8 @@
-﻿namespace Fifthweek.Api.Identity.Tests.Commands
+﻿namespace Fifthweek.Api.Identity.Tests.Membership.Commands
 {
-    using Fifthweek.Api.Identity.Commands;
-    using Fifthweek.Api.Identity.Controllers;
-    using Fifthweek.Api.Identity.Tests.Controllers;
+    using Fifthweek.Api.Identity.Membership.Commands;
+    using Fifthweek.Api.Identity.Membership.Controllers;
+    using Fifthweek.Api.Identity.Tests.Membership.Controllers;
 
     using Microsoft.VisualStudio.TestTools.UnitTesting;
 

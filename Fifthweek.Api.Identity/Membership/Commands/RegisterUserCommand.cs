@@ -1,4 +1,4 @@
-﻿namespace Fifthweek.Api.Identity.Commands
+﻿namespace Fifthweek.Api.Identity.Membership.Commands
 {
     public class RegisterUserCommand
     {

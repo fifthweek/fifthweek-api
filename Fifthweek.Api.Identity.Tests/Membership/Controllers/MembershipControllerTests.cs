@@ -1,13 +1,13 @@
-﻿namespace Fifthweek.Api.Identity.Tests.Controllers
+﻿namespace Fifthweek.Api.Identity.Tests.Membership.Controllers
 {
     using System.Threading.Tasks;
     using System.Web.Http.Results;
 
     using Fifthweek.Api.Core;
-    using Fifthweek.Api.Identity.Commands;
-    using Fifthweek.Api.Identity.Controllers;
-    using Fifthweek.Api.Identity.Queries;
-    using Fifthweek.Api.Identity.Tests.Commands;
+    using Fifthweek.Api.Identity.Membership.Commands;
+    using Fifthweek.Api.Identity.Membership.Controllers;
+    using Fifthweek.Api.Identity.Membership.Queries;
+    using Fifthweek.Api.Identity.Tests.Membership.Commands;
 
     using Microsoft.VisualStudio.TestTools.UnitTesting;
 

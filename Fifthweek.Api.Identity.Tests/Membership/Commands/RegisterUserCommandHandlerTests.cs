@@ -1,12 +1,13 @@
-﻿namespace Fifthweek.Api.Identity.Tests.Commands
+﻿namespace Fifthweek.Api.Identity.Tests.Membership.Commands
 {
     using System;
     using System.Data.SqlTypes;
     using System.Linq;
     using System.Threading.Tasks;
 
-    using Fifthweek.Api.Identity.Commands;
-    using Fifthweek.Api.Identity.Controllers;
+    using Fifthweek.Api.Identity.Membership;
+    using Fifthweek.Api.Identity.Membership.Commands;
+    using Fifthweek.Api.Identity.Membership.Controllers;
     using Fifthweek.Api.Persistence;
 
     using Microsoft.VisualStudio.TestTools.UnitTesting;

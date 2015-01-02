@@ -8,9 +8,9 @@
     using System.Threading.Tasks;
 
     using Fifthweek.Api.Core;
-    using Fifthweek.Api.Identity.Commands;
+    using Fifthweek.Api.Identity.Membership.Commands;
+    using Fifthweek.Api.Identity.Membership.Queries;
     using Fifthweek.Api.Identity.OAuth.Queries;
-    using Fifthweek.Api.Identity.Queries;
     using Fifthweek.Api.Persistence;
 
     using Microsoft.Owin.Security;

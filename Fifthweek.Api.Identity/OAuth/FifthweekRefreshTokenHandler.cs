@@ -4,10 +4,8 @@
     using System.Threading.Tasks;
 
     using Fifthweek.Api.Core;
-    using Fifthweek.Api.Identity.Commands;
     using Fifthweek.Api.Identity.OAuth.Commands;
     using Fifthweek.Api.Identity.OAuth.Queries;
-    using Fifthweek.Api.Identity.Queries;
     using Fifthweek.Api.Persistence;
 
     using Microsoft.Owin.Security.Infrastructure;

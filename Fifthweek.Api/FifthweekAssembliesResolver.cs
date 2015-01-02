@@ -5,7 +5,7 @@
     using System.Reflection;
     using System.Web.Http.Dispatcher;
 
-    using Fifthweek.Api.Identity.Controllers;
+    using Fifthweek.Api.Identity.Membership.Controllers;
 
     public static class FifthweekAssembliesResolver
     {

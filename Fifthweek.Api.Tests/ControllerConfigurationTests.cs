@@ -7,7 +7,7 @@
     using System.Web.Http;
 
     using Fifthweek.Api.Identity;
-    using Fifthweek.Api.Identity.Controllers;
+    using Fifthweek.Api.Identity.Membership.Controllers;
 
     using Microsoft.VisualStudio.TestTools.UnitTesting;
 

@@ -85,21 +85,21 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
-    <Compile Include="Commands\RegisterUserCommandHandlerTests.cs" />
-    <Compile Include="Commands\RegisterUserCommandTests.cs" />
-    <Compile Include="Commands\UpdateLastAccessTokenDateCommandHandlerTests.cs" />
-    <Compile Include="Controllers\MembershipControllerTests.cs" />
-    <Compile Include="Controllers\PasswordResetRequestDataTests.cs" />
-    <Compile Include="Controllers\RegistrationDataTests.cs" />
-    <Compile Include="MockIdentityResult.cs" />
+    <Compile Include="Membership\Commands\RegisterUserCommandHandlerTests.cs" />
+    <Compile Include="Membership\Commands\RegisterUserCommandTests.cs" />
+    <Compile Include="Membership\Commands\UpdateLastAccessTokenDateCommandHandlerTests.cs" />
+    <Compile Include="Membership\Controllers\MembershipControllerTests.cs" />
+    <Compile Include="Membership\Controllers\PasswordResetRequestDataTests.cs" />
+    <Compile Include="Membership\Controllers\RegistrationDataTests.cs" />
+    <Compile Include="Membership\MockIdentityResult.cs" />
+    <Compile Include="Membership\Queries\GetUsernameAvailabilityQueryHandlerTests.cs" />
+    <Compile Include="Membership\Queries\GetUsernameAvailabilityQueryTests.cs" />
+    <Compile Include="Membership\Queries\GetUserQueryHandlerTests.cs" />
     <Compile Include="OAuth\Commands\AddRefreshTokenCommandHandlerTests.cs" />
     <Compile Include="OAuth\Commands\RemoveRefreshTokenCommandHandlerTests.cs" />
     <Compile Include="OAuth\Queries\GetClientQueryHandlerTests.cs" />
     <Compile Include="OAuth\Queries\GetRefreshTokenQueryHandlerTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Queries\GetUsernameAvailabilityQueryHandlerTests.cs" />
-    <Compile Include="Queries\GetUsernameAvailabilityQueryTests.cs" />
-    <Compile Include="Queries\GetUserQueryHandlerTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Fifthweek.Api.Core\Fifthweek.Api.Core.csproj">

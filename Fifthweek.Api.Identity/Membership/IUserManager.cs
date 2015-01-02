@@ -1,4 +1,4 @@
-﻿namespace Fifthweek.Api.Identity
+﻿namespace Fifthweek.Api.Identity.Membership
 {
     using System;
     using System.Threading.Tasks;

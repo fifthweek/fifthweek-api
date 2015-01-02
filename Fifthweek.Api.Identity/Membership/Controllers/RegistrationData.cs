@@ -1,4 +1,4 @@
-﻿namespace Fifthweek.Api.Identity.Controllers
+﻿namespace Fifthweek.Api.Identity.Membership.Controllers
 {
     using System.ComponentModel.DataAnnotations;
 

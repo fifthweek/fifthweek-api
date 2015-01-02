@@ -1,6 +1,6 @@
-﻿namespace Fifthweek.Api.Identity.Tests.Controllers
+﻿namespace Fifthweek.Api.Identity.Tests.Membership.Controllers
 {
-    using Fifthweek.Api.Identity.Controllers;
+    using Fifthweek.Api.Identity.Membership.Controllers;
 
     using Microsoft.VisualStudio.TestTools.UnitTesting;
 

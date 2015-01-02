@@ -1,9 +1,10 @@
-﻿namespace Fifthweek.Api.Identity.Tests.Commands
+﻿namespace Fifthweek.Api.Identity.Tests.Membership.Commands
 {
     using System;
     using System.Threading.Tasks;
 
-    using Fifthweek.Api.Identity.Commands;
+    using Fifthweek.Api.Identity.Membership;
+    using Fifthweek.Api.Identity.Membership.Commands;
 
     using Microsoft.VisualStudio.TestTools.UnitTesting;
 

@@ -1,8 +1,9 @@
-﻿namespace Fifthweek.Api.Identity.Tests.Queries
+﻿namespace Fifthweek.Api.Identity.Tests.Membership.Queries
 {
     using System.Threading.Tasks;
 
-    using Fifthweek.Api.Identity.Queries;
+    using Fifthweek.Api.Identity.Membership;
+    using Fifthweek.Api.Identity.Membership.Queries;
     using Fifthweek.Api.Persistence;
 
     using Microsoft.VisualStudio.TestTools.UnitTesting;

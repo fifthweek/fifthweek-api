@@ -1,4 +1,4 @@
-﻿namespace Fifthweek.Api.Identity.Controllers
+﻿namespace Fifthweek.Api.Identity.Membership.Controllers
 {
     using System;
     using System.Threading.Tasks;
@@ -6,8 +6,8 @@
     using System.Web.Http.Description;
 
     using Fifthweek.Api.Core;
-    using Fifthweek.Api.Identity.Commands;
-    using Fifthweek.Api.Identity.Queries;
+    using Fifthweek.Api.Identity.Membership.Commands;
+    using Fifthweek.Api.Identity.Membership.Queries;
 
     [RoutePrefix("membership")]
     public class MembershipController : ApiController
