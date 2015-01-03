@@ -2,7 +2,7 @@
 {
     public class RequestPasswordResetCommand
     {
-        public RequestPasswordResetCommand(NormalizedEmail email, string username)
+        public RequestPasswordResetCommand(NormalizedEmail email, NormalizedUsername username)
         {
             this.Email = email;
             this.Username = username;
@@ -10,7 +10,7 @@
 
         public NormalizedEmail Email { get; private set; }
 
-        public string Username { get; private set; }
+        public NormalizedUsername Username { get; private set; }
 
         public override bool Equals(object obj)
         {

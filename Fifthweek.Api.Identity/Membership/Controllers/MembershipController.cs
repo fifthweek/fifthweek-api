@@ -54,7 +54,7 @@ namespace Fifthweek.Api.Identity.Membership.Controllers
                 registration.ExampleWork,
                 NormalizedEmail.Normalize(registration.EmailObj),
                 NormalizedUsername.Normalize(registration.UsernameObj),
-                registration.Password);
+                registration.PasswordObj);
 
             await this.registerUser.HandleAsync(command);
             return this.Ok();
@@ -91,7 +91,7 @@ namespace Fifthweek.Api.Identity.Membership.Controllers
 
             var command = new RequestPasswordResetCommand(
                 passwordResetRequest.EmailObj == null ? null : NormalizedEmail.Normalize(passwordResetRequest.EmailObj),
-                passwordResetRequest.Username
+                passwordResetRequest.UsernameObj == null ? null : NormalizedUsername.Normalize(passwordResetRequest.UsernameObj)
             );
 
             await this.requestPasswordReset.HandleAsync(command);

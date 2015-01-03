@@ -27,7 +27,7 @@ namespace Fifthweek.Api.Identity.Tests.Membership.Commands
             var registrationData = PasswordResetRequestDataTests.NewPasswordResetRequestData();
             var command1 = NewRequestPasswordResetCommand(registrationData);
 
-            registrationData.Username = "Different";
+            registrationData.Username = "different";
             var command2 = NewRequestPasswordResetCommand(registrationData);
 
             Assert.AreNotEqual(command1, command2);
@@ -37,7 +37,7 @@ namespace Fifthweek.Api.Identity.Tests.Membership.Commands
         {
             return new RequestPasswordResetCommand(
                 passwordResetRequest.Email == null ? null : NormalizedEmail.Parse(passwordResetRequest.Email),
-                passwordResetRequest.Username);
+                passwordResetRequest.Username == null ? null : NormalizedUsername.Parse(passwordResetRequest.Username));
         }
     }
 }

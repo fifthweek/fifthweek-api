@@ -55,14 +55,6 @@ namespace Fifthweek.Api.Identity.Tests.Membership
         }
 
         [TestMethod]
-        public void ItShouldNotAllowEmptyUsernames()
-        {
-            this.BadUsername("");
-            this.BadUsername(" ");
-        }
-
-
-        [TestMethod]
         public void ItShouldRecogniseEqualObjects()
         {
             var username1 = Parse("joe_bloggs");

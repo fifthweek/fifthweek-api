@@ -94,6 +94,7 @@
     <Compile Include="Membership\Controllers\RegistrationDataTests.cs" />
     <Compile Include="Membership\UsernameTests.cs" />
     <Compile Include="Membership\NormalizedUsernameTests.cs" />
+    <Compile Include="Membership\PasswordTests.cs" />
     <Compile Include="Membership\UsernameTestsBase.cs" />
     <Compile Include="Membership\EmailTestsBase.cs" />
     <Compile Include="Membership\NormalizedEmailTests.cs" />

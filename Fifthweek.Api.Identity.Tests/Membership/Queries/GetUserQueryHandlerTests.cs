@@ -23,7 +23,9 @@
 
             var handler = new GetUserQueryHandler(authenticationRepository.Object);
 
-            var result = await handler.HandleAsync(new GetUserQuery(NormalizedUsername.Parse("username"), "Password"));
+            var username = NormalizedUsername.Parse("username");
+            var password = Password.Parse("Password");
+            var result = await handler.HandleAsync(new GetUserQuery(username, password));
 
             authenticationRepository.Verify(v => v.FindAsync("username", "Password"));
 

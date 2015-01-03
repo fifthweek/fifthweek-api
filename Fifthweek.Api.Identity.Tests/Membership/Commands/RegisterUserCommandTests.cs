@@ -39,7 +39,7 @@ namespace Fifthweek.Api.Identity.Tests.Membership.Commands
                 registrationData.ExampleWork,
                 NormalizedEmail.Parse(registrationData.Email),
                 NormalizedUsername.Parse(registrationData.Username),
-                registrationData.Password);
+                Password.Parse(registrationData.Password));
         }
     }
 }

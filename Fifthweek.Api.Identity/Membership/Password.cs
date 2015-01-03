@@ -1,20 +1,20 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Net.Mail;
 
 namespace Fifthweek.Api.Identity.Membership
 {
-    public class Email
+    public class Password
     {
-        protected Email()
+        public static readonly int MinLength = 6;
+        public static readonly int MaxLength = 100;
+
+        protected Password()
         {
         }
 
         public string Value { get; protected set; }
 
-        protected bool Equals(Email other)
+        protected bool Equals(Password other)
         {
             return string.Equals(this.Value, other.Value);
         }
@@ -33,7 +33,7 @@ namespace Fifthweek.Api.Identity.Membership
             {
                 return false;
             }
-            return Equals((Email) obj);
+            return Equals((Password)obj);
         }
 
         public override int GetHashCode()
@@ -41,52 +41,40 @@ namespace Fifthweek.Api.Identity.Membership
             return (this.Value != null ? this.Value.GetHashCode() : 0);
         }
 
-        public static Email Parse(string value)
+        public static Password Parse(string value)
         {
-            Email retval;
+            Password retval;
             if (!TryParse(value, out retval))
             {
-                throw new ArgumentException("Invalid email address", value);
+                throw new ArgumentException("Invalid password", value);
             }
 
             return retval;
         }
 
-        public static bool TryParse(string value, out Email email)
+        public static bool TryParse(string value, out Password password)
         {
             IReadOnlyCollection<string> errorMessages;
-            return TryParse(value, out email, out errorMessages);
+            return TryParse(value, out password, out errorMessages);
         }
 
-        public static bool TryParse(string value, out Email email, out IReadOnlyCollection<string> errorMessages)
+        public static bool TryParse(string value, out Password password, out IReadOnlyCollection<string> errorMessages)
         {
             var errorMessageList = new List<string>();
             errorMessages = errorMessageList;
 
-            try
+            if (value.Length < MinLength || value.Length > MaxLength)
             {
-                if (new MailAddress(value).Address != value.Trim())
-                {
-                    errorMessageList.Add("Invalid email format");
-                    email = null;
-                    return false;
-                }
+                errorMessageList.Add(string.Format("Password length must be from {0} to {1} characters", MinLength, MaxLength));
             }
-            catch
+
+            if (errorMessageList.Count > 0)
             {
-                email = null;
+                password = null;
                 return false;
             }
 
-            if (value.Contains("\""))
-            {
-                // Quoted names are valid, but to keep things sane we're not accepting them.
-                errorMessageList.Add("Email must not contain quotes");
-                email = null;
-                return false;
-            }
-
-            email = new Email
+            password = new Password
             {
                 Value = value
             };

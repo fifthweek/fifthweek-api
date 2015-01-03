@@ -104,7 +104,9 @@
     <Compile Include="Membership\Controllers\MembershipController.cs" />
     <Compile Include="Membership\Controllers\PasswordResetRequestData.cs" />
     <Compile Include="Membership\Controllers\RegistrationData.cs" />
+    <Compile Include="Membership\Controllers\HttpDtoValidationExtensions.cs" />
     <Compile Include="Membership\NormalizedUsername.cs" />
+    <Compile Include="Membership\Password.cs" />
     <Compile Include="Membership\Username.cs" />
     <Compile Include="Membership\NormalizedEmail.cs" />
     <Compile Include="Membership\Email.cs" />

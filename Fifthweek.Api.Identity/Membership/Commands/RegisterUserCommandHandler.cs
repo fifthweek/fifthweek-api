@@ -41,7 +41,7 @@
                 LastAccessTokenDate = SqlDateTime.MinValue.Value,
             };
 
-            var result = await this.userManager.CreateAsync(user, command.Password);
+            var result = await this.userManager.CreateAsync(user, command.Password.Value);
 
             if (!result.Succeeded)
             {

@@ -1,11 +1,8 @@
-﻿using System.Collections.Generic;
-using System.Web.Http.ModelBinding;
+﻿using System.Web.Http.ModelBinding;
 using Fifthweek.Api.Core;
 
 namespace Fifthweek.Api.Identity.Membership.Controllers
 {
-    using System.ComponentModel.DataAnnotations;
-
     public class RegistrationData
     {
         public string ExampleWork { get; set; }
@@ -14,67 +11,25 @@ namespace Fifthweek.Api.Identity.Membership.Controllers
 
         public string Username { get; set; }
 
-        [Required]
-        [StringLength(100, MinimumLength = 6)]
-        [DataType(DataType.Password)]
-        [Display(Name = "Password")]
         public string Password { get; set; }
 
         public Email EmailObj { get; private set; }
 
         public Username UsernameObj { get; private set; }
 
+        public Password PasswordObj { get; private set; }
+
         public void Parse()
         {
-            var errorDictionary = new Dictionary<string, IReadOnlyCollection<string>>();
+            var modelState = new ModelStateDictionary();
 
-            this.ParseEmail(errorDictionary);
-            this.ParseUsername(errorDictionary);
+            this.UsernameObj = this.Username.AsUsername("Username", modelState);
+            this.EmailObj = this.Email.AsEmail("Email", modelState);
+            this.PasswordObj = this.Password.AsPassword("Password", modelState);
 
-            if (errorDictionary.Count <= 0)
+            if (!modelState.IsValid)
             {
-                return;
-            }
-
-            var modelStateDictionary = new ModelStateDictionary();
-            foreach (var kvp in errorDictionary)
-            {
-                var modelState = new ModelState();
-                foreach (var error in kvp.Value)
-                {
-                    modelState.Errors.Add(error);
-                }
-
-                modelStateDictionary.Add(kvp.Key, modelState);
-            }
-            throw new ModelValidationException(modelStateDictionary);
-        }
-
-        private void ParseEmail(IDictionary<string, IReadOnlyCollection<string>> errorDictionary)
-        {
-            Email email;
-            IReadOnlyCollection<string> errorMessages;
-            if (Membership.Email.TryParse(this.Email, out email, out errorMessages))
-            {
-                this.EmailObj = email;
-            }
-            else
-            {
-                errorDictionary.Add("Email", errorMessages);
-            }
-        }
-
-        private void ParseUsername(IDictionary<string, IReadOnlyCollection<string>> errorDictionary)
-        {
-            Username username;
-            IReadOnlyCollection<string> errorMessages;
-            if (Membership.Username.TryParse(this.Username, out username, out errorMessages))
-            {
-                this.UsernameObj = username;
-            }
-            else
-            {
-                errorDictionary.Add("Username", errorMessages);
+                throw new ModelValidationException(modelState);
             }
         }
 

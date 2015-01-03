@@ -2,7 +2,7 @@
 {
     public class RegisterUserCommand
     {
-        public RegisterUserCommand(string exampleWork, NormalizedEmail email, NormalizedUsername username, string password)
+        public RegisterUserCommand(string exampleWork, NormalizedEmail email, NormalizedUsername username, Password password)
         {
             this.ExampleWork = exampleWork;
             this.Email = email;
@@ -16,7 +16,7 @@
 
         public NormalizedUsername Username { get; private set; }
 
-        public string Password { get; private set; }
+        public Password Password { get; private set; }
 
         public override bool Equals(object obj)
         {

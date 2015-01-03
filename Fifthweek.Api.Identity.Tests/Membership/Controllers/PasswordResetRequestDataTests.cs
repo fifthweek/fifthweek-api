@@ -41,7 +41,7 @@
             return new PasswordResetRequestData
             {
                 Email = "test@test.com",
-                Username = "TestUsername",
+                Username = "test_username",
             };
         }
     }

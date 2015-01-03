@@ -68,7 +68,7 @@ namespace Fifthweek.Api.Identity.Membership
 
             if (trimmedUsername.Length < MinLength || trimmedUsername.Length > MaxLength)
             {
-                errorMessageList.Add(string.Format("Length must be at least {0} and at most {1}", MinLength, MaxLength));
+                errorMessageList.Add(string.Format("Username length must be from {0} to {1} characters", MinLength, MaxLength));
             }
 
             if (!Pattern.IsMatch(trimmedUsername))

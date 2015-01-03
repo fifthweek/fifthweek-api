@@ -123,8 +123,9 @@ namespace Fifthweek.Api.Identity.OAuth
 
             var username = Username.Parse(context.UserName);
             var normalizedUsername = NormalizedUsername.Normalize(username);
+            var password = Password.Parse(context.Password);
 
-            var user = await this.getUser.HandleAsync(new GetUserQuery(normalizedUsername, context.Password));
+            var user = await this.getUser.HandleAsync(new GetUserQuery(normalizedUsername, password));
 
             if (user == null)
             {
