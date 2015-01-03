@@ -41,19 +41,19 @@ namespace Fifthweek.Api
             var builder = new ContainerBuilder();
 
             RegisterControllerAssemblies(builder);
-
             RegisterHandlers(builder);
 
             builder.RegisterType<FifthweekDbContext>().As<IFifthweekDbContext>().InstancePerRequest();
             builder.RegisterType<RefreshTokenRepository>().As<IRefreshTokenRepository>().InstancePerRequest();
             builder.RegisterType<ClientRepository>().As<IClientRepository>().InstancePerRequest();
             builder.RegisterType<UserRepository>().As<IUserRepository>().InstancePerRequest();
-            builder.Register(c =>
+            builder.Register(c => 
                 new UserManagerImpl(
-                new UserManager<ApplicationUser>(
-                    new UserStore<ApplicationUser>((FifthweekDbContext)c.Resolve<IFifthweekDbContext>()))))
-                    .As<IUserManager>().InstancePerRequest();
-
+                    IdentityConfig.CreateUserManager(
+                        c.Resolve<ISendEmailService>(), 
+                        c.Resolve<IFifthweekDbContext>())))
+                    .As<IUserManager>()
+                    .InstancePerRequest();
             builder.RegisterType<TraceService>().As<ITraceService>().SingleInstance();
             builder.RegisterType<ExceptionHandler>().As<IExceptionHandler>().SingleInstance();
             builder.RegisterInstance(Constants.DefaultDeveloperRepository).As<IDeveloperRepository>().SingleInstance();
