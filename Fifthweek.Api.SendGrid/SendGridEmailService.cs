@@ -38,7 +38,7 @@
             message.AddTo(to);
             message.From = Constants.FifthweekEmailAddress;
             message.Subject = subject;
-            message.Text = content;
+            message.Html = content;
 
             var transportWeb = new Web(this.credentials);
             return transportWeb.DeliverAsync(message);

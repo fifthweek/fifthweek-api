@@ -53,7 +53,7 @@ Use the following link to reset your password:
 Thanks,
 The Fifthweek Team";
 
-            var emailBody = string.Format(emailBodyTemplate, callbackUrl).Replace("\n", "<br />");
+            var emailBody = string.Format(emailBodyTemplate.Trim(), callbackUrl).Replace("\n", "<br />");
             await this.userManager.SendEmailAsync(user.Id, "Reset Password", emailBody);
         }
     }
