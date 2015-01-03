@@ -2,13 +2,13 @@
 {
     public class RequestPasswordResetCommand
     {
-        public RequestPasswordResetCommand(string email, string username)
+        public RequestPasswordResetCommand(NormalizedEmail email, string username)
         {
             this.Email = email;
             this.Username = username;
         }
 
-        public string Email { get; private set; }
+        public NormalizedEmail Email { get; private set; }
 
         public string Username { get; private set; }
 

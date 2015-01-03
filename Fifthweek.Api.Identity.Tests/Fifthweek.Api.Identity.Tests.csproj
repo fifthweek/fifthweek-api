@@ -92,6 +92,7 @@
     <Compile Include="Membership\Controllers\MembershipControllerTests.cs" />
     <Compile Include="Membership\Controllers\PasswordResetRequestDataTests.cs" />
     <Compile Include="Membership\Controllers\RegistrationDataTests.cs" />
+    <Compile Include="Membership\EmailTestsBase.cs" />
     <Compile Include="Membership\NormalizedEmailTests.cs" />
     <Compile Include="Membership\MockIdentityResult.cs" />
     <Compile Include="Membership\Queries\GetUsernameAvailabilityQueryHandlerTests.cs" />

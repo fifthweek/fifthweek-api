@@ -32,58 +32,6 @@
             this.registerUser.Verify(v => v.HandleAsync(command));
         }
 
-        [TestMethod]
-        public async Task WhenPostingRegistrations_ItShouldNormalizeUsernameAndEmail()
-        {
-            const string emailTransformation = "!";
-            const string usernameTransformation = "?";
-            var registration = RegistrationDataTests.NewRegistrationData();
-            var command = RegisterUserCommandTests.NewRegisterUserCommand(registration);
-
-            this.normalization.Setup(v => v.NormalizeEmailAddress(registration.Email)).Returns(registration.Email + emailTransformation);
-            this.normalization.Setup(v => v.NormalizeUsername(registration.Username)).Returns(registration.Username + usernameTransformation);
-            this.registerUser.Setup(v => v.HandleAsync(command)).Returns(Task.FromResult(0));
-
-            var result = await this.controller.PostRegistrationAsync(registration);
-
-            var expectedRegistration = RegistrationDataTests.NewRegistrationData();
-            expectedRegistration.Email += emailTransformation;
-            expectedRegistration.Username += usernameTransformation;
-            var expectedCommand = RegisterUserCommandTests.NewRegisterUserCommand(expectedRegistration);
-
-            Assert.IsInstanceOfType(result, typeof(OkResult));
-            this.registerUser.Verify(v => v.HandleAsync(expectedCommand));
-        }
-
-        [TestMethod]
-        public async Task WhenPostingRegistrations_ItShouldNormalizeWithoutMutatingRegistration()
-        {
-            const string emailTransformation = "!";
-            const string usernameTransformation = "?";
-            var registration = RegistrationDataTests.NewRegistrationData();
-            RegisterUserCommand actualCommand = null;
-
-            this.normalization.Setup(v => v.NormalizeEmailAddress(registration.Email)).Returns(registration.Email + emailTransformation);
-            this.normalization.Setup(v => v.NormalizeUsername(registration.Username)).Returns(registration.Username + usernameTransformation);
-            this.registerUser.Setup(v => v.HandleAsync(It.IsAny<RegisterUserCommand>()))
-                .Returns(Task.FromResult(0))
-                .Callback<RegisterUserCommand>(c => actualCommand = c);
-
-            var result = await this.controller.PostRegistrationAsync(registration);
-
-            Assert.AreEqual(registration.ExampleWork, actualCommand.ExampleWork);
-            Assert.AreEqual(registration.Password, actualCommand.Password);
-            Assert.AreNotEqual(registration.Email, actualCommand.Email);
-            Assert.AreNotEqual(registration.Username, actualCommand.Username);
-            Assert.IsInstanceOfType(result, typeof(OkResult));
-
-            var expectedRegistration = RegistrationDataTests.NewRegistrationData();
-            expectedRegistration.Email += emailTransformation;
-            expectedRegistration.Username += usernameTransformation;
-            var expectedCommand = RegisterUserCommandTests.NewRegisterUserCommand(expectedRegistration);
-
-            this.registerUser.Verify(v => v.HandleAsync(expectedCommand));
-        }
 
         [TestMethod]
         public async Task WhenGettingUsernameAvailability_ItShouldYieldOkIfUsernameAvailable()
@@ -111,22 +59,6 @@
             var result = await this.controller.GetUsernameAvailabilityAsync(username);
 
             Assert.IsInstanceOfType(result, typeof(NotFoundResult));
-        }
-
-        [TestMethod]
-        public async Task WhenGettingUsernameAvailability_ItShouldNormalizeUsername()
-        {
-            const string usernameTransformation = "?";
-            const string username = "Lawrence";
-            var expectedQuery = new GetUsernameAvailabilityQuery(username + usernameTransformation);
-
-            this.normalization.Setup(v => v.NormalizeUsername(username)).Returns(username + usernameTransformation);
-            this.getUsernameAvailability.Setup(v => v.HandleAsync(expectedQuery)).Returns(Task.FromResult(true));
-
-            var result = await this.controller.GetUsernameAvailabilityAsync(username);
-
-            Assert.IsInstanceOfType(result, typeof(OkResult));
-            this.getUsernameAvailability.Verify(v => v.HandleAsync(expectedQuery));
         }
 
         [TestMethod]

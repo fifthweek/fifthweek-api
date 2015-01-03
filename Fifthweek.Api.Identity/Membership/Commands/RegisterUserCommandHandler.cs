@@ -19,7 +19,7 @@
 
         public async Task HandleAsync(RegisterUserCommand command)
         {
-            var userByEmail = await this.userManager.FindByEmailAsync(command.Email);
+            var userByEmail = await this.userManager.FindByEmailAsync(command.Email.Value);
             if (userByEmail != null)
             {
                 throw new RecoverableException("The email address '" + command.Email + "' is already taken.");
@@ -34,7 +34,7 @@
             var user = new ApplicationUser
             {
                 UserName = command.Username,
-                Email = command.Email,
+                Email = command.Email.Value,
                 ExampleWork = command.ExampleWork,
                 RegistrationDate = DateTime.UtcNow,
                 LastSignInDate = SqlDateTime.MinValue.Value,

@@ -1,4 +1,6 @@
-﻿namespace Fifthweek.Api.Identity.Tests.Membership.Controllers
+﻿using Email = Fifthweek.Api.Identity.Membership.Email;
+
+namespace Fifthweek.Api.Identity.Tests.Membership.Controllers
 {
     using Fifthweek.Api.Identity.Membership.Controllers;
 
@@ -31,7 +33,7 @@
         {
             var registration1 = NewRegistrationData();
             var registration2 = NewRegistrationData();
-            registration2.Email = "Different";
+            registration2.Email = "different@example.com";
 
             Assert.AreNotEqual(registration1, registration2);
         }

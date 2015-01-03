@@ -5,19 +5,13 @@ namespace Fifthweek.Api.Identity.Tests.Membership
     using Microsoft.VisualStudio.TestTools.UnitTesting;
 
     [TestClass]
-    public class NormalizedEmailTests : EmailTests
+    public class NormalizedEmailTests : EmailTestsBase
     {
         [TestMethod]
-        public void ItShouldNotAllowWhitespace()
+        public void ItShouldNotAllowLeadingOrTrailingWhitespace()
         {
             this.BadEmail(" joe@bloggs.com");
             this.BadEmail("joe@bloggs.com ");
-            this.BadEmail("joe @bloggs.com");
-            this.BadEmail("joe@ bloggs.com");
-            this.BadEmail("jo e@bloggs.com");
-            this.BadEmail("joe@blo ggs.com");
-            this.BadEmail("joe@bloggs .com");
-            this.BadEmail("joe@bloggs. com");
         }
 
         [TestMethod]
@@ -26,12 +20,12 @@ namespace Fifthweek.Api.Identity.Tests.Membership
             this.BadEmail("Joe@Bloggs.com");
         }
 
-        override protected Email Parse(string emailValue)
+        protected override Email Parse(string emailValue)
         {
             return NormalizedEmail.Parse(emailValue);
         }
 
-        override protected bool TryParse(string emailValue, out Email email)
+        protected override bool TryParse(string emailValue, out Email email)
         {
             NormalizedEmail normalizedEmail;
             if (NormalizedEmail.TryParse(emailValue, out normalizedEmail))

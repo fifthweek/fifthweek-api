@@ -1,11 +1,9 @@
-﻿namespace Fifthweek.Api
+﻿using System;
+using System.Linq;
+using System.Web.Http.ModelBinding;
+
+namespace Fifthweek.Api.Core
 {
-    using System;
-    using System.Linq;
-    using System.Web.Http.ModelBinding;
-
-    using Fifthweek.Api.Core;
-
     public class ModelValidationException : RecoverableException
     {
         public ModelValidationException(ModelStateDictionary modelState)

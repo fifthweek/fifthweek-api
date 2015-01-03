@@ -1,4 +1,6 @@
-﻿namespace Fifthweek.Api.Identity.Tests.Membership.Commands
+﻿using Fifthweek.Api.Identity.Membership;
+
+namespace Fifthweek.Api.Identity.Tests.Membership.Commands
 {
     using Fifthweek.Api.Identity.Membership.Commands;
     using Fifthweek.Api.Identity.Membership.Controllers;
@@ -31,11 +33,11 @@
             Assert.AreNotEqual(command1, command2);
         }
 
-        public static RequestPasswordResetCommand NewRequestPasswordResetCommand(PasswordResetRequestData registrationData)
+        public static RequestPasswordResetCommand NewRequestPasswordResetCommand(PasswordResetRequestData passwordResetRequest)
         {
             return new RequestPasswordResetCommand(
-                registrationData.Email,
-                registrationData.Username);
+                passwordResetRequest.Email == null ? null : NormalizedEmail.Parse(passwordResetRequest.Email),
+                passwordResetRequest.Username);
         }
     }
 }

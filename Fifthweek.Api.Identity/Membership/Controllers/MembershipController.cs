@@ -1,4 +1,7 @@
-﻿namespace Fifthweek.Api.Identity.Membership.Controllers
+﻿using System.Web.Http.Controllers;
+using System.Web.Http.ModelBinding;
+
+namespace Fifthweek.Api.Identity.Membership.Controllers
 {
     using System;
     using System.Threading.Tasks;
@@ -51,13 +54,15 @@
         // POST membership/registrations
         [AllowAnonymous]
         [Route("registrations")]
-        public async Task<IHttpActionResult> PostRegistrationAsync(RegistrationData registrationData)
+        public async Task<IHttpActionResult> PostRegistrationAsync(RegistrationData registration)
         {
+            registration.Parse();
+
             var command = new RegisterUserCommand(
-                registrationData.ExampleWork,
-                this.userInputNormalization.NormalizeEmailAddress(registrationData.Email),
-                this.userInputNormalization.NormalizeUsername(registrationData.Username),
-                registrationData.Password);
+                registration.ExampleWork,
+                NormalizedEmail.Normalize(registration.EmailObj),
+                this.userInputNormalization.NormalizeUsername(registration.Username),
+                registration.Password);
 
             await this.registerUser.HandleAsync(command);
             return this.Ok();
@@ -86,8 +91,10 @@
         [Route("passwordResetRequests")]
         public async Task<IHttpActionResult> PostPasswordResetRequestAsync(PasswordResetRequestData passwordResetRequest)
         {
+            passwordResetRequest.Parse();
+
             var command = new RequestPasswordResetCommand(
-                passwordResetRequest.Email,
+                passwordResetRequest.EmailObj == null ? null : NormalizedEmail.Normalize(passwordResetRequest.EmailObj),
                 passwordResetRequest.Username
             );
 

@@ -2,7 +2,7 @@
 {
     public class RegisterUserCommand
     {
-        public RegisterUserCommand(string exampleWork, string email, string username, string password)
+        public RegisterUserCommand(string exampleWork, NormalizedEmail email, string username, string password)
         {
             this.ExampleWork = exampleWork;
             this.Email = email;
@@ -12,7 +12,7 @@
 
         public string ExampleWork { get; private set; }
 
-        public string Email { get; private set; }
+        public NormalizedEmail Email { get; private set; }
 
         public string Username { get; private set; }
 

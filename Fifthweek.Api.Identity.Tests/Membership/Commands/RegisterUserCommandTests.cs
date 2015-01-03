@@ -1,4 +1,6 @@
-﻿namespace Fifthweek.Api.Identity.Tests.Membership.Commands
+﻿using Fifthweek.Api.Identity.Membership;
+
+namespace Fifthweek.Api.Identity.Tests.Membership.Commands
 {
     using Fifthweek.Api.Identity.Membership.Commands;
     using Fifthweek.Api.Identity.Membership.Controllers;
@@ -35,7 +37,7 @@
         {
             return new RegisterUserCommand(
                 registrationData.ExampleWork,
-                registrationData.Email,
+                NormalizedEmail.Parse(registrationData.Email),
                 registrationData.Username,
                 registrationData.Password);
         }

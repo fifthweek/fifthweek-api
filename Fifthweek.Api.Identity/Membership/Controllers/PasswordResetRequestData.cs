@@ -1,14 +1,45 @@
-﻿namespace Fifthweek.Api.Identity.Membership.Controllers
+﻿using System;
+using System.Web.Http.ModelBinding;
+using Fifthweek.Api.Core;
+
+namespace Fifthweek.Api.Identity.Membership.Controllers
 {
     using System.ComponentModel.DataAnnotations;
 
     public class PasswordResetRequestData
     {
-        [Display(Name = "Email")]
         public string Email { get; set; }
+
+        public Email EmailObj { get; private set; }
 
         [Display(Name = "Username")]
         public string Username { get; set; }
+
+        public void Parse()
+        {
+            var modelState = new ModelStateDictionary();
+            
+            // Email address is optional.
+            if (!String.IsNullOrWhiteSpace(this.Email))
+            {
+                Email email;
+                if (Membership.Email.TryParse(this.Email, out email))
+                {
+                    this.EmailObj = email;
+                }
+                else
+                {
+                    var error = new ModelState();
+                    error.Errors.Add("Valid email required");
+                    modelState.Add("Email", error);
+                }
+            }
+            
+            if (!modelState.IsValid)
+            {
+                throw new ModelValidationException(modelState);
+            }
+        }
 
         public override bool Equals(object obj)
         {

@@ -55,7 +55,11 @@ namespace Fifthweek.Api.Identity.Membership
         {
             try
             {
-                new MailAddress(value);
+                if (new MailAddress(value).Address != value.Trim())
+                {
+                    email = null;
+                    return false;
+                }
             }
             catch
             {

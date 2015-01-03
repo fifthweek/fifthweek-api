@@ -1,4 +1,7 @@
-﻿namespace Fifthweek.Api.Identity.Membership.Controllers
+﻿using System.Web.Http.ModelBinding;
+using Fifthweek.Api.Core;
+
+namespace Fifthweek.Api.Identity.Membership.Controllers
 {
     using System.ComponentModel.DataAnnotations;
 
@@ -7,10 +10,9 @@
         [Display(Name = "ExampleWork")]
         public string ExampleWork { get; set; }
 
-        [Required]
-        [Display(Name = "Email")]
-        [DataType(DataType.EmailAddress)]
         public string Email { get; set; }
+
+        public Email EmailObj { get; private set; }
 
         [Required]
         [Display(Name = "Username")]
@@ -23,6 +25,27 @@
         [DataType(DataType.Password)]
         [Display(Name = "Password")]
         public string Password { get; set; }
+
+        public void Parse()
+        {
+            var modelState = new ModelStateDictionary();
+            Email email;
+            if (Membership.Email.TryParse(this.Email, out email))
+            {
+                this.EmailObj = email;
+            }
+            else
+            {
+                var error = new ModelState();
+                error.Errors.Add("Valid email required");
+                modelState.Add("Email", error);
+            }
+
+            if (!modelState.IsValid)
+            {
+                throw new ModelValidationException(modelState);
+            }
+        }
 
         public override bool Equals(object obj)
         {

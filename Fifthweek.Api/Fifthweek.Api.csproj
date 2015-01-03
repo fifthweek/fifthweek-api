@@ -194,7 +194,6 @@
       <DependentUpon>201412232020572_AddRefreshTokensIndexForUsernameClientId.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
-    <Compile Include="ModelValidationException.cs" />
     <Compile Include="NullCommand.cs" />
     <Compile Include="NullCommandHandler.cs" />
     <Compile Include="NullQuery.cs" />
