@@ -4,7 +4,6 @@
 
     public class RegistrationData
     {
-        [Required]
         [Display(Name = "ExampleWork")]
         public string ExampleWork { get; set; }
 
