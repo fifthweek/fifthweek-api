@@ -11,6 +11,8 @@ namespace Fifthweek.Api.Identity.Tests.Membership.Commands
     using Fifthweek.Api.Identity.Membership;
     using Fifthweek.Api.Identity.Membership.Commands;
     using Fifthweek.Api.Identity.Membership.Controllers;
+    using Fifthweek.Api.Persistence.Identity;
+
     using Microsoft.VisualStudio.TestTools.UnitTesting;
 
     using Moq;
@@ -45,7 +47,7 @@ namespace Fifthweek.Api.Identity.Tests.Membership.Commands
 
         private void SetupUserManager(bool isTokenValid)
         {
-            this.userManager.Setup(_ => _.FindByIdAsync(UserId)).ReturnsAsync(new ApplicationUser
+            this.userManager.Setup(_ => _.FindByIdAsync(UserId)).ReturnsAsync(new FifthweekUser
             {
                 Id = UserId
             });
@@ -53,7 +55,7 @@ namespace Fifthweek.Api.Identity.Tests.Membership.Commands
             this.userManager
                 .Setup(_ =>
                     _.ValidatePasswordResetTokenAsync(
-                        It.Is<ApplicationUser>(user => user.Id == UserId),
+                        It.Is<FifthweekUser>(user => user.Id == UserId),
                         Token))
                 .ReturnsAsync(isTokenValid);
         }
@@ -63,22 +65,22 @@ namespace Fifthweek.Api.Identity.Tests.Membership.Commands
         {
             this.command = ConfirmPasswordResetCommandTests.NewCommand(new PasswordResetConfirmationData
             {
-                UserId = Guid.Parse(UserId),
+                UserId = UserId,
                 Token = Token,
                 NewPassword = NewPassword
             });
 
             this.userManager = new Mock<IUserManager>();
-            this.userTokenProvider = new Mock<IUserTokenProvider<ApplicationUser, string>>();
+            this.userTokenProvider = new Mock<IUserTokenProvider<FifthweekUser, Guid>>();
             this.target = new ConfirmPasswordResetCommandHandler(this.userManager.Object);
         }
 
-        private const string UserId = "7265bc4f-555e-4386-ad57-701dbdbc78bb";
+        private static readonly Guid UserId = Guid.Parse("7265bc4f-555e-4386-ad57-701dbdbc78bb");
         private const string Token = "abc";
         private const string NewPassword = "Secret";
         private ConfirmPasswordResetCommand command;
         private Mock<IUserManager> userManager;
-        private Mock<IUserTokenProvider<ApplicationUser, string>> userTokenProvider;
+        private Mock<IUserTokenProvider<FifthweekUser, Guid>> userTokenProvider;
         private ConfirmPasswordResetCommandHandler target;
     }
 }

@@ -116,7 +116,6 @@
     <Compile Include="Membership\Username.cs" />
     <Compile Include="Membership\NormalizedEmail.cs" />
     <Compile Include="Membership\Email.cs" />
-    <Compile Include="Membership\IUserManager.cs" />
     <Compile Include="Membership\IUserRepository.cs" />
     <Compile Include="Membership\Queries\IsUsernameAvailableQuery.cs" />
     <Compile Include="Membership\Queries\IsUsernameAvailableQueryHandler.cs" />

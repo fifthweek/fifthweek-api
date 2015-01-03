@@ -12,6 +12,8 @@ using Owin;
 
 namespace Fifthweek.Api
 {
+    using Fifthweek.Api.Persistence.Identity;
+
     public static class IdentityConfig
     {
         // This allows us to use AutoFac instead of IOwinContext:
@@ -31,13 +33,13 @@ namespace Fifthweek.Api
             FarmedMachineDataProtectionProvider = app.GetDataProtectionProvider();
         }
 
-        public static UserManager<ApplicationUser> CreateUserManager(ISendEmailService sendEmailService, IFifthweekDbContext dbContext)
+        public static FifthweekUserManager CreateUserManager(ISendEmailService sendEmailService, IFifthweekDbContext dbContext)
         {
-            var userStore = new UserStore<ApplicationUser>((FifthweekDbContext)dbContext);
+            var userStore = new FifthweekUserStore((FifthweekDbContext)dbContext);
             var dataProtectionProvider = FarmedMachineDataProtectionProvider ?? NonFarmedMachineDataProtectionProvider;
-            var userManager = new UserManager<ApplicationUser>(userStore)
+            var userManager = new FifthweekUserManager(userStore)
             {
-                UserTokenProvider = new DataProtectorTokenProvider<ApplicationUser>(dataProtectionProvider.Create()),
+                UserTokenProvider = new DataProtectorTokenProvider<FifthweekUser, Guid>(dataProtectionProvider.Create()),
                 EmailService = new MessageService(sendEmailService)
             };
 

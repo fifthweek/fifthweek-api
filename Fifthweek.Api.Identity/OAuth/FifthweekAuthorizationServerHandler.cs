@@ -14,6 +14,7 @@ namespace Fifthweek.Api.Identity.OAuth
     using Fifthweek.Api.Identity.Membership.Queries;
     using Fifthweek.Api.Identity.OAuth.Queries;
     using Fifthweek.Api.Persistence;
+    using Fifthweek.Api.Persistence.Identity;
 
     using Microsoft.Owin.Security;
     using Microsoft.Owin.Security.OAuth;
@@ -21,13 +22,13 @@ namespace Fifthweek.Api.Identity.OAuth
     public class FifthweekAuthorizationServerHandler : IFifthweekAuthorizationServerHandler
     {
         private readonly IQueryHandler<GetClientQuery, Client> getClient;
-        private readonly IQueryHandler<GetUserQuery, ApplicationUser> getUser;
+        private readonly IQueryHandler<GetUserQuery, FifthweekUser> getUser;
         private readonly ICommandHandler<UpdateLastAccessTokenDateCommand> updateLastAccessTokenDate;
         private readonly IExceptionHandler exceptionHandler;
 
         public FifthweekAuthorizationServerHandler(
             IQueryHandler<GetClientQuery, Client> getClient,
-            IQueryHandler<GetUserQuery, ApplicationUser> getUser,
+            IQueryHandler<GetUserQuery, FifthweekUser> getUser,
             ICommandHandler<UpdateLastAccessTokenDateCommand> updateLastAccessTokenDate,
             IExceptionHandler exceptionHandler)
         {
@@ -150,7 +151,7 @@ namespace Fifthweek.Api.Identity.OAuth
                         "username", normalizedUsername.Value
                     },
                     {
-                        "user_id", user.Id
+                        "user_id", user.Id.ToString()
                     }
                 });
 

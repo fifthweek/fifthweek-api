@@ -5,6 +5,7 @@
     using Fifthweek.Api.Identity.Membership;
     using Fifthweek.Api.Identity.Membership.Queries;
     using Fifthweek.Api.Persistence;
+    using Fifthweek.Api.Persistence.Identity;
 
     using Microsoft.VisualStudio.TestTools.UnitTesting;
 
@@ -19,7 +20,7 @@
             var authenticationRepository = new Mock<IUserManager>();
 
             authenticationRepository.Setup(v => v.FindAsync("username", "Password"))
-                .ReturnsAsync(new ApplicationUser { UserName = "username" });
+                .ReturnsAsync(new FifthweekUser { UserName = "username" });
 
             var handler = new GetUserQueryHandler(authenticationRepository.Object);
 

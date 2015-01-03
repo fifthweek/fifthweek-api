@@ -7,6 +7,8 @@ namespace Fifthweek.Api.Identity.Membership.Commands
     using System.Threading.Tasks;
 
     using Fifthweek.Api.Core;
+    using Fifthweek.Api.Persistence;
+    using Fifthweek.Api.Persistence.Identity;
 
     public class RequestPasswordResetCommandHandler : ICommandHandler<RequestPasswordResetCommand>
     {
@@ -24,7 +26,7 @@ namespace Fifthweek.Api.Identity.Membership.Commands
 
         public async Task HandleAsync(RequestPasswordResetCommand command)
         {
-            ApplicationUser user = null;
+            FifthweekUser user = null;
 
             if (command.Username != null)
             {

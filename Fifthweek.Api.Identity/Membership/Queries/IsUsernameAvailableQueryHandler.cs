@@ -4,6 +4,8 @@ namespace Fifthweek.Api.Identity.Membership.Queries
     using System.Threading.Tasks;
 
     using Fifthweek.Api.Core;
+    using Fifthweek.Api.Persistence;
+    using Fifthweek.Api.Persistence.Identity;
 
     public class IsUsernameAvailableQueryHandler : IQueryHandler<IsUsernameAvailableQuery, bool>
     {
