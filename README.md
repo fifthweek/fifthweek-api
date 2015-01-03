@@ -24,6 +24,8 @@
 
         BROWSER_STACK_ACCESS_KEY=<password>
         BROWSER_STACK_USERNAME=<email>
+        SENDGRID_USERNAME=<password>
+        SENDGRID_PASSWORD=<email>
 
 4.  Run Visual Studio 2013 as *admin* to avoid IIS Express related errors.
 
