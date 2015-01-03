@@ -10,30 +10,30 @@
         [TestMethod]
         public void ItShouldRecogniseEqualObjects()
         {
-            var registration1 = NewPasswordResetRequestData();
-            var registration2 = NewPasswordResetRequestData();
+            var request1 = NewPasswordResetRequestData();
+            var request2 = NewPasswordResetRequestData();
 
-            Assert.AreEqual(registration1, registration2);
+            Assert.AreEqual(request1, request2);
         }
 
         [TestMethod]
         public void ItShouldRecogniseDifferentEmail()
         {
-            var registration1 = NewPasswordResetRequestData();
-            var registration2 = NewPasswordResetRequestData();
-            registration2.Email = "Different";
+            var request1 = NewPasswordResetRequestData();
+            var request2 = NewPasswordResetRequestData();
+            request2.Email = "Different";
 
-            Assert.AreNotEqual(registration1, registration2);
+            Assert.AreNotEqual(request1, request2);
         }
 
         [TestMethod]
         public void ItShouldRecogniseDifferentUsername()
         {
-            var registration1 = NewPasswordResetRequestData();
-            var registration2 = NewPasswordResetRequestData();
-            registration2.Username = "Different";
+            var request1 = NewPasswordResetRequestData();
+            var request2 = NewPasswordResetRequestData();
+            request2.Username = "Different";
 
-            Assert.AreNotEqual(registration1, registration2);
+            Assert.AreNotEqual(request1, request2);
         }
 
         public static PasswordResetRequestData NewPasswordResetRequestData()

@@ -2,16 +2,11 @@
 
 namespace Fifthweek.Api.Identity.Tests.Membership.Commands
 {
-    using System;
-    using System.Data.SqlTypes;
-    using System.Linq;
     using System.Threading.Tasks;
 
     using Fifthweek.Api.Identity.Membership;
     using Fifthweek.Api.Identity.Membership.Commands;
     using Fifthweek.Api.Identity.Membership.Controllers;
-    using Fifthweek.Api.Persistence;
-
     using Microsoft.VisualStudio.TestTools.UnitTesting;
 
     using Moq;
@@ -22,7 +17,6 @@ namespace Fifthweek.Api.Identity.Tests.Membership.Commands
         [TestMethod]
         public async Task WhenUsernameAndEmailAreNotProvided_ItShouldDoNothing()
         {
-            //this.requestPasswordResetCommand.Email
             await this.target.HandleAsync(this.requestPasswordResetCommand);
             Assert.Fail();
         }
