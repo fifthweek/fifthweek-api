@@ -16,7 +16,7 @@
 
         public Task<ApplicationUser> HandleAsync(GetUserQuery query)
         {
-            return this.userManager.FindAsync(query.Username, query.Password);
+            return this.userManager.FindAsync(query.Username.Value, query.Password);
         }
     }
 }

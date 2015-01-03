@@ -18,13 +18,11 @@ namespace Fifthweek.Api.Identity.Membership.Controllers
         private readonly ICommandHandler<RegisterUserCommand> registerUser;
         private readonly ICommandHandler<RequestPasswordResetCommand> requestPasswordReset;
         private readonly IQueryHandler<GetUsernameAvailabilityQuery, bool> getUsernameAvailability;
-        private readonly IUserInputNormalization userInputNormalization;
 
         public MembershipController(
             ICommandHandler<RegisterUserCommand> registerUser,
             ICommandHandler<RequestPasswordResetCommand> requestPasswordReset,
-            IQueryHandler<GetUsernameAvailabilityQuery, bool> getUsernameAvailability,
-            IUserInputNormalization userInputNormalization)
+            IQueryHandler<GetUsernameAvailabilityQuery, bool> getUsernameAvailability)
         {
             if (registerUser == null)
             {
@@ -40,16 +38,10 @@ namespace Fifthweek.Api.Identity.Membership.Controllers
                 throw new ArgumentNullException("getUsernameAvailability");
             }
 
-            if (userInputNormalization == null)
-            {
-                throw new ArgumentNullException("userInputNormalization");
-            }
-
             this.registerUser = registerUser;
             this.requestPasswordReset = requestPasswordReset;
             this.getUsernameAvailability = getUsernameAvailability;
-            this.userInputNormalization = userInputNormalization;
-        }
+            }
 
         // POST membership/registrations
         [AllowAnonymous]
@@ -61,7 +53,7 @@ namespace Fifthweek.Api.Identity.Membership.Controllers
             var command = new RegisterUserCommand(
                 registration.ExampleWork,
                 NormalizedEmail.Normalize(registration.EmailObj),
-                this.userInputNormalization.NormalizeUsername(registration.Username),
+                NormalizedUsername.Normalize(registration.UsernameObj),
                 registration.Password);
 
             await this.registerUser.HandleAsync(command);
@@ -74,9 +66,13 @@ namespace Fifthweek.Api.Identity.Membership.Controllers
         [ResponseType(typeof(bool))]
         public async Task<IHttpActionResult> GetUsernameAvailabilityAsync(string username)
         {
-            var query = new GetUsernameAvailabilityQuery(
-                this.userInputNormalization.NormalizeUsername(username));
+            Username usernameObj;
+            if (!Username.TryParse(username, out usernameObj))
+            {
+                return this.NotFound();
+            }
 
+            var query = new GetUsernameAvailabilityQuery(NormalizedUsername.Normalize(usernameObj));
             var usernameAvailable = await this.getUsernameAvailability.HandleAsync(query);
             if (usernameAvailable)
             {

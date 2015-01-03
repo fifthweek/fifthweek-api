@@ -128,7 +128,7 @@
                 Email = "test@testing.fifthweek.com",
                 ExampleWork = "testing.fifthweek.com",
                 Password = "TestPassword",
-                Username = "TestUsername",
+                Username = "test_username",
             };
         }
 

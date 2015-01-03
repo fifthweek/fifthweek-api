@@ -44,8 +44,8 @@
 
         protected bool Equals(RequestPasswordResetCommand other)
         {
-            return string.Equals(this.Email, other.Email) && 
-                string.Equals(this.Username, other.Username);
+            return object.Equals(this.Email, other.Email) &&
+                object.Equals(this.Username, other.Username);
         }
     }
 }

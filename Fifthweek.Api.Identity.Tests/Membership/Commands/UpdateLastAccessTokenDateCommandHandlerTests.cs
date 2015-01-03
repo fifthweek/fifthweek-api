@@ -13,13 +13,11 @@
     [TestClass]
     public class UpdateLastAccessTokenDateCommandHandlerTests
     {
-        private string testUsername = "TestUsername";
-
         [TestMethod]
         public async Task WhenTheCreationTypeIsSignIn_ItSouldUpdateBothTimestamps()
         {
             var command = new UpdateLastAccessTokenDateCommand(
-                this.testUsername,
+                Username,
                 DateTime.UtcNow,
                 UpdateLastAccessTokenDateCommand.AccessTokenCreationType.SignIn);
 
@@ -38,7 +36,7 @@
         public async Task WhenTheCreationTypeIsRefreshToken_ItSouldUpdateAccessTokenTimestampOnly()
         {
             var command = new UpdateLastAccessTokenDateCommand(
-                this.testUsername,
+                Username,
                 DateTime.UtcNow,
                 UpdateLastAccessTokenDateCommand.AccessTokenCreationType.RefreshToken);
 
@@ -52,5 +50,7 @@
 
             userRepository.Verify();
         }
+
+        private static readonly NormalizedUsername Username = NormalizedUsername.Parse("lawrence");
     }
 }

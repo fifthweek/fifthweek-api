@@ -83,8 +83,8 @@ namespace Fifthweek.Api.Identity.Tests.Membership
         [TestMethod]
         public void ItShouldRecogniseEqualObjects()
         {
-            var email1 = Email.Parse("joe@example.com");
-            var email2 = Email.Parse("joe@example.com");
+            var email1 = Parse("joe@example.com");
+            var email2 = Parse("joe@example.com");
 
             Assert.AreEqual(email1, email2);
         }
@@ -92,8 +92,8 @@ namespace Fifthweek.Api.Identity.Tests.Membership
         [TestMethod]
         public void ItShouldRecogniseDifferentObjects()
         {
-            var email1 = Email.Parse("joe@example.com");
-            var email2 = Email.Parse("bloggs@example.com");
+            var email1 = Parse("joe@example.com");
+            var email2 = Parse("bloggs@example.com");
 
             Assert.AreNotEqual(email1, email2);
         }

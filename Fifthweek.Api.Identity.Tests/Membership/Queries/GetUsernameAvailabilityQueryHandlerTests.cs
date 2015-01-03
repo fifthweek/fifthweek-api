@@ -13,16 +13,16 @@
     [TestClass]
     public class GetUsernameAvailabilityQueryHandlerTests
     {
-        private static readonly string username = "lawrence";
-        private static readonly GetUsernameAvailabilityQuery query = new GetUsernameAvailabilityQuery(username);
+        private static readonly NormalizedUsername Username = NormalizedUsername.Parse("lawrence");
+        private static readonly GetUsernameAvailabilityQuery Query = new GetUsernameAvailabilityQuery(Username);
 
         [TestMethod]
         public async Task WhenUsernameNotRegistered_ItShouldReturnTrue()
         {
             var userManager = new Mock<IUserManager>();
-            userManager.Setup(v => v.FindByNameAsync(username)).ReturnsAsync(null);
+            userManager.Setup(v => v.FindByNameAsync(Username.Value)).ReturnsAsync(null);
             var handler = new GetUsernameAvailabilityQueryHandler(userManager.Object);
-            var result = await handler.HandleAsync(query);
+            var result = await handler.HandleAsync(Query);
             Assert.IsTrue(result);
         }
 
@@ -30,9 +30,9 @@
         public async Task WhenUsernameRegistered_ItShouldReturnFalse()
         {
             var userManager = new Mock<IUserManager>();
-            userManager.Setup(v => v.FindByNameAsync(username)).ReturnsAsync(new ApplicationUser());
+            userManager.Setup(v => v.FindByNameAsync(Username.Value)).ReturnsAsync(new ApplicationUser());
             var handler = new GetUsernameAvailabilityQueryHandler(userManager.Object);
-            var result = await handler.HandleAsync(query);
+            var result = await handler.HandleAsync(Query);
             Assert.IsFalse(result);
         }
     }

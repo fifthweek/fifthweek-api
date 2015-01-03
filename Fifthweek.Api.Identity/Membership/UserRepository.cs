@@ -16,18 +16,18 @@
             this.fifthweekDbContext = fifthweekDbContext;
         }
 
-        public Task UpdateLastSignInDateAndAccessTokenDateAsync(string username, DateTime timestamp)
+        public Task UpdateLastSignInDateAndAccessTokenDateAsync(NormalizedUsername username, DateTime timestamp)
         {
             return this.fifthweekDbContext.Database.Connection.ExecuteAsync(
                     @"UPDATE AspNetUsers SET LastSignInDate=@timestamp, LastAccessTokenDate=@timestamp WHERE UserName=@username",
-                    new { username, timestamp });
+                    new { username = username.Value, timestamp });
         }
 
-        public Task UpdateLastAccessTokenDateAsync(string username, DateTime timestamp)
+        public Task UpdateLastAccessTokenDateAsync(NormalizedUsername username, DateTime timestamp)
         {
             return this.fifthweekDbContext.Database.Connection.ExecuteAsync(
                    @"UPDATE AspNetUsers SET LastAccessTokenDate=@timestamp WHERE UserName=@username",
-                   new { username, timestamp });
+                   new {username =  username.Value, timestamp });
         }
     }
 }

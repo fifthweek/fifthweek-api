@@ -4,16 +4,16 @@
 
     public class GetUsernameAvailabilityQuery : IQuery<bool>
     {
-        public GetUsernameAvailabilityQuery(string username)
+        public GetUsernameAvailabilityQuery(NormalizedUsername username)
         {
             this.Username = username;
         }
 
-        public string Username { get; private set; }
+        public NormalizedUsername Username { get; private set; }
 
         protected bool Equals(GetUsernameAvailabilityQuery other)
         {
-            return string.Equals(this.Username, other.Username);
+            return object.Equals(this.Username, other.Username);
         }
 
         public override bool Equals(object obj)

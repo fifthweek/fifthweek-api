@@ -1,4 +1,6 @@
-﻿namespace Fifthweek.Api.Identity.OAuth
+﻿using Fifthweek.Api.Identity.Membership;
+
+namespace Fifthweek.Api.Identity.OAuth
 {
     using System;
     using System.Threading.Tasks;
@@ -13,23 +15,32 @@
     public class FifthweekRefreshTokenHandler : IFifthweekRefreshTokenHandler
     {
         private readonly ICommandHandler<AddRefreshTokenCommand> addRefreshToken;
-
         private readonly ICommandHandler<RemoveRefreshTokenCommand> removeRefreshToken;
-
         private readonly IQueryHandler<GetRefreshTokenQuery, RefreshToken> getRefreshToken;
-
-        private readonly IUserInputNormalization userInputNormalization;
 
         public FifthweekRefreshTokenHandler(
             ICommandHandler<AddRefreshTokenCommand> addRefreshToken,
             ICommandHandler<RemoveRefreshTokenCommand> removeRefreshToken,
-            IQueryHandler<GetRefreshTokenQuery, RefreshToken> getRefreshToken,
-            IUserInputNormalization userInputNormalization)
+            IQueryHandler<GetRefreshTokenQuery, RefreshToken> getRefreshToken)
         {
+            if (addRefreshToken == null)
+            {
+                throw new ArgumentNullException("addRefreshToken");
+            }
+
+            if (removeRefreshToken == null)
+            {
+                throw new ArgumentNullException("removeRefreshToken");
+            }
+
+            if (getRefreshToken == null)
+            {
+                throw new ArgumentNullException("getRefreshToken");
+            }
+
             this.addRefreshToken = addRefreshToken;
             this.removeRefreshToken = removeRefreshToken;
             this.getRefreshToken = getRefreshToken;
-            this.userInputNormalization = userInputNormalization;
         }
 
         public async Task CreateAsync(AuthenticationTokenCreateContext context)
@@ -45,13 +56,14 @@
 
             var refreshTokenLifeTime = context.OwinContext.Get<string>(Constants.TokenRefreshTokenLifeTimeKey);
 
-            var normalizedUserName = this.userInputNormalization.NormalizeUsername(context.Ticket.Identity.Name);
+            var username = Username.Parse(context.Ticket.Identity.Name);
+            var normalizedUsername = NormalizedUsername.Normalize(username);
 
             var token = new RefreshToken()
             {
                 HashedId = Helper.GetHash(refreshTokenId.Value),
                 ClientId = clientid,
-                Username = normalizedUserName,
+                Username = normalizedUsername.Value,
                 IssuedUtc = DateTime.UtcNow,
                 ExpiresUtc = DateTime.UtcNow.AddMinutes(Convert.ToDouble((string)refreshTokenLifeTime))
             };

@@ -119,7 +119,6 @@
     <Compile Include="AutofacConfigTests.cs" />
     <Compile Include="ControllerConfigurationTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="UserInputNormalizationTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

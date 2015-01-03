@@ -1,4 +1,6 @@
-﻿namespace Fifthweek.Api.Identity.Tests.Membership.Controllers
+﻿using Fifthweek.Api.Identity.Membership;
+
+namespace Fifthweek.Api.Identity.Tests.Membership.Controllers
 {
     using System.Threading.Tasks;
     using System.Web.Http.Results;
@@ -22,8 +24,6 @@
             var registration = RegistrationDataTests.NewRegistrationData();
             var command = RegisterUserCommandTests.NewRegisterUserCommand(registration);
 
-            this.normalization.Setup(v => v.NormalizeEmailAddress(registration.Email)).Returns(registration.Email);
-            this.normalization.Setup(v => v.NormalizeUsername(registration.Username)).Returns(registration.Username);
             this.registerUser.Setup(v => v.HandleAsync(command)).Returns(Task.FromResult(0));
 
             var result = await this.controller.PostRegistrationAsync(registration);
@@ -36,13 +36,11 @@
         [TestMethod]
         public async Task WhenGettingUsernameAvailability_ItShouldYieldOkIfUsernameAvailable()
         {
-            const string username = "Lawrence";
-            var query = new GetUsernameAvailabilityQuery(username);
+            var query = new GetUsernameAvailabilityQuery(Username);
 
-            this.normalization.Setup(v => v.NormalizeUsername(username)).Returns(username);
             this.getUsernameAvailability.Setup(v => v.HandleAsync(query)).Returns(Task.FromResult(true));
 
-            var result = await this.controller.GetUsernameAvailabilityAsync(username);
+            var result = await this.controller.GetUsernameAvailabilityAsync(UsernameValue);
 
             Assert.IsInstanceOfType(result, typeof(OkResult));
         }
@@ -50,13 +48,11 @@
         [TestMethod]
         public async Task WhenGettingUsernameAvailability_ItShouldYieldNotFoundIfUsernameUnavailable()
         {
-            const string username = "Lawrence";
-            var query = new GetUsernameAvailabilityQuery(username);
+            var query = new GetUsernameAvailabilityQuery(Username);
 
-            this.normalization.Setup(v => v.NormalizeUsername(username)).Returns(username);
             this.getUsernameAvailability.Setup(v => v.HandleAsync(query)).Returns(Task.FromResult(false));
 
-            var result = await this.controller.GetUsernameAvailabilityAsync(username);
+            var result = await this.controller.GetUsernameAvailabilityAsync(UsernameValue);
 
             Assert.IsInstanceOfType(result, typeof(NotFoundResult));
         }
@@ -79,14 +75,14 @@
             this.registerUser = new Mock<ICommandHandler<RegisterUserCommand>>();
             this.requestPasswordReset = new Mock<ICommandHandler<RequestPasswordResetCommand>>();
             this.getUsernameAvailability = new Mock<IQueryHandler<GetUsernameAvailabilityQuery, bool>>();
-            this.normalization = new Mock<IUserInputNormalization>();
-            this.controller = new MembershipController(this.registerUser.Object, this.requestPasswordReset.Object, this.getUsernameAvailability.Object, this.normalization.Object);
+            this.controller = new MembershipController(this.registerUser.Object, this.requestPasswordReset.Object, this.getUsernameAvailability.Object);
         }
 
+        private static readonly string UsernameValue = "lawrence";
+        private static readonly NormalizedUsername Username = NormalizedUsername.Parse(UsernameValue);
         private Mock<ICommandHandler<RegisterUserCommand>> registerUser;
         private Mock<ICommandHandler<RequestPasswordResetCommand>> requestPasswordReset;
         private Mock<IQueryHandler<GetUsernameAvailabilityQuery, bool>> getUsernameAvailability;
-        private Mock<IUserInputNormalization> normalization;
         private MembershipController controller;
     }
 }

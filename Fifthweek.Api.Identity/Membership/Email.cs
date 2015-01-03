@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Net.Mail;
@@ -53,10 +54,20 @@ namespace Fifthweek.Api.Identity.Membership
 
         public static bool TryParse(string value, out Email email)
         {
+            IReadOnlyCollection<string> errorMessages;
+            return TryParse(value, out email, out errorMessages);
+        }
+
+        public static bool TryParse(string value, out Email email, out IReadOnlyCollection<string> errorMessages)
+        {
+            var errorMessageList = new List<string>();
+            errorMessages = errorMessageList;
+
             try
             {
                 if (new MailAddress(value).Address != value.Trim())
                 {
+                    errorMessageList.Add("Invalid format");
                     email = null;
                     return false;
                 }
@@ -70,6 +81,7 @@ namespace Fifthweek.Api.Identity.Membership
             if (value.Contains("\""))
             {
                 // Quoted names are valid, but to keep things sane we're not accepting them.
+                errorMessageList.Add("Must not contain quotes");
                 email = null;
                 return false;
             }

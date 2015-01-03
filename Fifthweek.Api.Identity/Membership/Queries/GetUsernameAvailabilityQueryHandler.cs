@@ -21,7 +21,7 @@ namespace Fifthweek.Api.Identity.Membership.Queries
 
         public async Task<bool> HandleAsync(GetUsernameAvailabilityQuery query)
         {
-            var user = await this.userManager.FindByNameAsync(query.Username);
+            var user = await this.userManager.FindByNameAsync(query.Username.Value);
             return user == null;
         }
     }

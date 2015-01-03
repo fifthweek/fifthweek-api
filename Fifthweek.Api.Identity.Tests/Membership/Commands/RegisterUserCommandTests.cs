@@ -38,7 +38,7 @@ namespace Fifthweek.Api.Identity.Tests.Membership.Commands
             return new RegisterUserCommand(
                 registrationData.ExampleWork,
                 NormalizedEmail.Parse(registrationData.Email),
-                registrationData.Username,
+                NormalizedUsername.Parse(registrationData.Username),
                 registrationData.Password);
         }
     }

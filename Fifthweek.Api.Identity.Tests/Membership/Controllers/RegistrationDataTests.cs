@@ -64,7 +64,7 @@ namespace Fifthweek.Api.Identity.Tests.Membership.Controllers
             {
                 ExampleWork = "TestExampleWork",
                 Email = "test@test.com",
-                Username = "TestUsername",
+                Username = "test_username",
                 Password = "TestPassword"
             };
         }

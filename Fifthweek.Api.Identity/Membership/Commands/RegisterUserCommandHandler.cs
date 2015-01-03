@@ -25,7 +25,7 @@
                 throw new RecoverableException("The email address '" + command.Email + "' is already taken.");
             }
 
-            var userByUsername = await this.userManager.FindByNameAsync(command.Username);
+            var userByUsername = await this.userManager.FindByNameAsync(command.Username.Value);
             if (userByUsername != null)
             {
                 throw new RecoverableException("The username '" + command.Username + "' is already taken.");
@@ -33,7 +33,7 @@
 
             var user = new ApplicationUser
             {
-                UserName = command.Username,
+                UserName = command.Username.Value,
                 Email = command.Email.Value,
                 ExampleWork = command.ExampleWork,
                 RegistrationDate = DateTime.UtcNow,

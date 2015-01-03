@@ -202,7 +202,6 @@
     <Compile Include="RequireHttpsAttribute.cs" />
     <Compile Include="Startup.cs" />
     <Compile Include="TraceService.cs" />
-    <Compile Include="UserInputNormalization.cs" />
     <Compile Include="ValidateModelAttribute.cs" />
   </ItemGroup>
   <ItemGroup>

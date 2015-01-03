@@ -5,7 +5,7 @@
     public class UpdateLastAccessTokenDateCommand
     {
         public UpdateLastAccessTokenDateCommand(
-            string username, 
+            NormalizedUsername username, 
             DateTime timestamp,
             AccessTokenCreationType creationType)
         {
@@ -20,7 +20,7 @@
             RefreshToken,
         }
 
-        public string Username { get; private set; }
+        public NormalizedUsername Username { get; private set; }
 
         public DateTime Timestamp { get; private set; }
 

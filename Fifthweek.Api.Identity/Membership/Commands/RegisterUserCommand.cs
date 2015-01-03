@@ -2,7 +2,7 @@
 {
     public class RegisterUserCommand
     {
-        public RegisterUserCommand(string exampleWork, NormalizedEmail email, string username, string password)
+        public RegisterUserCommand(string exampleWork, NormalizedEmail email, NormalizedUsername username, string password)
         {
             this.ExampleWork = exampleWork;
             this.Email = email;
@@ -14,7 +14,7 @@
 
         public NormalizedEmail Email { get; private set; }
 
-        public string Username { get; private set; }
+        public NormalizedUsername Username { get; private set; }
 
         public string Password { get; private set; }
 
@@ -52,7 +52,10 @@
 
         protected bool Equals(RegisterUserCommand other)
         {
-            return string.Equals(this.ExampleWork, other.ExampleWork) && string.Equals(this.Email, other.Email) && string.Equals(this.Username, other.Username) && string.Equals(this.Password, other.Password);
+            return object.Equals(this.ExampleWork, other.ExampleWork) && 
+                object.Equals(this.Email, other.Email) &&
+                object.Equals(this.Username, other.Username) && 
+                object.Equals(this.Password, other.Password);
         }
     }
 }
