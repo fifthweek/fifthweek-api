@@ -1,4 +1,6 @@
-﻿namespace Fifthweek.Api.Identity.Membership.Commands
+﻿using Fifthweek.Api.Persistence;
+
+namespace Fifthweek.Api.Identity.Membership.Commands
 {
     using System;
     using System.Threading.Tasks;
@@ -11,12 +13,48 @@
 
         public RequestPasswordResetCommandHandler(IUserManager userManager)
         {
+            if (userManager == null)
+            {
+                throw new ArgumentNullException("userManager");
+            }
+
             this.userManager = userManager;
         }
 
         public async Task HandleAsync(RequestPasswordResetCommand command)
         {
-            throw new NotImplementedException();
+            ApplicationUser user = null;
+
+            if (command.Username != null)
+            {
+                user = await this.userManager.FindByNameAsync(command.Username.Value);  
+            }
+
+            if (command.Email != null && user == null)
+            {
+                user = await this.userManager.FindByEmailAsync(command.Email.Value);
+            }
+
+            if (user == null) // || !(await this.userManager.IsEmailConfirmedAsync(user.Id))
+            {
+                // Don't reveal that the user does not exist.
+                return;
+            }
+
+            var token = await this.userManager.GeneratePasswordResetTokenAsync(user.Id);
+            var callbackUrl = string.Format("https://www.fifthweek.com/#/resetPassword?userId={0}&token={1}", user.Id, token);
+            const string emailBodyTemplate = @"
+Hey, we heard you lost your Fifthweek password. Never mind - it happens!
+
+Use the following link to reset your password:
+
+<strong><a href=""{0}"">Reset Password</a></strong>
+
+Thanks,
+The Fifthweek Team";
+
+            var emailBody = string.Format(emailBodyTemplate, callbackUrl).Replace("\n", "<br />");
+            await this.userManager.SendEmailAsync(user.Id, "Reset Password", emailBody);
         }
     }
 }
