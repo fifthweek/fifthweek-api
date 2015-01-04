@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using Autofac;
 using Fifthweek.Api.Core;
+using Fifthweek.Api.Identity.Membership;
 using Fifthweek.Api.Persistence;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
@@ -36,7 +37,7 @@ namespace Fifthweek.Api
             var dataProtectionProvider = FarmedMachineDataProtectionProvider ?? NonFarmedMachineDataProtectionProvider;
             var userManager = new UserManager<ApplicationUser>(userStore)
             {
-                UserTokenProvider = new DataProtectorTokenProvider<ApplicationUser>(dataProtectionProvider.Create("EmailConfirmation")),
+                UserTokenProvider = new DataProtectorTokenProvider<ApplicationUser>(dataProtectionProvider.Create()),
                 EmailService = new MessageService(sendEmailService)
             };
 

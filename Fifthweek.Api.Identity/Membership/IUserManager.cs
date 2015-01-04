@@ -9,9 +9,15 @@
 
     public interface IUserManager : IDisposable
     {
+        UserManager<ApplicationUser> Base { get; }
+
+        IUserTokenProvider<ApplicationUser, string> UserTokenProvider { get; }
+
         Task<IdentityResult> CreateAsync(ApplicationUser user, string password);
 
         Task<ApplicationUser> FindAsync(string userName, string password);
+
+        Task<ApplicationUser> FindByIdAsync(string userId);
 
         Task<ApplicationUser> FindByEmailAsync(string email);
 
@@ -40,6 +46,16 @@
             this.userManager.Dispose();
         }
 
+        public UserManager<ApplicationUser> Base
+        {
+            get { return this.userManager; }
+        }
+
+        public IUserTokenProvider<ApplicationUser, string> UserTokenProvider
+        {
+            get { return this.userManager.UserTokenProvider; }
+        }
+
         public Task<IdentityResult> CreateAsync(ApplicationUser user, string password)
         {
             return this.userManager.CreateAsync(user, password);
@@ -48,6 +64,11 @@
         public Task<ApplicationUser> FindAsync(string userName, string password)
         {
             return this.userManager.FindAsync(userName, password);
+        }
+
+        public Task<ApplicationUser> FindByIdAsync(string userId)
+        {
+            return this.userManager.FindByIdAsync(userId);
         }
 
         public Task<ApplicationUser> FindByEmailAsync(string email)

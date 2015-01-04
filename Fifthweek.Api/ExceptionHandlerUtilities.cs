@@ -52,7 +52,7 @@
                 // For anything else we want to hide the error details.
                 return request.CreateErrorResponse(
                         HttpStatusCode.InternalServerError,
-                        "Something went wrong: " + identifier);
+                        "Something went wrong, please try again later. " + identifier);
             }
         }
 

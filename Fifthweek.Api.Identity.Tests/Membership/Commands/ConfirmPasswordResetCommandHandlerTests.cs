@@ -1,4 +1,5 @@
 ﻿using System;
+using Fifthweek.Api.Core;
 using Fifthweek.Api.Identity.Tests.Membership.Controllers;
 using Fifthweek.Api.Persistence;
 using Microsoft.AspNet.Identity;
@@ -18,35 +19,69 @@ namespace Fifthweek.Api.Identity.Tests.Membership.Commands
     public class ConfirmPasswordResetCommandHandlerTests
     {
         [TestMethod]
-        public async Task ItShouldResetThePassword()
+        public async Task WhenTokenIsValid_ItShouldResetThePassword()
         {
-            var command = ConfirmPasswordResetCommandTests.NewCommand(new PasswordResetConfirmationData
-            {
-                UserId = userId,
-                Token = Token,
-                NewPassword = NewPassword
-            });
+            this.SetupUserManager(isTokenValid: true);
 
-            this.userManager.Setup(_ => _.ResetPasswordAsync(userId.ToString(), Token, NewPassword))
+            this.userManager.Setup(_ => _.ResetPasswordAsync(UserId, Token, NewPassword))
                 .ReturnsAsync(IdentityResult.Success)
                 .Verifiable();
 
-            await this.target.HandleAsync(command);
+            await this.target.HandleAsync(this.command);
 
             this.userManager.Verify();
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(RecoverableException))]
+        public async Task WhenTokenIsInvalid_ItShouldRaiseRecoverableException()
+        {
+            this.SetupUserManager(isTokenValid: false);
+
+            await this.target.HandleAsync(this.command);
+
+            Assert.Fail("Expected a recoverable exception.");
+        }
+
+        private void SetupUserManager(bool isTokenValid)
+        {
+            this.userManager.SetupGet(_ => _.UserTokenProvider).Returns(this.userTokenProvider.Object);
+            this.userManager.Setup(_ => _.FindByIdAsync(UserId)).ReturnsAsync(new ApplicationUser
+            {
+                Id = UserId
+            });
+
+            this.userTokenProvider
+                .Setup(_ =>
+                    _.ValidateAsync(
+                        UserManagerDataProtectorPurposes.ResetPassword,
+                        Token,
+                        It.IsAny<UserManager<ApplicationUser>>(),
+                        It.Is<ApplicationUser>(user => user.Id == UserId)))
+                .ReturnsAsync(isTokenValid);
         }
 
         [TestInitialize]
         public void TestInitialize()
         {
-            this.userManager = new Mock<IUserManager>(MockBehavior.Strict);
+            this.command = ConfirmPasswordResetCommandTests.NewCommand(new PasswordResetConfirmationData
+            {
+                UserId = Guid.Parse(UserId),
+                Token = Token,
+                NewPassword = NewPassword
+            });
+
+            this.userManager = new Mock<IUserManager>();
+            this.userTokenProvider = new Mock<IUserTokenProvider<ApplicationUser, string>>();
             this.target = new ConfirmPasswordResetCommandHandler(this.userManager.Object);
         }
-        
-        private readonly Guid userId = Guid.NewGuid();
+
+        private const string UserId = "7265bc4f-555e-4386-ad57-701dbdbc78bb";
         private const string Token = "abc";
         private const string NewPassword = "Secret";
+        private ConfirmPasswordResetCommand command;
         private Mock<IUserManager> userManager;
+        private Mock<IUserTokenProvider<ApplicationUser, string>> userTokenProvider;
         private ConfirmPasswordResetCommandHandler target;
     }
 }
