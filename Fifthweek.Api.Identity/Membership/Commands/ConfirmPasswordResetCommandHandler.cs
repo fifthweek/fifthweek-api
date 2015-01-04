@@ -30,12 +30,7 @@ namespace Fifthweek.Api.Identity.Membership.Commands
                 throw new Exception("User not found");    
             }
 
-            var tokenValid = await this.userManager.UserTokenProvider.ValidateAsync(
-                UserManagerDataProtectorPurposes.ResetPassword,
-                command.Token,
-                this.userManager.Base,
-                user);
-
+            var tokenValid = await this.userManager.ValidatePasswordResetTokenAsync(user, command.Token);
             if (!tokenValid)
             {
                 // Tokens are provided to the user through links. The user understands links, so we make the exception 

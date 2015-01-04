@@ -9,10 +9,6 @@
 
     public interface IUserManager : IDisposable
     {
-        UserManager<ApplicationUser> Base { get; }
-
-        IUserTokenProvider<ApplicationUser, string> UserTokenProvider { get; }
-
         Task<IdentityResult> CreateAsync(ApplicationUser user, string password);
 
         Task<ApplicationUser> FindAsync(string userName, string password);
@@ -30,6 +26,8 @@
         Task<IdentityResult> ResetPasswordAsync(string userId, string token, string newPassword);
         
         Task SendEmailAsync(string userId, string subject, string body);
+
+        Task<bool> ValidatePasswordResetTokenAsync(ApplicationUser user, string token);
     }
 
     public class UserManagerImpl : IUserManager
@@ -44,11 +42,6 @@
         public void Dispose()
         {
             this.userManager.Dispose();
-        }
-
-        public UserManager<ApplicationUser> Base
-        {
-            get { return this.userManager; }
         }
 
         public IUserTokenProvider<ApplicationUser, string> UserTokenProvider
@@ -99,6 +92,17 @@
         public Task SendEmailAsync(string userId, string subject, string body)
         {
             return this.userManager.SendEmailAsync(userId, subject, body);
+        }
+
+        public Task<bool> ValidatePasswordResetTokenAsync(ApplicationUser user, string token)
+        {
+            // This is internal detail from ASP.NET UserManager.cs, available on GitHub:
+            // https://github.com/aspnet/Identity/tree/dev/src/Microsoft.AspNet.Identity/UserManager.cs
+            return this.userManager.UserTokenProvider.ValidateAsync(
+                "ResetPassword",
+                token,
+                this.userManager,
+                user);
         }
     }
 }

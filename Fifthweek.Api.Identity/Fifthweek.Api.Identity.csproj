@@ -111,7 +111,6 @@
     <Compile Include="Membership\NormalizedUsername.cs" />
     <Compile Include="Membership\UserId.cs" />
     <Compile Include="Membership\Password.cs" />
-    <Compile Include="Membership\UserManagerCryptoPurposes.cs" />
     <Compile Include="Membership\Username.cs" />
     <Compile Include="Membership\NormalizedEmail.cs" />
     <Compile Include="Membership\Email.cs" />

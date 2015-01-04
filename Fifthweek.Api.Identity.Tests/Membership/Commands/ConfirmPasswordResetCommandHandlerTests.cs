@@ -45,19 +45,16 @@ namespace Fifthweek.Api.Identity.Tests.Membership.Commands
 
         private void SetupUserManager(bool isTokenValid)
         {
-            this.userManager.SetupGet(_ => _.UserTokenProvider).Returns(this.userTokenProvider.Object);
             this.userManager.Setup(_ => _.FindByIdAsync(UserId)).ReturnsAsync(new ApplicationUser
             {
                 Id = UserId
             });
 
-            this.userTokenProvider
+            this.userManager
                 .Setup(_ =>
-                    _.ValidateAsync(
-                        UserManagerDataProtectorPurposes.ResetPassword,
-                        Token,
-                        It.IsAny<UserManager<ApplicationUser>>(),
-                        It.Is<ApplicationUser>(user => user.Id == UserId)))
+                    _.ValidatePasswordResetTokenAsync(
+                        It.Is<ApplicationUser>(user => user.Id == UserId),
+                        Token))
                 .ReturnsAsync(isTokenValid);
         }
 
