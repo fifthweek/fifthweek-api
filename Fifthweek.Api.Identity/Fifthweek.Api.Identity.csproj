@@ -109,6 +109,8 @@
     <Compile Include="Membership\Controllers\RegistrationData.cs" />
     <Compile Include="Membership\Controllers\HttpDtoValidationExtensions.cs" />
     <Compile Include="Membership\NormalizedUsername.cs" />
+    <Compile Include="Membership\Queries\IsPasswordResetTokenValidQuery.cs" />
+    <Compile Include="Membership\Queries\IsPasswordResetTokenValidQueryHandler.cs" />
     <Compile Include="Membership\UserId.cs" />
     <Compile Include="Membership\Password.cs" />
     <Compile Include="Membership\Username.cs" />
@@ -116,8 +118,8 @@
     <Compile Include="Membership\Email.cs" />
     <Compile Include="Membership\IUserManager.cs" />
     <Compile Include="Membership\IUserRepository.cs" />
-    <Compile Include="Membership\Queries\GetUsernameAvailabilityQuery.cs" />
-    <Compile Include="Membership\Queries\GetUsernameAvailabilityQueryHandler.cs" />
+    <Compile Include="Membership\Queries\IsUsernameAvailableQuery.cs" />
+    <Compile Include="Membership\Queries\IsUsernameAvailableQueryHandler.cs" />
     <Compile Include="Membership\Queries\GetUserQuery.cs" />
     <Compile Include="Membership\Queries\GetUserQueryHandler.cs" />
     <Compile Include="Membership\UserRepository.cs" />

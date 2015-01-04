@@ -1,4 +1,5 @@
-﻿using System.Web.Http.Controllers;
+﻿using System.Web;
+using System.Web.Http.Controllers;
 using System.Web.Http.ModelBinding;
 
 namespace Fifthweek.Api.Identity.Membership.Controllers
@@ -18,13 +19,15 @@ namespace Fifthweek.Api.Identity.Membership.Controllers
         private readonly ICommandHandler<RegisterUserCommand> registerUser;
         private readonly ICommandHandler<RequestPasswordResetCommand> requestPasswordReset;
         private readonly ICommandHandler<ConfirmPasswordResetCommand> confirmPasswordReset;
-        private readonly IQueryHandler<GetUsernameAvailabilityQuery, bool> getUsernameAvailability;
+        private readonly IQueryHandler<IsUsernameAvailableQuery, bool> isUsernameAvailable;
+        private readonly IQueryHandler<IsPasswordResetTokenValidQuery, bool> isPasswordResetTokenValid;
 
         public MembershipController(
             ICommandHandler<RegisterUserCommand> registerUser,
             ICommandHandler<RequestPasswordResetCommand> requestPasswordReset,
             ICommandHandler<ConfirmPasswordResetCommand> confirmPasswordReset,
-            IQueryHandler<GetUsernameAvailabilityQuery, bool> getUsernameAvailability)
+            IQueryHandler<IsUsernameAvailableQuery, bool> isUsernameAvailable,
+            IQueryHandler<IsPasswordResetTokenValidQuery, bool> isPasswordResetTokenValid)
         {
             if (registerUser == null)
             {
@@ -41,16 +44,22 @@ namespace Fifthweek.Api.Identity.Membership.Controllers
                 throw new ArgumentNullException("confirmPasswordReset");
             }
 
-            if (getUsernameAvailability == null)
+            if (isUsernameAvailable == null)
             {
-                throw new ArgumentNullException("getUsernameAvailability");
+                throw new ArgumentNullException("isUsernameAvailable");
+            }
+
+            if (isPasswordResetTokenValid == null)
+            {
+                throw new ArgumentNullException("isPasswordResetTokenValid");
             }
 
             this.registerUser = registerUser;
             this.requestPasswordReset = requestPasswordReset;
             this.confirmPasswordReset = confirmPasswordReset;
-            this.getUsernameAvailability = getUsernameAvailability;
-            }
+            this.isUsernameAvailable = isUsernameAvailable;
+            this.isPasswordResetTokenValid = isPasswordResetTokenValid;
+        }
 
         // POST membership/registrations
         [AllowAnonymous]
@@ -81,8 +90,8 @@ namespace Fifthweek.Api.Identity.Membership.Controllers
                 return this.NotFound();
             }
 
-            var query = new GetUsernameAvailabilityQuery(NormalizedUsername.Normalize(usernameObj));
-            var usernameAvailable = await this.getUsernameAvailability.HandleAsync(query);
+            var query = new IsUsernameAvailableQuery(NormalizedUsername.Normalize(usernameObj));
+            var usernameAvailable = await this.isUsernameAvailable.HandleAsync(query);
             if (usernameAvailable)
             {
                 return this.Ok();
@@ -117,13 +126,32 @@ namespace Fifthweek.Api.Identity.Membership.Controllers
 
             var command = new ConfirmPasswordResetCommand(
                 passwordResetConfirmation.UserIdObj,
-                passwordResetConfirmation.Token,
+                NonEscapedUrlEncoder.Decode(passwordResetConfirmation.Token),
                 passwordResetConfirmation.NewPasswordObj
             );
 
             await this.confirmPasswordReset.HandleAsync(command);
 
             return this.Ok();
+        }
+
+        // GET membership/passwordResetTokens/{userId}/{token}
+        [AllowAnonymous]
+        [Route("passwordResetTokens/{userId}/{token}")]
+        [ResponseType(typeof(bool))]
+        public async Task<IHttpActionResult> GetPasswordResetTokenValidityAsync(Guid userId, string token)
+        {
+            var tokenObj = NonEscapedUrlEncoder.Decode(token);
+            var userIdObj = UserId.Parse(userId);
+
+            var query = new IsPasswordResetTokenValidQuery(userIdObj, tokenObj);
+            var tokenValid = await this.isPasswordResetTokenValid.HandleAsync(query);
+            if (tokenValid)
+            {
+                return this.Ok();
+            }
+
+            return this.NotFound();
         }
     }
 }

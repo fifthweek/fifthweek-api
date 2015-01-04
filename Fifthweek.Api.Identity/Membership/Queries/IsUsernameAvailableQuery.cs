@@ -2,16 +2,16 @@
 {
     using Fifthweek.Api.Core;
 
-    public class GetUsernameAvailabilityQuery : IQuery<bool>
+    public class IsUsernameAvailableQuery : IQuery<bool>
     {
-        public GetUsernameAvailabilityQuery(NormalizedUsername username)
+        public IsUsernameAvailableQuery(NormalizedUsername username)
         {
             this.Username = username;
         }
 
         public NormalizedUsername Username { get; private set; }
 
-        protected bool Equals(GetUsernameAvailabilityQuery other)
+        protected bool Equals(IsUsernameAvailableQuery other)
         {
             return object.Equals(this.Username, other.Username);
         }
@@ -30,7 +30,7 @@
             {
                 return false;
             }
-            return this.Equals((GetUsernameAvailabilityQuery) obj);
+            return this.Equals((IsUsernameAvailableQuery) obj);
         }
 
         public override int GetHashCode()

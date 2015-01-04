@@ -1,4 +1,5 @@
-﻿using Fifthweek.Api.Identity.Membership;
+﻿using System;
+using Fifthweek.Api.Identity.Membership;
 
 namespace Fifthweek.Api.Identity.Tests.Membership.Controllers
 {
@@ -36,9 +37,9 @@ namespace Fifthweek.Api.Identity.Tests.Membership.Controllers
         [TestMethod]
         public async Task WhenGettingUsernameAvailability_ItShouldYieldOkIfUsernameAvailable()
         {
-            var query = new GetUsernameAvailabilityQuery(Username);
+            var query = new IsUsernameAvailableQuery(Username);
 
-            this.getUsernameAvailability.Setup(v => v.HandleAsync(query)).Returns(Task.FromResult(true));
+            this.isUsernameAvailable.Setup(v => v.HandleAsync(query)).Returns(Task.FromResult(true));
 
             var result = await this.controller.GetUsernameAvailabilityAsync(UsernameValue);
 
@@ -48,9 +49,9 @@ namespace Fifthweek.Api.Identity.Tests.Membership.Controllers
         [TestMethod]
         public async Task WhenGettingUsernameAvailability_ItShouldYieldNotFoundIfUsernameUnavailable()
         {
-            var query = new GetUsernameAvailabilityQuery(Username);
+            var query = new IsUsernameAvailableQuery(Username);
 
-            this.getUsernameAvailability.Setup(v => v.HandleAsync(query)).Returns(Task.FromResult(false));
+            this.isUsernameAvailable.Setup(v => v.HandleAsync(query)).Returns(Task.FromResult(false));
 
             var result = await this.controller.GetUsernameAvailabilityAsync(UsernameValue);
 
@@ -81,22 +82,55 @@ namespace Fifthweek.Api.Identity.Tests.Membership.Controllers
             this.confirmPasswordReset.Verify(v => v.HandleAsync(command));
         }
 
+        [TestMethod]
+        public async Task WhenGettingPasswordResetTokenValidity_ItShouldYieldOkIfTokenValid()
+        {
+            var query = new IsPasswordResetTokenValidQuery(UserId, Token);
+
+            this.isPasswordResetTokenValid.Setup(v => v.HandleAsync(query)).Returns(Task.FromResult(true));
+
+            var result = await this.controller.GetPasswordResetTokenValidityAsync(UserId.Value, Token);
+
+            Assert.IsInstanceOfType(result, typeof(OkResult));
+        }
+
+        [TestMethod]
+        public async Task WhenGettingPasswordResetTokenValidity_ItShouldYieldNotFoundIfTokenInvalid()
+        {
+            var query = new IsPasswordResetTokenValidQuery(UserId, Token);
+
+            this.isPasswordResetTokenValid.Setup(v => v.HandleAsync(query)).Returns(Task.FromResult(false));
+
+            var result = await this.controller.GetPasswordResetTokenValidityAsync(UserId.Value, Token);
+
+            Assert.IsInstanceOfType(result, typeof(NotFoundResult));
+        }
+
         [TestInitialize]
         public void TestInitialize()
         {
             this.registerUser = new Mock<ICommandHandler<RegisterUserCommand>>();
             this.requestPasswordReset = new Mock<ICommandHandler<RequestPasswordResetCommand>>();
             this.confirmPasswordReset = new Mock<ICommandHandler<ConfirmPasswordResetCommand>>();
-            this.getUsernameAvailability = new Mock<IQueryHandler<GetUsernameAvailabilityQuery, bool>>();
-            this.controller = new MembershipController(this.registerUser.Object, this.requestPasswordReset.Object, this.confirmPasswordReset.Object, this.getUsernameAvailability.Object);
+            this.isUsernameAvailable = new Mock<IQueryHandler<IsUsernameAvailableQuery, bool>>();
+            this.isPasswordResetTokenValid = new Mock<IQueryHandler<IsPasswordResetTokenValidQuery, bool>>();
+            this.controller = new MembershipController(
+                this.registerUser.Object, 
+                this.requestPasswordReset.Object, 
+                this.confirmPasswordReset.Object, 
+                this.isUsernameAvailable.Object,
+                this.isPasswordResetTokenValid.Object);
         }
 
         private const string UsernameValue = "lawrence";
+        private const string Token = "Password Token";
+        private static readonly UserId UserId = UserId.Parse(Guid.NewGuid());
         private static readonly NormalizedUsername Username = NormalizedUsername.Parse(UsernameValue);
         private Mock<ICommandHandler<RegisterUserCommand>> registerUser;
         private Mock<ICommandHandler<RequestPasswordResetCommand>> requestPasswordReset;
         private Mock<ICommandHandler<ConfirmPasswordResetCommand>> confirmPasswordReset;
-        private Mock<IQueryHandler<GetUsernameAvailabilityQuery, bool>> getUsernameAvailability;
+        private Mock<IQueryHandler<IsUsernameAvailableQuery, bool>> isUsernameAvailable;
+        private Mock<IQueryHandler<IsPasswordResetTokenValidQuery, bool>> isPasswordResetTokenValid;
         private MembershipController controller;
     }
 }

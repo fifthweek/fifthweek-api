@@ -1,4 +1,5 @@
-﻿using Fifthweek.Api.Persistence;
+﻿using System.Web;
+using Fifthweek.Api.Persistence;
 
 namespace Fifthweek.Api.Identity.Membership.Commands
 {
@@ -43,7 +44,7 @@ namespace Fifthweek.Api.Identity.Membership.Commands
 
             var token = await this.userManager.GeneratePasswordResetTokenAsync(user.Id);
 
-            var callbackUrl = string.Format("https://www.fifthweek.com/#/resetPassword?userId={0}&token={1}", user.Id, token);
+            var callbackUrl = string.Format("https://www.fifthweek.com/#/resetPassword?userId={0}&token={1}", user.Id, NonEscapedUrlEncoder.Encode(token));
             const string emailBodyTemplate = @"
 Hey, we heard you lost your Fifthweek password. Don't worry!
 

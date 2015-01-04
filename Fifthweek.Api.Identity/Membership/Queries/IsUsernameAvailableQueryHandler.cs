@@ -5,11 +5,11 @@ namespace Fifthweek.Api.Identity.Membership.Queries
 
     using Fifthweek.Api.Core;
 
-    public class GetUsernameAvailabilityQueryHandler : IQueryHandler<GetUsernameAvailabilityQuery, bool>
+    public class IsUsernameAvailableQueryHandler : IQueryHandler<IsUsernameAvailableQuery, bool>
     {
         private readonly IUserManager userManager;
 
-        public GetUsernameAvailabilityQueryHandler(IUserManager userManager)
+        public IsUsernameAvailableQueryHandler(IUserManager userManager)
         {
             if (userManager == null)
             {
@@ -19,7 +19,7 @@ namespace Fifthweek.Api.Identity.Membership.Queries
             this.userManager = userManager;
         }
 
-        public async Task<bool> HandleAsync(GetUsernameAvailabilityQuery query)
+        public async Task<bool> HandleAsync(IsUsernameAvailableQuery query)
         {
             var user = await this.userManager.FindByNameAsync(query.Username.Value);
             return user == null;
