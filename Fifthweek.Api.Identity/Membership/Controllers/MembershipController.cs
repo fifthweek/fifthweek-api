@@ -126,7 +126,7 @@ namespace Fifthweek.Api.Identity.Membership.Controllers
 
             var command = new ConfirmPasswordResetCommand(
                 passwordResetConfirmation.UserIdObj,
-                NonEscapedUrlEncoder.Decode(passwordResetConfirmation.Token),
+                passwordResetConfirmation.Token,
                 passwordResetConfirmation.NewPasswordObj
             );
 
@@ -137,14 +137,12 @@ namespace Fifthweek.Api.Identity.Membership.Controllers
 
         // GET membership/passwordResetTokens/{userId}/{token}
         [AllowAnonymous]
-        [Route("passwordResetTokens/{userId}/{token}")]
+        [Route("passwordResetTokens/{userId}/{*token}")]
         [ResponseType(typeof(bool))]
         public async Task<IHttpActionResult> GetPasswordResetTokenValidityAsync(Guid userId, string token)
         {
-            var tokenObj = NonEscapedUrlEncoder.Decode(token);
             var userIdObj = UserId.Parse(userId);
-
-            var query = new IsPasswordResetTokenValidQuery(userIdObj, tokenObj);
+            var query = new IsPasswordResetTokenValidQuery(userIdObj, token);
             var tokenValid = await this.isPasswordResetTokenValid.HandleAsync(query);
             if (tokenValid)
             {

@@ -84,7 +84,6 @@
     <Compile Include="Constants.cs" />
     <Compile Include="Extensions.cs" />
     <Compile Include="ExternalErrorException.cs" />
-    <Compile Include="NonEscapedUrlEncoder.cs" />
     <Compile Include="ICommandHandler.cs" />
     <Compile Include="IExceptionHandler.cs" />
     <Compile Include="IQuery.cs" />
