@@ -18,6 +18,7 @@ namespace Fifthweek.Api
             {
                 var httpConfiguration = new HttpConfiguration();
 
+                IdentityConfig.Register(app);
                 AutofacConfig.Register(httpConfiguration, app);
                 OAuthConfig.Register(httpConfiguration, app);
                 DatabaseConfig.Register();
