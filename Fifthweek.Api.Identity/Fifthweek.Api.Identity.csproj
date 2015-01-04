@@ -95,6 +95,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Membership\Commands\ConfirmPasswordResetCommand.cs" />
     <Compile Include="Membership\Commands\RequestPasswordResetCommand.cs" />
     <Compile Include="Membership\Commands\RegisterUserCommand.cs" />
     <Compile Include="Membership\Commands\RequestPasswordResetCommandHandler.cs" />
@@ -102,6 +103,7 @@
     <Compile Include="Membership\Commands\UpdateLastAccessTokenDateCommand.cs" />
     <Compile Include="Membership\Commands\UpdateLastAccessTokenDateCommandHandler.cs" />
     <Compile Include="Membership\Controllers\MembershipController.cs" />
+    <Compile Include="Membership\Controllers\PasswordResetConfirmationData.cs" />
     <Compile Include="Membership\Controllers\PasswordResetRequestData.cs" />
     <Compile Include="Membership\Controllers\RegistrationData.cs" />
     <Compile Include="Membership\Controllers\HttpDtoValidationExtensions.cs" />

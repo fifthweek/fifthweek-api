@@ -12,8 +12,8 @@ namespace Fifthweek.Api.Identity.Tests.Membership.Controllers
         [TestMethod]
         public void ItShouldRecogniseEqualObjects()
         {
-            var registration1 = NewRegistrationData();
-            var registration2 = NewRegistrationData();
+            var registration1 = NewData();
+            var registration2 = NewData();
 
             Assert.AreEqual(registration1, registration2);
         }
@@ -21,8 +21,8 @@ namespace Fifthweek.Api.Identity.Tests.Membership.Controllers
         [TestMethod]
         public void ItShouldRecogniseDifferentExampleWork()
         {
-            var registration1 = NewRegistrationData();
-            var registration2 = NewRegistrationData();
+            var registration1 = NewData();
+            var registration2 = NewData();
             registration2.ExampleWork = "Different";
 
             Assert.AreNotEqual(registration1, registration2);
@@ -31,8 +31,8 @@ namespace Fifthweek.Api.Identity.Tests.Membership.Controllers
         [TestMethod]
         public void ItShouldRecogniseDifferentEmail()
         {
-            var registration1 = NewRegistrationData();
-            var registration2 = NewRegistrationData();
+            var registration1 = NewData();
+            var registration2 = NewData();
             registration2.Email = "different@example.com";
 
             Assert.AreNotEqual(registration1, registration2);
@@ -41,8 +41,8 @@ namespace Fifthweek.Api.Identity.Tests.Membership.Controllers
         [TestMethod]
         public void ItShouldRecogniseDifferentUsername()
         {
-            var registration1 = NewRegistrationData();
-            var registration2 = NewRegistrationData();
+            var registration1 = NewData();
+            var registration2 = NewData();
             registration2.Username = "Different";
 
             Assert.AreNotEqual(registration1, registration2);
@@ -51,14 +51,14 @@ namespace Fifthweek.Api.Identity.Tests.Membership.Controllers
         [TestMethod]
         public void ItShouldRecogniseDifferentPassword()
         {
-            var registration1 = NewRegistrationData();
-            var registration2 = NewRegistrationData();
+            var registration1 = NewData();
+            var registration2 = NewData();
             registration2.Password = "Different";
 
             Assert.AreNotEqual(registration1, registration2);
         }
 
-        public static RegistrationData NewRegistrationData()
+        public static RegistrationData NewData()
         {
             return new RegistrationData
             {

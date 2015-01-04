@@ -117,7 +117,7 @@
 
         private RegisterUserCommand CreateRegisterUserCommand()
         {
-            return RegisterUserCommandTests.NewRegisterUserCommand(this.registrationData);
+            return RegisterUserCommandTests.NewCommand(this.registrationData);
         }
 
         [TestInitialize]

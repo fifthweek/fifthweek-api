@@ -146,8 +146,8 @@ namespace Fifthweek.Api.Identity.Tests.Membership.Commands
         [TestInitialize]
         public void TestInitialize()
         {
-            this.passwordResetRequestData = PasswordResetRequestDataTests.NewPasswordResetRequestData();
-            this.requestPasswordResetCommand = RequestPasswordResetCommandTests.NewRequestPasswordResetCommand(this.passwordResetRequestData);
+            this.passwordResetRequestData = PasswordResetRequestDataTests.NewData();
+            this.requestPasswordResetCommand = RequestPasswordResetCommandTests.NewCommand(this.passwordResetRequestData);
             this.userManager = new Mock<IUserManager>(MockBehavior.Strict);
             this.target = new RequestPasswordResetCommandHandler(this.userManager.Object);
         }

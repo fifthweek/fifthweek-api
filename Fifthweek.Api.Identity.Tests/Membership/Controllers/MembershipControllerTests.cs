@@ -21,8 +21,8 @@ namespace Fifthweek.Api.Identity.Tests.Membership.Controllers
         [TestMethod]
         public async Task WhenPostingRegistrations_ItShouldIssueRegisterUserCommand()
         {
-            var registration = RegistrationDataTests.NewRegistrationData();
-            var command = RegisterUserCommandTests.NewRegisterUserCommand(registration);
+            var registration = RegistrationDataTests.NewData();
+            var command = RegisterUserCommandTests.NewCommand(registration);
 
             this.registerUser.Setup(v => v.HandleAsync(command)).Returns(Task.FromResult(0));
 
@@ -60,8 +60,8 @@ namespace Fifthweek.Api.Identity.Tests.Membership.Controllers
         [TestMethod]
         public async Task WhenPostingPasswordResetRequests_ItShouldIssueRequestPasswordResetCommand()
         {
-            var passwordResetRequest = PasswordResetRequestDataTests.NewPasswordResetRequestData();
-            var command = RequestPasswordResetCommandTests.NewRequestPasswordResetCommand(passwordResetRequest);
+            var passwordResetRequest = PasswordResetRequestDataTests.NewData();
+            var command = RequestPasswordResetCommandTests.NewCommand(passwordResetRequest);
 
             var result = await this.controller.PostPasswordResetRequestAsync(passwordResetRequest);
 
@@ -69,19 +69,33 @@ namespace Fifthweek.Api.Identity.Tests.Membership.Controllers
             this.requestPasswordReset.Verify(v => v.HandleAsync(command));
         }
 
+        [TestMethod]
+        public async Task WhenPostingPasswordResetConfirmations_ItShouldIssueConfirmPasswordResetCommand()
+        {
+            var passwordResetConfirmation = PasswordResetConfirmationDataTests.NewData();
+            var command = ConfirmPasswordResetCommandTests.NewCommand(passwordResetConfirmation);
+
+            var result = await this.controller.PostPasswordResetConfirmationAsync(passwordResetConfirmation);
+
+            Assert.IsInstanceOfType(result, typeof(OkResult));
+            this.confirmPasswordReset.Verify(v => v.HandleAsync(command));
+        }
+
         [TestInitialize]
         public void TestInitialize()
         {
             this.registerUser = new Mock<ICommandHandler<RegisterUserCommand>>();
             this.requestPasswordReset = new Mock<ICommandHandler<RequestPasswordResetCommand>>();
+            this.confirmPasswordReset = new Mock<ICommandHandler<ConfirmPasswordResetCommand>>();
             this.getUsernameAvailability = new Mock<IQueryHandler<GetUsernameAvailabilityQuery, bool>>();
-            this.controller = new MembershipController(this.registerUser.Object, this.requestPasswordReset.Object, this.getUsernameAvailability.Object);
+            this.controller = new MembershipController(this.registerUser.Object, this.requestPasswordReset.Object, this.confirmPasswordReset.Object, this.getUsernameAvailability.Object);
         }
 
-        private static readonly string UsernameValue = "lawrence";
+        private const string UsernameValue = "lawrence";
         private static readonly NormalizedUsername Username = NormalizedUsername.Parse(UsernameValue);
         private Mock<ICommandHandler<RegisterUserCommand>> registerUser;
         private Mock<ICommandHandler<RequestPasswordResetCommand>> requestPasswordReset;
+        private Mock<ICommandHandler<ConfirmPasswordResetCommand>> confirmPasswordReset;
         private Mock<IQueryHandler<GetUsernameAvailabilityQuery, bool>> getUsernameAvailability;
         private MembershipController controller;
     }

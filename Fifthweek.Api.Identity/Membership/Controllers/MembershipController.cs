@@ -17,20 +17,28 @@ namespace Fifthweek.Api.Identity.Membership.Controllers
     {
         private readonly ICommandHandler<RegisterUserCommand> registerUser;
         private readonly ICommandHandler<RequestPasswordResetCommand> requestPasswordReset;
+        private readonly ICommandHandler<ConfirmPasswordResetCommand> confirmPasswordReset;
         private readonly IQueryHandler<GetUsernameAvailabilityQuery, bool> getUsernameAvailability;
 
         public MembershipController(
             ICommandHandler<RegisterUserCommand> registerUser,
             ICommandHandler<RequestPasswordResetCommand> requestPasswordReset,
+            ICommandHandler<ConfirmPasswordResetCommand> confirmPasswordReset,
             IQueryHandler<GetUsernameAvailabilityQuery, bool> getUsernameAvailability)
         {
             if (registerUser == null)
             {
                 throw new ArgumentNullException("registerUser");
             }
+
             if (requestPasswordReset == null)
             {
                 throw new ArgumentNullException("requestPasswordReset");
+            }
+
+            if (confirmPasswordReset == null)
+            {
+                throw new ArgumentNullException("confirmPasswordReset");
             }
 
             if (getUsernameAvailability == null)
@@ -40,6 +48,7 @@ namespace Fifthweek.Api.Identity.Membership.Controllers
 
             this.registerUser = registerUser;
             this.requestPasswordReset = requestPasswordReset;
+            this.confirmPasswordReset = confirmPasswordReset;
             this.getUsernameAvailability = getUsernameAvailability;
             }
 
@@ -95,6 +104,23 @@ namespace Fifthweek.Api.Identity.Membership.Controllers
             );
 
             await this.requestPasswordReset.HandleAsync(command);
+
+            return this.Ok();
+        }
+
+        // POST membership/passwordResetConfirmations
+        [AllowAnonymous]
+        [Route("passwordResetConfirmations")]
+        public async Task<IHttpActionResult> PostPasswordResetConfirmationAsync(PasswordResetConfirmationData passwordResetConfirmation)
+        {
+            passwordResetConfirmation.Parse();
+
+            var command = new ConfirmPasswordResetCommand(
+                passwordResetConfirmation.Token,
+                passwordResetConfirmation.NewPasswordObj
+            );
+
+            await this.confirmPasswordReset.HandleAsync(command);
 
             return this.Ok();
         }

@@ -14,9 +14,9 @@ namespace Fifthweek.Api.Identity.Tests.Membership.Commands
         [TestMethod]
         public void ItShouldRecogniseEqualObjects()
         {
-            var registrationData = PasswordResetRequestDataTests.NewPasswordResetRequestData();
-            var command1 = NewRequestPasswordResetCommand(registrationData);
-            var command2 = NewRequestPasswordResetCommand(registrationData);
+            var data = PasswordResetRequestDataTests.NewData();
+            var command1 = NewCommand(data);
+            var command2 = NewCommand(data);
 
             Assert.AreEqual(command1, command2);
         }
@@ -24,16 +24,16 @@ namespace Fifthweek.Api.Identity.Tests.Membership.Commands
         [TestMethod]
         public void ItShouldRecogniseDifferentRegistrationData()
         {
-            var registrationData = PasswordResetRequestDataTests.NewPasswordResetRequestData();
-            var command1 = NewRequestPasswordResetCommand(registrationData);
+            var data = PasswordResetRequestDataTests.NewData();
+            var command1 = NewCommand(data);
 
-            registrationData.Username = "different";
-            var command2 = NewRequestPasswordResetCommand(registrationData);
+            data.Username = "different";
+            var command2 = NewCommand(data);
 
             Assert.AreNotEqual(command1, command2);
         }
 
-        public static RequestPasswordResetCommand NewRequestPasswordResetCommand(PasswordResetRequestData passwordResetRequest)
+        public static RequestPasswordResetCommand NewCommand(PasswordResetRequestData passwordResetRequest)
         {
             return new RequestPasswordResetCommand(
                 passwordResetRequest.Email == null ? null : NormalizedEmail.Parse(passwordResetRequest.Email),
