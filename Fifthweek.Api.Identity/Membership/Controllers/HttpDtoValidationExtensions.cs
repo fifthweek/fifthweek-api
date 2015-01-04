@@ -7,7 +7,7 @@ namespace Fifthweek.Api.Identity.Membership.Controllers
     {
         public static Username AsUsername(this string value, string key, ModelStateDictionary modelStateDictionary, bool isRequired = true)
         {
-            if (!isRequired && string.IsNullOrWhiteSpace(value))
+            if (!isRequired && string.IsNullOrWhiteSpace(value)) // Usernames are whitespace insensitive.
             {
                 // Optional field.
                 return null;
@@ -26,7 +26,7 @@ namespace Fifthweek.Api.Identity.Membership.Controllers
 
         public static Email AsEmail(this string value, string key, ModelStateDictionary modelStateDictionary, bool isRequired = true)
         {
-            if (!isRequired && string.IsNullOrWhiteSpace(value))
+            if (!isRequired && string.IsNullOrWhiteSpace(value)) // Emails are whitespace insensitive.
             {
                 // Optional field.
                 return null;
@@ -45,7 +45,7 @@ namespace Fifthweek.Api.Identity.Membership.Controllers
 
         public static Password AsPassword(this string value, string key, ModelStateDictionary modelStateDictionary, bool isRequired = true)
         {
-            if (!isRequired && string.IsNullOrEmpty(value)) // Passwords are whitespace sensitive.
+            if (!isRequired && string.IsNullOrEmpty(value))
             {
                 // Optional field.
                 return null;

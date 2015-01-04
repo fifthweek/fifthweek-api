@@ -1,4 +1,6 @@
-﻿namespace Fifthweek.Api.Identity.Tests.Membership.Controllers
+﻿using System;
+
+namespace Fifthweek.Api.Identity.Tests.Membership.Controllers
 {
     using Fifthweek.Api.Identity.Membership.Controllers;
 
@@ -17,7 +19,17 @@
         }
 
         [TestMethod]
-        public void ItShouldRecogniseDifferentEmail()
+        public void ItShouldRecogniseDifferentUserId()
+        {
+            var confirmation1 = NewData();
+            var confirmation2 = NewData();
+            confirmation2.UserId = Guid.NewGuid();
+
+            Assert.AreNotEqual(confirmation1, confirmation2);
+        }
+
+        [TestMethod]
+        public void ItShouldRecogniseDifferentToken()
         {
             var confirmation1 = NewData();
             var confirmation2 = NewData();
@@ -27,7 +39,7 @@
         }
 
         [TestMethod]
-        public void ItShouldRecogniseDifferentUsername()
+        public void ItShouldRecogniseDifferentPassword()
         {
             var confirmation1 = NewData();
             var confirmation2 = NewData();
@@ -40,6 +52,7 @@
         {
             return new PasswordResetConfirmationData
             {
+                UserId = Guid.Parse("{5E41A09B-0523-4FD3-BC82-9D5A02D2FB97}"),
                 Token = "SomeLongBase64EncodedGumpf",
                 NewPassword = "SecretSquirrel",
             };

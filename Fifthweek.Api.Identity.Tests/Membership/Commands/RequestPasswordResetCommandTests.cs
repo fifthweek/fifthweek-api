@@ -22,7 +22,7 @@ namespace Fifthweek.Api.Identity.Tests.Membership.Commands
         }
 
         [TestMethod]
-        public void ItShouldRecogniseDifferentRegistrationData()
+        public void ItShouldRecogniseDifferentRequestData()
         {
             var data = PasswordResetRequestDataTests.NewData();
             var command1 = NewCommand(data);

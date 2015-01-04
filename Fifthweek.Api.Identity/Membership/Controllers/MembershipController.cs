@@ -116,6 +116,7 @@ namespace Fifthweek.Api.Identity.Membership.Controllers
             passwordResetConfirmation.Parse();
 
             var command = new ConfirmPasswordResetCommand(
+                passwordResetConfirmation.UserIdObj,
                 passwordResetConfirmation.Token,
                 passwordResetConfirmation.NewPasswordObj
             );

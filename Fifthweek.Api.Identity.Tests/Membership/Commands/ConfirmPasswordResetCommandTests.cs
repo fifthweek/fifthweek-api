@@ -22,7 +22,7 @@ namespace Fifthweek.Api.Identity.Tests.Membership.Commands
         }
 
         [TestMethod]
-        public void ItShouldRecogniseDifferentRegistrationData()
+        public void ItShouldRecogniseDifferentConfirmationData()
         {
             var data = PasswordResetConfirmationDataTests.NewData();
             var command1 = NewCommand(data);
@@ -36,6 +36,7 @@ namespace Fifthweek.Api.Identity.Tests.Membership.Commands
         public static ConfirmPasswordResetCommand NewCommand(PasswordResetConfirmationData passwordResetConfirmation)
         {
             return new ConfirmPasswordResetCommand(
+                UserId.Parse(passwordResetConfirmation.UserId),
                 passwordResetConfirmation.Token,
                 Password.Parse(passwordResetConfirmation.NewPassword));
         }

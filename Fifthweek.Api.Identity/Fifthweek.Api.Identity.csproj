@@ -98,6 +98,7 @@
     <Compile Include="Membership\Commands\ConfirmPasswordResetCommand.cs" />
     <Compile Include="Membership\Commands\RequestPasswordResetCommand.cs" />
     <Compile Include="Membership\Commands\RegisterUserCommand.cs" />
+    <Compile Include="Membership\Commands\ConfirmPasswordResetCommandHandler.cs" />
     <Compile Include="Membership\Commands\RequestPasswordResetCommandHandler.cs" />
     <Compile Include="Membership\Commands\RegisterUserCommandHandler.cs" />
     <Compile Include="Membership\Commands\UpdateLastAccessTokenDateCommand.cs" />
@@ -108,6 +109,7 @@
     <Compile Include="Membership\Controllers\RegistrationData.cs" />
     <Compile Include="Membership\Controllers\HttpDtoValidationExtensions.cs" />
     <Compile Include="Membership\NormalizedUsername.cs" />
+    <Compile Include="Membership\UserId.cs" />
     <Compile Include="Membership\Password.cs" />
     <Compile Include="Membership\Username.cs" />
     <Compile Include="Membership\NormalizedEmail.cs" />

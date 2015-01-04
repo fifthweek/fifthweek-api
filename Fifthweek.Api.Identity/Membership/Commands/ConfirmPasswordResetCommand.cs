@@ -2,11 +2,14 @@
 {
     public class ConfirmPasswordResetCommand
     {
-        public ConfirmPasswordResetCommand(string token, Password newPassword)
+        public ConfirmPasswordResetCommand(UserId userId, string token, Password newPassword)
         {
+            this.UserId = userId;
             this.Token = token;
             this.NewPassword = newPassword;
         }
+
+        public UserId UserId { get; private set; }
 
         public string Token { get; private set; }
 
@@ -36,7 +39,8 @@
         {
             unchecked
             {
-                int hashCode = this.Token != null ? this.Token.GetHashCode() : 0;
+                int hashCode = this.UserId != null ? this.UserId.GetHashCode() : 0;
+                hashCode = (hashCode * 397) ^ (this.Token != null ? this.Token.GetHashCode() : 0);
                 hashCode = (hashCode * 397) ^ (this.NewPassword != null ? this.NewPassword.GetHashCode() : 0);
                 return hashCode;
             }
@@ -44,7 +48,8 @@
 
         protected bool Equals(ConfirmPasswordResetCommand other)
         {
-            return object.Equals(this.Token, other.Token) &&
+            return object.Equals(this.UserId, other.UserId) && 
+                object.Equals(this.Token, other.Token) &&
                 object.Equals(this.NewPassword, other.NewPassword);
         }
     }
