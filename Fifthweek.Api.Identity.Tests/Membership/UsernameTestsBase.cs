@@ -52,6 +52,7 @@ namespace Fifthweek.Api.Identity.Tests.Membership
         public void ItShouldNotAllowInnerWhitespace()
         {
             this.BadUsername("joe bloggs");
+            this.BadUsername("joe\nbloggs");
         }
 
         [TestMethod]

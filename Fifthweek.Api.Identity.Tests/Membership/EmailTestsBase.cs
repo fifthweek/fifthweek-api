@@ -65,6 +65,8 @@ namespace Fifthweek.Api.Identity.Tests.Membership
             this.BadEmail("joe@blo ggs.com");
             this.BadEmail("joe@bloggs .com");
             this.BadEmail("joe@bloggs. com");
+            this.BadEmail("joe@bloggs.com\njoe@bloggs.com");
+            this.BadEmail("joe\n@bloggs.com");
         }
 
         [TestMethod]
