@@ -1,4 +1,5 @@
-﻿using Fifthweek.Api.Identity.Membership;
+﻿using System.Collections.Generic;
+using Fifthweek.Api.Identity.Membership;
 
 namespace Fifthweek.Api.Identity.Tests.Membership
 {
@@ -10,14 +11,14 @@ namespace Fifthweek.Api.Identity.Tests.Membership
         [TestMethod]
         public void ItShouldAllowLeadingOrTrailingWhitespace()
         {
-            this.GoodUsername(" joebloggs");
-            this.GoodUsername("joebloggs ");
+            this.GoodValue(" joebloggs");
+            this.GoodValue("joebloggs ");
         }
 
         [TestMethod]
         public void ItShouldAllowUppercase()
         {
-            this.GoodUsername("JoeBloggs");
+            this.GoodValue("JoeBloggs");
         }
 
         protected override Username Parse(string usernameValue)
@@ -28,6 +29,11 @@ namespace Fifthweek.Api.Identity.Tests.Membership
         protected override bool TryParse(string usernameValue, out Username username)
         {
             return Username.TryParse(usernameValue, out username);
+        }
+
+        protected override bool TryParse(string usernameValue, out Username username, out IReadOnlyCollection<string> errorMessages)
+        {
+            return Username.TryParse(usernameValue, out username, out errorMessages);
         }
     }
 }

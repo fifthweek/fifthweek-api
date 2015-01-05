@@ -1,4 +1,6 @@
-﻿using Fifthweek.Api.Identity.Membership;
+﻿using System;
+using System.Collections.Generic;
+using Fifthweek.Api.Identity.Membership;
 
 namespace Fifthweek.Api.Identity.Tests.Membership
 {
@@ -10,49 +12,49 @@ namespace Fifthweek.Api.Identity.Tests.Membership
         [TestMethod]
         public void ItShouldAllowBasicUsernames()
         {
-            this.GoodUsername("joebloggs");
+            this.GoodValue("joebloggs");
         }
 
         [TestMethod]
         public void ItShouldAllowUnderscores()
         {
-            this.GoodUsername("joe_bloggs");
+            this.GoodValue("joe_bloggs");
         }
 
         [TestMethod]
         public void ItShouldAllowNumbers()
         {
-            this.GoodUsername("joe123");
-            this.GoodUsername("123456");
+            this.GoodValue("joe123");
+            this.GoodValue("123456");
         }
 
         [TestMethod]
         public void ItShouldNotAllowUsernamesUnder6Characters()
         {
-            this.GoodUsername("joeblo");
-            this.BadUsername("joebl");
+            this.GoodValue("joeblo");
+            this.BadValue("joebl");
         }
 
         [TestMethod]
         public void ItShouldNotAllowUsernamesOver20Characters()
         {
-            this.GoodUsername("joe_bloggs_123456789");
-            this.BadUsername("joe_bloggs_1234567890");
+            this.GoodValue("joe_bloggs_123456789");
+            this.BadValue("joe_bloggs_1234567890");
         }
 
         [TestMethod]
         public void ItShouldNotAllowIllegalCharacters()
         {
             // Include 'a' to ensure we're not just checking for the existence of at least one valid character.
-            this.BadUsername("a!@£#$%^&*()-+={}[]");
-            this.BadUsername("a:;'`\"\\|<>,./?~§±");
+            this.BadValue("a!@£#$%^&*()-+={}[]");
+            this.BadValue("a:;'`\"\\|<>,./?~§±");
         }
 
         [TestMethod]
         public void ItShouldNotAllowInnerWhitespace()
         {
-            this.BadUsername("joe bloggs");
-            this.BadUsername("joe\nbloggs");
+            this.BadValue("joe bloggs");
+            this.BadValue("joe\nbloggs");
         }
 
         [TestMethod]
@@ -77,21 +79,46 @@ namespace Fifthweek.Api.Identity.Tests.Membership
 
         protected abstract bool TryParse(string usernameValue, out Username username);
 
-        protected void GoodUsername(string usernameValue)
-        {
-            Username username;
-            var usernameValid = this.TryParse(usernameValue, out username);
+        protected abstract bool TryParse(string usernameValue, out Username username, out IReadOnlyCollection<string> errorMessages);
 
-            Assert.IsTrue(usernameValid);
-            Assert.AreEqual(usernameValue, username.Value);
+        protected void GoodValue(string value)
+        {
+            Username parsedObject;
+            IReadOnlyCollection<string> errorMessages;
+
+            var valid = this.TryParse(value, out parsedObject);
+            Assert.IsTrue(valid);
+            Assert.AreEqual(value, parsedObject.Value);
+
+            valid = this.TryParse(value, out parsedObject, out errorMessages);
+            Assert.IsTrue(valid);
+            Assert.AreEqual(value, parsedObject.Value);
+            Assert.IsTrue(errorMessages.Count == 0);
+
+            parsedObject = this.Parse(value);
+            Assert.AreEqual(value, parsedObject.Value);
         }
 
-        protected void BadUsername(string usernameValue)
+        protected void BadValue(string value)
         {
-            Username username;
-            var usernameValid = this.TryParse(usernameValue, out username);
+            Username parsedObject;
+            IReadOnlyCollection<string> errorMessages;
 
-            Assert.IsFalse(usernameValid);
+            var valid = this.TryParse(value, out parsedObject);
+            Assert.IsFalse(valid);
+
+            valid = this.TryParse(value, out parsedObject, out errorMessages);
+            Assert.IsFalse(valid);
+            Assert.IsTrue(errorMessages.Count > 0);
+
+            try
+            {
+                this.Parse(value);
+                Assert.Fail("Expected argument exception");
+            }
+            catch (ArgumentException)
+            {
+            }
         }
     }
 }
