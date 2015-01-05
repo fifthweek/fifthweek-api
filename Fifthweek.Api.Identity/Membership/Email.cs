@@ -44,7 +44,7 @@ namespace Fifthweek.Api.Identity.Membership
             Email retval;
             if (!TryParse(value, out retval))
             {
-                throw new ArgumentException("Invalid email address", value);
+                throw new ArgumentException("Invalid email address", "value");
             }
 
             return retval;

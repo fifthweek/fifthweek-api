@@ -4,21 +4,21 @@ using System.Linq;
 
 namespace Fifthweek.Api.Subscriptions
 {
-    public class Tagline
+    public class SubscriptionName
     {
         public static readonly string ForbiddenCharacters = "\r\n\t";
-        public static readonly int MinLength = 5;
-        public static readonly int MaxLength = 55; // Need to support XKCD ;) "A webcomic of romance, sarcasm, math, and language."
+        public static readonly int MinLength = 1;
+        public static readonly int MaxLength = 25;
 
         private static readonly HashSet<char> ForbiddenCharactersHashSet = new HashSet<char>(ForbiddenCharacters);
 
-        protected Tagline()
+        protected SubscriptionName()
         {
         }
 
         public string Value { get; protected set; }
 
-        protected bool Equals(Tagline other)
+        protected bool Equals(SubscriptionName other)
         {
             return string.Equals(this.Value, other.Value);
         }
@@ -37,7 +37,7 @@ namespace Fifthweek.Api.Subscriptions
             {
                 return false;
             }
-            return Equals((Tagline)obj);
+            return Equals((SubscriptionName)obj);
         }
 
         public override int GetHashCode()
@@ -45,45 +45,45 @@ namespace Fifthweek.Api.Subscriptions
             return (this.Value != null ? this.Value.GetHashCode() : 0);
         }
 
-        public static Tagline Parse(string value)
+        public static SubscriptionName Parse(string value)
         {
-            Tagline retval;
+            SubscriptionName retval;
             if (!TryParse(value, out retval))
             {
-                throw new ArgumentException("Invalid tagline", "value");
+                throw new ArgumentException("Invalid subscription name", "value");
             }
 
             return retval;
         }
 
-        public static bool TryParse(string value, out Tagline tagline)
+        public static bool TryParse(string value, out SubscriptionName subscriptionName)
         {
             IReadOnlyCollection<string> errorMessages;
-            return TryParse(value, out tagline, out errorMessages);
+            return TryParse(value, out subscriptionName, out errorMessages);
         }
 
-        public static bool TryParse(string value, out Tagline tagline, out IReadOnlyCollection<string> errorMessages)
+        public static bool TryParse(string value, out SubscriptionName subscriptionName, out IReadOnlyCollection<string> errorMessages)
         {
             var errorMessageList = new List<string>();
             errorMessages = errorMessageList;
 
             if (value.Length < MinLength || value.Length > MaxLength)
             {
-                errorMessageList.Add(string.Format("Tagline length must be from {0} to {1} characters", MinLength, MaxLength));
+                errorMessageList.Add(string.Format("Subscription name length must be from {0} to {1} characters", MinLength, MaxLength));
             }
 
             if (value.Any(ForbiddenCharactersHashSet.Contains))
             {
-                errorMessageList.Add("Tagline must not contain new lines or tabs");
+                errorMessageList.Add("Subscription name must not contain new lines or tabs");
             }
 
             if (errorMessageList.Count > 0)
             {
-                tagline = null;
+                subscriptionName = null;
                 return false;
             }
 
-            tagline = new Tagline
+            subscriptionName = new SubscriptionName
             {
                 Value = value
             };

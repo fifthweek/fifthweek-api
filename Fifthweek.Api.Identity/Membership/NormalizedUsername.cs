@@ -24,7 +24,7 @@ namespace Fifthweek.Api.Identity.Membership
             NormalizedUsername retval;
             if (!TryParse(value, out retval))
             {
-                throw new ArgumentException("Invalid username", value);
+                throw new ArgumentException("Invalid normalized username", "value");
             }
 
             return retval;

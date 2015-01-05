@@ -48,7 +48,7 @@ namespace Fifthweek.Api.Identity.Membership
             Username retval;
             if (!TryParse(value, out retval))
             {
-                throw new ArgumentException("Invalid username", value);
+                throw new ArgumentException("Invalid username", "value");
             }
 
             return retval;
@@ -73,7 +73,7 @@ namespace Fifthweek.Api.Identity.Membership
 
             if (!Pattern.IsMatch(trimmedUsername))
             {
-                errorMessageList.Add("Only alphanumeric characters and underscores are allowed in the username.");
+                errorMessageList.Add("Only alphanumeric characters and underscores are allowed in the username");
             }
 
             if (errorMessageList.Count > 0)

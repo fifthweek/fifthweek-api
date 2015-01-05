@@ -46,7 +46,7 @@ namespace Fifthweek.Api.Identity.Membership
             Password retval;
             if (!TryParse(value, out retval))
             {
-                throw new ArgumentException("Invalid password", value);
+                throw new ArgumentException("Invalid password", "value");
             }
 
             return retval;

@@ -23,7 +23,7 @@ namespace Fifthweek.Api.Identity.Membership
             NormalizedEmail retval;
             if (!TryParse(value, out retval))
             {
-                throw new ArgumentException("Invalid normalized email address", value);
+                throw new ArgumentException("Invalid normalized email address", "value");
             }
 
             return retval;
