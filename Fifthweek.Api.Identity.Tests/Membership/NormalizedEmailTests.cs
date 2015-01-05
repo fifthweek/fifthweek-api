@@ -1,41 +1,39 @@
-﻿using Fifthweek.Api.Identity.Membership;
+﻿using System.Collections.Generic;
+using Fifthweek.Api.Identity.Membership;
 
 namespace Fifthweek.Api.Identity.Tests.Membership
 {
     using Microsoft.VisualStudio.TestTools.UnitTesting;
 
     [TestClass]
-    public class NormalizedEmailTests : EmailTestsBase
+    public class NormalizedEmailTests : EmailTestsBase<NormalizedEmail>
     {
         [TestMethod]
         public void ItShouldNotAllowLeadingOrTrailingWhitespace()
         {
-            this.BadEmail(" joe@bloggs.com");
-            this.BadEmail("joe@bloggs.com ");
+            this.BadValue(" joe@bloggs.com");
+            this.BadValue("joe@bloggs.com ");
         }
 
         [TestMethod]
         public void ItShouldNotAllowUppercase()
         {
-            this.BadEmail("Joe@Bloggs.com");
+            this.BadValue("Joe@Bloggs.com");
         }
 
-        protected override Email Parse(string emailValue)
+        protected override NormalizedEmail Parse(string value)
         {
-            return NormalizedEmail.Parse(emailValue);
+            return NormalizedEmail.Parse(value);
         }
 
-        protected override bool TryParse(string emailValue, out Email email)
+        protected override bool TryParse(string value, out NormalizedEmail parsedObject)
         {
-            NormalizedEmail normalizedEmail;
-            if (NormalizedEmail.TryParse(emailValue, out normalizedEmail))
-            {
-                email = normalizedEmail;
-                return true;
-            }
+            return NormalizedEmail.TryParse(value, out parsedObject);
+        }
 
-            email = null;
-            return false;
+        protected override bool TryParse(string value, out NormalizedEmail parsedObject, out IReadOnlyCollection<string> errorMessages)
+        {
+            return NormalizedEmail.TryParse(value, out parsedObject, out errorMessages);
         }
     }
 }

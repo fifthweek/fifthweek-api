@@ -72,6 +72,7 @@ namespace Fifthweek.Api.Identity.Membership
             }
             catch
             {
+                errorMessageList.Add("Invalid email format");
                 email = null;
                 return false;
             }

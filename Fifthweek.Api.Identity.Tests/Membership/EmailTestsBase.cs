@@ -1,124 +1,107 @@
 ﻿using Fifthweek.Api.Identity.Membership;
+using Fifthweek.Api.Tests.Shared;
 
 namespace Fifthweek.Api.Identity.Tests.Membership
 {
     using Microsoft.VisualStudio.TestTools.UnitTesting;
 
     [TestClass]
-    public abstract class EmailTestsBase
+    public abstract class EmailTestsBase<T> : ValidatedCustomPrimitiveTypeTests<T, string> where T : Email
     {
+        [TestMethod]
+        public void ItShouldRecogniseEquality()
+        {
+            this.TestEquality();
+        }
+
         [TestMethod]
         public void ItShouldAllowBasicEmailAddresses()
         {
-            this.GoodEmail("joe@bloggs.com");
+            this.GoodValue("joe@bloggs.com");
         }
 
         [TestMethod]
         public void ItShouldAllowTokens()
         {
-            this.GoodEmail("joe+token@bloggs.com");
+            this.GoodValue("joe+token@bloggs.com");
         }
 
         [TestMethod]
         public void ItShouldAllowSmallTlds()
         {
-            this.GoodEmail("joe@bloggs.co");
+            this.GoodValue("joe@bloggs.co");
         }
 
         [TestMethod]
         public void ItShouldAllowLargeTlds()
         {
-            this.GoodEmail("joe@bloggs.museum");
+            this.GoodValue("joe@bloggs.museum");
         }
 
         [TestMethod]
         public void ItShouldAllowIPAddresses()
         {
-            this.GoodEmail("joe@[127.0.0.1]");
-            this.GoodEmail("joe@127.0.0.1");
+            this.GoodValue("joe@[127.0.0.1]");
+            this.GoodValue("joe@127.0.0.1");
         }
 
         [TestMethod]
         public void ItShouldAllowSubdomains()
         {
-            this.GoodEmail("joe@sub.bloggs.com");
+            this.GoodValue("joe@sub.bloggs.com");
         }
 
         [TestMethod]
         public void ItShouldAllowNumbers()
         {
-            this.GoodEmail("joe123@bloggs456.com");
+            this.GoodValue("joe123@bloggs456.com");
         }
 
         [TestMethod]
         public void ItShouldNotAllowQuotedNames()
         {
-            this.BadEmail("\"joe bloggs\"@bloggs.com");
+            this.BadValue("\"joe bloggs\"@bloggs.com");
         }
 
         [TestMethod]
         public void ItShouldNotAllowInnerWhitespace()
         {
-            this.BadEmail("joe @bloggs.com");
-            this.BadEmail("joe@ bloggs.com");
-            this.BadEmail("jo e@bloggs.com");
-            this.BadEmail("joe@blo ggs.com");
-            this.BadEmail("joe@bloggs .com");
-            this.BadEmail("joe@bloggs. com");
-            this.BadEmail("joe@bloggs.com\njoe@bloggs.com");
-            this.BadEmail("joe\n@bloggs.com");
+            this.BadValue("joe @bloggs.com");
+            this.BadValue("joe@ bloggs.com");
+            this.BadValue("jo e@bloggs.com");
+            this.BadValue("joe@blo ggs.com");
+            this.BadValue("joe@bloggs .com");
+            this.BadValue("joe@bloggs. com");
+            this.BadValue("joe@bloggs.com\njoe@bloggs.com");
+            this.BadValue("joe\n@bloggs.com");
         }
 
         [TestMethod]
         public void ItShouldNotAllowEmptyAddresses()
         {
-            this.BadEmail("");
-            this.BadEmail(" ");
+            this.BadValue("");
+            this.BadValue(" ");
         }
 
         [TestMethod]
         public void ItShouldNotAllowAddressesWithoutAtSymbol()
         {
-            this.BadEmail("joebloggs.com");
+            this.BadValue("joebloggs.com");
         }
 
-        [TestMethod]
-        public void ItShouldRecogniseEqualObjects()
+        protected override string ValueA
         {
-            var email1 = Parse("joe@example.com");
-            var email2 = Parse("joe@example.com");
-
-            Assert.AreEqual(email1, email2);
+            get { return "joe@example.com"; }
         }
 
-        [TestMethod]
-        public void ItShouldRecogniseDifferentObjects()
+        protected override string ValueB
         {
-            var email1 = Parse("joe@example.com");
-            var email2 = Parse("bloggs@example.com");
-
-            Assert.AreNotEqual(email1, email2);
+            get { return "bloggs@example.com"; }
         }
 
-        protected abstract Email Parse(string emailValue);
-
-        protected abstract bool TryParse(string emailValue, out Email email);
-
-        protected void GoodEmail(string emailValue)
+        protected override string GetValue(T parsedObject)
         {
-            Email email;
-            var emailValid = this.TryParse(emailValue, out email);
-
-            Assert.IsTrue(emailValid);
-            Assert.AreEqual(emailValue, email.Value);
-        }
-
-        protected void BadEmail(string emailValue)
-        {
-            Email email;
-            var emailValid = this.TryParse(emailValue, out email);
-
-            Assert.IsFalse(emailValid);
+            return parsedObject.Value;
         }
     }
 }

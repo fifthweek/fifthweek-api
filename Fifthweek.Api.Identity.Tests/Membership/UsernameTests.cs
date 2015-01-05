@@ -6,7 +6,7 @@ namespace Fifthweek.Api.Identity.Tests.Membership
     using Microsoft.VisualStudio.TestTools.UnitTesting;
 
     [TestClass]
-    public class UsernameTests : UsernameTestsBase
+    public class UsernameTests : UsernameTestsBase<Username>
     {
         [TestMethod]
         public void ItShouldAllowLeadingOrTrailingWhitespace()

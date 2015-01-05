@@ -1,33 +1,39 @@
-﻿using Fifthweek.Api.Identity.Membership;
+﻿using System.Collections.Generic;
+using Fifthweek.Api.Identity.Membership;
 
 namespace Fifthweek.Api.Identity.Tests.Membership
 {
     using Microsoft.VisualStudio.TestTools.UnitTesting;
 
     [TestClass]
-    public class EmailTests : EmailTestsBase
+    public class EmailTests : EmailTestsBase<Email>
     {
         [TestMethod]
         public void ItShouldAllowLeadingOrTrailingWhitespace()
         {
-            this.GoodEmail(" joe@bloggs.com");
-            this.GoodEmail("joe@bloggs.com ");
+            this.GoodValue(" joe@bloggs.com");
+            this.GoodValue("joe@bloggs.com ");
         }
 
         [TestMethod]
         public void ItShouldAllowUppercase()
         {
-            this.GoodEmail("Joe@Bloggs.com");
+            this.GoodValue("Joe@Bloggs.com");
         }
 
-        protected override Email Parse(string emailValue)
+        protected override Email Parse(string value)
         {
-            return Email.Parse(emailValue);
+            return Email.Parse(value);
         }
 
-        protected override bool TryParse(string emailValue, out Email email)
+        protected override bool TryParse(string value, out Email parsedObject)
         {
-            return Email.TryParse(emailValue, out email);
+            return Email.TryParse(value, out parsedObject);
+        }
+
+        protected override bool TryParse(string value, out Email parsedObject, out IReadOnlyCollection<string> errorMessages)
+        {
+            return Email.TryParse(value, out parsedObject, out errorMessages);
         }
     }
 }

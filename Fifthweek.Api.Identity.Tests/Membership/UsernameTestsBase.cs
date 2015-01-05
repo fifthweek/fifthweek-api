@@ -1,14 +1,19 @@
-﻿using System;
-using System.Collections.Generic;
-using Fifthweek.Api.Identity.Membership;
+﻿using Fifthweek.Api.Identity.Membership;
+using Fifthweek.Api.Tests.Shared;
 
 namespace Fifthweek.Api.Identity.Tests.Membership
 {
     using Microsoft.VisualStudio.TestTools.UnitTesting;
 
     [TestClass]
-    public abstract class UsernameTestsBase
+    public abstract class UsernameTestsBase<T> : ValidatedCustomPrimitiveTypeTests<T, string> where T : Username
     {
+        [TestMethod]
+        public void ItShouldRecogniseEquality()
+        {
+            this.TestEquality();
+        }
+
         [TestMethod]
         public void ItShouldAllowBasicUsernames()
         {
@@ -57,68 +62,19 @@ namespace Fifthweek.Api.Identity.Tests.Membership
             this.BadValue("joe\nbloggs");
         }
 
-        [TestMethod]
-        public void ItShouldRecogniseEqualObjects()
+        protected override string ValueA
         {
-            var username1 = Parse("joe_bloggs");
-            var username2 = Parse("joe_bloggs");
-
-            Assert.AreEqual(username1, username2);
+            get { return "joe_bloggs"; }
         }
 
-        [TestMethod]
-        public void ItShouldRecogniseDifferentObjects()
+        protected override string ValueB
         {
-            var username1 = Parse("joe_bloggs");
-            var username2 = Parse("joe_bloggs2");
-
-            Assert.AreNotEqual(username1, username2);
+            get { return "joe_bloggs2"; }
         }
 
-        protected abstract Username Parse(string usernameValue);
-
-        protected abstract bool TryParse(string usernameValue, out Username username);
-
-        protected abstract bool TryParse(string usernameValue, out Username username, out IReadOnlyCollection<string> errorMessages);
-
-        protected void GoodValue(string value)
+        protected override string GetValue(T parsedObject)
         {
-            Username parsedObject;
-            IReadOnlyCollection<string> errorMessages;
-
-            var valid = this.TryParse(value, out parsedObject);
-            Assert.IsTrue(valid);
-            Assert.AreEqual(value, parsedObject.Value);
-
-            valid = this.TryParse(value, out parsedObject, out errorMessages);
-            Assert.IsTrue(valid);
-            Assert.AreEqual(value, parsedObject.Value);
-            Assert.IsTrue(errorMessages.Count == 0);
-
-            parsedObject = this.Parse(value);
-            Assert.AreEqual(value, parsedObject.Value);
-        }
-
-        protected void BadValue(string value)
-        {
-            Username parsedObject;
-            IReadOnlyCollection<string> errorMessages;
-
-            var valid = this.TryParse(value, out parsedObject);
-            Assert.IsFalse(valid);
-
-            valid = this.TryParse(value, out parsedObject, out errorMessages);
-            Assert.IsFalse(valid);
-            Assert.IsTrue(errorMessages.Count > 0);
-
-            try
-            {
-                this.Parse(value);
-                Assert.Fail("Expected argument exception");
-            }
-            catch (ArgumentException)
-            {
-            }
+            return parsedObject.Value;
         }
     }
 }

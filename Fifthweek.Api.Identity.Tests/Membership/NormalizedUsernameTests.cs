@@ -6,7 +6,7 @@ namespace Fifthweek.Api.Identity.Tests.Membership
     using Microsoft.VisualStudio.TestTools.UnitTesting;
 
     [TestClass]
-    public class NormalizedUsernameTests : UsernameTestsBase
+    public class NormalizedUsernameTests : UsernameTestsBase<NormalizedUsername>
     {
         [TestMethod]
         public void ItShouldNotAllowLeadingOrTrailingWhitespace()
@@ -21,35 +21,19 @@ namespace Fifthweek.Api.Identity.Tests.Membership
             this.BadValue("JoeBloggs");
         }
 
-        protected override Username Parse(string usernameValue)
+        protected override NormalizedUsername Parse(string value)
         {
-            return NormalizedUsername.Parse(usernameValue);
+            return NormalizedUsername.Parse(value);
         }
 
-        protected override bool TryParse(string usernameValue, out Username username)
+        protected override bool TryParse(string value, out NormalizedUsername parsedObject)
         {
-            NormalizedUsername normalizedUsername;
-            if (NormalizedUsername.TryParse(usernameValue, out normalizedUsername))
-            {
-                username = normalizedUsername;
-                return true;
-            }
-
-            username = null;
-            return false;
+            return NormalizedUsername.TryParse(value, out parsedObject);
         }
 
-        protected override bool TryParse(string usernameValue, out Username username, out IReadOnlyCollection<string> errorMessages)
+        protected override bool TryParse(string value, out NormalizedUsername parsedObject, out IReadOnlyCollection<string> errorMessages)
         {
-            NormalizedUsername normalizedUsername;
-            if (NormalizedUsername.TryParse(usernameValue, out normalizedUsername, out errorMessages))
-            {
-                username = normalizedUsername;
-                return true;
-            }
-
-            username = null;
-            return false;
+            return NormalizedUsername.TryParse(value, out parsedObject, out errorMessages);
         }
     }
 }

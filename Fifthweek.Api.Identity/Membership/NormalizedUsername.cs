@@ -39,29 +39,29 @@ namespace Fifthweek.Api.Identity.Membership
         public static bool TryParse(string value, out NormalizedUsername normalizedUsername, out IReadOnlyCollection<string> errorMessages)
         {
             Username username;
-            if (Username.TryParse(value, out username, out errorMessages))
+            Username.TryParse(value, out username, out errorMessages);
+
+            if (value.Any(c => char.IsUpper(c) || char.IsWhiteSpace(c)))
             {
-                if (value.Any(c => char.IsUpper(c) || char.IsWhiteSpace(c)))
-                {
-                    // Usernames must be normalised to trimmed lowercase.
-                    var errorMessageList = new List<String>();
-                    errorMessageList.AddRange(errorMessages);
-                    errorMessageList.Add("Must be normalized");
-                    errorMessages = errorMessageList;
-                    normalizedUsername = null;
-                    return false;
-                }
-
-                normalizedUsername = new NormalizedUsername
-                {
-                    Value = value
-                };
-
-                return true;
+                // Usernames must be normalised to trimmed lowercase.
+                var errorMessageList = new List<String>();
+                errorMessageList.AddRange(errorMessages);
+                errorMessageList.Add("Must be normalized");
+                errorMessages = errorMessageList;
             }
 
-            normalizedUsername = null;
-            return false;
+            if (errorMessages.Count > 0)
+            {
+                normalizedUsername = null;
+                return false;
+            }
+
+            normalizedUsername = new NormalizedUsername
+            {
+                Value = value
+            };
+
+            return true;
         }
     }
 }
