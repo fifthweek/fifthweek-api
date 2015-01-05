@@ -1,30 +1,31 @@
 ﻿using System;
+using Fifthweek.Api.Tests.Shared;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Fifthweek.Api.Subscriptions.Tests
 {
     [TestClass]
-    public class SubscriptionIdTests
+    public class SubscriptionIdTests : CustomPrimitiveTypeTests<SubscriptionId, Guid>
     {
         [TestMethod]
-        public void ItShouldRecogniseEqualObjects()
+        public void ItShouldRecogniseEquality()
         {
-            var id1 = SubscriptionId.Parse(this.guidA);
-            var id2 = SubscriptionId.Parse(this.guidA);
-
-            Assert.AreEqual(id1, id2);
+            this.TestEquality();
         }
 
-        [TestMethod]
-        public void ItShouldRecogniseDifferentObjects()
+        protected override Guid ValueA
         {
-            var id1 = SubscriptionId.Parse(this.guidA);
-            var id2 = SubscriptionId.Parse(this.guidB);
-
-            Assert.AreNotEqual(id1, id2);
+            get { return Guid.Parse("{6BE94E94-6280-414A-A189-41145C4223A2}"); }
         }
 
-        private readonly Guid guidA = Guid.NewGuid();
-        private readonly Guid guidB = Guid.NewGuid();
+        protected override Guid ValueB
+        {
+            get { return Guid.Parse("{57A2997D-1944-4D59-94CC-6E3B7973C507}"); }
+        }
+
+        protected override SubscriptionId Parse(Guid value)
+        {
+            return SubscriptionId.Parse(value);
+        }
     }
 }

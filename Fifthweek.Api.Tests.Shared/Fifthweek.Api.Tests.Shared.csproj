@@ -3,11 +3,11 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{F11F6CD5-E9FF-4324-9EF9-0ED9CE26C8BE}</ProjectGuid>
+    <ProjectGuid>{22CBC602-26DD-45FA-8FF1-6C545913B62A}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Fifthweek.Api.Subscriptions.Tests</RootNamespace>
-    <AssemblyName>Fifthweek.Api.Subscriptions.Tests</AssemblyName>
+    <RootNamespace>Fifthweek.Api.Tests.Shared</RootNamespace>
+    <AssemblyName>Fifthweek.Api.Tests.Shared</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{3AC096D0-A1C2-E12C-1390-A8335801FDAB};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
@@ -50,19 +50,9 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
-    <Compile Include="TaglineTests.cs" />
-    <Compile Include="SubscriptionIdTests.cs" />
+    <Compile Include="ValidatedCustomPrimitiveTypeTests.cs" />
+    <Compile Include="CustomPrimitiveTypeTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\Fifthweek.Api.Subscriptions\Fifthweek.Api.Subscriptions.csproj">
-      <Project>{5DB142B7-3152-447E-8816-33A90BA9EF76}</Project>
-      <Name>Fifthweek.Api.Subscriptions</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Fifthweek.Api.Tests.Shared\Fifthweek.Api.Tests.Shared.csproj">
-      <Project>{22CBC602-26DD-45FA-8FF1-6C545913B62A}</Project>
-      <Name>Fifthweek.Api.Tests.Shared</Name>
-    </ProjectReference>
   </ItemGroup>
   <Choose>
     <When Condition="'$(VisualStudioVersion)' == '10.0' And '$(IsCodedUITest)' == 'True'">
