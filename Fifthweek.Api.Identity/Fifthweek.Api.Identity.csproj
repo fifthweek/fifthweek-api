@@ -111,6 +111,7 @@
     <Compile Include="Membership\NormalizedUsername.cs" />
     <Compile Include="Membership\Queries\IsPasswordResetTokenValidQuery.cs" />
     <Compile Include="Membership\Queries\IsPasswordResetTokenValidQueryHandler.cs" />
+    <Compile Include="Membership\SubscriptionId.cs" />
     <Compile Include="Membership\UserId.cs" />
     <Compile Include="Membership\Password.cs" />
     <Compile Include="Membership\Username.cs" />

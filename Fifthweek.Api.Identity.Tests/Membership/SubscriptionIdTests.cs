@@ -6,13 +6,13 @@ namespace Fifthweek.Api.Identity.Tests.Membership
     using Microsoft.VisualStudio.TestTools.UnitTesting;
 
     [TestClass]
-    public class UserIdTests
+    public class SubscriptionIdTests
     {
         [TestMethod]
         public void ItShouldRecogniseEqualObjects()
         {
-            var id1 = UserId.Parse(this.guidA);
-            var id2 = UserId.Parse(this.guidA);
+            var id1 = SubscriptionId.Parse(this.guidA);
+            var id2 = SubscriptionId.Parse(this.guidA);
 
             Assert.AreEqual(id1, id2);
         }
@@ -20,8 +20,8 @@ namespace Fifthweek.Api.Identity.Tests.Membership
         [TestMethod]
         public void ItShouldRecogniseDifferentObjects()
         {
-            var id1 = UserId.Parse(this.guidA);
-            var id2 = UserId.Parse(this.guidB);
+            var id1 = SubscriptionId.Parse(this.guidA);
+            var id2 = SubscriptionId.Parse(this.guidB);
 
             Assert.AreNotEqual(id1, id2);
         }
