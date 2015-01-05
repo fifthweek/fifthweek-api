@@ -177,7 +177,6 @@
     <Compile Include="ExceptionHandler.cs" />
     <Compile Include="ExceptionHandlerUtilities.cs" />
     <Compile Include="FifthweekAssembliesResolver.cs" />
-    <Compile Include="FifthweekDbContext.cs" />
     <Compile Include="Migrations\201412041523081_InitialCreate.cs" />
     <Compile Include="Migrations\201412041523081_InitialCreate.Designer.cs">
       <DependentUpon>201412041523081_InitialCreate.cs</DependentUpon>

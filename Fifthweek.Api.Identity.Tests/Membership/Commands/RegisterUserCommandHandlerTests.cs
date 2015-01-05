@@ -9,6 +9,7 @@
     using Fifthweek.Api.Identity.Membership.Commands;
     using Fifthweek.Api.Identity.Membership.Controllers;
     using Fifthweek.Api.Persistence;
+    using Fifthweek.Api.Persistence.Identity;
 
     using Microsoft.VisualStudio.TestTools.UnitTesting;
 
@@ -21,7 +22,7 @@
         public async Task WhenUserManagerFindsEmail_ItShouldThrowAnException()
         {
             var userManager = new Mock<IUserManager>();
-            userManager.Setup(v => v.FindByEmailAsync(this.registrationData.Email)).ReturnsAsync(new ApplicationUser());
+            userManager.Setup(v => v.FindByEmailAsync(this.registrationData.Email)).ReturnsAsync(new FifthweekUser());
             userManager.Setup(v => v.FindByNameAsync(this.registrationData.Username)).ReturnsAsync(null);
 
             var target = new RegisterUserCommandHandler(userManager.Object);
@@ -45,7 +46,7 @@
         {
             var userManager = new Mock<IUserManager>();
             userManager.Setup(v => v.FindByEmailAsync(this.registrationData.Email)).ReturnsAsync(null);
-            userManager.Setup(v => v.FindByNameAsync(this.registrationData.Username)).ReturnsAsync(new ApplicationUser());
+            userManager.Setup(v => v.FindByNameAsync(this.registrationData.Username)).ReturnsAsync(new FifthweekUser());
 
             var target = new RegisterUserCommandHandler(userManager.Object);
             Exception exception = null;
@@ -66,23 +67,23 @@
         [TestMethod]
         public async Task WhenCredentialsAccepted_ItShouldCreateUser()
         {
-            ApplicationUser applicationUser = null;
+            FifthweekUser fifthweekUser = null;
             var userManager = new Mock<IUserManager>();
             userManager.Setup(v => v.FindByEmailAsync(this.registrationData.Email)).ReturnsAsync(null);
             userManager.Setup(v => v.FindByNameAsync(this.registrationData.Username)).ReturnsAsync(null);
-            userManager.Setup(v => v.CreateAsync(It.IsAny<ApplicationUser>(), this.registrationData.Password))
-                .Callback<ApplicationUser, string>((u, p) => applicationUser = u)
+            userManager.Setup(v => v.CreateAsync(It.IsAny<FifthweekUser>(), this.registrationData.Password))
+                .Callback<FifthweekUser, string>((u, p) => fifthweekUser = u)
                 .ReturnsAsync(new MockIdentityResult());
 
             var target = new RegisterUserCommandHandler(userManager.Object);
             await target.HandleAsync(this.CreateRegisterUserCommand());
 
-            Assert.IsNotNull(applicationUser);
-            Assert.AreEqual<string>(this.registrationData.Email, applicationUser.Email);
-            Assert.AreEqual<string>(this.registrationData.Username, applicationUser.UserName);
-            Assert.AreNotEqual<DateTime>(DateTime.MinValue, applicationUser.RegistrationDate);
-            Assert.AreEqual<DateTime>(SqlDateTime.MinValue.Value, applicationUser.LastSignInDate);
-            Assert.AreEqual<DateTime>(SqlDateTime.MinValue.Value, applicationUser.LastAccessTokenDate);
+            Assert.IsNotNull(fifthweekUser);
+            Assert.AreEqual<string>(this.registrationData.Email, fifthweekUser.Email);
+            Assert.AreEqual<string>(this.registrationData.Username, fifthweekUser.UserName);
+            Assert.AreNotEqual<DateTime>(DateTime.MinValue, fifthweekUser.RegistrationDate);
+            Assert.AreEqual<DateTime>(SqlDateTime.MinValue.Value, fifthweekUser.LastSignInDate);
+            Assert.AreEqual<DateTime>(SqlDateTime.MinValue.Value, fifthweekUser.LastAccessTokenDate);
         }
 
         [TestMethod]
@@ -91,7 +92,7 @@
             var userManager = new Mock<IUserManager>();
             userManager.Setup(v => v.FindByEmailAsync(this.registrationData.Email)).ReturnsAsync(null);
             userManager.Setup(v => v.FindByNameAsync(this.registrationData.Username)).ReturnsAsync(null);
-            userManager.Setup(v => v.CreateAsync(It.IsAny<ApplicationUser>(), this.registrationData.Password))
+            userManager.Setup(v => v.CreateAsync(It.IsAny<FifthweekUser>(), this.registrationData.Password))
                 .ReturnsAsync(new MockIdentityResult("One", "Two"));
 
             var target = new RegisterUserCommandHandler(userManager.Object);

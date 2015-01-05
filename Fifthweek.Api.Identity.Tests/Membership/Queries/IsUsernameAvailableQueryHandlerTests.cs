@@ -5,6 +5,7 @@
     using Fifthweek.Api.Identity.Membership;
     using Fifthweek.Api.Identity.Membership.Queries;
     using Fifthweek.Api.Persistence;
+    using Fifthweek.Api.Persistence.Identity;
 
     using Microsoft.VisualStudio.TestTools.UnitTesting;
 
@@ -27,7 +28,7 @@
         public async Task WhenUsernameRegistered_ItShouldReturnFalse()
         {
             var userManager = new Mock<IUserManager>();
-            userManager.Setup(v => v.FindByNameAsync(Username.Value)).ReturnsAsync(new ApplicationUser());
+            userManager.Setup(v => v.FindByNameAsync(Username.Value)).ReturnsAsync(new FifthweekUser());
             var handler = new IsUsernameAvailableQueryHandler(userManager.Object);
             var result = await handler.HandleAsync(Query);
             Assert.IsFalse(result);
