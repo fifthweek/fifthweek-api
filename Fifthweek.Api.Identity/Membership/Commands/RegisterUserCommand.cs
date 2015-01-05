@@ -1,14 +1,19 @@
 ﻿namespace Fifthweek.Api.Identity.Membership.Commands
 {
+    using System;
+
     public class RegisterUserCommand
     {
-        public RegisterUserCommand(string exampleWork, NormalizedEmail email, NormalizedUsername username, Password password)
+        public RegisterUserCommand(Guid userId, string exampleWork, NormalizedEmail email, NormalizedUsername username, Password password)
         {
+            this.UserId = userId;
             this.ExampleWork = exampleWork;
             this.Email = email;
             this.Username = username;
             this.Password = password;
         }
+
+        public Guid UserId { get; private set; }
 
         public string ExampleWork { get; private set; }
 
@@ -46,13 +51,15 @@
                 hashCode = (hashCode * 397) ^ (this.Email != null ? this.Email.GetHashCode() : 0);
                 hashCode = (hashCode * 397) ^ (this.Username != null ? this.Username.GetHashCode() : 0);
                 hashCode = (hashCode * 397) ^ (this.Password != null ? this.Password.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ this.UserId.GetHashCode();
                 return hashCode;
             }
         }
 
         protected bool Equals(RegisterUserCommand other)
         {
-            return object.Equals(this.ExampleWork, other.ExampleWork) && 
+            return this.UserId.Equals(other.UserId) &&
+                object.Equals(this.ExampleWork, other.ExampleWork) && 
                 object.Equals(this.Email, other.Email) &&
                 object.Equals(this.Username, other.Username) && 
                 object.Equals(this.Password, other.Password);

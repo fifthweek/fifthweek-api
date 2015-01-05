@@ -197,6 +197,10 @@
     <Compile Include="Migrations\201501031856056_ReplaceRefreshTokensManualIndexWithCodeFirstIndex.Designer.cs">
       <DependentUpon>201501031856056_ReplaceRefreshTokensManualIndexWithCodeFirstIndex.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201501032034425_ChangeIdentityPrimaryKeysToGuid.cs" />
+    <Compile Include="Migrations\201501032034425_ChangeIdentityPrimaryKeysToGuid.Designer.cs">
+      <DependentUpon>201501032034425_ChangeIdentityPrimaryKeysToGuid.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="NullCommand.cs" />
     <Compile Include="NullCommandHandler.cs" />
@@ -245,6 +249,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201501031856056_ReplaceRefreshTokensManualIndexWithCodeFirstIndex.resx">
       <DependentUpon>201501031856056_ReplaceRefreshTokensManualIndexWithCodeFirstIndex.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201501032034425_ChangeIdentityPrimaryKeysToGuid.resx">
+      <DependentUpon>201501032034425_ChangeIdentityPrimaryKeysToGuid.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
