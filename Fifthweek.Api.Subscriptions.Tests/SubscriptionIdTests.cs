@@ -1,10 +1,8 @@
 ﻿using System;
-using Fifthweek.Api.Identity.Membership;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace Fifthweek.Api.Identity.Tests.Membership
+namespace Fifthweek.Api.Subscriptions.Tests
 {
-    using Microsoft.VisualStudio.TestTools.UnitTesting;
-
     [TestClass]
     public class SubscriptionIdTests
     {

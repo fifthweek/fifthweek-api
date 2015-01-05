@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Fifthweek.Api.Identity.Membership
+namespace Fifthweek.Api.Subscriptions
 {
     public class SubscriptionId
     {
@@ -29,7 +29,7 @@ namespace Fifthweek.Api.Identity.Membership
             {
                 return false;
             }
-            return Equals((SubscriptionId)obj);
+            return this.Equals((SubscriptionId)obj);
         }
 
         public override int GetHashCode()

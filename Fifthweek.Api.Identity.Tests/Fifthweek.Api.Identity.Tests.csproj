@@ -98,7 +98,6 @@
     <Compile Include="Membership\Controllers\RegistrationDataTests.cs" />
     <Compile Include="Membership\Queries\IsPasswordResetTokenValidQueryTests.cs" />
     <Compile Include="Membership\Queries\IsPasswordResetTokenValidQueryHandlerTests.cs" />
-    <Compile Include="Membership\SubscriptionIdTests.cs" />
     <Compile Include="Membership\UserIdTests.cs" />
     <Compile Include="Membership\UsernameTests.cs" />
     <Compile Include="Membership\NormalizedUsernameTests.cs" />
