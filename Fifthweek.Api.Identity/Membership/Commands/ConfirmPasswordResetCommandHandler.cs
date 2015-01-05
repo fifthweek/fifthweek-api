@@ -6,7 +6,6 @@ namespace Fifthweek.Api.Identity.Membership.Commands
     using System.Threading.Tasks;
 
     using Fifthweek.Api.Core;
-    using Fifthweek.Api.Persistence;
 
     public class ConfirmPasswordResetCommandHandler : ICommandHandler<ConfirmPasswordResetCommand>
     {
@@ -24,7 +23,7 @@ namespace Fifthweek.Api.Identity.Membership.Commands
 
         public async Task HandleAsync(ConfirmPasswordResetCommand command)
         {
-            var user = await this.userManager.FindByIdAsync(command.UserId.Value);
+            var user = await this.userManager.FindByIdAsync(command.UserId.Value.ToString());
             if (user == null)
             {
                 // This is unexpected behaviour which the user cannot recover from, so we don't report it to them.
@@ -39,7 +38,7 @@ namespace Fifthweek.Api.Identity.Membership.Commands
                 throw new RecoverableException("This link has expired.");
             }
 
-            var result = await this.userManager.ResetPasswordAsync(command.UserId.Value, command.Token, command.NewPassword.Value);
+            var result = await this.userManager.ResetPasswordAsync(command.UserId.Value.ToString(), command.Token, command.NewPassword.Value);
             if (!result.Succeeded)
             {
                 throw new AggregateException("Failed to reset password", result.Errors.Select(e => new Exception(e)));

@@ -4,9 +4,8 @@
 
     using Fifthweek.Api.Core;
     using Fifthweek.Api.Persistence;
-    using Fifthweek.Api.Persistence.Identity;
 
-    public class GetUserQueryHandler : IQueryHandler<GetUserQuery, FifthweekUser>
+    public class GetUserQueryHandler : IQueryHandler<GetUserQuery, ApplicationUser>
     {
         private readonly IUserManager userManager;
 
@@ -15,7 +14,7 @@
             this.userManager = userManager;
         }
 
-        public Task<FifthweekUser> HandleAsync(GetUserQuery query)
+        public Task<ApplicationUser> HandleAsync(GetUserQuery query)
         {
             return this.userManager.FindAsync(query.Username.Value, query.Password.Value);
         }

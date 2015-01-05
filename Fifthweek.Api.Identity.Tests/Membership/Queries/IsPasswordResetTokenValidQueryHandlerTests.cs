@@ -7,7 +7,6 @@ namespace Fifthweek.Api.Identity.Tests.Membership.Queries
     using Fifthweek.Api.Identity.Membership;
     using Fifthweek.Api.Identity.Membership.Queries;
     using Fifthweek.Api.Persistence;
-    using Fifthweek.Api.Persistence.Identity;
 
     using Microsoft.VisualStudio.TestTools.UnitTesting;
 
@@ -57,12 +56,12 @@ namespace Fifthweek.Api.Identity.Tests.Membership.Queries
             Assert.IsFalse(result);
         }
 
+        private const string UserId = "7265bc4f-555e-4386-ad57-701dbdbc78bb";
         private const string Token = "Token";
-        private static readonly Guid UserId = Guid.Parse("7265bc4f-555e-4386-ad57-701dbdbc78bb");
         private static readonly IsPasswordResetTokenValidQuery Query = new IsPasswordResetTokenValidQuery(
-            Identity.Membership.UserId.Parse(UserId),
+            Identity.Membership.UserId.Parse(Guid.Parse(UserId)),
             Token);
-        private static readonly FifthweekUser User = new FifthweekUser
+        private static readonly ApplicationUser User = new ApplicationUser
         {
             Id = UserId
         };

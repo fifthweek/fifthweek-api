@@ -6,8 +6,6 @@
     using System.Web.Http;
 
     using Fifthweek.Api.Migrations;
-    using Fifthweek.Api.Persistence;
-    using Fifthweek.Api.Persistence.Identity;
 
     public static class DatabaseConfig
     {

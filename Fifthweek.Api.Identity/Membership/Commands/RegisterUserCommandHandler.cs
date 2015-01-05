@@ -7,7 +7,6 @@
 
     using Fifthweek.Api.Core;
     using Fifthweek.Api.Persistence;
-    using Fifthweek.Api.Persistence.Identity;
 
     public class RegisterUserCommandHandler : ICommandHandler<RegisterUserCommand>
     {
@@ -32,7 +31,7 @@
                 throw new RecoverableException("The username '" + command.Username + "' is already taken.");
             }
 
-            var user = new FifthweekUser
+            var user = new ApplicationUser
             {
                 UserName = command.Username.Value,
                 Email = command.Email.Value,

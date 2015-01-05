@@ -4,7 +4,6 @@ namespace Fifthweek.Api.Identity.Membership.Queries
     using System.Threading.Tasks;
 
     using Fifthweek.Api.Core;
-    using Fifthweek.Api.Persistence;
 
     public class IsPasswordResetTokenValidQueryHandler : IQueryHandler<IsPasswordResetTokenValidQuery, bool>
     {
@@ -22,7 +21,7 @@ namespace Fifthweek.Api.Identity.Membership.Queries
 
         public async Task<bool> HandleAsync(IsPasswordResetTokenValidQuery query)
         {
-            var user = await this.userManager.FindByIdAsync(query.UserId.Value);
+            var user = await this.userManager.FindByIdAsync(query.UserId.Value.ToString());
             if (user == null)
             {
                 return false;

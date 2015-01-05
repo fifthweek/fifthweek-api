@@ -5,9 +5,6 @@ namespace Fifthweek.Api.Migrations
     using System.Data.Entity.Migrations;
     using System.Linq;
 
-    using Fifthweek.Api.Persistence;
-    using Fifthweek.Api.Persistence.Identity;
-
     internal sealed class Configuration : DbMigrationsConfiguration<FifthweekDbContext>
     {
         public Configuration()

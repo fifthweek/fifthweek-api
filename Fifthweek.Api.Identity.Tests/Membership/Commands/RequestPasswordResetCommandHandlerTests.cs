@@ -9,8 +9,6 @@ namespace Fifthweek.Api.Identity.Tests.Membership.Commands
     using Fifthweek.Api.Identity.Membership;
     using Fifthweek.Api.Identity.Membership.Commands;
     using Fifthweek.Api.Identity.Membership.Controllers;
-    using Fifthweek.Api.Persistence.Identity;
-
     using Microsoft.VisualStudio.TestTools.UnitTesting;
 
     using Moq;
@@ -62,7 +60,7 @@ namespace Fifthweek.Api.Identity.Tests.Membership.Commands
         {
             var command = new RequestPasswordResetCommand(null, NormalizedUsername.Parse(Username));
 
-            this.userManager.Setup(_ => _.FindByNameAsync(Username)).ReturnsAsync(new FifthweekUser()
+            this.userManager.Setup(_ => _.FindByNameAsync(Username)).ReturnsAsync(new ApplicationUser()
             {
                 Id = UserId
             });
@@ -75,7 +73,7 @@ namespace Fifthweek.Api.Identity.Tests.Membership.Commands
         {
             var command = new RequestPasswordResetCommand(NormalizedEmail.Parse(EmailAddress), null);
 
-            this.userManager.Setup(_ => _.FindByEmailAsync(EmailAddress)).ReturnsAsync(new FifthweekUser()
+            this.userManager.Setup(_ => _.FindByEmailAsync(EmailAddress)).ReturnsAsync(new ApplicationUser()
             {
                 Id = UserId
             });
@@ -89,7 +87,7 @@ namespace Fifthweek.Api.Identity.Tests.Membership.Commands
             var command = new RequestPasswordResetCommand(NormalizedEmail.Parse(EmailAddress), NormalizedUsername.Parse(Username));
 
             this.userManager.Setup(_ => _.FindByEmailAsync(EmailAddress)).ReturnsAsync(null);
-            this.userManager.Setup(_ => _.FindByNameAsync(Username)).ReturnsAsync(new FifthweekUser()
+            this.userManager.Setup(_ => _.FindByNameAsync(Username)).ReturnsAsync(new ApplicationUser()
             {
                 Id = UserId
             });
@@ -103,7 +101,7 @@ namespace Fifthweek.Api.Identity.Tests.Membership.Commands
             var command = new RequestPasswordResetCommand(NormalizedEmail.Parse(EmailAddress), NormalizedUsername.Parse(Username));
 
             this.userManager.Setup(_ => _.FindByNameAsync(Username)).ReturnsAsync(null);
-            this.userManager.Setup(_ => _.FindByEmailAsync(EmailAddress)).ReturnsAsync(new FifthweekUser()
+            this.userManager.Setup(_ => _.FindByEmailAsync(EmailAddress)).ReturnsAsync(new ApplicationUser()
             {
                 Id = UserId
             });
@@ -116,11 +114,11 @@ namespace Fifthweek.Api.Identity.Tests.Membership.Commands
         {
             var command = new RequestPasswordResetCommand(NormalizedEmail.Parse(EmailAddress), NormalizedUsername.Parse(Username));
 
-            this.userManager.Setup(_ => _.FindByNameAsync(Username)).ReturnsAsync(new FifthweekUser()
+            this.userManager.Setup(_ => _.FindByNameAsync(Username)).ReturnsAsync(new ApplicationUser()
             {
                 Id = UserId
             });
-            this.userManager.Setup(_ => _.FindByEmailAsync(EmailAddress)).ReturnsAsync(new FifthweekUser()
+            this.userManager.Setup(_ => _.FindByEmailAsync(EmailAddress)).ReturnsAsync(new ApplicationUser()
             {
                 Id = UserId2
             });
@@ -153,9 +151,9 @@ namespace Fifthweek.Api.Identity.Tests.Membership.Commands
             this.userManager = new Mock<IUserManager>(MockBehavior.Strict);
             this.target = new RequestPasswordResetCommandHandler(this.userManager.Object);
         }
-
-        private static readonly Guid UserId = Guid.NewGuid();
-        private static readonly Guid UserId2 = Guid.NewGuid();
+        
+        private const string UserId = "123";
+        private const string UserId2 = "789";
         private const string Token = "abc";
         private const string EmailAddress = "test@example.com";
         private const string Username = "test_user";

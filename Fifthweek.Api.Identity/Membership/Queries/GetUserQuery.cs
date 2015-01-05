@@ -2,9 +2,8 @@
 {
     using Fifthweek.Api.Core;
     using Fifthweek.Api.Persistence;
-    using Fifthweek.Api.Persistence.Identity;
 
-    public class GetUserQuery : IQuery<FifthweekUser>
+    public class GetUserQuery : IQuery<ApplicationUser>
     {
         public GetUserQuery(NormalizedUsername username, Password password)
         {
