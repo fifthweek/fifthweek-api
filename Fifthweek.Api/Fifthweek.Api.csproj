@@ -149,6 +149,7 @@
     <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Migrations\201501032034425_ChangeIdentityPrimaryKeysToGuid.sql" />
     <Content Include="newrelic\extensions\CoreInstrumentation.xml" />
     <Content Include="newrelic\extensions\Providers\TransactionContext\Asp\NewRelic.Agent.Extensions.dll" />
     <Content Include="newrelic\extensions\Providers\TransactionContext\Asp\NewRelic.Providers.TransactionContext.Asp.Repacked.dll" />

@@ -7,6 +7,15 @@ namespace Fifthweek.Api.Migrations
     {
         public override void Up()
         {
+        }
+
+        public override void Down()
+        {
+        }
+
+        public void GeneratedUp()
+        {
+            // These don't work on Azure as you can't have a table with no clustered index.
             DropForeignKey("dbo.AspNetUserRoles", "RoleId", "dbo.AspNetRoles");
             DropForeignKey("dbo.AspNetUserClaims", "UserId", "dbo.AspNetUsers");
             DropForeignKey("dbo.AspNetUserLogins", "UserId", "dbo.AspNetUsers");
@@ -38,9 +47,10 @@ namespace Fifthweek.Api.Migrations
             AddForeignKey("dbo.AspNetUserLogins", "UserId", "dbo.AspNetUsers", "Id", cascadeDelete: true);
             AddForeignKey("dbo.AspNetUserRoles", "UserId", "dbo.AspNetUsers", "Id", cascadeDelete: true);
         }
-        
-        public override void Down()
+
+        public void GeneratedDown()
         {
+            // These don't work on Azure as you can't have a table with no clustered index.
             DropForeignKey("dbo.AspNetUserRoles", "UserId", "dbo.AspNetUsers");
             DropForeignKey("dbo.AspNetUserLogins", "UserId", "dbo.AspNetUsers");
             DropForeignKey("dbo.AspNetUserClaims", "UserId", "dbo.AspNetUsers");
