@@ -7,12 +7,12 @@ namespace Fifthweek.Api.Migrations
     {
         public override void Up()
         {
-            this.CreateIndex("RefreshTokens", new string[] { "Username", "ClientId" }, name: "UsernameClientIdIndex");
+            this.CreateIndex("dbo.RefreshTokens", new[] { "Username", "ClientId" }, name: "UsernameClientIdIndex");
         }
         
         public override void Down()
         {
-            this.DropIndex("RefreshTokens", "UsernameClientIdIndex");
+            this.DropIndex("dbo.RefreshTokens", "UsernameClientIdIndex");
         }
     }
 }

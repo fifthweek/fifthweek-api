@@ -194,6 +194,10 @@
     <Compile Include="Migrations\201412232020572_AddRefreshTokensIndexForUsernameClientId.Designer.cs">
       <DependentUpon>201412232020572_AddRefreshTokensIndexForUsernameClientId.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201501031856056_ReplaceRefreshTokensManualIndexWithCodeFirstIndex.cs" />
+    <Compile Include="Migrations\201501031856056_ReplaceRefreshTokensManualIndexWithCodeFirstIndex.Designer.cs">
+      <DependentUpon>201501031856056_ReplaceRefreshTokensManualIndexWithCodeFirstIndex.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="NullCommand.cs" />
     <Compile Include="NullCommandHandler.cs" />
@@ -239,6 +243,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201412232020572_AddRefreshTokensIndexForUsernameClientId.resx">
       <DependentUpon>201412232020572_AddRefreshTokensIndexForUsernameClientId.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201501031856056_ReplaceRefreshTokensManualIndexWithCodeFirstIndex.resx">
+      <DependentUpon>201501031856056_ReplaceRefreshTokensManualIndexWithCodeFirstIndex.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
