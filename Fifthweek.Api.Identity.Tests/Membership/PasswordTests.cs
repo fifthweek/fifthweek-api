@@ -1,65 +1,68 @@
-﻿using Fifthweek.Api.Identity.Membership;
+﻿using System.Collections.Generic;
+using Fifthweek.Api.Identity.Membership;
+using Fifthweek.Api.Tests.Shared;
 
 namespace Fifthweek.Api.Identity.Tests.Membership
 {
     using Microsoft.VisualStudio.TestTools.UnitTesting;
 
     [TestClass]
-    public class PasswordTests
+    public class PasswordTests : ValidatedCustomPrimitiveTypeTests<Password, string>
     {
+        [TestMethod]
+        public void ItShouldRecogniseEquality()
+        {
+            this.TestEquality();
+        }
+
         [TestMethod]
         public void ItShouldAllowBasicPasswords()
         {
-            this.GoodPassword("Secr3T!");
+            this.GoodValue("Secr3T!");
         }
 
         [TestMethod]
         public void ItShouldNotAllowPasswordsUnder6Characters()
         {
-            this.GoodPassword("passwo");
-            this.BadPassword("passw");
+            this.GoodValue("passwo");
+            this.BadValue("passw");
         }
 
         [TestMethod]
-        public void ItShouldNotAllowUsernamesOver100Characters()
+        public void ItShouldNotAllowPasswordsOver100Characters()
         {
-            this.GoodPassword(new string(' ', 100));
-            this.BadPassword(new string(' ', 101));
+            this.GoodValue(new string(' ', 100));
+            this.BadValue(new string(' ', 101));
         }
 
-        [TestMethod]
-        public void ItShouldRecogniseEqualObjects()
+        protected override string ValueA
         {
-            var password1 = Password.Parse("password");
-            var password2 = Password.Parse("password");
-
-            Assert.AreEqual(password1, password2);
+            get { return "password"; }
         }
 
-        [TestMethod]
-        public void ItShouldRecogniseDifferentObjects()
+        protected override string ValueB
         {
-            var password1 = Password.Parse("password");
-            var password2 = Password.Parse("password2");
-
-            Assert.AreNotEqual(password1, password2);
+            get { return "password2"; }
         }
 
-        protected void GoodPassword(string passwordValue)
+        protected override Password Parse(string value)
         {
-            Password password;
-            var passwordValid = Password.TryParse(passwordValue, out password);
-
-            Assert.IsTrue(passwordValid);
-            Assert.AreEqual(passwordValue, password.Value);
+            return Password.Parse(value);
         }
 
-        protected void BadPassword(string passwordValue)
+        protected override bool TryParse(string value, out Password parsedObject)
         {
-            Password password;
-            var passwordValid = Password.TryParse(passwordValue, out password);
+            return Password.TryParse(value, out parsedObject);
+        }
 
-            Assert.IsFalse(passwordValid);
+        protected override bool TryParse(string value, out Password parsedObject, out IReadOnlyCollection<string> errorMessages)
+        {
+            return Password.TryParse(value, out parsedObject, out errorMessages);
+        }
+
+        protected override string GetValue(Password parsedObject)
+        {
+            return parsedObject.Value;
         }
     }
 }
