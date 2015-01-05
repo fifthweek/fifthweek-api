@@ -21,15 +21,13 @@ namespace Fifthweek.Api.Identity.Membership.Controllers
         private readonly ICommandHandler<ConfirmPasswordResetCommand> confirmPasswordReset;
         private readonly IQueryHandler<IsUsernameAvailableQuery, bool> isUsernameAvailable;
         private readonly IQueryHandler<IsPasswordResetTokenValidQuery, bool> isPasswordResetTokenValid;
-        private readonly IGuidCreator guidCreator;
 
         public MembershipController(
             ICommandHandler<RegisterUserCommand> registerUser,
             ICommandHandler<RequestPasswordResetCommand> requestPasswordReset,
             ICommandHandler<ConfirmPasswordResetCommand> confirmPasswordReset,
             IQueryHandler<IsUsernameAvailableQuery, bool> isUsernameAvailable,
-            IQueryHandler<IsPasswordResetTokenValidQuery, bool> isPasswordResetTokenValid,
-            IGuidCreator guidCreator)
+            IQueryHandler<IsPasswordResetTokenValidQuery, bool> isPasswordResetTokenValid)
         {
             if (registerUser == null)
             {
@@ -56,17 +54,11 @@ namespace Fifthweek.Api.Identity.Membership.Controllers
                 throw new ArgumentNullException("isPasswordResetTokenValid");
             }
 
-            if (guidCreator == null)
-            {
-                throw new ArgumentNullException("guidCreator");
-            }
-
             this.registerUser = registerUser;
             this.requestPasswordReset = requestPasswordReset;
             this.confirmPasswordReset = confirmPasswordReset;
             this.isUsernameAvailable = isUsernameAvailable;
             this.isPasswordResetTokenValid = isPasswordResetTokenValid;
-            this.guidCreator = guidCreator;
         }
 
         // POST membership/registrations
@@ -77,7 +69,6 @@ namespace Fifthweek.Api.Identity.Membership.Controllers
             registration.Parse();
 
             var command = new RegisterUserCommand(
-                this.guidCreator.CreateSqlSequential(),
                 registration.ExampleWork,
                 NormalizedEmail.Normalize(registration.EmailObj),
                 NormalizedUsername.Normalize(registration.UsernameObj),

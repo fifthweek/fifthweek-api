@@ -3,7 +3,6 @@ using Fifthweek.Api.Identity.Membership;
 
 namespace Fifthweek.Api.Identity.Tests.Membership.Controllers
 {
-    using System;
     using System.Threading.Tasks;
     using System.Web.Http.Results;
 
@@ -24,7 +23,7 @@ namespace Fifthweek.Api.Identity.Tests.Membership.Controllers
         public async Task WhenPostingRegistrations_ItShouldIssueRegisterUserCommand()
         {
             var registration = RegistrationDataTests.NewData();
-            var command = RegisterUserCommandTests.NewCommand(Guid.Empty, registration);
+            var command = RegisterUserCommandTests.NewCommand(registration);
 
             this.registerUser.Setup(v => v.HandleAsync(command)).Returns(Task.FromResult(0));
 
@@ -32,7 +31,6 @@ namespace Fifthweek.Api.Identity.Tests.Membership.Controllers
 
             Assert.IsInstanceOfType(result, typeof(OkResult));
             this.registerUser.Verify(v => v.HandleAsync(command));
-            this.guidCreator.Verify(v => v.CreateSqlSequential());
         }
 
 
@@ -116,16 +114,12 @@ namespace Fifthweek.Api.Identity.Tests.Membership.Controllers
             this.confirmPasswordReset = new Mock<ICommandHandler<ConfirmPasswordResetCommand>>();
             this.isUsernameAvailable = new Mock<IQueryHandler<IsUsernameAvailableQuery, bool>>();
             this.isPasswordResetTokenValid = new Mock<IQueryHandler<IsPasswordResetTokenValidQuery, bool>>();
-            this.guidCreator = new Mock<IGuidCreator>();
-            this.guidCreator.Setup(v => v.CreateSqlSequential()).Returns(Guid.Empty);
-
             this.controller = new MembershipController(
                 this.registerUser.Object, 
                 this.requestPasswordReset.Object, 
                 this.confirmPasswordReset.Object, 
                 this.isUsernameAvailable.Object,
-                this.isPasswordResetTokenValid.Object,
-                this.guidCreator.Object);
+                this.isPasswordResetTokenValid.Object);
         }
 
         private const string UsernameValue = "lawrence";
@@ -137,7 +131,6 @@ namespace Fifthweek.Api.Identity.Tests.Membership.Controllers
         private Mock<ICommandHandler<ConfirmPasswordResetCommand>> confirmPasswordReset;
         private Mock<IQueryHandler<IsUsernameAvailableQuery, bool>> isUsernameAvailable;
         private Mock<IQueryHandler<IsPasswordResetTokenValidQuery, bool>> isPasswordResetTokenValid;
-        private Mock<IGuidCreator> guidCreator;
         private MembershipController controller;
     }
 }
