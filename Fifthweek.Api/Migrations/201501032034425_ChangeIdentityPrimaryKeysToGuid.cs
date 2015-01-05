@@ -7,6 +7,12 @@ namespace Fifthweek.Api.Migrations
     {
         public override void Up()
         {
+            // The migrations below are not necessary if your identity tables already have
+            // GUID primary keys, which they should if you ran the latest migrations from scratch as they
+            // have been updated from InitialCreate to use GUIDs.
+            // If your PKs are strings, you need to run the migration below if running locally,
+            // or the .SQL file by the same name in Azure (as Azure doesn't support removing a clustered
+            // index from a table).
         }
 
         public override void Down()

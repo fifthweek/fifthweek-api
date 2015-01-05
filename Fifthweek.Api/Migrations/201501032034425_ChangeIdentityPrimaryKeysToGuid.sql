@@ -169,3 +169,35 @@ sp_rename N'[dbo].[New_AspNetUserClaims]', N'AspNetUserClaims'
 GO
 sp_rename N'[dbo].[New_AspNetUserLogins]', N'AspNetUserLogins'
 GO
+
+
+DROP TABLE [dbo].[Old_AspNetUserLogins]
+DROP TABLE [dbo].[Old_AspNetUserClaims]
+DROP TABLE [dbo].[Old_AspNetUserRoles]
+DROP TABLE [dbo].[Old_AspNetUsers]
+DROP TABLE [dbo].[Old_AspNetRoles]
+
+
+sp_rename N'[dbo].[PK_dbo.New_AspNetRoles]', N'PK_dbo.AspNetRoles', N'OBJECT'
+GO
+sp_rename N'[dbo].[PK_dbo.New_AspNetUserRoles]', N'PK_dbo.AspNetUserRoles', N'OBJECT'
+GO
+
+sp_rename N'[dbo].[PK_dbo.New_AspNetUsers]', N'PK_dbo.AspNetUsers', N'OBJECT'
+GO
+sp_rename N'[dbo].[PK_dbo.New_AspNetUserClaims]', N'PK_dbo.AspNetUserClaims', N'OBJECT'
+GO
+sp_rename N'[dbo].[PK_dbo.New_AspNetUserLogins]', N'PK_dbo.AspNetUserLogins', N'OBJECT'
+GO
+
+
+sp_rename N'[dbo].[FK_dbo.New_AspNetUserRoles_dbo.New_AspNetRoles_RoleId]', N'FK_dbo.AspNetUserRoles_dbo.AspNetRoles_RoleId', N'OBJECT'
+GO
+sp_rename N'[dbo].[FK_dbo.New_AspNetUserRoles_dbo.New_AspNetUsers_UserId]', N'FK_dbo.AspNetUserRoles_dbo.AspNetUsers_UserId', N'OBJECT'
+GO
+sp_rename N'[dbo].[FK_dbo.New_AspNetUserClaims_dbo.New_AspNetUsers_UserId]', N'FK_dbo.AspNetUserClaims_dbo.AspNetUsers_UserId]', N'OBJECT'
+GO
+sp_rename N'[dbo].[FK_dbo.New_AspNetUserLogins_dbo.New_AspNetUsers_UserId]', N'FK_dbo.AspNetUserLogins_dbo.AspNetUsers_UserId', N'OBJECT'
+GO
+
+
