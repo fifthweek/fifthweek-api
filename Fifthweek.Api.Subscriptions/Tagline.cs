@@ -9,7 +9,7 @@ namespace Fifthweek.Api.Subscriptions
         public static readonly string ForbiddenCharacters = "\r\n\t";
         public static readonly int MinLength = 5;
         public static readonly int MaxLength = 55; // Need to support XKCD ;) "A webcomic of romance, sarcasm, math, and language."
-        
+
         private static readonly HashSet<char> ForbiddenCharactersHashSet = new HashSet<char>(ForbiddenCharacters);
 
         protected Tagline()

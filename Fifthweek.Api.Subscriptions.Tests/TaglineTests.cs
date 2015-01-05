@@ -13,6 +13,52 @@ namespace Fifthweek.Api.Subscriptions.Tests
             this.TestEquality();
         }
 
+        [TestMethod]
+        public void ItShouldAllowBasicTaglines()
+        {
+            this.GoodValue("Web Comics and More");
+        }
+
+        [TestMethod]
+        public void ItShouldAllowPunctuation()
+        {
+            this.GoodValue("A webcomic of romance! Sarcasm? Math, and language.");
+        }
+
+        [TestMethod]
+        public void ItShouldNotAllowTaglinesUnder5Characters()
+        {
+            this.GoodValue("12345");
+            this.BadValue("1234");
+        }
+
+        [TestMethod]
+        public void ItShouldNotAllowTaglinesOver55Characters()
+        {
+            this.GoodValue(new string(' ', 55));
+            this.BadValue(new string(' ', 56));
+        }
+
+        [TestMethod]
+        public void ItShouldNotAllowTabs()
+        {
+            this.BadValue("abcdef\t");
+            this.BadValue("\tabcdef");
+            this.BadValue("abc\tdef");
+        }
+
+        [TestMethod]
+        public void ItShouldNotAllowNewLines()
+        {
+            this.BadValue("abcdef\n");
+            this.BadValue("\nabcdef");
+            this.BadValue("abc\ndef");
+
+            this.BadValue("abcdef\r");
+            this.BadValue("\rabcdef");
+            this.BadValue("abc\rdef");
+        }
+
         protected override string ValueA
         {
             get { return "Tagline A"; }
