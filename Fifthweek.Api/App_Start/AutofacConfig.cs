@@ -49,6 +49,7 @@ namespace Fifthweek.Api
             builder.RegisterType<ClientRepository>().As<IClientRepository>().InstancePerRequest();
             builder.RegisterType<UserRepository>().As<IUserRepository>().InstancePerRequest();
             builder.Register(c => IdentityConfig.CreateUserManager(c.Resolve<ISendEmailService>(), c.Resolve<IFifthweekDbContext>())).As<IUserManager>().InstancePerRequest();
+            builder.RegisterType<GuidCreator>().As<IGuidCreator>().SingleInstance();
             builder.RegisterType<TraceService>().As<ITraceService>().SingleInstance();
             builder.RegisterType<ExceptionHandler>().As<IExceptionHandler>().SingleInstance();
             builder.RegisterInstance(Constants.DefaultDeveloperRepository).As<IDeveloperRepository>().SingleInstance();
