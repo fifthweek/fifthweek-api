@@ -66,21 +66,21 @@ namespace Fifthweek.Api.Identity.Membership
                 if (new MailAddress(value).Address != value.Trim())
                 {
                     errorMessageList.Add("Invalid email format");
-                    email = null;
-                    return false;
                 }
             }
             catch
             {
                 errorMessageList.Add("Invalid email format");
-                email = null;
-                return false;
             }
 
             if (value.Contains("\""))
             {
                 // Quoted names are valid, but to keep things sane we're not accepting them.
                 errorMessageList.Add("Email must not contain quotes");
+            }
+
+            if (errorMessageList.Count > 0)
+            {
                 email = null;
                 return false;
             }
