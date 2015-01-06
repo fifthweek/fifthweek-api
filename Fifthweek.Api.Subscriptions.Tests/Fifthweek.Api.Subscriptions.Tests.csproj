@@ -51,9 +51,10 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
+    <Compile Include="Controllers\MandatorySubscriptionDataTests.cs" />
     <Compile Include="SetMandatorySubscriptionFieldsCommandTests.cs" />
     <Compile Include="SubscriptionNameTests.cs" />
-    <Compile Include="UsCentsPerWeekTests.cs" />
+    <Compile Include="ChannelPriceInUsCentsPerWeekTests.cs" />
     <Compile Include="TaglineTests.cs" />
     <Compile Include="SubscriptionIdTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -68,6 +69,7 @@
       <Name>Fifthweek.Api.Tests.Shared</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <Choose>
     <When Condition="'$(VisualStudioVersion)' == '10.0' And '$(IsCodedUITest)' == 'True'">
       <ItemGroup>

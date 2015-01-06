@@ -4,7 +4,7 @@ namespace Fifthweek.Api.Subscriptions.Commands
 {
     public class SetMandatorySubscriptionFieldsCommand
     {
-        public SetMandatorySubscriptionFieldsCommand(SubscriptionId subscriptionId, SubscriptionName subscriptionName, Tagline tagline, UsCentsPerWeek basePrice)
+        public SetMandatorySubscriptionFieldsCommand(SubscriptionId subscriptionId, SubscriptionName subscriptionName, Tagline tagline, ChannelPriceInUsCentsPerWeek basePrice)
         {
             if (subscriptionId == null)
             {
@@ -38,7 +38,7 @@ namespace Fifthweek.Api.Subscriptions.Commands
 
         public Tagline Tagline { get; private set; }
 
-        public UsCentsPerWeek BasePrice { get; private set; }
+        public ChannelPriceInUsCentsPerWeek BasePrice { get; private set; }
 
         protected bool Equals(SetMandatorySubscriptionFieldsCommand other)
         {

@@ -5,7 +5,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 namespace Fifthweek.Api.Subscriptions.Tests
 {
     [TestClass]
-    public class UsCentsPerWeekTests : ValidatedPrimitiveEqualityTests<UsCentsPerWeek, int>
+    public class ChannelPriceInUsCentsPerWeekTests : ValidatedPrimitiveEqualityTests<ChannelPriceInUsCentsPerWeek, int>
     {
         [TestMethod]
         public void ItShouldRecogniseEquality()
@@ -39,24 +39,26 @@ namespace Fifthweek.Api.Subscriptions.Tests
             get { return 75; }
         }
 
-        protected override UsCentsPerWeek Parse(int value)
+        protected override ChannelPriceInUsCentsPerWeek Parse(int value)
         {
-            return UsCentsPerWeek.Parse(value);
+            return ChannelPriceInUsCentsPerWeek.Parse(value);
         }
 
-        protected override bool TryParse(int value, out UsCentsPerWeek parsedObject)
+        protected override bool TryParse(int value, out ChannelPriceInUsCentsPerWeek parsedObject)
         {
-            return UsCentsPerWeek.TryParse(value, out parsedObject);
+            return ChannelPriceInUsCentsPerWeek.TryParse(value, out parsedObject);
         }
 
-        protected override bool TryParse(int value, out UsCentsPerWeek parsedObject, out IReadOnlyCollection<string> errorMessages)
+        protected override bool TryParse(int value, out ChannelPriceInUsCentsPerWeek parsedObject, out IReadOnlyCollection<string> errorMessages)
         {
-            return UsCentsPerWeek.TryParse(value, out parsedObject, out errorMessages);
+            return ChannelPriceInUsCentsPerWeek.TryParse(value, out parsedObject, out errorMessages);
         }
 
-        protected override int GetValue(UsCentsPerWeek parsedObject)
+        protected override int GetValue(ChannelPriceInUsCentsPerWeek parsedObject)
         {
             return parsedObject.Value;
         }
+
+        public static readonly int InvalidValue = 0;
     }
 }

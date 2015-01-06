@@ -1,11 +1,11 @@
 ﻿using System.Collections.Generic;
 using System.Web.Http.ModelBinding;
 
-namespace Fifthweek.Api.Identity.Membership.Controllers
+namespace Fifthweek.Api.Subscriptions.Controllers
 {
     public static class HttpDtoValidationExtensions
     {
-        public static Username AsUsername(this string value, string key, ModelStateDictionary modelStateDictionary, bool isRequired = true)
+        public static SubscriptionName AsSubscriptionName(this string value, string key, ModelStateDictionary modelStateDictionary, bool isRequired = true)
         {
             if (!isRequired && string.IsNullOrWhiteSpace(value))
             {
@@ -13,18 +13,18 @@ namespace Fifthweek.Api.Identity.Membership.Controllers
                 return null;
             }
 
-            Username username;
+            SubscriptionName obj;
             IReadOnlyCollection<string> errorMessages;
-            if (Username.TryParse(value, out username, out errorMessages))
+            if (SubscriptionName.TryParse(value, out obj, out errorMessages))
             {
-                return username;
+                return obj;
             }
 
             AddErrorsToModelState(key, modelStateDictionary, errorMessages);
             return null;
         }
 
-        public static Email AsEmail(this string value, string key, ModelStateDictionary modelStateDictionary, bool isRequired = true)
+        public static Tagline AsTagline(this string value, string key, ModelStateDictionary modelStateDictionary, bool isRequired = true)
         {
             if (!isRequired && string.IsNullOrWhiteSpace(value))
             {
@@ -32,30 +32,24 @@ namespace Fifthweek.Api.Identity.Membership.Controllers
                 return null;
             }
 
-            Email email;
+            Tagline obj;
             IReadOnlyCollection<string> errorMessages;
-            if (Email.TryParse(value, out email, out errorMessages))
+            if (Tagline.TryParse(value, out obj, out errorMessages))
             {
-                return email;
+                return obj;
             }
 
             AddErrorsToModelState(key, modelStateDictionary, errorMessages);
             return null;
         }
 
-        public static Password AsPassword(this string value, string key, ModelStateDictionary modelStateDictionary, bool isRequired = true)
+        public static ChannelPriceInUsCentsPerWeek AsChannelPriceInUsCentsPerWeek(this int value, string key, ModelStateDictionary modelStateDictionary, bool isRequired = true)
         {
-            if (!isRequired && string.IsNullOrEmpty(value)) // Whitespace sensitive.
-            {
-                // Optional field.
-                return null;
-            }
-
-            Password password;
+            ChannelPriceInUsCentsPerWeek obj;
             IReadOnlyCollection<string> errorMessages;
-            if (Password.TryParse(value, out password, out errorMessages))
+            if (ChannelPriceInUsCentsPerWeek.TryParse(value, out obj, out errorMessages))
             {
-                return password;
+                return obj;
             }
 
             AddErrorsToModelState(key, modelStateDictionary, errorMessages);

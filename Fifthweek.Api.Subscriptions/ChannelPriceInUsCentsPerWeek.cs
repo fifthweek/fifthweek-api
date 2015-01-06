@@ -3,17 +3,17 @@ using System.Collections.Generic;
 
 namespace Fifthweek.Api.Subscriptions
 {
-    public class UsCentsPerWeek
+    public class ChannelPriceInUsCentsPerWeek
     {
         public static readonly int MinValue = 25;
 
-        protected UsCentsPerWeek()
+        protected ChannelPriceInUsCentsPerWeek()
         {
         }
 
         public int Value { get; protected set; }
 
-        protected bool Equals(UsCentsPerWeek other)
+        protected bool Equals(ChannelPriceInUsCentsPerWeek other)
         {
             return string.Equals(this.Value, other.Value);
         }
@@ -32,7 +32,7 @@ namespace Fifthweek.Api.Subscriptions
             {
                 return false;
             }
-            return Equals((UsCentsPerWeek)obj);
+            return Equals((ChannelPriceInUsCentsPerWeek)obj);
         }
 
         public override int GetHashCode()
@@ -40,9 +40,9 @@ namespace Fifthweek.Api.Subscriptions
             return this.Value.GetHashCode();
         }
 
-        public static UsCentsPerWeek Parse(int value)
+        public static ChannelPriceInUsCentsPerWeek Parse(int value)
         {
-            UsCentsPerWeek retval;
+            ChannelPriceInUsCentsPerWeek retval;
             if (!TryParse(value, out retval))
             {
                 throw new ArgumentException("Invalid weekly subscription price", "value");
@@ -51,13 +51,13 @@ namespace Fifthweek.Api.Subscriptions
             return retval;
         }
 
-        public static bool TryParse(int value, out UsCentsPerWeek weeklySubscriptionPrice)
+        public static bool TryParse(int value, out ChannelPriceInUsCentsPerWeek weeklySubscriptionPrice)
         {
             IReadOnlyCollection<string> errorMessages;
             return TryParse(value, out weeklySubscriptionPrice, out errorMessages);
         }
 
-        public static bool TryParse(int value, out UsCentsPerWeek weeklySubscriptionPrice, out IReadOnlyCollection<string> errorMessages)
+        public static bool TryParse(int value, out ChannelPriceInUsCentsPerWeek weeklySubscriptionPrice, out IReadOnlyCollection<string> errorMessages)
         {
             var errorMessageList = new List<string>();
             errorMessages = errorMessageList;
@@ -73,7 +73,7 @@ namespace Fifthweek.Api.Subscriptions
                 return false;
             }
 
-            weeklySubscriptionPrice = new UsCentsPerWeek
+            weeklySubscriptionPrice = new ChannelPriceInUsCentsPerWeek
             {
                 Value = value
             };

@@ -94,5 +94,7 @@ namespace Fifthweek.Api.Subscriptions.Tests
         {
             return parsedObject.Value;
         }
+
+        public static readonly string InvalidValue = "";
     }
 }
