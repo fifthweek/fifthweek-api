@@ -35,5 +35,7 @@ namespace Fifthweek.Api.Identity.Tests.Membership
         {
             return Username.TryParse(usernameValue, out username, out errorMessages);
         }
+
+        public static readonly string InvalidValue = "!";
     }
 }

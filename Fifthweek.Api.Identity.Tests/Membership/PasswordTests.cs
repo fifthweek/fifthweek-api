@@ -70,5 +70,7 @@ namespace Fifthweek.Api.Identity.Tests.Membership
         {
             return parsedObject.Value;
         }
+
+        public static readonly string InvalidValue = "!";
     }
 }

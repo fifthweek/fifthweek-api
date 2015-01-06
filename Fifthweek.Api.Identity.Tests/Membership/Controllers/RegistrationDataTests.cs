@@ -1,4 +1,6 @@
-﻿using Fifthweek.Api.Identity.Membership;
+﻿using System;
+using Fifthweek.Api.Core;
+using Fifthweek.Api.Identity.Membership;
 using Email = Fifthweek.Api.Identity.Membership.Email;
 
 namespace Fifthweek.Api.Identity.Tests.Membership.Controllers
@@ -63,27 +65,52 @@ namespace Fifthweek.Api.Identity.Tests.Membership.Controllers
         [TestMethod]
         public void ItShouldInitializeWithNullCustomPrimitives()
         {
-            var registration = NewData();
-            Assert.IsNull(registration.EmailObj);
-            Assert.IsNull(registration.PasswordObj);
-            Assert.IsNull(registration.UsernameObj);
+            var data = NewData();
+
+            Assert.IsNull(data.EmailObj);
+            Assert.IsNull(data.PasswordObj);
+            Assert.IsNull(data.UsernameObj);
         }
 
         [TestMethod]
-        public void ItShouldParseCustomPrimitives()
+        public void WhenParsingCustomPrimitives_ItShouldSetObjectPropertiesOnSuccess()
         {
-            var registration = NewData();
-            registration.Parse();
+            var data = NewData();
+            data.Parse();
 
-            Assert.AreEqual(registration.EmailObj, Email.Parse(registration.Email));
-            Assert.AreEqual(registration.PasswordObj, Password.Parse(registration.Password));
-            Assert.AreEqual(registration.UsernameObj, Username.Parse(registration.Username));
+            Assert.AreEqual(data.EmailObj, Email.Parse(data.Email));
+            Assert.AreEqual(data.PasswordObj, Password.Parse(data.Password));
+            Assert.AreEqual(data.UsernameObj, Username.Parse(data.Username));
         }
 
         [TestMethod]
-        public void WhenParsingInvalidCustomPrimitives_ItShouldRaiseModelValidationException()
+        public void WhenParsingCustomPrimitives_ItShouldRaiseModelValidationExceptionIfInvalid()
         {
-            
+            this.AssertInvalid(_ => _.Email = EmailTests.InvalidValue);
+            this.AssertInvalid(_ => _.Password = PasswordTests.InvalidValue);
+            this.AssertInvalid(_ => _.Username = UsernameTests.InvalidValue);
+        }
+
+        [TestMethod]
+        public void WhenParsingCustomPrimitives_ItShouldRaiseModelValidationExceptionIfAnyAreNull()
+        {
+            this.AssertInvalid(_ => _.Email = null);
+            this.AssertInvalid(_ => _.Password = null);
+            this.AssertInvalid(_ => _.Username = null);
+        }
+
+        private void AssertInvalid(Action<RegistrationData> setInvalidFieldValue)
+        {
+            try
+            {
+                var registration = NewData();
+                setInvalidFieldValue(registration);
+                registration.Parse();
+                Assert.Fail("Expected model validation exception");
+            }
+            catch (ModelValidationException)
+            {
+            }
         }
 
         public static RegistrationData NewData()
