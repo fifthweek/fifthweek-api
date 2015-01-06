@@ -1,4 +1,6 @@
-﻿namespace Fifthweek.Api.Identity.Membership.Queries
+﻿using System;
+
+namespace Fifthweek.Api.Identity.Membership.Queries
 {
     using Fifthweek.Api.Core;
 
@@ -6,6 +8,11 @@
     {
         public IsUsernameAvailableQuery(NormalizedUsername username)
         {
+            if (username == null)
+            {
+                throw new ArgumentNullException("username");
+            }
+
             this.Username = username;
         }
 

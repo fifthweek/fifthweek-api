@@ -1,4 +1,6 @@
-﻿using Fifthweek.Api.Identity.Membership;
+﻿using System;
+using Fifthweek.Api.Identity.Membership;
+using Fifthweek.Api.Tests.Shared;
 
 namespace Fifthweek.Api.Identity.Tests.Membership.Queries
 {
@@ -7,24 +9,42 @@ namespace Fifthweek.Api.Identity.Tests.Membership.Queries
     using Microsoft.VisualStudio.TestTools.UnitTesting;
 
     [TestClass]
-    public class IsUsernameAvailableQueryTests
+    public class IsUsernameAvailableQueryTests : ImmutableComplexTypeTests<IsUsernameAvailableQuery, IsUsernameAvailableQueryTests.Builder>
     {
         [TestMethod]
-        public void ItShouldRecogniseEqualObjects()
+        public void ItShouldRecogniseEquality()
         {
-            var query1 = new IsUsernameAvailableQuery(NormalizedUsername.Parse("lawrence"));
-            var query2 = new IsUsernameAvailableQuery(NormalizedUsername.Parse("lawrence"));
-
-            Assert.AreEqual(query1, query2);
+            this.TestEquality();
         }
 
         [TestMethod]
         public void ItShouldRecogniseDifferentUsernames()
         {
-            var query1 = new IsUsernameAvailableQuery(NormalizedUsername.Parse("lawrence"));
-            var query2 = new IsUsernameAvailableQuery(NormalizedUsername.Parse("jamest"));
+            this.AssertDifference(_ => _.Username = NormalizedUsername.Parse("different"));
+        }
 
-            Assert.AreNotEqual(query1, query2);
+        [TestMethod]
+        public void ItShouldRequireUsername()
+        {
+            this.AssertRequired(_ => _.Username = null);
+        }
+
+        public class Builder
+        {
+            public NormalizedUsername Username;
+        }
+
+        protected override Builder NewInstanceOfBuilderForObjectA()
+        {
+            return new Builder
+            {
+                Username = NormalizedUsername.Parse("joebloggs")
+            };
+        }
+
+        protected override IsUsernameAvailableQuery FromBuilder(Builder builder)
+        {
+            return new IsUsernameAvailableQuery(builder.Username);
         }
     }
 }

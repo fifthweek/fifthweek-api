@@ -113,9 +113,8 @@ namespace Fifthweek.Api.Identity.Tests.Membership.Commands
 
         public class Builder
         {
-            public Guid UserId { get; set; }
-
-            public RegistrationData Registration { get; set; }
+            public Guid UserId;
+            public RegistrationData Registration;
         }
     }
 }
