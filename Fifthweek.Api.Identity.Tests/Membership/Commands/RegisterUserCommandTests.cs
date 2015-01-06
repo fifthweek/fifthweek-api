@@ -49,6 +49,45 @@ namespace Fifthweek.Api.Identity.Tests.Membership.Commands
             this.AssertDifference(_ => _.Registration.Password = "different");
         }
 
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentNullException))]
+        public void ItShouldRequireUserId()
+        {
+            // This approach is required when checking custom primitives that have non-nullable inner values (such as Guid, Int, etc).
+            // Otherwise, the more terse `AssertRequired` method can be used.
+            new RegisterUserCommand(
+                userId: null,
+                exampleWork: this.ObjectA.ExampleWork,
+                email: this.ObjectA.Email,
+                username: this.ObjectA.Username,
+                password: this.ObjectA.Password);
+        }
+
+        [TestMethod]
+        public void ItShouldNotRequireExampleWork()
+        {
+            this.AssertOptional(_ => _.Registration.ExampleWork = null);
+        }
+
+        [TestMethod]
+        public void ItShouldRequireEmail()
+        {
+            this.AssertRequired(_ => _.Registration.Email = null);
+        }
+
+        [TestMethod]
+        public void ItShouldRequireUsername()
+        {
+            this.AssertRequired(_ => _.Registration.Username = null);
+        }
+
+        [TestMethod]
+        public void ItShouldRequirePassword()
+        {
+            this.AssertRequired(_ => _.Registration.Password = null);
+        }
+
+
         protected override Builder NewInstanceOfBuilderForObjectA()
         {
             return new Builder
@@ -68,9 +107,9 @@ namespace Fifthweek.Api.Identity.Tests.Membership.Commands
             return new RegisterUserCommand(
                 UserId.Parse(userId),
                 registrationData.ExampleWork,
-                NormalizedEmail.Parse(registrationData.Email),
-                NormalizedUsername.Parse(registrationData.Username),
-                Password.Parse(registrationData.Password));
+                registrationData.Email == null ? null : NormalizedEmail.Parse(registrationData.Email),
+                registrationData.Username == null ? null : NormalizedUsername.Parse(registrationData.Username),
+                registrationData.Password == null ? null : Password.Parse(registrationData.Password));
         }
 
         public class Builder

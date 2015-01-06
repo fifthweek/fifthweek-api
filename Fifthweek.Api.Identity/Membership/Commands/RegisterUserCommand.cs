@@ -1,9 +1,31 @@
-﻿namespace Fifthweek.Api.Identity.Membership.Commands
+﻿using System;
+
+namespace Fifthweek.Api.Identity.Membership.Commands
 {
     public class RegisterUserCommand
     {
         public RegisterUserCommand(UserId userId, string exampleWork, NormalizedEmail email, NormalizedUsername username, Password password)
         {
+            if (userId == null)
+            {
+                throw new ArgumentNullException("userId");
+            }
+            
+            if (email == null)
+            {
+                throw new ArgumentNullException("email");
+            }
+
+            if (username == null)
+            {
+                throw new ArgumentNullException("username");
+            }
+
+            if (password == null)
+            {
+                throw new ArgumentNullException("password");
+            }
+
             this.UserId = userId;
             this.ExampleWork = exampleWork;
             this.Email = email;
