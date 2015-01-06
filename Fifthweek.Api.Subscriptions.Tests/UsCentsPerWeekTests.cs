@@ -5,7 +5,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 namespace Fifthweek.Api.Subscriptions.Tests
 {
     [TestClass]
-    public class WeeklySubscriptionPriceInUSCentsTests : ValidatedCustomPrimitiveTypeTests<WeeklySubscriptionPriceInUSCents, int>
+    public class UsCentsPerWeekTests : ValidatedCustomPrimitiveTypeTests<UsCentsPerWeek, int>
     {
         [TestMethod]
         public void ItShouldRecogniseEquality()
@@ -39,22 +39,22 @@ namespace Fifthweek.Api.Subscriptions.Tests
             get { return 75; }
         }
 
-        protected override WeeklySubscriptionPriceInUSCents Parse(int value)
+        protected override UsCentsPerWeek Parse(int value)
         {
-            return WeeklySubscriptionPriceInUSCents.Parse(value);
+            return UsCentsPerWeek.Parse(value);
         }
 
-        protected override bool TryParse(int value, out WeeklySubscriptionPriceInUSCents parsedObject)
+        protected override bool TryParse(int value, out UsCentsPerWeek parsedObject)
         {
-            return WeeklySubscriptionPriceInUSCents.TryParse(value, out parsedObject);
+            return UsCentsPerWeek.TryParse(value, out parsedObject);
         }
 
-        protected override bool TryParse(int value, out WeeklySubscriptionPriceInUSCents parsedObject, out IReadOnlyCollection<string> errorMessages)
+        protected override bool TryParse(int value, out UsCentsPerWeek parsedObject, out IReadOnlyCollection<string> errorMessages)
         {
-            return WeeklySubscriptionPriceInUSCents.TryParse(value, out parsedObject, out errorMessages);
+            return UsCentsPerWeek.TryParse(value, out parsedObject, out errorMessages);
         }
 
-        protected override int GetValue(WeeklySubscriptionPriceInUSCents parsedObject)
+        protected override int GetValue(UsCentsPerWeek parsedObject)
         {
             return parsedObject.Value;
         }

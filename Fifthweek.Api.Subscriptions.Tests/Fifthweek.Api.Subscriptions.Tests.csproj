@@ -51,7 +51,7 @@
   </Choose>
   <ItemGroup>
     <Compile Include="SubscriptionNameTests.cs" />
-    <Compile Include="WeeklySubscriptionPriceInUSCentsTests.cs" />
+    <Compile Include="UsCentsPerWeekTests.cs" />
     <Compile Include="TaglineTests.cs" />
     <Compile Include="SubscriptionIdTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
