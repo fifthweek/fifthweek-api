@@ -4,6 +4,7 @@
     using System.Net.Http;
     using System.Threading.Tasks;
     using System.Web.Http;
+    using System.Web.Http.Description;
 
     using Fifthweek.Api.Availability.Queries;
     using Fifthweek.Api.Core;
@@ -20,6 +21,7 @@
 
         // GET: availability
         [AllowAnonymous]
+        [ResponseType(typeof(AvailabilityResult))]
         public async Task<HttpResponseMessage> Get()
         {
             var result = await this.getAvailability.HandleAsync(new GetAvailabilityQuery());
