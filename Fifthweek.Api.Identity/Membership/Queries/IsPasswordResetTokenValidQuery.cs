@@ -1,4 +1,6 @@
-﻿namespace Fifthweek.Api.Identity.Membership.Queries
+﻿using System;
+
+namespace Fifthweek.Api.Identity.Membership.Queries
 {
     using Fifthweek.Api.Core;
 
@@ -6,6 +8,16 @@
     {
         public IsPasswordResetTokenValidQuery(UserId userId, string token)
         {
+            if (userId == null)
+            {
+                throw new ArgumentNullException("userId");
+            }
+
+            if (token == null)
+            {
+                throw new ArgumentNullException("token");
+            }
+
             this.UserId = userId;
             this.Token = token;
         }

@@ -11,7 +11,7 @@ namespace Fifthweek.Api.Identity.Tests.Membership.Commands
     using Microsoft.VisualStudio.TestTools.UnitTesting;
 
     [TestClass]
-    public class RegisterUserCommandTests : EqualityTests<RegisterUserCommand, RegisterUserCommandTests.Builder>
+    public class RegisterUserCommandTests : ImmutableComplexTypeTests<RegisterUserCommand, RegisterUserCommandTests.Builder>
     {
         [TestMethod]
         public void ItShouldRecogniseEquality()

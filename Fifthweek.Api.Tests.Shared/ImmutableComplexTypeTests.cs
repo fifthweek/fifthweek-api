@@ -3,7 +3,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Fifthweek.Api.Tests.Shared
 {
-    public abstract class EqualityTests<T, TBuilder> : EqualityTests<T>
+    public abstract class ImmutableComplexTypeTests<T, TBuilder> : EqualityTests<T>
     {
         public void AssertDifference(Action<TBuilder> applyDifference)
         {

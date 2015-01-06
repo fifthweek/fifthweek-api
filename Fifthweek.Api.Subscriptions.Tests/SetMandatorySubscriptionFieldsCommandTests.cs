@@ -3,7 +3,7 @@
 namespace Fifthweek.Api.Subscriptions.Tests
 {
     [TestClass]
-    public class SetMandatorySubscriptionFieldsCommand
+    public class SetMandatorySubscriptionFieldsCommandTests
     {
         /*
         [TestMethod]

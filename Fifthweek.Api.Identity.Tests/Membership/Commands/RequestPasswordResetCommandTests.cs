@@ -10,7 +10,7 @@ namespace Fifthweek.Api.Identity.Tests.Membership.Commands
     using Microsoft.VisualStudio.TestTools.UnitTesting;
 
     [TestClass]
-    public class RequestPasswordResetCommandTests : EqualityTests<RequestPasswordResetCommand, PasswordResetRequestData>
+    public class RequestPasswordResetCommandTests : ImmutableComplexTypeTests<RequestPasswordResetCommand, PasswordResetRequestData>
     {
         [TestMethod]
         public void ItShouldRecogniseEquality()

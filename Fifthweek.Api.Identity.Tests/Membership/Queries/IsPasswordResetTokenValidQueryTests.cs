@@ -1,5 +1,6 @@
 ﻿using System;
 using Fifthweek.Api.Identity.Membership;
+using Fifthweek.Api.Tests.Shared;
 
 namespace Fifthweek.Api.Identity.Tests.Membership.Queries
 {
@@ -8,39 +9,56 @@ namespace Fifthweek.Api.Identity.Tests.Membership.Queries
     using Microsoft.VisualStudio.TestTools.UnitTesting;
 
     [TestClass]
-    public class IsPasswordResetTokenValidQueryTests
+    public class IsPasswordResetTokenValidQueryTests : ImmutableComplexTypeTests<IsPasswordResetTokenValidQuery, IsPasswordResetTokenValidQueryTests.Builder>
     {
         [TestMethod]
-        public void ItShouldRecogniseEqualObjects()
+        public void ItShouldRecogniseEquality()
         {
-            var query1 = new IsPasswordResetTokenValidQuery(UserId.Parse(guidA), TokenA);
-            var query2 = new IsPasswordResetTokenValidQuery(UserId.Parse(guidA), TokenA);
-
-            Assert.AreEqual(query1, query2);
+            this.TestEquality();
         }
 
         [TestMethod]
         public void ItShouldRecogniseDifferentUserIds()
         {
-            var query1 = new IsPasswordResetTokenValidQuery(UserId.Parse(guidA), TokenA);
-            var query2 = new IsPasswordResetTokenValidQuery(UserId.Parse(guidB), TokenA);
-
-            Assert.AreNotEqual(query1, query2);
+            this.AssertDifference(_ => _.UserId = UserId.Parse(Guid.NewGuid()));
         }
 
         [TestMethod]
         public void ItShouldRecogniseDifferentTokens()
         {
-            var query1 = new IsPasswordResetTokenValidQuery(UserId.Parse(guidA), TokenA);
-            var query2 = new IsPasswordResetTokenValidQuery(UserId.Parse(guidA), TokenB);
-
-            Assert.AreNotEqual(query1, query2);
+            this.AssertDifference(_ => _.Token = "different");
         }
 
+        [TestMethod]
+        public void ItShouldRequireUserId()
+        {
+            this.AssertRequired(_ => _.UserId = null);
+        }
 
-        private readonly Guid guidA = Guid.NewGuid();
-        private readonly Guid guidB = Guid.NewGuid();
-        private const string TokenA = "Token A";
-        private const string TokenB = "Token B";
+        [TestMethod]
+        public void ItShouldRequireToken()
+        {
+            this.AssertRequired(_ => _.Token = null);
+        }
+
+        protected override Builder NewInstanceOfBuilderForObjectA()
+        {
+            return new Builder
+            {
+                UserId = UserId.Parse(Guid.Parse("{8712C764-315D-4393-A3EB-6CCA0DADAC68}")),
+                Token = "token"
+            };
+        }
+
+        protected override IsPasswordResetTokenValidQuery FromBuilder(Builder builder)
+        {
+            return new IsPasswordResetTokenValidQuery(builder.UserId, builder.Token);
+        }
+
+        public class Builder
+        {
+            public UserId UserId;
+            public string Token;
+        }
     }
 }
