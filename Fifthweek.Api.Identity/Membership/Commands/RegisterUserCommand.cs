@@ -1,10 +1,8 @@
 ﻿namespace Fifthweek.Api.Identity.Membership.Commands
 {
-    using System;
-
     public class RegisterUserCommand
     {
-        public RegisterUserCommand(Guid userId, string exampleWork, NormalizedEmail email, NormalizedUsername username, Password password)
+        public RegisterUserCommand(UserId userId, string exampleWork, NormalizedEmail email, NormalizedUsername username, Password password)
         {
             this.UserId = userId;
             this.ExampleWork = exampleWork;
@@ -13,7 +11,7 @@
             this.Password = password;
         }
 
-        public Guid UserId { get; private set; }
+        public UserId UserId { get; private set; }
 
         public string ExampleWork { get; private set; }
 

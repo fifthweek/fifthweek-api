@@ -34,7 +34,7 @@
 
             var user = new FifthweekUser
             {
-                Id = command.UserId,
+                Id = command.UserId.Value,
                 UserName = command.Username.Value,
                 Email = command.Email.Value,
                 ExampleWork = command.ExampleWork,

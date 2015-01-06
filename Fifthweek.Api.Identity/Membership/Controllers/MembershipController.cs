@@ -77,7 +77,7 @@ namespace Fifthweek.Api.Identity.Membership.Controllers
             registration.Parse();
 
             var command = new RegisterUserCommand(
-                this.guidCreator.CreateSqlSequential(),
+                UserId.Parse(this.guidCreator.CreateSqlSequential()),
                 registration.ExampleWork,
                 NormalizedEmail.Normalize(registration.EmailObj),
                 NormalizedUsername.Normalize(registration.UsernameObj),

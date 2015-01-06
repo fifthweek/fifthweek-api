@@ -66,7 +66,7 @@ namespace Fifthweek.Api.Identity.Tests.Membership.Commands
         public static RegisterUserCommand NewCommand(Guid userId, RegistrationData registrationData)
         {
             return new RegisterUserCommand(
-                userId,
+                UserId.Parse(userId),
                 registrationData.ExampleWork,
                 NormalizedEmail.Parse(registrationData.Email),
                 NormalizedUsername.Parse(registrationData.Username),
