@@ -2,7 +2,7 @@
 {
     using Fifthweek.Api.Persistence;
 
-    public class AddRefreshTokenCommand
+    public partial class AddRefreshTokenCommand
     {
         public AddRefreshTokenCommand(RefreshToken refreshToken)
         {

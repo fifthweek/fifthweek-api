@@ -96,6 +96,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AutoEqualityMembers.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>AutoEqualityMembers.tt</DependentUpon>
+    </Compile>
+    <Compile Include="AutoEqualityMembersAttribute.cs" />
     <Compile Include="Membership\Commands\ConfirmPasswordResetCommand.cs" />
     <Compile Include="Membership\Commands\RequestPasswordResetCommand.cs" />
     <Compile Include="Membership\Commands\RegisterUserCommand.cs" />
@@ -164,9 +170,16 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+    <None Include="AutoEqualityMembers.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>AutoEqualityMembers.cs</LastGenOutput>
+    </None>
     <None Include="packages.config" />
+    <None Include="VisualStudioHelper.ttinclude" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

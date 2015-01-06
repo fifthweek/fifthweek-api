@@ -2,7 +2,7 @@
 
 namespace Fifthweek.Api.Identity.Membership.Commands
 {
-    public class RegisterUserCommand
+    public partial class RegisterUserCommand
     {
         public RegisterUserCommand(UserId userId, string exampleWork, NormalizedEmail email, NormalizedUsername username, Password password)
         {

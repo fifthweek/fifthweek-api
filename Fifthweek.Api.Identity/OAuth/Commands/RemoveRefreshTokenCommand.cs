@@ -1,6 +1,6 @@
 ﻿namespace Fifthweek.Api.Identity.OAuth.Commands
 {
-    public class RemoveRefreshTokenCommand
+    public partial class RemoveRefreshTokenCommand
     {
         public RemoveRefreshTokenCommand(HashedRefreshTokenId hashedRefreshTokenId)
         {

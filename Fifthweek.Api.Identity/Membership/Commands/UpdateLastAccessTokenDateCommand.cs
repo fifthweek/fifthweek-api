@@ -2,7 +2,7 @@
 {
     using System;
 
-    public class UpdateLastAccessTokenDateCommand
+    public partial class UpdateLastAccessTokenDateCommand
     {
         public UpdateLastAccessTokenDateCommand(
             NormalizedUsername username, 

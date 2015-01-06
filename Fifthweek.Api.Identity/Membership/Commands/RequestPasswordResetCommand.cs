@@ -1,6 +1,6 @@
 ﻿namespace Fifthweek.Api.Identity.Membership.Commands
 {
-    public class RequestPasswordResetCommand
+    public partial class RequestPasswordResetCommand
     {
         public RequestPasswordResetCommand(NormalizedEmail email, NormalizedUsername username)
         {
