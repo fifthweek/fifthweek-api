@@ -139,8 +139,11 @@ namespace Fifthweek.Api.Identity.OAuth
 
             var identity = new ClaimsIdentity(context.Options.AuthenticationType);
             identity.AddClaim(new Claim(ClaimTypes.Name, normalizedUsername.Value));
-            identity.AddClaim(new Claim("sub", normalizedUsername.Value));
-            identity.AddClaim(new Claim("role", "user"));
+
+            foreach (var role in user.Roles)
+            {
+                identity.AddClaim(new Claim(ClaimTypes.Role, role.RoleId.ToString()));
+            }
 
             var props = new AuthenticationProperties(new Dictionary<string, string>
                 {

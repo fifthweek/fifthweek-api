@@ -14,6 +14,9 @@ namespace Fifthweek.Api.Persistence.Identity
 
         public IDbSet<RefreshToken> RefreshTokens { get; set; }
 
+        public IDbSet<File> UserUploads { get; set; }
+
+        public IDbSet<FileVariant> GeneratedAssets { get; set; }
 
         public static FifthweekDbContext Create()
         {

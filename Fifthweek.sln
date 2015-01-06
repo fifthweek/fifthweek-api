@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2013
-VisualStudioVersion = 12.0.30723.0
+VisualStudioVersion = 12.0.31101.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fifthweek.Api", "Fifthweek.Api\Fifthweek.Api.csproj", "{F90DC407-DC1E-4EF6-BBEC-B5598810660A}"
 EndProject
@@ -37,15 +37,15 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fifthweek.Api.Persistence.T
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fifthweek.Api.SendGrid.Tests", "Fifthweek.Api.SendGrid.Tests\Fifthweek.Api.SendGrid.Tests.csproj", "{F91E5854-C180-4F6D-9AA5-D657C202F1AE}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fifthweek.Api.Creator", "Fifthweek.Api.Creator\Fifthweek.Api.Creator.csproj", "{3242E7FC-35CE-4E69-B07B-B8DCB3C69348}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fifthweek.Api.Creator.Tests", "Fifthweek.Api.Creator.Tests\Fifthweek.Api.Creator.Tests.csproj", "{6449285D-CBBE-4186-B840-D757A63389DA}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fifthweek.Api.Subscriptions", "Fifthweek.Api.Subscriptions\Fifthweek.Api.Subscriptions.csproj", "{5DB142B7-3152-447E-8816-33A90BA9EF76}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fifthweek.Api.Subscriptions.Tests", "Fifthweek.Api.Subscriptions.Tests\Fifthweek.Api.Subscriptions.Tests.csproj", "{F11F6CD5-E9FF-4324-9EF9-0ED9CE26C8BE}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fifthweek.Api.Tests.Shared", "Fifthweek.Api.Tests.Shared\Fifthweek.Api.Tests.Shared.csproj", "{22CBC602-26DD-45FA-8FF1-6C545913B62A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fifthweek.Api.FileManagement", "Fifthweek.Api.FileManagement\Fifthweek.Api.FileManagement.csproj", "{3242E7FC-35CE-4E69-B07B-B8DCB3C69348}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fifthweek.Api.FileManagement.Tests", "Fifthweek.Api.FileManagement.Tests\Fifthweek.Api.FileManagement.Tests.csproj", "{6449285D-CBBE-4186-B840-D757A63389DA}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -109,14 +109,6 @@ Global
 		{F91E5854-C180-4F6D-9AA5-D657C202F1AE}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F91E5854-C180-4F6D-9AA5-D657C202F1AE}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F91E5854-C180-4F6D-9AA5-D657C202F1AE}.Release|Any CPU.Build.0 = Release|Any CPU
-		{3242E7FC-35CE-4E69-B07B-B8DCB3C69348}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{3242E7FC-35CE-4E69-B07B-B8DCB3C69348}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{3242E7FC-35CE-4E69-B07B-B8DCB3C69348}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{3242E7FC-35CE-4E69-B07B-B8DCB3C69348}.Release|Any CPU.Build.0 = Release|Any CPU
-		{6449285D-CBBE-4186-B840-D757A63389DA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{6449285D-CBBE-4186-B840-D757A63389DA}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{6449285D-CBBE-4186-B840-D757A63389DA}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{6449285D-CBBE-4186-B840-D757A63389DA}.Release|Any CPU.Build.0 = Release|Any CPU
 		{5DB142B7-3152-447E-8816-33A90BA9EF76}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{5DB142B7-3152-447E-8816-33A90BA9EF76}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5DB142B7-3152-447E-8816-33A90BA9EF76}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -129,6 +121,14 @@ Global
 		{22CBC602-26DD-45FA-8FF1-6C545913B62A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{22CBC602-26DD-45FA-8FF1-6C545913B62A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{22CBC602-26DD-45FA-8FF1-6C545913B62A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3242E7FC-35CE-4E69-B07B-B8DCB3C69348}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3242E7FC-35CE-4E69-B07B-B8DCB3C69348}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3242E7FC-35CE-4E69-B07B-B8DCB3C69348}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3242E7FC-35CE-4E69-B07B-B8DCB3C69348}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6449285D-CBBE-4186-B840-D757A63389DA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6449285D-CBBE-4186-B840-D757A63389DA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6449285D-CBBE-4186-B840-D757A63389DA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6449285D-CBBE-4186-B840-D757A63389DA}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

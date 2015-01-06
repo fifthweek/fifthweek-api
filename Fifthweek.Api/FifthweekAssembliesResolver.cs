@@ -6,6 +6,7 @@
     using System.Web.Http.Dispatcher;
 
     using Fifthweek.Api.Availability.Controllers;
+    using Fifthweek.Api.FileManagement.Controllers;
     using Fifthweek.Api.Identity.Membership.Controllers;
     using Fifthweek.Api.Logging.Controllers;
     using Fifthweek.Api.Persistence.Identity;
@@ -22,7 +23,8 @@
                 typeof(MembershipController).Assembly,
                 typeof(LogController).Assembly,
                 typeof(FifthweekUser).Assembly,
-                typeof(Fifthweek.Api.SendGrid.SendGridEmailService).Assembly
+                typeof(Fifthweek.Api.SendGrid.SendGridEmailService).Assembly,
+                typeof(FileUploadController).Assembly
             };
         }
     }

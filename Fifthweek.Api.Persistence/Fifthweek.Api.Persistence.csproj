@@ -87,10 +87,12 @@
     <Compile Include="Identity\FifthweekUserManager.cs" />
     <Compile Include="Identity\FifthweekUserRole.cs" />
     <Compile Include="Identity\FifthweekUserStore.cs" />
+    <Compile Include="FileVariant.cs" />
     <Compile Include="IFifthweekDbContext.cs" />
     <Compile Include="IUserManager.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RefreshToken.cs" />
+    <Compile Include="File.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

@@ -264,6 +264,10 @@
       <Project>{bd52863e-063d-45a5-9ca8-7541804d1313}</Project>
       <Name>Fifthweek.Api.Core</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Fifthweek.Api.FileManagement\Fifthweek.Api.FileManagement.csproj">
+      <Project>{3242e7fc-35ce-4e69-b07b-b8dcb3c69348}</Project>
+      <Name>Fifthweek.Api.FileManagement</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Fifthweek.Api.Identity\Fifthweek.Api.Identity.csproj">
       <Project>{6a2af270-e4d4-4c4e-a88f-807f7b9a03b7}</Project>
       <Name>Fifthweek.Api.Identity</Name>
