@@ -50,8 +50,8 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
-    <Compile Include="ValidatedCustomPrimitiveTypeTests.cs" />
-    <Compile Include="CustomPrimitiveTypeTests.cs" />
+    <Compile Include="EqualityTests.cs" />
+    <Compile Include="TryParsableTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <Choose>

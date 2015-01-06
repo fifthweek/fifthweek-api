@@ -6,7 +6,7 @@ namespace Fifthweek.Api.Identity.Tests.Membership
     using Microsoft.VisualStudio.TestTools.UnitTesting;
 
     [TestClass]
-    public abstract class UsernameTestsBase<T> : ValidatedCustomPrimitiveTypeTests<T, string> where T : Username
+    public abstract class UsernameTestsBase<T> : TryParsableTests<T, string> where T : Username
     {
         [TestMethod]
         public void ItShouldRecogniseEquality()
@@ -18,6 +18,12 @@ namespace Fifthweek.Api.Identity.Tests.Membership
         public void ItShouldAllowBasicUsernames()
         {
             this.GoodValue("joebloggs");
+        }
+
+        [TestMethod]
+        public void ItShouldNowAllowNull()
+        {
+            this.BadValue(null);
         }
 
         [TestMethod]

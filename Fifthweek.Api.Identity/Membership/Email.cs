@@ -61,22 +61,30 @@ namespace Fifthweek.Api.Identity.Membership
             var errorMessageList = new List<string>();
             errorMessages = errorMessageList;
 
-            try
+            if (value == null)
             {
-                if (new MailAddress(value).Address != value.Trim())
+                // Method should never fail, so report null as an error instead of ArgumentNullException.
+                errorMessageList.Add("Value required");
+            }
+            else
+            {
+                try
                 {
-                    errorMessageList.Add("Invalid email format");
+                    if (new MailAddress(value).Address != value.Trim())
+                    {
+                        errorMessageList.Add("Invalid format");
+                    }
                 }
-            }
-            catch
-            {
-                errorMessageList.Add("Invalid email format");
-            }
+                catch
+                {
+                    errorMessageList.Add("Invalid format");
+                }
 
-            if (value.Contains("\""))
-            {
-                // Quoted names are valid, but to keep things sane we're not accepting them.
-                errorMessageList.Add("Email must not contain quotes");
+                if (value.Contains("\""))
+                {
+                    // Quoted names are valid, but to keep things sane we're not accepting them.
+                    errorMessageList.Add("Must not contain quotes");
+                }
             }
 
             if (errorMessageList.Count > 0)

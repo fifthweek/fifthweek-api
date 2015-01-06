@@ -6,7 +6,7 @@ namespace Fifthweek.Api.Identity.Tests.Membership
     using Microsoft.VisualStudio.TestTools.UnitTesting;
 
     [TestClass]
-    public abstract class EmailTestsBase<T> : ValidatedCustomPrimitiveTypeTests<T, string> where T : Email
+    public abstract class EmailTestsBase<T> : TryParsableTests<T, string> where T : Email
     {
         [TestMethod]
         public void ItShouldRecogniseEquality()
@@ -18,6 +18,12 @@ namespace Fifthweek.Api.Identity.Tests.Membership
         public void ItShouldAllowBasicEmailAddresses()
         {
             this.GoodValue("joe@bloggs.com");
+        }
+
+        [TestMethod]
+        public void ItShouldNowAllowNull()
+        {
+            this.BadValue(null);
         }
 
         [TestMethod]

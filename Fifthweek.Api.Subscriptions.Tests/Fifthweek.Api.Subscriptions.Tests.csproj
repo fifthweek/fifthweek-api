@@ -50,6 +50,7 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
+    <Compile Include="SetMandatorySubscriptionFieldsCommand.cs" />
     <Compile Include="SubscriptionNameTests.cs" />
     <Compile Include="UsCentsPerWeekTests.cs" />
     <Compile Include="TaglineTests.cs" />

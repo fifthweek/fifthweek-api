@@ -7,7 +7,7 @@ namespace Fifthweek.Api.Identity.Tests.Membership
     using Microsoft.VisualStudio.TestTools.UnitTesting;
 
     [TestClass]
-    public class PasswordTests : ValidatedCustomPrimitiveTypeTests<Password, string>
+    public class PasswordTests : TryParsableTests<Password, string>
     {
         [TestMethod]
         public void ItShouldRecogniseEquality()
@@ -19,6 +19,12 @@ namespace Fifthweek.Api.Identity.Tests.Membership
         public void ItShouldAllowBasicPasswords()
         {
             this.GoodValue("Secr3T!");
+        }
+
+        [TestMethod]
+        public void ItShouldNowAllowNull()
+        {
+            this.BadValue(null);
         }
 
         [TestMethod]

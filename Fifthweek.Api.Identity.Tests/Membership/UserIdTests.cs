@@ -7,7 +7,7 @@ namespace Fifthweek.Api.Identity.Tests.Membership
     using Microsoft.VisualStudio.TestTools.UnitTesting;
 
     [TestClass]
-    public class UserIdTests : CustomPrimitiveTypeTests<UserId, Guid>
+    public class UserIdTests : EqualityTests<UserId>
     {
         [TestMethod]
         public void ItShouldRecogniseEquality()
@@ -15,19 +15,14 @@ namespace Fifthweek.Api.Identity.Tests.Membership
             this.TestEquality();
         }
 
-        protected override Guid ValueA
+        protected override UserId ObjectA
         {
-            get { return Guid.Parse("{6BE94E94-6280-414A-A189-41145C4223A2}"); }
+            get { return UserId.Parse(Guid.Parse("{6BE94E94-6280-414A-A189-41145C4223A2}")); }
         }
 
-        protected override Guid ValueB
+        protected override UserId ObjectB
         {
-            get { return Guid.Parse("{57A2997D-1944-4D59-94CC-6E3B7973C507}"); }
-        }
-
-        protected override UserId Parse(Guid value)
-        {
-            return UserId.Parse(value);
+            get { return UserId.Parse(Guid.Parse("{57A2997D-1944-4D59-94CC-6E3B7973C507}")); }
         }
     }
 }

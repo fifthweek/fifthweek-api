@@ -18,6 +18,15 @@ namespace Fifthweek.Api.Identity.Tests.Membership.Controllers
             Assert.AreEqual(confirmation1, confirmation2);
         }
 
+
+        [TestMethod]
+        public void ItShouldRecogniseNullAsDifferent()
+        {
+            var confirmation1 = NewData();
+
+            Assert.AreNotEqual(confirmation1, null);
+        }
+
         [TestMethod]
         public void ItShouldRecogniseDifferentUserId()
         {
@@ -26,6 +35,7 @@ namespace Fifthweek.Api.Identity.Tests.Membership.Controllers
             confirmation2.UserId = Guid.NewGuid();
 
             Assert.AreNotEqual(confirmation1, confirmation2);
+            Assert.AreNotEqual(confirmation1, null);
         }
 
         [TestMethod]

@@ -1,4 +1,5 @@
-﻿using Email = Fifthweek.Api.Identity.Membership.Email;
+﻿using Fifthweek.Api.Identity.Membership;
+using Email = Fifthweek.Api.Identity.Membership.Email;
 
 namespace Fifthweek.Api.Identity.Tests.Membership.Controllers
 {
@@ -36,6 +37,7 @@ namespace Fifthweek.Api.Identity.Tests.Membership.Controllers
             registration2.Email = "different@example.com";
 
             Assert.AreNotEqual(registration1, registration2);
+            Assert.AreNotEqual(registration1, null);
         }
 
         [TestMethod]
@@ -56,6 +58,32 @@ namespace Fifthweek.Api.Identity.Tests.Membership.Controllers
             registration2.Password = "Different";
 
             Assert.AreNotEqual(registration1, registration2);
+        }
+
+        [TestMethod]
+        public void ItShouldInitializeWithNullCustomPrimitives()
+        {
+            var registration = NewData();
+            Assert.IsNull(registration.EmailObj);
+            Assert.IsNull(registration.PasswordObj);
+            Assert.IsNull(registration.UsernameObj);
+        }
+
+        [TestMethod]
+        public void ItShouldParseCustomPrimitives()
+        {
+            var registration = NewData();
+            registration.Parse();
+
+            Assert.AreEqual(registration.EmailObj, Email.Parse(registration.Email));
+            Assert.AreEqual(registration.PasswordObj, Password.Parse(registration.Password));
+            Assert.AreEqual(registration.UsernameObj, Username.Parse(registration.Username));
+        }
+
+        [TestMethod]
+        public void WhenParsingInvalidCustomPrimitives_ItShouldRaiseModelValidationException()
+        {
+            
         }
 
         public static RegistrationData NewData()

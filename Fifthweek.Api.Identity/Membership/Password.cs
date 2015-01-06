@@ -63,9 +63,14 @@ namespace Fifthweek.Api.Identity.Membership
             var errorMessageList = new List<string>();
             errorMessages = errorMessageList;
 
-            if (value.Length < MinLength || value.Length > MaxLength)
+            if (value == null)
             {
-                errorMessageList.Add(string.Format("Password length must be from {0} to {1} characters", MinLength, MaxLength));
+                // Method should never fail, so report null as an error instead of ArgumentNullException.
+                errorMessageList.Add("Value required");
+            }
+            else if (value.Length < MinLength || value.Length > MaxLength)
+            {
+                errorMessageList.Add(string.Format("Length must be from {0} to {1} characters", MinLength, MaxLength));
             }
 
             if (errorMessageList.Count > 0)

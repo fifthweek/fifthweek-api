@@ -62,18 +62,27 @@ namespace Fifthweek.Api.Identity.Membership
 
         public static bool TryParse(string value, out Username username, out IReadOnlyCollection<string> errorMessages)
         {
-            var trimmedUsername = value.Trim();
             var errorMessageList = new List<string>();
             errorMessages = errorMessageList;
 
-            if (trimmedUsername.Length < MinLength || trimmedUsername.Length > MaxLength)
+            if (value == null)
             {
-                errorMessageList.Add(string.Format("Username length must be from {0} to {1} characters", MinLength, MaxLength));
+                // Method should never fail, so report null as an error instead of ArgumentNullException.
+                errorMessageList.Add("Value required");
             }
-
-            if (!Pattern.IsMatch(trimmedUsername))
+            else
             {
-                errorMessageList.Add("Only alphanumeric characters and underscores are allowed in the username");
+                var trimmedUsername = value.Trim();
+
+                if (trimmedUsername.Length < MinLength || trimmedUsername.Length > MaxLength)
+                {
+                    errorMessageList.Add(string.Format("Length must be from {0} to {1} characters", MinLength, MaxLength));
+                }
+
+                if (!Pattern.IsMatch(trimmedUsername))
+                {
+                    errorMessageList.Add("Only alphanumeric characters and underscores are allowed");
+                }
             }
 
             if (errorMessageList.Count > 0)

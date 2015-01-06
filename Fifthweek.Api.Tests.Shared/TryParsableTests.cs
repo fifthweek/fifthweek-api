@@ -4,51 +4,48 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Fifthweek.Api.Tests.Shared
 {
-    [TestClass]
-    public abstract class ValidatedCustomPrimitiveTypeTests<TParsed, TRaw>
+    public abstract class TryParsableTests<TParsed, TRaw> : EqualityTests<TParsed>
     {
-        public void TestEquality()
+        public override void ItShouldRecogniseEqualObjects()
         {
-            this.ItShouldRecogniseEqualObjects();
-            this.ItShouldRecogniseDifferentObjects();
-        }
+            base.ItShouldRecogniseEqualObjects();
 
-        public void ItShouldRecogniseEqualObjects()
-        {
-            var value1 = this.Parse(this.ValueA);
-            var value2 = this.Parse(this.ValueA);
-            
-            Assert.AreEqual(value1, value2);
-
-            Assert.IsTrue(this.TryParse(this.ValueA, out value1));
-            Assert.IsTrue(this.TryParse(this.ValueA, out value2));
-            
-            Assert.AreEqual(value1, value2);
+            TParsed objectA;
+            TParsed objectB;
+            Assert.IsTrue(this.TryParse(this.ValueA, out objectA));
+            Assert.IsTrue(this.TryParse(this.ValueA, out objectB));
+            Assert.AreEqual(objectA, objectB);
 
             IReadOnlyCollection<string> errorMessages;
-            Assert.IsTrue(this.TryParse(this.ValueA, out value1, out errorMessages));
-            Assert.IsTrue(this.TryParse(this.ValueA, out value2, out errorMessages));
-
-            Assert.AreEqual(value1, value2);
+            Assert.IsTrue(this.TryParse(this.ValueA, out objectA, out errorMessages));
+            Assert.IsTrue(this.TryParse(this.ValueA, out objectB, out errorMessages));
+            Assert.AreEqual(objectA, objectB);
         }
 
-        public void ItShouldRecogniseDifferentObjects()
+        public override void ItShouldRecogniseDifferentObjects()
         {
-            var value1 = this.Parse(this.ValueA);
-            var value2 = this.Parse(this.ValueB);
+            base.ItShouldRecogniseDifferentObjects();
 
-            Assert.AreNotEqual(value1, value2);
-
-            Assert.IsTrue(this.TryParse(this.ValueA, out value1));
-            Assert.IsTrue(this.TryParse(this.ValueB, out value2));
-
-            Assert.AreNotEqual(value1, value2);
+            TParsed objectA;
+            TParsed objectB;
+            Assert.IsTrue(this.TryParse(this.ValueA, out objectA));
+            Assert.IsTrue(this.TryParse(this.ValueB, out objectB));
+            Assert.AreNotEqual(objectA, objectB);
 
             IReadOnlyCollection<string> errorMessages;
-            Assert.IsTrue(this.TryParse(this.ValueA, out value1, out errorMessages));
-            Assert.IsTrue(this.TryParse(this.ValueB, out value2, out errorMessages));
+            Assert.IsTrue(this.TryParse(this.ValueA, out objectA, out errorMessages));
+            Assert.IsTrue(this.TryParse(this.ValueB, out objectB, out errorMessages));
+            Assert.AreNotEqual(objectA, objectB);
+        }
 
-            Assert.AreNotEqual(value1, value2);
+        protected override TParsed ObjectA
+        {
+            get { return this.Parse(this.ValueA); }
+        }
+
+        protected override TParsed ObjectB
+        {
+            get { return this.Parse(this.ValueB); }
         }
 
         protected abstract TRaw ValueA { get; }

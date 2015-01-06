@@ -41,7 +41,7 @@ namespace Fifthweek.Api.Identity.Membership
             Username username;
             Username.TryParse(value, out username, out errorMessages);
 
-            if (value.Any(c => char.IsUpper(c) || char.IsWhiteSpace(c)))
+            if (value != null && value.Any(c => char.IsUpper(c) || char.IsWhiteSpace(c)))
             {
                 // Usernames must be normalised to trimmed lowercase.
                 var errorMessageList = new List<String>();

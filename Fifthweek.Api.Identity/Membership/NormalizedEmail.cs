@@ -40,7 +40,7 @@ namespace Fifthweek.Api.Identity.Membership
             Email email;
             Email.TryParse(value, out email, out errorMessages);
 
-            if (value.Any(c => char.IsUpper(c) || char.IsWhiteSpace(c)))
+            if (value != null && value.Any(c => char.IsUpper(c) || char.IsWhiteSpace(c)))
             {
                 // Email addresses must be normalised to trimmed lowercase.
                 var errorMessageList = new List<String>();

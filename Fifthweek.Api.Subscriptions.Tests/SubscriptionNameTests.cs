@@ -5,7 +5,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 namespace Fifthweek.Api.Subscriptions.Tests
 {
     [TestClass]
-    public class SubscriptionNameTests : ValidatedCustomPrimitiveTypeTests<SubscriptionName, string>
+    public class SubscriptionNameTests : TryParsableTests<SubscriptionName, string>
     {
         [TestMethod]
         public void ItShouldRecogniseEquality()
@@ -17,6 +17,12 @@ namespace Fifthweek.Api.Subscriptions.Tests
         public void ItShouldAllowBasicSubscriptionNames()
         {
             this.GoodValue("Web Comics and More");
+        }
+
+        [TestMethod]
+        public void ItShouldNowAllowNull()
+        {
+            this.BadValue(null);
         }
 
         [TestMethod]

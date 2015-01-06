@@ -24,6 +24,7 @@
             request2.Email = "Different";
 
             Assert.AreNotEqual(request1, request2);
+            Assert.AreNotEqual(request1, null);
         }
 
         [TestMethod]

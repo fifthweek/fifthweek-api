@@ -67,14 +67,22 @@ namespace Fifthweek.Api.Subscriptions
             var errorMessageList = new List<string>();
             errorMessages = errorMessageList;
 
-            if (value.Length < MinLength || value.Length > MaxLength)
+            if (value == null)
             {
-                errorMessageList.Add(string.Format("Tagline length must be from {0} to {1} characters", MinLength, MaxLength));
+                // Method should never fail, so report null as an error instead of ArgumentNullException.
+                errorMessageList.Add("Value required");
             }
-
-            if (value.Any(ForbiddenCharactersHashSet.Contains))
+            else
             {
-                errorMessageList.Add("Tagline must not contain new lines or tabs");
+                if (value.Length < MinLength || value.Length > MaxLength)
+                {
+                    errorMessageList.Add(string.Format("Length must be from {0} to {1} characters", MinLength, MaxLength));
+                }
+
+                if (value.Any(ForbiddenCharactersHashSet.Contains))
+                {
+                    errorMessageList.Add("Must not contain new lines or tabs");
+                }
             }
 
             if (errorMessageList.Count > 0)

@@ -5,7 +5,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 namespace Fifthweek.Api.Subscriptions.Tests
 {
     [TestClass]
-    public class SubscriptionIdTests : CustomPrimitiveTypeTests<SubscriptionId, Guid>
+    public class SubscriptionIdTests : EqualityTests<SubscriptionId>
     {
         [TestMethod]
         public void ItShouldRecogniseEquality()
@@ -13,19 +13,14 @@ namespace Fifthweek.Api.Subscriptions.Tests
             this.TestEquality();
         }
 
-        protected override Guid ValueA
+        protected override SubscriptionId ObjectA
         {
-            get { return Guid.Parse("{6BE94E94-6280-414A-A189-41145C4223A2}"); }
+            get { return SubscriptionId.Parse(Guid.Parse("{6BE94E94-6280-414A-A189-41145C4223A2}")); }
         }
 
-        protected override Guid ValueB
+        protected override SubscriptionId ObjectB
         {
-            get { return Guid.Parse("{57A2997D-1944-4D59-94CC-6E3B7973C507}"); }
-        }
-
-        protected override SubscriptionId Parse(Guid value)
-        {
-            return SubscriptionId.Parse(value);
+            get { return SubscriptionId.Parse(Guid.Parse("{57A2997D-1944-4D59-94CC-6E3B7973C507}")); }
         }
     }
 }

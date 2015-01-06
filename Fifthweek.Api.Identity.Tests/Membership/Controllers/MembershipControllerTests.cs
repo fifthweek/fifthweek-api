@@ -1,5 +1,4 @@
-﻿using System;
-using Fifthweek.Api.Identity.Membership;
+﻿using Fifthweek.Api.Identity.Membership;
 
 namespace Fifthweek.Api.Identity.Tests.Membership.Controllers
 {

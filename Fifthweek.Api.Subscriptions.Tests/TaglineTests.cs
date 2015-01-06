@@ -5,7 +5,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 namespace Fifthweek.Api.Subscriptions.Tests
 {
     [TestClass]
-    public class TaglineTests : ValidatedCustomPrimitiveTypeTests<Tagline, string>
+    public class TaglineTests : TryParsableTests<Tagline, string>
     {
         [TestMethod]
         public void ItShouldRecogniseEquality()
@@ -17,6 +17,12 @@ namespace Fifthweek.Api.Subscriptions.Tests
         public void ItShouldAllowBasicTaglines()
         {
             this.GoodValue("Web Comics and More");
+        }
+
+        [TestMethod]
+        public void ItShouldNowAllowNull()
+        {
+            this.BadValue(null);
         }
 
         [TestMethod]
