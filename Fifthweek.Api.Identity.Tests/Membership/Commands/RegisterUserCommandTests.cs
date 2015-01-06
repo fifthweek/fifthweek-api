@@ -87,7 +87,6 @@ namespace Fifthweek.Api.Identity.Tests.Membership.Commands
             this.AssertRequired(_ => _.Registration.Password = null);
         }
 
-
         protected override Builder NewInstanceOfBuilderForObjectA()
         {
             return new Builder

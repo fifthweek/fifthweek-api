@@ -30,6 +30,18 @@ namespace Fifthweek.Api.Identity.Tests.Membership.Commands
             this.AssertDifference(_ => _.Username = "different");
         }
 
+        [TestMethod]
+        public void ItShouldNotRequireEmail()
+        {
+            this.AssertOptional(_ => _.Email = null);
+        }
+
+        [TestMethod]
+        public void ItShouldNotRequireUsername()
+        {
+            this.AssertOptional(_ => _.Username = null);
+        }
+
         protected override PasswordResetRequestData NewInstanceOfBuilderForObjectA()
         {
             return PasswordResetRequestDataTests.NewData();
