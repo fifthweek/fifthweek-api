@@ -37,6 +37,30 @@ namespace Fifthweek.Api.Identity.Tests.Membership.Commands
             this.AssertDifference(_ => _.NewPassword = "different");
         }
 
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentNullException))]
+        public void ItShouldRequireUserId()
+        {
+            // This approach is required when checking custom primitives that have non-nullable inner values (such as Guid, Int, etc).
+            // Otherwise, the more terse `AssertRequired` method can be used.
+            new ConfirmPasswordResetCommand(
+                userId: null, 
+                token: this.ObjectA.Token, 
+                newPassword: this.ObjectA.NewPassword);
+        }
+
+        [TestMethod]
+        public void ItShouldRequireToken()
+        {
+            this.AssertRequired(_ => _.Token = null);
+        }
+
+        [TestMethod]
+        public void ItShouldRequirePassword()
+        {
+            this.AssertRequired(_ => _.NewPassword = null);
+        }
+
         protected override PasswordResetConfirmationData NewInstanceOfBuilderForObjectA()
         {
             return PasswordResetConfirmationDataTests.NewData();
@@ -52,7 +76,7 @@ namespace Fifthweek.Api.Identity.Tests.Membership.Commands
             return new ConfirmPasswordResetCommand(
                 UserId.Parse(passwordResetConfirmation.UserId),
                 passwordResetConfirmation.Token,
-                Password.Parse(passwordResetConfirmation.NewPassword));
+                passwordResetConfirmation.NewPassword == null ? null : Password.Parse(passwordResetConfirmation.NewPassword));
         }
     }
 }
