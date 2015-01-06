@@ -1,4 +1,6 @@
-﻿using Fifthweek.Api.Identity.Membership;
+﻿using System;
+using Fifthweek.Api.Identity.Membership;
+using Fifthweek.Api.Tests.Shared;
 
 namespace Fifthweek.Api.Identity.Tests.Membership.Commands
 {
@@ -9,28 +11,40 @@ namespace Fifthweek.Api.Identity.Tests.Membership.Commands
     using Microsoft.VisualStudio.TestTools.UnitTesting;
 
     [TestClass]
-    public class ConfirmPasswordResetCommandTests
+    public class ConfirmPasswordResetCommandTests : EqualityTests<ConfirmPasswordResetCommand, PasswordResetConfirmationData>
     {
         [TestMethod]
-        public void ItShouldRecogniseEqualObjects()
+        public void ItShouldRecogniseEquality()
         {
-            var data = PasswordResetConfirmationDataTests.NewData();
-            var command1 = NewCommand(data);
-            var command2 = NewCommand(data);
-
-            Assert.AreEqual(command1, command2);
+            this.TestEquality();
         }
 
         [TestMethod]
-        public void ItShouldRecogniseDifferentConfirmationData()
+        public void ItShouldRecogniseDifferentUserId()
         {
-            var data = PasswordResetConfirmationDataTests.NewData();
-            var command1 = NewCommand(data);
+            this.AssertDifference(_ => _.UserId = Guid.NewGuid());
+        }
 
-            data.Token = "different";
-            var command2 = NewCommand(data);
+        [TestMethod]
+        public void ItShouldRecogniseDifferentToken()
+        {
+            this.AssertDifference(_ => _.Token = "different");
+        }
 
-            Assert.AreNotEqual(command1, command2);
+        [TestMethod]
+        public void ItShouldRecogniseDifferentPassword()
+        {
+            this.AssertDifference(_ => _.NewPassword = "different");
+        }
+
+        protected override PasswordResetConfirmationData NewInstanceOfBuilderForObjectA()
+        {
+            return PasswordResetConfirmationDataTests.NewData();
+        }
+
+        protected override ConfirmPasswordResetCommand FromBuilder(PasswordResetConfirmationData builder)
+        {
+            return NewCommand(builder);
         }
 
         public static ConfirmPasswordResetCommand NewCommand(PasswordResetConfirmationData passwordResetConfirmation)

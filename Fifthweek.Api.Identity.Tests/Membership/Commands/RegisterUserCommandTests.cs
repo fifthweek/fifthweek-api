@@ -1,10 +1,9 @@
 ﻿using Fifthweek.Api.Identity.Membership;
+using Fifthweek.Api.Tests.Shared;
 
 namespace Fifthweek.Api.Identity.Tests.Membership.Commands
 {
     using System;
-
-    using Fifthweek.Api.Core;
     using Fifthweek.Api.Identity.Membership.Commands;
     using Fifthweek.Api.Identity.Membership.Controllers;
     using Fifthweek.Api.Identity.Tests.Membership.Controllers;
@@ -12,86 +11,56 @@ namespace Fifthweek.Api.Identity.Tests.Membership.Commands
     using Microsoft.VisualStudio.TestTools.UnitTesting;
 
     [TestClass]
-    public class RegisterUserCommandTests
+    public class RegisterUserCommandTests : EqualityTests<RegisterUserCommand, RegisterUserCommandTests.Builder>
     {
         [TestMethod]
-        public void ItShouldRecogniseEqualObjects()
+        public void ItShouldRecogniseEquality()
         {
-            var data = RegistrationDataTests.NewData();
-            var userId = Guid.NewGuid();
-            var command1 = NewCommand(userId, data);
-            var command2 = NewCommand(userId, data);
-
-            Assert.AreEqual(command1, command2);
-        }
-
-        [TestMethod]
-        public void ItShouldRecogniseDifferentExampleWork()
-        {
-            var registrationData = RegistrationDataTests.NewData();
-            var userId = Guid.NewGuid();
-            var command1 = NewCommand(userId, registrationData);
-
-            registrationData.ExampleWork = "different";
-            registrationData.Parse();
-            var command2 = NewCommand(userId, registrationData);
-
-            Assert.AreNotEqual(command1, command2);
-        }
-
-        [TestMethod]
-        public void ItShouldRecogniseDifferentEmail()
-        {
-            var registrationData = RegistrationDataTests.NewData();
-            var userId = Guid.NewGuid();
-            var command1 = NewCommand(userId, registrationData);
-
-            registrationData.Email = "different@test.com";
-            registrationData.Parse();
-            var command2 = NewCommand(userId, registrationData);
-
-            Assert.AreNotEqual(command1, command2);
-        }
-
-        [TestMethod]
-        public void ItShouldRecogniseDifferentPassword()
-        {
-            var registrationData = RegistrationDataTests.NewData();
-            var userId = Guid.NewGuid();
-            var command1 = NewCommand(userId, registrationData);
-
-            registrationData.Password = "different";
-            registrationData.Parse();
-            var command2 = NewCommand(userId, registrationData);
-
-            Assert.AreNotEqual(command1, command2);
-        }
-
-        [TestMethod]
-        public void ItShouldRecogniseDifferentUsername()
-        {
-            var registrationData = RegistrationDataTests.NewData();
-            var userId = Guid.NewGuid();
-            var command1 = NewCommand(userId, registrationData);
-
-            registrationData.Username = "different";
-            registrationData.Parse();
-            var command2 = NewCommand(userId, registrationData);
-
-            Assert.AreNotEqual(command1, command2);
+            this.TestEquality();
         }
 
         [TestMethod]
         public void ItShouldRecogniseDifferentUserId()
         {
-            var registrationData = RegistrationDataTests.NewData();
-            var userId = Guid.NewGuid();
-            var command1 = NewCommand(userId, registrationData);
+            this.AssertDifference(_ => _.UserId = Guid.NewGuid());
+        }
 
-            userId = Guid.NewGuid();
-            var command2 = NewCommand(userId, registrationData);
+        [TestMethod]
+        public void ItShouldRecogniseDifferentExampleWork()
+        {
+            this.AssertDifference(_ => _.Registration.ExampleWork = "different");
+        }
 
-            Assert.AreNotEqual(command1, command2);
+        [TestMethod]
+        public void ItShouldRecogniseDifferentEmail()
+        {
+            this.AssertDifference(_ => _.Registration.Email = "different@different.com");
+        }
+
+        [TestMethod]
+        public void ItShouldRecogniseDifferentUsername()
+        {
+            this.AssertDifference(_ => _.Registration.Username = "different");
+        }
+
+        [TestMethod]
+        public void ItShouldRecogniseDifferentPassword()
+        {
+            this.AssertDifference(_ => _.Registration.Password = "different");
+        }
+
+        protected override Builder NewInstanceOfBuilderForObjectA()
+        {
+            return new Builder
+            {
+                UserId = Guid.Parse("{6BE94E94-6280-414A-A189-41145C4223A2}"),
+                Registration = RegistrationDataTests.NewData()
+            };
+        }
+
+        protected override RegisterUserCommand FromBuilder(Builder builder)
+        {
+            return NewCommand(builder.UserId, builder.Registration);
         }
 
         public static RegisterUserCommand NewCommand(Guid userId, RegistrationData registrationData)
@@ -102,6 +71,13 @@ namespace Fifthweek.Api.Identity.Tests.Membership.Commands
                 NormalizedEmail.Parse(registrationData.Email),
                 NormalizedUsername.Parse(registrationData.Username),
                 Password.Parse(registrationData.Password));
+        }
+
+        public class Builder
+        {
+            public Guid UserId { get; set; }
+
+            public RegistrationData Registration { get; set; }
         }
     }
 }

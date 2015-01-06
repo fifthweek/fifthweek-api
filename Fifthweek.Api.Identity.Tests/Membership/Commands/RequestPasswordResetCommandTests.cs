@@ -1,4 +1,5 @@
 ﻿using Fifthweek.Api.Identity.Membership;
+using Fifthweek.Api.Tests.Shared;
 
 namespace Fifthweek.Api.Identity.Tests.Membership.Commands
 {
@@ -9,28 +10,34 @@ namespace Fifthweek.Api.Identity.Tests.Membership.Commands
     using Microsoft.VisualStudio.TestTools.UnitTesting;
 
     [TestClass]
-    public class RequestPasswordResetCommandTests
+    public class RequestPasswordResetCommandTests : EqualityTests<RequestPasswordResetCommand, PasswordResetRequestData>
     {
         [TestMethod]
-        public void ItShouldRecogniseEqualObjects()
+        public void ItShouldRecogniseEquality()
         {
-            var data = PasswordResetRequestDataTests.NewData();
-            var command1 = NewCommand(data);
-            var command2 = NewCommand(data);
-
-            Assert.AreEqual(command1, command2);
+            this.TestEquality();
         }
 
         [TestMethod]
-        public void ItShouldRecogniseDifferentRequestData()
+        public void ItShouldRecogniseDifferentEmail()
         {
-            var data = PasswordResetRequestDataTests.NewData();
-            var command1 = NewCommand(data);
+            this.AssertDifference(_ => _.Email = "different@different.com");
+        }
 
-            data.Username = "different";
-            var command2 = NewCommand(data);
+        [TestMethod]
+        public void ItShouldRecogniseDifferentUsername()
+        {
+            this.AssertDifference(_ => _.Username = "different");
+        }
 
-            Assert.AreNotEqual(command1, command2);
+        protected override PasswordResetRequestData NewInstanceOfBuilderForObjectA()
+        {
+            return PasswordResetRequestDataTests.NewData();
+        }
+
+        protected override RequestPasswordResetCommand FromBuilder(PasswordResetRequestData builder)
+        {
+            return NewCommand(builder);
         }
 
         public static RequestPasswordResetCommand NewCommand(PasswordResetRequestData passwordResetRequest)
