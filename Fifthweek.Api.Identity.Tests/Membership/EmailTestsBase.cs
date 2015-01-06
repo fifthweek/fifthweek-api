@@ -6,7 +6,7 @@ namespace Fifthweek.Api.Identity.Tests.Membership
     using Microsoft.VisualStudio.TestTools.UnitTesting;
 
     [TestClass]
-    public abstract class EmailTestsBase<T> : TryParsableTests<T, string> where T : Email
+    public abstract class EmailTestsBase<T> : ValidatedPrimitiveEqualityTests<T, string> where T : Email
     {
         [TestMethod]
         public void ItShouldRecogniseEquality()

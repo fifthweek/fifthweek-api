@@ -1,4 +1,5 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using System;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Fifthweek.Api.Tests.Shared
 {
@@ -8,7 +9,6 @@ namespace Fifthweek.Api.Tests.Shared
         {
             this.ItShouldRecogniseEqualObjects();
             this.ItShouldRecogniseNullAsDifferent();
-            this.ItShouldRecogniseDifferentObjects();
         }
 
         public virtual void ItShouldRecogniseEqualObjects()
@@ -21,13 +21,20 @@ namespace Fifthweek.Api.Tests.Shared
             Assert.AreNotEqual(this.ObjectA, null);
         }
 
-        public virtual void ItShouldRecogniseDifferentObjects()
+        public void AssertDifference(Action<T> applyDifference)
         {
-            Assert.AreNotEqual(this.ObjectA, this.ObjectB);
+            var data1 = NewInstanceOfObjectA();
+            var data2 = NewInstanceOfObjectA();
+            applyDifference(data2);
+
+            Assert.AreNotEqual(data1, data2);
         }
 
-        protected abstract T ObjectA { get; }
+        protected abstract T NewInstanceOfObjectA();
 
-        protected abstract T ObjectB { get; }
+        protected T ObjectA
+        {
+            get { return this.NewInstanceOfObjectA(); }
+        }
     }
 }

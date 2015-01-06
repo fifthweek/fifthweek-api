@@ -5,7 +5,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 namespace Fifthweek.Api.Subscriptions.Tests
 {
     [TestClass]
-    public class TaglineTests : TryParsableTests<Tagline, string>
+    public class TaglineTests : ValidatedPrimitiveEqualityTests<Tagline, string>
     {
         [TestMethod]
         public void ItShouldRecogniseEquality()

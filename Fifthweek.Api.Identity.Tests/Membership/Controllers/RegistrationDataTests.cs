@@ -1,6 +1,5 @@
-﻿using System;
-using Fifthweek.Api.Core;
-using Fifthweek.Api.Identity.Membership;
+﻿using Fifthweek.Api.Identity.Membership;
+using Fifthweek.Api.Tests.Shared;
 using Email = Fifthweek.Api.Identity.Membership.Email;
 
 namespace Fifthweek.Api.Identity.Tests.Membership.Controllers
@@ -10,60 +9,44 @@ namespace Fifthweek.Api.Identity.Tests.Membership.Controllers
     using Microsoft.VisualStudio.TestTools.UnitTesting;
 
     [TestClass]
-    public class RegistrationDataTests
+    public class RegistrationDataTests : DataTransferObjectTests<RegistrationData>
     {
         [TestMethod]
-        public void ItShouldRecogniseEqualObjects()
+        public void ItShouldRecogniseEquality()
         {
-            var registration1 = NewData();
-            var registration2 = NewData();
-
-            Assert.AreEqual(registration1, registration2);
+            this.TestEquality();
         }
 
         [TestMethod]
         public void ItShouldRecogniseDifferentExampleWork()
         {
-            var registration1 = NewData();
-            var registration2 = NewData();
-            registration2.ExampleWork = "Different";
-
-            Assert.AreNotEqual(registration1, registration2);
+            this.AssertDifference(_ => _.ExampleWork = "Different");
+            this.AssertDifference(_ => _.ExampleWork = null);
         }
 
         [TestMethod]
         public void ItShouldRecogniseDifferentEmail()
         {
-            var registration1 = NewData();
-            var registration2 = NewData();
-            registration2.Email = "different@example.com";
-
-            Assert.AreNotEqual(registration1, registration2);
-            Assert.AreNotEqual(registration1, null);
+            this.AssertDifference(_ => _.Email = "Different");
+            this.AssertDifference(_ => _.Email = null);
         }
 
         [TestMethod]
         public void ItShouldRecogniseDifferentUsername()
         {
-            var registration1 = NewData();
-            var registration2 = NewData();
-            registration2.Username = "Different";
-
-            Assert.AreNotEqual(registration1, registration2);
+            this.AssertDifference(_ => _.Username = "Different");
+            this.AssertDifference(_ => _.Username = null);
         }
 
         [TestMethod]
         public void ItShouldRecogniseDifferentPassword()
         {
-            var registration1 = NewData();
-            var registration2 = NewData();
-            registration2.Password = "Different";
-
-            Assert.AreNotEqual(registration1, registration2);
+            this.AssertDifference(_ => _.Password = "Different");
+            this.AssertDifference(_ => _.Password = null);
         }
 
         [TestMethod]
-        public void ItShouldInitializeWithNullCustomPrimitives()
+        public void ItShouldHaveNullCustomPrimitivesBeforeParseIsCalled()
         {
             var data = NewData();
 
@@ -86,31 +69,27 @@ namespace Fifthweek.Api.Identity.Tests.Membership.Controllers
         [TestMethod]
         public void WhenParsingCustomPrimitives_ItShouldRaiseModelValidationExceptionIfInvalid()
         {
-            this.AssertInvalid(_ => _.Email = EmailTests.InvalidValue);
-            this.AssertInvalid(_ => _.Password = PasswordTests.InvalidValue);
-            this.AssertInvalid(_ => _.Username = UsernameTests.InvalidValue);
+            this.BadValue(_ => _.Email = EmailTests.InvalidValue);
+            this.BadValue(_ => _.Password = PasswordTests.InvalidValue);
+            this.BadValue(_ => _.Username = UsernameTests.InvalidValue);
         }
 
         [TestMethod]
         public void WhenParsingCustomPrimitives_ItShouldRaiseModelValidationExceptionIfAnyAreNull()
         {
-            this.AssertInvalid(_ => _.Email = null);
-            this.AssertInvalid(_ => _.Password = null);
-            this.AssertInvalid(_ => _.Username = null);
+            this.BadValue(_ => _.Email = null);
+            this.BadValue(_ => _.Password = null);
+            this.BadValue(_ => _.Username = null);
         }
 
-        private void AssertInvalid(Action<RegistrationData> setInvalidFieldValue)
+        protected override void Parse(RegistrationData obj)
         {
-            try
-            {
-                var registration = NewData();
-                setInvalidFieldValue(registration);
-                registration.Parse();
-                Assert.Fail("Expected model validation exception");
-            }
-            catch (ModelValidationException)
-            {
-            }
+            obj.Parse();
+        }
+
+        protected override RegistrationData NewInstanceOfObjectA()
+        {
+            return NewData();
         }
 
         public static RegistrationData NewData()

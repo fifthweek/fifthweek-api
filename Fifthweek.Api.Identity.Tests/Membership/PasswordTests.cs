@@ -7,7 +7,7 @@ namespace Fifthweek.Api.Identity.Tests.Membership
     using Microsoft.VisualStudio.TestTools.UnitTesting;
 
     [TestClass]
-    public class PasswordTests : TryParsableTests<Password, string>
+    public class PasswordTests : ValidatedPrimitiveEqualityTests<Password, string>
     {
         [TestMethod]
         public void ItShouldRecogniseEquality()

@@ -1,4 +1,6 @@
 ﻿using System;
+using Fifthweek.Api.Identity.Membership;
+using Fifthweek.Api.Tests.Shared;
 
 namespace Fifthweek.Api.Identity.Tests.Membership.Controllers
 {
@@ -7,55 +9,74 @@ namespace Fifthweek.Api.Identity.Tests.Membership.Controllers
     using Microsoft.VisualStudio.TestTools.UnitTesting;
 
     [TestClass]
-    public class PasswordResetConfirmationDataTests
+    public class PasswordResetConfirmationDataTests : DataTransferObjectTests<PasswordResetConfirmationData>
     {
         [TestMethod]
-        public void ItShouldRecogniseEqualObjects()
+        public void ItShouldRecogniseEquality()
         {
-            var confirmation1 = NewData();
-            var confirmation2 = NewData();
-
-            Assert.AreEqual(confirmation1, confirmation2);
-        }
-
-
-        [TestMethod]
-        public void ItShouldRecogniseNullAsDifferent()
-        {
-            var confirmation1 = NewData();
-
-            Assert.AreNotEqual(confirmation1, null);
+            this.TestEquality();
         }
 
         [TestMethod]
         public void ItShouldRecogniseDifferentUserId()
         {
-            var confirmation1 = NewData();
-            var confirmation2 = NewData();
-            confirmation2.UserId = Guid.NewGuid();
-
-            Assert.AreNotEqual(confirmation1, confirmation2);
-            Assert.AreNotEqual(confirmation1, null);
+            this.AssertDifference(_ => _.UserId = Guid.NewGuid());
         }
 
         [TestMethod]
         public void ItShouldRecogniseDifferentToken()
         {
-            var confirmation1 = NewData();
-            var confirmation2 = NewData();
-            confirmation2.Token = "Different";
-
-            Assert.AreNotEqual(confirmation1, confirmation2);
+            this.AssertDifference(_ => _.Token = "Different");
+            this.AssertDifference(_ => _.Token = null);
         }
 
         [TestMethod]
         public void ItShouldRecogniseDifferentPassword()
         {
-            var confirmation1 = NewData();
-            var confirmation2 = NewData();
-            confirmation2.NewPassword = "Different";
+            this.AssertDifference(_ => _.NewPassword = "Different");
+            this.AssertDifference(_ => _.NewPassword = null);
+        }
 
-            Assert.AreNotEqual(confirmation1, confirmation2);
+        [TestMethod]
+        public void ItShouldHaveNullCustomPrimitivesBeforeParseIsCalled()
+        {
+            var data = NewData();
+
+            Assert.IsNull(data.NewPasswordObj);
+            Assert.IsNull(data.UserIdObj);
+        }
+
+        [TestMethod]
+        public void WhenParsingCustomPrimitives_ItShouldSetObjectPropertiesOnSuccess()
+        {
+            var data = NewData();
+            data.Parse();
+
+            Assert.AreEqual(data.NewPasswordObj, Password.Parse(data.NewPassword));
+            Assert.AreEqual(data.UserIdObj, UserId.Parse(data.UserId));
+        }
+
+        [TestMethod]
+        public void WhenParsingCustomPrimitives_ItShouldRaiseModelValidationExceptionIfInvalid()
+        {
+            this.BadValue(_ => _.NewPassword = PasswordTests.InvalidValue);
+        }
+
+        [TestMethod]
+        public void WhenParsingCustomPrimitives_ItShouldRaiseModelValidationExceptionIfPasswordNull()
+        {
+            this.BadValue(_ => _.NewPassword = null);
+        }
+
+
+        protected override PasswordResetConfirmationData NewInstanceOfObjectA()
+        {
+            return NewData();
+        }
+
+        protected override void Parse(PasswordResetConfirmationData obj)
+        {
+            obj.Parse();
         }
 
         public static PasswordResetConfirmationData NewData()

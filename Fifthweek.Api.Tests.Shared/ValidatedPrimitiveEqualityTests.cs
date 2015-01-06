@@ -4,7 +4,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Fifthweek.Api.Tests.Shared
 {
-    public abstract class TryParsableTests<TParsed, TRaw> : EqualityTests<TParsed>
+    public abstract class ValidatedPrimitiveEqualityTests<TParsed, TRaw> : PrimitiveEqualityTests<TParsed>
     {
         public override void ItShouldRecogniseEqualObjects()
         {
@@ -38,14 +38,14 @@ namespace Fifthweek.Api.Tests.Shared
             Assert.AreNotEqual(objectA, objectB);
         }
 
-        protected override TParsed ObjectA
+        protected override TParsed NewInstanceOfObjectA()
         {
-            get { return this.Parse(this.ValueA); }
+            return this.Parse(this.ValueA);
         }
 
-        protected override TParsed ObjectB
+        protected override TParsed NewInstanceOfObjectB()
         {
-            get { return this.Parse(this.ValueB); }
+            return this.Parse(this.ValueB);
         }
 
         protected abstract TRaw ValueA { get; }
