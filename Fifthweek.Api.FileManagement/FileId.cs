@@ -4,11 +4,10 @@
 
     using Fifthweek.Api.Core;
 
-    public class FileId : IdBase<Guid>
+    [AutoConstructor]
+    [AutoEqualityMembers]
+    public partial class FileId
     {
-        public FileId(Guid id)
-            : base(id)
-        {
-        }
+        public Guid Value { get; private set; }
     }
 }
