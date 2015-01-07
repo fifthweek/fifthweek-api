@@ -1,4 +1,4 @@
-﻿<#@ template debug="false" hostspecific="true" language="C#" #>
+﻿<#@ template debug="true" hostspecific="true" language="C#" #>
 <#@ output extension=".cs" #>
 <#@ include file="$(SolutionDir)$(ProjectName)\VisualStudioHelper.ttinclude" #>
 <#@ assembly name="System.Core" #>
@@ -10,19 +10,20 @@
     var project = VisualStudioHelper.CurrentProject;
     // get all class items from the code model
     var allClasses = VisualStudioHelper.CodeModel.GetAllCodeElementsOfType(project.CodeModel.CodeElements, EnvDTE.vsCMElement.vsCMElementClass, false);
+	var allClassesArray = allClasses.ToArray();
 
     // iterate all classes
-    foreach(EnvDTE.CodeClass codeClass in allClasses)
+    foreach(EnvDTE.CodeClass codeClass in allClassesArray)
     {
-		if (codeClass.Attributes.OfType<EnvDTE.CodeAttribute>().All(_ => !_.Name.StartsWith("AutoEqualityMembers")))
+		var allAttributes = GetAllAttributes(codeClass);
+		if (allAttributes.OfType<EnvDTE.CodeAttribute>().All(_ => !_.Name.StartsWith("AutoEqualityMembers")))
         {
 			continue;
         }
 
-		var publicProperties = codeClass.Members
-			.Cast<EnvDTE.CodeElement>()
-			.Where(ce => ce.Kind == EnvDTE.vsCMElement.vsCMElementProperty)
-			.Cast<EnvDTE.CodeProperty>()
+		var allProperties = GetAllProperties(codeClass);
+		var publicProperties = allProperties
+			.OfType<EnvDTE.CodeProperty>()
 			.Where(p => p.Access == EnvDTE.vsCMAccess.vsCMAccessPublic)
 			.ToArray();
 
@@ -72,7 +73,7 @@ namespace <#= codeClass.Namespace.Name #>
             }
         }
 
-		protected bool Equals(ConfirmPasswordResetCommand other)
+		protected bool Equals(<#= codeClass.Name #> other)
         {
 <#
     foreach(EnvDTE.CodeProperty codeProperty in publicProperties)
@@ -91,5 +92,33 @@ namespace <#= codeClass.Namespace.Name #>
 }
 <#
     }
+#>
+<#+
+public IEnumerable<EnvDTE.CodeAttribute> GetAllAttributes(EnvDTE.CodeClass codeClass)
+{
+	var allAttributes = new List<EnvDTE.CodeAttribute>();
 
+	foreach(var partialClass in VisualStudioHelper.CodeModel.GetPartialClasses(codeClass))
+    {
+		foreach(EnvDTE.CodeAttribute attribute in partialClass.Attributes)
+		{
+			allAttributes.Add(attribute);
+		}
+    }
+		
+	return allAttributes;
+}
+
+public IEnumerable<EnvDTE.CodeProperty> GetAllProperties(EnvDTE.CodeClass codeClass)
+{
+	var allProperties = new List<EnvDTE.CodeProperty>();
+
+	foreach(var partialClass in VisualStudioHelper.CodeModel.GetPartialClasses(codeClass))
+    {
+		var properties = VisualStudioHelper.CodeModel.GetAllCodeElementsOfType(partialClass.Members, EnvDTE.vsCMElement.vsCMElementProperty, false).OfType<EnvDTE.CodeProperty>();
+		allProperties.AddRange(properties);
+    }
+		
+	return allProperties;
+}
 #>

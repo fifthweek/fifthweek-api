@@ -2,6 +2,7 @@
 {
     using System;
 
+    [AutoEqualityMembers]
     public partial class UpdateLastAccessTokenDateCommand
     {
         public UpdateLastAccessTokenDateCommand(
