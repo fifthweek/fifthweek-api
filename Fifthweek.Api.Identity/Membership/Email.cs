@@ -4,40 +4,14 @@ using System.Net.Mail;
 
 namespace Fifthweek.Api.Identity.Membership
 {
-    public class Email
+    [AutoEqualityMembers]
+    public partial class Email
     {
         protected Email()
         {
         }
 
         public string Value { get; protected set; }
-
-        protected bool Equals(Email other)
-        {
-            return string.Equals(this.Value, other.Value);
-        }
-
-        public override bool Equals(object obj)
-        {
-            if (ReferenceEquals(null, obj))
-            {
-                return false;
-            }
-            if (ReferenceEquals(this, obj))
-            {
-                return true;
-            }
-            if (obj.GetType() != this.GetType())
-            {
-                return false;
-            }
-            return Equals((Email) obj);
-        }
-
-        public override int GetHashCode()
-        {
-            return (this.Value != null ? this.Value.GetHashCode() : 0);
-        }
 
         public static Email Parse(string value)
         {

@@ -2,7 +2,8 @@
 {
     using Fifthweek.Api.Core;
 
-    public class GetClientQuery : IQuery<Client>
+    [AutoEqualityMembers]
+    public partial class GetClientQuery : IQuery<Client>
     {
         public GetClientQuery(ClientId clientId)
         {

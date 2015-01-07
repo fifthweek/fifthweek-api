@@ -3,7 +3,8 @@ using System.Collections.Generic;
 
 namespace Fifthweek.Api.Identity.Membership
 {
-    public class Password
+    [AutoEqualityMembers]
+    public partial class Password
     {
         public static readonly int MinLength = 6;
         public static readonly int MaxLength = 100;
@@ -13,33 +14,6 @@ namespace Fifthweek.Api.Identity.Membership
         }
 
         public string Value { get; protected set; }
-
-        protected bool Equals(Password other)
-        {
-            return string.Equals(this.Value, other.Value);
-        }
-
-        public override bool Equals(object obj)
-        {
-            if (ReferenceEquals(null, obj))
-            {
-                return false;
-            }
-            if (ReferenceEquals(this, obj))
-            {
-                return true;
-            }
-            if (obj.GetType() != this.GetType())
-            {
-                return false;
-            }
-            return Equals((Password)obj);
-        }
-
-        public override int GetHashCode()
-        {
-            return (this.Value != null ? this.Value.GetHashCode() : 0);
-        }
 
         public static Password Parse(string value)
         {
