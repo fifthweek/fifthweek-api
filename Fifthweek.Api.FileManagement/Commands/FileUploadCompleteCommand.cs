@@ -1,12 +1,11 @@
 ﻿namespace Fifthweek.Api.FileManagement.Commands
 {
-    public class FileUploadCompleteCommand
-    {
-        public FileUploadCompleteCommand(FileId fileId)
-        {
-            this.FileId = fileId;
-        }
+    using Fifthweek.Api.Core;
 
+    [AutoConstructor]
+    [AutoEqualityMembers]
+    public partial class FileUploadCompleteCommand
+    {
         public FileId FileId { get; private set; }
     }
 }

@@ -1,6 +1,9 @@
 ﻿namespace Fifthweek.Api.FileManagement.Controllers
 {
-    public class UploadRequest
+    using Fifthweek.Api.Core;
+
+    [AutoEqualityMembers]
+    public partial class UploadRequest
     {
         public string FilePath { get; set; }
 

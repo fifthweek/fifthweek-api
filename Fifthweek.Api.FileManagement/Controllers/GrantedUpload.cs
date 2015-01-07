@@ -2,14 +2,12 @@
 {
     using System;
 
-    public class GrantedUpload
-    {
-        public GrantedUpload(Guid fileId, string uploadUri)
-        {
-            this.FileId = fileId;
-            this.UploadUri = uploadUri;
-        }
+    using Fifthweek.Api.Core;
 
+    [AutoConstructor]
+    [AutoEqualityMembers]
+    public partial class GrantedUpload
+    {
         public Guid FileId { get; private set; }
 
         public string UploadUri { get; private set; }
