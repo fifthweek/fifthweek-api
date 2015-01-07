@@ -1,46 +1,15 @@
 ﻿
-
-
-
-
 using System;
 
-namespace Fifthweek.Api.FileManagement.Queries
-{
-    public partial class GetSharedAccessSignatureUriQuery
-    {
-        public GetSharedAccessSignatureUriQuery(
-            Fifthweek.Api.FileManagement.FileId fileId)
-        {
-            if (fileId == null)
-            {
-                throw new ArgumentNullException("fileId");
-            }
 
-            this.FileId = fileId;
-        }
-    }
-}
+
+
+
+
 namespace Fifthweek.Api.FileManagement.Commands
 {
-    public partial class FileUploadCompleteCommand
-    {
-        public FileUploadCompleteCommand(
-            Fifthweek.Api.FileManagement.FileId fileId)
-        {
-            if (fileId == null)
-            {
-                throw new ArgumentNullException("fileId");
-            }
-
-            this.FileId = fileId;
-        }
-    }
-}
-namespace Fifthweek.Api.FileManagement.Commands
-{
-    public partial class InitiateFileUploadRequestCommand
-    {
+	public partial class InitiateFileUploadRequestCommand
+	{
         public InitiateFileUploadRequestCommand(
             Fifthweek.Api.FileManagement.FileId fileId)
         {
@@ -51,12 +20,44 @@ namespace Fifthweek.Api.FileManagement.Commands
 
             this.FileId = fileId;
         }
-    }
+	}
+}
+namespace Fifthweek.Api.FileManagement.Commands
+{
+	public partial class FileUploadCompleteCommand
+	{
+        public FileUploadCompleteCommand(
+            Fifthweek.Api.FileManagement.FileId fileId)
+        {
+            if (fileId == null)
+            {
+                throw new ArgumentNullException("fileId");
+            }
+
+            this.FileId = fileId;
+        }
+	}
+}
+namespace Fifthweek.Api.FileManagement.Queries
+{
+	public partial class GetSharedAccessSignatureUriQuery
+	{
+        public GetSharedAccessSignatureUriQuery(
+            Fifthweek.Api.FileManagement.FileId fileId)
+        {
+            if (fileId == null)
+            {
+                throw new ArgumentNullException("fileId");
+            }
+
+            this.FileId = fileId;
+        }
+	}
 }
 namespace Fifthweek.Api.FileManagement.Controllers
 {
-    public partial class GrantedUpload
-    {
+	public partial class GrantedUpload
+	{
         public GrantedUpload(
             System.Guid fileId, 
             System.String uploadUri)
@@ -74,28 +75,12 @@ namespace Fifthweek.Api.FileManagement.Controllers
             this.FileId = fileId;
             this.UploadUri = uploadUri;
         }
-    }
+	}
 }
 namespace Fifthweek.Api.FileManagement
 {
-    public partial class FileId
-    {
-        public FileId(
-            System.Guid value)
-        {
-            if (value == null)
-            {
-                throw new ArgumentNullException("value");
-            }
-
-            this.Value = value;
-        }
-    }
-}
-namespace Fifthweek.Api.FileManagement
-{
-    public partial class FileVariantId
-    {
+	public partial class FileVariantId
+	{
         public FileVariantId(
             System.Guid value)
         {
@@ -106,100 +91,29 @@ namespace Fifthweek.Api.FileManagement
 
             this.Value = value;
         }
-    }
+	}
 }
-namespace Fifthweek.Api.FileManagement.Queries
+namespace Fifthweek.Api.FileManagement
 {
-    public partial class GetSharedAccessSignatureUriQuery
-    {
-        public override bool Equals(object obj)
+	public partial class FileId
+	{
+        public FileId(
+            System.Guid value)
         {
-            if (ReferenceEquals(null, obj))
+            if (value == null)
             {
-                return false;
+                throw new ArgumentNullException("value");
             }
 
-            if (ReferenceEquals(this, obj))
-            {
-                return true;
-            }
-
-            if (obj.GetType() != this.GetType())
-            {
-                return false;
-            }
-
-            return this.Equals((GetSharedAccessSignatureUriQuery)obj);
+            this.Value = value;
         }
-
-        public override int GetHashCode()
-        {
-            unchecked
-            {
-                int hashCode = 0;
-                hashCode = (hashCode * 397) ^ (this.FileId != null ? this.FileId.GetHashCode() : 0);
-                return hashCode;
-            }
-        }
-
-        protected bool Equals(GetSharedAccessSignatureUriQuery other)
-        {
-            if (!object.Equals(this.FileId, other.FileId))
-            {
-                return false;
-            }
-            return true;
-        }
-    }
+	}
 }
+
 namespace Fifthweek.Api.FileManagement.Commands
 {
-    public partial class FileUploadCompleteCommand
-    {
-        public override bool Equals(object obj)
-        {
-            if (ReferenceEquals(null, obj))
-            {
-                return false;
-            }
-
-            if (ReferenceEquals(this, obj))
-            {
-                return true;
-            }
-
-            if (obj.GetType() != this.GetType())
-            {
-                return false;
-            }
-
-            return this.Equals((FileUploadCompleteCommand)obj);
-        }
-
-        public override int GetHashCode()
-        {
-            unchecked
-            {
-                int hashCode = 0;
-                hashCode = (hashCode * 397) ^ (this.FileId != null ? this.FileId.GetHashCode() : 0);
-                return hashCode;
-            }
-        }
-
-        protected bool Equals(FileUploadCompleteCommand other)
-        {
-            if (!object.Equals(this.FileId, other.FileId))
-            {
-                return false;
-            }
-            return true;
-        }
-    }
-}
-namespace Fifthweek.Api.FileManagement.Commands
-{
-    public partial class InitiateFileUploadRequestCommand
-    {
+	public partial class InitiateFileUploadRequestCommand
+	{
         public override bool Equals(object obj)
         {
             if (ReferenceEquals(null, obj))
@@ -238,12 +152,100 @@ namespace Fifthweek.Api.FileManagement.Commands
             }
             return true;
         }
-    }
+	}
+}
+namespace Fifthweek.Api.FileManagement.Commands
+{
+	public partial class FileUploadCompleteCommand
+	{
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj))
+            {
+                return false;
+            }
+
+            if (ReferenceEquals(this, obj))
+            {
+                return true;
+            }
+
+            if (obj.GetType() != this.GetType())
+            {
+                return false;
+            }
+
+            return this.Equals((FileUploadCompleteCommand)obj);
+        }
+
+        public override int GetHashCode()
+        {
+            unchecked
+            {
+                int hashCode = 0;
+                hashCode = (hashCode * 397) ^ (this.FileId != null ? this.FileId.GetHashCode() : 0);
+                return hashCode;
+            }
+        }
+
+        protected bool Equals(FileUploadCompleteCommand other)
+        {
+            if (!object.Equals(this.FileId, other.FileId))
+            {
+                return false;
+            }
+            return true;
+        }
+	}
+}
+namespace Fifthweek.Api.FileManagement.Queries
+{
+	public partial class GetSharedAccessSignatureUriQuery
+	{
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj))
+            {
+                return false;
+            }
+
+            if (ReferenceEquals(this, obj))
+            {
+                return true;
+            }
+
+            if (obj.GetType() != this.GetType())
+            {
+                return false;
+            }
+
+            return this.Equals((GetSharedAccessSignatureUriQuery)obj);
+        }
+
+        public override int GetHashCode()
+        {
+            unchecked
+            {
+                int hashCode = 0;
+                hashCode = (hashCode * 397) ^ (this.FileId != null ? this.FileId.GetHashCode() : 0);
+                return hashCode;
+            }
+        }
+
+        protected bool Equals(GetSharedAccessSignatureUriQuery other)
+        {
+            if (!object.Equals(this.FileId, other.FileId))
+            {
+                return false;
+            }
+            return true;
+        }
+	}
 }
 namespace Fifthweek.Api.FileManagement.Controllers
 {
-    public partial class GrantedUpload
-    {
+	public partial class GrantedUpload
+	{
         public override bool Equals(object obj)
         {
             if (ReferenceEquals(null, obj))
@@ -287,12 +289,12 @@ namespace Fifthweek.Api.FileManagement.Controllers
             }
             return true;
         }
-    }
+	}
 }
 namespace Fifthweek.Api.FileManagement.Controllers
 {
-    public partial class UploadRequest
-    {
+	public partial class UploadRequest
+	{
         public override bool Equals(object obj)
         {
             if (ReferenceEquals(null, obj))
@@ -336,56 +338,12 @@ namespace Fifthweek.Api.FileManagement.Controllers
             }
             return true;
         }
-    }
+	}
 }
 namespace Fifthweek.Api.FileManagement
 {
-    public partial class FileId
-    {
-        public override bool Equals(object obj)
-        {
-            if (ReferenceEquals(null, obj))
-            {
-                return false;
-            }
-
-            if (ReferenceEquals(this, obj))
-            {
-                return true;
-            }
-
-            if (obj.GetType() != this.GetType())
-            {
-                return false;
-            }
-
-            return this.Equals((FileId)obj);
-        }
-
-        public override int GetHashCode()
-        {
-            unchecked
-            {
-                int hashCode = 0;
-                hashCode = (hashCode * 397) ^ (this.Value != null ? this.Value.GetHashCode() : 0);
-                return hashCode;
-            }
-        }
-
-        protected bool Equals(FileId other)
-        {
-            if (!object.Equals(this.Value, other.Value))
-            {
-                return false;
-            }
-            return true;
-        }
-    }
-}
-namespace Fifthweek.Api.FileManagement
-{
-    public partial class FileVariantId
-    {
+	public partial class FileVariantId
+	{
         public override bool Equals(object obj)
         {
             if (ReferenceEquals(null, obj))
@@ -424,6 +382,50 @@ namespace Fifthweek.Api.FileManagement
             }
             return true;
         }
-    }
+	}
+}
+namespace Fifthweek.Api.FileManagement
+{
+	public partial class FileId
+	{
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj))
+            {
+                return false;
+            }
+
+            if (ReferenceEquals(this, obj))
+            {
+                return true;
+            }
+
+            if (obj.GetType() != this.GetType())
+            {
+                return false;
+            }
+
+            return this.Equals((FileId)obj);
+        }
+
+        public override int GetHashCode()
+        {
+            unchecked
+            {
+                int hashCode = 0;
+                hashCode = (hashCode * 397) ^ (this.Value != null ? this.Value.GetHashCode() : 0);
+                return hashCode;
+            }
+        }
+
+        protected bool Equals(FileId other)
+        {
+            if (!object.Equals(this.Value, other.Value))
+            {
+                return false;
+            }
+            return true;
+        }
+	}
 }
 
