@@ -4,12 +4,15 @@
 <#@ import namespace="System.Linq" #>
 <#@ import namespace="System.Text" #>
 <#@ import namespace="System.Collections.Generic" #>
+
+using System;
+
 <#
     // iterate all classes
     foreach(EnvDTE.CodeClass codeClass in allClasses)
     {
 		var allAttributes = GetAllAttributes(codeClass);
-		if (allAttributes.OfType<EnvDTE.CodeAttribute>().All(_ => !_.Name.StartsWith("AutoConstructor")))
+		if (allAttributes.All(_ => !_.Name.StartsWith("AutoConstructor")))
         {
 			continue;
         }
@@ -24,6 +27,9 @@
         {
 			continue;
         }
+
+		var requiredNullableProperties = publicProperties.Where(p => p.Attributes.OfType<EnvDTE.CodeAttribute>().All(_ => !_.Name.StartsWith("Optional")));
+
 #>
 namespace <#= codeClass.Namespace.Name #>
 {
@@ -41,6 +47,17 @@ namespace <#= codeClass.Namespace.Name #>
 #>
         {
 <#
+	foreach(EnvDTE.CodeProperty codeProperty in requiredNullableProperties)
+	{
+#>
+			if (<#= ToLowerCamelCase(codeProperty.Name) #> == null)
+			{
+				throw new ArgumentNullException("<#= ToLowerCamelCase(codeProperty.Name) #>");
+			}
+
+<#
+	}
+
 	foreach(EnvDTE.CodeProperty codeProperty in publicProperties)
 	{
 #>

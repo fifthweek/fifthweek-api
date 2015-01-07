@@ -80,6 +80,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ApiException.cs" />
+    <Compile Include="OptionalAttribute.cs" />
     <Compile Include="AutoConstructorAttribute.cs" />
     <Compile Include="AutoEqualityMembersAttribute.cs" />
     <Compile Include="BadRequestException.cs" />

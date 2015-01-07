@@ -2,21 +2,9 @@
 
 
 
-namespace Fifthweek.Api.Identity.Membership.Commands
-{
-	public partial class UpdateLastAccessTokenDateCommand
-	{
-		public UpdateLastAccessTokenDateCommand(
-			Fifthweek.Api.Identity.Membership.NormalizedUsername username, 
-			System.DateTime timestamp, 
-			Fifthweek.Api.Identity.Membership.Commands.UpdateLastAccessTokenDateCommand.AccessTokenCreationType creationType)
-        {
-			this.Username = username;
-			this.Timestamp = timestamp;
-			this.CreationType = creationType;
-        }
-	}
-}
+
+using System;
+
 namespace Fifthweek.Api.Identity.Membership.Commands
 {
 	public partial class RequestPasswordResetCommand
@@ -30,14 +18,33 @@ namespace Fifthweek.Api.Identity.Membership.Commands
         }
 	}
 }
-namespace Fifthweek.Api.Identity.OAuth.Queries
+namespace Fifthweek.Api.Identity.Membership.Commands
 {
-	public partial class GetRefreshTokenQuery
+	public partial class UpdateLastAccessTokenDateCommand
 	{
-		public GetRefreshTokenQuery(
-			Fifthweek.Api.Identity.OAuth.HashedRefreshTokenId hashedRefreshTokenId)
+		public UpdateLastAccessTokenDateCommand(
+			Fifthweek.Api.Identity.Membership.NormalizedUsername username, 
+			System.DateTime timestamp, 
+			Fifthweek.Api.Identity.Membership.Commands.UpdateLastAccessTokenDateCommand.AccessTokenCreationType creationType)
         {
-			this.HashedRefreshTokenId = hashedRefreshTokenId;
+			if (username == null)
+			{
+				throw new ArgumentNullException("username");
+			}
+
+			if (timestamp == null)
+			{
+				throw new ArgumentNullException("timestamp");
+			}
+
+			if (creationType == null)
+			{
+				throw new ArgumentNullException("creationType");
+			}
+
+			this.Username = username;
+			this.Timestamp = timestamp;
+			this.CreationType = creationType;
         }
 	}
 }
@@ -48,7 +55,28 @@ namespace Fifthweek.Api.Identity.OAuth.Queries
 		public GetClientQuery(
 			Fifthweek.Api.Identity.OAuth.ClientId clientId)
         {
+			if (clientId == null)
+			{
+				throw new ArgumentNullException("clientId");
+			}
+
 			this.ClientId = clientId;
+        }
+	}
+}
+namespace Fifthweek.Api.Identity.OAuth.Queries
+{
+	public partial class GetRefreshTokenQuery
+	{
+		public GetRefreshTokenQuery(
+			Fifthweek.Api.Identity.OAuth.HashedRefreshTokenId hashedRefreshTokenId)
+        {
+			if (hashedRefreshTokenId == null)
+			{
+				throw new ArgumentNullException("hashedRefreshTokenId");
+			}
+
+			this.HashedRefreshTokenId = hashedRefreshTokenId;
         }
 	}
 }
@@ -59,6 +87,11 @@ namespace Fifthweek.Api.Identity.OAuth.Commands
 		public RemoveRefreshTokenCommand(
 			Fifthweek.Api.Identity.OAuth.HashedRefreshTokenId hashedRefreshTokenId)
         {
+			if (hashedRefreshTokenId == null)
+			{
+				throw new ArgumentNullException("hashedRefreshTokenId");
+			}
+
 			this.HashedRefreshTokenId = hashedRefreshTokenId;
         }
 	}
@@ -70,6 +103,11 @@ namespace Fifthweek.Api.Identity.OAuth.Commands
 		public AddRefreshTokenCommand(
 			Fifthweek.Api.Persistence.RefreshToken refreshToken)
         {
+			if (refreshToken == null)
+			{
+				throw new ArgumentNullException("refreshToken");
+			}
+
 			this.RefreshToken = refreshToken;
         }
 	}
@@ -81,66 +119,12 @@ namespace Fifthweek.Api.Identity.OAuth
 		public ClientId(
 			System.String value)
         {
+			if (value == null)
+			{
+				throw new ArgumentNullException("value");
+			}
+
 			this.Value = value;
-        }
-	}
-}
-namespace Fifthweek.Api.Identity.Membership.Controllers
-{
-	public partial class PasswordResetRequestData
-	{
-		public override bool Equals(object obj)
-        {
-            if (ReferenceEquals(null, obj))
-            {
-                return false;
-            }
-
-            if (ReferenceEquals(this, obj))
-            {
-                return true;
-            }
-
-            if (obj.GetType() != this.GetType())
-            {
-                return false;
-            }
-
-            return this.Equals((PasswordResetRequestData)obj);
-        }
-
-		public override int GetHashCode()
-        {
-            unchecked
-            {
-                int hashCode = 0;
-				hashCode = (hashCode * 397) ^ (this.Email != null ? this.Email.GetHashCode() : 0);
-				hashCode = (hashCode * 397) ^ (this.Username != null ? this.Username.GetHashCode() : 0);
-				hashCode = (hashCode * 397) ^ (this.EmailObj != null ? this.EmailObj.GetHashCode() : 0);
-				hashCode = (hashCode * 397) ^ (this.UsernameObj != null ? this.UsernameObj.GetHashCode() : 0);
-                return hashCode;
-            }
-        }
-
-		protected bool Equals(PasswordResetRequestData other)
-        {
-			if (!object.Equals(this.Email, other.Email))
-			{
-				return false;
-			}
-			if (!object.Equals(this.Username, other.Username))
-			{
-				return false;
-			}
-			if (!object.Equals(this.EmailObj, other.EmailObj))
-			{
-				return false;
-			}
-			if (!object.Equals(this.UsernameObj, other.UsernameObj))
-			{
-				return false;
-			}
-			return true;
         }
 	}
 }
@@ -201,6 +185,65 @@ namespace Fifthweek.Api.Identity.Membership.Controllers
 				return false;
 			}
 			if (!object.Equals(this.NewPasswordObj, other.NewPasswordObj))
+			{
+				return false;
+			}
+			return true;
+        }
+	}
+}
+namespace Fifthweek.Api.Identity.Membership.Controllers
+{
+	public partial class PasswordResetRequestData
+	{
+		public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj))
+            {
+                return false;
+            }
+
+            if (ReferenceEquals(this, obj))
+            {
+                return true;
+            }
+
+            if (obj.GetType() != this.GetType())
+            {
+                return false;
+            }
+
+            return this.Equals((PasswordResetRequestData)obj);
+        }
+
+		public override int GetHashCode()
+        {
+            unchecked
+            {
+                int hashCode = 0;
+				hashCode = (hashCode * 397) ^ (this.Email != null ? this.Email.GetHashCode() : 0);
+				hashCode = (hashCode * 397) ^ (this.Username != null ? this.Username.GetHashCode() : 0);
+				hashCode = (hashCode * 397) ^ (this.EmailObj != null ? this.EmailObj.GetHashCode() : 0);
+				hashCode = (hashCode * 397) ^ (this.UsernameObj != null ? this.UsernameObj.GetHashCode() : 0);
+                return hashCode;
+            }
+        }
+
+		protected bool Equals(PasswordResetRequestData other)
+        {
+			if (!object.Equals(this.Email, other.Email))
+			{
+				return false;
+			}
+			if (!object.Equals(this.Username, other.Username))
+			{
+				return false;
+			}
+			if (!object.Equals(this.EmailObj, other.EmailObj))
+			{
+				return false;
+			}
+			if (!object.Equals(this.UsernameObj, other.UsernameObj))
 			{
 				return false;
 			}
@@ -284,6 +327,50 @@ namespace Fifthweek.Api.Identity.Membership.Controllers
 }
 namespace Fifthweek.Api.Identity.Membership.Queries
 {
+	public partial class IsUsernameAvailableQuery
+	{
+		public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj))
+            {
+                return false;
+            }
+
+            if (ReferenceEquals(this, obj))
+            {
+                return true;
+            }
+
+            if (obj.GetType() != this.GetType())
+            {
+                return false;
+            }
+
+            return this.Equals((IsUsernameAvailableQuery)obj);
+        }
+
+		public override int GetHashCode()
+        {
+            unchecked
+            {
+                int hashCode = 0;
+				hashCode = (hashCode * 397) ^ (this.Username != null ? this.Username.GetHashCode() : 0);
+                return hashCode;
+            }
+        }
+
+		protected bool Equals(IsUsernameAvailableQuery other)
+        {
+			if (!object.Equals(this.Username, other.Username))
+			{
+				return false;
+			}
+			return true;
+        }
+	}
+}
+namespace Fifthweek.Api.Identity.Membership.Queries
+{
 	public partial class IsPasswordResetTokenValidQuery
 	{
 		public override bool Equals(object obj)
@@ -333,50 +420,6 @@ namespace Fifthweek.Api.Identity.Membership.Queries
 }
 namespace Fifthweek.Api.Identity.Membership.Queries
 {
-	public partial class IsUsernameAvailableQuery
-	{
-		public override bool Equals(object obj)
-        {
-            if (ReferenceEquals(null, obj))
-            {
-                return false;
-            }
-
-            if (ReferenceEquals(this, obj))
-            {
-                return true;
-            }
-
-            if (obj.GetType() != this.GetType())
-            {
-                return false;
-            }
-
-            return this.Equals((IsUsernameAvailableQuery)obj);
-        }
-
-		public override int GetHashCode()
-        {
-            unchecked
-            {
-                int hashCode = 0;
-				hashCode = (hashCode * 397) ^ (this.Username != null ? this.Username.GetHashCode() : 0);
-                return hashCode;
-            }
-        }
-
-		protected bool Equals(IsUsernameAvailableQuery other)
-        {
-			if (!object.Equals(this.Username, other.Username))
-			{
-				return false;
-			}
-			return true;
-        }
-	}
-}
-namespace Fifthweek.Api.Identity.Membership.Queries
-{
 	public partial class GetUserQuery
 	{
 		public override bool Equals(object obj)
@@ -417,60 +460,6 @@ namespace Fifthweek.Api.Identity.Membership.Queries
 				return false;
 			}
 			if (!object.Equals(this.Password, other.Password))
-			{
-				return false;
-			}
-			return true;
-        }
-	}
-}
-namespace Fifthweek.Api.Identity.Membership.Commands
-{
-	public partial class UpdateLastAccessTokenDateCommand
-	{
-		public override bool Equals(object obj)
-        {
-            if (ReferenceEquals(null, obj))
-            {
-                return false;
-            }
-
-            if (ReferenceEquals(this, obj))
-            {
-                return true;
-            }
-
-            if (obj.GetType() != this.GetType())
-            {
-                return false;
-            }
-
-            return this.Equals((UpdateLastAccessTokenDateCommand)obj);
-        }
-
-		public override int GetHashCode()
-        {
-            unchecked
-            {
-                int hashCode = 0;
-				hashCode = (hashCode * 397) ^ (this.Username != null ? this.Username.GetHashCode() : 0);
-				hashCode = (hashCode * 397) ^ (this.Timestamp != null ? this.Timestamp.GetHashCode() : 0);
-				hashCode = (hashCode * 397) ^ (this.CreationType != null ? this.CreationType.GetHashCode() : 0);
-                return hashCode;
-            }
-        }
-
-		protected bool Equals(UpdateLastAccessTokenDateCommand other)
-        {
-			if (!object.Equals(this.Username, other.Username))
-			{
-				return false;
-			}
-			if (!object.Equals(this.Timestamp, other.Timestamp))
-			{
-				return false;
-			}
-			if (!object.Equals(this.CreationType, other.CreationType))
 			{
 				return false;
 			}
@@ -593,6 +582,60 @@ namespace Fifthweek.Api.Identity.Membership.Commands
 }
 namespace Fifthweek.Api.Identity.Membership.Commands
 {
+	public partial class UpdateLastAccessTokenDateCommand
+	{
+		public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj))
+            {
+                return false;
+            }
+
+            if (ReferenceEquals(this, obj))
+            {
+                return true;
+            }
+
+            if (obj.GetType() != this.GetType())
+            {
+                return false;
+            }
+
+            return this.Equals((UpdateLastAccessTokenDateCommand)obj);
+        }
+
+		public override int GetHashCode()
+        {
+            unchecked
+            {
+                int hashCode = 0;
+				hashCode = (hashCode * 397) ^ (this.Username != null ? this.Username.GetHashCode() : 0);
+				hashCode = (hashCode * 397) ^ (this.Timestamp != null ? this.Timestamp.GetHashCode() : 0);
+				hashCode = (hashCode * 397) ^ (this.CreationType != null ? this.CreationType.GetHashCode() : 0);
+                return hashCode;
+            }
+        }
+
+		protected bool Equals(UpdateLastAccessTokenDateCommand other)
+        {
+			if (!object.Equals(this.Username, other.Username))
+			{
+				return false;
+			}
+			if (!object.Equals(this.Timestamp, other.Timestamp))
+			{
+				return false;
+			}
+			if (!object.Equals(this.CreationType, other.CreationType))
+			{
+				return false;
+			}
+			return true;
+        }
+	}
+}
+namespace Fifthweek.Api.Identity.Membership.Commands
+{
 	public partial class ConfirmPasswordResetCommand
 	{
 		public override bool Equals(object obj)
@@ -647,7 +690,7 @@ namespace Fifthweek.Api.Identity.Membership.Commands
 }
 namespace Fifthweek.Api.Identity.Membership
 {
-	public partial class Password
+	public partial class Username
 	{
 		public override bool Equals(object obj)
         {
@@ -666,7 +709,7 @@ namespace Fifthweek.Api.Identity.Membership
                 return false;
             }
 
-            return this.Equals((Password)obj);
+            return this.Equals((Username)obj);
         }
 
 		public override int GetHashCode()
@@ -679,51 +722,7 @@ namespace Fifthweek.Api.Identity.Membership
             }
         }
 
-		protected bool Equals(Password other)
-        {
-			if (!object.Equals(this.Value, other.Value))
-			{
-				return false;
-			}
-			return true;
-        }
-	}
-}
-namespace Fifthweek.Api.Identity.Membership
-{
-	public partial class Email
-	{
-		public override bool Equals(object obj)
-        {
-            if (ReferenceEquals(null, obj))
-            {
-                return false;
-            }
-
-            if (ReferenceEquals(this, obj))
-            {
-                return true;
-            }
-
-            if (obj.GetType() != this.GetType())
-            {
-                return false;
-            }
-
-            return this.Equals((Email)obj);
-        }
-
-		public override int GetHashCode()
-        {
-            unchecked
-            {
-                int hashCode = 0;
-				hashCode = (hashCode * 397) ^ (this.Value != null ? this.Value.GetHashCode() : 0);
-                return hashCode;
-            }
-        }
-
-		protected bool Equals(Email other)
+		protected bool Equals(Username other)
         {
 			if (!object.Equals(this.Value, other.Value))
 			{
@@ -779,7 +778,7 @@ namespace Fifthweek.Api.Identity.Membership
 }
 namespace Fifthweek.Api.Identity.Membership
 {
-	public partial class Username
+	public partial class Email
 	{
 		public override bool Equals(object obj)
         {
@@ -798,7 +797,7 @@ namespace Fifthweek.Api.Identity.Membership
                 return false;
             }
 
-            return this.Equals((Username)obj);
+            return this.Equals((Email)obj);
         }
 
 		public override int GetHashCode()
@@ -811,7 +810,7 @@ namespace Fifthweek.Api.Identity.Membership
             }
         }
 
-		protected bool Equals(Username other)
+		protected bool Equals(Email other)
         {
 			if (!object.Equals(this.Value, other.Value))
 			{
@@ -821,9 +820,9 @@ namespace Fifthweek.Api.Identity.Membership
         }
 	}
 }
-namespace Fifthweek.Api.Identity.OAuth.Queries
+namespace Fifthweek.Api.Identity.Membership
 {
-	public partial class GetRefreshTokenQuery
+	public partial class Password
 	{
 		public override bool Equals(object obj)
         {
@@ -842,7 +841,7 @@ namespace Fifthweek.Api.Identity.OAuth.Queries
                 return false;
             }
 
-            return this.Equals((GetRefreshTokenQuery)obj);
+            return this.Equals((Password)obj);
         }
 
 		public override int GetHashCode()
@@ -850,14 +849,14 @@ namespace Fifthweek.Api.Identity.OAuth.Queries
             unchecked
             {
                 int hashCode = 0;
-				hashCode = (hashCode * 397) ^ (this.HashedRefreshTokenId != null ? this.HashedRefreshTokenId.GetHashCode() : 0);
+				hashCode = (hashCode * 397) ^ (this.Value != null ? this.Value.GetHashCode() : 0);
                 return hashCode;
             }
         }
 
-		protected bool Equals(GetRefreshTokenQuery other)
+		protected bool Equals(Password other)
         {
-			if (!object.Equals(this.HashedRefreshTokenId, other.HashedRefreshTokenId))
+			if (!object.Equals(this.Value, other.Value))
 			{
 				return false;
 			}
@@ -902,6 +901,50 @@ namespace Fifthweek.Api.Identity.OAuth.Queries
 		protected bool Equals(GetClientQuery other)
         {
 			if (!object.Equals(this.ClientId, other.ClientId))
+			{
+				return false;
+			}
+			return true;
+        }
+	}
+}
+namespace Fifthweek.Api.Identity.OAuth.Queries
+{
+	public partial class GetRefreshTokenQuery
+	{
+		public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj))
+            {
+                return false;
+            }
+
+            if (ReferenceEquals(this, obj))
+            {
+                return true;
+            }
+
+            if (obj.GetType() != this.GetType())
+            {
+                return false;
+            }
+
+            return this.Equals((GetRefreshTokenQuery)obj);
+        }
+
+		public override int GetHashCode()
+        {
+            unchecked
+            {
+                int hashCode = 0;
+				hashCode = (hashCode * 397) ^ (this.HashedRefreshTokenId != null ? this.HashedRefreshTokenId.GetHashCode() : 0);
+                return hashCode;
+            }
+        }
+
+		protected bool Equals(GetRefreshTokenQuery other)
+        {
+			if (!object.Equals(this.HashedRefreshTokenId, other.HashedRefreshTokenId))
 			{
 				return false;
 			}
