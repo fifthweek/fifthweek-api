@@ -75,7 +75,7 @@ namespace Fifthweek.Api.Core.Tests
 
         protected override ClassAugmentationDummy FromBuilder(ClassAugmentationDummy.Builder builder)
         {
-            return ClassAugmentationDummy.Build(builder);
+            return builder.Build();
         }
 
         // We do not currently have a way of checking equality on collections. Need to consider external classes mutating those collections too.
