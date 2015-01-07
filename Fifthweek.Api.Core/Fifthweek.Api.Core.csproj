@@ -80,6 +80,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ApiException.cs" />
+    <Compile Include="AutoConstructorAttribute.cs" />
+    <Compile Include="AutoEqualityMembersAttribute.cs" />
     <Compile Include="BadRequestException.cs" />
     <Compile Include="Constants.cs" />
     <Compile Include="Extensions.cs" />

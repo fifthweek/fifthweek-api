@@ -1,4 +1,6 @@
-﻿namespace Fifthweek.Api.Identity.OAuth.Commands
+﻿using Fifthweek.Api.Core;
+
+namespace Fifthweek.Api.Identity.OAuth.Commands
 {
     using Fifthweek.Api.Persistence;
 

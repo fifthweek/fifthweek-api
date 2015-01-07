@@ -1,4 +1,6 @@
-﻿namespace Fifthweek.Api.Identity.OAuth
+﻿using Fifthweek.Api.Core;
+
+namespace Fifthweek.Api.Identity.OAuth
 {
     [AutoConstructor]
     [AutoEqualityMembers]

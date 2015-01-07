@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Fifthweek.Api.Core;
 
 namespace Fifthweek.Api.Identity.Membership
 {

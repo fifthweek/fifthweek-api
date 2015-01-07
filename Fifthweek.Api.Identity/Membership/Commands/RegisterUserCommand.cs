@@ -1,4 +1,5 @@
 ﻿using System;
+using Fifthweek.Api.Core;
 
 namespace Fifthweek.Api.Identity.Membership.Commands
 {

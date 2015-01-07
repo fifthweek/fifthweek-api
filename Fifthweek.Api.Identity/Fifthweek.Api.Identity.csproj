@@ -96,13 +96,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AutoConstructorAttribute.cs" />
     <Compile Include="ClassAugmentation.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>ClassAugmentation.tt</DependentUpon>
     </Compile>
-    <Compile Include="AutoEqualityMembersAttribute.cs" />
     <Compile Include="Membership\Commands\ConfirmPasswordResetCommand.cs" />
     <Compile Include="Membership\Commands\RequestPasswordResetCommand.cs" />
     <Compile Include="Membership\Commands\RegisterUserCommand.cs" />
