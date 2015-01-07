@@ -3,6 +3,8 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Fifthweek.Api.FileManagement.Tests.Controllers
 {
+    using System.Threading.Tasks;
+
     using Fifthweek.Api.Core;
     using Fifthweek.Api.FileManagement.Commands;
     using Fifthweek.Api.FileManagement.Controllers;
@@ -14,10 +16,35 @@ namespace Fifthweek.Api.FileManagement.Tests.Controllers
     public class FileUploadControllerTests
     {
         [TestMethod]
-        public void WhenAnUploadRequestIsPosted_ItShouldCreateStorageAndReturnSasUriIfValid()
+        public async Task WhenAnUploadRequestIsPosted_ItShouldCreateStorageAndReturnSasUriIfValid()
         {
-            ////this.guidCreator.Setup(v => v.CreateSqlSequential()).Returns(this.guid).Verifiable();
+            this.guidCreator.Setup(v => v.CreateSqlSequential()).Returns(this.guid).Verifiable();
 
+            var fileId = new FileId(this.guid);
+            var uploadUri = "/test";
+
+            this.initiateFileUploadRequest.Setup(v => v.HandleAsync(new InitiateFileUploadRequestCommand(fileId))).Returns(Task.FromResult(0)).Verifiable();
+            this.getSharedAccessSignatureUri.Setup(v => v.HandleAsync(new GetSharedAccessSignatureUriQuery(fileId))).ReturnsAsync(uploadUri).Verifiable();
+
+            var response = await this.fileUploadController.PostUploadRequestAsync(new UploadRequest());
+
+            this.guidCreator.Verify();
+            this.initiateFileUploadRequest.Verify();
+            this.getSharedAccessSignatureUri.Verify();
+
+            Assert.AreEqual(new GrantedUpload(this.guid, uploadUri), response);
+        }
+
+        [TestMethod]
+        public async Task WhenAnUploadCompleteNotificationIsPosted_ItShouldHandleTheNotification()
+        {
+            var fileId = new FileId(this.guid);
+
+            this.fileUploadComplete.Setup(v => v.HandleAsync(new FileUploadCompleteCommand(fileId))).Returns(Task.FromResult(0)).Verifiable();
+
+            await this.fileUploadController.PostUploadCompleteNotificationAsync(this.guid);
+
+            this.fileUploadComplete.Verify();
         }
 
         [TestInitialize]

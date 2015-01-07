@@ -42,14 +42,14 @@
         [Authorize]
         [ResponseType(typeof(GrantedUpload))]
         [Route("uploadRequests")]
-        public async Task<HttpResponseMessage> PostUploadRequestAsync(UploadRequest data)
+        public async Task<GrantedUpload> PostUploadRequestAsync(UploadRequest data)
         {
             var fileId = new FileId(this.guidCreator.CreateSqlSequential());
 
             await this.initiateFileUploadRequest.HandleAsync(new InitiateFileUploadRequestCommand(fileId));
             var uri = await this.getSharedAccessSignatureUri.HandleAsync(new GetSharedAccessSignatureUriQuery(fileId));
 
-            return this.Request.CreateResponse(new GrantedUpload(fileId.Value, uri));
+            return new GrantedUpload(fileId.Value, uri);
         }
 
         [Authorize]
