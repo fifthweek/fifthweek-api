@@ -28,5 +28,7 @@
 *.bat       eol=crlf
 *.csproj    eol=crlf
 *.vcproj    eol=crlf
+*.tt        eol=crlf
+*.ttinclude eol=crlf
 
 *.ico       -text

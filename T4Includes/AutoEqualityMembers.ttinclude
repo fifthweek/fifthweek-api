@@ -8,28 +8,28 @@
     // iterate all classes
     foreach(EnvDTE.CodeClass codeClass in allClasses)
     {
-		var allAttributes = GetAllAttributes(codeClass);
-		if (allAttributes.OfType<EnvDTE.CodeAttribute>().All(_ => !_.Name.StartsWith("AutoEqualityMembers")))
+        var allAttributes = GetAllAttributes(codeClass);
+        if (allAttributes.OfType<EnvDTE.CodeAttribute>().All(_ => !_.Name.StartsWith("AutoEqualityMembers")))
         {
-			continue;
+            continue;
         }
 
-		var allProperties = GetAllProperties(codeClass);
-		var publicProperties = allProperties
-			.OfType<EnvDTE.CodeProperty>()
-			.Where(p => p.Access == EnvDTE.vsCMAccess.vsCMAccessPublic)
-			.ToArray();
+        var allProperties = GetAllProperties(codeClass);
+        var publicProperties = allProperties
+            .OfType<EnvDTE.CodeProperty>()
+            .Where(p => p.Access == EnvDTE.vsCMAccess.vsCMAccessPublic)
+            .ToArray();
 
-		if (publicProperties.Length == 0)
+        if (publicProperties.Length == 0)
         {
-			continue;
+            continue;
         }
 #>
 namespace <#= codeClass.Namespace.Name #>
 {
-	public partial class <#= codeClass.Name #>
-	{
-		public override bool Equals(object obj)
+    public partial class <#= codeClass.Name #>
+    {
+        public override bool Equals(object obj)
         {
             if (ReferenceEquals(null, obj))
             {
@@ -49,7 +49,7 @@ namespace <#= codeClass.Namespace.Name #>
             return this.Equals((<#= codeClass.Name #>)obj);
         }
 
-		public override int GetHashCode()
+        public override int GetHashCode()
         {
             unchecked
             {
@@ -58,7 +58,7 @@ namespace <#= codeClass.Namespace.Name #>
     foreach(EnvDTE.CodeProperty codeProperty in publicProperties)
     {
 #>
-				hashCode = (hashCode * 397) ^ (this.<#= codeProperty.Name #> != null ? this.<#= codeProperty.Name #>.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.<#= codeProperty.Name #> != null ? this.<#= codeProperty.Name #>.GetHashCode() : 0);
 <#
     }
 #>
@@ -66,22 +66,22 @@ namespace <#= codeClass.Namespace.Name #>
             }
         }
 
-		protected bool Equals(<#= codeClass.Name #> other)
+        protected bool Equals(<#= codeClass.Name #> other)
         {
 <#
     foreach(EnvDTE.CodeProperty codeProperty in publicProperties)
     {
 #>
-			if (!object.Equals(this.<#= codeProperty.Name #>, other.<#= codeProperty.Name #>))
-			{
-				return false;
-			}
+            if (!object.Equals(this.<#= codeProperty.Name #>, other.<#= codeProperty.Name #>))
+            {
+                return false;
+            }
 <#
     }
 #>
-			return true;
+            return true;
         }
-	}
+    }
 }
 <#
     }

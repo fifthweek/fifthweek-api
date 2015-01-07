@@ -11,62 +11,62 @@ using System;
     // iterate all classes
     foreach(EnvDTE.CodeClass codeClass in allClasses)
     {
-		var allAttributes = GetAllAttributes(codeClass);
-		if (allAttributes.All(_ => !_.Name.StartsWith("AutoConstructor")))
+        var allAttributes = GetAllAttributes(codeClass);
+        if (allAttributes.All(_ => !_.Name.StartsWith("AutoConstructor")))
         {
-			continue;
+            continue;
         }
 
-		var allProperties = GetAllProperties(codeClass);
-		var publicProperties = allProperties
-			.OfType<EnvDTE.CodeProperty>()
-			.Where(p => p.Access == EnvDTE.vsCMAccess.vsCMAccessPublic)
-			.ToArray();
+        var allProperties = GetAllProperties(codeClass);
+        var publicProperties = allProperties
+            .OfType<EnvDTE.CodeProperty>()
+            .Where(p => p.Access == EnvDTE.vsCMAccess.vsCMAccessPublic)
+            .ToArray();
 
-		if (publicProperties.Length == 0)
+        if (publicProperties.Length == 0)
         {
-			continue;
+            continue;
         }
 
-		var requiredNullableProperties = publicProperties.Where(p => p.Attributes.OfType<EnvDTE.CodeAttribute>().All(_ => !_.Name.StartsWith("Optional")));
+        var requiredNullableProperties = publicProperties.Where(p => p.Attributes.OfType<EnvDTE.CodeAttribute>().All(_ => !_.Name.StartsWith("Optional")));
 
 #>
 namespace <#= codeClass.Namespace.Name #>
 {
-	public partial class <#= codeClass.Name #>
-	{
-		public <#= codeClass.Name #>(
+    public partial class <#= codeClass.Name #>
+    {
+        public <#= codeClass.Name #>(
 <#
     for (var i = 0; i < publicProperties.Length; i++)
     {
-		var codeProperty = publicProperties[i];
+        var codeProperty = publicProperties[i];
 #>
-			<#= codeProperty.Type.AsFullName #> <#= ToLowerCamelCase(codeProperty.Name) #><#= i < publicProperties.Length - 1 ? ", " : ")" #>
+            <#= codeProperty.Type.AsFullName #> <#= ToLowerCamelCase(codeProperty.Name) #><#= i < publicProperties.Length - 1 ? ", " : ")" #>
 <#
     }
 #>
         {
 <#
-	foreach(EnvDTE.CodeProperty codeProperty in requiredNullableProperties)
-	{
+    foreach(EnvDTE.CodeProperty codeProperty in requiredNullableProperties)
+    {
 #>
-			if (<#= ToLowerCamelCase(codeProperty.Name) #> == null)
-			{
-				throw new ArgumentNullException("<#= ToLowerCamelCase(codeProperty.Name) #>");
-			}
+            if (<#= ToLowerCamelCase(codeProperty.Name) #> == null)
+            {
+                throw new ArgumentNullException("<#= ToLowerCamelCase(codeProperty.Name) #>");
+            }
 
 <#
-	}
+    }
 
-	foreach(EnvDTE.CodeProperty codeProperty in publicProperties)
-	{
+    foreach(EnvDTE.CodeProperty codeProperty in publicProperties)
+    {
 #>
-			this.<#= codeProperty.Name #> = <#= ToLowerCamelCase(codeProperty.Name) #>;
+            this.<#= codeProperty.Name #> = <#= ToLowerCamelCase(codeProperty.Name) #>;
 <#
-	}
+    }
 #>
         }
-	}
+    }
 }
 <#
     }
