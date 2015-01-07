@@ -26,18 +26,26 @@
 
 		classUtility.WriteNamespaceAndClass(() => {
 #>
-		public static <#= codeClass.Name #> Build(Builder builder)
+		public Builder ToBuilder()
 		{
-			return new <#= codeClass.Name #>(
+			var builder = new Builder();
 <#
     for (var i = 0; i < publicProperties.Count; i++)
     {
         var codeProperty = publicProperties[i];
 #>
-				builder.<#= codeProperty.Name #><#= i < publicProperties.Count - 1 ? ", " : ");" #>
+			builder.<#= codeProperty.Name #> = this.<#= codeProperty.Name #>;
 <#
     }
 #>
+			return builder;
+		}
+
+		public <#= codeClass.Name #> Copy(Action<Builder> applyDelta)
+		{
+			var builder = this.ToBuilder();
+			applyDelta(builder);
+			return builder.Build();
 		}
 
         public partial class Builder
@@ -51,6 +59,20 @@
 <#
     }
 #>
+
+			public <#= codeClass.Name #> Build()
+			{
+				return new <#= codeClass.Name #>(
+<#
+    for (var i = 0; i < publicProperties.Count; i++)
+    {
+        var codeProperty = publicProperties[i];
+#>
+					this.<#= codeProperty.Name #><#= i < publicProperties.Count - 1 ? ", " : ");" #>
+<#
+    }
+#>
+			}
         }
 <#
 		});

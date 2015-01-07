@@ -221,19 +221,27 @@ namespace Fifthweek.Api.Core.Tests
 {
 	public partial class ClassAugmentationDummy
 	{
-		public static ClassAugmentationDummy Build(Builder builder)
+		public Builder ToBuilder()
 		{
-			return new ClassAugmentationDummy(
-				builder.SomeGuid, 
-				builder.SomeInt, 
-				builder.OptionalGuid, 
-				builder.OptionalInt, 
-				builder.SomeString, 
-				builder.OptionalString, 
-				builder.SomeCollection, 
-				builder.OptionalCollection, 
-				builder.SomeComplexType, 
-				builder.OptionalComplexType);
+			var builder = new Builder();
+			builder.SomeGuid = this.SomeGuid;
+			builder.SomeInt = this.SomeInt;
+			builder.OptionalGuid = this.OptionalGuid;
+			builder.OptionalInt = this.OptionalInt;
+			builder.SomeString = this.SomeString;
+			builder.OptionalString = this.OptionalString;
+			builder.SomeCollection = this.SomeCollection;
+			builder.OptionalCollection = this.OptionalCollection;
+			builder.SomeComplexType = this.SomeComplexType;
+			builder.OptionalComplexType = this.OptionalComplexType;
+			return builder;
+		}
+
+		public ClassAugmentationDummy Copy(Action<Builder> applyDelta)
+		{
+			var builder = this.ToBuilder();
+			applyDelta(builder);
+			return builder.Build();
 		}
 
         public partial class Builder
@@ -248,6 +256,21 @@ namespace Fifthweek.Api.Core.Tests
             public System.Collections.Generic.IEnumerable<System.String> OptionalCollection { get; set; }
             public Fifthweek.Api.Core.Tests.ClassAugmentationDummy.ComplexType SomeComplexType { get; set; }
             public Fifthweek.Api.Core.Tests.ClassAugmentationDummy.ComplexType OptionalComplexType { get; set; }
+
+			public ClassAugmentationDummy Build()
+			{
+				return new ClassAugmentationDummy(
+					this.SomeGuid, 
+					this.SomeInt, 
+					this.OptionalGuid, 
+					this.OptionalInt, 
+					this.SomeString, 
+					this.OptionalString, 
+					this.SomeCollection, 
+					this.OptionalCollection, 
+					this.SomeComplexType, 
+					this.OptionalComplexType);
+			}
         }
 	}
 }
