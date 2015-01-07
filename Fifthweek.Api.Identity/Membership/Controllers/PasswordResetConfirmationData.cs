@@ -16,16 +16,16 @@ namespace Fifthweek.Api.Identity.Membership.Controllers
 
         public string NewPassword { get; set; }
 
-        public UserId UserIdObj { get; private set; }
+        public UserId UserIdObject { get; private set; }
 
-        public Password NewPasswordObj { get; private set; }
+        public Password NewPasswordObject { get; private set; }
 
         public void Parse()
         {
             var modelState = new ModelStateDictionary();
 
-            this.UserIdObj = Membership.UserId.Parse(this.UserId);
-            this.NewPasswordObj = this.NewPassword.AsPassword("NewPassword", modelState);
+            this.UserIdObject = Membership.UserId.Parse(this.UserId);
+            this.NewPasswordObject = this.NewPassword.AsPassword("NewPassword", modelState);
 
             if (!modelState.IsValid)
             {

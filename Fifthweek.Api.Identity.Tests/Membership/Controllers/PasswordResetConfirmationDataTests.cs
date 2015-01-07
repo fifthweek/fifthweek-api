@@ -16,8 +16,8 @@ namespace Fifthweek.Api.Identity.Tests.Membership.Controllers
         {
             var data = NewData();
 
-            Assert.IsNull(data.NewPasswordObj);
-            Assert.IsNull(data.UserIdObj);
+            Assert.IsNull(data.NewPasswordObject);
+            Assert.IsNull(data.UserIdObject);
         }
 
         [TestMethod]
@@ -26,8 +26,8 @@ namespace Fifthweek.Api.Identity.Tests.Membership.Controllers
             var data = NewData();
             data.Parse();
 
-            Assert.AreEqual(data.NewPasswordObj, Password.Parse(data.NewPassword));
-            Assert.AreEqual(data.UserIdObj, UserId.Parse(data.UserId));
+            Assert.AreEqual(data.NewPasswordObject, Password.Parse(data.NewPassword));
+            Assert.AreEqual(data.UserIdObject, UserId.Parse(data.UserId));
         }
 
         [TestMethod]

@@ -79,9 +79,9 @@ namespace Fifthweek.Api.Identity.Membership.Controllers
             var command = new RegisterUserCommand(
                 UserId.Parse(this.guidCreator.CreateSqlSequential()),
                 registration.ExampleWork,
-                NormalizedEmail.Normalize(registration.EmailObj),
-                NormalizedUsername.Normalize(registration.UsernameObj),
-                registration.PasswordObj);
+                NormalizedEmail.Normalize(registration.EmailObject),
+                NormalizedUsername.Normalize(registration.UsernameObject),
+                registration.PasswordObject);
 
             await this.registerUser.HandleAsync(command);
             return this.Ok();
@@ -117,8 +117,8 @@ namespace Fifthweek.Api.Identity.Membership.Controllers
             passwordResetRequest.Parse();
 
             var command = new RequestPasswordResetCommand(
-                passwordResetRequest.EmailObj == null ? null : NormalizedEmail.Normalize(passwordResetRequest.EmailObj),
-                passwordResetRequest.UsernameObj == null ? null : NormalizedUsername.Normalize(passwordResetRequest.UsernameObj)
+                passwordResetRequest.EmailObject == null ? null : NormalizedEmail.Normalize(passwordResetRequest.EmailObject),
+                passwordResetRequest.UsernameObject == null ? null : NormalizedUsername.Normalize(passwordResetRequest.UsernameObject)
             );
 
             await this.requestPasswordReset.HandleAsync(command);
@@ -134,9 +134,9 @@ namespace Fifthweek.Api.Identity.Membership.Controllers
             passwordResetConfirmation.Parse();
 
             var command = new ConfirmPasswordResetCommand(
-                passwordResetConfirmation.UserIdObj,
+                passwordResetConfirmation.UserIdObject,
                 passwordResetConfirmation.Token,
-                passwordResetConfirmation.NewPasswordObj
+                passwordResetConfirmation.NewPasswordObject
             );
 
             await this.confirmPasswordReset.HandleAsync(command);

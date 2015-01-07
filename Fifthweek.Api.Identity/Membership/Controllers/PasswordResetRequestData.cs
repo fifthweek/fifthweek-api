@@ -10,16 +10,16 @@ namespace Fifthweek.Api.Identity.Membership.Controllers
 
         public string Username { get; set; }
 
-        public Email EmailObj { get; private set; }
+        public Email EmailObject { get; private set; }
 
-        public Username UsernameObj { get; private set; }
+        public Username UsernameObject { get; private set; }
 
         public void Parse()
         {
             var modelState = new ModelStateDictionary();
 
-            this.UsernameObj = this.Username.AsUsername("Username", modelState, isRequired: false);
-            this.EmailObj = this.Email.AsEmail("Email", modelState, isRequired: false);
+            this.UsernameObject = this.Username.AsUsername("Username", modelState, isRequired: false);
+            this.EmailObject = this.Email.AsEmail("Email", modelState, isRequired: false);
 
             if (!modelState.IsValid)
             {

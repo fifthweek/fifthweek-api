@@ -1210,8 +1210,8 @@ namespace Fifthweek.Api.Identity.Membership.Controllers
                 hashCode = (hashCode * 397) ^ (this.UserId != null ? this.UserId.GetHashCode() : 0);
                 hashCode = (hashCode * 397) ^ (this.Token != null ? this.Token.GetHashCode() : 0);
                 hashCode = (hashCode * 397) ^ (this.NewPassword != null ? this.NewPassword.GetHashCode() : 0);
-                hashCode = (hashCode * 397) ^ (this.UserIdObj != null ? this.UserIdObj.GetHashCode() : 0);
-                hashCode = (hashCode * 397) ^ (this.NewPasswordObj != null ? this.NewPasswordObj.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.UserIdObject != null ? this.UserIdObject.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.NewPasswordObject != null ? this.NewPasswordObject.GetHashCode() : 0);
                 return hashCode;
             }
         }
@@ -1230,11 +1230,11 @@ namespace Fifthweek.Api.Identity.Membership.Controllers
             {
                 return false;
             }
-            if (!object.Equals(this.UserIdObj, other.UserIdObj))
+            if (!object.Equals(this.UserIdObject, other.UserIdObject))
             {
                 return false;
             }
-            if (!object.Equals(this.NewPasswordObj, other.NewPasswordObj))
+            if (!object.Equals(this.NewPasswordObject, other.NewPasswordObject))
             {
                 return false;
             }
@@ -1276,8 +1276,8 @@ namespace Fifthweek.Api.Identity.Membership.Controllers
                 int hashCode = 0;
                 hashCode = (hashCode * 397) ^ (this.Email != null ? this.Email.GetHashCode() : 0);
                 hashCode = (hashCode * 397) ^ (this.Username != null ? this.Username.GetHashCode() : 0);
-                hashCode = (hashCode * 397) ^ (this.EmailObj != null ? this.EmailObj.GetHashCode() : 0);
-                hashCode = (hashCode * 397) ^ (this.UsernameObj != null ? this.UsernameObj.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.EmailObject != null ? this.EmailObject.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.UsernameObject != null ? this.UsernameObject.GetHashCode() : 0);
                 return hashCode;
             }
         }
@@ -1292,11 +1292,11 @@ namespace Fifthweek.Api.Identity.Membership.Controllers
             {
                 return false;
             }
-            if (!object.Equals(this.EmailObj, other.EmailObj))
+            if (!object.Equals(this.EmailObject, other.EmailObject))
             {
                 return false;
             }
-            if (!object.Equals(this.UsernameObj, other.UsernameObj))
+            if (!object.Equals(this.UsernameObject, other.UsernameObject))
             {
                 return false;
             }
@@ -1340,9 +1340,9 @@ namespace Fifthweek.Api.Identity.Membership.Controllers
                 hashCode = (hashCode * 397) ^ (this.Email != null ? this.Email.GetHashCode() : 0);
                 hashCode = (hashCode * 397) ^ (this.Username != null ? this.Username.GetHashCode() : 0);
                 hashCode = (hashCode * 397) ^ (this.Password != null ? this.Password.GetHashCode() : 0);
-                hashCode = (hashCode * 397) ^ (this.EmailObj != null ? this.EmailObj.GetHashCode() : 0);
-                hashCode = (hashCode * 397) ^ (this.UsernameObj != null ? this.UsernameObj.GetHashCode() : 0);
-                hashCode = (hashCode * 397) ^ (this.PasswordObj != null ? this.PasswordObj.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.EmailObject != null ? this.EmailObject.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.UsernameObject != null ? this.UsernameObject.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.PasswordObject != null ? this.PasswordObject.GetHashCode() : 0);
                 return hashCode;
             }
         }
@@ -1365,15 +1365,15 @@ namespace Fifthweek.Api.Identity.Membership.Controllers
             {
                 return false;
             }
-            if (!object.Equals(this.EmailObj, other.EmailObj))
+            if (!object.Equals(this.EmailObject, other.EmailObject))
             {
                 return false;
             }
-            if (!object.Equals(this.UsernameObj, other.UsernameObj))
+            if (!object.Equals(this.UsernameObject, other.UsernameObject))
             {
                 return false;
             }
-            if (!object.Equals(this.PasswordObj, other.PasswordObj))
+            if (!object.Equals(this.PasswordObject, other.PasswordObject))
             {
                 return false;
             }

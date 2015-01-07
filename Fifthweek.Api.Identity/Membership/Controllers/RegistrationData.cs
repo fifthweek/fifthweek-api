@@ -14,19 +14,19 @@ namespace Fifthweek.Api.Identity.Membership.Controllers
 
         public string Password { get; set; }
 
-        public Email EmailObj { get; private set; }
+        public Email EmailObject { get; private set; }
 
-        public Username UsernameObj { get; private set; }
+        public Username UsernameObject { get; private set; }
 
-        public Password PasswordObj { get; private set; }
+        public Password PasswordObject { get; private set; }
 
         public void Parse()
         {
             var modelState = new ModelStateDictionary();
 
-            this.UsernameObj = this.Username.AsUsername("Username", modelState);
-            this.EmailObj = this.Email.AsEmail("Email", modelState);
-            this.PasswordObj = this.Password.AsPassword("Password", modelState);
+            this.UsernameObject = this.Username.AsUsername("Username", modelState);
+            this.EmailObject = this.Email.AsEmail("Email", modelState);
+            this.PasswordObject = this.Password.AsPassword("Password", modelState);
 
             if (!modelState.IsValid)
             {
