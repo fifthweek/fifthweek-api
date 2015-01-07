@@ -96,10 +96,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AutoEqualityMembers.cs">
+    <Compile Include="ClassAugmentation.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
-      <DependentUpon>AutoEqualityMembers.tt</DependentUpon>
+      <DependentUpon>ClassAugmentation.tt</DependentUpon>
     </Compile>
     <Compile Include="AutoEqualityMembersAttribute.cs" />
     <Compile Include="Membership\Commands\ConfirmPasswordResetCommand.cs" />
@@ -170,12 +170,11 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
-    <None Include="AutoEqualityMembers.tt">
+    <None Include="ClassAugmentation.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
-      <LastGenOutput>AutoEqualityMembers.cs</LastGenOutput>
+      <LastGenOutput>ClassAugmentation.cs</LastGenOutput>
     </None>
     <None Include="packages.config" />
-    <None Include="VisualStudioHelper.ttinclude" />
   </ItemGroup>
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />

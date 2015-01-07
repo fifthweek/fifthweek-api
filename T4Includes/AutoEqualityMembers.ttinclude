@@ -1,6 +1,4 @@
-﻿<#@ template debug="true" hostspecific="true" language="C#" #>
-<#@ output extension=".cs" #>
-<#@ include file="$(SolutionDir)$(ProjectName)\VisualStudioHelper.ttinclude" #>
+﻿<#@ include file="VisualStudioHelper.ttinclude" once="true" #>
 <#@ assembly name="System.Core" #>
 <#@ import namespace="System.Linq" #>
 <#@ import namespace="System.Text" #>

@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2013
-VisualStudioVersion = 12.0.31101.0
+VisualStudioVersion = 12.0.30723.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fifthweek.Api", "Fifthweek.Api\Fifthweek.Api.csproj", "{F90DC407-DC1E-4EF6-BBEC-B5598810660A}"
 EndProject
@@ -46,6 +46,13 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fifthweek.Api.FileManagement", "Fifthweek.Api.FileManagement\Fifthweek.Api.FileManagement.csproj", "{3242E7FC-35CE-4E69-B07B-B8DCB3C69348}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fifthweek.Api.FileManagement.Tests", "Fifthweek.Api.FileManagement.Tests\Fifthweek.Api.FileManagement.Tests.csproj", "{6449285D-CBBE-4186-B840-D757A63389DA}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "T4Includes", "T4Includes", "{FA1F4272-E9E3-4B73-B7DB-1048C5CA917D}"
+	ProjectSection(SolutionItems) = preProject
+		T4Includes\AutoEqualityMembers.ttinclude = T4Includes\AutoEqualityMembers.ttinclude
+		T4Includes\ClassAugmentation.ttinclude = T4Includes\ClassAugmentation.ttinclude
+		T4Includes\VisualStudioHelper.ttinclude = T4Includes\VisualStudioHelper.ttinclude
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -132,5 +139,8 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{FA1F4272-E9E3-4B73-B7DB-1048C5CA917D} = {707B8A39-8E28-4ECD-8CC3-BA34225675C8}
 	EndGlobalSection
 EndGlobal
