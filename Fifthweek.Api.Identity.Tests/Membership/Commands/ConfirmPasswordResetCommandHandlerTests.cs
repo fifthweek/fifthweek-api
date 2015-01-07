@@ -35,14 +35,19 @@ namespace Fifthweek.Api.Identity.Tests.Membership.Commands
         }
 
         [TestMethod]
-        [ExpectedException(typeof(RecoverableException))]
         public async Task WhenTokenIsInvalid_ItShouldRaiseRecoverableException()
         {
+            
             this.SetupUserManager(isTokenValid: false);
 
-            await this.target.HandleAsync(this.command);
-
-            Assert.Fail("Expected a recoverable exception.");
+            try
+            {
+                await this.target.HandleAsync(this.command);
+                Assert.Fail("Expected a recoverable exception.");
+            }
+            catch (RecoverableException)
+            {
+            }
         }
 
         private void SetupUserManager(bool isTokenValid)
