@@ -1,11 +1,9 @@
-﻿using Fifthweek.Api.Core;
+﻿using System;
+using Fifthweek.Api.Core;
 
 namespace Fifthweek.Api.Identity.Membership.Commands
 {
-    using System;
-
-    [AutoConstructor]
-    [AutoEqualityMembers]
+    [AutoEqualityMembers, AutoConstructor]
     public partial class UpdateLastAccessTokenDateCommand
     {
         public enum AccessTokenCreationType

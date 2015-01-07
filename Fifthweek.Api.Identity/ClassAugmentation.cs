@@ -5,6 +5,68 @@
 
 using System;
 
+namespace Fifthweek.Api.Identity.Membership.Queries
+{
+	public partial class IsUsernameAvailableQuery
+	{
+		public IsUsernameAvailableQuery(
+			Fifthweek.Api.Identity.Membership.NormalizedUsername username)
+        {
+			if (username == null)
+			{
+				throw new ArgumentNullException("username");
+			}
+
+			this.Username = username;
+        }
+	}
+}
+namespace Fifthweek.Api.Identity.Membership.Queries
+{
+	public partial class IsPasswordResetTokenValidQuery
+	{
+		public IsPasswordResetTokenValidQuery(
+			Fifthweek.Api.Identity.Membership.UserId userId, 
+			System.String token)
+        {
+			if (userId == null)
+			{
+				throw new ArgumentNullException("userId");
+			}
+
+			if (token == null)
+			{
+				throw new ArgumentNullException("token");
+			}
+
+			this.UserId = userId;
+			this.Token = token;
+        }
+	}
+}
+namespace Fifthweek.Api.Identity.Membership.Queries
+{
+	public partial class GetUserQuery
+	{
+		public GetUserQuery(
+			Fifthweek.Api.Identity.Membership.NormalizedUsername username, 
+			Fifthweek.Api.Identity.Membership.Password password)
+        {
+			if (username == null)
+			{
+				throw new ArgumentNullException("username");
+			}
+
+			if (password == null)
+			{
+				throw new ArgumentNullException("password");
+			}
+
+			this.Username = username;
+			this.Password = password;
+        }
+	}
+}
 namespace Fifthweek.Api.Identity.Membership.Commands
 {
 	public partial class RegisterUserCommand
@@ -178,6 +240,103 @@ namespace Fifthweek.Api.Identity.OAuth.Commands
 			}
 
 			this.RefreshToken = refreshToken;
+        }
+	}
+}
+namespace Fifthweek.Api.Identity.OAuth
+{
+	public partial class Client
+	{
+		public Client(
+			Fifthweek.Api.Identity.OAuth.ClientId clientId, 
+			System.String secret, 
+			System.String name, 
+			Fifthweek.Api.Identity.OAuth.ApplicationType applicationType, 
+			System.Boolean active, 
+			System.Int32 refreshTokenLifeTimeMinutes, 
+			System.String allowedOriginRegex, 
+			System.String defaultAllowedOrigin)
+        {
+			if (clientId == null)
+			{
+				throw new ArgumentNullException("clientId");
+			}
+
+			if (secret == null)
+			{
+				throw new ArgumentNullException("secret");
+			}
+
+			if (name == null)
+			{
+				throw new ArgumentNullException("name");
+			}
+
+			if (applicationType == null)
+			{
+				throw new ArgumentNullException("applicationType");
+			}
+
+			if (active == null)
+			{
+				throw new ArgumentNullException("active");
+			}
+
+			if (refreshTokenLifeTimeMinutes == null)
+			{
+				throw new ArgumentNullException("refreshTokenLifeTimeMinutes");
+			}
+
+			if (allowedOriginRegex == null)
+			{
+				throw new ArgumentNullException("allowedOriginRegex");
+			}
+
+			if (defaultAllowedOrigin == null)
+			{
+				throw new ArgumentNullException("defaultAllowedOrigin");
+			}
+
+			this.ClientId = clientId;
+			this.Secret = secret;
+			this.Name = name;
+			this.ApplicationType = applicationType;
+			this.Active = active;
+			this.RefreshTokenLifeTimeMinutes = refreshTokenLifeTimeMinutes;
+			this.AllowedOriginRegex = allowedOriginRegex;
+			this.DefaultAllowedOrigin = defaultAllowedOrigin;
+        }
+	}
+}
+namespace Fifthweek.Api.Identity.OAuth
+{
+	public partial class HashedRefreshTokenId
+	{
+		public HashedRefreshTokenId(
+			System.String value)
+        {
+			if (value == null)
+			{
+				throw new ArgumentNullException("value");
+			}
+
+			this.Value = value;
+        }
+	}
+}
+namespace Fifthweek.Api.Identity.OAuth
+{
+	public partial class RefreshTokenId
+	{
+		public RefreshTokenId(
+			System.String value)
+        {
+			if (value == null)
+			{
+				throw new ArgumentNullException("value");
+			}
+
+			this.Value = value;
         }
 	}
 }
@@ -1102,6 +1261,173 @@ namespace Fifthweek.Api.Identity.OAuth.Commands
 		protected bool Equals(AddRefreshTokenCommand other)
         {
 			if (!object.Equals(this.RefreshToken, other.RefreshToken))
+			{
+				return false;
+			}
+			return true;
+        }
+	}
+}
+namespace Fifthweek.Api.Identity.OAuth
+{
+	public partial class Client
+	{
+		public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj))
+            {
+                return false;
+            }
+
+            if (ReferenceEquals(this, obj))
+            {
+                return true;
+            }
+
+            if (obj.GetType() != this.GetType())
+            {
+                return false;
+            }
+
+            return this.Equals((Client)obj);
+        }
+
+		public override int GetHashCode()
+        {
+            unchecked
+            {
+                int hashCode = 0;
+				hashCode = (hashCode * 397) ^ (this.ClientId != null ? this.ClientId.GetHashCode() : 0);
+				hashCode = (hashCode * 397) ^ (this.Secret != null ? this.Secret.GetHashCode() : 0);
+				hashCode = (hashCode * 397) ^ (this.Name != null ? this.Name.GetHashCode() : 0);
+				hashCode = (hashCode * 397) ^ (this.ApplicationType != null ? this.ApplicationType.GetHashCode() : 0);
+				hashCode = (hashCode * 397) ^ (this.Active != null ? this.Active.GetHashCode() : 0);
+				hashCode = (hashCode * 397) ^ (this.RefreshTokenLifeTimeMinutes != null ? this.RefreshTokenLifeTimeMinutes.GetHashCode() : 0);
+				hashCode = (hashCode * 397) ^ (this.AllowedOriginRegex != null ? this.AllowedOriginRegex.GetHashCode() : 0);
+				hashCode = (hashCode * 397) ^ (this.DefaultAllowedOrigin != null ? this.DefaultAllowedOrigin.GetHashCode() : 0);
+                return hashCode;
+            }
+        }
+
+		protected bool Equals(Client other)
+        {
+			if (!object.Equals(this.ClientId, other.ClientId))
+			{
+				return false;
+			}
+			if (!object.Equals(this.Secret, other.Secret))
+			{
+				return false;
+			}
+			if (!object.Equals(this.Name, other.Name))
+			{
+				return false;
+			}
+			if (!object.Equals(this.ApplicationType, other.ApplicationType))
+			{
+				return false;
+			}
+			if (!object.Equals(this.Active, other.Active))
+			{
+				return false;
+			}
+			if (!object.Equals(this.RefreshTokenLifeTimeMinutes, other.RefreshTokenLifeTimeMinutes))
+			{
+				return false;
+			}
+			if (!object.Equals(this.AllowedOriginRegex, other.AllowedOriginRegex))
+			{
+				return false;
+			}
+			if (!object.Equals(this.DefaultAllowedOrigin, other.DefaultAllowedOrigin))
+			{
+				return false;
+			}
+			return true;
+        }
+	}
+}
+namespace Fifthweek.Api.Identity.OAuth
+{
+	public partial class HashedRefreshTokenId
+	{
+		public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj))
+            {
+                return false;
+            }
+
+            if (ReferenceEquals(this, obj))
+            {
+                return true;
+            }
+
+            if (obj.GetType() != this.GetType())
+            {
+                return false;
+            }
+
+            return this.Equals((HashedRefreshTokenId)obj);
+        }
+
+		public override int GetHashCode()
+        {
+            unchecked
+            {
+                int hashCode = 0;
+				hashCode = (hashCode * 397) ^ (this.Value != null ? this.Value.GetHashCode() : 0);
+                return hashCode;
+            }
+        }
+
+		protected bool Equals(HashedRefreshTokenId other)
+        {
+			if (!object.Equals(this.Value, other.Value))
+			{
+				return false;
+			}
+			return true;
+        }
+	}
+}
+namespace Fifthweek.Api.Identity.OAuth
+{
+	public partial class RefreshTokenId
+	{
+		public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj))
+            {
+                return false;
+            }
+
+            if (ReferenceEquals(this, obj))
+            {
+                return true;
+            }
+
+            if (obj.GetType() != this.GetType())
+            {
+                return false;
+            }
+
+            return this.Equals((RefreshTokenId)obj);
+        }
+
+		public override int GetHashCode()
+        {
+            unchecked
+            {
+                int hashCode = 0;
+				hashCode = (hashCode * 397) ^ (this.Value != null ? this.Value.GetHashCode() : 0);
+                return hashCode;
+            }
+        }
+
+		protected bool Equals(RefreshTokenId other)
+        {
+			if (!object.Equals(this.Value, other.Value))
 			{
 				return false;
 			}

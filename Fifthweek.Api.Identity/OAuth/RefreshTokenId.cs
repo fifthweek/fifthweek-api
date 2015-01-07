@@ -1,14 +1,12 @@
-﻿namespace Fifthweek.Api.Identity.OAuth
+﻿using Fifthweek.Api.Core;
+
+namespace Fifthweek.Api.Identity.OAuth
 {
     using System;
 
-    public class RefreshTokenId
+    [AutoEqualityMembers, AutoConstructor]
+    public partial class RefreshTokenId
     {
-        public RefreshTokenId(string value)
-        {
-            this.Value = value;
-        }
-
         public string Value { get; private set; }
 
         public static RefreshTokenId Create()

@@ -3,8 +3,7 @@
     using Fifthweek.Api.Core;
     using Fifthweek.Api.Persistence;
 
-    [AutoConstructor]
-    [AutoEqualityMembers]
+    [AutoEqualityMembers, AutoConstructor]
     public partial class GetRefreshTokenQuery : IQuery<RefreshToken>
     {
         public HashedRefreshTokenId HashedRefreshTokenId { get; private set; }

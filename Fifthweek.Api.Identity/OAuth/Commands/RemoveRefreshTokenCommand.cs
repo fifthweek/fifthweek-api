@@ -2,8 +2,7 @@
 
 namespace Fifthweek.Api.Identity.OAuth.Commands
 {
-    [AutoConstructor]
-    [AutoEqualityMembers]
+    [AutoEqualityMembers, AutoConstructor]
     public partial class RemoveRefreshTokenCommand
     {
         public HashedRefreshTokenId HashedRefreshTokenId { get; private set; }

@@ -2,8 +2,7 @@
 
 namespace Fifthweek.Api.Identity.OAuth
 {
-    [AutoConstructor]
-    [AutoEqualityMembers]
+    [AutoEqualityMembers, AutoConstructor]
     public partial class ClientId
     {
         public string Value { get; private set; }
