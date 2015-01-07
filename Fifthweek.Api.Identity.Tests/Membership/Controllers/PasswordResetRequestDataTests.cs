@@ -11,26 +11,6 @@ namespace Fifthweek.Api.Identity.Tests.Membership.Controllers
     public class PasswordResetRequestDataTests : DataTransferObjectTests<PasswordResetRequestData>
     {
         [TestMethod]
-        public void ItShouldRecogniseEquality()
-        {
-            this.TestEquality();
-        }
-
-        [TestMethod]
-        public void ItShouldRecogniseDifferentEmail()
-        {
-            this.AssertDifference(_ => _.Email = "Different");
-            this.AssertDifference(_ => _.Email = null);
-        }
-
-        [TestMethod]
-        public void ItShouldRecogniseDifferentUsername()
-        {
-            this.AssertDifference(_ => _.Username = "Different");
-            this.AssertDifference(_ => _.Username = null);
-        }
-
-        [TestMethod]
         public void ItShouldHaveNullCustomPrimitivesBeforeParseIsCalled()
         {
             var data = NewData();

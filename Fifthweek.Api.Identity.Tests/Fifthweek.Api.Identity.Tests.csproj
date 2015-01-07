@@ -88,18 +88,12 @@
     <Compile Include="Membership\Commands\RegisterUserCommandHandlerTests.cs" />
     <Compile Include="Membership\Commands\ConfirmPasswordResetCommandHandlerTests.cs" />
     <Compile Include="Membership\Commands\RequestPasswordResetCommandHandlerTests.cs" />
-    <Compile Include="Membership\Commands\ConfirmPasswordResetCommandTests.cs" />
-    <Compile Include="Membership\Commands\RequestPasswordResetCommandTests.cs" />
-    <Compile Include="Membership\Commands\RegisterUserCommandTests.cs" />
     <Compile Include="Membership\Commands\UpdateLastAccessTokenDateCommandHandlerTests.cs" />
     <Compile Include="Membership\Controllers\MembershipControllerTests.cs" />
     <Compile Include="Membership\Controllers\PasswordResetConfirmationDataTests.cs" />
     <Compile Include="Membership\Controllers\PasswordResetRequestDataTests.cs" />
     <Compile Include="Membership\Controllers\RegistrationDataTests.cs" />
-    <Compile Include="Membership\Queries\GetUserQueryTests.cs" />
-    <Compile Include="Membership\Queries\IsPasswordResetTokenValidQueryTests.cs" />
     <Compile Include="Membership\Queries\IsPasswordResetTokenValidQueryHandlerTests.cs" />
-    <Compile Include="Membership\UserIdTests.cs" />
     <Compile Include="Membership\UsernameTests.cs" />
     <Compile Include="Membership\NormalizedUsernameTests.cs" />
     <Compile Include="Membership\PasswordTests.cs" />
@@ -108,7 +102,6 @@
     <Compile Include="Membership\NormalizedEmailTests.cs" />
     <Compile Include="Membership\MockIdentityResult.cs" />
     <Compile Include="Membership\Queries\IsUsernameAvailableQueryHandlerTests.cs" />
-    <Compile Include="Membership\Queries\IsUsernameAvailableQueryTests.cs" />
     <Compile Include="Membership\Queries\GetUserQueryHandlerTests.cs" />
     <Compile Include="Membership\EmailTests.cs" />
     <Compile Include="OAuth\Commands\AddRefreshTokenCommandHandlerTests.cs" />

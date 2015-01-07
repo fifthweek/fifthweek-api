@@ -135,4 +135,17 @@
 
         private RegistrationData registrationData;
     }
+
+    public static class RegisterUserCommandTests
+    {
+        public static RegisterUserCommand NewCommand(Guid userId, RegistrationData registrationData)
+        {
+            return new RegisterUserCommand(
+                UserId.Parse(userId),
+                registrationData.ExampleWork,
+                NormalizedEmail.Parse(registrationData.Email),
+                NormalizedUsername.Parse(registrationData.Username),
+                Password.Parse(registrationData.Password));
+        }
+    }
 }

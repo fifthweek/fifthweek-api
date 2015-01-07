@@ -12,32 +12,6 @@ namespace Fifthweek.Api.Identity.Tests.Membership.Controllers
     public class PasswordResetConfirmationDataTests : DataTransferObjectTests<PasswordResetConfirmationData>
     {
         [TestMethod]
-        public void ItShouldRecogniseEquality()
-        {
-            this.TestEquality();
-        }
-
-        [TestMethod]
-        public void ItShouldRecogniseDifferentUserId()
-        {
-            this.AssertDifference(_ => _.UserId = Guid.NewGuid());
-        }
-
-        [TestMethod]
-        public void ItShouldRecogniseDifferentToken()
-        {
-            this.AssertDifference(_ => _.Token = "Different");
-            this.AssertDifference(_ => _.Token = null);
-        }
-
-        [TestMethod]
-        public void ItShouldRecogniseDifferentPassword()
-        {
-            this.AssertDifference(_ => _.NewPassword = "Different");
-            this.AssertDifference(_ => _.NewPassword = null);
-        }
-
-        [TestMethod]
         public void ItShouldHaveNullCustomPrimitivesBeforeParseIsCalled()
         {
             var data = NewData();

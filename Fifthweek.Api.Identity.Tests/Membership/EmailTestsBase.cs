@@ -9,12 +9,6 @@ namespace Fifthweek.Api.Identity.Tests.Membership
     public abstract class EmailTestsBase<T> : ValidatedPrimitiveEqualityTests<T, string> where T : Email
     {
         [TestMethod]
-        public void ItShouldRecogniseEquality()
-        {
-            this.TestEquality();
-        }
-
-        [TestMethod]
         public void ItShouldAllowBasicEmailAddresses()
         {
             this.GoodValue("joe@bloggs.com");

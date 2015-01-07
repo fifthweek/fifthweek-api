@@ -9,12 +9,6 @@ namespace Fifthweek.Api.Identity.Tests.Membership
     public abstract class UsernameTestsBase<T> : ValidatedPrimitiveEqualityTests<T, string> where T : Username
     {
         [TestMethod]
-        public void ItShouldRecogniseEquality()
-        {
-            this.TestEquality();
-        }
-
-        [TestMethod]
         public void ItShouldAllowBasicUsernames()
         {
             this.GoodValue("joebloggs");

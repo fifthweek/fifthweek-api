@@ -12,40 +12,6 @@ namespace Fifthweek.Api.Identity.Tests.Membership.Controllers
     public class RegistrationDataTests : DataTransferObjectTests<RegistrationData>
     {
         [TestMethod]
-        public void ItShouldRecogniseEquality()
-        {
-            this.TestEquality();
-        }
-
-        [TestMethod]
-        public void ItShouldRecogniseDifferentExampleWork()
-        {
-            this.AssertDifference(_ => _.ExampleWork = "Different");
-            this.AssertDifference(_ => _.ExampleWork = null);
-        }
-
-        [TestMethod]
-        public void ItShouldRecogniseDifferentEmail()
-        {
-            this.AssertDifference(_ => _.Email = "Different");
-            this.AssertDifference(_ => _.Email = null);
-        }
-
-        [TestMethod]
-        public void ItShouldRecogniseDifferentUsername()
-        {
-            this.AssertDifference(_ => _.Username = "Different");
-            this.AssertDifference(_ => _.Username = null);
-        }
-
-        [TestMethod]
-        public void ItShouldRecogniseDifferentPassword()
-        {
-            this.AssertDifference(_ => _.Password = "Different");
-            this.AssertDifference(_ => _.Password = null);
-        }
-
-        [TestMethod]
         public void ItShouldHaveNullCustomPrimitivesBeforeParseIsCalled()
         {
             var data = NewData();

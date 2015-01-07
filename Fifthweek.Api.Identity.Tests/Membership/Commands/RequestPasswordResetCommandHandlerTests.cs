@@ -166,4 +166,14 @@ namespace Fifthweek.Api.Identity.Tests.Membership.Commands
         private Mock<IUserManager> userManager;
         private RequestPasswordResetCommandHandler target;
     }
+
+    public static class RequestPasswordResetCommandTests
+    {
+        public static RequestPasswordResetCommand NewCommand(PasswordResetRequestData data)
+        {
+            return new RequestPasswordResetCommand(
+                data.Email == null ? null : NormalizedEmail.Parse(data.Email),
+                data.Username == null ? null : NormalizedUsername.Parse(data.Username));
+        }
+    }
 }

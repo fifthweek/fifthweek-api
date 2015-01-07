@@ -10,12 +10,6 @@ namespace Fifthweek.Api.Identity.Tests.Membership
     public class PasswordTests : ValidatedPrimitiveEqualityTests<Password, string>
     {
         [TestMethod]
-        public void ItShouldRecogniseEquality()
-        {
-            this.TestEquality();
-        }
-
-        [TestMethod]
         public void ItShouldAllowBasicPasswords()
         {
             this.GoodValue("Secr3T!");

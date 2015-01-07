@@ -83,4 +83,15 @@ namespace Fifthweek.Api.Identity.Tests.Membership.Commands
         private Mock<IUserTokenProvider<FifthweekUser, Guid>> userTokenProvider;
         private ConfirmPasswordResetCommandHandler target;
     }
+
+    public static class ConfirmPasswordResetCommandTests
+    {
+        public static ConfirmPasswordResetCommand NewCommand(PasswordResetConfirmationData data)
+        {
+            return new ConfirmPasswordResetCommand(
+                UserId.Parse(data.UserId), 
+                data.Token, 
+                Password.Parse(data.NewPassword));
+        }
+    }
 }
