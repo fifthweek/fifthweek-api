@@ -4,17 +4,17 @@
     using System.ComponentModel.DataAnnotations;
     using System.ComponentModel.DataAnnotations.Schema;
 
-    public enum AssetUploadState
-    {
-        WaitingForClient,
-        UploadCompleted,
-        Processing,
-        ProcessingCompleted
-    }
+    using Fifthweek.Api.Core;
 
-    public class File
+    [AutoConstructor]
+    public partial class File
     {
+        public File()
+        {
+        }
+
         [Key]
+        [Required]
         public Guid Id { get; set; }
 
         [ForeignKey("UserId")]
@@ -22,7 +22,7 @@
         public Guid UserId { get; set; }
 
         [Required]
-        public AssetUploadState State { get; set; }
+        public FileState State { get; set; }
 
         [Required]
         public string BlobReference { get; set; }
@@ -30,13 +30,16 @@
         [Required]
         public DateTime CreationDate { get; set; }
 
-        public DateTime CompletionDate { get; set; }
+        [Optional]
+        public DateTime? CompletionDate { get; set; }
 
-        public DateTime ProcessedDate { get; set; }
+        [Optional]
+        public DateTime? ProcessedDate { get; set; }
 
         [Required]
         public string FileName { get; set; }
 
+        [Optional]
         public string MimeType { get; set; }
     }
 }

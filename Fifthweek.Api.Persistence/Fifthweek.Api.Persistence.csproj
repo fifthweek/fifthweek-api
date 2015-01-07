@@ -78,6 +78,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ClassAugmentation.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>ClassAugmentation.tt</DependentUpon>
+    </Compile>
+    <Compile Include="FileState.cs" />
     <Compile Include="Identity\FifthweekDbContext.cs" />
     <Compile Include="Identity\FifthweekRole.cs" />
     <Compile Include="Identity\FifthweekRoleStore.cs" />
@@ -96,7 +102,20 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+    <None Include="ClassAugmentation.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>ClassAugmentation.cs</LastGenOutput>
+    </None>
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Fifthweek.Api.Core\Fifthweek.Api.Core.csproj">
+      <Project>{bd52863e-063d-45a5-9ca8-7541804d1313}</Project>
+      <Name>Fifthweek.Api.Core</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
