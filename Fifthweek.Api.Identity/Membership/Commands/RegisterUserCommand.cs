@@ -1,40 +1,10 @@
-﻿using System;
-using Fifthweek.Api.Core;
+﻿using Fifthweek.Api.Core;
 
 namespace Fifthweek.Api.Identity.Membership.Commands
 {
-    [AutoEqualityMembers]
+    [AutoEqualityMembers, AutoConstructor]
     public partial class RegisterUserCommand
     {
-        public RegisterUserCommand(UserId userId, string exampleWork, NormalizedEmail email, NormalizedUsername username, Password password)
-        {
-            if (userId == null)
-            {
-                throw new ArgumentNullException("userId");
-            }
-            
-            if (email == null)
-            {
-                throw new ArgumentNullException("email");
-            }
-
-            if (username == null)
-            {
-                throw new ArgumentNullException("username");
-            }
-
-            if (password == null)
-            {
-                throw new ArgumentNullException("password");
-            }
-
-            this.UserId = userId;
-            this.ExampleWork = exampleWork;
-            this.Email = email;
-            this.Username = username;
-            this.Password = password;
-        }
-
         public UserId UserId { get; private set; }
 
         [Optional]

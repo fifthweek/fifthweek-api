@@ -2,8 +2,7 @@
 
 namespace Fifthweek.Api.Identity.Membership.Commands
 {
-    [AutoConstructor]
-    [AutoEqualityMembers]
+    [AutoEqualityMembers, AutoConstructor]
     public partial class RequestPasswordResetCommand
     {
         [Optional]

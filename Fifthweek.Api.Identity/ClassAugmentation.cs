@@ -7,6 +7,45 @@ using System;
 
 namespace Fifthweek.Api.Identity.Membership.Commands
 {
+	public partial class RegisterUserCommand
+	{
+		public RegisterUserCommand(
+			Fifthweek.Api.Identity.Membership.UserId userId, 
+			System.String exampleWork, 
+			Fifthweek.Api.Identity.Membership.NormalizedEmail email, 
+			Fifthweek.Api.Identity.Membership.NormalizedUsername username, 
+			Fifthweek.Api.Identity.Membership.Password password)
+        {
+			if (userId == null)
+			{
+				throw new ArgumentNullException("userId");
+			}
+
+			if (email == null)
+			{
+				throw new ArgumentNullException("email");
+			}
+
+			if (username == null)
+			{
+				throw new ArgumentNullException("username");
+			}
+
+			if (password == null)
+			{
+				throw new ArgumentNullException("password");
+			}
+
+			this.UserId = userId;
+			this.ExampleWork = exampleWork;
+			this.Email = email;
+			this.Username = username;
+			this.Password = password;
+        }
+	}
+}
+namespace Fifthweek.Api.Identity.Membership.Commands
+{
 	public partial class RequestPasswordResetCommand
 	{
 		public RequestPasswordResetCommand(
@@ -45,6 +84,36 @@ namespace Fifthweek.Api.Identity.Membership.Commands
 			this.Username = username;
 			this.Timestamp = timestamp;
 			this.CreationType = creationType;
+        }
+	}
+}
+namespace Fifthweek.Api.Identity.Membership.Commands
+{
+	public partial class ConfirmPasswordResetCommand
+	{
+		public ConfirmPasswordResetCommand(
+			Fifthweek.Api.Identity.Membership.UserId userId, 
+			System.String token, 
+			Fifthweek.Api.Identity.Membership.Password newPassword)
+        {
+			if (userId == null)
+			{
+				throw new ArgumentNullException("userId");
+			}
+
+			if (token == null)
+			{
+				throw new ArgumentNullException("token");
+			}
+
+			if (newPassword == null)
+			{
+				throw new ArgumentNullException("newPassword");
+			}
+
+			this.UserId = userId;
+			this.Token = token;
+			this.NewPassword = newPassword;
         }
 	}
 }
