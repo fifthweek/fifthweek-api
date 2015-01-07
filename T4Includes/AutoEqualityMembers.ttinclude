@@ -6,10 +6,12 @@
 <#@ import namespace="System.Text" #>
 <#@ import namespace="System.Collections.Generic" #>
 <#
+	var AutoEqualityMembersAttributeName = "AutoEqualityMembers";
+
     foreach(UnifiedClass unifiedClass in allClasses)
     {
         var allAttributes = unifiedClass.GetAllAttributes();
-        if (allAttributes.All(_ => !_.Name.StartsWith("AutoEqualityMembers")))
+        if (allAttributes.All(_ => !_.Name.StartsWith(AutoEqualityMembersAttributeName)))
         {
             continue;
         }

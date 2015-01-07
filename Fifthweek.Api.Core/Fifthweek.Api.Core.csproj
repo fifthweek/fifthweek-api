@@ -81,7 +81,8 @@
   <ItemGroup>
     <Compile Include="ApiException.cs" />
     <Compile Include="AutoBuilderAttribute.cs" />
-    <Compile Include="StronglyTypedAttribute.cs" />
+    <Compile Include="ConstructedAttribute.cs" />
+    <Compile Include="ParsedAttribute.cs" />
     <Compile Include="OptionalAttribute.cs" />
     <Compile Include="AutoConstructorAttribute.cs" />
     <Compile Include="AutoEqualityMembersAttribute.cs" />

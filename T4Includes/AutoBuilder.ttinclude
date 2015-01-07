@@ -5,12 +5,13 @@
 <#@ import namespace="System.Linq" #>
 <#@ import namespace="System.Text" #>
 <#@ import namespace="System.Collections.Generic" #>
-
 <#
+	var AutoBuilderAttributeName = "AutoBuilder";
+
     foreach(UnifiedClass unifiedClass in allClasses)
     {
         var allAttributes = unifiedClass.GetAllAttributes();
-        if (allAttributes.All(_ => !_.Name.StartsWith("AutoBuilder")))
+        if (allAttributes.All(_ => !_.Name.StartsWith(AutoBuilderAttributeName)))
         {
             continue;
         }

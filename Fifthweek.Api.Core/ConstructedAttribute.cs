@@ -3,9 +3,9 @@
 namespace Fifthweek.Api.Core
 {
     [AttributeUsage(AttributeTargets.Property)]
-    public class StronglyTypedAttribute : Attribute
+    public class ConstructedAttribute : Attribute
     {
-        public StronglyTypedAttribute(Type type)
+        public ConstructedAttribute(Type type)
         {
             this.Type = type;
         }

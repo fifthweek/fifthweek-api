@@ -8,12 +8,14 @@
 
 <#
 	var StrongPropertySuffix = "Object";
+	var ConstructedAttributeName = "Constructed";
+	var ParsedAttributeName = "Parsed";
 
     foreach(UnifiedClass unifiedClass in allClasses)
     {
         var publicProperties = unifiedClass.GetAllPublicGetters();
         var stronglyTypedProperties = publicProperties
-			.Select(p => new { Property = p, Attribute = p.Attributes.OfType<CodeAttribute>().FirstOrDefault(_ => _.Name.StartsWith("StronglyTyped")) })
+			.Select(p => new { Property = p, Attribute = p.Attributes.OfType<CodeAttribute>().FirstOrDefault(_ => _.Name.StartsWith(ParsedAttributeName) || _.Name.StartsWith(ConstructedAttributeName)) })
 			.Where(p => p.Attribute != null)
 			.ToList();
 		if (stronglyTypedProperties.Count == 0)
@@ -38,12 +40,53 @@
 
 		public void Parse()
 		{
-			var modelState = new System.Web.Http.ModelBinding.ModelStateDictionary();
+			var modelStateDictionary = new System.Web.Http.ModelBinding.ModelStateDictionary();
 
+<#
+	for (var i = 0; i < stronglyTypedProperties.Count; i++)
+	{
+		var codeAttribute = stronglyTypedProperties[i].Attribute;
+        var codeProperty = stronglyTypedProperties[i].Property;
+		var typedPropertyName = codeProperty.Name + StrongPropertySuffix;
+		var strongType = StripTypeOf(codeAttribute.Value);
+		var isRequired = codeProperty.Attributes.OfType<CodeAttribute>().All(_ => !_.Name.StartsWith(OptionalAttributeName));
 
-			if (!modelState.IsValid)
+		if (codeAttribute.Name.StartsWith(ConstructedAttributeName))
+        {
+#>
+			this.<#= typedPropertyName #> = new <#= strongType #>(this.<#= codeProperty.Name #>);
+<#
+        }
+		else
+        {
+#>
+			if (<#= isRequired ? "true" : "false" #> || !<#= strongType #>.IsEmpty(this.<#= codeProperty.Name #>))
 			{
-				throw new Fifthweek.Api.Core.ModelValidationException(modelState);
+				<#= strongType #> @object;
+				IReadOnlyCollection<string> errorMessages;
+				if (<#= strongType #>.TryParse(this.<#= codeProperty.Name #>, out @object, out errorMessages))
+				{
+					this.<#= typedPropertyName #> = @object;
+				}
+				else
+				{
+					var modelState = new System.Web.Http.ModelBinding.ModelState();
+					foreach (var errorMessage in errorMessages)
+					{
+						modelState.Errors.Add(errorMessage);
+					}
+
+					modelStateDictionary.Add("<#= codeProperty.Name #>", modelState);
+				}
+			}
+
+<#
+        }
+	}
+#>
+			if (!modelStateDictionary.IsValid)
+			{
+				throw new Fifthweek.Api.Core.ModelValidationException(modelStateDictionary);
 			}
 		}	
 <#

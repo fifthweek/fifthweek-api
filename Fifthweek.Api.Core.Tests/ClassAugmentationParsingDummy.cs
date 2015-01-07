@@ -1,4 +1,4 @@
-﻿using System.Linq;
+﻿using System;
 
 namespace Fifthweek.Api.Core.Tests
 {
@@ -8,61 +8,61 @@ namespace Fifthweek.Api.Core.Tests
     {
         public int NotStrongTyped { get; set; }
 
-        #region Unconditional Strings
+        #region Constructed Strings
 
-        [StronglyTyped(typeof(UnconditionalString))]
-        public string SomeUnconditionalString { get; set; }
+        [Constructed(typeof(ConstructedString))]
+        public string SomeConstructedString { get; set; }
 
         [Optional]
-        [StronglyTyped(typeof(UnconditionalString))]
-        public string OptionalUnconditionalString { get; set; }
+        [Constructed(typeof(ConstructedString))]
+        public string OptionalConstructedString { get; set; }
 
         #endregion
 
 
-        #region Conditional Strings
+        #region Parsed Strings
 
-        [StronglyTyped(typeof(ConditionalString))]
-        public string SomeConditionalString { get; set; }
+        [Parsed(typeof(ParsedString))]
+        public string SomeParsedString { get; set; }
 
         [Optional]
-        [StronglyTyped(typeof(ConditionalString))]
-        public string OptionalConditionalString { get; set; }
+        [Parsed(typeof(ParsedString))]
+        public string OptionalParsedString { get; set; }
 
         #endregion
 
 
-        #region Unconditional Integers
+        #region Constructed Integers
 
-        [StronglyTyped(typeof(UnconditionalInt))]
-        public int SomeUnconditionalInt { get; set; }
+        [Constructed(typeof(ConstructedInt))]
+        public int SomeConstructedInt { get; set; }
 
         #endregion
 
 
-        #region Conditional Integers
+        #region Parsed Integers
 
-        [StronglyTyped(typeof(ConditionalInt))]
-        public int SomeConditionalInt { get; set; }
+        [Parsed(typeof(ParsedInt))]
+        public int SomeParsedInt { get; set; }
 
         [Optional]
-        [StronglyTyped(typeof(ConditionalInt))]
-        public int OptionalConditionalInt { get; set; }
+        [Parsed(typeof(ParsedInt))]
+        public int OptionalParsedInt { get; set; }
 
         #endregion
 
 
         [AutoEqualityMembers, AutoConstructor]
-        public partial class UnconditionalString
+        public partial class ConstructedString
         {
             [Optional]
             public string Value { get; private set; }
         }
 
         [AutoEqualityMembers]
-        public partial class ConditionalString
+        public partial class ParsedString
         {
-            private ConditionalString()
+            private ParsedString()
             {
             }
 
@@ -74,7 +74,19 @@ namespace Fifthweek.Api.Core.Tests
                 return string.IsNullOrWhiteSpace(value);
             }
 
-            public static bool TryParse(string value, out ConditionalString @object, out IReadOnlyCollection<string> errorMessages)
+            public static ParsedString Parse(string value)
+            {
+                ParsedString retval;
+                IReadOnlyCollection<string> errorMessages;
+                if (!TryParse(value, out retval, out errorMessages))
+                {
+                    throw new ArgumentException("Invalid value", "value");
+                }
+
+                return retval;
+            }
+
+            public static bool TryParse(string value, out ParsedString @object, out IReadOnlyCollection<string> errorMessages)
             {
                 var errorMessageList = new List<string>();
                 errorMessages = errorMessageList;
@@ -86,9 +98,9 @@ namespace Fifthweek.Api.Core.Tests
                 }
                 else
                 {
-                    if (value.Trim().Length == 1)
+                    if (value.Trim().Length < 2)
                     {
-                        errorMessageList.Add("Length must be at least 1 character");
+                        errorMessageList.Add("Length must be at least 2 characters");
                     }
                 }
 
@@ -98,7 +110,7 @@ namespace Fifthweek.Api.Core.Tests
                     return false;
                 }
 
-                @object = new ConditionalString
+                @object = new ParsedString
                 {
                     Value = value
                 };
@@ -108,15 +120,15 @@ namespace Fifthweek.Api.Core.Tests
         }
 
         [AutoEqualityMembers, AutoConstructor]
-        public partial class UnconditionalInt
+        public partial class ConstructedInt
         {
             public int Value { get; private set; }
         }
 
         [AutoEqualityMembers]
-        public partial class ConditionalInt
+        public partial class ParsedInt
         {
-            private ConditionalInt()
+            private ParsedInt()
             {
             }
 
@@ -127,7 +139,19 @@ namespace Fifthweek.Api.Core.Tests
                 return false;
             }
 
-            public static bool TryParse(int value, out ConditionalInt @object, out IReadOnlyCollection<string> errorMessages)
+            public static ParsedInt Parse(int value)
+            {
+                ParsedInt retval;
+                IReadOnlyCollection<string> errorMessages;
+                if (!TryParse(value, out retval, out errorMessages))
+                {
+                    throw new ArgumentException("Invalid value", "value");
+                }
+
+                return retval;
+            }
+
+            public static bool TryParse(int value, out ParsedInt @object, out IReadOnlyCollection<string> errorMessages)
             {
                 var errorMessageList = new List<string>();
                 errorMessages = errorMessageList;
@@ -143,7 +167,7 @@ namespace Fifthweek.Api.Core.Tests
                     return false;
                 }
 
-                @object = new ConditionalInt
+                @object = new ParsedInt
                 {
                     Value = value
                 };

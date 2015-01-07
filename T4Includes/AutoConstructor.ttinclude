@@ -5,12 +5,14 @@
 <#@ import namespace="System.Linq" #>
 <#@ import namespace="System.Text" #>
 <#@ import namespace="System.Collections.Generic" #>
-
 <#
+	var AutoConstructorAttributeName = "AutoConstructor";
+	var OptionalAttributeName = "Optional";
+
     foreach(UnifiedClass unifiedClass in allClasses)
     {
         var allAttributes = unifiedClass.GetAllAttributes();
-        if (allAttributes.All(_ => !_.Name.StartsWith("AutoConstructor")))
+        if (allAttributes.All(_ => !_.Name.StartsWith(AutoConstructorAttributeName)))
         {
             continue;
         }
@@ -21,7 +23,7 @@
             continue;
         }
 
-        var requiredNullableProperties = publicProperties.Where(p => p.Attributes.OfType<CodeAttribute>().All(_ => !_.Name.StartsWith("Optional")));
+        var requiredNullableProperties = publicProperties.Where(p => p.Attributes.OfType<CodeAttribute>().All(_ => !_.Name.StartsWith(OptionalAttributeName)));
 
 		unifiedClass.WriteNamespaceAndClass(() => {
 #>
