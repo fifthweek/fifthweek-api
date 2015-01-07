@@ -25,6 +25,8 @@
 
 		unifiedClass.WriteNamespaceAndClass(() => {
 
+	// Render the main class here. Companion class follows in next lambda.
+
     for (var i = 0; i < stronglyTypedProperties.Count; i++)
     {
 		var codeAttribute = stronglyTypedProperties[i].Attribute;
@@ -33,12 +35,19 @@
 		var strongType = StripTypeOf(codeAttribute.Value);
 
 #>
-		public <#= strongType #> <#= typedPropertyName #> { get; private set; }
+		public <#= strongType #> <#= typedPropertyName #> { get; set; }
 <#
     }
 #>
 
 		public void Parse()
+		{
+			<#= unifiedClass.CompanionClassName #>.Parse(this); // Avoid conflicts between property and type names.
+		}
+<#
+        }, () => { // Companion class.
+#>
+		public static void Parse(<#= unifiedClass.FirstCodeClass.Name #> target)
 		{
 			var modelStateDictionary = new System.Web.Http.ModelBinding.ModelStateDictionary();
 
@@ -54,19 +63,19 @@
 		if (codeAttribute.Name.StartsWith(ConstructedAttributeName))
         {
 #>
-			this.<#= typedPropertyName #> = new <#= strongType #>(this.<#= codeProperty.Name #>);
+			target.<#= typedPropertyName #> = new <#= strongType #>(target.<#= codeProperty.Name #>);
 <#
         }
 		else
         {
 #>
-			if (<#= isRequired ? "true" : "false" #> || !<#= strongType #>.IsEmpty(this.<#= codeProperty.Name #>))
+			if (<#= isRequired ? "true" : "false" #> || !<#= strongType #>.IsEmpty(target.<#= codeProperty.Name #>))
 			{
 				<#= strongType #> @object;
-				IReadOnlyCollection<string> errorMessages;
-				if (<#= strongType #>.TryParse(this.<#= codeProperty.Name #>, out @object, out errorMessages))
+				System.Collections.Generic.IReadOnlyCollection<string> errorMessages;
+				if (<#= strongType #>.TryParse(target.<#= codeProperty.Name #>, out @object, out errorMessages))
 				{
-					this.<#= typedPropertyName #> = @object;
+					target.<#= typedPropertyName #> = @object;
 				}
 				else
 				{
@@ -90,6 +99,6 @@
 			}
 		}	
 <#
-        });
+		});
     }
 #>

@@ -94,7 +94,7 @@ namespace Fifthweek.Api.Identity.Tests.Membership.Commands
         public static ConfirmPasswordResetCommand NewCommand(PasswordResetConfirmationData data)
         {
             return new ConfirmPasswordResetCommand(
-                UserId.Parse(data.UserId), 
+                new UserId(data.UserId), 
                 data.Token, 
                 Password.Parse(data.NewPassword));
         }

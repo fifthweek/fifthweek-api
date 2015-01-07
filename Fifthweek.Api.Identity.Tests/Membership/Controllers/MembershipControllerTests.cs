@@ -129,7 +129,7 @@ namespace Fifthweek.Api.Identity.Tests.Membership.Controllers
 
         private const string UsernameValue = "lawrence";
         private const string Token = "Password Token";
-        private static readonly UserId UserId = UserId.Parse(Guid.NewGuid());
+        private static readonly UserId UserId = new UserId(Guid.NewGuid());
         private static readonly NormalizedUsername Username = NormalizedUsername.Parse(UsernameValue);
         private Mock<ICommandHandler<RegisterUserCommand>> registerUser;
         private Mock<ICommandHandler<RequestPasswordResetCommand>> requestPasswordReset;

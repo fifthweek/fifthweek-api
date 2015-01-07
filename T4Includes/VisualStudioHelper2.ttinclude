@@ -80,8 +80,10 @@
 			this.FirstCodeClass = codeClasses.First();
 			this.output = output;
 			this.visualStudioHelper = visualStudioHelper;
+			this.CompanionClassName = this.FirstCodeClass.Name + "_Companion";
         }
 
+		public string CompanionClassName { get; private set; }
 		public CodeClass FirstCodeClass { get; private set; }
 		public IReadOnlyList<CodeClass> CodeClasses { get; private set; }
 		public IReadOnlyList<ProjectItem> CodeFiles { get; private set; }
@@ -125,29 +127,6 @@
 			return allProperties;
 		}
 
-		public void WriteNamespaceAndClass(Action around)
-		{
-			this.output.WriteLine("namespace " + this.FirstCodeClass.Namespace.Name);
-			this.output.WriteLine("{");
-
-			var imports = new HashSet<string>();
-			foreach (var codeFile in this.CodeFiles)
-            {
-				foreach (var import in this.GetAllCodeElementsOfType<CodeImport>(codeFile.FileCodeModel.CodeElements))
-                {
-					imports.Add(import.Namespace);
-                }
-            }
-
-			foreach (var import in imports)
-            {
-				this.output.WriteLine("\tusing " + import + ";"); 
-            }
-
-			WriteClass(around);
-			this.output.WriteLine("}");
-		}
-
 		public IEnumerable<T> GetAllCodeElementsOfType<T>(CodeElements elements) where T : CodeElement
 		{
 			var ret = new List<T>();
@@ -189,23 +168,67 @@
 			return ret;
 		}
 
+		public void WriteNamespaceAndClass(Action renderMainClass, Action renderCompanionClass = null)
+		{
+			this.output.WriteLine("namespace " + this.FirstCodeClass.Namespace.Name);
+			this.output.WriteLine("{");
 
-		private void WriteClass(Action around)
+			this.WriteUsings();
+
+			WriteClass(renderMainClass, renderCompanionClass);
+
+			this.output.WriteLine("}");
+		}
+
+		private void WriteUsings()
+        {
+			var imports = new HashSet<string>();
+			foreach (var codeFile in this.CodeFiles)
+            {
+				foreach (var import in this.GetAllCodeElementsOfType<CodeImport>(codeFile.FileCodeModel.CodeElements))
+                {
+					imports.Add(import.Namespace);
+                }
+            }
+
+			foreach (var import in imports)
+            {
+				this.output.WriteLine("\tusing " + import + ";"); 
+            }
+        }
+
+		private void WriteClass(Action render, Action renderCompanionClass = null)
 		{
 			var classHierarchy = GetEnclosingClasses();
+			string tabs;
 
-			for (var i = 0; i < classHierarchy.Count; i++)
+			for (var i = 0; i < classHierarchy.Count - 1; i++)
 			{
-				var tabs = new string('\t', i + 1);
+				tabs = new string('\t', i + 1);
 				this.output.WriteLine(tabs + "public partial class " + classHierarchy[i].Name);
 				this.output.WriteLine(tabs + "{");
 			}
 
-			around();
+			var name = classHierarchy.Last().Name;
+			tabs = new string('\t', classHierarchy.Count);
 
-			for (var i = 0; i < classHierarchy.Count; i++)
+			this.output.WriteLine(tabs + "public partial class " + name);
+			this.output.WriteLine(tabs + "{");
+			render();			
+			this.output.WriteLine(tabs + "}");
+			this.output.WriteLine("");
+
+			if (renderCompanionClass != null)
+            {
+				this.output.WriteLine(tabs + "internal class " + this.CompanionClassName);
+				this.output.WriteLine(tabs + "{");
+				renderCompanionClass();			
+				this.output.WriteLine(tabs + "}");
+            }
+
+			for (var i = 0; i < classHierarchy.Count - 1; i++)
 			{
-				var tabs = new string('\t', classHierarchy.Count - i);
+				tabs = new string('\t', classHierarchy.Count - i);
 				this.output.WriteLine(tabs + "}");
 			}
 		}

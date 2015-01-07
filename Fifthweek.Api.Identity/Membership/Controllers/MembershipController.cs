@@ -77,7 +77,7 @@ namespace Fifthweek.Api.Identity.Membership.Controllers
             registration.Parse();
 
             var command = new RegisterUserCommand(
-                UserId.Parse(this.guidCreator.CreateSqlSequential()),
+                new UserId(this.guidCreator.CreateSqlSequential()),
                 registration.ExampleWork,
                 NormalizedEmail.Normalize(registration.EmailObject),
                 NormalizedUsername.Normalize(registration.UsernameObject),
@@ -150,8 +150,8 @@ namespace Fifthweek.Api.Identity.Membership.Controllers
         [ResponseType(typeof(bool))]
         public async Task<IHttpActionResult> GetPasswordResetTokenValidityAsync(Guid userId, string token)
         {
-            var userIdObj = UserId.Parse(userId);
-            var query = new IsPasswordResetTokenValidQuery(userIdObj, token);
+            var userIdObject = new UserId(userId);
+            var query = new IsPasswordResetTokenValidQuery(userIdObject, token);
             var tokenValid = await this.isPasswordResetTokenValid.HandleAsync(query);
             if (tokenValid)
             {

@@ -1,5 +1,4 @@
-﻿using System.Web.Http.ModelBinding;
-using Fifthweek.Api.Core;
+﻿using Fifthweek.Api.Core;
 
 namespace Fifthweek.Api.Identity.Membership.Controllers
 {
@@ -8,30 +7,13 @@ namespace Fifthweek.Api.Identity.Membership.Controllers
     {
         public string ExampleWork { get; set; }
 
+        [Parsed(typeof(Email))]
         public string Email { get; set; }
 
+        [Parsed(typeof(Username))]
         public string Username { get; set; }
 
+        [Parsed(typeof(Password))]
         public string Password { get; set; }
-
-        public Email EmailObject { get; private set; }
-
-        public Username UsernameObject { get; private set; }
-
-        public Password PasswordObject { get; private set; }
-
-        public void Parse()
-        {
-            var modelState = new ModelStateDictionary();
-
-            this.UsernameObject = this.Username.AsUsername("Username", modelState);
-            this.EmailObject = this.Email.AsEmail("Email", modelState);
-            this.PasswordObject = this.Password.AsPassword("Password", modelState);
-
-            if (!modelState.IsValid)
-            {
-                throw new ModelValidationException(modelState);
-            }
-        }
     }
 }

@@ -141,7 +141,7 @@
         public static RegisterUserCommand NewCommand(Guid userId, RegistrationData registrationData)
         {
             return new RegisterUserCommand(
-                UserId.Parse(userId),
+                new UserId(userId),
                 registrationData.ExampleWork,
                 NormalizedEmail.Parse(registrationData.Email),
                 NormalizedUsername.Parse(registrationData.Username),

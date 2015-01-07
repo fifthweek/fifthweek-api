@@ -60,7 +60,7 @@ namespace Fifthweek.Api.Identity.Tests.Membership.Queries
         private const string Token = "Token";
         private static readonly Guid UserId = Guid.Parse("7265bc4f-555e-4386-ad57-701dbdbc78bb");
         private static readonly IsPasswordResetTokenValidQuery Query = new IsPasswordResetTokenValidQuery(
-            Identity.Membership.UserId.Parse(UserId),
+            new UserId(UserId),
             Token);
         private static readonly FifthweekUser User = new FifthweekUser
         {
