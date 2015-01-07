@@ -37,7 +37,6 @@ namespace Fifthweek.Api.Identity.Tests.Membership.Commands
         [TestMethod]
         public async Task WhenTokenIsInvalid_ItShouldRaiseRecoverableException()
         {
-            
             this.SetupUserManager(isTokenValid: false);
 
             try
@@ -45,8 +44,9 @@ namespace Fifthweek.Api.Identity.Tests.Membership.Commands
                 await this.target.HandleAsync(this.command);
                 Assert.Fail("Expected a recoverable exception.");
             }
-            catch (RecoverableException)
+            catch (Exception t)
             {
+                Assert.IsInstanceOfType(t, typeof(RecoverableException));
             }
         }
 
