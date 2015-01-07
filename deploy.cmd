@@ -75,7 +75,9 @@ IF /I "Fifthweek.sln" NEQ "" (
 
 :: 2. Building solution for running tests
 echo Building test project
-call :ExecuteCmd "%MSBUILD_PATH%" "%DEPLOYMENT_SOURCE%\Fifthweek.sln" /t:Clean,Build
+call :ExecuteCmd "%MSBUILD_PATH%" "%DEPLOYMENT_SOURCE%\Fifthweek.sln" /t:Clean /p:Configuration=Release
+call :ExecuteCmd "%MSBUILD_PATH%" "%DEPLOYMENT_SOURCE%\Fifthweek.sln" /t:Clean /p:Configuration=Debug
+call :ExecuteCmd "%MSBUILD_PATH%" "%DEPLOYMENT_SOURCE%\Fifthweek.sln" /t:Build /p:Configuration=Release
 IF !ERRORLEVEL! NEQ 0 goto error
 
 :: 3. Running tests
