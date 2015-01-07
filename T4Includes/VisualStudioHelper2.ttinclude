@@ -8,40 +8,109 @@
 // get a reference to the project of this t4 template
 var project = VisualStudioHelper.CurrentProject;
 // get all class items from the code model
-var allClasses = VisualStudioHelper.CodeModel.GetAllCodeElementsOfType(project.CodeModel.CodeElements, EnvDTE.vsCMElement.vsCMElementClass, false);
+var allClasses = VisualStudioHelper.CodeModel.GetAllCodeElementsOfType(project.CodeModel.CodeElements, vsCMElement.vsCMElementClass, false);
 #>
 
 <#+
-public IEnumerable<EnvDTE.CodeAttribute> GetAllAttributes(EnvDTE.CodeClass codeClass)
-{
-	var allAttributes = new List<EnvDTE.CodeAttribute>();
+	public string ToLowerCamelCase(string value)
+	{
+		return value.Substring(0, 1).ToLower() + value.Substring(1);
+	}
 
-	foreach(var partialClass in VisualStudioHelper.CodeModel.GetPartialClasses(codeClass))
-    {
-		foreach(EnvDTE.CodeAttribute attribute in partialClass.Attributes)
+	public class ClassUtility
+	{
+		private readonly CodeClass codeClass;
+		private readonly TextTransformation output;
+		private readonly AutomationHelper visualStudioHelper;
+
+		public ClassUtility(CodeClass codeClass, TextTransformation output, AutomationHelper visualStudioHelper)
+        {
+			this.codeClass = codeClass;
+			this.output = output;
+			this.visualStudioHelper = visualStudioHelper;
+        }
+
+		public IReadOnlyList<CodeAttribute> GetAllAttributes()
 		{
-			allAttributes.Add(attribute);
+			var allAttributes = new List<CodeAttribute>();
+
+			foreach(var partialClass in this.visualStudioHelper.CodeModel.GetPartialClasses(this.codeClass))
+			{
+				foreach(CodeAttribute attribute in partialClass.Attributes)
+				{
+					allAttributes.Add(attribute);
+				}
+			}
+		
+			return allAttributes;
+		}
+
+		public IReadOnlyList<CodeProperty> GetAllPublicGetters()
+		{
+			var allProperties = new List<CodeProperty>();
+
+			foreach(var partialClass in this.visualStudioHelper.CodeModel.GetPartialClasses(this.codeClass))
+			{
+				foreach (CodeElement elem in partialClass.Members)
+				{
+					if (elem.Kind == vsCMElement.vsCMElementProperty)
+					{
+						var property = (CodeProperty)elem;
+						if (property.Access != vsCMAccess.vsCMAccessPublic)
+                        {
+							continue;
+                        }
+
+						allProperties.Add(property);
+					}
+				}
+			}
+		
+			return allProperties;
+		}
+
+		public void WriteNamespaceAndClass(Action around)
+		{
+			this.output.WriteLine("namespace " + this.codeClass.Namespace.Name);
+			this.output.WriteLine("{");
+			WriteClass(around);
+			this.output.WriteLine("}");
+		}
+
+		private void WriteClass(Action around)
+		{
+			var classHierarchy = GetEnclosingClasses();
+
+			for (var i = 0; i < classHierarchy.Count; i++)
+			{
+				var tabs = new string('\t', i + 1);
+				this.output.WriteLine(tabs + "public partial class " + classHierarchy[i].Name);
+				this.output.WriteLine(tabs + "{");
+			}
+
+			around();
+
+			for (var i = 0; i < classHierarchy.Count; i++)
+			{
+				var tabs = new string('\t', classHierarchy.Count - i);
+				this.output.WriteLine(tabs + "}");
+			}
+		}
+
+		private List<CodeClass> GetEnclosingClasses()
+		{
+			var classHierarchy = new List<CodeClass>();
+			var currentClass = this.codeClass;
+			classHierarchy.Add(currentClass);
+			while (currentClass.Parent is CodeClass)
+			{
+				var parentClass = (CodeClass)currentClass.Parent;
+				classHierarchy.Add(parentClass);
+				currentClass = parentClass;
+			} 
+
+			classHierarchy.Reverse();
+			return classHierarchy;
 		}
     }
-		
-	return allAttributes;
-}
-
-public IEnumerable<EnvDTE.CodeProperty> GetAllProperties(EnvDTE.CodeClass codeClass)
-{
-	var allProperties = new List<EnvDTE.CodeProperty>();
-
-	foreach(var partialClass in VisualStudioHelper.CodeModel.GetPartialClasses(codeClass))
-    {
-		var properties = VisualStudioHelper.CodeModel.GetAllCodeElementsOfType(partialClass.Members, EnvDTE.vsCMElement.vsCMElementProperty, false).OfType<EnvDTE.CodeProperty>();
-		allProperties.AddRange(properties);
-    }
-		
-	return allProperties;
-}
-
-public string ToLowerCamelCase(string value)
-{
-	return value.Substring(0, 1).ToLower() + value.Substring(1);
-}
 #>

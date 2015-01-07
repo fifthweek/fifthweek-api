@@ -1,34 +1,30 @@
 ﻿<#@ include file="VisualStudioHelper.ttinclude" once="true" #>
 <#@ include file="VisualStudioHelper2.ttinclude" once="true" #>
 <#@ assembly name="System.Core" #>
+<#@ import namespace="EnvDTE" #>
 <#@ import namespace="System.Linq" #>
 <#@ import namespace="System.Text" #>
 <#@ import namespace="System.Collections.Generic" #>
 <#
     // iterate all classes
-    foreach(EnvDTE.CodeClass codeClass in allClasses)
+    foreach(CodeClass codeClass in allClasses)
     {
-        var allAttributes = GetAllAttributes(codeClass);
-        if (allAttributes.OfType<EnvDTE.CodeAttribute>().All(_ => !_.Name.StartsWith("AutoEqualityMembers")))
+		var classUtility = new ClassUtility(codeClass, this, VisualStudioHelper);
+
+        var allAttributes = classUtility.GetAllAttributes();
+        if (allAttributes.All(_ => !_.Name.StartsWith("AutoEqualityMembers")))
         {
             continue;
         }
 
-        var allProperties = GetAllProperties(codeClass);
-        var publicProperties = allProperties
-            .OfType<EnvDTE.CodeProperty>()
-            .Where(p => p.Access == EnvDTE.vsCMAccess.vsCMAccessPublic)
-            .ToArray();
-
-        if (publicProperties.Length == 0)
+        var publicProperties = classUtility.GetAllPublicGetters();
+        if (publicProperties.Count == 0)
         {
             continue;
         }
+
+		classUtility.WriteNamespaceAndClass(() => {
 #>
-namespace <#= codeClass.Namespace.Name #>
-{
-    public partial class <#= codeClass.Name #>
-    {
         public override bool Equals(object obj)
         {
             if (ReferenceEquals(null, obj))
@@ -55,7 +51,7 @@ namespace <#= codeClass.Namespace.Name #>
             {
                 int hashCode = 0;
 <#
-    foreach(EnvDTE.CodeProperty codeProperty in publicProperties)
+    foreach(CodeProperty codeProperty in publicProperties)
     {
 #>
                 hashCode = (hashCode * 397) ^ (this.<#= codeProperty.Name #> != null ? this.<#= codeProperty.Name #>.GetHashCode() : 0);
@@ -69,7 +65,7 @@ namespace <#= codeClass.Namespace.Name #>
         protected bool Equals(<#= codeClass.Name #> other)
         {
 <#
-    foreach(EnvDTE.CodeProperty codeProperty in publicProperties)
+    foreach(CodeProperty codeProperty in publicProperties)
     {
 #>
             if (!object.Equals(this.<#= codeProperty.Name #>, other.<#= codeProperty.Name #>))
@@ -81,8 +77,7 @@ namespace <#= codeClass.Namespace.Name #>
 #>
             return true;
         }
-    }
-}
 <#
-    }
+		});
+	}
 #>

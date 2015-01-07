@@ -13,7 +13,7 @@
 		var classUtility = new ClassUtility(codeClass, this, VisualStudioHelper);
 
         var allAttributes = classUtility.GetAllAttributes();
-        if (allAttributes.All(_ => !_.Name.StartsWith("AutoConstructor")))
+        if (allAttributes.All(_ => !_.Name.StartsWith("AutoBuilder")))
         {
             continue;
         }
@@ -24,42 +24,35 @@
             continue;
         }
 
-        var requiredNullableProperties = publicProperties.Where(p => p.Attributes.OfType<CodeAttribute>().All(_ => !_.Name.StartsWith("Optional")));
-
 		classUtility.WriteNamespaceAndClass(() => {
 #>
-        public <#= codeClass.Name #>(
+		public static <#= codeClass.Name #> Build(Builder builder)
+		{
+			return new <#= codeClass.Name #>(
 <#
     for (var i = 0; i < publicProperties.Count; i++)
     {
         var codeProperty = publicProperties[i];
 #>
-            <#= codeProperty.Type.AsFullName #> <#= ToLowerCamelCase(codeProperty.Name) #><#= i < publicProperties.Count - 1 ? ", " : ")" #>
+				builder.<#= codeProperty.Name #><#= i < publicProperties.Count - 1 ? ", " : ");" #>
 <#
     }
 #>
+		}
+
+        public partial class Builder
         {
 <#
-    foreach(CodeProperty codeProperty in requiredNullableProperties)
+    for (var i = 0; i < publicProperties.Count; i++)
     {
+        var codeProperty = publicProperties[i];
 #>
-            if (<#= ToLowerCamelCase(codeProperty.Name) #> == null)
-            {
-                throw new ArgumentNullException("<#= ToLowerCamelCase(codeProperty.Name) #>");
-            }
-
-<#
-    }
-
-    foreach(CodeProperty codeProperty in publicProperties)
-    {
-#>
-            this.<#= codeProperty.Name #> = <#= ToLowerCamelCase(codeProperty.Name) #>;
+            public <#= codeProperty.Type.AsFullName #> <#= codeProperty.Name #> { get; set; }
 <#
     }
 #>
         }
 <#
-        });
-    }
+		});
+	}
 #>
