@@ -1,4 +1,90 @@
 ﻿
+
+
+
+namespace Fifthweek.Api.Identity.Membership.Commands
+{
+	public partial class UpdateLastAccessTokenDateCommand
+	{
+		public UpdateLastAccessTokenDateCommand(
+			Fifthweek.Api.Identity.Membership.NormalizedUsername username, 
+			System.DateTime timestamp, 
+			Fifthweek.Api.Identity.Membership.Commands.UpdateLastAccessTokenDateCommand.AccessTokenCreationType creationType)
+        {
+			this.Username = username;
+			this.Timestamp = timestamp;
+			this.CreationType = creationType;
+        }
+	}
+}
+namespace Fifthweek.Api.Identity.Membership.Commands
+{
+	public partial class RequestPasswordResetCommand
+	{
+		public RequestPasswordResetCommand(
+			Fifthweek.Api.Identity.Membership.NormalizedEmail email, 
+			Fifthweek.Api.Identity.Membership.NormalizedUsername username)
+        {
+			this.Email = email;
+			this.Username = username;
+        }
+	}
+}
+namespace Fifthweek.Api.Identity.OAuth.Queries
+{
+	public partial class GetRefreshTokenQuery
+	{
+		public GetRefreshTokenQuery(
+			Fifthweek.Api.Identity.OAuth.HashedRefreshTokenId hashedRefreshTokenId)
+        {
+			this.HashedRefreshTokenId = hashedRefreshTokenId;
+        }
+	}
+}
+namespace Fifthweek.Api.Identity.OAuth.Queries
+{
+	public partial class GetClientQuery
+	{
+		public GetClientQuery(
+			Fifthweek.Api.Identity.OAuth.ClientId clientId)
+        {
+			this.ClientId = clientId;
+        }
+	}
+}
+namespace Fifthweek.Api.Identity.OAuth.Commands
+{
+	public partial class RemoveRefreshTokenCommand
+	{
+		public RemoveRefreshTokenCommand(
+			Fifthweek.Api.Identity.OAuth.HashedRefreshTokenId hashedRefreshTokenId)
+        {
+			this.HashedRefreshTokenId = hashedRefreshTokenId;
+        }
+	}
+}
+namespace Fifthweek.Api.Identity.OAuth.Commands
+{
+	public partial class AddRefreshTokenCommand
+	{
+		public AddRefreshTokenCommand(
+			Fifthweek.Api.Persistence.RefreshToken refreshToken)
+        {
+			this.RefreshToken = refreshToken;
+        }
+	}
+}
+namespace Fifthweek.Api.Identity.OAuth
+{
+	public partial class ClientId
+	{
+		public ClientId(
+			System.String value)
+        {
+			this.Value = value;
+        }
+	}
+}
 namespace Fifthweek.Api.Identity.Membership.Controllers
 {
 	public partial class PasswordResetRequestData
@@ -955,4 +1041,3 @@ namespace Fifthweek.Api.Identity.OAuth
         }
 	}
 }
-

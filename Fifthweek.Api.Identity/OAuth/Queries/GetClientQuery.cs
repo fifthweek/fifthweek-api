@@ -2,14 +2,10 @@
 {
     using Fifthweek.Api.Core;
 
+    [AutoConstructor]
     [AutoEqualityMembers]
     public partial class GetClientQuery : IQuery<Client>
     {
-        public GetClientQuery(ClientId clientId)
-        {
-            this.ClientId = clientId;
-        }
-
         public ClientId ClientId { get; private set; }
     }
 }

@@ -2,19 +2,10 @@
 {
     using System;
 
+    [AutoConstructor]
     [AutoEqualityMembers]
     public partial class UpdateLastAccessTokenDateCommand
     {
-        public UpdateLastAccessTokenDateCommand(
-            NormalizedUsername username, 
-            DateTime timestamp,
-            AccessTokenCreationType creationType)
-        {
-            this.Username = username;
-            this.Timestamp = timestamp;
-            this.CreationType = creationType;
-        }
-
         public enum AccessTokenCreationType
         {
             SignIn,

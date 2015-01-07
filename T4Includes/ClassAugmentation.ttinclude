@@ -1,3 +1,4 @@
 ﻿<#@ template debug="true" hostspecific="true" language="C#" #>
 <#@ output extension=".cs" #>
+<#@ include file="AutoConstructor.ttinclude" #>
 <#@ include file="AutoEqualityMembers.ttinclude" #>

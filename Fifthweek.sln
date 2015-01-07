@@ -49,9 +49,11 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fifthweek.Api.FileManagemen
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "T4Includes", "T4Includes", "{FA1F4272-E9E3-4B73-B7DB-1048C5CA917D}"
 	ProjectSection(SolutionItems) = preProject
+		T4Includes\AutoConstructor.ttinclude = T4Includes\AutoConstructor.ttinclude
 		T4Includes\AutoEqualityMembers.ttinclude = T4Includes\AutoEqualityMembers.ttinclude
 		T4Includes\ClassAugmentation.ttinclude = T4Includes\ClassAugmentation.ttinclude
 		T4Includes\VisualStudioHelper.ttinclude = T4Includes\VisualStudioHelper.ttinclude
+		T4Includes\VisualStudioHelper2.ttinclude = T4Includes\VisualStudioHelper2.ttinclude
 	EndProjectSection
 EndProject
 Global

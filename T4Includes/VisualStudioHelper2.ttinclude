@@ -1,0 +1,47 @@
+﻿<#@ include file="VisualStudioHelper.ttinclude" once="true" #>
+<#@ assembly name="System.Core" #>
+<#@ import namespace="System.Linq" #>
+<#@ import namespace="System.Text" #>
+<#@ import namespace="System.Collections.Generic" #>
+
+<#
+// get a reference to the project of this t4 template
+var project = VisualStudioHelper.CurrentProject;
+// get all class items from the code model
+var allClasses = VisualStudioHelper.CodeModel.GetAllCodeElementsOfType(project.CodeModel.CodeElements, EnvDTE.vsCMElement.vsCMElementClass, false);
+#>
+
+<#+
+public IEnumerable<EnvDTE.CodeAttribute> GetAllAttributes(EnvDTE.CodeClass codeClass)
+{
+	var allAttributes = new List<EnvDTE.CodeAttribute>();
+
+	foreach(var partialClass in VisualStudioHelper.CodeModel.GetPartialClasses(codeClass))
+    {
+		foreach(EnvDTE.CodeAttribute attribute in partialClass.Attributes)
+		{
+			allAttributes.Add(attribute);
+		}
+    }
+		
+	return allAttributes;
+}
+
+public IEnumerable<EnvDTE.CodeProperty> GetAllProperties(EnvDTE.CodeClass codeClass)
+{
+	var allProperties = new List<EnvDTE.CodeProperty>();
+
+	foreach(var partialClass in VisualStudioHelper.CodeModel.GetPartialClasses(codeClass))
+    {
+		var properties = VisualStudioHelper.CodeModel.GetAllCodeElementsOfType(partialClass.Members, EnvDTE.vsCMElement.vsCMElementProperty, false).OfType<EnvDTE.CodeProperty>();
+		allProperties.AddRange(properties);
+    }
+		
+	return allProperties;
+}
+
+public string ToLowerCamelCase(string value)
+{
+	return value.Substring(0, 1).ToLower() + value.Substring(1);
+}
+#>

@@ -1,0 +1,56 @@
+﻿<#@ include file="VisualStudioHelper.ttinclude" once="true" #>
+<#@ include file="VisualStudioHelper2.ttinclude" once="true" #>
+<#@ assembly name="System.Core" #>
+<#@ import namespace="System.Linq" #>
+<#@ import namespace="System.Text" #>
+<#@ import namespace="System.Collections.Generic" #>
+<#
+    // iterate all classes
+    foreach(EnvDTE.CodeClass codeClass in allClasses)
+    {
+		var allAttributes = GetAllAttributes(codeClass);
+		if (allAttributes.OfType<EnvDTE.CodeAttribute>().All(_ => !_.Name.StartsWith("AutoConstructor")))
+        {
+			continue;
+        }
+
+		var allProperties = GetAllProperties(codeClass);
+		var publicProperties = allProperties
+			.OfType<EnvDTE.CodeProperty>()
+			.Where(p => p.Access == EnvDTE.vsCMAccess.vsCMAccessPublic)
+			.ToArray();
+
+		if (publicProperties.Length == 0)
+        {
+			continue;
+        }
+#>
+namespace <#= codeClass.Namespace.Name #>
+{
+	public partial class <#= codeClass.Name #>
+	{
+		public <#= codeClass.Name #>(
+<#
+    for (var i = 0; i < publicProperties.Length; i++)
+    {
+		var codeProperty = publicProperties[i];
+#>
+			<#= codeProperty.Type.AsFullName #> <#= ToLowerCamelCase(codeProperty.Name) #><#= i < publicProperties.Length - 1 ? ", " : ")" #>
+<#
+    }
+#>
+        {
+<#
+	foreach(EnvDTE.CodeProperty codeProperty in publicProperties)
+	{
+#>
+			this.<#= codeProperty.Name #> = <#= ToLowerCamelCase(codeProperty.Name) #>;
+<#
+	}
+#>
+        }
+	}
+}
+<#
+    }
+#>
