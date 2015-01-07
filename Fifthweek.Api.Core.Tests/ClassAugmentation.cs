@@ -8,6 +8,9 @@ using System;
 
 namespace Fifthweek.Api.Core.Tests
 {
+	using System;
+	using System.Collections.Generic;
+	using System.Linq;
 	public partial class ClassAugmentationDummy
 	{
 		public partial class ComplexType
@@ -27,6 +30,9 @@ namespace Fifthweek.Api.Core.Tests
 }
 namespace Fifthweek.Api.Core.Tests
 {
+	using System;
+	using System.Collections.Generic;
+	using System.Linq;
 	public partial class ClassAugmentationDummy
 	{
         public ClassAugmentationDummy(
@@ -79,9 +85,51 @@ namespace Fifthweek.Api.Core.Tests
         }
 	}
 }
+namespace Fifthweek.Api.Core.Tests
+{
+	using System;
+	using System.Collections.Generic;
+	using System.Linq;
+	public partial class ClassAugmentationParsingDummy
+	{
+		public partial class UnconditionalString
+		{
+        public UnconditionalString(
+            System.String value)
+        {
+            this.Value = value;
+        }
+		}
+	}
+}
+namespace Fifthweek.Api.Core.Tests
+{
+	using System;
+	using System.Collections.Generic;
+	using System.Linq;
+	public partial class ClassAugmentationParsingDummy
+	{
+		public partial class UnconditionalInt
+		{
+        public UnconditionalInt(
+            System.Int32 value)
+        {
+            if (value == null)
+            {
+                throw new ArgumentNullException("value");
+            }
+
+            this.Value = value;
+        }
+		}
+	}
+}
 
 namespace Fifthweek.Api.Core.Tests
 {
+	using System;
+	using System.Collections.Generic;
+	using System.Linq;
 	public partial class ClassAugmentationDummy
 	{
 		public partial class ComplexType
@@ -129,6 +177,9 @@ namespace Fifthweek.Api.Core.Tests
 }
 namespace Fifthweek.Api.Core.Tests
 {
+	using System;
+	using System.Collections.Generic;
+	using System.Linq;
 	public partial class ClassAugmentationDummy
 	{
         public override bool Equals(object obj)
@@ -216,9 +267,329 @@ namespace Fifthweek.Api.Core.Tests
         }
 	}
 }
+namespace Fifthweek.Api.Core.Tests
+{
+	using System;
+	using System.Collections.Generic;
+	using System.Linq;
+	public partial class ClassAugmentationParsingDummy
+	{
+		public partial class UnconditionalString
+		{
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj))
+            {
+                return false;
+            }
+
+            if (ReferenceEquals(this, obj))
+            {
+                return true;
+            }
+
+            if (obj.GetType() != this.GetType())
+            {
+                return false;
+            }
+
+            return this.Equals((UnconditionalString)obj);
+        }
+
+        public override int GetHashCode()
+        {
+            unchecked
+            {
+                int hashCode = 0;
+                hashCode = (hashCode * 397) ^ (this.Value != null ? this.Value.GetHashCode() : 0);
+                return hashCode;
+            }
+        }
+
+        protected bool Equals(UnconditionalString other)
+        {
+            if (!object.Equals(this.Value, other.Value))
+            {
+                return false;
+            }
+            return true;
+        }
+		}
+	}
+}
+namespace Fifthweek.Api.Core.Tests
+{
+	using System;
+	using System.Collections.Generic;
+	using System.Linq;
+	public partial class ClassAugmentationParsingDummy
+	{
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj))
+            {
+                return false;
+            }
+
+            if (ReferenceEquals(this, obj))
+            {
+                return true;
+            }
+
+            if (obj.GetType() != this.GetType())
+            {
+                return false;
+            }
+
+            return this.Equals((ClassAugmentationParsingDummy)obj);
+        }
+
+        public override int GetHashCode()
+        {
+            unchecked
+            {
+                int hashCode = 0;
+                hashCode = (hashCode * 397) ^ (this.SomeUnconditionalStringObject != null ? this.SomeUnconditionalStringObject.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.OptionalUnconditionalStringObject != null ? this.OptionalUnconditionalStringObject.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.SomeConditionalStringObject != null ? this.SomeConditionalStringObject.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.OptionalConditionalStringObject != null ? this.OptionalConditionalStringObject.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.SomeUnconditionalIntObject != null ? this.SomeUnconditionalIntObject.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.SomeConditionalIntObject != null ? this.SomeConditionalIntObject.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.OptionalConditionalIntObject != null ? this.OptionalConditionalIntObject.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.NotStrongTyped != null ? this.NotStrongTyped.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.SomeUnconditionalString != null ? this.SomeUnconditionalString.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.OptionalUnconditionalString != null ? this.OptionalUnconditionalString.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.SomeConditionalString != null ? this.SomeConditionalString.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.OptionalConditionalString != null ? this.OptionalConditionalString.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.SomeUnconditionalInt != null ? this.SomeUnconditionalInt.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.SomeConditionalInt != null ? this.SomeConditionalInt.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.OptionalConditionalInt != null ? this.OptionalConditionalInt.GetHashCode() : 0);
+                return hashCode;
+            }
+        }
+
+        protected bool Equals(ClassAugmentationParsingDummy other)
+        {
+            if (!object.Equals(this.SomeUnconditionalStringObject, other.SomeUnconditionalStringObject))
+            {
+                return false;
+            }
+            if (!object.Equals(this.OptionalUnconditionalStringObject, other.OptionalUnconditionalStringObject))
+            {
+                return false;
+            }
+            if (!object.Equals(this.SomeConditionalStringObject, other.SomeConditionalStringObject))
+            {
+                return false;
+            }
+            if (!object.Equals(this.OptionalConditionalStringObject, other.OptionalConditionalStringObject))
+            {
+                return false;
+            }
+            if (!object.Equals(this.SomeUnconditionalIntObject, other.SomeUnconditionalIntObject))
+            {
+                return false;
+            }
+            if (!object.Equals(this.SomeConditionalIntObject, other.SomeConditionalIntObject))
+            {
+                return false;
+            }
+            if (!object.Equals(this.OptionalConditionalIntObject, other.OptionalConditionalIntObject))
+            {
+                return false;
+            }
+            if (!object.Equals(this.NotStrongTyped, other.NotStrongTyped))
+            {
+                return false;
+            }
+            if (!object.Equals(this.SomeUnconditionalString, other.SomeUnconditionalString))
+            {
+                return false;
+            }
+            if (!object.Equals(this.OptionalUnconditionalString, other.OptionalUnconditionalString))
+            {
+                return false;
+            }
+            if (!object.Equals(this.SomeConditionalString, other.SomeConditionalString))
+            {
+                return false;
+            }
+            if (!object.Equals(this.OptionalConditionalString, other.OptionalConditionalString))
+            {
+                return false;
+            }
+            if (!object.Equals(this.SomeUnconditionalInt, other.SomeUnconditionalInt))
+            {
+                return false;
+            }
+            if (!object.Equals(this.SomeConditionalInt, other.SomeConditionalInt))
+            {
+                return false;
+            }
+            if (!object.Equals(this.OptionalConditionalInt, other.OptionalConditionalInt))
+            {
+                return false;
+            }
+            return true;
+        }
+	}
+}
+namespace Fifthweek.Api.Core.Tests
+{
+	using System;
+	using System.Collections.Generic;
+	using System.Linq;
+	public partial class ClassAugmentationParsingDummy
+	{
+		public partial class UnconditionalInt
+		{
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj))
+            {
+                return false;
+            }
+
+            if (ReferenceEquals(this, obj))
+            {
+                return true;
+            }
+
+            if (obj.GetType() != this.GetType())
+            {
+                return false;
+            }
+
+            return this.Equals((UnconditionalInt)obj);
+        }
+
+        public override int GetHashCode()
+        {
+            unchecked
+            {
+                int hashCode = 0;
+                hashCode = (hashCode * 397) ^ (this.Value != null ? this.Value.GetHashCode() : 0);
+                return hashCode;
+            }
+        }
+
+        protected bool Equals(UnconditionalInt other)
+        {
+            if (!object.Equals(this.Value, other.Value))
+            {
+                return false;
+            }
+            return true;
+        }
+		}
+	}
+}
+namespace Fifthweek.Api.Core.Tests
+{
+	using System;
+	using System.Collections.Generic;
+	using System.Linq;
+	public partial class ClassAugmentationParsingDummy
+	{
+		public partial class ConditionalString
+		{
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj))
+            {
+                return false;
+            }
+
+            if (ReferenceEquals(this, obj))
+            {
+                return true;
+            }
+
+            if (obj.GetType() != this.GetType())
+            {
+                return false;
+            }
+
+            return this.Equals((ConditionalString)obj);
+        }
+
+        public override int GetHashCode()
+        {
+            unchecked
+            {
+                int hashCode = 0;
+                hashCode = (hashCode * 397) ^ (this.Value != null ? this.Value.GetHashCode() : 0);
+                return hashCode;
+            }
+        }
+
+        protected bool Equals(ConditionalString other)
+        {
+            if (!object.Equals(this.Value, other.Value))
+            {
+                return false;
+            }
+            return true;
+        }
+		}
+	}
+}
+namespace Fifthweek.Api.Core.Tests
+{
+	using System;
+	using System.Collections.Generic;
+	using System.Linq;
+	public partial class ClassAugmentationParsingDummy
+	{
+		public partial class ConditionalInt
+		{
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj))
+            {
+                return false;
+            }
+
+            if (ReferenceEquals(this, obj))
+            {
+                return true;
+            }
+
+            if (obj.GetType() != this.GetType())
+            {
+                return false;
+            }
+
+            return this.Equals((ConditionalInt)obj);
+        }
+
+        public override int GetHashCode()
+        {
+            unchecked
+            {
+                int hashCode = 0;
+                hashCode = (hashCode * 397) ^ (this.Value != null ? this.Value.GetHashCode() : 0);
+                return hashCode;
+            }
+        }
+
+        protected bool Equals(ConditionalInt other)
+        {
+            if (!object.Equals(this.Value, other.Value))
+            {
+                return false;
+            }
+            return true;
+        }
+		}
+	}
+}
 
 namespace Fifthweek.Api.Core.Tests
 {
+	using System;
+	using System.Collections.Generic;
+	using System.Linq;
 	public partial class ClassAugmentationDummy
 	{
 		public Builder ToBuilder()
@@ -274,3 +645,32 @@ namespace Fifthweek.Api.Core.Tests
         }
 	}
 }
+
+namespace Fifthweek.Api.Core.Tests
+{
+	using System;
+	using System.Collections.Generic;
+	using System.Linq;
+	public partial class ClassAugmentationParsingDummy
+	{
+		public UnconditionalString SomeUnconditionalStringObject { get; private set; }
+		public UnconditionalString OptionalUnconditionalStringObject { get; private set; }
+		public ConditionalString SomeConditionalStringObject { get; private set; }
+		public ConditionalString OptionalConditionalStringObject { get; private set; }
+		public UnconditionalInt SomeUnconditionalIntObject { get; private set; }
+		public ConditionalInt SomeConditionalIntObject { get; private set; }
+		public ConditionalInt OptionalConditionalIntObject { get; private set; }
+
+		public void Parse()
+		{
+			var modelState = new System.Web.Http.ModelBinding.ModelStateDictionary();
+
+
+			if (!modelState.IsValid)
+			{
+				throw new Fifthweek.Api.Core.ModelValidationException(modelState);
+			}
+		}	
+	}
+}
+

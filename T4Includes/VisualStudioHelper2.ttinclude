@@ -1,14 +1,47 @@
 ﻿<#@ include file="VisualStudioHelper.ttinclude" once="true" #>
 <#@ assembly name="System.Core" #>
+<#@ import namespace="EnvDTE" #>
+<#@ import namespace="EnvDTE80" #>
 <#@ import namespace="System.Linq" #>
 <#@ import namespace="System.Text" #>
 <#@ import namespace="System.Collections.Generic" #>
 
 <#
-// get a reference to the project of this t4 template
-var project = VisualStudioHelper.CurrentProject;
-// get all class items from the code model
-var allClasses = VisualStudioHelper.CodeModel.GetAllCodeElementsOfType(project.CodeModel.CodeElements, vsCMElement.vsCMElementClass, false);
+	var codeMap = new Dictionary<string, UnifiedClassBuilder>();
+	var codeFiles = VisualStudioHelper.GetAllProjectItems(VisualStudioHelper.CurrentProject)
+		.OfType<ProjectItem>()
+		.Where(_ => _.FileCodeModel != null);
+
+	// A file may contain many of the same partial class.
+	// A class may be split across multiple files.
+	foreach (var codeFile in codeFiles)
+    {
+		var codeClasses = VisualStudioHelper
+			.CodeModel
+			.GetAllCodeElementsOfType(codeFile.FileCodeModel.CodeElements, vsCMElement.vsCMElementClass, false)
+			.OfType<CodeClass>();
+
+		foreach (var codeClass in codeClasses)
+        {
+			var groupBy = codeClass.Namespace.Name + codeClass.Name;
+			if (!codeMap.ContainsKey(groupBy))
+            {
+				codeMap.Add(groupBy, new UnifiedClassBuilder());
+            }
+
+			// Add code file if not already added (multiple partial files can exist in one file).
+			var codeFilesForClass = codeMap[groupBy].CodeFiles;
+			if (codeFilesForClass.All(_ => _.FileNames[0] != codeFile.FileNames[0]))
+            {
+				codeMap[groupBy].CodeFiles.Add(codeFile);
+            }
+
+			// Add code class.
+			codeMap[groupBy].CodeClasses.Add(codeClass);
+        }
+    }
+
+	var allClasses = codeMap.Values.Select(_ => new UnifiedClass(_.CodeFiles, _.CodeClasses, this, VisualStudioHelper)).ToList();
 #>
 
 <#+
@@ -17,24 +50,47 @@ var allClasses = VisualStudioHelper.CodeModel.GetAllCodeElementsOfType(project.C
 		return value.Substring(0, 1).ToLower() + value.Substring(1);
 	}
 
-	public class ClassUtility
+	public string StripTypeOf(string typeWrappedWithTypeOf)
+    {
+		var hasTrailingParenthesis = typeWrappedWithTypeOf.Substring(7);
+		return hasTrailingParenthesis.Substring(0, hasTrailingParenthesis.Length - 1);
+    }
+
+	public class UnifiedClassBuilder
+    {
+		public UnifiedClassBuilder()
+        {
+			this.CodeClasses = new List<CodeClass>();
+			this.CodeFiles = new List<ProjectItem>();
+        }
+
+		public List<CodeClass> CodeClasses { get; private set; }
+		public List<ProjectItem> CodeFiles { get; private set; }
+    }
+
+	public class UnifiedClass
 	{
-		private readonly CodeClass codeClass;
 		private readonly TextTransformation output;
 		private readonly AutomationHelper visualStudioHelper;
 
-		public ClassUtility(CodeClass codeClass, TextTransformation output, AutomationHelper visualStudioHelper)
+		public UnifiedClass(IReadOnlyList<ProjectItem> codeFiles, IReadOnlyList<CodeClass> codeClasses, TextTransformation output, AutomationHelper visualStudioHelper)
         {
-			this.codeClass = codeClass;
+			this.CodeClasses = codeClasses;
+			this.CodeFiles = codeFiles;
+			this.FirstCodeClass = codeClasses.First();
 			this.output = output;
 			this.visualStudioHelper = visualStudioHelper;
         }
+
+		public CodeClass FirstCodeClass { get; private set; }
+		public IReadOnlyList<CodeClass> CodeClasses { get; private set; }
+		public IReadOnlyList<ProjectItem> CodeFiles { get; private set; }
 
 		public IReadOnlyList<CodeAttribute> GetAllAttributes()
 		{
 			var allAttributes = new List<CodeAttribute>();
 
-			foreach(var partialClass in this.visualStudioHelper.CodeModel.GetPartialClasses(this.codeClass))
+			foreach(var partialClass in this.CodeClasses)
 			{
 				foreach(CodeAttribute attribute in partialClass.Attributes)
 				{
@@ -49,7 +105,7 @@ var allClasses = VisualStudioHelper.CodeModel.GetAllCodeElementsOfType(project.C
 		{
 			var allProperties = new List<CodeProperty>();
 
-			foreach(var partialClass in this.visualStudioHelper.CodeModel.GetPartialClasses(this.codeClass))
+			foreach(var partialClass in this.CodeClasses)
 			{
 				foreach (CodeElement elem in partialClass.Members)
 				{
@@ -71,11 +127,68 @@ var allClasses = VisualStudioHelper.CodeModel.GetAllCodeElementsOfType(project.C
 
 		public void WriteNamespaceAndClass(Action around)
 		{
-			this.output.WriteLine("namespace " + this.codeClass.Namespace.Name);
+			this.output.WriteLine("namespace " + this.FirstCodeClass.Namespace.Name);
 			this.output.WriteLine("{");
+
+			var imports = new HashSet<string>();
+			foreach (var codeFile in this.CodeFiles)
+            {
+				foreach (var import in this.GetAllCodeElementsOfType<CodeImport>(codeFile.FileCodeModel.CodeElements))
+                {
+					imports.Add(import.Namespace);
+                }
+            }
+
+			foreach (var import in imports)
+            {
+				this.output.WriteLine("\tusing " + import + ";"); 
+            }
+
 			WriteClass(around);
 			this.output.WriteLine("}");
 		}
+
+		public IEnumerable<T> GetAllCodeElementsOfType<T>(CodeElements elements) where T : CodeElement
+		{
+			var ret = new List<T>();
+
+			foreach (CodeElement elem in elements)
+			{
+				// iterate all namespaces (even if they are external)
+				// > they might contain project code
+				if (elem.Kind == EnvDTE.vsCMElement.vsCMElementNamespace)
+				{
+					// Only drill into namespace if it's for this type.
+					var codeNamespace = (CodeNamespace)elem;
+					if (codeNamespace.Name == this.FirstCodeClass.Namespace.Name)
+					{
+						ret.AddRange(GetAllCodeElementsOfType<T>(codeNamespace.Members));
+					}
+				}
+				// if its not a namespace but external
+				// > ignore it
+				else if (elem.InfoLocation == EnvDTE.vsCMInfoLocation.vsCMInfoLocationExternal)
+                {
+					continue;
+                }
+				// if its from the project
+				// > check its members
+				else if (elem.IsCodeType)
+				{
+					ret.AddRange(GetAllCodeElementsOfType<T>(((CodeType)elem).Members));
+				}
+
+				// if this item is of the desired type
+				// > store it
+				if (elem is T)
+                {
+					ret.Add((T)elem);
+                }
+			}
+
+			return ret;
+		}
+
 
 		private void WriteClass(Action around)
 		{
@@ -100,7 +213,7 @@ var allClasses = VisualStudioHelper.CodeModel.GetAllCodeElementsOfType(project.C
 		private List<CodeClass> GetEnclosingClasses()
 		{
 			var classHierarchy = new List<CodeClass>();
-			var currentClass = this.codeClass;
+			var currentClass = this.FirstCodeClass;
 			classHierarchy.Add(currentClass);
 			while (currentClass.Parent is CodeClass)
 			{

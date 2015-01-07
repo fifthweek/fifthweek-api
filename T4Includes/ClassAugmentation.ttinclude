@@ -6,3 +6,4 @@ using System;
 <#@ include file="AutoConstructor.ttinclude" #>
 <#@ include file="AutoEqualityMembers.ttinclude" #>
 <#@ include file="AutoBuilder.ttinclude" #>
+<#@ include file="AutoParse.ttinclude" #>

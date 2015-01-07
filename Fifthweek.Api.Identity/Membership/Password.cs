@@ -16,6 +16,12 @@ namespace Fifthweek.Api.Identity.Membership
 
         public string Value { get; protected set; }
 
+        public static bool IsEmpty(string value)
+        {
+            // Whitespace is considered a value. It is handled differently from null.
+            return string.IsNullOrEmpty(value); // Some classes use IsNullOrWhiteSpace
+        }
+
         public static Password Parse(string value)
         {
             Password retval;
@@ -38,7 +44,7 @@ namespace Fifthweek.Api.Identity.Membership
             var errorMessageList = new List<string>();
             errorMessages = errorMessageList;
 
-            if (value == null)
+            if (IsEmpty(value))
             {
                 // Method should never fail, so report null as an error instead of ArgumentNullException.
                 errorMessageList.Add("Value required");

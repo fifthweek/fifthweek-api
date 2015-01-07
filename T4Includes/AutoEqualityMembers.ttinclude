@@ -6,24 +6,21 @@
 <#@ import namespace="System.Text" #>
 <#@ import namespace="System.Collections.Generic" #>
 <#
-    // iterate all classes
-    foreach(CodeClass codeClass in allClasses)
+    foreach(UnifiedClass unifiedClass in allClasses)
     {
-		var classUtility = new ClassUtility(codeClass, this, VisualStudioHelper);
-
-        var allAttributes = classUtility.GetAllAttributes();
+        var allAttributes = unifiedClass.GetAllAttributes();
         if (allAttributes.All(_ => !_.Name.StartsWith("AutoEqualityMembers")))
         {
             continue;
         }
 
-        var publicProperties = classUtility.GetAllPublicGetters();
+        var publicProperties = unifiedClass.GetAllPublicGetters();
         if (publicProperties.Count == 0)
         {
             continue;
         }
 
-		classUtility.WriteNamespaceAndClass(() => {
+		unifiedClass.WriteNamespaceAndClass(() => {
 #>
         public override bool Equals(object obj)
         {
@@ -42,7 +39,7 @@
                 return false;
             }
 
-            return this.Equals((<#= codeClass.Name #>)obj);
+            return this.Equals((<#= unifiedClass.FirstCodeClass.Name #>)obj);
         }
 
         public override int GetHashCode()
@@ -62,7 +59,7 @@
             }
         }
 
-        protected bool Equals(<#= codeClass.Name #> other)
+        protected bool Equals(<#= unifiedClass.FirstCodeClass.Name #> other)
         {
 <#
     foreach(CodeProperty codeProperty in publicProperties)

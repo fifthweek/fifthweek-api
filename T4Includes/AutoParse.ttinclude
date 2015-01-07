@@ -1,0 +1,52 @@
+﻿<#@ include file="VisualStudioHelper.ttinclude" once="true" #>
+<#@ include file="VisualStudioHelper2.ttinclude" once="true" #>
+<#@ assembly name="System.Core" #>
+<#@ import namespace="EnvDTE" #>
+<#@ import namespace="System.Linq" #>
+<#@ import namespace="System.Text" #>
+<#@ import namespace="System.Collections.Generic" #>
+
+<#
+	var StrongPropertySuffix = "Object";
+
+    foreach(UnifiedClass unifiedClass in allClasses)
+    {
+        var publicProperties = unifiedClass.GetAllPublicGetters();
+        var stronglyTypedProperties = publicProperties
+			.Select(p => new { Property = p, Attribute = p.Attributes.OfType<CodeAttribute>().FirstOrDefault(_ => _.Name.StartsWith("StronglyTyped")) })
+			.Where(p => p.Attribute != null)
+			.ToList();
+		if (stronglyTypedProperties.Count == 0)
+        {
+            continue;
+        }
+
+		unifiedClass.WriteNamespaceAndClass(() => {
+
+    for (var i = 0; i < stronglyTypedProperties.Count; i++)
+    {
+		var codeAttribute = stronglyTypedProperties[i].Attribute;
+        var codeProperty = stronglyTypedProperties[i].Property;
+		var typedPropertyName = codeProperty.Name + StrongPropertySuffix;
+		var strongType = StripTypeOf(codeAttribute.Value);
+
+#>
+		public <#= strongType #> <#= typedPropertyName #> { get; private set; }
+<#
+    }
+#>
+
+		public void Parse()
+		{
+			var modelState = new System.Web.Http.ModelBinding.ModelStateDictionary();
+
+
+			if (!modelState.IsValid)
+			{
+				throw new Fifthweek.Api.Core.ModelValidationException(modelState);
+			}
+		}	
+<#
+        });
+    }
+#>

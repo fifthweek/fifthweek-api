@@ -7,24 +7,21 @@
 <#@ import namespace="System.Collections.Generic" #>
 
 <#
-    // iterate all classes
-    foreach(CodeClass codeClass in allClasses)
+    foreach(UnifiedClass unifiedClass in allClasses)
     {
-		var classUtility = new ClassUtility(codeClass, this, VisualStudioHelper);
-
-        var allAttributes = classUtility.GetAllAttributes();
+        var allAttributes = unifiedClass.GetAllAttributes();
         if (allAttributes.All(_ => !_.Name.StartsWith("AutoBuilder")))
         {
             continue;
         }
 
-        var publicProperties = classUtility.GetAllPublicGetters();
+        var publicProperties = unifiedClass.GetAllPublicGetters();
         if (publicProperties.Count == 0)
         {
             continue;
         }
 
-		classUtility.WriteNamespaceAndClass(() => {
+		unifiedClass.WriteNamespaceAndClass(() => {
 #>
 		public Builder ToBuilder()
 		{
@@ -41,7 +38,7 @@
 			return builder;
 		}
 
-		public <#= codeClass.Name #> Copy(Action<Builder> applyDelta)
+		public <#= unifiedClass.FirstCodeClass.Name #> Copy(Action<Builder> applyDelta)
 		{
 			var builder = this.ToBuilder();
 			applyDelta(builder);
@@ -60,9 +57,9 @@
     }
 #>
 
-			public <#= codeClass.Name #> Build()
+			public <#= unifiedClass.FirstCodeClass.Name #> Build()
 			{
-				return new <#= codeClass.Name #>(
+				return new <#= unifiedClass.FirstCodeClass.Name #>(
 <#
     for (var i = 0; i < publicProperties.Count; i++)
     {

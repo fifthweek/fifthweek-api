@@ -7,18 +7,15 @@
 <#@ import namespace="System.Collections.Generic" #>
 
 <#
-    // iterate all classes
-    foreach(CodeClass codeClass in allClasses)
+    foreach(UnifiedClass unifiedClass in allClasses)
     {
-		var classUtility = new ClassUtility(codeClass, this, VisualStudioHelper);
-
-        var allAttributes = classUtility.GetAllAttributes();
+        var allAttributes = unifiedClass.GetAllAttributes();
         if (allAttributes.All(_ => !_.Name.StartsWith("AutoConstructor")))
         {
             continue;
         }
 
-        var publicProperties = classUtility.GetAllPublicGetters();
+        var publicProperties = unifiedClass.GetAllPublicGetters();
         if (publicProperties.Count == 0)
         {
             continue;
@@ -26,9 +23,9 @@
 
         var requiredNullableProperties = publicProperties.Where(p => p.Attributes.OfType<CodeAttribute>().All(_ => !_.Name.StartsWith("Optional")));
 
-		classUtility.WriteNamespaceAndClass(() => {
+		unifiedClass.WriteNamespaceAndClass(() => {
 #>
-        public <#= codeClass.Name #>(
+        public <#= unifiedClass.FirstCodeClass.Name #>(
 <#
     for (var i = 0; i < publicProperties.Count; i++)
     {
