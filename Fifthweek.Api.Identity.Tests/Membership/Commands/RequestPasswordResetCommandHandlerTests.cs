@@ -148,8 +148,6 @@ namespace Fifthweek.Api.Identity.Tests.Membership.Commands
         [TestInitialize]
         public void TestInitialize()
         {
-            this.passwordResetRequestData = PasswordResetRequestDataTests.NewData();
-            this.requestPasswordResetCommand = RequestPasswordResetCommandTests.NewCommand(this.passwordResetRequestData);
             this.userManager = new Mock<IUserManager>(MockBehavior.Strict);
             this.target = new RequestPasswordResetCommandHandler(this.userManager.Object);
         }
@@ -161,8 +159,6 @@ namespace Fifthweek.Api.Identity.Tests.Membership.Commands
         private const string Username = "test_user";
         private const string EmailSubject = "Reset Password";
         private readonly string activationLink = string.Format("\"https://www.fifthweek.com/#/resetPassword?userId={0}&token={1}\"", UserId, Token);
-        private PasswordResetRequestData passwordResetRequestData;
-        private RequestPasswordResetCommand requestPasswordResetCommand;
         private Mock<IUserManager> userManager;
         private RequestPasswordResetCommandHandler target;
     }

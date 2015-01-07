@@ -22,7 +22,7 @@ namespace Fifthweek.Api.Identity.Tests.Membership.Controllers
         [TestMethod]
         public async Task WhenPostingRegistrations_ItShouldIssueRegisterUserCommand()
         {
-            var registration = RegistrationDataTests.NewData();
+            var registration = NewRegistrationData();
             var command = RegisterUserCommandTests.NewCommand(Guid.Empty, registration);
 
             this.registerUser.Setup(v => v.HandleAsync(command)).Returns(Task.FromResult(0));
@@ -62,7 +62,7 @@ namespace Fifthweek.Api.Identity.Tests.Membership.Controllers
         [TestMethod]
         public async Task WhenPostingPasswordResetRequests_ItShouldIssueRequestPasswordResetCommand()
         {
-            var passwordResetRequest = PasswordResetRequestDataTests.NewData();
+            var passwordResetRequest = NewPasswordResetRequestData();
             var command = RequestPasswordResetCommandTests.NewCommand(passwordResetRequest);
 
             var result = await this.controller.PostPasswordResetRequestAsync(passwordResetRequest);
@@ -74,7 +74,7 @@ namespace Fifthweek.Api.Identity.Tests.Membership.Controllers
         [TestMethod]
         public async Task WhenPostingPasswordResetConfirmations_ItShouldIssueConfirmPasswordResetCommand()
         {
-            var passwordResetConfirmation = PasswordResetConfirmationDataTests.NewData();
+            var passwordResetConfirmation = NewPasswordResetConfirmationData();
             var command = ConfirmPasswordResetCommandTests.NewCommand(passwordResetConfirmation);
 
             var result = await this.controller.PostPasswordResetConfirmationAsync(passwordResetConfirmation);
@@ -138,5 +138,35 @@ namespace Fifthweek.Api.Identity.Tests.Membership.Controllers
         private Mock<IQueryHandler<IsPasswordResetTokenValidQuery, bool>> isPasswordResetTokenValid;
         private Mock<IGuidCreator> guidCreator;
         private MembershipController controller;
+
+        public static PasswordResetConfirmationData NewPasswordResetConfirmationData()
+        {
+            return new PasswordResetConfirmationData
+            {
+                UserId = Guid.Parse("{5E41A09B-0523-4FD3-BC82-9D5A02D2FB97}"),
+                Token = "SomeLongBase64EncodedGumpf",
+                NewPassword = "SecretSquirrel",
+            };
+        }
+
+        public static PasswordResetRequestData NewPasswordResetRequestData()
+        {
+            return new PasswordResetRequestData
+            {
+                Email = "test@test.com",
+                Username = "test_username",
+            };
+        }
+
+        public static RegistrationData NewRegistrationData()
+        {
+            return new RegistrationData
+            {
+                ExampleWork = "TestExampleWork",
+                Email = "test@test.com",
+                Username = "test_username",
+                Password = "TestPassword"
+            };
+        }
     }
 }
