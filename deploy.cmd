@@ -73,7 +73,18 @@ IF /I "Fifthweek.sln" NEQ "" (
   IF !ERRORLEVEL! NEQ 0 goto error
 )
 
-:: 2. Build to the temporary path
+:: 2. Building solution for running tests
+echo Building test project
+call :ExecuteCmd "%MSBUILD_PATH%" "%DEPLOYMENT_SOURCE%\Fifthweek.sln" /t:Clean,Build
+IF !ERRORLEVEL! NEQ 0 goto error
+
+:: 3. Running tests
+echo Running tests
+call :ExecuteCmd runtests "%DEPLOYMENT_SOURCE%"
+IF !ERRORLEVEL! NEQ 0 goto error
+
+
+:: 4. Build to the temporary path
 IF /I "%IN_PLACE_DEPLOYMENT%" NEQ "1" (
   call :ExecuteCmd "%MSBUILD_PATH%" "%DEPLOYMENT_SOURCE%\Fifthweek.Api/Fifthweek.Api.csproj" /nologo /verbosity:m /t:Build /t:pipelinePreDeployCopyAllFilesToOneFolder /p:_PackageTempDir="%DEPLOYMENT_TEMP%";AutoParameterizationWebConfigConnectionStrings=false;Configuration=Release /p:SolutionDir="%DEPLOYMENT_SOURCE%\.\\" %SCM_BUILD_ARGS%
 ) ELSE (
@@ -81,17 +92,6 @@ IF /I "%IN_PLACE_DEPLOYMENT%" NEQ "1" (
 )
 
 IF !ERRORLEVEL! NEQ 0 goto error
-
-:: 3. Building test project
-echo Building test project
-call :ExecuteCmd "%MSBUILD_PATH%" "%DEPLOYMENT_SOURCE%\Fifthweek.sln"
-IF !ERRORLEVEL! NEQ 0 goto error
-
-:: 4. Running tests
-echo Running tests
-call :ExecuteCmd runtests "%DEPLOYMENT_SOURCE%"
-IF !ERRORLEVEL! NEQ 0 goto error
-
 
 :: 5. KuduSync
 IF /I "%IN_PLACE_DEPLOYMENT%" NEQ "1" (
