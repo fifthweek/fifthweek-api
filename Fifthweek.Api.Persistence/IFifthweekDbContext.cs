@@ -7,17 +7,19 @@
 
     using Fifthweek.Api.Persistence.Identity;
 
-    using Microsoft.AspNet.Identity.EntityFramework;
-
     public interface IFifthweekDbContext : IDisposable
     {
         Database Database { get; }
 
-        IDbSet<RefreshToken> RefreshTokens { get; set; }
+        IDbSet<RefreshToken> RefreshTokens { get; }
 
-        IDbSet<FifthweekUser> Users { get; set; }
+        IDbSet<FifthweekUser> Users { get; }
 
-        IDbSet<FifthweekRole> Roles { get; set; }
+        IDbSet<FifthweekRole> Roles { get; }
+
+        IDbSet<Subscription> Subscriptions { get; }
+
+        IDbSet<Channel> Channels { get; }
 
         Task<int> SaveChangesAsync();
 

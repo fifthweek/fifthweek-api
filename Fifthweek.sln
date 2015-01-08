@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2013
-VisualStudioVersion = 12.0.31101.0
+VisualStudioVersion = 12.0.30723.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fifthweek.Api", "Fifthweek.Api\Fifthweek.Api.csproj", "{F90DC407-DC1E-4EF6-BBEC-B5598810660A}"
 EndProject
@@ -62,6 +62,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fifthweek.Api.Azure", "Fifthweek.Api.Azure\Fifthweek.Api.Azure.csproj", "{ABC43617-3AAA-4B7A-B4DC-D10E023F1846}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fifthweek.Api.Azure.Tests", "Fifthweek.Api.Azure.Tests\Fifthweek.Api.Azure.Tests.csproj", "{D4E9D942-7537-4F54-95C9-98B45F04B1D1}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fifthweek.Api.Persistence.Tests.Shared", "Fifthweek.Api.Persistence.Tests.Shared\Fifthweek.Api.Persistence.Tests.Shared.csproj", "{ECDE2C4E-7DD8-4210-8E09-D5762C88B3CB}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -153,6 +155,10 @@ Global
 		{D4E9D942-7537-4F54-95C9-98B45F04B1D1}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D4E9D942-7537-4F54-95C9-98B45F04B1D1}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D4E9D942-7537-4F54-95C9-98B45F04B1D1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{ECDE2C4E-7DD8-4210-8E09-D5762C88B3CB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{ECDE2C4E-7DD8-4210-8E09-D5762C88B3CB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{ECDE2C4E-7DD8-4210-8E09-D5762C88B3CB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{ECDE2C4E-7DD8-4210-8E09-D5762C88B3CB}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

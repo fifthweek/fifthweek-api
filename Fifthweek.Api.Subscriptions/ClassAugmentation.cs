@@ -59,10 +59,11 @@ namespace Fifthweek.Api.Subscriptions.Commands
 	using System;
 	using Fifthweek.Api.Core;
 	using System.Threading.Tasks;
+	using Fifthweek.Api.Identity.Membership;
 	public partial class SetMandatorySubscriptionFieldsCommandHandler
 	{
         public SetMandatorySubscriptionFieldsCommandHandler(
-            ISubscriptionSecurity subscriptionSecurity)
+            Fifthweek.Api.Subscriptions.ISubscriptionSecurity subscriptionSecurity)
         {
             if (subscriptionSecurity == null)
             {
@@ -91,6 +92,31 @@ namespace Fifthweek.Api.Subscriptions
             }
 
             this.Value = value;
+        }
+	}
+
+}
+namespace Fifthweek.Api.Subscriptions
+{
+	using System;
+	using System.Data.Entity;
+	using System.Linq;
+	using System.Threading.Tasks;
+	using Dapper;
+	using Fifthweek.Api.Core;
+	using Fifthweek.Api.Identity.Membership;
+	using Fifthweek.Api.Persistence;
+	public partial class SubscriptionSecurity
+	{
+        public SubscriptionSecurity(
+            Fifthweek.Api.Persistence.IFifthweekDbContext fifthweekDbContext)
+        {
+            if (fifthweekDbContext == null)
+            {
+                throw new ArgumentNullException("fifthweekDbContext");
+            }
+
+            this.fifthweekDbContext = fifthweekDbContext;
         }
 	}
 

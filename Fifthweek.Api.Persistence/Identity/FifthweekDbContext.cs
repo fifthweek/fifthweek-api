@@ -14,6 +14,10 @@ namespace Fifthweek.Api.Persistence.Identity
 
         public IDbSet<RefreshToken> RefreshTokens { get; set; }
 
+        public IDbSet<Subscription> Subscriptions { get; set; }
+
+        public IDbSet<Channel> Channels { get; set; }
+
         public static FifthweekDbContext Create()
         {
             return new FifthweekDbContext();
