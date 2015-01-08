@@ -9,6 +9,9 @@ namespace Fifthweek.Api.FileManagement.Tests.Controllers
     using Fifthweek.Api.FileManagement.Commands;
     using Fifthweek.Api.FileManagement.Controllers;
     using Fifthweek.Api.FileManagement.Queries;
+    using Fifthweek.Api.Identity;
+    using Fifthweek.Api.Identity.Membership;
+    using Fifthweek.Api.Identity.OAuth;
 
     using Moq;
 
@@ -22,13 +25,16 @@ namespace Fifthweek.Api.FileManagement.Tests.Controllers
 
             var fileId = new FileId(this.guid);
             var uploadUri = "/test";
+            var userId = new UserId(Guid.NewGuid());
 
-            this.initiateFileUploadRequest.Setup(v => v.HandleAsync(new InitiateFileUploadRequestCommand(fileId))).Returns(Task.FromResult(0)).Verifiable();
+            this.userContext.Setup(v => v.GetUserId()).Returns(userId).Verifiable();
+            this.initiateFileUploadRequest.Setup(v => v.HandleAsync(new InitiateFileUploadRequestCommand(fileId, userId))).Returns(Task.FromResult(0)).Verifiable();
             this.getSharedAccessSignatureUri.Setup(v => v.HandleAsync(new GetSharedAccessSignatureUriQuery(fileId))).ReturnsAsync(uploadUri).Verifiable();
 
             var response = await this.fileUploadController.PostUploadRequestAsync(new UploadRequest());
 
             this.guidCreator.Verify();
+            this.userContext.Verify();
             this.initiateFileUploadRequest.Verify();
             this.getSharedAccessSignatureUri.Verify();
 
@@ -54,12 +60,14 @@ namespace Fifthweek.Api.FileManagement.Tests.Controllers
             this.initiateFileUploadRequest = new Mock<ICommandHandler<InitiateFileUploadRequestCommand>>();
             this.getSharedAccessSignatureUri = new Mock<IQueryHandler<GetSharedAccessSignatureUriQuery, string>>();
             this.fileUploadComplete = new Mock<ICommandHandler<FileUploadCompleteCommand>>();
+            this.userContext = new Mock<IUserContext>();
 
             this.fileUploadController = new FileUploadController(
                 this.guidCreator.Object,
                 this.initiateFileUploadRequest.Object,
                 this.getSharedAccessSignatureUri.Object,
-                this.fileUploadComplete.Object);
+                this.fileUploadComplete.Object,
+                this.userContext.Object);
         }
 
         private readonly Guid guid = Guid.NewGuid();
@@ -71,6 +79,8 @@ namespace Fifthweek.Api.FileManagement.Tests.Controllers
         private Mock<IQueryHandler<GetSharedAccessSignatureUriQuery, string>> getSharedAccessSignatureUri;
 
         private Mock<ICommandHandler<FileUploadCompleteCommand>> fileUploadComplete;
+
+        private Mock<IUserContext> userContext;
 
         private FileUploadController fileUploadController;
     }

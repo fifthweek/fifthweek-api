@@ -149,6 +149,7 @@
     <Compile Include="OAuth\IFifthweekAuthorizationServerHandler.cs" />
     <Compile Include="OAuth\IFifthweekRefreshTokenHandler.cs" />
     <Compile Include="OAuth\IRefreshTokenRepository.cs" />
+    <Compile Include="OAuth\IUserContext.cs" />
     <Compile Include="OAuth\ProviderErrorHandler.cs" />
     <Compile Include="OAuth\Queries\GetClientQuery.cs" />
     <Compile Include="OAuth\Queries\GetClientQueryHandler.cs" />
@@ -156,6 +157,7 @@
     <Compile Include="OAuth\Queries\GetRefreshTokenQueryHandler.cs" />
     <Compile Include="OAuth\RefreshTokenId.cs" />
     <Compile Include="OAuth\RefreshTokenRepository.cs" />
+    <Compile Include="OAuth\UserContext.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

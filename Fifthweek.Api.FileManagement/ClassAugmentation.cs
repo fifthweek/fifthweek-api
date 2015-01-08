@@ -9,17 +9,25 @@ namespace Fifthweek.Api.FileManagement.Commands
 {
 	using System;
 	using Fifthweek.Api.Core;
+	using Fifthweek.Api.Identity.Membership;
 	public partial class InitiateFileUploadRequestCommand
 	{
         public InitiateFileUploadRequestCommand(
-            Fifthweek.Api.FileManagement.FileId fileId)
+            Fifthweek.Api.FileManagement.FileId fileId, 
+            Fifthweek.Api.Identity.Membership.UserId userId)
         {
             if (fileId == null)
             {
                 throw new ArgumentNullException("fileId");
             }
 
+            if (userId == null)
+            {
+                throw new ArgumentNullException("userId");
+            }
+
             this.FileId = fileId;
+            this.UserId = userId;
         }
 	}
 
@@ -28,6 +36,7 @@ namespace Fifthweek.Api.FileManagement.Commands
 {
 	using System;
 	using Fifthweek.Api.Core;
+	using Fifthweek.Api.Identity.Membership;
 	public partial class FileUploadCompleteCommand
 	{
         public FileUploadCompleteCommand(
@@ -126,11 +135,73 @@ namespace Fifthweek.Api.FileManagement
 	}
 
 }
+namespace Fifthweek.Api.FileManagement.Controllers
+{
+	using System;
+	using System.IO;
+	using System.Net.Http;
+	using System.Text;
+	using System.Threading.Tasks;
+	using System.Web.Http;
+	using System.Web.Http.Description;
+	using Fifthweek.Api.Core;
+	using Fifthweek.Api.FileManagement.Commands;
+	using Fifthweek.Api.FileManagement.Queries;
+	using Fifthweek.Api.Identity;
+	using Fifthweek.Api.Identity.OAuth;
+
+	using Microsoft.WindowsAzure;
+	using Microsoft.WindowsAzure.Storage;
+	using Microsoft.WindowsAzure.Storage.Blob;
+	public partial class FileUploadController
+	{
+        public FileUploadController(
+            Fifthweek.Api.Core.IGuidCreator guidCreator, 
+            Fifthweek.Api.Core.ICommandHandler<Fifthweek.Api.FileManagement.Commands.InitiateFileUploadRequestCommand> initiateFileUploadRequest, 
+            Fifthweek.Api.Core.IQueryHandler<Fifthweek.Api.FileManagement.Queries.GetSharedAccessSignatureUriQuery,System.String> getSharedAccessSignatureUri, 
+            Fifthweek.Api.Core.ICommandHandler<Fifthweek.Api.FileManagement.Commands.FileUploadCompleteCommand> fileUploadComplete, 
+            IUserContext userContext)
+        {
+            if (guidCreator == null)
+            {
+                throw new ArgumentNullException("guidCreator");
+            }
+
+            if (initiateFileUploadRequest == null)
+            {
+                throw new ArgumentNullException("initiateFileUploadRequest");
+            }
+
+            if (getSharedAccessSignatureUri == null)
+            {
+                throw new ArgumentNullException("getSharedAccessSignatureUri");
+            }
+
+            if (fileUploadComplete == null)
+            {
+                throw new ArgumentNullException("fileUploadComplete");
+            }
+
+            if (userContext == null)
+            {
+                throw new ArgumentNullException("userContext");
+            }
+
+            this.guidCreator = guidCreator;
+            this.initiateFileUploadRequest = initiateFileUploadRequest;
+            this.getSharedAccessSignatureUri = getSharedAccessSignatureUri;
+            this.fileUploadComplete = fileUploadComplete;
+            this.userContext = userContext;
+        }
+	}
+
+}
 
 namespace Fifthweek.Api.FileManagement.Commands
 {
 	using System;
 	using Fifthweek.Api.Core;
+	using Fifthweek.Api.Identity.Membership;
 	public partial class InitiateFileUploadRequestCommand
 	{
         public override bool Equals(object obj)
@@ -159,6 +230,7 @@ namespace Fifthweek.Api.FileManagement.Commands
             {
                 int hashCode = 0;
                 hashCode = (hashCode * 397) ^ (this.FileId != null ? this.FileId.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.UserId != null ? this.UserId.GetHashCode() : 0);
                 return hashCode;
             }
         }
@@ -166,6 +238,10 @@ namespace Fifthweek.Api.FileManagement.Commands
         protected bool Equals(InitiateFileUploadRequestCommand other)
         {
             if (!object.Equals(this.FileId, other.FileId))
+            {
+                return false;
+            }
+            if (!object.Equals(this.UserId, other.UserId))
             {
                 return false;
             }
@@ -178,6 +254,7 @@ namespace Fifthweek.Api.FileManagement.Commands
 {
 	using System;
 	using Fifthweek.Api.Core;
+	using Fifthweek.Api.Identity.Membership;
 	public partial class FileUploadCompleteCommand
 	{
         public override bool Equals(object obj)

@@ -15,6 +15,7 @@
             builder.RegisterType<FifthweekAuthorizationServerHandler>().As<IFifthweekAuthorizationServerHandler>().InstancePerRequest();
             builder.RegisterType<FifthweekRefreshTokenProvider>().SingleInstance();
             builder.RegisterType<FifthweekRefreshTokenHandler>().As<IFifthweekRefreshTokenHandler>().InstancePerRequest();
+            builder.RegisterType<UserContext>().As<IUserContext>().InstancePerRequest();
         }
     }
 }
