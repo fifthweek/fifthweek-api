@@ -1,5 +1,4 @@
-﻿using System;
-using Fifthweek.Api.Core;
+﻿using Fifthweek.Api.Core;
 
 namespace Fifthweek.Api.Subscriptions.Commands
 {

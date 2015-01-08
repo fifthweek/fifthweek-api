@@ -17,43 +17,43 @@
             continue;
         }
 
-        var publicProperties = unifiedClass.GetAllPublicGetters();
-        if (publicProperties.Count == 0)
+        var parameters = AutoConstructorParameter.GetParametersForClass(unifiedClass);
+        if (parameters.Count == 0)
         {
             continue;
         }
 
-        var requiredNullableProperties = publicProperties.Where(p => p.Attributes.OfType<CodeAttribute>().All(_ => !_.Name.StartsWith(OptionalAttributeName)));
+        var requiredNullableParameters = parameters.Where(p => p.Attributes.OfType<CodeAttribute>().All(_ => !_.Name.StartsWith(OptionalAttributeName)));
 
 		unifiedClass.WriteNamespaceAndClass(() => {
 #>
         public <#= unifiedClass.FirstCodeClass.Name #>(
 <#
-    for (var i = 0; i < publicProperties.Count; i++)
+    for (var i = 0; i < parameters.Count; i++)
     {
-        var codeProperty = publicProperties[i];
+        var parameter = parameters[i];
 #>
-            <#= codeProperty.Type.AsFullName #> <#= ToLowerCamelCase(codeProperty.Name) #><#= i < publicProperties.Count - 1 ? ", " : ")" #>
+            <#= parameter.TypeName #> <#= parameter.ConstructorParameter #><#= i < parameters.Count - 1 ? ", " : ")" #>
 <#
     }
 #>
         {
 <#
-    foreach(CodeProperty codeProperty in requiredNullableProperties)
+    foreach(var parameter in requiredNullableParameters)
     {
 #>
-            if (<#= ToLowerCamelCase(codeProperty.Name) #> == null)
+            if (<#= parameter.ConstructorParameter #> == null)
             {
-                throw new ArgumentNullException("<#= ToLowerCamelCase(codeProperty.Name) #>");
+                throw new ArgumentNullException("<#= parameter.ConstructorParameter #>");
             }
 
 <#
     }
 
-    foreach(CodeProperty codeProperty in publicProperties)
+    foreach(var parameter in parameters)
     {
 #>
-            this.<#= codeProperty.Name #> = <#= ToLowerCamelCase(codeProperty.Name) #>;
+            this.<#= parameter.AssigneeName #> = <#= parameter.ConstructorParameter #>;
 <#
     }
 #>
@@ -61,4 +61,31 @@
 <#
         });
     }
+#>
+<#+
+    public class AutoConstructorParameter
+	{
+		public string TypeName;
+		public string ConstructorParameter;
+		public string AssigneeName;
+		public CodeElements Attributes;
+
+		public static IReadOnlyList<AutoConstructorParameter> GetParametersForClass(UnifiedClass unifiedClass)
+        {
+			return unifiedClass.GetAllPublicGetters().Select(_ => new AutoConstructorParameter
+			{ 
+				TypeName = _.Type.AsFullName, 
+				ConstructorParameter = ToLowerCamelCase(_.Name),
+				AssigneeName = _.Name,
+				Attributes = _.Attributes
+			}).Concat(unifiedClass.GetAllPrivateReadOnlyFields().Select(_ => new AutoConstructorParameter
+			{ 
+				TypeName = _.Type.AsFullName, 
+				ConstructorParameter = ToLowerCamelCase(_.Name),
+				AssigneeName = _.Name,
+				Attributes = _.Attributes
+			}))
+			.ToList();
+        }
+	}
 #>

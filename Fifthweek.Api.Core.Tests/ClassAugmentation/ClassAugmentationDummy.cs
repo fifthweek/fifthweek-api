@@ -6,6 +6,17 @@ namespace Fifthweek.Api.Core.Tests.ClassAugmentation
     [AutoEqualityMembers, AutoConstructor, AutoBuilder]
     public partial class ClassAugmentationDummy
     {
+        private readonly string someStringField;
+        
+        [Optional]
+        private readonly string optionalStringField;
+
+        public readonly string NotInConstructor = "Hey";
+        public static readonly string NotInConstructor2 = "Hey";
+        protected readonly string NotInConstructor3 = "Hey";
+        protected static readonly string NotInConstructor4 = "Hey";
+        private static readonly string notInConstructor5 = "Hey";
+
         public Guid SomeGuid { get; private set; }
 
         public int SomeInt { get; private set; }

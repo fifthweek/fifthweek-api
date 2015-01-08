@@ -9,6 +9,7 @@ namespace Fifthweek.Api.Subscriptions.Commands
 {
 	using System;
 	using Fifthweek.Api.Core;
+	using System.Threading.Tasks;
 	public partial class SetMandatorySubscriptionFieldsCommand
 	{
         public SetMandatorySubscriptionFieldsCommand(
@@ -41,6 +42,26 @@ namespace Fifthweek.Api.Subscriptions.Commands
             this.SubscriptionName = subscriptionName;
             this.Tagline = tagline;
             this.BasePrice = basePrice;
+        }
+	}
+
+}
+namespace Fifthweek.Api.Subscriptions.Commands
+{
+	using System;
+	using Fifthweek.Api.Core;
+	using System.Threading.Tasks;
+	public partial class SetMandatorySubscriptionFieldsCommandHandler
+	{
+        public SetMandatorySubscriptionFieldsCommandHandler(
+            Fifthweek.Api.Subscriptions.Commands.ISubscriptionSecurity subscriptionSecurity)
+        {
+            if (subscriptionSecurity == null)
+            {
+                throw new ArgumentNullException("subscriptionSecurity");
+            }
+
+            this.subscriptionSecurity = subscriptionSecurity;
         }
 	}
 
@@ -120,6 +141,7 @@ namespace Fifthweek.Api.Subscriptions.Commands
 {
 	using System;
 	using Fifthweek.Api.Core;
+	using System.Threading.Tasks;
 	public partial class SetMandatorySubscriptionFieldsCommand
 	{
         public override bool Equals(object obj)

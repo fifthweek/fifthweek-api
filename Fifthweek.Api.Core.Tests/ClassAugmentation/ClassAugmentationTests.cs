@@ -6,7 +6,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 namespace Fifthweek.Api.Core.Tests.ClassAugmentation
 {
     [TestClass]
-    public class ClassAugmentationDummyTests : ImmutableComplexTypeTests<ClassAugmentation.ClassAugmentationDummy, ClassAugmentation.ClassAugmentationDummy.Builder>
+    public class ClassAugmentationDummyTests : ImmutableComplexTypeTests<ClassAugmentationDummy, ClassAugmentationDummy.Builder>
     {
         [TestMethod]
         public void ItShouldRecogniseEquality()
@@ -28,19 +28,28 @@ namespace Fifthweek.Api.Core.Tests.ClassAugmentation
             this.AssertDifference(_ => _.SomeString = "different");
             this.AssertDifference(_ => _.OptionalString = "different");
             this.AssertDifference(_ => _.OptionalString = null);
-
+            
             this.AssertDifference(_ => _.SomeCollection = CollectionB);
             this.AssertDifference(_ => _.OptionalCollection = CollectionB);
             this.AssertDifference(_ => _.OptionalCollection = null);
 
-            this.AssertDifference(_ => _.SomeComplexType = new ClassAugmentation.ClassAugmentationDummy.ComplexType("different"));
-            this.AssertDifference(_ => _.OptionalComplexType = new ClassAugmentation.ClassAugmentationDummy.ComplexType("different"));
+            this.AssertDifference(_ => _.SomeComplexType = new ClassAugmentationDummy.ComplexType("different"));
+            this.AssertDifference(_ => _.OptionalComplexType = new ClassAugmentationDummy.ComplexType("different"));
             this.AssertDifference(_ => _.OptionalComplexType = null);
+        }
+
+        [TestMethod]
+        public void ItShouldNotRecogniseFieldChanges()
+        {
+            this.AssertEqual(_ => _.someStringField = "different");
+            this.AssertEqual(_ => _.optionalStringField = "different");
+            this.AssertEqual(_ => _.optionalStringField = null);
         }
 
         [TestMethod]
         public void ItShouldRequirePropertiesByDefault()
         {
+            this.AssertRequired(_ => _.someStringField = null);
             this.AssertRequired(_ => _.SomeString = null);
             this.AssertRequired(_ => _.SomeCollection = null);
             this.AssertRequired(_ => _.SomeComplexType = null);
@@ -49,6 +58,7 @@ namespace Fifthweek.Api.Core.Tests.ClassAugmentation
         [TestMethod]
         public void ItShouldNotRequirePropertiesMarkedOptional()
         {
+            this.AssertOptional(_ => _.optionalStringField = null);
             this.AssertOptional(_ => _.OptionalGuid = null);
             this.AssertOptional(_ => _.OptionalInt = null);
             this.AssertOptional(_ => _.OptionalString = null);
@@ -56,9 +66,9 @@ namespace Fifthweek.Api.Core.Tests.ClassAugmentation
             this.AssertOptional(_ => _.OptionalComplexType = null);
         }
 
-        protected override ClassAugmentation.ClassAugmentationDummy.Builder NewInstanceOfBuilderForObjectA()
+        protected override ClassAugmentationDummy.Builder NewInstanceOfBuilderForObjectA()
         {
-            return new ClassAugmentation.ClassAugmentationDummy.Builder
+            return new ClassAugmentationDummy.Builder
             {
                 SomeGuid = Guid.Parse("{34FAA659-9A26-4068-8EF9-3986F0E6ECBC}"),
                 SomeInt = 75,
@@ -68,12 +78,14 @@ namespace Fifthweek.Api.Core.Tests.ClassAugmentation
                 OptionalString = "World",
                 SomeCollection = CollectionA,
                 OptionalCollection = CollectionA,
-                SomeComplexType = new ClassAugmentation.ClassAugmentationDummy.ComplexType("Foo"),
-                OptionalComplexType = new ClassAugmentation.ClassAugmentationDummy.ComplexType("Bar"),
+                SomeComplexType = new ClassAugmentationDummy.ComplexType("Foo"),
+                OptionalComplexType = new ClassAugmentationDummy.ComplexType("Bar"),
+                someStringField = "Hey",
+                optionalStringField = "This is cool"
             };
         }
 
-        protected override ClassAugmentation.ClassAugmentationDummy FromBuilder(ClassAugmentation.ClassAugmentationDummy.Builder builder)
+        protected override ClassAugmentationDummy FromBuilder(ClassAugmentationDummy.Builder builder)
         {
             return builder.Build();
         }

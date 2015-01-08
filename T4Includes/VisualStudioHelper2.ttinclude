@@ -45,18 +45,18 @@
 #>
 
 <#+
-	public string ToLowerCamelCase(string value)
+	public static string ToLowerCamelCase(string value)
 	{
 		return value.Substring(0, 1).ToLower() + value.Substring(1);
 	}
 
-	public string StripTypeOf(string typeWrappedWithTypeOf)
+	public static string StripTypeOf(string typeWrappedWithTypeOf)
     {
 		var hasTrailingParenthesis = typeWrappedWithTypeOf.Substring(7);
 		return hasTrailingParenthesis.Substring(0, hasTrailingParenthesis.Length - 1);
     }
 
-	public IReadOnlyList<string> ParseAttribute(string value)
+	public static IReadOnlyList<string> ParseAttribute(string value)
 	{
 		var retval = new List<string>();
 		foreach (var parameter in value.Split(new[] { ',' }))
@@ -152,6 +152,30 @@
 			}
 		
 			return allProperties;
+		}
+
+		public IReadOnlyList<CodeVariable> GetAllPrivateReadOnlyFields()
+		{
+			var allFields = new List<CodeVariable>();
+
+			foreach(var partialClass in this.CodeClasses)
+			{
+				foreach (CodeElement elem in partialClass.Members)
+				{
+					if (elem.Kind == vsCMElement.vsCMElementVariable)
+					{
+						var field = (CodeVariable)elem;
+						if (field.Access != vsCMAccess.vsCMAccessPrivate || !field.IsConstant || field.IsShared)
+                        {
+							continue;
+                        }
+
+						allFields.Add(field);
+					}
+				}
+			}
+		
+			return allFields;
 		}
 
 		public IEnumerable<T> GetAllCodeElementsOfType<T>(CodeElements elements) where T : CodeElement

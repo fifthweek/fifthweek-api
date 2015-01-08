@@ -5,6 +5,15 @@ namespace Fifthweek.Api.Tests.Shared
 {
     public abstract class ImmutableComplexTypeTests<T, TBuilder> : EqualityTests<T>
     {
+        public void AssertEqual(Action<TBuilder> applyUndetectedDifference)
+        {
+            var objectAClone = this.NewInstanceOfBuilderForObjectA();
+            applyUndetectedDifference(objectAClone);
+            var objectB = this.FromBuilder(objectAClone);
+
+            Assert.AreEqual(this.ObjectA, objectB);
+        }
+
         public void AssertDifference(Action<TBuilder> applyDifference)
         {
             var objectAClone = this.NewInstanceOfBuilderForObjectA();

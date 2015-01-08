@@ -43,7 +43,9 @@ namespace Fifthweek.Api.Core.Tests.ClassAugmentation
             System.Collections.Generic.IEnumerable<System.String> someCollection, 
             System.Collections.Generic.IEnumerable<System.String> optionalCollection, 
             Fifthweek.Api.Core.Tests.ClassAugmentation.ClassAugmentationDummy.ComplexType someComplexType, 
-            Fifthweek.Api.Core.Tests.ClassAugmentation.ClassAugmentationDummy.ComplexType optionalComplexType)
+            Fifthweek.Api.Core.Tests.ClassAugmentation.ClassAugmentationDummy.ComplexType optionalComplexType, 
+            System.String someStringField, 
+            System.String optionalStringField)
         {
             if (someGuid == null)
             {
@@ -70,6 +72,11 @@ namespace Fifthweek.Api.Core.Tests.ClassAugmentation
                 throw new ArgumentNullException("someComplexType");
             }
 
+            if (someStringField == null)
+            {
+                throw new ArgumentNullException("someStringField");
+            }
+
             this.SomeGuid = someGuid;
             this.SomeInt = someInt;
             this.OptionalGuid = optionalGuid;
@@ -80,6 +87,8 @@ namespace Fifthweek.Api.Core.Tests.ClassAugmentation
             this.OptionalCollection = optionalCollection;
             this.SomeComplexType = someComplexType;
             this.OptionalComplexType = optionalComplexType;
+            this.someStringField = someStringField;
+            this.optionalStringField = optionalStringField;
         }
 	}
 
@@ -670,6 +679,8 @@ namespace Fifthweek.Api.Core.Tests.ClassAugmentation
 			builder.OptionalCollection = this.OptionalCollection;
 			builder.SomeComplexType = this.SomeComplexType;
 			builder.OptionalComplexType = this.OptionalComplexType;
+			builder.someStringField = this.someStringField;
+			builder.optionalStringField = this.optionalStringField;
 			return builder;
 		}
 
@@ -692,6 +703,8 @@ namespace Fifthweek.Api.Core.Tests.ClassAugmentation
             public System.Collections.Generic.IEnumerable<System.String> OptionalCollection { get; set; }
             public Fifthweek.Api.Core.Tests.ClassAugmentation.ClassAugmentationDummy.ComplexType SomeComplexType { get; set; }
             public Fifthweek.Api.Core.Tests.ClassAugmentation.ClassAugmentationDummy.ComplexType OptionalComplexType { get; set; }
+            public System.String someStringField { get; set; }
+            public System.String optionalStringField { get; set; }
 
 			public ClassAugmentationDummy Build()
 			{
@@ -705,7 +718,9 @@ namespace Fifthweek.Api.Core.Tests.ClassAugmentation
 					this.SomeCollection, 
 					this.OptionalCollection, 
 					this.SomeComplexType, 
-					this.OptionalComplexType);
+					this.OptionalComplexType, 
+					this.someStringField, 
+					this.optionalStringField);
 			}
         }
 	}

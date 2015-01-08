@@ -16,8 +16,8 @@
             continue;
         }
 
-        var publicProperties = unifiedClass.GetAllPublicGetters();
-        if (publicProperties.Count == 0)
+        var parameters = AutoConstructorParameter.GetParametersForClass(unifiedClass);
+        if (parameters.Count == 0)
         {
             continue;
         }
@@ -28,11 +28,11 @@
 		{
 			var builder = new Builder();
 <#
-    for (var i = 0; i < publicProperties.Count; i++)
+    for (var i = 0; i < parameters.Count; i++)
     {
-        var codeProperty = publicProperties[i];
+        var parameter = parameters[i];
 #>
-			builder.<#= codeProperty.Name #> = this.<#= codeProperty.Name #>;
+			builder.<#= parameter.AssigneeName #> = this.<#= parameter.AssigneeName #>;
 <#
     }
 #>
@@ -49,11 +49,11 @@
         public partial class Builder
         {
 <#
-    for (var i = 0; i < publicProperties.Count; i++)
+    for (var i = 0; i < parameters.Count; i++)
     {
-        var codeProperty = publicProperties[i];
+        var parameter = parameters[i];
 #>
-            public <#= codeProperty.Type.AsFullName #> <#= codeProperty.Name #> { get; set; }
+            public <#= parameter.TypeName #> <#= parameter.AssigneeName #> { get; set; }
 <#
     }
 #>
@@ -62,11 +62,11 @@
 			{
 				return new <#= unifiedClass.FirstCodeClass.Name #>(
 <#
-    for (var i = 0; i < publicProperties.Count; i++)
+    for (var i = 0; i < parameters.Count; i++)
     {
-        var codeProperty = publicProperties[i];
+        var parameter = parameters[i];
 #>
-					this.<#= codeProperty.Name #><#= i < publicProperties.Count - 1 ? ", " : ");" #>
+					this.<#= parameter.AssigneeName #><#= i < parameters.Count - 1 ? ", " : ");" #>
 <#
     }
 #>

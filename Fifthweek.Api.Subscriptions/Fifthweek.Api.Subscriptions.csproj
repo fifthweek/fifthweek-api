@@ -59,6 +59,7 @@
       <DependentUpon>ClassAugmentation.tt</DependentUpon>
     </Compile>
     <Compile Include="Commands\SetMandatorySubscriptionFieldsCommand.cs" />
+    <Compile Include="Commands\SetMandatorySubscriptionFieldsCommandHandler.cs" />
     <Compile Include="Controllers\MandatorySubscriptionData.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SubscriptionId.cs" />
