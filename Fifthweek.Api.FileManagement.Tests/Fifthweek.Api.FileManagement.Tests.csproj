@@ -90,6 +90,7 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
+    <Compile Include="BlobNameCreatorTests.cs" />
     <Compile Include="Controllers\FileUploadControllerTests.cs" />
     <Compile Include="FileVariantIdTests.cs" />
     <Compile Include="FileIdTests.cs" />
