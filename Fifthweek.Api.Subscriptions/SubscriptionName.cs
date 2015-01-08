@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Fifthweek.Api.Core;
 
 namespace Fifthweek.Api.Subscriptions
 {
-    public class SubscriptionName
+    [AutoEqualityMembers]
+    public partial class SubscriptionName
     {
         public static readonly string ForbiddenCharacters = "\r\n\t";
         public static readonly int MinLength = 1;
@@ -12,37 +14,16 @@ namespace Fifthweek.Api.Subscriptions
 
         private static readonly HashSet<char> ForbiddenCharactersHashSet = new HashSet<char>(ForbiddenCharacters);
 
-        protected SubscriptionName()
+        private SubscriptionName()
         {
         }
 
         public string Value { get; protected set; }
 
-        protected bool Equals(SubscriptionName other)
+        public static bool IsEmpty(string value)
         {
-            return string.Equals(this.Value, other.Value);
-        }
-
-        public override bool Equals(object obj)
-        {
-            if (ReferenceEquals(null, obj))
-            {
-                return false;
-            }
-            if (ReferenceEquals(this, obj))
-            {
-                return true;
-            }
-            if (obj.GetType() != this.GetType())
-            {
-                return false;
-            }
-            return Equals((SubscriptionName)obj);
-        }
-
-        public override int GetHashCode()
-        {
-            return (this.Value != null ? this.Value.GetHashCode() : 0);
+            // Whitespace is considered a value, since values are not trimmed/normalized.
+            return string.IsNullOrEmpty(value); // Trimmed types use IsNullOrWhiteSpace
         }
 
         public static SubscriptionName Parse(string value)
@@ -67,7 +48,7 @@ namespace Fifthweek.Api.Subscriptions
             var errorMessageList = new List<string>();
             errorMessages = errorMessageList;
 
-            if (value == null)
+            if (IsEmpty(value))
             {
                 // Method should never fail, so report null as an error instead of ArgumentNullException.
                 errorMessageList.Add("Value required");

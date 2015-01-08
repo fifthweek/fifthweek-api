@@ -8,12 +8,6 @@ namespace Fifthweek.Api.Subscriptions.Tests
     public class ChannelPriceInUsCentsPerWeekTests : ValidatedPrimitiveEqualityTests<ChannelPriceInUsCentsPerWeek, int>
     {
         [TestMethod]
-        public void ItShouldRecogniseEquality()
-        {
-            this.TestEquality();
-        }
-
-        [TestMethod]
         public void ItShouldAllow25CentsPerWeekAndHigher()
         {
             this.GoodValue(25);

@@ -1,43 +1,23 @@
 ﻿using System;
 using System.Collections.Generic;
+using Fifthweek.Api.Core;
 
 namespace Fifthweek.Api.Subscriptions
 {
-    public class ChannelPriceInUsCentsPerWeek
+    [AutoEqualityMembers]
+    public partial class ChannelPriceInUsCentsPerWeek
     {
         public static readonly int MinValue = 25;
 
-        protected ChannelPriceInUsCentsPerWeek()
+        private ChannelPriceInUsCentsPerWeek()
         {
         }
 
         public int Value { get; protected set; }
 
-        protected bool Equals(ChannelPriceInUsCentsPerWeek other)
+        public static bool IsEmpty(int value)
         {
-            return string.Equals(this.Value, other.Value);
-        }
-
-        public override bool Equals(object obj)
-        {
-            if (ReferenceEquals(null, obj))
-            {
-                return false;
-            }
-            if (ReferenceEquals(this, obj))
-            {
-                return true;
-            }
-            if (obj.GetType() != this.GetType())
-            {
-                return false;
-            }
-            return Equals((ChannelPriceInUsCentsPerWeek)obj);
-        }
-
-        public override int GetHashCode()
-        {
-            return this.Value.GetHashCode();
+            return false;
         }
 
         public static ChannelPriceInUsCentsPerWeek Parse(int value)

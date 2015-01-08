@@ -8,19 +8,13 @@ namespace Fifthweek.Api.Subscriptions.Tests
     public class TaglineTests : ValidatedPrimitiveEqualityTests<Tagline, string>
     {
         [TestMethod]
-        public void ItShouldRecogniseEquality()
-        {
-            this.TestEquality();
-        }
-
-        [TestMethod]
         public void ItShouldAllowBasicTaglines()
         {
             this.GoodValue("Web Comics and More");
         }
 
         [TestMethod]
-        public void ItShouldNowAllowNull()
+        public void ItShouldNotAllowNull()
         {
             this.BadValue(null);
         }
@@ -41,8 +35,12 @@ namespace Fifthweek.Api.Subscriptions.Tests
         [TestMethod]
         public void ItShouldNotAllowTaglinesOver55Characters()
         {
+            this.GoodValue(new string('x', 55));
+            this.BadValue(new string('x', 56));
+
+            // Test whitespace sensitivity.
             this.GoodValue(new string(' ', 55));
-            this.BadValue(new string(' ', 56));
+            this.BadValue(new string(' ', 56)); 
         }
 
         [TestMethod]

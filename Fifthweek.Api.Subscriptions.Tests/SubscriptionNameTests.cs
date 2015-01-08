@@ -8,19 +8,13 @@ namespace Fifthweek.Api.Subscriptions.Tests
     public class SubscriptionNameTests : ValidatedPrimitiveEqualityTests<SubscriptionName, string>
     {
         [TestMethod]
-        public void ItShouldRecogniseEquality()
-        {
-            this.TestEquality();
-        }
-
-        [TestMethod]
         public void ItShouldAllowBasicSubscriptionNames()
         {
             this.GoodValue("Web Comics and More");
         }
 
         [TestMethod]
-        public void ItShouldNowAllowNull()
+        public void ItShouldNotAllowNull()
         {
             this.BadValue(null);
         }
@@ -41,8 +35,12 @@ namespace Fifthweek.Api.Subscriptions.Tests
         [TestMethod]
         public void ItShouldNotAllowSubscriptionNamesOver25Characters()
         {
+            this.GoodValue(new string('x', 25));
+            this.BadValue(new string('x', 26));
+
+            // Test whitespace sensitivity.
             this.GoodValue(new string(' ', 25));
-            this.BadValue(new string(' ', 26));
+            this.BadValue(new string(' ', 26)); 
         }
 
         [TestMethod]

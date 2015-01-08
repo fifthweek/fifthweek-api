@@ -19,7 +19,7 @@ namespace Fifthweek.Api.Identity.Membership
         public static bool IsEmpty(string value)
         {
             // Whitespace is considered a value. It is handled differently from null.
-            return string.IsNullOrEmpty(value); // Some classes use IsNullOrWhiteSpace
+            return string.IsNullOrEmpty(value); // Trimmed types use IsNullOrWhiteSpace
         }
 
         public static Password Parse(string value)

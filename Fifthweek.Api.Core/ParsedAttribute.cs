@@ -11,7 +11,5 @@ namespace Fifthweek.Api.Core
         }
 
         public Type Type { get; private set; }
-
-        public bool UseConstructor { get; set; }
     }
 }

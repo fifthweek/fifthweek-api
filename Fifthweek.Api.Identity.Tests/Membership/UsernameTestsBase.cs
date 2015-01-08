@@ -15,7 +15,7 @@ namespace Fifthweek.Api.Identity.Tests.Membership
         }
 
         [TestMethod]
-        public void ItShouldNowAllowNull()
+        public void ItShouldNotAllowNull()
         {
             this.BadValue(null);
         }
