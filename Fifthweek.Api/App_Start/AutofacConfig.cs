@@ -44,6 +44,9 @@ namespace Fifthweek.Api
             RegisterControllerAssemblies(builder);
             RegisterHandlers(builder);
 
+            Azure.AutofacConfig.Register(builder);
+            FileManagement.AutofacConfig.Register(builder);
+
             builder.RegisterType<FifthweekDbContext>().As<IFifthweekDbContext>().InstancePerRequest();
             builder.RegisterType<RefreshTokenRepository>().As<IRefreshTokenRepository>().InstancePerRequest();
             builder.RegisterType<ClientRepository>().As<IClientRepository>().InstancePerRequest();

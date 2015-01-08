@@ -5,7 +5,7 @@ namespace Fifthweek.Api.Azure
 
     using Microsoft.WindowsAzure.Storage.Blob;
 
-    public class BlobService
+    public class BlobService : IBlobService
     {
         private readonly ICloudStorageAccount cloudStorageAccount;
 
@@ -21,11 +21,10 @@ namespace Fifthweek.Api.Azure
             await container.CreateIfNotExistsAsync();
         }
 
-        public async Task<string> GetBlobSasUriForWritingAsync(string containerName, string blobName)
+        public Task<string> GetBlobSasUriForWritingAsync(string containerName, string blobName)
         {
             var client = this.cloudStorageAccount.CreateCloudBlobClient();
             var container = client.GetContainerReference(containerName);
-            await container.CreateIfNotExistsAsync();
             var blob = container.GetBlockBlobReference(blobName);
             
             var policy = new SharedAccessBlobPolicy
@@ -36,7 +35,7 @@ namespace Fifthweek.Api.Azure
 
             var token = blob.GetSharedAccessSignature(policy);
 
-            return blob.Uri + token;
+            return Task.FromResult(blob.Uri + token);
         }
     }
 }

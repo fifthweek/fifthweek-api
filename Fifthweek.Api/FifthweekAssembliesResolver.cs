@@ -24,7 +24,8 @@
                 typeof(LogController).Assembly,
                 typeof(FifthweekUser).Assembly,
                 typeof(Fifthweek.Api.SendGrid.SendGridEmailService).Assembly,
-                typeof(FileUploadController).Assembly
+                typeof(Azure.AutofacConfig).Assembly,
+                typeof(FileManagement.AutofacConfig).Assembly
             };
         }
     }
