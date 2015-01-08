@@ -10,6 +10,7 @@
 	var StrongPropertySuffix = "Object";
 	var ConstructedAttributeName = "Constructed";
 	var ParsedAttributeName = "Parsed";
+	var TypeAllowsNullAttributeParameterName = "TypeAcceptsNull";
 
     foreach(UnifiedClass unifiedClass in allClasses)
     {
@@ -32,8 +33,8 @@
 		var codeAttribute = stronglyTypedProperties[i].Attribute;
         var codeProperty = stronglyTypedProperties[i].Property;
 		var typedPropertyName = codeProperty.Name + StrongPropertySuffix;
-		var strongType = StripTypeOf(codeAttribute.Value);
-
+		var attributeParameters = ParseAttribute(codeAttribute.Value);
+		var strongType = StripTypeOf(attributeParameters[0]);
 #>
 		public <#= strongType #> <#= typedPropertyName #> { get; set; }
 <#
@@ -57,19 +58,42 @@
 		var codeAttribute = stronglyTypedProperties[i].Attribute;
         var codeProperty = stronglyTypedProperties[i].Property;
 		var typedPropertyName = codeProperty.Name + StrongPropertySuffix;
-		var strongType = StripTypeOf(codeAttribute.Value);
+		var attributeParameters = ParseAttribute(codeAttribute.Value);
+		var strongType = StripTypeOf(attributeParameters[0]);
+		var typeAllowsNullsPropertyValue = TryParseAttributeNamedProperty(TypeAllowsNullAttributeParameterName, attributeParameters);
+		var typeAllowsNulls = typeAllowsNullsPropertyValue != null && typeAllowsNullsPropertyValue == "true";
 		var isRequired = codeProperty.Attributes.OfType<CodeAttribute>().All(_ => !_.Name.StartsWith(OptionalAttributeName));
+		var isRequiredString = isRequired ? "true" : "false";
 
 		if (codeAttribute.Name.StartsWith(ConstructedAttributeName))
         {
+			if (typeAllowsNulls)
+            {
 #>
 			target.<#= typedPropertyName #> = new <#= strongType #>(target.<#= codeProperty.Name #>);
 <#
+            }
+			else
+            {
+#>
+		    if (target.<#= codeProperty.Name #> != null)
+		    {
+                target.<#= typedPropertyName #> = new <#= strongType #>(target.<#= codeProperty.Name #>);
+		    }
+		    else if (<#= isRequiredString #>)
+		    {
+                var modelState = new System.Web.Http.ModelBinding.ModelState();
+                modelState.Errors.Add("Value required");
+                modelStateDictionary.Add("<#= codeProperty.Name #>", modelState);
+            }
+
+<#
+            }
         }
 		else
         {
 #>
-			if (<#= isRequired ? "true" : "false" #> || !<#= strongType #>.IsEmpty(target.<#= codeProperty.Name #>))
+			if (<#= isRequiredString #> || !<#= strongType #>.IsEmpty(target.<#= codeProperty.Name #>))
 			{
 				<#= strongType #> @object;
 				System.Collections.Generic.IReadOnlyCollection<string> errorMessages;

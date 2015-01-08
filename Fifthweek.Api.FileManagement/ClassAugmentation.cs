@@ -5,7 +5,6 @@ using System;
 
 
 
-
 namespace Fifthweek.Api.FileManagement.Commands
 {
 	using System;
@@ -23,6 +22,7 @@ namespace Fifthweek.Api.FileManagement.Commands
             this.FileId = fileId;
         }
 	}
+
 }
 namespace Fifthweek.Api.FileManagement.Commands
 {
@@ -41,6 +41,7 @@ namespace Fifthweek.Api.FileManagement.Commands
             this.FileId = fileId;
         }
 	}
+
 }
 namespace Fifthweek.Api.FileManagement.Queries
 {
@@ -59,6 +60,7 @@ namespace Fifthweek.Api.FileManagement.Queries
             this.FileId = fileId;
         }
 	}
+
 }
 namespace Fifthweek.Api.FileManagement.Controllers
 {
@@ -84,6 +86,7 @@ namespace Fifthweek.Api.FileManagement.Controllers
             this.UploadUri = uploadUri;
         }
 	}
+
 }
 namespace Fifthweek.Api.FileManagement
 {
@@ -102,6 +105,7 @@ namespace Fifthweek.Api.FileManagement
             this.Value = value;
         }
 	}
+
 }
 namespace Fifthweek.Api.FileManagement
 {
@@ -120,6 +124,7 @@ namespace Fifthweek.Api.FileManagement
             this.Value = value;
         }
 	}
+
 }
 
 namespace Fifthweek.Api.FileManagement.Commands
@@ -167,6 +172,7 @@ namespace Fifthweek.Api.FileManagement.Commands
             return true;
         }
 	}
+
 }
 namespace Fifthweek.Api.FileManagement.Commands
 {
@@ -213,6 +219,7 @@ namespace Fifthweek.Api.FileManagement.Commands
             return true;
         }
 	}
+
 }
 namespace Fifthweek.Api.FileManagement.Queries
 {
@@ -259,6 +266,7 @@ namespace Fifthweek.Api.FileManagement.Queries
             return true;
         }
 	}
+
 }
 namespace Fifthweek.Api.FileManagement.Controllers
 {
@@ -310,6 +318,7 @@ namespace Fifthweek.Api.FileManagement.Controllers
             return true;
         }
 	}
+
 }
 namespace Fifthweek.Api.FileManagement
 {
@@ -356,6 +365,7 @@ namespace Fifthweek.Api.FileManagement
             return true;
         }
 	}
+
 }
 namespace Fifthweek.Api.FileManagement
 {
@@ -402,6 +412,7 @@ namespace Fifthweek.Api.FileManagement
             return true;
         }
 	}
+
 }
 namespace Fifthweek.Api.FileManagement.Controllers
 {
@@ -453,7 +464,6 @@ namespace Fifthweek.Api.FileManagement.Controllers
             return true;
         }
 	}
+
 }
-
-
 

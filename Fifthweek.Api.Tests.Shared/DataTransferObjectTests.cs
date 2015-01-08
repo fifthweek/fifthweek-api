@@ -20,11 +20,16 @@ namespace Fifthweek.Api.Tests.Shared
             }
         }
 
-        public void GoodValue(Action<T> setValidFieldValue)
+        public void GoodValue(Action<T> setValidFieldValue, Func<T, bool> assert = null)
         {
             var data = NewInstanceOfObjectA();
             setValidFieldValue(data);
             this.Parse(data);
+
+            if (assert != null)
+            {
+                Assert.IsTrue(assert(data));
+            }
         }
 
         protected abstract void Parse(T obj);

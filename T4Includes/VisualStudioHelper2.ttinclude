@@ -56,6 +56,33 @@
 		return hasTrailingParenthesis.Substring(0, hasTrailingParenthesis.Length - 1);
     }
 
+	public IReadOnlyList<string> ParseAttribute(string value)
+	{
+		var retval = new List<string>();
+		foreach (var parameter in value.Split(new[] { ',' }))
+        {
+			retval.Add(parameter.Trim());
+        }
+
+		return retval;
+	}
+
+	public string TryParseAttributeNamedProperty(string propertyName, IReadOnlyCollection<string> attributeParameters)
+    {
+		foreach (var attributeParameter in attributeParameters.Where(_ => _.Contains("=")))
+        {
+			var nameMaxLength = attributeParameter.IndexOf('=');
+			var attributeParameterName = attributeParameter.Substring(0, nameMaxLength).Trim();
+
+			if (attributeParameterName == propertyName)
+            {
+				return attributeParameter.Substring(nameMaxLength + 1).Trim();
+            }
+        }
+
+		return null;
+    }
+
 	public class UnifiedClassBuilder
     {
 		public UnifiedClassBuilder()

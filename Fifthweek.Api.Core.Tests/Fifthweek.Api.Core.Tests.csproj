@@ -74,11 +74,16 @@
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
     </Compile>
-    <Compile Include="ClassAugmentationParsingDummy.cs" />
-    <Compile Include="ClassAugmentationDummy.cs" />
+    <Compile Include="ClassAugmentation\ClassAugmentationParsingDummy.cs" />
+    <Compile Include="ClassAugmentation\ClassAugmentationDummy.cs" />
+    <Compile Include="ClassAugmentation\ConstructedInt.cs" />
+    <Compile Include="ClassAugmentation\ConstructedNonNullableString.cs" />
+    <Compile Include="ClassAugmentation\ConstructedNullableString.cs" />
+    <Compile Include="ClassAugmentation\ParsedInt.cs" />
+    <Compile Include="ClassAugmentation\ParsedString.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="ClassAugmentationTests.cs" />
-    <Compile Include="ClassAugmentationParsingTests.cs" />
+    <Compile Include="ClassAugmentation\ClassAugmentationTests.cs" />
+    <Compile Include="ClassAugmentation\ClassAugmentationParsingTests.cs" />
     <Compile Include="RetryOnSqlDeadlockOrTimeoutDecoratorTests.cs" />
     <Compile Include="GuidCreatorTests.cs" />
     <Compile Include="SqlExceptionMocker.cs" />

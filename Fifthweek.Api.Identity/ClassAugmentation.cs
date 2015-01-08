@@ -1233,6 +1233,56 @@ namespace Fifthweek.Api.Identity.OAuth
 	}
 
 }
+namespace Fifthweek.Api.Identity.Membership
+{
+	using System;
+	using System.Collections.Generic;
+	using System.Net.Mail;
+	using Fifthweek.Api.Core;
+	using System.Text.RegularExpressions;
+	public partial class UserId
+	{
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj))
+            {
+                return false;
+            }
+
+            if (ReferenceEquals(this, obj))
+            {
+                return true;
+            }
+
+            if (obj.GetType() != this.GetType())
+            {
+                return false;
+            }
+
+            return this.Equals((UserId)obj);
+        }
+
+        public override int GetHashCode()
+        {
+            unchecked
+            {
+                int hashCode = 0;
+                hashCode = (hashCode * 397) ^ (this.Value != null ? this.Value.GetHashCode() : 0);
+                return hashCode;
+            }
+        }
+
+        protected bool Equals(UserId other)
+        {
+            if (!object.Equals(this.Value, other.Value))
+            {
+                return false;
+            }
+            return true;
+        }
+	}
+
+}
 namespace Fifthweek.Api.Identity.Membership.Controllers
 {
 	using System;
@@ -1552,56 +1602,6 @@ namespace Fifthweek.Api.Identity.Membership
 	using System.Net.Mail;
 	using Fifthweek.Api.Core;
 	using System.Text.RegularExpressions;
-	public partial class UserId
-	{
-        public override bool Equals(object obj)
-        {
-            if (ReferenceEquals(null, obj))
-            {
-                return false;
-            }
-
-            if (ReferenceEquals(this, obj))
-            {
-                return true;
-            }
-
-            if (obj.GetType() != this.GetType())
-            {
-                return false;
-            }
-
-            return this.Equals((UserId)obj);
-        }
-
-        public override int GetHashCode()
-        {
-            unchecked
-            {
-                int hashCode = 0;
-                hashCode = (hashCode * 397) ^ (this.Value != null ? this.Value.GetHashCode() : 0);
-                return hashCode;
-            }
-        }
-
-        protected bool Equals(UserId other)
-        {
-            if (!object.Equals(this.Value, other.Value))
-            {
-                return false;
-            }
-            return true;
-        }
-	}
-
-}
-namespace Fifthweek.Api.Identity.Membership
-{
-	using System;
-	using System.Collections.Generic;
-	using System.Net.Mail;
-	using Fifthweek.Api.Core;
-	using System.Text.RegularExpressions;
 	public partial class Username
 	{
         public override bool Equals(object obj)
@@ -1669,7 +1669,17 @@ namespace Fifthweek.Api.Identity.Membership.Controllers
 		{
 			var modelStateDictionary = new System.Web.Http.ModelBinding.ModelStateDictionary();
 
-			target.UserIdObject = new UserId(target.UserId);
+		    if (target.UserId != null)
+		    {
+                target.UserIdObject = new UserId(target.UserId);
+		    }
+		    else if (true)
+		    {
+                var modelState = new System.Web.Http.ModelBinding.ModelState();
+                modelState.Errors.Add("Value required");
+                modelStateDictionary.Add("UserId", modelState);
+            }
+
 			if (true || !Password.IsEmpty(target.NewPassword))
 			{
 				Password @object;
@@ -1858,4 +1868,3 @@ namespace Fifthweek.Api.Identity.Membership.Controllers
 		}	
 	}
 }
-

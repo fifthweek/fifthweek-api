@@ -1,9 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
 
-namespace Fifthweek.Api.Core.Tests
+namespace Fifthweek.Api.Core.Tests.ClassAugmentation
 {
-    using System.Collections.Generic;
-
     [AutoEqualityMembers, AutoConstructor, AutoBuilder]
     public partial class ClassAugmentationDummy
     {

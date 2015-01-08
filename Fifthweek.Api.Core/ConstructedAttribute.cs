@@ -11,5 +11,7 @@ namespace Fifthweek.Api.Core
         }
 
         public Type Type { get; private set; }
+
+        public bool TypeAcceptsNull { get; set; }
     }
 }

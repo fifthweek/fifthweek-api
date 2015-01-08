@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using Fifthweek.Api.Tests.Shared;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace Fifthweek.Api.Core.Tests
+namespace Fifthweek.Api.Core.Tests.ClassAugmentation
 {
     [TestClass]
-    public class ClassAugmentationDummyTests : ImmutableComplexTypeTests<ClassAugmentationDummy, ClassAugmentationDummy.Builder>
+    public class ClassAugmentationDummyTests : ImmutableComplexTypeTests<ClassAugmentation.ClassAugmentationDummy, ClassAugmentation.ClassAugmentationDummy.Builder>
     {
         [TestMethod]
         public void ItShouldRecogniseEquality()
@@ -33,8 +33,8 @@ namespace Fifthweek.Api.Core.Tests
             this.AssertDifference(_ => _.OptionalCollection = CollectionB);
             this.AssertDifference(_ => _.OptionalCollection = null);
 
-            this.AssertDifference(_ => _.SomeComplexType = new ClassAugmentationDummy.ComplexType("different"));
-            this.AssertDifference(_ => _.OptionalComplexType = new ClassAugmentationDummy.ComplexType("different"));
+            this.AssertDifference(_ => _.SomeComplexType = new ClassAugmentation.ClassAugmentationDummy.ComplexType("different"));
+            this.AssertDifference(_ => _.OptionalComplexType = new ClassAugmentation.ClassAugmentationDummy.ComplexType("different"));
             this.AssertDifference(_ => _.OptionalComplexType = null);
         }
 
@@ -56,9 +56,9 @@ namespace Fifthweek.Api.Core.Tests
             this.AssertOptional(_ => _.OptionalComplexType = null);
         }
 
-        protected override ClassAugmentationDummy.Builder NewInstanceOfBuilderForObjectA()
+        protected override ClassAugmentation.ClassAugmentationDummy.Builder NewInstanceOfBuilderForObjectA()
         {
-            return new ClassAugmentationDummy.Builder
+            return new ClassAugmentation.ClassAugmentationDummy.Builder
             {
                 SomeGuid = Guid.Parse("{34FAA659-9A26-4068-8EF9-3986F0E6ECBC}"),
                 SomeInt = 75,
@@ -68,12 +68,12 @@ namespace Fifthweek.Api.Core.Tests
                 OptionalString = "World",
                 SomeCollection = CollectionA,
                 OptionalCollection = CollectionA,
-                SomeComplexType = new ClassAugmentationDummy.ComplexType("Foo"),
-                OptionalComplexType = new ClassAugmentationDummy.ComplexType("Bar"),
+                SomeComplexType = new ClassAugmentation.ClassAugmentationDummy.ComplexType("Foo"),
+                OptionalComplexType = new ClassAugmentation.ClassAugmentationDummy.ComplexType("Bar"),
             };
         }
 
-        protected override ClassAugmentationDummy FromBuilder(ClassAugmentationDummy.Builder builder)
+        protected override ClassAugmentation.ClassAugmentationDummy FromBuilder(ClassAugmentation.ClassAugmentationDummy.Builder builder)
         {
             return builder.Build();
         }

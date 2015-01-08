@@ -5,7 +5,7 @@ using System;
 
 
 
-namespace Fifthweek.Api.Core.Tests
+namespace Fifthweek.Api.Core.Tests.ClassAugmentation
 {
 	using System;
 	using System.Collections.Generic;
@@ -24,9 +24,10 @@ namespace Fifthweek.Api.Core.Tests
             this.Value = value;
         }
 		}
-	}
+
+		}
 }
-namespace Fifthweek.Api.Core.Tests
+namespace Fifthweek.Api.Core.Tests.ClassAugmentation
 {
 	using System;
 	using System.Collections.Generic;
@@ -41,8 +42,8 @@ namespace Fifthweek.Api.Core.Tests
             System.String optionalString, 
             System.Collections.Generic.IEnumerable<System.String> someCollection, 
             System.Collections.Generic.IEnumerable<System.String> optionalCollection, 
-            Fifthweek.Api.Core.Tests.ClassAugmentationDummy.ComplexType someComplexType, 
-            Fifthweek.Api.Core.Tests.ClassAugmentationDummy.ComplexType optionalComplexType)
+            Fifthweek.Api.Core.Tests.ClassAugmentation.ClassAugmentationDummy.ComplexType someComplexType, 
+            Fifthweek.Api.Core.Tests.ClassAugmentation.ClassAugmentationDummy.ComplexType optionalComplexType)
         {
             if (someGuid == null)
             {
@@ -81,31 +82,14 @@ namespace Fifthweek.Api.Core.Tests
             this.OptionalComplexType = optionalComplexType;
         }
 	}
+
 }
-namespace Fifthweek.Api.Core.Tests
+namespace Fifthweek.Api.Core.Tests.ClassAugmentation
 {
 	using System;
 	using System.Collections.Generic;
-	public partial class ClassAugmentationParsingDummy
+	public partial class ConstructedInt
 	{
-		public partial class ConstructedString
-		{
-        public ConstructedString(
-            System.String value)
-        {
-            this.Value = value;
-        }
-		}
-	}
-}
-namespace Fifthweek.Api.Core.Tests
-{
-	using System;
-	using System.Collections.Generic;
-	public partial class ClassAugmentationParsingDummy
-	{
-		public partial class ConstructedInt
-		{
         public ConstructedInt(
             System.Int32 value)
         {
@@ -116,11 +100,44 @@ namespace Fifthweek.Api.Core.Tests
 
             this.Value = value;
         }
-		}
 	}
+
+}
+namespace Fifthweek.Api.Core.Tests.ClassAugmentation
+{
+	using System;
+	using System.Collections.Generic;
+	public partial class ConstructedNonNullableString
+	{
+        public ConstructedNonNullableString(
+            System.String value)
+        {
+            if (value == null)
+            {
+                throw new ArgumentNullException("value");
+            }
+
+            this.Value = value;
+        }
+	}
+
+}
+namespace Fifthweek.Api.Core.Tests.ClassAugmentation
+{
+	using System;
+	using System.Collections.Generic;
+	public partial class ConstructedNullableString
+	{
+        public ConstructedNullableString(
+            System.String value)
+        {
+            this.Value = value;
+        }
+	}
+
 }
 
-namespace Fifthweek.Api.Core.Tests
+namespace Fifthweek.Api.Core.Tests.ClassAugmentation
 {
 	using System;
 	using System.Collections.Generic;
@@ -167,9 +184,10 @@ namespace Fifthweek.Api.Core.Tests
             return true;
         }
 		}
-	}
+
+		}
 }
-namespace Fifthweek.Api.Core.Tests
+namespace Fifthweek.Api.Core.Tests.ClassAugmentation
 {
 	using System;
 	using System.Collections.Generic;
@@ -259,15 +277,14 @@ namespace Fifthweek.Api.Core.Tests
             return true;
         }
 	}
+
 }
-namespace Fifthweek.Api.Core.Tests
+namespace Fifthweek.Api.Core.Tests.ClassAugmentation
 {
 	using System;
 	using System.Collections.Generic;
 	public partial class ClassAugmentationParsingDummy
 	{
-		public partial class ConstructedString
-		{
         public override bool Equals(object obj)
         {
             if (ReferenceEquals(null, obj))
@@ -285,7 +302,7 @@ namespace Fifthweek.Api.Core.Tests
                 return false;
             }
 
-            return this.Equals((ConstructedString)obj);
+            return this.Equals((ClassAugmentationParsingDummy)obj);
         }
 
         public override int GetHashCode()
@@ -293,79 +310,118 @@ namespace Fifthweek.Api.Core.Tests
             unchecked
             {
                 int hashCode = 0;
-                hashCode = (hashCode * 397) ^ (this.Value != null ? this.Value.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.NotStrongTyped != null ? this.NotStrongTyped.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.SomeConstructedNullableString != null ? this.SomeConstructedNullableString.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.OptionalConstructedNullableString != null ? this.OptionalConstructedNullableString.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.SomeConstructedNonNullableString != null ? this.SomeConstructedNonNullableString.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.OptionalConstructedNonNullableString != null ? this.OptionalConstructedNonNullableString.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.SomeParsedString != null ? this.SomeParsedString.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.OptionalParsedString != null ? this.OptionalParsedString.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.SomeConstructedInt != null ? this.SomeConstructedInt.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.SomeParsedInt != null ? this.SomeParsedInt.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.OptionalParsedInt != null ? this.OptionalParsedInt.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.SomeConstructedNullableStringObject != null ? this.SomeConstructedNullableStringObject.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.OptionalConstructedNullableStringObject != null ? this.OptionalConstructedNullableStringObject.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.SomeConstructedNonNullableStringObject != null ? this.SomeConstructedNonNullableStringObject.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.OptionalConstructedNonNullableStringObject != null ? this.OptionalConstructedNonNullableStringObject.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.SomeParsedStringObject != null ? this.SomeParsedStringObject.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.OptionalParsedStringObject != null ? this.OptionalParsedStringObject.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.SomeConstructedIntObject != null ? this.SomeConstructedIntObject.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.SomeParsedIntObject != null ? this.SomeParsedIntObject.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.OptionalParsedIntObject != null ? this.OptionalParsedIntObject.GetHashCode() : 0);
                 return hashCode;
             }
         }
 
-        protected bool Equals(ConstructedString other)
+        protected bool Equals(ClassAugmentationParsingDummy other)
         {
-            if (!object.Equals(this.Value, other.Value))
+            if (!object.Equals(this.NotStrongTyped, other.NotStrongTyped))
+            {
+                return false;
+            }
+            if (!object.Equals(this.SomeConstructedNullableString, other.SomeConstructedNullableString))
+            {
+                return false;
+            }
+            if (!object.Equals(this.OptionalConstructedNullableString, other.OptionalConstructedNullableString))
+            {
+                return false;
+            }
+            if (!object.Equals(this.SomeConstructedNonNullableString, other.SomeConstructedNonNullableString))
+            {
+                return false;
+            }
+            if (!object.Equals(this.OptionalConstructedNonNullableString, other.OptionalConstructedNonNullableString))
+            {
+                return false;
+            }
+            if (!object.Equals(this.SomeParsedString, other.SomeParsedString))
+            {
+                return false;
+            }
+            if (!object.Equals(this.OptionalParsedString, other.OptionalParsedString))
+            {
+                return false;
+            }
+            if (!object.Equals(this.SomeConstructedInt, other.SomeConstructedInt))
+            {
+                return false;
+            }
+            if (!object.Equals(this.SomeParsedInt, other.SomeParsedInt))
+            {
+                return false;
+            }
+            if (!object.Equals(this.OptionalParsedInt, other.OptionalParsedInt))
+            {
+                return false;
+            }
+            if (!object.Equals(this.SomeConstructedNullableStringObject, other.SomeConstructedNullableStringObject))
+            {
+                return false;
+            }
+            if (!object.Equals(this.OptionalConstructedNullableStringObject, other.OptionalConstructedNullableStringObject))
+            {
+                return false;
+            }
+            if (!object.Equals(this.SomeConstructedNonNullableStringObject, other.SomeConstructedNonNullableStringObject))
+            {
+                return false;
+            }
+            if (!object.Equals(this.OptionalConstructedNonNullableStringObject, other.OptionalConstructedNonNullableStringObject))
+            {
+                return false;
+            }
+            if (!object.Equals(this.SomeParsedStringObject, other.SomeParsedStringObject))
+            {
+                return false;
+            }
+            if (!object.Equals(this.OptionalParsedStringObject, other.OptionalParsedStringObject))
+            {
+                return false;
+            }
+            if (!object.Equals(this.SomeConstructedIntObject, other.SomeConstructedIntObject))
+            {
+                return false;
+            }
+            if (!object.Equals(this.SomeParsedIntObject, other.SomeParsedIntObject))
+            {
+                return false;
+            }
+            if (!object.Equals(this.OptionalParsedIntObject, other.OptionalParsedIntObject))
             {
                 return false;
             }
             return true;
         }
-		}
 	}
+
 }
-namespace Fifthweek.Api.Core.Tests
+namespace Fifthweek.Api.Core.Tests.ClassAugmentation
 {
 	using System;
 	using System.Collections.Generic;
-	public partial class ClassAugmentationParsingDummy
+	public partial class ConstructedInt
 	{
-		public partial class ParsedString
-		{
-        public override bool Equals(object obj)
-        {
-            if (ReferenceEquals(null, obj))
-            {
-                return false;
-            }
-
-            if (ReferenceEquals(this, obj))
-            {
-                return true;
-            }
-
-            if (obj.GetType() != this.GetType())
-            {
-                return false;
-            }
-
-            return this.Equals((ParsedString)obj);
-        }
-
-        public override int GetHashCode()
-        {
-            unchecked
-            {
-                int hashCode = 0;
-                hashCode = (hashCode * 397) ^ (this.Value != null ? this.Value.GetHashCode() : 0);
-                return hashCode;
-            }
-        }
-
-        protected bool Equals(ParsedString other)
-        {
-            if (!object.Equals(this.Value, other.Value))
-            {
-                return false;
-            }
-            return true;
-        }
-		}
-	}
-}
-namespace Fifthweek.Api.Core.Tests
-{
-	using System;
-	using System.Collections.Generic;
-	public partial class ClassAugmentationParsingDummy
-	{
-		public partial class ConstructedInt
-		{
         public override bool Equals(object obj)
         {
             if (ReferenceEquals(null, obj))
@@ -404,17 +460,109 @@ namespace Fifthweek.Api.Core.Tests
             }
             return true;
         }
-		}
 	}
+
 }
-namespace Fifthweek.Api.Core.Tests
+namespace Fifthweek.Api.Core.Tests.ClassAugmentation
 {
 	using System;
 	using System.Collections.Generic;
-	public partial class ClassAugmentationParsingDummy
+	public partial class ConstructedNonNullableString
 	{
-		public partial class ParsedInt
-		{
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj))
+            {
+                return false;
+            }
+
+            if (ReferenceEquals(this, obj))
+            {
+                return true;
+            }
+
+            if (obj.GetType() != this.GetType())
+            {
+                return false;
+            }
+
+            return this.Equals((ConstructedNonNullableString)obj);
+        }
+
+        public override int GetHashCode()
+        {
+            unchecked
+            {
+                int hashCode = 0;
+                hashCode = (hashCode * 397) ^ (this.Value != null ? this.Value.GetHashCode() : 0);
+                return hashCode;
+            }
+        }
+
+        protected bool Equals(ConstructedNonNullableString other)
+        {
+            if (!object.Equals(this.Value, other.Value))
+            {
+                return false;
+            }
+            return true;
+        }
+	}
+
+}
+namespace Fifthweek.Api.Core.Tests.ClassAugmentation
+{
+	using System;
+	using System.Collections.Generic;
+	public partial class ConstructedNullableString
+	{
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj))
+            {
+                return false;
+            }
+
+            if (ReferenceEquals(this, obj))
+            {
+                return true;
+            }
+
+            if (obj.GetType() != this.GetType())
+            {
+                return false;
+            }
+
+            return this.Equals((ConstructedNullableString)obj);
+        }
+
+        public override int GetHashCode()
+        {
+            unchecked
+            {
+                int hashCode = 0;
+                hashCode = (hashCode * 397) ^ (this.Value != null ? this.Value.GetHashCode() : 0);
+                return hashCode;
+            }
+        }
+
+        protected bool Equals(ConstructedNullableString other)
+        {
+            if (!object.Equals(this.Value, other.Value))
+            {
+                return false;
+            }
+            return true;
+        }
+	}
+
+}
+namespace Fifthweek.Api.Core.Tests.ClassAugmentation
+{
+	using System;
+	using System.Collections.Generic;
+	public partial class ParsedInt
+	{
         public override bool Equals(object obj)
         {
             if (ReferenceEquals(null, obj))
@@ -453,14 +601,14 @@ namespace Fifthweek.Api.Core.Tests
             }
             return true;
         }
-		}
 	}
+
 }
-namespace Fifthweek.Api.Core.Tests
+namespace Fifthweek.Api.Core.Tests.ClassAugmentation
 {
 	using System;
 	using System.Collections.Generic;
-	public partial class ClassAugmentationParsingDummy
+	public partial class ParsedString
 	{
         public override bool Equals(object obj)
         {
@@ -479,7 +627,7 @@ namespace Fifthweek.Api.Core.Tests
                 return false;
             }
 
-            return this.Equals((ClassAugmentationParsingDummy)obj);
+            return this.Equals((ParsedString)obj);
         }
 
         public override int GetHashCode()
@@ -487,57 +635,23 @@ namespace Fifthweek.Api.Core.Tests
             unchecked
             {
                 int hashCode = 0;
-                hashCode = (hashCode * 397) ^ (this.NotStrongTyped != null ? this.NotStrongTyped.GetHashCode() : 0);
-                hashCode = (hashCode * 397) ^ (this.SomeConstructedString != null ? this.SomeConstructedString.GetHashCode() : 0);
-                hashCode = (hashCode * 397) ^ (this.OptionalConstructedString != null ? this.OptionalConstructedString.GetHashCode() : 0);
-                hashCode = (hashCode * 397) ^ (this.SomeParsedString != null ? this.SomeParsedString.GetHashCode() : 0);
-                hashCode = (hashCode * 397) ^ (this.OptionalParsedString != null ? this.OptionalParsedString.GetHashCode() : 0);
-                hashCode = (hashCode * 397) ^ (this.SomeConstructedInt != null ? this.SomeConstructedInt.GetHashCode() : 0);
-                hashCode = (hashCode * 397) ^ (this.SomeParsedInt != null ? this.SomeParsedInt.GetHashCode() : 0);
-                hashCode = (hashCode * 397) ^ (this.OptionalParsedInt != null ? this.OptionalParsedInt.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.Value != null ? this.Value.GetHashCode() : 0);
                 return hashCode;
             }
         }
 
-        protected bool Equals(ClassAugmentationParsingDummy other)
+        protected bool Equals(ParsedString other)
         {
-            if (!object.Equals(this.NotStrongTyped, other.NotStrongTyped))
-            {
-                return false;
-            }
-            if (!object.Equals(this.SomeConstructedString, other.SomeConstructedString))
-            {
-                return false;
-            }
-            if (!object.Equals(this.OptionalConstructedString, other.OptionalConstructedString))
-            {
-                return false;
-            }
-            if (!object.Equals(this.SomeParsedString, other.SomeParsedString))
-            {
-                return false;
-            }
-            if (!object.Equals(this.OptionalParsedString, other.OptionalParsedString))
-            {
-                return false;
-            }
-            if (!object.Equals(this.SomeConstructedInt, other.SomeConstructedInt))
-            {
-                return false;
-            }
-            if (!object.Equals(this.SomeParsedInt, other.SomeParsedInt))
-            {
-                return false;
-            }
-            if (!object.Equals(this.OptionalParsedInt, other.OptionalParsedInt))
+            if (!object.Equals(this.Value, other.Value))
             {
                 return false;
             }
             return true;
         }
 	}
+
 }
-namespace Fifthweek.Api.Core.Tests
+namespace Fifthweek.Api.Core.Tests.ClassAugmentation
 {
 	using System;
 	using System.Collections.Generic;
@@ -576,8 +690,8 @@ namespace Fifthweek.Api.Core.Tests
             public System.String OptionalString { get; set; }
             public System.Collections.Generic.IEnumerable<System.String> SomeCollection { get; set; }
             public System.Collections.Generic.IEnumerable<System.String> OptionalCollection { get; set; }
-            public Fifthweek.Api.Core.Tests.ClassAugmentationDummy.ComplexType SomeComplexType { get; set; }
-            public Fifthweek.Api.Core.Tests.ClassAugmentationDummy.ComplexType OptionalComplexType { get; set; }
+            public Fifthweek.Api.Core.Tests.ClassAugmentation.ClassAugmentationDummy.ComplexType SomeComplexType { get; set; }
+            public Fifthweek.Api.Core.Tests.ClassAugmentation.ClassAugmentationDummy.ComplexType OptionalComplexType { get; set; }
 
 			public ClassAugmentationDummy Build()
 			{
@@ -595,35 +709,68 @@ namespace Fifthweek.Api.Core.Tests
 			}
         }
 	}
+
 }
 
-namespace Fifthweek.Api.Core.Tests
+namespace Fifthweek.Api.Core.Tests.ClassAugmentation
 {
 	using System;
 	using System.Collections.Generic;
 	public partial class ClassAugmentationParsingDummy
 	{
-		public ConstructedString SomeConstructedStringObject { get; private set; }
-		public ConstructedString OptionalConstructedStringObject { get; private set; }
-		public ParsedString SomeParsedStringObject { get; private set; }
-		public ParsedString OptionalParsedStringObject { get; private set; }
-		public ConstructedInt SomeConstructedIntObject { get; private set; }
-		public ParsedInt SomeParsedIntObject { get; private set; }
-		public ParsedInt OptionalParsedIntObject { get; private set; }
+		public ConstructedNullableString SomeConstructedNullableStringObject { get; set; }
+		public ConstructedNullableString OptionalConstructedNullableStringObject { get; set; }
+		public ConstructedNonNullableString SomeConstructedNonNullableStringObject { get; set; }
+		public ConstructedNonNullableString OptionalConstructedNonNullableStringObject { get; set; }
+		public ParsedString SomeParsedStringObject { get; set; }
+		public ParsedString OptionalParsedStringObject { get; set; }
+		public ConstructedInt SomeConstructedIntObject { get; set; }
+		public ParsedInt SomeParsedIntObject { get; set; }
+		public ParsedInt OptionalParsedIntObject { get; set; }
 
 		public void Parse()
 		{
+			ClassAugmentationParsingDummy_Companion.Parse(this); // Avoid conflicts between property and type names.
+		}
+	}
+
+	internal class ClassAugmentationParsingDummy_Companion
+	{
+		public static void Parse(ClassAugmentationParsingDummy target)
+		{
 			var modelStateDictionary = new System.Web.Http.ModelBinding.ModelStateDictionary();
 
-			this.SomeConstructedStringObject = new ConstructedString(this.SomeConstructedString);
-			this.OptionalConstructedStringObject = new ConstructedString(this.OptionalConstructedString);
-			if (true || !ParsedString.IsEmpty(this.SomeParsedString))
+			target.SomeConstructedNullableStringObject = new ConstructedNullableString(target.SomeConstructedNullableString);
+			target.OptionalConstructedNullableStringObject = new ConstructedNullableString(target.OptionalConstructedNullableString);
+		    if (target.SomeConstructedNonNullableString != null)
+		    {
+                target.SomeConstructedNonNullableStringObject = new ConstructedNonNullableString(target.SomeConstructedNonNullableString);
+		    }
+		    else if (true)
+		    {
+                var modelState = new System.Web.Http.ModelBinding.ModelState();
+                modelState.Errors.Add("Value required");
+                modelStateDictionary.Add("SomeConstructedNonNullableString", modelState);
+            }
+
+		    if (target.OptionalConstructedNonNullableString != null)
+		    {
+                target.OptionalConstructedNonNullableStringObject = new ConstructedNonNullableString(target.OptionalConstructedNonNullableString);
+		    }
+		    else if (false)
+		    {
+                var modelState = new System.Web.Http.ModelBinding.ModelState();
+                modelState.Errors.Add("Value required");
+                modelStateDictionary.Add("OptionalConstructedNonNullableString", modelState);
+            }
+
+			if (true || !ParsedString.IsEmpty(target.SomeParsedString))
 			{
 				ParsedString @object;
-				IReadOnlyCollection<string> errorMessages;
-				if (ParsedString.TryParse(this.SomeParsedString, out @object, out errorMessages))
+				System.Collections.Generic.IReadOnlyCollection<string> errorMessages;
+				if (ParsedString.TryParse(target.SomeParsedString, out @object, out errorMessages))
 				{
-					this.SomeParsedStringObject = @object;
+					target.SomeParsedStringObject = @object;
 				}
 				else
 				{
@@ -637,13 +784,13 @@ namespace Fifthweek.Api.Core.Tests
 				}
 			}
 
-			if (false || !ParsedString.IsEmpty(this.OptionalParsedString))
+			if (false || !ParsedString.IsEmpty(target.OptionalParsedString))
 			{
 				ParsedString @object;
-				IReadOnlyCollection<string> errorMessages;
-				if (ParsedString.TryParse(this.OptionalParsedString, out @object, out errorMessages))
+				System.Collections.Generic.IReadOnlyCollection<string> errorMessages;
+				if (ParsedString.TryParse(target.OptionalParsedString, out @object, out errorMessages))
 				{
-					this.OptionalParsedStringObject = @object;
+					target.OptionalParsedStringObject = @object;
 				}
 				else
 				{
@@ -657,14 +804,24 @@ namespace Fifthweek.Api.Core.Tests
 				}
 			}
 
-			this.SomeConstructedIntObject = new ConstructedInt(this.SomeConstructedInt);
-			if (true || !ParsedInt.IsEmpty(this.SomeParsedInt))
+		    if (target.SomeConstructedInt != null)
+		    {
+                target.SomeConstructedIntObject = new ConstructedInt(target.SomeConstructedInt);
+		    }
+		    else if (true)
+		    {
+                var modelState = new System.Web.Http.ModelBinding.ModelState();
+                modelState.Errors.Add("Value required");
+                modelStateDictionary.Add("SomeConstructedInt", modelState);
+            }
+
+			if (true || !ParsedInt.IsEmpty(target.SomeParsedInt))
 			{
 				ParsedInt @object;
-				IReadOnlyCollection<string> errorMessages;
-				if (ParsedInt.TryParse(this.SomeParsedInt, out @object, out errorMessages))
+				System.Collections.Generic.IReadOnlyCollection<string> errorMessages;
+				if (ParsedInt.TryParse(target.SomeParsedInt, out @object, out errorMessages))
 				{
-					this.SomeParsedIntObject = @object;
+					target.SomeParsedIntObject = @object;
 				}
 				else
 				{
@@ -678,13 +835,13 @@ namespace Fifthweek.Api.Core.Tests
 				}
 			}
 
-			if (false || !ParsedInt.IsEmpty(this.OptionalParsedInt))
+			if (false || !ParsedInt.IsEmpty(target.OptionalParsedInt))
 			{
 				ParsedInt @object;
-				IReadOnlyCollection<string> errorMessages;
-				if (ParsedInt.TryParse(this.OptionalParsedInt, out @object, out errorMessages))
+				System.Collections.Generic.IReadOnlyCollection<string> errorMessages;
+				if (ParsedInt.TryParse(target.OptionalParsedInt, out @object, out errorMessages))
 				{
-					this.OptionalParsedIntObject = @object;
+					target.OptionalParsedIntObject = @object;
 				}
 				else
 				{
@@ -705,4 +862,3 @@ namespace Fifthweek.Api.Core.Tests
 		}	
 	}
 }
-
