@@ -8,23 +8,19 @@ namespace Fifthweek.Api.Subscriptions.Commands
     public partial class SetMandatorySubscriptionFieldsCommandHandler : ICommandHandler<SetMandatorySubscriptionFieldsCommand>
     {
         private readonly ISubscriptionSecurity subscriptionSecurity;
-        private ISubscriptionSecurity subscriptionSecurity2;
 
-        public Task HandleAsync(SetMandatorySubscriptionFieldsCommand command)
+        public async Task HandleAsync(SetMandatorySubscriptionFieldsCommand command)
         {
             if (command == null)
             {
                 throw new ArgumentNullException("command");
             }
+
+            await this.subscriptionSecurity.CanUpdateAsync(command.Requester, command.SubscriptionId);
             
             //command.SubscriptionId
 
             throw new NotImplementedException();
         }
-    }
-
-    public interface ISubscriptionSecurity
-    {
-         
     }
 }

@@ -10,14 +10,21 @@ namespace Fifthweek.Api.Subscriptions.Commands
 	using System;
 	using Fifthweek.Api.Core;
 	using System.Threading.Tasks;
+	using Fifthweek.Api.Identity.Membership;
 	public partial class SetMandatorySubscriptionFieldsCommand
 	{
         public SetMandatorySubscriptionFieldsCommand(
+            Fifthweek.Api.Identity.Membership.UserId requester, 
             Fifthweek.Api.Subscriptions.SubscriptionId subscriptionId, 
             Fifthweek.Api.Subscriptions.SubscriptionName subscriptionName, 
             Fifthweek.Api.Subscriptions.Tagline tagline, 
             Fifthweek.Api.Subscriptions.ChannelPriceInUsCentsPerWeek basePrice)
         {
+            if (requester == null)
+            {
+                throw new ArgumentNullException("requester");
+            }
+
             if (subscriptionId == null)
             {
                 throw new ArgumentNullException("subscriptionId");
@@ -38,6 +45,7 @@ namespace Fifthweek.Api.Subscriptions.Commands
                 throw new ArgumentNullException("basePrice");
             }
 
+            this.Requester = requester;
             this.SubscriptionId = subscriptionId;
             this.SubscriptionName = subscriptionName;
             this.Tagline = tagline;
@@ -54,7 +62,7 @@ namespace Fifthweek.Api.Subscriptions.Commands
 	public partial class SetMandatorySubscriptionFieldsCommandHandler
 	{
         public SetMandatorySubscriptionFieldsCommandHandler(
-            Fifthweek.Api.Subscriptions.Commands.ISubscriptionSecurity subscriptionSecurity)
+            ISubscriptionSecurity subscriptionSecurity)
         {
             if (subscriptionSecurity == null)
             {
@@ -142,6 +150,7 @@ namespace Fifthweek.Api.Subscriptions.Commands
 	using System;
 	using Fifthweek.Api.Core;
 	using System.Threading.Tasks;
+	using Fifthweek.Api.Identity.Membership;
 	public partial class SetMandatorySubscriptionFieldsCommand
 	{
         public override bool Equals(object obj)
@@ -169,6 +178,7 @@ namespace Fifthweek.Api.Subscriptions.Commands
             unchecked
             {
                 int hashCode = 0;
+                hashCode = (hashCode * 397) ^ (this.Requester != null ? this.Requester.GetHashCode() : 0);
                 hashCode = (hashCode * 397) ^ (this.SubscriptionId != null ? this.SubscriptionId.GetHashCode() : 0);
                 hashCode = (hashCode * 397) ^ (this.SubscriptionName != null ? this.SubscriptionName.GetHashCode() : 0);
                 hashCode = (hashCode * 397) ^ (this.Tagline != null ? this.Tagline.GetHashCode() : 0);
@@ -179,6 +189,10 @@ namespace Fifthweek.Api.Subscriptions.Commands
 
         protected bool Equals(SetMandatorySubscriptionFieldsCommand other)
         {
+            if (!object.Equals(this.Requester, other.Requester))
+            {
+                return false;
+            }
             if (!object.Equals(this.SubscriptionId, other.SubscriptionId))
             {
                 return false;

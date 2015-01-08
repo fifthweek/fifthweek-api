@@ -430,6 +430,28 @@ namespace Fifthweek.Api.Identity.Membership
 	}
 
 }
+namespace Fifthweek.Api.Identity.Membership
+{
+	using Fifthweek.Api.Core;
+	using System;
+	using System.Threading.Tasks;
+	using Dapper;
+	using Fifthweek.Api.Persistence;
+	public partial class UserRepository
+	{
+        public UserRepository(
+            Fifthweek.Api.Persistence.IFifthweekDbContext fifthweekDbContext)
+        {
+            if (fifthweekDbContext == null)
+            {
+                throw new ArgumentNullException("fifthweekDbContext");
+            }
+
+            this.fifthweekDbContext = fifthweekDbContext;
+        }
+	}
+
+}
 
 namespace Fifthweek.Api.Identity.Membership.Commands
 {

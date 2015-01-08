@@ -1,4 +1,6 @@
-﻿namespace Fifthweek.Api.Identity.Membership
+﻿using Fifthweek.Api.Core;
+
+namespace Fifthweek.Api.Identity.Membership
 {
     using System;
     using System.Threading.Tasks;
@@ -7,14 +9,10 @@
 
     using Fifthweek.Api.Persistence;
 
-    public class UserRepository : IUserRepository
+    [AutoConstructor]
+    public partial class UserRepository : IUserRepository
     {
         private readonly IFifthweekDbContext fifthweekDbContext;
-
-        public UserRepository(IFifthweekDbContext fifthweekDbContext)
-        {
-            this.fifthweekDbContext = fifthweekDbContext;
-        }
 
         public Task UpdateLastSignInDateAndAccessTokenDateAsync(NormalizedUsername username, DateTime timestamp)
         {
