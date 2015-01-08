@@ -31,6 +31,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Autofac">
+      <HintPath>..\packages\Autofac.3.5.2\lib\net40\Autofac.dll</HintPath>
+    </Reference>
     <Reference Include="EntityFramework">
       <HintPath>..\packages\EntityFramework.6.1.0\lib\net45\EntityFramework.dll</HintPath>
     </Reference>
@@ -81,7 +84,9 @@
   <ItemGroup>
     <Compile Include="ApiException.cs" />
     <Compile Include="AutoBuilderAttribute.cs" />
+    <Compile Include="AutofacRegistration.cs" />
     <Compile Include="ConstructedAttribute.cs" />
+    <Compile Include="IAutofacRegistration.cs" />
     <Compile Include="ParsedAttribute.cs" />
     <Compile Include="OptionalAttribute.cs" />
     <Compile Include="AutoConstructorAttribute.cs" />
@@ -104,6 +109,7 @@
     <Compile Include="RetryOnSqlDeadlockOrTimeoutDecoratorBase.cs" />
     <Compile Include="RetryOnSqlDeadlockOrTimeoutQueryHandlerDecorator.cs" />
     <Compile Include="GuidCreator.cs" />
+    <Compile Include="TraceService.cs" />
     <Compile Include="TransactionCommandHandlerDecorator.cs" />
   </ItemGroup>
   <ItemGroup>

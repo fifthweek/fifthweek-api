@@ -168,7 +168,6 @@
     <Compile Include="App_Start\AutofacConfig.cs" />
     <Compile Include="App_Start\DatabaseConfig.cs" />
     <Compile Include="App_Start\ErrorLoggingWebApiDependencyResolver.cs" />
-    <Compile Include="App_Start\IdentityConfig.cs" />
     <Compile Include="App_Start\OAuthConfig.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="App_Start\LogRequestModule.cs" />
@@ -210,7 +209,6 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RequireHttpsAttribute.cs" />
     <Compile Include="Startup.cs" />
-    <Compile Include="TraceService.cs" />
     <Compile Include="ValidateModelAttribute.cs" />
   </ItemGroup>
   <ItemGroup>

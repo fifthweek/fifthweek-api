@@ -31,6 +31,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Autofac">
+      <HintPath>..\packages\Autofac.3.5.2\lib\net40\Autofac.dll</HintPath>
+    </Reference>
     <Reference Include="Dapper">
       <HintPath>..\packages\Dapper.1.38\lib\net45\Dapper.dll</HintPath>
     </Reference>
@@ -78,12 +81,14 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AutofacRegistration.cs" />
     <Compile Include="ClassAugmentation.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>ClassAugmentation.tt</DependentUpon>
     </Compile>
     <Compile Include="FileState.cs" />
+    <Compile Include="IdentityConfig.cs" />
     <Compile Include="Identity\FifthweekDbContext.cs" />
     <Compile Include="Identity\FifthweekRole.cs" />
     <Compile Include="Identity\FifthweekRoleStore.cs" />

@@ -1,42 +1,31 @@
-﻿using System;
-using System.Threading.Tasks;
-using Autofac;
-using Fifthweek.Api.Core;
-using Fifthweek.Api.Identity.Membership;
-using Fifthweek.Api.Persistence;
-using Microsoft.AspNet.Identity;
-using Microsoft.AspNet.Identity.EntityFramework;
-using Microsoft.AspNet.Identity.Owin;
-using Microsoft.Owin.Security.DataProtection;
-using Owin;
-
-namespace Fifthweek.Api
+﻿namespace Fifthweek.Api.Persistence
 {
+    using System;
+    using System.Threading.Tasks;
+
+    using Autofac;
+
+    using Fifthweek.Api.Core;
     using Fifthweek.Api.Persistence.Identity;
 
-    public static class IdentityConfig
+    using Microsoft.AspNet.Identity;
+    using Microsoft.AspNet.Identity.Owin;
+    using Microsoft.Owin.Security.DataProtection;
+
+    using Owin;
+
+    public class AutofacRegistration : IAutofacRegistration
     {
-        // This allows us to use AutoFac instead of IOwinContext:
-        // http://tech.trailmax.info/2014/06/asp-net-identity-and-cryptographicexception-when-running-your-site-on-microsoft-azure-web-sites/
-        internal static IDataProtectionProvider FarmedMachineDataProtectionProvider { get; private set; }
-
-        internal static IDataProtectionProvider NonFarmedMachineDataProtectionProvider
+        public void Register(ContainerBuilder builder)
         {
-            get
-            {
-                return new DpapiDataProtectionProvider("Fifthweek");
-            }
-        }
-
-        public static void Register(IAppBuilder app)
-        {
-            FarmedMachineDataProtectionProvider = app.GetDataProtectionProvider();
+            builder.RegisterType<FifthweekDbContext>().As<IFifthweekDbContext>().InstancePerRequest();
+            builder.Register(c => CreateUserManager(c.Resolve<ISendEmailService>(), c.Resolve<IFifthweekDbContext>())).As<IUserManager>().InstancePerRequest();
         }
 
         public static FifthweekUserManager CreateUserManager(ISendEmailService sendEmailService, IFifthweekDbContext dbContext)
         {
             var userStore = new FifthweekUserStore((FifthweekDbContext)dbContext);
-            var dataProtectionProvider = FarmedMachineDataProtectionProvider ?? NonFarmedMachineDataProtectionProvider;
+            var dataProtectionProvider = IdentityConfig.FarmedMachineDataProtectionProvider ?? IdentityConfig.NonFarmedMachineDataProtectionProvider;
             var userManager = new FifthweekUserManager(userStore)
             {
                 UserTokenProvider = new DataProtectorTokenProvider<FifthweekUser, Guid>(dataProtectionProvider.Create()),

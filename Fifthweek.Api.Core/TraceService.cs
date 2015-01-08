@@ -1,8 +1,6 @@
-﻿namespace Fifthweek.Api
+﻿namespace Fifthweek.Api.Core
 {
     using System.Diagnostics;
-
-    using Fifthweek.Api.Core;
 
     public class TraceService : ITraceService
     {

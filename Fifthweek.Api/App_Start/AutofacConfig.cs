@@ -15,12 +15,7 @@ namespace Fifthweek.Api
     using Autofac.Integration.WebApi;
 
     using Fifthweek.Api.Core;
-    using Fifthweek.Api.Identity;
-    using Fifthweek.Api.Identity.Membership;
-    using Fifthweek.Api.Identity.OAuth;
     using Fifthweek.Api.Logging;
-    using Fifthweek.Api.Persistence;
-    using Fifthweek.Api.Persistence.Identity;
 
     using Owin;
 
@@ -43,46 +38,46 @@ namespace Fifthweek.Api
 
             RegisterControllerAssemblies(builder);
             RegisterHandlers(builder);
+            RegisterModules(builder);
 
-            Azure.AutofacConfig.Register(builder);
-            FileManagement.AutofacConfig.Register(builder);
-
-            builder.RegisterType<FifthweekDbContext>().As<IFifthweekDbContext>().InstancePerRequest();
-            builder.RegisterType<RefreshTokenRepository>().As<IRefreshTokenRepository>().InstancePerRequest();
-            builder.RegisterType<ClientRepository>().As<IClientRepository>().InstancePerRequest();
-            builder.RegisterType<UserRepository>().As<IUserRepository>().InstancePerRequest();
-            builder.Register(c => IdentityConfig.CreateUserManager(c.Resolve<ISendEmailService>(), c.Resolve<IFifthweekDbContext>())).As<IUserManager>().InstancePerRequest();
-            builder.RegisterType<GuidCreator>().As<IGuidCreator>().SingleInstance();
-            builder.RegisterType<TraceService>().As<ITraceService>().SingleInstance();
             builder.RegisterType<ExceptionHandler>().As<IExceptionHandler>().SingleInstance();
             builder.RegisterInstance(Constants.DefaultDeveloperRepository).As<IDeveloperRepository>().SingleInstance();
             builder.RegisterInstance(Constants.DefaultSendEmailService).As<ISendEmailService>().SingleInstance();
             builder.RegisterInstance(Constants.DefaultReportingService).As<IReportingService>().SingleInstance();
 
-            builder.RegisterType<FifthweekAuthorizationServerProvider>().SingleInstance();
-            builder.RegisterType<FifthweekAuthorizationServerHandler>()
-                .As<IFifthweekAuthorizationServerHandler>()
-                .InstancePerRequest();
-            builder.RegisterType<FifthweekRefreshTokenProvider>().SingleInstance();
-            builder.RegisterType<FifthweekRefreshTokenHandler>().As<IFifthweekRefreshTokenHandler>().InstancePerRequest();
-
             builder.RegisterType<HttpClient>().InstancePerDependency();
 
-            builder.RegisterModule<LogRequestModule>();
+            // Uncoment this to log Autofac requests to trace output.
+            // builder.RegisterModule<LogRequestModule>();
 
             var container = builder.Build();
             return container;
         }
 
+        private static void RegisterModules(ContainerBuilder builder)
+        {
+            var autofacRegistrationTypes = FifthweekAssembliesResolver.Assemblies
+                .SelectMany(v => v.GetTypes())
+                .Where(v => v.IsClass)
+                .Where(v => typeof(IAutofacRegistration).IsAssignableFrom(v))
+                .ToList();
+
+            foreach (var t in autofacRegistrationTypes)
+            {
+                var instance = (IAutofacRegistration)Activator.CreateInstance(t);
+                instance.Register(builder);
+            }
+        }
+
         private static void RegisterControllerAssemblies(ContainerBuilder builder)
         {
-            builder.RegisterApiControllers(FifthweekAssembliesResolver.GetAssemblies().ToArray());
+            builder.RegisterApiControllers(FifthweekAssembliesResolver.Assemblies.ToArray());
         }
 
         private static void RegisterHandlers(
             ContainerBuilder builder)
         {
-            var types = FifthweekAssembliesResolver.GetAssemblies().SelectMany(v => v.GetTypes()).ToList();
+            var types = FifthweekAssembliesResolver.Assemblies.SelectMany(v => v.GetTypes()).ToList();
 
             var commandHandlers = (from t in types
                                    where t.IsClass

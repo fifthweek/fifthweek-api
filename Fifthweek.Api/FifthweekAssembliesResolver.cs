@@ -3,30 +3,22 @@
     using System.Collections.Generic;
     using System.Linq;
     using System.Reflection;
-    using System.Web.Http.Dispatcher;
-
-    using Fifthweek.Api.Availability.Controllers;
-    using Fifthweek.Api.FileManagement.Controllers;
-    using Fifthweek.Api.Identity.Membership.Controllers;
-    using Fifthweek.Api.Logging.Controllers;
-    using Fifthweek.Api.Persistence.Identity;
 
     public static class FifthweekAssembliesResolver
     {
-        public static IEnumerable<Assembly> GetAssemblies()
+        public static readonly IEnumerable<Assembly> Assemblies = new[] 
         {
-            return new List<Assembly>
-            {
-                Assembly.GetExecutingAssembly(),
-                typeof(AvailabilityController).Assembly,
-                typeof(Fifthweek.Api.Core.TransactionCommandHandlerDecorator<>).Assembly,
-                typeof(MembershipController).Assembly,
-                typeof(LogController).Assembly,
-                typeof(FifthweekUser).Assembly,
-                typeof(Fifthweek.Api.SendGrid.SendGridEmailService).Assembly,
-                typeof(Azure.AutofacConfig).Assembly,
-                typeof(FileManagement.AutofacConfig).Assembly
-            };
+            Assembly.GetExecutingAssembly(),
+            typeof(Core.AutofacRegistration).Assembly,
+            typeof(Availability.AutofacRegistration).Assembly,
+            typeof(Identity.Membership.AutofacRegistration).Assembly,
+            typeof(Identity.OAuth.AutofacRegistration).Assembly,
+            typeof(Logging.AutofacRegistration).Assembly,
+            typeof(Persistence.AutofacRegistration).Assembly,
+            typeof(SendGrid.AutofacRegistration).Assembly,
+            typeof(Azure.AutofacRegistration).Assembly,
+            typeof(FileManagement.AutofacRegistration).Assembly
         }
+        .Distinct().ToList().AsReadOnly();
     }
 }

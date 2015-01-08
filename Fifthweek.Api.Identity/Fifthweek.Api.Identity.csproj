@@ -101,6 +101,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>ClassAugmentation.tt</DependentUpon>
     </Compile>
+    <Compile Include="Membership\AutofacRegistration.cs" />
     <Compile Include="Membership\Commands\ConfirmPasswordResetCommand.cs" />
     <Compile Include="Membership\Commands\RequestPasswordResetCommand.cs" />
     <Compile Include="Membership\Commands\RegisterUserCommand.cs" />
@@ -128,6 +129,7 @@
     <Compile Include="Membership\Queries\GetUserQueryHandler.cs" />
     <Compile Include="Membership\UserRepository.cs" />
     <Compile Include="OAuth\ApplicationType.cs" />
+    <Compile Include="OAuth\AutofacRegistration.cs" />
     <Compile Include="OAuth\ChallengeResult.cs" />
     <Compile Include="OAuth\Client.cs" />
     <Compile Include="OAuth\ClientId.cs" />

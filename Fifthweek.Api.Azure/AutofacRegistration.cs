@@ -2,9 +2,11 @@
 {
     using Autofac;
 
-    public static class AutofacConfig
+    using Fifthweek.Api.Core;
+
+    public class AutofacRegistration : IAutofacRegistration
     {
-        public static void Register(ContainerBuilder builder)
+        public void Register(ContainerBuilder builder)
         {
             builder.RegisterType<BlobService>().As<IBlobService>().SingleInstance();
             builder.RegisterType<FifthweekCloudStorageAccount>().As<ICloudStorageAccount>().SingleInstance();
