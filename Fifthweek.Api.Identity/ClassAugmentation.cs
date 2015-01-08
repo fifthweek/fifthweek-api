@@ -452,6 +452,59 @@ namespace Fifthweek.Api.Identity.Membership
 	}
 
 }
+namespace Fifthweek.Api.Identity.OAuth
+{
+	using Fifthweek.Api.Identity.Membership;
+	using System;
+	using System.Collections.Generic;
+	using System.Linq;
+	using System.Security.Claims;
+	using System.Text.RegularExpressions;
+	using System.Threading.Tasks;
+	using Fifthweek.Api.Core;
+	using Fifthweek.Api.Identity.Membership.Commands;
+	using Fifthweek.Api.Identity.Membership.Queries;
+	using Fifthweek.Api.Identity.OAuth.Queries;
+	using Fifthweek.Api.Persistence;
+	using Fifthweek.Api.Persistence.Identity;
+	using Microsoft.Owin.Security;
+	using Microsoft.Owin.Security.OAuth;
+	public partial class FifthweekAuthorizationServerHandler
+	{
+        public FifthweekAuthorizationServerHandler(
+            Fifthweek.Api.Core.IQueryHandler<Fifthweek.Api.Identity.OAuth.Queries.GetClientQuery,Fifthweek.Api.Identity.OAuth.Client> getClient, 
+            Fifthweek.Api.Core.IQueryHandler<Fifthweek.Api.Identity.Membership.Queries.GetUserQuery,Fifthweek.Api.Persistence.Identity.FifthweekUser> getUser, 
+            Fifthweek.Api.Core.ICommandHandler<Fifthweek.Api.Identity.Membership.Commands.UpdateLastAccessTokenDateCommand> updateLastAccessTokenDate, 
+            Fifthweek.Api.Core.IExceptionHandler exceptionHandler)
+        {
+            if (getClient == null)
+            {
+                throw new ArgumentNullException("getClient");
+            }
+
+            if (getUser == null)
+            {
+                throw new ArgumentNullException("getUser");
+            }
+
+            if (updateLastAccessTokenDate == null)
+            {
+                throw new ArgumentNullException("updateLastAccessTokenDate");
+            }
+
+            if (exceptionHandler == null)
+            {
+                throw new ArgumentNullException("exceptionHandler");
+            }
+
+            this.getClient = getClient;
+            this.getUser = getUser;
+            this.updateLastAccessTokenDate = updateLastAccessTokenDate;
+            this.exceptionHandler = exceptionHandler;
+        }
+	}
+
+}
 
 namespace Fifthweek.Api.Identity.Membership.Commands
 {

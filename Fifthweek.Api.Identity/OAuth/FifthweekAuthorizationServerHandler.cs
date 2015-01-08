@@ -19,44 +19,13 @@ namespace Fifthweek.Api.Identity.OAuth
     using Microsoft.Owin.Security;
     using Microsoft.Owin.Security.OAuth;
 
-    public class FifthweekAuthorizationServerHandler : IFifthweekAuthorizationServerHandler
+    [AutoConstructor]
+    public partial class FifthweekAuthorizationServerHandler : IFifthweekAuthorizationServerHandler
     {
         private readonly IQueryHandler<GetClientQuery, Client> getClient;
         private readonly IQueryHandler<GetUserQuery, FifthweekUser> getUser;
         private readonly ICommandHandler<UpdateLastAccessTokenDateCommand> updateLastAccessTokenDate;
         private readonly IExceptionHandler exceptionHandler;
-
-        public FifthweekAuthorizationServerHandler(
-            IQueryHandler<GetClientQuery, Client> getClient,
-            IQueryHandler<GetUserQuery, FifthweekUser> getUser,
-            ICommandHandler<UpdateLastAccessTokenDateCommand> updateLastAccessTokenDate,
-            IExceptionHandler exceptionHandler)
-        {
-            if (getClient == null)
-            {
-                throw new ArgumentNullException("getClient");
-            }
-
-            if (getUser == null)
-            {
-                throw new ArgumentNullException("getUser");
-            }
-
-            if (updateLastAccessTokenDate == null)
-            {
-                throw new ArgumentNullException("updateLastAccessTokenDate");
-            }
-
-            if (exceptionHandler == null)
-            {
-                throw new ArgumentNullException("exceptionHandler");
-            }
-
-            this.getClient = getClient;
-            this.getUser = getUser;
-            this.updateLastAccessTokenDate = updateLastAccessTokenDate;
-            this.exceptionHandler = exceptionHandler;
-        }
 
         public async Task ValidateClientAuthenticationAsync(OAuthValidateClientAuthenticationContext context)
         {
@@ -139,6 +108,7 @@ namespace Fifthweek.Api.Identity.OAuth
 
             var identity = new ClaimsIdentity(context.Options.AuthenticationType);
             identity.AddClaim(new Claim(ClaimTypes.Name, normalizedUsername.Value));
+            identity.AddClaim(new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()));
 
             foreach (var role in user.Roles)
             {
