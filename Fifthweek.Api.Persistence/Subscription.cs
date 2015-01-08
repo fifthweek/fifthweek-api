@@ -1,17 +1,24 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
+using Fifthweek.Api.Core;
+using Fifthweek.Api.Persistence.Identity;
 
 namespace Fifthweek.Api.Persistence
 {
-    public class Subscription
+    [AutoConstructor]
+    public partial class Subscription
     {
+        public Subscription()
+        {
+        }
+
         [Key]
         [Required]
         public Guid Id { get; set; }
 
-        [ForeignKey("CreatorId")]
-        [Required]
+        [Required, Optional]
+        public FifthweekUser Creator { get; set; }
+
         public Guid CreatorId { get; set; }
 
         [Required]

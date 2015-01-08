@@ -1,12 +1,10 @@
-﻿namespace Fifthweek.Api
+﻿using Fifthweek.Api.Persistence.Migrations;
+
+namespace Fifthweek.Api
 {
     using System.Data.Entity;
     using System.Diagnostics;
     using System.Linq;
-    using System.Web.Http;
-
-    using Fifthweek.Api.Migrations;
-    using Fifthweek.Api.Persistence;
     using Fifthweek.Api.Persistence.Identity;
 
     public static class DatabaseConfig

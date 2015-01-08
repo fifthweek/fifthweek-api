@@ -1,19 +1,14 @@
-namespace Fifthweek.Api.Migrations
+using System.Data.Entity.Migrations;
+using Fifthweek.Api.Persistence.Identity;
+
+namespace Fifthweek.Api.Persistence.Migrations
 {
-    using System;
-    using System.Data.Entity;
-    using System.Data.Entity.Migrations;
-    using System.Linq;
-
-    using Fifthweek.Api.Persistence;
-    using Fifthweek.Api.Persistence.Identity;
-
-    internal sealed class Configuration : DbMigrationsConfiguration<FifthweekDbContext>
+    public sealed class Configuration : DbMigrationsConfiguration<FifthweekDbContext>
     {
         public Configuration()
         {
-            AutomaticMigrationsEnabled = false;
-            ContextKey = "Fifthweek.Api.Repositories.FifthweekDbContext";
+            this.AutomaticMigrationsEnabled = false;
+            this.ContextKey = "Fifthweek.Api.Repositories.FifthweekDbContext";
         }
 
         protected override void Seed(FifthweekDbContext context)

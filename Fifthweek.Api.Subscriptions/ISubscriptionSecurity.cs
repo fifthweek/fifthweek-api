@@ -5,6 +5,6 @@ namespace Fifthweek.Api.Subscriptions
 {
     public interface ISubscriptionSecurity
     {
-        Task<bool> CanUpdateAsync(UserId userId, SubscriptionId subscriptionId);
+        Task<bool> IsUpdateAllowedAsync(UserId userId, SubscriptionId subscriptionId);
     }
 }

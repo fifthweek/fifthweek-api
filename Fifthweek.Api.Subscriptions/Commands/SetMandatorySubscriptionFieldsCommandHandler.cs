@@ -16,8 +16,11 @@ namespace Fifthweek.Api.Subscriptions.Commands
                 throw new ArgumentNullException("command");
             }
 
-            await this.subscriptionSecurity.CanUpdateAsync(command.Requester, command.SubscriptionId);
-            
+            var isUpdateAllowed = await this.subscriptionSecurity.IsUpdateAllowedAsync(command.Requester, command.SubscriptionId);
+            if (!isUpdateAllowed)
+            {
+                throw new RecoverableException("Not allowed to update subscription");
+            }
             //command.SubscriptionId
 
             throw new NotImplementedException();

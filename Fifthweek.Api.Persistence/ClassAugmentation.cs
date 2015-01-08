@@ -5,9 +5,12 @@ using System;
 
 
 
-
 namespace Fifthweek.Api.Persistence
 {
+	using System;
+	using System.ComponentModel.DataAnnotations;
+	using System.ComponentModel.DataAnnotations.Schema;
+	using Fifthweek.Api.Core;
 	public partial class File
 	{
         public File(
@@ -62,6 +65,58 @@ namespace Fifthweek.Api.Persistence
             this.MimeType = mimeType;
         }
 	}
+
+}
+namespace Fifthweek.Api.Persistence
+{
+	using System;
+	using System.ComponentModel.DataAnnotations;
+	using Fifthweek.Api.Core;
+	using Fifthweek.Api.Persistence.Identity;
+	public partial class Subscription
+	{
+        public Subscription(
+            System.Guid id, 
+            Fifthweek.Api.Persistence.Identity.FifthweekUser creator, 
+            System.Guid creatorId, 
+            System.String name, 
+            System.String tagline, 
+            System.DateTime creationDate)
+        {
+            if (id == null)
+            {
+                throw new ArgumentNullException("id");
+            }
+
+            if (creatorId == null)
+            {
+                throw new ArgumentNullException("creatorId");
+            }
+
+            if (name == null)
+            {
+                throw new ArgumentNullException("name");
+            }
+
+            if (tagline == null)
+            {
+                throw new ArgumentNullException("tagline");
+            }
+
+            if (creationDate == null)
+            {
+                throw new ArgumentNullException("creationDate");
+            }
+
+            this.Id = id;
+            this.Creator = creator;
+            this.CreatorId = creatorId;
+            this.Name = name;
+            this.Tagline = tagline;
+            this.CreationDate = creationDate;
+        }
+	}
+
 }
 
 

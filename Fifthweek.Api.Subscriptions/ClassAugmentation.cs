@@ -81,6 +81,11 @@ namespace Fifthweek.Api.Subscriptions
 	using Fifthweek.Api.Core;
 	using System.Collections.Generic;
 	using System.Linq;
+	using System.Data.Entity;
+	using System.Threading.Tasks;
+	using Dapper;
+	using Fifthweek.Api.Identity.Membership;
+	using Fifthweek.Api.Persistence;
 	public partial class SubscriptionId
 	{
         public SubscriptionId(
@@ -99,11 +104,12 @@ namespace Fifthweek.Api.Subscriptions
 namespace Fifthweek.Api.Subscriptions
 {
 	using System;
-	using System.Data.Entity;
+	using Fifthweek.Api.Core;
+	using System.Collections.Generic;
 	using System.Linq;
+	using System.Data.Entity;
 	using System.Threading.Tasks;
 	using Dapper;
-	using Fifthweek.Api.Core;
 	using Fifthweek.Api.Identity.Membership;
 	using Fifthweek.Api.Persistence;
 	public partial class SubscriptionSecurity
@@ -128,6 +134,11 @@ namespace Fifthweek.Api.Subscriptions
 	using System.Collections.Generic;
 	using Fifthweek.Api.Core;
 	using System.Linq;
+	using System.Data.Entity;
+	using System.Threading.Tasks;
+	using Dapper;
+	using Fifthweek.Api.Identity.Membership;
+	using Fifthweek.Api.Persistence;
 	public partial class ChannelPriceInUsCentsPerWeek
 	{
         public override bool Equals(object obj)
@@ -246,6 +257,11 @@ namespace Fifthweek.Api.Subscriptions
 	using Fifthweek.Api.Core;
 	using System.Collections.Generic;
 	using System.Linq;
+	using System.Data.Entity;
+	using System.Threading.Tasks;
+	using Dapper;
+	using Fifthweek.Api.Identity.Membership;
+	using Fifthweek.Api.Persistence;
 	public partial class SubscriptionId
 	{
         public override bool Equals(object obj)
@@ -377,6 +393,11 @@ namespace Fifthweek.Api.Subscriptions
 	using Fifthweek.Api.Core;
 	using System.Collections.Generic;
 	using System.Linq;
+	using System.Data.Entity;
+	using System.Threading.Tasks;
+	using Dapper;
+	using Fifthweek.Api.Identity.Membership;
+	using Fifthweek.Api.Persistence;
 	public partial class SubscriptionName
 	{
         public override bool Equals(object obj)
@@ -426,6 +447,11 @@ namespace Fifthweek.Api.Subscriptions
 	using Fifthweek.Api.Core;
 	using System.Collections.Generic;
 	using System.Linq;
+	using System.Data.Entity;
+	using System.Threading.Tasks;
+	using Dapper;
+	using Fifthweek.Api.Identity.Membership;
+	using Fifthweek.Api.Persistence;
 	public partial class Tagline
 	{
         public override bool Equals(object obj)

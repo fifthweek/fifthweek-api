@@ -29,6 +29,12 @@
 
 4.  Run Visual Studio 2013 as *admin* to avoid IIS Express related errors.
 
+## Database changes
+
+Run the following command to generate migrations:
+
+    Add-Migration AddSubscriptionsAndChannels -ProjectName Fifthweek.Api.Persistence -StartUpProjectName Fifthweek.Api
+
 ## Temporary database
 
 Data is stored in `App_Data` and is persisted between builds of the application.
@@ -45,7 +51,6 @@ For example, you can use curl to connect to the fifthweek-api project as follows
 
 Azure enables tracing when you connect, and disables it after 30 minutes.  You may need to check
 the Azure portal to set the logging level you require.
-
 
 ## Check-in procedure
 

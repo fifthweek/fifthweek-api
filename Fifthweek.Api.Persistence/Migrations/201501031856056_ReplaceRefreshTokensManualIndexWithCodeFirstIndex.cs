@@ -1,8 +1,7 @@
-namespace Fifthweek.Api.Migrations
+using System.Data.Entity.Migrations;
+
+namespace Fifthweek.Api.Persistence.Migrations
 {
-    using System;
-    using System.Data.Entity.Migrations;
-    
     public partial class ReplaceRefreshTokensManualIndexWithCodeFirstIndex : DbMigration
     {
         public override void Up()

@@ -42,11 +42,18 @@
     <Reference Include="EntityFramework.SqlServer">
       <HintPath>..\packages\EntityFramework.6.1.0\lib\net45\EntityFramework.SqlServer.dll</HintPath>
     </Reference>
+    <Reference Include="Microsoft.AspNet.Identity.Core">
+      <HintPath>..\packages\Microsoft.AspNet.Identity.Core.2.1.0\lib\net45\Microsoft.AspNet.Identity.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.AspNet.Identity.EntityFramework">
+      <HintPath>..\packages\Microsoft.AspNet.Identity.EntityFramework.2.1.0\lib\net45\Microsoft.AspNet.Identity.EntityFramework.dll</HintPath>
+    </Reference>
     <Reference Include="Moq">
       <HintPath>..\packages\Moq.4.2.1409.1722\lib\net40\Moq.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Data" />
   </ItemGroup>
   <Choose>
     <When Condition="('$(VisualStudioVersion)' == '10.0' or '$(VisualStudioVersion)' == '') and '$(TargetFrameworkVersion)' == 'v3.5'">
@@ -61,15 +68,36 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
-    <Compile Include="TestDbAsync.cs" />
-    <Compile Include="TestDbAsyncEnumerable.cs" />
-    <Compile Include="TestDbAsyncEnumerator.cs" />
-    <Compile Include="TestDbAsyncQueryProvider.cs" />
+    <Compile Include="ClassAugmentation.cs">
+      <DependentUpon>ClassAugmentation.tt</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <Compile Include="SubscriptionTests.cs" />
+    <Compile Include="TemporaryDatabase.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="UserTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+    <None Include="ClassAugmentation.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>ClassAugmentation.cs</LastGenOutput>
+    </None>
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Fifthweek.Api.Core\Fifthweek.Api.Core.csproj">
+      <Project>{BD52863E-063D-45A5-9CA8-7541804D1313}</Project>
+      <Name>Fifthweek.Api.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Fifthweek.Api.Persistence\Fifthweek.Api.Persistence.csproj">
+      <Project>{9C18BEE3-FAB5-4A00-8A94-A1FAEA370175}</Project>
+      <Name>Fifthweek.Api.Persistence</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
   </ItemGroup>
   <Choose>
     <When Condition="'$(VisualStudioVersion)' == '10.0' And '$(IsCodedUITest)' == 'True'">

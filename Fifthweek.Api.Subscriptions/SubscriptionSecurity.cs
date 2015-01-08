@@ -1,6 +1,6 @@
 using System;
-using System.Data.Entity;
 using System.Threading.Tasks;
+using Dapper;
 using Fifthweek.Api.Core;
 using Fifthweek.Api.Identity.Membership;
 using Fifthweek.Api.Persistence;
@@ -12,7 +12,7 @@ namespace Fifthweek.Api.Subscriptions
     {
         private readonly IFifthweekDbContext fifthweekDbContext;
 
-        public Task<bool> CanUpdateAsync(UserId userId, SubscriptionId subscriptionId)
+        public Task<bool> IsUpdateAllowedAsync(UserId userId, SubscriptionId subscriptionId)
         {
             if (userId == null)
             {
@@ -24,8 +24,18 @@ namespace Fifthweek.Api.Subscriptions
                 throw new ArgumentNullException("subscriptionId");
             }
 
-            return this.fifthweekDbContext.Subscriptions.AnyAsync(
-                _ => _.Id == subscriptionId.Value && _.CreatorId == userId.Value);
+            return this.fifthweekDbContext.Database.Connection.ExecuteScalarAsync<bool>(
+                @"IF EXISTS(SELECT *
+                            FROM   Subscriptions
+                            WHERE  Id = @SubscriptionId
+                            AND    CreatorId = @CreatorId)
+                    SELECT 1 AS FOUND
+                ELSE
+                    SELECT 0 AS FOUND", new
+                {
+                    SubscriptionId = subscriptionId.Value,
+                    CreatorId = userId.Value
+                });
         }
     }
 }

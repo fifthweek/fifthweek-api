@@ -12,6 +12,11 @@ namespace Fifthweek.Api.Persistence.Identity
         {
         }
 
+        public FifthweekDbContext(string connectionString)
+            : base(connectionString)
+        {
+        }
+
         public IDbSet<RefreshToken> RefreshTokens { get; set; }
 
         public IDbSet<Subscription> Subscriptions { get; set; }

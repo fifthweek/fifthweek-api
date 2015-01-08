@@ -1,13 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Data.Entity;
-using System.Linq;
 using System.Threading.Tasks;
 using Fifthweek.Api.Identity.Membership;
 using Fifthweek.Api.Persistence;
 using Fifthweek.Api.Persistence.Tests.Shared;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Moq;
 
 namespace Fifthweek.Api.Subscriptions.Tests
 {
@@ -15,62 +11,39 @@ namespace Fifthweek.Api.Subscriptions.Tests
     public class SubscriptionSecurityTests
     {
         [TestMethod]
-        public async Task WhenAtLeastOneSubscriptionMatchesSubscriptionAndCreator_ItShouldReturnTrue()
+        public async Task WhenAtLeastOneSubscriptionMatchesSubscriptionAndCreator_ItShouldAllowUpdate()
         {
-            this.WithEntities(new[]
-            {
-                new Subscription
-                {
-                    Id = this.subscriptionId.Value,
-                    CreatorId = this.userId.Value
-                }
-            });
+            await this.CreateSubscriptionAsync(this.userId, this.subscriptionId);
 
-            var result = await this.target.CanUpdateAsync(this.userId, this.subscriptionId);
+            var result = await this.target.IsUpdateAllowedAsync(this.userId, this.subscriptionId);
 
             Assert.IsTrue(result);
         }
 
         [TestMethod]
-        public async Task WhenNoSubscriptionsExist_ItShouldReturnFalse()
+        public async Task WhenNoSubscriptionsExist_ItShouldForbidUpdate()
         {
-            this.WithEntities(Enumerable.Empty<Subscription>());
-
-            var result = await this.target.CanUpdateAsync(this.userId, this.subscriptionId);
+            var result = await this.target.IsUpdateAllowedAsync(this.userId, this.subscriptionId);
 
             Assert.IsFalse(result);
         }
 
         [TestMethod]
-        public async Task WhenNoSubscriptionsMatchSubscriptionOrCreator_ItShouldReturnFalse()
+        public async Task WhenNoSubscriptionsMatchSubscriptionOrCreator_ItShouldForbidUpdate()
         {
-            this.WithEntities(new[]
-            {
-                new Subscription
-                {
-                    Id = new Guid(),
-                    CreatorId = new Guid()
-                }
-            });
+            await this.CreateSubscriptionAsync(new UserId(Guid.NewGuid()), new SubscriptionId(Guid.NewGuid()));
 
-            var result = await this.target.CanUpdateAsync(this.userId, this.subscriptionId);
+            var result = await this.target.IsUpdateAllowedAsync(this.userId, this.subscriptionId);
 
             Assert.IsFalse(result);
         }
 
         [TestMethod]
-        public async Task WhenNoSubscriptionsMatchSubscription_ItShouldReturnFalse()
+        public async Task WhenNoSubscriptionsMatchSubscription_ItShouldForbidUpdate()
         {
-            this.WithEntities(new[]
-            {
-                new Subscription
-                {
-                    Id = new Guid(),
-                    CreatorId = this.userId.Value
-                }
-            });
+            await this.CreateSubscriptionAsync(this.userId, new SubscriptionId(Guid.NewGuid()));
 
-            var result = await this.target.CanUpdateAsync(this.userId, this.subscriptionId);
+            var result = await this.target.IsUpdateAllowedAsync(this.userId, this.subscriptionId);
 
             Assert.IsFalse(result);
         }
@@ -78,16 +51,9 @@ namespace Fifthweek.Api.Subscriptions.Tests
         [TestMethod]
         public async Task WhenNoSubscriptionsMatchCreator_ItShouldReturnFalse()
         {
-            this.WithEntities(new[]
-            {
-                new Subscription
-                {
-                    Id = this.subscriptionId.Value,
-                    CreatorId = new Guid()
-                }
-            });
+            await this.CreateSubscriptionAsync(new UserId(Guid.NewGuid()), this.subscriptionId);
 
-            var result = await this.target.CanUpdateAsync(this.userId, this.subscriptionId);
+            var result = await this.target.IsUpdateAllowedAsync(this.userId, this.subscriptionId);
 
             Assert.IsFalse(result);
         }
@@ -95,21 +61,35 @@ namespace Fifthweek.Api.Subscriptions.Tests
         [TestInitialize]
         public void Initialize()
         {
-            this.subscriptions = new Mock<IDbSet<Subscription>>();
-            this.fifthweekDbContext = new Mock<IFifthweekDbContext>();
-            this.target = new SubscriptionSecurity(this.fifthweekDbContext.Object);
+            this.temporaryDatabase = TemporaryDatabase.CreateNew();
+            this.fifthweekDbContext = this.temporaryDatabase.NewDbContext();
+            this.target = new SubscriptionSecurity(this.fifthweekDbContext);
         }
 
-        private void WithEntities(IEnumerable<Subscription> entities)
+        [TestCleanup]
+        public void Cleanup()
         {
-            TestDbAsync.Populate(entities, this.subscriptions);
-            this.fifthweekDbContext.SetupGet(_ => _.Subscriptions).Returns(this.subscriptions.Object);
+            this.temporaryDatabase.Dispose();
         }
 
-        private UserId userId = new UserId(Guid.NewGuid());
-        private SubscriptionId subscriptionId = new SubscriptionId(Guid.NewGuid());
-        private Mock<IDbSet<Subscription>> subscriptions;
-        private Mock<IFifthweekDbContext> fifthweekDbContext;
+        private Task CreateSubscriptionAsync(UserId newUserId, SubscriptionId newSubscriptionId)
+        {
+            var creator = UserTests.UniqueEntity();
+            creator.Id = newUserId.Value;
+
+            var subscription = SubscriptionTests.UniqueEntity();
+            subscription.Id = newSubscriptionId.Value;
+            subscription.Creator = creator;
+            subscription.CreatorId = creator.Id;
+
+            this.fifthweekDbContext.Subscriptions.Add(subscription);
+            return this.fifthweekDbContext.SaveChangesAsync();
+        }
+
+        private TemporaryDatabase temporaryDatabase;
+        private readonly UserId userId = new UserId(Guid.NewGuid());
+        private readonly SubscriptionId subscriptionId = new SubscriptionId(Guid.NewGuid());
+        private IFifthweekDbContext fifthweekDbContext;
         private SubscriptionSecurity target;
     }
 }

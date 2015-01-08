@@ -102,6 +102,35 @@
     <Compile Include="FileVariant.cs" />
     <Compile Include="IFifthweekDbContext.cs" />
     <Compile Include="IUserManager.cs" />
+    <Compile Include="Migrations\201412041523081_InitialCreate.cs" />
+    <Compile Include="Migrations\201412041523081_InitialCreate.Designer.cs">
+      <DependentUpon>201412041523081_InitialCreate.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201412061138102_AddExampleWork.cs" />
+    <Compile Include="Migrations\201412061138102_AddExampleWork.Designer.cs">
+      <DependentUpon>201412061138102_AddExampleWork.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201412151012583_AddApplicationUserTimestamps.cs" />
+    <Compile Include="Migrations\201412151012583_AddApplicationUserTimestamps.Designer.cs">
+      <DependentUpon>201412151012583_AddApplicationUserTimestamps.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201412232020572_AddRefreshTokensIndexForUsernameClientId.cs" />
+    <Compile Include="Migrations\201412232020572_AddRefreshTokensIndexForUsernameClientId.Designer.cs">
+      <DependentUpon>201412232020572_AddRefreshTokensIndexForUsernameClientId.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201501031856056_ReplaceRefreshTokensManualIndexWithCodeFirstIndex.cs" />
+    <Compile Include="Migrations\201501031856056_ReplaceRefreshTokensManualIndexWithCodeFirstIndex.Designer.cs">
+      <DependentUpon>201501031856056_ReplaceRefreshTokensManualIndexWithCodeFirstIndex.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201501032034425_ChangeIdentityPrimaryKeysToGuid.cs" />
+    <Compile Include="Migrations\201501032034425_ChangeIdentityPrimaryKeysToGuid.Designer.cs">
+      <DependentUpon>201501032034425_ChangeIdentityPrimaryKeysToGuid.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201501082144347_AddSubscriptionsAndChannels.cs" />
+    <Compile Include="Migrations\201501082144347_AddSubscriptionsAndChannels.Designer.cs">
+      <DependentUpon>201501082144347_AddSubscriptionsAndChannels.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RefreshToken.cs" />
     <Compile Include="File.cs" />
@@ -123,6 +152,32 @@
   </ItemGroup>
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Migrations\201412041523081_InitialCreate.resx">
+      <DependentUpon>201412041523081_InitialCreate.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201412061138102_AddExampleWork.resx">
+      <DependentUpon>201412061138102_AddExampleWork.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201412151012583_AddApplicationUserTimestamps.resx">
+      <DependentUpon>201412151012583_AddApplicationUserTimestamps.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201412232020572_AddRefreshTokensIndexForUsernameClientId.resx">
+      <DependentUpon>201412232020572_AddRefreshTokensIndexForUsernameClientId.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201501031856056_ReplaceRefreshTokensManualIndexWithCodeFirstIndex.resx">
+      <DependentUpon>201501031856056_ReplaceRefreshTokensManualIndexWithCodeFirstIndex.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201501032034425_ChangeIdentityPrimaryKeysToGuid.resx">
+      <DependentUpon>201501032034425_ChangeIdentityPrimaryKeysToGuid.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201501082144347_AddSubscriptionsAndChannels.resx">
+      <DependentUpon>201501082144347_AddSubscriptionsAndChannels.cs</DependentUpon>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Migrations\201501032034425_ChangeIdentityPrimaryKeysToGuid.sql" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
