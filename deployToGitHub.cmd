@@ -8,6 +8,11 @@ mkdir "%APPVEYOR_BUILD_FOLDER%\temp_dist_git_settings"
 echo Cloning fifthweek-api-dist
 git clone --branch=master https://%git_personal_access_token%:x-oauth-basic@github.com/fifthweek/fifthweek-api-dist.git "%APPVEYOR_BUILD_FOLDER%\temp_dist"
 
+cd "%APPVEYOR_BUILD_FOLDER%"
+dir
+cd "%APPVEYOR_BUILD_FOLDER%\temp_dist"
+dir
+
 echo Preserving GIT settings for dist repo
 xcopy /h "%APPVEYOR_BUILD_FOLDER%\temp_dist\.git*" "%APPVEYOR_BUILD_FOLDER%\temp_dist_git_settings"
 
