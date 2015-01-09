@@ -12,7 +12,7 @@ echo Preserving GIT settings for dist repo
 xcopy /h "%APPVEYOR_BUILD_FOLDER%\temp_dist\.git" "%APPVEYOR_BUILD_FOLDER%\temp_dist_git_settings\.git\"
 
 echo Clearing files
-rmdir /s /q "%APPVEYOR_BUILD_FOLDER%\temp_dist*"
+rmdir /s /q "%APPVEYOR_BUILD_FOLDER%\temp_dist"
 mkdir "%APPVEYOR_BUILD_FOLDER%\temp_dist"
 
 echo Copying new files to dist repo
