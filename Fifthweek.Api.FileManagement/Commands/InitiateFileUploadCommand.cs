@@ -10,5 +10,9 @@
         public UserId Requester { get; private set; }
 
         public FileId FileId { get; private set; }
+
+        public string FilePath { get; private set; }
+
+        public string Purpose { get; private set; }
     }
 }

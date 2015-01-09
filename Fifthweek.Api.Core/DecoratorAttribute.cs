@@ -1,4 +1,4 @@
-﻿namespace Fifthweek.Api
+﻿namespace Fifthweek.Api.Core
 {
     using System;
     using System.Collections.Generic;

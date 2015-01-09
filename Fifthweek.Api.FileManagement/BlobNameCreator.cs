@@ -9,7 +9,7 @@
     {
         public string CreateFileName(FileId fileId)
         {
-            return fileId.ToString().ToLower();
+            return fileId.Value.ToString().ToLower();
         }
     }
 }

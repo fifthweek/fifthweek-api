@@ -9,6 +9,7 @@
         public void Register(ContainerBuilder builder)
         {
             builder.RegisterType<BlobNameCreator>().As<IBlobNameCreator>().SingleInstance();
+            builder.RegisterType<FileRepository>().As<IFileRepository>().SingleInstance();
         }
     }
 }

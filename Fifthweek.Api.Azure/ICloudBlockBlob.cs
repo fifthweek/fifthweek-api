@@ -1,6 +1,7 @@
 namespace Fifthweek.Api.Azure
 {
     using System;
+    using System.Threading.Tasks;
 
     using Microsoft.WindowsAzure.Storage.Blob;
 
@@ -11,5 +12,9 @@ namespace Fifthweek.Api.Azure
         string GetSharedAccessSignature(SharedAccessBlobPolicy policy);
 
         Uri Uri { get; }
+
+        IBlobProperties Properties { get; }
+
+        Task FetchAttributesAsync();
     }
 }

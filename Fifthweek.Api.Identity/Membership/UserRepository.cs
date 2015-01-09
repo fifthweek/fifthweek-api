@@ -25,7 +25,7 @@ namespace Fifthweek.Api.Identity.Membership
         {
             return this.fifthweekDbContext.Database.Connection.ExecuteAsync(
                    @"UPDATE AspNetUsers SET LastAccessTokenDate=@timestamp WHERE UserName=@username",
-                   new {username =  username.Value, timestamp });
+                   new { username = username.Value, timestamp });
         }
     }
 }

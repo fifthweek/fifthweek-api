@@ -40,7 +40,7 @@
             var fileId = new FileId(this.guidCreator.CreateSqlSequential());
             var authenticatedUserId = this.userContext.GetUserId();
             
-            await this.initiateFileUpload.HandleAsync(new InitiateFileUploadCommand(authenticatedUserId, fileId));
+            await this.initiateFileUpload.HandleAsync(new InitiateFileUploadCommand(authenticatedUserId, fileId, data.FilePath, data.Purpose));
             var uri = await this.generateWritableBlobUri.HandleAsync(new GenerateWritableBlobUriQuery(authenticatedUserId, fileId));
 
             return new GrantedUpload(fileId.Value, uri);

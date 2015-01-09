@@ -7,6 +7,6 @@
     {
         public string FilePath { get; set; }
 
-        public int FileSizeBytes { get; set; }
+        public string Purpose { get; set; }
     }
 }

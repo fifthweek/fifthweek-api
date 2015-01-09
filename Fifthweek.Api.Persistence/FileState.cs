@@ -2,9 +2,9 @@
 {
     public enum FileState
     {
-        WaitingForClient,
-        UploadCompleted,
-        Processing,
-        ProcessingCompleted
+        WaitingForUpload,
+        UploadComplete,
+        ProcessingStarted,
+        ProcessingComplete
     }
 }

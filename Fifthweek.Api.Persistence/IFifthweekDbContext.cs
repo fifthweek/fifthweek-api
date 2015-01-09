@@ -21,6 +21,10 @@
 
         IDbSet<Channel> Channels { get; }
 
+        IDbSet<File> Files { get; set; }
+
+        IDbSet<FileVariant> FileVariants { get; set; }
+
         Task<int> SaveChangesAsync();
 
         Task<int> SaveChangesAsync(CancellationToken cancellationToken);

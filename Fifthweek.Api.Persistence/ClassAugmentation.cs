@@ -11,18 +11,22 @@ namespace Fifthweek.Api.Persistence
 	using System.ComponentModel.DataAnnotations;
 	using System.ComponentModel.DataAnnotations.Schema;
 	using Fifthweek.Api.Core;
+	using Fifthweek.Api.Persistence.Identity;
 	public partial class File
 	{
         public File(
             System.Guid id, 
+            Fifthweek.Api.Persistence.Identity.FifthweekUser user, 
             System.Guid userId, 
             Fifthweek.Api.Persistence.FileState state, 
-            System.String blobReference, 
-            System.DateTime creationDate, 
-            System.Nullable<System.DateTime> completionDate, 
-            System.Nullable<System.DateTime> processedDate, 
-            System.String fileName, 
-            System.String mimeType)
+            System.DateTime uploadStartedDate, 
+            System.Nullable<System.DateTime> uploadCompletedDate, 
+            System.Nullable<System.DateTime> processingStartedDate, 
+            System.Nullable<System.DateTime> processingCompletedDate, 
+            System.String fileNameWithoutExtension, 
+            System.String fileExtension, 
+            System.Int64 blobSizeBytes, 
+            System.String purpose)
         {
             if (id == null)
             {
@@ -39,30 +43,43 @@ namespace Fifthweek.Api.Persistence
                 throw new ArgumentNullException("state");
             }
 
-            if (blobReference == null)
+            if (uploadStartedDate == null)
             {
-                throw new ArgumentNullException("blobReference");
+                throw new ArgumentNullException("uploadStartedDate");
             }
 
-            if (creationDate == null)
+            if (fileNameWithoutExtension == null)
             {
-                throw new ArgumentNullException("creationDate");
+                throw new ArgumentNullException("fileNameWithoutExtension");
             }
 
-            if (fileName == null)
+            if (fileExtension == null)
             {
-                throw new ArgumentNullException("fileName");
+                throw new ArgumentNullException("fileExtension");
+            }
+
+            if (blobSizeBytes == null)
+            {
+                throw new ArgumentNullException("blobSizeBytes");
+            }
+
+            if (purpose == null)
+            {
+                throw new ArgumentNullException("purpose");
             }
 
             this.Id = id;
+            this.User = user;
             this.UserId = userId;
             this.State = state;
-            this.BlobReference = blobReference;
-            this.CreationDate = creationDate;
-            this.CompletionDate = completionDate;
-            this.ProcessedDate = processedDate;
-            this.FileName = fileName;
-            this.MimeType = mimeType;
+            this.UploadStartedDate = uploadStartedDate;
+            this.UploadCompletedDate = uploadCompletedDate;
+            this.ProcessingStartedDate = processingStartedDate;
+            this.ProcessingCompletedDate = processingCompletedDate;
+            this.FileNameWithoutExtension = fileNameWithoutExtension;
+            this.FileExtension = fileExtension;
+            this.BlobSizeBytes = blobSizeBytes;
+            this.Purpose = purpose;
         }
 	}
 
@@ -71,6 +88,7 @@ namespace Fifthweek.Api.Persistence
 {
 	using System;
 	using System.ComponentModel.DataAnnotations;
+	using System.ComponentModel.DataAnnotations.Schema;
 	using Fifthweek.Api.Core;
 	using Fifthweek.Api.Persistence.Identity;
 	public partial class Subscription

@@ -7,7 +7,7 @@ namespace Fifthweek.Api.Subscriptions
     [AutoEqualityMembers]
     public partial class ChannelPriceInUsCentsPerWeek
     {
-        public static readonly int MinValue = 25;
+        public static readonly int MinValue = 1;
 
         private ChannelPriceInUsCentsPerWeek()
         {

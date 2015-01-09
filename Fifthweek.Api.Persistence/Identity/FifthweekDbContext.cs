@@ -23,6 +23,10 @@ namespace Fifthweek.Api.Persistence.Identity
 
         public IDbSet<Channel> Channels { get; set; }
 
+        public IDbSet<File> Files { get; set; }
+
+        public IDbSet<FileVariant> FileVariants { get; set; }
+
         public static FifthweekDbContext Create()
         {
             return new FifthweekDbContext();

@@ -1,5 +1,6 @@
 ﻿namespace Fifthweek.Api.FileManagement.Queries
 {
+    using System.Security;
     using System.Threading.Tasks;
 
     using Fifthweek.Api.Azure;
@@ -12,13 +13,16 @@
 
         private readonly IBlobNameCreator blobNameCreator;
 
-        public Task<string> HandleAsync(GenerateWritableBlobUriQuery query)
+        private readonly IFileRepository fileRepository;
+
+        public async Task<string> HandleAsync(GenerateWritableBlobUriQuery query)
         {
-            // Check the requester has access to this file.
+            await this.fileRepository.AssertFileBelongsToUserAsync(query.Requester, query.FileId);
 
             const string ContainerName = FileManagement.Constants.FileBlobContainerName;
             var blobName = this.blobNameCreator.CreateFileName(query.FileId);
-            return this.blobService.GetBlobSasUriForWritingAsync(ContainerName, blobName);
+            var url = await this.blobService.GetBlobSasUriForWritingAsync(ContainerName, blobName);
+            return url;
         }
     }
 }

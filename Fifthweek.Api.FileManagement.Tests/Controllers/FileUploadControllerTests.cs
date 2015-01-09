@@ -26,10 +26,12 @@ namespace Fifthweek.Api.FileManagement.Tests.Controllers
             var fileId = new FileId(this.guid);
             var uploadUri = "/test";
             var userId = new UserId(Guid.NewGuid());
+            var filePath = @"C:\test\myfile.jpeg";
+            var purpose = "profile-picture";
 
             this.userContext.Setup(v => v.GetUserId()).Returns(userId).Verifiable();
-            this.initiateFileUpload.Setup(v => v.HandleAsync(new InitiateFileUploadCommand(userId, fileId))).Returns(Task.FromResult(0)).Verifiable();
-            this.generateWritableBlobUri.Setup(v => v.HandleAsync(new GenerateWritableBlobUriQuery(fileId))).ReturnsAsync(uploadUri).Verifiable();
+            this.initiateFileUpload.Setup(v => v.HandleAsync(new InitiateFileUploadCommand(userId, fileId, filePath, purpose))).Returns(Task.FromResult(0)).Verifiable();
+            this.generateWritableBlobUri.Setup(v => v.HandleAsync(new GenerateWritableBlobUriQuery(userId, fileId))).ReturnsAsync(uploadUri).Verifiable();
 
             var response = await this.fileUploadController.PostUploadRequestAsync(new UploadRequest());
 
@@ -45,11 +47,14 @@ namespace Fifthweek.Api.FileManagement.Tests.Controllers
         public async Task WhenAnUploadCompleteNotificationIsPosted_ItShouldCompleteTheFileUpload()
         {
             var fileId = new FileId(this.guid);
+            var userId = new UserId(Guid.NewGuid());
 
-            this.completeFileUpload.Setup(v => v.HandleAsync(new CompleteFileUploadCommand(fileId))).Returns(Task.FromResult(0)).Verifiable();
+            this.userContext.Setup(v => v.GetUserId()).Returns(userId).Verifiable();
+            this.completeFileUpload.Setup(v => v.HandleAsync(new CompleteFileUploadCommand(userId, fileId))).Returns(Task.FromResult(0)).Verifiable();
 
             await this.fileUploadController.PostUploadCompleteNotificationAsync(this.guid);
 
+            this.userContext.Verify();
             this.completeFileUpload.Verify();
         }
 

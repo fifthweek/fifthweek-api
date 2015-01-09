@@ -71,10 +71,12 @@
   <ItemGroup>
     <Compile Include="AutofacRegistration.cs" />
     <Compile Include="BlobService.cs" />
+    <Compile Include="FifthweekBlobProperties.cs" />
     <Compile Include="FifthweekCloudBlobClient.cs" />
     <Compile Include="FifthweekCloudBlobContainer.cs" />
     <Compile Include="FifthweekCloudBlockBlob.cs" />
     <Compile Include="FifthweekCloudStorageAccount.cs" />
+    <Compile Include="IBlobProperties.cs" />
     <Compile Include="IBlobService.cs" />
     <Compile Include="ICloudBlobClient.cs" />
     <Compile Include="ICloudBlobContainer.cs" />

@@ -26,7 +26,7 @@ namespace Fifthweek.Api.Azure
             var client = this.cloudStorageAccount.CreateCloudBlobClient();
             var container = client.GetContainerReference(containerName);
             var blob = container.GetBlockBlobReference(blobName);
-            
+
             var policy = new SharedAccessBlobPolicy
             {
                 SharedAccessExpiryTime = DateTime.UtcNow.AddHours(1),
@@ -36,6 +36,32 @@ namespace Fifthweek.Api.Azure
             var token = blob.GetSharedAccessSignature(policy);
 
             return Task.FromResult(blob.Uri + token);
+        }
+
+        public Task<string> GetBlobSasUriForReadingAsync(string containerName, string blobName)
+        {
+            var client = this.cloudStorageAccount.CreateCloudBlobClient();
+            var container = client.GetContainerReference(containerName);
+            var blob = container.GetBlockBlobReference(blobName);
+
+            var policy = new SharedAccessBlobPolicy
+            {
+                SharedAccessExpiryTime = DateTime.UtcNow.AddHours(1),
+                Permissions = SharedAccessBlobPermissions.Read
+            };
+
+            var token = blob.GetSharedAccessSignature(policy);
+
+            return Task.FromResult(blob.Uri + token);
+        }
+
+        public async Task<IBlobProperties> GetBlobPropertiesAsync(string containerName, string blobName)
+        {
+            var client = this.cloudStorageAccount.CreateCloudBlobClient();
+            var container = client.GetContainerReference(containerName);
+            var blob = container.GetBlockBlobReference(blobName);
+            await blob.FetchAttributesAsync();
+            return blob.Properties;
         }
     }
 }

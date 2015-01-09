@@ -172,7 +172,6 @@
     <Compile Include="App_Start\LogRequestModule.cs" />
     <Compile Include="Constants.cs" />
     <Compile Include="ConvertExceptionsToResponsesAttribute.cs" />
-    <Compile Include="DecoratorAttribute.cs" />
     <Compile Include="ExceptionHandler.cs" />
     <Compile Include="ExceptionHandlerUtilities.cs" />
     <Compile Include="FifthweekAssembliesResolver.cs" />

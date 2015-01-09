@@ -86,6 +86,7 @@
     <Compile Include="AutoBuilderAttribute.cs" />
     <Compile Include="AutofacRegistration.cs" />
     <Compile Include="ConstructedAttribute.cs" />
+    <Compile Include="DecoratorAttribute.cs" />
     <Compile Include="IAutofacRegistration.cs" />
     <Compile Include="ParsedAttribute.cs" />
     <Compile Include="OptionalAttribute.cs" />

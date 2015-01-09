@@ -7,5 +7,9 @@ namespace Fifthweek.Api.Azure
         Task CreateBlobContainerAsync(string containerName);
 
         Task<string> GetBlobSasUriForWritingAsync(string containerName, string blobName);
+
+        Task<IBlobProperties> GetBlobPropertiesAsync(string containerName, string blobName);
+
+        Task<string> GetBlobSasUriForReadingAsync(string containerName, string blobName);
     }
 }
