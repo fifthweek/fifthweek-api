@@ -5,10 +5,10 @@
 
     [AutoConstructor]
     [AutoEqualityMembers]
-    public partial class InitiateFileUploadRequestCommand
+    public partial class InitiateFileUploadCommand
     {
-        public FileId FileId { get; private set; }
+        public UserId Requester { get; private set; }
 
-        public UserId UserId { get; private set; }
+        public FileId FileId { get; private set; }
     }
 }

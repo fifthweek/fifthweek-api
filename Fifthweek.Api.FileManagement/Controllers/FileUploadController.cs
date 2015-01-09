@@ -24,11 +24,11 @@
     {
         private readonly IGuidCreator guidCreator;
 
-        private readonly ICommandHandler<InitiateFileUploadRequestCommand> initiateFileUploadRequest;
+        private readonly ICommandHandler<InitiateFileUploadCommand> initiateFileUpload;
 
-        private readonly IQueryHandler<GetSharedAccessSignatureUriQuery, string> getSharedAccessSignatureUri;
+        private readonly IQueryHandler<GenerateWritableBlobUriQuery, string> generateWritableBlobUri;
 
-        private readonly ICommandHandler<FileUploadCompleteCommand> fileUploadComplete;
+        private readonly ICommandHandler<CompleteFileUploadCommand> completeFileUpload;
 
         private readonly IUserContext userContext;
         
@@ -38,10 +38,10 @@
         public async Task<GrantedUpload> PostUploadRequestAsync(UploadRequest data)
         {
             var fileId = new FileId(this.guidCreator.CreateSqlSequential());
-            var userId = this.userContext.GetUserId();
+            var authenticatedUserId = this.userContext.GetUserId();
             
-            await this.initiateFileUploadRequest.HandleAsync(new InitiateFileUploadRequestCommand(fileId, userId));
-            var uri = await this.getSharedAccessSignatureUri.HandleAsync(new GetSharedAccessSignatureUriQuery(fileId));
+            await this.initiateFileUpload.HandleAsync(new InitiateFileUploadCommand(authenticatedUserId, fileId));
+            var uri = await this.generateWritableBlobUri.HandleAsync(new GenerateWritableBlobUriQuery(authenticatedUserId, fileId));
 
             return new GrantedUpload(fileId.Value, uri);
         }
@@ -50,7 +50,9 @@
         [Route("uploadCompleteNotifications")]
         public async Task PostUploadCompleteNotificationAsync(Guid fileId)
         {
-            await this.fileUploadComplete.HandleAsync(new FileUploadCompleteCommand(new FileId(fileId)));
+            var parsedFileId = new FileId(fileId);
+            var authenticatedUserId = this.userContext.GetUserId();
+            await this.completeFileUpload.HandleAsync(new CompleteFileUploadCommand(authenticatedUserId, parsedFileId));
         }
     }
 }

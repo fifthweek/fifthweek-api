@@ -39,7 +39,7 @@
         [Required]
         public string FileName { get; set; }
 
-        [Optional]
-        public string MimeType { get; set; }
+        [Required]
+        public string Purpose { get; set; }
     }
 }

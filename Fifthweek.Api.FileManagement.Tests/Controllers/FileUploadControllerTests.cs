@@ -19,7 +19,7 @@ namespace Fifthweek.Api.FileManagement.Tests.Controllers
     public class FileUploadControllerTests
     {
         [TestMethod]
-        public async Task WhenAnUploadRequestIsPosted_ItShouldCreateStorageAndReturnSasUriIfValid()
+        public async Task WhenAnUploadRequestIsPosted_ItShouldInitiateTheFileUploadAndGenerateAWritableBlobUri()
         {
             this.guidCreator.Setup(v => v.CreateSqlSequential()).Returns(this.guid).Verifiable();
 
@@ -28,45 +28,45 @@ namespace Fifthweek.Api.FileManagement.Tests.Controllers
             var userId = new UserId(Guid.NewGuid());
 
             this.userContext.Setup(v => v.GetUserId()).Returns(userId).Verifiable();
-            this.initiateFileUploadRequest.Setup(v => v.HandleAsync(new InitiateFileUploadRequestCommand(fileId, userId))).Returns(Task.FromResult(0)).Verifiable();
-            this.getSharedAccessSignatureUri.Setup(v => v.HandleAsync(new GetSharedAccessSignatureUriQuery(fileId))).ReturnsAsync(uploadUri).Verifiable();
+            this.initiateFileUpload.Setup(v => v.HandleAsync(new InitiateFileUploadCommand(userId, fileId))).Returns(Task.FromResult(0)).Verifiable();
+            this.generateWritableBlobUri.Setup(v => v.HandleAsync(new GenerateWritableBlobUriQuery(fileId))).ReturnsAsync(uploadUri).Verifiable();
 
             var response = await this.fileUploadController.PostUploadRequestAsync(new UploadRequest());
 
             this.guidCreator.Verify();
             this.userContext.Verify();
-            this.initiateFileUploadRequest.Verify();
-            this.getSharedAccessSignatureUri.Verify();
+            this.initiateFileUpload.Verify();
+            this.generateWritableBlobUri.Verify();
 
             Assert.AreEqual(new GrantedUpload(this.guid, uploadUri), response);
         }
 
         [TestMethod]
-        public async Task WhenAnUploadCompleteNotificationIsPosted_ItShouldHandleTheNotification()
+        public async Task WhenAnUploadCompleteNotificationIsPosted_ItShouldCompleteTheFileUpload()
         {
             var fileId = new FileId(this.guid);
 
-            this.fileUploadComplete.Setup(v => v.HandleAsync(new FileUploadCompleteCommand(fileId))).Returns(Task.FromResult(0)).Verifiable();
+            this.completeFileUpload.Setup(v => v.HandleAsync(new CompleteFileUploadCommand(fileId))).Returns(Task.FromResult(0)).Verifiable();
 
             await this.fileUploadController.PostUploadCompleteNotificationAsync(this.guid);
 
-            this.fileUploadComplete.Verify();
+            this.completeFileUpload.Verify();
         }
 
         [TestInitialize]
         public void TestInitialize()
         {
             this.guidCreator = new Mock<IGuidCreator>();
-            this.initiateFileUploadRequest = new Mock<ICommandHandler<InitiateFileUploadRequestCommand>>();
-            this.getSharedAccessSignatureUri = new Mock<IQueryHandler<GetSharedAccessSignatureUriQuery, string>>();
-            this.fileUploadComplete = new Mock<ICommandHandler<FileUploadCompleteCommand>>();
+            this.initiateFileUpload = new Mock<ICommandHandler<InitiateFileUploadCommand>>();
+            this.generateWritableBlobUri = new Mock<IQueryHandler<GenerateWritableBlobUriQuery, string>>();
+            this.completeFileUpload = new Mock<ICommandHandler<CompleteFileUploadCommand>>();
             this.userContext = new Mock<IUserContext>();
 
             this.fileUploadController = new FileUploadController(
                 this.guidCreator.Object,
-                this.initiateFileUploadRequest.Object,
-                this.getSharedAccessSignatureUri.Object,
-                this.fileUploadComplete.Object,
+                this.initiateFileUpload.Object,
+                this.generateWritableBlobUri.Object,
+                this.completeFileUpload.Object,
                 this.userContext.Object);
         }
 
@@ -74,11 +74,11 @@ namespace Fifthweek.Api.FileManagement.Tests.Controllers
 
         private Mock<IGuidCreator> guidCreator;
 
-        private Mock<ICommandHandler<InitiateFileUploadRequestCommand>> initiateFileUploadRequest;
+        private Mock<ICommandHandler<InitiateFileUploadCommand>> initiateFileUpload;
 
-        private Mock<IQueryHandler<GetSharedAccessSignatureUriQuery, string>> getSharedAccessSignatureUri;
+        private Mock<IQueryHandler<GenerateWritableBlobUriQuery, string>> generateWritableBlobUri;
 
-        private Mock<ICommandHandler<FileUploadCompleteCommand>> fileUploadComplete;
+        private Mock<ICommandHandler<CompleteFileUploadCommand>> completeFileUpload;
 
         private Mock<IUserContext> userContext;
 

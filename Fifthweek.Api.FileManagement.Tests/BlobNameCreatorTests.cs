@@ -3,74 +3,46 @@
     using System;
     using System.Collections.Generic;
     using System.Text;
+    using System.Web;
+
+    using Fifthweek.Api.Identity.Membership;
 
     using Microsoft.VisualStudio.TestTools.UnitTesting;
 
     [TestClass]
     public class BlobNameCreatorTests
     {
+        private readonly FileId fileId = new FileId(Guid.Parse("05FD3AE8-AE77-4E8E-8D4A-56C461A78367"));
+        
+        private readonly FileId fileId2 = new FileId(Guid.Parse("15FD3AE8-AE77-4E8E-8D4A-56C461A78367"));
+
         [TestMethod]
-        public void ItShouldGenerateBase32Characters()
+        public void ItShouldGenerateAUrlFriendlyName()
         {
-            var blobNameCreator = new BlobNameCreator();
+            var creator = new BlobNameCreator();
+            var result = creator.CreateFileName(this.fileId);
 
-            var chars = new HashSet<char>();
-            for (int i = 0; i < 32; i++)
-            {
-                var c = blobNameCreator.GenerateRandomCharacter(i);
-                Assert.IsTrue((c >= 'a' && c <= 'z') || (c >= '2' && c <= '7'));
-                Assert.IsFalse(chars.Contains(c));
-                chars.Add(c);
-            }
+            var encoded = HttpUtility.UrlEncode(result);
 
-            try
-            {
-                blobNameCreator.GenerateRandomCharacter(-1);
-                Assert.Fail("An exception should be thrown.");
-            }
-            catch (Exception t)
-            {
-                Assert.IsInstanceOfType(t, typeof(ArgumentOutOfRangeException));
-            }
-
-            try
-            {
-                blobNameCreator.GenerateRandomCharacter(32);
-                Assert.Fail("An exception should be thrown.");
-            }
-            catch (Exception t)
-            {
-                Assert.IsInstanceOfType(t, typeof(ArgumentOutOfRangeException));
-            }
+            Assert.AreEqual(encoded, result);
         }
 
         [TestMethod]
-        public void ItShouldGenerateStringsOfTheCorrectLength()
+        public void ItShouldGenerateTheSameOutputGivenTheSameInputs()
         {
-            var blobNameCreator = new BlobNameCreator();
-
-            for (int i = 0; i < 30; i++)
-            {
-                var sb = new StringBuilder();
-                blobNameCreator.AppendRandomString(sb, i);
-                Assert.AreEqual(i, sb.Length);
-            }
+            var creator = new BlobNameCreator();
+            var result = creator.CreateFileName(this.fileId);
+            var result2 = creator.CreateFileName(this.fileId);
+            Assert.AreEqual(result2, result);
         }
 
         [TestMethod]
-        public void ItShouldGenerateUniqueNames()
+        public void ItShouldGenerateDifferentOutputsGivenDifferentInputs()
         {
-            var blobNameCreator = new BlobNameCreator();
-
-            var names = new HashSet<string>();
-            for (int i = 0; i < 100000; i++)
-            {
-                var name = blobNameCreator.CreateFileName();
-                Assert.IsFalse(string.IsNullOrWhiteSpace(name));
-                Assert.IsTrue(name == name.Trim());
-                Assert.IsFalse(names.Contains(name));
-                names.Add(name);
-            }
+            var creator = new BlobNameCreator();
+            var result = creator.CreateFileName(this.fileId);
+            var result2 = creator.CreateFileName(this.fileId2);
+            Assert.AreNotEqual(result2, result);
         }
     }
 }
