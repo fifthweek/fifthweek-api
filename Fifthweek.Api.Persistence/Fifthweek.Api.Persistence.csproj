@@ -130,6 +130,10 @@
     <Compile Include="Migrations\201501082144347_AddSubscriptionsAndChannels.Designer.cs">
       <DependentUpon>201501082144347_AddSubscriptionsAndChannels.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201501091548310_AddFilesAndFileVariants.cs" />
+    <Compile Include="Migrations\201501091548310_AddFilesAndFileVariants.Designer.cs">
+      <DependentUpon>201501091548310_AddFilesAndFileVariants.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RefreshToken.cs" />
@@ -174,6 +178,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201501082144347_AddSubscriptionsAndChannels.resx">
       <DependentUpon>201501082144347_AddSubscriptionsAndChannels.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201501091548310_AddFilesAndFileVariants.resx">
+      <DependentUpon>201501091548310_AddFilesAndFileVariants.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>

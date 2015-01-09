@@ -33,7 +33,7 @@ namespace Fifthweek.Api.FileManagement.Tests.Controllers
             this.initiateFileUpload.Setup(v => v.HandleAsync(new InitiateFileUploadCommand(userId, fileId, filePath, purpose))).Returns(Task.FromResult(0)).Verifiable();
             this.generateWritableBlobUri.Setup(v => v.HandleAsync(new GenerateWritableBlobUriQuery(userId, fileId))).ReturnsAsync(uploadUri).Verifiable();
 
-            var response = await this.fileUploadController.PostUploadRequestAsync(new UploadRequest());
+            var response = await this.fileUploadController.PostUploadRequestAsync(new UploadRequest(filePath, purpose));
 
             this.guidCreator.Verify();
             this.userContext.Verify();
