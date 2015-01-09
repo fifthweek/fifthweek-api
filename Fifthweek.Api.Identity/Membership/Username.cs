@@ -1,10 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text.RegularExpressions;
 using Fifthweek.Api.Core;
 
 namespace Fifthweek.Api.Identity.Membership
 {
+    /// <remarks>
+    /// Important: refer to `UpdatingValidationBehaviour.md` when changing validation behaviour.
+    /// </remarks>
     [AutoEqualityMembers]
     public partial class Username
     {
@@ -18,16 +22,16 @@ namespace Fifthweek.Api.Identity.Membership
 
         public string Value { get; protected set; }
 
-        public static bool IsEmpty(string value)
+        public static bool IsEmpty(string value, bool exact = false)
         {
-            // Whitespace is considered an empty value. It is treated the same as null.
-            return string.IsNullOrWhiteSpace(value);
+            return exact ? string.IsNullOrEmpty(value) : string.IsNullOrWhiteSpace(value);
         }
 
-        public static Username Parse(string value)
+        public static Username Parse(string value, bool exact = false)
         {
             Username retval;
-            if (!TryParse(value, out retval))
+            IReadOnlyCollection<string> errorMessages;
+            if (!TryParse(value, out retval, out errorMessages, exact))
             {
                 throw new ArgumentException("Invalid username", "value");
             }
@@ -35,34 +39,42 @@ namespace Fifthweek.Api.Identity.Membership
             return retval;
         }
 
-        public static bool TryParse(string value, out Username username)
+        public static bool TryParse(string value, out Username username, bool exact = false)
         {
             IReadOnlyCollection<string> errorMessages;
-            return TryParse(value, out username, out errorMessages);
+            return TryParse(value, out username, out errorMessages, exact);
         }
 
-        public static bool TryParse(string value, out Username username, out IReadOnlyCollection<string> errorMessages)
+        public static bool TryParse(string value, out Username username, out IReadOnlyCollection<string> errorMessages, bool exact = false)
         {
             var errorMessageList = new List<string>();
             errorMessages = errorMessageList;
 
-            if (IsEmpty(value))
+            if (IsEmpty(value, exact))
             {
                 // Method should never fail, so report null as an error instead of ArgumentNullException.
                 errorMessageList.Add("Value required");
             }
             else
             {
-                var trimmedUsername = value.Trim();
+                if (!exact)
+                {
+                    value = Normalize(value);
+                }
 
-                if (trimmedUsername.Length < MinLength || trimmedUsername.Length > MaxLength)
+                if (value.Length < MinLength || value.Length > MaxLength)
                 {
                     errorMessageList.Add(string.Format("Length must be from {0} to {1} characters", MinLength, MaxLength));
                 }
 
-                if (!Pattern.IsMatch(trimmedUsername))
+                if (!Pattern.IsMatch(value))
                 {
                     errorMessageList.Add("Only alphanumeric characters and underscores are allowed");
+                }
+
+                if (value.Any(c => char.IsUpper(c) || char.IsWhiteSpace(c)))
+                {
+                    errorMessageList.Add("Only lowercase with no surrounding whitespace is allowed");
                 }
             }
 
@@ -78,6 +90,11 @@ namespace Fifthweek.Api.Identity.Membership
             };
 
             return true;
+        }
+
+        private static string Normalize(string value)
+        {
+            return value.Trim().ToLower();
         }
     }
 }

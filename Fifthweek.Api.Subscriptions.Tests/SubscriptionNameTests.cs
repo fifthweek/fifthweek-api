@@ -73,17 +73,17 @@ namespace Fifthweek.Api.Subscriptions.Tests
             get { return "Subscription name B"; }
         }
 
-        protected override SubscriptionName Parse(string value)
+        protected override SubscriptionName Parse(string value, bool exact)
         {
             return SubscriptionName.Parse(value);
         }
 
-        protected override bool TryParse(string value, out SubscriptionName parsedObject)
+        protected override bool TryParse(string value, out SubscriptionName parsedObject, bool exact)
         {
             return SubscriptionName.TryParse(value, out parsedObject);
         }
 
-        protected override bool TryParse(string value, out SubscriptionName parsedObject, out IReadOnlyCollection<string> errorMessages)
+        protected override bool TryParse(string value, out SubscriptionName parsedObject, out IReadOnlyCollection<string> errorMessages, bool exact)
         {
             return SubscriptionName.TryParse(value, out parsedObject, out errorMessages);
         }

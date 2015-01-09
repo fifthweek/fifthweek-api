@@ -144,7 +144,7 @@
                 new UserId(userId),
                 registrationData.ExampleWork,
                 NormalizedEmail.Parse(registrationData.Email),
-                NormalizedUsername.Parse(registrationData.Username),
+                Username.Parse(registrationData.Username),
                 Password.Parse(registrationData.Password));
         }
     }

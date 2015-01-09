@@ -80,7 +80,7 @@ namespace Fifthweek.Api.Identity.Membership.Controllers
                 new UserId(this.guidCreator.CreateSqlSequential()),
                 registration.ExampleWork,
                 NormalizedEmail.Normalize(registration.EmailObject),
-                NormalizedUsername.Normalize(registration.UsernameObject),
+                registration.UsernameObject,
                 registration.PasswordObject);
 
             await this.registerUser.HandleAsync(command);
@@ -93,13 +93,13 @@ namespace Fifthweek.Api.Identity.Membership.Controllers
         [ResponseType(typeof(bool))]
         public async Task<IHttpActionResult> GetUsernameAvailabilityAsync(string username)
         {
-            Username usernameObj;
-            if (!Username.TryParse(username, out usernameObj))
+            Username usernameObject;
+            if (!Username.TryParse(username, out usernameObject))
             {
                 return this.NotFound();
             }
 
-            var query = new IsUsernameAvailableQuery(NormalizedUsername.Normalize(usernameObj));
+            var query = new IsUsernameAvailableQuery(usernameObject);
             var usernameAvailable = await this.isUsernameAvailable.HandleAsync(query);
             if (usernameAvailable)
             {
@@ -118,7 +118,7 @@ namespace Fifthweek.Api.Identity.Membership.Controllers
 
             var command = new RequestPasswordResetCommand(
                 passwordResetRequest.EmailObject == null ? null : NormalizedEmail.Normalize(passwordResetRequest.EmailObject),
-                passwordResetRequest.UsernameObject == null ? null : NormalizedUsername.Normalize(passwordResetRequest.UsernameObject)
+                passwordResetRequest.UsernameObject
             );
 
             await this.requestPasswordReset.HandleAsync(command);

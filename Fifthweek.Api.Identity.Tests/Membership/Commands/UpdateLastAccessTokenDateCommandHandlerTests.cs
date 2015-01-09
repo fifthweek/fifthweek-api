@@ -51,6 +51,6 @@
             userRepository.Verify();
         }
 
-        private static readonly NormalizedUsername Username = NormalizedUsername.Parse("lawrence");
+        private static readonly Username Username = Username.Parse("lawrence");
     }
 }

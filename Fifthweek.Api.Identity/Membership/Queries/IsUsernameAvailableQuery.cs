@@ -5,6 +5,6 @@
     [AutoEqualityMembers, AutoConstructor]
     public partial class IsUsernameAvailableQuery : IQuery<bool>
     {
-        public NormalizedUsername Username { get; private set; }
+        public Username Username { get; private set; }
     }
 }

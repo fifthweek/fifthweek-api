@@ -73,17 +73,17 @@ namespace Fifthweek.Api.Subscriptions.Tests
             get { return "Tagline B"; }
         }
 
-        protected override Tagline Parse(string value)
+        protected override Tagline Parse(string value, bool exact)
         {
             return Tagline.Parse(value);
         }
 
-        protected override bool TryParse(string value, out Tagline parsedObject)
+        protected override bool TryParse(string value, out Tagline parsedObject, bool exact)
         {
             return Tagline.TryParse(value, out parsedObject);
         }
 
-        protected override bool TryParse(string value, out Tagline parsedObject, out IReadOnlyCollection<string> errorMessages)
+        protected override bool TryParse(string value, out Tagline parsedObject, out IReadOnlyCollection<string> errorMessages, bool exact)
         {
             return Tagline.TryParse(value, out parsedObject, out errorMessages);
         }

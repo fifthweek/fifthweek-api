@@ -9,6 +9,6 @@ namespace Fifthweek.Api.Identity.Membership.Commands
         public NormalizedEmail Email { get; private set; }
 
         [Optional]
-        public NormalizedUsername Username { get; private set; }
+        public Username Username { get; private set; }
     }
 }

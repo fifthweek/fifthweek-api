@@ -12,7 +12,7 @@ namespace Fifthweek.Api.Identity.Membership.Commands
 
         public NormalizedEmail Email { get; private set; }
 
-        public NormalizedUsername Username { get; private set; }
+        public Username Username { get; private set; }
 
         public Password Password { get; private set; }
     }

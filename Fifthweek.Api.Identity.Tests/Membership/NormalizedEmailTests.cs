@@ -21,17 +21,17 @@ namespace Fifthweek.Api.Identity.Tests.Membership
             this.BadValue("Joe@Bloggs.com");
         }
 
-        protected override NormalizedEmail Parse(string value)
+        protected override NormalizedEmail Parse(string value, bool exact)
         {
             return NormalizedEmail.Parse(value);
         }
 
-        protected override bool TryParse(string value, out NormalizedEmail parsedObject)
+        protected override bool TryParse(string value, out NormalizedEmail parsedObject, bool exact)
         {
             return NormalizedEmail.TryParse(value, out parsedObject);
         }
 
-        protected override bool TryParse(string value, out NormalizedEmail parsedObject, out IReadOnlyCollection<string> errorMessages)
+        protected override bool TryParse(string value, out NormalizedEmail parsedObject, out IReadOnlyCollection<string> errorMessages, bool exact)
         {
             return NormalizedEmail.TryParse(value, out parsedObject, out errorMessages);
         }

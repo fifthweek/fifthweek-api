@@ -45,17 +45,17 @@ namespace Fifthweek.Api.Identity.Tests.Membership
             get { return "password2"; }
         }
 
-        protected override Password Parse(string value)
+        protected override Password Parse(string value, bool exact)
         {
             return Password.Parse(value);
         }
 
-        protected override bool TryParse(string value, out Password parsedObject)
+        protected override bool TryParse(string value, out Password parsedObject, bool exact)
         {
             return Password.TryParse(value, out parsedObject);
         }
 
-        protected override bool TryParse(string value, out Password parsedObject, out IReadOnlyCollection<string> errorMessages)
+        protected override bool TryParse(string value, out Password parsedObject, out IReadOnlyCollection<string> errorMessages, bool exact)
         {
             return Password.TryParse(value, out parsedObject, out errorMessages);
         }

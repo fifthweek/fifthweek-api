@@ -48,7 +48,7 @@ namespace Fifthweek.Api.Identity.Membership.Commands
             Fifthweek.Api.Identity.Membership.UserId userId, 
             System.String exampleWork, 
             Fifthweek.Api.Identity.Membership.NormalizedEmail email, 
-            Fifthweek.Api.Identity.Membership.NormalizedUsername username, 
+            Fifthweek.Api.Identity.Membership.Username username, 
             Fifthweek.Api.Identity.Membership.Password password)
         {
             if (userId == null)
@@ -88,7 +88,7 @@ namespace Fifthweek.Api.Identity.Membership.Commands
 	{
         public RequestPasswordResetCommand(
             Fifthweek.Api.Identity.Membership.NormalizedEmail email, 
-            Fifthweek.Api.Identity.Membership.NormalizedUsername username)
+            Fifthweek.Api.Identity.Membership.Username username)
         {
             this.Email = email;
             this.Username = username;
@@ -103,7 +103,7 @@ namespace Fifthweek.Api.Identity.Membership.Commands
 	public partial class UpdateLastAccessTokenDateCommand
 	{
         public UpdateLastAccessTokenDateCommand(
-            Fifthweek.Api.Identity.Membership.NormalizedUsername username, 
+            Fifthweek.Api.Identity.Membership.Username username, 
             System.DateTime timestamp, 
             Fifthweek.Api.Identity.Membership.Commands.UpdateLastAccessTokenDateCommand.AccessTokenCreationType creationType)
         {
@@ -137,7 +137,7 @@ namespace Fifthweek.Api.Identity.Membership.Queries
 	public partial class GetUserQuery
 	{
         public GetUserQuery(
-            Fifthweek.Api.Identity.Membership.NormalizedUsername username, 
+            Fifthweek.Api.Identity.Membership.Username username, 
             Fifthweek.Api.Identity.Membership.Password password)
         {
             if (username == null)
@@ -191,7 +191,7 @@ namespace Fifthweek.Api.Identity.Membership.Queries
 	public partial class IsUsernameAvailableQuery
 	{
         public IsUsernameAvailableQuery(
-            Fifthweek.Api.Identity.Membership.NormalizedUsername username)
+            Fifthweek.Api.Identity.Membership.Username username)
         {
             if (username == null)
             {
@@ -207,6 +207,19 @@ namespace Fifthweek.Api.Identity.OAuth
 {
 	using System;
 	using Fifthweek.Api.Core;
+	using Fifthweek.Api.Identity.Membership;
+	using System.Collections.Generic;
+	using System.Linq;
+	using System.Security.Claims;
+	using System.Text.RegularExpressions;
+	using System.Threading.Tasks;
+	using Fifthweek.Api.Identity.Membership.Commands;
+	using Fifthweek.Api.Identity.Membership.Queries;
+	using Fifthweek.Api.Identity.OAuth.Queries;
+	using Fifthweek.Api.Persistence;
+	using Fifthweek.Api.Persistence.Identity;
+	using Microsoft.Owin.Security;
+	using Microsoft.Owin.Security.OAuth;
 	public partial class Client
 	{
         public Client(
@@ -275,6 +288,19 @@ namespace Fifthweek.Api.Identity.OAuth
 {
 	using System;
 	using Fifthweek.Api.Core;
+	using Fifthweek.Api.Identity.Membership;
+	using System.Collections.Generic;
+	using System.Linq;
+	using System.Security.Claims;
+	using System.Text.RegularExpressions;
+	using System.Threading.Tasks;
+	using Fifthweek.Api.Identity.Membership.Commands;
+	using Fifthweek.Api.Identity.Membership.Queries;
+	using Fifthweek.Api.Identity.OAuth.Queries;
+	using Fifthweek.Api.Persistence;
+	using Fifthweek.Api.Persistence.Identity;
+	using Microsoft.Owin.Security;
+	using Microsoft.Owin.Security.OAuth;
 	public partial class ClientId
 	{
         public ClientId(
@@ -334,6 +360,19 @@ namespace Fifthweek.Api.Identity.OAuth
 {
 	using System;
 	using Fifthweek.Api.Core;
+	using Fifthweek.Api.Identity.Membership;
+	using System.Collections.Generic;
+	using System.Linq;
+	using System.Security.Claims;
+	using System.Text.RegularExpressions;
+	using System.Threading.Tasks;
+	using Fifthweek.Api.Identity.Membership.Commands;
+	using Fifthweek.Api.Identity.Membership.Queries;
+	using Fifthweek.Api.Identity.OAuth.Queries;
+	using Fifthweek.Api.Persistence;
+	using Fifthweek.Api.Persistence.Identity;
+	using Microsoft.Owin.Security;
+	using Microsoft.Owin.Security.OAuth;
 	public partial class HashedRefreshTokenId
 	{
         public HashedRefreshTokenId(
@@ -393,6 +432,19 @@ namespace Fifthweek.Api.Identity.OAuth
 {
 	using System;
 	using Fifthweek.Api.Core;
+	using Fifthweek.Api.Identity.Membership;
+	using System.Collections.Generic;
+	using System.Linq;
+	using System.Security.Claims;
+	using System.Text.RegularExpressions;
+	using System.Threading.Tasks;
+	using Fifthweek.Api.Identity.Membership.Commands;
+	using Fifthweek.Api.Identity.Membership.Queries;
+	using Fifthweek.Api.Identity.OAuth.Queries;
+	using Fifthweek.Api.Persistence;
+	using Fifthweek.Api.Persistence.Identity;
+	using Microsoft.Owin.Security;
+	using Microsoft.Owin.Security.OAuth;
 	public partial class RefreshTokenId
 	{
         public RefreshTokenId(
@@ -415,6 +467,10 @@ namespace Fifthweek.Api.Identity.Membership
 	using System.Net.Mail;
 	using Fifthweek.Api.Core;
 	using System.Text.RegularExpressions;
+	using System.Threading.Tasks;
+	using Dapper;
+	using Fifthweek.Api.Persistence;
+	using System.Linq;
 	public partial class UserId
 	{
         public UserId(
@@ -432,11 +488,15 @@ namespace Fifthweek.Api.Identity.Membership
 }
 namespace Fifthweek.Api.Identity.Membership
 {
-	using Fifthweek.Api.Core;
 	using System;
+	using System.Collections.Generic;
+	using System.Net.Mail;
+	using Fifthweek.Api.Core;
+	using System.Text.RegularExpressions;
 	using System.Threading.Tasks;
 	using Dapper;
 	using Fifthweek.Api.Persistence;
+	using System.Linq;
 	public partial class UserRepository
 	{
         public UserRepository(
@@ -454,14 +514,14 @@ namespace Fifthweek.Api.Identity.Membership
 }
 namespace Fifthweek.Api.Identity.OAuth
 {
-	using Fifthweek.Api.Identity.Membership;
 	using System;
+	using Fifthweek.Api.Core;
+	using Fifthweek.Api.Identity.Membership;
 	using System.Collections.Generic;
 	using System.Linq;
 	using System.Security.Claims;
 	using System.Text.RegularExpressions;
 	using System.Threading.Tasks;
-	using Fifthweek.Api.Core;
 	using Fifthweek.Api.Identity.Membership.Commands;
 	using Fifthweek.Api.Identity.Membership.Queries;
 	using Fifthweek.Api.Identity.OAuth.Queries;
@@ -897,6 +957,19 @@ namespace Fifthweek.Api.Identity.OAuth
 {
 	using System;
 	using Fifthweek.Api.Core;
+	using Fifthweek.Api.Identity.Membership;
+	using System.Collections.Generic;
+	using System.Linq;
+	using System.Security.Claims;
+	using System.Text.RegularExpressions;
+	using System.Threading.Tasks;
+	using Fifthweek.Api.Identity.Membership.Commands;
+	using Fifthweek.Api.Identity.Membership.Queries;
+	using Fifthweek.Api.Identity.OAuth.Queries;
+	using Fifthweek.Api.Persistence;
+	using Fifthweek.Api.Persistence.Identity;
+	using Microsoft.Owin.Security;
+	using Microsoft.Owin.Security.OAuth;
 	public partial class Client
 	{
         public override bool Equals(object obj)
@@ -979,6 +1052,19 @@ namespace Fifthweek.Api.Identity.OAuth
 {
 	using System;
 	using Fifthweek.Api.Core;
+	using Fifthweek.Api.Identity.Membership;
+	using System.Collections.Generic;
+	using System.Linq;
+	using System.Security.Claims;
+	using System.Text.RegularExpressions;
+	using System.Threading.Tasks;
+	using Fifthweek.Api.Identity.Membership.Commands;
+	using Fifthweek.Api.Identity.Membership.Queries;
+	using Fifthweek.Api.Identity.OAuth.Queries;
+	using Fifthweek.Api.Persistence;
+	using Fifthweek.Api.Persistence.Identity;
+	using Microsoft.Owin.Security;
+	using Microsoft.Owin.Security.OAuth;
 	public partial class ClientId
 	{
         public override bool Equals(object obj)
@@ -1122,6 +1208,19 @@ namespace Fifthweek.Api.Identity.OAuth
 {
 	using System;
 	using Fifthweek.Api.Core;
+	using Fifthweek.Api.Identity.Membership;
+	using System.Collections.Generic;
+	using System.Linq;
+	using System.Security.Claims;
+	using System.Text.RegularExpressions;
+	using System.Threading.Tasks;
+	using Fifthweek.Api.Identity.Membership.Commands;
+	using Fifthweek.Api.Identity.Membership.Queries;
+	using Fifthweek.Api.Identity.OAuth.Queries;
+	using Fifthweek.Api.Persistence;
+	using Fifthweek.Api.Persistence.Identity;
+	using Microsoft.Owin.Security;
+	using Microsoft.Owin.Security.OAuth;
 	public partial class HashedRefreshTokenId
 	{
         public override bool Equals(object obj)
@@ -1265,6 +1364,19 @@ namespace Fifthweek.Api.Identity.OAuth
 {
 	using System;
 	using Fifthweek.Api.Core;
+	using Fifthweek.Api.Identity.Membership;
+	using System.Collections.Generic;
+	using System.Linq;
+	using System.Security.Claims;
+	using System.Text.RegularExpressions;
+	using System.Threading.Tasks;
+	using Fifthweek.Api.Identity.Membership.Commands;
+	using Fifthweek.Api.Identity.Membership.Queries;
+	using Fifthweek.Api.Identity.OAuth.Queries;
+	using Fifthweek.Api.Persistence;
+	using Fifthweek.Api.Persistence.Identity;
+	using Microsoft.Owin.Security;
+	using Microsoft.Owin.Security.OAuth;
 	public partial class RefreshTokenId
 	{
         public override bool Equals(object obj)
@@ -1315,6 +1427,10 @@ namespace Fifthweek.Api.Identity.Membership
 	using System.Net.Mail;
 	using Fifthweek.Api.Core;
 	using System.Text.RegularExpressions;
+	using System.Threading.Tasks;
+	using Dapper;
+	using Fifthweek.Api.Persistence;
+	using System.Linq;
 	public partial class UserId
 	{
         public override bool Equals(object obj)
@@ -1577,6 +1693,10 @@ namespace Fifthweek.Api.Identity.Membership
 	using System.Net.Mail;
 	using Fifthweek.Api.Core;
 	using System.Text.RegularExpressions;
+	using System.Threading.Tasks;
+	using Dapper;
+	using Fifthweek.Api.Persistence;
+	using System.Linq;
 	public partial class Email
 	{
         public override bool Equals(object obj)
@@ -1627,6 +1747,10 @@ namespace Fifthweek.Api.Identity.Membership
 	using System.Net.Mail;
 	using Fifthweek.Api.Core;
 	using System.Text.RegularExpressions;
+	using System.Threading.Tasks;
+	using Dapper;
+	using Fifthweek.Api.Persistence;
+	using System.Linq;
 	public partial class Password
 	{
         public override bool Equals(object obj)
@@ -1677,6 +1801,10 @@ namespace Fifthweek.Api.Identity.Membership
 	using System.Net.Mail;
 	using Fifthweek.Api.Core;
 	using System.Text.RegularExpressions;
+	using System.Threading.Tasks;
+	using Dapper;
+	using Fifthweek.Api.Persistence;
+	using System.Linq;
 	public partial class Username
 	{
         public override bool Equals(object obj)

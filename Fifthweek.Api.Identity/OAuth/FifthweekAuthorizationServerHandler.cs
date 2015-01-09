@@ -91,11 +91,16 @@ namespace Fifthweek.Api.Identity.OAuth
             var allowedOrigin = context.OwinContext.Get<string>(Constants.TokenAllowedOriginKey) ?? "*";
             Helper.SetAccessControlAllowOrigin(context.OwinContext, allowedOrigin);
 
-            var username = Username.Parse(context.UserName);
-            var normalizedUsername = NormalizedUsername.Normalize(username);
-            var password = Password.Parse(context.Password);
+            Username username;
+            Password password;
+            if (!Username.TryParse(context.UserName, out username) ||
+                !Password.TryParse(context.Password, out password))
+            {
+                context.SetError("invalid_grant", "Invalid username or password.");
+                return;
+            }
 
-            var user = await this.getUser.HandleAsync(new GetUserQuery(normalizedUsername, password));
+            var user = await this.getUser.HandleAsync(new GetUserQuery(username, password));
 
             if (user == null)
             {
@@ -104,10 +109,10 @@ namespace Fifthweek.Api.Identity.OAuth
             }
 
             await this.updateLastAccessTokenDate.HandleAsync(
-                new UpdateLastAccessTokenDateCommand(normalizedUsername, DateTime.UtcNow, UpdateLastAccessTokenDateCommand.AccessTokenCreationType.SignIn));
+                new UpdateLastAccessTokenDateCommand(username, DateTime.UtcNow, UpdateLastAccessTokenDateCommand.AccessTokenCreationType.SignIn));
 
             var identity = new ClaimsIdentity(context.Options.AuthenticationType);
-            identity.AddClaim(new Claim(ClaimTypes.Name, normalizedUsername.Value));
+            identity.AddClaim(new Claim(ClaimTypes.Name, username.Value));
             identity.AddClaim(new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()));
 
             foreach (var role in user.Roles)
@@ -121,7 +126,7 @@ namespace Fifthweek.Api.Identity.OAuth
                         Constants.TokenClientIdKey, context.ClientId ?? string.Empty
                     },
                     { 
-                        "username", normalizedUsername.Value
+                        "username", username.Value
                     },
                     {
                         "user_id", user.Id.ToString()
@@ -153,11 +158,10 @@ namespace Fifthweek.Api.Identity.OAuth
                 return;
             }
 
-            var username = Username.Parse(context.Ticket.Identity.Name);
-            var normalizedUsername = NormalizedUsername.Normalize(username);
+            var username = Username.Parse(context.Ticket.Identity.Name, true);
 
             await this.updateLastAccessTokenDate.HandleAsync(
-                new UpdateLastAccessTokenDateCommand(normalizedUsername, DateTime.UtcNow, UpdateLastAccessTokenDateCommand.AccessTokenCreationType.RefreshToken));
+                new UpdateLastAccessTokenDateCommand(username, DateTime.UtcNow, UpdateLastAccessTokenDateCommand.AccessTokenCreationType.RefreshToken));
 
             var newIdentity = new ClaimsIdentity(context.Ticket.Identity);
 

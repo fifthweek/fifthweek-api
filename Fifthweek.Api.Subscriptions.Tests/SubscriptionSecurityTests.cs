@@ -49,7 +49,7 @@ namespace Fifthweek.Api.Subscriptions.Tests
         }
 
         [TestMethod]
-        public async Task WhenNoSubscriptionsMatchCreator_ItShouldReturnFalse()
+        public async Task WhenNoSubscriptionsMatchCreator_ItShouldForbidUpdate()
         {
             await this.CreateSubscriptionAsync(new UserId(Guid.NewGuid()), this.subscriptionId);
 

@@ -33,17 +33,17 @@ namespace Fifthweek.Api.Subscriptions.Tests
             get { return 75; }
         }
 
-        protected override ChannelPriceInUsCentsPerWeek Parse(int value)
+        protected override ChannelPriceInUsCentsPerWeek Parse(int value, bool exact)
         {
             return ChannelPriceInUsCentsPerWeek.Parse(value);
         }
 
-        protected override bool TryParse(int value, out ChannelPriceInUsCentsPerWeek parsedObject)
+        protected override bool TryParse(int value, out ChannelPriceInUsCentsPerWeek parsedObject, bool exact)
         {
             return ChannelPriceInUsCentsPerWeek.TryParse(value, out parsedObject);
         }
 
-        protected override bool TryParse(int value, out ChannelPriceInUsCentsPerWeek parsedObject, out IReadOnlyCollection<string> errorMessages)
+        protected override bool TryParse(int value, out ChannelPriceInUsCentsPerWeek parsedObject, out IReadOnlyCollection<string> errorMessages, bool exact)
         {
             return ChannelPriceInUsCentsPerWeek.TryParse(value, out parsedObject, out errorMessages);
         }
