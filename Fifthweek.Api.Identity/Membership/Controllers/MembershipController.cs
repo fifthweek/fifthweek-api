@@ -79,7 +79,7 @@ namespace Fifthweek.Api.Identity.Membership.Controllers
             var command = new RegisterUserCommand(
                 new UserId(this.guidCreator.CreateSqlSequential()),
                 registration.ExampleWork,
-                NormalizedEmail.Normalize(registration.EmailObject),
+                registration.EmailObject,
                 registration.UsernameObject,
                 registration.PasswordObject);
 
@@ -117,7 +117,7 @@ namespace Fifthweek.Api.Identity.Membership.Controllers
             passwordResetRequest.Parse();
 
             var command = new RequestPasswordResetCommand(
-                passwordResetRequest.EmailObject == null ? null : NormalizedEmail.Normalize(passwordResetRequest.EmailObject),
+                passwordResetRequest.EmailObject,
                 passwordResetRequest.UsernameObject
             );
 

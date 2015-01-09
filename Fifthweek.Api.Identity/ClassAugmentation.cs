@@ -47,7 +47,7 @@ namespace Fifthweek.Api.Identity.Membership.Commands
         public RegisterUserCommand(
             Fifthweek.Api.Identity.Membership.UserId userId, 
             System.String exampleWork, 
-            Fifthweek.Api.Identity.Membership.NormalizedEmail email, 
+            Fifthweek.Api.Identity.Membership.Email email, 
             Fifthweek.Api.Identity.Membership.Username username, 
             Fifthweek.Api.Identity.Membership.Password password)
         {
@@ -87,7 +87,7 @@ namespace Fifthweek.Api.Identity.Membership.Commands
 	public partial class RequestPasswordResetCommand
 	{
         public RequestPasswordResetCommand(
-            Fifthweek.Api.Identity.Membership.NormalizedEmail email, 
+            Fifthweek.Api.Identity.Membership.Email email, 
             Fifthweek.Api.Identity.Membership.Username username)
         {
             this.Email = email;

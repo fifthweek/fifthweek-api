@@ -62,63 +62,61 @@ namespace Fifthweek.Api.Tests.Shared
 
         protected void GoodValue(TRaw value)
         {
-            TParsed parsedObject;
-            IReadOnlyCollection<string> errorMessages;
-
-            var valid = this.TryParse(value, out parsedObject, true);
-            Assert.IsTrue(valid);
-            Assert.AreEqual(value, this.GetValue(parsedObject));
-
-            valid = this.TryParse(value, out parsedObject, out errorMessages, true);
-            Assert.IsTrue(valid);
-            Assert.AreEqual(value, this.GetValue(parsedObject));
-            Assert.IsTrue(errorMessages.Count == 0);
-
-            parsedObject = this.Parse(value, true);
-            Assert.AreEqual(value, this.GetValue(parsedObject));
+            this.GoodValue(value, value, true);
+            this.GoodValue(value, value, false);
         }
 
         protected void GoodNonExactValue(TRaw value, TRaw exactValue)
         {
-            TParsed parsedObject;
-            IReadOnlyCollection<string> errorMessages;
-
-            var valid = this.TryParse(value, out parsedObject, false);
-            Assert.IsTrue(valid);
-            Assert.AreEqual(exactValue, this.GetValue(parsedObject));
-
-            valid = this.TryParse(value, out parsedObject, out errorMessages, false);
-            Assert.IsTrue(valid);
-            Assert.AreEqual(exactValue, this.GetValue(parsedObject));
-            Assert.IsTrue(errorMessages.Count == 0);
-
-            parsedObject = this.Parse(value, false);
-            Assert.AreEqual(exactValue, this.GetValue(parsedObject));
-
             // Good non-exact values are bad exact values.
-            this.BadValue(value);
+            this.GoodValue(value, exactValue, false);
+            this.BadValue(value, true);
         }
 
         protected void BadValue(TRaw value)
         {
+            this.BadValue(value, true);
+            this.BadValue(value, false);
+        }
+
+        private void BadValue(TRaw value, bool exact)
+        {
             TParsed parsedObject;
             IReadOnlyCollection<string> errorMessages;
 
-            var valid = this.TryParse(value, out parsedObject, true);
+            var valid = this.TryParse(value, out parsedObject, exact);
             Assert.IsFalse(valid);
 
-            valid = this.TryParse(value, out parsedObject, out errorMessages, true);
+            valid = this.TryParse(value, out parsedObject, out errorMessages, exact);
             Assert.IsFalse(valid);
             Assert.IsTrue(errorMessages.Count > 0);
 
             try
             {
-                this.Parse(value, true);
+                this.Parse(value, exact);
                 Assert.Fail("Expected argument exception");
             }
             catch (ArgumentException)
             {
             }
+        }
+
+        private void GoodValue(TRaw actualValue, TRaw expectedValue, bool exact)
+        {
+            TParsed parsedObject;
+            IReadOnlyCollection<string> errorMessages;
+
+            var valid = this.TryParse(actualValue, out parsedObject, exact);
+            Assert.IsTrue(valid);
+            Assert.AreEqual(expectedValue, this.GetValue(parsedObject));
+
+            valid = this.TryParse(actualValue, out parsedObject, out errorMessages, exact);
+            Assert.IsTrue(valid);
+            Assert.AreEqual(expectedValue, this.GetValue(parsedObject));
+            Assert.IsTrue(errorMessages.Count == 0);
+
+            parsedObject = this.Parse(actualValue, exact);
+            Assert.AreEqual(expectedValue, this.GetValue(parsedObject));
         }
     }
 }

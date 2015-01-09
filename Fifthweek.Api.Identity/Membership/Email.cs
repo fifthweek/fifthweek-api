@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net.Mail;
 using Fifthweek.Api.Core;
 
@@ -8,22 +9,22 @@ namespace Fifthweek.Api.Identity.Membership
     [AutoEqualityMembers]
     public partial class Email
     {
-        protected Email()
+        private Email()
         {
         }
 
         public string Value { get; protected set; }
 
-        public static bool IsEmpty(string value)
+        public static bool IsEmpty(string value, bool exact = false)
         {
-            // Whitespace is considered an empty value. It is treated the same as null.
-            return string.IsNullOrWhiteSpace(value);
+            return exact ? string.IsNullOrEmpty(value) : string.IsNullOrWhiteSpace(value);
         }
 
-        public static Email Parse(string value)
+        public static Email Parse(string value, bool exact = false)
         {
             Email retval;
-            if (!TryParse(value, out retval))
+            IReadOnlyCollection<string> errorMessages;
+            if (!TryParse(value, out retval, out errorMessages, exact))
             {
                 throw new ArgumentException("Invalid email address", "value");
             }
@@ -31,24 +32,29 @@ namespace Fifthweek.Api.Identity.Membership
             return retval;
         }
 
-        public static bool TryParse(string value, out Email email)
+        public static bool TryParse(string value, out Email email, bool exact = false)
         {
             IReadOnlyCollection<string> errorMessages;
-            return TryParse(value, out email, out errorMessages);
+            return TryParse(value, out email, out errorMessages, exact);
         }
 
-        public static bool TryParse(string value, out Email email, out IReadOnlyCollection<string> errorMessages)
+        public static bool TryParse(string value, out Email email, out IReadOnlyCollection<string> errorMessages, bool exact = false)
         {
             var errorMessageList = new List<string>();
             errorMessages = errorMessageList;
 
-            if (IsEmpty(value))
+            if (IsEmpty(value, exact))
             {
                 // Method should never fail, so report null as an error instead of ArgumentNullException.
                 errorMessageList.Add("Value required");
             }
             else
             {
+                if (!exact)
+                {
+                    value = Normalize(value);
+                }
+
                 try
                 {
                     if (new MailAddress(value).Address != value.Trim())
@@ -66,6 +72,11 @@ namespace Fifthweek.Api.Identity.Membership
                     // Quoted names are valid, but to keep things sane we're not accepting them.
                     errorMessageList.Add("Must not contain quotes");
                 }
+
+                if (value.Any(c => char.IsUpper(c) || char.IsWhiteSpace(c)))
+                {
+                    errorMessageList.Add("Only lowercase with no surrounding whitespace is allowed");
+                }
             }
 
             if (errorMessageList.Count > 0)
@@ -80,6 +91,11 @@ namespace Fifthweek.Api.Identity.Membership
             };
 
             return true;
+        }
+
+        private static string Normalize(string value)
+        {
+            return value.Trim().ToLower();
         }
     }
 }

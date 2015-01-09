@@ -10,7 +10,7 @@ namespace Fifthweek.Api.Identity.Membership.Commands
         [Optional]
         public string ExampleWork { get; private set; }
 
-        public NormalizedEmail Email { get; private set; }
+        public Email Email { get; private set; }
 
         public Username Username { get; private set; }
 

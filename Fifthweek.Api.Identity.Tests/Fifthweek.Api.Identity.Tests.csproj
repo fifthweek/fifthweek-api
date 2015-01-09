@@ -94,12 +94,10 @@
     <Compile Include="Membership\Queries\IsPasswordResetTokenValidQueryHandlerTests.cs" />
     <Compile Include="Membership\PasswordTests.cs" />
     <Compile Include="Membership\UsernameTests.cs" />
-    <Compile Include="Membership\EmailTestsBase.cs" />
-    <Compile Include="Membership\NormalizedEmailTests.cs" />
+    <Compile Include="Membership\EmailTests.cs" />
     <Compile Include="Membership\MockIdentityResult.cs" />
     <Compile Include="Membership\Queries\IsUsernameAvailableQueryHandlerTests.cs" />
     <Compile Include="Membership\Queries\GetUserQueryHandlerTests.cs" />
-    <Compile Include="Membership\EmailTests.cs" />
     <Compile Include="OAuth\Commands\AddRefreshTokenCommandHandlerTests.cs" />
     <Compile Include="OAuth\Commands\RemoveRefreshTokenCommandHandlerTests.cs" />
     <Compile Include="OAuth\Queries\GetClientQueryHandlerTests.cs" />

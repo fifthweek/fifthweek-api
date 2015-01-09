@@ -143,7 +143,7 @@
             return new RegisterUserCommand(
                 new UserId(userId),
                 registrationData.ExampleWork,
-                NormalizedEmail.Parse(registrationData.Email),
+                Email.Parse(registrationData.Email),
                 Username.Parse(registrationData.Username),
                 Password.Parse(registrationData.Password));
         }

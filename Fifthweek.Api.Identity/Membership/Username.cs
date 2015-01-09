@@ -16,7 +16,7 @@ namespace Fifthweek.Api.Identity.Membership
         public static readonly int MinLength = 6;
         public static readonly int MaxLength = 20;
 
-        protected Username()
+        private Username()
         {
         }
 

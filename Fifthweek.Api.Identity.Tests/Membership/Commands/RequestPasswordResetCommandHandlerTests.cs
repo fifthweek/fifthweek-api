@@ -29,7 +29,7 @@ namespace Fifthweek.Api.Identity.Tests.Membership.Commands
         [TestMethod]
         public async Task WhenUsernameAndEmailDoNotExist_ItShouldDoNothing()
         {
-            var command = new RequestPasswordResetCommand(NormalizedEmail.Parse(EmailAddress), Identity.Membership.Username.Parse(Username));
+            var command = new RequestPasswordResetCommand(Email.Parse(EmailAddress), Identity.Membership.Username.Parse(Username));
 
             this.userManager.Setup(_ => _.FindByEmailAsync(EmailAddress)).ReturnsAsync(null);
             this.userManager.Setup(_ => _.FindByNameAsync(Username)).ReturnsAsync(null);
@@ -50,7 +50,7 @@ namespace Fifthweek.Api.Identity.Tests.Membership.Commands
         [TestMethod]
         public async Task WhenEmailDoesNotExist_ItShouldDoNothing()
         {
-            var command = new RequestPasswordResetCommand(NormalizedEmail.Parse(EmailAddress), null);
+            var command = new RequestPasswordResetCommand(Email.Parse(EmailAddress), null);
 
             this.userManager.Setup(_ => _.FindByEmailAsync(EmailAddress)).ReturnsAsync(null);
 
@@ -73,7 +73,7 @@ namespace Fifthweek.Api.Identity.Tests.Membership.Commands
         [TestMethod]
         public async Task WhenEmailExists_ItShouldSendEmail()
         {
-            var command = new RequestPasswordResetCommand(NormalizedEmail.Parse(EmailAddress), null);
+            var command = new RequestPasswordResetCommand(Email.Parse(EmailAddress), null);
 
             this.userManager.Setup(_ => _.FindByEmailAsync(EmailAddress)).ReturnsAsync(new FifthweekUser()
             {
@@ -86,7 +86,7 @@ namespace Fifthweek.Api.Identity.Tests.Membership.Commands
         [TestMethod]
         public async Task WhenUsernameExistsAndEmailDoesNotExist_ItShouldSendEmail()
         {
-            var command = new RequestPasswordResetCommand(NormalizedEmail.Parse(EmailAddress), Identity.Membership.Username.Parse(Username));
+            var command = new RequestPasswordResetCommand(Email.Parse(EmailAddress), Identity.Membership.Username.Parse(Username));
 
             this.userManager.Setup(_ => _.FindByEmailAsync(EmailAddress)).ReturnsAsync(null);
             this.userManager.Setup(_ => _.FindByNameAsync(Username)).ReturnsAsync(new FifthweekUser()
@@ -100,7 +100,7 @@ namespace Fifthweek.Api.Identity.Tests.Membership.Commands
         [TestMethod]
         public async Task WhenEmailExistsAndUsernameDoesNotExist_ItShouldSendEmail()
         {
-            var command = new RequestPasswordResetCommand(NormalizedEmail.Parse(EmailAddress), Identity.Membership.Username.Parse(Username));
+            var command = new RequestPasswordResetCommand(Email.Parse(EmailAddress), Identity.Membership.Username.Parse(Username));
 
             this.userManager.Setup(_ => _.FindByNameAsync(Username)).ReturnsAsync(null);
             this.userManager.Setup(_ => _.FindByEmailAsync(EmailAddress)).ReturnsAsync(new FifthweekUser()
@@ -114,7 +114,7 @@ namespace Fifthweek.Api.Identity.Tests.Membership.Commands
         [TestMethod]
         public async Task WhenEmailExistsAndUsernameExists_ItShouldSendEmailToUserIdentifiedByUsername()
         {
-            var command = new RequestPasswordResetCommand(NormalizedEmail.Parse(EmailAddress), Identity.Membership.Username.Parse(Username));
+            var command = new RequestPasswordResetCommand(Email.Parse(EmailAddress), Identity.Membership.Username.Parse(Username));
 
             this.userManager.Setup(_ => _.FindByNameAsync(Username)).ReturnsAsync(new FifthweekUser()
             {
@@ -168,7 +168,7 @@ namespace Fifthweek.Api.Identity.Tests.Membership.Commands
         public static RequestPasswordResetCommand NewCommand(PasswordResetRequestData data)
         {
             return new RequestPasswordResetCommand(
-                data.Email == null ? null : NormalizedEmail.Parse(data.Email),
+                data.Email == null ? null : Email.Parse(data.Email),
                 data.Username == null ? null : Username.Parse(data.Username));
         }
     }

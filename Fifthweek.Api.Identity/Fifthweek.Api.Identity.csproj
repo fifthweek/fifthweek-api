@@ -119,7 +119,6 @@
     <Compile Include="Membership\UserId.cs" />
     <Compile Include="Membership\Password.cs" />
     <Compile Include="Membership\Username.cs" />
-    <Compile Include="Membership\NormalizedEmail.cs" />
     <Compile Include="Membership\Email.cs" />
     <Compile Include="Membership\IUserRepository.cs" />
     <Compile Include="Membership\Queries\IsUsernameAvailableQuery.cs" />
