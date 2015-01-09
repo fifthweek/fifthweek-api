@@ -13,7 +13,7 @@ install:
   - ps: Set-Content c:\users\appveyor\.ssh\id_rsa $fileContent
 before_build:
   - nuget restore
-after_test::
+after_test:
   - deployToGitHub
 build_script:
   - SET DEPLOYMENT_TEMP="%APPVEYOR_BUILD_FOLDER%\dist"
