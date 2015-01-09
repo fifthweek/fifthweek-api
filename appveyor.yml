@@ -15,3 +15,8 @@ build_script:
   - msbuild.exe "%APPVEYOR_BUILD_FOLDER%\Fifthweek.sln" /t:Clean /p:Configuration=Debug
   - msbuild.exe "%APPVEYOR_BUILD_FOLDER%\Fifthweek.sln" /t:Build /p:Configuration=Release
   - msbuild.exe "%APPVEYOR_BUILD_FOLDER%\Fifthweek.Api\Fifthweek.Api.csproj" /nologo /verbosity:m /t:Build /t:pipelinePreDeployCopyAllFilesToOneFolder /p:_PackageTempDir="%DEPLOYMENT_TEMP%";AutoParameterizationWebConfigConnectionStrings=false;Configuration=Release /p:SolutionDir="%APPVEYOR_BUILD_FOLDER%\.\\"
+notifications:
+  - provider: Slack
+    auth_token:
+      secure: dNohNyk1tMZ49NhLGLccecFy+/1ha7FEQyO/IPjMjRvzuIcsTXTPSgk/x/d42YHb
+    channel: services
