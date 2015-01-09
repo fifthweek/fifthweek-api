@@ -6,7 +6,7 @@ mkdir "%APPVEYOR_BUILD_FOLDER%\temp_dist"
 mkdir "%APPVEYOR_BUILD_FOLDER%\temp_dist_git_settings"
 
 echo Cloning fifthweek-api-dist
-git clone -b master git@github.com:fifthweek/fifthweek-api-dist.git "%APPVEYOR_BUILD_FOLDER%\temp_dist"
+git clone --branch=master https://%git_personal_access_token%:x-oauth-basic@github.com/fifthweek/fifthweek-api-dist.git "%APPVEYOR_BUILD_FOLDER%\temp_dist"
 
 echo Preserving GIT settings for dist repo
 xcopy /h "%APPVEYOR_BUILD_FOLDER%\temp_dist\.git*" "%APPVEYOR_BUILD_FOLDER%\temp_dist_git_settings"
@@ -27,4 +27,4 @@ cd "%APPVEYOR_BUILD_FOLDER%\temp_dist"
 echo Pushing new files to fifthweek-api-dist
 git add -A
 git commit -m "%APPVEYOR_REPO_COMMIT_MESSAGE% - %APPVEYOR_BUILD_NUMBER%"
-git push git@github.com:fifthweek/fifthweek-api-dist.git %APPVEYOR_REPO_BRANCH%
+git push https://%git_personal_access_token%:x-oauth-basic@github.com/fifthweek/fifthweek-api-dist.git %APPVEYOR_REPO_BRANCH%
