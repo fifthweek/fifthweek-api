@@ -14,6 +14,8 @@ If the new rule is more string that the existing rule:
 
 1.  Create a new `NewType` type (where 'Type' is the original type name).
 
+    Only one `NewType` should ever exist. It represents the current validation rules, whereas the existing type passes everything that has ever been successfully validated.
+
 2.  Extend the original type and apply its behaviours.
 
 3.  Add the new (stricter) validation rules to the new type.
