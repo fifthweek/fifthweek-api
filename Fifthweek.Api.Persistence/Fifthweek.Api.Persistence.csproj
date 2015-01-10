@@ -140,6 +140,10 @@
     <Compile Include="Migrations\201501101638258_UpdateChannelPrimaryKey.Designer.cs">
       <DependentUpon>201501101638258_UpdateChannelPrimaryKey.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201501102017565_UpdateChannelPrimaryKey2.cs" />
+    <Compile Include="Migrations\201501102017565_UpdateChannelPrimaryKey2.Designer.cs">
+      <DependentUpon>201501102017565_UpdateChannelPrimaryKey2.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RefreshToken.cs" />
@@ -191,6 +195,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201501101638258_UpdateChannelPrimaryKey.resx">
       <DependentUpon>201501101638258_UpdateChannelPrimaryKey.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201501102017565_UpdateChannelPrimaryKey2.resx">
+      <DependentUpon>201501102017565_UpdateChannelPrimaryKey2.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>

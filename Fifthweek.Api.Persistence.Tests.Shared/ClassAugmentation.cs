@@ -1,7 +1,5 @@
-﻿
-using System;
-
-
+﻿using System;
+using System.Linq;
 
 
 
@@ -92,5 +90,6 @@ namespace Fifthweek.Api.Persistence.Tests.Shared
 	}
 
 }
+
 
 

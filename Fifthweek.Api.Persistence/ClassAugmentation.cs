@@ -1,7 +1,5 @@
-﻿
-using System;
-
-
+﻿using System;
+using System.Linq;
 
 
 
@@ -9,17 +7,14 @@ namespace Fifthweek.Api.Persistence
 {
 	using System;
 	using System.ComponentModel.DataAnnotations;
-	using System.ComponentModel.DataAnnotations.Schema;
 	using Fifthweek.Api.Core;
-	using System.Data.SqlClient;
-	using System.Text;
-	using System.Threading.Tasks;
-	using Dapper;
+	using System.Linq;
+	using System.ComponentModel.DataAnnotations.Schema;
 	using Fifthweek.Api.Persistence.Identity;
 	public partial class Channel 
 	{
         public Channel(
-            System.Nullable<System.Guid> id, 
+            System.Guid id, 
             System.Guid subscriptionId, 
             Fifthweek.Api.Persistence.Subscription subscription, 
             System.Int32 priceInUsCentsPerWeek, 
@@ -62,13 +57,10 @@ namespace Fifthweek.Api.Persistence
 namespace Fifthweek.Api.Persistence
 {
 	using System;
+	using System.Linq;
 	using System.ComponentModel.DataAnnotations;
-	using System.ComponentModel.DataAnnotations.Schema;
 	using Fifthweek.Api.Core;
-	using System.Data.SqlClient;
-	using System.Text;
-	using System.Threading.Tasks;
-	using Dapper;
+	using System.ComponentModel.DataAnnotations.Schema;
 	using Fifthweek.Api.Persistence.Identity;
 	public partial class File 
 	{
@@ -145,13 +137,10 @@ namespace Fifthweek.Api.Persistence
 namespace Fifthweek.Api.Persistence
 {
 	using System;
+	using System.Linq;
 	using System.ComponentModel.DataAnnotations;
-	using System.ComponentModel.DataAnnotations.Schema;
 	using Fifthweek.Api.Core;
-	using System.Data.SqlClient;
-	using System.Text;
-	using System.Threading.Tasks;
-	using Dapper;
+	using System.ComponentModel.DataAnnotations.Schema;
 	using Fifthweek.Api.Persistence.Identity;
 	public partial class Subscription 
 	{
@@ -203,12 +192,9 @@ namespace Fifthweek.Api.Persistence
 {
 	using System;
 	using System.ComponentModel.DataAnnotations;
-	using System.ComponentModel.DataAnnotations.Schema;
 	using Fifthweek.Api.Core;
-	using System.Data.SqlClient;
-	using System.Text;
-	using System.Threading.Tasks;
-	using Dapper;
+	using System.Linq;
+	using System.ComponentModel.DataAnnotations.Schema;
 	using Fifthweek.Api.Persistence.Identity;
 	public partial class Channel 
 	{
@@ -281,13 +267,10 @@ namespace Fifthweek.Api.Persistence
 namespace Fifthweek.Api.Persistence
 {
 	using System;
+	using System.Linq;
 	using System.ComponentModel.DataAnnotations;
-	using System.ComponentModel.DataAnnotations.Schema;
 	using Fifthweek.Api.Core;
-	using System.Data.SqlClient;
-	using System.Text;
-	using System.Threading.Tasks;
-	using Dapper;
+	using System.ComponentModel.DataAnnotations.Schema;
 	using Fifthweek.Api.Persistence.Identity;
 	public partial class Subscription 
 	{
@@ -366,8 +349,8 @@ namespace Fifthweek.Api.Persistence
 namespace Fifthweek.Api.Persistence.Identity
 {
 	using System;
+	using System.Linq;
 	using Fifthweek.Api.Core;
-	using System.Threading.Tasks;
 	using Microsoft.AspNet.Identity.EntityFramework;
 	public partial class FifthweekUser 
 	{
@@ -436,12 +419,9 @@ namespace Fifthweek.Api.Persistence
 {
 	using System;
 	using System.ComponentModel.DataAnnotations;
-	using System.ComponentModel.DataAnnotations.Schema;
 	using Fifthweek.Api.Core;
-	using System.Data.SqlClient;
-	using System.Text;
-	using System.Threading.Tasks;
-	using Dapper;
+	using System.Linq;
+	using System.ComponentModel.DataAnnotations.Schema;
 	using Fifthweek.Api.Persistence.Identity;
 	public partial class Channel  : IIdentityEquatable
 	{
@@ -472,12 +452,16 @@ namespace Fifthweek.Api.Persistence
                 return false;
             }
 
-            if (!object.Equals(this.SubscriptionId, other.SubscriptionId))
-            {
-                return false;
-            }
-
             return true;
+        }
+
+		[Flags]
+        public enum Fields
+        {
+			Id = 1, 
+			SubscriptionId = 2, 
+			PriceInUsCentsPerWeek = 4, 
+			CreationDate = 8
         }
 	}
 
@@ -485,63 +469,110 @@ namespace Fifthweek.Api.Persistence
 	{
 		public static System.Threading.Tasks.Task InsertAsync(this System.Data.Common.DbConnection connection, Channel entity, bool idempotent = true)
 		{
-			return Dapper.SqlMapper.ExecuteAsync(connection, InsertStatement(idempotent), entity);
+			return Dapper.SqlMapper.ExecuteAsync(connection, InsertStatement(idempotent), new 
+			{
+				entity.Id, entity.SubscriptionId, entity.PriceInUsCentsPerWeek, entity.CreationDate
+			});
 		}
 
-		public static System.Threading.Tasks.Task UpsertAsync(this System.Data.Common.DbConnection connection, Channel entity, params string[] fields)
+		public static System.Threading.Tasks.Task UpsertAsync(this System.Data.Common.DbConnection connection, Channel entity, Channel.Fields fields)
 		{
-			return Dapper.SqlMapper.ExecuteAsync(connection, UpsertStatement(fields), entity);
+			return Dapper.SqlMapper.ExecuteAsync(connection, UpsertStatement(fields), new 
+			{
+				entity.Id, entity.SubscriptionId, entity.PriceInUsCentsPerWeek, entity.CreationDate
+			});
 		}
 
-		public static System.Threading.Tasks.Task UpdateAsync(this System.Data.Common.DbConnection connection, Channel entity, params string[] fields)
+		public static System.Threading.Tasks.Task UpdateAsync(this System.Data.Common.DbConnection connection, Channel entity, Channel.Fields fields)
 		{
-			return Dapper.SqlMapper.ExecuteAsync(connection, UpdateStatement(fields), entity);
+			return Dapper.SqlMapper.ExecuteAsync(connection, UpdateStatement(fields), MaskParameters(entity, fields));
 		}
 
 		public static string InsertStatement(bool idempotent = true)
 		{
-			const string insert = "INSERT INTO Channels(@Id, @SubscriptionId, @PriceInUsCentsPerWeek, @CreationDate)";
+			const string insert = "INSERT INTO Channels(Id, SubscriptionId, PriceInUsCentsPerWeek, CreationDate) VALUES(@Id, @SubscriptionId, @PriceInUsCentsPerWeek, @CreationDate)";
 			return idempotent ? SqlStatementTemplates.IdempotentInsert(insert) : insert;
 		}
 
-		public static string UpsertStatement(params string[] fields)
+		public static string UpsertStatement(Channel.Fields fields)
 		{
 			var sql = new System.Text.StringBuilder();
 			sql.Append(
 				@"MERGE Channels as Target
 				USING (VALUES (@Id, @SubscriptionId, @PriceInUsCentsPerWeek, @CreationDate)) AS Source (Id, SubscriptionId, PriceInUsCentsPerWeek, CreationDate)
-				ON    (Target.Id = Source.Id AND Target.SubscriptionId = Source.SubscriptionId)
+				ON    (Target.Id = Source.Id)
 				WHEN MATCHED THEN
 					UPDATE
 					SET		");
-			sql.AppendUpdateParameters(fields);
+			sql.AppendUpdateParameters(GetFieldNames(fields));
 			sql.Append(
-				@"WHEN NOT MATCHED THEN
-					INSERT  (@Id, @SubscriptionId, @PriceInUsCentsPerWeek, @CreationDate)
-					VALUES  (Source.Id, Source.SubscriptionId, Source.PriceInUsCentsPerWeek, Source.CreationDate)");
+				@" WHEN NOT MATCHED THEN
+					INSERT  (Id, SubscriptionId, PriceInUsCentsPerWeek, CreationDate)
+					VALUES  (Source.Id, Source.SubscriptionId, Source.PriceInUsCentsPerWeek, Source.CreationDate);");
 			return sql.ToString();
 		}
 
-		public static string UpdateStatement(params string[] fields)
+		public static string UpdateStatement(Channel.Fields fields)
 		{
 			var sql = new System.Text.StringBuilder();
 			sql.Append("UPDATE Channels SET ");
-			sql.AppendUpdateParameters(fields);
-			sql.Append("WHERE Id = @Id AND SubscriptionId = @SubscriptionId");
+			sql.AppendUpdateParameters(GetFieldNames(fields));
+			sql.Append(" WHERE Id = @Id");
 			return sql.ToString();
+		}
+
+		private static System.Collections.Generic.IReadOnlyList<string> GetFieldNames(Channel.Fields fields)
+		{
+			var fieldNames = new System.Collections.Generic.List<string>();
+			fieldNames.Add("Id");
+			if(fields.HasFlag(Channel.Fields.SubscriptionId))
+			{
+				fieldNames.Add("SubscriptionId");
+			}
+
+			if(fields.HasFlag(Channel.Fields.PriceInUsCentsPerWeek))
+			{
+				fieldNames.Add("PriceInUsCentsPerWeek");
+			}
+
+			if(fields.HasFlag(Channel.Fields.CreationDate))
+			{
+				fieldNames.Add("CreationDate");
+			}
+
+			return fieldNames;
+		}
+
+		private static object MaskParameters(Channel entity, Channel.Fields fields)
+		{
+			var parameters = new Dapper.DynamicParameters();
+			parameters.Add("Id", entity.Id);
+			if(fields.HasFlag(Channel.Fields.SubscriptionId))
+			{
+				parameters.Add("SubscriptionId", entity.SubscriptionId);
+			}
+
+			if(fields.HasFlag(Channel.Fields.PriceInUsCentsPerWeek))
+			{
+				parameters.Add("PriceInUsCentsPerWeek", entity.PriceInUsCentsPerWeek);
+			}
+
+			if(fields.HasFlag(Channel.Fields.CreationDate))
+			{
+				parameters.Add("CreationDate", entity.CreationDate);
+			}
+
+			return parameters;
 		}
 	}
 }
 namespace Fifthweek.Api.Persistence
 {
 	using System;
+	using System.Linq;
 	using System.ComponentModel.DataAnnotations;
-	using System.ComponentModel.DataAnnotations.Schema;
 	using Fifthweek.Api.Core;
-	using System.Data.SqlClient;
-	using System.Text;
-	using System.Threading.Tasks;
-	using Dapper;
+	using System.ComponentModel.DataAnnotations.Schema;
 	using Fifthweek.Api.Persistence.Identity;
 	public partial class Subscription  : IIdentityEquatable
 	{
@@ -574,32 +605,48 @@ namespace Fifthweek.Api.Persistence
 
             return true;
         }
+
+		[Flags]
+        public enum Fields
+        {
+			Id = 1, 
+			CreatorId = 2, 
+			Name = 4, 
+			Tagline = 8, 
+			CreationDate = 16
+        }
 	}
 
 	public static partial class SubscriptionExtensions
 	{
 		public static System.Threading.Tasks.Task InsertAsync(this System.Data.Common.DbConnection connection, Subscription entity, bool idempotent = true)
 		{
-			return Dapper.SqlMapper.ExecuteAsync(connection, InsertStatement(idempotent), entity);
+			return Dapper.SqlMapper.ExecuteAsync(connection, InsertStatement(idempotent), new 
+			{
+				entity.Id, entity.CreatorId, entity.Name, entity.Tagline, entity.CreationDate
+			});
 		}
 
-		public static System.Threading.Tasks.Task UpsertAsync(this System.Data.Common.DbConnection connection, Subscription entity, params string[] fields)
+		public static System.Threading.Tasks.Task UpsertAsync(this System.Data.Common.DbConnection connection, Subscription entity, Subscription.Fields fields)
 		{
-			return Dapper.SqlMapper.ExecuteAsync(connection, UpsertStatement(fields), entity);
+			return Dapper.SqlMapper.ExecuteAsync(connection, UpsertStatement(fields), new 
+			{
+				entity.Id, entity.CreatorId, entity.Name, entity.Tagline, entity.CreationDate
+			});
 		}
 
-		public static System.Threading.Tasks.Task UpdateAsync(this System.Data.Common.DbConnection connection, Subscription entity, params string[] fields)
+		public static System.Threading.Tasks.Task UpdateAsync(this System.Data.Common.DbConnection connection, Subscription entity, Subscription.Fields fields)
 		{
-			return Dapper.SqlMapper.ExecuteAsync(connection, UpdateStatement(fields), entity);
+			return Dapper.SqlMapper.ExecuteAsync(connection, UpdateStatement(fields), MaskParameters(entity, fields));
 		}
 
 		public static string InsertStatement(bool idempotent = true)
 		{
-			const string insert = "INSERT INTO Subscriptions(@Id, @CreatorId, @Name, @Tagline, @CreationDate)";
+			const string insert = "INSERT INTO Subscriptions(Id, CreatorId, Name, Tagline, CreationDate) VALUES(@Id, @CreatorId, @Name, @Tagline, @CreationDate)";
 			return idempotent ? SqlStatementTemplates.IdempotentInsert(insert) : insert;
 		}
 
-		public static string UpsertStatement(params string[] fields)
+		public static string UpsertStatement(Subscription.Fields fields)
 		{
 			var sql = new System.Text.StringBuilder();
 			sql.Append(
@@ -609,21 +656,76 @@ namespace Fifthweek.Api.Persistence
 				WHEN MATCHED THEN
 					UPDATE
 					SET		");
-			sql.AppendUpdateParameters(fields);
+			sql.AppendUpdateParameters(GetFieldNames(fields));
 			sql.Append(
-				@"WHEN NOT MATCHED THEN
-					INSERT  (@Id, @CreatorId, @Name, @Tagline, @CreationDate)
-					VALUES  (Source.Id, Source.CreatorId, Source.Name, Source.Tagline, Source.CreationDate)");
+				@" WHEN NOT MATCHED THEN
+					INSERT  (Id, CreatorId, Name, Tagline, CreationDate)
+					VALUES  (Source.Id, Source.CreatorId, Source.Name, Source.Tagline, Source.CreationDate);");
 			return sql.ToString();
 		}
 
-		public static string UpdateStatement(params string[] fields)
+		public static string UpdateStatement(Subscription.Fields fields)
 		{
 			var sql = new System.Text.StringBuilder();
 			sql.Append("UPDATE Subscriptions SET ");
-			sql.AppendUpdateParameters(fields);
-			sql.Append("WHERE Id = @Id");
+			sql.AppendUpdateParameters(GetFieldNames(fields));
+			sql.Append(" WHERE Id = @Id");
 			return sql.ToString();
+		}
+
+		private static System.Collections.Generic.IReadOnlyList<string> GetFieldNames(Subscription.Fields fields)
+		{
+			var fieldNames = new System.Collections.Generic.List<string>();
+			fieldNames.Add("Id");
+			if(fields.HasFlag(Subscription.Fields.CreatorId))
+			{
+				fieldNames.Add("CreatorId");
+			}
+
+			if(fields.HasFlag(Subscription.Fields.Name))
+			{
+				fieldNames.Add("Name");
+			}
+
+			if(fields.HasFlag(Subscription.Fields.Tagline))
+			{
+				fieldNames.Add("Tagline");
+			}
+
+			if(fields.HasFlag(Subscription.Fields.CreationDate))
+			{
+				fieldNames.Add("CreationDate");
+			}
+
+			return fieldNames;
+		}
+
+		private static object MaskParameters(Subscription entity, Subscription.Fields fields)
+		{
+			var parameters = new Dapper.DynamicParameters();
+			parameters.Add("Id", entity.Id);
+			if(fields.HasFlag(Subscription.Fields.CreatorId))
+			{
+				parameters.Add("CreatorId", entity.CreatorId);
+			}
+
+			if(fields.HasFlag(Subscription.Fields.Name))
+			{
+				parameters.Add("Name", entity.Name);
+			}
+
+			if(fields.HasFlag(Subscription.Fields.Tagline))
+			{
+				parameters.Add("Tagline", entity.Tagline);
+			}
+
+			if(fields.HasFlag(Subscription.Fields.CreationDate))
+			{
+				parameters.Add("CreationDate", entity.CreationDate);
+			}
+
+			return parameters;
 		}
 	}
 }
+

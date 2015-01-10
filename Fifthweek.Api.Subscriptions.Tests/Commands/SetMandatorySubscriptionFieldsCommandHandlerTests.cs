@@ -13,7 +13,7 @@ namespace Fifthweek.Api.Subscriptions.Tests.Commands
     public class SetMandatorySubscriptionFieldsCommandHandlerTests : PersistenceTestsBase
     {
         [TestMethod]
-        public async Task WhenNotAllowedToUpdate_ItShouldNotMakeChangesAndShouldThrowException()
+        public async Task WhenNotAllowedToUpdate_ItShouldHaveNoEffectAndThrowException()
         {
             await this.TakeSnapshotAsync();
 
@@ -30,6 +30,21 @@ namespace Fifthweek.Api.Subscriptions.Tests.Commands
 
             await this.AssertNoSideEffectsAsync();
         }
+
+        [TestMethod]
+        public async Task WhenReRun_ItShouldHaveNoEffect()
+        {
+            await this.CreateSubscriptionAsync(UserId, SubscriptionId);
+
+            this.subscriptionSecurity.Setup(_ => _.IsUpdateAllowedAsync(UserId, SubscriptionId)).ReturnsAsync(true);
+            
+            await this.target.HandleAsync(Command);
+            await this.TakeSnapshotAsync();
+
+            await this.target.HandleAsync(Command);
+            await this.AssertNoSideEffectsAsync();
+        }
+
 
 //        [TestMethod]
 //        public async Task DoesNotAffectOtherEntities()
@@ -49,6 +64,24 @@ namespace Fifthweek.Api.Subscriptions.Tests.Commands
         public override void Cleanup()
         {
             base.Cleanup();
+        }
+
+        private async Task CreateSubscriptionAsync(UserId newUserId, SubscriptionId newSubscriptionId)
+        {
+            var random = new Random();
+            var creator = UserTests.UniqueEntity(random);
+            creator.Id = newUserId.Value;
+
+            var subscription = SubscriptionTests.UniqueEntity(random);
+            subscription.Id = newSubscriptionId.Value;
+            subscription.Creator = creator;
+            subscription.CreatorId = creator.Id;
+
+            using (var dbContext = this.NewDbContext())
+            {
+                dbContext.Subscriptions.Add(subscription);
+                await dbContext.SaveChangesAsync();
+            }
         }
 
         private static readonly UserId UserId = new UserId(Guid.NewGuid());

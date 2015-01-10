@@ -1,6 +1,5 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
 using Fifthweek.Api.Core;
 
 namespace Fifthweek.Api.Persistence
@@ -12,10 +11,10 @@ namespace Fifthweek.Api.Persistence
         {
         }
 
-        [Key, Column(Order = 0)]
-        public Guid? Id { get; set; }
+        [Required, Key]
+        public Guid Id { get; set; }
 
-        [Key, Column(Order = 1), Required]
+        [Required]
         public Guid SubscriptionId { get; set; }
 
         public Subscription Subscription { get; set; }

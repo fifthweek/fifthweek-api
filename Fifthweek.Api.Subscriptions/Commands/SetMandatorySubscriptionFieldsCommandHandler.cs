@@ -38,20 +38,20 @@ namespace Fifthweek.Api.Subscriptions.Commands
                 Tagline = command.Tagline.Value
             };
 
-            return this.fifthweekDbContext.Database.Connection.UpdateAsync(subscription, "Name", "Tagline");
+            return this.fifthweekDbContext.Database.Connection.UpdateAsync(subscription, Subscription.Fields.Name | Subscription.Fields.Tagline);
         }
 
         private Task CreateChannelAsync(SetMandatorySubscriptionFieldsCommand command)
         {
             var channel = new Channel
             {
-                Id = null,
+                Id = command.SubscriptionId.Value, // Default channel uses same ID as subscription.
                 SubscriptionId = command.SubscriptionId.Value,
                 PriceInUsCentsPerWeek = command.BasePrice.Value,
                 CreationDate = DateTime.UtcNow
             };
 
-            return this.fifthweekDbContext.Database.Connection.UpsertAsync(channel, "PriceInUsCentsPerWeek");
+            return this.fifthweekDbContext.Database.Connection.UpsertAsync(channel, Channel.Fields.PriceInUsCentsPerWeek);
         }
     }
 }

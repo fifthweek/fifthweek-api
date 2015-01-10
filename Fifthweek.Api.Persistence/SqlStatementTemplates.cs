@@ -1,4 +1,5 @@
-﻿using System.Text;
+﻿using System.Collections.Generic;
+using System.Text;
 
 namespace Fifthweek.Api.Persistence
 {
@@ -23,15 +24,16 @@ namespace Fifthweek.Api.Persistence
                 insert);
         }
 
-        public static void AppendUpdateParameters(this StringBuilder sql, params string[] fields)
+        public static void AppendUpdateParameters(this StringBuilder sql, IReadOnlyList<string> fields)
         {
-            for (var i = 0; i < fields.Length; i++)
+            for (var i = 0; i < fields.Count; i++)
             {
-                var isLast = i == fields.Length - 1;
+                var isLast = i == fields.Count - 1;
                 var field = fields[i];
 
                 sql.Append(field);
                 sql.Append("=@");
+                sql.Append(field);
 
                 if (!isLast)
                 {

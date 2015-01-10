@@ -5,7 +5,6 @@
 <#@ import namespace="System.Linq" #>
 <#@ import namespace="System.Text" #>
 <#@ import namespace="System.Collections.Generic" #>
-
 <#
 	var codeMap = new Dictionary<string, UnifiedClassBuilder>();
 	var codeFiles = VisualStudioHelper.GetAllProjectItems(VisualStudioHelper.CurrentProject)
