@@ -7,3 +7,4 @@ using System;
 <#@ include file="AutoEqualityMembers.ttinclude" #>
 <#@ include file="AutoBuilder.ttinclude" #>
 <#@ include file="AutoParse.ttinclude" #>
+<#@ include file="AutoSql.ttinclude" #>

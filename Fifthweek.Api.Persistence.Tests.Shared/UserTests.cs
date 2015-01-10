@@ -5,9 +5,8 @@ namespace Fifthweek.Api.Persistence.Tests.Shared
 {
     public static class UserTests
     {
-        public static FifthweekUser UniqueEntity()
+        public static FifthweekUser UniqueEntity(Random random)
         {
-            var random = new Random();
             return new FifthweekUser
             {
                 Id = Guid.NewGuid(),

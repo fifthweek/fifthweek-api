@@ -74,10 +74,11 @@ namespace Fifthweek.Api.Subscriptions.Tests
 
         private Task CreateSubscriptionAsync(UserId newUserId, SubscriptionId newSubscriptionId)
         {
-            var creator = UserTests.UniqueEntity();
+            var random = new Random();
+            var creator = UserTests.UniqueEntity(random);
             creator.Id = newUserId.Value;
 
-            var subscription = SubscriptionTests.UniqueEntity();
+            var subscription = SubscriptionTests.UniqueEntity(random);
             subscription.Id = newSubscriptionId.Value;
             subscription.Creator = creator;
             subscription.CreatorId = creator.Id;

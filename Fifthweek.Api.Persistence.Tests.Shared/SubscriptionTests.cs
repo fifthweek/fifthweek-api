@@ -4,10 +4,9 @@ namespace Fifthweek.Api.Persistence.Tests.Shared
 {
     public static class SubscriptionTests
     {
-        public static Subscription UniqueEntity()
+        public static Subscription UniqueEntity(Random random)
         {
-            var random = new Random();
-            var user = UserTests.UniqueEntity();
+            var user = UserTests.UniqueEntity(random);
             return new Subscription(
                 Guid.NewGuid(),
                 user,

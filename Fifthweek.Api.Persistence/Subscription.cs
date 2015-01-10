@@ -5,7 +5,7 @@ using Fifthweek.Api.Persistence.Identity;
 
 namespace Fifthweek.Api.Persistence
 {
-    [AutoConstructor]
+    [AutoConstructor, AutoEqualityMembers, AutoSql]
     public partial class Subscription
     {
         public Subscription()

@@ -1,15 +1,16 @@
+using Fifthweek.Api.Core;
+
 namespace Fifthweek.Api.Persistence.Identity
 {
     using System;
-    using System.Threading.Tasks;
-
     using Microsoft.AspNet.Identity.EntityFramework;
 
     /// <summary>
     /// See here for same code for changing the PK type for identity tables.
     /// https://aspnet.codeplex.com/SourceControl/latest#Samples/Identity/ChangePK/PrimaryKeysConfigTest/Models/IdentityModels.cs
     /// </summary>
-    public class FifthweekUser : IdentityUser<Guid, FifthweekUserLogin, FifthweekUserRole, FifthweekUserClaim>
+    [AutoEqualityMembers]
+    public partial class FifthweekUser : IdentityUser<Guid, FifthweekUserLogin, FifthweekUserRole, FifthweekUserClaim>, IIdentityEquatable
     {
         public string ExampleWork { get; set; }
 
@@ -18,5 +19,30 @@ namespace Fifthweek.Api.Persistence.Identity
         public DateTime LastSignInDate { get; set; }
 
         public DateTime LastAccessTokenDate { get; set; }
+
+        public bool IdentityEquals(object other)
+        {
+            if (ReferenceEquals(null, other))
+            {
+                return false;
+            }
+
+            if (ReferenceEquals(this, other))
+            {
+                return true;
+            }
+
+            if (other.GetType() != this.GetType())
+            {
+                return false;
+            }
+
+            return this.IdentityEquals((FifthweekUser)other);
+        }
+
+        protected bool IdentityEquals(FifthweekUser other)
+        {
+            return this.Id.Equals(other.Id);
+        }
     }
 }

@@ -82,6 +82,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AutofacRegistration.cs" />
+    <Compile Include="AutoSqlAttribute.cs" />
     <Compile Include="Channel.cs" />
     <Compile Include="ClassAugmentation.cs">
       <AutoGen>True</AutoGen>
@@ -101,6 +102,7 @@
     <Compile Include="Identity\FifthweekUserStore.cs" />
     <Compile Include="FileVariant.cs" />
     <Compile Include="IFifthweekDbContext.cs" />
+    <Compile Include="IIdentityEquatable.cs" />
     <Compile Include="IUserManager.cs" />
     <Compile Include="Migrations\201412041523081_InitialCreate.cs" />
     <Compile Include="Migrations\201412041523081_InitialCreate.Designer.cs">
@@ -134,10 +136,15 @@
     <Compile Include="Migrations\201501091548310_AddFilesAndFileVariants.Designer.cs">
       <DependentUpon>201501091548310_AddFilesAndFileVariants.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201501101638258_UpdateChannelPrimaryKey.cs" />
+    <Compile Include="Migrations\201501101638258_UpdateChannelPrimaryKey.Designer.cs">
+      <DependentUpon>201501101638258_UpdateChannelPrimaryKey.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RefreshToken.cs" />
     <Compile Include="File.cs" />
+    <Compile Include="SqlStatementTemplates.cs" />
     <Compile Include="Subscription.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -181,6 +188,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201501091548310_AddFilesAndFileVariants.resx">
       <DependentUpon>201501091548310_AddFilesAndFileVariants.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201501101638258_UpdateChannelPrimaryKey.resx">
+      <DependentUpon>201501101638258_UpdateChannelPrimaryKey.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>

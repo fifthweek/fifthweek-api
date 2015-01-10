@@ -60,16 +60,25 @@ namespace Fifthweek.Api.Subscriptions.Commands
 	using Fifthweek.Api.Core;
 	using System.Threading.Tasks;
 	using Fifthweek.Api.Identity.Membership;
+	using Dapper;
+	using Fifthweek.Api.Persistence;
 	public partial class SetMandatorySubscriptionFieldsCommandHandler
 	{
         public SetMandatorySubscriptionFieldsCommandHandler(
+            Fifthweek.Api.Persistence.IFifthweekDbContext fifthweekDbContext, 
             Fifthweek.Api.Subscriptions.ISubscriptionSecurity subscriptionSecurity)
         {
+            if (fifthweekDbContext == null)
+            {
+                throw new ArgumentNullException("fifthweekDbContext");
+            }
+
             if (subscriptionSecurity == null)
             {
                 throw new ArgumentNullException("subscriptionSecurity");
             }
 
+            this.fifthweekDbContext = fifthweekDbContext;
             this.subscriptionSecurity = subscriptionSecurity;
         }
 	}
@@ -509,11 +518,11 @@ namespace Fifthweek.Api.Subscriptions.Controllers
 
 		public void Parse()
 		{
-			MandatorySubscriptionData_Companion.Parse(this); // Avoid conflicts between property and type names.
+			MandatorySubscriptionDataExtensions.Parse(this); // Avoid conflicts between property and type names.
 		}
 	}
 
-	internal class MandatorySubscriptionData_Companion
+	public static partial class MandatorySubscriptionDataExtensions
 	{
 		public static void Parse(MandatorySubscriptionData target)
 		{

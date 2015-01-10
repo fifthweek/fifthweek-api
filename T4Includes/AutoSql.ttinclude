@@ -1,0 +1,154 @@
+﻿<#@ include file="VisualStudioHelper.ttinclude" once="true" #>
+<#@ include file="VisualStudioHelper2.ttinclude" once="true" #>
+<#@ assembly name="System.Core" #>
+<#@ import namespace="EnvDTE" #>
+<#@ import namespace="System.Linq" #>
+<#@ import namespace="System.Text" #>
+<#@ import namespace="System.Collections.Generic" #>
+<#
+	var AutoSqlAttributeName = "AutoSql";
+	var PrimaryKeyAttributeName = "Key";
+
+    foreach(UnifiedClass unifiedClass in allClasses)
+    {
+        var allAttributes = unifiedClass.GetAllAttributes();
+        if (allAttributes.All(_ => !_.Name.StartsWith(AutoSqlAttributeName)))
+        {
+            continue;
+        }
+
+        var publicPrimitiveProperties = unifiedClass.GetAllPublicGetters().Where(_ => IsPrimitiveType(_.Type.AsFullName)).ToList();
+        if (publicPrimitiveProperties.Count == 0)
+        {
+            continue;
+        }
+
+		var tableName = unifiedClass.FirstCodeClass.Name + "s";
+
+		StringBuilder sql;
+		sql = new StringBuilder();
+		for (var i = 0; i < publicPrimitiveProperties.Count; i++)
+        {
+			var property = publicPrimitiveProperties[i];
+			var isLast = i == publicPrimitiveProperties.Count - 1;
+			sql.Append("@");
+			sql.Append(property.Name);
+			if (!isLast)
+            {
+				sql.Append(", ");
+            }
+        }
+
+		var properties = sql.ToString();
+		var propertiesWithoutAt = properties.Replace("@", string.Empty);
+
+		var keyProperties = publicPrimitiveProperties.Where(p => p.Attributes.OfType<CodeAttribute>().Any(_ => _.Name.StartsWith(PrimaryKeyAttributeName))).ToList();
+		sql = new StringBuilder();
+		for (var i = 0; i < keyProperties.Count; i++)
+        {
+			var property = keyProperties[i];
+			var isLast = i == keyProperties.Count - 1;
+			sql.Append("Target.");
+			sql.Append(property.Name);
+			sql.Append(" = Source.");
+			sql.Append(property.Name);
+			if (!isLast)
+            {
+				sql.Append(" AND ");
+            }
+        }
+		
+		var targetSourceIdentityPredicate = sql.ToString();
+
+		unifiedClass.WriteNamespaceAndClassWithSignature(" : IIdentityEquatable", () => {
+#>
+        public bool IdentityEquals(object other)
+        {
+            if (ReferenceEquals(null, other))
+            {
+                return false;
+            }
+
+            if (ReferenceEquals(this, other))
+            {
+                return true;
+            }
+
+            if (other.GetType() != this.GetType())
+            {
+                return false;
+            }
+
+            return this.IdentityEquals((<#= unifiedClass.FirstCodeClass.Name #>)other);
+        }
+
+        protected bool IdentityEquals(<#= unifiedClass.FirstCodeClass.Name #> other)
+        {
+<#
+    foreach(CodeProperty codeProperty in keyProperties)
+    {
+#>
+            if (!object.Equals(this.<#= codeProperty.Name #>, other.<#= codeProperty.Name #>))
+            {
+                return false;
+            }
+
+<#
+    }
+#>
+            return true;
+        }
+<#
+		}, () => {
+#>
+		public static System.Threading.Tasks.Task InsertAsync(this System.Data.Common.DbConnection connection, <#= unifiedClass.FirstCodeClass.Name #> entity, bool idempotent = true)
+		{
+			return Dapper.SqlMapper.ExecuteAsync(connection, InsertStatement(idempotent), entity);
+		}
+
+		public static System.Threading.Tasks.Task UpsertAsync(this System.Data.Common.DbConnection connection, <#= unifiedClass.FirstCodeClass.Name #> entity, params string[] fields)
+		{
+			return Dapper.SqlMapper.ExecuteAsync(connection, UpsertStatement(fields), entity);
+		}
+
+		public static System.Threading.Tasks.Task UpdateAsync(this System.Data.Common.DbConnection connection, <#= unifiedClass.FirstCodeClass.Name #> entity, params string[] fields)
+		{
+			return Dapper.SqlMapper.ExecuteAsync(connection, UpdateStatement(fields), entity);
+		}
+
+		public static string InsertStatement(bool idempotent = true)
+		{
+			const string insert = "INSERT INTO <#= tableName #>(<#= properties #>)";
+			return idempotent ? SqlStatementTemplates.IdempotentInsert(insert) : insert;
+		}
+
+		public static string UpsertStatement(params string[] fields)
+		{
+			var sql = new System.Text.StringBuilder();
+			sql.Append(
+				@"MERGE <#= tableName #> as Target
+				USING (VALUES (<#= properties #>)) AS Source (<#= propertiesWithoutAt #>)
+				ON    (<#= targetSourceIdentityPredicate #>)
+				WHEN MATCHED THEN
+					UPDATE
+					SET		");
+			sql.AppendUpdateParameters(fields);
+			sql.Append(
+				@"WHEN NOT MATCHED THEN
+					INSERT  (<#= properties #>)
+					VALUES  (<#= properties.Replace("@", "Source.") #>)");
+			return sql.ToString();
+		}
+
+		public static string UpdateStatement(params string[] fields)
+		{
+			var sql = new System.Text.StringBuilder();
+			sql.Append("UPDATE <#= tableName #> SET ");
+			sql.AppendUpdateParameters(fields);
+			sql.Append("WHERE <#= targetSourceIdentityPredicate.Replace("Target.", string.Empty).Replace("Source.", "@") #>");
+			return sql.ToString();
+		}
+<#
+		});
+	}
+#>

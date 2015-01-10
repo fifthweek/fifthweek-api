@@ -1,23 +1,29 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+using Fifthweek.Api.Core;
 
 namespace Fifthweek.Api.Persistence
 {
-    public class Channel
+    [AutoConstructor, AutoEqualityMembers, AutoSql]
+    public partial class Channel
     {
-        [Key]
-        [Required]
-        public Guid Id { get; set; }
+        public Channel()
+        {
+        }
 
-        [Required]
+        [Key, Column(Order = 0)]
+        public Guid? Id { get; set; }
+
+        [Key, Column(Order = 1), Required]
+        public Guid SubscriptionId { get; set; }
+
         public Subscription Subscription { get; set; }
-
-        public Guid SubscriptionId { get; set; } 
 
         [Required]
         public int PriceInUsCentsPerWeek { get; set; }
 
         [Required]
-        public DateTime CreationDate { get; set; } 
+        public DateTime CreationDate { get; set; }
     }
 }

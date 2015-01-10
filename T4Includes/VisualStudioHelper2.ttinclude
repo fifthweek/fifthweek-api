@@ -45,6 +45,33 @@
 #>
 
 <#+
+	public static bool IsPrimitiveType(string typeName)
+	{
+		var primitiveTypes = new HashSet<string>(new[] {
+			"System.String",
+			"System.Guid",
+			"System.Boolean",
+			"System.DateTime",
+			"System.Char",
+			"System.Byte",
+			"System.Decimal",
+			"System.Single",
+			"System.Double",
+			"System.Int16",
+			"System.Int32",
+			"System.Int64",
+		});
+
+		const string nullablePrefix = "System.Nullable<";
+		if (typeName.StartsWith(nullablePrefix))
+        {
+			typeName = typeName.Substring(nullablePrefix.Length);
+			typeName = typeName.Substring(0, typeName.Length - 1);
+        }
+
+		return primitiveTypes.Contains(typeName);
+	}
+
 	public static string ToLowerCamelCase(string value)
 	{
 		return value.Substring(0, 1).ToLower() + value.Substring(1);
@@ -107,7 +134,7 @@
 			this.FirstCodeClass = codeClasses.First();
 			this.output = output;
 			this.visualStudioHelper = visualStudioHelper;
-			this.CompanionClassName = this.FirstCodeClass.Name + "_Companion";
+			this.CompanionClassName = this.FirstCodeClass.Name + "Extensions";
         }
 
 		public string CompanionClassName { get; private set; }
@@ -219,14 +246,19 @@
 			return ret;
 		}
 
-		public void WriteNamespaceAndClass(Action renderMainClass, Action renderCompanionClass = null)
+		public void WriteNamespaceAndClass(Action renderMainClass = null, Action renderExtensionClass = null)
+		{
+			WriteNamespaceAndClassWithSignature(null, renderMainClass, renderExtensionClass);
+		}
+
+		public void WriteNamespaceAndClassWithSignature(string mainClassSignature = null, Action renderMainClass = null, Action renderExtensionClass = null)
 		{
 			this.output.WriteLine("namespace " + this.FirstCodeClass.Namespace.Name);
 			this.output.WriteLine("{");
 
 			this.WriteUsings();
 
-			WriteClass(renderMainClass, renderCompanionClass);
+			WriteClass(mainClassSignature, renderMainClass, renderExtensionClass);
 
 			this.output.WriteLine("}");
 		}
@@ -248,7 +280,7 @@
             }
         }
 
-		private void WriteClass(Action render, Action renderCompanionClass = null)
+		private void WriteClass(string mainClassSignature = null, Action renderMainClass = null, Action renderExtensionClass = null)
 		{
 			var classHierarchy = GetEnclosingClasses();
 			string tabs;
@@ -263,17 +295,20 @@
 			var name = classHierarchy.Last().Name;
 			tabs = new string('\t', classHierarchy.Count);
 
-			this.output.WriteLine(tabs + "public partial class " + name);
-			this.output.WriteLine(tabs + "{");
-			render();			
-			this.output.WriteLine(tabs + "}");
-			this.output.WriteLine("");
-
-			if (renderCompanionClass != null)
+			if (renderMainClass != null)
             {
-				this.output.WriteLine(tabs + "internal class " + this.CompanionClassName);
+				this.output.WriteLine(tabs + "public partial class " + name + " " + (mainClassSignature ?? string.Empty));
 				this.output.WriteLine(tabs + "{");
-				renderCompanionClass();			
+				renderMainClass();			
+				this.output.WriteLine(tabs + "}");
+				this.output.WriteLine("");
+            }
+
+			if (renderExtensionClass != null)
+            {
+				this.output.WriteLine(tabs + "public static partial class " + this.CompanionClassName);
+				this.output.WriteLine(tabs + "{");
+				renderExtensionClass();			
 				this.output.WriteLine(tabs + "}");
             }
 
