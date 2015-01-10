@@ -76,6 +76,7 @@
     <Compile Include="DatabaseSeed.cs" />
     <Compile Include="DatabaseState.cs" />
     <Compile Include="ChannelTests.cs" />
+    <Compile Include="PersistenceTestsBase.cs" />
     <Compile Include="SubscriptionTests.cs" />
     <Compile Include="TemporaryDatabase.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

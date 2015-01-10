@@ -2,7 +2,6 @@
 using System.Threading.Tasks;
 using Fifthweek.Api.Core;
 using Fifthweek.Api.Identity.Membership;
-using Fifthweek.Api.Persistence;
 using Fifthweek.Api.Persistence.Tests.Shared;
 using Fifthweek.Api.Subscriptions.Commands;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -11,13 +10,13 @@ using Moq;
 namespace Fifthweek.Api.Subscriptions.Tests.Commands
 {
     [TestClass]
-    public class SetMandatorySubscriptionFieldsCommandHandlerTests
+    public class SetMandatorySubscriptionFieldsCommandHandlerTests : PersistenceTestsBase
     {
         [TestMethod]
         public async Task WhenNotAllowedToUpdate_ItShouldNotMakeChangesAndShouldThrowException()
         {
-            await this.temporaryDatabase.PopulateWithDummyEntitiesAsync();
-            await this.databaseState.TakeSnapshotAsync();
+            await this.PopulateWithDummyEntitiesAsync();
+            await this.TakeSnapshotAsync();
 
             this.subscriptionSecurity.Setup(_ => _.IsUpdateAllowedAsync(UserId, SubscriptionId)).ReturnsAsync(false);
 
@@ -30,7 +29,7 @@ namespace Fifthweek.Api.Subscriptions.Tests.Commands
             {
             }
 
-            await this.databaseState.AssertNoSideEffectsAsync();
+            await this.AssertNoSideEffectsAsync();
         }
 
 //        [TestMethod]
@@ -40,19 +39,17 @@ namespace Fifthweek.Api.Subscriptions.Tests.Commands
 //        }
 
         [TestInitialize]
-        public void Initialize()
+        public override void Initialize()
         {
-            this.temporaryDatabase = TemporaryDatabase.CreateNew();
-            this.databaseState = new DatabaseState(temporaryDatabase);
-            this.fifthweekDbContext = this.temporaryDatabase.NewDbContext();
+            base.Initialize();
             this.subscriptionSecurity = new Mock<ISubscriptionSecurity>();
-            this.target = new SetMandatorySubscriptionFieldsCommandHandler(this.fifthweekDbContext, this.subscriptionSecurity.Object);
+            this.target = new SetMandatorySubscriptionFieldsCommandHandler(this.NewDbContext(), this.subscriptionSecurity.Object);
         }
 
         [TestCleanup]
-        public void Cleanup()
+        public override void Cleanup()
         {
-            this.temporaryDatabase.Dispose();
+            base.Cleanup();
         }
 
         private static readonly UserId UserId = new UserId(Guid.NewGuid());
@@ -61,9 +58,6 @@ namespace Fifthweek.Api.Subscriptions.Tests.Commands
         private static readonly Tagline Tagline = Tagline.Parse("Web Comics and More");
         private static readonly ChannelPriceInUsCentsPerWeek BasePrice = ChannelPriceInUsCentsPerWeek.Parse(10);
         private static readonly SetMandatorySubscriptionFieldsCommand Command = new SetMandatorySubscriptionFieldsCommand(UserId, SubscriptionId, SubscriptionName, Tagline, BasePrice);
-        private TemporaryDatabase temporaryDatabase;
-        private DatabaseState databaseState;
-        private IFifthweekDbContext fifthweekDbContext;
         private Mock<ISubscriptionSecurity> subscriptionSecurity;
         private SetMandatorySubscriptionFieldsCommandHandler target;
     }
