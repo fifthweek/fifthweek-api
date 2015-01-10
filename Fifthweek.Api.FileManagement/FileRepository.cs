@@ -87,7 +87,7 @@
 
             if (!fileBelongsToUser)
             {
-                throw new SecurityException("The file doesn't belong to the user");
+                throw new SecurityException("The user " + userId.Value + " does not have permission to access file " + fileId.Value);
             }
         }
 
