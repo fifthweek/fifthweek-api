@@ -11,8 +11,10 @@
 
         public FileId FileId { get; private set; }
 
+        [Optional]
         public string FilePath { get; private set; }
 
+        [Optional]
         public string Purpose { get; private set; }
     }
 }

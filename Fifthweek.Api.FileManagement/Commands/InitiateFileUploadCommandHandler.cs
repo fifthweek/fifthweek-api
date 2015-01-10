@@ -27,6 +27,18 @@
             {
                 fileNameWithoutExtension = System.IO.Path.GetFileNameWithoutExtension(command.FilePath);
                 fileExtension = System.IO.Path.GetExtension(command.FilePath);
+
+                if (!string.IsNullOrEmpty(fileExtension) && fileExtension[0] == '.')
+                {
+                    fileExtension = fileExtension.Substring(1);
+                }
+
+                // If it's a hidden file in linux, windows treats it as a file with no name.
+                if (string.IsNullOrEmpty(fileNameWithoutExtension) && !string.IsNullOrEmpty(fileExtension))
+                {
+                    fileNameWithoutExtension = fileExtension;
+                    fileExtension = string.Empty;
+                }
             }
 
             await this.fileRepository.AddNewFileAsync(

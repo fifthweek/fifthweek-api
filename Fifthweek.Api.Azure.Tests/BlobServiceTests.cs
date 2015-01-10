@@ -28,7 +28,7 @@ namespace Fifthweek.Api.Azure.Tests
         }
 
         [TestMethod]
-        public async Task WhenRequestingBlobSasUri_ItShouldReturnTheCorrectUri()
+        public async Task WhenRequestingBlobSasUriForWriting_ItShouldReturnTheCorrectUri()
         {
             var containerName = "testContainer";
             var blobName = "testBlob";
@@ -61,6 +61,66 @@ namespace Fifthweek.Api.Azure.Tests
             Assert.IsTrue(expiry < DateTime.UtcNow.AddDays(1));
 
             Assert.AreEqual(result, uri + token);
+        }
+
+        [TestMethod]
+        public async Task WhenRequestingBlobSasUriForReading_ItShouldReturnTheCorrectUri()
+        {
+            var containerName = "testContainer";
+            var blobName = "testBlob";
+            var uri = "http://uri/";
+            var token = "token";
+
+            this.cloudStorageAccount.Setup(v => v.CreateCloudBlobClient()).Returns(this.cloudBlobClient.Object).Verifiable();
+            this.cloudBlobClient.Setup(v => v.GetContainerReference(containerName)).Returns(this.cloudBlobContainer.Object).Verifiable();
+            this.cloudBlobContainer.Setup(v => v.GetBlockBlobReference(blobName)).Returns(this.cloudBlockBlob.Object).Verifiable();
+
+            this.cloudBlockBlob.Setup(v => v.Uri).Returns(new Uri(uri)).Verifiable();
+            SharedAccessBlobPolicy submittedPolicy = null;
+            this.cloudBlockBlob.Setup(v => v.GetSharedAccessSignature(It.IsAny<SharedAccessBlobPolicy>()))
+                .Callback<SharedAccessBlobPolicy>(v => submittedPolicy = v).Returns(token).Verifiable();
+
+            var result = await this.blobService.GetBlobSasUriForReadingAsync(containerName, blobName);
+
+            this.cloudStorageAccount.Verify();
+            this.cloudBlobClient.Verify();
+            this.cloudBlobContainer.Verify();
+            this.cloudBlockBlob.Verify();
+
+            Assert.IsNotNull(submittedPolicy);
+            Assert.AreEqual(SharedAccessBlobPermissions.Read, submittedPolicy.Permissions);
+            Assert.AreEqual(null, submittedPolicy.SharedAccessStartTime);
+            Assert.IsTrue(submittedPolicy.SharedAccessExpiryTime.HasValue);
+            var expiry = submittedPolicy.SharedAccessExpiryTime.Value;
+            Assert.IsTrue(expiry.Offset.Ticks == 0);
+            Assert.IsTrue(expiry > DateTime.UtcNow.AddMinutes(15));
+            Assert.IsTrue(expiry < DateTime.UtcNow.AddDays(1));
+
+            Assert.AreEqual(result, uri + token);
+        }
+
+        [TestMethod]
+        public async Task WhenRequestingBlobProperties_ItShouldFetchAttributesFromAzure()
+        {
+            var containerName = "testContainer";
+            var blobName = "testBlob";
+
+            this.cloudStorageAccount.Setup(v => v.CreateCloudBlobClient()).Returns(this.cloudBlobClient.Object).Verifiable();
+            this.cloudBlobClient.Setup(v => v.GetContainerReference(containerName)).Returns(this.cloudBlobContainer.Object).Verifiable();
+            this.cloudBlobContainer.Setup(v => v.GetBlockBlobReference(blobName)).Returns(this.cloudBlockBlob.Object).Verifiable();
+
+            var properties = new Mock<IBlobProperties>();
+            this.cloudBlockBlob.Setup(v => v.FetchAttributesAsync()).Returns(Task.FromResult(0)).Verifiable();
+            this.cloudBlockBlob.Setup(v => v.Properties).Returns(properties.Object).Verifiable();
+
+            var result = await this.blobService.GetBlobPropertiesAsync(containerName, blobName);
+
+            this.cloudStorageAccount.Verify();
+            this.cloudBlobClient.Verify();
+            this.cloudBlobContainer.Verify();
+            this.cloudBlockBlob.Verify();
+
+            Assert.AreSame(properties.Object, result);
         }
 
         [TestInitialize]

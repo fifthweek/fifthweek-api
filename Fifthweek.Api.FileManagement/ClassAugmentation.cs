@@ -86,16 +86,6 @@ namespace Fifthweek.Api.FileManagement.Commands
                 throw new ArgumentNullException("fileId");
             }
 
-            if (filePath == null)
-            {
-                throw new ArgumentNullException("filePath");
-            }
-
-            if (purpose == null)
-            {
-                throw new ArgumentNullException("purpose");
-            }
-
             this.Requester = requester;
             this.FileId = fileId;
             this.FilePath = filePath;
