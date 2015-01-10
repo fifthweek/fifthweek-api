@@ -1,58 +1,52 @@
 ﻿using System;
 using System.Linq;
-using System.Threading.Tasks;
 using Fifthweek.Api.Core;
 
 namespace Fifthweek.Api.Persistence.Tests.Shared
 {
     [AutoConstructor]
-    public partial class DatabaseSeed
+    public partial class TemporaryDatabaseSeed
     {
         private const int Users = 10;
         private const int Creators = 5;
         private const int SubscriptionsPerCreator = 1; // That's all our interface supports for now!
         private const int ChannelsPerSubscription = 3;
 
-        private readonly TemporaryDatabase database;
-        
-        private Random random = new Random();
+        private static readonly Random Random = new Random();
 
-        public async Task PopulateWithDummyEntitiesAsync()
+        private readonly IFifthweekDbContext dbContext;
+
+        public void PopulateWithDummyEntities()
         {
-            using (var dbContext = database.NewDbContext())
-            {
-                PopulateUsers(dbContext);
-                PopulateSubscriptions(dbContext);
-                PopulateChannels(dbContext);
-
-                await dbContext.SaveChangesAsync();
-            }
+            PopulateUsers();
+            PopulateSubscriptions();
+            PopulateChannels();
         }
 
-        private void PopulateUsers(IFifthweekDbContext dbContext)
+        private void PopulateUsers()
         {
             for (var i = 0; i < Users; i++)
             {
-                dbContext.Users.Add(UserTests.UniqueEntity(this.random));
+                this.dbContext.Users.Add(UserTests.UniqueEntity(Random));
             }
         }
 
-        private void PopulateSubscriptions(IFifthweekDbContext dbContext)
+        private void PopulateSubscriptions()
         {
             for (var creatorIndex = 0; creatorIndex < Creators; creatorIndex++)
             {
                 var creator = dbContext.Users.Local[creatorIndex];
                 for (var subscriptionIndex = 0; subscriptionIndex < SubscriptionsPerCreator; subscriptionIndex++)
                 {
-                    var subscription = SubscriptionTests.UniqueEntity(this.random);
+                    var subscription = SubscriptionTests.UniqueEntity(Random);
                     subscription.Creator = creator;
                     subscription.CreatorId = creator.Id;
-                    dbContext.Subscriptions.Add(subscription);
+                    this.dbContext.Subscriptions.Add(subscription);
                 }
             }
         }
 
-        private void PopulateChannels(IFifthweekDbContext dbContext)
+        private void PopulateChannels()
         {
             for (var creatorIndex = 0; creatorIndex < Creators; creatorIndex++)
             {
@@ -62,21 +56,13 @@ namespace Fifthweek.Api.Persistence.Tests.Shared
                     var subscription = dbContext.Subscriptions.Local.Single(_ => _.Creator == creator);
                     for (var channelIndex = 0; channelIndex < ChannelsPerSubscription; channelIndex++)
                     {
-                        var channel = ChannelTests.UniqueEntity(this.random);
+                        var channel = ChannelTests.UniqueEntity(Random);
                         channel.Subscription = subscription;
                         channel.SubscriptionId = subscription.Id;
-                        dbContext.Channels.Add(channel);
+                        this.dbContext.Channels.Add(channel);
                     }
                 }
             }
-        }
-    }
-
-    public static class DatabaseSeedExtensions
-    {
-        public static Task PopulateWithDummyEntitiesAsync(this TemporaryDatabase database)
-        {
-            return new DatabaseSeed(database).PopulateWithDummyEntitiesAsync();
         }
     }
 }

@@ -1,11 +1,13 @@
 ﻿using System.Collections.Generic;
-using System.Threading;
 using System.Threading.Tasks;
 
 namespace Fifthweek.Api.Persistence.Tests.Shared
 {
     public abstract class PersistenceTestsBase
     {
+        private TemporaryDatabase temporaryDatabase;
+        private DatabaseState databaseState;
+
         public virtual void Initialize()
         {
             this.temporaryDatabase = TemporaryDatabase.CreateNew();
@@ -20,11 +22,6 @@ namespace Fifthweek.Api.Persistence.Tests.Shared
         protected IFifthweekDbContext NewDbContext()
         {
             return this.temporaryDatabase.NewDbContext();
-        }
-
-        protected Task PopulateWithDummyEntitiesAsync()
-        {
-            return this.temporaryDatabase.PopulateWithDummyEntitiesAsync();
         }
 
         protected Task TakeSnapshotAsync()
@@ -44,8 +41,5 @@ namespace Fifthweek.Api.Persistence.Tests.Shared
         {
             return this.databaseState.AssertNoUnexpectedSideEffectsAsync(expectedInserts, expectedUpdates, expectedDeletions);
         }
-
-        private TemporaryDatabase temporaryDatabase;
-        private DatabaseState databaseState;
     }
 }

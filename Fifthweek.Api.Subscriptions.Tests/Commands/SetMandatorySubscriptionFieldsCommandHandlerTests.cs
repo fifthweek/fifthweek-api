@@ -15,7 +15,6 @@ namespace Fifthweek.Api.Subscriptions.Tests.Commands
         [TestMethod]
         public async Task WhenNotAllowedToUpdate_ItShouldNotMakeChangesAndShouldThrowException()
         {
-            await this.PopulateWithDummyEntitiesAsync();
             await this.TakeSnapshotAsync();
 
             this.subscriptionSecurity.Setup(_ => _.IsUpdateAllowedAsync(UserId, SubscriptionId)).ReturnsAsync(false);

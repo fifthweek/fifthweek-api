@@ -44,12 +44,14 @@ namespace Fifthweek.Api.Persistence.Tests.Shared
 
         public static TemporaryDatabase CreateNew()
         {
+            Action<FifthweekDbContext> databaseSeed = context => new TemporaryDatabaseSeed(context).PopulateWithDummyEntities();
             var connectionString = NewUniqueLocalDbConnectionString();
-
-            var migrationConfiguration = new Configuration
+            
+            var migrationConfiguration = new Configuration(databaseSeed)
             {
                 TargetDatabase = new DbConnectionInfo(connectionString, "System.Data.SqlClient")
             };
+
             new DbMigrator(migrationConfiguration).Update();
             
             using (var db = new FifthweekDbContext(connectionString))

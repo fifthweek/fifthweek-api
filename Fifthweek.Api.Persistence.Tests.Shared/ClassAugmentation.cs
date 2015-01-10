@@ -16,6 +16,9 @@ namespace Fifthweek.Api.Persistence.Tests.Shared
 	using Fifthweek.Api.Persistence.Identity;
 	using Fifthweek.Api.Persistence.Migrations;
 	using System.Threading.Tasks;
+	using System.Collections.Generic;
+	using System.Data.Entity;
+	using Microsoft.VisualStudio.TestTools.UnitTesting;
 	public partial class TemporaryDatabase 
 	{
         public TemporaryDatabase(
@@ -63,20 +66,28 @@ namespace Fifthweek.Api.Persistence.Tests.Shared
 namespace Fifthweek.Api.Persistence.Tests.Shared
 {
 	using System;
+	using System.Data.Entity.Infrastructure;
+	using System.Data.Entity.Migrations;
+	using System.Diagnostics;
 	using System.Linq;
-	using System.Threading.Tasks;
 	using Fifthweek.Api.Core;
-	public partial class DatabaseSeed 
+	using Fifthweek.Api.Persistence.Identity;
+	using Fifthweek.Api.Persistence.Migrations;
+	using System.Threading.Tasks;
+	using System.Collections.Generic;
+	using System.Data.Entity;
+	using Microsoft.VisualStudio.TestTools.UnitTesting;
+	public partial class TemporaryDatabaseSeed 
 	{
-        public DatabaseSeed(
-            Fifthweek.Api.Persistence.Tests.Shared.TemporaryDatabase database)
+        public TemporaryDatabaseSeed(
+            Fifthweek.Api.Persistence.IFifthweekDbContext dbContext)
         {
-            if (database == null)
+            if (dbContext == null)
             {
-                throw new ArgumentNullException("database");
+                throw new ArgumentNullException("dbContext");
             }
 
-            this.database = database;
+            this.dbContext = dbContext;
         }
 	}
 

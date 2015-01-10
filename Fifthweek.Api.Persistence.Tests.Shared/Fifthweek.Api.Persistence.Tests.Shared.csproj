@@ -73,7 +73,7 @@
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
     </Compile>
-    <Compile Include="DatabaseSeed.cs" />
+    <Compile Include="TemporaryDatabaseSeed.cs" />
     <Compile Include="DatabaseState.cs" />
     <Compile Include="ChannelTests.cs" />
     <Compile Include="PersistenceTestsBase.cs" />

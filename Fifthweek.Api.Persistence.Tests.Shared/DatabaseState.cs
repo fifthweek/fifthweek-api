@@ -71,14 +71,12 @@ namespace Fifthweek.Api.Persistence.Tests.Shared
             foreach (var databaseEntity in database)
             {
                 var snapshotEntity = snapshot.FirstOrDefault(_ => _.IdentityEquals(databaseEntity));
-                if (snapshotEntity != null)
+                if (snapshotEntity == null)
                 {
-                    if (!snapshotEntity.Equals(databaseEntity))
-                    {
-                        Assert.IsTrue(expectedInserts.Contains(databaseEntity), "Unexpected insert");
-                    }
+                    Assert.IsTrue(expectedInserts.Contains(databaseEntity), "Unexpected insert");
+                    
                 }
-                else
+                else if (!snapshotEntity.Equals(databaseEntity))
                 {
                     Assert.IsTrue(expectedUpdates.Contains(databaseEntity), "Unexpected update");
                 }
