@@ -73,6 +73,8 @@
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
     </Compile>
+    <Compile Include="ExpectedSideEffects.cs" />
+    <Compile Include="TableBeforeAndAfter.cs" />
     <Compile Include="TemporaryDatabaseSeed.cs" />
     <Compile Include="DatabaseState.cs" />
     <Compile Include="ChannelTests.cs" />

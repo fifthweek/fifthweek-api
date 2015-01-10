@@ -6,10 +6,10 @@ using System.Linq;
 namespace Fifthweek.Api.Persistence.Tests.Shared
 {
 	using System;
+	using System.Linq;
 	using System.Data.Entity.Infrastructure;
 	using System.Data.Entity.Migrations;
 	using System.Diagnostics;
-	using System.Linq;
 	using Fifthweek.Api.Core;
 	using Fifthweek.Api.Persistence.Identity;
 	using Fifthweek.Api.Persistence.Migrations;
@@ -35,10 +35,10 @@ namespace Fifthweek.Api.Persistence.Tests.Shared
 namespace Fifthweek.Api.Persistence.Tests.Shared
 {
 	using System;
+	using System.Linq;
 	using System.Data.Entity.Infrastructure;
 	using System.Data.Entity.Migrations;
 	using System.Diagnostics;
-	using System.Linq;
 	using Fifthweek.Api.Core;
 	using Fifthweek.Api.Persistence.Identity;
 	using Fifthweek.Api.Persistence.Migrations;
@@ -49,14 +49,14 @@ namespace Fifthweek.Api.Persistence.Tests.Shared
 	public partial class DatabaseState 
 	{
         public DatabaseState(
-            Fifthweek.Api.Persistence.Tests.Shared.TemporaryDatabase database)
+            Fifthweek.Api.Persistence.Tests.Shared.TemporaryDatabase temporaryDatabase)
         {
-            if (database == null)
+            if (temporaryDatabase == null)
             {
-                throw new ArgumentNullException("database");
+                throw new ArgumentNullException("temporaryDatabase");
             }
 
-            this.database = database;
+            this.temporaryDatabase = temporaryDatabase;
         }
 	}
 
@@ -64,10 +64,10 @@ namespace Fifthweek.Api.Persistence.Tests.Shared
 namespace Fifthweek.Api.Persistence.Tests.Shared
 {
 	using System;
+	using System.Linq;
 	using System.Data.Entity.Infrastructure;
 	using System.Data.Entity.Migrations;
 	using System.Diagnostics;
-	using System.Linq;
 	using Fifthweek.Api.Core;
 	using Fifthweek.Api.Persistence.Identity;
 	using Fifthweek.Api.Persistence.Migrations;
@@ -86,6 +86,36 @@ namespace Fifthweek.Api.Persistence.Tests.Shared
             }
 
             this.dbContext = dbContext;
+        }
+	}
+
+}
+namespace Fifthweek.Api.Persistence.Tests.Shared
+{
+	using System.Collections.Generic;
+	using System.Data.Entity;
+	using System.Linq;
+	using System.Threading.Tasks;
+	using Fifthweek.Api.Core;
+	using Microsoft.VisualStudio.TestTools.UnitTesting;
+	public partial class TableBeforeAndAfter 
+	{
+        public TableBeforeAndAfter(
+            System.Collections.Generic.IReadOnlyList<Fifthweek.Api.Persistence.IIdentityEquatable> snapshot, 
+            System.Collections.Generic.IReadOnlyList<Fifthweek.Api.Persistence.IIdentityEquatable> database)
+        {
+            if (snapshot == null)
+            {
+                throw new ArgumentNullException("snapshot");
+            }
+
+            if (database == null)
+            {
+                throw new ArgumentNullException("database");
+            }
+
+            this.Snapshot = snapshot;
+            this.Database = database;
         }
 	}
 

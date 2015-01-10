@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 
 namespace Fifthweek.Api.Persistence.Tests.Shared
 {
@@ -24,22 +23,14 @@ namespace Fifthweek.Api.Persistence.Tests.Shared
             return this.temporaryDatabase.NewDbContext();
         }
 
-        protected Task TakeSnapshotAsync()
+        protected Task SnapshotDatabaseAsync()
         {
             return this.databaseState.TakeSnapshotAsync();
         }
 
-        protected Task AssertNoSideEffectsAsync()
+        protected Task AssertDatabaseAsync(ExpectedSideEffects sideEffects)
         {
-            return this.databaseState.AssertNoSideEffectsAsync();
-        }
-
-        protected Task AssertNoUnexpectedSideEffectsAsync(
-            IReadOnlyList<object> expectedInserts,
-            IReadOnlyList<object> expectedUpdates,
-            IReadOnlyList<object> expectedDeletions)
-        {
-            return this.databaseState.AssertNoUnexpectedSideEffectsAsync(expectedInserts, expectedUpdates, expectedDeletions);
+            return this.databaseState.AssertSideEffectsAsync(sideEffects);
         }
     }
 }

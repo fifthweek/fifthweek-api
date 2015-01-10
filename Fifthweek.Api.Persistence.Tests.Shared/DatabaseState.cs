@@ -10,83 +10,116 @@ namespace Fifthweek.Api.Persistence.Tests.Shared
     [AutoConstructor]
     public partial class DatabaseState
     {
-        private readonly TemporaryDatabase database;
+        private readonly TemporaryDatabase temporaryDatabase;
 
-        private IFifthweekDbContext snapshot; // 'Local' properties on each DbSet will represent snapshot state.
+        private IFifthweekDbContext loadedSnapshotContext; // 'Local' properties on each DbSet will represent Snapshot state.
 
         public async Task TakeSnapshotAsync()
         {
-            this.snapshot = this.database.NewDbContext();
-            await this.snapshot.Users.LoadAsync();
-            await this.snapshot.Subscriptions.LoadAsync();
-            await this.snapshot.Channels.LoadAsync();
+            this.loadedSnapshotContext = this.temporaryDatabase.NewDbContext();
+            await this.loadedSnapshotContext.Users.LoadAsync();
+            await this.loadedSnapshotContext.Subscriptions.LoadAsync();
+            await this.loadedSnapshotContext.Channels.LoadAsync();
         }
 
-        public Task AssertNoSideEffectsAsync()
+        public async Task AssertSideEffectsAsync(ExpectedSideEffects sideEffects)
         {
-            var noDelta = new object[0];
-            return this.AssertNoUnexpectedSideEffectsAsync(noDelta, noDelta, noDelta);
-        }
-
-        public async Task AssertNoUnexpectedSideEffectsAsync(
-            IReadOnlyList<object> expectedInserts,
-            IReadOnlyList<object> expectedUpdates,
-            IReadOnlyList<object> expectedDeletions)
-        {
-            using (var dbContext = this.database.NewDbContext())
+            var tables = new List<TableBeforeAndAfter>();
+            using (var dbContext = this.temporaryDatabase.NewDbContext())
             {
-                await AssertNoUnexpectedSideEffectsAsync(this.snapshot.Users, dbContext.Users, expectedInserts, expectedUpdates, expectedDeletions);
-                await AssertNoUnexpectedSideEffectsAsync(this.snapshot.Subscriptions, dbContext.Subscriptions, expectedInserts, expectedUpdates, expectedDeletions);
-                await AssertNoUnexpectedSideEffectsAsync(this.snapshot.Channels, dbContext.Channels, expectedInserts, expectedUpdates, expectedDeletions);
+                tables.Add(await TableBeforeAndAfter.GenerateAsync(this.loadedSnapshotContext.Users, dbContext.Users));
+                tables.Add(await TableBeforeAndAfter.GenerateAsync(this.loadedSnapshotContext.Subscriptions, dbContext.Subscriptions));
+                tables.Add(await TableBeforeAndAfter.GenerateAsync(this.loadedSnapshotContext.Channels, dbContext.Channels));
             }
+
+            var snapshot = tables.SelectMany(_ => _.Snapshot).ToList();
+            var database = tables.SelectMany(_ => _.Database).ToList();
+
+            this.AssertNoUnexpectedSideEffects(snapshot, database, sideEffects);
+            this.AssertExpectedSideEffects(snapshot, database, sideEffects);
         }
 
-        private async Task AssertNoUnexpectedSideEffectsAsync<T>(
-            IDbSet<T> snapshot, IDbSet<T> database,
-            IReadOnlyList<object> expectedInserts,
-            IReadOnlyList<object> expectedUpdates,
-            IReadOnlyList<object> expectedDeletions)
-            where T : class
-        {
-            var databaseList = await database.ToListAsync();
-            var snapshotList = snapshot.Local.ToList();
-
-            Assert.IsTrue(databaseList.All(_ => _ is IIdentityEquatable), "Entities must implement IIdentityEquatable");
-            Assert.IsTrue(snapshotList.All(_ => _ is IIdentityEquatable), "Entities must implement IIdentityEquatable");
-
-            await this.AssertNoUnexpectedSideEffectsAsync(
-                snapshotList.OfType<IIdentityEquatable>().ToList(),
-                databaseList.OfType<IIdentityEquatable>().ToList(),
-                expectedInserts,
-                expectedUpdates,
-                expectedDeletions);
-        }
-
-        private async Task AssertNoUnexpectedSideEffectsAsync(
-            IReadOnlyList<IIdentityEquatable> snapshot, IReadOnlyList<IIdentityEquatable> database,
-            IReadOnlyList<object> expectedInserts,
-            IReadOnlyList<object> expectedUpdates,
-            IReadOnlyList<object> expectedDeletions)
+        private void AssertNoUnexpectedSideEffects(IReadOnlyCollection<IIdentityEquatable> snapshot, IReadOnlyCollection<IIdentityEquatable> database, ExpectedSideEffects sideEffects)
         {
             foreach (var databaseEntity in database)
             {
+                if (sideEffects.ExcludedFromTest != null && sideEffects.ExcludedFromTest(databaseEntity))
+                {
+                    continue;
+                }
+
                 var snapshotEntity = snapshot.FirstOrDefault(_ => _.IdentityEquals(databaseEntity));
                 if (snapshotEntity == null)
                 {
-                    Assert.IsTrue(expectedInserts.Contains(databaseEntity), "Unexpected insert");
-                    
+                    if (sideEffects.Inserts == null)
+                    {
+                        Assert.Fail("Unexpected insert");
+                    }
+                    else
+                    {
+                        Assert.IsTrue(sideEffects.Inserts.Contains(databaseEntity), "Unexpected insert");
+                    }
                 }
                 else if (!snapshotEntity.Equals(databaseEntity))
                 {
-                    Assert.IsTrue(expectedUpdates.Contains(databaseEntity), "Unexpected update");
+                    if (sideEffects.Updates == null)
+                    {
+                        Assert.Fail("Unexpected update");
+                    }
+                    else
+                    {
+                        Assert.IsTrue(sideEffects.Updates.Contains(databaseEntity), "Unexpected update");
+                    }
                 }
             }
 
             foreach (var snapshotEntity in snapshot)
             {
+                if (sideEffects.ExcludedFromTest != null && sideEffects.ExcludedFromTest(snapshotEntity))
+                {
+                    continue;
+                }
+
                 if (database.All(_ => !_.IdentityEquals(snapshotEntity)))
                 {
-                    Assert.IsTrue(expectedDeletions.Contains(snapshotEntity), "Unexpected delete");
+                    if (sideEffects.Deletes == null)
+                    {
+                        Assert.Fail("Unexpected delete");
+                    }
+                    else
+                    {
+                        Assert.IsTrue(sideEffects.Deletes.Contains(snapshotEntity), "Unexpected delete");
+                    }
+                }
+            }
+        }
+
+        private void AssertExpectedSideEffects(IReadOnlyCollection<IIdentityEquatable> snapshot, IReadOnlyCollection<IIdentityEquatable> database, ExpectedSideEffects sideEffects)
+        {
+            if (sideEffects.Inserts != null)
+            {
+                foreach (var insert in sideEffects.Inserts)
+                {
+                    Assert.IsTrue(database.Contains(insert));
+                    Assert.IsTrue(snapshot.All(_ => !_.IdentityEquals(insert)), "Cannot assert insert on entity that already exists in snapshot");
+                }
+            }
+
+            if (sideEffects.Updates != null)
+            {
+                foreach (var update in sideEffects.Updates)
+                {
+                    Assert.IsTrue(database.Contains(update));
+                    Assert.IsFalse(snapshot.Contains(update), "Cannot assert update on entity that has not changed since the snapshot");
+                    Assert.IsTrue(snapshot.Any(_ => _.IdentityEquals(update)), "Cannot assert update on entity that does not exist in snapshot");
+                }
+            }
+
+            if (sideEffects.Deletes != null)
+            {
+                foreach (var delete in sideEffects.Deletes)
+                {
+                    Assert.IsTrue(database.All(_ => !_.IdentityEquals(delete)));
                 }
             }
         }

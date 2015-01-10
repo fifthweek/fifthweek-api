@@ -13,59 +13,59 @@ namespace Fifthweek.Api.Subscriptions.Tests
         public async Task WhenAtLeastOneSubscriptionMatchesSubscriptionAndCreator_ItShouldAllowUpdate()
         {
             await this.CreateSubscriptionAsync(this.userId, this.subscriptionId);
-            await this.TakeSnapshotAsync();
+            await this.SnapshotDatabaseAsync();
 
             var result = await this.target.IsUpdateAllowedAsync(this.userId, this.subscriptionId);
 
             Assert.IsTrue(result);
-            await this.AssertNoSideEffectsAsync();
+            await this.AssertDatabaseAsync(ExpectedSideEffects.None);
         }
 
         [TestMethod]
         public async Task WhenNoSubscriptionsExist_ItShouldForbidUpdate()
         {
-            await this.TakeSnapshotAsync();
+            await this.SnapshotDatabaseAsync();
 
             var result = await this.target.IsUpdateAllowedAsync(this.userId, this.subscriptionId);
 
             Assert.IsFalse(result);
-            await this.AssertNoSideEffectsAsync();
+            await this.AssertDatabaseAsync(ExpectedSideEffects.None);
         }
 
         [TestMethod]
         public async Task WhenNoSubscriptionsMatchSubscriptionOrCreator_ItShouldForbidUpdate()
         {
             await this.CreateSubscriptionAsync(new UserId(Guid.NewGuid()), new SubscriptionId(Guid.NewGuid()));
-            await this.TakeSnapshotAsync();
+            await this.SnapshotDatabaseAsync();
 
             var result = await this.target.IsUpdateAllowedAsync(this.userId, this.subscriptionId);
 
             Assert.IsFalse(result);
-            await this.AssertNoSideEffectsAsync();
+            await this.AssertDatabaseAsync(ExpectedSideEffects.None);
         }
 
         [TestMethod]
         public async Task WhenNoSubscriptionsMatchSubscription_ItShouldForbidUpdate()
         {
             await this.CreateSubscriptionAsync(this.userId, new SubscriptionId(Guid.NewGuid()));
-            await this.TakeSnapshotAsync();
+            await this.SnapshotDatabaseAsync();
 
             var result = await this.target.IsUpdateAllowedAsync(this.userId, this.subscriptionId);
 
             Assert.IsFalse(result);
-            await this.AssertNoSideEffectsAsync();
+            await this.AssertDatabaseAsync(ExpectedSideEffects.None);
         }
 
         [TestMethod]
         public async Task WhenNoSubscriptionsMatchCreator_ItShouldForbidUpdate()
         {
             await this.CreateSubscriptionAsync(new UserId(Guid.NewGuid()), this.subscriptionId);
-            await this.TakeSnapshotAsync();
+            await this.SnapshotDatabaseAsync();
 
             var result = await this.target.IsUpdateAllowedAsync(this.userId, this.subscriptionId);
 
             Assert.IsFalse(result);
-            await this.AssertNoSideEffectsAsync();
+            await this.AssertDatabaseAsync(ExpectedSideEffects.None);
         }
 
         [TestInitialize]

@@ -1,7 +1,11 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Data.Entity;
+using System.Linq;
 using System.Threading.Tasks;
 using Fifthweek.Api.Core;
 using Fifthweek.Api.Identity.Membership;
+using Fifthweek.Api.Persistence;
 using Fifthweek.Api.Persistence.Tests.Shared;
 using Fifthweek.Api.Subscriptions.Commands;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -13,11 +17,11 @@ namespace Fifthweek.Api.Subscriptions.Tests.Commands
     public class SetMandatorySubscriptionFieldsCommandHandlerTests : PersistenceTestsBase
     {
         [TestMethod]
-        public async Task WhenNotAllowedToUpdate_ItShouldHaveNoEffectAndThrowException()
+        public async Task WhenNotAllowedToUpdate_ItShouldReportAnError()
         {
-            await this.TakeSnapshotAsync();
-
             this.subscriptionSecurity.Setup(_ => _.IsUpdateAllowedAsync(UserId, SubscriptionId)).ReturnsAsync(false);
+
+            await this.SnapshotDatabaseAsync();
 
             try
             {
@@ -28,28 +32,64 @@ namespace Fifthweek.Api.Subscriptions.Tests.Commands
             {
             }
 
-            await this.AssertNoSideEffectsAsync();
+            await this.AssertDatabaseAsync(ExpectedSideEffects.None);
         }
 
         [TestMethod]
         public async Task WhenReRun_ItShouldHaveNoEffect()
         {
-            await this.CreateSubscriptionAsync(UserId, SubscriptionId);
-
             this.subscriptionSecurity.Setup(_ => _.IsUpdateAllowedAsync(UserId, SubscriptionId)).ReturnsAsync(true);
-            
+
+            await this.CreateSubscriptionAsync(UserId, SubscriptionId);
             await this.target.HandleAsync(Command);
-            await this.TakeSnapshotAsync();
+            await this.SnapshotDatabaseAsync();
 
             await this.target.HandleAsync(Command);
-            await this.AssertNoSideEffectsAsync();
+            await this.AssertDatabaseAsync(ExpectedSideEffects.None);
         }
 
+        [TestMethod]
+        public async Task ItShouldUpdateSubscription()
+        {
+            this.subscriptionSecurity.Setup(_ => _.IsUpdateAllowedAsync(UserId, SubscriptionId)).ReturnsAsync(true);
+
+            var subscription = await this.CreateSubscriptionAsync(UserId, SubscriptionId);
+            await this.SnapshotDatabaseAsync();
+
+            await this.target.HandleAsync(Command);
+
+            subscription.Tagline = Tagline.Value;
+            subscription.Name = SubscriptionName.Value;
+
+            await this.AssertDatabaseAsync(new ExpectedSideEffects
+            {
+                Update = subscription, 
+                ExcludedFromTest = entity => entity is Channel
+            });
+        }
 
 //        [TestMethod]
-//        public async Task DoesNotAffectOtherEntities()
+//        public async Task ItShouldCreateTheDefaultChannel()
 //        {
+//            this.subscriptionSecurity.Setup(_ => _.IsUpdateAllowedAsync(UserId, SubscriptionId)).ReturnsAsync(true);
 //
+//            await this.CreateSubscriptionAsync(UserId, SubscriptionId);
+//            await this.SnapshotDatabaseAsync();
+//
+//            await this.target.HandleAsync(Command);
+//
+//            var channel = new Channel(
+//                SubscriptionId.Value, // The default channel uses the subscription ID.
+//                SubscriptionId.Value,
+//                null,
+//                BasePrice.Value,
+//                WeNeedAPredicateForThis!!!);
+//
+//            await this.AssertDatabaseAsync(new ExpectedSideEffects
+//            {
+//                Update = channel,
+//                ExcludedFromTest = entity => entity is Subscription
+//            });
 //        }
 
         [TestInitialize]
@@ -66,7 +106,7 @@ namespace Fifthweek.Api.Subscriptions.Tests.Commands
             base.Cleanup();
         }
 
-        private async Task CreateSubscriptionAsync(UserId newUserId, SubscriptionId newSubscriptionId)
+        private async Task<Subscription> CreateSubscriptionAsync(UserId newUserId, SubscriptionId newSubscriptionId)
         {
             var random = new Random();
             var creator = UserTests.UniqueEntity(random);
@@ -81,6 +121,12 @@ namespace Fifthweek.Api.Subscriptions.Tests.Commands
             {
                 dbContext.Subscriptions.Add(subscription);
                 await dbContext.SaveChangesAsync();
+            }
+
+            using (var dbContext = this.NewDbContext())
+            {
+                // Re-fetch from database to solve clipping (e.g. DateTime).
+                return await dbContext.Subscriptions.FirstAsync(_ => _.Id == subscription.Id);
             }
         }
 

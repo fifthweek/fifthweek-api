@@ -12,11 +12,10 @@ namespace Fifthweek.Api.Persistence
         {
         }
 
-        [Key]
-        [Required]
+        [Required, Key]
         public Guid Id { get; set; }
 
-        [Required, Optional]
+        [Required, Optional, NonEquatable]
         public FifthweekUser Creator { get; set; }
 
         public Guid CreatorId { get; set; }

@@ -7,6 +7,7 @@
 <#@ import namespace="System.Collections.Generic" #>
 <#
 	var AutoEqualityMembersAttributeName = "AutoEqualityMembers";
+	var NonEquatableAttributeName = "NonEquatable";
 
     foreach(UnifiedClass unifiedClass in allClasses)
     {
@@ -16,7 +17,7 @@
             continue;
         }
 
-        var publicProperties = unifiedClass.GetAllPublicGetters();
+        var publicProperties = unifiedClass.GetAllPublicGetters().Where(p => p.Attributes.OfType<CodeAttribute>().All(_ => !_.Name.StartsWith(NonEquatableAttributeName))).ToList();
         if (publicProperties.Count == 0)
         {
             continue;
