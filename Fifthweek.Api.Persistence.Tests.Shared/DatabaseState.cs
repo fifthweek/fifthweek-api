@@ -57,7 +57,7 @@ namespace Fifthweek.Api.Persistence.Tests.Shared
                     }
                     else
                     {
-                        Assert.IsTrue(sideEffects.Inserts.Contains(databaseEntity), "Unexpected insert");
+                        Assert.IsTrue(sideEffects.Inserts.Any(_ => AreEntitiesEqual(_, databaseEntity)), "Unexpected insert");
                     }
                 }
                 else if (!snapshotEntity.Equals(databaseEntity))
@@ -68,7 +68,7 @@ namespace Fifthweek.Api.Persistence.Tests.Shared
                     }
                     else
                     {
-                        Assert.IsTrue(sideEffects.Updates.Contains(databaseEntity), "Unexpected update");
+                        Assert.IsTrue(sideEffects.Updates.Any(_ => AreEntitiesEqual(_, databaseEntity)), "Unexpected update");
                     }
                 }
             }
@@ -88,7 +88,7 @@ namespace Fifthweek.Api.Persistence.Tests.Shared
                     }
                     else
                     {
-                        Assert.IsTrue(sideEffects.Deletes.Contains(snapshotEntity), "Unexpected delete");
+                        Assert.IsTrue(sideEffects.Deletes.Any(_ => AreEntitiesEqual(_, snapshotEntity)), "Unexpected delete");
                     }
                 }
             }
@@ -100,7 +100,7 @@ namespace Fifthweek.Api.Persistence.Tests.Shared
             {
                 foreach (var insert in sideEffects.Inserts)
                 {
-                    Assert.IsTrue(database.Contains(insert));
+                    Assert.IsTrue(database.Any(_ => AreEntitiesEqual(insert, _)));
                     Assert.IsTrue(snapshot.All(_ => !_.IdentityEquals(insert)), "Cannot assert insert on entity that already exists in snapshot");
                 }
             }
@@ -109,8 +109,8 @@ namespace Fifthweek.Api.Persistence.Tests.Shared
             {
                 foreach (var update in sideEffects.Updates)
                 {
-                    Assert.IsTrue(database.Contains(update));
-                    Assert.IsFalse(snapshot.Contains(update), "Cannot assert update on entity that has not changed since the snapshot");
+                    Assert.IsTrue(database.Any(_ => AreEntitiesEqual(update, _)));
+                    Assert.IsTrue(snapshot.All(_ => !AreEntitiesEqual(update, _)), "Cannot assert update on entity that has not changed since the snapshot");
                     Assert.IsTrue(snapshot.Any(_ => _.IdentityEquals(update)), "Cannot assert update on entity that does not exist in snapshot");
                 }
             }
@@ -122,6 +122,17 @@ namespace Fifthweek.Api.Persistence.Tests.Shared
                     Assert.IsTrue(database.All(_ => !_.IdentityEquals(delete)));
                 }
             }
+        }
+
+        private bool AreEntitiesEqual(object possibleWildcard, object standardEntity)
+        {
+            var wildcardEntity = possibleWildcard as IWildcardEntity;
+            if (wildcardEntity != null)
+            {
+                return wildcardEntity.WildcardEquals(standardEntity);
+            }
+
+            return Equals(possibleWildcard, standardEntity);
         }
     }
 }

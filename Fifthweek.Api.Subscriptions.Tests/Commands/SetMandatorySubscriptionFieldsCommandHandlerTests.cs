@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Data.Entity;
-using System.Linq;
 using System.Threading.Tasks;
 using Fifthweek.Api.Core;
 using Fifthweek.Api.Identity.Membership;
@@ -39,12 +37,13 @@ namespace Fifthweek.Api.Subscriptions.Tests.Commands
         public async Task WhenReRun_ItShouldHaveNoEffect()
         {
             this.subscriptionSecurity.Setup(_ => _.IsUpdateAllowedAsync(UserId, SubscriptionId)).ReturnsAsync(true);
-
             await this.CreateSubscriptionAsync(UserId, SubscriptionId);
             await this.target.HandleAsync(Command);
+
             await this.SnapshotDatabaseAsync();
 
             await this.target.HandleAsync(Command);
+
             await this.AssertDatabaseAsync(ExpectedSideEffects.None);
         }
 
@@ -52,8 +51,8 @@ namespace Fifthweek.Api.Subscriptions.Tests.Commands
         public async Task ItShouldUpdateSubscription()
         {
             this.subscriptionSecurity.Setup(_ => _.IsUpdateAllowedAsync(UserId, SubscriptionId)).ReturnsAsync(true);
-
             var subscription = await this.CreateSubscriptionAsync(UserId, SubscriptionId);
+
             await this.SnapshotDatabaseAsync();
 
             await this.target.HandleAsync(Command);
@@ -68,29 +67,36 @@ namespace Fifthweek.Api.Subscriptions.Tests.Commands
             });
         }
 
-//        [TestMethod]
-//        public async Task ItShouldCreateTheDefaultChannel()
-//        {
-//            this.subscriptionSecurity.Setup(_ => _.IsUpdateAllowedAsync(UserId, SubscriptionId)).ReturnsAsync(true);
-//
-//            await this.CreateSubscriptionAsync(UserId, SubscriptionId);
-//            await this.SnapshotDatabaseAsync();
-//
-//            await this.target.HandleAsync(Command);
-//
-//            var channel = new Channel(
-//                SubscriptionId.Value, // The default channel uses the subscription ID.
-//                SubscriptionId.Value,
-//                null,
-//                BasePrice.Value,
-//                WeNeedAPredicateForThis!!!);
-//
-//            await this.AssertDatabaseAsync(new ExpectedSideEffects
-//            {
-//                Update = channel,
-//                ExcludedFromTest = entity => entity is Subscription
-//            });
-//        }
+        [TestMethod]
+        public async Task ItShouldCreateTheDefaultChannel()
+        {
+            this.subscriptionSecurity.Setup(_ => _.IsUpdateAllowedAsync(UserId, SubscriptionId)).ReturnsAsync(true);
+            await this.CreateSubscriptionAsync(UserId, SubscriptionId);
+
+            await this.SnapshotDatabaseAsync();
+
+            await this.target.HandleAsync(Command);
+
+            var expectedChannel = new Channel(
+                SubscriptionId.Value, // The default channel uses the subscription ID.
+                SubscriptionId.Value,
+                null,
+                BasePrice.Value,
+                DateTime.MinValue);
+
+            await this.AssertDatabaseAsync(new ExpectedSideEffects
+            {
+                Insert = new WildcardEntity<Channel>(expectedChannel)
+                {
+                    AreEqual = actualChannel =>
+                    {
+                        expectedChannel.CreationDate = actualChannel.CreationDate; // Take wildcard properties from actual value.
+                        return Equals(expectedChannel, actualChannel);
+                    }
+                },
+                ExcludedFromTest = entity => entity is Subscription
+            });
+        }
 
         [TestInitialize]
         public override void Initialize()

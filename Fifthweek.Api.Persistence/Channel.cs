@@ -17,6 +17,7 @@ namespace Fifthweek.Api.Persistence
         [Required]
         public Guid SubscriptionId { get; set; }
 
+        [Optional, NonEquatable]
         public Subscription Subscription { get; set; }
 
         [Required]

@@ -8,6 +8,9 @@ namespace Fifthweek.Api.Persistence
 	using System;
 	using System.ComponentModel.DataAnnotations;
 	using Fifthweek.Api.Core;
+	using System.Linq;
+	using System.ComponentModel.DataAnnotations.Schema;
+	using Fifthweek.Api.Persistence.Identity;
 	public partial class Channel 
 	{
         public Channel(
@@ -25,11 +28,6 @@ namespace Fifthweek.Api.Persistence
             if (subscriptionId == null)
             {
                 throw new ArgumentNullException("subscriptionId");
-            }
-
-            if (subscription == null)
-            {
-                throw new ArgumentNullException("subscription");
             }
 
             if (priceInUsCentsPerWeek == null)
@@ -54,9 +52,10 @@ namespace Fifthweek.Api.Persistence
 namespace Fifthweek.Api.Persistence
 {
 	using System;
+	using System.Linq;
 	using System.ComponentModel.DataAnnotations;
-	using System.ComponentModel.DataAnnotations.Schema;
 	using Fifthweek.Api.Core;
+	using System.ComponentModel.DataAnnotations.Schema;
 	using Fifthweek.Api.Persistence.Identity;
 	public partial class File 
 	{
@@ -133,8 +132,10 @@ namespace Fifthweek.Api.Persistence
 namespace Fifthweek.Api.Persistence
 {
 	using System;
+	using System.Linq;
 	using System.ComponentModel.DataAnnotations;
 	using Fifthweek.Api.Core;
+	using System.ComponentModel.DataAnnotations.Schema;
 	using Fifthweek.Api.Persistence.Identity;
 	public partial class Subscription 
 	{
@@ -187,6 +188,9 @@ namespace Fifthweek.Api.Persistence
 	using System;
 	using System.ComponentModel.DataAnnotations;
 	using Fifthweek.Api.Core;
+	using System.Linq;
+	using System.ComponentModel.DataAnnotations.Schema;
+	using Fifthweek.Api.Persistence.Identity;
 	public partial class Channel 
 	{
         public override bool Equals(object obj)
@@ -216,7 +220,6 @@ namespace Fifthweek.Api.Persistence
                 int hashCode = 0;
                 hashCode = (hashCode * 397) ^ (this.Id != null ? this.Id.GetHashCode() : 0);
                 hashCode = (hashCode * 397) ^ (this.SubscriptionId != null ? this.SubscriptionId.GetHashCode() : 0);
-                hashCode = (hashCode * 397) ^ (this.Subscription != null ? this.Subscription.GetHashCode() : 0);
                 hashCode = (hashCode * 397) ^ (this.PriceInUsCentsPerWeek != null ? this.PriceInUsCentsPerWeek.GetHashCode() : 0);
                 hashCode = (hashCode * 397) ^ (this.CreationDate != null ? this.CreationDate.GetHashCode() : 0);
                 return hashCode;
@@ -231,11 +234,6 @@ namespace Fifthweek.Api.Persistence
             }
 
             if (!object.Equals(this.SubscriptionId, other.SubscriptionId))
-            {
-                return false;
-            }
-
-            if (!object.Equals(this.Subscription, other.Subscription))
             {
                 return false;
             }
@@ -255,78 +253,13 @@ namespace Fifthweek.Api.Persistence
 	}
 
 }
-namespace Fifthweek.Api.Persistence.Identity
-{
-	using Fifthweek.Api.Core;
-	using System;
-	using Microsoft.AspNet.Identity.EntityFramework;
-	public partial class FifthweekUser 
-	{
-        public override bool Equals(object obj)
-        {
-            if (ReferenceEquals(null, obj))
-            {
-                return false;
-            }
-
-            if (ReferenceEquals(this, obj))
-            {
-                return true;
-            }
-
-            if (obj.GetType() != this.GetType())
-            {
-                return false;
-            }
-
-            return this.Equals((FifthweekUser)obj);
-        }
-
-        public override int GetHashCode()
-        {
-            unchecked
-            {
-                int hashCode = 0;
-                hashCode = (hashCode * 397) ^ (this.ExampleWork != null ? this.ExampleWork.GetHashCode() : 0);
-                hashCode = (hashCode * 397) ^ (this.RegistrationDate != null ? this.RegistrationDate.GetHashCode() : 0);
-                hashCode = (hashCode * 397) ^ (this.LastSignInDate != null ? this.LastSignInDate.GetHashCode() : 0);
-                hashCode = (hashCode * 397) ^ (this.LastAccessTokenDate != null ? this.LastAccessTokenDate.GetHashCode() : 0);
-                return hashCode;
-            }
-        }
-
-        protected bool Equals(FifthweekUser other)
-        {
-            if (!object.Equals(this.ExampleWork, other.ExampleWork))
-            {
-                return false;
-            }
-
-            if (!object.Equals(this.RegistrationDate, other.RegistrationDate))
-            {
-                return false;
-            }
-
-            if (!object.Equals(this.LastSignInDate, other.LastSignInDate))
-            {
-                return false;
-            }
-
-            if (!object.Equals(this.LastAccessTokenDate, other.LastAccessTokenDate))
-            {
-                return false;
-            }
-
-            return true;
-        }
-	}
-
-}
 namespace Fifthweek.Api.Persistence
 {
 	using System;
+	using System.Linq;
 	using System.ComponentModel.DataAnnotations;
 	using Fifthweek.Api.Core;
+	using System.ComponentModel.DataAnnotations.Schema;
 	using Fifthweek.Api.Persistence.Identity;
 	public partial class Subscription 
 	{
@@ -396,12 +329,83 @@ namespace Fifthweek.Api.Persistence
 	}
 
 }
+namespace Fifthweek.Api.Persistence.Identity
+{
+	using System;
+	using System.Linq;
+	using Fifthweek.Api.Core;
+	using Microsoft.AspNet.Identity.EntityFramework;
+	public partial class FifthweekUser 
+	{
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj))
+            {
+                return false;
+            }
+
+            if (ReferenceEquals(this, obj))
+            {
+                return true;
+            }
+
+            if (obj.GetType() != this.GetType())
+            {
+                return false;
+            }
+
+            return this.Equals((FifthweekUser)obj);
+        }
+
+        public override int GetHashCode()
+        {
+            unchecked
+            {
+                int hashCode = 0;
+                hashCode = (hashCode * 397) ^ (this.ExampleWork != null ? this.ExampleWork.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.RegistrationDate != null ? this.RegistrationDate.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.LastSignInDate != null ? this.LastSignInDate.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.LastAccessTokenDate != null ? this.LastAccessTokenDate.GetHashCode() : 0);
+                return hashCode;
+            }
+        }
+
+        protected bool Equals(FifthweekUser other)
+        {
+            if (!object.Equals(this.ExampleWork, other.ExampleWork))
+            {
+                return false;
+            }
+
+            if (!object.Equals(this.RegistrationDate, other.RegistrationDate))
+            {
+                return false;
+            }
+
+            if (!object.Equals(this.LastSignInDate, other.LastSignInDate))
+            {
+                return false;
+            }
+
+            if (!object.Equals(this.LastAccessTokenDate, other.LastAccessTokenDate))
+            {
+                return false;
+            }
+
+            return true;
+        }
+	}
+
+}
 
 namespace Fifthweek.Api.Persistence
 {
 	using System;
 	using System.ComponentModel.DataAnnotations;
 	using Fifthweek.Api.Core;
+	using System.Linq;
+	using System.ComponentModel.DataAnnotations.Schema;
+	using Fifthweek.Api.Persistence.Identity;
 	public partial class Channel  : IIdentityEquatable
 	{
         public bool IdentityEquals(object other)
@@ -548,8 +552,10 @@ namespace Fifthweek.Api.Persistence
 namespace Fifthweek.Api.Persistence
 {
 	using System;
+	using System.Linq;
 	using System.ComponentModel.DataAnnotations;
 	using Fifthweek.Api.Core;
+	using System.ComponentModel.DataAnnotations.Schema;
 	using Fifthweek.Api.Persistence.Identity;
 	public partial class Subscription  : IIdentityEquatable
 	{
