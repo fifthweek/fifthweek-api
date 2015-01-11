@@ -14,6 +14,29 @@ namespace Fifthweek.Api.Subscriptions.Tests.Commands
     [TestClass]
     public class SetMandatorySubscriptionFieldsCommandHandlerTests : PersistenceTestsBase
     {
+        private static readonly UserId UserId = new UserId(Guid.NewGuid());
+        private static readonly SubscriptionId SubscriptionId = new SubscriptionId(Guid.NewGuid());
+        private static readonly SubscriptionName SubscriptionName = SubscriptionName.Parse("Lawrence");
+        private static readonly Tagline Tagline = Tagline.Parse("Web Comics and More");
+        private static readonly ChannelPriceInUsCentsPerWeek BasePrice = ChannelPriceInUsCentsPerWeek.Parse(10);
+        private static readonly SetMandatorySubscriptionFieldsCommand Command = new SetMandatorySubscriptionFieldsCommand(UserId, SubscriptionId, SubscriptionName, Tagline, BasePrice);
+        private Mock<ISubscriptionSecurity> subscriptionSecurity;
+        private SetMandatorySubscriptionFieldsCommandHandler target;
+
+        [TestInitialize]
+        public override void Initialize()
+        {
+            base.Initialize();
+            this.subscriptionSecurity = new Mock<ISubscriptionSecurity>();
+            this.target = new SetMandatorySubscriptionFieldsCommandHandler(this.NewDbContext(), this.subscriptionSecurity.Object);
+        }
+
+        [TestCleanup]
+        public override void Cleanup()
+        {
+            base.Cleanup();
+        }
+
         [TestMethod]
         public async Task WhenNotAllowedToUpdate_ItShouldReportAnError()
         {
@@ -98,20 +121,6 @@ namespace Fifthweek.Api.Subscriptions.Tests.Commands
             });
         }
 
-        [TestInitialize]
-        public override void Initialize()
-        {
-            base.Initialize();
-            this.subscriptionSecurity = new Mock<ISubscriptionSecurity>();
-            this.target = new SetMandatorySubscriptionFieldsCommandHandler(this.NewDbContext(), this.subscriptionSecurity.Object);
-        }
-
-        [TestCleanup]
-        public override void Cleanup()
-        {
-            base.Cleanup();
-        }
-
         private async Task<Subscription> CreateSubscriptionAsync(UserId newUserId, SubscriptionId newSubscriptionId)
         {
             var random = new Random();
@@ -135,14 +144,5 @@ namespace Fifthweek.Api.Subscriptions.Tests.Commands
                 return await dbContext.Subscriptions.FirstAsync(_ => _.Id == subscription.Id);
             }
         }
-
-        private static readonly UserId UserId = new UserId(Guid.NewGuid());
-        private static readonly SubscriptionId SubscriptionId = new SubscriptionId(Guid.NewGuid());
-        private static readonly SubscriptionName SubscriptionName = SubscriptionName.Parse("Lawrence");
-        private static readonly Tagline Tagline = Tagline.Parse("Web Comics and More");
-        private static readonly ChannelPriceInUsCentsPerWeek BasePrice = ChannelPriceInUsCentsPerWeek.Parse(10);
-        private static readonly SetMandatorySubscriptionFieldsCommand Command = new SetMandatorySubscriptionFieldsCommand(UserId, SubscriptionId, SubscriptionName, Tagline, BasePrice);
-        private Mock<ISubscriptionSecurity> subscriptionSecurity;
-        private SetMandatorySubscriptionFieldsCommandHandler target;
     }
 }
