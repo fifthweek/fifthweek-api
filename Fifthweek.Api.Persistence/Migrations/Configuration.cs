@@ -1,5 +1,6 @@
 using System;
 using System.Data.Entity.Migrations;
+using System.Linq;
 using Fifthweek.Api.Persistence.Identity;
 
 namespace Fifthweek.Api.Persistence.Migrations
@@ -21,22 +22,28 @@ namespace Fifthweek.Api.Persistence.Migrations
 
         protected override void Seed(FifthweekDbContext context)
         {
+            if (context.Roles.All(_ => _.Name != FifthweekRole.Administrator))
+            {
+                context.Roles.Add(new FifthweekRole
+                {
+                    Id = FifthweekRole.AdministratorId,
+                    Name = FifthweekRole.Administrator
+                });
+            }
+
+            if (context.Roles.All(_ => _.Name != FifthweekRole.Creator))
+            {
+                context.Roles.Add(new FifthweekRole
+                {
+                    Id = FifthweekRole.CreatorId,
+                    Name = FifthweekRole.Creator
+                });
+            }
+
             if (this.seed != null)
             {
                 this.seed(context);
             }
-            //  This method will be called after migrating to the latest version.
-
-            //  You can use the DbSet<T>.AddOrUpdate() helper extension method 
-            //  to avoid creating duplicate seed data. E.g.
-            //
-            //    context.People.AddOrUpdate(
-            //      p => p.FullName,
-            //      new Person { FullName = "Andrew Peters" },
-            //      new Person { FullName = "Brice Lambson" },
-            //      new Person { FullName = "Rowan Miller" }
-            //    );
-            //
         }
     }
 }
