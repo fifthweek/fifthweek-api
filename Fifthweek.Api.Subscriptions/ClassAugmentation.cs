@@ -13,9 +13,10 @@ namespace Fifthweek.Api.Subscriptions.Commands
 	using Dapper;
 	using Fifthweek.Api.Persistence;
 	using Fifthweek.Api.Identity.Membership.Events;
-	public partial class SetMandatorySubscriptionFieldsCommand 
+	using Fifthweek.Api.Persistence.Identity;
+	public partial class CreateSubscriptionCommand 
 	{
-        public SetMandatorySubscriptionFieldsCommand(
+        public CreateSubscriptionCommand(
             Fifthweek.Api.Identity.Membership.UserId requester, 
             Fifthweek.Api.Subscriptions.SubscriptionId subscriptionId, 
             Fifthweek.Api.Subscriptions.SubscriptionName subscriptionName, 
@@ -66,9 +67,10 @@ namespace Fifthweek.Api.Subscriptions.Commands
 	using Dapper;
 	using Fifthweek.Api.Persistence;
 	using Fifthweek.Api.Identity.Membership.Events;
-	public partial class SetMandatorySubscriptionFieldsCommandHandler 
+	using Fifthweek.Api.Persistence.Identity;
+	public partial class CreateSubscriptionCommandHandler 
 	{
-        public SetMandatorySubscriptionFieldsCommandHandler(
+        public CreateSubscriptionCommandHandler(
             Fifthweek.Api.Persistence.IFifthweekDbContext fifthweekDbContext, 
             Fifthweek.Api.Subscriptions.ISubscriptionSecurity subscriptionSecurity)
         {
@@ -130,14 +132,14 @@ namespace Fifthweek.Api.Subscriptions
 	public partial class SubscriptionSecurity 
 	{
         public SubscriptionSecurity(
-            Fifthweek.Api.Persistence.IFifthweekDbContext fifthweekDbContext)
+            Fifthweek.Api.Persistence.IUserManager userManager)
         {
-            if (fifthweekDbContext == null)
+            if (userManager == null)
             {
-                throw new ArgumentNullException("fifthweekDbContext");
+                throw new ArgumentNullException("userManager");
             }
 
-            this.fifthweekDbContext = fifthweekDbContext;
+            this.userManager = userManager;
         }
 	}
 
@@ -156,7 +158,7 @@ namespace Fifthweek.Api.Subscriptions.Controllers
 	public partial class SubscriptionController 
 	{
         public SubscriptionController(
-            Fifthweek.Api.Core.ICommandHandler<Fifthweek.Api.Subscriptions.Commands.SetMandatorySubscriptionFieldsCommand> setMandatorySubscriptionFields, 
+            Fifthweek.Api.Core.ICommandHandler<Fifthweek.Api.Subscriptions.Commands.CreateSubscriptionCommand> setMandatorySubscriptionFields, 
             Fifthweek.Api.Identity.OAuth.IUserContext userContext)
         {
             if (setMandatorySubscriptionFields == null)
@@ -185,6 +187,7 @@ namespace Fifthweek.Api.Subscriptions.Commands
 	using Dapper;
 	using Fifthweek.Api.Persistence;
 	using Fifthweek.Api.Identity.Membership.Events;
+	using Fifthweek.Api.Persistence.Identity;
 	public partial class PromoteNewUserToCreatorCommand 
 	{
         public PromoteNewUserToCreatorCommand(
@@ -210,17 +213,18 @@ namespace Fifthweek.Api.Subscriptions.Commands
 	using Dapper;
 	using Fifthweek.Api.Persistence;
 	using Fifthweek.Api.Identity.Membership.Events;
+	using Fifthweek.Api.Persistence.Identity;
 	public partial class PromoteNewUserToCreatorCommandHandler 
 	{
         public PromoteNewUserToCreatorCommandHandler(
-            Fifthweek.Api.Persistence.IFifthweekDbContext fifthweekDbContext)
+            Fifthweek.Api.Persistence.IUserManager userManager)
         {
-            if (fifthweekDbContext == null)
+            if (userManager == null)
             {
-                throw new ArgumentNullException("fifthweekDbContext");
+                throw new ArgumentNullException("userManager");
             }
 
-            this.fifthweekDbContext = fifthweekDbContext;
+            this.userManager = userManager;
         }
 	}
 
@@ -235,6 +239,7 @@ namespace Fifthweek.Api.Subscriptions.Commands
 	using Dapper;
 	using Fifthweek.Api.Persistence;
 	using Fifthweek.Api.Identity.Membership.Events;
+	using Fifthweek.Api.Persistence.Identity;
 	public partial class PromoteNewUserToCreatorCommandInitiator 
 	{
         public PromoteNewUserToCreatorCommandInitiator(
@@ -317,7 +322,8 @@ namespace Fifthweek.Api.Subscriptions.Commands
 	using Dapper;
 	using Fifthweek.Api.Persistence;
 	using Fifthweek.Api.Identity.Membership.Events;
-	public partial class SetMandatorySubscriptionFieldsCommand 
+	using Fifthweek.Api.Persistence.Identity;
+	public partial class CreateSubscriptionCommand 
 	{
         public override bool Equals(object obj)
         {
@@ -336,7 +342,7 @@ namespace Fifthweek.Api.Subscriptions.Commands
                 return false;
             }
 
-            return this.Equals((SetMandatorySubscriptionFieldsCommand)obj);
+            return this.Equals((CreateSubscriptionCommand)obj);
         }
 
         public override int GetHashCode()
@@ -353,7 +359,7 @@ namespace Fifthweek.Api.Subscriptions.Commands
             }
         }
 
-        protected bool Equals(SetMandatorySubscriptionFieldsCommand other)
+        protected bool Equals(CreateSubscriptionCommand other)
         {
             if (!object.Equals(this.Requester, other.Requester))
             {
@@ -451,6 +457,7 @@ namespace Fifthweek.Api.Subscriptions.Commands
 	using Dapper;
 	using Fifthweek.Api.Persistence;
 	using Fifthweek.Api.Identity.Membership.Events;
+	using Fifthweek.Api.Persistence.Identity;
 	public partial class PromoteNewUserToCreatorCommand 
 	{
         public override bool Equals(object obj)

@@ -20,10 +20,10 @@ namespace Fifthweek.Api.Persistence
 
         public Guid CreatorId { get; set; }
 
-        [Optional]
+        [Required]
         public string Name { get; set; }
 
-        [Optional]
+        [Required]
         public string Tagline { get; set; }
 
         [Required]

@@ -1,106 +1,45 @@
 ﻿using System;
 using System.Threading.Tasks;
 using Fifthweek.Api.Identity.Membership;
-using Fifthweek.Api.Persistence.Tests.Shared;
+using Fifthweek.Api.Persistence;
+using Fifthweek.Api.Persistence.Identity;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Moq;
 
 namespace Fifthweek.Api.Subscriptions.Tests
 {
     [TestClass]
-    public class SubscriptionSecurityTests : PersistenceTestsBase
+    public class SubscriptionSecurityTests
     {
-        [TestMethod]
-        public async Task WhenAtLeastOneSubscriptionMatchesSubscriptionAndCreator_ItShouldAllowUpdate()
-        {
-            await this.CreateSubscriptionAsync(this.userId, this.subscriptionId);
-            await this.SnapshotDatabaseAsync();
-
-            var result = await this.target.IsUpdateAllowedAsync(this.userId, this.subscriptionId);
-
-            Assert.IsTrue(result);
-            await this.AssertDatabaseAsync(ExpectedSideEffects.None);
-        }
-
-        [TestMethod]
-        public async Task WhenNoSubscriptionsExist_ItShouldForbidUpdate()
-        {
-            await this.SnapshotDatabaseAsync();
-
-            var result = await this.target.IsUpdateAllowedAsync(this.userId, this.subscriptionId);
-
-            Assert.IsFalse(result);
-            await this.AssertDatabaseAsync(ExpectedSideEffects.None);
-        }
-
-        [TestMethod]
-        public async Task WhenNoSubscriptionsMatchSubscriptionOrCreator_ItShouldForbidUpdate()
-        {
-            await this.CreateSubscriptionAsync(new UserId(Guid.NewGuid()), new SubscriptionId(Guid.NewGuid()));
-            await this.SnapshotDatabaseAsync();
-
-            var result = await this.target.IsUpdateAllowedAsync(this.userId, this.subscriptionId);
-
-            Assert.IsFalse(result);
-            await this.AssertDatabaseAsync(ExpectedSideEffects.None);
-        }
-
-        [TestMethod]
-        public async Task WhenNoSubscriptionsMatchSubscription_ItShouldForbidUpdate()
-        {
-            await this.CreateSubscriptionAsync(this.userId, new SubscriptionId(Guid.NewGuid()));
-            await this.SnapshotDatabaseAsync();
-
-            var result = await this.target.IsUpdateAllowedAsync(this.userId, this.subscriptionId);
-
-            Assert.IsFalse(result);
-            await this.AssertDatabaseAsync(ExpectedSideEffects.None);
-        }
-
-        [TestMethod]
-        public async Task WhenNoSubscriptionsMatchCreator_ItShouldForbidUpdate()
-        {
-            await this.CreateSubscriptionAsync(new UserId(Guid.NewGuid()), this.subscriptionId);
-            await this.SnapshotDatabaseAsync();
-
-            var result = await this.target.IsUpdateAllowedAsync(this.userId, this.subscriptionId);
-
-            Assert.IsFalse(result);
-            await this.AssertDatabaseAsync(ExpectedSideEffects.None);
-        }
+        private static readonly UserId UserId = new UserId(Guid.NewGuid());
+        private Mock<IUserManager> userManager;
+        private SubscriptionSecurity target;
 
         [TestInitialize]
-        public override void Initialize()
+        public void Initialize()
         {
-            base.Initialize();
-            this.target = new SubscriptionSecurity(this.NewDbContext());
+            this.userManager = new Mock<IUserManager>();
+            this.target = new SubscriptionSecurity(this.userManager.Object);
         }
 
-        [TestCleanup]
-        public override void Cleanup()
+        [TestMethod]
+        public async Task WhenUserHasCreatorRole_ItShouldAllowCreation()
         {
-            base.Cleanup();
+            this.userManager.Setup(_ => _.IsInRoleAsync(UserId.Value, FifthweekRole.Creator)).ReturnsAsync(true);
+            
+            var result = await this.target.IsCreationAllowedAsync(UserId);
+
+            Assert.IsTrue(result);
         }
 
-        private async Task CreateSubscriptionAsync(UserId newUserId, SubscriptionId newSubscriptionId)
+        [TestMethod]
+        public async Task WhenUserDoesNotHaveCreatorRole_ItShouldForbidCreation()
         {
-            var random = new Random();
-            var creator = UserTests.UniqueEntity(random);
-            creator.Id = newUserId.Value;
+            this.userManager.Setup(_ => _.IsInRoleAsync(UserId.Value, FifthweekRole.Creator)).ReturnsAsync(false);
+            
+            var result = await this.target.IsCreationAllowedAsync(UserId);
 
-            var subscription = SubscriptionTests.UniqueEntity(random);
-            subscription.Id = newSubscriptionId.Value;
-            subscription.Creator = creator;
-            subscription.CreatorId = creator.Id;
-
-            using (var dbContext = this.NewDbContext())
-            {
-                dbContext.Subscriptions.Add(subscription);
-                await dbContext.SaveChangesAsync();    
-            }
+            Assert.IsFalse(result);
         }
-
-        private readonly UserId userId = new UserId(Guid.NewGuid());
-        private readonly SubscriptionId subscriptionId = new SubscriptionId(Guid.NewGuid());
-        private SubscriptionSecurity target;
     }
 }
