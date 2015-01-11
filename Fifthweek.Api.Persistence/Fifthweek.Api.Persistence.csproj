@@ -148,10 +148,6 @@
     <Compile Include="Migrations\201501111510355_UpdateSubscriptionRequiredFields.Designer.cs">
       <DependentUpon>201501111510355_UpdateSubscriptionRequiredFields.cs</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\201501112057565_UpdateSubscriptionRequiredFields2.cs" />
-    <Compile Include="Migrations\201501112057565_UpdateSubscriptionRequiredFields2.Designer.cs">
-      <DependentUpon>201501112057565_UpdateSubscriptionRequiredFields2.cs</DependentUpon>
-    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RefreshToken.cs" />
@@ -209,9 +205,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201501111510355_UpdateSubscriptionRequiredFields.resx">
       <DependentUpon>201501111510355_UpdateSubscriptionRequiredFields.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201501112057565_UpdateSubscriptionRequiredFields2.resx">
-      <DependentUpon>201501112057565_UpdateSubscriptionRequiredFields2.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>

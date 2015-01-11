@@ -10,7 +10,7 @@ namespace Fifthweek.Api.Subscriptions.Controllers
     [RoutePrefix("subscriptions"), AutoConstructor]
     public partial class SubscriptionController : ApiController
     {
-        private readonly ICommandHandler<CreateSubscriptionCommand> setMandatorySubscriptionFields;
+        private readonly ICommandHandler<SetMandatorySubscriptionFieldsCommand> setMandatorySubscriptionFields;
         private readonly IUserContext userContext;
 
         [Route("{subscriptionId}/mandatoryFields")]
@@ -21,7 +21,7 @@ namespace Fifthweek.Api.Subscriptions.Controllers
             var authenticatedUserId = this.userContext.GetUserId();
             var subscriptionIdObject = new SubscriptionId(subscriptionId);
 
-            await this.setMandatorySubscriptionFields.HandleAsync(new CreateSubscriptionCommand(
+            await this.setMandatorySubscriptionFields.HandleAsync(new SetMandatorySubscriptionFieldsCommand(
                 authenticatedUserId,
                 subscriptionIdObject,
                 fields.SubscriptionNameObject,

@@ -4,7 +4,7 @@ using Fifthweek.Api.Identity.Membership;
 namespace Fifthweek.Api.Subscriptions.Commands
 {
     [AutoEqualityMembers, AutoConstructor]
-    public partial class CreateSubscriptionCommand
+    public partial class SetMandatorySubscriptionFieldsCommand
     {
         public UserId Requester { get; private set; }
         

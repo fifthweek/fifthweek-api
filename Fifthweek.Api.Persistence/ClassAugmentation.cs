@@ -157,16 +157,6 @@ namespace Fifthweek.Api.Persistence
                 throw new ArgumentNullException("creatorId");
             }
 
-            if (name == null)
-            {
-                throw new ArgumentNullException("name");
-            }
-
-            if (tagline == null)
-            {
-                throw new ArgumentNullException("tagline");
-            }
-
             if (creationDate == null)
             {
                 throw new ArgumentNullException("creationDate");

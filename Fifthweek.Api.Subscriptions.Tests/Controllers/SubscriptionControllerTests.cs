@@ -16,14 +16,14 @@ namespace Fifthweek.Api.Subscriptions.Tests.Controllers
     {
         private static readonly UserId UserId = new UserId(Guid.NewGuid());
         private static readonly SubscriptionId SubscriptionId = new SubscriptionId(Guid.NewGuid());
-        private Mock<ICommandHandler<CreateSubscriptionCommand>> setMandatorySubscriptionFields;
+        private Mock<ICommandHandler<SetMandatorySubscriptionFieldsCommand>> setMandatorySubscriptionFields;
         private Mock<IUserContext> userContext;
         private SubscriptionController target;
 
         [TestInitialize]
         public void Initialize()
         {
-            this.setMandatorySubscriptionFields = new Mock<ICommandHandler<CreateSubscriptionCommand>>();
+            this.setMandatorySubscriptionFields = new Mock<ICommandHandler<SetMandatorySubscriptionFieldsCommand>>();
             this.userContext = new Mock<IUserContext>();
             this.target = new SubscriptionController(
                 this.setMandatorySubscriptionFields.Object,
@@ -55,12 +55,12 @@ namespace Fifthweek.Api.Subscriptions.Tests.Controllers
             };
         }
 
-        public static CreateSubscriptionCommand NewSetMandatorySubscriptionFieldsCommand(
+        public static SetMandatorySubscriptionFieldsCommand NewSetMandatorySubscriptionFieldsCommand(
             UserId userId,
             SubscriptionId subscriptionId,
             MandatorySubscriptionData data)
         {
-            return new CreateSubscriptionCommand(
+            return new SetMandatorySubscriptionFieldsCommand(
                 userId,
                 subscriptionId,
                 SubscriptionName.Parse(data.SubscriptionName),

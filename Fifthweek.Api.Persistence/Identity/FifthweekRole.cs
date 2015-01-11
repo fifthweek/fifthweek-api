@@ -7,7 +7,5 @@ namespace Fifthweek.Api.Persistence.Identity
     public class FifthweekRole : IdentityRole<Guid, FifthweekUserRole>
     {
         public static string Administrator = "administrator";
-
-        public static string Creator = "creator";
     }
 }

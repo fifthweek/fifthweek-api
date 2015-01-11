@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Data.Entity;
 using System.Threading.Tasks;
 using Fifthweek.Api.Core;
 using Fifthweek.Api.Identity.Membership;
@@ -11,23 +12,23 @@ using Moq;
 namespace Fifthweek.Api.Subscriptions.Tests.Commands
 {
     [TestClass]
-    public class CreateSubscriptionCommandHandlerTests : PersistenceTestsBase
+    public class SetMandatorySubscriptionFieldsCommandHandlerTests : PersistenceTestsBase
     {
         private static readonly UserId UserId = new UserId(Guid.NewGuid());
         private static readonly SubscriptionId SubscriptionId = new SubscriptionId(Guid.NewGuid());
         private static readonly SubscriptionName SubscriptionName = SubscriptionName.Parse("Lawrence");
         private static readonly Tagline Tagline = Tagline.Parse("Web Comics and More");
         private static readonly ChannelPriceInUsCentsPerWeek BasePrice = ChannelPriceInUsCentsPerWeek.Parse(10);
-        private static readonly CreateSubscriptionCommand Command = new CreateSubscriptionCommand(UserId, SubscriptionId, SubscriptionName, Tagline, BasePrice);
+        private static readonly SetMandatorySubscriptionFieldsCommand Command = new SetMandatorySubscriptionFieldsCommand(UserId, SubscriptionId, SubscriptionName, Tagline, BasePrice);
         private Mock<ISubscriptionSecurity> subscriptionSecurity;
-        private CreateSubscriptionCommandHandler target;
+        private SetMandatorySubscriptionFieldsCommandHandler target;
 
         [TestInitialize]
         public override void Initialize()
         {
             base.Initialize();
             this.subscriptionSecurity = new Mock<ISubscriptionSecurity>();
-            this.target = new CreateSubscriptionCommandHandler(this.NewDbContext(), this.subscriptionSecurity.Object);
+            this.target = new SetMandatorySubscriptionFieldsCommandHandler(this.NewDbContext(), this.subscriptionSecurity.Object);
         }
 
         [TestCleanup]
@@ -39,7 +40,7 @@ namespace Fifthweek.Api.Subscriptions.Tests.Commands
         [TestMethod]
         public async Task WhenNotAllowedToUpdate_ItShouldReportAnError()
         {
-            this.subscriptionSecurity.Setup(_ => _.IsCreationAllowedAsync(UserId)).ReturnsAsync(false);
+            this.subscriptionSecurity.Setup(_ => _.IsUpdateAllowedAsync(UserId, SubscriptionId)).ReturnsAsync(false);
 
             await this.SnapshotDatabaseAsync();
 
@@ -58,8 +59,8 @@ namespace Fifthweek.Api.Subscriptions.Tests.Commands
         [TestMethod]
         public async Task WhenReRun_ItShouldHaveNoEffect()
         {
-            this.subscriptionSecurity.Setup(_ => _.IsCreationAllowedAsync(UserId)).ReturnsAsync(true);
-            await this.CreateUserAsync(UserId);
+            this.subscriptionSecurity.Setup(_ => _.IsUpdateAllowedAsync(UserId, SubscriptionId)).ReturnsAsync(true);
+            await this.CreateSubscriptionAsync(UserId, SubscriptionId);
             await this.target.HandleAsync(Command);
 
             await this.SnapshotDatabaseAsync();
@@ -70,33 +71,21 @@ namespace Fifthweek.Api.Subscriptions.Tests.Commands
         }
 
         [TestMethod]
-        public async Task ItShouldCreateSubscription()
+        public async Task ItShouldUpdateSubscription()
         {
-            this.subscriptionSecurity.Setup(_ => _.IsCreationAllowedAsync(UserId)).ReturnsAsync(true);
-            await this.CreateUserAsync(UserId);
+            this.subscriptionSecurity.Setup(_ => _.IsUpdateAllowedAsync(UserId, SubscriptionId)).ReturnsAsync(true);
+            var subscription = await this.CreateSubscriptionAsync(UserId, SubscriptionId);
 
             await this.SnapshotDatabaseAsync();
 
             await this.target.HandleAsync(Command);
 
-            var expectedSubscription = new Subscription(
-                SubscriptionId.Value,
-                null,
-                UserId.Value,
-                SubscriptionName.Value,
-                Tagline.Value,
-                DateTime.MinValue);
-            
+            subscription.Tagline = Tagline.Value;
+            subscription.Name = SubscriptionName.Value;
+
             await this.AssertDatabaseAsync(new ExpectedSideEffects
             {
-                Insert = new WildcardEntity<Subscription>(expectedSubscription)
-                {
-                    AreEqual = actualSubscription =>
-                    {
-                        expectedSubscription.CreationDate = actualSubscription.CreationDate; // Take wildcard properties from actual value.
-                        return Equals(expectedSubscription, actualSubscription);
-                    }
-                }, 
+                Update = subscription, 
                 ExcludedFromTest = entity => entity is Channel
             });
         }
@@ -104,8 +93,8 @@ namespace Fifthweek.Api.Subscriptions.Tests.Commands
         [TestMethod]
         public async Task ItShouldCreateTheDefaultChannel()
         {
-            this.subscriptionSecurity.Setup(_ => _.IsCreationAllowedAsync(UserId)).ReturnsAsync(true);
-            await this.CreateUserAsync(UserId);
+            this.subscriptionSecurity.Setup(_ => _.IsUpdateAllowedAsync(UserId, SubscriptionId)).ReturnsAsync(true);
+            await this.CreateSubscriptionAsync(UserId, SubscriptionId);
 
             await this.SnapshotDatabaseAsync();
 
@@ -132,16 +121,27 @@ namespace Fifthweek.Api.Subscriptions.Tests.Commands
             });
         }
 
-        private async Task CreateUserAsync(UserId newUserId)
+        private async Task<Subscription> CreateSubscriptionAsync(UserId newUserId, SubscriptionId newSubscriptionId)
         {
             var random = new Random();
             var creator = UserTests.UniqueEntity(random);
             creator.Id = newUserId.Value;
 
+            var subscription = SubscriptionTests.UniqueEntity(random);
+            subscription.Id = newSubscriptionId.Value;
+            subscription.Creator = creator;
+            subscription.CreatorId = creator.Id;
+
             using (var dbContext = this.NewDbContext())
             {
-                dbContext.Users.Add(creator);
+                dbContext.Subscriptions.Add(subscription);
                 await dbContext.SaveChangesAsync();
+            }
+
+            using (var dbContext = this.NewDbContext())
+            {
+                // Re-fetch from database to solve clipping (e.g. DateTime).
+                return await dbContext.Subscriptions.FirstAsync(_ => _.Id == subscription.Id);
             }
         }
     }
