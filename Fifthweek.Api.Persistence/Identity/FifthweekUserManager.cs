@@ -4,8 +4,6 @@ namespace Fifthweek.Api.Persistence.Identity
     using System.Threading.Tasks;
 
     using Microsoft.AspNet.Identity;
-    using Microsoft.AspNet.Identity.Owin;
-    using Microsoft.Owin;
 
     public class FifthweekUserManager : UserManager<FifthweekUser, Guid>, IUserManager
     {
@@ -19,6 +17,8 @@ namespace Fifthweek.Api.Persistence.Identity
         {
             // This is internal detail from ASP.NET UserManager.cs, available on GitHub:
             // https://github.com/aspnet/Identity/tree/dev/src/Microsoft.AspNet.Identity/UserManager.cs
+            // Issue raised here:
+            // https://github.com/aspnet/Identity/issues/307#issuecomment-68791565
             return this.UserTokenProvider.ValidateAsync(
                 "ResetPassword",
                 token,

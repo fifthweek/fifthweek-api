@@ -85,9 +85,16 @@
     <Compile Include="ApiException.cs" />
     <Compile Include="AutoBuilderAttribute.cs" />
     <Compile Include="AutofacRegistration.cs" />
+    <Compile Include="ClassAugmentation.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>ClassAugmentation.tt</DependentUpon>
+    </Compile>
     <Compile Include="ConstructedAttribute.cs" />
     <Compile Include="DecoratorAttribute.cs" />
+    <Compile Include="AggregateEventHandler.cs" />
     <Compile Include="IAutofacRegistration.cs" />
+    <Compile Include="IEventHandler.cs" />
     <Compile Include="NonEquatableAttribute.cs" />
     <Compile Include="ParsedAttribute.cs" />
     <Compile Include="OptionalAttribute.cs" />
@@ -116,7 +123,14 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+    <None Include="ClassAugmentation.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>ClassAugmentation.cs</LastGenOutput>
+    </None>
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

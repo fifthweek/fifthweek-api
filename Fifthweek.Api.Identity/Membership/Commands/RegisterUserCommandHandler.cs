@@ -1,4 +1,6 @@
-﻿namespace Fifthweek.Api.Identity.Membership.Commands
+﻿using Fifthweek.Api.Identity.Membership.Events;
+
+namespace Fifthweek.Api.Identity.Membership.Commands
 {
     using System;
     using System.Data.SqlTypes;
@@ -9,17 +11,19 @@
     using Fifthweek.Api.Persistence;
     using Fifthweek.Api.Persistence.Identity;
 
-    public class RegisterUserCommandHandler : ICommandHandler<RegisterUserCommand>
+    [AutoConstructor]
+    public partial class RegisterUserCommandHandler : ICommandHandler<RegisterUserCommand>
     {
         private readonly IUserManager userManager;
-
-        public RegisterUserCommandHandler(IUserManager userManager)
-        {
-            this.userManager = userManager;
-        }
+        private readonly IEventHandler<UserRegisteredEvent> userRegistered;
 
         public async Task HandleAsync(RegisterUserCommand command)
         {
+            if (command == null)
+            {
+                throw new ArgumentNullException("command");
+            }
+
             var userByEmail = await this.userManager.FindByEmailAsync(command.Email.Value);
             if (userByEmail != null)
             {
@@ -49,6 +53,8 @@
             {
                 throw new AggregateException("Failed to create user: " + user.UserName, result.Errors.Select(v => new Exception(v)));
             }
+
+            await this.userRegistered.HandleAsync(new UserRegisteredEvent(command.UserId));
         }
     }
 }

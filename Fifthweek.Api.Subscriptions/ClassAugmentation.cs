@@ -12,6 +12,7 @@ namespace Fifthweek.Api.Subscriptions.Commands
 	using Fifthweek.Api.Identity.Membership;
 	using Dapper;
 	using Fifthweek.Api.Persistence;
+	using Fifthweek.Api.Identity.Membership.Events;
 	public partial class SetMandatorySubscriptionFieldsCommand 
 	{
         public SetMandatorySubscriptionFieldsCommand(
@@ -64,6 +65,7 @@ namespace Fifthweek.Api.Subscriptions.Commands
 	using Fifthweek.Api.Identity.Membership;
 	using Dapper;
 	using Fifthweek.Api.Persistence;
+	using Fifthweek.Api.Identity.Membership.Events;
 	public partial class SetMandatorySubscriptionFieldsCommandHandler 
 	{
         public SetMandatorySubscriptionFieldsCommandHandler(
@@ -97,6 +99,7 @@ namespace Fifthweek.Api.Subscriptions
 	using Dapper;
 	using Fifthweek.Api.Identity.Membership;
 	using Fifthweek.Api.Persistence;
+	using Fifthweek.Api.Persistence.Identity;
 	public partial class SubscriptionId 
 	{
         public SubscriptionId(
@@ -123,6 +126,7 @@ namespace Fifthweek.Api.Subscriptions
 	using Dapper;
 	using Fifthweek.Api.Identity.Membership;
 	using Fifthweek.Api.Persistence;
+	using Fifthweek.Api.Persistence.Identity;
 	public partial class SubscriptionSecurity 
 	{
         public SubscriptionSecurity(
@@ -171,6 +175,81 @@ namespace Fifthweek.Api.Subscriptions.Controllers
 	}
 
 }
+namespace Fifthweek.Api.Subscriptions.Commands
+{
+	using System;
+	using System.Linq;
+	using Fifthweek.Api.Core;
+	using System.Threading.Tasks;
+	using Fifthweek.Api.Identity.Membership;
+	using Dapper;
+	using Fifthweek.Api.Persistence;
+	using Fifthweek.Api.Identity.Membership.Events;
+	public partial class PromoteNewUserToCreatorCommand 
+	{
+        public PromoteNewUserToCreatorCommand(
+            Fifthweek.Api.Identity.Membership.UserId newUserId)
+        {
+            if (newUserId == null)
+            {
+                throw new ArgumentNullException("newUserId");
+            }
+
+            this.NewUserId = newUserId;
+        }
+	}
+
+}
+namespace Fifthweek.Api.Subscriptions.Commands
+{
+	using System;
+	using System.Linq;
+	using Fifthweek.Api.Core;
+	using System.Threading.Tasks;
+	using Fifthweek.Api.Identity.Membership;
+	using Dapper;
+	using Fifthweek.Api.Persistence;
+	using Fifthweek.Api.Identity.Membership.Events;
+	public partial class PromoteNewUserToCreatorCommandHandler 
+	{
+        public PromoteNewUserToCreatorCommandHandler(
+            Fifthweek.Api.Persistence.IFifthweekDbContext fifthweekDbContext)
+        {
+            if (fifthweekDbContext == null)
+            {
+                throw new ArgumentNullException("fifthweekDbContext");
+            }
+
+            this.fifthweekDbContext = fifthweekDbContext;
+        }
+	}
+
+}
+namespace Fifthweek.Api.Subscriptions.Commands
+{
+	using System;
+	using System.Linq;
+	using Fifthweek.Api.Core;
+	using System.Threading.Tasks;
+	using Fifthweek.Api.Identity.Membership;
+	using Dapper;
+	using Fifthweek.Api.Persistence;
+	using Fifthweek.Api.Identity.Membership.Events;
+	public partial class PromoteNewUserToCreatorCommandInitiator 
+	{
+        public PromoteNewUserToCreatorCommandInitiator(
+            Fifthweek.Api.Core.ICommandHandler<Fifthweek.Api.Subscriptions.Commands.PromoteNewUserToCreatorCommand> promoteNewUserToCreator)
+        {
+            if (promoteNewUserToCreator == null)
+            {
+                throw new ArgumentNullException("promoteNewUserToCreator");
+            }
+
+            this.promoteNewUserToCreator = promoteNewUserToCreator;
+        }
+	}
+
+}
 
 namespace Fifthweek.Api.Subscriptions
 {
@@ -183,6 +262,7 @@ namespace Fifthweek.Api.Subscriptions
 	using Dapper;
 	using Fifthweek.Api.Identity.Membership;
 	using Fifthweek.Api.Persistence;
+	using Fifthweek.Api.Persistence.Identity;
 	public partial class ChannelPriceInUsCentsPerWeek 
 	{
         public override bool Equals(object obj)
@@ -236,6 +316,7 @@ namespace Fifthweek.Api.Subscriptions.Commands
 	using Fifthweek.Api.Identity.Membership;
 	using Dapper;
 	using Fifthweek.Api.Persistence;
+	using Fifthweek.Api.Identity.Membership.Events;
 	public partial class SetMandatorySubscriptionFieldsCommand 
 	{
         public override bool Equals(object obj)
@@ -315,6 +396,7 @@ namespace Fifthweek.Api.Subscriptions
 	using Dapper;
 	using Fifthweek.Api.Identity.Membership;
 	using Fifthweek.Api.Persistence;
+	using Fifthweek.Api.Persistence.Identity;
 	public partial class SubscriptionId 
 	{
         public override bool Equals(object obj)
@@ -359,6 +441,60 @@ namespace Fifthweek.Api.Subscriptions
 	}
 
 }
+namespace Fifthweek.Api.Subscriptions.Commands
+{
+	using System;
+	using System.Linq;
+	using Fifthweek.Api.Core;
+	using System.Threading.Tasks;
+	using Fifthweek.Api.Identity.Membership;
+	using Dapper;
+	using Fifthweek.Api.Persistence;
+	using Fifthweek.Api.Identity.Membership.Events;
+	public partial class PromoteNewUserToCreatorCommand 
+	{
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj))
+            {
+                return false;
+            }
+
+            if (ReferenceEquals(this, obj))
+            {
+                return true;
+            }
+
+            if (obj.GetType() != this.GetType())
+            {
+                return false;
+            }
+
+            return this.Equals((PromoteNewUserToCreatorCommand)obj);
+        }
+
+        public override int GetHashCode()
+        {
+            unchecked
+            {
+                int hashCode = 0;
+                hashCode = (hashCode * 397) ^ (this.NewUserId != null ? this.NewUserId.GetHashCode() : 0);
+                return hashCode;
+            }
+        }
+
+        protected bool Equals(PromoteNewUserToCreatorCommand other)
+        {
+            if (!object.Equals(this.NewUserId, other.NewUserId))
+            {
+                return false;
+            }
+
+            return true;
+        }
+	}
+
+}
 namespace Fifthweek.Api.Subscriptions.Controllers
 {
 	using System;
@@ -369,6 +505,7 @@ namespace Fifthweek.Api.Subscriptions.Controllers
 	using System.Web.Http;
 	using Fifthweek.Api.Core;
 	using Fifthweek.Api.Subscriptions.Commands;
+	using Fifthweek.Api.Identity.OAuth;
 	public partial class MandatorySubscriptionData 
 	{
         public override bool Equals(object obj)
@@ -454,6 +591,7 @@ namespace Fifthweek.Api.Subscriptions
 	using Dapper;
 	using Fifthweek.Api.Identity.Membership;
 	using Fifthweek.Api.Persistence;
+	using Fifthweek.Api.Persistence.Identity;
 	public partial class SubscriptionName 
 	{
         public override bool Equals(object obj)
@@ -509,6 +647,7 @@ namespace Fifthweek.Api.Subscriptions
 	using Dapper;
 	using Fifthweek.Api.Identity.Membership;
 	using Fifthweek.Api.Persistence;
+	using Fifthweek.Api.Persistence.Identity;
 	public partial class Tagline 
 	{
         public override bool Equals(object obj)
@@ -564,6 +703,7 @@ namespace Fifthweek.Api.Subscriptions.Controllers
 	using System.Web.Http;
 	using Fifthweek.Api.Core;
 	using Fifthweek.Api.Subscriptions.Commands;
+	using Fifthweek.Api.Identity.OAuth;
 	public partial class MandatorySubscriptionData 
 	{
 		public SubscriptionName SubscriptionNameObject { get; set; }

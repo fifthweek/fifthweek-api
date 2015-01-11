@@ -1,4 +1,7 @@
-﻿namespace Fifthweek.Api.Identity.Tests.Membership.Commands
+﻿using Fifthweek.Api.Core;
+using Fifthweek.Api.Identity.Membership.Events;
+
+namespace Fifthweek.Api.Identity.Tests.Membership.Commands
 {
     using System;
     using System.Data.SqlTypes;
@@ -18,18 +21,38 @@
     [TestClass]
     public class RegisterUserCommandHandlerTests
     {
+        private static readonly UserId UserId = new UserId(Guid.NewGuid());
+        private static readonly RegistrationData RegistrationData = new RegistrationData
+        {
+            Email = "test@testing.fifthweek.com",
+            ExampleWork = "testing.fifthweek.com",
+            Password = "TestPassword",
+            Username = "test_username",
+        };
+        private static readonly RegisterUserCommand Command = RegisterUserCommandTests.NewCommand(UserId.Value, RegistrationData);
+
+        private Mock<IEventHandler<UserRegisteredEvent>> userRegistered;
+        private Mock<IUserManager> userManager;
+        private RegisterUserCommandHandler target; 
+
+        [TestInitialize]
+        public void TestInitialize()
+        {
+            this.userManager = new Mock<IUserManager>();
+            this.userRegistered = new Mock<IEventHandler<UserRegisteredEvent>>();
+            this.target = new RegisterUserCommandHandler(this.userManager.Object, this.userRegistered.Object);
+        }
+
         [TestMethod]
         public async Task WhenUserManagerFindsEmail_ItShouldThrowAnException()
         {
-            var userManager = new Mock<IUserManager>();
-            userManager.Setup(v => v.FindByEmailAsync(this.registrationData.Email)).ReturnsAsync(new FifthweekUser());
-            userManager.Setup(v => v.FindByNameAsync(this.registrationData.Username)).ReturnsAsync(null);
+            this.userManager.Setup(v => v.FindByEmailAsync(RegistrationData.Email)).ReturnsAsync(new FifthweekUser());
+            this.userManager.Setup(v => v.FindByNameAsync(RegistrationData.Username)).ReturnsAsync(null);
 
-            var target = new RegisterUserCommandHandler(userManager.Object);
             Exception exception = null;
             try
             {
-                await target.HandleAsync(this.CreateRegisterUserCommand());
+                await this.target.HandleAsync(Command);
             }
             catch (Exception t)
             {
@@ -44,15 +67,13 @@
         [TestMethod]
         public async Task WhenUserManagerFindsUsername_ItShouldThrowAnException()
         {
-            var userManager = new Mock<IUserManager>();
-            userManager.Setup(v => v.FindByEmailAsync(this.registrationData.Email)).ReturnsAsync(null);
-            userManager.Setup(v => v.FindByNameAsync(this.registrationData.Username)).ReturnsAsync(new FifthweekUser());
+            this.userManager.Setup(v => v.FindByEmailAsync(RegistrationData.Email)).ReturnsAsync(null);
+            this.userManager.Setup(v => v.FindByNameAsync(RegistrationData.Username)).ReturnsAsync(new FifthweekUser());
 
-            var target = new RegisterUserCommandHandler(userManager.Object);
             Exception exception = null;
             try
             {
-                await target.HandleAsync(this.CreateRegisterUserCommand());
+                await this.target.HandleAsync(Command);
             }
             catch (Exception t)
             {
@@ -68,38 +89,48 @@
         public async Task WhenCredentialsAccepted_ItShouldCreateUser()
         {
             FifthweekUser fifthweekUser = null;
-            var userManager = new Mock<IUserManager>();
-            userManager.Setup(v => v.FindByEmailAsync(this.registrationData.Email)).ReturnsAsync(null);
-            userManager.Setup(v => v.FindByNameAsync(this.registrationData.Username)).ReturnsAsync(null);
-            userManager.Setup(v => v.CreateAsync(It.IsAny<FifthweekUser>(), this.registrationData.Password))
+            this.userManager.Setup(v => v.FindByEmailAsync(RegistrationData.Email)).ReturnsAsync(null);
+            this.userManager.Setup(v => v.FindByNameAsync(RegistrationData.Username)).ReturnsAsync(null);
+            this.userManager.Setup(v => v.CreateAsync(It.IsAny<FifthweekUser>(), RegistrationData.Password))
                 .Callback<FifthweekUser, string>((u, p) => fifthweekUser = u)
                 .ReturnsAsync(new MockIdentityResult());
 
-            var target = new RegisterUserCommandHandler(userManager.Object);
-            await target.HandleAsync(this.CreateRegisterUserCommand());
+            await this.target.HandleAsync(Command);
 
             Assert.IsNotNull(fifthweekUser);
-            Assert.AreEqual<string>(this.registrationData.Email, fifthweekUser.Email);
-            Assert.AreEqual<string>(this.registrationData.Username, fifthweekUser.UserName);
+            Assert.AreEqual<string>(RegistrationData.Email, fifthweekUser.Email);
+            Assert.AreEqual<string>(RegistrationData.Username, fifthweekUser.UserName);
             Assert.AreNotEqual<DateTime>(DateTime.MinValue, fifthweekUser.RegistrationDate);
             Assert.AreEqual<DateTime>(SqlDateTime.MinValue.Value, fifthweekUser.LastSignInDate);
             Assert.AreEqual<DateTime>(SqlDateTime.MinValue.Value, fifthweekUser.LastAccessTokenDate);
         }
 
         [TestMethod]
+        public async Task WhenUserCreationSucceeds_ItShouldPublishEvent()
+        {
+            this.userRegistered.Setup(_ => _.HandleAsync(new UserRegisteredEvent(UserId))).Returns(Task.FromResult(0)).Verifiable();
+            this.userManager.Setup(v => v.FindByEmailAsync(RegistrationData.Email)).ReturnsAsync(null);
+            this.userManager.Setup(v => v.FindByNameAsync(RegistrationData.Username)).ReturnsAsync(null);
+            this.userManager.Setup(v => v.CreateAsync(It.IsAny<FifthweekUser>(), RegistrationData.Password))
+                .ReturnsAsync(new MockIdentityResult());
+
+            await this.target.HandleAsync(Command);
+
+            this.userRegistered.Verify();
+        }
+
+        [TestMethod]
         public async Task WhenUserCreationFails_ItShouldThrowAnException()
         {
-            var userManager = new Mock<IUserManager>();
-            userManager.Setup(v => v.FindByEmailAsync(this.registrationData.Email)).ReturnsAsync(null);
-            userManager.Setup(v => v.FindByNameAsync(this.registrationData.Username)).ReturnsAsync(null);
-            userManager.Setup(v => v.CreateAsync(It.IsAny<FifthweekUser>(), this.registrationData.Password))
+            this.userManager.Setup(v => v.FindByEmailAsync(RegistrationData.Email)).ReturnsAsync(null);
+            this.userManager.Setup(v => v.FindByNameAsync(RegistrationData.Username)).ReturnsAsync(null);
+            this.userManager.Setup(v => v.CreateAsync(It.IsAny<FifthweekUser>(), RegistrationData.Password))
                 .ReturnsAsync(new MockIdentityResult("One", "Two"));
 
-            var target = new RegisterUserCommandHandler(userManager.Object);
             Exception exception = null;
             try
             {
-                await target.HandleAsync(this.CreateRegisterUserCommand());
+                await this.target.HandleAsync(Command);
             }
             catch (Exception t)
             {
@@ -107,7 +138,7 @@
             }
 
             Assert.IsNotNull(exception);
-            Assert.IsTrue(exception.Message.Contains(this.registrationData.Username));
+            Assert.IsTrue(exception.Message.Contains(RegistrationData.Username));
             Assert.IsInstanceOfType(exception, typeof(AggregateException));
 
             var ae = (AggregateException)exception;
@@ -115,25 +146,6 @@
             Assert.IsTrue(ae.InnerExceptions.Any(v => v.Message == "One"));
             Assert.IsTrue(ae.InnerExceptions.Any(v => v.Message == "Two"));
         }
-
-        private RegisterUserCommand CreateRegisterUserCommand()
-        {
-            return RegisterUserCommandTests.NewCommand(Guid.Empty, this.registrationData);
-        }
-
-        [TestInitialize]
-        public void TestInitialize()
-        {
-            this.registrationData = new RegistrationData
-            {
-                Email = "test@testing.fifthweek.com",
-                ExampleWork = "testing.fifthweek.com",
-                Password = "TestPassword",
-                Username = "test_username",
-            };
-        }
-
-        private RegistrationData registrationData;
     }
 
     public static class RegisterUserCommandTests

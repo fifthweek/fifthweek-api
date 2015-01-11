@@ -28,5 +28,7 @@ namespace Fifthweek.Api.Persistence
         Task SendEmailAsync(Guid userId, string subject, string body);
 
         Task<bool> ValidatePasswordResetTokenAsync(FifthweekUser user, string token);
+
+        Task<bool> IsInRoleAsync(Guid userId, string role);
     }
 }

@@ -287,11 +287,11 @@
 			for (var i = 0; i < classHierarchy.Count - 1; i++)
 			{
 				tabs = new string('\t', i + 1);
-				this.output.WriteLine(tabs + "public partial class " + classHierarchy[i].Name);
+				this.output.WriteLine(tabs + "public partial class " + this.GetClassSignature(classHierarchy[i]));
 				this.output.WriteLine(tabs + "{");
 			}
 
-			var name = classHierarchy.Last().Name;
+			var name = this.GetClassSignature(classHierarchy.Last());
 			tabs = new string('\t', classHierarchy.Count);
 
 			if (renderMainClass != null)
@@ -333,5 +333,21 @@
 			classHierarchy.Reverse();
 			return classHierarchy;
 		}
+
+		private string GetClassSignature(CodeClass codeClass)
+        {
+			var upToTypeParameters = codeClass.FullName.IndexOf("<");
+			if (upToTypeParameters == -1)
+            {
+				upToTypeParameters = codeClass.FullName.Length;
+            }
+			var removeUpTo = Math.Min(upToTypeParameters, codeClass.FullName.LastIndexOf("."));
+			if (removeUpTo == -1)
+            {
+				return codeClass.FullName;
+            }
+
+			return codeClass.FullName.Substring(removeUpTo + 1);
+        }
     }
 #>

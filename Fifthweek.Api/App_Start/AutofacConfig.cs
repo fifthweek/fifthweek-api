@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNet.Identity;
+﻿using Autofac.Builder;
+using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
 
 namespace Fifthweek.Api
@@ -83,13 +84,19 @@ namespace Fifthweek.Api
                                    where t.IsClass
                                    from i in t.GetInterfaces()
                                    where i.IsClosedTypeOf(typeof(ICommandHandler<>))
-                                   select new { Type = t, Interface = i, Decorators = GetDecoratorTypes(t) }).ToList();
+                                   select new { Type = t, Interface = i }).ToList();
+
+            var eventHandlers = (from t in types
+                                 where t.IsClass
+                                 from i in t.GetInterfaces()
+                                 where i.IsClosedTypeOf(typeof(IEventHandler<>))
+                                 select new { Type = t, Interface = i }).ToList();
 
             var queryHandlers = (from t in types
-                                  where t.IsClass
-                                  from i in t.GetInterfaces()
-                                  where i.IsClosedTypeOf(typeof(IQueryHandler<,>))
-                                 select new { Type = t, Interface = i, Decorators = GetDecoratorTypes(t) }).ToList();
+                                 where t.IsClass
+                                 from i in t.GetInterfaces()
+                                 where i.IsClosedTypeOf(typeof(IQueryHandler<,>))
+                                 select new { Type = t, Interface = i }).ToList();
 
             foreach (var item in commandHandlers.Concat(queryHandlers))
             {
@@ -115,6 +122,30 @@ namespace Fifthweek.Api
                             i == 0 ? null : GetDecoratedTypeName(item.Type, i));
                     }
                 }
+            }
+
+            foreach (var eventHandlersWithCommonInterface in eventHandlers.GroupBy(_ => _.Interface))
+            {
+                var handlerTypes = eventHandlersWithCommonInterface.Select(_ => _.Type).ToArray();
+                var commonHandlerType = eventHandlersWithCommonInterface.Key;
+                var commonEventType = commonHandlerType.GetGenericArguments().Single();
+                var collectionType = typeof(IEnumerable<>).MakeGenericType(commonHandlerType);
+                var aggregateHandlerType = typeof(AggregateEventHandler<>).MakeGenericType(commonEventType);
+                var collectionKey = commonHandlerType.Name;
+
+                foreach (var handlerType in handlerTypes)
+                {
+                    builder.RegisterType(handlerType).Named(collectionKey, commonHandlerType);
+                }
+
+                builder
+                    .Register(context =>
+                    {
+                        var handlers = context.ResolveKeyed(collectionKey, collectionType);
+                        var aggregateHandler = Activator.CreateInstance(aggregateHandlerType, handlers);
+                        return aggregateHandler;
+                    })
+                    .As(commonHandlerType);
             }
         }
 

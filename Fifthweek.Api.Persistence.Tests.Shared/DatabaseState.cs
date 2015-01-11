@@ -53,22 +53,22 @@ namespace Fifthweek.Api.Persistence.Tests.Shared
                 {
                     if (sideEffects.Inserts == null)
                     {
-                        Assert.Fail("Unexpected insert");
+                        Assert.Fail("Insert was unexpected");
                     }
                     else
                     {
-                        Assert.IsTrue(sideEffects.Inserts.Any(_ => AreEntitiesEqual(_, databaseEntity)), "Unexpected insert");
+                        Assert.IsTrue(sideEffects.Inserts.Any(_ => AreEntitiesEqual(_, databaseEntity)), "Insert was unexpected");
                     }
                 }
                 else if (!snapshotEntity.Equals(databaseEntity))
                 {
                     if (sideEffects.Updates == null)
                     {
-                        Assert.Fail("Unexpected update");
+                        Assert.Fail("Update was unexpected");
                     }
                     else
                     {
-                        Assert.IsTrue(sideEffects.Updates.Any(_ => AreEntitiesEqual(_, databaseEntity)), "Unexpected update");
+                        Assert.IsTrue(sideEffects.Updates.Any(_ => AreEntitiesEqual(_, databaseEntity)), "Update was unexpected");
                     }
                 }
             }
@@ -84,11 +84,11 @@ namespace Fifthweek.Api.Persistence.Tests.Shared
                 {
                     if (sideEffects.Deletes == null)
                     {
-                        Assert.Fail("Unexpected delete");
+                        Assert.Fail("Delete was unexpected");
                     }
                     else
                     {
-                        Assert.IsTrue(sideEffects.Deletes.Any(_ => AreEntitiesEqual(_, snapshotEntity)), "Unexpected delete");
+                        Assert.IsTrue(sideEffects.Deletes.Any(_ => AreEntitiesEqual(_, snapshotEntity)), "Delete was unexpected");
                     }
                 }
             }
@@ -100,7 +100,7 @@ namespace Fifthweek.Api.Persistence.Tests.Shared
             {
                 foreach (var insert in sideEffects.Inserts)
                 {
-                    Assert.IsTrue(database.Any(_ => AreEntitiesEqual(insert, _)));
+                    Assert.IsTrue(database.Any(_ => AreEntitiesEqual(insert, _)), "Insert was not applied");
                     Assert.IsTrue(snapshot.All(_ => !_.IdentityEquals(insert)), "Cannot assert insert on entity that already exists in snapshot");
                 }
             }
@@ -109,7 +109,7 @@ namespace Fifthweek.Api.Persistence.Tests.Shared
             {
                 foreach (var update in sideEffects.Updates)
                 {
-                    Assert.IsTrue(database.Any(_ => AreEntitiesEqual(update, _)));
+                    Assert.IsTrue(database.Any(_ => AreEntitiesEqual(update, _)), "Update was not applied");
                     Assert.IsTrue(snapshot.All(_ => !AreEntitiesEqual(update, _)), "Cannot assert update on entity that has not changed since the snapshot");
                     Assert.IsTrue(snapshot.Any(_ => _.IdentityEquals(update)), "Cannot assert update on entity that does not exist in snapshot");
                 }
@@ -119,7 +119,7 @@ namespace Fifthweek.Api.Persistence.Tests.Shared
             {
                 foreach (var delete in sideEffects.Deletes)
                 {
-                    Assert.IsTrue(database.All(_ => !_.IdentityEquals(delete)));
+                    Assert.IsTrue(database.All(_ => !_.IdentityEquals(delete)), "Delete was not applied");
                 }
             }
         }

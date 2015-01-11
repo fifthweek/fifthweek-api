@@ -42,13 +42,13 @@ namespace Fifthweek.Api.Subscriptions.Commands
 
         private Task CreateChannelAsync(SetMandatorySubscriptionFieldsCommand command)
         {
-            var channel = new Channel
-            {
-                Id = command.SubscriptionId.Value, // Default channel uses same ID as subscription.
-                SubscriptionId = command.SubscriptionId.Value,
-                PriceInUsCentsPerWeek = command.BasePrice.Value,
-                CreationDate = DateTime.UtcNow
-            };
+            var channel = new Channel(
+                command.SubscriptionId.Value, // Default channel uses same ID as subscription.
+                command.SubscriptionId.Value,
+                null,
+                command.BasePrice.Value,
+                DateTime.UtcNow
+            );
 
             return this.fifthweekDbContext.Database.Connection.UpsertAsync(channel, Channel.Fields.PriceInUsCentsPerWeek);
         }
