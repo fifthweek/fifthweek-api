@@ -86,8 +86,8 @@
     <Compile Include="Commands\PromoteNewUserToCreatorCommand.cs" />
     <Compile Include="Commands\PromoteNewUserToCreatorCommandInitiator.cs" />
     <Compile Include="Commands\PromoteNewUserToCreatorCommandHandler.cs" />
-    <Compile Include="Commands\SetMandatorySubscriptionFieldsCommand.cs" />
-    <Compile Include="Commands\SetMandatorySubscriptionFieldsCommandHandler.cs" />
+    <Compile Include="Commands\CreateSubscriptionCommand.cs" />
+    <Compile Include="Commands\CreateSubscriptionCommandHandler.cs" />
     <Compile Include="Controllers\MandatorySubscriptionData.cs" />
     <Compile Include="Controllers\SubscriptionController.cs" />
     <Compile Include="ISubscriptionSecurity.cs" />
