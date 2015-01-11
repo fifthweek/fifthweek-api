@@ -19,6 +19,7 @@ namespace Fifthweek.Api
 
                 IdentityConfig.Register(app);
                 AutofacConfig.Register(httpConfiguration, app);
+                AzureConfig.Register();
                 OAuthConfig.Register(httpConfiguration, app);
                 DatabaseConfig.Register();
                 WebApiConfig.Register(httpConfiguration);
