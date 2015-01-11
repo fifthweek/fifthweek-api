@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Threading.Tasks;
-using Dapper;
 using Fifthweek.Api.Core;
 using Fifthweek.Api.Persistence;
 

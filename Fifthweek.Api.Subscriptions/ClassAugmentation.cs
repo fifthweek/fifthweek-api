@@ -1,17 +1,18 @@
-﻿
-using System;
-
-
+﻿using System;
+using System.Linq;
 
 
 
 namespace Fifthweek.Api.Subscriptions.Commands
 {
 	using System;
+	using System.Linq;
 	using Fifthweek.Api.Core;
 	using System.Threading.Tasks;
 	using Fifthweek.Api.Identity.Membership;
-	public partial class SetMandatorySubscriptionFieldsCommand
+	using Dapper;
+	using Fifthweek.Api.Persistence;
+	public partial class SetMandatorySubscriptionFieldsCommand 
 	{
         public SetMandatorySubscriptionFieldsCommand(
             Fifthweek.Api.Identity.Membership.UserId requester, 
@@ -57,12 +58,13 @@ namespace Fifthweek.Api.Subscriptions.Commands
 namespace Fifthweek.Api.Subscriptions.Commands
 {
 	using System;
+	using System.Linq;
 	using Fifthweek.Api.Core;
 	using System.Threading.Tasks;
 	using Fifthweek.Api.Identity.Membership;
 	using Dapper;
 	using Fifthweek.Api.Persistence;
-	public partial class SetMandatorySubscriptionFieldsCommandHandler
+	public partial class SetMandatorySubscriptionFieldsCommandHandler 
 	{
         public SetMandatorySubscriptionFieldsCommandHandler(
             Fifthweek.Api.Persistence.IFifthweekDbContext fifthweekDbContext, 
@@ -87,15 +89,15 @@ namespace Fifthweek.Api.Subscriptions.Commands
 namespace Fifthweek.Api.Subscriptions
 {
 	using System;
+	using System.Linq;
 	using Fifthweek.Api.Core;
 	using System.Collections.Generic;
-	using System.Linq;
 	using System.Data.Entity;
 	using System.Threading.Tasks;
 	using Dapper;
 	using Fifthweek.Api.Identity.Membership;
 	using Fifthweek.Api.Persistence;
-	public partial class SubscriptionId
+	public partial class SubscriptionId 
 	{
         public SubscriptionId(
             System.Guid value)
@@ -113,15 +115,15 @@ namespace Fifthweek.Api.Subscriptions
 namespace Fifthweek.Api.Subscriptions
 {
 	using System;
+	using System.Linq;
 	using Fifthweek.Api.Core;
 	using System.Collections.Generic;
-	using System.Linq;
 	using System.Data.Entity;
 	using System.Threading.Tasks;
 	using Dapper;
 	using Fifthweek.Api.Identity.Membership;
 	using Fifthweek.Api.Persistence;
-	public partial class SubscriptionSecurity
+	public partial class SubscriptionSecurity 
 	{
         public SubscriptionSecurity(
             Fifthweek.Api.Persistence.IFifthweekDbContext fifthweekDbContext)
@@ -132,6 +134,39 @@ namespace Fifthweek.Api.Subscriptions
             }
 
             this.fifthweekDbContext = fifthweekDbContext;
+        }
+	}
+
+}
+namespace Fifthweek.Api.Subscriptions.Controllers
+{
+	using System;
+	using System.Linq;
+	using System.Collections.Generic;
+	using System.Text;
+	using System.Threading.Tasks;
+	using System.Web.Http;
+	using Fifthweek.Api.Core;
+	using Fifthweek.Api.Subscriptions.Commands;
+	using Fifthweek.Api.Identity.OAuth;
+	public partial class SubscriptionController 
+	{
+        public SubscriptionController(
+            Fifthweek.Api.Core.ICommandHandler<Fifthweek.Api.Subscriptions.Commands.SetMandatorySubscriptionFieldsCommand> setMandatorySubscriptionFields, 
+            Fifthweek.Api.Identity.OAuth.IUserContext userContext)
+        {
+            if (setMandatorySubscriptionFields == null)
+            {
+                throw new ArgumentNullException("setMandatorySubscriptionFields");
+            }
+
+            if (userContext == null)
+            {
+                throw new ArgumentNullException("userContext");
+            }
+
+            this.setMandatorySubscriptionFields = setMandatorySubscriptionFields;
+            this.userContext = userContext;
         }
 	}
 
@@ -148,7 +183,7 @@ namespace Fifthweek.Api.Subscriptions
 	using Dapper;
 	using Fifthweek.Api.Identity.Membership;
 	using Fifthweek.Api.Persistence;
-	public partial class ChannelPriceInUsCentsPerWeek
+	public partial class ChannelPriceInUsCentsPerWeek 
 	{
         public override bool Equals(object obj)
         {
@@ -186,6 +221,7 @@ namespace Fifthweek.Api.Subscriptions
             {
                 return false;
             }
+
             return true;
         }
 	}
@@ -194,10 +230,13 @@ namespace Fifthweek.Api.Subscriptions
 namespace Fifthweek.Api.Subscriptions.Commands
 {
 	using System;
+	using System.Linq;
 	using Fifthweek.Api.Core;
 	using System.Threading.Tasks;
 	using Fifthweek.Api.Identity.Membership;
-	public partial class SetMandatorySubscriptionFieldsCommand
+	using Dapper;
+	using Fifthweek.Api.Persistence;
+	public partial class SetMandatorySubscriptionFieldsCommand 
 	{
         public override bool Equals(object obj)
         {
@@ -239,22 +278,27 @@ namespace Fifthweek.Api.Subscriptions.Commands
             {
                 return false;
             }
+
             if (!object.Equals(this.SubscriptionId, other.SubscriptionId))
             {
                 return false;
             }
+
             if (!object.Equals(this.SubscriptionName, other.SubscriptionName))
             {
                 return false;
             }
+
             if (!object.Equals(this.Tagline, other.Tagline))
             {
                 return false;
             }
+
             if (!object.Equals(this.BasePrice, other.BasePrice))
             {
                 return false;
             }
+
             return true;
         }
 	}
@@ -263,15 +307,15 @@ namespace Fifthweek.Api.Subscriptions.Commands
 namespace Fifthweek.Api.Subscriptions
 {
 	using System;
+	using System.Linq;
 	using Fifthweek.Api.Core;
 	using System.Collections.Generic;
-	using System.Linq;
 	using System.Data.Entity;
 	using System.Threading.Tasks;
 	using Dapper;
 	using Fifthweek.Api.Identity.Membership;
 	using Fifthweek.Api.Persistence;
-	public partial class SubscriptionId
+	public partial class SubscriptionId 
 	{
         public override bool Equals(object obj)
         {
@@ -309,6 +353,7 @@ namespace Fifthweek.Api.Subscriptions
             {
                 return false;
             }
+
             return true;
         }
 	}
@@ -317,8 +362,14 @@ namespace Fifthweek.Api.Subscriptions
 namespace Fifthweek.Api.Subscriptions.Controllers
 {
 	using System;
+	using System.Linq;
+	using System.Collections.Generic;
+	using System.Text;
+	using System.Threading.Tasks;
+	using System.Web.Http;
 	using Fifthweek.Api.Core;
-	public partial class MandatorySubscriptionData
+	using Fifthweek.Api.Subscriptions.Commands;
+	public partial class MandatorySubscriptionData 
 	{
         public override bool Equals(object obj)
         {
@@ -345,11 +396,9 @@ namespace Fifthweek.Api.Subscriptions.Controllers
             unchecked
             {
                 int hashCode = 0;
-                hashCode = (hashCode * 397) ^ (this.SubscriptionIdObject != null ? this.SubscriptionIdObject.GetHashCode() : 0);
                 hashCode = (hashCode * 397) ^ (this.SubscriptionNameObject != null ? this.SubscriptionNameObject.GetHashCode() : 0);
                 hashCode = (hashCode * 397) ^ (this.TaglineObject != null ? this.TaglineObject.GetHashCode() : 0);
                 hashCode = (hashCode * 397) ^ (this.BasePriceObject != null ? this.BasePriceObject.GetHashCode() : 0);
-                hashCode = (hashCode * 397) ^ (this.SubscriptionId != null ? this.SubscriptionId.GetHashCode() : 0);
                 hashCode = (hashCode * 397) ^ (this.SubscriptionName != null ? this.SubscriptionName.GetHashCode() : 0);
                 hashCode = (hashCode * 397) ^ (this.Tagline != null ? this.Tagline.GetHashCode() : 0);
                 hashCode = (hashCode * 397) ^ (this.BasePrice != null ? this.BasePrice.GetHashCode() : 0);
@@ -359,38 +408,36 @@ namespace Fifthweek.Api.Subscriptions.Controllers
 
         protected bool Equals(MandatorySubscriptionData other)
         {
-            if (!object.Equals(this.SubscriptionIdObject, other.SubscriptionIdObject))
-            {
-                return false;
-            }
             if (!object.Equals(this.SubscriptionNameObject, other.SubscriptionNameObject))
             {
                 return false;
             }
+
             if (!object.Equals(this.TaglineObject, other.TaglineObject))
             {
                 return false;
             }
+
             if (!object.Equals(this.BasePriceObject, other.BasePriceObject))
             {
                 return false;
             }
-            if (!object.Equals(this.SubscriptionId, other.SubscriptionId))
-            {
-                return false;
-            }
+
             if (!object.Equals(this.SubscriptionName, other.SubscriptionName))
             {
                 return false;
             }
+
             if (!object.Equals(this.Tagline, other.Tagline))
             {
                 return false;
             }
+
             if (!object.Equals(this.BasePrice, other.BasePrice))
             {
                 return false;
             }
+
             return true;
         }
 	}
@@ -399,15 +446,15 @@ namespace Fifthweek.Api.Subscriptions.Controllers
 namespace Fifthweek.Api.Subscriptions
 {
 	using System;
+	using System.Linq;
 	using Fifthweek.Api.Core;
 	using System.Collections.Generic;
-	using System.Linq;
 	using System.Data.Entity;
 	using System.Threading.Tasks;
 	using Dapper;
 	using Fifthweek.Api.Identity.Membership;
 	using Fifthweek.Api.Persistence;
-	public partial class SubscriptionName
+	public partial class SubscriptionName 
 	{
         public override bool Equals(object obj)
         {
@@ -445,6 +492,7 @@ namespace Fifthweek.Api.Subscriptions
             {
                 return false;
             }
+
             return true;
         }
 	}
@@ -453,15 +501,15 @@ namespace Fifthweek.Api.Subscriptions
 namespace Fifthweek.Api.Subscriptions
 {
 	using System;
+	using System.Linq;
 	using Fifthweek.Api.Core;
 	using System.Collections.Generic;
-	using System.Linq;
 	using System.Data.Entity;
 	using System.Threading.Tasks;
 	using Dapper;
 	using Fifthweek.Api.Identity.Membership;
 	using Fifthweek.Api.Persistence;
-	public partial class Tagline
+	public partial class Tagline 
 	{
         public override bool Equals(object obj)
         {
@@ -499,6 +547,7 @@ namespace Fifthweek.Api.Subscriptions
             {
                 return false;
             }
+
             return true;
         }
 	}
@@ -508,10 +557,15 @@ namespace Fifthweek.Api.Subscriptions
 namespace Fifthweek.Api.Subscriptions.Controllers
 {
 	using System;
+	using System.Linq;
+	using System.Collections.Generic;
+	using System.Text;
+	using System.Threading.Tasks;
+	using System.Web.Http;
 	using Fifthweek.Api.Core;
-	public partial class MandatorySubscriptionData
+	using Fifthweek.Api.Subscriptions.Commands;
+	public partial class MandatorySubscriptionData 
 	{
-		public SubscriptionId SubscriptionIdObject { get; set; }
 		public SubscriptionName SubscriptionNameObject { get; set; }
 		public Tagline TaglineObject { get; set; }
 		public ChannelPriceInUsCentsPerWeek BasePriceObject { get; set; }
@@ -527,17 +581,6 @@ namespace Fifthweek.Api.Subscriptions.Controllers
 		public static void Parse(MandatorySubscriptionData target)
 		{
 			var modelStateDictionary = new System.Web.Http.ModelBinding.ModelStateDictionary();
-
-		    if (target.SubscriptionId != null)
-		    {
-                target.SubscriptionIdObject = new SubscriptionId(target.SubscriptionId);
-		    }
-		    else if (true)
-		    {
-                var modelState = new System.Web.Http.ModelBinding.ModelState();
-                modelState.Errors.Add("Value required");
-                modelStateDictionary.Add("SubscriptionId", modelState);
-            }
 
 			if (true || !SubscriptionName.IsEmpty(target.SubscriptionName))
 			{
@@ -606,3 +649,4 @@ namespace Fifthweek.Api.Subscriptions.Controllers
 		}	
 	}
 }
+

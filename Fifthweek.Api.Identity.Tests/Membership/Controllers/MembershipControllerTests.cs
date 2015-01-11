@@ -19,6 +19,38 @@ namespace Fifthweek.Api.Identity.Tests.Membership.Controllers
     [TestClass]
     public class MembershipControllerTests
     {
+        private const string UsernameValue = "lawrence";
+        private const string Token = "Password Token";
+        private static readonly UserId UserId = new UserId(Guid.NewGuid());
+        private static readonly Username Username = Username.Parse(UsernameValue);
+        private Mock<ICommandHandler<RegisterUserCommand>> registerUser;
+        private Mock<ICommandHandler<RequestPasswordResetCommand>> requestPasswordReset;
+        private Mock<ICommandHandler<ConfirmPasswordResetCommand>> confirmPasswordReset;
+        private Mock<IQueryHandler<IsUsernameAvailableQuery, bool>> isUsernameAvailable;
+        private Mock<IQueryHandler<IsPasswordResetTokenValidQuery, bool>> isPasswordResetTokenValid;
+        private Mock<IGuidCreator> guidCreator;
+        private MembershipController controller;
+
+        [TestInitialize]
+        public void TestInitialize()
+        {
+            this.registerUser = new Mock<ICommandHandler<RegisterUserCommand>>();
+            this.requestPasswordReset = new Mock<ICommandHandler<RequestPasswordResetCommand>>();
+            this.confirmPasswordReset = new Mock<ICommandHandler<ConfirmPasswordResetCommand>>();
+            this.isUsernameAvailable = new Mock<IQueryHandler<IsUsernameAvailableQuery, bool>>();
+            this.isPasswordResetTokenValid = new Mock<IQueryHandler<IsPasswordResetTokenValidQuery, bool>>();
+            this.guidCreator = new Mock<IGuidCreator>();
+            this.guidCreator.Setup(v => v.CreateSqlSequential()).Returns(Guid.Empty);
+
+            this.controller = new MembershipController(
+                this.registerUser.Object,
+                this.requestPasswordReset.Object,
+                this.confirmPasswordReset.Object,
+                this.isUsernameAvailable.Object,
+                this.isPasswordResetTokenValid.Object,
+                this.guidCreator.Object);
+        }
+        
         [TestMethod]
         public async Task WhenPostingRegistrations_ItShouldIssueRegisterUserCommand()
         {
@@ -33,7 +65,6 @@ namespace Fifthweek.Api.Identity.Tests.Membership.Controllers
             this.registerUser.Verify(v => v.HandleAsync(command));
             this.guidCreator.Verify(v => v.CreateSqlSequential());
         }
-
 
         [TestMethod]
         public async Task WhenGettingUsernameAvailability_ItShouldYieldOkIfUsernameAvailable()
@@ -106,38 +137,6 @@ namespace Fifthweek.Api.Identity.Tests.Membership.Controllers
 
             Assert.IsInstanceOfType(result, typeof(NotFoundResult));
         }
-
-        [TestInitialize]
-        public void TestInitialize()
-        {
-            this.registerUser = new Mock<ICommandHandler<RegisterUserCommand>>();
-            this.requestPasswordReset = new Mock<ICommandHandler<RequestPasswordResetCommand>>();
-            this.confirmPasswordReset = new Mock<ICommandHandler<ConfirmPasswordResetCommand>>();
-            this.isUsernameAvailable = new Mock<IQueryHandler<IsUsernameAvailableQuery, bool>>();
-            this.isPasswordResetTokenValid = new Mock<IQueryHandler<IsPasswordResetTokenValidQuery, bool>>();
-            this.guidCreator = new Mock<IGuidCreator>();
-            this.guidCreator.Setup(v => v.CreateSqlSequential()).Returns(Guid.Empty);
-
-            this.controller = new MembershipController(
-                this.registerUser.Object, 
-                this.requestPasswordReset.Object, 
-                this.confirmPasswordReset.Object, 
-                this.isUsernameAvailable.Object,
-                this.isPasswordResetTokenValid.Object,
-                this.guidCreator.Object);
-        }
-
-        private const string UsernameValue = "lawrence";
-        private const string Token = "Password Token";
-        private static readonly UserId UserId = new UserId(Guid.NewGuid());
-        private static readonly Username Username = Username.Parse(UsernameValue);
-        private Mock<ICommandHandler<RegisterUserCommand>> registerUser;
-        private Mock<ICommandHandler<RequestPasswordResetCommand>> requestPasswordReset;
-        private Mock<ICommandHandler<ConfirmPasswordResetCommand>> confirmPasswordReset;
-        private Mock<IQueryHandler<IsUsernameAvailableQuery, bool>> isUsernameAvailable;
-        private Mock<IQueryHandler<IsPasswordResetTokenValidQuery, bool>> isPasswordResetTokenValid;
-        private Mock<IGuidCreator> guidCreator;
-        private MembershipController controller;
 
         public static PasswordResetConfirmationData NewPasswordResetConfirmationData()
         {
