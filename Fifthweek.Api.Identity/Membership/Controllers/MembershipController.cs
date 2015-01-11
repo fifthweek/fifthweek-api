@@ -1,8 +1,4 @@
-﻿using System.Web;
-using System.Web.Http.Controllers;
-using System.Web.Http.ModelBinding;
-
-namespace Fifthweek.Api.Identity.Membership.Controllers
+﻿namespace Fifthweek.Api.Identity.Membership.Controllers
 {
     using System;
     using System.Threading.Tasks;
@@ -13,8 +9,8 @@ namespace Fifthweek.Api.Identity.Membership.Controllers
     using Fifthweek.Api.Identity.Membership.Commands;
     using Fifthweek.Api.Identity.Membership.Queries;
 
-    [RoutePrefix("membership")]
-    public class MembershipController : ApiController
+    [RoutePrefix("membership"), AutoConstructor]
+    public partial class MembershipController : ApiController
     {
         private readonly ICommandHandler<RegisterUserCommand> registerUser;
         private readonly ICommandHandler<RequestPasswordResetCommand> requestPasswordReset;
@@ -22,52 +18,6 @@ namespace Fifthweek.Api.Identity.Membership.Controllers
         private readonly IQueryHandler<IsUsernameAvailableQuery, bool> isUsernameAvailable;
         private readonly IQueryHandler<IsPasswordResetTokenValidQuery, bool> isPasswordResetTokenValid;
         private readonly IGuidCreator guidCreator;
-
-        public MembershipController(
-            ICommandHandler<RegisterUserCommand> registerUser,
-            ICommandHandler<RequestPasswordResetCommand> requestPasswordReset,
-            ICommandHandler<ConfirmPasswordResetCommand> confirmPasswordReset,
-            IQueryHandler<IsUsernameAvailableQuery, bool> isUsernameAvailable,
-            IQueryHandler<IsPasswordResetTokenValidQuery, bool> isPasswordResetTokenValid,
-            IGuidCreator guidCreator)
-        {
-            if (registerUser == null)
-            {
-                throw new ArgumentNullException("registerUser");
-            }
-
-            if (requestPasswordReset == null)
-            {
-                throw new ArgumentNullException("requestPasswordReset");
-            }
-
-            if (confirmPasswordReset == null)
-            {
-                throw new ArgumentNullException("confirmPasswordReset");
-            }
-
-            if (isUsernameAvailable == null)
-            {
-                throw new ArgumentNullException("isUsernameAvailable");
-            }
-
-            if (isPasswordResetTokenValid == null)
-            {
-                throw new ArgumentNullException("isPasswordResetTokenValid");
-            }
-
-            if (guidCreator == null)
-            {
-                throw new ArgumentNullException("guidCreator");
-            }
-
-            this.registerUser = registerUser;
-            this.requestPasswordReset = requestPasswordReset;
-            this.confirmPasswordReset = confirmPasswordReset;
-            this.isUsernameAvailable = isUsernameAvailable;
-            this.isPasswordResetTokenValid = isPasswordResetTokenValid;
-            this.guidCreator = guidCreator;
-        }
 
         // POST membership/registrations
         [AllowAnonymous]
