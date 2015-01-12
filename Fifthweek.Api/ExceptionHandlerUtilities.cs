@@ -3,6 +3,7 @@
     using System;
     using System.Net;
     using System.Net.Http;
+    using System.Security;
     using System.Threading.Tasks;
     using System.Web;
     using System.Web.Hosting;
@@ -46,6 +47,14 @@
                 return request.CreateErrorResponse(
                     HttpStatusCode.BadRequest,
                     exception.Message);
+            }
+            else if (exception is ForbiddenException || exception is SecurityException)
+            {
+                return request.CreateErrorResponse(HttpStatusCode.Forbidden, HttpStatusCode.Forbidden.ToString());
+            }
+            else if (exception is UnauthorizedException || exception is UnauthorizedAccessException)
+            {
+                return request.CreateErrorResponse(HttpStatusCode.Unauthorized, HttpStatusCode.Unauthorized.ToString());
             }
             else
             {

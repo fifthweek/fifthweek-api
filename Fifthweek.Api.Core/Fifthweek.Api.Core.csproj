@@ -93,6 +93,8 @@
     <Compile Include="ConstructedAttribute.cs" />
     <Compile Include="DecoratorAttribute.cs" />
     <Compile Include="AggregateEventHandler.cs" />
+    <Compile Include="DetailedRecoverableException.cs" />
+    <Compile Include="ForbiddenException.cs" />
     <Compile Include="IAutofacRegistration.cs" />
     <Compile Include="IEventHandler.cs" />
     <Compile Include="NonEquatableAttribute.cs" />
@@ -120,6 +122,7 @@
     <Compile Include="GuidCreator.cs" />
     <Compile Include="TraceService.cs" />
     <Compile Include="TransactionCommandHandlerDecorator.cs" />
+    <Compile Include="UnauthorizedException.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
