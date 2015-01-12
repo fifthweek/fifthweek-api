@@ -1,6 +1,7 @@
 ﻿namespace Fifthweek.Api.Subscriptions.Commands
 {
     using Fifthweek.Api.Core;
+    using Fifthweek.Api.FileManagement;
     using Fifthweek.Api.Identity.Membership;
 
     [AutoEqualityMembers, AutoConstructor]
@@ -18,5 +19,14 @@
 
         [Optional]
         public Introduction Introduction { get; private set; }
+
+        [Optional]
+        public FileId HeaderImageFileId { get; private set; }
+
+        [Optional]
+        public ExternalVideoUrl Video { get; private set; }
+
+        [Optional]
+        public Description Description { get; private set; }
     }
 }

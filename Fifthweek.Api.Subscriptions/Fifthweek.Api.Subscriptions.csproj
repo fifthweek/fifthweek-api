@@ -92,6 +92,7 @@
     <Compile Include="Controllers\CreatorStatusData.cs" />
     <Compile Include="Controllers\NewSubscriptionData.cs" />
     <Compile Include="Controllers\SubscriptionController.cs" />
+    <Compile Include="ExternalVideoUrl.cs" />
     <Compile Include="Introduction.cs" />
     <Compile Include="ISubscriptionSecurity.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -99,6 +100,7 @@
     <Compile Include="Queries\GetCreatorStatusQuery.cs" />
     <Compile Include="Queries\GetCreatorStatusQueryHandler.cs" />
     <Compile Include="SubscriptionId.cs" />
+    <Compile Include="Description.cs" />
     <Compile Include="SubscriptionName.cs" />
     <Compile Include="ChannelPriceInUsCentsPerWeek.cs" />
     <Compile Include="SubscriptionSecurity.cs" />
@@ -108,6 +110,10 @@
     <ProjectReference Include="..\Fifthweek.Api.Core\Fifthweek.Api.Core.csproj">
       <Project>{BD52863E-063D-45A5-9CA8-7541804D1313}</Project>
       <Name>Fifthweek.Api.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Fifthweek.Api.FileManagement\Fifthweek.Api.FileManagement.csproj">
+      <Project>{3242e7fc-35ce-4e69-b07b-b8dcb3c69348}</Project>
+      <Name>Fifthweek.Api.FileManagement</Name>
     </ProjectReference>
     <ProjectReference Include="..\Fifthweek.Api.Identity\Fifthweek.Api.Identity.csproj">
       <Project>{6A2AF270-E4D4-4C4E-A88F-807F7B9A03B7}</Project>

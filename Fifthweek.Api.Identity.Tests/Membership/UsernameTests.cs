@@ -74,14 +74,14 @@
         }
 
         [TestMethod]
-        public void WhenParsingNonExactOnly_ItShouldAllowLeadingOrTrailingWhitespace()
+        public void ItShouldNormalizeToHaveNoLeadingOrTrailingWhitespace()
         {
             this.GoodNonExactValue(" joebloggs", "joebloggs");
             this.GoodNonExactValue("joebloggs ", "joebloggs");
         }
 
         [TestMethod]
-        public void WhenParsingNonExactOnly_ItShouldAllowUppercase()
+        public void ItShouldNormalizeToHaveAllLowercase()
         {
             this.GoodNonExactValue("JoeBloggs", "joebloggs");
         }

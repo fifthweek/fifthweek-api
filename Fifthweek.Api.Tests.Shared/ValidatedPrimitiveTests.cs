@@ -86,7 +86,7 @@ namespace Fifthweek.Api.Tests.Shared
             IReadOnlyCollection<string> errorMessages;
 
             var valid = this.TryParse(value, out parsedObject, exact);
-            Assert.IsFalse(valid);
+            Assert.IsFalse(valid, string.Format("Value not expected to be valid: '{0}' (exact = {1})", value, exact));
 
             valid = this.TryParse(value, out parsedObject, out errorMessages, exact);
             Assert.IsFalse(valid);
@@ -108,7 +108,7 @@ namespace Fifthweek.Api.Tests.Shared
             IReadOnlyCollection<string> errorMessages;
 
             var valid = this.TryParse(actualValue, out parsedObject, exact);
-            Assert.IsTrue(valid);
+            Assert.IsTrue(valid, string.Format("Value expected to be valid: '{0}' (exact = {1})", actualValue, exact));
             Assert.AreEqual(expectedValue, this.GetValue(parsedObject));
 
             valid = this.TryParse(actualValue, out parsedObject, out errorMessages, exact);

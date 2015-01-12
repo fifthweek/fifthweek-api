@@ -2,20 +2,16 @@
 {
     using System;
     using System.Collections.Generic;
-    using System.Linq;
 
     using Fifthweek.Api.Core;
 
     [AutoEqualityMembers]
-    public partial class SubscriptionName
+    public partial class Description
     {
-        public static readonly string ForbiddenCharacters = "\r\n\t";
         public static readonly int MinLength = 1;
-        public static readonly int MaxLength = 25;
+        public static readonly int MaxLength = 2000;
 
-        private static readonly HashSet<char> ForbiddenCharactersHashSet = new HashSet<char>(ForbiddenCharacters);
-
-        private SubscriptionName()
+        private Description()
         {
         }
 
@@ -27,24 +23,24 @@
             return string.IsNullOrEmpty(value); // Trimmed types use IsNullOrWhiteSpace
         }
 
-        public static SubscriptionName Parse(string value)
+        public static Description Parse(string value)
         {
-            SubscriptionName retval;
+            Description retval;
             if (!TryParse(value, out retval))
             {
-                throw new ArgumentException("Invalid subscription name", "value");
+                throw new ArgumentException("Invalid description", "value");
             }
 
             return retval;
         }
 
-        public static bool TryParse(string value, out SubscriptionName subscriptionName)
+        public static bool TryParse(string value, out Description description)
         {
             IReadOnlyCollection<string> errorMessages;
-            return TryParse(value, out subscriptionName, out errorMessages);
+            return TryParse(value, out description, out errorMessages);
         }
 
-        public static bool TryParse(string value, out SubscriptionName subscriptionName, out IReadOnlyCollection<string> errorMessages)
+        public static bool TryParse(string value, out Description description, out IReadOnlyCollection<string> errorMessages)
         {
             var errorMessageList = new List<string>();
             errorMessages = errorMessageList;
@@ -60,20 +56,15 @@
                 {
                     errorMessageList.Add(string.Format("Length must be from {0} to {1} characters", MinLength, MaxLength));
                 }
-
-                if (value.Any(ForbiddenCharactersHashSet.Contains))
-                {
-                    errorMessageList.Add("Must not contain new lines or tabs");
-                }
             }
 
             if (errorMessageList.Count > 0)
             {
-                subscriptionName = null;
+                description = null;
                 return false;
             }
 
-            subscriptionName = new SubscriptionName
+            description = new Description
             {
                 Value = value
             };

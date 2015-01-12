@@ -14,6 +14,7 @@ namespace Fifthweek.Api.Subscriptions.Commands
 	using Fifthweek.Api.Persistence;
 	using Fifthweek.Api.Identity.Membership.Events;
 	using Fifthweek.Api.Persistence.Identity;
+	using Fifthweek.Api.FileManagement;
 	public partial class CreateSubscriptionCommand 
 	{
         public CreateSubscriptionCommand(
@@ -68,6 +69,7 @@ namespace Fifthweek.Api.Subscriptions.Commands
 	using Fifthweek.Api.Persistence;
 	using Fifthweek.Api.Identity.Membership.Events;
 	using Fifthweek.Api.Persistence.Identity;
+	using Fifthweek.Api.FileManagement;
 	public partial class CreateSubscriptionCommandHandler 
 	{
         public CreateSubscriptionCommandHandler(
@@ -204,6 +206,7 @@ namespace Fifthweek.Api.Subscriptions.Commands
 	using Fifthweek.Api.Persistence;
 	using Fifthweek.Api.Identity.Membership.Events;
 	using Fifthweek.Api.Persistence.Identity;
+	using Fifthweek.Api.FileManagement;
 	public partial class PromoteNewUserToCreatorCommand 
 	{
         public PromoteNewUserToCreatorCommand(
@@ -230,6 +233,7 @@ namespace Fifthweek.Api.Subscriptions.Commands
 	using Fifthweek.Api.Persistence;
 	using Fifthweek.Api.Identity.Membership.Events;
 	using Fifthweek.Api.Persistence.Identity;
+	using Fifthweek.Api.FileManagement;
 	public partial class PromoteNewUserToCreatorCommandHandler 
 	{
         public PromoteNewUserToCreatorCommandHandler(
@@ -256,6 +260,7 @@ namespace Fifthweek.Api.Subscriptions.Commands
 	using Fifthweek.Api.Persistence;
 	using Fifthweek.Api.Identity.Membership.Events;
 	using Fifthweek.Api.Persistence.Identity;
+	using Fifthweek.Api.FileManagement;
 	public partial class PromoteNewUserToCreatorCommandInitiator 
 	{
         public PromoteNewUserToCreatorCommandInitiator(
@@ -385,8 +390,16 @@ namespace Fifthweek.Api.Subscriptions.Controllers
 }
 namespace Fifthweek.Api.Subscriptions.Commands
 {
+	using System;
+	using System.Linq;
 	using Fifthweek.Api.Core;
+	using System.Threading.Tasks;
 	using Fifthweek.Api.Identity.Membership;
+	using Dapper;
+	using Fifthweek.Api.Persistence;
+	using Fifthweek.Api.Identity.Membership.Events;
+	using Fifthweek.Api.Persistence.Identity;
+	using Fifthweek.Api.FileManagement;
 	public partial class UpdateSubscriptionCommand 
 	{
         public UpdateSubscriptionCommand(
@@ -394,7 +407,10 @@ namespace Fifthweek.Api.Subscriptions.Commands
             Fifthweek.Api.Subscriptions.SubscriptionId subscriptionId, 
             Fifthweek.Api.Subscriptions.SubscriptionName subscriptionName, 
             Fifthweek.Api.Subscriptions.Tagline tagline, 
-            Fifthweek.Api.Subscriptions.Introduction introduction)
+            Fifthweek.Api.Subscriptions.Introduction introduction, 
+            Fifthweek.Api.FileManagement.FileId headerImageFileId, 
+            Fifthweek.Api.Subscriptions.ExternalVideoUrl video, 
+            Fifthweek.Api.Subscriptions.Description description)
         {
             if (requester == null)
             {
@@ -406,26 +422,14 @@ namespace Fifthweek.Api.Subscriptions.Commands
                 throw new ArgumentNullException("subscriptionId");
             }
 
-            if (subscriptionName == null)
-            {
-                throw new ArgumentNullException("subscriptionName");
-            }
-
-            if (tagline == null)
-            {
-                throw new ArgumentNullException("tagline");
-            }
-
-            if (introduction == null)
-            {
-                throw new ArgumentNullException("introduction");
-            }
-
             this.Requester = requester;
             this.SubscriptionId = subscriptionId;
             this.SubscriptionName = subscriptionName;
             this.Tagline = tagline;
             this.Introduction = introduction;
+            this.HeaderImageFileId = headerImageFileId;
+            this.Video = video;
+            this.Description = description;
         }
 	}
 
@@ -498,6 +502,7 @@ namespace Fifthweek.Api.Subscriptions.Commands
 	using Fifthweek.Api.Persistence;
 	using Fifthweek.Api.Identity.Membership.Events;
 	using Fifthweek.Api.Persistence.Identity;
+	using Fifthweek.Api.FileManagement;
 	public partial class CreateSubscriptionCommand 
 	{
         public override bool Equals(object obj)
@@ -633,6 +638,7 @@ namespace Fifthweek.Api.Subscriptions.Commands
 	using Fifthweek.Api.Persistence;
 	using Fifthweek.Api.Identity.Membership.Events;
 	using Fifthweek.Api.Persistence.Identity;
+	using Fifthweek.Api.FileManagement;
 	public partial class PromoteNewUserToCreatorCommand 
 	{
         public override bool Equals(object obj)
@@ -855,6 +861,104 @@ namespace Fifthweek.Api.Subscriptions.Controllers
 	}
 
 }
+namespace Fifthweek.Api.Subscriptions.Commands
+{
+	using System;
+	using System.Linq;
+	using Fifthweek.Api.Core;
+	using System.Threading.Tasks;
+	using Fifthweek.Api.Identity.Membership;
+	using Dapper;
+	using Fifthweek.Api.Persistence;
+	using Fifthweek.Api.Identity.Membership.Events;
+	using Fifthweek.Api.Persistence.Identity;
+	using Fifthweek.Api.FileManagement;
+	public partial class UpdateSubscriptionCommand 
+	{
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj))
+            {
+                return false;
+            }
+
+            if (ReferenceEquals(this, obj))
+            {
+                return true;
+            }
+
+            if (obj.GetType() != this.GetType())
+            {
+                return false;
+            }
+
+            return this.Equals((UpdateSubscriptionCommand)obj);
+        }
+
+        public override int GetHashCode()
+        {
+            unchecked
+            {
+                int hashCode = 0;
+                hashCode = (hashCode * 397) ^ (this.Requester != null ? this.Requester.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.SubscriptionId != null ? this.SubscriptionId.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.SubscriptionName != null ? this.SubscriptionName.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.Tagline != null ? this.Tagline.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.Introduction != null ? this.Introduction.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.HeaderImageFileId != null ? this.HeaderImageFileId.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.Video != null ? this.Video.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.Description != null ? this.Description.GetHashCode() : 0);
+                return hashCode;
+            }
+        }
+
+        protected bool Equals(UpdateSubscriptionCommand other)
+        {
+            if (!object.Equals(this.Requester, other.Requester))
+            {
+                return false;
+            }
+
+            if (!object.Equals(this.SubscriptionId, other.SubscriptionId))
+            {
+                return false;
+            }
+
+            if (!object.Equals(this.SubscriptionName, other.SubscriptionName))
+            {
+                return false;
+            }
+
+            if (!object.Equals(this.Tagline, other.Tagline))
+            {
+                return false;
+            }
+
+            if (!object.Equals(this.Introduction, other.Introduction))
+            {
+                return false;
+            }
+
+            if (!object.Equals(this.HeaderImageFileId, other.HeaderImageFileId))
+            {
+                return false;
+            }
+
+            if (!object.Equals(this.Video, other.Video))
+            {
+                return false;
+            }
+
+            if (!object.Equals(this.Description, other.Description))
+            {
+                return false;
+            }
+
+            return true;
+        }
+	}
+
+}
 namespace Fifthweek.Api.Subscriptions.Controllers
 {
 	using System;
@@ -1054,11 +1158,19 @@ namespace Fifthweek.Api.Subscriptions
 	}
 
 }
-namespace Fifthweek.Api.Subscriptions.Commands
+namespace Fifthweek.Api.Subscriptions
 {
+	using System;
+	using System.Linq;
 	using Fifthweek.Api.Core;
+	using System.Collections.Generic;
+	using System.Data.Entity;
+	using System.Threading.Tasks;
+	using Dapper;
 	using Fifthweek.Api.Identity.Membership;
-	public partial class UpdateSubscriptionCommand 
+	using Fifthweek.Api.Persistence;
+	using Fifthweek.Api.Persistence.Identity;
+	public partial class Description 
 	{
         public override bool Equals(object obj)
         {
@@ -1077,7 +1189,7 @@ namespace Fifthweek.Api.Subscriptions.Commands
                 return false;
             }
 
-            return this.Equals((UpdateSubscriptionCommand)obj);
+            return this.Equals((Description)obj);
         }
 
         public override int GetHashCode()
@@ -1085,38 +1197,14 @@ namespace Fifthweek.Api.Subscriptions.Commands
             unchecked
             {
                 int hashCode = 0;
-                hashCode = (hashCode * 397) ^ (this.Requester != null ? this.Requester.GetHashCode() : 0);
-                hashCode = (hashCode * 397) ^ (this.SubscriptionId != null ? this.SubscriptionId.GetHashCode() : 0);
-                hashCode = (hashCode * 397) ^ (this.SubscriptionName != null ? this.SubscriptionName.GetHashCode() : 0);
-                hashCode = (hashCode * 397) ^ (this.Tagline != null ? this.Tagline.GetHashCode() : 0);
-                hashCode = (hashCode * 397) ^ (this.Introduction != null ? this.Introduction.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.Value != null ? this.Value.GetHashCode() : 0);
                 return hashCode;
             }
         }
 
-        protected bool Equals(UpdateSubscriptionCommand other)
+        protected bool Equals(Description other)
         {
-            if (!object.Equals(this.Requester, other.Requester))
-            {
-                return false;
-            }
-
-            if (!object.Equals(this.SubscriptionId, other.SubscriptionId))
-            {
-                return false;
-            }
-
-            if (!object.Equals(this.SubscriptionName, other.SubscriptionName))
-            {
-                return false;
-            }
-
-            if (!object.Equals(this.Tagline, other.Tagline))
-            {
-                return false;
-            }
-
-            if (!object.Equals(this.Introduction, other.Introduction))
+            if (!object.Equals(this.Value, other.Value))
             {
                 return false;
             }

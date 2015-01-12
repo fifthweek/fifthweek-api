@@ -4,6 +4,14 @@
 
     public abstract class ValidatedStringTests<T> : ValidatedPrimitiveTests<T, string>
     {
+        protected virtual bool AppendPadding
+        {
+            get
+            {
+                return false;
+            }
+        }
+
         public void AssertMinLength(int minLength, bool whitespaceSensitive = true)
         {
             var minString = new string('x', minLength);
@@ -30,7 +38,8 @@
         public void AssertMaxLength(int maxLength, bool whitespaceSensitive = true)
         {
             // Build the max length string from a valid string.
-            var maxString = new string('x', maxLength - this.ValueA.Length) + this.ValueA;
+            var padding = new string('x', maxLength - this.ValueA.Length);
+            var maxString = this.AppendPadding ? this.ValueA + padding : padding + this.ValueA;
             
             this.GoodValue(maxString);
             this.BadValue("x" + maxString);

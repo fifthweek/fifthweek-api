@@ -97,6 +97,8 @@
     <Compile Include="Commands\PromoteNewUserToCreatorCommandHandlerTests.cs" />
     <Compile Include="Commands\CreateSubscriptionCommandHandlerTests.cs" />
     <Compile Include="Controllers\SubscriptionControllerTests.cs" />
+    <Compile Include="DescriptionTests.cs" />
+    <Compile Include="ExternalVideoUrlTests.cs" />
     <Compile Include="Queries\GetCreatorStatusQueryHandlerTests.cs" />
     <Compile Include="SubscriptionNameTests.cs" />
     <Compile Include="ChannelPriceInUsCentsPerWeekTests.cs" />
