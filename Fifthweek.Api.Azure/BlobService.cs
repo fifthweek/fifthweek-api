@@ -14,12 +14,6 @@ namespace Fifthweek.Api.Azure
             this.cloudStorageAccount = cloudStorageAccount;
         }
 
-        public async Task InitializeCors()
-        {
-            var client = this.cloudStorageAccount.CreateCloudBlobClient();
-            client
-        }
-
         public async Task CreateBlobContainerAsync(string containerName)
         {
             var client = this.cloudStorageAccount.CreateCloudBlobClient();

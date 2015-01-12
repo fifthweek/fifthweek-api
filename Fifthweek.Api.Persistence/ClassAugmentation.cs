@@ -8,9 +8,6 @@ namespace Fifthweek.Api.Persistence
 	using System;
 	using System.ComponentModel.DataAnnotations;
 	using Fifthweek.Api.Core;
-	using System.Linq;
-	using System.ComponentModel.DataAnnotations.Schema;
-	using Fifthweek.Api.Persistence.Identity;
 	public partial class Channel 
 	{
         public Channel(
@@ -52,10 +49,9 @@ namespace Fifthweek.Api.Persistence
 namespace Fifthweek.Api.Persistence
 {
 	using System;
-	using System.Linq;
 	using System.ComponentModel.DataAnnotations;
-	using Fifthweek.Api.Core;
 	using System.ComponentModel.DataAnnotations.Schema;
+	using Fifthweek.Api.Core;
 	using Fifthweek.Api.Persistence.Identity;
 	public partial class File 
 	{
@@ -132,10 +128,8 @@ namespace Fifthweek.Api.Persistence
 namespace Fifthweek.Api.Persistence
 {
 	using System;
-	using System.Linq;
 	using System.ComponentModel.DataAnnotations;
 	using Fifthweek.Api.Core;
-	using System.ComponentModel.DataAnnotations.Schema;
 	using Fifthweek.Api.Persistence.Identity;
 	public partial class Subscription 
 	{
@@ -188,9 +182,6 @@ namespace Fifthweek.Api.Persistence
 	using System;
 	using System.ComponentModel.DataAnnotations;
 	using Fifthweek.Api.Core;
-	using System.Linq;
-	using System.ComponentModel.DataAnnotations.Schema;
-	using Fifthweek.Api.Persistence.Identity;
 	public partial class Channel 
 	{
         public override bool Equals(object obj)
@@ -256,10 +247,186 @@ namespace Fifthweek.Api.Persistence
 namespace Fifthweek.Api.Persistence
 {
 	using System;
-	using System.Linq;
+	using System.ComponentModel.DataAnnotations;
+	using System.ComponentModel.DataAnnotations.Schema;
+	using Fifthweek.Api.Core;
+	using Fifthweek.Api.Persistence.Identity;
+	public partial class File 
+	{
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj))
+            {
+                return false;
+            }
+
+            if (ReferenceEquals(this, obj))
+            {
+                return true;
+            }
+
+            if (obj.GetType() != this.GetType())
+            {
+                return false;
+            }
+
+            return this.Equals((File)obj);
+        }
+
+        public override int GetHashCode()
+        {
+            unchecked
+            {
+                int hashCode = 0;
+                hashCode = (hashCode * 397) ^ (this.Id != null ? this.Id.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.UserId != null ? this.UserId.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.State != null ? this.State.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.UploadStartedDate != null ? this.UploadStartedDate.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.UploadCompletedDate != null ? this.UploadCompletedDate.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.ProcessingStartedDate != null ? this.ProcessingStartedDate.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.ProcessingCompletedDate != null ? this.ProcessingCompletedDate.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.FileNameWithoutExtension != null ? this.FileNameWithoutExtension.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.FileExtension != null ? this.FileExtension.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.BlobSizeBytes != null ? this.BlobSizeBytes.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.Purpose != null ? this.Purpose.GetHashCode() : 0);
+                return hashCode;
+            }
+        }
+
+        protected bool Equals(File other)
+        {
+            if (!object.Equals(this.Id, other.Id))
+            {
+                return false;
+            }
+
+            if (!object.Equals(this.UserId, other.UserId))
+            {
+                return false;
+            }
+
+            if (!object.Equals(this.State, other.State))
+            {
+                return false;
+            }
+
+            if (!object.Equals(this.UploadStartedDate, other.UploadStartedDate))
+            {
+                return false;
+            }
+
+            if (!object.Equals(this.UploadCompletedDate, other.UploadCompletedDate))
+            {
+                return false;
+            }
+
+            if (!object.Equals(this.ProcessingStartedDate, other.ProcessingStartedDate))
+            {
+                return false;
+            }
+
+            if (!object.Equals(this.ProcessingCompletedDate, other.ProcessingCompletedDate))
+            {
+                return false;
+            }
+
+            if (!object.Equals(this.FileNameWithoutExtension, other.FileNameWithoutExtension))
+            {
+                return false;
+            }
+
+            if (!object.Equals(this.FileExtension, other.FileExtension))
+            {
+                return false;
+            }
+
+            if (!object.Equals(this.BlobSizeBytes, other.BlobSizeBytes))
+            {
+                return false;
+            }
+
+            if (!object.Equals(this.Purpose, other.Purpose))
+            {
+                return false;
+            }
+
+            return true;
+        }
+	}
+
+}
+namespace Fifthweek.Api.Persistence.Identity
+{
+	using Fifthweek.Api.Core;
+	using System;
+	using Microsoft.AspNet.Identity.EntityFramework;
+	public partial class FifthweekUser 
+	{
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj))
+            {
+                return false;
+            }
+
+            if (ReferenceEquals(this, obj))
+            {
+                return true;
+            }
+
+            if (obj.GetType() != this.GetType())
+            {
+                return false;
+            }
+
+            return this.Equals((FifthweekUser)obj);
+        }
+
+        public override int GetHashCode()
+        {
+            unchecked
+            {
+                int hashCode = 0;
+                hashCode = (hashCode * 397) ^ (this.ExampleWork != null ? this.ExampleWork.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.RegistrationDate != null ? this.RegistrationDate.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.LastSignInDate != null ? this.LastSignInDate.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.LastAccessTokenDate != null ? this.LastAccessTokenDate.GetHashCode() : 0);
+                return hashCode;
+            }
+        }
+
+        protected bool Equals(FifthweekUser other)
+        {
+            if (!object.Equals(this.ExampleWork, other.ExampleWork))
+            {
+                return false;
+            }
+
+            if (!object.Equals(this.RegistrationDate, other.RegistrationDate))
+            {
+                return false;
+            }
+
+            if (!object.Equals(this.LastSignInDate, other.LastSignInDate))
+            {
+                return false;
+            }
+
+            if (!object.Equals(this.LastAccessTokenDate, other.LastAccessTokenDate))
+            {
+                return false;
+            }
+
+            return true;
+        }
+	}
+
+}
+namespace Fifthweek.Api.Persistence
+{
+	using System;
 	using System.ComponentModel.DataAnnotations;
 	using Fifthweek.Api.Core;
-	using System.ComponentModel.DataAnnotations.Schema;
 	using Fifthweek.Api.Persistence.Identity;
 	public partial class Subscription 
 	{
@@ -329,83 +496,12 @@ namespace Fifthweek.Api.Persistence
 	}
 
 }
-namespace Fifthweek.Api.Persistence.Identity
-{
-	using System;
-	using System.Linq;
-	using Fifthweek.Api.Core;
-	using Microsoft.AspNet.Identity.EntityFramework;
-	public partial class FifthweekUser 
-	{
-        public override bool Equals(object obj)
-        {
-            if (ReferenceEquals(null, obj))
-            {
-                return false;
-            }
-
-            if (ReferenceEquals(this, obj))
-            {
-                return true;
-            }
-
-            if (obj.GetType() != this.GetType())
-            {
-                return false;
-            }
-
-            return this.Equals((FifthweekUser)obj);
-        }
-
-        public override int GetHashCode()
-        {
-            unchecked
-            {
-                int hashCode = 0;
-                hashCode = (hashCode * 397) ^ (this.ExampleWork != null ? this.ExampleWork.GetHashCode() : 0);
-                hashCode = (hashCode * 397) ^ (this.RegistrationDate != null ? this.RegistrationDate.GetHashCode() : 0);
-                hashCode = (hashCode * 397) ^ (this.LastSignInDate != null ? this.LastSignInDate.GetHashCode() : 0);
-                hashCode = (hashCode * 397) ^ (this.LastAccessTokenDate != null ? this.LastAccessTokenDate.GetHashCode() : 0);
-                return hashCode;
-            }
-        }
-
-        protected bool Equals(FifthweekUser other)
-        {
-            if (!object.Equals(this.ExampleWork, other.ExampleWork))
-            {
-                return false;
-            }
-
-            if (!object.Equals(this.RegistrationDate, other.RegistrationDate))
-            {
-                return false;
-            }
-
-            if (!object.Equals(this.LastSignInDate, other.LastSignInDate))
-            {
-                return false;
-            }
-
-            if (!object.Equals(this.LastAccessTokenDate, other.LastAccessTokenDate))
-            {
-                return false;
-            }
-
-            return true;
-        }
-	}
-
-}
 
 namespace Fifthweek.Api.Persistence
 {
 	using System;
 	using System.ComponentModel.DataAnnotations;
 	using Fifthweek.Api.Core;
-	using System.Linq;
-	using System.ComponentModel.DataAnnotations.Schema;
-	using Fifthweek.Api.Persistence.Identity;
 	public partial class Channel  : IIdentityEquatable
 	{
         public bool IdentityEquals(object other)
@@ -552,10 +648,202 @@ namespace Fifthweek.Api.Persistence
 namespace Fifthweek.Api.Persistence
 {
 	using System;
-	using System.Linq;
+	using System.ComponentModel.DataAnnotations;
+	using System.ComponentModel.DataAnnotations.Schema;
+	using Fifthweek.Api.Core;
+	using Fifthweek.Api.Persistence.Identity;
+	public partial class File  : IIdentityEquatable
+	{
+        public bool IdentityEquals(object other)
+        {
+            if (ReferenceEquals(null, other))
+            {
+                return false;
+            }
+
+            if (ReferenceEquals(this, other))
+            {
+                return true;
+            }
+
+            if (other.GetType() != this.GetType())
+            {
+                return false;
+            }
+
+            return this.IdentityEquals((File)other);
+        }
+
+        protected bool IdentityEquals(File other)
+        {
+            if (!object.Equals(this.Id, other.Id))
+            {
+                return false;
+            }
+
+            return true;
+        }
+
+		[Flags]
+        public enum Fields
+        {
+			Id = 1, 
+			UserId = 2, 
+			State = 4, 
+			UploadStartedDate = 8, 
+			FileNameWithoutExtension = 16, 
+			FileExtension = 32, 
+			BlobSizeBytes = 64, 
+			Purpose = 128
+        }
+	}
+
+	public static partial class FileExtensions
+	{
+		public static System.Threading.Tasks.Task InsertAsync(this System.Data.Common.DbConnection connection, File entity, bool idempotent = true)
+		{
+			return Dapper.SqlMapper.ExecuteAsync(connection, InsertStatement(idempotent), new 
+			{
+				entity.Id, entity.UserId, entity.State, entity.UploadStartedDate, entity.FileNameWithoutExtension, entity.FileExtension, entity.BlobSizeBytes, entity.Purpose
+			});
+		}
+
+		public static System.Threading.Tasks.Task UpsertAsync(this System.Data.Common.DbConnection connection, File entity, File.Fields fields)
+		{
+			return Dapper.SqlMapper.ExecuteAsync(connection, UpsertStatement(fields), new 
+			{
+				entity.Id, entity.UserId, entity.State, entity.UploadStartedDate, entity.FileNameWithoutExtension, entity.FileExtension, entity.BlobSizeBytes, entity.Purpose
+			});
+		}
+
+		public static System.Threading.Tasks.Task UpdateAsync(this System.Data.Common.DbConnection connection, File entity, File.Fields fields)
+		{
+			return Dapper.SqlMapper.ExecuteAsync(connection, UpdateStatement(fields), MaskParameters(entity, fields));
+		}
+
+		public static string InsertStatement(bool idempotent = true)
+		{
+			const string insert = "INSERT INTO Files(Id, UserId, State, UploadStartedDate, FileNameWithoutExtension, FileExtension, BlobSizeBytes, Purpose) VALUES(@Id, @UserId, @State, @UploadStartedDate, @FileNameWithoutExtension, @FileExtension, @BlobSizeBytes, @Purpose)";
+			return idempotent ? SqlStatementTemplates.IdempotentInsert(insert) : insert;
+		}
+
+		public static string UpsertStatement(File.Fields fields)
+		{
+			var sql = new System.Text.StringBuilder();
+			sql.Append(
+				@"MERGE Files as Target
+				USING (VALUES (@Id, @UserId, @State, @UploadStartedDate, @FileNameWithoutExtension, @FileExtension, @BlobSizeBytes, @Purpose)) AS Source (Id, UserId, State, UploadStartedDate, FileNameWithoutExtension, FileExtension, BlobSizeBytes, Purpose)
+				ON    (Target.Id = Source.Id)
+				WHEN MATCHED THEN
+					UPDATE
+					SET		");
+			sql.AppendUpdateParameters(GetFieldNames(fields));
+			sql.Append(
+				@" WHEN NOT MATCHED THEN
+					INSERT  (Id, UserId, State, UploadStartedDate, FileNameWithoutExtension, FileExtension, BlobSizeBytes, Purpose)
+					VALUES  (Source.Id, Source.UserId, Source.State, Source.UploadStartedDate, Source.FileNameWithoutExtension, Source.FileExtension, Source.BlobSizeBytes, Source.Purpose);");
+			return sql.ToString();
+		}
+
+		public static string UpdateStatement(File.Fields fields)
+		{
+			var sql = new System.Text.StringBuilder();
+			sql.Append("UPDATE Files SET ");
+			sql.AppendUpdateParameters(GetFieldNames(fields));
+			sql.Append(" WHERE Id = @Id");
+			return sql.ToString();
+		}
+
+		private static System.Collections.Generic.IReadOnlyList<string> GetFieldNames(File.Fields fields)
+		{
+			var fieldNames = new System.Collections.Generic.List<string>();
+			fieldNames.Add("Id");
+			if(fields.HasFlag(File.Fields.UserId))
+			{
+				fieldNames.Add("UserId");
+			}
+
+			if(fields.HasFlag(File.Fields.State))
+			{
+				fieldNames.Add("State");
+			}
+
+			if(fields.HasFlag(File.Fields.UploadStartedDate))
+			{
+				fieldNames.Add("UploadStartedDate");
+			}
+
+			if(fields.HasFlag(File.Fields.FileNameWithoutExtension))
+			{
+				fieldNames.Add("FileNameWithoutExtension");
+			}
+
+			if(fields.HasFlag(File.Fields.FileExtension))
+			{
+				fieldNames.Add("FileExtension");
+			}
+
+			if(fields.HasFlag(File.Fields.BlobSizeBytes))
+			{
+				fieldNames.Add("BlobSizeBytes");
+			}
+
+			if(fields.HasFlag(File.Fields.Purpose))
+			{
+				fieldNames.Add("Purpose");
+			}
+
+			return fieldNames;
+		}
+
+		private static object MaskParameters(File entity, File.Fields fields)
+		{
+			var parameters = new Dapper.DynamicParameters();
+			parameters.Add("Id", entity.Id);
+			if(fields.HasFlag(File.Fields.UserId))
+			{
+				parameters.Add("UserId", entity.UserId);
+			}
+
+			if(fields.HasFlag(File.Fields.State))
+			{
+				parameters.Add("State", entity.State);
+			}
+
+			if(fields.HasFlag(File.Fields.UploadStartedDate))
+			{
+				parameters.Add("UploadStartedDate", entity.UploadStartedDate);
+			}
+
+			if(fields.HasFlag(File.Fields.FileNameWithoutExtension))
+			{
+				parameters.Add("FileNameWithoutExtension", entity.FileNameWithoutExtension);
+			}
+
+			if(fields.HasFlag(File.Fields.FileExtension))
+			{
+				parameters.Add("FileExtension", entity.FileExtension);
+			}
+
+			if(fields.HasFlag(File.Fields.BlobSizeBytes))
+			{
+				parameters.Add("BlobSizeBytes", entity.BlobSizeBytes);
+			}
+
+			if(fields.HasFlag(File.Fields.Purpose))
+			{
+				parameters.Add("Purpose", entity.Purpose);
+			}
+
+			return parameters;
+		}
+	}
+}
+namespace Fifthweek.Api.Persistence
+{
+	using System;
 	using System.ComponentModel.DataAnnotations;
 	using Fifthweek.Api.Core;
-	using System.ComponentModel.DataAnnotations.Schema;
 	using Fifthweek.Api.Persistence.Identity;
 	public partial class Subscription  : IIdentityEquatable
 	{

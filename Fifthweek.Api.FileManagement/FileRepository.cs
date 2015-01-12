@@ -61,8 +61,7 @@
                 0L,
                 purpose);
 
-            this.fifthweekDbContext.Files.Add(file);
-            return this.fifthweekDbContext.SaveChangesAsync();
+            return this.fifthweekDbContext.Database.Connection.InsertAsync(file, true);
         }
 
         public Task SetFileUploadComplete(FileId fileId, long blobSize)

@@ -7,7 +7,7 @@
     using Fifthweek.Api.Core;
     using Fifthweek.Api.Persistence.Identity;
 
-    [AutoConstructor]
+    [AutoConstructor, AutoEqualityMembers, AutoSql]
     public partial class File
     {
         public File()
@@ -18,7 +18,7 @@
         [Required]
         public Guid Id { get; set; }
 
-        [Required, Optional]
+        [Required, Optional, NonEquatable]
         public FifthweekUser User { get; set; }
 
         public Guid UserId { get; set; }
