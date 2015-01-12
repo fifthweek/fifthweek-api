@@ -19,15 +19,21 @@ namespace Fifthweek.Api.Subscriptions.Queries
                 throw new ArgumentNullException("query");
             }
 
+            // Ensure we return the same subscription each time by ordering by creation date descending. This means the latest
+            // subscription is returned. Latest seems to make most sense: if a user double-posts, they'll get the ID of the 
+            // latest subscription, which they'll probably then start filling out. It also provides us with a mechanism for 
+            // overriding / soft deleting subscriptions by inserting a new subscription record (not saying that's the solution 
+            // in that case, but its another option enabled by the decision to sort descending!).
             var creatorId = query.CreatorId.Value;
             var subscriptionId = await (from subscription in this.dbContext.Subscriptions
                                         where subscription.CreatorId == creatorId
+                                        orderby subscription.CreationDate descending 
                                         select subscription.Id)
                                         .FirstOrDefaultAsync();
 
             return subscriptionId == default(Guid) 
-                ? new CreatorStatus(null, false) 
-                : new CreatorStatus(new SubscriptionId(subscriptionId), false); // We're not storing posts yet, so this will always be false.
+                ? CreatorStatus.NoSubscriptions
+                : new CreatorStatus(new SubscriptionId(subscriptionId), true); // We're not storing posts yet, so this will always be true.
         }
     }
 }

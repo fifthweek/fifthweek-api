@@ -36,6 +36,10 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Dapper, Version=1.38.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Dapper.1.38\lib\net45\Dapper.dll</HintPath>
+    </Reference>
     <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\EntityFramework.6.1.0\lib\net45\EntityFramework.dll</HintPath>
@@ -51,6 +55,7 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\Microsoft.AspNet.Identity.EntityFramework.2.1.0\lib\net45\Microsoft.AspNet.Identity.EntityFramework.dll</HintPath>
     </Reference>
+    <Reference Include="Microsoft.CSharp" />
     <Reference Include="Moq">
       <HintPath>..\packages\Moq.4.2.1409.1722\lib\net40\Moq.dll</HintPath>
     </Reference>
@@ -92,6 +97,7 @@
     <Compile Include="Commands\PromoteNewUserToCreatorCommandHandlerTests.cs" />
     <Compile Include="Commands\CreateSubscriptionCommandHandlerTests.cs" />
     <Compile Include="Controllers\SubscriptionControllerTests.cs" />
+    <Compile Include="Queries\GetCreatorStatusQueryHandlerTests.cs" />
     <Compile Include="SubscriptionNameTests.cs" />
     <Compile Include="ChannelPriceInUsCentsPerWeekTests.cs" />
     <Compile Include="SubscriptionSecurityTests.cs" />
