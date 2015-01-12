@@ -8,25 +8,21 @@ namespace Fifthweek.Api.Persistence.Tests.Shared
     {
         public static readonly ExpectedSideEffects None = new ExpectedSideEffects();
 
-        public Predicate<object> InsertLike { get; set; }
-        public Predicate<object> UpdateLike { get; set; }
-        public Predicate<object> DeleteLike { get; set; } 
+        public IReadOnlyList<IIdentityEquatable> Inserts { get; set; }
+        public IReadOnlyList<IIdentityEquatable> Updates { get; set; }
+        public IReadOnlyList<IIdentityEquatable> Deletes { get; set; }
 
-        public IReadOnlyList<object> Inserts { get; set; }
-        public IReadOnlyList<object> Updates { get; set; }
-        public IReadOnlyList<object> Deletes { get; set; }
-
-        public object Insert
+        public IIdentityEquatable Insert
         {
             set { this.Inserts = new[] {value}; }
         }
 
-        public object Update
+        public IIdentityEquatable Update
         {
             set { this.Updates = new[] { value }; }
         }
 
-        public object Delete
+        public IIdentityEquatable Delete
         {
             set { this.Deletes = new[] { value }; }
         }

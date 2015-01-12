@@ -20,6 +20,8 @@ namespace Fifthweek.Api.Persistence.Tests.Shared
             await this.loadedSnapshotContext.Users.LoadAsync();
             await this.loadedSnapshotContext.Subscriptions.LoadAsync();
             await this.loadedSnapshotContext.Channels.LoadAsync();
+            await this.loadedSnapshotContext.Files.LoadAsync();
+            await this.loadedSnapshotContext.FileVariants.LoadAsync();
         }
 
         public async Task AssertSideEffectsAsync(ExpectedSideEffects sideEffects)
@@ -30,6 +32,8 @@ namespace Fifthweek.Api.Persistence.Tests.Shared
                 tables.Add(await TableBeforeAndAfter.GenerateAsync(this.loadedSnapshotContext.Users, dbContext.Users));
                 tables.Add(await TableBeforeAndAfter.GenerateAsync(this.loadedSnapshotContext.Subscriptions, dbContext.Subscriptions));
                 tables.Add(await TableBeforeAndAfter.GenerateAsync(this.loadedSnapshotContext.Channels, dbContext.Channels));
+                tables.Add(await TableBeforeAndAfter.GenerateAsync(this.loadedSnapshotContext.Files, dbContext.Files));
+                tables.Add(await TableBeforeAndAfter.GenerateAsync(this.loadedSnapshotContext.FileVariants, dbContext.FileVariants));
             }
 
             var snapshot = tables.SelectMany(_ => _.Snapshot).ToList();
@@ -100,8 +104,10 @@ namespace Fifthweek.Api.Persistence.Tests.Shared
             {
                 foreach (var insert in sideEffects.Inserts)
                 {
-                    Assert.IsTrue(database.Any(_ => AreEntitiesEqual(insert, _)), "Insert was not applied");
-                    Assert.IsTrue(snapshot.All(_ => !_.IdentityEquals(insert)), "Cannot assert insert on entity that already exists in snapshot");
+                    // We call insert.IdentityEquals because it doesn't enforce type checking (it may be an IWildcardEntity).
+                    Assert.IsTrue(database.Any(_ => insert.IdentityEquals(_)), "Insert was not applied");
+                    Assert.IsTrue(database.Any(_ => AreEntitiesEqual(insert, _)), "Insert was applied, but not with expected fields");
+                    Assert.IsTrue(snapshot.All(_ => !insert.IdentityEquals(_)), "Cannot assert insert on entity that already exists in snapshot");
                 }
             }
 
@@ -111,7 +117,7 @@ namespace Fifthweek.Api.Persistence.Tests.Shared
                 {
                     Assert.IsTrue(database.Any(_ => AreEntitiesEqual(update, _)), "Update was not applied");
                     Assert.IsTrue(snapshot.All(_ => !AreEntitiesEqual(update, _)), "Cannot assert update on entity that has not changed since the snapshot");
-                    Assert.IsTrue(snapshot.Any(_ => _.IdentityEquals(update)), "Cannot assert update on entity that does not exist in snapshot");
+                    Assert.IsTrue(snapshot.Any(_ => update.IdentityEquals(_)), "Cannot assert update on entity that does not exist in snapshot");
                 }
             }
 
