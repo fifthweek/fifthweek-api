@@ -15,7 +15,10 @@ namespace Fifthweek.Api.Persistence.Tests.Shared
 
         public virtual void Cleanup()
         {
-            this.temporaryDatabase.Dispose();
+            if (this.temporaryDatabase != null)
+            {
+                this.temporaryDatabase.Dispose();
+            }
         }
 
         protected IFifthweekDbContext NewDbContext()

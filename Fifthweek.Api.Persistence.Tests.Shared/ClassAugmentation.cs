@@ -92,11 +92,17 @@ namespace Fifthweek.Api.Persistence.Tests.Shared
 }
 namespace Fifthweek.Api.Persistence.Tests.Shared
 {
+	using System;
+	using System.Linq;
+	using System.Data.Entity.Infrastructure;
+	using System.Data.Entity.Migrations;
+	using System.Diagnostics;
+	using Fifthweek.Api.Core;
+	using Fifthweek.Api.Persistence.Identity;
+	using Fifthweek.Api.Persistence.Migrations;
+	using System.Threading.Tasks;
 	using System.Collections.Generic;
 	using System.Data.Entity;
-	using System.Linq;
-	using System.Threading.Tasks;
-	using Fifthweek.Api.Core;
 	using Microsoft.VisualStudio.TestTools.UnitTesting;
 	public partial class TableBeforeAndAfter 
 	{

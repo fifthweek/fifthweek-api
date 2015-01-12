@@ -66,18 +66,17 @@
 
         public Task SetFileUploadComplete(FileId fileId, long blobSize)
         {
-            return this.fifthweekDbContext.Database.Connection.ExecuteAsync(
-                    @"
-                    UPDATE dbo.Files 
-                    SET State=@State, CompletionDate=@CompletionDate, BlobSizeBytes=@BlobSizeBytes
-                    WHERE Id=@FileId",
-                    new 
-                    {
-                        State = FileState.UploadComplete,
-                        CompletionDate = DateTime.UtcNow,
-                        BlobSizeBytes = blobSize,
-                        FileId = fileId
-                    });
+            var newFile = new File
+            {
+                State = FileState.UploadComplete,
+                UploadCompletedDate = DateTime.UtcNow,
+                BlobSizeBytes = blobSize,
+                Id = fileId.Value,
+            };
+
+            return this.fifthweekDbContext.Database.Connection.UpdateAsync(
+                newFile,
+                File.Fields.State | File.Fields.UploadCompletedDate | File.Fields.BlobSizeBytes);
         }
 
         public async Task AssertFileBelongsToUserAsync(UserId userId, FileId fileId)

@@ -44,7 +44,7 @@
 #>
 
 <#+
-	public static bool IsPrimitiveType(CodeType type)
+	public static bool IsPrimitiveType(TextTransformation output, CodeType type)
 	{
 		if(type is CodeEnum){
 			return true;
@@ -72,6 +72,12 @@
 			typeName = typeName.Substring(nullablePrefix.Length);
 			typeName = typeName.Substring(0, typeName.Length - 1);
         }
+
+		const string nullablePostfix = "?";
+		if(typeName.EndsWith(nullablePostfix))
+		{
+			typeName = typeName.Substring(0, typeName.Length - 1);
+		}
 
 		return primitiveTypes.Contains(typeName);
 	}

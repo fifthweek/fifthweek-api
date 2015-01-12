@@ -16,7 +16,7 @@
             continue;
         }
 
-        var publicPrimitiveProperties = unifiedClass.GetAllPublicGetters().Where(_ => IsPrimitiveType(_.Type.CodeType)).ToList();
+        var publicPrimitiveProperties = unifiedClass.GetAllPublicGetters().Where(_ => IsPrimitiveType(this, _.Type.CodeType)).ToList();
         if (publicPrimitiveProperties.Count == 0)
         {
             continue;
