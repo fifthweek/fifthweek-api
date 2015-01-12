@@ -27,6 +27,10 @@
         SENDGRID_USERNAME=<password>
         SENDGRID_PASSWORD=<email>
 
+4.  Run the Azure Emulators (required each time you start your machine):
+
+        WAStorageEmulator.exe start
+
 4.  Run Visual Studio 2013 as *admin* to avoid IIS Express related errors.
 
 ## Database changes
