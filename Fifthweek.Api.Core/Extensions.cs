@@ -20,14 +20,9 @@
         {
             var result = HttpServerUtility.UrlTokenDecode(value);
 
-            if (result == null)
+            if (result == null || result.Length != 16)
             {
-                throw new ArgumentException("Value does not represent a byte stream: " + value);
-            }
-
-            if (result.Length != 16)
-            {
-                throw new ArgumentException("Value does not represent a GUID: " + value);
+                throw new BadRequestException("Value does not represent an ID: " + value);
             }
 
             return new Guid(result);

@@ -5,8 +5,13 @@ using System.Linq;
 
 namespace Fifthweek.Api.FileManagement.Commands
 {
+	using System;
+	using System.Linq;
 	using Fifthweek.Api.Core;
 	using Fifthweek.Api.Identity.Membership;
+	using System.Threading.Tasks;
+	using Fifthweek.Api.Azure;
+	using Fifthweek.Api.Persistence;
 	public partial class CompleteFileUploadCommand 
 	{
         public CompleteFileUploadCommand(
@@ -32,9 +37,12 @@ namespace Fifthweek.Api.FileManagement.Commands
 namespace Fifthweek.Api.FileManagement.Commands
 {
 	using System;
+	using System.Linq;
+	using Fifthweek.Api.Core;
+	using Fifthweek.Api.Identity.Membership;
 	using System.Threading.Tasks;
 	using Fifthweek.Api.Azure;
-	using Fifthweek.Api.Core;
+	using Fifthweek.Api.Persistence;
 	public partial class CompleteFileUploadCommandHandler 
 	{
         public CompleteFileUploadCommandHandler(
@@ -66,8 +74,13 @@ namespace Fifthweek.Api.FileManagement.Commands
 }
 namespace Fifthweek.Api.FileManagement.Commands
 {
+	using System;
+	using System.Linq;
 	using Fifthweek.Api.Core;
 	using Fifthweek.Api.Identity.Membership;
+	using System.Threading.Tasks;
+	using Fifthweek.Api.Azure;
+	using Fifthweek.Api.Persistence;
 	public partial class InitiateFileUploadCommand 
 	{
         public InitiateFileUploadCommand(
@@ -97,9 +110,11 @@ namespace Fifthweek.Api.FileManagement.Commands
 namespace Fifthweek.Api.FileManagement.Commands
 {
 	using System;
+	using System.Linq;
+	using Fifthweek.Api.Core;
+	using Fifthweek.Api.Identity.Membership;
 	using System.Threading.Tasks;
 	using Fifthweek.Api.Azure;
-	using Fifthweek.Api.Core;
 	using Fifthweek.Api.Persistence;
 	public partial class InitiateFileUploadCommandHandler 
 	{
@@ -126,6 +141,7 @@ namespace Fifthweek.Api.FileManagement.Commands
 namespace Fifthweek.Api.FileManagement.Controllers
 {
 	using System;
+	using System.Linq;
 	using System.IO;
 	using System.Net.Http;
 	using System.Text;
@@ -186,11 +202,25 @@ namespace Fifthweek.Api.FileManagement.Controllers
 namespace Fifthweek.Api.FileManagement.Controllers
 {
 	using System;
+	using System.Linq;
+	using System.IO;
+	using System.Net.Http;
+	using System.Text;
+	using System.Threading.Tasks;
+	using System.Web.Http;
+	using System.Web.Http.Description;
 	using Fifthweek.Api.Core;
+	using Fifthweek.Api.FileManagement.Commands;
+	using Fifthweek.Api.FileManagement.Queries;
+	using Fifthweek.Api.Identity;
+	using Fifthweek.Api.Identity.OAuth;
+	using Microsoft.WindowsAzure;
+	using Microsoft.WindowsAzure.Storage;
+	using Microsoft.WindowsAzure.Storage.Blob;
 	public partial class GrantedUpload 
 	{
         public GrantedUpload(
-            System.Guid fileId, 
+            System.String fileId, 
             System.String uploadUri)
         {
             if (fileId == null)
@@ -211,7 +241,22 @@ namespace Fifthweek.Api.FileManagement.Controllers
 }
 namespace Fifthweek.Api.FileManagement.Controllers
 {
+	using System;
+	using System.Linq;
+	using System.IO;
+	using System.Net.Http;
+	using System.Text;
+	using System.Threading.Tasks;
+	using System.Web.Http;
+	using System.Web.Http.Description;
 	using Fifthweek.Api.Core;
+	using Fifthweek.Api.FileManagement.Commands;
+	using Fifthweek.Api.FileManagement.Queries;
+	using Fifthweek.Api.Identity;
+	using Fifthweek.Api.Identity.OAuth;
+	using Microsoft.WindowsAzure;
+	using Microsoft.WindowsAzure.Storage;
+	using Microsoft.WindowsAzure.Storage.Blob;
 	public partial class UploadRequest 
 	{
         public UploadRequest(
@@ -237,7 +282,13 @@ namespace Fifthweek.Api.FileManagement.Controllers
 namespace Fifthweek.Api.FileManagement
 {
 	using System;
+	using System.Linq;
 	using Fifthweek.Api.Core;
+	using System.Security;
+	using System.Threading.Tasks;
+	using Dapper;
+	using Fifthweek.Api.Identity.Membership;
+	using Fifthweek.Api.Persistence;
 	public partial class FileId 
 	{
         public FileId(
@@ -256,10 +307,11 @@ namespace Fifthweek.Api.FileManagement
 namespace Fifthweek.Api.FileManagement
 {
 	using System;
+	using System.Linq;
+	using Fifthweek.Api.Core;
 	using System.Security;
 	using System.Threading.Tasks;
 	using Dapper;
-	using Fifthweek.Api.Core;
 	using Fifthweek.Api.Identity.Membership;
 	using Fifthweek.Api.Persistence;
 	public partial class FileRepository 
@@ -280,7 +332,13 @@ namespace Fifthweek.Api.FileManagement
 namespace Fifthweek.Api.FileManagement
 {
 	using System;
+	using System.Linq;
 	using Fifthweek.Api.Core;
+	using System.Security;
+	using System.Threading.Tasks;
+	using Dapper;
+	using Fifthweek.Api.Identity.Membership;
+	using Fifthweek.Api.Persistence;
 	public partial class FileVariantId 
 	{
         public FileVariantId(
@@ -298,8 +356,13 @@ namespace Fifthweek.Api.FileManagement
 }
 namespace Fifthweek.Api.FileManagement.Queries
 {
+	using System;
+	using System.Linq;
 	using Fifthweek.Api.Core;
 	using Fifthweek.Api.Identity.Membership;
+	using System.Security;
+	using System.Threading.Tasks;
+	using Fifthweek.Api.Azure;
 	public partial class GenerateWritableBlobUriQuery 
 	{
         public GenerateWritableBlobUriQuery(
@@ -324,10 +387,13 @@ namespace Fifthweek.Api.FileManagement.Queries
 }
 namespace Fifthweek.Api.FileManagement.Queries
 {
+	using System;
+	using System.Linq;
+	using Fifthweek.Api.Core;
+	using Fifthweek.Api.Identity.Membership;
 	using System.Security;
 	using System.Threading.Tasks;
 	using Fifthweek.Api.Azure;
-	using Fifthweek.Api.Core;
 	public partial class GenerateWritableBlobUriQueryHandler 
 	{
         public GenerateWritableBlobUriQueryHandler(
@@ -360,8 +426,13 @@ namespace Fifthweek.Api.FileManagement.Queries
 
 namespace Fifthweek.Api.FileManagement.Commands
 {
+	using System;
+	using System.Linq;
 	using Fifthweek.Api.Core;
 	using Fifthweek.Api.Identity.Membership;
+	using System.Threading.Tasks;
+	using Fifthweek.Api.Azure;
+	using Fifthweek.Api.Persistence;
 	public partial class CompleteFileUploadCommand 
 	{
         public override bool Equals(object obj)
@@ -414,8 +485,13 @@ namespace Fifthweek.Api.FileManagement.Commands
 }
 namespace Fifthweek.Api.FileManagement.Commands
 {
+	using System;
+	using System.Linq;
 	using Fifthweek.Api.Core;
 	using Fifthweek.Api.Identity.Membership;
+	using System.Threading.Tasks;
+	using Fifthweek.Api.Azure;
+	using Fifthweek.Api.Persistence;
 	public partial class InitiateFileUploadCommand 
 	{
         public override bool Equals(object obj)
@@ -481,7 +557,21 @@ namespace Fifthweek.Api.FileManagement.Commands
 namespace Fifthweek.Api.FileManagement.Controllers
 {
 	using System;
+	using System.Linq;
+	using System.IO;
+	using System.Net.Http;
+	using System.Text;
+	using System.Threading.Tasks;
+	using System.Web.Http;
+	using System.Web.Http.Description;
 	using Fifthweek.Api.Core;
+	using Fifthweek.Api.FileManagement.Commands;
+	using Fifthweek.Api.FileManagement.Queries;
+	using Fifthweek.Api.Identity;
+	using Fifthweek.Api.Identity.OAuth;
+	using Microsoft.WindowsAzure;
+	using Microsoft.WindowsAzure.Storage;
+	using Microsoft.WindowsAzure.Storage.Blob;
 	public partial class GrantedUpload 
 	{
         public override bool Equals(object obj)
@@ -534,7 +624,22 @@ namespace Fifthweek.Api.FileManagement.Controllers
 }
 namespace Fifthweek.Api.FileManagement.Controllers
 {
+	using System;
+	using System.Linq;
+	using System.IO;
+	using System.Net.Http;
+	using System.Text;
+	using System.Threading.Tasks;
+	using System.Web.Http;
+	using System.Web.Http.Description;
 	using Fifthweek.Api.Core;
+	using Fifthweek.Api.FileManagement.Commands;
+	using Fifthweek.Api.FileManagement.Queries;
+	using Fifthweek.Api.Identity;
+	using Fifthweek.Api.Identity.OAuth;
+	using Microsoft.WindowsAzure;
+	using Microsoft.WindowsAzure.Storage;
+	using Microsoft.WindowsAzure.Storage.Blob;
 	public partial class UploadRequest 
 	{
         public override bool Equals(object obj)
@@ -588,7 +693,13 @@ namespace Fifthweek.Api.FileManagement.Controllers
 namespace Fifthweek.Api.FileManagement
 {
 	using System;
+	using System.Linq;
 	using Fifthweek.Api.Core;
+	using System.Security;
+	using System.Threading.Tasks;
+	using Dapper;
+	using Fifthweek.Api.Identity.Membership;
+	using Fifthweek.Api.Persistence;
 	public partial class FileId 
 	{
         public override bool Equals(object obj)
@@ -636,7 +747,13 @@ namespace Fifthweek.Api.FileManagement
 namespace Fifthweek.Api.FileManagement
 {
 	using System;
+	using System.Linq;
 	using Fifthweek.Api.Core;
+	using System.Security;
+	using System.Threading.Tasks;
+	using Dapper;
+	using Fifthweek.Api.Identity.Membership;
+	using Fifthweek.Api.Persistence;
 	public partial class FileVariantId 
 	{
         public override bool Equals(object obj)
@@ -683,8 +800,13 @@ namespace Fifthweek.Api.FileManagement
 }
 namespace Fifthweek.Api.FileManagement.Queries
 {
+	using System;
+	using System.Linq;
 	using Fifthweek.Api.Core;
 	using Fifthweek.Api.Identity.Membership;
+	using System.Security;
+	using System.Threading.Tasks;
+	using Fifthweek.Api.Azure;
 	public partial class GenerateWritableBlobUriQuery 
 	{
         public override bool Equals(object obj)

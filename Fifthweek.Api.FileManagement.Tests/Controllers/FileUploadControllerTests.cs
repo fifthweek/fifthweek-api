@@ -40,7 +40,7 @@ namespace Fifthweek.Api.FileManagement.Tests.Controllers
             this.initiateFileUpload.Verify();
             this.generateWritableBlobUri.Verify();
 
-            Assert.AreEqual(new GrantedUpload(this.guid, uploadUri), response);
+            Assert.AreEqual(new GrantedUpload(this.guid.EncodeGuid(), uploadUri), response);
         }
 
         [TestMethod]
@@ -52,7 +52,7 @@ namespace Fifthweek.Api.FileManagement.Tests.Controllers
             this.userContext.Setup(v => v.GetUserId()).Returns(userId).Verifiable();
             this.completeFileUpload.Setup(v => v.HandleAsync(new CompleteFileUploadCommand(userId, fileId))).Returns(Task.FromResult(0)).Verifiable();
 
-            await this.fileUploadController.PostUploadCompleteNotificationAsync(this.guid);
+            await this.fileUploadController.PostUploadCompleteNotificationAsync(this.guid.EncodeGuid());
 
             this.userContext.Verify();
             this.completeFileUpload.Verify();

@@ -43,14 +43,14 @@
             await this.initiateFileUpload.HandleAsync(new InitiateFileUploadCommand(authenticatedUserId, fileId, data.FilePath, data.Purpose));
             var uri = await this.generateWritableBlobUri.HandleAsync(new GenerateWritableBlobUriQuery(authenticatedUserId, fileId));
 
-            return new GrantedUpload(fileId.Value, uri);
+            return new GrantedUpload(fileId.Value.EncodeGuid(), uri);
         }
 
         [Authorize]
         [Route("uploadCompleteNotifications")]
-        public async Task PostUploadCompleteNotificationAsync(Guid fileId)
+        public async Task PostUploadCompleteNotificationAsync(string fileId)
         {
-            var parsedFileId = new FileId(fileId);
+            var parsedFileId = new FileId(fileId.DecodeGuid());
             var authenticatedUserId = this.userContext.GetUserId();
             await this.completeFileUpload.HandleAsync(new CompleteFileUploadCommand(authenticatedUserId, parsedFileId));
         }
