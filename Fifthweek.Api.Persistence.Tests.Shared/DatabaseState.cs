@@ -1,12 +1,14 @@
-﻿using System.Collections.Generic;
-using System.Data.Entity;
-using System.Linq;
-using System.Threading.Tasks;
-using Fifthweek.Api.Core;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-
-namespace Fifthweek.Api.Persistence.Tests.Shared
+﻿namespace Fifthweek.Api.Persistence.Tests.Shared
 {
+    using System.Collections.Generic;
+    using System.Data.Entity;
+    using System.Linq;
+    using System.Threading.Tasks;
+
+    using Fifthweek.Api.Core;
+
+    using Microsoft.VisualStudio.TestTools.UnitTesting;
+
     [AutoConstructor]
     public partial class DatabaseState
     {
@@ -16,7 +18,7 @@ namespace Fifthweek.Api.Persistence.Tests.Shared
 
         public async Task TakeSnapshotAsync()
         {
-            this.loadedSnapshotContext = this.temporaryDatabase.NewDbContext();
+            this.loadedSnapshotContext = this.temporaryDatabase.NewDatabaseContext();
             await this.loadedSnapshotContext.Users.LoadAsync();
             await this.loadedSnapshotContext.Subscriptions.LoadAsync();
             await this.loadedSnapshotContext.Channels.LoadAsync();
@@ -27,13 +29,13 @@ namespace Fifthweek.Api.Persistence.Tests.Shared
         public async Task AssertSideEffectsAsync(ExpectedSideEffects sideEffects)
         {
             var tables = new List<TableBeforeAndAfter>();
-            using (var dbContext = this.temporaryDatabase.NewDbContext())
+            using (var databaseContext = this.temporaryDatabase.NewDatabaseContext())
             {
-                tables.Add(await TableBeforeAndAfter.GenerateAsync(this.loadedSnapshotContext.Users, dbContext.Users));
-                tables.Add(await TableBeforeAndAfter.GenerateAsync(this.loadedSnapshotContext.Subscriptions, dbContext.Subscriptions));
-                tables.Add(await TableBeforeAndAfter.GenerateAsync(this.loadedSnapshotContext.Channels, dbContext.Channels));
-                tables.Add(await TableBeforeAndAfter.GenerateAsync(this.loadedSnapshotContext.Files, dbContext.Files));
-                tables.Add(await TableBeforeAndAfter.GenerateAsync(this.loadedSnapshotContext.FileVariants, dbContext.FileVariants));
+                tables.Add(await TableBeforeAndAfter.GenerateAsync(this.loadedSnapshotContext.Users, databaseContext.Users));
+                tables.Add(await TableBeforeAndAfter.GenerateAsync(this.loadedSnapshotContext.Subscriptions, databaseContext.Subscriptions));
+                tables.Add(await TableBeforeAndAfter.GenerateAsync(this.loadedSnapshotContext.Channels, databaseContext.Channels));
+                tables.Add(await TableBeforeAndAfter.GenerateAsync(this.loadedSnapshotContext.Files, databaseContext.Files));
+                tables.Add(await TableBeforeAndAfter.GenerateAsync(this.loadedSnapshotContext.FileVariants, databaseContext.FileVariants));
             }
 
             var snapshot = tables.SelectMany(_ => _.Snapshot).ToList();

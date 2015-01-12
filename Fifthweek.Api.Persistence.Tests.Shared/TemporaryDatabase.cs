@@ -16,7 +16,7 @@ namespace Fifthweek.Api.Persistence.Tests.Shared
 
         public void Dispose()
         {
-            var connection = this.NewDbContext().Database.Connection;
+            var connection = this.NewDatabaseContext().Database.Connection;
             connection.Open();
             try
             {
@@ -37,7 +37,7 @@ namespace Fifthweek.Api.Persistence.Tests.Shared
             }
         }
 
-        public IFifthweekDbContext NewDbContext()
+        public IFifthweekDbContext NewDatabaseContext()
         {
             return new FifthweekDbContext(this.connectionString);
         }

@@ -20,7 +20,7 @@ namespace Fifthweek.Api.Persistence.Tests.Shared
 
         protected IFifthweekDbContext NewDbContext()
         {
-            return this.temporaryDatabase.NewDbContext();
+            return this.temporaryDatabase.NewDatabaseContext();
         }
 
         protected Task SnapshotDatabaseAsync()
