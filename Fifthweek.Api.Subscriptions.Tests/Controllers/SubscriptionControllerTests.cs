@@ -53,6 +53,35 @@ namespace Fifthweek.Api.Subscriptions.Tests.Controllers
             this.setMandatorySubscriptionFields.Verify();
         }
 
+        [TestMethod]
+        public async Task WhenGettingCreatorStatus_ItShouldReturnResultFromCreatorStatusQuery()
+        {
+            var query = new GetCreatorStatusQuery(UserId);
+
+            this.userContext.Setup(v => v.GetUserId()).Returns(UserId);
+            this.getCreatorStatus.Setup(v => v.HandleAsync(query)).Returns(Task.FromResult(new CreatorStatus(SubscriptionId, false)));
+
+            var result = await this.target.GetCurrentCreatorStatus();
+
+            Assert.AreEqual(result.SubscriptionId, SubscriptionId.Value);
+            Assert.AreEqual(result.MustWriteFirstPost, false);
+        }
+
+        [TestMethod]
+        public async Task WhenGettingCreatorStatus_ItShouldReturnResultFromCreatorStatusQuery2()
+        {
+            var query = new GetCreatorStatusQuery(UserId);
+
+            this.userContext.Setup(v => v.GetUserId()).Returns(UserId);
+            this.getCreatorStatus.Setup(v => v.HandleAsync(query)).Returns(Task.FromResult(new CreatorStatus(SubscriptionId, true)));
+
+            var result = await this.target.GetCurrentCreatorStatus();
+
+            Assert.AreEqual(result.SubscriptionId, SubscriptionId.Value);
+            Assert.AreEqual(result.MustWriteFirstPost, true);
+        }
+
+
         public static NewSubscriptionData NewMandatorySubscriptionData()
         {
             return new NewSubscriptionData

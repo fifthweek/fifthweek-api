@@ -156,6 +156,7 @@ namespace Fifthweek.Api.Subscriptions.Controllers
 	using Fifthweek.Api.Subscriptions.Commands;
 	using Fifthweek.Api.Identity.OAuth;
 	using Fifthweek.Api.Subscriptions.Queries;
+	using System.Web.Http.Description;
 	public partial class SubscriptionController 
 	{
         public SubscriptionController(
@@ -307,6 +308,7 @@ namespace Fifthweek.Api.Subscriptions.Queries
 	using Fifthweek.Api.Identity.Membership;
 	using System.Threading.Tasks;
 	using Fifthweek.Api.Persistence;
+	using System.Data.Entity;
 	public partial class GetCreatorStatusQuery 
 	{
         public GetCreatorStatusQuery(
@@ -342,6 +344,32 @@ namespace Fifthweek.Api.Subscriptions.Queries
             }
 
             this.dbContext = dbContext;
+        }
+	}
+
+}
+namespace Fifthweek.Api.Subscriptions.Controllers
+{
+	using System;
+	using Fifthweek.Api.Core;
+	public partial class CreatorStatusData 
+	{
+        public CreatorStatusData(
+            System.Nullable<System.Guid> subscriptionId, 
+            System.Boolean mustWriteFirstPost)
+        {
+            if (subscriptionId == null)
+            {
+                throw new ArgumentNullException("subscriptionId");
+            }
+
+            if (mustWriteFirstPost == null)
+            {
+                throw new ArgumentNullException("mustWriteFirstPost");
+            }
+
+            this.SubscriptionId = subscriptionId;
+            this.MustWriteFirstPost = mustWriteFirstPost;
         }
 	}
 
@@ -663,6 +691,7 @@ namespace Fifthweek.Api.Subscriptions.Queries
 	using Fifthweek.Api.Identity.Membership;
 	using System.Threading.Tasks;
 	using Fifthweek.Api.Persistence;
+	using System.Data.Entity;
 	public partial class GetCreatorStatusQuery 
 	{
         public override bool Equals(object obj)
@@ -718,6 +747,7 @@ namespace Fifthweek.Api.Subscriptions.Controllers
 	using Fifthweek.Api.Core;
 	using Fifthweek.Api.Subscriptions.Commands;
 	using Fifthweek.Api.Identity.OAuth;
+	using Fifthweek.Api.Subscriptions.Queries;
 	public partial class NewSubscriptionData 
 	{
         public override bool Equals(object obj)
@@ -904,6 +934,60 @@ namespace Fifthweek.Api.Subscriptions
 	}
 
 }
+namespace Fifthweek.Api.Subscriptions.Controllers
+{
+	using System;
+	using Fifthweek.Api.Core;
+	public partial class CreatorStatusData 
+	{
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj))
+            {
+                return false;
+            }
+
+            if (ReferenceEquals(this, obj))
+            {
+                return true;
+            }
+
+            if (obj.GetType() != this.GetType())
+            {
+                return false;
+            }
+
+            return this.Equals((CreatorStatusData)obj);
+        }
+
+        public override int GetHashCode()
+        {
+            unchecked
+            {
+                int hashCode = 0;
+                hashCode = (hashCode * 397) ^ (this.SubscriptionId != null ? this.SubscriptionId.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.MustWriteFirstPost != null ? this.MustWriteFirstPost.GetHashCode() : 0);
+                return hashCode;
+            }
+        }
+
+        protected bool Equals(CreatorStatusData other)
+        {
+            if (!object.Equals(this.SubscriptionId, other.SubscriptionId))
+            {
+                return false;
+            }
+
+            if (!object.Equals(this.MustWriteFirstPost, other.MustWriteFirstPost))
+            {
+                return false;
+            }
+
+            return true;
+        }
+	}
+
+}
 
 namespace Fifthweek.Api.Subscriptions.Controllers
 {
@@ -916,6 +1000,7 @@ namespace Fifthweek.Api.Subscriptions.Controllers
 	using Fifthweek.Api.Core;
 	using Fifthweek.Api.Subscriptions.Commands;
 	using Fifthweek.Api.Identity.OAuth;
+	using Fifthweek.Api.Subscriptions.Queries;
 	public partial class NewSubscriptionData 
 	{
 		public SubscriptionName SubscriptionNameObject { get; set; }
@@ -924,11 +1009,11 @@ namespace Fifthweek.Api.Subscriptions.Controllers
 
 		public void Parse()
 		{
-			MandatorySubscriptionDataExtensions.Parse(this); // Avoid conflicts between property and type names.
+			NewSubscriptionDataExtensions.Parse(this); // Avoid conflicts between property and type names.
 		}
 	}
 
-	public static partial class MandatorySubscriptionDataExtensions
+	public static partial class NewSubscriptionDataExtensions
 	{
 		public static void Parse(NewSubscriptionData target)
 		{

@@ -1,5 +1,7 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using System.Web.Http;
+using System.Web.Http.Description;
 using Fifthweek.Api.Core;
 using Fifthweek.Api.Identity.OAuth;
 using Fifthweek.Api.Subscriptions.Commands;
@@ -31,6 +33,18 @@ namespace Fifthweek.Api.Subscriptions.Controllers
                 fields.BasePriceObject));
 
             return this.Ok();
+        }
+
+        [Authorize]
+        [ResponseType(typeof (CreatorStatusData))]
+        [Route("currentCreatorStatus")]
+        public async Task<CreatorStatusData> GetCurrentCreatorStatus()
+        {
+            var authenticatedUserId = this.userContext.GetUserId();
+            var creatorStatus = await this.getCreatorStatus.HandleAsync(new GetCreatorStatusQuery(authenticatedUserId));
+            return new CreatorStatusData(
+                creatorStatus.SubscriptionId == null ? (Guid?)null : creatorStatus.SubscriptionId.Value, 
+                creatorStatus.MustWriteFirstPost);
         }
     }
 }
