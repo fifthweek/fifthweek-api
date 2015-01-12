@@ -6,8 +6,11 @@
     {
         public void AssertMinLength(int minLength, bool whitespaceSensitive = true)
         {
-            this.GoodValue(new string('x', minLength));
-            this.BadValue(new string('x', minLength - 1));
+            var minString = new string('x', minLength);
+            var tooSmallString = minString.Remove(0, 1);
+
+            this.GoodValue(minString);
+            this.BadValue(tooSmallString);
 
             // Test whitespace sensitivity.
             if (whitespaceSensitive)
@@ -15,12 +18,22 @@
                 this.GoodValue(new string(' ', minLength));
                 this.BadValue(new string(' ', minLength - 1));
             }
+            else
+            {
+                // Whitespace should be ignored.
+                this.BadValue(tooSmallString + " ");
+                this.BadValue(" " + tooSmallString);
+                this.BadValue(" " + tooSmallString + " ");
+            }
         }
 
         public void AssertMaxLength(int maxLength, bool whitespaceSensitive = true)
         {
-            this.GoodValue(new string('x', maxLength));
-            this.BadValue(new string('x', maxLength + 1));
+            // Build the max length string from a valid string.
+            var maxString = new string('x', maxLength - this.ValueA.Length) + this.ValueA;
+            
+            this.GoodValue(maxString);
+            this.BadValue("x" + maxString);
 
             // Test whitespace sensitivity.
             if (whitespaceSensitive)
@@ -28,34 +41,41 @@
                 this.GoodValue(new string(' ', maxLength));
                 this.BadValue(new string(' ', maxLength + 1));     
             }
+            else
+            {
+                // Whitespace should be ignored.
+                this.GoodNonExactValue(maxString + " ", maxString);
+                this.GoodNonExactValue(" " + maxString, maxString);
+                this.GoodNonExactValue(" " + maxString + " ", maxString);
+            }
         }
 
         public void AssertPunctuationAllowed()
         {
-            this.AssertCharacter('!', areGood: true);
-            this.AssertCharacter('?', areGood: true);
-            this.AssertCharacter(',', areGood: true);
-            this.AssertCharacter('.', areGood: true);
-            this.AssertCharacter(':', areGood: true);
-            this.AssertCharacter(';', areGood: true);
-            this.AssertCharacter('-', areGood: true);
-            this.AssertCharacter('\'', areGood: true);
+            this.AssertCharacter('!', isGood: true);
+            this.AssertCharacter('?', isGood: true);
+            this.AssertCharacter(',', isGood: true);
+            this.AssertCharacter('.', isGood: true);
+            this.AssertCharacter(':', isGood: true);
+            this.AssertCharacter(';', isGood: true);
+            this.AssertCharacter('-', isGood: true);
+            this.AssertCharacter('\'', isGood: true);
         }
 
         public void AssertTabsNotAllowed()
         {
-            this.AssertCharacter('\t', areGood: false);
+            this.AssertCharacter('\t', isGood: false);
         }
 
         public void AssertNewLinesNotAllowed()
         {
-            this.AssertCharacter('\r', areGood: false);
-            this.AssertCharacter('\n', areGood: false);
+            this.AssertCharacter('\r', isGood: false);
+            this.AssertCharacter('\n', isGood: false);
         }
 
-        public void AssertCharacter(char character, bool areGood)
+        public void AssertCharacter(char character, bool isGood)
         {
-            this.AssertCharacters(new string(new[] { character }), areGood);    
+            this.AssertCharacters(new string(new[] { character }), isGood);    
         }
         
         public void AssertCharacters(string characters, bool areGood)

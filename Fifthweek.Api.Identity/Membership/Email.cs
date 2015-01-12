@@ -1,14 +1,21 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net.Mail;
-using Fifthweek.Api.Core;
-
-namespace Fifthweek.Api.Identity.Membership
+﻿namespace Fifthweek.Api.Identity.Membership
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Net.Mail;
+
+    using Fifthweek.Api.Core;
+
+    /// <remarks>
+    /// Important: refer to `UpdatingValidationBehaviour.md` when changing validation behaviour.
+    /// </remarks>
     [AutoEqualityMembers]
     public partial class Email
     {
+        public static readonly int MinLength = 3;
+        public static readonly int MaxLength = 256; // Taken from ASP.NET Identity.
+
         private Email()
         {
         }
@@ -53,6 +60,11 @@ namespace Fifthweek.Api.Identity.Membership
                 if (!exact)
                 {
                     value = Normalize(value);
+                }
+
+                if (value.Length < MinLength || value.Length > MaxLength)
+                {
+                    errorMessageList.Add(string.Format("Length must be from {0} to {1} characters", MinLength, MaxLength));
                 }
 
                 try

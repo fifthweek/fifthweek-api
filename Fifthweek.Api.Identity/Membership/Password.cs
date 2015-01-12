@@ -1,9 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using Fifthweek.Api.Core;
-
-namespace Fifthweek.Api.Identity.Membership
+﻿namespace Fifthweek.Api.Identity.Membership
 {
+    using System;
+    using System.Collections.Generic;
+
+    using Fifthweek.Api.Core;
+
     [AutoEqualityMembers]
     public partial class Password
     {

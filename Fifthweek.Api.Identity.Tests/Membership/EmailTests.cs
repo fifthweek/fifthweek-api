@@ -1,25 +1,23 @@
-﻿using System.Collections.Generic;
-using Fifthweek.Api.Identity.Membership;
-using Fifthweek.Api.Tests.Shared;
-
-namespace Fifthweek.Api.Identity.Tests.Membership
+﻿namespace Fifthweek.Api.Identity.Tests.Membership
 {
+    using System.Collections.Generic;
+
+    using Fifthweek.Api.Identity.Membership;
+    using Fifthweek.Api.Tests.Shared;
+
     using Microsoft.VisualStudio.TestTools.UnitTesting;
 
     [TestClass]
-    public class EmailTests : ValidatedPrimitiveTests<Email, string>
+    public class EmailTests : ValidatedStringTests<Email>
     {
-        [TestMethod]
-        public void WhenParsingNonExactOnly_ItShouldAllowLeadingOrTrailingWhitespace()
+        protected override string ValueA
         {
-            this.GoodNonExactValue(" joe@bloggs.com", "joe@bloggs.com");
-            this.GoodNonExactValue("joe@bloggs.com ", "joe@bloggs.com");
+            get { return "joe@example.com"; }
         }
 
-        [TestMethod]
-        public void WhenParsingNonExactOnly_ItShouldAllowUppercase()
+        protected override string ValueB
         {
-            this.GoodNonExactValue("Joe@Bloggs.com", "joe@bloggs.com");
+            get { return "bloggs@example.com"; }
         }
 
         [TestMethod]
@@ -91,10 +89,21 @@ namespace Fifthweek.Api.Identity.Tests.Membership
         }
 
         [TestMethod]
-        public void ItShouldNotAllowEmptyAddresses()
+        public void ItShouldNotAllowEmailsUnder3Characters()
         {
-            this.BadValue("");
-            this.BadValue(" ");
+            this.GoodValue("a@a");
+            this.BadValue("a@");
+
+            // Whitespace should be ignored.
+            this.BadValue("a@ ");
+            this.BadValue(" a@");
+            this.BadValue(" a@ ");
+        }
+
+        [TestMethod]
+        public void ItShouldNotAllowEmailsOver256Characters()
+        {
+            this.AssertMaxLength(256, whitespaceSensitive: false);
         }
 
         [TestMethod]
@@ -103,14 +112,17 @@ namespace Fifthweek.Api.Identity.Tests.Membership
             this.BadValue("joebloggs.com");
         }
 
-        protected override string ValueA
+        [TestMethod]
+        public void WhenParsingNonExactOnly_ItShouldAllowLeadingOrTrailingWhitespace()
         {
-            get { return "joe@example.com"; }
+            this.GoodNonExactValue(" joe@bloggs.com", "joe@bloggs.com");
+            this.GoodNonExactValue("joe@bloggs.com ", "joe@bloggs.com");
         }
 
-        protected override string ValueB
+        [TestMethod]
+        public void WhenParsingNonExactOnly_ItShouldAllowUppercase()
         {
-            get { return "bloggs@example.com"; }
+            this.GoodNonExactValue("Joe@Bloggs.com", "joe@bloggs.com");
         }
 
         protected override Email Parse(string value, bool exact)

@@ -1,18 +1,32 @@
-﻿using System.Collections.Generic;
-using Fifthweek.Api.Identity.Membership;
-using Fifthweek.Api.Tests.Shared;
-
-namespace Fifthweek.Api.Identity.Tests.Membership
+﻿namespace Fifthweek.Api.Identity.Tests.Membership
 {
+    using System.Collections.Generic;
+
+    using Fifthweek.Api.Identity.Membership;
+    using Fifthweek.Api.Tests.Shared;
+
     using Microsoft.VisualStudio.TestTools.UnitTesting;
 
     [TestClass]
-    public class PasswordTests : ValidatedPrimitiveTests<Password, string>
+    public class PasswordTests : ValidatedStringTests<Password>
     {
+        public static readonly string InvalidValue = "!";
+
+        protected override string ValueA
+        {
+            get { return "password"; }
+        }
+
+        protected override string ValueB
+        {
+            get { return "password2"; }
+        }
+
         [TestMethod]
         public void ItShouldAllowBasicPasswords()
         {
-            this.GoodValue("Secr3T!");
+            this.GoodValue(this.ValueA);
+            this.GoodValue(this.ValueB);
         }
 
         [TestMethod]
@@ -24,25 +38,13 @@ namespace Fifthweek.Api.Identity.Tests.Membership
         [TestMethod]
         public void ItShouldNotAllowPasswordsUnder6Characters()
         {
-            this.GoodValue("passwo");
-            this.BadValue("passw");
+            this.AssertMinLength(6);
         }
 
         [TestMethod]
         public void ItShouldNotAllowPasswordsOver100Characters()
         {
-            this.GoodValue(new string(' ', 100));
-            this.BadValue(new string(' ', 101));
-        }
-
-        protected override string ValueA
-        {
-            get { return "password"; }
-        }
-
-        protected override string ValueB
-        {
-            get { return "password2"; }
+            this.AssertMaxLength(100);
         }
 
         protected override Password Parse(string value, bool exact)
@@ -64,7 +66,5 @@ namespace Fifthweek.Api.Identity.Tests.Membership
         {
             return parsedObject.Value;
         }
-
-        public static readonly string InvalidValue = "!";
     }
 }

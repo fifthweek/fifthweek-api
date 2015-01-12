@@ -7,6 +7,10 @@ namespace Fifthweek.Api.Tests.Shared
 
     public abstract class ValidatedPrimitiveTests<TParsed, TRaw> : PrimitiveTests<TParsed>
     {
+        protected abstract TRaw ValueA { get; }
+
+        protected abstract TRaw ValueB { get; }
+
         public override void ItShouldRecogniseEqualObjects()
         {
             base.ItShouldRecogniseEqualObjects();
@@ -48,10 +52,6 @@ namespace Fifthweek.Api.Tests.Shared
         {
             return this.Parse(this.ValueB, true);
         }
-
-        protected abstract TRaw ValueA { get; }
-
-        protected abstract TRaw ValueB { get; }
 
         protected abstract TParsed Parse(TRaw value, bool exact);
 

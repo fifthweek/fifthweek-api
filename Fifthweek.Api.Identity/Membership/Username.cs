@@ -1,11 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text.RegularExpressions;
-using Fifthweek.Api.Core;
-
-namespace Fifthweek.Api.Identity.Membership
+﻿namespace Fifthweek.Api.Identity.Membership
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Text.RegularExpressions;
+
+    using Fifthweek.Api.Core;
+
     /// <remarks>
     /// Important: refer to `UpdatingValidationBehaviour.md` when changing validation behaviour.
     /// </remarks>

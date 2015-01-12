@@ -1,31 +1,30 @@
-﻿using System.Collections.Generic;
-using Fifthweek.Api.Identity.Membership;
-using Fifthweek.Api.Tests.Shared;
-
-namespace Fifthweek.Api.Identity.Tests.Membership
+﻿namespace Fifthweek.Api.Identity.Tests.Membership
 {
+    using System.Collections.Generic;
+
+    using Fifthweek.Api.Identity.Membership;
+    using Fifthweek.Api.Tests.Shared;
+
     using Microsoft.VisualStudio.TestTools.UnitTesting;
 
     [TestClass]
-    public class UsernameTests : ValidatedPrimitiveTests<Username, string>
+    public class UsernameTests : ValidatedStringTests<Username>
     {
-        [TestMethod]
-        public void WhenParsingNonExactOnly_ItShouldAllowLeadingOrTrailingWhitespace()
+        protected override string ValueA
         {
-            this.GoodNonExactValue(" joebloggs", "joebloggs");
-            this.GoodNonExactValue("joebloggs ", "joebloggs");
+            get { return "joebloggs"; }
         }
 
-        [TestMethod]
-        public void WhenParsingNonExactOnly_ItShouldAllowUppercase()
+        protected override string ValueB
         {
-            this.GoodNonExactValue("JoeBloggs", "joebloggs");
+            get { return "joebloggs2"; }
         }
 
         [TestMethod]
         public void ItShouldAllowBasicUsernames()
         {
-            this.GoodValue("joebloggs");
+            this.GoodValue(this.ValueA);
+            this.GoodValue(this.ValueB);
         }
 
         [TestMethod]
@@ -37,7 +36,7 @@ namespace Fifthweek.Api.Identity.Tests.Membership
         [TestMethod]
         public void ItShouldAllowUnderscores()
         {
-            this.GoodValue("joe_bloggs");
+            this.AssertCharacter('_', isGood: true);
         }
 
         [TestMethod]
@@ -50,15 +49,13 @@ namespace Fifthweek.Api.Identity.Tests.Membership
         [TestMethod]
         public void ItShouldNotAllowUsernamesUnder6Characters()
         {
-            this.GoodValue("joeblo");
-            this.BadValue("joebl");
+            this.AssertMinLength(6, whitespaceSensitive: false);
         }
 
         [TestMethod]
         public void ItShouldNotAllowUsernamesOver20Characters()
         {
-            this.GoodValue("joe_bloggs_123456789");
-            this.BadValue("joe_bloggs_1234567890");
+            this.AssertMaxLength(20, whitespaceSensitive: false);
         }
 
         [TestMethod]
@@ -76,14 +73,17 @@ namespace Fifthweek.Api.Identity.Tests.Membership
             this.BadValue("joe\nbloggs");
         }
 
-        protected override string ValueA
+        [TestMethod]
+        public void WhenParsingNonExactOnly_ItShouldAllowLeadingOrTrailingWhitespace()
         {
-            get { return "joe_bloggs"; }
+            this.GoodNonExactValue(" joebloggs", "joebloggs");
+            this.GoodNonExactValue("joebloggs ", "joebloggs");
         }
 
-        protected override string ValueB
+        [TestMethod]
+        public void WhenParsingNonExactOnly_ItShouldAllowUppercase()
         {
-            get { return "joe_bloggs2"; }
+            this.GoodNonExactValue("JoeBloggs", "joebloggs");
         }
 
         protected override Username Parse(string value, bool exact)
