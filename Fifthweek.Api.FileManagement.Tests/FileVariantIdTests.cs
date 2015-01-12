@@ -7,7 +7,7 @@
     using Microsoft.VisualStudio.TestTools.UnitTesting;
 
     [TestClass]
-    public class FileVarientIdTests : PrimitiveEqualityTests<FileVariantId>
+    public class FileVarientIdTests : PrimitiveTests<FileVariantId>
     {
         [TestMethod]
         public void ItShouldRecogniseEquality()

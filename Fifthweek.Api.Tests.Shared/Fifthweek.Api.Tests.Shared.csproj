@@ -55,9 +55,10 @@
     <Compile Include="ImmutableComplexTypeTests.cs" />
     <Compile Include="EqualityTests.cs" />
     <Compile Include="DataTransferObjectTests.cs" />
-    <Compile Include="PrimitiveEqualityTests.cs" />
-    <Compile Include="ValidatedPrimitiveEqualityTests.cs" />
+    <Compile Include="PrimitiveTests.cs" />
+    <Compile Include="ValidatedPrimitiveTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ValidatedStringTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

@@ -101,6 +101,7 @@
     <Compile Include="SubscriptionNameTests.cs" />
     <Compile Include="ChannelPriceInUsCentsPerWeekTests.cs" />
     <Compile Include="SubscriptionSecurityTests.cs" />
+    <Compile Include="IntroductionTests.cs" />
     <Compile Include="TaglineTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

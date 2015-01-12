@@ -2,7 +2,7 @@
 
 namespace Fifthweek.Api.Tests.Shared
 {
-    public abstract class PrimitiveEqualityTests<T> : EqualityTests<T>
+    public abstract class PrimitiveTests<T> : EqualityTests<T>
     {
         public override void TestEquality()
         {

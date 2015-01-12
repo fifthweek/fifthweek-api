@@ -7,7 +7,7 @@ namespace Fifthweek.Api.Identity.Tests.Membership
     using Microsoft.VisualStudio.TestTools.UnitTesting;
 
     [TestClass]
-    public class UsernameTests : ValidatedPrimitiveEqualityTests<Username, string>
+    public class UsernameTests : ValidatedPrimitiveTests<Username, string>
     {
         [TestMethod]
         public void WhenParsingNonExactOnly_ItShouldAllowLeadingOrTrailingWhitespace()

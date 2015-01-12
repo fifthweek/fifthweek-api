@@ -88,9 +88,11 @@
     <Compile Include="Commands\PromoteNewUserToCreatorCommandHandler.cs" />
     <Compile Include="Commands\CreateSubscriptionCommand.cs" />
     <Compile Include="Commands\CreateSubscriptionCommandHandler.cs" />
+    <Compile Include="Commands\UpdateSubscriptionCommand.cs" />
     <Compile Include="Controllers\CreatorStatusData.cs" />
     <Compile Include="Controllers\NewSubscriptionData.cs" />
     <Compile Include="Controllers\SubscriptionController.cs" />
+    <Compile Include="Introduction.cs" />
     <Compile Include="ISubscriptionSecurity.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="CreatorStatus.cs" />

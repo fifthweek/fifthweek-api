@@ -5,7 +5,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 namespace Fifthweek.Api.Subscriptions.Tests
 {
     [TestClass]
-    public class ChannelPriceInUsCentsPerWeekTests : ValidatedPrimitiveEqualityTests<ChannelPriceInUsCentsPerWeek, int>
+    public class ChannelPriceInUsCentsPerWeekTests : ValidatedPrimitiveTests<ChannelPriceInUsCentsPerWeek, int>
     {
         [TestMethod]
         public void ItShouldAllow1CentsPerWeekAndHigher()

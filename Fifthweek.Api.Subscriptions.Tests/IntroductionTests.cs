@@ -7,22 +7,22 @@
     using Microsoft.VisualStudio.TestTools.UnitTesting;
 
     [TestClass]
-    public class TaglineTests : ValidatedStringTests<Tagline>
+    public class IntroductionTests : ValidatedStringTests<Introduction>
     {
         public static readonly string InvalidValue = "!";
 
         protected override string ValueA
         {
-            get { return "Web Comics and More"; }
+            get { return "Hi, I'm Lawrence. Thinking of subscribing? Awesome!"; }
         }
 
         protected override string ValueB
         {
-            get { return "Web Comics and Much, Much More"; }
+            get { return "Hi, I'm James. Thinking of subscribing? Awesome!"; }
         }
 
         [TestMethod]
-        public void ItShouldAllowBasicTaglines()
+        public void ItShouldAllowBasicIntroductions()
         {
             this.GoodValue(this.ValueA);
             this.GoodValue(this.ValueB);
@@ -41,15 +41,15 @@
         }
 
         [TestMethod]
-        public void ItShouldNotAllowTaglinesUnder5Characters()
+        public void ItShouldNotAllowIntroductionsUnder15Characters()
         {
-            this.AssertMinLength(5);
+            this.AssertMinLength(15);
         }
 
         [TestMethod]
-        public void ItShouldNotAllowTaglinesOver55Characters()
+        public void ItShouldNotAllowIntroductionsOver250Characters()
         {
-            this.AssertMaxLength(55);
+            this.AssertMaxLength(250);
         }
 
         [TestMethod]
@@ -64,22 +64,22 @@
             this.AssertNewLinesNotAllowed();
         }
 
-        protected override Tagline Parse(string value, bool exact)
+        protected override Introduction Parse(string value, bool exact)
         {
-            return Tagline.Parse(value);
+            return Introduction.Parse(value);
         }
 
-        protected override bool TryParse(string value, out Tagline parsedObject, bool exact)
+        protected override bool TryParse(string value, out Introduction parsedObject, bool exact)
         {
-            return Tagline.TryParse(value, out parsedObject);
+            return Introduction.TryParse(value, out parsedObject);
         }
 
-        protected override bool TryParse(string value, out Tagline parsedObject, out IReadOnlyCollection<string> errorMessages, bool exact)
+        protected override bool TryParse(string value, out Introduction parsedObject, out IReadOnlyCollection<string> errorMessages, bool exact)
         {
-            return Tagline.TryParse(value, out parsedObject, out errorMessages);
+            return Introduction.TryParse(value, out parsedObject, out errorMessages);
         }
 
-        protected override string GetValue(Tagline parsedObject)
+        protected override string GetValue(Introduction parsedObject)
         {
             return parsedObject.Value;
         }

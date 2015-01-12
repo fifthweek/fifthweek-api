@@ -1,16 +1,31 @@
-﻿using System.Collections.Generic;
-using Fifthweek.Api.Tests.Shared;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-
-namespace Fifthweek.Api.Subscriptions.Tests
+﻿namespace Fifthweek.Api.Subscriptions.Tests
 {
+    using System.Collections.Generic;
+
+    using Fifthweek.Api.Tests.Shared;
+
+    using Microsoft.VisualStudio.TestTools.UnitTesting;
+
     [TestClass]
-    public class SubscriptionNameTests : ValidatedPrimitiveEqualityTests<SubscriptionName, string>
+    public class SubscriptionNameTests : ValidatedStringTests<SubscriptionName>
     {
+        public static readonly string InvalidValue = string.Empty;
+
+        protected override string ValueA
+        {
+            get { return "Lawrence"; }
+        }
+
+        protected override string ValueB
+        {
+            get { return "James"; }
+        }
+
         [TestMethod]
         public void ItShouldAllowBasicSubscriptionNames()
         {
-            this.GoodValue("Web Comics and More");
+            this.GoodValue(this.ValueA);
+            this.GoodValue(this.ValueB);
         }
 
         [TestMethod]
@@ -22,55 +37,31 @@ namespace Fifthweek.Api.Subscriptions.Tests
         [TestMethod]
         public void ItShouldAllowPunctuation()
         {
-            this.GoodValue("A webcomic, of romance!?.");
+            this.AssertPunctuationAllowed();
         }
 
         [TestMethod]
         public void ItShouldNotAllowEmptySubscriptionNames()
         {
-            this.GoodValue("1");
-            this.BadValue("");
+            this.AssertMinLength(1);
         }
 
         [TestMethod]
         public void ItShouldNotAllowSubscriptionNamesOver25Characters()
         {
-            this.GoodValue(new string('x', 25));
-            this.BadValue(new string('x', 26));
-
-            // Test whitespace sensitivity.
-            this.GoodValue(new string(' ', 25));
-            this.BadValue(new string(' ', 26)); 
+            this.AssertMaxLength(25);
         }
 
         [TestMethod]
         public void ItShouldNotAllowTabs()
         {
-            this.BadValue("abcdef\t");
-            this.BadValue("\tabcdef");
-            this.BadValue("abc\tdef");
+            this.AssertTabsNotAllowed();
         }
 
         [TestMethod]
         public void ItShouldNotAllowNewLines()
         {
-            this.BadValue("abcdef\n");
-            this.BadValue("\nabcdef");
-            this.BadValue("abc\ndef");
-
-            this.BadValue("abcdef\r");
-            this.BadValue("\rabcdef");
-            this.BadValue("abc\rdef");
-        }
-
-        protected override string ValueA
-        {
-            get { return "Subscription name A"; }
-        }
-
-        protected override string ValueB
-        {
-            get { return "Subscription name B"; }
+            this.AssertNewLinesNotAllowed();
         }
 
         protected override SubscriptionName Parse(string value, bool exact)
@@ -92,7 +83,5 @@ namespace Fifthweek.Api.Subscriptions.Tests
         {
             return parsedObject.Value;
         }
-
-        public static readonly string InvalidValue = "";
     }
 }

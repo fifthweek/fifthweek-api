@@ -1,10 +1,11 @@
-using System;
-using System.Collections.Generic;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-
 namespace Fifthweek.Api.Tests.Shared
 {
-    public abstract class ValidatedPrimitiveEqualityTests<TParsed, TRaw> : PrimitiveEqualityTests<TParsed>
+    using System;
+    using System.Collections.Generic;
+
+    using Microsoft.VisualStudio.TestTools.UnitTesting;
+
+    public abstract class ValidatedPrimitiveTests<TParsed, TRaw> : PrimitiveTests<TParsed>
     {
         public override void ItShouldRecogniseEqualObjects()
         {
