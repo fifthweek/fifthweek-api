@@ -88,10 +88,13 @@
     <Compile Include="Commands\PromoteNewUserToCreatorCommandHandler.cs" />
     <Compile Include="Commands\CreateSubscriptionCommand.cs" />
     <Compile Include="Commands\CreateSubscriptionCommandHandler.cs" />
-    <Compile Include="Controllers\MandatorySubscriptionData.cs" />
+    <Compile Include="Controllers\NewSubscriptionData.cs" />
     <Compile Include="Controllers\SubscriptionController.cs" />
     <Compile Include="ISubscriptionSecurity.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="CreatorStatus.cs" />
+    <Compile Include="Queries\GetCreatorStatusQuery.cs" />
+    <Compile Include="Queries\GetCreatorStatusQueryHandler.cs" />
     <Compile Include="SubscriptionId.cs" />
     <Compile Include="SubscriptionName.cs" />
     <Compile Include="ChannelPriceInUsCentsPerWeek.cs" />

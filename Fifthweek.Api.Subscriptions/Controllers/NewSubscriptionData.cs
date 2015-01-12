@@ -3,7 +3,7 @@
 namespace Fifthweek.Api.Subscriptions.Controllers
 {
     [AutoEqualityMembers]
-    public partial class MandatorySubscriptionData
+    public partial class NewSubscriptionData
     {
         [Parsed(typeof(SubscriptionName))]
         public string SubscriptionName { get; set; }
