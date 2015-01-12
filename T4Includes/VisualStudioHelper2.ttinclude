@@ -44,8 +44,13 @@
 #>
 
 <#+
-	public static bool IsPrimitiveType(string typeName)
+	public static bool IsPrimitiveType(CodeType type)
 	{
+		if(type is CodeEnum){
+			return true;
+		}
+
+		var typeName = type.FullName;
 		var primitiveTypes = new HashSet<string>(new[] {
 			"System.String",
 			"System.Guid",
