@@ -8,7 +8,7 @@
 
     public interface IAccountRepository
     {
-        Task<AccountSettingsResult> GetAccountSettingsAsync(UserId userId);
+        Task<GetAccountSettingsResult> GetAccountSettingsAsync(UserId userId);
 
         Task<AccountRepository.UpdateAccountSettingsResult> UpdateAccountSettingsAsync(
             UserId userId,

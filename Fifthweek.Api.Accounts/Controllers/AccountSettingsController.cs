@@ -19,10 +19,10 @@
 
         private readonly ICommandHandler<UpdateAccountSettingsCommand> updateAccountSettings;
 
-        private readonly IQueryHandler<GetAccountSettingsQuery, AccountSettingsResult> getAccountSettings;
+        private readonly IQueryHandler<GetAccountSettingsQuery, GetAccountSettingsResult> getAccountSettings;
 
         [Route("{userId}")]
-        public async Task<AccountSettingsResult> Get(string userId)
+        public async Task<AccountSettingsResponse> Get(string userId)
         {
             var requestedUserId = new UserId(userId.DecodeGuid());
             var authenticatedUserId = this.userContext.GetUserId();
@@ -30,7 +30,7 @@
             var query = new GetAccountSettingsQuery(authenticatedUserId, requestedUserId);
             var result = await this.getAccountSettings.HandleAsync(query);
 
-            return result; 
+            return new AccountSettingsResponse(result.Email.Value, result.ProfileImageFileId.Value.EncodeGuid());; 
         }
 
         [Route("{userId}")]

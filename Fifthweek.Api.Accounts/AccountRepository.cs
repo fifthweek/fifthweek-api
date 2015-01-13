@@ -18,11 +18,15 @@
 
         private readonly IUserManager userManager;
 
-        public Task<AccountSettingsResult> GetAccountSettingsAsync(UserId userId)
+        public async Task<GetAccountSettingsResult> GetAccountSettingsAsync(UserId userId)
         {
-            return this.databaseContext.Database.Connection.ExecuteScalarAsync<AccountSettingsResult>(
+            var result = await this.databaseContext.Database.Connection.ExecuteScalarAsync<GetAccountSettingsDapperResult>(
                 @"SELECT Email, ProfileImageFileId FROM dbo.AspNetUsers WHERE Id=@UserId",
                 new { UserId = userId });
+
+            result.Parse();
+
+            return new GetAccountSettingsResult(result.EmailObject, result.ProfileImageFileIdObject);
         }
 
         public async Task<UpdateAccountSettingsResult> UpdateAccountSettingsAsync(

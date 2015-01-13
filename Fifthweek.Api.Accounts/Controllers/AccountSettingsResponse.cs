@@ -4,7 +4,7 @@
 
     [AutoConstructor]
     [AutoEqualityMembers]
-    public partial class AccountSettingsResult
+    public partial class AccountSettingsResponse
     {
         public string Email { get; private set; }
 

@@ -7,11 +7,11 @@
     using Fifthweek.Api.Identity.Membership;
 
     [AutoConstructor]
-    public partial class GetAccountSettingsQueryHandler : IQueryHandler<GetAccountSettingsQuery, AccountSettingsResult>
+    public partial class GetAccountSettingsQueryHandler : IQueryHandler<GetAccountSettingsQuery, GetAccountSettingsResult>
     {
         private readonly IAccountRepository accountRepository;
 
-        public Task<AccountSettingsResult> HandleAsync(GetAccountSettingsQuery query)
+        public Task<GetAccountSettingsResult> HandleAsync(GetAccountSettingsQuery query)
         {
             query.AssertNotNull("query");
             query.AuthenticatedUserId.AssertAuthorizedFor(query.RequestedUserId);

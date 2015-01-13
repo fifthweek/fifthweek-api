@@ -6,7 +6,7 @@
 
     [AutoConstructor]
     [AutoEqualityMembers]
-    public partial class GetAccountSettingsQuery : IQuery<AccountSettingsResult>
+    public partial class GetAccountSettingsQuery : IQuery<GetAccountSettingsResult>
     {
         public UserId AuthenticatedUserId { get; private set; }
 
