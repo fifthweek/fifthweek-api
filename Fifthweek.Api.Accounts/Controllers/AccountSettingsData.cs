@@ -8,6 +8,7 @@
     {
         public string Email { get; private set; }
 
+        [Optional]
         public string ProfileImageId { get; private set; }
     }
 }

@@ -48,10 +48,6 @@
                     HttpStatusCode.BadRequest,
                     exception.Message);
             }
-            else if (exception is ForbiddenException || exception is SecurityException)
-            {
-                return request.CreateErrorResponse(HttpStatusCode.Forbidden, HttpStatusCode.Forbidden.ToString());
-            }
             else if (exception is UnauthorizedException || exception is UnauthorizedAccessException)
             {
                 return request.CreateErrorResponse(HttpStatusCode.Unauthorized, HttpStatusCode.Unauthorized.ToString());

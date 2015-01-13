@@ -94,7 +94,6 @@
     <Compile Include="DecoratorAttribute.cs" />
     <Compile Include="AggregateEventHandler.cs" />
     <Compile Include="DetailedRecoverableException.cs" />
-    <Compile Include="ForbiddenException.cs" />
     <Compile Include="IAutofacRegistration.cs" />
     <Compile Include="IEventHandler.cs" />
     <Compile Include="NonEquatableAttribute.cs" />

@@ -163,7 +163,7 @@
         }
 
         [TestMethod]
-        [ExpectedException(typeof(ForbiddenException))]
+        [ExpectedException(typeof(UnauthorizedException))]
         public async Task WhenAssertingAFileBelongsToAUser_ItShouldThrowAnExceptionIfThePermissionsAreViolated()
         {
             await this.InitializeWithDatabaseAsync();

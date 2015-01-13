@@ -91,6 +91,7 @@
     <Compile Include="Membership\Commands\RequestPasswordResetCommandHandlerTests.cs" />
     <Compile Include="Membership\Commands\UpdateLastAccessTokenDateCommandHandlerTests.cs" />
     <Compile Include="Membership\Controllers\MembershipControllerTests.cs" />
+    <Compile Include="Membership\ExtensionsTests.cs" />
     <Compile Include="Membership\Queries\IsPasswordResetTokenValidQueryHandlerTests.cs" />
     <Compile Include="Membership\PasswordTests.cs" />
     <Compile Include="Membership\UsernameTests.cs" />

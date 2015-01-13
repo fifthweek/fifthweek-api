@@ -5,6 +5,7 @@
 
     using Fifthweek.Api.Azure;
     using Fifthweek.Api.Core;
+    using Fifthweek.Api.Identity.Membership;
     using Fifthweek.Api.Persistence;
 
     [Decorator(typeof(RetryOnSqlDeadlockOrTimeoutCommandHandlerDecorator<>))]
@@ -17,6 +18,9 @@
 
         public async Task HandleAsync(InitiateFileUploadCommand command)
         {
+            command.AssertNotNull("command");
+            command.Requester.AssertAuthenticated();
+
             const string ContainerName = FileManagement.Constants.FileBlobContainerName;
             await this.blobService.CreateBlobContainerAsync(ContainerName);
 

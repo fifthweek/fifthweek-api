@@ -7,6 +7,8 @@ using Fifthweek.Api.Persistence;
 
 namespace Fifthweek.Api.Subscriptions.Queries
 {
+    using Fifthweek.Api.Identity.Membership;
+
     [AutoConstructor]
     public partial class GetCreatorStatusQueryHandler : IQueryHandler<GetCreatorStatusQuery, CreatorStatus>
     {
@@ -14,10 +16,8 @@ namespace Fifthweek.Api.Subscriptions.Queries
 
         public async Task<CreatorStatus> HandleAsync(GetCreatorStatusQuery query)
         {
-            if (query == null)
-            {
-                throw new ArgumentNullException("query");
-            }
+            query.AssertNotNull("query");
+            query.CreatorId.AssertAuthenticated();
 
             // Ensure we return the same subscription each time by ordering by creation date descending. This means the latest
             // subscription is returned. Latest seems to make most sense: if a user double-posts, they'll get the ID of the 

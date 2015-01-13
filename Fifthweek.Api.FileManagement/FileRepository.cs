@@ -85,7 +85,7 @@
 
             if (!fileBelongsToUser)
             {
-                throw new ForbiddenException("The user " + userId.Value + " does not have permission to access file " + fileId.Value);
+                throw new UnauthorizedException("The user " + userId.Value + " does not have permission to access file " + fileId.Value);
             }
         }
 

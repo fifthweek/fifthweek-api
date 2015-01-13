@@ -10,7 +10,7 @@
     {
         public UserId Requester { get; private set; }
 
-        public UserId RequestedAccount { get; private set; }
+        public UserId RequestedUserId { get; private set; }
 
         [Optional]
         public string NewUsername { get; private set; }

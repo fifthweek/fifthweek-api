@@ -5,6 +5,7 @@
 
     using Fifthweek.Api.Azure;
     using Fifthweek.Api.Core;
+    using Fifthweek.Api.Identity.Membership;
 
     [AutoConstructor]
     public partial class GenerateWritableBlobUriQueryHandler : IQueryHandler<GenerateWritableBlobUriQuery, string>
@@ -17,6 +18,8 @@
 
         public async Task<string> HandleAsync(GenerateWritableBlobUriQuery query)
         {
+            query.AssertNotNull("query");
+            query.Requester.AssertAuthenticated();
             await this.fileRepository.AssertFileBelongsToUserAsync(query.Requester, query.FileId);
 
             const string ContainerName = FileManagement.Constants.FileBlobContainerName;

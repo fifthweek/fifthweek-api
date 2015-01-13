@@ -27,5 +27,13 @@
 
             return new Guid(result);
         }
+
+        public static void AssertNotNull(this object value, string argumentName)
+        {
+            if (value == null)
+            {
+                throw new ArgumentNullException(argumentName);
+            }
+        }
     }
 }

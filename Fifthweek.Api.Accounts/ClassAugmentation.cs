@@ -14,7 +14,7 @@ namespace Fifthweek.Api.Accounts.Commands
 	{
         public UpdateAccountSettingsCommand(
             Fifthweek.Api.Identity.Membership.UserId requester, 
-            Fifthweek.Api.Identity.Membership.UserId requestedAccount, 
+            Fifthweek.Api.Identity.Membership.UserId requestedUserId, 
             System.String newUsername, 
             System.String newEmail, 
             Fifthweek.Api.FileManagement.FileId newProfileImageId)
@@ -24,13 +24,13 @@ namespace Fifthweek.Api.Accounts.Commands
                 throw new ArgumentNullException("requester");
             }
 
-            if (requestedAccount == null)
+            if (requestedUserId == null)
             {
-                throw new ArgumentNullException("requestedAccount");
+                throw new ArgumentNullException("requestedUserId");
             }
 
             this.Requester = requester;
-            this.RequestedAccount = requestedAccount;
+            this.RequestedUserId = requestedUserId;
             this.NewUsername = newUsername;
             this.NewEmail = newEmail;
             this.NewProfileImageId = newProfileImageId;
@@ -65,7 +65,14 @@ namespace Fifthweek.Api.Accounts.Controllers
 }
 namespace Fifthweek.Api.Accounts.Controllers
 {
+	using System;
+	using System.Linq;
+	using System.Threading.Tasks;
+	using System.Web.Http;
+	using System.Web.Http.Description;
 	using Fifthweek.Api.Core;
+	using Fifthweek.Api.Identity.Membership;
+	using Fifthweek.Api.Identity.OAuth;
 	public partial class AccountSettingsData 
 	{
         public AccountSettingsData(
@@ -75,11 +82,6 @@ namespace Fifthweek.Api.Accounts.Controllers
             if (email == null)
             {
                 throw new ArgumentNullException("email");
-            }
-
-            if (profileImageId == null)
-            {
-                throw new ArgumentNullException("profileImageId");
             }
 
             this.Email = email;
@@ -124,7 +126,7 @@ namespace Fifthweek.Api.Accounts.Commands
             {
                 int hashCode = 0;
                 hashCode = (hashCode * 397) ^ (this.Requester != null ? this.Requester.GetHashCode() : 0);
-                hashCode = (hashCode * 397) ^ (this.RequestedAccount != null ? this.RequestedAccount.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.RequestedUserId != null ? this.RequestedUserId.GetHashCode() : 0);
                 hashCode = (hashCode * 397) ^ (this.NewUsername != null ? this.NewUsername.GetHashCode() : 0);
                 hashCode = (hashCode * 397) ^ (this.NewEmail != null ? this.NewEmail.GetHashCode() : 0);
                 hashCode = (hashCode * 397) ^ (this.NewProfileImageId != null ? this.NewProfileImageId.GetHashCode() : 0);
@@ -139,7 +141,7 @@ namespace Fifthweek.Api.Accounts.Commands
                 return false;
             }
 
-            if (!object.Equals(this.RequestedAccount, other.RequestedAccount))
+            if (!object.Equals(this.RequestedUserId, other.RequestedUserId))
             {
                 return false;
             }
@@ -166,7 +168,14 @@ namespace Fifthweek.Api.Accounts.Commands
 }
 namespace Fifthweek.Api.Accounts.Controllers
 {
+	using System;
+	using System.Linq;
+	using System.Threading.Tasks;
+	using System.Web.Http;
+	using System.Web.Http.Description;
 	using Fifthweek.Api.Core;
+	using Fifthweek.Api.Identity.Membership;
+	using Fifthweek.Api.Identity.OAuth;
 	public partial class AccountSettingsData 
 	{
         public override bool Equals(object obj)

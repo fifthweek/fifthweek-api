@@ -5,6 +5,7 @@
 
     using Fifthweek.Api.Azure;
     using Fifthweek.Api.Core;
+    using Fifthweek.Api.Identity.Membership;
 
     [Decorator(typeof(RetryOnSqlDeadlockOrTimeoutCommandHandlerDecorator<>))]
     [AutoConstructor]
@@ -18,6 +19,8 @@
         
         public async Task HandleAsync(CompleteFileUploadCommand command)
         {
+            command.AssertNotNull("command");
+            command.Requester.AssertAuthenticated();
             await this.fileRepository.AssertFileBelongsToUserAsync(command.Requester, command.FileId);
 
             const string ContainerName = FileManagement.Constants.FileBlobContainerName;

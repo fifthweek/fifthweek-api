@@ -24,6 +24,9 @@
                            select t).ToList();
         }
 
+        /// <summary>
+        /// RequireHttpsAttribute is applied automatically.
+        /// </summary>
         [TestMethod]
         public void AllControllerMethodsShouldNotManuallyRequireHttps()
         {
@@ -36,6 +39,9 @@
             }
         }
 
+        /// <summary>
+        /// ConvertExceptionsToResponsesAttribute is applied automatically.
+        /// </summary>
         [TestMethod]
         public void AllControllerMethodsShouldNotManuallyConvertExceptionsToResponses()
         {
@@ -48,6 +54,9 @@
             }
         }
 
+        /// <summary>
+        /// ValidateModelAttribute is applied automatically.
+        /// </summary>
         [TestMethod]
         public void AllControllerMethodsShouldNotManuallyValidateTheModel()
         {
@@ -56,6 +65,21 @@
                 foreach (var method in controller.GetMethods(BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly))
                 {
                     Assert.IsFalse(method.GetCustomAttributes<ValidateModelAttribute>().Any());
+                }
+            }
+        }
+
+        /// <summary>
+        /// Command handlers should perform authorization, not the controllers.
+        /// </summary>
+        [TestMethod]
+        public void AllControllerMethodsShouldNotAuthorizeTheUser()
+        {
+            foreach (var controller in this.controllers)
+            {
+                foreach (var method in controller.GetMethods(BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly))
+                {
+                    Assert.IsFalse(method.GetCustomAttributes<AuthorizeAttribute>().Any());
                 }
             }
         }

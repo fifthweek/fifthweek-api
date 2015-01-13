@@ -59,8 +59,10 @@
       <DependentUpon>ClassAugmentation.tt</DependentUpon>
     </Compile>
     <Compile Include="Commands\UpdateAccountSettingsCommand.cs" />
+    <Compile Include="Commands\UpdateAccountSettingsCommandHandler.cs" />
     <Compile Include="Controllers\AccountSettingsController.cs" />
     <Compile Include="Controllers\AccountSettingsData.cs" />
+    <Compile Include="Controllers\UpdatedAccountSettingsData.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
