@@ -96,7 +96,7 @@ namespace Fifthweek.Api.Identity.Tests.Membership.Commands
             return new ConfirmPasswordResetCommand(
                 new UserId(data.UserId), 
                 data.Token, 
-                ValidatedPassword.Parse(data.NewPassword));
+                ValidPassword.Parse(data.NewPassword));
         }
     }
 }

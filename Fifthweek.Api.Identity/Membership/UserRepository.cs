@@ -14,14 +14,14 @@ namespace Fifthweek.Api.Identity.Membership
     {
         private readonly IFifthweekDbContext fifthweekDbContext;
 
-        public Task UpdateLastSignInDateAndAccessTokenDateAsync(ValidatedUsername username, DateTime timestamp)
+        public Task UpdateLastSignInDateAndAccessTokenDateAsync(ValidUsername username, DateTime timestamp)
         {
             return this.fifthweekDbContext.Database.Connection.ExecuteAsync(
                     @"UPDATE AspNetUsers SET LastSignInDate=@timestamp, LastAccessTokenDate=@timestamp WHERE UserName=@username",
                     new { username = username.Value, timestamp });
         }
 
-        public Task UpdateLastAccessTokenDateAsync(ValidatedUsername username, DateTime timestamp)
+        public Task UpdateLastAccessTokenDateAsync(ValidUsername username, DateTime timestamp)
         {
             return this.fifthweekDbContext.Database.Connection.ExecuteAsync(
                    @"UPDATE AspNetUsers SET LastAccessTokenDate=@timestamp WHERE UserName=@username",

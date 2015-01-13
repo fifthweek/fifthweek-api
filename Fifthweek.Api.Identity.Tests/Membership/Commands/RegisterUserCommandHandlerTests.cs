@@ -155,9 +155,9 @@ namespace Fifthweek.Api.Identity.Tests.Membership.Commands
             return new RegisterUserCommand(
                 new UserId(userId),
                 registrationData.ExampleWork,
-                ValidatedEmail.Parse(registrationData.Email),
-                ValidatedUsername.Parse(registrationData.Username),
-                ValidatedPassword.Parse(registrationData.Password));
+                ValidEmail.Parse(registrationData.Email),
+                ValidUsername.Parse(registrationData.Username),
+                ValidPassword.Parse(registrationData.Password));
         }
     }
 }

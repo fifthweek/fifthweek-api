@@ -5,8 +5,8 @@
 
     public interface IUserRepository
     {
-        Task UpdateLastSignInDateAndAccessTokenDateAsync(ValidatedUsername username, DateTime timestamp);
+        Task UpdateLastSignInDateAndAccessTokenDateAsync(ValidUsername username, DateTime timestamp);
 
-        Task UpdateLastAccessTokenDateAsync(ValidatedUsername username, DateTime timestamp);
+        Task UpdateLastAccessTokenDateAsync(ValidUsername username, DateTime timestamp);
     }
 }

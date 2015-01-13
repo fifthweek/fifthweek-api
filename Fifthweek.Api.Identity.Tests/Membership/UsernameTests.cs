@@ -8,7 +8,7 @@
     using Microsoft.VisualStudio.TestTools.UnitTesting;
 
     [TestClass]
-    public class UsernameTests : ValidatedStringTests<ValidatedUsername>
+    public class UsernameTests : ValidatedStringTests<ValidUsername>
     {
         protected override string ValueA
         {
@@ -86,22 +86,22 @@
             this.GoodNonExactValue("JoeBloggs", "joebloggs");
         }
 
-        protected override ValidatedUsername Parse(string value, bool exact)
+        protected override ValidUsername Parse(string value, bool exact)
         {
-            return ValidatedUsername.Parse(value, exact);
+            return ValidUsername.Parse(value, exact);
         }
 
-        protected override bool TryParse(string value, out ValidatedUsername parsedObject, bool exact)
+        protected override bool TryParse(string value, out ValidUsername parsedObject, bool exact)
         {
-            return ValidatedUsername.TryParse(value, out parsedObject, exact);
+            return ValidUsername.TryParse(value, out parsedObject, exact);
         }
 
-        protected override bool TryParse(string value, out ValidatedUsername parsedObject, out IReadOnlyCollection<string> errorMessages, bool exact)
+        protected override bool TryParse(string value, out ValidUsername parsedObject, out IReadOnlyCollection<string> errorMessages, bool exact)
         {
-            return ValidatedUsername.TryParse(value, out parsedObject, out errorMessages, exact);
+            return ValidUsername.TryParse(value, out parsedObject, out errorMessages, exact);
         }
 
-        protected override string GetValue(ValidatedUsername parsedObject)
+        protected override string GetValue(ValidUsername parsedObject)
         {
             return parsedObject.Value;
         }

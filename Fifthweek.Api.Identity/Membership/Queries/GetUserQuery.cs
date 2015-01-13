@@ -6,8 +6,8 @@
     [AutoEqualityMembers, AutoConstructor]
     public partial class GetUserQuery : IQuery<FifthweekUser>
     {
-        public ValidatedUsername Username { get; private set; }
+        public ValidUsername Username { get; private set; }
 
-        public ValidatedPassword Password { get; private set; }
+        public ValidPassword Password { get; private set; }
     }
 }

@@ -6,11 +6,11 @@ namespace Fifthweek.Api.Identity.Membership.Controllers
     public partial class PasswordResetRequestData
     {
         [Optional]
-        [Parsed(typeof(ValidatedEmail))]
+        [Parsed(typeof(ValidEmail))]
         public string Email { get; set; }
 
         [Optional]
-        [Parsed(typeof(ValidatedUsername))]
+        [Parsed(typeof(ValidUsername))]
         public string Username { get; set; }
     }
 }

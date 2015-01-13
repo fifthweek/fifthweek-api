@@ -91,10 +91,10 @@ namespace Fifthweek.Api.Identity.OAuth
             var allowedOrigin = context.OwinContext.Get<string>(Constants.TokenAllowedOriginKey) ?? "*";
             Helper.SetAccessControlAllowOrigin(context.OwinContext, allowedOrigin);
 
-            ValidatedUsername username;
-            ValidatedPassword password;
-            if (!ValidatedUsername.TryParse(context.UserName, out username) ||
-                !ValidatedPassword.TryParse(context.Password, out password))
+            ValidUsername username;
+            ValidPassword password;
+            if (!ValidUsername.TryParse(context.UserName, out username) ||
+                !ValidPassword.TryParse(context.Password, out password))
             {
                 context.SetError("invalid_grant", "Invalid username or password.");
                 return;
@@ -158,7 +158,7 @@ namespace Fifthweek.Api.Identity.OAuth
                 return;
             }
 
-            var username = ValidatedUsername.Parse(context.Ticket.Identity.Name, true);
+            var username = ValidUsername.Parse(context.Ticket.Identity.Name, true);
 
             await this.updateLastAccessTokenDate.HandleAsync(
                 new UpdateLastAccessTokenDateCommand(username, DateTime.UtcNow, UpdateLastAccessTokenDateCommand.AccessTokenCreationType.RefreshToken));

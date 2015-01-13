@@ -10,7 +10,7 @@ namespace Fifthweek.Api.Identity.Membership.Controllers
         [Constructed(typeof(UserId))]
         public Guid UserId { get; set; }
 
-        [Parsed(typeof(ValidatedPassword))]
+        [Parsed(typeof(ValidPassword))]
         public string NewPassword { get; set; }
 
         [Required]
