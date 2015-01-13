@@ -13,7 +13,7 @@ namespace Fifthweek.Api.Persistence.Migrations
         
         string IMigrationMetadata.Id
         {
-            get { return "201501131809578_AddProfileImageFileIdToUser"; }
+            get { return "201501131929274_AddProfileImageFileIdToUser"; }
         }
         
         string IMigrationMetadata.Source
