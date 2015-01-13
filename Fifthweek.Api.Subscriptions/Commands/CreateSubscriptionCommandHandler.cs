@@ -22,7 +22,9 @@
             var isCreationAllowed = await this.subscriptionSecurity.IsCreationAllowedAsync(command.Requester);
             if (!isCreationAllowed)
             {
-                throw new RecoverableException("Not allowed to create subscription");
+                throw new UnauthorizedException(string.Format(
+                    "Not allowed to create subscription. User={0}",
+                    command.Requester.Value));
             }
 
             await this.CreateSubscriptionAsync(command);

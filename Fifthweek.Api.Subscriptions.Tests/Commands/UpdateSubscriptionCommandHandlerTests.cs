@@ -4,6 +4,7 @@
     using System.Threading.Tasks;
 
     using Fifthweek.Api.Core;
+    using Fifthweek.Api.FileManagement;
     using Fifthweek.Api.Identity.Membership;
     using Fifthweek.Api.Persistence;
     using Fifthweek.Api.Persistence.Tests.Shared;
@@ -14,23 +15,36 @@
     using Moq;
 
     [TestClass]
-    public class CreateSubscriptionCommandHandlerTests : PersistenceTestsBase
+    public class UpdateSubscriptionCommandHandlerTests : PersistenceTestsBase
     {
         private static readonly UserId UserId = new UserId(Guid.NewGuid());
         private static readonly SubscriptionId SubscriptionId = new SubscriptionId(Guid.NewGuid());
         private static readonly SubscriptionName SubscriptionName = SubscriptionName.Parse("Lawrence");
         private static readonly Tagline Tagline = Tagline.Parse("Web Comics and More");
+        private static readonly Introduction Introduction = Introduction.Default;
+        private static readonly Description Description = Description.Parse("Hello all!");
+        private static readonly FileId HeaderImageFileId = new FileId(Guid.NewGuid());
+        private static readonly ExternalVideoUrl Video = ExternalVideoUrl.Parse("http://youtube.com/3135");
         private static readonly ChannelPriceInUsCentsPerWeek BasePrice = ChannelPriceInUsCentsPerWeek.Parse(10);
-        private static readonly CreateSubscriptionCommand Command = new CreateSubscriptionCommand(UserId, SubscriptionId, SubscriptionName, Tagline, BasePrice);
+        private static readonly UpdateSubscriptionCommand Command = new UpdateSubscriptionCommand(
+            UserId, 
+            SubscriptionId, 
+            SubscriptionName, 
+            Tagline, 
+            Introduction, 
+            Description,
+            HeaderImageFileId,
+            Video);
+
         private Mock<ISubscriptionSecurity> subscriptionSecurity;
-        private CreateSubscriptionCommandHandler target;
+        private UpdateSubscriptionCommandHandler target;
 
         [TestInitialize]
         public override void Initialize()
         {
             base.Initialize();
             this.subscriptionSecurity = new Mock<ISubscriptionSecurity>();
-            this.target = new CreateSubscriptionCommandHandler(this.NewDbContext(), this.subscriptionSecurity.Object);
+            this.target = new UpdateSubscriptionCommandHandler(this.NewDbContext(), this.subscriptionSecurity.Object);
         }
 
         [TestCleanup]
@@ -51,7 +65,7 @@
                 await this.target.HandleAsync(Command);
                 Assert.Fail("Expected recoverable exception");
             }
-            catch (UnauthorizedException)
+            catch (RecoverableException)
             {
             }
 

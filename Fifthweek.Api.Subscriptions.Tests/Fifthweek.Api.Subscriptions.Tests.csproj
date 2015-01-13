@@ -94,6 +94,7 @@
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
     </Compile>
+    <Compile Include="Commands\UpdateSubscriptionCommandHandlerTests.cs" />
     <Compile Include="Commands\PromoteNewUserToCreatorCommandHandlerTests.cs" />
     <Compile Include="Commands\CreateSubscriptionCommandHandlerTests.cs" />
     <Compile Include="Controllers\SubscriptionControllerTests.cs" />
@@ -111,6 +112,10 @@
     <ProjectReference Include="..\Fifthweek.Api.Core\Fifthweek.Api.Core.csproj">
       <Project>{BD52863E-063D-45A5-9CA8-7541804D1313}</Project>
       <Name>Fifthweek.Api.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Fifthweek.Api.FileManagement\Fifthweek.Api.FileManagement.csproj">
+      <Project>{3242E7FC-35CE-4E69-B07B-B8DCB3C69348}</Project>
+      <Name>Fifthweek.Api.FileManagement</Name>
     </ProjectReference>
     <ProjectReference Include="..\Fifthweek.Api.Identity\Fifthweek.Api.Identity.csproj">
       <Project>{6A2AF270-E4D4-4C4E-A88F-807F7B9A03B7}</Project>

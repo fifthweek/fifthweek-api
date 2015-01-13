@@ -242,14 +242,21 @@ namespace Fifthweek.Api.Subscriptions.Commands
 	public partial class UpdateSubscriptionCommandHandler 
 	{
         public UpdateSubscriptionCommandHandler(
-            Fifthweek.Api.Persistence.IFifthweekDbContext databaseContext)
+            Fifthweek.Api.Persistence.IFifthweekDbContext databaseContext, 
+            Fifthweek.Api.Subscriptions.ISubscriptionSecurity subscriptionSecurity)
         {
             if (databaseContext == null)
             {
                 throw new ArgumentNullException("databaseContext");
             }
 
+            if (subscriptionSecurity == null)
+            {
+                throw new ArgumentNullException("subscriptionSecurity");
+            }
+
             this.databaseContext = databaseContext;
+            this.subscriptionSecurity = subscriptionSecurity;
         }
 	}
 
@@ -346,6 +353,7 @@ namespace Fifthweek.Api.Subscriptions
 	using Fifthweek.Api.Persistence;
 	using Fifthweek.Api.Persistence.Identity;
 	using System.Collections.Generic;
+	using Dapper;
 	public partial class CreatorStatus 
 	{
         public CreatorStatus(
@@ -421,6 +429,7 @@ namespace Fifthweek.Api.Subscriptions
 	using Fifthweek.Api.Persistence;
 	using Fifthweek.Api.Persistence.Identity;
 	using System.Collections.Generic;
+	using Dapper;
 	public partial class SubscriptionId 
 	{
         public SubscriptionId(
@@ -446,17 +455,25 @@ namespace Fifthweek.Api.Subscriptions
 	using Fifthweek.Api.Persistence;
 	using Fifthweek.Api.Persistence.Identity;
 	using System.Collections.Generic;
+	using Dapper;
 	public partial class SubscriptionSecurity 
 	{
         public SubscriptionSecurity(
-            Fifthweek.Api.Persistence.IUserManager userManager)
+            Fifthweek.Api.Persistence.IUserManager userManager, 
+            Fifthweek.Api.Persistence.IFifthweekDbContext databaseContext)
         {
             if (userManager == null)
             {
                 throw new ArgumentNullException("userManager");
             }
 
+            if (databaseContext == null)
+            {
+                throw new ArgumentNullException("databaseContext");
+            }
+
             this.userManager = userManager;
+            this.databaseContext = databaseContext;
         }
 	}
 
@@ -472,6 +489,7 @@ namespace Fifthweek.Api.Subscriptions
 	using Fifthweek.Api.Identity.Membership;
 	using Fifthweek.Api.Persistence;
 	using Fifthweek.Api.Persistence.Identity;
+	using Dapper;
 	public partial class ChannelPriceInUsCentsPerWeek 
 	{
         public override bool Equals(object obj)
@@ -819,6 +837,7 @@ namespace Fifthweek.Api.Subscriptions
 	using Fifthweek.Api.Persistence;
 	using Fifthweek.Api.Persistence.Identity;
 	using System.Collections.Generic;
+	using Dapper;
 	public partial class CreatorStatus 
 	{
         public override bool Equals(object obj)
@@ -932,6 +951,7 @@ namespace Fifthweek.Api.Subscriptions
 	using Fifthweek.Api.Persistence;
 	using Fifthweek.Api.Persistence.Identity;
 	using System.Collections.Generic;
+	using Dapper;
 	public partial class SubscriptionId 
 	{
         public override bool Equals(object obj)
@@ -1206,6 +1226,7 @@ namespace Fifthweek.Api.Subscriptions
 	using Fifthweek.Api.Persistence;
 	using Fifthweek.Api.Persistence.Identity;
 	using System.Collections.Generic;
+	using Dapper;
 	public partial class Description 
 	{
         public override bool Equals(object obj)
@@ -1260,6 +1281,7 @@ namespace Fifthweek.Api.Subscriptions
 	using Fifthweek.Api.Persistence;
 	using Fifthweek.Api.Persistence.Identity;
 	using System.Collections.Generic;
+	using Dapper;
 	public partial class SubscriptionName 
 	{
         public override bool Equals(object obj)
@@ -1314,6 +1336,7 @@ namespace Fifthweek.Api.Subscriptions
 	using Fifthweek.Api.Persistence;
 	using Fifthweek.Api.Persistence.Identity;
 	using System.Collections.Generic;
+	using Dapper;
 	public partial class Tagline 
 	{
         public override bool Equals(object obj)

@@ -10,14 +10,29 @@
     public partial class UpdateSubscriptionCommandHandler : ICommandHandler<UpdateSubscriptionCommand>
     {
         private readonly IFifthweekDbContext databaseContext;
+        private readonly ISubscriptionSecurity subscriptionSecurity;
 
-        public Task HandleAsync(UpdateSubscriptionCommand command)
+        public async Task HandleAsync(UpdateSubscriptionCommand command)
         {
             if (command == null)
             {
                 throw new ArgumentNullException("command");
             }
 
+            var isUpdateAllowed = await this.subscriptionSecurity.IsUpdateAllowedAsync(command.Requester, command.SubscriptionId);
+            if (!isUpdateAllowed)
+            {
+                throw new UnauthorizedException(string.Format(
+                    "Not allowed to update subscription. User={0} Subscription={1}", 
+                    command.Requester.Value, 
+                    command.SubscriptionId.Value));
+            }
+
+            await this.UpdateSubscriptionAsync(command);
+        }
+
+        private Task UpdateSubscriptionAsync(UpdateSubscriptionCommand command)
+        {
             var subscription = new Subscription(
                 command.SubscriptionId.Value,
                 default(Guid),
@@ -32,7 +47,7 @@
                 default(DateTime));
 
             return this.databaseContext.Database.Connection.UpdateAsync(
-                subscription, 
+                subscription,
                 Subscription.Fields.Name |
                 Subscription.Fields.Tagline |
                 Subscription.Fields.Introduction |
