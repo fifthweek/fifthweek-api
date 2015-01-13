@@ -19,13 +19,7 @@
                 throw new ArgumentNullException("command");
             }
 
-            var isCreationAllowed = await this.subscriptionSecurity.IsCreationAllowedAsync(command.Requester);
-            if (!isCreationAllowed)
-            {
-                throw new UnauthorizedException(string.Format(
-                    "Not allowed to create subscription. User={0}",
-                    command.Requester.Value));
-            }
+            await this.subscriptionSecurity.AssertCreationAllowedAsync(command.Requester);
 
             await this.CreateSubscriptionAsync(command);
             await this.CreateChannelAsync(command);

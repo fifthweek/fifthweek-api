@@ -42,7 +42,7 @@
         [TestMethod]
         public async Task WhenNotAllowedToCreate_ItShouldReportAnError()
         {
-            this.subscriptionSecurity.Setup(_ => _.IsCreationAllowedAsync(UserId)).ReturnsAsync(false);
+            this.subscriptionSecurity.Setup(_ => _.AssertCreationAllowedAsync(UserId)).Throws<UnauthorizedException>();
 
             await this.SnapshotDatabaseAsync();
 
@@ -61,7 +61,6 @@
         [TestMethod]
         public async Task WhenReRun_ItShouldHaveNoEffect()
         {
-            this.subscriptionSecurity.Setup(_ => _.IsCreationAllowedAsync(UserId)).ReturnsAsync(true);
             await this.CreateUserAsync(UserId);
             await this.target.HandleAsync(Command);
 
@@ -75,7 +74,6 @@
         [TestMethod]
         public async Task ItShouldCreateSubscription()
         {
-            this.subscriptionSecurity.Setup(_ => _.IsCreationAllowedAsync(UserId)).ReturnsAsync(true);
             await this.CreateUserAsync(UserId);
 
             await this.SnapshotDatabaseAsync();
@@ -112,7 +110,6 @@
         [TestMethod]
         public async Task ItShouldCreateTheDefaultChannel()
         {
-            this.subscriptionSecurity.Setup(_ => _.IsCreationAllowedAsync(UserId)).ReturnsAsync(true);
             await this.CreateUserAsync(UserId);
 
             await this.SnapshotDatabaseAsync();
