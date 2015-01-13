@@ -7,7 +7,7 @@
     [AutoEqualityMembers]
     public partial class InitiateFileUploadCommand
     {
-        public UserId Requester { get; private set; }
+        public UserId AuthenticatedUserId { get; private set; }
 
         public FileId FileId { get; private set; }
 

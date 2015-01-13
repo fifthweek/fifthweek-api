@@ -8,17 +8,16 @@
     [AutoEqualityMembers]
     public partial class UpdateAccountSettingsCommand
     {
-        public UserId Requester { get; private set; }
+        public UserId AuthenticatedUserId { get; private set; }
 
         public UserId RequestedUserId { get; private set; }
 
-        [Optional]
-        public string NewUsername { get; private set; }
+        public Username NewUsername { get; private set; }
 
-        [Optional]
-        public string NewEmail { get; private set; }
+        public Email NewEmail { get; private set; }
 
-        [Optional]
+        public Password NewPassword { get; private set; }
+
         public FileId NewProfileImageId { get; private set; }
     }
 }

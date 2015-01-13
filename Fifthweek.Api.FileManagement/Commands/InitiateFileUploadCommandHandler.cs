@@ -19,7 +19,7 @@
         public async Task HandleAsync(InitiateFileUploadCommand command)
         {
             command.AssertNotNull("command");
-            command.Requester.AssertAuthenticated();
+            command.AuthenticatedUserId.AssertAuthenticated();
 
             const string ContainerName = FileManagement.Constants.FileBlobContainerName;
             await this.blobService.CreateBlobContainerAsync(ContainerName);
@@ -47,7 +47,7 @@
 
             await this.fileRepository.AddNewFileAsync(
                 command.FileId,
-                command.Requester,
+                command.AuthenticatedUserId,
                 fileNameWithoutExtension ?? string.Empty,
                 fileExtension ?? string.Empty,
                 command.Purpose ?? string.Empty);

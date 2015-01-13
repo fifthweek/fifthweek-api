@@ -4,11 +4,11 @@
 
     [AutoConstructor]
     [AutoEqualityMembers]
-    public partial class AccountSettingsData
+    public partial class AccountSettingsResult
     {
         public string Email { get; private set; }
 
         [Optional]
-        public string ProfileImageId { get; private set; }
+        public string ProfileImageFileId { get; private set; }
     }
 }

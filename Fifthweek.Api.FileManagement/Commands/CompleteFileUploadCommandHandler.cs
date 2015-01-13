@@ -20,8 +20,8 @@
         public async Task HandleAsync(CompleteFileUploadCommand command)
         {
             command.AssertNotNull("command");
-            command.Requester.AssertAuthenticated();
-            await this.fileRepository.AssertFileBelongsToUserAsync(command.Requester, command.FileId);
+            command.AuthenticatedUserId.AssertAuthenticated();
+            await this.fileRepository.AssertFileBelongsToUserAsync(command.AuthenticatedUserId, command.FileId);
 
             const string ContainerName = FileManagement.Constants.FileBlobContainerName;
             var blobName = this.blobNameCreator.CreateFileName(command.FileId);

@@ -15,12 +15,12 @@ namespace Fifthweek.Api.FileManagement.Commands
 	public partial class CompleteFileUploadCommand 
 	{
         public CompleteFileUploadCommand(
-            Fifthweek.Api.Identity.Membership.UserId requester, 
+            Fifthweek.Api.Identity.Membership.UserId authenticatedUserId, 
             Fifthweek.Api.FileManagement.FileId fileId)
         {
-            if (requester == null)
+            if (authenticatedUserId == null)
             {
-                throw new ArgumentNullException("requester");
+                throw new ArgumentNullException("authenticatedUserId");
             }
 
             if (fileId == null)
@@ -28,7 +28,7 @@ namespace Fifthweek.Api.FileManagement.Commands
                 throw new ArgumentNullException("fileId");
             }
 
-            this.Requester = requester;
+            this.AuthenticatedUserId = authenticatedUserId;
             this.FileId = fileId;
         }
 	}
@@ -84,14 +84,14 @@ namespace Fifthweek.Api.FileManagement.Commands
 	public partial class InitiateFileUploadCommand 
 	{
         public InitiateFileUploadCommand(
-            Fifthweek.Api.Identity.Membership.UserId requester, 
+            Fifthweek.Api.Identity.Membership.UserId authenticatedUserId, 
             Fifthweek.Api.FileManagement.FileId fileId, 
             System.String filePath, 
             System.String purpose)
         {
-            if (requester == null)
+            if (authenticatedUserId == null)
             {
-                throw new ArgumentNullException("requester");
+                throw new ArgumentNullException("authenticatedUserId");
             }
 
             if (fileId == null)
@@ -99,7 +99,7 @@ namespace Fifthweek.Api.FileManagement.Commands
                 throw new ArgumentNullException("fileId");
             }
 
-            this.Requester = requester;
+            this.AuthenticatedUserId = authenticatedUserId;
             this.FileId = fileId;
             this.FilePath = filePath;
             this.Purpose = purpose;
@@ -366,12 +366,12 @@ namespace Fifthweek.Api.FileManagement.Queries
 	public partial class GenerateWritableBlobUriQuery 
 	{
         public GenerateWritableBlobUriQuery(
-            Fifthweek.Api.Identity.Membership.UserId requester, 
+            Fifthweek.Api.Identity.Membership.UserId authenticatedUserId, 
             Fifthweek.Api.FileManagement.FileId fileId)
         {
-            if (requester == null)
+            if (authenticatedUserId == null)
             {
-                throw new ArgumentNullException("requester");
+                throw new ArgumentNullException("authenticatedUserId");
             }
 
             if (fileId == null)
@@ -379,7 +379,7 @@ namespace Fifthweek.Api.FileManagement.Queries
                 throw new ArgumentNullException("fileId");
             }
 
-            this.Requester = requester;
+            this.AuthenticatedUserId = authenticatedUserId;
             this.FileId = fileId;
         }
 	}
@@ -460,7 +460,7 @@ namespace Fifthweek.Api.FileManagement.Commands
             unchecked
             {
                 int hashCode = 0;
-                hashCode = (hashCode * 397) ^ (this.Requester != null ? this.Requester.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.AuthenticatedUserId != null ? this.AuthenticatedUserId.GetHashCode() : 0);
                 hashCode = (hashCode * 397) ^ (this.FileId != null ? this.FileId.GetHashCode() : 0);
                 return hashCode;
             }
@@ -468,7 +468,7 @@ namespace Fifthweek.Api.FileManagement.Commands
 
         protected bool Equals(CompleteFileUploadCommand other)
         {
-            if (!object.Equals(this.Requester, other.Requester))
+            if (!object.Equals(this.AuthenticatedUserId, other.AuthenticatedUserId))
             {
                 return false;
             }
@@ -519,7 +519,7 @@ namespace Fifthweek.Api.FileManagement.Commands
             unchecked
             {
                 int hashCode = 0;
-                hashCode = (hashCode * 397) ^ (this.Requester != null ? this.Requester.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.AuthenticatedUserId != null ? this.AuthenticatedUserId.GetHashCode() : 0);
                 hashCode = (hashCode * 397) ^ (this.FileId != null ? this.FileId.GetHashCode() : 0);
                 hashCode = (hashCode * 397) ^ (this.FilePath != null ? this.FilePath.GetHashCode() : 0);
                 hashCode = (hashCode * 397) ^ (this.Purpose != null ? this.Purpose.GetHashCode() : 0);
@@ -529,7 +529,7 @@ namespace Fifthweek.Api.FileManagement.Commands
 
         protected bool Equals(InitiateFileUploadCommand other)
         {
-            if (!object.Equals(this.Requester, other.Requester))
+            if (!object.Equals(this.AuthenticatedUserId, other.AuthenticatedUserId))
             {
                 return false;
             }
@@ -834,7 +834,7 @@ namespace Fifthweek.Api.FileManagement.Queries
             unchecked
             {
                 int hashCode = 0;
-                hashCode = (hashCode * 397) ^ (this.Requester != null ? this.Requester.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.AuthenticatedUserId != null ? this.AuthenticatedUserId.GetHashCode() : 0);
                 hashCode = (hashCode * 397) ^ (this.FileId != null ? this.FileId.GetHashCode() : 0);
                 return hashCode;
             }
@@ -842,7 +842,7 @@ namespace Fifthweek.Api.FileManagement.Queries
 
         protected bool Equals(GenerateWritableBlobUriQuery other)
         {
-            if (!object.Equals(this.Requester, other.Requester))
+            if (!object.Equals(this.AuthenticatedUserId, other.AuthenticatedUserId))
             {
                 return false;
             }

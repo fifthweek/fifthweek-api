@@ -9,6 +9,8 @@ namespace Fifthweek.Api.Persistence
 
     public interface IUserManager : IDisposable
     {
+        IPasswordHasher PasswordHasher { get; }
+
         Task<IdentityResult> CreateAsync(FifthweekUser user, string password);
 
         Task<FifthweekUser> FindAsync(string userName, string password);

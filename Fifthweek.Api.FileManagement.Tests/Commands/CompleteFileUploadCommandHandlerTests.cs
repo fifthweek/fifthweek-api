@@ -6,10 +6,13 @@ namespace Fifthweek.Api.FileManagement.Tests.Commands
     using System.Threading.Tasks;
 
     using Fifthweek.Api.Azure;
+    using Fifthweek.Api.Core;
     using Fifthweek.Api.FileManagement.Commands;
     using Fifthweek.Api.Identity.Membership;
 
     using Moq;
+
+    using Constants = Fifthweek.Api.FileManagement.Constants;
 
     [TestClass]
     public class CompleteFileUploadCommandHandlerTests
@@ -22,8 +25,7 @@ namespace Fifthweek.Api.FileManagement.Tests.Commands
             var blobName = "blobName";
 
             this.fileRepository.Setup(v => v.AssertFileBelongsToUserAsync(userId, fileId))
-                .Returns(Task.FromResult(0))
-                .Verifiable();
+                .Returns(Task.FromResult(0));
 
             this.blobNameCreator.Setup(v => v.CreateFileName(fileId)).Returns(blobName);
 
@@ -39,6 +41,41 @@ namespace Fifthweek.Api.FileManagement.Tests.Commands
 
             await this.handler.HandleAsync(new CompleteFileUploadCommand(userId, fileId));
 
+            this.fileRepository.Verify();
+        }
+
+        [TestMethod]
+        public async Task WhenCalledAndFileDoesNotBelogToUser_ItShouldNotUpdateTheDatabase()
+        {
+            var userId = new UserId(Guid.NewGuid());
+            var fileId = new FileId(Guid.NewGuid());
+            var blobName = "blobName";
+
+            this.fileRepository.Setup(v => v.AssertFileBelongsToUserAsync(userId, fileId))
+                .Throws(new UnauthorizedException());
+
+            this.blobNameCreator.Setup(v => v.CreateFileName(fileId)).Returns(blobName);
+
+            var blobProperties = new Mock<IBlobProperties>();
+            blobProperties.Setup(v => v.Length).Returns(1024);
+
+            this.blobService.Setup(v => v.GetBlobPropertiesAsync(Constants.FileBlobContainerName, blobName))
+                .ReturnsAsync(blobProperties.Object);
+
+            this.fileRepository.Setup(v => v.SetFileUploadComplete(fileId, 1024))
+                .Throws(new Exception("This should not be called"));
+
+            Exception exception = null;
+            try
+            {
+                await this.handler.HandleAsync(new CompleteFileUploadCommand(userId, fileId));
+            }
+            catch (Exception t)
+            {
+                exception = t;
+            }
+
+            Assert.IsInstanceOfType(exception, typeof(UnauthorizedException));
             this.fileRepository.Verify();
         }
 

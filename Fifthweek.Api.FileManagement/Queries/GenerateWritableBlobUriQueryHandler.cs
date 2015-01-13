@@ -19,8 +19,8 @@
         public async Task<string> HandleAsync(GenerateWritableBlobUriQuery query)
         {
             query.AssertNotNull("query");
-            query.Requester.AssertAuthenticated();
-            await this.fileRepository.AssertFileBelongsToUserAsync(query.Requester, query.FileId);
+            query.AuthenticatedUserId.AssertAuthenticated();
+            await this.fileRepository.AssertFileBelongsToUserAsync(query.AuthenticatedUserId, query.FileId);
 
             const string ContainerName = FileManagement.Constants.FileBlobContainerName;
             var blobName = this.blobNameCreator.CreateFileName(query.FileId);

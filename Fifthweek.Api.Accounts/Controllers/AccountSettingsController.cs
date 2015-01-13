@@ -5,7 +5,9 @@
     using System.Web.Http.Description;
 
     using Fifthweek.Api.Accounts.Commands;
+    using Fifthweek.Api.Accounts.Queries;
     using Fifthweek.Api.Core;
+    using Fifthweek.Api.FileManagement;
     using Fifthweek.Api.Identity.Membership;
     using Fifthweek.Api.Identity.OAuth;
 
@@ -15,29 +17,40 @@
     {
         private readonly IUserContext userContext;
 
-        [ResponseType(typeof(AccountSettingsData))]
+        private readonly ICommandHandler<UpdateAccountSettingsCommand> updateAccountSettings;
+
+        private readonly IQueryHandler<GetAccountSettingsQuery, AccountSettingsResult> getAccountSettings;
+
         [Route("{userId}")]
-        public async Task Get(string userId)
+        public async Task<AccountSettingsResult> Get(string userId)
         {
             var requestedUserId = new UserId(userId.DecodeGuid());
             var authenticatedUserId = this.userContext.GetUserId();
 
+            var query = new GetAccountSettingsQuery(authenticatedUserId, requestedUserId);
+            var result = await this.getAccountSettings.HandleAsync(query);
 
+            return result; 
         }
 
         [Route("{userId}")]
-        public async Task Put(string userId, [FromBody]UpdatedAccountSettingsData updatedAccountSettings)
+        public async Task Put(string userId, [FromBody]UpdatedAccountSettings updatedAccountSettings)
         {
             var authenticatedUserId = this.userContext.GetUserId();
             var requestedUserId = new UserId(userId.DecodeGuid());
+            
+            updatedAccountSettings.Parse();
+            var newProfileImageId = new FileId(updatedAccountSettings.NewProfileImageId.DecodeGuid());
 
             var command = new UpdateAccountSettingsCommand(
                 authenticatedUserId,
                 requestedUserId,
-                updatedAccountSettings.NewUsername,
-                updatedAccountSettings.NewEmail,
-                updatedAccountSettings.NewProfileImageId);
+                updatedAccountSettings.NewUsernameObject,
+                updatedAccountSettings.NewEmailObject,
+                updatedAccountSettings.NewPasswordObject,
+                newProfileImageId);
 
+            await this.updateAccountSettings.HandleAsync(command);
         }
     }
 }
