@@ -1,15 +1,18 @@
-﻿using System;
-using System.Threading.Tasks;
-using Fifthweek.Api.Core;
-using Fifthweek.Api.Identity.Membership;
-using Fifthweek.Api.Persistence;
-using Fifthweek.Api.Persistence.Tests.Shared;
-using Fifthweek.Api.Subscriptions.Commands;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Moq;
-
-namespace Fifthweek.Api.Subscriptions.Tests.Commands
+﻿namespace Fifthweek.Api.Subscriptions.Tests.Commands
 {
+    using System;
+    using System.Threading.Tasks;
+
+    using Fifthweek.Api.Core;
+    using Fifthweek.Api.Identity.Membership;
+    using Fifthweek.Api.Persistence;
+    using Fifthweek.Api.Persistence.Tests.Shared;
+    using Fifthweek.Api.Subscriptions.Commands;
+
+    using Microsoft.VisualStudio.TestTools.UnitTesting;
+
+    using Moq;
+
     [TestClass]
     public class CreateSubscriptionCommandHandlerTests : PersistenceTestsBase
     {
@@ -81,11 +84,16 @@ namespace Fifthweek.Api.Subscriptions.Tests.Commands
 
             var expectedSubscription = new Subscription(
                 SubscriptionId.Value,
-                null,
                 UserId.Value,
+                null,
                 SubscriptionName.Value,
                 Tagline.Value,
-                DateTime.MinValue);
+                Introduction.Default.Value,
+                null,
+                null,
+                null,
+                null,
+                default(DateTime));
             
             await this.AssertDatabaseAsync(new ExpectedSideEffects
             {

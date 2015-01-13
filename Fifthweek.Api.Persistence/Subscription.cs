@@ -1,10 +1,11 @@
-﻿using System;
-using System.ComponentModel.DataAnnotations;
-using Fifthweek.Api.Core;
-using Fifthweek.Api.Persistence.Identity;
-
-namespace Fifthweek.Api.Persistence
+﻿namespace Fifthweek.Api.Persistence
 {
+    using System;
+    using System.ComponentModel.DataAnnotations;
+
+    using Fifthweek.Api.Core;
+    using Fifthweek.Api.Persistence.Identity;
+
     [AutoConstructor, AutoEqualityMembers, AutoSql]
     public partial class Subscription
     {
@@ -15,16 +16,37 @@ namespace Fifthweek.Api.Persistence
         [Required, Key]
         public Guid Id { get; set; }
 
+        [Required]
+        public Guid CreatorId { get; set; }
+
         [Required, Optional, NonEquatable]
         public FifthweekUser Creator { get; set; }
 
-        public Guid CreatorId { get; set; }
-
         [Required]
+        [MaxLength(25)] // See: SubscriptionName.MaxLength
         public string Name { get; set; }
 
         [Required]
+        [MaxLength(55)] // See: Tagline.MaxLength
         public string Tagline { get; set; }
+
+        [Required]
+        [MaxLength(250)] // See: Introduction.MaxLength
+        public string Introduction { get; set; }
+
+        [Optional]
+        [MaxLength(2000)] // See: Description.MaxLength
+        public string Description { get; set; }
+
+        [Optional]
+        [MaxLength(100)] // See: ExternalVideoUrl.MaxLength
+        public string ExternalVideoUrl { get; set; }
+
+        [Optional]
+        public Guid? HeaderImageFileId { get; set; }
+
+        [Optional, NonEquatable]
+        public File HeaderImageFile { get; set; }
 
         [Required]
         public DateTime CreationDate { get; set; }

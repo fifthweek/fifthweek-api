@@ -1,7 +1,5 @@
-﻿
-using System;
-
-
+﻿using System;
+using System.Linq;
 
 
 
@@ -9,9 +7,10 @@ namespace Fifthweek.Api.Core.Tests.ClassAugmentation
 {
 	using System;
 	using System.Collections.Generic;
+	using System.Linq;
 	public partial class ClassAugmentationDummy
 	{
-		public partial class ComplexType
+		public partial class ComplexType 
 		{
         public ComplexType(
             System.String value)
@@ -31,7 +30,8 @@ namespace Fifthweek.Api.Core.Tests.ClassAugmentation
 {
 	using System;
 	using System.Collections.Generic;
-	public partial class ClassAugmentationDummy
+	using System.Linq;
+	public partial class ClassAugmentationDummy 
 	{
         public ClassAugmentationDummy(
             System.Guid someGuid, 
@@ -96,8 +96,9 @@ namespace Fifthweek.Api.Core.Tests.ClassAugmentation
 namespace Fifthweek.Api.Core.Tests.ClassAugmentation
 {
 	using System;
+	using System.Linq;
 	using System.Collections.Generic;
-	public partial class ConstructedInt
+	public partial class ConstructedInt 
 	{
         public ConstructedInt(
             System.Int32 value)
@@ -115,8 +116,9 @@ namespace Fifthweek.Api.Core.Tests.ClassAugmentation
 namespace Fifthweek.Api.Core.Tests.ClassAugmentation
 {
 	using System;
+	using System.Linq;
 	using System.Collections.Generic;
-	public partial class ConstructedNonNullableString
+	public partial class ConstructedNonNullableString 
 	{
         public ConstructedNonNullableString(
             System.String value)
@@ -134,8 +136,9 @@ namespace Fifthweek.Api.Core.Tests.ClassAugmentation
 namespace Fifthweek.Api.Core.Tests.ClassAugmentation
 {
 	using System;
+	using System.Linq;
 	using System.Collections.Generic;
-	public partial class ConstructedNullableString
+	public partial class ConstructedNullableString 
 	{
         public ConstructedNullableString(
             System.String value)
@@ -150,9 +153,10 @@ namespace Fifthweek.Api.Core.Tests.ClassAugmentation
 {
 	using System;
 	using System.Collections.Generic;
+	using System.Linq;
 	public partial class ClassAugmentationDummy
 	{
-		public partial class ComplexType
+		public partial class ComplexType 
 		{
         public override bool Equals(object obj)
         {
@@ -190,6 +194,7 @@ namespace Fifthweek.Api.Core.Tests.ClassAugmentation
             {
                 return false;
             }
+
             return true;
         }
 		}
@@ -200,7 +205,8 @@ namespace Fifthweek.Api.Core.Tests.ClassAugmentation
 {
 	using System;
 	using System.Collections.Generic;
-	public partial class ClassAugmentationDummy
+	using System.Linq;
+	public partial class ClassAugmentationDummy 
 	{
         public override bool Equals(object obj)
         {
@@ -247,42 +253,52 @@ namespace Fifthweek.Api.Core.Tests.ClassAugmentation
             {
                 return false;
             }
+
             if (!object.Equals(this.SomeInt, other.SomeInt))
             {
                 return false;
             }
+
             if (!object.Equals(this.OptionalGuid, other.OptionalGuid))
             {
                 return false;
             }
+
             if (!object.Equals(this.OptionalInt, other.OptionalInt))
             {
                 return false;
             }
+
             if (!object.Equals(this.SomeString, other.SomeString))
             {
                 return false;
             }
+
             if (!object.Equals(this.OptionalString, other.OptionalString))
             {
                 return false;
             }
+
             if (!object.Equals(this.SomeCollection, other.SomeCollection))
             {
                 return false;
             }
+
             if (!object.Equals(this.OptionalCollection, other.OptionalCollection))
             {
                 return false;
             }
+
             if (!object.Equals(this.SomeComplexType, other.SomeComplexType))
             {
                 return false;
             }
+
             if (!object.Equals(this.OptionalComplexType, other.OptionalComplexType))
             {
                 return false;
             }
+
             return true;
         }
 	}
@@ -291,8 +307,9 @@ namespace Fifthweek.Api.Core.Tests.ClassAugmentation
 namespace Fifthweek.Api.Core.Tests.ClassAugmentation
 {
 	using System;
+	using System.Linq;
 	using System.Collections.Generic;
-	public partial class ClassAugmentationParsingDummy
+	public partial class ClassAugmentationParsingDummy 
 	{
         public override bool Equals(object obj)
         {
@@ -327,6 +344,7 @@ namespace Fifthweek.Api.Core.Tests.ClassAugmentation
                 hashCode = (hashCode * 397) ^ (this.SomeParsedString != null ? this.SomeParsedString.GetHashCode() : 0);
                 hashCode = (hashCode * 397) ^ (this.OptionalParsedString != null ? this.OptionalParsedString.GetHashCode() : 0);
                 hashCode = (hashCode * 397) ^ (this.SomeConstructedInt != null ? this.SomeConstructedInt.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.OptionalConstructedInt != null ? this.OptionalConstructedInt.GetHashCode() : 0);
                 hashCode = (hashCode * 397) ^ (this.SomeParsedInt != null ? this.SomeParsedInt.GetHashCode() : 0);
                 hashCode = (hashCode * 397) ^ (this.OptionalParsedInt != null ? this.OptionalParsedInt.GetHashCode() : 0);
                 hashCode = (hashCode * 397) ^ (this.SomeConstructedNullableStringObject != null ? this.SomeConstructedNullableStringObject.GetHashCode() : 0);
@@ -348,78 +366,102 @@ namespace Fifthweek.Api.Core.Tests.ClassAugmentation
             {
                 return false;
             }
+
             if (!object.Equals(this.SomeConstructedNullableString, other.SomeConstructedNullableString))
             {
                 return false;
             }
+
             if (!object.Equals(this.OptionalConstructedNullableString, other.OptionalConstructedNullableString))
             {
                 return false;
             }
+
             if (!object.Equals(this.SomeConstructedNonNullableString, other.SomeConstructedNonNullableString))
             {
                 return false;
             }
+
             if (!object.Equals(this.OptionalConstructedNonNullableString, other.OptionalConstructedNonNullableString))
             {
                 return false;
             }
+
             if (!object.Equals(this.SomeParsedString, other.SomeParsedString))
             {
                 return false;
             }
+
             if (!object.Equals(this.OptionalParsedString, other.OptionalParsedString))
             {
                 return false;
             }
+
             if (!object.Equals(this.SomeConstructedInt, other.SomeConstructedInt))
             {
                 return false;
             }
+
+            if (!object.Equals(this.OptionalConstructedInt, other.OptionalConstructedInt))
+            {
+                return false;
+            }
+
             if (!object.Equals(this.SomeParsedInt, other.SomeParsedInt))
             {
                 return false;
             }
+
             if (!object.Equals(this.OptionalParsedInt, other.OptionalParsedInt))
             {
                 return false;
             }
+
             if (!object.Equals(this.SomeConstructedNullableStringObject, other.SomeConstructedNullableStringObject))
             {
                 return false;
             }
+
             if (!object.Equals(this.OptionalConstructedNullableStringObject, other.OptionalConstructedNullableStringObject))
             {
                 return false;
             }
+
             if (!object.Equals(this.SomeConstructedNonNullableStringObject, other.SomeConstructedNonNullableStringObject))
             {
                 return false;
             }
+
             if (!object.Equals(this.OptionalConstructedNonNullableStringObject, other.OptionalConstructedNonNullableStringObject))
             {
                 return false;
             }
+
             if (!object.Equals(this.SomeParsedStringObject, other.SomeParsedStringObject))
             {
                 return false;
             }
+
             if (!object.Equals(this.OptionalParsedStringObject, other.OptionalParsedStringObject))
             {
                 return false;
             }
+
             if (!object.Equals(this.SomeConstructedIntObject, other.SomeConstructedIntObject))
             {
                 return false;
             }
+
             if (!object.Equals(this.SomeParsedIntObject, other.SomeParsedIntObject))
             {
                 return false;
             }
+
             if (!object.Equals(this.OptionalParsedIntObject, other.OptionalParsedIntObject))
             {
                 return false;
             }
+
             return true;
         }
 	}
@@ -428,8 +470,9 @@ namespace Fifthweek.Api.Core.Tests.ClassAugmentation
 namespace Fifthweek.Api.Core.Tests.ClassAugmentation
 {
 	using System;
+	using System.Linq;
 	using System.Collections.Generic;
-	public partial class ConstructedInt
+	public partial class ConstructedInt 
 	{
         public override bool Equals(object obj)
         {
@@ -467,6 +510,7 @@ namespace Fifthweek.Api.Core.Tests.ClassAugmentation
             {
                 return false;
             }
+
             return true;
         }
 	}
@@ -475,8 +519,9 @@ namespace Fifthweek.Api.Core.Tests.ClassAugmentation
 namespace Fifthweek.Api.Core.Tests.ClassAugmentation
 {
 	using System;
+	using System.Linq;
 	using System.Collections.Generic;
-	public partial class ConstructedNonNullableString
+	public partial class ConstructedNonNullableString 
 	{
         public override bool Equals(object obj)
         {
@@ -514,6 +559,7 @@ namespace Fifthweek.Api.Core.Tests.ClassAugmentation
             {
                 return false;
             }
+
             return true;
         }
 	}
@@ -522,8 +568,9 @@ namespace Fifthweek.Api.Core.Tests.ClassAugmentation
 namespace Fifthweek.Api.Core.Tests.ClassAugmentation
 {
 	using System;
+	using System.Linq;
 	using System.Collections.Generic;
-	public partial class ConstructedNullableString
+	public partial class ConstructedNullableString 
 	{
         public override bool Equals(object obj)
         {
@@ -561,6 +608,7 @@ namespace Fifthweek.Api.Core.Tests.ClassAugmentation
             {
                 return false;
             }
+
             return true;
         }
 	}
@@ -570,7 +618,8 @@ namespace Fifthweek.Api.Core.Tests.ClassAugmentation
 {
 	using System;
 	using System.Collections.Generic;
-	public partial class ParsedInt
+	using System.Linq;
+	public partial class ParsedInt 
 	{
         public override bool Equals(object obj)
         {
@@ -608,6 +657,7 @@ namespace Fifthweek.Api.Core.Tests.ClassAugmentation
             {
                 return false;
             }
+
             return true;
         }
 	}
@@ -617,7 +667,8 @@ namespace Fifthweek.Api.Core.Tests.ClassAugmentation
 {
 	using System;
 	using System.Collections.Generic;
-	public partial class ParsedString
+	using System.Linq;
+	public partial class ParsedString 
 	{
         public override bool Equals(object obj)
         {
@@ -655,6 +706,7 @@ namespace Fifthweek.Api.Core.Tests.ClassAugmentation
             {
                 return false;
             }
+
             return true;
         }
 	}
@@ -664,7 +716,8 @@ namespace Fifthweek.Api.Core.Tests.ClassAugmentation
 {
 	using System;
 	using System.Collections.Generic;
-	public partial class ClassAugmentationDummy
+	using System.Linq;
+	public partial class ClassAugmentationDummy 
 	{
 		public Builder ToBuilder()
 		{
@@ -730,8 +783,9 @@ namespace Fifthweek.Api.Core.Tests.ClassAugmentation
 namespace Fifthweek.Api.Core.Tests.ClassAugmentation
 {
 	using System;
+	using System.Linq;
 	using System.Collections.Generic;
-	public partial class ClassAugmentationParsingDummy
+	public partial class ClassAugmentationParsingDummy 
 	{
 		public ConstructedNullableString SomeConstructedNullableStringObject { get; set; }
 		public ConstructedNullableString OptionalConstructedNullableStringObject { get; set; }
@@ -740,16 +794,17 @@ namespace Fifthweek.Api.Core.Tests.ClassAugmentation
 		public ParsedString SomeParsedStringObject { get; set; }
 		public ParsedString OptionalParsedStringObject { get; set; }
 		public ConstructedInt SomeConstructedIntObject { get; set; }
+		public ConstructedInt OptionalConstructedIntObject { get; set; }
 		public ParsedInt SomeParsedIntObject { get; set; }
 		public ParsedInt OptionalParsedIntObject { get; set; }
 
 		public void Parse()
 		{
-			ClassAugmentationParsingDummy_Companion.Parse(this); // Avoid conflicts between property and type names.
+			ClassAugmentationParsingDummyExtensions.Parse(this); // Avoid conflicts between property and type names.
 		}
 	}
 
-	internal class ClassAugmentationParsingDummy_Companion
+	public static partial class ClassAugmentationParsingDummyExtensions
 	{
 		public static void Parse(ClassAugmentationParsingDummy target)
 		{
@@ -830,6 +885,17 @@ namespace Fifthweek.Api.Core.Tests.ClassAugmentation
                 modelStateDictionary.Add("SomeConstructedInt", modelState);
             }
 
+		    if (target.OptionalConstructedInt != null)
+		    {
+                target.OptionalConstructedIntObject = new ConstructedInt(target.OptionalConstructedInt.Value);
+		    }
+		    else if (false)
+		    {
+                var modelState = new System.Web.Http.ModelBinding.ModelState();
+                modelState.Errors.Add("Value required");
+                modelStateDictionary.Add("OptionalConstructedInt", modelState);
+            }
+
 			if (true || !ParsedInt.IsEmpty(target.SomeParsedInt))
 			{
 				ParsedInt @object;
@@ -877,3 +943,4 @@ namespace Fifthweek.Api.Core.Tests.ClassAugmentation
 		}	
 	}
 }
+

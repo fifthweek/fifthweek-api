@@ -60,13 +60,14 @@
 		var typedPropertyName = codeProperty.Name + StrongPropertySuffix;
 		var attributeParameters = ParseAttribute(codeAttribute.Value);
 		var strongType = StripTypeOf(attributeParameters[0]);
-		var typeAllowsNullsPropertyValue = TryParseAttributeNamedProperty(TypeAllowsNullAttributeParameterName, attributeParameters);
-		var typeAllowsNulls = typeAllowsNullsPropertyValue != null && typeAllowsNullsPropertyValue == "true";
 		var isRequired = codeProperty.Attributes.OfType<CodeAttribute>().All(_ => !_.Name.StartsWith(OptionalAttributeName));
 		var isRequiredString = isRequired ? "true" : "false";
 
 		if (codeAttribute.Name.StartsWith(ConstructedAttributeName))
         {
+			var typeAllowsNullsPropertyValue = TryParseAttributeNamedProperty(TypeAllowsNullAttributeParameterName, attributeParameters);
+			var typeAllowsNulls = typeAllowsNullsPropertyValue != null && typeAllowsNullsPropertyValue == "true";
+
 			if (typeAllowsNulls)
             {
 #>
@@ -75,10 +76,11 @@
             }
 			else
             {
+				var nullablePrimitiveTypeAccessor = IsNullablePrimitiveType(codeProperty.Type.CodeType) ? ".Value" : "";
 #>
 		    if (target.<#= codeProperty.Name #> != null)
 		    {
-                target.<#= typedPropertyName #> = new <#= strongType #>(target.<#= codeProperty.Name #>);
+                target.<#= typedPropertyName #> = new <#= strongType #>(target.<#= codeProperty.Name + nullablePrimitiveTypeAccessor #>);
 		    }
 		    else if (<#= isRequiredString #>)
 		    {

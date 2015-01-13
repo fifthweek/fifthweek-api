@@ -108,6 +108,7 @@ namespace Fifthweek.Api.Subscriptions.Tests.Queries
             var subscription = SubscriptionTests.UniqueEntity(random);
             subscription.Id = newSubscriptionId.Value;
             subscription.CreatorId = creator.Id;
+            subscription.HeaderImageFileId = null;
 
             if (newUser)
             {

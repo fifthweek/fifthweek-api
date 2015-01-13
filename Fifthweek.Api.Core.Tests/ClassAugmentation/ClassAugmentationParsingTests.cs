@@ -1,10 +1,11 @@
-﻿using Fifthweek.Api.Tests.Shared;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-
-namespace Fifthweek.Api.Core.Tests.ClassAugmentation
+﻿namespace Fifthweek.Api.Core.Tests.ClassAugmentation
 {
+    using Fifthweek.Api.Tests.Shared;
+
+    using Microsoft.VisualStudio.TestTools.UnitTesting;
+
     [TestClass]
-    public class ClassAugmentationParsingTests : DataTransferObjectTests<ClassAugmentation.ClassAugmentationParsingDummy>
+    public class ClassAugmentationParsingTests : DataTransferObjectTests<ClassAugmentationParsingDummy>
     {
         [TestMethod]
         public void ItShouldHaveNullCustomPrimitivesBeforeParseIsCalled()
@@ -42,6 +43,9 @@ namespace Fifthweek.Api.Core.Tests.ClassAugmentation
             Assert.AreEqual(data.OptionalParsedStringObject, ParsedString.Parse(data.OptionalParsedString));
 
             Assert.AreEqual(data.SomeConstructedIntObject, new ConstructedInt(data.SomeConstructedInt));
+            
+            Assert.IsTrue(data.OptionalConstructedInt.HasValue);
+            Assert.AreEqual(data.OptionalConstructedIntObject, new ConstructedInt(data.OptionalConstructedInt.Value));
 
             Assert.AreEqual(data.SomeParsedIntObject, ParsedInt.Parse(data.SomeParsedInt));
             Assert.AreEqual(data.OptionalParsedIntObject, ParsedInt.Parse(data.OptionalParsedInt));
@@ -87,6 +91,10 @@ namespace Fifthweek.Api.Core.Tests.ClassAugmentation
                 _ => _.OptionalConstructedNonNullableStringObject == null);
 
             this.GoodValue(
+                _ => _.OptionalConstructedInt = null,
+                _ => _.OptionalConstructedIntObject == null);
+
+            this.GoodValue(
                 _ => _.OptionalParsedString = null,
                 _ => _.OptionalParsedStringObject == null);
         }
@@ -108,6 +116,7 @@ namespace Fifthweek.Api.Core.Tests.ClassAugmentation
                 SomeParsedString = "Captain Phil",
                 OptionalParsedString = "Captain Phil",
                 SomeConstructedInt = 123,
+                OptionalConstructedInt = 123,
                 SomeParsedInt = 123, 
                 OptionalParsedInt = 123 
             };

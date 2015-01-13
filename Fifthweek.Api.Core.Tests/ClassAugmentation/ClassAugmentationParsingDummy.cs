@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace Fifthweek.Api.Core.Tests.ClassAugmentation
+﻿namespace Fifthweek.Api.Core.Tests.ClassAugmentation
 {
     [AutoEqualityMembers]
     public partial class ClassAugmentationParsingDummy
@@ -46,6 +43,10 @@ namespace Fifthweek.Api.Core.Tests.ClassAugmentation
 
         [Constructed(typeof(ConstructedInt))]
         public int SomeConstructedInt { get; set; }
+
+        [Optional]
+        [Constructed(typeof(ConstructedInt))]
+        public int? OptionalConstructedInt { get; set; }
 
         #endregion
 

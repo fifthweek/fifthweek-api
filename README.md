@@ -37,7 +37,11 @@
 
 Run the following command to generate migrations:
 
-    Add-Migration AddSubscriptionsAndChannels -ProjectName Fifthweek.Api.Persistence -StartUpProjectName Fifthweek.Api
+    Add-Migration YourMigrationNameHere -ProjectName Fifthweek.Api.Persistence -StartUpProjectName Fifthweek.Api
+
+Then test the migration against your local database using:
+
+    Update-Database -ProjectName Fifthweek.Api.Persistence -StartUpProjectName Fifthweek.Api
 
 ## Temporary database
 

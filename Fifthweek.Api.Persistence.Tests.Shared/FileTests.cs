@@ -3,7 +3,6 @@
     using System;
 
     using Fifthweek.Api.Persistence;
-    using Fifthweek.Api.Persistence.Tests.Shared;
 
     public static class FileTests
     {
@@ -15,10 +14,10 @@
                 user,
                 user.Id,
                 (FileState)random.Next(0, 3),
-                DateTime.UtcNow,
-                DateTime.UtcNow,
-                DateTime.UtcNow,
-                DateTime.UtcNow,
+                DateTime.UtcNow.AddDays(random.NextDouble() * -100),
+                DateTime.UtcNow.AddDays(random.NextDouble() * -100),
+                DateTime.UtcNow.AddDays(random.NextDouble() * -100),
+                DateTime.UtcNow.AddDays(random.NextDouble() * -100),
                 "File Name " + random.Next(),
                 "File Extension " + random.Next(),
                 random.Next(),

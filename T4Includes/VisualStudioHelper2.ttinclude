@@ -44,6 +44,14 @@
 #>
 
 <#+
+	public static bool IsNullablePrimitiveType(CodeType type)
+	{
+		const string nullablePostfix = "?";
+		const string nullablePrefix = "System.Nullable<";
+		var typeName = type.FullName;
+		return typeName.StartsWith(nullablePrefix) || typeName.EndsWith(nullablePostfix);
+	}
+
 	public static bool IsPrimitiveType(TextTransformation output, CodeType type)
 	{
 		if(type is CodeEnum){

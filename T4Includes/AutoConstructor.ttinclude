@@ -87,5 +87,17 @@
 			}))
 			.ToList();
         }
+
+		public static IReadOnlyList<AutoConstructorParameter> GetParametersForProperties(IEnumerable<CodeProperty> properties)
+        {
+			return properties.Select(_ => new AutoConstructorParameter
+			{ 
+				TypeName = _.Type.AsFullName, 
+				ConstructorParameter = ToLowerCamelCase(_.Name),
+				AssigneeName = _.Name,
+				Attributes = _.Attributes
+			})
+			.ToList();
+        }
 	}
 #>

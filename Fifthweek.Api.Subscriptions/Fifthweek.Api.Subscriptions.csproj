@@ -89,9 +89,11 @@
     <Compile Include="Commands\CreateSubscriptionCommand.cs" />
     <Compile Include="Commands\CreateSubscriptionCommandHandler.cs" />
     <Compile Include="Commands\UpdateSubscriptionCommand.cs" />
+    <Compile Include="Commands\UpdateSubscriptionCommandHandler.cs" />
     <Compile Include="Controllers\CreatorStatusData.cs" />
     <Compile Include="Controllers\NewSubscriptionData.cs" />
     <Compile Include="Controllers\SubscriptionController.cs" />
+    <Compile Include="Controllers\UpdatedSubscriptionData.cs" />
     <Compile Include="ExternalVideoUrl.cs" />
     <Compile Include="Introduction.cs" />
     <Compile Include="ISubscriptionSecurity.cs" />

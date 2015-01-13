@@ -1,9 +1,10 @@
-﻿using System;
-using System.ComponentModel.DataAnnotations;
-using Fifthweek.Api.Core;
-
-namespace Fifthweek.Api.Persistence
+﻿namespace Fifthweek.Api.Persistence
 {
+    using System;
+    using System.ComponentModel.DataAnnotations;
+
+    using Fifthweek.Api.Core;
+
     [AutoConstructor, AutoEqualityMembers, AutoSql]
     public partial class Channel
     {
@@ -17,7 +18,7 @@ namespace Fifthweek.Api.Persistence
         [Required]
         public Guid SubscriptionId { get; set; }
 
-        [Optional, NonEquatable]
+        [Required, Optional, NonEquatable]
         public Subscription Subscription { get; set; }
 
         [Required]

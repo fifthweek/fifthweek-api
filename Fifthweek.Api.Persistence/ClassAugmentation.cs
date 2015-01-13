@@ -141,10 +141,15 @@ namespace Fifthweek.Api.Persistence
 	{
         public Subscription(
             System.Guid id, 
-            Fifthweek.Api.Persistence.Identity.FifthweekUser creator, 
             System.Guid creatorId, 
+            Fifthweek.Api.Persistence.Identity.FifthweekUser creator, 
             System.String name, 
             System.String tagline, 
+            System.String introduction, 
+            System.String description, 
+            System.String externalVideoUrl, 
+            System.Nullable<System.Guid> headerImageFileId, 
+            Fifthweek.Api.Persistence.File headerImageFile, 
             System.DateTime creationDate)
         {
             if (id == null)
@@ -167,16 +172,26 @@ namespace Fifthweek.Api.Persistence
                 throw new ArgumentNullException("tagline");
             }
 
+            if (introduction == null)
+            {
+                throw new ArgumentNullException("introduction");
+            }
+
             if (creationDate == null)
             {
                 throw new ArgumentNullException("creationDate");
             }
 
             this.Id = id;
-            this.Creator = creator;
             this.CreatorId = creatorId;
+            this.Creator = creator;
             this.Name = name;
             this.Tagline = tagline;
+            this.Introduction = introduction;
+            this.Description = description;
+            this.ExternalVideoUrl = externalVideoUrl;
+            this.HeaderImageFileId = headerImageFileId;
+            this.HeaderImageFile = headerImageFile;
             this.CreationDate = creationDate;
         }
 	}
@@ -404,6 +419,10 @@ namespace Fifthweek.Api.Persistence
                 hashCode = (hashCode * 397) ^ (this.CreatorId != null ? this.CreatorId.GetHashCode() : 0);
                 hashCode = (hashCode * 397) ^ (this.Name != null ? this.Name.GetHashCode() : 0);
                 hashCode = (hashCode * 397) ^ (this.Tagline != null ? this.Tagline.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.Introduction != null ? this.Introduction.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.Description != null ? this.Description.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.ExternalVideoUrl != null ? this.ExternalVideoUrl.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.HeaderImageFileId != null ? this.HeaderImageFileId.GetHashCode() : 0);
                 hashCode = (hashCode * 397) ^ (this.CreationDate != null ? this.CreationDate.GetHashCode() : 0);
                 return hashCode;
             }
@@ -427,6 +446,26 @@ namespace Fifthweek.Api.Persistence
             }
 
             if (!object.Equals(this.Tagline, other.Tagline))
+            {
+                return false;
+            }
+
+            if (!object.Equals(this.Introduction, other.Introduction))
+            {
+                return false;
+            }
+
+            if (!object.Equals(this.Description, other.Description))
+            {
+                return false;
+            }
+
+            if (!object.Equals(this.ExternalVideoUrl, other.ExternalVideoUrl))
+            {
+                return false;
+            }
+
+            if (!object.Equals(this.HeaderImageFileId, other.HeaderImageFileId))
             {
                 return false;
             }
@@ -520,6 +559,17 @@ namespace Fifthweek.Api.Persistence
 	using Fifthweek.Api.Persistence.Identity;
 	public partial class Channel  : IIdentityEquatable
 	{
+        public Channel(
+            System.Guid id)
+        {
+            if (id == null)
+            {
+                throw new ArgumentNullException("id");
+            }
+
+            this.Id = id;
+        }
+
         public bool IdentityEquals(object other)
         {
             if (ReferenceEquals(null, other))
@@ -553,6 +603,7 @@ namespace Fifthweek.Api.Persistence
 		[Flags]
         public enum Fields
         {
+			Empty = 0,
 			Id = 1, 
 			SubscriptionId = 2, 
 			PriceInUsCentsPerWeek = 4, 
@@ -671,6 +722,17 @@ namespace Fifthweek.Api.Persistence
 	using Fifthweek.Api.Persistence.Identity;
 	public partial class File  : IIdentityEquatable
 	{
+        public File(
+            System.Guid id)
+        {
+            if (id == null)
+            {
+                throw new ArgumentNullException("id");
+            }
+
+            this.Id = id;
+        }
+
         public bool IdentityEquals(object other)
         {
             if (ReferenceEquals(null, other))
@@ -704,6 +766,7 @@ namespace Fifthweek.Api.Persistence
 		[Flags]
         public enum Fields
         {
+			Empty = 0,
 			Id = 1, 
 			UserId = 2, 
 			State = 4, 
@@ -899,6 +962,17 @@ namespace Fifthweek.Api.Persistence
 	using Fifthweek.Api.Persistence.Identity;
 	public partial class Subscription  : IIdentityEquatable
 	{
+        public Subscription(
+            System.Guid id)
+        {
+            if (id == null)
+            {
+                throw new ArgumentNullException("id");
+            }
+
+            this.Id = id;
+        }
+
         public bool IdentityEquals(object other)
         {
             if (ReferenceEquals(null, other))
@@ -932,11 +1006,16 @@ namespace Fifthweek.Api.Persistence
 		[Flags]
         public enum Fields
         {
+			Empty = 0,
 			Id = 1, 
 			CreatorId = 2, 
 			Name = 4, 
 			Tagline = 8, 
-			CreationDate = 16
+			Introduction = 16, 
+			Description = 32, 
+			ExternalVideoUrl = 64, 
+			HeaderImageFileId = 128, 
+			CreationDate = 256
         }
 	}
 
@@ -946,7 +1025,7 @@ namespace Fifthweek.Api.Persistence
 		{
 			return Dapper.SqlMapper.ExecuteAsync(connection, InsertStatement(idempotent), new 
 			{
-				entity.Id, entity.CreatorId, entity.Name, entity.Tagline, entity.CreationDate
+				entity.Id, entity.CreatorId, entity.Name, entity.Tagline, entity.Introduction, entity.Description, entity.ExternalVideoUrl, entity.HeaderImageFileId, entity.CreationDate
 			});
 		}
 
@@ -954,7 +1033,7 @@ namespace Fifthweek.Api.Persistence
 		{
 			return Dapper.SqlMapper.ExecuteAsync(connection, UpsertStatement(fields), new 
 			{
-				entity.Id, entity.CreatorId, entity.Name, entity.Tagline, entity.CreationDate
+				entity.Id, entity.CreatorId, entity.Name, entity.Tagline, entity.Introduction, entity.Description, entity.ExternalVideoUrl, entity.HeaderImageFileId, entity.CreationDate
 			});
 		}
 
@@ -965,7 +1044,7 @@ namespace Fifthweek.Api.Persistence
 
 		public static string InsertStatement(bool idempotent = true)
 		{
-			const string insert = "INSERT INTO Subscriptions(Id, CreatorId, Name, Tagline, CreationDate) VALUES(@Id, @CreatorId, @Name, @Tagline, @CreationDate)";
+			const string insert = "INSERT INTO Subscriptions(Id, CreatorId, Name, Tagline, Introduction, Description, ExternalVideoUrl, HeaderImageFileId, CreationDate) VALUES(@Id, @CreatorId, @Name, @Tagline, @Introduction, @Description, @ExternalVideoUrl, @HeaderImageFileId, @CreationDate)";
 			return idempotent ? SqlStatementTemplates.IdempotentInsert(insert) : insert;
 		}
 
@@ -974,7 +1053,7 @@ namespace Fifthweek.Api.Persistence
 			var sql = new System.Text.StringBuilder();
 			sql.Append(
 				@"MERGE Subscriptions as Target
-				USING (VALUES (@Id, @CreatorId, @Name, @Tagline, @CreationDate)) AS Source (Id, CreatorId, Name, Tagline, CreationDate)
+				USING (VALUES (@Id, @CreatorId, @Name, @Tagline, @Introduction, @Description, @ExternalVideoUrl, @HeaderImageFileId, @CreationDate)) AS Source (Id, CreatorId, Name, Tagline, Introduction, Description, ExternalVideoUrl, HeaderImageFileId, CreationDate)
 				ON    (Target.Id = Source.Id)
 				WHEN MATCHED THEN
 					UPDATE
@@ -982,8 +1061,8 @@ namespace Fifthweek.Api.Persistence
 			sql.AppendUpdateParameters(GetFieldNames(fields));
 			sql.Append(
 				@" WHEN NOT MATCHED THEN
-					INSERT  (Id, CreatorId, Name, Tagline, CreationDate)
-					VALUES  (Source.Id, Source.CreatorId, Source.Name, Source.Tagline, Source.CreationDate);");
+					INSERT  (Id, CreatorId, Name, Tagline, Introduction, Description, ExternalVideoUrl, HeaderImageFileId, CreationDate)
+					VALUES  (Source.Id, Source.CreatorId, Source.Name, Source.Tagline, Source.Introduction, Source.Description, Source.ExternalVideoUrl, Source.HeaderImageFileId, Source.CreationDate);");
 			return sql.ToString();
 		}
 
@@ -1015,6 +1094,26 @@ namespace Fifthweek.Api.Persistence
 				fieldNames.Add("Tagline");
 			}
 
+			if(fields.HasFlag(Subscription.Fields.Introduction))
+			{
+				fieldNames.Add("Introduction");
+			}
+
+			if(fields.HasFlag(Subscription.Fields.Description))
+			{
+				fieldNames.Add("Description");
+			}
+
+			if(fields.HasFlag(Subscription.Fields.ExternalVideoUrl))
+			{
+				fieldNames.Add("ExternalVideoUrl");
+			}
+
+			if(fields.HasFlag(Subscription.Fields.HeaderImageFileId))
+			{
+				fieldNames.Add("HeaderImageFileId");
+			}
+
 			if(fields.HasFlag(Subscription.Fields.CreationDate))
 			{
 				fieldNames.Add("CreationDate");
@@ -1040,6 +1139,26 @@ namespace Fifthweek.Api.Persistence
 			if(fields.HasFlag(Subscription.Fields.Tagline))
 			{
 				parameters.Add("Tagline", entity.Tagline);
+			}
+
+			if(fields.HasFlag(Subscription.Fields.Introduction))
+			{
+				parameters.Add("Introduction", entity.Introduction);
+			}
+
+			if(fields.HasFlag(Subscription.Fields.Description))
+			{
+				parameters.Add("Description", entity.Description);
+			}
+
+			if(fields.HasFlag(Subscription.Fields.ExternalVideoUrl))
+			{
+				parameters.Add("ExternalVideoUrl", entity.ExternalVideoUrl);
+			}
+
+			if(fields.HasFlag(Subscription.Fields.HeaderImageFileId))
+			{
+				parameters.Add("HeaderImageFileId", entity.HeaderImageFileId);
 			}
 
 			if(fields.HasFlag(Subscription.Fields.CreationDate))

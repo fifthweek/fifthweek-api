@@ -1,10 +1,11 @@
-﻿using System;
-using System.Threading.Tasks;
-using Fifthweek.Api.Core;
-using Fifthweek.Api.Persistence;
-
-namespace Fifthweek.Api.Subscriptions.Commands
+﻿namespace Fifthweek.Api.Subscriptions.Commands
 {
+    using System;
+    using System.Threading.Tasks;
+
+    using Fifthweek.Api.Core;
+    using Fifthweek.Api.Persistence;
+
     [AutoConstructor]
     public partial class CreateSubscriptionCommandHandler : ICommandHandler<CreateSubscriptionCommand>
     {
@@ -32,10 +33,15 @@ namespace Fifthweek.Api.Subscriptions.Commands
         {
             var subscription = new Subscription(
                 command.SubscriptionId.Value,
-                null,
                 command.Requester.Value,
+                null,
                 command.SubscriptionName.Value,
                 command.Tagline.Value,
+                Introduction.Default.Value,
+                null,
+                null,
+                null,
+                null,
                 DateTime.UtcNow);
 
             return this.fifthweekDbContext.Database.Connection.InsertAsync(subscription); 

@@ -1,9 +1,10 @@
-﻿using System;
-using System.Linq;
-using Fifthweek.Api.Core;
-
-namespace Fifthweek.Api.Persistence.Tests.Shared
+﻿namespace Fifthweek.Api.Persistence.Tests.Shared
 {
+    using System;
+    using System.Linq;
+
+    using Fifthweek.Api.Core;
+
     [AutoConstructor]
     public partial class TemporaryDatabaseSeed
     {
@@ -11,7 +12,6 @@ namespace Fifthweek.Api.Persistence.Tests.Shared
         private const int Creators = 5;
         private const int SubscriptionsPerCreator = 1; // That's all our interface supports for now!
         private const int ChannelsPerSubscription = 3;
-        private const int FilesPerCreator = 3;
 
         private static readonly Random Random = new Random();
 
@@ -22,7 +22,6 @@ namespace Fifthweek.Api.Persistence.Tests.Shared
             this.PopulateUsers();
             this.PopulateSubscriptions();
             this.PopulateChannels();
-            this.PopulateFiles();
         }
 
         private void PopulateUsers()
@@ -41,6 +40,18 @@ namespace Fifthweek.Api.Persistence.Tests.Shared
                 for (var subscriptionIndex = 0; subscriptionIndex < SubscriptionsPerCreator; subscriptionIndex++)
                 {
                     var subscription = SubscriptionTests.UniqueEntity(Random);
+
+                    if (subscription.HeaderImageFile != null)
+                    {
+                        var file = FileTests.UniqueEntity(Random);
+                        file.User = creator;
+                        file.UserId = creator.Id;
+                        this.dbContext.Files.Add(file);
+
+                        subscription.HeaderImageFile = file;
+                        subscription.HeaderImageFileId = file.Id;
+                    }
+
                     subscription.Creator = creator;
                     subscription.CreatorId = creator.Id;
                     this.dbContext.Subscriptions.Add(subscription);
@@ -63,22 +74,6 @@ namespace Fifthweek.Api.Persistence.Tests.Shared
                         channel.SubscriptionId = subscription.Id;
                         this.dbContext.Channels.Add(channel);
                     }
-                }
-            }
-        }
-
-        private void PopulateFiles()
-        {
-            for (var creatorIndex = 0; creatorIndex < Creators; creatorIndex++)
-            {
-                var creator = this.dbContext.Users.Local[creatorIndex];
-
-                for (var i = 0; i < FilesPerCreator; i++)
-                {
-                    var item = FileTests.UniqueEntity(Random);
-                    item.User = creator;
-                    item.UserId = creator.Id;
-                    this.dbContext.Files.Add(item);
                 }
             }
         }

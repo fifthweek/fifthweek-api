@@ -2,6 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Diagnostics.CodeAnalysis;
     using System.Linq;
 
     public class Introduction
@@ -11,6 +12,10 @@
         public static readonly int MaxLength = 250; // Approximately 3 lines of content at 750px in Lato Regular 18px.
 
         private static readonly HashSet<char> ForbiddenCharactersHashSet = new HashSet<char>(ForbiddenCharacters);
+
+        [SuppressMessage("StyleCop.CSharp.OrderingRules", "SA1202:ElementsMustBeOrderedByAccess", Justification = "Parse method requires other private static members to be initialized.")]
+        public static readonly Introduction Default = Parse(
+            "Hello! Thinking of subscribing? Awesome! Subscriptions allow me to produce more of my awesome creations for all you lovely people to see here!");
 
         private Introduction()
         {

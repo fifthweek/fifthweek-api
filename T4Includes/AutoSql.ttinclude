@@ -43,6 +43,7 @@
 		var entityMaskInitialization = properties.Replace("@", "entity.");
 
 		var keyProperties = publicPrimitiveProperties.Where(IsPrimaryKey).ToList();
+		var keyConstructorParameters = AutoConstructorParameter.GetParametersForProperties(keyProperties);
 		sql = new StringBuilder();
 		for (var i = 0; i < keyProperties.Count; i++)
         {
@@ -62,6 +63,38 @@
 
 		unifiedClass.WriteNamespaceAndClassWithSignature(" : IIdentityEquatable", () => {
 #>
+        public <#= unifiedClass.FirstCodeClass.Name #>(
+<#
+    for (var i = 0; i < keyConstructorParameters.Count; i++)
+    {
+        var parameter = keyConstructorParameters[i];
+#>
+            <#= parameter.TypeName #> <#= parameter.ConstructorParameter #><#= i < keyConstructorParameters.Count - 1 ? ", " : ")" #>
+<#
+    }
+#>
+        {
+<#
+    foreach(var parameter in keyConstructorParameters)
+    {
+#>
+            if (<#= parameter.ConstructorParameter #> == null)
+            {
+                throw new ArgumentNullException("<#= parameter.ConstructorParameter #>");
+            }
+
+<#
+    }
+
+    foreach(var parameter in keyConstructorParameters)
+    {
+#>
+            this.<#= parameter.AssigneeName #> = <#= parameter.ConstructorParameter #>;
+<#
+    }
+#>
+        }
+
         public bool IdentityEquals(object other)
         {
             if (ReferenceEquals(null, other))
@@ -102,6 +135,7 @@
 		[Flags]
         public enum Fields
         {
+			Empty = 0,
 <#
 			var bitwiseIndex = 1;
 			for (var i = 0; i < publicPrimitiveProperties.Count; i++)
