@@ -19,6 +19,7 @@
         public Guid Id { get; set; }
 
         [Required, Optional, NonEquatable]
+        [InverseProperty("Files")]
         public FifthweekUser User { get; set; }
 
         public Guid UserId { get; set; }

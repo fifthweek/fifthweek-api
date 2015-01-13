@@ -3,7 +3,9 @@ using Fifthweek.Api.Core;
 namespace Fifthweek.Api.Persistence.Identity
 {
     using System;
+    using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
+    using System.ComponentModel.DataAnnotations.Schema;
 
     using Microsoft.AspNet.Identity.EntityFramework;
 
@@ -22,10 +24,13 @@ namespace Fifthweek.Api.Persistence.Identity
 
         public DateTime LastAccessTokenDate { get; set; }
 
-        [Optional]
+        [Optional, NonEquatable]
         public File ProfileImageFile { get; set; }
 
-        public Guid ProfileImageFileId { get; set; }
+        public Guid? ProfileImageFileId { get; set; }
+
+        [Optional, NonEquatable]
+        public ICollection<File> Files { get; set; }
 
         public bool IdentityEquals(object other)
         {

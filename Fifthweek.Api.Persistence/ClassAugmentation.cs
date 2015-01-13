@@ -486,6 +486,9 @@ namespace Fifthweek.Api.Persistence.Identity
 	using System.Linq;
 	using Fifthweek.Api.Core;
 	using Microsoft.AspNet.Identity.EntityFramework;
+	using System.Collections.Generic;
+	using System.ComponentModel.DataAnnotations;
+	using System.ComponentModel.DataAnnotations.Schema;
 	public partial class FifthweekUser 
 	{
         public override bool Equals(object obj)
@@ -517,6 +520,7 @@ namespace Fifthweek.Api.Persistence.Identity
                 hashCode = (hashCode * 397) ^ (this.RegistrationDate != null ? this.RegistrationDate.GetHashCode() : 0);
                 hashCode = (hashCode * 397) ^ (this.LastSignInDate != null ? this.LastSignInDate.GetHashCode() : 0);
                 hashCode = (hashCode * 397) ^ (this.LastAccessTokenDate != null ? this.LastAccessTokenDate.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.ProfileImageFileId != null ? this.ProfileImageFileId.GetHashCode() : 0);
                 return hashCode;
             }
         }
@@ -539,6 +543,11 @@ namespace Fifthweek.Api.Persistence.Identity
             }
 
             if (!object.Equals(this.LastAccessTokenDate, other.LastAccessTokenDate))
+            {
+                return false;
+            }
+
+            if (!object.Equals(this.ProfileImageFileId, other.ProfileImageFileId))
             {
                 return false;
             }
