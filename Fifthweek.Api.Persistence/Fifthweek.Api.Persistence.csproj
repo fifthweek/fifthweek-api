@@ -155,6 +155,7 @@
     <Compile Include="Migrations\201501131306566_AddSubscriptionFields.cs" />
     <Compile Include="Migrations\201501131306566_AddSubscriptionFields.Designer.cs">
       <DependentUpon>201501131306566_AddSubscriptionFields.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\201501131809578_AddProfileImageFileIdToUser.cs" />
     <Compile Include="Migrations\201501131809578_AddProfileImageFileIdToUser.Designer.cs">
       <DependentUpon>201501131809578_AddProfileImageFileIdToUser.cs</DependentUpon>
@@ -222,6 +223,7 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201501131306566_AddSubscriptionFields.resx">
       <DependentUpon>201501131306566_AddSubscriptionFields.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201501131809578_AddProfileImageFileIdToUser.resx">
       <DependentUpon>201501131809578_AddProfileImageFileIdToUser.cs</DependentUpon>
     </EmbeddedResource>
