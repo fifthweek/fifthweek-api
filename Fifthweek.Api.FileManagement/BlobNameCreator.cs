@@ -3,13 +3,14 @@
     using System;
     using System.Text;
 
+    using Fifthweek.Api.Core;
     using Fifthweek.Api.Identity.Membership;
 
     public class BlobNameCreator : IBlobNameCreator
     {
         public string CreateFileName(FileId fileId)
         {
-            return fileId.Value.ToString().ToLower();
+            return fileId.Value.EncodeGuid();
         }
     }
 }
