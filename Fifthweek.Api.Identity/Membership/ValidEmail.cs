@@ -8,13 +8,13 @@
     /// <remarks>
     /// Important: refer to `UpdatingValidationBehaviour.md` when changing validation behaviour.
     /// </remarks>
-    public class ValidatedEmail : Email
+    public class ValidEmail : Email
     {
         public static readonly int MinLength = 3;
 
         public static readonly int MaxLength = 256; // Taken from ASP.NET Identity.
 
-        private ValidatedEmail(string value)
+        private ValidEmail(string value)
             : base(value)
         {
         }
@@ -24,9 +24,9 @@
             return exact ? string.IsNullOrEmpty(value) : string.IsNullOrWhiteSpace(value);
         }
 
-        public static ValidatedEmail Parse(string value, bool exact = false)
+        public static ValidEmail Parse(string value, bool exact = false)
         {
-            ValidatedEmail retval;
+            ValidEmail retval;
             IReadOnlyCollection<string> errorMessages;
             if (!TryParse(value, out retval, out errorMessages, exact))
             {
@@ -36,13 +36,13 @@
             return retval;
         }
 
-        public static bool TryParse(string value, out ValidatedEmail email, bool exact = false)
+        public static bool TryParse(string value, out ValidEmail email, bool exact = false)
         {
             IReadOnlyCollection<string> errorMessages;
             return TryParse(value, out email, out errorMessages, exact);
         }
 
-        public static bool TryParse(string value, out ValidatedEmail email, out IReadOnlyCollection<string> errorMessages, bool exact = false)
+        public static bool TryParse(string value, out ValidEmail email, out IReadOnlyCollection<string> errorMessages, bool exact = false)
         {
             var errorMessageList = new List<string>();
             errorMessages = errorMessageList;
@@ -94,7 +94,7 @@
                 return false;
             }
 
-            email = new ValidatedEmail(value);
+            email = new ValidEmail(value);
 
             return true;
         }

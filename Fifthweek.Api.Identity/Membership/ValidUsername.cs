@@ -8,7 +8,7 @@
     /// <remarks>
     /// Important: refer to `UpdatingValidationBehaviour.md` when changing validation behaviour.
     /// </remarks>
-    public class ValidatedUsername : Username
+    public class ValidUsername : Username
     {
         public static readonly Regex Pattern = new Regex(@"^[a-z0-9_]+$", RegexOptions.Compiled | RegexOptions.IgnoreCase);
 
@@ -16,7 +16,7 @@
 
         public static readonly int MaxLength = 20;
 
-        private ValidatedUsername(string value)
+        private ValidUsername(string value)
             : base(value)
         {
         }
@@ -26,9 +26,9 @@
             return exact ? string.IsNullOrEmpty(value) : string.IsNullOrWhiteSpace(value);
         }
 
-        public static ValidatedUsername Parse(string value, bool exact = false)
+        public static ValidUsername Parse(string value, bool exact = false)
         {
-            ValidatedUsername retval;
+            ValidUsername retval;
             IReadOnlyCollection<string> errorMessages;
             if (!TryParse(value, out retval, out errorMessages, exact))
             {
@@ -38,13 +38,13 @@
             return retval;
         }
 
-        public static bool TryParse(string value, out ValidatedUsername username, bool exact = false)
+        public static bool TryParse(string value, out ValidUsername username, bool exact = false)
         {
             IReadOnlyCollection<string> errorMessages;
             return TryParse(value, out username, out errorMessages, exact);
         }
 
-        public static bool TryParse(string value, out ValidatedUsername username, out IReadOnlyCollection<string> errorMessages, bool exact = false)
+        public static bool TryParse(string value, out ValidUsername username, out IReadOnlyCollection<string> errorMessages, bool exact = false)
         {
             var errorMessageList = new List<string>();
             errorMessages = errorMessageList;
@@ -83,7 +83,7 @@
                 return false;
             }
 
-            username = new ValidatedUsername(value);
+            username = new ValidUsername(value);
 
             return true;
         }

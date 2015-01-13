@@ -122,9 +122,9 @@
     <Compile Include="Membership\Queries\IsPasswordResetTokenValidQueryHandler.cs" />
     <Compile Include="Membership\UserId.cs" />
     <Compile Include="Membership\Username.cs" />
-    <Compile Include="Membership\ValidatedPassword.cs" />
-    <Compile Include="Membership\ValidatedUsername.cs" />
-    <Compile Include="Membership\ValidatedEmail.cs" />
+    <Compile Include="Membership\ValidPassword.cs" />
+    <Compile Include="Membership\ValidUsername.cs" />
+    <Compile Include="Membership\ValidEmail.cs" />
     <Compile Include="Membership\IUserRepository.cs" />
     <Compile Include="Membership\Queries\IsUsernameAvailableQuery.cs" />
     <Compile Include="Membership\Queries\IsUsernameAvailableQueryHandler.cs" />

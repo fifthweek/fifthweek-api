@@ -54,9 +54,9 @@ namespace Fifthweek.Api.Accounts.Commands
         public UpdateAccountSettingsCommand(
             Fifthweek.Api.Identity.Membership.UserId authenticatedUserId, 
             Fifthweek.Api.Identity.Membership.UserId requestedUserId, 
-            Fifthweek.Api.Identity.Membership.ValidatedUsername newUsername, 
-            Fifthweek.Api.Identity.Membership.ValidatedEmail newEmail, 
-            Fifthweek.Api.Identity.Membership.ValidatedPassword newPassword, 
+            Fifthweek.Api.Identity.Membership.ValidUsername newUsername, 
+            Fifthweek.Api.Identity.Membership.ValidEmail newEmail, 
+            Fifthweek.Api.Identity.Membership.ValidPassword newPassword, 
             Fifthweek.Api.FileManagement.FileId newProfileImageId)
         {
             if (authenticatedUserId == null)
@@ -571,9 +571,9 @@ namespace Fifthweek.Api.Accounts.Controllers
 	using Fifthweek.Api.FileManagement;
 	public partial class UpdatedAccountSettings 
 	{
-		public ValidatedUsername NewUsernameObject { get; set; }
-		public ValidatedEmail NewEmailObject { get; set; }
-		public ValidatedPassword NewPasswordObject { get; set; }
+		public ValidUsername NewUsernameObject { get; set; }
+		public ValidEmail NewEmailObject { get; set; }
+		public ValidPassword NewPasswordObject { get; set; }
 
 		public void Parse()
 		{
@@ -587,11 +587,11 @@ namespace Fifthweek.Api.Accounts.Controllers
 		{
 			var modelStateDictionary = new System.Web.Http.ModelBinding.ModelStateDictionary();
 
-			if (true || !ValidatedUsername.IsEmpty(target.NewUsername))
+			if (true || !ValidUsername.IsEmpty(target.NewUsername))
 			{
-				ValidatedUsername @object;
+				ValidUsername @object;
 				System.Collections.Generic.IReadOnlyCollection<string> errorMessages;
-				if (ValidatedUsername.TryParse(target.NewUsername, out @object, out errorMessages))
+				if (ValidUsername.TryParse(target.NewUsername, out @object, out errorMessages))
 				{
 					target.NewUsernameObject = @object;
 				}
@@ -607,11 +607,11 @@ namespace Fifthweek.Api.Accounts.Controllers
 				}
 			}
 
-			if (true || !ValidatedEmail.IsEmpty(target.NewEmail))
+			if (true || !ValidEmail.IsEmpty(target.NewEmail))
 			{
-				ValidatedEmail @object;
+				ValidEmail @object;
 				System.Collections.Generic.IReadOnlyCollection<string> errorMessages;
-				if (ValidatedEmail.TryParse(target.NewEmail, out @object, out errorMessages))
+				if (ValidEmail.TryParse(target.NewEmail, out @object, out errorMessages))
 				{
 					target.NewEmailObject = @object;
 				}
@@ -627,11 +627,11 @@ namespace Fifthweek.Api.Accounts.Controllers
 				}
 			}
 
-			if (false || !ValidatedPassword.IsEmpty(target.NewPassword))
+			if (false || !ValidPassword.IsEmpty(target.NewPassword))
 			{
-				ValidatedPassword @object;
+				ValidPassword @object;
 				System.Collections.Generic.IReadOnlyCollection<string> errorMessages;
-				if (ValidatedPassword.TryParse(target.NewPassword, out @object, out errorMessages))
+				if (ValidPassword.TryParse(target.NewPassword, out @object, out errorMessages))
 				{
 					target.NewPasswordObject = @object;
 				}

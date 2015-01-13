@@ -19,7 +19,7 @@ namespace Fifthweek.Api.Identity.Membership.Commands
         public ConfirmPasswordResetCommand(
             Fifthweek.Api.Identity.Membership.UserId userId, 
             System.String token, 
-            Fifthweek.Api.Identity.Membership.ValidatedPassword newPassword)
+            Fifthweek.Api.Identity.Membership.ValidPassword newPassword)
         {
             if (userId == null)
             {
@@ -59,9 +59,9 @@ namespace Fifthweek.Api.Identity.Membership.Commands
         public RegisterUserCommand(
             Fifthweek.Api.Identity.Membership.UserId userId, 
             System.String exampleWork, 
-            Fifthweek.Api.Identity.Membership.ValidatedEmail email, 
-            Fifthweek.Api.Identity.Membership.ValidatedUsername username, 
-            Fifthweek.Api.Identity.Membership.ValidatedPassword password)
+            Fifthweek.Api.Identity.Membership.ValidEmail email, 
+            Fifthweek.Api.Identity.Membership.ValidUsername username, 
+            Fifthweek.Api.Identity.Membership.ValidPassword password)
         {
             if (userId == null)
             {
@@ -106,8 +106,8 @@ namespace Fifthweek.Api.Identity.Membership.Commands
 	public partial class RequestPasswordResetCommand 
 	{
         public RequestPasswordResetCommand(
-            Fifthweek.Api.Identity.Membership.ValidatedEmail email, 
-            Fifthweek.Api.Identity.Membership.ValidatedUsername username)
+            Fifthweek.Api.Identity.Membership.ValidEmail email, 
+            Fifthweek.Api.Identity.Membership.ValidUsername username)
         {
             this.Email = email;
             this.Username = username;
@@ -129,7 +129,7 @@ namespace Fifthweek.Api.Identity.Membership.Commands
 	public partial class UpdateLastAccessTokenDateCommand 
 	{
         public UpdateLastAccessTokenDateCommand(
-            Fifthweek.Api.Identity.Membership.ValidatedUsername username, 
+            Fifthweek.Api.Identity.Membership.ValidUsername username, 
             System.DateTime timestamp, 
             Fifthweek.Api.Identity.Membership.Commands.UpdateLastAccessTokenDateCommand.AccessTokenCreationType creationType)
         {
@@ -164,8 +164,8 @@ namespace Fifthweek.Api.Identity.Membership.Queries
 	public partial class GetUserQuery 
 	{
         public GetUserQuery(
-            Fifthweek.Api.Identity.Membership.ValidatedUsername username, 
-            Fifthweek.Api.Identity.Membership.ValidatedPassword password)
+            Fifthweek.Api.Identity.Membership.ValidUsername username, 
+            Fifthweek.Api.Identity.Membership.ValidPassword password)
         {
             if (username == null)
             {
@@ -220,7 +220,7 @@ namespace Fifthweek.Api.Identity.Membership.Queries
 	public partial class IsUsernameAvailableQuery 
 	{
         public IsUsernameAvailableQuery(
-            Fifthweek.Api.Identity.Membership.ValidatedUsername username)
+            Fifthweek.Api.Identity.Membership.ValidUsername username)
         {
             if (username == null)
             {
@@ -2229,7 +2229,7 @@ namespace Fifthweek.Api.Identity.Membership.Controllers
 	public partial class PasswordResetConfirmationData 
 	{
 		public UserId UserIdObject { get; set; }
-		public ValidatedPassword NewPasswordObject { get; set; }
+		public ValidPassword NewPasswordObject { get; set; }
 
 		public void Parse()
 		{
@@ -2254,11 +2254,11 @@ namespace Fifthweek.Api.Identity.Membership.Controllers
                 modelStateDictionary.Add("UserId", modelState);
             }
 
-			if (true || !ValidatedPassword.IsEmpty(target.NewPassword))
+			if (true || !ValidPassword.IsEmpty(target.NewPassword))
 			{
-				ValidatedPassword @object;
+				ValidPassword @object;
 				System.Collections.Generic.IReadOnlyCollection<string> errorMessages;
-				if (ValidatedPassword.TryParse(target.NewPassword, out @object, out errorMessages))
+				if (ValidPassword.TryParse(target.NewPassword, out @object, out errorMessages))
 				{
 					target.NewPasswordObject = @object;
 				}
@@ -2295,8 +2295,8 @@ namespace Fifthweek.Api.Identity.Membership.Controllers
 	using System.Web.Http.ModelBinding;
 	public partial class PasswordResetRequestData 
 	{
-		public ValidatedEmail EmailObject { get; set; }
-		public ValidatedUsername UsernameObject { get; set; }
+		public ValidEmail EmailObject { get; set; }
+		public ValidUsername UsernameObject { get; set; }
 
 		public void Parse()
 		{
@@ -2310,11 +2310,11 @@ namespace Fifthweek.Api.Identity.Membership.Controllers
 		{
 			var modelStateDictionary = new System.Web.Http.ModelBinding.ModelStateDictionary();
 
-			if (false || !ValidatedEmail.IsEmpty(target.Email))
+			if (false || !ValidEmail.IsEmpty(target.Email))
 			{
-				ValidatedEmail @object;
+				ValidEmail @object;
 				System.Collections.Generic.IReadOnlyCollection<string> errorMessages;
-				if (ValidatedEmail.TryParse(target.Email, out @object, out errorMessages))
+				if (ValidEmail.TryParse(target.Email, out @object, out errorMessages))
 				{
 					target.EmailObject = @object;
 				}
@@ -2330,11 +2330,11 @@ namespace Fifthweek.Api.Identity.Membership.Controllers
 				}
 			}
 
-			if (false || !ValidatedUsername.IsEmpty(target.Username))
+			if (false || !ValidUsername.IsEmpty(target.Username))
 			{
-				ValidatedUsername @object;
+				ValidUsername @object;
 				System.Collections.Generic.IReadOnlyCollection<string> errorMessages;
-				if (ValidatedUsername.TryParse(target.Username, out @object, out errorMessages))
+				if (ValidUsername.TryParse(target.Username, out @object, out errorMessages))
 				{
 					target.UsernameObject = @object;
 				}
@@ -2371,9 +2371,9 @@ namespace Fifthweek.Api.Identity.Membership.Controllers
 	using System.Web.Http.ModelBinding;
 	public partial class RegistrationData 
 	{
-		public ValidatedEmail EmailObject { get; set; }
-		public ValidatedUsername UsernameObject { get; set; }
-		public ValidatedPassword PasswordObject { get; set; }
+		public ValidEmail EmailObject { get; set; }
+		public ValidUsername UsernameObject { get; set; }
+		public ValidPassword PasswordObject { get; set; }
 
 		public void Parse()
 		{
@@ -2387,11 +2387,11 @@ namespace Fifthweek.Api.Identity.Membership.Controllers
 		{
 			var modelStateDictionary = new System.Web.Http.ModelBinding.ModelStateDictionary();
 
-			if (true || !ValidatedEmail.IsEmpty(target.Email))
+			if (true || !ValidEmail.IsEmpty(target.Email))
 			{
-				ValidatedEmail @object;
+				ValidEmail @object;
 				System.Collections.Generic.IReadOnlyCollection<string> errorMessages;
-				if (ValidatedEmail.TryParse(target.Email, out @object, out errorMessages))
+				if (ValidEmail.TryParse(target.Email, out @object, out errorMessages))
 				{
 					target.EmailObject = @object;
 				}
@@ -2407,11 +2407,11 @@ namespace Fifthweek.Api.Identity.Membership.Controllers
 				}
 			}
 
-			if (true || !ValidatedUsername.IsEmpty(target.Username))
+			if (true || !ValidUsername.IsEmpty(target.Username))
 			{
-				ValidatedUsername @object;
+				ValidUsername @object;
 				System.Collections.Generic.IReadOnlyCollection<string> errorMessages;
-				if (ValidatedUsername.TryParse(target.Username, out @object, out errorMessages))
+				if (ValidUsername.TryParse(target.Username, out @object, out errorMessages))
 				{
 					target.UsernameObject = @object;
 				}
@@ -2427,11 +2427,11 @@ namespace Fifthweek.Api.Identity.Membership.Controllers
 				}
 			}
 
-			if (true || !ValidatedPassword.IsEmpty(target.Password))
+			if (true || !ValidPassword.IsEmpty(target.Password))
 			{
-				ValidatedPassword @object;
+				ValidPassword @object;
 				System.Collections.Generic.IReadOnlyCollection<string> errorMessages;
-				if (ValidatedPassword.TryParse(target.Password, out @object, out errorMessages))
+				if (ValidPassword.TryParse(target.Password, out @object, out errorMessages))
 				{
 					target.PasswordObject = @object;
 				}
