@@ -1,7 +1,7 @@
-﻿using Fifthweek.Api.Core;
-
-namespace Fifthweek.Api.Identity.OAuth
+﻿namespace Fifthweek.Api.Identity.OAuth
 {
+    using Fifthweek.Api.Core;
+
     [AutoEqualityMembers, AutoConstructor]
     public partial class HashedRefreshTokenId
     {
@@ -17,11 +17,6 @@ namespace Fifthweek.Api.Identity.OAuth
         {
             var hashedTokenId = Helper.GetHash(refreshTokenId.Value);
             return new HashedRefreshTokenId(hashedTokenId);
-        }
-
-        public override string ToString()
-        {
-            return this.Value;
         }
     }
 }

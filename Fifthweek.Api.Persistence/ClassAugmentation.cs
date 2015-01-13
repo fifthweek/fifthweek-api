@@ -208,6 +208,11 @@ namespace Fifthweek.Api.Persistence
 	using Fifthweek.Api.Persistence.Identity;
 	public partial class Channel 
 	{
+		public override string ToString()
+        {
+			return string.Format("Channel({0}, {1}, {2}, {3})", this.Id == null ? "null" : this.Id.ToString(), this.SubscriptionId == null ? "null" : this.SubscriptionId.ToString(), this.PriceInUsCentsPerWeek == null ? "null" : this.PriceInUsCentsPerWeek.ToString(), this.CreationDate == null ? "null" : this.CreationDate.ToString());
+		}
+
         public override bool Equals(object obj)
         {
             if (ReferenceEquals(null, obj))
@@ -278,6 +283,11 @@ namespace Fifthweek.Api.Persistence
 	using Fifthweek.Api.Persistence.Identity;
 	public partial class File 
 	{
+		public override string ToString()
+        {
+			return string.Format("File({0}, {1}, {2}, {3}, {4}, {5}, {6}, \"{7}\", \"{8}\", {9}, \"{10}\")", this.Id == null ? "null" : this.Id.ToString(), this.UserId == null ? "null" : this.UserId.ToString(), this.State == null ? "null" : this.State.ToString(), this.UploadStartedDate == null ? "null" : this.UploadStartedDate.ToString(), this.UploadCompletedDate == null ? "null" : this.UploadCompletedDate.ToString(), this.ProcessingStartedDate == null ? "null" : this.ProcessingStartedDate.ToString(), this.ProcessingCompletedDate == null ? "null" : this.ProcessingCompletedDate.ToString(), this.FileNameWithoutExtension == null ? "null" : this.FileNameWithoutExtension.ToString(), this.FileExtension == null ? "null" : this.FileExtension.ToString(), this.BlobSizeBytes == null ? "null" : this.BlobSizeBytes.ToString(), this.Purpose == null ? "null" : this.Purpose.ToString());
+		}
+
         public override bool Equals(object obj)
         {
             if (ReferenceEquals(null, obj))
@@ -390,6 +400,11 @@ namespace Fifthweek.Api.Persistence
 	using Fifthweek.Api.Persistence.Identity;
 	public partial class Subscription 
 	{
+		public override string ToString()
+        {
+			return string.Format("Subscription({0}, {1}, \"{2}\", \"{3}\", \"{4}\", \"{5}\", \"{6}\", {7}, {8})", this.Id == null ? "null" : this.Id.ToString(), this.CreatorId == null ? "null" : this.CreatorId.ToString(), this.Name == null ? "null" : this.Name.ToString(), this.Tagline == null ? "null" : this.Tagline.ToString(), this.Introduction == null ? "null" : this.Introduction.ToString(), this.Description == null ? "null" : this.Description.ToString(), this.ExternalVideoUrl == null ? "null" : this.ExternalVideoUrl.ToString(), this.HeaderImageFileId == null ? "null" : this.HeaderImageFileId.ToString(), this.CreationDate == null ? "null" : this.CreationDate.ToString());
+		}
+
         public override bool Equals(object obj)
         {
             if (ReferenceEquals(null, obj))
@@ -491,6 +506,11 @@ namespace Fifthweek.Api.Persistence.Identity
 	using System.ComponentModel.DataAnnotations.Schema;
 	public partial class FifthweekUser 
 	{
+		public override string ToString()
+        {
+			return string.Format("FifthweekUser(\"{0}\", {1}, {2}, {3}, {4})", this.ExampleWork == null ? "null" : this.ExampleWork.ToString(), this.RegistrationDate == null ? "null" : this.RegistrationDate.ToString(), this.LastSignInDate == null ? "null" : this.LastSignInDate.ToString(), this.LastAccessTokenDate == null ? "null" : this.LastAccessTokenDate.ToString(), this.ProfileImageFileId == null ? "null" : this.ProfileImageFileId.ToString());
+		}
+
         public override bool Equals(object obj)
         {
             if (ReferenceEquals(null, obj))

@@ -1,8 +1,8 @@
-﻿using Fifthweek.Api.Core;
-
-namespace Fifthweek.Api.Identity.OAuth
+﻿namespace Fifthweek.Api.Identity.OAuth
 {
     using System;
+
+    using Fifthweek.Api.Core;
 
     [AutoEqualityMembers, AutoConstructor]
     public partial class RefreshTokenId
@@ -12,11 +12,6 @@ namespace Fifthweek.Api.Identity.OAuth
         public static RefreshTokenId Create()
         {
             return new RefreshTokenId(Guid.NewGuid().ToString("n"));
-        }
-
-        public override string ToString()
-        {
-            return this.Value;
         }
     }
 }

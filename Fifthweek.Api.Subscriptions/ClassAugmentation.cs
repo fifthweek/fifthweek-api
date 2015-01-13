@@ -368,6 +368,7 @@ namespace Fifthweek.Api.Subscriptions
 	using Fifthweek.Api.Persistence;
 	using Fifthweek.Api.Persistence.Identity;
 	using System.Collections.Generic;
+	using System.Diagnostics.CodeAnalysis;
 	public partial class CreatorStatus 
 	{
         public CreatorStatus(
@@ -444,6 +445,7 @@ namespace Fifthweek.Api.Subscriptions
 	using Fifthweek.Api.Persistence;
 	using Fifthweek.Api.Persistence.Identity;
 	using System.Collections.Generic;
+	using System.Diagnostics.CodeAnalysis;
 	public partial class SubscriptionId 
 	{
         public SubscriptionId(
@@ -470,6 +472,7 @@ namespace Fifthweek.Api.Subscriptions
 	using Fifthweek.Api.Persistence;
 	using Fifthweek.Api.Persistence.Identity;
 	using System.Collections.Generic;
+	using System.Diagnostics.CodeAnalysis;
 	public partial class SubscriptionSecurity 
 	{
         public SubscriptionSecurity(
@@ -504,8 +507,14 @@ namespace Fifthweek.Api.Subscriptions
 	using Fifthweek.Api.Identity.Membership;
 	using Fifthweek.Api.Persistence;
 	using Fifthweek.Api.Persistence.Identity;
+	using System.Diagnostics.CodeAnalysis;
 	public partial class ChannelPriceInUsCentsPerWeek 
 	{
+		public override string ToString()
+        {
+			return string.Format("ChannelPriceInUsCentsPerWeek({0})", this.Value == null ? "null" : this.Value.ToString());
+		}
+
         public override bool Equals(object obj)
         {
             if (ReferenceEquals(null, obj))
@@ -561,6 +570,11 @@ namespace Fifthweek.Api.Subscriptions.Commands
 	using Fifthweek.Api.FileManagement;
 	public partial class CreateSubscriptionCommand 
 	{
+		public override string ToString()
+        {
+			return string.Format("CreateSubscriptionCommand({0}, {1}, {2}, {3}, {4})", this.Requester == null ? "null" : this.Requester.ToString(), this.NewSubscriptionId == null ? "null" : this.NewSubscriptionId.ToString(), this.SubscriptionName == null ? "null" : this.SubscriptionName.ToString(), this.Tagline == null ? "null" : this.Tagline.ToString(), this.BasePrice == null ? "null" : this.BasePrice.ToString());
+		}
+
         public override bool Equals(object obj)
         {
             if (ReferenceEquals(null, obj))
@@ -640,6 +654,11 @@ namespace Fifthweek.Api.Subscriptions.Commands
 	using Fifthweek.Api.FileManagement;
 	public partial class PromoteNewUserToCreatorCommand 
 	{
+		public override string ToString()
+        {
+			return string.Format("PromoteNewUserToCreatorCommand({0})", this.NewUserId == null ? "null" : this.NewUserId.ToString());
+		}
+
         public override bool Equals(object obj)
         {
             if (ReferenceEquals(null, obj))
@@ -695,6 +714,11 @@ namespace Fifthweek.Api.Subscriptions.Commands
 	using Fifthweek.Api.FileManagement;
 	public partial class UpdateSubscriptionCommand 
 	{
+		public override string ToString()
+        {
+			return string.Format("UpdateSubscriptionCommand({0}, {1}, {2}, {3}, {4}, {5}, {6}, {7})", this.Requester == null ? "null" : this.Requester.ToString(), this.SubscriptionId == null ? "null" : this.SubscriptionId.ToString(), this.SubscriptionName == null ? "null" : this.SubscriptionName.ToString(), this.Tagline == null ? "null" : this.Tagline.ToString(), this.Introduction == null ? "null" : this.Introduction.ToString(), this.Description == null ? "null" : this.Description.ToString(), this.HeaderImageFileId == null ? "null" : this.HeaderImageFileId.ToString(), this.Video == null ? "null" : this.Video.ToString());
+		}
+
         public override bool Equals(object obj)
         {
             if (ReferenceEquals(null, obj))
@@ -793,6 +817,11 @@ namespace Fifthweek.Api.Subscriptions.Controllers
 	using Fifthweek.Api.FileManagement;
 	public partial class CreatorStatusData 
 	{
+		public override string ToString()
+        {
+			return string.Format("CreatorStatusData({0}, {1})", this.SubscriptionId == null ? "null" : this.SubscriptionId.ToString(), this.MustWriteFirstPost == null ? "null" : this.MustWriteFirstPost.ToString());
+		}
+
         public override bool Equals(object obj)
         {
             if (ReferenceEquals(null, obj))
@@ -852,8 +881,14 @@ namespace Fifthweek.Api.Subscriptions
 	using Fifthweek.Api.Persistence;
 	using Fifthweek.Api.Persistence.Identity;
 	using System.Collections.Generic;
+	using System.Diagnostics.CodeAnalysis;
 	public partial class CreatorStatus 
 	{
+		public override string ToString()
+        {
+			return string.Format("CreatorStatus({0}, {1})", this.SubscriptionId == null ? "null" : this.SubscriptionId.ToString(), this.MustWriteFirstPost == null ? "null" : this.MustWriteFirstPost.ToString());
+		}
+
         public override bool Equals(object obj)
         {
             if (ReferenceEquals(null, obj))
@@ -913,6 +948,11 @@ namespace Fifthweek.Api.Subscriptions.Queries
 	using Fifthweek.Api.Persistence;
 	public partial class GetCreatorStatusQuery 
 	{
+		public override string ToString()
+        {
+			return string.Format("GetCreatorStatusQuery({0})", this.CreatorId == null ? "null" : this.CreatorId.ToString());
+		}
+
         public override bool Equals(object obj)
         {
             if (ReferenceEquals(null, obj))
@@ -966,8 +1006,14 @@ namespace Fifthweek.Api.Subscriptions
 	using Fifthweek.Api.Persistence;
 	using Fifthweek.Api.Persistence.Identity;
 	using System.Collections.Generic;
+	using System.Diagnostics.CodeAnalysis;
 	public partial class SubscriptionId 
 	{
+		public override string ToString()
+        {
+			return string.Format("SubscriptionId({0})", this.Value == null ? "null" : this.Value.ToString());
+		}
+
         public override bool Equals(object obj)
         {
             if (ReferenceEquals(null, obj))
@@ -1024,6 +1070,11 @@ namespace Fifthweek.Api.Subscriptions.Controllers
 	using Fifthweek.Api.FileManagement;
 	public partial class NewSubscriptionData 
 	{
+		public override string ToString()
+        {
+			return string.Format("NewSubscriptionData({0}, {1}, {2}, \"{3}\", \"{4}\", {5})", this.SubscriptionNameObject == null ? "null" : this.SubscriptionNameObject.ToString(), this.TaglineObject == null ? "null" : this.TaglineObject.ToString(), this.BasePriceObject == null ? "null" : this.BasePriceObject.ToString(), this.SubscriptionName == null ? "null" : this.SubscriptionName.ToString(), this.Tagline == null ? "null" : this.Tagline.ToString(), this.BasePrice == null ? "null" : this.BasePrice.ToString());
+		}
+
         public override bool Equals(object obj)
         {
             if (ReferenceEquals(null, obj))
@@ -1110,6 +1161,11 @@ namespace Fifthweek.Api.Subscriptions.Controllers
 	using Fifthweek.Api.FileManagement;
 	public partial class UpdatedSubscriptionData 
 	{
+		public override string ToString()
+        {
+			return string.Format("UpdatedSubscriptionData({0}, {1}, {2}, {3}, {4}, {5}, \"{6}\", \"{7}\", \"{8}\", {9}, \"{10}\", \"{11}\")", this.SubscriptionNameObject == null ? "null" : this.SubscriptionNameObject.ToString(), this.TaglineObject == null ? "null" : this.TaglineObject.ToString(), this.IntroductionObject == null ? "null" : this.IntroductionObject.ToString(), this.HeaderImageFileIdObject == null ? "null" : this.HeaderImageFileIdObject.ToString(), this.VideoObject == null ? "null" : this.VideoObject.ToString(), this.DescriptionObject == null ? "null" : this.DescriptionObject.ToString(), this.SubscriptionName == null ? "null" : this.SubscriptionName.ToString(), this.Tagline == null ? "null" : this.Tagline.ToString(), this.Introduction == null ? "null" : this.Introduction.ToString(), this.HeaderImageFileId == null ? "null" : this.HeaderImageFileId.ToString(), this.Video == null ? "null" : this.Video.ToString(), this.Description == null ? "null" : this.Description.ToString());
+		}
+
         public override bool Equals(object obj)
         {
             if (ReferenceEquals(null, obj))
@@ -1229,8 +1285,14 @@ namespace Fifthweek.Api.Subscriptions
 	using Fifthweek.Api.Persistence;
 	using Fifthweek.Api.Persistence.Identity;
 	using System.Collections.Generic;
+	using System.Diagnostics.CodeAnalysis;
 	public partial class ValidDescription 
 	{
+		public override string ToString()
+        {
+			return string.Format("ValidDescription(\"{0}\")", this.Value == null ? "null" : this.Value.ToString());
+		}
+
         public override bool Equals(object obj)
         {
             if (ReferenceEquals(null, obj))
@@ -1284,8 +1346,14 @@ namespace Fifthweek.Api.Subscriptions
 	using Fifthweek.Api.Persistence;
 	using Fifthweek.Api.Persistence.Identity;
 	using System.Collections.Generic;
+	using System.Diagnostics.CodeAnalysis;
 	public partial class ValidSubscriptionName 
 	{
+		public override string ToString()
+        {
+			return string.Format("ValidSubscriptionName(\"{0}\")", this.Value == null ? "null" : this.Value.ToString());
+		}
+
         public override bool Equals(object obj)
         {
             if (ReferenceEquals(null, obj))
@@ -1339,8 +1407,14 @@ namespace Fifthweek.Api.Subscriptions
 	using Fifthweek.Api.Persistence;
 	using Fifthweek.Api.Persistence.Identity;
 	using System.Collections.Generic;
+	using System.Diagnostics.CodeAnalysis;
 	public partial class ValidTagline 
 	{
+		public override string ToString()
+        {
+			return string.Format("ValidTagline(\"{0}\")", this.Value == null ? "null" : this.Value.ToString());
+		}
+
         public override bool Equals(object obj)
         {
             if (ReferenceEquals(null, obj))
@@ -1386,11 +1460,22 @@ namespace Fifthweek.Api.Subscriptions
 namespace Fifthweek.Api.Subscriptions
 {
 	using System;
-	using System.Collections.Generic;
 	using System.Linq;
 	using Fifthweek.Api.Core;
+	using System.Threading.Tasks;
+	using Dapper;
+	using Fifthweek.Api.Identity.Membership;
+	using Fifthweek.Api.Persistence;
+	using Fifthweek.Api.Persistence.Identity;
+	using System.Collections.Generic;
+	using System.Diagnostics.CodeAnalysis;
 	public partial class ValidExternalVideoUrl 
 	{
+		public override string ToString()
+        {
+			return string.Format("ValidExternalVideoUrl(\"{0}\")", this.Value == null ? "null" : this.Value.ToString());
+		}
+
         public override bool Equals(object obj)
         {
             if (ReferenceEquals(null, obj))
@@ -1436,12 +1521,22 @@ namespace Fifthweek.Api.Subscriptions
 namespace Fifthweek.Api.Subscriptions
 {
 	using System;
-	using System.Collections.Generic;
-	using System.Diagnostics.CodeAnalysis;
 	using System.Linq;
 	using Fifthweek.Api.Core;
+	using System.Threading.Tasks;
+	using Dapper;
+	using Fifthweek.Api.Identity.Membership;
+	using Fifthweek.Api.Persistence;
+	using Fifthweek.Api.Persistence.Identity;
+	using System.Collections.Generic;
+	using System.Diagnostics.CodeAnalysis;
 	public partial class ValidIntroduction 
 	{
+		public override string ToString()
+        {
+			return string.Format("ValidIntroduction(\"{0}\")", this.Value == null ? "null" : this.Value.ToString());
+		}
+
         public override bool Equals(object obj)
         {
             if (ReferenceEquals(null, obj))

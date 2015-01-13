@@ -435,6 +435,11 @@ namespace Fifthweek.Api.FileManagement.Commands
 	using Fifthweek.Api.Persistence;
 	public partial class CompleteFileUploadCommand 
 	{
+		public override string ToString()
+        {
+			return string.Format("CompleteFileUploadCommand({0}, {1})", this.AuthenticatedUserId == null ? "null" : this.AuthenticatedUserId.ToString(), this.FileId == null ? "null" : this.FileId.ToString());
+		}
+
         public override bool Equals(object obj)
         {
             if (ReferenceEquals(null, obj))
@@ -494,6 +499,11 @@ namespace Fifthweek.Api.FileManagement.Commands
 	using Fifthweek.Api.Persistence;
 	public partial class InitiateFileUploadCommand 
 	{
+		public override string ToString()
+        {
+			return string.Format("InitiateFileUploadCommand({0}, {1}, \"{2}\", \"{3}\")", this.AuthenticatedUserId == null ? "null" : this.AuthenticatedUserId.ToString(), this.FileId == null ? "null" : this.FileId.ToString(), this.FilePath == null ? "null" : this.FilePath.ToString(), this.Purpose == null ? "null" : this.Purpose.ToString());
+		}
+
         public override bool Equals(object obj)
         {
             if (ReferenceEquals(null, obj))
@@ -574,6 +584,11 @@ namespace Fifthweek.Api.FileManagement.Controllers
 	using Microsoft.WindowsAzure.Storage.Blob;
 	public partial class GrantedUpload 
 	{
+		public override string ToString()
+        {
+			return string.Format("GrantedUpload(\"{0}\", \"{1}\")", this.FileId == null ? "null" : this.FileId.ToString(), this.UploadUri == null ? "null" : this.UploadUri.ToString());
+		}
+
         public override bool Equals(object obj)
         {
             if (ReferenceEquals(null, obj))
@@ -642,6 +657,11 @@ namespace Fifthweek.Api.FileManagement.Controllers
 	using Microsoft.WindowsAzure.Storage.Blob;
 	public partial class UploadRequest 
 	{
+		public override string ToString()
+        {
+			return string.Format("UploadRequest(\"{0}\", \"{1}\")", this.FilePath == null ? "null" : this.FilePath.ToString(), this.Purpose == null ? "null" : this.Purpose.ToString());
+		}
+
         public override bool Equals(object obj)
         {
             if (ReferenceEquals(null, obj))
@@ -702,6 +722,11 @@ namespace Fifthweek.Api.FileManagement
 	using Fifthweek.Api.Persistence;
 	public partial class FileId 
 	{
+		public override string ToString()
+        {
+			return string.Format("FileId({0})", this.Value == null ? "null" : this.Value.ToString());
+		}
+
         public override bool Equals(object obj)
         {
             if (ReferenceEquals(null, obj))
@@ -756,6 +781,11 @@ namespace Fifthweek.Api.FileManagement
 	using Fifthweek.Api.Persistence;
 	public partial class FileVariantId 
 	{
+		public override string ToString()
+        {
+			return string.Format("FileVariantId({0})", this.Value == null ? "null" : this.Value.ToString());
+		}
+
         public override bool Equals(object obj)
         {
             if (ReferenceEquals(null, obj))
@@ -809,6 +839,11 @@ namespace Fifthweek.Api.FileManagement.Queries
 	using Fifthweek.Api.Azure;
 	public partial class GenerateWritableBlobUriQuery 
 	{
+		public override string ToString()
+        {
+			return string.Format("GenerateWritableBlobUriQuery({0}, {1})", this.AuthenticatedUserId == null ? "null" : this.AuthenticatedUserId.ToString(), this.FileId == null ? "null" : this.FileId.ToString());
+		}
+
         public override bool Equals(object obj)
         {
             if (ReferenceEquals(null, obj))

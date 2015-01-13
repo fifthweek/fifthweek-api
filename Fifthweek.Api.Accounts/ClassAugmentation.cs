@@ -153,6 +153,7 @@ namespace Fifthweek.Api.Accounts.Controllers
 	using Fifthweek.Api.Identity.OAuth;
 	using Fifthweek.Api.Accounts.Commands;
 	using Fifthweek.Api.FileManagement;
+	using Fifthweek.Api.Accounts.Queries;
 	public partial class AccountSettingsResult 
 	{
         public AccountSettingsResult(
@@ -272,6 +273,11 @@ namespace Fifthweek.Api.Accounts.Commands
 	using Microsoft.AspNet.Identity.EntityFramework;
 	public partial class UpdateAccountSettingsCommand 
 	{
+		public override string ToString()
+        {
+			return string.Format("UpdateAccountSettingsCommand({0}, {1}, {2}, {3}, {4}, {5})", this.AuthenticatedUserId == null ? "null" : this.AuthenticatedUserId.ToString(), this.RequestedUserId == null ? "null" : this.RequestedUserId.ToString(), this.NewUsername == null ? "null" : this.NewUsername.ToString(), this.NewEmail == null ? "null" : this.NewEmail.ToString(), this.NewPassword == null ? "null" : this.NewPassword.ToString(), this.NewProfileImageId == null ? "null" : this.NewProfileImageId.ToString());
+		}
+
         public override bool Equals(object obj)
         {
             if (ReferenceEquals(null, obj))
@@ -356,8 +362,14 @@ namespace Fifthweek.Api.Accounts.Controllers
 	using Fifthweek.Api.Identity.OAuth;
 	using Fifthweek.Api.Accounts.Commands;
 	using Fifthweek.Api.FileManagement;
+	using Fifthweek.Api.Accounts.Queries;
 	public partial class AccountSettingsResult 
 	{
+		public override string ToString()
+        {
+			return string.Format("AccountSettingsResult(\"{0}\", \"{1}\")", this.Email == null ? "null" : this.Email.ToString(), this.ProfileImageFileId == null ? "null" : this.ProfileImageFileId.ToString());
+		}
+
         public override bool Equals(object obj)
         {
             if (ReferenceEquals(null, obj))
@@ -416,6 +428,11 @@ namespace Fifthweek.Api.Accounts.Queries
 	using System.Threading.Tasks;
 	public partial class GetAccountSettingsQuery 
 	{
+		public override string ToString()
+        {
+			return string.Format("GetAccountSettingsQuery({0}, {1})", this.AuthenticatedUserId == null ? "null" : this.AuthenticatedUserId.ToString(), this.RequestedUserId == null ? "null" : this.RequestedUserId.ToString());
+		}
+
         public override bool Equals(object obj)
         {
             if (ReferenceEquals(null, obj))
@@ -476,8 +493,14 @@ namespace Fifthweek.Api.Accounts.Controllers
 	using Fifthweek.Api.Identity.OAuth;
 	using Fifthweek.Api.Accounts.Commands;
 	using Fifthweek.Api.FileManagement;
+	using Fifthweek.Api.Accounts.Queries;
 	public partial class UpdatedAccountSettings 
 	{
+		public override string ToString()
+        {
+			return string.Format("UpdatedAccountSettings({0}, {1}, {2}, \"{3}\", \"{4}\", \"{5}\", \"{6}\")", this.NewUsernameObject == null ? "null" : this.NewUsernameObject.ToString(), this.NewEmailObject == null ? "null" : this.NewEmailObject.ToString(), this.NewPasswordObject == null ? "null" : this.NewPasswordObject.ToString(), this.NewUsername == null ? "null" : this.NewUsername.ToString(), this.NewEmail == null ? "null" : this.NewEmail.ToString(), this.NewPassword == null ? "null" : this.NewPassword.ToString(), this.NewProfileImageId == null ? "null" : this.NewProfileImageId.ToString());
+		}
+
         public override bool Equals(object obj)
         {
             if (ReferenceEquals(null, obj))
@@ -569,6 +592,7 @@ namespace Fifthweek.Api.Accounts.Controllers
 	using Fifthweek.Api.Identity.OAuth;
 	using Fifthweek.Api.Accounts.Commands;
 	using Fifthweek.Api.FileManagement;
+	using Fifthweek.Api.Accounts.Queries;
 	public partial class UpdatedAccountSettings 
 	{
 		public ValidUsername NewUsernameObject { get; set; }

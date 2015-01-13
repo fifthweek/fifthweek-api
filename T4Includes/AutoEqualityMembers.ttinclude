@@ -23,8 +23,59 @@
             continue;
         }
 
+		var formatParameterIndexes = new StringBuilder();
+		for (var i = 0; i < publicProperties.Count; i++)
+        {
+			var property = publicProperties[i];
+			var isLast = i == publicProperties.Count - 1;
+			var isString = property.Type.CodeType.FullName == "System.String";
+
+			if (isString)
+            {
+				formatParameterIndexes.Append("\\\"");
+            }
+
+			formatParameterIndexes.Append("{");
+			formatParameterIndexes.Append(i);
+			formatParameterIndexes.Append("}");
+
+			if (isString)
+            {
+				formatParameterIndexes.Append("\\\"");
+            }
+
+			if (!isLast)
+            {
+				formatParameterIndexes.Append(", ");
+            }
+        }
+
+		var formatParameters = new StringBuilder();
+		for (var i = 0; i < publicProperties.Count; i++)
+        {
+			var property = publicProperties[i];
+			var isLast = i == publicProperties.Count - 1;
+
+			formatParameters.Append("this.");
+			formatParameters.Append(property.Name);
+			formatParameters.Append(" == null ? \"null\" : ");
+			formatParameters.Append("this.");
+			formatParameters.Append(property.Name);
+			formatParameters.Append(".ToString()");
+
+			if (!isLast)
+            {
+				formatParameters.Append(", ");
+            }
+        }
+
 		unifiedClass.WriteNamespaceAndClass(() => {
 #>
+		public override string ToString()
+        {
+			return string.Format("<#= unifiedClass.FirstCodeClass.Name #>(<#= formatParameterIndexes.ToString() #>)", <#= formatParameters.ToString() #>);
+		}
+
         public override bool Equals(object obj)
         {
             if (ReferenceEquals(null, obj))
