@@ -5,7 +5,10 @@
     using System.Diagnostics.CodeAnalysis;
     using System.Linq;
 
-    public class ValidIntroduction
+    using Fifthweek.Api.Core;
+
+    [AutoEqualityMembers]
+    public partial class ValidIntroduction
     {
         public static readonly string ForbiddenCharacters = "\r\n\t";
         public static readonly int MinLength = 15; // Must be at least a few words.

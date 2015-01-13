@@ -1,33 +1,35 @@
-﻿using System;
-using System.Threading.Tasks;
-using System.Web.Http;
-using System.Web.Http.Description;
-using Fifthweek.Api.Core;
-using Fifthweek.Api.Identity.OAuth;
-using Fifthweek.Api.Subscriptions.Commands;
-using Fifthweek.Api.Subscriptions.Queries;
-
-namespace Fifthweek.Api.Subscriptions.Controllers
+﻿namespace Fifthweek.Api.Subscriptions.Controllers
 {
+    using System;
+    using System.Threading.Tasks;
+    using System.Web.Http;
+    using System.Web.Http.Description;
+
+    using Fifthweek.Api.Core;
+    using Fifthweek.Api.Identity.OAuth;
+    using Fifthweek.Api.Subscriptions.Commands;
+    using Fifthweek.Api.Subscriptions.Queries;
+
     [RoutePrefix("subscriptions"), AutoConstructor]
     public partial class SubscriptionController : ApiController
     {
-        private readonly ICommandHandler<CreateSubscriptionCommand> setMandatorySubscriptionFields;
+        private readonly ICommandHandler<CreateSubscriptionCommand> createSubscription;
+        private readonly ICommandHandler<UpdateSubscriptionCommand> updateSubscription; 
         private readonly IQueryHandler<GetCreatorStatusQuery, CreatorStatus> getCreatorStatus;
         private readonly IUserContext userContext;
         private readonly IGuidCreator guidCreator;
 
         [Route("")]
-        public async Task<IHttpActionResult> PostNewSubscription(NewSubscriptionData fields)
+        public async Task<IHttpActionResult> PostSubscription(NewSubscriptionData fields)
         {
             fields.Parse();
 
             var authenticatedUserId = this.userContext.GetUserId();
-            var subscriptionId = new SubscriptionId(this.guidCreator.CreateSqlSequential());
+            var newSubscriptionId = new SubscriptionId(this.guidCreator.CreateSqlSequential());
 
-            await this.setMandatorySubscriptionFields.HandleAsync(new CreateSubscriptionCommand(
+            await this.createSubscription.HandleAsync(new CreateSubscriptionCommand(
                 authenticatedUserId,
-                subscriptionId,
+                newSubscriptionId,
                 fields.SubscriptionNameObject,
                 fields.TaglineObject,
                 fields.BasePriceObject));
@@ -35,8 +37,29 @@ namespace Fifthweek.Api.Subscriptions.Controllers
             return this.Ok();
         }
 
+        [Route("{subscriptionId}")]
+        public async Task<IHttpActionResult> PutSubscription(Guid subscriptionId, [FromBody]UpdatedSubscriptionData fields)
+        {
+            fields.Parse();
+
+            var authenticatedUserId = this.userContext.GetUserId();
+            var subscriptionIdObject = new SubscriptionId(subscriptionId);
+
+            await this.updateSubscription.HandleAsync(new UpdateSubscriptionCommand(
+                authenticatedUserId,
+                subscriptionIdObject,
+                fields.SubscriptionNameObject,
+                fields.TaglineObject,
+                fields.IntroductionObject,
+                fields.DescriptionObject,
+                fields.HeaderImageFileIdObject,
+                fields.VideoObject));
+
+            return this.Ok();
+        }
+
         [Authorize]
-        [ResponseType(typeof (CreatorStatusData))]
+        [ResponseType(typeof(CreatorStatusData))]
         [Route("currentCreatorStatus")]
         public async Task<CreatorStatusData> GetCurrentCreatorStatus()
         {

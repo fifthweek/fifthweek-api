@@ -8,9 +8,6 @@
     [AutoEqualityMembers]
     public partial class UpdatedSubscriptionData
     {
-        [Constructed(typeof(SubscriptionId))]
-        public Guid SubscriptionId { get; set; }
-
         [Parsed(typeof(ValidSubscriptionName))]
         public string SubscriptionName { get; set; }
 

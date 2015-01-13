@@ -1,7 +1,7 @@
-﻿using Fifthweek.Api.Core;
-
-namespace Fifthweek.Api.Subscriptions.Controllers
+﻿namespace Fifthweek.Api.Subscriptions.Controllers
 {
+    using Fifthweek.Api.Core;
+
     [AutoEqualityMembers]
     public partial class NewSubscriptionData
     {

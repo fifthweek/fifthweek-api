@@ -4,11 +4,14 @@
     using System.Collections.Generic;
     using System.Linq;
 
+    using Fifthweek.Api.Core;
+
     /// <summary>
     /// This is a first attempt at URL validation. When we come to write the embed code generator, we will have a better idea of what valid URLs are. At this point,
     /// we will be able to update the following rules to meet the generator's requirements.
     /// </summary>
-    public class ValidExternalVideoUrl
+    [AutoEqualityMembers]
+    public partial class ValidExternalVideoUrl
     {
         public static readonly int MinLength = 1;
         public static readonly int MaxLength = 100; // Set quite high to allow Vimeo's vanity URLs. Right now it seems unlikely someone will pick a long / hard to remember vanity URL.
