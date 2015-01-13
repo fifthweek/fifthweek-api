@@ -7,7 +7,7 @@
     using Microsoft.VisualStudio.TestTools.UnitTesting;
 
     [TestClass]
-    public class DescriptionTests : ValidatedStringTests<Description>
+    public class DescriptionTests : ValidatedStringTests<ValidDescription>
     {
         public static readonly string InvalidValue = "!";
 
@@ -65,22 +65,22 @@
             this.AssertMaxLength(2000);
         }
 
-        protected override Description Parse(string value, bool exact)
+        protected override ValidDescription Parse(string value, bool exact)
         {
-            return Description.Parse(value);
+            return ValidDescription.Parse(value);
         }
 
-        protected override bool TryParse(string value, out Description parsedObject, bool exact)
+        protected override bool TryParse(string value, out ValidDescription parsedObject, bool exact)
         {
-            return Description.TryParse(value, out parsedObject);
+            return ValidDescription.TryParse(value, out parsedObject);
         }
 
-        protected override bool TryParse(string value, out Description parsedObject, out IReadOnlyCollection<string> errorMessages, bool exact)
+        protected override bool TryParse(string value, out ValidDescription parsedObject, out IReadOnlyCollection<string> errorMessages, bool exact)
         {
-            return Description.TryParse(value, out parsedObject, out errorMessages);
+            return ValidDescription.TryParse(value, out parsedObject, out errorMessages);
         }
 
-        protected override string GetValue(Description parsedObject)
+        protected override string GetValue(ValidDescription parsedObject)
         {
             return parsedObject.Value;
         }

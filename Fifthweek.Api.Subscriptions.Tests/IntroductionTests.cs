@@ -7,7 +7,7 @@
     using Microsoft.VisualStudio.TestTools.UnitTesting;
 
     [TestClass]
-    public class IntroductionTests : ValidatedStringTests<Introduction>
+    public class IntroductionTests : ValidatedStringTests<ValidIntroduction>
     {
         public static readonly string InvalidValue = "!";
 
@@ -64,22 +64,22 @@
             this.AssertNewLinesNotAllowed();
         }
 
-        protected override Introduction Parse(string value, bool exact)
+        protected override ValidIntroduction Parse(string value, bool exact)
         {
-            return Introduction.Parse(value);
+            return ValidIntroduction.Parse(value);
         }
 
-        protected override bool TryParse(string value, out Introduction parsedObject, bool exact)
+        protected override bool TryParse(string value, out ValidIntroduction parsedObject, bool exact)
         {
-            return Introduction.TryParse(value, out parsedObject);
+            return ValidIntroduction.TryParse(value, out parsedObject);
         }
 
-        protected override bool TryParse(string value, out Introduction parsedObject, out IReadOnlyCollection<string> errorMessages, bool exact)
+        protected override bool TryParse(string value, out ValidIntroduction parsedObject, out IReadOnlyCollection<string> errorMessages, bool exact)
         {
-            return Introduction.TryParse(value, out parsedObject, out errorMessages);
+            return ValidIntroduction.TryParse(value, out parsedObject, out errorMessages);
         }
 
-        protected override string GetValue(Introduction parsedObject)
+        protected override string GetValue(ValidIntroduction parsedObject)
         {
             return parsedObject.Value;
         }

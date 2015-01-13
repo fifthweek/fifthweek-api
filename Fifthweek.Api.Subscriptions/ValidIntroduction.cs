@@ -2,20 +2,22 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Diagnostics.CodeAnalysis;
     using System.Linq;
 
-    using Fifthweek.Api.Core;
-
-    [AutoEqualityMembers]
-    public partial class Tagline
+    public class ValidIntroduction
     {
         public static readonly string ForbiddenCharacters = "\r\n\t";
-        public static readonly int MinLength = 5;
-        public static readonly int MaxLength = 55; // Need to support XKCD ;) "A webcomic of romance, sarcasm, math, and language."
+        public static readonly int MinLength = 15; // Must be at least a few words.
+        public static readonly int MaxLength = 250; // Approximately 3 lines of content at 750px in Lato Regular 18px.
 
         private static readonly HashSet<char> ForbiddenCharactersHashSet = new HashSet<char>(ForbiddenCharacters);
 
-        private Tagline()
+        [SuppressMessage("StyleCop.CSharp.OrderingRules", "SA1202:ElementsMustBeOrderedByAccess", Justification = "Parse method requires other private static members to be initialized.")]
+        public static readonly ValidIntroduction Default = Parse(
+            "Hello! Thinking of subscribing? Awesome! Subscriptions allow me to produce more of my awesome creations for all you lovely people to see here!");
+
+        private ValidIntroduction()
         {
         }
 
@@ -27,24 +29,24 @@
             return string.IsNullOrEmpty(value); // Trimmed types use IsNullOrWhiteSpace
         }
 
-        public static Tagline Parse(string value)
+        public static ValidIntroduction Parse(string value)
         {
-            Tagline retval;
+            ValidIntroduction retval;
             if (!TryParse(value, out retval))
             {
-                throw new ArgumentException("Invalid tagline", "value");
+                throw new ArgumentException("Invalid introduction", "value");
             }
 
             return retval;
         }
 
-        public static bool TryParse(string value, out Tagline tagline)
+        public static bool TryParse(string value, out ValidIntroduction introduction)
         {
             IReadOnlyCollection<string> errorMessages;
-            return TryParse(value, out tagline, out errorMessages);
+            return TryParse(value, out introduction, out errorMessages);
         }
 
-        public static bool TryParse(string value, out Tagline tagline, out IReadOnlyCollection<string> errorMessages)
+        public static bool TryParse(string value, out ValidIntroduction introduction, out IReadOnlyCollection<string> errorMessages)
         {
             var errorMessageList = new List<string>();
             errorMessages = errorMessageList;
@@ -69,16 +71,17 @@
 
             if (errorMessageList.Count > 0)
             {
-                tagline = null;
+                introduction = null;
                 return false;
             }
 
-            tagline = new Tagline
+            introduction = new ValidIntroduction
             {
                 Value = value
             };
 
             return true;
         }
+ 
     }
 }

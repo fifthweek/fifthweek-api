@@ -2,22 +2,20 @@
 {
     using System;
     using System.Collections.Generic;
-    using System.Diagnostics.CodeAnalysis;
     using System.Linq;
 
-    public class Introduction
+    using Fifthweek.Api.Core;
+
+    [AutoEqualityMembers]
+    public partial class ValidSubscriptionName
     {
         public static readonly string ForbiddenCharacters = "\r\n\t";
-        public static readonly int MinLength = 15; // Must be at least a few words.
-        public static readonly int MaxLength = 250; // Approximately 3 lines of content at 750px in Lato Regular 18px.
+        public static readonly int MinLength = 1;
+        public static readonly int MaxLength = 25;
 
         private static readonly HashSet<char> ForbiddenCharactersHashSet = new HashSet<char>(ForbiddenCharacters);
 
-        [SuppressMessage("StyleCop.CSharp.OrderingRules", "SA1202:ElementsMustBeOrderedByAccess", Justification = "Parse method requires other private static members to be initialized.")]
-        public static readonly Introduction Default = Parse(
-            "Hello! Thinking of subscribing? Awesome! Subscriptions allow me to produce more of my awesome creations for all you lovely people to see here!");
-
-        private Introduction()
+        private ValidSubscriptionName()
         {
         }
 
@@ -29,24 +27,24 @@
             return string.IsNullOrEmpty(value); // Trimmed types use IsNullOrWhiteSpace
         }
 
-        public static Introduction Parse(string value)
+        public static ValidSubscriptionName Parse(string value)
         {
-            Introduction retval;
+            ValidSubscriptionName retval;
             if (!TryParse(value, out retval))
             {
-                throw new ArgumentException("Invalid introduction", "value");
+                throw new ArgumentException("Invalid subscription name", "value");
             }
 
             return retval;
         }
 
-        public static bool TryParse(string value, out Introduction introduction)
+        public static bool TryParse(string value, out ValidSubscriptionName subscriptionName)
         {
             IReadOnlyCollection<string> errorMessages;
-            return TryParse(value, out introduction, out errorMessages);
+            return TryParse(value, out subscriptionName, out errorMessages);
         }
 
-        public static bool TryParse(string value, out Introduction introduction, out IReadOnlyCollection<string> errorMessages)
+        public static bool TryParse(string value, out ValidSubscriptionName subscriptionName, out IReadOnlyCollection<string> errorMessages)
         {
             var errorMessageList = new List<string>();
             errorMessages = errorMessageList;
@@ -71,17 +69,16 @@
 
             if (errorMessageList.Count > 0)
             {
-                introduction = null;
+                subscriptionName = null;
                 return false;
             }
 
-            introduction = new Introduction
+            subscriptionName = new ValidSubscriptionName
             {
                 Value = value
             };
 
             return true;
         }
- 
     }
 }

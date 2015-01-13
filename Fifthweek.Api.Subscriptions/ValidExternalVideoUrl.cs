@@ -8,7 +8,7 @@
     /// This is a first attempt at URL validation. When we come to write the embed code generator, we will have a better idea of what valid URLs are. At this point,
     /// we will be able to update the following rules to meet the generator's requirements.
     /// </summary>
-    public class ExternalVideoUrl
+    public class ValidExternalVideoUrl
     {
         public static readonly int MinLength = 1;
         public static readonly int MaxLength = 100; // Set quite high to allow Vimeo's vanity URLs. Right now it seems unlikely someone will pick a long / hard to remember vanity URL.
@@ -24,7 +24,7 @@
 
         private const string AllowedDomainsMessage = "Vimeo or YouTube";
 
-        private ExternalVideoUrl()
+        private ValidExternalVideoUrl()
         {
         }
 
@@ -35,9 +35,9 @@
             return exact ? string.IsNullOrEmpty(value) : string.IsNullOrWhiteSpace(value);
         }
 
-        public static ExternalVideoUrl Parse(string value, bool exact = false)
+        public static ValidExternalVideoUrl Parse(string value, bool exact = false)
         {
-            ExternalVideoUrl retval;
+            ValidExternalVideoUrl retval;
             IReadOnlyCollection<string> errorMessages;
             if (!TryParse(value, out retval, out errorMessages, exact))
             {
@@ -47,13 +47,13 @@
             return retval;
         }
 
-        public static bool TryParse(string value, out ExternalVideoUrl externalVideoUrl, bool exact = false)
+        public static bool TryParse(string value, out ValidExternalVideoUrl externalVideoUrl, bool exact = false)
         {
             IReadOnlyCollection<string> errorMessages;
             return TryParse(value, out externalVideoUrl, out errorMessages, exact);
         }
 
-        public static bool TryParse(string value, out ExternalVideoUrl externalVideoUrl, out IReadOnlyCollection<string> errorMessages, bool exact = false)
+        public static bool TryParse(string value, out ValidExternalVideoUrl externalVideoUrl, out IReadOnlyCollection<string> errorMessages, bool exact = false)
         {
             var errorMessageList = new List<string>();
             errorMessages = errorMessageList;
@@ -121,7 +121,7 @@
                 return false;
             }
 
-            externalVideoUrl = new ExternalVideoUrl
+            externalVideoUrl = new ValidExternalVideoUrl
             {
                 Value = value
             };

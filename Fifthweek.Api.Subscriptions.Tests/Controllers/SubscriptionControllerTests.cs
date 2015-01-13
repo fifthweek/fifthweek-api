@@ -100,8 +100,8 @@ namespace Fifthweek.Api.Subscriptions.Tests.Controllers
             return new CreateSubscriptionCommand(
                 userId,
                 subscriptionId,
-                SubscriptionName.Parse(data.SubscriptionName),
-                Tagline.Parse(data.Tagline),
+                ValidSubscriptionName.Parse(data.SubscriptionName),
+                ValidTagline.Parse(data.Tagline),
                 ChannelPriceInUsCentsPerWeek.Parse(data.BasePrice));
         }
     }

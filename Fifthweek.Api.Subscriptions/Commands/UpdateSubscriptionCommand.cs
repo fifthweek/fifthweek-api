@@ -11,19 +11,19 @@
 
         public SubscriptionId SubscriptionId { get; private set; }
 
-        public SubscriptionName SubscriptionName { get; private set; }
+        public ValidSubscriptionName SubscriptionName { get; private set; }
 
-        public Tagline Tagline { get; private set; }
+        public ValidTagline Tagline { get; private set; }
 
-        public Introduction Introduction { get; private set; }
+        public ValidIntroduction Introduction { get; private set; }
 
         [Optional]
-        public Description Description { get; private set; }
+        public ValidDescription Description { get; private set; }
 
         [Optional]
         public FileId HeaderImageFileId { get; private set; }
 
         [Optional]
-        public ExternalVideoUrl Video { get; private set; }
+        public ValidExternalVideoUrl Video { get; private set; }
     }
 }

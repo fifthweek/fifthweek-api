@@ -6,12 +6,12 @@
     using Fifthweek.Api.Core;
 
     [AutoEqualityMembers]
-    public partial class Description
+    public partial class ValidDescription
     {
         public static readonly int MinLength = 1;
         public static readonly int MaxLength = 2000;
 
-        private Description()
+        private ValidDescription()
         {
         }
 
@@ -23,9 +23,9 @@
             return string.IsNullOrEmpty(value); // Trimmed types use IsNullOrWhiteSpace
         }
 
-        public static Description Parse(string value)
+        public static ValidDescription Parse(string value)
         {
-            Description retval;
+            ValidDescription retval;
             if (!TryParse(value, out retval))
             {
                 throw new ArgumentException("Invalid description", "value");
@@ -34,13 +34,13 @@
             return retval;
         }
 
-        public static bool TryParse(string value, out Description description)
+        public static bool TryParse(string value, out ValidDescription description)
         {
             IReadOnlyCollection<string> errorMessages;
             return TryParse(value, out description, out errorMessages);
         }
 
-        public static bool TryParse(string value, out Description description, out IReadOnlyCollection<string> errorMessages)
+        public static bool TryParse(string value, out ValidDescription description, out IReadOnlyCollection<string> errorMessages)
         {
             var errorMessageList = new List<string>();
             errorMessages = errorMessageList;
@@ -64,7 +64,7 @@
                 return false;
             }
 
-            description = new Description
+            description = new ValidDescription
             {
                 Value = value
             };

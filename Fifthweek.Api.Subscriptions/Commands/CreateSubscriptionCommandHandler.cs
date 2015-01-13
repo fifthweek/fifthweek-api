@@ -33,7 +33,7 @@
                 null,
                 command.SubscriptionName.Value,
                 command.Tagline.Value,
-                Introduction.Default.Value,
+                ValidIntroduction.Default.Value,
                 null,
                 null,
                 null,

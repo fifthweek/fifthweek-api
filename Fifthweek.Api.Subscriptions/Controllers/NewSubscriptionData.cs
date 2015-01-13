@@ -5,10 +5,10 @@ namespace Fifthweek.Api.Subscriptions.Controllers
     [AutoEqualityMembers]
     public partial class NewSubscriptionData
     {
-        [Parsed(typeof(SubscriptionName))]
+        [Parsed(typeof(ValidSubscriptionName))]
         public string SubscriptionName { get; set; }
 
-        [Parsed(typeof(Tagline))]
+        [Parsed(typeof(ValidTagline))]
         public string Tagline { get; set; }
 
         [Parsed(typeof(ChannelPriceInUsCentsPerWeek))]

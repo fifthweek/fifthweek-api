@@ -7,7 +7,7 @@
     using Microsoft.VisualStudio.TestTools.UnitTesting;
 
     [TestClass]
-    public class SubscriptionNameTests : ValidatedStringTests<SubscriptionName>
+    public class SubscriptionNameTests : ValidatedStringTests<ValidSubscriptionName>
     {
         public static readonly string InvalidValue = string.Empty;
 
@@ -64,22 +64,22 @@
             this.AssertNewLinesNotAllowed();
         }
 
-        protected override SubscriptionName Parse(string value, bool exact)
+        protected override ValidSubscriptionName Parse(string value, bool exact)
         {
-            return SubscriptionName.Parse(value);
+            return ValidSubscriptionName.Parse(value);
         }
 
-        protected override bool TryParse(string value, out SubscriptionName parsedObject, bool exact)
+        protected override bool TryParse(string value, out ValidSubscriptionName parsedObject, bool exact)
         {
-            return SubscriptionName.TryParse(value, out parsedObject);
+            return ValidSubscriptionName.TryParse(value, out parsedObject);
         }
 
-        protected override bool TryParse(string value, out SubscriptionName parsedObject, out IReadOnlyCollection<string> errorMessages, bool exact)
+        protected override bool TryParse(string value, out ValidSubscriptionName parsedObject, out IReadOnlyCollection<string> errorMessages, bool exact)
         {
-            return SubscriptionName.TryParse(value, out parsedObject, out errorMessages);
+            return ValidSubscriptionName.TryParse(value, out parsedObject, out errorMessages);
         }
 
-        protected override string GetValue(SubscriptionName parsedObject)
+        protected override string GetValue(ValidSubscriptionName parsedObject)
         {
             return parsedObject.Value;
         }

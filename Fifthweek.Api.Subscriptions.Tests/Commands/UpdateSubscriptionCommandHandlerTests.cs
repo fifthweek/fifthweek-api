@@ -20,12 +20,12 @@
     {
         private static readonly UserId UserId = new UserId(Guid.NewGuid());
         private static readonly SubscriptionId SubscriptionId = new SubscriptionId(Guid.NewGuid());
-        private static readonly SubscriptionName SubscriptionName = SubscriptionName.Parse("Lawrence");
-        private static readonly Tagline Tagline = Tagline.Parse("Web Comics and More");
-        private static readonly Introduction Introduction = Introduction.Default;
-        private static readonly Description Description = Description.Parse("Hello all!");
+        private static readonly ValidSubscriptionName SubscriptionName = ValidSubscriptionName.Parse("Lawrence");
+        private static readonly ValidTagline Tagline = ValidTagline.Parse("Web Comics and More");
+        private static readonly ValidIntroduction Introduction = ValidIntroduction.Default;
+        private static readonly ValidDescription Description = ValidDescription.Parse("Hello all!");
         private static readonly FileId HeaderImageFileId = new FileId(Guid.NewGuid());
-        private static readonly ExternalVideoUrl Video = ExternalVideoUrl.Parse("http://youtube.com/3135");
+        private static readonly ValidExternalVideoUrl Video = ValidExternalVideoUrl.Parse("http://youtube.com/3135");
         private static readonly UpdateSubscriptionCommand Command = new UpdateSubscriptionCommand(
             UserId, 
             SubscriptionId, 

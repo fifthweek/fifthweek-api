@@ -11,13 +11,13 @@
         [Constructed(typeof(SubscriptionId))]
         public Guid SubscriptionId { get; set; }
 
-        [Parsed(typeof(SubscriptionName))]
+        [Parsed(typeof(ValidSubscriptionName))]
         public string SubscriptionName { get; set; }
 
-        [Parsed(typeof(Tagline))]
+        [Parsed(typeof(ValidTagline))]
         public string Tagline { get; set; }
 
-        [Parsed(typeof(Introduction))]
+        [Parsed(typeof(ValidIntroduction))]
         public string Introduction { get; set; }
 
         [Optional]
@@ -25,10 +25,10 @@
         public Guid? HeaderImageFileId { get; set; }
 
         [Optional]
-        [Parsed(typeof(ExternalVideoUrl))]
+        [Parsed(typeof(ValidExternalVideoUrl))]
         public string Video { get; set; }
 
-        [Parsed(typeof(Description))]
+        [Parsed(typeof(ValidDescription))]
         public string Description { get; set; }
     }
 }

@@ -7,7 +7,7 @@
     using Microsoft.VisualStudio.TestTools.UnitTesting;
 
     [TestClass]
-    public class ExternalVideoUrlTests : ValidatedStringTests<ExternalVideoUrl>
+    public class ExternalVideoUrlTests : ValidatedStringTests<ValidExternalVideoUrl>
     {
         public static readonly string InvalidValue = "!";
 
@@ -39,7 +39,7 @@
             this.BadValue("http://www.naughty.com/1241515");
             this.BadValue("http://www.google.com/wggasdf");
 
-            foreach (var allowedDomain in ExternalVideoUrl.AllowedDomains)
+            foreach (var allowedDomain in ValidExternalVideoUrl.AllowedDomains)
             {
                 this.GoodValue(string.Format("http://{0}/1241515", allowedDomain));
             }
@@ -102,22 +102,22 @@
             this.GoodNonExactValue("http://vimeo.com/114229222 ", "http://vimeo.com/114229222");
         }
 
-        protected override ExternalVideoUrl Parse(string value, bool exact)
+        protected override ValidExternalVideoUrl Parse(string value, bool exact)
         {
-            return ExternalVideoUrl.Parse(value, exact);
+            return ValidExternalVideoUrl.Parse(value, exact);
         }
 
-        protected override bool TryParse(string value, out ExternalVideoUrl parsedObject, bool exact)
+        protected override bool TryParse(string value, out ValidExternalVideoUrl parsedObject, bool exact)
         {
-            return ExternalVideoUrl.TryParse(value, out parsedObject, exact);
+            return ValidExternalVideoUrl.TryParse(value, out parsedObject, exact);
         }
 
-        protected override bool TryParse(string value, out ExternalVideoUrl parsedObject, out IReadOnlyCollection<string> errorMessages, bool exact)
+        protected override bool TryParse(string value, out ValidExternalVideoUrl parsedObject, out IReadOnlyCollection<string> errorMessages, bool exact)
         {
-            return ExternalVideoUrl.TryParse(value, out parsedObject, out errorMessages, exact);
+            return ValidExternalVideoUrl.TryParse(value, out parsedObject, out errorMessages, exact);
         }
 
-        protected override string GetValue(ExternalVideoUrl parsedObject)
+        protected override string GetValue(ValidExternalVideoUrl parsedObject)
         {
             return parsedObject.Value;
         }

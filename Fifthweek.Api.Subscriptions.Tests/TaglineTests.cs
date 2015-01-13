@@ -7,7 +7,7 @@
     using Microsoft.VisualStudio.TestTools.UnitTesting;
 
     [TestClass]
-    public class TaglineTests : ValidatedStringTests<Tagline>
+    public class TaglineTests : ValidatedStringTests<ValidTagline>
     {
         public static readonly string InvalidValue = "!";
 
@@ -64,22 +64,22 @@
             this.AssertNewLinesNotAllowed();
         }
 
-        protected override Tagline Parse(string value, bool exact)
+        protected override ValidTagline Parse(string value, bool exact)
         {
-            return Tagline.Parse(value);
+            return ValidTagline.Parse(value);
         }
 
-        protected override bool TryParse(string value, out Tagline parsedObject, bool exact)
+        protected override bool TryParse(string value, out ValidTagline parsedObject, bool exact)
         {
-            return Tagline.TryParse(value, out parsedObject);
+            return ValidTagline.TryParse(value, out parsedObject);
         }
 
-        protected override bool TryParse(string value, out Tagline parsedObject, out IReadOnlyCollection<string> errorMessages, bool exact)
+        protected override bool TryParse(string value, out ValidTagline parsedObject, out IReadOnlyCollection<string> errorMessages, bool exact)
         {
-            return Tagline.TryParse(value, out parsedObject, out errorMessages);
+            return ValidTagline.TryParse(value, out parsedObject, out errorMessages);
         }
 
-        protected override string GetValue(Tagline parsedObject)
+        protected override string GetValue(ValidTagline parsedObject)
         {
             return parsedObject.Value;
         }

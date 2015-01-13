@@ -94,19 +94,19 @@
     <Compile Include="Controllers\NewSubscriptionData.cs" />
     <Compile Include="Controllers\SubscriptionController.cs" />
     <Compile Include="Controllers\UpdatedSubscriptionData.cs" />
-    <Compile Include="ExternalVideoUrl.cs" />
-    <Compile Include="Introduction.cs" />
+    <Compile Include="ValidExternalVideoUrl.cs" />
+    <Compile Include="ValidIntroduction.cs" />
     <Compile Include="ISubscriptionSecurity.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="CreatorStatus.cs" />
     <Compile Include="Queries\GetCreatorStatusQuery.cs" />
     <Compile Include="Queries\GetCreatorStatusQueryHandler.cs" />
     <Compile Include="SubscriptionId.cs" />
-    <Compile Include="Description.cs" />
-    <Compile Include="SubscriptionName.cs" />
+    <Compile Include="ValidDescription.cs" />
+    <Compile Include="ValidSubscriptionName.cs" />
     <Compile Include="ChannelPriceInUsCentsPerWeek.cs" />
     <Compile Include="SubscriptionSecurity.cs" />
-    <Compile Include="Tagline.cs" />
+    <Compile Include="ValidTagline.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Fifthweek.Api.Core\Fifthweek.Api.Core.csproj">

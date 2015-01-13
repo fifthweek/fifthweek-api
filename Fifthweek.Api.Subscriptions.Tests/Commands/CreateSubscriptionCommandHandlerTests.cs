@@ -18,8 +18,8 @@
     {
         private static readonly UserId UserId = new UserId(Guid.NewGuid());
         private static readonly SubscriptionId SubscriptionId = new SubscriptionId(Guid.NewGuid());
-        private static readonly SubscriptionName SubscriptionName = SubscriptionName.Parse("Lawrence");
-        private static readonly Tagline Tagline = Tagline.Parse("Web Comics and More");
+        private static readonly ValidSubscriptionName SubscriptionName = ValidSubscriptionName.Parse("Lawrence");
+        private static readonly ValidTagline Tagline = ValidTagline.Parse("Web Comics and More");
         private static readonly ChannelPriceInUsCentsPerWeek BasePrice = ChannelPriceInUsCentsPerWeek.Parse(10);
         private static readonly CreateSubscriptionCommand Command = new CreateSubscriptionCommand(UserId, SubscriptionId, SubscriptionName, Tagline, BasePrice);
         private Mock<ISubscriptionSecurity> subscriptionSecurity;
@@ -86,7 +86,7 @@
                 null,
                 SubscriptionName.Value,
                 Tagline.Value,
-                Introduction.Default.Value,
+                ValidIntroduction.Default.Value,
                 null,
                 null,
                 null,
