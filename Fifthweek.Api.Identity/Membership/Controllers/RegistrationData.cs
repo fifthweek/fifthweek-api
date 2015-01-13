@@ -7,13 +7,13 @@ namespace Fifthweek.Api.Identity.Membership.Controllers
     {
         public string ExampleWork { get; set; }
 
-        [Parsed(typeof(Email))]
+        [Parsed(typeof(ValidatedEmail))]
         public string Email { get; set; }
 
-        [Parsed(typeof(Username))]
+        [Parsed(typeof(ValidatedUsername))]
         public string Username { get; set; }
 
-        [Parsed(typeof(Password))]
+        [Parsed(typeof(ValidatedPassword))]
         public string Password { get; set; }
     }
 }

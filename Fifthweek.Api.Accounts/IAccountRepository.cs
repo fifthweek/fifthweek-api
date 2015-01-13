@@ -12,9 +12,9 @@
 
         Task<AccountRepository.UpdateAccountSettingsResult> UpdateAccountSettingsAsync(
             UserId userId,
-            Username newUsername,
-            Email newEmail,
-            Password newPassword,
+            ValidatedUsername newUsername,
+            ValidatedEmail newEmail,
+            ValidatedPassword newPassword,
             FileId newProfileImageFileId);
     }
 }

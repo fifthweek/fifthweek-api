@@ -56,7 +56,7 @@ namespace Fifthweek.Api.Identity.OAuth
 
             var refreshTokenLifeTime = context.OwinContext.Get<string>(Constants.TokenRefreshTokenLifeTimeKey);
 
-            var username = Username.Parse(context.Ticket.Identity.Name);
+            var username = ValidatedUsername.Parse(context.Ticket.Identity.Name);
 
             var token = new RefreshToken()
             {

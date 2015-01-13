@@ -51,6 +51,6 @@
             userRepository.Verify();
         }
 
-        private static readonly Username Username = Username.Parse("lawrence");
+        private static readonly ValidatedUsername Username = ValidatedUsername.Parse("lawrence");
     }
 }

@@ -9,6 +9,6 @@ namespace Fifthweek.Api.Identity.Membership.Commands
 
         public string Token { get; private set; }
 
-        public Password NewPassword { get; private set; }
+        public ValidatedPassword NewPassword { get; private set; }
     }
 }

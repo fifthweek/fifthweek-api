@@ -8,7 +8,7 @@
     using Microsoft.VisualStudio.TestTools.UnitTesting;
 
     [TestClass]
-    public class EmailTests : ValidatedStringTests<Email>
+    public class EmailTests : ValidatedStringTests<ValidatedEmail>
     {
         protected override string ValueA
         {
@@ -125,22 +125,22 @@
             this.GoodNonExactValue("Joe@Bloggs.com", "joe@bloggs.com");
         }
 
-        protected override Email Parse(string value, bool exact)
+        protected override ValidatedEmail Parse(string value, bool exact)
         {
-            return Email.Parse(value, exact);
+            return ValidatedEmail.Parse(value, exact);
         }
 
-        protected override bool TryParse(string value, out Email parsedObject, bool exact)
+        protected override bool TryParse(string value, out ValidatedEmail parsedObject, bool exact)
         {
-            return Email.TryParse(value, out parsedObject, exact);
+            return ValidatedEmail.TryParse(value, out parsedObject, exact);
         }
 
-        protected override bool TryParse(string value, out Email parsedObject, out IReadOnlyCollection<string> errorMessages, bool exact)
+        protected override bool TryParse(string value, out ValidatedEmail parsedObject, out IReadOnlyCollection<string> errorMessages, bool exact)
         {
-            return Email.TryParse(value, out parsedObject, out errorMessages, exact);
+            return ValidatedEmail.TryParse(value, out parsedObject, out errorMessages, exact);
         }
 
-        protected override string GetValue(Email parsedObject)
+        protected override string GetValue(ValidatedEmail parsedObject)
         {
             return parsedObject.Value;
         }

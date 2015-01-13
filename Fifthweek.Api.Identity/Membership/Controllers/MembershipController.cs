@@ -43,8 +43,8 @@
         [ResponseType(typeof(bool))]
         public async Task<IHttpActionResult> GetUsernameAvailabilityAsync(string username)
         {
-            Username usernameObject;
-            if (!Username.TryParse(username, out usernameObject))
+            ValidatedUsername usernameObject;
+            if (!ValidatedUsername.TryParse(username, out usernameObject))
             {
                 return this.NotFound();
             }

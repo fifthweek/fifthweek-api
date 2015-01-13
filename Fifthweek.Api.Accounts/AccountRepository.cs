@@ -27,9 +27,9 @@
 
         public async Task<UpdateAccountSettingsResult> UpdateAccountSettingsAsync(
             UserId userId,
-            Username newUsername,
-            Email newEmail,
-            Password newPassword,
+            ValidatedUsername newUsername,
+            ValidatedEmail newEmail,
+            ValidatedPassword newPassword,
             FileId newProfileImageFileId)
         {
             string passwordHash = null;
@@ -40,7 +40,7 @@
 
             var query = new StringBuilder();
 
-            query.Append(@"DECLARE @oldEmail varchar(").Append(Email.MaxLength).Append(@")").AppendLine();
+            query.Append(@"DECLARE @oldEmail varchar(").Append(ValidatedEmail.MaxLength).Append(@")").AppendLine();
 
             query.Append(@"UPDATE dbo.AspNetUsers SET @oldEmail=Email, Email=@NewEmail, UserName=@Username, ProfileImageFileId=@ProfileImageFileId");
 

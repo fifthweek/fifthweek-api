@@ -8,7 +8,7 @@
     using Microsoft.VisualStudio.TestTools.UnitTesting;
 
     [TestClass]
-    public class PasswordTests : ValidatedStringTests<Password>
+    public class PasswordTests : ValidatedStringTests<ValidatedPassword>
     {
         public static readonly string InvalidValue = "!";
 
@@ -47,22 +47,22 @@
             this.AssertMaxLength(100);
         }
 
-        protected override Password Parse(string value, bool exact)
+        protected override ValidatedPassword Parse(string value, bool exact)
         {
-            return Password.Parse(value);
+            return ValidatedPassword.Parse(value);
         }
 
-        protected override bool TryParse(string value, out Password parsedObject, bool exact)
+        protected override bool TryParse(string value, out ValidatedPassword parsedObject, bool exact)
         {
-            return Password.TryParse(value, out parsedObject);
+            return ValidatedPassword.TryParse(value, out parsedObject);
         }
 
-        protected override bool TryParse(string value, out Password parsedObject, out IReadOnlyCollection<string> errorMessages, bool exact)
+        protected override bool TryParse(string value, out ValidatedPassword parsedObject, out IReadOnlyCollection<string> errorMessages, bool exact)
         {
-            return Password.TryParse(value, out parsedObject, out errorMessages);
+            return ValidatedPassword.TryParse(value, out parsedObject, out errorMessages);
         }
 
-        protected override string GetValue(Password parsedObject)
+        protected override string GetValue(ValidatedPassword parsedObject)
         {
             return parsedObject.Value;
         }

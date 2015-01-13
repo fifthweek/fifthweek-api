@@ -12,11 +12,11 @@
 
         public UserId RequestedUserId { get; private set; }
 
-        public Username NewUsername { get; private set; }
+        public ValidatedUsername NewUsername { get; private set; }
 
-        public Email NewEmail { get; private set; }
+        public ValidatedEmail NewEmail { get; private set; }
 
-        public Password NewPassword { get; private set; }
+        public ValidatedPassword NewPassword { get; private set; }
 
         public FileId NewProfileImageId { get; private set; }
     }

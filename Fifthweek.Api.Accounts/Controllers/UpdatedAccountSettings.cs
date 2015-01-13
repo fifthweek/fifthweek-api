@@ -9,14 +9,14 @@
     [AutoEqualityMembers]
     public partial class UpdatedAccountSettings
     {
-        [Parsed(typeof(Username))]
+        [Parsed(typeof(ValidatedUsername))]
         public string NewUsername { get; set; }
 
-        [Parsed(typeof(Email))]
+        [Parsed(typeof(ValidatedEmail))]
         public string NewEmail { get; set; }
 
         [Optional]
-        [Parsed(typeof(Password))]
+        [Parsed(typeof(ValidatedPassword))]
         public string NewPassword { get; set; }
 
         public string NewProfileImageId { get; set; }

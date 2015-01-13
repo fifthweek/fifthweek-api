@@ -10,10 +10,10 @@ namespace Fifthweek.Api.Identity.Membership.Commands
         [Optional]
         public string ExampleWork { get; private set; }
 
-        public Email Email { get; private set; }
+        public ValidatedEmail Email { get; private set; }
 
-        public Username Username { get; private set; }
+        public ValidatedUsername Username { get; private set; }
 
-        public Password Password { get; private set; }
+        public ValidatedPassword Password { get; private set; }
     }
 }
