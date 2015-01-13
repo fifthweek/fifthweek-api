@@ -8,7 +8,7 @@
     {
         public UserId Requester { get; private set; }
         
-        public SubscriptionId SubscriptionId { get; private set; }
+        public SubscriptionId NewSubscriptionId { get; private set; }
 
         public SubscriptionName SubscriptionName { get; private set; }
 

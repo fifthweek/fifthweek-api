@@ -4,6 +4,7 @@
     using System.Threading.Tasks;
 
     using Fifthweek.Api.Core;
+    using Fifthweek.Api.FileManagement;
     using Fifthweek.Api.Persistence;
 
     [AutoConstructor]
@@ -11,6 +12,7 @@
     {
         private readonly IFifthweekDbContext databaseContext;
         private readonly ISubscriptionSecurity subscriptionSecurity;
+        private readonly IFileRepository fileRepository;
 
         public async Task HandleAsync(UpdateSubscriptionCommand command)
         {
@@ -19,15 +21,9 @@
                 throw new ArgumentNullException("command");
             }
 
-            var isUpdateAllowed = await this.subscriptionSecurity.IsUpdateAllowedAsync(command.Requester, command.SubscriptionId);
-            if (!isUpdateAllowed)
-            {
-                throw new UnauthorizedException(string.Format(
-                    "Not allowed to update subscription. User={0} Subscription={1}", 
-                    command.Requester.Value, 
-                    command.SubscriptionId.Value));
-            }
-
+            await this.subscriptionSecurity.AssertUpdateAllowedAsync(command.Requester, command.SubscriptionId);
+            await this.fileRepository.AssertFileBelongsToUserAsync(command.Requester, command.HeaderImageFileId);
+            
             await this.UpdateSubscriptionAsync(command);
         }
 

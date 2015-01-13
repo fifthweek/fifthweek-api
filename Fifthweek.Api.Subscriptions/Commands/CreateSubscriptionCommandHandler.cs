@@ -34,7 +34,7 @@
         private Task CreateSubscriptionAsync(CreateSubscriptionCommand command)
         {
             var subscription = new Subscription(
-                command.SubscriptionId.Value,
+                command.NewSubscriptionId.Value,
                 command.Requester.Value,
                 null,
                 command.SubscriptionName.Value,
@@ -52,8 +52,8 @@
         private Task CreateChannelAsync(CreateSubscriptionCommand command)
         {
             var channel = new Channel(
-                command.SubscriptionId.Value, // Default channel uses same ID as subscription.
-                command.SubscriptionId.Value,
+                command.NewSubscriptionId.Value, // Default channel uses same ID as subscription.
+                command.NewSubscriptionId.Value,
                 null,
                 command.BasePrice.Value,
                 DateTime.UtcNow);

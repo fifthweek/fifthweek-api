@@ -18,7 +18,7 @@ namespace Fifthweek.Api.Subscriptions.Commands
 	{
         public CreateSubscriptionCommand(
             Fifthweek.Api.Identity.Membership.UserId requester, 
-            Fifthweek.Api.Subscriptions.SubscriptionId subscriptionId, 
+            Fifthweek.Api.Subscriptions.SubscriptionId newSubscriptionId, 
             Fifthweek.Api.Subscriptions.SubscriptionName subscriptionName, 
             Fifthweek.Api.Subscriptions.Tagline tagline, 
             Fifthweek.Api.Subscriptions.ChannelPriceInUsCentsPerWeek basePrice)
@@ -28,9 +28,9 @@ namespace Fifthweek.Api.Subscriptions.Commands
                 throw new ArgumentNullException("requester");
             }
 
-            if (subscriptionId == null)
+            if (newSubscriptionId == null)
             {
-                throw new ArgumentNullException("subscriptionId");
+                throw new ArgumentNullException("newSubscriptionId");
             }
 
             if (subscriptionName == null)
@@ -49,7 +49,7 @@ namespace Fifthweek.Api.Subscriptions.Commands
             }
 
             this.Requester = requester;
-            this.SubscriptionId = subscriptionId;
+            this.NewSubscriptionId = newSubscriptionId;
             this.SubscriptionName = subscriptionName;
             this.Tagline = tagline;
             this.BasePrice = basePrice;
@@ -243,7 +243,8 @@ namespace Fifthweek.Api.Subscriptions.Commands
 	{
         public UpdateSubscriptionCommandHandler(
             Fifthweek.Api.Persistence.IFifthweekDbContext databaseContext, 
-            Fifthweek.Api.Subscriptions.ISubscriptionSecurity subscriptionSecurity)
+            Fifthweek.Api.Subscriptions.ISubscriptionSecurity subscriptionSecurity, 
+            Fifthweek.Api.FileManagement.IFileRepository fileRepository)
         {
             if (databaseContext == null)
             {
@@ -255,8 +256,14 @@ namespace Fifthweek.Api.Subscriptions.Commands
                 throw new ArgumentNullException("subscriptionSecurity");
             }
 
+            if (fileRepository == null)
+            {
+                throw new ArgumentNullException("fileRepository");
+            }
+
             this.databaseContext = databaseContext;
             this.subscriptionSecurity = subscriptionSecurity;
+            this.fileRepository = fileRepository;
         }
 	}
 
@@ -573,7 +580,7 @@ namespace Fifthweek.Api.Subscriptions.Commands
             {
                 int hashCode = 0;
                 hashCode = (hashCode * 397) ^ (this.Requester != null ? this.Requester.GetHashCode() : 0);
-                hashCode = (hashCode * 397) ^ (this.SubscriptionId != null ? this.SubscriptionId.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.NewSubscriptionId != null ? this.NewSubscriptionId.GetHashCode() : 0);
                 hashCode = (hashCode * 397) ^ (this.SubscriptionName != null ? this.SubscriptionName.GetHashCode() : 0);
                 hashCode = (hashCode * 397) ^ (this.Tagline != null ? this.Tagline.GetHashCode() : 0);
                 hashCode = (hashCode * 397) ^ (this.BasePrice != null ? this.BasePrice.GetHashCode() : 0);
@@ -588,7 +595,7 @@ namespace Fifthweek.Api.Subscriptions.Commands
                 return false;
             }
 
-            if (!object.Equals(this.SubscriptionId, other.SubscriptionId))
+            if (!object.Equals(this.NewSubscriptionId, other.NewSubscriptionId))
             {
                 return false;
             }

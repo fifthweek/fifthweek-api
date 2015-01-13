@@ -1,6 +1,7 @@
 ﻿namespace Fifthweek.Api.Subscriptions.Tests.Commands
 {
     using System;
+    using System.Data.Entity;
     using System.Threading.Tasks;
 
     using Fifthweek.Api.Core;
@@ -25,7 +26,6 @@
         private static readonly Description Description = Description.Parse("Hello all!");
         private static readonly FileId HeaderImageFileId = new FileId(Guid.NewGuid());
         private static readonly ExternalVideoUrl Video = ExternalVideoUrl.Parse("http://youtube.com/3135");
-        private static readonly ChannelPriceInUsCentsPerWeek BasePrice = ChannelPriceInUsCentsPerWeek.Parse(10);
         private static readonly UpdateSubscriptionCommand Command = new UpdateSubscriptionCommand(
             UserId, 
             SubscriptionId, 
@@ -37,6 +37,7 @@
             Video);
 
         private Mock<ISubscriptionSecurity> subscriptionSecurity;
+        private Mock<IFileRepository> fileRepository;
         private UpdateSubscriptionCommandHandler target;
 
         [TestInitialize]
@@ -44,7 +45,8 @@
         {
             base.Initialize();
             this.subscriptionSecurity = new Mock<ISubscriptionSecurity>();
-            this.target = new UpdateSubscriptionCommandHandler(this.NewDbContext(), this.subscriptionSecurity.Object);
+            this.fileRepository = new Mock<IFileRepository>();
+            this.target = new UpdateSubscriptionCommandHandler(this.NewDbContext(), this.subscriptionSecurity.Object, this.fileRepository.Object);
         }
 
         [TestCleanup]
@@ -56,16 +58,35 @@
         [TestMethod]
         public async Task WhenNotAllowedToUpdate_ItShouldReportAnError()
         {
-            this.subscriptionSecurity.Setup(_ => _.IsCreationAllowedAsync(UserId)).ReturnsAsync(false);
+            this.subscriptionSecurity.Setup(_ => _.AssertUpdateAllowedAsync(UserId, SubscriptionId)).Throws<UnauthorizedException>();
 
             await this.SnapshotDatabaseAsync();
 
             try
             {
                 await this.target.HandleAsync(Command);
-                Assert.Fail("Expected recoverable exception");
+                Assert.Fail("Expected unauthorized exception");
             }
-            catch (RecoverableException)
+            catch (UnauthorizedException)
+            {
+            }
+
+            await this.AssertDatabaseAsync(ExpectedSideEffects.None);
+        }
+
+        [TestMethod]
+        public async Task WhenNotAllowedToUseFile_ItShouldReportAnError()
+        {
+            this.fileRepository.Setup(_ => _.AssertFileBelongsToUserAsync(UserId, HeaderImageFileId)).Throws<UnauthorizedException>();
+
+            await this.SnapshotDatabaseAsync();
+
+            try
+            {
+                await this.target.HandleAsync(Command);
+                Assert.Fail("Expected unauthorized exception");
+            }
+            catch (UnauthorizedException)
             {
             }
 
@@ -75,8 +96,7 @@
         [TestMethod]
         public async Task WhenReRun_ItShouldHaveNoEffect()
         {
-            this.subscriptionSecurity.Setup(_ => _.IsCreationAllowedAsync(UserId)).ReturnsAsync(true);
-            await this.CreateUserAsync(UserId);
+            await this.CreateSubscriptionAsync(UserId, SubscriptionId, HeaderImageFileId);
             await this.target.HandleAsync(Command);
 
             await this.SnapshotDatabaseAsync();
@@ -87,10 +107,9 @@
         }
 
         [TestMethod]
-        public async Task ItShouldCreateSubscription()
+        public async Task ItShouldUpdateSubscription()
         {
-            this.subscriptionSecurity.Setup(_ => _.IsCreationAllowedAsync(UserId)).ReturnsAsync(true);
-            await this.CreateUserAsync(UserId);
+            var subscription = await this.CreateSubscriptionAsync(UserId, SubscriptionId, HeaderImageFileId);
 
             await this.SnapshotDatabaseAsync();
 
@@ -102,68 +121,47 @@
                 null,
                 SubscriptionName.Value,
                 Tagline.Value,
-                Introduction.Default.Value,
+                Introduction.Value,
+                Description.Value,
+                Video.Value,
+                HeaderImageFileId.Value,
                 null,
-                null,
-                null,
-                null,
-                default(DateTime));
+                subscription.CreationDate);
             
             await this.AssertDatabaseAsync(new ExpectedSideEffects
             {
-                Insert = new WildcardEntity<Subscription>(expectedSubscription)
-                {
-                    AreEqual = actualSubscription =>
-                    {
-                        expectedSubscription.CreationDate = actualSubscription.CreationDate; // Take wildcard properties from actual value.
-                        return Equals(expectedSubscription, actualSubscription);
-                    }
-                }, 
+                Update = expectedSubscription, 
                 ExcludedFromTest = entity => entity is Channel
             });
         }
 
-        [TestMethod]
-        public async Task ItShouldCreateTheDefaultChannel()
-        {
-            this.subscriptionSecurity.Setup(_ => _.IsCreationAllowedAsync(UserId)).ReturnsAsync(true);
-            await this.CreateUserAsync(UserId);
-
-            await this.SnapshotDatabaseAsync();
-
-            await this.target.HandleAsync(Command);
-
-            var expectedChannel = new Channel(
-                SubscriptionId.Value, // The default channel uses the subscription ID.
-                SubscriptionId.Value,
-                null,
-                BasePrice.Value,
-                DateTime.MinValue);
-
-            await this.AssertDatabaseAsync(new ExpectedSideEffects
-            {
-                Insert = new WildcardEntity<Channel>(expectedChannel)
-                {
-                    AreEqual = actualChannel =>
-                    {
-                        expectedChannel.CreationDate = actualChannel.CreationDate; // Take wildcard properties from actual value.
-                        return Equals(expectedChannel, actualChannel);
-                    }
-                },
-                ExcludedFromTest = entity => entity is Subscription
-            });
-        }
-
-        private async Task CreateUserAsync(UserId newUserId)
+        private async Task<Subscription> CreateSubscriptionAsync(UserId newUserId, SubscriptionId newSubscriptionId, FileId headerImageFileId)
         {
             var random = new Random();
             var creator = UserTests.UniqueEntity(random);
             creator.Id = newUserId.Value;
 
+            var file = FileTests.UniqueEntity(random);
+            file.Id = headerImageFileId.Value;
+            file.User = creator;
+            file.UserId = creator.Id;
+
+            var subscription = SubscriptionTests.UniqueEntity(random);
+            subscription.Id = newSubscriptionId.Value;
+            subscription.Creator = creator;
+            subscription.CreatorId = creator.Id;
+            subscription.HeaderImageFile = file;
+            subscription.HeaderImageFileId = file.Id;
+
             using (var dbContext = this.NewDbContext())
             {
-                dbContext.Users.Add(creator);
+                dbContext.Subscriptions.Add(subscription);
                 await dbContext.SaveChangesAsync();
+            }
+
+            using (var dbContext = this.NewDbContext())
+            {
+                return await dbContext.Subscriptions.SingleAsync(_ => _.Id == newSubscriptionId.Value);
             }
         }
     }

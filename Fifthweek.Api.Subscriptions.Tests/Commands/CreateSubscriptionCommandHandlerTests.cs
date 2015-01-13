@@ -40,7 +40,7 @@
         }
 
         [TestMethod]
-        public async Task WhenNotAllowedToUpdate_ItShouldReportAnError()
+        public async Task WhenNotAllowedToCreate_ItShouldReportAnError()
         {
             this.subscriptionSecurity.Setup(_ => _.IsCreationAllowedAsync(UserId)).ReturnsAsync(false);
 
