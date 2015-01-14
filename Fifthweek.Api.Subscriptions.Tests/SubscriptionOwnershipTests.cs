@@ -9,17 +9,17 @@
     using Microsoft.VisualStudio.TestTools.UnitTesting;
 
     [TestClass]
-    public class DataOwnershipTests : PersistenceTestsBase
+    public class SubscriptionOwnershipTests : PersistenceTestsBase
     {
         private static readonly UserId UserId = new UserId(Guid.NewGuid());
         private static readonly SubscriptionId SubscriptionId = new SubscriptionId(Guid.NewGuid());
-        private DataOwnership target;
+        private SubscriptionOwnership target;
 
         [TestInitialize]
         public override void Initialize()
         {
             base.Initialize();
-            this.target = new DataOwnership(this.NewDbContext());
+            this.target = new SubscriptionOwnership(this.NewDbContext());
         }
 
         [TestCleanup]

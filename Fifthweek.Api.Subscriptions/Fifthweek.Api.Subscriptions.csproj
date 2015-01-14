@@ -80,9 +80,11 @@
     <Compile Include="AutofacRegistration.cs" />
     <Compile Include="ChannelSecurity.cs" />
     <Compile Include="Controllers\PostController.cs" />
-    <Compile Include="DataOwnership.cs" />
+    <Compile Include="ChannelOwnership.cs" />
+    <Compile Include="SubscriptionOwnership.cs" />
     <Compile Include="IChannelSecurity.cs" />
-    <Compile Include="IDataOwnership.cs" />
+    <Compile Include="IChannelOwnership.cs" />
+    <Compile Include="ISubscriptionOwnership.cs" />
     <Compile Include="PostId.cs" />
     <Compile Include="CollectionId.cs" />
     <Compile Include="ClassAugmentation.cs">

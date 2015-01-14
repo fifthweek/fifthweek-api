@@ -10,7 +10,7 @@
     using Fifthweek.Api.Persistence;
 
     [AutoConstructor]
-    public partial class DataOwnership : IDataOwnership
+    public partial class SubscriptionOwnership : ISubscriptionOwnership
     {
         private readonly IFifthweekDbContext databaseContext;
 
@@ -37,35 +37,6 @@
                 new
                 {
                     SubscriptionId = subscriptionId.Value,
-                    CreatorId = userId.Value
-                });
-        }
-
-        public Task<bool> IsOwnerAsync(UserId userId, ChannelId channelId)
-        {
-            if (userId == null)
-            {
-                throw new ArgumentNullException("userId");
-            }
-
-            if (channelId == null)
-            {
-                throw new ArgumentNullException("channelId");
-            }
-
-            return this.databaseContext.Database.Connection.ExecuteScalarAsync<bool>(
-                @"IF EXISTS(SELECT *
-                            FROM        Channels channel
-                            INNER JOIN  Subscriptions subscription
-                            ON          channel.SubscriptionId = subscription.Id
-                            WHERE       channel.Id = @ChannelId
-                            AND         subscription.CreatorId = @CreatorId)
-                    SELECT 1 AS FOUND
-                ELSE
-                    SELECT 0 AS FOUND",
-                new
-                {
-                    ChannelId = channelId.Value,
                     CreatorId = userId.Value
                 });
         }

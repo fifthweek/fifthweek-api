@@ -15,20 +15,20 @@
     {
         private static readonly UserId UserId = new UserId(Guid.NewGuid());
         private static readonly ChannelId ChannelId = new ChannelId(Guid.NewGuid());
-        private Mock<IDataOwnership> dataOwnership;
+        private Mock<IChannelOwnership> channelOwnership;
         private ChannelSecurity target;
 
         [TestInitialize]
         public void Initialize()
         {
-            this.dataOwnership = new Mock<IDataOwnership>();
-            this.target = new ChannelSecurity(this.dataOwnership.Object);
+            this.channelOwnership = new Mock<IChannelOwnership>();
+            this.target = new ChannelSecurity(this.channelOwnership.Object);
         }
 
         [TestMethod]
         public async Task WhenAuthorizingPost_ItShouldAllowIfUserOwnsChannel()
         {
-            this.dataOwnership.Setup(_ => _.IsOwnerAsync(UserId, ChannelId)).ReturnsAsync(true);
+            this.channelOwnership.Setup(_ => _.IsOwnerAsync(UserId, ChannelId)).ReturnsAsync(true);
 
             var result = await this.target.IsPostingAllowedAsync(UserId, ChannelId);
 
@@ -38,7 +38,7 @@
         [TestMethod]
         public async Task WhenAuthorizingPost_ItShouldForbidIfUserDoesNotOwnChannel()
         {
-            this.dataOwnership.Setup(_ => _.IsOwnerAsync(UserId, ChannelId)).ReturnsAsync(false);
+            this.channelOwnership.Setup(_ => _.IsOwnerAsync(UserId, ChannelId)).ReturnsAsync(false);
 
             var result = await this.target.IsPostingAllowedAsync(UserId, ChannelId);
 

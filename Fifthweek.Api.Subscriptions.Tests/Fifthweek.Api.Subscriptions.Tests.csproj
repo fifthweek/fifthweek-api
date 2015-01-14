@@ -104,7 +104,7 @@
     <Compile Include="Queries\GetCreatorStatusQueryHandlerTests.cs" />
     <Compile Include="SubscriptionNameTests.cs" />
     <Compile Include="ChannelPriceInUsCentsPerWeekTests.cs" />
-    <Compile Include="DataOwnershipTests.cs" />
+    <Compile Include="SubscriptionOwnershipTests.cs" />
     <Compile Include="ChannelSecurityTests.cs" />
     <Compile Include="SubscriptionSecurityTests.cs" />
     <Compile Include="IntroductionTests.cs" />

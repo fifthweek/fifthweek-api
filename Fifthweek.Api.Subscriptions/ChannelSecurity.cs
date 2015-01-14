@@ -1,6 +1,5 @@
 ﻿namespace Fifthweek.Api.Subscriptions
 {
-    using System;
     using System.Threading.Tasks;
 
     using Fifthweek.Api.Core;
@@ -9,14 +8,14 @@
     [AutoConstructor]
     public partial class ChannelSecurity : IChannelSecurity
     {
-        private readonly IDataOwnership dataOwnership;
+        private readonly IChannelOwnership channelOwnership;
 
         public Task<bool> IsPostingAllowedAsync(UserId requester, ChannelId channelId)
         {
             requester.AssertNotNull("requester");
             channelId.AssertNotNull("channelId");
 
-            return this.dataOwnership.IsOwnerAsync(requester, channelId);
+            return this.channelOwnership.IsOwnerAsync(requester, channelId);
         }
 
         public async Task AssertPostingAllowedAsync(UserId requester, ChannelId channelId)
