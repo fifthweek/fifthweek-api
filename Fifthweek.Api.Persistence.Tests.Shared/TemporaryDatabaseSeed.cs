@@ -28,7 +28,19 @@
         {
             for (var i = 0; i < Users; i++)
             {
-                this.dbContext.Users.Add(UserTests.UniqueEntity(Random));
+                var user = UserTests.UniqueEntity(Random);
+
+                if (Random.Next(1) == 1)
+                {
+                    var file = FileTests.UniqueEntity(Random);
+                    file.User = user;
+                    file.UserId = user.Id;
+                    user.ProfileImageFile = file;
+                    user.ProfileImageFileId = file.Id;
+                    this.dbContext.Files.Add(file);
+                }
+
+                this.dbContext.Users.Add(user);
             }
         }
 
@@ -43,13 +55,10 @@
 
                     if (subscription.HeaderImageFile != null)
                     {
-                        var file = FileTests.UniqueEntity(Random);
+                        var file = subscription.HeaderImageFile;
                         file.User = creator;
                         file.UserId = creator.Id;
-                        this.dbContext.Files.Add(file);
-
-                        subscription.HeaderImageFile = file;
-                        subscription.HeaderImageFileId = file.Id;
+                        this.dbContext.Files.Add(subscription.HeaderImageFile);
                     }
 
                     subscription.Creator = creator;

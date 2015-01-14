@@ -16,6 +16,24 @@
     [TestClass]
     public class FileRepositoryTests : PersistenceTestsBase
     {
+        private readonly string fileNameWithoutExtension = "myfile";
+
+        private readonly string fileExtension = "jpeg";
+
+        private readonly string purpose = "profile-picture";
+
+        private readonly UserId userId = new UserId(Guid.NewGuid());
+
+        private readonly FileId fileId = new FileId(Guid.NewGuid());
+
+        private FileRepository target;
+
+        [TestCleanup]
+        public override void Cleanup()
+        {
+            base.Cleanup();
+        }
+
         [TestMethod]
         public async Task WhenAddingANewFile_ItShouldUpdateTheDatabase()
         {
@@ -168,29 +186,11 @@
             var creator = UserTests.UniqueEntity(random);
             creator.Id = this.userId.Value;
 
-            using (var dbContext = this.NewDbContext())
+            using (var databaseContext = this.NewDbContext())
             {
-                dbContext.Users.Add(creator);
-                await dbContext.SaveChangesAsync();
+                databaseContext.Users.Add(creator);
+                await databaseContext.SaveChangesAsync();
             }
         }
-
-        [TestCleanup]
-        public override void Cleanup()
-        {
-            base.Cleanup();
-        }
-
-        private readonly string fileNameWithoutExtension = "myfile";
-
-        private readonly string fileExtension = "jpeg";
-
-        private readonly string purpose = "profile-picture";
-
-        private readonly UserId userId = new UserId(Guid.NewGuid());
-
-        private readonly FileId fileId = new FileId(Guid.NewGuid());
-
-        private FileRepository target;
     }
 }

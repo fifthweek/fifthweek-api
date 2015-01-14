@@ -484,7 +484,7 @@ namespace Fifthweek.Api.Persistence
 	using Fifthweek.Api.Core;
 	using System.ComponentModel.DataAnnotations.Schema;
 	using Fifthweek.Api.Persistence.Identity;
-	public partial class Subscription 
+	public partial class    Subscription 
 	{
 		public override string ToString()
         {

@@ -35,5 +35,21 @@
                 throw new ArgumentNullException(argumentName);
             }
         }
+
+        public static void AssertUrlParameterProvided(this object value, string argumentName)
+        {
+            if (value == null)
+            {
+                throw new BadRequestException("The value '" + argumentName + "' is required.");
+            }
+        }
+
+        public static void AssertUrlParameterProvided(this string value, string argumentName)
+        {
+            if (string.IsNullOrWhiteSpace(value))
+            {
+                throw new BadRequestException("The value '" + argumentName + "' is required.");
+            }
+        }
     }
 }

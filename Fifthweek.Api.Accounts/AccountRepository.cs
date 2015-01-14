@@ -1,5 +1,7 @@
 ﻿namespace Fifthweek.Api.Accounts
 {
+    using System;
+    using System.Linq;
     using System.Text;
     using System.Threading.Tasks;
 
@@ -20,9 +22,18 @@
 
         public async Task<GetAccountSettingsResult> GetAccountSettingsAsync(UserId userId)
         {
-            var result = await this.databaseContext.Database.Connection.ExecuteScalarAsync<GetAccountSettingsDapperResult>(
+            userId.AssertNotNull("userId");
+
+            var result = (await this.databaseContext.Database.Connection.QueryAsync<GetAccountSettingsDapperResult>(
                 @"SELECT Email, ProfileImageFileId FROM dbo.AspNetUsers WHERE Id=@UserId",
-                new { UserId = userId });
+                new { UserId = userId.Value })).SingleOrDefault();
+
+            if (result == null)
+            {
+                throw new DetailedRecoverableException(
+                    "Unknown user.",
+                    "The user ID " + userId.Value + " was not found in the database.");
+            }
 
             result.Parse();
 
@@ -36,6 +47,10 @@
             ValidPassword newPassword,
             FileId newProfileImageFileId)
         {
+            userId.AssertNotNull("userId");
+            newUsername.AssertNotNull("newUsername");
+            newEmail.AssertNotNull("newEmail");
+
             string passwordHash = null;
             if (newPassword != null)
             {
@@ -46,7 +61,7 @@
 
             query.Append(@"DECLARE @oldEmail varchar(").Append(ValidEmail.MaxLength).Append(@")").AppendLine();
 
-            query.Append(@"UPDATE dbo.AspNetUsers SET @oldEmail=Email, Email=@NewEmail, UserName=@Username, ProfileImageFileId=@ProfileImageFileId");
+            query.Append(@"UPDATE dbo.AspNetUsers SET @oldEmail=Email, Email=@Email, UserName=@Username, ProfileImageFileId=@ProfileImageFileId");
 
             if (passwordHash != null)
             {
@@ -61,11 +76,11 @@
                 query.ToString(),
                 new 
                 {
-                    UserId = userId, 
+                    UserId = userId.Value, 
                     Username = newUsername.Value, 
                     Email = newEmail.Value,
                     PasswordHash = passwordHash,
-                    ProfileImageFileId = newProfileImageFileId == null ? null : newProfileImageFileId.Value.ToString()
+                    ProfileImageFileId = newProfileImageFileId == null ? (Guid?)null : newProfileImageFileId.Value
                 });
 
             return new UpdateAccountSettingsResult(oldEmail != newEmail.Value);

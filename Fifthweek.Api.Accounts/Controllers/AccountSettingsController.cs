@@ -24,18 +24,23 @@
         [Route("{userId}")]
         public async Task<AccountSettingsResponse> Get(string userId)
         {
+            userId.AssertUrlParameterProvided("userId");
+
             var requestedUserId = new UserId(userId.DecodeGuid());
             var authenticatedUserId = this.userContext.GetUserId();
 
             var query = new GetAccountSettingsQuery(authenticatedUserId, requestedUserId);
             var result = await this.getAccountSettings.HandleAsync(query);
 
-            return new AccountSettingsResponse(result.Email.Value, result.ProfileImageFileId.Value.EncodeGuid());; 
+            return new AccountSettingsResponse(result.Email.Value, result.ProfileImageFileId.Value.EncodeGuid());
         }
 
         [Route("{userId}")]
         public async Task Put(string userId, [FromBody]UpdatedAccountSettings updatedAccountSettings)
         {
+            userId.AssertUrlParameterProvided("userId");
+            updatedAccountSettings.AssertUrlParameterProvided("updatedAccountSettings");
+
             var authenticatedUserId = this.userContext.GetUserId();
             var requestedUserId = new UserId(userId.DecodeGuid());
             

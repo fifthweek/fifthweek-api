@@ -1,5 +1,6 @@
 ﻿namespace Fifthweek.Api.Persistence.Tests.Shared
 {
+    using System;
     using System.Collections.Generic;
     using System.Data.Entity;
     using System.Linq;
@@ -28,6 +29,11 @@
 
         public async Task AssertSideEffectsAsync(ExpectedSideEffects sideEffects)
         {
+            if (this.loadedSnapshotContext == null)
+            {
+                throw new Exception("No snapshot context found. Did you forget to take a snapshot?");
+            }
+
             var tables = new List<TableBeforeAndAfter>();
             using (var databaseContext = this.temporaryDatabase.NewDatabaseContext())
             {

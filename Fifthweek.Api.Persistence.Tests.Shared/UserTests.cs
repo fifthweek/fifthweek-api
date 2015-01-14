@@ -15,8 +15,8 @@ namespace Fifthweek.Api.Persistence.Tests.Shared
                 LastAccessTokenDate = DateTime.UtcNow.AddDays(random.NextDouble() * -100),
                 LastSignInDate = DateTime.UtcNow.AddDays(random.NextDouble() * -100),
                 RegistrationDate = DateTime.UtcNow.AddDays(random.NextDouble() * -100),
-                LockoutEndDateUtc = DateTime.UtcNow.AddDays(random.NextDouble() * -100)
+                LockoutEndDateUtc = DateTime.UtcNow.AddDays(random.NextDouble() * -100),
             };
-        }
+      }
     }
 }
