@@ -21,7 +21,9 @@
     {
         private static readonly UserId UserId = new UserId(Guid.NewGuid());
         private static readonly SubscriptionId SubscriptionId = new SubscriptionId(Guid.NewGuid());
+        private static readonly ChannelId ChannelId = new ChannelId(Guid.NewGuid());
         private static readonly FileId HeaderImageFileId = new FileId(Guid.NewGuid());
+        private static readonly DateTime TwoDaysFromNow = DateTime.UtcNow.AddDays(2);
         private Mock<ICommandHandler<CreateSubscriptionCommand>> createSubscription;
         private Mock<ICommandHandler<UpdateSubscriptionCommand>> updateSubscription;
         private Mock<ICommandHandler<CreateNoteCommand>> createNote;
@@ -80,6 +82,21 @@
         }
 
         [TestMethod]
+        public async Task WhenPostingNote_ItShouldIssueCreateNoteCommand()
+        {
+            var data = NewNoteData();
+            var command = NewCreateNoteCommand(UserId, SubscriptionId, data);
+
+            this.userContext.Setup(v => v.GetUserId()).Returns(UserId);
+            this.createNote.Setup(v => v.HandleAsync(command)).Returns(Task.FromResult(0)).Verifiable();
+
+            var result = await this.target.PostNote(SubscriptionId.Value.EncodeGuid(), data);
+
+            Assert.IsInstanceOfType(result, typeof(OkResult));
+            this.createNote.Verify();
+        }
+
+        [TestMethod]
         public async Task WhenGettingCreatorStatus_ItShouldReturnResultFromCreatorStatusQuery()
         {
             var query = new GetCreatorStatusQuery(UserId);
@@ -117,19 +134,6 @@
             };
         }
 
-        public static UpdatedSubscriptionData NewUpdatedSubscriptionData()
-        {
-            return new UpdatedSubscriptionData
-            {
-                SubscriptionName = "Captain Phil",
-                Tagline = "Web Comics And More",
-                Introduction = "Subscription introduction",
-                HeaderImageFileId = HeaderImageFileId.Value.EncodeGuid(),
-                Video = "http://youtube.com/3135",
-                Description = "Hello all!"
-            };
-        }
-
         public static CreateSubscriptionCommand NewCreateSubscriptionCommand(
             UserId userId,
             SubscriptionId subscriptionId,
@@ -143,21 +147,56 @@
                 ChannelPriceInUsCentsPerWeek.Parse(data.BasePrice));
         }
 
+        public static UpdatedSubscriptionData NewUpdatedSubscriptionData()
+        {
+            return new UpdatedSubscriptionData
+            {
+                SubscriptionName = "Captain Phil",
+                Tagline = "Web Comics And More",
+                Introduction = "Subscription introduction",
+                HeaderImageFileId = HeaderImageFileId.Value.EncodeGuid(),
+                Video = "http://youtube.com/3135",
+                Description = "Hello all!"
+            };
+        }
+
         public static UpdateSubscriptionCommand NewUpdateSubscriptionCommand(
             UserId userId,
             SubscriptionId subscriptionId,
             UpdatedSubscriptionData data)
         {
-            Assert.IsTrue(data.HeaderImageFileId != null);
             return new UpdateSubscriptionCommand(
                 userId,
-                subscriptionId, 
+                subscriptionId,
                 ValidSubscriptionName.Parse(data.SubscriptionName),
                 ValidTagline.Parse(data.Tagline),
                 ValidIntroduction.Parse(data.Introduction),
                 ValidDescription.Parse(data.Description),
-                new FileId(data.HeaderImageFileId.DecodeGuid()), 
+                new FileId(data.HeaderImageFileId.DecodeGuid()),
                 ValidExternalVideoUrl.Parse(data.Video));
+        }
+
+        public static NewNoteData NewNoteData()
+        {
+            return new NewNoteData
+            {
+                ChannelId = ChannelId.Value.EncodeGuid(),
+                Note = "Hey peeps ;)",
+                ScheduledPostDate = TwoDaysFromNow
+            };
+        }
+
+        public static CreateNoteCommand NewCreateNoteCommand(
+            UserId userId,
+            SubscriptionId subscriptionId,
+            NewNoteData data)
+        {
+            return new CreateNoteCommand(
+                userId,
+                subscriptionId,
+                new ChannelId(data.ChannelId.DecodeGuid()),
+                ValidNote.Parse(data.Note),
+                data.ScheduledPostDate);
         }
     }
 }
