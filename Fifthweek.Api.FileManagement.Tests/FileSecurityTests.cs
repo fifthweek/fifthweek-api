@@ -20,7 +20,6 @@
         public async Task WhenAssertingAFileBelongsToAUser_ItShouldCompleteSuccessfullyIfThePermissionsAreOk()
         {
             await this.InitializeWithDatabaseAsync();
-            await this.CreateFileAsync(this.fileId, this.userId);
             await this.target.AssertFileBelongsToUserAsync(this.userId, this.fileId);
         }
 
@@ -29,7 +28,6 @@
         public async Task WhenAssertingAFileBelongsToAUser_ItShouldThrowAnExceptionIfThePermissionsAreViolated()
         {
             await this.InitializeWithDatabaseAsync();
-            await this.CreateFileAsync(this.fileId, this.userId);
             await this.target.AssertFileBelongsToUserAsync(new UserId(Guid.NewGuid()), this.fileId);
         }
 
@@ -49,6 +47,38 @@
             await this.target.AssertFileBelongsToUserAsync(this.userId, null);
         }
 
+        [TestMethod]
+        public async Task WhenCheckingAFileBelongsToAUser_ItShouldCompleteSuccessfullyIfThePermissionsAreOk()
+        {
+            await this.InitializeWithDatabaseAsync();
+            var result = await this.target.CheckFileBelongsToUserAsync(this.userId, this.fileId);
+            Assert.IsTrue(result);
+        }
+
+        [TestMethod]
+        public async Task WhenCheckingAFileBelongsToAUser_ItShouldThrowAnExceptionIfThePermissionsAreViolated()
+        {
+            await this.InitializeWithDatabaseAsync();
+            var result = await this.target.CheckFileBelongsToUserAsync(new UserId(Guid.NewGuid()), this.fileId);
+            Assert.IsFalse(result);
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentNullException))]
+        public async Task WhenCheckingAFileBelongsToAUser_UserIdMustNotBeNull()
+        {
+            await this.InitializeWithoutDatabaseAsync();
+            await this.target.CheckFileBelongsToUserAsync(null, this.fileId);
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentNullException))]
+        public async Task WhenCheckingAFileBelongsToAUser_FileIdMustNotBeNull()
+        {
+            await this.InitializeWithoutDatabaseAsync();
+            await this.target.CheckFileBelongsToUserAsync(this.userId, null);
+        }
+
         private async Task InitializeWithoutDatabaseAsync()
         {
             this.target = new FileSecurity(new Mock<IFifthweekDbContext>(MockBehavior.Strict).Object);
@@ -60,27 +90,17 @@
             this.target = new FileSecurity(this.NewDbContext());
 
             var random = new Random();
-            var creator = UserTests.UniqueEntity(random);
-            creator.Id = this.userId.Value;
-
-            using (var dbContext = this.NewDbContext())
-            {
-                dbContext.Users.Add(creator);
-                await dbContext.SaveChangesAsync();
-            }
-        }
-
-        private async Task CreateFileAsync(FileId fileId, UserId userId)
-        {
-            var random = new Random();
-            var creator = UserTests.UniqueEntity(random);
-            creator.Id = userId.Value;
+            var user = UserTests.UniqueEntity(random);
+            user.Id = this.userId.Value;
 
             var file = FileTests.UniqueEntity(random);
-            file.Id = fileId.Value;
+            file.Id = this.fileId.Value;
+            file.User = user;
+            file.UserId = this.userId.Value;
 
             using (var dbContext = this.NewDbContext())
             {
+                dbContext.Users.Add(user);
                 dbContext.Files.Add(file);
                 await dbContext.SaveChangesAsync();
             }
