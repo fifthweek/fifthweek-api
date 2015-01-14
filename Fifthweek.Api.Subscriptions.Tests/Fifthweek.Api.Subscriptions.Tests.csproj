@@ -97,6 +97,7 @@
     <Compile Include="Commands\UpdateSubscriptionCommandHandlerTests.cs" />
     <Compile Include="Commands\PromoteNewUserToCreatorCommandHandlerTests.cs" />
     <Compile Include="Commands\CreateSubscriptionCommandHandlerTests.cs" />
+    <Compile Include="Controllers\PostControllerTests.cs" />
     <Compile Include="Controllers\SubscriptionControllerTests.cs" />
     <Compile Include="DescriptionTests.cs" />
     <Compile Include="ExternalVideoUrlTests.cs" />

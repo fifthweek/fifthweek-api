@@ -23,23 +23,23 @@
         public FifthweekUser Creator { get; set; }
 
         [Required]
-        [MaxLength(25)] // See: SubscriptionName.MaxLength
+        [MaxLength(25)] // See: ValidSubscriptionName.MaxLength
         public string Name { get; set; }
 
         [Required]
-        [MaxLength(55)] // See: Tagline.MaxLength
+        [MaxLength(55)] // See: ValidTagline.MaxLength
         public string Tagline { get; set; }
 
         [Required]
-        [MaxLength(250)] // See: Introduction.MaxLength
+        [MaxLength(250)] // See: ValidIntroduction.MaxLength
         public string Introduction { get; set; }
 
         [Optional]
-        [MaxLength(2000)] // See: Description.MaxLength
+        [MaxLength(2000)] // See: ValidDescription.MaxLength
         public string Description { get; set; }
 
         [Optional]
-        [MaxLength(100)] // See: ExternalVideoUrl.MaxLength
+        [MaxLength(100)] // See: ValidExternalVideoUrl.MaxLength
         public string ExternalVideoUrl { get; set; }
 
         [Optional]

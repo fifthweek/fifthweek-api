@@ -197,6 +197,92 @@ namespace Fifthweek.Api.Persistence
 	}
 
 }
+namespace Fifthweek.Api.Persistence
+{
+	using System;
+	using System.ComponentModel.DataAnnotations;
+	using Fifthweek.Api.Core;
+	public partial class Collection 
+	{
+        public Collection(
+            System.Guid id, 
+            System.Guid channelId, 
+            Fifthweek.Api.Persistence.Channel channel, 
+            System.String name)
+        {
+            if (id == null)
+            {
+                throw new ArgumentNullException("id");
+            }
+
+            if (channelId == null)
+            {
+                throw new ArgumentNullException("channelId");
+            }
+
+            if (name == null)
+            {
+                throw new ArgumentNullException("name");
+            }
+
+            this.Id = id;
+            this.ChannelId = channelId;
+            this.Channel = channel;
+            this.Name = name;
+        }
+	}
+
+}
+namespace Fifthweek.Api.Persistence
+{
+	using System;
+	using System.ComponentModel.DataAnnotations;
+	using Fifthweek.Api.Core;
+	public partial class Post 
+	{
+        public Post(
+            System.Guid id, 
+            System.Guid channelId, 
+            Fifthweek.Api.Persistence.Channel channel, 
+            System.Nullable<System.Guid> collectionId, 
+            Fifthweek.Api.Persistence.Collection collection, 
+            System.Nullable<System.Guid> fileId, 
+            Fifthweek.Api.Persistence.File file, 
+            System.Nullable<System.Guid> imageId, 
+            Fifthweek.Api.Persistence.File image, 
+            System.String comment, 
+            System.DateTime creationDate)
+        {
+            if (id == null)
+            {
+                throw new ArgumentNullException("id");
+            }
+
+            if (channelId == null)
+            {
+                throw new ArgumentNullException("channelId");
+            }
+
+            if (creationDate == null)
+            {
+                throw new ArgumentNullException("creationDate");
+            }
+
+            this.Id = id;
+            this.ChannelId = channelId;
+            this.Channel = channel;
+            this.CollectionId = collectionId;
+            this.Collection = collection;
+            this.FileId = fileId;
+            this.File = file;
+            this.ImageId = imageId;
+            this.Image = image;
+            this.Comment = comment;
+            this.CreationDate = creationDate;
+        }
+	}
+
+}
 
 namespace Fifthweek.Api.Persistence
 {
@@ -568,6 +654,162 @@ namespace Fifthweek.Api.Persistence.Identity
             }
 
             if (!object.Equals(this.ProfileImageFileId, other.ProfileImageFileId))
+            {
+                return false;
+            }
+
+            return true;
+        }
+	}
+
+}
+namespace Fifthweek.Api.Persistence
+{
+	using System;
+	using System.ComponentModel.DataAnnotations;
+	using Fifthweek.Api.Core;
+	public partial class Collection 
+	{
+		public override string ToString()
+        {
+			return string.Format("Collection({0}, {1}, \"{2}\")", this.Id == null ? "null" : this.Id.ToString(), this.ChannelId == null ? "null" : this.ChannelId.ToString(), this.Name == null ? "null" : this.Name.ToString());
+		}
+
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj))
+            {
+                return false;
+            }
+
+            if (ReferenceEquals(this, obj))
+            {
+                return true;
+            }
+
+            if (obj.GetType() != this.GetType())
+            {
+                return false;
+            }
+
+            return this.Equals((Collection)obj);
+        }
+
+        public override int GetHashCode()
+        {
+            unchecked
+            {
+                int hashCode = 0;
+                hashCode = (hashCode * 397) ^ (this.Id != null ? this.Id.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.ChannelId != null ? this.ChannelId.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.Name != null ? this.Name.GetHashCode() : 0);
+                return hashCode;
+            }
+        }
+
+        protected bool Equals(Collection other)
+        {
+            if (!object.Equals(this.Id, other.Id))
+            {
+                return false;
+            }
+
+            if (!object.Equals(this.ChannelId, other.ChannelId))
+            {
+                return false;
+            }
+
+            if (!object.Equals(this.Name, other.Name))
+            {
+                return false;
+            }
+
+            return true;
+        }
+	}
+
+}
+namespace Fifthweek.Api.Persistence
+{
+	using System;
+	using System.ComponentModel.DataAnnotations;
+	using Fifthweek.Api.Core;
+	public partial class Post 
+	{
+		public override string ToString()
+        {
+			return string.Format("Post({0}, {1}, {2}, {3}, {4}, \"{5}\", {6})", this.Id == null ? "null" : this.Id.ToString(), this.ChannelId == null ? "null" : this.ChannelId.ToString(), this.CollectionId == null ? "null" : this.CollectionId.ToString(), this.FileId == null ? "null" : this.FileId.ToString(), this.ImageId == null ? "null" : this.ImageId.ToString(), this.Comment == null ? "null" : this.Comment.ToString(), this.CreationDate == null ? "null" : this.CreationDate.ToString());
+		}
+
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj))
+            {
+                return false;
+            }
+
+            if (ReferenceEquals(this, obj))
+            {
+                return true;
+            }
+
+            if (obj.GetType() != this.GetType())
+            {
+                return false;
+            }
+
+            return this.Equals((Post)obj);
+        }
+
+        public override int GetHashCode()
+        {
+            unchecked
+            {
+                int hashCode = 0;
+                hashCode = (hashCode * 397) ^ (this.Id != null ? this.Id.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.ChannelId != null ? this.ChannelId.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.CollectionId != null ? this.CollectionId.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.FileId != null ? this.FileId.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.ImageId != null ? this.ImageId.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.Comment != null ? this.Comment.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.CreationDate != null ? this.CreationDate.GetHashCode() : 0);
+                return hashCode;
+            }
+        }
+
+        protected bool Equals(Post other)
+        {
+            if (!object.Equals(this.Id, other.Id))
+            {
+                return false;
+            }
+
+            if (!object.Equals(this.ChannelId, other.ChannelId))
+            {
+                return false;
+            }
+
+            if (!object.Equals(this.CollectionId, other.CollectionId))
+            {
+                return false;
+            }
+
+            if (!object.Equals(this.FileId, other.FileId))
+            {
+                return false;
+            }
+
+            if (!object.Equals(this.ImageId, other.ImageId))
+            {
+                return false;
+            }
+
+            if (!object.Equals(this.Comment, other.Comment))
+            {
+                return false;
+            }
+
+            if (!object.Equals(this.CreationDate, other.CreationDate))
             {
                 return false;
             }
@@ -1191,6 +1433,348 @@ namespace Fifthweek.Api.Persistence
 			}
 
 			if(fields.HasFlag(Subscription.Fields.CreationDate))
+			{
+				parameters.Add("CreationDate", entity.CreationDate);
+			}
+
+			return parameters;
+		}
+	}
+}
+namespace Fifthweek.Api.Persistence
+{
+	using System;
+	using System.ComponentModel.DataAnnotations;
+	using Fifthweek.Api.Core;
+	public partial class Collection  : IIdentityEquatable
+	{
+        public Collection(
+            System.Guid id)
+        {
+            if (id == null)
+            {
+                throw new ArgumentNullException("id");
+            }
+
+            this.Id = id;
+        }
+
+        public bool IdentityEquals(object other)
+        {
+            if (ReferenceEquals(null, other))
+            {
+                return false;
+            }
+
+            if (ReferenceEquals(this, other))
+            {
+                return true;
+            }
+
+            if (other.GetType() != this.GetType())
+            {
+                return false;
+            }
+
+            return this.IdentityEquals((Collection)other);
+        }
+
+        protected bool IdentityEquals(Collection other)
+        {
+            if (!object.Equals(this.Id, other.Id))
+            {
+                return false;
+            }
+
+            return true;
+        }
+
+		[Flags]
+        public enum Fields
+        {
+			Empty = 0,
+			Id = 1, 
+			ChannelId = 2, 
+			Name = 4
+        }
+	}
+
+	public static partial class CollectionExtensions
+	{
+		public static System.Threading.Tasks.Task InsertAsync(this System.Data.Common.DbConnection connection, Collection entity, bool idempotent = true)
+		{
+			return Dapper.SqlMapper.ExecuteAsync(connection, InsertStatement(idempotent), new 
+			{
+				entity.Id, entity.ChannelId, entity.Name
+			});
+		}
+
+		public static System.Threading.Tasks.Task UpsertAsync(this System.Data.Common.DbConnection connection, Collection entity, Collection.Fields fields)
+		{
+			return Dapper.SqlMapper.ExecuteAsync(connection, UpsertStatement(fields), new 
+			{
+				entity.Id, entity.ChannelId, entity.Name
+			});
+		}
+
+		public static System.Threading.Tasks.Task UpdateAsync(this System.Data.Common.DbConnection connection, Collection entity, Collection.Fields fields)
+		{
+			return Dapper.SqlMapper.ExecuteAsync(connection, UpdateStatement(fields), MaskParameters(entity, fields));
+		}
+
+		public static string InsertStatement(bool idempotent = true)
+		{
+			const string insert = "INSERT INTO Collections(Id, ChannelId, Name) VALUES(@Id, @ChannelId, @Name)";
+			return idempotent ? SqlStatementTemplates.IdempotentInsert(insert) : insert;
+		}
+
+		public static string UpsertStatement(Collection.Fields fields)
+		{
+			var sql = new System.Text.StringBuilder();
+			sql.Append(
+				@"MERGE Collections as Target
+				USING (VALUES (@Id, @ChannelId, @Name)) AS Source (Id, ChannelId, Name)
+				ON    (Target.Id = Source.Id)
+				WHEN MATCHED THEN
+					UPDATE
+					SET		");
+			sql.AppendUpdateParameters(GetFieldNames(fields));
+			sql.Append(
+				@" WHEN NOT MATCHED THEN
+					INSERT  (Id, ChannelId, Name)
+					VALUES  (Source.Id, Source.ChannelId, Source.Name);");
+			return sql.ToString();
+		}
+
+		public static string UpdateStatement(Collection.Fields fields)
+		{
+			var sql = new System.Text.StringBuilder();
+			sql.Append("UPDATE Collections SET ");
+			sql.AppendUpdateParameters(GetFieldNames(fields));
+			sql.Append(" WHERE Id = @Id");
+			return sql.ToString();
+		}
+
+		private static System.Collections.Generic.IReadOnlyList<string> GetFieldNames(Collection.Fields fields)
+		{
+			var fieldNames = new System.Collections.Generic.List<string>();
+			fieldNames.Add("Id");
+			if(fields.HasFlag(Collection.Fields.ChannelId))
+			{
+				fieldNames.Add("ChannelId");
+			}
+
+			if(fields.HasFlag(Collection.Fields.Name))
+			{
+				fieldNames.Add("Name");
+			}
+
+			return fieldNames;
+		}
+
+		private static object MaskParameters(Collection entity, Collection.Fields fields)
+		{
+			var parameters = new Dapper.DynamicParameters();
+			parameters.Add("Id", entity.Id);
+			if(fields.HasFlag(Collection.Fields.ChannelId))
+			{
+				parameters.Add("ChannelId", entity.ChannelId);
+			}
+
+			if(fields.HasFlag(Collection.Fields.Name))
+			{
+				parameters.Add("Name", entity.Name);
+			}
+
+			return parameters;
+		}
+	}
+}
+namespace Fifthweek.Api.Persistence
+{
+	using System;
+	using System.ComponentModel.DataAnnotations;
+	using Fifthweek.Api.Core;
+	public partial class Post  : IIdentityEquatable
+	{
+        public Post(
+            System.Guid id)
+        {
+            if (id == null)
+            {
+                throw new ArgumentNullException("id");
+            }
+
+            this.Id = id;
+        }
+
+        public bool IdentityEquals(object other)
+        {
+            if (ReferenceEquals(null, other))
+            {
+                return false;
+            }
+
+            if (ReferenceEquals(this, other))
+            {
+                return true;
+            }
+
+            if (other.GetType() != this.GetType())
+            {
+                return false;
+            }
+
+            return this.IdentityEquals((Post)other);
+        }
+
+        protected bool IdentityEquals(Post other)
+        {
+            if (!object.Equals(this.Id, other.Id))
+            {
+                return false;
+            }
+
+            return true;
+        }
+
+		[Flags]
+        public enum Fields
+        {
+			Empty = 0,
+			Id = 1, 
+			ChannelId = 2, 
+			CollectionId = 4, 
+			FileId = 8, 
+			ImageId = 16, 
+			Comment = 32, 
+			CreationDate = 64
+        }
+	}
+
+	public static partial class PostExtensions
+	{
+		public static System.Threading.Tasks.Task InsertAsync(this System.Data.Common.DbConnection connection, Post entity, bool idempotent = true)
+		{
+			return Dapper.SqlMapper.ExecuteAsync(connection, InsertStatement(idempotent), new 
+			{
+				entity.Id, entity.ChannelId, entity.CollectionId, entity.FileId, entity.ImageId, entity.Comment, entity.CreationDate
+			});
+		}
+
+		public static System.Threading.Tasks.Task UpsertAsync(this System.Data.Common.DbConnection connection, Post entity, Post.Fields fields)
+		{
+			return Dapper.SqlMapper.ExecuteAsync(connection, UpsertStatement(fields), new 
+			{
+				entity.Id, entity.ChannelId, entity.CollectionId, entity.FileId, entity.ImageId, entity.Comment, entity.CreationDate
+			});
+		}
+
+		public static System.Threading.Tasks.Task UpdateAsync(this System.Data.Common.DbConnection connection, Post entity, Post.Fields fields)
+		{
+			return Dapper.SqlMapper.ExecuteAsync(connection, UpdateStatement(fields), MaskParameters(entity, fields));
+		}
+
+		public static string InsertStatement(bool idempotent = true)
+		{
+			const string insert = "INSERT INTO Posts(Id, ChannelId, CollectionId, FileId, ImageId, Comment, CreationDate) VALUES(@Id, @ChannelId, @CollectionId, @FileId, @ImageId, @Comment, @CreationDate)";
+			return idempotent ? SqlStatementTemplates.IdempotentInsert(insert) : insert;
+		}
+
+		public static string UpsertStatement(Post.Fields fields)
+		{
+			var sql = new System.Text.StringBuilder();
+			sql.Append(
+				@"MERGE Posts as Target
+				USING (VALUES (@Id, @ChannelId, @CollectionId, @FileId, @ImageId, @Comment, @CreationDate)) AS Source (Id, ChannelId, CollectionId, FileId, ImageId, Comment, CreationDate)
+				ON    (Target.Id = Source.Id)
+				WHEN MATCHED THEN
+					UPDATE
+					SET		");
+			sql.AppendUpdateParameters(GetFieldNames(fields));
+			sql.Append(
+				@" WHEN NOT MATCHED THEN
+					INSERT  (Id, ChannelId, CollectionId, FileId, ImageId, Comment, CreationDate)
+					VALUES  (Source.Id, Source.ChannelId, Source.CollectionId, Source.FileId, Source.ImageId, Source.Comment, Source.CreationDate);");
+			return sql.ToString();
+		}
+
+		public static string UpdateStatement(Post.Fields fields)
+		{
+			var sql = new System.Text.StringBuilder();
+			sql.Append("UPDATE Posts SET ");
+			sql.AppendUpdateParameters(GetFieldNames(fields));
+			sql.Append(" WHERE Id = @Id");
+			return sql.ToString();
+		}
+
+		private static System.Collections.Generic.IReadOnlyList<string> GetFieldNames(Post.Fields fields)
+		{
+			var fieldNames = new System.Collections.Generic.List<string>();
+			fieldNames.Add("Id");
+			if(fields.HasFlag(Post.Fields.ChannelId))
+			{
+				fieldNames.Add("ChannelId");
+			}
+
+			if(fields.HasFlag(Post.Fields.CollectionId))
+			{
+				fieldNames.Add("CollectionId");
+			}
+
+			if(fields.HasFlag(Post.Fields.FileId))
+			{
+				fieldNames.Add("FileId");
+			}
+
+			if(fields.HasFlag(Post.Fields.ImageId))
+			{
+				fieldNames.Add("ImageId");
+			}
+
+			if(fields.HasFlag(Post.Fields.Comment))
+			{
+				fieldNames.Add("Comment");
+			}
+
+			if(fields.HasFlag(Post.Fields.CreationDate))
+			{
+				fieldNames.Add("CreationDate");
+			}
+
+			return fieldNames;
+		}
+
+		private static object MaskParameters(Post entity, Post.Fields fields)
+		{
+			var parameters = new Dapper.DynamicParameters();
+			parameters.Add("Id", entity.Id);
+			if(fields.HasFlag(Post.Fields.ChannelId))
+			{
+				parameters.Add("ChannelId", entity.ChannelId);
+			}
+
+			if(fields.HasFlag(Post.Fields.CollectionId))
+			{
+				parameters.Add("CollectionId", entity.CollectionId);
+			}
+
+			if(fields.HasFlag(Post.Fields.FileId))
+			{
+				parameters.Add("FileId", entity.FileId);
+			}
+
+			if(fields.HasFlag(Post.Fields.ImageId))
+			{
+				parameters.Add("ImageId", entity.ImageId);
+			}
+
+			if(fields.HasFlag(Post.Fields.Comment))
+			{
+				parameters.Add("Comment", entity.Comment);
+			}
+
+			if(fields.HasFlag(Post.Fields.CreationDate))
 			{
 				parameters.Add("CreationDate", entity.CreationDate);
 			}

@@ -14,7 +14,6 @@
     {
         private readonly ICommandHandler<CreateSubscriptionCommand> createSubscription;
         private readonly ICommandHandler<UpdateSubscriptionCommand> updateSubscription;
-        private readonly ICommandHandler<CreateNoteCommand> createNote; 
         private readonly IQueryHandler<GetCreatorStatusQuery, CreatorStatus> getCreatorStatus;
         private readonly IUserContext userContext;
         private readonly IGuidCreator guidCreator;
@@ -54,24 +53,6 @@
                 fields.DescriptionObject,
                 fields.HeaderImageFileIdObject,
                 fields.VideoObject));
-
-            return this.Ok();
-        }
-
-        [Route("{subscriptionId}")]
-        public async Task<IHttpActionResult> PostNote(string subscriptionId, [FromBody]NewNoteData fields)
-        {
-            fields.Parse();
-
-            var authenticatedUserId = this.userContext.GetUserId();
-            var subscriptionIdObject = new SubscriptionId(subscriptionId.DecodeGuid());
-
-            await this.createNote.HandleAsync(new CreateNoteCommand(
-                authenticatedUserId,
-                subscriptionIdObject,
-                fields.ChannelIdObject,
-                fields.NoteObject,
-                fields.ScheduledPostDate));
 
             return this.Ok();
         }

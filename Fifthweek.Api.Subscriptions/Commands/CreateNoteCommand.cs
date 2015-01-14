@@ -10,10 +10,9 @@
     {
         public UserId Requester { get; private set; }
 
-        public SubscriptionId SubscriptionId { get; private set; }
-
-        [Optional]
         public ChannelId ChannelId { get; private set; }
+
+        public PostId NewPostId { get; private set; }
 
         public ValidNote Note { get; private set; }
 

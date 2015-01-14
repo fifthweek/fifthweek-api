@@ -16,21 +16,21 @@ namespace Fifthweek.Api.Subscriptions
         private readonly IUserManager userManager;
         private readonly IFifthweekDbContext databaseContext;
 
-        public Task<bool> IsCreationAllowedAsync(UserId userId)
+        public Task<bool> IsCreationAllowedAsync(UserId requester)
         {
-            if (userId == null)
+            if (requester == null)
             {
-                throw new ArgumentNullException("userId");
+                throw new ArgumentNullException("requester");
             }
 
-            return this.userManager.IsInRoleAsync(userId.Value, FifthweekRole.Creator);
+            return this.userManager.IsInRoleAsync(requester.Value, FifthweekRole.Creator);
         }
 
-        public Task<bool> IsUpdateAllowedAsync(UserId userId, SubscriptionId subscriptionId)
+        public Task<bool> IsUpdateAllowedAsync(UserId requester, SubscriptionId subscriptionId)
         {
-            if (userId == null)
+            if (requester == null)
             {
-                throw new ArgumentNullException("userId");
+                throw new ArgumentNullException("requester");
             }
 
             if (subscriptionId == null)
@@ -45,10 +45,40 @@ namespace Fifthweek.Api.Subscriptions
                             AND    CreatorId = @CreatorId)
                     SELECT 1 AS FOUND
                 ELSE
-                    SELECT 0 AS FOUND", new
+                    SELECT 0 AS FOUND", 
+                new
                 {
                     SubscriptionId = subscriptionId.Value,
-                    CreatorId = userId.Value
+                    CreatorId = requester.Value
+                });
+        }
+
+        public Task<bool> IsUpdateAllowedAsync(UserId requester, ChannelId channelId)
+        {
+            if (requester == null)
+            {
+                throw new ArgumentNullException("requester");
+            }
+
+            if (channelId == null)
+            {
+                throw new ArgumentNullException("channelId");
+            }
+
+            return this.databaseContext.Database.Connection.ExecuteScalarAsync<bool>(
+                @"IF EXISTS(SELECT *
+                            FROM        Channels channel
+                            INNER JOIN  Subscriptions subscription
+                            ON          channel.SubscriptionId = subscription.Id
+                            WHERE       channel.Id = @ChannelId
+                            AND         subscription.CreatorId = @CreatorId)
+                    SELECT 1 AS FOUND
+                ELSE
+                    SELECT 0 AS FOUND", 
+                new
+                {
+                    ChannelId = channelId.Value,
+                    CreatorId = requester.Value
                 });
         }
 
@@ -62,9 +92,7 @@ namespace Fifthweek.Api.Subscriptions
             var isCreationAllowed = await this.IsCreationAllowedAsync(requester);
             if (!isCreationAllowed)
             {
-                throw new UnauthorizedException(string.Format(
-                    "Not allowed to create subscription. User={0}",
-                    requester.Value));
+                throw new UnauthorizedException(string.Format("Not allowed to create subscription. {0}", requester));
             }
         }
 
@@ -83,10 +111,26 @@ namespace Fifthweek.Api.Subscriptions
             var isUpdateAllowed = await this.IsUpdateAllowedAsync(requester, subscriptionId);
             if (!isUpdateAllowed)
             {
-                throw new UnauthorizedException(string.Format(
-                    "Not allowed to update subscription. User={0} Subscription={1}",
-                    requester.Value,
-                    subscriptionId.Value));
+                throw new UnauthorizedException(string.Format("Not allowed to update subscription. {0} {1}", requester, subscriptionId));
+            }
+        }
+
+        public async Task AssertUpdateAllowedAsync(UserId requester, ChannelId channelId)
+        {
+            if (requester == null)
+            {
+                throw new ArgumentNullException("requester");
+            }
+
+            if (channelId == null)
+            {
+                throw new ArgumentNullException("channelId");
+            }
+
+            var isUpdateAllowed = await this.IsUpdateAllowedAsync(requester, channelId);
+            if (!isUpdateAllowed)
+            {
+                throw new UnauthorizedException(string.Format("Not allowed to update channel. {0} {1}", requester, channelId));
             }
         }
     }

@@ -10,8 +10,12 @@ namespace Fifthweek.Api.Subscriptions
 
         Task<bool> IsUpdateAllowedAsync(UserId requester, SubscriptionId subscriptionId);
 
+        Task<bool> IsUpdateAllowedAsync(UserId requester, ChannelId channelId);
+
         Task AssertCreationAllowedAsync(UserId requester);
 
         Task AssertUpdateAllowedAsync(UserId requester, SubscriptionId subscriptionId);
+
+        Task AssertUpdateAllowedAsync(UserId requester, ChannelId channelId);
     }
 }

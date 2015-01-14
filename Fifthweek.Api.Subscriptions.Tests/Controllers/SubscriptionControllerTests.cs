@@ -21,12 +21,9 @@
     {
         private static readonly UserId UserId = new UserId(Guid.NewGuid());
         private static readonly SubscriptionId SubscriptionId = new SubscriptionId(Guid.NewGuid());
-        private static readonly ChannelId ChannelId = new ChannelId(Guid.NewGuid());
         private static readonly FileId HeaderImageFileId = new FileId(Guid.NewGuid());
-        private static readonly DateTime TwoDaysFromNow = DateTime.UtcNow.AddDays(2);
         private Mock<ICommandHandler<CreateSubscriptionCommand>> createSubscription;
         private Mock<ICommandHandler<UpdateSubscriptionCommand>> updateSubscription;
-        private Mock<ICommandHandler<CreateNoteCommand>> createNote;
         private Mock<IQueryHandler<GetCreatorStatusQuery, CreatorStatus>> getCreatorStatus;
         private Mock<IUserContext> userContext;
         private Mock<IGuidCreator> guidCreator;
@@ -37,14 +34,12 @@
         {
             this.createSubscription = new Mock<ICommandHandler<CreateSubscriptionCommand>>();
             this.updateSubscription = new Mock<ICommandHandler<UpdateSubscriptionCommand>>();
-            this.createNote = new Mock<ICommandHandler<CreateNoteCommand>>();
             this.getCreatorStatus = new Mock<IQueryHandler<GetCreatorStatusQuery, CreatorStatus>>();
             this.userContext = new Mock<IUserContext>();
             this.guidCreator = new Mock<IGuidCreator>();
             this.target = new SubscriptionController(
                 this.createSubscription.Object,
                 this.updateSubscription.Object,
-                this.createNote.Object,
                 this.getCreatorStatus.Object,
                 this.userContext.Object,
                 this.guidCreator.Object);
@@ -79,21 +74,6 @@
 
             Assert.IsInstanceOfType(result, typeof(OkResult));
             this.updateSubscription.Verify();
-        }
-
-        [TestMethod]
-        public async Task WhenPostingNote_ItShouldIssueCreateNoteCommand()
-        {
-            var data = NewNoteData();
-            var command = NewCreateNoteCommand(UserId, SubscriptionId, data);
-
-            this.userContext.Setup(v => v.GetUserId()).Returns(UserId);
-            this.createNote.Setup(v => v.HandleAsync(command)).Returns(Task.FromResult(0)).Verifiable();
-
-            var result = await this.target.PostNote(SubscriptionId.Value.EncodeGuid(), data);
-
-            Assert.IsInstanceOfType(result, typeof(OkResult));
-            this.createNote.Verify();
         }
 
         [TestMethod]
@@ -174,29 +154,6 @@
                 ValidDescription.Parse(data.Description),
                 new FileId(data.HeaderImageFileId.DecodeGuid()),
                 ValidExternalVideoUrl.Parse(data.Video));
-        }
-
-        public static NewNoteData NewNoteData()
-        {
-            return new NewNoteData
-            {
-                ChannelId = ChannelId.Value.EncodeGuid(),
-                Note = "Hey peeps ;)",
-                ScheduledPostDate = TwoDaysFromNow
-            };
-        }
-
-        public static CreateNoteCommand NewCreateNoteCommand(
-            UserId userId,
-            SubscriptionId subscriptionId,
-            NewNoteData data)
-        {
-            return new CreateNoteCommand(
-                userId,
-                subscriptionId,
-                new ChannelId(data.ChannelId.DecodeGuid()),
-                ValidNote.Parse(data.Note),
-                data.ScheduledPostDate);
         }
     }
 }

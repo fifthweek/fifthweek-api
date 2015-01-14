@@ -89,6 +89,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>ClassAugmentation.tt</DependentUpon>
     </Compile>
+    <Compile Include="Collection.cs" />
     <Compile Include="FileState.cs" />
     <Compile Include="IdentityConfig.cs" />
     <Compile Include="Identity\FifthweekDbContext.cs" />
@@ -161,6 +162,7 @@
       <DependentUpon>201501131929274_AddProfileImageFileIdToUser.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
+    <Compile Include="Post.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RefreshToken.cs" />
     <Compile Include="File.cs" />
