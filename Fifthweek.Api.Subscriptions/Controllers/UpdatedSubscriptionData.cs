@@ -1,7 +1,5 @@
 ﻿namespace Fifthweek.Api.Subscriptions.Controllers
 {
-    using System;
-
     using Fifthweek.Api.Core;
     using Fifthweek.Api.FileManagement;
 
@@ -18,8 +16,8 @@
         public string Introduction { get; set; }
 
         [Optional]
-        [Constructed(typeof(FileId))]
-        public Guid? HeaderImageFileId { get; set; }
+        [Constructed(typeof(FileId), IsGuidBase64 = true)]
+        public string HeaderImageFileId { get; set; }
 
         [Optional]
         [Parsed(typeof(ValidExternalVideoUrl))]

@@ -1,6 +1,5 @@
 ﻿namespace Fifthweek.Api.Subscriptions.Controllers
 {
-    using System;
     using System.Threading.Tasks;
     using System.Web.Http;
     using System.Web.Http.Description;
@@ -39,12 +38,12 @@
         }
 
         [Route("{subscriptionId}")]
-        public async Task<IHttpActionResult> PutSubscription(Guid subscriptionId, [FromBody]UpdatedSubscriptionData fields)
+        public async Task<IHttpActionResult> PutSubscription(string subscriptionId, [FromBody]UpdatedSubscriptionData fields)
         {
             fields.Parse();
 
             var authenticatedUserId = this.userContext.GetUserId();
-            var subscriptionIdObject = new SubscriptionId(subscriptionId);
+            var subscriptionIdObject = new SubscriptionId(subscriptionId.DecodeGuid());
 
             await this.updateSubscription.HandleAsync(new UpdateSubscriptionCommand(
                 authenticatedUserId,
@@ -85,7 +84,7 @@
             var authenticatedUserId = this.userContext.GetUserId();
             var creatorStatus = await this.getCreatorStatus.HandleAsync(new GetCreatorStatusQuery(authenticatedUserId));
             return new CreatorStatusData(
-                creatorStatus.SubscriptionId == null ? (Guid?)null : creatorStatus.SubscriptionId.Value, 
+                creatorStatus.SubscriptionId == null ? null : creatorStatus.SubscriptionId.Value.EncodeGuid(), 
                 creatorStatus.MustWriteFirstPost);
         }
     }

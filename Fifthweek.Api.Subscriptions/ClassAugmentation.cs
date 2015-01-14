@@ -41,6 +41,50 @@ namespace Fifthweek.Api.Subscriptions.Commands
 	using Fifthweek.Api.Persistence.Identity;
 	using Fifthweek.Api.Identity.Membership.Events;
 	using Fifthweek.Api.FileManagement;
+	public partial class CreateNoteCommand 
+	{
+        public CreateNoteCommand(
+            Fifthweek.Api.Identity.Membership.UserId requester, 
+            Fifthweek.Api.Subscriptions.SubscriptionId subscriptionId, 
+            Fifthweek.Api.Subscriptions.ChannelId channelId, 
+            Fifthweek.Api.Subscriptions.ValidNote note, 
+            System.Nullable<System.DateTime> scheduledPostDate)
+        {
+            if (requester == null)
+            {
+                throw new ArgumentNullException("requester");
+            }
+
+            if (subscriptionId == null)
+            {
+                throw new ArgumentNullException("subscriptionId");
+            }
+
+            if (note == null)
+            {
+                throw new ArgumentNullException("note");
+            }
+
+            this.Requester = requester;
+            this.SubscriptionId = subscriptionId;
+            this.ChannelId = channelId;
+            this.Note = note;
+            this.ScheduledPostDate = scheduledPostDate;
+        }
+	}
+
+}
+namespace Fifthweek.Api.Subscriptions.Commands
+{
+	using System;
+	using System.Linq;
+	using Fifthweek.Api.Core;
+	using Fifthweek.Api.Identity.Membership;
+	using System.Threading.Tasks;
+	using Fifthweek.Api.Persistence;
+	using Fifthweek.Api.Persistence.Identity;
+	using Fifthweek.Api.Identity.Membership.Events;
+	using Fifthweek.Api.FileManagement;
 	public partial class CreateSubscriptionCommand 
 	{
         public CreateSubscriptionCommand(
@@ -310,14 +354,9 @@ namespace Fifthweek.Api.Subscriptions.Controllers
 	public partial class CreatorStatusData 
 	{
         public CreatorStatusData(
-            System.Nullable<System.Guid> subscriptionId, 
+            System.String subscriptionId, 
             System.Boolean mustWriteFirstPost)
         {
-            if (subscriptionId == null)
-            {
-                throw new ArgumentNullException("subscriptionId");
-            }
-
             if (mustWriteFirstPost == null)
             {
                 throw new ArgumentNullException("mustWriteFirstPost");
@@ -529,50 +568,6 @@ namespace Fifthweek.Api.Subscriptions
 	}
 
 }
-namespace Fifthweek.Api.Subscriptions.Commands
-{
-	using System;
-	using System.Linq;
-	using Fifthweek.Api.Core;
-	using Fifthweek.Api.Identity.Membership;
-	using System.Threading.Tasks;
-	using Fifthweek.Api.Persistence;
-	using Fifthweek.Api.Persistence.Identity;
-	using Fifthweek.Api.Identity.Membership.Events;
-	using Fifthweek.Api.FileManagement;
-	public partial class CreateNoteCommand 
-	{
-        public CreateNoteCommand(
-            Fifthweek.Api.Identity.Membership.UserId requester, 
-            Fifthweek.Api.Subscriptions.SubscriptionId subscriptionId, 
-            Fifthweek.Api.Subscriptions.ChannelId channelId, 
-            Fifthweek.Api.Subscriptions.ValidNote note, 
-            System.Nullable<System.DateTime> scheduledPostDate)
-        {
-            if (requester == null)
-            {
-                throw new ArgumentNullException("requester");
-            }
-
-            if (subscriptionId == null)
-            {
-                throw new ArgumentNullException("subscriptionId");
-            }
-
-            if (note == null)
-            {
-                throw new ArgumentNullException("note");
-            }
-
-            this.Requester = requester;
-            this.SubscriptionId = subscriptionId;
-            this.ChannelId = channelId;
-            this.Note = note;
-            this.ScheduledPostDate = scheduledPostDate;
-        }
-	}
-
-}
 
 namespace Fifthweek.Api.Subscriptions
 {
@@ -687,6 +682,90 @@ namespace Fifthweek.Api.Subscriptions
         protected bool Equals(ChannelPriceInUsCentsPerWeek other)
         {
             if (!object.Equals(this.Value, other.Value))
+            {
+                return false;
+            }
+
+            return true;
+        }
+	}
+
+}
+namespace Fifthweek.Api.Subscriptions.Commands
+{
+	using System;
+	using System.Linq;
+	using Fifthweek.Api.Core;
+	using Fifthweek.Api.Identity.Membership;
+	using System.Threading.Tasks;
+	using Fifthweek.Api.Persistence;
+	using Fifthweek.Api.Persistence.Identity;
+	using Fifthweek.Api.Identity.Membership.Events;
+	using Fifthweek.Api.FileManagement;
+	public partial class CreateNoteCommand 
+	{
+		public override string ToString()
+        {
+			return string.Format("CreateNoteCommand({0}, {1}, {2}, {3}, {4})", this.Requester == null ? "null" : this.Requester.ToString(), this.SubscriptionId == null ? "null" : this.SubscriptionId.ToString(), this.ChannelId == null ? "null" : this.ChannelId.ToString(), this.Note == null ? "null" : this.Note.ToString(), this.ScheduledPostDate == null ? "null" : this.ScheduledPostDate.ToString());
+		}
+
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj))
+            {
+                return false;
+            }
+
+            if (ReferenceEquals(this, obj))
+            {
+                return true;
+            }
+
+            if (obj.GetType() != this.GetType())
+            {
+                return false;
+            }
+
+            return this.Equals((CreateNoteCommand)obj);
+        }
+
+        public override int GetHashCode()
+        {
+            unchecked
+            {
+                int hashCode = 0;
+                hashCode = (hashCode * 397) ^ (this.Requester != null ? this.Requester.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.SubscriptionId != null ? this.SubscriptionId.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.ChannelId != null ? this.ChannelId.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.Note != null ? this.Note.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.ScheduledPostDate != null ? this.ScheduledPostDate.GetHashCode() : 0);
+                return hashCode;
+            }
+        }
+
+        protected bool Equals(CreateNoteCommand other)
+        {
+            if (!object.Equals(this.Requester, other.Requester))
+            {
+                return false;
+            }
+
+            if (!object.Equals(this.SubscriptionId, other.SubscriptionId))
+            {
+                return false;
+            }
+
+            if (!object.Equals(this.ChannelId, other.ChannelId))
+            {
+                return false;
+            }
+
+            if (!object.Equals(this.Note, other.Note))
+            {
+                return false;
+            }
+
+            if (!object.Equals(this.ScheduledPostDate, other.ScheduledPostDate))
             {
                 return false;
             }
@@ -958,7 +1037,7 @@ namespace Fifthweek.Api.Subscriptions.Controllers
 	{
 		public override string ToString()
         {
-			return string.Format("CreatorStatusData({0}, {1})", this.SubscriptionId == null ? "null" : this.SubscriptionId.ToString(), this.MustWriteFirstPost == null ? "null" : this.MustWriteFirstPost.ToString());
+			return string.Format("CreatorStatusData(\"{0}\", {1})", this.SubscriptionId == null ? "null" : this.SubscriptionId.ToString(), this.MustWriteFirstPost == null ? "null" : this.MustWriteFirstPost.ToString());
 		}
 
         public override bool Equals(object obj)
@@ -1195,22 +1274,23 @@ namespace Fifthweek.Api.Subscriptions
 	}
 
 }
-namespace Fifthweek.Api.Subscriptions.Commands
+namespace Fifthweek.Api.Subscriptions.Controllers
 {
 	using System;
 	using System.Linq;
 	using Fifthweek.Api.Core;
-	using Fifthweek.Api.Identity.Membership;
 	using System.Threading.Tasks;
-	using Fifthweek.Api.Persistence;
-	using Fifthweek.Api.Persistence.Identity;
-	using Fifthweek.Api.Identity.Membership.Events;
+	using System.Web.Http;
+	using System.Web.Http.Description;
+	using Fifthweek.Api.Identity.OAuth;
+	using Fifthweek.Api.Subscriptions.Commands;
+	using Fifthweek.Api.Subscriptions.Queries;
 	using Fifthweek.Api.FileManagement;
-	public partial class CreateNoteCommand 
+	public partial class NewNoteData 
 	{
 		public override string ToString()
         {
-			return string.Format("CreateNoteCommand({0}, {1}, {2}, {3}, {4})", this.Requester == null ? "null" : this.Requester.ToString(), this.SubscriptionId == null ? "null" : this.SubscriptionId.ToString(), this.ChannelId == null ? "null" : this.ChannelId.ToString(), this.Note == null ? "null" : this.Note.ToString(), this.ScheduledPostDate == null ? "null" : this.ScheduledPostDate.ToString());
+			return string.Format("NewNoteData({0}, {1}, \"{2}\", \"{3}\", {4})", this.ChannelIdObject == null ? "null" : this.ChannelIdObject.ToString(), this.NoteObject == null ? "null" : this.NoteObject.ToString(), this.ChannelId == null ? "null" : this.ChannelId.ToString(), this.Note == null ? "null" : this.Note.ToString(), this.ScheduledPostDate == null ? "null" : this.ScheduledPostDate.ToString());
 		}
 
         public override bool Equals(object obj)
@@ -1230,7 +1310,7 @@ namespace Fifthweek.Api.Subscriptions.Commands
                 return false;
             }
 
-            return this.Equals((CreateNoteCommand)obj);
+            return this.Equals((NewNoteData)obj);
         }
 
         public override int GetHashCode()
@@ -1238,8 +1318,8 @@ namespace Fifthweek.Api.Subscriptions.Commands
             unchecked
             {
                 int hashCode = 0;
-                hashCode = (hashCode * 397) ^ (this.Requester != null ? this.Requester.GetHashCode() : 0);
-                hashCode = (hashCode * 397) ^ (this.SubscriptionId != null ? this.SubscriptionId.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.ChannelIdObject != null ? this.ChannelIdObject.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.NoteObject != null ? this.NoteObject.GetHashCode() : 0);
                 hashCode = (hashCode * 397) ^ (this.ChannelId != null ? this.ChannelId.GetHashCode() : 0);
                 hashCode = (hashCode * 397) ^ (this.Note != null ? this.Note.GetHashCode() : 0);
                 hashCode = (hashCode * 397) ^ (this.ScheduledPostDate != null ? this.ScheduledPostDate.GetHashCode() : 0);
@@ -1247,14 +1327,14 @@ namespace Fifthweek.Api.Subscriptions.Commands
             }
         }
 
-        protected bool Equals(CreateNoteCommand other)
+        protected bool Equals(NewNoteData other)
         {
-            if (!object.Equals(this.Requester, other.Requester))
+            if (!object.Equals(this.ChannelIdObject, other.ChannelIdObject))
             {
                 return false;
             }
 
-            if (!object.Equals(this.SubscriptionId, other.SubscriptionId))
+            if (!object.Equals(this.NoteObject, other.NoteObject))
             {
                 return false;
             }
@@ -1386,7 +1466,7 @@ namespace Fifthweek.Api.Subscriptions.Controllers
 	{
 		public override string ToString()
         {
-			return string.Format("UpdatedSubscriptionData({0}, {1}, {2}, {3}, {4}, {5}, \"{6}\", \"{7}\", \"{8}\", {9}, \"{10}\", \"{11}\")", this.SubscriptionNameObject == null ? "null" : this.SubscriptionNameObject.ToString(), this.TaglineObject == null ? "null" : this.TaglineObject.ToString(), this.IntroductionObject == null ? "null" : this.IntroductionObject.ToString(), this.HeaderImageFileIdObject == null ? "null" : this.HeaderImageFileIdObject.ToString(), this.VideoObject == null ? "null" : this.VideoObject.ToString(), this.DescriptionObject == null ? "null" : this.DescriptionObject.ToString(), this.SubscriptionName == null ? "null" : this.SubscriptionName.ToString(), this.Tagline == null ? "null" : this.Tagline.ToString(), this.Introduction == null ? "null" : this.Introduction.ToString(), this.HeaderImageFileId == null ? "null" : this.HeaderImageFileId.ToString(), this.Video == null ? "null" : this.Video.ToString(), this.Description == null ? "null" : this.Description.ToString());
+			return string.Format("UpdatedSubscriptionData({0}, {1}, {2}, {3}, {4}, {5}, \"{6}\", \"{7}\", \"{8}\", \"{9}\", \"{10}\", \"{11}\")", this.SubscriptionNameObject == null ? "null" : this.SubscriptionNameObject.ToString(), this.TaglineObject == null ? "null" : this.TaglineObject.ToString(), this.IntroductionObject == null ? "null" : this.IntroductionObject.ToString(), this.HeaderImageFileIdObject == null ? "null" : this.HeaderImageFileIdObject.ToString(), this.VideoObject == null ? "null" : this.VideoObject.ToString(), this.DescriptionObject == null ? "null" : this.DescriptionObject.ToString(), this.SubscriptionName == null ? "null" : this.SubscriptionName.ToString(), this.Tagline == null ? "null" : this.Tagline.ToString(), this.Introduction == null ? "null" : this.Introduction.ToString(), this.HeaderImageFileId == null ? "null" : this.HeaderImageFileId.ToString(), this.Video == null ? "null" : this.Video.ToString(), this.Description == null ? "null" : this.Description.ToString());
 		}
 
         public override bool Equals(object obj)
@@ -1547,128 +1627,6 @@ namespace Fifthweek.Api.Subscriptions
         }
 
         protected bool Equals(ValidDescription other)
-        {
-            if (!object.Equals(this.Value, other.Value))
-            {
-                return false;
-            }
-
-            return true;
-        }
-	}
-
-}
-namespace Fifthweek.Api.Subscriptions
-{
-	using System;
-	using System.Linq;
-	using Fifthweek.Api.Core;
-	using System.Threading.Tasks;
-	using Dapper;
-	using Fifthweek.Api.Identity.Membership;
-	using Fifthweek.Api.Persistence;
-	using Fifthweek.Api.Persistence.Identity;
-	using System.Collections.Generic;
-	using System.Diagnostics.CodeAnalysis;
-	public partial class ValidSubscriptionName 
-	{
-		public override string ToString()
-        {
-			return string.Format("ValidSubscriptionName(\"{0}\")", this.Value == null ? "null" : this.Value.ToString());
-		}
-
-        public override bool Equals(object obj)
-        {
-            if (ReferenceEquals(null, obj))
-            {
-                return false;
-            }
-
-            if (ReferenceEquals(this, obj))
-            {
-                return true;
-            }
-
-            if (obj.GetType() != this.GetType())
-            {
-                return false;
-            }
-
-            return this.Equals((ValidSubscriptionName)obj);
-        }
-
-        public override int GetHashCode()
-        {
-            unchecked
-            {
-                int hashCode = 0;
-                hashCode = (hashCode * 397) ^ (this.Value != null ? this.Value.GetHashCode() : 0);
-                return hashCode;
-            }
-        }
-
-        protected bool Equals(ValidSubscriptionName other)
-        {
-            if (!object.Equals(this.Value, other.Value))
-            {
-                return false;
-            }
-
-            return true;
-        }
-	}
-
-}
-namespace Fifthweek.Api.Subscriptions
-{
-	using System;
-	using System.Linq;
-	using Fifthweek.Api.Core;
-	using System.Threading.Tasks;
-	using Dapper;
-	using Fifthweek.Api.Identity.Membership;
-	using Fifthweek.Api.Persistence;
-	using Fifthweek.Api.Persistence.Identity;
-	using System.Collections.Generic;
-	using System.Diagnostics.CodeAnalysis;
-	public partial class ValidTagline 
-	{
-		public override string ToString()
-        {
-			return string.Format("ValidTagline(\"{0}\")", this.Value == null ? "null" : this.Value.ToString());
-		}
-
-        public override bool Equals(object obj)
-        {
-            if (ReferenceEquals(null, obj))
-            {
-                return false;
-            }
-
-            if (ReferenceEquals(this, obj))
-            {
-                return true;
-            }
-
-            if (obj.GetType() != this.GetType())
-            {
-                return false;
-            }
-
-            return this.Equals((ValidTagline)obj);
-        }
-
-        public override int GetHashCode()
-        {
-            unchecked
-            {
-                int hashCode = 0;
-                hashCode = (hashCode * 397) ^ (this.Value != null ? this.Value.GetHashCode() : 0);
-                return hashCode;
-            }
-        }
-
-        protected bool Equals(ValidTagline other)
         {
             if (!object.Equals(this.Value, other.Value))
             {
@@ -1863,23 +1821,23 @@ namespace Fifthweek.Api.Subscriptions
 	}
 
 }
-namespace Fifthweek.Api.Subscriptions.Controllers
+namespace Fifthweek.Api.Subscriptions
 {
 	using System;
 	using System.Linq;
 	using Fifthweek.Api.Core;
 	using System.Threading.Tasks;
-	using System.Web.Http;
-	using System.Web.Http.Description;
-	using Fifthweek.Api.Identity.OAuth;
-	using Fifthweek.Api.Subscriptions.Commands;
-	using Fifthweek.Api.Subscriptions.Queries;
-	using Fifthweek.Api.FileManagement;
-	public partial class NewNoteData 
+	using Dapper;
+	using Fifthweek.Api.Identity.Membership;
+	using Fifthweek.Api.Persistence;
+	using Fifthweek.Api.Persistence.Identity;
+	using System.Collections.Generic;
+	using System.Diagnostics.CodeAnalysis;
+	public partial class ValidSubscriptionName 
 	{
 		public override string ToString()
         {
-			return string.Format("NewNoteData({0}, \"{1}\", \"{2}\", {3})", this.NoteObject == null ? "null" : this.NoteObject.ToString(), this.ChannelId == null ? "null" : this.ChannelId.ToString(), this.Note == null ? "null" : this.Note.ToString(), this.ScheduledPostDate == null ? "null" : this.ScheduledPostDate.ToString());
+			return string.Format("ValidSubscriptionName(\"{0}\")", this.Value == null ? "null" : this.Value.ToString());
 		}
 
         public override bool Equals(object obj)
@@ -1899,7 +1857,7 @@ namespace Fifthweek.Api.Subscriptions.Controllers
                 return false;
             }
 
-            return this.Equals((NewNoteData)obj);
+            return this.Equals((ValidSubscriptionName)obj);
         }
 
         public override int GetHashCode()
@@ -1907,32 +1865,75 @@ namespace Fifthweek.Api.Subscriptions.Controllers
             unchecked
             {
                 int hashCode = 0;
-                hashCode = (hashCode * 397) ^ (this.NoteObject != null ? this.NoteObject.GetHashCode() : 0);
-                hashCode = (hashCode * 397) ^ (this.ChannelId != null ? this.ChannelId.GetHashCode() : 0);
-                hashCode = (hashCode * 397) ^ (this.Note != null ? this.Note.GetHashCode() : 0);
-                hashCode = (hashCode * 397) ^ (this.ScheduledPostDate != null ? this.ScheduledPostDate.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.Value != null ? this.Value.GetHashCode() : 0);
                 return hashCode;
             }
         }
 
-        protected bool Equals(NewNoteData other)
+        protected bool Equals(ValidSubscriptionName other)
         {
-            if (!object.Equals(this.NoteObject, other.NoteObject))
+            if (!object.Equals(this.Value, other.Value))
             {
                 return false;
             }
 
-            if (!object.Equals(this.ChannelId, other.ChannelId))
+            return true;
+        }
+	}
+
+}
+namespace Fifthweek.Api.Subscriptions
+{
+	using System;
+	using System.Linq;
+	using Fifthweek.Api.Core;
+	using System.Threading.Tasks;
+	using Dapper;
+	using Fifthweek.Api.Identity.Membership;
+	using Fifthweek.Api.Persistence;
+	using Fifthweek.Api.Persistence.Identity;
+	using System.Collections.Generic;
+	using System.Diagnostics.CodeAnalysis;
+	public partial class ValidTagline 
+	{
+		public override string ToString()
+        {
+			return string.Format("ValidTagline(\"{0}\")", this.Value == null ? "null" : this.Value.ToString());
+		}
+
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj))
             {
                 return false;
             }
 
-            if (!object.Equals(this.Note, other.Note))
+            if (ReferenceEquals(this, obj))
+            {
+                return true;
+            }
+
+            if (obj.GetType() != this.GetType())
             {
                 return false;
             }
 
-            if (!object.Equals(this.ScheduledPostDate, other.ScheduledPostDate))
+            return this.Equals((ValidTagline)obj);
+        }
+
+        public override int GetHashCode()
+        {
+            unchecked
+            {
+                int hashCode = 0;
+                hashCode = (hashCode * 397) ^ (this.Value != null ? this.Value.GetHashCode() : 0);
+                return hashCode;
+            }
+        }
+
+        protected bool Equals(ValidTagline other)
+        {
+            if (!object.Equals(this.Value, other.Value))
             {
                 return false;
             }
@@ -1943,6 +1944,68 @@ namespace Fifthweek.Api.Subscriptions.Controllers
 
 }
 
+namespace Fifthweek.Api.Subscriptions.Controllers
+{
+	using System;
+	using System.Linq;
+	using Fifthweek.Api.Core;
+	using System.Threading.Tasks;
+	using System.Web.Http;
+	using System.Web.Http.Description;
+	using Fifthweek.Api.Identity.OAuth;
+	using Fifthweek.Api.Subscriptions.Commands;
+	using Fifthweek.Api.Subscriptions.Queries;
+	using Fifthweek.Api.FileManagement;
+	public partial class NewNoteData 
+	{
+		public ChannelId ChannelIdObject { get; set; }
+		public ValidNote NoteObject { get; set; }
+	}
+
+	public static partial class NewNoteDataExtensions
+	{
+		public static void Parse(this NewNoteData target)
+		{
+			var modelStateDictionary = new System.Web.Http.ModelBinding.ModelStateDictionary();
+
+		    if (target.ChannelId != null)
+		    {
+                target.ChannelIdObject = new ChannelId(Fifthweek.Api.Core.Extensions.DecodeGuid(target.ChannelId));
+		    }
+		    else if (false)
+		    {
+                var modelState = new System.Web.Http.ModelBinding.ModelState();
+                modelState.Errors.Add("Value required");
+                modelStateDictionary.Add("ChannelId", modelState);
+            }
+
+			if (true || !ValidNote.IsEmpty(target.Note))
+			{
+				ValidNote @object;
+				System.Collections.Generic.IReadOnlyCollection<string> errorMessages;
+				if (ValidNote.TryParse(target.Note, out @object, out errorMessages))
+				{
+					target.NoteObject = @object;
+				}
+				else
+				{
+					var modelState = new System.Web.Http.ModelBinding.ModelState();
+					foreach (var errorMessage in errorMessages)
+					{
+						modelState.Errors.Add(errorMessage);
+					}
+
+					modelStateDictionary.Add("Note", modelState);
+				}
+			}
+
+			if (!modelStateDictionary.IsValid)
+			{
+				throw new Fifthweek.Api.Core.ModelValidationException(modelStateDictionary);
+			}
+		}	
+	}
+}
 namespace Fifthweek.Api.Subscriptions.Controllers
 {
 	using System;
@@ -2125,7 +2188,7 @@ namespace Fifthweek.Api.Subscriptions.Controllers
 
 		    if (target.HeaderImageFileId != null)
 		    {
-                target.HeaderImageFileIdObject = new FileId(target.HeaderImageFileId.Value);
+                target.HeaderImageFileIdObject = new FileId(Fifthweek.Api.Core.Extensions.DecodeGuid(target.HeaderImageFileId));
 		    }
 		    else if (false)
 		    {
@@ -2171,68 +2234,6 @@ namespace Fifthweek.Api.Subscriptions.Controllers
 					}
 
 					modelStateDictionary.Add("Description", modelState);
-				}
-			}
-
-			if (!modelStateDictionary.IsValid)
-			{
-				throw new Fifthweek.Api.Core.ModelValidationException(modelStateDictionary);
-			}
-		}	
-	}
-}
-namespace Fifthweek.Api.Subscriptions.Controllers
-{
-	using System;
-	using System.Linq;
-	using Fifthweek.Api.Core;
-	using System.Threading.Tasks;
-	using System.Web.Http;
-	using System.Web.Http.Description;
-	using Fifthweek.Api.Identity.OAuth;
-	using Fifthweek.Api.Subscriptions.Commands;
-	using Fifthweek.Api.Subscriptions.Queries;
-	using Fifthweek.Api.FileManagement;
-	public partial class NewNoteData 
-	{
-		public ChannelId ChannelIdObject { get; set; }
-		public ValidNote NoteObject { get; set; }
-	}
-
-	public static partial class NewNoteDataExtensions
-	{
-		public static void Parse(this NewNoteData target)
-		{
-			var modelStateDictionary = new System.Web.Http.ModelBinding.ModelStateDictionary();
-
-		    if (target.ChannelId != null)
-		    {
-                target.ChannelIdObject = new ChannelId(Fifthweek.Api.Core.Extensions.DecodeGuid(target.ChannelId));
-		    }
-		    else if (false)
-		    {
-                var modelState = new System.Web.Http.ModelBinding.ModelState();
-                modelState.Errors.Add("Value required");
-                modelStateDictionary.Add("ChannelId", modelState);
-            }
-
-			if (true || !ValidNote.IsEmpty(target.Note))
-			{
-				ValidNote @object;
-				System.Collections.Generic.IReadOnlyCollection<string> errorMessages;
-				if (ValidNote.TryParse(target.Note, out @object, out errorMessages))
-				{
-					target.NoteObject = @object;
-				}
-				else
-				{
-					var modelState = new System.Web.Http.ModelBinding.ModelState();
-					foreach (var errorMessage in errorMessages)
-					{
-						modelState.Errors.Add(errorMessage);
-					}
-
-					modelStateDictionary.Add("Note", modelState);
 				}
 			}
 

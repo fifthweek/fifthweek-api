@@ -1,12 +1,12 @@
-﻿using System;
-using Fifthweek.Api.Core;
-
-namespace Fifthweek.Api.Subscriptions.Controllers
+﻿namespace Fifthweek.Api.Subscriptions.Controllers
 {
+    using Fifthweek.Api.Core;
+
     [AutoConstructor, AutoEqualityMembers]
     public partial class CreatorStatusData
     {
-        public Guid? SubscriptionId { get; set; }
+        [Optional]
+        public string SubscriptionId { get; set; }
 
         public bool MustWriteFirstPost { get; set; }
     }

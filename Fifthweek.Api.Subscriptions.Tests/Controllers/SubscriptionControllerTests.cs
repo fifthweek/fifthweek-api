@@ -1,7 +1,6 @@
 ﻿namespace Fifthweek.Api.Subscriptions.Tests.Controllers
 {
     using System;
-    using System.Runtime.Remoting.Messaging;
     using System.Threading.Tasks;
     using System.Web.Http.Results;
 
@@ -74,7 +73,7 @@
             this.userContext.Setup(v => v.GetUserId()).Returns(UserId);
             this.updateSubscription.Setup(v => v.HandleAsync(command)).Returns(Task.FromResult(0)).Verifiable();
 
-            var result = await this.target.PutSubscription(SubscriptionId.Value, data);
+            var result = await this.target.PutSubscription(SubscriptionId.Value.EncodeGuid(), data);
 
             Assert.IsInstanceOfType(result, typeof(OkResult));
             this.updateSubscription.Verify();
@@ -90,7 +89,7 @@
 
             var result = await this.target.GetCurrentCreatorStatus();
 
-            Assert.AreEqual(result.SubscriptionId, SubscriptionId.Value);
+            Assert.AreEqual(result.SubscriptionId, SubscriptionId.Value.EncodeGuid());
             Assert.AreEqual(result.MustWriteFirstPost, false);
         }
 
@@ -104,7 +103,7 @@
 
             var result = await this.target.GetCurrentCreatorStatus();
 
-            Assert.AreEqual(result.SubscriptionId, SubscriptionId.Value);
+            Assert.AreEqual(result.SubscriptionId, SubscriptionId.Value.EncodeGuid());
             Assert.AreEqual(result.MustWriteFirstPost, true);
         }
 
@@ -125,7 +124,7 @@
                 SubscriptionName = "Captain Phil",
                 Tagline = "Web Comics And More",
                 Introduction = "Subscription introduction",
-                HeaderImageFileId = HeaderImageFileId.Value,
+                HeaderImageFileId = HeaderImageFileId.Value.EncodeGuid(),
                 Video = "http://youtube.com/3135",
                 Description = "Hello all!"
             };
@@ -157,7 +156,7 @@
                 ValidTagline.Parse(data.Tagline),
                 ValidIntroduction.Parse(data.Introduction),
                 ValidDescription.Parse(data.Description),
-                new FileId(data.HeaderImageFileId.Value), 
+                new FileId(data.HeaderImageFileId.DecodeGuid()), 
                 ValidExternalVideoUrl.Parse(data.Video));
         }
     }
