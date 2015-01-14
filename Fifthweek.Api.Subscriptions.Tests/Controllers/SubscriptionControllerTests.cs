@@ -25,6 +25,7 @@
         private static readonly FileId HeaderImageFileId = new FileId(Guid.NewGuid());
         private Mock<ICommandHandler<CreateSubscriptionCommand>> createSubscription;
         private Mock<ICommandHandler<UpdateSubscriptionCommand>> updateSubscription;
+        private Mock<ICommandHandler<CreateNoteCommand>> createNote;
         private Mock<IQueryHandler<GetCreatorStatusQuery, CreatorStatus>> getCreatorStatus;
         private Mock<IUserContext> userContext;
         private Mock<IGuidCreator> guidCreator;
@@ -35,12 +36,14 @@
         {
             this.createSubscription = new Mock<ICommandHandler<CreateSubscriptionCommand>>();
             this.updateSubscription = new Mock<ICommandHandler<UpdateSubscriptionCommand>>();
+            this.createNote = new Mock<ICommandHandler<CreateNoteCommand>>();
             this.getCreatorStatus = new Mock<IQueryHandler<GetCreatorStatusQuery, CreatorStatus>>();
             this.userContext = new Mock<IUserContext>();
             this.guidCreator = new Mock<IGuidCreator>();
             this.target = new SubscriptionController(
                 this.createSubscription.Object,
                 this.updateSubscription.Object,
+                this.createNote.Object,
                 this.getCreatorStatus.Object,
                 this.userContext.Object,
                 this.guidCreator.Object);

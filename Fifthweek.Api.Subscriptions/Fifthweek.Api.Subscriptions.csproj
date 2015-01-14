@@ -83,6 +83,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>ClassAugmentation.tt</DependentUpon>
     </Compile>
+    <Compile Include="Commands\CreateNoteCommand.cs" />
     <Compile Include="Commands\PromoteNewUserToCreatorCommand.cs" />
     <Compile Include="Commands\PromoteNewUserToCreatorCommandInitiator.cs" />
     <Compile Include="Commands\PromoteNewUserToCreatorCommandHandler.cs" />
@@ -91,9 +92,11 @@
     <Compile Include="Commands\UpdateSubscriptionCommand.cs" />
     <Compile Include="Commands\UpdateSubscriptionCommandHandler.cs" />
     <Compile Include="Controllers\CreatorStatusData.cs" />
+    <Compile Include="Controllers\NewNoteData.cs" />
     <Compile Include="Controllers\NewSubscriptionData.cs" />
     <Compile Include="Controllers\SubscriptionController.cs" />
     <Compile Include="Controllers\UpdatedSubscriptionData.cs" />
+    <Compile Include="ChannelId.cs" />
     <Compile Include="ValidExternalVideoUrl.cs" />
     <Compile Include="ValidIntroduction.cs" />
     <Compile Include="ISubscriptionSecurity.cs" />
@@ -106,6 +109,7 @@
     <Compile Include="ValidSubscriptionName.cs" />
     <Compile Include="ChannelPriceInUsCentsPerWeek.cs" />
     <Compile Include="SubscriptionSecurity.cs" />
+    <Compile Include="ValidNote.cs" />
     <Compile Include="ValidTagline.cs" />
   </ItemGroup>
   <ItemGroup>

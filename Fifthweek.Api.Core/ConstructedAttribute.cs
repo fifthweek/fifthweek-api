@@ -1,7 +1,7 @@
-﻿using System;
-
-namespace Fifthweek.Api.Core
+﻿namespace Fifthweek.Api.Core
 {
+    using System;
+
     [AttributeUsage(AttributeTargets.Property)]
     public class ConstructedAttribute : Attribute
     {
@@ -13,5 +13,7 @@ namespace Fifthweek.Api.Core
         public Type Type { get; private set; }
 
         public bool TypeAcceptsNull { get; set; }
+
+        public bool IsGuidBase64 { get; set; }
     }
 }

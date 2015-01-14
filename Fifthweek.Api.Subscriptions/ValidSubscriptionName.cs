@@ -13,6 +13,7 @@
         public static readonly int MinLength = 1;
         public static readonly int MaxLength = 25;
 
+        private const string ForbiddenCharacterMessage = "Must not contain new lines or tabs";
         private static readonly HashSet<char> ForbiddenCharactersHashSet = new HashSet<char>(ForbiddenCharacters);
 
         private ValidSubscriptionName()
@@ -63,7 +64,7 @@
 
                 if (value.Any(ForbiddenCharactersHashSet.Contains))
                 {
-                    errorMessageList.Add("Must not contain new lines or tabs");
+                    errorMessageList.Add(ForbiddenCharacterMessage);
                 }
             }
 

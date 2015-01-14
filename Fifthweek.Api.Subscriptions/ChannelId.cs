@@ -5,7 +5,7 @@
     using Fifthweek.Api.Core;
 
     [AutoEqualityMembers, AutoConstructor]
-    public partial class SubscriptionId
+    public partial class ChannelId
     {
         public Guid Value { get; private set; }
     }

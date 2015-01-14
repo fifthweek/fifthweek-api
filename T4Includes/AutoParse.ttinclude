@@ -11,6 +11,7 @@
 	var ConstructedAttributeName = "Constructed";
 	var ParsedAttributeName = "Parsed";
 	var TypeAllowsNullAttributeParameterName = "TypeAcceptsNull";
+	var IsGuidBase64AttributeParameterName = "IsGuidBase64";
 
     foreach(UnifiedClass unifiedClass in allClasses)
     {
@@ -39,16 +40,9 @@
 		public <#= strongType #> <#= typedPropertyName #> { get; set; }
 <#
     }
+        }, () => { // Extension class. Avoid conflicts between property and type names.
 #>
-
-		public void Parse()
-		{
-			<#= unifiedClass.CompanionClassName #>.Parse(this); // Avoid conflicts between property and type names.
-		}
-<#
-        }, () => { // Companion class.
-#>
-		public static void Parse(<#= unifiedClass.FirstCodeClass.Name #> target)
+		public static void Parse(this <#= unifiedClass.FirstCodeClass.Name #> target)
 		{
 			var modelStateDictionary = new System.Web.Http.ModelBinding.ModelStateDictionary();
 
@@ -65,8 +59,8 @@
 
 		if (codeAttribute.Name.StartsWith(ConstructedAttributeName))
         {
-			var typeAllowsNullsPropertyValue = TryParseAttributeNamedProperty(TypeAllowsNullAttributeParameterName, attributeParameters);
-			var typeAllowsNulls = typeAllowsNullsPropertyValue != null && typeAllowsNullsPropertyValue == "true";
+			var typeAllowsNulls = TryParseAttributeFlag(TypeAllowsNullAttributeParameterName, attributeParameters);
+			var isGuidBase64 = TryParseAttributeFlag(IsGuidBase64AttributeParameterName, attributeParameters);
 
 			if (typeAllowsNulls)
             {
@@ -76,11 +70,19 @@
             }
 			else
             {
-				var nullablePrimitiveTypeAccessor = IsNullablePrimitiveType(codeProperty.Type.CodeType) ? ".Value" : "";
+				var valueAccessor = "target." + codeProperty.Name;
+				if (IsNullablePrimitiveType(codeProperty.Type.CodeType))
+                {
+					valueAccessor += ".Value";
+                }
+				else if (isGuidBase64)
+                {
+					valueAccessor = string.Format("Fifthweek.Api.Core.Extensions.DecodeGuid({0})", valueAccessor);
+                }
 #>
 		    if (target.<#= codeProperty.Name #> != null)
 		    {
-                target.<#= typedPropertyName #> = new <#= strongType #>(target.<#= codeProperty.Name + nullablePrimitiveTypeAccessor #>);
+                target.<#= typedPropertyName #> = new <#= strongType #>(<#= valueAccessor #>);
 		    }
 		    else if (<#= isRequiredString #>)
 		    {

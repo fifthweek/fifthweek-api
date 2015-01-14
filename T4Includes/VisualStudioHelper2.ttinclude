@@ -112,6 +112,12 @@
 		return retval;
 	}
 
+	public bool TryParseAttributeFlag(string propertyName, IReadOnlyCollection<string> attributeParameters)
+    {
+		var value = TryParseAttributeNamedProperty(propertyName, attributeParameters);
+		return value != null && value == "true";
+    }
+
 	public string TryParseAttributeNamedProperty(string propertyName, IReadOnlyCollection<string> attributeParameters)
     {
 		foreach (var attributeParameter in attributeParameters.Where(_ => _.Contains("=")))

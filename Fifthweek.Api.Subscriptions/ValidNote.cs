@@ -7,16 +7,16 @@
     using Fifthweek.Api.Core;
 
     [AutoEqualityMembers]
-    public partial class ValidTagline
+    public partial class ValidNote
     {
-        public static readonly string ForbiddenCharacters = "\r\n\t";
-        public static readonly int MinLength = 5;
-        public static readonly int MaxLength = 55; // Need to support XKCD ;) "A webcomic of romance, sarcasm, math, and language."
+        public static readonly string ForbiddenCharacters = "\t"; // Tweets allow new lines, so these have been removed from the exclusion list.
+        public static readonly int MinLength = 1;
+        public static readonly int MaxLength = 280; // Twice a tweet :)
 
-        private const string ForbiddenCharacterMessage = "Must not contain new lines or tabs";
+        private const string ForbiddenCharacterMessage = "Must not contain tabs";
         private static readonly HashSet<char> ForbiddenCharactersHashSet = new HashSet<char>(ForbiddenCharacters);
 
-        private ValidTagline()
+        private ValidNote()
         {
         }
 
@@ -28,24 +28,24 @@
             return string.IsNullOrEmpty(value); // Trimmed types use IsNullOrWhiteSpace
         }
 
-        public static ValidTagline Parse(string value)
+        public static ValidNote Parse(string value)
         {
-            ValidTagline retval;
+            ValidNote retval;
             if (!TryParse(value, out retval))
             {
-                throw new ArgumentException("Invalid tagline", "value");
+                throw new ArgumentException("Invalid note", "value");
             }
 
             return retval;
         }
 
-        public static bool TryParse(string value, out ValidTagline tagline)
+        public static bool TryParse(string value, out ValidNote note)
         {
             IReadOnlyCollection<string> errorMessages;
-            return TryParse(value, out tagline, out errorMessages);
+            return TryParse(value, out note, out errorMessages);
         }
 
-        public static bool TryParse(string value, out ValidTagline tagline, out IReadOnlyCollection<string> errorMessages)
+        public static bool TryParse(string value, out ValidNote note, out IReadOnlyCollection<string> errorMessages)
         {
             var errorMessageList = new List<string>();
             errorMessages = errorMessageList;
@@ -70,11 +70,11 @@
 
             if (errorMessageList.Count > 0)
             {
-                tagline = null;
+                note = null;
                 return false;
             }
 
-            tagline = new ValidTagline
+            note = new ValidNote
             {
                 Value = value
             };
