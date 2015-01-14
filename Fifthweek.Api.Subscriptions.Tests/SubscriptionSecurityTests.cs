@@ -3,6 +3,7 @@
     using System;
     using System.Threading.Tasks;
 
+    using Fifthweek.Api.Core;
     using Fifthweek.Api.Identity.Membership;
     using Fifthweek.Api.Persistence;
     using Fifthweek.Api.Persistence.Identity;
@@ -13,25 +14,20 @@
     using Moq;
 
     [TestClass]
-    public class SubscriptionSecurityTests : PersistenceTestsBase
+    public class SubscriptionSecurityTests
     {
         private static readonly UserId UserId = new UserId(Guid.NewGuid());
         private static readonly SubscriptionId SubscriptionId = new SubscriptionId(Guid.NewGuid());
         private Mock<IUserManager> userManager;
+        private Mock<IDataOwnership> dataOwnership;
         private SubscriptionSecurity target;
 
         [TestInitialize]
-        public override void Initialize()
+        public void Initialize()
         {
-            base.Initialize();
             this.userManager = new Mock<IUserManager>();
-            this.target = new SubscriptionSecurity(this.userManager.Object, this.NewDbContext());
-        }
-
-        [TestCleanup]
-        public override void Cleanup()
-        {
-            base.Cleanup();
+            this.dataOwnership = new Mock<IDataOwnership>();
+            this.target = new SubscriptionSecurity(this.userManager.Object, this.dataOwnership.Object);
         }
 
         [TestMethod]
@@ -52,82 +48,43 @@
             var result = await this.target.IsCreationAllowedAsync(UserId);
 
             Assert.IsFalse(result);
+
+            try
+            {
+                await this.target.AssertCreationAllowedAsync(UserId);
+                Assert.Fail("Expected unauthorized exception");
+            }
+            catch (UnauthorizedException)
+            {
+            }
         }
 
         [TestMethod]
-        public async Task WhenAuthorizingUpdate_ItShouldAllowIfAtLeastOneSubscriptionMatchesSubscriptionAndCreator()
+        public async Task WhenAuthorizingUpdate_ItShouldAllowIfUserOwnsSubscription()
         {
-            await this.CreateSubscriptionAsync(UserId, SubscriptionId);
-            await this.SnapshotDatabaseAsync();
+            this.dataOwnership.Setup(_ => _.IsOwnerAsync(UserId, SubscriptionId)).ReturnsAsync(true);
 
             var result = await this.target.IsUpdateAllowedAsync(UserId, SubscriptionId);
 
             Assert.IsTrue(result);
-            await this.AssertDatabaseAsync(ExpectedSideEffects.None);
         }
 
         [TestMethod]
-        public async Task WhenAuthorizingUpdate_ItShouldForbidIfNoSubscriptionsExist()
+        public async Task WhenAuthorizingUpdate_ItShouldForbidIfUserDoesNotOwnSubscription()
         {
-            await this.SnapshotDatabaseAsync();
+            this.dataOwnership.Setup(_ => _.IsOwnerAsync(UserId, SubscriptionId)).ReturnsAsync(false);
 
             var result = await this.target.IsUpdateAllowedAsync(UserId, SubscriptionId);
 
             Assert.IsFalse(result);
-            await this.AssertDatabaseAsync(ExpectedSideEffects.None);
-        }
 
-        [TestMethod]
-        public async Task WhenAuthorizingUpdate_ItShouldForbidIfNoSubscriptionsMatchSubscriptionOrCreator()
-        {
-            await this.CreateSubscriptionAsync(new UserId(Guid.NewGuid()), new SubscriptionId(Guid.NewGuid()));
-            await this.SnapshotDatabaseAsync();
-
-            var result = await this.target.IsUpdateAllowedAsync(UserId, SubscriptionId);
-
-            Assert.IsFalse(result);
-            await this.AssertDatabaseAsync(ExpectedSideEffects.None);
-        }
-
-        [TestMethod]
-        public async Task WhenAuthorizingUpdate_ItShouldForbidIfNoSubscriptionsMatchSubscription()
-        {
-            await this.CreateSubscriptionAsync(UserId, new SubscriptionId(Guid.NewGuid()));
-            await this.SnapshotDatabaseAsync();
-
-            var result = await this.target.IsUpdateAllowedAsync(UserId, SubscriptionId);
-
-            Assert.IsFalse(result);
-            await this.AssertDatabaseAsync(ExpectedSideEffects.None);
-        }
-
-        [TestMethod]
-        public async Task WhenAuthorizingUpdate_ItShouldForbidIfNoSubscriptionsMatchCreator()
-        {
-            await this.CreateSubscriptionAsync(new UserId(Guid.NewGuid()), SubscriptionId);
-            await this.SnapshotDatabaseAsync();
-
-            var result = await this.target.IsUpdateAllowedAsync(UserId, SubscriptionId);
-
-            Assert.IsFalse(result);
-            await this.AssertDatabaseAsync(ExpectedSideEffects.None);
-        }
-
-        private async Task CreateSubscriptionAsync(UserId newUserId, SubscriptionId newSubscriptionId)
-        {
-            var random = new Random();
-            var creator = UserTests.UniqueEntity(random);
-            creator.Id = newUserId.Value;
-
-            var subscription = SubscriptionTests.UniqueEntity(random);
-            subscription.Id = newSubscriptionId.Value;
-            subscription.Creator = creator;
-            subscription.CreatorId = creator.Id;
-
-            using (var dbContext = this.NewDbContext())
+            try
             {
-                dbContext.Subscriptions.Add(subscription);
-                await dbContext.SaveChangesAsync();
+                await this.target.AssertUpdateAllowedAsync(UserId, SubscriptionId);
+                Assert.Fail("Expected unauthorized exception");
+            }
+            catch (UnauthorizedException)
+            {
             }
         }
     }

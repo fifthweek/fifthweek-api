@@ -78,7 +78,11 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AutofacRegistration.cs" />
+    <Compile Include="ChannelSecurity.cs" />
     <Compile Include="Controllers\PostController.cs" />
+    <Compile Include="DataOwnership.cs" />
+    <Compile Include="IChannelSecurity.cs" />
+    <Compile Include="IDataOwnership.cs" />
     <Compile Include="PostId.cs" />
     <Compile Include="CollectionId.cs" />
     <Compile Include="ClassAugmentation.cs">

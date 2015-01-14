@@ -9,7 +9,7 @@
     [AutoConstructor]
     public partial class CreateNoteCommandHandler : ICommandHandler<CreateNoteCommand>
     {
-        private readonly ISubscriptionSecurity subscriptionSecurity;
+        private readonly IChannelSecurity channelSecurity;
         private readonly IFifthweekDbContext databaseContext;
 
         public async Task HandleAsync(CreateNoteCommand command)
@@ -19,7 +19,7 @@
                 throw new ArgumentNullException("command");
             }
 
-            await this.subscriptionSecurity.AssertUpdateAllowedAsync(command.Requester, command.ChannelId);
+            await this.channelSecurity.AssertPostingAllowedAsync(command.Requester, command.ChannelId);
 
             await this.CreatePostAsync(command);
         }
