@@ -7,9 +7,9 @@ namespace Fifthweek.Api.Persistence
 {
 	using System;
 	using System.ComponentModel.DataAnnotations;
+	using System.ComponentModel.DataAnnotations.Schema;
 	using Fifthweek.Api.Core;
 	using System.Linq;
-	using System.ComponentModel.DataAnnotations.Schema;
 	using Fifthweek.Api.Persistence.Identity;
 	public partial class Channel 
 	{
@@ -200,8 +200,11 @@ namespace Fifthweek.Api.Persistence
 namespace Fifthweek.Api.Persistence
 {
 	using System;
+	using System.Linq;
 	using System.ComponentModel.DataAnnotations;
 	using Fifthweek.Api.Core;
+	using System.ComponentModel.DataAnnotations.Schema;
+	using Fifthweek.Api.Persistence.Identity;
 	public partial class Collection 
 	{
         public Collection(
@@ -236,8 +239,11 @@ namespace Fifthweek.Api.Persistence
 namespace Fifthweek.Api.Persistence
 {
 	using System;
+	using System.Linq;
 	using System.ComponentModel.DataAnnotations;
 	using Fifthweek.Api.Core;
+	using System.ComponentModel.DataAnnotations.Schema;
+	using Fifthweek.Api.Persistence.Identity;
 	public partial class Post 
 	{
         public Post(
@@ -251,6 +257,8 @@ namespace Fifthweek.Api.Persistence
             System.Nullable<System.Guid> imageId, 
             Fifthweek.Api.Persistence.File image, 
             System.String comment, 
+            System.Nullable<System.Int32> queuePosition, 
+            System.Nullable<System.DateTime> liveDate, 
             System.DateTime creationDate)
         {
             if (id == null)
@@ -278,6 +286,8 @@ namespace Fifthweek.Api.Persistence
             this.ImageId = imageId;
             this.Image = image;
             this.Comment = comment;
+            this.QueuePosition = queuePosition;
+            this.LiveDate = liveDate;
             this.CreationDate = creationDate;
         }
 	}
@@ -288,9 +298,9 @@ namespace Fifthweek.Api.Persistence
 {
 	using System;
 	using System.ComponentModel.DataAnnotations;
+	using System.ComponentModel.DataAnnotations.Schema;
 	using Fifthweek.Api.Core;
 	using System.Linq;
-	using System.ComponentModel.DataAnnotations.Schema;
 	using Fifthweek.Api.Persistence.Identity;
 	public partial class Channel 
 	{
@@ -484,7 +494,7 @@ namespace Fifthweek.Api.Persistence
 	using Fifthweek.Api.Core;
 	using System.ComponentModel.DataAnnotations.Schema;
 	using Fifthweek.Api.Persistence.Identity;
-	public partial class    Subscription 
+	public partial class Subscription 
 	{
 		public override string ToString()
         {
@@ -581,6 +591,180 @@ namespace Fifthweek.Api.Persistence
 	}
 
 }
+namespace Fifthweek.Api.Persistence
+{
+	using System;
+	using System.Linq;
+	using System.ComponentModel.DataAnnotations;
+	using Fifthweek.Api.Core;
+	using System.ComponentModel.DataAnnotations.Schema;
+	using Fifthweek.Api.Persistence.Identity;
+	public partial class Collection 
+	{
+		public override string ToString()
+        {
+			return string.Format("Collection({0}, {1}, \"{2}\")", this.Id == null ? "null" : this.Id.ToString(), this.ChannelId == null ? "null" : this.ChannelId.ToString(), this.Name == null ? "null" : this.Name.ToString());
+		}
+
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj))
+            {
+                return false;
+            }
+
+            if (ReferenceEquals(this, obj))
+            {
+                return true;
+            }
+
+            if (obj.GetType() != this.GetType())
+            {
+                return false;
+            }
+
+            return this.Equals((Collection)obj);
+        }
+
+        public override int GetHashCode()
+        {
+            unchecked
+            {
+                int hashCode = 0;
+                hashCode = (hashCode * 397) ^ (this.Id != null ? this.Id.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.ChannelId != null ? this.ChannelId.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.Name != null ? this.Name.GetHashCode() : 0);
+                return hashCode;
+            }
+        }
+
+        protected bool Equals(Collection other)
+        {
+            if (!object.Equals(this.Id, other.Id))
+            {
+                return false;
+            }
+
+            if (!object.Equals(this.ChannelId, other.ChannelId))
+            {
+                return false;
+            }
+
+            if (!object.Equals(this.Name, other.Name))
+            {
+                return false;
+            }
+
+            return true;
+        }
+	}
+
+}
+namespace Fifthweek.Api.Persistence
+{
+	using System;
+	using System.Linq;
+	using System.ComponentModel.DataAnnotations;
+	using Fifthweek.Api.Core;
+	using System.ComponentModel.DataAnnotations.Schema;
+	using Fifthweek.Api.Persistence.Identity;
+	public partial class Post 
+	{
+		public override string ToString()
+        {
+			return string.Format("Post({0}, {1}, {2}, {3}, {4}, \"{5}\", {6}, {7}, {8})", this.Id == null ? "null" : this.Id.ToString(), this.ChannelId == null ? "null" : this.ChannelId.ToString(), this.CollectionId == null ? "null" : this.CollectionId.ToString(), this.FileId == null ? "null" : this.FileId.ToString(), this.ImageId == null ? "null" : this.ImageId.ToString(), this.Comment == null ? "null" : this.Comment.ToString(), this.QueuePosition == null ? "null" : this.QueuePosition.ToString(), this.LiveDate == null ? "null" : this.LiveDate.ToString(), this.CreationDate == null ? "null" : this.CreationDate.ToString());
+		}
+
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj))
+            {
+                return false;
+            }
+
+            if (ReferenceEquals(this, obj))
+            {
+                return true;
+            }
+
+            if (obj.GetType() != this.GetType())
+            {
+                return false;
+            }
+
+            return this.Equals((Post)obj);
+        }
+
+        public override int GetHashCode()
+        {
+            unchecked
+            {
+                int hashCode = 0;
+                hashCode = (hashCode * 397) ^ (this.Id != null ? this.Id.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.ChannelId != null ? this.ChannelId.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.CollectionId != null ? this.CollectionId.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.FileId != null ? this.FileId.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.ImageId != null ? this.ImageId.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.Comment != null ? this.Comment.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.QueuePosition != null ? this.QueuePosition.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.LiveDate != null ? this.LiveDate.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.CreationDate != null ? this.CreationDate.GetHashCode() : 0);
+                return hashCode;
+            }
+        }
+
+        protected bool Equals(Post other)
+        {
+            if (!object.Equals(this.Id, other.Id))
+            {
+                return false;
+            }
+
+            if (!object.Equals(this.ChannelId, other.ChannelId))
+            {
+                return false;
+            }
+
+            if (!object.Equals(this.CollectionId, other.CollectionId))
+            {
+                return false;
+            }
+
+            if (!object.Equals(this.FileId, other.FileId))
+            {
+                return false;
+            }
+
+            if (!object.Equals(this.ImageId, other.ImageId))
+            {
+                return false;
+            }
+
+            if (!object.Equals(this.Comment, other.Comment))
+            {
+                return false;
+            }
+
+            if (!object.Equals(this.QueuePosition, other.QueuePosition))
+            {
+                return false;
+            }
+
+            if (!object.Equals(this.LiveDate, other.LiveDate))
+            {
+                return false;
+            }
+
+            if (!object.Equals(this.CreationDate, other.CreationDate))
+            {
+                return false;
+            }
+
+            return true;
+        }
+	}
+
+}
 namespace Fifthweek.Api.Persistence.Identity
 {
 	using System;
@@ -663,170 +847,14 @@ namespace Fifthweek.Api.Persistence.Identity
 	}
 
 }
-namespace Fifthweek.Api.Persistence
-{
-	using System;
-	using System.ComponentModel.DataAnnotations;
-	using Fifthweek.Api.Core;
-	public partial class Collection 
-	{
-		public override string ToString()
-        {
-			return string.Format("Collection({0}, {1}, \"{2}\")", this.Id == null ? "null" : this.Id.ToString(), this.ChannelId == null ? "null" : this.ChannelId.ToString(), this.Name == null ? "null" : this.Name.ToString());
-		}
-
-        public override bool Equals(object obj)
-        {
-            if (ReferenceEquals(null, obj))
-            {
-                return false;
-            }
-
-            if (ReferenceEquals(this, obj))
-            {
-                return true;
-            }
-
-            if (obj.GetType() != this.GetType())
-            {
-                return false;
-            }
-
-            return this.Equals((Collection)obj);
-        }
-
-        public override int GetHashCode()
-        {
-            unchecked
-            {
-                int hashCode = 0;
-                hashCode = (hashCode * 397) ^ (this.Id != null ? this.Id.GetHashCode() : 0);
-                hashCode = (hashCode * 397) ^ (this.ChannelId != null ? this.ChannelId.GetHashCode() : 0);
-                hashCode = (hashCode * 397) ^ (this.Name != null ? this.Name.GetHashCode() : 0);
-                return hashCode;
-            }
-        }
-
-        protected bool Equals(Collection other)
-        {
-            if (!object.Equals(this.Id, other.Id))
-            {
-                return false;
-            }
-
-            if (!object.Equals(this.ChannelId, other.ChannelId))
-            {
-                return false;
-            }
-
-            if (!object.Equals(this.Name, other.Name))
-            {
-                return false;
-            }
-
-            return true;
-        }
-	}
-
-}
-namespace Fifthweek.Api.Persistence
-{
-	using System;
-	using System.ComponentModel.DataAnnotations;
-	using Fifthweek.Api.Core;
-	public partial class Post 
-	{
-		public override string ToString()
-        {
-			return string.Format("Post({0}, {1}, {2}, {3}, {4}, \"{5}\", {6})", this.Id == null ? "null" : this.Id.ToString(), this.ChannelId == null ? "null" : this.ChannelId.ToString(), this.CollectionId == null ? "null" : this.CollectionId.ToString(), this.FileId == null ? "null" : this.FileId.ToString(), this.ImageId == null ? "null" : this.ImageId.ToString(), this.Comment == null ? "null" : this.Comment.ToString(), this.CreationDate == null ? "null" : this.CreationDate.ToString());
-		}
-
-        public override bool Equals(object obj)
-        {
-            if (ReferenceEquals(null, obj))
-            {
-                return false;
-            }
-
-            if (ReferenceEquals(this, obj))
-            {
-                return true;
-            }
-
-            if (obj.GetType() != this.GetType())
-            {
-                return false;
-            }
-
-            return this.Equals((Post)obj);
-        }
-
-        public override int GetHashCode()
-        {
-            unchecked
-            {
-                int hashCode = 0;
-                hashCode = (hashCode * 397) ^ (this.Id != null ? this.Id.GetHashCode() : 0);
-                hashCode = (hashCode * 397) ^ (this.ChannelId != null ? this.ChannelId.GetHashCode() : 0);
-                hashCode = (hashCode * 397) ^ (this.CollectionId != null ? this.CollectionId.GetHashCode() : 0);
-                hashCode = (hashCode * 397) ^ (this.FileId != null ? this.FileId.GetHashCode() : 0);
-                hashCode = (hashCode * 397) ^ (this.ImageId != null ? this.ImageId.GetHashCode() : 0);
-                hashCode = (hashCode * 397) ^ (this.Comment != null ? this.Comment.GetHashCode() : 0);
-                hashCode = (hashCode * 397) ^ (this.CreationDate != null ? this.CreationDate.GetHashCode() : 0);
-                return hashCode;
-            }
-        }
-
-        protected bool Equals(Post other)
-        {
-            if (!object.Equals(this.Id, other.Id))
-            {
-                return false;
-            }
-
-            if (!object.Equals(this.ChannelId, other.ChannelId))
-            {
-                return false;
-            }
-
-            if (!object.Equals(this.CollectionId, other.CollectionId))
-            {
-                return false;
-            }
-
-            if (!object.Equals(this.FileId, other.FileId))
-            {
-                return false;
-            }
-
-            if (!object.Equals(this.ImageId, other.ImageId))
-            {
-                return false;
-            }
-
-            if (!object.Equals(this.Comment, other.Comment))
-            {
-                return false;
-            }
-
-            if (!object.Equals(this.CreationDate, other.CreationDate))
-            {
-                return false;
-            }
-
-            return true;
-        }
-	}
-
-}
 
 namespace Fifthweek.Api.Persistence
 {
 	using System;
 	using System.ComponentModel.DataAnnotations;
+	using System.ComponentModel.DataAnnotations.Schema;
 	using Fifthweek.Api.Core;
 	using System.Linq;
-	using System.ComponentModel.DataAnnotations.Schema;
 	using Fifthweek.Api.Persistence.Identity;
 	public partial class Channel  : IIdentityEquatable
 	{
@@ -1444,8 +1472,11 @@ namespace Fifthweek.Api.Persistence
 namespace Fifthweek.Api.Persistence
 {
 	using System;
+	using System.Linq;
 	using System.ComponentModel.DataAnnotations;
 	using Fifthweek.Api.Core;
+	using System.ComponentModel.DataAnnotations.Schema;
+	using Fifthweek.Api.Persistence.Identity;
 	public partial class Collection  : IIdentityEquatable
 	{
         public Collection(
@@ -1593,8 +1624,11 @@ namespace Fifthweek.Api.Persistence
 namespace Fifthweek.Api.Persistence
 {
 	using System;
+	using System.Linq;
 	using System.ComponentModel.DataAnnotations;
 	using Fifthweek.Api.Core;
+	using System.ComponentModel.DataAnnotations.Schema;
+	using Fifthweek.Api.Persistence.Identity;
 	public partial class Post  : IIdentityEquatable
 	{
         public Post(
@@ -1648,7 +1682,9 @@ namespace Fifthweek.Api.Persistence
 			FileId = 8, 
 			ImageId = 16, 
 			Comment = 32, 
-			CreationDate = 64
+			QueuePosition = 64, 
+			LiveDate = 128, 
+			CreationDate = 256
         }
 	}
 
@@ -1658,7 +1694,7 @@ namespace Fifthweek.Api.Persistence
 		{
 			return Dapper.SqlMapper.ExecuteAsync(connection, InsertStatement(idempotent), new 
 			{
-				entity.Id, entity.ChannelId, entity.CollectionId, entity.FileId, entity.ImageId, entity.Comment, entity.CreationDate
+				entity.Id, entity.ChannelId, entity.CollectionId, entity.FileId, entity.ImageId, entity.Comment, entity.QueuePosition, entity.LiveDate, entity.CreationDate
 			});
 		}
 
@@ -1666,7 +1702,7 @@ namespace Fifthweek.Api.Persistence
 		{
 			return Dapper.SqlMapper.ExecuteAsync(connection, UpsertStatement(fields), new 
 			{
-				entity.Id, entity.ChannelId, entity.CollectionId, entity.FileId, entity.ImageId, entity.Comment, entity.CreationDate
+				entity.Id, entity.ChannelId, entity.CollectionId, entity.FileId, entity.ImageId, entity.Comment, entity.QueuePosition, entity.LiveDate, entity.CreationDate
 			});
 		}
 
@@ -1677,7 +1713,7 @@ namespace Fifthweek.Api.Persistence
 
 		public static string InsertStatement(bool idempotent = true)
 		{
-			const string insert = "INSERT INTO Posts(Id, ChannelId, CollectionId, FileId, ImageId, Comment, CreationDate) VALUES(@Id, @ChannelId, @CollectionId, @FileId, @ImageId, @Comment, @CreationDate)";
+			const string insert = "INSERT INTO Posts(Id, ChannelId, CollectionId, FileId, ImageId, Comment, QueuePosition, LiveDate, CreationDate) VALUES(@Id, @ChannelId, @CollectionId, @FileId, @ImageId, @Comment, @QueuePosition, @LiveDate, @CreationDate)";
 			return idempotent ? SqlStatementTemplates.IdempotentInsert(insert) : insert;
 		}
 
@@ -1686,7 +1722,7 @@ namespace Fifthweek.Api.Persistence
 			var sql = new System.Text.StringBuilder();
 			sql.Append(
 				@"MERGE Posts as Target
-				USING (VALUES (@Id, @ChannelId, @CollectionId, @FileId, @ImageId, @Comment, @CreationDate)) AS Source (Id, ChannelId, CollectionId, FileId, ImageId, Comment, CreationDate)
+				USING (VALUES (@Id, @ChannelId, @CollectionId, @FileId, @ImageId, @Comment, @QueuePosition, @LiveDate, @CreationDate)) AS Source (Id, ChannelId, CollectionId, FileId, ImageId, Comment, QueuePosition, LiveDate, CreationDate)
 				ON    (Target.Id = Source.Id)
 				WHEN MATCHED THEN
 					UPDATE
@@ -1694,8 +1730,8 @@ namespace Fifthweek.Api.Persistence
 			sql.AppendUpdateParameters(GetFieldNames(fields));
 			sql.Append(
 				@" WHEN NOT MATCHED THEN
-					INSERT  (Id, ChannelId, CollectionId, FileId, ImageId, Comment, CreationDate)
-					VALUES  (Source.Id, Source.ChannelId, Source.CollectionId, Source.FileId, Source.ImageId, Source.Comment, Source.CreationDate);");
+					INSERT  (Id, ChannelId, CollectionId, FileId, ImageId, Comment, QueuePosition, LiveDate, CreationDate)
+					VALUES  (Source.Id, Source.ChannelId, Source.CollectionId, Source.FileId, Source.ImageId, Source.Comment, Source.QueuePosition, Source.LiveDate, Source.CreationDate);");
 			return sql.ToString();
 		}
 
@@ -1737,6 +1773,16 @@ namespace Fifthweek.Api.Persistence
 				fieldNames.Add("Comment");
 			}
 
+			if(fields.HasFlag(Post.Fields.QueuePosition))
+			{
+				fieldNames.Add("QueuePosition");
+			}
+
+			if(fields.HasFlag(Post.Fields.LiveDate))
+			{
+				fieldNames.Add("LiveDate");
+			}
+
 			if(fields.HasFlag(Post.Fields.CreationDate))
 			{
 				fieldNames.Add("CreationDate");
@@ -1772,6 +1818,16 @@ namespace Fifthweek.Api.Persistence
 			if(fields.HasFlag(Post.Fields.Comment))
 			{
 				parameters.Add("Comment", entity.Comment);
+			}
+
+			if(fields.HasFlag(Post.Fields.QueuePosition))
+			{
+				parameters.Add("QueuePosition", entity.QueuePosition);
+			}
+
+			if(fields.HasFlag(Post.Fields.LiveDate))
+			{
+				parameters.Add("LiveDate", entity.LiveDate);
 			}
 
 			if(fields.HasFlag(Post.Fields.CreationDate))

@@ -21,6 +21,10 @@
 
         IDbSet<Channel> Channels { get; }
 
+        IDbSet<Collection> Collections { get; }
+
+        IDbSet<Post> Posts { get; }
+
         IDbSet<File> Files { get; set; }
 
         IDbSet<FileVariant> FileVariants { get; set; }

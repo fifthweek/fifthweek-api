@@ -11,11 +11,11 @@
     using Microsoft.VisualStudio.TestTools.UnitTesting;
 
     [AutoConstructor]
-    public partial class DatabaseState
+    public partial class TemporaryDatabaseState
     {
         private readonly TemporaryDatabase temporaryDatabase;
 
-        private IFifthweekDbContext loadedSnapshotContext; // 'Local' properties on each DbSet will represent Snapshot state.
+        private IFifthweekDbContext loadedSnapshotContext; // 'Local' properties on each DbSet will represent snapshot state.
 
         public async Task TakeSnapshotAsync()
         {
@@ -23,6 +23,8 @@
             await this.loadedSnapshotContext.Users.LoadAsync();
             await this.loadedSnapshotContext.Subscriptions.LoadAsync();
             await this.loadedSnapshotContext.Channels.LoadAsync();
+            await this.loadedSnapshotContext.Collections.LoadAsync();
+            await this.loadedSnapshotContext.Posts.LoadAsync();
             await this.loadedSnapshotContext.Files.LoadAsync();
             await this.loadedSnapshotContext.FileVariants.LoadAsync();
         }
@@ -40,6 +42,8 @@
                 tables.Add(await TableBeforeAndAfter.GenerateAsync(this.loadedSnapshotContext.Users, databaseContext.Users));
                 tables.Add(await TableBeforeAndAfter.GenerateAsync(this.loadedSnapshotContext.Subscriptions, databaseContext.Subscriptions));
                 tables.Add(await TableBeforeAndAfter.GenerateAsync(this.loadedSnapshotContext.Channels, databaseContext.Channels));
+                tables.Add(await TableBeforeAndAfter.GenerateAsync(this.loadedSnapshotContext.Collections, databaseContext.Collections));
+                tables.Add(await TableBeforeAndAfter.GenerateAsync(this.loadedSnapshotContext.Posts, databaseContext.Posts));
                 tables.Add(await TableBeforeAndAfter.GenerateAsync(this.loadedSnapshotContext.Files, databaseContext.Files));
                 tables.Add(await TableBeforeAndAfter.GenerateAsync(this.loadedSnapshotContext.FileVariants, databaseContext.FileVariants));
             }

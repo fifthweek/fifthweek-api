@@ -89,19 +89,9 @@
 
         private async Task CreateSubscriptionAsync(UserId newUserId, SubscriptionId newSubscriptionId)
         {
-            var random = new Random();
-            var creator = UserTests.UniqueEntity(random);
-            creator.Id = newUserId.Value;
-
-            var subscription = SubscriptionTests.UniqueEntity(random);
-            subscription.Id = newSubscriptionId.Value;
-            subscription.Creator = creator;
-            subscription.CreatorId = creator.Id;
-
-            using (var dbContext = this.NewDbContext())
+            using (var databaseContext = this.NewDbContext())
             {
-                dbContext.Subscriptions.Add(subscription);
-                await dbContext.SaveChangesAsync();
+                await databaseContext.CreateTestSubscriptionAsync(newUserId.Value, newSubscriptionId.Value);
             }
         }
     }

@@ -9,8 +9,8 @@
     [AutoConstructor]
     public partial class CreateSubscriptionCommandHandler : ICommandHandler<CreateSubscriptionCommand>
     {
-        private readonly IFifthweekDbContext fifthweekDbContext;
         private readonly ISubscriptionSecurity subscriptionSecurity;
+        private readonly IFifthweekDbContext fifthweekDbContext;
 
         public async Task HandleAsync(CreateSubscriptionCommand command)
         {

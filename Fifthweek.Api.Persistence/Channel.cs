@@ -2,6 +2,7 @@
 {
     using System;
     using System.ComponentModel.DataAnnotations;
+    using System.ComponentModel.DataAnnotations.Schema;
 
     using Fifthweek.Api.Core;
 
@@ -15,7 +16,7 @@
         [Required, Key]
         public Guid Id { get; set; }
 
-        [Required]
+        [Required, Index]
         public Guid SubscriptionId { get; set; }
 
         [Required, Optional, NonEquatable]

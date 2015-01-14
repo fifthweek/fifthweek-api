@@ -2,6 +2,7 @@
 {
     using System;
     using System.ComponentModel.DataAnnotations;
+    using System.ComponentModel.DataAnnotations.Schema;
 
     using Fifthweek.Api.Core;
     using Fifthweek.Api.Persistence.Identity;
@@ -16,7 +17,7 @@
         [Required, Key]
         public Guid Id { get; set; }
 
-        [Required]
+        [Required, Index]
         public Guid CreatorId { get; set; }
 
         [Required, Optional, NonEquatable]

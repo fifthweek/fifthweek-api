@@ -1,9 +1,10 @@
 ﻿namespace Fifthweek.Api.Persistence.Tests.Shared
 {
     using System;
-    using System.Linq;
+    using System.Diagnostics;
 
     using Fifthweek.Api.Core;
+    using Fifthweek.Api.Persistence.Identity;
 
     [AutoConstructor]
     public partial class TemporaryDatabaseSeed
@@ -12,19 +13,24 @@
         private const int Creators = 5;
         private const int SubscriptionsPerCreator = 1; // That's all our interface supports for now!
         private const int ChannelsPerSubscription = 3;
+        private const int CollectionsPerChannel = 4;
+        private const int NotesPerChannel = 10;
+        private const int ImagesPerCollection = 10;
+        private const int FilesPerCollection = 10;
 
         private static readonly Random Random = new Random();
 
-        private readonly IFifthweekDbContext dbContext;
+        private readonly FifthweekDbContext databaseContext;
 
         public void PopulateWithDummyEntities()
         {
-            this.PopulateUsers();
-            this.PopulateSubscriptions();
-            this.PopulateChannels();
+            Trace.WriteLine(DateTime.Now.TimeOfDay);
+            this.databaseContext.Configuration.AutoDetectChangesEnabled = false;
+            this.CreateUsers();
+            Trace.WriteLine(DateTime.Now.TimeOfDay);
         }
 
-        private void PopulateUsers()
+        private void CreateUsers()
         {
             for (var i = 0; i < Users; i++)
             {
@@ -37,53 +43,111 @@
                     file.UserId = user.Id;
                     user.ProfileImageFile = file;
                     user.ProfileImageFileId = file.Id;
-                    this.dbContext.Files.Add(file);
                 }
 
-                this.dbContext.Users.Add(user);
-            }
-        }
+                this.databaseContext.Users.Add(user);
 
-        private void PopulateSubscriptions()
-        {
-            for (var creatorIndex = 0; creatorIndex < Creators; creatorIndex++)
-            {
-                var creator = this.dbContext.Users.Local[creatorIndex];
-                for (var subscriptionIndex = 0; subscriptionIndex < SubscriptionsPerCreator; subscriptionIndex++)
+                if (i < Creators)
                 {
-                    var subscription = SubscriptionTests.UniqueEntity(Random);
-
-                    if (subscription.HeaderImageFile != null)
-                    {
-                        var file = subscription.HeaderImageFile;
-                        file.User = creator;
-                        file.UserId = creator.Id;
-                        this.dbContext.Files.Add(subscription.HeaderImageFile);
-                    }
-
-                    subscription.Creator = creator;
-                    subscription.CreatorId = creator.Id;
-                    this.dbContext.Subscriptions.Add(subscription);
+                    this.CreateSubscriptions(user);
                 }
             }
         }
 
-        private void PopulateChannels()
+        private void CreateSubscriptions(FifthweekUser creator)
         {
-            for (var creatorIndex = 0; creatorIndex < Creators; creatorIndex++)
+            for (var subscriptionIndex = 0; subscriptionIndex < SubscriptionsPerCreator; subscriptionIndex++)
             {
-                var creator = this.dbContext.Users.Local[creatorIndex];
-                for (var subscriptionIndex = 0; subscriptionIndex < SubscriptionsPerCreator; subscriptionIndex++)
+                var subscription = SubscriptionTests.UniqueEntity(Random);
+
+                if (subscription.HeaderImageFile != null)
                 {
-                    var subscription = this.dbContext.Subscriptions.Local.Single(_ => _.Creator == creator);
-                    for (var channelIndex = 0; channelIndex < ChannelsPerSubscription; channelIndex++)
-                    {
-                        var channel = ChannelTests.UniqueEntity(Random);
-                        channel.Subscription = subscription;
-                        channel.SubscriptionId = subscription.Id;
-                        this.dbContext.Channels.Add(channel);
-                    }
+                    var file = subscription.HeaderImageFile;
+                    file.User = creator;
+                    file.UserId = creator.Id;
+                    this.databaseContext.Files.Add(subscription.HeaderImageFile);
                 }
+
+                subscription.Creator = creator;
+                subscription.CreatorId = creator.Id;
+                this.databaseContext.Subscriptions.Add(subscription);
+
+                this.CreateChannels(subscription);
+            }
+        }
+
+        private void CreateChannels(Subscription subscription)
+        {
+            for (var channelIndex = 0; channelIndex < ChannelsPerSubscription; channelIndex++)
+            {
+                var channel = ChannelTests.UniqueEntity(Random, false);
+                channel.Subscription = subscription;
+                channel.SubscriptionId = subscription.Id;
+                this.databaseContext.Channels.Add(channel);
+
+                this.CreateNotes(channel);
+                this.CreateCollections(channel);
+            }
+        }
+
+        private void CreateNotes(Channel channel)
+        {
+            for (var postIndex = 0; postIndex < NotesPerChannel; postIndex++)
+            {
+                var post = PostTests.UniqueNote(Random, false);
+                post.Channel = channel;
+                post.ChannelId = channel.Id;
+                this.databaseContext.Posts.Add(post);
+            }
+        }
+
+        private void CreateCollections(Channel channel)
+        {
+            for (var collectionIndex = 0; collectionIndex < CollectionsPerChannel; collectionIndex++)
+            {
+                var collection = CollectionTests.UniqueEntity(Random, false);
+                collection.Channel = channel;
+                collection.ChannelId = channel.Id;
+                this.databaseContext.Collections.Add(collection);
+
+                this.CreateFileAndImagePosts(collection);
+            }
+        }
+
+        private void CreateFileAndImagePosts(Collection collection)
+        {
+            for (var postIndex = 0; postIndex < ImagesPerCollection; postIndex++)
+            {
+                var post = PostTests.UniqueImage(Random, false);
+                post.Channel = collection.Channel;
+                post.ChannelId = collection.Channel.Id;
+                post.Collection = collection;
+                post.CollectionId = collection.Id;
+
+                var file = FileTests.UniqueEntity(Random);
+                file.User = collection.Channel.Subscription.Creator;
+                file.UserId = collection.Channel.Subscription.Creator.Id;
+                post.Image = file;
+                post.ImageId = file.Id;
+
+                this.databaseContext.Posts.Add(post);
+            }
+
+            for (var postIndex = 0; postIndex < FilesPerCollection; postIndex++)
+            {
+                var post = PostTests.UniqueFile(Random, false);
+                post.Channel = collection.Channel;
+                post.ChannelId = collection.Channel.Id;
+                post.Collection = collection;
+                post.CollectionId = collection.Id;
+
+                var file = FileTests.UniqueEntity(Random);
+                file.User = collection.Channel.Subscription.Creator;
+                file.UserId = collection.Channel.Subscription.Creator.Id;
+                post.File = file;
+                post.FileId = file.Id;
+
+                this.databaseContext.Posts.Add(post);
             }
         }
     }

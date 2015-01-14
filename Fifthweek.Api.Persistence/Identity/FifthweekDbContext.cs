@@ -22,6 +22,10 @@ namespace Fifthweek.Api.Persistence.Identity
         public IDbSet<Subscription> Subscriptions { get; set; }
 
         public IDbSet<Channel> Channels { get; set; }
+        
+        public IDbSet<Collection> Collections { get; set; }
+        
+        public IDbSet<Post> Posts { get; set; }
 
         public IDbSet<File> Files { get; set; }
 

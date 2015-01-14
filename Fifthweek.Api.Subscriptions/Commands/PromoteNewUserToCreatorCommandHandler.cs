@@ -1,11 +1,12 @@
-﻿using System;
-using System.Threading.Tasks;
-using Fifthweek.Api.Core;
-using Fifthweek.Api.Persistence;
-using Fifthweek.Api.Persistence.Identity;
-
-namespace Fifthweek.Api.Subscriptions.Commands
+﻿namespace Fifthweek.Api.Subscriptions.Commands
 {
+    using System;
+    using System.Threading.Tasks;
+
+    using Fifthweek.Api.Core;
+    using Fifthweek.Api.Persistence;
+    using Fifthweek.Api.Persistence.Identity;
+
     [AutoConstructor]
     public partial class PromoteNewUserToCreatorCommandHandler : ICommandHandler<PromoteNewUserToCreatorCommand>
     {

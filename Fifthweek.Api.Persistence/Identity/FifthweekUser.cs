@@ -1,11 +1,9 @@
-using Fifthweek.Api.Core;
-
 namespace Fifthweek.Api.Persistence.Identity
 {
     using System;
     using System.Collections.Generic;
-    using System.ComponentModel.DataAnnotations;
-    using System.ComponentModel.DataAnnotations.Schema;
+
+    using Fifthweek.Api.Core;
 
     using Microsoft.AspNet.Identity.EntityFramework;
 

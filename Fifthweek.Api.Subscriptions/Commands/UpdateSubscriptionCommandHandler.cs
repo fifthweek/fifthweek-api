@@ -10,9 +10,9 @@
     [AutoConstructor]
     public partial class UpdateSubscriptionCommandHandler : ICommandHandler<UpdateSubscriptionCommand>
     {
-        private readonly IFifthweekDbContext databaseContext;
         private readonly ISubscriptionSecurity subscriptionSecurity;
         private readonly IFileSecurity fileSecurity;
+        private readonly IFifthweekDbContext databaseContext;
 
         public async Task HandleAsync(UpdateSubscriptionCommand command)
         {

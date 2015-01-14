@@ -1,8 +1,10 @@
-﻿using System;
-using Fifthweek.Api.Persistence.Identity;
-
-namespace Fifthweek.Api.Persistence.Tests.Shared
+﻿namespace Fifthweek.Api.Persistence.Tests.Shared
 {
+    using System;
+    using System.Threading.Tasks;
+
+    using Fifthweek.Api.Persistence.Identity;
+
     public static class UserTests
     {
         public static FifthweekUser UniqueEntity(Random random)
@@ -17,6 +19,16 @@ namespace Fifthweek.Api.Persistence.Tests.Shared
                 RegistrationDate = DateTime.UtcNow.AddDays(random.NextDouble() * -100),
                 LockoutEndDateUtc = DateTime.UtcNow.AddDays(random.NextDouble() * -100),
             };
-      }
+        }
+
+        public static Task CreateTestUserAsync(this IFifthweekDbContext databaseContext, Guid newUserId)
+        {
+            var random = new Random();
+            var creator = UserTests.UniqueEntity(random);
+            creator.Id = newUserId;
+
+            databaseContext.Users.Add(creator);
+            return databaseContext.SaveChangesAsync();
+        }
     }
 }

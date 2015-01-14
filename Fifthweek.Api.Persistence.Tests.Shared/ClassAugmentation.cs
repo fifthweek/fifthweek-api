@@ -46,9 +46,9 @@ namespace Fifthweek.Api.Persistence.Tests.Shared
 	using System.Collections.Generic;
 	using System.Data.Entity;
 	using Microsoft.VisualStudio.TestTools.UnitTesting;
-	public partial class DatabaseState 
+	public partial class TemporaryDatabaseState 
 	{
-        public DatabaseState(
+        public TemporaryDatabaseState(
             Fifthweek.Api.Persistence.Tests.Shared.TemporaryDatabase temporaryDatabase)
         {
             if (temporaryDatabase == null)
@@ -78,14 +78,14 @@ namespace Fifthweek.Api.Persistence.Tests.Shared
 	public partial class TemporaryDatabaseSeed 
 	{
         public TemporaryDatabaseSeed(
-            Fifthweek.Api.Persistence.IFifthweekDbContext dbContext)
+            Fifthweek.Api.Persistence.Identity.FifthweekDbContext databaseContext)
         {
-            if (dbContext == null)
+            if (databaseContext == null)
             {
-                throw new ArgumentNullException("dbContext");
+                throw new ArgumentNullException("databaseContext");
             }
 
-            this.dbContext = dbContext;
+            this.databaseContext = databaseContext;
         }
 	}
 

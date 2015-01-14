@@ -2,6 +2,7 @@
 {
     using System;
     using System.ComponentModel.DataAnnotations;
+    using System.ComponentModel.DataAnnotations.Schema;
 
     using Fifthweek.Api.Core;
 
@@ -15,7 +16,7 @@
         [Required, Key]
         public Guid Id { get; set; }
 
-        [Required]
+        [Required, Index]
         public Guid ChannelId { get; set; }
 
         [Required, Optional, NonEquatable]
@@ -42,6 +43,12 @@
         [Optional]
         [MaxLength(280)] // See: ValidNote.MaxLength
         public string Comment { get; set; }
+
+        [Optional]
+        public int? QueuePosition { get; set; }
+
+        [Optional, Index]
+        public DateTime? LiveDate { get; set; }
 
         [Required]
         public DateTime CreationDate { get; set; }

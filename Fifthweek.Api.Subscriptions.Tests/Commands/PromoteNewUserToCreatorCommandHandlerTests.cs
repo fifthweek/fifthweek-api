@@ -1,16 +1,18 @@
-﻿using System;
-using System.Threading.Tasks;
-using Fifthweek.Api.Identity.Membership;
-using Fifthweek.Api.Persistence;
-using Fifthweek.Api.Persistence.Identity;
-using Fifthweek.Api.Persistence.Tests.Shared;
-using Fifthweek.Api.Subscriptions.Commands;
-using Microsoft.AspNet.Identity;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Moq;
-
-namespace Fifthweek.Api.Subscriptions.Tests.Commands
+﻿namespace Fifthweek.Api.Subscriptions.Tests.Commands
 {
+    using System;
+    using System.Threading.Tasks;
+
+    using Fifthweek.Api.Identity.Membership;
+    using Fifthweek.Api.Persistence;
+    using Fifthweek.Api.Persistence.Identity;
+    using Fifthweek.Api.Subscriptions.Commands;
+
+    using Microsoft.AspNet.Identity;
+    using Microsoft.VisualStudio.TestTools.UnitTesting;
+
+    using Moq;
+
     [TestClass]
     public class PromoteNewUserToCreatorCommandHandlerTests
     {

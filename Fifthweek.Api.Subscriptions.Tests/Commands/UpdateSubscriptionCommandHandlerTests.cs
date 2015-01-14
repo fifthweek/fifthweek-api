@@ -46,7 +46,7 @@
             base.Initialize();
             this.subscriptionSecurity = new Mock<ISubscriptionSecurity>();
             this.fileSecurity = new Mock<IFileSecurity>();
-            this.target = new UpdateSubscriptionCommandHandler(this.NewDbContext(), this.subscriptionSecurity.Object, this.fileSecurity.Object);
+            this.target = new UpdateSubscriptionCommandHandler(this.subscriptionSecurity.Object, this.fileSecurity.Object, this.NewDbContext());
         }
 
         [TestCleanup]
@@ -137,31 +137,14 @@
 
         private async Task<Subscription> CreateSubscriptionAsync(UserId newUserId, SubscriptionId newSubscriptionId, FileId headerImageFileId)
         {
-            var random = new Random();
-            var creator = UserTests.UniqueEntity(random);
-            creator.Id = newUserId.Value;
-
-            var file = FileTests.UniqueEntity(random);
-            file.Id = headerImageFileId.Value;
-            file.User = creator;
-            file.UserId = creator.Id;
-
-            var subscription = SubscriptionTests.UniqueEntity(random);
-            subscription.Id = newSubscriptionId.Value;
-            subscription.Creator = creator;
-            subscription.CreatorId = creator.Id;
-            subscription.HeaderImageFile = file;
-            subscription.HeaderImageFileId = file.Id;
-
-            using (var dbContext = this.NewDbContext())
+            using (var databaseContext = this.NewDbContext())
             {
-                dbContext.Subscriptions.Add(subscription);
-                await dbContext.SaveChangesAsync();
+                await databaseContext.CreateTestSubscriptionAsync(newUserId.Value, newSubscriptionId.Value, headerImageFileId.Value);
             }
 
-            using (var dbContext = this.NewDbContext())
+            using (var databaseContext = this.NewDbContext())
             {
-                return await dbContext.Subscriptions.SingleAsync(_ => _.Id == newSubscriptionId.Value);
+                return await databaseContext.Subscriptions.SingleAsync(_ => _.Id == newSubscriptionId.Value);
             }
         }
     }

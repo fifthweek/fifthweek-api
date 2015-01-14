@@ -261,21 +261,21 @@ namespace Fifthweek.Api.Subscriptions.Commands
 	public partial class CreateSubscriptionCommandHandler 
 	{
         public CreateSubscriptionCommandHandler(
-            Fifthweek.Api.Persistence.IFifthweekDbContext fifthweekDbContext, 
-            Fifthweek.Api.Subscriptions.ISubscriptionSecurity subscriptionSecurity)
+            Fifthweek.Api.Subscriptions.ISubscriptionSecurity subscriptionSecurity, 
+            Fifthweek.Api.Persistence.IFifthweekDbContext fifthweekDbContext)
         {
-            if (fifthweekDbContext == null)
-            {
-                throw new ArgumentNullException("fifthweekDbContext");
-            }
-
             if (subscriptionSecurity == null)
             {
                 throw new ArgumentNullException("subscriptionSecurity");
             }
 
-            this.fifthweekDbContext = fifthweekDbContext;
+            if (fifthweekDbContext == null)
+            {
+                throw new ArgumentNullException("fifthweekDbContext");
+            }
+
             this.subscriptionSecurity = subscriptionSecurity;
+            this.fifthweekDbContext = fifthweekDbContext;
         }
 	}
 
@@ -432,15 +432,10 @@ namespace Fifthweek.Api.Subscriptions.Commands
 	public partial class UpdateSubscriptionCommandHandler 
 	{
         public UpdateSubscriptionCommandHandler(
-            Fifthweek.Api.Persistence.IFifthweekDbContext databaseContext, 
             Fifthweek.Api.Subscriptions.ISubscriptionSecurity subscriptionSecurity, 
-            Fifthweek.Api.FileManagement.IFileSecurity fileSecurity)
+            Fifthweek.Api.FileManagement.IFileSecurity fileSecurity, 
+            Fifthweek.Api.Persistence.IFifthweekDbContext databaseContext)
         {
-            if (databaseContext == null)
-            {
-                throw new ArgumentNullException("databaseContext");
-            }
-
             if (subscriptionSecurity == null)
             {
                 throw new ArgumentNullException("subscriptionSecurity");
@@ -451,9 +446,14 @@ namespace Fifthweek.Api.Subscriptions.Commands
                 throw new ArgumentNullException("fileSecurity");
             }
 
-            this.databaseContext = databaseContext;
+            if (databaseContext == null)
+            {
+                throw new ArgumentNullException("databaseContext");
+            }
+
             this.subscriptionSecurity = subscriptionSecurity;
             this.fileSecurity = fileSecurity;
+            this.databaseContext = databaseContext;
         }
 	}
 

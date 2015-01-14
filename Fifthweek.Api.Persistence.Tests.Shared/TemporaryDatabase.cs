@@ -1,14 +1,15 @@
-﻿using System;
-using System.Data.Entity.Infrastructure;
-using System.Data.Entity.Migrations;
-using System.Diagnostics;
-using System.Linq;
-using Fifthweek.Api.Core;
-using Fifthweek.Api.Persistence.Identity;
-using Fifthweek.Api.Persistence.Migrations;
-
-namespace Fifthweek.Api.Persistence.Tests.Shared
+﻿namespace Fifthweek.Api.Persistence.Tests.Shared
 {
+    using System;
+    using System.Data.Entity.Infrastructure;
+    using System.Data.Entity.Migrations;
+    using System.Diagnostics;
+    using System.Linq;
+
+    using Fifthweek.Api.Core;
+    using Fifthweek.Api.Persistence.Identity;
+    using Fifthweek.Api.Persistence.Migrations;
+
     [AutoConstructor]
     public partial class TemporaryDatabase : IDisposable
     {
@@ -61,6 +62,13 @@ namespace Fifthweek.Api.Persistence.Tests.Shared
             }
 
             return new TemporaryDatabase(connectionString);
+        }
+
+        private static string LocalDbConnectionString()
+        {
+            const string FileName = "Fifthweek_Test.mdf";
+            var filePath = AppDomain.CurrentDomain.BaseDirectory + "\\" + FileName;
+            return string.Format("Data Source=(LocalDb)\\v11.0;AttachDbFilename={0};Integrated Security=SSPI;", filePath);
         }
 
         private static string NewUniqueLocalDbConnectionString()

@@ -30,7 +30,7 @@
         {
             base.Initialize();
             this.subscriptionSecurity = new Mock<ISubscriptionSecurity>();
-            this.target = new CreateSubscriptionCommandHandler(this.NewDbContext(), this.subscriptionSecurity.Object);
+            this.target = new CreateSubscriptionCommandHandler(this.subscriptionSecurity.Object, this.NewDbContext());
         }
 
         [TestCleanup]
@@ -139,14 +139,9 @@
 
         private async Task CreateUserAsync(UserId newUserId)
         {
-            var random = new Random();
-            var creator = UserTests.UniqueEntity(random);
-            creator.Id = newUserId.Value;
-
-            using (var dbContext = this.NewDbContext())
+            using (var databaseContext = this.NewDbContext())
             {
-                dbContext.Users.Add(creator);
-                await dbContext.SaveChangesAsync();
+                await databaseContext.CreateTestUserAsync(newUserId.Value);
             }
         }
     }

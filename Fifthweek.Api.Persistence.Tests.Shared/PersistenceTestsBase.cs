@@ -1,16 +1,22 @@
-﻿using System.Threading.Tasks;
-
-namespace Fifthweek.Api.Persistence.Tests.Shared
+﻿namespace Fifthweek.Api.Persistence.Tests.Shared
 {
+    using System.Threading.Tasks;
+
     public abstract class PersistenceTestsBase
     {
+        private static TemporaryDatabase singletonTemporaryDatabase;
         private TemporaryDatabase temporaryDatabase;
-        private DatabaseState databaseState;
+        private TemporaryDatabaseState databaseState;
 
         public virtual void Initialize()
         {
+//            if (singletonTemporaryDatabase == null)
+//            {
+//                singletonTemporaryDatabase = TemporaryDatabase.CreateNew();
+//            }
+
             this.temporaryDatabase = TemporaryDatabase.CreateNew();
-            this.databaseState = new DatabaseState(temporaryDatabase);
+            this.databaseState = new TemporaryDatabaseState(this.temporaryDatabase);
         }
 
         public virtual void Cleanup()
@@ -18,6 +24,7 @@ namespace Fifthweek.Api.Persistence.Tests.Shared
             if (this.temporaryDatabase != null)
             {
                 this.temporaryDatabase.Dispose();
+                this.temporaryDatabase = null;
             }
         }
 

@@ -68,6 +68,8 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
+    <Compile Include="PostTests.cs" />
+    <Compile Include="CollectionTests.cs" />
     <Compile Include="ClassAugmentation.cs">
       <DependentUpon>ClassAugmentation.tt</DependentUpon>
       <AutoGen>True</AutoGen>
@@ -78,7 +80,7 @@
     <Compile Include="IWildcardEntity.cs" />
     <Compile Include="TableBeforeAndAfter.cs" />
     <Compile Include="TemporaryDatabaseSeed.cs" />
-    <Compile Include="DatabaseState.cs" />
+    <Compile Include="TemporaryDatabaseState.cs" />
     <Compile Include="ChannelTests.cs" />
     <Compile Include="PersistenceTestsBase.cs" />
     <Compile Include="SubscriptionTests.cs" />
