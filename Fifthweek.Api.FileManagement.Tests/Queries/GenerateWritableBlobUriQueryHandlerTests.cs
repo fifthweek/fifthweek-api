@@ -6,11 +6,14 @@ namespace Fifthweek.Api.FileManagement.Tests.Queries
     using System.Threading.Tasks;
 
     using Fifthweek.Api.Azure;
+    using Fifthweek.Api.Core;
     using Fifthweek.Api.FileManagement.Commands;
     using Fifthweek.Api.FileManagement.Queries;
     using Fifthweek.Api.Identity.Membership;
 
     using Moq;
+
+    using Constants = Fifthweek.Api.FileManagement.Constants;
 
     [TestClass]
     public class GenerateWritableBlobUriQueryHandlerTests
@@ -23,9 +26,8 @@ namespace Fifthweek.Api.FileManagement.Tests.Queries
             var blobName = "blobName";
             var url = "http://blah.com/blob";
 
-            this.fileRepository.Setup(v => v.AssertFileBelongsToUserAsync(userId, fileId))
-                .Returns(Task.FromResult(0))
-                .Verifiable();
+            this.fileSecurity.Setup(v => v.AssertFileBelongsToUserAsync(userId, fileId))
+                .Returns(Task.FromResult(0));
 
             this.blobNameCreator.Setup(v => v.CreateFileName(fileId)).Returns(blobName);
 
@@ -34,25 +36,55 @@ namespace Fifthweek.Api.FileManagement.Tests.Queries
 
             var result = await this.handler.HandleAsync(new GenerateWritableBlobUriQuery(userId, fileId));
 
-            this.fileRepository.Verify();
+            this.fileSecurity.Verify();
 
             Assert.AreEqual(url, result);
+        }
+
+        [TestMethod]
+        public async Task WhenCalledAndTheUserDoesNotOwnTheFile_ItShouldFail()
+        {
+            var userId = new UserId(Guid.NewGuid());
+            var fileId = new FileId(Guid.NewGuid());
+            var blobName = "blobName";
+            var url = "http://blah.com/blob";
+
+            this.fileSecurity.Setup(v => v.AssertFileBelongsToUserAsync(userId, fileId))
+                .Throws(new UnauthorizedException());
+
+            this.blobNameCreator.Setup(v => v.CreateFileName(fileId))
+                .Throws(new Exception("Shouldn't be called"));
+
+            this.blobService.Setup(v => v.GetBlobSasUriForWritingAsync(Constants.FileBlobContainerName, blobName))
+                .Throws(new Exception("Shouldn't be called"));
+
+            UnauthorizedException exception = null;
+            try
+            {
+                await this.handler.HandleAsync(new GenerateWritableBlobUriQuery(userId, fileId));
+            }
+            catch (UnauthorizedException t)
+            {
+                exception = t;
+            }
+
+            Assert.IsNotNull(exception);
         }
 
         [TestInitialize]
         public void TestInitialize()
         {
             this.blobService = new Mock<IBlobService>();
-            this.fileRepository = new Mock<IFileRepository>();
+            this.fileSecurity = new Mock<IFileSecurity>();
             this.blobNameCreator = new Mock<IBlobNameCreator>();
 
             this.handler = new GenerateWritableBlobUriQueryHandler(
                 this.blobService.Object,
                 this.blobNameCreator.Object,
-                this.fileRepository.Object);
+                this.fileSecurity.Object);
         }
 
-        private Mock<IFileRepository> fileRepository;
+        private Mock<IFileSecurity> fileSecurity;
         private Mock<IBlobService> blobService;
         private Mock<IBlobNameCreator> blobNameCreator;
 

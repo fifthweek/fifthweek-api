@@ -154,39 +154,6 @@
             }
         }
 
-        [TestMethod]
-        public async Task WhenAssertingAFileBelongsToAUser_ItShouldCompleteSuccessfullyIfThePermissionsAreOk()
-        {
-            await this.InitializeWithDatabaseAsync();
-            await this.target.AddNewFileAsync(this.fileId, this.userId, this.fileNameWithoutExtension, this.fileExtension, this.purpose);
-            await this.target.AssertFileBelongsToUserAsync(this.userId, this.fileId);
-        }
-
-        [TestMethod]
-        [ExpectedException(typeof(UnauthorizedException))]
-        public async Task WhenAssertingAFileBelongsToAUser_ItShouldThrowAnExceptionIfThePermissionsAreViolated()
-        {
-            await this.InitializeWithDatabaseAsync();
-            await this.target.AddNewFileAsync(this.fileId, this.userId, this.fileNameWithoutExtension, this.fileExtension, this.purpose);
-            await this.target.AssertFileBelongsToUserAsync(new UserId(Guid.NewGuid()), this.fileId);
-        }
-
-        [TestMethod]
-        [ExpectedException(typeof(ArgumentNullException))]
-        public async Task WhenAssertingAFileBelongsToAUser_UserIdMustNotBeNull()
-        {
-            await this.InitializeWithoutDatabaseAsync();
-            await this.target.AssertFileBelongsToUserAsync(null, this.fileId);
-        }
-
-        [TestMethod]
-        [ExpectedException(typeof(ArgumentNullException))]
-        public async Task WhenAssertingAFileBelongsToAUser_FileIdMustNotBeNull()
-        {
-            await this.InitializeWithoutDatabaseAsync();
-            await this.target.AssertFileBelongsToUserAsync(this.userId, null);
-        }
-
         private async Task InitializeWithoutDatabaseAsync()
         {
             this.target = new FileRepository(new Mock<IFifthweekDbContext>(MockBehavior.Strict).Object);

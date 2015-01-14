@@ -7,8 +7,6 @@
 
     public interface IFileRepository
     {
-        Task AssertFileBelongsToUserAsync(UserId userId, FileId fileId);
-
         Task AddNewFileAsync(
             FileId fileId, 
             UserId userId,

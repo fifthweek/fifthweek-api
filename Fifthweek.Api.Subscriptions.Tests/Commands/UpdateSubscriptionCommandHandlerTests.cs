@@ -37,7 +37,7 @@
             Video);
 
         private Mock<ISubscriptionSecurity> subscriptionSecurity;
-        private Mock<IFileRepository> fileRepository;
+        private Mock<IFileSecurity> fileSecurity;
         private UpdateSubscriptionCommandHandler target;
 
         [TestInitialize]
@@ -45,8 +45,8 @@
         {
             base.Initialize();
             this.subscriptionSecurity = new Mock<ISubscriptionSecurity>();
-            this.fileRepository = new Mock<IFileRepository>();
-            this.target = new UpdateSubscriptionCommandHandler(this.NewDbContext(), this.subscriptionSecurity.Object, this.fileRepository.Object);
+            this.fileSecurity = new Mock<IFileSecurity>();
+            this.target = new UpdateSubscriptionCommandHandler(this.NewDbContext(), this.subscriptionSecurity.Object, this.fileSecurity.Object);
         }
 
         [TestCleanup]
@@ -77,7 +77,7 @@
         [TestMethod]
         public async Task WhenNotAllowedToUseFile_ItShouldReportAnError()
         {
-            this.fileRepository.Setup(_ => _.AssertFileBelongsToUserAsync(UserId, HeaderImageFileId)).Throws<UnauthorizedException>();
+            this.fileSecurity.Setup(_ => _.AssertFileBelongsToUserAsync(UserId, HeaderImageFileId)).Throws<UnauthorizedException>();
 
             await this.SnapshotDatabaseAsync();
 

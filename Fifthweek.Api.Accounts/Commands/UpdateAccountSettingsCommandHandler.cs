@@ -17,7 +17,7 @@
     {
         private readonly IAccountRepository accountRepository;
 
-        private readonly IFileRepository fileRepository;
+        private readonly IFileSecurity fileSecurity;
 
         public async Task HandleAsync(UpdateAccountSettingsCommand command)
         {
@@ -26,7 +26,7 @@
             
             if (command.NewProfileImageId != null)
             {
-                await this.fileRepository.AssertFileBelongsToUserAsync(command.AuthenticatedUserId, command.NewProfileImageId);
+                await this.fileSecurity.AssertFileBelongsToUserAsync(command.AuthenticatedUserId, command.NewProfileImageId);
             }
 
             var result = await this.accountRepository.UpdateAccountSettingsAsync(

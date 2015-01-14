@@ -434,7 +434,7 @@ namespace Fifthweek.Api.Subscriptions.Commands
         public UpdateSubscriptionCommandHandler(
             Fifthweek.Api.Persistence.IFifthweekDbContext databaseContext, 
             Fifthweek.Api.Subscriptions.ISubscriptionSecurity subscriptionSecurity, 
-            Fifthweek.Api.FileManagement.IFileRepository fileRepository)
+            Fifthweek.Api.FileManagement.IFileSecurity fileSecurity)
         {
             if (databaseContext == null)
             {
@@ -446,14 +446,14 @@ namespace Fifthweek.Api.Subscriptions.Commands
                 throw new ArgumentNullException("subscriptionSecurity");
             }
 
-            if (fileRepository == null)
+            if (fileSecurity == null)
             {
-                throw new ArgumentNullException("fileRepository");
+                throw new ArgumentNullException("fileSecurity");
             }
 
             this.databaseContext = databaseContext;
             this.subscriptionSecurity = subscriptionSecurity;
-            this.fileRepository = fileRepository;
+            this.fileSecurity = fileSecurity;
         }
 	}
 

@@ -10,6 +10,7 @@
         {
             builder.RegisterType<BlobNameCreator>().As<IBlobNameCreator>().SingleInstance();
             builder.RegisterType<FileRepository>().As<IFileRepository>().SingleInstance();
+            builder.RegisterType<FileSecurity>().As<IFileSecurity>().SingleInstance();
         }
     }
 }

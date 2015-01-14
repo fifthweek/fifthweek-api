@@ -116,9 +116,11 @@
     <Compile Include="Controllers\UploadRequest.cs" />
     <Compile Include="FileId.cs" />
     <Compile Include="FileRepository.cs" />
+    <Compile Include="FileSecurity.cs" />
     <Compile Include="FileVariantId.cs" />
     <Compile Include="IBlobNameCreator.cs" />
     <Compile Include="IFileRepository.cs" />
+    <Compile Include="IFileSecurity.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Queries\GenerateWritableBlobUriQuery.cs" />
     <Compile Include="Queries\GenerateWritableBlobUriQueryHandler.cs" />

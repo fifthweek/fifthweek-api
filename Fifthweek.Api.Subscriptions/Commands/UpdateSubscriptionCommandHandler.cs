@@ -12,7 +12,7 @@
     {
         private readonly IFifthweekDbContext databaseContext;
         private readonly ISubscriptionSecurity subscriptionSecurity;
-        private readonly IFileRepository fileRepository;
+        private readonly IFileSecurity fileSecurity;
 
         public async Task HandleAsync(UpdateSubscriptionCommand command)
         {
@@ -22,7 +22,7 @@
             }
 
             await this.subscriptionSecurity.AssertUpdateAllowedAsync(command.Requester, command.SubscriptionId);
-            await this.fileRepository.AssertFileBelongsToUserAsync(command.Requester, command.HeaderImageFileId);
+            await this.fileSecurity.AssertFileBelongsToUserAsync(command.Requester, command.HeaderImageFileId);
             
             await this.UpdateSubscriptionAsync(command);
         }

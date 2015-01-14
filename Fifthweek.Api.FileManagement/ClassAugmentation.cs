@@ -47,12 +47,18 @@ namespace Fifthweek.Api.FileManagement.Commands
 	{
         public CompleteFileUploadCommandHandler(
             Fifthweek.Api.FileManagement.IFileRepository fileRepository, 
+            Fifthweek.Api.FileManagement.IFileSecurity fileSecurity, 
             Fifthweek.Api.Azure.IBlobService blobService, 
             Fifthweek.Api.FileManagement.IBlobNameCreator blobNameCreator)
         {
             if (fileRepository == null)
             {
                 throw new ArgumentNullException("fileRepository");
+            }
+
+            if (fileSecurity == null)
+            {
+                throw new ArgumentNullException("fileSecurity");
             }
 
             if (blobService == null)
@@ -66,6 +72,7 @@ namespace Fifthweek.Api.FileManagement.Commands
             }
 
             this.fileRepository = fileRepository;
+            this.fileSecurity = fileSecurity;
             this.blobService = blobService;
             this.blobNameCreator = blobNameCreator;
         }
@@ -399,7 +406,7 @@ namespace Fifthweek.Api.FileManagement.Queries
         public GenerateWritableBlobUriQueryHandler(
             Fifthweek.Api.Azure.IBlobService blobService, 
             Fifthweek.Api.FileManagement.IBlobNameCreator blobNameCreator, 
-            Fifthweek.Api.FileManagement.IFileRepository fileRepository)
+            Fifthweek.Api.FileManagement.IFileSecurity fileSecurity)
         {
             if (blobService == null)
             {
@@ -411,14 +418,39 @@ namespace Fifthweek.Api.FileManagement.Queries
                 throw new ArgumentNullException("blobNameCreator");
             }
 
-            if (fileRepository == null)
+            if (fileSecurity == null)
             {
-                throw new ArgumentNullException("fileRepository");
+                throw new ArgumentNullException("fileSecurity");
             }
 
             this.blobService = blobService;
             this.blobNameCreator = blobNameCreator;
-            this.fileRepository = fileRepository;
+            this.fileSecurity = fileSecurity;
+        }
+	}
+
+}
+namespace Fifthweek.Api.FileManagement
+{
+	using System;
+	using System.Linq;
+	using Fifthweek.Api.Core;
+	using System.Security;
+	using System.Threading.Tasks;
+	using Dapper;
+	using Fifthweek.Api.Identity.Membership;
+	using Fifthweek.Api.Persistence;
+	public partial class FileSecurity 
+	{
+        public FileSecurity(
+            Fifthweek.Api.Persistence.IFifthweekDbContext fifthweekDbContext)
+        {
+            if (fifthweekDbContext == null)
+            {
+                throw new ArgumentNullException("fifthweekDbContext");
+            }
+
+            this.fifthweekDbContext = fifthweekDbContext;
         }
 	}
 

@@ -105,20 +105,20 @@ namespace Fifthweek.Api.Accounts.Commands
 	{
         public UpdateAccountSettingsCommandHandler(
             Fifthweek.Api.Accounts.IAccountRepository accountRepository, 
-            Fifthweek.Api.FileManagement.IFileRepository fileRepository)
+            Fifthweek.Api.FileManagement.IFileSecurity fileSecurity)
         {
             if (accountRepository == null)
             {
                 throw new ArgumentNullException("accountRepository");
             }
 
-            if (fileRepository == null)
+            if (fileSecurity == null)
             {
-                throw new ArgumentNullException("fileRepository");
+                throw new ArgumentNullException("fileSecurity");
             }
 
             this.accountRepository = accountRepository;
-            this.fileRepository = fileRepository;
+            this.fileSecurity = fileSecurity;
         }
 	}
 

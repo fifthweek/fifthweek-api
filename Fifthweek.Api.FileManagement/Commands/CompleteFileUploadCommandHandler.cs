@@ -12,6 +12,8 @@
     public partial class CompleteFileUploadCommandHandler : ICommandHandler<CompleteFileUploadCommand>
     {
         private readonly IFileRepository fileRepository;
+        
+        private readonly IFileSecurity fileSecurity;
 
         private readonly IBlobService blobService;
 
@@ -21,7 +23,7 @@
         {
             command.AssertNotNull("command");
             command.AuthenticatedUserId.AssertAuthenticated();
-            await this.fileRepository.AssertFileBelongsToUserAsync(command.AuthenticatedUserId, command.FileId);
+            await this.fileSecurity.AssertFileBelongsToUserAsync(command.AuthenticatedUserId, command.FileId);
 
             const string ContainerName = FileManagement.Constants.FileBlobContainerName;
             var blobName = this.blobNameCreator.CreateFileName(command.FileId);

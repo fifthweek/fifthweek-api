@@ -24,7 +24,7 @@ namespace Fifthweek.Api.FileManagement.Tests.Commands
             var fileId = new FileId(Guid.NewGuid());
             var blobName = "blobName";
 
-            this.fileRepository.Setup(v => v.AssertFileBelongsToUserAsync(userId, fileId))
+            this.fileSecurity.Setup(v => v.AssertFileBelongsToUserAsync(userId, fileId))
                 .Returns(Task.FromResult(0));
 
             this.blobNameCreator.Setup(v => v.CreateFileName(fileId)).Returns(blobName);
@@ -51,7 +51,7 @@ namespace Fifthweek.Api.FileManagement.Tests.Commands
             var fileId = new FileId(Guid.NewGuid());
             var blobName = "blobName";
 
-            this.fileRepository.Setup(v => v.AssertFileBelongsToUserAsync(userId, fileId))
+            this.fileSecurity.Setup(v => v.AssertFileBelongsToUserAsync(userId, fileId))
                 .Throws(new UnauthorizedException());
 
             this.blobNameCreator.Setup(v => v.CreateFileName(fileId)).Returns(blobName);
@@ -84,14 +84,17 @@ namespace Fifthweek.Api.FileManagement.Tests.Commands
         {
             this.blobService = new Mock<IBlobService>();
             this.fileRepository = new Mock<IFileRepository>();
+            this.fileSecurity = new Mock<IFileSecurity>();
             this.blobNameCreator = new Mock<IBlobNameCreator>();
 
             this.handler = new CompleteFileUploadCommandHandler(
                 this.fileRepository.Object,
+                this.fileSecurity.Object,
                 this.blobService.Object, 
                 this.blobNameCreator.Object);
         }
 
+        private Mock<IFileSecurity> fileSecurity;
         private Mock<IFileRepository> fileRepository;
         private Mock<IBlobService> blobService;
         private Mock<IBlobNameCreator> blobNameCreator;
