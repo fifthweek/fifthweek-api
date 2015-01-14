@@ -30,9 +30,9 @@
                 @"IF EXISTS(SELECT *
                             FROM        Channels channel
                             INNER JOIN  Subscriptions subscription
-                            ON          channel.SubscriptionId = subscription.Id
-                            WHERE       channel.Id = @ChannelId
-                            AND         subscription.CreatorId = @CreatorId)
+                            ON          channel.SubscriptionId  = subscription.Id
+                            WHERE       channel.Id              = @ChannelId
+                            AND         subscription.CreatorId  = @CreatorId)
                     SELECT 1 AS FOUND
                 ELSE
                     SELECT 0 AS FOUND",
