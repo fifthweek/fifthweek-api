@@ -8,11 +8,10 @@
     {
         public static File UniqueEntity(Random random)
         {
-            var user = UserTests.UniqueEntity(random);
             return new File(
                 Guid.NewGuid(),
-                user,
-                user.Id,
+                null,
+                default(Guid),
                 (FileState)random.Next(0, 3),
                 DateTime.UtcNow.AddDays(random.NextDouble() * -100),
                 DateTime.UtcNow.AddDays(random.NextDouble() * -100),

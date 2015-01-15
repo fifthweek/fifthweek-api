@@ -4,13 +4,12 @@
 
     public static class CollectionTests
     {
-        public static Collection UniqueEntity(Random random, bool createForeignEntities)
+        public static Collection UniqueEntity(Random random)
         {
-            var channel = createForeignEntities ? ChannelTests.UniqueEntity(random, true) : null;
             return new Collection(
                 Guid.NewGuid(),
-                channel != null ? channel.Id : default(Guid),
-                channel,
+                default(Guid),
+                null,
                 "Channel " + random.Next());
         }
     }

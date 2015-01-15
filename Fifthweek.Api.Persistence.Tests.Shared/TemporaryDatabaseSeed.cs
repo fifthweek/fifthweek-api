@@ -48,7 +48,7 @@
 
             if (!seedResetRequired)
             {
-                Trace.WriteLine("Seed state matched - no reset required.");
+                Trace.WriteLine("Seed state matches - no reset required.");
                 return;
             }
 
@@ -145,7 +145,7 @@
         {
             for (var channelIndex = 0; channelIndex < ChannelsPerSubscription; channelIndex++)
             {
-                var channel = ChannelTests.UniqueEntity(Random, false);
+                var channel = ChannelTests.UniqueEntity(Random);
                 channel.Subscription = subscription;
                 channel.SubscriptionId = subscription.Id;
                 this.channels.Add(channel);
@@ -159,7 +159,7 @@
         {
             for (var postIndex = 0; postIndex < NotesPerChannel; postIndex++)
             {
-                var post = PostTests.UniqueNote(Random, false);
+                var post = PostTests.UniqueNote(Random);
                 post.Channel = channel;
                 post.ChannelId = channel.Id;
                 this.posts.Add(post);
@@ -170,7 +170,7 @@
         {
             for (var collectionIndex = 0; collectionIndex < CollectionsPerChannel; collectionIndex++)
             {
-                var collection = CollectionTests.UniqueEntity(Random, false);
+                var collection = CollectionTests.UniqueEntity(Random);
                 collection.Channel = channel;
                 collection.ChannelId = channel.Id;
                 this.collections.Add(collection);
@@ -182,7 +182,7 @@
         {
             for (var postIndex = 0; postIndex < ImagesPerCollection; postIndex++)
             {
-                var post = PostTests.UniqueImage(Random, false);
+                var post = PostTests.UniqueFileOrImage(Random);
                 post.Channel = collection.Channel;
                 post.ChannelId = collection.Channel.Id;
                 post.Collection = collection;
@@ -200,7 +200,7 @@
 
             for (var postIndex = 0; postIndex < FilesPerCollection; postIndex++)
             {
-                var post = PostTests.UniqueFile(Random, false);
+                var post = PostTests.UniqueFileOrImage(Random);
                 post.Channel = collection.Channel;
                 post.ChannelId = collection.Channel.Id;
                 post.Collection = collection;

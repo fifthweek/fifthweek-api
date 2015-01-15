@@ -92,7 +92,7 @@
                 await this.CreateFileAsync(testDatabase);
                 await testDatabase.TakeSnapshotAsync();
 
-                var currentUser = await this.GetUser(testDatabase);
+                var currentUser = await this.GetUserAsync(testDatabase);
 
                 var hashedNewPassword = this.newPassword.Value + "1";
                 this.passwordHasher.Setup(v => v.HashPassword(this.newPassword.Value)).Returns(hashedNewPassword);
@@ -132,7 +132,7 @@
                 await this.CreateFileAsync(testDatabase);
                 await testDatabase.TakeSnapshotAsync();
 
-                var currentUser = await this.GetUser(testDatabase);
+                var currentUser = await this.GetUserAsync(testDatabase);
 
                 var result = await this.target.UpdateAccountSettingsAsync(
                     this.userId,
@@ -169,7 +169,7 @@
                 await this.CreateFileAsync(testDatabase);
                 await testDatabase.TakeSnapshotAsync();
 
-                var currentUser = await this.GetUser(testDatabase);
+                var currentUser = await this.GetUserAsync(testDatabase);
 
                 var result = await this.target.UpdateAccountSettingsAsync(
                     this.userId,
@@ -206,7 +206,7 @@
                 await this.CreateFileAsync(testDatabase);
                 await testDatabase.TakeSnapshotAsync();
 
-                var currentUser = await this.GetUser(testDatabase);
+                var currentUser = await this.GetUserAsync(testDatabase);
 
                 var result = await this.target.UpdateAccountSettingsAsync(
                     this.userId,
@@ -270,12 +270,17 @@
                     this.newFileId));
         }
 
-        private async Task<FifthweekUser> GetUser(TestDatabaseContext testDatabase)
+        private async Task<FifthweekUser> GetUserAsync(TestDatabaseContext testDatabase)
         {
             using (var databaseContext = testDatabase.NewContext())
             {
-                return await databaseContext.Users.SingleAsync(v => v.Id == this.userId.Value);
+                return await this.GetUserAsync(databaseContext);
             }
+        }
+
+        private async Task<FifthweekUser> GetUserAsync(IFifthweekDbContext databaseContext)
+        {
+            return await databaseContext.Users.SingleAsync(v => v.Id == this.userId.Value);
         }
 
         private async Task CreateFileAsync(TestDatabaseContext testDatabase)
@@ -283,12 +288,18 @@
             var random = new Random();
             var user = UserTests.UniqueEntity(random);
             user.Id = this.userId.Value;
-
             user.Email = this.email.Value;
 
-            user.ProfileImageFile = FileTests.UniqueEntity(random);
-            user.ProfileImageFile.Id = this.fileId.Value;
-            user.ProfileImageFileId = this.fileId.Value;
+            using (var databaseContext = testDatabase.NewContext())
+            {
+                databaseContext.Users.Add(user);
+                await databaseContext.SaveChangesAsync();
+            }
+
+            var profileImageFile = FileTests.UniqueEntity(random);
+            profileImageFile.Id = this.fileId.Value;
+            profileImageFile.User = user;
+            profileImageFile.UserId = user.Id;
 
             var otherFile = FileTests.UniqueEntity(random);
             otherFile.Id = this.newFileId.Value;
@@ -297,10 +308,13 @@
 
             using (var databaseContext = testDatabase.NewContext())
             {
-                databaseContext.Files.Add(user.ProfileImageFile);
-                databaseContext.Files.Add(otherFile);
-                databaseContext.Users.Add(user);
-                await databaseContext.SaveChangesAsync();
+                await databaseContext.Database.Connection.InsertAsync(profileImageFile);
+                await databaseContext.Database.Connection.InsertAsync(otherFile);
+
+                user.ProfileImageFile = profileImageFile;
+                user.ProfileImageFileId = profileImageFile.Id;
+
+                await databaseContext.Database.Connection.UpdateAsync(user, FifthweekUser.Fields.ProfileImageFileId);
             }
         }
     }

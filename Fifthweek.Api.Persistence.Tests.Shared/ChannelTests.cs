@@ -5,13 +5,12 @@
 
     public static class ChannelTests
     {
-        public static Channel UniqueEntity(Random random, bool createForeignEntities)
+        public static Channel UniqueEntity(Random random)
         {
-            var subscription = createForeignEntities ? SubscriptionTests.UniqueEntity(random) : null;
             return new Channel(
                 Guid.NewGuid(),
-                subscription != null ? subscription.Id : default(Guid),
-                subscription,
+                default(Guid),
+                null,
                 random.Next(1, 100),
                 DateTime.UtcNow.AddDays(random.NextDouble() * -100));
         }
@@ -26,7 +25,7 @@
             subscription.Creator = creator;
             subscription.CreatorId = creator.Id;
 
-            var channel = ChannelTests.UniqueEntity(random, false);
+            var channel = ChannelTests.UniqueEntity(random);
             channel.Id = newChannelId;
             channel.Subscription = subscription;
             channel.SubscriptionId = subscription.Id;

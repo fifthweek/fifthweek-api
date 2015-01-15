@@ -7,19 +7,17 @@
     {
         public static Subscription UniqueEntity(Random random)
         {
-            var user = UserTests.UniqueEntity(random);
-            var headerImage = random.Next(1) == 1 ? null : FileTests.UniqueEntity(random);
             return new Subscription(
                 Guid.NewGuid(),
-                user.Id,
-                user,
+                default(Guid),
+                null,
                 "Name " + random.Next(),
                 "Subscription tagline " + random.Next(),
                 "Subscription intro " + random.Next(),
                 random.Next(1) == 1 ? null : "Subscription description " + random.Next(),
                 random.Next(1) == 1 ? null : "http://external/video" + random.Next(),
-                headerImage == null ? (Guid?)null : headerImage.Id,
-                headerImage,
+                null,
+                null,
                 DateTime.UtcNow.AddDays(random.NextDouble() * -100));
         }
 
