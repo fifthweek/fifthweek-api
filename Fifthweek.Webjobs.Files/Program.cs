@@ -1,18 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Fifthweek.Webjobs.Thumbnails
+﻿namespace Fifthweek.Webjobs.Files
 {
+    using System;
     using System.IO;
     using System.Threading;
-    using System.Web.Helpers;
+    using System.Threading.Tasks;
 
+    using Fifthweek.Shared;
+    using Fifthweek.Webjobs.Files.Shared;
     using Fifthweek.Webjobs.Thumbnails.Shared;
-
-    using ImageMagick;
 
     using Microsoft.Azure.WebJobs;
 
@@ -28,17 +23,17 @@ namespace Fifthweek.Webjobs.Thumbnails
             host.RunAndBlock();
         }
 
-        public static Task CreateThumbnailAsync(
-            [QueueTrigger(Constants.ThumbnailsQueueName)] ThumbnailQueueItem thumbnail,
-            [Blob("{InputBlobLocation}", FileAccess.Read)] Stream input,
-            [Blob("{OutputBlobLocation}", FileAccess.Write)] Stream output,
+        public static Task ProcessFileAsync(
+            [QueueTrigger(Files.Shared.Constants.FilesQueueName)] FileQueueItem file,
+            [Queue(Thumbnails.Shared.Constants.ThumbnailsQueueName)] IAsyncCollector<ThumbnailQueueItem> thumbnails,
             TextWriter logger,
             CancellationToken cancellationToken)
         {
-            using (var image = new MagickImage(input))
+            string mimeType = MimeTypeMap.GetMimeType(file.FileExtension);
+
+            if (Thumbnails.Shared.Constants.SupportedMimeTypes.Contains(mimeType))
             {
-                image.Resize(800, 600);
-                image.Write(output);
+
             }
 
             return Task.FromResult(0);
