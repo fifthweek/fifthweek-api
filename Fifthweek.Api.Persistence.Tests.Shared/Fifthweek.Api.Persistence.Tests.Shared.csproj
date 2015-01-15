@@ -54,6 +54,7 @@
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Data" />
+    <Reference Include="System.Transactions" />
   </ItemGroup>
   <Choose>
     <When Condition="('$(VisualStudioVersion)' == '10.0' or '$(VisualStudioVersion)' == '') and '$(TargetFrameworkVersion)' == 'v3.5'">
@@ -80,11 +81,11 @@
     <Compile Include="IWildcardEntity.cs" />
     <Compile Include="TableBeforeAndAfter.cs" />
     <Compile Include="TemporaryDatabaseSeed.cs" />
-    <Compile Include="TemporaryDatabaseState.cs" />
+    <Compile Include="TestDatabaseSnapshot.cs" />
     <Compile Include="ChannelTests.cs" />
     <Compile Include="PersistenceTestsBase.cs" />
     <Compile Include="SubscriptionTests.cs" />
-    <Compile Include="TemporaryDatabase.cs" />
+    <Compile Include="TestDatabase.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="UserTests.cs" />
     <Compile Include="WildcardEntity.cs" />

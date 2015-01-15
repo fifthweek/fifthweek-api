@@ -15,86 +15,88 @@
         private static readonly SubscriptionId SubscriptionId = new SubscriptionId(Guid.NewGuid());
         private SubscriptionOwnership target;
 
-        [TestInitialize]
-        public override void Initialize()
-        {
-            base.Initialize();
-            this.target = new SubscriptionOwnership(this.NewDbContext());
-        }
-
-        [TestCleanup]
-        public override void Cleanup()
-        {
-            base.Cleanup();
-        }
-
         [TestMethod]
         public async Task WhenCheckingSubscriptionOwnership_ItShouldPassIfAtLeastOneSubscriptionMatchesSubscriptionAndCreator()
         {
-            await this.InitializeDatabaseAsync();
-            await this.CreateSubscriptionAsync(UserId, SubscriptionId);
-            await this.SnapshotDatabaseAsync();
+            await this.NewTestDatabaseAsync(async testDatabase =>
+            {
+                this.target = new SubscriptionOwnership(testDatabase.NewContext());
+                await this.CreateSubscriptionAsync(UserId, SubscriptionId, testDatabase);
+                await testDatabase.TakeSnapshotAsync();
 
-            var result = await this.target.IsOwnerAsync(UserId, SubscriptionId);
+                var result = await this.target.IsOwnerAsync(UserId, SubscriptionId);
 
-            Assert.IsTrue(result);
-            await this.AssertDatabaseAsync(ExpectedSideEffects.None);
+                Assert.IsTrue(result);
+                return ExpectedSideEffects.None;
+            });
         }
 
         [TestMethod]
         public async Task WhenCheckingSubscriptionOwnership_ItShouldFailIfNoSubscriptionsExist()
         {
-            await this.InitializeDatabaseAsync();
-            await this.SnapshotDatabaseAsync();
+            await this.NewTestDatabaseAsync(async testDatabase =>
+            {
+                this.target = new SubscriptionOwnership(testDatabase.NewContext());
+                await testDatabase.TakeSnapshotAsync();
 
-            var result = await this.target.IsOwnerAsync(UserId, SubscriptionId);
+                var result = await this.target.IsOwnerAsync(UserId, SubscriptionId);
 
-            Assert.IsFalse(result);
-            await this.AssertDatabaseAsync(ExpectedSideEffects.None);
+                Assert.IsFalse(result);
+                return ExpectedSideEffects.None;
+            });
         }
 
         [TestMethod]
         public async Task WhenCheckingSubscriptionOwnership_ItShouldFailIfNoSubscriptionsMatchSubscriptionOrCreator()
         {
-            await this.InitializeDatabaseAsync();
-            await this.CreateSubscriptionAsync(new UserId(Guid.NewGuid()), new SubscriptionId(Guid.NewGuid()));
-            await this.SnapshotDatabaseAsync();
+            await this.NewTestDatabaseAsync(async testDatabase =>
+            {
+                this.target = new SubscriptionOwnership(testDatabase.NewContext());
+                await this.CreateSubscriptionAsync(new UserId(Guid.NewGuid()), new SubscriptionId(Guid.NewGuid()), testDatabase);
+                await testDatabase.TakeSnapshotAsync();
 
-            var result = await this.target.IsOwnerAsync(UserId, SubscriptionId);
+                var result = await this.target.IsOwnerAsync(UserId, SubscriptionId);
 
-            Assert.IsFalse(result);
-            await this.AssertDatabaseAsync(ExpectedSideEffects.None);
+                Assert.IsFalse(result);
+                return ExpectedSideEffects.None;
+            });
         }
 
         [TestMethod]
         public async Task WhenCheckingSubscriptionOwnership_ItShouldFailIfNoSubscriptionsMatchSubscription()
         {
-            await this.InitializeDatabaseAsync();
-            await this.CreateSubscriptionAsync(UserId, new SubscriptionId(Guid.NewGuid()));
-            await this.SnapshotDatabaseAsync();
+            await this.NewTestDatabaseAsync(async testDatabase =>
+            {
+                this.target = new SubscriptionOwnership(testDatabase.NewContext());
+                await this.CreateSubscriptionAsync(UserId, new SubscriptionId(Guid.NewGuid()), testDatabase);
+                await testDatabase.TakeSnapshotAsync();
 
-            var result = await this.target.IsOwnerAsync(UserId, SubscriptionId);
+                var result = await this.target.IsOwnerAsync(UserId, SubscriptionId);
 
-            Assert.IsFalse(result);
-            await this.AssertDatabaseAsync(ExpectedSideEffects.None);
+                Assert.IsFalse(result);
+                return ExpectedSideEffects.None;
+            });
         }
 
         [TestMethod]
         public async Task WhenCheckingSubscriptionOwnership_ItShouldFailIfNoSubscriptionsMatchCreator()
         {
-            await this.InitializeDatabaseAsync();
-            await this.CreateSubscriptionAsync(new UserId(Guid.NewGuid()), SubscriptionId);
-            await this.SnapshotDatabaseAsync();
+            await this.NewTestDatabaseAsync(async testDatabase =>
+            {
+                this.target = new SubscriptionOwnership(testDatabase.NewContext());
+                await this.CreateSubscriptionAsync(new UserId(Guid.NewGuid()), SubscriptionId, testDatabase);
+                await testDatabase.TakeSnapshotAsync();
 
-            var result = await this.target.IsOwnerAsync(UserId, SubscriptionId);
+                var result = await this.target.IsOwnerAsync(UserId, SubscriptionId);
 
-            Assert.IsFalse(result);
-            await this.AssertDatabaseAsync(ExpectedSideEffects.None);
+                Assert.IsFalse(result);
+                return ExpectedSideEffects.None;
+            });
         }
 
-        private async Task CreateSubscriptionAsync(UserId newUserId, SubscriptionId newSubscriptionId)
+        private async Task CreateSubscriptionAsync(UserId newUserId, SubscriptionId newSubscriptionId, TestDatabaseContext testDatabase)
         {
-            using (var databaseContext = this.NewDbContext())
+            using (var databaseContext = testDatabase.NewContext())
             {
                 await databaseContext.CreateTestSubscriptionAsync(newUserId.Value, newSubscriptionId.Value);
             }

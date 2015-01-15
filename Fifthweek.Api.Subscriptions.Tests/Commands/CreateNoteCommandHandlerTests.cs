@@ -29,87 +29,87 @@
         private CreateNoteCommandHandler target;
 
         [TestInitialize]
-        public override void Initialize()
+        public void Initialize()
         {
-            base.Initialize();
             this.channelSecurity = new Mock<IChannelSecurity>();
-            this.target = new CreateNoteCommandHandler(this.channelSecurity.Object, this.NewDbContext());
-        }
-
-        [TestCleanup]
-        public override void Cleanup()
-        {
-            base.Cleanup();
         }
 
         [TestMethod]
         public async Task WhenNotAllowedToPost_ItShouldReportAnError()
         {
-            await this.InitializeDatabaseAsync();
-            await this.SnapshotDatabaseAsync();
-
-            this.channelSecurity.Setup(_ => _.AssertPostingAllowedAsync(UserId, ChannelId)).Throws<UnauthorizedException>();
-
-            try
+            await this.NewTestDatabaseAsync(async testDatabase =>
             {
-                await this.target.HandleAsync(Command);
-                Assert.Fail("Expected recoverable exception");
-            }
-            catch (UnauthorizedException)
-            {
-            }
+                this.target = new CreateNoteCommandHandler(this.channelSecurity.Object, testDatabase.NewContext());
+                this.channelSecurity.Setup(_ => _.AssertPostingAllowedAsync(UserId, ChannelId)).Throws<UnauthorizedException>();
+                await testDatabase.TakeSnapshotAsync();
 
-            await this.AssertDatabaseAsync(ExpectedSideEffects.None);
+                try
+                {
+                    await this.target.HandleAsync(Command);
+                    Assert.Fail("Expected recoverable exception");
+                }
+                catch (UnauthorizedException)
+                {
+                }
+
+                return ExpectedSideEffects.None;
+            });
         }
 
         [TestMethod]
         public async Task WhenReRun_ItShouldHaveNoEffect()
         {
-            await this.InitializeDatabaseAsync();
-            await this.CreateChannelAsync(UserId, ChannelId);
-            await this.target.HandleAsync(Command);
-            await this.SnapshotDatabaseAsync();
+            await this.NewTestDatabaseAsync(async testDatabase =>
+            {
+                this.target = new CreateNoteCommandHandler(this.channelSecurity.Object, testDatabase.NewContext());
+                await this.CreateChannelAsync(UserId, ChannelId, testDatabase);
+                await this.target.HandleAsync(Command);
+                await testDatabase.TakeSnapshotAsync();
 
-            await this.target.HandleAsync(Command);
+                await this.target.HandleAsync(Command);
 
-            await this.AssertDatabaseAsync(ExpectedSideEffects.None);
+                return ExpectedSideEffects.None;
+            });
         }
 
         [TestMethod]
         public async Task WhenDateIsProvidedAndIsInFuture_ItShouldSchedulePostForLater()
         {
-            await this.InitializeDatabaseAsync();
-            await this.CreateChannelAsync(UserId, ChannelId);
-            await this.SnapshotDatabaseAsync();
-
-            var scheduledPostCommand = new CreateNoteCommand(UserId, ChannelId, PostId, Note, TwoDaysFromNow);
-            await this.target.HandleAsync(scheduledPostCommand);
-
-            var expectedPost = new Post(
-                PostId.Value,
-                ChannelId.Value,
-                null,
-                null,
-                null,
-                null,
-                null,
-                null,
-                null,
-                Note.Value,
-                null,
-                new SqlDateTime(TwoDaysFromNow).Value,
-                default(DateTime));
-            
-            await this.AssertDatabaseAsync(new ExpectedSideEffects
+            await this.NewTestDatabaseAsync(async testDatabase =>
             {
-                Insert = new WildcardEntity<Post>(expectedPost)
+                this.target = new CreateNoteCommandHandler(this.channelSecurity.Object, testDatabase.NewContext());
+                var scheduledPostCommand = new CreateNoteCommand(UserId, ChannelId, PostId, Note, TwoDaysFromNow);
+                await this.CreateChannelAsync(UserId, ChannelId, testDatabase);
+                await testDatabase.TakeSnapshotAsync();
+
+                await this.target.HandleAsync(scheduledPostCommand);
+
+                var expectedPost = new Post(
+                    PostId.Value,
+                    ChannelId.Value,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    Note.Value,
+                    null,
+                    new SqlDateTime(TwoDaysFromNow).Value,
+                    default(DateTime));
+            
+                return new ExpectedSideEffects
                 {
-                    AreEqual = actualPost =>
+                    Insert = new WildcardEntity<Post>(expectedPost)
                     {
-                        expectedPost.CreationDate = actualPost.CreationDate; // Take wildcard properties from actual value.
-                        return Equals(expectedPost, actualPost);
+                        AreEqual = actualPost =>
+                        {
+                            expectedPost.CreationDate = actualPost.CreationDate; // Take wildcard properties from actual value.
+                            return Equals(expectedPost, actualPost);
+                        }
                     }
-                }
+                };
             });
         }
 
@@ -128,44 +128,47 @@
 
         private async Task ItShouldSchedulePostForNow(CreateNoteCommand command)
         {
-            await this.InitializeDatabaseAsync();
-            await this.CreateChannelAsync(UserId, ChannelId);
-            await this.SnapshotDatabaseAsync();
-
-            await this.target.HandleAsync(command);
-
-            var expectedPost = new Post(
-                PostId.Value,
-                ChannelId.Value,
-                null,
-                null,
-                null,
-                null,
-                null,
-                null,
-                null,
-                Note.Value,
-                null,
-                default(DateTime),
-                default(DateTime));
-
-            await this.AssertDatabaseAsync(new ExpectedSideEffects
+            await this.NewTestDatabaseAsync(async testDatabase =>
             {
-                Insert = new WildcardEntity<Post>(expectedPost)
+                this.target = new CreateNoteCommandHandler(this.channelSecurity.Object, testDatabase.NewContext());
+                await this.CreateChannelAsync(UserId, ChannelId, testDatabase);
+                await testDatabase.TakeSnapshotAsync();
+
+                await this.target.HandleAsync(command);
+
+                var expectedPost = new Post(
+                    PostId.Value,
+                    ChannelId.Value,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    Note.Value,
+                    null,
+                    default(DateTime),
+                    default(DateTime));
+
+                return new ExpectedSideEffects
                 {
-                    AreEqual = actualPost =>
+                    Insert = new WildcardEntity<Post>(expectedPost)
                     {
-                        expectedPost.CreationDate = actualPost.CreationDate; // Take wildcard properties from actual value.
-                        expectedPost.LiveDate = actualPost.CreationDate; // Assumes creation date is UtcNow (haven't actually been testing this so far).
-                        return Equals(expectedPost, actualPost);
+                        AreEqual = actualPost =>
+                        {
+                            expectedPost.CreationDate = actualPost.CreationDate; // Take wildcard properties from actual value.
+                            expectedPost.LiveDate = actualPost.CreationDate; // Assumes creation date is UtcNow (haven't actually been testing this so far).
+                            return Equals(expectedPost, actualPost);
+                        }
                     }
-                }
+                };
             });
         }
 
-        private async Task CreateChannelAsync(UserId newUserId, ChannelId newChannelId)
+        private async Task CreateChannelAsync(UserId newUserId, ChannelId newChannelId, TestDatabaseContext testDatabase)
         {
-            using (var databaseContext = this.NewDbContext())
+            using (var databaseContext = testDatabase.NewContext())
             {
                 await databaseContext.CreateTestChannelAsync(newUserId.Value, newChannelId.Value);
             }

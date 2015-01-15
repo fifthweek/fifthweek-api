@@ -20,94 +20,93 @@
         private static readonly GetCreatorStatusQuery Query = new GetCreatorStatusQuery(UserId);
         private GetCreatorStatusQueryHandler target;
 
-        [TestInitialize]
-        public override void Initialize()
-        {
-            base.Initialize();
-            this.target = new GetCreatorStatusQueryHandler(this.NewDbContext());
-        }
-
-        [TestCleanup]
-        public override void Cleanup()
-        {
-            base.Cleanup();
-        }
-
         [TestMethod]
         public async Task WhenAtLeastOneSubscriptionMatchesCreator_ItShouldReturnThatSubscriptionId()
         {
-            await this.InitializeDatabaseAsync();
-            await this.CreateSubscriptionAsync(UserId, SubscriptionId);
-            await this.SnapshotDatabaseAsync();
+            await this.NewTestDatabaseAsync(async testDatabase =>
+            {
+                this.target = new GetCreatorStatusQueryHandler(testDatabase.NewContext());
+                await this.CreateSubscriptionAsync(UserId, SubscriptionId, testDatabase);
+                await testDatabase.TakeSnapshotAsync();
 
-            var result = await this.target.HandleAsync(Query);
+                var result = await this.target.HandleAsync(Query);
 
-            Assert.AreEqual(result.SubscriptionId, SubscriptionId);
-            Assert.IsTrue(result.MustWriteFirstPost);
+                Assert.AreEqual(result.SubscriptionId, SubscriptionId);
+                Assert.IsTrue(result.MustWriteFirstPost);
 
-            await this.AssertDatabaseAsync(ExpectedSideEffects.None);
+                return ExpectedSideEffects.None;
+            });
         }
 
         [TestMethod]
         public async Task WhenMultipleSubscriptionsMatchCreator_ItShouldReturnTheLatestSubscriptionId()
         {
-            await this.InitializeDatabaseAsync();
-            await this.CreateSubscriptionAsync(UserId, new SubscriptionId(Guid.NewGuid()));
-            await this.CreateSubscriptionsAsync(UserId, 100);
-            await this.CreateSubscriptionAsync(UserId, SubscriptionId, false, true);
-            await this.SnapshotDatabaseAsync();
+            await this.NewTestDatabaseAsync(async testDatabase =>
+            {
+                this.target = new GetCreatorStatusQueryHandler(testDatabase.NewContext());
+                await this.CreateSubscriptionAsync(UserId, new SubscriptionId(Guid.NewGuid()), testDatabase);
+                await this.CreateSubscriptionsAsync(UserId, 100, testDatabase);
+                await this.CreateSubscriptionAsync(UserId, SubscriptionId, testDatabase, false, true);
+                await testDatabase.TakeSnapshotAsync();
 
-            var result = await this.target.HandleAsync(Query);
+                var result = await this.target.HandleAsync(Query);
 
-            Assert.AreEqual(result.SubscriptionId, SubscriptionId);
-            Assert.IsTrue(result.MustWriteFirstPost);
+                Assert.AreEqual(result.SubscriptionId, SubscriptionId);
+                Assert.IsTrue(result.MustWriteFirstPost);
 
-            await this.AssertDatabaseAsync(ExpectedSideEffects.None);
+                return ExpectedSideEffects.None;
+            });
         }
 
         [TestMethod]
         public async Task WhenNoSubscriptionsExist_ItShouldReturnEmptySubscriptionId()
         {
-            await this.InitializeDatabaseAsync();
-
-            using (var dbContext = this.NewDbContext())
+            await this.NewTestDatabaseAsync(async testDatabase =>
             {
-                await dbContext.Database.Connection.ExecuteAsync("DELETE FROM Subscriptions");
-            }
+                this.target = new GetCreatorStatusQueryHandler(testDatabase.NewContext());
 
-            await this.SnapshotDatabaseAsync();
+                using (var databaseContext = testDatabase.NewContext())
+                {
+                    await databaseContext.Database.Connection.ExecuteAsync("DELETE FROM Subscriptions");
+                }
 
-            var result = await this.target.HandleAsync(Query);
+                await testDatabase.TakeSnapshotAsync();
 
-            Assert.IsNull(result.SubscriptionId);
-            Assert.IsFalse(result.MustWriteFirstPost);
+                var result = await this.target.HandleAsync(Query);
 
-            await this.AssertDatabaseAsync(ExpectedSideEffects.None);
+                Assert.IsNull(result.SubscriptionId);
+                Assert.IsFalse(result.MustWriteFirstPost);
+
+                return ExpectedSideEffects.None;
+            });
         }
 
         [TestMethod]
         public async Task WhenNoSubscriptionsMatchCreator_ItShouldReturnEmptySubscriptionId()
         {
-            await this.InitializeDatabaseAsync();
-            await this.SnapshotDatabaseAsync();
+            await this.NewTestDatabaseAsync(async testDatabase =>
+            {
+                this.target = new GetCreatorStatusQueryHandler(testDatabase.NewContext());
+                await testDatabase.TakeSnapshotAsync();
 
-            var result = await this.target.HandleAsync(Query);
+                var result = await this.target.HandleAsync(Query);
 
-            Assert.IsNull(result.SubscriptionId);
-            Assert.IsFalse(result.MustWriteFirstPost);
+                Assert.IsNull(result.SubscriptionId);
+                Assert.IsFalse(result.MustWriteFirstPost);
 
-            await this.AssertDatabaseAsync(ExpectedSideEffects.None);
+                return ExpectedSideEffects.None;
+            });
         }
 
-        private async Task CreateSubscriptionsAsync(UserId newUserId, int subscriptions)
+        private async Task CreateSubscriptionsAsync(UserId newUserId, int subscriptions, TestDatabaseContext testDatabase)
         {
             for (var i = 0; i < subscriptions; i++)
             {
-                await this.CreateSubscriptionAsync(newUserId, new SubscriptionId(Guid.NewGuid()), false);
+                await this.CreateSubscriptionAsync(newUserId, new SubscriptionId(Guid.NewGuid()), testDatabase, false);
             }
         }
 
-        private async Task CreateSubscriptionAsync(UserId newUserId, SubscriptionId newSubscriptionId, bool newUser = true, bool setTodaysDate = false)
+        private async Task CreateSubscriptionAsync(UserId newUserId, SubscriptionId newSubscriptionId, TestDatabaseContext testDatabase, bool newUser = true, bool setTodaysDate = false)
         {
             var random = new Random();
             var creator = UserTests.UniqueEntity(random);
@@ -132,16 +131,16 @@
                 subscription.CreationDate = DateTime.UtcNow;
             }
 
-            using (var dbContext = this.NewDbContext())
+            using (var databaseContext = testDatabase.NewContext())
             {
                 if (newUser)
                 {
-                    dbContext.Users.Add(creator);
-                    await dbContext.SaveChangesAsync();
+                    databaseContext.Users.Add(creator);
+                    await databaseContext.SaveChangesAsync();
                 }
 
                 // Work around EF (in)validation
-                await dbContext.Database.Connection.InsertAsync(subscription, false);
+                await databaseContext.Database.Connection.InsertAsync(subscription, false);
             }
         }
     }

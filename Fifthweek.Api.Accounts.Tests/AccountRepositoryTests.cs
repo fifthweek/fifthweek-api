@@ -32,208 +32,211 @@
         private Mock<IPasswordHasher> passwordHasher;
 
         [TestInitialize]
-        public override void Initialize()
+        public void Initialize()
         {
-            base.Initialize();
             this.passwordHasher = new Mock<IPasswordHasher>();
             this.userManager = new Mock<IUserManager>();
             this.userManager.Setup(v => v.PasswordHasher).Returns(this.passwordHasher.Object);
-            this.target = new AccountRepository(this.NewDbContext(), this.userManager.Object);
-        }
 
-        [TestCleanup]
-        public override void Cleanup()
-        {
-            base.Cleanup();
+            // Required for non-database tests.
+            this.target = new AccountRepository(new Mock<IFifthweekDbContext>(MockBehavior.Strict).Object, this.userManager.Object);
         }
 
         [TestMethod]
         public async Task WhenGetAccountSettingsCalled_ItShouldGetAccountSettingsFromTheDatabase()
         {
-            await this.InitializeDatabaseAsync();
-            await this.CreateFileAsync();
-            await this.SnapshotDatabaseAsync();
+            await this.NewTestDatabaseAsync(async testDatabase =>
+            {
+                this.target = new AccountRepository(testDatabase.NewContext(), this.userManager.Object);
+                await this.CreateFileAsync(testDatabase);
+                await testDatabase.TakeSnapshotAsync();
 
-            var result = await this.target.GetAccountSettingsAsync(this.userId);
+                var result = await this.target.GetAccountSettingsAsync(this.userId);
+                
+                Assert.AreEqual(result.Email, this.email);
+                Assert.AreEqual(result.ProfileImageFileId, this.fileId);
 
-            await this.AssertDatabaseAsync(ExpectedSideEffects.None);
-
-            Assert.AreEqual(result.Email, this.email);
-            Assert.AreEqual(result.ProfileImageFileId, this.fileId);
+                return ExpectedSideEffects.None;
+            });
         }
 
         [TestMethod]
         public async Task WhenGetAccountSettingsCalledWithInvalidUserId_ItShouldThrowARecoverableException()
         {
-            await this.InitializeDatabaseAsync();
-            await this.CreateFileAsync();
-            await this.SnapshotDatabaseAsync();
+            await this.NewTestDatabaseAsync(async testDatabase =>
+            {
+                this.target = new AccountRepository(testDatabase.NewContext(), this.userManager.Object);
+                await this.CreateFileAsync(testDatabase);
+                await testDatabase.TakeSnapshotAsync();
 
-            await ExpectedException<DetailedRecoverableException>.AssertAsync(
-                () => this.target.GetAccountSettingsAsync(new UserId(Guid.NewGuid())));
+                await ExpectedException<DetailedRecoverableException>.AssertAsync(
+                    () => this.target.GetAccountSettingsAsync(new UserId(Guid.NewGuid())));
 
-            await this.AssertDatabaseAsync(ExpectedSideEffects.None);
+                return ExpectedSideEffects.None;
+            });
         }
 
         [TestMethod]
         public async Task WhenGetAccountSettingsCalledWithNullUserId_ItShouldThrowAnAugumentException()
         {
-            await this.InitializeDatabaseAsync();
-            await this.CreateFileAsync();
-            await this.SnapshotDatabaseAsync();
-
             await ExpectedException<ArgumentNullException>.AssertAsync(
                 () => this.target.GetAccountSettingsAsync(null));
-
-            await this.AssertDatabaseAsync(ExpectedSideEffects.None);
         }
 
         [TestMethod]
         public async Task WhenUpdateAccountSettingsCalled_ItShouldUpdateTheDatabase()
         {
-            await this.InitializeDatabaseAsync();
-            await this.CreateFileAsync();
-            await this.SnapshotDatabaseAsync();
-
-            var currentUser = await this.GetUser();
-
-            var hashedNewPassword = this.newPassword.Value + "1";
-            this.passwordHasher.Setup(v => v.HashPassword(this.newPassword.Value)).Returns(hashedNewPassword);
-
-            var result = await this.target.UpdateAccountSettingsAsync(
-                this.userId,
-                this.newUsername,
-                this.newEmail,
-                this.newPassword,
-                this.newFileId);
-
-            Assert.AreEqual(true, result.EmailChanged);
-
-            await this.AssertDatabaseAsync(new ExpectedSideEffects
+            await this.NewTestDatabaseAsync(async testDatabase =>
             {
-                Update = new WildcardEntity<FifthweekUser>(currentUser)
+                this.target = new AccountRepository(testDatabase.NewContext(), this.userManager.Object);
+                await this.CreateFileAsync(testDatabase);
+                await testDatabase.TakeSnapshotAsync();
+
+                var currentUser = await this.GetUser(testDatabase);
+
+                var hashedNewPassword = this.newPassword.Value + "1";
+                this.passwordHasher.Setup(v => v.HashPassword(this.newPassword.Value)).Returns(hashedNewPassword);
+
+                var result = await this.target.UpdateAccountSettingsAsync(
+                    this.userId,
+                    this.newUsername,
+                    this.newEmail,
+                    this.newPassword,
+                    this.newFileId);
+
+                Assert.AreEqual(true, result.EmailChanged);
+
+                return new ExpectedSideEffects
                 {
-                    AreEqual = actualFile =>
+                    Update = new WildcardEntity<FifthweekUser>(currentUser)
                     {
-                        return actualFile.Id == currentUser.Id
-                            && actualFile.UserName == this.newUsername.Value
-                            && actualFile.Email == this.newEmail.Value
-                            && actualFile.PasswordHash == hashedNewPassword
-                            && actualFile.ProfileImageFileId == this.newFileId.Value;
+                        AreEqual = actualFile =>
+                        {
+                            return actualFile.Id == currentUser.Id
+                                && actualFile.UserName == this.newUsername.Value
+                                && actualFile.Email == this.newEmail.Value
+                                && actualFile.PasswordHash == hashedNewPassword
+                                && actualFile.ProfileImageFileId == this.newFileId.Value;
+                        }
                     }
-                }
+                };
             });
         }
 
         [TestMethod]
         public async Task WhenUpdateAccountSettingsCalledWithoutANewPassword_ItShouldUpdateTheDatabase()
         {
-            await this.InitializeDatabaseAsync();
-            await this.CreateFileAsync();
-            await this.SnapshotDatabaseAsync();
-
-            var currentUser = await this.GetUser();
-
-            var result = await this.target.UpdateAccountSettingsAsync(
-                this.userId,
-                this.newUsername,
-                this.newEmail,
-                null,
-                this.newFileId);
-
-            Assert.AreEqual(true, result.EmailChanged);
-
-            await this.AssertDatabaseAsync(new ExpectedSideEffects
+            await this.NewTestDatabaseAsync(async testDatabase =>
             {
-                Update = new WildcardEntity<FifthweekUser>(currentUser)
+                this.target = new AccountRepository(testDatabase.NewContext(), this.userManager.Object);
+                await this.CreateFileAsync(testDatabase);
+                await testDatabase.TakeSnapshotAsync();
+
+                var currentUser = await this.GetUser(testDatabase);
+
+                var result = await this.target.UpdateAccountSettingsAsync(
+                    this.userId,
+                    this.newUsername,
+                    this.newEmail,
+                    null,
+                    this.newFileId);
+
+                Assert.AreEqual(true, result.EmailChanged);
+
+                return new ExpectedSideEffects
                 {
-                    AreEqual = actualFile =>
+                    Update = new WildcardEntity<FifthweekUser>(currentUser)
                     {
-                        return actualFile.Id == currentUser.Id
-                            && actualFile.UserName == this.newUsername.Value
-                            && actualFile.Email == this.newEmail.Value
-                            && actualFile.PasswordHash == currentUser.PasswordHash
-                            && actualFile.ProfileImageFileId == this.newFileId.Value;
+                        AreEqual = actualFile =>
+                        {
+                            return actualFile.Id == currentUser.Id
+                                && actualFile.UserName == this.newUsername.Value
+                                && actualFile.Email == this.newEmail.Value
+                                && actualFile.PasswordHash == currentUser.PasswordHash
+                                && actualFile.ProfileImageFileId == this.newFileId.Value;
+                        }
                     }
-                }
+                };
             });
         }
 
         [TestMethod]
         public async Task WhenUpdateAccountSettingsCalledWithSameEMail_ItShouldDetectTheEmailHasNotChanged()
         {
-            await this.InitializeDatabaseAsync();
-            await this.CreateFileAsync();
-            await this.SnapshotDatabaseAsync();
-
-            var currentUser = await this.GetUser();
-
-            var result = await this.target.UpdateAccountSettingsAsync(
-                this.userId,
-                this.newUsername,
-                ValidEmail.Parse(this.email.Value),
-                null,
-                this.newFileId);
-
-            Assert.AreEqual(false, result.EmailChanged);
-
-            await this.AssertDatabaseAsync(new ExpectedSideEffects
+            await this.NewTestDatabaseAsync(async testDatabase =>
             {
-                Update = new WildcardEntity<FifthweekUser>(currentUser)
+                this.target = new AccountRepository(testDatabase.NewContext(), this.userManager.Object);
+                await this.CreateFileAsync(testDatabase);
+                await testDatabase.TakeSnapshotAsync();
+
+                var currentUser = await this.GetUser(testDatabase);
+
+                var result = await this.target.UpdateAccountSettingsAsync(
+                    this.userId,
+                    this.newUsername,
+                    ValidEmail.Parse(this.email.Value),
+                    null,
+                    this.newFileId);
+
+                Assert.AreEqual(false, result.EmailChanged);
+
+                return new ExpectedSideEffects
                 {
-                    AreEqual = actualFile =>
+                    Update = new WildcardEntity<FifthweekUser>(currentUser)
                     {
-                        return actualFile.Id == currentUser.Id
-                            && actualFile.UserName == this.newUsername.Value
-                            && actualFile.Email == this.email.Value
-                            && actualFile.PasswordHash == currentUser.PasswordHash
-                            && actualFile.ProfileImageFileId == this.newFileId.Value;
+                        AreEqual = actualFile =>
+                        {
+                            return actualFile.Id == currentUser.Id
+                                && actualFile.UserName == this.newUsername.Value
+                                && actualFile.Email == this.email.Value
+                                && actualFile.PasswordHash == currentUser.PasswordHash
+                                && actualFile.ProfileImageFileId == this.newFileId.Value;
+                        }
                     }
-                }
+                };
             });
         }
 
         [TestMethod]
         public async Task WhenUpdateAccountSettingsCalledWithoutAProfileImageFileId_ItShouldUpdateTheDatabase()
         {
-            await this.InitializeDatabaseAsync();
-            await this.CreateFileAsync();
-            await this.SnapshotDatabaseAsync();
-
-            var currentUser = await this.GetUser();
-
-            var result = await this.target.UpdateAccountSettingsAsync(
-                this.userId,
-                this.newUsername,
-                this.newEmail,
-                null,
-                null);
-
-            Assert.AreEqual(true, result.EmailChanged);
-
-            await this.AssertDatabaseAsync(new ExpectedSideEffects
+            await this.NewTestDatabaseAsync(async testDatabase =>
             {
-                Update = new WildcardEntity<FifthweekUser>(currentUser)
+                this.target = new AccountRepository(testDatabase.NewContext(), this.userManager.Object);
+                await this.CreateFileAsync(testDatabase);
+                await testDatabase.TakeSnapshotAsync();
+
+                var currentUser = await this.GetUser(testDatabase);
+
+                var result = await this.target.UpdateAccountSettingsAsync(
+                    this.userId,
+                    this.newUsername,
+                    this.newEmail,
+                    null,
+                    null);
+
+                Assert.AreEqual(true, result.EmailChanged);
+
+                return new ExpectedSideEffects
                 {
-                    AreEqual = actualFile =>
+                    Update = new WildcardEntity<FifthweekUser>(currentUser)
                     {
-                        return actualFile.Id == currentUser.Id
-                            && actualFile.UserName == this.newUsername.Value
-                            && actualFile.Email == this.newEmail.Value
-                            && actualFile.PasswordHash == currentUser.PasswordHash
-                            && actualFile.ProfileImageFileId == null;
+                        AreEqual = actualFile =>
+                        {
+                            return actualFile.Id == currentUser.Id
+                                && actualFile.UserName == this.newUsername.Value
+                                && actualFile.Email == this.newEmail.Value
+                                && actualFile.PasswordHash == currentUser.PasswordHash
+                                && actualFile.ProfileImageFileId == null;
+                        }
                     }
-                }
+                };
             });
         }
 
         [TestMethod]
         public async Task WhenUpdateAccountSettingsCalledWithNullUserId_ItShouldThrowAnAugumentException()
         {
-            await this.InitializeDatabaseAsync();
-            await this.CreateFileAsync();
-            await this.SnapshotDatabaseAsync();
-
             await ExpectedException<ArgumentNullException>.AssertAsync(
                 () => this.target.UpdateAccountSettingsAsync(
                     null,
@@ -241,17 +244,11 @@
                     this.newEmail,
                     this.newPassword,
                     this.newFileId));
-
-            await this.AssertDatabaseAsync(ExpectedSideEffects.None);
         }
 
         [TestMethod]
         public async Task WhenUpdateAccountSettingsCalledWithNullEmail_ItShouldThrowAnAugumentException()
         {
-            await this.InitializeDatabaseAsync();
-            await this.CreateFileAsync();
-            await this.SnapshotDatabaseAsync();
-
             await ExpectedException<ArgumentNullException>.AssertAsync(
                 () => this.target.UpdateAccountSettingsAsync(
                     this.userId,
@@ -259,17 +256,11 @@
                     null,
                     this.newPassword,
                     this.newFileId));
-
-            await this.AssertDatabaseAsync(ExpectedSideEffects.None);
         }
 
         [TestMethod]
         public async Task WhenUpdateAccountSettingsCalledWithNullUsername_ItShouldThrowAnAugumentException()
         {
-            await this.InitializeDatabaseAsync();
-            await this.CreateFileAsync();
-            await this.SnapshotDatabaseAsync();
-
             await ExpectedException<ArgumentNullException>.AssertAsync(
                 () => this.target.UpdateAccountSettingsAsync(
                     this.userId,
@@ -277,24 +268,17 @@
                     this.newEmail,
                     this.newPassword,
                     this.newFileId));
-
-            await this.AssertDatabaseAsync(ExpectedSideEffects.None);
         }
 
-        private async Task<FifthweekUser> GetUser()
+        private async Task<FifthweekUser> GetUser(TestDatabaseContext testDatabase)
         {
-            using (var databaseContext = this.NewDbContext())
+            using (var databaseContext = testDatabase.NewContext())
             {
-                return await this.GetUser(databaseContext);
+                return await databaseContext.Users.SingleAsync(v => v.Id == this.userId.Value);
             }
         }
 
-        private async Task<FifthweekUser> GetUser(IFifthweekDbContext databaseContext)
-        {
-            return await databaseContext.Users.SingleAsync(v => v.Id == this.userId.Value);
-        }
-
-        private async Task CreateFileAsync()
+        private async Task CreateFileAsync(TestDatabaseContext testDatabase)
         {
             var random = new Random();
             var user = UserTests.UniqueEntity(random);
@@ -311,7 +295,7 @@
             otherFile.User = user;
             otherFile.UserId = user.Id;
 
-            using (var databaseContext = this.NewDbContext())
+            using (var databaseContext = testDatabase.NewContext())
             {
                 databaseContext.Files.Add(user.ProfileImageFile);
                 databaseContext.Files.Add(otherFile);

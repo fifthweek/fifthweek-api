@@ -995,7 +995,7 @@ namespace Fifthweek.Api.Persistence
 				entities.Select(entity => new 
 				{
 					entity.Id, entity.SubscriptionId, entity.PriceInUsCentsPerWeek, entity.CreationDate
-				}),
+				}).ToArray(),
 				transaction);
 		}
 
@@ -1193,7 +1193,7 @@ namespace Fifthweek.Api.Persistence
 				entities.Select(entity => new 
 				{
 					entity.Id, entity.ChannelId, entity.Name
-				}),
+				}).ToArray(),
 				transaction);
 		}
 
@@ -1389,7 +1389,7 @@ namespace Fifthweek.Api.Persistence
 				entities.Select(entity => new 
 				{
 					entity.Id, entity.UserId, entity.State, entity.UploadStartedDate, entity.UploadCompletedDate, entity.ProcessingStartedDate, entity.ProcessingCompletedDate, entity.FileNameWithoutExtension, entity.FileExtension, entity.BlobSizeBytes, entity.Purpose
-				}),
+				}).ToArray(),
 				transaction);
 		}
 
@@ -1663,7 +1663,7 @@ namespace Fifthweek.Api.Persistence
 				entities.Select(entity => new 
 				{
 					entity.Id, entity.ChannelId, entity.CollectionId, entity.FileId, entity.ImageId, entity.Comment, entity.QueuePosition, entity.LiveDate, entity.CreationDate
-				}),
+				}).ToArray(),
 				transaction);
 		}
 
@@ -1917,7 +1917,7 @@ namespace Fifthweek.Api.Persistence
 				entities.Select(entity => new 
 				{
 					entity.Id, entity.CreatorId, entity.Name, entity.Tagline, entity.Introduction, entity.Description, entity.ExternalVideoUrl, entity.HeaderImageFileId, entity.CreationDate
-				}),
+				}).ToArray(),
 				transaction);
 		}
 
@@ -2179,7 +2179,7 @@ namespace Fifthweek.Api.Persistence.Identity
 				entities.Select(entity => new 
 				{
 					entity.ExampleWork, entity.RegistrationDate, entity.LastSignInDate, entity.LastAccessTokenDate, entity.ProfileImageFileId, entity.Id, entity.AccessFailedCount, entity.Email, entity.EmailConfirmed, entity.LockoutEnabled, entity.LockoutEndDateUtc, entity.PasswordHash, entity.PhoneNumber, entity.PhoneNumberConfirmed, entity.SecurityStamp, entity.TwoFactorEnabled, entity.UserName
-				}),
+				}).ToArray(),
 				transaction);
 		}
 

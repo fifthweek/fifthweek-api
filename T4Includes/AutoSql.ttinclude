@@ -168,7 +168,7 @@
 				entities.Select(entity => new 
 				{
 					<#= entityMaskInitialization #>
-				}),
+				}).ToArray(),
 				transaction);
 		}
 

@@ -1,47 +1,41 @@
 ﻿namespace Fifthweek.Api.Persistence.Tests.Shared
 {
+    using System;
     using System.Threading.Tasks;
+    using System.Transactions;
 
-    public abstract class PersistenceTestsBase
+    using Fifthweek.Api.Core;
+
+    public abstract partial class PersistenceTestsBase
     {
-        private TemporaryDatabase temporaryDatabase;
-        private TemporaryDatabaseState databaseState;
-
-        public Task InitializeDatabaseAsync()
+        protected async Task NewTestDatabaseAsync(Func<TestDatabaseContext, Task<ExpectedSideEffects>> databaseTest)
         {
-            return this.temporaryDatabase.ReadyAsync();
-        }
-
-        public virtual void Initialize()
-        {
-            this.temporaryDatabase = TemporaryDatabase.CreateNew();
-            this.databaseState = new TemporaryDatabaseState(this.temporaryDatabase);
-        }
-
-        public virtual void Cleanup()
-        {
-            if (this.temporaryDatabase == null)
+            var database = await TestDatabase.CreateNewAsync();
+            var databaseSnapshot = new TestDatabaseSnapshot(database);
+            var databaseContext = new TestDatabaseContext(database, databaseSnapshot);
+            
+            using (new TransactionScope(TransactionScopeAsyncFlowOption.Enabled))
             {
-                return;
+                var sideEffects = await databaseTest(databaseContext);
+                await databaseSnapshot.AssertSideEffectsAsync(sideEffects);
+            }
+        }
+
+        [AutoConstructor]
+        public partial class TestDatabaseContext
+        {
+            private readonly TestDatabase testDatabase;
+            private readonly TestDatabaseSnapshot testDatabaseSnapshot;
+
+            public Task TakeSnapshotAsync()
+            {
+                return this.testDatabaseSnapshot.InitializeAsync();
             }
 
-            this.temporaryDatabase.Dispose();
-            this.temporaryDatabase = null;
-        }
-
-        protected IFifthweekDbContext NewDbContext()
-        {
-            return this.temporaryDatabase.NewDatabaseContext();
-        }
-
-        protected Task SnapshotDatabaseAsync()
-        {
-            return this.databaseState.TakeSnapshotAsync();
-        }
-
-        protected Task AssertDatabaseAsync(ExpectedSideEffects sideEffects)
-        {
-            return this.databaseState.AssertSideEffectsAsync(sideEffects);
+            public IFifthweekDbContext NewContext()
+            {
+                return this.testDatabase.NewDatabaseContext();
+            }
         }
     }
 }

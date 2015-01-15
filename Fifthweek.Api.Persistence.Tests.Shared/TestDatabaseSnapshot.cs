@@ -11,15 +11,15 @@
     using Microsoft.VisualStudio.TestTools.UnitTesting;
 
     [AutoConstructor]
-    public partial class TemporaryDatabaseState
+    public partial class TestDatabaseSnapshot
     {
-        private readonly TemporaryDatabase temporaryDatabase;
+        private readonly TestDatabase testDatabase;
 
         private IFifthweekDbContext loadedSnapshotContext; // 'Local' properties on each DbSet will represent snapshot state.
 
-        public async Task TakeSnapshotAsync()
+        public async Task InitializeAsync()
         {
-            this.loadedSnapshotContext = this.temporaryDatabase.NewDatabaseContext();
+            this.loadedSnapshotContext = this.testDatabase.NewDatabaseContext();
             await this.loadedSnapshotContext.Users.LoadAsync();
             await this.loadedSnapshotContext.Subscriptions.LoadAsync();
             await this.loadedSnapshotContext.Channels.LoadAsync();
@@ -36,7 +36,7 @@
             }
 
             var tables = new List<TableBeforeAndAfter>();
-            using (var databaseContext = this.temporaryDatabase.NewDatabaseContext())
+            using (var databaseContext = this.testDatabase.NewDatabaseContext())
             {
                 tables.Add(await TableBeforeAndAfter.GenerateAsync(this.loadedSnapshotContext.Users, databaseContext.Users));
                 tables.Add(await TableBeforeAndAfter.GenerateAsync(this.loadedSnapshotContext.Subscriptions, databaseContext.Subscriptions));

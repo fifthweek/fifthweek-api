@@ -23,79 +23,71 @@
 
         private FileRepository target;
 
-        public void InitializeWithoutDatabase()
+        [TestInitialize]
+        public void Initialize()
         {
             this.target = new FileRepository(new Mock<IFifthweekDbContext>(MockBehavior.Strict).Object);
-        }
-
-        public override void Initialize()
-        {
-            base.Initialize();
-            this.target = new FileRepository(this.NewDbContext());
-        }
-
-        [TestCleanup]
-        public override void Cleanup()
-        {
-            base.Cleanup();
         }
 
         [TestMethod]
         public async Task WhenAddingANewFile_ItShouldUpdateTheDatabase()
         {
-            this.Initialize();
-            await this.InitializeDatabaseAsync();
-            await this.CreateUserAsync();
-            await this.SnapshotDatabaseAsync();
-
-            await this.target.AddNewFileAsync(FileId, UserId, FileNameWithoutExtension, FileExtension, Purpose);
-
-            var expectedFile = new File(
-                FileId.Value,
-                null,
-                UserId.Value,
-                FileState.WaitingForUpload,
-                DateTime.MinValue,
-                null,
-                null,
-                null,
-                FileNameWithoutExtension,
-                FileExtension,
-                0,
-                Purpose);
-
-            await this.AssertDatabaseAsync(new ExpectedSideEffects
+            await this.NewTestDatabaseAsync(async testDatabase =>
             {
-                Insert = new WildcardEntity<File>(expectedFile)
+                this.target = new FileRepository(testDatabase.NewContext());
+                await this.CreateUserAsync(testDatabase);
+                await testDatabase.TakeSnapshotAsync();
+
+                await this.target.AddNewFileAsync(FileId, UserId, FileNameWithoutExtension, FileExtension, Purpose);
+
+                var expectedFile = new File(
+                    FileId.Value,
+                    null,
+                    UserId.Value,
+                    FileState.WaitingForUpload,
+                    DateTime.MinValue,
+                    null,
+                    null,
+                    null,
+                    FileNameWithoutExtension,
+                    FileExtension,
+                    0,
+                    Purpose);
+
+                return new ExpectedSideEffects
                 {
-                    AreEqual = actualFile =>
-                    { 
-                        expectedFile.UploadStartedDate = actualFile.UploadStartedDate;
-                        return object.Equals(expectedFile, actualFile);
+                    Insert = new WildcardEntity<File>(expectedFile)
+                    {
+                        AreEqual = actualFile =>
+                        { 
+                            expectedFile.UploadStartedDate = actualFile.UploadStartedDate;
+                            return Equals(expectedFile, actualFile);
+                        }
                     }
-                }
+                };
             });
         }
 
         [TestMethod]
         public async Task WhenAddingANewFileTwice_ItShouldHaveNoEffect()
         {
-            this.Initialize();
-            await this.InitializeDatabaseAsync();
-            await this.CreateUserAsync();
-            await this.target.AddNewFileAsync(FileId, UserId, FileNameWithoutExtension, FileExtension, Purpose);
-            await this.SnapshotDatabaseAsync();
+            await this.NewTestDatabaseAsync(async testDatabase =>
+            {
+                this.target = new FileRepository(testDatabase.NewContext());
+                await this.CreateUserAsync(testDatabase);
+                await this.target.AddNewFileAsync(FileId, UserId, FileNameWithoutExtension, FileExtension, Purpose);
+                await testDatabase.TakeSnapshotAsync();
 
-            await this.target.AddNewFileAsync(FileId, UserId, FileNameWithoutExtension, FileExtension, Purpose);
-            
-            await this.AssertDatabaseAsync(ExpectedSideEffects.None);
+                await target.AddNewFileAsync(FileId, UserId, FileNameWithoutExtension, FileExtension, Purpose);
+
+                return ExpectedSideEffects.None;
+            });
         }
 
         [TestMethod]
         [ExpectedException(typeof(ArgumentNullException))]
         public async Task WhenAddingANewFile_ItShouldRequireAFileId()
         {
-            this.InitializeWithoutDatabase();
             await this.target.AddNewFileAsync(null, UserId, FileNameWithoutExtension, FileExtension, Purpose);
         }
 
@@ -103,7 +95,6 @@
         [ExpectedException(typeof(ArgumentNullException))]
         public async Task WhenAddingANewFile_ItShouldRequireAUserId()
         {
-            this.InitializeWithoutDatabase();
             await this.target.AddNewFileAsync(FileId, null, FileNameWithoutExtension, FileExtension, Purpose);
         }
 
@@ -111,7 +102,6 @@
         [ExpectedException(typeof(ArgumentNullException))]
         public async Task WhenAddingANewFile_ItShouldRequireAFileNameWithoutExtension()
         {
-            this.InitializeWithoutDatabase();
             await this.target.AddNewFileAsync(FileId, UserId, null, FileExtension, Purpose);
         }
 
@@ -119,7 +109,6 @@
         [ExpectedException(typeof(ArgumentNullException))]
         public async Task WhenAddingANewFile_ItShouldRequireAFileExtension()
         {
-            this.InitializeWithoutDatabase();
             await this.target.AddNewFileAsync(FileId, UserId, FileNameWithoutExtension, null, Purpose);
         }
 
@@ -127,69 +116,71 @@
         [ExpectedException(typeof(ArgumentNullException))]
         public async Task WhenAddingANewFile_ItShouldRequireAPurpose()
         {
-            this.InitializeWithoutDatabase();
             await this.target.AddNewFileAsync(FileId, UserId, FileNameWithoutExtension, FileExtension, null);
         }
 
         [TestMethod]
         public async Task WhenSetFileUploadCompleteCalled_ItShouldUpdateTheDatabase()
         {
-            this.Initialize();
-            await this.InitializeDatabaseAsync();
-            await this.CreateUserAsync();
-            await this.target.AddNewFileAsync(FileId, UserId, FileNameWithoutExtension, FileExtension, Purpose);
-            await this.SnapshotDatabaseAsync();
-
-            // This is just to guarantee we get a different timestamp for when the upload completes.
-            Thread.Sleep(1);
-
-            const long NewLength = 11111L;
-
-            await this.target.SetFileUploadComplete(FileId, NewLength);
-
-            var expectedFile = new File(
-                FileId.Value,
-                null,
-                UserId.Value,
-                FileState.UploadComplete,
-                DateTime.MinValue,
-                null,
-                null,
-                null,
-                FileNameWithoutExtension,
-                FileExtension,
-                NewLength,
-                Purpose);
-
-            await this.AssertDatabaseAsync(new ExpectedSideEffects
+            await this.NewTestDatabaseAsync(async testDatabase =>
             {
-                Update = new WildcardEntity<File>(expectedFile)
+                this.target = new FileRepository(testDatabase.NewContext());
+
+                await this.CreateUserAsync(testDatabase);
+                await this.target.AddNewFileAsync(FileId, UserId, FileNameWithoutExtension, FileExtension, Purpose);
+                await testDatabase.TakeSnapshotAsync();
+
+                // This is just to guarantee we get a different timestamp for when the upload completes.
+                Thread.Sleep(1);
+
+                const long NewLength = 11111L;
+
+                await this.target.SetFileUploadComplete(FileId, NewLength);
+
+                var expectedFile = new File(
+                    FileId.Value,
+                    null,
+                    UserId.Value,
+                    FileState.UploadComplete,
+                    DateTime.MinValue,
+                    null,
+                    null,
+                    null,
+                    FileNameWithoutExtension,
+                    FileExtension,
+                    NewLength,
+                    Purpose);
+
+                using (var databaseContext = testDatabase.NewContext())
                 {
-                    AreEqual = actualFile =>
-                    {
-                        expectedFile.UploadStartedDate = actualFile.UploadStartedDate;
-                        expectedFile.UploadCompletedDate = actualFile.UploadCompletedDate;
-                        return object.Equals(expectedFile, actualFile);
-                    }
+                    var newFile = databaseContext.Files.Find(FileId.Value);
+                    Assert.IsTrue(newFile.UploadStartedDate < newFile.UploadCompletedDate);
+                    Assert.IsTrue((DateTime.UtcNow - newFile.UploadStartedDate) < TimeSpan.FromMinutes(5));
+                    Assert.IsTrue((newFile.UploadCompletedDate - newFile.UploadStartedDate) < TimeSpan.FromMinutes(5));
                 }
-            });
 
-            using (var databaseContext = this.NewDbContext())
-            {
-                var newFile = databaseContext.Files.Find(FileId.Value);
-                Assert.IsTrue(newFile.UploadStartedDate < newFile.UploadCompletedDate);
-                Assert.IsTrue((DateTime.UtcNow - newFile.UploadStartedDate) < TimeSpan.FromMinutes(5));
-                Assert.IsTrue((newFile.UploadCompletedDate - newFile.UploadStartedDate) < TimeSpan.FromMinutes(5));
-            }
+                return new ExpectedSideEffects
+                {
+                    Update = new WildcardEntity<File>(expectedFile)
+                    {
+                        AreEqual = actualFile =>
+                        {
+                            expectedFile.UploadStartedDate = actualFile.UploadStartedDate;
+                            expectedFile.UploadCompletedDate = actualFile.UploadCompletedDate;
+                            return Equals(expectedFile, actualFile);
+                        }
+                    }
+                };
+            });
         }
 
-        private async Task CreateUserAsync()
+        private async Task CreateUserAsync(TestDatabaseContext testDatabase)
         {
             var random = new Random();
             var user = UserTests.UniqueEntity(random);
             user.Id = UserId.Value;
 
-            using (var databaseContext = this.NewDbContext())
+            using (var databaseContext = testDatabase.NewContext())
             {
                 databaseContext.Users.Add(user);
                 await databaseContext.SaveChangesAsync();

@@ -20,55 +20,47 @@
 
         private FileSecurity target;
 
-        public void InitializeWithoutDatabase()
+        [TestInitialize]
+        public void Initialize()
         {
             this.target = new FileSecurity(new Mock<IFifthweekDbContext>(MockBehavior.Strict).Object);
-        }
-
-        public override void Initialize()
-        {
-            base.Initialize();
-            this.target = new FileSecurity(this.NewDbContext());
-        }
-
-        [TestCleanup]
-        public override void Cleanup()
-        {
-            base.Cleanup();
         }
 
         [TestMethod]
         public async Task WhenAssertingAFileBelongsToAUser_ItShouldCompleteSuccessfullyIfThePermissionsAreOk()
         {
-            this.Initialize();
-            await this.InitializeDatabaseAsync();
-            await this.CreateFileAsync();
-            await this.SnapshotDatabaseAsync();
+            await this.NewTestDatabaseAsync(async testDatabase =>
+            {
+                this.target = new FileSecurity(testDatabase.NewContext());
+                await this.CreateFileAsync(testDatabase);
+                await testDatabase.TakeSnapshotAsync();
 
-            await this.target.AssertFileBelongsToUserAsync(UserId, FileId);
+                await this.target.AssertFileBelongsToUserAsync(UserId, FileId);
 
-            await this.AssertDatabaseAsync(ExpectedSideEffects.None);
+                return ExpectedSideEffects.None;
+            });
         }
 
         [TestMethod]
         [ExpectedException(typeof(UnauthorizedException))]
         public async Task WhenAssertingAFileBelongsToAUser_ItShouldThrowAnExceptionIfThePermissionsAreViolated()
         {
-            this.Initialize();
-            await this.InitializeDatabaseAsync();
-            await this.CreateFileAsync();
-            await this.SnapshotDatabaseAsync();
+            await this.NewTestDatabaseAsync(async testDatabase =>
+            {
+                this.target = new FileSecurity(testDatabase.NewContext());
+                await this.CreateFileAsync(testDatabase);
+                await testDatabase.TakeSnapshotAsync();
 
-            await this.target.AssertFileBelongsToUserAsync(new UserId(Guid.NewGuid()), FileId);
+                await this.target.AssertFileBelongsToUserAsync(new UserId(Guid.NewGuid()), FileId);
 
-            await this.AssertDatabaseAsync(ExpectedSideEffects.None);
+                return ExpectedSideEffects.None;
+            });
         }
 
         [TestMethod]
         [ExpectedException(typeof(ArgumentNullException))]
         public async Task WhenAssertingAFileBelongsToAUser_UserIdMustNotBeNull()
         {
-            this.InitializeWithoutDatabase();
             await this.target.AssertFileBelongsToUserAsync(null, FileId);
         }
 
@@ -76,43 +68,45 @@
         [ExpectedException(typeof(ArgumentNullException))]
         public async Task WhenAssertingAFileBelongsToAUser_FileIdMustNotBeNull()
         {
-            this.InitializeWithoutDatabase();
             await this.target.AssertFileBelongsToUserAsync(UserId, null);
         }
 
         [TestMethod]
         public async Task WhenCheckingAFileBelongsToAUser_ItShouldCompleteSuccessfullyIfThePermissionsAreOk()
         {
-            this.Initialize();
-            await this.InitializeDatabaseAsync();
-            await this.CreateFileAsync();
-            await this.SnapshotDatabaseAsync();
+            await this.NewTestDatabaseAsync(async testDatabase =>
+            {
+                this.target = new FileSecurity(testDatabase.NewContext());
+                await this.CreateFileAsync(testDatabase);
+                await testDatabase.TakeSnapshotAsync();
 
-            var result = await this.target.CheckFileBelongsToUserAsync(UserId, FileId);
-            Assert.IsTrue(result);
+                var result = await this.target.CheckFileBelongsToUserAsync(UserId, FileId);
+                Assert.IsTrue(result);
 
-            await this.AssertDatabaseAsync(ExpectedSideEffects.None);
+                return ExpectedSideEffects.None;
+            });
         }
 
         [TestMethod]
         public async Task WhenCheckingAFileBelongsToAUser_ItShouldThrowAnExceptionIfThePermissionsAreViolated()
         {
-            this.Initialize();
-            await this.InitializeDatabaseAsync();
-            await this.CreateFileAsync();
-            await this.SnapshotDatabaseAsync();
+            await this.NewTestDatabaseAsync(async testDatabase =>
+            {
+                this.target = new FileSecurity(testDatabase.NewContext());
+                await this.CreateFileAsync(testDatabase);
+                await testDatabase.TakeSnapshotAsync();
 
-            var result = await this.target.CheckFileBelongsToUserAsync(new UserId(Guid.NewGuid()), FileId);
-            Assert.IsFalse(result);
+                var result = await this.target.CheckFileBelongsToUserAsync(new UserId(Guid.NewGuid()), FileId);
+                Assert.IsFalse(result);
 
-            await this.AssertDatabaseAsync(ExpectedSideEffects.None);
+                return ExpectedSideEffects.None;
+            });
         }
 
         [TestMethod]
         [ExpectedException(typeof(ArgumentNullException))]
         public async Task WhenCheckingAFileBelongsToAUser_UserIdMustNotBeNull()
         {
-            this.InitializeWithoutDatabase();
             await this.target.CheckFileBelongsToUserAsync(null, FileId);
         }
 
@@ -120,11 +114,10 @@
         [ExpectedException(typeof(ArgumentNullException))]
         public async Task WhenCheckingAFileBelongsToAUser_FileIdMustNotBeNull()
         {
-            this.InitializeWithoutDatabase();
             await this.target.CheckFileBelongsToUserAsync(UserId, null);
         }
 
-        private async Task CreateFileAsync()
+        private async Task CreateFileAsync(TestDatabaseContext testDatabase)
         {
             var random = new Random();
             var user = UserTests.UniqueEntity(random);
@@ -135,11 +128,11 @@
             file.User = user;
             file.UserId = UserId.Value;
 
-            using (var dbContext = this.NewDbContext())
+            using (var databaseContext = testDatabase.NewContext())
             {
-                dbContext.Users.Add(user);
-                dbContext.Files.Add(file);
-                await dbContext.SaveChangesAsync();
+                databaseContext.Users.Add(user);
+                databaseContext.Files.Add(file);
+                await databaseContext.SaveChangesAsync();
             }
         }
     }

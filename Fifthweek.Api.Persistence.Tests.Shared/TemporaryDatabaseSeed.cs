@@ -2,16 +2,13 @@
 {
     using System;
     using System.Collections.Generic;
-    using System.Data.Common;
-    using System.Data.SqlClient;
+    using System.Data.Entity;
     using System.Diagnostics;
     using System.Threading.Tasks;
 
-    using Fifthweek.Api.Core;
     using Fifthweek.Api.Persistence.Identity;
 
-    [AutoConstructor]
-    public partial class TemporaryDatabaseSeed
+    public class TemporaryDatabaseSeed
     {
         private const int Users = 10;
         private const int Creators = 5;
@@ -31,17 +28,48 @@
         private readonly List<Channel> channels = new List<Channel>();
         private readonly List<Collection> collections = new List<Collection>();
         private readonly List<Post> posts = new List<Post>();
-        private readonly List<File> files = new List<File>(); 
+        private readonly List<File> files = new List<File>();
+
+        public TemporaryDatabaseSeed(Func<IFifthweekDbContext> databaseContextFactory)
+        {
+            if (databaseContextFactory == null)
+            {
+                throw new ArgumentNullException("databaseContextFactory");
+            }
+
+            this.databaseContextFactory = databaseContextFactory;
+        }
 
         public async Task PopulateWithDummyEntitiesAsync()
         {
             var stopwatch = Stopwatch.StartNew();
+            var seedResetRequired = await this.SeedStateResetRequiredAsync();
+            Trace.WriteLine(string.Format("Checked database seed version in {0}s", Math.Round(stopwatch.Elapsed.TotalSeconds, 2)));
+
+            if (!seedResetRequired)
+            {
+                Trace.WriteLine("Seed state matched - no reset required.");
+                return;
+            }
+
+            Trace.WriteLine("Resetting database! This should only occur once after making changes to the seeding code.");
+
+            stopwatch = Stopwatch.StartNew();
             this.CreateUsers();
             Trace.WriteLine(string.Format("Generated in-memory entities in {0}s", Math.Round(stopwatch.Elapsed.TotalSeconds, 2)));
 
             stopwatch = Stopwatch.StartNew();
             await this.FlushToDatabaseAsync();
             Trace.WriteLine(string.Format("Saved to database in {0}s", Math.Round(stopwatch.Elapsed.TotalSeconds, 2)));
+        }
+
+        private async Task<bool> SeedStateResetRequiredAsync()
+        {
+            using (var databaseContext = this.databaseContextFactory())
+            {
+                // We use the user count to discriminate between seed state versions.
+                return await databaseContext.Users.CountAsync() == Users;
+            }
         }
 
         private async Task FlushToDatabaseAsync()

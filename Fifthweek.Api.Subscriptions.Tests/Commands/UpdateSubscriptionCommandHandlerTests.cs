@@ -41,110 +41,112 @@
         private UpdateSubscriptionCommandHandler target;
 
         [TestInitialize]
-        public override void Initialize()
+        public void Initialize()
         {
-            base.Initialize();
             this.subscriptionSecurity = new Mock<ISubscriptionSecurity>();
             this.fileSecurity = new Mock<IFileSecurity>();
-            this.target = new UpdateSubscriptionCommandHandler(this.subscriptionSecurity.Object, this.fileSecurity.Object, this.NewDbContext());
-        }
-
-        [TestCleanup]
-        public override void Cleanup()
-        {
-            base.Cleanup();
         }
 
         [TestMethod]
         public async Task WhenNotAllowedToUpdate_ItShouldReportAnError()
         {
-            await this.InitializeDatabaseAsync();
-            await this.SnapshotDatabaseAsync();
-
-            this.subscriptionSecurity.Setup(_ => _.AssertUpdateAllowedAsync(UserId, SubscriptionId)).Throws<UnauthorizedException>();
-
-            try
+            await this.NewTestDatabaseAsync(async testDatabase =>
             {
-                await this.target.HandleAsync(Command);
-                Assert.Fail("Expected unauthorized exception");
-            }
-            catch (UnauthorizedException)
-            {
-            }
+                this.subscriptionSecurity.Setup(_ => _.AssertUpdateAllowedAsync(UserId, SubscriptionId)).Throws<UnauthorizedException>();
+                this.target = new UpdateSubscriptionCommandHandler(this.subscriptionSecurity.Object, this.fileSecurity.Object, testDatabase.NewContext());
+                await testDatabase.TakeSnapshotAsync();
 
-            await this.AssertDatabaseAsync(ExpectedSideEffects.None);
+                try
+                {
+                    await this.target.HandleAsync(Command);
+                    Assert.Fail("Expected unauthorized exception");
+                }
+                catch (UnauthorizedException)
+                {
+                }
+
+                return ExpectedSideEffects.None;
+            });
         }
 
         [TestMethod]
         public async Task WhenNotAllowedToUseFile_ItShouldReportAnError()
         {
-            await this.InitializeDatabaseAsync();
-            await this.SnapshotDatabaseAsync();
-
-            this.fileSecurity.Setup(_ => _.AssertFileBelongsToUserAsync(UserId, HeaderImageFileId)).Throws<UnauthorizedException>();
-
-            try
+            await this.NewTestDatabaseAsync(async testDatabase =>
             {
-                await this.target.HandleAsync(Command);
-                Assert.Fail("Expected unauthorized exception");
-            }
-            catch (UnauthorizedException)
-            {
-            }
+                this.fileSecurity.Setup(_ => _.AssertFileBelongsToUserAsync(UserId, HeaderImageFileId)).Throws<UnauthorizedException>();
+                this.target = new UpdateSubscriptionCommandHandler(this.subscriptionSecurity.Object, this.fileSecurity.Object, testDatabase.NewContext());
+                await testDatabase.TakeSnapshotAsync();
 
-            await this.AssertDatabaseAsync(ExpectedSideEffects.None);
+                try
+                {
+                    await this.target.HandleAsync(Command);
+                    Assert.Fail("Expected unauthorized exception");
+                }
+                catch (UnauthorizedException)
+                {
+                }
+
+                return ExpectedSideEffects.None;
+            });
         }
 
         [TestMethod]
         public async Task WhenReRun_ItShouldHaveNoEffect()
         {
-            await this.InitializeDatabaseAsync();
-            await this.CreateSubscriptionAsync(UserId, SubscriptionId, HeaderImageFileId);
-            await this.target.HandleAsync(Command);
-            await this.SnapshotDatabaseAsync();
+            await this.NewTestDatabaseAsync(async testDatabase =>
+            {
+                this.target = new UpdateSubscriptionCommandHandler(this.subscriptionSecurity.Object, this.fileSecurity.Object, testDatabase.NewContext());
+                await this.CreateSubscriptionAsync(UserId, SubscriptionId, HeaderImageFileId, testDatabase);
+                await this.target.HandleAsync(Command);
+                await testDatabase.TakeSnapshotAsync();
 
-            await this.target.HandleAsync(Command);
+                await this.target.HandleAsync(Command);
 
-            await this.AssertDatabaseAsync(ExpectedSideEffects.None);
+                return ExpectedSideEffects.None;
+            });
         }
 
         [TestMethod]
         public async Task ItShouldUpdateSubscription()
         {
-            await this.InitializeDatabaseAsync();
-            var subscription = await this.CreateSubscriptionAsync(UserId, SubscriptionId, HeaderImageFileId);
-            await this.SnapshotDatabaseAsync();
-
-            await this.target.HandleAsync(Command);
-
-            var expectedSubscription = new Subscription(
-                SubscriptionId.Value,
-                UserId.Value,
-                null,
-                SubscriptionName.Value,
-                Tagline.Value,
-                Introduction.Value,
-                Description.Value,
-                Video.Value,
-                HeaderImageFileId.Value,
-                null,
-                subscription.CreationDate);
-            
-            await this.AssertDatabaseAsync(new ExpectedSideEffects
+            await this.NewTestDatabaseAsync(async testDatabase =>
             {
-                Update = expectedSubscription, 
-                ExcludedFromTest = entity => entity is Channel
+                this.target = new UpdateSubscriptionCommandHandler(this.subscriptionSecurity.Object, this.fileSecurity.Object, testDatabase.NewContext());
+                var subscription = await this.CreateSubscriptionAsync(UserId, SubscriptionId, HeaderImageFileId, testDatabase);
+                await testDatabase.TakeSnapshotAsync();
+
+                await this.target.HandleAsync(Command);
+
+                var expectedSubscription = new Subscription(
+                    SubscriptionId.Value,
+                    UserId.Value,
+                    null,
+                    SubscriptionName.Value,
+                    Tagline.Value,
+                    Introduction.Value,
+                    Description.Value,
+                    Video.Value,
+                    HeaderImageFileId.Value,
+                    null,
+                    subscription.CreationDate);
+
+                return new ExpectedSideEffects
+                {
+                    Update = expectedSubscription,
+                    ExcludedFromTest = entity => entity is Channel
+                };
             });
         }
 
-        private async Task<Subscription> CreateSubscriptionAsync(UserId newUserId, SubscriptionId newSubscriptionId, FileId headerImageFileId)
+        private async Task<Subscription> CreateSubscriptionAsync(UserId newUserId, SubscriptionId newSubscriptionId, FileId headerImageFileId, TestDatabaseContext testDatabase)
         {
-            using (var databaseContext = this.NewDbContext())
+            using (var databaseContext = testDatabase.NewContext())
             {
                 await databaseContext.CreateTestSubscriptionAsync(newUserId.Value, newSubscriptionId.Value, headerImageFileId.Value);
             }
 
-            using (var databaseContext = this.NewDbContext())
+            using (var databaseContext = testDatabase.NewContext())
             {
                 return await databaseContext.Subscriptions.SingleAsync(_ => _.Id == newSubscriptionId.Value);
             }

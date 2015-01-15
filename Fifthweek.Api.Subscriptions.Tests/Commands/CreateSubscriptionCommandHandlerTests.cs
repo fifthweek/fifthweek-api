@@ -26,121 +26,124 @@
         private CreateSubscriptionCommandHandler target;
 
         [TestInitialize]
-        public override void Initialize()
+        public void Initialize()
         {
-            base.Initialize();
             this.subscriptionSecurity = new Mock<ISubscriptionSecurity>();
-            this.target = new CreateSubscriptionCommandHandler(this.subscriptionSecurity.Object, this.NewDbContext());
-        }
-
-        [TestCleanup]
-        public override void Cleanup()
-        {
-            base.Cleanup();
         }
 
         [TestMethod]
         public async Task WhenNotAllowedToCreate_ItShouldReportAnError()
         {
-            await this.InitializeDatabaseAsync();
-            await this.SnapshotDatabaseAsync();
-
-            this.subscriptionSecurity.Setup(_ => _.AssertCreationAllowedAsync(UserId)).Throws<UnauthorizedException>();
-
-            try
+            await this.NewTestDatabaseAsync(async testDatabase =>
             {
-                await this.target.HandleAsync(Command);
-                Assert.Fail("Expected recoverable exception");
-            }
-            catch (UnauthorizedException)
-            {
-            }
+                this.subscriptionSecurity.Setup(_ => _.AssertCreationAllowedAsync(UserId)).Throws<UnauthorizedException>();
+                this.target = new CreateSubscriptionCommandHandler(this.subscriptionSecurity.Object, testDatabase.NewContext());
+                await testDatabase.TakeSnapshotAsync();
 
-            await this.AssertDatabaseAsync(ExpectedSideEffects.None);
+                try
+                {
+                    await this.target.HandleAsync(Command);
+                    Assert.Fail("Expected recoverable exception");
+                }
+                catch (UnauthorizedException)
+                {
+                }
+
+                return ExpectedSideEffects.None;
+            });
         }
 
         [TestMethod]
         public async Task WhenReRun_ItShouldHaveNoEffect()
         {
-            await this.InitializeDatabaseAsync();
-            await this.CreateUserAsync(UserId);
-            await this.target.HandleAsync(Command);
-            await this.SnapshotDatabaseAsync();
+            await this.NewTestDatabaseAsync(async testDatabase =>
+            {
+                this.target = new CreateSubscriptionCommandHandler(this.subscriptionSecurity.Object, testDatabase.NewContext());
+                await this.CreateUserAsync(UserId, testDatabase);
+                await this.target.HandleAsync(Command);
+                await testDatabase.TakeSnapshotAsync();
 
-            await this.target.HandleAsync(Command);
+                await this.target.HandleAsync(Command);
 
-            await this.AssertDatabaseAsync(ExpectedSideEffects.None);
+                return ExpectedSideEffects.None;
+            });
         }
 
         [TestMethod]
         public async Task ItShouldCreateSubscription()
         {
-            await this.InitializeDatabaseAsync();
-            await this.CreateUserAsync(UserId);
-            await this.SnapshotDatabaseAsync();
-
-            await this.target.HandleAsync(Command);
-
-            var expectedSubscription = new Subscription(
-                SubscriptionId.Value,
-                UserId.Value,
-                null,
-                SubscriptionName.Value,
-                Tagline.Value,
-                ValidIntroduction.Default.Value,
-                null,
-                null,
-                null,
-                null,
-                default(DateTime));
-            
-            await this.AssertDatabaseAsync(new ExpectedSideEffects
+            await this.NewTestDatabaseAsync(async testDatabase =>
             {
-                Insert = new WildcardEntity<Subscription>(expectedSubscription)
+                this.target = new CreateSubscriptionCommandHandler(this.subscriptionSecurity.Object, testDatabase.NewContext());
+                await this.CreateUserAsync(UserId, testDatabase);
+                await testDatabase.TakeSnapshotAsync();
+
+                await this.target.HandleAsync(Command);
+
+                var expectedSubscription = new Subscription(
+                    SubscriptionId.Value,
+                    UserId.Value,
+                    null,
+                    SubscriptionName.Value,
+                    Tagline.Value,
+                    ValidIntroduction.Default.Value,
+                    null,
+                    null,
+                    null,
+                    null,
+                    default(DateTime));
+
+                return new ExpectedSideEffects
                 {
-                    AreEqual = actualSubscription =>
+                    Insert = new WildcardEntity<Subscription>(expectedSubscription)
                     {
-                        expectedSubscription.CreationDate = actualSubscription.CreationDate; // Take wildcard properties from actual value.
-                        return Equals(expectedSubscription, actualSubscription);
-                    }
-                }, 
-                ExcludedFromTest = entity => entity is Channel
+                        AreEqual = actualSubscription =>
+                        {
+                            expectedSubscription.CreationDate = actualSubscription.CreationDate; // Take wildcard properties from actual value.
+                            return Equals(expectedSubscription, actualSubscription);
+                        }
+                    },
+                    ExcludedFromTest = entity => entity is Channel
+                };
             });
         }
 
         [TestMethod]
         public async Task ItShouldCreateTheDefaultChannel()
         {
-            await this.InitializeDatabaseAsync();
-            await this.CreateUserAsync(UserId);
-            await this.SnapshotDatabaseAsync();
+            await this.NewTestDatabaseAsync(async testDatabase =>
+            {
+                this.target = new CreateSubscriptionCommandHandler(this.subscriptionSecurity.Object, testDatabase.NewContext());
+                await this.CreateUserAsync(UserId, testDatabase);
+                await testDatabase.TakeSnapshotAsync();
 
-            await this.target.HandleAsync(Command);
+                await this.target.HandleAsync(Command);
 
-            var expectedChannel = new Channel(
+                var expectedChannel = new Channel(
                 SubscriptionId.Value, // The default channel uses the subscription ID.
                 SubscriptionId.Value,
                 null,
                 BasePrice.Value,
                 DateTime.MinValue);
 
-            await this.AssertDatabaseAsync(new ExpectedSideEffects
-            {
-                Insert = new WildcardEntity<Channel>(expectedChannel)
+                return new ExpectedSideEffects
                 {
-                    AreEqual = actualChannel =>
+                    Insert = new WildcardEntity<Channel>(expectedChannel)
                     {
-                        expectedChannel.CreationDate = actualChannel.CreationDate; // Take wildcard properties from actual value.
-                        return Equals(expectedChannel, actualChannel);
-                    }
-                },
-                ExcludedFromTest = entity => entity is Subscription
+                        AreEqual = actualChannel =>
+                        {
+                            expectedChannel.CreationDate = actualChannel.CreationDate; // Take wildcard properties from actual value.
+                            return Equals(expectedChannel, actualChannel);
+                        }
+                    },
+                    ExcludedFromTest = entity => entity is Subscription
+                };
             });
         }
 
-        private async Task CreateUserAsync(UserId newUserId)
+        private async Task CreateUserAsync(UserId newUserId, TestDatabaseContext testDatabase)
         {
-            using (var databaseContext = this.NewDbContext())
+            using (var databaseContext = testDatabase.NewContext())
             {
                 await databaseContext.CreateTestUserAsync(newUserId.Value);
             }
