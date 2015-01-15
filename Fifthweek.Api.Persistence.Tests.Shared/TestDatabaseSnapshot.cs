@@ -3,54 +3,96 @@
     using System;
     using System.Collections.Generic;
     using System.Data.Entity;
+    using System.Diagnostics;
     using System.Linq;
     using System.Threading.Tasks;
 
-    using Fifthweek.Api.Core;
-
     using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-    [AutoConstructor]
-    public partial class TestDatabaseSnapshot
+    public class TestDatabaseSnapshot
     {
         private readonly TestDatabase testDatabase;
+        private readonly List<ITableBeforeAndAfter> tables = new List<ITableBeforeAndAfter>();
 
-        private IFifthweekDbContext loadedSnapshotContext; // 'Local' properties on each DbSet will represent snapshot state.
+        public TestDatabaseSnapshot(TestDatabase testDatabase)
+        {
+            if (testDatabase == null)
+            {
+                throw new ArgumentNullException("testDatabase");
+            }
+
+            this.testDatabase = testDatabase;
+        }
 
         public async Task InitializeAsync()
         {
-            this.loadedSnapshotContext = this.testDatabase.NewDatabaseContext();
-            await this.loadedSnapshotContext.Users.LoadAsync();
-            await this.loadedSnapshotContext.Subscriptions.LoadAsync();
-            await this.loadedSnapshotContext.Channels.LoadAsync();
-            await this.loadedSnapshotContext.Collections.LoadAsync();
-            await this.loadedSnapshotContext.Posts.LoadAsync();
-            await this.loadedSnapshotContext.Files.LoadAsync();
+            var stopwatch = Stopwatch.StartNew();
+
+            this.tables.Add( this.LoadAsync(databaseContext => databaseContext.Users));
+            this.tables.Add( this.LoadAsync(databaseContext => databaseContext.Subscriptions));
+            this.tables.Add( this.LoadAsync(databaseContext => databaseContext.Channels));
+            this.tables.Add( this.LoadAsync(databaseContext => databaseContext.Collections));
+            this.tables.Add( this.LoadAsync(databaseContext => databaseContext.Posts));
+            this.tables.Add( this.LoadAsync(databaseContext => databaseContext.Files));
+
+            Trace.WriteLine(string.Format("Snapshot taken in {0}s", Math.Round(stopwatch.Elapsed.TotalSeconds, 2)));
+        }
+
+        private ITableBeforeAndAfter LoadAsync<T>(Func<IFifthweekDbContext, IDbSet<T>> setFactory) where T : class
+        {
+            var table = new TableBeforeAndAfter<T>(setFactory);
+            
+            using (var databaseContext = this.testDatabase.NewDatabaseContext())
+            {
+                databaseContext.Configuration.AutoDetectChangesEnabled = false;
+                databaseContext.Configuration.LazyLoadingEnabled = false;
+                databaseContext.Configuration.ValidateOnSaveEnabled = false;
+
+                table.InitializeSnapshot(databaseContext);
+            }
+
+            return table;
         }
 
         public async Task AssertSideEffectsAsync(ExpectedSideEffects sideEffects)
         {
-            if (this.loadedSnapshotContext == null)
+            if (this.tables.Count == 0)
             {
-                throw new Exception("No snapshot context found. Did you forget to take a snapshot?");
+                throw new Exception("No snapshot found. Did you forget to take a snapshot?");
             }
 
-            var tables = new List<TableBeforeAndAfter>();
+            var stopwatch = Stopwatch.StartNew();
+
             using (var databaseContext = this.testDatabase.NewDatabaseContext())
             {
-                tables.Add(await TableBeforeAndAfter.GenerateAsync(this.loadedSnapshotContext.Users, databaseContext.Users));
-                tables.Add(await TableBeforeAndAfter.GenerateAsync(this.loadedSnapshotContext.Subscriptions, databaseContext.Subscriptions));
-                tables.Add(await TableBeforeAndAfter.GenerateAsync(this.loadedSnapshotContext.Channels, databaseContext.Channels));
-                tables.Add(await TableBeforeAndAfter.GenerateAsync(this.loadedSnapshotContext.Collections, databaseContext.Collections));
-                tables.Add(await TableBeforeAndAfter.GenerateAsync(this.loadedSnapshotContext.Posts, databaseContext.Posts));
-                tables.Add(await TableBeforeAndAfter.GenerateAsync(this.loadedSnapshotContext.Files, databaseContext.Files));
+                databaseContext.Configuration.AutoDetectChangesEnabled = false;
+                databaseContext.Configuration.LazyLoadingEnabled = false;
+                databaseContext.Configuration.ValidateOnSaveEnabled = false;
+
+                foreach (var table in this.tables)
+                {
+                    table.GetLatestFromDatabase(databaseContext);
+                }
             }
 
-            var snapshot = tables.SelectMany(_ => _.Snapshot).ToList();
-            var database = tables.SelectMany(_ => _.Database).ToList();
+            Trace.WriteLine(string.Format("Queried latest in {0}s", Math.Round(stopwatch.Elapsed.TotalSeconds, 2)));
 
-            this.AssertNoUnexpectedSideEffects(snapshot, database, sideEffects);
+            stopwatch = Stopwatch.StartNew();
+
+            foreach (var table in this.tables)
+            {
+                this.AssertNoUnexpectedSideEffects(table.Snapshot, table.Database, sideEffects);
+            }
+
+            Trace.WriteLine(string.Format("Asserted no unexpected side effects in {0}s", Math.Round(stopwatch.Elapsed.TotalSeconds, 2)));
+
+            stopwatch = Stopwatch.StartNew();
+
+            var snapshot = this.tables.SelectMany(_ => _.Snapshot).ToList();
+            var database = this.tables.SelectMany(_ => _.Database).ToList();
             this.AssertExpectedSideEffects(snapshot, database, sideEffects);
+
+            Trace.WriteLine(string.Format("Asserted expected side effects in {0}s", Math.Round(stopwatch.Elapsed.TotalSeconds, 2)));
         }
 
         private void AssertNoUnexpectedSideEffects(IReadOnlyCollection<IIdentityEquatable> snapshot, IReadOnlyCollection<IIdentityEquatable> database, ExpectedSideEffects sideEffects)

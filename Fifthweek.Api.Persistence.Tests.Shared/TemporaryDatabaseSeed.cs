@@ -14,10 +14,10 @@
         private const int Creators = 5;
         private const int SubscriptionsPerCreator = 1; // That's all our interface supports for now!
         private const int ChannelsPerSubscription = 3;
-        private const int CollectionsPerChannel = 4;
-        private const int NotesPerChannel = 10;
-        private const int ImagesPerCollection = 10;
-        private const int FilesPerCollection = 10;
+        private const int CollectionsPerChannel = 2;
+        private const int NotesPerChannel = 3;
+        private const int ImagesPerCollection = 3;
+        private const int FilesPerCollection = 3;
 
         private static readonly Random Random = new Random();
 

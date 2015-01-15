@@ -3,6 +3,8 @@
     using System;
     using System.Threading.Tasks;
 
+    using Dapper;
+
     using Fifthweek.Api.Identity.Membership;
     using Fifthweek.Api.Persistence.Tests.Shared;
 
@@ -42,6 +44,12 @@
             await this.NewTestDatabaseAsync(async testDatabase =>
             {
                 this.target = new ChannelOwnership(testDatabase.NewContext());
+
+                using (var databaseContext = testDatabase.NewContext())
+                {
+                    await databaseContext.Database.Connection.ExecuteAsync("DELETE FROM Channels");
+                }
+
                 await testDatabase.TakeSnapshotAsync();
 
                 var result = await this.target.IsOwnerAsync(UserId, ChannelId);

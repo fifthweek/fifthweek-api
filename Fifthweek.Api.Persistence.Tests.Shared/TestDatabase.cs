@@ -5,7 +5,6 @@
     using System.Data.Entity.Migrations;
     using System.Diagnostics;
     using System.Threading.Tasks;
-    using System.Transactions;
 
     using Fifthweek.Api.Core;
     using Fifthweek.Api.Persistence.Migrations;
@@ -27,8 +26,7 @@
 
             new DbMigrator(migrationConfiguration).Update();
 
-            var secondsElapsed = Math.Round(stopwatch.Elapsed.TotalSeconds, 2);
-            Trace.WriteLine(string.Format("Migrated database in {0}s", secondsElapsed));
+            Trace.WriteLine(string.Format("Migrated database in {0}s", Math.Round(stopwatch.Elapsed.TotalSeconds, 2)));
 
             var seed = new TemporaryDatabaseSeed(() => new FifthweekDbContext(connectionString));
             await seed.PopulateWithDummyEntitiesAsync();
@@ -36,14 +34,14 @@
             return new TestDatabase(connectionString);
         }
 
-        public IFifthweekDbContext NewDatabaseContext()
+        public FifthweekDbContext NewDatabaseContext()
         {
             return new FifthweekDbContext(this.connectionString);
         }
 
         private static string NewLocalDbConnectionString()
         {
-            const string FileName = "Fifthweek_Test.mdf";
+            const string FileName = "Fifthweek_Test_2.mdf";
             var filePath = System.IO.Path.GetTempPath() + "\\" + FileName;
             return string.Format("Data Source=(LocalDb)\\v11.0;AttachDbFilename={0};Integrated Security=SSPI;", filePath);
         }

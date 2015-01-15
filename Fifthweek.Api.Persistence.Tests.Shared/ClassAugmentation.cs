@@ -6,13 +6,9 @@ using System.Linq;
 namespace Fifthweek.Api.Persistence.Tests.Shared
 {
 	using System;
-	using System.Linq;
 	using System.Threading.Tasks;
 	using System.Transactions;
 	using Fifthweek.Api.Core;
-	using System.Collections.Generic;
-	using System.Data.Entity;
-	using Microsoft.VisualStudio.TestTools.UnitTesting;
 	public partial class PersistenceTestsBase
 	{
 		public partial class TestDatabaseContext 
@@ -37,63 +33,6 @@ namespace Fifthweek.Api.Persistence.Tests.Shared
 		}
 
 		}
-}
-namespace Fifthweek.Api.Persistence.Tests.Shared
-{
-	using System;
-	using System.Linq;
-	using System.Threading.Tasks;
-	using System.Transactions;
-	using Fifthweek.Api.Core;
-	using System.Collections.Generic;
-	using System.Data.Entity;
-	using Microsoft.VisualStudio.TestTools.UnitTesting;
-	public partial class TableBeforeAndAfter 
-	{
-        public TableBeforeAndAfter(
-            System.Collections.Generic.IReadOnlyList<Fifthweek.Api.Persistence.IIdentityEquatable> snapshot, 
-            System.Collections.Generic.IReadOnlyList<Fifthweek.Api.Persistence.IIdentityEquatable> database)
-        {
-            if (snapshot == null)
-            {
-                throw new ArgumentNullException("snapshot");
-            }
-
-            if (database == null)
-            {
-                throw new ArgumentNullException("database");
-            }
-
-            this.Snapshot = snapshot;
-            this.Database = database;
-        }
-	}
-
-}
-namespace Fifthweek.Api.Persistence.Tests.Shared
-{
-	using System;
-	using System.Linq;
-	using System.Threading.Tasks;
-	using System.Transactions;
-	using Fifthweek.Api.Core;
-	using System.Collections.Generic;
-	using System.Data.Entity;
-	using Microsoft.VisualStudio.TestTools.UnitTesting;
-	public partial class TestDatabaseSnapshot 
-	{
-        public TestDatabaseSnapshot(
-            Fifthweek.Api.Persistence.Tests.Shared.TestDatabase testDatabase)
-        {
-            if (testDatabase == null)
-            {
-                throw new ArgumentNullException("testDatabase");
-            }
-
-            this.testDatabase = testDatabase;
-        }
-	}
-
 }
 namespace Fifthweek.Api.Persistence.Tests.Shared
 {
