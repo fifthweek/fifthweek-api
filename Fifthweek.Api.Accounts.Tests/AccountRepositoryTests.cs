@@ -1,10 +1,7 @@
-﻿using System;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-
-namespace Fifthweek.Api.Accounts.Tests
+﻿namespace Fifthweek.Api.Accounts.Tests
 {
+    using System;
     using System.Data.Entity;
-    using System.Linq;
     using System.Threading.Tasks;
 
     using Fifthweek.Api.Core;
@@ -16,6 +13,7 @@ namespace Fifthweek.Api.Accounts.Tests
     using Fifthweek.Api.Tests.Shared;
 
     using Microsoft.AspNet.Identity;
+    using Microsoft.VisualStudio.TestTools.UnitTesting;
 
     using Moq;
 
@@ -23,31 +21,24 @@ namespace Fifthweek.Api.Accounts.Tests
     public class AccountRepositoryTests : PersistenceTestsBase
     {
         private readonly UserId userId = new UserId(Guid.NewGuid());
-
         private readonly FileId fileId = new FileId(Guid.NewGuid());
-
         private readonly Email email = new Email("accountrepositorytests@testing.fifthweek.com");
-
         private readonly ValidEmail newEmail = ValidEmail.Parse("newtestemail@testing.fifthweek.com");
-
         private readonly ValidUsername newUsername = ValidUsername.Parse("newtestusername");
-
         private readonly ValidPassword newPassword = ValidPassword.Parse("newtestpassword");
-
         private readonly FileId newFileId = new FileId(Guid.NewGuid());
-
         private AccountRepository target;
-
         private Mock<IUserManager> userManager;
-
         private Mock<IPasswordHasher> passwordHasher;
 
         [TestInitialize]
-        public void TestInitialize()
+        public override void Initialize()
         {
+            base.Initialize();
             this.passwordHasher = new Mock<IPasswordHasher>();
             this.userManager = new Mock<IUserManager>();
             this.userManager.Setup(v => v.PasswordHasher).Returns(this.passwordHasher.Object);
+            this.target = new AccountRepository(this.NewDbContext(), this.userManager.Object);
         }
 
         [TestCleanup]
@@ -59,7 +50,8 @@ namespace Fifthweek.Api.Accounts.Tests
         [TestMethod]
         public async Task WhenGetAccountSettingsCalled_ItShouldGetAccountSettingsFromTheDatabase()
         {
-            await this.InitializeWithDatabaseAsync();
+            await this.InitializeDatabaseAsync();
+            await this.CreateFileAsync();
             await this.SnapshotDatabaseAsync();
 
             var result = await this.target.GetAccountSettingsAsync(this.userId);
@@ -73,7 +65,8 @@ namespace Fifthweek.Api.Accounts.Tests
         [TestMethod]
         public async Task WhenGetAccountSettingsCalledWithInvalidUserId_ItShouldThrowARecoverableException()
         {
-            await this.InitializeWithDatabaseAsync();
+            await this.InitializeDatabaseAsync();
+            await this.CreateFileAsync();
             await this.SnapshotDatabaseAsync();
 
             await ExpectedException<DetailedRecoverableException>.AssertAsync(
@@ -85,7 +78,8 @@ namespace Fifthweek.Api.Accounts.Tests
         [TestMethod]
         public async Task WhenGetAccountSettingsCalledWithNullUserId_ItShouldThrowAnAugumentException()
         {
-            await this.InitializeWithDatabaseAsync();
+            await this.InitializeDatabaseAsync();
+            await this.CreateFileAsync();
             await this.SnapshotDatabaseAsync();
 
             await ExpectedException<ArgumentNullException>.AssertAsync(
@@ -97,8 +91,10 @@ namespace Fifthweek.Api.Accounts.Tests
         [TestMethod]
         public async Task WhenUpdateAccountSettingsCalled_ItShouldUpdateTheDatabase()
         {
-            await this.InitializeWithDatabaseAsync();
+            await this.InitializeDatabaseAsync();
+            await this.CreateFileAsync();
             await this.SnapshotDatabaseAsync();
+
             var currentUser = await this.GetUser();
 
             var hashedNewPassword = this.newPassword.Value + "1";
@@ -132,8 +128,10 @@ namespace Fifthweek.Api.Accounts.Tests
         [TestMethod]
         public async Task WhenUpdateAccountSettingsCalledWithoutANewPassword_ItShouldUpdateTheDatabase()
         {
-            await this.InitializeWithDatabaseAsync();
+            await this.InitializeDatabaseAsync();
+            await this.CreateFileAsync();
             await this.SnapshotDatabaseAsync();
+
             var currentUser = await this.GetUser();
 
             var result = await this.target.UpdateAccountSettingsAsync(
@@ -164,8 +162,10 @@ namespace Fifthweek.Api.Accounts.Tests
         [TestMethod]
         public async Task WhenUpdateAccountSettingsCalledWithSameEMail_ItShouldDetectTheEmailHasNotChanged()
         {
-            await this.InitializeWithDatabaseAsync();
+            await this.InitializeDatabaseAsync();
+            await this.CreateFileAsync();
             await this.SnapshotDatabaseAsync();
+
             var currentUser = await this.GetUser();
 
             var result = await this.target.UpdateAccountSettingsAsync(
@@ -196,8 +196,10 @@ namespace Fifthweek.Api.Accounts.Tests
         [TestMethod]
         public async Task WhenUpdateAccountSettingsCalledWithoutAProfileImageFileId_ItShouldUpdateTheDatabase()
         {
-            await this.InitializeWithDatabaseAsync();
+            await this.InitializeDatabaseAsync();
+            await this.CreateFileAsync();
             await this.SnapshotDatabaseAsync();
+
             var currentUser = await this.GetUser();
 
             var result = await this.target.UpdateAccountSettingsAsync(
@@ -228,7 +230,8 @@ namespace Fifthweek.Api.Accounts.Tests
         [TestMethod]
         public async Task WhenUpdateAccountSettingsCalledWithNullUserId_ItShouldThrowAnAugumentException()
         {
-            await this.InitializeWithDatabaseAsync();
+            await this.InitializeDatabaseAsync();
+            await this.CreateFileAsync();
             await this.SnapshotDatabaseAsync();
 
             await ExpectedException<ArgumentNullException>.AssertAsync(
@@ -245,7 +248,8 @@ namespace Fifthweek.Api.Accounts.Tests
         [TestMethod]
         public async Task WhenUpdateAccountSettingsCalledWithNullEmail_ItShouldThrowAnAugumentException()
         {
-            await this.InitializeWithDatabaseAsync();
+            await this.InitializeDatabaseAsync();
+            await this.CreateFileAsync();
             await this.SnapshotDatabaseAsync();
 
             await ExpectedException<ArgumentNullException>.AssertAsync(
@@ -262,7 +266,8 @@ namespace Fifthweek.Api.Accounts.Tests
         [TestMethod]
         public async Task WhenUpdateAccountSettingsCalledWithNullUsername_ItShouldThrowAnAugumentException()
         {
-            await this.InitializeWithDatabaseAsync();
+            await this.InitializeDatabaseAsync();
+            await this.CreateFileAsync();
             await this.SnapshotDatabaseAsync();
 
             await ExpectedException<ArgumentNullException>.AssertAsync(
@@ -289,17 +294,8 @@ namespace Fifthweek.Api.Accounts.Tests
             return await databaseContext.Users.SingleAsync(v => v.Id == this.userId.Value);
         }
 
-        private async Task InitializeWithoutDatabaseAsync()
+        private async Task CreateFileAsync()
         {
-            this.target = new AccountRepository(new Mock<IFifthweekDbContext>(MockBehavior.Strict).Object, this.userManager.Object);
-        }
-
-        private async Task InitializeWithDatabaseAsync()
-        {
-            await this.InitializeDatabaseAsync();
-
-            this.target = new AccountRepository(this.NewDbContext(), this.userManager.Object);
-
             var random = new Random();
             var user = UserTests.UniqueEntity(random);
             user.Id = this.userId.Value;

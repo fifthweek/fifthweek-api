@@ -16,8 +16,9 @@
         private SubscriptionOwnership target;
 
         [TestInitialize]
-        public void Initialize()
+        public override void Initialize()
         {
+            base.Initialize();
             this.target = new SubscriptionOwnership(this.NewDbContext());
         }
 

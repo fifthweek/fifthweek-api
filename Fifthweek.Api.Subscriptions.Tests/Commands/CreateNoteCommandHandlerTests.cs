@@ -29,8 +29,9 @@
         private CreateNoteCommandHandler target;
 
         [TestInitialize]
-        public void Initialize()
+        public override void Initialize()
         {
+            base.Initialize();
             this.channelSecurity = new Mock<IChannelSecurity>();
             this.target = new CreateNoteCommandHandler(this.channelSecurity.Object, this.NewDbContext());
         }

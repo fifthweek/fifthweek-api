@@ -21,8 +21,9 @@
         private GetCreatorStatusQueryHandler target;
 
         [TestInitialize]
-        public void Initialize()
+        public override void Initialize()
         {
+            base.Initialize();
             this.target = new GetCreatorStatusQueryHandler(this.NewDbContext());
         }
 

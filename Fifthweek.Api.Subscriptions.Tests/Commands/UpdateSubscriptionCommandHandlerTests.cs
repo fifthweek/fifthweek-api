@@ -41,8 +41,9 @@
         private UpdateSubscriptionCommandHandler target;
 
         [TestInitialize]
-        public void Initialize()
+        public override void Initialize()
         {
+            base.Initialize();
             this.subscriptionSecurity = new Mock<ISubscriptionSecurity>();
             this.fileSecurity = new Mock<IFileSecurity>();
             this.target = new UpdateSubscriptionCommandHandler(this.subscriptionSecurity.Object, this.fileSecurity.Object, this.NewDbContext());

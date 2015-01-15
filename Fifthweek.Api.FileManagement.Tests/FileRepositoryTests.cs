@@ -1,11 +1,9 @@
 ﻿namespace Fifthweek.Api.FileManagement.Tests
 {
     using System;
-    using System.Diagnostics;
     using System.Threading;
     using System.Threading.Tasks;
 
-    using Fifthweek.Api.Core;
     using Fifthweek.Api.Identity.Membership;
     using Fifthweek.Api.Persistence;
     using Fifthweek.Api.Persistence.Tests.Shared;
@@ -17,17 +15,24 @@
     [TestClass]
     public class FileRepositoryTests : PersistenceTestsBase
     {
-        private readonly string fileNameWithoutExtension = "myfile";
-
-        private readonly string fileExtension = "jpeg";
-
-        private readonly string purpose = "profile-picture";
-
-        private readonly UserId userId = new UserId(Guid.NewGuid());
-
-        private readonly FileId fileId = new FileId(Guid.NewGuid());
+        private const string FileNameWithoutExtension = "myfile";
+        private const string FileExtension = "jpeg";
+        private const string Purpose = "profile-picture";
+        private static readonly UserId UserId = new UserId(Guid.NewGuid());
+        private static readonly FileId FileId = new FileId(Guid.NewGuid());
 
         private FileRepository target;
+
+        public void InitializeWithoutDatabase()
+        {
+            this.target = new FileRepository(new Mock<IFifthweekDbContext>(MockBehavior.Strict).Object);
+        }
+
+        public override void Initialize()
+        {
+            base.Initialize();
+            this.target = new FileRepository(this.NewDbContext());
+        }
 
         [TestCleanup]
         public override void Cleanup()
@@ -38,25 +43,26 @@
         [TestMethod]
         public async Task WhenAddingANewFile_ItShouldUpdateTheDatabase()
         {
-            await this.InitializeWithDatabaseAsync();
-
+            this.Initialize();
+            await this.InitializeDatabaseAsync();
+            await this.CreateUserAsync();
             await this.SnapshotDatabaseAsync();
 
-            await this.target.AddNewFileAsync(this.fileId, this.userId, this.fileNameWithoutExtension, this.fileExtension, this.purpose);
+            await this.target.AddNewFileAsync(FileId, UserId, FileNameWithoutExtension, FileExtension, Purpose);
 
             var expectedFile = new File(
-                this.fileId.Value,
+                FileId.Value,
                 null,
-                this.userId.Value,
+                UserId.Value,
                 FileState.WaitingForUpload,
                 DateTime.MinValue,
                 null,
                 null,
                 null,
-                this.fileNameWithoutExtension,
-                this.fileExtension,
+                FileNameWithoutExtension,
+                FileExtension,
                 0,
-                this.purpose);
+                Purpose);
 
             await this.AssertDatabaseAsync(new ExpectedSideEffects
             {
@@ -74,87 +80,86 @@
         [TestMethod]
         public async Task WhenAddingANewFileTwice_ItShouldHaveNoEffect()
         {
-            await this.InitializeWithDatabaseAsync();
-            var stopwatch = Stopwatch.StartNew();
-
-            await this.target.AddNewFileAsync(this.fileId, this.userId, this.fileNameWithoutExtension, this.fileExtension, this.purpose);
-
+            this.Initialize();
+            await this.InitializeDatabaseAsync();
+            await this.CreateUserAsync();
+            await this.target.AddNewFileAsync(FileId, UserId, FileNameWithoutExtension, FileExtension, Purpose);
             await this.SnapshotDatabaseAsync();
 
-            await this.target.AddNewFileAsync(this.fileId, this.userId, this.fileNameWithoutExtension, this.fileExtension, this.purpose);
+            await this.target.AddNewFileAsync(FileId, UserId, FileNameWithoutExtension, FileExtension, Purpose);
+            
             await this.AssertDatabaseAsync(ExpectedSideEffects.None);
-
-            var secondsElapsed = Math.Round(stopwatch.Elapsed.TotalSeconds, 2);
-            Trace.WriteLine(string.Format("Ran tests in {0}s", secondsElapsed));
         }
 
         [TestMethod]
         [ExpectedException(typeof(ArgumentNullException))]
         public async Task WhenAddingANewFile_ItShouldRequireAFileId()
         {
-            await this.InitializeWithoutDatabaseAsync();
-            await this.target.AddNewFileAsync(null, this.userId, this.fileNameWithoutExtension, this.fileExtension, this.purpose);
+            this.InitializeWithoutDatabase();
+            await this.target.AddNewFileAsync(null, UserId, FileNameWithoutExtension, FileExtension, Purpose);
         }
 
         [TestMethod]
         [ExpectedException(typeof(ArgumentNullException))]
         public async Task WhenAddingANewFile_ItShouldRequireAUserId()
         {
-            await this.InitializeWithoutDatabaseAsync();
-            await this.target.AddNewFileAsync(this.fileId, null, this.fileNameWithoutExtension, this.fileExtension, this.purpose);
+            this.InitializeWithoutDatabase();
+            await this.target.AddNewFileAsync(FileId, null, FileNameWithoutExtension, FileExtension, Purpose);
         }
 
         [TestMethod]
         [ExpectedException(typeof(ArgumentNullException))]
         public async Task WhenAddingANewFile_ItShouldRequireAFileNameWithoutExtension()
         {
-            await this.InitializeWithoutDatabaseAsync();
-            await this.target.AddNewFileAsync(this.fileId, this.userId, null, this.fileExtension, this.purpose);
+            this.InitializeWithoutDatabase();
+            await this.target.AddNewFileAsync(FileId, UserId, null, FileExtension, Purpose);
         }
 
         [TestMethod]
         [ExpectedException(typeof(ArgumentNullException))]
         public async Task WhenAddingANewFile_ItShouldRequireAFileExtension()
         {
-            await this.InitializeWithoutDatabaseAsync();
-            await this.target.AddNewFileAsync(this.fileId, this.userId, this.fileNameWithoutExtension, null, this.purpose);
+            this.InitializeWithoutDatabase();
+            await this.target.AddNewFileAsync(FileId, UserId, FileNameWithoutExtension, null, Purpose);
         }
 
         [TestMethod]
         [ExpectedException(typeof(ArgumentNullException))]
         public async Task WhenAddingANewFile_ItShouldRequireAPurpose()
         {
-            await this.InitializeWithoutDatabaseAsync();
-            await this.target.AddNewFileAsync(this.fileId, this.userId, this.fileNameWithoutExtension, this.fileExtension, null);
+            this.InitializeWithoutDatabase();
+            await this.target.AddNewFileAsync(FileId, UserId, FileNameWithoutExtension, FileExtension, null);
         }
 
         [TestMethod]
         public async Task WhenSetFileUploadCompleteCalled_ItShouldUpdateTheDatabase()
         {
-            await this.InitializeWithDatabaseAsync();
-            await this.target.AddNewFileAsync(this.fileId, this.userId, this.fileNameWithoutExtension, this.fileExtension, this.purpose);
+            this.Initialize();
+            await this.InitializeDatabaseAsync();
+            await this.CreateUserAsync();
+            await this.target.AddNewFileAsync(FileId, UserId, FileNameWithoutExtension, FileExtension, Purpose);
             await this.SnapshotDatabaseAsync();
 
             // This is just to guarantee we get a different timestamp for when the upload completes.
             Thread.Sleep(1);
 
-            var newLength = 11111L;
+            const long NewLength = 11111L;
 
-            await this.target.SetFileUploadComplete(this.fileId, newLength);
+            await this.target.SetFileUploadComplete(FileId, NewLength);
 
             var expectedFile = new File(
-                this.fileId.Value,
+                FileId.Value,
                 null,
-                this.userId.Value,
+                UserId.Value,
                 FileState.UploadComplete,
                 DateTime.MinValue,
                 null,
                 null,
                 null,
-                this.fileNameWithoutExtension,
-                this.fileExtension,
-                newLength,
-                this.purpose);
+                FileNameWithoutExtension,
+                FileExtension,
+                NewLength,
+                Purpose);
 
             await this.AssertDatabaseAsync(new ExpectedSideEffects
             {
@@ -171,31 +176,22 @@
 
             using (var databaseContext = this.NewDbContext())
             {
-                var newFile = databaseContext.Files.Find(this.fileId.Value);
+                var newFile = databaseContext.Files.Find(FileId.Value);
                 Assert.IsTrue(newFile.UploadStartedDate < newFile.UploadCompletedDate);
                 Assert.IsTrue((DateTime.UtcNow - newFile.UploadStartedDate) < TimeSpan.FromMinutes(5));
                 Assert.IsTrue((newFile.UploadCompletedDate - newFile.UploadStartedDate) < TimeSpan.FromMinutes(5));
             }
         }
 
-        private async Task InitializeWithoutDatabaseAsync()
+        private async Task CreateUserAsync()
         {
-            this.target = new FileRepository(new Mock<IFifthweekDbContext>(MockBehavior.Strict).Object);
-        }
-
-        private async Task InitializeWithDatabaseAsync()
-        {
-            await this.InitializeDatabaseAsync();
-
-            this.target = new FileRepository(this.NewDbContext());
-
             var random = new Random();
-            var creator = UserTests.UniqueEntity(random);
-            creator.Id = this.userId.Value;
+            var user = UserTests.UniqueEntity(random);
+            user.Id = UserId.Value;
 
             using (var databaseContext = this.NewDbContext())
             {
-                databaseContext.Users.Add(creator);
+                databaseContext.Users.Add(user);
                 await databaseContext.SaveChangesAsync();
             }
         }

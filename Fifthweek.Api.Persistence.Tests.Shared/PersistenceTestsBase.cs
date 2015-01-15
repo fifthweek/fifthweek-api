@@ -1,7 +1,5 @@
 ﻿namespace Fifthweek.Api.Persistence.Tests.Shared
 {
-    using System;
-    using System.Diagnostics;
     using System.Threading.Tasks;
 
     public abstract class PersistenceTestsBase
@@ -11,9 +9,13 @@
 
         public Task InitializeDatabaseAsync()
         {
+            return this.temporaryDatabase.ReadyAsync();
+        }
+
+        public virtual void Initialize()
+        {
             this.temporaryDatabase = TemporaryDatabase.CreateNew();
             this.databaseState = new TemporaryDatabaseState(this.temporaryDatabase);
-            return this.temporaryDatabase.ReadyAsync();
         }
 
         public virtual void Cleanup()

@@ -26,8 +26,9 @@
         private CreateSubscriptionCommandHandler target;
 
         [TestInitialize]
-        public void Initialize()
+        public override void Initialize()
         {
+            base.Initialize();
             this.subscriptionSecurity = new Mock<ISubscriptionSecurity>();
             this.target = new CreateSubscriptionCommandHandler(this.subscriptionSecurity.Object, this.NewDbContext());
         }

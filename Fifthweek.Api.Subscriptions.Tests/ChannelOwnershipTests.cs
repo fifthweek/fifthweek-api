@@ -16,8 +16,9 @@
         private ChannelOwnership target;
 
         [TestInitialize]
-        public void Initialize()
+        public override void Initialize()
         {
+            base.Initialize();
             this.target = new ChannelOwnership(this.NewDbContext());
         }
 
