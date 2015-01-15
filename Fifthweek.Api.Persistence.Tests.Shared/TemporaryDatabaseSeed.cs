@@ -1,7 +1,9 @@
 ﻿namespace Fifthweek.Api.Persistence.Tests.Shared
 {
     using System;
+    using System.Collections.Generic;
     using System.Data.Common;
+    using System.Data.SqlClient;
     using System.Diagnostics;
     using System.Threading.Tasks;
 
@@ -24,28 +26,47 @@
 
         private readonly Func<IFifthweekDbContext> databaseContextFactory;
 
+        private readonly List<FifthweekUser> users = new List<FifthweekUser>();
+        private readonly List<Subscription> subscriptions = new List<Subscription>();
+        private readonly List<Channel> channels = new List<Channel>();
+        private readonly List<Collection> collections = new List<Collection>();
+        private readonly List<Post> posts = new List<Post>();
+        private readonly List<File> files = new List<File>(); 
+
         public async Task PopulateWithDummyEntitiesAsync()
         {
             var stopwatch = Stopwatch.StartNew();
+            this.CreateUsers();
+            Trace.WriteLine(string.Format("Generated in-memory entities in {0}s", Math.Round(stopwatch.Elapsed.TotalSeconds, 2)));
 
-            using (var databaseContext = this.databaseContextFactory())
-            {
-                await databaseContext.Database.Connection.OpenAsync();
-                try
-                {
-                    await this.CreateUsersAsync(databaseContext.Database.Connection);
-                }
-                finally 
-                {
-                    databaseContext.Database.Connection.Close();
-                }
-            }
-
-            var secondsElapsed = Math.Round(stopwatch.Elapsed.TotalSeconds, 2);
-            Trace.WriteLine(string.Format("Seeded database in {0}s", secondsElapsed));
+            stopwatch = Stopwatch.StartNew();
+            await this.FlushToDatabaseAsync();
+            Trace.WriteLine(string.Format("Saved to database in {0}s", Math.Round(stopwatch.Elapsed.TotalSeconds, 2)));
         }
 
-        private async Task CreateUsersAsync(DbConnection connection)
+        private async Task FlushToDatabaseAsync()
+        {
+            using (var databaseContext = this.databaseContextFactory())
+            {
+                var connection = databaseContext.Database.Connection;
+                await connection.OpenAsync();
+                try
+                {
+                    await connection.InsertAsync(this.users, false);
+                    await connection.InsertAsync(this.files, false);
+                    await connection.InsertAsync(this.subscriptions, false);
+                    await connection.InsertAsync(this.channels, false);
+                    await connection.InsertAsync(this.collections, false);
+                    await connection.InsertAsync(this.posts, false);
+                }
+                finally
+                {
+                    connection.Close();
+                }
+            }
+        }
+
+        private void CreateUsers()
         {
             for (var i = 0; i < Users; i++)
             {
@@ -60,16 +81,16 @@
                     user.ProfileImageFileId = file.Id;
                 }
 
-                await connection.InsertAsync(user, false);
+                this.users.Add(user);
 
                 if (i < Creators)
                 {
-                    await this.CreateSubscriptionsAsync(connection, user);
+                    this.CreateSubscriptions(user);
                 }
             }
         }
 
-        private async Task CreateSubscriptionsAsync(DbConnection connection, FifthweekUser creator)
+        private void CreateSubscriptions(FifthweekUser creator)
         {
             for (var subscriptionIndex = 0; subscriptionIndex < SubscriptionsPerCreator; subscriptionIndex++)
             {
@@ -80,55 +101,56 @@
                     var file = subscription.HeaderImageFile;
                     file.User = creator;
                     file.UserId = creator.Id;
-                    await connection.InsertAsync(file, false);
+
+                    this.files.Add(file);
                 }
 
                 subscription.Creator = creator;
                 subscription.CreatorId = creator.Id;
-                await connection.InsertAsync(subscription, false);
+                this.subscriptions.Add(subscription);
 
-                await this.CreateChannelsAsync(connection, subscription);
+                this.CreateChannels(subscription);
             }
         }
 
-        private async Task CreateChannelsAsync(DbConnection connection, Subscription subscription)
+        private void CreateChannels(Subscription subscription)
         {
             for (var channelIndex = 0; channelIndex < ChannelsPerSubscription; channelIndex++)
             {
                 var channel = ChannelTests.UniqueEntity(Random, false);
                 channel.Subscription = subscription;
                 channel.SubscriptionId = subscription.Id;
-                await connection.InsertAsync(channel, false);
+                this.channels.Add(channel);
 
-                await this.CreateNotesAsync(connection, channel);
-                await this.CreateCollectionsAsync(connection, channel);
+                this.CreateNotes(channel);
+                this.CreateCollections(channel);
             }
         }
 
-        private async Task CreateNotesAsync(DbConnection connection, Channel channel)
+        private void CreateNotes(Channel channel)
         {
             for (var postIndex = 0; postIndex < NotesPerChannel; postIndex++)
             {
                 var post = PostTests.UniqueNote(Random, false);
                 post.Channel = channel;
                 post.ChannelId = channel.Id;
-                await connection.InsertAsync(post, false);
+                this.posts.Add(post);
             }
         }
 
-        private async Task CreateCollectionsAsync(DbConnection connection, Channel channel)
+        private void CreateCollections(Channel channel)
         {
             for (var collectionIndex = 0; collectionIndex < CollectionsPerChannel; collectionIndex++)
             {
                 var collection = CollectionTests.UniqueEntity(Random, false);
                 collection.Channel = channel;
                 collection.ChannelId = channel.Id;
-                await connection.InsertAsync(collection, false);
-                await this.CreateFileAndImagePostsAsync(connection, collection);
+                this.collections.Add(collection);
+                this.CreateFileAndImagePosts(collection);
             }
         }
 
-        private async Task CreateFileAndImagePostsAsync(DbConnection connection, Collection collection)
+        private void CreateFileAndImagePosts(Collection collection)
         {
             for (var postIndex = 0; postIndex < ImagesPerCollection; postIndex++)
             {
@@ -144,8 +166,8 @@
                 post.Image = file;
                 post.ImageId = file.Id;
 
-                await connection.InsertAsync(file, false);
-                await connection.InsertAsync(post, false);
+                this.posts.Add(post);
+                this.files.Add(file);
             }
 
             for (var postIndex = 0; postIndex < FilesPerCollection; postIndex++)
@@ -162,8 +184,8 @@
                 post.File = file;
                 post.FileId = file.Id;
 
-                await connection.InsertAsync(file, false);
-                await connection.InsertAsync(post, false);
+                this.posts.Add(post);
+                this.files.Add(file);
             }
         }
     }

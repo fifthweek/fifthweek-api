@@ -156,25 +156,61 @@
 <#
 		}, () => {
 #>
-		public static System.Threading.Tasks.Task InsertAsync(this System.Data.Common.DbConnection connection, <#= unifiedClass.FirstCodeClass.Name #> entity, bool idempotent = true)
+		public static System.Threading.Tasks.Task InsertAsync(
+			this System.Data.Common.DbConnection connection, 
+			System.Collections.Generic.IEnumerable<<#= unifiedClass.FirstCodeClass.Name #>> entities, 
+			bool idempotent = true, 
+			System.Data.IDbTransaction transaction = null)
 		{
-			return Dapper.SqlMapper.ExecuteAsync(connection, InsertStatement(idempotent), new 
-			{
-				<#= entityMaskInitialization #>
-			});
+			return Dapper.SqlMapper.ExecuteAsync(
+				connection, 
+				InsertStatement(idempotent), 
+				entities.Select(entity => new 
+				{
+					<#= entityMaskInitialization #>
+				}),
+				transaction);
 		}
 
-		public static System.Threading.Tasks.Task UpsertAsync(this System.Data.Common.DbConnection connection, <#= unifiedClass.FirstCodeClass.Name #> entity, <#= unifiedClass.FirstCodeClass.Name #>.Fields fields)
+		public static System.Threading.Tasks.Task InsertAsync(
+			this System.Data.Common.DbConnection connection, 
+			<#= unifiedClass.FirstCodeClass.Name #> entity,
+			bool idempotent = true, 
+			System.Data.IDbTransaction transaction = null)
 		{
-			return Dapper.SqlMapper.ExecuteAsync(connection, UpsertStatement(fields), new 
-			{
-				<#= entityMaskInitialization #>
-			});
+			return Dapper.SqlMapper.ExecuteAsync(
+				connection, 
+				InsertStatement(idempotent), 
+				new 
+				{
+					<#= entityMaskInitialization #>
+				},
+				transaction);
 		}
 
-		public static System.Threading.Tasks.Task UpdateAsync(this System.Data.Common.DbConnection connection, <#= unifiedClass.FirstCodeClass.Name #> entity, <#= unifiedClass.FirstCodeClass.Name #>.Fields fields)
+		public static System.Threading.Tasks.Task UpsertAsync(
+			this System.Data.Common.DbConnection connection, 
+			<#= unifiedClass.FirstCodeClass.Name #> entity, 
+			<#= unifiedClass.FirstCodeClass.Name #>.Fields fields,
+			System.Data.IDbTransaction transaction = null)
 		{
-			return Dapper.SqlMapper.ExecuteAsync(connection, UpdateStatement(fields), MaskParameters(entity, fields));
+			return Dapper.SqlMapper.ExecuteAsync(
+				connection, 
+				UpsertStatement(fields), 
+				new 
+				{
+					<#= entityMaskInitialization #>
+				},
+				transaction);
+		}
+
+		public static System.Threading.Tasks.Task UpdateAsync(
+			this System.Data.Common.DbConnection connection, 
+			<#= unifiedClass.FirstCodeClass.Name #> entity, 
+			<#= unifiedClass.FirstCodeClass.Name #>.Fields fields,
+			System.Data.IDbTransaction transaction = null)
+		{
+			return Dapper.SqlMapper.ExecuteAsync(connection, UpdateStatement(fields), MaskParameters(entity, fields), transaction);
 		}
 
 		public static string InsertStatement(bool idempotent = true)

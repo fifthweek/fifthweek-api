@@ -9,6 +9,8 @@ namespace Fifthweek.Api.Persistence
 	using System.ComponentModel.DataAnnotations;
 	using System.ComponentModel.DataAnnotations.Schema;
 	using Fifthweek.Api.Core;
+	using System.Linq;
+	using Fifthweek.Api.Persistence.Identity;
 	public partial class Channel 
 	{
         public Channel(
@@ -50,8 +52,11 @@ namespace Fifthweek.Api.Persistence
 namespace Fifthweek.Api.Persistence
 {
 	using System;
+	using System.Linq;
 	using System.ComponentModel.DataAnnotations;
+	using System.ComponentModel.DataAnnotations.Schema;
 	using Fifthweek.Api.Core;
+	using Fifthweek.Api.Persistence.Identity;
 	public partial class Collection 
 	{
         public Collection(
@@ -86,6 +91,7 @@ namespace Fifthweek.Api.Persistence
 namespace Fifthweek.Api.Persistence
 {
 	using System;
+	using System.Linq;
 	using System.ComponentModel.DataAnnotations;
 	using System.ComponentModel.DataAnnotations.Schema;
 	using Fifthweek.Api.Core;
@@ -165,9 +171,11 @@ namespace Fifthweek.Api.Persistence
 namespace Fifthweek.Api.Persistence
 {
 	using System;
+	using System.Linq;
 	using System.ComponentModel.DataAnnotations;
 	using System.ComponentModel.DataAnnotations.Schema;
 	using Fifthweek.Api.Core;
+	using Fifthweek.Api.Persistence.Identity;
 	public partial class Post 
 	{
         public Post(
@@ -220,6 +228,7 @@ namespace Fifthweek.Api.Persistence
 namespace Fifthweek.Api.Persistence
 {
 	using System;
+	using System.Linq;
 	using System.ComponentModel.DataAnnotations;
 	using System.ComponentModel.DataAnnotations.Schema;
 	using Fifthweek.Api.Core;
@@ -291,6 +300,8 @@ namespace Fifthweek.Api.Persistence
 	using System.ComponentModel.DataAnnotations;
 	using System.ComponentModel.DataAnnotations.Schema;
 	using Fifthweek.Api.Core;
+	using System.Linq;
+	using Fifthweek.Api.Persistence.Identity;
 	public partial class Channel 
 	{
 		public override string ToString()
@@ -361,8 +372,11 @@ namespace Fifthweek.Api.Persistence
 namespace Fifthweek.Api.Persistence
 {
 	using System;
+	using System.Linq;
 	using System.ComponentModel.DataAnnotations;
+	using System.ComponentModel.DataAnnotations.Schema;
 	using Fifthweek.Api.Core;
+	using Fifthweek.Api.Persistence.Identity;
 	public partial class Collection 
 	{
 		public override string ToString()
@@ -427,6 +441,7 @@ namespace Fifthweek.Api.Persistence
 namespace Fifthweek.Api.Persistence
 {
 	using System;
+	using System.Linq;
 	using System.ComponentModel.DataAnnotations;
 	using System.ComponentModel.DataAnnotations.Schema;
 	using Fifthweek.Api.Core;
@@ -540,9 +555,220 @@ namespace Fifthweek.Api.Persistence
 	}
 
 }
+namespace Fifthweek.Api.Persistence
+{
+	using System;
+	using System.Linq;
+	using System.ComponentModel.DataAnnotations;
+	using System.ComponentModel.DataAnnotations.Schema;
+	using Fifthweek.Api.Core;
+	using Fifthweek.Api.Persistence.Identity;
+	public partial class Post 
+	{
+		public override string ToString()
+        {
+			return string.Format("Post({0}, {1}, {2}, {3}, {4}, \"{5}\", {6}, {7}, {8})", this.Id == null ? "null" : this.Id.ToString(), this.ChannelId == null ? "null" : this.ChannelId.ToString(), this.CollectionId == null ? "null" : this.CollectionId.ToString(), this.FileId == null ? "null" : this.FileId.ToString(), this.ImageId == null ? "null" : this.ImageId.ToString(), this.Comment == null ? "null" : this.Comment.ToString(), this.QueuePosition == null ? "null" : this.QueuePosition.ToString(), this.LiveDate == null ? "null" : this.LiveDate.ToString(), this.CreationDate == null ? "null" : this.CreationDate.ToString());
+		}
+
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj))
+            {
+                return false;
+            }
+
+            if (ReferenceEquals(this, obj))
+            {
+                return true;
+            }
+
+            if (obj.GetType() != this.GetType())
+            {
+                return false;
+            }
+
+            return this.Equals((Post)obj);
+        }
+
+        public override int GetHashCode()
+        {
+            unchecked
+            {
+                int hashCode = 0;
+                hashCode = (hashCode * 397) ^ (this.Id != null ? this.Id.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.ChannelId != null ? this.ChannelId.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.CollectionId != null ? this.CollectionId.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.FileId != null ? this.FileId.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.ImageId != null ? this.ImageId.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.Comment != null ? this.Comment.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.QueuePosition != null ? this.QueuePosition.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.LiveDate != null ? this.LiveDate.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.CreationDate != null ? this.CreationDate.GetHashCode() : 0);
+                return hashCode;
+            }
+        }
+
+        protected bool Equals(Post other)
+        {
+            if (!object.Equals(this.Id, other.Id))
+            {
+                return false;
+            }
+
+            if (!object.Equals(this.ChannelId, other.ChannelId))
+            {
+                return false;
+            }
+
+            if (!object.Equals(this.CollectionId, other.CollectionId))
+            {
+                return false;
+            }
+
+            if (!object.Equals(this.FileId, other.FileId))
+            {
+                return false;
+            }
+
+            if (!object.Equals(this.ImageId, other.ImageId))
+            {
+                return false;
+            }
+
+            if (!object.Equals(this.Comment, other.Comment))
+            {
+                return false;
+            }
+
+            if (!object.Equals(this.QueuePosition, other.QueuePosition))
+            {
+                return false;
+            }
+
+            if (!object.Equals(this.LiveDate, other.LiveDate))
+            {
+                return false;
+            }
+
+            if (!object.Equals(this.CreationDate, other.CreationDate))
+            {
+                return false;
+            }
+
+            return true;
+        }
+	}
+
+}
+namespace Fifthweek.Api.Persistence
+{
+	using System;
+	using System.Linq;
+	using System.ComponentModel.DataAnnotations;
+	using System.ComponentModel.DataAnnotations.Schema;
+	using Fifthweek.Api.Core;
+	using Fifthweek.Api.Persistence.Identity;
+	public partial class Subscription 
+	{
+		public override string ToString()
+        {
+			return string.Format("Subscription({0}, {1}, \"{2}\", \"{3}\", \"{4}\", \"{5}\", \"{6}\", {7}, {8})", this.Id == null ? "null" : this.Id.ToString(), this.CreatorId == null ? "null" : this.CreatorId.ToString(), this.Name == null ? "null" : this.Name.ToString(), this.Tagline == null ? "null" : this.Tagline.ToString(), this.Introduction == null ? "null" : this.Introduction.ToString(), this.Description == null ? "null" : this.Description.ToString(), this.ExternalVideoUrl == null ? "null" : this.ExternalVideoUrl.ToString(), this.HeaderImageFileId == null ? "null" : this.HeaderImageFileId.ToString(), this.CreationDate == null ? "null" : this.CreationDate.ToString());
+		}
+
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj))
+            {
+                return false;
+            }
+
+            if (ReferenceEquals(this, obj))
+            {
+                return true;
+            }
+
+            if (obj.GetType() != this.GetType())
+            {
+                return false;
+            }
+
+            return this.Equals((Subscription)obj);
+        }
+
+        public override int GetHashCode()
+        {
+            unchecked
+            {
+                int hashCode = 0;
+                hashCode = (hashCode * 397) ^ (this.Id != null ? this.Id.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.CreatorId != null ? this.CreatorId.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.Name != null ? this.Name.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.Tagline != null ? this.Tagline.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.Introduction != null ? this.Introduction.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.Description != null ? this.Description.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.ExternalVideoUrl != null ? this.ExternalVideoUrl.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.HeaderImageFileId != null ? this.HeaderImageFileId.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.CreationDate != null ? this.CreationDate.GetHashCode() : 0);
+                return hashCode;
+            }
+        }
+
+        protected bool Equals(Subscription other)
+        {
+            if (!object.Equals(this.Id, other.Id))
+            {
+                return false;
+            }
+
+            if (!object.Equals(this.CreatorId, other.CreatorId))
+            {
+                return false;
+            }
+
+            if (!object.Equals(this.Name, other.Name))
+            {
+                return false;
+            }
+
+            if (!object.Equals(this.Tagline, other.Tagline))
+            {
+                return false;
+            }
+
+            if (!object.Equals(this.Introduction, other.Introduction))
+            {
+                return false;
+            }
+
+            if (!object.Equals(this.Description, other.Description))
+            {
+                return false;
+            }
+
+            if (!object.Equals(this.ExternalVideoUrl, other.ExternalVideoUrl))
+            {
+                return false;
+            }
+
+            if (!object.Equals(this.HeaderImageFileId, other.HeaderImageFileId))
+            {
+                return false;
+            }
+
+            if (!object.Equals(this.CreationDate, other.CreationDate))
+            {
+                return false;
+            }
+
+            return true;
+        }
+	}
+
+}
 namespace Fifthweek.Api.Persistence.Identity
 {
 	using System;
+	using System.Linq;
 	using System.Collections.Generic;
 	using System.ComponentModel.DataAnnotations;
 	using Fifthweek.Api.Core;
@@ -692,220 +918,15 @@ namespace Fifthweek.Api.Persistence.Identity
 	}
 
 }
+
 namespace Fifthweek.Api.Persistence
 {
 	using System;
 	using System.ComponentModel.DataAnnotations;
 	using System.ComponentModel.DataAnnotations.Schema;
 	using Fifthweek.Api.Core;
-	public partial class Post 
-	{
-		public override string ToString()
-        {
-			return string.Format("Post({0}, {1}, {2}, {3}, {4}, \"{5}\", {6}, {7}, {8})", this.Id == null ? "null" : this.Id.ToString(), this.ChannelId == null ? "null" : this.ChannelId.ToString(), this.CollectionId == null ? "null" : this.CollectionId.ToString(), this.FileId == null ? "null" : this.FileId.ToString(), this.ImageId == null ? "null" : this.ImageId.ToString(), this.Comment == null ? "null" : this.Comment.ToString(), this.QueuePosition == null ? "null" : this.QueuePosition.ToString(), this.LiveDate == null ? "null" : this.LiveDate.ToString(), this.CreationDate == null ? "null" : this.CreationDate.ToString());
-		}
-
-        public override bool Equals(object obj)
-        {
-            if (ReferenceEquals(null, obj))
-            {
-                return false;
-            }
-
-            if (ReferenceEquals(this, obj))
-            {
-                return true;
-            }
-
-            if (obj.GetType() != this.GetType())
-            {
-                return false;
-            }
-
-            return this.Equals((Post)obj);
-        }
-
-        public override int GetHashCode()
-        {
-            unchecked
-            {
-                int hashCode = 0;
-                hashCode = (hashCode * 397) ^ (this.Id != null ? this.Id.GetHashCode() : 0);
-                hashCode = (hashCode * 397) ^ (this.ChannelId != null ? this.ChannelId.GetHashCode() : 0);
-                hashCode = (hashCode * 397) ^ (this.CollectionId != null ? this.CollectionId.GetHashCode() : 0);
-                hashCode = (hashCode * 397) ^ (this.FileId != null ? this.FileId.GetHashCode() : 0);
-                hashCode = (hashCode * 397) ^ (this.ImageId != null ? this.ImageId.GetHashCode() : 0);
-                hashCode = (hashCode * 397) ^ (this.Comment != null ? this.Comment.GetHashCode() : 0);
-                hashCode = (hashCode * 397) ^ (this.QueuePosition != null ? this.QueuePosition.GetHashCode() : 0);
-                hashCode = (hashCode * 397) ^ (this.LiveDate != null ? this.LiveDate.GetHashCode() : 0);
-                hashCode = (hashCode * 397) ^ (this.CreationDate != null ? this.CreationDate.GetHashCode() : 0);
-                return hashCode;
-            }
-        }
-
-        protected bool Equals(Post other)
-        {
-            if (!object.Equals(this.Id, other.Id))
-            {
-                return false;
-            }
-
-            if (!object.Equals(this.ChannelId, other.ChannelId))
-            {
-                return false;
-            }
-
-            if (!object.Equals(this.CollectionId, other.CollectionId))
-            {
-                return false;
-            }
-
-            if (!object.Equals(this.FileId, other.FileId))
-            {
-                return false;
-            }
-
-            if (!object.Equals(this.ImageId, other.ImageId))
-            {
-                return false;
-            }
-
-            if (!object.Equals(this.Comment, other.Comment))
-            {
-                return false;
-            }
-
-            if (!object.Equals(this.QueuePosition, other.QueuePosition))
-            {
-                return false;
-            }
-
-            if (!object.Equals(this.LiveDate, other.LiveDate))
-            {
-                return false;
-            }
-
-            if (!object.Equals(this.CreationDate, other.CreationDate))
-            {
-                return false;
-            }
-
-            return true;
-        }
-	}
-
-}
-namespace Fifthweek.Api.Persistence
-{
-	using System;
-	using System.ComponentModel.DataAnnotations;
-	using System.ComponentModel.DataAnnotations.Schema;
-	using Fifthweek.Api.Core;
+	using System.Linq;
 	using Fifthweek.Api.Persistence.Identity;
-	public partial class Subscription 
-	{
-		public override string ToString()
-        {
-			return string.Format("Subscription({0}, {1}, \"{2}\", \"{3}\", \"{4}\", \"{5}\", \"{6}\", {7}, {8})", this.Id == null ? "null" : this.Id.ToString(), this.CreatorId == null ? "null" : this.CreatorId.ToString(), this.Name == null ? "null" : this.Name.ToString(), this.Tagline == null ? "null" : this.Tagline.ToString(), this.Introduction == null ? "null" : this.Introduction.ToString(), this.Description == null ? "null" : this.Description.ToString(), this.ExternalVideoUrl == null ? "null" : this.ExternalVideoUrl.ToString(), this.HeaderImageFileId == null ? "null" : this.HeaderImageFileId.ToString(), this.CreationDate == null ? "null" : this.CreationDate.ToString());
-		}
-
-        public override bool Equals(object obj)
-        {
-            if (ReferenceEquals(null, obj))
-            {
-                return false;
-            }
-
-            if (ReferenceEquals(this, obj))
-            {
-                return true;
-            }
-
-            if (obj.GetType() != this.GetType())
-            {
-                return false;
-            }
-
-            return this.Equals((Subscription)obj);
-        }
-
-        public override int GetHashCode()
-        {
-            unchecked
-            {
-                int hashCode = 0;
-                hashCode = (hashCode * 397) ^ (this.Id != null ? this.Id.GetHashCode() : 0);
-                hashCode = (hashCode * 397) ^ (this.CreatorId != null ? this.CreatorId.GetHashCode() : 0);
-                hashCode = (hashCode * 397) ^ (this.Name != null ? this.Name.GetHashCode() : 0);
-                hashCode = (hashCode * 397) ^ (this.Tagline != null ? this.Tagline.GetHashCode() : 0);
-                hashCode = (hashCode * 397) ^ (this.Introduction != null ? this.Introduction.GetHashCode() : 0);
-                hashCode = (hashCode * 397) ^ (this.Description != null ? this.Description.GetHashCode() : 0);
-                hashCode = (hashCode * 397) ^ (this.ExternalVideoUrl != null ? this.ExternalVideoUrl.GetHashCode() : 0);
-                hashCode = (hashCode * 397) ^ (this.HeaderImageFileId != null ? this.HeaderImageFileId.GetHashCode() : 0);
-                hashCode = (hashCode * 397) ^ (this.CreationDate != null ? this.CreationDate.GetHashCode() : 0);
-                return hashCode;
-            }
-        }
-
-        protected bool Equals(Subscription other)
-        {
-            if (!object.Equals(this.Id, other.Id))
-            {
-                return false;
-            }
-
-            if (!object.Equals(this.CreatorId, other.CreatorId))
-            {
-                return false;
-            }
-
-            if (!object.Equals(this.Name, other.Name))
-            {
-                return false;
-            }
-
-            if (!object.Equals(this.Tagline, other.Tagline))
-            {
-                return false;
-            }
-
-            if (!object.Equals(this.Introduction, other.Introduction))
-            {
-                return false;
-            }
-
-            if (!object.Equals(this.Description, other.Description))
-            {
-                return false;
-            }
-
-            if (!object.Equals(this.ExternalVideoUrl, other.ExternalVideoUrl))
-            {
-                return false;
-            }
-
-            if (!object.Equals(this.HeaderImageFileId, other.HeaderImageFileId))
-            {
-                return false;
-            }
-
-            if (!object.Equals(this.CreationDate, other.CreationDate))
-            {
-                return false;
-            }
-
-            return true;
-        }
-	}
-
-}
-
-namespace Fifthweek.Api.Persistence
-{
-	using System;
-	using System.ComponentModel.DataAnnotations;
-	using System.ComponentModel.DataAnnotations.Schema;
-	using Fifthweek.Api.Core;
 	public partial class Channel  : IIdentityEquatable
 	{
         public Channel(
@@ -962,25 +983,61 @@ namespace Fifthweek.Api.Persistence
 
 	public static partial class ChannelExtensions
 	{
-		public static System.Threading.Tasks.Task InsertAsync(this System.Data.Common.DbConnection connection, Channel entity, bool idempotent = true)
+		public static System.Threading.Tasks.Task InsertAsync(
+			this System.Data.Common.DbConnection connection, 
+			System.Collections.Generic.IEnumerable<Channel> entities, 
+			bool idempotent = true, 
+			System.Data.IDbTransaction transaction = null)
 		{
-			return Dapper.SqlMapper.ExecuteAsync(connection, InsertStatement(idempotent), new 
-			{
-				entity.Id, entity.SubscriptionId, entity.PriceInUsCentsPerWeek, entity.CreationDate
-			});
+			return Dapper.SqlMapper.ExecuteAsync(
+				connection, 
+				InsertStatement(idempotent), 
+				entities.Select(entity => new 
+				{
+					entity.Id, entity.SubscriptionId, entity.PriceInUsCentsPerWeek, entity.CreationDate
+				}),
+				transaction);
 		}
 
-		public static System.Threading.Tasks.Task UpsertAsync(this System.Data.Common.DbConnection connection, Channel entity, Channel.Fields fields)
+		public static System.Threading.Tasks.Task InsertAsync(
+			this System.Data.Common.DbConnection connection, 
+			Channel entity,
+			bool idempotent = true, 
+			System.Data.IDbTransaction transaction = null)
 		{
-			return Dapper.SqlMapper.ExecuteAsync(connection, UpsertStatement(fields), new 
-			{
-				entity.Id, entity.SubscriptionId, entity.PriceInUsCentsPerWeek, entity.CreationDate
-			});
+			return Dapper.SqlMapper.ExecuteAsync(
+				connection, 
+				InsertStatement(idempotent), 
+				new 
+				{
+					entity.Id, entity.SubscriptionId, entity.PriceInUsCentsPerWeek, entity.CreationDate
+				},
+				transaction);
 		}
 
-		public static System.Threading.Tasks.Task UpdateAsync(this System.Data.Common.DbConnection connection, Channel entity, Channel.Fields fields)
+		public static System.Threading.Tasks.Task UpsertAsync(
+			this System.Data.Common.DbConnection connection, 
+			Channel entity, 
+			Channel.Fields fields,
+			System.Data.IDbTransaction transaction = null)
 		{
-			return Dapper.SqlMapper.ExecuteAsync(connection, UpdateStatement(fields), MaskParameters(entity, fields));
+			return Dapper.SqlMapper.ExecuteAsync(
+				connection, 
+				UpsertStatement(fields), 
+				new 
+				{
+					entity.Id, entity.SubscriptionId, entity.PriceInUsCentsPerWeek, entity.CreationDate
+				},
+				transaction);
+		}
+
+		public static System.Threading.Tasks.Task UpdateAsync(
+			this System.Data.Common.DbConnection connection, 
+			Channel entity, 
+			Channel.Fields fields,
+			System.Data.IDbTransaction transaction = null)
+		{
+			return Dapper.SqlMapper.ExecuteAsync(connection, UpdateStatement(fields), MaskParameters(entity, fields), transaction);
 		}
 
 		public static string InsertStatement(bool idempotent = true)
@@ -1064,8 +1121,11 @@ namespace Fifthweek.Api.Persistence
 namespace Fifthweek.Api.Persistence
 {
 	using System;
+	using System.Linq;
 	using System.ComponentModel.DataAnnotations;
+	using System.ComponentModel.DataAnnotations.Schema;
 	using Fifthweek.Api.Core;
+	using Fifthweek.Api.Persistence.Identity;
 	public partial class Collection  : IIdentityEquatable
 	{
         public Collection(
@@ -1121,25 +1181,61 @@ namespace Fifthweek.Api.Persistence
 
 	public static partial class CollectionExtensions
 	{
-		public static System.Threading.Tasks.Task InsertAsync(this System.Data.Common.DbConnection connection, Collection entity, bool idempotent = true)
+		public static System.Threading.Tasks.Task InsertAsync(
+			this System.Data.Common.DbConnection connection, 
+			System.Collections.Generic.IEnumerable<Collection> entities, 
+			bool idempotent = true, 
+			System.Data.IDbTransaction transaction = null)
 		{
-			return Dapper.SqlMapper.ExecuteAsync(connection, InsertStatement(idempotent), new 
-			{
-				entity.Id, entity.ChannelId, entity.Name
-			});
+			return Dapper.SqlMapper.ExecuteAsync(
+				connection, 
+				InsertStatement(idempotent), 
+				entities.Select(entity => new 
+				{
+					entity.Id, entity.ChannelId, entity.Name
+				}),
+				transaction);
 		}
 
-		public static System.Threading.Tasks.Task UpsertAsync(this System.Data.Common.DbConnection connection, Collection entity, Collection.Fields fields)
+		public static System.Threading.Tasks.Task InsertAsync(
+			this System.Data.Common.DbConnection connection, 
+			Collection entity,
+			bool idempotent = true, 
+			System.Data.IDbTransaction transaction = null)
 		{
-			return Dapper.SqlMapper.ExecuteAsync(connection, UpsertStatement(fields), new 
-			{
-				entity.Id, entity.ChannelId, entity.Name
-			});
+			return Dapper.SqlMapper.ExecuteAsync(
+				connection, 
+				InsertStatement(idempotent), 
+				new 
+				{
+					entity.Id, entity.ChannelId, entity.Name
+				},
+				transaction);
 		}
 
-		public static System.Threading.Tasks.Task UpdateAsync(this System.Data.Common.DbConnection connection, Collection entity, Collection.Fields fields)
+		public static System.Threading.Tasks.Task UpsertAsync(
+			this System.Data.Common.DbConnection connection, 
+			Collection entity, 
+			Collection.Fields fields,
+			System.Data.IDbTransaction transaction = null)
 		{
-			return Dapper.SqlMapper.ExecuteAsync(connection, UpdateStatement(fields), MaskParameters(entity, fields));
+			return Dapper.SqlMapper.ExecuteAsync(
+				connection, 
+				UpsertStatement(fields), 
+				new 
+				{
+					entity.Id, entity.ChannelId, entity.Name
+				},
+				transaction);
+		}
+
+		public static System.Threading.Tasks.Task UpdateAsync(
+			this System.Data.Common.DbConnection connection, 
+			Collection entity, 
+			Collection.Fields fields,
+			System.Data.IDbTransaction transaction = null)
+		{
+			return Dapper.SqlMapper.ExecuteAsync(connection, UpdateStatement(fields), MaskParameters(entity, fields), transaction);
 		}
 
 		public static string InsertStatement(bool idempotent = true)
@@ -1213,6 +1309,7 @@ namespace Fifthweek.Api.Persistence
 namespace Fifthweek.Api.Persistence
 {
 	using System;
+	using System.Linq;
 	using System.ComponentModel.DataAnnotations;
 	using System.ComponentModel.DataAnnotations.Schema;
 	using Fifthweek.Api.Core;
@@ -1280,25 +1377,61 @@ namespace Fifthweek.Api.Persistence
 
 	public static partial class FileExtensions
 	{
-		public static System.Threading.Tasks.Task InsertAsync(this System.Data.Common.DbConnection connection, File entity, bool idempotent = true)
+		public static System.Threading.Tasks.Task InsertAsync(
+			this System.Data.Common.DbConnection connection, 
+			System.Collections.Generic.IEnumerable<File> entities, 
+			bool idempotent = true, 
+			System.Data.IDbTransaction transaction = null)
 		{
-			return Dapper.SqlMapper.ExecuteAsync(connection, InsertStatement(idempotent), new 
-			{
-				entity.Id, entity.UserId, entity.State, entity.UploadStartedDate, entity.UploadCompletedDate, entity.ProcessingStartedDate, entity.ProcessingCompletedDate, entity.FileNameWithoutExtension, entity.FileExtension, entity.BlobSizeBytes, entity.Purpose
-			});
+			return Dapper.SqlMapper.ExecuteAsync(
+				connection, 
+				InsertStatement(idempotent), 
+				entities.Select(entity => new 
+				{
+					entity.Id, entity.UserId, entity.State, entity.UploadStartedDate, entity.UploadCompletedDate, entity.ProcessingStartedDate, entity.ProcessingCompletedDate, entity.FileNameWithoutExtension, entity.FileExtension, entity.BlobSizeBytes, entity.Purpose
+				}),
+				transaction);
 		}
 
-		public static System.Threading.Tasks.Task UpsertAsync(this System.Data.Common.DbConnection connection, File entity, File.Fields fields)
+		public static System.Threading.Tasks.Task InsertAsync(
+			this System.Data.Common.DbConnection connection, 
+			File entity,
+			bool idempotent = true, 
+			System.Data.IDbTransaction transaction = null)
 		{
-			return Dapper.SqlMapper.ExecuteAsync(connection, UpsertStatement(fields), new 
-			{
-				entity.Id, entity.UserId, entity.State, entity.UploadStartedDate, entity.UploadCompletedDate, entity.ProcessingStartedDate, entity.ProcessingCompletedDate, entity.FileNameWithoutExtension, entity.FileExtension, entity.BlobSizeBytes, entity.Purpose
-			});
+			return Dapper.SqlMapper.ExecuteAsync(
+				connection, 
+				InsertStatement(idempotent), 
+				new 
+				{
+					entity.Id, entity.UserId, entity.State, entity.UploadStartedDate, entity.UploadCompletedDate, entity.ProcessingStartedDate, entity.ProcessingCompletedDate, entity.FileNameWithoutExtension, entity.FileExtension, entity.BlobSizeBytes, entity.Purpose
+				},
+				transaction);
 		}
 
-		public static System.Threading.Tasks.Task UpdateAsync(this System.Data.Common.DbConnection connection, File entity, File.Fields fields)
+		public static System.Threading.Tasks.Task UpsertAsync(
+			this System.Data.Common.DbConnection connection, 
+			File entity, 
+			File.Fields fields,
+			System.Data.IDbTransaction transaction = null)
 		{
-			return Dapper.SqlMapper.ExecuteAsync(connection, UpdateStatement(fields), MaskParameters(entity, fields));
+			return Dapper.SqlMapper.ExecuteAsync(
+				connection, 
+				UpsertStatement(fields), 
+				new 
+				{
+					entity.Id, entity.UserId, entity.State, entity.UploadStartedDate, entity.UploadCompletedDate, entity.ProcessingStartedDate, entity.ProcessingCompletedDate, entity.FileNameWithoutExtension, entity.FileExtension, entity.BlobSizeBytes, entity.Purpose
+				},
+				transaction);
+		}
+
+		public static System.Threading.Tasks.Task UpdateAsync(
+			this System.Data.Common.DbConnection connection, 
+			File entity, 
+			File.Fields fields,
+			System.Data.IDbTransaction transaction = null)
+		{
+			return Dapper.SqlMapper.ExecuteAsync(connection, UpdateStatement(fields), MaskParameters(entity, fields), transaction);
 		}
 
 		public static string InsertStatement(bool idempotent = true)
@@ -1449,9 +1582,518 @@ namespace Fifthweek.Api.Persistence
 		}
 	}
 }
+namespace Fifthweek.Api.Persistence
+{
+	using System;
+	using System.Linq;
+	using System.ComponentModel.DataAnnotations;
+	using System.ComponentModel.DataAnnotations.Schema;
+	using Fifthweek.Api.Core;
+	using Fifthweek.Api.Persistence.Identity;
+	public partial class Post  : IIdentityEquatable
+	{
+        public Post(
+            System.Guid id)
+        {
+            if (id == null)
+            {
+                throw new ArgumentNullException("id");
+            }
+
+            this.Id = id;
+        }
+
+        public bool IdentityEquals(object other)
+        {
+            if (ReferenceEquals(null, other))
+            {
+                return false;
+            }
+
+            if (ReferenceEquals(this, other))
+            {
+                return true;
+            }
+
+            if (other.GetType() != this.GetType())
+            {
+                return false;
+            }
+
+            return this.IdentityEquals((Post)other);
+        }
+
+        protected bool IdentityEquals(Post other)
+        {
+            if (!object.Equals(this.Id, other.Id))
+            {
+                return false;
+            }
+
+            return true;
+        }
+
+		[Flags]
+        public enum Fields
+        {
+			Empty = 0,
+			Id = 1, 
+			ChannelId = 2, 
+			CollectionId = 4, 
+			FileId = 8, 
+			ImageId = 16, 
+			Comment = 32, 
+			QueuePosition = 64, 
+			LiveDate = 128, 
+			CreationDate = 256
+        }
+	}
+
+	public static partial class PostExtensions
+	{
+		public static System.Threading.Tasks.Task InsertAsync(
+			this System.Data.Common.DbConnection connection, 
+			System.Collections.Generic.IEnumerable<Post> entities, 
+			bool idempotent = true, 
+			System.Data.IDbTransaction transaction = null)
+		{
+			return Dapper.SqlMapper.ExecuteAsync(
+				connection, 
+				InsertStatement(idempotent), 
+				entities.Select(entity => new 
+				{
+					entity.Id, entity.ChannelId, entity.CollectionId, entity.FileId, entity.ImageId, entity.Comment, entity.QueuePosition, entity.LiveDate, entity.CreationDate
+				}),
+				transaction);
+		}
+
+		public static System.Threading.Tasks.Task InsertAsync(
+			this System.Data.Common.DbConnection connection, 
+			Post entity,
+			bool idempotent = true, 
+			System.Data.IDbTransaction transaction = null)
+		{
+			return Dapper.SqlMapper.ExecuteAsync(
+				connection, 
+				InsertStatement(idempotent), 
+				new 
+				{
+					entity.Id, entity.ChannelId, entity.CollectionId, entity.FileId, entity.ImageId, entity.Comment, entity.QueuePosition, entity.LiveDate, entity.CreationDate
+				},
+				transaction);
+		}
+
+		public static System.Threading.Tasks.Task UpsertAsync(
+			this System.Data.Common.DbConnection connection, 
+			Post entity, 
+			Post.Fields fields,
+			System.Data.IDbTransaction transaction = null)
+		{
+			return Dapper.SqlMapper.ExecuteAsync(
+				connection, 
+				UpsertStatement(fields), 
+				new 
+				{
+					entity.Id, entity.ChannelId, entity.CollectionId, entity.FileId, entity.ImageId, entity.Comment, entity.QueuePosition, entity.LiveDate, entity.CreationDate
+				},
+				transaction);
+		}
+
+		public static System.Threading.Tasks.Task UpdateAsync(
+			this System.Data.Common.DbConnection connection, 
+			Post entity, 
+			Post.Fields fields,
+			System.Data.IDbTransaction transaction = null)
+		{
+			return Dapper.SqlMapper.ExecuteAsync(connection, UpdateStatement(fields), MaskParameters(entity, fields), transaction);
+		}
+
+		public static string InsertStatement(bool idempotent = true)
+		{
+			const string insert = "INSERT INTO Posts(Id, ChannelId, CollectionId, FileId, ImageId, Comment, QueuePosition, LiveDate, CreationDate) VALUES(@Id, @ChannelId, @CollectionId, @FileId, @ImageId, @Comment, @QueuePosition, @LiveDate, @CreationDate)";
+			return idempotent ? SqlStatementTemplates.IdempotentInsert(insert) : insert;
+		}
+
+		public static string UpsertStatement(Post.Fields fields)
+		{
+			var sql = new System.Text.StringBuilder();
+			sql.Append(
+				@"MERGE Posts as Target
+				USING (VALUES (@Id, @ChannelId, @CollectionId, @FileId, @ImageId, @Comment, @QueuePosition, @LiveDate, @CreationDate)) AS Source (Id, ChannelId, CollectionId, FileId, ImageId, Comment, QueuePosition, LiveDate, CreationDate)
+				ON    (Target.Id = Source.Id)
+				WHEN MATCHED THEN
+					UPDATE
+					SET		");
+			sql.AppendUpdateParameters(GetFieldNames(fields));
+			sql.Append(
+				@" WHEN NOT MATCHED THEN
+					INSERT  (Id, ChannelId, CollectionId, FileId, ImageId, Comment, QueuePosition, LiveDate, CreationDate)
+					VALUES  (Source.Id, Source.ChannelId, Source.CollectionId, Source.FileId, Source.ImageId, Source.Comment, Source.QueuePosition, Source.LiveDate, Source.CreationDate);");
+			return sql.ToString();
+		}
+
+		public static string UpdateStatement(Post.Fields fields)
+		{
+			var sql = new System.Text.StringBuilder();
+			sql.Append("UPDATE Posts SET ");
+			sql.AppendUpdateParameters(GetFieldNames(fields));
+			sql.Append(" WHERE Id = @Id");
+			return sql.ToString();
+		}
+
+		private static System.Collections.Generic.IReadOnlyList<string> GetFieldNames(Post.Fields fields)
+		{
+			var fieldNames = new System.Collections.Generic.List<string>();
+			fieldNames.Add("Id");
+			if(fields.HasFlag(Post.Fields.ChannelId))
+			{
+				fieldNames.Add("ChannelId");
+			}
+
+			if(fields.HasFlag(Post.Fields.CollectionId))
+			{
+				fieldNames.Add("CollectionId");
+			}
+
+			if(fields.HasFlag(Post.Fields.FileId))
+			{
+				fieldNames.Add("FileId");
+			}
+
+			if(fields.HasFlag(Post.Fields.ImageId))
+			{
+				fieldNames.Add("ImageId");
+			}
+
+			if(fields.HasFlag(Post.Fields.Comment))
+			{
+				fieldNames.Add("Comment");
+			}
+
+			if(fields.HasFlag(Post.Fields.QueuePosition))
+			{
+				fieldNames.Add("QueuePosition");
+			}
+
+			if(fields.HasFlag(Post.Fields.LiveDate))
+			{
+				fieldNames.Add("LiveDate");
+			}
+
+			if(fields.HasFlag(Post.Fields.CreationDate))
+			{
+				fieldNames.Add("CreationDate");
+			}
+
+			return fieldNames;
+		}
+
+		private static object MaskParameters(Post entity, Post.Fields fields)
+		{
+			var parameters = new Dapper.DynamicParameters();
+			parameters.Add("Id", entity.Id);
+			if(fields.HasFlag(Post.Fields.ChannelId))
+			{
+				parameters.Add("ChannelId", entity.ChannelId);
+			}
+
+			if(fields.HasFlag(Post.Fields.CollectionId))
+			{
+				parameters.Add("CollectionId", entity.CollectionId);
+			}
+
+			if(fields.HasFlag(Post.Fields.FileId))
+			{
+				parameters.Add("FileId", entity.FileId);
+			}
+
+			if(fields.HasFlag(Post.Fields.ImageId))
+			{
+				parameters.Add("ImageId", entity.ImageId);
+			}
+
+			if(fields.HasFlag(Post.Fields.Comment))
+			{
+				parameters.Add("Comment", entity.Comment);
+			}
+
+			if(fields.HasFlag(Post.Fields.QueuePosition))
+			{
+				parameters.Add("QueuePosition", entity.QueuePosition);
+			}
+
+			if(fields.HasFlag(Post.Fields.LiveDate))
+			{
+				parameters.Add("LiveDate", entity.LiveDate);
+			}
+
+			if(fields.HasFlag(Post.Fields.CreationDate))
+			{
+				parameters.Add("CreationDate", entity.CreationDate);
+			}
+
+			return parameters;
+		}
+	}
+}
+namespace Fifthweek.Api.Persistence
+{
+	using System;
+	using System.Linq;
+	using System.ComponentModel.DataAnnotations;
+	using System.ComponentModel.DataAnnotations.Schema;
+	using Fifthweek.Api.Core;
+	using Fifthweek.Api.Persistence.Identity;
+	public partial class Subscription  : IIdentityEquatable
+	{
+        public Subscription(
+            System.Guid id)
+        {
+            if (id == null)
+            {
+                throw new ArgumentNullException("id");
+            }
+
+            this.Id = id;
+        }
+
+        public bool IdentityEquals(object other)
+        {
+            if (ReferenceEquals(null, other))
+            {
+                return false;
+            }
+
+            if (ReferenceEquals(this, other))
+            {
+                return true;
+            }
+
+            if (other.GetType() != this.GetType())
+            {
+                return false;
+            }
+
+            return this.IdentityEquals((Subscription)other);
+        }
+
+        protected bool IdentityEquals(Subscription other)
+        {
+            if (!object.Equals(this.Id, other.Id))
+            {
+                return false;
+            }
+
+            return true;
+        }
+
+		[Flags]
+        public enum Fields
+        {
+			Empty = 0,
+			Id = 1, 
+			CreatorId = 2, 
+			Name = 4, 
+			Tagline = 8, 
+			Introduction = 16, 
+			Description = 32, 
+			ExternalVideoUrl = 64, 
+			HeaderImageFileId = 128, 
+			CreationDate = 256
+        }
+	}
+
+	public static partial class SubscriptionExtensions
+	{
+		public static System.Threading.Tasks.Task InsertAsync(
+			this System.Data.Common.DbConnection connection, 
+			System.Collections.Generic.IEnumerable<Subscription> entities, 
+			bool idempotent = true, 
+			System.Data.IDbTransaction transaction = null)
+		{
+			return Dapper.SqlMapper.ExecuteAsync(
+				connection, 
+				InsertStatement(idempotent), 
+				entities.Select(entity => new 
+				{
+					entity.Id, entity.CreatorId, entity.Name, entity.Tagline, entity.Introduction, entity.Description, entity.ExternalVideoUrl, entity.HeaderImageFileId, entity.CreationDate
+				}),
+				transaction);
+		}
+
+		public static System.Threading.Tasks.Task InsertAsync(
+			this System.Data.Common.DbConnection connection, 
+			Subscription entity,
+			bool idempotent = true, 
+			System.Data.IDbTransaction transaction = null)
+		{
+			return Dapper.SqlMapper.ExecuteAsync(
+				connection, 
+				InsertStatement(idempotent), 
+				new 
+				{
+					entity.Id, entity.CreatorId, entity.Name, entity.Tagline, entity.Introduction, entity.Description, entity.ExternalVideoUrl, entity.HeaderImageFileId, entity.CreationDate
+				},
+				transaction);
+		}
+
+		public static System.Threading.Tasks.Task UpsertAsync(
+			this System.Data.Common.DbConnection connection, 
+			Subscription entity, 
+			Subscription.Fields fields,
+			System.Data.IDbTransaction transaction = null)
+		{
+			return Dapper.SqlMapper.ExecuteAsync(
+				connection, 
+				UpsertStatement(fields), 
+				new 
+				{
+					entity.Id, entity.CreatorId, entity.Name, entity.Tagline, entity.Introduction, entity.Description, entity.ExternalVideoUrl, entity.HeaderImageFileId, entity.CreationDate
+				},
+				transaction);
+		}
+
+		public static System.Threading.Tasks.Task UpdateAsync(
+			this System.Data.Common.DbConnection connection, 
+			Subscription entity, 
+			Subscription.Fields fields,
+			System.Data.IDbTransaction transaction = null)
+		{
+			return Dapper.SqlMapper.ExecuteAsync(connection, UpdateStatement(fields), MaskParameters(entity, fields), transaction);
+		}
+
+		public static string InsertStatement(bool idempotent = true)
+		{
+			const string insert = "INSERT INTO Subscriptions(Id, CreatorId, Name, Tagline, Introduction, Description, ExternalVideoUrl, HeaderImageFileId, CreationDate) VALUES(@Id, @CreatorId, @Name, @Tagline, @Introduction, @Description, @ExternalVideoUrl, @HeaderImageFileId, @CreationDate)";
+			return idempotent ? SqlStatementTemplates.IdempotentInsert(insert) : insert;
+		}
+
+		public static string UpsertStatement(Subscription.Fields fields)
+		{
+			var sql = new System.Text.StringBuilder();
+			sql.Append(
+				@"MERGE Subscriptions as Target
+				USING (VALUES (@Id, @CreatorId, @Name, @Tagline, @Introduction, @Description, @ExternalVideoUrl, @HeaderImageFileId, @CreationDate)) AS Source (Id, CreatorId, Name, Tagline, Introduction, Description, ExternalVideoUrl, HeaderImageFileId, CreationDate)
+				ON    (Target.Id = Source.Id)
+				WHEN MATCHED THEN
+					UPDATE
+					SET		");
+			sql.AppendUpdateParameters(GetFieldNames(fields));
+			sql.Append(
+				@" WHEN NOT MATCHED THEN
+					INSERT  (Id, CreatorId, Name, Tagline, Introduction, Description, ExternalVideoUrl, HeaderImageFileId, CreationDate)
+					VALUES  (Source.Id, Source.CreatorId, Source.Name, Source.Tagline, Source.Introduction, Source.Description, Source.ExternalVideoUrl, Source.HeaderImageFileId, Source.CreationDate);");
+			return sql.ToString();
+		}
+
+		public static string UpdateStatement(Subscription.Fields fields)
+		{
+			var sql = new System.Text.StringBuilder();
+			sql.Append("UPDATE Subscriptions SET ");
+			sql.AppendUpdateParameters(GetFieldNames(fields));
+			sql.Append(" WHERE Id = @Id");
+			return sql.ToString();
+		}
+
+		private static System.Collections.Generic.IReadOnlyList<string> GetFieldNames(Subscription.Fields fields)
+		{
+			var fieldNames = new System.Collections.Generic.List<string>();
+			fieldNames.Add("Id");
+			if(fields.HasFlag(Subscription.Fields.CreatorId))
+			{
+				fieldNames.Add("CreatorId");
+			}
+
+			if(fields.HasFlag(Subscription.Fields.Name))
+			{
+				fieldNames.Add("Name");
+			}
+
+			if(fields.HasFlag(Subscription.Fields.Tagline))
+			{
+				fieldNames.Add("Tagline");
+			}
+
+			if(fields.HasFlag(Subscription.Fields.Introduction))
+			{
+				fieldNames.Add("Introduction");
+			}
+
+			if(fields.HasFlag(Subscription.Fields.Description))
+			{
+				fieldNames.Add("Description");
+			}
+
+			if(fields.HasFlag(Subscription.Fields.ExternalVideoUrl))
+			{
+				fieldNames.Add("ExternalVideoUrl");
+			}
+
+			if(fields.HasFlag(Subscription.Fields.HeaderImageFileId))
+			{
+				fieldNames.Add("HeaderImageFileId");
+			}
+
+			if(fields.HasFlag(Subscription.Fields.CreationDate))
+			{
+				fieldNames.Add("CreationDate");
+			}
+
+			return fieldNames;
+		}
+
+		private static object MaskParameters(Subscription entity, Subscription.Fields fields)
+		{
+			var parameters = new Dapper.DynamicParameters();
+			parameters.Add("Id", entity.Id);
+			if(fields.HasFlag(Subscription.Fields.CreatorId))
+			{
+				parameters.Add("CreatorId", entity.CreatorId);
+			}
+
+			if(fields.HasFlag(Subscription.Fields.Name))
+			{
+				parameters.Add("Name", entity.Name);
+			}
+
+			if(fields.HasFlag(Subscription.Fields.Tagline))
+			{
+				parameters.Add("Tagline", entity.Tagline);
+			}
+
+			if(fields.HasFlag(Subscription.Fields.Introduction))
+			{
+				parameters.Add("Introduction", entity.Introduction);
+			}
+
+			if(fields.HasFlag(Subscription.Fields.Description))
+			{
+				parameters.Add("Description", entity.Description);
+			}
+
+			if(fields.HasFlag(Subscription.Fields.ExternalVideoUrl))
+			{
+				parameters.Add("ExternalVideoUrl", entity.ExternalVideoUrl);
+			}
+
+			if(fields.HasFlag(Subscription.Fields.HeaderImageFileId))
+			{
+				parameters.Add("HeaderImageFileId", entity.HeaderImageFileId);
+			}
+
+			if(fields.HasFlag(Subscription.Fields.CreationDate))
+			{
+				parameters.Add("CreationDate", entity.CreationDate);
+			}
+
+			return parameters;
+		}
+	}
+}
 namespace Fifthweek.Api.Persistence.Identity
 {
 	using System;
+	using System.Linq;
 	using System.Collections.Generic;
 	using System.ComponentModel.DataAnnotations;
 	using Fifthweek.Api.Core;
@@ -1525,25 +2167,61 @@ namespace Fifthweek.Api.Persistence.Identity
 
 	public static partial class FifthweekUserExtensions
 	{
-		public static System.Threading.Tasks.Task InsertAsync(this System.Data.Common.DbConnection connection, FifthweekUser entity, bool idempotent = true)
+		public static System.Threading.Tasks.Task InsertAsync(
+			this System.Data.Common.DbConnection connection, 
+			System.Collections.Generic.IEnumerable<FifthweekUser> entities, 
+			bool idempotent = true, 
+			System.Data.IDbTransaction transaction = null)
 		{
-			return Dapper.SqlMapper.ExecuteAsync(connection, InsertStatement(idempotent), new 
-			{
-				entity.ExampleWork, entity.RegistrationDate, entity.LastSignInDate, entity.LastAccessTokenDate, entity.ProfileImageFileId, entity.Id, entity.AccessFailedCount, entity.Email, entity.EmailConfirmed, entity.LockoutEnabled, entity.LockoutEndDateUtc, entity.PasswordHash, entity.PhoneNumber, entity.PhoneNumberConfirmed, entity.SecurityStamp, entity.TwoFactorEnabled, entity.UserName
-			});
+			return Dapper.SqlMapper.ExecuteAsync(
+				connection, 
+				InsertStatement(idempotent), 
+				entities.Select(entity => new 
+				{
+					entity.ExampleWork, entity.RegistrationDate, entity.LastSignInDate, entity.LastAccessTokenDate, entity.ProfileImageFileId, entity.Id, entity.AccessFailedCount, entity.Email, entity.EmailConfirmed, entity.LockoutEnabled, entity.LockoutEndDateUtc, entity.PasswordHash, entity.PhoneNumber, entity.PhoneNumberConfirmed, entity.SecurityStamp, entity.TwoFactorEnabled, entity.UserName
+				}),
+				transaction);
 		}
 
-		public static System.Threading.Tasks.Task UpsertAsync(this System.Data.Common.DbConnection connection, FifthweekUser entity, FifthweekUser.Fields fields)
+		public static System.Threading.Tasks.Task InsertAsync(
+			this System.Data.Common.DbConnection connection, 
+			FifthweekUser entity,
+			bool idempotent = true, 
+			System.Data.IDbTransaction transaction = null)
 		{
-			return Dapper.SqlMapper.ExecuteAsync(connection, UpsertStatement(fields), new 
-			{
-				entity.ExampleWork, entity.RegistrationDate, entity.LastSignInDate, entity.LastAccessTokenDate, entity.ProfileImageFileId, entity.Id, entity.AccessFailedCount, entity.Email, entity.EmailConfirmed, entity.LockoutEnabled, entity.LockoutEndDateUtc, entity.PasswordHash, entity.PhoneNumber, entity.PhoneNumberConfirmed, entity.SecurityStamp, entity.TwoFactorEnabled, entity.UserName
-			});
+			return Dapper.SqlMapper.ExecuteAsync(
+				connection, 
+				InsertStatement(idempotent), 
+				new 
+				{
+					entity.ExampleWork, entity.RegistrationDate, entity.LastSignInDate, entity.LastAccessTokenDate, entity.ProfileImageFileId, entity.Id, entity.AccessFailedCount, entity.Email, entity.EmailConfirmed, entity.LockoutEnabled, entity.LockoutEndDateUtc, entity.PasswordHash, entity.PhoneNumber, entity.PhoneNumberConfirmed, entity.SecurityStamp, entity.TwoFactorEnabled, entity.UserName
+				},
+				transaction);
 		}
 
-		public static System.Threading.Tasks.Task UpdateAsync(this System.Data.Common.DbConnection connection, FifthweekUser entity, FifthweekUser.Fields fields)
+		public static System.Threading.Tasks.Task UpsertAsync(
+			this System.Data.Common.DbConnection connection, 
+			FifthweekUser entity, 
+			FifthweekUser.Fields fields,
+			System.Data.IDbTransaction transaction = null)
 		{
-			return Dapper.SqlMapper.ExecuteAsync(connection, UpdateStatement(fields), MaskParameters(entity, fields));
+			return Dapper.SqlMapper.ExecuteAsync(
+				connection, 
+				UpsertStatement(fields), 
+				new 
+				{
+					entity.ExampleWork, entity.RegistrationDate, entity.LastSignInDate, entity.LastAccessTokenDate, entity.ProfileImageFileId, entity.Id, entity.AccessFailedCount, entity.Email, entity.EmailConfirmed, entity.LockoutEnabled, entity.LockoutEndDateUtc, entity.PasswordHash, entity.PhoneNumber, entity.PhoneNumberConfirmed, entity.SecurityStamp, entity.TwoFactorEnabled, entity.UserName
+				},
+				transaction);
+		}
+
+		public static System.Threading.Tasks.Task UpdateAsync(
+			this System.Data.Common.DbConnection connection, 
+			FifthweekUser entity, 
+			FifthweekUser.Fields fields,
+			System.Data.IDbTransaction transaction = null)
+		{
+			return Dapper.SqlMapper.ExecuteAsync(connection, UpdateStatement(fields), MaskParameters(entity, fields), transaction);
 		}
 
 		public static string InsertStatement(bool idempotent = true)
@@ -1748,439 +2426,6 @@ namespace Fifthweek.Api.Persistence.Identity
 			if(fields.HasFlag(FifthweekUser.Fields.UserName))
 			{
 				parameters.Add("UserName", entity.UserName);
-			}
-
-			return parameters;
-		}
-	}
-}
-namespace Fifthweek.Api.Persistence
-{
-	using System;
-	using System.ComponentModel.DataAnnotations;
-	using System.ComponentModel.DataAnnotations.Schema;
-	using Fifthweek.Api.Core;
-	public partial class Post  : IIdentityEquatable
-	{
-        public Post(
-            System.Guid id)
-        {
-            if (id == null)
-            {
-                throw new ArgumentNullException("id");
-            }
-
-            this.Id = id;
-        }
-
-        public bool IdentityEquals(object other)
-        {
-            if (ReferenceEquals(null, other))
-            {
-                return false;
-            }
-
-            if (ReferenceEquals(this, other))
-            {
-                return true;
-            }
-
-            if (other.GetType() != this.GetType())
-            {
-                return false;
-            }
-
-            return this.IdentityEquals((Post)other);
-        }
-
-        protected bool IdentityEquals(Post other)
-        {
-            if (!object.Equals(this.Id, other.Id))
-            {
-                return false;
-            }
-
-            return true;
-        }
-
-		[Flags]
-        public enum Fields
-        {
-			Empty = 0,
-			Id = 1, 
-			ChannelId = 2, 
-			CollectionId = 4, 
-			FileId = 8, 
-			ImageId = 16, 
-			Comment = 32, 
-			QueuePosition = 64, 
-			LiveDate = 128, 
-			CreationDate = 256
-        }
-	}
-
-	public static partial class PostExtensions
-	{
-		public static System.Threading.Tasks.Task InsertAsync(this System.Data.Common.DbConnection connection, Post entity, bool idempotent = true)
-		{
-			return Dapper.SqlMapper.ExecuteAsync(connection, InsertStatement(idempotent), new 
-			{
-				entity.Id, entity.ChannelId, entity.CollectionId, entity.FileId, entity.ImageId, entity.Comment, entity.QueuePosition, entity.LiveDate, entity.CreationDate
-			});
-		}
-
-		public static System.Threading.Tasks.Task UpsertAsync(this System.Data.Common.DbConnection connection, Post entity, Post.Fields fields)
-		{
-			return Dapper.SqlMapper.ExecuteAsync(connection, UpsertStatement(fields), new 
-			{
-				entity.Id, entity.ChannelId, entity.CollectionId, entity.FileId, entity.ImageId, entity.Comment, entity.QueuePosition, entity.LiveDate, entity.CreationDate
-			});
-		}
-
-		public static System.Threading.Tasks.Task UpdateAsync(this System.Data.Common.DbConnection connection, Post entity, Post.Fields fields)
-		{
-			return Dapper.SqlMapper.ExecuteAsync(connection, UpdateStatement(fields), MaskParameters(entity, fields));
-		}
-
-		public static string InsertStatement(bool idempotent = true)
-		{
-			const string insert = "INSERT INTO Posts(Id, ChannelId, CollectionId, FileId, ImageId, Comment, QueuePosition, LiveDate, CreationDate) VALUES(@Id, @ChannelId, @CollectionId, @FileId, @ImageId, @Comment, @QueuePosition, @LiveDate, @CreationDate)";
-			return idempotent ? SqlStatementTemplates.IdempotentInsert(insert) : insert;
-		}
-
-		public static string UpsertStatement(Post.Fields fields)
-		{
-			var sql = new System.Text.StringBuilder();
-			sql.Append(
-				@"MERGE Posts as Target
-				USING (VALUES (@Id, @ChannelId, @CollectionId, @FileId, @ImageId, @Comment, @QueuePosition, @LiveDate, @CreationDate)) AS Source (Id, ChannelId, CollectionId, FileId, ImageId, Comment, QueuePosition, LiveDate, CreationDate)
-				ON    (Target.Id = Source.Id)
-				WHEN MATCHED THEN
-					UPDATE
-					SET		");
-			sql.AppendUpdateParameters(GetFieldNames(fields));
-			sql.Append(
-				@" WHEN NOT MATCHED THEN
-					INSERT  (Id, ChannelId, CollectionId, FileId, ImageId, Comment, QueuePosition, LiveDate, CreationDate)
-					VALUES  (Source.Id, Source.ChannelId, Source.CollectionId, Source.FileId, Source.ImageId, Source.Comment, Source.QueuePosition, Source.LiveDate, Source.CreationDate);");
-			return sql.ToString();
-		}
-
-		public static string UpdateStatement(Post.Fields fields)
-		{
-			var sql = new System.Text.StringBuilder();
-			sql.Append("UPDATE Posts SET ");
-			sql.AppendUpdateParameters(GetFieldNames(fields));
-			sql.Append(" WHERE Id = @Id");
-			return sql.ToString();
-		}
-
-		private static System.Collections.Generic.IReadOnlyList<string> GetFieldNames(Post.Fields fields)
-		{
-			var fieldNames = new System.Collections.Generic.List<string>();
-			fieldNames.Add("Id");
-			if(fields.HasFlag(Post.Fields.ChannelId))
-			{
-				fieldNames.Add("ChannelId");
-			}
-
-			if(fields.HasFlag(Post.Fields.CollectionId))
-			{
-				fieldNames.Add("CollectionId");
-			}
-
-			if(fields.HasFlag(Post.Fields.FileId))
-			{
-				fieldNames.Add("FileId");
-			}
-
-			if(fields.HasFlag(Post.Fields.ImageId))
-			{
-				fieldNames.Add("ImageId");
-			}
-
-			if(fields.HasFlag(Post.Fields.Comment))
-			{
-				fieldNames.Add("Comment");
-			}
-
-			if(fields.HasFlag(Post.Fields.QueuePosition))
-			{
-				fieldNames.Add("QueuePosition");
-			}
-
-			if(fields.HasFlag(Post.Fields.LiveDate))
-			{
-				fieldNames.Add("LiveDate");
-			}
-
-			if(fields.HasFlag(Post.Fields.CreationDate))
-			{
-				fieldNames.Add("CreationDate");
-			}
-
-			return fieldNames;
-		}
-
-		private static object MaskParameters(Post entity, Post.Fields fields)
-		{
-			var parameters = new Dapper.DynamicParameters();
-			parameters.Add("Id", entity.Id);
-			if(fields.HasFlag(Post.Fields.ChannelId))
-			{
-				parameters.Add("ChannelId", entity.ChannelId);
-			}
-
-			if(fields.HasFlag(Post.Fields.CollectionId))
-			{
-				parameters.Add("CollectionId", entity.CollectionId);
-			}
-
-			if(fields.HasFlag(Post.Fields.FileId))
-			{
-				parameters.Add("FileId", entity.FileId);
-			}
-
-			if(fields.HasFlag(Post.Fields.ImageId))
-			{
-				parameters.Add("ImageId", entity.ImageId);
-			}
-
-			if(fields.HasFlag(Post.Fields.Comment))
-			{
-				parameters.Add("Comment", entity.Comment);
-			}
-
-			if(fields.HasFlag(Post.Fields.QueuePosition))
-			{
-				parameters.Add("QueuePosition", entity.QueuePosition);
-			}
-
-			if(fields.HasFlag(Post.Fields.LiveDate))
-			{
-				parameters.Add("LiveDate", entity.LiveDate);
-			}
-
-			if(fields.HasFlag(Post.Fields.CreationDate))
-			{
-				parameters.Add("CreationDate", entity.CreationDate);
-			}
-
-			return parameters;
-		}
-	}
-}
-namespace Fifthweek.Api.Persistence
-{
-	using System;
-	using System.ComponentModel.DataAnnotations;
-	using System.ComponentModel.DataAnnotations.Schema;
-	using Fifthweek.Api.Core;
-	using Fifthweek.Api.Persistence.Identity;
-	public partial class Subscription  : IIdentityEquatable
-	{
-        public Subscription(
-            System.Guid id)
-        {
-            if (id == null)
-            {
-                throw new ArgumentNullException("id");
-            }
-
-            this.Id = id;
-        }
-
-        public bool IdentityEquals(object other)
-        {
-            if (ReferenceEquals(null, other))
-            {
-                return false;
-            }
-
-            if (ReferenceEquals(this, other))
-            {
-                return true;
-            }
-
-            if (other.GetType() != this.GetType())
-            {
-                return false;
-            }
-
-            return this.IdentityEquals((Subscription)other);
-        }
-
-        protected bool IdentityEquals(Subscription other)
-        {
-            if (!object.Equals(this.Id, other.Id))
-            {
-                return false;
-            }
-
-            return true;
-        }
-
-		[Flags]
-        public enum Fields
-        {
-			Empty = 0,
-			Id = 1, 
-			CreatorId = 2, 
-			Name = 4, 
-			Tagline = 8, 
-			Introduction = 16, 
-			Description = 32, 
-			ExternalVideoUrl = 64, 
-			HeaderImageFileId = 128, 
-			CreationDate = 256
-        }
-	}
-
-	public static partial class SubscriptionExtensions
-	{
-		public static System.Threading.Tasks.Task InsertAsync(this System.Data.Common.DbConnection connection, Subscription entity, bool idempotent = true)
-		{
-			return Dapper.SqlMapper.ExecuteAsync(connection, InsertStatement(idempotent), new 
-			{
-				entity.Id, entity.CreatorId, entity.Name, entity.Tagline, entity.Introduction, entity.Description, entity.ExternalVideoUrl, entity.HeaderImageFileId, entity.CreationDate
-			});
-		}
-
-		public static System.Threading.Tasks.Task UpsertAsync(this System.Data.Common.DbConnection connection, Subscription entity, Subscription.Fields fields)
-		{
-			return Dapper.SqlMapper.ExecuteAsync(connection, UpsertStatement(fields), new 
-			{
-				entity.Id, entity.CreatorId, entity.Name, entity.Tagline, entity.Introduction, entity.Description, entity.ExternalVideoUrl, entity.HeaderImageFileId, entity.CreationDate
-			});
-		}
-
-		public static System.Threading.Tasks.Task UpdateAsync(this System.Data.Common.DbConnection connection, Subscription entity, Subscription.Fields fields)
-		{
-			return Dapper.SqlMapper.ExecuteAsync(connection, UpdateStatement(fields), MaskParameters(entity, fields));
-		}
-
-		public static string InsertStatement(bool idempotent = true)
-		{
-			const string insert = "INSERT INTO Subscriptions(Id, CreatorId, Name, Tagline, Introduction, Description, ExternalVideoUrl, HeaderImageFileId, CreationDate) VALUES(@Id, @CreatorId, @Name, @Tagline, @Introduction, @Description, @ExternalVideoUrl, @HeaderImageFileId, @CreationDate)";
-			return idempotent ? SqlStatementTemplates.IdempotentInsert(insert) : insert;
-		}
-
-		public static string UpsertStatement(Subscription.Fields fields)
-		{
-			var sql = new System.Text.StringBuilder();
-			sql.Append(
-				@"MERGE Subscriptions as Target
-				USING (VALUES (@Id, @CreatorId, @Name, @Tagline, @Introduction, @Description, @ExternalVideoUrl, @HeaderImageFileId, @CreationDate)) AS Source (Id, CreatorId, Name, Tagline, Introduction, Description, ExternalVideoUrl, HeaderImageFileId, CreationDate)
-				ON    (Target.Id = Source.Id)
-				WHEN MATCHED THEN
-					UPDATE
-					SET		");
-			sql.AppendUpdateParameters(GetFieldNames(fields));
-			sql.Append(
-				@" WHEN NOT MATCHED THEN
-					INSERT  (Id, CreatorId, Name, Tagline, Introduction, Description, ExternalVideoUrl, HeaderImageFileId, CreationDate)
-					VALUES  (Source.Id, Source.CreatorId, Source.Name, Source.Tagline, Source.Introduction, Source.Description, Source.ExternalVideoUrl, Source.HeaderImageFileId, Source.CreationDate);");
-			return sql.ToString();
-		}
-
-		public static string UpdateStatement(Subscription.Fields fields)
-		{
-			var sql = new System.Text.StringBuilder();
-			sql.Append("UPDATE Subscriptions SET ");
-			sql.AppendUpdateParameters(GetFieldNames(fields));
-			sql.Append(" WHERE Id = @Id");
-			return sql.ToString();
-		}
-
-		private static System.Collections.Generic.IReadOnlyList<string> GetFieldNames(Subscription.Fields fields)
-		{
-			var fieldNames = new System.Collections.Generic.List<string>();
-			fieldNames.Add("Id");
-			if(fields.HasFlag(Subscription.Fields.CreatorId))
-			{
-				fieldNames.Add("CreatorId");
-			}
-
-			if(fields.HasFlag(Subscription.Fields.Name))
-			{
-				fieldNames.Add("Name");
-			}
-
-			if(fields.HasFlag(Subscription.Fields.Tagline))
-			{
-				fieldNames.Add("Tagline");
-			}
-
-			if(fields.HasFlag(Subscription.Fields.Introduction))
-			{
-				fieldNames.Add("Introduction");
-			}
-
-			if(fields.HasFlag(Subscription.Fields.Description))
-			{
-				fieldNames.Add("Description");
-			}
-
-			if(fields.HasFlag(Subscription.Fields.ExternalVideoUrl))
-			{
-				fieldNames.Add("ExternalVideoUrl");
-			}
-
-			if(fields.HasFlag(Subscription.Fields.HeaderImageFileId))
-			{
-				fieldNames.Add("HeaderImageFileId");
-			}
-
-			if(fields.HasFlag(Subscription.Fields.CreationDate))
-			{
-				fieldNames.Add("CreationDate");
-			}
-
-			return fieldNames;
-		}
-
-		private static object MaskParameters(Subscription entity, Subscription.Fields fields)
-		{
-			var parameters = new Dapper.DynamicParameters();
-			parameters.Add("Id", entity.Id);
-			if(fields.HasFlag(Subscription.Fields.CreatorId))
-			{
-				parameters.Add("CreatorId", entity.CreatorId);
-			}
-
-			if(fields.HasFlag(Subscription.Fields.Name))
-			{
-				parameters.Add("Name", entity.Name);
-			}
-
-			if(fields.HasFlag(Subscription.Fields.Tagline))
-			{
-				parameters.Add("Tagline", entity.Tagline);
-			}
-
-			if(fields.HasFlag(Subscription.Fields.Introduction))
-			{
-				parameters.Add("Introduction", entity.Introduction);
-			}
-
-			if(fields.HasFlag(Subscription.Fields.Description))
-			{
-				parameters.Add("Description", entity.Description);
-			}
-
-			if(fields.HasFlag(Subscription.Fields.ExternalVideoUrl))
-			{
-				parameters.Add("ExternalVideoUrl", entity.ExternalVideoUrl);
-			}
-
-			if(fields.HasFlag(Subscription.Fields.HeaderImageFileId))
-			{
-				parameters.Add("HeaderImageFileId", entity.HeaderImageFileId);
-			}
-
-			if(fields.HasFlag(Subscription.Fields.CreationDate))
-			{
-				parameters.Add("CreationDate", entity.CreationDate);
 			}
 
 			return parameters;
