@@ -107,7 +107,7 @@ namespace Fifthweek.Api.FileManagement.Tests.Commands
 
         private async Task TestCommandHandler(FileId fileId, UserId requester, string filePath, string purpose, string expectedFileName, string expectedExtension, string expectedPurpose)
         {
-            this.blobService.Setup(v => v.CreateBlobContainerAsync(Constants.FileBlobContainerName))
+            this.blobService.Setup(v => v.CreateBlobContainerAsync(Constants.PublicFileBlobContainerName))
                 .Returns(Task.FromResult(0))
                 .Verifiable();
 

@@ -24,18 +24,11 @@
         }
 
         public static Task ProcessFileAsync(
-            [QueueTrigger(Files.Shared.Constants.FilesQueueName)] FileQueueItem file,
+            [QueueTrigger(Files.Shared.Constants.FilesQueueName)] ProcessFileQueueItem processFile,
             [Queue(Thumbnails.Shared.Constants.ThumbnailsQueueName)] IAsyncCollector<ThumbnailQueueItem> thumbnails,
             TextWriter logger,
             CancellationToken cancellationToken)
         {
-            string mimeType = MimeTypeMap.GetMimeType(file.FileExtension);
-
-            if (Thumbnails.Shared.Constants.SupportedMimeTypes.Contains(mimeType))
-            {
-
-            }
-
             return Task.FromResult(0);
         }
     }

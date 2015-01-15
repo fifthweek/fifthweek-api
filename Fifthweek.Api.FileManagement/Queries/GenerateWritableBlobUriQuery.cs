@@ -10,5 +10,7 @@
         public UserId AuthenticatedUserId { get; private set; }
 
         public FileId FileId { get; private set; }
+
+        public string Purpose { get; private set; }
     }
 }

@@ -21,7 +21,7 @@
             command.AssertNotNull("command");
             command.AuthenticatedUserId.AssertAuthenticated();
 
-            const string ContainerName = FileManagement.Constants.FileBlobContainerName;
+            const string ContainerName = FileManagement.Constants.PublicFileBlobContainerName;
             await this.blobService.CreateBlobContainerAsync(ContainerName);
 
             string fileNameWithoutExtension = null;

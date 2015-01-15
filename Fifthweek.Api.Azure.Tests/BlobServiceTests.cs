@@ -100,27 +100,31 @@ namespace Fifthweek.Api.Azure.Tests
         }
 
         [TestMethod]
-        public async Task WhenRequestingBlobProperties_ItShouldFetchAttributesFromAzure()
+        public async Task WhenGettingBlobLengthAndSettingContentType_ItShouldFetchAttributesFromAzureAndSave()
         {
             var containerName = "testContainer";
             var blobName = "testBlob";
+            var contentType = "test/fifthweek";
+            var blobLength = 1111;
 
-            this.cloudStorageAccount.Setup(v => v.CreateCloudBlobClient()).Returns(this.cloudBlobClient.Object).Verifiable();
-            this.cloudBlobClient.Setup(v => v.GetContainerReference(containerName)).Returns(this.cloudBlobContainer.Object).Verifiable();
-            this.cloudBlobContainer.Setup(v => v.GetBlockBlobReference(blobName)).Returns(this.cloudBlockBlob.Object).Verifiable();
+            this.cloudStorageAccount.Setup(v => v.CreateCloudBlobClient()).Returns(this.cloudBlobClient.Object);
+            this.cloudBlobClient.Setup(v => v.GetContainerReference(containerName)).Returns(this.cloudBlobContainer.Object);
+            this.cloudBlobContainer.Setup(v => v.GetBlockBlobReference(blobName)).Returns(this.cloudBlockBlob.Object);
 
             var properties = new Mock<IBlobProperties>();
+            properties.Setup(v => v.Length).Returns(blobLength);
+            this.cloudBlockBlob.Setup(v => v.Properties).Returns(properties.Object);
+
             this.cloudBlockBlob.Setup(v => v.FetchAttributesAsync()).Returns(Task.FromResult(0)).Verifiable();
-            this.cloudBlockBlob.Setup(v => v.Properties).Returns(properties.Object).Verifiable();
+            properties.SetupSet(v => v.ContentType = contentType).Verifiable();
+            this.cloudBlockBlob.Setup(v => v.SetPropertiesAsync()).Returns(Task.FromResult(0)).Verifiable();
 
-            var result = await this.blobService.GetBlobPropertiesAsync(containerName, blobName);
+            var result = await this.blobService.GetBlobLengthAndSetContentTypeAsync(containerName, blobName, contentType);
 
-            this.cloudStorageAccount.Verify();
-            this.cloudBlobClient.Verify();
-            this.cloudBlobContainer.Verify();
             this.cloudBlockBlob.Verify();
+            properties.Verify();
 
-            Assert.AreSame(properties.Object, result);
+            Assert.AreSame(blobLength, result);
         }
 
         [TestInitialize]

@@ -100,7 +100,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AutofacRegistration.cs" />
-    <Compile Include="BlobNameCreator.cs" />
+    <Compile Include="BlobLocation.cs" />
+    <Compile Include="BlobLocationGenerator.cs" />
     <Compile Include="ClassAugmentation.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -118,7 +119,8 @@
     <Compile Include="FileRepository.cs" />
     <Compile Include="FileSecurity.cs" />
     <Compile Include="FileVariantId.cs" />
-    <Compile Include="IBlobNameCreator.cs" />
+    <Compile Include="FileWaitingForUpload.cs" />
+    <Compile Include="IBlobLocationGenerator.cs" />
     <Compile Include="IFileRepository.cs" />
     <Compile Include="IFileSecurity.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -149,6 +151,10 @@
     <ProjectReference Include="..\Fifthweek.Api.Persistence\Fifthweek.Api.Persistence.csproj">
       <Project>{9c18bee3-fab5-4a00-8a94-a1faea370175}</Project>
       <Name>Fifthweek.Api.Persistence</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Fifthweek.Shared\Fifthweek.Shared.csproj">
+      <Project>{6D12FFBB-38E9-4722-A690-0F0338538EBC}</Project>
+      <Name>Fifthweek.Shared</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

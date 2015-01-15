@@ -4,16 +4,14 @@
     using System.Collections.Generic;
 
     /// <summary>
+    /// Modified version of this file:
     /// https://raw.githubusercontent.com/samuelneff/MimeTypeMap/master/src/MimeTypeMap.cs
+    /// 
+    /// Overwrite list of mime types only if updating.
     /// </summary>
     public static class MimeTypeMap
     {
-        private static readonly IDictionary<string, string> _mappings = new Dictionary<string, string>(StringComparer.InvariantCultureIgnoreCase) {
-
-        #region Big freaking list of mime types
-        // combination of values from Windows 7 Registry and 
-        // from C:\Windows\System32\inetsrv\config\applicationHost.config
-        // some added, including .7z and .dat
+        private static readonly IDictionary<string, string> Mappings = new Dictionary<string, string>(StringComparer.InvariantCultureIgnoreCase) {
         {".323", "text/h323"},
         {".3g2", "video/3gpp2"},
         {".3gp", "video/3gpp"},
@@ -574,15 +572,15 @@
         {".xwd", "image/x-xwindowdump"},
         {".z", "application/x-compress"},
         {".zip", "application/x-zip-compressed"},
-        #endregion
-
         };
 
         public static string GetMimeType(string extension)
         {
-            if (extension == null)
+            const string DefaultMimeType = "application/octet-stream";
+
+            if (string.IsNullOrWhiteSpace(extension))
             {
-                throw new ArgumentNullException("extension");
+                return DefaultMimeType;
             }
 
             if (!extension.StartsWith("."))
@@ -591,8 +589,7 @@
             }
 
             string mime;
-
-            return _mappings.TryGetValue(extension, out mime) ? mime : "application/octet-stream";
+            return Mappings.TryGetValue(extension, out mime) ? mime : DefaultMimeType;
         }
     }
 }

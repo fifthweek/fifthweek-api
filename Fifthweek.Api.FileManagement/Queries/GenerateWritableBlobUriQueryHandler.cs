@@ -12,7 +12,7 @@
     {
         private readonly IBlobService blobService;
 
-        private readonly IBlobNameCreator blobNameCreator;
+        private readonly IBlobLocationGenerator blobLocationGenerator;
 
         private readonly IFileSecurity fileSecurity;
 
@@ -22,9 +22,8 @@
             query.AuthenticatedUserId.AssertAuthenticated();
             await this.fileSecurity.AssertFileBelongsToUserAsync(query.AuthenticatedUserId, query.FileId);
 
-            const string ContainerName = FileManagement.Constants.FileBlobContainerName;
-            var blobName = this.blobNameCreator.CreateFileName(query.FileId);
-            var url = await this.blobService.GetBlobSasUriForWritingAsync(ContainerName, blobName);
+            var blobLocation = this.blobLocationGenerator.GetBlobLocation(query.AuthenticatedUserId, query.FileId, query.Purpose);
+            var url = await this.blobService.GetBlobSasUriForWritingAsync(blobLocation.ContainerName, blobLocation.BlobName);
             return url;
         }
     }

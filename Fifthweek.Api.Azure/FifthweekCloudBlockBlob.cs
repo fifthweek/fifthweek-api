@@ -45,5 +45,10 @@ namespace Fifthweek.Api.Azure
         {
             return this.blob.FetchAttributesAsync();
         }
+
+        public Task SetPropertiesAsync()
+        {
+            return this.blob.SetPropertiesAsync();
+        }
     }
 }

@@ -1,11 +1,11 @@
 namespace Fifthweek.Webjobs.Files.Shared
 {
-    public class FileQueueItem
+    public class ProcessFileQueueItem
     {
-        public string FileExtension { get; set; }
-
         public string Purpose { get; set; }
 
         public string BlobLocation { get; set; }
+
+        public bool Overwrite { get; set; }
     }
 }

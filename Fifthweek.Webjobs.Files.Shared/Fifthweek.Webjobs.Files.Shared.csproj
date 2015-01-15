@@ -41,8 +41,15 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Constants.cs" />
-    <Compile Include="FileQueueItem.cs" />
+    <Compile Include="IFileTask.cs" />
+    <Compile Include="ProcessFileQueueItem.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Fifthweek.Shared\Fifthweek.Shared.csproj">
+      <Project>{6d12ffbb-38e9-4722-a690-0f0338538ebc}</Project>
+      <Name>Fifthweek.Shared</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

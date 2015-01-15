@@ -22,6 +22,5 @@ namespace Fifthweek.Api.Azure
         {
             return new FifthweekCloudBlockBlob(this.container.GetBlockBlobReference(blobName));
         }
-
     }
 }

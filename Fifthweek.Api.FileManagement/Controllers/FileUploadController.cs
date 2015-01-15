@@ -40,7 +40,7 @@
             var authenticatedUserId = this.userContext.GetUserId();
             
             await this.initiateFileUpload.HandleAsync(new InitiateFileUploadCommand(authenticatedUserId, fileId, data.FilePath, data.Purpose));
-            var uri = await this.generateWritableBlobUri.HandleAsync(new GenerateWritableBlobUriQuery(authenticatedUserId, fileId));
+            var uri = await this.generateWritableBlobUri.HandleAsync(new GenerateWritableBlobUriQuery(authenticatedUserId, fileId, data.Purpose));
 
             return new GrantedUpload(fileId.Value.EncodeGuid(), uri);
         }

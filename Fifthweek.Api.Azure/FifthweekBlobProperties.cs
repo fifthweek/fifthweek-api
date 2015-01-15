@@ -18,5 +18,18 @@
                 return this.blobProperties.Length;
             }
         }
+
+        public string ContentType
+        {
+            get
+            {
+                return this.blobProperties.ContentType;
+            }
+
+            set
+            {
+                this.blobProperties.ContentType = value;
+            }
+        }
     }
 }

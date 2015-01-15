@@ -2,6 +2,6 @@
 {
     public class Constants
     {
-        public const string FileBlobContainerName = "files";
+        public const string PublicFileBlobContainerName = "files";
     }
 }

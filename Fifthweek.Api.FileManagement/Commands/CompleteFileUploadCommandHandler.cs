@@ -6,30 +6,34 @@
     using Fifthweek.Api.Azure;
     using Fifthweek.Api.Core;
     using Fifthweek.Api.Identity.Membership;
+    using Fifthweek.Shared;
 
     [Decorator(typeof(RetryOnSqlDeadlockOrTimeoutCommandHandlerDecorator<>))]
     [AutoConstructor]
     public partial class CompleteFileUploadCommandHandler : ICommandHandler<CompleteFileUploadCommand>
     {
         private readonly IFileRepository fileRepository;
-        
-        private readonly IFileSecurity fileSecurity;
 
         private readonly IBlobService blobService;
 
-        private readonly IBlobNameCreator blobNameCreator;
+        private readonly IBlobLocationGenerator blobLocationGenerator;
         
         public async Task HandleAsync(CompleteFileUploadCommand command)
         {
             command.AssertNotNull("command");
             command.AuthenticatedUserId.AssertAuthenticated();
-            await this.fileSecurity.AssertFileBelongsToUserAsync(command.AuthenticatedUserId, command.FileId);
+            
+            var file = await this.fileRepository.GetFileWaitingForUploadAsync(command.FileId);
+            command.AuthenticatedUserId.AssertAuthorizedFor(file.UserId);
 
-            const string ContainerName = FileManagement.Constants.FileBlobContainerName;
-            var blobName = this.blobNameCreator.CreateFileName(command.FileId);
-            var blobProperties = await this.blobService.GetBlobPropertiesAsync(ContainerName, blobName);
+            var mimeType = MimeTypeMap.GetMimeType(file.FileExtension);
+            
+            var blobLocation = this.blobLocationGenerator.GetBlobLocation(command.AuthenticatedUserId, command.FileId, file.Purpose);
+            var blobLength = await this.blobService.GetBlobLengthAndSetContentTypeAsync(blobLocation.ContainerName, blobLocation.BlobName, mimeType);
 
-            await this.fileRepository.SetFileUploadComplete(command.FileId, blobProperties.Length);
+            await this.fileRepository.SetFileUploadComplete(command.FileId, blobLength);
+
+            // Post file queue message.
         }
     }
 }

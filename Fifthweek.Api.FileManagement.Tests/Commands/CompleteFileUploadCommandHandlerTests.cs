@@ -9,6 +9,8 @@ namespace Fifthweek.Api.FileManagement.Tests.Commands
     using Fifthweek.Api.Core;
     using Fifthweek.Api.FileManagement.Commands;
     using Fifthweek.Api.Identity.Membership;
+    using Fifthweek.Api.Persistence;
+    using Fifthweek.Api.Tests.Shared;
 
     using Moq;
 
@@ -17,88 +19,77 @@ namespace Fifthweek.Api.FileManagement.Tests.Commands
     [TestClass]
     public class CompleteFileUploadCommandHandlerTests
     {
-        [TestMethod]
-        public async Task WhenCalled_ItShouldCheckPermissionsAndUpdateTheDatabase()
-        {
-            var userId = new UserId(Guid.NewGuid());
-            var fileId = new FileId(Guid.NewGuid());
-            var blobName = "blobName";
+        private readonly FileId fileId = new FileId(Guid.NewGuid());
 
-            this.fileSecurity.Setup(v => v.AssertFileBelongsToUserAsync(userId, fileId))
-                .Returns(Task.FromResult(0));
+        private readonly UserId userId = new UserId(Guid.NewGuid());
 
-            this.blobNameCreator.Setup(v => v.CreateFileName(fileId)).Returns(blobName);
+        private readonly string blobName = "blobName";
+        private readonly string containerName = "containerName";
+        private readonly string purpose = "purpose";
 
-            var blobProperties = new Mock<IBlobProperties>();
-            blobProperties.Setup(v => v.Length).Returns(1024);
+        private readonly string fileExtension = "jpeg";
+        private readonly string contentType = "image/jpeg";
 
-            this.blobService.Setup(v => v.GetBlobPropertiesAsync(Constants.FileBlobContainerName, blobName))
-                .ReturnsAsync(blobProperties.Object);
+        private readonly long blobSize = 1234;
 
-            this.fileRepository.Setup(v => v.SetFileUploadComplete(fileId, 1024))
-                .Returns(Task.FromResult(0))
-                .Verifiable();
+        private Mock<IFileRepository> fileRepository;
+        private Mock<IBlobService> blobService;
+        private Mock<IBlobLocationGenerator> blobNameCreator;
 
-            await this.handler.HandleAsync(new CompleteFileUploadCommand(userId, fileId));
-
-            this.fileRepository.Verify();
-        }
-
-        [TestMethod]
-        public async Task WhenCalledAndFileDoesNotBelogToUser_ItShouldNotUpdateTheDatabase()
-        {
-            var userId = new UserId(Guid.NewGuid());
-            var fileId = new FileId(Guid.NewGuid());
-            var blobName = "blobName";
-
-            this.fileSecurity.Setup(v => v.AssertFileBelongsToUserAsync(userId, fileId))
-                .Throws(new UnauthorizedException());
-
-            this.blobNameCreator.Setup(v => v.CreateFileName(fileId)).Returns(blobName);
-
-            var blobProperties = new Mock<IBlobProperties>();
-            blobProperties.Setup(v => v.Length).Returns(1024);
-
-            this.blobService.Setup(v => v.GetBlobPropertiesAsync(Constants.FileBlobContainerName, blobName))
-                .ReturnsAsync(blobProperties.Object);
-
-            this.fileRepository.Setup(v => v.SetFileUploadComplete(fileId, 1024))
-                .Throws(new Exception("This should not be called"));
-
-            Exception exception = null;
-            try
-            {
-                await this.handler.HandleAsync(new CompleteFileUploadCommand(userId, fileId));
-            }
-            catch (Exception t)
-            {
-                exception = t;
-            }
-
-            Assert.IsInstanceOfType(exception, typeof(UnauthorizedException));
-            this.fileRepository.Verify();
-        }
+        private CompleteFileUploadCommandHandler handler;
 
         [TestInitialize]
         public void TestInitialize()
         {
             this.blobService = new Mock<IBlobService>();
             this.fileRepository = new Mock<IFileRepository>();
-            this.fileSecurity = new Mock<IFileSecurity>();
-            this.blobNameCreator = new Mock<IBlobNameCreator>();
+            this.blobNameCreator = new Mock<IBlobLocationGenerator>();
 
             this.handler = new CompleteFileUploadCommandHandler(
                 this.fileRepository.Object,
-                this.fileSecurity.Object,
-                this.blobService.Object, 
+                this.blobService.Object,
                 this.blobNameCreator.Object);
         }
 
-        private Mock<IFileSecurity> fileSecurity;
-        private Mock<IFileRepository> fileRepository;
-        private Mock<IBlobService> blobService;
-        private Mock<IBlobNameCreator> blobNameCreator;
+        [TestMethod]
+        public async Task WhenCalled_ItShouldUpdateTheDatabase()
+        {
+            this.fileRepository.Setup(v => v.GetFileWaitingForUploadAsync(this.fileId))
+                .ReturnsAsync(new FileWaitingForUpload(this.fileId, this.userId, "myfile", this.fileExtension, this.purpose));
 
-        private CompleteFileUploadCommandHandler handler;
+            this.blobNameCreator.Setup(v => v.GetBlobLocation(this.userId, this.fileId, this.purpose))
+                .Returns(new BlobLocation(this.containerName, this.blobName));
+
+            this.blobService.Setup(v => v.GetBlobLengthAndSetContentTypeAsync(this.containerName, this.blobName, this.contentType))
+                .ReturnsAsync(this.blobSize).Verifiable();
+
+            this.fileRepository.Setup(v => v.SetFileUploadComplete(this.fileId, this.blobSize))
+                .Returns(Task.FromResult(0))
+                .Verifiable();
+
+            await this.handler.HandleAsync(new CompleteFileUploadCommand(this.userId, this.fileId));
+
+            this.fileRepository.Verify();
+            this.blobService.Verify();
+        }
+
+        [TestMethod]
+        public async Task WhenCalledAndFileDoesNotBelogToUser_ItShouldNotUpdateTheDatabase()
+        {
+            this.fileRepository.Setup(v => v.GetFileWaitingForUploadAsync(this.fileId))
+                .ReturnsAsync(new FileWaitingForUpload(this.fileId, new UserId(Guid.NewGuid()), "myfile", this.fileExtension, this.purpose));
+
+            this.blobNameCreator.Setup(v => v.GetBlobLocation(this.userId, this.fileId, this.purpose))
+                .Throws(new Exception("This shouldn't be called"));
+
+            this.blobService.Setup(v => v.GetBlobLengthAndSetContentTypeAsync(this.containerName, this.blobName, this.contentType))
+                .Throws(new Exception("This shouldn't be called"));
+
+            this.fileRepository.Setup(v => v.SetFileUploadComplete(this.fileId, this.blobSize))
+                .Throws(new Exception("This shouldn't be called"));
+
+            await ExpectedException<UnauthorizedException>.AssertAsync( 
+                () => this.handler.HandleAsync(new CompleteFileUploadCommand(this.userId, this.fileId)));
+        }
     }
 }

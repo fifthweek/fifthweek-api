@@ -15,5 +15,7 @@
             string purpose);
 
         Task SetFileUploadComplete(FileId fileId, long blobSize);
+
+        Task<FileWaitingForUpload> GetFileWaitingForUploadAsync(FileId fileId);
     }
 }

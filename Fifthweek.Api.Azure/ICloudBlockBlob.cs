@@ -16,5 +16,7 @@ namespace Fifthweek.Api.Azure
         IBlobProperties Properties { get; }
 
         Task FetchAttributesAsync();
+
+        Task SetPropertiesAsync();
     }
 }

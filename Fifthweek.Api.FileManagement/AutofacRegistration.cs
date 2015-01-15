@@ -8,7 +8,7 @@
     {
         public void Register(ContainerBuilder builder)
         {
-            builder.RegisterType<BlobNameCreator>().As<IBlobNameCreator>().SingleInstance();
+            builder.RegisterType<BlobLocationGenerator>().As<IBlobLocationGenerator>().SingleInstance();
             builder.RegisterType<FileRepository>().As<IFileRepository>().SingleInstance();
             builder.RegisterType<FileSecurity>().As<IFileSecurity>().SingleInstance();
         }

@@ -1,6 +1,7 @@
 ﻿namespace Fifthweek.Api.FileManagement
 {
     using System;
+    using System.Linq;
     using System.Security;
     using System.Threading.Tasks;
 
@@ -77,6 +78,28 @@
             return this.fifthweekDbContext.Database.Connection.UpdateAsync(
                 newFile,
                 File.Fields.State | File.Fields.UploadCompletedDate | File.Fields.BlobSizeBytes);
+        }
+
+        public async Task<FileWaitingForUpload> GetFileWaitingForUploadAsync(FileId fileId)
+        {
+            var items = await this.fifthweekDbContext.Database.Connection.QueryAsync<File>(
+                string.Format(
+                    @"SELECT {0}, {1}, {2}, {3}, {4} FROM Files WHERE FileId=@FileId",
+                    File.Fields.Id,
+                    File.Fields.UserId,
+                    File.Fields.FileNameWithoutExtension,
+                    File.Fields.FileExtension,
+                    File.Fields.Purpose),
+                new { FileId = fileId });
+
+            var result = items.SingleOrDefault();
+
+            if (result == null)
+            {
+                throw new InvalidOperationException("The File " + fileId + " couldn't be found.");
+            }
+
+            return new FileWaitingForUpload(new FileId(result.Id), new UserId(result.UserId), result.FileNameWithoutExtension, result.FileExtension, result.Purpose);
         }
     }
 }

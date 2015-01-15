@@ -42,7 +42,14 @@
   <ItemGroup>
     <Compile Include="Constants.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ThumbnailFileTask.cs" />
     <Compile Include="ThumbnailQueueItem.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Fifthweek.Webjobs.Files.Shared\Fifthweek.Webjobs.Files.Shared.csproj">
+      <Project>{227AE1D7-E7A5-44A2-87CC-82EB29033B0D}</Project>
+      <Name>Fifthweek.Webjobs.Files.Shared</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

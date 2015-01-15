@@ -55,13 +55,15 @@ namespace Fifthweek.Api.Azure
             return Task.FromResult(blob.Uri + token);
         }
 
-        public async Task<IBlobProperties> GetBlobPropertiesAsync(string containerName, string blobName)
+        public async Task<long> GetBlobLengthAndSetContentTypeAsync(string containerName, string blobName, string contentType)
         {
             var client = this.cloudStorageAccount.CreateCloudBlobClient();
             var container = client.GetContainerReference(containerName);
             var blob = container.GetBlockBlobReference(blobName);
             await blob.FetchAttributesAsync();
-            return blob.Properties;
+            blob.Properties.ContentType = contentType;
+            await blob.SetPropertiesAsync();
+            return blob.Properties.Length;
         }
     }
 }
