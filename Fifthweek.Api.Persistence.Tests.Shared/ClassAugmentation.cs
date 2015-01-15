@@ -78,7 +78,7 @@ namespace Fifthweek.Api.Persistence.Tests.Shared
 	public partial class TemporaryDatabaseSeed 
 	{
         public TemporaryDatabaseSeed(
-            Fifthweek.Api.Persistence.Identity.FifthweekDbContext databaseContext)
+            FifthweekDbContext databaseContext)
         {
             if (databaseContext == null)
             {

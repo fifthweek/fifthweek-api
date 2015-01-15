@@ -1,7 +1,9 @@
-namespace Fifthweek.Api.Persistence.Identity
+namespace Fifthweek.Api.Persistence
 {
     using System;
     using System.Data.Entity;
+
+    using Fifthweek.Api.Persistence.Identity;
 
     using Microsoft.AspNet.Identity.EntityFramework;
 
@@ -28,8 +30,6 @@ namespace Fifthweek.Api.Persistence.Identity
         public IDbSet<Post> Posts { get; set; }
 
         public IDbSet<File> Files { get; set; }
-
-        public IDbSet<FileVariant> FileVariants { get; set; }
 
         public static FifthweekDbContext Create()
         {

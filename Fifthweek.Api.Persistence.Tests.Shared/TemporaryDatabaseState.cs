@@ -26,7 +26,6 @@
             await this.loadedSnapshotContext.Collections.LoadAsync();
             await this.loadedSnapshotContext.Posts.LoadAsync();
             await this.loadedSnapshotContext.Files.LoadAsync();
-            await this.loadedSnapshotContext.FileVariants.LoadAsync();
         }
 
         public async Task AssertSideEffectsAsync(ExpectedSideEffects sideEffects)
@@ -45,7 +44,6 @@
                 tables.Add(await TableBeforeAndAfter.GenerateAsync(this.loadedSnapshotContext.Collections, databaseContext.Collections));
                 tables.Add(await TableBeforeAndAfter.GenerateAsync(this.loadedSnapshotContext.Posts, databaseContext.Posts));
                 tables.Add(await TableBeforeAndAfter.GenerateAsync(this.loadedSnapshotContext.Files, databaseContext.Files));
-                tables.Add(await TableBeforeAndAfter.GenerateAsync(this.loadedSnapshotContext.FileVariants, databaseContext.FileVariants));
             }
 
             var snapshot = tables.SelectMany(_ => _.Snapshot).ToList();

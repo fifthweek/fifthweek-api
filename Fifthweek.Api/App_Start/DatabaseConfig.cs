@@ -5,6 +5,8 @@ namespace Fifthweek.Api
     using System.Data.Entity;
     using System.Diagnostics;
     using System.Linq;
+
+    using Fifthweek.Api.Persistence;
     using Fifthweek.Api.Persistence.Identity;
 
     public static class DatabaseConfig

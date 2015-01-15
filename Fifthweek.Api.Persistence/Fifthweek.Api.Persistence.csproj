@@ -90,10 +90,9 @@
       <DependentUpon>ClassAugmentation.tt</DependentUpon>
     </Compile>
     <Compile Include="Collection.cs" />
+    <Compile Include="FifthweekDbContext.cs" />
     <Compile Include="FileState.cs" />
-    <Compile Include="FileVariant.cs" />
     <Compile Include="IdentityConfig.cs" />
-    <Compile Include="Identity\FifthweekDbContext.cs" />
     <Compile Include="Identity\FifthweekRole.cs" />
     <Compile Include="Identity\FifthweekRoleStore.cs" />
     <Compile Include="Identity\FifthweekUser.cs" />
@@ -165,6 +164,10 @@
     <Compile Include="Migrations\201501142025492_AddPostsAndCollections.Designer.cs">
       <DependentUpon>201501142025492_AddPostsAndCollections.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201501151317530_RemoveFileVariants.cs" />
+    <Compile Include="Migrations\201501151317530_RemoveFileVariants.Designer.cs">
+      <DependentUpon>201501151317530_RemoveFileVariants.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Post.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -235,6 +238,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201501142025492_AddPostsAndCollections.resx">
       <DependentUpon>201501142025492_AddPostsAndCollections.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201501151317530_RemoveFileVariants.resx">
+      <DependentUpon>201501151317530_RemoveFileVariants.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
