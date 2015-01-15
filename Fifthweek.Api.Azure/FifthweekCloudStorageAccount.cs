@@ -16,5 +16,10 @@ namespace Fifthweek.Api.Azure
         {
             return new FifthweekCloudBlobClient(this.storageAccount.CreateCloudBlobClient());
         }
+
+        public ICloudQueueClient CreateCloudQueueClient()
+        {
+            return new FifthweekCloudQueueClient(this.storageAccount.CreateCloudQueueClient());
+        }
     }
 }

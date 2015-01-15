@@ -75,14 +75,20 @@
     <Compile Include="FifthweekCloudBlobClient.cs" />
     <Compile Include="FifthweekCloudBlobContainer.cs" />
     <Compile Include="FifthweekCloudBlockBlob.cs" />
+    <Compile Include="FifthweekCloudQueue.cs" />
+    <Compile Include="FifthweekCloudQueueClient.cs" />
     <Compile Include="FifthweekCloudStorageAccount.cs" />
     <Compile Include="IBlobProperties.cs" />
     <Compile Include="IBlobService.cs" />
     <Compile Include="ICloudBlobClient.cs" />
     <Compile Include="ICloudBlobContainer.cs" />
     <Compile Include="ICloudBlockBlob.cs" />
+    <Compile Include="ICloudQueue.cs" />
+    <Compile Include="ICloudQueueClient.cs" />
     <Compile Include="ICloudStorageAccount.cs" />
+    <Compile Include="IQueueService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="QueueService.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
