@@ -296,7 +296,8 @@ namespace Fifthweek.Api.Accounts.Tests
 
         private async Task InitializeWithDatabaseAsync()
         {
-            this.Initialize();
+            await this.InitializeDatabaseAsync();
+
             this.target = new AccountRepository(this.NewDbContext(), this.userManager.Object);
 
             var random = new Random();

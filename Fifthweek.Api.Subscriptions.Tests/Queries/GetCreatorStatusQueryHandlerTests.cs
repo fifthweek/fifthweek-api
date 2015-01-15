@@ -1,14 +1,17 @@
-﻿using System;
-using System.Threading.Tasks;
-using Dapper;
-using Fifthweek.Api.Identity.Membership;
-using Fifthweek.Api.Persistence;
-using Fifthweek.Api.Persistence.Tests.Shared;
-using Fifthweek.Api.Subscriptions.Queries;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-
-namespace Fifthweek.Api.Subscriptions.Tests.Queries
+﻿namespace Fifthweek.Api.Subscriptions.Tests.Queries
 {
+    using System;
+    using System.Threading.Tasks;
+
+    using Dapper;
+
+    using Fifthweek.Api.Identity.Membership;
+    using Fifthweek.Api.Persistence;
+    using Fifthweek.Api.Persistence.Tests.Shared;
+    using Fifthweek.Api.Subscriptions.Queries;
+
+    using Microsoft.VisualStudio.TestTools.UnitTesting;
+
     [TestClass]
     public class GetCreatorStatusQueryHandlerTests : PersistenceTestsBase
     {
@@ -18,9 +21,8 @@ namespace Fifthweek.Api.Subscriptions.Tests.Queries
         private GetCreatorStatusQueryHandler target;
 
         [TestInitialize]
-        public override void Initialize()
+        public void Initialize()
         {
-            base.Initialize();
             this.target = new GetCreatorStatusQueryHandler(this.NewDbContext());
         }
 
@@ -33,6 +35,7 @@ namespace Fifthweek.Api.Subscriptions.Tests.Queries
         [TestMethod]
         public async Task WhenAtLeastOneSubscriptionMatchesCreator_ItShouldReturnThatSubscriptionId()
         {
+            await this.InitializeDatabaseAsync();
             await this.CreateSubscriptionAsync(UserId, SubscriptionId);
             await this.SnapshotDatabaseAsync();
 
@@ -47,6 +50,7 @@ namespace Fifthweek.Api.Subscriptions.Tests.Queries
         [TestMethod]
         public async Task WhenMultipleSubscriptionsMatchCreator_ItShouldReturnTheLatestSubscriptionId()
         {
+            await this.InitializeDatabaseAsync();
             await this.CreateSubscriptionAsync(UserId, new SubscriptionId(Guid.NewGuid()));
             await this.CreateSubscriptionsAsync(UserId, 100);
             await this.CreateSubscriptionAsync(UserId, SubscriptionId, false, true);
@@ -63,6 +67,8 @@ namespace Fifthweek.Api.Subscriptions.Tests.Queries
         [TestMethod]
         public async Task WhenNoSubscriptionsExist_ItShouldReturnEmptySubscriptionId()
         {
+            await this.InitializeDatabaseAsync();
+
             using (var dbContext = this.NewDbContext())
             {
                 await dbContext.Database.Connection.ExecuteAsync("DELETE FROM Subscriptions");
@@ -81,6 +87,7 @@ namespace Fifthweek.Api.Subscriptions.Tests.Queries
         [TestMethod]
         public async Task WhenNoSubscriptionsMatchCreator_ItShouldReturnEmptySubscriptionId()
         {
+            await this.InitializeDatabaseAsync();
             await this.SnapshotDatabaseAsync();
 
             var result = await this.target.HandleAsync(Query);

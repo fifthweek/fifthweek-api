@@ -1,6 +1,7 @@
 ﻿namespace Fifthweek.Api.FileManagement.Tests
 {
     using System;
+    using System.Diagnostics;
     using System.Threading;
     using System.Threading.Tasks;
 
@@ -74,12 +75,17 @@
         public async Task WhenAddingANewFileTwice_ItShouldHaveNoEffect()
         {
             await this.InitializeWithDatabaseAsync();
+            var stopwatch = Stopwatch.StartNew();
+
             await this.target.AddNewFileAsync(this.fileId, this.userId, this.fileNameWithoutExtension, this.fileExtension, this.purpose);
 
             await this.SnapshotDatabaseAsync();
 
             await this.target.AddNewFileAsync(this.fileId, this.userId, this.fileNameWithoutExtension, this.fileExtension, this.purpose);
             await this.AssertDatabaseAsync(ExpectedSideEffects.None);
+
+            var secondsElapsed = Math.Round(stopwatch.Elapsed.TotalSeconds, 2);
+            Trace.WriteLine(string.Format("Ran tests in {0}s", secondsElapsed));
         }
 
         [TestMethod]
@@ -179,7 +185,8 @@
 
         private async Task InitializeWithDatabaseAsync()
         {
-            this.Initialize();
+            await this.InitializeDatabaseAsync();
+
             this.target = new FileRepository(this.NewDbContext());
 
             var random = new Random();

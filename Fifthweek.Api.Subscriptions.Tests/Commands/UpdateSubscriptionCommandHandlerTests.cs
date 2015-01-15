@@ -41,9 +41,8 @@
         private UpdateSubscriptionCommandHandler target;
 
         [TestInitialize]
-        public override void Initialize()
+        public void Initialize()
         {
-            base.Initialize();
             this.subscriptionSecurity = new Mock<ISubscriptionSecurity>();
             this.fileSecurity = new Mock<IFileSecurity>();
             this.target = new UpdateSubscriptionCommandHandler(this.subscriptionSecurity.Object, this.fileSecurity.Object, this.NewDbContext());
@@ -58,9 +57,10 @@
         [TestMethod]
         public async Task WhenNotAllowedToUpdate_ItShouldReportAnError()
         {
-            this.subscriptionSecurity.Setup(_ => _.AssertUpdateAllowedAsync(UserId, SubscriptionId)).Throws<UnauthorizedException>();
-
+            await this.InitializeDatabaseAsync();
             await this.SnapshotDatabaseAsync();
+
+            this.subscriptionSecurity.Setup(_ => _.AssertUpdateAllowedAsync(UserId, SubscriptionId)).Throws<UnauthorizedException>();
 
             try
             {
@@ -77,9 +77,10 @@
         [TestMethod]
         public async Task WhenNotAllowedToUseFile_ItShouldReportAnError()
         {
-            this.fileSecurity.Setup(_ => _.AssertFileBelongsToUserAsync(UserId, HeaderImageFileId)).Throws<UnauthorizedException>();
-
+            await this.InitializeDatabaseAsync();
             await this.SnapshotDatabaseAsync();
+
+            this.fileSecurity.Setup(_ => _.AssertFileBelongsToUserAsync(UserId, HeaderImageFileId)).Throws<UnauthorizedException>();
 
             try
             {
@@ -96,9 +97,9 @@
         [TestMethod]
         public async Task WhenReRun_ItShouldHaveNoEffect()
         {
+            await this.InitializeDatabaseAsync();
             await this.CreateSubscriptionAsync(UserId, SubscriptionId, HeaderImageFileId);
             await this.target.HandleAsync(Command);
-
             await this.SnapshotDatabaseAsync();
 
             await this.target.HandleAsync(Command);
@@ -109,8 +110,8 @@
         [TestMethod]
         public async Task ItShouldUpdateSubscription()
         {
+            await this.InitializeDatabaseAsync();
             var subscription = await this.CreateSubscriptionAsync(UserId, SubscriptionId, HeaderImageFileId);
-
             await this.SnapshotDatabaseAsync();
 
             await this.target.HandleAsync(Command);

@@ -59,8 +59,8 @@
 
 		if (codeAttribute.Name.StartsWith(ConstructedAttributeName))
         {
-			var typeAllowsNulls = TryParseAttributeFlag(TypeAllowsNullAttributeParameterName, attributeParameters);
-			var isGuidBase64 = TryParseAttributeFlag(IsGuidBase64AttributeParameterName, attributeParameters);
+			var typeAllowsNulls = TryParseAttributeFlagParameter(TypeAllowsNullAttributeParameterName, attributeParameters);
+			var isGuidBase64 = TryParseAttributeFlagParameter(IsGuidBase64AttributeParameterName, attributeParameters);
 
 			if (typeAllowsNulls)
             {

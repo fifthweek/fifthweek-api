@@ -86,7 +86,8 @@
 
         private async Task InitializeWithDatabaseAsync()
         {
-            this.Initialize();
+            await this.InitializeDatabaseAsync();
+
             this.target = new FileSecurity(this.NewDbContext());
 
             var random = new Random();

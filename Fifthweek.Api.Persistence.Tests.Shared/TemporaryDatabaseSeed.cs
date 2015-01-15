@@ -1,7 +1,9 @@
 ﻿namespace Fifthweek.Api.Persistence.Tests.Shared
 {
     using System;
+    using System.Data.Common;
     using System.Diagnostics;
+    using System.Threading.Tasks;
 
     using Fifthweek.Api.Core;
     using Fifthweek.Api.Persistence.Identity;
@@ -20,17 +22,30 @@
 
         private static readonly Random Random = new Random();
 
-        private readonly FifthweekDbContext databaseContext;
+        private readonly Func<IFifthweekDbContext> databaseContextFactory;
 
-        public void PopulateWithDummyEntities()
+        public async Task PopulateWithDummyEntitiesAsync()
         {
-            Trace.WriteLine(DateTime.Now.TimeOfDay);
-            this.databaseContext.Configuration.AutoDetectChangesEnabled = false;
-            this.CreateUsers();
-            Trace.WriteLine(DateTime.Now.TimeOfDay);
+            var stopwatch = Stopwatch.StartNew();
+
+            using (var databaseContext = this.databaseContextFactory())
+            {
+                await databaseContext.Database.Connection.OpenAsync();
+                try
+                {
+                    await this.CreateUsersAsync(databaseContext.Database.Connection);
+                }
+                finally 
+                {
+                    databaseContext.Database.Connection.Close();
+                }
+            }
+
+            var secondsElapsed = Math.Round(stopwatch.Elapsed.TotalSeconds, 2);
+            Trace.WriteLine(string.Format("Seeded database in {0}s", secondsElapsed));
         }
 
-        private void CreateUsers()
+        private async Task CreateUsersAsync(DbConnection connection)
         {
             for (var i = 0; i < Users; i++)
             {
@@ -45,16 +60,16 @@
                     user.ProfileImageFileId = file.Id;
                 }
 
-                this.databaseContext.Users.Add(user);
+                await connection.InsertAsync(user, false);
 
                 if (i < Creators)
                 {
-                    this.CreateSubscriptions(user);
+                    await this.CreateSubscriptionsAsync(connection, user);
                 }
             }
         }
 
-        private void CreateSubscriptions(FifthweekUser creator)
+        private async Task CreateSubscriptionsAsync(DbConnection connection, FifthweekUser creator)
         {
             for (var subscriptionIndex = 0; subscriptionIndex < SubscriptionsPerCreator; subscriptionIndex++)
             {
@@ -65,56 +80,55 @@
                     var file = subscription.HeaderImageFile;
                     file.User = creator;
                     file.UserId = creator.Id;
-                    this.databaseContext.Files.Add(subscription.HeaderImageFile);
+                    await connection.InsertAsync(file, false);
                 }
 
                 subscription.Creator = creator;
                 subscription.CreatorId = creator.Id;
-                this.databaseContext.Subscriptions.Add(subscription);
+                await connection.InsertAsync(subscription, false);
 
-                this.CreateChannels(subscription);
+                await this.CreateChannelsAsync(connection, subscription);
             }
         }
 
-        private void CreateChannels(Subscription subscription)
+        private async Task CreateChannelsAsync(DbConnection connection, Subscription subscription)
         {
             for (var channelIndex = 0; channelIndex < ChannelsPerSubscription; channelIndex++)
             {
                 var channel = ChannelTests.UniqueEntity(Random, false);
                 channel.Subscription = subscription;
                 channel.SubscriptionId = subscription.Id;
-                this.databaseContext.Channels.Add(channel);
+                await connection.InsertAsync(channel, false);
 
-                this.CreateNotes(channel);
-                this.CreateCollections(channel);
+                await this.CreateNotesAsync(connection, channel);
+                await this.CreateCollectionsAsync(connection, channel);
             }
         }
 
-        private void CreateNotes(Channel channel)
+        private async Task CreateNotesAsync(DbConnection connection, Channel channel)
         {
             for (var postIndex = 0; postIndex < NotesPerChannel; postIndex++)
             {
                 var post = PostTests.UniqueNote(Random, false);
                 post.Channel = channel;
                 post.ChannelId = channel.Id;
-                this.databaseContext.Posts.Add(post);
+                await connection.InsertAsync(post, false);
             }
         }
 
-        private void CreateCollections(Channel channel)
+        private async Task CreateCollectionsAsync(DbConnection connection, Channel channel)
         {
             for (var collectionIndex = 0; collectionIndex < CollectionsPerChannel; collectionIndex++)
             {
                 var collection = CollectionTests.UniqueEntity(Random, false);
                 collection.Channel = channel;
                 collection.ChannelId = channel.Id;
-                this.databaseContext.Collections.Add(collection);
-
-                this.CreateFileAndImagePosts(collection);
+                await connection.InsertAsync(collection, false);
+                await this.CreateFileAndImagePostsAsync(connection, collection);
             }
         }
 
-        private void CreateFileAndImagePosts(Collection collection)
+        private async Task CreateFileAndImagePostsAsync(DbConnection connection, Collection collection)
         {
             for (var postIndex = 0; postIndex < ImagesPerCollection; postIndex++)
             {
@@ -130,7 +144,8 @@
                 post.Image = file;
                 post.ImageId = file.Id;
 
-                this.databaseContext.Posts.Add(post);
+                await connection.InsertAsync(file, false);
+                await connection.InsertAsync(post, false);
             }
 
             for (var postIndex = 0; postIndex < FilesPerCollection; postIndex++)
@@ -147,7 +162,8 @@
                 post.File = file;
                 post.FileId = file.Id;
 
-                this.databaseContext.Posts.Add(post);
+                await connection.InsertAsync(file, false);
+                await connection.InsertAsync(post, false);
             }
         }
     }

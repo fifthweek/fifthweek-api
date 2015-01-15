@@ -16,9 +16,8 @@
         private SubscriptionOwnership target;
 
         [TestInitialize]
-        public override void Initialize()
+        public void Initialize()
         {
-            base.Initialize();
             this.target = new SubscriptionOwnership(this.NewDbContext());
         }
 
@@ -31,6 +30,7 @@
         [TestMethod]
         public async Task WhenCheckingSubscriptionOwnership_ItShouldPassIfAtLeastOneSubscriptionMatchesSubscriptionAndCreator()
         {
+            await this.InitializeDatabaseAsync();
             await this.CreateSubscriptionAsync(UserId, SubscriptionId);
             await this.SnapshotDatabaseAsync();
 
@@ -43,6 +43,7 @@
         [TestMethod]
         public async Task WhenCheckingSubscriptionOwnership_ItShouldFailIfNoSubscriptionsExist()
         {
+            await this.InitializeDatabaseAsync();
             await this.SnapshotDatabaseAsync();
 
             var result = await this.target.IsOwnerAsync(UserId, SubscriptionId);
@@ -54,6 +55,7 @@
         [TestMethod]
         public async Task WhenCheckingSubscriptionOwnership_ItShouldFailIfNoSubscriptionsMatchSubscriptionOrCreator()
         {
+            await this.InitializeDatabaseAsync();
             await this.CreateSubscriptionAsync(new UserId(Guid.NewGuid()), new SubscriptionId(Guid.NewGuid()));
             await this.SnapshotDatabaseAsync();
 
@@ -66,6 +68,7 @@
         [TestMethod]
         public async Task WhenCheckingSubscriptionOwnership_ItShouldFailIfNoSubscriptionsMatchSubscription()
         {
+            await this.InitializeDatabaseAsync();
             await this.CreateSubscriptionAsync(UserId, new SubscriptionId(Guid.NewGuid()));
             await this.SnapshotDatabaseAsync();
 
@@ -78,6 +81,7 @@
         [TestMethod]
         public async Task WhenCheckingSubscriptionOwnership_ItShouldFailIfNoSubscriptionsMatchCreator()
         {
+            await this.InitializeDatabaseAsync();
             await this.CreateSubscriptionAsync(new UserId(Guid.NewGuid()), SubscriptionId);
             await this.SnapshotDatabaseAsync();
 

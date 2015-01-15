@@ -6,6 +6,9 @@
 <#@ import namespace="System.Text" #>
 <#@ import namespace="System.Collections.Generic" #>
 <#
+	var LiftMembersAttributeName = "LiftMembers";
+	var LiftedMembersChildClassName = "LiftedMembers";
+
 	var codeMap = new Dictionary<string, UnifiedClassBuilder>();
 	var codeFiles = VisualStudioHelper.GetAllProjectItems(VisualStudioHelper.CurrentProject)
 		.OfType<ProjectItem>()
@@ -22,21 +25,40 @@
 
 		foreach (var codeClass in codeClasses)
         {
-			var groupBy = codeClass.Namespace.Name + codeClass.Name;
-			if (!codeMap.ContainsKey(groupBy))
+			var qualifiedClassName = codeClass.Namespace.Name + codeClass.Name;
+			if (!codeMap.ContainsKey(qualifiedClassName))
             {
-				codeMap.Add(groupBy, new UnifiedClassBuilder());
+				codeMap.Add(qualifiedClassName, new UnifiedClassBuilder());
             }
 
 			// Add code file if not already added (multiple partial files can exist in one file).
-			var codeFilesForClass = codeMap[groupBy].CodeFiles;
+			var codeFilesForClass = codeMap[qualifiedClassName].CodeFiles;
 			if (codeFilesForClass.All(_ => _.FileNames[0] != codeFile.FileNames[0]))
             {
-				codeMap[groupBy].CodeFiles.Add(codeFile);
+				codeMap[qualifiedClassName].CodeFiles.Add(codeFile);
             }
 
 			// Add code class.
-			codeMap[groupBy].CodeClasses.Add(codeClass);
+			codeMap[qualifiedClassName].CodeClasses.Add(codeClass);
+
+			// Check for lifted types.
+			foreach (CodeAttribute attribute in codeClass.Attributes)
+            {
+				if (!attribute.Name.StartsWith(LiftMembersAttributeName))
+                {
+					continue;
+                }
+
+				foreach (CodeElement codeElement in codeClass.Children)
+                {
+					var childClass = codeElement as CodeClass;
+					if (childClass != null && childClass.Name == LiftedMembersChildClassName)
+                    {
+						// Add lifted members code class.
+						codeMap[qualifiedClassName].CodeClasses.Add(childClass);
+                    }
+                }
+            }
         }
     }
 
@@ -112,10 +134,22 @@
 		return retval;
 	}
 
-	public bool TryParseAttributeFlag(string propertyName, IReadOnlyCollection<string> attributeParameters)
+	public bool TryParseAttributeFlagParameter(string propertyName, IReadOnlyCollection<string> attributeParameters)
     {
 		var value = TryParseAttributeNamedProperty(propertyName, attributeParameters);
 		return value != null && value == "true";
+    }
+
+	public string TryParseAttributeStringParameter(string propertyName, IReadOnlyCollection<string> attributeParameters)
+    {
+		var value = TryParseAttributeNamedProperty(propertyName, attributeParameters);
+		if (value != null)
+        {
+			value = value.Substring(1);
+			value = value.Substring(0, value.Length - 1);
+        }
+
+		return value;
     }
 
 	public string TryParseAttributeNamedProperty(string propertyName, IReadOnlyCollection<string> attributeParameters)

@@ -29,9 +29,8 @@
         private CreateNoteCommandHandler target;
 
         [TestInitialize]
-        public override void Initialize()
+        public void Initialize()
         {
-            base.Initialize();
             this.channelSecurity = new Mock<IChannelSecurity>();
             this.target = new CreateNoteCommandHandler(this.channelSecurity.Object, this.NewDbContext());
         }
@@ -45,9 +44,10 @@
         [TestMethod]
         public async Task WhenNotAllowedToPost_ItShouldReportAnError()
         {
-            this.channelSecurity.Setup(_ => _.AssertPostingAllowedAsync(UserId, ChannelId)).Throws<UnauthorizedException>();
-
+            await this.InitializeDatabaseAsync();
             await this.SnapshotDatabaseAsync();
+
+            this.channelSecurity.Setup(_ => _.AssertPostingAllowedAsync(UserId, ChannelId)).Throws<UnauthorizedException>();
 
             try
             {
@@ -64,9 +64,9 @@
         [TestMethod]
         public async Task WhenReRun_ItShouldHaveNoEffect()
         {
+            await this.InitializeDatabaseAsync();
             await this.CreateChannelAsync(UserId, ChannelId);
             await this.target.HandleAsync(Command);
-
             await this.SnapshotDatabaseAsync();
 
             await this.target.HandleAsync(Command);
@@ -77,12 +77,11 @@
         [TestMethod]
         public async Task WhenDateIsProvidedAndIsInFuture_ItShouldSchedulePostForLater()
         {
-            var scheduledPostCommand = new CreateNoteCommand(UserId, ChannelId, PostId, Note, TwoDaysFromNow);
-
+            await this.InitializeDatabaseAsync();
             await this.CreateChannelAsync(UserId, ChannelId);
-
             await this.SnapshotDatabaseAsync();
 
+            var scheduledPostCommand = new CreateNoteCommand(UserId, ChannelId, PostId, Note, TwoDaysFromNow);
             await this.target.HandleAsync(scheduledPostCommand);
 
             var expectedPost = new Post(
@@ -128,8 +127,8 @@
 
         private async Task ItShouldSchedulePostForNow(CreateNoteCommand command)
         {
+            await this.InitializeDatabaseAsync();
             await this.CreateChannelAsync(UserId, ChannelId);
-
             await this.SnapshotDatabaseAsync();
 
             await this.target.HandleAsync(command);

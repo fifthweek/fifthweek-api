@@ -7,11 +7,13 @@
 <#@ import namespace="System.Collections.Generic" #>
 <#
 	var AutoSqlAttributeName = "AutoSql";
+	var TableAttributeParameterName = "Table";
 
     foreach(UnifiedClass unifiedClass in allClasses)
     {
         var allAttributes = unifiedClass.GetAllAttributes();
-        if (allAttributes.All(_ => !_.Name.StartsWith(AutoSqlAttributeName)))
+		var autoSqlAttribute = allAttributes.FirstOrDefault(_ => _.Name.StartsWith(AutoSqlAttributeName));
+        if (autoSqlAttribute == null)
         {
             continue;
         }
@@ -22,7 +24,9 @@
             continue;
         }
 
-		var tableName = unifiedClass.FirstCodeClass.Name + "s";
+		var attributeParameters = ParseAttribute(autoSqlAttribute.Value);
+		var tableName = TryParseAttributeStringParameter(TableAttributeParameterName, attributeParameters);
+		tableName = tableName ?? (unifiedClass.FirstCodeClass.Name + "s");
 
 		StringBuilder sql;
 		sql = new StringBuilder();

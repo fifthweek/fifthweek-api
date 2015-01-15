@@ -16,9 +16,8 @@
         private ChannelOwnership target;
 
         [TestInitialize]
-        public override void Initialize()
+        public void Initialize()
         {
-            base.Initialize();
             this.target = new ChannelOwnership(this.NewDbContext());
         }
 
@@ -31,6 +30,7 @@
         [TestMethod]
         public async Task WhenCheckingChannelOwnership_ItShouldPassIfAtLeastOneChannelMatchesChannelAndCreator()
         {
+            await this.InitializeDatabaseAsync();
             await this.CreateChannelAsync(UserId, ChannelId);
             await this.SnapshotDatabaseAsync();
 
@@ -43,6 +43,7 @@
         [TestMethod]
         public async Task WhenCheckingChannelOwnership_ItShouldFailIfNoChannelsExist()
         {
+            await this.InitializeDatabaseAsync();
             await this.SnapshotDatabaseAsync();
 
             var result = await this.target.IsOwnerAsync(UserId, ChannelId);
@@ -54,6 +55,7 @@
         [TestMethod]
         public async Task WhenCheckingChannelOwnership_ItShouldFailIfNoChannelsMatchChannelOrCreator()
         {
+            await this.InitializeDatabaseAsync();
             await this.CreateChannelAsync(new UserId(Guid.NewGuid()), new ChannelId(Guid.NewGuid()));
             await this.SnapshotDatabaseAsync();
 
@@ -66,6 +68,7 @@
         [TestMethod]
         public async Task WhenCheckingChannelOwnership_ItShouldFailIfNoChannelsMatchChannel()
         {
+            await this.InitializeDatabaseAsync();
             await this.CreateChannelAsync(UserId, new ChannelId(Guid.NewGuid()));
             await this.SnapshotDatabaseAsync();
 
@@ -78,6 +81,7 @@
         [TestMethod]
         public async Task WhenCheckingChannelOwnership_ItShouldFailIfNoChannelsMatchCreator()
         {
+            await this.InitializeDatabaseAsync();
             await this.CreateChannelAsync(new UserId(Guid.NewGuid()), ChannelId);
             await this.SnapshotDatabaseAsync();
 

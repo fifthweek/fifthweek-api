@@ -26,9 +26,8 @@
         private CreateSubscriptionCommandHandler target;
 
         [TestInitialize]
-        public override void Initialize()
+        public void Initialize()
         {
-            base.Initialize();
             this.subscriptionSecurity = new Mock<ISubscriptionSecurity>();
             this.target = new CreateSubscriptionCommandHandler(this.subscriptionSecurity.Object, this.NewDbContext());
         }
@@ -42,9 +41,10 @@
         [TestMethod]
         public async Task WhenNotAllowedToCreate_ItShouldReportAnError()
         {
-            this.subscriptionSecurity.Setup(_ => _.AssertCreationAllowedAsync(UserId)).Throws<UnauthorizedException>();
-
+            await this.InitializeDatabaseAsync();
             await this.SnapshotDatabaseAsync();
+
+            this.subscriptionSecurity.Setup(_ => _.AssertCreationAllowedAsync(UserId)).Throws<UnauthorizedException>();
 
             try
             {
@@ -61,9 +61,9 @@
         [TestMethod]
         public async Task WhenReRun_ItShouldHaveNoEffect()
         {
+            await this.InitializeDatabaseAsync();
             await this.CreateUserAsync(UserId);
             await this.target.HandleAsync(Command);
-
             await this.SnapshotDatabaseAsync();
 
             await this.target.HandleAsync(Command);
@@ -74,8 +74,8 @@
         [TestMethod]
         public async Task ItShouldCreateSubscription()
         {
+            await this.InitializeDatabaseAsync();
             await this.CreateUserAsync(UserId);
-
             await this.SnapshotDatabaseAsync();
 
             await this.target.HandleAsync(Command);
@@ -110,8 +110,8 @@
         [TestMethod]
         public async Task ItShouldCreateTheDefaultChannel()
         {
+            await this.InitializeDatabaseAsync();
             await this.CreateUserAsync(UserId);
-
             await this.SnapshotDatabaseAsync();
 
             await this.target.HandleAsync(Command);
