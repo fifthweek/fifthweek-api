@@ -23,30 +23,11 @@
             string fileExtension,
             string purpose)
         {
-            if (fileId == null)
-            {
-                throw new ArgumentNullException("fileId");
-            }
-
-            if (userId == null)
-            {
-                throw new ArgumentNullException("userId");
-            }
-
-            if (fileNameWithoutExtension == null)
-            {
-                throw new ArgumentNullException("fileNameWithoutExtension");
-            }
-
-            if (fileExtension == null)
-            {
-                throw new ArgumentNullException("fileExtension");
-            }
-
-            if (purpose == null)
-            {
-                throw new ArgumentNullException("purpose");
-            }
+            fileId.AssertNotNull("fileId");
+            userId.AssertNotNull("userId");
+            fileNameWithoutExtension.AssertNotNull("fileNameWithoutExtension");
+            fileExtension.AssertNotNull("fileExtension");
+            purpose.AssertNotNull("purpose");
 
             var file = new File(
                 fileId.Value,
@@ -67,6 +48,8 @@
 
         public Task SetFileUploadComplete(FileId fileId, long blobSize)
         {
+            fileId.AssertNotNull("fileId");
+
             var newFile = new File
             {
                 State = FileState.UploadComplete,
@@ -82,15 +65,17 @@
 
         public async Task<FileWaitingForUpload> GetFileWaitingForUploadAsync(FileId fileId)
         {
+            fileId.AssertNotNull("fileId");
+
             var items = await this.fifthweekDbContext.Database.Connection.QueryAsync<File>(
                 string.Format(
-                    @"SELECT {0}, {1}, {2}, {3}, {4} FROM Files WHERE FileId=@FileId",
+                    @"SELECT {0}, {1}, {2}, {3}, {4} FROM Files WHERE Id=@FileId",
                     File.Fields.Id,
                     File.Fields.UserId,
                     File.Fields.FileNameWithoutExtension,
                     File.Fields.FileExtension,
                     File.Fields.Purpose),
-                new { FileId = fileId });
+                new { FileId = fileId.Value });
 
             var result = items.SingleOrDefault();
 

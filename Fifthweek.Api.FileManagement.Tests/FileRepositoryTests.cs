@@ -174,6 +174,60 @@
             });
         }
 
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentNullException))]
+        public async Task WhenSetFileUploadCompleteCalled_ItShouldRequireAFileId()
+        {
+            await this.target.SetFileUploadComplete(null, 123);
+        }
+
+        [TestMethod]
+        public async Task WhenGettingFileWaitingForUpload_ItShouldReturnTheFile()
+        {
+            await this.NewTestDatabaseAsync(async testDatabase =>
+            {
+                this.target = new FileRepository(testDatabase.NewContext());
+
+                await this.CreateUserAsync(testDatabase);
+                await this.target.AddNewFileAsync(FileId, UserId, FileNameWithoutExtension, FileExtension, Purpose);
+                await testDatabase.TakeSnapshotAsync();
+
+                var result = await this.target.GetFileWaitingForUploadAsync(FileId);
+
+                Assert.AreEqual(FileId, result.FileId);
+                Assert.AreEqual(UserId, result.UserId);
+                Assert.AreEqual(FileNameWithoutExtension, result.FileNameWithoutExtension);
+                Assert.AreEqual(FileExtension, result.FileExtension);
+                Assert.AreEqual(Purpose, result.Purpose);
+
+                return ExpectedSideEffects.None;
+            });
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(InvalidOperationException))]
+        public async Task WhenGettingANonExistantFileWaitingForUpload_ItShouldThrowAnException()
+        {
+            await this.NewTestDatabaseAsync(async testDatabase =>
+            {
+                this.target = new FileRepository(testDatabase.NewContext());
+
+                await this.CreateUserAsync(testDatabase);
+                await this.target.AddNewFileAsync(FileId, UserId, FileNameWithoutExtension, FileExtension, Purpose);
+                await testDatabase.TakeSnapshotAsync();
+
+                await this.target.GetFileWaitingForUploadAsync(new FileId(Guid.NewGuid()));
+                return ExpectedSideEffects.None;
+            });
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentNullException))]
+        public async Task WhenGettingFileWaitingForUpload_ItShouldRequireAFileId()
+        {
+            await this.target.GetFileWaitingForUploadAsync(null);
+        }
+
         private async Task CreateUserAsync(TestDatabaseContext testDatabase)
         {
             var random = new Random();

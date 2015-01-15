@@ -124,7 +124,7 @@ namespace Fifthweek.Api.Azure.Tests
             this.cloudBlockBlob.Verify();
             properties.Verify();
 
-            Assert.AreSame(blobLength, result);
+            Assert.AreEqual(blobLength, result);
         }
 
         [TestInitialize]
