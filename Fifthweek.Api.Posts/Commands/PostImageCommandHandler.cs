@@ -41,9 +41,13 @@
             {
                 await this.QueuePostAsync(command);
             }
+            else if (command.ScheduledPostDate != null)
+            {
+                await this.SchedulePostAsync(command, command.ScheduledPostDate.Value);
+            }
             else
             {
-                await this.SchedulePostAsync(command);
+                await this.PostNowAsync(command);
             }
         }
 
@@ -55,23 +59,28 @@
                 Post.Fields.ChannelId | Post.Fields.QueuePosition);
         }
 
-        protected virtual Task SchedulePostAsync(PostImageCommand command)
+        protected virtual Task SchedulePostAsync(PostImageCommand command, DateTime scheduledPostDate)
         {
             var now = DateTime.UtcNow;
             DateTime? liveDate = now;
 
-            if (command.ScheduledPostDate != null)
+            if (scheduledPostDate > now)
             {
-                var scheduledPostDate = command.ScheduledPostDate.Value;
-                if (scheduledPostDate > now)
-                {
-                    liveDate = scheduledPostDate;
-                }
+                liveDate = scheduledPostDate;
             }
 
             return this.databaseContext.Database.Connection.InsertAsync(
                 Entity(command, now, liveDate), 
                 SelectChannelId, 
+                Post.Fields.ChannelId);
+        }
+
+        protected virtual Task PostNowAsync(PostImageCommand command)
+        {
+            var now = DateTime.UtcNow;
+            return this.databaseContext.Database.Connection.InsertAsync(
+                Entity(command, now, now),
+                SelectChannelId,
                 Post.Fields.ChannelId);
         }
 
