@@ -1,4 +1,4 @@
-﻿namespace Fifthweek.Api.Subscriptions
+﻿namespace Fifthweek.Api.Posts
 {
     using System;
     using System.Collections.Generic;
@@ -6,12 +6,12 @@
     using Fifthweek.CodeGeneration;
 
     [AutoEqualityMembers]
-    public partial class ValidDescription
+    public partial class ValidComment
     {
         public static readonly int MinLength = 1;
-        public static readonly int MaxLength = 2000; // Seems to be the maximum size used on other sites for landing page blubs.
+        public static readonly int MaxLength = 2000; // Some of the longer comments on Tumblr are over 1000 characters.
 
-        private ValidDescription()
+        private ValidComment()
         {
         }
 
@@ -23,24 +23,24 @@
             return string.IsNullOrEmpty(value); // Trimmed types use IsNullOrWhiteSpace
         }
 
-        public static ValidDescription Parse(string value)
+        public static ValidComment Parse(string value)
         {
-            ValidDescription retval;
+            ValidComment retval;
             if (!TryParse(value, out retval))
             {
-                throw new ArgumentException("Invalid description", "value");
+                throw new ArgumentException("Invalid comment", "value");
             }
 
             return retval;
         }
 
-        public static bool TryParse(string value, out ValidDescription description)
+        public static bool TryParse(string value, out ValidComment comment)
         {
             IReadOnlyCollection<string> errorMessages;
-            return TryParse(value, out description, out errorMessages);
+            return TryParse(value, out comment, out errorMessages);
         }
 
-        public static bool TryParse(string value, out ValidDescription description, out IReadOnlyCollection<string> errorMessages)
+        public static bool TryParse(string value, out ValidComment comment, out IReadOnlyCollection<string> errorMessages)
         {
             var errorMessageList = new List<string>();
             errorMessages = errorMessageList;
@@ -60,11 +60,11 @@
 
             if (errorMessageList.Count > 0)
             {
-                description = null;
+                comment = null;
                 return false;
             }
 
-            description = new ValidDescription
+            comment = new ValidComment
             {
                 Value = value
             };

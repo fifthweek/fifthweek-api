@@ -5,6 +5,7 @@
     using System.Web.Http.Results;
 
     using Fifthweek.Api.Core;
+    using Fifthweek.Api.FileManagement;
     using Fifthweek.Api.Identity.Membership;
     using Fifthweek.Api.Identity.OAuth;
     using Fifthweek.Api.Posts.Commands;
@@ -21,6 +22,8 @@
         private static readonly UserId UserId = new UserId(Guid.NewGuid());
         private static readonly PostId PostId = new PostId(Guid.NewGuid());
         private static readonly ChannelId ChannelId = new ChannelId(Guid.NewGuid());
+        private static readonly CollectionId CollectionId = new CollectionId(Guid.NewGuid());
+        private static readonly FileId FileId = new FileId(Guid.NewGuid());
         private static readonly DateTime TwoDaysFromNow = DateTime.UtcNow.AddDays(2);
         private Mock<ICommandHandler<PostNoteCommand>> postNote;
         private Mock<ICommandHandler<PostImageCommand>> postImage;
@@ -49,7 +52,7 @@
         public async Task WhenPostingNote_ItShouldIssueCreateNoteCommand()
         {
             var data = NewNoteData();
-            var command = NewCreateNoteCommand(UserId, PostId, data);
+            var command = NewPostNoteCommand(UserId, PostId, data);
 
             this.userContext.Setup(v => v.GetUserId()).Returns(UserId);
             this.guidCreator.Setup(_ => _.CreateSqlSequential()).Returns(PostId.Value);
@@ -71,17 +74,44 @@
             };
         }
 
-        public static PostNoteCommand NewCreateNoteCommand(
+        public static PostNoteCommand NewPostNoteCommand(
             UserId userId,
             PostId postId,
             NewNoteData data)
         {
             return new PostNoteCommand(
                 userId,
-                new ChannelId(data.ChannelId.DecodeGuid()),
                 postId,
+                new ChannelId(data.ChannelId.DecodeGuid()),
                 ValidNote.Parse(data.Note),
                 data.ScheduledPostDate);
+        }
+
+        public static NewImageData NewImageData()
+        {
+            return new NewImageData
+            {
+                CollectionId = CollectionId.Value.EncodeGuid(),
+                ImageFileId = FileId.Value.EncodeGuid(),
+                Comment = null,
+                ScheduledPostDate = null,
+                IsQueued = true
+            };
+        }
+
+        public static PostImageCommand NewPostImageCommand(
+            UserId userId,
+            PostId postId,
+            NewImageData data)
+        {
+            return new PostImageCommand(
+                userId,
+                postId,
+                new CollectionId(data.CollectionId.DecodeGuid()), 
+                new FileId(data.ImageFileId.DecodeGuid()),
+                ValidComment.Parse(data.Comment),
+                data.ScheduledPostDate,
+                data.IsQueued);
         }
     }
 }

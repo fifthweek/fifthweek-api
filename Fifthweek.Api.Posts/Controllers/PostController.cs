@@ -27,8 +27,8 @@
 
             await this.postNote.HandleAsync(new PostNoteCommand(
                 authenticatedUserId,
-                note.ChannelIdObject,
                 newPostId,
+                note.ChannelIdObject,
                 note.NoteObject,
                 note.ScheduledPostDate));
 
@@ -45,9 +45,10 @@
 
             await this.postImage.HandleAsync(new PostImageCommand(
                 authenticatedUserId,
-                image.CollectionIdObject,
                 newPostId,
+                image.CollectionIdObject,
                 image.ImageFileIdObject,
+                image.CommentObject,
                 image.ScheduledPostDate,
                 image.IsQueued));
 
@@ -64,9 +65,10 @@
 
             await this.postFile.HandleAsync(new PostFileCommand(
                 authenticatedUserId,
-                file.CollectionIdObject,
                 newPostId,
+                file.CollectionIdObject,
                 file.FileIdObject,
+                file.CommentObject,
                 file.ScheduledPostDate,
                 file.IsQueued));
 

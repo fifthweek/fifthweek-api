@@ -43,7 +43,7 @@
         public File Image { get; set; }
 
         [Optional]
-        [MaxLength(280)] // See: ValidNote.MaxLength
+        [MaxLength(2000)] // Maximum of the two: ValidComment.MaxLength & ValidNote.MaxLength
         public string Comment { get; set; }
 
         [Optional]

@@ -24,7 +24,7 @@
         private static readonly ValidNote Note = ValidNote.Parse("Hey peeps!");
         private static readonly DateTime TwoDaysFromNow = DateTime.UtcNow.AddDays(2);
         private static readonly DateTime TwoDaysAgo = DateTime.UtcNow.AddDays(-2);
-        private static readonly PostNoteCommand ImmediatePostCommand = new PostNoteCommand(UserId, ChannelId, PostId, Note, null);
+        private static readonly PostNoteCommand ImmediatePostCommand = new PostNoteCommand(UserId, PostId, ChannelId, Note, null);
         private static readonly PostNoteCommand Command = ImmediatePostCommand; // Treat this as our canonical testing command.
         private Mock<IChannelSecurity> channelSecurity;
         private PostNoteCommandHandler target;
@@ -79,7 +79,7 @@
             await this.NewTestDatabaseAsync(async testDatabase =>
             {
                 this.target = new PostNoteCommandHandler(this.channelSecurity.Object, testDatabase.NewContext());
-                var scheduledPostCommand = new PostNoteCommand(UserId, ChannelId, PostId, Note, TwoDaysFromNow);
+                var scheduledPostCommand = new PostNoteCommand(UserId, PostId, ChannelId, Note, TwoDaysFromNow);
                 await this.CreateChannelAsync(UserId, ChannelId, testDatabase);
                 await testDatabase.TakeSnapshotAsync();
 
@@ -117,7 +117,7 @@
         [TestMethod]
         public async Task WhenDateIsProvidedAndIsInPast_ItShouldSchedulePostForNow()
         {
-            var misscheduledPostCommand = new PostNoteCommand(UserId, ChannelId, PostId, Note, TwoDaysAgo);
+            var misscheduledPostCommand = new PostNoteCommand(UserId, PostId, ChannelId, Note, TwoDaysAgo);
             await this.ItShouldSchedulePostForNow(misscheduledPostCommand);
         }
 
