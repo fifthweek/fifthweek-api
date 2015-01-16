@@ -14,7 +14,7 @@
     using Moq;
 
     [TestClass]
-    public class PostImageCommandHandlerTests
+    public class PostFileCommandHandlerTests
     {
         private const bool IsQueued = false;
         private static readonly UserId UserId = new UserId(Guid.NewGuid());
@@ -23,10 +23,10 @@
         private static readonly FileId FileId = new FileId(Guid.NewGuid());
         private static readonly DateTime? ScheduleDate = null;
         private static readonly ValidComment Comment = ValidComment.Parse("Hey guys!");
-        private static readonly PostImageCommand Command = new PostImageCommand(UserId, PostId, CollectionId, FileId, Comment, ScheduleDate, IsQueued);
+        private static readonly PostFileCommand Command = new PostFileCommand(UserId, PostId, CollectionId, FileId, Comment, ScheduleDate, IsQueued);
         private Mock<ICollectionSecurity> collectionSecurity;
         private Mock<IPostToCollectionDbStatement> postToCollectionDbStatement;
-        private PostImageCommandHandler target;
+        private PostFileCommandHandler target;
 
         [TestInitialize]
         public void Initialize()
@@ -36,7 +36,7 @@
             // Give side-effecting components strict mock behaviour.
             this.postToCollectionDbStatement = new Mock<IPostToCollectionDbStatement>(MockBehavior.Strict);
 
-            this.target = new PostImageCommandHandler(this.collectionSecurity.Object, this.postToCollectionDbStatement.Object);
+            this.target = new PostFileCommandHandler(this.collectionSecurity.Object, this.postToCollectionDbStatement.Object);
         }
 
         [TestMethod]
@@ -58,7 +58,7 @@
         public async Task WhenAllowedToPost_ItShouldPostToCollection()
         {
             this.postToCollectionDbStatement.Setup(
-                _ => _.ExecuteAsync(PostId, CollectionId, Comment, ScheduleDate, IsQueued, FileId, true))
+                _ => _.ExecuteAsync(PostId, CollectionId, Comment, ScheduleDate, IsQueued, FileId, false))
                 .Returns(Task.FromResult(0))
                 .Verifiable();
 

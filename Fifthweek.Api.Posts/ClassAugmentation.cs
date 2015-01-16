@@ -341,6 +341,34 @@ namespace Fifthweek.Api.Posts
     }
 
 }
+namespace Fifthweek.Api.Posts.Commands
+{
+    using System.Threading.Tasks;
+    using Fifthweek.Api.Core;
+    using Fifthweek.Api.Subscriptions;
+    using Fifthweek.CodeGeneration;
+    public partial class PostFileCommandHandler 
+    {
+        public PostFileCommandHandler(
+            Fifthweek.Api.Subscriptions.ICollectionSecurity collectionSecurity, 
+            Fifthweek.Api.Posts.IPostToCollectionDbStatement postToCollectionDbStatement)
+        {
+            if (collectionSecurity == null)
+            {
+                throw new ArgumentNullException("collectionSecurity");
+            }
+
+            if (postToCollectionDbStatement == null)
+            {
+                throw new ArgumentNullException("postToCollectionDbStatement");
+            }
+
+            this.collectionSecurity = collectionSecurity;
+            this.postToCollectionDbStatement = postToCollectionDbStatement;
+        }
+    }
+
+}
 
 namespace Fifthweek.Api.Posts.Commands
 {

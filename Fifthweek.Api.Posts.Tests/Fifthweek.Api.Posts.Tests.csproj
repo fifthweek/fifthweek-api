@@ -77,6 +77,7 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
+    <Compile Include="Commands\PostFileCommandHandlerTests.cs" />
     <Compile Include="Commands\PostImageCommandHandlerTests.cs" />
     <Compile Include="Commands\PostNoteCommandHandlerTests.cs" />
     <Compile Include="Controllers\PostControllerTests.cs" />

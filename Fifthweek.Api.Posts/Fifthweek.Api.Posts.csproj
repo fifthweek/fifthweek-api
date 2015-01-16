@@ -71,6 +71,7 @@
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
     </Compile>
+    <Compile Include="Commands\PostFileCommandHandler.cs" />
     <Compile Include="IPostToCollectionDbStatement.cs" />
     <Compile Include="Commands\PostFileCommand.cs" />
     <Compile Include="Commands\PostImageCommand.cs" />
