@@ -78,8 +78,12 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AutofacRegistration.cs" />
+    <Compile Include="CollectionSecurity.cs" />
     <Compile Include="ChannelSecurity.cs" />
     <Compile Include="ChannelOwnership.cs" />
+    <Compile Include="CollectionOwnership.cs" />
+    <Compile Include="ICollectionSecurity.cs" />
+    <Compile Include="ICollectionOwnership.cs" />
     <Compile Include="SubscriptionOwnership.cs" />
     <Compile Include="IChannelSecurity.cs" />
     <Compile Include="IChannelOwnership.cs" />

@@ -4,8 +4,8 @@
 
     using Fifthweek.Api.Identity.Membership;
 
-    public interface IChannelOwnership
+    public interface ICollectionOwnership
     {
-        Task<bool> IsOwnerAsync(UserId userId, ChannelId channelId);
+        Task<bool> IsOwnerAsync(UserId userId, CollectionId collectionId);
     }
 }

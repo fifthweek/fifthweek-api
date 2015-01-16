@@ -74,6 +74,7 @@
     <Compile Include="Commands\PostFileCommand.cs" />
     <Compile Include="Commands\PostImageCommand.cs" />
     <Compile Include="Commands\PostNoteCommand.cs" />
+    <Compile Include="Commands\PostImageCommandHandler.cs" />
     <Compile Include="Commands\PostNoteCommandHandler.cs" />
     <Compile Include="Controllers\NewFileData.cs" />
     <Compile Include="Controllers\NewImageData.cs" />

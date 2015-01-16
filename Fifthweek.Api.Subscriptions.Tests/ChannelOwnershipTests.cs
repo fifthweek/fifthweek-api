@@ -1,7 +1,6 @@
 ﻿namespace Fifthweek.Api.Subscriptions.Tests
 {
     using System;
-    using System.Data.Entity;
     using System.Threading.Tasks;
 
     using Dapper;
@@ -17,11 +16,6 @@
         private static readonly UserId UserId = new UserId(Guid.NewGuid());
         private static readonly ChannelId ChannelId = new ChannelId(Guid.NewGuid());
         private ChannelOwnership target;
-
-        public async Task InitializeWithDatabaseAsync()
-        {
-            
-        }
 
         [TestMethod]
         public async Task WhenCheckingChannelOwnership_ItShouldPassIfAtLeastOneChannelMatchesChannelAndCreator()

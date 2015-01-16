@@ -16,10 +16,7 @@
 
         public async Task HandleAsync(PostNoteCommand command)
         {
-            if (command == null)
-            {
-                throw new ArgumentNullException("command");
-            }
+            command.AssertNotNull("command");
 
             await this.channelSecurity.AssertPostingAllowedAsync(command.Requester, command.ChannelId);
 

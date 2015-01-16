@@ -3,9 +3,7 @@
     using System;
     using System.ComponentModel.DataAnnotations;
 
-    using Fifthweek.Api.Core;
     using Fifthweek.CodeGeneration;
-    using Fifthweek.Shared;
 
     [AutoConstructor, AutoEqualityMembers, AutoSql]
     public partial class Collection

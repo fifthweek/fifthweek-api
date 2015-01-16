@@ -6,6 +6,6 @@
 
     public interface ISubscriptionOwnership
     {
-        Task<bool> IsOwnerAsync(UserId user, SubscriptionId subscriptionId);
+        Task<bool> IsOwnerAsync(UserId userId, SubscriptionId subscriptionId);
     }
 }

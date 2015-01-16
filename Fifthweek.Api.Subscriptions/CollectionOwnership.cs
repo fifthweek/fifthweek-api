@@ -1,4 +1,4 @@
-﻿namespace Fifthweek.Api.Subscriptions
+namespace Fifthweek.Api.Subscriptions
 {
     using System.Threading.Tasks;
 
@@ -10,28 +10,30 @@
     using Fifthweek.CodeGeneration;
 
     [AutoConstructor]
-    public partial class ChannelOwnership : IChannelOwnership
+    public partial class CollectionOwnership : ICollectionOwnership
     {
         private readonly IFifthweekDbContext databaseContext;
 
-        public Task<bool> IsOwnerAsync(UserId userId, ChannelId channelId)
+        public Task<bool> IsOwnerAsync(UserId userId, CollectionId collectionId)
         {
             userId.AssertNotNull("userId");
-            channelId.AssertNotNull("channelId");
+            collectionId.AssertNotNull("collectionId");
 
             return this.databaseContext.Database.Connection.ExecuteScalarAsync<bool>(
                 @"IF EXISTS(SELECT *
-                            FROM        Channels channel
-                            INNER JOIN  Subscriptions subscription 
+                            FROM        Collections collection
+                            INNER JOIN  Channels channel        
+                                ON      collection.ChannelId = channel.Id
+                            INNER JOIN  Subscriptions subscription
                                 ON      channel.SubscriptionId  = subscription.Id
-                            WHERE       channel.Id              = @ChannelId
+                            WHERE       collection.Id           = @CollectionId
                             AND         subscription.CreatorId  = @CreatorId)
                     SELECT 1 AS FOUND
                 ELSE
                     SELECT 0 AS FOUND",
                 new
                 {
-                    ChannelId = channelId.Value,
+                    CollectionId = collectionId.Value,
                     CreatorId = userId.Value
                 });
         }
