@@ -8,7 +8,7 @@
     {
         public void Register(ContainerBuilder builder)
         {
-            builder.RegisterType<AccountRepository>().As<IAccountRepository>().SingleInstance();
+            builder.RegisterType<AccountRepository>().As<IAccountRepository>();
         }
     }
 }
