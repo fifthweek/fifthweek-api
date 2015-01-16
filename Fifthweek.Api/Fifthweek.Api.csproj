@@ -41,7 +41,7 @@
   <ItemGroup>
     <Reference Include="Autofac, Version=3.5.0.0, Culture=neutral, PublicKeyToken=17863af14b0044da, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Autofac.3.5.0\lib\net40\Autofac.dll</HintPath>
+      <HintPath>..\packages\Autofac.3.5.2\lib\net40\Autofac.dll</HintPath>
     </Reference>
     <Reference Include="Autofac.Integration.Owin">
       <HintPath>..\packages\Autofac.Owin.3.1.0\lib\net45\Autofac.Integration.Owin.dll</HintPath>
@@ -250,6 +250,10 @@
     <ProjectReference Include="..\Fifthweek.Api.Subscriptions\Fifthweek.Api.Subscriptions.csproj">
       <Project>{5db142b7-3152-447e-8816-33a90ba9ef76}</Project>
       <Name>Fifthweek.Api.Subscriptions</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Fifthweek.Azure\Fifthweek.Azure.csproj">
+      <Project>{890CD4C4-993F-482D-BBB5-A50767ACE55B}</Project>
+      <Name>Fifthweek.Azure</Name>
     </ProjectReference>
   </ItemGroup>
   <PropertyGroup>

@@ -5,14 +5,40 @@ using System.Linq;
 
 namespace Fifthweek.Webjobs.Thumbnails.Shared
 {
-	using Fifthweek.Shared;
-	using Fifthweek.Webjobs.Files.Shared;
-	public partial class ThumbnailFileTask 
-	{
-        public ThumbnailFileTask(
+    using System;
+    using System.Linq;
+    using Fifthweek.Shared;
+    using Fifthweek.Webjobs.Files.Shared;
+    using Fifthweek.CodeGeneration;
+    using System.Threading.Tasks;
+    using Fifthweek.Azure;
+    using Microsoft.WindowsAzure.Storage.Queue;
+    using Newtonsoft.Json;
+    public partial class CreateThumbnailMessage 
+    {
+        public CreateThumbnailMessage(
+            System.String containerName, 
+            System.String inputBlobName, 
+            System.String outputBlobName, 
             System.Int32 width, 
-            System.Int32 height)
+            System.Int32 height, 
+            System.Boolean overwrite)
         {
+            if (containerName == null)
+            {
+                throw new ArgumentNullException("containerName");
+            }
+
+            if (inputBlobName == null)
+            {
+                throw new ArgumentNullException("inputBlobName");
+            }
+
+            if (outputBlobName == null)
+            {
+                throw new ArgumentNullException("outputBlobName");
+            }
+
             if (width == null)
             {
                 throw new ArgumentNullException("width");
@@ -23,23 +49,39 @@ namespace Fifthweek.Webjobs.Thumbnails.Shared
                 throw new ArgumentNullException("height");
             }
 
+            if (overwrite == null)
+            {
+                throw new ArgumentNullException("overwrite");
+            }
+
+            this.ContainerName = containerName;
+            this.InputBlobName = inputBlobName;
+            this.OutputBlobName = outputBlobName;
             this.Width = width;
             this.Height = height;
+            this.Overwrite = overwrite;
         }
-	}
+    }
 
 }
 
 namespace Fifthweek.Webjobs.Thumbnails.Shared
 {
-	using Fifthweek.Shared;
-	using Fifthweek.Webjobs.Files.Shared;
-	public partial class ThumbnailFileTask 
-	{
-		public override string ToString()
+    using System;
+    using System.Linq;
+    using Fifthweek.Shared;
+    using Fifthweek.Webjobs.Files.Shared;
+    using Fifthweek.CodeGeneration;
+    using System.Threading.Tasks;
+    using Fifthweek.Azure;
+    using Microsoft.WindowsAzure.Storage.Queue;
+    using Newtonsoft.Json;
+    public partial class ThumbnailFileTask 
+    {
+        public override string ToString()
         {
-			return string.Format("ThumbnailFileTask({0}, {1})", this.Width == null ? "null" : this.Width.ToString(), this.Height == null ? "null" : this.Height.ToString());
-		}
+            return string.Format("ThumbnailFileTask({0}, {1})", this.Width == null ? "null" : this.Width.ToString(), this.Height == null ? "null" : this.Height.ToString());
+        }
 
         public override bool Equals(object obj)
         {
@@ -86,7 +128,97 @@ namespace Fifthweek.Webjobs.Thumbnails.Shared
 
             return true;
         }
-	}
+    }
+
+}
+namespace Fifthweek.Webjobs.Thumbnails.Shared
+{
+    using System;
+    using System.Linq;
+    using Fifthweek.Shared;
+    using Fifthweek.Webjobs.Files.Shared;
+    using Fifthweek.CodeGeneration;
+    using System.Threading.Tasks;
+    using Fifthweek.Azure;
+    using Microsoft.WindowsAzure.Storage.Queue;
+    using Newtonsoft.Json;
+    public partial class CreateThumbnailMessage 
+    {
+        public override string ToString()
+        {
+            return string.Format("CreateThumbnailMessage(\"{0}\", \"{1}\", \"{2}\", {3}, {4}, {5})", this.ContainerName == null ? "null" : this.ContainerName.ToString(), this.InputBlobName == null ? "null" : this.InputBlobName.ToString(), this.OutputBlobName == null ? "null" : this.OutputBlobName.ToString(), this.Width == null ? "null" : this.Width.ToString(), this.Height == null ? "null" : this.Height.ToString(), this.Overwrite == null ? "null" : this.Overwrite.ToString());
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj))
+            {
+                return false;
+            }
+
+            if (ReferenceEquals(this, obj))
+            {
+                return true;
+            }
+
+            if (obj.GetType() != this.GetType())
+            {
+                return false;
+            }
+
+            return this.Equals((CreateThumbnailMessage)obj);
+        }
+
+        public override int GetHashCode()
+        {
+            unchecked
+            {
+                int hashCode = 0;
+                hashCode = (hashCode * 397) ^ (this.ContainerName != null ? this.ContainerName.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.InputBlobName != null ? this.InputBlobName.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.OutputBlobName != null ? this.OutputBlobName.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.Width != null ? this.Width.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.Height != null ? this.Height.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.Overwrite != null ? this.Overwrite.GetHashCode() : 0);
+                return hashCode;
+            }
+        }
+
+        protected bool Equals(CreateThumbnailMessage other)
+        {
+            if (!object.Equals(this.ContainerName, other.ContainerName))
+            {
+                return false;
+            }
+
+            if (!object.Equals(this.InputBlobName, other.InputBlobName))
+            {
+                return false;
+            }
+
+            if (!object.Equals(this.OutputBlobName, other.OutputBlobName))
+            {
+                return false;
+            }
+
+            if (!object.Equals(this.Width, other.Width))
+            {
+                return false;
+            }
+
+            if (!object.Equals(this.Height, other.Height))
+            {
+                return false;
+            }
+
+            if (!object.Equals(this.Overwrite, other.Overwrite))
+            {
+                return false;
+            }
+
+            return true;
+        }
+    }
 
 }
 

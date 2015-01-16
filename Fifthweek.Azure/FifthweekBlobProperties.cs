@@ -1,4 +1,4 @@
-﻿namespace Fifthweek.Api.Azure
+﻿namespace Fifthweek.Azure
 {
     using Microsoft.WindowsAzure.Storage.Blob;
 

@@ -1,12 +1,13 @@
 ﻿namespace Fifthweek.Webjobs.Files
 {
     using System.Collections.Generic;
+    using System.Linq;
 
     using Fifthweek.Shared;
     using Fifthweek.Webjobs.Files.Shared;
     using Fifthweek.Webjobs.Thumbnails.Shared;
 
-    public class FilePurposeToTasksMappings
+    public class FilePurposeToTasksMappings : IFilePurposeToTasksMappings
     {
         private readonly Dictionary<string, IEnumerable<IFileTask>> mappings =
             new Dictionary<string, IEnumerable<IFileTask>>();
@@ -25,6 +26,12 @@
                 FilePurposes.ProfileHeaderImage,
                 new ThumbnailFileTask(1500, 400),
                 new ThumbnailFileTask(480, 128));
+        }
+
+        public IEnumerable<IFileTask> GetTasks(string purpose)
+        {
+            IEnumerable<IFileTask> result;
+            return this.mappings.TryGetValue(purpose, out result) ? result : Enumerable.Empty<IFileTask>();
         }
 
         private void Add(string purpose, params IFileTask[] tasks)

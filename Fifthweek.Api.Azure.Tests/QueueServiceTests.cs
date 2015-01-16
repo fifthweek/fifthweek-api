@@ -3,6 +3,7 @@
     using System;
     using System.Threading.Tasks;
 
+    using Fifthweek.Azure;
     using Fifthweek.Webjobs.Files.Shared;
 
     using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -56,7 +57,7 @@
             this.cloudQueue.Verify();
 
             Assert.IsNotNull(message);
-            var messageContent = JsonConvert.DeserializeObject<ProcessFileQueueItem>(message.AsString);
+            var messageContent = JsonConvert.DeserializeObject<ProcessFileMessage>(message.AsString);
             Assert.AreEqual(this.containerName, messageContent.ContainerName);
             Assert.AreEqual(this.blobName, messageContent.BlobName);
             Assert.AreEqual(this.purpose, messageContent.Purpose);

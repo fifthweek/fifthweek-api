@@ -1,4 +1,4 @@
-namespace Fifthweek.Api.Azure
+namespace Fifthweek.Azure
 {
     using System.Threading.Tasks;
 
@@ -11,6 +11,14 @@ namespace Fifthweek.Api.Azure
         public FifthweekCloudQueue(CloudQueue cloudQueue)
         {
             this.cloudQueue = cloudQueue;
+        }
+
+        public string Name
+        {
+            get
+            {
+                return this.cloudQueue.Name;
+            }
         }
 
         public Task CreateIfNotExistsAsync()

@@ -1,4 +1,4 @@
-﻿namespace Fifthweek.Api.Azure
+﻿namespace Fifthweek.Azure
 {
     public interface IBlobProperties
     {

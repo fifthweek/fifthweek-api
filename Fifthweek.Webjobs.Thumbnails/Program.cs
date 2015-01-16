@@ -1,24 +1,36 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Fifthweek.Webjobs.Thumbnails
+﻿namespace Fifthweek.Webjobs.Thumbnails
 {
+    using System;
     using System.IO;
     using System.Threading;
-    using System.Web.Helpers;
+    using System.Threading.Tasks;
 
+    using Fifthweek.Azure;
     using Fifthweek.Webjobs.Thumbnails.Shared;
 
-    using ImageMagick;
-
     using Microsoft.Azure.WebJobs;
+    using Microsoft.WindowsAzure.Storage.Blob;
 
-    class Program
+    public class Program
     {
-        static void Main(string[] args)
+        private static readonly IThumbnailProcessor ThumbnailProcessor = new ThumbnailProcessor();
+
+        public static Task CreateThumbnailAsync(
+            [QueueTrigger(Constants.ThumbnailsQueueName)] CreateThumbnailMessage thumbnail,
+            [Blob("{ContainerName}/{InputBlobName}", FileAccess.Read)] Stream input,
+            [Blob("{ContainerName}/{OutputBlobName}", FileAccess.Write)] Stream output,
+            TextWriter logger,
+            CancellationToken cancellationToken)
+        {
+            return ThumbnailProcessor.CreateThumbnailAsync(
+                thumbnail, 
+                input, 
+                output, 
+                logger, 
+                cancellationToken);
+        }
+
+        public static void Main(string[] args)
         {
             var config = new JobHostConfiguration();
             config.Queues.BatchSize = 8;
@@ -26,22 +38,6 @@ namespace Fifthweek.Webjobs.Thumbnails
             config.Queues.MaxPollingInterval = TimeSpan.FromSeconds(5);
             var host = new JobHost(config);
             host.RunAndBlock();
-        }
-
-        public static Task CreateThumbnailAsync(
-            [QueueTrigger(Constants.ThumbnailsQueueName)] ThumbnailQueueItem thumbnail,
-            [Blob("{InputBlobLocation}", FileAccess.Read)] Stream input,
-            [Blob("{OutputBlobLocation}", FileAccess.Write)] Stream output,
-            TextWriter logger,
-            CancellationToken cancellationToken)
-        {
-            using (var image = new MagickImage(input))
-            {
-                image.Resize(800, 600);
-                image.Write(output);
-            }
-
-            return Task.FromResult(0);
         }
     }
 }

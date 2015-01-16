@@ -3,6 +3,7 @@
     using Autofac;
 
     using Fifthweek.Api.Core;
+    using Fifthweek.Azure;
 
     public class AutofacRegistration : IAutofacRegistration
     {

@@ -5,6 +5,8 @@ namespace Fifthweek.Api.Azure.Tests
 {
     using System.Threading.Tasks;
 
+    using Fifthweek.Azure;
+
     using Microsoft.WindowsAzure.Storage.Blob;
 
     using Moq;

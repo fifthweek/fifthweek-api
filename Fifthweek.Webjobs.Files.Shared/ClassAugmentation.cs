@@ -9,9 +9,9 @@ namespace Fifthweek.Webjobs.Files.Shared
     using System.Linq;
     using Fifthweek.Shared;
     using Fifthweek.CodeGeneration;
-    public partial class ProcessFileQueueItem 
+    public partial class ProcessFileMessage 
     {
-        public ProcessFileQueueItem(
+        public ProcessFileMessage(
             System.String containerName, 
             System.String blobName, 
             System.String purpose, 
@@ -52,7 +52,7 @@ namespace Fifthweek.Webjobs.Files.Shared
     using System.Linq;
     using Fifthweek.Shared;
     using Fifthweek.CodeGeneration;
-    public partial class ProcessFileQueueItem 
+    public partial class ProcessFileMessage 
     {
         public override string ToString()
         {
@@ -76,7 +76,7 @@ namespace Fifthweek.Webjobs.Files.Shared
                 return false;
             }
 
-            return this.Equals((ProcessFileQueueItem)obj);
+            return this.Equals((ProcessFileMessage)obj);
         }
 
         public override int GetHashCode()
@@ -92,7 +92,7 @@ namespace Fifthweek.Webjobs.Files.Shared
             }
         }
 
-        protected bool Equals(ProcessFileQueueItem other)
+        protected bool Equals(ProcessFileMessage other)
         {
             if (!object.Equals(this.ContainerName, other.ContainerName))
             {

@@ -1,4 +1,4 @@
-namespace Fifthweek.Api.Azure
+namespace Fifthweek.Azure
 {
     using System.Threading.Tasks;
 
@@ -6,6 +6,8 @@ namespace Fifthweek.Api.Azure
 
     public interface ICloudQueue
     {
+        string Name { get; }
+
         Task CreateIfNotExistsAsync();
 
         Task AddMessageAsync(CloudQueueMessage message);

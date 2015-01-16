@@ -5,9 +5,9 @@ namespace Fifthweek.Webjobs.Files.Shared
 
     [AutoConstructor]
     [AutoEqualityMembers]
-    public partial class ProcessFileQueueItem
+    public partial class ProcessFileMessage
     {
-        public ProcessFileQueueItem()
+        public ProcessFileMessage()
         {
         }
 

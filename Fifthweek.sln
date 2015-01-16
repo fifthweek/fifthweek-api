@@ -96,6 +96,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fifthweek.Api.Posts.Tests",
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fifthweek.Api.Posts", "Fifthweek.Api.Posts\Fifthweek.Api.Posts.csproj", "{154CBDE0-8EEB-44DC-BFA4-769542A24080}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fifthweek.Azure", "Fifthweek.Azure\Fifthweek.Azure.csproj", "{890CD4C4-993F-482D-BBB5-A50767ACE55B}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -250,6 +252,10 @@ Global
 		{154CBDE0-8EEB-44DC-BFA4-769542A24080}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{154CBDE0-8EEB-44DC-BFA4-769542A24080}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{154CBDE0-8EEB-44DC-BFA4-769542A24080}.Release|Any CPU.Build.0 = Release|Any CPU
+		{890CD4C4-993F-482D-BBB5-A50767ACE55B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{890CD4C4-993F-482D-BBB5-A50767ACE55B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{890CD4C4-993F-482D-BBB5-A50767ACE55B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{890CD4C4-993F-482D-BBB5-A50767ACE55B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

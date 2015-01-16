@@ -3,6 +3,8 @@ namespace Fifthweek.Api.Azure
     using System;
     using System.Threading.Tasks;
 
+    using Fifthweek.Azure;
+
     using Microsoft.WindowsAzure.Storage.Blob;
 
     public class BlobService : IBlobService

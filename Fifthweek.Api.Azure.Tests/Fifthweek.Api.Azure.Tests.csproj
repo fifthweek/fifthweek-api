@@ -94,6 +94,10 @@
       <Project>{abc43617-3aaa-4b7a-b4dc-d10e023f1846}</Project>
       <Name>Fifthweek.Api.Azure</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Fifthweek.Azure\Fifthweek.Azure.csproj">
+      <Project>{890CD4C4-993F-482D-BBB5-A50767ACE55B}</Project>
+      <Name>Fifthweek.Azure</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Fifthweek.Webjobs.Files.Shared\Fifthweek.Webjobs.Files.Shared.csproj">
       <Project>{227ae1d7-e7a5-44a2-87cc-82eb29033b0d}</Project>
       <Name>Fifthweek.Webjobs.Files.Shared</Name>

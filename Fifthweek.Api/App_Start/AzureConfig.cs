@@ -8,6 +8,7 @@
     using System.Web.Http;
 
     using Fifthweek.Api.Azure;
+    using Fifthweek.Azure;
 
     using Microsoft.WindowsAzure.Storage.Shared.Protocol;
 

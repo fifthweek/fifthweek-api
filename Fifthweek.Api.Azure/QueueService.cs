@@ -3,6 +3,7 @@
     using System.Threading.Tasks;
 
     using Fifthweek.Api.Core;
+    using Fifthweek.Azure;
     using Fifthweek.Webjobs.Files.Shared;
 
     using Microsoft.WindowsAzure.Storage.Queue;
@@ -28,7 +29,7 @@
             var queue = cloudQueueClient.GetQueueReference(Fifthweek.Webjobs.Files.Shared.Constants.FilesQueueName);
             await queue.CreateIfNotExistsAsync();
 
-            var messageContent = new ProcessFileQueueItem(containerName, blobName, purpose, false);
+            var messageContent = new ProcessFileMessage(containerName, blobName, purpose, false);
             var serializedMessageContent = JsonConvert.SerializeObject(messageContent);
             var message = new CloudQueueMessage(serializedMessageContent);
             await queue.AddMessageAsync(message);
