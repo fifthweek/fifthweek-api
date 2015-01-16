@@ -80,7 +80,7 @@
     <Compile Include="FileTests.cs" />
     <Compile Include="IWildcardEntity.cs" />
     <Compile Include="TableBeforeAndAfter.cs" />
-    <Compile Include="TemporaryDatabaseSeed.cs" />
+    <Compile Include="TestDatabaseSeed.cs" />
     <Compile Include="TestDatabaseSnapshot.cs" />
     <Compile Include="ChannelTests.cs" />
     <Compile Include="PersistenceTestsBase.cs" />

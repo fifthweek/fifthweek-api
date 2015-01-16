@@ -8,7 +8,7 @@
 
     using Fifthweek.Api.Persistence.Identity;
 
-    public class TemporaryDatabaseSeed
+    public class TestDatabaseSeed
     {
         private const int Users = 10;
         private const int Creators = 5;
@@ -30,7 +30,7 @@
         private readonly List<Post> posts = new List<Post>();
         private readonly List<File> files = new List<File>();
 
-        public TemporaryDatabaseSeed(Func<IFifthweekDbContext> databaseContextFactory)
+        public TestDatabaseSeed(Func<IFifthweekDbContext> databaseContextFactory)
         {
             if (databaseContextFactory == null)
             {
@@ -68,7 +68,7 @@
             using (var databaseContext = this.databaseContextFactory())
             {
                 // We use the user count to discriminate between seed state versions.
-                return await databaseContext.Users.CountAsync() == Users;
+                return await databaseContext.Users.CountAsync() != Users;
             }
         }
 

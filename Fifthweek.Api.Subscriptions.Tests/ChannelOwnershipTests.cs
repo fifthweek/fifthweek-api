@@ -1,6 +1,7 @@
 ﻿namespace Fifthweek.Api.Subscriptions.Tests
 {
     using System;
+    using System.Data.Entity;
     using System.Threading.Tasks;
 
     using Dapper;

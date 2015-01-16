@@ -3,9 +3,7 @@ namespace Fifthweek.Api.Persistence.Tests.Shared
     using System;
     using System.Collections.Generic;
     using System.Data.Entity;
-    using System.Diagnostics;
     using System.Linq;
-    using System.Threading.Tasks;
 
     using Microsoft.VisualStudio.TestTools.UnitTesting;
 
@@ -30,9 +28,8 @@ namespace Fifthweek.Api.Persistence.Tests.Shared
         public void InitializeSnapshot(IFifthweekDbContext databaseContext)
         {
             var set = this.setFactory(databaseContext);
-            set.Load();
 
-            var snapshot = set.Local;
+            var snapshot = set.ToList();
             var prototype = snapshot.FirstOrDefault();
             Assert.IsTrue(prototype == null || prototype is IIdentityEquatable, "Entities must implement IIdentityEquatable");
 
@@ -42,9 +39,8 @@ namespace Fifthweek.Api.Persistence.Tests.Shared
         public void GetLatestFromDatabase(IFifthweekDbContext databaseContext)
         {
             var set = this.setFactory(databaseContext);
-            set.Load();
 
-            var database = set.Local;
+            var database = set.ToList();
             var prototype = database.FirstOrDefault();
             Assert.IsTrue(prototype == null || prototype is IIdentityEquatable, "Entities must implement IIdentityEquatable");
 

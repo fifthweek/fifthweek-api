@@ -1,6 +1,7 @@
 ﻿namespace Fifthweek.Api.Persistence.Tests.Shared
 {
     using System;
+    using System.Data.Entity;
     using System.Data.Entity.Infrastructure;
     using System.Data.Entity.Migrations;
     using System.Diagnostics;
@@ -28,7 +29,7 @@
 
             Trace.WriteLine(string.Format("Migrated database in {0}s", Math.Round(stopwatch.Elapsed.TotalSeconds, 2)));
 
-            var seed = new TemporaryDatabaseSeed(() => new FifthweekDbContext(connectionString));
+            var seed = new TestDatabaseSeed(() => new FifthweekDbContext(connectionString));
             await seed.PopulateWithDummyEntitiesAsync();
 
             return new TestDatabase(connectionString);
@@ -41,7 +42,7 @@
 
         private static string NewLocalDbConnectionString()
         {
-            const string FileName = "Fifthweek_Test_2.mdf";
+            const string FileName = "Fifthweek_Test_3.mdf";
             var filePath = System.IO.Path.GetTempPath() + "\\" + FileName;
             return string.Format("Data Source=(LocalDb)\\v11.0;AttachDbFilename={0};Integrated Security=SSPI;", filePath);
         }

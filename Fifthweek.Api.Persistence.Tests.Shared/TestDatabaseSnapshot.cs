@@ -28,30 +28,14 @@
         {
             var stopwatch = Stopwatch.StartNew();
 
-            this.tables.Add( this.LoadAsync(databaseContext => databaseContext.Users));
-            this.tables.Add( this.LoadAsync(databaseContext => databaseContext.Subscriptions));
-            this.tables.Add( this.LoadAsync(databaseContext => databaseContext.Channels));
-            this.tables.Add( this.LoadAsync(databaseContext => databaseContext.Collections));
-            this.tables.Add( this.LoadAsync(databaseContext => databaseContext.Posts));
-            this.tables.Add( this.LoadAsync(databaseContext => databaseContext.Files));
+            this.tables.Add(this.Load(databaseContext => databaseContext.Users));
+            this.tables.Add(this.Load(databaseContext => databaseContext.Subscriptions));
+            this.tables.Add(this.Load(databaseContext => databaseContext.Channels));
+            this.tables.Add(this.Load(databaseContext => databaseContext.Collections));
+            this.tables.Add(this.Load(databaseContext => databaseContext.Posts));
+            this.tables.Add(this.Load(databaseContext => databaseContext.Files));
 
             Trace.WriteLine(string.Format("Snapshot taken in {0}s", Math.Round(stopwatch.Elapsed.TotalSeconds, 2)));
-        }
-
-        private ITableBeforeAndAfter LoadAsync<T>(Func<IFifthweekDbContext, IDbSet<T>> setFactory) where T : class
-        {
-            var table = new TableBeforeAndAfter<T>(setFactory);
-            
-            using (var databaseContext = this.testDatabase.NewDatabaseContext())
-            {
-                databaseContext.Configuration.AutoDetectChangesEnabled = false;
-                databaseContext.Configuration.LazyLoadingEnabled = false;
-                databaseContext.Configuration.ValidateOnSaveEnabled = false;
-
-                table.InitializeSnapshot(databaseContext);
-            }
-
-            return table;
         }
 
         public async Task AssertSideEffectsAsync(ExpectedSideEffects sideEffects)
@@ -93,6 +77,17 @@
             this.AssertExpectedSideEffects(snapshot, database, sideEffects);
 
             Trace.WriteLine(string.Format("Asserted expected side effects in {0}s", Math.Round(stopwatch.Elapsed.TotalSeconds, 2)));
+        }
+
+        private static bool AreEntitiesEqual(object possibleWildcard, object standardEntity)
+        {
+            var wildcardEntity = possibleWildcard as IWildcardEntity;
+            if (wildcardEntity != null)
+            {
+                return wildcardEntity.WildcardEquals(standardEntity);
+            }
+
+            return Equals(possibleWildcard, standardEntity);
         }
 
         private void AssertNoUnexpectedSideEffects(IReadOnlyCollection<IIdentityEquatable> snapshot, IReadOnlyCollection<IIdentityEquatable> database, ExpectedSideEffects sideEffects)
@@ -182,15 +177,20 @@
             }
         }
 
-        private bool AreEntitiesEqual(object possibleWildcard, object standardEntity)
+        private ITableBeforeAndAfter Load<T>(Func<IFifthweekDbContext, IDbSet<T>> setFactory) where T : class
         {
-            var wildcardEntity = possibleWildcard as IWildcardEntity;
-            if (wildcardEntity != null)
+            var table = new TableBeforeAndAfter<T>(setFactory);
+
+            using (var databaseContext = this.testDatabase.NewDatabaseContext())
             {
-                return wildcardEntity.WildcardEquals(standardEntity);
+                databaseContext.Configuration.AutoDetectChangesEnabled = false;
+                databaseContext.Configuration.LazyLoadingEnabled = false;
+                databaseContext.Configuration.ValidateOnSaveEnabled = false;
+
+                table.InitializeSnapshot(databaseContext);
             }
 
-            return Equals(possibleWildcard, standardEntity);
+            return table;
         }
     }
 }
