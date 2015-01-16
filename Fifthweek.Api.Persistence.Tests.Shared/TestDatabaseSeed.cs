@@ -8,6 +8,8 @@
 
     using Fifthweek.Api.Persistence.Identity;
 
+    using Microsoft.VisualStudio.TestTools.UnitTesting;
+
     public class TestDatabaseSeed
     {
         private const int Users = 10;
@@ -40,12 +42,15 @@
             this.databaseContextFactory = databaseContextFactory;
         }
 
+        public async Task AssertSeedStateUnchangedAsync()
+        {
+            var seedResetRequired = await this.SeedStateResetRequiredAsync();
+            Assert.IsFalse(seedResetRequired, "It seems a test managed to change database seed state.");
+        }
+
         public async Task PopulateWithDummyEntitiesAsync()
         {
-            var stopwatch = Stopwatch.StartNew();
             var seedResetRequired = await this.SeedStateResetRequiredAsync();
-            Trace.WriteLine(string.Format("Checked database seed version in {0}s", Math.Round(stopwatch.Elapsed.TotalSeconds, 2)));
-
             if (!seedResetRequired)
             {
                 Trace.WriteLine("Seed state matches - no reset required.");
@@ -54,7 +59,7 @@
 
             Trace.WriteLine("Resetting database! This should only occur once after making changes to the seeding code.");
 
-            stopwatch = Stopwatch.StartNew();
+            var stopwatch = Stopwatch.StartNew();
             this.CreateUsers();
             Trace.WriteLine(string.Format("Generated in-memory entities in {0}s", Math.Round(stopwatch.Elapsed.TotalSeconds, 2)));
 
@@ -65,11 +70,16 @@
 
         private async Task<bool> SeedStateResetRequiredAsync()
         {
+            bool retval;
+            var stopwatch = Stopwatch.StartNew();
             using (var databaseContext = this.databaseContextFactory())
             {
                 // We use the user count to discriminate between seed state versions.
-                return await databaseContext.Users.CountAsync() != Users;
+                retval = await databaseContext.Users.CountAsync() != Users;
             }
+
+            Trace.WriteLine(string.Format("Checked database seed version in {0}s", Math.Round(stopwatch.Elapsed.TotalSeconds, 2)));
+            return retval;
         }
 
         private async Task FlushToDatabaseAsync()
