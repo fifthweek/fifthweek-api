@@ -1,8 +1,9 @@
-﻿using System;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-
-namespace Fifthweek.Api.Tests.Shared
+﻿namespace Fifthweek.Tests.Shared
 {
+    using System;
+
+    using Microsoft.VisualStudio.TestTools.UnitTesting;
+
     public abstract class EqualityTests<T>
     {
         public virtual void TestEquality()
@@ -23,8 +24,8 @@ namespace Fifthweek.Api.Tests.Shared
 
         public void AssertDifference(Action<T> applyDifference)
         {
-            var data1 = NewInstanceOfObjectA();
-            var data2 = NewInstanceOfObjectA();
+            var data1 = this.NewInstanceOfObjectA();
+            var data2 = this.NewInstanceOfObjectA();
             applyDifference(data2);
 
             Assert.AreNotEqual(data1, data2);

@@ -1,6 +1,6 @@
-﻿namespace Fifthweek.Api.Core.Tests.ClassAugmentation
+﻿namespace Fifthweek.CodeGeneration.Tests
 {
-    using Fifthweek.Api.Tests.Shared;
+    using Fifthweek.Tests.Shared;
 
     using Microsoft.VisualStudio.TestTools.UnitTesting;
 
@@ -33,22 +33,22 @@
             var data = this.NewInstanceOfObjectA();
             data.Parse();
 
-            Assert.AreEqual(data.SomeConstructedNullableStringObject, new ConstructedNullableString(data.SomeConstructedNullableString));
-            Assert.AreEqual(data.OptionalConstructedNullableStringObject, new ConstructedNullableString(data.OptionalConstructedNullableString));
+            Assert.AreEqual<ConstructedNullableString>(data.SomeConstructedNullableStringObject, new ConstructedNullableString(data.SomeConstructedNullableString));
+            Assert.AreEqual<ConstructedNullableString>(data.OptionalConstructedNullableStringObject, new ConstructedNullableString(data.OptionalConstructedNullableString));
 
-            Assert.AreEqual(data.SomeConstructedNonNullableStringObject, new ConstructedNonNullableString(data.SomeConstructedNonNullableString));
-            Assert.AreEqual(data.OptionalConstructedNonNullableStringObject, new ConstructedNonNullableString(data.OptionalConstructedNonNullableString));
+            Assert.AreEqual<ConstructedNonNullableString>(data.SomeConstructedNonNullableStringObject, new ConstructedNonNullableString(data.SomeConstructedNonNullableString));
+            Assert.AreEqual<ConstructedNonNullableString>(data.OptionalConstructedNonNullableStringObject, new ConstructedNonNullableString(data.OptionalConstructedNonNullableString));
 
-            Assert.AreEqual(data.SomeParsedStringObject, ParsedString.Parse(data.SomeParsedString));
-            Assert.AreEqual(data.OptionalParsedStringObject, ParsedString.Parse(data.OptionalParsedString));
+            Assert.AreEqual<ParsedString>(data.SomeParsedStringObject, ParsedString.Parse(data.SomeParsedString));
+            Assert.AreEqual<ParsedString>(data.OptionalParsedStringObject, ParsedString.Parse(data.OptionalParsedString));
 
-            Assert.AreEqual(data.SomeConstructedIntObject, new ConstructedInt(data.SomeConstructedInt));
+            Assert.AreEqual<ConstructedInt>(data.SomeConstructedIntObject, new ConstructedInt(data.SomeConstructedInt));
             
             Assert.IsTrue(data.OptionalConstructedInt.HasValue);
-            Assert.AreEqual(data.OptionalConstructedIntObject, new ConstructedInt(data.OptionalConstructedInt.Value));
+            Assert.AreEqual<ConstructedInt>(data.OptionalConstructedIntObject, new ConstructedInt(data.OptionalConstructedInt.Value));
 
-            Assert.AreEqual(data.SomeParsedIntObject, ParsedInt.Parse(data.SomeParsedInt));
-            Assert.AreEqual(data.OptionalParsedIntObject, ParsedInt.Parse(data.OptionalParsedInt));
+            Assert.AreEqual<ParsedInt>(data.SomeParsedIntObject, ParsedInt.Parse(data.SomeParsedInt));
+            Assert.AreEqual<ParsedInt>(data.OptionalParsedIntObject, ParsedInt.Parse(data.OptionalParsedInt));
         }
 
         [TestMethod]
@@ -99,14 +99,14 @@
                 _ => _.OptionalParsedStringObject == null);
         }
 
-        protected override void Parse(ClassAugmentation.ClassAugmentationParsingDummy obj)
+        protected override void Parse(ClassAugmentationParsingDummy obj)
         {
             obj.Parse();
         }
 
-        protected override ClassAugmentation.ClassAugmentationParsingDummy NewInstanceOfObjectA()
+        protected override ClassAugmentationParsingDummy NewInstanceOfObjectA()
         {
-            return new ClassAugmentation.ClassAugmentationParsingDummy
+            return new ClassAugmentationParsingDummy
             {
                 NotStrongTyped = 123,
                 SomeConstructedNullableString = "Captain Phil",

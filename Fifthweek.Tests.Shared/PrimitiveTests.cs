@@ -1,7 +1,7 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-
-namespace Fifthweek.Api.Tests.Shared
+﻿namespace Fifthweek.Tests.Shared
 {
+    using Microsoft.VisualStudio.TestTools.UnitTesting;
+
     public abstract class PrimitiveTests<T> : EqualityTests<T>
     {
         public override void TestEquality()

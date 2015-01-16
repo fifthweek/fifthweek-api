@@ -6,8 +6,8 @@
 <#@ import namespace="System.Text" #>
 <#@ import namespace="System.Collections.Generic" #>
 <#
-	var AutoEqualityMembersAttributeName = "AutoEqualityMembers";
-	var NonEquatableAttributeName = "NonEquatable";
+    var AutoEqualityMembersAttributeName = "AutoEqualityMembers";
+    var NonEquatableAttributeName = "NonEquatable";
 
     foreach(UnifiedClass unifiedClass in allClasses)
     {
@@ -23,58 +23,58 @@
             continue;
         }
 
-		var formatParameterIndexes = new StringBuilder();
-		for (var i = 0; i < publicProperties.Count; i++)
+        var formatParameterIndexes = new StringBuilder();
+        for (var i = 0; i < publicProperties.Count; i++)
         {
-			var property = publicProperties[i];
-			var isLast = i == publicProperties.Count - 1;
-			var isString = property.Type.CodeType.FullName == "System.String";
+            var property = publicProperties[i];
+            var isLast = i == publicProperties.Count - 1;
+            var isString = property.Type.CodeType.FullName == "System.String";
 
-			if (isString)
+            if (isString)
             {
-				formatParameterIndexes.Append("\\\"");
+                formatParameterIndexes.Append("\\\"");
             }
 
-			formatParameterIndexes.Append("{");
-			formatParameterIndexes.Append(i);
-			formatParameterIndexes.Append("}");
+            formatParameterIndexes.Append("{");
+            formatParameterIndexes.Append(i);
+            formatParameterIndexes.Append("}");
 
-			if (isString)
+            if (isString)
             {
-				formatParameterIndexes.Append("\\\"");
+                formatParameterIndexes.Append("\\\"");
             }
 
-			if (!isLast)
+            if (!isLast)
             {
-				formatParameterIndexes.Append(", ");
+                formatParameterIndexes.Append(", ");
             }
         }
 
-		var formatParameters = new StringBuilder();
-		for (var i = 0; i < publicProperties.Count; i++)
+        var formatParameters = new StringBuilder();
+        for (var i = 0; i < publicProperties.Count; i++)
         {
-			var property = publicProperties[i];
-			var isLast = i == publicProperties.Count - 1;
+            var property = publicProperties[i];
+            var isLast = i == publicProperties.Count - 1;
 
-			formatParameters.Append("this.");
-			formatParameters.Append(property.Name);
-			formatParameters.Append(" == null ? \"null\" : ");
-			formatParameters.Append("this.");
-			formatParameters.Append(property.Name);
-			formatParameters.Append(".ToString()");
+            formatParameters.Append("this.");
+            formatParameters.Append(property.Name);
+            formatParameters.Append(" == null ? \"null\" : ");
+            formatParameters.Append("this.");
+            formatParameters.Append(property.Name);
+            formatParameters.Append(".ToString()");
 
-			if (!isLast)
+            if (!isLast)
             {
-				formatParameters.Append(", ");
+                formatParameters.Append(", ");
             }
         }
 
-		unifiedClass.WriteNamespaceAndClass(() => {
+        unifiedClass.WriteNamespaceAndClass(() => {
 #>
-		public override string ToString()
+        public override string ToString()
         {
-			return string.Format("<#= unifiedClass.FirstCodeClass.Name #>(<#= formatParameterIndexes.ToString() #>)", <#= formatParameters.ToString() #>);
-		}
+            return string.Format("<#= unifiedClass.FirstCodeClass.Name #>(<#= formatParameterIndexes.ToString() #>)", <#= formatParameters.ToString() #>);
+        }
 
         public override bool Equals(object obj)
         {
@@ -130,6 +130,6 @@
             return true;
         }
 <#
-		});
-	}
+        });
+    }
 #>

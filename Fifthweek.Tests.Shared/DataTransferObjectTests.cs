@@ -1,16 +1,18 @@
-﻿using System;
-using Fifthweek.Api.Core;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-
-namespace Fifthweek.Api.Tests.Shared
+﻿namespace Fifthweek.Tests.Shared
 {
+    using System;
+
+    using Fifthweek.Api.Core;
+
+    using Microsoft.VisualStudio.TestTools.UnitTesting;
+
     public abstract class DataTransferObjectTests<T> : EqualityTests<T>
     {
         public void BadValue(Action<T> setInvalidFieldValue)
         {
             try
             {
-                var data = NewInstanceOfObjectA();
+                var data = this.NewInstanceOfObjectA();
                 setInvalidFieldValue(data);
                 this.Parse(data);
                 Assert.Fail("Expected model validation exception");
@@ -22,7 +24,7 @@ namespace Fifthweek.Api.Tests.Shared
 
         public void GoodValue(Action<T> setValidFieldValue, Func<T, bool> assert = null)
         {
-            var data = NewInstanceOfObjectA();
+            var data = this.NewInstanceOfObjectA();
             setValidFieldValue(data);
             this.Parse(data);
 

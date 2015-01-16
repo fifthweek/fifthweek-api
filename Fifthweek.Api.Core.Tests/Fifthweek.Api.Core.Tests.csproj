@@ -69,22 +69,8 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
-    <Compile Include="ClassAugmentation.cs">
-      <DependentUpon>ClassAugmentation.tt</DependentUpon>
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-    </Compile>
-    <Compile Include="ClassAugmentation\ClassAugmentationParsingDummy.cs" />
-    <Compile Include="ClassAugmentation\ClassAugmentationDummy.cs" />
-    <Compile Include="ClassAugmentation\ConstructedInt.cs" />
-    <Compile Include="ClassAugmentation\ConstructedNonNullableString.cs" />
-    <Compile Include="ClassAugmentation\ConstructedNullableString.cs" />
-    <Compile Include="ClassAugmentation\ParsedInt.cs" />
-    <Compile Include="ClassAugmentation\ParsedString.cs" />
     <Compile Include="ExtensionsTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="ClassAugmentation\ClassAugmentationTests.cs" />
-    <Compile Include="ClassAugmentation\ClassAugmentationParsingTests.cs" />
     <Compile Include="RetryOnSqlDeadlockOrTimeoutDecoratorTests.cs" />
     <Compile Include="GuidCreatorTests.cs" />
     <Compile Include="SqlExceptionMocker.cs" />
@@ -94,10 +80,6 @@
     <ProjectReference Include="..\Fifthweek.Api.Core\Fifthweek.Api.Core.csproj">
       <Project>{bd52863e-063d-45a5-9ca8-7541804d1313}</Project>
       <Name>Fifthweek.Api.Core</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Fifthweek.Api.Tests.Shared\Fifthweek.Api.Tests.Shared.csproj">
-      <Project>{22CBC602-26DD-45FA-8FF1-6C545913B62A}</Project>
-      <Name>Fifthweek.Api.Tests.Shared</Name>
     </ProjectReference>
     <ProjectReference Include="..\Fifthweek.Api\Fifthweek.Api.csproj">
       <Project>{f90dc407-dc1e-4ef6-bbec-b5598810660a}</Project>
@@ -114,10 +96,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
-    <None Include="ClassAugmentation.tt">
-      <Generator>TextTemplatingFileGenerator</Generator>
-      <LastGenOutput>ClassAugmentation.cs</LastGenOutput>
-    </None>
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>

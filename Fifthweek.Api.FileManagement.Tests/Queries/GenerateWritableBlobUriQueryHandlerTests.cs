@@ -10,7 +10,7 @@ namespace Fifthweek.Api.FileManagement.Tests.Queries
     using Fifthweek.Api.FileManagement.Commands;
     using Fifthweek.Api.FileManagement.Queries;
     using Fifthweek.Api.Identity.Membership;
-    using Fifthweek.Api.Tests.Shared;
+    using Fifthweek.Tests.Shared;
 
     using Moq;
 

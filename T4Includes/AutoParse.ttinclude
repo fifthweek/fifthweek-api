@@ -7,85 +7,85 @@
 <#@ import namespace="System.Collections.Generic" #>
 
 <#
-	var StrongPropertySuffix = "Object";
-	var ConstructedAttributeName = "Constructed";
-	var ParsedAttributeName = "Parsed";
-	var TypeAllowsNullAttributeParameterName = "TypeAcceptsNull";
-	var IsGuidBase64AttributeParameterName = "IsGuidBase64";
+    var StrongPropertySuffix = "Object";
+    var ConstructedAttributeName = "Constructed";
+    var ParsedAttributeName = "Parsed";
+    var TypeAllowsNullAttributeParameterName = "TypeAcceptsNull";
+    var IsGuidBase64AttributeParameterName = "IsGuidBase64";
 
     foreach(UnifiedClass unifiedClass in allClasses)
     {
         var publicProperties = unifiedClass.GetAllPublicGetters();
         var stronglyTypedProperties = publicProperties
-			.Select(p => new { Property = p, Attribute = p.Attributes.OfType<CodeAttribute>().FirstOrDefault(_ => _.Name.StartsWith(ParsedAttributeName) || _.Name.StartsWith(ConstructedAttributeName)) })
-			.Where(p => p.Attribute != null)
-			.ToList();
-		if (stronglyTypedProperties.Count == 0)
+            .Select(p => new { Property = p, Attribute = p.Attributes.OfType<CodeAttribute>().FirstOrDefault(_ => _.Name.StartsWith(ParsedAttributeName) || _.Name.StartsWith(ConstructedAttributeName)) })
+            .Where(p => p.Attribute != null)
+            .ToList();
+        if (stronglyTypedProperties.Count == 0)
         {
             continue;
         }
 
-		unifiedClass.WriteNamespaceAndClass(() => {
+        unifiedClass.WriteNamespaceAndClass(() => {
 
-	// Render the main class here. Companion class follows in next lambda.
+    // Render the main class here. Companion class follows in next lambda.
 
     for (var i = 0; i < stronglyTypedProperties.Count; i++)
     {
-		var codeAttribute = stronglyTypedProperties[i].Attribute;
+        var codeAttribute = stronglyTypedProperties[i].Attribute;
         var codeProperty = stronglyTypedProperties[i].Property;
-		var typedPropertyName = codeProperty.Name + StrongPropertySuffix;
-		var attributeParameters = ParseAttribute(codeAttribute.Value);
-		var strongType = StripTypeOf(attributeParameters[0]);
+        var typedPropertyName = codeProperty.Name + StrongPropertySuffix;
+        var attributeParameters = ParseAttribute(codeAttribute.Value);
+        var strongType = StripTypeOf(attributeParameters[0]);
 #>
-		public <#= strongType #> <#= typedPropertyName #> { get; set; }
+        public <#= strongType #> <#= typedPropertyName #> { get; set; }
 <#
     }
         }, () => { // Extension class. Avoid conflicts between property and type names.
 #>
-		public static void Parse(this <#= unifiedClass.FirstCodeClass.Name #> target)
-		{
-			var modelStateDictionary = new System.Web.Http.ModelBinding.ModelStateDictionary();
+        public static void Parse(this <#= unifiedClass.FirstCodeClass.Name #> target)
+        {
+            var modelStateDictionary = new System.Web.Http.ModelBinding.ModelStateDictionary();
 
 <#
-	for (var i = 0; i < stronglyTypedProperties.Count; i++)
-	{
-		var codeAttribute = stronglyTypedProperties[i].Attribute;
+    for (var i = 0; i < stronglyTypedProperties.Count; i++)
+    {
+        var codeAttribute = stronglyTypedProperties[i].Attribute;
         var codeProperty = stronglyTypedProperties[i].Property;
-		var typedPropertyName = codeProperty.Name + StrongPropertySuffix;
-		var attributeParameters = ParseAttribute(codeAttribute.Value);
-		var strongType = StripTypeOf(attributeParameters[0]);
-		var isRequired = codeProperty.Attributes.OfType<CodeAttribute>().All(_ => !_.Name.StartsWith(OptionalAttributeName));
-		var isRequiredString = isRequired ? "true" : "false";
+        var typedPropertyName = codeProperty.Name + StrongPropertySuffix;
+        var attributeParameters = ParseAttribute(codeAttribute.Value);
+        var strongType = StripTypeOf(attributeParameters[0]);
+        var isRequired = codeProperty.Attributes.OfType<CodeAttribute>().All(_ => !_.Name.StartsWith(OptionalAttributeName));
+        var isRequiredString = isRequired ? "true" : "false";
 
-		if (codeAttribute.Name.StartsWith(ConstructedAttributeName))
+        if (codeAttribute.Name.StartsWith(ConstructedAttributeName))
         {
-			var typeAllowsNulls = TryParseAttributeFlagParameter(TypeAllowsNullAttributeParameterName, attributeParameters);
-			var isGuidBase64 = TryParseAttributeFlagParameter(IsGuidBase64AttributeParameterName, attributeParameters);
+            var typeAllowsNulls = TryParseAttributeFlagParameter(TypeAllowsNullAttributeParameterName, attributeParameters);
+            var isGuidBase64 = TryParseAttributeFlagParameter(IsGuidBase64AttributeParameterName, attributeParameters);
 
-			if (typeAllowsNulls)
+            if (typeAllowsNulls)
             {
 #>
-			target.<#= typedPropertyName #> = new <#= strongType #>(target.<#= codeProperty.Name #>);
+            target.<#= typedPropertyName #> = new <#= strongType #>(target.<#= codeProperty.Name #>);
 <#
             }
-			else
+            else
             {
-				var valueAccessor = "target." + codeProperty.Name;
-				if (IsNullablePrimitiveType(codeProperty.Type.CodeType))
+                var valueAccessor = "target." + codeProperty.Name;
+                if (IsNullablePrimitiveType(codeProperty.Type.CodeType))
                 {
-					valueAccessor += ".Value";
+                    valueAccessor += ".Value";
                 }
-				else if (isGuidBase64)
+                else if (isGuidBase64)
                 {
-					valueAccessor = string.Format("Fifthweek.Api.Core.Extensions.DecodeGuid({0})", valueAccessor);
+                    valueAccessor = string.Format("Fifthweek.Api.Core.Extensions.DecodeGuid({0})", valueAccessor);
                 }
 #>
-		    if (target.<#= codeProperty.Name #> != null)
-		    {
+            if (target.<#= codeProperty.Name #> != null)
+            {
                 target.<#= typedPropertyName #> = new <#= strongType #>(<#= valueAccessor #>);
-		    }
-		    else if (<#= isRequiredString #>)
-		    {
+            }
+            else if (<#= isRequiredString #>)
+            {
                 var modelState = new System.Web.Http.ModelBinding.ModelState();
                 modelState.Errors.Add("Value required");
                 modelStateDictionary.Add("<#= codeProperty.Name #>", modelState);
@@ -94,39 +94,39 @@
 <#
             }
         }
-		else
+        else
         {
 #>
-			if (<#= isRequiredString #> || !<#= strongType #>.IsEmpty(target.<#= codeProperty.Name #>))
-			{
-				<#= strongType #> @object;
-				System.Collections.Generic.IReadOnlyCollection<string> errorMessages;
-				if (<#= strongType #>.TryParse(target.<#= codeProperty.Name #>, out @object, out errorMessages))
-				{
-					target.<#= typedPropertyName #> = @object;
-				}
-				else
-				{
-					var modelState = new System.Web.Http.ModelBinding.ModelState();
-					foreach (var errorMessage in errorMessages)
-					{
-						modelState.Errors.Add(errorMessage);
-					}
+            if (<#= isRequiredString #> || !<#= strongType #>.IsEmpty(target.<#= codeProperty.Name #>))
+            {
+                <#= strongType #> @object;
+                System.Collections.Generic.IReadOnlyCollection<string> errorMessages;
+                if (<#= strongType #>.TryParse(target.<#= codeProperty.Name #>, out @object, out errorMessages))
+                {
+                    target.<#= typedPropertyName #> = @object;
+                }
+                else
+                {
+                    var modelState = new System.Web.Http.ModelBinding.ModelState();
+                    foreach (var errorMessage in errorMessages)
+                    {
+                        modelState.Errors.Add(errorMessage);
+                    }
 
-					modelStateDictionary.Add("<#= codeProperty.Name #>", modelState);
-				}
-			}
+                    modelStateDictionary.Add("<#= codeProperty.Name #>", modelState);
+                }
+            }
 
 <#
         }
-	}
+    }
 #>
-			if (!modelStateDictionary.IsValid)
-			{
-				throw new Fifthweek.Api.Core.ModelValidationException(modelStateDictionary);
-			}
-		}	
+            if (!modelStateDictionary.IsValid)
+            {
+                throw new Fifthweek.Api.Core.ModelValidationException(modelStateDictionary);
+            }
+        }    
 <#
-		});
+        });
     }
 #>

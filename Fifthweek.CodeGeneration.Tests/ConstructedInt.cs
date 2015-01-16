@@ -1,8 +1,5 @@
-﻿namespace Fifthweek.Api.Core.Tests.ClassAugmentation
+﻿namespace Fifthweek.CodeGeneration.Tests
 {
-    using Fifthweek.CodeGeneration;
-    using Fifthweek.Shared;
-
     [AutoEqualityMembers, AutoConstructor]
     public partial class ConstructedInt
     {

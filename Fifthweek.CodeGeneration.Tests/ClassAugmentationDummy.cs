@@ -1,10 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace Fifthweek.Api.Core.Tests.ClassAugmentation
+﻿namespace Fifthweek.CodeGeneration.Tests
 {
-    using Fifthweek.CodeGeneration;
-    using Fifthweek.Shared;
+    using System;
+    using System.Collections.Generic;
 
     [AutoEqualityMembers, AutoConstructor, AutoBuilder]
     public partial class ClassAugmentationDummy

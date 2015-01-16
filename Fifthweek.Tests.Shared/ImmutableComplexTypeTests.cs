@@ -1,8 +1,9 @@
-﻿using System;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-
-namespace Fifthweek.Api.Tests.Shared
+﻿namespace Fifthweek.Tests.Shared
 {
+    using System;
+
+    using Microsoft.VisualStudio.TestTools.UnitTesting;
+
     public abstract class ImmutableComplexTypeTests<T, TBuilder> : EqualityTests<T>
     {
         public void AssertEqual(Action<TBuilder> applyUndetectedDifference)

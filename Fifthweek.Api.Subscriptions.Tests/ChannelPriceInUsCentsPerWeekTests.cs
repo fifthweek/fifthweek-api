@@ -1,9 +1,11 @@
 ﻿using System.Collections.Generic;
-using Fifthweek.Api.Tests.Shared;
+
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Fifthweek.Api.Subscriptions.Tests
 {
+    using Fifthweek.Tests.Shared;
+
     [TestClass]
     public class ChannelPriceInUsCentsPerWeekTests : ValidatedPrimitiveTests<ChannelPriceInUsCentsPerWeek, int>
     {

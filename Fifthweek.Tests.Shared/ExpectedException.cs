@@ -1,4 +1,4 @@
-﻿namespace Fifthweek.Api.Tests.Shared
+﻿namespace Fifthweek.Tests.Shared
 {
     using System;
     using System.Threading.Tasks;

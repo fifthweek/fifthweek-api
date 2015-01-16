@@ -10,7 +10,7 @@
     using Fifthweek.Api.Persistence;
     using Fifthweek.Api.Persistence.Identity;
     using Fifthweek.Api.Persistence.Tests.Shared;
-    using Fifthweek.Api.Tests.Shared;
+    using Fifthweek.Tests.Shared;
 
     using Microsoft.AspNet.Identity;
     using Microsoft.VisualStudio.TestTools.UnitTesting;

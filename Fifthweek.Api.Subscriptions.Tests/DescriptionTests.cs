@@ -2,7 +2,7 @@
 {
     using System.Collections.Generic;
 
-    using Fifthweek.Api.Tests.Shared;
+    using Fifthweek.Tests.Shared;
 
     using Microsoft.VisualStudio.TestTools.UnitTesting;
 

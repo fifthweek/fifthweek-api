@@ -1,10 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using Fifthweek.Api.Tests.Shared;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-
-namespace Fifthweek.Api.Core.Tests.ClassAugmentation
+﻿namespace Fifthweek.CodeGeneration.Tests
 {
+    using System;
+    using System.Collections.Generic;
+
+    using Fifthweek.Tests.Shared;
+
+    using Microsoft.VisualStudio.TestTools.UnitTesting;
+
     [TestClass]
     public class ClassAugmentationDummyTests : ImmutableComplexTypeTests<ClassAugmentationDummy, ClassAugmentationDummy.Builder>
     {

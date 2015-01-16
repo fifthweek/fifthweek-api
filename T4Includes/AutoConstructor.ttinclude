@@ -6,8 +6,8 @@
 <#@ import namespace="System.Text" #>
 <#@ import namespace="System.Collections.Generic" #>
 <#
-	var AutoConstructorAttributeName = "AutoConstructor";
-	var OptionalAttributeName = "Optional";
+    var AutoConstructorAttributeName = "AutoConstructor";
+    var OptionalAttributeName = "Optional";
 
     foreach(UnifiedClass unifiedClass in allClasses)
     {
@@ -25,7 +25,7 @@
 
         var requiredNullableParameters = parameters.Where(p => p.Attributes.OfType<CodeAttribute>().All(_ => !_.Name.StartsWith(OptionalAttributeName)));
 
-		unifiedClass.WriteNamespaceAndClass(() => {
+        unifiedClass.WriteNamespaceAndClass(() => {
 #>
         public <#= unifiedClass.FirstCodeClass.Name #>(
 <#
@@ -64,40 +64,40 @@
 #>
 <#+
     public class AutoConstructorParameter
-	{
-		public string TypeName;
-		public string ConstructorParameter;
-		public string AssigneeName;
-		public CodeElements Attributes;
+    {
+        public string TypeName;
+        public string ConstructorParameter;
+        public string AssigneeName;
+        public CodeElements Attributes;
 
-		public static IReadOnlyList<AutoConstructorParameter> GetParametersForClass(UnifiedClass unifiedClass)
+        public static IReadOnlyList<AutoConstructorParameter> GetParametersForClass(UnifiedClass unifiedClass)
         {
-			return unifiedClass.GetAllPublicGetters().Select(_ => new AutoConstructorParameter
-			{ 
-				TypeName = _.Type.AsFullName, 
-				ConstructorParameter = ToLowerCamelCase(_.Name),
-				AssigneeName = _.Name,
-				Attributes = _.Attributes
-			}).Concat(unifiedClass.GetAllPrivateReadOnlyFields().Select(_ => new AutoConstructorParameter
-			{ 
-				TypeName = _.Type.AsFullName, 
-				ConstructorParameter = ToLowerCamelCase(_.Name),
-				AssigneeName = _.Name,
-				Attributes = _.Attributes
-			}))
-			.ToList();
+            return unifiedClass.GetAllPublicGetters().Select(_ => new AutoConstructorParameter
+            { 
+                TypeName = _.Type.AsFullName, 
+                ConstructorParameter = ToLowerCamelCase(_.Name),
+                AssigneeName = _.Name,
+                Attributes = _.Attributes
+            }).Concat(unifiedClass.GetAllPrivateReadOnlyFields().Select(_ => new AutoConstructorParameter
+            { 
+                TypeName = _.Type.AsFullName, 
+                ConstructorParameter = ToLowerCamelCase(_.Name),
+                AssigneeName = _.Name,
+                Attributes = _.Attributes
+            }))
+            .ToList();
         }
 
-		public static IReadOnlyList<AutoConstructorParameter> GetParametersForProperties(IEnumerable<CodeProperty> properties)
+        public static IReadOnlyList<AutoConstructorParameter> GetParametersForProperties(IEnumerable<CodeProperty> properties)
         {
-			return properties.Select(_ => new AutoConstructorParameter
-			{ 
-				TypeName = _.Type.AsFullName, 
-				ConstructorParameter = ToLowerCamelCase(_.Name),
-				AssigneeName = _.Name,
-				Attributes = _.Attributes
-			})
-			.ToList();
+            return properties.Select(_ => new AutoConstructorParameter
+            { 
+                TypeName = _.Type.AsFullName, 
+                ConstructorParameter = ToLowerCamelCase(_.Name),
+                AssigneeName = _.Name,
+                Attributes = _.Attributes
+            })
+            .ToList();
         }
-	}
+    }
 #>

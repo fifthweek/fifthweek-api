@@ -6,7 +6,7 @@
 <#@ import namespace="System.Text" #>
 <#@ import namespace="System.Collections.Generic" #>
 <#
-	var AutoBuilderAttributeName = "AutoBuilder";
+    var AutoBuilderAttributeName = "AutoBuilder";
 
     foreach(UnifiedClass unifiedClass in allClasses)
     {
@@ -22,29 +22,29 @@
             continue;
         }
 
-		unifiedClass.WriteNamespaceAndClass(() => {
+        unifiedClass.WriteNamespaceAndClass(() => {
 #>
-		public Builder ToBuilder()
-		{
-			var builder = new Builder();
+        public Builder ToBuilder()
+        {
+            var builder = new Builder();
 <#
     for (var i = 0; i < parameters.Count; i++)
     {
         var parameter = parameters[i];
 #>
-			builder.<#= parameter.AssigneeName #> = this.<#= parameter.AssigneeName #>;
+            builder.<#= parameter.AssigneeName #> = this.<#= parameter.AssigneeName #>;
 <#
     }
 #>
-			return builder;
-		}
+            return builder;
+        }
 
-		public <#= unifiedClass.FirstCodeClass.Name #> Copy(Action<Builder> applyDelta)
-		{
-			var builder = this.ToBuilder();
-			applyDelta(builder);
-			return builder.Build();
-		}
+        public <#= unifiedClass.FirstCodeClass.Name #> Copy(Action<Builder> applyDelta)
+        {
+            var builder = this.ToBuilder();
+            applyDelta(builder);
+            return builder.Build();
+        }
 
         public partial class Builder
         {
@@ -58,21 +58,21 @@
     }
 #>
 
-			public <#= unifiedClass.FirstCodeClass.Name #> Build()
-			{
-				return new <#= unifiedClass.FirstCodeClass.Name #>(
+            public <#= unifiedClass.FirstCodeClass.Name #> Build()
+            {
+                return new <#= unifiedClass.FirstCodeClass.Name #>(
 <#
     for (var i = 0; i < parameters.Count; i++)
     {
         var parameter = parameters[i];
 #>
-					this.<#= parameter.AssigneeName #><#= i < parameters.Count - 1 ? ", " : ");" #>
+                    this.<#= parameter.AssigneeName #><#= i < parameters.Count - 1 ? ", " : ");" #>
 <#
     }
 #>
-			}
+            }
         }
 <#
-		});
-	}
+        });
+    }
 #>
