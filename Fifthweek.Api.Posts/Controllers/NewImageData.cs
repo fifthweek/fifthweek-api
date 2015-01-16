@@ -14,7 +14,7 @@
 
         [Constructed(typeof(FileId), IsGuidBase64 = true)]
         public string ImageFileId { get; set; }
-
+        
         [Optional]
         [Parsed(typeof(ValidComment))]
         public string Comment { get; set; }

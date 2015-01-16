@@ -4,9 +4,7 @@
     using System.ComponentModel.DataAnnotations;
     using System.ComponentModel.DataAnnotations.Schema;
 
-    using Fifthweek.Api.Core;
     using Fifthweek.CodeGeneration;
-    using Fifthweek.Shared;
 
     [AutoConstructor, AutoEqualityMembers, AutoSql]
     public partial class Post
@@ -46,7 +44,11 @@
         [MaxLength(2000)] // Maximum of the two: ValidComment.MaxLength & ValidNote.MaxLength
         public string Comment { get; set; }
 
-        [Optional]
+        /// <remarks>
+        /// Warning: not guaranteed to be unique per collection. We have biased availability over consistency since the likelihood and 
+        /// impact of duplicates are both low. In this case, the cost of a deadlock is higher than the impact of a duplicate.
+        /// </remarks>
+        [Optional] 
         public int? QueuePosition { get; set; }
 
         [Optional, Index]

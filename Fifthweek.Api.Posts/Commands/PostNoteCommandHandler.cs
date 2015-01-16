@@ -20,10 +20,10 @@
 
             await this.channelSecurity.AssertPostingAllowedAsync(command.Requester, command.ChannelId);
 
-            await this.CreatePostAsync(command);
+            await this.SchedulePostAsync(command);
         }
 
-        private Task CreatePostAsync(PostNoteCommand command)
+        private Task SchedulePostAsync(PostNoteCommand command)
         {
             var now = DateTime.UtcNow;
 

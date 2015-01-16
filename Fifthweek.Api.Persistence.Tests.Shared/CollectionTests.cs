@@ -14,7 +14,7 @@
                 "Collection " + random.Next());
         }
 
-        public static Task CreateTestCollectionAsync(this IFifthweekDbContext databaseContext, Guid newUserId, Guid newCollectionId)
+        public static Task CreateTestCollectionAsync(this IFifthweekDbContext databaseContext, Guid newUserId, Guid newChannelId, Guid newCollectionId)
         {
             var random = new Random();
             var creator = UserTests.UniqueEntity(random);
@@ -25,6 +25,7 @@
             subscription.CreatorId = creator.Id;
 
             var channel = ChannelTests.UniqueEntity(random);
+            channel.Id = newChannelId;
             channel.Subscription = subscription;
             channel.SubscriptionId = subscription.Id;
 

@@ -1,6 +1,7 @@
 ﻿namespace Fifthweek.Api.Persistence.Tests.Shared
 {
     using System;
+    using System.Threading.Tasks;
 
     using Fifthweek.Api.Persistence;
 
@@ -21,6 +22,17 @@
                 "File Extension " + random.Next(),
                 random.Next(),
                 "Purpose " + random.Next());
+        }
+
+        public static Task CreateTestFileWithExistingUserAsync(this IFifthweekDbContext databaseContext, Guid existingUserId, Guid newFileId)
+        {
+            var random = new Random();
+
+            var file = UniqueEntity(random);
+            file.Id = newFileId;
+            file.UserId = existingUserId;
+
+            return databaseContext.Database.Connection.InsertAsync(file);
         }
     }
 }

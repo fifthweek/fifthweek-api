@@ -188,6 +188,21 @@
                 transaction);
         }
 
+        public static System.Threading.Tasks.Task InsertAsync(
+            this System.Data.Common.DbConnection connection,
+            <#= unifiedClass.FirstCodeClass.Name #> entity,
+            string selectValuesForInsertStatement,
+            <#= unifiedClass.FirstCodeClass.Name #>.Fields selectedFields,
+            bool idempotent = true,
+            System.Data.IDbTransaction transaction = null)
+        {
+            return Dapper.SqlMapper.ExecuteAsync(
+                connection,
+                selectValuesForInsertStatement + System.Environment.NewLine + InsertStatement(idempotent),
+                MaskParameters(entity, selectedFields, true),
+                transaction);
+        }
+
         public static System.Threading.Tasks.Task UpsertAsync(
             this System.Data.Common.DbConnection connection, 
             <#= unifiedClass.FirstCodeClass.Name #> entity, 
@@ -210,7 +225,7 @@
             <#= unifiedClass.FirstCodeClass.Name #>.Fields fields,
             System.Data.IDbTransaction transaction = null)
         {
-            return Dapper.SqlMapper.ExecuteAsync(connection, UpdateStatement(fields), MaskParameters(entity, fields), transaction);
+            return Dapper.SqlMapper.ExecuteAsync(connection, UpdateStatement(fields), MaskParameters(entity, fields, false), transaction);
         }
 
         public static string InsertStatement(bool idempotent = true)
@@ -246,7 +261,7 @@
             return sql.ToString();
         }
 
-        private static System.Collections.Generic.IReadOnlyList<string> GetFieldNames(<#= unifiedClass.FirstCodeClass.Name #>.Fields fields)
+        private static System.Collections.Generic.IReadOnlyList<string> GetFieldNames(<#= unifiedClass.FirstCodeClass.Name #>.Fields fields, bool autoIncludePrimaryKeys = true)
         {
             var fieldNames = new System.Collections.Generic.List<string>();
 <#
@@ -255,13 +270,17 @@
                 if (IsPrimaryKey(property))
                 {
 #>
-            fieldNames.Add("<#= property.Name #>");
+			if (autoIncludePrimaryKeys)
+			{
+				fieldNames.Add("<#= property.Name #>");
+			}
+
 <#
                 }
                 else
                 {
 #>
-            if(fields.HasFlag(<#= unifiedClass.FirstCodeClass.Name #>.Fields.<#= property.Name #>))
+            if (fields.HasFlag(<#= unifiedClass.FirstCodeClass.Name #>.Fields.<#= property.Name #>))
             {
                 fieldNames.Add("<#= property.Name #>");
             }
@@ -274,22 +293,24 @@
             return fieldNames;
         }
 
-        private static object MaskParameters(<#= unifiedClass.FirstCodeClass.Name #> entity, <#= unifiedClass.FirstCodeClass.Name #>.Fields fields)
+        private static object MaskParameters(<#= unifiedClass.FirstCodeClass.Name #> entity, <#= unifiedClass.FirstCodeClass.Name #>.Fields fields, bool excludeSpecified)
         {
             var parameters = new Dapper.DynamicParameters();
+
+			// Assume we never want to exclude primary key field(s) from our input.
 <#
             foreach (var property in publicPrimitiveProperties)
             {
                 if (IsPrimaryKey(property))
                 {
 #>
-            parameters.Add("<#= property.Name #>", entity.<#= property.Name #>);
+			parameters.Add("<#= property.Name #>", entity.<#= property.Name #>);
 <#
                 }
                 else
                 {
 #>
-            if(fields.HasFlag(<#= unifiedClass.FirstCodeClass.Name #>.Fields.<#= property.Name #>))
+            if(excludeSpecified != fields.HasFlag(<#= unifiedClass.FirstCodeClass.Name #>.Fields.<#= property.Name #>))
             {
                 parameters.Add("<#= property.Name #>", entity.<#= property.Name #>);
             }

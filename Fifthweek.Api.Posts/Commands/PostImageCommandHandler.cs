@@ -11,6 +11,23 @@
     [AutoConstructor]
     public partial class PostImageCommandHandler : ICommandHandler<PostImageCommand>
     {
+        private static readonly string SelectChannelId = string.Format(
+            @"DECLARE @{0} uniqueidentifier = (
+            SELECT TOP 1 {0}
+            FROM   Collections 
+            WHERE  {1} = @{2})",
+            Collection.Fields.ChannelId,
+            Collection.Fields.Id,
+            Post.Fields.CollectionId);
+
+        private static readonly string SelectMaxQueuePosition = string.Format(
+            @"DECLARE @{0} int = (            
+            SELECT  MAX({0})
+            FROM    Posts
+            WHERE   {1} = @{1})",
+            Post.Fields.QueuePosition,
+            Post.Fields.CollectionId);
+
         private readonly ICollectionSecurity collectionSecurity;
         private readonly IFifthweekDbContext databaseContext;
 
@@ -20,23 +37,30 @@
 
             await this.collectionSecurity.AssertPostingAllowedAsync(command.Requester, command.CollectionId);
 
-            await this.CreatePostAsync(command);
-        }
-
-        private Task CreatePostAsync(PostImageCommand command)
-        {
-            var now = DateTime.UtcNow;
-
-            int? queuePosition = null;
-            DateTime? liveDate = now;
-
             if (command.IsQueued)
             {
-                liveDate = null;
-
-                throw new NotImplementedException("Need to get queue position from database. Consider atomicity here.");
+                await this.QueuePostAsync(command);
             }
-            else if (command.ScheduledPostDate != null)
+            else
+            {
+                await this.SchedulePostAsync(command);
+            }
+        }
+
+        protected virtual Task QueuePostAsync(PostImageCommand command)
+        {
+            return this.databaseContext.Database.Connection.InsertAsync(
+                Entity(command, DateTime.UtcNow, null), 
+                SelectChannelId + " " + SelectMaxQueuePosition, 
+                Post.Fields.ChannelId | Post.Fields.QueuePosition);
+        }
+
+        protected virtual Task SchedulePostAsync(PostImageCommand command)
+        {
+            var now = DateTime.UtcNow;
+            DateTime? liveDate = now;
+
+            if (command.ScheduledPostDate != null)
             {
                 var scheduledPostDate = command.ScheduledPostDate.Value;
                 if (scheduledPostDate > now)
@@ -45,24 +69,28 @@
                 }
             }
 
-            throw new NotImplementedException("Need to get channel ID from database.");
+            return this.databaseContext.Database.Connection.InsertAsync(
+                Entity(command, now, liveDate), 
+                SelectChannelId, 
+                Post.Fields.ChannelId);
+        }
 
-//            var post = new Post(
-//                command.NewPostId.Value,
-//                command.ChannelId.Value,
-//                null,
-//                command.CollectionId.Value,
-//                null,
-//                null,
-//                null,
-//                command.ImageFileId.Value,
-//                null,
-//                command.Comment == null ? null : command.Comment.Value,
-//                queuePosition,
-//                liveDate,
-//                now);
-//
-//            return this.databaseContext.Database.Connection.InsertAsync(post);
+        private static Post Entity(PostImageCommand command, DateTime now, DateTime? liveDate)
+        {
+            return new Post(
+                command.NewPostId.Value,
+                default(Guid),
+                null,
+                command.CollectionId.Value,
+                null,
+                null,
+                null,
+                command.ImageFileId.Value,
+                null,
+                command.Comment == null ? null : command.Comment.Value,
+                null,
+                liveDate,
+                now);
         }
     }
 }

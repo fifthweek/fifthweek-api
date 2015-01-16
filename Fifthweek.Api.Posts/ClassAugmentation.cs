@@ -280,11 +280,14 @@ namespace Fifthweek.Api.Posts
 namespace Fifthweek.Api.Posts.Commands
 {
     using System;
+    using System.Linq;
+    using Fifthweek.Api.FileManagement;
+    using Fifthweek.Api.Identity.Membership;
+    using Fifthweek.Api.Subscriptions;
+    using Fifthweek.CodeGeneration;
     using System.Threading.Tasks;
     using Fifthweek.Api.Core;
     using Fifthweek.Api.Persistence;
-    using Fifthweek.Api.Subscriptions;
-    using Fifthweek.CodeGeneration;
     public partial class PostImageCommandHandler 
     {
         public PostImageCommandHandler(
