@@ -7,9 +7,15 @@ namespace Fifthweek.Webjobs.Files.Shared
     [AutoEqualityMembers]
     public partial class ProcessFileQueueItem
     {
-        public string Purpose { get; set; }
+        public ProcessFileQueueItem()
+        {
+        }
 
-        public string BlobLocation { get; set; }
+        public string ContainerName { get; set; }
+        
+        public string BlobName { get; set; }
+
+        public string Purpose { get; set; }
 
         public bool Overwrite { get; set; }
     }

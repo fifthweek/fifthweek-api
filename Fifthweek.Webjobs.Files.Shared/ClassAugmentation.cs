@@ -5,22 +5,31 @@ using System.Linq;
 
 namespace Fifthweek.Webjobs.Files.Shared
 {
-	using Fifthweek.Shared;
-	public partial class ProcessFileQueueItem 
-	{
+    using System;
+    using System.Linq;
+    using Fifthweek.Shared;
+    using Fifthweek.CodeGeneration;
+    public partial class ProcessFileQueueItem 
+    {
         public ProcessFileQueueItem(
+            System.String containerName, 
+            System.String blobName, 
             System.String purpose, 
-            System.String blobLocation, 
             System.Boolean overwrite)
         {
+            if (containerName == null)
+            {
+                throw new ArgumentNullException("containerName");
+            }
+
+            if (blobName == null)
+            {
+                throw new ArgumentNullException("blobName");
+            }
+
             if (purpose == null)
             {
                 throw new ArgumentNullException("purpose");
-            }
-
-            if (blobLocation == null)
-            {
-                throw new ArgumentNullException("blobLocation");
             }
 
             if (overwrite == null)
@@ -28,23 +37,27 @@ namespace Fifthweek.Webjobs.Files.Shared
                 throw new ArgumentNullException("overwrite");
             }
 
+            this.ContainerName = containerName;
+            this.BlobName = blobName;
             this.Purpose = purpose;
-            this.BlobLocation = blobLocation;
             this.Overwrite = overwrite;
         }
-	}
+    }
 
 }
 
 namespace Fifthweek.Webjobs.Files.Shared
 {
-	using Fifthweek.Shared;
-	public partial class ProcessFileQueueItem 
-	{
-		public override string ToString()
+    using System;
+    using System.Linq;
+    using Fifthweek.Shared;
+    using Fifthweek.CodeGeneration;
+    public partial class ProcessFileQueueItem 
+    {
+        public override string ToString()
         {
-			return string.Format("ProcessFileQueueItem(\"{0}\", \"{1}\", {2})", this.Purpose == null ? "null" : this.Purpose.ToString(), this.BlobLocation == null ? "null" : this.BlobLocation.ToString(), this.Overwrite == null ? "null" : this.Overwrite.ToString());
-		}
+            return string.Format("ProcessFileQueueItem(\"{0}\", \"{1}\", \"{2}\", {3})", this.ContainerName == null ? "null" : this.ContainerName.ToString(), this.BlobName == null ? "null" : this.BlobName.ToString(), this.Purpose == null ? "null" : this.Purpose.ToString(), this.Overwrite == null ? "null" : this.Overwrite.ToString());
+        }
 
         public override bool Equals(object obj)
         {
@@ -71,8 +84,9 @@ namespace Fifthweek.Webjobs.Files.Shared
             unchecked
             {
                 int hashCode = 0;
+                hashCode = (hashCode * 397) ^ (this.ContainerName != null ? this.ContainerName.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.BlobName != null ? this.BlobName.GetHashCode() : 0);
                 hashCode = (hashCode * 397) ^ (this.Purpose != null ? this.Purpose.GetHashCode() : 0);
-                hashCode = (hashCode * 397) ^ (this.BlobLocation != null ? this.BlobLocation.GetHashCode() : 0);
                 hashCode = (hashCode * 397) ^ (this.Overwrite != null ? this.Overwrite.GetHashCode() : 0);
                 return hashCode;
             }
@@ -80,12 +94,17 @@ namespace Fifthweek.Webjobs.Files.Shared
 
         protected bool Equals(ProcessFileQueueItem other)
         {
-            if (!object.Equals(this.Purpose, other.Purpose))
+            if (!object.Equals(this.ContainerName, other.ContainerName))
             {
                 return false;
             }
 
-            if (!object.Equals(this.BlobLocation, other.BlobLocation))
+            if (!object.Equals(this.BlobName, other.BlobName))
+            {
+                return false;
+            }
+
+            if (!object.Equals(this.Purpose, other.Purpose))
             {
                 return false;
             }
@@ -97,7 +116,7 @@ namespace Fifthweek.Webjobs.Files.Shared
 
             return true;
         }
-	}
+    }
 
 }
 

@@ -34,6 +34,7 @@ namespace Fifthweek.Api.FileManagement.Tests.Commands
 
         private Mock<IFileRepository> fileRepository;
         private Mock<IBlobService> blobService;
+        private Mock<IQueueService> queueService;
         private Mock<IBlobLocationGenerator> blobNameCreator;
 
         private CompleteFileUploadCommandHandler handler;
@@ -41,18 +42,20 @@ namespace Fifthweek.Api.FileManagement.Tests.Commands
         [TestInitialize]
         public void TestInitialize()
         {
-            this.blobService = new Mock<IBlobService>();
             this.fileRepository = new Mock<IFileRepository>();
+            this.blobService = new Mock<IBlobService>();
+            this.queueService = new Mock<IQueueService>();
             this.blobNameCreator = new Mock<IBlobLocationGenerator>();
 
             this.handler = new CompleteFileUploadCommandHandler(
                 this.fileRepository.Object,
                 this.blobService.Object,
+                this.queueService.Object,
                 this.blobNameCreator.Object);
         }
 
         [TestMethod]
-        public async Task WhenCalled_ItShouldUpdateTheDatabase()
+        public async Task WhenCalled_ItShouldUpdateStorageAndQueue()
         {
             this.fileRepository.Setup(v => v.GetFileWaitingForUploadAsync(this.fileId))
                 .ReturnsAsync(new FileWaitingForUpload(this.fileId, this.userId, "myfile", this.fileExtension, this.purpose));
@@ -67,14 +70,19 @@ namespace Fifthweek.Api.FileManagement.Tests.Commands
                 .Returns(Task.FromResult(0))
                 .Verifiable();
 
+            this.queueService.Setup(v => v.PostFileUploadCompletedMessageToQueueAsync(this.containerName, this.blobName, this.purpose))
+                .Returns(Task.FromResult(0))
+                .Verifiable();
+
             await this.handler.HandleAsync(new CompleteFileUploadCommand(this.userId, this.fileId));
 
             this.fileRepository.Verify();
             this.blobService.Verify();
+            this.queueService.Verify();
         }
 
         [TestMethod]
-        public async Task WhenCalledAndFileDoesNotBelogToUser_ItShouldNotUpdateTheDatabase()
+        public async Task WhenCalledAndFileDoesNotBelogToUser_ItShouldNotUpdateStorageOrQueue()
         {
             this.fileRepository.Setup(v => v.GetFileWaitingForUploadAsync(this.fileId))
                 .ReturnsAsync(new FileWaitingForUpload(this.fileId, new UserId(Guid.NewGuid()), "myfile", this.fileExtension, this.purpose));
@@ -86,6 +94,9 @@ namespace Fifthweek.Api.FileManagement.Tests.Commands
                 .Throws(new Exception("This shouldn't be called"));
 
             this.fileRepository.Setup(v => v.SetFileUploadComplete(this.fileId, this.blobSize))
+                .Throws(new Exception("This shouldn't be called"));
+
+            this.queueService.Setup(v => v.PostFileUploadCompletedMessageToQueueAsync(this.containerName, this.blobName, this.purpose))
                 .Throws(new Exception("This shouldn't be called"));
 
             await ExpectedException<UnauthorizedException>.AssertAsync( 

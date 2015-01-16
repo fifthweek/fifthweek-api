@@ -12,6 +12,23 @@ namespace Fifthweek.Api.Azure.Tests
     [TestClass]
     public class BlobServiceTests
     {
+        private Mock<ICloudStorageAccount> cloudStorageAccount;
+        private Mock<ICloudBlobContainer> cloudBlobContainer;
+        private Mock<ICloudBlobClient> cloudBlobClient;
+        private Mock<ICloudBlockBlob> cloudBlockBlob;
+
+        private BlobService blobService;
+
+        [TestInitialize]
+        public void TestInitialize()
+        {
+            this.cloudStorageAccount = new Mock<ICloudStorageAccount>();
+            this.cloudBlobClient = new Mock<ICloudBlobClient>();
+            this.cloudBlobContainer = new Mock<ICloudBlobContainer>();
+            this.cloudBlockBlob = new Mock<ICloudBlockBlob>();
+            this.blobService = new BlobService(this.cloudStorageAccount.Object);
+        }
+
         [TestMethod]
         public async Task WhenRequestingBlobContainerCreation_ItShouldCreateANewBlobContainer()
         {
@@ -126,22 +143,5 @@ namespace Fifthweek.Api.Azure.Tests
 
             Assert.AreEqual(blobLength, result);
         }
-
-        [TestInitialize]
-        public void TestInitialize()
-        {
-            this.cloudStorageAccount = new Mock<ICloudStorageAccount>();
-            this.cloudBlobClient = new Mock<ICloudBlobClient>();
-            this.cloudBlobContainer = new Mock<ICloudBlobContainer>();
-            this.cloudBlockBlob = new Mock<ICloudBlockBlob>();
-            this.blobService = new BlobService(this.cloudStorageAccount.Object);
-        }
-
-        private Mock<ICloudStorageAccount> cloudStorageAccount;
-        private Mock<ICloudBlobContainer> cloudBlobContainer;
-        private Mock<ICloudBlobClient> cloudBlobClient;
-        private Mock<ICloudBlockBlob> cloudBlockBlob;
-
-        private BlobService blobService;
     }
 }

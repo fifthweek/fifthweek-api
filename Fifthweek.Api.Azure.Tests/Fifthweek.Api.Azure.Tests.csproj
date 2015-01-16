@@ -83,6 +83,7 @@
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="BlobServiceTests.cs" />
+    <Compile Include="QueueServiceTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
@@ -92,6 +93,10 @@
     <ProjectReference Include="..\Fifthweek.Api.Azure\Fifthweek.Api.Azure.csproj">
       <Project>{abc43617-3aaa-4b7a-b4dc-d10e023f1846}</Project>
       <Name>Fifthweek.Api.Azure</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Fifthweek.Webjobs.Files.Shared\Fifthweek.Webjobs.Files.Shared.csproj">
+      <Project>{227ae1d7-e7a5-44a2-87cc-82eb29033b0d}</Project>
+      <Name>Fifthweek.Webjobs.Files.Shared</Name>
     </ProjectReference>
   </ItemGroup>
   <Choose>

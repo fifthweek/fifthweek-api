@@ -16,6 +16,8 @@
         private readonly IFileRepository fileRepository;
 
         private readonly IBlobService blobService;
+        
+        private readonly IQueueService queueService;
 
         private readonly IBlobLocationGenerator blobLocationGenerator;
         
@@ -34,7 +36,7 @@
 
             await this.fileRepository.SetFileUploadComplete(command.FileId, blobLength);
 
-            // Post file queue message.
+            await this.queueService.PostFileUploadCompletedMessageToQueueAsync(blobLocation.ContainerName, blobLocation.BlobName, file.Purpose);
         }
     }
 }

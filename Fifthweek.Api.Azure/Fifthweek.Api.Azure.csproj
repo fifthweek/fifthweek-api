@@ -99,6 +99,10 @@
       <Project>{BD52863E-063D-45A5-9CA8-7541804D1313}</Project>
       <Name>Fifthweek.Api.Core</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Fifthweek.Webjobs.Files.Shared\Fifthweek.Webjobs.Files.Shared.csproj">
+      <Project>{227ae1d7-e7a5-44a2-87cc-82eb29033b0d}</Project>
+      <Name>Fifthweek.Webjobs.Files.Shared</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
