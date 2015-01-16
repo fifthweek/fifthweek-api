@@ -16,16 +16,16 @@
         {
             this.Add(
                 FilePurposes.ProfileImage,
-                new ThumbnailFileTask(300, 300),
-                new ThumbnailFileTask(256, 256),
-                new ThumbnailFileTask(128, 128),
-                new ThumbnailFileTask(64, 64),
-                new ThumbnailFileTask(32, 32));
+                new ThumbnailFileTask(300, 300, ResizeBehaviour.CropToAspectRatio),
+                new ThumbnailFileTask(256, 256, ResizeBehaviour.CropToAspectRatio),
+                new ThumbnailFileTask(128, 128, ResizeBehaviour.CropToAspectRatio),
+                new ThumbnailFileTask(64, 64, ResizeBehaviour.CropToAspectRatio),
+                new ThumbnailFileTask(32, 32, ResizeBehaviour.CropToAspectRatio));
 
             this.Add(
                 FilePurposes.ProfileHeaderImage,
-                new ThumbnailFileTask(1500, 400),
-                new ThumbnailFileTask(480, 128));
+                new ThumbnailFileTask(1500, 400, ResizeBehaviour.CropToAspectRatio),
+                new ThumbnailFileTask(480, 128, ResizeBehaviour.CropToAspectRatio));
         }
 
         public IEnumerable<IFileTask> GetTasks(string purpose)

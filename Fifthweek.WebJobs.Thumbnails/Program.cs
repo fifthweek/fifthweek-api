@@ -11,7 +11,7 @@
 
     public class Program
     {
-        private static readonly IThumbnailProcessor ThumbnailProcessor = new ThumbnailProcessor();
+        private static readonly IThumbnailProcessor ThumbnailProcessor = new ThumbnailProcessor(new ImageService());
 
         public static Task CreateThumbnailAsync(
             [QueueTrigger(Constants.ThumbnailsQueueName)] CreateThumbnailMessage thumbnail,

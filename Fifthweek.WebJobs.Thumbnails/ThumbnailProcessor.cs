@@ -12,6 +12,8 @@
     [AutoConstructor]
     public partial class ThumbnailProcessor : IThumbnailProcessor
     {
+        private readonly IImageService imageService;
+
         public Task CreateThumbnailAsync(
             CreateThumbnailMessage thumbnail,
             Stream input,
@@ -19,10 +21,9 @@
             TextWriter logger,
             CancellationToken cancellationToken)
         {
-            using (var image = new MagickImage(input))
+            if (thumbnail.Overwrite || output.Length == 0)
             {
-                image.Resize(800, 600);
-                image.Write(output);
+                this.imageService.Resize(input, output, thumbnail.Width, thumbnail.Height, thumbnail.ResizeBehaviour);
             }
 
             return Task.FromResult(0);

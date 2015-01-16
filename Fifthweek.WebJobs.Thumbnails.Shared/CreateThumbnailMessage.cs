@@ -20,6 +20,8 @@ namespace Fifthweek.WebJobs.Thumbnails.Shared
 
         public int Height { get; set; }
 
+        public ResizeBehaviour ResizeBehaviour { get; set; }
+
         public bool Overwrite { get; set; }
     }
 }
