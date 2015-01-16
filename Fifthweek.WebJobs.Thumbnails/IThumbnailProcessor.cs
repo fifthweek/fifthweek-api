@@ -6,12 +6,20 @@
 
     using Fifthweek.WebJobs.Thumbnails.Shared;
 
+    using Microsoft.WindowsAzure.Storage.Blob;
+
     public interface IThumbnailProcessor
     {
         Task CreateThumbnailAsync(
             CreateThumbnailMessage thumbnail,
             Stream input,
-            Stream output,
+            CloudBlockBlob output,
+            TextWriter logger,
+            CancellationToken cancellationToken);
+
+        Task CreatePoisonThumbnailAsync(
+            CreateThumbnailMessage thumbnail,
+            CloudBlockBlob output,
             TextWriter logger,
             CancellationToken cancellationToken);
     }

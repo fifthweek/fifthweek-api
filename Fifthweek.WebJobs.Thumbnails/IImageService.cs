@@ -4,8 +4,10 @@
 
     using Fifthweek.WebJobs.Thumbnails.Shared;
 
+    using ImageMagick;
+
     public interface IImageService
     {
-        void Resize(Stream input, Stream output, int width, int height, ResizeBehaviour resizeBehaviour);
+        void Resize(MagickImage input, Stream output, int width, int height, ResizeBehaviour resizeBehaviour);
     }
 }

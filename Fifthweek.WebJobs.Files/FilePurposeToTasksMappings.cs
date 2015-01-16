@@ -17,7 +17,7 @@
             this.Add(
                 FilePurposes.ProfileImage,
                 new ThumbnailFileTask(300, 300, ResizeBehaviour.CropToAspectRatio),
-                new ThumbnailFileTask(256, 256, ResizeBehaviour.CropToAspectRatio),
+                new ThumbnailFileTask(150, 150, ResizeBehaviour.CropToAspectRatio),
                 new ThumbnailFileTask(128, 128, ResizeBehaviour.CropToAspectRatio),
                 new ThumbnailFileTask(64, 64, ResizeBehaviour.CropToAspectRatio),
                 new ThumbnailFileTask(32, 32, ResizeBehaviour.CropToAspectRatio));

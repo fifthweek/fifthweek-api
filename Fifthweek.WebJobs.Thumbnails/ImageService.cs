@@ -9,7 +9,7 @@
 
     public class ImageService : IImageService
     {
-        public void Resize(Stream input, Stream output, int width, int height, ResizeBehaviour resizeBehaviour)
+        public void Resize(MagickImage input, Stream output, int width, int height, ResizeBehaviour resizeBehaviour)
         {
             switch (resizeBehaviour)
             {
@@ -23,45 +23,39 @@
             }
         }
 
-        public void ResizeMaintainAspectRatio(Stream input, Stream output, int width, int height)
+        private void ResizeMaintainAspectRatio(MagickImage input, Stream output, int width, int height)
         {
-            using (var image = new MagickImage(input))
+            if (input.Width > width || input.Height > height)
             {
-                if (image.Width > width || image.Height > height)
-                {
-                    image.Resize(width, height);
-                }
-
-                image.Write(output);
+                input.Resize(width, height);
             }
+
+            input.Write(output);
         }
 
-        public void ResizeCropToAspectRatio(Stream input, Stream output, int width, int height)
+        private void ResizeCropToAspectRatio(MagickImage input, Stream output, int width, int height)
         {
-            using (var image = new MagickImage(input))
+            if (input.Width > width && input.Height > height)
             {
-                if (image.Width > width && image.Height > height)
-                {
-                    image.Resize(new MagickGeometry(width, height) { FillArea = true });
-                }
-
-                var desiredAspectRatio = width / (double)height;
-                var currentAspectRatio = image.Width / (double)image.Height;
-
-                if (desiredAspectRatio != currentAspectRatio)
-                {
-                    if (desiredAspectRatio > currentAspectRatio)
-                    {
-                        image.Crop(width, (int)Math.Round(height * currentAspectRatio / desiredAspectRatio));
-                    }
-                    else
-                    {
-                        image.Crop((int)Math.Round(width * desiredAspectRatio / currentAspectRatio), height);
-                    }
-                }
-
-                image.Write(output);
+                input.Resize(new MagickGeometry(width, height) { FillArea = true });
             }
+
+            var desiredAspectRatio = width / (double)height;
+            var currentAspectRatio = input.Width / (double)input.Height;
+
+            if (desiredAspectRatio != currentAspectRatio)
+            {
+                if (desiredAspectRatio > currentAspectRatio)
+                {
+                    input.Crop(width, (int)Math.Round(height * currentAspectRatio / desiredAspectRatio));
+                }
+                else
+                {
+                    input.Crop((int)Math.Round(width * desiredAspectRatio / currentAspectRatio), height);
+                }
+            }
+
+            input.Write(output);
         }
     }
 }
