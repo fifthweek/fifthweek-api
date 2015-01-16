@@ -13,7 +13,7 @@
     {
         private static readonly string SelectChannelId = string.Format(
             @"DECLARE @{0} uniqueidentifier = (
-            SELECT TOP 1 {0}
+            SELECT {0}
             FROM   Collections 
             WHERE  {1} = @{2})",
             Collection.Fields.ChannelId,
