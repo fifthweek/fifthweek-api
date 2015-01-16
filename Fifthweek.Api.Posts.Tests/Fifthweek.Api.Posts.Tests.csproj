@@ -80,6 +80,7 @@
     <Compile Include="Commands\PostImageCommandHandlerTests.cs" />
     <Compile Include="Commands\PostNoteCommandHandlerTests.cs" />
     <Compile Include="Controllers\PostControllerTests.cs" />
+    <Compile Include="PostToCollectionDbStatementTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ValidCommentTests.cs" />
     <Compile Include="ValidNoteTests.cs" />

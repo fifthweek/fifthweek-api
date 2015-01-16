@@ -262,6 +262,11 @@ namespace Fifthweek.Api.Posts
     using System.Linq;
     using Fifthweek.CodeGeneration;
     using System.Collections.Generic;
+    using System.Threading.Tasks;
+    using Fifthweek.Api.Core;
+    using Fifthweek.Api.FileManagement;
+    using Fifthweek.Api.Persistence;
+    using Fifthweek.Api.Subscriptions;
     public partial class PostId 
     {
         public PostId(
@@ -292,19 +297,45 @@ namespace Fifthweek.Api.Posts.Commands
     {
         public PostImageCommandHandler(
             Fifthweek.Api.Subscriptions.ICollectionSecurity collectionSecurity, 
-            Fifthweek.Api.Persistence.IFifthweekDbContext databaseContext)
+            Fifthweek.Api.Posts.IPostToCollectionDbStatement postToCollectionDbStatement)
         {
             if (collectionSecurity == null)
             {
                 throw new ArgumentNullException("collectionSecurity");
             }
 
+            if (postToCollectionDbStatement == null)
+            {
+                throw new ArgumentNullException("postToCollectionDbStatement");
+            }
+
+            this.collectionSecurity = collectionSecurity;
+            this.postToCollectionDbStatement = postToCollectionDbStatement;
+        }
+    }
+
+}
+namespace Fifthweek.Api.Posts
+{
+    using System;
+    using System.Linq;
+    using Fifthweek.CodeGeneration;
+    using System.Collections.Generic;
+    using System.Threading.Tasks;
+    using Fifthweek.Api.Core;
+    using Fifthweek.Api.FileManagement;
+    using Fifthweek.Api.Persistence;
+    using Fifthweek.Api.Subscriptions;
+    public partial class PostToCollectionDbStatement 
+    {
+        public PostToCollectionDbStatement(
+            Fifthweek.Api.Persistence.IFifthweekDbContext databaseContext)
+        {
             if (databaseContext == null)
             {
                 throw new ArgumentNullException("databaseContext");
             }
 
-            this.collectionSecurity = collectionSecurity;
             this.databaseContext = databaseContext;
         }
     }
@@ -593,6 +624,11 @@ namespace Fifthweek.Api.Posts
     using System.Linq;
     using Fifthweek.CodeGeneration;
     using System.Collections.Generic;
+    using System.Threading.Tasks;
+    using Fifthweek.Api.Core;
+    using Fifthweek.Api.FileManagement;
+    using Fifthweek.Api.Persistence;
+    using Fifthweek.Api.Subscriptions;
     public partial class PostId 
     {
         public override string ToString()
@@ -939,6 +975,11 @@ namespace Fifthweek.Api.Posts
     using System.Linq;
     using Fifthweek.CodeGeneration;
     using System.Collections.Generic;
+    using System.Threading.Tasks;
+    using Fifthweek.Api.Core;
+    using Fifthweek.Api.FileManagement;
+    using Fifthweek.Api.Persistence;
+    using Fifthweek.Api.Subscriptions;
     public partial class ValidNote 
     {
         public override string ToString()
@@ -994,6 +1035,11 @@ namespace Fifthweek.Api.Posts
     using System.Linq;
     using Fifthweek.CodeGeneration;
     using System.Collections.Generic;
+    using System.Threading.Tasks;
+    using Fifthweek.Api.Core;
+    using Fifthweek.Api.FileManagement;
+    using Fifthweek.Api.Persistence;
+    using Fifthweek.Api.Subscriptions;
     public partial class ValidComment 
     {
         public override string ToString()

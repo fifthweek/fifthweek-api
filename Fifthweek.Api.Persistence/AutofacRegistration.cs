@@ -18,8 +18,8 @@
     {
         public void Register(ContainerBuilder builder)
         {
-            builder.RegisterType<FifthweekDbContext>().As<IFifthweekDbContext>().InstancePerRequest();
-            builder.Register(c => CreateUserManager(c.Resolve<ISendEmailService>(), c.Resolve<IFifthweekDbContext>())).As<IUserManager>().InstancePerRequest();
+            builder.RegisterType<FifthweekDbContext>().As<IFifthweekDbContext>();
+            builder.Register(c => CreateUserManager(c.Resolve<ISendEmailService>(), c.Resolve<IFifthweekDbContext>())).As<IUserManager>();
         }
 
         public static FifthweekUserManager CreateUserManager(ISendEmailService sendEmailService, IFifthweekDbContext dbContext)
