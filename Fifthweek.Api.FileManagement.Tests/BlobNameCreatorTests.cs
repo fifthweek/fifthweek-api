@@ -56,7 +56,7 @@
         {
             var result = this.target.GetBlobLocation(this.userId, this.fileId, purpose);
             var result2 = this.target.GetBlobLocation(this.userId, this.fileId, purpose);
-            Assert.AreEqual(this.GetUrl(result2), this.GetUrl(result));
+            Assert.AreEqual(result2, result);
         }
 
         private void ItShouldGenerateDifferentOutputsGivenDifferentInputs(string purpose, bool isPublic)
@@ -65,15 +65,15 @@
             var result2 = this.target.GetBlobLocation(this.userId, this.fileId2, purpose);
             var result3 = this.target.GetBlobLocation(this.userId2, this.fileId, purpose);
             
-            Assert.AreNotEqual(this.GetUrl(result2), this.GetUrl(result));
+            Assert.AreNotEqual(result2, result);
 
             if (isPublic)
             {
-                Assert.AreEqual(this.GetUrl(result3), this.GetUrl(result));
+                Assert.AreEqual(result3, result);
             }
             else
             {
-                Assert.AreNotEqual(this.GetUrl(result3), this.GetUrl(result));
+                Assert.AreNotEqual(result3, result);
             }
         }
 
@@ -89,11 +89,6 @@
             {
                 Assert.AreNotEqual(Constants.PublicFileBlobContainerName, result.ContainerName);
             }
-        }
-
-        private string GetUrl(BlobLocation blobLocation)
-        {
-            return blobLocation.ContainerName + "/" + blobLocation.BlobName;
         }
     }
 }

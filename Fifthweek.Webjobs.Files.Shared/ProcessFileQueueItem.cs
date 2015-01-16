@@ -1,6 +1,10 @@
 namespace Fifthweek.Webjobs.Files.Shared
 {
-    public class ProcessFileQueueItem
+    using Fifthweek.Shared;
+
+    [AutoConstructor]
+    [AutoEqualityMembers]
+    public partial class ProcessFileQueueItem
     {
         public string Purpose { get; set; }
 

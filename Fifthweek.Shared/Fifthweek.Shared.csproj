@@ -43,6 +43,11 @@
     <Compile Include="AutoBuilderAttribute.cs" />
     <Compile Include="AutoConstructorAttribute.cs" />
     <Compile Include="AutoEqualityMembersAttribute.cs" />
+    <Compile Include="ClassAugmentation.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>ClassAugmentation.tt</DependentUpon>
+    </Compile>
     <Compile Include="ConstructedAttribute.cs" />
     <Compile Include="FilePurpose.cs" />
     <Compile Include="FilePurposes.cs" />
@@ -52,6 +57,15 @@
     <Compile Include="OptionalAttribute.cs" />
     <Compile Include="ParsedAttribute.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ClassAugmentation.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>ClassAugmentation.cs</LastGenOutput>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

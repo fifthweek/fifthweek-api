@@ -53,6 +53,12 @@
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Fifthweek.Webjobs.Files\Fifthweek.Webjobs.Files.csproj">
+      <Project>{0927094c-5474-40e7-9458-7c710678507a}</Project>
+      <Name>Fifthweek.Webjobs.Files</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Choose>
     <When Condition="'$(VisualStudioVersion)' == '10.0' And '$(IsCodedUITest)' == 'True'">
       <ItemGroup>
