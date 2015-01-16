@@ -49,7 +49,7 @@
         }
 
         [TestMethod]
-        public async Task WhenPostingNote_ItShouldIssueCreateNoteCommand()
+        public async Task WhenPostingNote_ItShouldIssuePostNoteCommand()
         {
             var data = NewNoteData();
             var command = NewPostNoteCommand(UserId, PostId, data);
@@ -59,6 +59,38 @@
             this.postNote.Setup(v => v.HandleAsync(command)).Returns(Task.FromResult(0)).Verifiable();
 
             var result = await this.target.PostNote(data);
+
+            Assert.IsInstanceOfType(result, typeof(OkResult));
+            this.postNote.Verify();
+        }
+
+        [TestMethod]
+        public async Task WhenPostingImage_ItShouldIssuePostImageCommand()
+        {
+            var data = NewImageData();
+            var command = NewPostImageCommand(UserId, PostId, data);
+
+            this.userContext.Setup(v => v.GetUserId()).Returns(UserId);
+            this.guidCreator.Setup(_ => _.CreateSqlSequential()).Returns(PostId.Value);
+            this.postImage.Setup(v => v.HandleAsync(command)).Returns(Task.FromResult(0)).Verifiable();
+
+            var result = await this.target.PostImage(data);
+
+            Assert.IsInstanceOfType(result, typeof(OkResult));
+            this.postNote.Verify();
+        }
+
+        [TestMethod]
+        public async Task WhenPostingFile_ItShouldIssuePostFileCommand()
+        {
+            var data = NewFileData();
+            var command = NewPostFileCommand(UserId, PostId, data);
+
+            this.userContext.Setup(v => v.GetUserId()).Returns(UserId);
+            this.guidCreator.Setup(_ => _.CreateSqlSequential()).Returns(PostId.Value);
+            this.postFile.Setup(v => v.HandleAsync(command)).Returns(Task.FromResult(0)).Verifiable();
+
+            var result = await this.target.PostFile(data);
 
             Assert.IsInstanceOfType(result, typeof(OkResult));
             this.postNote.Verify();
@@ -109,6 +141,33 @@
                 postId,
                 new CollectionId(data.CollectionId.DecodeGuid()), 
                 new FileId(data.ImageFileId.DecodeGuid()),
+                ValidComment.Parse(data.Comment),
+                data.ScheduledPostDate,
+                data.IsQueued);
+        }
+
+        public static NewFileData NewFileData()
+        {
+            return new NewFileData
+            {
+                CollectionId = CollectionId.Value.EncodeGuid(),
+                FileId = FileId.Value.EncodeGuid(),
+                Comment = null,
+                ScheduledPostDate = null,
+                IsQueued = true
+            };
+        }
+
+        public static PostFileCommand NewPostFileCommand(
+            UserId userId,
+            PostId postId,
+            NewFileData data)
+        {
+            return new PostFileCommand(
+                userId,
+                postId,
+                new CollectionId(data.CollectionId.DecodeGuid()),
+                new FileId(data.FileId.DecodeGuid()),
                 ValidComment.Parse(data.Comment),
                 data.ScheduledPostDate,
                 data.IsQueued);
