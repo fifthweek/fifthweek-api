@@ -82,6 +82,12 @@
             this.AssertCharacter('\n', isGood: false);
         }
 
+        public void AssertNewLinesAllowed()
+        {
+            this.AssertCharacter('\r', isGood: true);
+            this.AssertCharacter('\n', isGood: true);
+        }
+
         public void AssertCharacter(char character, bool isGood)
         {
             this.AssertCharacters(new string(new[] { character }), isGood);    
