@@ -1,13 +1,14 @@
-﻿namespace Fifthweek.Api.Subscriptions.Commands
+﻿namespace Fifthweek.Api.Posts.Commands
 {
     using System;
 
     using Fifthweek.Api.FileManagement;
     using Fifthweek.Api.Identity.Membership;
+    using Fifthweek.Api.Subscriptions;
     using Fifthweek.CodeGeneration;
 
     [AutoConstructor, AutoEqualityMembers]
-    public partial class PostImageCommand
+    public partial class PostFileCommand
     {
         public UserId Requester { get; private set; }
 
@@ -15,7 +16,7 @@
 
         public PostId NewPostId { get; private set; }
 
-        public FileId ImageFileId { get; private set; }
+        public FileId FileId { get; private set; }
 
         [Optional]
         public DateTime? ScheduledPostDate { get; private set; }

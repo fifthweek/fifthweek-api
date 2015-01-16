@@ -17,6 +17,7 @@
             typeof(Persistence.AutofacRegistration).Assembly,
             typeof(SendGrid.AutofacRegistration).Assembly,
             typeof(Subscriptions.AutofacRegistration).Assembly,
+            typeof(Posts.AutofacRegistration).Assembly,
             typeof(Azure.AutofacRegistration).Assembly,
             typeof(FileManagement.AutofacRegistration).Assembly
         }

@@ -1,4 +1,4 @@
-﻿namespace Fifthweek.Api.Subscriptions.Tests.Controllers
+﻿namespace Fifthweek.Api.Posts.Tests.Controllers
 {
     using System;
     using System.Threading.Tasks;
@@ -7,8 +7,9 @@
     using Fifthweek.Api.Core;
     using Fifthweek.Api.Identity.Membership;
     using Fifthweek.Api.Identity.OAuth;
-    using Fifthweek.Api.Subscriptions.Commands;
-    using Fifthweek.Api.Subscriptions.Controllers;
+    using Fifthweek.Api.Posts.Commands;
+    using Fifthweek.Api.Posts.Controllers;
+    using Fifthweek.Api.Subscriptions;
 
     using Microsoft.VisualStudio.TestTools.UnitTesting;
 

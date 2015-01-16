@@ -1,8 +1,9 @@
-﻿namespace Fifthweek.Api.Subscriptions.Commands
+﻿namespace Fifthweek.Api.Posts.Commands
 {
     using System;
 
     using Fifthweek.Api.Identity.Membership;
+    using Fifthweek.Api.Subscriptions;
     using Fifthweek.CodeGeneration;
 
     [AutoConstructor, AutoEqualityMembers]

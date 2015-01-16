@@ -239,6 +239,10 @@
       <Project>{9c18bee3-fab5-4a00-8a94-a1faea370175}</Project>
       <Name>Fifthweek.Api.Persistence</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Fifthweek.Api.Posts\Fifthweek.Api.Posts.csproj">
+      <Project>{154cbde0-8eeb-44dc-bfa4-769542a24080}</Project>
+      <Name>Fifthweek.Api.Posts</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Fifthweek.Api.SendGrid\Fifthweek.Api.SendGrid.csproj">
       <Project>{5f5df240-536a-41b6-bfec-4f89940eb053}</Project>
       <Name>Fifthweek.Api.SendGrid</Name>

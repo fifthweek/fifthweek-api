@@ -20,7 +20,7 @@
         private static readonly SubscriptionId SubscriptionId = new SubscriptionId(Guid.NewGuid());
         private static readonly ValidSubscriptionName SubscriptionName = ValidSubscriptionName.Parse("Lawrence");
         private static readonly ValidTagline Tagline = ValidTagline.Parse("Web Comics and More");
-        private static readonly ChannelPriceInUsCentsPerWeek BasePrice = ChannelPriceInUsCentsPerWeek.Parse(10);
+        private static readonly ValidChannelPriceInUsCentsPerWeek BasePrice = ValidChannelPriceInUsCentsPerWeek.Parse(10);
         private static readonly CreateSubscriptionCommand Command = new CreateSubscriptionCommand(UserId, SubscriptionId, SubscriptionName, Tagline, BasePrice);
         private Mock<ISubscriptionSecurity> subscriptionSecurity;
         private CreateSubscriptionCommandHandler target;

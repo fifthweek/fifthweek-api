@@ -1,11 +1,11 @@
-﻿namespace Fifthweek.Api.Subscriptions.Controllers
+﻿namespace Fifthweek.Api.Posts.Controllers
 {
     using System.Threading.Tasks;
     using System.Web.Http;
 
     using Fifthweek.Api.Core;
     using Fifthweek.Api.Identity.OAuth;
-    using Fifthweek.Api.Subscriptions.Commands;
+    using Fifthweek.Api.Posts.Commands;
     using Fifthweek.CodeGeneration;
 
     [RoutePrefix("posts"), AutoConstructor]
@@ -62,7 +62,7 @@
             var authenticatedUserId = this.userContext.GetUserId();
             var newPostId = new PostId(this.guidCreator.CreateSqlSequential());
 
-            await this.postImage.HandleAsync(new PostImageCommand(
+            await this.postFile.HandleAsync(new PostFileCommand(
                 authenticatedUserId,
                 file.CollectionIdObject,
                 newPostId,

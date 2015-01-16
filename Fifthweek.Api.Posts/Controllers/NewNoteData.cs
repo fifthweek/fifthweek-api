@@ -1,7 +1,8 @@
-﻿namespace Fifthweek.Api.Subscriptions.Controllers
+﻿namespace Fifthweek.Api.Posts.Controllers
 {
     using System;
 
+    using Fifthweek.Api.Subscriptions;
     using Fifthweek.CodeGeneration;
 
     [AutoEqualityMembers]

@@ -1,18 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
-using Fifthweek.Api.Core;
-
-namespace Fifthweek.Api.Subscriptions
+﻿namespace Fifthweek.Api.Subscriptions
 {
+    using System;
+    using System.Collections.Generic;
+
     using Fifthweek.CodeGeneration;
-    using Fifthweek.Shared;
 
     [AutoEqualityMembers]
-    public partial class ChannelPriceInUsCentsPerWeek
+    public partial class ValidChannelPriceInUsCentsPerWeek
     {
         public static readonly int MinValue = 1;
 
-        private ChannelPriceInUsCentsPerWeek()
+        private ValidChannelPriceInUsCentsPerWeek()
         {
         }
 
@@ -23,31 +21,31 @@ namespace Fifthweek.Api.Subscriptions
             return false;
         }
 
-        public static ChannelPriceInUsCentsPerWeek Parse(int value)
+        public static ValidChannelPriceInUsCentsPerWeek Parse(int value)
         {
-            ChannelPriceInUsCentsPerWeek retval;
+            ValidChannelPriceInUsCentsPerWeek retval;
             if (!TryParse(value, out retval))
             {
-                throw new ArgumentException("Invalid weekly subscription price", "value");
+                throw new ArgumentException("Invalid weekly price", "value");
             }
 
             return retval;
         }
 
-        public static bool TryParse(int value, out ChannelPriceInUsCentsPerWeek weeklySubscriptionPrice)
+        public static bool TryParse(int value, out ValidChannelPriceInUsCentsPerWeek weeklySubscriptionPrice)
         {
             IReadOnlyCollection<string> errorMessages;
             return TryParse(value, out weeklySubscriptionPrice, out errorMessages);
         }
 
-        public static bool TryParse(int value, out ChannelPriceInUsCentsPerWeek weeklySubscriptionPrice, out IReadOnlyCollection<string> errorMessages)
+        public static bool TryParse(int value, out ValidChannelPriceInUsCentsPerWeek weeklySubscriptionPrice, out IReadOnlyCollection<string> errorMessages)
         {
             var errorMessageList = new List<string>();
             errorMessages = errorMessageList;
 
             if (value < MinValue)
             {
-                errorMessageList.Add(string.Format("Weekly subscription price must be at least {0}", MinValue));
+                errorMessageList.Add(string.Format("Weekly price must be at least {0}", MinValue));
             }
 
             if (errorMessageList.Count > 0)
@@ -56,7 +54,7 @@ namespace Fifthweek.Api.Subscriptions
                 return false;
             }
 
-            weeklySubscriptionPrice = new ChannelPriceInUsCentsPerWeek
+            weeklySubscriptionPrice = new ValidChannelPriceInUsCentsPerWeek
             {
                 Value = value
             };

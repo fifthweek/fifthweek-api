@@ -7,22 +7,22 @@
     using Microsoft.VisualStudio.TestTools.UnitTesting;
 
     [TestClass]
-    public class SubscriptionNameTests : ValidatedStringTests<ValidSubscriptionName>
+    public class ValidTaglineTests : ValidatedStringTests<ValidTagline>
     {
-        public static readonly string InvalidValue = string.Empty;
+        public static readonly string InvalidValue = "!";
 
         protected override string ValueA
         {
-            get { return "Lawrence"; }
+            get { return "Web Comics and More"; }
         }
 
         protected override string ValueB
         {
-            get { return "James"; }
+            get { return "Web Comics and Much, Much More"; }
         }
 
         [TestMethod]
-        public void ItShouldAllowBasicSubscriptionNames()
+        public void ItShouldAllowBasicTaglines()
         {
             this.GoodValue(this.ValueA);
             this.GoodValue(this.ValueB);
@@ -41,15 +41,15 @@
         }
 
         [TestMethod]
-        public void ItShouldNotAllowEmptySubscriptionNames()
+        public void ItShouldNotAllowTaglinesUnder5Characters()
         {
-            this.AssertMinLength(1);
+            this.AssertMinLength(5);
         }
 
         [TestMethod]
-        public void ItShouldNotAllowSubscriptionNamesOver25Characters()
+        public void ItShouldNotAllowTaglinesOver55Characters()
         {
-            this.AssertMaxLength(25);
+            this.AssertMaxLength(55);
         }
 
         [TestMethod]
@@ -64,22 +64,22 @@
             this.AssertNewLinesNotAllowed();
         }
 
-        protected override ValidSubscriptionName Parse(string value, bool exact)
+        protected override ValidTagline Parse(string value, bool exact)
         {
-            return ValidSubscriptionName.Parse(value);
+            return ValidTagline.Parse(value);
         }
 
-        protected override bool TryParse(string value, out ValidSubscriptionName parsedObject, bool exact)
+        protected override bool TryParse(string value, out ValidTagline parsedObject, bool exact)
         {
-            return ValidSubscriptionName.TryParse(value, out parsedObject);
+            return ValidTagline.TryParse(value, out parsedObject);
         }
 
-        protected override bool TryParse(string value, out ValidSubscriptionName parsedObject, out IReadOnlyCollection<string> errorMessages, bool exact)
+        protected override bool TryParse(string value, out ValidTagline parsedObject, out IReadOnlyCollection<string> errorMessages, bool exact)
         {
-            return ValidSubscriptionName.TryParse(value, out parsedObject, out errorMessages);
+            return ValidTagline.TryParse(value, out parsedObject, out errorMessages);
         }
 
-        protected override string GetValue(ValidSubscriptionName parsedObject)
+        protected override string GetValue(ValidTagline parsedObject)
         {
             return parsedObject.Value;
         }

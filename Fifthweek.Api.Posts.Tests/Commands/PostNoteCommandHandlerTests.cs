@@ -1,4 +1,4 @@
-﻿namespace Fifthweek.Api.Subscriptions.Tests.Commands
+﻿namespace Fifthweek.Api.Posts.Tests.Commands
 {
     using System;
     using System.Data.SqlTypes;
@@ -8,7 +8,8 @@
     using Fifthweek.Api.Identity.Membership;
     using Fifthweek.Api.Persistence;
     using Fifthweek.Api.Persistence.Tests.Shared;
-    using Fifthweek.Api.Subscriptions.Commands;
+    using Fifthweek.Api.Posts.Commands;
+    using Fifthweek.Api.Subscriptions;
 
     using Microsoft.VisualStudio.TestTools.UnitTesting;
 

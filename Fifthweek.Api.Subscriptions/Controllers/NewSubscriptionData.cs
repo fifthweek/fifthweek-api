@@ -13,7 +13,7 @@
         [Parsed(typeof(ValidTagline))]
         public string Tagline { get; set; }
 
-        [Parsed(typeof(ChannelPriceInUsCentsPerWeek))]
+        [Parsed(typeof(ValidChannelPriceInUsCentsPerWeek))]
         public int BasePrice { get; set; }
     }
 }

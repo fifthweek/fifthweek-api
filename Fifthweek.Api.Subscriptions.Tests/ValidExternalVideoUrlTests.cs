@@ -7,7 +7,7 @@
     using Microsoft.VisualStudio.TestTools.UnitTesting;
 
     [TestClass]
-    public class ExternalVideoUrlTests : ValidatedStringTests<ValidExternalVideoUrl>
+    public class ValidExternalVideoUrlTests : ValidatedStringTests<ValidExternalVideoUrl>
     {
         public static readonly string InvalidValue = "!";
 

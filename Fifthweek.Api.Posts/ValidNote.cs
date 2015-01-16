@@ -1,12 +1,10 @@
-﻿namespace Fifthweek.Api.Subscriptions
+﻿namespace Fifthweek.Api.Posts
 {
     using System;
     using System.Collections.Generic;
     using System.Linq;
 
-    using Fifthweek.Api.Core;
     using Fifthweek.CodeGeneration;
-    using Fifthweek.Shared;
 
     [AutoEqualityMembers]
     public partial class ValidNote

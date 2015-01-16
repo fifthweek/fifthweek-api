@@ -124,7 +124,7 @@
                 subscriptionId,
                 ValidSubscriptionName.Parse(data.SubscriptionName),
                 ValidTagline.Parse(data.Tagline),
-                ChannelPriceInUsCentsPerWeek.Parse(data.BasePrice));
+                ValidChannelPriceInUsCentsPerWeek.Parse(data.BasePrice));
         }
 
         public static UpdatedSubscriptionData NewUpdatedSubscriptionData()
