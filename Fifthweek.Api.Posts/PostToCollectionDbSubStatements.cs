@@ -28,30 +28,30 @@ namespace Fifthweek.Api.Posts
 
         private readonly IFifthweekDbContext databaseContext;
 
-        public Task QueuePostAsync(Post post)
+        public Task QueuePostAsync(Post unscheduledPostWithoutChannel)
         {
             return this.databaseContext.Database.Connection.InsertAsync(
-                post,
+                unscheduledPostWithoutChannel,
                 SelectChannelId + Environment.NewLine + SelectMaxQueuePosition,
                 Post.Fields.ChannelId | Post.Fields.QueuePosition);
         }
 
-        public Task SchedulePostAsync(Post post, DateTime scheduledPostDate, DateTime now)
+        public Task SchedulePostAsync(Post unscheduledPostWithoutChannel, DateTime scheduledPostDate, DateTime now)
         {
-            post.LiveDate = scheduledPostDate > now ? scheduledPostDate : now;
+            unscheduledPostWithoutChannel.LiveDate = scheduledPostDate > now ? scheduledPostDate : now;
 
             return this.databaseContext.Database.Connection.InsertAsync(
-                post,
+                unscheduledPostWithoutChannel,
                 SelectChannelId,
                 Post.Fields.ChannelId);
         }
 
-        public Task PostNowAsync(Post post, DateTime now)
+        public Task PostNowAsync(Post unscheduledPostWithoutChannel, DateTime now)
         {
-            post.LiveDate = now;
+            unscheduledPostWithoutChannel.LiveDate = now;
 
             return this.databaseContext.Database.Connection.InsertAsync(
-                post,
+                unscheduledPostWithoutChannel,
                 SelectChannelId,
                 Post.Fields.ChannelId);
         }

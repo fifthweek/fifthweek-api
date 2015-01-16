@@ -7,10 +7,10 @@ namespace Fifthweek.Api.Posts
 
     public interface IPostToCollectionDbSubStatements
     {
-        Task QueuePostAsync(Post post);
+        Task QueuePostAsync(Post unscheduledPostWithoutChannel);
 
-        Task SchedulePostAsync(Post post, DateTime scheduledPostDate, DateTime now);
+        Task SchedulePostAsync(Post unscheduledPostWithoutChannel, DateTime scheduledPostDate, DateTime now);
 
-        Task PostNowAsync(Post post, DateTime now);
+        Task PostNowAsync(Post unscheduledPostWithoutChannel, DateTime now);
     }
 }
