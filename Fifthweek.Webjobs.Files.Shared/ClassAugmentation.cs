@@ -1,14 +1,17 @@
-﻿using System;
-using System.Linq;
-
-
-
-namespace Fifthweek.Webjobs.Files.Shared
+﻿namespace Fifthweek.WebJobs.Files.Shared
 {
     using System;
+    using System;
+    using System;
     using System.Linq;
-    using Fifthweek.Shared;
+    using System.Linq;
+    using System.Linq;
+
     using Fifthweek.CodeGeneration;
+    using Fifthweek.CodeGeneration;
+    using Fifthweek.Shared;
+    using Fifthweek.Shared;
+
     public partial class ProcessFileMessage 
     {
         public ProcessFileMessage(
@@ -44,19 +47,11 @@ namespace Fifthweek.Webjobs.Files.Shared
         }
     }
 
-}
-
-namespace Fifthweek.Webjobs.Files.Shared
-{
-    using System;
-    using System.Linq;
-    using Fifthweek.Shared;
-    using Fifthweek.CodeGeneration;
     public partial class ProcessFileMessage 
     {
         public override string ToString()
         {
-            return string.Format("ProcessFileQueueItem(\"{0}\", \"{1}\", \"{2}\", {3})", this.ContainerName == null ? "null" : this.ContainerName.ToString(), this.BlobName == null ? "null" : this.BlobName.ToString(), this.Purpose == null ? "null" : this.Purpose.ToString(), this.Overwrite == null ? "null" : this.Overwrite.ToString());
+            return string.Format("ProcessFileMessage(\"{0}\", \"{1}\", \"{2}\", {3})", this.ContainerName == null ? "null" : this.ContainerName.ToString(), this.BlobName == null ? "null" : this.BlobName.ToString(), this.Purpose == null ? "null" : this.Purpose.ToString(), this.Overwrite == null ? "null" : this.Overwrite.ToString());
         }
 
         public override bool Equals(object obj)
@@ -117,7 +112,4 @@ namespace Fifthweek.Webjobs.Files.Shared
             return true;
         }
     }
-
 }
-
-

@@ -68,23 +68,23 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fifthweek.Api.Accounts", "F
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fifthweek.Api.Accounts.Tests", "Fifthweek.Api.Accounts.Tests\Fifthweek.Api.Accounts.Tests.csproj", "{F2E923C5-B18D-41F1-9742-61ED576EF0FC}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fifthweek.Webjobs.Thumbnails", "Fifthweek.Webjobs.Thumbnails\Fifthweek.Webjobs.Thumbnails.csproj", "{38210173-9A08-4C53-9D64-D9FDCC44107A}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fifthweek.WebJobs.Thumbnails", "Fifthweek.WebJobs.Thumbnails\Fifthweek.WebJobs.Thumbnails.csproj", "{38210173-9A08-4C53-9D64-D9FDCC44107A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fifthweek.Webjobs.Shared", "Fifthweek.Webjobs.Shared\Fifthweek.Webjobs.Shared.csproj", "{EFBACD48-98A1-4FA3-9BEA-E13414141484}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fifthweek.WebJobs.Shared", "Fifthweek.WebJobs.Shared\Fifthweek.WebJobs.Shared.csproj", "{EFBACD48-98A1-4FA3-9BEA-E13414141484}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fifthweek.Webjobs.Thumbnails.Tests", "Fifthweek.Webjobs.Thumbnails.Tests\Fifthweek.Webjobs.Thumbnails.Tests.csproj", "{3A45065B-761C-4DE6-AB5F-1B663658C919}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fifthweek.WebJobs.Thumbnails.Tests", "Fifthweek.WebJobs.Thumbnails.Tests\Fifthweek.WebJobs.Thumbnails.Tests.csproj", "{3A45065B-761C-4DE6-AB5F-1B663658C919}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fifthweek.Webjobs.Thumbnails.Shared", "Fifthweek.Webjobs.Thumbnails.Shared\Fifthweek.Webjobs.Thumbnails.Shared.csproj", "{36D94253-0A3D-4062-9FB9-635B402C68C6}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fifthweek.WebJobs.Thumbnails.Shared", "Fifthweek.WebJobs.Thumbnails.Shared\Fifthweek.WebJobs.Thumbnails.Shared.csproj", "{36D94253-0A3D-4062-9FB9-635B402C68C6}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fifthweek.Webjobs.Files", "Fifthweek.Webjobs.Files\Fifthweek.Webjobs.Files.csproj", "{0927094C-5474-40E7-9458-7C710678507A}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fifthweek.WebJobs.Files", "Fifthweek.WebJobs.Files\Fifthweek.WebJobs.Files.csproj", "{0927094C-5474-40E7-9458-7C710678507A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fifthweek.Webjobs.Files.Shared", "Fifthweek.Webjobs.Files.Shared\Fifthweek.Webjobs.Files.Shared.csproj", "{227AE1D7-E7A5-44A2-87CC-82EB29033B0D}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fifthweek.WebJobs.Files.Shared", "Fifthweek.WebJobs.Files.Shared\Fifthweek.WebJobs.Files.Shared.csproj", "{227AE1D7-E7A5-44A2-87CC-82EB29033B0D}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fifthweek.Shared", "Fifthweek.Shared\Fifthweek.Shared.csproj", "{6D12FFBB-38E9-4722-A690-0F0338538EBC}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fifthweek.Shared.Tests", "Fifthweek.Shared.Tests\Fifthweek.Shared.Tests.csproj", "{47D9DF9F-7EBC-4AEC-A2E6-8367B4FAE95D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fifthweek.Webjobs.Files.Tests", "Fifthweek.Webjobs.Files.Tests\Fifthweek.Webjobs.Files.Tests.csproj", "{E06F69AA-2584-4A6C-9640-C8BE33086AD7}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fifthweek.WebJobs.Files.Tests", "Fifthweek.WebJobs.Files.Tests\Fifthweek.WebJobs.Files.Tests.csproj", "{E06F69AA-2584-4A6C-9640-C8BE33086AD7}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fifthweek.CodeGeneration", "Fifthweek.CodeGeneration\Fifthweek.CodeGeneration.csproj", "{770F450E-2166-4269-BEC1-DF59AA16B1E8}"
 EndProject

@@ -1,7 +1,6 @@
-namespace Fifthweek.Webjobs.Files.Shared
+namespace Fifthweek.WebJobs.Files.Shared
 {
     using Fifthweek.CodeGeneration;
-    using Fifthweek.Shared;
 
     [AutoConstructor]
     [AutoEqualityMembers]

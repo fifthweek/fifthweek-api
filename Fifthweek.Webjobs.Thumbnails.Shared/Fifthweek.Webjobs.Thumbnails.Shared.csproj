@@ -7,8 +7,8 @@
     <ProjectGuid>{36D94253-0A3D-4062-9FB9-635B402C68C6}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Fifthweek.Webjobs.Thumbnails.Shared</RootNamespace>
-    <AssemblyName>Fifthweek.Webjobs.Thumbnails.Shared</AssemblyName>
+    <RootNamespace>Fifthweek.WebJobs.Thumbnails.Shared</RootNamespace>
+    <AssemblyName>Fifthweek.WebJobs.Thumbnails.Shared</AssemblyName>
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />
@@ -89,9 +89,9 @@
       <Project>{6D12FFBB-38E9-4722-A690-0F0338538EBC}</Project>
       <Name>Fifthweek.Shared</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Fifthweek.Webjobs.Files.Shared\Fifthweek.Webjobs.Files.Shared.csproj">
+    <ProjectReference Include="..\Fifthweek.WebJobs.Files.Shared\Fifthweek.WebJobs.Files.Shared.csproj">
       <Project>{227AE1D7-E7A5-44A2-87CC-82EB29033B0D}</Project>
-      <Name>Fifthweek.Webjobs.Files.Shared</Name>
+      <Name>Fifthweek.WebJobs.Files.Shared</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

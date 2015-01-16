@@ -1,11 +1,10 @@
-﻿namespace Fifthweek.Webjobs.Thumbnails.Shared
+﻿namespace Fifthweek.WebJobs.Thumbnails.Shared
 {
     using System.Threading.Tasks;
 
     using Fifthweek.Azure;
     using Fifthweek.CodeGeneration;
-    using Fifthweek.Shared;
-    using Fifthweek.Webjobs.Files.Shared;
+    using Fifthweek.WebJobs.Files.Shared;
 
     using Microsoft.WindowsAzure.Storage.Queue;
 

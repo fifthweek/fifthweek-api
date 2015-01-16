@@ -1,15 +1,13 @@
-﻿namespace Fifthweek.Webjobs.Thumbnails
+﻿namespace Fifthweek.WebJobs.Thumbnails
 {
     using System;
     using System.IO;
     using System.Threading;
     using System.Threading.Tasks;
 
-    using Fifthweek.Azure;
-    using Fifthweek.Webjobs.Thumbnails.Shared;
+    using Fifthweek.WebJobs.Thumbnails.Shared;
 
     using Microsoft.Azure.WebJobs;
-    using Microsoft.WindowsAzure.Storage.Blob;
 
     public class Program
     {

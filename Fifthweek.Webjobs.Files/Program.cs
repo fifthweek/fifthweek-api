@@ -1,14 +1,11 @@
-﻿namespace Fifthweek.Webjobs.Files
+﻿namespace Fifthweek.WebJobs.Files
 {
     using System;
-    using System.Collections.Generic;
     using System.IO;
     using System.Threading;
     using System.Threading.Tasks;
 
-    using Fifthweek.Shared;
-    using Fifthweek.Webjobs.Files.Shared;
-    using Fifthweek.Webjobs.Thumbnails.Shared;
+    using Fifthweek.WebJobs.Files.Shared;
 
     using Microsoft.Azure.WebJobs;
 

@@ -1,4 +1,4 @@
-﻿namespace Fifthweek.Webjobs.Files.Shared
+﻿namespace Fifthweek.WebJobs.Files.Shared
 {
     public class Constants
     {

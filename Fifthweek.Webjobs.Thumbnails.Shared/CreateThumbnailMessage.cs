@@ -1,4 +1,4 @@
-namespace Fifthweek.Webjobs.Thumbnails.Shared
+namespace Fifthweek.WebJobs.Thumbnails.Shared
 {
     using Fifthweek.CodeGeneration;
 

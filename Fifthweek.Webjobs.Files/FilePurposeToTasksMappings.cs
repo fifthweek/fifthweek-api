@@ -1,11 +1,11 @@
-﻿namespace Fifthweek.Webjobs.Files
+﻿namespace Fifthweek.WebJobs.Files
 {
     using System.Collections.Generic;
     using System.Linq;
 
     using Fifthweek.Shared;
-    using Fifthweek.Webjobs.Files.Shared;
-    using Fifthweek.Webjobs.Thumbnails.Shared;
+    using Fifthweek.WebJobs.Files.Shared;
+    using Fifthweek.WebJobs.Thumbnails.Shared;
 
     public class FilePurposeToTasksMappings : IFilePurposeToTasksMappings
     {

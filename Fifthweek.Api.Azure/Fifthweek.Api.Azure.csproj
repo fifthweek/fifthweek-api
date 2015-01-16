@@ -89,9 +89,9 @@
       <Project>{890cd4c4-993f-482d-bbb5-a50767ace55b}</Project>
       <Name>Fifthweek.Azure</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Fifthweek.Webjobs.Files.Shared\Fifthweek.Webjobs.Files.Shared.csproj">
+    <ProjectReference Include="..\Fifthweek.WebJobs.Files.Shared\Fifthweek.WebJobs.Files.Shared.csproj">
       <Project>{227ae1d7-e7a5-44a2-87cc-82eb29033b0d}</Project>
-      <Name>Fifthweek.Webjobs.Files.Shared</Name>
+      <Name>Fifthweek.WebJobs.Files.Shared</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

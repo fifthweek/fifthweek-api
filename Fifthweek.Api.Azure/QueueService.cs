@@ -4,11 +4,13 @@
 
     using Fifthweek.Api.Core;
     using Fifthweek.Azure;
-    using Fifthweek.Webjobs.Files.Shared;
+    using Fifthweek.WebJobs.Files.Shared;
 
     using Microsoft.WindowsAzure.Storage.Queue;
 
     using Newtonsoft.Json;
+
+    using Constants = Fifthweek.WebJobs.Files.Shared.Constants;
 
     public class QueueService : IQueueService
     {
@@ -26,7 +28,7 @@
             purpose.AssertNotNull("purpose");
 
             var cloudQueueClient = this.cloudStorageAccount.CreateCloudQueueClient();
-            var queue = cloudQueueClient.GetQueueReference(Fifthweek.Webjobs.Files.Shared.Constants.FilesQueueName);
+            var queue = cloudQueueClient.GetQueueReference(Constants.FilesQueueName);
             await queue.CreateIfNotExistsAsync();
 
             var messageContent = new ProcessFileMessage(containerName, blobName, purpose, false);

@@ -1,8 +1,8 @@
-﻿namespace Fifthweek.Webjobs.Files
+﻿namespace Fifthweek.WebJobs.Files
 {
     using System.Collections.Generic;
 
-    using Fifthweek.Webjobs.Files.Shared;
+    using Fifthweek.WebJobs.Files.Shared;
 
     public interface IFilePurposeToTasksMappings
     {

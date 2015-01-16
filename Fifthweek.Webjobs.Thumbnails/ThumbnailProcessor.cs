@@ -1,16 +1,13 @@
-﻿namespace Fifthweek.Webjobs.Thumbnails
+﻿namespace Fifthweek.WebJobs.Thumbnails
 {
     using System.IO;
     using System.Threading;
     using System.Threading.Tasks;
 
-    using Fifthweek.Azure;
     using Fifthweek.CodeGeneration;
-    using Fifthweek.Webjobs.Thumbnails.Shared;
+    using Fifthweek.WebJobs.Thumbnails.Shared;
 
     using ImageMagick;
-
-    using Microsoft.Azure.WebJobs;
 
     [AutoConstructor]
     public partial class ThumbnailProcessor : IThumbnailProcessor

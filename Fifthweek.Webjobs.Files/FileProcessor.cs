@@ -1,4 +1,4 @@
-﻿namespace Fifthweek.Webjobs.Files
+﻿namespace Fifthweek.WebJobs.Files
 {
     using System;
     using System.IO;
@@ -7,11 +7,9 @@
 
     using Fifthweek.Azure;
     using Fifthweek.CodeGeneration;
-    using Fifthweek.Webjobs.Files.Shared;
-    using Fifthweek.Webjobs.Thumbnails.Shared;
+    using Fifthweek.WebJobs.Files.Shared;
 
     using Microsoft.Azure.WebJobs;
-    using Microsoft.WindowsAzure.Storage.Queue;
 
     [AutoConstructor]
     public partial class FileProcessor : IFileProcessor

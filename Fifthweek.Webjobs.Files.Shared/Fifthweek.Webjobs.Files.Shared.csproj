@@ -7,8 +7,8 @@
     <ProjectGuid>{227AE1D7-E7A5-44A2-87CC-82EB29033B0D}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Fifthweek.Webjobs.Files.Shared</RootNamespace>
-    <AssemblyName>Fifthweek.Webjobs.Files.Shared</AssemblyName>
+    <RootNamespace>Fifthweek.WebJobs.Files.Shared</RootNamespace>
+    <AssemblyName>Fifthweek.WebJobs.Files.Shared</AssemblyName>
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />

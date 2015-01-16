@@ -1,10 +1,8 @@
-﻿namespace Fifthweek.Webjobs.Files.Shared
+﻿namespace Fifthweek.WebJobs.Files.Shared
 {
     using System.Threading.Tasks;
 
     using Fifthweek.Azure;
-
-    using Microsoft.WindowsAzure.Storage.Queue;
 
     public interface IFileTask
     {
