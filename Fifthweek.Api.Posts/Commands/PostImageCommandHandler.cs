@@ -1,5 +1,6 @@
 ﻿namespace Fifthweek.Api.Posts.Commands
 {
+    using System;
     using System.Threading.Tasks;
 
     using Fifthweek.Api.Core;
@@ -25,7 +26,8 @@
                 command.ScheduledPostDate,
                 command.IsQueued,
                 command.ImageFileId,
-                true);
+                true,
+                DateTime.UtcNow);
         }
     }
 }

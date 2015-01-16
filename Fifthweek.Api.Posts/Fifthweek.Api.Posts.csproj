@@ -72,6 +72,7 @@
       <DesignTime>True</DesignTime>
     </Compile>
     <Compile Include="Commands\PostFileCommandHandler.cs" />
+    <Compile Include="IPostToCollectionDbSubStatements.cs" />
     <Compile Include="IPostToCollectionDbStatement.cs" />
     <Compile Include="Commands\PostFileCommand.cs" />
     <Compile Include="Commands\PostImageCommand.cs" />
@@ -84,6 +85,7 @@
     <Compile Include="Controllers\PostController.cs" />
     <Compile Include="PostId.cs" />
     <Compile Include="PostToCollectionDbStatement.cs" />
+    <Compile Include="PostToCollectionDbSubStatements.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ValidComment.cs" />
     <Compile Include="ValidNote.cs" />

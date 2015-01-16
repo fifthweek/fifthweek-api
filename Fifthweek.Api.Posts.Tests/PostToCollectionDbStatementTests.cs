@@ -1,145 +1,139 @@
 ﻿namespace Fifthweek.Api.Posts.Tests
 {
     using System;
-    using System.Data.SqlTypes;
     using System.Threading.Tasks;
 
     using Fifthweek.Api.FileManagement;
-    using Fifthweek.Api.Identity.Membership;
     using Fifthweek.Api.Persistence;
-    using Fifthweek.Api.Persistence.Tests.Shared;
     using Fifthweek.Api.Subscriptions;
 
     using Microsoft.VisualStudio.TestTools.UnitTesting;
 
+    using Moq;
+
     [TestClass]
-    public class PostToCollectionDbStatementTests : PersistenceTestsBase
+    public class PostToCollectionDbStatementTests
     {
-        private static readonly UserId UserId = new UserId(Guid.NewGuid());
-        private static readonly ChannelId ChannelId = new ChannelId(Guid.NewGuid());
         private static readonly CollectionId CollectionId = new CollectionId(Guid.NewGuid());
         private static readonly PostId PostId = new PostId(Guid.NewGuid());
         private static readonly FileId FileId = new FileId(Guid.NewGuid());
         private static readonly ValidComment Comment = ValidComment.Parse("Hey guys!");
         private static readonly DateTime TwoDaysFromNow = DateTime.UtcNow.AddDays(2);
-        private static readonly DateTime TwoDaysAgo = DateTime.UtcNow.AddDays(-2);
+        private static readonly DateTime Now = DateTime.UtcNow;
+
+        private static readonly Post UncommentedImage = new Post(
+                PostId.Value,
+                default(Guid),
+                null,
+                CollectionId.Value,
+                null,
+                null,
+                null,
+                FileId.Value,
+                null,
+                null,
+                null,
+                null,
+                Now);
+
+        private static readonly Post CommentedImage = new Post(
+                PostId.Value,
+                default(Guid),
+                null,
+                CollectionId.Value,
+                null,
+                null,
+                null,
+                FileId.Value,
+                null,
+                Comment.Value,
+                null,
+                null,
+                Now);
+
+        private static readonly Post CommentedFile = new Post(
+                PostId.Value,
+                default(Guid),
+                null,
+                CollectionId.Value,
+                null,
+                FileId.Value,
+                null,
+                null,
+                null,
+                Comment.Value,
+                null,
+                null,
+                Now);
+
+        private Mock<IPostToCollectionDbSubStatements> subStatements;
         private PostToCollectionDbStatement target;
 
-        [TestMethod]
-        public async Task WhenReRun_ItShouldHaveNoEffect()
+        [TestInitialize]
+        public void Initialize()
         {
-            await this.NewTestDatabaseAsync(async testDatabase =>
-            {
-                this.target = new PostToCollectionDbStatement(testDatabase.NewContext());
-                await this.CreateEntitiesAsync(testDatabase);
-                await this.target.ExecuteAsync(PostId, CollectionId, Comment, null, false, FileId, false);
-                await testDatabase.TakeSnapshotAsync();
-
-                await this.target.ExecuteAsync(PostId, CollectionId, Comment, null, false, FileId, false);
-
-                return ExpectedSideEffects.None;
-            });
+            this.subStatements = new Mock<IPostToCollectionDbSubStatements>(MockBehavior.Strict);
+            this.target = new PostToCollectionDbStatement(this.subStatements.Object);
         }
 
         [TestMethod]
-        public async Task WhenDateIsProvidedAndIsInFuture_ItShouldSchedulePostForLater()
+        public async Task ItShouldAllowFiles()
         {
-            await this.NewTestDatabaseAsync(async testDatabase =>
-            {
-                this.target = new PostToCollectionDbStatement(testDatabase.NewContext());
-                await this.CreateEntitiesAsync(testDatabase);
-                await testDatabase.TakeSnapshotAsync();
+            this.subStatements.Setup(_ => _.QueuePostAsync(CommentedFile)).Returns(Task.FromResult(0)).Verifiable();
 
-                await this.target.ExecuteAsync(PostId, CollectionId, Comment, TwoDaysFromNow, false, FileId, true);
+            await this.target.ExecuteAsync(PostId, CollectionId, Comment, null, true, FileId, false, Now);
 
-                var expectedPost = new Post(
-                    PostId.Value,
-                    ChannelId.Value,
-                    null,
-                    CollectionId.Value,
-                    null,
-                    null,
-                    null,
-                    FileId.Value,
-                    null,
-                    Comment.Value,
-                    null,
-                    new SqlDateTime(TwoDaysFromNow).Value,
-                    default(DateTime));
-
-                return new ExpectedSideEffects
-                {
-                    Insert = new WildcardEntity<Post>(expectedPost)
-                    {
-                        AreEqual = actualPost =>
-                        {
-                            expectedPost.CreationDate = actualPost.CreationDate; // Take wildcard properties from actual value.
-                            return Equals(expectedPost, actualPost);
-                        }
-                    }
-                };
-            });
+            this.subStatements.Verify();
         }
 
         [TestMethod]
-        public async Task WhenDateIsProvidedAndIsInPast_ItShouldSchedulePostForNow()
+        public async Task ItShouldAllowImages()
         {
-            await this.ItShouldSchedulePostForNow(TwoDaysAgo);
+            this.subStatements.Setup(_ => _.QueuePostAsync(CommentedImage)).Returns(Task.FromResult(0)).Verifiable();
+
+            await this.target.ExecuteAsync(PostId, CollectionId, Comment, null, true, FileId, true, Now);
+
+            this.subStatements.Verify();
         }
 
         [TestMethod]
-        public async Task WhenDateIsNotProvided_ItShouldSchedulePostForNow()
+        public async Task ItShouldAllowOptionalComments()
         {
-            await this.ItShouldSchedulePostForNow(null);
+            this.subStatements.Setup(_ => _.QueuePostAsync(UncommentedImage)).Returns(Task.FromResult(0)).Verifiable();
+
+            await this.target.ExecuteAsync(PostId, CollectionId, null, null, true, FileId, true, Now);
+
+            this.subStatements.Verify();
         }
 
-        private async Task ItShouldSchedulePostForNow(DateTime? dateInThePast)
+        [TestMethod]
+        public async Task ItShouldAllowQueuedPosts()
         {
-            await this.NewTestDatabaseAsync(async testDatabase =>
-            {
-                this.target = new PostToCollectionDbStatement(testDatabase.NewContext());
-                await this.CreateEntitiesAsync(testDatabase);
-                await testDatabase.TakeSnapshotAsync();
+            this.subStatements.Setup(_ => _.QueuePostAsync(CommentedImage)).Returns(Task.FromResult(0)).Verifiable();
 
-                await this.target.ExecuteAsync(PostId, CollectionId, Comment, dateInThePast, false, FileId, true);
+            await this.target.ExecuteAsync(PostId, CollectionId, Comment, null, true, FileId, true, Now);
 
-                var expectedPost = new Post(
-                    PostId.Value,
-                    ChannelId.Value,
-                    null,
-                    CollectionId.Value,
-                    null,
-                    null,
-                    null,
-                    FileId.Value,
-                    null,
-                    Comment.Value,
-                    null,
-                    default(DateTime),
-                    default(DateTime));
-
-                return new ExpectedSideEffects
-                {
-                    Insert = new WildcardEntity<Post>(expectedPost)
-                    {
-                        AreEqual = actualPost =>
-                        {
-                            expectedPost.CreationDate = actualPost.CreationDate; // Take wildcard properties from actual value.
-                            expectedPost.LiveDate = actualPost.CreationDate; // Assumes creation date is UtcNow (haven't actually been testing this so far).
-                            return Equals(expectedPost, actualPost);
-                        }
-                    }
-                };
-            });
+            this.subStatements.Verify();
         }
 
-        private async Task CreateEntitiesAsync(TestDatabaseContext testDatabase)
+        [TestMethod]
+        public async Task ItShouldAllowScheduledPosts()
         {
-            using (var databaseContext = testDatabase.NewContext())
-            {
-                await databaseContext.CreateTestCollectionAsync(UserId.Value, ChannelId.Value, CollectionId.Value);
-                await databaseContext.CreateTestFileWithExistingUserAsync(UserId.Value, FileId.Value);
-            }
+            this.subStatements.Setup(_ => _.SchedulePostAsync(CommentedImage, TwoDaysFromNow, Now)).Returns(Task.FromResult(0)).Verifiable();
+
+            await this.target.ExecuteAsync(PostId, CollectionId, Comment, TwoDaysFromNow, false, FileId, true, Now);
+
+            this.subStatements.Verify();
+        }
+
+        [TestMethod]
+        public async Task ItShouldAllowImmediatePosts()
+        {
+            this.subStatements.Setup(_ => _.PostNowAsync(CommentedImage, Now)).Returns(Task.FromResult(0)).Verifiable();
+
+            await this.target.ExecuteAsync(PostId, CollectionId, Comment, null, false, FileId, true, Now);
+
+            this.subStatements.Verify();
         }
     }
 }

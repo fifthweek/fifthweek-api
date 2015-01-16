@@ -329,24 +329,29 @@ namespace Fifthweek.Api.Posts
     public partial class PostToCollectionDbStatement 
     {
         public PostToCollectionDbStatement(
-            Fifthweek.Api.Persistence.IFifthweekDbContext databaseContext)
+            Fifthweek.Api.Posts.IPostToCollectionDbSubStatements subStatements)
         {
-            if (databaseContext == null)
+            if (subStatements == null)
             {
-                throw new ArgumentNullException("databaseContext");
+                throw new ArgumentNullException("subStatements");
             }
 
-            this.databaseContext = databaseContext;
+            this.subStatements = subStatements;
         }
     }
 
 }
 namespace Fifthweek.Api.Posts.Commands
 {
-    using System.Threading.Tasks;
-    using Fifthweek.Api.Core;
+    using System;
+    using System.Linq;
+    using Fifthweek.Api.FileManagement;
+    using Fifthweek.Api.Identity.Membership;
     using Fifthweek.Api.Subscriptions;
     using Fifthweek.CodeGeneration;
+    using System.Threading.Tasks;
+    using Fifthweek.Api.Core;
+    using Fifthweek.Api.Persistence;
     public partial class PostFileCommandHandler 
     {
         public PostFileCommandHandler(
@@ -365,6 +370,27 @@ namespace Fifthweek.Api.Posts.Commands
 
             this.collectionSecurity = collectionSecurity;
             this.postToCollectionDbStatement = postToCollectionDbStatement;
+        }
+    }
+
+}
+namespace Fifthweek.Api.Posts
+{
+    using System;
+    using System.Threading.Tasks;
+    using Fifthweek.Api.Persistence;
+    using Fifthweek.CodeGeneration;
+    public partial class PostToCollectionDbSubStatements 
+    {
+        public PostToCollectionDbSubStatements(
+            Fifthweek.Api.Persistence.IFifthweekDbContext databaseContext)
+        {
+            if (databaseContext == null)
+            {
+                throw new ArgumentNullException("databaseContext");
+            }
+
+            this.databaseContext = databaseContext;
         }
     }
 

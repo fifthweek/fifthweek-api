@@ -15,6 +15,7 @@ namespace Fifthweek.Api.Posts
             DateTime? sheduledPostDate,
             bool isQueued,
             FileId fileId,
-            bool isFileImage);
+            bool isFileImage,
+            DateTime now);
     }
 }

@@ -58,7 +58,7 @@
         public async Task WhenAllowedToPost_ItShouldPostToCollection()
         {
             this.postToCollectionDbStatement.Setup(
-                _ => _.ExecuteAsync(PostId, CollectionId, Comment, ScheduleDate, IsQueued, FileId, false))
+                _ => _.ExecuteAsync(PostId, CollectionId, Comment, ScheduleDate, IsQueued, FileId, false, It.IsAny<DateTime>()))
                 .Returns(Task.FromResult(0))
                 .Verifiable();
 
