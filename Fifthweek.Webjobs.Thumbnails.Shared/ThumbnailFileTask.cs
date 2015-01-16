@@ -1,5 +1,6 @@
 ﻿namespace Fifthweek.Webjobs.Thumbnails.Shared
 {
+    using Fifthweek.CodeGeneration;
     using Fifthweek.Shared;
     using Fifthweek.Webjobs.Files.Shared;
 

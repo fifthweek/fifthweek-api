@@ -1,4 +1,4 @@
-﻿namespace Fifthweek.Shared
+﻿namespace Fifthweek.CodeGeneration
 {
     using System;
 

@@ -1,4 +1,4 @@
-﻿namespace Fifthweek.Api.Persistence
+﻿namespace Fifthweek.CodeGeneration
 {
     using System;
 

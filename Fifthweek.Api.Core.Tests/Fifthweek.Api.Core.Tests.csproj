@@ -103,6 +103,10 @@
       <Project>{f90dc407-dc1e-4ef6-bbec-b5598810660a}</Project>
       <Name>Fifthweek.Api</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Fifthweek.CodeGeneration\Fifthweek.CodeGeneration.csproj">
+      <Project>{770f450e-2166-4269-bec1-df59aa16b1e8}</Project>
+      <Name>Fifthweek.CodeGeneration</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Fifthweek.Shared\Fifthweek.Shared.csproj">
       <Project>{6d12ffbb-38e9-4722-a690-0f0338538ebc}</Project>
       <Name>Fifthweek.Shared</Name>

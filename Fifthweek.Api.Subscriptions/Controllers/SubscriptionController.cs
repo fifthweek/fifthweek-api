@@ -8,6 +8,7 @@
     using Fifthweek.Api.Identity.OAuth;
     using Fifthweek.Api.Subscriptions.Commands;
     using Fifthweek.Api.Subscriptions.Queries;
+    using Fifthweek.CodeGeneration;
     using Fifthweek.Shared;
 
     [RoutePrefix("subscriptions"), AutoConstructor]

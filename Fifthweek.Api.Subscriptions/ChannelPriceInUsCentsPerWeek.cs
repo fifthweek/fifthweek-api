@@ -4,6 +4,7 @@ using Fifthweek.Api.Core;
 
 namespace Fifthweek.Api.Subscriptions
 {
+    using Fifthweek.CodeGeneration;
     using Fifthweek.Shared;
 
     [AutoEqualityMembers]

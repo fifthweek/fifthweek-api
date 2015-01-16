@@ -13,6 +13,7 @@
     using Fifthweek.Api.FileManagement.Queries;
     using Fifthweek.Api.Identity;
     using Fifthweek.Api.Identity.OAuth;
+    using Fifthweek.CodeGeneration;
     using Fifthweek.Shared;
 
     using Microsoft.WindowsAzure;

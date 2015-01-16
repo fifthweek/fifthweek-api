@@ -6,6 +6,7 @@
     using Fifthweek.Api.Core;
     using Fifthweek.Api.Identity.OAuth;
     using Fifthweek.Api.Subscriptions.Commands;
+    using Fifthweek.CodeGeneration;
     using Fifthweek.Shared;
 
     [RoutePrefix("posts"), AutoConstructor]

@@ -8,6 +8,7 @@ namespace Fifthweek.Api.Identity.Membership
     using Dapper;
 
     using Fifthweek.Api.Persistence;
+    using Fifthweek.CodeGeneration;
     using Fifthweek.Shared;
 
     [AutoConstructor]

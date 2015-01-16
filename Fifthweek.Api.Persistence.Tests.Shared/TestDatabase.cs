@@ -9,6 +9,7 @@
 
     using Fifthweek.Api.Core;
     using Fifthweek.Api.Persistence.Migrations;
+    using Fifthweek.CodeGeneration;
     using Fifthweek.Shared;
 
     [AutoConstructor]

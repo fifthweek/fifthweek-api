@@ -2,6 +2,7 @@
 
 namespace Fifthweek.Api.Identity.Membership.Commands
 {
+    using Fifthweek.CodeGeneration;
     using Fifthweek.Shared;
 
     [AutoEqualityMembers, AutoConstructor]

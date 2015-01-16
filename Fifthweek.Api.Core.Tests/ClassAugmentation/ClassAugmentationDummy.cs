@@ -3,6 +3,7 @@ using System.Collections.Generic;
 
 namespace Fifthweek.Api.Core.Tests.ClassAugmentation
 {
+    using Fifthweek.CodeGeneration;
     using Fifthweek.Shared;
 
     [AutoEqualityMembers, AutoConstructor, AutoBuilder]

@@ -15,6 +15,7 @@ namespace Fifthweek.Api.Identity.OAuth
     using Fifthweek.Api.Identity.OAuth.Queries;
     using Fifthweek.Api.Persistence;
     using Fifthweek.Api.Persistence.Identity;
+    using Fifthweek.CodeGeneration;
     using Fifthweek.Shared;
 
     using Microsoft.Owin.Security;

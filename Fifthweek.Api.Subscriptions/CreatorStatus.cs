@@ -2,6 +2,7 @@
 
 namespace Fifthweek.Api.Subscriptions
 {
+    using Fifthweek.CodeGeneration;
     using Fifthweek.Shared;
 
     [AutoConstructor, AutoEqualityMembers]

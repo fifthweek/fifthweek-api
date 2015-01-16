@@ -1,5 +1,7 @@
 ﻿namespace Fifthweek.Shared
 {
+    using Fifthweek.CodeGeneration;
+
     [AutoConstructor]
     [AutoEqualityMembers]
     public partial class FilePurpose

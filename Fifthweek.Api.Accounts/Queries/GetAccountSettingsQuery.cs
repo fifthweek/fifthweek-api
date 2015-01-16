@@ -3,6 +3,7 @@
     using Fifthweek.Api.Accounts.Controllers;
     using Fifthweek.Api.Core;
     using Fifthweek.Api.Identity.Membership;
+    using Fifthweek.CodeGeneration;
     using Fifthweek.Shared;
 
     [AutoConstructor]

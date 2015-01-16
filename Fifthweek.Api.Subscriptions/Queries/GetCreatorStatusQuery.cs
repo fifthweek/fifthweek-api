@@ -3,6 +3,7 @@ using Fifthweek.Api.Identity.Membership;
 
 namespace Fifthweek.Api.Subscriptions.Queries
 {
+    using Fifthweek.CodeGeneration;
     using Fifthweek.Shared;
 
     [AutoConstructor, AutoEqualityMembers]

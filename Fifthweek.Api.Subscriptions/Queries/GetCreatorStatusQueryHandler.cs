@@ -8,6 +8,7 @@ using Fifthweek.Api.Persistence;
 namespace Fifthweek.Api.Subscriptions.Queries
 {
     using Fifthweek.Api.Identity.Membership;
+    using Fifthweek.CodeGeneration;
     using Fifthweek.Shared;
 
     [AutoConstructor]

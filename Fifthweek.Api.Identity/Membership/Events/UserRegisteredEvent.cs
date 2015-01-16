@@ -2,6 +2,7 @@ using Fifthweek.Api.Core;
 
 namespace Fifthweek.Api.Identity.Membership.Events
 {
+    using Fifthweek.CodeGeneration;
     using Fifthweek.Shared;
 
     [AutoConstructor, AutoEqualityMembers]

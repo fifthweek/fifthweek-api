@@ -5,6 +5,7 @@ namespace Fifthweek.Api.Persistence.Identity
     using System.ComponentModel.DataAnnotations;
 
     using Fifthweek.Api.Core;
+    using Fifthweek.CodeGeneration;
     using Fifthweek.Shared;
 
     using Microsoft.AspNet.Identity.EntityFramework;
