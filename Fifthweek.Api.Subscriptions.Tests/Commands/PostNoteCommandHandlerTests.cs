@@ -15,7 +15,7 @@
     using Moq;
 
     [TestClass]
-    public class CreateNoteCommandHandlerTests : PersistenceTestsBase
+    public class PostNoteCommandHandlerTests : PersistenceTestsBase
     {
         private static readonly UserId UserId = new UserId(Guid.NewGuid());
         private static readonly ChannelId ChannelId = new ChannelId(Guid.NewGuid());
@@ -23,10 +23,10 @@
         private static readonly ValidNote Note = ValidNote.Parse("Hey peeps!");
         private static readonly DateTime TwoDaysFromNow = DateTime.UtcNow.AddDays(2);
         private static readonly DateTime TwoDaysAgo = DateTime.UtcNow.AddDays(-2);
-        private static readonly CreateNoteCommand ImmediatePostCommand = new CreateNoteCommand(UserId, ChannelId, PostId, Note, null);
-        private static readonly CreateNoteCommand Command = ImmediatePostCommand; // Treat this as our canonical testing command.
+        private static readonly PostNoteCommand ImmediatePostCommand = new PostNoteCommand(UserId, ChannelId, PostId, Note, null);
+        private static readonly PostNoteCommand Command = ImmediatePostCommand; // Treat this as our canonical testing command.
         private Mock<IChannelSecurity> channelSecurity;
-        private CreateNoteCommandHandler target;
+        private PostNoteCommandHandler target;
 
         [TestInitialize]
         public void Initialize()
@@ -39,7 +39,7 @@
         {
             await this.NewTestDatabaseAsync(async testDatabase =>
             {
-                this.target = new CreateNoteCommandHandler(this.channelSecurity.Object, testDatabase.NewContext());
+                this.target = new PostNoteCommandHandler(this.channelSecurity.Object, testDatabase.NewContext());
                 this.channelSecurity.Setup(_ => _.AssertPostingAllowedAsync(UserId, ChannelId)).Throws<UnauthorizedException>();
                 await testDatabase.TakeSnapshotAsync();
 
@@ -61,7 +61,7 @@
         {
             await this.NewTestDatabaseAsync(async testDatabase =>
             {
-                this.target = new CreateNoteCommandHandler(this.channelSecurity.Object, testDatabase.NewContext());
+                this.target = new PostNoteCommandHandler(this.channelSecurity.Object, testDatabase.NewContext());
                 await this.CreateChannelAsync(UserId, ChannelId, testDatabase);
                 await this.target.HandleAsync(Command);
                 await testDatabase.TakeSnapshotAsync();
@@ -77,8 +77,8 @@
         {
             await this.NewTestDatabaseAsync(async testDatabase =>
             {
-                this.target = new CreateNoteCommandHandler(this.channelSecurity.Object, testDatabase.NewContext());
-                var scheduledPostCommand = new CreateNoteCommand(UserId, ChannelId, PostId, Note, TwoDaysFromNow);
+                this.target = new PostNoteCommandHandler(this.channelSecurity.Object, testDatabase.NewContext());
+                var scheduledPostCommand = new PostNoteCommand(UserId, ChannelId, PostId, Note, TwoDaysFromNow);
                 await this.CreateChannelAsync(UserId, ChannelId, testDatabase);
                 await testDatabase.TakeSnapshotAsync();
 
@@ -116,7 +116,7 @@
         [TestMethod]
         public async Task WhenDateIsProvidedAndIsInPast_ItShouldSchedulePostForNow()
         {
-            var misscheduledPostCommand = new CreateNoteCommand(UserId, ChannelId, PostId, Note, TwoDaysAgo);
+            var misscheduledPostCommand = new PostNoteCommand(UserId, ChannelId, PostId, Note, TwoDaysAgo);
             await this.ItShouldSchedulePostForNow(misscheduledPostCommand);
         }
 
@@ -126,11 +126,11 @@
             await this.ItShouldSchedulePostForNow(ImmediatePostCommand);
         }
 
-        private async Task ItShouldSchedulePostForNow(CreateNoteCommand command)
+        private async Task ItShouldSchedulePostForNow(PostNoteCommand command)
         {
             await this.NewTestDatabaseAsync(async testDatabase =>
             {
-                this.target = new CreateNoteCommandHandler(this.channelSecurity.Object, testDatabase.NewContext());
+                this.target = new PostNoteCommandHandler(this.channelSecurity.Object, testDatabase.NewContext());
                 await this.CreateChannelAsync(UserId, ChannelId, testDatabase);
                 await testDatabase.TakeSnapshotAsync();
 

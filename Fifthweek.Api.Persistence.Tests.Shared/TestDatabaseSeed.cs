@@ -74,7 +74,8 @@
             var stopwatch = Stopwatch.StartNew();
             using (var databaseContext = this.databaseContextFactory())
             {
-                // We use the user count to discriminate between seed state versions.
+                // Quick validation to ensure database hasn't deviated from seed state. If something is wrong with transaction scopes, it will likely
+                // affect every test. We know that some tests add users, so this seems to be the fastest check (it's run before every test).
                 retval = await databaseContext.Users.CountAsync() != Users;
             }
 

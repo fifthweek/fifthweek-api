@@ -2,23 +2,24 @@
 {
     using System;
 
-    using Fifthweek.Api.Core;
+    using Fifthweek.Api.FileManagement;
     using Fifthweek.Api.Identity.Membership;
     using Fifthweek.CodeGeneration;
-    using Fifthweek.Shared;
 
     [AutoConstructor, AutoEqualityMembers]
-    public partial class CreateNoteCommand
+    public partial class PostFileCommand
     {
         public UserId Requester { get; private set; }
 
-        public ChannelId ChannelId { get; private set; }
+        public CollectionId CollectionId { get; private set; }
 
         public PostId NewPostId { get; private set; }
 
-        public ValidNote Note { get; private set; }
+        public FileId FileId { get; private set; }
 
         [Optional]
         public DateTime? ScheduledPostDate { get; private set; }
+
+        public bool IsQueued { get; private set; }
     }
 }

@@ -21,7 +21,9 @@
         private static readonly PostId PostId = new PostId(Guid.NewGuid());
         private static readonly ChannelId ChannelId = new ChannelId(Guid.NewGuid());
         private static readonly DateTime TwoDaysFromNow = DateTime.UtcNow.AddDays(2);
-        private Mock<ICommandHandler<CreateNoteCommand>> createNote;
+        private Mock<ICommandHandler<PostNoteCommand>> postNote;
+        private Mock<ICommandHandler<PostImageCommand>> postImage;
+        private Mock<ICommandHandler<PostFileCommand>> postFile;
         private Mock<IUserContext> userContext;
         private Mock<IGuidCreator> guidCreator;
         private PostController target;
@@ -29,11 +31,15 @@
         [TestInitialize]
         public void Initialize()
         {
-            this.createNote = new Mock<ICommandHandler<CreateNoteCommand>>();
+            this.postNote = new Mock<ICommandHandler<PostNoteCommand>>();
+            this.postImage = new Mock<ICommandHandler<PostImageCommand>>();
+            this.postFile = new Mock<ICommandHandler<PostFileCommand>>();
             this.userContext = new Mock<IUserContext>();
             this.guidCreator = new Mock<IGuidCreator>();
             this.target = new PostController(
-                this.createNote.Object,
+                this.postNote.Object,
+                this.postImage.Object,
+                this.postFile.Object,
                 this.userContext.Object,
                 this.guidCreator.Object);
         }
@@ -46,12 +52,12 @@
 
             this.userContext.Setup(v => v.GetUserId()).Returns(UserId);
             this.guidCreator.Setup(_ => _.CreateSqlSequential()).Returns(PostId.Value);
-            this.createNote.Setup(v => v.HandleAsync(command)).Returns(Task.FromResult(0)).Verifiable();
+            this.postNote.Setup(v => v.HandleAsync(command)).Returns(Task.FromResult(0)).Verifiable();
 
             var result = await this.target.PostNote(data);
 
             Assert.IsInstanceOfType(result, typeof(OkResult));
-            this.createNote.Verify();
+            this.postNote.Verify();
         }
 
         public static NewNoteData NewNoteData()
@@ -64,12 +70,12 @@
             };
         }
 
-        public static CreateNoteCommand NewCreateNoteCommand(
+        public static PostNoteCommand NewCreateNoteCommand(
             UserId userId,
             PostId postId,
             NewNoteData data)
         {
-            return new CreateNoteCommand(
+            return new PostNoteCommand(
                 userId,
                 new ChannelId(data.ChannelId.DecodeGuid()),
                 postId,

@@ -6,15 +6,14 @@
     using Fifthweek.Api.Core;
     using Fifthweek.Api.Persistence;
     using Fifthweek.CodeGeneration;
-    using Fifthweek.Shared;
 
     [AutoConstructor]
-    public partial class CreateNoteCommandHandler : ICommandHandler<CreateNoteCommand>
+    public partial class PostNoteCommandHandler : ICommandHandler<PostNoteCommand>
     {
         private readonly IChannelSecurity channelSecurity;
         private readonly IFifthweekDbContext databaseContext;
 
-        public async Task HandleAsync(CreateNoteCommand command)
+        public async Task HandleAsync(PostNoteCommand command)
         {
             if (command == null)
             {
@@ -26,7 +25,7 @@
             await this.CreatePostAsync(command);
         }
 
-        private Task CreatePostAsync(CreateNoteCommand command)
+        private Task CreatePostAsync(PostNoteCommand command)
         {
             var now = DateTime.UtcNow;
 

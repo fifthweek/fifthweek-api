@@ -95,7 +95,7 @@
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
     </Compile>
-    <Compile Include="Commands\CreateNoteCommandHandlerTests.cs" />
+    <Compile Include="Commands\PostNoteCommandHandlerTests.cs" />
     <Compile Include="Commands\UpdateSubscriptionCommandHandlerTests.cs" />
     <Compile Include="Commands\PromoteNewUserToCreatorCommandHandlerTests.cs" />
     <Compile Include="Commands\CreateSubscriptionCommandHandlerTests.cs" />

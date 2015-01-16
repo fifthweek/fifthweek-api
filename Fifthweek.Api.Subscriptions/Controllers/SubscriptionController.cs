@@ -21,9 +21,9 @@
         private readonly IGuidCreator guidCreator;
 
         [Route("")]
-        public async Task<IHttpActionResult> PostSubscription(NewSubscriptionData fields)
+        public async Task<IHttpActionResult> PostSubscription(NewSubscriptionData subscription)
         {
-            fields.Parse();
+            subscription.Parse();
 
             var authenticatedUserId = this.userContext.GetUserId();
             var newSubscriptionId = new SubscriptionId(this.guidCreator.CreateSqlSequential());
@@ -31,17 +31,17 @@
             await this.createSubscription.HandleAsync(new CreateSubscriptionCommand(
                 authenticatedUserId,
                 newSubscriptionId,
-                fields.SubscriptionNameObject,
-                fields.TaglineObject,
-                fields.BasePriceObject));
+                subscription.SubscriptionNameObject,
+                subscription.TaglineObject,
+                subscription.BasePriceObject));
 
             return this.Ok();
         }
 
         [Route("{subscriptionId}")]
-        public async Task<IHttpActionResult> PutSubscription(string subscriptionId, [FromBody]UpdatedSubscriptionData fields)
+        public async Task<IHttpActionResult> PutSubscription(string subscriptionId, [FromBody]UpdatedSubscriptionData subscription)
         {
-            fields.Parse();
+            subscription.Parse();
 
             var authenticatedUserId = this.userContext.GetUserId();
             var subscriptionIdObject = new SubscriptionId(subscriptionId.DecodeGuid());
@@ -49,12 +49,12 @@
             await this.updateSubscription.HandleAsync(new UpdateSubscriptionCommand(
                 authenticatedUserId,
                 subscriptionIdObject,
-                fields.SubscriptionNameObject,
-                fields.TaglineObject,
-                fields.IntroductionObject,
-                fields.DescriptionObject,
-                fields.HeaderImageFileIdObject,
-                fields.VideoObject));
+                subscription.SubscriptionNameObject,
+                subscription.TaglineObject,
+                subscription.IntroductionObject,
+                subscription.DescriptionObject,
+                subscription.HeaderImageFileIdObject,
+                subscription.VideoObject));
 
             return this.Ok();
         }

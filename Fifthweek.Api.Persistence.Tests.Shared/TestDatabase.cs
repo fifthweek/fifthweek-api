@@ -1,20 +1,20 @@
 ﻿namespace Fifthweek.Api.Persistence.Tests.Shared
 {
     using System;
-    using System.Data.Entity;
     using System.Data.Entity.Infrastructure;
     using System.Data.Entity.Migrations;
     using System.Diagnostics;
     using System.Threading.Tasks;
 
-    using Fifthweek.Api.Core;
     using Fifthweek.Api.Persistence.Migrations;
     using Fifthweek.CodeGeneration;
-    using Fifthweek.Shared;
 
     [AutoConstructor]
     public partial class TestDatabase
     {
+        // Increment this when changing database seed state.
+        private const int SeedStateVersion = 3;
+
         private static bool migrationRequired = true;
 
         private readonly string connectionString;
@@ -63,8 +63,8 @@
 
         private static string NewLocalDbConnectionString()
         {
-            const string FileName = "Fifthweek_Test_3.mdf";
-            var filePath = System.IO.Path.GetTempPath() + "\\" + FileName;
+            var fileName = string.Format("Fifthweek_Test_{0}.mdf", SeedStateVersion);
+            var filePath = System.IO.Path.GetTempPath() + "\\" + fileName;
             return string.Format("Data Source=(LocalDb)\\v11.0;AttachDbFilename={0};Integrated Security=SSPI;", filePath);
         }
     }
