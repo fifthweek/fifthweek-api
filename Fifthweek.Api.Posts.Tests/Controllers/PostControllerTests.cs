@@ -141,7 +141,7 @@
                 postId,
                 new CollectionId(data.CollectionId.DecodeGuid()), 
                 new FileId(data.ImageFileId.DecodeGuid()),
-                ValidComment.Parse(data.Comment),
+                data.Comment == null ? null : ValidComment.Parse(data.Comment),
                 data.ScheduledPostDate,
                 data.IsQueued);
         }
@@ -168,7 +168,7 @@
                 postId,
                 new CollectionId(data.CollectionId.DecodeGuid()),
                 new FileId(data.FileId.DecodeGuid()),
-                ValidComment.Parse(data.Comment),
+                data.Comment == null ? null : ValidComment.Parse(data.Comment),
                 data.ScheduledPostDate,
                 data.IsQueued);
         }
