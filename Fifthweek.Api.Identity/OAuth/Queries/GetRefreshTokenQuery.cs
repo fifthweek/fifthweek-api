@@ -2,6 +2,7 @@
 {
     using Fifthweek.Api.Core;
     using Fifthweek.Api.Persistence;
+    using Fifthweek.Shared;
 
     [AutoEqualityMembers, AutoConstructor]
     public partial class GetRefreshTokenQuery : IQuery<RefreshToken>

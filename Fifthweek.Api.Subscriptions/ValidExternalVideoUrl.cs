@@ -5,6 +5,7 @@
     using System.Linq;
 
     using Fifthweek.Api.Core;
+    using Fifthweek.Shared;
 
     /// <summary>
     /// This is a first attempt at URL validation. When we come to write the embed code generator, we will have a better idea of what valid URLs are. At this point,

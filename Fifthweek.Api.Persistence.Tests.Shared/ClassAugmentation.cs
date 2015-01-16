@@ -6,9 +6,15 @@ using System.Linq;
 namespace Fifthweek.Api.Persistence.Tests.Shared
 {
 	using System;
+	using System.Linq;
 	using System.Threading.Tasks;
 	using System.Transactions;
 	using Fifthweek.Api.Core;
+	using System.Data.Entity.Infrastructure;
+	using System.Data.Entity.Migrations;
+	using System.Diagnostics;
+	using Fifthweek.Api.Persistence.Migrations;
+	using Fifthweek.Shared;
 	public partial class PersistenceTestsBase
 	{
 		public partial class TestDatabaseContext 
@@ -37,13 +43,16 @@ namespace Fifthweek.Api.Persistence.Tests.Shared
 namespace Fifthweek.Api.Persistence.Tests.Shared
 {
 	using System;
-	using System.Data.Entity.Infrastructure;
-	using System.Data.Entity.Migrations;
-	using System.Diagnostics;
+	using System.Linq;
 	using System.Threading.Tasks;
 	using System.Transactions;
 	using Fifthweek.Api.Core;
+	using System.Data.Entity.Infrastructure;
+	using System.Data.Entity.Migrations;
+	using System.Diagnostics;
 	using Fifthweek.Api.Persistence.Migrations;
+	using System.Data.Entity;
+	using Fifthweek.Shared;
 	public partial class TestDatabase 
 	{
         public TestDatabase(

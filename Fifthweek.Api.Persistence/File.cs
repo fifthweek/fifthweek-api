@@ -6,6 +6,7 @@
 
     using Fifthweek.Api.Core;
     using Fifthweek.Api.Persistence.Identity;
+    using Fifthweek.Shared;
 
     [AutoConstructor, AutoEqualityMembers, AutoSql]
     public partial class File

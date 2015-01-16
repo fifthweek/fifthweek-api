@@ -8,6 +8,7 @@ namespace Fifthweek.Api.Core
 	using System.Collections.Generic;
 	using System.Linq;
 	using System.Threading.Tasks;
+	using Fifthweek.Shared;
 	using System;
 	public partial class AggregateEventHandler<T> 
 	{

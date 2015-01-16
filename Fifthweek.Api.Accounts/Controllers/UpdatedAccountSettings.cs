@@ -5,6 +5,7 @@
     using Fifthweek.Api.Core;
     using Fifthweek.Api.FileManagement;
     using Fifthweek.Api.Identity.Membership;
+    using Fifthweek.Shared;
 
     [AutoEqualityMembers]
     public partial class UpdatedAccountSettings

@@ -2,6 +2,7 @@
 {
     using Fifthweek.Api.Core;
     using Fifthweek.Api.FileManagement;
+    using Fifthweek.Shared;
 
     [AutoEqualityMembers]
     public partial class UpdatedSubscriptionData

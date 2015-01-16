@@ -2,6 +2,7 @@
 {
     using Fifthweek.Api.Core;
     using Fifthweek.Api.Identity.Membership;
+    using Fifthweek.Shared;
 
     [AutoConstructor]
     public partial class FileWaitingForUpload

@@ -9,6 +9,7 @@
 
     using Fifthweek.Api.Core;
     using Fifthweek.Api.Persistence.Migrations;
+    using Fifthweek.Shared;
 
     [AutoConstructor]
     public partial class TestDatabase

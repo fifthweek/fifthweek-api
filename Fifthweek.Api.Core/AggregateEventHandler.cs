@@ -4,6 +4,8 @@ using System.Threading.Tasks;
 
 namespace Fifthweek.Api.Core
 {
+    using Fifthweek.Shared;
+
     [AutoConstructor]
     public partial class AggregateEventHandler<T> : IEventHandler<T>
     {

@@ -1,6 +1,7 @@
 namespace Fifthweek.Api.Identity.Membership
 {
     using Fifthweek.Api.Core;
+    using Fifthweek.Shared;
 
     [AutoEqualityMembers]
     [AutoConstructor]

@@ -2,6 +2,8 @@
 
 namespace Fifthweek.Api.Identity.OAuth
 {
+    using Fifthweek.Shared;
+
     [AutoEqualityMembers, AutoConstructor]
     public partial class Client
     {

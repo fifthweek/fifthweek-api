@@ -2,6 +2,8 @@
 
 namespace Fifthweek.Api.Identity.OAuth.Commands
 {
+    using Fifthweek.Shared;
+
     [AutoEqualityMembers, AutoConstructor]
     public partial class RemoveRefreshTokenCommand
     {

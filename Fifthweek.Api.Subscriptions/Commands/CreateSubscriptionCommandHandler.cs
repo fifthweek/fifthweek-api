@@ -5,6 +5,7 @@
 
     using Fifthweek.Api.Core;
     using Fifthweek.Api.Persistence;
+    using Fifthweek.Shared;
 
     [AutoConstructor]
     public partial class CreateSubscriptionCommandHandler : ICommandHandler<CreateSubscriptionCommand>

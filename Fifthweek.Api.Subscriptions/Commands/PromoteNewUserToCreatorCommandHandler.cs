@@ -6,6 +6,7 @@
     using Fifthweek.Api.Core;
     using Fifthweek.Api.Persistence;
     using Fifthweek.Api.Persistence.Identity;
+    using Fifthweek.Shared;
 
     [AutoConstructor]
     public partial class PromoteNewUserToCreatorCommandHandler : ICommandHandler<PromoteNewUserToCreatorCommand>

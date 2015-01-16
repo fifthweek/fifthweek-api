@@ -7,6 +7,7 @@ namespace Fifthweek.Api.Core.Tests.ClassAugmentation
 {
 	using System;
 	using System.Collections.Generic;
+	using Fifthweek.Shared;
 	using System.Linq;
 	public partial class ClassAugmentationDummy
 	{
@@ -30,6 +31,7 @@ namespace Fifthweek.Api.Core.Tests.ClassAugmentation
 {
 	using System;
 	using System.Collections.Generic;
+	using Fifthweek.Shared;
 	using System.Linq;
 	public partial class ClassAugmentationDummy 
 	{
@@ -95,6 +97,7 @@ namespace Fifthweek.Api.Core.Tests.ClassAugmentation
 }
 namespace Fifthweek.Api.Core.Tests.ClassAugmentation
 {
+	using Fifthweek.Shared;
 	using System;
 	using System.Linq;
 	using System.Collections.Generic;
@@ -115,6 +118,7 @@ namespace Fifthweek.Api.Core.Tests.ClassAugmentation
 }
 namespace Fifthweek.Api.Core.Tests.ClassAugmentation
 {
+	using Fifthweek.Shared;
 	using System;
 	using System.Linq;
 	using System.Collections.Generic;
@@ -135,6 +139,7 @@ namespace Fifthweek.Api.Core.Tests.ClassAugmentation
 }
 namespace Fifthweek.Api.Core.Tests.ClassAugmentation
 {
+	using Fifthweek.Shared;
 	using System;
 	using System.Linq;
 	using System.Collections.Generic;
@@ -153,11 +158,17 @@ namespace Fifthweek.Api.Core.Tests.ClassAugmentation
 {
 	using System;
 	using System.Collections.Generic;
+	using Fifthweek.Shared;
 	using System.Linq;
 	public partial class ClassAugmentationDummy
 	{
 		public partial class ComplexType 
 		{
+		public override string ToString()
+        {
+			return string.Format("ComplexType(\"{0}\")", this.Value == null ? "null" : this.Value.ToString());
+		}
+
         public override bool Equals(object obj)
         {
             if (ReferenceEquals(null, obj))
@@ -205,9 +216,15 @@ namespace Fifthweek.Api.Core.Tests.ClassAugmentation
 {
 	using System;
 	using System.Collections.Generic;
+	using Fifthweek.Shared;
 	using System.Linq;
 	public partial class ClassAugmentationDummy 
 	{
+		public override string ToString()
+        {
+			return string.Format("ClassAugmentationDummy({0}, {1}, {2}, {3}, \"{4}\", \"{5}\", {6}, {7}, {8}, {9})", this.SomeGuid == null ? "null" : this.SomeGuid.ToString(), this.SomeInt == null ? "null" : this.SomeInt.ToString(), this.OptionalGuid == null ? "null" : this.OptionalGuid.ToString(), this.OptionalInt == null ? "null" : this.OptionalInt.ToString(), this.SomeString == null ? "null" : this.SomeString.ToString(), this.OptionalString == null ? "null" : this.OptionalString.ToString(), this.SomeCollection == null ? "null" : this.SomeCollection.ToString(), this.OptionalCollection == null ? "null" : this.OptionalCollection.ToString(), this.SomeComplexType == null ? "null" : this.SomeComplexType.ToString(), this.OptionalComplexType == null ? "null" : this.OptionalComplexType.ToString());
+		}
+
         public override bool Equals(object obj)
         {
             if (ReferenceEquals(null, obj))
@@ -306,11 +323,17 @@ namespace Fifthweek.Api.Core.Tests.ClassAugmentation
 }
 namespace Fifthweek.Api.Core.Tests.ClassAugmentation
 {
+	using Fifthweek.Shared;
 	using System;
 	using System.Linq;
 	using System.Collections.Generic;
 	public partial class ClassAugmentationParsingDummy 
 	{
+		public override string ToString()
+        {
+			return string.Format("ClassAugmentationParsingDummy({0}, \"{1}\", \"{2}\", \"{3}\", \"{4}\", \"{5}\", \"{6}\", {7}, {8}, {9}, {10}, {11}, {12}, {13}, {14}, {15}, {16}, {17}, {18}, {19}, {20})", this.NotStrongTyped == null ? "null" : this.NotStrongTyped.ToString(), this.SomeConstructedNullableString == null ? "null" : this.SomeConstructedNullableString.ToString(), this.OptionalConstructedNullableString == null ? "null" : this.OptionalConstructedNullableString.ToString(), this.SomeConstructedNonNullableString == null ? "null" : this.SomeConstructedNonNullableString.ToString(), this.OptionalConstructedNonNullableString == null ? "null" : this.OptionalConstructedNonNullableString.ToString(), this.SomeParsedString == null ? "null" : this.SomeParsedString.ToString(), this.OptionalParsedString == null ? "null" : this.OptionalParsedString.ToString(), this.SomeConstructedInt == null ? "null" : this.SomeConstructedInt.ToString(), this.OptionalConstructedInt == null ? "null" : this.OptionalConstructedInt.ToString(), this.SomeParsedInt == null ? "null" : this.SomeParsedInt.ToString(), this.OptionalParsedInt == null ? "null" : this.OptionalParsedInt.ToString(), this.SomeConstructedNullableStringObject == null ? "null" : this.SomeConstructedNullableStringObject.ToString(), this.OptionalConstructedNullableStringObject == null ? "null" : this.OptionalConstructedNullableStringObject.ToString(), this.SomeConstructedNonNullableStringObject == null ? "null" : this.SomeConstructedNonNullableStringObject.ToString(), this.OptionalConstructedNonNullableStringObject == null ? "null" : this.OptionalConstructedNonNullableStringObject.ToString(), this.SomeParsedStringObject == null ? "null" : this.SomeParsedStringObject.ToString(), this.OptionalParsedStringObject == null ? "null" : this.OptionalParsedStringObject.ToString(), this.SomeConstructedIntObject == null ? "null" : this.SomeConstructedIntObject.ToString(), this.OptionalConstructedIntObject == null ? "null" : this.OptionalConstructedIntObject.ToString(), this.SomeParsedIntObject == null ? "null" : this.SomeParsedIntObject.ToString(), this.OptionalParsedIntObject == null ? "null" : this.OptionalParsedIntObject.ToString());
+		}
+
         public override bool Equals(object obj)
         {
             if (ReferenceEquals(null, obj))
@@ -354,6 +377,7 @@ namespace Fifthweek.Api.Core.Tests.ClassAugmentation
                 hashCode = (hashCode * 397) ^ (this.SomeParsedStringObject != null ? this.SomeParsedStringObject.GetHashCode() : 0);
                 hashCode = (hashCode * 397) ^ (this.OptionalParsedStringObject != null ? this.OptionalParsedStringObject.GetHashCode() : 0);
                 hashCode = (hashCode * 397) ^ (this.SomeConstructedIntObject != null ? this.SomeConstructedIntObject.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.OptionalConstructedIntObject != null ? this.OptionalConstructedIntObject.GetHashCode() : 0);
                 hashCode = (hashCode * 397) ^ (this.SomeParsedIntObject != null ? this.SomeParsedIntObject.GetHashCode() : 0);
                 hashCode = (hashCode * 397) ^ (this.OptionalParsedIntObject != null ? this.OptionalParsedIntObject.GetHashCode() : 0);
                 return hashCode;
@@ -452,6 +476,11 @@ namespace Fifthweek.Api.Core.Tests.ClassAugmentation
                 return false;
             }
 
+            if (!object.Equals(this.OptionalConstructedIntObject, other.OptionalConstructedIntObject))
+            {
+                return false;
+            }
+
             if (!object.Equals(this.SomeParsedIntObject, other.SomeParsedIntObject))
             {
                 return false;
@@ -469,11 +498,17 @@ namespace Fifthweek.Api.Core.Tests.ClassAugmentation
 }
 namespace Fifthweek.Api.Core.Tests.ClassAugmentation
 {
+	using Fifthweek.Shared;
 	using System;
 	using System.Linq;
 	using System.Collections.Generic;
 	public partial class ConstructedInt 
 	{
+		public override string ToString()
+        {
+			return string.Format("ConstructedInt({0})", this.Value == null ? "null" : this.Value.ToString());
+		}
+
         public override bool Equals(object obj)
         {
             if (ReferenceEquals(null, obj))
@@ -518,11 +553,17 @@ namespace Fifthweek.Api.Core.Tests.ClassAugmentation
 }
 namespace Fifthweek.Api.Core.Tests.ClassAugmentation
 {
+	using Fifthweek.Shared;
 	using System;
 	using System.Linq;
 	using System.Collections.Generic;
 	public partial class ConstructedNonNullableString 
 	{
+		public override string ToString()
+        {
+			return string.Format("ConstructedNonNullableString(\"{0}\")", this.Value == null ? "null" : this.Value.ToString());
+		}
+
         public override bool Equals(object obj)
         {
             if (ReferenceEquals(null, obj))
@@ -567,11 +608,17 @@ namespace Fifthweek.Api.Core.Tests.ClassAugmentation
 }
 namespace Fifthweek.Api.Core.Tests.ClassAugmentation
 {
+	using Fifthweek.Shared;
 	using System;
 	using System.Linq;
 	using System.Collections.Generic;
 	public partial class ConstructedNullableString 
 	{
+		public override string ToString()
+        {
+			return string.Format("ConstructedNullableString(\"{0}\")", this.Value == null ? "null" : this.Value.ToString());
+		}
+
         public override bool Equals(object obj)
         {
             if (ReferenceEquals(null, obj))
@@ -618,9 +665,15 @@ namespace Fifthweek.Api.Core.Tests.ClassAugmentation
 {
 	using System;
 	using System.Collections.Generic;
+	using Fifthweek.Shared;
 	using System.Linq;
 	public partial class ParsedInt 
 	{
+		public override string ToString()
+        {
+			return string.Format("ParsedInt({0})", this.Value == null ? "null" : this.Value.ToString());
+		}
+
         public override bool Equals(object obj)
         {
             if (ReferenceEquals(null, obj))
@@ -667,9 +720,15 @@ namespace Fifthweek.Api.Core.Tests.ClassAugmentation
 {
 	using System;
 	using System.Collections.Generic;
+	using Fifthweek.Shared;
 	using System.Linq;
 	public partial class ParsedString 
 	{
+		public override string ToString()
+        {
+			return string.Format("ParsedString(\"{0}\")", this.Value == null ? "null" : this.Value.ToString());
+		}
+
         public override bool Equals(object obj)
         {
             if (ReferenceEquals(null, obj))
@@ -716,6 +775,7 @@ namespace Fifthweek.Api.Core.Tests.ClassAugmentation
 {
 	using System;
 	using System.Collections.Generic;
+	using Fifthweek.Shared;
 	using System.Linq;
 	public partial class ClassAugmentationDummy 
 	{
@@ -782,6 +842,7 @@ namespace Fifthweek.Api.Core.Tests.ClassAugmentation
 
 namespace Fifthweek.Api.Core.Tests.ClassAugmentation
 {
+	using Fifthweek.Shared;
 	using System;
 	using System.Linq;
 	using System.Collections.Generic;
@@ -797,16 +858,11 @@ namespace Fifthweek.Api.Core.Tests.ClassAugmentation
 		public ConstructedInt OptionalConstructedIntObject { get; set; }
 		public ParsedInt SomeParsedIntObject { get; set; }
 		public ParsedInt OptionalParsedIntObject { get; set; }
-
-		public void Parse()
-		{
-			ClassAugmentationParsingDummyExtensions.Parse(this); // Avoid conflicts between property and type names.
-		}
 	}
 
 	public static partial class ClassAugmentationParsingDummyExtensions
 	{
-		public static void Parse(ClassAugmentationParsingDummy target)
+		public static void Parse(this ClassAugmentationParsingDummy target)
 		{
 			var modelStateDictionary = new System.Web.Http.ModelBinding.ModelStateDictionary();
 

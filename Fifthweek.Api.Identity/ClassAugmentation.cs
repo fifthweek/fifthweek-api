@@ -13,6 +13,7 @@ namespace Fifthweek.Api.Identity.Membership.Commands
 	using System.Threading.Tasks;
 	using Fifthweek.Api.Persistence;
 	using Fifthweek.Api.Persistence.Identity;
+	using Fifthweek.Shared;
 	public partial class ConfirmPasswordResetCommand 
 	{
         public ConfirmPasswordResetCommand(
@@ -52,6 +53,7 @@ namespace Fifthweek.Api.Identity.Membership.Commands
 	using System.Threading.Tasks;
 	using Fifthweek.Api.Persistence;
 	using Fifthweek.Api.Persistence.Identity;
+	using Fifthweek.Shared;
 	public partial class RegisterUserCommand 
 	{
         public RegisterUserCommand(
@@ -100,6 +102,7 @@ namespace Fifthweek.Api.Identity.Membership.Commands
 	using System.Threading.Tasks;
 	using Fifthweek.Api.Persistence;
 	using Fifthweek.Api.Persistence.Identity;
+	using Fifthweek.Shared;
 	public partial class RegisterUserCommandHandler 
 	{
         public RegisterUserCommandHandler(
@@ -132,6 +135,7 @@ namespace Fifthweek.Api.Identity.Membership.Commands
 	using System.Threading.Tasks;
 	using Fifthweek.Api.Persistence;
 	using Fifthweek.Api.Persistence.Identity;
+	using Fifthweek.Shared;
 	public partial class RequestPasswordResetCommand 
 	{
         public RequestPasswordResetCommand(
@@ -154,6 +158,7 @@ namespace Fifthweek.Api.Identity.Membership.Commands
 	using System.Threading.Tasks;
 	using Fifthweek.Api.Persistence;
 	using Fifthweek.Api.Persistence.Identity;
+	using Fifthweek.Shared;
 	public partial class UpdateLastAccessTokenDateCommand 
 	{
         public UpdateLastAccessTokenDateCommand(
@@ -194,6 +199,7 @@ namespace Fifthweek.Api.Identity.Membership.Controllers
 	using Fifthweek.Api.Identity.Membership.Commands;
 	using Fifthweek.Api.Identity.Membership.Queries;
 	using System.ComponentModel.DataAnnotations;
+	using Fifthweek.Shared;
 	public partial class MembershipController 
 	{
         public MembershipController(
@@ -252,6 +258,7 @@ namespace Fifthweek.Api.Identity.Membership
 	using System.Threading.Tasks;
 	using Dapper;
 	using Fifthweek.Api.Persistence;
+	using Fifthweek.Shared;
 	public partial class Email 
 	{
         public Email(
@@ -272,6 +279,7 @@ namespace Fifthweek.Api.Identity.Membership.Events
 	using System;
 	using System.Linq;
 	using Fifthweek.Api.Core;
+	using Fifthweek.Shared;
 	public partial class UserRegisteredEvent 
 	{
         public UserRegisteredEvent(
@@ -295,6 +303,7 @@ namespace Fifthweek.Api.Identity.Membership
 	using System.Threading.Tasks;
 	using Dapper;
 	using Fifthweek.Api.Persistence;
+	using Fifthweek.Shared;
 	public partial class Password 
 	{
         public Password(
@@ -316,6 +325,7 @@ namespace Fifthweek.Api.Identity.Membership.Queries
 	using System.Linq;
 	using Fifthweek.Api.Core;
 	using Fifthweek.Api.Persistence.Identity;
+	using Fifthweek.Shared;
 	public partial class GetUserQuery 
 	{
         public GetUserQuery(
@@ -344,6 +354,7 @@ namespace Fifthweek.Api.Identity.Membership.Queries
 	using System.Linq;
 	using Fifthweek.Api.Core;
 	using Fifthweek.Api.Persistence.Identity;
+	using Fifthweek.Shared;
 	public partial class IsPasswordResetTokenValidQuery 
 	{
         public IsPasswordResetTokenValidQuery(
@@ -372,6 +383,7 @@ namespace Fifthweek.Api.Identity.Membership.Queries
 	using System.Linq;
 	using Fifthweek.Api.Core;
 	using Fifthweek.Api.Persistence.Identity;
+	using Fifthweek.Shared;
 	public partial class IsUsernameAvailableQuery 
 	{
         public IsUsernameAvailableQuery(
@@ -395,6 +407,7 @@ namespace Fifthweek.Api.Identity.Membership
 	using System.Threading.Tasks;
 	using Dapper;
 	using Fifthweek.Api.Persistence;
+	using Fifthweek.Shared;
 	public partial class UserId 
 	{
         public UserId(
@@ -418,6 +431,7 @@ namespace Fifthweek.Api.Identity.Membership
 	using System.Threading.Tasks;
 	using Dapper;
 	using Fifthweek.Api.Persistence;
+	using Fifthweek.Shared;
 	public partial class Username 
 	{
         public Username(
@@ -441,6 +455,7 @@ namespace Fifthweek.Api.Identity.Membership
 	using System.Threading.Tasks;
 	using Dapper;
 	using Fifthweek.Api.Persistence;
+	using Fifthweek.Shared;
 	public partial class UserRepository 
 	{
         public UserRepository(
@@ -473,6 +488,7 @@ namespace Fifthweek.Api.Identity.OAuth
 	using Fifthweek.Api.Persistence.Identity;
 	using Microsoft.Owin.Security;
 	using Microsoft.Owin.Security.OAuth;
+	using Fifthweek.Shared;
 	public partial class Client 
 	{
         public Client(
@@ -554,6 +570,7 @@ namespace Fifthweek.Api.Identity.OAuth
 	using Fifthweek.Api.Persistence.Identity;
 	using Microsoft.Owin.Security;
 	using Microsoft.Owin.Security.OAuth;
+	using Fifthweek.Shared;
 	public partial class ClientId 
 	{
         public ClientId(
@@ -575,6 +592,7 @@ namespace Fifthweek.Api.Identity.OAuth.Commands
 	using System.Linq;
 	using Fifthweek.Api.Core;
 	using Fifthweek.Api.Persistence;
+	using Fifthweek.Shared;
 	public partial class AddRefreshTokenCommand 
 	{
         public AddRefreshTokenCommand(
@@ -596,6 +614,7 @@ namespace Fifthweek.Api.Identity.OAuth.Commands
 	using System.Linq;
 	using Fifthweek.Api.Core;
 	using Fifthweek.Api.Persistence;
+	using Fifthweek.Shared;
 	public partial class RemoveRefreshTokenCommand 
 	{
         public RemoveRefreshTokenCommand(
@@ -628,6 +647,7 @@ namespace Fifthweek.Api.Identity.OAuth
 	using Fifthweek.Api.Persistence.Identity;
 	using Microsoft.Owin.Security;
 	using Microsoft.Owin.Security.OAuth;
+	using Fifthweek.Shared;
 	public partial class FifthweekAuthorizationServerHandler 
 	{
         public FifthweekAuthorizationServerHandler(
@@ -681,6 +701,7 @@ namespace Fifthweek.Api.Identity.OAuth
 	using Fifthweek.Api.Persistence.Identity;
 	using Microsoft.Owin.Security;
 	using Microsoft.Owin.Security.OAuth;
+	using Fifthweek.Shared;
 	public partial class HashedRefreshTokenId 
 	{
         public HashedRefreshTokenId(
@@ -702,6 +723,7 @@ namespace Fifthweek.Api.Identity.OAuth.Queries
 	using System.Linq;
 	using Fifthweek.Api.Core;
 	using Fifthweek.Api.Persistence;
+	using Fifthweek.Shared;
 	public partial class GetClientQuery 
 	{
         public GetClientQuery(
@@ -723,6 +745,7 @@ namespace Fifthweek.Api.Identity.OAuth.Queries
 	using System.Linq;
 	using Fifthweek.Api.Core;
 	using Fifthweek.Api.Persistence;
+	using Fifthweek.Shared;
 	public partial class GetRefreshTokenQuery 
 	{
         public GetRefreshTokenQuery(
@@ -755,6 +778,7 @@ namespace Fifthweek.Api.Identity.OAuth
 	using Fifthweek.Api.Persistence.Identity;
 	using Microsoft.Owin.Security;
 	using Microsoft.Owin.Security.OAuth;
+	using Fifthweek.Shared;
 	public partial class RefreshTokenId 
 	{
         public RefreshTokenId(
@@ -781,6 +805,7 @@ namespace Fifthweek.Api.Identity.Membership.Commands
 	using System.Threading.Tasks;
 	using Fifthweek.Api.Persistence;
 	using Fifthweek.Api.Persistence.Identity;
+	using Fifthweek.Shared;
 	public partial class ConfirmPasswordResetCommand 
 	{
 		public override string ToString()
@@ -852,6 +877,7 @@ namespace Fifthweek.Api.Identity.Membership.Commands
 	using System.Threading.Tasks;
 	using Fifthweek.Api.Persistence;
 	using Fifthweek.Api.Persistence.Identity;
+	using Fifthweek.Shared;
 	public partial class RegisterUserCommand 
 	{
 		public override string ToString()
@@ -935,6 +961,7 @@ namespace Fifthweek.Api.Identity.Membership.Commands
 	using System.Threading.Tasks;
 	using Fifthweek.Api.Persistence;
 	using Fifthweek.Api.Persistence.Identity;
+	using Fifthweek.Shared;
 	public partial class RequestPasswordResetCommand 
 	{
 		public override string ToString()
@@ -1000,6 +1027,7 @@ namespace Fifthweek.Api.Identity.Membership.Commands
 	using System.Threading.Tasks;
 	using Fifthweek.Api.Persistence;
 	using Fifthweek.Api.Persistence.Identity;
+	using Fifthweek.Shared;
 	public partial class UpdateLastAccessTokenDateCommand 
 	{
 		public override string ToString()
@@ -1069,6 +1097,7 @@ namespace Fifthweek.Api.Identity.Membership
 	using System.Threading.Tasks;
 	using Dapper;
 	using Fifthweek.Api.Persistence;
+	using Fifthweek.Shared;
 	public partial class Email 
 	{
 		public override string ToString()
@@ -1123,6 +1152,7 @@ namespace Fifthweek.Api.Identity.Membership.Events
 	using System;
 	using System.Linq;
 	using Fifthweek.Api.Core;
+	using Fifthweek.Shared;
 	public partial class UserRegisteredEvent 
 	{
 		public override string ToString()
@@ -1180,6 +1210,7 @@ namespace Fifthweek.Api.Identity.Membership
 	using System.Threading.Tasks;
 	using Dapper;
 	using Fifthweek.Api.Persistence;
+	using Fifthweek.Shared;
 	public partial class Password 
 	{
 		public override string ToString()
@@ -1235,6 +1266,7 @@ namespace Fifthweek.Api.Identity.Membership.Queries
 	using System.Linq;
 	using Fifthweek.Api.Core;
 	using Fifthweek.Api.Persistence.Identity;
+	using Fifthweek.Shared;
 	public partial class GetUserQuery 
 	{
 		public override string ToString()
@@ -1296,6 +1328,7 @@ namespace Fifthweek.Api.Identity.Membership.Queries
 	using System.Linq;
 	using Fifthweek.Api.Core;
 	using Fifthweek.Api.Persistence.Identity;
+	using Fifthweek.Shared;
 	public partial class IsPasswordResetTokenValidQuery 
 	{
 		public override string ToString()
@@ -1357,6 +1390,7 @@ namespace Fifthweek.Api.Identity.Membership.Queries
 	using System.Linq;
 	using Fifthweek.Api.Core;
 	using Fifthweek.Api.Persistence.Identity;
+	using Fifthweek.Shared;
 	public partial class IsUsernameAvailableQuery 
 	{
 		public override string ToString()
@@ -1414,6 +1448,7 @@ namespace Fifthweek.Api.Identity.Membership
 	using System.Threading.Tasks;
 	using Dapper;
 	using Fifthweek.Api.Persistence;
+	using Fifthweek.Shared;
 	public partial class UserId 
 	{
 		public override string ToString()
@@ -1471,6 +1506,7 @@ namespace Fifthweek.Api.Identity.Membership
 	using System.Threading.Tasks;
 	using Dapper;
 	using Fifthweek.Api.Persistence;
+	using Fifthweek.Shared;
 	public partial class Username 
 	{
 		public override string ToString()
@@ -1537,6 +1573,7 @@ namespace Fifthweek.Api.Identity.OAuth
 	using Fifthweek.Api.Persistence.Identity;
 	using Microsoft.Owin.Security;
 	using Microsoft.Owin.Security.OAuth;
+	using Fifthweek.Shared;
 	public partial class Client 
 	{
 		public override string ToString()
@@ -1645,6 +1682,7 @@ namespace Fifthweek.Api.Identity.OAuth
 	using Fifthweek.Api.Persistence.Identity;
 	using Microsoft.Owin.Security;
 	using Microsoft.Owin.Security.OAuth;
+	using Fifthweek.Shared;
 	public partial class ClientId 
 	{
 		public override string ToString()
@@ -1700,6 +1738,7 @@ namespace Fifthweek.Api.Identity.OAuth.Commands
 	using System.Linq;
 	using Fifthweek.Api.Core;
 	using Fifthweek.Api.Persistence;
+	using Fifthweek.Shared;
 	public partial class AddRefreshTokenCommand 
 	{
 		public override string ToString()
@@ -1755,6 +1794,7 @@ namespace Fifthweek.Api.Identity.OAuth.Commands
 	using System.Linq;
 	using Fifthweek.Api.Core;
 	using Fifthweek.Api.Persistence;
+	using Fifthweek.Shared;
 	public partial class RemoveRefreshTokenCommand 
 	{
 		public override string ToString()
@@ -1821,6 +1861,7 @@ namespace Fifthweek.Api.Identity.OAuth
 	using Fifthweek.Api.Persistence.Identity;
 	using Microsoft.Owin.Security;
 	using Microsoft.Owin.Security.OAuth;
+	using Fifthweek.Shared;
 	public partial class HashedRefreshTokenId 
 	{
 		public override string ToString()
@@ -1876,6 +1917,7 @@ namespace Fifthweek.Api.Identity.OAuth.Queries
 	using System.Linq;
 	using Fifthweek.Api.Core;
 	using Fifthweek.Api.Persistence;
+	using Fifthweek.Shared;
 	public partial class GetClientQuery 
 	{
 		public override string ToString()
@@ -1931,6 +1973,7 @@ namespace Fifthweek.Api.Identity.OAuth.Queries
 	using System.Linq;
 	using Fifthweek.Api.Core;
 	using Fifthweek.Api.Persistence;
+	using Fifthweek.Shared;
 	public partial class GetRefreshTokenQuery 
 	{
 		public override string ToString()
@@ -1997,6 +2040,7 @@ namespace Fifthweek.Api.Identity.OAuth
 	using Fifthweek.Api.Persistence.Identity;
 	using Microsoft.Owin.Security;
 	using Microsoft.Owin.Security.OAuth;
+	using Fifthweek.Shared;
 	public partial class RefreshTokenId 
 	{
 		public override string ToString()
@@ -2057,6 +2101,7 @@ namespace Fifthweek.Api.Identity.Membership.Controllers
 	using Fifthweek.Api.Identity.Membership.Commands;
 	using Fifthweek.Api.Identity.Membership.Queries;
 	using System.ComponentModel.DataAnnotations;
+	using Fifthweek.Shared;
 	public partial class PasswordResetConfirmationData 
 	{
 		public override string ToString()
@@ -2141,6 +2186,7 @@ namespace Fifthweek.Api.Identity.Membership.Controllers
 	using Fifthweek.Api.Identity.Membership.Commands;
 	using Fifthweek.Api.Identity.Membership.Queries;
 	using System.ComponentModel.DataAnnotations;
+	using Fifthweek.Shared;
 	public partial class PasswordResetRequestData 
 	{
 		public override string ToString()
@@ -2219,6 +2265,7 @@ namespace Fifthweek.Api.Identity.Membership.Controllers
 	using Fifthweek.Api.Identity.Membership.Commands;
 	using Fifthweek.Api.Identity.Membership.Queries;
 	using System.ComponentModel.DataAnnotations;
+	using Fifthweek.Shared;
 	public partial class RegistrationData 
 	{
 		public override string ToString()
@@ -2316,20 +2363,16 @@ namespace Fifthweek.Api.Identity.Membership.Controllers
 	using Fifthweek.Api.Identity.Membership.Commands;
 	using Fifthweek.Api.Identity.Membership.Queries;
 	using System.ComponentModel.DataAnnotations;
+	using Fifthweek.Shared;
 	public partial class PasswordResetConfirmationData 
 	{
 		public UserId UserIdObject { get; set; }
 		public ValidPassword NewPasswordObject { get; set; }
-
-		public void Parse()
-		{
-			PasswordResetConfirmationDataExtensions.Parse(this); // Avoid conflicts between property and type names.
-		}
 	}
 
 	public static partial class PasswordResetConfirmationDataExtensions
 	{
-		public static void Parse(PasswordResetConfirmationData target)
+		public static void Parse(this PasswordResetConfirmationData target)
 		{
 			var modelStateDictionary = new System.Web.Http.ModelBinding.ModelStateDictionary();
 
@@ -2382,20 +2425,16 @@ namespace Fifthweek.Api.Identity.Membership.Controllers
 	using Fifthweek.Api.Identity.Membership.Commands;
 	using Fifthweek.Api.Identity.Membership.Queries;
 	using System.ComponentModel.DataAnnotations;
+	using Fifthweek.Shared;
 	public partial class PasswordResetRequestData 
 	{
 		public ValidEmail EmailObject { get; set; }
 		public ValidUsername UsernameObject { get; set; }
-
-		public void Parse()
-		{
-			PasswordResetRequestDataExtensions.Parse(this); // Avoid conflicts between property and type names.
-		}
 	}
 
 	public static partial class PasswordResetRequestDataExtensions
 	{
-		public static void Parse(PasswordResetRequestData target)
+		public static void Parse(this PasswordResetRequestData target)
 		{
 			var modelStateDictionary = new System.Web.Http.ModelBinding.ModelStateDictionary();
 
@@ -2457,21 +2496,17 @@ namespace Fifthweek.Api.Identity.Membership.Controllers
 	using Fifthweek.Api.Identity.Membership.Commands;
 	using Fifthweek.Api.Identity.Membership.Queries;
 	using System.ComponentModel.DataAnnotations;
+	using Fifthweek.Shared;
 	public partial class RegistrationData 
 	{
 		public ValidEmail EmailObject { get; set; }
 		public ValidUsername UsernameObject { get; set; }
 		public ValidPassword PasswordObject { get; set; }
-
-		public void Parse()
-		{
-			RegistrationDataExtensions.Parse(this); // Avoid conflicts between property and type names.
-		}
 	}
 
 	public static partial class RegistrationDataExtensions
 	{
-		public static void Parse(RegistrationData target)
+		public static void Parse(this RegistrationData target)
 		{
 			var modelStateDictionary = new System.Web.Http.ModelBinding.ModelStateDictionary();
 

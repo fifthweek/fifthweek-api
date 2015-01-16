@@ -8,6 +8,7 @@
     using Fifthweek.Api.Identity.OAuth;
     using Fifthweek.Api.Subscriptions.Commands;
     using Fifthweek.Api.Subscriptions.Queries;
+    using Fifthweek.Shared;
 
     [RoutePrefix("subscriptions"), AutoConstructor]
     public partial class SubscriptionController : ApiController

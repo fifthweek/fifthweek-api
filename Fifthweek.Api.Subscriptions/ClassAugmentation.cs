@@ -7,6 +7,7 @@ namespace Fifthweek.Api.Subscriptions
 {
 	using System;
 	using Fifthweek.Api.Core;
+	using Fifthweek.Shared;
 	using System.Linq;
 	using System.Threading.Tasks;
 	using Dapper;
@@ -38,6 +39,7 @@ namespace Fifthweek.Api.Subscriptions
 	using Fifthweek.Api.Core;
 	using Fifthweek.Api.Identity.Membership;
 	using Fifthweek.Api.Persistence;
+	using Fifthweek.Shared;
 	using System.Linq;
 	using Fifthweek.Api.Persistence.Identity;
 	using System.Collections.Generic;
@@ -62,6 +64,7 @@ namespace Fifthweek.Api.Subscriptions
 	using System.Threading.Tasks;
 	using Fifthweek.Api.Core;
 	using Fifthweek.Api.Identity.Membership;
+	using Fifthweek.Shared;
 	using System;
 	using System.Linq;
 	using Dapper;
@@ -96,6 +99,7 @@ namespace Fifthweek.Api.Subscriptions
 	using Fifthweek.Api.Persistence.Identity;
 	using System.Collections.Generic;
 	using System.Diagnostics.CodeAnalysis;
+	using Fifthweek.Shared;
 	public partial class CollectionId 
 	{
         public CollectionId(
@@ -122,6 +126,7 @@ namespace Fifthweek.Api.Subscriptions.Commands
 	using Fifthweek.Api.Persistence.Identity;
 	using Fifthweek.Api.Identity.Membership.Events;
 	using Fifthweek.Api.FileManagement;
+	using Fifthweek.Shared;
 	public partial class CreateNoteCommand 
 	{
         public CreateNoteCommand(
@@ -171,6 +176,7 @@ namespace Fifthweek.Api.Subscriptions.Commands
 	using Fifthweek.Api.Persistence.Identity;
 	using Fifthweek.Api.Identity.Membership.Events;
 	using Fifthweek.Api.FileManagement;
+	using Fifthweek.Shared;
 	public partial class CreateNoteCommandHandler 
 	{
         public CreateNoteCommandHandler(
@@ -204,6 +210,7 @@ namespace Fifthweek.Api.Subscriptions.Commands
 	using Fifthweek.Api.Persistence.Identity;
 	using Fifthweek.Api.Identity.Membership.Events;
 	using Fifthweek.Api.FileManagement;
+	using Fifthweek.Shared;
 	public partial class CreateSubscriptionCommand 
 	{
         public CreateSubscriptionCommand(
@@ -258,6 +265,7 @@ namespace Fifthweek.Api.Subscriptions.Commands
 	using Fifthweek.Api.Persistence.Identity;
 	using Fifthweek.Api.Identity.Membership.Events;
 	using Fifthweek.Api.FileManagement;
+	using Fifthweek.Shared;
 	public partial class CreateSubscriptionCommandHandler 
 	{
         public CreateSubscriptionCommandHandler(
@@ -291,6 +299,7 @@ namespace Fifthweek.Api.Subscriptions.Commands
 	using Fifthweek.Api.Persistence.Identity;
 	using Fifthweek.Api.Identity.Membership.Events;
 	using Fifthweek.Api.FileManagement;
+	using Fifthweek.Shared;
 	public partial class PromoteNewUserToCreatorCommand 
 	{
         public PromoteNewUserToCreatorCommand(
@@ -317,6 +326,7 @@ namespace Fifthweek.Api.Subscriptions.Commands
 	using Fifthweek.Api.Persistence.Identity;
 	using Fifthweek.Api.Identity.Membership.Events;
 	using Fifthweek.Api.FileManagement;
+	using Fifthweek.Shared;
 	public partial class PromoteNewUserToCreatorCommandHandler 
 	{
         public PromoteNewUserToCreatorCommandHandler(
@@ -343,6 +353,7 @@ namespace Fifthweek.Api.Subscriptions.Commands
 	using Fifthweek.Api.Persistence.Identity;
 	using Fifthweek.Api.Identity.Membership.Events;
 	using Fifthweek.Api.FileManagement;
+	using Fifthweek.Shared;
 	public partial class PromoteNewUserToCreatorCommandInitiator 
 	{
         public PromoteNewUserToCreatorCommandInitiator(
@@ -369,6 +380,7 @@ namespace Fifthweek.Api.Subscriptions.Commands
 	using Fifthweek.Api.Persistence.Identity;
 	using Fifthweek.Api.Identity.Membership.Events;
 	using Fifthweek.Api.FileManagement;
+	using Fifthweek.Shared;
 	public partial class UpdateSubscriptionCommand 
 	{
         public UpdateSubscriptionCommand(
@@ -429,6 +441,7 @@ namespace Fifthweek.Api.Subscriptions.Commands
 	using Fifthweek.Api.Persistence.Identity;
 	using Fifthweek.Api.Identity.Membership.Events;
 	using Fifthweek.Api.FileManagement;
+	using Fifthweek.Shared;
 	public partial class UpdateSubscriptionCommandHandler 
 	{
         public UpdateSubscriptionCommandHandler(
@@ -470,6 +483,7 @@ namespace Fifthweek.Api.Subscriptions.Controllers
 	using System.Web.Http.Description;
 	using Fifthweek.Api.Subscriptions.Queries;
 	using Fifthweek.Api.FileManagement;
+	using Fifthweek.Shared;
 	public partial class CreatorStatusData 
 	{
         public CreatorStatusData(
@@ -499,6 +513,7 @@ namespace Fifthweek.Api.Subscriptions.Controllers
 	using System.Web.Http.Description;
 	using Fifthweek.Api.Subscriptions.Queries;
 	using Fifthweek.Api.FileManagement;
+	using Fifthweek.Shared;
 	public partial class PostController 
 	{
         public PostController(
@@ -540,6 +555,7 @@ namespace Fifthweek.Api.Subscriptions.Controllers
 	using System.Web.Http.Description;
 	using Fifthweek.Api.Subscriptions.Queries;
 	using Fifthweek.Api.FileManagement;
+	using Fifthweek.Shared;
 	public partial class SubscriptionController 
 	{
         public SubscriptionController(
@@ -595,6 +611,7 @@ namespace Fifthweek.Api.Subscriptions
 	using Fifthweek.Api.Persistence.Identity;
 	using System.Collections.Generic;
 	using System.Diagnostics.CodeAnalysis;
+	using Fifthweek.Shared;
 	public partial class CreatorStatus 
 	{
         public CreatorStatus(
@@ -624,6 +641,7 @@ namespace Fifthweek.Api.Subscriptions
 	using Fifthweek.Api.Persistence.Identity;
 	using System.Collections.Generic;
 	using System.Diagnostics.CodeAnalysis;
+	using Fifthweek.Shared;
 	public partial class PostId 
 	{
         public PostId(
@@ -648,6 +666,7 @@ namespace Fifthweek.Api.Subscriptions.Queries
 	using System.Data.Entity;
 	using System.Threading.Tasks;
 	using Fifthweek.Api.Persistence;
+	using Fifthweek.Shared;
 	public partial class GetCreatorStatusQuery 
 	{
         public GetCreatorStatusQuery(
@@ -672,6 +691,7 @@ namespace Fifthweek.Api.Subscriptions.Queries
 	using System.Data.Entity;
 	using System.Threading.Tasks;
 	using Fifthweek.Api.Persistence;
+	using Fifthweek.Shared;
 	public partial class GetCreatorStatusQueryHandler 
 	{
         public GetCreatorStatusQueryHandler(
@@ -699,6 +719,7 @@ namespace Fifthweek.Api.Subscriptions
 	using Fifthweek.Api.Persistence.Identity;
 	using System.Collections.Generic;
 	using System.Diagnostics.CodeAnalysis;
+	using Fifthweek.Shared;
 	public partial class SubscriptionId 
 	{
         public SubscriptionId(
@@ -726,6 +747,7 @@ namespace Fifthweek.Api.Subscriptions
 	using Fifthweek.Api.Persistence.Identity;
 	using System.Collections.Generic;
 	using System.Diagnostics.CodeAnalysis;
+	using Fifthweek.Shared;
 	public partial class SubscriptionOwnership 
 	{
         public SubscriptionOwnership(
@@ -753,6 +775,7 @@ namespace Fifthweek.Api.Subscriptions
 	using Fifthweek.Api.Persistence.Identity;
 	using System.Collections.Generic;
 	using System.Diagnostics.CodeAnalysis;
+	using Fifthweek.Shared;
 	public partial class SubscriptionSecurity 
 	{
         public SubscriptionSecurity(
@@ -780,6 +803,7 @@ namespace Fifthweek.Api.Subscriptions
 {
 	using System;
 	using Fifthweek.Api.Core;
+	using Fifthweek.Shared;
 	using System.Linq;
 	using System.Threading.Tasks;
 	using Dapper;
@@ -842,6 +866,7 @@ namespace Fifthweek.Api.Subscriptions
 	using System;
 	using System.Collections.Generic;
 	using Fifthweek.Api.Core;
+	using Fifthweek.Shared;
 	using System.Linq;
 	using System.Threading.Tasks;
 	using Dapper;
@@ -910,6 +935,7 @@ namespace Fifthweek.Api.Subscriptions
 	using Fifthweek.Api.Persistence.Identity;
 	using System.Collections.Generic;
 	using System.Diagnostics.CodeAnalysis;
+	using Fifthweek.Shared;
 	public partial class CollectionId 
 	{
 		public override string ToString()
@@ -970,6 +996,7 @@ namespace Fifthweek.Api.Subscriptions.Commands
 	using Fifthweek.Api.Persistence.Identity;
 	using Fifthweek.Api.Identity.Membership.Events;
 	using Fifthweek.Api.FileManagement;
+	using Fifthweek.Shared;
 	public partial class CreateNoteCommand 
 	{
 		public override string ToString()
@@ -1054,6 +1081,7 @@ namespace Fifthweek.Api.Subscriptions.Commands
 	using Fifthweek.Api.Persistence.Identity;
 	using Fifthweek.Api.Identity.Membership.Events;
 	using Fifthweek.Api.FileManagement;
+	using Fifthweek.Shared;
 	public partial class CreateSubscriptionCommand 
 	{
 		public override string ToString()
@@ -1138,6 +1166,7 @@ namespace Fifthweek.Api.Subscriptions.Commands
 	using Fifthweek.Api.Persistence.Identity;
 	using Fifthweek.Api.Identity.Membership.Events;
 	using Fifthweek.Api.FileManagement;
+	using Fifthweek.Shared;
 	public partial class PromoteNewUserToCreatorCommand 
 	{
 		public override string ToString()
@@ -1198,6 +1227,7 @@ namespace Fifthweek.Api.Subscriptions.Commands
 	using Fifthweek.Api.Persistence.Identity;
 	using Fifthweek.Api.Identity.Membership.Events;
 	using Fifthweek.Api.FileManagement;
+	using Fifthweek.Shared;
 	public partial class UpdateSubscriptionCommand 
 	{
 		public override string ToString()
@@ -1301,6 +1331,7 @@ namespace Fifthweek.Api.Subscriptions.Controllers
 	using System.Web.Http.Description;
 	using Fifthweek.Api.Subscriptions.Queries;
 	using Fifthweek.Api.FileManagement;
+	using Fifthweek.Shared;
 	public partial class CreatorStatusData 
 	{
 		public override string ToString()
@@ -1368,6 +1399,7 @@ namespace Fifthweek.Api.Subscriptions
 	using Fifthweek.Api.Persistence.Identity;
 	using System.Collections.Generic;
 	using System.Diagnostics.CodeAnalysis;
+	using Fifthweek.Shared;
 	public partial class CreatorStatus 
 	{
 		public override string ToString()
@@ -1435,6 +1467,7 @@ namespace Fifthweek.Api.Subscriptions
 	using Fifthweek.Api.Persistence.Identity;
 	using System.Collections.Generic;
 	using System.Diagnostics.CodeAnalysis;
+	using Fifthweek.Shared;
 	public partial class PostId 
 	{
 		public override string ToString()
@@ -1493,6 +1526,7 @@ namespace Fifthweek.Api.Subscriptions.Queries
 	using System.Data.Entity;
 	using System.Threading.Tasks;
 	using Fifthweek.Api.Persistence;
+	using Fifthweek.Shared;
 	public partial class GetCreatorStatusQuery 
 	{
 		public override string ToString()
@@ -1554,6 +1588,7 @@ namespace Fifthweek.Api.Subscriptions
 	using Fifthweek.Api.Persistence.Identity;
 	using System.Collections.Generic;
 	using System.Diagnostics.CodeAnalysis;
+	using Fifthweek.Shared;
 	public partial class SubscriptionId 
 	{
 		public override string ToString()
@@ -1615,6 +1650,7 @@ namespace Fifthweek.Api.Subscriptions.Controllers
 	using System.Web.Http.Description;
 	using Fifthweek.Api.Subscriptions.Queries;
 	using Fifthweek.Api.FileManagement;
+	using Fifthweek.Shared;
 	public partial class NewNoteData 
 	{
 		public override string ToString()
@@ -1700,6 +1736,7 @@ namespace Fifthweek.Api.Subscriptions.Controllers
 	using System.Web.Http.Description;
 	using Fifthweek.Api.Subscriptions.Queries;
 	using Fifthweek.Api.FileManagement;
+	using Fifthweek.Shared;
 	public partial class NewSubscriptionData 
 	{
 		public override string ToString()
@@ -1791,6 +1828,7 @@ namespace Fifthweek.Api.Subscriptions.Controllers
 	using System.Web.Http.Description;
 	using Fifthweek.Api.Subscriptions.Queries;
 	using Fifthweek.Api.FileManagement;
+	using Fifthweek.Shared;
 	public partial class UpdatedSubscriptionData 
 	{
 		public override string ToString()
@@ -1918,6 +1956,7 @@ namespace Fifthweek.Api.Subscriptions
 	using Fifthweek.Api.Persistence.Identity;
 	using System.Collections.Generic;
 	using System.Diagnostics.CodeAnalysis;
+	using Fifthweek.Shared;
 	public partial class ValidDescription 
 	{
 		public override string ToString()
@@ -1979,6 +2018,7 @@ namespace Fifthweek.Api.Subscriptions
 	using Fifthweek.Api.Persistence.Identity;
 	using System.Collections.Generic;
 	using System.Diagnostics.CodeAnalysis;
+	using Fifthweek.Shared;
 	public partial class ValidExternalVideoUrl 
 	{
 		public override string ToString()
@@ -2040,6 +2080,7 @@ namespace Fifthweek.Api.Subscriptions
 	using Fifthweek.Api.Persistence.Identity;
 	using System.Collections.Generic;
 	using System.Diagnostics.CodeAnalysis;
+	using Fifthweek.Shared;
 	public partial class ValidIntroduction 
 	{
 		public override string ToString()
@@ -2101,6 +2142,7 @@ namespace Fifthweek.Api.Subscriptions
 	using Fifthweek.Api.Persistence.Identity;
 	using System.Collections.Generic;
 	using System.Diagnostics.CodeAnalysis;
+	using Fifthweek.Shared;
 	public partial class ValidNote 
 	{
 		public override string ToString()
@@ -2162,6 +2204,7 @@ namespace Fifthweek.Api.Subscriptions
 	using Fifthweek.Api.Persistence.Identity;
 	using System.Collections.Generic;
 	using System.Diagnostics.CodeAnalysis;
+	using Fifthweek.Shared;
 	public partial class ValidSubscriptionName 
 	{
 		public override string ToString()
@@ -2223,6 +2266,7 @@ namespace Fifthweek.Api.Subscriptions
 	using Fifthweek.Api.Persistence.Identity;
 	using System.Collections.Generic;
 	using System.Diagnostics.CodeAnalysis;
+	using Fifthweek.Shared;
 	public partial class ValidTagline 
 	{
 		public override string ToString()
@@ -2285,6 +2329,7 @@ namespace Fifthweek.Api.Subscriptions.Controllers
 	using System.Web.Http.Description;
 	using Fifthweek.Api.Subscriptions.Queries;
 	using Fifthweek.Api.FileManagement;
+	using Fifthweek.Shared;
 	public partial class NewNoteData 
 	{
 		public ChannelId ChannelIdObject { get; set; }
@@ -2347,6 +2392,7 @@ namespace Fifthweek.Api.Subscriptions.Controllers
 	using System.Web.Http.Description;
 	using Fifthweek.Api.Subscriptions.Queries;
 	using Fifthweek.Api.FileManagement;
+	using Fifthweek.Shared;
 	public partial class NewSubscriptionData 
 	{
 		public ValidSubscriptionName SubscriptionNameObject { get; set; }
@@ -2439,6 +2485,7 @@ namespace Fifthweek.Api.Subscriptions.Controllers
 	using System.Web.Http.Description;
 	using Fifthweek.Api.Subscriptions.Queries;
 	using Fifthweek.Api.FileManagement;
+	using Fifthweek.Shared;
 	public partial class UpdatedSubscriptionData 
 	{
 		public ValidSubscriptionName SubscriptionNameObject { get; set; }

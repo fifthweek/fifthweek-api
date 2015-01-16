@@ -189,6 +189,10 @@
       <Project>{bd52863e-063d-45a5-9ca8-7541804d1313}</Project>
       <Name>Fifthweek.Api.Core</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Fifthweek.Shared\Fifthweek.Shared.csproj">
+      <Project>{6d12ffbb-38e9-4722-a690-0f0338538ebc}</Project>
+      <Name>Fifthweek.Shared</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />

@@ -4,6 +4,8 @@ using Fifthweek.Api.Core;
 
 namespace Fifthweek.Api.Identity.Membership.Controllers
 {
+    using Fifthweek.Shared;
+
     [AutoEqualityMembers]
     public partial class PasswordResetConfirmationData
     {

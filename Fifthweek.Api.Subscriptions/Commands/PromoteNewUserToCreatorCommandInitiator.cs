@@ -4,6 +4,8 @@ using Fifthweek.Api.Identity.Membership.Events;
 
 namespace Fifthweek.Api.Subscriptions.Commands
 {
+    using Fifthweek.Shared;
+
     [AutoConstructor]
     public partial class PromoteNewUserToCreatorCommandInitiator : IEventHandler<UserRegisteredEvent>
     {

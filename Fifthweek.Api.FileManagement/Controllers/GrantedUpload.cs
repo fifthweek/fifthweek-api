@@ -3,6 +3,7 @@
     using System;
 
     using Fifthweek.Api.Core;
+    using Fifthweek.Shared;
 
     [AutoConstructor]
     [AutoEqualityMembers]

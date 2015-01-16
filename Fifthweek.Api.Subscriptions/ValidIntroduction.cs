@@ -6,6 +6,7 @@
     using System.Linq;
 
     using Fifthweek.Api.Core;
+    using Fifthweek.Shared;
 
     [AutoEqualityMembers]
     public partial class ValidIntroduction

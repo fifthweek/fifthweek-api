@@ -6,6 +6,7 @@
     using Fifthweek.Api.Core;
     using Fifthweek.Api.FileManagement;
     using Fifthweek.Api.Persistence;
+    using Fifthweek.Shared;
 
     [AutoConstructor]
     public partial class UpdateSubscriptionCommandHandler : ICommandHandler<UpdateSubscriptionCommand>

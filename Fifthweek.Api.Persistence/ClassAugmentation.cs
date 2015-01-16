@@ -9,6 +9,7 @@ namespace Fifthweek.Api.Persistence
 	using System.ComponentModel.DataAnnotations;
 	using System.ComponentModel.DataAnnotations.Schema;
 	using Fifthweek.Api.Core;
+	using Fifthweek.Shared;
 	using System.Linq;
 	using Fifthweek.Api.Persistence.Identity;
 	public partial class Channel 
@@ -57,6 +58,7 @@ namespace Fifthweek.Api.Persistence
 	using System.ComponentModel.DataAnnotations.Schema;
 	using Fifthweek.Api.Core;
 	using Fifthweek.Api.Persistence.Identity;
+	using Fifthweek.Shared;
 	public partial class Collection 
 	{
         public Collection(
@@ -96,6 +98,7 @@ namespace Fifthweek.Api.Persistence
 	using System.ComponentModel.DataAnnotations.Schema;
 	using Fifthweek.Api.Core;
 	using Fifthweek.Api.Persistence.Identity;
+	using Fifthweek.Shared;
 	public partial class File 
 	{
         public File(
@@ -176,6 +179,7 @@ namespace Fifthweek.Api.Persistence
 	using System.ComponentModel.DataAnnotations.Schema;
 	using Fifthweek.Api.Core;
 	using Fifthweek.Api.Persistence.Identity;
+	using Fifthweek.Shared;
 	public partial class Post 
 	{
         public Post(
@@ -233,6 +237,7 @@ namespace Fifthweek.Api.Persistence
 	using System.ComponentModel.DataAnnotations.Schema;
 	using Fifthweek.Api.Core;
 	using Fifthweek.Api.Persistence.Identity;
+	using Fifthweek.Shared;
 	public partial class Subscription 
 	{
         public Subscription(
@@ -300,6 +305,7 @@ namespace Fifthweek.Api.Persistence
 	using System.ComponentModel.DataAnnotations;
 	using System.ComponentModel.DataAnnotations.Schema;
 	using Fifthweek.Api.Core;
+	using Fifthweek.Shared;
 	using System.Linq;
 	using Fifthweek.Api.Persistence.Identity;
 	public partial class Channel 
@@ -377,6 +383,7 @@ namespace Fifthweek.Api.Persistence
 	using System.ComponentModel.DataAnnotations.Schema;
 	using Fifthweek.Api.Core;
 	using Fifthweek.Api.Persistence.Identity;
+	using Fifthweek.Shared;
 	public partial class Collection 
 	{
 		public override string ToString()
@@ -446,6 +453,7 @@ namespace Fifthweek.Api.Persistence
 	using System.ComponentModel.DataAnnotations.Schema;
 	using Fifthweek.Api.Core;
 	using Fifthweek.Api.Persistence.Identity;
+	using Fifthweek.Shared;
 	public partial class File 
 	{
 		public override string ToString()
@@ -563,6 +571,7 @@ namespace Fifthweek.Api.Persistence
 	using System.ComponentModel.DataAnnotations.Schema;
 	using Fifthweek.Api.Core;
 	using Fifthweek.Api.Persistence.Identity;
+	using Fifthweek.Shared;
 	public partial class Post 
 	{
 		public override string ToString()
@@ -668,6 +677,7 @@ namespace Fifthweek.Api.Persistence
 	using System.ComponentModel.DataAnnotations.Schema;
 	using Fifthweek.Api.Core;
 	using Fifthweek.Api.Persistence.Identity;
+	using Fifthweek.Shared;
 	public partial class Subscription 
 	{
 		public override string ToString()
@@ -773,6 +783,7 @@ namespace Fifthweek.Api.Persistence.Identity
 	using System.ComponentModel.DataAnnotations;
 	using Fifthweek.Api.Core;
 	using Microsoft.AspNet.Identity.EntityFramework;
+	using Fifthweek.Shared;
 	public partial class FifthweekUser 
 	{
 		public override string ToString()
@@ -925,6 +936,7 @@ namespace Fifthweek.Api.Persistence
 	using System.ComponentModel.DataAnnotations;
 	using System.ComponentModel.DataAnnotations.Schema;
 	using Fifthweek.Api.Core;
+	using Fifthweek.Shared;
 	using System.Linq;
 	using Fifthweek.Api.Persistence.Identity;
 	public partial class Channel  : IIdentityEquatable
@@ -1126,6 +1138,7 @@ namespace Fifthweek.Api.Persistence
 	using System.ComponentModel.DataAnnotations.Schema;
 	using Fifthweek.Api.Core;
 	using Fifthweek.Api.Persistence.Identity;
+	using Fifthweek.Shared;
 	public partial class Collection  : IIdentityEquatable
 	{
         public Collection(
@@ -1314,6 +1327,7 @@ namespace Fifthweek.Api.Persistence
 	using System.ComponentModel.DataAnnotations.Schema;
 	using Fifthweek.Api.Core;
 	using Fifthweek.Api.Persistence.Identity;
+	using Fifthweek.Shared;
 	public partial class File  : IIdentityEquatable
 	{
         public File(
@@ -1590,6 +1604,7 @@ namespace Fifthweek.Api.Persistence
 	using System.ComponentModel.DataAnnotations.Schema;
 	using Fifthweek.Api.Core;
 	using Fifthweek.Api.Persistence.Identity;
+	using Fifthweek.Shared;
 	public partial class Post  : IIdentityEquatable
 	{
         public Post(
@@ -1844,6 +1859,7 @@ namespace Fifthweek.Api.Persistence
 	using System.ComponentModel.DataAnnotations.Schema;
 	using Fifthweek.Api.Core;
 	using Fifthweek.Api.Persistence.Identity;
+	using Fifthweek.Shared;
 	public partial class Subscription  : IIdentityEquatable
 	{
         public Subscription(
@@ -2098,6 +2114,7 @@ namespace Fifthweek.Api.Persistence.Identity
 	using System.ComponentModel.DataAnnotations;
 	using Fifthweek.Api.Core;
 	using Microsoft.AspNet.Identity.EntityFramework;
+	using Fifthweek.Shared;
 	public partial class FifthweekUser  : IIdentityEquatable
 	{
         public FifthweekUser(

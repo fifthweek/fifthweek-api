@@ -1,7 +1,7 @@
-﻿using System;
-
-namespace Fifthweek.Api.Core
+﻿namespace Fifthweek.Shared
 {
+    using System;
+
     [AttributeUsage(AttributeTargets.Property)]
     public class ParsedAttribute : Attribute
     {

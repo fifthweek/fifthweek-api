@@ -8,6 +8,7 @@
     using Fifthweek.Api.Core;
     using Fifthweek.Api.Identity.Membership.Commands;
     using Fifthweek.Api.Identity.Membership.Queries;
+    using Fifthweek.Shared;
 
     [RoutePrefix("membership"), AutoConstructor]
     public partial class MembershipController : ApiController

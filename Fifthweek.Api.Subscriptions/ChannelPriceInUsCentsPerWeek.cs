@@ -4,6 +4,8 @@ using Fifthweek.Api.Core;
 
 namespace Fifthweek.Api.Subscriptions
 {
+    using Fifthweek.Shared;
+
     [AutoEqualityMembers]
     public partial class ChannelPriceInUsCentsPerWeek
     {

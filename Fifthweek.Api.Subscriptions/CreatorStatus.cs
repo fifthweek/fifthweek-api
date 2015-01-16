@@ -2,6 +2,8 @@
 
 namespace Fifthweek.Api.Subscriptions
 {
+    using Fifthweek.Shared;
+
     [AutoConstructor, AutoEqualityMembers]
     public partial class CreatorStatus
     {

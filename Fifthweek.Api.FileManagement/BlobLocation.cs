@@ -1,6 +1,7 @@
 ﻿namespace Fifthweek.Api.FileManagement
 {
     using Fifthweek.Api.Core;
+    using Fifthweek.Shared;
 
     [AutoConstructor]
     [AutoEqualityMembers]

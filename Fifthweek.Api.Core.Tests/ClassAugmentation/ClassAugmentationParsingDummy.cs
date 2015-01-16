@@ -1,5 +1,7 @@
 ﻿namespace Fifthweek.Api.Core.Tests.ClassAugmentation
 {
+    using Fifthweek.Shared;
+
     [AutoEqualityMembers]
     public partial class ClassAugmentationParsingDummy
     {

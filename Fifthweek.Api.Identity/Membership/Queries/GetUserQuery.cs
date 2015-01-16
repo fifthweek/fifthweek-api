@@ -2,6 +2,7 @@
 {
     using Fifthweek.Api.Core;
     using Fifthweek.Api.Persistence.Identity;
+    using Fifthweek.Shared;
 
     [AutoEqualityMembers, AutoConstructor]
     public partial class GetUserQuery : IQuery<FifthweekUser>

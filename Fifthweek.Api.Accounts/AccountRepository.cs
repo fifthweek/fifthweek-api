@@ -12,6 +12,7 @@
     using Fifthweek.Api.FileManagement;
     using Fifthweek.Api.Identity.Membership;
     using Fifthweek.Api.Persistence;
+    using Fifthweek.Shared;
 
     [AutoConstructor]
     public partial class AccountRepository : IAccountRepository

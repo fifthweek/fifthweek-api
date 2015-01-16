@@ -10,6 +10,7 @@
     using Fifthweek.Api.FileManagement;
     using Fifthweek.Api.Identity.Membership;
     using Fifthweek.Api.Identity.OAuth;
+    using Fifthweek.Shared;
 
     [AutoConstructor]
     [RoutePrefix("accountsettings")]

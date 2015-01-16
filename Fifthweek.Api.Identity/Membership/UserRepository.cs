@@ -8,6 +8,7 @@ namespace Fifthweek.Api.Identity.Membership
     using Dapper;
 
     using Fifthweek.Api.Persistence;
+    using Fifthweek.Shared;
 
     [AutoConstructor]
     public partial class UserRepository : IUserRepository

@@ -5,6 +5,7 @@
     using System.Transactions;
 
     using Fifthweek.Api.Core;
+    using Fifthweek.Shared;
 
     public abstract partial class PersistenceTestsBase
     {

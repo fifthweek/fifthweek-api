@@ -5,6 +5,7 @@
     using System.ComponentModel.DataAnnotations.Schema;
 
     using Fifthweek.Api.Core;
+    using Fifthweek.Shared;
 
     [AutoConstructor, AutoEqualityMembers, AutoSql]
     public partial class Post

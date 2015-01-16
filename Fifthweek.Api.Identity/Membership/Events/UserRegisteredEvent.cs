@@ -2,6 +2,8 @@ using Fifthweek.Api.Core;
 
 namespace Fifthweek.Api.Identity.Membership.Events
 {
+    using Fifthweek.Shared;
+
     [AutoConstructor, AutoEqualityMembers]
     public partial class UserRegisteredEvent
     {
