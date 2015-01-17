@@ -187,6 +187,60 @@
             });
         }
 
+        [TestMethod]
+        public async Task WhenPostingNow_ItShouldBeIdempotent()
+        {
+            await this.NewTestDatabaseAsync(async testDatabase =>
+            {
+                var givenPost = UnscheduledPostWithoutChannel();
+
+                this.target = new PostToCollectionDbSubStatements(testDatabase.NewContext());
+                await this.CreateEntitiesAsync(testDatabase);
+                await this.target.PostNowAsync(givenPost, Now);
+                await testDatabase.TakeSnapshotAsync();
+
+                await this.target.PostNowAsync(givenPost, Now);
+
+                return ExpectedSideEffects.None;
+            });
+        }
+
+        [TestMethod]
+        public async Task WhenScheduling_ItShouldBeIdempotent()
+        {
+            await this.NewTestDatabaseAsync(async testDatabase =>
+            {
+                var givenPost = UnscheduledPostWithoutChannel();
+
+                this.target = new PostToCollectionDbSubStatements(testDatabase.NewContext());
+                await this.CreateEntitiesAsync(testDatabase);
+                await this.target.SchedulePostAsync(givenPost, TwoDaysFromNow, Now);
+                await testDatabase.TakeSnapshotAsync();
+
+                await this.target.SchedulePostAsync(givenPost, TwoDaysFromNow, Now);
+
+                return ExpectedSideEffects.None;
+            });
+        }
+
+        [TestMethod]
+        public async Task WhenQueueing_ItShouldBeIdempotent()
+        {
+            await this.NewTestDatabaseAsync(async testDatabase =>
+            {
+                var givenPost = UnscheduledPostWithoutChannel();
+
+                this.target = new PostToCollectionDbSubStatements(testDatabase.NewContext());
+                await this.CreateEntitiesAsync(testDatabase);
+                await this.target.QueuePostAsync(givenPost);
+                await testDatabase.TakeSnapshotAsync();
+
+                await this.target.QueuePostAsync(givenPost);
+
+                return ExpectedSideEffects.None;
+            });
+        }
+
         private static Post UnscheduledPostWithoutChannel()
         {
             return new Post(
