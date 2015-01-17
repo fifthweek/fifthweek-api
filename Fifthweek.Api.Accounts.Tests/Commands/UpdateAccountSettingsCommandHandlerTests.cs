@@ -51,7 +51,7 @@ namespace Fifthweek.Api.Accounts.Tests.Commands
                 this.password,
                 this.fileId);
 
-            this.fileSecurity.Setup(v => v.AssertFileBelongsToUserAsync(this.userId, this.fileId))
+            this.fileSecurity.Setup(v => v.AssertUsageAllowedAsync(this.userId, this.fileId))
                 .Returns(Task.FromResult(0));
 
             this.accountRepository.Setup(
@@ -81,7 +81,7 @@ namespace Fifthweek.Api.Accounts.Tests.Commands
                 this.password,
                 this.fileId);
 
-            this.fileSecurity.Setup(v => v.AssertFileBelongsToUserAsync(this.userId, this.fileId))
+            this.fileSecurity.Setup(v => v.AssertUsageAllowedAsync(this.userId, this.fileId))
                 .Throws(new UnauthorizedException());
 
             await this.target.HandleAsync(command);

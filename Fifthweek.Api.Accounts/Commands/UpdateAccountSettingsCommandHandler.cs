@@ -28,7 +28,7 @@
             
             if (command.NewProfileImageId != null)
             {
-                await this.fileSecurity.AssertFileBelongsToUserAsync(command.AuthenticatedUserId, command.NewProfileImageId);
+                await this.fileSecurity.AssertUsageAllowedAsync(command.AuthenticatedUserId, command.NewProfileImageId);
             }
 
             var result = await this.accountRepository.UpdateAccountSettingsAsync(

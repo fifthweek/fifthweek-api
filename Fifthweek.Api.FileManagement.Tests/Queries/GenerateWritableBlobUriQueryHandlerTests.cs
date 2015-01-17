@@ -1,30 +1,28 @@
-﻿using System;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-
-namespace Fifthweek.Api.FileManagement.Tests.Queries
+﻿namespace Fifthweek.Api.FileManagement.Tests.Queries
 {
+    using System;
     using System.Threading.Tasks;
 
     using Fifthweek.Api.Azure;
     using Fifthweek.Api.Core;
-    using Fifthweek.Api.FileManagement.Commands;
     using Fifthweek.Api.FileManagement.Queries;
     using Fifthweek.Api.Identity.Membership;
     using Fifthweek.Tests.Shared;
 
-    using Moq;
+    using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-    using Constants = Fifthweek.Api.FileManagement.Constants;
+    using Moq;
 
     [TestClass]
     public class GenerateWritableBlobUriQueryHandlerTests
     {
-        private readonly UserId userId = new UserId(Guid.NewGuid());
-        private readonly FileId fileId = new FileId(Guid.NewGuid());
-        private readonly string blobName = "blobName";
-        private readonly string containerName = "containerName";
-        private readonly string url = "http://blah.com/blob";
-        private readonly string purpose = "purpose";
+        private const string BlobName = "blobName";
+        private const string ContainerName = "containerName";
+        private const string Url = "http://blah.com/blob";
+        private const string Purpose = "purpose";
+
+        private static readonly UserId UserId = new UserId(Guid.NewGuid());
+        private static readonly FileId FileId = new FileId(Guid.NewGuid());
 
         private Mock<IFileSecurity> fileSecurity;
         private Mock<IBlobService> blobService;
@@ -48,34 +46,34 @@ namespace Fifthweek.Api.FileManagement.Tests.Queries
         [TestMethod]
         public async Task WhenCalled_ItShouldCheckPermissionsAndUpdateTheDatabase()
         {
-            this.fileSecurity.Setup(v => v.AssertFileBelongsToUserAsync(this.userId, this.fileId))
+            this.fileSecurity.Setup(v => v.AssertUsageAllowedAsync(UserId, FileId))
                 .Returns(Task.FromResult(0));
 
-            this.blobNameCreator.Setup(v => v.GetBlobLocation(this.userId, this.fileId, this.purpose))
-                .Returns(new BlobLocation(this.containerName, this.blobName));
+            this.blobNameCreator.Setup(v => v.GetBlobLocation(UserId, FileId, Purpose))
+                .Returns(new BlobLocation(ContainerName, BlobName));
 
-            this.blobService.Setup(v => v.GetBlobSasUriForWritingAsync(this.containerName, this.blobName))
-                .ReturnsAsync(this.url);
+            this.blobService.Setup(v => v.GetBlobSasUriForWritingAsync(ContainerName, BlobName))
+                .ReturnsAsync(Url);
 
-            var result = await this.handler.HandleAsync(new GenerateWritableBlobUriQuery(this.userId, this.fileId, this.purpose));
+            var result = await this.handler.HandleAsync(new GenerateWritableBlobUriQuery(UserId, FileId, Purpose));
 
-            Assert.AreEqual(this.url, result);
+            Assert.AreEqual(Url, result);
         }
 
         [TestMethod]
         public async Task WhenCalledAndTheUserDoesNotOwnTheFile_ItShouldFail()
         {
-            this.fileSecurity.Setup(v => v.AssertFileBelongsToUserAsync(this.userId, this.fileId))
+            this.fileSecurity.Setup(v => v.AssertUsageAllowedAsync(UserId, FileId))
                 .Throws(new UnauthorizedException());
 
-            this.blobNameCreator.Setup(v => v.GetBlobLocation(this.userId, this.fileId, this.purpose))
+            this.blobNameCreator.Setup(v => v.GetBlobLocation(UserId, FileId, Purpose))
                 .Throws(new Exception("Shouldn't be called"));
 
-            this.blobService.Setup(v => v.GetBlobSasUriForWritingAsync(this.containerName, this.blobName))
+            this.blobService.Setup(v => v.GetBlobSasUriForWritingAsync(ContainerName, BlobName))
                 .Throws(new Exception("Shouldn't be called"));
 
             await ExpectedException<UnauthorizedException>.AssertAsync(
-                () => this.handler.HandleAsync(new GenerateWritableBlobUriQuery(this.userId, this.fileId, this.purpose)));
+                () => this.handler.HandleAsync(new GenerateWritableBlobUriQuery(UserId, FileId, Purpose)));
         }
     }
 }

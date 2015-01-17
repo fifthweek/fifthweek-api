@@ -1,8 +1,5 @@
 ﻿namespace Fifthweek.Api.FileManagement
 {
-    using System;
-    using System.Text;
-
     using Fifthweek.Api.Core;
     using Fifthweek.Api.Identity.Membership;
     using Fifthweek.Shared;

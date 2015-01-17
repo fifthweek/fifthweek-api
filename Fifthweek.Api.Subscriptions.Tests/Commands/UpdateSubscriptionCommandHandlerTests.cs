@@ -74,7 +74,7 @@
         {
             await this.NewTestDatabaseAsync(async testDatabase =>
             {
-                this.fileSecurity.Setup(_ => _.AssertFileBelongsToUserAsync(UserId, HeaderImageFileId)).Throws<UnauthorizedException>();
+                this.fileSecurity.Setup(_ => _.AssertUsageAllowedAsync(UserId, HeaderImageFileId)).Throws<UnauthorizedException>();
                 this.target = new UpdateSubscriptionCommandHandler(this.subscriptionSecurity.Object, this.fileSecurity.Object, testDatabase.NewContext());
                 await testDatabase.TakeSnapshotAsync();
 

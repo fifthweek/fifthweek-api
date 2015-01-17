@@ -72,7 +72,9 @@
         [TestInitialize]
         public void Initialize()
         {
+            // Give side-effecting components strict mock behaviour.
             this.subStatements = new Mock<IPostToCollectionDbSubStatements>(MockBehavior.Strict);
+
             this.target = new PostToCollectionDbStatement(this.subStatements.Object);
         }
 

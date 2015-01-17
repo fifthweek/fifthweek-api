@@ -24,7 +24,7 @@
             }
 
             await this.subscriptionSecurity.AssertUpdateAllowedAsync(command.Requester, command.SubscriptionId);
-            await this.fileSecurity.AssertFileBelongsToUserAsync(command.Requester, command.HeaderImageFileId);
+            await this.fileSecurity.AssertUsageAllowedAsync(command.Requester, command.HeaderImageFileId);
             
             await this.UpdateSubscriptionAsync(command);
         }

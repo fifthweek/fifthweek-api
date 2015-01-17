@@ -297,11 +297,17 @@ namespace Fifthweek.Api.Posts.Commands
     {
         public PostImageCommandHandler(
             Fifthweek.Api.Subscriptions.ICollectionSecurity collectionSecurity, 
+            Fifthweek.Api.FileManagement.IFileSecurity fileSecurity, 
             Fifthweek.Api.Posts.IPostToCollectionDbStatement postToCollectionDbStatement)
         {
             if (collectionSecurity == null)
             {
                 throw new ArgumentNullException("collectionSecurity");
+            }
+
+            if (fileSecurity == null)
+            {
+                throw new ArgumentNullException("fileSecurity");
             }
 
             if (postToCollectionDbStatement == null)
@@ -310,6 +316,7 @@ namespace Fifthweek.Api.Posts.Commands
             }
 
             this.collectionSecurity = collectionSecurity;
+            this.fileSecurity = fileSecurity;
             this.postToCollectionDbStatement = postToCollectionDbStatement;
         }
     }
@@ -377,9 +384,14 @@ namespace Fifthweek.Api.Posts.Commands
 namespace Fifthweek.Api.Posts
 {
     using System;
-    using System.Threading.Tasks;
-    using Fifthweek.Api.Persistence;
+    using System.Linq;
     using Fifthweek.CodeGeneration;
+    using System.Collections.Generic;
+    using System.Threading.Tasks;
+    using Fifthweek.Api.Core;
+    using Fifthweek.Api.FileManagement;
+    using Fifthweek.Api.Persistence;
+    using Fifthweek.Api.Subscriptions;
     public partial class PostToCollectionDbSubStatements 
     {
         public PostToCollectionDbSubStatements(

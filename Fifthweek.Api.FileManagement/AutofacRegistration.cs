@@ -10,6 +10,7 @@
         {
             builder.RegisterType<BlobLocationGenerator>().As<IBlobLocationGenerator>().SingleInstance();
             builder.RegisterType<FileRepository>().As<IFileRepository>();
+            builder.RegisterType<FileOwnership>().As<IFileOwnership>();
             builder.RegisterType<FileSecurity>().As<IFileSecurity>();
         }
     }

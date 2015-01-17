@@ -25,6 +25,7 @@
         private static readonly ValidComment Comment = ValidComment.Parse("Hey guys!");
         private static readonly PostImageCommand Command = new PostImageCommand(UserId, PostId, CollectionId, FileId, Comment, ScheduleDate, IsQueued);
         private Mock<ICollectionSecurity> collectionSecurity;
+        private Mock<IFileSecurity> fileSecurity;
         private Mock<IPostToCollectionDbStatement> postToCollectionDbStatement;
         private PostImageCommandHandler target;
 
@@ -32,17 +33,33 @@
         public void Initialize()
         {
             this.collectionSecurity = new Mock<ICollectionSecurity>();
+            this.fileSecurity = new Mock<IFileSecurity>();
             
             // Give side-effecting components strict mock behaviour.
             this.postToCollectionDbStatement = new Mock<IPostToCollectionDbStatement>(MockBehavior.Strict);
 
-            this.target = new PostImageCommandHandler(this.collectionSecurity.Object, this.postToCollectionDbStatement.Object);
+            this.target = new PostImageCommandHandler(this.collectionSecurity.Object, this.fileSecurity.Object, this.postToCollectionDbStatement.Object);
         }
 
         [TestMethod]
         public async Task WhenNotAllowedToPost_ItShouldReportAnError()
         {
             this.collectionSecurity.Setup(_ => _.AssertPostingAllowedAsync(UserId, CollectionId)).Throws<UnauthorizedException>();
+
+            try
+            {
+                await this.target.HandleAsync(Command);
+                Assert.Fail("Expected recoverable exception");
+            }
+            catch (UnauthorizedException)
+            {
+            }
+        }
+
+        [TestMethod]
+        public async Task WhenNotAllowedToUseFile_ItShouldReportAnError()
+        {
+            this.fileSecurity.Setup(_ => _.AssertUsageAllowedAsync(UserId, FileId)).Throws<UnauthorizedException>();
 
             try
             {
