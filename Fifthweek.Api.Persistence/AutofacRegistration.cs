@@ -7,6 +7,7 @@
 
     using Fifthweek.Api.Core;
     using Fifthweek.Api.Persistence.Identity;
+    using Fifthweek.Shared;
 
     using Microsoft.AspNet.Identity;
     using Microsoft.AspNet.Identity.Owin;

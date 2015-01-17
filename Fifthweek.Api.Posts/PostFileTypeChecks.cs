@@ -5,22 +5,32 @@
     using Fifthweek.Api.Core;
     using Fifthweek.Api.FileManagement;
     using Fifthweek.CodeGeneration;
+    using Fifthweek.Shared;
 
     [AutoConstructor]
     public partial class PostFileTypeChecks : IPostFileTypeChecks
     {
         private readonly IGetFileExtensionDbStatement getFileExtension;
+        private readonly IMimeTypeMap mimeTypeMap;
 
-        public async Task<bool> IsValidForFilePostAsync(FileId fileId)
+        public Task<bool> IsValidForFilePostAsync(FileId fileId)
         {
-            var fileExtension = await this.getFileExtension.ExecuteAsync(fileId);
-            throw new System.NotImplementedException();
+            fileId.AssertNotNull("fileId");
+
+            // Do we want to filter potentially dangerous files, or be agnostic like DropBox?
+            // We need to consider technical people sharing code snippets which might have shell 
+            // extensions (e.g. `.bat`), so we probably wouldn't want to filter on those?
+            return Task.FromResult(true);
         }
 
         public async Task<bool> IsValidForImagePostAsync(FileId fileId)
         {
+            fileId.AssertNotNull("fileId");
+
             var fileExtension = await this.getFileExtension.ExecuteAsync(fileId);
-            throw new System.NotImplementedException();
+            var mimeType = this.mimeTypeMap.GetMimeType(fileExtension);
+
+            return mimeType.StartsWith("image/");
         }
 
         public async Task AssertValidForFilePostAsync(FileId fileId)
@@ -36,6 +46,8 @@
 
         public async Task AssertValidForImagePostAsync(FileId fileId)
         {
+            fileId.AssertNotNull("fileId");
+
             var isValid = await this.IsValidForImagePostAsync(fileId);
             if (!isValid)
             {

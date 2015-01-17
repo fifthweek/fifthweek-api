@@ -1,4 +1,4 @@
-﻿namespace Fifthweek.Api.Core
+namespace Fifthweek.Shared
 {
     using Autofac;
 

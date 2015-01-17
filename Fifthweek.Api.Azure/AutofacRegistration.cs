@@ -2,8 +2,8 @@
 {
     using Autofac;
 
-    using Fifthweek.Api.Core;
     using Fifthweek.Azure;
+    using Fifthweek.Shared;
 
     public class AutofacRegistration : IAutofacRegistration
     {

@@ -34,6 +34,8 @@
             var result = await this.target.IsPostingAllowedAsync(UserId, ChannelId);
 
             Assert.IsTrue(result);
+
+            await this.target.AssertPostingAllowedAsync(UserId, ChannelId);
         }
 
         [TestMethod]

@@ -35,6 +35,8 @@
             var result = await this.target.IsUsageAllowedAsync(UserId, FileId);
 
             Assert.IsTrue(result);
+
+            await this.target.AssertUsageAllowedAsync(UserId, FileId);
         }
 
         [TestMethod]

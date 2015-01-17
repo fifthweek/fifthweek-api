@@ -1,13 +1,12 @@
-﻿namespace Fifthweek.Api.Availability
+﻿namespace Fifthweek.Shared
 {
     using Autofac;
-
-    using Fifthweek.Shared;
 
     public class AutofacRegistration : IAutofacRegistration
     {
         public void Register(ContainerBuilder builder)
         {
+            builder.RegisterType<MimeTypeMap>().As<IMimeTypeMap>();
         }
     }
 }

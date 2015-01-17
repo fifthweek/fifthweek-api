@@ -9,6 +9,7 @@
         public static readonly IEnumerable<Assembly> Assemblies = new[] 
         {
             Assembly.GetExecutingAssembly(),
+            typeof(Shared.AutofacRegistration).Assembly,
             typeof(Core.AutofacRegistration).Assembly,
             typeof(Availability.AutofacRegistration).Assembly,
             typeof(Identity.Membership.AutofacRegistration).Assembly,

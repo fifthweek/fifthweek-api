@@ -1,8 +1,4 @@
-﻿using Autofac.Builder;
-using Microsoft.AspNet.Identity;
-using Microsoft.AspNet.Identity.EntityFramework;
-
-namespace Fifthweek.Api
+﻿namespace Fifthweek.Api
 {
     using System;
     using System.Collections.Generic;
@@ -17,6 +13,7 @@ namespace Fifthweek.Api
 
     using Fifthweek.Api.Core;
     using Fifthweek.Api.Logging;
+    using Fifthweek.Shared;
 
     using Owin;
 

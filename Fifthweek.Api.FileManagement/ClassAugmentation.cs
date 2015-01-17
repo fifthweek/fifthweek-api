@@ -85,6 +85,7 @@ namespace Fifthweek.Api.FileManagement.Commands
     {
         public CompleteFileUploadCommandHandler(
             Fifthweek.Api.FileManagement.IFileRepository fileRepository, 
+            Fifthweek.Shared.IMimeTypeMap mimeTypeMap, 
             Fifthweek.Api.Azure.IBlobService blobService, 
             Fifthweek.Api.Azure.IQueueService queueService, 
             Fifthweek.Api.FileManagement.IBlobLocationGenerator blobLocationGenerator)
@@ -92,6 +93,11 @@ namespace Fifthweek.Api.FileManagement.Commands
             if (fileRepository == null)
             {
                 throw new ArgumentNullException("fileRepository");
+            }
+
+            if (mimeTypeMap == null)
+            {
+                throw new ArgumentNullException("mimeTypeMap");
             }
 
             if (blobService == null)
@@ -110,6 +116,7 @@ namespace Fifthweek.Api.FileManagement.Commands
             }
 
             this.fileRepository = fileRepository;
+            this.mimeTypeMap = mimeTypeMap;
             this.blobService = blobService;
             this.queueService = queueService;
             this.blobLocationGenerator = blobLocationGenerator;
@@ -606,11 +613,16 @@ namespace Fifthweek.Api.FileManagement.Queries
 }
 namespace Fifthweek.Api.FileManagement
 {
+    using System;
+    using System.Linq;
+    using Fifthweek.Api.Core;
+    using Fifthweek.CodeGeneration;
+    using Fifthweek.Shared;
     using System.Threading.Tasks;
     using Dapper;
-    using Fifthweek.Api.Core;
+    using Fifthweek.Api.Identity.Membership;
     using Fifthweek.Api.Persistence;
-    using Fifthweek.CodeGeneration;
+    using System.Security;
     public partial class GetFileExtensionDbStatement 
     {
         public GetFileExtensionDbStatement(

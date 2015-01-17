@@ -14,11 +14,9 @@
     public partial class CompleteFileUploadCommandHandler : ICommandHandler<CompleteFileUploadCommand>
     {
         private readonly IFileRepository fileRepository;
-
+        private readonly IMimeTypeMap mimeTypeMap;
         private readonly IBlobService blobService;
-        
         private readonly IQueueService queueService;
-
         private readonly IBlobLocationGenerator blobLocationGenerator;
         
         public async Task HandleAsync(CompleteFileUploadCommand command)
@@ -29,7 +27,7 @@
             var file = await this.fileRepository.GetFileWaitingForUploadAsync(command.FileId);
             command.AuthenticatedUserId.AssertAuthorizedFor(file.UserId);
 
-            var mimeType = MimeTypeMap.GetMimeType(file.FileExtension);
+            var mimeType = this.mimeTypeMap.GetMimeType(file.FileExtension);
             
             var blobLocation = this.blobLocationGenerator.GetBlobLocation(command.AuthenticatedUserId, command.FileId, file.Purpose);
             var blobLength = await this.blobService.GetBlobLengthAndSetContentTypeAsync(blobLocation.ContainerName, blobLocation.BlobName, mimeType);

@@ -103,9 +103,10 @@
     <Compile Include="BlobLocation.cs" />
     <Compile Include="BlobLocationGenerator.cs" />
     <Compile Include="ClassAugmentation.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
       <DependentUpon>ClassAugmentation.tt</DependentUpon>
+      <SubType>Code</SubType>
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
     </Compile>
     <Compile Include="Commands\CompleteFileUploadCommand.cs" />
     <Compile Include="Commands\CompleteFileUploadCommandHandler.cs" />

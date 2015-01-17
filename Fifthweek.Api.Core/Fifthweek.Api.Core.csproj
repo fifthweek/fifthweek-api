@@ -92,7 +92,6 @@
     <Compile Include="DecoratorAttribute.cs" />
     <Compile Include="AggregateEventHandler.cs" />
     <Compile Include="DetailedRecoverableException.cs" />
-    <Compile Include="IAutofacRegistration.cs" />
     <Compile Include="IEventHandler.cs" />
     <Compile Include="BadRequestException.cs" />
     <Compile Include="Constants.cs" />

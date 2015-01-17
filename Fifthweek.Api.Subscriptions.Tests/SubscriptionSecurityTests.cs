@@ -38,6 +38,8 @@
             var result = await this.target.IsCreationAllowedAsync(UserId);
 
             Assert.IsTrue(result);
+
+            await this.target.AssertCreationAllowedAsync(UserId);
         }
 
         [TestMethod]
@@ -62,6 +64,8 @@
             var result = await this.target.IsUpdateAllowedAsync(UserId, SubscriptionId);
 
             Assert.IsTrue(result);
+
+            await this.target.AssertUpdateAllowedAsync(UserId, SubscriptionId);
         }
 
         [TestMethod]

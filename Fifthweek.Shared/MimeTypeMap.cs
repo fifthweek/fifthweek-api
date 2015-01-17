@@ -9,7 +9,7 @@
     /// 
     /// Overwrite list of mime types only if updating.
     /// </summary>
-    public static class MimeTypeMap
+    public class MimeTypeMap : IMimeTypeMap
     {
         private static readonly IDictionary<string, string> Mappings = new Dictionary<string, string>(StringComparer.InvariantCultureIgnoreCase) {
         {".323", "text/h323"},
@@ -574,7 +574,7 @@
         {".zip", "application/x-zip-compressed"},
         };
 
-        public static string GetMimeType(string extension)
+        public string GetMimeType(string extension)
         {
             const string DefaultMimeType = "application/octet-stream";
 
