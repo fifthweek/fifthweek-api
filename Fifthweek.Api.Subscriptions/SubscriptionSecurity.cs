@@ -7,7 +7,6 @@ namespace Fifthweek.Api.Subscriptions
     using Fifthweek.Api.Persistence;
     using Fifthweek.Api.Persistence.Identity;
     using Fifthweek.CodeGeneration;
-    using Fifthweek.Shared;
 
     [AutoConstructor]
     public partial class SubscriptionSecurity : ISubscriptionSecurity

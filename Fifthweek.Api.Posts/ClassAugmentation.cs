@@ -298,6 +298,7 @@ namespace Fifthweek.Api.Posts.Commands
         public PostImageCommandHandler(
             Fifthweek.Api.Subscriptions.ICollectionSecurity collectionSecurity, 
             Fifthweek.Api.FileManagement.IFileSecurity fileSecurity, 
+            Fifthweek.Api.Posts.IPostFileTypeChecks postFileTypeChecks, 
             Fifthweek.Api.Posts.IPostToCollectionDbStatement postToCollectionDbStatement)
         {
             if (collectionSecurity == null)
@@ -310,6 +311,11 @@ namespace Fifthweek.Api.Posts.Commands
                 throw new ArgumentNullException("fileSecurity");
             }
 
+            if (postFileTypeChecks == null)
+            {
+                throw new ArgumentNullException("postFileTypeChecks");
+            }
+
             if (postToCollectionDbStatement == null)
             {
                 throw new ArgumentNullException("postToCollectionDbStatement");
@@ -317,6 +323,7 @@ namespace Fifthweek.Api.Posts.Commands
 
             this.collectionSecurity = collectionSecurity;
             this.fileSecurity = fileSecurity;
+            this.postFileTypeChecks = postFileTypeChecks;
             this.postToCollectionDbStatement = postToCollectionDbStatement;
         }
     }
@@ -364,6 +371,7 @@ namespace Fifthweek.Api.Posts.Commands
         public PostFileCommandHandler(
             Fifthweek.Api.Subscriptions.ICollectionSecurity collectionSecurity, 
             Fifthweek.Api.FileManagement.IFileSecurity fileSecurity, 
+            Fifthweek.Api.Posts.IPostFileTypeChecks postFileTypeChecks, 
             Fifthweek.Api.Posts.IPostToCollectionDbStatement postToCollectionDbStatement)
         {
             if (collectionSecurity == null)
@@ -376,6 +384,11 @@ namespace Fifthweek.Api.Posts.Commands
                 throw new ArgumentNullException("fileSecurity");
             }
 
+            if (postFileTypeChecks == null)
+            {
+                throw new ArgumentNullException("postFileTypeChecks");
+            }
+
             if (postToCollectionDbStatement == null)
             {
                 throw new ArgumentNullException("postToCollectionDbStatement");
@@ -383,6 +396,7 @@ namespace Fifthweek.Api.Posts.Commands
 
             this.collectionSecurity = collectionSecurity;
             this.fileSecurity = fileSecurity;
+            this.postFileTypeChecks = postFileTypeChecks;
             this.postToCollectionDbStatement = postToCollectionDbStatement;
         }
     }
@@ -410,6 +424,27 @@ namespace Fifthweek.Api.Posts
             }
 
             this.databaseContext = databaseContext;
+        }
+    }
+
+}
+namespace Fifthweek.Api.Posts
+{
+    using System.Threading.Tasks;
+    using Fifthweek.Api.Core;
+    using Fifthweek.Api.FileManagement;
+    using Fifthweek.CodeGeneration;
+    public partial class PostFileTypeChecks 
+    {
+        public PostFileTypeChecks(
+            Fifthweek.Api.FileManagement.IGetFileExtensionDbStatement getFileExtension)
+        {
+            if (getFileExtension == null)
+            {
+                throw new ArgumentNullException("getFileExtension");
+            }
+
+            this.getFileExtension = getFileExtension;
         }
     }
 

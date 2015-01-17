@@ -26,6 +26,7 @@
         private static readonly PostImageCommand Command = new PostImageCommand(UserId, PostId, CollectionId, FileId, Comment, ScheduleDate, IsQueued);
         private Mock<ICollectionSecurity> collectionSecurity;
         private Mock<IFileSecurity> fileSecurity;
+        private Mock<IPostFileTypeChecks> postFileTypeChecks;
         private Mock<IPostToCollectionDbStatement> postToCollectionDbStatement;
         private PostImageCommandHandler target;
 
@@ -34,11 +35,16 @@
         {
             this.collectionSecurity = new Mock<ICollectionSecurity>();
             this.fileSecurity = new Mock<IFileSecurity>();
+            this.postFileTypeChecks = new Mock<IPostFileTypeChecks>();
             
             // Give side-effecting components strict mock behaviour.
             this.postToCollectionDbStatement = new Mock<IPostToCollectionDbStatement>(MockBehavior.Strict);
 
-            this.target = new PostImageCommandHandler(this.collectionSecurity.Object, this.fileSecurity.Object, this.postToCollectionDbStatement.Object);
+            this.target = new PostImageCommandHandler(
+                this.collectionSecurity.Object, 
+                this.fileSecurity.Object, 
+                this.postFileTypeChecks.Object, 
+                this.postToCollectionDbStatement.Object);
         }
 
         [TestMethod]
@@ -49,7 +55,7 @@
             try
             {
                 await this.target.HandleAsync(Command);
-                Assert.Fail("Expected recoverable exception");
+                Assert.Fail("Expected security exception");
             }
             catch (UnauthorizedException)
             {
@@ -64,9 +70,24 @@
             try
             {
                 await this.target.HandleAsync(Command);
-                Assert.Fail("Expected recoverable exception");
+                Assert.Fail("Expected security exception");
             }
             catch (UnauthorizedException)
+            {
+            }
+        }
+
+        [TestMethod]
+        public async Task WhenFileHasInvalidType_ItShouldReportAnError()
+        {
+            this.postFileTypeChecks.Setup(_ => _.AssertValidForImagePostAsync(FileId)).Throws(new RecoverableException("Bad file type"));
+
+            try
+            {
+                await this.target.HandleAsync(Command);
+                Assert.Fail("Expected recoverable exception");
+            }
+            catch (RecoverableException)
             {
             }
         }

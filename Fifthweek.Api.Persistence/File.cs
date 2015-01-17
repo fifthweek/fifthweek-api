@@ -4,10 +4,8 @@
     using System.ComponentModel.DataAnnotations;
     using System.ComponentModel.DataAnnotations.Schema;
 
-    using Fifthweek.Api.Core;
     using Fifthweek.Api.Persistence.Identity;
     using Fifthweek.CodeGeneration;
-    using Fifthweek.Shared;
 
     [AutoConstructor, AutoEqualityMembers, AutoSql]
     public partial class File
@@ -42,9 +40,11 @@
         public DateTime? ProcessingCompletedDate { get; set; }
 
         [Required]
+        [MaxLength(255)] // This is the limit on some OSs. Again, somewhat arbitrary, but a safe limitation for us to enforce.
         public string FileNameWithoutExtension { get; set; }
         
         [Required]
+        [MaxLength(10)] // Arbitrary but seems safe. Should really be enforcing this through the type system (ValidFileExension type).
         public string FileExtension { get; set; }
 
         [Required]

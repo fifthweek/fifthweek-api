@@ -19,7 +19,7 @@
                 DateTime.UtcNow.AddDays(random.NextDouble() * -100),
                 DateTime.UtcNow.AddDays(random.NextDouble() * -100),
                 "File Name " + random.Next(),
-                "File Extension " + random.Next(),
+                "ext" + random.Next(100),
                 random.Next(),
                 "Purpose " + random.Next());
         }

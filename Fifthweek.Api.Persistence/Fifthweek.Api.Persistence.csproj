@@ -171,6 +171,10 @@
     <Compile Include="Migrations\201501161438173_ExtendPostCommentLength.Designer.cs">
       <DependentUpon>201501161438173_ExtendPostCommentLength.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201501171345390_AddMaxSizesToFileColumns.cs" />
+    <Compile Include="Migrations\201501171345390_AddMaxSizesToFileColumns.Designer.cs">
+      <DependentUpon>201501171345390_AddMaxSizesToFileColumns.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Post.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -255,6 +259,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201501161438173_ExtendPostCommentLength.resx">
       <DependentUpon>201501161438173_ExtendPostCommentLength.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201501171345390_AddMaxSizesToFileColumns.resx">
+      <DependentUpon>201501171345390_AddMaxSizesToFileColumns.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>

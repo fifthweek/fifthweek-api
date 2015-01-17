@@ -12,6 +12,7 @@
             builder.RegisterType<FileRepository>().As<IFileRepository>();
             builder.RegisterType<FileOwnership>().As<IFileOwnership>();
             builder.RegisterType<FileSecurity>().As<IFileSecurity>();
+            builder.RegisterType<GetFileExtensionDbStatement>().As<IGetFileExtensionDbStatement>();
         }
     }
 }

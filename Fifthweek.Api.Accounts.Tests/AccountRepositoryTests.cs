@@ -69,8 +69,9 @@
                 await this.CreateFileAsync(testDatabase);
                 await testDatabase.TakeSnapshotAsync();
 
-                await ExpectedException<DetailedRecoverableException>.AssertAsync(
-                    () => this.target.GetAccountSettingsAsync(new UserId(Guid.NewGuid())));
+                Func<Task> badMethodCall = () => this.target.GetAccountSettingsAsync(new UserId(Guid.NewGuid()));
+
+                await badMethodCall.AssertExceptionAsync<DetailedRecoverableException>();
 
                 return ExpectedSideEffects.None;
             });
@@ -79,8 +80,9 @@
         [TestMethod]
         public async Task WhenGetAccountSettingsCalledWithNullUserId_ItShouldThrowAnAugumentException()
         {
-            await ExpectedException<ArgumentNullException>.AssertAsync(
-                () => this.target.GetAccountSettingsAsync(null));
+            Func<Task> badMethodCall = () => this.target.GetAccountSettingsAsync(null);
+
+            await badMethodCall.AssertExceptionAsync<ArgumentNullException>();
         }
 
         [TestMethod]
@@ -209,37 +211,40 @@
         [TestMethod]
         public async Task WhenUpdateAccountSettingsCalledWithNullUserId_ItShouldThrowAnAugumentException()
         {
-            await ExpectedException<ArgumentNullException>.AssertAsync(
-                () => this.target.UpdateAccountSettingsAsync(
-                    null,
-                    this.newUsername,
-                    this.newEmail,
-                    this.newPassword,
-                    this.newFileId));
+            Func<Task> badMethodCall = () => this.target.UpdateAccountSettingsAsync(
+                null,
+                this.newUsername,
+                this.newEmail,
+                this.newPassword,
+                this.newFileId);
+
+            await badMethodCall.AssertExceptionAsync<ArgumentNullException>();
         }
 
         [TestMethod]
         public async Task WhenUpdateAccountSettingsCalledWithNullEmail_ItShouldThrowAnAugumentException()
         {
-            await ExpectedException<ArgumentNullException>.AssertAsync(
-                () => this.target.UpdateAccountSettingsAsync(
-                    this.userId,
-                    this.newUsername,
-                    null,
-                    this.newPassword,
-                    this.newFileId));
+            Func<Task> badMethodCall = () => this.target.UpdateAccountSettingsAsync(
+                this.userId,
+                this.newUsername,
+                null,
+                this.newPassword,
+                this.newFileId);
+
+            await badMethodCall.AssertExceptionAsync<ArgumentNullException>();
         }
 
         [TestMethod]
         public async Task WhenUpdateAccountSettingsCalledWithNullUsername_ItShouldThrowAnAugumentException()
         {
-            await ExpectedException<ArgumentNullException>.AssertAsync(
-                () => this.target.UpdateAccountSettingsAsync(
-                    this.userId,
-                    null,
-                    this.newEmail,
-                    this.newPassword,
-                    this.newFileId));
+            Func<Task> badMethodCall = () => this.target.UpdateAccountSettingsAsync(
+                this.userId,
+                null,
+                this.newEmail,
+                this.newPassword,
+                this.newFileId);
+
+            await badMethodCall.AssertExceptionAsync<ArgumentNullException>();
         }
 
         private async Task<FifthweekUser> GetUserAsync(TestDatabaseContext testDatabase)

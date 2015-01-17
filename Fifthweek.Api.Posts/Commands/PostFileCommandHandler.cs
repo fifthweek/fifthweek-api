@@ -13,6 +13,7 @@
     {
         private readonly ICollectionSecurity collectionSecurity;
         private readonly IFileSecurity fileSecurity;
+        private readonly IPostFileTypeChecks postFileTypeChecks;
         private readonly IPostToCollectionDbStatement postToCollectionDbStatement;
 
         public async Task HandleAsync(PostFileCommand command)
@@ -22,6 +23,8 @@
             await this.collectionSecurity.AssertPostingAllowedAsync(command.Requester, command.CollectionId);
 
             await this.fileSecurity.AssertUsageAllowedAsync(command.Requester, command.FileId);
+
+            await this.postFileTypeChecks.AssertValidForFilePostAsync(command.FileId);
 
             await this.postToCollectionDbStatement.ExecuteAsync(
                 command.NewPostId,

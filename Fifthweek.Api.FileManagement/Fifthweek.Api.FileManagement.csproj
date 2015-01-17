@@ -125,6 +125,8 @@
     <Compile Include="IFileRepository.cs" />
     <Compile Include="IFileOwnership.cs" />
     <Compile Include="IFileSecurity.cs" />
+    <Compile Include="GetFileExtensionDbStatement.cs" />
+    <Compile Include="IGetFileExtensionDbStatement.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Queries\GenerateWritableBlobUriQuery.cs" />
     <Compile Include="Queries\GenerateWritableBlobUriQueryHandler.cs" />

@@ -33,9 +33,11 @@
         [TestInitialize]
         public void TestInitialize()
         {
-            this.blobService = new Mock<IBlobService>();
             this.fileSecurity = new Mock<IFileSecurity>();
             this.blobNameCreator = new Mock<IBlobLocationGenerator>();
+
+            // Give side-effecting components strict mock behaviour.
+            this.blobService = new Mock<IBlobService>(MockBehavior.Strict);
 
             this.handler = new GenerateWritableBlobUriQueryHandler(
                 this.blobService.Object,
@@ -66,14 +68,9 @@
             this.fileSecurity.Setup(v => v.AssertUsageAllowedAsync(UserId, FileId))
                 .Throws(new UnauthorizedException());
 
-            this.blobNameCreator.Setup(v => v.GetBlobLocation(UserId, FileId, Purpose))
-                .Throws(new Exception("Shouldn't be called"));
+            Func<Task> badMethodCall = () => this.handler.HandleAsync(new GenerateWritableBlobUriQuery(UserId, FileId, Purpose));
 
-            this.blobService.Setup(v => v.GetBlobSasUriForWritingAsync(ContainerName, BlobName))
-                .Throws(new Exception("Shouldn't be called"));
-
-            await ExpectedException<UnauthorizedException>.AssertAsync(
-                () => this.handler.HandleAsync(new GenerateWritableBlobUriQuery(UserId, FileId, Purpose)));
+            await badMethodCall.AssertExceptionAsync<UnauthorizedException>();
         }
     }
 }

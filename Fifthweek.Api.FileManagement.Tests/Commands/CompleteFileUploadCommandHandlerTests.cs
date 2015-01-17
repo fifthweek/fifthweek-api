@@ -42,10 +42,12 @@ namespace Fifthweek.Api.FileManagement.Tests.Commands
         [TestInitialize]
         public void TestInitialize()
         {
-            this.fileRepository = new Mock<IFileRepository>();
-            this.blobService = new Mock<IBlobService>();
-            this.queueService = new Mock<IQueueService>();
             this.blobNameCreator = new Mock<IBlobLocationGenerator>();
+
+            // Give side-effecting components strict mock behaviour.
+            this.fileRepository = new Mock<IFileRepository>(MockBehavior.Strict);
+            this.blobService = new Mock<IBlobService>(MockBehavior.Strict);
+            this.queueService = new Mock<IQueueService>(MockBehavior.Strict);
 
             this.handler = new CompleteFileUploadCommandHandler(
                 this.fileRepository.Object,
@@ -87,20 +89,9 @@ namespace Fifthweek.Api.FileManagement.Tests.Commands
             this.fileRepository.Setup(v => v.GetFileWaitingForUploadAsync(this.fileId))
                 .ReturnsAsync(new FileWaitingForUpload(this.fileId, new UserId(Guid.NewGuid()), "myfile", this.fileExtension, this.purpose));
 
-            this.blobNameCreator.Setup(v => v.GetBlobLocation(this.userId, this.fileId, this.purpose))
-                .Throws(new Exception("This shouldn't be called"));
+            Func<Task> badMethodCall = () => this.handler.HandleAsync(new CompleteFileUploadCommand(this.userId, this.fileId));
 
-            this.blobService.Setup(v => v.GetBlobLengthAndSetContentTypeAsync(this.containerName, this.blobName, this.contentType))
-                .Throws(new Exception("This shouldn't be called"));
-
-            this.fileRepository.Setup(v => v.SetFileUploadComplete(this.fileId, this.blobSize))
-                .Throws(new Exception("This shouldn't be called"));
-
-            this.queueService.Setup(v => v.PostFileUploadCompletedMessageToQueueAsync(this.containerName, this.blobName, this.purpose))
-                .Throws(new Exception("This shouldn't be called"));
-
-            await ExpectedException<UnauthorizedException>.AssertAsync( 
-                () => this.handler.HandleAsync(new CompleteFileUploadCommand(this.userId, this.fileId)));
+            await badMethodCall.AssertExceptionAsync<UnauthorizedException>();
         }
     }
 }

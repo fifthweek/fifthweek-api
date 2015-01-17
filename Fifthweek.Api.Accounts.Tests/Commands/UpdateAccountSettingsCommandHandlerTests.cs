@@ -1,14 +1,14 @@
-﻿using System;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-
-namespace Fifthweek.Api.Accounts.Tests.Commands
+﻿namespace Fifthweek.Api.Accounts.Tests.Commands
 {
+    using System;
     using System.Threading.Tasks;
 
     using Fifthweek.Api.Accounts.Commands;
     using Fifthweek.Api.Core;
     using Fifthweek.Api.FileManagement;
     using Fifthweek.Api.Identity.Membership;
+
+    using Microsoft.VisualStudio.TestTools.UnitTesting;
 
     using Moq;
 

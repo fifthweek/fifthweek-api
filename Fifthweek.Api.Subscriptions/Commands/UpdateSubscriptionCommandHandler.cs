@@ -7,7 +7,6 @@
     using Fifthweek.Api.FileManagement;
     using Fifthweek.Api.Persistence;
     using Fifthweek.CodeGeneration;
-    using Fifthweek.Shared;
 
     [AutoConstructor]
     public partial class UpdateSubscriptionCommandHandler : ICommandHandler<UpdateSubscriptionCommand>
@@ -18,12 +17,10 @@
 
         public async Task HandleAsync(UpdateSubscriptionCommand command)
         {
-            if (command == null)
-            {
-                throw new ArgumentNullException("command");
-            }
+            command.AssertNotNull("command");
 
             await this.subscriptionSecurity.AssertUpdateAllowedAsync(command.Requester, command.SubscriptionId);
+
             await this.fileSecurity.AssertUsageAllowedAsync(command.Requester, command.HeaderImageFileId);
             
             await this.UpdateSubscriptionAsync(command);
