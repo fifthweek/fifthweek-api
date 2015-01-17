@@ -82,9 +82,15 @@
         private static bool AreEntitiesEqual(object possibleWildcard, object standardEntity)
         {
             var wildcardEntity = possibleWildcard as IWildcardEntity;
-            if (wildcardEntity != null)
+            if (wildcardEntity != null && standardEntity != null)
             {
-                return wildcardEntity.WildcardEquals(standardEntity);
+                if (wildcardEntity.EntityType != standardEntity.GetType())
+                {
+                    // Ensure we do not try to get expected value using an actual value of different type.
+                    return false;
+                }
+
+                possibleWildcard = wildcardEntity.GetExpectedValue(standardEntity);
             }
 
             return Equals(possibleWildcard, standardEntity);

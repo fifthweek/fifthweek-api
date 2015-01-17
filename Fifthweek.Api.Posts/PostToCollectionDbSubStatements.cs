@@ -20,7 +20,7 @@ namespace Fifthweek.Api.Posts
 
         private static readonly string SelectMaxQueuePosition = string.Format(
             @"DECLARE @{0} int = (            
-            SELECT  MAX({0})
+            SELECT  ISNULL(MAX({0}), -1) + 1
             FROM    Posts
             WHERE   {1} = @{1})",
             Post.Fields.QueuePosition,

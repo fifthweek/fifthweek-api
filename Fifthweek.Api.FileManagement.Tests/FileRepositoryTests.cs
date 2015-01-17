@@ -58,10 +58,10 @@
                 {
                     Insert = new WildcardEntity<File>(expectedFile)
                     {
-                        AreEqual = actualFile =>
+                        Expected = actualFile =>
                         { 
                             expectedFile.UploadStartedDate = actualFile.UploadStartedDate;
-                            return Equals(expectedFile, actualFile);
+                            return expectedFile;
                         }
                     }
                 };
@@ -163,11 +163,11 @@
                 {
                     Update = new WildcardEntity<File>(expectedFile)
                     {
-                        AreEqual = actualFile =>
+                        Expected = actualFile =>
                         {
                             expectedFile.UploadStartedDate = actualFile.UploadStartedDate;
                             expectedFile.UploadCompletedDate = actualFile.UploadCompletedDate;
-                            return Equals(expectedFile, actualFile);
+                            return expectedFile;
                         }
                     }
                 };

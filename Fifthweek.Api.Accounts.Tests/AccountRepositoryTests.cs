@@ -92,10 +92,14 @@
                 await this.CreateFileAsync(testDatabase);
                 await testDatabase.TakeSnapshotAsync();
 
-                var currentUser = await this.GetUserAsync(testDatabase);
-
                 var hashedNewPassword = this.newPassword.Value + "1";
                 this.passwordHasher.Setup(v => v.HashPassword(this.newPassword.Value)).Returns(hashedNewPassword);
+
+                var expectedUser = await this.GetUserAsync(testDatabase);
+                expectedUser.UserName = this.newUsername.Value;
+                expectedUser.Email = this.newEmail.Value;
+                expectedUser.PasswordHash = hashedNewPassword;
+                expectedUser.ProfileImageFileId = this.newFileId.Value;
 
                 var result = await this.target.UpdateAccountSettingsAsync(
                     this.userId,
@@ -108,17 +112,7 @@
 
                 return new ExpectedSideEffects
                 {
-                    Update = new WildcardEntity<FifthweekUser>(currentUser)
-                    {
-                        AreEqual = actualFile =>
-                        {
-                            return actualFile.Id == currentUser.Id
-                                && actualFile.UserName == this.newUsername.Value
-                                && actualFile.Email == this.newEmail.Value
-                                && actualFile.PasswordHash == hashedNewPassword
-                                && actualFile.ProfileImageFileId == this.newFileId.Value;
-                        }
-                    }
+                    Update = expectedUser
                 };
             });
         }
@@ -132,7 +126,10 @@
                 await this.CreateFileAsync(testDatabase);
                 await testDatabase.TakeSnapshotAsync();
 
-                var currentUser = await this.GetUserAsync(testDatabase);
+                var expectedUser = await this.GetUserAsync(testDatabase);
+                expectedUser.UserName = this.newUsername.Value;
+                expectedUser.Email = this.newEmail.Value;
+                expectedUser.ProfileImageFileId = this.newFileId.Value;
 
                 var result = await this.target.UpdateAccountSettingsAsync(
                     this.userId,
@@ -145,17 +142,7 @@
 
                 return new ExpectedSideEffects
                 {
-                    Update = new WildcardEntity<FifthweekUser>(currentUser)
-                    {
-                        AreEqual = actualFile =>
-                        {
-                            return actualFile.Id == currentUser.Id
-                                && actualFile.UserName == this.newUsername.Value
-                                && actualFile.Email == this.newEmail.Value
-                                && actualFile.PasswordHash == currentUser.PasswordHash
-                                && actualFile.ProfileImageFileId == this.newFileId.Value;
-                        }
-                    }
+                    Update = expectedUser
                 };
             });
         }
@@ -169,7 +156,9 @@
                 await this.CreateFileAsync(testDatabase);
                 await testDatabase.TakeSnapshotAsync();
 
-                var currentUser = await this.GetUserAsync(testDatabase);
+                var expectedUser = await this.GetUserAsync(testDatabase);
+                expectedUser.UserName = this.newUsername.Value;
+                expectedUser.ProfileImageFileId = this.newFileId.Value;
 
                 var result = await this.target.UpdateAccountSettingsAsync(
                     this.userId,
@@ -182,17 +171,7 @@
 
                 return new ExpectedSideEffects
                 {
-                    Update = new WildcardEntity<FifthweekUser>(currentUser)
-                    {
-                        AreEqual = actualFile =>
-                        {
-                            return actualFile.Id == currentUser.Id
-                                && actualFile.UserName == this.newUsername.Value
-                                && actualFile.Email == this.email.Value
-                                && actualFile.PasswordHash == currentUser.PasswordHash
-                                && actualFile.ProfileImageFileId == this.newFileId.Value;
-                        }
-                    }
+                    Update = expectedUser
                 };
             });
         }
@@ -206,7 +185,10 @@
                 await this.CreateFileAsync(testDatabase);
                 await testDatabase.TakeSnapshotAsync();
 
-                var currentUser = await this.GetUserAsync(testDatabase);
+                var expectedUser = await this.GetUserAsync(testDatabase);
+                expectedUser.UserName = this.newUsername.Value;
+                expectedUser.Email = this.newEmail.Value;
+                expectedUser.ProfileImageFileId = null;
 
                 var result = await this.target.UpdateAccountSettingsAsync(
                     this.userId,
@@ -219,17 +201,7 @@
 
                 return new ExpectedSideEffects
                 {
-                    Update = new WildcardEntity<FifthweekUser>(currentUser)
-                    {
-                        AreEqual = actualFile =>
-                        {
-                            return actualFile.Id == currentUser.Id
-                                && actualFile.UserName == this.newUsername.Value
-                                && actualFile.Email == this.newEmail.Value
-                                && actualFile.PasswordHash == currentUser.PasswordHash
-                                && actualFile.ProfileImageFileId == null;
-                        }
-                    }
+                    Update = expectedUser
                 };
             });
         }

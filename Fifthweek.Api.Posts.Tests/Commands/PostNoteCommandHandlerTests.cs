@@ -104,10 +104,10 @@
                 {
                     Insert = new WildcardEntity<Post>(expectedPost)
                     {
-                        AreEqual = actualPost =>
+                        Expected = actualPost =>
                         {
                             expectedPost.CreationDate = actualPost.CreationDate; // Take wildcard properties from actual value.
-                            return Equals(expectedPost, actualPost);
+                            return expectedPost;
                         }
                     }
                 };
@@ -156,11 +156,11 @@
                 {
                     Insert = new WildcardEntity<Post>(expectedPost)
                     {
-                        AreEqual = actualPost =>
+                        Expected = actualPost =>
                         {
                             expectedPost.CreationDate = actualPost.CreationDate; // Take wildcard properties from actual value.
                             expectedPost.LiveDate = actualPost.CreationDate; // Assumes creation date is UtcNow (haven't actually been testing this so far).
-                            return Equals(expectedPost, actualPost);
+                            return expectedPost;
                         }
                     }
                 };

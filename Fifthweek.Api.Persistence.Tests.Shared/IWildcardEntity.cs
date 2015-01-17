@@ -1,7 +1,11 @@
 ﻿namespace Fifthweek.Api.Persistence.Tests.Shared
 {
+    using System;
+
     public interface IWildcardEntity : IIdentityEquatable
     {
-        bool WildcardEquals(object other);
+        Type EntityType { get; }
+
+        object GetExpectedValue(object other);
     }
 }

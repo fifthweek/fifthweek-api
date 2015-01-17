@@ -97,10 +97,10 @@
                 {
                     Insert = new WildcardEntity<Subscription>(expectedSubscription)
                     {
-                        AreEqual = actualSubscription =>
+                        Expected = actualSubscription =>
                         {
                             expectedSubscription.CreationDate = actualSubscription.CreationDate; // Take wildcard properties from actual value.
-                            return Equals(expectedSubscription, actualSubscription);
+                            return expectedSubscription;
                         }
                     },
                     ExcludedFromTest = entity => entity is Channel
@@ -130,10 +130,10 @@
                 {
                     Insert = new WildcardEntity<Channel>(expectedChannel)
                     {
-                        AreEqual = actualChannel =>
+                        Expected = actualChannel =>
                         {
                             expectedChannel.CreationDate = actualChannel.CreationDate; // Take wildcard properties from actual value.
-                            return Equals(expectedChannel, actualChannel);
+                            return expectedChannel;
                         }
                     },
                     ExcludedFromTest = entity => entity is Subscription

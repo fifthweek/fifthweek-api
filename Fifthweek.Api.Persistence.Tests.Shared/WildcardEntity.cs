@@ -14,23 +14,31 @@
             }
 
             this.entity = entity;
+            this.EntityType = typeof(T);
         }
 
-        public Predicate<T> AreEqual { get; set; } 
+        public Func<T, T> Expected { get; set; } 
 
         public bool IdentityEquals(object other)
         {
             return this.entity.IdentityEquals(other);
         }
 
-        public bool WildcardEquals(object other)
+        public Type EntityType { get; private set; }
+
+        public object GetExpectedValue(object other)
         {
-            if (this.AreEqual == null || !(other is T))
+            if (this.Expected == null)
             {
-                return false;
+                throw new Exception("Expected property must be set on wildcard");
             }
 
-            return this.AreEqual((T)other);
+            if (!(other is T))
+            {
+                throw new Exception("Cannot get expected value when actual value is a different type");
+            }
+
+            return this.Expected((T)other);
         }
     }
 }
