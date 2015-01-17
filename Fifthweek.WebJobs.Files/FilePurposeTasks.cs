@@ -7,12 +7,12 @@
     using Fifthweek.WebJobs.Files.Shared;
     using Fifthweek.WebJobs.Thumbnails.Shared;
 
-    public class FilePurposeToTasksMappings : IFilePurposeToTasksMappings
+    public class FilePurposeTasks : IFilePurposeTasks
     {
         private readonly Dictionary<string, IEnumerable<IFileTask>> mappings =
             new Dictionary<string, IEnumerable<IFileTask>>();
 
-        public FilePurposeToTasksMappings()
+        public FilePurposeTasks()
         {
             this.Add(
                 FilePurposes.ProfileImage,

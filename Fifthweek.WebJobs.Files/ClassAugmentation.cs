@@ -5,12 +5,12 @@
     public partial class FileProcessor 
     {
         public FileProcessor(
-            IFilePurposeToTasksMappings filePurposeToTasksMappings, 
+            IFilePurposeTasks filePurposeTasks, 
             ICloudQueueResolver cloudQueueResolver)
         {
-            if (filePurposeToTasksMappings == null)
+            if (filePurposeTasks == null)
             {
-                throw new ArgumentNullException("filePurposeToTasksMappings");
+                throw new ArgumentNullException("filePurposeTasks");
             }
 
             if (cloudQueueResolver == null)
@@ -18,7 +18,7 @@
                 throw new ArgumentNullException("cloudQueueResolver");
             }
 
-            this.filePurposeToTasksMappings = filePurposeToTasksMappings;
+            this.filePurposeTasks = filePurposeTasks;
             this.cloudQueueResolver = cloudQueueResolver;
         }
     }

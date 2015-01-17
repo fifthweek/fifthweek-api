@@ -81,10 +81,10 @@
       <DesignTime>True</DesignTime>
     </Compile>
     <Compile Include="CloudQueueResolver.cs" />
-    <Compile Include="FilePurposeToTasksMappings.cs" />
+    <Compile Include="FilePurposeTasks.cs" />
     <Compile Include="FileProcessor.cs" />
     <Compile Include="ICloudQueueResolver.cs" />
-    <Compile Include="IFilePurposeToTasksMappings.cs" />
+    <Compile Include="IFilePurposeTasks.cs" />
     <Compile Include="IFileProcessor.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

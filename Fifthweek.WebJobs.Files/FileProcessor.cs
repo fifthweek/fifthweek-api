@@ -14,7 +14,7 @@
     [AutoConstructor]
     public partial class FileProcessor : IFileProcessor
     {
-        private readonly IFilePurposeToTasksMappings filePurposeToTasksMappings;
+        private readonly IFilePurposeTasks filePurposeTasks;
 
         private readonly ICloudQueueResolver cloudQueueResolver;
 
@@ -24,7 +24,7 @@
             TextWriter logger,
             CancellationToken cancellationToken)
         {
-            var tasks = this.filePurposeToTasksMappings.GetTasks(message.Purpose);
+            var tasks = this.filePurposeTasks.GetTasks(message.Purpose);
 
             ICloudQueue queue = null;
             foreach (var task in tasks)

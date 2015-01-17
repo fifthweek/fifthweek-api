@@ -12,7 +12,7 @@
     internal class Program
     {
         private static readonly IFileProcessor FileProcessor = new FileProcessor(
-            new FilePurposeToTasksMappings(), new CloudQueueResolver());
+            new FilePurposeTasks(), new CloudQueueResolver());
 
         public static Task ProcessFileAsync(
             [QueueTrigger(Constants.FilesQueueName)] ProcessFileMessage message,

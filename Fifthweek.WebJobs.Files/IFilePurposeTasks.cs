@@ -4,7 +4,7 @@
 
     using Fifthweek.WebJobs.Files.Shared;
 
-    public interface IFilePurposeToTasksMappings
+    public interface IFilePurposeTasks
     {
         IEnumerable<IFileTask> GetTasks(string purpose);
     }
