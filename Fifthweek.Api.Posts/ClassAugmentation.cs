@@ -363,11 +363,17 @@ namespace Fifthweek.Api.Posts.Commands
     {
         public PostFileCommandHandler(
             Fifthweek.Api.Subscriptions.ICollectionSecurity collectionSecurity, 
+            Fifthweek.Api.FileManagement.IFileSecurity fileSecurity, 
             Fifthweek.Api.Posts.IPostToCollectionDbStatement postToCollectionDbStatement)
         {
             if (collectionSecurity == null)
             {
                 throw new ArgumentNullException("collectionSecurity");
+            }
+
+            if (fileSecurity == null)
+            {
+                throw new ArgumentNullException("fileSecurity");
             }
 
             if (postToCollectionDbStatement == null)
@@ -376,6 +382,7 @@ namespace Fifthweek.Api.Posts.Commands
             }
 
             this.collectionSecurity = collectionSecurity;
+            this.fileSecurity = fileSecurity;
             this.postToCollectionDbStatement = postToCollectionDbStatement;
         }
     }

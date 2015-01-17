@@ -4,6 +4,7 @@
     using System.Threading.Tasks;
 
     using Fifthweek.Api.Core;
+    using Fifthweek.Api.FileManagement;
     using Fifthweek.Api.Subscriptions;
     using Fifthweek.CodeGeneration;
 
@@ -11,6 +12,7 @@
     public partial class PostFileCommandHandler : ICommandHandler<PostFileCommand>
     {
         private readonly ICollectionSecurity collectionSecurity;
+        private readonly IFileSecurity fileSecurity;
         private readonly IPostToCollectionDbStatement postToCollectionDbStatement;
 
         public async Task HandleAsync(PostFileCommand command)
@@ -18,6 +20,8 @@
             command.AssertNotNull("command");
 
             await this.collectionSecurity.AssertPostingAllowedAsync(command.Requester, command.CollectionId);
+
+            await this.fileSecurity.AssertUsageAllowedAsync(command.Requester, command.FileId);
 
             await this.postToCollectionDbStatement.ExecuteAsync(
                 command.NewPostId,
