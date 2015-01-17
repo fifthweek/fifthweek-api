@@ -40,7 +40,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AutoBuilderAttribute.cs" />
+    <Compile Include="AutoCopyAttribute.cs" />
     <Compile Include="AutoConstructorAttribute.cs" />
     <Compile Include="AutoEqualityMembersAttribute.cs" />
     <Compile Include="AutoSqlAttribute.cs" />

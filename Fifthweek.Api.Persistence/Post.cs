@@ -6,7 +6,7 @@
 
     using Fifthweek.CodeGeneration;
 
-    [AutoConstructor, AutoEqualityMembers, AutoSql]
+    [AutoConstructor, AutoEqualityMembers, AutoSql, AutoCopy(RequiresBuilder = false)]
     public partial class Post
     {
         public Post()

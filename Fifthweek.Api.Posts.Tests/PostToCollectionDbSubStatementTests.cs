@@ -39,24 +39,16 @@
                 await this.CreateEntitiesAsync(testDatabase);
                 await testDatabase.TakeSnapshotAsync();
 
-                var inputPost = UnscheduledPostWithoutChannel();
-                inputPost.Comment = null;
-                await this.target.PostNowAsync(inputPost, Now);
+                var givenPost = UnscheduledPostWithoutChannel();
+                givenPost.Comment = null;
+                await this.target.PostNowAsync(givenPost, Now);
 
-                var expectedPost = new Post(
-                    PostId.Value,
-                    ChannelId.Value,
-                    null,
-                    CollectionId.Value,
-                    null,
-                    null,
-                    null,
-                    FileId.Value,
-                    null,
-                    null,
-                    null,
-                    new SqlDateTime(Now).Value,
-                    new SqlDateTime(Now).Value);
+                var expectedPost = givenPost.Copy(_ =>
+                {
+                    _.ChannelId = ChannelId.Value;
+                    _.LiveDate = new SqlDateTime(Now).Value;
+                    _.CreationDate = new SqlDateTime(Now).Value;
+                });
 
                 return new ExpectedSideEffects
                 {
@@ -74,22 +66,15 @@
                 await this.CreateEntitiesAsync(testDatabase);
                 await testDatabase.TakeSnapshotAsync();
 
-                await this.target.PostNowAsync(UnscheduledPostWithoutChannel(), Now);
+                var givenPost = UnscheduledPostWithoutChannel();
+                await this.target.PostNowAsync(givenPost, Now);
 
-                var expectedPost = new Post(
-                    PostId.Value,
-                    ChannelId.Value,
-                    null,
-                    CollectionId.Value,
-                    null,
-                    null,
-                    null,
-                    FileId.Value,
-                    null,
-                    Comment.Value,
-                    null,
-                    new SqlDateTime(Now).Value,
-                    new SqlDateTime(Now).Value);
+                var expectedPost = givenPost.Copy(_ =>
+                {
+                    _.ChannelId = ChannelId.Value;
+                    _.LiveDate = new SqlDateTime(Now).Value;
+                    _.CreationDate = new SqlDateTime(Now).Value;
+                });
 
                 return new ExpectedSideEffects
                 {
@@ -107,22 +92,15 @@
                 await this.CreateEntitiesAsync(testDatabase);
                 await testDatabase.TakeSnapshotAsync();
 
-                await this.target.SchedulePostAsync(UnscheduledPostWithoutChannel(), TwoDaysAgo, Now);
+                var givenPost = UnscheduledPostWithoutChannel();
+                await this.target.SchedulePostAsync(givenPost, TwoDaysAgo, Now);
 
-                var expectedPost = new Post(
-                    PostId.Value,
-                    ChannelId.Value,
-                    null,
-                    CollectionId.Value,
-                    null,
-                    null,
-                    null,
-                    FileId.Value,
-                    null,
-                    Comment.Value,
-                    null,
-                    new SqlDateTime(Now).Value,
-                    new SqlDateTime(Now).Value);
+                var expectedPost = givenPost.Copy(_ =>
+                {
+                    _.ChannelId = ChannelId.Value;
+                    _.LiveDate = new SqlDateTime(Now).Value;
+                    _.CreationDate = new SqlDateTime(Now).Value;
+                });
 
                 return new ExpectedSideEffects
                 {
@@ -140,22 +118,15 @@
                 await this.CreateEntitiesAsync(testDatabase);
                 await testDatabase.TakeSnapshotAsync();
 
-                await this.target.SchedulePostAsync(UnscheduledPostWithoutChannel(), TwoDaysFromNow, Now);
+                var givenPost = UnscheduledPostWithoutChannel();
+                await this.target.SchedulePostAsync(givenPost, TwoDaysFromNow, Now);
 
-                var expectedPost = new Post(
-                    PostId.Value,
-                    ChannelId.Value,
-                    null,
-                    CollectionId.Value,
-                    null,
-                    null,
-                    null,
-                    FileId.Value,
-                    null,
-                    Comment.Value,
-                    null,
-                    new SqlDateTime(TwoDaysFromNow).Value,
-                    new SqlDateTime(Now).Value);
+                var expectedPost = givenPost.Copy(_ =>
+                {
+                    _.ChannelId = ChannelId.Value;
+                    _.LiveDate = new SqlDateTime(TwoDaysFromNow).Value;
+                    _.CreationDate = new SqlDateTime(Now).Value;
+                });
 
                 return new ExpectedSideEffects
                 {
@@ -173,23 +144,15 @@
                 await this.CreateEntitiesAsync(testDatabase);
                 await testDatabase.TakeSnapshotAsync();
 
-                await this.target.QueuePostAsync(UnscheduledPostWithoutChannel());
+                var givenPost = UnscheduledPostWithoutChannel();
+                await this.target.QueuePostAsync(givenPost);
 
-                const int ExpectedQueuePosition = 0;
-                var expectedPost = new Post(
-                    PostId.Value,
-                    ChannelId.Value,
-                    null,
-                    CollectionId.Value,
-                    null,
-                    null,
-                    null,
-                    FileId.Value,
-                    null,
-                    Comment.Value,
-                    ExpectedQueuePosition,
-                    null,
-                    new SqlDateTime(Now).Value);
+                var expectedPost = givenPost.Copy(_ =>
+                {
+                    _.ChannelId = ChannelId.Value;
+                    _.QueuePosition = 0;
+                    _.CreationDate = new SqlDateTime(Now).Value;
+                });
 
                 return new ExpectedSideEffects
                 {
@@ -207,23 +170,15 @@
                 await this.CreateEntitiesAsync(testDatabase, createQueuedPosts: true);
                 await testDatabase.TakeSnapshotAsync();
 
-                await this.target.QueuePostAsync(UnscheduledPostWithoutChannel());
+                var givenPost = UnscheduledPostWithoutChannel();
+                await this.target.QueuePostAsync(givenPost);
 
-                const int ExpectedQueuePosition = MaxPositionInQueue + 1;
-                var expectedPost = new Post(
-                    PostId.Value,
-                    ChannelId.Value,
-                    null,
-                    CollectionId.Value,
-                    null,
-                    null,
-                    null,
-                    FileId.Value,
-                    null,
-                    Comment.Value,
-                    ExpectedQueuePosition,
-                    null,
-                    new SqlDateTime(Now).Value);
+                var expectedPost = givenPost.Copy(_ =>
+                {
+                    _.ChannelId = ChannelId.Value;
+                    _.QueuePosition = MaxPositionInQueue + 1;
+                    _.CreationDate = new SqlDateTime(Now).Value;
+                });
 
                 return new ExpectedSideEffects
                 {

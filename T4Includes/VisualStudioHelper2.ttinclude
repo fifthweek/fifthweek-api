@@ -134,10 +134,15 @@
         return retval;
     }
 
-    public bool TryParseAttributeFlagParameter(string propertyName, IReadOnlyCollection<string> attributeParameters)
+    public bool TryParseAttributeFlagParameter(string propertyName, IReadOnlyCollection<string> attributeParameters, bool defaultValue = false)
     {
         var value = TryParseAttributeNamedProperty(propertyName, attributeParameters);
-        return value != null && value == "true";
+		if (value == null)
+        {
+			return defaultValue;
+        }
+
+        return value == "true";
     }
 
     public string TryParseAttributeStringParameter(string propertyName, IReadOnlyCollection<string> attributeParameters)

@@ -791,10 +791,8 @@ namespace Fifthweek.Api.Persistence.Identity
     using System.Linq;
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
-    using Fifthweek.Api.Core;
-    using Microsoft.AspNet.Identity.EntityFramework;
-    using Fifthweek.Shared;
     using Fifthweek.CodeGeneration;
+    using Microsoft.AspNet.Identity.EntityFramework;
     public partial class FifthweekUser 
     {
         public override string ToString()
@@ -940,7 +938,46 @@ namespace Fifthweek.Api.Persistence.Identity
     }
 
 }
+namespace Fifthweek.Api.Persistence
+{
+    using System;
+    using System.Linq;
+    using System.ComponentModel.DataAnnotations;
+    using System.ComponentModel.DataAnnotations.Schema;
+    using Fifthweek.Api.Core;
+    using Fifthweek.CodeGeneration;
+    using Fifthweek.Shared;
+    using Fifthweek.Api.Persistence.Identity;
+    public partial class Post 
+    {
+        public Post Copy()
+        {
+            var copy = new Post();
+            copy.Id = this.Id;
+            copy.ChannelId = this.ChannelId;
+            copy.Channel = this.Channel;
+            copy.CollectionId = this.CollectionId;
+            copy.Collection = this.Collection;
+            copy.FileId = this.FileId;
+            copy.File = this.File;
+            copy.ImageId = this.ImageId;
+            copy.Image = this.Image;
+            copy.Comment = this.Comment;
+            copy.QueuePosition = this.QueuePosition;
+            copy.LiveDate = this.LiveDate;
+            copy.CreationDate = this.CreationDate;
+            return copy;
+        }
 
+        public Post Copy(Action<Post> applyDelta)
+        {
+            var copy = this.Copy();
+            applyDelta(copy);
+            return copy;
+        }
+    }
+
+}
 namespace Fifthweek.Api.Persistence
 {
     using System;
@@ -2233,10 +2270,8 @@ namespace Fifthweek.Api.Persistence.Identity
     using System.Linq;
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
-    using Fifthweek.Api.Core;
-    using Microsoft.AspNet.Identity.EntityFramework;
-    using Fifthweek.Shared;
     using Fifthweek.CodeGeneration;
+    using Microsoft.AspNet.Identity.EntityFramework;
     public partial class FifthweekUser  : IIdentityEquatable
     {
         public FifthweekUser(

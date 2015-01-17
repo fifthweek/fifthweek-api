@@ -38,20 +38,26 @@ namespace Fifthweek.Api.Posts
 
         public Task SchedulePostAsync(Post unscheduledPostWithoutChannel, DateTime scheduledPostDate, DateTime now)
         {
-            unscheduledPostWithoutChannel.LiveDate = scheduledPostDate > now ? scheduledPostDate : now;
+            var scheduledPostWithoutChannel = unscheduledPostWithoutChannel.Copy(_ =>
+            {
+                _.LiveDate = scheduledPostDate > now ? scheduledPostDate : now;
+            });
 
             return this.databaseContext.Database.Connection.InsertAsync(
-                unscheduledPostWithoutChannel,
+                scheduledPostWithoutChannel,
                 SelectChannelId,
                 Post.Fields.ChannelId);
         }
 
         public Task PostNowAsync(Post unscheduledPostWithoutChannel, DateTime now)
         {
-            unscheduledPostWithoutChannel.LiveDate = now;
+            var scheduledPostWithoutChannel = unscheduledPostWithoutChannel.Copy(_ =>
+            {
+                _.LiveDate = now;
+            });
 
             return this.databaseContext.Database.Connection.InsertAsync(
-                unscheduledPostWithoutChannel,
+                scheduledPostWithoutChannel,
                 SelectChannelId,
                 Post.Fields.ChannelId);
         }

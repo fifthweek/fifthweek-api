@@ -6,12 +6,14 @@
 <#@ import namespace="System.Text" #>
 <#@ import namespace="System.Collections.Generic" #>
 <#
-    var AutoBuilderAttributeName = "AutoBuilder";
+    var AutoCopyAttributeName = "AutoCopy";
+	var RequiresBuilderAttributeParameterName = "RequiresBuilder";
 
     foreach(UnifiedClass unifiedClass in allClasses)
     {
         var allAttributes = unifiedClass.GetAllAttributes();
-        if (allAttributes.All(_ => !_.Name.StartsWith(AutoBuilderAttributeName)))
+		var autoCopyAttribute = allAttributes.FirstOrDefault(_ => _.Name.StartsWith(AutoCopyAttributeName));
+        if (autoCopyAttribute == null)
         {
             continue;
         }
@@ -22,7 +24,13 @@
             continue;
         }
 
+		var attributeParameters = ParseAttribute(autoCopyAttribute.Value);
+		var requiresBuilder = TryParseAttributeFlagParameter(RequiresBuilderAttributeParameterName, attributeParameters, true);
+
         unifiedClass.WriteNamespaceAndClass(() => {
+
+			if (requiresBuilder)
+			{
 #>
         public Builder ToBuilder()
         {
@@ -73,6 +81,33 @@
             }
         }
 <#
+			}
+			else
+            {
+#>
+        public <#= unifiedClass.FirstCodeClass.Name #> Copy()
+        {
+            var copy = new <#= unifiedClass.FirstCodeClass.Name #>();
+<#
+    for (var i = 0; i < parameters.Count; i++)
+    {
+        var parameter = parameters[i];
+#>
+            copy.<#= parameter.AssigneeName #> = this.<#= parameter.AssigneeName #>;
+<#
+    }
+#>
+            return copy;
+        }
+
+        public Post Copy(Action<<#= unifiedClass.FirstCodeClass.Name #>> applyDelta)
+        {
+            var copy = this.Copy();
+            applyDelta(copy);
+            return copy;
+        }
+<#
+            }
         });
     }
 #>

@@ -3,7 +3,7 @@
     using System;
     using System.Collections.Generic;
 
-    [AutoEqualityMembers, AutoConstructor, AutoBuilder]
+    [AutoEqualityMembers, AutoConstructor, AutoCopy]
     public partial class ClassAugmentationDummy
     {
         private readonly string someStringField;

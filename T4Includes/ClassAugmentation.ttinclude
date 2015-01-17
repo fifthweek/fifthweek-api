@@ -4,6 +4,6 @@ using System;
 using System.Linq;
 <#@ include file="AutoConstructor.ttinclude" #>
 <#@ include file="AutoEqualityMembers.ttinclude" #>
-<#@ include file="AutoBuilder.ttinclude" #>
+<#@ include file="AutoCopy.ttinclude" #>
 <#@ include file="AutoParse.ttinclude" #>
 <#@ include file="AutoSql.ttinclude" #>
