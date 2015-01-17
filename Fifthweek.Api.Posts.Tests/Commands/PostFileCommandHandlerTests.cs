@@ -8,6 +8,7 @@
     using Fifthweek.Api.Identity.Membership;
     using Fifthweek.Api.Posts.Commands;
     using Fifthweek.Api.Subscriptions;
+    using Fifthweek.Tests.Shared;
 
     using Microsoft.VisualStudio.TestTools.UnitTesting;
 
@@ -52,14 +53,9 @@
         {
             this.collectionSecurity.Setup(_ => _.AssertPostingAllowedAsync(UserId, CollectionId)).Throws<UnauthorizedException>();
 
-            try
-            {
-                await this.target.HandleAsync(Command);
-                Assert.Fail("Expected security exception");
-            }
-            catch (UnauthorizedException)
-            {
-            }
+            Func<Task> badMethodCall = () => this.target.HandleAsync(Command);
+
+            await badMethodCall.AssertExceptionAsync<UnauthorizedException>();
         }
 
         [TestMethod]
@@ -67,14 +63,9 @@
         {
             this.fileSecurity.Setup(_ => _.AssertUsageAllowedAsync(UserId, FileId)).Throws<UnauthorizedException>();
 
-            try
-            {
-                await this.target.HandleAsync(Command);
-                Assert.Fail("Expected security exception");
-            }
-            catch (UnauthorizedException)
-            {
-            }
+            Func<Task> badMethodCall = () => this.target.HandleAsync(Command);
+
+            await badMethodCall.AssertExceptionAsync<UnauthorizedException>();
         }
 
         [TestMethod]
@@ -82,14 +73,9 @@
         {
             this.postFileTypeChecks.Setup(_ => _.AssertValidForFilePostAsync(FileId)).Throws(new RecoverableException("Bad file type"));
 
-            try
-            {
-                await this.target.HandleAsync(Command);
-                Assert.Fail("Expected recoverable exception");
-            }
-            catch (RecoverableException)
-            {
-            }
+            Func<Task> badMethodCall = () => this.target.HandleAsync(Command);
+
+            await badMethodCall.AssertExceptionAsync<RecoverableException>();
         }
 
         [TestMethod]

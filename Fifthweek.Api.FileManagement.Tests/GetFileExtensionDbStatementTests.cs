@@ -5,6 +5,7 @@
 
     using Fifthweek.Api.Identity.Membership;
     using Fifthweek.Api.Persistence.Tests.Shared;
+    using Fifthweek.Tests.Shared;
 
     using Microsoft.VisualStudio.TestTools.UnitTesting;
 
@@ -42,14 +43,9 @@
                 this.target = new GetFileExtensionDbStatement(testDatabase.NewContext());
                 await testDatabase.TakeSnapshotAsync();
 
-                try
-                {
-                    await this.target.ExecuteAsync(FileId);
-                    Assert.Fail("Expected exception");
-                }
-                catch (Exception)
-                {
-                }
+                Func<Task> badMethodCall = () => this.target.ExecuteAsync(FileId);
+
+                await badMethodCall.AssertExceptionAsync<Exception>();
                 
                 return ExpectedSideEffects.None;
             });

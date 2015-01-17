@@ -8,6 +8,7 @@
     using Fifthweek.Api.Persistence;
     using Fifthweek.Api.Persistence.Tests.Shared;
     using Fifthweek.Api.Subscriptions.Commands;
+    using Fifthweek.Tests.Shared;
 
     using Microsoft.VisualStudio.TestTools.UnitTesting;
 
@@ -40,14 +41,9 @@
                 this.target = new CreateSubscriptionCommandHandler(this.subscriptionSecurity.Object, testDatabase.NewContext());
                 await testDatabase.TakeSnapshotAsync();
 
-                try
-                {
-                    await this.target.HandleAsync(Command);
-                    Assert.Fail("Expected recoverable exception");
-                }
-                catch (UnauthorizedException)
-                {
-                }
+                Func<Task> badMethodCall = () => this.target.HandleAsync(Command);
+
+                await badMethodCall.AssertExceptionAsync<UnauthorizedException>();
 
                 return ExpectedSideEffects.None;
             });

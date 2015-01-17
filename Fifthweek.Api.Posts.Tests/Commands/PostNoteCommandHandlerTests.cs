@@ -10,6 +10,7 @@
     using Fifthweek.Api.Persistence.Tests.Shared;
     using Fifthweek.Api.Posts.Commands;
     using Fifthweek.Api.Subscriptions;
+    using Fifthweek.Tests.Shared;
 
     using Microsoft.VisualStudio.TestTools.UnitTesting;
 
@@ -44,14 +45,9 @@
                 this.channelSecurity.Setup(_ => _.AssertPostingAllowedAsync(UserId, ChannelId)).Throws<UnauthorizedException>();
                 await testDatabase.TakeSnapshotAsync();
 
-                try
-                {
-                    await this.target.HandleAsync(Command);
-                    Assert.Fail("Expected recoverable exception");
-                }
-                catch (UnauthorizedException)
-                {
-                }
+                Func<Task> badMethodCall = () => this.target.HandleAsync(Command);
+
+                await badMethodCall.AssertExceptionAsync<UnauthorizedException>();
 
                 return ExpectedSideEffects.None;
             });

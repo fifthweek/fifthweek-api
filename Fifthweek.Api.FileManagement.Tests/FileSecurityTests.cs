@@ -5,6 +5,7 @@
 
     using Fifthweek.Api.Core;
     using Fifthweek.Api.Identity.Membership;
+    using Fifthweek.Tests.Shared;
 
     using Microsoft.VisualStudio.TestTools.UnitTesting;
 
@@ -45,14 +46,9 @@
 
             Assert.IsFalse(result);
 
-            try
-            {
-                await this.target.AssertUsageAllowedAsync(UserId, FileId);
-                Assert.Fail("Expected unauthorized exception");
-            }
-            catch (UnauthorizedException)
-            {
-            }
+            Func<Task> badMethodCall = () => this.target.AssertUsageAllowedAsync(UserId, FileId);
+
+            await badMethodCall.AssertExceptionAsync<UnauthorizedException>();
         }
     }
 }

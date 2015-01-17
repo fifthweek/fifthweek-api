@@ -1,5 +1,6 @@
 ﻿namespace Fifthweek.Api.FileManagement
 {
+    using System;
     using System.Threading.Tasks;
 
     using Dapper;
@@ -13,11 +14,11 @@
     {
         private readonly IFifthweekDbContext databaseContext;
 
-        public Task<string> ExecuteAsync(FileId fileId)
+        public async Task<string> ExecuteAsync(FileId fileId)
         {
             fileId.AssertNotNull("fileId");
 
-            return this.databaseContext.Database.Connection.ExecuteScalarAsync<string>(
+            var extension = await this.databaseContext.Database.Connection.ExecuteScalarAsync<string>(
                 @"SELECT FileExtension
                   FROM   Files
                   WHERE  Id = @FileId",
@@ -25,6 +26,13 @@
                 {
                     FileId = fileId.Value
                 });
+
+            if (extension == null)
+            {
+                throw new Exception(string.Format("File not found. {0}", fileId));
+            }
+
+            return extension;
         }
     }
 }

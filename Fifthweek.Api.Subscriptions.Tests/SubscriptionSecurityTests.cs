@@ -7,6 +7,7 @@
     using Fifthweek.Api.Identity.Membership;
     using Fifthweek.Api.Persistence;
     using Fifthweek.Api.Persistence.Identity;
+    using Fifthweek.Tests.Shared;
 
     using Microsoft.VisualStudio.TestTools.UnitTesting;
 
@@ -48,14 +49,9 @@
 
             Assert.IsFalse(result);
 
-            try
-            {
-                await this.target.AssertCreationAllowedAsync(UserId);
-                Assert.Fail("Expected unauthorized exception");
-            }
-            catch (UnauthorizedException)
-            {
-            }
+            Func<Task> badMethodCall = () => this.target.AssertCreationAllowedAsync(UserId);
+
+            await badMethodCall.AssertExceptionAsync<UnauthorizedException>();
         }
 
         [TestMethod]
@@ -77,14 +73,9 @@
 
             Assert.IsFalse(result);
 
-            try
-            {
-                await this.target.AssertUpdateAllowedAsync(UserId, SubscriptionId);
-                Assert.Fail("Expected unauthorized exception");
-            }
-            catch (UnauthorizedException)
-            {
-            }
+            Func<Task> badMethodCall = () => this.target.AssertUpdateAllowedAsync(UserId, SubscriptionId);
+
+            await badMethodCall.AssertExceptionAsync<UnauthorizedException>();
         }
     }
 }

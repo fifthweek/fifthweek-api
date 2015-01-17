@@ -12,6 +12,7 @@ namespace Fifthweek.Api.Identity.Tests.Membership.Commands
     using Fifthweek.Api.Identity.Membership.Commands;
     using Fifthweek.Api.Identity.Membership.Controllers;
     using Fifthweek.Api.Persistence.Identity;
+    using Fifthweek.Tests.Shared;
 
     using Microsoft.VisualStudio.TestTools.UnitTesting;
 
@@ -39,15 +40,9 @@ namespace Fifthweek.Api.Identity.Tests.Membership.Commands
         {
             this.SetupUserManager(isTokenValid: false);
 
-            try
-            {
-                await this.target.HandleAsync(this.command);
-                Assert.Fail("Expected a recoverable exception.");
-            }
-            catch (Exception t)
-            {
-                Assert.IsInstanceOfType(t, typeof(RecoverableException));
-            }
+            Func<Task> badMethodCall = () => this.target.HandleAsync(this.command);
+
+            await badMethodCall.AssertExceptionAsync<RecoverableException>();
         }
 
         private void SetupUserManager(bool isTokenValid)
