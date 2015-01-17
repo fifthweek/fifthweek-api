@@ -175,6 +175,10 @@
     <Compile Include="Migrations\201501171345390_AddMaxSizesToFileColumns.Designer.cs">
       <DependentUpon>201501171345390_AddMaxSizesToFileColumns.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201501171734109_IncreaseFileExtension.cs" />
+    <Compile Include="Migrations\201501171734109_IncreaseFileExtension.Designer.cs">
+      <DependentUpon>201501171734109_IncreaseFileExtension.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Post.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -262,6 +266,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201501171345390_AddMaxSizesToFileColumns.resx">
       <DependentUpon>201501171345390_AddMaxSizesToFileColumns.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201501171734109_IncreaseFileExtension.resx">
+      <DependentUpon>201501171734109_IncreaseFileExtension.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>

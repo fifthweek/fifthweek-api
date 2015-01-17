@@ -44,7 +44,7 @@
         public string FileNameWithoutExtension { get; set; }
         
         [Required]
-        [MaxLength(10)] // Arbitrary but seems safe. Should really be enforcing this through the type system (ValidFileExension type).
+        [MaxLength(25)] // Arbitrary but seems safe. Should really be enforcing this through the type system (ValidFileExension type).
         public string FileExtension { get; set; }
 
         [Required]
