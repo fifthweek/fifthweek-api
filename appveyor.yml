@@ -8,13 +8,17 @@ environment:
 before_build:
   - nuget restore
 after_test:
-  - deployToGitHub
+  - deployToGitHub fifthweek-api-dist api-dist
+  - deployToGitHub fifthweek-webjobs-dist webjobs-dist
 build_script:
-  - SET DEPLOYMENT_TEMP="%APPVEYOR_BUILD_FOLDER%\dist"
+  - SET API_DEPLOYMENT_TEMP="%APPVEYOR_BUILD_FOLDER%\api-dist"
+  - SET WEBJOBS_DEPLOYMENT_TEMP="%APPVEYOR_BUILD_FOLDER%\webjobs-dist\App_Data\jobs\continuous"
   - msbuild.exe "%APPVEYOR_BUILD_FOLDER%\Fifthweek.sln" /t:Clean /p:Configuration=Release
   - msbuild.exe "%APPVEYOR_BUILD_FOLDER%\Fifthweek.sln" /t:Clean /p:Configuration=Debug
   - msbuild.exe "%APPVEYOR_BUILD_FOLDER%\Fifthweek.sln" /t:Build /p:Configuration=Release
-  - msbuild.exe "%APPVEYOR_BUILD_FOLDER%\Fifthweek.Api\Fifthweek.Api.csproj" /nologo /verbosity:m /t:Build /t:pipelinePreDeployCopyAllFilesToOneFolder /p:_PackageTempDir="%DEPLOYMENT_TEMP%";AutoParameterizationWebConfigConnectionStrings=false;Configuration=Release /p:SolutionDir="%APPVEYOR_BUILD_FOLDER%\.\\"
+  - msbuild.exe "%APPVEYOR_BUILD_FOLDER%\Fifthweek.Api\Fifthweek.Api.csproj" /nologo /verbosity:m /t:Build /t:pipelinePreDeployCopyAllFilesToOneFolder /p:_PackageTempDir="%API_DEPLOYMENT_TEMP%";AutoParameterizationWebConfigConnectionStrings=false;Configuration=Release /p:SolutionDir="%APPVEYOR_BUILD_FOLDER%\.\\"
+  - msbuild.exe "%APPVEYOR_BUILD_FOLDER%\Fifthweek.WebJobs.Files\Fifthweek.WebJobs.Files.csproj" /nologo /verbosity:m /t:Build /t:pipelinePreDeployCopyAllFilesToOneFolder /p:_PackageTempDir="%WEBJOBS_DEPLOYMENT_TEMP%\files";AutoParameterizationWebConfigConnectionStrings=false;Configuration=Release /p:SolutionDir="%APPVEYOR_BUILD_FOLDER%\.\\"
+  - msbuild.exe "%APPVEYOR_BUILD_FOLDER%\Fifthweek.WebJobs.Thumbnails\Fifthweek.WebJobs.Thumbnails.csproj" /nologo /verbosity:m /t:Build /t:pipelinePreDeployCopyAllFilesToOneFolder /p:_PackageTempDir="%WEBJOBS_DEPLOYMENT_TEMP%\thumbnails";AutoParameterizationWebConfigConnectionStrings=false;Configuration=Release /p:SolutionDir="%APPVEYOR_BUILD_FOLDER%\.\\"
 notifications:
   - provider: Slack
     auth_token:

@@ -1,5 +1,7 @@
 namespace Fifthweek.Azure
 {
+    using System;
+
     using Microsoft.WindowsAzure;
     using Microsoft.WindowsAzure.Storage;
 
@@ -9,7 +11,7 @@ namespace Fifthweek.Azure
 
         public FifthweekCloudStorageAccount()
         {
-            this.storageAccount = CloudStorageAccount.Parse(CloudConfigurationManager.GetSetting("StorageConnectionString"));
+            this.storageAccount = CloudStorageAccount.Parse(AzureConfiguration.GetStorageConnectionString());
         }
 
         public ICloudBlobClient CreateCloudBlobClient()

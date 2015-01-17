@@ -8,7 +8,7 @@
     <OutputType>Exe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Fifthweek.WebJobs.Files</RootNamespace>
-    <AssemblyName>Fifthweek.WebJobs.Files</AssemblyName>
+    <AssemblyName>run</AssemblyName>
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />

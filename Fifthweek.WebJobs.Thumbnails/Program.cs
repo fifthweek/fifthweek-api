@@ -5,6 +5,7 @@
     using System.Threading;
     using System.Threading.Tasks;
 
+    using Fifthweek.Azure;
     using Fifthweek.WebJobs.Thumbnails.Shared;
 
     using ImageMagick;
@@ -49,6 +50,7 @@
         public static void Main(string[] args)
         {
             var config = new JobHostConfiguration();
+            config.DashboardConnectionString = config.StorageConnectionString = AzureConfiguration.GetStorageConnectionString();
             config.Queues.BatchSize = 8;
             config.Queues.MaxDequeueCount = 3;
             config.Queues.MaxPollingInterval = TimeSpan.FromSeconds(5);
