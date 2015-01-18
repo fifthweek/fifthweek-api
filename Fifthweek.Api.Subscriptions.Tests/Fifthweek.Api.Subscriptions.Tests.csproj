@@ -90,8 +90,6 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
-    <Compile Include="CollectionSecurityTests.cs" />
-    <Compile Include="CollectionOwnershipTests.cs" />
     <Compile Include="ClassAugmentation.cs">
       <DependentUpon>ClassAugmentation.tt</DependentUpon>
       <AutoGen>True</AutoGen>

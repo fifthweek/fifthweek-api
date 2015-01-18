@@ -3,6 +3,7 @@
     using System;
     using System.Threading.Tasks;
 
+    using Fifthweek.Api.Collections;
     using Fifthweek.Api.Core;
     using Fifthweek.Api.FileManagement;
     using Fifthweek.Api.Identity.Membership;

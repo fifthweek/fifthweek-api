@@ -36,7 +36,22 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Dapper">
+      <HintPath>..\packages\Dapper.1.38\lib\net45\Dapper.dll</HintPath>
+    </Reference>
+    <Reference Include="EntityFramework">
+      <HintPath>..\packages\EntityFramework.6.1.0\lib\net45\EntityFramework.dll</HintPath>
+    </Reference>
+    <Reference Include="EntityFramework.SqlServer">
+      <HintPath>..\packages\EntityFramework.6.1.0\lib\net45\EntityFramework.SqlServer.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="Moq">
+      <HintPath>..\packages\Moq.4.2.1409.1722\lib\net40\Moq.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Data" />
   </ItemGroup>
   <Choose>
     <When Condition="('$(VisualStudioVersion)' == '10.0' or '$(VisualStudioVersion)' == '') and '$(TargetFrameworkVersion)' == 'v3.5'">
@@ -51,7 +66,39 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
+    <Compile Include="CollectionOwnershipTests.cs" />
+    <Compile Include="CollectionSecurityTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Fifthweek.Api.Collections\Fifthweek.Api.Collections.csproj">
+      <Project>{92FF5E2B-F153-433F-92F6-DD580D9E09B8}</Project>
+      <Name>Fifthweek.Api.Collections</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Fifthweek.Api.Core\Fifthweek.Api.Core.csproj">
+      <Project>{BD52863E-063D-45A5-9CA8-7541804D1313}</Project>
+      <Name>Fifthweek.Api.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Fifthweek.Api.Identity\Fifthweek.Api.Identity.csproj">
+      <Project>{6A2AF270-E4D4-4C4E-A88F-807F7B9A03B7}</Project>
+      <Name>Fifthweek.Api.Identity</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Fifthweek.Api.Persistence.Tests.Shared\Fifthweek.Api.Persistence.Tests.Shared.csproj">
+      <Project>{ECDE2C4E-7DD8-4210-8E09-D5762C88B3CB}</Project>
+      <Name>Fifthweek.Api.Persistence.Tests.Shared</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Fifthweek.Api.Persistence\Fifthweek.Api.Persistence.csproj">
+      <Project>{9C18BEE3-FAB5-4A00-8A94-A1FAEA370175}</Project>
+      <Name>Fifthweek.Api.Persistence</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Fifthweek.Tests.Shared\Fifthweek.Tests.Shared.csproj">
+      <Project>{85691D93-9C0C-498B-8341-1990BC8E24B2}</Project>
+      <Name>Fifthweek.Tests.Shared</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="app.config" />
+    <None Include="packages.config" />
   </ItemGroup>
   <Choose>
     <When Condition="'$(VisualStudioVersion)' == '10.0' And '$(IsCodedUITest)' == 'True'">

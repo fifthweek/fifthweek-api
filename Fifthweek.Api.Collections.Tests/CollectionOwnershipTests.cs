@@ -1,4 +1,4 @@
-﻿namespace Fifthweek.Api.Subscriptions.Tests
+﻿namespace Fifthweek.Api.Collections.Tests
 {
     using System;
     using System.Threading.Tasks;

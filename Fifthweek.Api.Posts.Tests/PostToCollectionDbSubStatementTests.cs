@@ -4,6 +4,7 @@
     using System.Data.SqlTypes;
     using System.Threading.Tasks;
 
+    using Fifthweek.Api.Collections;
     using Fifthweek.Api.FileManagement;
     using Fifthweek.Api.Identity.Membership;
     using Fifthweek.Api.Persistence;

@@ -2,8 +2,8 @@
 {
     using System;
 
+    using Fifthweek.Api.Collections;
     using Fifthweek.Api.FileManagement;
-    using Fifthweek.Api.Subscriptions;
     using Fifthweek.CodeGeneration;
 
     [AutoEqualityMembers]

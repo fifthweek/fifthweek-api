@@ -12,13 +12,14 @@
             typeof(Shared.AutofacRegistration).Assembly,
             typeof(Core.AutofacRegistration).Assembly,
             typeof(Availability.AutofacRegistration).Assembly,
+            typeof(Collections.AutofacRegistration).Assembly,
             typeof(Identity.Membership.AutofacRegistration).Assembly,
             typeof(Identity.OAuth.AutofacRegistration).Assembly,
             typeof(Logging.AutofacRegistration).Assembly,
             typeof(Persistence.AutofacRegistration).Assembly,
+            typeof(Posts.AutofacRegistration).Assembly,
             typeof(SendGrid.AutofacRegistration).Assembly,
             typeof(Subscriptions.AutofacRegistration).Assembly,
-            typeof(Posts.AutofacRegistration).Assembly,
             typeof(Azure.AutofacRegistration).Assembly,
             typeof(FileManagement.AutofacRegistration).Assembly
         }
