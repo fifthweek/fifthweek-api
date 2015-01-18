@@ -25,7 +25,6 @@
 
         private readonly IUserContext userContext;
 
-        [Authorize]
         [ResponseType(typeof(GrantedUpload))]
         [Route("uploadRequests")]
         public async Task<GrantedUpload> PostUploadRequestAsync(UploadRequest data)
@@ -39,7 +38,6 @@
             return new GrantedUpload(fileId.Value.EncodeGuid(), uri);
         }
 
-        [Authorize]
         [Route("uploadCompleteNotifications")]
         public async Task PostUploadCompleteNotificationAsync(string fileId)
         {

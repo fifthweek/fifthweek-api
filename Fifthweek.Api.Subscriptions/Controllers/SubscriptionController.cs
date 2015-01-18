@@ -20,7 +20,6 @@
         private readonly IUserContext userContext;
         private readonly IGuidCreator guidCreator;
 
-        [Authorize]
         [Route("")]
         public async Task<IHttpActionResult> PostSubscription(NewSubscriptionData subscription)
         {
@@ -40,7 +39,6 @@
             return this.Ok();
         }
 
-        [Authorize]
         [Route("{subscriptionId}")]
         public async Task<IHttpActionResult> PutSubscription(string subscriptionId, [FromBody]UpdatedSubscriptionData subscription)
         {
@@ -64,7 +62,6 @@
             return this.Ok();
         }
 
-        [Authorize]
         [ResponseType(typeof(CreatorStatusData))]
         [Route("currentCreatorStatus")]
         public async Task<CreatorStatusData> GetCurrentCreatorStatus()

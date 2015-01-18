@@ -21,7 +21,6 @@
 
         private readonly IQueryHandler<GetAccountSettingsQuery, GetAccountSettingsResult> getAccountSettings;
 
-        [Authorize]
         [Route("{userId}")]
         public async Task<AccountSettingsResponse> Get(string userId)
         {
@@ -36,7 +35,6 @@
             return new AccountSettingsResponse(result.Email.Value, result.ProfileImageFileId.Value.EncodeGuid());
         }
 
-        [Authorize]
         [Route("{userId}")]
         public async Task Put(string userId, [FromBody]UpdatedAccountSettings updatedAccountSettings)
         {

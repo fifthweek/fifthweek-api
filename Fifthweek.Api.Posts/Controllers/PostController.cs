@@ -18,7 +18,6 @@
         private readonly IUserContext userContext;
         private readonly IGuidCreator guidCreator;
 
-        [Authorize]
         [Route("notes")]
         public async Task<IHttpActionResult> PostNote(NewNoteData note)
         {
@@ -38,7 +37,6 @@
             return this.Ok();
         }
 
-        [Authorize]
         [Route("images")]
         public async Task<IHttpActionResult> PostImage(NewImageData image)
         {
@@ -60,7 +58,6 @@
             return this.Ok();
         }
 
-        [Authorize]
         [Route("files")]
         public async Task<IHttpActionResult> PostFile(NewFileData file)
         {
