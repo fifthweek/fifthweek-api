@@ -36,11 +36,19 @@
             }
         }
 
+        public static void AssertBodyProvided(this object value, string argumentName)
+        {
+            if (value == null)
+            {
+                throw new BadRequestException("The value '" + argumentName + "' must be provided in the request body.");
+            }
+        }
+
         public static void AssertUrlParameterProvided(this object value, string argumentName)
         {
             if (value == null)
             {
-                throw new BadRequestException("The value '" + argumentName + "' is required.");
+                throw new BadRequestException("The value '" + argumentName + "' must be provided in the request URL.");
             }
         }
 
@@ -48,7 +56,7 @@
         {
             if (string.IsNullOrWhiteSpace(value))
             {
-                throw new BadRequestException("The value '" + argumentName + "' is required.");
+                throw new BadRequestException("The value '" + argumentName + "' must be provided in the request URL.");
             }
         }
     }

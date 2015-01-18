@@ -63,6 +63,7 @@
     <Compile Include="CollectionId.cs" />
     <Compile Include="CollectionOwnership.cs" />
     <Compile Include="CollectionSecurity.cs" />
+    <Compile Include="Controllers\CollectionController.cs" />
     <Compile Include="ICollectionOwnership.cs" />
     <Compile Include="ICollectionSecurity.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

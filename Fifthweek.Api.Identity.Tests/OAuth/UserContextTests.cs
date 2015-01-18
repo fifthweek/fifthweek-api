@@ -60,7 +60,7 @@
 
             HttpContext.Current.User = principal;
 
-            var result = this.userContext.GetUsername();
+            var result = this.userContext.TryGetUsername();
 
             Assert.AreEqual(un, result);
         }
@@ -74,7 +74,7 @@
 
             HttpContext.Current.User = principal;
 
-            var result = this.userContext.GetUsername();
+            var result = this.userContext.TryGetUsername();
 
             Assert.IsNull(result);
         }
@@ -88,7 +88,7 @@
 
             HttpContext.Current.User = principal;
 
-            var result = this.userContext.GetUserId();
+            var result = this.userContext.TryGetUserId();
 
             Assert.AreEqual(new UserId(id), result);
         }
@@ -102,7 +102,7 @@
 
             HttpContext.Current.User = principal;
 
-            var result = this.userContext.GetUserId();
+            var result = this.userContext.TryGetUserId();
 
             Assert.IsNull(result);
         }

@@ -39,7 +39,7 @@
         public async Task<GrantedUpload> PostUploadRequestAsync(UploadRequest data)
         {
             var fileId = new FileId(this.guidCreator.CreateSqlSequential());
-            var authenticatedUserId = this.userContext.GetUserId();
+            var authenticatedUserId = this.userContext.TryGetUserId();
             
             await this.initiateFileUpload.HandleAsync(new InitiateFileUploadCommand(authenticatedUserId, fileId, data.FilePath, data.Purpose));
             var uri = await this.generateWritableBlobUri.HandleAsync(new GenerateWritableBlobUriQuery(authenticatedUserId, fileId, data.Purpose));
@@ -51,7 +51,7 @@
         public async Task PostUploadCompleteNotificationAsync(string fileId)
         {
             var parsedFileId = new FileId(fileId.DecodeGuid());
-            var authenticatedUserId = this.userContext.GetUserId();
+            var authenticatedUserId = this.userContext.TryGetUserId();
             await this.completeFileUpload.HandleAsync(new CompleteFileUploadCommand(authenticatedUserId, parsedFileId));
         }
     }

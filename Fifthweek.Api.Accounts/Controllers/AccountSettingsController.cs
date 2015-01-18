@@ -2,7 +2,6 @@
 {
     using System.Threading.Tasks;
     using System.Web.Http;
-    using System.Web.Http.Description;
 
     using Fifthweek.Api.Accounts.Commands;
     using Fifthweek.Api.Accounts.Queries;
@@ -11,7 +10,6 @@
     using Fifthweek.Api.Identity.Membership;
     using Fifthweek.Api.Identity.OAuth;
     using Fifthweek.CodeGeneration;
-    using Fifthweek.Shared;
 
     [AutoConstructor]
     [RoutePrefix("accountsettings")]
@@ -29,7 +27,7 @@
             userId.AssertUrlParameterProvided("userId");
 
             var requestedUserId = new UserId(userId.DecodeGuid());
-            var authenticatedUserId = this.userContext.GetUserId();
+            var authenticatedUserId = this.userContext.TryGetUserId();
 
             var query = new GetAccountSettingsQuery(authenticatedUserId, requestedUserId);
             var result = await this.getAccountSettings.HandleAsync(query);
@@ -41,9 +39,9 @@
         public async Task Put(string userId, [FromBody]UpdatedAccountSettings updatedAccountSettings)
         {
             userId.AssertUrlParameterProvided("userId");
-            updatedAccountSettings.AssertUrlParameterProvided("updatedAccountSettings");
+            updatedAccountSettings.AssertBodyProvided("updatedAccountSettings");
 
-            var authenticatedUserId = this.userContext.GetUserId();
+            var authenticatedUserId = this.userContext.TryGetUserId();
             var requestedUserId = new UserId(userId.DecodeGuid());
             
             updatedAccountSettings.Parse();

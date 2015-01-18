@@ -8,7 +8,6 @@
     using Fifthweek.Api.FileManagement;
     using Fifthweek.Api.Identity.Membership;
     using Fifthweek.Api.Posts.Commands;
-    using Fifthweek.Api.Subscriptions;
     using Fifthweek.Tests.Shared;
 
     using Microsoft.VisualStudio.TestTools.UnitTesting;

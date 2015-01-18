@@ -20,9 +20,10 @@
         [Route("notes")]
         public async Task<IHttpActionResult> PostNote(NewNoteData note)
         {
+            note.AssertBodyProvided("note");
             note.Parse();
 
-            var authenticatedUserId = this.userContext.GetUserId();
+            var authenticatedUserId = this.userContext.TryGetUserId();
             var newPostId = new PostId(this.guidCreator.CreateSqlSequential());
 
             await this.postNote.HandleAsync(new PostNoteCommand(
@@ -38,9 +39,10 @@
         [Route("images")]
         public async Task<IHttpActionResult> PostImage(NewImageData image)
         {
+            image.AssertBodyProvided("image");
             image.Parse();
 
-            var authenticatedUserId = this.userContext.GetUserId();
+            var authenticatedUserId = this.userContext.TryGetUserId();
             var newPostId = new PostId(this.guidCreator.CreateSqlSequential());
 
             await this.postImage.HandleAsync(new PostImageCommand(
@@ -58,9 +60,10 @@
         [Route("files")]
         public async Task<IHttpActionResult> PostFile(NewFileData file)
         {
+            file.AssertBodyProvided("file");
             file.Parse();
 
-            var authenticatedUserId = this.userContext.GetUserId();
+            var authenticatedUserId = this.userContext.TryGetUserId();
             var newPostId = new PostId(this.guidCreator.CreateSqlSequential());
 
             await this.postFile.HandleAsync(new PostFileCommand(

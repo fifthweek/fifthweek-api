@@ -13,14 +13,14 @@
         {
             get
             {
-                var identity = this.GetIdentity();
+                var identity = this.TryGetIdentity();
                 return identity != null && identity.IsAuthenticated;
             }
         }
 
-        public string GetUsername()
+        public string TryGetUsername()
         {
-            var identity = this.GetIdentity();
+            var identity = this.TryGetIdentity();
             if (identity != null && identity.IsAuthenticated)
             {
                 return identity.Name;
@@ -29,9 +29,9 @@
             return null;
         }
 
-        public UserId GetUserId()
+        public UserId TryGetUserId()
         {
-            var identity = this.GetIdentity();
+            var identity = this.TryGetIdentity();
             if (identity != null && identity.IsAuthenticated)
             {
                 var claim = identity.FindFirst(ClaimTypes.NameIdentifier);
@@ -48,7 +48,7 @@
 
         public bool IsUserInRole(string role)
         {
-            var identity = this.GetIdentity();
+            var identity = this.TryGetIdentity();
 
             if (identity != null && identity.IsAuthenticated)
             {
@@ -58,7 +58,7 @@
             return false;
         }
 
-        private ClaimsIdentity GetIdentity()
+        private ClaimsIdentity TryGetIdentity()
         {
             if (HttpContext.Current != null && HttpContext.Current.User != null)
             {

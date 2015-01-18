@@ -5,7 +5,6 @@
     using Fifthweek.Api.Collections;
     using Fifthweek.Api.FileManagement;
     using Fifthweek.Api.Identity.Membership;
-    using Fifthweek.Api.Subscriptions;
     using Fifthweek.CodeGeneration;
 
     [AutoConstructor, AutoEqualityMembers]

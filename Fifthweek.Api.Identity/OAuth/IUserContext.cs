@@ -4,12 +4,12 @@
 
     public interface IUserContext
     {
-        string GetUsername();
+        bool IsAuthenticated { get; }
 
-        UserId GetUserId();
+        string TryGetUsername();
+
+        UserId TryGetUserId();
 
         bool IsUserInRole(string role);
-
-        bool IsAuthenticated { get; }
     }
 }

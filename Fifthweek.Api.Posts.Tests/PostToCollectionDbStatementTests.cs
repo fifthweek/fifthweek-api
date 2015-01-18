@@ -6,7 +6,6 @@
     using Fifthweek.Api.Collections;
     using Fifthweek.Api.FileManagement;
     using Fifthweek.Api.Persistence;
-    using Fifthweek.Api.Subscriptions;
 
     using Microsoft.VisualStudio.TestTools.UnitTesting;
 

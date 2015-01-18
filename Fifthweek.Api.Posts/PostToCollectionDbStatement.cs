@@ -7,7 +7,6 @@ namespace Fifthweek.Api.Posts
     using Fifthweek.Api.Core;
     using Fifthweek.Api.FileManagement;
     using Fifthweek.Api.Persistence;
-    using Fifthweek.Api.Subscriptions;
     using Fifthweek.CodeGeneration;
 
     [AutoConstructor]
