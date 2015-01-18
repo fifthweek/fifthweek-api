@@ -98,6 +98,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fifthweek.Api.Posts", "Fift
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fifthweek.Azure", "Fifthweek.Azure\Fifthweek.Azure.csproj", "{890CD4C4-993F-482D-BBB5-A50767ACE55B}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fifthweek.Api.Collections", "Fifthweek.Api.Collections\Fifthweek.Api.Collections.csproj", "{92FF5E2B-F153-433F-92F6-DD580D9E09B8}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fifthweek.Api.Collections.Tests", "Fifthweek.Api.Collections.Tests\Fifthweek.Api.Collections.Tests.csproj", "{7109ACEC-A98B-4CDE-BF8E-D38048344DFB}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -256,6 +260,14 @@ Global
 		{890CD4C4-993F-482D-BBB5-A50767ACE55B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{890CD4C4-993F-482D-BBB5-A50767ACE55B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{890CD4C4-993F-482D-BBB5-A50767ACE55B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{92FF5E2B-F153-433F-92F6-DD580D9E09B8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{92FF5E2B-F153-433F-92F6-DD580D9E09B8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{92FF5E2B-F153-433F-92F6-DD580D9E09B8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{92FF5E2B-F153-433F-92F6-DD580D9E09B8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7109ACEC-A98B-4CDE-BF8E-D38048344DFB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7109ACEC-A98B-4CDE-BF8E-D38048344DFB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7109ACEC-A98B-4CDE-BF8E-D38048344DFB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7109ACEC-A98B-4CDE-BF8E-D38048344DFB}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
