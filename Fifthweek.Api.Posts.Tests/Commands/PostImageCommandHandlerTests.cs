@@ -8,7 +8,6 @@
     using Fifthweek.Api.FileManagement;
     using Fifthweek.Api.Identity.Membership;
     using Fifthweek.Api.Posts.Commands;
-    using Fifthweek.Tests.Shared;
 
     using Microsoft.VisualStudio.TestTools.UnitTesting;
 
@@ -57,33 +56,30 @@
         }
 
         [TestMethod]
-        public async Task WhenNotAllowedToPost_ItShouldReportAnError()
+        [ExpectedException(typeof(UnauthorizedException))]
+        public async Task WhenNotAllowedToPost_ItShouldThrowUnauthorizedException()
         {
             this.collectionSecurity.Setup(_ => _.AssertPostingAllowedAsync(UserId, CollectionId)).Throws<UnauthorizedException>();
 
-            Func<Task> badMethodCall = () => this.target.HandleAsync(Command);
-
-            await badMethodCall.AssertExceptionAsync<UnauthorizedException>();
+            await this.target.HandleAsync(Command);
         }
 
         [TestMethod]
-        public async Task WhenNotAllowedToUseFile_ItShouldReportAnError()
+        [ExpectedException(typeof(UnauthorizedException))]
+        public async Task WhenNotAllowedToUseFile_ItShouldThrowUnauthorizedException()
         {
             this.fileSecurity.Setup(_ => _.AssertUsageAllowedAsync(UserId, FileId)).Throws<UnauthorizedException>();
 
-            Func<Task> badMethodCall = () => this.target.HandleAsync(Command);
-
-            await badMethodCall.AssertExceptionAsync<UnauthorizedException>();
+            await this.target.HandleAsync(Command);
         }
 
         [TestMethod]
-        public async Task WhenFileHasInvalidType_ItShouldReportAnError()
+        [ExpectedException(typeof(RecoverableException))]
+        public async Task WhenFileHasInvalidType_ItShouldThrowRecoverableException()
         {
             this.postFileTypeChecks.Setup(_ => _.AssertValidForImagePostAsync(FileId)).Throws(new RecoverableException("Bad file type"));
 
-            Func<Task> badMethodCall = () => this.target.HandleAsync(Command);
-
-            await badMethodCall.AssertExceptionAsync<RecoverableException>();
+            await this.target.HandleAsync(Command);
         }
 
         [TestMethod]

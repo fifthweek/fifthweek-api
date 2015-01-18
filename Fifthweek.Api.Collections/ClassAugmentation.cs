@@ -81,6 +81,7 @@ namespace Fifthweek.Api.Collections
 namespace Fifthweek.Api.Collections.Controllers
 {
     using System;
+    using System.Linq;
     using System.Threading.Tasks;
     using System.Web.Http;
     using System.Web.Http.Description;
@@ -114,6 +115,7 @@ namespace Fifthweek.Api.Collections.Controllers
 namespace Fifthweek.Api.Collections.Queries
 {
     using System;
+    using System.Linq;
     using Fifthweek.Api.Core;
     using Fifthweek.Api.Identity.Membership;
     using Fifthweek.CodeGeneration;
@@ -135,6 +137,28 @@ namespace Fifthweek.Api.Collections.Queries
 
             this.Requester = requester;
             this.CollectionId = collectionId;
+        }
+    }
+
+}
+namespace Fifthweek.Api.Collections.Queries
+{
+    using System;
+    using System.Threading.Tasks;
+    using Fifthweek.Api.Core;
+    using Fifthweek.Api.Identity.Membership;
+    using Fifthweek.CodeGeneration;
+    public partial class GetLiveDateOfNewQueuedPostQueryHandler 
+    {
+        public GetLiveDateOfNewQueuedPostQueryHandler(
+            Fifthweek.Api.Collections.ICollectionSecurity collectionSecurity)
+        {
+            if (collectionSecurity == null)
+            {
+                throw new ArgumentNullException("collectionSecurity");
+            }
+
+            this.collectionSecurity = collectionSecurity;
         }
     }
 
@@ -202,6 +226,7 @@ namespace Fifthweek.Api.Collections
 namespace Fifthweek.Api.Collections.Queries
 {
     using System;
+    using System.Linq;
     using Fifthweek.Api.Core;
     using Fifthweek.Api.Identity.Membership;
     using Fifthweek.CodeGeneration;
