@@ -6,11 +6,7 @@
     {
         bool IsAuthenticated { get; }
 
-        string GetUsername();
-
         string TryGetUsername();
-
-        UserId GetUserId();
 
         UserId TryGetUserId();
 

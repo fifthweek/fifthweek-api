@@ -1,22 +1,22 @@
 ﻿namespace Fifthweek.Api.Identity.Membership
 {
-    using System;
-
     using Fifthweek.Api.Core;
+    using Fifthweek.Api.Identity.OAuth;
 
     public static class Extensions
     {
-        public static void AssertAuthenticated(this UserId userId)
+        public static Requester GetRequester(this IUserContext userContext)
         {
-            userId.AssertAuthorizedFor(null);
+            var userId = userContext.TryGetUserId();
+            return userId != null 
+                ? Requester.Authenticated(userId) 
+                : Requester.Unauthenticated;
         }
 
-        public static void AssertAuthorizedFor(this UserId userId, UserId requiredUserId)
+        public static void AssertAuthorizedFor(this Requester requester, UserId requiredUserId)
         {
-            if (userId == null)
-            {
-                throw new UnauthorizedException("The user was not authenticated.");
-            }
+            UserId userId;
+            requester.AssertAuthenticated(out userId);
 
             if (requiredUserId != null && !requiredUserId.Equals(userId))
             {

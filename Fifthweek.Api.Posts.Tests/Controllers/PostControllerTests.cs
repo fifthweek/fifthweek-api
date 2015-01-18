@@ -55,7 +55,7 @@
             var data = NewNoteData();
             var command = NewPostNoteCommand(UserId, PostId, data);
 
-            this.userContext.Setup(v => v.GetUserId()).Returns(UserId);
+            this.userContext.Setup(v => v.TryGetUserId()).Returns(UserId);
             this.guidCreator.Setup(_ => _.CreateSqlSequential()).Returns(PostId.Value);
             this.postNote.Setup(v => v.HandleAsync(command)).Returns(Task.FromResult(0)).Verifiable();
 
@@ -71,7 +71,7 @@
             var data = NewImageData();
             var command = NewPostImageCommand(UserId, PostId, data);
 
-            this.userContext.Setup(v => v.GetUserId()).Returns(UserId);
+            this.userContext.Setup(v => v.TryGetUserId()).Returns(UserId);
             this.guidCreator.Setup(_ => _.CreateSqlSequential()).Returns(PostId.Value);
             this.postImage.Setup(v => v.HandleAsync(command)).Returns(Task.FromResult(0)).Verifiable();
 
@@ -87,7 +87,7 @@
             var data = NewFileData();
             var command = NewPostFileCommand(UserId, PostId, data);
 
-            this.userContext.Setup(v => v.GetUserId()).Returns(UserId);
+            this.userContext.Setup(v => v.TryGetUserId()).Returns(UserId);
             this.guidCreator.Setup(_ => _.CreateSqlSequential()).Returns(PostId.Value);
             this.postFile.Setup(v => v.HandleAsync(command)).Returns(Task.FromResult(0)).Verifiable();
 

@@ -5,6 +5,7 @@
     using System.Web.Http.Description;
 
     using Fifthweek.Api.Core;
+    using Fifthweek.Api.Identity.Membership;
     using Fifthweek.Api.Identity.OAuth;
     using Fifthweek.Api.Subscriptions.Commands;
     using Fifthweek.Api.Subscriptions.Queries;
@@ -26,7 +27,7 @@
             subscription.AssertBodyProvided("subscription");
             subscription.Parse();
 
-            var authenticatedUserId = this.userContext.GetUserId();
+            var authenticatedUserId = this.userContext.TryGetUserId();
             var newSubscriptionId = new SubscriptionId(this.guidCreator.CreateSqlSequential());
 
             await this.createSubscription.HandleAsync(new CreateSubscriptionCommand(
@@ -47,7 +48,7 @@
             subscription.AssertBodyProvided("subscription");
             subscription.Parse();
 
-            var authenticatedUserId = this.userContext.GetUserId();
+            var authenticatedUserId = this.userContext.TryGetUserId();
             var subscriptionIdObject = new SubscriptionId(subscriptionId.DecodeGuid());
 
             await this.updateSubscription.HandleAsync(new UpdateSubscriptionCommand(
@@ -68,8 +69,8 @@
         [Route("currentCreatorStatus")]
         public async Task<CreatorStatusData> GetCurrentCreatorStatus()
         {
-            var authenticatedUserId = this.userContext.GetUserId();
-            var creatorStatus = await this.getCreatorStatus.HandleAsync(new GetCreatorStatusQuery(authenticatedUserId));
+            var requester = this.userContext.GetRequester();
+            var creatorStatus = await this.getCreatorStatus.HandleAsync(new GetCreatorStatusQuery(requester));
             return new CreatorStatusData(
                 creatorStatus.SubscriptionId == null ? null : creatorStatus.SubscriptionId.Value.EncodeGuid(), 
                 creatorStatus.MustWriteFirstPost);

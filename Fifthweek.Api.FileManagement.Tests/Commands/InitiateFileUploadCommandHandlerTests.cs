@@ -1,19 +1,33 @@
-﻿using System;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-
-namespace Fifthweek.Api.FileManagement.Tests.Commands
+﻿namespace Fifthweek.Api.FileManagement.Tests.Commands
 {
+    using System;
     using System.Threading.Tasks;
 
     using Fifthweek.Api.Azure;
     using Fifthweek.Api.FileManagement.Commands;
     using Fifthweek.Api.Identity.Membership;
 
+    using Microsoft.VisualStudio.TestTools.UnitTesting;
+
     using Moq;
 
     [TestClass]
     public class InitiateFileUploadCommandHandlerTests
     {
+        private Mock<IFileRepository> fileRepository;
+        private Mock<IBlobService> blobService;
+        private InitiateFileUploadCommandHandler target;
+
+        [TestInitialize]
+        public void TestInitialize()
+        {
+            // Give side-effecting components strict mock behaviour.
+            this.blobService = new Mock<IBlobService>(MockBehavior.Strict);
+            this.fileRepository = new Mock<IFileRepository>(MockBehavior.Strict);
+
+            this.target = new InitiateFileUploadCommandHandler(this.blobService.Object, this.fileRepository.Object);
+        }
+
         [TestMethod]
         public async Task WhenPassedValidInformation_ItShouldAddANewFile()
         {
@@ -115,24 +129,10 @@ namespace Fifthweek.Api.FileManagement.Tests.Commands
                 .Returns(Task.FromResult(0))
                 .Verifiable();
 
-            await this.handler.HandleAsync(new InitiateFileUploadCommand(requester, fileId, filePath, purpose));
+            await this.target.HandleAsync(new InitiateFileUploadCommand(Requester.Authenticated(requester), fileId, filePath, purpose));
 
             this.blobService.Verify();
             this.fileRepository.Verify();
         }
-
-        [TestInitialize]
-        public void TestInitialize()
-        {
-            this.blobService = new Mock<IBlobService>();
-            this.fileRepository = new Mock<IFileRepository>();
-
-            this.handler = new InitiateFileUploadCommandHandler(this.blobService.Object, this.fileRepository.Object);
-        }
-
-        private Mock<IFileRepository> fileRepository;
-        private Mock<IBlobService> blobService;
-
-        private InitiateFileUploadCommandHandler handler;
     }
 }

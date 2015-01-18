@@ -2,11 +2,9 @@
 {
     using System.Threading.Tasks;
 
-    using Fifthweek.Api.Accounts.Controllers;
     using Fifthweek.Api.Core;
     using Fifthweek.Api.Identity.Membership;
     using Fifthweek.CodeGeneration;
-    using Fifthweek.Shared;
 
     [AutoConstructor]
     public partial class GetAccountSettingsQueryHandler : IQueryHandler<GetAccountSettingsQuery, GetAccountSettingsResult>
@@ -16,7 +14,10 @@
         public Task<GetAccountSettingsResult> HandleAsync(GetAccountSettingsQuery query)
         {
             query.AssertNotNull("query");
-            query.AuthenticatedUserId.AssertAuthorizedFor(query.RequestedUserId);
+
+            UserId authenticatedUserId;
+            query.Requester.AssertAuthenticated(out authenticatedUserId);
+            query.Requester.AssertAuthorizedFor(query.RequestedUserId);
 
             return this.accountRepository.GetAccountSettingsAsync(query.RequestedUserId);
         }

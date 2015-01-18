@@ -28,9 +28,9 @@
             userId.AssertUrlParameterProvided("userId");
 
             var requestedUserId = new UserId(userId.DecodeGuid());
-            var authenticatedUserId = this.userContext.GetUserId();
+            var requester = this.userContext.GetRequester();
 
-            var query = new GetAccountSettingsQuery(authenticatedUserId, requestedUserId);
+            var query = new GetAccountSettingsQuery(requester, requestedUserId);
             var result = await this.getAccountSettings.HandleAsync(query);
 
             return new AccountSettingsResponse(result.Email.Value, result.ProfileImageFileId.Value.EncodeGuid());
@@ -43,14 +43,14 @@
             userId.AssertUrlParameterProvided("userId");
             updatedAccountSettings.AssertBodyProvided("updatedAccountSettings");
 
-            var authenticatedUserId = this.userContext.GetUserId();
+            var requester = this.userContext.GetRequester();
             var requestedUserId = new UserId(userId.DecodeGuid());
             
             updatedAccountSettings.Parse();
             var newProfileImageId = new FileId(updatedAccountSettings.NewProfileImageId.DecodeGuid());
 
             var command = new UpdateAccountSettingsCommand(
-                authenticatedUserId,
+                requester,
                 requestedUserId,
                 updatedAccountSettings.NewUsernameObject,
                 updatedAccountSettings.NewEmailObject,

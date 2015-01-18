@@ -8,7 +8,7 @@
     [AutoEqualityMembers]
     public partial class GenerateWritableBlobUriQuery : IQuery<string>
     {
-        public UserId AuthenticatedUserId { get; private set; }
+        public Requester Requester { get; private set; }
 
         public FileId FileId { get; private set; }
 

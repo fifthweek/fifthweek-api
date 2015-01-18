@@ -11,20 +11,21 @@
     public partial class GenerateWritableBlobUriQueryHandler : IQueryHandler<GenerateWritableBlobUriQuery, string>
     {
         private readonly IBlobService blobService;
-
         private readonly IBlobLocationGenerator blobLocationGenerator;
-
         private readonly IFileSecurity fileSecurity;
 
         public async Task<string> HandleAsync(GenerateWritableBlobUriQuery query)
         {
             query.AssertNotNull("query");
 
-            query.AuthenticatedUserId.AssertAuthenticated();
-            await this.fileSecurity.AssertUsageAllowedAsync(query.AuthenticatedUserId, query.FileId);
+            UserId userId;
+            query.Requester.AssertAuthenticated(out userId);
 
-            var blobLocation = this.blobLocationGenerator.GetBlobLocation(query.AuthenticatedUserId, query.FileId, query.Purpose);
+            await this.fileSecurity.AssertUsageAllowedAsync(userId, query.FileId);
+
+            var blobLocation = this.blobLocationGenerator.GetBlobLocation(userId, query.FileId, query.Purpose);
             var url = await this.blobService.GetBlobSasUriForWritingAsync(blobLocation.ContainerName, blobLocation.BlobName);
+
             return url;
         }
     }

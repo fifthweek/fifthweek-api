@@ -15,20 +15,15 @@
     [TestClass]
     public class UpdateAccountSettingsCommandHandlerTests
     {
-        private readonly UserId userId = new UserId(Guid.NewGuid());
-
-        private readonly FileId fileId = new FileId(Guid.NewGuid());
-
-        private readonly ValidUsername username = ValidUsername.Parse("username");
-
-        private readonly ValidEmail email = ValidEmail.Parse("test@testing.fifthweek.com");
-
-        private readonly ValidPassword password = ValidPassword.Parse("passw0rd");
+        private static readonly UserId UserId = new UserId(Guid.NewGuid());
+        private static readonly Requester Requester = Requester.Authenticated(UserId);
+        private static readonly FileId FileId = new FileId(Guid.NewGuid());
+        private static readonly ValidUsername Username = ValidUsername.Parse("username");
+        private static readonly ValidEmail Email = ValidEmail.Parse("test@testing.fifthweek.com");
+        private static readonly ValidPassword Password = ValidPassword.Parse("passw0rd");
 
         private Mock<IAccountRepository> accountRepository;
-
         private Mock<IFileSecurity> fileSecurity;
-
         private UpdateAccountSettingsCommandHandler target;
 
         [TestInitialize]
@@ -44,24 +39,24 @@
         public async Task WhenCalledWithValidData_ItShouldCallTheAccountRepository()
         {
             var command = new UpdateAccountSettingsCommand(
-                this.userId,
-                this.userId,
-                this.username,
-                this.email,
-                this.password,
-                this.fileId);
+                Requester,
+                UserId,
+                Username,
+                Email,
+                Password,
+                FileId);
 
-            this.fileSecurity.Setup(v => v.AssertUsageAllowedAsync(this.userId, this.fileId))
+            this.fileSecurity.Setup(v => v.AssertUsageAllowedAsync(UserId, FileId))
                 .Returns(Task.FromResult(0));
 
             this.accountRepository.Setup(
                 v =>
                 v.UpdateAccountSettingsAsync(
-                    this.userId,
-                    this.username,
-                    this.email,
-                    this.password,
-                    this.fileId)).ReturnsAsync(new AccountRepository.UpdateAccountSettingsResult(false))
+                    UserId,
+                    Username,
+                    Email,
+                    Password,
+                    FileId)).ReturnsAsync(new AccountRepository.UpdateAccountSettingsResult(false))
                     .Verifiable();
 
             await this.target.HandleAsync(command);
@@ -74,14 +69,14 @@
         public async Task WhenCalledWithUnauthorizedFileId_ItShouldCallThrowAnUnauthroizedException()
         {
             var command = new UpdateAccountSettingsCommand(
-                this.userId,
-                this.userId,
-                this.username,
-                this.email,
-                this.password,
-                this.fileId);
+                Requester,
+                UserId,
+                Username,
+                Email,
+                Password,
+                FileId);
 
-            this.fileSecurity.Setup(v => v.AssertUsageAllowedAsync(this.userId, this.fileId))
+            this.fileSecurity.Setup(v => v.AssertUsageAllowedAsync(UserId, FileId))
                 .Throws(new UnauthorizedException());
 
             await this.target.HandleAsync(command);

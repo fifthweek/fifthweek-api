@@ -8,7 +8,7 @@
     [AutoEqualityMembers]
     public partial class GetAccountSettingsQuery : IQuery<GetAccountSettingsResult>
     {
-        public UserId AuthenticatedUserId { get; private set; }
+        public Requester Requester { get; private set; }
 
         public UserId RequestedUserId { get; private set; }
     }

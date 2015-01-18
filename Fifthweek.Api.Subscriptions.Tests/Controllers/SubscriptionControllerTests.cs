@@ -51,7 +51,7 @@
             var data = NewCreateSubscriptionData();
             var command = NewCreateSubscriptionCommand(UserId, SubscriptionId, data);
 
-            this.userContext.Setup(v => v.GetUserId()).Returns(UserId);
+            this.userContext.Setup(v => v.TryGetUserId()).Returns(UserId);
             this.guidCreator.Setup(_ => _.CreateSqlSequential()).Returns(SubscriptionId.Value);
             this.createSubscription.Setup(v => v.HandleAsync(command)).Returns(Task.FromResult(0)).Verifiable();
 
@@ -67,7 +67,7 @@
             var data = NewUpdatedSubscriptionData();
             var command = NewUpdateSubscriptionCommand(UserId, SubscriptionId, data);
 
-            this.userContext.Setup(v => v.GetUserId()).Returns(UserId);
+            this.userContext.Setup(v => v.TryGetUserId()).Returns(UserId);
             this.updateSubscription.Setup(v => v.HandleAsync(command)).Returns(Task.FromResult(0)).Verifiable();
 
             var result = await this.target.PutSubscription(SubscriptionId.Value.EncodeGuid(), data);
@@ -79,9 +79,9 @@
         [TestMethod]
         public async Task WhenGettingCreatorStatus_ItShouldReturnResultFromCreatorStatusQuery()
         {
-            var query = new GetCreatorStatusQuery(UserId);
+            var query = new GetCreatorStatusQuery(Requester.Authenticated(UserId));
 
-            this.userContext.Setup(v => v.GetUserId()).Returns(UserId);
+            this.userContext.Setup(v => v.TryGetUserId()).Returns(UserId);
             this.getCreatorStatus.Setup(v => v.HandleAsync(query)).Returns(Task.FromResult(new CreatorStatus(SubscriptionId, false)));
 
             var result = await this.target.GetCurrentCreatorStatus();
@@ -93,9 +93,9 @@
         [TestMethod]
         public async Task WhenGettingCreatorStatus_ItShouldReturnResultFromCreatorStatusQuery2()
         {
-            var query = new GetCreatorStatusQuery(UserId);
+            var query = new GetCreatorStatusQuery(Requester.Authenticated(UserId));
 
-            this.userContext.Setup(v => v.GetUserId()).Returns(UserId);
+            this.userContext.Setup(v => v.TryGetUserId()).Returns(UserId);
             this.getCreatorStatus.Setup(v => v.HandleAsync(query)).Returns(Task.FromResult(new CreatorStatus(SubscriptionId, true)));
 
             var result = await this.target.GetCurrentCreatorStatus();

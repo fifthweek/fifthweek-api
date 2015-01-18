@@ -340,7 +340,6 @@ namespace Fifthweek.Api.Subscriptions.Controllers
     using Fifthweek.Api.Subscriptions.Commands;
     using Fifthweek.Api.Subscriptions.Queries;
     using Fifthweek.CodeGeneration;
-    using Fifthweek.Shared;
     public partial class SubscriptionController 
     {
         public SubscriptionController(
@@ -411,18 +410,17 @@ namespace Fifthweek.Api.Subscriptions.Queries
     using Fifthweek.Api.Core;
     using Fifthweek.Api.Identity.Membership;
     using Fifthweek.CodeGeneration;
-    using Fifthweek.Shared;
     public partial class GetCreatorStatusQuery 
     {
         public GetCreatorStatusQuery(
-            Fifthweek.Api.Identity.Membership.UserId creatorId)
+            Fifthweek.Api.Identity.Membership.Requester requester)
         {
-            if (creatorId == null)
+            if (requester == null)
             {
-                throw new ArgumentNullException("creatorId");
+                throw new ArgumentNullException("requester");
             }
 
-            this.CreatorId = creatorId;
+            this.Requester = requester;
         }
     }
 
@@ -434,21 +432,20 @@ namespace Fifthweek.Api.Subscriptions.Queries
     using System.Linq;
     using System.Threading.Tasks;
     using Fifthweek.Api.Core;
-    using Fifthweek.Api.Persistence;
     using Fifthweek.Api.Identity.Membership;
+    using Fifthweek.Api.Persistence;
     using Fifthweek.CodeGeneration;
-    using Fifthweek.Shared;
     public partial class GetCreatorStatusQueryHandler 
     {
         public GetCreatorStatusQueryHandler(
-            Fifthweek.Api.Persistence.IFifthweekDbContext dbContext)
+            Fifthweek.Api.Persistence.IFifthweekDbContext databaseContext)
         {
-            if (dbContext == null)
+            if (databaseContext == null)
             {
-                throw new ArgumentNullException("dbContext");
+                throw new ArgumentNullException("databaseContext");
             }
 
-            this.dbContext = dbContext;
+            this.databaseContext = databaseContext;
         }
     }
 
@@ -1091,12 +1088,11 @@ namespace Fifthweek.Api.Subscriptions.Queries
     using Fifthweek.Api.Core;
     using Fifthweek.Api.Identity.Membership;
     using Fifthweek.CodeGeneration;
-    using Fifthweek.Shared;
     public partial class GetCreatorStatusQuery 
     {
         public override string ToString()
         {
-            return string.Format("GetCreatorStatusQuery({0})", this.CreatorId == null ? "null" : this.CreatorId.ToString());
+            return string.Format("GetCreatorStatusQuery({0})", this.Requester == null ? "null" : this.Requester.ToString());
         }
 
         public override bool Equals(object obj)
@@ -1124,14 +1120,14 @@ namespace Fifthweek.Api.Subscriptions.Queries
             unchecked
             {
                 int hashCode = 0;
-                hashCode = (hashCode * 397) ^ (this.CreatorId != null ? this.CreatorId.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.Requester != null ? this.Requester.GetHashCode() : 0);
                 return hashCode;
             }
         }
 
         protected bool Equals(GetCreatorStatusQuery other)
         {
-            if (!object.Equals(this.CreatorId, other.CreatorId))
+            if (!object.Equals(this.Requester, other.Requester))
             {
                 return false;
             }

@@ -1,6 +1,5 @@
 ﻿namespace Fifthweek.Api.FileManagement.Commands
 {
-    using System;
     using System.Threading.Tasks;
 
     using Fifthweek.Api.Azure;
@@ -22,14 +21,16 @@
         public async Task HandleAsync(CompleteFileUploadCommand command)
         {
             command.AssertNotNull("command");
-            command.AuthenticatedUserId.AssertAuthenticated();
+
+            UserId userId;
+            command.Requester.AssertAuthenticated(out userId);
             
             var file = await this.fileRepository.GetFileWaitingForUploadAsync(command.FileId);
-            command.AuthenticatedUserId.AssertAuthorizedFor(file.UserId);
+            command.Requester.AssertAuthorizedFor(file.UserId);
 
             var mimeType = this.mimeTypeMap.GetMimeType(file.FileExtension);
-            
-            var blobLocation = this.blobLocationGenerator.GetBlobLocation(command.AuthenticatedUserId, command.FileId, file.Purpose);
+
+            var blobLocation = this.blobLocationGenerator.GetBlobLocation(userId, command.FileId, file.Purpose);
             var blobLength = await this.blobService.GetBlobLengthAndSetContentTypeAsync(blobLocation.ContainerName, blobLocation.BlobName, mimeType);
 
             await this.fileRepository.SetFileUploadComplete(command.FileId, blobLength);

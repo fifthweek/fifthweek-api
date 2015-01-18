@@ -22,6 +22,7 @@
         private const string Purpose = "purpose";
 
         private static readonly UserId UserId = new UserId(Guid.NewGuid());
+        private static readonly Requester Requester = Requester.Authenticated(UserId);
         private static readonly FileId FileId = new FileId(Guid.NewGuid());
 
         private Mock<IFileSecurity> fileSecurity;
@@ -57,7 +58,7 @@
             this.blobService.Setup(v => v.GetBlobSasUriForWritingAsync(ContainerName, BlobName))
                 .ReturnsAsync(Url);
 
-            var result = await this.handler.HandleAsync(new GenerateWritableBlobUriQuery(UserId, FileId, Purpose));
+            var result = await this.handler.HandleAsync(new GenerateWritableBlobUriQuery(Requester, FileId, Purpose));
 
             Assert.AreEqual(Url, result);
         }
@@ -68,7 +69,7 @@
             this.fileSecurity.Setup(v => v.AssertUsageAllowedAsync(UserId, FileId))
                 .Throws(new UnauthorizedException());
 
-            Func<Task> badMethodCall = () => this.handler.HandleAsync(new GenerateWritableBlobUriQuery(UserId, FileId, Purpose));
+            Func<Task> badMethodCall = () => this.handler.HandleAsync(new GenerateWritableBlobUriQuery(Requester, FileId, Purpose));
 
             await badMethodCall.AssertExceptionAsync<UnauthorizedException>();
         }

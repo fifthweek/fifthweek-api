@@ -1,14 +1,11 @@
 ﻿namespace Fifthweek.Api.FileManagement.Commands
 {
-    using System;
     using System.Threading.Tasks;
 
     using Fifthweek.Api.Azure;
     using Fifthweek.Api.Core;
     using Fifthweek.Api.Identity.Membership;
-    using Fifthweek.Api.Persistence;
     using Fifthweek.CodeGeneration;
-    using Fifthweek.Shared;
 
     [Decorator(typeof(RetryOnSqlDeadlockOrTimeoutCommandHandlerDecorator<>))]
     [AutoConstructor]
@@ -21,7 +18,9 @@
         public async Task HandleAsync(InitiateFileUploadCommand command)
         {
             command.AssertNotNull("command");
-            command.AuthenticatedUserId.AssertAuthenticated();
+
+            UserId authenticatedUserId;
+            command.Requester.AssertAuthenticated(out authenticatedUserId);
 
             const string ContainerName = FileManagement.Constants.PublicFileBlobContainerName;
             await this.blobService.CreateBlobContainerAsync(ContainerName);
@@ -49,7 +48,7 @@
 
             await this.fileRepository.AddNewFileAsync(
                 command.FileId,
-                command.AuthenticatedUserId,
+                authenticatedUserId,
                 fileNameWithoutExtension ?? string.Empty,
                 fileExtension ?? string.Empty,
                 command.Purpose ?? string.Empty);

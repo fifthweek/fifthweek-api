@@ -53,21 +53,6 @@
         }
 
         [TestMethod]
-        public void GetUsernameShouldThrowExceptionIfNotAuthenticated()
-        {
-            var principal = new Principal(null);
-            var un = "blah";
-            principal.ClaimsIdentity.AddClaim(new Claim(ClaimTypes.Name, un));
-
-            HttpContext.Current.User = principal;
-
-            ExpectedException.AssertException<InvalidOperationException>(() =>
-            {
-                this.userContext.GetUsername();
-            });
-        }
-
-        [TestMethod]
         public void TryGetUsernameShouldReturnTheAuthenticatedUsername()
         {
             var principal = new Principal(AuthenticationType);
@@ -93,21 +78,6 @@
             var result = this.userContext.TryGetUsername();
 
             Assert.IsNull(result);
-        }
-
-        [TestMethod]
-        public void GetUserIdShouldThrowExceptionIfNotAuthenticated()
-        {
-            var principal = new Principal(null);
-            var id = Guid.NewGuid();
-            principal.ClaimsIdentity.AddClaim(new Claim(ClaimTypes.NameIdentifier, id.ToString()));
-
-            HttpContext.Current.User = principal;
-
-            ExpectedException.AssertException<InvalidOperationException>(() =>
-            {
-                this.userContext.GetUserId();
-            });
         }
 
         [TestMethod]

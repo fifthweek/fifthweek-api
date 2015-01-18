@@ -10,38 +10,8 @@
     [TestClass]
     public class ExtensionsTests
     {
-        [TestMethod]
-        public void WhenAssertAuthenticatedCalled_ItShouldThrowAnExceptionIfNotAuthenticated()
-        {
-            Exception exception = null;
-            try
-            {
-                ((UserId)null).AssertAuthenticated();
-            }
-            catch (Exception t)
-            {
-                exception = t;
-            }
-
-            Assert.IsNotNull(exception);
-            Assert.IsInstanceOfType(exception, typeof(UnauthorizedException));
-        }
-
-        [TestMethod]
-        public void WhenAssertAuthenticatedCalled_ItShouldContinueIfAuthenticated()
-        {
-            Exception exception = null;
-            try
-            {
-                new UserId(Guid.NewGuid()).AssertAuthenticated();
-            }
-            catch (Exception t)
-            {
-                exception = t;
-            }
-
-            Assert.IsNull(exception);
-        }
+        private static readonly UserId AuthenticatedUserId = new UserId(Guid.NewGuid());
+        private static readonly Requester AuthenticatedRequester = Requester.Authenticated(AuthenticatedUserId);
 
         [TestMethod]
         public void WhenAssertAuthorizedForCalled_ItShouldThrowAnExceptionIfNotAuthenticated()
@@ -49,7 +19,7 @@
             Exception exception = null;
             try
             {
-                ((UserId)null).AssertAuthorizedFor(new UserId(Guid.NewGuid()));
+                 Requester.Unauthenticated.AssertAuthorizedFor(new UserId(Guid.NewGuid()));
             }
             catch (Exception t)
             {
@@ -66,7 +36,7 @@
             Exception exception = null;
             try
             {
-                new UserId(Guid.NewGuid()).AssertAuthorizedFor(new UserId(Guid.NewGuid()));
+                AuthenticatedRequester.AssertAuthorizedFor(new UserId(Guid.NewGuid()));
             }
             catch (Exception t)
             {
@@ -83,7 +53,7 @@
             Exception exception = null;
             try
             {
-                new UserId(Guid.NewGuid()).AssertAuthorizedFor(null);
+                AuthenticatedRequester.AssertAuthorizedFor(null);
             }
             catch (Exception t)
             {
@@ -99,8 +69,7 @@
             Exception exception = null;
             try
             {
-                var userId = new UserId(Guid.NewGuid());
-                userId.AssertAuthorizedFor(userId);
+                AuthenticatedRequester.AssertAuthorizedFor(AuthenticatedUserId);
             }
             catch (Exception t)
             {

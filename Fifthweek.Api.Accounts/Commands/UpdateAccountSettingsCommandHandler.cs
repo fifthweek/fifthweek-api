@@ -1,18 +1,11 @@
 ﻿namespace Fifthweek.Api.Accounts.Commands
 {
-    using System;
     using System.Threading.Tasks;
 
     using Fifthweek.Api.Core;
     using Fifthweek.Api.FileManagement;
     using Fifthweek.Api.Identity.Membership;
-    using Fifthweek.Api.Persistence;
-    using Fifthweek.Api.Persistence.Identity;
     using Fifthweek.CodeGeneration;
-    using Fifthweek.Shared;
-
-    using Microsoft.AspNet.Identity;
-    using Microsoft.AspNet.Identity.EntityFramework;
 
     [AutoConstructor]
     public partial class UpdateAccountSettingsCommandHandler : ICommandHandler<UpdateAccountSettingsCommand>
@@ -24,11 +17,14 @@
         public async Task HandleAsync(UpdateAccountSettingsCommand command)
         {
             command.AssertNotNull("command");
-            command.AuthenticatedUserId.AssertAuthorizedFor(command.RequestedUserId);
+
+            UserId userId;
+            command.Requester.AssertAuthenticated(out userId);
+            command.Requester.AssertAuthorizedFor(command.RequestedUserId);
             
             if (command.NewProfileImageId != null)
             {
-                await this.fileSecurity.AssertUsageAllowedAsync(command.AuthenticatedUserId, command.NewProfileImageId);
+                await this.fileSecurity.AssertUsageAllowedAsync(userId, command.NewProfileImageId);
             }
 
             var result = await this.accountRepository.UpdateAccountSettingsAsync(
@@ -40,7 +36,7 @@
 
             if (result.EmailChanged)
             {
-
+                // Send activation email.
             }
         }
     }

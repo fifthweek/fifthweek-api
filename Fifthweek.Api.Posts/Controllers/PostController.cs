@@ -24,7 +24,7 @@
             note.AssertBodyProvided("note");
             note.Parse();
 
-            var authenticatedUserId = this.userContext.GetUserId();
+            var authenticatedUserId = this.userContext.TryGetUserId();
             var newPostId = new PostId(this.guidCreator.CreateSqlSequential());
 
             await this.postNote.HandleAsync(new PostNoteCommand(
@@ -44,7 +44,7 @@
             image.AssertBodyProvided("image");
             image.Parse();
 
-            var authenticatedUserId = this.userContext.GetUserId();
+            var authenticatedUserId = this.userContext.TryGetUserId();
             var newPostId = new PostId(this.guidCreator.CreateSqlSequential());
 
             await this.postImage.HandleAsync(new PostImageCommand(
@@ -66,7 +66,7 @@
             file.AssertBodyProvided("file");
             file.Parse();
 
-            var authenticatedUserId = this.userContext.GetUserId();
+            var authenticatedUserId = this.userContext.TryGetUserId();
             var newPostId = new PostId(this.guidCreator.CreateSqlSequential());
 
             await this.postFile.HandleAsync(new PostFileCommand(

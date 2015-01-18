@@ -23,8 +23,9 @@
         private const string FileExtension = "jpeg";
         private const string MimeType = "image/jpeg";
         private const long BlobSize = 1234;
-        private readonly FileId fileId = new FileId(Guid.NewGuid());
-        private readonly UserId userId = new UserId(Guid.NewGuid());
+        private static readonly FileId FileId = new FileId(Guid.NewGuid());
+        private static readonly UserId UserId = new UserId(Guid.NewGuid());
+        private static readonly Requester Requester = Requester.Authenticated(UserId);
 
         private Mock<IFileRepository> fileRepository;
         private Mock<IMimeTypeMap> mimeTypeMap;
@@ -58,16 +59,16 @@
         {
             this.mimeTypeMap.Setup(_ => _.GetMimeType(FileExtension)).Returns(MimeType);
 
-            this.fileRepository.Setup(v => v.GetFileWaitingForUploadAsync(this.fileId))
-                .ReturnsAsync(new FileWaitingForUpload(this.fileId, this.userId, "myfile", FileExtension, Purpose));
+            this.fileRepository.Setup(v => v.GetFileWaitingForUploadAsync(FileId))
+                .ReturnsAsync(new FileWaitingForUpload(FileId, UserId, "myfile", FileExtension, Purpose));
 
-            this.blobNameCreator.Setup(v => v.GetBlobLocation(this.userId, this.fileId, Purpose))
+            this.blobNameCreator.Setup(v => v.GetBlobLocation(UserId, FileId, Purpose))
                 .Returns(new BlobLocation(ContainerName, BlobName));
 
             this.blobService.Setup(v => v.GetBlobLengthAndSetContentTypeAsync(ContainerName, BlobName, MimeType))
                 .ReturnsAsync(BlobSize).Verifiable();
 
-            this.fileRepository.Setup(v => v.SetFileUploadComplete(this.fileId, BlobSize))
+            this.fileRepository.Setup(v => v.SetFileUploadComplete(FileId, BlobSize))
                 .Returns(Task.FromResult(0))
                 .Verifiable();
 
@@ -75,7 +76,7 @@
                 .Returns(Task.FromResult(0))
                 .Verifiable();
 
-            await this.handler.HandleAsync(new CompleteFileUploadCommand(this.userId, this.fileId));
+            await this.handler.HandleAsync(new CompleteFileUploadCommand(Requester, FileId));
 
             this.fileRepository.Verify();
             this.blobService.Verify();
@@ -85,10 +86,10 @@
         [TestMethod]
         public async Task WhenCalledAndFileDoesNotBelogToUser_ItShouldNotUpdateStorageOrQueue()
         {
-            this.fileRepository.Setup(v => v.GetFileWaitingForUploadAsync(this.fileId))
-                .ReturnsAsync(new FileWaitingForUpload(this.fileId, new UserId(Guid.NewGuid()), "myfile", FileExtension, Purpose));
+            this.fileRepository.Setup(v => v.GetFileWaitingForUploadAsync(FileId))
+                .ReturnsAsync(new FileWaitingForUpload(FileId, new UserId(Guid.NewGuid()), "myfile", FileExtension, Purpose));
 
-            Func<Task> badMethodCall = () => this.handler.HandleAsync(new CompleteFileUploadCommand(this.userId, this.fileId));
+            Func<Task> badMethodCall = () => this.handler.HandleAsync(new CompleteFileUploadCommand(Requester, FileId));
 
             await badMethodCall.AssertExceptionAsync<UnauthorizedException>();
         }

@@ -17,7 +17,7 @@
     {
         private static readonly UserId UserId = new UserId(Guid.NewGuid());
         private static readonly SubscriptionId SubscriptionId = new SubscriptionId(Guid.NewGuid());
-        private static readonly GetCreatorStatusQuery Query = new GetCreatorStatusQuery(UserId);
+        private static readonly GetCreatorStatusQuery Query = new GetCreatorStatusQuery(Requester.Authenticated(UserId));
         private GetCreatorStatusQueryHandler target;
 
         [TestMethod]
