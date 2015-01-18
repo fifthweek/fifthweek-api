@@ -38,6 +38,18 @@
         }
 
         [TestMethod]
+        [ExpectedException(typeof(UnauthorizedException))]
+        public async Task WhenUnauthenticated_ItShouldThrowUnauthorizedException()
+        {
+            // Give side-effecting components strict mock behaviour.
+            var databaseContext = new Mock<IFifthweekDbContext>(MockBehavior.Strict);
+
+            this.target = new PostNoteCommandHandler(this.channelSecurity.Object, databaseContext.Object);
+
+            await this.target.HandleAsync(new PostNoteCommand(Requester.Unauthenticated, PostId, ChannelId, Note, null));
+        }
+
+        [TestMethod]
         public async Task WhenNotAllowedToPost_ItShouldReportAnError()
         {
             await this.NewTestDatabaseAsync(async testDatabase =>

@@ -34,6 +34,18 @@
         }
 
         [TestMethod]
+        [ExpectedException(typeof(UnauthorizedException))]
+        public async Task WhenUnauthenticated_ItShouldThrowUnauthorizedException()
+        {
+            // Give side-effecting components strict mock behaviour.
+            var databaseContext = new Mock<IFifthweekDbContext>(MockBehavior.Strict);
+
+            this.target = new CreateSubscriptionCommandHandler(this.subscriptionSecurity.Object, databaseContext.Object);
+
+            await this.target.HandleAsync(new CreateSubscriptionCommand(Requester.Unauthenticated, SubscriptionId, SubscriptionName, Tagline, BasePrice));
+        }
+
+        [TestMethod]
         public async Task WhenNotAllowedToCreate_ItShouldReportAnError()
         {
             await this.NewTestDatabaseAsync(async testDatabase =>

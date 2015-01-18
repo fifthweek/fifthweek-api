@@ -47,6 +47,13 @@
         }
 
         [TestMethod]
+        [ExpectedException(typeof(UnauthorizedException))]
+        public async Task WhenUnauthenticated_ItShouldThrowUnauthorizedException()
+        {
+            await this.handler.HandleAsync(new GenerateWritableBlobUriQuery(Requester.Unauthenticated, FileId, Purpose));
+        }
+
+        [TestMethod]
         public async Task WhenCalled_ItShouldCheckPermissionsAndUpdateTheDatabase()
         {
             this.fileSecurity.Setup(v => v.AssertUsageAllowedAsync(UserId, FileId))

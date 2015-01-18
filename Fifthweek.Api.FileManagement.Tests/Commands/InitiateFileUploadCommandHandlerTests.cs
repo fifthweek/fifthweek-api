@@ -4,6 +4,7 @@
     using System.Threading.Tasks;
 
     using Fifthweek.Api.Azure;
+    using Fifthweek.Api.Core;
     using Fifthweek.Api.FileManagement.Commands;
     using Fifthweek.Api.Identity.Membership;
 
@@ -11,9 +12,17 @@
 
     using Moq;
 
+    using Constants = Fifthweek.Api.FileManagement.Constants;
+
     [TestClass]
     public class InitiateFileUploadCommandHandlerTests
     {
+        private const string FilePath = @"C:\test\myfile.jpeg";
+        private const string Purpose = "purpose";
+
+        private static readonly UserId UserId = new UserId(Guid.NewGuid());
+        private static readonly FileId FileId = new FileId(Guid.NewGuid());
+
         private Mock<IFileRepository> fileRepository;
         private Mock<IBlobService> blobService;
         private InitiateFileUploadCommandHandler target;
@@ -29,11 +38,18 @@
         }
 
         [TestMethod]
+        [ExpectedException(typeof(UnauthorizedException))]
+        public async Task WhenUnauthenticated_ItShouldThrowUnauthorizedException()
+        {
+            await this.target.HandleAsync(new InitiateFileUploadCommand(Requester.Unauthenticated, FileId, FilePath, Purpose));
+        }
+
+        [TestMethod]
         public async Task WhenPassedValidInformation_ItShouldAddANewFile()
         {
             await this.TestCommandHandler(
-                new FileId(Guid.NewGuid()),
-                new UserId(Guid.NewGuid()),
+                FileId,
+                UserId,
                 @"C:\test\myfile.jpeg",
                 "purpose",
                 "myfile",
@@ -45,8 +61,8 @@
         public async Task WhenPassedFilePathWithNoExtension_ItShouldAddANewFileWithNoExtension()
         {
             await this.TestCommandHandler(
-                new FileId(Guid.NewGuid()),
-                new UserId(Guid.NewGuid()),
+                FileId,
+                UserId,
                 @"C:\test\myfile",
                 "purpose",
                 "myfile",
@@ -58,8 +74,8 @@
         public async Task WhenPassedHiddenFilePathWithNoExtension_ItShouldAddANewFileWithNoExtension()
         {
             await this.TestCommandHandler(
-                new FileId(Guid.NewGuid()),
-                new UserId(Guid.NewGuid()),
+                FileId,
+                UserId,
                 @"C:\test\.myfile",
                 "purpose",
                 "myfile",
@@ -71,8 +87,8 @@
         public async Task WhenPassedFileNameWithNoExtension_ItShouldAddANewFileWithNoExtension()
         {
             await this.TestCommandHandler(
-                new FileId(Guid.NewGuid()),
-                new UserId(Guid.NewGuid()),
+                FileId,
+                UserId,
                 @"hello",
                 "purpose",
                 "hello",
@@ -84,8 +100,8 @@
         public async Task WhenPassedFileWithMultiplePeriods_ItShouldExtractExtensionCorrectly()
         {
             await this.TestCommandHandler(
-                new FileId(Guid.NewGuid()),
-                new UserId(Guid.NewGuid()),
+                FileId,
+                UserId,
                 @"C:\test\myfile.isgreat.jpeg",
                 "purpose",
                 "myfile.isgreat",
@@ -97,8 +113,8 @@
         public async Task WhenPassedFileWithNullPurpose_ItShouldAddANewFile()
         {
             await this.TestCommandHandler(
-                new FileId(Guid.NewGuid()),
-                new UserId(Guid.NewGuid()),
+                FileId,
+                UserId,
                 @"C:\test\myfile.jpeg",
                 null,
                 "myfile",
@@ -110,8 +126,8 @@
         public async Task WhenPassedNullFilePath_ItShouldAddANewFile()
         {
             await this.TestCommandHandler(
-                new FileId(Guid.NewGuid()),
-                new UserId(Guid.NewGuid()),
+                FileId,
+                UserId,
                 null,
                 "purpose",
                 string.Empty,

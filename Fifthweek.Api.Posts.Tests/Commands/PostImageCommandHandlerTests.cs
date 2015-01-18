@@ -50,6 +50,13 @@
         }
 
         [TestMethod]
+        [ExpectedException(typeof(UnauthorizedException))]
+        public async Task WhenUnauthenticated_ItShouldThrowUnauthorizedException()
+        {
+            await this.target.HandleAsync(new PostImageCommand(Requester.Unauthenticated, PostId, CollectionId, FileId, Comment, ScheduleDate, IsQueued));
+        }
+
+        [TestMethod]
         public async Task WhenNotAllowedToPost_ItShouldReportAnError()
         {
             this.collectionSecurity.Setup(_ => _.AssertPostingAllowedAsync(UserId, CollectionId)).Throws<UnauthorizedException>();

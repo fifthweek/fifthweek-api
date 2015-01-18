@@ -33,6 +33,13 @@
         }
 
         [TestMethod]
+        [ExpectedException(typeof(UnauthorizedException))]
+        public async Task WhenUnauthenticated_ItShouldThrowUnauthorizedException()
+        {
+            await this.target.HandleAsync(new GetAccountSettingsQuery(Requester.Unauthenticated, UserId));
+        }
+
+        [TestMethod]
         public async Task WhenCalled_ItShouldCallTheAccountRepository()
         {
             this.accountRepository.Setup(v => v.GetAccountSettingsAsync(UserId))

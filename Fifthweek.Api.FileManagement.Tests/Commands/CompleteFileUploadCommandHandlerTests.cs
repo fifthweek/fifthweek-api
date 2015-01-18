@@ -55,6 +55,13 @@
         }
 
         [TestMethod]
+        [ExpectedException(typeof(UnauthorizedException))]
+        public async Task WhenUnauthenticated_ItShouldThrowUnauthorizedException()
+        {
+            await this.handler.HandleAsync(new CompleteFileUploadCommand(Requester.Unauthenticated, FileId));
+        }
+
+        [TestMethod]
         public async Task WhenCalled_ItShouldUpdateStorageAndQueue()
         {
             this.mimeTypeMap.Setup(_ => _.GetMimeType(FileExtension)).Returns(MimeType);

@@ -5,12 +5,15 @@
 
     using Dapper;
 
+    using Fifthweek.Api.Core;
     using Fifthweek.Api.Identity.Membership;
     using Fifthweek.Api.Persistence;
     using Fifthweek.Api.Persistence.Tests.Shared;
     using Fifthweek.Api.Subscriptions.Queries;
 
     using Microsoft.VisualStudio.TestTools.UnitTesting;
+
+    using Moq;
 
     [TestClass]
     public class GetCreatorStatusQueryHandlerTests : PersistenceTestsBase
@@ -19,6 +22,17 @@
         private static readonly SubscriptionId SubscriptionId = new SubscriptionId(Guid.NewGuid());
         private static readonly GetCreatorStatusQuery Query = new GetCreatorStatusQuery(Requester.Authenticated(UserId));
         private GetCreatorStatusQueryHandler target;
+
+        [TestMethod]
+        [ExpectedException(typeof(UnauthorizedException))]
+        public async Task WhenUnauthenticated_ItShouldThrowUnauthorizedException()
+        {
+            var databaseContext = new Mock<IFifthweekDbContext>(MockBehavior.Strict);
+
+            this.target = new GetCreatorStatusQueryHandler(databaseContext.Object);
+
+            await this.target.HandleAsync(new GetCreatorStatusQuery(Requester.Unauthenticated));
+        }
 
         [TestMethod]
         public async Task WhenAtLeastOneSubscriptionMatchesCreator_ItShouldReturnThatSubscriptionId()

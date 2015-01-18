@@ -29,10 +29,25 @@
         [TestInitialize]
         public void TestInitialize()
         {
-            this.accountRepository = new Mock<IAccountRepository>();
             this.fileSecurity = new Mock<IFileSecurity>();
 
+            // Give side-effecting components strict mock behaviour.
+            this.accountRepository = new Mock<IAccountRepository>(MockBehavior.Strict);
+
             this.target = new UpdateAccountSettingsCommandHandler(this.accountRepository.Object, this.fileSecurity.Object);
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(UnauthorizedException))]
+        public async Task WhenUnauthenticated_ItShouldThrowUnauthorizedException()
+        {
+            await this.target.HandleAsync(new UpdateAccountSettingsCommand(
+                Requester.Unauthenticated,
+                UserId,
+                Username,
+                Email,
+                Password,
+                FileId));
         }
 
         [TestMethod]

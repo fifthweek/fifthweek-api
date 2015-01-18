@@ -50,6 +50,26 @@
         }
 
         [TestMethod]
+        [ExpectedException(typeof(UnauthorizedException))]
+        public async Task WhenUnauthenticated_ItShouldThrowUnauthorizedException()
+        {
+            // Give side-effecting components strict mock behaviour.
+            var databaseContext = new Mock<IFifthweekDbContext>(MockBehavior.Strict);
+
+            this.target = new UpdateSubscriptionCommandHandler(this.subscriptionSecurity.Object, this.fileSecurity.Object, databaseContext.Object);
+            
+            await this.target.HandleAsync(new UpdateSubscriptionCommand(
+                Requester.Unauthenticated,
+                SubscriptionId,
+                SubscriptionName,
+                Tagline,
+                Introduction,
+                Description,
+                HeaderImageFileId,
+                Video));
+        }
+
+        [TestMethod]
         public async Task WhenNotAllowedToUpdate_ItShouldReportAnError()
         {
             await this.NewTestDatabaseAsync(async testDatabase =>
