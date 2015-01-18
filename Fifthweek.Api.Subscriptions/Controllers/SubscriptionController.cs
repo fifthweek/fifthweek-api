@@ -42,7 +42,7 @@
         [Route("{subscriptionId}")]
         public async Task<IHttpActionResult> PutSubscription(string subscriptionId, [FromBody]UpdatedSubscriptionData subscription)
         {
-            subscription.AssertUrlParameterProvided("subscriptionId");
+            subscriptionId.AssertUrlParameterProvided("subscriptionId");
             subscription.AssertBodyProvided("subscription");
             subscription.Parse();
 
