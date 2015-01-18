@@ -27,11 +27,11 @@
             subscription.AssertBodyProvided("subscription");
             subscription.Parse();
 
-            var authenticatedUserId = this.userContext.TryGetUserId();
+            var requester = this.userContext.GetRequester();
             var newSubscriptionId = new SubscriptionId(this.guidCreator.CreateSqlSequential());
 
             await this.createSubscription.HandleAsync(new CreateSubscriptionCommand(
-                authenticatedUserId,
+                requester,
                 newSubscriptionId,
                 subscription.SubscriptionNameObject,
                 subscription.TaglineObject,
@@ -48,11 +48,11 @@
             subscription.AssertBodyProvided("subscription");
             subscription.Parse();
 
-            var authenticatedUserId = this.userContext.TryGetUserId();
+            var requester = this.userContext.GetRequester();
             var subscriptionIdObject = new SubscriptionId(subscriptionId.DecodeGuid());
 
             await this.updateSubscription.HandleAsync(new UpdateSubscriptionCommand(
-                authenticatedUserId,
+                requester,
                 subscriptionIdObject,
                 subscription.SubscriptionNameObject,
                 subscription.TaglineObject,

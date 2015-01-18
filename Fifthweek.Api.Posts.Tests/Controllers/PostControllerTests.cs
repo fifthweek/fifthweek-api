@@ -113,7 +113,7 @@
             NewNoteData data)
         {
             return new PostNoteCommand(
-                userId,
+                Requester.Authenticated(userId),
                 postId,
                 new ChannelId(data.ChannelId.DecodeGuid()),
                 ValidNote.Parse(data.Note),
@@ -138,7 +138,7 @@
             NewImageData data)
         {
             return new PostImageCommand(
-                userId,
+                Requester.Authenticated(userId),
                 postId,
                 new CollectionId(data.CollectionId.DecodeGuid()), 
                 new FileId(data.ImageFileId.DecodeGuid()),
@@ -165,7 +165,7 @@
             NewFileData data)
         {
             return new PostFileCommand(
-                userId,
+                Requester.Authenticated(userId),
                 postId,
                 new CollectionId(data.CollectionId.DecodeGuid()),
                 new FileId(data.FileId.DecodeGuid()),

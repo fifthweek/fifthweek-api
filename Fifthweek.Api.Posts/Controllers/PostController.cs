@@ -4,6 +4,7 @@
     using System.Web.Http;
 
     using Fifthweek.Api.Core;
+    using Fifthweek.Api.Identity.Membership;
     using Fifthweek.Api.Identity.OAuth;
     using Fifthweek.Api.Posts.Commands;
     using Fifthweek.CodeGeneration;
@@ -24,11 +25,11 @@
             note.AssertBodyProvided("note");
             note.Parse();
 
-            var authenticatedUserId = this.userContext.TryGetUserId();
+            var requester = this.userContext.GetRequester();
             var newPostId = new PostId(this.guidCreator.CreateSqlSequential());
 
             await this.postNote.HandleAsync(new PostNoteCommand(
-                authenticatedUserId,
+                requester,
                 newPostId,
                 note.ChannelIdObject,
                 note.NoteObject,
@@ -44,11 +45,11 @@
             image.AssertBodyProvided("image");
             image.Parse();
 
-            var authenticatedUserId = this.userContext.TryGetUserId();
+            var requester = this.userContext.GetRequester();
             var newPostId = new PostId(this.guidCreator.CreateSqlSequential());
 
             await this.postImage.HandleAsync(new PostImageCommand(
-                authenticatedUserId,
+                requester,
                 newPostId,
                 image.CollectionIdObject,
                 image.ImageFileIdObject,
@@ -66,11 +67,11 @@
             file.AssertBodyProvided("file");
             file.Parse();
 
-            var authenticatedUserId = this.userContext.TryGetUserId();
+            var requester = this.userContext.GetRequester();
             var newPostId = new PostId(this.guidCreator.CreateSqlSequential());
 
             await this.postFile.HandleAsync(new PostFileCommand(
-                authenticatedUserId,
+                requester,
                 newPostId,
                 file.CollectionIdObject,
                 file.FileIdObject,

@@ -6,6 +6,7 @@
     using Fifthweek.Api.Collections;
     using Fifthweek.Api.Core;
     using Fifthweek.Api.FileManagement;
+    using Fifthweek.Api.Identity.Membership;
     using Fifthweek.CodeGeneration;
 
     [AutoConstructor]
@@ -20,9 +21,12 @@
         {
             command.AssertNotNull("command");
 
-            await this.collectionSecurity.AssertPostingAllowedAsync(command.Requester, command.CollectionId);
+            UserId authenticatedUserId;
+            command.Requester.AssertAuthenticated(out authenticatedUserId);
 
-            await this.fileSecurity.AssertUsageAllowedAsync(command.Requester, command.ImageFileId);
+            await this.collectionSecurity.AssertPostingAllowedAsync(authenticatedUserId, command.CollectionId);
+
+            await this.fileSecurity.AssertUsageAllowedAsync(authenticatedUserId, command.ImageFileId);
 
             await this.postFileTypeChecks.AssertValidForImagePostAsync(command.ImageFileId);
 

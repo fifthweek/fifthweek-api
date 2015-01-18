@@ -4,6 +4,7 @@
     using System.Threading.Tasks;
 
     using Fifthweek.Api.Core;
+    using Fifthweek.Api.Identity.Membership;
     using Fifthweek.Api.Persistence;
     using Fifthweek.Api.Subscriptions;
     using Fifthweek.CodeGeneration;
@@ -18,7 +19,10 @@
         {
             command.AssertNotNull("command");
 
-            await this.channelSecurity.AssertPostingAllowedAsync(command.Requester, command.ChannelId);
+            UserId authenticatedUserId;
+            command.Requester.AssertAuthenticated(out authenticatedUserId);
+
+            await this.channelSecurity.AssertPostingAllowedAsync(authenticatedUserId, command.ChannelId);
 
             await this.SchedulePostAsync(command);
         }

@@ -4,9 +4,9 @@
     using System.Threading.Tasks;
 
     using Fifthweek.Api.Core;
+    using Fifthweek.Api.Identity.Membership;
     using Fifthweek.Api.Persistence;
     using Fifthweek.CodeGeneration;
-    using Fifthweek.Shared;
 
     [AutoConstructor]
     public partial class CreateSubscriptionCommandHandler : ICommandHandler<CreateSubscriptionCommand>
@@ -16,22 +16,22 @@
 
         public async Task HandleAsync(CreateSubscriptionCommand command)
         {
-            if (command == null)
-            {
-                throw new ArgumentNullException("command");
-            }
+            command.AssertNotNull("command");
 
-            await this.subscriptionSecurity.AssertCreationAllowedAsync(command.Requester);
+            UserId authenticatedUserId;
+            command.Requester.AssertAuthenticated(out authenticatedUserId);
 
-            await this.CreateSubscriptionAsync(command);
+            await this.subscriptionSecurity.AssertCreationAllowedAsync(authenticatedUserId);
+
+            await this.CreateSubscriptionAsync(command, authenticatedUserId);
             await this.CreateChannelAsync(command);
         }
 
-        private Task CreateSubscriptionAsync(CreateSubscriptionCommand command)
+        private Task CreateSubscriptionAsync(CreateSubscriptionCommand command, UserId authenticatedUserId)
         {
             var subscription = new Subscription(
                 command.NewSubscriptionId.Value,
-                command.Requester.Value,
+                authenticatedUserId.Value,
                 null,
                 command.SubscriptionName.Value,
                 command.Tagline.Value,

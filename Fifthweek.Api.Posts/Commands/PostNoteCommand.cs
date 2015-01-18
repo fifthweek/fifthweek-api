@@ -9,7 +9,7 @@
     [AutoConstructor, AutoEqualityMembers]
     public partial class PostNoteCommand
     {
-        public UserId Requester { get; private set; }
+        public Requester Requester { get; private set; }
 
         public PostId NewPostId { get; private set; }
 

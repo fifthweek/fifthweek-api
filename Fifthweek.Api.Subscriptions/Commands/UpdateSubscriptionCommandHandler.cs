@@ -5,6 +5,7 @@
 
     using Fifthweek.Api.Core;
     using Fifthweek.Api.FileManagement;
+    using Fifthweek.Api.Identity.Membership;
     using Fifthweek.Api.Persistence;
     using Fifthweek.CodeGeneration;
 
@@ -19,9 +20,12 @@
         {
             command.AssertNotNull("command");
 
-            await this.subscriptionSecurity.AssertUpdateAllowedAsync(command.Requester, command.SubscriptionId);
+            UserId authenticatedUserId;
+            command.Requester.AssertAuthenticated(out authenticatedUserId);
 
-            await this.fileSecurity.AssertUsageAllowedAsync(command.Requester, command.HeaderImageFileId);
+            await this.subscriptionSecurity.AssertUpdateAllowedAsync(authenticatedUserId, command.SubscriptionId);
+
+            await this.fileSecurity.AssertUsageAllowedAsync(authenticatedUserId, command.HeaderImageFileId);
             
             await this.UpdateSubscriptionAsync(command);
         }

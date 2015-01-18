@@ -18,11 +18,12 @@
     public class CreateSubscriptionCommandHandlerTests : PersistenceTestsBase
     {
         private static readonly UserId UserId = new UserId(Guid.NewGuid());
+        private static readonly Requester Requester = Requester.Authenticated(UserId);
         private static readonly SubscriptionId SubscriptionId = new SubscriptionId(Guid.NewGuid());
         private static readonly ValidSubscriptionName SubscriptionName = ValidSubscriptionName.Parse("Lawrence");
         private static readonly ValidTagline Tagline = ValidTagline.Parse("Web Comics and More");
         private static readonly ValidChannelPriceInUsCentsPerWeek BasePrice = ValidChannelPriceInUsCentsPerWeek.Parse(10);
-        private static readonly CreateSubscriptionCommand Command = new CreateSubscriptionCommand(UserId, SubscriptionId, SubscriptionName, Tagline, BasePrice);
+        private static readonly CreateSubscriptionCommand Command = new CreateSubscriptionCommand(Requester, SubscriptionId, SubscriptionName, Tagline, BasePrice);
         private Mock<ISubscriptionSecurity> subscriptionSecurity;
         private CreateSubscriptionCommandHandler target;
 

@@ -20,12 +20,13 @@
     public class PostNoteCommandHandlerTests : PersistenceTestsBase
     {
         private static readonly UserId UserId = new UserId(Guid.NewGuid());
+        private static readonly Requester Requester = Requester.Authenticated(UserId);
         private static readonly ChannelId ChannelId = new ChannelId(Guid.NewGuid());
         private static readonly PostId PostId = new PostId(Guid.NewGuid());
         private static readonly ValidNote Note = ValidNote.Parse("Hey peeps!");
         private static readonly DateTime TwoDaysFromNow = DateTime.UtcNow.AddDays(2);
         private static readonly DateTime TwoDaysAgo = DateTime.UtcNow.AddDays(-2);
-        private static readonly PostNoteCommand ImmediatePostCommand = new PostNoteCommand(UserId, PostId, ChannelId, Note, null);
+        private static readonly PostNoteCommand ImmediatePostCommand = new PostNoteCommand(Requester, PostId, ChannelId, Note, null);
         private static readonly PostNoteCommand Command = ImmediatePostCommand; // Treat this as our canonical testing command.
         private Mock<IChannelSecurity> channelSecurity;
         private PostNoteCommandHandler target;
@@ -75,7 +76,7 @@
             await this.NewTestDatabaseAsync(async testDatabase =>
             {
                 this.target = new PostNoteCommandHandler(this.channelSecurity.Object, testDatabase.NewContext());
-                var scheduledPostCommand = new PostNoteCommand(UserId, PostId, ChannelId, Note, TwoDaysFromNow);
+                var scheduledPostCommand = new PostNoteCommand(Requester, PostId, ChannelId, Note, TwoDaysFromNow);
                 await this.CreateChannelAsync(UserId, ChannelId, testDatabase);
                 await testDatabase.TakeSnapshotAsync();
 
@@ -113,7 +114,7 @@
         [TestMethod]
         public async Task WhenDateIsProvidedAndIsInPast_ItShouldSchedulePostForNow()
         {
-            var misscheduledPostCommand = new PostNoteCommand(UserId, PostId, ChannelId, Note, TwoDaysAgo);
+            var misscheduledPostCommand = new PostNoteCommand(Requester, PostId, ChannelId, Note, TwoDaysAgo);
             await this.ItShouldSchedulePostForNow(misscheduledPostCommand);
         }
 

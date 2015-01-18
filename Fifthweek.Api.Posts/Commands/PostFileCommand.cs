@@ -10,7 +10,7 @@
     [AutoConstructor, AutoEqualityMembers]
     public partial class PostFileCommand
     {
-        public UserId Requester { get; private set; }
+        public Requester Requester { get; private set; }
 
         public PostId NewPostId { get; private set; }
 

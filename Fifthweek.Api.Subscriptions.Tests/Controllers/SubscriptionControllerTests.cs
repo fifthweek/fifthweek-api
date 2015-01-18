@@ -120,7 +120,7 @@
             NewSubscriptionData data)
         {
             return new CreateSubscriptionCommand(
-                userId,
+                Requester.Authenticated(userId),
                 subscriptionId,
                 ValidSubscriptionName.Parse(data.SubscriptionName),
                 ValidTagline.Parse(data.Tagline),
@@ -146,7 +146,7 @@
             UpdatedSubscriptionData data)
         {
             return new UpdateSubscriptionCommand(
-                userId,
+                Requester.Authenticated(userId),
                 subscriptionId,
                 ValidSubscriptionName.Parse(data.SubscriptionName),
                 ValidTagline.Parse(data.Tagline),

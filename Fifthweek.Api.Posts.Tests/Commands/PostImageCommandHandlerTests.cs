@@ -19,12 +19,13 @@
     {
         private const bool IsQueued = false;
         private static readonly UserId UserId = new UserId(Guid.NewGuid());
+        private static readonly Requester Requester = Requester.Authenticated(UserId);
         private static readonly CollectionId CollectionId = new CollectionId(Guid.NewGuid());
         private static readonly PostId PostId = new PostId(Guid.NewGuid());
         private static readonly FileId FileId = new FileId(Guid.NewGuid());
         private static readonly DateTime? ScheduleDate = null;
         private static readonly ValidComment Comment = ValidComment.Parse("Hey guys!");
-        private static readonly PostImageCommand Command = new PostImageCommand(UserId, PostId, CollectionId, FileId, Comment, ScheduleDate, IsQueued);
+        private static readonly PostImageCommand Command = new PostImageCommand(Requester, PostId, CollectionId, FileId, Comment, ScheduleDate, IsQueued);
         private Mock<ICollectionSecurity> collectionSecurity;
         private Mock<IFileSecurity> fileSecurity;
         private Mock<IPostFileTypeChecks> postFileTypeChecks;

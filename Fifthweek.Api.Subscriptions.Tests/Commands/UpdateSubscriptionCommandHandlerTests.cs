@@ -20,6 +20,7 @@
     public class UpdateSubscriptionCommandHandlerTests : PersistenceTestsBase
     {
         private static readonly UserId UserId = new UserId(Guid.NewGuid());
+        private static readonly Requester Requester = Requester.Authenticated(UserId);
         private static readonly SubscriptionId SubscriptionId = new SubscriptionId(Guid.NewGuid());
         private static readonly ValidSubscriptionName SubscriptionName = ValidSubscriptionName.Parse("Lawrence");
         private static readonly ValidTagline Tagline = ValidTagline.Parse("Web Comics and More");
@@ -28,7 +29,7 @@
         private static readonly FileId HeaderImageFileId = new FileId(Guid.NewGuid());
         private static readonly ValidExternalVideoUrl Video = ValidExternalVideoUrl.Parse("http://youtube.com/3135");
         private static readonly UpdateSubscriptionCommand Command = new UpdateSubscriptionCommand(
-            UserId, 
+            Requester, 
             SubscriptionId, 
             SubscriptionName, 
             Tagline, 

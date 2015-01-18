@@ -1,10 +1,7 @@
-﻿using Fifthweek.Api.Core;
-using Fifthweek.Api.Identity.Membership;
-
-namespace Fifthweek.Api.Subscriptions.Commands
+﻿namespace Fifthweek.Api.Subscriptions.Commands
 {
+    using Fifthweek.Api.Identity.Membership;
     using Fifthweek.CodeGeneration;
-    using Fifthweek.Shared;
 
     [AutoConstructor, AutoEqualityMembers]
     public partial class PromoteNewUserToCreatorCommand
