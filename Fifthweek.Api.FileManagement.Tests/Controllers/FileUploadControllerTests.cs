@@ -29,7 +29,7 @@ namespace Fifthweek.Api.FileManagement.Tests.Controllers
             var filePath = @"C:\test\myfile.jpeg";
             var purpose = "profile-picture";
 
-            this.userContext.Setup(v => v.TryGetUserId()).Returns(userId).Verifiable();
+            this.userContext.Setup(v => v.GetUserId()).Returns(userId).Verifiable();
             this.initiateFileUpload.Setup(v => v.HandleAsync(new InitiateFileUploadCommand(userId, fileId, filePath, purpose))).Returns(Task.FromResult(0)).Verifiable();
             this.generateWritableBlobUri.Setup(v => v.HandleAsync(new GenerateWritableBlobUriQuery(userId, fileId, purpose))).ReturnsAsync(uploadUri).Verifiable();
 
@@ -49,7 +49,7 @@ namespace Fifthweek.Api.FileManagement.Tests.Controllers
             var fileId = new FileId(this.guid);
             var userId = new UserId(Guid.NewGuid());
 
-            this.userContext.Setup(v => v.TryGetUserId()).Returns(userId).Verifiable();
+            this.userContext.Setup(v => v.GetUserId()).Returns(userId).Verifiable();
             this.completeFileUpload.Setup(v => v.HandleAsync(new CompleteFileUploadCommand(userId, fileId))).Returns(Task.FromResult(0)).Verifiable();
 
             await this.fileUploadController.PostUploadCompleteNotificationAsync(this.guid.EncodeGuid());

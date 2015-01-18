@@ -8,6 +8,7 @@
 
     using Fifthweek.Api.Identity.Membership;
     using Fifthweek.Api.Identity.OAuth;
+    using Fifthweek.Tests.Shared;
 
     using Microsoft.VisualStudio.TestTools.UnitTesting;
 
@@ -52,7 +53,22 @@
         }
 
         [TestMethod]
-        public void GetUsernameShouldReturnTheAuthenticatedUsername()
+        public void GetUsernameShouldThrowExceptionIfNotAuthenticated()
+        {
+            var principal = new Principal(null);
+            var un = "blah";
+            principal.ClaimsIdentity.AddClaim(new Claim(ClaimTypes.Name, un));
+
+            HttpContext.Current.User = principal;
+
+            ExpectedException.AssertException<InvalidOperationException>(() =>
+            {
+                this.userContext.GetUsername();
+            });
+        }
+
+        [TestMethod]
+        public void TryGetUsernameShouldReturnTheAuthenticatedUsername()
         {
             var principal = new Principal(AuthenticationType);
             var un = "blah";
@@ -66,7 +82,7 @@
         }
 
         [TestMethod]
-        public void GetUsernameShouldReturnNullIfNotAuthenticated()
+        public void TryGetUsernameShouldReturnNullIfNotAuthenticated()
         {
             var principal = new Principal(null);
             var un = "blah";
@@ -80,7 +96,22 @@
         }
 
         [TestMethod]
-        public void GetUserIdShouldReturnTheAuthenticatedUserId()
+        public void GetUserIdShouldThrowExceptionIfNotAuthenticated()
+        {
+            var principal = new Principal(null);
+            var id = Guid.NewGuid();
+            principal.ClaimsIdentity.AddClaim(new Claim(ClaimTypes.NameIdentifier, id.ToString()));
+
+            HttpContext.Current.User = principal;
+
+            ExpectedException.AssertException<InvalidOperationException>(() =>
+            {
+                this.userContext.GetUserId();
+            });
+        }
+
+        [TestMethod]
+        public void TryGetUserIdShouldReturnTheAuthenticatedUserId()
         {
             var principal = new Principal(AuthenticationType);
             var id = Guid.NewGuid();
@@ -94,7 +125,7 @@
         }
 
         [TestMethod]
-        public void GetUserIdShouldReturnNullIfNotAuthenticated()
+        public void TryGetUserIdShouldReturnNullIfNotAuthenticated()
         {
             var principal = new Principal(null);
             var id = Guid.NewGuid();

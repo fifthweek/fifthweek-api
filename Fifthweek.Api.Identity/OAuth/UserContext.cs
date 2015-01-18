@@ -18,6 +18,20 @@
             }
         }
 
+        public string GetUsername()
+        {
+            var username = this.TryGetUsername();
+
+            if (username == null)
+            {
+                // Could throw `UnauthorizedException`, but we should really be using `AuthorizeAttribute` on the controllers, so the
+                // following is not expected to occur.
+                throw new InvalidOperationException("The user is not authenticated.");
+            }
+
+            return username;
+        }
+
         public string TryGetUsername()
         {
             var identity = this.TryGetIdentity();
@@ -27,6 +41,20 @@
             }
 
             return null;
+        }
+
+        public UserId GetUserId()
+        {
+            var userId = this.TryGetUserId();
+
+            if (userId == null)
+            {
+                // Could throw `UnauthorizedException`, but we should really be using `AuthorizeAttribute` on the controllers, so the
+                // following is not expected to occur.
+                throw new InvalidOperationException("The user is not authenticated.");
+            }
+
+            return userId;
         }
 
         public UserId TryGetUserId()
