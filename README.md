@@ -22,10 +22,9 @@
 
 3.  Add the following environmental variables:
 
-        BROWSER_STACK_ACCESS_KEY=<password>
-        BROWSER_STACK_USERNAME=<email>
         SENDGRID_USERNAME=<password>
         SENDGRID_PASSWORD=<email>
+		StorageConnectionString=<DevAzureStorageConnectionString>
 
 4.  Run the Azure Emulators (required each time you start your machine):
 
