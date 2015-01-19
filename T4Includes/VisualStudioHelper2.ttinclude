@@ -86,6 +86,7 @@
             "System.Guid",
             "System.Boolean",
             "System.DateTime",
+			"System.TimeSpan",
             "System.Char",
             "System.Byte",
             "System.Decimal",

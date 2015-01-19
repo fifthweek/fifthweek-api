@@ -23,6 +23,6 @@
         public byte DayOfWeek { get; set; }
 
         [Key, Column(Order = 3)]
-        public DateTime TimeOfDay { get; set; }
+        public TimeSpan TimeOfDay { get; set; }
     }
 }

@@ -88,6 +88,7 @@
     <Compile Include="TestDatabase.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="UserTests.cs" />
+    <Compile Include="WeeklyReleaseTimeTests.cs" />
     <Compile Include="WildcardEntity.cs" />
   </ItemGroup>
   <ItemGroup>

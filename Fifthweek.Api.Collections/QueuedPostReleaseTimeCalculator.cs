@@ -21,6 +21,8 @@
             var weeklyReleaseIndex = zeroBasedQueuePosition % releasesPerWeek;
             var weeklyReleaseTime = ascendingWeeklyReleaseTimes[weeklyReleaseIndex];
 
+            // each time we hit a new week (i.e. go back in time).
+
             throw new NotImplementedException();
         }
     }

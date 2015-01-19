@@ -319,7 +319,7 @@ namespace Fifthweek.Api.Persistence
             System.Guid collectionId, 
             Fifthweek.Api.Persistence.Collection collection, 
             System.Byte dayOfWeek, 
-            System.DateTime timeOfDay)
+            System.TimeSpan timeOfDay)
         {
             if (collectionId == null)
             {
@@ -2403,7 +2403,7 @@ namespace Fifthweek.Api.Persistence
         public WeeklyReleaseTime(
             System.Guid collectionId, 
             System.Byte dayOfWeek, 
-            System.DateTime timeOfDay)
+            System.TimeSpan timeOfDay)
         {
             if (collectionId == null)
             {

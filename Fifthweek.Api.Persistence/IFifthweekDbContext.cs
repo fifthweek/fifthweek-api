@@ -23,6 +23,8 @@
 
         IDbSet<Collection> Collections { get; }
 
+        IDbSet<WeeklyReleaseTime> WeeklyReleaseTimes { get; }
+
         IDbSet<Post> Posts { get; }
 
         IDbSet<File> Files { get; set; }

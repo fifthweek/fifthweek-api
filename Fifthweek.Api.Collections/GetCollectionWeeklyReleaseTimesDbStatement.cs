@@ -1,5 +1,6 @@
 ﻿namespace Fifthweek.Api.Collections
 {
+    using System;
     using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
@@ -35,6 +36,13 @@
 
             // We sort in memory. It's only a small collection of items, so seems like an unnecessary potential strain to put on DB.
             var ascendingReleaseTimes = releaseTimes.OrderBy(_ => _.DayOfWeek).ThenBy(_ => _.TimeOfDay).ToList();
+
+            if (ascendingReleaseTimes.Count == 0)
+            {
+                throw new Exception(string.Format(
+                    "Collection does not have any weekly release times defined. At least one should exist per collection at all times. {0}",
+                    collectionId));
+            }
 
             return ascendingReleaseTimes;
         }

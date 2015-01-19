@@ -7,6 +7,7 @@
 
     /// <remarks>
     /// Entities are sorted ascending by: DayOfWeek, TimeOfDay.
+    /// Result will contain at least one element.
     /// </remarks>
     public interface IGetCollectionWeeklyReleaseTimesDbStatement
     {
