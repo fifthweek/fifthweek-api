@@ -28,7 +28,7 @@
 
             var parameters = new
             {
-                CollectionId = collectionId
+                CollectionId = collectionId.Value
             };
 
             return this.databaseContext.Database.Connection.ExecuteScalarAsync<int>(Sql, parameters);

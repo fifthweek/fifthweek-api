@@ -82,6 +82,7 @@
     <Compile Include="CollectionOwnershipTests.cs" />
     <Compile Include="CollectionSecurityTests.cs" />
     <Compile Include="Controllers\CollectionControllerTests.cs" />
+    <Compile Include="CountQueuedPostsInCollectionDbStatementTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Queries\GetLiveDateOfNewQueuedPostQueryHandlerTests.cs" />
   </ItemGroup>
@@ -105,6 +106,14 @@
     <ProjectReference Include="..\Fifthweek.Api.Persistence\Fifthweek.Api.Persistence.csproj">
       <Project>{9C18BEE3-FAB5-4A00-8A94-A1FAEA370175}</Project>
       <Name>Fifthweek.Api.Persistence</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Fifthweek.Api.Subscriptions\Fifthweek.Api.Subscriptions.csproj">
+      <Project>{5DB142B7-3152-447E-8816-33A90BA9EF76}</Project>
+      <Name>Fifthweek.Api.Subscriptions</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Fifthweek.Shared\Fifthweek.Shared.csproj">
+      <Project>{6d12ffbb-38e9-4722-a690-0f0338538ebc}</Project>
+      <Name>Fifthweek.Shared</Name>
     </ProjectReference>
     <ProjectReference Include="..\Fifthweek.Tests.Shared\Fifthweek.Tests.Shared.csproj">
       <Project>{85691D93-9C0C-498B-8341-1990BC8E24B2}</Project>

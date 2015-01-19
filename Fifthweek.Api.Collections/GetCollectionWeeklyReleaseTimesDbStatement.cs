@@ -28,7 +28,7 @@
 
             var parameters = new
             {
-                CollectionId = collectionId
+                CollectionId = collectionId.Value
             };
 
             var releaseTimes = await this.databaseContext.Database.Connection.QueryAsync<WeeklyReleaseTime>(Sql, parameters);
