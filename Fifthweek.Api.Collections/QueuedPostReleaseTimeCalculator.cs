@@ -5,12 +5,11 @@
     using System.Linq;
 
     using Fifthweek.Api.Core;
-    using Fifthweek.Api.Persistence;
     using Fifthweek.Shared;
 
     public class QueuedPostReleaseTimeCalculator : IQueuedPostReleaseTimeCalculator
     {
-        public DateTime GetQueuedPostReleaseTime(DateTime startTime, IReadOnlyList<WeeklyReleaseTime> ascendingWeeklyReleaseTimes, int zeroBasedQueuePosition)
+        public DateTime GetQueuedPostReleaseTime(DateTime startTime, IReadOnlyList<HourOfWeek> ascendingWeeklyReleaseTimes, int zeroBasedQueuePosition)
         {
             ascendingWeeklyReleaseTimes.AssertNotNull("ascendingWeeklyReleaseTimes");
 
@@ -18,6 +17,21 @@
             {
                 throw new ArgumentException("Must be UTC", "startTime");
             }
+
+            if (ascendingWeeklyReleaseTimes.Count == 0)
+            {
+                throw new ArgumentException("Must be non-empty", "ascendingWeeklyReleaseTimes");
+            }
+
+            ascendingWeeklyReleaseTimes.Aggregate((previous, current) =>
+            {
+                if (previous.Value >= current.Value)
+                {
+                    throw new ArgumentException("Must be in ascending order with no duplicates", "ascendingWeeklyReleaseTimes");
+                }
+
+                return current;
+            });
 
             if (zeroBasedQueuePosition < 0)
             {
@@ -37,11 +51,11 @@
             var fullWeeksOfBacklog = zeroBasedQueuePosition / releasesPerWeek;
 
             var currentHourOfWeek = new HourOfWeek(startTime).Value;
-            var nextReleaseTimeAfterCurrentTime = ascendingWeeklyReleaseTimes.FirstOrDefault(_ => _.HourOfWeek >= currentHourOfWeek);
+            var nextReleaseTimeAfterCurrentTime = ascendingWeeklyReleaseTimes.FirstOrDefault(_ => _.Value >= currentHourOfWeek);
             var startFromNextWeek = nextReleaseTimeAfterCurrentTime == null;
             var nextReleaseTimeIndex = startFromNextWeek ? 0 : ascendingWeeklyReleaseTimes.IndexOf(nextReleaseTimeAfterCurrentTime);
             var releaseTimeIndex = (nextReleaseTimeIndex + zeroBasedQueuePosition) % releasesPerWeek;
-            var releaseHourOfWeek = ascendingWeeklyReleaseTimes[releaseTimeIndex].HourOfWeek;
+            var releaseHourOfWeek = ascendingWeeklyReleaseTimes[releaseTimeIndex].Value;
 
             var releaseWeek = startTimeWithWeekReset.AddDays(fullWeeksOfBacklog * 7);
             var releaseTime = releaseWeek.AddHours(releaseHourOfWeek);

@@ -1,6 +1,7 @@
 ﻿namespace Fifthweek.Api.Collections.Queries
 {
     using System;
+    using System.Linq;
     using System.Threading.Tasks;
 
     using Fifthweek.Api.Core;
@@ -32,10 +33,11 @@
         {
             var hypotheticalNewPostQueuePosition = await this.countQueuedPostsInCollection.ExecuteAsync(collectionId);
             var ascendingWeeklyReleaseTimes = await this.getCollectionWeeklyReleaseTimes.ExecuteAsync(collectionId);
-
+            var ascendingHoursOfWeek = ascendingWeeklyReleaseTimes.Select(_ => new HourOfWeek(_.HourOfWeek)).ToList();
+            
             return this.queuedPostReleaseTimeCalculator.GetQueuedPostReleaseTime(
                 DateTime.UtcNow,
-                ascendingWeeklyReleaseTimes, 
+                ascendingHoursOfWeek, 
                 hypotheticalNewPostQueuePosition);
         }
     }

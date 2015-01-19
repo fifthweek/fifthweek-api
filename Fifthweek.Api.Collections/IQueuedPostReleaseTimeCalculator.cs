@@ -3,13 +3,11 @@
     using System;
     using System.Collections.Generic;
 
-    using Fifthweek.Api.Persistence;
-
     public interface IQueuedPostReleaseTimeCalculator
     {
         DateTime GetQueuedPostReleaseTime(
             DateTime startTime,
-            IReadOnlyList<WeeklyReleaseTime> ascendingWeeklyReleaseTimes,
+            IReadOnlyList<HourOfWeek> ascendingWeeklyReleaseTimes,
             int zeroBasedQueuePosition);
     }
 }

@@ -2,6 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Linq;
     using System.Threading.Tasks;
 
     using Fifthweek.Api.Collections.Queries;
@@ -23,6 +24,7 @@
         private static readonly Requester Requester = Requester.Authenticated(UserId);
         private static readonly CollectionId CollectionId = new CollectionId(Guid.NewGuid());
         private static readonly IReadOnlyList<WeeklyReleaseTime> SortedReleaseTimes = WeeklyReleaseTimeTests.GenerateSortedWeeklyReleaseTimes(CollectionId.Value, 10); 
+        private static readonly IReadOnlyList<HourOfWeek> SortedHoursOfWeek = SortedReleaseTimes.Select(_ => new HourOfWeek(_.HourOfWeek)).ToList();
         private static readonly DateTime CalculatedLiveDate = DateTime.UtcNow.AddDays(5);
         private Mock<ICollectionSecurity> collectionSecurity;
         private Mock<ICountQueuedPostsInCollectionDbStatement> countQueuedPostsInCollection;
@@ -63,13 +65,25 @@
         [TestMethod]
         public async Task ItShouldCalculateReleaseTimeOfHypotheticalNewQueuedPost()
         {
+            IReadOnlyList<HourOfWeek> actualReleaseTimes = null;
+
             this.countQueuedPostsInCollection.Setup(_ => _.ExecuteAsync(CollectionId)).ReturnsAsync(CurrentQueueSize);
             this.getCollectionWeeklyReleaseTimes.Setup(_ => _.ExecuteAsync(CollectionId)).ReturnsAsync(SortedReleaseTimes);
             this.queuedPostReleaseTimeCalculator
-                .Setup(_ => _.GetQueuedPostReleaseTime(It.IsAny<DateTime>(), SortedReleaseTimes, CurrentQueueSize))
-                .Returns(CalculatedLiveDate);
+                .Setup(_ => _.GetQueuedPostReleaseTime(
+                    It.IsAny<DateTime>(), 
+                    It.IsAny<IReadOnlyList<HourOfWeek>>(), 
+                    CurrentQueueSize))
+                .Returns(CalculatedLiveDate)
+                .Callback((DateTime dateTime, IReadOnlyList<HourOfWeek> releaseTimes, int size) =>
+                {
+                    actualReleaseTimes = releaseTimes;
+                });
 
             var result = await this.target.HandleAsync(new GetLiveDateOfNewQueuedPostQuery(Requester, CollectionId));
+
+            Assert.IsNotNull(actualReleaseTimes);
+            CollectionAssert.AreEqual(actualReleaseTimes.ToList(), SortedHoursOfWeek.ToList());
 
             Assert.AreEqual(result, CalculatedLiveDate);
         }

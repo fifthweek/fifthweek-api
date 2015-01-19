@@ -5,7 +5,7 @@
     using Fifthweek.CodeGeneration;
 
     /// <summary>
-    /// Hour of the week, represented as UTC, starting at Sunday as day 0, to be consistent with .NET's DayOfWeek enum.
+    /// Hour of the week, represented as UTC, starting with Sunday 00:00AM as 0, to be consistent with .NET's DayOfWeek enum.
     /// </summary>
     [AutoEqualityMembers]
     public partial class HourOfWeek
