@@ -3,6 +3,9 @@ setlocal
 git config --global user.email "services@fifthweek.com"
 git config --global user.name "%APPVEYOR_REPO_COMMIT_AUTHOR%"
 
+rmdir /s /q "%APPVEYOR_BUILD_FOLDER%\temp_dist"
+rmdir /s /q "%APPVEYOR_BUILD_FOLDER%\temp_dist_git_settings"
+
 mkdir "%APPVEYOR_BUILD_FOLDER%\temp_dist"
 mkdir "%APPVEYOR_BUILD_FOLDER%\temp_dist_git_settings"
 
