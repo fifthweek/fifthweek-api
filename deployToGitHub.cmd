@@ -1,3 +1,4 @@
+setlocal
 
 git config --global user.email "services@fifthweek.com"
 git config --global user.name "%APPVEYOR_REPO_COMMIT_AUTHOR%"
