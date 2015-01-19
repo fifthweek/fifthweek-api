@@ -10,35 +10,19 @@
 
         public static WeeklyReleaseTime UniqueEntity(Random random, Guid collectionId)
         {
-            var dayOfWeek = (byte)random.Next(7);
-            var timeOfDay = new TimeSpan(random.Next(24), random.Next(60), random.Next(60));
-            return new WeeklyReleaseTime(collectionId, null, dayOfWeek, timeOfDay);
+            var hourOfWeek = (byte)random.Next(DaysInWeek * HoursInDay);
+            return new WeeklyReleaseTime(collectionId, null, hourOfWeek);
         }
 
         /// <summary>
-        /// Create a sorted list of 36 release times using the most basic method possible.
+        /// Create a sorted list of release times.
         /// </summary>
-        public static IReadOnlyList<WeeklyReleaseTime> GenerateSortedWeeklyReleaseTimes(Guid collectionId)
+        public static IReadOnlyList<WeeklyReleaseTime> GenerateSortedWeeklyReleaseTimes(Guid collectionId, int count)
         {
             var releaseTimes = new List<WeeklyReleaseTime>();
-            for (var dayOfWeek = 0; dayOfWeek < DaysInWeek; dayOfWeek++)
+            for (byte hourOfWeek = 0; hourOfWeek < count; hourOfWeek++)
             {
-                if (dayOfWeek % 2 == 1)
-                {
-                    // 3 days (1, 3, 5)
-                    continue;
-                }
-
-                for (var hourOfDay = 0; hourOfDay < HoursInDay; hourOfDay++)
-                {
-                    if (hourOfDay % 2 == 1)
-                    {
-                        // 12 hours (1, 3, ..., 23)
-                        continue;
-                    }
-
-                    releaseTimes.Add(new WeeklyReleaseTime(collectionId, null, (byte)dayOfWeek, new TimeSpan(hourOfDay, 0, 0)));
-                }
+                releaseTimes.Add(new WeeklyReleaseTime(collectionId, null, hourOfWeek));
             }
 
             return releaseTimes;

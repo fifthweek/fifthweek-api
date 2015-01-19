@@ -318,28 +318,21 @@ namespace Fifthweek.Api.Persistence
         public WeeklyReleaseTime(
             System.Guid collectionId, 
             Fifthweek.Api.Persistence.Collection collection, 
-            System.Byte dayOfWeek, 
-            System.TimeSpan timeOfDay)
+            System.Byte hourOfWeek)
         {
             if (collectionId == null)
             {
                 throw new ArgumentNullException("collectionId");
             }
 
-            if (dayOfWeek == null)
+            if (hourOfWeek == null)
             {
-                throw new ArgumentNullException("dayOfWeek");
-            }
-
-            if (timeOfDay == null)
-            {
-                throw new ArgumentNullException("timeOfDay");
+                throw new ArgumentNullException("hourOfWeek");
             }
 
             this.CollectionId = collectionId;
             this.Collection = collection;
-            this.DayOfWeek = dayOfWeek;
-            this.TimeOfDay = timeOfDay;
+            this.HourOfWeek = hourOfWeek;
         }
     }
 
@@ -840,7 +833,7 @@ namespace Fifthweek.Api.Persistence
     {
         public override string ToString()
         {
-            return string.Format("WeeklyReleaseTime({0}, {1}, {2})", this.CollectionId == null ? "null" : this.CollectionId.ToString(), this.DayOfWeek == null ? "null" : this.DayOfWeek.ToString(), this.TimeOfDay == null ? "null" : this.TimeOfDay.ToString());
+            return string.Format("WeeklyReleaseTime({0}, {1})", this.CollectionId == null ? "null" : this.CollectionId.ToString(), this.HourOfWeek == null ? "null" : this.HourOfWeek.ToString());
         }
 
         public override bool Equals(object obj)
@@ -869,8 +862,7 @@ namespace Fifthweek.Api.Persistence
             {
                 int hashCode = 0;
                 hashCode = (hashCode * 397) ^ (this.CollectionId != null ? this.CollectionId.GetHashCode() : 0);
-                hashCode = (hashCode * 397) ^ (this.DayOfWeek != null ? this.DayOfWeek.GetHashCode() : 0);
-                hashCode = (hashCode * 397) ^ (this.TimeOfDay != null ? this.TimeOfDay.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.HourOfWeek != null ? this.HourOfWeek.GetHashCode() : 0);
                 return hashCode;
             }
         }
@@ -882,12 +874,7 @@ namespace Fifthweek.Api.Persistence
                 return false;
             }
 
-            if (!object.Equals(this.DayOfWeek, other.DayOfWeek))
-            {
-                return false;
-            }
-
-            if (!object.Equals(this.TimeOfDay, other.TimeOfDay))
+            if (!object.Equals(this.HourOfWeek, other.HourOfWeek))
             {
                 return false;
             }
@@ -2402,27 +2389,20 @@ namespace Fifthweek.Api.Persistence
 
         public WeeklyReleaseTime(
             System.Guid collectionId, 
-            System.Byte dayOfWeek, 
-            System.TimeSpan timeOfDay)
+            System.Byte hourOfWeek)
         {
             if (collectionId == null)
             {
                 throw new ArgumentNullException("collectionId");
             }
 
-            if (dayOfWeek == null)
+            if (hourOfWeek == null)
             {
-                throw new ArgumentNullException("dayOfWeek");
-            }
-
-            if (timeOfDay == null)
-            {
-                throw new ArgumentNullException("timeOfDay");
+                throw new ArgumentNullException("hourOfWeek");
             }
 
             this.CollectionId = collectionId;
-            this.DayOfWeek = dayOfWeek;
-            this.TimeOfDay = timeOfDay;
+            this.HourOfWeek = hourOfWeek;
         }
 
         public bool IdentityEquals(object other)
@@ -2452,12 +2432,7 @@ namespace Fifthweek.Api.Persistence
                 return false;
             }
 
-            if (!object.Equals(this.DayOfWeek, other.DayOfWeek))
-            {
-                return false;
-            }
-
-            if (!object.Equals(this.TimeOfDay, other.TimeOfDay))
+            if (!object.Equals(this.HourOfWeek, other.HourOfWeek))
             {
                 return false;
             }
@@ -2470,8 +2445,7 @@ namespace Fifthweek.Api.Persistence
         {
             Empty = 0,
             CollectionId = 1, 
-            DayOfWeek = 2, 
-            TimeOfDay = 4
+            HourOfWeek = 2
         }
     }
 
@@ -2488,7 +2462,7 @@ namespace Fifthweek.Api.Persistence
                 InsertStatement(idempotent), 
                 entities.Select(entity => new 
                 {
-                    entity.CollectionId, entity.DayOfWeek, entity.TimeOfDay
+                    entity.CollectionId, entity.HourOfWeek
                 }).ToArray(),
                 transaction);
         }
@@ -2504,7 +2478,7 @@ namespace Fifthweek.Api.Persistence
                 InsertStatement(idempotent), 
                 new 
                 {
-                    entity.CollectionId, entity.DayOfWeek, entity.TimeOfDay
+                    entity.CollectionId, entity.HourOfWeek
                 },
                 transaction);
         }
@@ -2535,7 +2509,7 @@ namespace Fifthweek.Api.Persistence
                 UpsertStatement(fields), 
                 new 
                 {
-                    entity.CollectionId, entity.DayOfWeek, entity.TimeOfDay
+                    entity.CollectionId, entity.HourOfWeek
                 },
                 transaction);
         }
@@ -2551,7 +2525,7 @@ namespace Fifthweek.Api.Persistence
 
         public static string InsertStatement(bool idempotent = true)
         {
-            const string insert = "INSERT INTO WeeklyReleaseTimes(CollectionId, DayOfWeek, TimeOfDay) VALUES(@CollectionId, @DayOfWeek, @TimeOfDay)";
+            const string insert = "INSERT INTO WeeklyReleaseTimes(CollectionId, HourOfWeek) VALUES(@CollectionId, @HourOfWeek)";
             return idempotent ? SqlStatementTemplates.IdempotentInsert(insert) : insert;
         }
 
@@ -2560,16 +2534,16 @@ namespace Fifthweek.Api.Persistence
             var sql = new System.Text.StringBuilder();
             sql.Append(
                 @"MERGE WeeklyReleaseTimes as Target
-                USING (VALUES (@CollectionId, @DayOfWeek, @TimeOfDay)) AS Source (CollectionId, DayOfWeek, TimeOfDay)
-                ON    (Target.CollectionId = Source.CollectionId AND Target.DayOfWeek = Source.DayOfWeek AND Target.TimeOfDay = Source.TimeOfDay)
+                USING (VALUES (@CollectionId, @HourOfWeek)) AS Source (CollectionId, HourOfWeek)
+                ON    (Target.CollectionId = Source.CollectionId AND Target.HourOfWeek = Source.HourOfWeek)
                 WHEN MATCHED THEN
                     UPDATE
                     SET        ");
             sql.AppendUpdateParameters(GetFieldNames(fields));
             sql.Append(
                 @" WHEN NOT MATCHED THEN
-                    INSERT  (CollectionId, DayOfWeek, TimeOfDay)
-                    VALUES  (Source.CollectionId, Source.DayOfWeek, Source.TimeOfDay);");
+                    INSERT  (CollectionId, HourOfWeek)
+                    VALUES  (Source.CollectionId, Source.HourOfWeek);");
             return sql.ToString();
         }
 
@@ -2578,7 +2552,7 @@ namespace Fifthweek.Api.Persistence
             var sql = new System.Text.StringBuilder();
             sql.Append("UPDATE WeeklyReleaseTimes SET ");
             sql.AppendUpdateParameters(GetFieldNames(fields));
-            sql.Append(" WHERE CollectionId = @CollectionId AND DayOfWeek = @DayOfWeek AND TimeOfDay = @TimeOfDay");
+            sql.Append(" WHERE CollectionId = @CollectionId AND HourOfWeek = @HourOfWeek");
             return sql.ToString();
         }
 
@@ -2592,12 +2566,7 @@ namespace Fifthweek.Api.Persistence
 
 			if (autoIncludePrimaryKeys)
 			{
-				fieldNames.Add("DayOfWeek");
-			}
-
-			if (autoIncludePrimaryKeys)
-			{
-				fieldNames.Add("TimeOfDay");
+				fieldNames.Add("HourOfWeek");
 			}
 
             return fieldNames;
@@ -2609,8 +2578,7 @@ namespace Fifthweek.Api.Persistence
 
 			// Assume we never want to exclude primary key field(s) from our input.
 			parameters.Add("CollectionId", entity.CollectionId);
-			parameters.Add("DayOfWeek", entity.DayOfWeek);
-			parameters.Add("TimeOfDay", entity.TimeOfDay);
+			parameters.Add("HourOfWeek", entity.HourOfWeek);
             return parameters;
         }
     }

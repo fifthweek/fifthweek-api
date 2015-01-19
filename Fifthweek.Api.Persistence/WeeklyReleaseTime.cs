@@ -19,10 +19,7 @@
         [Key, Column(Order = 1), Optional, NonEquatable]
         public Collection Collection { get; set; }
 
-        [Key, Column(Order = 2)]
-        public byte DayOfWeek { get; set; }
-
-        [Key, Column(Order = 3)]
-        public TimeSpan TimeOfDay { get; set; }
+        [Key, Column(Order = 2)] // Stored as UTC.
+        public byte HourOfWeek { get; set; }
     }
 }

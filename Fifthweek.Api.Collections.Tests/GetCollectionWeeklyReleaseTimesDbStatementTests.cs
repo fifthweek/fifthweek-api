@@ -19,7 +19,7 @@
         private static readonly UserId UserId = new UserId(Guid.NewGuid());
         private static readonly ChannelId ChannelId = new ChannelId(Guid.NewGuid());
         private static readonly CollectionId CollectionId = new CollectionId(Guid.NewGuid());
-        private static readonly IReadOnlyList<WeeklyReleaseTime> SortedReleaseTimes = WeeklyReleaseTimeTests.GenerateSortedWeeklyReleaseTimes(CollectionId.Value); 
+        private static readonly IReadOnlyList<WeeklyReleaseTime> SortedReleaseTimes = WeeklyReleaseTimeTests.GenerateSortedWeeklyReleaseTimes(CollectionId.Value, 10); 
         private GetCollectionWeeklyReleaseTimesDbStatement target;
 
         [TestMethod]

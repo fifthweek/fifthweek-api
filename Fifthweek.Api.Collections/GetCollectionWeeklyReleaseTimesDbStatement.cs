@@ -35,7 +35,7 @@
             var releaseTimes = await this.databaseContext.Database.Connection.QueryAsync<WeeklyReleaseTime>(Sql, parameters);
 
             // We sort in memory. It's only a small collection of items, so seems like an unnecessary potential strain to put on DB.
-            var ascendingReleaseTimes = releaseTimes.OrderBy(_ => _.DayOfWeek).ThenBy(_ => _.TimeOfDay).ToList();
+            var ascendingReleaseTimes = releaseTimes.OrderBy(_ => _.HourOfWeek).ToList();
 
             if (ascendingReleaseTimes.Count == 0)
             {

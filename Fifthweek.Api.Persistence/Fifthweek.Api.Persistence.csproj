@@ -184,6 +184,10 @@
     <Compile Include="Migrations\201501191353050_AddWeeklyReleaseTimes.Designer.cs">
       <DependentUpon>201501191353050_AddWeeklyReleaseTimes.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201501191503267_SetWeeklyReleaseTimesToUseHourOfWeek.cs" />
+    <Compile Include="Migrations\201501191503267_SetWeeklyReleaseTimesToUseHourOfWeek.Designer.cs">
+      <DependentUpon>201501191503267_SetWeeklyReleaseTimesToUseHourOfWeek.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Post.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -278,6 +282,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201501191353050_AddWeeklyReleaseTimes.resx">
       <DependentUpon>201501191353050_AddWeeklyReleaseTimes.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201501191503267_SetWeeklyReleaseTimesToUseHourOfWeek.resx">
+      <DependentUpon>201501191503267_SetWeeklyReleaseTimesToUseHourOfWeek.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>

@@ -22,7 +22,7 @@
         private static readonly UserId UserId = new UserId(Guid.NewGuid());
         private static readonly Requester Requester = Requester.Authenticated(UserId);
         private static readonly CollectionId CollectionId = new CollectionId(Guid.NewGuid());
-        private static readonly IReadOnlyList<WeeklyReleaseTime> SortedReleaseTimes = WeeklyReleaseTimeTests.GenerateSortedWeeklyReleaseTimes(CollectionId.Value); 
+        private static readonly IReadOnlyList<WeeklyReleaseTime> SortedReleaseTimes = WeeklyReleaseTimeTests.GenerateSortedWeeklyReleaseTimes(CollectionId.Value, 10); 
         private static readonly DateTime CalculatedLiveDate = DateTime.UtcNow.AddDays(5);
         private Mock<ICollectionSecurity> collectionSecurity;
         private Mock<ICountQueuedPostsInCollectionDbStatement> countQueuedPostsInCollection;

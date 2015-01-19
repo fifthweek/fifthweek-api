@@ -20,6 +20,7 @@
             var releasesPerWeek = ascendingWeeklyReleaseTimes.Count;
             var weeklyReleaseIndex = zeroBasedQueuePosition % releasesPerWeek;
             var weeklyReleaseTime = ascendingWeeklyReleaseTimes[weeklyReleaseIndex];
+            var nextReleaseTimeIndex = 0; // Determined using start time.
 
             // each time we hit a new week (i.e. go back in time).
 
