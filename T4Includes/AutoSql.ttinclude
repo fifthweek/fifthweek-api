@@ -67,6 +67,8 @@
 
         unifiedClass.WriteNamespaceAndClassWithSignature(" : IIdentityEquatable", () => {
 #>
+		public const string Table = "<#= tableName #>";
+
         public <#= unifiedClass.FirstCodeClass.Name #>(
 <#
     for (var i = 0; i < keyConstructorParameters.Count; i++)

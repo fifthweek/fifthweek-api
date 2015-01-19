@@ -89,6 +89,7 @@
       <DependentUpon>ClassAugmentation.tt</DependentUpon>
     </Compile>
     <Compile Include="Collection.cs" />
+    <Compile Include="DapperExtensions.cs" />
     <Compile Include="FifthweekDbContext.cs" />
     <Compile Include="FileState.cs" />
     <Compile Include="IdentityConfig.cs" />
@@ -186,6 +187,7 @@
     <Compile Include="File.cs" />
     <Compile Include="SqlStatementTemplates.cs" />
     <Compile Include="Subscription.cs" />
+    <Compile Include="WeeklyReleaseTime.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

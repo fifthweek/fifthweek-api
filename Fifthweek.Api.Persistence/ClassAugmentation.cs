@@ -303,6 +303,47 @@ namespace Fifthweek.Api.Persistence
     }
 
 }
+namespace Fifthweek.Api.Persistence
+{
+    using System;
+    using System.Linq;
+    using System.ComponentModel.DataAnnotations;
+    using System.ComponentModel.DataAnnotations.Schema;
+    using Fifthweek.Api.Core;
+    using Fifthweek.CodeGeneration;
+    using Fifthweek.Shared;
+    using Fifthweek.Api.Persistence.Identity;
+    public partial class WeeklyReleaseTime 
+    {
+        public WeeklyReleaseTime(
+            System.Guid collectionId, 
+            Fifthweek.Api.Persistence.Collection collection, 
+            System.Byte dayOfWeek, 
+            System.DateTime timeOfDay)
+        {
+            if (collectionId == null)
+            {
+                throw new ArgumentNullException("collectionId");
+            }
+
+            if (dayOfWeek == null)
+            {
+                throw new ArgumentNullException("dayOfWeek");
+            }
+
+            if (timeOfDay == null)
+            {
+                throw new ArgumentNullException("timeOfDay");
+            }
+
+            this.CollectionId = collectionId;
+            this.Collection = collection;
+            this.DayOfWeek = dayOfWeek;
+            this.TimeOfDay = timeOfDay;
+        }
+    }
+
+}
 
 namespace Fifthweek.Api.Persistence
 {
@@ -785,6 +826,77 @@ namespace Fifthweek.Api.Persistence
     }
 
 }
+namespace Fifthweek.Api.Persistence
+{
+    using System;
+    using System.Linq;
+    using System.ComponentModel.DataAnnotations;
+    using System.ComponentModel.DataAnnotations.Schema;
+    using Fifthweek.Api.Core;
+    using Fifthweek.CodeGeneration;
+    using Fifthweek.Shared;
+    using Fifthweek.Api.Persistence.Identity;
+    public partial class WeeklyReleaseTime 
+    {
+        public override string ToString()
+        {
+            return string.Format("WeeklyReleaseTime({0}, {1}, {2})", this.CollectionId == null ? "null" : this.CollectionId.ToString(), this.DayOfWeek == null ? "null" : this.DayOfWeek.ToString(), this.TimeOfDay == null ? "null" : this.TimeOfDay.ToString());
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj))
+            {
+                return false;
+            }
+
+            if (ReferenceEquals(this, obj))
+            {
+                return true;
+            }
+
+            if (obj.GetType() != this.GetType())
+            {
+                return false;
+            }
+
+            return this.Equals((WeeklyReleaseTime)obj);
+        }
+
+        public override int GetHashCode()
+        {
+            unchecked
+            {
+                int hashCode = 0;
+                hashCode = (hashCode * 397) ^ (this.CollectionId != null ? this.CollectionId.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.DayOfWeek != null ? this.DayOfWeek.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.TimeOfDay != null ? this.TimeOfDay.GetHashCode() : 0);
+                return hashCode;
+            }
+        }
+
+        protected bool Equals(WeeklyReleaseTime other)
+        {
+            if (!object.Equals(this.CollectionId, other.CollectionId))
+            {
+                return false;
+            }
+
+            if (!object.Equals(this.DayOfWeek, other.DayOfWeek))
+            {
+                return false;
+            }
+
+            if (!object.Equals(this.TimeOfDay, other.TimeOfDay))
+            {
+                return false;
+            }
+
+            return true;
+        }
+    }
+
+}
 namespace Fifthweek.Api.Persistence.Identity
 {
     using System;
@@ -990,6 +1102,8 @@ namespace Fifthweek.Api.Persistence
     using Fifthweek.Api.Persistence.Identity;
     public partial class Channel  : IIdentityEquatable
     {
+		public const string Table = "Channels";
+
         public Channel(
             System.Guid id)
         {
@@ -1212,6 +1326,8 @@ namespace Fifthweek.Api.Persistence
     using Fifthweek.Api.Persistence.Identity;
     public partial class Collection  : IIdentityEquatable
     {
+		public const string Table = "Collections";
+
         public Collection(
             System.Guid id)
         {
@@ -1423,6 +1539,8 @@ namespace Fifthweek.Api.Persistence
     using Fifthweek.Api.Persistence.Identity;
     public partial class File  : IIdentityEquatable
     {
+		public const string Table = "Files";
+
         public File(
             System.Guid id)
         {
@@ -1722,6 +1840,8 @@ namespace Fifthweek.Api.Persistence
     using Fifthweek.Api.Persistence.Identity;
     public partial class Post  : IIdentityEquatable
     {
+		public const string Table = "Posts";
+
         public Post(
             System.Guid id)
         {
@@ -1999,6 +2119,8 @@ namespace Fifthweek.Api.Persistence
     using Fifthweek.Api.Persistence.Identity;
     public partial class Subscription  : IIdentityEquatable
     {
+		public const string Table = "Subscriptions";
+
         public Subscription(
             System.Guid id)
         {
@@ -2264,6 +2386,235 @@ namespace Fifthweek.Api.Persistence
         }
     }
 }
+namespace Fifthweek.Api.Persistence
+{
+    using System;
+    using System.Linq;
+    using System.ComponentModel.DataAnnotations;
+    using System.ComponentModel.DataAnnotations.Schema;
+    using Fifthweek.Api.Core;
+    using Fifthweek.CodeGeneration;
+    using Fifthweek.Shared;
+    using Fifthweek.Api.Persistence.Identity;
+    public partial class WeeklyReleaseTime  : IIdentityEquatable
+    {
+		public const string Table = "WeeklyReleaseTimes";
+
+        public WeeklyReleaseTime(
+            System.Guid collectionId, 
+            System.Byte dayOfWeek, 
+            System.DateTime timeOfDay)
+        {
+            if (collectionId == null)
+            {
+                throw new ArgumentNullException("collectionId");
+            }
+
+            if (dayOfWeek == null)
+            {
+                throw new ArgumentNullException("dayOfWeek");
+            }
+
+            if (timeOfDay == null)
+            {
+                throw new ArgumentNullException("timeOfDay");
+            }
+
+            this.CollectionId = collectionId;
+            this.DayOfWeek = dayOfWeek;
+            this.TimeOfDay = timeOfDay;
+        }
+
+        public bool IdentityEquals(object other)
+        {
+            if (ReferenceEquals(null, other))
+            {
+                return false;
+            }
+
+            if (ReferenceEquals(this, other))
+            {
+                return true;
+            }
+
+            if (other.GetType() != this.GetType())
+            {
+                return false;
+            }
+
+            return this.IdentityEquals((WeeklyReleaseTime)other);
+        }
+
+        protected bool IdentityEquals(WeeklyReleaseTime other)
+        {
+            if (!object.Equals(this.CollectionId, other.CollectionId))
+            {
+                return false;
+            }
+
+            if (!object.Equals(this.DayOfWeek, other.DayOfWeek))
+            {
+                return false;
+            }
+
+            if (!object.Equals(this.TimeOfDay, other.TimeOfDay))
+            {
+                return false;
+            }
+
+            return true;
+        }
+
+        [Flags]
+        public enum Fields
+        {
+            Empty = 0,
+            CollectionId = 1, 
+            DayOfWeek = 2, 
+            TimeOfDay = 4
+        }
+    }
+
+    public static partial class WeeklyReleaseTimeExtensions
+    {
+        public static System.Threading.Tasks.Task InsertAsync(
+            this System.Data.Common.DbConnection connection, 
+            System.Collections.Generic.IEnumerable<WeeklyReleaseTime> entities, 
+            bool idempotent = true, 
+            System.Data.IDbTransaction transaction = null)
+        {
+            return Dapper.SqlMapper.ExecuteAsync(
+                connection, 
+                InsertStatement(idempotent), 
+                entities.Select(entity => new 
+                {
+                    entity.CollectionId, entity.DayOfWeek, entity.TimeOfDay
+                }).ToArray(),
+                transaction);
+        }
+
+        public static System.Threading.Tasks.Task InsertAsync(
+            this System.Data.Common.DbConnection connection, 
+            WeeklyReleaseTime entity,
+            bool idempotent = true, 
+            System.Data.IDbTransaction transaction = null)
+        {
+            return Dapper.SqlMapper.ExecuteAsync(
+                connection, 
+                InsertStatement(idempotent), 
+                new 
+                {
+                    entity.CollectionId, entity.DayOfWeek, entity.TimeOfDay
+                },
+                transaction);
+        }
+
+        public static System.Threading.Tasks.Task InsertAsync(
+            this System.Data.Common.DbConnection connection,
+            WeeklyReleaseTime entity,
+            string selectValuesForInsertStatement,
+            WeeklyReleaseTime.Fields selectedFields,
+            bool idempotent = true,
+            System.Data.IDbTransaction transaction = null)
+        {
+            return Dapper.SqlMapper.ExecuteAsync(
+                connection,
+                selectValuesForInsertStatement + System.Environment.NewLine + InsertStatement(idempotent),
+                MaskParameters(entity, selectedFields, true),
+                transaction);
+        }
+
+        public static System.Threading.Tasks.Task UpsertAsync(
+            this System.Data.Common.DbConnection connection, 
+            WeeklyReleaseTime entity, 
+            WeeklyReleaseTime.Fields fields,
+            System.Data.IDbTransaction transaction = null)
+        {
+            return Dapper.SqlMapper.ExecuteAsync(
+                connection, 
+                UpsertStatement(fields), 
+                new 
+                {
+                    entity.CollectionId, entity.DayOfWeek, entity.TimeOfDay
+                },
+                transaction);
+        }
+
+        public static System.Threading.Tasks.Task UpdateAsync(
+            this System.Data.Common.DbConnection connection, 
+            WeeklyReleaseTime entity, 
+            WeeklyReleaseTime.Fields fields,
+            System.Data.IDbTransaction transaction = null)
+        {
+            return Dapper.SqlMapper.ExecuteAsync(connection, UpdateStatement(fields), MaskParameters(entity, fields, false), transaction);
+        }
+
+        public static string InsertStatement(bool idempotent = true)
+        {
+            const string insert = "INSERT INTO WeeklyReleaseTimes(CollectionId, DayOfWeek, TimeOfDay) VALUES(@CollectionId, @DayOfWeek, @TimeOfDay)";
+            return idempotent ? SqlStatementTemplates.IdempotentInsert(insert) : insert;
+        }
+
+        public static string UpsertStatement(WeeklyReleaseTime.Fields fields)
+        {
+            var sql = new System.Text.StringBuilder();
+            sql.Append(
+                @"MERGE WeeklyReleaseTimes as Target
+                USING (VALUES (@CollectionId, @DayOfWeek, @TimeOfDay)) AS Source (CollectionId, DayOfWeek, TimeOfDay)
+                ON    (Target.CollectionId = Source.CollectionId AND Target.DayOfWeek = Source.DayOfWeek AND Target.TimeOfDay = Source.TimeOfDay)
+                WHEN MATCHED THEN
+                    UPDATE
+                    SET        ");
+            sql.AppendUpdateParameters(GetFieldNames(fields));
+            sql.Append(
+                @" WHEN NOT MATCHED THEN
+                    INSERT  (CollectionId, DayOfWeek, TimeOfDay)
+                    VALUES  (Source.CollectionId, Source.DayOfWeek, Source.TimeOfDay);");
+            return sql.ToString();
+        }
+
+        public static string UpdateStatement(WeeklyReleaseTime.Fields fields)
+        {
+            var sql = new System.Text.StringBuilder();
+            sql.Append("UPDATE WeeklyReleaseTimes SET ");
+            sql.AppendUpdateParameters(GetFieldNames(fields));
+            sql.Append(" WHERE CollectionId = @CollectionId AND DayOfWeek = @DayOfWeek AND TimeOfDay = @TimeOfDay");
+            return sql.ToString();
+        }
+
+        private static System.Collections.Generic.IReadOnlyList<string> GetFieldNames(WeeklyReleaseTime.Fields fields, bool autoIncludePrimaryKeys = true)
+        {
+            var fieldNames = new System.Collections.Generic.List<string>();
+			if (autoIncludePrimaryKeys)
+			{
+				fieldNames.Add("CollectionId");
+			}
+
+			if (autoIncludePrimaryKeys)
+			{
+				fieldNames.Add("DayOfWeek");
+			}
+
+			if (autoIncludePrimaryKeys)
+			{
+				fieldNames.Add("TimeOfDay");
+			}
+
+            return fieldNames;
+        }
+
+        private static object MaskParameters(WeeklyReleaseTime entity, WeeklyReleaseTime.Fields fields, bool excludeSpecified)
+        {
+            var parameters = new Dapper.DynamicParameters();
+
+			// Assume we never want to exclude primary key field(s) from our input.
+			parameters.Add("CollectionId", entity.CollectionId);
+			parameters.Add("DayOfWeek", entity.DayOfWeek);
+			parameters.Add("TimeOfDay", entity.TimeOfDay);
+            return parameters;
+        }
+    }
+}
 namespace Fifthweek.Api.Persistence.Identity
 {
     using System;
@@ -2274,6 +2625,8 @@ namespace Fifthweek.Api.Persistence.Identity
     using Microsoft.AspNet.Identity.EntityFramework;
     public partial class FifthweekUser  : IIdentityEquatable
     {
+		public const string Table = "AspNetUsers";
+
         public FifthweekUser(
             System.Guid id)
         {

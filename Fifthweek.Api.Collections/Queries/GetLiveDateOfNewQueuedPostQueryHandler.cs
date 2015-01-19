@@ -11,6 +11,9 @@
     public partial class GetLiveDateOfNewQueuedPostQueryHandler : IQueryHandler<GetLiveDateOfNewQueuedPostQuery, DateTime>
     {
         private readonly ICollectionSecurity collectionSecurity;
+        private readonly ICountQueuedPostsInCollectionDbStatement countQueuedPostsInCollection;
+        private readonly IGetCollectionWeeklyReleaseTimesDbStatement getCollectionWeeklyReleaseTimes;
+        private readonly IQueuedPostReleaseTimeCalculator queuedPostReleaseTimeCalculator;
 
         public async Task<DateTime> HandleAsync(GetLiveDateOfNewQueuedPostQuery query)
         {
@@ -22,12 +25,18 @@
             // This query is only raised when a user is about to post something, so request same privileges.
             await this.collectionSecurity.AssertPostingAllowedAsync(authenticatedUserId, query.CollectionId);
 
-            return await this.GetLiveDateAsync();
+            return await this.GetLiveDateAsync(query.CollectionId);
         }
 
-        private Task<DateTime> GetLiveDateAsync()
+        private async Task<DateTime> GetLiveDateAsync(CollectionId collectionId)
         {
-            throw new NotImplementedException();
+            var hypotheticalNewPostQueuePosition = await this.countQueuedPostsInCollection.ExecuteAsync(collectionId);
+            var ascendingWeeklyReleaseTimes = await this.getCollectionWeeklyReleaseTimes.ExecuteAsync(collectionId);
+
+            return this.queuedPostReleaseTimeCalculator.GetQueuedPostReleaseTime(
+                DateTime.UtcNow,
+                ascendingWeeklyReleaseTimes, 
+                hypotheticalNewPostQueuePosition);
         }
     }
 }
