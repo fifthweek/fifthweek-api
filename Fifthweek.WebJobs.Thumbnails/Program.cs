@@ -21,7 +21,7 @@
         public static Task CreateThumbnailAsync(
             [QueueTrigger(Constants.ThumbnailsQueueName)] CreateThumbnailMessage message,
             [Blob("{ContainerName}/{InputBlobName}", FileAccess.Read)] Stream input,
-            [Blob("{ContainerName}/{OutputBlobName}", FileAccess.Write)] CloudBlockBlob output,
+            [Blob("{ContainerName}/{OutputBlobName}")] CloudBlockBlob output,
             TextWriter logger,
             CancellationToken cancellationToken)
         {
@@ -35,7 +35,7 @@
 
         public static Task ProcessPoisonMessage(
             [QueueTrigger(Constants.ThumbnailsQueueName + "-poison")] CreateThumbnailMessage message,
-            [Blob("{ContainerName}/{OutputBlobName}", FileAccess.Write)] CloudBlockBlob output,
+            [Blob("{ContainerName}/{OutputBlobName}")] CloudBlockBlob output,
             TextWriter logger,
             CancellationToken cancellationToken)
         {

@@ -11,7 +11,7 @@
 
     using Microsoft.Azure.WebJobs;
 
-    internal class Program
+    public class Program
     {
         private static readonly IFileProcessor FileProcessor = new FileProcessor(
             new FilePurposeTasks(), new CloudQueueResolver());
