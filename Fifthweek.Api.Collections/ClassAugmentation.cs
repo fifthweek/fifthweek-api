@@ -123,6 +123,8 @@ namespace Fifthweek.Api.Collections.Queries
     using Fifthweek.Api.Identity.Membership;
     using Fifthweek.CodeGeneration;
     using System.Threading.Tasks;
+    using System.Collections.Generic;
+    using Fifthweek.Api.Persistence;
     public partial class GetLiveDateOfNewQueuedPostQuery 
     {
         public GetLiveDateOfNewQueuedPostQuery(
@@ -312,6 +314,8 @@ namespace Fifthweek.Api.Collections.Queries
     using Fifthweek.Api.Identity.Membership;
     using Fifthweek.CodeGeneration;
     using System.Threading.Tasks;
+    using System.Collections.Generic;
+    using Fifthweek.Api.Persistence;
     public partial class GetLiveDateOfNewQueuedPostQuery 
     {
         public override string ToString()
@@ -358,6 +362,66 @@ namespace Fifthweek.Api.Collections.Queries
             }
 
             if (!object.Equals(this.CollectionId, other.CollectionId))
+            {
+                return false;
+            }
+
+            return true;
+        }
+    }
+
+}
+namespace Fifthweek.Api.Collections
+{
+    using System;
+    using System.Linq;
+    using Fifthweek.CodeGeneration;
+    using System.Threading.Tasks;
+    using Dapper;
+    using Fifthweek.Api.Core;
+    using Fifthweek.Api.Identity.Membership;
+    using Fifthweek.Api.Persistence;
+    using System.Collections.Generic;
+    public partial class HourOfWeek 
+    {
+        public override string ToString()
+        {
+            return string.Format("HourOfWeek({0})", this.Value == null ? "null" : this.Value.ToString());
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj))
+            {
+                return false;
+            }
+
+            if (ReferenceEquals(this, obj))
+            {
+                return true;
+            }
+
+            if (obj.GetType() != this.GetType())
+            {
+                return false;
+            }
+
+            return this.Equals((HourOfWeek)obj);
+        }
+
+        public override int GetHashCode()
+        {
+            unchecked
+            {
+                int hashCode = 0;
+                hashCode = (hashCode * 397) ^ (this.Value != null ? this.Value.GetHashCode() : 0);
+                return hashCode;
+            }
+        }
+
+        protected bool Equals(HourOfWeek other)
+        {
+            if (!object.Equals(this.Value, other.Value))
             {
                 return false;
             }

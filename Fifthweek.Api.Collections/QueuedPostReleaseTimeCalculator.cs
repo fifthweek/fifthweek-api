@@ -2,9 +2,11 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Linq;
 
     using Fifthweek.Api.Core;
     using Fifthweek.Api.Persistence;
+    using Fifthweek.Shared;
 
     public class QueuedPostReleaseTimeCalculator : IQueuedPostReleaseTimeCalculator
     {
@@ -12,19 +14,39 @@
         {
             ascendingWeeklyReleaseTimes.AssertNotNull("ascendingWeeklyReleaseTimes");
 
+            if (startTime.Kind != DateTimeKind.Utc)
+            {
+                throw new ArgumentException("Must be UTC", "startTime");
+            }
+
             if (zeroBasedQueuePosition < 0)
             {
                 throw new ArgumentOutOfRangeException("zeroBasedQueuePosition");
             }
 
+            var startTimeWithWeekReset = new DateTime(
+                startTime.Year,
+                startTime.Month,
+                (startTime.Day / 7) * 7,
+                0,
+                0,
+                0,
+                DateTimeKind.Utc);
+
             var releasesPerWeek = ascendingWeeklyReleaseTimes.Count;
-            var weeklyReleaseIndex = zeroBasedQueuePosition % releasesPerWeek;
-            var weeklyReleaseTime = ascendingWeeklyReleaseTimes[weeklyReleaseIndex];
-            var nextReleaseTimeIndex = 0; // Determined using start time.
+            var fullWeeksOfBacklog = zeroBasedQueuePosition / releasesPerWeek;
 
-            // each time we hit a new week (i.e. go back in time).
+            var currentHourOfWeek = new HourOfWeek(startTime).Value;
+            var nextReleaseTimeAfterCurrentTime = ascendingWeeklyReleaseTimes.FirstOrDefault(_ => _.HourOfWeek >= currentHourOfWeek);
+            var startFromNextWeek = nextReleaseTimeAfterCurrentTime == null;
+            var nextReleaseTimeIndex = startFromNextWeek ? 0 : ascendingWeeklyReleaseTimes.IndexOf(nextReleaseTimeAfterCurrentTime);
+            var releaseTimeIndex = (nextReleaseTimeIndex + zeroBasedQueuePosition) % releasesPerWeek;
+            var releaseHourOfWeek = ascendingWeeklyReleaseTimes[releaseTimeIndex].HourOfWeek;
 
-            throw new NotImplementedException();
+            var releaseWeek = startTimeWithWeekReset.AddDays(fullWeeksOfBacklog * 7);
+            var releaseTime = releaseWeek.AddHours(releaseHourOfWeek);
+
+            return releaseTime;
         }
     }
 }

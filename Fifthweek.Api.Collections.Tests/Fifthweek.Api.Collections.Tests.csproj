@@ -84,8 +84,10 @@
     <Compile Include="Controllers\CollectionControllerTests.cs" />
     <Compile Include="CountQueuedPostsInCollectionDbStatementTests.cs" />
     <Compile Include="GetCollectionWeeklyReleaseTimesDbStatementTests.cs" />
+    <Compile Include="HourOfWeekTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Queries\GetLiveDateOfNewQueuedPostQueryHandlerTests.cs" />
+    <Compile Include="QueuedPostReleaseTimeCalculatorTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Fifthweek.Api.Collections\Fifthweek.Api.Collections.csproj">

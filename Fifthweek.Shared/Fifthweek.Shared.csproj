@@ -49,6 +49,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>ClassAugmentation.tt</DependentUpon>
     </Compile>
+    <Compile Include="CollectionExtensions.cs" />
     <Compile Include="FilePurpose.cs" />
     <Compile Include="FilePurposes.cs" />
     <Compile Include="IAutofacRegistration.cs" />

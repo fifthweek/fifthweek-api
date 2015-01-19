@@ -79,6 +79,7 @@
     <Compile Include="Controllers\CollectionController.cs" />
     <Compile Include="CountQueuedPostsInCollectionDbStatement.cs" />
     <Compile Include="GetCollectionWeeklyReleaseTimesDbStatement.cs" />
+    <Compile Include="HourOfWeek.cs" />
     <Compile Include="ICollectionOwnership.cs" />
     <Compile Include="ICollectionSecurity.cs" />
     <Compile Include="ICountQueuedPostsInCollectionDbStatement.cs" />
