@@ -8,6 +8,7 @@
     using Fifthweek.Azure;
     using Fifthweek.CodeGeneration;
     using Fifthweek.WebJobs.Files.Shared;
+    using Fifthweek.WebJobs.Shared;
 
     using Microsoft.Azure.WebJobs;
 
@@ -21,7 +22,7 @@
         public async Task ProcessFileAsync(
             ProcessFileMessage message,
             IBinder binder,
-            TextWriter logger,
+            ILogger logger,
             CancellationToken cancellationToken)
         {
             var tasks = this.filePurposeTasks.GetTasks(message.Purpose);
@@ -33,16 +34,17 @@
                 {
                     cancellationToken.ThrowIfCancellationRequested();
 
-                    if (queue == null || queue.Name != task.QueueName)
+                    var queueName = task.QueueName;
+                    if (queue == null || queue.Name != queueName)
                     {
-                        queue = await this.cloudQueueResolver.GetQueueAsync(binder, task);
+                        queue = await this.cloudQueueResolver.GetQueueAsync(binder, queueName);
                     }
 
                     await task.HandleAsync(queue, message);
                 }
                 catch (Exception t)
                 {
-                    logger.WriteLine("Failed to handle file task of type '{0}': {1}", task.GetType().Name, t);
+                    logger.Error("Failed to handle file task of type '{0}': {1}", task.GetType().Name, t);
                     throw;
                 }
             }

@@ -47,11 +47,11 @@
             {
                 if (desiredAspectRatio > currentAspectRatio)
                 {
-                    input.Crop(width, (int)Math.Round(height * currentAspectRatio / desiredAspectRatio));
+                    input.Crop(width, (int)Math.Round(input.Height * currentAspectRatio / desiredAspectRatio));
                 }
                 else
                 {
-                    input.Crop((int)Math.Round(width * desiredAspectRatio / currentAspectRatio), height);
+                    input.Crop((int)Math.Round(input.Width * desiredAspectRatio / currentAspectRatio), height);
                 }
             }
 

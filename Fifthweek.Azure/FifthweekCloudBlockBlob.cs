@@ -1,6 +1,8 @@
 namespace Fifthweek.Azure
 {
     using System;
+    using System.IO;
+    using System.Threading;
     using System.Threading.Tasks;
 
     using Microsoft.WindowsAzure.Storage.Blob;
@@ -46,9 +48,24 @@ namespace Fifthweek.Azure
             return this.blob.FetchAttributesAsync();
         }
 
+        public Task FetchAttributesAsync(CancellationToken cancellationToken)
+        {
+            return this.blob.FetchAttributesAsync(cancellationToken);
+        }
+
         public Task SetPropertiesAsync()
         {
             return this.blob.SetPropertiesAsync();
+        }
+
+        public Task SetPropertiesAsync(CancellationToken cancellationToken)
+        {
+            return this.blob.SetPropertiesAsync(cancellationToken);
+        }
+
+        public Task<CloudBlobStream> OpenWriteAsync(CancellationToken cancellationToken)
+        {
+            return this.blob.OpenWriteAsync(cancellationToken);
         }
     }
 }

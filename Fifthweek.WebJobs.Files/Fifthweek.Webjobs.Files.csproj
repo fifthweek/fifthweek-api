@@ -114,6 +114,10 @@
       <Project>{227ae1d7-e7a5-44a2-87cc-82eb29033b0d}</Project>
       <Name>Fifthweek.WebJobs.Files.Shared</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Fifthweek.WebJobs.Shared\Fifthweek.WebJobs.Shared.csproj">
+      <Project>{EFBACD48-98A1-4FA3-9BEA-E13414141484}</Project>
+      <Name>Fifthweek.WebJobs.Shared</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Fifthweek.WebJobs.Thumbnails.Shared\Fifthweek.WebJobs.Thumbnails.Shared.csproj">
       <Project>{36d94253-0a3d-4062-9fb9-635b402c68c6}</Project>
       <Name>Fifthweek.WebJobs.Thumbnails.Shared</Name>

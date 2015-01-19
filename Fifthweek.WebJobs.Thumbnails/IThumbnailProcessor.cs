@@ -4,6 +4,8 @@
     using System.Threading;
     using System.Threading.Tasks;
 
+    using Fifthweek.Azure;
+    using Fifthweek.WebJobs.Shared;
     using Fifthweek.WebJobs.Thumbnails.Shared;
 
     using Microsoft.WindowsAzure.Storage.Blob;
@@ -13,14 +15,14 @@
         Task CreateThumbnailAsync(
             CreateThumbnailMessage thumbnail,
             Stream input,
-            CloudBlockBlob output,
-            TextWriter logger,
+            ICloudBlockBlob output,
+            ILogger logger,
             CancellationToken cancellationToken);
 
         Task CreatePoisonThumbnailAsync(
             CreateThumbnailMessage thumbnail,
-            CloudBlockBlob output,
-            TextWriter logger,
+            ICloudBlockBlob output,
+            ILogger logger,
             CancellationToken cancellationToken);
     }
 }

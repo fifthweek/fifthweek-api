@@ -8,7 +8,7 @@
     <OutputType>Exe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Fifthweek.WebJobs.Thumbnails</RootNamespace>
-    <AssemblyName>Fifthweek.WebJobs.Thumbnails</AssemblyName>
+    <AssemblyName>run</AssemblyName>
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />
@@ -112,6 +112,10 @@
     <ProjectReference Include="..\Fifthweek.CodeGeneration\Fifthweek.CodeGeneration.csproj">
       <Project>{770F450E-2166-4269-BEC1-DF59AA16B1E8}</Project>
       <Name>Fifthweek.CodeGeneration</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Fifthweek.WebJobs.Shared\Fifthweek.WebJobs.Shared.csproj">
+      <Project>{EFBACD48-98A1-4FA3-9BEA-E13414141484}</Project>
+      <Name>Fifthweek.WebJobs.Shared</Name>
     </ProjectReference>
     <ProjectReference Include="..\Fifthweek.WebJobs.Thumbnails.Shared\Fifthweek.WebJobs.Thumbnails.Shared.csproj">
       <Project>{36d94253-0a3d-4062-9fb9-635b402c68c6}</Project>

@@ -7,6 +7,7 @@
 
     using Fifthweek.Azure;
     using Fifthweek.WebJobs.Files.Shared;
+    using Fifthweek.WebJobs.Shared;
 
     using Microsoft.Azure.WebJobs;
 
@@ -21,7 +22,8 @@
             TextWriter logger,
             CancellationToken cancellationToken)
         {
-            return FileProcessor.ProcessFileAsync(message, binder, logger, cancellationToken);
+            return FileProcessor.ProcessFileAsync(
+                message, binder, new WebJobLogger(logger), cancellationToken);
         }
 
         public static void ProcessPoisonMessage(

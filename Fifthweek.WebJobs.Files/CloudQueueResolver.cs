@@ -14,9 +14,9 @@
         {
         }
 
-        public async Task<ICloudQueue> GetQueueAsync(IBinder binder, IFileTask task)
+        public async Task<ICloudQueue> GetQueueAsync(IBinder binder, string queueName)
         {
-            var queueAttribute = new QueueAttribute(task.QueueName);
+            var queueAttribute = new QueueAttribute(queueName);
             var queue = binder.Bind<CloudQueue>(queueAttribute);
             await queue.CreateIfNotExistsAsync();
             return new FifthweekCloudQueue(queue);

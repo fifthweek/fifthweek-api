@@ -6,6 +6,7 @@
     using System.Threading.Tasks;
 
     using Fifthweek.Azure;
+    using Fifthweek.WebJobs.Shared;
     using Fifthweek.WebJobs.Thumbnails.Shared;
 
     using ImageMagick;
@@ -27,8 +28,8 @@
             return ThumbnailProcessor.CreateThumbnailAsync(
                 message, 
                 input, 
-                output, 
-                logger, 
+                new FifthweekCloudBlockBlob(output),
+                new WebJobLogger(logger), 
                 cancellationToken);
         }
 
@@ -42,8 +43,8 @@
 
             return ThumbnailProcessor.CreatePoisonThumbnailAsync(
                 message,
-                output,
-                logger, 
+                new FifthweekCloudBlockBlob(output),
+                new WebJobLogger(logger), 
                 cancellationToken);
         }
 

@@ -9,6 +9,6 @@ namespace Fifthweek.WebJobs.Files
 
     public interface ICloudQueueResolver
     {
-        Task<ICloudQueue> GetQueueAsync(IBinder binder, IFileTask task);
+        Task<ICloudQueue> GetQueueAsync(IBinder binder, string queueName);
     }
 }

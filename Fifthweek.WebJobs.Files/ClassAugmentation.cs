@@ -1,12 +1,24 @@
-﻿namespace Fifthweek.WebJobs.Files
+﻿using System;
+using System.Linq;
+
+
+
+namespace Fifthweek.WebJobs.Files
 {
     using System;
-
+    using System.IO;
+    using System.Threading;
+    using System.Threading.Tasks;
+    using Fifthweek.Azure;
+    using Fifthweek.CodeGeneration;
+    using Fifthweek.WebJobs.Files.Shared;
+    using Fifthweek.WebJobs.Shared;
+    using Microsoft.Azure.WebJobs;
     public partial class FileProcessor 
     {
         public FileProcessor(
-            IFilePurposeTasks filePurposeTasks, 
-            ICloudQueueResolver cloudQueueResolver)
+            Fifthweek.WebJobs.Files.IFilePurposeTasks filePurposeTasks, 
+            Fifthweek.WebJobs.Files.ICloudQueueResolver cloudQueueResolver)
         {
             if (filePurposeTasks == null)
             {
@@ -24,6 +36,5 @@
     }
 
 }
-
 
 

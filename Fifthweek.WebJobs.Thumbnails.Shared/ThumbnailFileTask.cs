@@ -51,7 +51,7 @@
                 this.Width,
                 this.Height,
                 this.ResizeBehaviour,
-                false);
+                message.Overwrite);
 
             var serializedContent = JsonConvert.SerializeObject(messageContent);
             return cloudQueue.AddMessageAsync(new CloudQueueMessage(serializedContent));

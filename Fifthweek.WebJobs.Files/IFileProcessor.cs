@@ -5,6 +5,7 @@
     using System.Threading.Tasks;
 
     using Fifthweek.WebJobs.Files.Shared;
+    using Fifthweek.WebJobs.Shared;
 
     using Microsoft.Azure.WebJobs;
 
@@ -13,7 +14,7 @@
         Task ProcessFileAsync(
             ProcessFileMessage message,
             IBinder binder,
-            TextWriter logger,
+            ILogger logger,
             CancellationToken cancellationToken);
     }
 }
