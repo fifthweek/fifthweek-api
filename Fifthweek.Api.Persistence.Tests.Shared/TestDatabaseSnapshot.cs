@@ -32,6 +32,7 @@
             this.tables.Add(this.Load(databaseContext => databaseContext.Subscriptions));
             this.tables.Add(this.Load(databaseContext => databaseContext.Channels));
             this.tables.Add(this.Load(databaseContext => databaseContext.Collections));
+            this.tables.Add(this.Load(databaseContext => databaseContext.WeeklyReleaseTimes));
             this.tables.Add(this.Load(databaseContext => databaseContext.Posts));
             this.tables.Add(this.Load(databaseContext => databaseContext.Files));
 

@@ -10,6 +10,12 @@
 
     using Microsoft.VisualStudio.TestTools.UnitTesting;
 
+    /// <summary>
+    /// WHEN ADDING ENTITIES:
+    /// 1) Add the seed entities in this class.
+    /// 2) Update `TestDatabaseSnapshot` with the single line required to track those entities.
+    /// 3) Increment `TestDatabase.SeedStateVersion`.
+    /// </summary>
     public class TestDatabaseSeed
     {
         private const int Users = 10;
@@ -29,6 +35,7 @@
         private readonly List<Subscription> subscriptions = new List<Subscription>();
         private readonly List<Channel> channels = new List<Channel>();
         private readonly List<Collection> collections = new List<Collection>();
+        private readonly List<WeeklyReleaseTime> weeklyReleaseTimes = new List<WeeklyReleaseTime>();
         private readonly List<Post> posts = new List<Post>();
         private readonly List<File> files = new List<File>();
 
@@ -96,6 +103,7 @@
                     await connection.InsertAsync(this.subscriptions, false);
                     await connection.InsertAsync(this.channels, false);
                     await connection.InsertAsync(this.collections, false);
+                    await connection.InsertAsync(this.weeklyReleaseTimes, false);
                     await connection.InsertAsync(this.posts, false);
                 }
                 finally
@@ -185,6 +193,11 @@
                 collection.Channel = channel;
                 collection.ChannelId = channel.Id;
                 this.collections.Add(collection);
+
+                // At least one weekly release time is required per collection.
+                var weeklyReleaseTime = WeeklyReleaseTimeTests.UniqueEntity(Random, collection.Id);
+                this.weeklyReleaseTimes.Add(weeklyReleaseTime);
+                
                 this.CreateFileAndImagePosts(collection);
             }
         }
