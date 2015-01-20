@@ -1,6 +1,7 @@
 ﻿namespace Fifthweek.Api.Persistence.Tests.Shared
 {
     using System;
+    using System.Threading.Tasks;
 
     public static class PostTests
     {
@@ -41,6 +42,29 @@
                 isQueued ? random.Next(100) : (int?)null,
                 isQueued ? (DateTime?)null : DateTime.UtcNow.AddDays((random.NextDouble() * -100) + (random.NextDouble() * 100)),
                 DateTime.UtcNow.AddDays(random.NextDouble() * -100));
+        }
+
+        public static Task CreateTestPostAsync(this IFifthweekDbContext databaseContext, Guid newUserId, Guid newPostId)
+        {
+            var random = new Random();
+            var creator = UserTests.UniqueEntity(random);
+            creator.Id = newUserId;
+
+            var subscription = SubscriptionTests.UniqueEntity(random);
+            subscription.Creator = creator;
+            subscription.CreatorId = creator.Id;
+
+            var channel = ChannelTests.UniqueEntity(random);
+            channel.Subscription = subscription;
+            channel.SubscriptionId = subscription.Id;
+
+            var post = UniqueNote(random);
+            post.Id = newPostId;
+            post.Channel = channel;
+            post.ChannelId = channel.Id;
+            
+            databaseContext.Posts.Add(post);
+            return databaseContext.SaveChangesAsync();
         }
     }
 }

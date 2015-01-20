@@ -314,12 +314,14 @@ namespace Fifthweek.Api.Posts.Controllers
     using Fifthweek.Api.Collections;
     using Fifthweek.Api.FileManagement;
     using Fifthweek.Api.Subscriptions;
+    using Fifthweek.Api.Identity.Membership;
     public partial class PostController 
     {
         public PostController(
             Fifthweek.Api.Core.ICommandHandler<Fifthweek.Api.Posts.Commands.PostNoteCommand> postNote, 
             Fifthweek.Api.Core.ICommandHandler<Fifthweek.Api.Posts.Commands.PostImageCommand> postImage, 
             Fifthweek.Api.Core.ICommandHandler<Fifthweek.Api.Posts.Commands.PostFileCommand> postFile, 
+            Fifthweek.Api.Core.ICommandHandler<Fifthweek.Api.Posts.Commands.DeletePostCommand> deletePost, 
             Fifthweek.Api.Identity.OAuth.IUserContext userContext, 
             Fifthweek.Api.Core.IGuidCreator guidCreator)
         {
@@ -338,6 +340,11 @@ namespace Fifthweek.Api.Posts.Controllers
                 throw new ArgumentNullException("postFile");
             }
 
+            if (deletePost == null)
+            {
+                throw new ArgumentNullException("deletePost");
+            }
+
             if (userContext == null)
             {
                 throw new ArgumentNullException("userContext");
@@ -351,6 +358,7 @@ namespace Fifthweek.Api.Posts.Controllers
             this.postNote = postNote;
             this.postImage = postImage;
             this.postFile = postFile;
+            this.deletePost = deletePost;
             this.userContext = userContext;
             this.guidCreator = guidCreator;
         }
@@ -472,6 +480,114 @@ namespace Fifthweek.Api.Posts
             }
 
             this.databaseContext = databaseContext;
+        }
+    }
+
+}
+namespace Fifthweek.Api.Posts.Commands
+{
+    using System;
+    using System.Linq;
+    using Fifthweek.Api.Collections;
+    using Fifthweek.Api.FileManagement;
+    using Fifthweek.Api.Identity.Membership;
+    using Fifthweek.CodeGeneration;
+    using System.Threading.Tasks;
+    using Fifthweek.Api.Core;
+    using Fifthweek.Api.Subscriptions;
+    using Fifthweek.Api.Persistence;
+    public partial class DeletePostCommand 
+    {
+        public DeletePostCommand(
+            Fifthweek.Api.Posts.PostId postId, 
+            Fifthweek.Api.Identity.Membership.Requester requester)
+        {
+            if (postId == null)
+            {
+                throw new ArgumentNullException("postId");
+            }
+
+            if (requester == null)
+            {
+                throw new ArgumentNullException("requester");
+            }
+
+            this.PostId = postId;
+            this.Requester = requester;
+        }
+    }
+
+}
+namespace Fifthweek.Api.Posts.Commands
+{
+    using System.Threading.Tasks;
+    using Fifthweek.Api.Azure;
+    using Fifthweek.Api.Core;
+    using Fifthweek.Api.Identity.Membership;
+    using Fifthweek.CodeGeneration;
+    public partial class DeletePostCommandHandler 
+    {
+        public DeletePostCommandHandler(
+            Fifthweek.Api.Azure.IQueueService queueService, 
+            Fifthweek.Api.Posts.IPostSecurity postSecurity)
+        {
+            if (queueService == null)
+            {
+                throw new ArgumentNullException("queueService");
+            }
+
+            if (postSecurity == null)
+            {
+                throw new ArgumentNullException("postSecurity");
+            }
+
+            this.queueService = queueService;
+            this.postSecurity = postSecurity;
+        }
+    }
+
+}
+namespace Fifthweek.Api.Posts
+{
+    using System.Threading.Tasks;
+    using Dapper;
+    using Fifthweek.Api.Core;
+    using Fifthweek.Api.Identity.Membership;
+    using Fifthweek.Api.Persistence;
+    using Fifthweek.CodeGeneration;
+    public partial class PostOwnership 
+    {
+        public PostOwnership(
+            Fifthweek.Api.Persistence.IFifthweekDbContext databaseContext)
+        {
+            if (databaseContext == null)
+            {
+                throw new ArgumentNullException("databaseContext");
+            }
+
+            this.databaseContext = databaseContext;
+        }
+    }
+
+}
+namespace Fifthweek.Api.Posts
+{
+    using System.Threading.Tasks;
+    using Fifthweek.Api.Core;
+    using Fifthweek.Api.Identity.Membership;
+    using Fifthweek.CodeGeneration;
+    using Fifthweek.Shared;
+    public partial class PostSecurity 
+    {
+        public PostSecurity(
+            Fifthweek.Api.Posts.IPostOwnership postOwnership)
+        {
+            if (postOwnership == null)
+            {
+                throw new ArgumentNullException("postOwnership");
+            }
+
+            this.postOwnership = postOwnership;
         }
     }
 
@@ -818,6 +934,73 @@ namespace Fifthweek.Api.Posts
     }
 
 }
+namespace Fifthweek.Api.Posts.Commands
+{
+    using System;
+    using System.Linq;
+    using Fifthweek.Api.Collections;
+    using Fifthweek.Api.FileManagement;
+    using Fifthweek.Api.Identity.Membership;
+    using Fifthweek.CodeGeneration;
+    using System.Threading.Tasks;
+    using Fifthweek.Api.Core;
+    using Fifthweek.Api.Subscriptions;
+    using Fifthweek.Api.Persistence;
+    public partial class DeletePostCommand 
+    {
+        public override string ToString()
+        {
+            return string.Format("DeletePostCommand({0}, {1})", this.PostId == null ? "null" : this.PostId.ToString(), this.Requester == null ? "null" : this.Requester.ToString());
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj))
+            {
+                return false;
+            }
+
+            if (ReferenceEquals(this, obj))
+            {
+                return true;
+            }
+
+            if (obj.GetType() != this.GetType())
+            {
+                return false;
+            }
+
+            return this.Equals((DeletePostCommand)obj);
+        }
+
+        public override int GetHashCode()
+        {
+            unchecked
+            {
+                int hashCode = 0;
+                hashCode = (hashCode * 397) ^ (this.PostId != null ? this.PostId.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.Requester != null ? this.Requester.GetHashCode() : 0);
+                return hashCode;
+            }
+        }
+
+        protected bool Equals(DeletePostCommand other)
+        {
+            if (!object.Equals(this.PostId, other.PostId))
+            {
+                return false;
+            }
+
+            if (!object.Equals(this.Requester, other.Requester))
+            {
+                return false;
+            }
+
+            return true;
+        }
+    }
+
+}
 namespace Fifthweek.Api.Posts.Controllers
 {
     using System;
@@ -831,6 +1014,7 @@ namespace Fifthweek.Api.Posts.Controllers
     using Fifthweek.Api.Collections;
     using Fifthweek.Api.FileManagement;
     using Fifthweek.Api.Subscriptions;
+    using Fifthweek.Api.Identity.Membership;
     public partial class NewFileData 
     {
         public override string ToString()
@@ -935,6 +1119,7 @@ namespace Fifthweek.Api.Posts.Controllers
     using Fifthweek.Api.Collections;
     using Fifthweek.Api.FileManagement;
     using Fifthweek.Api.Subscriptions;
+    using Fifthweek.Api.Identity.Membership;
     public partial class NewImageData 
     {
         public override string ToString()
@@ -1039,6 +1224,7 @@ namespace Fifthweek.Api.Posts.Controllers
     using Fifthweek.Api.Collections;
     using Fifthweek.Api.FileManagement;
     using Fifthweek.Api.Subscriptions;
+    using Fifthweek.Api.Identity.Membership;
     public partial class NewNoteData 
     {
         public override string ToString()
@@ -1249,6 +1435,7 @@ namespace Fifthweek.Api.Posts.Controllers
     using Fifthweek.Api.Collections;
     using Fifthweek.Api.FileManagement;
     using Fifthweek.Api.Subscriptions;
+    using Fifthweek.Api.Identity.Membership;
     public partial class NewFileData 
     {
         public CollectionId CollectionIdObject { get; set; }
@@ -1324,6 +1511,7 @@ namespace Fifthweek.Api.Posts.Controllers
     using Fifthweek.Api.Collections;
     using Fifthweek.Api.FileManagement;
     using Fifthweek.Api.Subscriptions;
+    using Fifthweek.Api.Identity.Membership;
     public partial class NewImageData 
     {
         public CollectionId CollectionIdObject { get; set; }
@@ -1399,6 +1587,7 @@ namespace Fifthweek.Api.Posts.Controllers
     using Fifthweek.Api.Collections;
     using Fifthweek.Api.FileManagement;
     using Fifthweek.Api.Subscriptions;
+    using Fifthweek.Api.Identity.Membership;
     public partial class NewNoteData 
     {
         public ChannelId ChannelIdObject { get; set; }

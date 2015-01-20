@@ -29,6 +29,8 @@
         [Route("uploadRequests")]
         public async Task<GrantedUpload> PostUploadRequestAsync(UploadRequest data)
         {
+            data.AssertBodyProvided("data");
+
             var fileId = new FileId(this.guidCreator.CreateSqlSequential());
             var requester = this.userContext.GetRequester();
 
@@ -41,6 +43,8 @@
         [Route("uploadCompleteNotifications")]
         public async Task PostUploadCompleteNotificationAsync(string fileId)
         {
+            fileId.AssertBodyProvided("fileId");
+
             var parsedFileId = new FileId(fileId.DecodeGuid());
             var requester = this.userContext.GetRequester();
             await this.completeFileUpload.HandleAsync(new CompleteFileUploadCommand(requester, parsedFileId));

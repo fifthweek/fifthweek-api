@@ -14,7 +14,8 @@
     {
         private readonly ICommandHandler<PostNoteCommand> postNote;
         private readonly ICommandHandler<PostImageCommand> postImage;
-        private readonly ICommandHandler<PostFileCommand> postFile; 
+        private readonly ICommandHandler<PostFileCommand> postFile;
+        private readonly ICommandHandler<DeletePostCommand> deletePost;
         private readonly IUserContext userContext;
         private readonly IGuidCreator guidCreator;
 
@@ -77,6 +78,33 @@
                 file.IsQueued));
 
             return this.Ok();
+        }
+
+        [Route("notes/{postId}")]
+        public Task DeleteNote(string postId)
+        {
+            return this.DeletePost(postId);
+        }
+
+        [Route("images/{postId}")]
+        public Task DeleteImage(string postId)
+        {
+            return this.DeletePost(postId);
+        }
+
+        [Route("files/{postId}")]
+        public Task DeleteFile(string postId)
+        {
+            return this.DeletePost(postId);
+        }
+
+        private Task DeletePost(string postId)
+        {
+            postId.AssertUrlParameterProvided("postId");
+            var parsedPostId = new PostId(postId.DecodeGuid());
+            var requester = this.userContext.GetRequester();
+
+            return this.deletePost.HandleAsync(new DeletePostCommand(parsedPostId, requester));
         }
     }
 }

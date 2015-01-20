@@ -29,6 +29,7 @@
         private Mock<ICommandHandler<PostNoteCommand>> postNote;
         private Mock<ICommandHandler<PostImageCommand>> postImage;
         private Mock<ICommandHandler<PostFileCommand>> postFile;
+        private Mock<ICommandHandler<DeletePostCommand>> deletePost;
         private Mock<IUserContext> userContext;
         private Mock<IGuidCreator> guidCreator;
         private PostController target;
@@ -39,12 +40,14 @@
             this.postNote = new Mock<ICommandHandler<PostNoteCommand>>();
             this.postImage = new Mock<ICommandHandler<PostImageCommand>>();
             this.postFile = new Mock<ICommandHandler<PostFileCommand>>();
+            this.deletePost = new Mock<ICommandHandler<DeletePostCommand>>();
             this.userContext = new Mock<IUserContext>();
             this.guidCreator = new Mock<IGuidCreator>();
             this.target = new PostController(
                 this.postNote.Object,
                 this.postImage.Object,
                 this.postFile.Object,
+                this.deletePost.Object,
                 this.userContext.Object,
                 this.guidCreator.Object);
         }
