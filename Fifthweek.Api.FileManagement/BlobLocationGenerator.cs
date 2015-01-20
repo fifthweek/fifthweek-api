@@ -13,8 +13,8 @@
             {
                 return new BlobLocation(Constants.PublicFileBlobContainerName, fileId.Value.EncodeGuid());
             }
-            
-            return new BlobLocation(userId.Value.EncodeGuid(), fileId.Value.EncodeGuid());
+
+            return new BlobLocation(userId.Value.ToString("N"), fileId.Value.ToString("N"));
         }
     }
 }

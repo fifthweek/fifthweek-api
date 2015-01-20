@@ -76,7 +76,9 @@
                         "Unable to generate output blob name for resize behaviour: " + this.ResizeBehaviour);
             }
 
-            return string.Format("{0}-{1}-{2}{3}", inputBlobName, this.Width, this.Height, resizeBehaviourTag);
+            // Note we use a forwardslash here to take advantage of Azure Blob virtual hierarchy structure
+            // which allows us to easily delete all blobs generated from the input blob.
+            return string.Format("{0}/{1}x{2}{3}", inputBlobName, this.Width, this.Height, resizeBehaviourTag);
         }
     }
 }

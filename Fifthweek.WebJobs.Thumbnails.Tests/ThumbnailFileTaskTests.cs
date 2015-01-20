@@ -1,5 +1,6 @@
 ﻿namespace Fifthweek.WebJobs.Thumbnails.Tests
 {
+    using System;
     using System.Threading.Tasks;
 
     using Fifthweek.Azure;
@@ -17,8 +18,8 @@
     public class ThumbnailFileTaskTests
     {
         private readonly ProcessFileMessage message = new ProcessFileMessage(
-            "containerName",
-            "blobName",
+            Guid.NewGuid().ToString("N"),
+            Guid.NewGuid().ToString("N"),
             "purpose",
             true);
 
@@ -46,7 +47,7 @@
 
             Assert.AreEqual(this.message.ContainerName, outputMessage.ContainerName);
             Assert.AreEqual(this.message.BlobName, outputMessage.InputBlobName);
-            Assert.AreEqual(string.Format("{0}-{1}-{2}", this.message.BlobName, target.Width, target.Height), outputMessage.OutputBlobName);
+            Assert.AreEqual(string.Format("{0}/{1}x{2}", this.message.BlobName, target.Width, target.Height), outputMessage.OutputBlobName);
             Assert.AreEqual(target.Width, outputMessage.Width);
             Assert.AreEqual(target.Height, outputMessage.Height);
             Assert.AreEqual(target.ResizeBehaviour, outputMessage.ResizeBehaviour);
@@ -69,7 +70,7 @@
 
             Assert.AreEqual(this.message.ContainerName, outputMessage.ContainerName);
             Assert.AreEqual(this.message.BlobName, outputMessage.InputBlobName);
-            Assert.AreEqual(string.Format("{0}-{1}-{2}-crop", this.message.BlobName, target.Width, target.Height), outputMessage.OutputBlobName);
+            Assert.AreEqual(string.Format("{0}/{1}x{2}-crop", this.message.BlobName, target.Width, target.Height), outputMessage.OutputBlobName);
             Assert.AreEqual(target.Width, outputMessage.Width);
             Assert.AreEqual(target.Height, outputMessage.Height);
             Assert.AreEqual(target.ResizeBehaviour, outputMessage.ResizeBehaviour);
