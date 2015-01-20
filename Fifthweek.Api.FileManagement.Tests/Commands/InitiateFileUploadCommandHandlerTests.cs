@@ -7,6 +7,7 @@
     using Fifthweek.Api.Core;
     using Fifthweek.Api.FileManagement.Commands;
     using Fifthweek.Api.Identity.Membership;
+    using Fifthweek.Shared;
 
     using Microsoft.VisualStudio.TestTools.UnitTesting;
 
@@ -25,6 +26,7 @@
 
         private Mock<IFileRepository> fileRepository;
         private Mock<IBlobService> blobService;
+        private Mock<IBlobLocationGenerator> blobNameCreator;
         private InitiateFileUploadCommandHandler target;
 
         [TestInitialize]
@@ -32,9 +34,10 @@
         {
             // Give side-effecting components strict mock behaviour.
             this.blobService = new Mock<IBlobService>(MockBehavior.Strict);
+            this.blobNameCreator = new Mock<IBlobLocationGenerator>();
             this.fileRepository = new Mock<IFileRepository>(MockBehavior.Strict);
 
-            this.target = new InitiateFileUploadCommandHandler(this.blobService.Object, this.fileRepository.Object);
+            this.target = new InitiateFileUploadCommandHandler(this.blobService.Object, this.blobNameCreator.Object, this.fileRepository.Object);
         }
 
         [TestMethod]
@@ -52,6 +55,7 @@
                 UserId,
                 @"C:\test\myfile.jpeg",
                 "purpose",
+                Constants.PublicFileBlobContainerName,
                 "myfile",
                 "jpeg",
                 "purpose");
@@ -65,6 +69,7 @@
                 UserId,
                 @"C:\test\myfile",
                 "purpose",
+                Constants.PublicFileBlobContainerName,
                 "myfile",
                 string.Empty,
                 "purpose");
@@ -78,6 +83,7 @@
                 UserId,
                 @"C:\test\.myfile",
                 "purpose",
+                Constants.PublicFileBlobContainerName,
                 "myfile",
                 string.Empty,
                 "purpose");
@@ -91,6 +97,7 @@
                 UserId,
                 @"hello",
                 "purpose",
+                Constants.PublicFileBlobContainerName,
                 "hello",
                 string.Empty,
                 "purpose");
@@ -104,6 +111,7 @@
                 UserId,
                 @"C:\test\myfile.isgreat.jpeg",
                 "purpose",
+                Constants.PublicFileBlobContainerName,
                 "myfile.isgreat",
                 "jpeg",
                 "purpose");
@@ -117,6 +125,7 @@
                 UserId,
                 @"C:\test\myfile.jpeg",
                 null,
+                Constants.PublicFileBlobContainerName,
                 "myfile",
                 "jpeg",
                 string.Empty);
@@ -130,16 +139,36 @@
                 UserId,
                 null,
                 "purpose",
+                Constants.PublicFileBlobContainerName,
                 string.Empty,
                 string.Empty,
                 "purpose");
         }
 
-        private async Task TestCommandHandler(FileId fileId, UserId requester, string filePath, string purpose, string expectedFileName, string expectedExtension, string expectedPurpose)
+        [TestMethod]
+        public async Task WhenAddingAPublicFile_ItShouldNotAskForTheBlobContainerToBeCreated()
         {
-            this.blobService.Setup(v => v.CreateBlobContainerAsync(Constants.PublicFileBlobContainerName))
-                .Returns(Task.FromResult(0))
-                .Verifiable();
+            var containerName = Guid.NewGuid().ToString("N");
+
+            this.blobService.Setup(v => v.CreateBlobContainerAsync(containerName))
+              .Returns(Task.FromResult(0))
+              .Verifiable();
+            
+            await this.TestCommandHandler(
+                FileId,
+                UserId,
+                null,
+                "purpose",
+                containerName,
+                string.Empty,
+                string.Empty,
+                "purpose");
+        }
+
+        private async Task TestCommandHandler(FileId fileId, UserId requester, string filePath, string purpose, string blobContainerName, string expectedFileName, string expectedExtension, string expectedPurpose)
+        {
+            this.blobNameCreator.Setup(v => v.GetBlobLocation(requester, fileId, purpose))
+                .Returns(new BlobLocation(blobContainerName, string.Empty));
 
             this.fileRepository.Setup(v => v.AddNewFileAsync(fileId, requester, expectedFileName, expectedExtension, expectedPurpose))
                 .Returns(Task.FromResult(0))

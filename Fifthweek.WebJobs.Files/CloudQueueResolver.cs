@@ -1,5 +1,6 @@
 ﻿namespace Fifthweek.WebJobs.Files
 {
+    using System.Collections.Generic;
     using System.Threading.Tasks;
 
     using Fifthweek.Azure;
@@ -10,15 +11,10 @@
 
     public class CloudQueueResolver : ICloudQueueResolver
     {
-        public CloudQueueResolver()
-        {
-        }
-
         public async Task<ICloudQueue> GetQueueAsync(IBinder binder, string queueName)
         {
             var queueAttribute = new QueueAttribute(queueName);
-            var queue = binder.Bind<CloudQueue>(queueAttribute);
-            await queue.CreateIfNotExistsAsync();
+            var queue = await binder.BindAsync<CloudQueue>(queueAttribute);
             return new FifthweekCloudQueue(queue);
         }
     }

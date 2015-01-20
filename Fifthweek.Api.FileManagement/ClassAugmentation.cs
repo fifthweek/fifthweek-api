@@ -176,11 +176,17 @@ namespace Fifthweek.Api.FileManagement.Commands
     {
         public InitiateFileUploadCommandHandler(
             Fifthweek.Api.Azure.IBlobService blobService, 
+            Fifthweek.Api.FileManagement.IBlobLocationGenerator blobLocationGenerator, 
             Fifthweek.Api.FileManagement.IFileRepository fileRepository)
         {
             if (blobService == null)
             {
                 throw new ArgumentNullException("blobService");
+            }
+
+            if (blobLocationGenerator == null)
+            {
+                throw new ArgumentNullException("blobLocationGenerator");
             }
 
             if (fileRepository == null)
@@ -189,6 +195,7 @@ namespace Fifthweek.Api.FileManagement.Commands
             }
 
             this.blobService = blobService;
+            this.blobLocationGenerator = blobLocationGenerator;
             this.fileRepository = fileRepository;
         }
     }

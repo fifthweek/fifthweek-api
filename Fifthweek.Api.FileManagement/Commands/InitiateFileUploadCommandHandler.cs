@@ -12,7 +12,7 @@
     public partial class InitiateFileUploadCommandHandler : ICommandHandler<InitiateFileUploadCommand>
     {
         private readonly IBlobService blobService;
-
+        private readonly IBlobLocationGenerator blobLocationGenerator;
         private readonly IFileRepository fileRepository;
 
         public async Task HandleAsync(InitiateFileUploadCommand command)
@@ -22,8 +22,12 @@
             UserId authenticatedUserId;
             command.Requester.AssertAuthenticated(out authenticatedUserId);
 
-            const string ContainerName = FileManagement.Constants.PublicFileBlobContainerName;
-            await this.blobService.CreateBlobContainerAsync(ContainerName);
+            var blobLocation = this.blobLocationGenerator.GetBlobLocation(authenticatedUserId, command.FileId, command.Purpose);
+
+            if (blobLocation.ContainerName != FileManagement.Constants.PublicFileBlobContainerName)
+            {
+                await this.blobService.CreateBlobContainerAsync(blobLocation.ContainerName);
+            }
 
             string fileNameWithoutExtension = null;
             string fileExtension = null;

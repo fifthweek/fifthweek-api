@@ -16,14 +16,57 @@
     {
         public static void Register()
         {
-            HostingEnvironment.QueueBackgroundWorkItem(ct => ConfigureCors());
+            HostingEnvironment.QueueBackgroundWorkItem(ct => ConfigureAsync());
         }
 
-        private static async Task ConfigureCors()
+        private static async Task ConfigureAsync()
         {
             try
             {
                 var storageAccount = (ICloudStorageAccount)GlobalConfiguration.Configuration.DependencyResolver.GetService(typeof(ICloudStorageAccount));
+
+                await ConfigureStorage(storageAccount);
+                await ConfigureCors(storageAccount);
+            }
+            catch (Exception t)
+            {
+                ExceptionHandlerUtilities.ReportExceptionAsync(t);
+            }
+        }
+
+        private static async Task ConfigureStorage(ICloudStorageAccount storageAccount)
+        {
+            try
+            {
+                var cloudQueueClient = storageAccount.CreateCloudQueueClient();
+                await CreateQueueIfNotExists(cloudQueueClient, WebJobs.Files.Shared.Constants.FilesQueueName);
+                await CreateQueueIfNotExists(cloudQueueClient, WebJobs.Thumbnails.Shared.Constants.ThumbnailsQueueName);
+
+                var cloudBlobClient = storageAccount.CreateCloudBlobClient();
+                await CreateBlobIfNotExists(cloudBlobClient, FileManagement.Constants.PublicFileBlobContainerName);
+            }
+            catch (Exception t)
+            {
+                ExceptionHandlerUtilities.ReportExceptionAsync(t);
+            }
+        }
+
+        private static async Task CreateQueueIfNotExists(ICloudQueueClient cloudQueueClient, string queueName)
+        {
+            var queue = cloudQueueClient.GetQueueReference(queueName);
+            await queue.CreateIfNotExistsAsync();
+        }
+
+        private static async Task CreateBlobIfNotExists(ICloudBlobClient cloudBlobClient, string containerName)
+        {
+            var container = cloudBlobClient.GetContainerReference(containerName);
+            await container.CreateIfNotExistsAsync();
+        }
+
+        private static async Task ConfigureCors(ICloudStorageAccount storageAccount)
+        {
+            try
+            {
                 var blobClient = storageAccount.CreateCloudBlobClient();
 
                 var blobServiceProperties = await blobClient.GetServicePropertiesAsync();

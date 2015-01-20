@@ -44,7 +44,6 @@
 
             CloudQueueMessage message = null;
 
-            this.cloudQueue.Setup(v => v.CreateIfNotExistsAsync()).Returns(Task.FromResult(0)).Verifiable();
             this.cloudQueue.Setup(v => v.AddMessageAsync(It.IsAny<CloudQueueMessage>()))
                 .Callback<CloudQueueMessage>(v => message = v)
                 .Returns(Task.FromResult(0));

@@ -263,6 +263,14 @@
       <Project>{6D12FFBB-38E9-4722-A690-0F0338538EBC}</Project>
       <Name>Fifthweek.Shared</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Fifthweek.WebJobs.Files.Shared\Fifthweek.WebJobs.Files.Shared.csproj">
+      <Project>{227ae1d7-e7a5-44a2-87cc-82eb29033b0d}</Project>
+      <Name>Fifthweek.WebJobs.Files.Shared</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Fifthweek.WebJobs.Thumbnails.Shared\Fifthweek.WebJobs.Thumbnails.Shared.csproj">
+      <Project>{36d94253-0a3d-4062-9fb9-635b402c68c6}</Project>
+      <Name>Fifthweek.WebJobs.Thumbnails.Shared</Name>
+    </ProjectReference>
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

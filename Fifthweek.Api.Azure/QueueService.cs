@@ -29,7 +29,6 @@
 
             var cloudQueueClient = this.cloudStorageAccount.CreateCloudQueueClient();
             var queue = cloudQueueClient.GetQueueReference(Constants.FilesQueueName);
-            await queue.CreateIfNotExistsAsync();
 
             var messageContent = new ProcessFileMessage(containerName, blobName, purpose, false);
             var serializedMessageContent = JsonConvert.SerializeObject(messageContent);
