@@ -1,6 +1,7 @@
 ﻿namespace Fifthweek.WebJobs.Thumbnails
 {
     using System;
+    using System.Diagnostics;
     using System.IO;
     using System.Threading;
     using System.Threading.Tasks;
@@ -50,6 +51,9 @@
 
         public static void Main(string[] args)
         {
+            Console.WriteLine("Thumbnails WebJob running as {0} bit process.", Environment.Is64BitProcess ? "64" : "32");
+            Trace.TraceInformation("Thumbnails WebJob running as {0} bit process.", Environment.Is64BitProcess ? "64" : "32");
+
             var config = new JobHostConfiguration();
             config.DashboardConnectionString = config.StorageConnectionString = AzureConfiguration.GetStorageConnectionString();
             config.Queues.BatchSize = 8;
