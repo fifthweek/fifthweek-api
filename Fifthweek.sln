@@ -108,9 +108,9 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fifthweek.WebJobs.GarbageCo
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fifthweek.WebJobs.GarbageCollection.Tests", "Fifthweek.WebJobs.GarbageCollection.Tests\Fifthweek.WebJobs.GarbageCollection.Tests.csproj", "{1A90E948-31F6-4C6C-B1CA-2863CD583B42}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fifthweek.Aggregations.Tests", "Fifthweek.Aggregations.Tests\Fifthweek.Aggregations.Tests.csproj", "{75A5513F-68D6-4E90-8244-B4A9385A5336}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fifthweek.Api.Aggregations", "Fifthweek.Api.Aggregations\Fifthweek.Api.Aggregations.csproj", "{CC71B97B-13CC-4333-A681-D192DD87BCCD}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fifthweek.Aggregations", "Fifthweek.Aggregations\Fifthweek.Aggregations.csproj", "{6F5B4143-9BD9-4A3B-807C-26A0C9DD6140}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fifthweek.Api.Aggregations.Tests", "Fifthweek.Api.Aggregations.Tests\Fifthweek.Api.Aggregations.Tests.csproj", "{F5B149A2-9500-44DC-88B5-870629675845}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -290,14 +290,14 @@ Global
 		{1A90E948-31F6-4C6C-B1CA-2863CD583B42}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1A90E948-31F6-4C6C-B1CA-2863CD583B42}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1A90E948-31F6-4C6C-B1CA-2863CD583B42}.Release|Any CPU.Build.0 = Release|Any CPU
-		{75A5513F-68D6-4E90-8244-B4A9385A5336}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{75A5513F-68D6-4E90-8244-B4A9385A5336}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{75A5513F-68D6-4E90-8244-B4A9385A5336}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{75A5513F-68D6-4E90-8244-B4A9385A5336}.Release|Any CPU.Build.0 = Release|Any CPU
-		{6F5B4143-9BD9-4A3B-807C-26A0C9DD6140}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{6F5B4143-9BD9-4A3B-807C-26A0C9DD6140}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{6F5B4143-9BD9-4A3B-807C-26A0C9DD6140}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{6F5B4143-9BD9-4A3B-807C-26A0C9DD6140}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CC71B97B-13CC-4333-A681-D192DD87BCCD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CC71B97B-13CC-4333-A681-D192DD87BCCD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CC71B97B-13CC-4333-A681-D192DD87BCCD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CC71B97B-13CC-4333-A681-D192DD87BCCD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F5B149A2-9500-44DC-88B5-870629675845}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F5B149A2-9500-44DC-88B5-870629675845}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F5B149A2-9500-44DC-88B5-870629675845}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F5B149A2-9500-44DC-88B5-870629675845}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
