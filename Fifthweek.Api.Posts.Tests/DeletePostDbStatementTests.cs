@@ -70,7 +70,7 @@
                 post.CollectionId = CollectionId.Value;
                 post.FileId = FileId.Value;
                 post.CreationDate = new SqlDateTime(post.CreationDate).Value;
-                post.LiveDate = post.LiveDate.HasValue ? new SqlDateTime(post.LiveDate.Value).Value : (DateTime?)null;
+                post.LiveDate = new SqlDateTime(post.LiveDate).Value;
                 await databaseContext.Database.Connection.InsertAsync(post);
 
                 return post;
