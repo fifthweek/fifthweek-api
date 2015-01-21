@@ -1,4 +1,4 @@
-﻿namespace Fifthweek.WebJobs.Deletions.Shared
+﻿namespace Fifthweek.WebJobs.GarbageCollection.Shared
 {
     using System;
 

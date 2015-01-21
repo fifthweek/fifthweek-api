@@ -1,4 +1,4 @@
-﻿namespace Fifthweek.WebJobs.Deletions
+﻿namespace Fifthweek.WebJobs.GarbageCollection
 {
     using System;
 

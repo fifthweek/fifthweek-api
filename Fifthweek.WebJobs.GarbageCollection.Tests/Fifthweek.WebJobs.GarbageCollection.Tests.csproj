@@ -53,6 +53,16 @@
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Fifthweek.WebJobs.GarbageCollection.Shared\Fifthweek.WebJobs.GarbageCollection.Shared.csproj">
+      <Project>{6328c758-26d7-4fb4-a626-d8aad17435fd}</Project>
+      <Name>Fifthweek.WebJobs.GarbageCollection.Shared</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Fifthweek.WebJobs.GarbageCollection\Fifthweek.WebJobs.GarbageCollection.csproj">
+      <Project>{ed4bb87d-ac12-4bc8-b06a-6ca956ba6da8}</Project>
+      <Name>Fifthweek.WebJobs.GarbageCollection</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Choose>
     <When Condition="'$(VisualStudioVersion)' == '10.0' And '$(IsCodedUITest)' == 'True'">
       <ItemGroup>

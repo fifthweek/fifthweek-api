@@ -543,7 +543,7 @@ namespace Fifthweek.Api.FileManagement
     using System.Threading.Tasks;
     using Fifthweek.Api.Azure;
     using Fifthweek.CodeGeneration;
-    using Fifthweek.WebJobs.Deletions.Shared;
+    using Fifthweek.WebJobs.GarbageCollection.Shared;
     public partial class ScheduleGarbageCollectionStatement 
     {
         public ScheduleGarbageCollectionStatement(

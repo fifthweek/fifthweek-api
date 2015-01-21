@@ -3,7 +3,7 @@
     using System.Threading.Tasks;
 
     using Fifthweek.Api.Azure;
-    using Fifthweek.WebJobs.Deletions.Shared;
+    using Fifthweek.WebJobs.GarbageCollection.Shared;
 
     using Microsoft.VisualStudio.TestTools.UnitTesting;
 

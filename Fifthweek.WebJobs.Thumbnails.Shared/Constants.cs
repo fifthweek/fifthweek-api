@@ -4,7 +4,7 @@
 
     public class Constants
     {
-        public const string ThumbnailsQueueName = "thumbnails";
+        public const string ThumbnailsQueueName = "create-thumbnail-requests";
 
         public static readonly HashSet<string> SupportedMimeTypes = new HashSet<string> 
         {

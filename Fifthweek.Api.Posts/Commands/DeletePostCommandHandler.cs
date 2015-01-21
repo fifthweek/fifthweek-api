@@ -7,7 +7,6 @@
     using Fifthweek.Api.FileManagement;
     using Fifthweek.Api.Identity.Membership;
     using Fifthweek.CodeGeneration;
-    using Fifthweek.WebJobs.Deletions.Shared;
 
     [AutoConstructor]
     public partial class DeletePostCommandHandler : ICommandHandler<DeletePostCommand>

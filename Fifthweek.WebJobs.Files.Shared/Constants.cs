@@ -2,6 +2,6 @@
 {
     public class Constants
     {
-        public const string FilesQueueName = "files";
+        public const string FilesQueueName = "new-file-notifications";
     }
 }

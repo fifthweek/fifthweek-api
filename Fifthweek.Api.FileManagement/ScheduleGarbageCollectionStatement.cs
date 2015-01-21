@@ -5,7 +5,7 @@ namespace Fifthweek.Api.FileManagement
 
     using Fifthweek.Api.Azure;
     using Fifthweek.CodeGeneration;
-    using Fifthweek.WebJobs.Deletions.Shared;
+    using Fifthweek.WebJobs.GarbageCollection.Shared;
 
     [AutoConstructor]
     public partial class ScheduleGarbageCollectionStatement : IScheduleGarbageCollectionStatement
@@ -15,10 +15,10 @@ namespace Fifthweek.Api.FileManagement
         public Task ExecuteAsync()
         {
             return this.queueService.AddMessageToQueueAsync(
-                WebJobs.Deletions.Shared.Constants.GarbageCollectionQueueName, 
+                WebJobs.GarbageCollection.Shared.Constants.GarbageCollectionQueueName, 
                 new RunGarbageCollectionMessage(), 
                 null,
-                WebJobs.Deletions.Shared.Constants.GarbageCollectionMessageInitialVisibilityDelay);
+                WebJobs.GarbageCollection.Shared.Constants.GarbageCollectionMessageInitialVisibilityDelay);
         }
     }
 }

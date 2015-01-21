@@ -41,7 +41,7 @@
                 var cloudQueueClient = storageAccount.CreateCloudQueueClient();
                 await CreateQueueIfNotExists(cloudQueueClient, WebJobs.Files.Shared.Constants.FilesQueueName);
                 await CreateQueueIfNotExists(cloudQueueClient, WebJobs.Thumbnails.Shared.Constants.ThumbnailsQueueName);
-                await CreateQueueIfNotExists(cloudQueueClient, WebJobs.Deletions.Shared.Constants.GarbageCollectionQueueName);
+                await CreateQueueIfNotExists(cloudQueueClient, WebJobs.GarbageCollection.Shared.Constants.GarbageCollectionQueueName);
 
                 var cloudBlobClient = storageAccount.CreateCloudBlobClient();
                 await CreateBlobIfNotExists(cloudBlobClient, FileManagement.Constants.PublicFileBlobContainerName);
