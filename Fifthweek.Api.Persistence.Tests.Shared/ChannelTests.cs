@@ -11,6 +11,7 @@
                 Guid.NewGuid(),
                 default(Guid),
                 null,
+                string.Empty,
                 random.Next(1, 100),
                 DateTime.UtcNow.AddDays(random.NextDouble() * -100));
         }

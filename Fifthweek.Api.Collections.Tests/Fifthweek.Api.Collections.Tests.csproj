@@ -83,11 +83,13 @@
     <Compile Include="CollectionOwnershipTests.cs" />
     <Compile Include="CollectionSecurityTests.cs" />
     <Compile Include="Controllers\CollectionControllerTests.cs" />
+    <Compile Include="GetChannelsAndCollectionsDbStatementTests.cs" />
     <Compile Include="GetLiveDateOfNewQueuedPostDbStatementTests.cs" />
     <Compile Include="GetNewQueuedPostLiveDateLowerBoundDbStatementTests.cs" />
     <Compile Include="GetCollectionWeeklyReleaseTimesDbStatementTests.cs" />
     <Compile Include="HourOfWeekTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Queries\GetChannelsAndCollectionsQueryHandlerTests.cs" />
     <Compile Include="Queries\GetLiveDateOfNewQueuedPostQueryHandlerTests.cs" />
     <Compile Include="QueuedPostLiveDateCalculatorTests.cs" />
   </ItemGroup>

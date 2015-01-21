@@ -25,6 +25,9 @@
         public Subscription Subscription { get; set; }
 
         [Required]
+        public string Name { get; set; }
+
+        [Required]
         public int PriceInUsCentsPerWeek { get; set; }
 
         [Required]

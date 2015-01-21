@@ -13,6 +13,7 @@
             builder.RegisterType<GetNewQueuedPostLiveDateLowerBoundDbStatement>().As<IGetNewQueuedPostLiveDateLowerBoundDbStatement>();
             builder.RegisterType<GetCollectionWeeklyReleaseTimesDbStatement>().As<IGetCollectionWeeklyReleaseTimesDbStatement>();
             builder.RegisterType<QueuedPostLiveDateCalculator>().As<IQueuedPostLiveDateCalculator>();
+            builder.RegisterType<GetChannelsAndCollectionsDbStatement>().As<IGetChannelsAndCollectionsDbStatement>();
         }
     }
 }
