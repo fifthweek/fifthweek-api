@@ -205,6 +205,60 @@
                 transaction);
         }
 
+		public static System.Threading.Tasks.Task<bool> InsertIfAsync(
+            this System.Data.Common.DbConnection connection,
+            <#= unifiedClass.FirstCodeClass.Name #> entity,
+            string condition,
+			bool idempotent = true,
+            System.Data.IDbTransaction transaction = null)
+        {
+            var sql = new System.Text.StringBuilder();
+            sql.Append("IF ");
+            sql.AppendLine(condition); // Remember to use `WITH (UPDLOCK, HOLDLOCK)` in your conditions! See: http://samsaffron.com/blog/archive/2007/04/04/14.aspx
+            sql.AppendLine("BEGIN");
+            sql.AppendLine(InsertStatement(idempotent));
+            sql.AppendLine("SELECT 1 AS InsertAttempted"); // Indicates a (potentially idempotent) insert has been performed.
+			sql.AppendLine("END");
+			sql.AppendLine("ELSE");
+			sql.AppendLine("SELECT 0 AS InsertAttempted");
+
+            return Dapper.SqlMapper.ExecuteScalarAsync<bool>(
+                connection,
+                sql.ToString(),
+                new 
+                {
+                    <#= entityMaskInitialization #>
+                },
+                transaction);
+        }
+
+        public static System.Threading.Tasks.Task<bool> InsertIfAsync(
+            this System.Data.Common.DbConnection connection,
+            <#= unifiedClass.FirstCodeClass.Name #> entity,
+            string condition,
+            string selectValuesForInsertStatement,
+            <#= unifiedClass.FirstCodeClass.Name #>.Fields selectedFields,
+            bool idempotent = true,
+            System.Data.IDbTransaction transaction = null)
+        {
+            var sql = new System.Text.StringBuilder();
+            sql.AppendLine(selectValuesForInsertStatement);
+            sql.Append("IF ");
+            sql.AppendLine(condition); // Remember to use `WITH (UPDLOCK, HOLDLOCK)` in your conditions! See: http://samsaffron.com/blog/archive/2007/04/04/14.aspx
+            sql.AppendLine("BEGIN");
+            sql.AppendLine(InsertStatement(idempotent));
+            sql.AppendLine("SELECT 1 AS InsertAttempted"); // Indicates a (potentially idempotent) insert has been performed.
+			sql.AppendLine("END");
+			sql.AppendLine("ELSE");
+			sql.AppendLine("SELECT 0 AS InsertAttempted");
+
+            return Dapper.SqlMapper.ExecuteScalarAsync<bool>(
+                connection,
+                sql.ToString(),
+                MaskParameters(entity, selectedFields, true),
+                transaction);
+        }
+
         public static System.Threading.Tasks.Task UpsertAsync(
             this System.Data.Common.DbConnection connection, 
             <#= unifiedClass.FirstCodeClass.Name #> entity, 
@@ -238,9 +292,11 @@
 
         public static string UpsertStatement(<#= unifiedClass.FirstCodeClass.Name #>.Fields fields)
         {
+			// HOLDLOCK ensures operation is concurrent by not releasing the U lock on the row after determining
+			// it does not exist. See: http://weblogs.sqlteam.com/dang/archive/2009/01/31/UPSERT-Race-Condition-With-MERGE.aspx
             var sql = new System.Text.StringBuilder();
             sql.Append(
-                @"MERGE <#= tableName #> as Target
+                @"MERGE <#= tableName #> WITH (HOLDLOCK) as Target
                 USING (VALUES (<#= properties #>)) AS Source (<#= propertiesWithoutAt #>)
                 ON    (<#= targetSourceIdentityPredicate #>)
                 WHEN MATCHED THEN

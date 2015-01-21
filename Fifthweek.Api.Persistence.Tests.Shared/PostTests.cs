@@ -18,7 +18,7 @@
                 null,
                 null,
                 "Note " + random.Next(),
-                null,
+                false,
                 DateTime.UtcNow.AddDays((random.NextDouble() * -100) + (random.NextDouble() * 100)),
                 DateTime.UtcNow.AddDays(random.NextDouble() * -100));
         }
@@ -39,8 +39,8 @@
                 null,
                 null,
                 hasComment ? "Comment " + random.Next() : null,
-                isQueued ? random.Next(100) : (int?)null,
-                isQueued ? (DateTime?)null : DateTime.UtcNow.AddDays((random.NextDouble() * -100) + (random.NextDouble() * 100)),
+                isQueued,
+                DateTime.UtcNow.AddDays((random.NextDouble() * -100) + (random.NextDouble() * 100)),
                 DateTime.UtcNow.AddDays(random.NextDouble() * -100));
         }
 

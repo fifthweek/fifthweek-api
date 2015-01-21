@@ -1,7 +1,6 @@
 ﻿namespace Fifthweek.Api.Collections.Queries
 {
     using System;
-    using System.Linq;
     using System.Threading.Tasks;
 
     using Fifthweek.Api.Core;
@@ -12,9 +11,7 @@
     public partial class GetLiveDateOfNewQueuedPostQueryHandler : IQueryHandler<GetLiveDateOfNewQueuedPostQuery, DateTime>
     {
         private readonly ICollectionSecurity collectionSecurity;
-        private readonly ICountQueuedPostsInCollectionDbStatement countQueuedPostsInCollection;
-        private readonly IGetCollectionWeeklyReleaseTimesDbStatement getCollectionWeeklyReleaseTimes;
-        private readonly IQueuedPostReleaseTimeCalculator queuedPostReleaseTimeCalculator;
+        private readonly IGetLiveDateOfNewQueuedPostDbStatement getLiveDateOfNewQueuedPost;
 
         public async Task<DateTime> HandleAsync(GetLiveDateOfNewQueuedPostQuery query)
         {
@@ -26,19 +23,7 @@
             // This query is only raised when a user is about to post something, so request same privileges.
             await this.collectionSecurity.AssertPostingAllowedAsync(authenticatedUserId, query.CollectionId);
 
-            return await this.GetLiveDateAsync(query.CollectionId);
-        }
-
-        private async Task<DateTime> GetLiveDateAsync(CollectionId collectionId)
-        {
-            var hypotheticalNewPostQueuePosition = await this.countQueuedPostsInCollection.ExecuteAsync(collectionId);
-            var ascendingWeeklyReleaseTimes = await this.getCollectionWeeklyReleaseTimes.ExecuteAsync(collectionId);
-            var ascendingHoursOfWeek = ascendingWeeklyReleaseTimes.Select(_ => new HourOfWeek(_.HourOfWeek)).ToList();
-            
-            return this.queuedPostReleaseTimeCalculator.GetQueuedPostReleaseTime(
-                DateTime.UtcNow,
-                ascendingHoursOfWeek, 
-                hypotheticalNewPostQueuePosition);
+            return await this.getLiveDateOfNewQueuedPost.ExecuteAsync(query.CollectionId);
         }
     }
 }

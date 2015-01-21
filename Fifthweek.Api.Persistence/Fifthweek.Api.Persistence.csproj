@@ -188,6 +188,18 @@
     <Compile Include="Migrations\201501191503267_SetWeeklyReleaseTimesToUseHourOfWeek.Designer.cs">
       <DependentUpon>201501191503267_SetWeeklyReleaseTimesToUseHourOfWeek.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201501200820123_RemoveQueuePosition.cs" />
+    <Compile Include="Migrations\201501200820123_RemoveQueuePosition.Designer.cs">
+      <DependentUpon>201501200820123_RemoveQueuePosition.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201501201526014_AddQueueExclusiveLowerBoundToCollections.cs" />
+    <Compile Include="Migrations\201501201526014_AddQueueExclusiveLowerBoundToCollections.Designer.cs">
+      <DependentUpon>201501201526014_AddQueueExclusiveLowerBoundToCollections.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201501202327541_AddCollectionIdIndexToPosts.cs" />
+    <Compile Include="Migrations\201501202327541_AddCollectionIdIndexToPosts.Designer.cs">
+      <DependentUpon>201501202327541_AddCollectionIdIndexToPosts.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Post.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -285,6 +297,15 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201501191503267_SetWeeklyReleaseTimesToUseHourOfWeek.resx">
       <DependentUpon>201501191503267_SetWeeklyReleaseTimesToUseHourOfWeek.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201501200820123_RemoveQueuePosition.resx">
+      <DependentUpon>201501200820123_RemoveQueuePosition.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201501201526014_AddQueueExclusiveLowerBoundToCollections.resx">
+      <DependentUpon>201501201526014_AddQueueExclusiveLowerBoundToCollections.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201501202327541_AddCollectionIdIndexToPosts.resx">
+      <DependentUpon>201501202327541_AddCollectionIdIndexToPosts.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>

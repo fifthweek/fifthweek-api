@@ -32,8 +32,8 @@
                 FileId.Value,
                 null,
                 null,
-                null,
-                null,
+                false,
+                default(DateTime),
                 Now);
 
         private static readonly Post CommentedImage = new Post(
@@ -47,8 +47,8 @@
                 FileId.Value,
                 null,
                 Comment.Value,
-                null,
-                null,
+                false,
+                default(DateTime),
                 Now);
 
         private static readonly Post CommentedFile = new Post(
@@ -62,8 +62,8 @@
                 null,
                 null,
                 Comment.Value,
-                null,
-                null,
+                false,
+                default(DateTime),
                 Now);
 
         private Mock<IPostToCollectionDbSubStatements> subStatements;

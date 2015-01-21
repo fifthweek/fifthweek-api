@@ -1,15 +1,11 @@
 ﻿namespace Fifthweek.Api.Collections.Tests.Queries
 {
     using System;
-    using System.Collections.Generic;
-    using System.Linq;
     using System.Threading.Tasks;
 
     using Fifthweek.Api.Collections.Queries;
     using Fifthweek.Api.Core;
     using Fifthweek.Api.Identity.Membership;
-    using Fifthweek.Api.Persistence;
-    using Fifthweek.Api.Persistence.Tests.Shared;
 
     using Microsoft.VisualStudio.TestTools.UnitTesting;
 
@@ -18,32 +14,22 @@
     [TestClass]
     public class GetLiveDateOfNewQueuedPostQueryHandlerTests
     {
-        private const int CurrentQueueSize = 8;
-
         private static readonly UserId UserId = new UserId(Guid.NewGuid());
         private static readonly Requester Requester = Requester.Authenticated(UserId);
         private static readonly CollectionId CollectionId = new CollectionId(Guid.NewGuid());
-        private static readonly IReadOnlyList<WeeklyReleaseTime> SortedReleaseTimes = WeeklyReleaseTimeTests.GenerateSortedWeeklyReleaseTimes(CollectionId.Value, 10); 
-        private static readonly IReadOnlyList<HourOfWeek> SortedHoursOfWeek = SortedReleaseTimes.Select(_ => new HourOfWeek(_.HourOfWeek)).ToList();
-        private static readonly DateTime CalculatedLiveDate = DateTime.UtcNow.AddDays(5);
+        private static readonly DateTime CalculatedLiveDate = DateTime.UtcNow.AddDays(8);
         private Mock<ICollectionSecurity> collectionSecurity;
-        private Mock<ICountQueuedPostsInCollectionDbStatement> countQueuedPostsInCollection;
-        private Mock<IGetCollectionWeeklyReleaseTimesDbStatement> getCollectionWeeklyReleaseTimes;
-        private Mock<IQueuedPostReleaseTimeCalculator> queuedPostReleaseTimeCalculator;
+        private Mock<IGetLiveDateOfNewQueuedPostDbStatement> getLiveDateOfNewQueuedPost;
         private GetLiveDateOfNewQueuedPostQueryHandler target;
 
         [TestInitialize]
         public void Initialize()
         {
             this.collectionSecurity = new Mock<ICollectionSecurity>();
-            this.countQueuedPostsInCollection = new Mock<ICountQueuedPostsInCollectionDbStatement>();
-            this.getCollectionWeeklyReleaseTimes = new Mock<IGetCollectionWeeklyReleaseTimesDbStatement>();
-            this.queuedPostReleaseTimeCalculator = new Mock<IQueuedPostReleaseTimeCalculator>();
+            this.getLiveDateOfNewQueuedPost = new Mock<IGetLiveDateOfNewQueuedPostDbStatement>();
             this.target = new GetLiveDateOfNewQueuedPostQueryHandler(
-                this.collectionSecurity.Object, 
-                this.countQueuedPostsInCollection.Object, 
-                this.getCollectionWeeklyReleaseTimes.Object,
-                this.queuedPostReleaseTimeCalculator.Object);
+                this.collectionSecurity.Object,
+                this.getLiveDateOfNewQueuedPost.Object);
         }
 
         [TestMethod]
@@ -65,25 +51,9 @@
         [TestMethod]
         public async Task ItShouldCalculateReleaseTimeOfHypotheticalNewQueuedPost()
         {
-            IReadOnlyList<HourOfWeek> actualReleaseTimes = null;
-
-            this.countQueuedPostsInCollection.Setup(_ => _.ExecuteAsync(CollectionId)).ReturnsAsync(CurrentQueueSize);
-            this.getCollectionWeeklyReleaseTimes.Setup(_ => _.ExecuteAsync(CollectionId)).ReturnsAsync(SortedReleaseTimes);
-            this.queuedPostReleaseTimeCalculator
-                .Setup(_ => _.GetQueuedPostReleaseTime(
-                    It.IsAny<DateTime>(), 
-                    It.IsAny<IReadOnlyList<HourOfWeek>>(), 
-                    CurrentQueueSize))
-                .Returns(CalculatedLiveDate)
-                .Callback((DateTime dateTime, IReadOnlyList<HourOfWeek> releaseTimes, int size) =>
-                {
-                    actualReleaseTimes = releaseTimes;
-                });
+            this.getLiveDateOfNewQueuedPost.Setup(_ => _.ExecuteAsync(CollectionId)).ReturnsAsync(CalculatedLiveDate);
 
             var result = await this.target.HandleAsync(new GetLiveDateOfNewQueuedPostQuery(Requester, CollectionId));
-
-            Assert.IsNotNull(actualReleaseTimes);
-            CollectionAssert.AreEqual(actualReleaseTimes.ToList(), SortedHoursOfWeek.ToList());
 
             Assert.AreEqual(result, CalculatedLiveDate);
         }

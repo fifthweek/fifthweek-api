@@ -11,10 +11,14 @@
                 Guid.NewGuid(),
                 default(Guid),
                 null,
-                "Collection " + random.Next());
+                "Collection " + random.Next(),
+                DateTime.UtcNow);
         }
 
-        public static Task CreateTestCollectionAsync(this IFifthweekDbContext databaseContext, Guid newUserId, Guid newChannelId, Guid newCollectionId)
+        public static Collection UniqueEntityWithForeignEntities(
+            Guid newUserId,
+            Guid newChannelId,
+            Guid newCollectionId)
         {
             var random = new Random();
             var creator = UserTests.UniqueEntity(random);
@@ -34,6 +38,16 @@
             collection.Channel = channel;
             collection.ChannelId = channel.Id;
 
+            return collection;
+        }
+
+        public static Task CreateTestCollectionAsync(
+            this IFifthweekDbContext databaseContext, 
+            Guid newUserId, 
+            Guid newChannelId, 
+            Guid newCollectionId)
+        {
+            var collection = UniqueEntityWithForeignEntities(newUserId, newChannelId, newCollectionId);
             databaseContext.Collections.Add(collection);
             return databaseContext.SaveChangesAsync();
         }

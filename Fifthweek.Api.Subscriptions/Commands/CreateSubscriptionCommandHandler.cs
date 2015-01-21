@@ -2,6 +2,7 @@
 {
     using System;
     using System.Threading.Tasks;
+    using System.Transactions;
 
     using Fifthweek.Api.Core;
     using Fifthweek.Api.Identity.Membership;
@@ -23,11 +24,10 @@
 
             await this.subscriptionSecurity.AssertCreationAllowedAsync(authenticatedUserId);
 
-            await this.CreateSubscriptionAsync(command, authenticatedUserId);
-            await this.CreateChannelAsync(command);
+            await this.CreateEntitiesAsync(command, authenticatedUserId);
         }
 
-        private Task CreateSubscriptionAsync(CreateSubscriptionCommand command, UserId authenticatedUserId)
+        private async Task CreateEntitiesAsync(CreateSubscriptionCommand command, UserId authenticatedUserId)
         {
             var subscription = new Subscription(
                 command.NewSubscriptionId.Value,
@@ -42,11 +42,6 @@
                 null,
                 DateTime.UtcNow);
 
-            return this.fifthweekDbContext.Database.Connection.InsertAsync(subscription); 
-        }
-
-        private Task CreateChannelAsync(CreateSubscriptionCommand command)
-        {
             var channel = new Channel(
                 command.NewSubscriptionId.Value, // Default channel uses same ID as subscription.
                 command.NewSubscriptionId.Value,
@@ -54,7 +49,14 @@
                 command.BasePrice.Value,
                 DateTime.UtcNow);
 
-            return this.fifthweekDbContext.Database.Connection.InsertAsync(channel);
+            // Assuming no lock escalation, this transaction will hold X locks on the new rows and IX locks further up the hierarchy.
+            using (var transaction = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled))
+            {
+                await this.fifthweekDbContext.Database.Connection.InsertAsync(subscription);
+                await this.fifthweekDbContext.Database.Connection.InsertAsync(channel);
+
+                transaction.Complete();
+            }
         }
     }
 }

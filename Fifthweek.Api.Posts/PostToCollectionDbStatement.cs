@@ -39,8 +39,8 @@ namespace Fifthweek.Api.Posts
                 isFileImage ? fileId.Value : (Guid?)null,
                 null,
                 comment == null ? null : comment.Value,
-                null, // QueuePosition assigned with SQL (if applicable).
-                null,
+                false, // Queue flag assigned by sub-statements.
+                default(DateTime), // Live date assigned by sub-statements.
                 now);
 
             if (isQueued)

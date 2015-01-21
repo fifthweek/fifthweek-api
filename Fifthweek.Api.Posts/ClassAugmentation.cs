@@ -472,14 +472,21 @@ namespace Fifthweek.Api.Posts
     public partial class PostToCollectionDbSubStatements 
     {
         public PostToCollectionDbSubStatements(
-            Fifthweek.Api.Persistence.IFifthweekDbContext databaseContext)
+            Fifthweek.Api.Persistence.IFifthweekDbContext databaseContext, 
+            Fifthweek.Api.Collections.IGetLiveDateOfNewQueuedPostDbStatement getLiveDateOfNewQueuedPost)
         {
             if (databaseContext == null)
             {
                 throw new ArgumentNullException("databaseContext");
             }
 
+            if (getLiveDateOfNewQueuedPost == null)
+            {
+                throw new ArgumentNullException("getLiveDateOfNewQueuedPost");
+            }
+
             this.databaseContext = databaseContext;
+            this.getLiveDateOfNewQueuedPost = getLiveDateOfNewQueuedPost;
         }
     }
 

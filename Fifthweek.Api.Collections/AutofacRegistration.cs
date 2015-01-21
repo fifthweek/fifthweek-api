@@ -10,9 +10,9 @@
         {
             builder.RegisterType<CollectionOwnership>().As<ICollectionOwnership>();
             builder.RegisterType<CollectionSecurity>().As<ICollectionSecurity>();
-            builder.RegisterType<CountQueuedPostsInCollectionDbStatement>().As<ICountQueuedPostsInCollectionDbStatement>();
+            builder.RegisterType<GetNewQueuedPostLiveDateLowerBoundDbStatement>().As<IGetNewQueuedPostLiveDateLowerBoundDbStatement>();
             builder.RegisterType<GetCollectionWeeklyReleaseTimesDbStatement>().As<IGetCollectionWeeklyReleaseTimesDbStatement>();
-            builder.RegisterType<QueuedPostReleaseTimeCalculator>().As<IQueuedPostReleaseTimeCalculator>();
+            builder.RegisterType<QueuedPostLiveDateCalculator>().As<IQueuedPostLiveDateCalculator>();
         }
     }
 }

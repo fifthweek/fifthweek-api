@@ -96,7 +96,7 @@
                     null,
                     null,
                     Note.Value,
-                    null,
+                    false,
                     new SqlDateTime(TwoDaysFromNow).Value,
                     default(DateTime));
             
@@ -148,7 +148,7 @@
                     null,
                     null,
                     Note.Value,
-                    null,
+                    false,
                     default(DateTime),
                     default(DateTime));
 

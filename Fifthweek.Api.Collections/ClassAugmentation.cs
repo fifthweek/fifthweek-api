@@ -115,6 +115,98 @@ namespace Fifthweek.Api.Collections.Controllers
     }
 
 }
+namespace Fifthweek.Api.Collections
+{
+    using System;
+    using System.Linq;
+    using Fifthweek.CodeGeneration;
+    using System.Threading.Tasks;
+    using Dapper;
+    using Fifthweek.Api.Core;
+    using Fifthweek.Api.Identity.Membership;
+    using Fifthweek.Api.Persistence;
+    using System.Collections.Generic;
+    public partial class GetCollectionWeeklyReleaseTimesDbStatement 
+    {
+        public GetCollectionWeeklyReleaseTimesDbStatement(
+            Fifthweek.Api.Persistence.IFifthweekDbContext databaseContext)
+        {
+            if (databaseContext == null)
+            {
+                throw new ArgumentNullException("databaseContext");
+            }
+
+            this.databaseContext = databaseContext;
+        }
+    }
+
+}
+namespace Fifthweek.Api.Collections
+{
+    using System;
+    using System.Linq;
+    using Fifthweek.CodeGeneration;
+    using System.Threading.Tasks;
+    using Dapper;
+    using Fifthweek.Api.Core;
+    using Fifthweek.Api.Identity.Membership;
+    using Fifthweek.Api.Persistence;
+    using System.Collections.Generic;
+    public partial class GetLiveDateOfNewQueuedPostDbStatement 
+    {
+        public GetLiveDateOfNewQueuedPostDbStatement(
+            Fifthweek.Api.Collections.IGetNewQueuedPostLiveDateLowerBoundDbStatement getNewQueuedPostLiveDateLowerBound, 
+            Fifthweek.Api.Collections.IGetCollectionWeeklyReleaseTimesDbStatement getCollectionWeeklyReleaseTimes, 
+            Fifthweek.Api.Collections.IQueuedPostLiveDateCalculator queuedPostLiveDateCalculator)
+        {
+            if (getNewQueuedPostLiveDateLowerBound == null)
+            {
+                throw new ArgumentNullException("getNewQueuedPostLiveDateLowerBound");
+            }
+
+            if (getCollectionWeeklyReleaseTimes == null)
+            {
+                throw new ArgumentNullException("getCollectionWeeklyReleaseTimes");
+            }
+
+            if (queuedPostLiveDateCalculator == null)
+            {
+                throw new ArgumentNullException("queuedPostLiveDateCalculator");
+            }
+
+            this.getNewQueuedPostLiveDateLowerBound = getNewQueuedPostLiveDateLowerBound;
+            this.getCollectionWeeklyReleaseTimes = getCollectionWeeklyReleaseTimes;
+            this.queuedPostLiveDateCalculator = queuedPostLiveDateCalculator;
+        }
+    }
+
+}
+namespace Fifthweek.Api.Collections
+{
+    using System;
+    using System.Linq;
+    using Fifthweek.CodeGeneration;
+    using System.Threading.Tasks;
+    using Dapper;
+    using Fifthweek.Api.Core;
+    using Fifthweek.Api.Identity.Membership;
+    using Fifthweek.Api.Persistence;
+    using System.Collections.Generic;
+    public partial class GetNewQueuedPostLiveDateLowerBoundDbStatement 
+    {
+        public GetNewQueuedPostLiveDateLowerBoundDbStatement(
+            Fifthweek.Api.Persistence.IFifthweekDbContext databaseContext)
+        {
+            if (databaseContext == null)
+            {
+                throw new ArgumentNullException("databaseContext");
+            }
+
+            this.databaseContext = databaseContext;
+        }
+    }
+
+}
 namespace Fifthweek.Api.Collections.Queries
 {
     using System;
@@ -123,8 +215,6 @@ namespace Fifthweek.Api.Collections.Queries
     using Fifthweek.Api.Identity.Membership;
     using Fifthweek.CodeGeneration;
     using System.Threading.Tasks;
-    using System.Collections.Generic;
-    using Fifthweek.Api.Persistence;
     public partial class GetLiveDateOfNewQueuedPostQuery 
     {
         public GetLiveDateOfNewQueuedPostQuery(
@@ -155,92 +245,24 @@ namespace Fifthweek.Api.Collections.Queries
     using Fifthweek.Api.Identity.Membership;
     using Fifthweek.CodeGeneration;
     using System.Threading.Tasks;
-    using System.Collections.Generic;
-    using Fifthweek.Api.Persistence;
     public partial class GetLiveDateOfNewQueuedPostQueryHandler 
     {
         public GetLiveDateOfNewQueuedPostQueryHandler(
             Fifthweek.Api.Collections.ICollectionSecurity collectionSecurity, 
-            Fifthweek.Api.Collections.ICountQueuedPostsInCollectionDbStatement countQueuedPostsInCollection, 
-            Fifthweek.Api.Collections.IGetCollectionWeeklyReleaseTimesDbStatement getCollectionWeeklyReleaseTimes, 
-            Fifthweek.Api.Collections.IQueuedPostReleaseTimeCalculator queuedPostReleaseTimeCalculator)
+            Fifthweek.Api.Collections.IGetLiveDateOfNewQueuedPostDbStatement getLiveDateOfNewQueuedPost)
         {
             if (collectionSecurity == null)
             {
                 throw new ArgumentNullException("collectionSecurity");
             }
 
-            if (countQueuedPostsInCollection == null)
+            if (getLiveDateOfNewQueuedPost == null)
             {
-                throw new ArgumentNullException("countQueuedPostsInCollection");
-            }
-
-            if (getCollectionWeeklyReleaseTimes == null)
-            {
-                throw new ArgumentNullException("getCollectionWeeklyReleaseTimes");
-            }
-
-            if (queuedPostReleaseTimeCalculator == null)
-            {
-                throw new ArgumentNullException("queuedPostReleaseTimeCalculator");
+                throw new ArgumentNullException("getLiveDateOfNewQueuedPost");
             }
 
             this.collectionSecurity = collectionSecurity;
-            this.countQueuedPostsInCollection = countQueuedPostsInCollection;
-            this.getCollectionWeeklyReleaseTimes = getCollectionWeeklyReleaseTimes;
-            this.queuedPostReleaseTimeCalculator = queuedPostReleaseTimeCalculator;
-        }
-    }
-
-}
-namespace Fifthweek.Api.Collections
-{
-    using System;
-    using System.Linq;
-    using Fifthweek.CodeGeneration;
-    using System.Threading.Tasks;
-    using Dapper;
-    using Fifthweek.Api.Core;
-    using Fifthweek.Api.Identity.Membership;
-    using Fifthweek.Api.Persistence;
-    using System.Collections.Generic;
-    public partial class CountQueuedPostsInCollectionDbStatement 
-    {
-        public CountQueuedPostsInCollectionDbStatement(
-            Fifthweek.Api.Persistence.IFifthweekDbContext databaseContext)
-        {
-            if (databaseContext == null)
-            {
-                throw new ArgumentNullException("databaseContext");
-            }
-
-            this.databaseContext = databaseContext;
-        }
-    }
-
-}
-namespace Fifthweek.Api.Collections
-{
-    using System;
-    using System.Linq;
-    using Fifthweek.CodeGeneration;
-    using System.Threading.Tasks;
-    using Dapper;
-    using Fifthweek.Api.Core;
-    using Fifthweek.Api.Identity.Membership;
-    using Fifthweek.Api.Persistence;
-    using System.Collections.Generic;
-    public partial class GetCollectionWeeklyReleaseTimesDbStatement 
-    {
-        public GetCollectionWeeklyReleaseTimesDbStatement(
-            Fifthweek.Api.Persistence.IFifthweekDbContext databaseContext)
-        {
-            if (databaseContext == null)
-            {
-                throw new ArgumentNullException("databaseContext");
-            }
-
-            this.databaseContext = databaseContext;
+            this.getLiveDateOfNewQueuedPost = getLiveDateOfNewQueuedPost;
         }
     }
 
@@ -314,8 +336,6 @@ namespace Fifthweek.Api.Collections.Queries
     using Fifthweek.Api.Identity.Membership;
     using Fifthweek.CodeGeneration;
     using System.Threading.Tasks;
-    using System.Collections.Generic;
-    using Fifthweek.Api.Persistence;
     public partial class GetLiveDateOfNewQueuedPostQuery 
     {
         public override string ToString()

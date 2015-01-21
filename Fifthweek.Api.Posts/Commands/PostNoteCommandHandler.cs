@@ -52,7 +52,7 @@
                 null,
                 null,
                 command.Note.Value,
-                null,
+                false,
                 liveDate,
                 now);
 

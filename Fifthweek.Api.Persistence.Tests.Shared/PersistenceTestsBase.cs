@@ -4,9 +4,7 @@
     using System.Threading.Tasks;
     using System.Transactions;
 
-    using Fifthweek.Api.Core;
     using Fifthweek.CodeGeneration;
-    using Fifthweek.Shared;
 
     public abstract partial class PersistenceTestsBase
     {
