@@ -17,7 +17,7 @@
 
             UserId authenticatedUserId;
             query.Requester.AssertAuthenticated(out authenticatedUserId);
-            query.Requester.AssertAuthorizedFor(query.RequestedUserId);
+            query.Requester.AssertAuthenticatedAs(query.RequestedUserId);
 
             return this.accountRepository.GetAccountSettingsAsync(query.RequestedUserId);
         }

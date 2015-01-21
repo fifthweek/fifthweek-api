@@ -13,7 +13,7 @@
                 : Requester.Unauthenticated;
         }
 
-        public static void AssertAuthorizedFor(this Requester requester, UserId requiredUserId)
+        public static void AssertAuthenticatedAs(this Requester requester, UserId requiredUserId)
         {
             UserId userId;
             requester.AssertAuthenticated(out userId);

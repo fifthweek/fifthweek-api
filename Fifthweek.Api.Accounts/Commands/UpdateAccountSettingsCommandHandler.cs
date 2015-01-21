@@ -20,7 +20,7 @@
 
             UserId userId;
             command.Requester.AssertAuthenticated(out userId);
-            command.Requester.AssertAuthorizedFor(command.RequestedUserId);
+            command.Requester.AssertAuthenticatedAs(command.RequestedUserId);
             
             if (command.NewProfileImageId != null)
             {

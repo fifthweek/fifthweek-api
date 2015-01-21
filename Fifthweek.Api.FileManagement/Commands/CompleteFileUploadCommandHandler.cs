@@ -27,7 +27,7 @@
             command.Requester.AssertAuthenticated(out userId);
             
             var file = await this.fileRepository.GetFileWaitingForUploadAsync(command.FileId);
-            command.Requester.AssertAuthorizedFor(file.UserId);
+            command.Requester.AssertAuthenticatedAs(file.UserId);
 
             var mimeType = this.mimeTypeMap.GetMimeType(file.FileExtension);
 

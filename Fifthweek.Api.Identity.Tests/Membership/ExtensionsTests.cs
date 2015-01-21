@@ -14,12 +14,12 @@
         private static readonly Requester AuthenticatedRequester = Requester.Authenticated(AuthenticatedUserId);
 
         [TestMethod]
-        public void WhenAssertAuthorizedForCalled_ItShouldThrowAnExceptionIfNotAuthenticated()
+        public void WhenAssertAuthenticatedAsCalled_ItShouldThrowAnExceptionIfNotAuthenticated()
         {
             Exception exception = null;
             try
             {
-                 Requester.Unauthenticated.AssertAuthorizedFor(new UserId(Guid.NewGuid()));
+                 Requester.Unauthenticated.AssertAuthenticatedAs(new UserId(Guid.NewGuid()));
             }
             catch (Exception t)
             {
@@ -31,12 +31,12 @@
         }
 
         [TestMethod]
-        public void WhenAssertAuthorizedForCalled_ItShouldThrowAnExceptionIfUserIdsDoNotMatch()
+        public void WhenAssertAuthenticatedAsCalled_ItShouldThrowAnExceptionIfUserIdsDoNotMatch()
         {
             Exception exception = null;
             try
             {
-                AuthenticatedRequester.AssertAuthorizedFor(new UserId(Guid.NewGuid()));
+                AuthenticatedRequester.AssertAuthenticatedAs(new UserId(Guid.NewGuid()));
             }
             catch (Exception t)
             {
@@ -48,12 +48,12 @@
         }
 
         [TestMethod]
-        public void WhenAssertAuthorizedForCalled_ItShouldContinueIfAuthenticatedAndAuthorizedForIsNull()
+        public void WhenAssertAuthenticatedAsCalled_ItShouldContinueIfAuthenticatedAndAuthorizedForIsNull()
         {
             Exception exception = null;
             try
             {
-                AuthenticatedRequester.AssertAuthorizedFor(null);
+                AuthenticatedRequester.AssertAuthenticatedAs(null);
             }
             catch (Exception t)
             {
@@ -64,12 +64,12 @@
         }
 
         [TestMethod]
-        public void WhenAssertAuthorizedForCalled_ItShouldContinueAuthorized()
+        public void WhenAssertAuthenticatedAsCalled_ItShouldContinueAuthorized()
         {
             Exception exception = null;
             try
             {
-                AuthenticatedRequester.AssertAuthorizedFor(AuthenticatedUserId);
+                AuthenticatedRequester.AssertAuthenticatedAs(AuthenticatedUserId);
             }
             catch (Exception t)
             {

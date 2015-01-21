@@ -16,7 +16,7 @@
         public async Task<UserState> HandleAsync(GetUserStateQuery query)
         {
             query.AssertNotNull("query");
-            query.Requester.AssertAuthorizedFor(query.RequestedUserId);
+            query.Requester.AssertAuthenticatedAs(query.RequestedUserId);
 
             CreatorStatus creatorStatus = null;
             if (query.IsCreator)
