@@ -7,8 +7,8 @@
     <ProjectGuid>{6328C758-26D7-4FB4-A626-D8AAD17435FD}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Fifthweek.WebJobs.Deletions.Shared</RootNamespace>
-    <AssemblyName>Fifthweek.WebJobs.Deletions.Shared</AssemblyName>
+    <RootNamespace>Fifthweek.WebJobs.GarbageCollection.Shared</RootNamespace>
+    <AssemblyName>Fifthweek.WebJobs.GarbageCollection.Shared</AssemblyName>
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />

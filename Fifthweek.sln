@@ -102,11 +102,11 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fifthweek.Api.Collections",
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fifthweek.Api.Collections.Tests", "Fifthweek.Api.Collections.Tests\Fifthweek.Api.Collections.Tests.csproj", "{7109ACEC-A98B-4CDE-BF8E-D38048344DFB}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fifthweek.WebJobs.Deletions", "Fifthweek.WebJobs.Deletions\Fifthweek.WebJobs.Deletions.csproj", "{ED4BB87D-AC12-4BC8-B06A-6CA956BA6DA8}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fifthweek.WebJobs.GarbageCollection", "Fifthweek.WebJobs.Deletions\Fifthweek.WebJobs.GarbageCollection.csproj", "{ED4BB87D-AC12-4BC8-B06A-6CA956BA6DA8}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fifthweek.WebJobs.Deletions.Shared", "Fifthweek.WebJobs.Deletions.Shared\Fifthweek.WebJobs.Deletions.Shared.csproj", "{6328C758-26D7-4FB4-A626-D8AAD17435FD}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fifthweek.WebJobs.GarbageCollection.Shared", "Fifthweek.WebJobs.Deletions.Shared\Fifthweek.WebJobs.GarbageCollection.Shared.csproj", "{6328C758-26D7-4FB4-A626-D8AAD17435FD}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fifthweek.WebJobs.Deletions.Tests", "Fifthweek.WebJobs.Deletions.Tests\Fifthweek.WebJobs.Deletions.Tests.csproj", "{1A90E948-31F6-4C6C-B1CA-2863CD583B42}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fifthweek.WebJobs.GarbageCollection.Tests", "Fifthweek.WebJobs.Deletions.Tests\Fifthweek.WebJobs.GarbageCollection.Tests.csproj", "{1A90E948-31F6-4C6C-B1CA-2863CD583B42}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

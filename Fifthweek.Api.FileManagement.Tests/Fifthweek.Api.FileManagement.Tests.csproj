@@ -158,9 +158,9 @@
       <Project>{85691D93-9C0C-498B-8341-1990BC8E24B2}</Project>
       <Name>Fifthweek.Tests.Shared</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Fifthweek.WebJobs.Deletions.Shared\Fifthweek.WebJobs.Deletions.Shared.csproj">
+    <ProjectReference Include="..\Fifthweek.WebJobs.Deletions.Shared\Fifthweek.WebJobs.GarbageCollection.Shared.csproj">
       <Project>{6328C758-26D7-4FB4-A626-D8AAD17435FD}</Project>
-      <Name>Fifthweek.WebJobs.Deletions.Shared</Name>
+      <Name>Fifthweek.WebJobs.GarbageCollection.Shared</Name>
     </ProjectReference>
     <ProjectReference Include="..\Fifthweek.WebJobs.Files.Shared\Fifthweek.WebJobs.Files.Shared.csproj">
       <Project>{227AE1D7-E7A5-44A2-87CC-82EB29033B0D}</Project>
