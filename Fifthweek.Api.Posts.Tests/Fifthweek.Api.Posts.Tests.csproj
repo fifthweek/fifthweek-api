@@ -89,6 +89,8 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
+    <Compile Include="Commands\DeletePostCommandHandlerTests.cs" />
+    <Compile Include="DeletePostDbStatementTests.cs" />
     <Compile Include="PostOwnershipTests.cs" />
     <Compile Include="PostSecurityTests.cs" />
     <Compile Include="Commands\PostFileCommandHandlerTests.cs" />

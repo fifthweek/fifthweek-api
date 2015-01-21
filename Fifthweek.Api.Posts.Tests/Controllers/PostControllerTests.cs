@@ -100,6 +100,26 @@
             this.postNote.Verify();
         }
 
+        [TestMethod]
+        public async Task WhenDeletingPost_ItShouldIssueDeletePostCommand()
+        {
+            this.userContext.Setup(v => v.TryGetUserId()).Returns(UserId);
+            this.deletePost.Setup(v => v.HandleAsync(new DeletePostCommand(PostId, Requester.Authenticated(UserId))))
+                .Returns(Task.FromResult(0))
+                .Verifiable();
+
+            await this.target.DeletePost(PostId.Value.EncodeGuid());
+
+            this.deletePost.Verify();
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(BadRequestException))]
+        public async Task WhenDeletingPostWithoutSpecifyingPostId_ItShouldThrowBadRequestException()
+        {
+            await this.target.DeletePost(string.Empty);
+        }
+
         public static NewNoteData NewNoteData()
         {
             return new NewNoteData

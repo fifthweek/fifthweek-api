@@ -16,9 +16,11 @@
     [TestClass]
     public class QueueServiceTests
     {
-        private readonly string containerName = "containerName";
-        private readonly string blobName = "blobName";
-        private readonly string purpose = "purpose";
+        private readonly string queueName = "queueName";
+        private readonly TestMessage testMessage = new TestMessage { One = 1, Two = "2" };
+
+        private readonly TimeSpan timeToLive = TimeSpan.FromMinutes(100);
+        private readonly TimeSpan initialVisibilityDelay = TimeSpan.FromMinutes(200);
 
         private Mock<ICloudStorageAccount> cloudStorageAccount;
         private Mock<ICloudQueueClient> cloudQueueClient;
@@ -37,60 +39,126 @@
         }
 
         [TestMethod]
-        public async Task WhenPostingFileUploadCompletedMessage_ItShouldPostMessageToQueue()
+        public async Task WhenPostingMessage_ItShouldPostMessageToQueue()
         {
             this.cloudStorageAccount.Setup(v => v.CreateCloudQueueClient()).Returns(this.cloudQueueClient.Object);
-            this.cloudQueueClient.Setup(v => v.GetQueueReference(Constants.FilesQueueName)).Returns(this.cloudQueue.Object);
+            this.cloudQueueClient.Setup(v => v.GetQueueReference(this.queueName)).Returns(this.cloudQueue.Object);
 
             CloudQueueMessage message = null;
 
-            this.cloudQueue.Setup(v => v.AddMessageAsync(It.IsAny<CloudQueueMessage>()))
-                .Callback<CloudQueueMessage>(v => message = v)
+            this.cloudQueue.Setup(v => v.AddMessageAsync(It.IsAny<CloudQueueMessage>(), null, null))
+                .Callback<CloudQueueMessage, TimeSpan?, TimeSpan?>((m, x, y) => message = m)
                 .Returns(Task.FromResult(0));
 
-            await this.queueService.PostFileUploadCompletedMessageToQueueAsync(
-                this.containerName,
-                this.blobName,
-                this.purpose);
+            await this.queueService.AddMessageToQueueAsync(
+                this.queueName,
+                this.testMessage);
 
             this.cloudQueue.Verify();
 
             Assert.IsNotNull(message);
-            var messageContent = JsonConvert.DeserializeObject<ProcessFileMessage>(message.AsString);
-            Assert.AreEqual(this.containerName, messageContent.ContainerName);
-            Assert.AreEqual(this.blobName, messageContent.BlobName);
-            Assert.AreEqual(this.purpose, messageContent.Purpose);
-            Assert.IsFalse(messageContent.Overwrite);
+            var messageContent = JsonConvert.DeserializeObject<TestMessage>(message.AsString);
+            Assert.AreEqual(this.testMessage.One, messageContent.One);
+            Assert.AreEqual(this.testMessage.Two, messageContent.Two);
         }
 
         [TestMethod]
         [ExpectedException(typeof(ArgumentNullException))]
-        public async Task WhenPostingFileUploadCompletedMessage_ItShouldRequireContainerName()
+        public async Task WhenPostingMessage_ItShouldRequireQueueName()
         {
-            await this.queueService.PostFileUploadCompletedMessageToQueueAsync(
+            await this.queueService.AddMessageToQueueAsync(
                 null,
-                this.blobName,
-                this.purpose);
+                this.testMessage);
         }
 
         [TestMethod]
         [ExpectedException(typeof(ArgumentNullException))]
-        public async Task WhenPostingFileUploadCompletedMessage_ItShouldRequireBlobName()
+        public async Task WhenPostingMessage_ItShouldRequireMessage()
         {
-            await this.queueService.PostFileUploadCompletedMessageToQueueAsync(
-                this.containerName,
-                null,
-                this.purpose);
-        }
-
-        [TestMethod]
-        [ExpectedException(typeof(ArgumentNullException))]
-        public async Task WhenPostingFileUploadCompletedMessage_ItShouldRequirePurpose()
-        {
-            await this.queueService.PostFileUploadCompletedMessageToQueueAsync(
-                this.containerName,
-                this.blobName,
+            await this.queueService.AddMessageToQueueAsync<TestMessage>(
+                this.queueName,
                 null);
+        }
+
+        [TestMethod]
+        public async Task WhenPostingMessageSpecifyingTimeoutAndVisibility_ItShouldPostMessageToQueue()
+        {
+            this.cloudStorageAccount.Setup(v => v.CreateCloudQueueClient()).Returns(this.cloudQueueClient.Object);
+            this.cloudQueueClient.Setup(v => v.GetQueueReference(this.queueName)).Returns(this.cloudQueue.Object);
+
+            CloudQueueMessage message = null;
+
+            this.cloudQueue.Setup(v => v.AddMessageAsync(It.IsAny<CloudQueueMessage>(), this.timeToLive, this.initialVisibilityDelay))
+                .Callback<CloudQueueMessage, TimeSpan?, TimeSpan?>((m, x, y) => message = m)
+                .Returns(Task.FromResult(0));
+
+            await this.queueService.AddMessageToQueueAsync(
+                this.queueName,
+                this.testMessage,
+                this.timeToLive,
+                this.initialVisibilityDelay);
+
+            this.cloudQueue.Verify();
+
+            Assert.IsNotNull(message);
+            var messageContent = JsonConvert.DeserializeObject<TestMessage>(message.AsString);
+            Assert.AreEqual(this.testMessage.One, messageContent.One);
+            Assert.AreEqual(this.testMessage.Two, messageContent.Two);
+        }
+
+        [TestMethod]
+        public async Task WhenPostingMessageSpecifyingNullTimeoutAndVisibility_ItShouldPostMessageToQueue()
+        {
+            this.cloudStorageAccount.Setup(v => v.CreateCloudQueueClient()).Returns(this.cloudQueueClient.Object);
+            this.cloudQueueClient.Setup(v => v.GetQueueReference(this.queueName)).Returns(this.cloudQueue.Object);
+
+            CloudQueueMessage message = null;
+
+            this.cloudQueue.Setup(v => v.AddMessageAsync(It.IsAny<CloudQueueMessage>(), null, null))
+                .Callback<CloudQueueMessage, TimeSpan?, TimeSpan?>((m, x, y) => message = m)
+                .Returns(Task.FromResult(0));
+
+            await this.queueService.AddMessageToQueueAsync(
+                this.queueName,
+                this.testMessage,
+                null,
+                null);
+
+            this.cloudQueue.Verify();
+
+            Assert.IsNotNull(message);
+            var messageContent = JsonConvert.DeserializeObject<TestMessage>(message.AsString);
+            Assert.AreEqual(this.testMessage.One, messageContent.One);
+            Assert.AreEqual(this.testMessage.Two, messageContent.Two);
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentNullException))]
+        public async Task WhenPostingMessageSpecifyingTimeoutAndVisibility_ItShouldRequireQueueName()
+        {
+            await this.queueService.AddMessageToQueueAsync(
+                null,
+                this.testMessage,
+                this.timeToLive,
+                this.initialVisibilityDelay);
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentNullException))]
+        public async Task WhenPostingMessageSpecifyingTimeoutAndVisibility_ItShouldRequireMessage()
+        {
+            await this.queueService.AddMessageToQueueAsync<TestMessage>(
+                this.queueName,
+                null,
+                this.timeToLive,
+                this.initialVisibilityDelay);
+        }
+
+        public class TestMessage
+        {
+            public int One { get; set; }
+
+            public string Two { get; set; }
         }
     }
 }

@@ -70,6 +70,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AutofacRegistration.cs" />
+    <Compile Include="DeletePostDbStatement.cs" />
+    <Compile Include="IDeletePostDbStatement.cs" />
     <Compile Include="PostOwnership.cs" />
     <Compile Include="IPostOwnership.cs" />
     <Compile Include="PostSecurity.cs" />
@@ -138,6 +140,10 @@
     <ProjectReference Include="..\Fifthweek.Shared\Fifthweek.Shared.csproj">
       <Project>{6D12FFBB-38E9-4722-A690-0F0338538EBC}</Project>
       <Name>Fifthweek.Shared</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Fifthweek.WebJobs.Deletions.Shared\Fifthweek.WebJobs.Deletions.Shared.csproj">
+      <Project>{6328C758-26D7-4FB4-A626-D8AAD17435FD}</Project>
+      <Name>Fifthweek.WebJobs.Deletions.Shared</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

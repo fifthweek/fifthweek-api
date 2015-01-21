@@ -15,6 +15,8 @@ namespace Fifthweek.Api.Posts.Commands
     using Fifthweek.Api.Core;
     using Fifthweek.Api.Subscriptions;
     using Fifthweek.Api.Persistence;
+    using Fifthweek.Api.Azure;
+    using Fifthweek.WebJobs.Deletions.Shared;
     public partial class PostFileCommand 
     {
         public PostFileCommand(
@@ -74,6 +76,8 @@ namespace Fifthweek.Api.Posts.Commands
     using Fifthweek.Api.Core;
     using Fifthweek.Api.Subscriptions;
     using Fifthweek.Api.Persistence;
+    using Fifthweek.Api.Azure;
+    using Fifthweek.WebJobs.Deletions.Shared;
     public partial class PostFileCommandHandler 
     {
         public PostFileCommandHandler(
@@ -122,6 +126,8 @@ namespace Fifthweek.Api.Posts.Commands
     using Fifthweek.Api.Core;
     using Fifthweek.Api.Subscriptions;
     using Fifthweek.Api.Persistence;
+    using Fifthweek.Api.Azure;
+    using Fifthweek.WebJobs.Deletions.Shared;
     public partial class PostImageCommand 
     {
         public PostImageCommand(
@@ -181,6 +187,8 @@ namespace Fifthweek.Api.Posts.Commands
     using Fifthweek.Api.Core;
     using Fifthweek.Api.Subscriptions;
     using Fifthweek.Api.Persistence;
+    using Fifthweek.Api.Azure;
+    using Fifthweek.WebJobs.Deletions.Shared;
     public partial class PostImageCommandHandler 
     {
         public PostImageCommandHandler(
@@ -229,6 +237,8 @@ namespace Fifthweek.Api.Posts.Commands
     using Fifthweek.Api.Core;
     using Fifthweek.Api.Subscriptions;
     using Fifthweek.Api.Persistence;
+    using Fifthweek.Api.Azure;
+    using Fifthweek.WebJobs.Deletions.Shared;
     public partial class PostNoteCommand 
     {
         public PostNoteCommand(
@@ -279,6 +289,8 @@ namespace Fifthweek.Api.Posts.Commands
     using Fifthweek.Api.Core;
     using Fifthweek.Api.Subscriptions;
     using Fifthweek.Api.Persistence;
+    using Fifthweek.Api.Azure;
+    using Fifthweek.WebJobs.Deletions.Shared;
     public partial class PostNoteCommandHandler 
     {
         public PostNoteCommandHandler(
@@ -378,6 +390,8 @@ namespace Fifthweek.Api.Posts
     using Fifthweek.Api.Persistence;
     using Fifthweek.Api.Subscriptions;
     using System.Collections.Generic;
+    using Dapper;
+    using Fifthweek.Api.Identity.Membership;
     public partial class PostFileTypeChecks 
     {
         public PostFileTypeChecks(
@@ -413,6 +427,8 @@ namespace Fifthweek.Api.Posts
     using Fifthweek.Api.Persistence;
     using Fifthweek.Api.Subscriptions;
     using System.Collections.Generic;
+    using Dapper;
+    using Fifthweek.Api.Identity.Membership;
     public partial class PostId 
     {
         public PostId(
@@ -441,6 +457,8 @@ namespace Fifthweek.Api.Posts
     using Fifthweek.Api.Persistence;
     using Fifthweek.Api.Subscriptions;
     using System.Collections.Generic;
+    using Dapper;
+    using Fifthweek.Api.Identity.Membership;
     public partial class PostToCollectionDbStatement 
     {
         public PostToCollectionDbStatement(
@@ -469,6 +487,8 @@ namespace Fifthweek.Api.Posts
     using Fifthweek.Api.Persistence;
     using Fifthweek.Api.Subscriptions;
     using System.Collections.Generic;
+    using Dapper;
+    using Fifthweek.Api.Identity.Membership;
     public partial class PostToCollectionDbSubStatements 
     {
         public PostToCollectionDbSubStatements(
@@ -503,6 +523,8 @@ namespace Fifthweek.Api.Posts.Commands
     using Fifthweek.Api.Core;
     using Fifthweek.Api.Subscriptions;
     using Fifthweek.Api.Persistence;
+    using Fifthweek.Api.Azure;
+    using Fifthweek.WebJobs.Deletions.Shared;
     public partial class DeletePostCommand 
     {
         public DeletePostCommand(
@@ -527,20 +549,28 @@ namespace Fifthweek.Api.Posts.Commands
 }
 namespace Fifthweek.Api.Posts.Commands
 {
-    using System.Threading.Tasks;
-    using Fifthweek.Api.Azure;
-    using Fifthweek.Api.Core;
+    using System;
+    using System.Linq;
+    using Fifthweek.Api.Collections;
+    using Fifthweek.Api.FileManagement;
     using Fifthweek.Api.Identity.Membership;
     using Fifthweek.CodeGeneration;
+    using System.Threading.Tasks;
+    using Fifthweek.Api.Core;
+    using Fifthweek.Api.Subscriptions;
+    using Fifthweek.Api.Persistence;
+    using Fifthweek.Api.Azure;
+    using Fifthweek.WebJobs.Deletions.Shared;
     public partial class DeletePostCommandHandler 
     {
         public DeletePostCommandHandler(
-            Fifthweek.Api.Azure.IQueueService queueService, 
-            Fifthweek.Api.Posts.IPostSecurity postSecurity)
+            Fifthweek.Api.FileManagement.IScheduleGarbageCollectionStatement scheduleGarbageCollection, 
+            Fifthweek.Api.Posts.IPostSecurity postSecurity, 
+            Fifthweek.Api.Posts.IDeletePostDbStatement deletePost)
         {
-            if (queueService == null)
+            if (scheduleGarbageCollection == null)
             {
-                throw new ArgumentNullException("queueService");
+                throw new ArgumentNullException("scheduleGarbageCollection");
             }
 
             if (postSecurity == null)
@@ -548,20 +578,33 @@ namespace Fifthweek.Api.Posts.Commands
                 throw new ArgumentNullException("postSecurity");
             }
 
-            this.queueService = queueService;
+            if (deletePost == null)
+            {
+                throw new ArgumentNullException("deletePost");
+            }
+
+            this.scheduleGarbageCollection = scheduleGarbageCollection;
             this.postSecurity = postSecurity;
+            this.deletePost = deletePost;
         }
     }
 
 }
 namespace Fifthweek.Api.Posts
 {
+    using System;
+    using System.Linq;
     using System.Threading.Tasks;
-    using Dapper;
     using Fifthweek.Api.Core;
-    using Fifthweek.Api.Identity.Membership;
-    using Fifthweek.Api.Persistence;
+    using Fifthweek.Api.FileManagement;
     using Fifthweek.CodeGeneration;
+    using Fifthweek.Shared;
+    using Fifthweek.Api.Collections;
+    using Fifthweek.Api.Persistence;
+    using Fifthweek.Api.Subscriptions;
+    using System.Collections.Generic;
+    using Dapper;
+    using Fifthweek.Api.Identity.Membership;
     public partial class PostOwnership 
     {
         public PostOwnership(
@@ -579,11 +622,19 @@ namespace Fifthweek.Api.Posts
 }
 namespace Fifthweek.Api.Posts
 {
+    using System;
+    using System.Linq;
     using System.Threading.Tasks;
     using Fifthweek.Api.Core;
-    using Fifthweek.Api.Identity.Membership;
+    using Fifthweek.Api.FileManagement;
     using Fifthweek.CodeGeneration;
     using Fifthweek.Shared;
+    using Fifthweek.Api.Collections;
+    using Fifthweek.Api.Persistence;
+    using Fifthweek.Api.Subscriptions;
+    using System.Collections.Generic;
+    using Dapper;
+    using Fifthweek.Api.Identity.Membership;
     public partial class PostSecurity 
     {
         public PostSecurity(
@@ -595,6 +646,36 @@ namespace Fifthweek.Api.Posts
             }
 
             this.postOwnership = postOwnership;
+        }
+    }
+
+}
+namespace Fifthweek.Api.Posts
+{
+    using System;
+    using System.Linq;
+    using System.Threading.Tasks;
+    using Fifthweek.Api.Core;
+    using Fifthweek.Api.FileManagement;
+    using Fifthweek.CodeGeneration;
+    using Fifthweek.Shared;
+    using Fifthweek.Api.Collections;
+    using Fifthweek.Api.Persistence;
+    using Fifthweek.Api.Subscriptions;
+    using System.Collections.Generic;
+    using Dapper;
+    using Fifthweek.Api.Identity.Membership;
+    public partial class DeletePostDbStatement 
+    {
+        public DeletePostDbStatement(
+            Fifthweek.Api.Persistence.IFifthweekDbContext fifthweekDbContext)
+        {
+            if (fifthweekDbContext == null)
+            {
+                throw new ArgumentNullException("fifthweekDbContext");
+            }
+
+            this.fifthweekDbContext = fifthweekDbContext;
         }
     }
 
@@ -612,6 +693,8 @@ namespace Fifthweek.Api.Posts.Commands
     using Fifthweek.Api.Core;
     using Fifthweek.Api.Subscriptions;
     using Fifthweek.Api.Persistence;
+    using Fifthweek.Api.Azure;
+    using Fifthweek.WebJobs.Deletions.Shared;
     public partial class PostFileCommand 
     {
         public override string ToString()
@@ -709,6 +792,8 @@ namespace Fifthweek.Api.Posts.Commands
     using Fifthweek.Api.Core;
     using Fifthweek.Api.Subscriptions;
     using Fifthweek.Api.Persistence;
+    using Fifthweek.Api.Azure;
+    using Fifthweek.WebJobs.Deletions.Shared;
     public partial class PostImageCommand 
     {
         public override string ToString()
@@ -806,6 +891,8 @@ namespace Fifthweek.Api.Posts.Commands
     using Fifthweek.Api.Core;
     using Fifthweek.Api.Subscriptions;
     using Fifthweek.Api.Persistence;
+    using Fifthweek.Api.Azure;
+    using Fifthweek.WebJobs.Deletions.Shared;
     public partial class PostNoteCommand 
     {
         public override string ToString()
@@ -892,6 +979,8 @@ namespace Fifthweek.Api.Posts
     using Fifthweek.Api.Persistence;
     using Fifthweek.Api.Subscriptions;
     using System.Collections.Generic;
+    using Dapper;
+    using Fifthweek.Api.Identity.Membership;
     public partial class PostId 
     {
         public override string ToString()
@@ -953,6 +1042,8 @@ namespace Fifthweek.Api.Posts.Commands
     using Fifthweek.Api.Core;
     using Fifthweek.Api.Subscriptions;
     using Fifthweek.Api.Persistence;
+    using Fifthweek.Api.Azure;
+    using Fifthweek.WebJobs.Deletions.Shared;
     public partial class DeletePostCommand 
     {
         public override string ToString()
@@ -1318,6 +1409,8 @@ namespace Fifthweek.Api.Posts
     using Fifthweek.Api.Persistence;
     using Fifthweek.Api.Subscriptions;
     using System.Collections.Generic;
+    using Dapper;
+    using Fifthweek.Api.Identity.Membership;
     public partial class ValidComment 
     {
         public override string ToString()
@@ -1380,6 +1473,8 @@ namespace Fifthweek.Api.Posts
     using Fifthweek.Api.Persistence;
     using Fifthweek.Api.Subscriptions;
     using System.Collections.Generic;
+    using Dapper;
+    using Fifthweek.Api.Identity.Membership;
     public partial class ValidNote 
     {
         public override string ToString()

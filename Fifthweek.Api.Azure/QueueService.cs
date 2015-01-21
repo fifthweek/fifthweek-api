@@ -1,16 +1,14 @@
 ﻿namespace Fifthweek.Api.Azure
 {
+    using System;
     using System.Threading.Tasks;
 
     using Fifthweek.Api.Core;
     using Fifthweek.Azure;
-    using Fifthweek.WebJobs.Files.Shared;
 
     using Microsoft.WindowsAzure.Storage.Queue;
 
     using Newtonsoft.Json;
-
-    using Constants = Fifthweek.WebJobs.Files.Shared.Constants;
 
     public class QueueService : IQueueService
     {
@@ -21,19 +19,23 @@
             this.cloudStorageAccount = cloudStorageAccount;
         }
 
-        public async Task PostFileUploadCompletedMessageToQueueAsync(string containerName, string blobName, string purpose)
+        public Task AddMessageToQueueAsync<TMessage>(string queueName, TMessage messageContent)
         {
-            containerName.AssertNotNull("containerName");
-            blobName.AssertNotNull("blobName");
-            purpose.AssertNotNull("purpose");
+            return this.AddMessageToQueueAsync(queueName, messageContent, null, null);
+        }
+
+        public async Task AddMessageToQueueAsync<TMessage>(string queueName, TMessage messageContent, TimeSpan? timeToLive, TimeSpan? initialVisibilityDelay)
+        {
+            queueName.AssertNotNull("queueName");
+            messageContent.AssertNotNull("messageContent");
 
             var cloudQueueClient = this.cloudStorageAccount.CreateCloudQueueClient();
-            var queue = cloudQueueClient.GetQueueReference(Constants.FilesQueueName);
+            var queue = cloudQueueClient.GetQueueReference(queueName);
 
-            var messageContent = new ProcessFileMessage(containerName, blobName, purpose, false);
             var serializedMessageContent = JsonConvert.SerializeObject(messageContent);
             var message = new CloudQueueMessage(serializedMessageContent);
-            await queue.AddMessageAsync(message);
+
+            await queue.AddMessageAsync(message, timeToLive, initialVisibilityDelay);
         }
     }
 }

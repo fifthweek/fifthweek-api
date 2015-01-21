@@ -9,6 +9,7 @@
     using Fifthweek.Api.Identity.Membership;
     using Fifthweek.Shared;
     using Fifthweek.Tests.Shared;
+    using Fifthweek.WebJobs.Files.Shared;
 
     using Microsoft.VisualStudio.TestTools.UnitTesting;
 
@@ -79,7 +80,7 @@
                 .Returns(Task.FromResult(0))
                 .Verifiable();
 
-            this.queueService.Setup(v => v.PostFileUploadCompletedMessageToQueueAsync(ContainerName, BlobName, Purpose))
+            this.queueService.Setup(v => v.AddMessageToQueueAsync(WebJobs.Files.Shared.Constants.FilesQueueName, new ProcessFileMessage(ContainerName, BlobName, Purpose, false)))
                 .Returns(Task.FromResult(0))
                 .Verifiable();
 

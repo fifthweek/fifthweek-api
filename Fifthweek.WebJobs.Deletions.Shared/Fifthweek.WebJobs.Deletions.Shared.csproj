@@ -45,7 +45,8 @@
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
     </Compile>
-    <Compile Include="DeletePostMessage.cs" />
+    <Compile Include="Constants.cs" />
+    <Compile Include="RunGarbageCollectionMessage.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -55,6 +56,10 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Fifthweek.Api.Azure\Fifthweek.Api.Azure.csproj">
+      <Project>{ABC43617-3AAA-4B7A-B4DC-D10E023F1846}</Project>
+      <Name>Fifthweek.Api.Azure</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Fifthweek.CodeGeneration\Fifthweek.CodeGeneration.csproj">
       <Project>{770F450E-2166-4269-BEC1-DF59AA16B1E8}</Project>
       <Name>Fifthweek.CodeGeneration</Name>

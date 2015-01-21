@@ -7,6 +7,7 @@
     using Fifthweek.Api.Identity.Membership;
     using Fifthweek.CodeGeneration;
     using Fifthweek.Shared;
+    using Fifthweek.WebJobs.Files.Shared;
 
     [Decorator(typeof(RetryOnSqlDeadlockOrTimeoutCommandHandlerDecorator<>))]
     [AutoConstructor]
@@ -35,7 +36,8 @@
 
             await this.fileRepository.SetFileUploadComplete(command.FileId, blobLength);
 
-            await this.queueService.PostFileUploadCompletedMessageToQueueAsync(blobLocation.ContainerName, blobLocation.BlobName, file.Purpose);
+            var messageContent = new ProcessFileMessage(blobLocation.ContainerName, blobLocation.BlobName, file.Purpose, false);
+            await this.queueService.AddMessageToQueueAsync(WebJobs.Files.Shared.Constants.FilesQueueName, messageContent);
         }
     }
 }

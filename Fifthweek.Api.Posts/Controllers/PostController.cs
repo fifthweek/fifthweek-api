@@ -80,25 +80,8 @@
             return this.Ok();
         }
 
-        [Route("notes/{postId}")]
-        public Task DeleteNote(string postId)
-        {
-            return this.DeletePost(postId);
-        }
-
-        [Route("images/{postId}")]
-        public Task DeleteImage(string postId)
-        {
-            return this.DeletePost(postId);
-        }
-
-        [Route("files/{postId}")]
-        public Task DeleteFile(string postId)
-        {
-            return this.DeletePost(postId);
-        }
-
-        private Task DeletePost(string postId)
+        [Route("{postId}")]
+        public Task DeletePost(string postId)
         {
             postId.AssertUrlParameterProvided("postId");
             var parsedPostId = new PostId(postId.DecodeGuid());

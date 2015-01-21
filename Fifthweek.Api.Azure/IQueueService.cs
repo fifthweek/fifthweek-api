@@ -1,9 +1,12 @@
 ﻿namespace Fifthweek.Api.Azure
 {
+    using System;
     using System.Threading.Tasks;
 
     public interface IQueueService
     {
-        Task PostFileUploadCompletedMessageToQueueAsync(string containerName, string blobName, string purpose);
+        Task AddMessageToQueueAsync<TMessage>(string queueName, TMessage messageContent);
+
+        Task AddMessageToQueueAsync<TMessage>(string queueName, TMessage messageContent, TimeSpan? timeToLive, TimeSpan? initialVisibilityDelay);
     }
 }

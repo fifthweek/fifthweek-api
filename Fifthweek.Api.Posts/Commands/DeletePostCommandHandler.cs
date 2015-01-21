@@ -4,15 +4,19 @@
 
     using Fifthweek.Api.Azure;
     using Fifthweek.Api.Core;
+    using Fifthweek.Api.FileManagement;
     using Fifthweek.Api.Identity.Membership;
     using Fifthweek.CodeGeneration;
+    using Fifthweek.WebJobs.Deletions.Shared;
 
     [AutoConstructor]
     public partial class DeletePostCommandHandler : ICommandHandler<DeletePostCommand>
     {
-        private readonly IQueueService queueService;
+        private readonly IScheduleGarbageCollectionStatement scheduleGarbageCollection;
 
         private readonly IPostSecurity postSecurity;
+
+        private readonly IDeletePostDbStatement deletePost;
 
         public async Task HandleAsync(DeletePostCommand command)
         {
@@ -22,10 +26,8 @@
             command.Requester.AssertAuthenticated(out userId);
 
             await this.postSecurity.AssertDeletionAllowedAsync(userId, command.PostId);
-
-            // Post delete message to queue.
-            
-            // Delete post from table.
+            await this.deletePost.ExecuteAsync(command.PostId);
+            await this.scheduleGarbageCollection.ExecuteAsync();
         }
     }
 }
