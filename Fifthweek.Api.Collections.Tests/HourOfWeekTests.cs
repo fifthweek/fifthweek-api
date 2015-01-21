@@ -18,13 +18,17 @@
         [TestMethod]
         public void ItShouldAllowUtcDateTimes()
         {
-            const int HoursIntoWeek = 42;
+            var firstSundayInFeb = new DateTime(2015, 2, 1, 0, 0, 0, DateTimeKind.Utc);
+            Assert.AreEqual(new HourOfWeek(firstSundayInFeb).Value, (byte)0);
 
-            var firstWeekOfFeb = new DateTime(2015, 2, 1, 0, 0, 0, DateTimeKind.Utc).AddHours(HoursIntoWeek);
-            Assert.AreEqual(new HourOfWeek(firstWeekOfFeb).Value, (byte)HoursIntoWeek);
+            var thirdSundayInFeb = new DateTime(2015, 2, 15, 0, 0, 0, DateTimeKind.Utc);
+            Assert.AreEqual(new HourOfWeek(thirdSundayInFeb).Value, (byte)0);
 
-            var thirdWeekOfFeb = new DateTime(2015, 2, 15, 0, 0, 0, DateTimeKind.Utc).AddHours(HoursIntoWeek);
-            Assert.AreEqual(new HourOfWeek(thirdWeekOfFeb).Value, (byte)HoursIntoWeek);
+            var secondWednesdayInFeb = new DateTime(2015, 2, 11, 0, 0, 0, DateTimeKind.Utc);
+            Assert.AreEqual(new HourOfWeek(secondWednesdayInFeb).Value, (byte)72);
+
+            var secondWednesdayInFebMidday = new DateTime(2015, 2, 11, 12, 0, 0, DateTimeKind.Utc);
+            Assert.AreEqual(new HourOfWeek(secondWednesdayInFebMidday).Value, (byte)84);
         }
 
         [TestMethod]

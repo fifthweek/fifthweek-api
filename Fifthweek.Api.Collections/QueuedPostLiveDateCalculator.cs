@@ -37,14 +37,14 @@
             var startTimeWithWeekReset = new DateTime(
                 exclusiveLowerBound.Year,
                 exclusiveLowerBound.Month,
-                (exclusiveLowerBound.Day / 7) * 7,
+                exclusiveLowerBound.Day,
                 0,
                 0,
                 0,
-                DateTimeKind.Utc);
+                DateTimeKind.Utc)
+                .AddDays(-1 * (int)exclusiveLowerBound.DayOfWeek);
 
             var releasesPerWeek = ascendingWeeklyReleaseTimes.Count;
-
             var currentHourOfWeek = new HourOfWeek(exclusiveLowerBound).Value;
             var nextReleaseTimeAfterCurrentTime = ascendingWeeklyReleaseTimes.FirstOrDefault(_ => _.Value > currentHourOfWeek);
             var startFromNextWeek = nextReleaseTimeAfterCurrentTime == null;

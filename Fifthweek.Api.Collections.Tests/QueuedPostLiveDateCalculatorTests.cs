@@ -2,26 +2,68 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Linq;
 
     using Microsoft.VisualStudio.TestTools.UnitTesting;
 
     [TestClass]
     public class QueuedPostLiveDateCalculatorTests
     {
-        public static readonly DateTime TuesdayNight = new DateTime(2015, 1, 20, 18, 36, 12, DateTimeKind.Utc);
-        public static readonly HourOfWeek Monday = new HourOfWeek(24);
-        public static readonly HourOfWeek Tuesday = new HourOfWeek(48);
-        public static readonly HourOfWeek Wednesday = new HourOfWeek(72);
-        public static readonly HourOfWeek Thursday = new HourOfWeek(96);
-        public static readonly IReadOnlyList<HourOfWeek> ReleaseSchedule = new[]
+        private static readonly HourOfWeek Sunday = new HourOfWeek(0); // Minimum hour of week.
+        private static readonly HourOfWeek Monday = new HourOfWeek(24);
+        private static readonly HourOfWeek Tuesday = new HourOfWeek(48);
+        private static readonly HourOfWeek Wednesday = new HourOfWeek(72);
+        private static readonly HourOfWeek Thursday = new HourOfWeek(96);
+        private static readonly HourOfWeek SaturdayNight = new HourOfWeek(167); // Maximum hour of week.
+
+        private static readonly IReadOnlyList<HourOfWeek> ScheduleStartOfWeek = new[]
         {
+            Sunday
+        };
+
+        private static readonly IReadOnlyList<HourOfWeek> ScheduleEndOfWeek = new[]
+        {
+            SaturdayNight
+        };
+
+        private static readonly IReadOnlyList<HourOfWeek> ScheduleMidWeek = new[]
+        {
+            Wednesday
+        };
+
+        private static readonly IReadOnlyList<HourOfWeek> ScheduleForManyDays = new[]
+        {
+            Sunday,
             Monday,
             Tuesday,
             Wednesday,
-            Thursday
+            Thursday, 
+            SaturdayNight
         };
 
-        public QueuedPostLiveDateCalculator target;
+        private static readonly IReadOnlyList<IReadOnlyList<HourOfWeek>> Schedules = new[]
+        {
+            ScheduleStartOfWeek,
+            ScheduleEndOfWeek,
+            ScheduleMidWeek,
+            ScheduleForManyDays
+        };
+
+        private static readonly Random Random = new Random();
+        private static readonly IEnumerable<DateTime> DaysInJanuary = DaysInMonth(Random, 1, 31, 2015);
+        private static readonly IEnumerable<DateTime> DaysInFebruary = DaysInMonth(Random, 2, 28, 2015);
+        private static readonly IEnumerable<DateTime> DaysInFebruaryLeap = DaysInMonth(Random, 2, 29, 2020);
+        private static readonly IEnumerable<DateTime> DaysInApril = DaysInMonth(Random, 4, 30, 2015);
+        private static readonly IEnumerable<DateTime> DaysInDecember = DaysInMonth(Random, 12, 31, 2015);
+        private static readonly IReadOnlyList<DateTime> Dates =
+            DaysInJanuary
+            .Concat(DaysInFebruary)
+            .Concat(DaysInFebruaryLeap)
+            .Concat(DaysInApril)
+            .Concat(DaysInDecember)
+            .ToList();
+
+        private QueuedPostLiveDateCalculator target;
 
         [TestInitialize]
         public void Initialize()
@@ -33,14 +75,20 @@
         [ExpectedException(typeof(ArgumentException))]
         public void ItShouldRequireUtcStartTime()
         {
-            this.target.GetNextLiveDates(DateTime.Now, ReleaseSchedule, 1);
+            foreach (var schedule in Schedules)
+            {
+                this.target.GetNextLiveDates(DateTime.Now, schedule, 1);    
+            }
         }
 
         [TestMethod]
         [ExpectedException(typeof(ArgumentException))]
         public void ItShouldRequireNonEmptyReleaseTimes()
         {
-            this.target.GetNextLiveDates(TuesdayNight, new HourOfWeek[0], 1);
+            foreach (var date in Dates)
+            {
+                this.target.GetNextLiveDates(date, new HourOfWeek[0], 1);
+            }
         }
 
         [TestMethod]
@@ -55,7 +103,10 @@
                 Thursday
             };
 
-            this.target.GetNextLiveDates(TuesdayNight, nonAscendingReleaseSchedule, 1);
+            foreach (var date in Dates)
+            {
+                this.target.GetNextLiveDates(date, nonAscendingReleaseSchedule, 1);
+            }
         }
 
         [TestMethod]
@@ -70,7 +121,10 @@
                 Wednesday
             };
 
-            this.target.GetNextLiveDates(TuesdayNight, nonAscendingReleaseSchedule, 1);
+            foreach (var date in Dates)
+            {
+                this.target.GetNextLiveDates(date, nonAscendingReleaseSchedule, 1);
+            }
         }
 
         [TestMethod]
@@ -86,7 +140,10 @@
                 Thursday
             };
 
-            this.target.GetNextLiveDates(TuesdayNight, indistinctReleaseSchedule, 1);
+            foreach (var date in Dates)
+            {
+                this.target.GetNextLiveDates(date, indistinctReleaseSchedule, 1);
+            }
         }
 
         [TestMethod]
@@ -102,36 +159,170 @@
                 Thursday
             };
 
-            this.target.GetNextLiveDates(TuesdayNight, indistinctReleaseSchedule, 1);
+            foreach (var date in Dates)
+            {
+                this.target.GetNextLiveDates(date, indistinctReleaseSchedule, 1);
+            }
         }
 
         [TestMethod]
         [ExpectedException(typeof(ArgumentOutOfRangeException))]
         public void ItShouldRequireNonNegativeCount()
         {
-            this.target.GetNextLiveDates(TuesdayNight, ReleaseSchedule, -1);
+            foreach (var schedule in Schedules)
+            {
+                foreach (var date in Dates)
+                {
+                    this.target.GetNextLiveDates(date, schedule, -1);
+                }
+            }
         }
 
         [TestMethod]
         public void ItShouldAllowZeroCount()
         {
-            this.target.GetNextLiveDates(TuesdayNight, ReleaseSchedule, 0);
+            foreach (var schedule in Schedules)
+            {
+                foreach (var date in Dates)
+                {
+                    this.target.GetNextLiveDates(date, schedule, 0);
+                }
+            }
         }
 
         [TestMethod]
         public void ItShouldReturnListWithSameSizeAsCount()
         {
-            Assert.AreEqual(0, this.target.GetNextLiveDates(TuesdayNight, ReleaseSchedule, 0).Count);
-            Assert.AreEqual(1, this.target.GetNextLiveDates(TuesdayNight, ReleaseSchedule, 1).Count);
-            Assert.AreEqual(10, this.target.GetNextLiveDates(TuesdayNight, ReleaseSchedule, 10).Count);
+            foreach (var schedule in Schedules)
+            {
+                foreach (var date in Dates)
+                {
+                    Assert.AreEqual(0, this.target.GetNextLiveDates(date, schedule, 0).Count);
+                    Assert.AreEqual(1, this.target.GetNextLiveDates(date, schedule, 1).Count);
+                    Assert.AreEqual(10, this.target.GetNextLiveDates(date, schedule, 10).Count);
+                }
+            }
         }
 
         [TestMethod]
         public void ItShouldReturnDatesInUtc()
         {
-            foreach (var result in this.target.GetNextLiveDates(TuesdayNight, ReleaseSchedule, 10))
+            foreach (var schedule in Schedules)
             {
-                Assert.AreEqual(result.Kind, DateTimeKind.Utc);    
+                foreach (var date in Dates)
+                {
+                    foreach (var result in this.target.GetNextLiveDates(date, schedule, 10))
+                    {
+                        Assert.AreEqual(result.Kind, DateTimeKind.Utc);
+                    }
+                }
+            }
+        }
+
+        [TestMethod]
+        public void ItShouldReturnDatesClippedToTheHour()
+        {
+            foreach (var schedule in Schedules)
+            {
+                foreach (var date in Dates)
+                {
+                    foreach (var result in this.target.GetNextLiveDates(date, schedule, 10))
+                    {
+                        var timeWithHourPrecision = new DateTime(
+                            result.Year,
+                            result.Month,
+                            result.Day,
+                            result.Hour,
+                            minute: 0,
+                            second: 0,
+                            kind: DateTimeKind.Utc);
+
+                        Assert.AreEqual(result, timeWithHourPrecision);
+                    }
+                }
+            }
+        }
+
+        [TestMethod]
+        public void ItShouldReturnDatesGreaterThanTheLowerBound()
+        {
+            foreach (var schedule in Schedules)
+            {
+                foreach (var date in Dates)
+                {
+                    foreach (var result in this.target.GetNextLiveDates(date, schedule, 10))
+                    {
+                        Assert.IsTrue(result > date);
+                    }
+                }
+            }
+        }
+
+        [TestMethod]
+        public void ItShouldReturnDatesInAnIncreasingSequence()
+        {
+            foreach (var schedule in Schedules)
+            {
+                foreach (var date in Dates)
+                {
+                    var result = this.target.GetNextLiveDates(date, schedule, 10);
+
+                    result.Aggregate(
+                        date,
+                        (previous, current) =>
+                            {
+                                Assert.IsTrue(current > previous);
+                                return current;
+                            });
+                }
+            }
+        }
+
+        [TestMethod]
+        public void ItShouldReturnDatesThatAlignWithReleaseTimes()
+        {
+            foreach (var schedule in Schedules)
+            {
+                foreach (var date in Dates)
+                {
+                    var results = this.target.GetNextLiveDates(date, schedule, 10);
+
+                    var expectedFirstReleaseTime = 0;
+                    var currentHourOfWeek = new HourOfWeek(date);
+                    for (var i = 0; i < schedule.Count; i++)
+                    {
+                        // If this never evaluates, it means the current date is beyond any scheduled date for this week,
+                        // so we wrap around to the start of next week, which is 0 (initialized above).
+                        if (currentHourOfWeek.Value < schedule[i].Value)
+                        {
+                            expectedFirstReleaseTime = i;
+                            break;
+                        }
+                    }
+
+                    for (var i = 0; i < results.Count; i++)
+                    {
+                        var expectedWeeklyReleaseTime = schedule[(i + expectedFirstReleaseTime) % schedule.Count];
+                        var actualWeeklyReleaseTime = new HourOfWeek(results[i]);
+
+                        Assert.AreEqual(expectedWeeklyReleaseTime, actualWeeklyReleaseTime);
+                    }
+                }
+            }
+        }
+
+        private static IEnumerable<DateTime> DaysInMonth(Random random, int oneBasedMonthIndex, int daysInMonth, int year)
+        {
+            for (var i = 1; i <= daysInMonth; i++)
+            {
+                // No precision. Also represents start of day / week / month / year (when month index is 1)
+                yield return new DateTime(year, oneBasedMonthIndex, i, 0, 0, 0, DateTimeKind.Utc);
+
+                // With precision.
+                yield return new DateTime(year, oneBasedMonthIndex, i, random.Next(24), random.Next(60), random.Next(60), DateTimeKind.Utc);
+
+                // Ensure we hit end of the year (when month index is 12).
+                yield return new DateTime(year, oneBasedMonthIndex, i, 23, 59, 59, DateTimeKind.Utc);
             }
         }
     }
