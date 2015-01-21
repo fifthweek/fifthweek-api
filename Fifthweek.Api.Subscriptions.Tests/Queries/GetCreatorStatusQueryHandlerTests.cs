@@ -20,6 +20,7 @@
     {
         private static readonly UserId UserId = new UserId(Guid.NewGuid());
         private static readonly SubscriptionId SubscriptionId = new SubscriptionId(Guid.NewGuid());
+        private static readonly ChannelId DefaultChannelId = new ChannelId(SubscriptionId.Value);
         private static readonly GetCreatorStatusQuery Query = new GetCreatorStatusQuery(Requester.Authenticated(UserId));
         private GetCreatorStatusQueryHandler target;
 
@@ -53,14 +54,94 @@
         }
 
         [TestMethod]
+        public async Task WhenCreatorHasNoPosts_ItShouldReturnTheyMustWriteFirstPost()
+        {
+            await this.NewTestDatabaseAsync(async testDatabase =>
+            {
+                this.target = new GetCreatorStatusQueryHandler(testDatabase.NewContext());
+                await this.CreateSubscriptionAsync(UserId, SubscriptionId, testDatabase);
+                await testDatabase.TakeSnapshotAsync();
+
+                var result = await this.target.HandleAsync(Query);
+
+                Assert.AreEqual(result.SubscriptionId, SubscriptionId);
+                Assert.IsTrue(result.MustWriteFirstPost);
+
+                return ExpectedSideEffects.None;
+            });
+        }
+
+        [TestMethod]
+        public async Task WhenCreatorHasOnePost_ItShouldNotReturnTheyMustWriteFirstPost()
+        {
+            await this.NewTestDatabaseAsync(async testDatabase =>
+            {
+                this.target = new GetCreatorStatusQueryHandler(testDatabase.NewContext());
+                await this.CreateSubscriptionAsync(UserId, SubscriptionId, testDatabase);
+                await this.CreatePostAsync(testDatabase);
+                await testDatabase.TakeSnapshotAsync();
+
+                var result = await this.target.HandleAsync(Query);
+
+                Assert.AreEqual(result.SubscriptionId, SubscriptionId);
+                Assert.IsFalse(result.MustWriteFirstPost);
+
+                return ExpectedSideEffects.None;
+            });
+        }
+
+        [TestMethod]
+        public async Task WhenCreatorHasManyPosts_ItShouldNotReturnTheyMustWriteFirstPost()
+        {
+            await this.NewTestDatabaseAsync(async testDatabase =>
+            {
+                this.target = new GetCreatorStatusQueryHandler(testDatabase.NewContext());
+                await this.CreateSubscriptionAsync(UserId, SubscriptionId, testDatabase);
+                await this.CreatePostAsync(testDatabase);
+                await this.CreatePostAsync(testDatabase);
+                await this.CreatePostAsync(testDatabase);
+                await testDatabase.TakeSnapshotAsync();
+
+                var result = await this.target.HandleAsync(Query);
+
+                Assert.AreEqual(result.SubscriptionId, SubscriptionId);
+                Assert.IsFalse(result.MustWriteFirstPost);
+
+                return ExpectedSideEffects.None;
+            });
+        }
+
+        [TestMethod]
+        public async Task WhenCreatorHasManyPostsInDifferentChannels_ItShouldNotReturnTheyMustWriteFirstPost()
+        {
+            await this.NewTestDatabaseAsync(async testDatabase =>
+            {
+                this.target = new GetCreatorStatusQueryHandler(testDatabase.NewContext());
+                await this.CreateSubscriptionAsync(UserId, SubscriptionId, testDatabase);
+                await this.CreatePostAsync(testDatabase);
+                await this.CreatePostAsync(testDatabase);
+                await this.CreatePostAsync(testDatabase, true);
+                await this.CreatePostAsync(testDatabase, true);
+                await testDatabase.TakeSnapshotAsync();
+
+                var result = await this.target.HandleAsync(Query);
+
+                Assert.AreEqual(result.SubscriptionId, SubscriptionId);
+                Assert.IsFalse(result.MustWriteFirstPost);
+
+                return ExpectedSideEffects.None;
+            });
+        }
+
+        [TestMethod]
         public async Task WhenMultipleSubscriptionsMatchCreator_ItShouldReturnTheLatestSubscriptionId()
         {
             await this.NewTestDatabaseAsync(async testDatabase =>
             {
                 this.target = new GetCreatorStatusQueryHandler(testDatabase.NewContext());
-                await this.CreateSubscriptionAsync(UserId, new SubscriptionId(Guid.NewGuid()), testDatabase);
+                await this.CreateSubscriptionAsync(UserId, new SubscriptionId(Guid.NewGuid()), testDatabase, newUser: true, setTodaysDate: false);
                 await this.CreateSubscriptionsAsync(UserId, 100, testDatabase);
-                await this.CreateSubscriptionAsync(UserId, SubscriptionId, testDatabase, false, true);
+                await this.CreateSubscriptionAsync(UserId, SubscriptionId, testDatabase, newUser: false, setTodaysDate: true);
                 await testDatabase.TakeSnapshotAsync();
 
                 var result = await this.target.HandleAsync(Query);
@@ -131,6 +212,11 @@
             subscription.CreatorId = creator.Id;
             subscription.HeaderImageFileId = null;
 
+            var channel = ChannelTests.UniqueEntity(random);
+            channel.Id = newSubscriptionId.Value; // Create default channel.
+            channel.Subscription = subscription;
+            channel.SubscriptionId = subscription.Id;
+
             if (newUser)
             {
                 subscription.Creator = creator;
@@ -153,8 +239,30 @@
                     await databaseContext.SaveChangesAsync();
                 }
 
-                // Work around EF (in)validation
                 await databaseContext.Database.Connection.InsertAsync(subscription, false);
+                await databaseContext.Database.Connection.InsertAsync(channel, false);
+            }
+        }
+
+        private async Task CreatePostAsync(TestDatabaseContext testDatabase, bool createNewChannel = false)
+        {
+            using (var databaseContext = testDatabase.NewContext())
+            {
+                var random = new Random();
+
+                var post = PostTests.UniqueNote(random);
+                post.ChannelId = DefaultChannelId.Value;
+
+                if (createNewChannel)
+                {
+                    var channel = ChannelTests.UniqueEntity(random);
+                    channel.SubscriptionId = SubscriptionId.Value;
+                    await databaseContext.Database.Connection.InsertAsync(channel, false);
+
+                    post.ChannelId = channel.Id;
+                }
+                
+                await databaseContext.Database.Connection.InsertAsync(post, false);
             }
         }
     }

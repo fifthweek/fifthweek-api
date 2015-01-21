@@ -8,5 +8,7 @@
     public partial class GetCreatorStatusQuery : IQuery<CreatorStatus>
     {
         public Requester Requester { get; private set; }
+
+        public UserId RequestedUserId { get; private set; }
     }
 }
