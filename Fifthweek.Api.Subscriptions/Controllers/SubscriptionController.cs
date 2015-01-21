@@ -16,7 +16,6 @@
     {
         private readonly ICommandHandler<CreateSubscriptionCommand> createSubscription;
         private readonly ICommandHandler<UpdateSubscriptionCommand> updateSubscription;
-        private readonly IQueryHandler<GetCreatorStatusQuery, CreatorStatus> getCreatorStatus;
         private readonly IUserContext userContext;
         private readonly IGuidCreator guidCreator;
 
@@ -60,17 +59,6 @@
                 subscription.VideoObject));
 
             return this.Ok();
-        }
-
-        [ResponseType(typeof(CreatorStatusData))]
-        [Route("currentCreatorStatus")]
-        public async Task<CreatorStatusData> GetCurrentCreatorStatus()
-        {
-            var requester = this.userContext.GetRequester();
-            var creatorStatus = await this.getCreatorStatus.HandleAsync(new GetCreatorStatusQuery(requester));
-            return new CreatorStatusData(
-                creatorStatus.SubscriptionId == null ? null : creatorStatus.SubscriptionId.Value.EncodeGuid(), 
-                creatorStatus.MustWriteFirstPost);
         }
     }
 }

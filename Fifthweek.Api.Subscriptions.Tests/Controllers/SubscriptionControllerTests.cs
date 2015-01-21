@@ -24,7 +24,6 @@
         private static readonly FileId HeaderImageFileId = new FileId(Guid.NewGuid());
         private Mock<ICommandHandler<CreateSubscriptionCommand>> createSubscription;
         private Mock<ICommandHandler<UpdateSubscriptionCommand>> updateSubscription;
-        private Mock<IQueryHandler<GetCreatorStatusQuery, CreatorStatus>> getCreatorStatus;
         private Mock<IUserContext> userContext;
         private Mock<IGuidCreator> guidCreator;
         private SubscriptionController target;
@@ -34,13 +33,11 @@
         {
             this.createSubscription = new Mock<ICommandHandler<CreateSubscriptionCommand>>();
             this.updateSubscription = new Mock<ICommandHandler<UpdateSubscriptionCommand>>();
-            this.getCreatorStatus = new Mock<IQueryHandler<GetCreatorStatusQuery, CreatorStatus>>();
             this.userContext = new Mock<IUserContext>();
             this.guidCreator = new Mock<IGuidCreator>();
             this.target = new SubscriptionController(
                 this.createSubscription.Object,
                 this.updateSubscription.Object,
-                this.getCreatorStatus.Object,
                 this.userContext.Object,
                 this.guidCreator.Object);
         }
@@ -74,34 +71,6 @@
 
             Assert.IsInstanceOfType(result, typeof(OkResult));
             this.updateSubscription.Verify();
-        }
-
-        [TestMethod]
-        public async Task WhenGettingCreatorStatus_ItShouldReturnResultFromCreatorStatusQuery()
-        {
-            var query = new GetCreatorStatusQuery(Requester.Authenticated(UserId));
-
-            this.userContext.Setup(v => v.TryGetUserId()).Returns(UserId);
-            this.getCreatorStatus.Setup(v => v.HandleAsync(query)).Returns(Task.FromResult(new CreatorStatus(SubscriptionId, false)));
-
-            var result = await this.target.GetCurrentCreatorStatus();
-
-            Assert.AreEqual(result.SubscriptionId, SubscriptionId.Value.EncodeGuid());
-            Assert.AreEqual(result.MustWriteFirstPost, false);
-        }
-
-        [TestMethod]
-        public async Task WhenGettingCreatorStatus_ItShouldReturnResultFromCreatorStatusQuery2()
-        {
-            var query = new GetCreatorStatusQuery(Requester.Authenticated(UserId));
-
-            this.userContext.Setup(v => v.TryGetUserId()).Returns(UserId);
-            this.getCreatorStatus.Setup(v => v.HandleAsync(query)).Returns(Task.FromResult(new CreatorStatus(SubscriptionId, true)));
-
-            var result = await this.target.GetCurrentCreatorStatus();
-
-            Assert.AreEqual(result.SubscriptionId, SubscriptionId.Value.EncodeGuid());
-            Assert.AreEqual(result.MustWriteFirstPost, true);
         }
 
         public static NewSubscriptionData NewCreateSubscriptionData()

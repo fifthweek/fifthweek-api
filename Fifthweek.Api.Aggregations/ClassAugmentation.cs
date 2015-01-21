@@ -1,0 +1,347 @@
+﻿using System;
+using System.Linq;
+
+
+
+namespace Fifthweek.Api.Aggregations.Controllers
+{
+    using System;
+    using System.Linq;
+    using System.Threading.Tasks;
+    using System.Web.Http;
+    using Fifthweek.Api.Core;
+    using Fifthweek.Api.Identity.Membership;
+    using Fifthweek.Api.Identity.OAuth;
+    using Fifthweek.Api.Subscriptions;
+    using Fifthweek.Api.Subscriptions.Controllers;
+    using Fifthweek.Api.Subscriptions.Queries;
+    using Fifthweek.CodeGeneration;
+    using Fifthweek.Api.Persistence.Identity;
+    using Fifthweek.Api.Aggregations.Queries;
+    public partial class UserStateController 
+    {
+        public UserStateController(
+            Fifthweek.Api.Core.IQueryHandler<Fifthweek.Api.Aggregations.Queries.GetUserStateQuery,Fifthweek.Api.Aggregations.Queries.UserState> getUserState, 
+            Fifthweek.Api.Identity.OAuth.IUserContext userContext)
+        {
+            if (getUserState == null)
+            {
+                throw new ArgumentNullException("getUserState");
+            }
+
+            if (userContext == null)
+            {
+                throw new ArgumentNullException("userContext");
+            }
+
+            this.getUserState = getUserState;
+            this.userContext = userContext;
+        }
+    }
+
+}
+namespace Fifthweek.Api.Aggregations.Controllers
+{
+    using System;
+    using System.Linq;
+    using System.Threading.Tasks;
+    using System.Web.Http;
+    using Fifthweek.Api.Core;
+    using Fifthweek.Api.Identity.Membership;
+    using Fifthweek.Api.Identity.OAuth;
+    using Fifthweek.Api.Subscriptions;
+    using Fifthweek.Api.Subscriptions.Controllers;
+    using Fifthweek.Api.Subscriptions.Queries;
+    using Fifthweek.CodeGeneration;
+    using Fifthweek.Api.Persistence.Identity;
+    using Fifthweek.Api.Aggregations.Queries;
+    public partial class UserStateResponse 
+    {
+        public UserStateResponse(
+            Fifthweek.Api.Subscriptions.Controllers.CreatorStatusData creatorStatus)
+        {
+            this.CreatorStatus = creatorStatus;
+        }
+    }
+
+}
+namespace Fifthweek.Api.Aggregations.Queries
+{
+    using System;
+    using System.Linq;
+    using Fifthweek.Api.Core;
+    using Fifthweek.Api.Identity.Membership;
+    using Fifthweek.Api.Subscriptions;
+    using Fifthweek.CodeGeneration;
+    using System.Threading.Tasks;
+    using Fifthweek.Api.Subscriptions.Queries;
+    public partial class GetUserStateQuery 
+    {
+        public GetUserStateQuery(
+            Fifthweek.Api.Identity.Membership.UserId requestedUserId, 
+            Fifthweek.Api.Identity.Membership.Requester requester, 
+            System.Boolean isCreator)
+        {
+            if (requestedUserId == null)
+            {
+                throw new ArgumentNullException("requestedUserId");
+            }
+
+            if (requester == null)
+            {
+                throw new ArgumentNullException("requester");
+            }
+
+            if (isCreator == null)
+            {
+                throw new ArgumentNullException("isCreator");
+            }
+
+            this.RequestedUserId = requestedUserId;
+            this.Requester = requester;
+            this.IsCreator = isCreator;
+        }
+    }
+
+}
+namespace Fifthweek.Api.Aggregations.Queries
+{
+    using System;
+    using System.Linq;
+    using Fifthweek.Api.Core;
+    using Fifthweek.Api.Identity.Membership;
+    using Fifthweek.Api.Subscriptions;
+    using Fifthweek.CodeGeneration;
+    using System.Threading.Tasks;
+    using Fifthweek.Api.Subscriptions.Queries;
+    public partial class UserState 
+    {
+        public UserState(
+            Fifthweek.Api.Subscriptions.CreatorStatus creatorStatus)
+        {
+            this.CreatorStatus = creatorStatus;
+        }
+    }
+
+}
+namespace Fifthweek.Api.Aggregations.Queries
+{
+    using System;
+    using System.Linq;
+    using Fifthweek.Api.Core;
+    using Fifthweek.Api.Identity.Membership;
+    using Fifthweek.Api.Subscriptions;
+    using Fifthweek.CodeGeneration;
+    using System.Threading.Tasks;
+    using Fifthweek.Api.Subscriptions.Queries;
+    public partial class GetUserStateQueryHandler 
+    {
+        public GetUserStateQueryHandler(
+            Fifthweek.Api.Core.IQueryHandler<Fifthweek.Api.Subscriptions.Queries.GetCreatorStatusQuery,Fifthweek.Api.Subscriptions.CreatorStatus> getCreatorStatus)
+        {
+            if (getCreatorStatus == null)
+            {
+                throw new ArgumentNullException("getCreatorStatus");
+            }
+
+            this.getCreatorStatus = getCreatorStatus;
+        }
+    }
+
+}
+
+namespace Fifthweek.Api.Aggregations.Controllers
+{
+    using System;
+    using System.Linq;
+    using System.Threading.Tasks;
+    using System.Web.Http;
+    using Fifthweek.Api.Core;
+    using Fifthweek.Api.Identity.Membership;
+    using Fifthweek.Api.Identity.OAuth;
+    using Fifthweek.Api.Subscriptions;
+    using Fifthweek.Api.Subscriptions.Controllers;
+    using Fifthweek.Api.Subscriptions.Queries;
+    using Fifthweek.CodeGeneration;
+    using Fifthweek.Api.Persistence.Identity;
+    using Fifthweek.Api.Aggregations.Queries;
+    public partial class UserStateResponse 
+    {
+        public override string ToString()
+        {
+            return string.Format("UserStateResponse({0})", this.CreatorStatus == null ? "null" : this.CreatorStatus.ToString());
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj))
+            {
+                return false;
+            }
+
+            if (ReferenceEquals(this, obj))
+            {
+                return true;
+            }
+
+            if (obj.GetType() != this.GetType())
+            {
+                return false;
+            }
+
+            return this.Equals((UserStateResponse)obj);
+        }
+
+        public override int GetHashCode()
+        {
+            unchecked
+            {
+                int hashCode = 0;
+                hashCode = (hashCode * 397) ^ (this.CreatorStatus != null ? this.CreatorStatus.GetHashCode() : 0);
+                return hashCode;
+            }
+        }
+
+        protected bool Equals(UserStateResponse other)
+        {
+            if (!object.Equals(this.CreatorStatus, other.CreatorStatus))
+            {
+                return false;
+            }
+
+            return true;
+        }
+    }
+
+}
+namespace Fifthweek.Api.Aggregations.Queries
+{
+    using System;
+    using System.Linq;
+    using Fifthweek.Api.Core;
+    using Fifthweek.Api.Identity.Membership;
+    using Fifthweek.Api.Subscriptions;
+    using Fifthweek.CodeGeneration;
+    using System.Threading.Tasks;
+    using Fifthweek.Api.Subscriptions.Queries;
+    public partial class GetUserStateQuery 
+    {
+        public override string ToString()
+        {
+            return string.Format("GetUserStateQuery({0}, {1}, {2})", this.RequestedUserId == null ? "null" : this.RequestedUserId.ToString(), this.Requester == null ? "null" : this.Requester.ToString(), this.IsCreator == null ? "null" : this.IsCreator.ToString());
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj))
+            {
+                return false;
+            }
+
+            if (ReferenceEquals(this, obj))
+            {
+                return true;
+            }
+
+            if (obj.GetType() != this.GetType())
+            {
+                return false;
+            }
+
+            return this.Equals((GetUserStateQuery)obj);
+        }
+
+        public override int GetHashCode()
+        {
+            unchecked
+            {
+                int hashCode = 0;
+                hashCode = (hashCode * 397) ^ (this.RequestedUserId != null ? this.RequestedUserId.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.Requester != null ? this.Requester.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.IsCreator != null ? this.IsCreator.GetHashCode() : 0);
+                return hashCode;
+            }
+        }
+
+        protected bool Equals(GetUserStateQuery other)
+        {
+            if (!object.Equals(this.RequestedUserId, other.RequestedUserId))
+            {
+                return false;
+            }
+
+            if (!object.Equals(this.Requester, other.Requester))
+            {
+                return false;
+            }
+
+            if (!object.Equals(this.IsCreator, other.IsCreator))
+            {
+                return false;
+            }
+
+            return true;
+        }
+    }
+
+}
+namespace Fifthweek.Api.Aggregations.Queries
+{
+    using System;
+    using System.Linq;
+    using Fifthweek.Api.Core;
+    using Fifthweek.Api.Identity.Membership;
+    using Fifthweek.Api.Subscriptions;
+    using Fifthweek.CodeGeneration;
+    using System.Threading.Tasks;
+    using Fifthweek.Api.Subscriptions.Queries;
+    public partial class UserState 
+    {
+        public override string ToString()
+        {
+            return string.Format("UserState({0})", this.CreatorStatus == null ? "null" : this.CreatorStatus.ToString());
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj))
+            {
+                return false;
+            }
+
+            if (ReferenceEquals(this, obj))
+            {
+                return true;
+            }
+
+            if (obj.GetType() != this.GetType())
+            {
+                return false;
+            }
+
+            return this.Equals((UserState)obj);
+        }
+
+        public override int GetHashCode()
+        {
+            unchecked
+            {
+                int hashCode = 0;
+                hashCode = (hashCode * 397) ^ (this.CreatorStatus != null ? this.CreatorStatus.GetHashCode() : 0);
+                return hashCode;
+            }
+        }
+
+        protected bool Equals(UserState other)
+        {
+            if (!object.Equals(this.CreatorStatus, other.CreatorStatus))
+            {
+                return false;
+            }
+
+            return true;
+        }
+    }
+
+}
+

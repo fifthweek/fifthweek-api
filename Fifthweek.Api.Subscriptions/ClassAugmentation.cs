@@ -159,6 +159,7 @@ namespace Fifthweek.Api.Subscriptions.Commands
     using Fifthweek.Api.Persistence.Identity;
     using Fifthweek.Api.Identity.Membership.Events;
     using Fifthweek.Api.FileManagement;
+    using System.Transactions;
     public partial class CreateSubscriptionCommandHandler 
     {
         public CreateSubscriptionCommandHandler(
@@ -383,6 +384,7 @@ namespace Fifthweek.Api.Subscriptions.Controllers
     using Fifthweek.Api.Subscriptions.Commands;
     using Fifthweek.Api.Subscriptions.Queries;
     using Fifthweek.Api.FileManagement;
+    using Fifthweek.Api.Identity.Membership;
     public partial class CreatorStatusData 
     {
         public CreatorStatusData(
@@ -420,7 +422,6 @@ namespace Fifthweek.Api.Subscriptions.Controllers
         public SubscriptionController(
             Fifthweek.Api.Core.ICommandHandler<Fifthweek.Api.Subscriptions.Commands.CreateSubscriptionCommand> createSubscription, 
             Fifthweek.Api.Core.ICommandHandler<Fifthweek.Api.Subscriptions.Commands.UpdateSubscriptionCommand> updateSubscription, 
-            Fifthweek.Api.Core.IQueryHandler<Fifthweek.Api.Subscriptions.Queries.GetCreatorStatusQuery,Fifthweek.Api.Subscriptions.CreatorStatus> getCreatorStatus, 
             Fifthweek.Api.Identity.OAuth.IUserContext userContext, 
             Fifthweek.Api.Core.IGuidCreator guidCreator)
         {
@@ -432,11 +433,6 @@ namespace Fifthweek.Api.Subscriptions.Controllers
             if (updateSubscription == null)
             {
                 throw new ArgumentNullException("updateSubscription");
-            }
-
-            if (getCreatorStatus == null)
-            {
-                throw new ArgumentNullException("getCreatorStatus");
             }
 
             if (userContext == null)
@@ -451,7 +447,6 @@ namespace Fifthweek.Api.Subscriptions.Controllers
 
             this.createSubscription = createSubscription;
             this.updateSubscription = updateSubscription;
-            this.getCreatorStatus = getCreatorStatus;
             this.userContext = userContext;
             this.guidCreator = guidCreator;
         }
@@ -963,6 +958,7 @@ namespace Fifthweek.Api.Subscriptions.Controllers
     using Fifthweek.Api.Subscriptions.Commands;
     using Fifthweek.Api.Subscriptions.Queries;
     using Fifthweek.Api.FileManagement;
+    using Fifthweek.Api.Identity.Membership;
     public partial class CreatorStatusData 
     {
         public override string ToString()
@@ -1223,6 +1219,7 @@ namespace Fifthweek.Api.Subscriptions.Controllers
     using Fifthweek.Api.Subscriptions.Commands;
     using Fifthweek.Api.Subscriptions.Queries;
     using Fifthweek.Api.FileManagement;
+    using Fifthweek.Api.Identity.Membership;
     public partial class NewSubscriptionData 
     {
         public override string ToString()
@@ -1316,6 +1313,7 @@ namespace Fifthweek.Api.Subscriptions.Controllers
     using Fifthweek.Api.Subscriptions.Commands;
     using Fifthweek.Api.Subscriptions.Queries;
     using Fifthweek.Api.FileManagement;
+    using Fifthweek.Api.Identity.Membership;
     public partial class UpdatedSubscriptionData 
     {
         public override string ToString()
@@ -1823,6 +1821,7 @@ namespace Fifthweek.Api.Subscriptions.Controllers
     using Fifthweek.Api.Subscriptions.Commands;
     using Fifthweek.Api.Subscriptions.Queries;
     using Fifthweek.Api.FileManagement;
+    using Fifthweek.Api.Identity.Membership;
     public partial class NewSubscriptionData 
     {
         public ValidSubscriptionName SubscriptionNameObject { get; set; }
@@ -1917,6 +1916,7 @@ namespace Fifthweek.Api.Subscriptions.Controllers
     using Fifthweek.Api.Subscriptions.Commands;
     using Fifthweek.Api.Subscriptions.Queries;
     using Fifthweek.Api.FileManagement;
+    using Fifthweek.Api.Identity.Membership;
     public partial class UpdatedSubscriptionData 
     {
         public ValidSubscriptionName SubscriptionNameObject { get; set; }
