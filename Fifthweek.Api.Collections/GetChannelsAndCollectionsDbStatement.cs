@@ -37,13 +37,14 @@
                 Persistence.Subscription.Fields.CreatorId);
 
             var collectionsQuery = string.Format(
-                @"SELECT col.{0}, col.{1}, ch.{2} FROM {3} col 
-                INNER JOIN {4} ch ON col.{5} = ch.{6} 
-                INNER JOIN {7} s ON ch.{8} = s.{9} 
-                WHERE s.{10} = @CreatorId",
+                @"SELECT col.{0}, col.{1}, ch.{2} AS {3} FROM {4} col 
+                INNER JOIN {5} ch ON col.{6} = ch.{7} 
+                INNER JOIN {8} s ON ch.{9} = s.{10} 
+                WHERE s.{11} = @CreatorId",
                 Persistence.Collection.Fields.Id,
                 Persistence.Collection.Fields.Name,
                 Persistence.Channel.Fields.Id,
+                Persistence.Collection.Fields.ChannelId,
                 Persistence.Collection.Table,
                 Persistence.Channel.Table,
                 Persistence.Collection.Fields.ChannelId,
@@ -61,7 +62,8 @@
             List<Channel> channels;
             List<Collection> collections;
             using (var multi = await this.databaseContext.Database.Connection.QueryMultipleAsync(
-                query))
+                query,
+                new { CreatorId = userId.Value }))
             {
                 channels = multi.Read<Channel>().ToList();
                 collections = multi.Read<Collection>().ToList();
@@ -80,7 +82,6 @@
             return result;
         }
 
-        [AutoConstructor]
         public partial class Channel
         {
             public Guid Id { get; set; }
@@ -88,7 +89,6 @@
             public string Name { get; set; }
         }
 
-        [AutoConstructor]
         public partial class Collection
         {
             public Guid Id { get; set; }

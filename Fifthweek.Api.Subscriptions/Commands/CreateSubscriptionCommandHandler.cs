@@ -46,7 +46,7 @@
                 command.NewSubscriptionId.Value, // Default channel uses same ID as subscription.
                 command.NewSubscriptionId.Value,
                 null,
-                null,
+                string.Empty,
                 command.BasePrice.Value,
                 DateTime.UtcNow);
 

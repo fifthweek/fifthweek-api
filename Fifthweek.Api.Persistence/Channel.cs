@@ -24,7 +24,7 @@
         [Required, Optional, NonEquatable]
         public Subscription Subscription { get; set; }
 
-        [Required]
+        [Required(AllowEmptyStrings = true)]
         public string Name { get; set; }
 
         [Required]

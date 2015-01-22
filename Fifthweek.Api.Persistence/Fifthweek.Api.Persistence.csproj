@@ -200,6 +200,10 @@
     <Compile Include="Migrations\201501202327541_AddCollectionIdIndexToPosts.Designer.cs">
       <DependentUpon>201501202327541_AddCollectionIdIndexToPosts.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201501212049537_AddNameFieldToChannels.cs" />
+    <Compile Include="Migrations\201501212049537_AddNameFieldToChannels.Designer.cs">
+      <DependentUpon>201501212049537_AddNameFieldToChannels.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Post.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -306,6 +310,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201501202327541_AddCollectionIdIndexToPosts.resx">
       <DependentUpon>201501202327541_AddCollectionIdIndexToPosts.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201501212049537_AddNameFieldToChannels.resx">
+      <DependentUpon>201501212049537_AddNameFieldToChannels.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>

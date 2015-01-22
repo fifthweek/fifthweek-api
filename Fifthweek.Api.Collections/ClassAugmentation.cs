@@ -15,6 +15,8 @@ namespace Fifthweek.Api.Collections
     using Fifthweek.Api.Persistence;
     using System.Collections.Generic;
     using Fifthweek.Api.Collections.Queries;
+    using System.Text;
+    using Fifthweek.Api.Subscriptions;
     public partial class CollectionId 
     {
         public CollectionId(
@@ -42,6 +44,8 @@ namespace Fifthweek.Api.Collections
     using Fifthweek.Api.Persistence;
     using System.Collections.Generic;
     using Fifthweek.Api.Collections.Queries;
+    using System.Text;
+    using Fifthweek.Api.Subscriptions;
     public partial class CollectionOwnership 
     {
         public CollectionOwnership(
@@ -69,6 +73,8 @@ namespace Fifthweek.Api.Collections
     using Fifthweek.Api.Persistence;
     using System.Collections.Generic;
     using Fifthweek.Api.Collections.Queries;
+    using System.Text;
+    using Fifthweek.Api.Subscriptions;
     public partial class CollectionSecurity 
     {
         public CollectionSecurity(
@@ -130,6 +136,8 @@ namespace Fifthweek.Api.Collections
     using Fifthweek.Api.Persistence;
     using System.Collections.Generic;
     using Fifthweek.Api.Collections.Queries;
+    using System.Text;
+    using Fifthweek.Api.Subscriptions;
     public partial class GetCollectionWeeklyReleaseTimesDbStatement 
     {
         public GetCollectionWeeklyReleaseTimesDbStatement(
@@ -157,6 +165,8 @@ namespace Fifthweek.Api.Collections
     using Fifthweek.Api.Persistence;
     using System.Collections.Generic;
     using Fifthweek.Api.Collections.Queries;
+    using System.Text;
+    using Fifthweek.Api.Subscriptions;
     public partial class GetLiveDateOfNewQueuedPostDbStatement 
     {
         public GetLiveDateOfNewQueuedPostDbStatement(
@@ -198,6 +208,8 @@ namespace Fifthweek.Api.Collections
     using Fifthweek.Api.Persistence;
     using System.Collections.Generic;
     using Fifthweek.Api.Collections.Queries;
+    using System.Text;
+    using Fifthweek.Api.Subscriptions;
     public partial class GetNewQueuedPostLiveDateLowerBoundDbStatement 
     {
         public GetNewQueuedPostLiveDateLowerBoundDbStatement(
@@ -465,104 +477,21 @@ namespace Fifthweek.Api.Collections.Queries
     }
 
 }
+
 namespace Fifthweek.Api.Collections
 {
     using System;
-    using System.Collections.Generic;
     using System.Linq;
+    using Fifthweek.CodeGeneration;
+    using System.Threading.Tasks;
+    using Dapper;
+    using Fifthweek.Api.Core;
+    using Fifthweek.Api.Identity.Membership;
+    using Fifthweek.Api.Persistence;
+    using System.Collections.Generic;
+    using Fifthweek.Api.Collections.Queries;
     using System.Text;
-    using System.Threading.Tasks;
-    using Dapper;
-    using Fifthweek.Api.Collections.Queries;
-    using Fifthweek.Api.Core;
-    using Fifthweek.Api.Identity.Membership;
-    using Fifthweek.Api.Persistence;
     using Fifthweek.Api.Subscriptions;
-    using Fifthweek.CodeGeneration;
-    public partial class GetChannelsAndCollectionsDbStatement
-    {
-        public partial class Channel 
-        {
-        public Channel(
-            System.Guid id, 
-            System.String name)
-        {
-            if (id == null)
-            {
-                throw new ArgumentNullException("id");
-            }
-
-            if (name == null)
-            {
-                throw new ArgumentNullException("name");
-            }
-
-            this.Id = id;
-            this.Name = name;
-        }
-        }
-
-        }
-}
-namespace Fifthweek.Api.Collections
-{
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Text;
-    using System.Threading.Tasks;
-    using Dapper;
-    using Fifthweek.Api.Collections.Queries;
-    using Fifthweek.Api.Core;
-    using Fifthweek.Api.Identity.Membership;
-    using Fifthweek.Api.Persistence;
-    using Fifthweek.Api.Subscriptions;
-    using Fifthweek.CodeGeneration;
-    public partial class GetChannelsAndCollectionsDbStatement
-    {
-        public partial class Collection 
-        {
-        public Collection(
-            System.Guid id, 
-            System.Guid channelId, 
-            System.String name)
-        {
-            if (id == null)
-            {
-                throw new ArgumentNullException("id");
-            }
-
-            if (channelId == null)
-            {
-                throw new ArgumentNullException("channelId");
-            }
-
-            if (name == null)
-            {
-                throw new ArgumentNullException("name");
-            }
-
-            this.Id = id;
-            this.ChannelId = channelId;
-            this.Name = name;
-        }
-        }
-
-        }
-}
-
-namespace Fifthweek.Api.Collections
-{
-    using System;
-    using System.Linq;
-    using Fifthweek.CodeGeneration;
-    using System.Threading.Tasks;
-    using Dapper;
-    using Fifthweek.Api.Core;
-    using Fifthweek.Api.Identity.Membership;
-    using Fifthweek.Api.Persistence;
-    using System.Collections.Generic;
-    using Fifthweek.Api.Collections.Queries;
     public partial class CollectionId 
     {
         public override string ToString()
@@ -754,6 +683,8 @@ namespace Fifthweek.Api.Collections
     using Fifthweek.Api.Persistence;
     using System.Collections.Generic;
     using Fifthweek.Api.Collections.Queries;
+    using System.Text;
+    using Fifthweek.Api.Subscriptions;
     public partial class HourOfWeek 
     {
         public override string ToString()
