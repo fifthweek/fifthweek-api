@@ -1,11 +1,9 @@
-﻿namespace Fifthweek.Api.Posts
+﻿namespace Fifthweek.CodeGeneration.Tests
 {
     using System;
 
-    using Fifthweek.CodeGeneration;
-
     [AutoPrimitive]
-    public partial class PostId
+    public partial class PrimitiveGuidDummy
     {
         public Guid Value { get; private set; }
     }

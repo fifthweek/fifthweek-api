@@ -64,7 +64,7 @@
             var creatorStatus = new CreatorStatus(new SubscriptionId(Guid.NewGuid()), true);
             var createdChannelsAndCollections = new ChannelsAndCollections(new List<ChannelsAndCollections.Channel>());
 
-            this.getCreatorStatus.Setup(v => v.HandleAsync(new GetCreatorStatusQuery(Requester)))
+            this.getCreatorStatus.Setup(v => v.HandleAsync(new GetCreatorStatusQuery(Requester, UserId)))
                 .ReturnsAsync(creatorStatus);
             this.getCreatedChannelsAndCollections.Setup(v => v.HandleAsync(new GetCreatedChannelsAndCollectionsQuery(Requester, UserId)))
                 .ReturnsAsync(createdChannelsAndCollections);

@@ -2,6 +2,7 @@
 <#@ output extension=".cs" #>
 using System;
 using System.Linq;
+<#@ include file="AutoPrimitive.ttinclude" #>
 <#@ include file="AutoConstructor.ttinclude" #>
 <#@ include file="AutoEqualityMembers.ttinclude" #>
 <#@ include file="AutoCopy.ttinclude" #>

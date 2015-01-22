@@ -1,12 +1,10 @@
-﻿using System;
-using Fifthweek.Api.Core;
-
-namespace Fifthweek.Api.Identity.Membership
+﻿namespace Fifthweek.Api.Identity.Membership
 {
-    using Fifthweek.CodeGeneration;
-    using Fifthweek.Shared;
+    using System;
 
-    [AutoEqualityMembers, AutoConstructor]
+    using Fifthweek.CodeGeneration;
+
+    [AutoPrimitive]
     public partial class UserId
     {
         public Guid Value { get; private set; }

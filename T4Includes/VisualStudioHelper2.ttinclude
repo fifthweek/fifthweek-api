@@ -312,17 +312,17 @@
 
         public void WriteNamespaceAndClass(Action renderMainClass = null, Action renderExtensionClass = null)
         {
-            WriteNamespaceAndClassWithSignature(null, renderMainClass, renderExtensionClass);
+            WriteNamespaceAndClassWithSignature(null, null, renderMainClass, renderExtensionClass);
         }
 
-        public void WriteNamespaceAndClassWithSignature(string mainClassSignature = null, Action renderMainClass = null, Action renderExtensionClass = null)
+        public void WriteNamespaceAndClassWithSignature(string mainClassSignature = null, string mainClassHeader = null, Action renderMainClass = null, Action renderExtensionClass = null)
         {
             this.output.WriteLine("namespace " + this.FirstCodeClass.Namespace.Name);
             this.output.WriteLine("{");
 
             this.WriteUsings();
 
-            WriteClass(mainClassSignature, renderMainClass, renderExtensionClass);
+            WriteClass(mainClassSignature, mainClassHeader, renderMainClass, renderExtensionClass);
 
             this.output.WriteLine("}");
         }
@@ -344,7 +344,7 @@
             }
         }
 
-        private void WriteClass(string mainClassSignature = null, Action renderMainClass = null, Action renderExtensionClass = null)
+        private void WriteClass(string mainClassSignature = null, string mainClassHeader = null, Action renderMainClass = null, Action renderExtensionClass = null)
         {
             var classHierarchy = GetEnclosingClasses();
             string tabs;
@@ -361,6 +361,11 @@
 
             if (renderMainClass != null)
             {
+				if (mainClassHeader != null)
+                {
+					this.output.WriteLine(tabs + mainClassHeader);
+                }
+
                 this.output.WriteLine(tabs + "public partial class " + name + " " + (mainClassSignature ?? string.Empty));
                 this.output.WriteLine(tabs + "{");
                 renderMainClass();            

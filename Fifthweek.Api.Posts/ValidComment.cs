@@ -6,16 +6,15 @@
     using Fifthweek.CodeGeneration;
 
     [AutoEqualityMembers]
-    public partial class ValidComment
+    public partial class ValidComment : Comment
     {
         public static readonly int MinLength = 1;
         public static readonly int MaxLength = 2000; // Some of the longer comments on Tumblr are over 1000 characters.
 
-        private ValidComment()
+        private ValidComment(string value)
+            : base(value)
         {
         }
-
-        public string Value { get; protected set; }
 
         public static bool IsEmpty(string value)
         {
@@ -64,10 +63,7 @@
                 return false;
             }
 
-            comment = new ValidComment
-            {
-                Value = value
-            };
+            comment = new ValidComment(value);
 
             return true;
         }

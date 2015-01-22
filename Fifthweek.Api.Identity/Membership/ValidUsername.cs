@@ -5,9 +5,6 @@
     using System.Linq;
     using System.Text.RegularExpressions;
 
-    /// <remarks>
-    /// Important: refer to `UpdatingValidationBehaviour.md` when changing validation behaviour.
-    /// </remarks>
     public class ValidUsername : Username
     {
         public static readonly Regex Pattern = new Regex(@"^[a-z0-9_]+$", RegexOptions.Compiled | RegexOptions.IgnoreCase);

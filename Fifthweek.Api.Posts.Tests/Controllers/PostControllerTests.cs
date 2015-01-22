@@ -1,6 +1,7 @@
 ﻿namespace Fifthweek.Api.Posts.Tests.Controllers
 {
     using System;
+    using System.Collections.Generic;
     using System.Threading.Tasks;
     using System.Web.Http.Results;
 
@@ -11,7 +12,9 @@
     using Fifthweek.Api.Identity.OAuth;
     using Fifthweek.Api.Posts.Commands;
     using Fifthweek.Api.Posts.Controllers;
+    using Fifthweek.Api.Posts.Queries;
     using Fifthweek.Api.Subscriptions;
+    using Fifthweek.Api.Subscriptions.Queries;
 
     using Microsoft.VisualStudio.TestTools.UnitTesting;
 
@@ -30,6 +33,7 @@
         private Mock<ICommandHandler<PostImageCommand>> postImage;
         private Mock<ICommandHandler<PostFileCommand>> postFile;
         private Mock<ICommandHandler<DeletePostCommand>> deletePost;
+        private Mock<IQueryHandler<GetCreatorBacklogQuery, IReadOnlyList<BacklogPost>>> getCreatorBacklog;
         private Mock<IUserContext> userContext;
         private Mock<IGuidCreator> guidCreator;
         private PostController target;
@@ -41,6 +45,7 @@
             this.postImage = new Mock<ICommandHandler<PostImageCommand>>();
             this.postFile = new Mock<ICommandHandler<PostFileCommand>>();
             this.deletePost = new Mock<ICommandHandler<DeletePostCommand>>();
+            this.getCreatorBacklog = new Mock<IQueryHandler<GetCreatorBacklogQuery, IReadOnlyList<BacklogPost>>>();
             this.userContext = new Mock<IUserContext>();
             this.guidCreator = new Mock<IGuidCreator>();
             this.target = new PostController(
@@ -48,6 +53,7 @@
                 this.postImage.Object,
                 this.postFile.Object,
                 this.deletePost.Object,
+                this.getCreatorBacklog.Object,
                 this.userContext.Object,
                 this.guidCreator.Object);
         }

@@ -92,6 +92,7 @@
     <Compile Include="DecoratorAttribute.cs" />
     <Compile Include="AggregateEventHandler.cs" />
     <Compile Include="DetailedRecoverableException.cs" />
+    <Compile Include="GuidJsonConverter.cs" />
     <Compile Include="IEventHandler.cs" />
     <Compile Include="BadRequestException.cs" />
     <Compile Include="Constants.cs" />

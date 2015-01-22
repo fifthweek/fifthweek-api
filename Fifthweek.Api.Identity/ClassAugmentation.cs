@@ -3,6 +3,127 @@ using System.Linq;
 
 
 
+namespace Fifthweek.Api.Identity.Membership
+{
+    using System;
+    using System.Linq;
+    using Fifthweek.Api.Core;
+    using System.Threading.Tasks;
+    using Dapper;
+    using Fifthweek.Api.Persistence;
+    using Fifthweek.Shared;
+    using Fifthweek.CodeGeneration;
+    [Newtonsoft.Json.JsonConverter(typeof(JsonConverter))]
+    public partial class Email 
+    {
+		public class JsonConverter : Newtonsoft.Json.JsonConverter
+        {
+            public override void WriteJson(Newtonsoft.Json.JsonWriter writer, object value, Newtonsoft.Json.JsonSerializer serializer)
+            {
+                var valueType = (Email)value;
+                serializer.Serialize(writer, valueType.Value);
+            }
+
+            public override object ReadJson(Newtonsoft.Json.JsonReader reader, Type objectType, object existingValue, Newtonsoft.Json.JsonSerializer serializer)
+            {
+                if (objectType != typeof(Email))
+                {
+                    throw new ArgumentException("Expected to deserialize JSON for type " + typeof(Email).Name, "objectType");
+                }
+
+                var value = serializer.Deserialize<System.String>(reader);
+                return new Email(value);
+            }
+
+            public override bool CanConvert(Type objectType)
+            {
+                return objectType == typeof(Email);
+            }
+        }
+    }
+
+}
+namespace Fifthweek.Api.Identity.Membership
+{
+    using System;
+    using System.Linq;
+    using Fifthweek.Api.Core;
+    using System.Threading.Tasks;
+    using Dapper;
+    using Fifthweek.Api.Persistence;
+    using Fifthweek.Shared;
+    using Fifthweek.CodeGeneration;
+    [Newtonsoft.Json.JsonConverter(typeof(JsonConverter))]
+    public partial class UserId 
+    {
+		public class JsonConverter : Newtonsoft.Json.JsonConverter
+        {
+            public override void WriteJson(Newtonsoft.Json.JsonWriter writer, object value, Newtonsoft.Json.JsonSerializer serializer)
+            {
+                var valueType = (UserId)value;
+                serializer.Serialize(writer, valueType.Value);
+            }
+
+            public override object ReadJson(Newtonsoft.Json.JsonReader reader, Type objectType, object existingValue, Newtonsoft.Json.JsonSerializer serializer)
+            {
+                if (objectType != typeof(UserId))
+                {
+                    throw new ArgumentException("Expected to deserialize JSON for type " + typeof(UserId).Name, "objectType");
+                }
+
+                var value = serializer.Deserialize<System.Guid>(reader);
+                return new UserId(value);
+            }
+
+            public override bool CanConvert(Type objectType)
+            {
+                return objectType == typeof(UserId);
+            }
+        }
+    }
+
+}
+namespace Fifthweek.Api.Identity.Membership
+{
+    using System;
+    using System.Linq;
+    using Fifthweek.Api.Core;
+    using System.Threading.Tasks;
+    using Dapper;
+    using Fifthweek.Api.Persistence;
+    using Fifthweek.Shared;
+    using Fifthweek.CodeGeneration;
+    [Newtonsoft.Json.JsonConverter(typeof(JsonConverter))]
+    public partial class Username 
+    {
+		public class JsonConverter : Newtonsoft.Json.JsonConverter
+        {
+            public override void WriteJson(Newtonsoft.Json.JsonWriter writer, object value, Newtonsoft.Json.JsonSerializer serializer)
+            {
+                var valueType = (Username)value;
+                serializer.Serialize(writer, valueType.Value);
+            }
+
+            public override object ReadJson(Newtonsoft.Json.JsonReader reader, Type objectType, object existingValue, Newtonsoft.Json.JsonSerializer serializer)
+            {
+                if (objectType != typeof(Username))
+                {
+                    throw new ArgumentException("Expected to deserialize JSON for type " + typeof(Username).Name, "objectType");
+                }
+
+                var value = serializer.Deserialize<System.String>(reader);
+                return new Username(value);
+            }
+
+            public override bool CanConvert(Type objectType)
+            {
+                return objectType == typeof(Username);
+            }
+        }
+    }
+
+}
+
 namespace Fifthweek.Api.Identity.Membership.Commands
 {
     using System;

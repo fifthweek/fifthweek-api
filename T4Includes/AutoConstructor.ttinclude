@@ -12,7 +12,7 @@
     foreach(UnifiedClass unifiedClass in allClasses)
     {
         var allAttributes = unifiedClass.GetAllAttributes();
-        if (allAttributes.All(_ => !_.Name.StartsWith(AutoConstructorAttributeName)))
+        if (!allAttributes.Any(_ => _.Name.StartsWith(AutoConstructorAttributeName) || _.Name.StartsWith(AutoPrimitiveAttributeName)))
         {
             continue;
         }

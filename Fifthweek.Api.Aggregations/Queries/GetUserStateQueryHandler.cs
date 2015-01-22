@@ -25,7 +25,7 @@
             ChannelsAndCollections createdChannelsAndCollections = null;
             if (query.IsCreator)
             {
-                creatorStatus = await this.getCreatorStatus.HandleAsync(new GetCreatorStatusQuery(query.Requester));
+                creatorStatus = await this.getCreatorStatus.HandleAsync(new GetCreatorStatusQuery(query.Requester, query.RequestedUserId));
                 createdChannelsAndCollections = await this.getCreatedChannelsAndCollections.HandleAsync(new GetCreatedChannelsAndCollectionsQuery(query.Requester, query.RequestedUserId));
             }
 

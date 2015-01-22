@@ -5,9 +5,6 @@
     using System.Linq;
     using System.Net.Mail;
 
-    /// <remarks>
-    /// Important: refer to `UpdatingValidationBehaviour.md` when changing validation behaviour.
-    /// </remarks>
     public class ValidEmail : Email
     {
         public static readonly int MinLength = 3;

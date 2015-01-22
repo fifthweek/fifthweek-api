@@ -3,7 +3,7 @@
     using System;
 
     [AttributeUsage(AttributeTargets.Class)]
-    public class AutoConstructorAttribute : Attribute
+    public class AutoPrimitiveAttribute : Attribute
     {
     }
 }

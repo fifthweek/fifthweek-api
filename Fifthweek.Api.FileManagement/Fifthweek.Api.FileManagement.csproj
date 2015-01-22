@@ -121,7 +121,6 @@
     <Compile Include="FileRepository.cs" />
     <Compile Include="FileOwnership.cs" />
     <Compile Include="FileSecurity.cs" />
-    <Compile Include="FileVariantId.cs" />
     <Compile Include="FileWaitingForUpload.cs" />
     <Compile Include="IScheduleGarbageCollectionStatement.cs" />
     <Compile Include="IBlobLocationGenerator.cs" />

@@ -64,6 +64,7 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
+    <Compile Include="AutoPrimitiveTests.cs" />
     <Compile Include="ClassAugmentation.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -78,6 +79,9 @@
     <Compile Include="ConstructedNullableString.cs" />
     <Compile Include="ParsedInt.cs" />
     <Compile Include="ParsedString.cs" />
+    <Compile Include="PrimitiveIntDummy.cs" />
+    <Compile Include="PrimitiveStringDummy.cs" />
+    <Compile Include="PrimitiveGuidDummy.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

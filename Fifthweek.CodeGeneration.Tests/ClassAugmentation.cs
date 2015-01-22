@@ -6,6 +6,104 @@ using System.Linq;
 namespace Fifthweek.CodeGeneration.Tests
 {
     using System;
+    [Newtonsoft.Json.JsonConverter(typeof(JsonConverter))]
+    public partial class PrimitiveGuidDummy 
+    {
+		public class JsonConverter : Newtonsoft.Json.JsonConverter
+        {
+            public override void WriteJson(Newtonsoft.Json.JsonWriter writer, object value, Newtonsoft.Json.JsonSerializer serializer)
+            {
+                var valueType = (PrimitiveGuidDummy)value;
+                serializer.Serialize(writer, valueType.Value);
+            }
+
+            public override object ReadJson(Newtonsoft.Json.JsonReader reader, Type objectType, object existingValue, Newtonsoft.Json.JsonSerializer serializer)
+            {
+                if (objectType != typeof(PrimitiveGuidDummy))
+                {
+                    throw new ArgumentException("Expected to deserialize JSON for type " + typeof(PrimitiveGuidDummy).Name, "objectType");
+                }
+
+                var value = serializer.Deserialize<System.Guid>(reader);
+                return new PrimitiveGuidDummy(value);
+            }
+
+            public override bool CanConvert(Type objectType)
+            {
+                return objectType == typeof(PrimitiveGuidDummy);
+            }
+        }
+    }
+
+}
+namespace Fifthweek.CodeGeneration.Tests
+{
+    [Newtonsoft.Json.JsonConverter(typeof(JsonConverter))]
+    public partial class PrimitiveIntDummy 
+    {
+		public class JsonConverter : Newtonsoft.Json.JsonConverter
+        {
+            public override void WriteJson(Newtonsoft.Json.JsonWriter writer, object value, Newtonsoft.Json.JsonSerializer serializer)
+            {
+                var valueType = (PrimitiveIntDummy)value;
+                serializer.Serialize(writer, valueType.Value);
+            }
+
+            public override object ReadJson(Newtonsoft.Json.JsonReader reader, Type objectType, object existingValue, Newtonsoft.Json.JsonSerializer serializer)
+            {
+                if (objectType != typeof(PrimitiveIntDummy))
+                {
+                    throw new ArgumentException("Expected to deserialize JSON for type " + typeof(PrimitiveIntDummy).Name, "objectType");
+                }
+
+                var value = serializer.Deserialize<System.Int32>(reader);
+                return new PrimitiveIntDummy(value);
+            }
+
+            public override bool CanConvert(Type objectType)
+            {
+                return objectType == typeof(PrimitiveIntDummy);
+            }
+        }
+    }
+
+}
+namespace Fifthweek.CodeGeneration.Tests
+{
+    [Newtonsoft.Json.JsonConverter(typeof(JsonConverter))]
+    public partial class PrimitiveStringDummy 
+    {
+		public class JsonConverter : Newtonsoft.Json.JsonConverter
+        {
+            public override void WriteJson(Newtonsoft.Json.JsonWriter writer, object value, Newtonsoft.Json.JsonSerializer serializer)
+            {
+                var valueType = (PrimitiveStringDummy)value;
+                serializer.Serialize(writer, valueType.Value);
+            }
+
+            public override object ReadJson(Newtonsoft.Json.JsonReader reader, Type objectType, object existingValue, Newtonsoft.Json.JsonSerializer serializer)
+            {
+                if (objectType != typeof(PrimitiveStringDummy))
+                {
+                    throw new ArgumentException("Expected to deserialize JSON for type " + typeof(PrimitiveStringDummy).Name, "objectType");
+                }
+
+                var value = serializer.Deserialize<System.String>(reader);
+                return new PrimitiveStringDummy(value);
+            }
+
+            public override bool CanConvert(Type objectType)
+            {
+                return objectType == typeof(PrimitiveStringDummy);
+            }
+        }
+    }
+
+}
+
+namespace Fifthweek.CodeGeneration.Tests
+{
+    using System;
     using System.Linq;
     using System.Collections.Generic;
     public partial class ClassAugmentationDummy
@@ -143,6 +241,58 @@ namespace Fifthweek.CodeGeneration.Tests
         public ConstructedNullableString(
             System.String value)
         {
+            this.Value = value;
+        }
+    }
+
+}
+namespace Fifthweek.CodeGeneration.Tests
+{
+    using System;
+    public partial class PrimitiveGuidDummy 
+    {
+        public PrimitiveGuidDummy(
+            System.Guid value)
+        {
+            if (value == null)
+            {
+                throw new ArgumentNullException("value");
+            }
+
+            this.Value = value;
+        }
+    }
+
+}
+namespace Fifthweek.CodeGeneration.Tests
+{
+    public partial class PrimitiveIntDummy 
+    {
+        public PrimitiveIntDummy(
+            System.Int32 value)
+        {
+            if (value == null)
+            {
+                throw new ArgumentNullException("value");
+            }
+
+            this.Value = value;
+        }
+    }
+
+}
+namespace Fifthweek.CodeGeneration.Tests
+{
+    public partial class PrimitiveStringDummy 
+    {
+        public PrimitiveStringDummy(
+            System.String value)
+        {
+            if (value == null)
+            {
+                throw new ArgumentNullException("value");
+            }
+
             this.Value = value;
         }
     }
@@ -761,6 +911,160 @@ namespace Fifthweek.CodeGeneration.Tests
 namespace Fifthweek.CodeGeneration.Tests
 {
     using System;
+    public partial class PrimitiveGuidDummy 
+    {
+        public override string ToString()
+        {
+            return string.Format("PrimitiveGuidDummy({0})", this.Value == null ? "null" : this.Value.ToString());
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj))
+            {
+                return false;
+            }
+
+            if (ReferenceEquals(this, obj))
+            {
+                return true;
+            }
+
+            if (obj.GetType() != this.GetType())
+            {
+                return false;
+            }
+
+            return this.Equals((PrimitiveGuidDummy)obj);
+        }
+
+        public override int GetHashCode()
+        {
+            unchecked
+            {
+                int hashCode = 0;
+                hashCode = (hashCode * 397) ^ (this.Value != null ? this.Value.GetHashCode() : 0);
+                return hashCode;
+            }
+        }
+
+        protected bool Equals(PrimitiveGuidDummy other)
+        {
+            if (!object.Equals(this.Value, other.Value))
+            {
+                return false;
+            }
+
+            return true;
+        }
+    }
+
+}
+namespace Fifthweek.CodeGeneration.Tests
+{
+    public partial class PrimitiveIntDummy 
+    {
+        public override string ToString()
+        {
+            return string.Format("PrimitiveIntDummy({0})", this.Value == null ? "null" : this.Value.ToString());
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj))
+            {
+                return false;
+            }
+
+            if (ReferenceEquals(this, obj))
+            {
+                return true;
+            }
+
+            if (obj.GetType() != this.GetType())
+            {
+                return false;
+            }
+
+            return this.Equals((PrimitiveIntDummy)obj);
+        }
+
+        public override int GetHashCode()
+        {
+            unchecked
+            {
+                int hashCode = 0;
+                hashCode = (hashCode * 397) ^ (this.Value != null ? this.Value.GetHashCode() : 0);
+                return hashCode;
+            }
+        }
+
+        protected bool Equals(PrimitiveIntDummy other)
+        {
+            if (!object.Equals(this.Value, other.Value))
+            {
+                return false;
+            }
+
+            return true;
+        }
+    }
+
+}
+namespace Fifthweek.CodeGeneration.Tests
+{
+    public partial class PrimitiveStringDummy 
+    {
+        public override string ToString()
+        {
+            return string.Format("PrimitiveStringDummy(\"{0}\")", this.Value == null ? "null" : this.Value.ToString());
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj))
+            {
+                return false;
+            }
+
+            if (ReferenceEquals(this, obj))
+            {
+                return true;
+            }
+
+            if (obj.GetType() != this.GetType())
+            {
+                return false;
+            }
+
+            return this.Equals((PrimitiveStringDummy)obj);
+        }
+
+        public override int GetHashCode()
+        {
+            unchecked
+            {
+                int hashCode = 0;
+                hashCode = (hashCode * 397) ^ (this.Value != null ? this.Value.GetHashCode() : 0);
+                return hashCode;
+            }
+        }
+
+        protected bool Equals(PrimitiveStringDummy other)
+        {
+            if (!object.Equals(this.Value, other.Value))
+            {
+                return false;
+            }
+
+            return true;
+        }
+    }
+
+}
+namespace Fifthweek.CodeGeneration.Tests
+{
+    using System;
     using System.Linq;
     using System.Collections.Generic;
     public partial class ClassAugmentationDummy 
@@ -825,7 +1129,6 @@ namespace Fifthweek.CodeGeneration.Tests
     }
 
 }
-
 namespace Fifthweek.CodeGeneration.Tests
 {
     using System;

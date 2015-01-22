@@ -21,7 +21,7 @@
         private static readonly UserId UserId = new UserId(Guid.NewGuid());
         private static readonly SubscriptionId SubscriptionId = new SubscriptionId(Guid.NewGuid());
         private static readonly ChannelId DefaultChannelId = new ChannelId(SubscriptionId.Value);
-        private static readonly GetCreatorStatusQuery Query = new GetCreatorStatusQuery(Requester.Authenticated(UserId));
+        private static readonly GetCreatorStatusQuery Query = new GetCreatorStatusQuery(Requester.Authenticated(UserId), UserId);
         private GetCreatorStatusQueryHandler target;
 
         [TestMethod]
@@ -32,7 +32,18 @@
 
             this.target = new GetCreatorStatusQueryHandler(databaseContext.Object);
 
-            await this.target.HandleAsync(new GetCreatorStatusQuery(Requester.Unauthenticated));
+            await this.target.HandleAsync(new GetCreatorStatusQuery(Requester.Unauthenticated, UserId));
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(UnauthorizedException))]
+        public async Task WhenNotAuthenticatedAsRequiredUser_ItShouldThrowUnauthorizedException()
+        {
+            var databaseContext = new Mock<IFifthweekDbContext>(MockBehavior.Strict);
+
+            this.target = new GetCreatorStatusQueryHandler(databaseContext.Object);
+
+            await this.target.HandleAsync(new GetCreatorStatusQuery(Requester.Authenticated(UserId), new UserId(Guid.NewGuid())));
         }
 
         [TestMethod]

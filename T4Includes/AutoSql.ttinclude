@@ -65,7 +65,7 @@
         
         var targetSourceIdentityPredicate = sql.ToString();
 
-        unifiedClass.WriteNamespaceAndClassWithSignature(" : IIdentityEquatable", () => {
+        unifiedClass.WriteNamespaceAndClassWithSignature(" : IIdentityEquatable", null, () => {
 #>
 		public const string Table = "<#= tableName #>";
 

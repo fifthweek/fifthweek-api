@@ -6,9 +6,76 @@ using System.Linq;
 namespace Fifthweek.Api.Subscriptions
 {
     using System;
-    using Fifthweek.Api.Core;
     using Fifthweek.CodeGeneration;
-    using Fifthweek.Shared;
+    [Newtonsoft.Json.JsonConverter(typeof(JsonConverter))]
+    public partial class ChannelId 
+    {
+		public class JsonConverter : Newtonsoft.Json.JsonConverter
+        {
+            public override void WriteJson(Newtonsoft.Json.JsonWriter writer, object value, Newtonsoft.Json.JsonSerializer serializer)
+            {
+                var valueType = (ChannelId)value;
+                serializer.Serialize(writer, valueType.Value);
+            }
+
+            public override object ReadJson(Newtonsoft.Json.JsonReader reader, Type objectType, object existingValue, Newtonsoft.Json.JsonSerializer serializer)
+            {
+                if (objectType != typeof(ChannelId))
+                {
+                    throw new ArgumentException("Expected to deserialize JSON for type " + typeof(ChannelId).Name, "objectType");
+                }
+
+                var value = serializer.Deserialize<System.Guid>(reader);
+                return new ChannelId(value);
+            }
+
+            public override bool CanConvert(Type objectType)
+            {
+                return objectType == typeof(ChannelId);
+            }
+        }
+    }
+
+}
+namespace Fifthweek.Api.Subscriptions
+{
+    using System;
+    using Fifthweek.CodeGeneration;
+    [Newtonsoft.Json.JsonConverter(typeof(JsonConverter))]
+    public partial class SubscriptionId 
+    {
+		public class JsonConverter : Newtonsoft.Json.JsonConverter
+        {
+            public override void WriteJson(Newtonsoft.Json.JsonWriter writer, object value, Newtonsoft.Json.JsonSerializer serializer)
+            {
+                var valueType = (SubscriptionId)value;
+                serializer.Serialize(writer, valueType.Value);
+            }
+
+            public override object ReadJson(Newtonsoft.Json.JsonReader reader, Type objectType, object existingValue, Newtonsoft.Json.JsonSerializer serializer)
+            {
+                if (objectType != typeof(SubscriptionId))
+                {
+                    throw new ArgumentException("Expected to deserialize JSON for type " + typeof(SubscriptionId).Name, "objectType");
+                }
+
+                var value = serializer.Deserialize<System.Guid>(reader);
+                return new SubscriptionId(value);
+            }
+
+            public override bool CanConvert(Type objectType)
+            {
+                return objectType == typeof(SubscriptionId);
+            }
+        }
+    }
+
+}
+
+namespace Fifthweek.Api.Subscriptions
+{
+    using System;
+    using Fifthweek.CodeGeneration;
     public partial class ChannelId 
     {
         public ChannelId(
@@ -381,14 +448,21 @@ namespace Fifthweek.Api.Subscriptions.Queries
     public partial class GetCreatorStatusQuery 
     {
         public GetCreatorStatusQuery(
-            Fifthweek.Api.Identity.Membership.Requester requester)
+            Fifthweek.Api.Identity.Membership.Requester requester, 
+            Fifthweek.Api.Identity.Membership.UserId requestedUserId)
         {
             if (requester == null)
             {
                 throw new ArgumentNullException("requester");
             }
 
+            if (requestedUserId == null)
+            {
+                throw new ArgumentNullException("requestedUserId");
+            }
+
             this.Requester = requester;
+            this.RequestedUserId = requestedUserId;
         }
     }
 
@@ -396,9 +470,9 @@ namespace Fifthweek.Api.Subscriptions.Queries
 namespace Fifthweek.Api.Subscriptions.Queries
 {
     using System;
-    using System.Data.Entity;
     using System.Linq;
     using System.Threading.Tasks;
+    using Dapper;
     using Fifthweek.Api.Core;
     using Fifthweek.Api.Identity.Membership;
     using Fifthweek.Api.Persistence;
@@ -421,9 +495,7 @@ namespace Fifthweek.Api.Subscriptions.Queries
 namespace Fifthweek.Api.Subscriptions
 {
     using System;
-    using Fifthweek.Api.Core;
     using Fifthweek.CodeGeneration;
-    using Fifthweek.Shared;
     public partial class SubscriptionId 
     {
         public SubscriptionId(
@@ -496,9 +568,7 @@ namespace Fifthweek.Api.Subscriptions
 namespace Fifthweek.Api.Subscriptions
 {
     using System;
-    using Fifthweek.Api.Core;
     using Fifthweek.CodeGeneration;
-    using Fifthweek.Shared;
     public partial class ChannelId 
     {
         public override string ToString()
@@ -994,7 +1064,7 @@ namespace Fifthweek.Api.Subscriptions.Queries
     {
         public override string ToString()
         {
-            return string.Format("GetCreatorStatusQuery({0})", this.Requester == null ? "null" : this.Requester.ToString());
+            return string.Format("GetCreatorStatusQuery({0}, {1})", this.Requester == null ? "null" : this.Requester.ToString(), this.RequestedUserId == null ? "null" : this.RequestedUserId.ToString());
         }
 
         public override bool Equals(object obj)
@@ -1023,6 +1093,7 @@ namespace Fifthweek.Api.Subscriptions.Queries
             {
                 int hashCode = 0;
                 hashCode = (hashCode * 397) ^ (this.Requester != null ? this.Requester.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.RequestedUserId != null ? this.RequestedUserId.GetHashCode() : 0);
                 return hashCode;
             }
         }
@@ -1030,6 +1101,11 @@ namespace Fifthweek.Api.Subscriptions.Queries
         protected bool Equals(GetCreatorStatusQuery other)
         {
             if (!object.Equals(this.Requester, other.Requester))
+            {
+                return false;
+            }
+
+            if (!object.Equals(this.RequestedUserId, other.RequestedUserId))
             {
                 return false;
             }
@@ -1042,9 +1118,7 @@ namespace Fifthweek.Api.Subscriptions.Queries
 namespace Fifthweek.Api.Subscriptions
 {
     using System;
-    using Fifthweek.Api.Core;
     using Fifthweek.CodeGeneration;
-    using Fifthweek.Shared;
     public partial class SubscriptionId 
     {
         public override string ToString()

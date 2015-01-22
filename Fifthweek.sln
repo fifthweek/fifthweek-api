@@ -52,6 +52,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "T4Includes", "T4Includes", 
 		T4Includes\AutoCopy.ttinclude = T4Includes\AutoCopy.ttinclude
 		T4Includes\AutoEqualityMembers.ttinclude = T4Includes\AutoEqualityMembers.ttinclude
 		T4Includes\AutoParse.ttinclude = T4Includes\AutoParse.ttinclude
+		T4Includes\AutoPrimitive.ttinclude = T4Includes\AutoPrimitive.ttinclude
 		T4Includes\AutoSql.ttinclude = T4Includes\AutoSql.ttinclude
 		T4Includes\ClassAugmentation.ttinclude = T4Includes\ClassAugmentation.ttinclude
 		T4Includes\VisualStudioHelper.ttinclude = T4Includes\VisualStudioHelper.ttinclude

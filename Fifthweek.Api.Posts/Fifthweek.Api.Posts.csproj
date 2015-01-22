@@ -70,6 +70,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AutofacRegistration.cs" />
+    <Compile Include="Comment.cs" />
+    <Compile Include="Controllers\BacklogPostData.cs" />
     <Compile Include="DeletePostDbStatement.cs" />
     <Compile Include="IDeletePostDbStatement.cs" />
     <Compile Include="PostOwnership.cs" />
@@ -101,6 +103,8 @@
     <Compile Include="PostToCollectionDbStatement.cs" />
     <Compile Include="PostToCollectionDbSubStatements.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Queries\BacklogPost.cs" />
+    <Compile Include="Queries\GetCreatorBacklogQuery.cs" />
     <Compile Include="ValidComment.cs" />
     <Compile Include="ValidNote.cs" />
   </ItemGroup>

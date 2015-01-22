@@ -1,0 +1,60 @@
+﻿<#@ include file="VisualStudioHelper.ttinclude" once="true" #>
+<#@ include file="VisualStudioHelper2.ttinclude" once="true" #>
+<#@ assembly name="System.Core" #>
+<#@ import namespace="EnvDTE" #>
+<#@ import namespace="System.Linq" #>
+<#@ import namespace="System.Text" #>
+<#@ import namespace="System.Collections.Generic" #>
+<#
+    var AutoPrimitiveAttributeName = "AutoPrimitive";
+
+    foreach(UnifiedClass unifiedClass in allClasses)
+    {
+        var allAttributes = unifiedClass.GetAllAttributes();
+        if (!allAttributes.Any(_ => _.Name.StartsWith(AutoPrimitiveAttributeName)))
+        {
+            continue;
+        }
+
+		var publicProperties = unifiedClass.GetAllPublicGetters();
+        if (publicProperties.Count != 1)
+        {
+            continue;
+        }
+
+		var singleProperty = publicProperties[0];
+		if (singleProperty.Name != "Value")
+        {
+			continue;
+        }
+
+        unifiedClass.WriteNamespaceAndClassWithSignature(null, "[Newtonsoft.Json.JsonConverter(typeof(JsonConverter))]",() => {
+#>
+		public class JsonConverter : Newtonsoft.Json.JsonConverter
+        {
+            public override void WriteJson(Newtonsoft.Json.JsonWriter writer, object value, Newtonsoft.Json.JsonSerializer serializer)
+            {
+                var valueType = (<#= unifiedClass.FirstCodeClass.Name #>)value;
+                serializer.Serialize(writer, valueType.Value);
+            }
+
+            public override object ReadJson(Newtonsoft.Json.JsonReader reader, Type objectType, object existingValue, Newtonsoft.Json.JsonSerializer serializer)
+            {
+                if (objectType != typeof(<#= unifiedClass.FirstCodeClass.Name #>))
+                {
+                    throw new ArgumentException("Expected to deserialize JSON for type " + typeof(<#= unifiedClass.FirstCodeClass.Name #>).Name, "objectType");
+                }
+
+                var value = serializer.Deserialize<<#= singleProperty.Type.AsFullName #>>(reader);
+                return new <#= unifiedClass.FirstCodeClass.Name #>(value);
+            }
+
+            public override bool CanConvert(Type objectType)
+            {
+                return objectType == typeof(<#= unifiedClass.FirstCodeClass.Name #>);
+            }
+        }
+<#
+        });
+    }
+#>

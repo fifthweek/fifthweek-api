@@ -2,12 +2,9 @@
 {
     using System;
 
-    using Fifthweek.Api.Core;
     using Fifthweek.CodeGeneration;
-    using Fifthweek.Shared;
 
-    [AutoConstructor]
-    [AutoEqualityMembers]
+    [AutoPrimitive]
     public partial class FileId
     {
         public Guid Value { get; private set; }

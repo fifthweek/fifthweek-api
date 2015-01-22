@@ -1,12 +1,10 @@
 ﻿namespace Fifthweek.Api.Posts
 {
-    using System;
-
     using Fifthweek.CodeGeneration;
 
     [AutoPrimitive]
-    public partial class PostId
+    public partial class Comment
     {
-        public Guid Value { get; private set; }
+        public string Value { get; private set; }
     }
 }
