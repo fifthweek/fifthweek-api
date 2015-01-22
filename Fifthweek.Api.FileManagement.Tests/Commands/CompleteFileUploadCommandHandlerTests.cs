@@ -7,6 +7,7 @@
     using Fifthweek.Api.Core;
     using Fifthweek.Api.FileManagement.Commands;
     using Fifthweek.Api.Identity.Membership;
+    using Fifthweek.Api.Identity.Tests.Shared.Membership;
     using Fifthweek.Shared;
     using Fifthweek.Tests.Shared;
     using Fifthweek.WebJobs.Files.Shared;
@@ -33,6 +34,7 @@
         private Mock<IBlobService> blobService;
         private Mock<IQueueService> queueService;
         private Mock<IBlobLocationGenerator> blobNameCreator;
+        private Mock<IRequesterSecurity> requesterSecurity;
 
         private CompleteFileUploadCommandHandler handler;
 
@@ -41,6 +43,7 @@
         {
             this.blobNameCreator = new Mock<IBlobLocationGenerator>();
             this.mimeTypeMap = new Mock<IMimeTypeMap>();
+            this.requesterSecurity = new Mock<IRequesterSecurity>();
 
             // Give side-effecting components strict mock behaviour.
             this.fileRepository = new Mock<IFileRepository>(MockBehavior.Strict);
@@ -52,7 +55,10 @@
                 this.mimeTypeMap.Object,
                 this.blobService.Object,
                 this.queueService.Object,
-                this.blobNameCreator.Object);
+                this.blobNameCreator.Object,
+                this.requesterSecurity.Object);
+
+            this.requesterSecurity.SetupFor(Requester);
         }
 
         [TestMethod]
@@ -60,6 +66,18 @@
         public async Task WhenUnauthenticated_ItShouldThrowUnauthorizedException()
         {
             await this.handler.HandleAsync(new CompleteFileUploadCommand(Requester.Unauthenticated, FileId));
+        }
+
+        [TestMethod]
+        public async Task WhenCalledAndFileDoesNotBelogToUser_ItShouldNotUpdateStorageOrQueue()
+        {
+            this.fileRepository.Setup(v => v.GetFileWaitingForUploadAsync(FileId))
+                .ReturnsAsync(new FileWaitingForUpload(FileId, new UserId(Guid.NewGuid()), "myfile", FileExtension, Purpose));
+
+            await ExpectedException.AssertExceptionAsync<UnauthorizedException>(() =>
+            {
+                return this.handler.HandleAsync(new CompleteFileUploadCommand(Requester, FileId));
+            });
         }
 
         [TestMethod]
@@ -89,17 +107,6 @@
             this.fileRepository.Verify();
             this.blobService.Verify();
             this.queueService.Verify();
-        }
-
-        [TestMethod]
-        public async Task WhenCalledAndFileDoesNotBelogToUser_ItShouldNotUpdateStorageOrQueue()
-        {
-            this.fileRepository.Setup(v => v.GetFileWaitingForUploadAsync(FileId))
-                .ReturnsAsync(new FileWaitingForUpload(FileId, new UserId(Guid.NewGuid()), "myfile", FileExtension, Purpose));
-
-            Func<Task> badMethodCall = () => this.handler.HandleAsync(new CompleteFileUploadCommand(Requester, FileId));
-
-            await badMethodCall.AssertExceptionAsync<UnauthorizedException>();
         }
     }
 }

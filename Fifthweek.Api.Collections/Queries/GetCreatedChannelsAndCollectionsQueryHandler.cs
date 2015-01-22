@@ -11,14 +11,16 @@
     [AutoConstructor]
     public partial class GetCreatedChannelsAndCollectionsQueryHandler : IQueryHandler<GetCreatedChannelsAndCollectionsQuery, ChannelsAndCollections>
     {
+        private readonly IRequesterSecurity requesterSecurity;
         private readonly IGetChannelsAndCollectionsDbStatement getChannelsAndCollections;
 
-        public Task<ChannelsAndCollections> HandleAsync(GetCreatedChannelsAndCollectionsQuery query)
+        public async Task<ChannelsAndCollections> HandleAsync(GetCreatedChannelsAndCollectionsQuery query)
         {
             query.AssertNotNull("query");
-            query.Requester.AssertAuthenticatedAs(query.RequestedCreatorId);
 
-            return this.getChannelsAndCollections.ExecuteAsync(query.RequestedCreatorId);
+            await this.requesterSecurity.AuthenticateAsAsync(query.Requester, query.RequestedCreatorId);
+
+            return await this.getChannelsAndCollections.ExecuteAsync(query.RequestedCreatorId);
         }
     }
 }

@@ -13,13 +13,13 @@
         private readonly IBlobService blobService;
         private readonly IBlobLocationGenerator blobLocationGenerator;
         private readonly IFileSecurity fileSecurity;
+        private readonly IRequesterSecurity requesterSecurity;
 
         public async Task<string> HandleAsync(GenerateWritableBlobUriQuery query)
         {
             query.AssertNotNull("query");
 
-            UserId userId;
-            query.Requester.AssertAuthenticated(out userId);
+            var userId = await this.requesterSecurity.AuthenticateAsync(query.Requester);
 
             await this.fileSecurity.AssertUsageAllowedAsync(userId, query.FileId);
 

@@ -7,6 +7,7 @@
     using Fifthweek.Api.Core;
     using Fifthweek.Api.FileManagement.Commands;
     using Fifthweek.Api.Identity.Membership;
+    using Fifthweek.Api.Identity.Tests.Shared.Membership;
     using Fifthweek.Shared;
 
     using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -23,10 +24,12 @@
 
         private static readonly UserId UserId = new UserId(Guid.NewGuid());
         private static readonly FileId FileId = new FileId(Guid.NewGuid());
+        private static readonly Requester Requester = Requester.Authenticated(UserId);
 
         private Mock<IFileRepository> fileRepository;
         private Mock<IBlobService> blobService;
         private Mock<IBlobLocationGenerator> blobNameCreator;
+        private Mock<IRequesterSecurity> requesterSecurity;
         private InitiateFileUploadCommandHandler target;
 
         [TestInitialize]
@@ -36,8 +39,10 @@
             this.blobService = new Mock<IBlobService>(MockBehavior.Strict);
             this.blobNameCreator = new Mock<IBlobLocationGenerator>();
             this.fileRepository = new Mock<IFileRepository>(MockBehavior.Strict);
+            this.requesterSecurity = new Mock<IRequesterSecurity>();
+            this.requesterSecurity.SetupFor(Requester);
 
-            this.target = new InitiateFileUploadCommandHandler(this.blobService.Object, this.blobNameCreator.Object, this.fileRepository.Object);
+            this.target = new InitiateFileUploadCommandHandler(this.requesterSecurity.Object, this.blobService.Object, this.blobNameCreator.Object, this.fileRepository.Object);
         }
 
         [TestMethod]
@@ -174,7 +179,7 @@
                 .Returns(Task.FromResult(0))
                 .Verifiable();
 
-            await this.target.HandleAsync(new InitiateFileUploadCommand(Requester.Authenticated(requester), fileId, filePath, purpose));
+            await this.target.HandleAsync(new InitiateFileUploadCommand(Requester, fileId, filePath, purpose));
 
             this.blobService.Verify();
             this.fileRepository.Verify();

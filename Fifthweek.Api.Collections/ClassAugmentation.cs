@@ -271,11 +271,17 @@ namespace Fifthweek.Api.Collections.Queries
     {
         public GetLiveDateOfNewQueuedPostQueryHandler(
             Fifthweek.Api.Collections.ICollectionSecurity collectionSecurity, 
+            Fifthweek.Api.Identity.Membership.IRequesterSecurity requesterSecurity, 
             Fifthweek.Api.Collections.IGetLiveDateOfNewQueuedPostDbStatement getLiveDateOfNewQueuedPost)
         {
             if (collectionSecurity == null)
             {
                 throw new ArgumentNullException("collectionSecurity");
+            }
+
+            if (requesterSecurity == null)
+            {
+                throw new ArgumentNullException("requesterSecurity");
             }
 
             if (getLiveDateOfNewQueuedPost == null)
@@ -284,6 +290,7 @@ namespace Fifthweek.Api.Collections.Queries
             }
 
             this.collectionSecurity = collectionSecurity;
+            this.requesterSecurity = requesterSecurity;
             this.getLiveDateOfNewQueuedPost = getLiveDateOfNewQueuedPost;
         }
     }
@@ -465,13 +472,20 @@ namespace Fifthweek.Api.Collections.Queries
     public partial class GetCreatedChannelsAndCollectionsQueryHandler 
     {
         public GetCreatedChannelsAndCollectionsQueryHandler(
+            Fifthweek.Api.Identity.Membership.IRequesterSecurity requesterSecurity, 
             Fifthweek.Api.Collections.IGetChannelsAndCollectionsDbStatement getChannelsAndCollections)
         {
+            if (requesterSecurity == null)
+            {
+                throw new ArgumentNullException("requesterSecurity");
+            }
+
             if (getChannelsAndCollections == null)
             {
                 throw new ArgumentNullException("getChannelsAndCollections");
             }
 
+            this.requesterSecurity = requesterSecurity;
             this.getChannelsAndCollections = getChannelsAndCollections;
         }
     }
@@ -620,7 +634,7 @@ namespace Fifthweek.Api.Collections.Queries
     {
         public override string ToString()
         {
-            return string.Format("GetChannelsAndCollectionsQuery({0}, {1})", this.Requester == null ? "null" : this.Requester.ToString(), this.RequestedCreatorId == null ? "null" : this.RequestedCreatorId.ToString());
+            return string.Format("GetCreatedChannelsAndCollectionsQuery({0}, {1})", this.Requester == null ? "null" : this.Requester.ToString(), this.RequestedCreatorId == null ? "null" : this.RequestedCreatorId.ToString());
         }
 
         public override bool Equals(object obj)

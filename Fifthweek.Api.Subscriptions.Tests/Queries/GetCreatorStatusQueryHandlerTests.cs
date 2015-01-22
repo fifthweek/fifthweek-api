@@ -7,6 +7,7 @@
 
     using Fifthweek.Api.Core;
     using Fifthweek.Api.Identity.Membership;
+    using Fifthweek.Api.Identity.Tests.Shared.Membership;
     using Fifthweek.Api.Persistence;
     using Fifthweek.Api.Persistence.Tests.Shared;
     using Fifthweek.Api.Subscriptions.Queries;
@@ -19,10 +20,19 @@
     public class GetCreatorStatusQueryHandlerTests : PersistenceTestsBase
     {
         private static readonly UserId UserId = new UserId(Guid.NewGuid());
+        private static readonly Requester Requester = Requester.Authenticated(UserId);
         private static readonly SubscriptionId SubscriptionId = new SubscriptionId(Guid.NewGuid());
         private static readonly ChannelId DefaultChannelId = new ChannelId(SubscriptionId.Value);
-        private static readonly GetCreatorStatusQuery Query = new GetCreatorStatusQuery(Requester.Authenticated(UserId), UserId);
+        private static readonly GetCreatorStatusQuery Query = new GetCreatorStatusQuery(Requester, UserId);
         private GetCreatorStatusQueryHandler target;
+        private Mock<IRequesterSecurity> requesterSecurity;
+
+        [TestInitialize]
+        public void TestInitialize()
+        {
+            this.requesterSecurity = new Mock<IRequesterSecurity>();
+            this.requesterSecurity.SetupFor(Requester);
+        }
 
         [TestMethod]
         [ExpectedException(typeof(UnauthorizedException))]
@@ -30,7 +40,7 @@
         {
             var databaseContext = new Mock<IFifthweekDbContext>(MockBehavior.Strict);
 
-            this.target = new GetCreatorStatusQueryHandler(databaseContext.Object);
+            this.target = new GetCreatorStatusQueryHandler(this.requesterSecurity.Object, databaseContext.Object);
 
             await this.target.HandleAsync(new GetCreatorStatusQuery(Requester.Unauthenticated, UserId));
         }
@@ -41,9 +51,9 @@
         {
             var databaseContext = new Mock<IFifthweekDbContext>(MockBehavior.Strict);
 
-            this.target = new GetCreatorStatusQueryHandler(databaseContext.Object);
+            this.target = new GetCreatorStatusQueryHandler(this.requesterSecurity.Object, databaseContext.Object);
 
-            await this.target.HandleAsync(new GetCreatorStatusQuery(Requester.Authenticated(UserId), new UserId(Guid.NewGuid())));
+            await this.target.HandleAsync(new GetCreatorStatusQuery(Requester, new UserId(Guid.NewGuid())));
         }
 
         [TestMethod]
@@ -51,7 +61,7 @@
         {
             await this.NewTestDatabaseAsync(async testDatabase =>
             {
-                this.target = new GetCreatorStatusQueryHandler(testDatabase.NewContext());
+                this.target = new GetCreatorStatusQueryHandler(this.requesterSecurity.Object, testDatabase.NewContext());
                 await this.CreateSubscriptionAsync(UserId, SubscriptionId, testDatabase);
                 await testDatabase.TakeSnapshotAsync();
 
@@ -69,7 +79,7 @@
         {
             await this.NewTestDatabaseAsync(async testDatabase =>
             {
-                this.target = new GetCreatorStatusQueryHandler(testDatabase.NewContext());
+                this.target = new GetCreatorStatusQueryHandler(this.requesterSecurity.Object, testDatabase.NewContext());
                 await this.CreateSubscriptionAsync(UserId, SubscriptionId, testDatabase);
                 await testDatabase.TakeSnapshotAsync();
 
@@ -87,7 +97,7 @@
         {
             await this.NewTestDatabaseAsync(async testDatabase =>
             {
-                this.target = new GetCreatorStatusQueryHandler(testDatabase.NewContext());
+                this.target = new GetCreatorStatusQueryHandler(this.requesterSecurity.Object, testDatabase.NewContext());
                 await this.CreateSubscriptionAsync(UserId, SubscriptionId, testDatabase);
                 await this.CreatePostAsync(testDatabase);
                 await testDatabase.TakeSnapshotAsync();
@@ -106,7 +116,7 @@
         {
             await this.NewTestDatabaseAsync(async testDatabase =>
             {
-                this.target = new GetCreatorStatusQueryHandler(testDatabase.NewContext());
+                this.target = new GetCreatorStatusQueryHandler(this.requesterSecurity.Object, testDatabase.NewContext());
                 await this.CreateSubscriptionAsync(UserId, SubscriptionId, testDatabase);
                 await this.CreatePostAsync(testDatabase);
                 await this.CreatePostAsync(testDatabase);
@@ -127,7 +137,7 @@
         {
             await this.NewTestDatabaseAsync(async testDatabase =>
             {
-                this.target = new GetCreatorStatusQueryHandler(testDatabase.NewContext());
+                this.target = new GetCreatorStatusQueryHandler(this.requesterSecurity.Object, testDatabase.NewContext());
                 await this.CreateSubscriptionAsync(UserId, SubscriptionId, testDatabase);
                 await this.CreatePostAsync(testDatabase);
                 await this.CreatePostAsync(testDatabase);
@@ -149,7 +159,7 @@
         {
             await this.NewTestDatabaseAsync(async testDatabase =>
             {
-                this.target = new GetCreatorStatusQueryHandler(testDatabase.NewContext());
+                this.target = new GetCreatorStatusQueryHandler(this.requesterSecurity.Object, testDatabase.NewContext());
                 await this.CreateSubscriptionAsync(UserId, new SubscriptionId(Guid.NewGuid()), testDatabase, newUser: true, setTodaysDate: false);
                 await this.CreateSubscriptionsAsync(UserId, 100, testDatabase);
                 await this.CreateSubscriptionAsync(UserId, SubscriptionId, testDatabase, newUser: false, setTodaysDate: true);
@@ -169,7 +179,7 @@
         {
             await this.NewTestDatabaseAsync(async testDatabase =>
             {
-                this.target = new GetCreatorStatusQueryHandler(testDatabase.NewContext());
+                this.target = new GetCreatorStatusQueryHandler(this.requesterSecurity.Object, testDatabase.NewContext());
 
                 using (var databaseContext = testDatabase.NewContext())
                 {
@@ -192,7 +202,7 @@
         {
             await this.NewTestDatabaseAsync(async testDatabase =>
             {
-                this.target = new GetCreatorStatusQueryHandler(testDatabase.NewContext());
+                this.target = new GetCreatorStatusQueryHandler(this.requesterSecurity.Object, testDatabase.NewContext());
                 await testDatabase.TakeSnapshotAsync();
 
                 var result = await this.target.HandleAsync(Query);

@@ -97,7 +97,7 @@
     <Compile Include="GetCollectionWeeklyReleaseTimesDbStatementTests.cs" />
     <Compile Include="HourOfWeekTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Queries\GetChannelsAndCollectionsQueryHandlerTests.cs" />
+    <Compile Include="Queries\GetCreatedChannelsAndCollectionsQueryHandlerTests.cs" />
     <Compile Include="Queries\GetLiveDateOfNewQueuedPostQueryHandlerTests.cs" />
     <Compile Include="QueuedPostLiveDateCalculatorTests.cs" />
   </ItemGroup>
@@ -109,6 +109,10 @@
     <ProjectReference Include="..\Fifthweek.Api.Core\Fifthweek.Api.Core.csproj">
       <Project>{BD52863E-063D-45A5-9CA8-7541804D1313}</Project>
       <Name>Fifthweek.Api.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Fifthweek.Api.Identity.Tests.Shared\Fifthweek.Api.Identity.Tests.Shared.csproj">
+      <Project>{45E1C6C7-845A-480F-BBBC-5DF3135D1E19}</Project>
+      <Name>Fifthweek.Api.Identity.Tests.Shared</Name>
     </ProjectReference>
     <ProjectReference Include="..\Fifthweek.Api.Identity\Fifthweek.Api.Identity.csproj">
       <Project>{6A2AF270-E4D4-4C4E-A88F-807F7B9A03B7}</Project>

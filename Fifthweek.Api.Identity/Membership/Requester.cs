@@ -1,6 +1,8 @@
 ﻿namespace Fifthweek.Api.Identity.Membership
 {
     using System;
+    using System.Collections.Generic;
+    using System.Linq;
 
     using Fifthweek.Api.Core;
 
@@ -10,7 +12,9 @@
 
         private readonly UserId userId;
 
-        private Requester(UserId userId)
+        private readonly HashSet<string> roles;
+
+        private Requester(UserId userId, IEnumerable<string> roles)
         {
             if (userId == null)
             {
@@ -18,60 +22,51 @@
             }
 
             this.userId = userId;
+            this.roles = new HashSet<string>(roles ?? Enumerable.Empty<string>());
         }
 
         private Requester()
         {
+            this.roles = new HashSet<string>();
         }
 
-        public bool IsAuthenticated
+        internal UserId UserId
         {
             get
             {
-                return this.userId != null;
+                return this.userId;
             }
         }
 
-        public static Requester Authenticated(UserId userId)
+        internal IEnumerable<string> Roles 
         {
+            get
+            {
+                return this.roles.ToList();
+            }
+        }
+
+        public static Requester Authenticated(UserId userId, params string[] roles)
+        {
+            return Authenticated(userId, (IEnumerable<string>)roles);
+        }
+
+        public static Requester Authenticated(UserId userId, IEnumerable<string> roles)
+        {
+            userId.AssertNotNull("userId");
             if (userId == null)
             {
                 throw new ArgumentNullException("userId");
             }
 
-            return new Requester(userId);
-        }
-
-        public void AssertAuthenticated()
-        {
-            if (!this.IsAuthenticated)
-            {
-                throw new UnauthorizedException("The user was not authenticated.");
-            }
-        }
-
-        public void AssertAuthenticated(out UserId userId)
-        {
-            if (this.IsAuthenticated)
-            {
-                userId = this.userId;
-            }
-            else
-            {
-                throw new UnauthorizedException("The user was not authenticated.");
-            }
+            return new Requester(userId, roles);
         }
 
         public override string ToString()
         {
             return this.userId == null 
                 ? "Requester(Unauthenticated)" 
-                : string.Format("Requester({0})", this.userId);
-        }
-
-        public override int GetHashCode()
-        {
-            return (this.userId != null ? this.userId.GetHashCode() : 0);
+                : string.Format("Requester({0}, [{1}])", this.userId, string.Join(", ", this.roles));
         }
 
         public override bool Equals(object obj)
@@ -80,20 +75,58 @@
             {
                 return false;
             }
+
             if (ReferenceEquals(this, obj))
             {
                 return true;
             }
+
             if (obj.GetType() != this.GetType())
             {
                 return false;
             }
-            return Equals((Requester)obj);
+
+            return this.Equals((Requester)obj);
+        }
+
+        public override int GetHashCode()
+        {
+            unchecked
+            {
+                int hashCode = 0;
+                
+                hashCode = (hashCode * 397) ^ (this.userId != null ? this.userId.GetHashCode() : 0);
+                
+                var sortedRoles = new List<string>(this.roles);
+                sortedRoles.Sort();
+                foreach (var item in sortedRoles)
+                {
+                    hashCode = (hashCode * 397) ^ (item != null ? item.GetHashCode() : 0);
+                }
+
+                return hashCode;
+            }
+        }
+
+        internal bool IsInRole(string role)
+        {
+            role.AssertNotNull("role");
+            return this.roles.Contains(role);
         }
 
         protected bool Equals(Requester other)
         {
-            return Equals(this.userId, other.userId);
+            if (!object.Equals(this.userId, other.userId))
+            {
+                return false;
+            }
+
+            if (this.roles.Count != other.roles.Count)
+            {
+                return false;
+            }
+
+            return this.roles.All(item => other.roles.Contains(item));
         }
     }
 }

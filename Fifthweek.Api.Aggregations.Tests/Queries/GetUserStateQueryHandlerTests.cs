@@ -8,6 +8,7 @@
     using Fifthweek.Api.Collections.Queries;
     using Fifthweek.Api.Core;
     using Fifthweek.Api.Identity.Membership;
+    using Fifthweek.Api.Identity.Tests.Shared.Membership;
     using Fifthweek.Api.Subscriptions;
     using Fifthweek.Api.Subscriptions.Queries;
 
@@ -19,20 +20,25 @@
     public class GetUserStateQueryHandlerTests
     {
         private static readonly UserId UserId = new UserId(Guid.NewGuid());
-
         private static readonly Requester Requester = Requester.Authenticated(UserId);
 
         private GetUserStateQueryHandler target;
 
+        private Mock<IRequesterSecurity> requesterSecurity;
         private Mock<IQueryHandler<GetCreatorStatusQuery, CreatorStatus>> getCreatorStatus;
         private Mock<IQueryHandler<GetCreatedChannelsAndCollectionsQuery, ChannelsAndCollections>> getCreatedChannelsAndCollections;
 
         [TestInitialize]
         public void TestInitialize()
         {
+            this.requesterSecurity = new Mock<IRequesterSecurity>();
+            this.requesterSecurity.SetupFor(Requester);
+
+            // Give potentially side-effecting components strict mock behaviour.
             this.getCreatorStatus = new Mock<IQueryHandler<GetCreatorStatusQuery, CreatorStatus>>(MockBehavior.Strict);
-            this.getCreatedChannelsAndCollections = new Mock<IQueryHandler<GetCreatedChannelsAndCollectionsQuery,ChannelsAndCollections>>(MockBehavior.Strict);
-            this.target = new GetUserStateQueryHandler(this.getCreatorStatus.Object, this.getCreatedChannelsAndCollections.Object);
+            this.getCreatedChannelsAndCollections = new Mock<IQueryHandler<GetCreatedChannelsAndCollectionsQuery, ChannelsAndCollections>>(MockBehavior.Strict);
+            
+            this.target = new GetUserStateQueryHandler(this.requesterSecurity.Object, this.getCreatorStatus.Object, this.getCreatedChannelsAndCollections.Object);
         }
 
         [TestMethod]

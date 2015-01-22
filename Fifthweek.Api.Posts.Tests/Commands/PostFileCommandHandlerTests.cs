@@ -7,6 +7,7 @@
     using Fifthweek.Api.Core;
     using Fifthweek.Api.FileManagement;
     using Fifthweek.Api.Identity.Membership;
+    using Fifthweek.Api.Identity.Tests.Shared.Membership;
     using Fifthweek.Api.Posts.Commands;
     using Fifthweek.Tests.Shared;
 
@@ -28,6 +29,7 @@
         private static readonly PostFileCommand Command = new PostFileCommand(Requester, PostId, CollectionId, FileId, Comment, ScheduleDate, IsQueued);
         private Mock<ICollectionSecurity> collectionSecurity;
         private Mock<IFileSecurity> fileSecurity;
+        private Mock<IRequesterSecurity> requesterSecurity;
         private Mock<IPostFileTypeChecks> postFileTypeChecks;
         private Mock<IPostToCollectionDbStatement> postToCollectionDbStatement;
         private PostFileCommandHandler target;
@@ -38,6 +40,8 @@
             this.collectionSecurity = new Mock<ICollectionSecurity>();
             this.fileSecurity = new Mock<IFileSecurity>();
             this.postFileTypeChecks = new Mock<IPostFileTypeChecks>();
+            this.requesterSecurity = new Mock<IRequesterSecurity>();
+            this.requesterSecurity.SetupFor(Requester);
 
             // Give side-effecting components strict mock behaviour.
             this.postToCollectionDbStatement = new Mock<IPostToCollectionDbStatement>(MockBehavior.Strict);
@@ -45,6 +49,7 @@
             this.target = new PostFileCommandHandler(
                 this.collectionSecurity.Object,
                 this.fileSecurity.Object,
+                this.requesterSecurity.Object,
                 this.postFileTypeChecks.Object,
                 this.postToCollectionDbStatement.Object);
         }

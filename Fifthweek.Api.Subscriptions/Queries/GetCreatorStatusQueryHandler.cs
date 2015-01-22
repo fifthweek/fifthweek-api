@@ -41,17 +41,16 @@
             Subscription.Fields.CreatorId,
             Subscription.Fields.CreationDate);
 
+        private readonly IRequesterSecurity requesterSecurity;
         private readonly IFifthweekDbContext databaseContext;
 
-        public Task<CreatorStatus> HandleAsync(GetCreatorStatusQuery query)
+        public async Task<CreatorStatus> HandleAsync(GetCreatorStatusQuery query)
         {
             query.AssertNotNull("query");
 
-            UserId userId; 
-            query.Requester.AssertAuthenticated(out userId);
-            query.Requester.AssertAuthenticatedAs(query.RequestedUserId);
+            UserId userId = await this.requesterSecurity.AuthenticateAsAsync(query.Requester, query.RequestedUserId); 
 
-            return this.GetCreatorStatusAsync(userId);
+            return await this.GetCreatorStatusAsync(userId);
         }
 
         private async Task<CreatorStatus> GetCreatorStatusAsync(UserId creatorId)

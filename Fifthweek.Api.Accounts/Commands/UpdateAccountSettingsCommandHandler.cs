@@ -11,16 +11,14 @@
     public partial class UpdateAccountSettingsCommandHandler : ICommandHandler<UpdateAccountSettingsCommand>
     {
         private readonly IAccountRepository accountRepository;
-
+        private readonly IRequesterSecurity requesterSecurity;
         private readonly IFileSecurity fileSecurity;
 
         public async Task HandleAsync(UpdateAccountSettingsCommand command)
         {
             command.AssertNotNull("command");
 
-            UserId userId;
-            command.Requester.AssertAuthenticated(out userId);
-            command.Requester.AssertAuthenticatedAs(command.RequestedUserId);
+            var userId = await this.requesterSecurity.AuthenticateAsAsync(command.Requester, command.RequestedUserId);
             
             if (command.NewProfileImageId != null)
             {

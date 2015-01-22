@@ -7,6 +7,7 @@
     using Fifthweek.Api.Core;
     using Fifthweek.Api.FileManagement;
     using Fifthweek.Api.Identity.Membership;
+    using Fifthweek.Api.Identity.Tests.Shared.Membership;
     using Fifthweek.Api.Persistence;
     using Fifthweek.Api.Persistence.Tests.Shared;
     using Fifthweek.Api.Subscriptions.Commands;
@@ -40,6 +41,7 @@
 
         private Mock<ISubscriptionSecurity> subscriptionSecurity;
         private Mock<IFileSecurity> fileSecurity;
+        private Mock<IRequesterSecurity> requesterSecurity;
         private UpdateSubscriptionCommandHandler target;
 
         [TestInitialize]
@@ -47,6 +49,8 @@
         {
             this.subscriptionSecurity = new Mock<ISubscriptionSecurity>();
             this.fileSecurity = new Mock<IFileSecurity>();
+            this.requesterSecurity = new Mock<IRequesterSecurity>();
+            this.requesterSecurity.SetupFor(Requester);
         }
 
         [TestMethod]
@@ -56,7 +60,7 @@
             // Give side-effecting components strict mock behaviour.
             var databaseContext = new Mock<IFifthweekDbContext>(MockBehavior.Strict);
 
-            this.target = new UpdateSubscriptionCommandHandler(this.subscriptionSecurity.Object, this.fileSecurity.Object, databaseContext.Object);
+            this.target = new UpdateSubscriptionCommandHandler(this.subscriptionSecurity.Object, this.fileSecurity.Object, this.requesterSecurity.Object, databaseContext.Object);
             
             await this.target.HandleAsync(new UpdateSubscriptionCommand(
                 Requester.Unauthenticated,
@@ -75,7 +79,7 @@
             await this.NewTestDatabaseAsync(async testDatabase =>
             {
                 this.subscriptionSecurity.Setup(_ => _.AssertUpdateAllowedAsync(UserId, SubscriptionId)).Throws<UnauthorizedException>();
-                this.target = new UpdateSubscriptionCommandHandler(this.subscriptionSecurity.Object, this.fileSecurity.Object, testDatabase.NewContext());
+                this.target = new UpdateSubscriptionCommandHandler(this.subscriptionSecurity.Object, this.fileSecurity.Object, this.requesterSecurity.Object, testDatabase.NewContext());
                 await testDatabase.TakeSnapshotAsync();
 
                 Func<Task> badMethodCall = () => this.target.HandleAsync(Command);
@@ -92,7 +96,7 @@
             await this.NewTestDatabaseAsync(async testDatabase =>
             {
                 this.fileSecurity.Setup(_ => _.AssertUsageAllowedAsync(UserId, HeaderImageFileId)).Throws<UnauthorizedException>();
-                this.target = new UpdateSubscriptionCommandHandler(this.subscriptionSecurity.Object, this.fileSecurity.Object, testDatabase.NewContext());
+                this.target = new UpdateSubscriptionCommandHandler(this.subscriptionSecurity.Object, this.fileSecurity.Object, this.requesterSecurity.Object, testDatabase.NewContext());
                 await testDatabase.TakeSnapshotAsync();
 
                 Func<Task> badMethodCall = () => this.target.HandleAsync(Command);
@@ -108,7 +112,7 @@
         {
             await this.NewTestDatabaseAsync(async testDatabase =>
             {
-                this.target = new UpdateSubscriptionCommandHandler(this.subscriptionSecurity.Object, this.fileSecurity.Object, testDatabase.NewContext());
+                this.target = new UpdateSubscriptionCommandHandler(this.subscriptionSecurity.Object, this.fileSecurity.Object, this.requesterSecurity.Object, testDatabase.NewContext());
                 await this.CreateSubscriptionAsync(UserId, SubscriptionId, HeaderImageFileId, testDatabase);
                 await this.target.HandleAsync(Command);
                 await testDatabase.TakeSnapshotAsync();
@@ -124,7 +128,7 @@
         {
             await this.NewTestDatabaseAsync(async testDatabase =>
             {
-                this.target = new UpdateSubscriptionCommandHandler(this.subscriptionSecurity.Object, this.fileSecurity.Object, testDatabase.NewContext());
+                this.target = new UpdateSubscriptionCommandHandler(this.subscriptionSecurity.Object, this.fileSecurity.Object, this.requesterSecurity.Object, testDatabase.NewContext());
                 var subscription = await this.CreateSubscriptionAsync(UserId, SubscriptionId, HeaderImageFileId, testDatabase);
                 await testDatabase.TakeSnapshotAsync();
 

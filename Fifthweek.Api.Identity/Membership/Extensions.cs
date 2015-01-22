@@ -12,18 +12,5 @@
                 ? Requester.Authenticated(userId) 
                 : Requester.Unauthenticated;
         }
-
-        public static void AssertAuthenticatedAs(this Requester requester, UserId requiredUserId)
-        {
-            UserId userId;
-            requester.AssertAuthenticated(out userId);
-
-            if (requiredUserId != null && !requiredUserId.Equals(userId))
-            {
-                throw new UnauthorizedException(
-                    "The user " + requiredUserId.Value.EncodeGuid() + " was required, but user "
-                    + userId.Value.EncodeGuid() + " was authenticated.");
-            }
-        }
     }
 }

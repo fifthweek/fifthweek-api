@@ -13,14 +13,14 @@
     public partial class PostNoteCommandHandler : ICommandHandler<PostNoteCommand>
     {
         private readonly IChannelSecurity channelSecurity;
+        private readonly IRequesterSecurity requesterSecurity;
         private readonly IFifthweekDbContext databaseContext;
 
         public async Task HandleAsync(PostNoteCommand command)
         {
             command.AssertNotNull("command");
 
-            UserId authenticatedUserId;
-            command.Requester.AssertAuthenticated(out authenticatedUserId);
+            var authenticatedUserId = await this.requesterSecurity.AuthenticateAsync(command.Requester);
 
             await this.channelSecurity.AssertPostingAllowedAsync(authenticatedUserId, command.ChannelId);
 

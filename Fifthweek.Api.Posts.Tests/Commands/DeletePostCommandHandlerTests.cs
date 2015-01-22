@@ -6,6 +6,7 @@
     using Fifthweek.Api.Core;
     using Fifthweek.Api.FileManagement;
     using Fifthweek.Api.Identity.Membership;
+    using Fifthweek.Api.Identity.Tests.Shared.Membership;
     using Fifthweek.Api.Posts.Commands;
 
     using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -24,6 +25,7 @@
         private Mock<IScheduleGarbageCollectionStatement> scheduleGarbageCollection;
         private Mock<IPostSecurity> postSecurity;
         private Mock<IDeletePostDbStatement> deletePost;
+        private Mock<IRequesterSecurity> requesterSecurity;
 
         [TestInitialize]
         public void TestInitialize()
@@ -31,10 +33,13 @@
             this.postSecurity = new Mock<IPostSecurity>();
             this.deletePost = new Mock<IDeletePostDbStatement>(MockBehavior.Strict);
             this.scheduleGarbageCollection = new Mock<IScheduleGarbageCollectionStatement>(MockBehavior.Strict);
+            this.requesterSecurity = new Mock<IRequesterSecurity>();
+            this.requesterSecurity.SetupFor(Requester);
 
             this.target = new DeletePostCommandHandler(
                 this.scheduleGarbageCollection.Object,
                 this.postSecurity.Object,
+                this.requesterSecurity.Object,
                 this.deletePost.Object);
         }
 

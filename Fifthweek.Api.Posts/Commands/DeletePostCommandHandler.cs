@@ -12,17 +12,15 @@
     public partial class DeletePostCommandHandler : ICommandHandler<DeletePostCommand>
     {
         private readonly IScheduleGarbageCollectionStatement scheduleGarbageCollection;
-
         private readonly IPostSecurity postSecurity;
-
+        private readonly IRequesterSecurity requesterSecurity;
         private readonly IDeletePostDbStatement deletePost;
 
         public async Task HandleAsync(DeletePostCommand command)
         {
             command.AssertNotNull("command");
 
-            UserId userId;
-            command.Requester.AssertAuthenticated(out userId);
+            var userId = await this.requesterSecurity.AuthenticateAsync(command.Requester);
 
             await this.postSecurity.AssertDeletionAllowedAsync(userId, command.PostId);
             await this.deletePost.ExecuteAsync(command.PostId);

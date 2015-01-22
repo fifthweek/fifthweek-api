@@ -1,6 +1,7 @@
 ﻿namespace Fifthweek.Api.Identity.Tests.Membership
 {
     using System;
+    using System.Linq;
 
     using Fifthweek.Api.Core;
     using Fifthweek.Api.Identity.Membership;
@@ -18,24 +19,15 @@
         }
 
         [TestMethod]
-        public void WhenUsingUnauthenticatedInstance_ItShouldStateIsAuthenticatedFalse()
+        public void WhenUsingUnauthenticatedInstance_ItShouldNotHaveAUserId()
         {
-            Assert.IsFalse(Requester.Unauthenticated.IsAuthenticated);
+            Assert.IsNull(Requester.Unauthenticated.UserId);
         }
 
         [TestMethod]
-        [ExpectedException(typeof(UnauthorizedException))]
-        public void WhenUsingUnauthenticatedInstance_ItShouldThrowSecurityExceptionWhenAssertingAuthenticity()
+        public void WhenUsingUnauthenticatedInstance_ItShouldNotHaveAnyRoles()
         {
-            Requester.Unauthenticated.AssertAuthenticated();
-        }
-
-        [TestMethod]
-        [ExpectedException(typeof(UnauthorizedException))]
-        public void WhenUsingUnauthenticatedInstance_ItShouldThrowSecurityExceptionWhenAssertingAuthenticity2()
-        {
-            UserId userId;
-            Requester.Unauthenticated.AssertAuthenticated(out userId);
+            Assert.IsFalse(Requester.Unauthenticated.Roles.Any());
         }
 
         [TestMethod]
@@ -46,36 +38,38 @@
         }
 
         [TestMethod]
-        public void WhenUsingAuthenticatedInstance_ItShouldStateIsAuthenticatedTrue()
+        public void WhenUsingAuthenticatedInstance_ItShouldContainTheAuthenticatedUserId()
         {
             var userId = new UserId(Guid.NewGuid());
             var target = Requester.Authenticated(userId);
-            Assert.IsTrue(target.IsAuthenticated);
+            Assert.AreEqual(userId, target.UserId);
         }
 
         [TestMethod]
-        public void WhenUsingAuthenticatedInstance_ItShouldPassAssertion()
+        public void WhenUsingAuthenticatedInstance_ItShouldContainTheAuthenticatedRoles()
         {
             var userId = new UserId(Guid.NewGuid());
-            var target = Requester.Authenticated(userId);
-            target.AssertAuthenticated();
+            var target = Requester.Authenticated(userId, "role1", "role2");
+            Assert.AreEqual(2, target.Roles.Count());
+            Assert.IsTrue(target.Roles.Contains("role1"));
+            Assert.IsTrue(target.Roles.Contains("role2"));
+            Assert.IsTrue(target.IsInRole("role1"));
+            Assert.IsTrue(target.IsInRole("role2"));
+            Assert.IsFalse(target.IsInRole("role3"));
         }
 
         [TestMethod]
-        public void WhenUsingAuthenticatedInstance_ItShouldPassAssertionAndReturnUserId()
+        [ExpectedException(typeof(ArgumentNullException))]
+        public void WhenCallingIsInRole_ItShouldCheckRoleIsNotNull()
         {
             var userId = new UserId(Guid.NewGuid());
-            var target = Requester.Authenticated(userId);
-
-            UserId actualUserId;
-            target.AssertAuthenticated(out actualUserId);
-
-            Assert.AreEqual(userId, actualUserId);
+            var target = Requester.Authenticated(userId, "role1", "role2");
+            target.IsInRole(null);
         }
 
         protected override Requester NewInstanceOfObjectA()
         {
-            return Requester.Authenticated(new UserId(Guid.Parse("{316343AD-9E14-4292-9BA2-3E2803AD4497}")));
+            return Requester.Authenticated(new UserId(Guid.Parse("{316343AD-9E14-4292-9BA2-3E2803AD4497}")), "role1", "role2");
         }
 
         protected override Requester NewInstanceOfObjectB()

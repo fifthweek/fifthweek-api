@@ -9,17 +9,16 @@
     [AutoConstructor]
     public partial class GetAccountSettingsQueryHandler : IQueryHandler<GetAccountSettingsQuery, GetAccountSettingsResult>
     {
+        private readonly IRequesterSecurity requesterSecurity;
         private readonly IAccountRepository accountRepository;
 
-        public Task<GetAccountSettingsResult> HandleAsync(GetAccountSettingsQuery query)
+        public async Task<GetAccountSettingsResult> HandleAsync(GetAccountSettingsQuery query)
         {
             query.AssertNotNull("query");
 
-            UserId authenticatedUserId;
-            query.Requester.AssertAuthenticated(out authenticatedUserId);
-            query.Requester.AssertAuthenticatedAs(query.RequestedUserId);
+            await this.requesterSecurity.AuthenticateAsAsync(query.Requester, query.RequestedUserId);
 
-            return this.accountRepository.GetAccountSettingsAsync(query.RequestedUserId);
+            return await this.accountRepository.GetAccountSettingsAsync(query.RequestedUserId);
         }
     }
 }

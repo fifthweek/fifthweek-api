@@ -14,14 +14,14 @@
     {
         private readonly ISubscriptionSecurity subscriptionSecurity;
         private readonly IFileSecurity fileSecurity;
+        private readonly IRequesterSecurity requesterSecurity;
         private readonly IFifthweekDbContext databaseContext;
 
         public async Task HandleAsync(UpdateSubscriptionCommand command)
         {
             command.AssertNotNull("command");
 
-            UserId authenticatedUserId;
-            command.Requester.AssertAuthenticated(out authenticatedUserId);
+            var authenticatedUserId = await this.requesterSecurity.AuthenticateAsync(command.Requester);
 
             await this.subscriptionSecurity.AssertUpdateAllowedAsync(authenticatedUserId, command.SubscriptionId);
 

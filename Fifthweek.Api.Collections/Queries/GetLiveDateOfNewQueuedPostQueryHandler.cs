@@ -11,14 +11,14 @@
     public partial class GetLiveDateOfNewQueuedPostQueryHandler : IQueryHandler<GetLiveDateOfNewQueuedPostQuery, DateTime>
     {
         private readonly ICollectionSecurity collectionSecurity;
+        private readonly IRequesterSecurity requesterSecurity;
         private readonly IGetLiveDateOfNewQueuedPostDbStatement getLiveDateOfNewQueuedPost;
 
         public async Task<DateTime> HandleAsync(GetLiveDateOfNewQueuedPostQuery query)
         {
             query.AssertNotNull("query");
 
-            UserId authenticatedUserId;
-            query.Requester.AssertAuthenticated(out authenticatedUserId);
+            var authenticatedUserId = await this.requesterSecurity.AuthenticateAsync(query.Requester);
 
             // This query is only raised when a user is about to post something, so request same privileges.
             await this.collectionSecurity.AssertPostingAllowedAsync(authenticatedUserId, query.CollectionId);

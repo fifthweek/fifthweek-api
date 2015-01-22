@@ -7,6 +7,7 @@
     using Fifthweek.Api.Core;
     using Fifthweek.Api.FileManagement.Queries;
     using Fifthweek.Api.Identity.Membership;
+    using Fifthweek.Api.Identity.Tests.Shared.Membership;
     using Fifthweek.Tests.Shared;
 
     using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -28,6 +29,7 @@
         private Mock<IFileSecurity> fileSecurity;
         private Mock<IBlobService> blobService;
         private Mock<IBlobLocationGenerator> blobNameCreator;
+        private Mock<IRequesterSecurity> requesterSecurity;
 
         private GenerateWritableBlobUriQueryHandler handler;
 
@@ -36,6 +38,8 @@
         {
             this.fileSecurity = new Mock<IFileSecurity>();
             this.blobNameCreator = new Mock<IBlobLocationGenerator>();
+            this.requesterSecurity = new Mock<IRequesterSecurity>();
+            this.requesterSecurity.SetupFor(Requester);
 
             // Give side-effecting components strict mock behaviour.
             this.blobService = new Mock<IBlobService>(MockBehavior.Strict);
@@ -43,7 +47,8 @@
             this.handler = new GenerateWritableBlobUriQueryHandler(
                 this.blobService.Object,
                 this.blobNameCreator.Object,
-                this.fileSecurity.Object);
+                this.fileSecurity.Object,
+                this.requesterSecurity.Object);
         }
 
         [TestMethod]

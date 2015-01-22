@@ -6,6 +6,7 @@
 
     using Fifthweek.Api.Core;
     using Fifthweek.Api.Identity.Membership;
+    using Fifthweek.Api.Identity.Tests.Shared.Membership;
     using Fifthweek.Api.Persistence;
     using Fifthweek.Api.Persistence.Tests.Shared;
     using Fifthweek.Api.Posts.Commands;
@@ -28,17 +29,23 @@
         private static readonly PostNoteCommand ImmediatePostCommand = new PostNoteCommand(Requester, PostId, ChannelId, Note, null);
         private static readonly PostNoteCommand Command = ImmediatePostCommand; // Treat this as our canonical testing command.
         private Mock<IChannelSecurity> channelSecurity;
+        private Mock<IRequesterSecurity> requesterSecurity;
         private PostNoteCommandHandler target;
 
         [TestInitialize]
         public void Initialize()
         {
             this.channelSecurity = new Mock<IChannelSecurity>();
+            this.requesterSecurity = new Mock<IRequesterSecurity>();
+            this.requesterSecurity.SetupFor(Requester);
 
             // Give side-effecting components strict mock behaviour.
             var databaseContext = new Mock<IFifthweekDbContext>(MockBehavior.Strict);
 
-            this.target = new PostNoteCommandHandler(this.channelSecurity.Object, databaseContext.Object);
+            this.target = new PostNoteCommandHandler(
+                this.channelSecurity.Object,
+                this.requesterSecurity.Object,
+                databaseContext.Object);
         }
 
         [TestMethod]
@@ -62,7 +69,7 @@
         {
             await this.NewTestDatabaseAsync(async testDatabase =>
             {
-                this.target = new PostNoteCommandHandler(this.channelSecurity.Object, testDatabase.NewContext());
+                this.target = new PostNoteCommandHandler(this.channelSecurity.Object, this.requesterSecurity.Object, testDatabase.NewContext());
                 await this.CreateChannelAsync(UserId, ChannelId, testDatabase);
                 await this.target.HandleAsync(Command);
                 await testDatabase.TakeSnapshotAsync();
@@ -78,7 +85,7 @@
         {
             await this.NewTestDatabaseAsync(async testDatabase =>
             {
-                this.target = new PostNoteCommandHandler(this.channelSecurity.Object, testDatabase.NewContext());
+                this.target = new PostNoteCommandHandler(this.channelSecurity.Object, this.requesterSecurity.Object, testDatabase.NewContext());
                 var scheduledPostCommand = new PostNoteCommand(Requester, PostId, ChannelId, Note, TwoDaysFromNow);
                 await this.CreateChannelAsync(UserId, ChannelId, testDatabase);
                 await testDatabase.TakeSnapshotAsync();
@@ -131,7 +138,7 @@
         {
             await this.NewTestDatabaseAsync(async testDatabase =>
             {
-                this.target = new PostNoteCommandHandler(this.channelSecurity.Object, testDatabase.NewContext());
+                this.target = new PostNoteCommandHandler(this.channelSecurity.Object, this.requesterSecurity.Object, testDatabase.NewContext());
                 await this.CreateChannelAsync(UserId, ChannelId, testDatabase);
                 await testDatabase.TakeSnapshotAsync();
 

@@ -13,14 +13,14 @@
     public partial class CreateSubscriptionCommandHandler : ICommandHandler<CreateSubscriptionCommand>
     {
         private readonly ISubscriptionSecurity subscriptionSecurity;
+        private readonly IRequesterSecurity requesterSecurity;
         private readonly IFifthweekDbContext fifthweekDbContext;
 
         public async Task HandleAsync(CreateSubscriptionCommand command)
         {
             command.AssertNotNull("command");
 
-            UserId authenticatedUserId;
-            command.Requester.AssertAuthenticated(out authenticatedUserId);
+            var authenticatedUserId = await this.requesterSecurity.AuthenticateAsync(command.Requester);
 
             await this.subscriptionSecurity.AssertCreationAllowedAsync(authenticatedUserId);
 

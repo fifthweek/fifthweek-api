@@ -12,14 +12,15 @@
     [AutoConstructor]
     public partial class GetUserStateQueryHandler : IQueryHandler<GetUserStateQuery, UserState>
     {
+        private readonly IRequesterSecurity requesterSecurity;
         private readonly IQueryHandler<GetCreatorStatusQuery, CreatorStatus> getCreatorStatus;
-
         private readonly IQueryHandler<GetCreatedChannelsAndCollectionsQuery, ChannelsAndCollections> getCreatedChannelsAndCollections;
 
         public async Task<UserState> HandleAsync(GetUserStateQuery query)
         {
             query.AssertNotNull("query");
-            query.Requester.AssertAuthenticatedAs(query.RequestedUserId);
+            
+            await this.requesterSecurity.AuthenticateAsAsync(query.Requester, query.RequestedUserId);
 
             CreatorStatus creatorStatus = null;
             ChannelsAndCollections createdChannelsAndCollections = null;

@@ -5,6 +5,7 @@
 
     using Fifthweek.Api.Core;
     using Fifthweek.Api.Identity.Membership;
+    using Fifthweek.Api.Identity.Tests.Shared.Membership;
     using Fifthweek.Api.Persistence;
     using Fifthweek.Api.Persistence.Tests.Shared;
     using Fifthweek.Api.Subscriptions.Commands;
@@ -25,12 +26,15 @@
         private static readonly ValidChannelPriceInUsCentsPerWeek BasePrice = ValidChannelPriceInUsCentsPerWeek.Parse(10);
         private static readonly CreateSubscriptionCommand Command = new CreateSubscriptionCommand(Requester, SubscriptionId, SubscriptionName, Tagline, BasePrice);
         private Mock<ISubscriptionSecurity> subscriptionSecurity;
+        private Mock<IRequesterSecurity> requesterSecurity;
         private CreateSubscriptionCommandHandler target;
 
         [TestInitialize]
         public void Initialize()
         {
             this.subscriptionSecurity = new Mock<ISubscriptionSecurity>();
+            this.requesterSecurity = new Mock<IRequesterSecurity>();
+            this.requesterSecurity.SetupFor(Requester);
         }
 
         [TestMethod]
@@ -40,7 +44,7 @@
             // Give side-effecting components strict mock behaviour.
             var databaseContext = new Mock<IFifthweekDbContext>(MockBehavior.Strict);
 
-            this.target = new CreateSubscriptionCommandHandler(this.subscriptionSecurity.Object, databaseContext.Object);
+            this.target = new CreateSubscriptionCommandHandler(this.subscriptionSecurity.Object, this.requesterSecurity.Object, databaseContext.Object);
 
             await this.target.HandleAsync(new CreateSubscriptionCommand(Requester.Unauthenticated, SubscriptionId, SubscriptionName, Tagline, BasePrice));
         }
@@ -51,7 +55,7 @@
             await this.NewTestDatabaseAsync(async testDatabase =>
             {
                 this.subscriptionSecurity.Setup(_ => _.AssertCreationAllowedAsync(UserId)).Throws<UnauthorizedException>();
-                this.target = new CreateSubscriptionCommandHandler(this.subscriptionSecurity.Object, testDatabase.NewContext());
+                this.target = new CreateSubscriptionCommandHandler(this.subscriptionSecurity.Object, this.requesterSecurity.Object, testDatabase.NewContext());
                 await testDatabase.TakeSnapshotAsync();
 
                 Func<Task> badMethodCall = () => this.target.HandleAsync(Command);
@@ -67,7 +71,7 @@
         {
             await this.NewTestDatabaseAsync(async testDatabase =>
             {
-                this.target = new CreateSubscriptionCommandHandler(this.subscriptionSecurity.Object, testDatabase.NewContext());
+                this.target = new CreateSubscriptionCommandHandler(this.subscriptionSecurity.Object, this.requesterSecurity.Object, testDatabase.NewContext());
                 await this.CreateUserAsync(UserId, testDatabase);
                 await this.target.HandleAsync(Command);
                 await testDatabase.TakeSnapshotAsync();
@@ -83,7 +87,7 @@
         {
             await this.NewTestDatabaseAsync(async testDatabase =>
             {
-                this.target = new CreateSubscriptionCommandHandler(this.subscriptionSecurity.Object, testDatabase.NewContext());
+                this.target = new CreateSubscriptionCommandHandler(this.subscriptionSecurity.Object, this.requesterSecurity.Object, testDatabase.NewContext());
                 await this.CreateUserAsync(UserId, testDatabase);
                 await testDatabase.TakeSnapshotAsync();
 
@@ -122,7 +126,7 @@
         {
             await this.NewTestDatabaseAsync(async testDatabase =>
             {
-                this.target = new CreateSubscriptionCommandHandler(this.subscriptionSecurity.Object, testDatabase.NewContext());
+                this.target = new CreateSubscriptionCommandHandler(this.subscriptionSecurity.Object, this.requesterSecurity.Object, testDatabase.NewContext());
                 await this.CreateUserAsync(UserId, testDatabase);
                 await testDatabase.TakeSnapshotAsync();
 

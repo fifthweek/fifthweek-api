@@ -7,6 +7,7 @@
     using Fifthweek.Api.Core;
     using Fifthweek.Api.FileManagement;
     using Fifthweek.Api.Identity.Membership;
+    using Fifthweek.Api.Identity.Tests.Shared.Membership;
 
     using Microsoft.VisualStudio.TestTools.UnitTesting;
 
@@ -24,17 +25,20 @@
 
         private Mock<IAccountRepository> accountRepository;
         private Mock<IFileSecurity> fileSecurity;
+        private Mock<IRequesterSecurity> requesterSecurity;
         private UpdateAccountSettingsCommandHandler target;
 
         [TestInitialize]
         public void TestInitialize()
         {
             this.fileSecurity = new Mock<IFileSecurity>();
+            this.requesterSecurity = new Mock<IRequesterSecurity>();
+            this.requesterSecurity.SetupFor(Requester);
 
             // Give side-effecting components strict mock behaviour.
             this.accountRepository = new Mock<IAccountRepository>(MockBehavior.Strict);
 
-            this.target = new UpdateAccountSettingsCommandHandler(this.accountRepository.Object, this.fileSecurity.Object);
+            this.target = new UpdateAccountSettingsCommandHandler(this.accountRepository.Object, this.requesterSecurity.Object, this.fileSecurity.Object);
         }
 
         [TestMethod]

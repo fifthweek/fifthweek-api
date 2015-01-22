@@ -6,6 +6,7 @@
     using Fifthweek.Api.Collections.Queries;
     using Fifthweek.Api.Core;
     using Fifthweek.Api.Identity.Membership;
+    using Fifthweek.Api.Identity.Tests.Shared.Membership;
 
     using Microsoft.VisualStudio.TestTools.UnitTesting;
 
@@ -19,6 +20,7 @@
         private static readonly CollectionId CollectionId = new CollectionId(Guid.NewGuid());
         private static readonly DateTime CalculatedLiveDate = DateTime.UtcNow.AddDays(8);
         private Mock<ICollectionSecurity> collectionSecurity;
+        private Mock<IRequesterSecurity> requesterSecurity;
         private Mock<IGetLiveDateOfNewQueuedPostDbStatement> getLiveDateOfNewQueuedPost;
         private GetLiveDateOfNewQueuedPostQueryHandler target;
 
@@ -27,8 +29,13 @@
         {
             this.collectionSecurity = new Mock<ICollectionSecurity>();
             this.getLiveDateOfNewQueuedPost = new Mock<IGetLiveDateOfNewQueuedPostDbStatement>();
+            this.requesterSecurity = new Mock<IRequesterSecurity>();
+            
+            this.requesterSecurity.SetupFor(Requester);
+
             this.target = new GetLiveDateOfNewQueuedPostQueryHandler(
                 this.collectionSecurity.Object,
+                this.requesterSecurity.Object,
                 this.getLiveDateOfNewQueuedPost.Object);
         }
 

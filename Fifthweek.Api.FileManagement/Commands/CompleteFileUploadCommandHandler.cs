@@ -18,16 +18,16 @@
         private readonly IBlobService blobService;
         private readonly IQueueService queueService;
         private readonly IBlobLocationGenerator blobLocationGenerator;
+        private readonly IRequesterSecurity requesterSecurity;
         
         public async Task HandleAsync(CompleteFileUploadCommand command)
         {
             command.AssertNotNull("command");
 
-            UserId userId;
-            command.Requester.AssertAuthenticated(out userId);
+            UserId userId = await this.requesterSecurity.AuthenticateAsync(command.Requester);
             
             var file = await this.fileRepository.GetFileWaitingForUploadAsync(command.FileId);
-            command.Requester.AssertAuthenticatedAs(file.UserId);
+            await this.requesterSecurity.AuthenticateAsAsync(command.Requester, file.UserId);
 
             var mimeType = this.mimeTypeMap.GetMimeType(file.FileExtension);
 

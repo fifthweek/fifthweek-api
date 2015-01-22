@@ -146,9 +146,15 @@ namespace Fifthweek.Api.Aggregations.Queries
     public partial class GetUserStateQueryHandler 
     {
         public GetUserStateQueryHandler(
+            Fifthweek.Api.Identity.Membership.IRequesterSecurity requesterSecurity, 
             Fifthweek.Api.Core.IQueryHandler<Fifthweek.Api.Subscriptions.Queries.GetCreatorStatusQuery,Fifthweek.Api.Subscriptions.CreatorStatus> getCreatorStatus, 
             Fifthweek.Api.Core.IQueryHandler<Fifthweek.Api.Collections.Queries.GetCreatedChannelsAndCollectionsQuery,Fifthweek.Api.Collections.Queries.ChannelsAndCollections> getCreatedChannelsAndCollections)
         {
+            if (requesterSecurity == null)
+            {
+                throw new ArgumentNullException("requesterSecurity");
+            }
+
             if (getCreatorStatus == null)
             {
                 throw new ArgumentNullException("getCreatorStatus");
@@ -159,6 +165,7 @@ namespace Fifthweek.Api.Aggregations.Queries
                 throw new ArgumentNullException("getCreatedChannelsAndCollections");
             }
 
+            this.requesterSecurity = requesterSecurity;
             this.getCreatorStatus = getCreatorStatus;
             this.getCreatedChannelsAndCollections = getCreatedChannelsAndCollections;
         }

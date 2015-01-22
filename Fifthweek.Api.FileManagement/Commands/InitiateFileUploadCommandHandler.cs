@@ -11,6 +11,7 @@
     [AutoConstructor]
     public partial class InitiateFileUploadCommandHandler : ICommandHandler<InitiateFileUploadCommand>
     {
+        private readonly IRequesterSecurity requesterSecurity;
         private readonly IBlobService blobService;
         private readonly IBlobLocationGenerator blobLocationGenerator;
         private readonly IFileRepository fileRepository;
@@ -19,8 +20,7 @@
         {
             command.AssertNotNull("command");
 
-            UserId authenticatedUserId;
-            command.Requester.AssertAuthenticated(out authenticatedUserId);
+            var authenticatedUserId = await this.requesterSecurity.AuthenticateAsync(command.Requester);
 
             var blobLocation = this.blobLocationGenerator.GetBlobLocation(authenticatedUserId, command.FileId, command.Purpose);
 

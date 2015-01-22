@@ -106,11 +106,17 @@ namespace Fifthweek.Api.Accounts.Commands
     {
         public UpdateAccountSettingsCommandHandler(
             Fifthweek.Api.Accounts.IAccountRepository accountRepository, 
+            Fifthweek.Api.Identity.Membership.IRequesterSecurity requesterSecurity, 
             Fifthweek.Api.FileManagement.IFileSecurity fileSecurity)
         {
             if (accountRepository == null)
             {
                 throw new ArgumentNullException("accountRepository");
+            }
+
+            if (requesterSecurity == null)
+            {
+                throw new ArgumentNullException("requesterSecurity");
             }
 
             if (fileSecurity == null)
@@ -119,6 +125,7 @@ namespace Fifthweek.Api.Accounts.Commands
             }
 
             this.accountRepository = accountRepository;
+            this.requesterSecurity = requesterSecurity;
             this.fileSecurity = fileSecurity;
         }
     }
@@ -190,7 +197,12 @@ namespace Fifthweek.Api.Accounts
 {
     using Fifthweek.Api.FileManagement;
     using Fifthweek.Api.Identity.Membership;
+<<<<<<< HEAD
+=======
+    using Fifthweek.Api.Persistence;
+>>>>>>> Implement RequesterSecurity and update all code to use it
     using Fifthweek.CodeGeneration;
+    using Fifthweek.Shared;
     public partial class GetAccountSettingsResult 
     {
         public GetAccountSettingsResult(
@@ -249,13 +261,20 @@ namespace Fifthweek.Api.Accounts.Queries
     public partial class GetAccountSettingsQueryHandler 
     {
         public GetAccountSettingsQueryHandler(
+            Fifthweek.Api.Identity.Membership.IRequesterSecurity requesterSecurity, 
             Fifthweek.Api.Accounts.IAccountRepository accountRepository)
         {
+            if (requesterSecurity == null)
+            {
+                throw new ArgumentNullException("requesterSecurity");
+            }
+
             if (accountRepository == null)
             {
                 throw new ArgumentNullException("accountRepository");
             }
 
+            this.requesterSecurity = requesterSecurity;
             this.accountRepository = accountRepository;
         }
     }
@@ -412,9 +431,16 @@ namespace Fifthweek.Api.Accounts.Controllers
     using Fifthweek.Api.Core;
     using Fifthweek.Api.FileManagement;
     using Fifthweek.Api.Identity.Membership;
+<<<<<<< HEAD
     using Fifthweek.CodeGeneration;
     using Fifthweek.Shared;
     public partial class UpdatedAccountSettings 
+=======
+    using Fifthweek.Api.Persistence;
+    using Fifthweek.CodeGeneration;
+    using Fifthweek.Shared;
+    public partial class GetAccountSettingsResult 
+>>>>>>> Implement RequesterSecurity and update all code to use it
     {
         public override string ToString()
         {
@@ -689,3 +715,61 @@ namespace Fifthweek.Api.Accounts.Controllers
         }    
     }
 }
+<<<<<<< HEAD
+=======
+namespace Fifthweek.Api.Accounts
+{
+    using System;
+    using System.Linq;
+    using System.Text;
+    using System.Threading.Tasks;
+    using Dapper;
+    using Fifthweek.Api.Accounts.Controllers;
+    using Fifthweek.Api.Core;
+    using Fifthweek.Api.FileManagement;
+    using Fifthweek.Api.Identity.Membership;
+    using Fifthweek.Api.Persistence;
+    using Fifthweek.CodeGeneration;
+    using Fifthweek.Shared;
+    public partial class GetAccountSettingsDapperResult 
+    {
+        public Email EmailObject { get; set; }
+        public FileId ProfileImageFileIdObject { get; set; }
+    }
+
+    public static partial class GetAccountSettingsDapperResultExtensions
+    {
+        public static void Parse(this GetAccountSettingsDapperResult target)
+        {
+            var modelStateDictionary = new System.Web.Http.ModelBinding.ModelStateDictionary();
+
+            if (target.Email != null)
+            {
+                target.EmailObject = new Email(target.Email);
+            }
+            else if (true)
+            {
+                var modelState = new System.Web.Http.ModelBinding.ModelState();
+                modelState.Errors.Add("Value required");
+                modelStateDictionary.Add("Email", modelState);
+            }
+
+            if (target.ProfileImageFileId != null)
+            {
+                target.ProfileImageFileIdObject = new FileId(target.ProfileImageFileId);
+            }
+            else if (true)
+            {
+                var modelState = new System.Web.Http.ModelBinding.ModelState();
+                modelState.Errors.Add("Value required");
+                modelStateDictionary.Add("ProfileImageFileId", modelState);
+            }
+
+            if (!modelStateDictionary.IsValid)
+            {
+                throw new Fifthweek.Api.Core.ModelValidationException(modelStateDictionary);
+            }
+        }    
+    }
+}
+>>>>>>> Implement RequesterSecurity and update all code to use it

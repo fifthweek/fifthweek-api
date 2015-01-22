@@ -7,25 +7,32 @@
     using Fifthweek.Api.Collections.Queries;
     using Fifthweek.Api.Core;
     using Fifthweek.Api.Identity.Membership;
+    using Fifthweek.Api.Identity.Tests.Shared.Membership;
 
     using Microsoft.VisualStudio.TestTools.UnitTesting;
 
     using Moq;
 
     [TestClass]
-    public class GetChannelsAndCollectionsQueryHandlerTests
+    public class GetCreatedChannelsAndCollectionsQueryHandlerTests
     {
         public static readonly UserId UserId = new UserId(Guid.NewGuid());
         public static readonly Requester Requester = Requester.Authenticated(UserId);
 
         private GetCreatedChannelsAndCollectionsQueryHandler target;
         private Mock<IGetChannelsAndCollectionsDbStatement> getChannelsAndCollections;
+        private Mock<IRequesterSecurity> requesterSecurity;
 
         [TestInitialize]
         public void TestInitialize()
         {
+            this.requesterSecurity = new Mock<IRequesterSecurity>();
+            this.requesterSecurity.SetupFor(Requester);
+
+            // Give potentially side-effecting components strict mock behaviour.
             this.getChannelsAndCollections = new Mock<IGetChannelsAndCollectionsDbStatement>(MockBehavior.Strict);
-            this.target = new GetCreatedChannelsAndCollectionsQueryHandler(this.getChannelsAndCollections.Object);
+
+            this.target = new GetCreatedChannelsAndCollectionsQueryHandler(this.requesterSecurity.Object, this.getChannelsAndCollections.Object);
         }
 
         [TestMethod]
