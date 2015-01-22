@@ -1,5 +1,6 @@
 ﻿namespace Fifthweek.Api.Aggregations.Controllers
 {
+    using System.Linq;
     using System.Threading.Tasks;
     using System.Web.Http;
 
@@ -32,17 +33,29 @@
 
             var userState = await this.getUserState.HandleAsync(new GetUserStateQuery(requestedUserId, requester, isCreator));
             
-            CreatorStatusData creatorStatus = null;
+            UserStateResponse.CreatorStatusResponse creatorStatus = null;
             if (userState.CreatorStatus != null)
             {
-                creatorStatus = new CreatorStatusData(
+                creatorStatus = new UserStateResponse.CreatorStatusResponse(
                     userState.CreatorStatus.SubscriptionId == null
                         ? null
                         : userState.CreatorStatus.SubscriptionId.Value.EncodeGuid(),
                     userState.CreatorStatus.MustWriteFirstPost);
             }
 
-            return new UserStateResponse(creatorStatus);
+            UserStateResponse.ChannelsAndCollectionsResponse createdChannelsAndCollections = null;
+            if (userState.CreatedChannelsAndCollections != null)
+            {
+                createdChannelsAndCollections = new UserStateResponse.ChannelsAndCollectionsResponse(
+                    userState.CreatedChannelsAndCollections.Channels.Select(v => new UserStateResponse.ChannelsAndCollectionsResponse.ChannelResponse(
+                        v.ChannelId.Value.EncodeGuid(),
+                        v.Name,
+                        v.Collections.Select(w => new UserStateResponse.ChannelsAndCollectionsResponse.CollectionResponse(
+                            w.CollectionId.Value.EncodeGuid(),
+                            w.Name)).ToList())).ToList());
+            }
+
+            return new UserStateResponse(creatorStatus, createdChannelsAndCollections);
         }
     }
 }

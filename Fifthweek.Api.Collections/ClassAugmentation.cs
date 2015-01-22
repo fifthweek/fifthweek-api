@@ -299,9 +299,9 @@ namespace Fifthweek.Api.Collections.Queries
     using System.Threading.Tasks;
     using System.Collections.Generic;
     using Fifthweek.Api.Subscriptions;
-    public partial class GetChannelsAndCollectionsQuery 
+    public partial class GetCreatedChannelsAndCollectionsQuery 
     {
-        public GetChannelsAndCollectionsQuery(
+        public GetCreatedChannelsAndCollectionsQuery(
             Fifthweek.Api.Identity.Membership.Requester requester, 
             Fifthweek.Api.Identity.Membership.UserId requestedCreatorId)
         {
@@ -331,14 +331,14 @@ namespace Fifthweek.Api.Collections.Queries
     using System.Threading.Tasks;
     using System.Collections.Generic;
     using Fifthweek.Api.Subscriptions;
-    public partial class GetChannelsAndCollectionsResult
+    public partial class ChannelsAndCollections
     {
         public partial class Channel 
         {
         public Channel(
             Fifthweek.Api.Subscriptions.ChannelId channelId, 
             System.String name, 
-            System.Collections.Generic.IReadOnlyList<Fifthweek.Api.Collections.Queries.GetChannelsAndCollectionsResult.Collection> collections)
+            System.Collections.Generic.IReadOnlyList<Fifthweek.Api.Collections.Queries.ChannelsAndCollections.Collection> collections)
         {
             if (channelId == null)
             {
@@ -373,10 +373,10 @@ namespace Fifthweek.Api.Collections.Queries
     using System.Threading.Tasks;
     using System.Collections.Generic;
     using Fifthweek.Api.Subscriptions;
-    public partial class GetChannelsAndCollectionsResult 
+    public partial class ChannelsAndCollections 
     {
-        public GetChannelsAndCollectionsResult(
-            System.Collections.Generic.IReadOnlyList<Fifthweek.Api.Collections.Queries.GetChannelsAndCollectionsResult.Channel> channels)
+        public ChannelsAndCollections(
+            System.Collections.Generic.IReadOnlyList<Fifthweek.Api.Collections.Queries.ChannelsAndCollections.Channel> channels)
         {
             if (channels == null)
             {
@@ -398,7 +398,7 @@ namespace Fifthweek.Api.Collections.Queries
     using System.Threading.Tasks;
     using System.Collections.Generic;
     using Fifthweek.Api.Subscriptions;
-    public partial class GetChannelsAndCollectionsResult
+    public partial class ChannelsAndCollections
     {
         public partial class Collection 
         {
@@ -462,9 +462,9 @@ namespace Fifthweek.Api.Collections.Queries
     using System.Threading.Tasks;
     using System.Collections.Generic;
     using Fifthweek.Api.Subscriptions;
-    public partial class GetChannelsAndCollectionsQueryHandler 
+    public partial class GetCreatedChannelsAndCollectionsQueryHandler 
     {
-        public GetChannelsAndCollectionsQueryHandler(
+        public GetCreatedChannelsAndCollectionsQueryHandler(
             Fifthweek.Api.Collections.IGetChannelsAndCollectionsDbStatement getChannelsAndCollections)
         {
             if (getChannelsAndCollections == null)
@@ -616,7 +616,7 @@ namespace Fifthweek.Api.Collections.Queries
     using System.Threading.Tasks;
     using System.Collections.Generic;
     using Fifthweek.Api.Subscriptions;
-    public partial class GetChannelsAndCollectionsQuery 
+    public partial class GetCreatedChannelsAndCollectionsQuery 
     {
         public override string ToString()
         {
@@ -640,7 +640,7 @@ namespace Fifthweek.Api.Collections.Queries
                 return false;
             }
 
-            return this.Equals((GetChannelsAndCollectionsQuery)obj);
+            return this.Equals((GetCreatedChannelsAndCollectionsQuery)obj);
         }
 
         public override int GetHashCode()
@@ -654,7 +654,7 @@ namespace Fifthweek.Api.Collections.Queries
             }
         }
 
-        protected bool Equals(GetChannelsAndCollectionsQuery other)
+        protected bool Equals(GetCreatedChannelsAndCollectionsQuery other)
         {
             if (!object.Equals(this.Requester, other.Requester))
             {

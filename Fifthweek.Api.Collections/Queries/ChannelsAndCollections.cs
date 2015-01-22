@@ -6,7 +6,7 @@
     using Fifthweek.CodeGeneration;
 
     [AutoConstructor]
-    public partial class GetChannelsAndCollectionsResult
+    public partial class ChannelsAndCollections
     {
         public IReadOnlyList<Channel> Channels { get; private set; }
 

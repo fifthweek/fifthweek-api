@@ -7,6 +7,6 @@
 
     public interface IGetChannelsAndCollectionsDbStatement
     {
-        Task<GetChannelsAndCollectionsResult> ExecuteAsync(UserId userId);
+        Task<ChannelsAndCollections> ExecuteAsync(UserId userId);
     }
 }

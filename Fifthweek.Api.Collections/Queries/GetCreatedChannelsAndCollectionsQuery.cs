@@ -5,7 +5,7 @@
     using Fifthweek.CodeGeneration;
 
     [AutoConstructor, AutoEqualityMembers]
-    public partial class GetChannelsAndCollectionsQuery : IQuery<GetChannelsAndCollectionsResult>
+    public partial class GetCreatedChannelsAndCollectionsQuery : IQuery<ChannelsAndCollections>
     {
         public Requester Requester { get; private set; }
 

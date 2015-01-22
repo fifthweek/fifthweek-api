@@ -20,7 +20,7 @@
     {
         private readonly IFifthweekDbContext databaseContext;
 
-        public async Task<GetChannelsAndCollectionsResult> ExecuteAsync(UserId userId)
+        public async Task<ChannelsAndCollections> ExecuteAsync(UserId userId)
         {
             userId.AssertNotNull("userId");
 
@@ -69,14 +69,14 @@
                 collections = multi.Read<Collection>().ToList();
             }
 
-            var result = new GetChannelsAndCollectionsResult(
+            var result = new ChannelsAndCollections(
                 (from v in channels
-                 select new GetChannelsAndCollectionsResult.Channel(
+                 select new ChannelsAndCollections.Channel(
                     new ChannelId(v.Id),
                     v.Name,
                     (from c in collections 
                      where c.ChannelId == v.Id
-                     select new GetChannelsAndCollectionsResult.Collection(new CollectionId(c.Id), c.Name))
+                     select new ChannelsAndCollections.Collection(new CollectionId(c.Id), c.Name))
                         .AsReadOnlyList())).AsReadOnlyList());
 
             return result;

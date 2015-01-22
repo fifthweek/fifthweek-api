@@ -89,9 +89,9 @@
     <Compile Include="IQueuedPostLiveDateCalculator.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="GetLiveDateOfNewQueuedPostDbStatement.cs" />
-    <Compile Include="Queries\GetChannelsAndCollectionsResult.cs" />
-    <Compile Include="Queries\GetChannelsAndCollectionsQuery.cs" />
-    <Compile Include="Queries\GetChannelsAndCollectionsQueryHandler.cs" />
+    <Compile Include="Queries\ChannelsAndCollections.cs" />
+    <Compile Include="Queries\GetCreatedChannelsAndCollectionsQuery.cs" />
+    <Compile Include="Queries\GetCreatedChannelsAndCollectionsQueryHandler.cs" />
     <Compile Include="Queries\GetLiveDateOfNewQueuedPostQuery.cs" />
     <Compile Include="Queries\GetLiveDateOfNewQueuedPostQueryHandler.cs" />
     <Compile Include="IGetLiveDateOfNewQueuedPostDbStatement.cs" />

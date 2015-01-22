@@ -1,9 +1,11 @@
 ﻿namespace Fifthweek.Api.Aggregations.Tests.Queries
 {
     using System;
+    using System.Collections.Generic;
     using System.Threading.Tasks;
 
     using Fifthweek.Api.Aggregations.Queries;
+    using Fifthweek.Api.Collections.Queries;
     using Fifthweek.Api.Core;
     using Fifthweek.Api.Identity.Membership;
     using Fifthweek.Api.Subscriptions;
@@ -23,12 +25,14 @@
         private GetUserStateQueryHandler target;
 
         private Mock<IQueryHandler<GetCreatorStatusQuery, CreatorStatus>> getCreatorStatus;
+        private Mock<IQueryHandler<GetCreatedChannelsAndCollectionsQuery, ChannelsAndCollections>> getCreatedChannelsAndCollections;
 
         [TestInitialize]
         public void TestInitialize()
         {
             this.getCreatorStatus = new Mock<IQueryHandler<GetCreatorStatusQuery, CreatorStatus>>(MockBehavior.Strict);
-            this.target = new GetUserStateQueryHandler(this.getCreatorStatus.Object);
+            this.getCreatedChannelsAndCollections = new Mock<IQueryHandler<GetCreatedChannelsAndCollectionsQuery,ChannelsAndCollections>>(MockBehavior.Strict);
+            this.target = new GetUserStateQueryHandler(this.getCreatorStatus.Object, this.getCreatedChannelsAndCollections.Object);
         }
 
         [TestMethod]
@@ -58,11 +62,18 @@
         public async Task WhenCalledAsACreator_ItShouldReturnUserStateWithCreatorState()
         {
             var creatorStatus = new CreatorStatus(new SubscriptionId(Guid.NewGuid()), true);
-            this.getCreatorStatus.Setup(v => v.HandleAsync(new GetCreatorStatusQuery(Requester))).ReturnsAsync(creatorStatus);
+            var createdChannelsAndCollections = new ChannelsAndCollections(new List<ChannelsAndCollections.Channel>());
+
+            this.getCreatorStatus.Setup(v => v.HandleAsync(new GetCreatorStatusQuery(Requester)))
+                .ReturnsAsync(creatorStatus);
+            this.getCreatedChannelsAndCollections.Setup(v => v.HandleAsync(new GetCreatedChannelsAndCollectionsQuery(Requester, UserId)))
+                .ReturnsAsync(createdChannelsAndCollections);
+            
             var result = await this.target.HandleAsync(new GetUserStateQuery(UserId, Requester, true));
 
             Assert.IsNotNull(result);
             Assert.AreEqual(creatorStatus, result.CreatorStatus);
+            Assert.AreEqual(createdChannelsAndCollections, result.CreatedChannelsAndCollections);
         }
     }
 }

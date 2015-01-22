@@ -9,11 +9,11 @@
     using Fifthweek.CodeGeneration;
 
     [AutoConstructor]
-    public partial class GetChannelsAndCollectionsQueryHandler : IQueryHandler<GetChannelsAndCollectionsQuery, GetChannelsAndCollectionsResult>
+    public partial class GetCreatedChannelsAndCollectionsQueryHandler : IQueryHandler<GetCreatedChannelsAndCollectionsQuery, ChannelsAndCollections>
     {
         private readonly IGetChannelsAndCollectionsDbStatement getChannelsAndCollections;
 
-        public Task<GetChannelsAndCollectionsResult> HandleAsync(GetChannelsAndCollectionsQuery query)
+        public Task<ChannelsAndCollections> HandleAsync(GetCreatedChannelsAndCollectionsQuery query)
         {
             query.AssertNotNull("query");
             query.Requester.AssertAuthenticatedAs(query.RequestedCreatorId);
