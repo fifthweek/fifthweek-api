@@ -14,7 +14,6 @@
     using Fifthweek.Api.Posts.Controllers;
     using Fifthweek.Api.Posts.Queries;
     using Fifthweek.Api.Subscriptions;
-    using Fifthweek.Api.Subscriptions.Queries;
 
     using Microsoft.VisualStudio.TestTools.UnitTesting;
 
@@ -105,6 +104,27 @@
 
             Assert.IsInstanceOfType(result, typeof(OkResult));
             this.postNote.Verify();
+        }
+
+        [TestMethod]
+        public async Task WhenGettingCreatorBacklog_ItShouldReturnResultFromCreatorBacklogQuery()
+        {
+            var query = new GetCreatorBacklogQuery(Requester, UserId);
+            var queryResult = new[] { new BacklogPost(ChannelId, CollectionId, new Comment(""), null, null, false, DateTime.UtcNow) };
+
+            this.userContext.Setup(_ => _.TryGetUserId()).Returns(UserId);
+            this.getCreatorBacklog.Setup(_ => _.HandleAsync(query)).ReturnsAsync(queryResult);
+
+            var result = await this.target.GetCreatorBacklog(UserId.Value.EncodeGuid());
+
+            Assert.AreEqual(result, queryResult);
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(BadRequestException))]
+        public async Task WhenGettingCreatorBacklogWithoutSpecifyingCreatorId_ItShouldThrowBadRequestException()
+        {
+            await this.target.GetCreatorBacklog(string.Empty);
         }
 
         [TestMethod]

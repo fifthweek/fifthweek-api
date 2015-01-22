@@ -1,8 +1,6 @@
 ﻿namespace Fifthweek.Api.Posts.Controllers
 {
-    using System.Collections;
     using System.Collections.Generic;
-    using System.Linq;
     using System.Threading.Tasks;
     using System.Web.Http;
 
@@ -86,7 +84,7 @@
         }
 
         [Route("creatorBacklog/{creatorId}")]
-        public async Task<IEnumerable<BacklogPost>> GetPosts(string creatorId)
+        public async Task<IEnumerable<BacklogPost>> GetCreatorBacklog(string creatorId)
         {
             creatorId.AssertUrlParameterProvided("creatorId");
             var creatorIdObject = new UserId(creatorId.DecodeGuid());
