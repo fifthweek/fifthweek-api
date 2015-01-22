@@ -8,8 +8,7 @@
     [AutoEqualityMembers]
     public partial class NewNoteData
     {
-        [Constructed(typeof(ChannelId), IsGuidBase64 = true)]
-        public string ChannelId { get; set; }
+        public ChannelId ChannelId { get; set; }
 
         [Parsed(typeof(ValidNote))]
         public string Note { get; set; }

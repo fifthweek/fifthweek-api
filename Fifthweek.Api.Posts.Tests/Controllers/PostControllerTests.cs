@@ -130,7 +130,7 @@
         {
             return new NewNoteData
             {
-                ChannelId = ChannelId.Value.EncodeGuid(),
+                ChannelId = ChannelId,
                 Note = "Hey peeps ;)",
                 ScheduledPostDate = TwoDaysFromNow
             };
@@ -144,7 +144,7 @@
             return new PostNoteCommand(
                 Requester.Authenticated(userId),
                 postId,
-                new ChannelId(data.ChannelId.DecodeGuid()),
+                data.ChannelId,
                 ValidNote.Parse(data.Note),
                 data.ScheduledPostDate);
         }
@@ -153,8 +153,8 @@
         {
             return new NewImageData
             {
-                CollectionId = CollectionId.Value.EncodeGuid(),
-                ImageFileId = FileId.Value.EncodeGuid(),
+                CollectionId = CollectionId,
+                ImageFileId = FileId,
                 Comment = null,
                 ScheduledPostDate = null,
                 IsQueued = true
@@ -169,8 +169,8 @@
             return new PostImageCommand(
                 Requester.Authenticated(userId),
                 postId,
-                new CollectionId(data.CollectionId.DecodeGuid()), 
-                new FileId(data.ImageFileId.DecodeGuid()),
+                data.CollectionId, 
+                data.ImageFileId,
                 data.Comment == null ? null : ValidComment.Parse(data.Comment),
                 data.ScheduledPostDate,
                 data.IsQueued);
@@ -180,8 +180,8 @@
         {
             return new NewFileData
             {
-                CollectionId = CollectionId.Value.EncodeGuid(),
-                FileId = FileId.Value.EncodeGuid(),
+                CollectionId = CollectionId,
+                FileId = FileId,
                 Comment = null,
                 ScheduledPostDate = null,
                 IsQueued = true
@@ -196,8 +196,8 @@
             return new PostFileCommand(
                 Requester.Authenticated(userId),
                 postId,
-                new CollectionId(data.CollectionId.DecodeGuid()),
-                new FileId(data.FileId.DecodeGuid()),
+                data.CollectionId,
+                data.FileId,
                 data.Comment == null ? null : ValidComment.Parse(data.Comment),
                 data.ScheduledPostDate,
                 data.IsQueued);

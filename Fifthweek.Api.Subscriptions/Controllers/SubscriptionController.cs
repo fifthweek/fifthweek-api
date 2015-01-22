@@ -55,7 +55,7 @@
                 subscription.TaglineObject,
                 subscription.IntroductionObject,
                 subscription.DescriptionObject,
-                subscription.HeaderImageFileIdObject,
+                subscription.HeaderImageFileId,
                 subscription.VideoObject));
 
             return this.Ok();

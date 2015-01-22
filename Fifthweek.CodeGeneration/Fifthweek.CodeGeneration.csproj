@@ -45,7 +45,6 @@
     <Compile Include="AutoConstructorAttribute.cs" />
     <Compile Include="AutoEqualityMembersAttribute.cs" />
     <Compile Include="AutoSqlAttribute.cs" />
-    <Compile Include="ConstructedAttribute.cs" />
     <Compile Include="LiftMembersAttribute.cs" />
     <Compile Include="NonEquatableAttribute.cs" />
     <Compile Include="OptionalAttribute.cs" />

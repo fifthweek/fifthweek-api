@@ -71,7 +71,6 @@
   <ItemGroup>
     <Compile Include="AutofacRegistration.cs" />
     <Compile Include="Comment.cs" />
-    <Compile Include="Controllers\BacklogPostData.cs" />
     <Compile Include="DeletePostDbStatement.cs" />
     <Compile Include="IDeletePostDbStatement.cs" />
     <Compile Include="PostOwnership.cs" />

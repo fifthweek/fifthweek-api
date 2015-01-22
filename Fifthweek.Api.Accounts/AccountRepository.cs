@@ -7,13 +7,11 @@
 
     using Dapper;
 
-    using Fifthweek.Api.Accounts.Controllers;
     using Fifthweek.Api.Core;
     using Fifthweek.Api.FileManagement;
     using Fifthweek.Api.Identity.Membership;
     using Fifthweek.Api.Persistence;
     using Fifthweek.CodeGeneration;
-    using Fifthweek.Shared;
 
     [AutoConstructor]
     public partial class AccountRepository : IAccountRepository
@@ -37,9 +35,7 @@
                     "The user ID " + userId.Value + " was not found in the database.");
             }
 
-            result.Parse();
-
-            return new GetAccountSettingsResult(result.EmailObject, result.ProfileImageFileIdObject);
+            return new GetAccountSettingsResult(new Email(result.Email), new FileId(result.ProfileImageFileId));
         }
 
         public async Task<UpdateAccountSettingsResult> UpdateAccountSettingsAsync(

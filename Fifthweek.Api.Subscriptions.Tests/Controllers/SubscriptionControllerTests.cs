@@ -103,7 +103,7 @@
                 SubscriptionName = "Captain Phil",
                 Tagline = "Web Comics And More",
                 Introduction = "Subscription introduction",
-                HeaderImageFileId = HeaderImageFileId.Value.EncodeGuid(),
+                HeaderImageFileId = HeaderImageFileId,
                 Video = "http://youtube.com/3135",
                 Description = "Hello all!"
             };
@@ -121,7 +121,7 @@
                 ValidTagline.Parse(data.Tagline),
                 ValidIntroduction.Parse(data.Introduction),
                 ValidDescription.Parse(data.Description),
-                new FileId(data.HeaderImageFileId.DecodeGuid()),
+                data.HeaderImageFileId,
                 ValidExternalVideoUrl.Parse(data.Video));
         }
     }

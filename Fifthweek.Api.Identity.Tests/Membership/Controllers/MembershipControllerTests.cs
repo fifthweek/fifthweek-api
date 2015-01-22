@@ -1,12 +1,11 @@
-﻿using Fifthweek.Api.Identity.Membership;
-
-namespace Fifthweek.Api.Identity.Tests.Membership.Controllers
+﻿namespace Fifthweek.Api.Identity.Tests.Membership.Controllers
 {
     using System;
     using System.Threading.Tasks;
     using System.Web.Http.Results;
 
     using Fifthweek.Api.Core;
+    using Fifthweek.Api.Identity.Membership;
     using Fifthweek.Api.Identity.Membership.Commands;
     using Fifthweek.Api.Identity.Membership.Controllers;
     using Fifthweek.Api.Identity.Membership.Queries;
@@ -142,7 +141,7 @@ namespace Fifthweek.Api.Identity.Tests.Membership.Controllers
         {
             return new PasswordResetConfirmationData
             {
-                UserId = Guid.Parse("{5E41A09B-0523-4FD3-BC82-9D5A02D2FB97}"),
+                UserId = new UserId(Guid.Parse("{5E41A09B-0523-4FD3-BC82-9D5A02D2FB97}")),
                 Token = "SomeLongBase64EncodedGumpf",
                 NewPassword = "SecretSquirrel",
             };

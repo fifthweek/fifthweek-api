@@ -69,8 +69,7 @@
 
             var command = new RequestPasswordResetCommand(
                 passwordResetRequest.EmailObject,
-                passwordResetRequest.UsernameObject
-            );
+                passwordResetRequest.UsernameObject);
 
             await this.requestPasswordReset.HandleAsync(command);
 
@@ -85,10 +84,9 @@
             passwordResetConfirmation.Parse();
 
             var command = new ConfirmPasswordResetCommand(
-                passwordResetConfirmation.UserIdObject,
+                passwordResetConfirmation.UserId,
                 passwordResetConfirmation.Token,
-                passwordResetConfirmation.NewPasswordObject
-            );
+                passwordResetConfirmation.NewPasswordObject);
 
             await this.confirmPasswordReset.HandleAsync(command);
 

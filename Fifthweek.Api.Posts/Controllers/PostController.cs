@@ -36,7 +36,7 @@
             await this.postNote.HandleAsync(new PostNoteCommand(
                 requester,
                 newPostId,
-                note.ChannelIdObject,
+                note.ChannelId,
                 note.NoteObject,
                 note.ScheduledPostDate));
 
@@ -55,8 +55,8 @@
             await this.postImage.HandleAsync(new PostImageCommand(
                 requester,
                 newPostId,
-                image.CollectionIdObject,
-                image.ImageFileIdObject,
+                image.CollectionId,
+                image.ImageFileId,
                 image.CommentObject,
                 image.ScheduledPostDate,
                 image.IsQueued));
@@ -76,8 +76,8 @@
             await this.postFile.HandleAsync(new PostFileCommand(
                 requester,
                 newPostId,
-                file.CollectionIdObject,
-                file.FileIdObject,
+                file.CollectionId,
+                file.FileId,
                 file.CommentObject,
                 file.ScheduledPostDate,
                 file.IsQueued));
@@ -86,22 +86,13 @@
         }
 
         [Route("creatorBacklog/{creatorId}")]
-        public async Task<IEnumerable<BacklogPostData>> GetPosts(string creatorId)
+        public async Task<IEnumerable<BacklogPost>> GetPosts(string creatorId)
         {
             creatorId.AssertUrlParameterProvided("creatorId");
             var creatorIdObject = new UserId(creatorId.DecodeGuid());
             var requester = this.userContext.GetRequester();
 
-            var posts = await this.getCreatorBacklog.HandleAsync(new GetCreatorBacklogQuery(requester, creatorIdObject));
-
-            return posts.Select(_ => new BacklogPostData(
-                _.ChannelId,
-                _.CollectionId,
-                _.Comment,
-                _.FileId,
-                _.ImageId,
-                _.ScheduledByQueue,
-                _.LiveDate));
+            return await this.getCreatorBacklog.HandleAsync(new GetCreatorBacklogQuery(requester, creatorIdObject));
         }
 
         [Route("{postId}")]

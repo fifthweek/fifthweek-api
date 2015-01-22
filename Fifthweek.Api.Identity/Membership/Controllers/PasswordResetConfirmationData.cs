@@ -1,17 +1,13 @@
-﻿using System;
-using System.ComponentModel.DataAnnotations;
-using Fifthweek.Api.Core;
-
-namespace Fifthweek.Api.Identity.Membership.Controllers
+﻿namespace Fifthweek.Api.Identity.Membership.Controllers
 {
+    using System.ComponentModel.DataAnnotations;
+
     using Fifthweek.CodeGeneration;
-    using Fifthweek.Shared;
 
     [AutoEqualityMembers]
     public partial class PasswordResetConfirmationData
     {
-        [Constructed(typeof(UserId))]
-        public Guid UserId { get; set; }
+        public UserId UserId { get; set; }
 
         [Parsed(typeof(ValidPassword))]
         public string NewPassword { get; set; }

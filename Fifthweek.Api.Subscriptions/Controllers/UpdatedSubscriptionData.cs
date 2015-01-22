@@ -1,9 +1,7 @@
 ﻿namespace Fifthweek.Api.Subscriptions.Controllers
 {
-    using Fifthweek.Api.Core;
     using Fifthweek.Api.FileManagement;
     using Fifthweek.CodeGeneration;
-    using Fifthweek.Shared;
 
     [AutoEqualityMembers]
     public partial class UpdatedSubscriptionData
@@ -18,8 +16,7 @@
         public string Introduction { get; set; }
 
         [Optional]
-        [Constructed(typeof(FileId), IsGuidBase64 = true)]
-        public string HeaderImageFileId { get; set; }
+        public FileId HeaderImageFileId { get; set; }
 
         [Optional]
         [Parsed(typeof(ValidExternalVideoUrl))]

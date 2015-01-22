@@ -9,11 +9,9 @@
     [AutoEqualityMembers]
     public partial class NewFileData
     {
-        [Constructed(typeof(CollectionId), IsGuidBase64 = true)]
-        public string CollectionId { get; set; }
+        public CollectionId CollectionId { get; set; }
 
-        [Constructed(typeof(FileId), IsGuidBase64 = true)]
-        public string FileId { get; set; }
+        public FileId FileId { get; set; }
 
         [Optional]
         [Parsed(typeof(ValidComment))]

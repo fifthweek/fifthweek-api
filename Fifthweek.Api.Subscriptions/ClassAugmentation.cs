@@ -912,15 +912,13 @@ namespace Fifthweek.Api.Subscriptions.Controllers
 }
 namespace Fifthweek.Api.Subscriptions.Controllers
 {
-    using Fifthweek.Api.Core;
     using Fifthweek.Api.FileManagement;
     using Fifthweek.CodeGeneration;
-    using Fifthweek.Shared;
     public partial class UpdatedSubscriptionData 
     {
         public override string ToString()
         {
-            return string.Format("UpdatedSubscriptionData(\"{0}\", \"{1}\", \"{2}\", \"{3}\", \"{4}\", \"{5}\")", this.SubscriptionName == null ? "null" : this.SubscriptionName.ToString(), this.Tagline == null ? "null" : this.Tagline.ToString(), this.Introduction == null ? "null" : this.Introduction.ToString(), this.HeaderImageFileId == null ? "null" : this.HeaderImageFileId.ToString(), this.Video == null ? "null" : this.Video.ToString(), this.Description == null ? "null" : this.Description.ToString());
+            return string.Format("UpdatedSubscriptionData(\"{0}\", \"{1}\", \"{2}\", {3}, \"{4}\", \"{5}\")", this.SubscriptionName == null ? "null" : this.SubscriptionName.ToString(), this.Tagline == null ? "null" : this.Tagline.ToString(), this.Introduction == null ? "null" : this.Introduction.ToString(), this.HeaderImageFileId == null ? "null" : this.HeaderImageFileId.ToString(), this.Video == null ? "null" : this.Video.ToString(), this.Description == null ? "null" : this.Description.ToString());
         }
 
         public override bool Equals(object obj)
@@ -1584,16 +1582,13 @@ namespace Fifthweek.Api.Subscriptions.Controllers
 }
 namespace Fifthweek.Api.Subscriptions.Controllers
 {
-    using Fifthweek.Api.Core;
     using Fifthweek.Api.FileManagement;
     using Fifthweek.CodeGeneration;
-    using Fifthweek.Shared;
     public partial class UpdatedSubscriptionData 
     {
         public ValidSubscriptionName SubscriptionNameObject { get; set; }
         public ValidTagline TaglineObject { get; set; }
         public ValidIntroduction IntroductionObject { get; set; }
-        public FileId HeaderImageFileIdObject { get; set; }
         public ValidExternalVideoUrl VideoObject { get; set; }
         public ValidDescription DescriptionObject { get; set; }
     }
@@ -1662,17 +1657,6 @@ namespace Fifthweek.Api.Subscriptions.Controllers
 
                     modelStateDictionary.Add("Introduction", modelState);
                 }
-            }
-
-            if (target.HeaderImageFileId != null)
-            {
-                target.HeaderImageFileIdObject = new FileId(Fifthweek.Api.Core.Extensions.DecodeGuid(target.HeaderImageFileId));
-            }
-            else if (false)
-            {
-                var modelState = new System.Web.Http.ModelBinding.ModelState();
-                modelState.Errors.Add("Value required");
-                modelStateDictionary.Add("HeaderImageFileId", modelState);
             }
 
             if (false || !ValidExternalVideoUrl.IsEmpty(target.Video))
