@@ -1,14 +1,13 @@
-﻿using System;
-using Fifthweek.Api.Identity.Tests.Membership.Controllers;
-using Fifthweek.Api.Persistence;
-
-namespace Fifthweek.Api.Identity.Tests.Membership.Commands
+﻿namespace Fifthweek.Api.Identity.Tests.Membership.Commands
 {
+    using System;
     using System.Threading.Tasks;
 
+    using Fifthweek.Api.Core;
     using Fifthweek.Api.Identity.Membership;
     using Fifthweek.Api.Identity.Membership.Commands;
     using Fifthweek.Api.Identity.Membership.Controllers;
+    using Fifthweek.Api.Persistence;
     using Fifthweek.Api.Persistence.Identity;
 
     using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -18,6 +17,18 @@ namespace Fifthweek.Api.Identity.Tests.Membership.Commands
     [TestClass]
     public class RequestPasswordResetCommandHandlerTests
     {
+        private const string Token = "abc";
+        private const string EmailAddress = "test@example.com";
+        private const string Username = "test_user";
+        private const string EmailSubject = "Reset Password";
+
+        private static readonly Guid UserId = Guid.NewGuid();
+        private static readonly Guid UserId2 = Guid.NewGuid();
+        
+        private readonly string activationLink = string.Format("\"https://www.fifthweek.com/#/resetPassword?userId={0}&token={1}\"", UserId.EncodeGuid(), Token);
+        private Mock<IUserManager> userManager;
+        private RequestPasswordResetCommandHandler target;
+
         [TestMethod]
         public async Task WhenUsernameAndEmailAreNotProvided_ItShouldDoNothing()
         {
@@ -151,16 +162,6 @@ namespace Fifthweek.Api.Identity.Tests.Membership.Commands
             this.userManager = new Mock<IUserManager>(MockBehavior.Strict);
             this.target = new RequestPasswordResetCommandHandler(this.userManager.Object);
         }
-
-        private static readonly Guid UserId = Guid.NewGuid();
-        private static readonly Guid UserId2 = Guid.NewGuid();
-        private const string Token = "abc";
-        private const string EmailAddress = "test@example.com";
-        private const string Username = "test_user";
-        private const string EmailSubject = "Reset Password";
-        private readonly string activationLink = string.Format("\"https://www.fifthweek.com/#/resetPassword?userId={0}&token={1}\"", UserId, Token);
-        private Mock<IUserManager> userManager;
-        private RequestPasswordResetCommandHandler target;
     }
 
     public static class RequestPasswordResetCommandTests
