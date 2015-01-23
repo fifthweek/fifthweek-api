@@ -23,39 +23,14 @@
         private readonly IUserContext userContext;
 
         [Route("{userId}")]
-        public async Task<UserStateResponse> Get(string userId)
+        public async Task<UserState> Get(string userId)
         {
-            userId.AssertUrlParameterProvided("userId");
-
-            var requestedUserId = new UserId(userId.DecodeGuid());
+            var requestedUserId = string.IsNullOrWhiteSpace(userId) ? null : new UserId(userId.DecodeGuid());
             var requester = this.userContext.GetRequester();
-            bool isCreator = this.userContext.IsUserInRole(FifthweekRole.Creator);
 
-            var userState = await this.getUserState.HandleAsync(new GetUserStateQuery(requestedUserId, requester, isCreator));
-            
-            UserStateResponse.CreatorStatusResponse creatorStatus = null;
-            if (userState.CreatorStatus != null)
-            {
-                creatorStatus = new UserStateResponse.CreatorStatusResponse(
-                    userState.CreatorStatus.SubscriptionId == null
-                        ? null
-                        : userState.CreatorStatus.SubscriptionId.Value.EncodeGuid(),
-                    userState.CreatorStatus.MustWriteFirstPost);
-            }
+            var userState = await this.getUserState.HandleAsync(new GetUserStateQuery(requester, requestedUserId));
 
-            UserStateResponse.ChannelsAndCollectionsResponse createdChannelsAndCollections = null;
-            if (userState.CreatedChannelsAndCollections != null)
-            {
-                createdChannelsAndCollections = new UserStateResponse.ChannelsAndCollectionsResponse(
-                    userState.CreatedChannelsAndCollections.Channels.Select(v => new UserStateResponse.ChannelsAndCollectionsResponse.ChannelResponse(
-                        v.ChannelId.Value.EncodeGuid(),
-                        v.Name,
-                        v.Collections.Select(w => new UserStateResponse.ChannelsAndCollectionsResponse.CollectionResponse(
-                            w.CollectionId.Value.EncodeGuid(),
-                            w.Name)).ToList())).ToList());
-            }
-
-            return new UserStateResponse(creatorStatus, createdChannelsAndCollections);
+            return userState;
         }
     }
 }

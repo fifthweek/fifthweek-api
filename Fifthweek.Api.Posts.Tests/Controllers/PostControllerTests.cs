@@ -24,6 +24,7 @@
     public class PostControllerTests
     {
         private static readonly UserId UserId = new UserId(Guid.NewGuid());
+        private static readonly Requester Requester = Requester.Authenticated(UserId);
         private static readonly PostId PostId = new PostId(Guid.NewGuid());
         private static readonly ChannelId ChannelId = new ChannelId(Guid.NewGuid());
         private static readonly CollectionId CollectionId = new CollectionId(Guid.NewGuid());
@@ -64,7 +65,7 @@
             var data = NewNoteData();
             var command = NewPostNoteCommand(UserId, PostId, data);
 
-            this.userContext.Setup(v => v.TryGetUserId()).Returns(UserId);
+            this.userContext.Setup(v => v.GetRequester()).Returns(Requester);
             this.guidCreator.Setup(_ => _.CreateSqlSequential()).Returns(PostId.Value);
             this.postNote.Setup(v => v.HandleAsync(command)).Returns(Task.FromResult(0)).Verifiable();
 
@@ -80,7 +81,7 @@
             var data = NewImageData();
             var command = NewPostImageCommand(UserId, PostId, data);
 
-            this.userContext.Setup(v => v.TryGetUserId()).Returns(UserId);
+            this.userContext.Setup(v => v.GetRequester()).Returns(Requester);
             this.guidCreator.Setup(_ => _.CreateSqlSequential()).Returns(PostId.Value);
             this.postImage.Setup(v => v.HandleAsync(command)).Returns(Task.FromResult(0)).Verifiable();
 
@@ -96,7 +97,7 @@
             var data = NewFileData();
             var command = NewPostFileCommand(UserId, PostId, data);
 
-            this.userContext.Setup(v => v.TryGetUserId()).Returns(UserId);
+            this.userContext.Setup(v => v.GetRequester()).Returns(Requester);
             this.guidCreator.Setup(_ => _.CreateSqlSequential()).Returns(PostId.Value);
             this.postFile.Setup(v => v.HandleAsync(command)).Returns(Task.FromResult(0)).Verifiable();
 
@@ -109,8 +110,8 @@
         [TestMethod]
         public async Task WhenDeletingPost_ItShouldIssueDeletePostCommand()
         {
-            this.userContext.Setup(v => v.TryGetUserId()).Returns(UserId);
-            this.deletePost.Setup(v => v.HandleAsync(new DeletePostCommand(PostId, Requester.Authenticated(UserId))))
+            this.userContext.Setup(v => v.GetRequester()).Returns(Requester);
+            this.deletePost.Setup(v => v.HandleAsync(new DeletePostCommand(PostId, Requester)))
                 .Returns(Task.FromResult(0))
                 .Verifiable();
 

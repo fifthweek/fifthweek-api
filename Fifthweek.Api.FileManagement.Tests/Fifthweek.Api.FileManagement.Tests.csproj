@@ -123,6 +123,7 @@
     <Compile Include="Queries\GenerateWritableBlobUriQueryHandlerTests.cs" />
     <Compile Include="FileRepositoryTests.cs" />
     <Compile Include="FileOwnershipTests.cs" />
+    <Compile Include="Queries\GetUserAccessSignaturesQueryHandlerTests.cs" />
     <Compile Include="ScheduleGarbageCollectionStatementTests.cs" />
   </ItemGroup>
   <ItemGroup>

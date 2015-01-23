@@ -1,14 +1,14 @@
-﻿namespace Fifthweek.Api.Aggregations.Queries
+﻿namespace Fifthweek.Api.FileManagement.Queries
 {
     using Fifthweek.Api.Core;
     using Fifthweek.Api.Identity.Membership;
     using Fifthweek.CodeGeneration;
 
     [AutoConstructor, AutoEqualityMembers]
-    public partial class GetUserStateQuery : IQuery<UserState>
+    public partial class GetUserAccessSignaturesQuery : IQuery<UserAccessSignatures>
     {
         public Requester Requester { get; private set; }
-        
+
         [Optional]
         public UserId RequestedUserId { get; private set; }
     }

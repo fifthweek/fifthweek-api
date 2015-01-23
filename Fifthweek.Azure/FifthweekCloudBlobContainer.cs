@@ -1,5 +1,6 @@
 namespace Fifthweek.Azure
 {
+    using System;
     using System.Threading.Tasks;
 
     using Microsoft.WindowsAzure.Storage.Blob;
@@ -13,6 +14,14 @@ namespace Fifthweek.Azure
             this.container = container;
         }
 
+        public Uri Uri
+        {
+            get
+            {
+                return this.container.Uri;
+            }
+        }
+
         public Task<bool> CreateIfNotExistsAsync()
         {
             return this.container.CreateIfNotExistsAsync();
@@ -21,6 +30,11 @@ namespace Fifthweek.Azure
         public ICloudBlockBlob GetBlockBlobReference(string blobName)
         {
             return new FifthweekCloudBlockBlob(this.container.GetBlockBlobReference(blobName));
+        }
+
+        public string GetSharedAccessSignature(SharedAccessBlobPolicy policy)
+        {
+            return this.container.GetSharedAccessSignature(policy);
         }
     }
 }

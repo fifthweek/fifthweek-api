@@ -4,6 +4,7 @@
     using System.Web.Http;
     using System.Web.Http.Description;
 
+    using Fifthweek.Api.Azure;
     using Fifthweek.Api.Core;
     using Fifthweek.Api.FileManagement.Commands;
     using Fifthweek.Api.FileManagement.Queries;
@@ -19,7 +20,7 @@
 
         private readonly ICommandHandler<InitiateFileUploadCommand> initiateFileUpload;
 
-        private readonly IQueryHandler<GenerateWritableBlobUriQuery, string> generateWritableBlobUri;
+        private readonly IQueryHandler<GenerateWritableBlobUriQuery, BlobSharedAccessInformation> generateWritableBlobUri;
 
         private readonly ICommandHandler<CompleteFileUploadCommand> completeFileUpload;
 
@@ -30,14 +31,16 @@
         public async Task<GrantedUpload> PostUploadRequestAsync(UploadRequest data)
         {
             data.AssertBodyProvided("data");
+            data.FilePath.AssertBodyProvided("filePath");
+            data.Purpose.AssertBodyProvided("purpose");
 
             var fileId = new FileId(this.guidCreator.CreateSqlSequential());
             var requester = this.userContext.GetRequester();
 
             await this.initiateFileUpload.HandleAsync(new InitiateFileUploadCommand(requester, fileId, data.FilePath, data.Purpose));
-            var uri = await this.generateWritableBlobUri.HandleAsync(new GenerateWritableBlobUriQuery(requester, fileId, data.Purpose));
+            var accessInformation = await this.generateWritableBlobUri.HandleAsync(new GenerateWritableBlobUriQuery(requester, fileId, data.Purpose));
 
-            return new GrantedUpload(fileId.Value.EncodeGuid(), uri);
+            return new GrantedUpload(fileId, accessInformation);
         }
 
         [Route("uploadCompleteNotifications")]

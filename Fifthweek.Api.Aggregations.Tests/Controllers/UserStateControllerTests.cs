@@ -6,9 +6,11 @@
 
     using Fifthweek.Api.Aggregations.Controllers;
     using Fifthweek.Api.Aggregations.Queries;
+    using Fifthweek.Api.Azure;
     using Fifthweek.Api.Collections;
     using Fifthweek.Api.Collections.Queries;
     using Fifthweek.Api.Core;
+    using Fifthweek.Api.FileManagement.Queries;
     using Fifthweek.Api.Identity.Membership;
     using Fifthweek.Api.Identity.OAuth;
     using Fifthweek.Api.Persistence.Identity;
@@ -23,6 +25,24 @@
     public class UserStateControllerTests
     {
         private static readonly UserId UserId = new UserId(Guid.NewGuid());
+        private static readonly Requester Requester = Requester.Authenticated(UserId, FifthweekRole.Creator);
+
+        private static readonly UserAccessSignatures UserAccessSignatures =
+            new UserAccessSignatures(
+                new BlobContainerSharedAccessInformation("containerName", "uri", "signature", DateTime.UtcNow),
+                new List<UserAccessSignatures.PrivateAccessSignature>
+                    {
+                        new UserAccessSignatures.
+                            PrivateAccessSignature(
+                            new UserId(Guid.NewGuid()),
+                            new BlobContainerSharedAccessInformation(
+                            "containerName2",
+                            "uri2",
+                            "signature2",
+                            DateTime.UtcNow)),
+                    });
+
+        private static readonly UserState UserState = new UserState(UserId, UserAccessSignatures, null, null);
 
         private UserStateController target;
         private Mock<IQueryHandler<GetUserStateQuery, UserState>> getUserState;
@@ -39,133 +59,53 @@
         [TestMethod]
         public async Task WhenGettingUserState_ItShouldReturnResultFromUserStateQuery()
         {
-            this.userContext.Setup(v => v.TryGetUserId()).Returns(UserId);
-            this.userContext.Setup(v => v.IsUserInRole(FifthweekRole.Creator)).Returns(true);
+            this.userContext.Setup(v => v.GetRequester()).Returns(Requester);
             
-            var userState = new UserState(
-                    new CreatorStatus(new SubscriptionId(Guid.NewGuid()), true),
-                    new ChannelsAndCollections(
-                        new List<ChannelsAndCollections.Channel>
-                        {
-                            new ChannelsAndCollections.Channel(
-                                new ChannelId(
-                                    Guid.NewGuid()), 
-                                    Guid.NewGuid().ToString(),
-                                    new List<ChannelsAndCollections.Collection>()),
-                            new ChannelsAndCollections.Channel(
-                                new ChannelId(
-                                    Guid.NewGuid()), 
-                                    Guid.NewGuid().ToString(),
-                                    new List<ChannelsAndCollections.Collection>
-                                    {
-                                        new ChannelsAndCollections.Collection(
-                                            new CollectionId(Guid.NewGuid()),
-                                            Guid.NewGuid().ToString())
-                                    }),
-                            new ChannelsAndCollections.Channel(
-                                new ChannelId(
-                                    Guid.NewGuid()), 
-                                    Guid.NewGuid().ToString(),
-                                    new List<ChannelsAndCollections.Collection>
-                                    {
-                                        new ChannelsAndCollections.Collection(
-                                            new CollectionId(Guid.NewGuid()),
-                                            Guid.NewGuid().ToString()),
-                                        new ChannelsAndCollections.Collection(
-                                            new CollectionId(Guid.NewGuid()),
-                                            Guid.NewGuid().ToString())
-                                    })
-                        }));
-
-            var query = new GetUserStateQuery(UserId, Requester.Authenticated(UserId), true);
-            this.getUserState.Setup(v => v.HandleAsync(query))
-                .ReturnsAsync(userState);
+            this.getUserState.Setup(v => v.HandleAsync(new GetUserStateQuery(Requester, UserId)))
+                .ReturnsAsync(UserState);
 
             var result = await this.target.Get(UserId.Value.EncodeGuid());
 
-            Assert.AreEqual(
-                result.CreatorStatus.SubscriptionId, 
-                userState.CreatorStatus.SubscriptionId.Value.EncodeGuid());
-
-            Assert.AreEqual(
-                result.CreatorStatus.MustWriteFirstPost, 
-                userState.CreatorStatus.MustWriteFirstPost);
-
-            Assert.AreEqual(
-                result.CreatedChannelsAndCollections.Channels[0].ChannelId,
-                userState.CreatedChannelsAndCollections.Channels[0].ChannelId.Value.EncodeGuid());
-
-            Assert.AreEqual(
-                result.CreatedChannelsAndCollections.Channels[0].Name,
-                userState.CreatedChannelsAndCollections.Channels[0].Name);
-
-            Assert.AreEqual(
-                result.CreatedChannelsAndCollections.Channels[0].Collections.Count,
-                userState.CreatedChannelsAndCollections.Channels[0].Collections.Count);
-
-            Assert.AreEqual(
-                result.CreatedChannelsAndCollections.Channels[1].ChannelId,
-                userState.CreatedChannelsAndCollections.Channels[1].ChannelId.Value.EncodeGuid());
-
-            Assert.AreEqual(
-                result.CreatedChannelsAndCollections.Channels[1].Name,
-                userState.CreatedChannelsAndCollections.Channels[1].Name);
-
-            Assert.AreEqual(
-                result.CreatedChannelsAndCollections.Channels[1].Collections.Count,
-                userState.CreatedChannelsAndCollections.Channels[1].Collections.Count);
-
-            Assert.AreEqual(
-                result.CreatedChannelsAndCollections.Channels[1].Collections[0].CollectionId,
-                userState.CreatedChannelsAndCollections.Channels[1].Collections[0].CollectionId.Value.EncodeGuid());
-
-            Assert.AreEqual(
-                result.CreatedChannelsAndCollections.Channels[1].Collections[0].Name,
-                userState.CreatedChannelsAndCollections.Channels[1].Collections[0].Name);
-
-            Assert.AreEqual(
-                result.CreatedChannelsAndCollections.Channels[2].ChannelId,
-                userState.CreatedChannelsAndCollections.Channels[2].ChannelId.Value.EncodeGuid());
-
-            Assert.AreEqual(
-                result.CreatedChannelsAndCollections.Channels[2].Name,
-                userState.CreatedChannelsAndCollections.Channels[2].Name);
-
-            Assert.AreEqual(
-                result.CreatedChannelsAndCollections.Channels[2].Collections.Count,
-                userState.CreatedChannelsAndCollections.Channels[2].Collections.Count);
-
-            Assert.AreEqual(
-                result.CreatedChannelsAndCollections.Channels[2].Collections[0].CollectionId,
-                userState.CreatedChannelsAndCollections.Channels[2].Collections[0].CollectionId.Value.EncodeGuid());
-
-            Assert.AreEqual(
-                result.CreatedChannelsAndCollections.Channels[2].Collections[0].Name,
-                userState.CreatedChannelsAndCollections.Channels[2].Collections[0].Name);
-
-            Assert.AreEqual(
-                result.CreatedChannelsAndCollections.Channels[2].Collections[1].CollectionId,
-                userState.CreatedChannelsAndCollections.Channels[2].Collections[1].CollectionId.Value.EncodeGuid());
-
-            Assert.AreEqual(
-                result.CreatedChannelsAndCollections.Channels[2].Collections[1].Name,
-                userState.CreatedChannelsAndCollections.Channels[2].Collections[1].Name);
+            Assert.AreEqual(UserState, result);
         }
 
         [TestMethod]
         public async Task WhenGettingUserState_ItShouldReturnResultFromUserStateQuery2()
         {
-            this.userContext.Setup(v => v.TryGetUserId()).Returns(UserId);
-            this.userContext.Setup(v => v.IsUserInRole(FifthweekRole.Creator)).Returns(false);
-            
-            var query = new GetUserStateQuery(UserId, Requester.Authenticated(UserId), false);
-            this.getUserState.Setup(v => v.HandleAsync(query))
-                .ReturnsAsync(new UserState(null, null));
+            this.userContext.Setup(v => v.GetRequester()).Returns(Requester.Unauthenticated);
+
+            this.getUserState.Setup(v => v.HandleAsync(new GetUserStateQuery(Requester.Unauthenticated, UserId)))
+                .ReturnsAsync(UserState);
 
             var result = await this.target.Get(UserId.Value.EncodeGuid());
 
-            Assert.IsNull(result.CreatorStatus);
-            Assert.IsNull(result.CreatedChannelsAndCollections);
+            Assert.AreEqual(UserState, result);
+        }
+
+        [TestMethod]
+        public async Task WhenGettingUserState_ItShouldReturnResultFromUserStateQuery3()
+        {
+            this.userContext.Setup(v => v.GetRequester()).Returns(Requester.Unauthenticated);
+
+            this.getUserState.Setup(v => v.HandleAsync(new GetUserStateQuery(Requester.Unauthenticated, null)))
+                .ReturnsAsync(UserState);
+
+            var result = await this.target.Get(null);
+
+            Assert.AreEqual(UserState, result);
+        }
+
+        [TestMethod]
+        public async Task WhenGettingUserState_ItShouldReturnResultFromUserStateQuery4()
+        {
+            this.userContext.Setup(v => v.GetRequester()).Returns(Requester);
+
+            this.getUserState.Setup(v => v.HandleAsync(new GetUserStateQuery(Requester, null)))
+                .ReturnsAsync(UserState);
+
+            var result = await this.target.Get(" ");
+
+            Assert.AreEqual(UserState, result);
         }
     }
 }

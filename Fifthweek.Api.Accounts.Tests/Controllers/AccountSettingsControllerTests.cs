@@ -47,7 +47,7 @@
         [TestMethod]
         public async Task WhenGetIsCalled_ItShouldCallTheQueryHandler()
         {
-            this.userContext.Setup(v => v.TryGetUserId()).Returns(UserId);
+            this.userContext.Setup(v => v.GetRequester()).Returns(Requester);
 
             var query = new GetAccountSettingsQuery(Requester, RequestedUserId);
             this.getAccountSettings.Setup(v => v.HandleAsync(query))
@@ -80,7 +80,7 @@
         [TestMethod]
         public async Task WhenPutIsCalled_ItShouldCallTheCommandHandler()
         {
-            this.userContext.Setup(v => v.TryGetUserId()).Returns(UserId);
+            this.userContext.Setup(v => v.GetRequester()).Returns(Requester);
 
             var command = new UpdateAccountSettingsCommand(Requester, RequestedUserId, Username, Email, Password, FileId);
             this.updateAccountSettings.Setup(v => v.HandleAsync(command))

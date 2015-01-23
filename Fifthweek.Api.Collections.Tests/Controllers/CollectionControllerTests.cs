@@ -36,9 +36,10 @@
         [TestMethod]
         public async Task WhenGettingLiveDateOfNewQueuedPost_ItShouldReturnResultFromLiveDateOfNewQueuedPostQuery()
         {
-            var query = new GetLiveDateOfNewQueuedPostQuery(Requester.Authenticated(UserId), CollectionId);
+            var requester = Requester.Authenticated(UserId);
+            var query = new GetLiveDateOfNewQueuedPostQuery(requester, CollectionId);
 
-            this.userContext.Setup(_ => _.TryGetUserId()).Returns(UserId);
+            this.userContext.Setup(_ => _.GetRequester()).Returns(requester);
             this.getLiveDateOfNewQueuedPost.Setup(_ => _.HandleAsync(query)).ReturnsAsync(NewQueuedPostLiveDate);
 
             var result = await this.target.GetLiveDateOfNewQueuedPost(CollectionId.Value.EncodeGuid());

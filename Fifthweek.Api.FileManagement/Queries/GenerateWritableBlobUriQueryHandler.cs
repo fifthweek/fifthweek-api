@@ -8,14 +8,14 @@
     using Fifthweek.CodeGeneration;
 
     [AutoConstructor]
-    public partial class GenerateWritableBlobUriQueryHandler : IQueryHandler<GenerateWritableBlobUriQuery, string>
+    public partial class GenerateWritableBlobUriQueryHandler : IQueryHandler<GenerateWritableBlobUriQuery, BlobSharedAccessInformation>
     {
         private readonly IBlobService blobService;
         private readonly IBlobLocationGenerator blobLocationGenerator;
         private readonly IFileSecurity fileSecurity;
         private readonly IRequesterSecurity requesterSecurity;
 
-        public async Task<string> HandleAsync(GenerateWritableBlobUriQuery query)
+        public async Task<BlobSharedAccessInformation> HandleAsync(GenerateWritableBlobUriQuery query)
         {
             query.AssertNotNull("query");
 
@@ -24,9 +24,7 @@
             await this.fileSecurity.AssertUsageAllowedAsync(userId, query.FileId);
 
             var blobLocation = this.blobLocationGenerator.GetBlobLocation(userId, query.FileId, query.Purpose);
-            var url = await this.blobService.GetBlobSasUriForWritingAsync(blobLocation.ContainerName, blobLocation.BlobName);
-
-            return url;
+            return await this.blobService.GetBlobSharedAccessInformationForWritingAsync(blobLocation.ContainerName, blobLocation.BlobName);
         }
     }
 }

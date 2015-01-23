@@ -20,11 +20,16 @@
         private const string BlobName = "blobName";
         private const string ContainerName = "containerName";
         private const string Url = "http://blah.com/blob";
+        private const string Signature = "?sig";
         private const string Purpose = "purpose";
 
         private static readonly UserId UserId = new UserId(Guid.NewGuid());
         private static readonly Requester Requester = Requester.Authenticated(UserId);
         private static readonly FileId FileId = new FileId(Guid.NewGuid());
+
+        private static readonly BlobSharedAccessInformation SharedAccessInformation =
+            new BlobSharedAccessInformation(ContainerName, BlobName, Url, Signature, DateTime.UtcNow);
+
 
         private Mock<IFileSecurity> fileSecurity;
         private Mock<IBlobService> blobService;
@@ -52,10 +57,27 @@
         }
 
         [TestMethod]
+        [ExpectedException(typeof(ArgumentNullException))]
+        public async Task WhenQueryIsNull_ItShouldThrowException()
+        {
+            await this.handler.HandleAsync(null);
+        }
+
+        [TestMethod]
         [ExpectedException(typeof(UnauthorizedException))]
         public async Task WhenUnauthenticated_ItShouldThrowUnauthorizedException()
         {
             await this.handler.HandleAsync(new GenerateWritableBlobUriQuery(Requester.Unauthenticated, FileId, Purpose));
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(UnauthorizedException))]
+        public async Task WhenCalledAndTheUserDoesNotOwnTheFile_ItShouldFail()
+        {
+            this.fileSecurity.Setup(v => v.AssertUsageAllowedAsync(UserId, FileId))
+                .Throws(new UnauthorizedException());
+
+            await this.handler.HandleAsync(new GenerateWritableBlobUriQuery(Requester, FileId, Purpose));
         }
 
         [TestMethod]
@@ -67,23 +89,12 @@
             this.blobNameCreator.Setup(v => v.GetBlobLocation(UserId, FileId, Purpose))
                 .Returns(new BlobLocation(ContainerName, BlobName));
 
-            this.blobService.Setup(v => v.GetBlobSasUriForWritingAsync(ContainerName, BlobName))
-                .ReturnsAsync(Url);
+            this.blobService.Setup(v => v.GetBlobSharedAccessInformationForWritingAsync(ContainerName, BlobName))
+                .ReturnsAsync(SharedAccessInformation);
 
             var result = await this.handler.HandleAsync(new GenerateWritableBlobUriQuery(Requester, FileId, Purpose));
 
-            Assert.AreEqual(Url, result);
-        }
-
-        [TestMethod]
-        public async Task WhenCalledAndTheUserDoesNotOwnTheFile_ItShouldFail()
-        {
-            this.fileSecurity.Setup(v => v.AssertUsageAllowedAsync(UserId, FileId))
-                .Throws(new UnauthorizedException());
-
-            Func<Task> badMethodCall = () => this.handler.HandleAsync(new GenerateWritableBlobUriQuery(Requester, FileId, Purpose));
-
-            await badMethodCall.AssertExceptionAsync<UnauthorizedException>();
+            Assert.AreEqual(SharedAccessInformation, result);
         }
     }
 }

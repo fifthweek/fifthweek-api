@@ -15,124 +15,103 @@
     [TestClass]
     public class UserContextTests
     {
+        private static readonly UserId UserId = new UserId(Guid.NewGuid());
+
         private const string AuthenticationType = "bearer";
 
         [TestMethod]
-        public void IsAuthenticatedShouldReturnTrueIfAuthenticated()
+        [ExpectedException(typeof(InvalidOperationException))]
+        public void WhenAuthenticatedButNoNameIdentifierClaimExists_GetRequesterShouldThrowAnException()
         {
             HttpContext.Current.User = new Principal(AuthenticationType);
-            Assert.IsTrue(this.userContext.IsAuthenticated);
+            Assert.AreEqual(Requester.Unauthenticated, this.userContext.GetRequester());
         }
 
         [TestMethod]
-        public void IsAuthenticatedShouldReturnFalseIfNoHttpContext()
+        public void WhenNoHttpContext_RequesterShouldBeUnauthenticated()
         {
             HttpContext.Current = null;
-            Assert.IsFalse(this.userContext.IsAuthenticated);
+            Assert.AreEqual(Requester.Unauthenticated, this.userContext.GetRequester());
         }
 
         [TestMethod]
-        public void IsAuthenticatedShouldReturnFalseIfNoUser()
+        public void WhenNoUser_RequesterShouldBeUnauthenticated()
         {
             HttpContext.Current.User = null;
-            Assert.IsFalse(this.userContext.IsAuthenticated);
+            Assert.AreEqual(Requester.Unauthenticated, this.userContext.GetRequester());
         }
 
         [TestMethod]
-        public void IsAuthenticatedShouldReturnFalseIfNoIdentity()
+        public void WhenNoIdentity_RequesterShouldBeUnauthenticated()
         {
             HttpContext.Current.User = new NullIdentityPrincipal();
-            Assert.IsFalse(this.userContext.IsAuthenticated);
+            Assert.AreEqual(Requester.Unauthenticated, this.userContext.GetRequester());
         }
 
         [TestMethod]
-        public void IsAuthenticatedShouldReturnFalseIfNoAuthenticationType()
+        public void WhenNoAuthenticationType_RequesterShouldBeUnauthenticated()
         {
             HttpContext.Current.User = new Principal(null);
-            Assert.IsFalse(this.userContext.IsAuthenticated);
+            Assert.AreEqual(Requester.Unauthenticated, this.userContext.GetRequester());
         }
 
         [TestMethod]
-        public void TryGetUsernameShouldReturnTheAuthenticatedUsername()
+        public void WhenUserIdClaimExists_RequesterShouldBeAuthenticated()
         {
             var principal = new Principal(AuthenticationType);
-            var un = "blah";
-            principal.ClaimsIdentity.AddClaim(new Claim(ClaimTypes.Name, un));
+            principal.ClaimsIdentity.AddClaim(new Claim(ClaimTypes.NameIdentifier, UserId.Value.ToString()));
 
             HttpContext.Current.User = principal;
 
-            var result = this.userContext.TryGetUsername();
+            var result = this.userContext.GetRequester();
 
-            Assert.AreEqual(un, result);
+            Assert.AreEqual(Requester.Authenticated(UserId), result);
         }
 
         [TestMethod]
-        public void TryGetUsernameShouldReturnNullIfNotAuthenticated()
+        public void WhenNotAuthenticatedButNameIdentifierClamExists_RequesterShouldBeUnauthenticated()
         {
             var principal = new Principal(null);
-            var un = "blah";
-            principal.ClaimsIdentity.AddClaim(new Claim(ClaimTypes.Name, un));
+            principal.ClaimsIdentity.AddClaim(new Claim(ClaimTypes.NameIdentifier, UserId.Value.ToString()));
 
             HttpContext.Current.User = principal;
 
-            var result = this.userContext.TryGetUsername();
+            var result = this.userContext.GetRequester();
 
-            Assert.IsNull(result);
+            Assert.AreEqual(Requester.Unauthenticated, result);
         }
 
         [TestMethod]
-        public void TryGetUserIdShouldReturnTheAuthenticatedUserId()
+        public void IsInRoleShouldReturnTrueIfTheAuthenticatedUserIsInRole()
         {
             var principal = new Principal(AuthenticationType);
-            var id = Guid.NewGuid();
-            principal.ClaimsIdentity.AddClaim(new Claim(ClaimTypes.NameIdentifier, id.ToString()));
-
-            HttpContext.Current.User = principal;
-
-            var result = this.userContext.TryGetUserId();
-
-            Assert.AreEqual(new UserId(id), result);
-        }
-
-        [TestMethod]
-        public void TryGetUserIdShouldReturnNullIfNotAuthenticated()
-        {
-            var principal = new Principal(null);
-            var id = Guid.NewGuid();
-            principal.ClaimsIdentity.AddClaim(new Claim(ClaimTypes.NameIdentifier, id.ToString()));
-
-            HttpContext.Current.User = principal;
-
-            var result = this.userContext.TryGetUserId();
-
-            Assert.IsNull(result);
-        }
-
-        [TestMethod]
-        public void IsUserInRoleShouldReturnTrueIfTheAuthenticatedUserIsInRole()
-        {
-            var principal = new Principal(AuthenticationType);
+            principal.ClaimsIdentity.AddClaim(new Claim(ClaimTypes.NameIdentifier, UserId.Value.ToString()));
             principal.ClaimsIdentity.AddClaim(new Claim(ClaimTypes.Role, "One"));
             principal.ClaimsIdentity.AddClaim(new Claim(ClaimTypes.Role, "Two"));
             principal.ClaimsIdentity.AddClaim(new Claim(ClaimTypes.Role, "Three"));
 
             HttpContext.Current.User = principal;
 
-            Assert.IsTrue(this.userContext.IsUserInRole("Two"));
-            Assert.IsFalse(this.userContext.IsUserInRole("Four"));
+            var result = this.userContext.GetRequester();
+
+            Assert.IsTrue(result.IsInRole("Two"));
+            Assert.IsFalse(result.IsInRole("Four"));
         }
 
         [TestMethod]
-        public void IsUserInRoleShouldReturnFalseIfNotAuthenticated()
+        public void IsInRoleShouldReturnFalseIfNotAuthenticated()
         {
             var principal = new Principal(null);
+            principal.ClaimsIdentity.AddClaim(new Claim(ClaimTypes.NameIdentifier, UserId.Value.ToString()));
             principal.ClaimsIdentity.AddClaim(new Claim(ClaimTypes.Role, "One"));
             principal.ClaimsIdentity.AddClaim(new Claim(ClaimTypes.Role, "Two"));
             principal.ClaimsIdentity.AddClaim(new Claim(ClaimTypes.Role, "Three"));
 
             HttpContext.Current.User = principal;
 
-            Assert.IsFalse(this.userContext.IsUserInRole("Two"));
+            var result = this.userContext.GetRequester();
+
+            Assert.IsFalse(result.IsInRole("Two"));
         }
 
         [TestInitialize]

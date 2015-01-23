@@ -2,6 +2,7 @@
 {
     using System;
 
+    using Fifthweek.Api.Azure;
     using Fifthweek.Api.Core;
     using Fifthweek.CodeGeneration;
     using Fifthweek.Shared;
@@ -10,8 +11,8 @@
     [AutoEqualityMembers]
     public partial class GrantedUpload
     {
-        public string FileId { get; private set; }
+        public FileId FileId { get; private set; }
 
-        public string UploadUri { get; private set; }
+        public BlobSharedAccessInformation AccessInformation { get; private set; }
     }
 }

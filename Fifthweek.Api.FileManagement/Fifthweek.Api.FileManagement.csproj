@@ -99,6 +99,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Queries\GetUserAccessSignaturesQueryHandler.cs" />
+    <Compile Include="Queries\GetUserAccessSignaturesQuery.cs" />
+    <Compile Include="Queries\UserAccessSignatures.cs" />
     <Compile Include="ScheduleGarbageCollectionStatement.cs" />
     <Compile Include="AutofacRegistration.cs" />
     <Compile Include="BlobLocation.cs" />

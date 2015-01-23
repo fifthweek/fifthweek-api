@@ -3,6 +3,7 @@ using System.Linq;
 
 
 
+
 namespace Fifthweek.Api.Aggregations.Controllers
 {
     using System;
@@ -41,34 +42,6 @@ namespace Fifthweek.Api.Aggregations.Controllers
     }
 
 }
-namespace Fifthweek.Api.Aggregations.Controllers
-{
-    using System;
-    using System.Linq;
-    using System.Threading.Tasks;
-    using System.Web.Http;
-    using Fifthweek.Api.Core;
-    using Fifthweek.Api.Identity.Membership;
-    using Fifthweek.Api.Identity.OAuth;
-    using Fifthweek.Api.Subscriptions;
-    using Fifthweek.Api.Subscriptions.Controllers;
-    using Fifthweek.Api.Subscriptions.Queries;
-    using Fifthweek.CodeGeneration;
-    using Fifthweek.Api.Persistence.Identity;
-    using Fifthweek.Api.Aggregations.Queries;
-    using System.Collections.Generic;
-    public partial class UserStateResponse 
-    {
-        public UserStateResponse(
-            Fifthweek.Api.Aggregations.Controllers.UserStateResponse.CreatorStatusResponse creatorStatus, 
-            Fifthweek.Api.Aggregations.Controllers.UserStateResponse.ChannelsAndCollectionsResponse createdChannelsAndCollections)
-        {
-            this.CreatorStatus = creatorStatus;
-            this.CreatedChannelsAndCollections = createdChannelsAndCollections;
-        }
-    }
-
-}
 namespace Fifthweek.Api.Aggregations.Queries
 {
     using System;
@@ -80,31 +53,22 @@ namespace Fifthweek.Api.Aggregations.Queries
     using System.Threading.Tasks;
     using Fifthweek.Api.Subscriptions.Queries;
     using Fifthweek.Api.Collections.Queries;
+    using System.Collections.Generic;
+    using Fifthweek.Api.FileManagement.Queries;
+    using Fifthweek.Api.Persistence.Identity;
     public partial class GetUserStateQuery 
     {
         public GetUserStateQuery(
-            Fifthweek.Api.Identity.Membership.UserId requestedUserId, 
             Fifthweek.Api.Identity.Membership.Requester requester, 
-            System.Boolean isCreator)
+            Fifthweek.Api.Identity.Membership.UserId requestedUserId)
         {
-            if (requestedUserId == null)
-            {
-                throw new ArgumentNullException("requestedUserId");
-            }
-
             if (requester == null)
             {
                 throw new ArgumentNullException("requester");
             }
 
-            if (isCreator == null)
-            {
-                throw new ArgumentNullException("isCreator");
-            }
-
-            this.RequestedUserId = requestedUserId;
             this.Requester = requester;
-            this.IsCreator = isCreator;
+            this.RequestedUserId = requestedUserId;
         }
     }
 
@@ -120,12 +84,24 @@ namespace Fifthweek.Api.Aggregations.Queries
     using System.Threading.Tasks;
     using Fifthweek.Api.Subscriptions.Queries;
     using Fifthweek.Api.Collections.Queries;
+    using System.Collections.Generic;
+    using Fifthweek.Api.FileManagement.Queries;
+    using Fifthweek.Api.Persistence.Identity;
     public partial class UserState 
     {
         public UserState(
+            Fifthweek.Api.Identity.Membership.UserId userId, 
+            Fifthweek.Api.FileManagement.Queries.UserAccessSignatures accessSignatures, 
             Fifthweek.Api.Subscriptions.CreatorStatus creatorStatus, 
             Fifthweek.Api.Collections.Queries.ChannelsAndCollections createdChannelsAndCollections)
         {
+            if (accessSignatures == null)
+            {
+                throw new ArgumentNullException("accessSignatures");
+            }
+
+            this.UserId = userId;
+            this.AccessSignatures = accessSignatures;
             this.CreatorStatus = creatorStatus;
             this.CreatedChannelsAndCollections = createdChannelsAndCollections;
         }
@@ -143,16 +119,25 @@ namespace Fifthweek.Api.Aggregations.Queries
     using System.Threading.Tasks;
     using Fifthweek.Api.Subscriptions.Queries;
     using Fifthweek.Api.Collections.Queries;
+    using System.Collections.Generic;
+    using Fifthweek.Api.FileManagement.Queries;
+    using Fifthweek.Api.Persistence.Identity;
     public partial class GetUserStateQueryHandler 
     {
         public GetUserStateQueryHandler(
             Fifthweek.Api.Identity.Membership.IRequesterSecurity requesterSecurity, 
+            Fifthweek.Api.Core.IQueryHandler<Fifthweek.Api.FileManagement.Queries.GetUserAccessSignaturesQuery,Fifthweek.Api.FileManagement.Queries.UserAccessSignatures> getUserAccessSignatures, 
             Fifthweek.Api.Core.IQueryHandler<Fifthweek.Api.Subscriptions.Queries.GetCreatorStatusQuery,Fifthweek.Api.Subscriptions.CreatorStatus> getCreatorStatus, 
             Fifthweek.Api.Core.IQueryHandler<Fifthweek.Api.Collections.Queries.GetCreatedChannelsAndCollectionsQuery,Fifthweek.Api.Collections.Queries.ChannelsAndCollections> getCreatedChannelsAndCollections)
         {
             if (requesterSecurity == null)
             {
                 throw new ArgumentNullException("requesterSecurity");
+            }
+
+            if (getUserAccessSignatures == null)
+            {
+                throw new ArgumentNullException("getUserAccessSignatures");
             }
 
             if (getCreatorStatus == null)
@@ -166,176 +151,12 @@ namespace Fifthweek.Api.Aggregations.Queries
             }
 
             this.requesterSecurity = requesterSecurity;
+            this.getUserAccessSignatures = getUserAccessSignatures;
             this.getCreatorStatus = getCreatorStatus;
             this.getCreatedChannelsAndCollections = getCreatedChannelsAndCollections;
         }
     }
 
-}
-namespace Fifthweek.Api.Aggregations.Controllers
-{
-    using System;
-    using System.Linq;
-    using System.Threading.Tasks;
-    using System.Web.Http;
-    using Fifthweek.Api.Core;
-    using Fifthweek.Api.Identity.Membership;
-    using Fifthweek.Api.Identity.OAuth;
-    using Fifthweek.Api.Subscriptions;
-    using Fifthweek.Api.Subscriptions.Controllers;
-    using Fifthweek.Api.Subscriptions.Queries;
-    using Fifthweek.CodeGeneration;
-    using Fifthweek.Api.Persistence.Identity;
-    using Fifthweek.Api.Aggregations.Queries;
-    using System.Collections.Generic;
-    public partial class UserStateResponse
-    {
-        public partial class ChannelsAndCollectionsResponse
-        {
-            public partial class ChannelResponse 
-            {
-        public ChannelResponse(
-            System.String channelId, 
-            System.String name, 
-            System.Collections.Generic.IReadOnlyList<Fifthweek.Api.Aggregations.Controllers.UserStateResponse.ChannelsAndCollectionsResponse.CollectionResponse> collections)
-        {
-            if (channelId == null)
-            {
-                throw new ArgumentNullException("channelId");
-            }
-
-            if (name == null)
-            {
-                throw new ArgumentNullException("name");
-            }
-
-            if (collections == null)
-            {
-                throw new ArgumentNullException("collections");
-            }
-
-            this.ChannelId = channelId;
-            this.Name = name;
-            this.Collections = collections;
-        }
-            }
-
-            }
-        }
-}
-namespace Fifthweek.Api.Aggregations.Controllers
-{
-    using System;
-    using System.Linq;
-    using System.Threading.Tasks;
-    using System.Web.Http;
-    using Fifthweek.Api.Core;
-    using Fifthweek.Api.Identity.Membership;
-    using Fifthweek.Api.Identity.OAuth;
-    using Fifthweek.Api.Subscriptions;
-    using Fifthweek.Api.Subscriptions.Controllers;
-    using Fifthweek.Api.Subscriptions.Queries;
-    using Fifthweek.CodeGeneration;
-    using Fifthweek.Api.Persistence.Identity;
-    using Fifthweek.Api.Aggregations.Queries;
-    using System.Collections.Generic;
-    public partial class UserStateResponse
-    {
-        public partial class ChannelsAndCollectionsResponse 
-        {
-        public ChannelsAndCollectionsResponse(
-            System.Collections.Generic.IReadOnlyList<Fifthweek.Api.Aggregations.Controllers.UserStateResponse.ChannelsAndCollectionsResponse.ChannelResponse> channels)
-        {
-            if (channels == null)
-            {
-                throw new ArgumentNullException("channels");
-            }
-
-            this.Channels = channels;
-        }
-        }
-
-        }
-}
-namespace Fifthweek.Api.Aggregations.Controllers
-{
-    using System;
-    using System.Linq;
-    using System.Threading.Tasks;
-    using System.Web.Http;
-    using Fifthweek.Api.Core;
-    using Fifthweek.Api.Identity.Membership;
-    using Fifthweek.Api.Identity.OAuth;
-    using Fifthweek.Api.Subscriptions;
-    using Fifthweek.Api.Subscriptions.Controllers;
-    using Fifthweek.Api.Subscriptions.Queries;
-    using Fifthweek.CodeGeneration;
-    using Fifthweek.Api.Persistence.Identity;
-    using Fifthweek.Api.Aggregations.Queries;
-    using System.Collections.Generic;
-    public partial class UserStateResponse
-    {
-        public partial class ChannelsAndCollectionsResponse
-        {
-            public partial class CollectionResponse 
-            {
-        public CollectionResponse(
-            System.String collectionId, 
-            System.String name)
-        {
-            if (collectionId == null)
-            {
-                throw new ArgumentNullException("collectionId");
-            }
-
-            if (name == null)
-            {
-                throw new ArgumentNullException("name");
-            }
-
-            this.CollectionId = collectionId;
-            this.Name = name;
-        }
-            }
-
-            }
-        }
-}
-namespace Fifthweek.Api.Aggregations.Controllers
-{
-    using System;
-    using System.Linq;
-    using System.Threading.Tasks;
-    using System.Web.Http;
-    using Fifthweek.Api.Core;
-    using Fifthweek.Api.Identity.Membership;
-    using Fifthweek.Api.Identity.OAuth;
-    using Fifthweek.Api.Subscriptions;
-    using Fifthweek.Api.Subscriptions.Controllers;
-    using Fifthweek.Api.Subscriptions.Queries;
-    using Fifthweek.CodeGeneration;
-    using Fifthweek.Api.Persistence.Identity;
-    using Fifthweek.Api.Aggregations.Queries;
-    using System.Collections.Generic;
-    public partial class UserStateResponse
-    {
-        public partial class CreatorStatusResponse 
-        {
-        public CreatorStatusResponse(
-            System.String subscriptionId, 
-            System.Boolean mustWriteFirstPost)
-        {
-            if (mustWriteFirstPost == null)
-            {
-                throw new ArgumentNullException("mustWriteFirstPost");
-            }
-
-            this.SubscriptionId = subscriptionId;
-            this.MustWriteFirstPost = mustWriteFirstPost;
-        }
-        }
-
-        }
 }
 
 namespace Fifthweek.Api.Aggregations.Queries
@@ -349,11 +170,14 @@ namespace Fifthweek.Api.Aggregations.Queries
     using System.Threading.Tasks;
     using Fifthweek.Api.Subscriptions.Queries;
     using Fifthweek.Api.Collections.Queries;
+    using System.Collections.Generic;
+    using Fifthweek.Api.FileManagement.Queries;
+    using Fifthweek.Api.Persistence.Identity;
     public partial class GetUserStateQuery 
     {
         public override string ToString()
         {
-            return string.Format("GetUserStateQuery({0}, {1}, {2})", this.RequestedUserId == null ? "null" : this.RequestedUserId.ToString(), this.Requester == null ? "null" : this.Requester.ToString(), this.IsCreator == null ? "null" : this.IsCreator.ToString());
+            return string.Format("GetUserStateQuery({0}, {1})", this.Requester == null ? "null" : this.Requester.ToString(), this.RequestedUserId == null ? "null" : this.RequestedUserId.ToString());
         }
 
         public override bool Equals(object obj)
@@ -381,26 +205,20 @@ namespace Fifthweek.Api.Aggregations.Queries
             unchecked
             {
                 int hashCode = 0;
-                hashCode = (hashCode * 397) ^ (this.RequestedUserId != null ? this.RequestedUserId.GetHashCode() : 0);
                 hashCode = (hashCode * 397) ^ (this.Requester != null ? this.Requester.GetHashCode() : 0);
-                hashCode = (hashCode * 397) ^ (this.IsCreator != null ? this.IsCreator.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.RequestedUserId != null ? this.RequestedUserId.GetHashCode() : 0);
                 return hashCode;
             }
         }
 
         protected bool Equals(GetUserStateQuery other)
         {
-            if (!object.Equals(this.RequestedUserId, other.RequestedUserId))
-            {
-                return false;
-            }
-
             if (!object.Equals(this.Requester, other.Requester))
             {
                 return false;
             }
 
-            if (!object.Equals(this.IsCreator, other.IsCreator))
+            if (!object.Equals(this.RequestedUserId, other.RequestedUserId))
             {
                 return false;
             }
@@ -421,11 +239,14 @@ namespace Fifthweek.Api.Aggregations.Queries
     using System.Threading.Tasks;
     using Fifthweek.Api.Subscriptions.Queries;
     using Fifthweek.Api.Collections.Queries;
+    using System.Collections.Generic;
+    using Fifthweek.Api.FileManagement.Queries;
+    using Fifthweek.Api.Persistence.Identity;
     public partial class UserState 
     {
         public override string ToString()
         {
-            return string.Format("UserState({0}, {1})", this.CreatorStatus == null ? "null" : this.CreatorStatus.ToString(), this.CreatedChannelsAndCollections == null ? "null" : this.CreatedChannelsAndCollections.ToString());
+            return string.Format("UserState({0}, {1}, {2}, {3})", this.UserId == null ? "null" : this.UserId.ToString(), this.AccessSignatures == null ? "null" : this.AccessSignatures.ToString(), this.CreatorStatus == null ? "null" : this.CreatorStatus.ToString(), this.CreatedChannelsAndCollections == null ? "null" : this.CreatedChannelsAndCollections.ToString());
         }
 
         public override bool Equals(object obj)
@@ -453,6 +274,8 @@ namespace Fifthweek.Api.Aggregations.Queries
             unchecked
             {
                 int hashCode = 0;
+                hashCode = (hashCode * 397) ^ (this.UserId != null ? this.UserId.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.AccessSignatures != null ? this.AccessSignatures.GetHashCode() : 0);
                 hashCode = (hashCode * 397) ^ (this.CreatorStatus != null ? this.CreatorStatus.GetHashCode() : 0);
                 hashCode = (hashCode * 397) ^ (this.CreatedChannelsAndCollections != null ? this.CreatedChannelsAndCollections.GetHashCode() : 0);
                 return hashCode;
@@ -461,6 +284,16 @@ namespace Fifthweek.Api.Aggregations.Queries
 
         protected bool Equals(UserState other)
         {
+            if (!object.Equals(this.UserId, other.UserId))
+            {
+                return false;
+            }
+
+            if (!object.Equals(this.AccessSignatures, other.AccessSignatures))
+            {
+                return false;
+            }
+
             if (!object.Equals(this.CreatorStatus, other.CreatorStatus))
             {
                 return false;
@@ -475,79 +308,5 @@ namespace Fifthweek.Api.Aggregations.Queries
         }
     }
 
-}
-namespace Fifthweek.Api.Aggregations.Controllers
-{
-    using System;
-    using System.Linq;
-    using System.Threading.Tasks;
-    using System.Web.Http;
-    using Fifthweek.Api.Core;
-    using Fifthweek.Api.Identity.Membership;
-    using Fifthweek.Api.Identity.OAuth;
-    using Fifthweek.Api.Subscriptions;
-    using Fifthweek.Api.Subscriptions.Controllers;
-    using Fifthweek.Api.Subscriptions.Queries;
-    using Fifthweek.CodeGeneration;
-    using Fifthweek.Api.Persistence.Identity;
-    using Fifthweek.Api.Aggregations.Queries;
-    using System.Collections.Generic;
-    public partial class UserStateResponse
-    {
-        public partial class CreatorStatusResponse 
-        {
-        public override string ToString()
-        {
-            return string.Format("CreatorStatusResponse(\"{0}\", {1})", this.SubscriptionId == null ? "null" : this.SubscriptionId.ToString(), this.MustWriteFirstPost == null ? "null" : this.MustWriteFirstPost.ToString());
-        }
-
-        public override bool Equals(object obj)
-        {
-            if (ReferenceEquals(null, obj))
-            {
-                return false;
-            }
-
-            if (ReferenceEquals(this, obj))
-            {
-                return true;
-            }
-
-            if (obj.GetType() != this.GetType())
-            {
-                return false;
-            }
-
-            return this.Equals((CreatorStatusResponse)obj);
-        }
-
-        public override int GetHashCode()
-        {
-            unchecked
-            {
-                int hashCode = 0;
-                hashCode = (hashCode * 397) ^ (this.SubscriptionId != null ? this.SubscriptionId.GetHashCode() : 0);
-                hashCode = (hashCode * 397) ^ (this.MustWriteFirstPost != null ? this.MustWriteFirstPost.GetHashCode() : 0);
-                return hashCode;
-            }
-        }
-
-        protected bool Equals(CreatorStatusResponse other)
-        {
-            if (!object.Equals(this.SubscriptionId, other.SubscriptionId))
-            {
-                return false;
-            }
-
-            if (!object.Equals(this.MustWriteFirstPost, other.MustWriteFirstPost))
-            {
-                return false;
-            }
-
-            return true;
-        }
-        }
-
-        }
 }
 

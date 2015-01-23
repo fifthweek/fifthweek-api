@@ -1,6 +1,7 @@
 ﻿namespace Fifthweek.Api.Identity.OAuth
 {
     using System;
+    using System.Collections.Generic;
     using System.Linq;
     using System.Security.Claims;
     using System.Web;
@@ -9,53 +10,27 @@
 
     public class UserContext : IUserContext
     {
-        public bool IsAuthenticated
-        {
-            get
-            {
-                var identity = this.TryGetIdentity();
-                return identity != null && identity.IsAuthenticated;
-            }
-        }
-
-        public string TryGetUsername()
+        public Requester GetRequester()
         {
             var identity = this.TryGetIdentity();
             if (identity != null && identity.IsAuthenticated)
             {
-                return identity.Name;
-            }
-
-            return null;
-        }
-
-        public UserId TryGetUserId()
-        {
-            var identity = this.TryGetIdentity();
-            if (identity != null && identity.IsAuthenticated)
-            {
-                var claim = identity.FindFirst(ClaimTypes.NameIdentifier);
-                if (claim == null || claim.Value == null)
+                var userIdClaim = identity.FindFirst(ClaimTypes.NameIdentifier);
+                if (userIdClaim == null || userIdClaim.Value == null)
                 {
                     throw new InvalidOperationException("The authenticated user does not have a UserId present in their authentication token.");
                 }
 
-                return new UserId(Guid.Parse(claim.Value));
+                var userId = new UserId(Guid.Parse(userIdClaim.Value));
+                var roles = identity.FindAll(ClaimTypes.Role).Select(v => v.Value).ToList();
+             
+                // This isn't currently used.
+                var username = identity.Name;
+
+                return Requester.Authenticated(userId, roles);
             }
 
-            return null;
-        }
-
-        public bool IsUserInRole(string role)
-        {
-            var identity = this.TryGetIdentity();
-
-            if (identity != null && identity.IsAuthenticated)
-            {
-                return identity.FindAll(ClaimTypes.Role).Any(v => v.Value == role);
-            }
-
-            return false;
+            return Requester.Unauthenticated;
         }
 
         private ClaimsIdentity TryGetIdentity()

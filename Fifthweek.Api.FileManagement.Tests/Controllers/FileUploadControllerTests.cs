@@ -3,6 +3,7 @@
     using System;
     using System.Threading.Tasks;
 
+    using Fifthweek.Api.Azure;
     using Fifthweek.Api.Core;
     using Fifthweek.Api.FileManagement.Commands;
     using Fifthweek.Api.FileManagement.Controllers;
@@ -24,52 +25,17 @@
         
         private Mock<IGuidCreator> guidCreator;
         private Mock<ICommandHandler<InitiateFileUploadCommand>> initiateFileUpload;
-        private Mock<IQueryHandler<GenerateWritableBlobUriQuery, string>> generateWritableBlobUri;
+        private Mock<IQueryHandler<GenerateWritableBlobUriQuery, BlobSharedAccessInformation>> generateWritableBlobUri;
         private Mock<ICommandHandler<CompleteFileUploadCommand>> completeFileUpload;
         private Mock<IUserContext> userContext;
         private FileUploadController target;
-
-        [TestMethod]
-        public async Task WhenAnUploadRequestIsPosted_ItShouldInitiateTheFileUploadAndGenerateAWritableBlobUri()
-        {
-            this.guidCreator.Setup(v => v.CreateSqlSequential()).Returns(GeneratedSqlGuid).Verifiable();
-
-            const string UploadUri = "/test";
-            const string FilePath = @"C:\test\myfile.jpeg";
-            const string Purpose = "profile-picture";
-
-            this.userContext.Setup(v => v.TryGetUserId()).Returns(UserId).Verifiable();
-            this.initiateFileUpload.Setup(v => v.HandleAsync(new InitiateFileUploadCommand(Requester, FileId, FilePath, Purpose))).Returns(Task.FromResult(0)).Verifiable();
-            this.generateWritableBlobUri.Setup(v => v.HandleAsync(new GenerateWritableBlobUriQuery(Requester, FileId, Purpose))).ReturnsAsync(UploadUri).Verifiable();
-
-            var response = await this.target.PostUploadRequestAsync(new UploadRequest(FilePath, Purpose));
-
-            this.guidCreator.Verify();
-            this.userContext.Verify();
-            this.initiateFileUpload.Verify();
-            this.generateWritableBlobUri.Verify();
-
-            Assert.AreEqual(new GrantedUpload(GeneratedSqlGuid.EncodeGuid(), UploadUri), response);
-        }
-
-        [TestMethod]
-        public async Task WhenAnUploadCompleteNotificationIsPosted_ItShouldCompleteTheFileUpload()
-        {
-            this.userContext.Setup(v => v.TryGetUserId()).Returns(UserId).Verifiable();
-            this.completeFileUpload.Setup(v => v.HandleAsync(new CompleteFileUploadCommand(Requester, FileId))).Returns(Task.FromResult(0)).Verifiable();
-
-            await this.target.PostUploadCompleteNotificationAsync(GeneratedSqlGuid.EncodeGuid());
-
-            this.userContext.Verify();
-            this.completeFileUpload.Verify();
-        }
 
         [TestInitialize]
         public void TestInitialize()
         {
             this.guidCreator = new Mock<IGuidCreator>();
             this.initiateFileUpload = new Mock<ICommandHandler<InitiateFileUploadCommand>>();
-            this.generateWritableBlobUri = new Mock<IQueryHandler<GenerateWritableBlobUriQuery, string>>();
+            this.generateWritableBlobUri = new Mock<IQueryHandler<GenerateWritableBlobUriQuery, BlobSharedAccessInformation>>();
             this.completeFileUpload = new Mock<ICommandHandler<CompleteFileUploadCommand>>();
             this.userContext = new Mock<IUserContext>();
 
@@ -79,6 +45,68 @@
                 this.generateWritableBlobUri.Object,
                 this.completeFileUpload.Object,
                 this.userContext.Object);
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(BadRequestException))]
+        public async Task WhenAnUploadRequestIsPosted_ItShouldCheckDataIsNotNull()
+        {
+            await this.target.PostUploadRequestAsync(null);
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(BadRequestException))]
+        public async Task WhenAnUploadRequestIsPosted_ItShouldCheckFilePathIsNotNull()
+        {
+            await this.target.PostUploadRequestAsync(new UploadRequest { Purpose = "purpose" });
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(BadRequestException))]
+        public async Task WhenAnUploadRequestIsPosted_ItShouldCheckPurposeIsNotNull()
+        {
+            await this.target.PostUploadRequestAsync(new UploadRequest { FilePath = "file.jpeg" });
+        }
+
+        [TestMethod]
+        public async Task WhenAnUploadRequestIsPosted_ItShouldInitiateTheFileUploadAndGenerateAWritableBlobUri()
+        {
+            this.guidCreator.Setup(v => v.CreateSqlSequential()).Returns(GeneratedSqlGuid);
+
+            const string FilePath = @"C:\test\myfile.jpeg";
+            const string Purpose = "profile-picture";
+
+            this.userContext.Setup(v => v.GetRequester()).Returns(Requester);
+
+            this.initiateFileUpload.Setup(v => v.HandleAsync(new InitiateFileUploadCommand(Requester, FileId, FilePath, Purpose)))
+                .Returns(Task.FromResult(0));
+
+            var accessInformation = new BlobSharedAccessInformation("containerName", "blobName", "uri", "sig", DateTime.UtcNow);
+            this.generateWritableBlobUri.Setup(v => v.HandleAsync(new GenerateWritableBlobUriQuery(Requester, FileId, Purpose)))
+                .ReturnsAsync(accessInformation);
+
+            var response = await this.target.PostUploadRequestAsync(new UploadRequest(FilePath, Purpose));
+
+            Assert.AreEqual(new GrantedUpload(FileId, accessInformation), response);
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(BadRequestException))]
+        public async Task WhenAnUploadCompleteNotificationIsPosted_ItShouldCheckFileIdIsNotNull()
+        {
+            await this.target.PostUploadCompleteNotificationAsync(null);
+        }
+
+        [TestMethod]
+        public async Task WhenAnUploadCompleteNotificationIsPosted_ItShouldCompleteTheFileUpload()
+        {
+            this.userContext.Setup(v => v.GetRequester()).Returns(Requester).Verifiable();
+            this.completeFileUpload.Setup(v => v.HandleAsync(new CompleteFileUploadCommand(Requester, FileId))).Returns(Task.FromResult(0)).Verifiable();
+
+            await this.target.PostUploadCompleteNotificationAsync(GeneratedSqlGuid.EncodeGuid());
+
+            this.userContext.Verify();
+            this.completeFileUpload.Verify();
         }
     }
 }

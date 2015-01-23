@@ -1,12 +1,13 @@
 ﻿namespace Fifthweek.Api.FileManagement.Queries
 {
+    using Fifthweek.Api.Azure;
     using Fifthweek.Api.Core;
     using Fifthweek.Api.Identity.Membership;
     using Fifthweek.CodeGeneration;
 
     [AutoConstructor]
     [AutoEqualityMembers]
-    public partial class GenerateWritableBlobUriQuery : IQuery<string>
+    public partial class GenerateWritableBlobUriQuery : IQuery<BlobSharedAccessInformation>
     {
         public Requester Requester { get; private set; }
 

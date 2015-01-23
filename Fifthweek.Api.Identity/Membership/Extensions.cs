@@ -5,12 +5,5 @@
 
     public static class Extensions
     {
-        public static Requester GetRequester(this IUserContext userContext)
-        {
-            var userId = userContext.TryGetUserId();
-            return userId != null 
-                ? Requester.Authenticated(userId) 
-                : Requester.Unauthenticated;
-        }
     }
 }

@@ -14,7 +14,12 @@
                 return new BlobLocation(Constants.PublicFileBlobContainerName, fileId.Value.EncodeGuid());
             }
 
-            return new BlobLocation(userId.Value.ToString("N"), fileId.Value.ToString("N"));
+            return new BlobLocation(this.GetBlobContainerName(userId), fileId.Value.ToString("N"));
+        }
+
+        public string GetBlobContainerName(UserId userId)
+        {
+            return userId.Value.ToString("N");
         }
     }
 }

@@ -20,6 +20,7 @@
     public class SubscriptionControllerTests
     {
         private static readonly UserId UserId = new UserId(Guid.NewGuid());
+        private static readonly Requester Requester = Requester.Authenticated(UserId);
         private static readonly SubscriptionId SubscriptionId = new SubscriptionId(Guid.NewGuid());
         private static readonly FileId HeaderImageFileId = new FileId(Guid.NewGuid());
         private Mock<ICommandHandler<CreateSubscriptionCommand>> createSubscription;
@@ -48,7 +49,7 @@
             var data = NewCreateSubscriptionData();
             var command = NewCreateSubscriptionCommand(UserId, SubscriptionId, data);
 
-            this.userContext.Setup(v => v.TryGetUserId()).Returns(UserId);
+            this.userContext.Setup(v => v.GetRequester()).Returns(Requester);
             this.guidCreator.Setup(_ => _.CreateSqlSequential()).Returns(SubscriptionId.Value);
             this.createSubscription.Setup(v => v.HandleAsync(command)).Returns(Task.FromResult(0)).Verifiable();
 
@@ -64,7 +65,7 @@
             var data = NewUpdatedSubscriptionData();
             var command = NewUpdateSubscriptionCommand(UserId, SubscriptionId, data);
 
-            this.userContext.Setup(v => v.TryGetUserId()).Returns(UserId);
+            this.userContext.Setup(v => v.GetRequester()).Returns(Requester);
             this.updateSubscription.Setup(v => v.HandleAsync(command)).Returns(Task.FromResult(0)).Verifiable();
 
             var result = await this.target.PutSubscription(SubscriptionId.Value.EncodeGuid(), data);

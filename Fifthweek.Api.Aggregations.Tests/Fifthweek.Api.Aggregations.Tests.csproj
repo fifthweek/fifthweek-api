@@ -96,6 +96,10 @@
       <Project>{CC71B97B-13CC-4333-A681-D192DD87BCCD}</Project>
       <Name>Fifthweek.Api.Aggregations</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Fifthweek.Api.Azure\Fifthweek.Api.Azure.csproj">
+      <Project>{ABC43617-3AAA-4B7A-B4DC-D10E023F1846}</Project>
+      <Name>Fifthweek.Api.Azure</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Fifthweek.Api.Collections\Fifthweek.Api.Collections.csproj">
       <Project>{92FF5E2B-F153-433F-92F6-DD580D9E09B8}</Project>
       <Name>Fifthweek.Api.Collections</Name>
@@ -103,6 +107,10 @@
     <ProjectReference Include="..\Fifthweek.Api.Core\Fifthweek.Api.Core.csproj">
       <Project>{BD52863E-063D-45A5-9CA8-7541804D1313}</Project>
       <Name>Fifthweek.Api.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Fifthweek.Api.FileManagement\Fifthweek.Api.FileManagement.csproj">
+      <Project>{3242E7FC-35CE-4E69-B07B-B8DCB3C69348}</Project>
+      <Name>Fifthweek.Api.FileManagement</Name>
     </ProjectReference>
     <ProjectReference Include="..\Fifthweek.Api.Identity.Tests.Shared\Fifthweek.Api.Identity.Tests.Shared.csproj">
       <Project>{45E1C6C7-845A-480F-BBBC-5DF3135D1E19}</Project>

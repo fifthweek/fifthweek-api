@@ -6,7 +6,17 @@ using System.Linq;
 namespace Fifthweek.Api.FileManagement
 {
     using System;
+    using System.Linq;
     using Fifthweek.CodeGeneration;
+    using Fifthweek.Api.Core;
+    using Fifthweek.Shared;
+    using System.Threading.Tasks;
+    using Dapper;
+    using Fifthweek.Api.Identity.Membership;
+    using Fifthweek.Api.Persistence;
+    using System.Security;
+    using Fifthweek.Api.Azure;
+    using Fifthweek.WebJobs.GarbageCollection.Shared;
     [Newtonsoft.Json.JsonConverter(typeof(JsonConverter))]
     public partial class FileId 
     {
@@ -43,6 +53,15 @@ namespace Fifthweek.Api.FileManagement
     using Fifthweek.Api.Core;
     using Fifthweek.CodeGeneration;
     using Fifthweek.Shared;
+    using System;
+    using System.Linq;
+    using System.Threading.Tasks;
+    using Dapper;
+    using Fifthweek.Api.Identity.Membership;
+    using Fifthweek.Api.Persistence;
+    using System.Security;
+    using Fifthweek.Api.Azure;
+    using Fifthweek.WebJobs.GarbageCollection.Shared;
     public partial class BlobLocation 
     {
         public BlobLocation(
@@ -65,10 +84,46 @@ namespace Fifthweek.Api.FileManagement
     }
 
 }
+namespace Fifthweek.Api.FileManagement
+{
+    using System;
+    using System.Linq;
+    using Fifthweek.CodeGeneration;
+    using Fifthweek.Api.Core;
+    using Fifthweek.Shared;
+    using System.Threading.Tasks;
+    using Dapper;
+    using Fifthweek.Api.Identity.Membership;
+    using Fifthweek.Api.Persistence;
+    using System.Security;
+    using Fifthweek.Api.Azure;
+    using Fifthweek.WebJobs.GarbageCollection.Shared;
+    public partial class FileId 
+    {
+        public FileId(
+            System.Guid value)
+        {
+            if (value == null)
+            {
+                throw new ArgumentNullException("value");
+            }
+
+            this.Value = value;
+        }
+    }
+
+}
 namespace Fifthweek.Api.FileManagement.Commands
 {
+    using System;
+    using System.Linq;
     using Fifthweek.Api.Identity.Membership;
     using Fifthweek.CodeGeneration;
+    using System.Threading.Tasks;
+    using Fifthweek.Api.Azure;
+    using Fifthweek.Api.Core;
+    using Fifthweek.Shared;
+    using Fifthweek.WebJobs.Files.Shared;
     public partial class CompleteFileUploadCommand 
     {
         public CompleteFileUploadCommand(
@@ -93,11 +148,13 @@ namespace Fifthweek.Api.FileManagement.Commands
 }
 namespace Fifthweek.Api.FileManagement.Commands
 {
+    using System;
+    using System.Linq;
+    using Fifthweek.Api.Identity.Membership;
+    using Fifthweek.CodeGeneration;
     using System.Threading.Tasks;
     using Fifthweek.Api.Azure;
     using Fifthweek.Api.Core;
-    using Fifthweek.Api.Identity.Membership;
-    using Fifthweek.CodeGeneration;
     using Fifthweek.Shared;
     using Fifthweek.WebJobs.Files.Shared;
     public partial class CompleteFileUploadCommandHandler 
@@ -152,8 +209,15 @@ namespace Fifthweek.Api.FileManagement.Commands
 }
 namespace Fifthweek.Api.FileManagement.Commands
 {
+    using System;
+    using System.Linq;
     using Fifthweek.Api.Identity.Membership;
     using Fifthweek.CodeGeneration;
+    using System.Threading.Tasks;
+    using Fifthweek.Api.Azure;
+    using Fifthweek.Api.Core;
+    using Fifthweek.Shared;
+    using Fifthweek.WebJobs.Files.Shared;
     public partial class InitiateFileUploadCommand 
     {
         public InitiateFileUploadCommand(
@@ -182,11 +246,15 @@ namespace Fifthweek.Api.FileManagement.Commands
 }
 namespace Fifthweek.Api.FileManagement.Commands
 {
+    using System;
+    using System.Linq;
+    using Fifthweek.Api.Identity.Membership;
+    using Fifthweek.CodeGeneration;
     using System.Threading.Tasks;
     using Fifthweek.Api.Azure;
     using Fifthweek.Api.Core;
-    using Fifthweek.Api.Identity.Membership;
-    using Fifthweek.CodeGeneration;
+    using Fifthweek.Shared;
+    using Fifthweek.WebJobs.Files.Shared;
     public partial class InitiateFileUploadCommandHandler 
     {
         public InitiateFileUploadCommandHandler(
@@ -225,6 +293,8 @@ namespace Fifthweek.Api.FileManagement.Commands
 }
 namespace Fifthweek.Api.FileManagement.Controllers
 {
+    using System;
+    using System.Linq;
     using System.Threading.Tasks;
     using System.Web.Http;
     using System.Web.Http.Description;
@@ -234,12 +304,14 @@ namespace Fifthweek.Api.FileManagement.Controllers
     using Fifthweek.Api.Identity.Membership;
     using Fifthweek.Api.Identity.OAuth;
     using Fifthweek.CodeGeneration;
+    using Fifthweek.Shared;
+    using Fifthweek.Api.Azure;
     public partial class FileUploadController 
     {
         public FileUploadController(
             Fifthweek.Api.Core.IGuidCreator guidCreator, 
             Fifthweek.Api.Core.ICommandHandler<Fifthweek.Api.FileManagement.Commands.InitiateFileUploadCommand> initiateFileUpload, 
-            Fifthweek.Api.Core.IQueryHandler<Fifthweek.Api.FileManagement.Queries.GenerateWritableBlobUriQuery,System.String> generateWritableBlobUri, 
+            Fifthweek.Api.Core.IQueryHandler<Fifthweek.Api.FileManagement.Queries.GenerateWritableBlobUriQuery,Fifthweek.Api.Azure.BlobSharedAccessInformation> generateWritableBlobUri, 
             Fifthweek.Api.Core.ICommandHandler<Fifthweek.Api.FileManagement.Commands.CompleteFileUploadCommand> completeFileUpload, 
             Fifthweek.Api.Identity.OAuth.IUserContext userContext)
         {
@@ -280,36 +352,55 @@ namespace Fifthweek.Api.FileManagement.Controllers
 namespace Fifthweek.Api.FileManagement.Controllers
 {
     using System;
+    using System.Linq;
+    using System.Threading.Tasks;
+    using System.Web.Http;
+    using System.Web.Http.Description;
     using Fifthweek.Api.Core;
+    using Fifthweek.Api.FileManagement.Commands;
+    using Fifthweek.Api.FileManagement.Queries;
+    using Fifthweek.Api.Identity.Membership;
+    using Fifthweek.Api.Identity.OAuth;
     using Fifthweek.CodeGeneration;
     using Fifthweek.Shared;
+    using Fifthweek.Api.Azure;
     public partial class GrantedUpload 
     {
         public GrantedUpload(
-            System.String fileId, 
-            System.String uploadUri)
+            Fifthweek.Api.FileManagement.FileId fileId, 
+            Fifthweek.Api.Azure.BlobSharedAccessInformation accessInformation)
         {
             if (fileId == null)
             {
                 throw new ArgumentNullException("fileId");
             }
 
-            if (uploadUri == null)
+            if (accessInformation == null)
             {
-                throw new ArgumentNullException("uploadUri");
+                throw new ArgumentNullException("accessInformation");
             }
 
             this.FileId = fileId;
-            this.UploadUri = uploadUri;
+            this.AccessInformation = accessInformation;
         }
     }
 
 }
 namespace Fifthweek.Api.FileManagement.Controllers
 {
+    using System;
+    using System.Linq;
+    using System.Threading.Tasks;
+    using System.Web.Http;
+    using System.Web.Http.Description;
     using Fifthweek.Api.Core;
+    using Fifthweek.Api.FileManagement.Commands;
+    using Fifthweek.Api.FileManagement.Queries;
+    using Fifthweek.Api.Identity.Membership;
+    using Fifthweek.Api.Identity.OAuth;
     using Fifthweek.CodeGeneration;
     using Fifthweek.Shared;
+    using Fifthweek.Api.Azure;
     public partial class UploadRequest 
     {
         public UploadRequest(
@@ -335,30 +426,17 @@ namespace Fifthweek.Api.FileManagement.Controllers
 namespace Fifthweek.Api.FileManagement
 {
     using System;
+    using System.Linq;
     using Fifthweek.CodeGeneration;
-    public partial class FileId 
-    {
-        public FileId(
-            System.Guid value)
-        {
-            if (value == null)
-            {
-                throw new ArgumentNullException("value");
-            }
-
-            this.Value = value;
-        }
-    }
-
-}
-namespace Fifthweek.Api.FileManagement
-{
+    using Fifthweek.Api.Core;
+    using Fifthweek.Shared;
     using System.Threading.Tasks;
     using Dapper;
-    using Fifthweek.Api.Core;
     using Fifthweek.Api.Identity.Membership;
     using Fifthweek.Api.Persistence;
-    using Fifthweek.CodeGeneration;
+    using System.Security;
+    using Fifthweek.Api.Azure;
+    using Fifthweek.WebJobs.GarbageCollection.Shared;
     public partial class FileOwnership 
     {
         public FileOwnership(
@@ -378,14 +456,16 @@ namespace Fifthweek.Api.FileManagement
 {
     using System;
     using System.Linq;
-    using System.Security;
+    using Fifthweek.CodeGeneration;
+    using Fifthweek.Api.Core;
+    using Fifthweek.Shared;
     using System.Threading.Tasks;
     using Dapper;
-    using Fifthweek.Api.Core;
     using Fifthweek.Api.Identity.Membership;
     using Fifthweek.Api.Persistence;
-    using Fifthweek.CodeGeneration;
-    using Fifthweek.Shared;
+    using System.Security;
+    using Fifthweek.Api.Azure;
+    using Fifthweek.WebJobs.GarbageCollection.Shared;
     public partial class FileRepository 
     {
         public FileRepository(
@@ -403,10 +483,18 @@ namespace Fifthweek.Api.FileManagement
 }
 namespace Fifthweek.Api.FileManagement
 {
-    using System.Threading.Tasks;
-    using Fifthweek.Api.Core;
-    using Fifthweek.Api.Identity.Membership;
+    using System;
+    using System.Linq;
     using Fifthweek.CodeGeneration;
+    using Fifthweek.Api.Core;
+    using Fifthweek.Shared;
+    using System.Threading.Tasks;
+    using Dapper;
+    using Fifthweek.Api.Identity.Membership;
+    using Fifthweek.Api.Persistence;
+    using System.Security;
+    using Fifthweek.Api.Azure;
+    using Fifthweek.WebJobs.GarbageCollection.Shared;
     public partial class FileSecurity 
     {
         public FileSecurity(
@@ -424,10 +512,18 @@ namespace Fifthweek.Api.FileManagement
 }
 namespace Fifthweek.Api.FileManagement
 {
-    using Fifthweek.Api.Core;
-    using Fifthweek.Api.Identity.Membership;
+    using System;
+    using System.Linq;
     using Fifthweek.CodeGeneration;
+    using Fifthweek.Api.Core;
     using Fifthweek.Shared;
+    using System.Threading.Tasks;
+    using Dapper;
+    using Fifthweek.Api.Identity.Membership;
+    using Fifthweek.Api.Persistence;
+    using System.Security;
+    using Fifthweek.Api.Azure;
+    using Fifthweek.WebJobs.GarbageCollection.Shared;
     public partial class FileWaitingForUpload 
     {
         public FileWaitingForUpload(
@@ -474,11 +570,17 @@ namespace Fifthweek.Api.FileManagement
 namespace Fifthweek.Api.FileManagement
 {
     using System;
+    using System.Linq;
+    using Fifthweek.CodeGeneration;
+    using Fifthweek.Api.Core;
+    using Fifthweek.Shared;
     using System.Threading.Tasks;
     using Dapper;
-    using Fifthweek.Api.Core;
+    using Fifthweek.Api.Identity.Membership;
     using Fifthweek.Api.Persistence;
-    using Fifthweek.CodeGeneration;
+    using System.Security;
+    using Fifthweek.Api.Azure;
+    using Fifthweek.WebJobs.GarbageCollection.Shared;
     public partial class GetFileExtensionDbStatement 
     {
         public GetFileExtensionDbStatement(
@@ -496,9 +598,14 @@ namespace Fifthweek.Api.FileManagement
 }
 namespace Fifthweek.Api.FileManagement.Queries
 {
+    using System;
+    using System.Linq;
+    using Fifthweek.Api.Azure;
     using Fifthweek.Api.Core;
     using Fifthweek.Api.Identity.Membership;
     using Fifthweek.CodeGeneration;
+    using System.Threading.Tasks;
+    using System.Collections.Generic;
     public partial class GenerateWritableBlobUriQuery 
     {
         public GenerateWritableBlobUriQuery(
@@ -530,11 +637,14 @@ namespace Fifthweek.Api.FileManagement.Queries
 }
 namespace Fifthweek.Api.FileManagement.Queries
 {
-    using System.Threading.Tasks;
+    using System;
+    using System.Linq;
     using Fifthweek.Api.Azure;
     using Fifthweek.Api.Core;
     using Fifthweek.Api.Identity.Membership;
     using Fifthweek.CodeGeneration;
+    using System.Threading.Tasks;
+    using System.Collections.Generic;
     public partial class GenerateWritableBlobUriQueryHandler 
     {
         public GenerateWritableBlobUriQueryHandler(
@@ -571,6 +681,139 @@ namespace Fifthweek.Api.FileManagement.Queries
     }
 
 }
+namespace Fifthweek.Api.FileManagement.Queries
+{
+    using System;
+    using System.Linq;
+    using Fifthweek.Api.Azure;
+    using Fifthweek.Api.Core;
+    using Fifthweek.Api.Identity.Membership;
+    using Fifthweek.CodeGeneration;
+    using System.Threading.Tasks;
+    using System.Collections.Generic;
+    public partial class GetUserAccessSignaturesQuery 
+    {
+        public GetUserAccessSignaturesQuery(
+            Fifthweek.Api.Identity.Membership.Requester requester, 
+            Fifthweek.Api.Identity.Membership.UserId requestedUserId)
+        {
+            if (requester == null)
+            {
+                throw new ArgumentNullException("requester");
+            }
+
+            this.Requester = requester;
+            this.RequestedUserId = requestedUserId;
+        }
+    }
+
+}
+namespace Fifthweek.Api.FileManagement.Queries
+{
+    using System;
+    using System.Linq;
+    using Fifthweek.Api.Azure;
+    using Fifthweek.Api.Core;
+    using Fifthweek.Api.Identity.Membership;
+    using Fifthweek.CodeGeneration;
+    using System.Threading.Tasks;
+    using System.Collections.Generic;
+    public partial class GetUserAccessSignaturesQueryHandler 
+    {
+        public GetUserAccessSignaturesQueryHandler(
+            Fifthweek.Api.Azure.IBlobService blobService, 
+            Fifthweek.Api.FileManagement.IBlobLocationGenerator blobLocationGenerator, 
+            Fifthweek.Api.Identity.Membership.IRequesterSecurity requesterSecurity)
+        {
+            if (blobService == null)
+            {
+                throw new ArgumentNullException("blobService");
+            }
+
+            if (blobLocationGenerator == null)
+            {
+                throw new ArgumentNullException("blobLocationGenerator");
+            }
+
+            if (requesterSecurity == null)
+            {
+                throw new ArgumentNullException("requesterSecurity");
+            }
+
+            this.blobService = blobService;
+            this.blobLocationGenerator = blobLocationGenerator;
+            this.requesterSecurity = requesterSecurity;
+        }
+    }
+
+}
+namespace Fifthweek.Api.FileManagement.Queries
+{
+    using System;
+    using System.Linq;
+    using Fifthweek.Api.Azure;
+    using Fifthweek.Api.Core;
+    using Fifthweek.Api.Identity.Membership;
+    using Fifthweek.CodeGeneration;
+    using System.Threading.Tasks;
+    using System.Collections.Generic;
+    public partial class UserAccessSignatures
+    {
+        public partial class PrivateAccessSignature 
+        {
+        public PrivateAccessSignature(
+            Fifthweek.Api.Identity.Membership.UserId creatorId, 
+            Fifthweek.Api.Azure.BlobContainerSharedAccessInformation information)
+        {
+            if (creatorId == null)
+            {
+                throw new ArgumentNullException("creatorId");
+            }
+
+            if (information == null)
+            {
+                throw new ArgumentNullException("information");
+            }
+
+            this.CreatorId = creatorId;
+            this.Information = information;
+        }
+        }
+
+        }
+}
+namespace Fifthweek.Api.FileManagement.Queries
+{
+    using System;
+    using System.Linq;
+    using Fifthweek.Api.Azure;
+    using Fifthweek.Api.Core;
+    using Fifthweek.Api.Identity.Membership;
+    using Fifthweek.CodeGeneration;
+    using System.Threading.Tasks;
+    using System.Collections.Generic;
+    public partial class UserAccessSignatures 
+    {
+        public UserAccessSignatures(
+            Fifthweek.Api.Azure.BlobContainerSharedAccessInformation publicSignature, 
+            System.Collections.Generic.IReadOnlyList<Fifthweek.Api.FileManagement.Queries.UserAccessSignatures.PrivateAccessSignature> privateSignatures)
+        {
+            if (publicSignature == null)
+            {
+                throw new ArgumentNullException("publicSignature");
+            }
+
+            if (privateSignatures == null)
+            {
+                throw new ArgumentNullException("privateSignatures");
+            }
+
+            this.PublicSignature = publicSignature;
+            this.PrivateSignatures = privateSignatures;
+        }
+    }
+
+}
 namespace Fifthweek.Api.FileManagement
 {
     using System;
@@ -599,6 +842,15 @@ namespace Fifthweek.Api.FileManagement
     using Fifthweek.Api.Core;
     using Fifthweek.CodeGeneration;
     using Fifthweek.Shared;
+    using System;
+    using System.Linq;
+    using System.Threading.Tasks;
+    using Dapper;
+    using Fifthweek.Api.Identity.Membership;
+    using Fifthweek.Api.Persistence;
+    using System.Security;
+    using Fifthweek.Api.Azure;
+    using Fifthweek.WebJobs.GarbageCollection.Shared;
     public partial class BlobLocation 
     {
         public override string ToString()
@@ -654,10 +906,80 @@ namespace Fifthweek.Api.FileManagement
     }
 
 }
+namespace Fifthweek.Api.FileManagement
+{
+    using System;
+    using System.Linq;
+    using Fifthweek.CodeGeneration;
+    using Fifthweek.Api.Core;
+    using Fifthweek.Shared;
+    using System.Threading.Tasks;
+    using Dapper;
+    using Fifthweek.Api.Identity.Membership;
+    using Fifthweek.Api.Persistence;
+    using System.Security;
+    using Fifthweek.Api.Azure;
+    using Fifthweek.WebJobs.GarbageCollection.Shared;
+    public partial class FileId 
+    {
+        public override string ToString()
+        {
+            return string.Format("FileId({0})", this.Value == null ? "null" : this.Value.ToString());
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj))
+            {
+                return false;
+            }
+
+            if (ReferenceEquals(this, obj))
+            {
+                return true;
+            }
+
+            if (obj.GetType() != this.GetType())
+            {
+                return false;
+            }
+
+            return this.Equals((FileId)obj);
+        }
+
+        public override int GetHashCode()
+        {
+            unchecked
+            {
+                int hashCode = 0;
+                hashCode = (hashCode * 397) ^ (this.Value != null ? this.Value.GetHashCode() : 0);
+                return hashCode;
+            }
+        }
+
+        protected bool Equals(FileId other)
+        {
+            if (!object.Equals(this.Value, other.Value))
+            {
+                return false;
+            }
+
+            return true;
+        }
+    }
+
+}
 namespace Fifthweek.Api.FileManagement.Commands
 {
+    using System;
+    using System.Linq;
     using Fifthweek.Api.Identity.Membership;
     using Fifthweek.CodeGeneration;
+    using System.Threading.Tasks;
+    using Fifthweek.Api.Azure;
+    using Fifthweek.Api.Core;
+    using Fifthweek.Shared;
+    using Fifthweek.WebJobs.Files.Shared;
     public partial class CompleteFileUploadCommand 
     {
         public override string ToString()
@@ -715,8 +1037,15 @@ namespace Fifthweek.Api.FileManagement.Commands
 }
 namespace Fifthweek.Api.FileManagement.Commands
 {
+    using System;
+    using System.Linq;
     using Fifthweek.Api.Identity.Membership;
     using Fifthweek.CodeGeneration;
+    using System.Threading.Tasks;
+    using Fifthweek.Api.Azure;
+    using Fifthweek.Api.Core;
+    using Fifthweek.Shared;
+    using Fifthweek.WebJobs.Files.Shared;
     public partial class InitiateFileUploadCommand 
     {
         public override string ToString()
@@ -787,14 +1116,23 @@ namespace Fifthweek.Api.FileManagement.Commands
 namespace Fifthweek.Api.FileManagement.Controllers
 {
     using System;
+    using System.Linq;
+    using System.Threading.Tasks;
+    using System.Web.Http;
+    using System.Web.Http.Description;
     using Fifthweek.Api.Core;
+    using Fifthweek.Api.FileManagement.Commands;
+    using Fifthweek.Api.FileManagement.Queries;
+    using Fifthweek.Api.Identity.Membership;
+    using Fifthweek.Api.Identity.OAuth;
     using Fifthweek.CodeGeneration;
     using Fifthweek.Shared;
+    using Fifthweek.Api.Azure;
     public partial class GrantedUpload 
     {
         public override string ToString()
         {
-            return string.Format("GrantedUpload(\"{0}\", \"{1}\")", this.FileId == null ? "null" : this.FileId.ToString(), this.UploadUri == null ? "null" : this.UploadUri.ToString());
+            return string.Format("GrantedUpload({0}, {1})", this.FileId == null ? "null" : this.FileId.ToString(), this.AccessInformation == null ? "null" : this.AccessInformation.ToString());
         }
 
         public override bool Equals(object obj)
@@ -823,7 +1161,7 @@ namespace Fifthweek.Api.FileManagement.Controllers
             {
                 int hashCode = 0;
                 hashCode = (hashCode * 397) ^ (this.FileId != null ? this.FileId.GetHashCode() : 0);
-                hashCode = (hashCode * 397) ^ (this.UploadUri != null ? this.UploadUri.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.AccessInformation != null ? this.AccessInformation.GetHashCode() : 0);
                 return hashCode;
             }
         }
@@ -835,7 +1173,7 @@ namespace Fifthweek.Api.FileManagement.Controllers
                 return false;
             }
 
-            if (!object.Equals(this.UploadUri, other.UploadUri))
+            if (!object.Equals(this.AccessInformation, other.AccessInformation))
             {
                 return false;
             }
@@ -847,9 +1185,19 @@ namespace Fifthweek.Api.FileManagement.Controllers
 }
 namespace Fifthweek.Api.FileManagement.Controllers
 {
+    using System;
+    using System.Linq;
+    using System.Threading.Tasks;
+    using System.Web.Http;
+    using System.Web.Http.Description;
     using Fifthweek.Api.Core;
+    using Fifthweek.Api.FileManagement.Commands;
+    using Fifthweek.Api.FileManagement.Queries;
+    using Fifthweek.Api.Identity.Membership;
+    using Fifthweek.Api.Identity.OAuth;
     using Fifthweek.CodeGeneration;
     using Fifthweek.Shared;
+    using Fifthweek.Api.Azure;
     public partial class UploadRequest 
     {
         public override string ToString()
@@ -905,64 +1253,16 @@ namespace Fifthweek.Api.FileManagement.Controllers
     }
 
 }
-namespace Fifthweek.Api.FileManagement
-{
-    using System;
-    using Fifthweek.CodeGeneration;
-    public partial class FileId 
-    {
-        public override string ToString()
-        {
-            return string.Format("FileId({0})", this.Value == null ? "null" : this.Value.ToString());
-        }
-
-        public override bool Equals(object obj)
-        {
-            if (ReferenceEquals(null, obj))
-            {
-                return false;
-            }
-
-            if (ReferenceEquals(this, obj))
-            {
-                return true;
-            }
-
-            if (obj.GetType() != this.GetType())
-            {
-                return false;
-            }
-
-            return this.Equals((FileId)obj);
-        }
-
-        public override int GetHashCode()
-        {
-            unchecked
-            {
-                int hashCode = 0;
-                hashCode = (hashCode * 397) ^ (this.Value != null ? this.Value.GetHashCode() : 0);
-                return hashCode;
-            }
-        }
-
-        protected bool Equals(FileId other)
-        {
-            if (!object.Equals(this.Value, other.Value))
-            {
-                return false;
-            }
-
-            return true;
-        }
-    }
-
-}
 namespace Fifthweek.Api.FileManagement.Queries
 {
+    using System;
+    using System.Linq;
+    using Fifthweek.Api.Azure;
     using Fifthweek.Api.Core;
     using Fifthweek.Api.Identity.Membership;
     using Fifthweek.CodeGeneration;
+    using System.Threading.Tasks;
+    using System.Collections.Generic;
     public partial class GenerateWritableBlobUriQuery 
     {
         public override string ToString()
@@ -1015,6 +1315,71 @@ namespace Fifthweek.Api.FileManagement.Queries
             }
 
             if (!object.Equals(this.Purpose, other.Purpose))
+            {
+                return false;
+            }
+
+            return true;
+        }
+    }
+
+}
+namespace Fifthweek.Api.FileManagement.Queries
+{
+    using System;
+    using System.Linq;
+    using Fifthweek.Api.Azure;
+    using Fifthweek.Api.Core;
+    using Fifthweek.Api.Identity.Membership;
+    using Fifthweek.CodeGeneration;
+    using System.Threading.Tasks;
+    using System.Collections.Generic;
+    public partial class GetUserAccessSignaturesQuery 
+    {
+        public override string ToString()
+        {
+            return string.Format("GetUserAccessSignaturesQuery({0}, {1})", this.Requester == null ? "null" : this.Requester.ToString(), this.RequestedUserId == null ? "null" : this.RequestedUserId.ToString());
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj))
+            {
+                return false;
+            }
+
+            if (ReferenceEquals(this, obj))
+            {
+                return true;
+            }
+
+            if (obj.GetType() != this.GetType())
+            {
+                return false;
+            }
+
+            return this.Equals((GetUserAccessSignaturesQuery)obj);
+        }
+
+        public override int GetHashCode()
+        {
+            unchecked
+            {
+                int hashCode = 0;
+                hashCode = (hashCode * 397) ^ (this.Requester != null ? this.Requester.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.RequestedUserId != null ? this.RequestedUserId.GetHashCode() : 0);
+                return hashCode;
+            }
+        }
+
+        protected bool Equals(GetUserAccessSignaturesQuery other)
+        {
+            if (!object.Equals(this.Requester, other.Requester))
+            {
+                return false;
+            }
+
+            if (!object.Equals(this.RequestedUserId, other.RequestedUserId))
             {
                 return false;
             }
