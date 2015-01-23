@@ -4,7 +4,7 @@
 
     using Fifthweek.Api.Core;
 
-    [Decorator(typeof(RetryOnSqlDeadlockOrTimeoutCommandHandlerDecorator<>))]
+    [Decorator(typeof(RetryOnRecoverableDatabaseErrorCommandHandlerDecorator<>))]
     public class AddRefreshTokenCommandHandler : ICommandHandler<AddRefreshTokenCommand>
     {
         private readonly IRefreshTokenRepository refreshTokenRepository;

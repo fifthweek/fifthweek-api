@@ -16,9 +16,9 @@
             container = container.BeginLifetimeScope("AutofacWebRequest");
 
             var handler = container.Resolve<ICommandHandler<NullCommand>>();
-            Assert.IsInstanceOfType(handler, typeof(RetryOnSqlDeadlockOrTimeoutCommandHandlerDecorator<NullCommand>));
+            Assert.IsInstanceOfType(handler, typeof(RetryOnRecoverableDatabaseErrorCommandHandlerDecorator<NullCommand>));
 
-            handler = ((RetryOnSqlDeadlockOrTimeoutCommandHandlerDecorator<NullCommand>)handler).Decorated;
+            handler = ((RetryOnRecoverableDatabaseErrorCommandHandlerDecorator<NullCommand>)handler).Decorated;
             Assert.IsInstanceOfType(handler, typeof(TransactionCommandHandlerDecorator<NullCommand>));
 
             handler = ((TransactionCommandHandlerDecorator<NullCommand>)handler).Decorated;
@@ -32,9 +32,9 @@
             container = container.BeginLifetimeScope("AutofacWebRequest");
 
             var handler = container.Resolve<IQueryHandler<NullQuery, bool>>();
-            Assert.IsInstanceOfType(handler, typeof(RetryOnSqlDeadlockOrTimeoutQueryHandlerDecorator<NullQuery, bool>));
+            Assert.IsInstanceOfType(handler, typeof(RetryOnRecoverableDatabaseErrorQueryHandlerDecorator<NullQuery, bool>));
 
-            handler = ((RetryOnSqlDeadlockOrTimeoutQueryHandlerDecorator<NullQuery, bool>)handler).Decorated;
+            handler = ((RetryOnRecoverableDatabaseErrorQueryHandlerDecorator<NullQuery, bool>)handler).Decorated;
             Assert.IsInstanceOfType(handler, typeof(NullQueryHandler));
         }
     }

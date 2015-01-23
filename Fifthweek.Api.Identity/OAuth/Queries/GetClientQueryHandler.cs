@@ -4,7 +4,7 @@
 
     using Fifthweek.Api.Core;
 
-    [Decorator(typeof(RetryOnSqlDeadlockOrTimeoutQueryHandlerDecorator<,>))]
+    [Decorator(typeof(RetryOnRecoverableDatabaseErrorQueryHandlerDecorator<,>))]
     public class GetClientQueryHandler : IQueryHandler<GetClientQuery, Client>
     {
         private readonly IClientRepository clientRepository;

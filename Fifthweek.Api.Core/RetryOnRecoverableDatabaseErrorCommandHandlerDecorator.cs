@@ -3,12 +3,12 @@
     using System;
     using System.Threading.Tasks;
 
-    public class RetryOnSqlDeadlockOrTimeoutCommandHandlerDecorator<TCommand> : RetryOnSqlDeadlockOrTimeoutDecoratorBase,
+    public class RetryOnRecoverableDatabaseErrorCommandHandlerDecorator<TCommand> : RetryOnRecoverableDatabaseErrorDecoratorBase,
                                                                      ICommandHandler<TCommand>
     {
         private readonly ICommandHandler<TCommand> decorated;
 
-        public RetryOnSqlDeadlockOrTimeoutCommandHandlerDecorator(ICommandHandler<TCommand> decorated)
+        public RetryOnRecoverableDatabaseErrorCommandHandlerDecorator(ICommandHandler<TCommand> decorated)
         {
             this.decorated = decorated;
         }

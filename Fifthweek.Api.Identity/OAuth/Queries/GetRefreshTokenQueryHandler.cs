@@ -5,7 +5,7 @@
     using Fifthweek.Api.Core;
     using Fifthweek.Api.Persistence;
 
-    [Decorator(typeof(RetryOnSqlDeadlockOrTimeoutQueryHandlerDecorator<,>))]
+    [Decorator(typeof(RetryOnRecoverableDatabaseErrorQueryHandlerDecorator<,>))]
     public class GetRefreshTokenQueryHandler : IQueryHandler<GetRefreshTokenQuery, RefreshToken>
     {
         private readonly IRefreshTokenRepository refreshTokenRepository;

@@ -108,9 +108,9 @@
     <Compile Include="ModelValidationException.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RecoverableException.cs" />
-    <Compile Include="RetryOnSqlDeadlockOrTimeoutCommandHandlerDecorator.cs" />
-    <Compile Include="RetryOnSqlDeadlockOrTimeoutDecoratorBase.cs" />
-    <Compile Include="RetryOnSqlDeadlockOrTimeoutQueryHandlerDecorator.cs" />
+    <Compile Include="RetryOnRecoverableDatabaseErrorCommandHandlerDecorator.cs" />
+    <Compile Include="RetryOnRecoverableDatabaseErrorDecoratorBase.cs" />
+    <Compile Include="RetryOnRecoverableDatabaseErrorQueryHandlerDecorator.cs" />
     <Compile Include="GuidCreator.cs" />
     <Compile Include="TraceService.cs" />
     <Compile Include="TransactionCommandHandlerDecorator.cs" />

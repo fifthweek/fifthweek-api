@@ -3,12 +3,12 @@ namespace Fifthweek.Api.Core
     using System;
     using System.Threading.Tasks;
 
-    public class RetryOnSqlDeadlockOrTimeoutQueryHandlerDecorator<TQuery, TResult> : RetryOnSqlDeadlockOrTimeoutDecoratorBase, IQueryHandler<TQuery, TResult>
+    public class RetryOnRecoverableDatabaseErrorQueryHandlerDecorator<TQuery, TResult> : RetryOnRecoverableDatabaseErrorDecoratorBase, IQueryHandler<TQuery, TResult>
         where TQuery : IQuery<TResult>
     {
         private readonly IQueryHandler<TQuery, TResult> decorated;
 
-        public RetryOnSqlDeadlockOrTimeoutQueryHandlerDecorator(IQueryHandler<TQuery, TResult> decorated)
+        public RetryOnRecoverableDatabaseErrorQueryHandlerDecorator(IQueryHandler<TQuery, TResult> decorated)
         {
             this.decorated = decorated;
         }

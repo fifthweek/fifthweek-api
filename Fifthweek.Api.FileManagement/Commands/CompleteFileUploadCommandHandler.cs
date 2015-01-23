@@ -9,7 +9,7 @@
     using Fifthweek.Shared;
     using Fifthweek.WebJobs.Files.Shared;
 
-    [Decorator(typeof(RetryOnSqlDeadlockOrTimeoutCommandHandlerDecorator<>))]
+    [Decorator(typeof(RetryOnRecoverableDatabaseErrorCommandHandlerDecorator<>))]
     [AutoConstructor]
     public partial class CompleteFileUploadCommandHandler : ICommandHandler<CompleteFileUploadCommand>
     {

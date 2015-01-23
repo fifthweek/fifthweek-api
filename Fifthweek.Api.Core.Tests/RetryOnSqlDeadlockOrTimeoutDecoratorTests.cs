@@ -14,7 +14,7 @@
         public async Task ItShouldRetryUpToTheMaximumtryCount()
         {
             var command = new Mock<ICommandHandler<NullCommand>>();
-            var decorator = new RetryOnSqlDeadlockOrTimeoutCommandHandlerDecorator<NullCommand>(command.Object);
+            var decorator = new RetryOnRecoverableDatabaseErrorCommandHandlerDecorator<NullCommand>(command.Object);
 
             int tryCount = 0;
 
@@ -23,7 +23,7 @@
                 {
                     ++tryCount;
                     throw SqlExceptionMocker.MakeSqlException(
-                        RetryOnSqlDeadlockOrTimeoutDecoratorBase.SqlDeadlockErrorCode);
+                        RetryOnRecoverableDatabaseErrorDecoratorBase.SqlDeadlockErrorCode);
                 }).Returns(Task.FromResult(0));
 
             Exception exception = null;
@@ -38,14 +38,14 @@
 
             Assert.IsNotNull(exception);
             Assert.IsTrue(exception.Message.Contains("Maximum retries reached"));
-            Assert.AreEqual(RetryOnSqlDeadlockOrTimeoutDecoratorBase.MaxTries, tryCount);
+            Assert.AreEqual(RetryOnRecoverableDatabaseErrorDecoratorBase.MaxTries, tryCount);
         }
 
         [TestMethod]
         public async Task ItShouldRetryOnSqlDeadlock()
         {
             var query = new Mock<IQueryHandler<NullQuery, bool>>();
-            var decorator = new RetryOnSqlDeadlockOrTimeoutQueryHandlerDecorator<NullQuery, bool>(query.Object);
+            var decorator = new RetryOnRecoverableDatabaseErrorQueryHandlerDecorator<NullQuery, bool>(query.Object);
 
             int tryCount = 0;
 
@@ -56,7 +56,7 @@
                     if (tryCount == 1)
                     {
                         throw SqlExceptionMocker.MakeSqlException(
-                            RetryOnSqlDeadlockOrTimeoutDecoratorBase.SqlDeadlockErrorCode);
+                            RetryOnRecoverableDatabaseErrorDecoratorBase.SqlDeadlockErrorCode);
                     }
                 }).Returns(Task.FromResult(false));
 
@@ -69,7 +69,7 @@
         public async Task ItShouldRetryOnSqlTimeout()
         {
             var command = new Mock<ICommandHandler<NullCommand>>();
-            var decorator = new RetryOnSqlDeadlockOrTimeoutCommandHandlerDecorator<NullCommand>(command.Object);
+            var decorator = new RetryOnRecoverableDatabaseErrorCommandHandlerDecorator<NullCommand>(command.Object);
 
             int tryCount = 0;
 
@@ -80,7 +80,7 @@
                     if (tryCount == 1)
                     {
                         throw SqlExceptionMocker.MakeSqlException(
-                            RetryOnSqlDeadlockOrTimeoutDecoratorBase.SqlTimeoutErrorCode);
+                            RetryOnRecoverableDatabaseErrorDecoratorBase.SqlTimeoutErrorCode);
                     }
                 }).Returns(Task.FromResult(0));
 
@@ -93,7 +93,7 @@
         public async Task ItShouldNotRetryOnStandardExceptions()
         {
             var command = new Mock<ICommandHandler<NullCommand>>();
-            var decorator = new RetryOnSqlDeadlockOrTimeoutCommandHandlerDecorator<NullCommand>(command.Object);
+            var decorator = new RetryOnRecoverableDatabaseErrorCommandHandlerDecorator<NullCommand>(command.Object);
 
             int tryCount = 0;
 
@@ -125,7 +125,7 @@
         public async Task ItShouldNotRetryOnUnsupportedSqlExceptionErrorNumbers()
         {
             var command = new Mock<ICommandHandler<NullCommand>>();
-            var decorator = new RetryOnSqlDeadlockOrTimeoutCommandHandlerDecorator<NullCommand>(command.Object);
+            var decorator = new RetryOnRecoverableDatabaseErrorCommandHandlerDecorator<NullCommand>(command.Object);
 
             int tryCount = 0;
 
@@ -157,7 +157,7 @@
         public async Task ItShouldRetryCommandsUntilSuccess()
         {
             var command = new Mock<ICommandHandler<NullCommand>>();
-            var decorator = new RetryOnSqlDeadlockOrTimeoutCommandHandlerDecorator<NullCommand>(command.Object);
+            var decorator = new RetryOnRecoverableDatabaseErrorCommandHandlerDecorator<NullCommand>(command.Object);
 
             int tryCount = 0;
 
@@ -165,23 +165,23 @@
                 .Callback(() =>
                 {
                     ++tryCount;
-                    if (tryCount < RetryOnSqlDeadlockOrTimeoutDecoratorBase.MaxTries - 1)
+                    if (tryCount < RetryOnRecoverableDatabaseErrorDecoratorBase.MaxTries - 1)
                     {
                         throw SqlExceptionMocker.MakeSqlException(
-                            RetryOnSqlDeadlockOrTimeoutDecoratorBase.SqlDeadlockErrorCode);
+                            RetryOnRecoverableDatabaseErrorDecoratorBase.SqlDeadlockErrorCode);
                     }
                 }).Returns(Task.FromResult(0));
 
             await decorator.HandleAsync(new NullCommand());
 
-            Assert.AreEqual(RetryOnSqlDeadlockOrTimeoutDecoratorBase.MaxTries - 1, tryCount);
+            Assert.AreEqual(RetryOnRecoverableDatabaseErrorDecoratorBase.MaxTries - 1, tryCount);
         }
 
         [TestMethod]
         public async Task ItShouldRetryQueriesUntilSuccess()
         {
             var query = new Mock<IQueryHandler<NullQuery, bool>>();
-            var decorator = new RetryOnSqlDeadlockOrTimeoutQueryHandlerDecorator<NullQuery, bool>(query.Object);
+            var decorator = new RetryOnRecoverableDatabaseErrorQueryHandlerDecorator<NullQuery, bool>(query.Object);
 
             int tryCount = 0;
 
@@ -189,16 +189,16 @@
                 .Callback(() =>
                 {
                     ++tryCount;
-                    if (tryCount < RetryOnSqlDeadlockOrTimeoutDecoratorBase.MaxTries - 1)
+                    if (tryCount < RetryOnRecoverableDatabaseErrorDecoratorBase.MaxTries - 1)
                     {
                         throw SqlExceptionMocker.MakeSqlException(
-                            RetryOnSqlDeadlockOrTimeoutDecoratorBase.SqlDeadlockErrorCode);
+                            RetryOnRecoverableDatabaseErrorDecoratorBase.SqlDeadlockErrorCode);
                     }
                 }).Returns(Task.FromResult(false));
 
             await decorator.HandleAsync(new NullQuery());
 
-            Assert.AreEqual(RetryOnSqlDeadlockOrTimeoutDecoratorBase.MaxTries - 1, tryCount);
+            Assert.AreEqual(RetryOnRecoverableDatabaseErrorDecoratorBase.MaxTries - 1, tryCount);
         }
     }
 }

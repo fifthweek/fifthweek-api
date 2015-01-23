@@ -5,7 +5,7 @@
     using Fifthweek.Api.Core;
 
     [Decorator(
-        typeof(RetryOnSqlDeadlockOrTimeoutCommandHandlerDecorator<>),
+        typeof(RetryOnRecoverableDatabaseErrorCommandHandlerDecorator<>),
         typeof(TransactionCommandHandlerDecorator<>))]
     public class NullCommandHandler : ICommandHandler<NullCommand>
     {
