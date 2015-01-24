@@ -118,7 +118,25 @@
   <ItemGroup>
     <Compile Include="AutofacConfigTests.cs" />
     <Compile Include="ControllerConfigurationTests.cs" />
+    <Compile Include="TestCommandHandlerWithNoDecorator.cs" />
+    <Compile Include="TestCommandWithDefaultDecorators.cs" />
+    <Compile Include="TestCommandHandlerWithCustomDecorator.cs" />
+    <Compile Include="TestCommandHandlerWithCustomOuterDecorator.cs" />
+    <Compile Include="TestCommandHandlerWithDefaultDecorators.cs" />
+    <Compile Include="TestCommandHandlerDecorator.cs" />
+    <Compile Include="TestCommandWithCustomDecorator.cs" />
+    <Compile Include="TestCommandWithCustomOuterDecorator.cs" />
+    <Compile Include="TestCommandWithNoDecorator.cs" />
+    <Compile Include="TestQueryHandlerWithNoDecorator.cs" />
+    <Compile Include="TestQueryWithDefaultDecorators.cs" />
+    <Compile Include="TestQueryHandlerWithDefaultDecorators.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="TestQueryHandlerDecorator.cs" />
+    <Compile Include="TestQueryHandlerWithCustomDecorator.cs" />
+    <Compile Include="TestQueryHandlerWithCustomOuterDecorator.cs" />
+    <Compile Include="TestQueryWithCustomDecorator.cs" />
+    <Compile Include="TestQueryWithCustomOuterDecorator.cs" />
+    <Compile Include="TestQueryWithNoDecorator.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

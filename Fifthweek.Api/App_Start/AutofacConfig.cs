@@ -19,6 +19,16 @@
 
     public static class AutofacConfig
     {
+        private static readonly Type CommandRetryDecoratorType = typeof(RetryOnTransientErrorCommandHandlerDecorator<>);
+        private static readonly Type QueryRetryDecoratorType = typeof(RetryOnTransientErrorQueryHandlerDecorator<,>);
+
+        private enum HandlerType
+        {
+            CommandHandler,
+            QueryHandler,
+            EventHandler,
+        }
+
         public static void Register(HttpConfiguration httpConfiguration, IAppBuilder app)
         {
             var container = CreateContainer();
@@ -46,7 +56,7 @@
             builder.RegisterType<HttpClient>().InstancePerDependency();
 
             // Uncoment this to log Autofac requests to trace output.
-            // builder.RegisterModule<LogRequestModule>();
+            //// builder.RegisterModule<LogRequestModule>();
 
             var container = builder.Build();
             return container;
@@ -81,23 +91,23 @@
                                    where t.IsClass
                                    from i in t.GetInterfaces()
                                    where i.IsClosedTypeOf(typeof(ICommandHandler<>))
-                                   select new { Type = t, Interface = i }).ToList();
+                                   select new { Type = t, Interface = i, HandlerType = HandlerType.CommandHandler }).ToList();
 
             var eventHandlers = (from t in types
                                  where t.IsClass
                                  from i in t.GetInterfaces()
                                  where i.IsClosedTypeOf(typeof(IEventHandler<>))
-                                 select new { Type = t, Interface = i }).ToList();
+                                 select new { Type = t, Interface = i, HandlerType = HandlerType.EventHandler }).ToList();
 
             var queryHandlers = (from t in types
                                  where t.IsClass
                                  from i in t.GetInterfaces()
                                  where i.IsClosedTypeOf(typeof(IQueryHandler<,>))
-                                 select new { Type = t, Interface = i }).ToList();
+                                 select new { Type = t, Interface = i, HandlerType = HandlerType.QueryHandler }).ToList();
 
             foreach (var item in commandHandlers.Concat(queryHandlers))
             {
-                var decoratorTypes = GetDecoratorTypes(item.Type);
+                var decoratorTypes = GetDecoratorTypes(item.Type, item.HandlerType);
 
                 if (decoratorTypes.Count == 0)
                 {
@@ -146,13 +156,38 @@
             }
         }
 
-        private static List<Type> GetDecoratorTypes(Type item)
+        private static List<Type> GetDecoratorTypes(Type item, HandlerType handlerType)
         {
             var result = new List<Type>();
+
+            bool foundRetryDecorator = false;
+
             var decoratorAttribute = item.GetCustomAttribute<DecoratorAttribute>(false);
+            bool omitDefaultDecorators = false;
             if (decoratorAttribute != null)
             {
-                result.AddRange(decoratorAttribute.DecoratorTypes);
+                omitDefaultDecorators = decoratorAttribute.OmitDefaultDecorators;
+                foreach (var decoratorType in decoratorAttribute.DecoratorTypes)
+                {
+                    if (decoratorType == CommandRetryDecoratorType || decoratorType == QueryRetryDecoratorType)
+                    {
+                        foundRetryDecorator = true;
+                    }
+
+                    result.Add(decoratorType);
+                }
+            }
+
+            if (omitDefaultDecorators == false && foundRetryDecorator == false)
+            {
+                if (handlerType == HandlerType.CommandHandler)
+                {
+                    result.Insert(0, CommandRetryDecoratorType);
+                }
+                else if (handlerType == HandlerType.QueryHandler)
+                {
+                    result.Insert(0, QueryRetryDecoratorType);
+                }
             }
 
             return result;

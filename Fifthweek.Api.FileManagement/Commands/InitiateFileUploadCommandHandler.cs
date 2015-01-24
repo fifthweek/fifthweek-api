@@ -7,7 +7,6 @@
     using Fifthweek.Api.Identity.Membership;
     using Fifthweek.CodeGeneration;
 
-    [Decorator(typeof(RetryOnRecoverableDatabaseErrorCommandHandlerDecorator<>))]
     [AutoConstructor]
     public partial class InitiateFileUploadCommandHandler : ICommandHandler<InitiateFileUploadCommand>
     {

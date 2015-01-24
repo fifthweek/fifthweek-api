@@ -12,6 +12,7 @@
     using Fifthweek.CodeGeneration;
 
     [AutoConstructor]
+    [Decorator(OmitDefaultDecorators = true)]
     public partial class GetUserStateQueryHandler : IQueryHandler<GetUserStateQuery, UserState>
     {
         private readonly IRequesterSecurity requesterSecurity;

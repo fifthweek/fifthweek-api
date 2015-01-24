@@ -21,5 +21,7 @@
         }
 
         public IReadOnlyList<Type> DecoratorTypes { get; private set; }
+
+        public bool OmitDefaultDecorators { get; set; }
     }
 }

@@ -6,7 +6,7 @@
 
     public static class FifthweekAssembliesResolver
     {
-        public static readonly IEnumerable<Assembly> Assemblies = new[] 
+        public static readonly IEnumerable<Assembly> FifthweekAssemblies = new[] 
         {
             Assembly.GetExecutingAssembly(),
             typeof(Shared.AutofacRegistration).Assembly,
@@ -24,5 +24,20 @@
             typeof(FileManagement.AutofacRegistration).Assembly
         }
         .Distinct().ToList().AsReadOnly();
+
+        public static IEnumerable<Assembly> Assemblies
+        {
+            get
+            {
+                if (ExtraAssemblies == null)
+                {
+                    return FifthweekAssemblies;
+                }
+                 
+                return FifthweekAssemblies.Concat(ExtraAssemblies);
+            }
+        }
+
+        internal static IEnumerable<Assembly> ExtraAssemblies { get; set; }
     }
 }
