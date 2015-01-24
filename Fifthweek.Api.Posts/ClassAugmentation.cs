@@ -33,6 +33,20 @@ namespace Fifthweek.Api.Posts
                 return objectType == typeof(Comment);
             }
         }
+
+		public class DapperTypeHandler : Dapper.SqlMapper.TypeHandler<Comment>, Fifthweek.Api.Persistence.IAutoRegisteredTypeHandler<Comment>
+        {
+            public override void SetValue(System.Data.IDbDataParameter parameter, Comment value)
+            {
+                parameter.DbType = System.Data.DbType.String;
+                parameter.Value = value.Value;
+            }
+
+            public override Comment Parse(object value)
+            {
+                return new Comment((System.String)value);
+            }
+        }
     }
 
 }
@@ -65,6 +79,20 @@ namespace Fifthweek.Api.Posts
             public override bool CanConvert(Type objectType)
             {
                 return objectType == typeof(PostId);
+            }
+        }
+
+		public class DapperTypeHandler : Dapper.SqlMapper.TypeHandler<PostId>, Fifthweek.Api.Persistence.IAutoRegisteredTypeHandler<PostId>
+        {
+            public override void SetValue(System.Data.IDbDataParameter parameter, PostId value)
+            {
+                parameter.DbType = System.Data.DbType.Guid;
+                parameter.Value = value.Value;
+            }
+
+            public override PostId Parse(object value)
+            {
+                return new PostId((System.Guid)value);
             }
         }
     }
@@ -455,9 +483,7 @@ namespace Fifthweek.Api.Posts
 }
 namespace Fifthweek.Api.Posts.Controllers
 {
-    using System.Collections;
     using System.Collections.Generic;
-    using System.Linq;
     using System.Threading.Tasks;
     using System.Web.Http;
     using Fifthweek.Api.Core;
@@ -701,6 +727,7 @@ namespace Fifthweek.Api.Posts.Queries
     public partial class BacklogPost 
     {
         public BacklogPost(
+            Fifthweek.Api.Posts.PostId postId, 
             Fifthweek.Api.Subscriptions.ChannelId channelId, 
             Fifthweek.Api.Collections.CollectionId collectionId, 
             Fifthweek.Api.Posts.Comment comment, 
@@ -709,6 +736,11 @@ namespace Fifthweek.Api.Posts.Queries
             System.Boolean scheduledByQueue, 
             System.DateTime liveDate)
         {
+            if (postId == null)
+            {
+                throw new ArgumentNullException("postId");
+            }
+
             if (channelId == null)
             {
                 throw new ArgumentNullException("channelId");
@@ -724,6 +756,7 @@ namespace Fifthweek.Api.Posts.Queries
                 throw new ArgumentNullException("liveDate");
             }
 
+            this.PostId = postId;
             this.ChannelId = channelId;
             this.CollectionId = collectionId;
             this.Comment = comment;
@@ -759,6 +792,38 @@ namespace Fifthweek.Api.Posts.Queries
 
             this.Requester = requester;
             this.RequestedUserId = requestedUserId;
+        }
+    }
+
+}
+namespace Fifthweek.Api.Posts.Queries
+{
+    using System.Collections.Generic;
+    using System.Threading.Tasks;
+    using Dapper;
+    using Fifthweek.Api.Core;
+    using Fifthweek.Api.Identity.Membership;
+    using Fifthweek.Api.Persistence;
+    using Fifthweek.Api.Persistence.Identity;
+    using Fifthweek.CodeGeneration;
+    public partial class GetCreatorBacklogQueryHandler 
+    {
+        public GetCreatorBacklogQueryHandler(
+            Fifthweek.Api.Identity.Membership.IRequesterSecurity requesterSecurity, 
+            Fifthweek.Api.Persistence.IFifthweekDbContext databaseContext)
+        {
+            if (requesterSecurity == null)
+            {
+                throw new ArgumentNullException("requesterSecurity");
+            }
+
+            if (databaseContext == null)
+            {
+                throw new ArgumentNullException("databaseContext");
+            }
+
+            this.requesterSecurity = requesterSecurity;
+            this.databaseContext = databaseContext;
         }
     }
 
@@ -1426,7 +1491,7 @@ namespace Fifthweek.Api.Posts.Queries
     {
         public override string ToString()
         {
-            return string.Format("BacklogPost({0}, {1}, {2}, {3}, {4}, {5}, {6})", this.ChannelId == null ? "null" : this.ChannelId.ToString(), this.CollectionId == null ? "null" : this.CollectionId.ToString(), this.Comment == null ? "null" : this.Comment.ToString(), this.FileId == null ? "null" : this.FileId.ToString(), this.ImageId == null ? "null" : this.ImageId.ToString(), this.ScheduledByQueue == null ? "null" : this.ScheduledByQueue.ToString(), this.LiveDate == null ? "null" : this.LiveDate.ToString());
+            return string.Format("BacklogPost({0}, {1}, {2}, {3}, {4}, {5}, {6}, {7})", this.PostId == null ? "null" : this.PostId.ToString(), this.ChannelId == null ? "null" : this.ChannelId.ToString(), this.CollectionId == null ? "null" : this.CollectionId.ToString(), this.Comment == null ? "null" : this.Comment.ToString(), this.FileId == null ? "null" : this.FileId.ToString(), this.ImageId == null ? "null" : this.ImageId.ToString(), this.ScheduledByQueue == null ? "null" : this.ScheduledByQueue.ToString(), this.LiveDate == null ? "null" : this.LiveDate.ToString());
         }
 
         public override bool Equals(object obj)
@@ -1454,6 +1519,7 @@ namespace Fifthweek.Api.Posts.Queries
             unchecked
             {
                 int hashCode = 0;
+                hashCode = (hashCode * 397) ^ (this.PostId != null ? this.PostId.GetHashCode() : 0);
                 hashCode = (hashCode * 397) ^ (this.ChannelId != null ? this.ChannelId.GetHashCode() : 0);
                 hashCode = (hashCode * 397) ^ (this.CollectionId != null ? this.CollectionId.GetHashCode() : 0);
                 hashCode = (hashCode * 397) ^ (this.Comment != null ? this.Comment.GetHashCode() : 0);
@@ -1467,6 +1533,11 @@ namespace Fifthweek.Api.Posts.Queries
 
         protected bool Equals(BacklogPost other)
         {
+            if (!object.Equals(this.PostId, other.PostId))
+            {
+                return false;
+            }
+
             if (!object.Equals(this.ChannelId, other.ChannelId))
             {
                 return false;
