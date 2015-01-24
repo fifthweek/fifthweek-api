@@ -52,7 +52,7 @@
         [TestMethod]
         public async Task WhenNotAllowedToCreate_ItShouldReportAnError()
         {
-            await this.NewTestDatabaseAsync(async testDatabase =>
+            await this.DatabaseTestAsync(async testDatabase =>
             {
                 this.subscriptionSecurity.Setup(_ => _.AssertCreationAllowedAsync(UserId)).Throws<UnauthorizedException>();
                 this.target = new CreateSubscriptionCommandHandler(this.subscriptionSecurity.Object, this.requesterSecurity.Object, testDatabase.NewContext());
@@ -69,7 +69,7 @@
         [TestMethod]
         public async Task WhenReRun_ItShouldHaveNoEffect()
         {
-            await this.NewTestDatabaseAsync(async testDatabase =>
+            await this.DatabaseTestAsync(async testDatabase =>
             {
                 this.target = new CreateSubscriptionCommandHandler(this.subscriptionSecurity.Object, this.requesterSecurity.Object, testDatabase.NewContext());
                 await this.CreateUserAsync(UserId, testDatabase);
@@ -85,7 +85,7 @@
         [TestMethod]
         public async Task ItShouldCreateSubscription()
         {
-            await this.NewTestDatabaseAsync(async testDatabase =>
+            await this.DatabaseTestAsync(async testDatabase =>
             {
                 this.target = new CreateSubscriptionCommandHandler(this.subscriptionSecurity.Object, this.requesterSecurity.Object, testDatabase.NewContext());
                 await this.CreateUserAsync(UserId, testDatabase);
@@ -124,7 +124,7 @@
         [TestMethod]
         public async Task ItShouldCreateTheDefaultChannel()
         {
-            await this.NewTestDatabaseAsync(async testDatabase =>
+            await this.DatabaseTestAsync(async testDatabase =>
             {
                 this.target = new CreateSubscriptionCommandHandler(this.subscriptionSecurity.Object, this.requesterSecurity.Object, testDatabase.NewContext());
                 await this.CreateUserAsync(UserId, testDatabase);

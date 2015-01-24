@@ -59,7 +59,7 @@
         [TestMethod]
         public async Task WhenAtLeastOneSubscriptionMatchesCreator_ItShouldReturnThatSubscriptionId()
         {
-            await this.NewTestDatabaseAsync(async testDatabase =>
+            await this.DatabaseTestAsync(async testDatabase =>
             {
                 this.target = new GetCreatorStatusQueryHandler(this.requesterSecurity.Object, testDatabase.NewContext());
                 await this.CreateSubscriptionAsync(UserId, SubscriptionId, testDatabase);
@@ -77,7 +77,7 @@
         [TestMethod]
         public async Task WhenCreatorHasNoPosts_ItShouldReturnTheyMustWriteFirstPost()
         {
-            await this.NewTestDatabaseAsync(async testDatabase =>
+            await this.DatabaseTestAsync(async testDatabase =>
             {
                 this.target = new GetCreatorStatusQueryHandler(this.requesterSecurity.Object, testDatabase.NewContext());
                 await this.CreateSubscriptionAsync(UserId, SubscriptionId, testDatabase);
@@ -95,7 +95,7 @@
         [TestMethod]
         public async Task WhenCreatorHasOnePost_ItShouldNotReturnTheyMustWriteFirstPost()
         {
-            await this.NewTestDatabaseAsync(async testDatabase =>
+            await this.DatabaseTestAsync(async testDatabase =>
             {
                 this.target = new GetCreatorStatusQueryHandler(this.requesterSecurity.Object, testDatabase.NewContext());
                 await this.CreateSubscriptionAsync(UserId, SubscriptionId, testDatabase);
@@ -114,7 +114,7 @@
         [TestMethod]
         public async Task WhenCreatorHasManyPosts_ItShouldNotReturnTheyMustWriteFirstPost()
         {
-            await this.NewTestDatabaseAsync(async testDatabase =>
+            await this.DatabaseTestAsync(async testDatabase =>
             {
                 this.target = new GetCreatorStatusQueryHandler(this.requesterSecurity.Object, testDatabase.NewContext());
                 await this.CreateSubscriptionAsync(UserId, SubscriptionId, testDatabase);
@@ -135,7 +135,7 @@
         [TestMethod]
         public async Task WhenCreatorHasManyPostsInDifferentChannels_ItShouldNotReturnTheyMustWriteFirstPost()
         {
-            await this.NewTestDatabaseAsync(async testDatabase =>
+            await this.DatabaseTestAsync(async testDatabase =>
             {
                 this.target = new GetCreatorStatusQueryHandler(this.requesterSecurity.Object, testDatabase.NewContext());
                 await this.CreateSubscriptionAsync(UserId, SubscriptionId, testDatabase);
@@ -157,7 +157,7 @@
         [TestMethod]
         public async Task WhenMultipleSubscriptionsMatchCreator_ItShouldReturnTheLatestSubscriptionId()
         {
-            await this.NewTestDatabaseAsync(async testDatabase =>
+            await this.DatabaseTestAsync(async testDatabase =>
             {
                 this.target = new GetCreatorStatusQueryHandler(this.requesterSecurity.Object, testDatabase.NewContext());
                 await this.CreateSubscriptionAsync(UserId, new SubscriptionId(Guid.NewGuid()), testDatabase, newUser: true, setTodaysDate: false);
@@ -177,7 +177,7 @@
         [TestMethod]
         public async Task WhenNoSubscriptionsExist_ItShouldReturnEmptySubscriptionId()
         {
-            await this.NewTestDatabaseAsync(async testDatabase =>
+            await this.DatabaseTestAsync(async testDatabase =>
             {
                 this.target = new GetCreatorStatusQueryHandler(this.requesterSecurity.Object, testDatabase.NewContext());
 
@@ -200,7 +200,7 @@
         [TestMethod]
         public async Task WhenNoSubscriptionsMatchCreator_ItShouldReturnEmptySubscriptionId()
         {
-            await this.NewTestDatabaseAsync(async testDatabase =>
+            await this.DatabaseTestAsync(async testDatabase =>
             {
                 this.target = new GetCreatorStatusQueryHandler(this.requesterSecurity.Object, testDatabase.NewContext());
                 await testDatabase.TakeSnapshotAsync();

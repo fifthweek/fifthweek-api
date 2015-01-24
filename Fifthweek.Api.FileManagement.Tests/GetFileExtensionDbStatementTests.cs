@@ -21,7 +21,7 @@
         [TestMethod]
         public async Task WhenFileExists_ItShouldReturnExtension()
         {
-            await this.NewTestDatabaseAsync(async testDatabase =>
+            await this.DatabaseTestAsync(async testDatabase =>
             {
                 this.target = new GetFileExtensionDbStatement(testDatabase.NewContext());
                 await this.CreateFileAsync(UserId, FileId, FileExtension, testDatabase);
@@ -38,7 +38,7 @@
         [TestMethod]
         public async Task WhenFileDoesNotExist_ItShouldThrowException()
         {
-            await this.NewTestDatabaseAsync(async testDatabase =>
+            await this.DatabaseTestAsync(async testDatabase =>
             {
                 this.target = new GetFileExtensionDbStatement(testDatabase.NewContext());
                 await testDatabase.TakeSnapshotAsync();

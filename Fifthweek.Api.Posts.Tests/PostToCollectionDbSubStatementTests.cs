@@ -19,7 +19,7 @@
     [TestClass]
     public class PostToCollectionDbSubStatementTests : PersistenceTestsBase
     {
-        private const int MaxPositionInQueue = 3;
+        private const int QueuedPostCount = 3;
 
         private static readonly UserId UserId = new UserId(Guid.NewGuid());
         private static readonly CollectionId CollectionId = new CollectionId(Guid.NewGuid());
@@ -51,7 +51,7 @@
         [TestMethod]
         public async Task ItShouldAllowOptionalComments()
         {
-            await this.NewTestDatabaseAsync(async testDatabase =>
+            await this.DatabaseTestAsync(async testDatabase =>
             {
                 this.target = new PostToCollectionDbSubStatements(testDatabase.NewContext(), this.getLiveDateOfNewQueuedPost.Object);
                 await this.CreateEntitiesAsync(testDatabase);
@@ -78,7 +78,7 @@
         [TestMethod]
         public async Task WhenPostingNow_ItShouldSchedulePostForNow()
         {
-            await this.NewTestDatabaseAsync(async testDatabase =>
+            await this.DatabaseTestAsync(async testDatabase =>
             {
                 this.target = new PostToCollectionDbSubStatements(testDatabase.NewContext(), this.getLiveDateOfNewQueuedPost.Object);
                 await this.CreateEntitiesAsync(testDatabase);
@@ -104,7 +104,7 @@
         [TestMethod]
         public async Task WhenPostingNow_ItShouldBeIdempotent()
         {
-            await this.NewTestDatabaseAsync(async testDatabase =>
+            await this.DatabaseTestAsync(async testDatabase =>
             {
                 var givenPost = UnscheduledPostWithoutChannel();
 
@@ -122,7 +122,7 @@
         [TestMethod]
         public async Task WhenSchedulingWithDateInPast_ItShouldSchedulePostForNow()
         {
-            await this.NewTestDatabaseAsync(async testDatabase =>
+            await this.DatabaseTestAsync(async testDatabase =>
             {
                 var pastScheduleDate = DateTime.UtcNow.AddDays(-2);
 
@@ -150,7 +150,7 @@
         [TestMethod]
         public async Task WhenSchedulingWithDateInFuture_ItShouldSchedulePostForFuture()
         {
-            await this.NewTestDatabaseAsync(async testDatabase =>
+            await this.DatabaseTestAsync(async testDatabase =>
             {
                 var futureScheduleDate = DateTime.UtcNow.AddDays(2);
 
@@ -178,7 +178,7 @@
         [TestMethod]
         public async Task WhenQueueing_AndCalculatedLiveDateIsUnique_ItShouldQueueThePost()
         {
-            await this.NewTestDatabaseAsync(async testDatabase =>
+            await this.DatabaseTestAsync(async testDatabase =>
             {
                 var uniqueLiveDate = DateTime.UtcNow.AddDays(42);
                 this.getLiveDateOfNewQueuedPost.Setup(_ => _.ExecuteAsync(CollectionId)).ReturnsAsync(uniqueLiveDate);
@@ -207,7 +207,7 @@
         [TestMethod]
         public async Task WhenQueueing_AndCalculatedLiveDateMatchesAnotherQueuedPostInDifferentCollection_ItShouldQueueThePost()
         {
-            await this.NewTestDatabaseAsync(async testDatabase =>
+            await this.DatabaseTestAsync(async testDatabase =>
             {
                 var sharedLiveDate = DateTime.UtcNow.AddDays(42);
                 this.getLiveDateOfNewQueuedPost.Setup(_ => _.ExecuteAsync(CollectionId)).ReturnsAsync(sharedLiveDate);
@@ -237,7 +237,7 @@
         [TestMethod]
         public async Task WhenQueueing_AndCalculatedLiveDateMatchesAnotherScheduledPostInTheCollection_ItShouldQueueThePost()
         {
-            await this.NewTestDatabaseAsync(async testDatabase =>
+            await this.DatabaseTestAsync(async testDatabase =>
             {
                 var sharedLiveDate = DateTime.UtcNow.AddDays(42);
                 this.getLiveDateOfNewQueuedPost.Setup(_ => _.ExecuteAsync(CollectionId)).ReturnsAsync(sharedLiveDate);
@@ -267,7 +267,7 @@
         [TestMethod]
         public async Task WhenQueueing_AndCalculatedLiveDateMatchesAnotherQueuedPostInTheCollection_ItShouldRetryWithDifferentDate()
         {
-            await this.NewTestDatabaseAsync(async testDatabase =>
+            await this.DatabaseTestAsync(async testDatabase =>
             {
                 var sharedLiveDate = DateTime.UtcNow.AddDays(42);
                 var uniqueLiveDate = DateTime.UtcNow.AddDays(43);
@@ -298,7 +298,7 @@
         [TestMethod]
         public async Task WhenQueueing_ItShouldRetryForMaximumOf3TimesBeforeThrowingException()
         {
-            await this.NewTestDatabaseAsync(async testDatabase =>
+            await this.DatabaseTestAsync(async testDatabase =>
             {
                 const int MaxNumberOfRetries = 3;
 
@@ -329,7 +329,7 @@
         [TestMethod]
         public async Task WhenQueueing_ItShouldBeIdempotent()
         {
-            await this.NewTestDatabaseAsync(async testDatabase =>
+            await this.DatabaseTestAsync(async testDatabase =>
             {
                 var firstUniqueDate = DateTime.UtcNow.AddDays(42);
                 var secondUniqueDate = DateTime.UtcNow.AddDays(43);
@@ -395,7 +395,7 @@
 
                 if (createQueuedPosts)
                 {
-                    for (var i = 0; i <= MaxPositionInQueue; i++)
+                    for (var i = 0; i <= QueuedPostCount; i++)
                     {
                         var post = PostTests.UniqueFileOrImage(Random);
                         post.ChannelId = ChannelId.Value;

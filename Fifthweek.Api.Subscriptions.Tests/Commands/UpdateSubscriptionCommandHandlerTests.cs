@@ -76,7 +76,7 @@
         [TestMethod]
         public async Task WhenNotAllowedToUpdate_ItShouldReportAnError()
         {
-            await this.NewTestDatabaseAsync(async testDatabase =>
+            await this.DatabaseTestAsync(async testDatabase =>
             {
                 this.subscriptionSecurity.Setup(_ => _.AssertUpdateAllowedAsync(UserId, SubscriptionId)).Throws<UnauthorizedException>();
                 this.target = new UpdateSubscriptionCommandHandler(this.subscriptionSecurity.Object, this.fileSecurity.Object, this.requesterSecurity.Object, testDatabase.NewContext());
@@ -93,7 +93,7 @@
         [TestMethod]
         public async Task WhenNotAllowedToUseFile_ItShouldReportAnError()
         {
-            await this.NewTestDatabaseAsync(async testDatabase =>
+            await this.DatabaseTestAsync(async testDatabase =>
             {
                 this.fileSecurity.Setup(_ => _.AssertUsageAllowedAsync(UserId, HeaderImageFileId)).Throws<UnauthorizedException>();
                 this.target = new UpdateSubscriptionCommandHandler(this.subscriptionSecurity.Object, this.fileSecurity.Object, this.requesterSecurity.Object, testDatabase.NewContext());
@@ -110,7 +110,7 @@
         [TestMethod]
         public async Task WhenReRun_ItShouldHaveNoEffect()
         {
-            await this.NewTestDatabaseAsync(async testDatabase =>
+            await this.DatabaseTestAsync(async testDatabase =>
             {
                 this.target = new UpdateSubscriptionCommandHandler(this.subscriptionSecurity.Object, this.fileSecurity.Object, this.requesterSecurity.Object, testDatabase.NewContext());
                 await this.CreateSubscriptionAsync(UserId, SubscriptionId, HeaderImageFileId, testDatabase);
@@ -126,7 +126,7 @@
         [TestMethod]
         public async Task ItShouldUpdateSubscription()
         {
-            await this.NewTestDatabaseAsync(async testDatabase =>
+            await this.DatabaseTestAsync(async testDatabase =>
             {
                 this.target = new UpdateSubscriptionCommandHandler(this.subscriptionSecurity.Object, this.fileSecurity.Object, this.requesterSecurity.Object, testDatabase.NewContext());
                 var subscription = await this.CreateSubscriptionAsync(UserId, SubscriptionId, HeaderImageFileId, testDatabase);

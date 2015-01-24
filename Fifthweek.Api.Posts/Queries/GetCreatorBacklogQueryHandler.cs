@@ -1,6 +1,8 @@
 ﻿namespace Fifthweek.Api.Posts.Queries
 {
+    using System;
     using System.Collections.Generic;
+    using System.Linq;
     using System.Threading.Tasks;
 
     using Dapper;
@@ -15,14 +17,15 @@
     public partial class GetCreatorBacklogQueryHandler : IQueryHandler<GetCreatorBacklogQuery, IReadOnlyList<BacklogPost>>
     {
         private static readonly string Sql = string.Format(
-            @"SELECT    post.{1}, {2}, {3}, {4}, {5}, {6}, {7}, {8}
+            @"SELECT    post.{1} AS PostId, {2}, {4}, {5}, {6}, {7}, {8}, {3}
             FROM        {0} post
             INNER JOIN  {9} channel
                 ON      post.{2} = channel.{10}
             INNER JOIN  {12} subscription
                 ON      channel.{11} = subscription.{13}
             WHERE       post.{3} > @Now
-            AND         subscription.{14} = @CreatorId",
+            AND         subscription.{14} = @CreatorId
+            ORDER BY    post.{3} DESC, post.{8} DESC",
             Post.Table,
             Post.Fields.Id,
             Post.Fields.ChannelId,
@@ -54,8 +57,13 @@
 
         private async Task<IReadOnlyList<BacklogPost>> GetCreatorBacklogAsync(UserId creatorId)
         {
-            var entities = await this.databaseContext.Database.Connection.QueryAsync<BacklogPost>(Sql, new { CreatorId = creatorId.Value });
-            return entities.AsReadOnlyList();
+            var parameters = new
+            {
+                CreatorId = creatorId.Value,
+                Now = DateTime.UtcNow
+            };
+            var entities = await this.databaseContext.Database.Connection.QueryAsync<BacklogPost.Builder>(Sql, parameters);
+            return entities.Select(_ => _.Build()).ToList();
         }
     }
 }

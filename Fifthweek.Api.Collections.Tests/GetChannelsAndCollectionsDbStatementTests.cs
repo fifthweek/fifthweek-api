@@ -44,7 +44,7 @@
         [TestMethod]
         public async Task WhenCalled_ItShouldReturnChannelsAndCollections()
         {
-            await this.NewTestDatabaseAsync(async testDatabase =>
+            await this.DatabaseTestAsync(async testDatabase =>
             {
                 this.target = new GetChannelsAndCollectionsDbStatement(testDatabase.NewContext());
                 await this.CreateEntitiesAsync(testDatabase);
@@ -74,7 +74,7 @@
         [TestMethod]
         public async Task WhenCalledWithNoChannels_ItShouldReturnEmptyChannelsAndCollections()
         {
-            await this.NewTestDatabaseAsync(async testDatabase =>
+            await this.DatabaseTestAsync(async testDatabase =>
             {
                 this.target = new GetChannelsAndCollectionsDbStatement(testDatabase.NewContext());
                 await testDatabase.TakeSnapshotAsync();

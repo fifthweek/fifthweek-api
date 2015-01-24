@@ -32,7 +32,7 @@
         [TestMethod]
         public async Task WhenAddingANewFile_ItShouldUpdateTheDatabase()
         {
-            await this.NewTestDatabaseAsync(async testDatabase =>
+            await this.DatabaseTestAsync(async testDatabase =>
             {
                 this.target = new FileRepository(testDatabase.NewContext());
                 await this.CreateUserAsync(testDatabase);
@@ -71,7 +71,7 @@
         [TestMethod]
         public async Task WhenAddingANewFileTwice_ItShouldHaveNoEffect()
         {
-            await this.NewTestDatabaseAsync(async testDatabase =>
+            await this.DatabaseTestAsync(async testDatabase =>
             {
                 this.target = new FileRepository(testDatabase.NewContext());
                 await this.CreateUserAsync(testDatabase);
@@ -122,7 +122,7 @@
         [TestMethod]
         public async Task WhenSetFileUploadCompleteCalled_ItShouldUpdateTheDatabase()
         {
-            await this.NewTestDatabaseAsync(async testDatabase =>
+            await this.DatabaseTestAsync(async testDatabase =>
             {
                 this.target = new FileRepository(testDatabase.NewContext());
 
@@ -184,7 +184,7 @@
         [TestMethod]
         public async Task WhenGettingFileWaitingForUpload_ItShouldReturnTheFile()
         {
-            await this.NewTestDatabaseAsync(async testDatabase =>
+            await this.DatabaseTestAsync(async testDatabase =>
             {
                 this.target = new FileRepository(testDatabase.NewContext());
 
@@ -208,7 +208,7 @@
         [ExpectedException(typeof(InvalidOperationException))]
         public async Task WhenGettingANonExistantFileWaitingForUpload_ItShouldThrowAnException()
         {
-            await this.NewTestDatabaseAsync(async testDatabase =>
+            await this.DatabaseTestAsync(async testDatabase =>
             {
                 this.target = new FileRepository(testDatabase.NewContext());
 

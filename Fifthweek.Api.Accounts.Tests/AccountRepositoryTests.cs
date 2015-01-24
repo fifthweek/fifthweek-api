@@ -45,7 +45,7 @@
         [TestMethod]
         public async Task WhenGetAccountSettingsCalled_ItShouldGetAccountSettingsFromTheDatabase()
         {
-            await this.NewTestDatabaseAsync(async testDatabase =>
+            await this.DatabaseTestAsync(async testDatabase =>
             {
                 this.target = new AccountRepository(testDatabase.NewContext(), this.userManager.Object);
                 await this.CreateFileAsync(testDatabase);
@@ -63,7 +63,7 @@
         [TestMethod]
         public async Task WhenGetAccountSettingsCalledWithInvalidUserId_ItShouldThrowARecoverableException()
         {
-            await this.NewTestDatabaseAsync(async testDatabase =>
+            await this.DatabaseTestAsync(async testDatabase =>
             {
                 this.target = new AccountRepository(testDatabase.NewContext(), this.userManager.Object);
                 await this.CreateFileAsync(testDatabase);
@@ -88,7 +88,7 @@
         [TestMethod]
         public async Task WhenUpdateAccountSettingsCalled_ItShouldUpdateTheDatabase()
         {
-            await this.NewTestDatabaseAsync(async testDatabase =>
+            await this.DatabaseTestAsync(async testDatabase =>
             {
                 this.target = new AccountRepository(testDatabase.NewContext(), this.userManager.Object);
                 await this.CreateFileAsync(testDatabase);
@@ -122,7 +122,7 @@
         [TestMethod]
         public async Task WhenUpdateAccountSettingsCalledWithoutANewPassword_ItShouldUpdateTheDatabase()
         {
-            await this.NewTestDatabaseAsync(async testDatabase =>
+            await this.DatabaseTestAsync(async testDatabase =>
             {
                 this.target = new AccountRepository(testDatabase.NewContext(), this.userManager.Object);
                 await this.CreateFileAsync(testDatabase);
@@ -152,7 +152,7 @@
         [TestMethod]
         public async Task WhenUpdateAccountSettingsCalledWithSameEMail_ItShouldDetectTheEmailHasNotChanged()
         {
-            await this.NewTestDatabaseAsync(async testDatabase =>
+            await this.DatabaseTestAsync(async testDatabase =>
             {
                 this.target = new AccountRepository(testDatabase.NewContext(), this.userManager.Object);
                 await this.CreateFileAsync(testDatabase);
@@ -181,7 +181,7 @@
         [TestMethod]
         public async Task WhenUpdateAccountSettingsCalledWithoutAProfileImageFileId_ItShouldUpdateTheDatabase()
         {
-            await this.NewTestDatabaseAsync(async testDatabase =>
+            await this.DatabaseTestAsync(async testDatabase =>
             {
                 this.target = new AccountRepository(testDatabase.NewContext(), this.userManager.Object);
                 await this.CreateFileAsync(testDatabase);

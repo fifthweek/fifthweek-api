@@ -20,7 +20,7 @@
         [TestMethod]
         public async Task WhenCheckingPostOwnership_ItShouldPassIfAtThePostBelongsToTheUser()
         {
-            await this.NewTestDatabaseAsync(async testDatabase =>
+            await this.DatabaseTestAsync(async testDatabase =>
             {
                 this.target = new PostOwnership(testDatabase.NewContext());
                 await this.CreatePostAsync(UserId, PostId, testDatabase);
@@ -36,7 +36,7 @@
         [TestMethod]
         public async Task WhenCheckingPostOwnership_ItShouldFailIfNoPostsExist()
         {
-            await this.NewTestDatabaseAsync(async testDatabase =>
+            await this.DatabaseTestAsync(async testDatabase =>
             {
                 this.target = new PostOwnership(testDatabase.NewContext());
 
@@ -57,7 +57,7 @@
         [TestMethod]
         public async Task WhenCheckingPostOwnership_ItShouldFailIfNoPostsMatchPostOrCreator()
         {
-            await this.NewTestDatabaseAsync(async testDatabase =>
+            await this.DatabaseTestAsync(async testDatabase =>
             {
                 this.target = new PostOwnership(testDatabase.NewContext());
                 await this.CreatePostAsync(new UserId(Guid.NewGuid()), new PostId(Guid.NewGuid()), testDatabase);
@@ -73,7 +73,7 @@
         [TestMethod]
         public async Task WhenCheckingPostOwnership_ItShouldFailIfNoPostsMatchPost()
         {
-            await this.NewTestDatabaseAsync(async testDatabase =>
+            await this.DatabaseTestAsync(async testDatabase =>
             {
                 this.target = new PostOwnership(testDatabase.NewContext());
                 await this.CreatePostAsync(UserId, new PostId(Guid.NewGuid()), testDatabase);
@@ -89,7 +89,7 @@
         [TestMethod]
         public async Task WhenCheckingPostOwnership_ItShouldFailIfNoPostsMatchCreator()
         {
-            await this.NewTestDatabaseAsync(async testDatabase =>
+            await this.DatabaseTestAsync(async testDatabase =>
             {
                 this.target = new PostOwnership(testDatabase.NewContext());
                 await this.CreatePostAsync(new UserId(Guid.NewGuid()), PostId, testDatabase);

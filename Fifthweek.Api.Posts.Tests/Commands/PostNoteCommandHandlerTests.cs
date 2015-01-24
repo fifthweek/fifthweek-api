@@ -67,7 +67,7 @@
         [TestMethod]
         public async Task WhenReRun_ItShouldHaveNoEffect()
         {
-            await this.NewTestDatabaseAsync(async testDatabase =>
+            await this.DatabaseTestAsync(async testDatabase =>
             {
                 this.target = new PostNoteCommandHandler(this.channelSecurity.Object, this.requesterSecurity.Object, testDatabase.NewContext());
                 await this.CreateChannelAsync(UserId, ChannelId, testDatabase);
@@ -83,7 +83,7 @@
         [TestMethod]
         public async Task WhenDateIsProvidedAndIsInFuture_ItShouldSchedulePostForLater()
         {
-            await this.NewTestDatabaseAsync(async testDatabase =>
+            await this.DatabaseTestAsync(async testDatabase =>
             {
                 this.target = new PostNoteCommandHandler(this.channelSecurity.Object, this.requesterSecurity.Object, testDatabase.NewContext());
                 var scheduledPostCommand = new PostNoteCommand(Requester, PostId, ChannelId, Note, TwoDaysFromNow);
@@ -136,7 +136,7 @@
 
         private async Task ItShouldSchedulePostForNow(PostNoteCommand command)
         {
-            await this.NewTestDatabaseAsync(async testDatabase =>
+            await this.DatabaseTestAsync(async testDatabase =>
             {
                 this.target = new PostNoteCommandHandler(this.channelSecurity.Object, this.requesterSecurity.Object, testDatabase.NewContext());
                 await this.CreateChannelAsync(UserId, ChannelId, testDatabase);

@@ -7,7 +7,7 @@
     using Fifthweek.Api.Subscriptions;
     using Fifthweek.CodeGeneration;
 
-    [AutoConstructor, AutoEqualityMembers]
+    [AutoConstructor, AutoEqualityMembers, AutoCopy]
     public partial class BacklogPost
     {
         public PostId PostId { get; private set; }

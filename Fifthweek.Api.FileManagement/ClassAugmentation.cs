@@ -44,6 +44,20 @@ namespace Fifthweek.Api.FileManagement
                 return objectType == typeof(FileId);
             }
         }
+
+		public class DapperTypeHandler : Dapper.SqlMapper.TypeHandler<FileId>, Fifthweek.Api.Persistence.IAutoRegisteredTypeHandler<FileId>
+        {
+            public override void SetValue(System.Data.IDbDataParameter parameter, FileId value)
+            {
+                parameter.DbType = System.Data.DbType.Guid;
+                parameter.Value = value.Value;
+            }
+
+            public override FileId Parse(object value)
+            {
+                return new FileId((System.Guid)value);
+            }
+        }
     }
 
 }
@@ -817,9 +831,16 @@ namespace Fifthweek.Api.FileManagement.Queries
 namespace Fifthweek.Api.FileManagement
 {
     using System;
-    using System.Threading.Tasks;
-    using Fifthweek.Api.Azure;
+    using System.Linq;
     using Fifthweek.CodeGeneration;
+    using Fifthweek.Api.Core;
+    using Fifthweek.Shared;
+    using System.Threading.Tasks;
+    using Dapper;
+    using Fifthweek.Api.Identity.Membership;
+    using Fifthweek.Api.Persistence;
+    using System.Security;
+    using Fifthweek.Api.Azure;
     using Fifthweek.WebJobs.GarbageCollection.Shared;
     public partial class ScheduleGarbageCollectionStatement 
     {

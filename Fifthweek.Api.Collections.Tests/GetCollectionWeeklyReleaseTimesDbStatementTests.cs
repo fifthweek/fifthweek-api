@@ -25,7 +25,7 @@
         [TestMethod]
         public async Task WhenNoReleaseTimesExist_ItShouldThrowException()
         {
-            await this.NewTestDatabaseAsync(async testDatabase =>
+            await this.DatabaseTestAsync(async testDatabase =>
             {
                 this.target = new GetCollectionWeeklyReleaseTimesDbStatement(testDatabase.NewContext());
                 await testDatabase.TakeSnapshotAsync();
@@ -42,7 +42,7 @@
         [TestMethod]
         public async Task WhenReleaseTimesExist_ItShouldReleaseTimes()
         {
-            await this.NewTestDatabaseAsync(async testDatabase =>
+            await this.DatabaseTestAsync(async testDatabase =>
             {
                 this.target = new GetCollectionWeeklyReleaseTimesDbStatement(testDatabase.NewContext());
                 await this.CreateEntitiesAsync(testDatabase);
@@ -62,7 +62,7 @@
         [TestMethod]
         public async Task WhenReleaseTimesExist_ItShouldReleaseTimesSorted()
         {
-            await this.NewTestDatabaseAsync(async testDatabase =>
+            await this.DatabaseTestAsync(async testDatabase =>
             {
                 this.target = new GetCollectionWeeklyReleaseTimesDbStatement(testDatabase.NewContext());
                 await this.CreateEntitiesAsync(testDatabase);

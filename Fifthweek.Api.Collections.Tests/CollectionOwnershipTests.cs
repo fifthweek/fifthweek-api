@@ -20,7 +20,7 @@
         [TestMethod]
         public async Task WhenCheckingCollectionOwnership_ItShouldPassIfAtLeastOneCollectionMatchesCollectionAndCreator()
         {
-            await this.NewTestDatabaseAsync(async testDatabase =>
+            await this.DatabaseTestAsync(async testDatabase =>
             {
                 this.target = new CollectionOwnership(testDatabase.NewContext());
                 await this.CreateCollectionAsync(UserId, CollectionId, testDatabase);
@@ -36,7 +36,7 @@
         [TestMethod]
         public async Task WhenCheckingCollectionOwnership_ItShouldFailIfNoCollectionsExist()
         {
-            await this.NewTestDatabaseAsync(async testDatabase =>
+            await this.DatabaseTestAsync(async testDatabase =>
             {
                 this.target = new CollectionOwnership(testDatabase.NewContext());
 
@@ -62,7 +62,7 @@
         [TestMethod]
         public async Task WhenCheckingCollectionOwnership_ItShouldFailIfNoCollectionsMatchCollectionOrCreator()
         {
-            await this.NewTestDatabaseAsync(async testDatabase =>
+            await this.DatabaseTestAsync(async testDatabase =>
             {
                 this.target = new CollectionOwnership(testDatabase.NewContext());
                 await this.CreateCollectionAsync(new UserId(Guid.NewGuid()), new CollectionId(Guid.NewGuid()), testDatabase);
@@ -78,7 +78,7 @@
         [TestMethod]
         public async Task WhenCheckingCollectionOwnership_ItShouldFailIfNoCollectionsMatchCollection()
         {
-            await this.NewTestDatabaseAsync(async testDatabase =>
+            await this.DatabaseTestAsync(async testDatabase =>
             {
                 this.target = new CollectionOwnership(testDatabase.NewContext());
                 await this.CreateCollectionAsync(UserId, new CollectionId(Guid.NewGuid()), testDatabase);
@@ -94,7 +94,7 @@
         [TestMethod]
         public async Task WhenCheckingCollectionOwnership_ItShouldFailIfNoCollectionsMatchCreator()
         {
-            await this.NewTestDatabaseAsync(async testDatabase =>
+            await this.DatabaseTestAsync(async testDatabase =>
             {
                 this.target = new CollectionOwnership(testDatabase.NewContext());
                 await this.CreateCollectionAsync(new UserId(Guid.NewGuid()), CollectionId, testDatabase);

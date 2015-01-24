@@ -17,6 +17,65 @@ namespace Fifthweek.Api.Collections
     using Fifthweek.Api.Collections.Queries;
     using System.Text;
     using Fifthweek.Api.Subscriptions;
+    [Newtonsoft.Json.JsonConverter(typeof(JsonConverter))]
+    public partial class CollectionId 
+    {
+		public class JsonConverter : Newtonsoft.Json.JsonConverter
+        {
+            public override void WriteJson(Newtonsoft.Json.JsonWriter writer, object value, Newtonsoft.Json.JsonSerializer serializer)
+            {
+                var valueType = (CollectionId)value;
+                serializer.Serialize(writer, valueType.Value);
+            }
+
+            public override object ReadJson(Newtonsoft.Json.JsonReader reader, Type objectType, object existingValue, Newtonsoft.Json.JsonSerializer serializer)
+            {
+                if (objectType != typeof(CollectionId))
+                {
+                    throw new ArgumentException("Expected to deserialize JSON for type " + typeof(CollectionId).Name, "objectType");
+                }
+
+                var value = serializer.Deserialize<System.Guid>(reader);
+                return new CollectionId(value);
+            }
+
+            public override bool CanConvert(Type objectType)
+            {
+                return objectType == typeof(CollectionId);
+            }
+        }
+
+		public class DapperTypeHandler : Dapper.SqlMapper.TypeHandler<CollectionId>, Fifthweek.Api.Persistence.IAutoRegisteredTypeHandler<CollectionId>
+        {
+            public override void SetValue(System.Data.IDbDataParameter parameter, CollectionId value)
+            {
+                parameter.DbType = System.Data.DbType.Guid;
+                parameter.Value = value.Value;
+            }
+
+            public override CollectionId Parse(object value)
+            {
+                return new CollectionId((System.Guid)value);
+            }
+        }
+    }
+
+}
+
+namespace Fifthweek.Api.Collections
+{
+    using System;
+    using System.Linq;
+    using Fifthweek.CodeGeneration;
+    using System.Threading.Tasks;
+    using Dapper;
+    using Fifthweek.Api.Core;
+    using Fifthweek.Api.Identity.Membership;
+    using Fifthweek.Api.Persistence;
+    using System.Collections.Generic;
+    using Fifthweek.Api.Collections.Queries;
+    using System.Text;
+    using Fifthweek.Api.Subscriptions;
     public partial class CollectionId 
     {
         public CollectionId(

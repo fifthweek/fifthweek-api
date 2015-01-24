@@ -20,7 +20,7 @@
         [TestMethod]
         public async Task WhenCheckingSubscriptionOwnership_ItShouldPassIfAtLeastOneSubscriptionMatchesSubscriptionAndCreator()
         {
-            await this.NewTestDatabaseAsync(async testDatabase =>
+            await this.DatabaseTestAsync(async testDatabase =>
             {
                 this.target = new SubscriptionOwnership(testDatabase.NewContext());
                 await this.CreateSubscriptionAsync(UserId, SubscriptionId, testDatabase);
@@ -36,7 +36,7 @@
         [TestMethod]
         public async Task WhenCheckingSubscriptionOwnership_ItShouldFailIfNoSubscriptionsExist()
         {
-            await this.NewTestDatabaseAsync(async testDatabase =>
+            await this.DatabaseTestAsync(async testDatabase =>
             {
                 this.target = new SubscriptionOwnership(testDatabase.NewContext());
 
@@ -57,7 +57,7 @@
         [TestMethod]
         public async Task WhenCheckingSubscriptionOwnership_ItShouldFailIfNoSubscriptionsMatchSubscriptionOrCreator()
         {
-            await this.NewTestDatabaseAsync(async testDatabase =>
+            await this.DatabaseTestAsync(async testDatabase =>
             {
                 this.target = new SubscriptionOwnership(testDatabase.NewContext());
                 await this.CreateSubscriptionAsync(new UserId(Guid.NewGuid()), new SubscriptionId(Guid.NewGuid()), testDatabase);
@@ -73,7 +73,7 @@
         [TestMethod]
         public async Task WhenCheckingSubscriptionOwnership_ItShouldFailIfNoSubscriptionsMatchSubscription()
         {
-            await this.NewTestDatabaseAsync(async testDatabase =>
+            await this.DatabaseTestAsync(async testDatabase =>
             {
                 this.target = new SubscriptionOwnership(testDatabase.NewContext());
                 await this.CreateSubscriptionAsync(UserId, new SubscriptionId(Guid.NewGuid()), testDatabase);
@@ -89,7 +89,7 @@
         [TestMethod]
         public async Task WhenCheckingSubscriptionOwnership_ItShouldFailIfNoSubscriptionsMatchCreator()
         {
-            await this.NewTestDatabaseAsync(async testDatabase =>
+            await this.DatabaseTestAsync(async testDatabase =>
             {
                 this.target = new SubscriptionOwnership(testDatabase.NewContext());
                 await this.CreateSubscriptionAsync(new UserId(Guid.NewGuid()), SubscriptionId, testDatabase);

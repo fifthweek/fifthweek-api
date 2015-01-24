@@ -21,7 +21,7 @@
         [TestMethod]
         public async Task WhenCheckingFileOwnership_ItShouldPassIfAtLeastOneFileMatchesFileAndUser()
         {
-            await this.NewTestDatabaseAsync(async testDatabase =>
+            await this.DatabaseTestAsync(async testDatabase =>
             {
                 this.target = new FileOwnership(testDatabase.NewContext());
                 await this.CreateFileAsync(UserId, FileId, testDatabase);
@@ -37,7 +37,7 @@
         [TestMethod]
         public async Task WhenCheckingFileOwnership_ItShouldFailIfNoFilesExist()
         {
-            await this.NewTestDatabaseAsync(async testDatabase =>
+            await this.DatabaseTestAsync(async testDatabase =>
             {
                 this.target = new FileOwnership(testDatabase.NewContext());
 
@@ -59,7 +59,7 @@
         [TestMethod]
         public async Task WhenCheckingFileOwnership_ItShouldFailIfNoFilesMatchFileOrUser()
         {
-            await this.NewTestDatabaseAsync(async testDatabase =>
+            await this.DatabaseTestAsync(async testDatabase =>
             {
                 this.target = new FileOwnership(testDatabase.NewContext());
                 await this.CreateFileAsync(new UserId(Guid.NewGuid()), new FileId(Guid.NewGuid()), testDatabase);
@@ -75,7 +75,7 @@
         [TestMethod]
         public async Task WhenCheckingFileOwnership_ItShouldFailIfNoFilesMatchFile()
         {
-            await this.NewTestDatabaseAsync(async testDatabase =>
+            await this.DatabaseTestAsync(async testDatabase =>
             {
                 this.target = new FileOwnership(testDatabase.NewContext());
                 await this.CreateFileAsync(UserId, new FileId(Guid.NewGuid()), testDatabase);
@@ -91,7 +91,7 @@
         [TestMethod]
         public async Task WhenCheckingFileOwnership_ItShouldFailIfNoFilesMatchUser()
         {
-            await this.NewTestDatabaseAsync(async testDatabase =>
+            await this.DatabaseTestAsync(async testDatabase =>
             {
                 this.target = new FileOwnership(testDatabase.NewContext());
                 await this.CreateFileAsync(new UserId(Guid.NewGuid()), FileId, testDatabase);

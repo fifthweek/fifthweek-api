@@ -20,7 +20,7 @@
         [TestMethod]
         public async Task WhenCheckingChannelOwnership_ItShouldPassIfAtLeastOneChannelMatchesChannelAndCreator()
         {
-            await this.NewTestDatabaseAsync(async testDatabase =>
+            await this.DatabaseTestAsync(async testDatabase =>
             {
                 this.target = new ChannelOwnership(testDatabase.NewContext());
                 await this.CreateChannelAsync(UserId, ChannelId, testDatabase);
@@ -36,7 +36,7 @@
         [TestMethod]
         public async Task WhenCheckingChannelOwnership_ItShouldFailIfNoChannelsExist()
         {
-            await this.NewTestDatabaseAsync(async testDatabase =>
+            await this.DatabaseTestAsync(async testDatabase =>
             {
                 this.target = new ChannelOwnership(testDatabase.NewContext());
 
@@ -57,7 +57,7 @@
         [TestMethod]
         public async Task WhenCheckingChannelOwnership_ItShouldFailIfNoChannelsMatchChannelOrCreator()
         {
-            await this.NewTestDatabaseAsync(async testDatabase =>
+            await this.DatabaseTestAsync(async testDatabase =>
             {
                 this.target = new ChannelOwnership(testDatabase.NewContext());
                 await this.CreateChannelAsync(new UserId(Guid.NewGuid()), new ChannelId(Guid.NewGuid()), testDatabase);
@@ -73,7 +73,7 @@
         [TestMethod]
         public async Task WhenCheckingChannelOwnership_ItShouldFailIfNoChannelsMatchChannel()
         {
-            await this.NewTestDatabaseAsync(async testDatabase =>
+            await this.DatabaseTestAsync(async testDatabase =>
             {
                 this.target = new ChannelOwnership(testDatabase.NewContext());
                 await this.CreateChannelAsync(UserId, new ChannelId(Guid.NewGuid()), testDatabase);
@@ -89,7 +89,7 @@
         [TestMethod]
         public async Task WhenCheckingChannelOwnership_ItShouldFailIfNoChannelsMatchCreator()
         {
-            await this.NewTestDatabaseAsync(async testDatabase =>
+            await this.DatabaseTestAsync(async testDatabase =>
             {
                 this.target = new ChannelOwnership(testDatabase.NewContext());
                 await this.CreateChannelAsync(new UserId(Guid.NewGuid()), ChannelId, testDatabase);

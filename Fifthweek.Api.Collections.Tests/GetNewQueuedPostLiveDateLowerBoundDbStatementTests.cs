@@ -53,7 +53,7 @@
         [TestMethod]
         public async Task WhenCollectionLowerBoundHasPassed_AndNoPostsExist_ItShouldReturnNow()
         {
-            await this.NewTestDatabaseAsync(async testDatabase =>
+            await this.DatabaseTestAsync(async testDatabase =>
             {
                 this.target = new GetNewQueuedPostLiveDateLowerBoundDbStatement(testDatabase.NewContext());
                 await this.CreateEntitiesAsync(
@@ -73,7 +73,7 @@
         [TestMethod]
         public async Task WhenCollectionLowerBoundHasPassed_AndLivePostsExist_ItShouldReturnNow()
         {
-            await this.NewTestDatabaseAsync(async testDatabase =>
+            await this.DatabaseTestAsync(async testDatabase =>
             {
                 this.target = new GetNewQueuedPostLiveDateLowerBoundDbStatement(testDatabase.NewContext());
                 await this.CreateEntitiesAsync(
@@ -94,7 +94,7 @@
         [TestMethod]
         public async Task WhenCollectionLowerBoundHasPassed_AndScheduledPostsExist_ItShouldReturnNow()
         {
-            await this.NewTestDatabaseAsync(async testDatabase =>
+            await this.DatabaseTestAsync(async testDatabase =>
             {
                 this.target = new GetNewQueuedPostLiveDateLowerBoundDbStatement(testDatabase.NewContext());
                 await this.CreateEntitiesAsync(
@@ -116,7 +116,7 @@
         [TestMethod]
         public async Task WhenCollectionLowerBoundHasPassed_AndAllQueuedPostAreLive_ItShouldReturnNow()
         {
-            await this.NewTestDatabaseAsync(async testDatabase =>
+            await this.DatabaseTestAsync(async testDatabase =>
             {
                 this.target = new GetNewQueuedPostLiveDateLowerBoundDbStatement(testDatabase.NewContext());
                 await this.CreateEntitiesAsync(
@@ -139,7 +139,7 @@
         [TestMethod]
         public async Task WhenCollectionLowerBoundIsInFuture_AndNoPostsExist_ItShouldReturnCollectionLowerBound()
         {
-            await this.NewTestDatabaseAsync(async testDatabase =>
+            await this.DatabaseTestAsync(async testDatabase =>
             {
                 this.target = new GetNewQueuedPostLiveDateLowerBoundDbStatement(testDatabase.NewContext());
                 await this.CreateEntitiesAsync(
@@ -159,7 +159,7 @@
         [TestMethod]
         public async Task WhenCollectionLowerBoundIsInFuture_AndLivePostsExist_ItShouldReturnCollectionLowerBound()
         {
-            await this.NewTestDatabaseAsync(async testDatabase =>
+            await this.DatabaseTestAsync(async testDatabase =>
             {
                 this.target = new GetNewQueuedPostLiveDateLowerBoundDbStatement(testDatabase.NewContext());
                 await this.CreateEntitiesAsync(
@@ -180,7 +180,7 @@
         [TestMethod]
         public async Task WhenCollectionLowerBoundIsInFuture_AndScheduledPostsExist_ItShouldReturnCollectionLowerBound()
         {
-            await this.NewTestDatabaseAsync(async testDatabase =>
+            await this.DatabaseTestAsync(async testDatabase =>
             {
                 this.target = new GetNewQueuedPostLiveDateLowerBoundDbStatement(testDatabase.NewContext());
                 await this.CreateEntitiesAsync(
@@ -202,7 +202,7 @@
         [TestMethod]
         public async Task WhenCollectionLowerBoundIsInFuture_AndAllQueuedPostAreLive_ItShouldReturnCollectionLowerBound()
         {
-            await this.NewTestDatabaseAsync(async testDatabase =>
+            await this.DatabaseTestAsync(async testDatabase =>
             {
                 this.target = new GetNewQueuedPostLiveDateLowerBoundDbStatement(testDatabase.NewContext());
                 await this.CreateEntitiesAsync(
@@ -225,7 +225,7 @@
         [TestMethod]
         public async Task WhenQueuedPostsExist_AndLatestPostExceedsCollectionLowerBound_ItShouldReturnLiveDateOfLatestQueuedPost()
         {
-            await this.NewTestDatabaseAsync(async testDatabase =>
+            await this.DatabaseTestAsync(async testDatabase =>
             {
                 this.target = new GetNewQueuedPostLiveDateLowerBoundDbStatement(testDatabase.NewContext());
                 await this.CreateEntitiesAsync(
@@ -253,7 +253,7 @@
         [TestMethod]
         public async Task WhenQueuedPostsExist_AndLatestPostPreceedsCollectionLowerBound_ItShouldReturnLiveDateOfLatestQueuedPost()
         {
-            await this.NewTestDatabaseAsync(async testDatabase =>
+            await this.DatabaseTestAsync(async testDatabase =>
             {
                 this.target = new GetNewQueuedPostLiveDateLowerBoundDbStatement(testDatabase.NewContext());
                 await this.CreateEntitiesAsync(

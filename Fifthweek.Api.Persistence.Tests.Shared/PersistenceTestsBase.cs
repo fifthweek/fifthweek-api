@@ -8,7 +8,7 @@
 
     public abstract partial class PersistenceTestsBase
     {
-        protected async Task NewTestDatabaseAsync(Func<TestDatabaseContext, Task<ExpectedSideEffects>> databaseTest)
+        protected async Task DatabaseTestAsync(Func<TestDatabaseContext, Task<ExpectedSideEffects>> databaseTest)
         {
             var database = await TestDatabase.CreateNewAsync();
             var databaseSnapshot = new TestDatabaseSnapshot(database);

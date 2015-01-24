@@ -27,7 +27,7 @@
         [TestMethod]
         public async Task WhenDeletingPost_ItShouldRemoveTheRequestedPostFromTheDatabase()
         {
-            await this.NewTestDatabaseAsync(async testDatabase =>
+            await this.DatabaseTestAsync(async testDatabase =>
             {
                 target = new DeletePostDbStatement(testDatabase.NewContext());
                 var post = await this.CreateEntitiesAsync(testDatabase);
@@ -45,7 +45,7 @@
         [TestMethod]
         public async Task WhenDeletingNonExistantPost_ItShouldNotModifyTheDatabase()
         {
-            await this.NewTestDatabaseAsync(async testDatabase =>
+            await this.DatabaseTestAsync(async testDatabase =>
             {
                 target = new DeletePostDbStatement(testDatabase.NewContext());
                 await this.CreateEntitiesAsync(testDatabase);

@@ -4,7 +4,7 @@
 
     using Fifthweek.CodeGeneration;
 
-    [AutoEqualityMembers, AutoConstructor]
+    [AutoPrimitive]
     public partial class CollectionId
     {
         public Guid Value { get; private set; }
