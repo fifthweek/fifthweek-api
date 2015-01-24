@@ -8,6 +8,7 @@
     using Fifthweek.Api.Core;
     using Fifthweek.Api.Identity.Membership;
     using Fifthweek.Api.Persistence;
+    using Fifthweek.Api.Persistence.Identity;
     using Fifthweek.CodeGeneration;
 
     [AutoConstructor]
@@ -38,16 +39,17 @@
             Subscription.Fields.Id,
             Subscription.Fields.CreatorId);
 
+        private readonly IRequesterSecurity requesterSecurity;
         private readonly IFifthweekDbContext databaseContext;
 
-        public Task<IReadOnlyList<BacklogPost>> HandleAsync(GetCreatorBacklogQuery query)
+        public async Task<IReadOnlyList<BacklogPost>> HandleAsync(GetCreatorBacklogQuery query)
         {
             query.AssertNotNull("query");
 
-            query.Requester.AssertAuthenticatedAs(query.RequestedUserId);
-            // Todo: assert user has Creator role.
+            await this.requesterSecurity.AuthenticateAsAsync(query.Requester, query.RequestedUserId);
+            await this.requesterSecurity.AssertInRoleAsync(query.Requester, FifthweekRole.Creator);
 
-            return this.GetCreatorBacklogAsync(query.RequestedUserId);
+            return await this.GetCreatorBacklogAsync(query.RequestedUserId);
         }
 
         private async Task<IReadOnlyList<BacklogPost>> GetCreatorBacklogAsync(UserId creatorId)

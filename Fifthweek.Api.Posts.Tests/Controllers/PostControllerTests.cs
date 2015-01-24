@@ -112,7 +112,7 @@
             var query = new GetCreatorBacklogQuery(Requester, UserId);
             var queryResult = new[] { new BacklogPost(PostId, ChannelId, CollectionId, new Comment(""), null, null, false, DateTime.UtcNow) };
 
-            this.userContext.Setup(_ => _.TryGetUserId()).Returns(UserId);
+            this.userContext.Setup(_ => _.GetRequester()).Returns(Requester);
             this.getCreatorBacklog.Setup(_ => _.HandleAsync(query)).ReturnsAsync(queryResult);
 
             var result = await this.target.GetCreatorBacklog(UserId.Value.EncodeGuid());
