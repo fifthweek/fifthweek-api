@@ -9,11 +9,6 @@ namespace Fifthweek.Api.Persistence
 
     public class FifthweekDbContext : IdentityDbContext<FifthweekUser, FifthweekRole, Guid, FifthweekUserLogin, FifthweekUserRole, FifthweekUserClaim>, IFifthweekDbContext
     {
-        static FifthweekDbContext()
-        {
-            DapperTypeHandlerRegistration.Register(AppDomain.CurrentDomain.GetAssemblies());
-        }
-
         public FifthweekDbContext()
             : base("FifthweekDbContext")
         {

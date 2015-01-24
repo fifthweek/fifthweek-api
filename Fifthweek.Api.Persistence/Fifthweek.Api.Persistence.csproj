@@ -90,10 +90,8 @@
     </Compile>
     <Compile Include="Collection.cs" />
     <Compile Include="DapperExtensions.cs" />
-    <Compile Include="DapperTypeHandlerRegistration.cs" />
     <Compile Include="FifthweekDbContext.cs" />
     <Compile Include="FileState.cs" />
-    <Compile Include="IAutoRegisteredTypeHandler.cs" />
     <Compile Include="IdentityConfig.cs" />
     <Compile Include="Identity\FifthweekRole.cs" />
     <Compile Include="Identity\FifthweekRoleStore.cs" />

@@ -54,20 +54,6 @@
                 return objectType == typeof(<#= unifiedClass.FirstCodeClass.Name #>);
             }
         }
-
-		public class DapperTypeHandler : Dapper.SqlMapper.TypeHandler<<#= unifiedClass.FirstCodeClass.Name #>>, Fifthweek.Api.Persistence.IAutoRegisteredTypeHandler<<#= unifiedClass.FirstCodeClass.Name #>>
-        {
-            public override void SetValue(System.Data.IDbDataParameter parameter, <#= unifiedClass.FirstCodeClass.Name #> value)
-            {
-                parameter.DbType = System.Data.DbType.<#= singleProperty.Type.CodeType.Name #>;
-                parameter.Value = value.Value;
-            }
-
-            public override <#= unifiedClass.FirstCodeClass.Name #> Parse(object value)
-            {
-                return new <#= unifiedClass.FirstCodeClass.Name #>((<#= singleProperty.Type.AsFullName #>)value);
-            }
-        }
 <#
         });
     }
