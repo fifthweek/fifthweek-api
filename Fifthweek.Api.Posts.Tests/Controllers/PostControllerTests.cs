@@ -110,7 +110,7 @@
         public async Task WhenGettingCreatorBacklog_ItShouldReturnResultFromCreatorBacklogQuery()
         {
             var query = new GetCreatorBacklogQuery(Requester, UserId);
-            var queryResult = new[] { new BacklogPost(ChannelId, CollectionId, new Comment(""), null, null, false, DateTime.UtcNow) };
+            var queryResult = new[] { new BacklogPost(PostId, ChannelId, CollectionId, new Comment(""), null, null, false, DateTime.UtcNow) };
 
             this.userContext.Setup(_ => _.TryGetUserId()).Returns(UserId);
             this.getCreatorBacklog.Setup(_ => _.HandleAsync(query)).ReturnsAsync(queryResult);

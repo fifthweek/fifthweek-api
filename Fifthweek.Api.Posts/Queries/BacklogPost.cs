@@ -10,6 +10,8 @@
     [AutoConstructor, AutoEqualityMembers]
     public partial class BacklogPost
     {
+        public PostId PostId { get; private set; }
+
         public ChannelId ChannelId { get; private set; }
 
         [Optional]
