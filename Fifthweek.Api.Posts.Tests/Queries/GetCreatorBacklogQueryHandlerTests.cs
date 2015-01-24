@@ -40,6 +40,8 @@
         [TestInitialize]
         public void Initialize()
         {
+            DapperTypeHandlerRegistration.Register(FifthweekAssembliesResolver.Assemblies);
+
             this.requesterSecurity = new Mock<IRequesterSecurity>();
             this.databaseContext = new Mock<IFifthweekDbContext>(MockBehavior.Strict);
 

@@ -14,16 +14,6 @@
         private static readonly object LockObject = new object();
         private static bool isRegistered;
 
-        public static void RegisterWithAppDomainAssemblies()
-        {
-            if (isRegistered)
-            {
-                return;
-            }
-
-            Register(AppDomain.CurrentDomain.GetAssemblies());    
-        }
-
         public static void Register(IEnumerable<Assembly> assemblies)
         {
             if (isRegistered)

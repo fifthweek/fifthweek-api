@@ -9,12 +9,6 @@ namespace Fifthweek.Api.Persistence
 
     public class FifthweekDbContext : IdentityDbContext<FifthweekUser, FifthweekRole, Guid, FifthweekUserLogin, FifthweekUserRole, FifthweekUserClaim>, IFifthweekDbContext
     {
-        static FifthweekDbContext()
-        {
-            // Only takes effect in testing. Application startup registers with a predetermined list of assemblies.
-            DapperTypeHandlerRegistration.RegisterWithAppDomainAssemblies();
-        }
-
         public FifthweekDbContext()
             : base("FifthweekDbContext")
         {
