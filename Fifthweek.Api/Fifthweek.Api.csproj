@@ -170,6 +170,7 @@
   <ItemGroup>
     <Compile Include="App_Start\AutofacConfig.cs" />
     <Compile Include="App_Start\AzureConfig.cs" />
+    <Compile Include="App_Start\DapperConfig.cs" />
     <Compile Include="App_Start\DatabaseConfig.cs" />
     <Compile Include="App_Start\ErrorLoggingWebApiDependencyResolver.cs" />
     <Compile Include="App_Start\OAuthConfig.cs" />

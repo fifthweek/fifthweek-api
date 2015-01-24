@@ -11,7 +11,8 @@ namespace Fifthweek.Api.Persistence
     {
         static FifthweekDbContext()
         {
-            DapperTypeHandlerRegistration.Register(AppDomain.CurrentDomain.GetAssemblies());
+            // Only takes effect in testing. Application startup registers with a predetermined list of assemblies.
+            DapperTypeHandlerRegistration.RegisterWithAppDomainAssemblies();
         }
 
         public FifthweekDbContext()

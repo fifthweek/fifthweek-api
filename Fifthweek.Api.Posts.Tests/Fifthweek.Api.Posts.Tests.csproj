@@ -101,6 +101,7 @@
     <Compile Include="PostToCollectionDbSubStatementTests.cs" />
     <Compile Include="PostToCollectionDbStatementTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Queries\GetCreatorBacklogQueryHandlerTests.cs" />
     <Compile Include="ValidCommentTests.cs" />
     <Compile Include="ValidNoteTests.cs" />
   </ItemGroup>

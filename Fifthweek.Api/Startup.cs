@@ -18,6 +18,7 @@ namespace Fifthweek.Api
                 var httpConfiguration = new HttpConfiguration();
 
                 IdentityConfig.Register(app);
+                DapperConfig.Register();
                 AutofacConfig.Register(httpConfiguration, app);
                 AzureConfig.Register();
                 OAuthConfig.Register(httpConfiguration, app);
