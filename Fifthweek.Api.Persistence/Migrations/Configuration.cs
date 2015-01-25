@@ -1,26 +1,26 @@
-using System;
-using System.Data.Entity.Migrations;
-using System.Linq;
-using Fifthweek.Api.Persistence.Identity;
-
 namespace Fifthweek.Api.Persistence.Migrations
 {
+    using System;
+    using System.Data.Entity.Migrations;
+    using System.Linq;
+
+    using Fifthweek.Api.Persistence.Identity;
+
     public sealed class Configuration : DbMigrationsConfiguration<FifthweekDbContext>
     {
-        private readonly Action<FifthweekDbContext> seed;
-
         public Configuration()
         {
             this.AutomaticMigrationsEnabled = false;
             this.ContextKey = "Fifthweek.Api.Repositories.FifthweekDbContext";
         }
 
-        public Configuration(Action<FifthweekDbContext> seed)
+        protected override void Seed(FifthweekDbContext context)
         {
-            this.seed = seed;
+            this.EnsureRolesExist(context);
+            this.AssignRolesToTeam(context);
         }
 
-        protected override void Seed(FifthweekDbContext context)
+        private void EnsureRolesExist(FifthweekDbContext context)
         {
             if (context.Roles.All(_ => _.Name != FifthweekRole.Administrator))
             {
@@ -39,10 +39,24 @@ namespace Fifthweek.Api.Persistence.Migrations
                     Name = FifthweekRole.Creator
                 });
             }
+        }
 
-            if (this.seed != null)
+        private void AssignRolesToTeam(FifthweekDbContext context)
+        {
+            var teamMembers = new[] { "lawrence", "ttbarnes" };
+            foreach (var teamMember in teamMembers)
             {
-                this.seed(context);
+                var user = context.Users.FirstOrDefault(_ => _.UserName == teamMember);
+                if (user == null)
+                {
+                    continue;    
+                }
+
+                user.Roles.Add(new FifthweekUserRole
+                {
+                    RoleId = FifthweekRole.AdministratorId,
+                    UserId = user.Id
+                });
             }
         }
     }
