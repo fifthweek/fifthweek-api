@@ -55,6 +55,8 @@
     <Compile Include="IAutofacRegistration.cs" />
     <Compile Include="IMimeTypeMap.cs" />
     <Compile Include="MimeTypeMap.cs" />
+    <Compile Include="NonNegativeInt.cs" />
+    <Compile Include="PositiveInt.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

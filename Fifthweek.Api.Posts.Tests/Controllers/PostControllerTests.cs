@@ -14,6 +14,7 @@
     using Fifthweek.Api.Posts.Controllers;
     using Fifthweek.Api.Posts.Queries;
     using Fifthweek.Api.Subscriptions;
+    using Fifthweek.Shared;
 
     using Microsoft.VisualStudio.TestTools.UnitTesting;
 
@@ -34,6 +35,7 @@
         private Mock<ICommandHandler<PostFileCommand>> postFile;
         private Mock<ICommandHandler<DeletePostCommand>> deletePost;
         private Mock<IQueryHandler<GetCreatorBacklogQuery, IReadOnlyList<BacklogPost>>> getCreatorBacklog;
+        private Mock<IQueryHandler<GetCreatorNewsfeedQuery, IReadOnlyList<NewsfeedPost>>> getCreatorNewsfeed;
         private Mock<IUserContext> userContext;
         private Mock<IGuidCreator> guidCreator;
         private PostController target;
@@ -46,6 +48,7 @@
             this.postFile = new Mock<ICommandHandler<PostFileCommand>>();
             this.deletePost = new Mock<ICommandHandler<DeletePostCommand>>();
             this.getCreatorBacklog = new Mock<IQueryHandler<GetCreatorBacklogQuery, IReadOnlyList<BacklogPost>>>();
+            this.getCreatorNewsfeed = new Mock<IQueryHandler<GetCreatorNewsfeedQuery, IReadOnlyList<NewsfeedPost>>>();
             this.userContext = new Mock<IUserContext>();
             this.guidCreator = new Mock<IGuidCreator>();
             this.target = new PostController(
@@ -54,6 +57,7 @@
                 this.postFile.Object,
                 this.deletePost.Object,
                 this.getCreatorBacklog.Object,
+                this.getCreatorNewsfeed.Object,
                 this.userContext.Object,
                 this.guidCreator.Object);
         }
@@ -125,6 +129,35 @@
         public async Task WhenGettingCreatorBacklogWithoutSpecifyingCreatorId_ItShouldThrowBadRequestException()
         {
             await this.target.GetCreatorBacklog(string.Empty);
+        }
+
+        [TestMethod]
+        public async Task WhenGettingCreatorNewsfeed_ItShouldReturnResultFromCreatorBacklogQuery()
+        {
+            var query = new GetCreatorNewsfeedQuery(Requester, UserId, NonNegativeInt.Parse(10), PositiveInt.Parse(5));
+            var requestData = new CreatorNewsfeedRequestData { Count = 5, StartIndex = 10 };
+            var queryResult = new[] { new NewsfeedPost(PostId, ChannelId, CollectionId, new Comment(""), null, null, DateTime.UtcNow) };
+
+            this.userContext.Setup(_ => _.GetRequester()).Returns(Requester);
+            this.getCreatorNewsfeed.Setup(_ => _.HandleAsync(query)).ReturnsAsync(queryResult);
+
+            var result = await this.target.GetCreatorNewsfeed(UserId.Value.EncodeGuid(), requestData);
+
+            Assert.AreEqual(result, queryResult);
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(BadRequestException))]
+        public async Task WhenGettingCreatorNewsfeedWithoutSpecifyingCreatorId_ItShouldThrowBadRequestException()
+        {
+            await this.target.GetCreatorNewsfeed(string.Empty, new CreatorNewsfeedRequestData());
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(BadRequestException))]
+        public async Task WhenGettingCreatorNewsfeedWithoutSpecifyingPagination_ItShouldThrowBadRequestException()
+        {
+            await this.target.GetCreatorNewsfeed(UserId.Value.EncodeGuid(), null);
         }
 
         [TestMethod]

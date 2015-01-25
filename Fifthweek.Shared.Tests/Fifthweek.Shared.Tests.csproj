@@ -51,12 +51,18 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
+    <Compile Include="NonNegativeIntTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="PositiveIntTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Fifthweek.Shared\Fifthweek.Shared.csproj">
       <Project>{6d12ffbb-38e9-4722-a690-0f0338538ebc}</Project>
       <Name>Fifthweek.Shared</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Fifthweek.Tests.Shared\Fifthweek.Tests.Shared.csproj">
+      <Project>{85691D93-9C0C-498B-8341-1990BC8E24B2}</Project>
+      <Name>Fifthweek.Tests.Shared</Name>
     </ProjectReference>
   </ItemGroup>
   <Choose>

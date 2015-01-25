@@ -10,6 +10,7 @@
     using Fifthweek.Api.Posts.Commands;
     using Fifthweek.Api.Posts.Queries;
     using Fifthweek.CodeGeneration;
+    using Fifthweek.Shared;
 
     [RoutePrefix("posts"), AutoConstructor]
     public partial class PostController : ApiController
@@ -19,6 +20,7 @@
         private readonly ICommandHandler<PostFileCommand> postFile;
         private readonly ICommandHandler<DeletePostCommand> deletePost;
         private readonly IQueryHandler<GetCreatorBacklogQuery, IReadOnlyList<BacklogPost>> getCreatorBacklog;
+        private readonly IQueryHandler<GetCreatorNewsfeedQuery, IReadOnlyList<NewsfeedPost>> getCreatorNewsfeed;
         private readonly IUserContext userContext;
         private readonly IGuidCreator guidCreator;
 
@@ -91,6 +93,19 @@
             var requester = this.userContext.GetRequester();
 
             return await this.getCreatorBacklog.HandleAsync(new GetCreatorBacklogQuery(requester, creatorIdObject));
+        }
+
+        [Route("creatorNewsfeed/{creatorId}?index={index}&count={count}")]
+        public async Task<IEnumerable<NewsfeedPost>> GetCreatorNewsfeed(string creatorId, [FromUri]CreatorNewsfeedRequestData requestData)
+        {
+            creatorId.AssertUrlParameterProvided("creatorId");
+            requestData.AssertUrlParameterProvided("requestData");
+            requestData.Parse();
+
+            var creatorIdObject = new UserId(creatorId.DecodeGuid());
+            var requester = this.userContext.GetRequester();
+
+            return await this.getCreatorNewsfeed.HandleAsync(new GetCreatorNewsfeedQuery(requester, creatorIdObject, requestData.StartIndexObject, requestData.CountObject));
         }
 
         [Route("{postId}")]

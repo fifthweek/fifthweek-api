@@ -79,6 +79,7 @@
   <ItemGroup>
     <Compile Include="AutofacRegistration.cs" />
     <Compile Include="Comment.cs" />
+    <Compile Include="Controllers\CreatorNewsfeedRequestData.cs" />
     <Compile Include="DeletePostDbStatement.cs" />
     <Compile Include="IDeletePostDbStatement.cs" />
     <Compile Include="PostOwnership.cs" />
@@ -110,7 +111,9 @@
     <Compile Include="PostToCollectionDbStatement.cs" />
     <Compile Include="PostToCollectionDbSubStatements.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Queries\NewsfeedPost.cs" />
     <Compile Include="Queries\BacklogPost.cs" />
+    <Compile Include="Queries\GetCreatorNewsfeedQuery.cs" />
     <Compile Include="Queries\GetCreatorBacklogQuery.cs" />
     <Compile Include="Queries\GetCreatorBacklogQueryHandler.cs" />
     <Compile Include="ValidComment.cs" />
