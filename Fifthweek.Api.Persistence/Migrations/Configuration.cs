@@ -1,6 +1,7 @@
 namespace Fifthweek.Api.Persistence.Migrations
 {
     using System;
+    using System.Collections.Generic;
     using System.Data.Entity.Migrations;
     using System.Linq;
 
@@ -53,23 +54,20 @@ namespace Fifthweek.Api.Persistence.Migrations
                     continue;    
                 }
 
-                if (administrators.Contains(username))
-                {
-                    user.Roles.Add(new FifthweekUserRole
-                    {
-                        RoleId = FifthweekRole.AdministratorId,
-                        UserId = user.Id
-                    });
-                }
+                this.EnsureUserHasRole(user, administrators, FifthweekRole.AdministratorId);
+                this.EnsureUserHasRole(user, psychics, FifthweekRole.PsychicId);
+            }
+        }
 
-                if (psychics.Contains(username))
+        private void EnsureUserHasRole(FifthweekUser user, IEnumerable<string> usersInRole, Guid roleId)
+        {
+            if (usersInRole.Contains(user.UserName) && user.Roles.All(_ => _.RoleId != roleId))
+            {
+                user.Roles.Add(new FifthweekUserRole
                 {
-                    user.Roles.Add(new FifthweekUserRole
-                    {
-                        RoleId = FifthweekRole.PsychicId,
-                        UserId = user.Id
-                    });
-                }
+                    RoleId = roleId,
+                    UserId = user.Id
+                });
             }
         }
     }
