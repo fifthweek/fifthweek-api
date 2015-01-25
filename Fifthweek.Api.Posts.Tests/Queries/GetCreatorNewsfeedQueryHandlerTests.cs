@@ -33,8 +33,6 @@
         private static readonly Random Random = new Random();
         private static readonly DateTime Now = new SqlDateTime(DateTime.UtcNow).Value;
         private static readonly IReadOnlyList<NewsfeedPost> SortedNewsfeedPosts = GetSortedNewsfeedPosts().ToList();
-        private static readonly GetCreatorNewsfeedQuery UnPaginatedQuery = new GetCreatorNewsfeedQuery(Requester, UserId, NonNegativeInt.Parse(0), PositiveInt.Parse(int.MaxValue));
-        private static readonly GetCreatorNewsfeedQuery Query = UnPaginatedQuery;
 
         private Mock<IRequesterSecurity> requesterSecurity;
         private Mock<IFifthweekDbContext> databaseContext;
@@ -91,108 +89,166 @@
         [TestMethod]
         public async Task ItShouldReturnPostsWithLiveDateInPastOrNow()
         {
-            await this.DatabaseTestAsync(async testDatabase =>
+            await this.ParameterizedTestAsync(async (query, expectedPosts) =>
             {
-                this.target = new GetCreatorNewsfeedQueryHandler(this.requesterSecurity.Object, testDatabase.NewContext());
-                await this.CreateEntitiesAsync(testDatabase, createLivePosts: true, createFuturePosts: true);
-                await testDatabase.TakeSnapshotAsync();
-
-                var result = await this.target.HandleAsync(Query);
-
-                foreach (var newsfeedPost in result)
+                await this.DatabaseTestAsync(async testDatabase =>
                 {
-                    Assert.IsTrue(newsfeedPost.LiveDate <= Now);
-                }
+                    this.target = new GetCreatorNewsfeedQueryHandler(this.requesterSecurity.Object, testDatabase.NewContext());
+                    await this.CreateEntitiesAsync(testDatabase, createLivePosts: true, createFuturePosts: true);
+                    await testDatabase.TakeSnapshotAsync();
 
-                return ExpectedSideEffects.None;
+                    var result = await this.target.HandleAsync(query);
+
+                    foreach (var newsfeedPost in result)
+                    {
+                        Assert.IsTrue(newsfeedPost.LiveDate <= Now);
+                    }
+
+                    return ExpectedSideEffects.None;
+                });
             });
         }
 
         [TestMethod]
         public async Task ItShouldReturnPostsForUser()
         {
-            await this.DatabaseTestAsync(async testDatabase =>
+            await this.ParameterizedTestAsync(async (query, expectedPosts) =>
             {
-                this.target = new GetCreatorNewsfeedQueryHandler(this.requesterSecurity.Object, testDatabase.NewContext());
-                await this.CreateEntitiesAsync(testDatabase, createLivePosts: true, createFuturePosts: true);
-                await testDatabase.TakeSnapshotAsync();
+                await this.DatabaseTestAsync(async testDatabase =>
+                {
+                    this.target = new GetCreatorNewsfeedQueryHandler(this.requesterSecurity.Object, testDatabase.NewContext());
+                    await this.CreateEntitiesAsync(testDatabase, createLivePosts: true, createFuturePosts: true);
+                    await testDatabase.TakeSnapshotAsync();
 
-                var result = await this.target.HandleAsync(Query);
+                    var result = await this.target.HandleAsync(query);
 
-                CollectionAssert.AreEquivalent(result.ToList(), SortedNewsfeedPosts.ToList());
+                    CollectionAssert.AreEquivalent(expectedPosts.ToList(), result.ToList());
 
-                return ExpectedSideEffects.None;
+                    return ExpectedSideEffects.None;
+                });
             });
         }
 
         [TestMethod]
         public async Task ItShouldOrderPostsByLiveDateDescending()
         {
-            await this.DatabaseTestAsync(async testDatabase =>
+            await this.ParameterizedTestAsync(async (query, expectedPosts) =>
             {
-                this.target = new GetCreatorNewsfeedQueryHandler(this.requesterSecurity.Object, testDatabase.NewContext());
-                await this.CreateEntitiesAsync(testDatabase, createLivePosts: true, createFuturePosts: true);
-                await testDatabase.TakeSnapshotAsync();
-
-                var result = await this.target.HandleAsync(Query);
-
-                Func<NewsfeedPost, NewsfeedPost> removeSortInsensitiveValues = post => post.Copy(_ =>
+                await this.DatabaseTestAsync(async testDatabase =>
                 {
-                    // Required fields. Set to a value that is equal across all elements.
-                    _.PostId = new PostId(Guid.Empty); 
-                    _.ChannelId = new ChannelId(Guid.Empty);
+                    this.target = new GetCreatorNewsfeedQueryHandler(this.requesterSecurity.Object, testDatabase.NewContext());
+                    await this.CreateEntitiesAsync(testDatabase, createLivePosts: true, createFuturePosts: true);
+                    await testDatabase.TakeSnapshotAsync();
 
-                    // Non required fields.
-                    _.Comment = null;
-                    _.FileId = null;
-                    _.ImageId = null;
-                    _.CollectionId = null;
+                    var result = await this.target.HandleAsync(query);
+
+                    Func<NewsfeedPost, NewsfeedPost> removeSortInsensitiveValues = post => post.Copy(_ =>
+                    {
+                        // Required fields. Set to a value that is equal across all elements.
+                        _.PostId = new PostId(Guid.Empty); 
+                        _.ChannelId = new ChannelId(Guid.Empty);
+
+                        // Non required fields.
+                        _.Comment = null;
+                        _.FileId = null;
+                        _.ImageId = null;
+                        _.CollectionId = null;
+                    });
+
+                    var expectedOrder = expectedPosts.Select(removeSortInsensitiveValues).ToList();
+                    var actualOrder = result.Select(removeSortInsensitiveValues).ToList();
+
+                    CollectionAssert.AreEqual(expectedOrder, actualOrder);
+
+                    return ExpectedSideEffects.None;
                 });
-
-                var expectedOrder = SortedNewsfeedPosts.Select(removeSortInsensitiveValues).ToList();
-                var actualOrder = result.Select(removeSortInsensitiveValues).ToList();
-
-                CollectionAssert.AreEqual(expectedOrder, actualOrder);
-
-                return ExpectedSideEffects.None;
             });
         }
 
         [TestMethod]
         public async Task ItShouldReturnNothingWhenUserHasNoPosts()
         {
-            await this.DatabaseTestAsync(async testDatabase =>
+            await this.ParameterizedTestAsync(async (query, expectedPosts) =>
             {
-                this.target = new GetCreatorNewsfeedQueryHandler(this.requesterSecurity.Object, testDatabase.NewContext());
-                await this.CreateEntitiesAsync(testDatabase, createLivePosts: false, createFuturePosts: false);
-                await testDatabase.TakeSnapshotAsync();
+                await this.DatabaseTestAsync(async testDatabase =>
+                {
+                    this.target = new GetCreatorNewsfeedQueryHandler(this.requesterSecurity.Object, testDatabase.NewContext());
+                    await this.CreateEntitiesAsync(testDatabase, createLivePosts: false, createFuturePosts: false);
+                    await testDatabase.TakeSnapshotAsync();
 
-                var result = await this.target.HandleAsync(Query);
+                    var result = await this.target.HandleAsync(query);
 
-                Assert.AreEqual(result.Count, 0);
+                    Assert.AreEqual(result.Count, 0);
 
-                return ExpectedSideEffects.None;
+                    return ExpectedSideEffects.None;
+                });
             });
         }
 
         [TestMethod]
         public async Task ItShouldReturnNothingWhenUserHasNoPostsWithLiveDateInPastOrNow()
         {
-            await this.DatabaseTestAsync(async testDatabase =>
+            await this.ParameterizedTestAsync(async (query, expectedPosts) =>
             {
-                this.target = new GetCreatorNewsfeedQueryHandler(this.requesterSecurity.Object, testDatabase.NewContext());
-                await this.CreateEntitiesAsync(testDatabase, createLivePosts: false, createFuturePosts: true);
-                await testDatabase.TakeSnapshotAsync();
+                await this.DatabaseTestAsync(async testDatabase =>
+                {
+                    this.target = new GetCreatorNewsfeedQueryHandler(this.requesterSecurity.Object, testDatabase.NewContext());
+                    await this.CreateEntitiesAsync(testDatabase, createLivePosts: false, createFuturePosts: true);
+                    await testDatabase.TakeSnapshotAsync();
 
-                var result = await this.target.HandleAsync(Query);
+                    var result = await this.target.HandleAsync(query);
 
-                Assert.AreEqual(result.Count, 0);
+                    Assert.AreEqual(result.Count, 0);
 
-                return ExpectedSideEffects.None;
+                    return ExpectedSideEffects.None;
+                });
             });
         }
 
-        //private async Task ParameterizeTestAsyc
+        private async Task ParameterizedTestAsync(Func<GetCreatorNewsfeedQuery, IReadOnlyList<NewsfeedPost>, Task> parameterizedTest)
+        {
+            var totalPosts = SortedNewsfeedPosts.Count;
+
+            // No pagination.
+            await parameterizedTest(
+                new GetCreatorNewsfeedQuery(Requester, UserId, NonNegativeInt.Parse(0), PositiveInt.Parse(int.MaxValue)), 
+                SortedNewsfeedPosts);
+
+            // Paginate from start.
+            await parameterizedTest(
+                new GetCreatorNewsfeedQuery(Requester, UserId, NonNegativeInt.Parse(0), PositiveInt.Parse(10)),
+                SortedNewsfeedPosts.Take(10).ToList());
+
+            // Paginate from middle with different page size and page index.
+            await parameterizedTest(
+                new GetCreatorNewsfeedQuery(Requester, UserId, NonNegativeInt.Parse(5), PositiveInt.Parse(10)),
+                SortedNewsfeedPosts.Skip(5).Take(10).ToList());
+
+            // Paginate from middle with same page size and page index.
+            await parameterizedTest(
+                new GetCreatorNewsfeedQuery(Requester, UserId, NonNegativeInt.Parse(10), PositiveInt.Parse(10)),
+                SortedNewsfeedPosts.Skip(10).Take(10).ToList());
+
+            // Paginate from near end, requesting up to last post.
+            await parameterizedTest(
+                new GetCreatorNewsfeedQuery(Requester, UserId, NonNegativeInt.Parse(totalPosts - 10), PositiveInt.Parse(10)),
+                SortedNewsfeedPosts.Skip(totalPosts - 10).Take(10).ToList());
+
+            // Paginate from near end, requesting beyond last post.
+            await parameterizedTest(
+                new GetCreatorNewsfeedQuery(Requester, UserId, NonNegativeInt.Parse(totalPosts - 5), PositiveInt.Parse(10)),
+                SortedNewsfeedPosts.Skip(totalPosts - 5).Take(10).ToList());
+
+            // Paginate from end, requesting beyond last post.
+            await parameterizedTest(
+                new GetCreatorNewsfeedQuery(Requester, UserId, NonNegativeInt.Parse(totalPosts), PositiveInt.Parse(1)),
+                new NewsfeedPost[0]);
+
+            // Paginate from beyond end, requesting beyond last post.
+            await parameterizedTest(
+                new GetCreatorNewsfeedQuery(Requester, UserId, NonNegativeInt.Parse(totalPosts + 1), PositiveInt.Parse(1)),
+                new NewsfeedPost[0]);
+        }
 
         private async Task CreateEntitiesAsync(TestDatabaseContext testDatabase, bool createLivePosts, bool createFuturePosts)
         {
@@ -300,34 +356,32 @@
         private static IEnumerable<NewsfeedPost> GetSortedNewsfeedPosts()
         {
             // 1 in 3 chance of coincidental ordering being correct, yielding a false positive when implementation fails to order explicitly.
-            const int Days = 3;
             const int ChannelCount = 3;
             const int CollectionsPerChannel = 3;
             const int Posts = 6;
 
+            var day = 0;
             var result = new List<NewsfeedPost>();
-            for (var day = 0; day < Days; day++)
+            for (var channelIndex = 0; channelIndex < ChannelCount; channelIndex++)
             {
-                // Ensure we have one post that is `now` (i.e. AddDays(0)).
-                var liveDate = new SqlDateTime(Now.AddDays(day * -1)).Value;
-                for (var channelIndex = 0; channelIndex < ChannelCount; channelIndex++)
+                var channelId = new ChannelId(Guid.NewGuid());
+                for (var collectionIndex = 0; collectionIndex < CollectionsPerChannel; collectionIndex++)
                 {
-                    var channelId = new ChannelId(Guid.NewGuid());
-                    for (var collectionIndex = 0; collectionIndex < CollectionsPerChannel; collectionIndex++)
+                    var collectionId = collectionIndex == 0 ? null : new CollectionId(Guid.NewGuid());
+                    for (var i = 0; i < Posts; i++)
                     {
-                        var collectionId = collectionIndex == 0 ? null : new CollectionId(Guid.NewGuid());
-                        for (var i = 0; i < Posts; i++)
-                        {
-                            result.Add(
-                            new NewsfeedPost(
-                                new PostId(Guid.NewGuid()),
-                                channelId,
-                                collectionId,
-                                i % 2 == 0 ? Comment : null,
-                                i % 3 == 1 ? new FileId(Guid.NewGuid()) : null,
-                                i % 3 == 2 ? new FileId(Guid.NewGuid()) : null,
-                                liveDate));
-                        }
+                        // Ensure we have one post that is `now` (i.e. AddDays(0)).
+                        var liveDate = new SqlDateTime(Now.AddDays(day--)).Value;
+
+                        result.Add(
+                        new NewsfeedPost(
+                            new PostId(Guid.NewGuid()),
+                            channelId,
+                            collectionId,
+                            i % 2 == 0 ? Comment : null,
+                            i % 3 == 1 ? new FileId(Guid.NewGuid()) : null,
+                            i % 3 == 2 ? new FileId(Guid.NewGuid()) : null,
+                            liveDate));
                     }
                 }
             }

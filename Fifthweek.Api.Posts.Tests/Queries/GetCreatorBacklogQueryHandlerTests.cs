@@ -115,7 +115,7 @@
 
                 var result = await this.target.HandleAsync(Query);
 
-                CollectionAssert.AreEquivalent(result.ToList(), SortedBacklogPosts.ToList());
+                CollectionAssert.AreEquivalent(SortedBacklogPosts.ToList(), result.ToList());
 
                 return ExpectedSideEffects.None;
             });
