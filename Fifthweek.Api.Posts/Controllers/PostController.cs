@@ -95,7 +95,7 @@
             return await this.getCreatorBacklog.HandleAsync(new GetCreatorBacklogQuery(requester, creatorIdObject));
         }
 
-        [Route("creatorNewsfeed/{creatorId}?index={index}&count={count}")]
+        [Route("creatorNewsfeed/{creatorId}")]
         public async Task<IEnumerable<NewsfeedPost>> GetCreatorNewsfeed(string creatorId, [FromUri]CreatorNewsfeedRequestData requestData)
         {
             creatorId.AssertUrlParameterProvided("creatorId");
