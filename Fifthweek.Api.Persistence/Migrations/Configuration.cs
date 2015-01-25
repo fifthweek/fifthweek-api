@@ -43,20 +43,35 @@ namespace Fifthweek.Api.Persistence.Migrations
 
         private void AssignRolesToTeam(FifthweekDbContext context)
         {
-            var teamMembers = new[] { "lawrence", "ttbarnes" };
-            foreach (var teamMember in teamMembers)
+            var administrators = new[] { "lawrence" };
+            var psychics = new[] { "lawrence", "ttbarnes" };
+            var allUsernames = administrators.Concat(psychics).Distinct();
+
+            foreach (var username in allUsernames)
             {
-                var user = context.Users.FirstOrDefault(_ => _.UserName == teamMember);
+                var user = context.Users.FirstOrDefault(_ => _.UserName == username);
                 if (user == null)
                 {
                     continue;    
                 }
 
-                user.Roles.Add(new FifthweekUserRole
+                if (administrators.Contains(username))
                 {
-                    RoleId = FifthweekRole.AdministratorId,
-                    UserId = user.Id
-                });
+                    user.Roles.Add(new FifthweekUserRole
+                    {
+                        RoleId = FifthweekRole.AdministratorId,
+                        UserId = user.Id
+                    });
+                }
+
+                if (psychics.Contains(username))
+                {
+                    user.Roles.Add(new FifthweekUserRole
+                    {
+                        RoleId = FifthweekRole.PsychicId,
+                        UserId = user.Id
+                    });
+                }
             }
         }
     }
