@@ -1097,6 +1097,40 @@ namespace Fifthweek.Api.Posts.Queries
     }
 
 }
+namespace Fifthweek.Api.Posts.Queries
+{
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Threading.Tasks;
+    using Dapper;
+    using Fifthweek.Api.Core;
+    using Fifthweek.Api.Identity.Membership;
+    using Fifthweek.Api.Persistence;
+    using Fifthweek.Api.Persistence.Identity;
+    using Fifthweek.CodeGeneration;
+    public partial class GetCreatorNewsfeedQueryHandler 
+    {
+        public GetCreatorNewsfeedQueryHandler(
+            Fifthweek.Api.Identity.Membership.IRequesterSecurity requesterSecurity, 
+            Fifthweek.Api.Persistence.IFifthweekDbContext databaseContext)
+        {
+            if (requesterSecurity == null)
+            {
+                throw new ArgumentNullException("requesterSecurity");
+            }
+
+            if (databaseContext == null)
+            {
+                throw new ArgumentNullException("databaseContext");
+            }
+
+            this.requesterSecurity = requesterSecurity;
+            this.databaseContext = databaseContext;
+        }
+    }
+
+}
 
 namespace Fifthweek.Api.Posts
 {
@@ -1952,6 +1986,7 @@ namespace Fifthweek.Api.Posts.Controllers
     using Fifthweek.Api.Collections;
     using Fifthweek.Api.FileManagement;
     using Fifthweek.Api.Subscriptions;
+    using Fifthweek.Shared;
     public partial class NewFileData 
     {
         public override string ToString()
@@ -2047,6 +2082,7 @@ namespace Fifthweek.Api.Posts.Controllers
     using Fifthweek.Api.Collections;
     using Fifthweek.Api.FileManagement;
     using Fifthweek.Api.Subscriptions;
+    using Fifthweek.Shared;
     public partial class NewImageData 
     {
         public override string ToString()
@@ -2142,6 +2178,7 @@ namespace Fifthweek.Api.Posts.Controllers
     using Fifthweek.Api.Collections;
     using Fifthweek.Api.FileManagement;
     using Fifthweek.Api.Subscriptions;
+    using Fifthweek.Shared;
     public partial class NewNoteData 
     {
         public override string ToString()
@@ -2274,13 +2311,26 @@ namespace Fifthweek.Api.Posts
 }
 namespace Fifthweek.Api.Posts.Controllers
 {
+    using System;
+    using System.Linq;
+    using System.Collections.Generic;
+    using System.Threading.Tasks;
+    using System.Web.Http;
+    using Fifthweek.Api.Core;
+    using Fifthweek.Api.Identity.Membership;
+    using Fifthweek.Api.Identity.OAuth;
+    using Fifthweek.Api.Posts.Commands;
+    using Fifthweek.Api.Posts.Queries;
     using Fifthweek.CodeGeneration;
+    using Fifthweek.Api.Collections;
+    using Fifthweek.Api.FileManagement;
+    using Fifthweek.Api.Subscriptions;
     using Fifthweek.Shared;
     public partial class CreatorNewsfeedRequestData 
     {
         public override string ToString()
         {
-            return string.Format("CreatorNewsfeedRequestData({0}, {1})", this.StartIndex == null ? "null" : this.StartIndex.ToString(), this.Count == null ? "null" : this.Count.ToString());
+            return string.Format("CreatorNewsfeedRequestData({0}, {1}, {2}, {3})", this.StartIndexObject == null ? "null" : this.StartIndexObject.ToString(), this.CountObject == null ? "null" : this.CountObject.ToString(), this.StartIndex == null ? "null" : this.StartIndex.ToString(), this.Count == null ? "null" : this.Count.ToString());
         }
 
         public override bool Equals(object obj)
@@ -2308,6 +2358,8 @@ namespace Fifthweek.Api.Posts.Controllers
             unchecked
             {
                 int hashCode = 0;
+                hashCode = (hashCode * 397) ^ (this.StartIndexObject != null ? this.StartIndexObject.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.CountObject != null ? this.CountObject.GetHashCode() : 0);
                 hashCode = (hashCode * 397) ^ (this.StartIndex != null ? this.StartIndex.GetHashCode() : 0);
                 hashCode = (hashCode * 397) ^ (this.Count != null ? this.Count.GetHashCode() : 0);
                 return hashCode;
@@ -2316,6 +2368,16 @@ namespace Fifthweek.Api.Posts.Controllers
 
         protected bool Equals(CreatorNewsfeedRequestData other)
         {
+            if (!object.Equals(this.StartIndexObject, other.StartIndexObject))
+            {
+                return false;
+            }
+
+            if (!object.Equals(this.CountObject, other.CountObject))
+            {
+                return false;
+            }
+
             if (!object.Equals(this.StartIndex, other.StartIndex))
             {
                 return false;
@@ -2476,6 +2538,7 @@ namespace Fifthweek.Api.Posts.Controllers
     using Fifthweek.Api.Collections;
     using Fifthweek.Api.FileManagement;
     using Fifthweek.Api.Subscriptions;
+    using Fifthweek.Shared;
     public partial class NewFileData 
     {
         public ValidComment CommentObject { get; set; }
@@ -2530,6 +2593,7 @@ namespace Fifthweek.Api.Posts.Controllers
     using Fifthweek.Api.Collections;
     using Fifthweek.Api.FileManagement;
     using Fifthweek.Api.Subscriptions;
+    using Fifthweek.Shared;
     public partial class NewImageData 
     {
         public ValidComment CommentObject { get; set; }
@@ -2584,6 +2648,7 @@ namespace Fifthweek.Api.Posts.Controllers
     using Fifthweek.Api.Collections;
     using Fifthweek.Api.FileManagement;
     using Fifthweek.Api.Subscriptions;
+    using Fifthweek.Shared;
     public partial class NewNoteData 
     {
         public ValidNote NoteObject { get; set; }
@@ -2624,7 +2689,20 @@ namespace Fifthweek.Api.Posts.Controllers
 }
 namespace Fifthweek.Api.Posts.Controllers
 {
+    using System;
+    using System.Linq;
+    using System.Collections.Generic;
+    using System.Threading.Tasks;
+    using System.Web.Http;
+    using Fifthweek.Api.Core;
+    using Fifthweek.Api.Identity.Membership;
+    using Fifthweek.Api.Identity.OAuth;
+    using Fifthweek.Api.Posts.Commands;
+    using Fifthweek.Api.Posts.Queries;
     using Fifthweek.CodeGeneration;
+    using Fifthweek.Api.Collections;
+    using Fifthweek.Api.FileManagement;
+    using Fifthweek.Api.Subscriptions;
     using Fifthweek.Shared;
     public partial class CreatorNewsfeedRequestData 
     {

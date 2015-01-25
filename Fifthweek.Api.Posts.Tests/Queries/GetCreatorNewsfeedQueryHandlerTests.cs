@@ -15,27 +15,31 @@
     using Fifthweek.Api.Persistence.Tests.Shared;
     using Fifthweek.Api.Posts.Queries;
     using Fifthweek.Api.Subscriptions;
+    using Fifthweek.Shared;
 
     using Microsoft.VisualStudio.TestTools.UnitTesting;
 
     using Moq;
 
     [TestClass]
-    public class GetCreatorBacklogQueryHandlerTests : PersistenceTestsBase
+    public class GetCreatorNewsfeedQueryHandlerTests : PersistenceTestsBase
     {
         private static readonly UserId UserId = new UserId(Guid.NewGuid());
         private static readonly Requester Requester = Requester.Authenticated(UserId);
+        private static readonly NonNegativeInt StartIndex = NonNegativeInt.Parse(10);
+        private static readonly PositiveInt Count = PositiveInt.Parse(5);
         private static readonly SubscriptionId SubscriptionId = new SubscriptionId(Guid.NewGuid());
         private static readonly Comment Comment = new Comment("Hey guys!");
         private static readonly Random Random = new Random();
-        private static readonly DateTime Now = DateTime.UtcNow;
-        private static readonly IReadOnlyList<BacklogPost> SortedBacklogPosts = GetSortedBacklogPosts().ToList();
-        private static readonly GetCreatorBacklogQuery Query = new GetCreatorBacklogQuery(Requester, UserId);
+        private static readonly DateTime Now = new SqlDateTime(DateTime.UtcNow).Value;
+        private static readonly IReadOnlyList<NewsfeedPost> SortedNewsfeedPosts = GetSortedNewsfeedPosts().ToList();
+        private static readonly GetCreatorNewsfeedQuery UnPaginatedQuery = new GetCreatorNewsfeedQuery(Requester, UserId, NonNegativeInt.Parse(0), PositiveInt.Parse(int.MaxValue));
+        private static readonly GetCreatorNewsfeedQuery Query = UnPaginatedQuery;
 
         private Mock<IRequesterSecurity> requesterSecurity;
         private Mock<IFifthweekDbContext> databaseContext;
 
-        private GetCreatorBacklogQueryHandler target;
+        private GetCreatorNewsfeedQueryHandler target;
 
         [TestInitialize]
         public void Initialize()
@@ -45,7 +49,7 @@
             this.requesterSecurity = new Mock<IRequesterSecurity>();
             this.databaseContext = new Mock<IFifthweekDbContext>(MockBehavior.Strict);
 
-            this.target = new GetCreatorBacklogQueryHandler(this.requesterSecurity.Object, this.databaseContext.Object);
+            this.target = new GetCreatorNewsfeedQueryHandler(this.requesterSecurity.Object, this.databaseContext.Object);
         }
 
         [TestMethod]
@@ -61,7 +65,7 @@
         {
             this.requesterSecurity.Setup(_ => _.AuthenticateAsAsync(Requester.Unauthenticated, UserId)).Throws<UnauthorizedException>();
 
-            await this.target.HandleAsync(new GetCreatorBacklogQuery(Requester.Unauthenticated, UserId));
+            await this.target.HandleAsync(new GetCreatorNewsfeedQuery(Requester.Unauthenticated, UserId, StartIndex, Count));
         }
 
         [TestMethod]
@@ -72,7 +76,7 @@
 
             this.requesterSecurity.Setup(_ => _.AuthenticateAsAsync(Requester, otherUserId)).Throws<UnauthorizedException>();
 
-            await this.target.HandleAsync(new GetCreatorBacklogQuery(Requester, otherUserId));
+            await this.target.HandleAsync(new GetCreatorNewsfeedQuery(Requester, otherUserId, StartIndex, Count));
         }
 
         [TestMethod]
@@ -81,23 +85,23 @@
         {
             this.requesterSecurity.Setup(_ => _.AssertInRoleAsync(Requester, FifthweekRole.Creator)).Throws<UnauthorizedException>();
 
-            await this.target.HandleAsync(new GetCreatorBacklogQuery(Requester, UserId));
+            await this.target.HandleAsync(new GetCreatorNewsfeedQuery(Requester, UserId, StartIndex, Count));
         }
 
         [TestMethod]
-        public async Task ItShouldReturnPostsWithLiveDateInFuture()
+        public async Task ItShouldReturnPostsWithLiveDateInPastOrNow()
         {
             await this.DatabaseTestAsync(async testDatabase =>
             {
-                this.target = new GetCreatorBacklogQueryHandler(this.requesterSecurity.Object, testDatabase.NewContext());
+                this.target = new GetCreatorNewsfeedQueryHandler(this.requesterSecurity.Object, testDatabase.NewContext());
                 await this.CreateEntitiesAsync(testDatabase, createLivePosts: true, createFuturePosts: true);
                 await testDatabase.TakeSnapshotAsync();
 
                 var result = await this.target.HandleAsync(Query);
 
-                foreach (var backlogPost in result)
+                foreach (var newsfeedPost in result)
                 {
-                    Assert.IsTrue(backlogPost.LiveDate > Now);
+                    Assert.IsTrue(newsfeedPost.LiveDate <= Now);
                 }
 
                 return ExpectedSideEffects.None;
@@ -109,30 +113,30 @@
         {
             await this.DatabaseTestAsync(async testDatabase =>
             {
-                this.target = new GetCreatorBacklogQueryHandler(this.requesterSecurity.Object, testDatabase.NewContext());
+                this.target = new GetCreatorNewsfeedQueryHandler(this.requesterSecurity.Object, testDatabase.NewContext());
                 await this.CreateEntitiesAsync(testDatabase, createLivePosts: true, createFuturePosts: true);
                 await testDatabase.TakeSnapshotAsync();
 
                 var result = await this.target.HandleAsync(Query);
 
-                CollectionAssert.AreEquivalent(result.ToList(), SortedBacklogPosts.ToList());
+                CollectionAssert.AreEquivalent(result.ToList(), SortedNewsfeedPosts.ToList());
 
                 return ExpectedSideEffects.None;
             });
         }
 
         [TestMethod]
-        public async Task ItShouldOrderPostsByLiveDateDescending_ThenByQueueMechanism()
+        public async Task ItShouldOrderPostsByLiveDateDescending()
         {
             await this.DatabaseTestAsync(async testDatabase =>
             {
-                this.target = new GetCreatorBacklogQueryHandler(this.requesterSecurity.Object, testDatabase.NewContext());
+                this.target = new GetCreatorNewsfeedQueryHandler(this.requesterSecurity.Object, testDatabase.NewContext());
                 await this.CreateEntitiesAsync(testDatabase, createLivePosts: true, createFuturePosts: true);
                 await testDatabase.TakeSnapshotAsync();
 
                 var result = await this.target.HandleAsync(Query);
 
-                Func<BacklogPost, BacklogPost> removeSortInsensitiveValues = post => post.Copy(_ =>
+                Func<NewsfeedPost, NewsfeedPost> removeSortInsensitiveValues = post => post.Copy(_ =>
                 {
                     // Required fields. Set to a value that is equal across all elements.
                     _.PostId = new PostId(Guid.Empty); 
@@ -145,7 +149,7 @@
                     _.CollectionId = null;
                 });
 
-                var expectedOrder = SortedBacklogPosts.Select(removeSortInsensitiveValues).ToList();
+                var expectedOrder = SortedNewsfeedPosts.Select(removeSortInsensitiveValues).ToList();
                 var actualOrder = result.Select(removeSortInsensitiveValues).ToList();
 
                 CollectionAssert.AreEqual(expectedOrder, actualOrder);
@@ -159,7 +163,7 @@
         {
             await this.DatabaseTestAsync(async testDatabase =>
             {
-                this.target = new GetCreatorBacklogQueryHandler(this.requesterSecurity.Object, testDatabase.NewContext());
+                this.target = new GetCreatorNewsfeedQueryHandler(this.requesterSecurity.Object, testDatabase.NewContext());
                 await this.CreateEntitiesAsync(testDatabase, createLivePosts: false, createFuturePosts: false);
                 await testDatabase.TakeSnapshotAsync();
 
@@ -172,12 +176,12 @@
         }
 
         [TestMethod]
-        public async Task ItShouldReturnNothingWhenUserHasNoPostsWithLiveDateInFuture()
+        public async Task ItShouldReturnNothingWhenUserHasNoPostsWithLiveDateInPastOrNow()
         {
             await this.DatabaseTestAsync(async testDatabase =>
             {
-                this.target = new GetCreatorBacklogQueryHandler(this.requesterSecurity.Object, testDatabase.NewContext());
-                await this.CreateEntitiesAsync(testDatabase, createLivePosts: true, createFuturePosts: false);
+                this.target = new GetCreatorNewsfeedQueryHandler(this.requesterSecurity.Object, testDatabase.NewContext());
+                await this.CreateEntitiesAsync(testDatabase, createLivePosts: false, createFuturePosts: true);
                 await testDatabase.TakeSnapshotAsync();
 
                 var result = await this.target.HandleAsync(Query);
@@ -198,7 +202,7 @@
                 var collectionEntities = new List<Collection>();
                 var postEntities = new List<Post>();
 
-                if (createLivePosts)
+                if (createFuturePosts)
                 {
                     var channelId = new ChannelId(Guid.NewGuid());
                     var collectionId = new CollectionId(Guid.NewGuid());
@@ -209,48 +213,48 @@
                         var post = PostTests.UniqueFileOrImage(Random);
                         post.ChannelId = channelId.Value;
                         post.CollectionId = collectionId.Value;
-                        post.LiveDate = DateTime.UtcNow.AddDays(i * -1);
+                        post.LiveDate = DateTime.UtcNow.AddDays(i + 1);
                         postEntities.Add(post);
                     }
                 }
 
-                if (createFuturePosts)
+                if (createLivePosts)
                 {
-                    foreach (var backlogPost in SortedBacklogPosts)
+                    foreach (var newsfeedPost in SortedNewsfeedPosts)
                     {
-                        if (backlogPost.FileId != null)
+                        if (newsfeedPost.FileId != null)
                         {
-                            files.Add(backlogPost.FileId);
+                            files.Add(newsfeedPost.FileId);
                         }
 
-                        if (backlogPost.ImageId != null)
+                        if (newsfeedPost.ImageId != null)
                         {
-                            files.Add(backlogPost.ImageId);
+                            files.Add(newsfeedPost.ImageId);
                         }
 
-                        if (!channels.ContainsKey(backlogPost.ChannelId))
+                        if (!channels.ContainsKey(newsfeedPost.ChannelId))
                         {
-                            channels.Add(backlogPost.ChannelId, new List<CollectionId>());
+                            channels.Add(newsfeedPost.ChannelId, new List<CollectionId>());
                         }
 
-                        if (backlogPost.CollectionId != null)
+                        if (newsfeedPost.CollectionId != null)
                         {
-                            channels[backlogPost.ChannelId].Add(backlogPost.CollectionId);
+                            channels[newsfeedPost.ChannelId].Add(newsfeedPost.CollectionId);
                         }
 
                         postEntities.Add(new Post(
-                            backlogPost.PostId.Value,
-                            backlogPost.ChannelId.Value,
+                            newsfeedPost.PostId.Value,
+                            newsfeedPost.ChannelId.Value,
                             null,
-                            backlogPost.CollectionId == null ? (Guid?)null : backlogPost.CollectionId.Value,
+                            newsfeedPost.CollectionId == null ? (Guid?)null : newsfeedPost.CollectionId.Value,
                             null,
-                            backlogPost.FileId == null ? (Guid?)null : backlogPost.FileId.Value,
+                            newsfeedPost.FileId == null ? (Guid?)null : newsfeedPost.FileId.Value,
                             null,
-                            backlogPost.ImageId == null ? (Guid?)null : backlogPost.ImageId.Value,
+                            newsfeedPost.ImageId == null ? (Guid?)null : newsfeedPost.ImageId.Value,
                             null,
-                            backlogPost.Comment == null ? null : backlogPost.Comment.Value,
-                            backlogPost.ScheduledByQueue,
-                            backlogPost.LiveDate,
+                            newsfeedPost.Comment == null ? null : newsfeedPost.Comment.Value,
+                            Random.Next(2) == 0,
+                            newsfeedPost.LiveDate,
                             Now));
                     }
                 }
@@ -291,7 +295,7 @@
             }
         }
 
-        private static IEnumerable<BacklogPost> GetSortedBacklogPosts()
+        private static IEnumerable<NewsfeedPost> GetSortedNewsfeedPosts()
         {
             // 1 in 3 chance of coincidental ordering being correct, yielding a false positive when implementation fails to order explicitly.
             const int Days = 3;
@@ -299,10 +303,11 @@
             const int CollectionsPerChannel = 3;
             const int Posts = 6;
 
-            var result = new List<BacklogPost>();
+            var result = new List<NewsfeedPost>();
             for (var day = 0; day < Days; day++)
             {
-                var liveDate = new SqlDateTime(Now.AddDays(1 + day)).Value;
+                // Ensure we have one post that is `now` (i.e. AddDays(0)).
+                var liveDate = new SqlDateTime(Now.AddDays(day * -1)).Value;
                 for (var channelIndex = 0; channelIndex < ChannelCount; channelIndex++)
                 {
                     var channelId = new ChannelId(Guid.NewGuid());
@@ -312,21 +317,20 @@
                         for (var i = 0; i < Posts; i++)
                         {
                             result.Add(
-                            new BacklogPost(
+                            new NewsfeedPost(
                                 new PostId(Guid.NewGuid()),
                                 channelId,
                                 collectionId,
                                 i % 2 == 0 ? Comment : null,
                                 i % 3 == 1 ? new FileId(Guid.NewGuid()) : null,
                                 i % 3 == 2 ? new FileId(Guid.NewGuid()) : null,
-                                i % 2 == 0,
                                 liveDate));
                         }
                     }
                 }
             }
 
-            return result.OrderByDescending(_ => _.LiveDate).ThenByDescending(_ => _.ScheduledByQueue);
+            return result.OrderByDescending(_ => _.LiveDate);
         }
     }
 }
