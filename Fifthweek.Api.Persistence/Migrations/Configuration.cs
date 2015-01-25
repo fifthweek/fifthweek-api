@@ -22,21 +22,19 @@ namespace Fifthweek.Api.Persistence.Migrations
 
         private void EnsureRolesExist(FifthweekDbContext context)
         {
-            if (context.Roles.All(_ => _.Name != FifthweekRole.Administrator))
-            {
-                context.Roles.Add(new FifthweekRole
-                {
-                    Id = FifthweekRole.AdministratorId,
-                    Name = FifthweekRole.Administrator
-                });
-            }
+            this.EnsureRoleExists(context, FifthweekRole.Administrator, FifthweekRole.AdministratorId);
+            this.EnsureRoleExists(context, FifthweekRole.Creator, FifthweekRole.CreatorId);
+            this.EnsureRoleExists(context, FifthweekRole.Psychic, FifthweekRole.PsychicId);
+        }
 
-            if (context.Roles.All(_ => _.Name != FifthweekRole.Creator))
+        private void EnsureRoleExists(FifthweekDbContext context, string roleName, Guid roleId)
+        {
+            if (context.Roles.All(_ => _.Name != roleName))
             {
                 context.Roles.Add(new FifthweekRole
                 {
-                    Id = FifthweekRole.CreatorId,
-                    Name = FifthweekRole.Creator
+                    Id = roleId,
+                    Name = roleName
                 });
             }
         }
