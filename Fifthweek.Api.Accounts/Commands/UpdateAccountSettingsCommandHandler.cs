@@ -32,7 +32,7 @@
                     command.NewPassword,
                     command.NewProfileImageId);
 
-            if (result.EmailChanged)
+            if (!result.EmailConfirmed)
             {
                 // Send activation email.
             }

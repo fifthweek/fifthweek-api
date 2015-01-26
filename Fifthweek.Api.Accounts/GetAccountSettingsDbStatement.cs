@@ -1,5 +1,6 @@
 ﻿namespace Fifthweek.Api.Accounts
 {
+    using System;
     using System.Linq;
     using System.Threading.Tasks;
 
@@ -32,6 +33,13 @@
             }
 
             return new GetAccountSettingsResult(new Email(result.Email), new FileId(result.ProfileImageFileId));
+        }
+
+        private class GetAccountSettingsDapperResult
+        {
+            public string Email { get; set; }
+
+            public Guid ProfileImageFileId { get; set; }
         }
     }
 }

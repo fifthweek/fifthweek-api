@@ -45,35 +45,104 @@ namespace Fifthweek.Api.Accounts.Tests
         public async Task WhenUpdateAccountSettingsCalled_ItShouldUpdateTheDatabase()
         {
             await this.DatabaseTestAsync(async testDatabase =>
+            {
+                this.target = new UpdateAccountSettingsDbStatement(testDatabase.NewContext(), this.userManager.Object);
+                await this.CreateUserAsync(testDatabase);
+                await testDatabase.TakeSnapshotAsync();
+
+                var hashedNewPassword = this.newPassword.Value + "1";
+                this.passwordHasher.Setup(v => v.HashPassword(this.newPassword.Value)).Returns(hashedNewPassword);
+
+                var expectedUser = await this.GetUserAsync(testDatabase);
+                expectedUser.UserName = this.newUsername.Value;
+                expectedUser.Email = this.newEmail.Value;
+                expectedUser.EmailConfirmed = false;
+                expectedUser.PasswordHash = hashedNewPassword;
+                expectedUser.ProfileImageFileId = this.newFileId.Value;
+
+                var result = await this.target.ExecuteAsync(
+                    this.userId,
+                    this.newUsername,
+                    this.newEmail,
+                    this.newPassword,
+                    this.newFileId);
+
+                Assert.AreEqual(false, result.EmailConfirmed);
+
+                return new ExpectedSideEffects
                 {
-                    this.target = new UpdateAccountSettingsDbStatement(testDatabase.NewContext(), this.userManager.Object);
-                    await this.CreateFileAsync(testDatabase);
-                    await testDatabase.TakeSnapshotAsync();
-
-                    var hashedNewPassword = this.newPassword.Value + "1";
-                    this.passwordHasher.Setup(v => v.HashPassword(this.newPassword.Value)).Returns(hashedNewPassword);
-
-                    var expectedUser = await this.GetUserAsync(testDatabase);
-                    expectedUser.UserName = this.newUsername.Value;
-                    expectedUser.Email = this.newEmail.Value;
-                    expectedUser.PasswordHash = hashedNewPassword;
-                    expectedUser.ProfileImageFileId = this.newFileId.Value;
-
-                    var result = await this.target.ExecuteAsync(
-                        this.userId,
-                        this.newUsername,
-                        this.newEmail,
-                        this.newPassword,
-                        this.newFileId);
-
-                    Assert.AreEqual(true, result.EmailChanged);
-
-                    return new ExpectedSideEffects
-                               {
-                                   Update = expectedUser
-                               };
-                });
+                    Update = expectedUser
+                };
+            });
         }
+
+        [TestMethod]
+        public async Task WhenUpdateAccountSettingsCalledTwice_ItShouldBeIdempotent()
+        {
+            await this.DatabaseTestAsync(async testDatabase =>
+            {
+                this.target = new UpdateAccountSettingsDbStatement(testDatabase.NewContext(), this.userManager.Object);
+                await this.CreateUserAsync(testDatabase);
+
+                var hashedNewPassword = this.newPassword.Value + "1";
+                this.passwordHasher.Setup(v => v.HashPassword(this.newPassword.Value)).Returns(hashedNewPassword);
+
+                var result = await this.target.ExecuteAsync(
+                    this.userId,
+                    this.newUsername,
+                    this.newEmail,
+                    this.newPassword,
+                    this.newFileId);
+
+                await testDatabase.TakeSnapshotAsync();
+
+                var result2 = await this.target.ExecuteAsync(
+                    this.userId,
+                    this.newUsername,
+                    this.newEmail,
+                    this.newPassword,
+                    this.newFileId);
+
+                Assert.AreEqual(result, result2);
+
+                return ExpectedSideEffects.None;
+            });
+        }
+
+        [TestMethod]
+        public async Task WhenUpdateAccountSettingsCalledAndEmailWasNotConfirmed_TheEmailShouldStillNotBeConfirmedAfterUpdate()
+        {
+            await this.DatabaseTestAsync(async testDatabase =>
+            {
+                this.target = new UpdateAccountSettingsDbStatement(testDatabase.NewContext(), this.userManager.Object);
+                await this.CreateUserAsync(testDatabase, false);
+                await testDatabase.TakeSnapshotAsync();
+
+                var hashedNewPassword = this.newPassword.Value + "1";
+                this.passwordHasher.Setup(v => v.HashPassword(this.newPassword.Value)).Returns(hashedNewPassword);
+
+                var expectedUser = await this.GetUserAsync(testDatabase);
+                expectedUser.UserName = this.newUsername.Value;
+                expectedUser.Email = this.newEmail.Value;
+                expectedUser.PasswordHash = hashedNewPassword;
+                expectedUser.ProfileImageFileId = this.newFileId.Value;
+
+                var result = await this.target.ExecuteAsync(
+                    this.userId,
+                    this.newUsername,
+                    this.newEmail,
+                    this.newPassword,
+                    this.newFileId);
+
+                Assert.AreEqual(false, result.EmailConfirmed);
+
+                return new ExpectedSideEffects
+                {
+                    Update = expectedUser
+                };
+            });
+        }
+
 
         [TestMethod]
         public async Task WhenUpdateAccountSettingsCalledWithoutANewPassword_ItShouldUpdateTheDatabase()
@@ -81,12 +150,13 @@ namespace Fifthweek.Api.Accounts.Tests
             await this.DatabaseTestAsync(async testDatabase =>
                 {
                     this.target = new UpdateAccountSettingsDbStatement(testDatabase.NewContext(), this.userManager.Object);
-                    await this.CreateFileAsync(testDatabase);
+                    await this.CreateUserAsync(testDatabase);
                     await testDatabase.TakeSnapshotAsync();
 
                     var expectedUser = await this.GetUserAsync(testDatabase);
                     expectedUser.UserName = this.newUsername.Value;
                     expectedUser.Email = this.newEmail.Value;
+                    expectedUser.EmailConfirmed = false;
                     expectedUser.ProfileImageFileId = this.newFileId.Value;
 
                     var result = await this.target.ExecuteAsync(
@@ -96,7 +166,7 @@ namespace Fifthweek.Api.Accounts.Tests
                         null,
                         this.newFileId);
 
-                    Assert.AreEqual(true, result.EmailChanged);
+                    Assert.AreEqual(false, result.EmailConfirmed);
 
                     return new ExpectedSideEffects
                                {
@@ -109,29 +179,58 @@ namespace Fifthweek.Api.Accounts.Tests
         public async Task WhenUpdateAccountSettingsCalledWithSameEMail_ItShouldDetectTheEmailHasNotChanged()
         {
             await this.DatabaseTestAsync(async testDatabase =>
+            {
+                this.target = new UpdateAccountSettingsDbStatement(testDatabase.NewContext(), this.userManager.Object);
+                await this.CreateUserAsync(testDatabase);
+                await testDatabase.TakeSnapshotAsync();
+
+                var expectedUser = await this.GetUserAsync(testDatabase);
+                expectedUser.UserName = this.newUsername.Value;
+                expectedUser.ProfileImageFileId = this.newFileId.Value;
+
+                var result = await this.target.ExecuteAsync(
+                    this.userId,
+                    this.newUsername,
+                    ValidEmail.Parse(this.email.Value),
+                    null,
+                    this.newFileId);
+
+                Assert.AreEqual(true, result.EmailConfirmed);
+
+                return new ExpectedSideEffects
                 {
-                    this.target = new UpdateAccountSettingsDbStatement(testDatabase.NewContext(), this.userManager.Object);
-                    await this.CreateFileAsync(testDatabase);
-                    await testDatabase.TakeSnapshotAsync();
+                    Update = expectedUser
+                };
+            });
+        }
 
-                    var expectedUser = await this.GetUserAsync(testDatabase);
-                    expectedUser.UserName = this.newUsername.Value;
-                    expectedUser.ProfileImageFileId = this.newFileId.Value;
+        [TestMethod]
+        public async Task WhenUpdateAccountSettingsCalledWithSameEMailAndEmailWasNotConfirmed_ItShouldStillNotBeConfirmed()
+        {
+            await this.DatabaseTestAsync(async testDatabase =>
+            {
+                this.target = new UpdateAccountSettingsDbStatement(testDatabase.NewContext(), this.userManager.Object);
+                await this.CreateUserAsync(testDatabase, false);
+                await testDatabase.TakeSnapshotAsync();
 
-                    var result = await this.target.ExecuteAsync(
-                        this.userId,
-                        this.newUsername,
-                        ValidEmail.Parse(this.email.Value),
-                        null,
-                        this.newFileId);
+                var expectedUser = await this.GetUserAsync(testDatabase);
+                expectedUser.UserName = this.newUsername.Value;
+                expectedUser.ProfileImageFileId = this.newFileId.Value;
 
-                    Assert.AreEqual(false, result.EmailChanged);
+                var result = await this.target.ExecuteAsync(
+                    this.userId,
+                    this.newUsername,
+                    ValidEmail.Parse(this.email.Value),
+                    null,
+                    this.newFileId);
 
-                    return new ExpectedSideEffects
-                               {
-                                   Update = expectedUser
-                               };
-                });
+                Assert.AreEqual(false, result.EmailConfirmed);
+
+                return new ExpectedSideEffects
+                {
+                    Update = expectedUser
+                };
+            });
         }
 
         [TestMethod]
@@ -140,12 +239,13 @@ namespace Fifthweek.Api.Accounts.Tests
             await this.DatabaseTestAsync(async testDatabase =>
                 {
                     this.target = new UpdateAccountSettingsDbStatement(testDatabase.NewContext(), this.userManager.Object);
-                    await this.CreateFileAsync(testDatabase);
+                    await this.CreateUserAsync(testDatabase);
                     await testDatabase.TakeSnapshotAsync();
 
                     var expectedUser = await this.GetUserAsync(testDatabase);
                     expectedUser.UserName = this.newUsername.Value;
                     expectedUser.Email = this.newEmail.Value;
+                    expectedUser.EmailConfirmed = false;
                     expectedUser.ProfileImageFileId = null;
 
                     var result = await this.target.ExecuteAsync(
@@ -155,12 +255,12 @@ namespace Fifthweek.Api.Accounts.Tests
                         null,
                         null);
 
-                    Assert.AreEqual(true, result.EmailChanged);
+                    Assert.AreEqual(false, result.EmailConfirmed);
 
                     return new ExpectedSideEffects
-                               {
-                                   Update = expectedUser
-                               };
+                    {
+                        Update = expectedUser
+                    };
                 });
         }
 
@@ -216,12 +316,13 @@ namespace Fifthweek.Api.Accounts.Tests
             return await databaseContext.Users.SingleAsync(v => v.Id == this.userId.Value);
         }
 
-        private async Task CreateFileAsync(TestDatabaseContext testDatabase)
+        private async Task CreateUserAsync(TestDatabaseContext testDatabase, bool emailConfirmed = true)
         {
             var random = new Random();
             var user = UserTests.UniqueEntity(random);
             user.Id = this.userId.Value;
             user.Email = this.email.Value;
+            user.EmailConfirmed = emailConfirmed;
 
             using (var databaseContext = testDatabase.NewContext())
             {

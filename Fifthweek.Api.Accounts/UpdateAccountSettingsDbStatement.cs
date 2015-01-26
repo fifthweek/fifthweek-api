@@ -39,9 +39,26 @@
 
             var query = new StringBuilder();
 
-            query.Append(@"DECLARE @oldEmail varchar(").Append(ValidEmail.MaxLength).Append(@")").AppendLine();
+            query.AppendLine(@"DECLARE @emailConfirmed bit");
 
-            query.Append(@"UPDATE dbo.AspNetUsers SET @oldEmail=Email, Email=@Email, UserName=@Username, ProfileImageFileId=@ProfileImageFileId");
+            query.Append(@"
+                UPDATE dbo.AspNetUsers 
+                SET 
+                    Email = @Email, 
+                    UserName = @Username, 
+                    ProfileImageFileId = @ProfileImageFileId,
+                    @emailConfirmed =
+                    (
+                        CASE
+                            WHEN 
+                                ((EmailConfirmed = 0) OR (Email != @Email))
+                            THEN
+                                0
+                            ELSE
+                                1
+                        END
+                    ),
+                    EmailConfirmed = @emailConfirmed");
 
             if (passwordHash != null)
             {
@@ -50,9 +67,9 @@
 
             query.AppendLine().Append(@"WHERE Id=@UserId").AppendLine();
 
-            query.Append(@"select @oldEmail");
+            query.Append(@"select @emailConfirmed");
 
-            var oldEmail = await this.databaseContext.Database.Connection.ExecuteScalarAsync<string>(
+            var emailConfirmed = await this.databaseContext.Database.Connection.ExecuteScalarAsync<bool>(
                 query.ToString(),
                 new
                 {
@@ -63,17 +80,13 @@
                     ProfileImageFileId = newProfileImageFileId == null ? (Guid?)null : newProfileImageFileId.Value
                 });
 
-            return new UpdateAccountSettingsResult(oldEmail != newEmail.Value);
+            return new UpdateAccountSettingsResult(emailConfirmed);
         }
 
-        public class UpdateAccountSettingsResult
+        [AutoConstructor, AutoEqualityMembers]
+        public partial class UpdateAccountSettingsResult
         {
-            public UpdateAccountSettingsResult(bool emailChanged)
-            {
-                this.EmailChanged = emailChanged;
-            }
-
-            public bool EmailChanged { get; private set; }
+            public bool EmailConfirmed { get; private set; }
         }
     }
 }

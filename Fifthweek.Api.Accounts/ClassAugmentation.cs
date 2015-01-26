@@ -330,6 +330,36 @@ namespace Fifthweek.Api.Accounts
     }
 
 }
+namespace Fifthweek.Api.Accounts
+{
+    using System;
+    using System.Linq;
+    using System.Text;
+    using System.Threading.Tasks;
+    using Dapper;
+    using Fifthweek.Api.Core;
+    using Fifthweek.Api.FileManagement;
+    using Fifthweek.Api.Identity.Membership;
+    using Fifthweek.Api.Persistence;
+    using Fifthweek.CodeGeneration;
+    public partial class UpdateAccountSettingsDbStatement
+    {
+        public partial class UpdateAccountSettingsResult 
+        {
+        public UpdateAccountSettingsResult(
+            System.Boolean emailConfirmed)
+        {
+            if (emailConfirmed == null)
+            {
+                throw new ArgumentNullException("emailConfirmed");
+            }
+
+            this.EmailConfirmed = emailConfirmed;
+        }
+        }
+
+        }
+}
 
 namespace Fifthweek.Api.Accounts.Commands
 {
@@ -617,6 +647,70 @@ namespace Fifthweek.Api.Accounts.Queries
         }
     }
 
+}
+namespace Fifthweek.Api.Accounts
+{
+    using System;
+    using System.Linq;
+    using System.Text;
+    using System.Threading.Tasks;
+    using Dapper;
+    using Fifthweek.Api.Core;
+    using Fifthweek.Api.FileManagement;
+    using Fifthweek.Api.Identity.Membership;
+    using Fifthweek.Api.Persistence;
+    using Fifthweek.CodeGeneration;
+    public partial class UpdateAccountSettingsDbStatement
+    {
+        public partial class UpdateAccountSettingsResult 
+        {
+        public override string ToString()
+        {
+            return string.Format("UpdateAccountSettingsResult({0})", this.EmailConfirmed == null ? "null" : this.EmailConfirmed.ToString());
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj))
+            {
+                return false;
+            }
+
+            if (ReferenceEquals(this, obj))
+            {
+                return true;
+            }
+
+            if (obj.GetType() != this.GetType())
+            {
+                return false;
+            }
+
+            return this.Equals((UpdateAccountSettingsResult)obj);
+        }
+
+        public override int GetHashCode()
+        {
+            unchecked
+            {
+                int hashCode = 0;
+                hashCode = (hashCode * 397) ^ (this.EmailConfirmed != null ? this.EmailConfirmed.GetHashCode() : 0);
+                return hashCode;
+            }
+        }
+
+        protected bool Equals(UpdateAccountSettingsResult other)
+        {
+            if (!object.Equals(this.EmailConfirmed, other.EmailConfirmed))
+            {
+                return false;
+            }
+
+            return true;
+        }
+        }
+
+        }
 }
 namespace Fifthweek.Api.Accounts.Controllers
 {
