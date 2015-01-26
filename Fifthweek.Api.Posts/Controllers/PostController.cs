@@ -1,16 +1,17 @@
 ﻿namespace Fifthweek.Api.Posts.Controllers
 {
     using System.Collections.Generic;
+    using System.Linq;
     using System.Threading.Tasks;
     using System.Web.Http;
 
+    using Fifthweek.Api.Collections;
     using Fifthweek.Api.Core;
     using Fifthweek.Api.Identity.Membership;
     using Fifthweek.Api.Identity.OAuth;
     using Fifthweek.Api.Posts.Commands;
     using Fifthweek.Api.Posts.Queries;
     using Fifthweek.CodeGeneration;
-    using Fifthweek.Shared;
 
     [RoutePrefix("posts"), AutoConstructor]
     public partial class PostController : ApiController
@@ -19,6 +20,7 @@
         private readonly ICommandHandler<PostImageCommand> postImage;
         private readonly ICommandHandler<PostFileCommand> postFile;
         private readonly ICommandHandler<DeletePostCommand> deletePost;
+        private readonly ICommandHandler<ReorderQueueCommand> reorderQueue;
         private readonly IQueryHandler<GetCreatorBacklogQuery, IReadOnlyList<BacklogPost>> getCreatorBacklog;
         private readonly IQueryHandler<GetCreatorNewsfeedQuery, IReadOnlyList<NewsfeedPost>> getCreatorNewsfeed;
         private readonly IUserContext userContext;
@@ -81,6 +83,20 @@
                 file.CommentObject,
                 file.ScheduledPostDate,
                 file.IsQueued));
+
+            return this.Ok();
+        }
+
+        [Route("queues/{collectionId}")]
+        public async Task<IHttpActionResult> PostNewQueueOrder(string collectionId, [FromBody]IEnumerable<PostId> newQueueOrder)
+        {
+            collectionId.AssertUrlParameterProvided("collectionId");
+            newQueueOrder.AssertBodyProvided("newQueueOrder");
+
+            var collectionIdObject = new CollectionId(collectionId.DecodeGuid());
+            var requester = this.userContext.GetRequester();
+
+            await this.reorderQueue.HandleAsync(new ReorderQueueCommand(requester, collectionIdObject, newQueueOrder.ToList()));
 
             return this.Ok();
         }

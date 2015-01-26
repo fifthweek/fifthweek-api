@@ -2,6 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Linq;
     using System.Threading.Tasks;
     using System.Web.Http.Results;
 
@@ -34,6 +35,7 @@
         private Mock<ICommandHandler<PostImageCommand>> postImage;
         private Mock<ICommandHandler<PostFileCommand>> postFile;
         private Mock<ICommandHandler<DeletePostCommand>> deletePost;
+        private Mock<ICommandHandler<ReorderQueueCommand>> reorderQueue;
         private Mock<IQueryHandler<GetCreatorBacklogQuery, IReadOnlyList<BacklogPost>>> getCreatorBacklog;
         private Mock<IQueryHandler<GetCreatorNewsfeedQuery, IReadOnlyList<NewsfeedPost>>> getCreatorNewsfeed;
         private Mock<IUserContext> userContext;
@@ -47,6 +49,7 @@
             this.postImage = new Mock<ICommandHandler<PostImageCommand>>();
             this.postFile = new Mock<ICommandHandler<PostFileCommand>>();
             this.deletePost = new Mock<ICommandHandler<DeletePostCommand>>();
+            this.reorderQueue = new Mock<ICommandHandler<ReorderQueueCommand>>();
             this.getCreatorBacklog = new Mock<IQueryHandler<GetCreatorBacklogQuery, IReadOnlyList<BacklogPost>>>();
             this.getCreatorNewsfeed = new Mock<IQueryHandler<GetCreatorNewsfeedQuery, IReadOnlyList<NewsfeedPost>>>();
             this.userContext = new Mock<IUserContext>();
@@ -56,6 +59,7 @@
                 this.postImage.Object,
                 this.postFile.Object,
                 this.deletePost.Object,
+                this.reorderQueue.Object,
                 this.getCreatorBacklog.Object,
                 this.getCreatorNewsfeed.Object,
                 this.userContext.Object,
@@ -178,6 +182,35 @@
         public async Task WhenDeletingPostWithoutSpecifyingPostId_ItShouldThrowBadRequestException()
         {
             await this.target.DeletePost(string.Empty);
+        }
+
+        [TestMethod]
+        public async Task WhenReorderingQueue_ItShouldIssueReorderQueueCommand()
+        {
+            var newQueueOrder = new[] { new PostId(Guid.NewGuid()) };
+
+            this.userContext.Setup(v => v.GetRequester()).Returns(Requester);
+            this.reorderQueue.Setup(v => v.HandleAsync(new ReorderQueueCommand(Requester, CollectionId, newQueueOrder)))
+                .Returns(Task.FromResult(0))
+                .Verifiable();
+
+            await this.target.PostNewQueueOrder(CollectionId.Value.EncodeGuid(), newQueueOrder);
+
+            this.reorderQueue.Verify();
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(BadRequestException))]
+        public async Task WhenReorderingQueueWithoutSpecifyingCollectionId_ItShouldThrowBadRequestException()
+        {
+            await this.target.PostNewQueueOrder(string.Empty, Enumerable.Empty<PostId>());
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(BadRequestException))]
+        public async Task WhenReorderingQueueWithoutSpecifyingNewOrder_ItShouldThrowBadRequestException()
+        {
+            await this.target.PostNewQueueOrder(CollectionId.Value.EncodeGuid(), null);
         }
 
         public static NewNoteData NewNoteData()

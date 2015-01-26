@@ -1,6 +1,4 @@
-﻿using Fifthweek.Api.Identity.Membership.Events;
-
-namespace Fifthweek.Api.Identity.Membership.Commands
+﻿namespace Fifthweek.Api.Identity.Membership.Commands
 {
     using System;
     using System.Data.SqlTypes;
@@ -8,10 +6,10 @@ namespace Fifthweek.Api.Identity.Membership.Commands
     using System.Threading.Tasks;
 
     using Fifthweek.Api.Core;
+    using Fifthweek.Api.Identity.Membership.Events;
     using Fifthweek.Api.Persistence;
     using Fifthweek.Api.Persistence.Identity;
     using Fifthweek.CodeGeneration;
-    using Fifthweek.Shared;
 
     [AutoConstructor]
     public partial class RegisterUserCommandHandler : ICommandHandler<RegisterUserCommand>
@@ -29,13 +27,13 @@ namespace Fifthweek.Api.Identity.Membership.Commands
             var userByEmail = await this.userManager.FindByEmailAsync(command.Email.Value);
             if (userByEmail != null)
             {
-                throw new RecoverableException("The email address '" + command.Email + "' is already taken.");
+                throw new RecoverableException("The email address '" + command.Email.Value + "' is already taken.");
             }
 
             var userByUsername = await this.userManager.FindByNameAsync(command.Username.Value);
             if (userByUsername != null)
             {
-                throw new RecoverableException("The username '" + command.Username + "' is already taken.");
+                throw new RecoverableException("The username '" + command.Username.Value + "' is already taken.");
             }
 
             var user = new FifthweekUser

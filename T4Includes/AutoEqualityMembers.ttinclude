@@ -104,9 +104,26 @@
 <#
     foreach(CodeProperty codeProperty in publicProperties)
     {
+		if (IsEnumerableType(codeProperty.Type.CodeType, VisualStudioHelper))
+        {
+#>
+                hashCode = (hashCode * 397) ^ (this.<#= codeProperty.Name #> != null 
+				    ? this.<#= codeProperty.Name #>.Aggregate(0, (previous, current) => 
+				        { 
+				            unchecked
+				            {
+				                return (previous * 397) ^ (current != null ? current.GetHashCode() : 0);
+				            }
+				        })
+				    : 0);
+<#
+        }
+		else
+        {
 #>
                 hashCode = (hashCode * 397) ^ (this.<#= codeProperty.Name #> != null ? this.<#= codeProperty.Name #>.GetHashCode() : 0);
 <#
+        }
     }
 #>
                 return hashCode;
@@ -118,6 +135,25 @@
 <#
     foreach(CodeProperty codeProperty in publicProperties)
     {
+		if (IsEnumerableType(codeProperty.Type.CodeType, VisualStudioHelper))
+        {
+#>
+            if (this.<#= codeProperty.Name #> != null && other.<#= codeProperty.Name #> != null)
+            {
+                if (!this.<#= codeProperty.Name #>.SequenceEqual(other.<#= codeProperty.Name #>))
+                {
+                    return false;    
+                }
+            }
+            else if (this.<#= codeProperty.Name #> != null || other.<#= codeProperty.Name #> != null)
+            {
+                return false;
+            }
+
+<#
+        }
+		else
+        {
 #>
             if (!object.Equals(this.<#= codeProperty.Name #>, other.<#= codeProperty.Name #>))
             {
@@ -125,6 +161,7 @@
             }
 
 <#
+        }
     }
 #>
             return true;

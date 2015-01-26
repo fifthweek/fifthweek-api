@@ -66,6 +66,29 @@
 #>
 
 <#+
+	public static bool IsEnumerableType(CodeType type, AutomationHelper visualStudioHelper)
+	{
+		var interfaces = Enumerable.Empty<EnvDTE.CodeInterface>();
+		if (type is CodeClass)
+        {
+			var codeClass = (CodeClass)type;
+
+			if (codeClass.FullName == "System.String")
+            {
+				return false;
+            }
+
+			interfaces = visualStudioHelper.CodeModel.GetAllImplementedInterfaces(codeClass);
+        }
+		else if (type is CodeInterface)
+        {
+			var codeInterface = (CodeInterface)type;
+			interfaces = new[] { codeInterface }.Concat(visualStudioHelper.CodeModel.GetAllBaseInterfaces(codeInterface));
+        }
+		
+		return interfaces.Any(_ => _.FullName == "System.Collections.IEnumerable");
+	}
+
     public static bool IsNullablePrimitiveType(CodeType type)
     {
         const string nullablePostfix = "?";
