@@ -1,5 +1,6 @@
 ﻿namespace Fifthweek.Api.FileManagement.Commands
 {
+    using System;
     using System.Threading.Tasks;
 
     using Fifthweek.Api.Azure;
@@ -13,7 +14,7 @@
         private readonly IRequesterSecurity requesterSecurity;
         private readonly IBlobService blobService;
         private readonly IBlobLocationGenerator blobLocationGenerator;
-        private readonly IFileRepository fileRepository;
+        private readonly IAddNewFileDbStatement addNewFile;
 
         public async Task HandleAsync(InitiateFileUploadCommand command)
         {
@@ -49,12 +50,13 @@
                 }
             }
 
-            await this.fileRepository.AddNewFileAsync(
+            await this.addNewFile.ExecuteAsync(
                 command.FileId,
                 authenticatedUserId,
                 fileNameWithoutExtension ?? string.Empty,
                 fileExtension ?? string.Empty,
-                command.Purpose ?? string.Empty);
+                command.Purpose ?? string.Empty,
+                DateTime.UtcNow);
         }
     }
 }

@@ -64,6 +64,29 @@ namespace Fifthweek.Api.FileManagement
 
 namespace Fifthweek.Api.FileManagement
 {
+    using System;
+    using System.Threading.Tasks;
+    using Fifthweek.Api.Core;
+    using Fifthweek.Api.Identity.Membership;
+    using Fifthweek.Api.Persistence;
+    using Fifthweek.CodeGeneration;
+    public partial class AddNewFileDbStatement 
+    {
+        public AddNewFileDbStatement(
+            Fifthweek.Api.Persistence.IFifthweekDbContext fifthweekDbContext)
+        {
+            if (fifthweekDbContext == null)
+            {
+                throw new ArgumentNullException("fifthweekDbContext");
+            }
+
+            this.fifthweekDbContext = fifthweekDbContext;
+        }
+    }
+
+}
+namespace Fifthweek.Api.FileManagement
+{
     using Fifthweek.Api.Core;
     using Fifthweek.CodeGeneration;
     using Fifthweek.Shared;
@@ -174,16 +197,22 @@ namespace Fifthweek.Api.FileManagement.Commands
     public partial class CompleteFileUploadCommandHandler 
     {
         public CompleteFileUploadCommandHandler(
-            Fifthweek.Api.FileManagement.IFileRepository fileRepository, 
+            Fifthweek.Api.FileManagement.IGetFileWaitingForUploadDbStatement getFileWaitingForUpload, 
+            Fifthweek.Api.FileManagement.ISetFileUploadCompleteDbStatement setFileUploadComplete, 
             Fifthweek.Shared.IMimeTypeMap mimeTypeMap, 
             Fifthweek.Api.Azure.IBlobService blobService, 
             Fifthweek.Api.Azure.IQueueService queueService, 
             Fifthweek.Api.FileManagement.IBlobLocationGenerator blobLocationGenerator, 
             Fifthweek.Api.Identity.Membership.IRequesterSecurity requesterSecurity)
         {
-            if (fileRepository == null)
+            if (getFileWaitingForUpload == null)
             {
-                throw new ArgumentNullException("fileRepository");
+                throw new ArgumentNullException("getFileWaitingForUpload");
+            }
+
+            if (setFileUploadComplete == null)
+            {
+                throw new ArgumentNullException("setFileUploadComplete");
             }
 
             if (mimeTypeMap == null)
@@ -211,7 +240,8 @@ namespace Fifthweek.Api.FileManagement.Commands
                 throw new ArgumentNullException("requesterSecurity");
             }
 
-            this.fileRepository = fileRepository;
+            this.getFileWaitingForUpload = getFileWaitingForUpload;
+            this.setFileUploadComplete = setFileUploadComplete;
             this.mimeTypeMap = mimeTypeMap;
             this.blobService = blobService;
             this.queueService = queueService;
@@ -275,7 +305,7 @@ namespace Fifthweek.Api.FileManagement.Commands
             Fifthweek.Api.Identity.Membership.IRequesterSecurity requesterSecurity, 
             Fifthweek.Api.Azure.IBlobService blobService, 
             Fifthweek.Api.FileManagement.IBlobLocationGenerator blobLocationGenerator, 
-            Fifthweek.Api.FileManagement.IFileRepository fileRepository)
+            Fifthweek.Api.FileManagement.IAddNewFileDbStatement addNewFile)
         {
             if (requesterSecurity == null)
             {
@@ -292,15 +322,15 @@ namespace Fifthweek.Api.FileManagement.Commands
                 throw new ArgumentNullException("blobLocationGenerator");
             }
 
-            if (fileRepository == null)
+            if (addNewFile == null)
             {
-                throw new ArgumentNullException("fileRepository");
+                throw new ArgumentNullException("addNewFile");
             }
 
             this.requesterSecurity = requesterSecurity;
             this.blobService = blobService;
             this.blobLocationGenerator = blobLocationGenerator;
-            this.fileRepository = fileRepository;
+            this.addNewFile = addNewFile;
         }
     }
 
@@ -454,35 +484,6 @@ namespace Fifthweek.Api.FileManagement
     public partial class FileOwnership 
     {
         public FileOwnership(
-            Fifthweek.Api.Persistence.IFifthweekDbContext fifthweekDbContext)
-        {
-            if (fifthweekDbContext == null)
-            {
-                throw new ArgumentNullException("fifthweekDbContext");
-            }
-
-            this.fifthweekDbContext = fifthweekDbContext;
-        }
-    }
-
-}
-namespace Fifthweek.Api.FileManagement
-{
-    using System;
-    using System.Linq;
-    using Fifthweek.CodeGeneration;
-    using Fifthweek.Api.Core;
-    using Fifthweek.Shared;
-    using System.Threading.Tasks;
-    using Dapper;
-    using Fifthweek.Api.Identity.Membership;
-    using Fifthweek.Api.Persistence;
-    using System.Security;
-    using Fifthweek.Api.Azure;
-    using Fifthweek.WebJobs.GarbageCollection.Shared;
-    public partial class FileRepository 
-    {
-        public FileRepository(
             Fifthweek.Api.Persistence.IFifthweekDbContext fifthweekDbContext)
         {
             if (fifthweekDbContext == null)
@@ -853,6 +854,53 @@ namespace Fifthweek.Api.FileManagement
             }
 
             this.queueService = queueService;
+        }
+    }
+
+}
+namespace Fifthweek.Api.FileManagement
+{
+    using System;
+    using System.Linq;
+    using System.Threading.Tasks;
+    using Dapper;
+    using Fifthweek.Api.Core;
+    using Fifthweek.Api.Identity.Membership;
+    using Fifthweek.Api.Persistence;
+    using Fifthweek.CodeGeneration;
+    public partial class GetFileWaitingForUploadDbStatement 
+    {
+        public GetFileWaitingForUploadDbStatement(
+            Fifthweek.Api.Persistence.IFifthweekDbContext fifthweekDbContext)
+        {
+            if (fifthweekDbContext == null)
+            {
+                throw new ArgumentNullException("fifthweekDbContext");
+            }
+
+            this.fifthweekDbContext = fifthweekDbContext;
+        }
+    }
+
+}
+namespace Fifthweek.Api.FileManagement
+{
+    using System;
+    using System.Threading.Tasks;
+    using Fifthweek.Api.Core;
+    using Fifthweek.Api.Persistence;
+    using Fifthweek.CodeGeneration;
+    public partial class SetFileUploadCompleteDbStatement 
+    {
+        public SetFileUploadCompleteDbStatement(
+            Fifthweek.Api.Persistence.IFifthweekDbContext fifthweekDbContext)
+        {
+            if (fifthweekDbContext == null)
+            {
+                throw new ArgumentNullException("fifthweekDbContext");
+            }
+
+            this.fifthweekDbContext = fifthweekDbContext;
         }
     }
 

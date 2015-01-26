@@ -10,7 +10,9 @@
         public void Register(ContainerBuilder builder)
         {
             builder.RegisterType<BlobLocationGenerator>().As<IBlobLocationGenerator>().SingleInstance();
-            builder.RegisterType<FileRepository>().As<IFileRepository>();
+            builder.RegisterType<AddNewFileDbStatement>().As<IAddNewFileDbStatement>();
+            builder.RegisterType<GetFileWaitingForUploadDbStatement>().As<IGetFileWaitingForUploadDbStatement>();
+            builder.RegisterType<SetFileUploadCompleteDbStatement>().As<ISetFileUploadCompleteDbStatement>();
             builder.RegisterType<FileOwnership>().As<IFileOwnership>();
             builder.RegisterType<FileSecurity>().As<IFileSecurity>();
             builder.RegisterType<GetFileExtensionDbStatement>().As<IGetFileExtensionDbStatement>();

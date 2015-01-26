@@ -99,6 +99,7 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\Microsoft.AspNet.WebApi.Core.5.2.2\lib\net45\System.Web.Http.dll</HintPath>
     </Reference>
+    <Reference Include="System.Xml" />
   </ItemGroup>
   <Choose>
     <When Condition="('$(VisualStudioVersion)' == '10.0' or '$(VisualStudioVersion)' == '') and '$(TargetFrameworkVersion)' == 'v3.5'">
@@ -119,12 +120,14 @@
     <Compile Include="Controllers\FileUploadControllerTests.cs" />
     <Compile Include="GetFileExtensionDbStatementTests.cs" />
     <Compile Include="FileSecurityTests.cs" />
+    <Compile Include="GetFileWaitingForUploadDbStatementTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Queries\GenerateWritableBlobUriQueryHandlerTests.cs" />
-    <Compile Include="FileRepositoryTests.cs" />
+    <Compile Include="AddNewFileDbStatementTests.cs" />
     <Compile Include="FileOwnershipTests.cs" />
     <Compile Include="Queries\GetUserAccessSignaturesQueryHandlerTests.cs" />
     <Compile Include="ScheduleGarbageCollectionStatementTests.cs" />
+    <Compile Include="SetFileUploadCompleteDbStatementTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Fifthweek.Api.Azure\Fifthweek.Api.Azure.csproj">

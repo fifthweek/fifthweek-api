@@ -29,7 +29,8 @@
         private static readonly UserId UserId = new UserId(Guid.NewGuid());
         private static readonly Requester Requester = Requester.Authenticated(UserId);
 
-        private Mock<IFileRepository> fileRepository;
+        private Mock<IGetFileWaitingForUploadDbStatement> getFileWaitingForUpload;
+        private Mock<ISetFileUploadCompleteDbStatement> setFileUploadComplete;
         private Mock<IMimeTypeMap> mimeTypeMap;
         private Mock<IBlobService> blobService;
         private Mock<IQueueService> queueService;
@@ -44,14 +45,16 @@
             this.blobNameCreator = new Mock<IBlobLocationGenerator>();
             this.mimeTypeMap = new Mock<IMimeTypeMap>();
             this.requesterSecurity = new Mock<IRequesterSecurity>();
+            this.getFileWaitingForUpload = new Mock<IGetFileWaitingForUploadDbStatement>();
 
             // Give side-effecting components strict mock behaviour.
-            this.fileRepository = new Mock<IFileRepository>(MockBehavior.Strict);
+            this.setFileUploadComplete = new Mock<ISetFileUploadCompleteDbStatement>(MockBehavior.Strict);
             this.blobService = new Mock<IBlobService>(MockBehavior.Strict);
             this.queueService = new Mock<IQueueService>(MockBehavior.Strict);
 
             this.handler = new CompleteFileUploadCommandHandler(
-                this.fileRepository.Object,
+                this.getFileWaitingForUpload.Object,
+                this.setFileUploadComplete.Object,
                 this.mimeTypeMap.Object,
                 this.blobService.Object,
                 this.queueService.Object,
@@ -71,7 +74,7 @@
         [TestMethod]
         public async Task WhenCalledAndFileDoesNotBelogToUser_ItShouldNotUpdateStorageOrQueue()
         {
-            this.fileRepository.Setup(v => v.GetFileWaitingForUploadAsync(FileId))
+            this.getFileWaitingForUpload.Setup(v => v.ExecuteAsync(FileId))
                 .ReturnsAsync(new FileWaitingForUpload(FileId, new UserId(Guid.NewGuid()), "myfile", FileExtension, Purpose));
 
             await ExpectedException.AssertExceptionAsync<UnauthorizedException>(() =>
@@ -85,7 +88,7 @@
         {
             this.mimeTypeMap.Setup(_ => _.GetMimeType(FileExtension)).Returns(MimeType);
 
-            this.fileRepository.Setup(v => v.GetFileWaitingForUploadAsync(FileId))
+            this.getFileWaitingForUpload.Setup(v => v.ExecuteAsync(FileId))
                 .ReturnsAsync(new FileWaitingForUpload(FileId, UserId, "myfile", FileExtension, Purpose));
 
             this.blobNameCreator.Setup(v => v.GetBlobLocation(UserId, FileId, Purpose))
@@ -94,7 +97,7 @@
             this.blobService.Setup(v => v.GetBlobLengthAndSetContentTypeAsync(ContainerName, BlobName, MimeType))
                 .ReturnsAsync(BlobSize).Verifiable();
 
-            this.fileRepository.Setup(v => v.SetFileUploadComplete(FileId, BlobSize))
+            this.setFileUploadComplete.Setup(v => v.ExecuteAsync(FileId, BlobSize, It.IsAny<DateTime>()))
                 .Returns(Task.FromResult(0))
                 .Verifiable();
 
@@ -104,7 +107,7 @@
 
             await this.handler.HandleAsync(new CompleteFileUploadCommand(Requester, FileId));
 
-            this.fileRepository.Verify();
+            this.setFileUploadComplete.Verify();
             this.blobService.Verify();
             this.queueService.Verify();
         }

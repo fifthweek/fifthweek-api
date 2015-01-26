@@ -99,6 +99,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AddNewFileDbStatement.cs" />
+    <Compile Include="GetFileWaitingForUploadDbStatement.cs" />
+    <Compile Include="IAddNewFileDbStatement.cs" />
+    <Compile Include="IGetFileWaitingForUploadDbStatement.cs" />
+    <Compile Include="ISetFileUploadCompleteDbStatement.cs" />
     <Compile Include="Queries\GetUserAccessSignaturesQueryHandler.cs" />
     <Compile Include="Queries\GetUserAccessSignaturesQuery.cs" />
     <Compile Include="Queries\UserAccessSignatures.cs" />
@@ -121,13 +126,11 @@
     <Compile Include="Controllers\GrantedUpload.cs" />
     <Compile Include="Controllers\UploadRequest.cs" />
     <Compile Include="FileId.cs" />
-    <Compile Include="FileRepository.cs" />
     <Compile Include="FileOwnership.cs" />
     <Compile Include="FileSecurity.cs" />
     <Compile Include="FileWaitingForUpload.cs" />
     <Compile Include="IScheduleGarbageCollectionStatement.cs" />
     <Compile Include="IBlobLocationGenerator.cs" />
-    <Compile Include="IFileRepository.cs" />
     <Compile Include="IFileOwnership.cs" />
     <Compile Include="IFileSecurity.cs" />
     <Compile Include="GetFileExtensionDbStatement.cs" />
@@ -135,6 +138,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Queries\GenerateWritableBlobUriQuery.cs" />
     <Compile Include="Queries\GenerateWritableBlobUriQueryHandler.cs" />
+    <Compile Include="SetFileUploadCompleteDbStatement.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />

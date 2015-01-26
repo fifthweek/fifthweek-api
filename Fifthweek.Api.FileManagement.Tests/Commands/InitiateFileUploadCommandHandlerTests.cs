@@ -26,7 +26,7 @@
         private static readonly FileId FileId = new FileId(Guid.NewGuid());
         private static readonly Requester Requester = Requester.Authenticated(UserId);
 
-        private Mock<IFileRepository> fileRepository;
+        private Mock<IAddNewFileDbStatement> addNewFileDbStatement;
         private Mock<IBlobService> blobService;
         private Mock<IBlobLocationGenerator> blobNameCreator;
         private Mock<IRequesterSecurity> requesterSecurity;
@@ -38,11 +38,11 @@
             // Give side-effecting components strict mock behaviour.
             this.blobService = new Mock<IBlobService>(MockBehavior.Strict);
             this.blobNameCreator = new Mock<IBlobLocationGenerator>();
-            this.fileRepository = new Mock<IFileRepository>(MockBehavior.Strict);
+            this.addNewFileDbStatement = new Mock<IAddNewFileDbStatement>(MockBehavior.Strict);
             this.requesterSecurity = new Mock<IRequesterSecurity>();
             this.requesterSecurity.SetupFor(Requester);
 
-            this.target = new InitiateFileUploadCommandHandler(this.requesterSecurity.Object, this.blobService.Object, this.blobNameCreator.Object, this.fileRepository.Object);
+            this.target = new InitiateFileUploadCommandHandler(this.requesterSecurity.Object, this.blobService.Object, this.blobNameCreator.Object, this.addNewFileDbStatement.Object);
         }
 
         [TestMethod]
@@ -175,14 +175,14 @@
             this.blobNameCreator.Setup(v => v.GetBlobLocation(requester, fileId, purpose))
                 .Returns(new BlobLocation(blobContainerName, string.Empty));
 
-            this.fileRepository.Setup(v => v.AddNewFileAsync(fileId, requester, expectedFileName, expectedExtension, expectedPurpose))
+            this.addNewFileDbStatement.Setup(v => v.ExecuteAsync(fileId, requester, expectedFileName, expectedExtension, expectedPurpose, It.IsAny<DateTime>()))
                 .Returns(Task.FromResult(0))
                 .Verifiable();
 
             await this.target.HandleAsync(new InitiateFileUploadCommand(Requester, fileId, filePath, purpose));
 
             this.blobService.Verify();
-            this.fileRepository.Verify();
+            this.addNewFileDbStatement.Verify();
         }
     }
 }
