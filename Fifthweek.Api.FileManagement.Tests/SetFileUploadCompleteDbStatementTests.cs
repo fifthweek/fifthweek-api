@@ -43,9 +43,6 @@ namespace Fifthweek.Api.FileManagement.Tests
                     await this.AddFileAsync(testDatabase);
                     await testDatabase.TakeSnapshotAsync();
 
-                    // This is just to guarantee we get a different timestamp for when the upload completes.
-                    Thread.Sleep(1);
-
                     const long NewLength = 11111L;
 
                     await this.target.ExecuteAsync(FileId, NewLength, TimeStamp);
@@ -88,9 +85,6 @@ namespace Fifthweek.Api.FileManagement.Tests
 
                     await this.CreateUserAsync(testDatabase);
                     await this.AddFileAsync(testDatabase);
-
-                    // This is just to guarantee we get a different timestamp for when the upload completes.
-                    Thread.Sleep(1);
 
                     const long NewLength = 11111L;
 
