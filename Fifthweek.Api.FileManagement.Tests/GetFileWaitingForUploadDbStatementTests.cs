@@ -95,7 +95,7 @@ namespace Fifthweek.Api.FileManagement.Tests
                 null,
                 UserId.Value,
                 FileState.WaitingForUpload,
-                DateTime.MinValue,
+                DateTime.UtcNow,
                 null,
                 null,
                 null,
@@ -106,8 +106,7 @@ namespace Fifthweek.Api.FileManagement.Tests
 
             using (var databaseContext = testDatabase.NewContext())
             {
-                databaseContext.Files.Add(file);
-                await databaseContext.SaveChangesAsync();
+                await databaseContext.Database.Connection.InsertAsync(file);
             }
         }
     }

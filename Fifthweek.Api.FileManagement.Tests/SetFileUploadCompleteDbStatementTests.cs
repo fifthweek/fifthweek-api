@@ -22,6 +22,7 @@ namespace Fifthweek.Api.FileManagement.Tests
         private static readonly UserId UserId = new UserId(Guid.NewGuid());
         private static readonly FileId FileId = new FileId(Guid.NewGuid());
         private static readonly DateTime TimeStamp = new SqlDateTime(DateTime.UtcNow).Value;
+        private static readonly DateTime UploadStartedTimeStamp = new SqlDateTime(DateTime.UtcNow.AddSeconds(-180)).Value;
 
         private SetFileUploadCompleteDbStatement target;
 
@@ -54,8 +55,8 @@ namespace Fifthweek.Api.FileManagement.Tests
                         null,
                         UserId.Value,
                         FileState.UploadComplete,
-                        DateTime.MinValue,
-                        null,
+                        UploadStartedTimeStamp,
+                        TimeStamp,
                         null,
                         null,
                         FileNameWithoutExtension,
@@ -72,17 +73,9 @@ namespace Fifthweek.Api.FileManagement.Tests
                     }
 
                     return new ExpectedSideEffects
-                               {
-                                   Update = new WildcardEntity<File>(expectedFile)
-                                                {
-                                                    Expected = actualFile =>
-                                                        {
-                                                            expectedFile.UploadStartedDate = actualFile.UploadStartedDate;
-                                                            expectedFile.UploadCompletedDate = actualFile.UploadCompletedDate;
-                                                            return expectedFile;
-                                                        }
-                                                }
-                               };
+                    {
+                        Update = expectedFile,
+                    };
                 });
         }
 
@@ -136,7 +129,7 @@ namespace Fifthweek.Api.FileManagement.Tests
                 null,
                 UserId.Value,
                 FileState.WaitingForUpload,
-                DateTime.MinValue,
+                UploadStartedTimeStamp,
                 null,
                 null,
                 null,
@@ -147,8 +140,7 @@ namespace Fifthweek.Api.FileManagement.Tests
 
             using (var databaseContext = testDatabase.NewContext())
             {
-                databaseContext.Files.Add(file);
-                await databaseContext.SaveChangesAsync();
+                await databaseContext.Database.Connection.InsertAsync(file);
             }
         }
     }
