@@ -8,14 +8,13 @@ namespace Fifthweek.Api.Core
     {
         private readonly IQueryHandler<TQuery, TResult> decorated;
 
-        public RetryOnTransientErrorQueryHandlerDecorator(IQueryHandler<TQuery, TResult> decorated)
-            : base(RetryOnTransientErrorDecoratorBase.MaxRetryCount, RetryOnTransientErrorDecoratorBase.MaxDelay)
+        public RetryOnTransientErrorQueryHandlerDecorator(IExceptionHandler exceptionHandler, IQueryHandler<TQuery, TResult> decorated)
+            : this(exceptionHandler, decorated, RetryOnTransientErrorDecoratorBase.MaxRetryCount, RetryOnTransientErrorDecoratorBase.MaxDelay)
         {
-            this.decorated = decorated;
         }
 
-        public RetryOnTransientErrorQueryHandlerDecorator(IQueryHandler<TQuery, TResult> decorated, int maxRetryCount, TimeSpan maxDelay)
-            : base(maxRetryCount, maxDelay)
+        public RetryOnTransientErrorQueryHandlerDecorator(IExceptionHandler exceptionHandler, IQueryHandler<TQuery, TResult> decorated, int maxRetryCount, TimeSpan maxDelay)
+            : base(exceptionHandler, typeof(TQuery).Name, maxRetryCount, maxDelay)
         {
             this.decorated = decorated;
         }
@@ -31,11 +30,6 @@ namespace Fifthweek.Api.Core
         public Task<TResult> HandleAsync(TQuery query)
         {
             return this.HandleAsync(() => this.decorated.HandleAsync(query));
-        }
-
-        protected override Type GetCommandOrQueryType()
-        {
-            return typeof(TQuery);
         }
     }
 }

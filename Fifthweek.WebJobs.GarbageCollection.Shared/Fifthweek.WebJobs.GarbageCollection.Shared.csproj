@@ -50,6 +50,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="app.config" />
     <None Include="ClassAugmentation.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>ClassAugmentation.cs</LastGenOutput>

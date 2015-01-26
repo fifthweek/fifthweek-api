@@ -1,12 +1,13 @@
 ﻿namespace Fifthweek.Api.Core
 {
     using System;
-    using System.Data.Entity.Infrastructure;
-    using System.Data.Entity.SqlServer;
+    using System.Collections.Generic;
     using System.Data.SqlClient;
     using System.Diagnostics;
     using System.Threading;
     using System.Threading.Tasks;
+
+    using Microsoft.Practices.EnterpriseLibrary.TransientFaultHandling;
 
     public abstract class RetryOnTransientErrorDecoratorBase
     {
@@ -17,46 +18,104 @@
         public const int MaxRetryCount = 5;
 
         public static readonly TimeSpan MaxDelay = TimeSpan.FromSeconds(5);
+        
+        private readonly IExceptionHandler exceptionHandler;
 
-        private readonly DbExecutionStrategy executionStrategy;
+        private readonly string commandOrQueryName;
 
-        protected RetryOnTransientErrorDecoratorBase(int maxRetryCount, TimeSpan maxDelay)
+        private readonly int maxRetryCount;
+
+        private readonly TimeSpan maxDelay;
+
+        private int retryCount;
+
+        protected RetryOnTransientErrorDecoratorBase(IExceptionHandler exceptionHandler, string commandOrQueryName, int maxRetryCount, TimeSpan maxDelay)
         {
-            this.executionStrategy = new CustomExecutionStrategy(this, maxRetryCount, maxDelay);
+            this.exceptionHandler = exceptionHandler;
+            this.commandOrQueryName = commandOrQueryName;
+            this.maxRetryCount = maxRetryCount;
+            this.maxDelay = maxDelay;
+        }
+
+        public static RetryStrategy CreateRetryStrategy(int retryCount, TimeSpan maxDelay)
+        {
+            return new ExponentialBackoff(
+                retryCount,
+                TimeSpan.Zero,
+                maxDelay,
+                TimeSpan.FromMilliseconds(maxDelay.TotalMilliseconds / 3));
         }
 
         public async Task<TResult> HandleAsync<TResult>(Func<Task<TResult>> handleCommandAsync)
         {
-            return await this.executionStrategy.ExecuteAsync(
-                handleCommandAsync, 
-                CancellationToken.None);
+            var policy =
+                new RetryPolicy(
+                    CustomTransientErrorDetectionStrategy.Instance,
+                    CreateRetryStrategy(this.maxRetryCount, this.maxDelay));
+
+            policy.Retrying += this.OnRetry;
+
+            try
+            {
+                var result = await policy.ExecuteAsync(handleCommandAsync, CancellationToken.None);
+
+                if (this.retryCount > 0)
+                {
+                    this.exceptionHandler.ReportExceptionAsync(new RetriesOccuredException(string.Format("{0} was retried {1} time(s) before succeeding.", this.commandOrQueryName, this.retryCount)));
+                }
+
+                return result;
+            }
+            catch (Exception t)
+            {
+                if (this.retryCount == this.maxRetryCount && CustomTransientErrorDetectionStrategy.Instance.IsTransient(t))
+                {
+                    throw new RetryLimitExceededException(string.Format("{0} was retried {1} time(s) before exceeding retry limit.", this.commandOrQueryName, this.retryCount), t);
+                }
+
+                this.exceptionHandler.ReportExceptionAsync(new RetriesOccuredException(string.Format("{0} was retried {1} time(s) before failing with a non-transient error.", this.commandOrQueryName, this.retryCount)));
+                throw;
+            }
         }
 
-        protected abstract Type GetCommandOrQueryType();
-
-        private class CustomExecutionStrategy : SqlAzureExecutionStrategy
+        private void OnRetry(object sender, RetryingEventArgs e)
         {
-            private readonly RetryOnTransientErrorDecoratorBase parent;
+            ++this.retryCount;
+            Trace.TraceWarning("{0} retrying ({1}): {2}", this.commandOrQueryName, this.retryCount, e.LastException);
+        }
 
-            public CustomExecutionStrategy(
-                RetryOnTransientErrorDecoratorBase parent,
-                int maxRetryCount,
-                TimeSpan maxDelay)
-                : base(maxRetryCount, maxDelay)
+        private class CustomTransientErrorDetectionStrategy : ITransientErrorDetectionStrategy
+        {
+            public static readonly CustomTransientErrorDetectionStrategy Instance = new CustomTransientErrorDetectionStrategy();
+
+            private static readonly SqlDatabaseTransientErrorDetectionStrategy SqlDatabaseStrategy = new SqlDatabaseTransientErrorDetectionStrategy();
+           
+            private static readonly StorageTransientErrorDetectionStrategy StorageStrategy = new StorageTransientErrorDetectionStrategy();
+
+            public bool IsTransient(Exception outerException)
             {
-                this.parent = parent;
-            }
-
-            protected override bool ShouldRetryOn(Exception exception)
-            {
-                exception = this.FindSqlOrTimeoutException(exception);
-
-                if (exception == null)
+                if (outerException == null)
                 {
                     return false;
                 }
 
-                bool shouldRetry = false;
+                var isTransient = false;
+                foreach (var exception in this.Flatten(outerException))
+                {
+                    isTransient = this.IsTransientInner(exception);
+
+                    if (isTransient)
+                    {
+                        break;
+                    }
+                }
+
+                return isTransient;
+            }
+
+            private bool IsTransientInner(Exception exception)
+            {
+                bool isTransient = false;
 
                 var sqlException = exception as SqlException;
                 if (sqlException != null)
@@ -67,58 +126,45 @@
                         {
                             case RetryOnTransientErrorDecoratorBase.SqlTimeoutErrorCode:
                             case RetryOnTransientErrorDecoratorBase.SqlDeadlockErrorCode:
-                                shouldRetry = true;
+                                isTransient = true;
                                 break;
                         }
                     }
                 }
 
-                shouldRetry = shouldRetry || base.ShouldRetryOn(exception);
+                isTransient = isTransient || SqlDatabaseStrategy.IsTransient(exception) || StorageStrategy.IsTransient(exception);
 
-                if (shouldRetry)
-                {
-                    Trace.TraceWarning(this.parent.GetCommandOrQueryType().Name + " retrying: " + exception);
-                }
-
-                return shouldRetry;
+                return isTransient;
             }
 
-            private Exception FindSqlOrTimeoutException(Exception exception)
+            private IReadOnlyList<Exception> Flatten(Exception exception)
             {
-                var sqlException = exception as SqlException;
-                if (sqlException != null)
-                {
-                    return sqlException;
-                }
+                exception.AssertNotNull("exception");
 
-                var timeoutException = exception as TimeoutException;
-                if (timeoutException != null)
-                {
-                    return timeoutException;
-                }
+                var output = new List<Exception>();
+                this.Flatten(exception, output);
+                return output;
+            }
+
+            private void Flatten(Exception exception, List<Exception> output)
+            {
+                output.Add(exception);
 
                 var aggregateException = exception as AggregateException;
-                if (aggregateException != null)
+                if (aggregateException != null && aggregateException.InnerExceptions != null)
                 {
                     foreach (var child in aggregateException.InnerExceptions)
                     {
-                        var childResult = this.FindSqlOrTimeoutException(child);
-
-                        if (childResult != null)
+                        if (child != null)
                         {
-                            return childResult;
+                            this.Flatten(child, output);
                         }
                     }
-
-                    return null;
                 }
-
-                if (exception.InnerException != null)
+                else if (exception.InnerException != null)
                 {
-                    return this.FindSqlOrTimeoutException(exception.InnerException);
+                    this.Flatten(exception.InnerException, output);
                 }
-
-                return null;
             }
         }
     }

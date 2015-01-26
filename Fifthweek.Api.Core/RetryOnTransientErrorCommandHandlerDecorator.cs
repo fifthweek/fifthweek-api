@@ -8,14 +8,13 @@
     {
         private readonly ICommandHandler<TCommand> decorated;
 
-        public RetryOnTransientErrorCommandHandlerDecorator(ICommandHandler<TCommand> decorated)
-            : base(RetryOnTransientErrorDecoratorBase.MaxRetryCount, RetryOnTransientErrorDecoratorBase.MaxDelay)
+        public RetryOnTransientErrorCommandHandlerDecorator(IExceptionHandler exceptionHandler, ICommandHandler<TCommand> decorated)
+            : this(exceptionHandler, decorated, RetryOnTransientErrorDecoratorBase.MaxRetryCount, RetryOnTransientErrorDecoratorBase.MaxDelay)
         {
-            this.decorated = decorated;
         }
 
-        public RetryOnTransientErrorCommandHandlerDecorator(ICommandHandler<TCommand> decorated, int maxRetryCount, TimeSpan maxDelay)
-            : base(maxRetryCount, maxDelay)
+        public RetryOnTransientErrorCommandHandlerDecorator(IExceptionHandler exceptionHandler, ICommandHandler<TCommand> decorated, int maxRetryCount, TimeSpan maxDelay)
+            : base(exceptionHandler, typeof(TCommand).Name, maxRetryCount, maxDelay)
         {
             this.decorated = decorated;
         }
@@ -31,11 +30,6 @@
         public Task HandleAsync(TCommand command)
         {
             return this.HandleAsync(() => this.CallDecorated(command));
-        }
-
-        protected override Type GetCommandOrQueryType()
-        {
-            return typeof(TCommand);
         }
 
         private async Task<bool> CallDecorated(TCommand command)
