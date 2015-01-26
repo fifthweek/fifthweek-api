@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CodeSnippets xmlns="http://schemas.microsoft.com/VisualStudio/2005/CodeSnippet">
+    <CodeSnippet Format="1.0.0">
+      <Header>
+        <Title>Test ID</Title>
+        <Description>Test scaffolding for introducing new ID object</Description>
+			  <Shortcut>testid</Shortcut>
+      </Header>
+        <Snippet>
+          <Declarations>
+            <Literal>
+              <ID>IdType</ID>
+              <ToolTip>Replace with ID type.</ToolTip>
+              <Default>Awesome</Default>
+            </Literal>
+          </Declarations>
+          <Code Language="csharp">
+                <![CDATA[private static readonly $IdType$Id $IdType$Id = new $IdType$Id(Guid.NewGuid());]]>
+          </Code>
+        </Snippet>
+    </CodeSnippet>
+</CodeSnippets>

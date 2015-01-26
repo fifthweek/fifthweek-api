@@ -1193,6 +1193,38 @@ namespace Fifthweek.Api.Posts.Queries
     }
 
 }
+namespace Fifthweek.Api.Posts.Commands
+{
+    using System;
+    using System.Text;
+    using System.Threading.Tasks;
+    using Dapper;
+    using Fifthweek.Api.Core;
+    using Fifthweek.Api.Identity.Membership;
+    using Fifthweek.Api.Persistence;
+    using Fifthweek.CodeGeneration;
+    public partial class ReorderQueueCommandHandler 
+    {
+        public ReorderQueueCommandHandler(
+            Fifthweek.Api.Identity.Membership.IRequesterSecurity requesterSecurity, 
+            Fifthweek.Api.Persistence.IFifthweekDbContext databaseContext)
+        {
+            if (requesterSecurity == null)
+            {
+                throw new ArgumentNullException("requesterSecurity");
+            }
+
+            if (databaseContext == null)
+            {
+                throw new ArgumentNullException("databaseContext");
+            }
+
+            this.requesterSecurity = requesterSecurity;
+            this.databaseContext = databaseContext;
+        }
+    }
+
+}
 
 namespace Fifthweek.Api.Posts
 {

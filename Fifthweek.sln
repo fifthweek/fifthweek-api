@@ -115,6 +115,18 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fifthweek.Api.Aggregations.
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fifthweek.Api.Identity.Tests.Shared", "Fifthweek.Api.Identity.Tests.Shared\Fifthweek.Api.Identity.Tests.Shared.csproj", "{45E1C6C7-845A-480F-BBBC-5DF3135D1E19}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "CodeSnippets", "CodeSnippets", "{78C0F6D6-F9EC-41F0-8F06-877DE5CE3C7E}"
+	ProjectSection(SolutionItems) = preProject
+		CodeSnippets\CommandHandler.snippet = CodeSnippets\CommandHandler.snippet
+		CodeSnippets\TestClass.snippet = CodeSnippets\TestClass.snippet
+		CodeSnippets\TestId.snippet = CodeSnippets\TestId.snippet
+		CodeSnippets\TestMethod.snippet = CodeSnippets\TestMethod.snippet
+		CodeSnippets\TestMethodAuthorization.snippet = CodeSnippets\TestMethodAuthorization.snippet
+		CodeSnippets\TestMethodNullCommand.snippet = CodeSnippets\TestMethodNullCommand.snippet
+		CodeSnippets\TestMethodNullParameter.snippet = CodeSnippets\TestMethodNullParameter.snippet
+		CodeSnippets\TestRequester.snippet = CodeSnippets\TestRequester.snippet
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -311,6 +323,7 @@ Global
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{FA1F4272-E9E3-4B73-B7DB-1048C5CA917D} = {707B8A39-8E28-4ECD-8CC3-BA34225675C8}
+		{78C0F6D6-F9EC-41F0-8F06-877DE5CE3C7E} = {707B8A39-8E28-4ECD-8CC3-BA34225675C8}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		EnterpriseLibraryConfigurationToolBinariesPathV6 = packages\EnterpriseLibrary.TransientFaultHandling.6.0.1304.0\lib\portable-net45+win+wp8;packages\EnterpriseLibrary.TransientFaultHandling.Data.6.0.1304.1\lib\NET45;packages\EnterpriseLibrary.TransientFaultHandling.WindowsAzure.Storage.6.0.1304.1\lib\NET45

@@ -1,7 +1,6 @@
 ﻿namespace Fifthweek.Api.Identity.Tests.Shared.Membership
 {
     using System;
-    using System.Threading.Tasks;
 
     using Fifthweek.Api.Core;
     using Fifthweek.Api.Identity.Membership;
@@ -23,8 +22,8 @@
             requesterSecurity.Setup(v => v.AuthenticateAsync(Requester.Unauthenticated))
                 .Throws(new UnauthorizedException());
 
-            requesterSecurity.Setup(v => v.AuthenticateAsync(It.IsNotIn(Requester.Unauthenticated)))
-                .Returns<Requester>(v => Task.FromResult(v.UserId));
+            requesterSecurity.Setup(v => v.AuthenticateAsync(requester))
+                .ReturnsAsync(requester.UserId);
 
             requesterSecurity.Setup(v => v.AuthenticateAsAsync(Requester.Unauthenticated, It.IsAny<UserId>()))
                 .Throws(new UnauthorizedException());

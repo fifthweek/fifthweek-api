@@ -79,6 +79,7 @@
   <ItemGroup>
     <Compile Include="AutofacRegistration.cs" />
     <Compile Include="Commands\ReorderQueueCommand.cs" />
+    <Compile Include="Commands\ReorderQueueCommandHandler.cs" />
     <Compile Include="Comment.cs" />
     <Compile Include="Controllers\CreatorNewsfeedRequestData.cs" />
     <Compile Include="DeletePostDbStatement.cs" />

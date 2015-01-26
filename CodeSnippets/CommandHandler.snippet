@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CodeSnippets xmlns="http://schemas.microsoft.com/VisualStudio/2005/CodeSnippet">
+    <CodeSnippet Format="1.0.0">
+      <Header>
+        <Title>Command Handler</Title>
+        <Description>Command handler scaffolding</Description>
+			  <Shortcut>command</Shortcut>
+      </Header>
+        <Snippet>
+          <Imports>
+            <Import><Namespace>System.Threading.Tasks</Namespace></Import>
+            <Import><Namespace>Fifthweek.Api.Core</Namespace></Import>
+            <Import><Namespace>Fifthweek.Api.Identity.Membership</Namespace></Import>
+            <Import><Namespace>Fifthweek.CodeGeneration</Namespace></Import>
+          </Imports>
+          <Declarations>
+            <Literal>
+              <ID>CommandPrefix</ID>
+              <ToolTip>Replace with command prefix.</ToolTip>
+              <Default>Awesome</Default>
+            </Literal>
+          </Declarations>
+          <Code Language="csharp">
+                <![CDATA[[AutoConstructor]
+public partial class $CommandPrefix$CommandHandler : ICommandHandler<$CommandPrefix$Command>
+{
+    private readonly IRequesterSecurity requesterSecurity;
+
+    public async Task HandleAsync($CommandPrefix$Command command)
+    {
+        command.AssertNotNull("command");
+
+        await this.requesterSecurity.AuthenticateAsync(command.Requester);
+
+        await this.$CommandPrefix$Async(command);
+    }
+
+    private Task $CommandPrefix$Async($CommandPrefix$Command command)
+    {
+        throw new NotImplementedException();
+    }
+}]]>
+          </Code>
+        </Snippet>
+    </CodeSnippet>
+</CodeSnippets>

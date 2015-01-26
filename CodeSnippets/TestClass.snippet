@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CodeSnippets xmlns="http://schemas.microsoft.com/VisualStudio/2005/CodeSnippet">
+    <CodeSnippet Format="1.0.0">
+      <Header>
+        <Title>Test Class</Title>
+        <Description>Test scaffolding</Description>
+			  <Shortcut>testc</Shortcut>
+      </Header>
+        <Snippet>
+          <Declarations>
+            <Literal>
+              <ID>TargetType</ID>
+              <ToolTip>Replace with target type.</ToolTip>
+              <Default>Awesome</Default>
+            </Literal>
+          </Declarations>
+          <Code Language="csharp">
+                <![CDATA[[TestClass]
+public class $TargetType$Tests
+{
+    private $TargetType$ target;
+
+    [TestInitialize]
+    public void Initialize()
+    {
+        this.target = new $TargetType$();
+    }
+    
+    [TestMethod]
+    public async Task ItShould()
+    {
+    
+    }
+}]]>
+          </Code>
+        </Snippet>
+    </CodeSnippet>
+</CodeSnippets>

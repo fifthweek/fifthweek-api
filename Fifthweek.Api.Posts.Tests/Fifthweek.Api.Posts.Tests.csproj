@@ -89,6 +89,7 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
+    <Compile Include="Commands\ReorderQueueCommandHandlerTests.cs" />
     <Compile Include="FifthweekAssembliesResolver.cs" />
     <Compile Include="Commands\DeletePostCommandHandlerTests.cs" />
     <Compile Include="DeletePostDbStatementTests.cs" />

@@ -2,6 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Linq;
 
     public static class CollectionExtensions
     {
@@ -26,6 +27,11 @@
             }
 
             return -1;
+        }
+
+        public static IEnumerable<T> Shuffle<T>(this IEnumerable<T> self, Random random)
+        {
+            return self.OrderBy(_ => random.Next());
         }
     }
 }
