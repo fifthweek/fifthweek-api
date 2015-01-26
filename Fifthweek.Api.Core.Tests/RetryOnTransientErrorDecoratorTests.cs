@@ -103,7 +103,7 @@
                 .Callback(() =>
                 {
                     ++tryCount;
-                    if (tryCount < RetryOnTransientErrorDecoratorBase.MaxRetryCount)
+                    if (tryCount <= RetryOnTransientErrorDecoratorBase.MaxRetryCount)
                     {
                         throw SqlExceptionMocker.MakeSqlException(
                             RetryOnTransientErrorDecoratorBase.SqlDeadlockErrorCode);
@@ -112,7 +112,7 @@
 
             await this.decorator.HandleAsync(new TestCommand());
 
-            Assert.AreEqual(RetryOnTransientErrorDecoratorBase.MaxRetryCount, tryCount);
+            Assert.AreEqual(RetryOnTransientErrorDecoratorBase.MaxRetryCount + 1, tryCount);
         }
 
         [TestMethod]
@@ -131,7 +131,7 @@
                 .Callback(() =>
                 {
                     ++tryCount;
-                    if (tryCount < RetryOnTransientErrorDecoratorBase.MaxRetryCount)
+                    if (tryCount <= RetryOnTransientErrorDecoratorBase.MaxRetryCount)
                     {
                         throw SqlExceptionMocker.MakeSqlException(
                             RetryOnTransientErrorDecoratorBase.SqlDeadlockErrorCode);
@@ -140,7 +140,42 @@
 
             await queryDecorator.HandleAsync(new TestQuery());
 
-            Assert.AreEqual(RetryOnTransientErrorDecoratorBase.MaxRetryCount, tryCount);
+            Assert.AreEqual(RetryOnTransientErrorDecoratorBase.MaxRetryCount + 1, tryCount);
+        }
+
+        [TestMethod]
+        public async Task ItShouldRetryCommandsUntilNonTransientFailure()
+        {
+            int tryCount = 0;
+
+            this.command.Setup(v => v.HandleAsync(It.IsAny<TestCommand>()))
+                .Callback(() =>
+                {
+                    ++tryCount;
+                    if (tryCount <= RetryOnTransientErrorDecoratorBase.MaxRetryCount)
+                    {
+                        throw SqlExceptionMocker.MakeSqlException(
+                            RetryOnTransientErrorDecoratorBase.SqlDeadlockErrorCode);
+                    }
+                    else
+                    {
+                        throw new DivideByZeroException();
+                    }
+                }).Returns(Task.FromResult(0));
+
+            Exception exception = null;
+            try
+            {
+                await this.decorator.HandleAsync(new TestCommand());
+            }
+            catch (Exception t)
+            {
+                exception = t;
+            }
+
+            Assert.IsNotNull(exception);
+            Assert.IsInstanceOfType(exception, typeof(DivideByZeroException));
+            Assert.AreEqual(RetryOnTransientErrorDecoratorBase.MaxRetryCount + 1, tryCount);
         }
 
         [TestMethod]
