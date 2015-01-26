@@ -10,7 +10,7 @@
     [AutoConstructor]
     public partial class UpdateAccountSettingsCommandHandler : ICommandHandler<UpdateAccountSettingsCommand>
     {
-        private readonly IAccountRepository accountRepository;
+        private readonly IUpdateAccountSettingsDbStatement updateAccountSettings;
         private readonly IRequesterSecurity requesterSecurity;
         private readonly IFileSecurity fileSecurity;
 
@@ -25,7 +25,7 @@
                 await this.fileSecurity.AssertUsageAllowedAsync(userId, command.NewProfileImageId);
             }
 
-            var result = await this.accountRepository.UpdateAccountSettingsAsync(
+            var result = await this.updateAccountSettings.ExecuteAsync(
                     command.RequestedUserId,
                     command.NewUsername,
                     command.NewEmail,

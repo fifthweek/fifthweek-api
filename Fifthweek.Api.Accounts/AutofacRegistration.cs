@@ -9,7 +9,8 @@
     {
         public void Register(ContainerBuilder builder)
         {
-            builder.RegisterType<AccountRepository>().As<IAccountRepository>();
+            builder.RegisterType<GetAccountSettingsDbStatement>().As<IGetAccountSettingsDbStatement>();
+            builder.RegisterType<UpdateAccountSettingsDbStatement>().As<IUpdateAccountSettingsDbStatement>();
         }
     }
 }

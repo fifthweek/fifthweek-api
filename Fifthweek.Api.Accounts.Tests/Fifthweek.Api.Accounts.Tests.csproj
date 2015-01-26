@@ -88,7 +88,8 @@
     <Compile Include="Controllers\AccountSettingsControllerTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Queries\GetAccountSettingsQueryHandlerTests.cs" />
-    <Compile Include="AccountRepositoryTests.cs" />
+    <Compile Include="GetAccountSettingsDbRepositoryTests.cs" />
+    <Compile Include="UpdateAccountSettingsDbRepositoryTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Fifthweek.Api.Accounts\Fifthweek.Api.Accounts.csproj">

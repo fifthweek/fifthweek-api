@@ -10,7 +10,7 @@
     public partial class GetAccountSettingsQueryHandler : IQueryHandler<GetAccountSettingsQuery, GetAccountSettingsResult>
     {
         private readonly IRequesterSecurity requesterSecurity;
-        private readonly IAccountRepository accountRepository;
+        private readonly IGetAccountSettingsDbStatement getAccountSettings;
 
         public async Task<GetAccountSettingsResult> HandleAsync(GetAccountSettingsQuery query)
         {
@@ -18,7 +18,7 @@
 
             await this.requesterSecurity.AuthenticateAsAsync(query.Requester, query.RequestedUserId);
 
-            return await this.accountRepository.GetAccountSettingsAsync(query.RequestedUserId);
+            return await this.getAccountSettings.ExecuteAsync(query.RequestedUserId);
         }
     }
 }

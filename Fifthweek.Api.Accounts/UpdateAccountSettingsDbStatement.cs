@@ -14,31 +14,13 @@
     using Fifthweek.CodeGeneration;
 
     [AutoConstructor]
-    public partial class AccountRepository : IAccountRepository
+    public partial class UpdateAccountSettingsDbStatement : IUpdateAccountSettingsDbStatement
     {
         private readonly IFifthweekDbContext databaseContext;
 
         private readonly IUserManager userManager;
 
-        public async Task<GetAccountSettingsResult> GetAccountSettingsAsync(UserId userId)
-        {
-            userId.AssertNotNull("userId");
-
-            var result = (await this.databaseContext.Database.Connection.QueryAsync<GetAccountSettingsDapperResult>(
-                @"SELECT Email, ProfileImageFileId FROM dbo.AspNetUsers WHERE Id=@UserId",
-                new { UserId = userId.Value })).SingleOrDefault();
-
-            if (result == null)
-            {
-                throw new DetailedRecoverableException(
-                    "Unknown user.",
-                    "The user ID " + userId.Value + " was not found in the database.");
-            }
-
-            return new GetAccountSettingsResult(new Email(result.Email), new FileId(result.ProfileImageFileId));
-        }
-
-        public async Task<UpdateAccountSettingsResult> UpdateAccountSettingsAsync(
+        public async Task<UpdateAccountSettingsResult> ExecuteAsync(
             UserId userId,
             ValidUsername newUsername,
             ValidEmail newEmail,
@@ -72,10 +54,10 @@
 
             var oldEmail = await this.databaseContext.Database.Connection.ExecuteScalarAsync<string>(
                 query.ToString(),
-                new 
+                new
                 {
-                    UserId = userId.Value, 
-                    Username = newUsername.Value, 
+                    UserId = userId.Value,
+                    Username = newUsername.Value,
                     Email = newEmail.Value,
                     PasswordHash = passwordHash,
                     ProfileImageFileId = newProfileImageFileId == null ? (Guid?)null : newProfileImageFileId.Value

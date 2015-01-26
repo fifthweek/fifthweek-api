@@ -22,7 +22,7 @@
         private static readonly ValidEmail Email = ValidEmail.Parse("test@testing.fifthweek.com");
 
         private GetAccountSettingsQueryHandler target;
-        private Mock<IAccountRepository> accountRepository;
+        private Mock<IGetAccountSettingsDbStatement> getAccountSettings;
         private Mock<IRequesterSecurity> requesterSecurity;
 
         [TestInitialize]
@@ -31,10 +31,9 @@
             this.requesterSecurity = new Mock<IRequesterSecurity>();
             this.requesterSecurity.SetupFor(Requester);
 
-            // Give potentially side-effecting components strict mock behaviour.
-            this.accountRepository = new Mock<IAccountRepository>(MockBehavior.Strict);
+            this.getAccountSettings = new Mock<IGetAccountSettingsDbStatement>();
 
-            this.target = new GetAccountSettingsQueryHandler(this.requesterSecurity.Object, this.accountRepository.Object);
+            this.target = new GetAccountSettingsQueryHandler(this.requesterSecurity.Object, this.getAccountSettings.Object);
         }
 
         [TestMethod]
@@ -47,13 +46,13 @@
         [TestMethod]
         public async Task WhenCalled_ItShouldCallTheAccountRepository()
         {
-            this.accountRepository.Setup(v => v.GetAccountSettingsAsync(UserId))
+            this.getAccountSettings.Setup(v => v.ExecuteAsync(UserId))
                 .ReturnsAsync(new GetAccountSettingsResult(Email, FileId))
                 .Verifiable();
 
             var result = await this.target.HandleAsync(new GetAccountSettingsQuery(Requester, UserId));
 
-            this.accountRepository.Verify();
+            this.getAccountSettings.Verify();
 
             Assert.IsNotNull(result);
             Assert.AreEqual(Email, result.Email);
@@ -64,7 +63,7 @@
         [ExpectedException(typeof(UnauthorizedException))]
         public async Task WhenCalledWithUnauthorizedUserId_ItShouldThrowAnException()
         {
-            this.accountRepository.Setup(v => v.GetAccountSettingsAsync(UserId))
+            this.getAccountSettings.Setup(v => v.ExecuteAsync(UserId))
                 .Throws(new Exception("This should not be called"));
 
             await this.target.HandleAsync(new GetAccountSettingsQuery(Requester, new UserId(Guid.NewGuid())));

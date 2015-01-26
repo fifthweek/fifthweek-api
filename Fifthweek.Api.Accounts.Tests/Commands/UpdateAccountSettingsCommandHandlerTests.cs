@@ -23,7 +23,7 @@
         private static readonly ValidEmail Email = ValidEmail.Parse("test@testing.fifthweek.com");
         private static readonly ValidPassword Password = ValidPassword.Parse("passw0rd");
 
-        private Mock<IAccountRepository> accountRepository;
+        private Mock<IUpdateAccountSettingsDbStatement> updateAccountSettings;
         private Mock<IFileSecurity> fileSecurity;
         private Mock<IRequesterSecurity> requesterSecurity;
         private UpdateAccountSettingsCommandHandler target;
@@ -36,9 +36,9 @@
             this.requesterSecurity.SetupFor(Requester);
 
             // Give side-effecting components strict mock behaviour.
-            this.accountRepository = new Mock<IAccountRepository>(MockBehavior.Strict);
+            this.updateAccountSettings = new Mock<IUpdateAccountSettingsDbStatement>(MockBehavior.Strict);
 
-            this.target = new UpdateAccountSettingsCommandHandler(this.accountRepository.Object, this.requesterSecurity.Object, this.fileSecurity.Object);
+            this.target = new UpdateAccountSettingsCommandHandler(this.updateAccountSettings.Object, this.requesterSecurity.Object, this.fileSecurity.Object);
         }
 
         [TestMethod]
@@ -68,19 +68,19 @@
             this.fileSecurity.Setup(v => v.AssertUsageAllowedAsync(UserId, FileId))
                 .Returns(Task.FromResult(0));
 
-            this.accountRepository.Setup(
+            this.updateAccountSettings.Setup(
                 v =>
-                v.UpdateAccountSettingsAsync(
+                v.ExecuteAsync(
                     UserId,
                     Username,
                     Email,
                     Password,
-                    FileId)).ReturnsAsync(new AccountRepository.UpdateAccountSettingsResult(false))
+                    FileId)).ReturnsAsync(new UpdateAccountSettingsDbStatement.UpdateAccountSettingsResult(false))
                     .Verifiable();
 
             await this.target.HandleAsync(command);
 
-            this.accountRepository.Verify();
+            this.updateAccountSettings.Verify();
         }
 
         [TestMethod]

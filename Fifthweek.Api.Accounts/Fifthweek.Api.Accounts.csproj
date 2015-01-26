@@ -77,7 +77,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AccountRepository.cs" />
     <Compile Include="GetAccountSettingsDapperResult.cs" />
     <Compile Include="AutofacRegistration.cs" />
     <Compile Include="ClassAugmentation.cs">
@@ -90,11 +89,14 @@
     <Compile Include="Controllers\AccountSettingsController.cs" />
     <Compile Include="Controllers\AccountSettingsResponse.cs" />
     <Compile Include="Controllers\UpdatedAccountSettings.cs" />
-    <Compile Include="IAccountRepository.cs" />
+    <Compile Include="GetAccountSettingsDbStatement.cs" />
+    <Compile Include="IGetAccountSettingsDbStatement.cs" />
+    <Compile Include="IUpdateAccountSettingsDbStatement.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Queries\GetAccountSettingsQuery.cs" />
     <Compile Include="Queries\GetAccountSettingsQueryHandler.cs" />
     <Compile Include="GetAccountSettingsResult.cs" />
+    <Compile Include="UpdateAccountSettingsDbStatement.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />

@@ -1,16 +1,13 @@
-﻿namespace Fifthweek.Api.Accounts
+namespace Fifthweek.Api.Accounts
 {
     using System.Threading.Tasks;
 
-    using Fifthweek.Api.Accounts.Controllers;
     using Fifthweek.Api.FileManagement;
     using Fifthweek.Api.Identity.Membership;
 
-    public interface IAccountRepository
+    public interface IUpdateAccountSettingsDbStatement
     {
-        Task<GetAccountSettingsResult> GetAccountSettingsAsync(UserId userId);
-
-        Task<AccountRepository.UpdateAccountSettingsResult> UpdateAccountSettingsAsync(
+        Task<UpdateAccountSettingsDbStatement.UpdateAccountSettingsResult> ExecuteAsync(
             UserId userId,
             ValidUsername newUsername,
             ValidEmail newEmail,
