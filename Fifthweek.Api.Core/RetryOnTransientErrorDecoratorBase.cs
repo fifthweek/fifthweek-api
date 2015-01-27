@@ -38,6 +38,14 @@
             this.maxDelay = maxDelay;
         }
 
+        public int RetryCount
+        {
+            get
+            {
+                return this.retryCount;
+            }
+        }
+
         public static RetryStrategy CreateRetryStrategy(int retryCount, TimeSpan maxDelay)
         {
             return new ExponentialBackoff(
@@ -62,7 +70,7 @@
 
                 if (this.retryCount > 0)
                 {
-                    this.exceptionHandler.ReportExceptionAsync(new RetriesOccuredException(string.Format("{0} was retried {1} time(s) before succeeding.", this.commandOrQueryName, this.retryCount)));
+                    this.ReportRetriesOccured(string.Format("{0} succeeded on attempt {1}.", this.commandOrQueryName, this.retryCount + 1));
                 }
 
                 return result;
@@ -71,10 +79,15 @@
             {
                 if (this.retryCount == this.maxRetryCount && CustomTransientErrorDetectionStrategy.Instance.IsTransient(t))
                 {
-                    throw new RetryLimitExceededException(string.Format("{0} was retried {1} time(s) before exceeding retry limit.", this.commandOrQueryName, this.retryCount), t);
+                    this.TraceFailedAttempt(this.retryCount + 1, t);
+                    throw new RetryLimitExceededException(string.Format("{0} was attempted {1} times before exceeding retry limit.", this.commandOrQueryName, this.retryCount + 1), t);
                 }
 
-                this.exceptionHandler.ReportExceptionAsync(new RetriesOccuredException(string.Format("{0} was retried {1} time(s) before failing with a non-transient error.", this.commandOrQueryName, this.retryCount)));
+                if (this.retryCount > 0)
+                {
+                    this.ReportRetriesOccured(string.Format("{0} failed with a non-transient error on attempt {1}.", this.commandOrQueryName, this.retryCount + 1));
+                }
+
                 throw;
             }
         }
@@ -82,7 +95,17 @@
         private void OnRetry(object sender, RetryingEventArgs e)
         {
             ++this.retryCount;
-            Trace.TraceWarning("{0} retrying ({1}): {2}", this.commandOrQueryName, this.retryCount, e.LastException);
+            this.TraceFailedAttempt(this.retryCount, e.LastException);
+        }
+
+        private void TraceFailedAttempt(int attemptNumber, Exception exception)
+        {
+            Trace.TraceWarning("{0} failed with a transient error (attempt {1} of {2}): {3}", this.commandOrQueryName, attemptNumber, this.maxRetryCount + 1, exception);
+        }
+
+        private void ReportRetriesOccured(string message)
+        {
+            this.exceptionHandler.ReportExceptionAsync(new RetriesOccuredException(message));
         }
 
         private class CustomTransientErrorDetectionStrategy : ITransientErrorDetectionStrategy

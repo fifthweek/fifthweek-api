@@ -24,6 +24,9 @@
         public void TestInitialize()
         {
             this.exceptionHandler = new Mock<IExceptionHandler>();
+            this.exceptionHandler.Setup(v => v.ReportExceptionAsync(It.IsAny<Exception>()))
+                .Callback<Exception>(v => Trace.WriteLine(v));
+
             this.command = new Mock<ICommandHandler<TestCommand>>();
             this.decorator = new RetryOnTransientErrorCommandHandlerDecorator<TestCommand>(
                 this.exceptionHandler.Object,
@@ -58,6 +61,7 @@
             Assert.IsNotNull(exception);
             Assert.IsInstanceOfType(exception, typeof(RetryLimitExceededException));
             Assert.AreEqual(RetryOnTransientErrorDecoratorBase.MaxRetryCount + 1, tryCount);
+            Assert.AreEqual(RetryOnTransientErrorDecoratorBase.MaxRetryCount, this.decorator.RetryCount);
         }
 
         [TestMethod]
@@ -93,6 +97,7 @@
             Assert.IsNotNull(exception);
             Assert.IsInstanceOfType(exception, typeof(RetryLimitExceededException));
             Assert.AreEqual(RetryOnTransientErrorDecoratorBase.MaxRetryCount + 1, tryCount);
+            Assert.AreEqual(RetryOnTransientErrorDecoratorBase.MaxRetryCount, queryDecorator.RetryCount);
         }
 
         [TestMethod]
@@ -114,6 +119,7 @@
             await this.decorator.HandleAsync(new TestCommand());
 
             Assert.AreEqual(RetryOnTransientErrorDecoratorBase.MaxRetryCount + 1, tryCount);
+            Assert.AreEqual(RetryOnTransientErrorDecoratorBase.MaxRetryCount, this.decorator.RetryCount);
         }
 
         [TestMethod]
@@ -142,6 +148,7 @@
             await queryDecorator.HandleAsync(new TestQuery());
 
             Assert.AreEqual(RetryOnTransientErrorDecoratorBase.MaxRetryCount + 1, tryCount);
+            Assert.AreEqual(RetryOnTransientErrorDecoratorBase.MaxRetryCount, queryDecorator.RetryCount);
         }
 
         [TestMethod]
@@ -177,6 +184,7 @@
             Assert.IsNotNull(exception);
             Assert.IsInstanceOfType(exception, typeof(DivideByZeroException));
             Assert.AreEqual(RetryOnTransientErrorDecoratorBase.MaxRetryCount + 1, tryCount);
+            Assert.AreEqual(RetryOnTransientErrorDecoratorBase.MaxRetryCount, this.decorator.RetryCount);
         }
 
         [TestMethod]
@@ -198,6 +206,7 @@
             await this.decorator.HandleAsync(new TestCommand());
 
             Assert.AreEqual(2, tryCount);
+            Assert.AreEqual(1, this.decorator.RetryCount);
         }
 
         [TestMethod]
@@ -219,6 +228,7 @@
             await this.decorator.HandleAsync(new TestCommand());
 
             Assert.AreEqual(2, tryCount);
+            Assert.AreEqual(1, this.decorator.RetryCount);
         }
 
         [TestMethod]
@@ -259,6 +269,7 @@
             await this.decorator.HandleAsync(new TestCommand());
 
             Assert.AreEqual(2, tryCount);
+            Assert.AreEqual(1, this.decorator.RetryCount);
         }
 
         [TestMethod]
@@ -280,6 +291,7 @@
             await this.decorator.HandleAsync(new TestCommand());
 
             Assert.AreEqual(2, tryCount);
+            Assert.AreEqual(1, this.decorator.RetryCount);
         }
 
         [TestMethod]
@@ -301,6 +313,7 @@
             await this.decorator.HandleAsync(new TestCommand());
 
             Assert.AreEqual(2, tryCount);
+            Assert.AreEqual(1, this.decorator.RetryCount);
         }
 
         [TestMethod]
@@ -321,6 +334,7 @@
             await this.decorator.HandleAsync(new TestCommand());
 
             Assert.AreEqual(2, tryCount);
+            Assert.AreEqual(1, this.decorator.RetryCount);
         }
 
         [TestMethod]
@@ -346,6 +360,7 @@
             await this.decorator.HandleAsync(new TestCommand());
 
             Assert.AreEqual(2, tryCount);
+            Assert.AreEqual(1, this.decorator.RetryCount);
         }
 
         [TestMethod]
@@ -379,6 +394,7 @@
             await this.decorator.HandleAsync(new TestCommand());
 
             Assert.AreEqual(2, tryCount);
+            Assert.AreEqual(1, this.decorator.RetryCount);
         }
 
         [TestMethod]
@@ -407,6 +423,7 @@
             }
 
             Assert.AreEqual(1, tryCount);
+            Assert.AreEqual(0, this.decorator.RetryCount);
             Assert.IsInstanceOfType(exception, typeof(DivideByZeroException));
         }
 
@@ -436,6 +453,7 @@
             }
 
             Assert.AreEqual(1, tryCount);
+            Assert.AreEqual(0, this.decorator.RetryCount);
             Assert.IsInstanceOfType(exception, typeof(SqlException));
         }
 
