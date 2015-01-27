@@ -97,13 +97,8 @@ namespace Fifthweek.Api.Identity.Membership.Commands
     public partial class RegisterUserCommandHandler 
     {
         public RegisterUserCommandHandler(
-<<<<<<< HEAD
-            Fifthweek.Api.Persistence.IUserManager userManager, 
-            Fifthweek.Api.Core.IEventHandler<Fifthweek.Api.Identity.Shared.Membership.Events.UserRegisteredEvent> userRegistered)
-=======
-            Fifthweek.Api.Core.IEventHandler<Fifthweek.Api.Identity.Membership.Events.UserRegisteredEvent> userRegistered, 
+            Fifthweek.Api.Core.IEventHandler<Fifthweek.Api.Identity.Shared.Membership.Events.UserRegisteredEvent> userRegistered, 
             Fifthweek.Api.Identity.Membership.IRegisterUserDbStatement registerUser)
->>>>>>> Make RegisterUser command idempotent
         {
             if (userRegistered == null)
             {
@@ -316,16 +311,47 @@ namespace Fifthweek.Api.Identity.Membership.Queries
 }
 namespace Fifthweek.Api.Identity.Membership
 {
+    using System;
+    using System.Data.SqlTypes;
+    using System.Threading.Tasks;
+    using Fifthweek.Api.Core;
+    using Fifthweek.Api.Identity.Shared.Membership;
+    using Fifthweek.Api.Persistence;
+    using Fifthweek.Api.Persistence.Identity;
+    using Fifthweek.CodeGeneration;
+    public partial class RegisterUserDbStatement 
+    {
+        public RegisterUserDbStatement(
+            Fifthweek.Api.Persistence.IUserManager userManager, 
+            Fifthweek.Api.Persistence.IFifthweekDbContext fifthweekDbContext)
+        {
+            if (userManager == null)
+            {
+                throw new ArgumentNullException("userManager");
+            }
+
+            if (fifthweekDbContext == null)
+            {
+                throw new ArgumentNullException("fifthweekDbContext");
+            }
+
+            this.userManager = userManager;
+            this.fifthweekDbContext = fifthweekDbContext;
+        }
+    }
+
+}
+namespace Fifthweek.Api.Identity.Membership
+{
     using Fifthweek.Api.Core;
     using System;
     using System.Threading.Tasks;
     using Dapper;
     using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.Api.Persistence;
+    using Fifthweek.Api.Persistence.Identity;
     using Fifthweek.CodeGeneration;
     using Fifthweek.Shared;
-    using System.Data.SqlTypes;
-    using Fifthweek.Api.Persistence.Identity;
     public partial class UpdateUserTimeStampsDbStatement 
     {
         public UpdateUserTimeStampsDbStatement(
@@ -605,41 +631,6 @@ namespace Fifthweek.Api.Identity.OAuth
             }
 
             this.Value = value;
-        }
-    }
-
-}
-namespace Fifthweek.Api.Identity.Membership
-{
-    using System;
-    using System.Linq;
-    using Fifthweek.Api.Core;
-    using System.Threading.Tasks;
-    using Dapper;
-    using Fifthweek.Api.Identity.Shared.Membership;
-    using Fifthweek.Api.Persistence;
-    using Fifthweek.CodeGeneration;
-    using Fifthweek.Shared;
-    using System.Data.SqlTypes;
-    using Fifthweek.Api.Persistence.Identity;
-    public partial class RegisterUserDbStatement 
-    {
-        public RegisterUserDbStatement(
-            Fifthweek.Api.Persistence.IUserManager userManager, 
-            Fifthweek.Api.Persistence.IFifthweekDbContext fifthweekDbContext)
-        {
-            if (userManager == null)
-            {
-                throw new ArgumentNullException("userManager");
-            }
-
-            if (fifthweekDbContext == null)
-            {
-                throw new ArgumentNullException("fifthweekDbContext");
-            }
-
-            this.userManager = userManager;
-            this.fifthweekDbContext = fifthweekDbContext;
         }
     }
 
