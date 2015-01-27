@@ -67,7 +67,7 @@
 
         unifiedClass.WriteNamespaceAndClassWithSignature(" : IIdentityEquatable", null, () => {
 #>
-		public const string Table = "<#= tableName #>";
+        public const string Table = "<#= tableName #>";
 
         public <#= unifiedClass.FirstCodeClass.Name #>(
 <#
@@ -205,24 +205,56 @@
                 transaction);
         }
 
-		public static System.Threading.Tasks.Task<bool> InsertIfAsync(
+        public static async System.Threading.Tasks.Task<bool> InsertIfAsync(
             this System.Data.Common.DbConnection connection,
             <#= unifiedClass.FirstCodeClass.Name #> entity,
             string condition,
-			bool idempotent = true,
+            bool idempotent = true,
+            System.Data.IDbTransaction transaction = null)
+        {
+            return -1 == await InsertIfAsync(connection, entity, new[] { condition }, idempotent, transaction);
+        }
+
+        public static async System.Threading.Tasks.Task<bool> InsertIfAsync(
+            this System.Data.Common.DbConnection connection,
+            <#= unifiedClass.FirstCodeClass.Name #> entity,
+            string condition,
+            string selectValuesForInsertStatement,
+            <#= unifiedClass.FirstCodeClass.Name #>.Fields selectedFields,
+            bool idempotent = true,
+            System.Data.IDbTransaction transaction = null)
+        {
+            return -1 == await InsertIfAsync(connection, entity, new[] { condition }, selectValuesForInsertStatement, selectedFields, idempotent, transaction);
+        }
+
+        public static System.Threading.Tasks.Task<int> InsertIfAsync(
+            this System.Data.Common.DbConnection connection,
+            <#= unifiedClass.FirstCodeClass.Name #> entity,
+            System.Collections.Generic.IEnumerable<string> conditions,
+            bool idempotent = true,
             System.Data.IDbTransaction transaction = null)
         {
             var sql = new System.Text.StringBuilder();
-            sql.Append("IF ");
-            sql.AppendLine(condition); // Remember to use `WITH (UPDLOCK, HOLDLOCK)` in your conditions! See: http://samsaffron.com/blog/archive/2007/04/04/14.aspx
-            sql.AppendLine("BEGIN");
-            sql.AppendLine(InsertStatement(idempotent));
-            sql.AppendLine("SELECT 1 AS InsertAttempted"); // Indicates a (potentially idempotent) insert has been performed.
-			sql.AppendLine("END");
-			sql.AppendLine("ELSE");
-			sql.AppendLine("SELECT 0 AS InsertAttempted");
+            int currentIndex = 0;
+            foreach (var condition in conditions)
+            {
+                sql.Append("IF ");
+                sql.AppendLine(condition); // Remember to use `WITH (UPDLOCK, HOLDLOCK)` in your conditions! See: http://samsaffron.com/blog/archive/2007/04/04/14.aspx
+                sql.AppendLine("BEGIN");
+                ++currentIndex;
+            }
 
-            return Dapper.SqlMapper.ExecuteScalarAsync<bool>(
+            sql.AppendLine(InsertStatement(idempotent));
+            sql.AppendLine("SELECT -1 AS InsertAttempted"); // Indicates a (potentially idempotent) insert has been performed.
+            
+            foreach (var condition in conditions)
+            {
+                sql.AppendLine("END");
+                sql.AppendLine("ELSE");
+                sql.Append("SELECT ").Append(--currentIndex).AppendLine(" AS InsertAttempted");
+            }
+
+            return Dapper.SqlMapper.ExecuteScalarAsync<int>(
                 connection,
                 sql.ToString(),
                 new 
@@ -232,10 +264,10 @@
                 transaction);
         }
 
-        public static System.Threading.Tasks.Task<bool> InsertIfAsync(
+        public static System.Threading.Tasks.Task<int> InsertIfAsync(
             this System.Data.Common.DbConnection connection,
             <#= unifiedClass.FirstCodeClass.Name #> entity,
-            string condition,
+            System.Collections.Generic.IEnumerable<string> conditions,
             string selectValuesForInsertStatement,
             <#= unifiedClass.FirstCodeClass.Name #>.Fields selectedFields,
             bool idempotent = true,
@@ -243,16 +275,27 @@
         {
             var sql = new System.Text.StringBuilder();
             sql.AppendLine(selectValuesForInsertStatement);
-            sql.Append("IF ");
-            sql.AppendLine(condition); // Remember to use `WITH (UPDLOCK, HOLDLOCK)` in your conditions! See: http://samsaffron.com/blog/archive/2007/04/04/14.aspx
-            sql.AppendLine("BEGIN");
-            sql.AppendLine(InsertStatement(idempotent));
-            sql.AppendLine("SELECT 1 AS InsertAttempted"); // Indicates a (potentially idempotent) insert has been performed.
-			sql.AppendLine("END");
-			sql.AppendLine("ELSE");
-			sql.AppendLine("SELECT 0 AS InsertAttempted");
 
-            return Dapper.SqlMapper.ExecuteScalarAsync<bool>(
+            int currentIndex = 0;
+            foreach (var condition in conditions)
+            {
+                sql.Append("IF ");
+                sql.AppendLine(condition); // Remember to use `WITH (UPDLOCK, HOLDLOCK)` in your conditions! See: http://samsaffron.com/blog/archive/2007/04/04/14.aspx
+                sql.AppendLine("BEGIN");
+                ++currentIndex;
+            }
+
+            sql.AppendLine(InsertStatement(idempotent));
+            sql.AppendLine("SELECT -1 AS InsertAttempted"); // Indicates a (potentially idempotent) insert has been performed.
+            
+            foreach (var condition in conditions)
+            {
+                sql.AppendLine("END");
+                sql.AppendLine("ELSE");
+                sql.Append("SELECT ").Append(--currentIndex).AppendLine(" AS InsertAttempted");
+            }
+
+            return Dapper.SqlMapper.ExecuteScalarAsync<int>(
                 connection,
                 sql.ToString(),
                 MaskParameters(entity, selectedFields, true),
@@ -292,8 +335,8 @@
 
         public static string UpsertStatement(<#= unifiedClass.FirstCodeClass.Name #>.Fields fields)
         {
-			// HOLDLOCK ensures operation is concurrent by not releasing the U lock on the row after determining
-			// it does not exist. See: http://weblogs.sqlteam.com/dang/archive/2009/01/31/UPSERT-Race-Condition-With-MERGE.aspx
+            // HOLDLOCK ensures operation is concurrent by not releasing the U lock on the row after determining
+            // it does not exist. See: http://weblogs.sqlteam.com/dang/archive/2009/01/31/UPSERT-Race-Condition-With-MERGE.aspx
             var sql = new System.Text.StringBuilder();
             sql.Append(
                 @"MERGE <#= tableName #> WITH (HOLDLOCK) as Target
@@ -328,10 +371,10 @@
                 if (IsPrimaryKey(property))
                 {
 #>
-			if (autoIncludePrimaryKeys)
-			{
-				fieldNames.Add("<#= property.Name #>");
-			}
+            if (autoIncludePrimaryKeys)
+            {
+                fieldNames.Add("<#= property.Name #>");
+            }
 
 <#
                 }
@@ -355,14 +398,14 @@
         {
             var parameters = new Dapper.DynamicParameters();
 
-			// Assume we never want to exclude primary key field(s) from our input.
+            // Assume we never want to exclude primary key field(s) from our input.
 <#
             foreach (var property in publicPrimitiveProperties)
             {
                 if (IsPrimaryKey(property))
                 {
 #>
-			parameters.Add("<#= property.Name #>", entity.<#= property.Name #>);
+            parameters.Add("<#= property.Name #>", entity.<#= property.Name #>);
 <#
                 }
                 else

@@ -28,7 +28,7 @@
         {
             var property = publicProperties[i];
             var isLast = i == publicProperties.Count - 1;
-            var isString = property.Type.CodeType.FullName == "System.String";
+			var isString = property.Type.CodeType.FullName == "System.String";
 
             if (isString)
             {
