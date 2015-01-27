@@ -8,6 +8,8 @@ namespace Fifthweek.Api.Aggregations.Queries
     using Fifthweek.Api.Subscriptions;
     using Fifthweek.CodeGeneration;
 
+    using UserId = Fifthweek.Api.Identity.Shared.Membership.UserId;
+
     [AutoConstructor, AutoEqualityMembers]
     public partial class UserState
     {

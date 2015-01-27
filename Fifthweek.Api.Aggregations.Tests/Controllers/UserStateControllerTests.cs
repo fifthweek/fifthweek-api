@@ -13,6 +13,7 @@
     using Fifthweek.Api.FileManagement.Queries;
     using Fifthweek.Api.Identity.Membership;
     using Fifthweek.Api.Identity.OAuth;
+    using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.Api.Persistence.Identity;
     using Fifthweek.Api.Subscriptions;
     using Fifthweek.Api.Subscriptions.Queries;
@@ -20,6 +21,8 @@
     using Microsoft.VisualStudio.TestTools.UnitTesting;
 
     using Moq;
+
+    using UserId = Fifthweek.Api.Identity.Shared.Membership.UserId;
 
     [TestClass]
     public class UserStateControllerTests

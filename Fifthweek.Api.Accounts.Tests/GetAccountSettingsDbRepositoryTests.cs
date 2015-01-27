@@ -15,6 +15,9 @@
 
     using Moq;
 
+    using Email = Fifthweek.Api.Identity.Shared.Membership.Email;
+    using UserId = Fifthweek.Api.Identity.Shared.Membership.UserId;
+
     [TestClass]
     public class GetAccountSettingsDbRepositoryTests : PersistenceTestsBase
     {

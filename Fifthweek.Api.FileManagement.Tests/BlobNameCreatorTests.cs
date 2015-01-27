@@ -10,6 +10,8 @@
 
     using Microsoft.VisualStudio.TestTools.UnitTesting;
 
+    using UserId = Fifthweek.Api.Identity.Shared.Membership.UserId;
+
     [TestClass]
     public class BlobNameCreatorTests
     {

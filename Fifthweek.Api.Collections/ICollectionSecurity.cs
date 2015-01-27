@@ -4,6 +4,8 @@ namespace Fifthweek.Api.Collections
 
     using Fifthweek.Api.Identity.Membership;
 
+    using UserId = Fifthweek.Api.Identity.Shared.Membership.UserId;
+
     public interface ICollectionSecurity
     {
         Task<bool> IsPostingAllowedAsync(UserId requester, CollectionId collectionId);

@@ -11,6 +11,8 @@ namespace Fifthweek.Api.FileManagement.Tests
 
     using Moq;
 
+    using UserId = Fifthweek.Api.Identity.Shared.Membership.UserId;
+
     [TestClass]
     public class GetFileWaitingForUploadDbStatementTests : PersistenceTestsBase
     {

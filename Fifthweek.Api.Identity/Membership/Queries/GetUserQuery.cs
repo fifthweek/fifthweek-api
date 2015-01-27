@@ -1,6 +1,7 @@
 ﻿namespace Fifthweek.Api.Identity.Membership.Queries
 {
     using Fifthweek.Api.Core;
+    using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.Api.Persistence.Identity;
     using Fifthweek.CodeGeneration;
     using Fifthweek.Shared;

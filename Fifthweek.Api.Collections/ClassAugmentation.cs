@@ -155,6 +155,7 @@ namespace Fifthweek.Api.Collections.Commands
     using System.Linq;
     using Fifthweek.Api.Channels;
     using Fifthweek.Api.Identity.Membership;
+    using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.CodeGeneration;
 
     using ChannelId = Fifthweek.Api.Channels.Shared.ChannelId;
@@ -162,7 +163,7 @@ namespace Fifthweek.Api.Collections.Commands
     public partial class CreateCollectionCommand 
     {
         public CreateCollectionCommand(
-            Fifthweek.Api.Identity.Membership.Requester requester, 
+            Requester requester, 
             Fifthweek.Api.Collections.CollectionId newCollectionId, 
             ChannelId channelId, 
             Fifthweek.Api.Collections.ValidCollectionName name)
@@ -525,15 +526,19 @@ namespace Fifthweek.Api.Collections.Queries
     using System.Linq;
     using System.Collections.Generic;
     using Fifthweek.Api.Channels;
+    using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.CodeGeneration;
     using Fifthweek.Api.Core;
     using Fifthweek.Api.Identity.Membership;
     using System.Threading.Tasks;
+
+    using UserId = Fifthweek.Api.Identity.Shared.Membership.UserId;
+
     public partial class GetCreatedChannelsAndCollectionsQuery 
     {
         public GetCreatedChannelsAndCollectionsQuery(
-            Fifthweek.Api.Identity.Membership.Requester requester, 
-            Fifthweek.Api.Identity.Membership.UserId requestedCreatorId)
+            Requester requester, 
+            UserId requestedCreatorId)
         {
             if (requester == null)
             {
@@ -557,6 +562,7 @@ namespace Fifthweek.Api.Collections.Queries
     using System.Linq;
     using System.Collections.Generic;
     using Fifthweek.Api.Channels;
+    using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.CodeGeneration;
     using Fifthweek.Api.Core;
     using Fifthweek.Api.Identity.Membership;
@@ -564,7 +570,7 @@ namespace Fifthweek.Api.Collections.Queries
     public partial class GetCreatedChannelsAndCollectionsQueryHandler 
     {
         public GetCreatedChannelsAndCollectionsQueryHandler(
-            Fifthweek.Api.Identity.Membership.IRequesterSecurity requesterSecurity, 
+            IRequesterSecurity requesterSecurity, 
             Fifthweek.Api.Collections.IGetChannelsAndCollectionsDbStatement getChannelsAndCollections)
         {
             if (requesterSecurity == null)
@@ -589,6 +595,7 @@ namespace Fifthweek.Api.Collections.Queries
     using System.Linq;
     using System.Collections.Generic;
     using Fifthweek.Api.Channels;
+    using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.CodeGeneration;
     using Fifthweek.Api.Core;
     using Fifthweek.Api.Identity.Membership;
@@ -596,7 +603,7 @@ namespace Fifthweek.Api.Collections.Queries
     public partial class GetLiveDateOfNewQueuedPostQuery 
     {
         public GetLiveDateOfNewQueuedPostQuery(
-            Fifthweek.Api.Identity.Membership.Requester requester, 
+            Requester requester, 
             Fifthweek.Api.Collections.CollectionId collectionId)
         {
             if (requester == null)
@@ -621,6 +628,7 @@ namespace Fifthweek.Api.Collections.Queries
     using System.Linq;
     using System.Collections.Generic;
     using Fifthweek.Api.Channels;
+    using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.CodeGeneration;
     using Fifthweek.Api.Core;
     using Fifthweek.Api.Identity.Membership;
@@ -629,7 +637,7 @@ namespace Fifthweek.Api.Collections.Queries
     {
         public GetLiveDateOfNewQueuedPostQueryHandler(
             Fifthweek.Api.Collections.ICollectionSecurity collectionSecurity, 
-            Fifthweek.Api.Identity.Membership.IRequesterSecurity requesterSecurity, 
+            IRequesterSecurity requesterSecurity, 
             Fifthweek.Api.Collections.IGetLiveDateOfNewQueuedPostDbStatement getLiveDateOfNewQueuedPost)
         {
             if (collectionSecurity == null)

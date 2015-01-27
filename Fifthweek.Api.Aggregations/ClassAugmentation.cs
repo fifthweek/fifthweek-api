@@ -48,6 +48,7 @@ namespace Fifthweek.Api.Aggregations.Queries
     using System.Linq;
     using Fifthweek.Api.Core;
     using Fifthweek.Api.Identity.Membership;
+    using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.Api.Subscriptions;
     using Fifthweek.CodeGeneration;
     using System.Threading.Tasks;
@@ -56,11 +57,14 @@ namespace Fifthweek.Api.Aggregations.Queries
     using System.Collections.Generic;
     using Fifthweek.Api.FileManagement.Queries;
     using Fifthweek.Api.Persistence.Identity;
+
+    using UserId = Fifthweek.Api.Identity.Shared.Membership.UserId;
+
     public partial class GetUserStateQuery 
     {
         public GetUserStateQuery(
-            Fifthweek.Api.Identity.Membership.Requester requester, 
-            Fifthweek.Api.Identity.Membership.UserId requestedUserId)
+            Requester requester, 
+            UserId requestedUserId)
         {
             if (requester == null)
             {
@@ -87,10 +91,13 @@ namespace Fifthweek.Api.Aggregations.Queries
     using System.Collections.Generic;
     using Fifthweek.Api.FileManagement.Queries;
     using Fifthweek.Api.Persistence.Identity;
+
+    using UserId = Fifthweek.Api.Identity.Shared.Membership.UserId;
+
     public partial class UserState 
     {
         public UserState(
-            Fifthweek.Api.Identity.Membership.UserId userId, 
+            UserId userId, 
             Fifthweek.Api.FileManagement.Queries.UserAccessSignatures accessSignatures, 
             Fifthweek.Api.Subscriptions.CreatorStatus creatorStatus, 
             Fifthweek.Api.Collections.Queries.ChannelsAndCollections createdChannelsAndCollections)
@@ -114,6 +121,7 @@ namespace Fifthweek.Api.Aggregations.Queries
     using System.Linq;
     using Fifthweek.Api.Core;
     using Fifthweek.Api.Identity.Membership;
+    using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.Api.Subscriptions;
     using Fifthweek.CodeGeneration;
     using System.Threading.Tasks;
@@ -125,7 +133,7 @@ namespace Fifthweek.Api.Aggregations.Queries
     public partial class GetUserStateQueryHandler 
     {
         public GetUserStateQueryHandler(
-            Fifthweek.Api.Identity.Membership.IRequesterSecurity requesterSecurity, 
+            IRequesterSecurity requesterSecurity, 
             Fifthweek.Api.Core.IQueryHandler<Fifthweek.Api.FileManagement.Queries.GetUserAccessSignaturesQuery,Fifthweek.Api.FileManagement.Queries.UserAccessSignatures> getUserAccessSignatures, 
             Fifthweek.Api.Core.IQueryHandler<Fifthweek.Api.Subscriptions.Queries.GetCreatorStatusQuery,Fifthweek.Api.Subscriptions.CreatorStatus> getCreatorStatus, 
             Fifthweek.Api.Core.IQueryHandler<Fifthweek.Api.Collections.Queries.GetCreatedChannelsAndCollectionsQuery,Fifthweek.Api.Collections.Queries.ChannelsAndCollections> getCreatedChannelsAndCollections)

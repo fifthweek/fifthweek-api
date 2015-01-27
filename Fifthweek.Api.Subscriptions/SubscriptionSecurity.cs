@@ -8,6 +8,8 @@ namespace Fifthweek.Api.Subscriptions
     using Fifthweek.Api.Persistence.Identity;
     using Fifthweek.CodeGeneration;
 
+    using UserId = Fifthweek.Api.Identity.Shared.Membership.UserId;
+
     [AutoConstructor]
     public partial class SubscriptionSecurity : ISubscriptionSecurity
     {

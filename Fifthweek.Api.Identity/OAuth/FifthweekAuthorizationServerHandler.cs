@@ -13,6 +13,7 @@ namespace Fifthweek.Api.Identity.OAuth
     using Fifthweek.Api.Identity.Membership.Commands;
     using Fifthweek.Api.Identity.Membership.Queries;
     using Fifthweek.Api.Identity.OAuth.Queries;
+    using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.Api.Persistence;
     using Fifthweek.Api.Persistence.Identity;
     using Fifthweek.CodeGeneration;

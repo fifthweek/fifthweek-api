@@ -13,6 +13,8 @@ namespace Fifthweek.Api.Identity.Tests.Membership.Queries
 
     using Moq;
 
+    using UserId = Fifthweek.Api.Identity.Shared.Membership.UserId;
+
     [TestClass]
     public class IsPasswordResetTokenValidQueryHandlerTests
     {

@@ -4,6 +4,8 @@
     using Fifthweek.Api.Identity.Membership;
     using Fifthweek.Shared;
 
+    using UserId = Fifthweek.Api.Identity.Shared.Membership.UserId;
+
     public class BlobLocationGenerator : IBlobLocationGenerator
     {
         public BlobLocation GetBlobLocation(UserId userId, FileId fileId, string filePurpose)

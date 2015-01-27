@@ -3,6 +3,7 @@ using Fifthweek.Api.Core;
 
 namespace Fifthweek.Api.Identity.Membership.Commands
 {
+    using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.CodeGeneration;
     using Fifthweek.Shared;
 

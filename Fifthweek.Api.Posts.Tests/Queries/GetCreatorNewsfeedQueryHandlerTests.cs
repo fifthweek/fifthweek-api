@@ -11,6 +11,7 @@
     using Fifthweek.Api.Core;
     using Fifthweek.Api.FileManagement;
     using Fifthweek.Api.Identity.Membership;
+    using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.Api.Persistence;
     using Fifthweek.Api.Persistence.Identity;
     using Fifthweek.Api.Persistence.Tests.Shared;
@@ -23,6 +24,7 @@
     using Moq;
 
     using ChannelId = Fifthweek.Api.Channels.Shared.ChannelId;
+    using UserId = Fifthweek.Api.Identity.Shared.Membership.UserId;
 
     [TestClass]
     public class GetCreatorNewsfeedQueryHandlerTests : PersistenceTestsBase

@@ -155,6 +155,7 @@ namespace Fifthweek.Api.FileManagement.Commands
     using System;
     using System.Linq;
     using Fifthweek.Api.Identity.Membership;
+    using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.CodeGeneration;
     using System.Threading.Tasks;
     using Fifthweek.Api.Azure;
@@ -164,7 +165,7 @@ namespace Fifthweek.Api.FileManagement.Commands
     public partial class CompleteFileUploadCommand 
     {
         public CompleteFileUploadCommand(
-            Fifthweek.Api.Identity.Membership.Requester requester, 
+            Requester requester, 
             Fifthweek.Api.FileManagement.FileId fileId)
         {
             if (requester == null)
@@ -188,6 +189,7 @@ namespace Fifthweek.Api.FileManagement.Commands
     using System;
     using System.Linq;
     using Fifthweek.Api.Identity.Membership;
+    using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.CodeGeneration;
     using System.Threading.Tasks;
     using Fifthweek.Api.Azure;
@@ -203,7 +205,7 @@ namespace Fifthweek.Api.FileManagement.Commands
             Fifthweek.Api.Azure.IBlobService blobService, 
             Fifthweek.Api.Azure.IQueueService queueService, 
             Fifthweek.Api.FileManagement.IBlobLocationGenerator blobLocationGenerator, 
-            Fifthweek.Api.Identity.Membership.IRequesterSecurity requesterSecurity)
+            IRequesterSecurity requesterSecurity)
         {
             if (getFileWaitingForUpload == null)
             {
@@ -256,6 +258,7 @@ namespace Fifthweek.Api.FileManagement.Commands
     using System;
     using System.Linq;
     using Fifthweek.Api.Identity.Membership;
+    using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.CodeGeneration;
     using System.Threading.Tasks;
     using Fifthweek.Api.Azure;
@@ -265,7 +268,7 @@ namespace Fifthweek.Api.FileManagement.Commands
     public partial class InitiateFileUploadCommand 
     {
         public InitiateFileUploadCommand(
-            Fifthweek.Api.Identity.Membership.Requester requester, 
+            Requester requester, 
             Fifthweek.Api.FileManagement.FileId fileId, 
             System.String filePath, 
             System.String purpose)
@@ -293,6 +296,7 @@ namespace Fifthweek.Api.FileManagement.Commands
     using System;
     using System.Linq;
     using Fifthweek.Api.Identity.Membership;
+    using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.CodeGeneration;
     using System.Threading.Tasks;
     using Fifthweek.Api.Azure;
@@ -302,7 +306,7 @@ namespace Fifthweek.Api.FileManagement.Commands
     public partial class InitiateFileUploadCommandHandler 
     {
         public InitiateFileUploadCommandHandler(
-            Fifthweek.Api.Identity.Membership.IRequesterSecurity requesterSecurity, 
+            IRequesterSecurity requesterSecurity, 
             Fifthweek.Api.Azure.IBlobService blobService, 
             Fifthweek.Api.FileManagement.IBlobLocationGenerator blobLocationGenerator, 
             Fifthweek.Api.FileManagement.IAddNewFileDbStatement addNewFile)
@@ -539,11 +543,14 @@ namespace Fifthweek.Api.FileManagement
     using System.Security;
     using Fifthweek.Api.Azure;
     using Fifthweek.WebJobs.GarbageCollection.Shared;
+
+    using UserId = Fifthweek.Api.Identity.Shared.Membership.UserId;
+
     public partial class FileWaitingForUpload 
     {
         public FileWaitingForUpload(
             Fifthweek.Api.FileManagement.FileId fileId, 
-            Fifthweek.Api.Identity.Membership.UserId userId, 
+            UserId userId, 
             System.String fileNameWithoutExtension, 
             System.String fileExtension, 
             System.String purpose)
@@ -618,13 +625,14 @@ namespace Fifthweek.Api.FileManagement.Queries
     using Fifthweek.Api.Azure;
     using Fifthweek.Api.Core;
     using Fifthweek.Api.Identity.Membership;
+    using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.CodeGeneration;
     using System.Threading.Tasks;
     using System.Collections.Generic;
     public partial class GenerateWritableBlobUriQuery 
     {
         public GenerateWritableBlobUriQuery(
-            Fifthweek.Api.Identity.Membership.Requester requester, 
+            Requester requester, 
             Fifthweek.Api.FileManagement.FileId fileId, 
             System.String purpose)
         {
@@ -657,6 +665,7 @@ namespace Fifthweek.Api.FileManagement.Queries
     using Fifthweek.Api.Azure;
     using Fifthweek.Api.Core;
     using Fifthweek.Api.Identity.Membership;
+    using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.CodeGeneration;
     using System.Threading.Tasks;
     using System.Collections.Generic;
@@ -666,7 +675,7 @@ namespace Fifthweek.Api.FileManagement.Queries
             Fifthweek.Api.Azure.IBlobService blobService, 
             Fifthweek.Api.FileManagement.IBlobLocationGenerator blobLocationGenerator, 
             Fifthweek.Api.FileManagement.IFileSecurity fileSecurity, 
-            Fifthweek.Api.Identity.Membership.IRequesterSecurity requesterSecurity)
+            IRequesterSecurity requesterSecurity)
         {
             if (blobService == null)
             {
@@ -703,14 +712,18 @@ namespace Fifthweek.Api.FileManagement.Queries
     using Fifthweek.Api.Azure;
     using Fifthweek.Api.Core;
     using Fifthweek.Api.Identity.Membership;
+    using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.CodeGeneration;
     using System.Threading.Tasks;
     using System.Collections.Generic;
+
+    using UserId = Fifthweek.Api.Identity.Shared.Membership.UserId;
+
     public partial class GetUserAccessSignaturesQuery 
     {
         public GetUserAccessSignaturesQuery(
-            Fifthweek.Api.Identity.Membership.Requester requester, 
-            Fifthweek.Api.Identity.Membership.UserId requestedUserId)
+            Requester requester, 
+            UserId requestedUserId)
         {
             if (requester == null)
             {
@@ -730,6 +743,7 @@ namespace Fifthweek.Api.FileManagement.Queries
     using Fifthweek.Api.Azure;
     using Fifthweek.Api.Core;
     using Fifthweek.Api.Identity.Membership;
+    using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.CodeGeneration;
     using System.Threading.Tasks;
     using System.Collections.Generic;
@@ -738,7 +752,7 @@ namespace Fifthweek.Api.FileManagement.Queries
         public GetUserAccessSignaturesQueryHandler(
             Fifthweek.Api.Azure.IBlobService blobService, 
             Fifthweek.Api.FileManagement.IBlobLocationGenerator blobLocationGenerator, 
-            Fifthweek.Api.Identity.Membership.IRequesterSecurity requesterSecurity)
+            IRequesterSecurity requesterSecurity)
         {
             if (blobService == null)
             {
@@ -772,12 +786,15 @@ namespace Fifthweek.Api.FileManagement.Queries
     using Fifthweek.CodeGeneration;
     using System.Threading.Tasks;
     using System.Collections.Generic;
+
+    using UserId = Fifthweek.Api.Identity.Shared.Membership.UserId;
+
     public partial class UserAccessSignatures
     {
         public partial class PrivateAccessSignature 
         {
         public PrivateAccessSignature(
-            Fifthweek.Api.Identity.Membership.UserId creatorId, 
+            UserId creatorId, 
             Fifthweek.Api.Azure.BlobContainerSharedAccessInformation information)
         {
             if (creatorId == null)

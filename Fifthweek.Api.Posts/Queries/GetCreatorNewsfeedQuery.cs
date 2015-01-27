@@ -4,8 +4,11 @@
 
     using Fifthweek.Api.Core;
     using Fifthweek.Api.Identity.Membership;
+    using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.CodeGeneration;
     using Fifthweek.Shared;
+
+    using UserId = Fifthweek.Api.Identity.Shared.Membership.UserId;
 
     [AutoConstructor, AutoEqualityMembers]
     public partial class GetCreatorNewsfeedQuery : IQuery<IReadOnlyList<NewsfeedPost>>

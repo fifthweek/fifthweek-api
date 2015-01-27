@@ -14,6 +14,8 @@
     using Fifthweek.Api.Subscriptions.Queries;
     using Fifthweek.CodeGeneration;
 
+    using UserId = Fifthweek.Api.Identity.Shared.Membership.UserId;
+
     [AutoConstructor]
     [RoutePrefix("userState")]
     public partial class UserStateController : ApiController

@@ -6,6 +6,7 @@ namespace Fifthweek.Api.Accounts.Tests
 
     using Fifthweek.Api.FileManagement;
     using Fifthweek.Api.Identity.Membership;
+    using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.Api.Persistence;
     using Fifthweek.Api.Persistence.Identity;
     using Fifthweek.Api.Persistence.Tests.Shared;
@@ -15,6 +16,9 @@ namespace Fifthweek.Api.Accounts.Tests
     using Microsoft.VisualStudio.TestTools.UnitTesting;
 
     using Moq;
+
+    using Email = Fifthweek.Api.Identity.Shared.Membership.Email;
+    using UserId = Fifthweek.Api.Identity.Shared.Membership.UserId;
 
     [TestClass]
     public class UpdateAccountSettingsDbRepositoryTests : PersistenceTestsBase

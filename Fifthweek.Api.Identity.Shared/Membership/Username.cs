@@ -1,4 +1,4 @@
-﻿namespace Fifthweek.Api.Identity.Membership
+﻿namespace Fifthweek.Api.Identity.Shared.Membership
 {
     using Fifthweek.CodeGeneration;
 

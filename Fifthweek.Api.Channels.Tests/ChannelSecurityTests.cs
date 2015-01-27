@@ -12,6 +12,7 @@
     using Moq;
 
     using ChannelId = Fifthweek.Api.Channels.Shared.ChannelId;
+    using UserId = Fifthweek.Api.Identity.Shared.Membership.UserId;
 
     [TestClass]
     public class ChannelSecurityTests

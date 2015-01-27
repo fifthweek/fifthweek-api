@@ -2,6 +2,7 @@
 {
     using System.ComponentModel.DataAnnotations;
 
+    using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.CodeGeneration;
 
     [AutoEqualityMembers]

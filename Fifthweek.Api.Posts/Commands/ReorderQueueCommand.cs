@@ -4,6 +4,7 @@
 
     using Fifthweek.Api.Collections;
     using Fifthweek.Api.Identity.Membership;
+    using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.CodeGeneration;
 
     [AutoConstructor, AutoEqualityMembers]

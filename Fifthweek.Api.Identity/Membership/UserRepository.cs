@@ -7,6 +7,7 @@ namespace Fifthweek.Api.Identity.Membership
 
     using Dapper;
 
+    using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.Api.Persistence;
     using Fifthweek.CodeGeneration;
     using Fifthweek.Shared;

@@ -12,6 +12,7 @@
     using Fifthweek.Api.FileManagement;
     using Fifthweek.Api.Identity.Membership;
     using Fifthweek.Api.Identity.OAuth;
+    using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.Api.Posts.Commands;
     using Fifthweek.Api.Posts.Controllers;
     using Fifthweek.Api.Posts.Queries;
@@ -22,6 +23,7 @@
     using Moq;
 
     using ChannelId = Fifthweek.Api.Channels.Shared.ChannelId;
+    using UserId = Fifthweek.Api.Identity.Shared.Membership.UserId;
 
     [TestClass]
     public class PostControllerTests

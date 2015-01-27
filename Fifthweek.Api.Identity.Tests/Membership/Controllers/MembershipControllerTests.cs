@@ -9,11 +9,14 @@
     using Fifthweek.Api.Identity.Membership.Commands;
     using Fifthweek.Api.Identity.Membership.Controllers;
     using Fifthweek.Api.Identity.Membership.Queries;
+    using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.Api.Identity.Tests.Membership.Commands;
 
     using Microsoft.VisualStudio.TestTools.UnitTesting;
 
     using Moq;
+
+    using UserId = Fifthweek.Api.Identity.Shared.Membership.UserId;
 
     [TestClass]
     public class MembershipControllerTests

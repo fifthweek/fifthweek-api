@@ -12,6 +12,9 @@
     using Fifthweek.Api.Persistence;
     using Fifthweek.CodeGeneration;
 
+    using Email = Fifthweek.Api.Identity.Shared.Membership.Email;
+    using UserId = Fifthweek.Api.Identity.Shared.Membership.UserId;
+
     [AutoConstructor]
     public partial class GetAccountSettingsDbStatement : IGetAccountSettingsDbStatement
     {

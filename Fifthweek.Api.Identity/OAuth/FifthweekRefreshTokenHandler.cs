@@ -8,6 +8,7 @@ namespace Fifthweek.Api.Identity.OAuth
     using Fifthweek.Api.Core;
     using Fifthweek.Api.Identity.OAuth.Commands;
     using Fifthweek.Api.Identity.OAuth.Queries;
+    using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.Api.Persistence;
 
     using Microsoft.Owin.Security.Infrastructure;

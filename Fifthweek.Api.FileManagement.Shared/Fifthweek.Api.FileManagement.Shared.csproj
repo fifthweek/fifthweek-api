@@ -56,6 +56,10 @@
       <Project>{9c18bee3-fab5-4a00-8a94-a1faea370175}</Project>
       <Name>Fifthweek.Api.Persistence</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Fifthweek.CodeGeneration\Fifthweek.CodeGeneration.csproj">
+      <Project>{770F450E-2166-4269-BEC1-DF59AA16B1E8}</Project>
+      <Name>Fifthweek.CodeGeneration</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

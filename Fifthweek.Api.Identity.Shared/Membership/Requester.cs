@@ -1,4 +1,4 @@
-﻿namespace Fifthweek.Api.Identity.Membership
+﻿namespace Fifthweek.Api.Identity.Shared.Membership
 {
     using System;
     using System.Collections.Generic;
@@ -10,11 +10,11 @@
     {
         public static readonly Requester Unauthenticated = new Requester();
 
-        private readonly UserId userId;
+        private readonly Shared.Membership.UserId userId;
 
         private readonly HashSet<string> roles;
 
-        private Requester(UserId userId, IEnumerable<string> roles)
+        private Requester(Shared.Membership.UserId userId, IEnumerable<string> roles)
         {
             if (userId == null)
             {
@@ -30,7 +30,7 @@
             this.roles = new HashSet<string>();
         }
 
-        internal UserId UserId
+        internal Shared.Membership.UserId UserId
         {
             get
             {
@@ -46,12 +46,12 @@
             }
         }
 
-        public static Requester Authenticated(UserId userId, params string[] roles)
+        public static Requester Authenticated(Shared.Membership.UserId userId, params string[] roles)
         {
             return Authenticated(userId, (IEnumerable<string>)roles);
         }
 
-        public static Requester Authenticated(UserId userId, IEnumerable<string> roles)
+        public static Requester Authenticated(Shared.Membership.UserId userId, IEnumerable<string> roles)
         {
             userId.AssertNotNull("userId");
             if (userId == null)

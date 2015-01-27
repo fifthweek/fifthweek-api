@@ -13,6 +13,8 @@
     using Fifthweek.Api.Posts.Queries;
     using Fifthweek.CodeGeneration;
 
+    using UserId = Fifthweek.Api.Identity.Shared.Membership.UserId;
+
     [RoutePrefix("posts"), AutoConstructor]
     public partial class PostController : ApiController
     {

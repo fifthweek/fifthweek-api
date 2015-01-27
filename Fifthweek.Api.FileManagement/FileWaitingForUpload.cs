@@ -5,6 +5,8 @@
     using Fifthweek.CodeGeneration;
     using Fifthweek.Shared;
 
+    using UserId = Fifthweek.Api.Identity.Shared.Membership.UserId;
+
     [AutoConstructor]
     public partial class FileWaitingForUpload
     {

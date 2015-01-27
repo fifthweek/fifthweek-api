@@ -1,6 +1,7 @@
 ﻿namespace Fifthweek.Api.Posts.Commands
 {
     using Fifthweek.Api.Identity.Membership;
+    using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.CodeGeneration;
 
     [AutoConstructor, AutoEqualityMembers]

@@ -6,9 +6,12 @@
     using Fifthweek.Api.Azure;
     using Fifthweek.Api.Core;
     using Fifthweek.Api.Identity.Membership;
+    using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.CodeGeneration;
     using Fifthweek.Shared;
     using Fifthweek.WebJobs.Files.Shared;
+
+    using UserId = Fifthweek.Api.Identity.Shared.Membership.UserId;
 
     [AutoConstructor]
     public partial class CompleteFileUploadCommandHandler : ICommandHandler<CompleteFileUploadCommand>

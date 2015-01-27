@@ -179,6 +179,7 @@ namespace Fifthweek.Api.Posts.Commands
     using System;
     using System.Linq;
     using Fifthweek.Api.Identity.Membership;
+    using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.CodeGeneration;
     using System.Threading.Tasks;
     using Fifthweek.Api.Azure;
@@ -194,7 +195,7 @@ namespace Fifthweek.Api.Posts.Commands
     {
         public DeletePostCommand(
             Fifthweek.Api.Posts.PostId postId, 
-            Fifthweek.Api.Identity.Membership.Requester requester)
+            Requester requester)
         {
             if (postId == null)
             {
@@ -217,6 +218,7 @@ namespace Fifthweek.Api.Posts.Commands
     using System;
     using System.Linq;
     using Fifthweek.Api.Identity.Membership;
+    using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.CodeGeneration;
     using System.Threading.Tasks;
     using Fifthweek.Api.Azure;
@@ -233,7 +235,7 @@ namespace Fifthweek.Api.Posts.Commands
         public DeletePostCommandHandler(
             Fifthweek.Api.FileManagement.IScheduleGarbageCollectionStatement scheduleGarbageCollection, 
             Fifthweek.Api.Posts.IPostSecurity postSecurity, 
-            Fifthweek.Api.Identity.Membership.IRequesterSecurity requesterSecurity, 
+            IRequesterSecurity requesterSecurity, 
             Fifthweek.Api.Posts.IDeletePostDbStatement deletePost)
         {
             if (scheduleGarbageCollection == null)
@@ -269,6 +271,7 @@ namespace Fifthweek.Api.Posts.Commands
     using System;
     using System.Linq;
     using Fifthweek.Api.Identity.Membership;
+    using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.CodeGeneration;
     using System.Threading.Tasks;
     using Fifthweek.Api.Azure;
@@ -283,7 +286,7 @@ namespace Fifthweek.Api.Posts.Commands
     public partial class PostFileCommand 
     {
         public PostFileCommand(
-            Fifthweek.Api.Identity.Membership.Requester requester, 
+            Requester requester, 
             Fifthweek.Api.Posts.PostId newPostId, 
             Fifthweek.Api.Collections.CollectionId collectionId, 
             Fifthweek.Api.FileManagement.FileId fileId, 
@@ -332,6 +335,7 @@ namespace Fifthweek.Api.Posts.Commands
     using System;
     using System.Linq;
     using Fifthweek.Api.Identity.Membership;
+    using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.CodeGeneration;
     using System.Threading.Tasks;
     using Fifthweek.Api.Azure;
@@ -348,7 +352,7 @@ namespace Fifthweek.Api.Posts.Commands
         public PostFileCommandHandler(
             Fifthweek.Api.Collections.ICollectionSecurity collectionSecurity, 
             Fifthweek.Api.FileManagement.IFileSecurity fileSecurity, 
-            Fifthweek.Api.Identity.Membership.IRequesterSecurity requesterSecurity, 
+            IRequesterSecurity requesterSecurity, 
             Fifthweek.Api.Posts.IPostFileTypeChecks postFileTypeChecks, 
             Fifthweek.Api.Posts.IPostToCollectionDbStatement postToCollectionDbStatement)
         {
@@ -391,6 +395,7 @@ namespace Fifthweek.Api.Posts.Commands
     using System;
     using System.Linq;
     using Fifthweek.Api.Identity.Membership;
+    using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.CodeGeneration;
     using System.Threading.Tasks;
     using Fifthweek.Api.Azure;
@@ -405,7 +410,7 @@ namespace Fifthweek.Api.Posts.Commands
     public partial class PostImageCommand 
     {
         public PostImageCommand(
-            Fifthweek.Api.Identity.Membership.Requester requester, 
+            Requester requester, 
             Fifthweek.Api.Posts.PostId newPostId, 
             Fifthweek.Api.Collections.CollectionId collectionId, 
             Fifthweek.Api.FileManagement.FileId imageFileId, 
@@ -454,6 +459,7 @@ namespace Fifthweek.Api.Posts.Commands
     using System;
     using System.Linq;
     using Fifthweek.Api.Identity.Membership;
+    using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.CodeGeneration;
     using System.Threading.Tasks;
     using Fifthweek.Api.Azure;
@@ -470,7 +476,7 @@ namespace Fifthweek.Api.Posts.Commands
         public PostImageCommandHandler(
             Fifthweek.Api.Collections.ICollectionSecurity collectionSecurity, 
             Fifthweek.Api.FileManagement.IFileSecurity fileSecurity, 
-            Fifthweek.Api.Identity.Membership.IRequesterSecurity requesterSecurity, 
+            IRequesterSecurity requesterSecurity, 
             Fifthweek.Api.Posts.IPostFileTypeChecks postFileTypeChecks, 
             Fifthweek.Api.Posts.IPostToCollectionDbStatement postToCollectionDbStatement)
         {
@@ -513,6 +519,7 @@ namespace Fifthweek.Api.Posts.Commands
     using System;
     using System.Linq;
     using Fifthweek.Api.Identity.Membership;
+    using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.CodeGeneration;
     using System.Threading.Tasks;
     using Fifthweek.Api.Azure;
@@ -530,7 +537,7 @@ namespace Fifthweek.Api.Posts.Commands
     public partial class PostNoteCommand 
     {
         public PostNoteCommand(
-            Fifthweek.Api.Identity.Membership.Requester requester, 
+            Requester requester, 
             Fifthweek.Api.Posts.PostId newPostId, 
             ChannelId channelId, 
             Fifthweek.Api.Posts.ValidNote note, 
@@ -572,6 +579,7 @@ namespace Fifthweek.Api.Posts.Commands
 
     using Fifthweek.Api.Channels.Shared;
     using Fifthweek.Api.Identity.Membership;
+    using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.CodeGeneration;
     using System.Threading.Tasks;
     using Fifthweek.Api.Azure;
@@ -587,7 +595,7 @@ namespace Fifthweek.Api.Posts.Commands
     {
         public PostNoteCommandHandler(
             IChannelSecurity channelSecurity, 
-            Fifthweek.Api.Identity.Membership.IRequesterSecurity requesterSecurity, 
+            IRequesterSecurity requesterSecurity, 
             Fifthweek.Api.Persistence.IFifthweekDbContext databaseContext)
         {
             if (channelSecurity == null)
@@ -617,6 +625,7 @@ namespace Fifthweek.Api.Posts.Commands
     using System;
     using System.Linq;
     using Fifthweek.Api.Identity.Membership;
+    using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.CodeGeneration;
     using System.Threading.Tasks;
     using Fifthweek.Api.Azure;
@@ -631,7 +640,7 @@ namespace Fifthweek.Api.Posts.Commands
     public partial class ReorderQueueCommand 
     {
         public ReorderQueueCommand(
-            Fifthweek.Api.Identity.Membership.Requester requester, 
+            Requester requester, 
             Fifthweek.Api.Collections.CollectionId collectionId, 
             System.Collections.Generic.IReadOnlyList<Fifthweek.Api.Posts.PostId> newPartialQueueOrder)
         {
@@ -662,6 +671,7 @@ namespace Fifthweek.Api.Posts.Commands
     using System;
     using System.Linq;
     using Fifthweek.Api.Identity.Membership;
+    using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.CodeGeneration;
     using System.Threading.Tasks;
     using Fifthweek.Api.Azure;
@@ -676,7 +686,7 @@ namespace Fifthweek.Api.Posts.Commands
     public partial class ReorderQueueCommandHandler 
     {
         public ReorderQueueCommandHandler(
-            Fifthweek.Api.Identity.Membership.IRequesterSecurity requesterSecurity, 
+            IRequesterSecurity requesterSecurity, 
             Fifthweek.Api.Persistence.IFifthweekDbContext databaseContext)
         {
             if (requesterSecurity == null)
@@ -1034,6 +1044,7 @@ namespace Fifthweek.Api.Posts.Queries
     using Fifthweek.Api.Channels;
     using Fifthweek.Api.Collections;
     using Fifthweek.Api.FileManagement;
+    using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.CodeGeneration;
     using System.Collections.Generic;
     using Fifthweek.Api.Core;
@@ -1043,11 +1054,14 @@ namespace Fifthweek.Api.Posts.Queries
     using Fifthweek.Api.Persistence;
     using Fifthweek.Api.Persistence.Identity;
     using Fifthweek.Shared;
+
+    using UserId = Fifthweek.Api.Identity.Shared.Membership.UserId;
+
     public partial class GetCreatorBacklogQuery 
     {
         public GetCreatorBacklogQuery(
-            Fifthweek.Api.Identity.Membership.Requester requester, 
-            Fifthweek.Api.Identity.Membership.UserId requestedUserId)
+            Requester requester, 
+            UserId requestedUserId)
         {
             if (requester == null)
             {
@@ -1072,6 +1086,7 @@ namespace Fifthweek.Api.Posts.Queries
     using Fifthweek.Api.Channels;
     using Fifthweek.Api.Collections;
     using Fifthweek.Api.FileManagement;
+    using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.CodeGeneration;
     using System.Collections.Generic;
     using Fifthweek.Api.Core;
@@ -1084,7 +1099,7 @@ namespace Fifthweek.Api.Posts.Queries
     public partial class GetCreatorBacklogQueryHandler 
     {
         public GetCreatorBacklogQueryHandler(
-            Fifthweek.Api.Identity.Membership.IRequesterSecurity requesterSecurity, 
+            IRequesterSecurity requesterSecurity, 
             Fifthweek.Api.Persistence.IFifthweekDbContext databaseContext)
         {
             if (requesterSecurity == null)
@@ -1110,6 +1125,7 @@ namespace Fifthweek.Api.Posts.Queries
     using Fifthweek.Api.Channels;
     using Fifthweek.Api.Collections;
     using Fifthweek.Api.FileManagement;
+    using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.CodeGeneration;
     using System.Collections.Generic;
     using Fifthweek.Api.Core;
@@ -1119,11 +1135,14 @@ namespace Fifthweek.Api.Posts.Queries
     using Fifthweek.Api.Persistence;
     using Fifthweek.Api.Persistence.Identity;
     using Fifthweek.Shared;
+
+    using UserId = Fifthweek.Api.Identity.Shared.Membership.UserId;
+
     public partial class GetCreatorNewsfeedQuery 
     {
         public GetCreatorNewsfeedQuery(
-            Fifthweek.Api.Identity.Membership.Requester requester, 
-            Fifthweek.Api.Identity.Membership.UserId requestedUserId, 
+            Requester requester, 
+            UserId requestedUserId, 
             Fifthweek.Shared.NonNegativeInt startIndex, 
             Fifthweek.Shared.PositiveInt count)
         {
@@ -1162,6 +1181,7 @@ namespace Fifthweek.Api.Posts.Queries
     using Fifthweek.Api.Channels;
     using Fifthweek.Api.Collections;
     using Fifthweek.Api.FileManagement;
+    using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.CodeGeneration;
     using System.Collections.Generic;
     using Fifthweek.Api.Core;
@@ -1174,7 +1194,7 @@ namespace Fifthweek.Api.Posts.Queries
     public partial class GetCreatorNewsfeedQueryHandler 
     {
         public GetCreatorNewsfeedQueryHandler(
-            Fifthweek.Api.Identity.Membership.IRequesterSecurity requesterSecurity, 
+            IRequesterSecurity requesterSecurity, 
             Fifthweek.Api.Persistence.IFifthweekDbContext databaseContext)
         {
             if (requesterSecurity == null)

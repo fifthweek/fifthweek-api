@@ -5,6 +5,7 @@
 
     using Fifthweek.Api.Core;
     using Fifthweek.Api.Identity.Membership;
+    using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.Api.Identity.Tests.Shared.Membership;
     using Fifthweek.Api.Persistence;
     using Fifthweek.Api.Persistence.Tests.Shared;
@@ -15,6 +16,7 @@
 
     using Moq;
 
+    using UserId = Fifthweek.Api.Identity.Shared.Membership.UserId;
     using ValidChannelPriceInUsCentsPerWeek = Fifthweek.Api.Channels.Shared.ValidChannelPriceInUsCentsPerWeek;
 
     [TestClass]

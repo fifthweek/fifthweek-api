@@ -97,6 +97,7 @@ namespace Fifthweek.Api.Subscriptions.Commands
     using System.Linq;
     using Fifthweek.Api.Channels;
     using Fifthweek.Api.Identity.Membership;
+    using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.CodeGeneration;
     using System.Threading.Tasks;
     using System.Transactions;
@@ -110,7 +111,7 @@ namespace Fifthweek.Api.Subscriptions.Commands
     public partial class CreateSubscriptionCommand 
     {
         public CreateSubscriptionCommand(
-            Fifthweek.Api.Identity.Membership.Requester requester, 
+            Requester requester, 
             Fifthweek.Api.Subscriptions.SubscriptionId newSubscriptionId, 
             Fifthweek.Api.Subscriptions.ValidSubscriptionName subscriptionName, 
             Fifthweek.Api.Subscriptions.ValidTagline tagline, 
@@ -156,6 +157,7 @@ namespace Fifthweek.Api.Subscriptions.Commands
     using System.Linq;
     using Fifthweek.Api.Channels;
     using Fifthweek.Api.Identity.Membership;
+    using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.CodeGeneration;
     using System.Threading.Tasks;
     using System.Transactions;
@@ -170,7 +172,7 @@ namespace Fifthweek.Api.Subscriptions.Commands
     {
         public CreateSubscriptionCommandHandler(
             Fifthweek.Api.Subscriptions.ISubscriptionSecurity subscriptionSecurity, 
-            Fifthweek.Api.Identity.Membership.IRequesterSecurity requesterSecurity, 
+            IRequesterSecurity requesterSecurity, 
             Fifthweek.Api.Persistence.IFifthweekDbContext fifthweekDbContext)
         {
             if (subscriptionSecurity == null)
@@ -211,10 +213,13 @@ namespace Fifthweek.Api.Subscriptions.Commands
     using Fifthweek.Api.Identity.Membership.Events;
     using Fifthweek.Api.FileManagement;
     using Fifthweek.Api.Channels.Shared;
+
+    using UserId = Fifthweek.Api.Identity.Shared.Membership.UserId;
+
     public partial class PromoteNewUserToCreatorCommand 
     {
         public PromoteNewUserToCreatorCommand(
-            Fifthweek.Api.Identity.Membership.UserId newUserId)
+            UserId newUserId)
         {
             if (newUserId == null)
             {
@@ -294,6 +299,7 @@ namespace Fifthweek.Api.Subscriptions.Commands
     using System.Linq;
     using Fifthweek.Api.Channels;
     using Fifthweek.Api.Identity.Membership;
+    using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.CodeGeneration;
     using System.Threading.Tasks;
     using System.Transactions;
@@ -307,7 +313,7 @@ namespace Fifthweek.Api.Subscriptions.Commands
     public partial class UpdateSubscriptionCommand 
     {
         public UpdateSubscriptionCommand(
-            Fifthweek.Api.Identity.Membership.Requester requester, 
+            Requester requester, 
             Fifthweek.Api.Subscriptions.SubscriptionId subscriptionId, 
             Fifthweek.Api.Subscriptions.ValidSubscriptionName subscriptionName, 
             Fifthweek.Api.Subscriptions.ValidTagline tagline, 
@@ -359,6 +365,7 @@ namespace Fifthweek.Api.Subscriptions.Commands
     using System.Linq;
     using Fifthweek.Api.Channels;
     using Fifthweek.Api.Identity.Membership;
+    using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.CodeGeneration;
     using System.Threading.Tasks;
     using System.Transactions;
@@ -374,7 +381,7 @@ namespace Fifthweek.Api.Subscriptions.Commands
         public UpdateSubscriptionCommandHandler(
             Fifthweek.Api.Subscriptions.ISubscriptionSecurity subscriptionSecurity, 
             Fifthweek.Api.FileManagement.IFileSecurity fileSecurity, 
-            Fifthweek.Api.Identity.Membership.IRequesterSecurity requesterSecurity, 
+            IRequesterSecurity requesterSecurity, 
             Fifthweek.Api.Persistence.IFifthweekDbContext databaseContext)
         {
             if (subscriptionSecurity == null)
@@ -490,15 +497,19 @@ namespace Fifthweek.Api.Subscriptions.Queries
     using System.Linq;
     using Fifthweek.Api.Core;
     using Fifthweek.Api.Identity.Membership;
+    using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.CodeGeneration;
     using System.Threading.Tasks;
     using Dapper;
     using Fifthweek.Api.Persistence;
+
+    using UserId = Fifthweek.Api.Identity.Shared.Membership.UserId;
+
     public partial class GetCreatorStatusQuery 
     {
         public GetCreatorStatusQuery(
-            Fifthweek.Api.Identity.Membership.Requester requester, 
-            Fifthweek.Api.Identity.Membership.UserId requestedUserId)
+            Requester requester, 
+            UserId requestedUserId)
         {
             if (requester == null)
             {
@@ -522,6 +533,7 @@ namespace Fifthweek.Api.Subscriptions.Queries
     using System.Linq;
     using Fifthweek.Api.Core;
     using Fifthweek.Api.Identity.Membership;
+    using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.CodeGeneration;
     using System.Threading.Tasks;
     using Dapper;
@@ -529,7 +541,7 @@ namespace Fifthweek.Api.Subscriptions.Queries
     public partial class GetCreatorStatusQueryHandler 
     {
         public GetCreatorStatusQueryHandler(
-            Fifthweek.Api.Identity.Membership.IRequesterSecurity requesterSecurity, 
+            IRequesterSecurity requesterSecurity, 
             Fifthweek.Api.Persistence.IFifthweekDbContext databaseContext)
         {
             if (requesterSecurity == null)

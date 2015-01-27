@@ -3,6 +3,8 @@
     using System;
     using System.Threading.Tasks;
 
+    using Fifthweek.Api.Identity.Shared.Membership;
+
     public interface IUserRepository
     {
         Task UpdateLastSignInDateAndAccessTokenDateAsync(ValidUsername username, DateTime timestamp);

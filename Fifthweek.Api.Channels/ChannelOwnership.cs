@@ -9,6 +9,8 @@
     using Fifthweek.Api.Persistence;
     using Fifthweek.CodeGeneration;
 
+    using UserId = Fifthweek.Api.Identity.Shared.Membership.UserId;
+
     [AutoConstructor]
     public partial class ChannelOwnership : IChannelOwnership
     {
