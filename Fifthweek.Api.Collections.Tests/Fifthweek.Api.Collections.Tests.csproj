@@ -100,6 +100,7 @@
     <Compile Include="Queries\GetCreatedChannelsAndCollectionsQueryHandlerTests.cs" />
     <Compile Include="Queries\GetLiveDateOfNewQueuedPostQueryHandlerTests.cs" />
     <Compile Include="QueuedPostLiveDateCalculatorTests.cs" />
+    <Compile Include="ValidCollectionNameTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Fifthweek.Api.Collections\Fifthweek.Api.Collections.csproj">

@@ -52,11 +52,16 @@
   </Choose>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ValidChannelNameTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Fifthweek.Api.Channels\Fifthweek.Api.Channels.csproj">
       <Project>{208f4aca-4012-466f-bc49-7e2c443d3c06}</Project>
       <Name>Fifthweek.Api.Channels</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Fifthweek.Tests.Shared\Fifthweek.Tests.Shared.csproj">
+      <Project>{85691D93-9C0C-498B-8341-1990BC8E24B2}</Project>
+      <Name>Fifthweek.Tests.Shared</Name>
     </ProjectReference>
   </ItemGroup>
   <Choose>
