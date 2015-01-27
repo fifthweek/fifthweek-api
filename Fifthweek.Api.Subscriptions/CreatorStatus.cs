@@ -1,9 +1,6 @@
-﻿using Fifthweek.Api.Core;
-
-namespace Fifthweek.Api.Subscriptions
+﻿namespace Fifthweek.Api.Subscriptions
 {
     using Fifthweek.CodeGeneration;
-    using Fifthweek.Shared;
 
     [AutoConstructor, AutoEqualityMembers]
     public partial class CreatorStatus
@@ -11,7 +8,7 @@ namespace Fifthweek.Api.Subscriptions
         public static readonly CreatorStatus NoSubscriptions = new CreatorStatus(null, false);
 
         [Optional]
-        public SubscriptionId SubscriptionId { get; private set; }
+        public Shared.SubscriptionId SubscriptionId { get; private set; }
 
         public bool MustWriteFirstPost { get; private set; }
     }

@@ -7,6 +7,7 @@
 
     using Fifthweek.Api.Identity.Membership;
     using Fifthweek.Api.Persistence.Tests.Shared;
+    using Fifthweek.Api.Subscriptions.Shared;
 
     using Microsoft.VisualStudio.TestTools.UnitTesting;
 

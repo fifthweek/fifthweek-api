@@ -3,12 +3,11 @@ namespace Fifthweek.Api.Subscriptions
     using System.Threading.Tasks;
 
     using Fifthweek.Api.Core;
-    using Fifthweek.Api.Identity.Membership;
+    using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.Api.Persistence;
     using Fifthweek.Api.Persistence.Identity;
+    using Fifthweek.Api.Subscriptions.Shared;
     using Fifthweek.CodeGeneration;
-
-    using UserId = Fifthweek.Api.Identity.Shared.Membership.UserId;
 
     [AutoConstructor]
     public partial class SubscriptionSecurity : ISubscriptionSecurity
@@ -23,7 +22,7 @@ namespace Fifthweek.Api.Subscriptions
             return this.userManager.IsInRoleAsync(requester.Value, FifthweekRole.Creator);
         }
 
-        public Task<bool> IsUpdateAllowedAsync(UserId requester, SubscriptionId subscriptionId)
+        public Task<bool> IsUpdateAllowedAsync(UserId requester, Shared.SubscriptionId subscriptionId)
         {
             requester.AssertNotNull("requester");
             subscriptionId.AssertNotNull("subscriptionId");
@@ -42,7 +41,7 @@ namespace Fifthweek.Api.Subscriptions
             }
         }
 
-        public async Task AssertUpdateAllowedAsync(UserId requester, SubscriptionId subscriptionId)
+        public async Task AssertUpdateAllowedAsync(UserId requester, Shared.SubscriptionId subscriptionId)
         {
             requester.AssertNotNull("requester");
             subscriptionId.AssertNotNull("subscriptionId");

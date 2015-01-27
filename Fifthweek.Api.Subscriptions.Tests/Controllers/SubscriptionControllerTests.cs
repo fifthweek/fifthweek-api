@@ -13,6 +13,7 @@
     using Fifthweek.Api.Subscriptions.Commands;
     using Fifthweek.Api.Subscriptions.Controllers;
     using Fifthweek.Api.Subscriptions.Queries;
+    using Fifthweek.Api.Subscriptions.Shared;
 
     using Microsoft.VisualStudio.TestTools.UnitTesting;
 

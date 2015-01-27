@@ -1,4 +1,4 @@
-﻿namespace Fifthweek.Api.Subscriptions
+﻿namespace Fifthweek.Api.Subscriptions.Shared
 {
     using System;
     using System.Collections.Generic;

@@ -13,7 +13,8 @@
             typeof(Collections.Shared.CollectionId).Assembly,
             typeof(Identity.Shared.Membership.UserId).Assembly,
             typeof(FileManagement.Shared.FileId).Assembly,
-            typeof(Subscriptions.AutofacRegistration).Assembly
+            typeof(Posts.Shared.PostId).Assembly,
+            typeof(Subscriptions.Shared.SubscriptionId).Assembly
         }
         .Distinct().ToList().AsReadOnly();
     }

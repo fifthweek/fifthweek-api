@@ -5,18 +5,16 @@
 
     using Dapper;
 
-    using Fifthweek.Api.Identity.Membership;
+    using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.Api.Persistence;
     using Fifthweek.CodeGeneration;
-
-    using UserId = Fifthweek.Api.Identity.Shared.Membership.UserId;
 
     [AutoConstructor]
     public partial class SubscriptionOwnership : ISubscriptionOwnership
     {
         private readonly IFifthweekDbContext databaseContext;
 
-        public Task<bool> IsOwnerAsync(UserId userId, SubscriptionId subscriptionId)
+        public Task<bool> IsOwnerAsync(UserId userId, Shared.SubscriptionId subscriptionId)
         {
             if (userId == null)
             {

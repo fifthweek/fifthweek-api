@@ -56,12 +56,15 @@ namespace Fifthweek.Api.Channels.Commands
     using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.Api.Subscriptions;
     using Fifthweek.CodeGeneration;
+
+    using SubscriptionId = Fifthweek.Api.Subscriptions.Shared.SubscriptionId;
+
     public partial class CreateChannelCommand 
     {
         public CreateChannelCommand(
             Requester requester, 
             Fifthweek.Api.Channels.Shared.ChannelId newChannelId, 
-            Fifthweek.Api.Subscriptions.SubscriptionId subscriptionId, 
+            SubscriptionId subscriptionId, 
             Fifthweek.Api.Channels.Shared.ValidChannelName name)
         {
             if (requester == null)

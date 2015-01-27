@@ -6,6 +6,8 @@
     using Fifthweek.Api.Subscriptions;
     using Fifthweek.CodeGeneration;
 
+    using SubscriptionId = Fifthweek.Api.Subscriptions.Shared.SubscriptionId;
+
     [AutoConstructor, AutoEqualityMembers]
     public partial class CreateChannelCommand
     {

@@ -1,11 +1,9 @@
 ﻿namespace Fifthweek.Api.Subscriptions.Commands
 {
-    using Fifthweek.Api.FileManagement;
-    using Fifthweek.Api.Identity.Membership;
+    using Fifthweek.Api.FileManagement.Shared;
     using Fifthweek.Api.Identity.Shared.Membership;
+    using Fifthweek.Api.Subscriptions.Shared;
     using Fifthweek.CodeGeneration;
-
-    using FileId = Fifthweek.Api.FileManagement.Shared.FileId;
 
     [AutoEqualityMembers, AutoConstructor]
     public partial class UpdateSubscriptionCommand

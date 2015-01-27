@@ -1,27 +1,22 @@
-﻿namespace Fifthweek.Api.Subscriptions
+﻿namespace Fifthweek.Api.Subscriptions.Shared
 {
     using System;
     using System.Collections.Generic;
-    using System.Diagnostics.CodeAnalysis;
     using System.Linq;
 
     using Fifthweek.CodeGeneration;
 
     [AutoEqualityMembers]
-    public partial class ValidIntroduction
+    public partial class ValidTagline
     {
         public static readonly string ForbiddenCharacters = "\r\n\t";
-        public static readonly int MinLength = 15; // Must be at least a few words.
-        public static readonly int MaxLength = 250; // Approximately 3 lines of content at 750px in Lato Regular 18px.
+        public static readonly int MinLength = 5;
+        public static readonly int MaxLength = 55; // Need to support XKCD ;) "A webcomic of romance, sarcasm, math, and language."
 
         private const string ForbiddenCharacterMessage = "Must not contain new lines or tabs";
         private static readonly HashSet<char> ForbiddenCharactersHashSet = new HashSet<char>(ForbiddenCharacters);
 
-        [SuppressMessage("StyleCop.CSharp.OrderingRules", "SA1202:ElementsMustBeOrderedByAccess", Justification = "Parse method requires other private static members to be initialized.")]
-        public static readonly ValidIntroduction Default = Parse(
-            "Hello! Thinking of subscribing? Awesome! Subscriptions allow me to produce more of my awesome creations for all you lovely people to see here!");
-
-        private ValidIntroduction()
+        private ValidTagline()
         {
         }
 
@@ -33,24 +28,24 @@
             return string.IsNullOrEmpty(value); // Trimmed types use IsNullOrWhiteSpace
         }
 
-        public static ValidIntroduction Parse(string value)
+        public static ValidTagline Parse(string value)
         {
-            ValidIntroduction retval;
+            ValidTagline retval;
             if (!TryParse(value, out retval))
             {
-                throw new ArgumentException("Invalid introduction", "value");
+                throw new ArgumentException("Invalid tagline", "value");
             }
 
             return retval;
         }
 
-        public static bool TryParse(string value, out ValidIntroduction introduction)
+        public static bool TryParse(string value, out ValidTagline tagline)
         {
             IReadOnlyCollection<string> errorMessages;
-            return TryParse(value, out introduction, out errorMessages);
+            return TryParse(value, out tagline, out errorMessages);
         }
 
-        public static bool TryParse(string value, out ValidIntroduction introduction, out IReadOnlyCollection<string> errorMessages)
+        public static bool TryParse(string value, out ValidTagline tagline, out IReadOnlyCollection<string> errorMessages)
         {
             var errorMessageList = new List<string>();
             errorMessages = errorMessageList;
@@ -75,17 +70,16 @@
 
             if (errorMessageList.Count > 0)
             {
-                introduction = null;
+                tagline = null;
                 return false;
             }
 
-            introduction = new ValidIntroduction
+            tagline = new ValidTagline
             {
                 Value = value
             };
 
             return true;
         }
- 
     }
 }

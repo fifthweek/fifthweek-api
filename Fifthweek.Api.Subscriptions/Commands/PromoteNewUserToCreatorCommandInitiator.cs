@@ -1,11 +1,10 @@
-﻿using System.Threading.Tasks;
-using Fifthweek.Api.Core;
-using Fifthweek.Api.Identity.Membership.Events;
-
-namespace Fifthweek.Api.Subscriptions.Commands
+﻿namespace Fifthweek.Api.Subscriptions.Commands
 {
+    using System.Threading.Tasks;
+
+    using Fifthweek.Api.Core;
+    using Fifthweek.Api.Identity.Membership.Events;
     using Fifthweek.CodeGeneration;
-    using Fifthweek.Shared;
 
     [AutoConstructor]
     public partial class PromoteNewUserToCreatorCommandInitiator : IEventHandler<UserRegisteredEvent>
@@ -14,9 +13,8 @@ namespace Fifthweek.Api.Subscriptions.Commands
 
         public Task HandleAsync(UserRegisteredEvent @event)
         {
-            return promoteNewUserToCreator.HandleAsync(new PromoteNewUserToCreatorCommand(
-                @event.UserId
-            ));
+            return this.promoteNewUserToCreator.HandleAsync(
+                new PromoteNewUserToCreatorCommand(@event.UserId));
         }
     }
 }

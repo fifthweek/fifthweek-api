@@ -20,6 +20,7 @@
 
     using Moq;
 
+    using SubscriptionId = Fifthweek.Api.Subscriptions.Shared.SubscriptionId;
     using UserId = Fifthweek.Api.Identity.Shared.Membership.UserId;
 
     [TestClass]

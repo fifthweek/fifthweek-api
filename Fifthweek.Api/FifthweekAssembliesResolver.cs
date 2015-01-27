@@ -15,13 +15,17 @@
             typeof(Channels.AutofacRegistration).Assembly,
             typeof(Channels.Shared.ChannelId).Assembly,
             typeof(Collections.AutofacRegistration).Assembly,
+            typeof(Collections.Shared.CollectionId).Assembly,
             typeof(Identity.Membership.AutofacRegistration).Assembly,
             typeof(Identity.OAuth.AutofacRegistration).Assembly,
+            typeof(Identity.Shared.Membership.UserId).Assembly,
             typeof(Logging.AutofacRegistration).Assembly,
             typeof(Persistence.AutofacRegistration).Assembly,
             typeof(Posts.AutofacRegistration).Assembly,
+            typeof(Posts.Shared.PostId).Assembly,
             typeof(SendGrid.AutofacRegistration).Assembly,
             typeof(Subscriptions.AutofacRegistration).Assembly,
+            typeof(Subscriptions.Shared.SubscriptionId).Assembly,
             typeof(Azure.AutofacRegistration).Assembly,
             typeof(FileManagement.AutofacRegistration).Assembly
         }

@@ -224,6 +224,10 @@
       <Project>{208f4aca-4012-466f-bc49-7e2c443d3c06}</Project>
       <Name>Fifthweek.Api.Channels</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Fifthweek.Api.Collections.Shared\Fifthweek.Api.Collections.Shared.csproj">
+      <Project>{23b50a6b-d27c-4761-be96-1f90b9408a87}</Project>
+      <Name>Fifthweek.Api.Collections.Shared</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Fifthweek.Api.Collections\Fifthweek.Api.Collections.csproj">
       <Project>{92ff5e2b-f153-433f-92f6-dd580d9e09b8}</Project>
       <Name>Fifthweek.Api.Collections</Name>
@@ -232,9 +236,17 @@
       <Project>{bd52863e-063d-45a5-9ca8-7541804d1313}</Project>
       <Name>Fifthweek.Api.Core</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Fifthweek.Api.FileManagement.Shared\Fifthweek.Api.FileManagement.Shared.csproj">
+      <Project>{3ca706af-5916-414e-9625-fb8fcbbd82f7}</Project>
+      <Name>Fifthweek.Api.FileManagement.Shared</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Fifthweek.Api.FileManagement\Fifthweek.Api.FileManagement.csproj">
       <Project>{3242e7fc-35ce-4e69-b07b-b8dcb3c69348}</Project>
       <Name>Fifthweek.Api.FileManagement</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Fifthweek.Api.Identity.Shared\Fifthweek.Api.Identity.Shared.csproj">
+      <Project>{1b07e9cc-1b0e-49d7-96d6-0f8c58a7c0ca}</Project>
+      <Name>Fifthweek.Api.Identity.Shared</Name>
     </ProjectReference>
     <ProjectReference Include="..\Fifthweek.Api.Identity\Fifthweek.Api.Identity.csproj">
       <Project>{6a2af270-e4d4-4c4e-a88f-807f7b9a03b7}</Project>
@@ -248,6 +260,10 @@
       <Project>{9c18bee3-fab5-4a00-8a94-a1faea370175}</Project>
       <Name>Fifthweek.Api.Persistence</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Fifthweek.Api.Posts.Shared\Fifthweek.Api.Posts.Shared.csproj">
+      <Project>{493fc9f2-6a6b-46c0-9bc9-83f8a3b60f9e}</Project>
+      <Name>Fifthweek.Api.Posts.Shared</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Fifthweek.Api.Posts\Fifthweek.Api.Posts.csproj">
       <Project>{154cbde0-8eeb-44dc-bfa4-769542a24080}</Project>
       <Name>Fifthweek.Api.Posts</Name>
@@ -255,6 +271,10 @@
     <ProjectReference Include="..\Fifthweek.Api.SendGrid\Fifthweek.Api.SendGrid.csproj">
       <Project>{5f5df240-536a-41b6-bfec-4f89940eb053}</Project>
       <Name>Fifthweek.Api.SendGrid</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Fifthweek.Api.Subscriptions.Shared\Fifthweek.Api.Subscriptions.Shared.csproj">
+      <Project>{b2d572a4-86c5-4f16-ab6a-ce87a63e08dd}</Project>
+      <Name>Fifthweek.Api.Subscriptions.Shared</Name>
     </ProjectReference>
     <ProjectReference Include="..\Fifthweek.Api.Subscriptions\Fifthweek.Api.Subscriptions.csproj">
       <Project>{5db142b7-3152-447e-8816-33a90ba9ef76}</Project>
