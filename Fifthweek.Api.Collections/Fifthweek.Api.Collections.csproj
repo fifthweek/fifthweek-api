@@ -76,7 +76,9 @@
     <Compile Include="CollectionId.cs" />
     <Compile Include="CollectionOwnership.cs" />
     <Compile Include="CollectionSecurity.cs" />
+    <Compile Include="Commands\CreateCollectionCommand.cs" />
     <Compile Include="Controllers\CollectionController.cs" />
+    <Compile Include="Controllers\NewCollectionData.cs" />
     <Compile Include="GetChannelsAndCollectionsDbStatement.cs" />
     <Compile Include="GetNewQueuedPostLiveDateLowerBoundDbStatement.cs" />
     <Compile Include="GetCollectionWeeklyReleaseTimesDbStatement.cs" />
@@ -96,6 +98,7 @@
     <Compile Include="Queries\GetLiveDateOfNewQueuedPostQueryHandler.cs" />
     <Compile Include="IGetLiveDateOfNewQueuedPostDbStatement.cs" />
     <Compile Include="QueuedPostLiveDateCalculator.cs" />
+    <Compile Include="ValidCollectionName.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Fifthweek.Api.Core\Fifthweek.Api.Core.csproj">

@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CodeSnippets xmlns="http://schemas.microsoft.com/VisualStudio/2005/CodeSnippet">
+    <CodeSnippet Format="1.0.0">
+      <Header>
+        <Title>Test Method (Bad Request)</Title>
+        <Description>Test scaffolding for HTTP bad request</Description>
+			  <Shortcut>testb</Shortcut>
+      </Header>
+        <Snippet>
+          <Declarations>
+            <Literal>
+              <ID>RequiredParameter</ID>
+              <ToolTip>Replace with required parameter name.</ToolTip>
+              <Default>SomethingImportant</Default>
+            </Literal>
+            <Literal>
+              <ID>Action</ID>
+              <ToolTip>Replace with HTTP request.</ToolTip>
+              <Default>GettingSomething</Default>
+            </Literal>
+          </Declarations>
+          <Code Language="csharp">
+                <![CDATA[[TestMethod]
+[ExpectedException(typeof(BadRequestException))]
+public async Task When$Action$WithoutSpecifying$RequiredParameter$_ItShouldThrowBadRequestException()
+{
+    
+}]]>
+          </Code>
+        </Snippet>
+    </CodeSnippet>
+</CodeSnippets>

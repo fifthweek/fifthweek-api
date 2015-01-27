@@ -36,6 +36,7 @@
         var attributeParameters = ParseAttribute(codeAttribute.Value);
         var strongType = StripTypeOf(attributeParameters[0]);
 #>
+		[Optional]
         public <#= strongType #> <#= typedPropertyName #> { get; set; }
 <#
     }

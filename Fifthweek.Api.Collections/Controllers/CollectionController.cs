@@ -5,17 +5,38 @@
     using System.Web.Http;
     using System.Web.Http.Description;
 
+    using Fifthweek.Api.Collections.Commands;
     using Fifthweek.Api.Collections.Queries;
     using Fifthweek.Api.Core;
-    using Fifthweek.Api.Identity.Membership;
     using Fifthweek.Api.Identity.OAuth;
     using Fifthweek.CodeGeneration;
 
     [RoutePrefix("collections"), AutoConstructor]
     public partial class CollectionController : ApiController
     {
+        private readonly ICommandHandler<CreateCollectionCommand> createCollection;
         private readonly IQueryHandler<GetLiveDateOfNewQueuedPostQuery, DateTime> getLiveDateOfNewQueuedPost;
         private readonly IUserContext userContext;
+        private readonly IGuidCreator guidCreator;
+
+        [Route]
+        public async Task<CollectionId> PostCollectionAsync(NewCollectionData newCollection)
+        {
+            newCollection.AssertBodyProvided("newCollection");
+            newCollection.Parse();
+
+            var requester = this.userContext.GetRequester();
+            var newCollectionId = new CollectionId(this.guidCreator.CreateSqlSequential());
+
+            await this.createCollection.HandleAsync(
+                new CreateCollectionCommand(
+                    requester,
+                    newCollectionId,
+                    newCollection.ChannelId,
+                    newCollection.NameObject));
+
+            return newCollectionId;
+        }
 
         [ResponseType(typeof(DateTime))]
         [Route("{collectionId}/newQueuedPostLiveDate")]

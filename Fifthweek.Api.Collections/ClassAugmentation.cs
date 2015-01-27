@@ -161,12 +161,21 @@ namespace Fifthweek.Api.Collections.Controllers
     using Fifthweek.Api.Identity.Membership;
     using Fifthweek.Api.Identity.OAuth;
     using Fifthweek.CodeGeneration;
+    using Fifthweek.Api.Subscriptions;
+    using Fifthweek.Api.Collections.Commands;
     public partial class CollectionController 
     {
         public CollectionController(
+            Fifthweek.Api.Core.ICommandHandler<Fifthweek.Api.Collections.Commands.CreateCollectionCommand> createCollection, 
             Fifthweek.Api.Core.IQueryHandler<Fifthweek.Api.Collections.Queries.GetLiveDateOfNewQueuedPostQuery,System.DateTime> getLiveDateOfNewQueuedPost, 
-            Fifthweek.Api.Identity.OAuth.IUserContext userContext)
+            Fifthweek.Api.Identity.OAuth.IUserContext userContext, 
+            Fifthweek.Api.Core.IGuidCreator guidCreator)
         {
+            if (createCollection == null)
+            {
+                throw new ArgumentNullException("createCollection");
+            }
+
             if (getLiveDateOfNewQueuedPost == null)
             {
                 throw new ArgumentNullException("getLiveDateOfNewQueuedPost");
@@ -177,8 +186,15 @@ namespace Fifthweek.Api.Collections.Controllers
                 throw new ArgumentNullException("userContext");
             }
 
+            if (guidCreator == null)
+            {
+                throw new ArgumentNullException("guidCreator");
+            }
+
+            this.createCollection = createCollection;
             this.getLiveDateOfNewQueuedPost = getLiveDateOfNewQueuedPost;
             this.userContext = userContext;
+            this.guidCreator = guidCreator;
         }
     }
 
@@ -550,6 +566,87 @@ namespace Fifthweek.Api.Collections.Queries
     }
 
 }
+namespace Fifthweek.Api.Collections.Commands
+{
+    using System;
+    using System.Linq;
+    using Fifthweek.Api.Identity.Membership;
+    using Fifthweek.Api.Subscriptions;
+    using Fifthweek.CodeGeneration;
+    public partial class CreateCollectionCommand 
+    {
+        public CreateCollectionCommand(
+            Fifthweek.Api.Identity.Membership.Requester requester, 
+            Fifthweek.Api.Collections.CollectionId newCollectionId, 
+            Fifthweek.Api.Subscriptions.ChannelId channelId, 
+            Fifthweek.Api.Collections.ValidCollectionName name)
+        {
+            if (requester == null)
+            {
+                throw new ArgumentNullException("requester");
+            }
+
+            if (newCollectionId == null)
+            {
+                throw new ArgumentNullException("newCollectionId");
+            }
+
+            if (channelId == null)
+            {
+                throw new ArgumentNullException("channelId");
+            }
+
+            if (name == null)
+            {
+                throw new ArgumentNullException("name");
+            }
+
+            this.Requester = requester;
+            this.NewCollectionId = newCollectionId;
+            this.ChannelId = channelId;
+            this.Name = name;
+        }
+    }
+
+}
+namespace Fifthweek.Api.Collections.Controllers
+{
+    using System;
+    using System.Linq;
+    using System.Threading.Tasks;
+    using System.Web.Http;
+    using System.Web.Http.Description;
+    using Fifthweek.Api.Collections.Queries;
+    using Fifthweek.Api.Core;
+    using Fifthweek.Api.Identity.Membership;
+    using Fifthweek.Api.Identity.OAuth;
+    using Fifthweek.CodeGeneration;
+    using Fifthweek.Api.Subscriptions;
+    using Fifthweek.Api.Collections.Commands;
+    public partial class NewCollectionData 
+    {
+        public NewCollectionData(
+            Fifthweek.Api.Collections.ValidCollectionName nameObject, 
+            Fifthweek.Api.Subscriptions.ChannelId channelId, 
+            System.String name)
+        {
+            if (channelId == null)
+            {
+                throw new ArgumentNullException("channelId");
+            }
+
+            if (name == null)
+            {
+                throw new ArgumentNullException("name");
+            }
+
+            this.NameObject = nameObject;
+            this.ChannelId = channelId;
+            this.Name = name;
+        }
+    }
+
+}
 
 namespace Fifthweek.Api.Collections
 {
@@ -744,6 +841,155 @@ namespace Fifthweek.Api.Collections.Queries
     }
 
 }
+namespace Fifthweek.Api.Collections.Commands
+{
+    using System;
+    using System.Linq;
+    using Fifthweek.Api.Identity.Membership;
+    using Fifthweek.Api.Subscriptions;
+    using Fifthweek.CodeGeneration;
+    public partial class CreateCollectionCommand 
+    {
+        public override string ToString()
+        {
+            return string.Format("CreateCollectionCommand({0}, {1}, {2}, {3})", this.Requester == null ? "null" : this.Requester.ToString(), this.NewCollectionId == null ? "null" : this.NewCollectionId.ToString(), this.ChannelId == null ? "null" : this.ChannelId.ToString(), this.Name == null ? "null" : this.Name.ToString());
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj))
+            {
+                return false;
+            }
+
+            if (ReferenceEquals(this, obj))
+            {
+                return true;
+            }
+
+            if (obj.GetType() != this.GetType())
+            {
+                return false;
+            }
+
+            return this.Equals((CreateCollectionCommand)obj);
+        }
+
+        public override int GetHashCode()
+        {
+            unchecked
+            {
+                int hashCode = 0;
+                hashCode = (hashCode * 397) ^ (this.Requester != null ? this.Requester.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.NewCollectionId != null ? this.NewCollectionId.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.ChannelId != null ? this.ChannelId.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.Name != null ? this.Name.GetHashCode() : 0);
+                return hashCode;
+            }
+        }
+
+        protected bool Equals(CreateCollectionCommand other)
+        {
+            if (!object.Equals(this.Requester, other.Requester))
+            {
+                return false;
+            }
+
+            if (!object.Equals(this.NewCollectionId, other.NewCollectionId))
+            {
+                return false;
+            }
+
+            if (!object.Equals(this.ChannelId, other.ChannelId))
+            {
+                return false;
+            }
+
+            if (!object.Equals(this.Name, other.Name))
+            {
+                return false;
+            }
+
+            return true;
+        }
+    }
+
+}
+namespace Fifthweek.Api.Collections.Controllers
+{
+    using System;
+    using System.Linq;
+    using System.Threading.Tasks;
+    using System.Web.Http;
+    using System.Web.Http.Description;
+    using Fifthweek.Api.Collections.Queries;
+    using Fifthweek.Api.Core;
+    using Fifthweek.Api.Identity.Membership;
+    using Fifthweek.Api.Identity.OAuth;
+    using Fifthweek.CodeGeneration;
+    using Fifthweek.Api.Subscriptions;
+    using Fifthweek.Api.Collections.Commands;
+    public partial class NewCollectionData 
+    {
+        public override string ToString()
+        {
+            return string.Format("NewCollectionData({0}, {1}, \"{2}\")", this.NameObject == null ? "null" : this.NameObject.ToString(), this.ChannelId == null ? "null" : this.ChannelId.ToString(), this.Name == null ? "null" : this.Name.ToString());
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj))
+            {
+                return false;
+            }
+
+            if (ReferenceEquals(this, obj))
+            {
+                return true;
+            }
+
+            if (obj.GetType() != this.GetType())
+            {
+                return false;
+            }
+
+            return this.Equals((NewCollectionData)obj);
+        }
+
+        public override int GetHashCode()
+        {
+            unchecked
+            {
+                int hashCode = 0;
+                hashCode = (hashCode * 397) ^ (this.NameObject != null ? this.NameObject.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.ChannelId != null ? this.ChannelId.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.Name != null ? this.Name.GetHashCode() : 0);
+                return hashCode;
+            }
+        }
+
+        protected bool Equals(NewCollectionData other)
+        {
+            if (!object.Equals(this.NameObject, other.NameObject))
+            {
+                return false;
+            }
+
+            if (!object.Equals(this.ChannelId, other.ChannelId))
+            {
+                return false;
+            }
+
+            if (!object.Equals(this.Name, other.Name))
+            {
+                return false;
+            }
+
+            return true;
+        }
+    }
+
+}
 namespace Fifthweek.Api.Collections
 {
     using System;
@@ -806,5 +1052,121 @@ namespace Fifthweek.Api.Collections
         }
     }
 
+}
+namespace Fifthweek.Api.Collections
+{
+    using System;
+    using System.Linq;
+    using Fifthweek.CodeGeneration;
+    using System.Threading.Tasks;
+    using Dapper;
+    using Fifthweek.Api.Core;
+    using Fifthweek.Api.Identity.Membership;
+    using Fifthweek.Api.Persistence;
+    using System.Collections.Generic;
+    using Fifthweek.Api.Collections.Queries;
+    using System.Text;
+    using Fifthweek.Api.Subscriptions;
+    public partial class ValidCollectionName 
+    {
+        public override string ToString()
+        {
+            return string.Format("ValidCollectionName(\"{0}\")", this.Value == null ? "null" : this.Value.ToString());
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj))
+            {
+                return false;
+            }
+
+            if (ReferenceEquals(this, obj))
+            {
+                return true;
+            }
+
+            if (obj.GetType() != this.GetType())
+            {
+                return false;
+            }
+
+            return this.Equals((ValidCollectionName)obj);
+        }
+
+        public override int GetHashCode()
+        {
+            unchecked
+            {
+                int hashCode = 0;
+                hashCode = (hashCode * 397) ^ (this.Value != null ? this.Value.GetHashCode() : 0);
+                return hashCode;
+            }
+        }
+
+        protected bool Equals(ValidCollectionName other)
+        {
+            if (!object.Equals(this.Value, other.Value))
+            {
+                return false;
+            }
+
+            return true;
+        }
+    }
+
+}
+namespace Fifthweek.Api.Collections.Controllers
+{
+    using System;
+    using System.Linq;
+    using System.Threading.Tasks;
+    using System.Web.Http;
+    using System.Web.Http.Description;
+    using Fifthweek.Api.Collections.Queries;
+    using Fifthweek.Api.Core;
+    using Fifthweek.Api.Identity.Membership;
+    using Fifthweek.Api.Identity.OAuth;
+    using Fifthweek.CodeGeneration;
+    using Fifthweek.Api.Subscriptions;
+    using Fifthweek.Api.Collections.Commands;
+    public partial class NewCollectionData 
+    {
+		[Optional]
+        public ValidCollectionName NameObject { get; set; }
+    }
+
+    public static partial class NewCollectionDataExtensions
+    {
+        public static void Parse(this NewCollectionData target)
+        {
+            var modelStateDictionary = new System.Web.Http.ModelBinding.ModelStateDictionary();
+
+            if (true || !ValidCollectionName.IsEmpty(target.Name))
+            {
+                ValidCollectionName @object;
+                System.Collections.Generic.IReadOnlyCollection<string> errorMessages;
+                if (ValidCollectionName.TryParse(target.Name, out @object, out errorMessages))
+                {
+                    target.NameObject = @object;
+                }
+                else
+                {
+                    var modelState = new System.Web.Http.ModelBinding.ModelState();
+                    foreach (var errorMessage in errorMessages)
+                    {
+                        modelState.Errors.Add(errorMessage);
+                    }
+
+                    modelStateDictionary.Add("Name", modelState);
+                }
+            }
+
+            if (!modelStateDictionary.IsValid)
+            {
+                throw new Fifthweek.Api.Core.ModelValidationException(modelStateDictionary);
+            }
+        }    
+    }
 }
 
