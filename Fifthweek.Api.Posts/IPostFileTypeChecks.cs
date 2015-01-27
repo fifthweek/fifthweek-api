@@ -4,6 +4,8 @@
 
     using Fifthweek.Api.FileManagement;
 
+    using FileId = Fifthweek.Api.FileManagement.Shared.FileId;
+
     public interface IPostFileTypeChecks
     {
         Task<bool> IsValidForFilePostAsync(FileId fileId);

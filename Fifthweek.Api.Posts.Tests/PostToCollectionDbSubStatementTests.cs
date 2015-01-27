@@ -17,6 +17,7 @@
     using Moq;
 
     using ChannelId = Fifthweek.Api.Channels.Shared.ChannelId;
+    using FileId = Fifthweek.Api.FileManagement.Shared.FileId;
     using UserId = Fifthweek.Api.Identity.Shared.Membership.UserId;
 
     [TestClass]

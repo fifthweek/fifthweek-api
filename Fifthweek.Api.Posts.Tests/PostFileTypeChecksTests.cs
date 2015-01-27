@@ -12,6 +12,8 @@
 
     using Moq;
 
+    using FileId = Fifthweek.Api.FileManagement.Shared.FileId;
+
     [TestClass]
     public class PostFileTypeChecksTests
     {

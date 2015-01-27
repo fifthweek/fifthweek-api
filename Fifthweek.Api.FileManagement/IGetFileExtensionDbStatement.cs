@@ -4,6 +4,6 @@
 
     public interface IGetFileExtensionDbStatement
     {
-        Task<string> ExecuteAsync(FileId fileId);
+        Task<string> ExecuteAsync(Shared.FileId fileId);
     }
 }

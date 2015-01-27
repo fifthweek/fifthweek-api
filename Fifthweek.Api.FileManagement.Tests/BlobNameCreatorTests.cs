@@ -5,6 +5,7 @@
     using System.Text;
     using System.Web;
 
+    using Fifthweek.Api.FileManagement.Shared;
     using Fifthweek.Api.Identity.Membership;
     using Fifthweek.Shared;
 

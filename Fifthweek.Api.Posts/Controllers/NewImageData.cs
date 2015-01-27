@@ -6,6 +6,8 @@
     using Fifthweek.Api.FileManagement;
     using Fifthweek.CodeGeneration;
 
+    using FileId = Fifthweek.Api.FileManagement.Shared.FileId;
+
     [AutoEqualityMembers]
     public partial class NewImageData
     {

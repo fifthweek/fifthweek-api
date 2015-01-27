@@ -1,10 +1,8 @@
-namespace Fifthweek.Api.FileManagement
+namespace Fifthweek.Api.FileManagement.Shared
 {
     using System.Threading.Tasks;
 
-    using Fifthweek.Api.Identity.Membership;
-
-    using UserId = Fifthweek.Api.Identity.Shared.Membership.UserId;
+    using Fifthweek.Api.Identity.Shared.Membership;
 
     public interface IFileSecurity
     {

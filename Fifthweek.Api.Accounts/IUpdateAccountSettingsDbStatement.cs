@@ -6,6 +6,7 @@ namespace Fifthweek.Api.Accounts
     using Fifthweek.Api.Identity.Membership;
     using Fifthweek.Api.Identity.Shared.Membership;
 
+    using FileId = Fifthweek.Api.FileManagement.Shared.FileId;
     using UserId = Fifthweek.Api.Identity.Shared.Membership.UserId;
 
     public interface IUpdateAccountSettingsDbStatement

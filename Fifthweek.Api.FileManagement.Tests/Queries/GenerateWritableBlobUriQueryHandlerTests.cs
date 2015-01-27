@@ -6,6 +6,7 @@
     using Fifthweek.Api.Azure;
     using Fifthweek.Api.Core;
     using Fifthweek.Api.FileManagement.Queries;
+    using Fifthweek.Api.FileManagement.Shared;
     using Fifthweek.Api.Identity.Membership;
     using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.Api.Identity.Tests.Shared.Membership;

@@ -5,6 +5,6 @@
 
     public interface ISetFileUploadCompleteDbStatement
     {
-        Task ExecuteAsync(FileId fileId, long blobSize, DateTime timeStamp);
+        Task ExecuteAsync(Shared.FileId fileId, long blobSize, DateTime timeStamp);
     }
 }

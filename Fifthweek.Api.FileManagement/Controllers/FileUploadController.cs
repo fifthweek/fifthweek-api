@@ -8,6 +8,7 @@
     using Fifthweek.Api.Core;
     using Fifthweek.Api.FileManagement.Commands;
     using Fifthweek.Api.FileManagement.Queries;
+    using Fifthweek.Api.FileManagement.Shared;
     using Fifthweek.Api.Identity.Membership;
     using Fifthweek.Api.Identity.OAuth;
     using Fifthweek.CodeGeneration;

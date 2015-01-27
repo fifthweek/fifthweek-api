@@ -14,7 +14,7 @@
     {
         private readonly IFifthweekDbContext databaseContext;
 
-        public async Task<string> ExecuteAsync(FileId fileId)
+        public async Task<string> ExecuteAsync(Shared.FileId fileId)
         {
             fileId.AssertNotNull("fileId");
 

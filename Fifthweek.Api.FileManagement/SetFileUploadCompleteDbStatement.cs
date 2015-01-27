@@ -12,7 +12,7 @@
     {
         private readonly IFifthweekDbContext fifthweekDbContext;
 
-        public Task ExecuteAsync(FileId fileId, long blobSize, DateTime timeStamp)
+        public Task ExecuteAsync(Shared.FileId fileId, long blobSize, DateTime timeStamp)
         {
             fileId.AssertNotNull("fileId");
 

@@ -7,6 +7,8 @@
     using Fifthweek.CodeGeneration;
     using Fifthweek.Shared;
 
+    using FileId = Fifthweek.Api.FileManagement.Shared.FileId;
+
     [AutoConstructor]
     public partial class PostFileTypeChecks : IPostFileTypeChecks
     {

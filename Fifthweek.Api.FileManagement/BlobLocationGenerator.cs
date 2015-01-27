@@ -8,7 +8,7 @@
 
     public class BlobLocationGenerator : IBlobLocationGenerator
     {
-        public BlobLocation GetBlobLocation(UserId userId, FileId fileId, string filePurpose)
+        public BlobLocation GetBlobLocation(UserId userId, Shared.FileId fileId, string filePurpose)
         {
             var purpose = FilePurposes.TryGetFilePurpose(filePurpose);
             if (purpose.IsPublic)

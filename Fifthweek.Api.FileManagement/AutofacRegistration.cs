@@ -3,6 +3,7 @@
     using Autofac;
 
     using Fifthweek.Api.Core;
+    using Fifthweek.Api.FileManagement.Shared;
     using Fifthweek.Shared;
 
     public class AutofacRegistration : IAutofacRegistration

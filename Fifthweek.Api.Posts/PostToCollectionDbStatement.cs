@@ -9,6 +9,8 @@ namespace Fifthweek.Api.Posts
     using Fifthweek.Api.Persistence;
     using Fifthweek.CodeGeneration;
 
+    using FileId = Fifthweek.Api.FileManagement.Shared.FileId;
+
     [AutoConstructor]
     public partial class PostToCollectionDbStatement : IPostToCollectionDbStatement
     {

@@ -4,6 +4,6 @@
 
     public interface IGetFileWaitingForUploadDbStatement
     {
-        Task<FileWaitingForUpload> ExecuteAsync(FileId fileId);
+        Task<FileWaitingForUpload> ExecuteAsync(Shared.FileId fileId);
     }
 }

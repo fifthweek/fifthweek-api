@@ -5,6 +5,8 @@
     using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.CodeGeneration;
 
+    using FileId = Fifthweek.Api.FileManagement.Shared.FileId;
+
     [AutoEqualityMembers, AutoConstructor]
     public partial class UpdateSubscriptionCommand
     {

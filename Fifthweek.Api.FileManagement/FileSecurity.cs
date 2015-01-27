@@ -3,17 +3,16 @@
     using System.Threading.Tasks;
 
     using Fifthweek.Api.Core;
-    using Fifthweek.Api.Identity.Membership;
+    using Fifthweek.Api.FileManagement.Shared;
+    using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.CodeGeneration;
-
-    using UserId = Fifthweek.Api.Identity.Shared.Membership.UserId;
 
     [AutoConstructor]
     public partial class FileSecurity : IFileSecurity
     {
         private readonly IFileOwnership fileOwnership;
 
-        public Task<bool> IsUsageAllowedAsync(UserId requester, FileId fileId)
+        public Task<bool> IsUsageAllowedAsync(UserId requester, Shared.FileId fileId)
         {
             requester.AssertNotNull("requester");
             fileId.AssertNotNull("fileId");
@@ -21,7 +20,7 @@
             return this.fileOwnership.IsOwnerAsync(requester, fileId);
         }
 
-        public async Task AssertUsageAllowedAsync(UserId requester, FileId fileId)
+        public async Task AssertUsageAllowedAsync(UserId requester, Shared.FileId fileId)
         {
             requester.AssertNotNull("requester");
             fileId.AssertNotNull("fileId");

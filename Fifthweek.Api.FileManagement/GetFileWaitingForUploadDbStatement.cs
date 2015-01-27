@@ -7,18 +7,16 @@
     using Dapper;
 
     using Fifthweek.Api.Core;
-    using Fifthweek.Api.Identity.Membership;
+    using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.Api.Persistence;
     using Fifthweek.CodeGeneration;
-
-    using UserId = Fifthweek.Api.Identity.Shared.Membership.UserId;
 
     [AutoConstructor]
     public partial class GetFileWaitingForUploadDbStatement : IGetFileWaitingForUploadDbStatement
     {
         private readonly IFifthweekDbContext fifthweekDbContext;
 
-        public async Task<FileWaitingForUpload> ExecuteAsync(FileId fileId)
+        public async Task<FileWaitingForUpload> ExecuteAsync(Shared.FileId fileId)
         {
             fileId.AssertNotNull("fileId");
 
@@ -39,7 +37,7 @@
                 throw new InvalidOperationException("The File " + fileId + " couldn't be found.");
             }
 
-            return new FileWaitingForUpload(new FileId(result.Id), new UserId(result.UserId), result.FileNameWithoutExtension, result.FileExtension, result.Purpose);
+            return new FileWaitingForUpload(new Shared.FileId(result.Id), new UserId(result.UserId), result.FileNameWithoutExtension, result.FileExtension, result.Purpose);
         }
     }
 }

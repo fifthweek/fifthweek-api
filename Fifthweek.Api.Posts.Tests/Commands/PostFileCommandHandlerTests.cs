@@ -6,6 +6,7 @@
     using Fifthweek.Api.Collections;
     using Fifthweek.Api.Core;
     using Fifthweek.Api.FileManagement;
+    using Fifthweek.Api.FileManagement.Shared;
     using Fifthweek.Api.Identity.Membership;
     using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.Api.Identity.Tests.Shared.Membership;
@@ -16,6 +17,7 @@
 
     using Moq;
 
+    using FileId = Fifthweek.Api.FileManagement.Shared.FileId;
     using UserId = Fifthweek.Api.Identity.Shared.Membership.UserId;
 
     [TestClass]

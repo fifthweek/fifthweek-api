@@ -15,6 +15,7 @@ namespace Fifthweek.Api.Accounts.Commands
     using System.Threading.Tasks;
     using Fifthweek.Api.Core;
 
+    using FileId = Fifthweek.Api.FileManagement.Shared.FileId;
     using UserId = Fifthweek.Api.Identity.Shared.Membership.UserId;
 
     public partial class UpdateAccountSettingsCommand 
@@ -25,7 +26,7 @@ namespace Fifthweek.Api.Accounts.Commands
             ValidUsername newUsername, 
             ValidEmail newEmail, 
             ValidPassword newPassword, 
-            Fifthweek.Api.FileManagement.FileId newProfileImageId)
+            FileId newProfileImageId)
         {
             if (requester == null)
             {
@@ -72,6 +73,7 @@ namespace Fifthweek.Api.Accounts.Commands
     using System;
     using System.Linq;
     using Fifthweek.Api.FileManagement;
+    using Fifthweek.Api.FileManagement.Shared;
     using Fifthweek.Api.Identity.Membership;
     using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.CodeGeneration;
@@ -82,7 +84,7 @@ namespace Fifthweek.Api.Accounts.Commands
         public UpdateAccountSettingsCommandHandler(
             Fifthweek.Api.Accounts.IUpdateAccountSettingsDbStatement updateAccountSettings, 
             IRequesterSecurity requesterSecurity, 
-            Fifthweek.Api.FileManagement.IFileSecurity fileSecurity)
+            IFileSecurity fileSecurity)
         {
             if (updateAccountSettings == null)
             {
@@ -194,12 +196,13 @@ namespace Fifthweek.Api.Accounts
     using Fifthweek.CodeGeneration;
 
     using Email = Fifthweek.Api.Identity.Shared.Membership.Email;
+    using FileId = Fifthweek.Api.FileManagement.Shared.FileId;
 
     public partial class GetAccountSettingsResult 
     {
         public GetAccountSettingsResult(
             Email email, 
-            Fifthweek.Api.FileManagement.FileId profileImageFileId)
+            FileId profileImageFileId)
         {
             if (email == null)
             {

@@ -10,7 +10,7 @@ namespace Fifthweek.Api.FileManagement
     public interface IAddNewFileDbStatement
     {
         Task ExecuteAsync(
-            FileId fileId,
+            Shared.FileId fileId,
             UserId userId,
             string fileNameWithoutExtension,
             string fileExtension,

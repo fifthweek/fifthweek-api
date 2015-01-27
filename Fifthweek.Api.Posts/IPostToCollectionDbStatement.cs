@@ -6,6 +6,8 @@ namespace Fifthweek.Api.Posts
     using Fifthweek.Api.Collections;
     using Fifthweek.Api.FileManagement;
 
+    using FileId = Fifthweek.Api.FileManagement.Shared.FileId;
+
     public interface IPostToCollectionDbStatement
     {
         Task ExecuteAsync(

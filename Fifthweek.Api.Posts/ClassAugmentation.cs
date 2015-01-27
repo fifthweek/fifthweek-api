@@ -283,13 +283,16 @@ namespace Fifthweek.Api.Posts.Commands
     using System.Collections.Generic;
     using System.Text;
     using Dapper;
+
+    using FileId = Fifthweek.Api.FileManagement.Shared.FileId;
+
     public partial class PostFileCommand 
     {
         public PostFileCommand(
             Requester requester, 
             Fifthweek.Api.Posts.PostId newPostId, 
             Fifthweek.Api.Collections.CollectionId collectionId, 
-            Fifthweek.Api.FileManagement.FileId fileId, 
+            FileId fileId, 
             Fifthweek.Api.Posts.ValidComment comment, 
             System.Nullable<System.DateTime> scheduledPostDate, 
             System.Boolean isQueued)
@@ -334,6 +337,8 @@ namespace Fifthweek.Api.Posts.Commands
 {
     using System;
     using System.Linq;
+
+    using Fifthweek.Api.FileManagement.Shared;
     using Fifthweek.Api.Identity.Membership;
     using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.CodeGeneration;
@@ -351,7 +356,7 @@ namespace Fifthweek.Api.Posts.Commands
     {
         public PostFileCommandHandler(
             Fifthweek.Api.Collections.ICollectionSecurity collectionSecurity, 
-            Fifthweek.Api.FileManagement.IFileSecurity fileSecurity, 
+            IFileSecurity fileSecurity, 
             IRequesterSecurity requesterSecurity, 
             Fifthweek.Api.Posts.IPostFileTypeChecks postFileTypeChecks, 
             Fifthweek.Api.Posts.IPostToCollectionDbStatement postToCollectionDbStatement)
@@ -407,13 +412,16 @@ namespace Fifthweek.Api.Posts.Commands
     using System.Collections.Generic;
     using System.Text;
     using Dapper;
+
+    using FileId = Fifthweek.Api.FileManagement.Shared.FileId;
+
     public partial class PostImageCommand 
     {
         public PostImageCommand(
             Requester requester, 
             Fifthweek.Api.Posts.PostId newPostId, 
             Fifthweek.Api.Collections.CollectionId collectionId, 
-            Fifthweek.Api.FileManagement.FileId imageFileId, 
+            FileId imageFileId, 
             Fifthweek.Api.Posts.ValidComment comment, 
             System.Nullable<System.DateTime> scheduledPostDate, 
             System.Boolean isQueued)
@@ -458,6 +466,8 @@ namespace Fifthweek.Api.Posts.Commands
 {
     using System;
     using System.Linq;
+
+    using Fifthweek.Api.FileManagement.Shared;
     using Fifthweek.Api.Identity.Membership;
     using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.CodeGeneration;
@@ -475,7 +485,7 @@ namespace Fifthweek.Api.Posts.Commands
     {
         public PostImageCommandHandler(
             Fifthweek.Api.Collections.ICollectionSecurity collectionSecurity, 
-            Fifthweek.Api.FileManagement.IFileSecurity fileSecurity, 
+            IFileSecurity fileSecurity, 
             IRequesterSecurity requesterSecurity, 
             Fifthweek.Api.Posts.IPostFileTypeChecks postFileTypeChecks, 
             Fifthweek.Api.Posts.IPostToCollectionDbStatement postToCollectionDbStatement)
@@ -992,6 +1002,7 @@ namespace Fifthweek.Api.Posts.Queries
     using Fifthweek.Shared;
 
     using ChannelId = Fifthweek.Api.Channels.Shared.ChannelId;
+    using FileId = Fifthweek.Api.FileManagement.Shared.FileId;
 
     public partial class BacklogPost 
     {
@@ -1000,8 +1011,8 @@ namespace Fifthweek.Api.Posts.Queries
             ChannelId channelId, 
             Fifthweek.Api.Collections.CollectionId collectionId, 
             Fifthweek.Api.Posts.Comment comment, 
-            Fifthweek.Api.FileManagement.FileId fileId, 
-            Fifthweek.Api.FileManagement.FileId imageId, 
+            FileId fileId, 
+            FileId imageId, 
             System.Boolean scheduledByQueue, 
             System.DateTime liveDate)
         {
@@ -1231,6 +1242,7 @@ namespace Fifthweek.Api.Posts.Queries
     using Fifthweek.Shared;
 
     using ChannelId = Fifthweek.Api.Channels.Shared.ChannelId;
+    using FileId = Fifthweek.Api.FileManagement.Shared.FileId;
 
     public partial class NewsfeedPost 
     {
@@ -1239,8 +1251,8 @@ namespace Fifthweek.Api.Posts.Queries
             ChannelId channelId, 
             Fifthweek.Api.Collections.CollectionId collectionId, 
             Fifthweek.Api.Posts.Comment comment, 
-            Fifthweek.Api.FileManagement.FileId fileId, 
-            Fifthweek.Api.FileManagement.FileId imageId, 
+            FileId fileId, 
+            FileId imageId, 
             System.DateTime liveDate)
         {
             if (postId == null)
@@ -2598,6 +2610,7 @@ namespace Fifthweek.Api.Posts.Queries
     using Fifthweek.Shared;
 
     using ChannelId = Fifthweek.Api.Channels.Shared.ChannelId;
+    using FileId = Fifthweek.Api.FileManagement.Shared.FileId;
 
     public partial class BacklogPost 
     {
@@ -2628,8 +2641,8 @@ namespace Fifthweek.Api.Posts.Queries
             public ChannelId ChannelId { get; set; }
             public Fifthweek.Api.Collections.CollectionId CollectionId { get; set; }
             public Fifthweek.Api.Posts.Comment Comment { get; set; }
-            public Fifthweek.Api.FileManagement.FileId FileId { get; set; }
-            public Fifthweek.Api.FileManagement.FileId ImageId { get; set; }
+            public FileId FileId { get; set; }
+            public FileId ImageId { get; set; }
             public System.Boolean ScheduledByQueue { get; set; }
             public System.DateTime LiveDate { get; set; }
 
@@ -2667,6 +2680,7 @@ namespace Fifthweek.Api.Posts.Queries
     using Fifthweek.Shared;
 
     using ChannelId = Fifthweek.Api.Channels.Shared.ChannelId;
+    using FileId = Fifthweek.Api.FileManagement.Shared.FileId;
 
     public partial class NewsfeedPost 
     {
@@ -2696,8 +2710,8 @@ namespace Fifthweek.Api.Posts.Queries
             public ChannelId ChannelId { get; set; }
             public Fifthweek.Api.Collections.CollectionId CollectionId { get; set; }
             public Fifthweek.Api.Posts.Comment Comment { get; set; }
-            public Fifthweek.Api.FileManagement.FileId FileId { get; set; }
-            public Fifthweek.Api.FileManagement.FileId ImageId { get; set; }
+            public FileId FileId { get; set; }
+            public FileId ImageId { get; set; }
             public System.DateTime LiveDate { get; set; }
 
             public NewsfeedPost Build()

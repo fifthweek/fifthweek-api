@@ -5,6 +5,7 @@
     using Fifthweek.CodeGeneration;
 
     using Email = Fifthweek.Api.Identity.Shared.Membership.Email;
+    using FileId = Fifthweek.Api.FileManagement.Shared.FileId;
 
     [AutoConstructor]
     [AutoEqualityMembers]

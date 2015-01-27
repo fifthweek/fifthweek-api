@@ -5,18 +5,17 @@
     using Dapper;
 
     using Fifthweek.Api.Core;
-    using Fifthweek.Api.Identity.Membership;
+    using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.Api.Persistence;
     using Fifthweek.CodeGeneration;
 
-    using UserId = Fifthweek.Api.Identity.Shared.Membership.UserId;
 
     [AutoConstructor]
     public partial class FileOwnership : IFileOwnership
     {
         private readonly IFifthweekDbContext fifthweekDbContext;
 
-        public Task<bool> IsOwnerAsync(UserId userId, FileId fileId)
+        public Task<bool> IsOwnerAsync(UserId userId, Shared.FileId fileId)
         {
             userId.AssertNotNull("userId");
             fileId.AssertNotNull("fileId");

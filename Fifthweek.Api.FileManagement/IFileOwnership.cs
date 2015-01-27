@@ -8,6 +8,6 @@ namespace Fifthweek.Api.FileManagement
 
     public interface IFileOwnership
     {
-        Task<bool> IsOwnerAsync(UserId userId, FileId fileId);
+        Task<bool> IsOwnerAsync(UserId userId, Shared.FileId fileId);
     }
 }

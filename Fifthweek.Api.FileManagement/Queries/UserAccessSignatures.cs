@@ -3,10 +3,8 @@
     using System.Collections.Generic;
 
     using Fifthweek.Api.Azure;
-    using Fifthweek.Api.Identity.Membership;
+    using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.CodeGeneration;
-
-    using UserId = Fifthweek.Api.Identity.Shared.Membership.UserId;
 
     [AutoConstructor]
     public partial class UserAccessSignatures

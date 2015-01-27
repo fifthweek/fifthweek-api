@@ -125,14 +125,12 @@
     <Compile Include="Controllers\FileUploadController.cs" />
     <Compile Include="Controllers\GrantedUpload.cs" />
     <Compile Include="Controllers\UploadRequest.cs" />
-    <Compile Include="FileId.cs" />
     <Compile Include="FileOwnership.cs" />
     <Compile Include="FileSecurity.cs" />
     <Compile Include="FileWaitingForUpload.cs" />
     <Compile Include="IScheduleGarbageCollectionStatement.cs" />
     <Compile Include="IBlobLocationGenerator.cs" />
     <Compile Include="IFileOwnership.cs" />
-    <Compile Include="IFileSecurity.cs" />
     <Compile Include="GetFileExtensionDbStatement.cs" />
     <Compile Include="IGetFileExtensionDbStatement.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

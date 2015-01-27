@@ -310,6 +310,9 @@ namespace Fifthweek.Api.Subscriptions.Commands
     using Fifthweek.Api.Identity.Membership.Events;
     using Fifthweek.Api.FileManagement;
     using Fifthweek.Api.Channels.Shared;
+
+    using FileId = Fifthweek.Api.FileManagement.Shared.FileId;
+
     public partial class UpdateSubscriptionCommand 
     {
         public UpdateSubscriptionCommand(
@@ -319,7 +322,7 @@ namespace Fifthweek.Api.Subscriptions.Commands
             Fifthweek.Api.Subscriptions.ValidTagline tagline, 
             Fifthweek.Api.Subscriptions.ValidIntroduction introduction, 
             Fifthweek.Api.Subscriptions.ValidDescription description, 
-            Fifthweek.Api.FileManagement.FileId headerImageFileId, 
+            FileId headerImageFileId, 
             Fifthweek.Api.Subscriptions.ValidExternalVideoUrl video)
         {
             if (requester == null)
@@ -364,6 +367,7 @@ namespace Fifthweek.Api.Subscriptions.Commands
     using System;
     using System.Linq;
     using Fifthweek.Api.Channels;
+    using Fifthweek.Api.FileManagement.Shared;
     using Fifthweek.Api.Identity.Membership;
     using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.CodeGeneration;
@@ -380,7 +384,7 @@ namespace Fifthweek.Api.Subscriptions.Commands
     {
         public UpdateSubscriptionCommandHandler(
             Fifthweek.Api.Subscriptions.ISubscriptionSecurity subscriptionSecurity, 
-            Fifthweek.Api.FileManagement.IFileSecurity fileSecurity, 
+            IFileSecurity fileSecurity, 
             IRequesterSecurity requesterSecurity, 
             Fifthweek.Api.Persistence.IFifthweekDbContext databaseContext)
         {
