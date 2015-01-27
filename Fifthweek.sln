@@ -135,14 +135,29 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fifthweek.Api.Channels.Shared", "Fifthweek.Api.Channels.Shared\Fifthweek.Api.Channels.Shared.csproj", "{DF1BB4E7-5315-4E5C-BA73-6DFA4D9E7564}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fifthweek.Api.Collections.Shared", "Fifthweek.Api.Collections.Shared\Fifthweek.Api.Collections.Shared.csproj", "{23B50A6B-D27C-4761-BE96-1F90B9408A87}"
+	ProjectSection(ProjectDependencies) = postProject
+		{9C18BEE3-FAB5-4A00-8A94-A1FAEA370175} = {9C18BEE3-FAB5-4A00-8A94-A1FAEA370175}
+	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fifthweek.Api.FileManagement.Shared", "Fifthweek.Api.FileManagement.Shared\Fifthweek.Api.FileManagement.Shared.csproj", "{3CA706AF-5916-414E-9625-FB8FCBBD82F7}"
+	ProjectSection(ProjectDependencies) = postProject
+		{9C18BEE3-FAB5-4A00-8A94-A1FAEA370175} = {9C18BEE3-FAB5-4A00-8A94-A1FAEA370175}
+	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fifthweek.Api.Identity.Shared", "Fifthweek.Api.Identity.Shared\Fifthweek.Api.Identity.Shared.csproj", "{1B07E9CC-1B0E-49D7-96D6-0F8C58A7C0CA}"
+	ProjectSection(ProjectDependencies) = postProject
+		{9C18BEE3-FAB5-4A00-8A94-A1FAEA370175} = {9C18BEE3-FAB5-4A00-8A94-A1FAEA370175}
+	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fifthweek.Api.Posts.Shared", "Fifthweek.Api.Posts.Shared\Fifthweek.Api.Posts.Shared.csproj", "{493FC9F2-6A6B-46C0-9BC9-83F8A3B60F9E}"
+	ProjectSection(ProjectDependencies) = postProject
+		{9C18BEE3-FAB5-4A00-8A94-A1FAEA370175} = {9C18BEE3-FAB5-4A00-8A94-A1FAEA370175}
+	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fifthweek.Api.Subscriptions.Shared", "Fifthweek.Api.Subscriptions.Shared\Fifthweek.Api.Subscriptions.Shared.csproj", "{B2D572A4-86C5-4F16-AB6A-CE87A63E08DD}"
+	ProjectSection(ProjectDependencies) = postProject
+		{9C18BEE3-FAB5-4A00-8A94-A1FAEA370175} = {9C18BEE3-FAB5-4A00-8A94-A1FAEA370175}
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
