@@ -2,6 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.ComponentModel;
     using System.Data.SqlClient;
     using System.Diagnostics;
     using System.Threading;
@@ -115,6 +116,11 @@
 
             private bool IsTransientInner(Exception exception)
             {
+                return this.CustomStrategyIsTransient(exception) || SqlDatabaseStrategy.IsTransient(exception) || StorageStrategy.IsTransient(exception);
+            }
+
+            private bool CustomStrategyIsTransient(Exception exception)
+            {
                 bool isTransient = false;
 
                 var sqlException = exception as SqlException;
@@ -131,8 +137,17 @@
                         }
                     }
                 }
-
-                isTransient = isTransient || SqlDatabaseStrategy.IsTransient(exception) || StorageStrategy.IsTransient(exception);
+                else
+                {
+                    var win32Exception = exception as Win32Exception;
+                    if (win32Exception != null)
+                    {
+                        if (win32Exception.Message.Contains("An existing connection was forcibly closed by the remote host"))
+                        {
+                            isTransient = true;
+                        }
+                    }
+                }
 
                 return isTransient;
             }

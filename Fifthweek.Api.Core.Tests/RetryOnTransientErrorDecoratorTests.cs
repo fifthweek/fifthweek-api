@@ -1,6 +1,7 @@
 ﻿namespace Fifthweek.Api.Core.Tests
 {
     using System;
+    using System.ComponentModel;
     using System.Data.SqlClient;
     using System.Diagnostics;
     using System.IO;
@@ -212,6 +213,26 @@
                     {
                         throw SqlExceptionMocker.MakeSqlException(
                             RetryOnTransientErrorDecoratorBase.SqlTimeoutErrorCode);
+                    }
+                }).Returns(Task.FromResult(0));
+
+            await this.decorator.HandleAsync(new TestCommand());
+
+            Assert.AreEqual(2, tryCount);
+        }
+
+        [TestMethod]
+        public async Task ItShouldRetryOnConnectionForciblyClosed()
+        {
+            int tryCount = 0;
+
+            this.command.Setup(v => v.HandleAsync(It.IsAny<TestCommand>()))
+                .Callback(() =>
+                {
+                    ++tryCount;
+                    if (tryCount == 1)
+                    {
+                        throw new Win32Exception("An existing connection was forcibly closed by the remote host");
                     }
                 }).Returns(Task.FromResult(0));
 
