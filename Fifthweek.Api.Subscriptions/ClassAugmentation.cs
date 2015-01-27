@@ -14,7 +14,6 @@ namespace Fifthweek.Api.Subscriptions.Commands
     using Fifthweek.Api.Core;
     using Fifthweek.Api.Persistence;
     using Fifthweek.Api.Persistence.Identity;
-    using Fifthweek.Api.Identity.Membership.Events;
     using Fifthweek.Api.FileManagement.Shared;
     public partial class CreateSubscriptionCommand 
     {
@@ -72,7 +71,6 @@ namespace Fifthweek.Api.Subscriptions.Commands
     using Fifthweek.Api.Core;
     using Fifthweek.Api.Persistence;
     using Fifthweek.Api.Persistence.Identity;
-    using Fifthweek.Api.Identity.Membership.Events;
     using Fifthweek.Api.FileManagement.Shared;
     public partial class CreateSubscriptionCommandHandler 
     {
@@ -116,7 +114,6 @@ namespace Fifthweek.Api.Subscriptions.Commands
     using Fifthweek.Api.Core;
     using Fifthweek.Api.Persistence;
     using Fifthweek.Api.Persistence.Identity;
-    using Fifthweek.Api.Identity.Membership.Events;
     using Fifthweek.Api.FileManagement.Shared;
     public partial class PromoteNewUserToCreatorCommand 
     {
@@ -146,7 +143,6 @@ namespace Fifthweek.Api.Subscriptions.Commands
     using Fifthweek.Api.Core;
     using Fifthweek.Api.Persistence;
     using Fifthweek.Api.Persistence.Identity;
-    using Fifthweek.Api.Identity.Membership.Events;
     using Fifthweek.Api.FileManagement.Shared;
     public partial class PromoteNewUserToCreatorCommandHandler 
     {
@@ -176,7 +172,6 @@ namespace Fifthweek.Api.Subscriptions.Commands
     using Fifthweek.Api.Core;
     using Fifthweek.Api.Persistence;
     using Fifthweek.Api.Persistence.Identity;
-    using Fifthweek.Api.Identity.Membership.Events;
     using Fifthweek.Api.FileManagement.Shared;
     public partial class PromoteNewUserToCreatorCommandInitiator 
     {
@@ -206,7 +201,6 @@ namespace Fifthweek.Api.Subscriptions.Commands
     using Fifthweek.Api.Core;
     using Fifthweek.Api.Persistence;
     using Fifthweek.Api.Persistence.Identity;
-    using Fifthweek.Api.Identity.Membership.Events;
     using Fifthweek.Api.FileManagement.Shared;
     public partial class UpdateSubscriptionCommand 
     {
@@ -270,7 +264,6 @@ namespace Fifthweek.Api.Subscriptions.Commands
     using Fifthweek.Api.Core;
     using Fifthweek.Api.Persistence;
     using Fifthweek.Api.Persistence.Identity;
-    using Fifthweek.Api.Identity.Membership.Events;
     using Fifthweek.Api.FileManagement.Shared;
     public partial class UpdateSubscriptionCommandHandler 
     {
@@ -315,7 +308,6 @@ namespace Fifthweek.Api.Subscriptions.Controllers
     using System.Threading.Tasks;
     using System.Web.Http;
     using Fifthweek.Api.Core;
-    using Fifthweek.Api.Identity.OAuth;
     using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.Api.Subscriptions.Commands;
     using Fifthweek.Api.Subscriptions.Shared;
@@ -528,7 +520,6 @@ namespace Fifthweek.Api.Subscriptions.Commands
     using Fifthweek.Api.Core;
     using Fifthweek.Api.Persistence;
     using Fifthweek.Api.Persistence.Identity;
-    using Fifthweek.Api.Identity.Membership.Events;
     using Fifthweek.Api.FileManagement.Shared;
     public partial class CreateSubscriptionCommand 
     {
@@ -616,7 +607,6 @@ namespace Fifthweek.Api.Subscriptions.Commands
     using Fifthweek.Api.Core;
     using Fifthweek.Api.Persistence;
     using Fifthweek.Api.Persistence.Identity;
-    using Fifthweek.Api.Identity.Membership.Events;
     using Fifthweek.Api.FileManagement.Shared;
     public partial class PromoteNewUserToCreatorCommand 
     {
@@ -680,7 +670,6 @@ namespace Fifthweek.Api.Subscriptions.Commands
     using Fifthweek.Api.Core;
     using Fifthweek.Api.Persistence;
     using Fifthweek.Api.Persistence.Identity;
-    using Fifthweek.Api.Identity.Membership.Events;
     using Fifthweek.Api.FileManagement.Shared;
     public partial class UpdateSubscriptionCommand 
     {
@@ -913,7 +902,6 @@ namespace Fifthweek.Api.Subscriptions.Controllers
     using System.Threading.Tasks;
     using System.Web.Http;
     using Fifthweek.Api.Core;
-    using Fifthweek.Api.Identity.OAuth;
     using Fifthweek.Api.Subscriptions.Commands;
     using Fifthweek.Api.Subscriptions.Shared;
     using Fifthweek.CodeGeneration;
@@ -1005,7 +993,6 @@ namespace Fifthweek.Api.Subscriptions.Controllers
     using System.Threading.Tasks;
     using System.Web.Http;
     using Fifthweek.Api.Core;
-    using Fifthweek.Api.Identity.OAuth;
     using Fifthweek.Api.Subscriptions.Commands;
     using Fifthweek.Api.Subscriptions.Shared;
     using Fifthweek.CodeGeneration;
@@ -1127,7 +1114,6 @@ namespace Fifthweek.Api.Subscriptions.Controllers
     using System.Threading.Tasks;
     using System.Web.Http;
     using Fifthweek.Api.Core;
-    using Fifthweek.Api.Identity.OAuth;
     using Fifthweek.Api.Subscriptions.Commands;
     using Fifthweek.Api.Subscriptions.Shared;
     using Fifthweek.CodeGeneration;
@@ -1223,7 +1209,6 @@ namespace Fifthweek.Api.Subscriptions.Controllers
     using System.Threading.Tasks;
     using System.Web.Http;
     using Fifthweek.Api.Core;
-    using Fifthweek.Api.Identity.OAuth;
     using Fifthweek.Api.Subscriptions.Commands;
     using Fifthweek.Api.Subscriptions.Shared;
     using Fifthweek.CodeGeneration;

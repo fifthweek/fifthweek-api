@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Linq;
 
+
+
+
 namespace Fifthweek.Api.Accounts.Commands
 {
     using Fifthweek.Api.FileManagement;
     using Fifthweek.Api.FileManagement.Shared;
-    using Fifthweek.Api.Identity.Membership;
     using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.CodeGeneration;
     public partial class UpdateAccountSettingsCommand 
@@ -64,7 +66,6 @@ namespace Fifthweek.Api.Accounts.Commands
     using Fifthweek.Api.Core;
     using Fifthweek.Api.FileManagement;
     using Fifthweek.Api.FileManagement.Shared;
-    using Fifthweek.Api.Identity.Membership;
     using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.CodeGeneration;
     public partial class UpdateAccountSettingsCommandHandler 
@@ -104,14 +105,13 @@ namespace Fifthweek.Api.Accounts.Controllers
     using Fifthweek.Api.Accounts.Queries;
     using Fifthweek.Api.Core;
     using Fifthweek.Api.FileManagement;
-    using Fifthweek.Api.Identity.Membership;
-    using Fifthweek.Api.Identity.OAuth;
+    using Fifthweek.Api.FileManagement.Shared;
     using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.CodeGeneration;
     public partial class AccountSettingsController 
     {
         public AccountSettingsController(
-            IRequesterContext requesterContext, 
+            Fifthweek.Api.Identity.Shared.Membership.IRequesterContext requesterContext, 
             Fifthweek.Api.Core.ICommandHandler<Fifthweek.Api.Accounts.Commands.UpdateAccountSettingsCommand> updateAccountSettings, 
             Fifthweek.Api.Core.IQueryHandler<Fifthweek.Api.Accounts.Queries.GetAccountSettingsQuery,Fifthweek.Api.Accounts.GetAccountSettingsResult> getAccountSettings)
         {
@@ -167,7 +167,7 @@ namespace Fifthweek.Api.Accounts
     using Dapper;
     using Fifthweek.Api.Core;
     using Fifthweek.Api.FileManagement;
-    using Fifthweek.Api.Identity.Membership;
+    using Fifthweek.Api.FileManagement.Shared;
     using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.Api.Persistence;
     using Fifthweek.CodeGeneration;
@@ -190,7 +190,6 @@ namespace Fifthweek.Api.Accounts
 {
     using Fifthweek.Api.FileManagement;
     using Fifthweek.Api.FileManagement.Shared;
-    using Fifthweek.Api.Identity.Membership;
     using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.CodeGeneration;
     public partial class GetAccountSettingsResult 
@@ -218,7 +217,6 @@ namespace Fifthweek.Api.Accounts
 namespace Fifthweek.Api.Accounts.Queries
 {
     using Fifthweek.Api.Core;
-    using Fifthweek.Api.Identity.Membership;
     using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.CodeGeneration;
     public partial class GetAccountSettingsQuery 
@@ -247,7 +245,6 @@ namespace Fifthweek.Api.Accounts.Queries
 {
     using System.Threading.Tasks;
     using Fifthweek.Api.Core;
-    using Fifthweek.Api.Identity.Membership;
     using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.CodeGeneration;
     public partial class GetAccountSettingsQueryHandler 
@@ -282,7 +279,6 @@ namespace Fifthweek.Api.Accounts
     using Fifthweek.Api.Core;
     using Fifthweek.Api.FileManagement;
     using Fifthweek.Api.FileManagement.Shared;
-    using Fifthweek.Api.Identity.Membership;
     using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.Api.Persistence;
     using Fifthweek.CodeGeneration;
@@ -314,7 +310,6 @@ namespace Fifthweek.Api.Accounts
     using Fifthweek.Api.Core;
     using Fifthweek.Api.FileManagement;
     using Fifthweek.Api.FileManagement.Shared;
-    using Fifthweek.Api.Identity.Membership;
     using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.Api.Persistence;
     using Fifthweek.CodeGeneration;
@@ -345,7 +340,6 @@ namespace Fifthweek.Api.Accounts.Commands
 {
     using Fifthweek.Api.FileManagement;
     using Fifthweek.Api.FileManagement.Shared;
-    using Fifthweek.Api.Identity.Membership;
     using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.CodeGeneration;
     public partial class UpdateAccountSettingsCommand 
@@ -489,13 +483,8 @@ namespace Fifthweek.Api.Accounts.Controllers
 }
 namespace Fifthweek.Api.Accounts.Controllers
 {
-    using System;
-    using Fifthweek.Api.Core;
-    using Fifthweek.Api.FileManagement;
-    using Fifthweek.Api.Identity.Membership;
     using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.CodeGeneration;
-    using Fifthweek.Shared;
     public partial class UpdatedAccountSettings 
     {
         public override string ToString()
@@ -567,7 +556,6 @@ namespace Fifthweek.Api.Accounts
 {
     using Fifthweek.Api.FileManagement;
     using Fifthweek.Api.FileManagement.Shared;
-    using Fifthweek.Api.Identity.Membership;
     using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.CodeGeneration;
     public partial class GetAccountSettingsResult 
@@ -628,7 +616,6 @@ namespace Fifthweek.Api.Accounts
 namespace Fifthweek.Api.Accounts.Queries
 {
     using Fifthweek.Api.Core;
-    using Fifthweek.Api.Identity.Membership;
     using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.CodeGeneration;
     public partial class GetAccountSettingsQuery 
@@ -696,7 +683,6 @@ namespace Fifthweek.Api.Accounts
     using Fifthweek.Api.Core;
     using Fifthweek.Api.FileManagement;
     using Fifthweek.Api.FileManagement.Shared;
-    using Fifthweek.Api.Identity.Membership;
     using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.Api.Persistence;
     using Fifthweek.CodeGeneration;
@@ -754,13 +740,8 @@ namespace Fifthweek.Api.Accounts
 }
 namespace Fifthweek.Api.Accounts.Controllers
 {
-    using System;
-    using Fifthweek.Api.Core;
-    using Fifthweek.Api.FileManagement;
-    using Fifthweek.Api.Identity.Membership;
     using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.CodeGeneration;
-    using Fifthweek.Shared;
     public partial class UpdatedAccountSettings 
     {
 		[Optional]

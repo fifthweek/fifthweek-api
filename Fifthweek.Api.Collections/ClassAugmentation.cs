@@ -1,6 +1,9 @@
 ﻿using System;
 using System.Linq;
 
+
+
+
 namespace Fifthweek.Api.Collections
 {
     using System;
@@ -116,7 +119,6 @@ namespace Fifthweek.Api.Collections.Controllers
     using Fifthweek.Api.Collections.Queries;
     using Fifthweek.Api.Collections.Shared;
     using Fifthweek.Api.Core;
-    using Fifthweek.Api.Identity.OAuth;
     using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.CodeGeneration;
     using Fifthweek.Api.Channels.Shared;
@@ -125,7 +127,7 @@ namespace Fifthweek.Api.Collections.Controllers
         public CollectionController(
             Fifthweek.Api.Core.ICommandHandler<Fifthweek.Api.Collections.Commands.CreateCollectionCommand> createCollection, 
             Fifthweek.Api.Core.IQueryHandler<Fifthweek.Api.Collections.Queries.GetLiveDateOfNewQueuedPostQuery,System.DateTime> getLiveDateOfNewQueuedPost, 
-            IRequesterContext requesterContext, 
+            Fifthweek.Api.Identity.Shared.Membership.IRequesterContext requesterContext, 
             Fifthweek.Api.Core.IGuidCreator guidCreator)
         {
             if (createCollection == null)
@@ -167,7 +169,7 @@ namespace Fifthweek.Api.Collections.Controllers
     using Fifthweek.Api.Collections.Queries;
     using Fifthweek.Api.Collections.Shared;
     using Fifthweek.Api.Core;
-    using Fifthweek.Api.Identity.OAuth;
+    using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.CodeGeneration;
     using Fifthweek.Api.Channels.Shared;
     public partial class NewCollectionData 
@@ -548,7 +550,7 @@ namespace Fifthweek.Api.Collections.Queries
         public GetLiveDateOfNewQueuedPostQueryHandler(
             Fifthweek.Api.Collections.Shared.ICollectionSecurity collectionSecurity, 
             Fifthweek.Api.Identity.Shared.Membership.IRequesterSecurity requesterSecurity, 
-            Fifthweek.Api.Collections.IGetLiveDateOfNewQueuedPostDbStatement getLiveDateOfNewQueuedPost)
+            Fifthweek.Api.Collections.Shared.IGetLiveDateOfNewQueuedPostDbStatement getLiveDateOfNewQueuedPost)
         {
             if (collectionSecurity == null)
             {
@@ -659,7 +661,7 @@ namespace Fifthweek.Api.Collections.Controllers
     using Fifthweek.Api.Collections.Queries;
     using Fifthweek.Api.Collections.Shared;
     using Fifthweek.Api.Core;
-    using Fifthweek.Api.Identity.OAuth;
+    using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.CodeGeneration;
     using Fifthweek.Api.Channels.Shared;
     public partial class NewCollectionData 
@@ -866,7 +868,7 @@ namespace Fifthweek.Api.Collections.Controllers
     using Fifthweek.Api.Collections.Queries;
     using Fifthweek.Api.Collections.Shared;
     using Fifthweek.Api.Core;
-    using Fifthweek.Api.Identity.OAuth;
+    using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.CodeGeneration;
     using Fifthweek.Api.Channels.Shared;
     public partial class NewCollectionData 

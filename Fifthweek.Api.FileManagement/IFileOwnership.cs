@@ -2,7 +2,6 @@ namespace Fifthweek.Api.FileManagement
 {
     using System.Threading.Tasks;
 
-    using Fifthweek.Api.Identity.Membership;
     using Fifthweek.Api.Identity.Shared.Membership;
 
     public interface IFileOwnership

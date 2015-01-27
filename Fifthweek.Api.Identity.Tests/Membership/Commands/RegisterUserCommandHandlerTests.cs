@@ -12,6 +12,7 @@ namespace Fifthweek.Api.Identity.Tests.Membership.Commands
     using Fifthweek.Api.Identity.Membership.Commands;
     using Fifthweek.Api.Identity.Membership.Controllers;
     using Fifthweek.Api.Identity.Shared.Membership;
+    using Fifthweek.Api.Identity.Shared.Membership.Events;
     using Fifthweek.Api.Persistence;
     using Fifthweek.Api.Persistence.Identity;
 

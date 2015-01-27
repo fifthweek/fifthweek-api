@@ -3,8 +3,9 @@
     using System.Threading.Tasks;
 
     using Fifthweek.Api.Core;
-    using Fifthweek.Api.Identity.Membership.Events;
     using Fifthweek.CodeGeneration;
+
+    using UserRegisteredEvent = Fifthweek.Api.Identity.Shared.Membership.Events.UserRegisteredEvent;
 
     [AutoConstructor]
     public partial class PromoteNewUserToCreatorCommandInitiator : IEventHandler<UserRegisteredEvent>

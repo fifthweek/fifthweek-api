@@ -11,6 +11,8 @@
     using Fifthweek.Api.Persistence.Identity;
     using Fifthweek.CodeGeneration;
 
+    using UserRegisteredEvent = Fifthweek.Api.Identity.Shared.Membership.Events.UserRegisteredEvent;
+
     [AutoConstructor]
     public partial class RegisterUserCommandHandler : ICommandHandler<RegisterUserCommand>
     {

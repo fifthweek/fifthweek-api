@@ -93,10 +93,6 @@
       <Project>{1B07E9CC-1B0E-49D7-96D6-0F8C58A7C0CA}</Project>
       <Name>Fifthweek.Api.Identity.Shared</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Fifthweek.Api.Identity\Fifthweek.Api.Identity.csproj">
-      <Project>{6A2AF270-E4D4-4C4E-A88F-807F7B9A03B7}</Project>
-      <Name>Fifthweek.Api.Identity</Name>
-    </ProjectReference>
     <ProjectReference Include="..\Fifthweek.Api.Persistence\Fifthweek.Api.Persistence.csproj">
       <Project>{9C18BEE3-FAB5-4A00-8A94-A1FAEA370175}</Project>
       <Name>Fifthweek.Api.Persistence</Name>
@@ -104,10 +100,6 @@
     <ProjectReference Include="..\Fifthweek.Api.Subscriptions.Shared\Fifthweek.Api.Subscriptions.Shared.csproj">
       <Project>{B2D572A4-86C5-4F16-AB6A-CE87A63E08DD}</Project>
       <Name>Fifthweek.Api.Subscriptions.Shared</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Fifthweek.Api.Subscriptions\Fifthweek.Api.Subscriptions.csproj">
-      <Project>{5DB142B7-3152-447E-8816-33A90BA9EF76}</Project>
-      <Name>Fifthweek.Api.Subscriptions</Name>
     </ProjectReference>
     <ProjectReference Include="..\Fifthweek.CodeGeneration\Fifthweek.CodeGeneration.csproj">
       <Project>{770F450E-2166-4269-BEC1-DF59AA16B1E8}</Project>

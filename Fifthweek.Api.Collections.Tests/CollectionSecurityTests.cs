@@ -5,7 +5,6 @@
 
     using Fifthweek.Api.Collections.Shared;
     using Fifthweek.Api.Core;
-    using Fifthweek.Api.Identity.Membership;
     using Fifthweek.Api.Identity.Shared.Membership;
 
     using Microsoft.VisualStudio.TestTools.UnitTesting;

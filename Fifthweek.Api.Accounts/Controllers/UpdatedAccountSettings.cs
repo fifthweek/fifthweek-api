@@ -1,13 +1,7 @@
 ﻿namespace Fifthweek.Api.Accounts.Controllers
 {
-    using System;
-
-    using Fifthweek.Api.Core;
-    using Fifthweek.Api.FileManagement;
-    using Fifthweek.Api.Identity.Membership;
     using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.CodeGeneration;
-    using Fifthweek.Shared;
 
     [AutoEqualityMembers]
     public partial class UpdatedAccountSettings

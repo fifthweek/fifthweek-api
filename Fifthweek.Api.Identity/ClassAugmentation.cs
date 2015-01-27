@@ -107,11 +107,14 @@ namespace Fifthweek.Api.Identity.Membership.Commands
     using Fifthweek.Api.Identity.Membership.Events;
     using Fifthweek.Api.Persistence;
     using Fifthweek.Api.Persistence.Identity;
+
+    using UserRegisteredEvent = Fifthweek.Api.Identity.Shared.Membership.Events.UserRegisteredEvent;
+
     public partial class RegisterUserCommandHandler 
     {
         public RegisterUserCommandHandler(
             Fifthweek.Api.Persistence.IUserManager userManager, 
-            Fifthweek.Api.Core.IEventHandler<Fifthweek.Api.Identity.Membership.Events.UserRegisteredEvent> userRegistered)
+            Fifthweek.Api.Core.IEventHandler<UserRegisteredEvent> userRegistered)
         {
             if (userManager == null)
             {
@@ -1067,7 +1070,7 @@ namespace Fifthweek.Api.Identity.Membership.Events
                 return false;
             }
 
-            return this.Equals((UserRegisteredEvent)obj);
+            return this.Equals((Shared.Membership.Events.UserRegisteredEvent)obj);
         }
 
         public override int GetHashCode()
@@ -1080,7 +1083,7 @@ namespace Fifthweek.Api.Identity.Membership.Events
             }
         }
 
-        protected bool Equals(UserRegisteredEvent other)
+        protected bool Equals(Shared.Membership.Events.UserRegisteredEvent other)
         {
             if (!object.Equals(this.UserId, other.UserId))
             {

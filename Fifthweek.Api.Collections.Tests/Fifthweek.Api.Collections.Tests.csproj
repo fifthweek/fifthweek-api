@@ -107,10 +107,6 @@
       <Project>{df1bb4e7-5315-4e5c-ba73-6dfa4d9e7564}</Project>
       <Name>Fifthweek.Api.Channels.Shared</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Fifthweek.Api.Channels\Fifthweek.Api.Channels.csproj">
-      <Project>{208F4ACA-4012-466F-BC49-7E2C443D3C06}</Project>
-      <Name>Fifthweek.Api.Channels</Name>
-    </ProjectReference>
     <ProjectReference Include="..\Fifthweek.Api.Collections.Shared\Fifthweek.Api.Collections.Shared.csproj">
       <Project>{23b50a6b-d27c-4761-be96-1f90b9408a87}</Project>
       <Name>Fifthweek.Api.Collections.Shared</Name>
@@ -131,10 +127,6 @@
       <Project>{45E1C6C7-845A-480F-BBBC-5DF3135D1E19}</Project>
       <Name>Fifthweek.Api.Identity.Tests.Shared</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Fifthweek.Api.Identity\Fifthweek.Api.Identity.csproj">
-      <Project>{6A2AF270-E4D4-4C4E-A88F-807F7B9A03B7}</Project>
-      <Name>Fifthweek.Api.Identity</Name>
-    </ProjectReference>
     <ProjectReference Include="..\Fifthweek.Api.Persistence.Tests.Shared\Fifthweek.Api.Persistence.Tests.Shared.csproj">
       <Project>{ECDE2C4E-7DD8-4210-8E09-D5762C88B3CB}</Project>
       <Name>Fifthweek.Api.Persistence.Tests.Shared</Name>
@@ -142,10 +134,6 @@
     <ProjectReference Include="..\Fifthweek.Api.Persistence\Fifthweek.Api.Persistence.csproj">
       <Project>{9C18BEE3-FAB5-4A00-8A94-A1FAEA370175}</Project>
       <Name>Fifthweek.Api.Persistence</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Fifthweek.Api.Subscriptions\Fifthweek.Api.Subscriptions.csproj">
-      <Project>{5DB142B7-3152-447E-8816-33A90BA9EF76}</Project>
-      <Name>Fifthweek.Api.Subscriptions</Name>
     </ProjectReference>
     <ProjectReference Include="..\Fifthweek.Shared\Fifthweek.Shared.csproj">
       <Project>{6d12ffbb-38e9-4722-a690-0f0338538ebc}</Project>

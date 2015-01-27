@@ -53,6 +53,7 @@
       <DesignTime>True</DesignTime>
     </Compile>
     <Compile Include="Membership\Email.cs" />
+    <Compile Include="Membership\Events\UserRegisteredEvent.cs" />
     <Compile Include="Membership\IRequesterContext.cs" />
     <Compile Include="Membership\IRequesterSecurity.cs" />
     <Compile Include="Membership\Password.cs" />

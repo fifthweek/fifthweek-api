@@ -6,7 +6,6 @@
     using Dapper;
 
     using Fifthweek.Api.Collections.Shared;
-    using Fifthweek.Api.Identity.Membership;
     using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.Api.Persistence.Tests.Shared;
 

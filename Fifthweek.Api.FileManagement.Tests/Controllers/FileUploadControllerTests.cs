@@ -9,8 +9,6 @@
     using Fifthweek.Api.FileManagement.Controllers;
     using Fifthweek.Api.FileManagement.Queries;
     using Fifthweek.Api.FileManagement.Shared;
-    using Fifthweek.Api.Identity.Membership;
-    using Fifthweek.Api.Identity.OAuth;
     using Fifthweek.Api.Identity.Shared.Membership;
 
     using Microsoft.VisualStudio.TestTools.UnitTesting;

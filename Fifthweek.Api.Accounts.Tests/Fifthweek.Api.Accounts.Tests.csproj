@@ -116,10 +116,6 @@
       <Project>{45E1C6C7-845A-480F-BBBC-5DF3135D1E19}</Project>
       <Name>Fifthweek.Api.Identity.Tests.Shared</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Fifthweek.Api.Identity\Fifthweek.Api.Identity.csproj">
-      <Project>{6A2AF270-E4D4-4C4E-A88F-807F7B9A03B7}</Project>
-      <Name>Fifthweek.Api.Identity</Name>
-    </ProjectReference>
     <ProjectReference Include="..\Fifthweek.Api.Persistence.Tests.Shared\Fifthweek.Api.Persistence.Tests.Shared.csproj">
       <Project>{ECDE2C4E-7DD8-4210-8E09-D5762C88B3CB}</Project>
       <Name>Fifthweek.Api.Persistence.Tests.Shared</Name>

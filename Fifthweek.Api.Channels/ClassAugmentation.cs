@@ -1,12 +1,14 @@
 ﻿using System;
 using System.Linq;
 
+
+
+
 namespace Fifthweek.Api.Channels
 {
     using System.Threading.Tasks;
     using Dapper;
     using Fifthweek.Api.Core;
-    using Fifthweek.Api.Identity.Membership;
     using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.Api.Persistence;
     using Fifthweek.CodeGeneration;
@@ -30,7 +32,6 @@ namespace Fifthweek.Api.Channels
     using System.Threading.Tasks;
     using Fifthweek.Api.Channels.Shared;
     using Fifthweek.Api.Core;
-    using Fifthweek.Api.Identity.Membership;
     using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.CodeGeneration;
     public partial class ChannelSecurity 
@@ -51,7 +52,6 @@ namespace Fifthweek.Api.Channels
 namespace Fifthweek.Api.Channels.Commands
 {
     using Fifthweek.Api.Channels.Shared;
-    using Fifthweek.Api.Identity.Membership;
     using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.Api.Subscriptions;
     using Fifthweek.Api.Subscriptions.Shared;
@@ -96,13 +96,12 @@ namespace Fifthweek.Api.Channels.Controllers
 {
     using System.Web.Http;
     using Fifthweek.Api.Core;
-    using Fifthweek.Api.Identity.OAuth;
     using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.CodeGeneration;
     public partial class ChannelController 
     {
         public ChannelController(
-            IRequesterContext requesterContext, 
+            Fifthweek.Api.Identity.Shared.Membership.IRequesterContext requesterContext, 
             Fifthweek.Api.Core.IGuidCreator guidCreator)
         {
             if (requesterContext == null)
@@ -125,7 +124,6 @@ namespace Fifthweek.Api.Channels.Controllers
 namespace Fifthweek.Api.Channels.Commands
 {
     using Fifthweek.Api.Channels.Shared;
-    using Fifthweek.Api.Identity.Membership;
     using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.Api.Subscriptions;
     using Fifthweek.Api.Subscriptions.Shared;

@@ -4,7 +4,6 @@
     using System.Threading.Tasks;
 
     using Fifthweek.Api.FileManagement.Shared;
-    using Fifthweek.Api.Identity.Membership;
     using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.Api.Persistence.Tests.Shared;
     using Fifthweek.Tests.Shared;

@@ -55,6 +55,7 @@
     <Compile Include="CollectionId.cs" />
     <Compile Include="HourOfWeek.cs" />
     <Compile Include="ICollectionSecurity.cs" />
+    <Compile Include="IGetLiveDateOfNewQueuedPostDbStatement.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ValidCollectionName.cs" />
   </ItemGroup>

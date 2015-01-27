@@ -4,7 +4,6 @@
     using System.Web.Http;
 
     using Fifthweek.Api.Core;
-    using Fifthweek.Api.Identity.OAuth;
     using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.Api.Subscriptions.Commands;
     using Fifthweek.Api.Subscriptions.Shared;
