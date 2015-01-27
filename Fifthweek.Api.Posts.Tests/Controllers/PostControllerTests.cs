@@ -6,6 +6,7 @@
     using System.Threading.Tasks;
     using System.Web.Http.Results;
 
+    using Fifthweek.Api.Channels;
     using Fifthweek.Api.Collections;
     using Fifthweek.Api.Core;
     using Fifthweek.Api.FileManagement;
@@ -14,7 +15,6 @@
     using Fifthweek.Api.Posts.Commands;
     using Fifthweek.Api.Posts.Controllers;
     using Fifthweek.Api.Posts.Queries;
-    using Fifthweek.Api.Subscriptions;
     using Fifthweek.Shared;
 
     using Microsoft.VisualStudio.TestTools.UnitTesting;

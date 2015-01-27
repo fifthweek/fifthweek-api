@@ -2,7 +2,7 @@
 {
     using System.Collections.Generic;
 
-    using Fifthweek.Api.Subscriptions;
+    using Fifthweek.Api.Channels;
     using Fifthweek.CodeGeneration;
 
     [AutoConstructor]

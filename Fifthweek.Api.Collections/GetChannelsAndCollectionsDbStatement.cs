@@ -8,6 +8,7 @@
 
     using Dapper;
 
+    using Fifthweek.Api.Channels;
     using Fifthweek.Api.Collections.Queries;
     using Fifthweek.Api.Core;
     using Fifthweek.Api.Identity.Membership;

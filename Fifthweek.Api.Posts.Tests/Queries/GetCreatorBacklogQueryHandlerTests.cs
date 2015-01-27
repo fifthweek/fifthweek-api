@@ -6,6 +6,7 @@
     using System.Linq;
     using System.Threading.Tasks;
 
+    using Fifthweek.Api.Channels;
     using Fifthweek.Api.Collections;
     using Fifthweek.Api.Core;
     using Fifthweek.Api.FileManagement;

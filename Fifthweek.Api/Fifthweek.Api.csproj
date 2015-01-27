@@ -216,6 +216,10 @@
       <Project>{abc43617-3aaa-4b7a-b4dc-d10e023f1846}</Project>
       <Name>Fifthweek.Api.Azure</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Fifthweek.Api.Channels\Fifthweek.Api.Channels.csproj">
+      <Project>{208f4aca-4012-466f-bc49-7e2c443d3c06}</Project>
+      <Name>Fifthweek.Api.Channels</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Fifthweek.Api.Collections\Fifthweek.Api.Collections.csproj">
       <Project>{92ff5e2b-f153-433f-92f6-dd580d9e09b8}</Project>
       <Name>Fifthweek.Api.Collections</Name>

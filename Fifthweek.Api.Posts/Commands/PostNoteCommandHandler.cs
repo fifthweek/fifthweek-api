@@ -3,10 +3,10 @@
     using System;
     using System.Threading.Tasks;
 
+    using Fifthweek.Api.Channels;
     using Fifthweek.Api.Core;
     using Fifthweek.Api.Identity.Membership;
     using Fifthweek.Api.Persistence;
-    using Fifthweek.Api.Subscriptions;
     using Fifthweek.CodeGeneration;
 
     [AutoConstructor]

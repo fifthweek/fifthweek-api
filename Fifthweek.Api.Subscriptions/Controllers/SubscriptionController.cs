@@ -2,13 +2,10 @@
 {
     using System.Threading.Tasks;
     using System.Web.Http;
-    using System.Web.Http.Description;
 
     using Fifthweek.Api.Core;
-    using Fifthweek.Api.Identity.Membership;
     using Fifthweek.Api.Identity.OAuth;
     using Fifthweek.Api.Subscriptions.Commands;
-    using Fifthweek.Api.Subscriptions.Queries;
     using Fifthweek.CodeGeneration;
 
     [RoutePrefix("subscriptions"), AutoConstructor]

@@ -103,16 +103,17 @@
     <Compile Include="ValidExternalVideoUrlTests.cs" />
     <Compile Include="Queries\GetCreatorStatusQueryHandlerTests.cs" />
     <Compile Include="ValidSubscriptionNameTests.cs" />
-    <Compile Include="ValidChannelPriceInUsCentsPerWeekTests.cs" />
-    <Compile Include="ChannelOwnershipTests.cs" />
     <Compile Include="SubscriptionOwnershipTests.cs" />
-    <Compile Include="ChannelSecurityTests.cs" />
     <Compile Include="SubscriptionSecurityTests.cs" />
     <Compile Include="ValidIntroductionTests.cs" />
     <Compile Include="ValidTaglineTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Fifthweek.Api.Channels\Fifthweek.Api.Channels.csproj">
+      <Project>{208F4ACA-4012-466F-BC49-7E2C443D3C06}</Project>
+      <Name>Fifthweek.Api.Channels</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Fifthweek.Api.Core\Fifthweek.Api.Core.csproj">
       <Project>{BD52863E-063D-45A5-9CA8-7541804D1313}</Project>
       <Name>Fifthweek.Api.Core</Name>

@@ -10,8 +10,6 @@
         {
             builder.RegisterType<SubscriptionOwnership>().As<ISubscriptionOwnership>();
             builder.RegisterType<SubscriptionSecurity>().As<ISubscriptionSecurity>();
-            builder.RegisterType<ChannelOwnership>().As<IChannelOwnership>();
-            builder.RegisterType<ChannelSecurity>().As<IChannelSecurity>();
         }
     }
 }

@@ -79,11 +79,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AutofacRegistration.cs" />
-    <Compile Include="ChannelSecurity.cs" />
-    <Compile Include="ChannelOwnership.cs" />
     <Compile Include="SubscriptionOwnership.cs" />
-    <Compile Include="IChannelSecurity.cs" />
-    <Compile Include="IChannelOwnership.cs" />
     <Compile Include="ISubscriptionOwnership.cs" />
     <Compile Include="ClassAugmentation.cs">
       <AutoGen>True</AutoGen>
@@ -100,7 +96,6 @@
     <Compile Include="Controllers\NewSubscriptionData.cs" />
     <Compile Include="Controllers\SubscriptionController.cs" />
     <Compile Include="Controllers\UpdatedSubscriptionData.cs" />
-    <Compile Include="ChannelId.cs" />
     <Compile Include="ValidExternalVideoUrl.cs" />
     <Compile Include="ValidIntroduction.cs" />
     <Compile Include="ISubscriptionSecurity.cs" />
@@ -111,11 +106,14 @@
     <Compile Include="SubscriptionId.cs" />
     <Compile Include="ValidDescription.cs" />
     <Compile Include="ValidSubscriptionName.cs" />
-    <Compile Include="ValidChannelPriceInUsCentsPerWeek.cs" />
     <Compile Include="SubscriptionSecurity.cs" />
     <Compile Include="ValidTagline.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Fifthweek.Api.Channels\Fifthweek.Api.Channels.csproj">
+      <Project>{208F4ACA-4012-466F-BC49-7E2C443D3C06}</Project>
+      <Name>Fifthweek.Api.Channels</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Fifthweek.Api.Core\Fifthweek.Api.Core.csproj">
       <Project>{BD52863E-063D-45A5-9CA8-7541804D1313}</Project>
       <Name>Fifthweek.Api.Core</Name>

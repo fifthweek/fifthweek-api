@@ -7,74 +7,6 @@ namespace Fifthweek.Api.Subscriptions
 {
     using System;
     using Fifthweek.CodeGeneration;
-    using System.Linq;
-    using System.Threading.Tasks;
-    using Dapper;
-    using Fifthweek.Api.Core;
-    using Fifthweek.Api.Identity.Membership;
-    using Fifthweek.Api.Persistence;
-    using Fifthweek.Shared;
-    using Fifthweek.Api.Persistence.Identity;
-    using System.Collections.Generic;
-    using System.Diagnostics.CodeAnalysis;
-    [Newtonsoft.Json.JsonConverter(typeof(JsonConverter))]
-    public partial class ChannelId 
-    {
-		public class JsonConverter : Newtonsoft.Json.JsonConverter
-        {
-            public override void WriteJson(Newtonsoft.Json.JsonWriter writer, object value, Newtonsoft.Json.JsonSerializer serializer)
-            {
-                var valueType = (ChannelId)value;
-                serializer.Serialize(writer, valueType.Value);
-            }
-
-            public override object ReadJson(Newtonsoft.Json.JsonReader reader, Type objectType, object existingValue, Newtonsoft.Json.JsonSerializer serializer)
-            {
-                if (objectType != typeof(ChannelId))
-                {
-                    throw new ArgumentException("Expected to deserialize JSON for type " + typeof(ChannelId).Name, "objectType");
-                }
-
-                var value = serializer.Deserialize<System.Guid>(reader);
-                return new ChannelId(value);
-            }
-
-            public override bool CanConvert(Type objectType)
-            {
-                return objectType == typeof(ChannelId);
-            }
-        }
-
-		public class DapperTypeHandler : Dapper.SqlMapper.TypeHandler<ChannelId>, Fifthweek.Api.Persistence.IAutoRegisteredTypeHandler<ChannelId>
-        {
-            public override void SetValue(System.Data.IDbDataParameter parameter, ChannelId value)
-            {
-                parameter.DbType = System.Data.DbType.Guid;
-                parameter.Value = value.Value;
-            }
-
-            public override ChannelId Parse(object value)
-            {
-                return new ChannelId((System.Guid)value);
-            }
-        }
-    }
-
-}
-namespace Fifthweek.Api.Subscriptions
-{
-    using System;
-    using System.Linq;
-    using Fifthweek.CodeGeneration;
-    using System.Threading.Tasks;
-    using Dapper;
-    using Fifthweek.Api.Core;
-    using Fifthweek.Api.Identity.Membership;
-    using Fifthweek.Api.Persistence;
-    using Fifthweek.Shared;
-    using Fifthweek.Api.Persistence.Identity;
-    using System.Collections.Generic;
-    using System.Diagnostics.CodeAnalysis;
     [Newtonsoft.Json.JsonConverter(typeof(JsonConverter))]
     public partial class SubscriptionId 
     {
@@ -120,136 +52,11 @@ namespace Fifthweek.Api.Subscriptions
 
 }
 
-namespace Fifthweek.Api.Subscriptions
-{
-    using System;
-    using Fifthweek.CodeGeneration;
-    using System.Linq;
-    using System.Threading.Tasks;
-    using Dapper;
-    using Fifthweek.Api.Core;
-    using Fifthweek.Api.Identity.Membership;
-    using Fifthweek.Api.Persistence;
-    using Fifthweek.Shared;
-    using Fifthweek.Api.Persistence.Identity;
-    using System.Collections.Generic;
-    using System.Diagnostics.CodeAnalysis;
-    public partial class ChannelId 
-    {
-        public ChannelId(
-            System.Guid value)
-        {
-            if (value == null)
-            {
-                throw new ArgumentNullException("value");
-            }
-
-            this.Value = value;
-        }
-    }
-
-}
-namespace Fifthweek.Api.Subscriptions
-{
-    using System.Threading.Tasks;
-    using Dapper;
-    using Fifthweek.Api.Core;
-    using Fifthweek.Api.Identity.Membership;
-    using Fifthweek.Api.Persistence;
-    using Fifthweek.CodeGeneration;
-    using System;
-    using System.Linq;
-    using Fifthweek.Shared;
-    using Fifthweek.Api.Persistence.Identity;
-    using System.Collections.Generic;
-    using System.Diagnostics.CodeAnalysis;
-    public partial class ChannelOwnership 
-    {
-        public ChannelOwnership(
-            Fifthweek.Api.Persistence.IFifthweekDbContext databaseContext)
-        {
-            if (databaseContext == null)
-            {
-                throw new ArgumentNullException("databaseContext");
-            }
-
-            this.databaseContext = databaseContext;
-        }
-    }
-
-}
-namespace Fifthweek.Api.Subscriptions
-{
-    using System.Threading.Tasks;
-    using Fifthweek.Api.Core;
-    using Fifthweek.Api.Identity.Membership;
-    using Fifthweek.CodeGeneration;
-    using Fifthweek.Shared;
-    using System;
-    using System.Linq;
-    using Dapper;
-    using Fifthweek.Api.Persistence;
-    using Fifthweek.Api.Persistence.Identity;
-    using System.Collections.Generic;
-    using System.Diagnostics.CodeAnalysis;
-    public partial class ChannelSecurity 
-    {
-        public ChannelSecurity(
-            Fifthweek.Api.Subscriptions.IChannelOwnership channelOwnership)
-        {
-            if (channelOwnership == null)
-            {
-                throw new ArgumentNullException("channelOwnership");
-            }
-
-            this.channelOwnership = channelOwnership;
-        }
-    }
-
-}
-namespace Fifthweek.Api.Subscriptions
-{
-    using System;
-    using System.Linq;
-    using Fifthweek.CodeGeneration;
-    using System.Threading.Tasks;
-    using Dapper;
-    using Fifthweek.Api.Core;
-    using Fifthweek.Api.Identity.Membership;
-    using Fifthweek.Api.Persistence;
-    using Fifthweek.Shared;
-    using Fifthweek.Api.Persistence.Identity;
-    using System.Collections.Generic;
-    using System.Diagnostics.CodeAnalysis;
-    public partial class SubscriptionId 
-    {
-        public SubscriptionId(
-            System.Guid value)
-        {
-            if (value == null)
-            {
-                throw new ArgumentNullException("value");
-            }
-
-            this.Value = value;
-        }
-    }
-
-}
 namespace Fifthweek.Api.Subscriptions.Commands
 {
-    using System;
-    using System.Linq;
+    using Fifthweek.Api.Channels;
     using Fifthweek.Api.Identity.Membership;
     using Fifthweek.CodeGeneration;
-    using System.Threading.Tasks;
-    using System.Transactions;
-    using Fifthweek.Api.Core;
-    using Fifthweek.Api.Persistence;
-    using Fifthweek.Api.Persistence.Identity;
-    using Fifthweek.Shared;
-    using Fifthweek.Api.Identity.Membership.Events;
-    using Fifthweek.Api.FileManagement;
     public partial class CreateSubscriptionCommand 
     {
         public CreateSubscriptionCommand(
@@ -257,7 +64,7 @@ namespace Fifthweek.Api.Subscriptions.Commands
             Fifthweek.Api.Subscriptions.SubscriptionId newSubscriptionId, 
             Fifthweek.Api.Subscriptions.ValidSubscriptionName subscriptionName, 
             Fifthweek.Api.Subscriptions.ValidTagline tagline, 
-            Fifthweek.Api.Subscriptions.ValidChannelPriceInUsCentsPerWeek basePrice)
+            Fifthweek.Api.Channels.ValidChannelPriceInUsCentsPerWeek basePrice)
         {
             if (requester == null)
             {
@@ -296,17 +103,12 @@ namespace Fifthweek.Api.Subscriptions.Commands
 namespace Fifthweek.Api.Subscriptions.Commands
 {
     using System;
-    using System.Linq;
-    using Fifthweek.Api.Identity.Membership;
-    using Fifthweek.CodeGeneration;
     using System.Threading.Tasks;
     using System.Transactions;
     using Fifthweek.Api.Core;
+    using Fifthweek.Api.Identity.Membership;
     using Fifthweek.Api.Persistence;
-    using Fifthweek.Api.Persistence.Identity;
-    using Fifthweek.Shared;
-    using Fifthweek.Api.Identity.Membership.Events;
-    using Fifthweek.Api.FileManagement;
+    using Fifthweek.CodeGeneration;
     public partial class CreateSubscriptionCommandHandler 
     {
         public CreateSubscriptionCommandHandler(
@@ -338,18 +140,8 @@ namespace Fifthweek.Api.Subscriptions.Commands
 }
 namespace Fifthweek.Api.Subscriptions.Commands
 {
-    using System;
-    using System.Linq;
     using Fifthweek.Api.Identity.Membership;
     using Fifthweek.CodeGeneration;
-    using System.Threading.Tasks;
-    using System.Transactions;
-    using Fifthweek.Api.Core;
-    using Fifthweek.Api.Persistence;
-    using Fifthweek.Api.Persistence.Identity;
-    using Fifthweek.Shared;
-    using Fifthweek.Api.Identity.Membership.Events;
-    using Fifthweek.Api.FileManagement;
     public partial class PromoteNewUserToCreatorCommand 
     {
         public PromoteNewUserToCreatorCommand(
@@ -368,17 +160,12 @@ namespace Fifthweek.Api.Subscriptions.Commands
 namespace Fifthweek.Api.Subscriptions.Commands
 {
     using System;
-    using System.Linq;
-    using Fifthweek.Api.Identity.Membership;
-    using Fifthweek.CodeGeneration;
     using System.Threading.Tasks;
-    using System.Transactions;
     using Fifthweek.Api.Core;
     using Fifthweek.Api.Persistence;
     using Fifthweek.Api.Persistence.Identity;
+    using Fifthweek.CodeGeneration;
     using Fifthweek.Shared;
-    using Fifthweek.Api.Identity.Membership.Events;
-    using Fifthweek.Api.FileManagement;
     public partial class PromoteNewUserToCreatorCommandHandler 
     {
         public PromoteNewUserToCreatorCommandHandler(
@@ -396,18 +183,11 @@ namespace Fifthweek.Api.Subscriptions.Commands
 }
 namespace Fifthweek.Api.Subscriptions.Commands
 {
-    using System;
-    using System.Linq;
-    using Fifthweek.Api.Identity.Membership;
-    using Fifthweek.CodeGeneration;
     using System.Threading.Tasks;
-    using System.Transactions;
     using Fifthweek.Api.Core;
-    using Fifthweek.Api.Persistence;
-    using Fifthweek.Api.Persistence.Identity;
-    using Fifthweek.Shared;
     using Fifthweek.Api.Identity.Membership.Events;
-    using Fifthweek.Api.FileManagement;
+    using Fifthweek.CodeGeneration;
+    using Fifthweek.Shared;
     public partial class PromoteNewUserToCreatorCommandInitiator 
     {
         public PromoteNewUserToCreatorCommandInitiator(
@@ -425,18 +205,9 @@ namespace Fifthweek.Api.Subscriptions.Commands
 }
 namespace Fifthweek.Api.Subscriptions.Commands
 {
-    using System;
-    using System.Linq;
+    using Fifthweek.Api.FileManagement;
     using Fifthweek.Api.Identity.Membership;
     using Fifthweek.CodeGeneration;
-    using System.Threading.Tasks;
-    using System.Transactions;
-    using Fifthweek.Api.Core;
-    using Fifthweek.Api.Persistence;
-    using Fifthweek.Api.Persistence.Identity;
-    using Fifthweek.Shared;
-    using Fifthweek.Api.Identity.Membership.Events;
-    using Fifthweek.Api.FileManagement;
     public partial class UpdateSubscriptionCommand 
     {
         public UpdateSubscriptionCommand(
@@ -489,17 +260,12 @@ namespace Fifthweek.Api.Subscriptions.Commands
 namespace Fifthweek.Api.Subscriptions.Commands
 {
     using System;
-    using System.Linq;
-    using Fifthweek.Api.Identity.Membership;
-    using Fifthweek.CodeGeneration;
     using System.Threading.Tasks;
-    using System.Transactions;
     using Fifthweek.Api.Core;
-    using Fifthweek.Api.Persistence;
-    using Fifthweek.Api.Persistence.Identity;
-    using Fifthweek.Shared;
-    using Fifthweek.Api.Identity.Membership.Events;
     using Fifthweek.Api.FileManagement;
+    using Fifthweek.Api.Identity.Membership;
+    using Fifthweek.Api.Persistence;
+    using Fifthweek.CodeGeneration;
     public partial class UpdateSubscriptionCommandHandler 
     {
         public UpdateSubscriptionCommandHandler(
@@ -538,19 +304,12 @@ namespace Fifthweek.Api.Subscriptions.Commands
 }
 namespace Fifthweek.Api.Subscriptions.Controllers
 {
-    using System;
-    using System.Linq;
     using System.Threading.Tasks;
     using System.Web.Http;
-    using System.Web.Http.Description;
     using Fifthweek.Api.Core;
-    using Fifthweek.Api.Identity.Membership;
     using Fifthweek.Api.Identity.OAuth;
     using Fifthweek.Api.Subscriptions.Commands;
-    using Fifthweek.Api.Subscriptions.Queries;
     using Fifthweek.CodeGeneration;
-    using Fifthweek.Shared;
-    using Fifthweek.Api.FileManagement;
     public partial class SubscriptionController 
     {
         public SubscriptionController(
@@ -589,18 +348,9 @@ namespace Fifthweek.Api.Subscriptions.Controllers
 }
 namespace Fifthweek.Api.Subscriptions
 {
-    using System;
-    using System.Linq;
-    using Fifthweek.CodeGeneration;
-    using System.Threading.Tasks;
-    using Dapper;
     using Fifthweek.Api.Core;
-    using Fifthweek.Api.Identity.Membership;
-    using Fifthweek.Api.Persistence;
+    using Fifthweek.CodeGeneration;
     using Fifthweek.Shared;
-    using Fifthweek.Api.Persistence.Identity;
-    using System.Collections.Generic;
-    using System.Diagnostics.CodeAnalysis;
     public partial class CreatorStatus 
     {
         public CreatorStatus(
@@ -620,14 +370,9 @@ namespace Fifthweek.Api.Subscriptions
 }
 namespace Fifthweek.Api.Subscriptions.Queries
 {
-    using System;
-    using System.Linq;
     using Fifthweek.Api.Core;
     using Fifthweek.Api.Identity.Membership;
     using Fifthweek.CodeGeneration;
-    using System.Threading.Tasks;
-    using Dapper;
-    using Fifthweek.Api.Persistence;
     public partial class GetCreatorStatusQuery 
     {
         public GetCreatorStatusQuery(
@@ -654,12 +399,12 @@ namespace Fifthweek.Api.Subscriptions.Queries
 {
     using System;
     using System.Linq;
-    using Fifthweek.Api.Core;
-    using Fifthweek.Api.Identity.Membership;
-    using Fifthweek.CodeGeneration;
     using System.Threading.Tasks;
     using Dapper;
+    using Fifthweek.Api.Core;
+    using Fifthweek.Api.Identity.Membership;
     using Fifthweek.Api.Persistence;
+    using Fifthweek.CodeGeneration;
     public partial class GetCreatorStatusQueryHandler 
     {
         public GetCreatorStatusQueryHandler(
@@ -685,17 +430,30 @@ namespace Fifthweek.Api.Subscriptions.Queries
 namespace Fifthweek.Api.Subscriptions
 {
     using System;
-    using System.Linq;
     using Fifthweek.CodeGeneration;
+    public partial class SubscriptionId 
+    {
+        public SubscriptionId(
+            System.Guid value)
+        {
+            if (value == null)
+            {
+                throw new ArgumentNullException("value");
+            }
+
+            this.Value = value;
+        }
+    }
+
+}
+namespace Fifthweek.Api.Subscriptions
+{
+    using System;
     using System.Threading.Tasks;
     using Dapper;
-    using Fifthweek.Api.Core;
     using Fifthweek.Api.Identity.Membership;
     using Fifthweek.Api.Persistence;
-    using Fifthweek.Shared;
-    using Fifthweek.Api.Persistence.Identity;
-    using System.Collections.Generic;
-    using System.Diagnostics.CodeAnalysis;
+    using Fifthweek.CodeGeneration;
     public partial class SubscriptionOwnership 
     {
         public SubscriptionOwnership(
@@ -713,18 +471,12 @@ namespace Fifthweek.Api.Subscriptions
 }
 namespace Fifthweek.Api.Subscriptions
 {
-    using System;
-    using System.Linq;
-    using Fifthweek.CodeGeneration;
     using System.Threading.Tasks;
-    using Dapper;
     using Fifthweek.Api.Core;
     using Fifthweek.Api.Identity.Membership;
     using Fifthweek.Api.Persistence;
-    using Fifthweek.Shared;
     using Fifthweek.Api.Persistence.Identity;
-    using System.Collections.Generic;
-    using System.Diagnostics.CodeAnalysis;
+    using Fifthweek.CodeGeneration;
     public partial class SubscriptionSecurity 
     {
         public SubscriptionSecurity(
@@ -748,146 +500,11 @@ namespace Fifthweek.Api.Subscriptions
 
 }
 
-namespace Fifthweek.Api.Subscriptions
-{
-    using System;
-    using Fifthweek.CodeGeneration;
-    using System.Linq;
-    using System.Threading.Tasks;
-    using Dapper;
-    using Fifthweek.Api.Core;
-    using Fifthweek.Api.Identity.Membership;
-    using Fifthweek.Api.Persistence;
-    using Fifthweek.Shared;
-    using Fifthweek.Api.Persistence.Identity;
-    using System.Collections.Generic;
-    using System.Diagnostics.CodeAnalysis;
-    public partial class ChannelId 
-    {
-        public override string ToString()
-        {
-            return string.Format("ChannelId({0})", this.Value == null ? "null" : this.Value.ToString());
-        }
-
-        public override bool Equals(object obj)
-        {
-            if (ReferenceEquals(null, obj))
-            {
-                return false;
-            }
-
-            if (ReferenceEquals(this, obj))
-            {
-                return true;
-            }
-
-            if (obj.GetType() != this.GetType())
-            {
-                return false;
-            }
-
-            return this.Equals((ChannelId)obj);
-        }
-
-        public override int GetHashCode()
-        {
-            unchecked
-            {
-                int hashCode = 0;
-                hashCode = (hashCode * 397) ^ (this.Value != null ? this.Value.GetHashCode() : 0);
-                return hashCode;
-            }
-        }
-
-        protected bool Equals(ChannelId other)
-        {
-            if (!object.Equals(this.Value, other.Value))
-            {
-                return false;
-            }
-
-            return true;
-        }
-    }
-
-}
-namespace Fifthweek.Api.Subscriptions
-{
-    using System;
-    using System.Linq;
-    using Fifthweek.CodeGeneration;
-    using System.Threading.Tasks;
-    using Dapper;
-    using Fifthweek.Api.Core;
-    using Fifthweek.Api.Identity.Membership;
-    using Fifthweek.Api.Persistence;
-    using Fifthweek.Shared;
-    using Fifthweek.Api.Persistence.Identity;
-    using System.Collections.Generic;
-    using System.Diagnostics.CodeAnalysis;
-    public partial class SubscriptionId 
-    {
-        public override string ToString()
-        {
-            return string.Format("SubscriptionId({0})", this.Value == null ? "null" : this.Value.ToString());
-        }
-
-        public override bool Equals(object obj)
-        {
-            if (ReferenceEquals(null, obj))
-            {
-                return false;
-            }
-
-            if (ReferenceEquals(this, obj))
-            {
-                return true;
-            }
-
-            if (obj.GetType() != this.GetType())
-            {
-                return false;
-            }
-
-            return this.Equals((SubscriptionId)obj);
-        }
-
-        public override int GetHashCode()
-        {
-            unchecked
-            {
-                int hashCode = 0;
-                hashCode = (hashCode * 397) ^ (this.Value != null ? this.Value.GetHashCode() : 0);
-                return hashCode;
-            }
-        }
-
-        protected bool Equals(SubscriptionId other)
-        {
-            if (!object.Equals(this.Value, other.Value))
-            {
-                return false;
-            }
-
-            return true;
-        }
-    }
-
-}
 namespace Fifthweek.Api.Subscriptions.Commands
 {
-    using System;
-    using System.Linq;
+    using Fifthweek.Api.Channels;
     using Fifthweek.Api.Identity.Membership;
     using Fifthweek.CodeGeneration;
-    using System.Threading.Tasks;
-    using System.Transactions;
-    using Fifthweek.Api.Core;
-    using Fifthweek.Api.Persistence;
-    using Fifthweek.Api.Persistence.Identity;
-    using Fifthweek.Shared;
-    using Fifthweek.Api.Identity.Membership.Events;
-    using Fifthweek.Api.FileManagement;
     public partial class CreateSubscriptionCommand 
     {
         public override string ToString()
@@ -963,18 +580,8 @@ namespace Fifthweek.Api.Subscriptions.Commands
 }
 namespace Fifthweek.Api.Subscriptions.Commands
 {
-    using System;
-    using System.Linq;
     using Fifthweek.Api.Identity.Membership;
     using Fifthweek.CodeGeneration;
-    using System.Threading.Tasks;
-    using System.Transactions;
-    using Fifthweek.Api.Core;
-    using Fifthweek.Api.Persistence;
-    using Fifthweek.Api.Persistence.Identity;
-    using Fifthweek.Shared;
-    using Fifthweek.Api.Identity.Membership.Events;
-    using Fifthweek.Api.FileManagement;
     public partial class PromoteNewUserToCreatorCommand 
     {
         public override string ToString()
@@ -1026,18 +633,9 @@ namespace Fifthweek.Api.Subscriptions.Commands
 }
 namespace Fifthweek.Api.Subscriptions.Commands
 {
-    using System;
-    using System.Linq;
+    using Fifthweek.Api.FileManagement;
     using Fifthweek.Api.Identity.Membership;
     using Fifthweek.CodeGeneration;
-    using System.Threading.Tasks;
-    using System.Transactions;
-    using Fifthweek.Api.Core;
-    using Fifthweek.Api.Persistence;
-    using Fifthweek.Api.Persistence.Identity;
-    using Fifthweek.Shared;
-    using Fifthweek.Api.Identity.Membership.Events;
-    using Fifthweek.Api.FileManagement;
     public partial class UpdateSubscriptionCommand 
     {
         public override string ToString()
@@ -1129,20 +727,159 @@ namespace Fifthweek.Api.Subscriptions.Commands
     }
 
 }
+namespace Fifthweek.Api.Subscriptions.Controllers
+{
+    using Fifthweek.Api.Channels;
+    using Fifthweek.CodeGeneration;
+    public partial class NewSubscriptionData 
+    {
+        public override string ToString()
+        {
+            return string.Format("NewSubscriptionData(\"{0}\", \"{1}\", {2})", this.SubscriptionName == null ? "null" : this.SubscriptionName.ToString(), this.Tagline == null ? "null" : this.Tagline.ToString(), this.BasePrice == null ? "null" : this.BasePrice.ToString());
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj))
+            {
+                return false;
+            }
+
+            if (ReferenceEquals(this, obj))
+            {
+                return true;
+            }
+
+            if (obj.GetType() != this.GetType())
+            {
+                return false;
+            }
+
+            return this.Equals((NewSubscriptionData)obj);
+        }
+
+        public override int GetHashCode()
+        {
+            unchecked
+            {
+                int hashCode = 0;
+                hashCode = (hashCode * 397) ^ (this.SubscriptionName != null ? this.SubscriptionName.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.Tagline != null ? this.Tagline.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.BasePrice != null ? this.BasePrice.GetHashCode() : 0);
+                return hashCode;
+            }
+        }
+
+        protected bool Equals(NewSubscriptionData other)
+        {
+            if (!object.Equals(this.SubscriptionName, other.SubscriptionName))
+            {
+                return false;
+            }
+
+            if (!object.Equals(this.Tagline, other.Tagline))
+            {
+                return false;
+            }
+
+            if (!object.Equals(this.BasePrice, other.BasePrice))
+            {
+                return false;
+            }
+
+            return true;
+        }
+    }
+
+}
+namespace Fifthweek.Api.Subscriptions.Controllers
+{
+    using Fifthweek.Api.FileManagement;
+    using Fifthweek.CodeGeneration;
+    public partial class UpdatedSubscriptionData 
+    {
+        public override string ToString()
+        {
+            return string.Format("UpdatedSubscriptionData(\"{0}\", \"{1}\", \"{2}\", {3}, \"{4}\", \"{5}\")", this.SubscriptionName == null ? "null" : this.SubscriptionName.ToString(), this.Tagline == null ? "null" : this.Tagline.ToString(), this.Introduction == null ? "null" : this.Introduction.ToString(), this.HeaderImageFileId == null ? "null" : this.HeaderImageFileId.ToString(), this.Video == null ? "null" : this.Video.ToString(), this.Description == null ? "null" : this.Description.ToString());
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj))
+            {
+                return false;
+            }
+
+            if (ReferenceEquals(this, obj))
+            {
+                return true;
+            }
+
+            if (obj.GetType() != this.GetType())
+            {
+                return false;
+            }
+
+            return this.Equals((UpdatedSubscriptionData)obj);
+        }
+
+        public override int GetHashCode()
+        {
+            unchecked
+            {
+                int hashCode = 0;
+                hashCode = (hashCode * 397) ^ (this.SubscriptionName != null ? this.SubscriptionName.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.Tagline != null ? this.Tagline.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.Introduction != null ? this.Introduction.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.HeaderImageFileId != null ? this.HeaderImageFileId.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.Video != null ? this.Video.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.Description != null ? this.Description.GetHashCode() : 0);
+                return hashCode;
+            }
+        }
+
+        protected bool Equals(UpdatedSubscriptionData other)
+        {
+            if (!object.Equals(this.SubscriptionName, other.SubscriptionName))
+            {
+                return false;
+            }
+
+            if (!object.Equals(this.Tagline, other.Tagline))
+            {
+                return false;
+            }
+
+            if (!object.Equals(this.Introduction, other.Introduction))
+            {
+                return false;
+            }
+
+            if (!object.Equals(this.HeaderImageFileId, other.HeaderImageFileId))
+            {
+                return false;
+            }
+
+            if (!object.Equals(this.Video, other.Video))
+            {
+                return false;
+            }
+
+            if (!object.Equals(this.Description, other.Description))
+            {
+                return false;
+            }
+
+            return true;
+        }
+    }
+
+}
 namespace Fifthweek.Api.Subscriptions
 {
-    using System;
-    using System.Linq;
-    using Fifthweek.CodeGeneration;
-    using System.Threading.Tasks;
-    using Dapper;
     using Fifthweek.Api.Core;
-    using Fifthweek.Api.Identity.Membership;
-    using Fifthweek.Api.Persistence;
+    using Fifthweek.CodeGeneration;
     using Fifthweek.Shared;
-    using Fifthweek.Api.Persistence.Identity;
-    using System.Collections.Generic;
-    using System.Diagnostics.CodeAnalysis;
     public partial class CreatorStatus 
     {
         public override string ToString()
@@ -1200,14 +937,9 @@ namespace Fifthweek.Api.Subscriptions
 }
 namespace Fifthweek.Api.Subscriptions.Queries
 {
-    using System;
-    using System.Linq;
     using Fifthweek.Api.Core;
     using Fifthweek.Api.Identity.Membership;
     using Fifthweek.CodeGeneration;
-    using System.Threading.Tasks;
-    using Dapper;
-    using Fifthweek.Api.Persistence;
     public partial class GetCreatorStatusQuery 
     {
         public override string ToString()
@@ -1263,243 +995,15 @@ namespace Fifthweek.Api.Subscriptions.Queries
     }
 
 }
-namespace Fifthweek.Api.Subscriptions.Controllers
-{
-    using System;
-    using System.Linq;
-    using System.Threading.Tasks;
-    using System.Web.Http;
-    using System.Web.Http.Description;
-    using Fifthweek.Api.Core;
-    using Fifthweek.Api.Identity.Membership;
-    using Fifthweek.Api.Identity.OAuth;
-    using Fifthweek.Api.Subscriptions.Commands;
-    using Fifthweek.Api.Subscriptions.Queries;
-    using Fifthweek.CodeGeneration;
-    using Fifthweek.Shared;
-    using Fifthweek.Api.FileManagement;
-    public partial class NewSubscriptionData 
-    {
-        public override string ToString()
-        {
-            return string.Format("NewSubscriptionData({0}, {1}, {2}, \"{3}\", \"{4}\", {5})", this.SubscriptionNameObject == null ? "null" : this.SubscriptionNameObject.ToString(), this.TaglineObject == null ? "null" : this.TaglineObject.ToString(), this.BasePriceObject == null ? "null" : this.BasePriceObject.ToString(), this.SubscriptionName == null ? "null" : this.SubscriptionName.ToString(), this.Tagline == null ? "null" : this.Tagline.ToString(), this.BasePrice == null ? "null" : this.BasePrice.ToString());
-        }
-
-        public override bool Equals(object obj)
-        {
-            if (ReferenceEquals(null, obj))
-            {
-                return false;
-            }
-
-            if (ReferenceEquals(this, obj))
-            {
-                return true;
-            }
-
-            if (obj.GetType() != this.GetType())
-            {
-                return false;
-            }
-
-            return this.Equals((NewSubscriptionData)obj);
-        }
-
-        public override int GetHashCode()
-        {
-            unchecked
-            {
-                int hashCode = 0;
-                hashCode = (hashCode * 397) ^ (this.SubscriptionNameObject != null ? this.SubscriptionNameObject.GetHashCode() : 0);
-                hashCode = (hashCode * 397) ^ (this.TaglineObject != null ? this.TaglineObject.GetHashCode() : 0);
-                hashCode = (hashCode * 397) ^ (this.BasePriceObject != null ? this.BasePriceObject.GetHashCode() : 0);
-                hashCode = (hashCode * 397) ^ (this.SubscriptionName != null ? this.SubscriptionName.GetHashCode() : 0);
-                hashCode = (hashCode * 397) ^ (this.Tagline != null ? this.Tagline.GetHashCode() : 0);
-                hashCode = (hashCode * 397) ^ (this.BasePrice != null ? this.BasePrice.GetHashCode() : 0);
-                return hashCode;
-            }
-        }
-
-        protected bool Equals(NewSubscriptionData other)
-        {
-            if (!object.Equals(this.SubscriptionNameObject, other.SubscriptionNameObject))
-            {
-                return false;
-            }
-
-            if (!object.Equals(this.TaglineObject, other.TaglineObject))
-            {
-                return false;
-            }
-
-            if (!object.Equals(this.BasePriceObject, other.BasePriceObject))
-            {
-                return false;
-            }
-
-            if (!object.Equals(this.SubscriptionName, other.SubscriptionName))
-            {
-                return false;
-            }
-
-            if (!object.Equals(this.Tagline, other.Tagline))
-            {
-                return false;
-            }
-
-            if (!object.Equals(this.BasePrice, other.BasePrice))
-            {
-                return false;
-            }
-
-            return true;
-        }
-    }
-
-}
-namespace Fifthweek.Api.Subscriptions.Controllers
-{
-    using System;
-    using System.Linq;
-    using System.Threading.Tasks;
-    using System.Web.Http;
-    using System.Web.Http.Description;
-    using Fifthweek.Api.Core;
-    using Fifthweek.Api.Identity.Membership;
-    using Fifthweek.Api.Identity.OAuth;
-    using Fifthweek.Api.Subscriptions.Commands;
-    using Fifthweek.Api.Subscriptions.Queries;
-    using Fifthweek.CodeGeneration;
-    using Fifthweek.Shared;
-    using Fifthweek.Api.FileManagement;
-    public partial class UpdatedSubscriptionData 
-    {
-        public override string ToString()
-        {
-            return string.Format("UpdatedSubscriptionData({0}, {1}, {2}, {3}, {4}, \"{5}\", \"{6}\", \"{7}\", {8}, \"{9}\", \"{10}\")", this.SubscriptionNameObject == null ? "null" : this.SubscriptionNameObject.ToString(), this.TaglineObject == null ? "null" : this.TaglineObject.ToString(), this.IntroductionObject == null ? "null" : this.IntroductionObject.ToString(), this.VideoObject == null ? "null" : this.VideoObject.ToString(), this.DescriptionObject == null ? "null" : this.DescriptionObject.ToString(), this.SubscriptionName == null ? "null" : this.SubscriptionName.ToString(), this.Tagline == null ? "null" : this.Tagline.ToString(), this.Introduction == null ? "null" : this.Introduction.ToString(), this.HeaderImageFileId == null ? "null" : this.HeaderImageFileId.ToString(), this.Video == null ? "null" : this.Video.ToString(), this.Description == null ? "null" : this.Description.ToString());
-        }
-
-        public override bool Equals(object obj)
-        {
-            if (ReferenceEquals(null, obj))
-            {
-                return false;
-            }
-
-            if (ReferenceEquals(this, obj))
-            {
-                return true;
-            }
-
-            if (obj.GetType() != this.GetType())
-            {
-                return false;
-            }
-
-            return this.Equals((UpdatedSubscriptionData)obj);
-        }
-
-        public override int GetHashCode()
-        {
-            unchecked
-            {
-                int hashCode = 0;
-                hashCode = (hashCode * 397) ^ (this.SubscriptionNameObject != null ? this.SubscriptionNameObject.GetHashCode() : 0);
-                hashCode = (hashCode * 397) ^ (this.TaglineObject != null ? this.TaglineObject.GetHashCode() : 0);
-                hashCode = (hashCode * 397) ^ (this.IntroductionObject != null ? this.IntroductionObject.GetHashCode() : 0);
-                hashCode = (hashCode * 397) ^ (this.VideoObject != null ? this.VideoObject.GetHashCode() : 0);
-                hashCode = (hashCode * 397) ^ (this.DescriptionObject != null ? this.DescriptionObject.GetHashCode() : 0);
-                hashCode = (hashCode * 397) ^ (this.SubscriptionName != null ? this.SubscriptionName.GetHashCode() : 0);
-                hashCode = (hashCode * 397) ^ (this.Tagline != null ? this.Tagline.GetHashCode() : 0);
-                hashCode = (hashCode * 397) ^ (this.Introduction != null ? this.Introduction.GetHashCode() : 0);
-                hashCode = (hashCode * 397) ^ (this.HeaderImageFileId != null ? this.HeaderImageFileId.GetHashCode() : 0);
-                hashCode = (hashCode * 397) ^ (this.Video != null ? this.Video.GetHashCode() : 0);
-                hashCode = (hashCode * 397) ^ (this.Description != null ? this.Description.GetHashCode() : 0);
-                return hashCode;
-            }
-        }
-
-        protected bool Equals(UpdatedSubscriptionData other)
-        {
-            if (!object.Equals(this.SubscriptionNameObject, other.SubscriptionNameObject))
-            {
-                return false;
-            }
-
-            if (!object.Equals(this.TaglineObject, other.TaglineObject))
-            {
-                return false;
-            }
-
-            if (!object.Equals(this.IntroductionObject, other.IntroductionObject))
-            {
-                return false;
-            }
-
-            if (!object.Equals(this.VideoObject, other.VideoObject))
-            {
-                return false;
-            }
-
-            if (!object.Equals(this.DescriptionObject, other.DescriptionObject))
-            {
-                return false;
-            }
-
-            if (!object.Equals(this.SubscriptionName, other.SubscriptionName))
-            {
-                return false;
-            }
-
-            if (!object.Equals(this.Tagline, other.Tagline))
-            {
-                return false;
-            }
-
-            if (!object.Equals(this.Introduction, other.Introduction))
-            {
-                return false;
-            }
-
-            if (!object.Equals(this.HeaderImageFileId, other.HeaderImageFileId))
-            {
-                return false;
-            }
-
-            if (!object.Equals(this.Video, other.Video))
-            {
-                return false;
-            }
-
-            if (!object.Equals(this.Description, other.Description))
-            {
-                return false;
-            }
-
-            return true;
-        }
-    }
-
-}
 namespace Fifthweek.Api.Subscriptions
 {
     using System;
-    using System.Linq;
     using Fifthweek.CodeGeneration;
-    using System.Threading.Tasks;
-    using Dapper;
-    using Fifthweek.Api.Core;
-    using Fifthweek.Api.Identity.Membership;
-    using Fifthweek.Api.Persistence;
-    using Fifthweek.Shared;
-    using Fifthweek.Api.Persistence.Identity;
-    using System.Collections.Generic;
-    using System.Diagnostics.CodeAnalysis;
-    public partial class ValidChannelPriceInUsCentsPerWeek 
+    public partial class SubscriptionId 
     {
         public override string ToString()
         {
-            return string.Format("ValidChannelPriceInUsCentsPerWeek({0})", this.Value == null ? "null" : this.Value.ToString());
+            return string.Format("SubscriptionId({0})", this.Value == null ? "null" : this.Value.ToString());
         }
 
         public override bool Equals(object obj)
@@ -1519,7 +1023,7 @@ namespace Fifthweek.Api.Subscriptions
                 return false;
             }
 
-            return this.Equals((ValidChannelPriceInUsCentsPerWeek)obj);
+            return this.Equals((SubscriptionId)obj);
         }
 
         public override int GetHashCode()
@@ -1532,7 +1036,7 @@ namespace Fifthweek.Api.Subscriptions
             }
         }
 
-        protected bool Equals(ValidChannelPriceInUsCentsPerWeek other)
+        protected bool Equals(SubscriptionId other)
         {
             if (!object.Equals(this.Value, other.Value))
             {
@@ -1547,17 +1051,8 @@ namespace Fifthweek.Api.Subscriptions
 namespace Fifthweek.Api.Subscriptions
 {
     using System;
-    using System.Linq;
-    using Fifthweek.CodeGeneration;
-    using System.Threading.Tasks;
-    using Dapper;
-    using Fifthweek.Api.Core;
-    using Fifthweek.Api.Identity.Membership;
-    using Fifthweek.Api.Persistence;
-    using Fifthweek.Shared;
-    using Fifthweek.Api.Persistence.Identity;
     using System.Collections.Generic;
-    using System.Diagnostics.CodeAnalysis;
+    using Fifthweek.CodeGeneration;
     public partial class ValidDescription 
     {
         public override string ToString()
@@ -1610,17 +1105,9 @@ namespace Fifthweek.Api.Subscriptions
 namespace Fifthweek.Api.Subscriptions
 {
     using System;
+    using System.Collections.Generic;
     using System.Linq;
     using Fifthweek.CodeGeneration;
-    using System.Threading.Tasks;
-    using Dapper;
-    using Fifthweek.Api.Core;
-    using Fifthweek.Api.Identity.Membership;
-    using Fifthweek.Api.Persistence;
-    using Fifthweek.Shared;
-    using Fifthweek.Api.Persistence.Identity;
-    using System.Collections.Generic;
-    using System.Diagnostics.CodeAnalysis;
     public partial class ValidExternalVideoUrl 
     {
         public override string ToString()
@@ -1673,17 +1160,10 @@ namespace Fifthweek.Api.Subscriptions
 namespace Fifthweek.Api.Subscriptions
 {
     using System;
-    using System.Linq;
-    using Fifthweek.CodeGeneration;
-    using System.Threading.Tasks;
-    using Dapper;
-    using Fifthweek.Api.Core;
-    using Fifthweek.Api.Identity.Membership;
-    using Fifthweek.Api.Persistence;
-    using Fifthweek.Shared;
-    using Fifthweek.Api.Persistence.Identity;
     using System.Collections.Generic;
     using System.Diagnostics.CodeAnalysis;
+    using System.Linq;
+    using Fifthweek.CodeGeneration;
     public partial class ValidIntroduction 
     {
         public override string ToString()
@@ -1736,17 +1216,9 @@ namespace Fifthweek.Api.Subscriptions
 namespace Fifthweek.Api.Subscriptions
 {
     using System;
+    using System.Collections.Generic;
     using System.Linq;
     using Fifthweek.CodeGeneration;
-    using System.Threading.Tasks;
-    using Dapper;
-    using Fifthweek.Api.Core;
-    using Fifthweek.Api.Identity.Membership;
-    using Fifthweek.Api.Persistence;
-    using Fifthweek.Shared;
-    using Fifthweek.Api.Persistence.Identity;
-    using System.Collections.Generic;
-    using System.Diagnostics.CodeAnalysis;
     public partial class ValidSubscriptionName 
     {
         public override string ToString()
@@ -1799,17 +1271,9 @@ namespace Fifthweek.Api.Subscriptions
 namespace Fifthweek.Api.Subscriptions
 {
     using System;
+    using System.Collections.Generic;
     using System.Linq;
     using Fifthweek.CodeGeneration;
-    using System.Threading.Tasks;
-    using Dapper;
-    using Fifthweek.Api.Core;
-    using Fifthweek.Api.Identity.Membership;
-    using Fifthweek.Api.Persistence;
-    using Fifthweek.Shared;
-    using Fifthweek.Api.Persistence.Identity;
-    using System.Collections.Generic;
-    using System.Diagnostics.CodeAnalysis;
     public partial class ValidTagline 
     {
         public override string ToString()
@@ -1861,23 +1325,15 @@ namespace Fifthweek.Api.Subscriptions
 }
 namespace Fifthweek.Api.Subscriptions.Controllers
 {
-    using System;
-    using System.Linq;
-    using System.Threading.Tasks;
-    using System.Web.Http;
-    using System.Web.Http.Description;
-    using Fifthweek.Api.Core;
-    using Fifthweek.Api.Identity.Membership;
-    using Fifthweek.Api.Identity.OAuth;
-    using Fifthweek.Api.Subscriptions.Commands;
-    using Fifthweek.Api.Subscriptions.Queries;
+    using Fifthweek.Api.Channels;
     using Fifthweek.CodeGeneration;
-    using Fifthweek.Shared;
-    using Fifthweek.Api.FileManagement;
     public partial class NewSubscriptionData 
     {
+		[Optional]
         public ValidSubscriptionName SubscriptionNameObject { get; set; }
+		[Optional]
         public ValidTagline TaglineObject { get; set; }
+		[Optional]
         public ValidChannelPriceInUsCentsPerWeek BasePriceObject { get; set; }
     }
 
@@ -1956,25 +1412,19 @@ namespace Fifthweek.Api.Subscriptions.Controllers
 }
 namespace Fifthweek.Api.Subscriptions.Controllers
 {
-    using System;
-    using System.Linq;
-    using System.Threading.Tasks;
-    using System.Web.Http;
-    using System.Web.Http.Description;
-    using Fifthweek.Api.Core;
-    using Fifthweek.Api.Identity.Membership;
-    using Fifthweek.Api.Identity.OAuth;
-    using Fifthweek.Api.Subscriptions.Commands;
-    using Fifthweek.Api.Subscriptions.Queries;
-    using Fifthweek.CodeGeneration;
-    using Fifthweek.Shared;
     using Fifthweek.Api.FileManagement;
+    using Fifthweek.CodeGeneration;
     public partial class UpdatedSubscriptionData 
     {
+		[Optional]
         public ValidSubscriptionName SubscriptionNameObject { get; set; }
+		[Optional]
         public ValidTagline TaglineObject { get; set; }
+		[Optional]
         public ValidIntroduction IntroductionObject { get; set; }
+		[Optional]
         public ValidExternalVideoUrl VideoObject { get; set; }
+		[Optional]
         public ValidDescription DescriptionObject { get; set; }
     }
 

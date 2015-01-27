@@ -3,13 +3,13 @@
     using System;
     using System.Threading.Tasks;
 
+    using Fifthweek.Api.Channels;
     using Fifthweek.Api.Collections.Commands;
     using Fifthweek.Api.Collections.Controllers;
     using Fifthweek.Api.Collections.Queries;
     using Fifthweek.Api.Core;
     using Fifthweek.Api.Identity.Membership;
     using Fifthweek.Api.Identity.OAuth;
-    using Fifthweek.Api.Subscriptions;
 
     using Microsoft.VisualStudio.TestTools.UnitTesting;
 

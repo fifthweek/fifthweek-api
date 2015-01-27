@@ -1,10 +1,11 @@
-﻿namespace Fifthweek.Api.Subscriptions.Tests
+﻿namespace Fifthweek.Api.Channels.Tests
 {
     using System;
     using System.Threading.Tasks;
 
     using Dapper;
 
+    using Fifthweek.Api.Channels;
     using Fifthweek.Api.Identity.Membership;
     using Fifthweek.Api.Persistence.Tests.Shared;
 

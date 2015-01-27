@@ -1,11 +1,11 @@
-﻿namespace Fifthweek.Api.Subscriptions.Tests
+﻿namespace Fifthweek.Api.Channels.Tests
 {
     using System;
     using System.Threading.Tasks;
 
+    using Fifthweek.Api.Channels;
     using Fifthweek.Api.Core;
     using Fifthweek.Api.Identity.Membership;
-    using Fifthweek.Tests.Shared;
 
     using Microsoft.VisualStudio.TestTools.UnitTesting;
 
@@ -47,9 +47,15 @@
 
             Assert.IsFalse(result);
 
-            Func<Task> badMethodCall = () => this.target.AssertPostingAllowedAsync(UserId, ChannelId);
+        }
 
-            await badMethodCall.AssertExceptionAsync<UnauthorizedException>();
+        [TestMethod]
+        [ExpectedException(typeof(UnauthorizedException))]
+        public async Task WhenAuthorizingPost_ItShouldForbidIfUserDoesNotOwnChannel2()
+        {
+            this.channelOwnership.Setup(_ => _.IsOwnerAsync(UserId, ChannelId)).ReturnsAsync(false);
+
+            await this.target.AssertPostingAllowedAsync(UserId, ChannelId);
         }
     }
 }

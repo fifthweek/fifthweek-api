@@ -5,7 +5,6 @@
 
     using Fifthweek.Api.Core;
     using Fifthweek.Api.Identity.Membership;
-    using Fifthweek.Tests.Shared;
 
     using Microsoft.VisualStudio.TestTools.UnitTesting;
 
@@ -47,9 +46,15 @@
 
             Assert.IsFalse(result);
 
-            Func<Task> badMethodCall = () => this.target.AssertPostingAllowedAsync(UserId, CollectionId);
+        }
 
-            await badMethodCall.AssertExceptionAsync<UnauthorizedException>();
+        [TestMethod]
+        [ExpectedException(typeof(UnauthorizedException))]
+        public async Task WhenAuthorizingPost_ItShouldForbidIfUserDoesNotOwnCollection2()
+        {
+            this.collectionOwnership.Setup(_ => _.IsOwnerAsync(UserId, CollectionId)).ReturnsAsync(false);
+
+            await this.target.AssertPostingAllowedAsync(UserId, CollectionId);
         }
     }
 }

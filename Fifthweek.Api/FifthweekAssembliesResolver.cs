@@ -12,6 +12,7 @@
             typeof(Shared.AutofacRegistration).Assembly,
             typeof(Core.AutofacRegistration).Assembly,
             typeof(Availability.AutofacRegistration).Assembly,
+            typeof(Channels.AutofacRegistration).Assembly,
             typeof(Collections.AutofacRegistration).Assembly,
             typeof(Identity.Membership.AutofacRegistration).Assembly,
             typeof(Identity.OAuth.AutofacRegistration).Assembly,

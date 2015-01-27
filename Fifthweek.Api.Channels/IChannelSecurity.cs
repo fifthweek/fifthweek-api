@@ -1,4 +1,4 @@
-namespace Fifthweek.Api.Subscriptions
+namespace Fifthweek.Api.Channels
 {
     using System.Threading.Tasks;
 

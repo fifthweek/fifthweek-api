@@ -1,6 +1,6 @@
 ﻿namespace Fifthweek.Api.Collections.Controllers
 {
-    using Fifthweek.Api.Subscriptions;
+    using Fifthweek.Api.Channels;
     using Fifthweek.CodeGeneration;
 
     [AutoConstructor, AutoEqualityMembers]

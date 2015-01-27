@@ -4,6 +4,7 @@
     using System.Threading.Tasks;
     using System.Web.Http.Results;
 
+    using Fifthweek.Api.Channels;
     using Fifthweek.Api.Core;
     using Fifthweek.Api.FileManagement;
     using Fifthweek.Api.Identity.Membership;

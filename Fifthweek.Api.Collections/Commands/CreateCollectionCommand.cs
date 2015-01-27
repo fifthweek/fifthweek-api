@@ -1,7 +1,7 @@
 ﻿namespace Fifthweek.Api.Collections.Commands
 {
+    using Fifthweek.Api.Channels;
     using Fifthweek.Api.Identity.Membership;
-    using Fifthweek.Api.Subscriptions;
     using Fifthweek.CodeGeneration;
 
     [AutoConstructor, AutoEqualityMembers]

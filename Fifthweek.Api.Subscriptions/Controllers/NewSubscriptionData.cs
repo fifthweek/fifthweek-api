@@ -1,8 +1,7 @@
 ﻿namespace Fifthweek.Api.Subscriptions.Controllers
 {
-    using Fifthweek.Api.Core;
+    using Fifthweek.Api.Channels;
     using Fifthweek.CodeGeneration;
-    using Fifthweek.Shared;
 
     [AutoEqualityMembers]
     public partial class NewSubscriptionData
