@@ -138,9 +138,17 @@
       <Project>{BD52863E-063D-45A5-9CA8-7541804D1313}</Project>
       <Name>Fifthweek.Api.Core</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Fifthweek.Api.FileManagement.Shared\Fifthweek.Api.FileManagement.Shared.csproj">
+      <Project>{3ca706af-5916-414e-9625-fb8fcbbd82f7}</Project>
+      <Name>Fifthweek.Api.FileManagement.Shared</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Fifthweek.Api.FileManagement\Fifthweek.Api.FileManagement.csproj">
       <Project>{3242e7fc-35ce-4e69-b07b-b8dcb3c69348}</Project>
       <Name>Fifthweek.Api.FileManagement</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Fifthweek.Api.Identity.Shared\Fifthweek.Api.Identity.Shared.csproj">
+      <Project>{1B07E9CC-1B0E-49D7-96D6-0F8C58A7C0CA}</Project>
+      <Name>Fifthweek.Api.Identity.Shared</Name>
     </ProjectReference>
     <ProjectReference Include="..\Fifthweek.Api.Identity.Tests.Shared\Fifthweek.Api.Identity.Tests.Shared.csproj">
       <Project>{45E1C6C7-845A-480F-BBBC-5DF3135D1E19}</Project>

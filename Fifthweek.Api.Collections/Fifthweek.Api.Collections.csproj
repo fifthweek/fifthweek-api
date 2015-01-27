@@ -92,9 +92,17 @@
       <Project>{df1bb4e7-5315-4e5c-ba73-6dfa4d9e7564}</Project>
       <Name>Fifthweek.Api.Channels.Shared</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Fifthweek.Api.Collections.Shared\Fifthweek.Api.Collections.Shared.csproj">
+      <Project>{23b50a6b-d27c-4761-be96-1f90b9408a87}</Project>
+      <Name>Fifthweek.Api.Collections.Shared</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Fifthweek.Api.Core\Fifthweek.Api.Core.csproj">
       <Project>{BD52863E-063D-45A5-9CA8-7541804D1313}</Project>
       <Name>Fifthweek.Api.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Fifthweek.Api.Identity.Shared\Fifthweek.Api.Identity.Shared.csproj">
+      <Project>{1B07E9CC-1B0E-49D7-96D6-0F8C58A7C0CA}</Project>
+      <Name>Fifthweek.Api.Identity.Shared</Name>
     </ProjectReference>
     <ProjectReference Include="..\Fifthweek.Api.Identity\Fifthweek.Api.Identity.csproj">
       <Project>{6A2AF270-E4D4-4C4E-A88F-807F7B9A03B7}</Project>

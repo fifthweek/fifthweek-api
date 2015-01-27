@@ -111,6 +111,10 @@
       <Project>{208F4ACA-4012-466F-BC49-7E2C443D3C06}</Project>
       <Name>Fifthweek.Api.Channels</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Fifthweek.Api.Collections.Shared\Fifthweek.Api.Collections.Shared.csproj">
+      <Project>{23b50a6b-d27c-4761-be96-1f90b9408a87}</Project>
+      <Name>Fifthweek.Api.Collections.Shared</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Fifthweek.Api.Collections\Fifthweek.Api.Collections.csproj">
       <Project>{92FF5E2B-F153-433F-92F6-DD580D9E09B8}</Project>
       <Name>Fifthweek.Api.Collections</Name>
@@ -118,6 +122,10 @@
     <ProjectReference Include="..\Fifthweek.Api.Core\Fifthweek.Api.Core.csproj">
       <Project>{BD52863E-063D-45A5-9CA8-7541804D1313}</Project>
       <Name>Fifthweek.Api.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Fifthweek.Api.Identity.Shared\Fifthweek.Api.Identity.Shared.csproj">
+      <Project>{1B07E9CC-1B0E-49D7-96D6-0F8C58A7C0CA}</Project>
+      <Name>Fifthweek.Api.Identity.Shared</Name>
     </ProjectReference>
     <ProjectReference Include="..\Fifthweek.Api.Identity.Tests.Shared\Fifthweek.Api.Identity.Tests.Shared.csproj">
       <Project>{45E1C6C7-845A-480F-BBBC-5DF3135D1E19}</Project>

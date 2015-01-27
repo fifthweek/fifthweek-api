@@ -170,6 +170,10 @@
       <Project>{bd52863e-063d-45a5-9ca8-7541804d1313}</Project>
       <Name>Fifthweek.Api.Core</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Fifthweek.Api.Identity.Shared\Fifthweek.Api.Identity.Shared.csproj">
+      <Project>{1B07E9CC-1B0E-49D7-96D6-0F8C58A7C0CA}</Project>
+      <Name>Fifthweek.Api.Identity.Shared</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Fifthweek.Api.Persistence\Fifthweek.Api.Persistence.csproj">
       <Project>{9c18bee3-fab5-4a00-8a94-a1faea370175}</Project>
       <Name>Fifthweek.Api.Persistence</Name>
@@ -194,9 +198,7 @@
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Profile\Queries\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

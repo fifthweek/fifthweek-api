@@ -113,6 +113,10 @@
       <Project>{BD52863E-063D-45A5-9CA8-7541804D1313}</Project>
       <Name>Fifthweek.Api.Core</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Fifthweek.Api.Identity.Shared\Fifthweek.Api.Identity.Shared.csproj">
+      <Project>{1B07E9CC-1B0E-49D7-96D6-0F8C58A7C0CA}</Project>
+      <Name>Fifthweek.Api.Identity.Shared</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Fifthweek.Api.Identity\Fifthweek.Api.Identity.csproj">
       <Project>{6a2af270-e4d4-4c4e-a88f-807f7b9a03b7}</Project>
       <Name>Fifthweek.Api.Identity</Name>
