@@ -102,7 +102,7 @@
     <Compile Include="Membership\MockIdentityResult.cs" />
     <Compile Include="Membership\Queries\IsUsernameAvailableQueryHandlerTests.cs" />
     <Compile Include="Membership\Queries\GetUserQueryHandlerTests.cs" />
-    <Compile Include="Membership\UserRepositoryTests.cs" />
+    <Compile Include="Membership\UpdateUserTimeStampsDbStatementTests.cs" />
     <Compile Include="OAuth\Commands\AddRefreshTokenCommandHandlerTests.cs" />
     <Compile Include="OAuth\Commands\RemoveRefreshTokenCommandHandlerTests.cs" />
     <Compile Include="OAuth\Queries\GetClientQueryHandlerTests.cs" />

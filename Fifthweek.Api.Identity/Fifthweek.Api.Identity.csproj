@@ -123,12 +123,12 @@
     <Compile Include="Membership\Queries\IsPasswordResetTokenValidQueryHandler.cs" />
     <Compile Include="Membership\RegisterUserDbStatement.cs" />
     <Compile Include="Membership\RequesterSecurity.cs" />
-    <Compile Include="Membership\IUserRepository.cs" />
+    <Compile Include="Membership\IUpdateUserTimeStampsDbStatement.cs" />
     <Compile Include="Membership\Queries\IsUsernameAvailableQuery.cs" />
     <Compile Include="Membership\Queries\IsUsernameAvailableQueryHandler.cs" />
     <Compile Include="Membership\Queries\GetUserQuery.cs" />
     <Compile Include="Membership\Queries\GetUserQueryHandler.cs" />
-    <Compile Include="Membership\UserRepository.cs" />
+    <Compile Include="Membership\UpdateUserTimeStampsDbStatement.cs" />
     <Compile Include="OAuth\ApplicationType.cs" />
     <Compile Include="OAuth\AutofacRegistration.cs" />
     <Compile Include="OAuth\ChallengeResult.cs" />

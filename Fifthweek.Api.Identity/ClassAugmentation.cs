@@ -149,13 +149,13 @@ namespace Fifthweek.Api.Identity.Membership.Commands
     public partial class UpdateLastAccessTokenDateCommand 
     {
         public UpdateLastAccessTokenDateCommand(
-            Fifthweek.Api.Identity.Shared.Membership.ValidUsername username, 
+            Fifthweek.Api.Identity.Shared.Membership.UserId userId, 
             System.DateTime timestamp, 
             Fifthweek.Api.Identity.Membership.Commands.UpdateLastAccessTokenDateCommand.AccessTokenCreationType creationType)
         {
-            if (username == null)
+            if (userId == null)
             {
-                throw new ArgumentNullException("username");
+                throw new ArgumentNullException("userId");
             }
 
             if (timestamp == null)
@@ -168,7 +168,7 @@ namespace Fifthweek.Api.Identity.Membership.Commands
                 throw new ArgumentNullException("creationType");
             }
 
-            this.Username = username;
+            this.UserId = userId;
             this.Timestamp = timestamp;
             this.CreationType = creationType;
         }
@@ -324,9 +324,11 @@ namespace Fifthweek.Api.Identity.Membership
     using Fifthweek.Api.Persistence;
     using Fifthweek.CodeGeneration;
     using Fifthweek.Shared;
-    public partial class UserRepository 
+    using System.Data.SqlTypes;
+    using Fifthweek.Api.Persistence.Identity;
+    public partial class UpdateUserTimeStampsDbStatement 
     {
-        public UserRepository(
+        public UpdateUserTimeStampsDbStatement(
             Fifthweek.Api.Persistence.IFifthweekDbContext fifthweekDbContext)
         {
             if (fifthweekDbContext == null)
@@ -610,13 +612,16 @@ namespace Fifthweek.Api.Identity.OAuth
 namespace Fifthweek.Api.Identity.Membership
 {
     using System;
-    using System.Data.SqlTypes;
-    using System.Threading.Tasks;
+    using System.Linq;
     using Fifthweek.Api.Core;
+    using System.Threading.Tasks;
+    using Dapper;
     using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.Api.Persistence;
-    using Fifthweek.Api.Persistence.Identity;
     using Fifthweek.CodeGeneration;
+    using Fifthweek.Shared;
+    using System.Data.SqlTypes;
+    using Fifthweek.Api.Persistence.Identity;
     public partial class RegisterUserDbStatement 
     {
         public RegisterUserDbStatement(
@@ -858,7 +863,7 @@ namespace Fifthweek.Api.Identity.Membership.Commands
     {
         public override string ToString()
         {
-            return string.Format("UpdateLastAccessTokenDateCommand({0}, {1}, {2})", this.Username == null ? "null" : this.Username.ToString(), this.Timestamp == null ? "null" : this.Timestamp.ToString(), this.CreationType == null ? "null" : this.CreationType.ToString());
+            return string.Format("UpdateLastAccessTokenDateCommand({0}, {1}, {2})", this.UserId == null ? "null" : this.UserId.ToString(), this.Timestamp == null ? "null" : this.Timestamp.ToString(), this.CreationType == null ? "null" : this.CreationType.ToString());
         }
 
         public override bool Equals(object obj)
@@ -886,7 +891,7 @@ namespace Fifthweek.Api.Identity.Membership.Commands
             unchecked
             {
                 int hashCode = 0;
-                hashCode = (hashCode * 397) ^ (this.Username != null ? this.Username.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.UserId != null ? this.UserId.GetHashCode() : 0);
                 hashCode = (hashCode * 397) ^ (this.Timestamp != null ? this.Timestamp.GetHashCode() : 0);
                 hashCode = (hashCode * 397) ^ (this.CreationType != null ? this.CreationType.GetHashCode() : 0);
                 return hashCode;
@@ -895,7 +900,7 @@ namespace Fifthweek.Api.Identity.Membership.Commands
 
         protected bool Equals(UpdateLastAccessTokenDateCommand other)
         {
-            if (!object.Equals(this.Username, other.Username))
+            if (!object.Equals(this.UserId, other.UserId))
             {
                 return false;
             }

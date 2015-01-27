@@ -112,7 +112,7 @@ namespace Fifthweek.Api.Identity.OAuth
             }
 
             await this.updateLastAccessTokenDate.HandleAsync(
-                new UpdateLastAccessTokenDateCommand(username, DateTime.UtcNow, UpdateLastAccessTokenDateCommand.AccessTokenCreationType.SignIn));
+                new UpdateLastAccessTokenDateCommand(new UserId(user.Id), DateTime.UtcNow, UpdateLastAccessTokenDateCommand.AccessTokenCreationType.SignIn));
 
             var identity = new ClaimsIdentity(context.Options.AuthenticationType);
             identity.AddClaim(new Claim(ClaimTypes.Name, username.Value));
@@ -161,10 +161,11 @@ namespace Fifthweek.Api.Identity.OAuth
                 return;
             }
 
-            var username = ValidUsername.Parse(context.Ticket.Identity.Name, true);
+            var nameIdentifierClaim = context.Ticket.Identity.FindFirst(ClaimTypes.NameIdentifier);
+            var userId = new UserId(Guid.Parse(nameIdentifierClaim.Value));
 
             await this.updateLastAccessTokenDate.HandleAsync(
-                new UpdateLastAccessTokenDateCommand(username, DateTime.UtcNow, UpdateLastAccessTokenDateCommand.AccessTokenCreationType.RefreshToken));
+                new UpdateLastAccessTokenDateCommand(userId, DateTime.UtcNow, UpdateLastAccessTokenDateCommand.AccessTokenCreationType.RefreshToken));
 
             var newIdentity = new ClaimsIdentity(context.Ticket.Identity);
 

@@ -14,16 +14,18 @@
     [TestClass]
     public class UpdateLastAccessTokenDateCommandHandlerTests
     {
+        private static readonly UserId UserId = new UserId(Guid.NewGuid());
+
         [TestMethod]
         public async Task WhenTheCreationTypeIsSignIn_ItSouldUpdateBothTimestamps()
         {
             var command = new UpdateLastAccessTokenDateCommand(
-                Username,
+                UserId,
                 DateTime.UtcNow,
                 UpdateLastAccessTokenDateCommand.AccessTokenCreationType.SignIn);
 
-            var userRepository = new Mock<IUserRepository>();
-            userRepository.Setup(v => v.UpdateLastSignInDateAndAccessTokenDateAsync(command.Username, command.Timestamp))
+            var userRepository = new Mock<IUpdateUserTimeStampsDbStatement>();
+            userRepository.Setup(v => v.UpdateSignInAndAccessTokenAsync(command.UserId, command.Timestamp))
                 .Returns(Task.FromResult(0)).Verifiable();
 
             var target = new UpdateLastAccessTokenDateCommandHandler(userRepository.Object);
@@ -37,12 +39,12 @@
         public async Task WhenTheCreationTypeIsRefreshToken_ItSouldUpdateAccessTokenTimestampOnly()
         {
             var command = new UpdateLastAccessTokenDateCommand(
-                Username,
+                UserId,
                 DateTime.UtcNow,
                 UpdateLastAccessTokenDateCommand.AccessTokenCreationType.RefreshToken);
 
-            var userRepository = new Mock<IUserRepository>();
-            userRepository.Setup(v => v.UpdateLastAccessTokenDateAsync(command.Username, command.Timestamp))
+            var userRepository = new Mock<IUpdateUserTimeStampsDbStatement>();
+            userRepository.Setup(v => v.UpdateAccessTokenAsync(command.UserId, command.Timestamp))
                 .Returns(Task.FromResult(0)).Verifiable();
 
             var target = new UpdateLastAccessTokenDateCommandHandler(userRepository.Object);
@@ -51,7 +53,5 @@
 
             userRepository.Verify();
         }
-
-        private static readonly ValidUsername Username = ValidUsername.Parse("lawrence");
     }
 }

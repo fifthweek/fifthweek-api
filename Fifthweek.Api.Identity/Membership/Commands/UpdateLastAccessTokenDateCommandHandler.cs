@@ -6,23 +6,23 @@
 
     public class UpdateLastAccessTokenDateCommandHandler : ICommandHandler<UpdateLastAccessTokenDateCommand>
     {
-        private readonly IUserRepository userRepository;
+        private readonly IUpdateUserTimeStampsDbStatement updateUserTimeStamps;
 
         public UpdateLastAccessTokenDateCommandHandler(
-            IUserRepository userRepository)
+            IUpdateUserTimeStampsDbStatement updateUserTimeStamps)
         {
-            this.userRepository = userRepository;
+            this.updateUserTimeStamps = updateUserTimeStamps;
         }
 
         public async Task HandleAsync(UpdateLastAccessTokenDateCommand command)
         {
             if (command.CreationType == UpdateLastAccessTokenDateCommand.AccessTokenCreationType.SignIn)
             {
-                await this.userRepository.UpdateLastSignInDateAndAccessTokenDateAsync(command.Username, command.Timestamp);
+                await this.updateUserTimeStamps.UpdateSignInAndAccessTokenAsync(command.UserId, command.Timestamp);
             }
             else
             {
-                await this.userRepository.UpdateLastAccessTokenDateAsync(command.Username, command.Timestamp);
+                await this.updateUserTimeStamps.UpdateAccessTokenAsync(command.UserId, command.Timestamp);
             }
         }
     }

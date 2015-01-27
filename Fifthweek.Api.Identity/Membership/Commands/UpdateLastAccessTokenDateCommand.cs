@@ -16,7 +16,7 @@ namespace Fifthweek.Api.Identity.Membership.Commands
             RefreshToken,
         }
 
-        public ValidUsername Username { get; private set; }
+        public UserId UserId { get; private set; }
 
         public DateTime Timestamp { get; private set; }
 
