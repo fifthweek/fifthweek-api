@@ -14,6 +14,7 @@
     using Microsoft.VisualStudio.TestTools.UnitTesting;
 
     using ChannelId = Fifthweek.Api.Channels.Shared.ChannelId;
+    using CollectionId = Fifthweek.Api.Collections.Shared.CollectionId;
     using FileId = Fifthweek.Api.FileManagement.Shared.FileId;
     using UserId = Fifthweek.Api.Identity.Shared.Membership.UserId;
 

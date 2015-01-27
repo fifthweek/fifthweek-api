@@ -35,7 +35,7 @@
 
         private readonly IFifthweekDbContext databaseContext;
 
-        public async Task<DateTime> ExecuteAsync(CollectionId collectionId, DateTime now)
+        public async Task<DateTime> ExecuteAsync(Shared.CollectionId collectionId, DateTime now)
         {
             collectionId.AssertNotNull("collectionId");
             now.AssertUtc("now");

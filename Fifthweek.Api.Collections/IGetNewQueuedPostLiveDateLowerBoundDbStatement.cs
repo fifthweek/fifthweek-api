@@ -8,6 +8,6 @@
     /// </summary>
     public interface IGetNewQueuedPostLiveDateLowerBoundDbStatement
     {
-        Task<DateTime> ExecuteAsync(CollectionId collectionId, DateTime now);
+        Task<DateTime> ExecuteAsync(Shared.CollectionId collectionId, DateTime now);
     }
 }

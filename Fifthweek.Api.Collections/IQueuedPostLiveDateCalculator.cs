@@ -7,11 +7,11 @@
     {
         DateTime GetNextLiveDate(
             DateTime exclusiveLowerBound,
-            IReadOnlyList<HourOfWeek> ascendingWeeklyReleaseTimes);
+            IReadOnlyList<Shared.HourOfWeek> ascendingWeeklyReleaseTimes);
 
         IReadOnlyList<DateTime> GetNextLiveDates(
             DateTime exclusiveLowerBound,
-            IReadOnlyList<HourOfWeek> ascendingWeeklyReleaseTimes,
+            IReadOnlyList<Shared.HourOfWeek> ascendingWeeklyReleaseTimes,
             int numberOfLiveDatesToReturn);
     }
 }

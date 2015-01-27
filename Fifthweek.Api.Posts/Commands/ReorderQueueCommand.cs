@@ -7,6 +7,8 @@
     using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.CodeGeneration;
 
+    using CollectionId = Fifthweek.Api.Collections.Shared.CollectionId;
+
     [AutoConstructor, AutoEqualityMembers]
     public partial class ReorderQueueCommand
     {

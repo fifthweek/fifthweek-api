@@ -8,6 +8,8 @@ namespace Fifthweek.Api.Posts
     using Fifthweek.Api.Persistence;
     using Fifthweek.CodeGeneration;
 
+    using CollectionId = Fifthweek.Api.Collections.Shared.CollectionId;
+
     [AutoConstructor]
     public partial class PostToCollectionDbSubStatements : IPostToCollectionDbSubStatements
     {

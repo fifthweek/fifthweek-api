@@ -9,14 +9,14 @@
 
     public class QueuedPostLiveDateCalculator : IQueuedPostLiveDateCalculator
     {
-        public DateTime GetNextLiveDate(DateTime exclusiveLowerBound, IReadOnlyList<HourOfWeek> ascendingWeeklyReleaseTimes)
+        public DateTime GetNextLiveDate(DateTime exclusiveLowerBound, IReadOnlyList<Shared.HourOfWeek> ascendingWeeklyReleaseTimes)
         {
             return this.GetNextLiveDates(exclusiveLowerBound, ascendingWeeklyReleaseTimes, 1)[0];
         }
 
         public IReadOnlyList<DateTime> GetNextLiveDates(
             DateTime exclusiveLowerBound,
-            IReadOnlyList<HourOfWeek> ascendingWeeklyReleaseTimes,
+            IReadOnlyList<Shared.HourOfWeek> ascendingWeeklyReleaseTimes,
             int numberOfLiveDatesToReturn)
         {
             exclusiveLowerBound.AssertUtc("exclusiveLowerBound");
@@ -45,7 +45,7 @@
                 .AddDays(-1 * (int)exclusiveLowerBound.DayOfWeek);
 
             var releasesPerWeek = ascendingWeeklyReleaseTimes.Count;
-            var currentHourOfWeek = new HourOfWeek(exclusiveLowerBound).Value;
+            var currentHourOfWeek = new Shared.HourOfWeek(exclusiveLowerBound).Value;
             var nextReleaseTimeAfterCurrentTime = ascendingWeeklyReleaseTimes.FirstOrDefault(_ => _.Value > currentHourOfWeek);
             var startFromNextWeek = nextReleaseTimeAfterCurrentTime == null;
             var releaseTimeIndexOffset = startFromNextWeek ? releasesPerWeek : ascendingWeeklyReleaseTimes.IndexOf(nextReleaseTimeAfterCurrentTime);

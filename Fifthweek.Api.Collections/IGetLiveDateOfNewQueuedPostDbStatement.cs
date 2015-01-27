@@ -5,6 +5,6 @@
 
     public interface IGetLiveDateOfNewQueuedPostDbStatement
     {
-        Task<DateTime> ExecuteAsync(CollectionId collectionId);
+        Task<DateTime> ExecuteAsync(Shared.CollectionId collectionId);
     }
 }

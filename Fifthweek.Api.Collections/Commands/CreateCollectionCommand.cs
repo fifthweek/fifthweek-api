@@ -1,11 +1,9 @@
 ﻿namespace Fifthweek.Api.Collections.Commands
 {
-    using Fifthweek.Api.Channels;
-    using Fifthweek.Api.Identity.Membership;
+    using Fifthweek.Api.Channels.Shared;
+    using Fifthweek.Api.Collections.Shared;
     using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.CodeGeneration;
-
-    using ChannelId = Fifthweek.Api.Channels.Shared.ChannelId;
 
     [AutoConstructor, AutoEqualityMembers]
     public partial class CreateCollectionCommand

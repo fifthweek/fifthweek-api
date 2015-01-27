@@ -8,15 +8,12 @@
 
     using Dapper;
 
-    using Fifthweek.Api.Channels;
+    using Fifthweek.Api.Channels.Shared;
     using Fifthweek.Api.Collections.Queries;
     using Fifthweek.Api.Core;
-    using Fifthweek.Api.Identity.Membership;
+    using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.Api.Persistence;
     using Fifthweek.CodeGeneration;
-
-    using ChannelId = Fifthweek.Api.Channels.Shared.ChannelId;
-    using UserId = Fifthweek.Api.Identity.Shared.Membership.UserId;
 
     [AutoConstructor]
     public partial class GetChannelsAndCollectionsDbStatement : IGetChannelsAndCollectionsDbStatement
@@ -79,7 +76,7 @@
                     v.Name,
                     (from c in collections 
                      where c.ChannelId == v.Id
-                     select new ChannelsAndCollections.Collection(new CollectionId(c.Id), c.Name))
+                     select new ChannelsAndCollections.Collection(new Shared.CollectionId(c.Id), c.Name))
                         .AsReadOnlyList())).AsReadOnlyList());
 
             return result;

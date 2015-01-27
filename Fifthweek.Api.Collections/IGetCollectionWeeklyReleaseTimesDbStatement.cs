@@ -11,6 +11,6 @@
     /// </remarks>
     public interface IGetCollectionWeeklyReleaseTimesDbStatement
     {
-        Task<IReadOnlyList<WeeklyReleaseTime>> ExecuteAsync(CollectionId collectionId);
+        Task<IReadOnlyList<WeeklyReleaseTime>> ExecuteAsync(Shared.CollectionId collectionId);
     }
 }

@@ -4,6 +4,7 @@
     using System.Threading.Tasks;
 
     using Fifthweek.Api.Collections;
+    using Fifthweek.Api.Collections.Shared;
     using Fifthweek.Api.Core;
     using Fifthweek.Api.FileManagement;
     using Fifthweek.Api.FileManagement.Shared;
@@ -17,6 +18,7 @@
 
     using Moq;
 
+    using CollectionId = Fifthweek.Api.Collections.Shared.CollectionId;
     using FileId = Fifthweek.Api.FileManagement.Shared.FileId;
     using UserId = Fifthweek.Api.Identity.Shared.Membership.UserId;
 

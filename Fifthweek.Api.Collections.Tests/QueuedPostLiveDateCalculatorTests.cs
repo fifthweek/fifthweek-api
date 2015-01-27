@@ -4,6 +4,8 @@
     using System.Collections.Generic;
     using System.Linq;
 
+    using Fifthweek.Api.Collections.Shared;
+
     using Microsoft.VisualStudio.TestTools.UnitTesting;
 
     [TestClass]

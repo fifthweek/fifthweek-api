@@ -6,6 +6,7 @@
     using System.Threading.Tasks;
 
     using Fifthweek.Api.Channels;
+    using Fifthweek.Api.Collections.Shared;
     using Fifthweek.Api.Identity.Membership;
     using Fifthweek.Api.Persistence;
     using Fifthweek.Api.Persistence.Tests.Shared;

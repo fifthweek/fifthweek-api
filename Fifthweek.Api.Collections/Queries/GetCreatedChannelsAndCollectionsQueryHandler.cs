@@ -1,11 +1,8 @@
 ﻿namespace Fifthweek.Api.Collections.Queries
 {
-    using System.Collections.Generic;
-    using System.Linq;
     using System.Threading.Tasks;
 
     using Fifthweek.Api.Core;
-    using Fifthweek.Api.Identity.Membership;
     using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.CodeGeneration;
 

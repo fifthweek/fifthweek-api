@@ -284,6 +284,7 @@ namespace Fifthweek.Api.Posts.Commands
     using System.Text;
     using Dapper;
 
+    using CollectionId = Fifthweek.Api.Collections.Shared.CollectionId;
     using FileId = Fifthweek.Api.FileManagement.Shared.FileId;
 
     public partial class PostFileCommand 
@@ -291,7 +292,7 @@ namespace Fifthweek.Api.Posts.Commands
         public PostFileCommand(
             Requester requester, 
             Fifthweek.Api.Posts.PostId newPostId, 
-            Fifthweek.Api.Collections.CollectionId collectionId, 
+            CollectionId collectionId, 
             FileId fileId, 
             Fifthweek.Api.Posts.ValidComment comment, 
             System.Nullable<System.DateTime> scheduledPostDate, 
@@ -338,6 +339,7 @@ namespace Fifthweek.Api.Posts.Commands
     using System;
     using System.Linq;
 
+    using Fifthweek.Api.Collections.Shared;
     using Fifthweek.Api.FileManagement.Shared;
     using Fifthweek.Api.Identity.Membership;
     using Fifthweek.Api.Identity.Shared.Membership;
@@ -355,7 +357,7 @@ namespace Fifthweek.Api.Posts.Commands
     public partial class PostFileCommandHandler 
     {
         public PostFileCommandHandler(
-            Fifthweek.Api.Collections.ICollectionSecurity collectionSecurity, 
+            ICollectionSecurity collectionSecurity, 
             IFileSecurity fileSecurity, 
             IRequesterSecurity requesterSecurity, 
             Fifthweek.Api.Posts.IPostFileTypeChecks postFileTypeChecks, 
@@ -413,6 +415,7 @@ namespace Fifthweek.Api.Posts.Commands
     using System.Text;
     using Dapper;
 
+    using CollectionId = Fifthweek.Api.Collections.Shared.CollectionId;
     using FileId = Fifthweek.Api.FileManagement.Shared.FileId;
 
     public partial class PostImageCommand 
@@ -420,7 +423,7 @@ namespace Fifthweek.Api.Posts.Commands
         public PostImageCommand(
             Requester requester, 
             Fifthweek.Api.Posts.PostId newPostId, 
-            Fifthweek.Api.Collections.CollectionId collectionId, 
+            CollectionId collectionId, 
             FileId imageFileId, 
             Fifthweek.Api.Posts.ValidComment comment, 
             System.Nullable<System.DateTime> scheduledPostDate, 
@@ -467,6 +470,7 @@ namespace Fifthweek.Api.Posts.Commands
     using System;
     using System.Linq;
 
+    using Fifthweek.Api.Collections.Shared;
     using Fifthweek.Api.FileManagement.Shared;
     using Fifthweek.Api.Identity.Membership;
     using Fifthweek.Api.Identity.Shared.Membership;
@@ -484,7 +488,7 @@ namespace Fifthweek.Api.Posts.Commands
     public partial class PostImageCommandHandler 
     {
         public PostImageCommandHandler(
-            Fifthweek.Api.Collections.ICollectionSecurity collectionSecurity, 
+            ICollectionSecurity collectionSecurity, 
             IFileSecurity fileSecurity, 
             IRequesterSecurity requesterSecurity, 
             Fifthweek.Api.Posts.IPostFileTypeChecks postFileTypeChecks, 
@@ -647,11 +651,14 @@ namespace Fifthweek.Api.Posts.Commands
     using System.Collections.Generic;
     using System.Text;
     using Dapper;
+
+    using CollectionId = Fifthweek.Api.Collections.Shared.CollectionId;
+
     public partial class ReorderQueueCommand 
     {
         public ReorderQueueCommand(
             Requester requester, 
-            Fifthweek.Api.Collections.CollectionId collectionId, 
+            CollectionId collectionId, 
             System.Collections.Generic.IReadOnlyList<Fifthweek.Api.Posts.PostId> newPartialQueueOrder)
         {
             if (requester == null)
@@ -1002,6 +1009,7 @@ namespace Fifthweek.Api.Posts.Queries
     using Fifthweek.Shared;
 
     using ChannelId = Fifthweek.Api.Channels.Shared.ChannelId;
+    using CollectionId = Fifthweek.Api.Collections.Shared.CollectionId;
     using FileId = Fifthweek.Api.FileManagement.Shared.FileId;
 
     public partial class BacklogPost 
@@ -1009,7 +1017,7 @@ namespace Fifthweek.Api.Posts.Queries
         public BacklogPost(
             Fifthweek.Api.Posts.PostId postId, 
             ChannelId channelId, 
-            Fifthweek.Api.Collections.CollectionId collectionId, 
+            CollectionId collectionId, 
             Fifthweek.Api.Posts.Comment comment, 
             FileId fileId, 
             FileId imageId, 
@@ -1242,6 +1250,7 @@ namespace Fifthweek.Api.Posts.Queries
     using Fifthweek.Shared;
 
     using ChannelId = Fifthweek.Api.Channels.Shared.ChannelId;
+    using CollectionId = Fifthweek.Api.Collections.Shared.CollectionId;
     using FileId = Fifthweek.Api.FileManagement.Shared.FileId;
 
     public partial class NewsfeedPost 
@@ -1249,7 +1258,7 @@ namespace Fifthweek.Api.Posts.Queries
         public NewsfeedPost(
             Fifthweek.Api.Posts.PostId postId, 
             ChannelId channelId, 
-            Fifthweek.Api.Collections.CollectionId collectionId, 
+            CollectionId collectionId, 
             Fifthweek.Api.Posts.Comment comment, 
             FileId fileId, 
             FileId imageId, 
@@ -2610,6 +2619,7 @@ namespace Fifthweek.Api.Posts.Queries
     using Fifthweek.Shared;
 
     using ChannelId = Fifthweek.Api.Channels.Shared.ChannelId;
+    using CollectionId = Fifthweek.Api.Collections.Shared.CollectionId;
     using FileId = Fifthweek.Api.FileManagement.Shared.FileId;
 
     public partial class BacklogPost 
@@ -2639,7 +2649,7 @@ namespace Fifthweek.Api.Posts.Queries
         {
             public Fifthweek.Api.Posts.PostId PostId { get; set; }
             public ChannelId ChannelId { get; set; }
-            public Fifthweek.Api.Collections.CollectionId CollectionId { get; set; }
+            public CollectionId CollectionId { get; set; }
             public Fifthweek.Api.Posts.Comment Comment { get; set; }
             public FileId FileId { get; set; }
             public FileId ImageId { get; set; }
@@ -2680,6 +2690,7 @@ namespace Fifthweek.Api.Posts.Queries
     using Fifthweek.Shared;
 
     using ChannelId = Fifthweek.Api.Channels.Shared.ChannelId;
+    using CollectionId = Fifthweek.Api.Collections.Shared.CollectionId;
     using FileId = Fifthweek.Api.FileManagement.Shared.FileId;
 
     public partial class NewsfeedPost 
@@ -2708,7 +2719,7 @@ namespace Fifthweek.Api.Posts.Queries
         {
             public Fifthweek.Api.Posts.PostId PostId { get; set; }
             public ChannelId ChannelId { get; set; }
-            public Fifthweek.Api.Collections.CollectionId CollectionId { get; set; }
+            public CollectionId CollectionId { get; set; }
             public Fifthweek.Api.Posts.Comment Comment { get; set; }
             public FileId FileId { get; set; }
             public FileId ImageId { get; set; }

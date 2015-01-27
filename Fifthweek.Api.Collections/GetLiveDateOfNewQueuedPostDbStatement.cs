@@ -14,13 +14,13 @@
         private readonly IGetCollectionWeeklyReleaseTimesDbStatement getCollectionWeeklyReleaseTimes;
         private readonly IQueuedPostLiveDateCalculator queuedPostLiveDateCalculator;
 
-        public async Task<DateTime> ExecuteAsync(CollectionId collectionId)
+        public async Task<DateTime> ExecuteAsync(Shared.CollectionId collectionId)
         {
             collectionId.AssertNotNull("collectionId");
 
             var exclusiveLowerBound = await this.getNewQueuedPostLiveDateLowerBound.ExecuteAsync(collectionId, DateTime.UtcNow);
             var ascendingWeeklyReleaseTimes = await this.getCollectionWeeklyReleaseTimes.ExecuteAsync(collectionId);
-            var ascendingHoursOfWeek = ascendingWeeklyReleaseTimes.Select(_ => new HourOfWeek(_.HourOfWeek)).ToList();
+            var ascendingHoursOfWeek = ascendingWeeklyReleaseTimes.Select(_ => new Shared.HourOfWeek(_.HourOfWeek)).ToList();
 
             return this.queuedPostLiveDateCalculator.GetNextLiveDate(
                 exclusiveLowerBound,

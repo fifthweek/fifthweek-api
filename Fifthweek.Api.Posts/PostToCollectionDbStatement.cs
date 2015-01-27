@@ -9,6 +9,7 @@ namespace Fifthweek.Api.Posts
     using Fifthweek.Api.Persistence;
     using Fifthweek.CodeGeneration;
 
+    using CollectionId = Fifthweek.Api.Collections.Shared.CollectionId;
     using FileId = Fifthweek.Api.FileManagement.Shared.FileId;
 
     [AutoConstructor]

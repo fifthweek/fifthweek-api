@@ -8,6 +8,7 @@
     using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.CodeGeneration;
 
+    using CollectionId = Fifthweek.Api.Collections.Shared.CollectionId;
     using FileId = Fifthweek.Api.FileManagement.Shared.FileId;
 
     [AutoConstructor, AutoEqualityMembers]

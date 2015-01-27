@@ -2,12 +2,10 @@
 {
     using System.Threading.Tasks;
 
-    using Fifthweek.Api.Identity.Membership;
-
-    using UserId = Fifthweek.Api.Identity.Shared.Membership.UserId;
+    using Fifthweek.Api.Identity.Shared.Membership;
 
     public interface ICollectionOwnership
     {
-        Task<bool> IsOwnerAsync(UserId userId, CollectionId collectionId);
+        Task<bool> IsOwnerAsync(UserId userId, Shared.CollectionId collectionId);
     }
 }

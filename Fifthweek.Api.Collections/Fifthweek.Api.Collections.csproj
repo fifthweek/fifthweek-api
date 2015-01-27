@@ -60,7 +60,6 @@
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
     </Compile>
-    <Compile Include="CollectionId.cs" />
     <Compile Include="CollectionOwnership.cs" />
     <Compile Include="CollectionSecurity.cs" />
     <Compile Include="Commands\CreateCollectionCommand.cs" />
@@ -69,9 +68,7 @@
     <Compile Include="GetChannelsAndCollectionsDbStatement.cs" />
     <Compile Include="GetNewQueuedPostLiveDateLowerBoundDbStatement.cs" />
     <Compile Include="GetCollectionWeeklyReleaseTimesDbStatement.cs" />
-    <Compile Include="HourOfWeek.cs" />
     <Compile Include="ICollectionOwnership.cs" />
-    <Compile Include="ICollectionSecurity.cs" />
     <Compile Include="IGetChannelsAndCollectionsDbStatement.cs" />
     <Compile Include="IGetNewQueuedPostLiveDateLowerBoundDbStatement.cs" />
     <Compile Include="IGetCollectionWeeklyReleaseTimesDbStatement.cs" />
@@ -85,7 +82,6 @@
     <Compile Include="Queries\GetLiveDateOfNewQueuedPostQueryHandler.cs" />
     <Compile Include="IGetLiveDateOfNewQueuedPostDbStatement.cs" />
     <Compile Include="QueuedPostLiveDateCalculator.cs" />
-    <Compile Include="ValidCollectionName.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Fifthweek.Api.Channels.Shared\Fifthweek.Api.Channels.Shared.csproj">

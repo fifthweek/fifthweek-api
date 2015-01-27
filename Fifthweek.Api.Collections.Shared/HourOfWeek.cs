@@ -1,4 +1,4 @@
-﻿namespace Fifthweek.Api.Collections
+﻿namespace Fifthweek.Api.Collections.Shared
 {
     using System;
 

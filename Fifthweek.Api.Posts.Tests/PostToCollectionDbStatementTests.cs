@@ -11,6 +11,7 @@
 
     using Moq;
 
+    using CollectionId = Fifthweek.Api.Collections.Shared.CollectionId;
     using FileId = Fifthweek.Api.FileManagement.Shared.FileId;
 
     [TestClass]

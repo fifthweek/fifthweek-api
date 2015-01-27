@@ -2,6 +2,7 @@
 {
     using System;
 
+    using Fifthweek.Api.Collections.Shared;
     using Fifthweek.Tests.Shared;
 
     using Microsoft.VisualStudio.TestTools.UnitTesting;

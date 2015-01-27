@@ -23,7 +23,7 @@
         
         private readonly IFifthweekDbContext databaseContext;
 
-        public async Task<IReadOnlyList<WeeklyReleaseTime>> ExecuteAsync(CollectionId collectionId)
+        public async Task<IReadOnlyList<WeeklyReleaseTime>> ExecuteAsync(Shared.CollectionId collectionId)
         {
             collectionId.AssertNotNull("collectionId");
 

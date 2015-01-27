@@ -2,10 +2,9 @@
 {
     using System.Collections.Generic;
 
-    using Fifthweek.Api.Channels;
+    using Fifthweek.Api.Channels.Shared;
+    using Fifthweek.Api.Collections.Shared;
     using Fifthweek.CodeGeneration;
-
-    using ChannelId = Fifthweek.Api.Channels.Shared.ChannelId;
 
     [AutoConstructor]
     public partial class ChannelsAndCollections

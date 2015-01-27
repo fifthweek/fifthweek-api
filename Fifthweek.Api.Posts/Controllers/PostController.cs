@@ -13,6 +13,7 @@
     using Fifthweek.Api.Posts.Queries;
     using Fifthweek.CodeGeneration;
 
+    using CollectionId = Fifthweek.Api.Collections.Shared.CollectionId;
     using UserId = Fifthweek.Api.Identity.Shared.Membership.UserId;
 
     [RoutePrefix("posts"), AutoConstructor]
