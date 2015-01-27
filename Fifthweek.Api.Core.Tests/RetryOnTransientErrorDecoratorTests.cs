@@ -2,6 +2,7 @@
 {
     using System;
     using System.ComponentModel;
+    using System.Data.Entity.Core;
     using System.Data.SqlClient;
     using System.Diagnostics;
     using System.IO;
@@ -232,7 +233,7 @@
         }
 
         [TestMethod]
-        public async Task ItShouldRetryOnConnectionForciblyClosed()
+        public async Task ItShouldRetryWhenEntityFrameworkThinksThereIsATransientFailure()
         {
             int tryCount = 0;
 
@@ -242,7 +243,7 @@
                     ++tryCount;
                     if (tryCount == 1)
                     {
-                        throw new Win32Exception("An existing connection was forcibly closed by the remote host");
+                        throw new EntityException("An exception has been raised that is likely due to a transient failure. If you are connecting to a SQL Azure database consider using SqlAzureExecutionStrategy.");
                     }
                 }).Returns(Task.FromResult(0));
 

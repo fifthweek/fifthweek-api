@@ -3,6 +3,7 @@
     using System;
     using System.Collections.Generic;
     using System.ComponentModel;
+    using System.Data.Entity.Core;
     using System.Data.SqlClient;
     using System.Diagnostics;
     using System.Threading;
@@ -162,10 +163,10 @@
                 }
                 else
                 {
-                    var win32Exception = exception as Win32Exception;
-                    if (win32Exception != null)
+                    var entityException = exception as EntityException;
+                    if (entityException != null)
                     {
-                        if (win32Exception.Message.Contains("An existing connection was forcibly closed by the remote host"))
+                        if (entityException.ToString().Contains("transient failure"))
                         {
                             isTransient = true;
                         }
