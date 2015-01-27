@@ -91,6 +91,7 @@
     <Compile Include="Membership\Commands\RequestPasswordResetCommandHandlerTests.cs" />
     <Compile Include="Membership\Commands\UpdateLastAccessTokenDateCommandHandlerTests.cs" />
     <Compile Include="Membership\Controllers\MembershipControllerTests.cs" />
+    <Compile Include="Membership\RegisterUserDbStatementTests.cs" />
     <Compile Include="Membership\RequesterSecurityTests.cs" />
     <Compile Include="Membership\RequesterTests.cs" />
     <Compile Include="Membership\ExtensionsTests.cs" />
@@ -101,6 +102,7 @@
     <Compile Include="Membership\MockIdentityResult.cs" />
     <Compile Include="Membership\Queries\IsUsernameAvailableQueryHandlerTests.cs" />
     <Compile Include="Membership\Queries\GetUserQueryHandlerTests.cs" />
+    <Compile Include="Membership\UserRepositoryTests.cs" />
     <Compile Include="OAuth\Commands\AddRefreshTokenCommandHandlerTests.cs" />
     <Compile Include="OAuth\Commands\RemoveRefreshTokenCommandHandlerTests.cs" />
     <Compile Include="OAuth\Queries\GetClientQueryHandlerTests.cs" />
@@ -120,6 +122,10 @@
     <ProjectReference Include="..\Fifthweek.Api.Identity\Fifthweek.Api.Identity.csproj">
       <Project>{6a2af270-e4d4-4c4e-a88f-807f7b9a03b7}</Project>
       <Name>Fifthweek.Api.Identity</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Fifthweek.Api.Persistence.Tests.Shared\Fifthweek.Api.Persistence.Tests.Shared.csproj">
+      <Project>{ECDE2C4E-7DD8-4210-8E09-D5762C88B3CB}</Project>
+      <Name>Fifthweek.Api.Persistence.Tests.Shared</Name>
     </ProjectReference>
     <ProjectReference Include="..\Fifthweek.Api.Persistence\Fifthweek.Api.Persistence.csproj">
       <Project>{9C18BEE3-FAB5-4A00-8A94-A1FAEA370175}</Project>

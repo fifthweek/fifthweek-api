@@ -32,7 +32,7 @@
                 return this.testDatabaseSnapshot.InitializeAsync();
             }
 
-            public IFifthweekDbContext NewContext()
+            public FifthweekDbContext NewContext()
             {
                 return this.testDatabase.NewDatabaseContext();
             }

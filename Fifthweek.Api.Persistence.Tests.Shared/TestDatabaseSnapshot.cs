@@ -53,7 +53,8 @@
                 databaseContext.Configuration.AutoDetectChangesEnabled = false;
                 databaseContext.Configuration.LazyLoadingEnabled = false;
                 databaseContext.Configuration.ValidateOnSaveEnabled = false;
-
+                databaseContext.Configuration.ProxyCreationEnabled = false;
+               
                 foreach (var table in this.tables)
                 {
                     table.GetLatestFromDatabase(databaseContext);
@@ -193,6 +194,7 @@
                 databaseContext.Configuration.AutoDetectChangesEnabled = false;
                 databaseContext.Configuration.LazyLoadingEnabled = false;
                 databaseContext.Configuration.ValidateOnSaveEnabled = false;
+                databaseContext.Configuration.ProxyCreationEnabled = false;
 
                 table.InitializeSnapshot(databaseContext);
             }

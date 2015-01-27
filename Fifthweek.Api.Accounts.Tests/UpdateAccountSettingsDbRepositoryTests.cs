@@ -308,13 +308,9 @@ namespace Fifthweek.Api.Accounts.Tests
         {
             using (var databaseContext = testDatabase.NewContext())
             {
-                return await this.GetUserAsync(databaseContext);
+                databaseContext.Configuration.ProxyCreationEnabled = false;
+                return await databaseContext.Users.SingleAsync(v => v.Id == this.userId.Value);
             }
-        }
-
-        private async Task<FifthweekUser> GetUserAsync(IFifthweekDbContext databaseContext)
-        {
-            return await databaseContext.Users.SingleAsync(v => v.Id == this.userId.Value);
         }
 
         private async Task CreateUserAsync(TestDatabaseContext testDatabase, bool emailConfirmed = true)

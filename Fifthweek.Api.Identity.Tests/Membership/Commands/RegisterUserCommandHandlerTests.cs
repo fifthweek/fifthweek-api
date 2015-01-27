@@ -32,119 +32,56 @@
         private static readonly RegisterUserCommand Command = RegisterUserCommandTests.NewCommand(UserId.Value, RegistrationData);
 
         private Mock<IEventHandler<UserRegisteredEvent>> userRegistered;
-        private Mock<IUserManager> userManager;
-        private RegisterUserCommandHandler target; 
+        private Mock<IRegisterUserDbStatement> registerUser;
+        private RegisterUserCommandHandler target;
+
+        static RegisterUserCommandHandlerTests()
+        {
+            RegistrationData.Parse();
+        }
 
         [TestInitialize]
         public void TestInitialize()
         {
-            this.userManager = new Mock<IUserManager>();
             this.userRegistered = new Mock<IEventHandler<UserRegisteredEvent>>();
-            this.target = new RegisterUserCommandHandler(this.userManager.Object, this.userRegistered.Object);
+
+            // Give potentially side-effecting components strict mock behaviour.
+            this.registerUser = new Mock<IRegisterUserDbStatement>(MockBehavior.Strict);
+
+            this.target = new RegisterUserCommandHandler(this.userRegistered.Object, this.registerUser.Object);
         }
 
         [TestMethod]
-        public async Task WhenUserManagerFindsEmail_ItShouldThrowAnException()
+        [ExpectedException(typeof(ArgumentNullException))]
+        public async Task WhenCommandIsNull_ItShouldThrowAnException()
         {
-            this.userManager.Setup(v => v.FindByEmailAsync(RegistrationData.Email)).ReturnsAsync(new FifthweekUser());
-            this.userManager.Setup(v => v.FindByNameAsync(RegistrationData.Username)).ReturnsAsync(null);
-
-            Exception exception = null;
-            try
-            {
-                await this.target.HandleAsync(Command);
-            }
-            catch (Exception t)
-            {
-                exception = t;
-            }
-
-            Assert.IsNotNull(exception);
-            Assert.IsTrue(exception.Message.Contains("email"));
-            Assert.IsTrue(exception.Message.Contains("taken"));
+            await this.target.HandleAsync(null);
         }
 
         [TestMethod]
-        public async Task WhenUserManagerFindsUsername_ItShouldThrowAnException()
+        public async Task WhenUserCreationRequested_ItShouldCallTheRegisterUserDbStatement()
         {
-            this.userManager.Setup(v => v.FindByEmailAsync(RegistrationData.Email)).ReturnsAsync(null);
-            this.userManager.Setup(v => v.FindByNameAsync(RegistrationData.Username)).ReturnsAsync(new FifthweekUser());
+            this.registerUser.Setup(v => v.ExecuteAsync(UserId, RegistrationData.UsernameObject, RegistrationData.EmailObject, RegistrationData.ExampleWork, RegistrationData.PasswordObject, It.IsAny<DateTime>()))
+                .Returns(Task.FromResult(0)).Verifiable();
 
-            Exception exception = null;
-            try
-            {
-                await this.target.HandleAsync(Command);
-            }
-            catch (Exception t)
-            {
-                exception = t;
-            }
-
-            Assert.IsNotNull(exception);
-            Assert.IsTrue(exception.Message.Contains("username"));
-            Assert.IsTrue(exception.Message.Contains("taken"));
-        }
-
-        [TestMethod]
-        public async Task WhenCredentialsAccepted_ItShouldCreateUser()
-        {
-            FifthweekUser fifthweekUser = null;
-            this.userManager.Setup(v => v.FindByEmailAsync(RegistrationData.Email)).ReturnsAsync(null);
-            this.userManager.Setup(v => v.FindByNameAsync(RegistrationData.Username)).ReturnsAsync(null);
-            this.userManager.Setup(v => v.CreateAsync(It.IsAny<FifthweekUser>(), RegistrationData.Password))
-                .Callback<FifthweekUser, string>((u, p) => fifthweekUser = u)
-                .ReturnsAsync(new MockIdentityResult());
+            this.userRegistered.Setup(_ => _.HandleAsync(new UserRegisteredEvent(UserId))).Returns(Task.FromResult(0));
 
             await this.target.HandleAsync(Command);
 
-            Assert.IsNotNull(fifthweekUser);
-            Assert.AreEqual<string>(RegistrationData.Email, fifthweekUser.Email);
-            Assert.AreEqual<string>(RegistrationData.Username, fifthweekUser.UserName);
-            Assert.AreNotEqual<DateTime>(DateTime.MinValue, fifthweekUser.RegistrationDate);
-            Assert.AreEqual<DateTime>(SqlDateTime.MinValue.Value, fifthweekUser.LastSignInDate);
-            Assert.AreEqual<DateTime>(SqlDateTime.MinValue.Value, fifthweekUser.LastAccessTokenDate);
+            this.registerUser.Verify();
         }
 
         [TestMethod]
         public async Task WhenUserCreationSucceeds_ItShouldPublishEvent()
         {
+            this.registerUser.Setup(v => v.ExecuteAsync(UserId, RegistrationData.UsernameObject, RegistrationData.EmailObject, RegistrationData.ExampleWork, RegistrationData.PasswordObject, It.IsAny<DateTime>()))
+                .Returns(Task.FromResult(0));
+
             this.userRegistered.Setup(_ => _.HandleAsync(new UserRegisteredEvent(UserId))).Returns(Task.FromResult(0)).Verifiable();
-            this.userManager.Setup(v => v.FindByEmailAsync(RegistrationData.Email)).ReturnsAsync(null);
-            this.userManager.Setup(v => v.FindByNameAsync(RegistrationData.Username)).ReturnsAsync(null);
-            this.userManager.Setup(v => v.CreateAsync(It.IsAny<FifthweekUser>(), RegistrationData.Password))
-                .ReturnsAsync(new MockIdentityResult());
 
             await this.target.HandleAsync(Command);
 
             this.userRegistered.Verify();
-        }
-
-        [TestMethod]
-        public async Task WhenUserCreationFails_ItShouldThrowAnException()
-        {
-            this.userManager.Setup(v => v.FindByEmailAsync(RegistrationData.Email)).ReturnsAsync(null);
-            this.userManager.Setup(v => v.FindByNameAsync(RegistrationData.Username)).ReturnsAsync(null);
-            this.userManager.Setup(v => v.CreateAsync(It.IsAny<FifthweekUser>(), RegistrationData.Password))
-                .ReturnsAsync(new MockIdentityResult("One", "Two"));
-
-            Exception exception = null;
-            try
-            {
-                await this.target.HandleAsync(Command);
-            }
-            catch (Exception t)
-            {
-                exception = t;
-            }
-
-            Assert.IsNotNull(exception);
-            Assert.IsTrue(exception.Message.Contains(RegistrationData.Username));
-            Assert.IsInstanceOfType(exception, typeof(AggregateException));
-
-            var ae = (AggregateException)exception;
-            Assert.AreEqual(2, ae.InnerExceptions.Count);
-            Assert.IsTrue(ae.InnerExceptions.Any(v => v.Message == "One"));
-            Assert.IsTrue(ae.InnerExceptions.Any(v => v.Message == "Two"));
         }
     }
 

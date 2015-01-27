@@ -117,6 +117,11 @@
     <Compile Include="Membership\Queries\IsPasswordResetTokenValidQuery.cs" />
     <Compile Include="Membership\Queries\IsPasswordResetTokenValidQueryHandler.cs" />
     <Compile Include="Membership\RequesterContext.cs" />
+    <Compile Include="Membership\Events\UserRegisteredEvent.cs" />
+    <Compile Include="Membership\IRegisterUserDbStatement.cs" />
+    <Compile Include="Membership\Queries\IsPasswordResetTokenValidQuery.cs" />
+    <Compile Include="Membership\Queries\IsPasswordResetTokenValidQueryHandler.cs" />
+    <Compile Include="Membership\RegisterUserDbStatement.cs" />
     <Compile Include="Membership\RequesterSecurity.cs" />
     <Compile Include="Membership\IUserRepository.cs" />
     <Compile Include="Membership\Queries\IsUsernameAvailableQuery.cs" />
