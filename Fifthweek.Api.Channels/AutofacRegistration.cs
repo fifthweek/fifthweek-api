@@ -2,6 +2,7 @@
 {
     using Autofac;
 
+    using Fifthweek.Api.Channels.Shared;
     using Fifthweek.Shared;
 
     public class AutofacRegistration : IAutofacRegistration

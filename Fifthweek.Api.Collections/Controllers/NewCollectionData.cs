@@ -3,6 +3,8 @@
     using Fifthweek.Api.Channels;
     using Fifthweek.CodeGeneration;
 
+    using ChannelId = Fifthweek.Api.Channels.Shared.ChannelId;
+
     [AutoConstructor, AutoEqualityMembers]
     public partial class NewCollectionData
     {

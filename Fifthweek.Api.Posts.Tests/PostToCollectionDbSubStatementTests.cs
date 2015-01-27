@@ -16,6 +16,8 @@
 
     using Moq;
 
+    using ChannelId = Fifthweek.Api.Channels.Shared.ChannelId;
+
     [TestClass]
     public class PostToCollectionDbSubStatementTests : PersistenceTestsBase
     {

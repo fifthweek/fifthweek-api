@@ -76,6 +76,10 @@
     <Compile Include="ValidChannelPriceInUsCentsPerWeekTests.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Fifthweek.Api.Channels.Shared\Fifthweek.Api.Channels.Shared.csproj">
+      <Project>{df1bb4e7-5315-4e5c-ba73-6dfa4d9e7564}</Project>
+      <Name>Fifthweek.Api.Channels.Shared</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Fifthweek.Api.Channels\Fifthweek.Api.Channels.csproj">
       <Project>{208f4aca-4012-466f-bc49-7e2c443d3c06}</Project>
       <Name>Fifthweek.Api.Channels</Name>

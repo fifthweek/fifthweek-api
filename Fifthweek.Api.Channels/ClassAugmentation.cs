@@ -3,88 +3,7 @@ using System.Linq;
 
 
 
-namespace Fifthweek.Api.Channels
-{
-    using System;
-    using Fifthweek.CodeGeneration;
-    using System.Linq;
-    using System.Threading.Tasks;
-    using Dapper;
-    using Fifthweek.Api.Core;
-    using Fifthweek.Api.Identity.Membership;
-    using Fifthweek.Api.Persistence;
-    using System.Collections.Generic;
-    [Newtonsoft.Json.JsonConverter(typeof(JsonConverter))]
-    public partial class ChannelId 
-    {
-		public class JsonConverter : Newtonsoft.Json.JsonConverter
-        {
-            public override void WriteJson(Newtonsoft.Json.JsonWriter writer, object value, Newtonsoft.Json.JsonSerializer serializer)
-            {
-                var valueType = (ChannelId)value;
-                serializer.Serialize(writer, valueType.Value);
-            }
 
-            public override object ReadJson(Newtonsoft.Json.JsonReader reader, Type objectType, object existingValue, Newtonsoft.Json.JsonSerializer serializer)
-            {
-                if (objectType != typeof(ChannelId))
-                {
-                    throw new ArgumentException("Expected to deserialize JSON for type " + typeof(ChannelId).Name, "objectType");
-                }
-
-                var value = serializer.Deserialize<System.Guid>(reader);
-                return new ChannelId(value);
-            }
-
-            public override bool CanConvert(Type objectType)
-            {
-                return objectType == typeof(ChannelId);
-            }
-        }
-
-		public class DapperTypeHandler : Dapper.SqlMapper.TypeHandler<ChannelId>, Fifthweek.Api.Persistence.IAutoRegisteredTypeHandler<ChannelId>
-        {
-            public override void SetValue(System.Data.IDbDataParameter parameter, ChannelId value)
-            {
-                parameter.DbType = System.Data.DbType.Guid;
-                parameter.Value = value.Value;
-            }
-
-            public override ChannelId Parse(object value)
-            {
-                return new ChannelId((System.Guid)value);
-            }
-        }
-    }
-
-}
-
-namespace Fifthweek.Api.Channels
-{
-    using System;
-    using Fifthweek.CodeGeneration;
-    using System.Linq;
-    using System.Threading.Tasks;
-    using Dapper;
-    using Fifthweek.Api.Core;
-    using Fifthweek.Api.Identity.Membership;
-    using Fifthweek.Api.Persistence;
-    using System.Collections.Generic;
-    public partial class ChannelId 
-    {
-        public ChannelId(
-            System.Guid value)
-        {
-            if (value == null)
-            {
-                throw new ArgumentNullException("value");
-            }
-
-            this.Value = value;
-        }
-    }
-
-}
 namespace Fifthweek.Api.Channels
 {
     using System.Threading.Tasks;
@@ -93,9 +12,6 @@ namespace Fifthweek.Api.Channels
     using Fifthweek.Api.Identity.Membership;
     using Fifthweek.Api.Persistence;
     using Fifthweek.CodeGeneration;
-    using System;
-    using System.Linq;
-    using System.Collections.Generic;
     public partial class ChannelOwnership 
     {
         public ChannelOwnership(
@@ -114,14 +30,10 @@ namespace Fifthweek.Api.Channels
 namespace Fifthweek.Api.Channels
 {
     using System.Threading.Tasks;
+    using Fifthweek.Api.Channels.Shared;
     using Fifthweek.Api.Core;
     using Fifthweek.Api.Identity.Membership;
     using Fifthweek.CodeGeneration;
-    using System;
-    using System.Linq;
-    using Dapper;
-    using Fifthweek.Api.Persistence;
-    using System.Collections.Generic;
     public partial class ChannelSecurity 
     {
         public ChannelSecurity(
@@ -133,6 +45,48 @@ namespace Fifthweek.Api.Channels
             }
 
             this.channelOwnership = channelOwnership;
+        }
+    }
+
+}
+namespace Fifthweek.Api.Channels.Commands
+{
+    using Fifthweek.Api.Channels.Shared;
+    using Fifthweek.Api.Identity.Membership;
+    using Fifthweek.Api.Subscriptions;
+    using Fifthweek.CodeGeneration;
+    public partial class CreateChannelCommand 
+    {
+        public CreateChannelCommand(
+            Fifthweek.Api.Identity.Membership.Requester requester, 
+            Fifthweek.Api.Channels.Shared.ChannelId newChannelId, 
+            Fifthweek.Api.Subscriptions.SubscriptionId subscriptionId, 
+            Fifthweek.Api.Channels.Shared.ValidChannelName name)
+        {
+            if (requester == null)
+            {
+                throw new ArgumentNullException("requester");
+            }
+
+            if (newChannelId == null)
+            {
+                throw new ArgumentNullException("newChannelId");
+            }
+
+            if (subscriptionId == null)
+            {
+                throw new ArgumentNullException("subscriptionId");
+            }
+
+            if (name == null)
+            {
+                throw new ArgumentNullException("name");
+            }
+
+            this.Requester = requester;
+            this.NewChannelId = newChannelId;
+            this.SubscriptionId = subscriptionId;
+            this.Name = name;
         }
     }
 
@@ -166,22 +120,17 @@ namespace Fifthweek.Api.Channels.Controllers
 
 }
 
-namespace Fifthweek.Api.Channels
+namespace Fifthweek.Api.Channels.Commands
 {
-    using System;
-    using Fifthweek.CodeGeneration;
-    using System.Linq;
-    using System.Threading.Tasks;
-    using Dapper;
-    using Fifthweek.Api.Core;
+    using Fifthweek.Api.Channels.Shared;
     using Fifthweek.Api.Identity.Membership;
-    using Fifthweek.Api.Persistence;
-    using System.Collections.Generic;
-    public partial class ChannelId 
+    using Fifthweek.Api.Subscriptions;
+    using Fifthweek.CodeGeneration;
+    public partial class CreateChannelCommand 
     {
         public override string ToString()
         {
-            return string.Format("ChannelId({0})", this.Value == null ? "null" : this.Value.ToString());
+            return string.Format("CreateChannelCommand({0}, {1}, {2}, {3})", this.Requester == null ? "null" : this.Requester.ToString(), this.NewChannelId == null ? "null" : this.NewChannelId.ToString(), this.SubscriptionId == null ? "null" : this.SubscriptionId.ToString(), this.Name == null ? "null" : this.Name.ToString());
         }
 
         public override bool Equals(object obj)
@@ -201,7 +150,7 @@ namespace Fifthweek.Api.Channels
                 return false;
             }
 
-            return this.Equals((ChannelId)obj);
+            return this.Equals((CreateChannelCommand)obj);
         }
 
         public override int GetHashCode()
@@ -209,134 +158,32 @@ namespace Fifthweek.Api.Channels
             unchecked
             {
                 int hashCode = 0;
-                hashCode = (hashCode * 397) ^ (this.Value != null ? this.Value.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.Requester != null ? this.Requester.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.NewChannelId != null ? this.NewChannelId.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.SubscriptionId != null ? this.SubscriptionId.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.Name != null ? this.Name.GetHashCode() : 0);
                 return hashCode;
             }
         }
 
-        protected bool Equals(ChannelId other)
+        protected bool Equals(CreateChannelCommand other)
         {
-            if (!object.Equals(this.Value, other.Value))
+            if (!object.Equals(this.Requester, other.Requester))
             {
                 return false;
             }
 
-            return true;
-        }
-    }
-
-}
-namespace Fifthweek.Api.Channels
-{
-    using System;
-    using System.Linq;
-    using Fifthweek.CodeGeneration;
-    using System.Threading.Tasks;
-    using Dapper;
-    using Fifthweek.Api.Core;
-    using Fifthweek.Api.Identity.Membership;
-    using Fifthweek.Api.Persistence;
-    using System.Collections.Generic;
-    public partial class ValidChannelName 
-    {
-        public override string ToString()
-        {
-            return string.Format("ValidChannelName(\"{0}\")", this.Value == null ? "null" : this.Value.ToString());
-        }
-
-        public override bool Equals(object obj)
-        {
-            if (ReferenceEquals(null, obj))
+            if (!object.Equals(this.NewChannelId, other.NewChannelId))
             {
                 return false;
             }
 
-            if (ReferenceEquals(this, obj))
-            {
-                return true;
-            }
-
-            if (obj.GetType() != this.GetType())
+            if (!object.Equals(this.SubscriptionId, other.SubscriptionId))
             {
                 return false;
             }
 
-            return this.Equals((ValidChannelName)obj);
-        }
-
-        public override int GetHashCode()
-        {
-            unchecked
-            {
-                int hashCode = 0;
-                hashCode = (hashCode * 397) ^ (this.Value != null ? this.Value.GetHashCode() : 0);
-                return hashCode;
-            }
-        }
-
-        protected bool Equals(ValidChannelName other)
-        {
-            if (!object.Equals(this.Value, other.Value))
-            {
-                return false;
-            }
-
-            return true;
-        }
-    }
-
-}
-namespace Fifthweek.Api.Channels
-{
-    using System;
-    using System.Linq;
-    using Fifthweek.CodeGeneration;
-    using System.Threading.Tasks;
-    using Dapper;
-    using Fifthweek.Api.Core;
-    using Fifthweek.Api.Identity.Membership;
-    using Fifthweek.Api.Persistence;
-    using System.Collections.Generic;
-    public partial class ValidChannelPriceInUsCentsPerWeek 
-    {
-        public override string ToString()
-        {
-            return string.Format("ValidChannelPriceInUsCentsPerWeek({0})", this.Value == null ? "null" : this.Value.ToString());
-        }
-
-        public override bool Equals(object obj)
-        {
-            if (ReferenceEquals(null, obj))
-            {
-                return false;
-            }
-
-            if (ReferenceEquals(this, obj))
-            {
-                return true;
-            }
-
-            if (obj.GetType() != this.GetType())
-            {
-                return false;
-            }
-
-            return this.Equals((ValidChannelPriceInUsCentsPerWeek)obj);
-        }
-
-        public override int GetHashCode()
-        {
-            unchecked
-            {
-                int hashCode = 0;
-                hashCode = (hashCode * 397) ^ (this.Value != null ? this.Value.GetHashCode() : 0);
-                return hashCode;
-            }
-        }
-
-        protected bool Equals(ValidChannelPriceInUsCentsPerWeek other)
-        {
-            if (!object.Equals(this.Value, other.Value))
+            if (!object.Equals(this.Name, other.Name))
             {
                 return false;
             }

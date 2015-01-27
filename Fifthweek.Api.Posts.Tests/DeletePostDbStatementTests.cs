@@ -13,6 +13,8 @@
 
     using Microsoft.VisualStudio.TestTools.UnitTesting;
 
+    using ChannelId = Fifthweek.Api.Channels.Shared.ChannelId;
+
     [TestClass]
     public class DeletePostDbStatementTests : PersistenceTestsBase
     {

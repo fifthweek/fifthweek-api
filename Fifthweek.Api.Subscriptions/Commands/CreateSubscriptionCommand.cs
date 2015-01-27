@@ -1,6 +1,6 @@
 ﻿namespace Fifthweek.Api.Subscriptions.Commands
 {
-    using Fifthweek.Api.Channels;
+    using Fifthweek.Api.Channels.Shared;
     using Fifthweek.Api.Identity.Membership;
     using Fifthweek.CodeGeneration;
 

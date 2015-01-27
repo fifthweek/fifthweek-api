@@ -1,4 +1,4 @@
-﻿namespace Fifthweek.Api.Channels
+﻿namespace Fifthweek.Api.Channels.Shared
 {
     using System;
 

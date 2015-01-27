@@ -14,7 +14,7 @@
     {
         private readonly IFifthweekDbContext databaseContext;
 
-        public Task<bool> IsOwnerAsync(UserId userId, ChannelId channelId)
+        public Task<bool> IsOwnerAsync(UserId userId, Shared.ChannelId channelId)
         {
             userId.AssertNotNull("userId");
             channelId.AssertNotNull("channelId");

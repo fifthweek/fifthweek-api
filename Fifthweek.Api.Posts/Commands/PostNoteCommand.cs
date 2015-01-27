@@ -6,6 +6,8 @@
     using Fifthweek.Api.Identity.Membership;
     using Fifthweek.CodeGeneration;
 
+    using ChannelId = Fifthweek.Api.Channels.Shared.ChannelId;
+
     [AutoConstructor, AutoEqualityMembers]
     public partial class PostNoteCommand
     {

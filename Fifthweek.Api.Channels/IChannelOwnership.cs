@@ -6,6 +6,6 @@
 
     public interface IChannelOwnership
     {
-        Task<bool> IsOwnerAsync(UserId userId, ChannelId channelId);
+        Task<bool> IsOwnerAsync(UserId userId, Shared.ChannelId channelId);
     }
 }

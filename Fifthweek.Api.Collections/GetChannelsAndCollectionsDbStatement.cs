@@ -13,8 +13,9 @@
     using Fifthweek.Api.Core;
     using Fifthweek.Api.Identity.Membership;
     using Fifthweek.Api.Persistence;
-    using Fifthweek.Api.Subscriptions;
     using Fifthweek.CodeGeneration;
+
+    using ChannelId = Fifthweek.Api.Channels.Shared.ChannelId;
 
     [AutoConstructor]
     public partial class GetChannelsAndCollectionsDbStatement : IGetChannelsAndCollectionsDbStatement

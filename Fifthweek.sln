@@ -132,6 +132,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fifthweek.Api.Channels", "F
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fifthweek.Api.Channels.Tests", "Fifthweek.Api.Channels.Tests\Fifthweek.Api.Channels.Tests.csproj", "{6DF534C5-85D8-41AA-A7A3-E95A13F456BE}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fifthweek.Api.Channels.Shared", "Fifthweek.Api.Channels.Shared\Fifthweek.Api.Channels.Shared.csproj", "{DF1BB4E7-5315-4E5C-BA73-6DFA4D9E7564}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -330,6 +332,10 @@ Global
 		{6DF534C5-85D8-41AA-A7A3-E95A13F456BE}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6DF534C5-85D8-41AA-A7A3-E95A13F456BE}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6DF534C5-85D8-41AA-A7A3-E95A13F456BE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DF1BB4E7-5315-4E5C-BA73-6DFA4D9E7564}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DF1BB4E7-5315-4E5C-BA73-6DFA4D9E7564}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DF1BB4E7-5315-4E5C-BA73-6DFA4D9E7564}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DF1BB4E7-5315-4E5C-BA73-6DFA4D9E7564}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

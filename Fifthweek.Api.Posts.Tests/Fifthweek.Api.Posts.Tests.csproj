@@ -109,6 +109,10 @@
     <Compile Include="ValidNoteTests.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Fifthweek.Api.Channels.Shared\Fifthweek.Api.Channels.Shared.csproj">
+      <Project>{df1bb4e7-5315-4e5c-ba73-6dfa4d9e7564}</Project>
+      <Name>Fifthweek.Api.Channels.Shared</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Fifthweek.Api.Channels\Fifthweek.Api.Channels.csproj">
       <Project>{208F4ACA-4012-466F-BC49-7E2C443D3C06}</Project>
       <Name>Fifthweek.Api.Channels</Name>

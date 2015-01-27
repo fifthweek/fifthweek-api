@@ -7,6 +7,8 @@
 
     using Microsoft.VisualStudio.TestTools.UnitTesting;
 
+    using ValidChannelPriceInUsCentsPerWeek = Fifthweek.Api.Channels.Shared.ValidChannelPriceInUsCentsPerWeek;
+
     [TestClass]
     public class ValidChannelPriceInUsCentsPerWeekTests : ValidatedPrimitiveTests<ValidChannelPriceInUsCentsPerWeek, int>
     {

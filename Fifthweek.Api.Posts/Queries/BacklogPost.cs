@@ -7,6 +7,8 @@
     using Fifthweek.Api.FileManagement;
     using Fifthweek.CodeGeneration;
 
+    using ChannelId = Fifthweek.Api.Channels.Shared.ChannelId;
+
     [AutoConstructor, AutoEqualityMembers, AutoCopy]
     public partial class BacklogPost
     {

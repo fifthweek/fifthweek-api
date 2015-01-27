@@ -16,7 +16,7 @@ namespace Fifthweek.Api.Collections
     using System.Collections.Generic;
     using System.Text;
     using Fifthweek.Api.Collections.Queries;
-    using Fifthweek.Api.Subscriptions;
+
     [Newtonsoft.Json.JsonConverter(typeof(JsonConverter))]
     public partial class CollectionId 
     {
@@ -75,7 +75,7 @@ namespace Fifthweek.Api.Collections
     using System.Collections.Generic;
     using System.Text;
     using Fifthweek.Api.Collections.Queries;
-    using Fifthweek.Api.Subscriptions;
+
     public partial class CollectionId 
     {
         public CollectionId(
@@ -104,7 +104,7 @@ namespace Fifthweek.Api.Collections
     using System.Collections.Generic;
     using System.Text;
     using Fifthweek.Api.Collections.Queries;
-    using Fifthweek.Api.Subscriptions;
+
     public partial class CollectionOwnership 
     {
         public CollectionOwnership(
@@ -133,7 +133,7 @@ namespace Fifthweek.Api.Collections
     using System.Collections.Generic;
     using System.Text;
     using Fifthweek.Api.Collections.Queries;
-    using Fifthweek.Api.Subscriptions;
+
     public partial class CollectionSecurity 
     {
         public CollectionSecurity(
@@ -156,12 +156,15 @@ namespace Fifthweek.Api.Collections.Commands
     using Fifthweek.Api.Channels;
     using Fifthweek.Api.Identity.Membership;
     using Fifthweek.CodeGeneration;
+
+    using ChannelId = Fifthweek.Api.Channels.Shared.ChannelId;
+
     public partial class CreateCollectionCommand 
     {
         public CreateCollectionCommand(
             Fifthweek.Api.Identity.Membership.Requester requester, 
             Fifthweek.Api.Collections.CollectionId newCollectionId, 
-            Fifthweek.Api.Channels.ChannelId channelId, 
+            ChannelId channelId, 
             Fifthweek.Api.Collections.ValidCollectionName name)
         {
             if (requester == null)
@@ -254,11 +257,14 @@ namespace Fifthweek.Api.Collections.Controllers
     using Fifthweek.Api.Identity.OAuth;
     using Fifthweek.CodeGeneration;
     using Fifthweek.Api.Channels;
+
+    using ChannelId = Fifthweek.Api.Channels.Shared.ChannelId;
+
     public partial class NewCollectionData 
     {
         public NewCollectionData(
             Fifthweek.Api.Collections.ValidCollectionName nameObject, 
-            Fifthweek.Api.Channels.ChannelId channelId, 
+            ChannelId channelId, 
             System.String name)
         {
             if (channelId == null)
@@ -291,7 +297,6 @@ namespace Fifthweek.Api.Collections
     using System.Collections.Generic;
     using System.Text;
     using Fifthweek.Api.Collections.Queries;
-    using Fifthweek.Api.Subscriptions;
     using Fifthweek.Api.Channels;
     public partial class GetChannelsAndCollectionsDbStatement 
     {
@@ -321,7 +326,7 @@ namespace Fifthweek.Api.Collections
     using System.Collections.Generic;
     using System.Text;
     using Fifthweek.Api.Collections.Queries;
-    using Fifthweek.Api.Subscriptions;
+
     public partial class GetCollectionWeeklyReleaseTimesDbStatement 
     {
         public GetCollectionWeeklyReleaseTimesDbStatement(
@@ -350,7 +355,7 @@ namespace Fifthweek.Api.Collections
     using System.Collections.Generic;
     using System.Text;
     using Fifthweek.Api.Collections.Queries;
-    using Fifthweek.Api.Subscriptions;
+
     public partial class GetLiveDateOfNewQueuedPostDbStatement 
     {
         public GetLiveDateOfNewQueuedPostDbStatement(
@@ -393,7 +398,7 @@ namespace Fifthweek.Api.Collections
     using System.Collections.Generic;
     using System.Text;
     using Fifthweek.Api.Collections.Queries;
-    using Fifthweek.Api.Subscriptions;
+
     public partial class GetNewQueuedPostLiveDateLowerBoundDbStatement 
     {
         public GetNewQueuedPostLiveDateLowerBoundDbStatement(
@@ -415,17 +420,19 @@ namespace Fifthweek.Api.Collections.Queries
     using System.Linq;
     using System.Collections.Generic;
     using Fifthweek.Api.Channels;
-    using Fifthweek.Api.Subscriptions;
     using Fifthweek.CodeGeneration;
     using Fifthweek.Api.Core;
     using Fifthweek.Api.Identity.Membership;
     using System.Threading.Tasks;
+
+    using ChannelId = Fifthweek.Api.Channels.Shared.ChannelId;
+
     public partial class ChannelsAndCollections
     {
         public partial class Channel 
         {
         public Channel(
-            Fifthweek.Api.Channels.ChannelId channelId, 
+            ChannelId channelId, 
             System.String name, 
             System.Collections.Generic.IReadOnlyList<Fifthweek.Api.Collections.Queries.ChannelsAndCollections.Collection> collections)
         {
@@ -458,7 +465,6 @@ namespace Fifthweek.Api.Collections.Queries
     using System.Linq;
     using System.Collections.Generic;
     using Fifthweek.Api.Channels;
-    using Fifthweek.Api.Subscriptions;
     using Fifthweek.CodeGeneration;
     using Fifthweek.Api.Core;
     using Fifthweek.Api.Identity.Membership;
@@ -484,7 +490,6 @@ namespace Fifthweek.Api.Collections.Queries
     using System.Linq;
     using System.Collections.Generic;
     using Fifthweek.Api.Channels;
-    using Fifthweek.Api.Subscriptions;
     using Fifthweek.CodeGeneration;
     using Fifthweek.Api.Core;
     using Fifthweek.Api.Identity.Membership;
@@ -520,7 +525,6 @@ namespace Fifthweek.Api.Collections.Queries
     using System.Linq;
     using System.Collections.Generic;
     using Fifthweek.Api.Channels;
-    using Fifthweek.Api.Subscriptions;
     using Fifthweek.CodeGeneration;
     using Fifthweek.Api.Core;
     using Fifthweek.Api.Identity.Membership;
@@ -553,7 +557,6 @@ namespace Fifthweek.Api.Collections.Queries
     using System.Linq;
     using System.Collections.Generic;
     using Fifthweek.Api.Channels;
-    using Fifthweek.Api.Subscriptions;
     using Fifthweek.CodeGeneration;
     using Fifthweek.Api.Core;
     using Fifthweek.Api.Identity.Membership;
@@ -586,7 +589,6 @@ namespace Fifthweek.Api.Collections.Queries
     using System.Linq;
     using System.Collections.Generic;
     using Fifthweek.Api.Channels;
-    using Fifthweek.Api.Subscriptions;
     using Fifthweek.CodeGeneration;
     using Fifthweek.Api.Core;
     using Fifthweek.Api.Identity.Membership;
@@ -619,7 +621,6 @@ namespace Fifthweek.Api.Collections.Queries
     using System.Linq;
     using System.Collections.Generic;
     using Fifthweek.Api.Channels;
-    using Fifthweek.Api.Subscriptions;
     using Fifthweek.CodeGeneration;
     using Fifthweek.Api.Core;
     using Fifthweek.Api.Identity.Membership;
@@ -667,7 +668,7 @@ namespace Fifthweek.Api.Collections
     using System.Collections.Generic;
     using System.Text;
     using Fifthweek.Api.Collections.Queries;
-    using Fifthweek.Api.Subscriptions;
+
     public partial class CollectionId 
     {
         public override string ToString()
@@ -871,7 +872,6 @@ namespace Fifthweek.Api.Collections.Queries
     using System.Linq;
     using System.Collections.Generic;
     using Fifthweek.Api.Channels;
-    using Fifthweek.Api.Subscriptions;
     using Fifthweek.CodeGeneration;
     using Fifthweek.Api.Core;
     using Fifthweek.Api.Identity.Membership;
@@ -937,7 +937,6 @@ namespace Fifthweek.Api.Collections.Queries
     using System.Linq;
     using System.Collections.Generic;
     using Fifthweek.Api.Channels;
-    using Fifthweek.Api.Subscriptions;
     using Fifthweek.CodeGeneration;
     using Fifthweek.Api.Core;
     using Fifthweek.Api.Identity.Membership;
@@ -1010,7 +1009,7 @@ namespace Fifthweek.Api.Collections
     using System.Collections.Generic;
     using System.Text;
     using Fifthweek.Api.Collections.Queries;
-    using Fifthweek.Api.Subscriptions;
+
     public partial class HourOfWeek 
     {
         public override string ToString()
@@ -1073,7 +1072,7 @@ namespace Fifthweek.Api.Collections
     using System.Collections.Generic;
     using System.Text;
     using Fifthweek.Api.Collections.Queries;
-    using Fifthweek.Api.Subscriptions;
+
     public partial class ValidCollectionName 
     {
         public override string ToString()

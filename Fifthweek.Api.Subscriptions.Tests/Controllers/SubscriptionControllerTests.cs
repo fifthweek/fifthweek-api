@@ -17,6 +17,8 @@
 
     using Moq;
 
+    using ValidChannelPriceInUsCentsPerWeek = Fifthweek.Api.Channels.Shared.ValidChannelPriceInUsCentsPerWeek;
+
     [TestClass]
     public class SubscriptionControllerTests
     {

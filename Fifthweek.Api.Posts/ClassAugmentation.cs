@@ -524,12 +524,15 @@ namespace Fifthweek.Api.Posts.Commands
     using System.Collections.Generic;
     using System.Text;
     using Dapper;
+
+    using ChannelId = Fifthweek.Api.Channels.Shared.ChannelId;
+
     public partial class PostNoteCommand 
     {
         public PostNoteCommand(
             Fifthweek.Api.Identity.Membership.Requester requester, 
             Fifthweek.Api.Posts.PostId newPostId, 
-            Fifthweek.Api.Channels.ChannelId channelId, 
+            ChannelId channelId, 
             Fifthweek.Api.Posts.ValidNote note, 
             System.Nullable<System.DateTime> scheduledPostDate)
         {
@@ -566,6 +569,8 @@ namespace Fifthweek.Api.Posts.Commands
 {
     using System;
     using System.Linq;
+
+    using Fifthweek.Api.Channels.Shared;
     using Fifthweek.Api.Identity.Membership;
     using Fifthweek.CodeGeneration;
     using System.Threading.Tasks;
@@ -581,7 +586,7 @@ namespace Fifthweek.Api.Posts.Commands
     public partial class PostNoteCommandHandler 
     {
         public PostNoteCommandHandler(
-            Fifthweek.Api.Channels.IChannelSecurity channelSecurity, 
+            IChannelSecurity channelSecurity, 
             Fifthweek.Api.Identity.Membership.IRequesterSecurity requesterSecurity, 
             Fifthweek.Api.Persistence.IFifthweekDbContext databaseContext)
         {
@@ -975,11 +980,14 @@ namespace Fifthweek.Api.Posts.Queries
     using Fifthweek.Api.Persistence;
     using Fifthweek.Api.Persistence.Identity;
     using Fifthweek.Shared;
+
+    using ChannelId = Fifthweek.Api.Channels.Shared.ChannelId;
+
     public partial class BacklogPost 
     {
         public BacklogPost(
             Fifthweek.Api.Posts.PostId postId, 
-            Fifthweek.Api.Channels.ChannelId channelId, 
+            ChannelId channelId, 
             Fifthweek.Api.Collections.CollectionId collectionId, 
             Fifthweek.Api.Posts.Comment comment, 
             Fifthweek.Api.FileManagement.FileId fileId, 
@@ -1201,11 +1209,14 @@ namespace Fifthweek.Api.Posts.Queries
     using Fifthweek.Api.Persistence;
     using Fifthweek.Api.Persistence.Identity;
     using Fifthweek.Shared;
+
+    using ChannelId = Fifthweek.Api.Channels.Shared.ChannelId;
+
     public partial class NewsfeedPost 
     {
         public NewsfeedPost(
             Fifthweek.Api.Posts.PostId postId, 
-            Fifthweek.Api.Channels.ChannelId channelId, 
+            ChannelId channelId, 
             Fifthweek.Api.Collections.CollectionId collectionId, 
             Fifthweek.Api.Posts.Comment comment, 
             Fifthweek.Api.FileManagement.FileId fileId, 
@@ -2565,6 +2576,9 @@ namespace Fifthweek.Api.Posts.Queries
     using Fifthweek.Api.Persistence;
     using Fifthweek.Api.Persistence.Identity;
     using Fifthweek.Shared;
+
+    using ChannelId = Fifthweek.Api.Channels.Shared.ChannelId;
+
     public partial class BacklogPost 
     {
         public Builder ToBuilder()
@@ -2591,7 +2605,7 @@ namespace Fifthweek.Api.Posts.Queries
         public partial class Builder
         {
             public Fifthweek.Api.Posts.PostId PostId { get; set; }
-            public Fifthweek.Api.Channels.ChannelId ChannelId { get; set; }
+            public ChannelId ChannelId { get; set; }
             public Fifthweek.Api.Collections.CollectionId CollectionId { get; set; }
             public Fifthweek.Api.Posts.Comment Comment { get; set; }
             public Fifthweek.Api.FileManagement.FileId FileId { get; set; }
@@ -2631,6 +2645,9 @@ namespace Fifthweek.Api.Posts.Queries
     using Fifthweek.Api.Persistence;
     using Fifthweek.Api.Persistence.Identity;
     using Fifthweek.Shared;
+
+    using ChannelId = Fifthweek.Api.Channels.Shared.ChannelId;
+
     public partial class NewsfeedPost 
     {
         public Builder ToBuilder()
@@ -2656,7 +2673,7 @@ namespace Fifthweek.Api.Posts.Queries
         public partial class Builder
         {
             public Fifthweek.Api.Posts.PostId PostId { get; set; }
-            public Fifthweek.Api.Channels.ChannelId ChannelId { get; set; }
+            public ChannelId ChannelId { get; set; }
             public Fifthweek.Api.Collections.CollectionId CollectionId { get; set; }
             public Fifthweek.Api.Posts.Comment Comment { get; set; }
             public Fifthweek.Api.FileManagement.FileId FileId { get; set; }
