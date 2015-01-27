@@ -1,14 +1,11 @@
-﻿using Fifthweek.Api.Core;
-using Fifthweek.Api.Identity.Membership.Events;
-
-namespace Fifthweek.Api.Identity.Tests.Membership.Commands
+﻿namespace Fifthweek.Api.Identity.Tests.Membership.Commands
 {
     using System;
     using System.Data.SqlTypes;
     using System.Linq;
     using System.Threading.Tasks;
 
-    using Fifthweek.Api.Identity.Membership;
+    using Fifthweek.Api.Core;
     using Fifthweek.Api.Identity.Membership.Commands;
     using Fifthweek.Api.Identity.Membership.Controllers;
     using Fifthweek.Api.Identity.Shared.Membership;
@@ -31,6 +28,7 @@ namespace Fifthweek.Api.Identity.Tests.Membership.Commands
             Password = "TestPassword",
             Username = "test_username",
         };
+
         private static readonly RegisterUserCommand Command = RegisterUserCommandTests.NewCommand(UserId.Value, RegistrationData);
 
         private Mock<IEventHandler<UserRegisteredEvent>> userRegistered;
