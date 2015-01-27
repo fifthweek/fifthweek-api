@@ -273,6 +273,7 @@ namespace Fifthweek.Api.FileManagement.Controllers
     using Fifthweek.Api.FileManagement.Shared;
     using Fifthweek.Api.Identity.Membership;
     using Fifthweek.Api.Identity.OAuth;
+    using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.CodeGeneration;
     using Fifthweek.Shared;
     public partial class FileUploadController 
@@ -282,7 +283,7 @@ namespace Fifthweek.Api.FileManagement.Controllers
             Fifthweek.Api.Core.ICommandHandler<Fifthweek.Api.FileManagement.Commands.InitiateFileUploadCommand> initiateFileUpload, 
             Fifthweek.Api.Core.IQueryHandler<Fifthweek.Api.FileManagement.Queries.GenerateWritableBlobUriQuery,Fifthweek.Api.Azure.BlobSharedAccessInformation> generateWritableBlobUri, 
             Fifthweek.Api.Core.ICommandHandler<Fifthweek.Api.FileManagement.Commands.CompleteFileUploadCommand> completeFileUpload, 
-            Fifthweek.Api.Identity.OAuth.IUserContext userContext)
+            IRequesterContext requesterContext)
         {
             if (guidCreator == null)
             {
@@ -304,16 +305,16 @@ namespace Fifthweek.Api.FileManagement.Controllers
                 throw new ArgumentNullException("completeFileUpload");
             }
 
-            if (userContext == null)
+            if (requesterContext == null)
             {
-                throw new ArgumentNullException("userContext");
+                throw new ArgumentNullException("requesterContext");
             }
 
             this.guidCreator = guidCreator;
             this.initiateFileUpload = initiateFileUpload;
             this.generateWritableBlobUri = generateWritableBlobUri;
             this.completeFileUpload = completeFileUpload;
-            this.userContext = userContext;
+            this.requesterContext = requesterContext;
         }
     }
 

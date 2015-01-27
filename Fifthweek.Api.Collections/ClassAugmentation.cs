@@ -117,6 +117,7 @@ namespace Fifthweek.Api.Collections.Controllers
     using Fifthweek.Api.Collections.Shared;
     using Fifthweek.Api.Core;
     using Fifthweek.Api.Identity.OAuth;
+    using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.CodeGeneration;
     using Fifthweek.Api.Channels.Shared;
     public partial class CollectionController 
@@ -124,7 +125,7 @@ namespace Fifthweek.Api.Collections.Controllers
         public CollectionController(
             Fifthweek.Api.Core.ICommandHandler<Fifthweek.Api.Collections.Commands.CreateCollectionCommand> createCollection, 
             Fifthweek.Api.Core.IQueryHandler<Fifthweek.Api.Collections.Queries.GetLiveDateOfNewQueuedPostQuery,System.DateTime> getLiveDateOfNewQueuedPost, 
-            Fifthweek.Api.Identity.OAuth.IUserContext userContext, 
+            IRequesterContext requesterContext, 
             Fifthweek.Api.Core.IGuidCreator guidCreator)
         {
             if (createCollection == null)
@@ -137,9 +138,9 @@ namespace Fifthweek.Api.Collections.Controllers
                 throw new ArgumentNullException("getLiveDateOfNewQueuedPost");
             }
 
-            if (userContext == null)
+            if (requesterContext == null)
             {
-                throw new ArgumentNullException("userContext");
+                throw new ArgumentNullException("requesterContext");
             }
 
             if (guidCreator == null)
@@ -149,7 +150,7 @@ namespace Fifthweek.Api.Collections.Controllers
 
             this.createCollection = createCollection;
             this.getLiveDateOfNewQueuedPost = getLiveDateOfNewQueuedPost;
-            this.userContext = userContext;
+            this.requesterContext = requesterContext;
             this.guidCreator = guidCreator;
         }
     }

@@ -11,6 +11,7 @@
     using Fifthweek.Api.FileManagement.Shared;
     using Fifthweek.Api.Identity.Membership;
     using Fifthweek.Api.Identity.OAuth;
+    using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.CodeGeneration;
 
     [AutoConstructor]
@@ -25,7 +26,7 @@
 
         private readonly ICommandHandler<CompleteFileUploadCommand> completeFileUpload;
 
-        private readonly IUserContext userContext;
+        private readonly IRequesterContext requesterContext;
 
         [ResponseType(typeof(GrantedUpload))]
         [Route("uploadRequests")]
@@ -36,7 +37,7 @@
             data.Purpose.AssertBodyProvided("purpose");
 
             var fileId = new FileId(this.guidCreator.CreateSqlSequential());
-            var requester = this.userContext.GetRequester();
+            var requester = this.requesterContext.GetRequester();
 
             await this.initiateFileUpload.HandleAsync(new InitiateFileUploadCommand(requester, fileId, data.FilePath, data.Purpose));
             var accessInformation = await this.generateWritableBlobUri.HandleAsync(new GenerateWritableBlobUriQuery(requester, fileId, data.Purpose));
@@ -50,7 +51,7 @@
             fileId.AssertBodyProvided("fileId");
 
             var parsedFileId = new FileId(fileId.DecodeGuid());
-            var requester = this.userContext.GetRequester();
+            var requester = this.requesterContext.GetRequester();
             await this.completeFileUpload.HandleAsync(new CompleteFileUploadCommand(requester, parsedFileId));
         }
     }

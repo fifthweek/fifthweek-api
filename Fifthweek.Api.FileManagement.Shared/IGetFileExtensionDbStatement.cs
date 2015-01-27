@@ -1,4 +1,4 @@
-﻿namespace Fifthweek.Api.FileManagement
+﻿namespace Fifthweek.Api.FileManagement.Shared
 {
     using System.Threading.Tasks;
 

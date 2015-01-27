@@ -60,7 +60,7 @@ namespace Fifthweek.Api.Posts.Commands
     public partial class DeletePostCommandHandler 
     {
         public DeletePostCommandHandler(
-            Fifthweek.Api.FileManagement.IScheduleGarbageCollectionStatement scheduleGarbageCollection, 
+            IScheduleGarbageCollectionStatement scheduleGarbageCollection, 
             Fifthweek.Api.Posts.Shared.IPostSecurity postSecurity, 
             Fifthweek.Api.Identity.Shared.Membership.IRequesterSecurity requesterSecurity, 
             Fifthweek.Api.Posts.IDeletePostDbStatement deletePost)
@@ -555,7 +555,7 @@ namespace Fifthweek.Api.Posts.Controllers
             Fifthweek.Api.Core.ICommandHandler<Fifthweek.Api.Posts.Commands.ReorderQueueCommand> reorderQueue, 
             Fifthweek.Api.Core.IQueryHandler<Fifthweek.Api.Posts.Queries.GetCreatorBacklogQuery,System.Collections.Generic.IReadOnlyList<Fifthweek.Api.Posts.Queries.BacklogPost>> getCreatorBacklog, 
             Fifthweek.Api.Core.IQueryHandler<Fifthweek.Api.Posts.Queries.GetCreatorNewsfeedQuery,System.Collections.Generic.IReadOnlyList<Fifthweek.Api.Posts.Queries.NewsfeedPost>> getCreatorNewsfeed, 
-            Fifthweek.Api.Identity.OAuth.IUserContext userContext, 
+            IRequesterContext requesterContext, 
             Fifthweek.Api.Core.IGuidCreator guidCreator)
         {
             if (postNote == null)
@@ -593,9 +593,9 @@ namespace Fifthweek.Api.Posts.Controllers
                 throw new ArgumentNullException("getCreatorNewsfeed");
             }
 
-            if (userContext == null)
+            if (requesterContext == null)
             {
-                throw new ArgumentNullException("userContext");
+                throw new ArgumentNullException("requesterContext");
             }
 
             if (guidCreator == null)
@@ -610,7 +610,7 @@ namespace Fifthweek.Api.Posts.Controllers
             this.reorderQueue = reorderQueue;
             this.getCreatorBacklog = getCreatorBacklog;
             this.getCreatorNewsfeed = getCreatorNewsfeed;
-            this.userContext = userContext;
+            this.requesterContext = requesterContext;
             this.guidCreator = guidCreator;
         }
     }
@@ -666,7 +666,7 @@ namespace Fifthweek.Api.Posts
     public partial class PostFileTypeChecks 
     {
         public PostFileTypeChecks(
-            Fifthweek.Api.FileManagement.IGetFileExtensionDbStatement getFileExtension, 
+            IGetFileExtensionDbStatement getFileExtension, 
             Fifthweek.Shared.IMimeTypeMap mimeTypeMap)
         {
             if (getFileExtension == null)

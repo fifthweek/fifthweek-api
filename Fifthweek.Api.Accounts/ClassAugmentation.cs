@@ -106,17 +106,18 @@ namespace Fifthweek.Api.Accounts.Controllers
     using Fifthweek.Api.FileManagement;
     using Fifthweek.Api.Identity.Membership;
     using Fifthweek.Api.Identity.OAuth;
+    using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.CodeGeneration;
     public partial class AccountSettingsController 
     {
         public AccountSettingsController(
-            Fifthweek.Api.Identity.OAuth.IUserContext userContext, 
+            IRequesterContext requesterContext, 
             Fifthweek.Api.Core.ICommandHandler<Fifthweek.Api.Accounts.Commands.UpdateAccountSettingsCommand> updateAccountSettings, 
             Fifthweek.Api.Core.IQueryHandler<Fifthweek.Api.Accounts.Queries.GetAccountSettingsQuery,Fifthweek.Api.Accounts.GetAccountSettingsResult> getAccountSettings)
         {
-            if (userContext == null)
+            if (requesterContext == null)
             {
-                throw new ArgumentNullException("userContext");
+                throw new ArgumentNullException("requesterContext");
             }
 
             if (updateAccountSettings == null)
@@ -129,7 +130,7 @@ namespace Fifthweek.Api.Accounts.Controllers
                 throw new ArgumentNullException("getAccountSettings");
             }
 
-            this.userContext = userContext;
+            this.requesterContext = requesterContext;
             this.updateAccountSettings = updateAccountSettings;
             this.getAccountSettings = getAccountSettings;
         }

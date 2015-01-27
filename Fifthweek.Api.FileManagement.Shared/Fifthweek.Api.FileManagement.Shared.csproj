@@ -53,6 +53,8 @@
     </Compile>
     <Compile Include="FileId.cs" />
     <Compile Include="IFileSecurity.cs" />
+    <Compile Include="IGetFileExtensionDbStatement.cs" />
+    <Compile Include="IScheduleGarbageCollectionStatement.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

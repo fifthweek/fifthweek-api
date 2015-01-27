@@ -128,11 +128,9 @@
     <Compile Include="FileOwnership.cs" />
     <Compile Include="FileSecurity.cs" />
     <Compile Include="FileWaitingForUpload.cs" />
-    <Compile Include="IScheduleGarbageCollectionStatement.cs" />
     <Compile Include="IBlobLocationGenerator.cs" />
     <Compile Include="IFileOwnership.cs" />
     <Compile Include="GetFileExtensionDbStatement.cs" />
-    <Compile Include="IGetFileExtensionDbStatement.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Queries\GenerateWritableBlobUriQuery.cs" />
     <Compile Include="Queries\GenerateWritableBlobUriQueryHandler.cs" />

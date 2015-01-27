@@ -97,16 +97,17 @@ namespace Fifthweek.Api.Channels.Controllers
     using System.Web.Http;
     using Fifthweek.Api.Core;
     using Fifthweek.Api.Identity.OAuth;
+    using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.CodeGeneration;
     public partial class ChannelController 
     {
         public ChannelController(
-            Fifthweek.Api.Identity.OAuth.IUserContext userContext, 
+            IRequesterContext requesterContext, 
             Fifthweek.Api.Core.IGuidCreator guidCreator)
         {
-            if (userContext == null)
+            if (requesterContext == null)
             {
-                throw new ArgumentNullException("userContext");
+                throw new ArgumentNullException("requesterContext");
             }
 
             if (guidCreator == null)
@@ -114,7 +115,7 @@ namespace Fifthweek.Api.Channels.Controllers
                 throw new ArgumentNullException("guidCreator");
             }
 
-            this.userContext = userContext;
+            this.requesterContext = requesterContext;
             this.guidCreator = guidCreator;
         }
     }

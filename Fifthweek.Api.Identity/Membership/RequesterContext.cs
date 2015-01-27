@@ -1,15 +1,13 @@
-﻿namespace Fifthweek.Api.Identity.OAuth
+﻿namespace Fifthweek.Api.Identity.Membership
 {
     using System;
-    using System.Collections.Generic;
     using System.Linq;
     using System.Security.Claims;
     using System.Web;
 
-    using Fifthweek.Api.Identity.Membership;
     using Fifthweek.Api.Identity.Shared.Membership;
 
-    public class UserContext : IUserContext
+    public class RequesterContext : IRequesterContext
     {
         public Requester GetRequester()
         {

@@ -3,6 +3,8 @@
     using Autofac;
 
     using Fifthweek.Api.Core;
+    using Fifthweek.Api.Identity.Membership;
+    using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.Shared;
 
     public class AutofacRegistration : IAutofacRegistration
@@ -16,7 +18,7 @@
             builder.RegisterType<FifthweekAuthorizationServerHandler>().As<IFifthweekAuthorizationServerHandler>().InstancePerRequest();
             builder.RegisterType<FifthweekRefreshTokenProvider>().SingleInstance();
             builder.RegisterType<FifthweekRefreshTokenHandler>().As<IFifthweekRefreshTokenHandler>().InstancePerRequest();
-            builder.RegisterType<UserContext>().As<IUserContext>().InstancePerRequest();
+            builder.RegisterType<RequesterContext>().As<IRequesterContext>().InstancePerRequest();
         }
     }
 }

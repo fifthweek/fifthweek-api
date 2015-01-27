@@ -29,7 +29,7 @@
         private Mock<ICommandHandler<InitiateFileUploadCommand>> initiateFileUpload;
         private Mock<IQueryHandler<GenerateWritableBlobUriQuery, BlobSharedAccessInformation>> generateWritableBlobUri;
         private Mock<ICommandHandler<CompleteFileUploadCommand>> completeFileUpload;
-        private Mock<IUserContext> userContext;
+        private Mock<IRequesterContext> requesterContext;
         private FileUploadController target;
 
         [TestInitialize]
@@ -39,14 +39,14 @@
             this.initiateFileUpload = new Mock<ICommandHandler<InitiateFileUploadCommand>>();
             this.generateWritableBlobUri = new Mock<IQueryHandler<GenerateWritableBlobUriQuery, BlobSharedAccessInformation>>();
             this.completeFileUpload = new Mock<ICommandHandler<CompleteFileUploadCommand>>();
-            this.userContext = new Mock<IUserContext>();
+            this.requesterContext = new Mock<IRequesterContext>();
 
             this.target = new FileUploadController(
                 this.guidCreator.Object,
                 this.initiateFileUpload.Object,
                 this.generateWritableBlobUri.Object,
                 this.completeFileUpload.Object,
-                this.userContext.Object);
+                this.requesterContext.Object);
         }
 
         [TestMethod]
@@ -78,7 +78,7 @@
             const string FilePath = @"C:\test\myfile.jpeg";
             const string Purpose = "profile-picture";
 
-            this.userContext.Setup(v => v.GetRequester()).Returns(Requester);
+            this.requesterContext.Setup(v => v.GetRequester()).Returns(Requester);
 
             this.initiateFileUpload.Setup(v => v.HandleAsync(new InitiateFileUploadCommand(Requester, FileId, FilePath, Purpose)))
                 .Returns(Task.FromResult(0));
@@ -102,12 +102,12 @@
         [TestMethod]
         public async Task WhenAnUploadCompleteNotificationIsPosted_ItShouldCompleteTheFileUpload()
         {
-            this.userContext.Setup(v => v.GetRequester()).Returns(Requester).Verifiable();
+            this.requesterContext.Setup(v => v.GetRequester()).Returns(Requester).Verifiable();
             this.completeFileUpload.Setup(v => v.HandleAsync(new CompleteFileUploadCommand(Requester, FileId))).Returns(Task.FromResult(0)).Verifiable();
 
             await this.target.PostUploadCompleteNotificationAsync(GeneratedSqlGuid.EncodeGuid());
 
-            this.userContext.Verify();
+            this.requesterContext.Verify();
             this.completeFileUpload.Verify();
         }
     }

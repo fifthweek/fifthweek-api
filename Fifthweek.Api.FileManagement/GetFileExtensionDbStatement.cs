@@ -6,6 +6,7 @@
     using Dapper;
 
     using Fifthweek.Api.Core;
+    using Fifthweek.Api.FileManagement.Shared;
     using Fifthweek.Api.Persistence;
     using Fifthweek.CodeGeneration;
 

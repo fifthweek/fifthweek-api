@@ -5,6 +5,7 @@
 
     using Fifthweek.Api.Core;
     using Fifthweek.Api.Identity.OAuth;
+    using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.Api.Subscriptions.Commands;
     using Fifthweek.Api.Subscriptions.Shared;
     using Fifthweek.CodeGeneration;
@@ -14,7 +15,7 @@
     {
         private readonly ICommandHandler<CreateSubscriptionCommand> createSubscription;
         private readonly ICommandHandler<UpdateSubscriptionCommand> updateSubscription;
-        private readonly IUserContext userContext;
+        private readonly IRequesterContext requesterContext;
         private readonly IGuidCreator guidCreator;
 
         [Route("")]
@@ -23,7 +24,7 @@
             subscription.AssertBodyProvided("subscription");
             subscription.Parse();
 
-            var requester = this.userContext.GetRequester();
+            var requester = this.requesterContext.GetRequester();
             var newSubscriptionId = new SubscriptionId(this.guidCreator.CreateSqlSequential());
 
             await this.createSubscription.HandleAsync(new CreateSubscriptionCommand(
@@ -43,7 +44,7 @@
             subscription.AssertBodyProvided("subscription");
             subscription.Parse();
 
-            var requester = this.userContext.GetRequester();
+            var requester = this.requesterContext.GetRequester();
             var subscriptionIdObject = new SubscriptionId(subscriptionId.DecodeGuid());
 
             await this.updateSubscription.HandleAsync(new UpdateSubscriptionCommand(

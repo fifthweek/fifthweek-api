@@ -21,13 +21,13 @@
     {
         private readonly IQueryHandler<GetUserStateQuery, UserState> getUserState;
 
-        private readonly IUserContext userContext;
+        private readonly IRequesterContext requesterContext;
 
         [Route("{userId}")]
         public async Task<UserState> Get(string userId)
         {
             var requestedUserId = string.IsNullOrWhiteSpace(userId) ? null : new UserId(userId.DecodeGuid());
-            var requester = this.userContext.GetRequester();
+            var requester = this.requesterContext.GetRequester();
 
             var userState = await this.getUserState.HandleAsync(new GetUserStateQuery(requester, requestedUserId));
 

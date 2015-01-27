@@ -25,35 +25,35 @@
         public void WhenAuthenticatedButNoNameIdentifierClaimExists_GetRequesterShouldThrowAnException()
         {
             HttpContext.Current.User = new Principal(AuthenticationType);
-            Assert.AreEqual(Requester.Unauthenticated, this.userContext.GetRequester());
+            Assert.AreEqual(Requester.Unauthenticated, this.requesterContext.GetRequester());
         }
 
         [TestMethod]
         public void WhenNoHttpContext_RequesterShouldBeUnauthenticated()
         {
             HttpContext.Current = null;
-            Assert.AreEqual(Requester.Unauthenticated, this.userContext.GetRequester());
+            Assert.AreEqual(Requester.Unauthenticated, this.requesterContext.GetRequester());
         }
 
         [TestMethod]
         public void WhenNoUser_RequesterShouldBeUnauthenticated()
         {
             HttpContext.Current.User = null;
-            Assert.AreEqual(Requester.Unauthenticated, this.userContext.GetRequester());
+            Assert.AreEqual(Requester.Unauthenticated, this.requesterContext.GetRequester());
         }
 
         [TestMethod]
         public void WhenNoIdentity_RequesterShouldBeUnauthenticated()
         {
             HttpContext.Current.User = new NullIdentityPrincipal();
-            Assert.AreEqual(Requester.Unauthenticated, this.userContext.GetRequester());
+            Assert.AreEqual(Requester.Unauthenticated, this.requesterContext.GetRequester());
         }
 
         [TestMethod]
         public void WhenNoAuthenticationType_RequesterShouldBeUnauthenticated()
         {
             HttpContext.Current.User = new Principal(null);
-            Assert.AreEqual(Requester.Unauthenticated, this.userContext.GetRequester());
+            Assert.AreEqual(Requester.Unauthenticated, this.requesterContext.GetRequester());
         }
 
         [TestMethod]
@@ -64,7 +64,7 @@
 
             HttpContext.Current.User = principal;
 
-            var result = this.userContext.GetRequester();
+            var result = this.requesterContext.GetRequester();
 
             Assert.AreEqual(Requester.Authenticated(UserId), result);
         }
@@ -77,7 +77,7 @@
 
             HttpContext.Current.User = principal;
 
-            var result = this.userContext.GetRequester();
+            var result = this.requesterContext.GetRequester();
 
             Assert.AreEqual(Requester.Unauthenticated, result);
         }
@@ -93,7 +93,7 @@
 
             HttpContext.Current.User = principal;
 
-            var result = this.userContext.GetRequester();
+            var result = this.requesterContext.GetRequester();
 
             Assert.IsTrue(result.IsInRole("Two"));
             Assert.IsFalse(result.IsInRole("Four"));
@@ -110,7 +110,7 @@
 
             HttpContext.Current.User = principal;
 
-            var result = this.userContext.GetRequester();
+            var result = this.requesterContext.GetRequester();
 
             Assert.IsFalse(result.IsInRole("Two"));
         }
@@ -121,7 +121,7 @@
             TextWriter tw = new StreamWriter(new MemoryStream());
             HttpContext.Current = new HttpContext(new HttpRequest("blah", "http://blah.com", "blah"), new HttpResponse(tw));
 
-            this.userContext = new UserContext();
+            this.requesterContext = new RequesterContext();
         }
 
         [TestCleanup]
@@ -130,7 +130,7 @@
             HttpContext.Current = null;
         }
 
-        private UserContext userContext;
+        private RequesterContext requesterContext;
 
         private class Principal : IPrincipal
         {

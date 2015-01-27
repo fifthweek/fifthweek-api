@@ -17,7 +17,7 @@
     [RoutePrefix("accountsettings")]
     public partial class AccountSettingsController : ApiController
     {
-        private readonly IUserContext userContext;
+        private readonly IRequesterContext requesterContext;
 
         private readonly ICommandHandler<UpdateAccountSettingsCommand> updateAccountSettings;
 
@@ -29,7 +29,7 @@
             userId.AssertUrlParameterProvided("userId");
 
             var requestedUserId = new UserId(userId.DecodeGuid());
-            var requester = this.userContext.GetRequester();
+            var requester = this.requesterContext.GetRequester();
 
             var query = new GetAccountSettingsQuery(requester, requestedUserId);
             var result = await this.getAccountSettings.HandleAsync(query);
@@ -43,7 +43,7 @@
             userId.AssertUrlParameterProvided("userId");
             updatedAccountSettings.AssertBodyProvided("updatedAccountSettings");
 
-            var requester = this.userContext.GetRequester();
+            var requester = this.requesterContext.GetRequester();
             var requestedUserId = new UserId(userId.DecodeGuid());
             
             updatedAccountSettings.Parse();

@@ -24,7 +24,7 @@
         private readonly ICommandHandler<ReorderQueueCommand> reorderQueue;
         private readonly IQueryHandler<GetCreatorBacklogQuery, IReadOnlyList<BacklogPost>> getCreatorBacklog;
         private readonly IQueryHandler<GetCreatorNewsfeedQuery, IReadOnlyList<NewsfeedPost>> getCreatorNewsfeed;
-        private readonly IUserContext userContext;
+        private readonly IRequesterContext requesterContext;
         private readonly IGuidCreator guidCreator;
 
         [Route("notes")]
@@ -33,7 +33,7 @@
             note.AssertBodyProvided("note");
             note.Parse();
 
-            var requester = this.userContext.GetRequester();
+            var requester = this.requesterContext.GetRequester();
             var newPostId = new PostId(this.guidCreator.CreateSqlSequential());
 
             await this.postNote.HandleAsync(new PostNoteCommand(
@@ -52,7 +52,7 @@
             image.AssertBodyProvided("image");
             image.Parse();
 
-            var requester = this.userContext.GetRequester();
+            var requester = this.requesterContext.GetRequester();
             var newPostId = new PostId(this.guidCreator.CreateSqlSequential());
 
             await this.postImage.HandleAsync(new PostImageCommand(
@@ -73,7 +73,7 @@
             file.AssertBodyProvided("file");
             file.Parse();
 
-            var requester = this.userContext.GetRequester();
+            var requester = this.requesterContext.GetRequester();
             var newPostId = new PostId(this.guidCreator.CreateSqlSequential());
 
             await this.postFile.HandleAsync(new PostFileCommand(
@@ -95,7 +95,7 @@
             newQueueOrder.AssertBodyProvided("newQueueOrder");
 
             var collectionIdObject = new CollectionId(collectionId.DecodeGuid());
-            var requester = this.userContext.GetRequester();
+            var requester = this.requesterContext.GetRequester();
 
             await this.reorderQueue.HandleAsync(new ReorderQueueCommand(requester, collectionIdObject, newQueueOrder.ToList()));
 
@@ -107,7 +107,7 @@
         {
             creatorId.AssertUrlParameterProvided("creatorId");
             var creatorIdObject = new UserId(creatorId.DecodeGuid());
-            var requester = this.userContext.GetRequester();
+            var requester = this.requesterContext.GetRequester();
 
             return await this.getCreatorBacklog.HandleAsync(new GetCreatorBacklogQuery(requester, creatorIdObject));
         }
@@ -120,7 +120,7 @@
             requestData.Parse();
 
             var creatorIdObject = new UserId(creatorId.DecodeGuid());
-            var requester = this.userContext.GetRequester();
+            var requester = this.requesterContext.GetRequester();
 
             return await this.getCreatorNewsfeed.HandleAsync(new GetCreatorNewsfeedQuery(requester, creatorIdObject, requestData.StartIndexObject, requestData.CountObject));
         }
@@ -130,7 +130,7 @@
         {
             postId.AssertUrlParameterProvided("postId");
             var parsedPostId = new PostId(postId.DecodeGuid());
-            var requester = this.userContext.GetRequester();
+            var requester = this.requesterContext.GetRequester();
 
             return this.deletePost.HandleAsync(new DeletePostCommand(parsedPostId, requester));
         }

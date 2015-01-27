@@ -47,20 +47,20 @@
 
         private UserStateController target;
         private Mock<IQueryHandler<GetUserStateQuery, UserState>> getUserState;
-        private Mock<IUserContext> userContext;
+        private Mock<IRequesterContext> requesterContext;
 
         [TestInitialize]
         public void TestInitialize()
         {
             this.getUserState = new Mock<IQueryHandler<GetUserStateQuery, UserState>>();
-            this.userContext = new Mock<IUserContext>();
-            this.target = new UserStateController(this.getUserState.Object, this.userContext.Object);
+            this.requesterContext = new Mock<IRequesterContext>();
+            this.target = new UserStateController(this.getUserState.Object, this.requesterContext.Object);
         }
 
         [TestMethod]
         public async Task WhenGettingUserState_ItShouldReturnResultFromUserStateQuery()
         {
-            this.userContext.Setup(v => v.GetRequester()).Returns(Requester);
+            this.requesterContext.Setup(v => v.GetRequester()).Returns(Requester);
             
             this.getUserState.Setup(v => v.HandleAsync(new GetUserStateQuery(Requester, UserId)))
                 .ReturnsAsync(UserState);
@@ -73,7 +73,7 @@
         [TestMethod]
         public async Task WhenGettingUserState_ItShouldReturnResultFromUserStateQuery2()
         {
-            this.userContext.Setup(v => v.GetRequester()).Returns(Requester.Unauthenticated);
+            this.requesterContext.Setup(v => v.GetRequester()).Returns(Requester.Unauthenticated);
 
             this.getUserState.Setup(v => v.HandleAsync(new GetUserStateQuery(Requester.Unauthenticated, UserId)))
                 .ReturnsAsync(UserState);
@@ -86,7 +86,7 @@
         [TestMethod]
         public async Task WhenGettingUserState_ItShouldReturnResultFromUserStateQuery3()
         {
-            this.userContext.Setup(v => v.GetRequester()).Returns(Requester.Unauthenticated);
+            this.requesterContext.Setup(v => v.GetRequester()).Returns(Requester.Unauthenticated);
 
             this.getUserState.Setup(v => v.HandleAsync(new GetUserStateQuery(Requester.Unauthenticated, null)))
                 .ReturnsAsync(UserState);
@@ -99,7 +99,7 @@
         [TestMethod]
         public async Task WhenGettingUserState_ItShouldReturnResultFromUserStateQuery4()
         {
-            this.userContext.Setup(v => v.GetRequester()).Returns(Requester);
+            this.requesterContext.Setup(v => v.GetRequester()).Returns(Requester);
 
             this.getUserState.Setup(v => v.HandleAsync(new GetUserStateQuery(Requester, null)))
                 .ReturnsAsync(UserState);

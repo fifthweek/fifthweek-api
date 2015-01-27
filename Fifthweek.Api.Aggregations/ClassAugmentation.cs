@@ -10,6 +10,7 @@ namespace Fifthweek.Api.Aggregations.Controllers
     using Fifthweek.Api.Core;
     using Fifthweek.Api.Identity.Membership;
     using Fifthweek.Api.Identity.OAuth;
+    using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.Api.Persistence.Identity;
     using Fifthweek.Api.Subscriptions;
     using Fifthweek.Api.Subscriptions.Controllers;
@@ -19,20 +20,20 @@ namespace Fifthweek.Api.Aggregations.Controllers
     {
         public UserStateController(
             Fifthweek.Api.Core.IQueryHandler<Fifthweek.Api.Aggregations.Queries.GetUserStateQuery,Fifthweek.Api.Aggregations.Queries.UserState> getUserState, 
-            Fifthweek.Api.Identity.OAuth.IUserContext userContext)
+            IRequesterContext requesterContext)
         {
             if (getUserState == null)
             {
                 throw new ArgumentNullException("getUserState");
             }
 
-            if (userContext == null)
+            if (requesterContext == null)
             {
-                throw new ArgumentNullException("userContext");
+                throw new ArgumentNullException("requesterContext");
             }
 
             this.getUserState = getUserState;
-            this.userContext = userContext;
+            this.requesterContext = requesterContext;
         }
     }
 

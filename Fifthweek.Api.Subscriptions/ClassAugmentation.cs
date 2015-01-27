@@ -316,6 +316,7 @@ namespace Fifthweek.Api.Subscriptions.Controllers
     using System.Web.Http;
     using Fifthweek.Api.Core;
     using Fifthweek.Api.Identity.OAuth;
+    using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.Api.Subscriptions.Commands;
     using Fifthweek.Api.Subscriptions.Shared;
     using Fifthweek.CodeGeneration;
@@ -326,7 +327,7 @@ namespace Fifthweek.Api.Subscriptions.Controllers
         public SubscriptionController(
             Fifthweek.Api.Core.ICommandHandler<Fifthweek.Api.Subscriptions.Commands.CreateSubscriptionCommand> createSubscription, 
             Fifthweek.Api.Core.ICommandHandler<Fifthweek.Api.Subscriptions.Commands.UpdateSubscriptionCommand> updateSubscription, 
-            Fifthweek.Api.Identity.OAuth.IUserContext userContext, 
+            IRequesterContext requesterContext, 
             Fifthweek.Api.Core.IGuidCreator guidCreator)
         {
             if (createSubscription == null)
@@ -339,9 +340,9 @@ namespace Fifthweek.Api.Subscriptions.Controllers
                 throw new ArgumentNullException("updateSubscription");
             }
 
-            if (userContext == null)
+            if (requesterContext == null)
             {
-                throw new ArgumentNullException("userContext");
+                throw new ArgumentNullException("requesterContext");
             }
 
             if (guidCreator == null)
@@ -351,7 +352,7 @@ namespace Fifthweek.Api.Subscriptions.Controllers
 
             this.createSubscription = createSubscription;
             this.updateSubscription = updateSubscription;
-            this.userContext = userContext;
+            this.requesterContext = requesterContext;
             this.guidCreator = guidCreator;
         }
     }

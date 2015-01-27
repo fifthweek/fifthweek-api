@@ -43,7 +43,7 @@
         private Mock<ICommandHandler<ReorderQueueCommand>> reorderQueue;
         private Mock<IQueryHandler<GetCreatorBacklogQuery, IReadOnlyList<BacklogPost>>> getCreatorBacklog;
         private Mock<IQueryHandler<GetCreatorNewsfeedQuery, IReadOnlyList<NewsfeedPost>>> getCreatorNewsfeed;
-        private Mock<IUserContext> userContext;
+        private Mock<IRequesterContext> requesterContext;
         private Mock<IGuidCreator> guidCreator;
         private PostController target;
 
@@ -57,7 +57,7 @@
             this.reorderQueue = new Mock<ICommandHandler<ReorderQueueCommand>>();
             this.getCreatorBacklog = new Mock<IQueryHandler<GetCreatorBacklogQuery, IReadOnlyList<BacklogPost>>>();
             this.getCreatorNewsfeed = new Mock<IQueryHandler<GetCreatorNewsfeedQuery, IReadOnlyList<NewsfeedPost>>>();
-            this.userContext = new Mock<IUserContext>();
+            this.requesterContext = new Mock<IRequesterContext>();
             this.guidCreator = new Mock<IGuidCreator>();
             this.target = new PostController(
                 this.postNote.Object,
@@ -67,7 +67,7 @@
                 this.reorderQueue.Object,
                 this.getCreatorBacklog.Object,
                 this.getCreatorNewsfeed.Object,
-                this.userContext.Object,
+                this.requesterContext.Object,
                 this.guidCreator.Object);
         }
 
@@ -77,7 +77,7 @@
             var data = NewNoteData();
             var command = NewPostNoteCommand(UserId, PostId, data);
 
-            this.userContext.Setup(v => v.GetRequester()).Returns(Requester);
+            this.requesterContext.Setup(v => v.GetRequester()).Returns(Requester);
             this.guidCreator.Setup(_ => _.CreateSqlSequential()).Returns(PostId.Value);
             this.postNote.Setup(v => v.HandleAsync(command)).Returns(Task.FromResult(0)).Verifiable();
 
@@ -93,7 +93,7 @@
             var data = NewImageData();
             var command = NewPostImageCommand(UserId, PostId, data);
 
-            this.userContext.Setup(v => v.GetRequester()).Returns(Requester);
+            this.requesterContext.Setup(v => v.GetRequester()).Returns(Requester);
             this.guidCreator.Setup(_ => _.CreateSqlSequential()).Returns(PostId.Value);
             this.postImage.Setup(v => v.HandleAsync(command)).Returns(Task.FromResult(0)).Verifiable();
 
@@ -109,7 +109,7 @@
             var data = NewFileData();
             var command = NewPostFileCommand(UserId, PostId, data);
 
-            this.userContext.Setup(v => v.GetRequester()).Returns(Requester);
+            this.requesterContext.Setup(v => v.GetRequester()).Returns(Requester);
             this.guidCreator.Setup(_ => _.CreateSqlSequential()).Returns(PostId.Value);
             this.postFile.Setup(v => v.HandleAsync(command)).Returns(Task.FromResult(0)).Verifiable();
 
@@ -125,7 +125,7 @@
             var query = new GetCreatorBacklogQuery(Requester, UserId);
             var queryResult = new[] { new BacklogPost(PostId, ChannelId, CollectionId, new Comment(""), null, null, false, DateTime.UtcNow) };
 
-            this.userContext.Setup(_ => _.GetRequester()).Returns(Requester);
+            this.requesterContext.Setup(_ => _.GetRequester()).Returns(Requester);
             this.getCreatorBacklog.Setup(_ => _.HandleAsync(query)).ReturnsAsync(queryResult);
 
             var result = await this.target.GetCreatorBacklog(UserId.Value.EncodeGuid());
@@ -147,7 +147,7 @@
             var requestData = new CreatorNewsfeedRequestData { Count = 5, StartIndex = 10 };
             var queryResult = new[] { new NewsfeedPost(PostId, ChannelId, CollectionId, new Comment(""), null, null, DateTime.UtcNow) };
 
-            this.userContext.Setup(_ => _.GetRequester()).Returns(Requester);
+            this.requesterContext.Setup(_ => _.GetRequester()).Returns(Requester);
             this.getCreatorNewsfeed.Setup(_ => _.HandleAsync(query)).ReturnsAsync(queryResult);
 
             var result = await this.target.GetCreatorNewsfeed(UserId.Value.EncodeGuid(), requestData);
@@ -172,7 +172,7 @@
         [TestMethod]
         public async Task WhenDeletingPost_ItShouldIssueDeletePostCommand()
         {
-            this.userContext.Setup(v => v.GetRequester()).Returns(Requester);
+            this.requesterContext.Setup(v => v.GetRequester()).Returns(Requester);
             this.deletePost.Setup(v => v.HandleAsync(new DeletePostCommand(PostId, Requester)))
                 .Returns(Task.FromResult(0))
                 .Verifiable();
@@ -194,7 +194,7 @@
         {
             var newQueueOrder = new[] { new PostId(Guid.NewGuid()) };
 
-            this.userContext.Setup(v => v.GetRequester()).Returns(Requester);
+            this.requesterContext.Setup(v => v.GetRequester()).Returns(Requester);
             this.reorderQueue.Setup(v => v.HandleAsync(new ReorderQueueCommand(Requester, CollectionId, newQueueOrder)))
                 .Returns(Task.FromResult(0))
                 .Verifiable();

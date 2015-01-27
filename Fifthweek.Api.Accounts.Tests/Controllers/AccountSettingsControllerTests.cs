@@ -28,7 +28,7 @@
         private static readonly ValidPassword Password = ValidPassword.Parse("passw0rd");
         private static readonly FileId FileId = new FileId(Guid.NewGuid());
 
-        private Mock<IUserContext> userContext;
+        private Mock<IRequesterContext> requesterContext;
         private Mock<ICommandHandler<UpdateAccountSettingsCommand>> updateAccountSettings;
         private Mock<IQueryHandler<GetAccountSettingsQuery, GetAccountSettingsResult>> getAccountSettings;
         private AccountSettingsController target;
@@ -36,12 +36,12 @@
         [TestInitialize]
         public void TestInitialize()
         {
-            this.userContext = new Mock<IUserContext>();
+            this.requesterContext = new Mock<IRequesterContext>();
             this.updateAccountSettings = new Mock<ICommandHandler<UpdateAccountSettingsCommand>>();
             this.getAccountSettings = new Mock<IQueryHandler<GetAccountSettingsQuery, GetAccountSettingsResult>>();
 
             this.target = new AccountSettingsController(
-                this.userContext.Object,
+                this.requesterContext.Object,
                 this.updateAccountSettings.Object,
                 this.getAccountSettings.Object);
         }
@@ -49,7 +49,7 @@
         [TestMethod]
         public async Task WhenGetIsCalled_ItShouldCallTheQueryHandler()
         {
-            this.userContext.Setup(v => v.GetRequester()).Returns(Requester);
+            this.requesterContext.Setup(v => v.GetRequester()).Returns(Requester);
 
             var query = new GetAccountSettingsQuery(Requester, RequestedUserId);
             this.getAccountSettings.Setup(v => v.HandleAsync(query))
@@ -82,7 +82,7 @@
         [TestMethod]
         public async Task WhenPutIsCalled_ItShouldCallTheCommandHandler()
         {
-            this.userContext.Setup(v => v.GetRequester()).Returns(Requester);
+            this.requesterContext.Setup(v => v.GetRequester()).Returns(Requester);
 
             var command = new UpdateAccountSettingsCommand(Requester, RequestedUserId, Username, Email, Password, FileId);
             this.updateAccountSettings.Setup(v => v.HandleAsync(command))

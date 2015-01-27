@@ -30,7 +30,7 @@
         private static readonly FileId HeaderImageFileId = new FileId(Guid.NewGuid());
         private Mock<ICommandHandler<CreateSubscriptionCommand>> createSubscription;
         private Mock<ICommandHandler<UpdateSubscriptionCommand>> updateSubscription;
-        private Mock<IUserContext> userContext;
+        private Mock<IRequesterContext> requesterContext;
         private Mock<IGuidCreator> guidCreator;
         private SubscriptionController target;
 
@@ -39,12 +39,12 @@
         {
             this.createSubscription = new Mock<ICommandHandler<CreateSubscriptionCommand>>();
             this.updateSubscription = new Mock<ICommandHandler<UpdateSubscriptionCommand>>();
-            this.userContext = new Mock<IUserContext>();
+            this.requesterContext = new Mock<IRequesterContext>();
             this.guidCreator = new Mock<IGuidCreator>();
             this.target = new SubscriptionController(
                 this.createSubscription.Object,
                 this.updateSubscription.Object,
-                this.userContext.Object,
+                this.requesterContext.Object,
                 this.guidCreator.Object);
         }
 
@@ -54,7 +54,7 @@
             var data = NewCreateSubscriptionData();
             var command = NewCreateSubscriptionCommand(UserId, SubscriptionId, data);
 
-            this.userContext.Setup(v => v.GetRequester()).Returns(Requester);
+            this.requesterContext.Setup(v => v.GetRequester()).Returns(Requester);
             this.guidCreator.Setup(_ => _.CreateSqlSequential()).Returns(SubscriptionId.Value);
             this.createSubscription.Setup(v => v.HandleAsync(command)).Returns(Task.FromResult(0)).Verifiable();
 
@@ -70,7 +70,7 @@
             var data = NewUpdatedSubscriptionData();
             var command = NewUpdateSubscriptionCommand(UserId, SubscriptionId, data);
 
-            this.userContext.Setup(v => v.GetRequester()).Returns(Requester);
+            this.requesterContext.Setup(v => v.GetRequester()).Returns(Requester);
             this.updateSubscription.Setup(v => v.HandleAsync(command)).Returns(Task.FromResult(0)).Verifiable();
 
             var result = await this.target.PutSubscription(SubscriptionId.Value.EncodeGuid(), data);

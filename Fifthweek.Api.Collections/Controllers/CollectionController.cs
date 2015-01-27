@@ -10,6 +10,7 @@
     using Fifthweek.Api.Collections.Shared;
     using Fifthweek.Api.Core;
     using Fifthweek.Api.Identity.OAuth;
+    using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.CodeGeneration;
 
     [RoutePrefix("collections"), AutoConstructor]
@@ -17,7 +18,7 @@
     {
         private readonly ICommandHandler<CreateCollectionCommand> createCollection;
         private readonly IQueryHandler<GetLiveDateOfNewQueuedPostQuery, DateTime> getLiveDateOfNewQueuedPost;
-        private readonly IUserContext userContext;
+        private readonly IRequesterContext requesterContext;
         private readonly IGuidCreator guidCreator;
 
         [Route]
@@ -26,7 +27,7 @@
             newCollection.AssertBodyProvided("newCollection");
             newCollection.Parse();
 
-            var requester = this.userContext.GetRequester();
+            var requester = this.requesterContext.GetRequester();
             var newCollectionId = new CollectionId(this.guidCreator.CreateSqlSequential());
 
             await this.createCollection.HandleAsync(
@@ -45,7 +46,7 @@
         {
             collectionId.AssertUrlParameterProvided("collectionId");
 
-            var requester = this.userContext.GetRequester();
+            var requester = this.requesterContext.GetRequester();
             var collectionIdObject = new CollectionId(collectionId.DecodeGuid());
 
             return await this.getLiveDateOfNewQueuedPost.HandleAsync(new GetLiveDateOfNewQueuedPostQuery(requester, collectionIdObject));
