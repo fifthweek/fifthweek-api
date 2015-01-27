@@ -12,7 +12,7 @@
     {
         private readonly IFifthweekDbContext fifthweekDbContext;
 
-        public Task ExecuteAsync(PostId postId)
+        public Task ExecuteAsync(Shared.PostId postId)
         {
             return this.fifthweekDbContext.Database.Connection.ExecuteAsync(
                 string.Format(@"DELETE FROM {0} WHERE {1}=@Id", Post.Table, Post.Fields.Id),

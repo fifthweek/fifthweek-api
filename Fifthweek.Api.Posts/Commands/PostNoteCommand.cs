@@ -2,12 +2,10 @@
 {
     using System;
 
-    using Fifthweek.Api.Channels;
-    using Fifthweek.Api.Identity.Membership;
+    using Fifthweek.Api.Channels.Shared;
     using Fifthweek.Api.Identity.Shared.Membership;
+    using Fifthweek.Api.Posts.Shared;
     using Fifthweek.CodeGeneration;
-
-    using ChannelId = Fifthweek.Api.Channels.Shared.ChannelId;
 
     [AutoConstructor, AutoEqualityMembers]
     public partial class PostNoteCommand

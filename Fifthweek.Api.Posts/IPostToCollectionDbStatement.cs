@@ -3,16 +3,15 @@ namespace Fifthweek.Api.Posts
     using System;
     using System.Threading.Tasks;
 
-    using Fifthweek.Api.Collections;
-    using Fifthweek.Api.FileManagement;
+    using Fifthweek.Api.Collections.Shared;
+    using Fifthweek.Api.FileManagement.Shared;
+    using Fifthweek.Api.Posts.Shared;
 
-    using CollectionId = Fifthweek.Api.Collections.Shared.CollectionId;
-    using FileId = Fifthweek.Api.FileManagement.Shared.FileId;
 
     public interface IPostToCollectionDbStatement
     {
         Task ExecuteAsync(
-            PostId newPostId,
+            Shared.PostId newPostId,
             CollectionId collectionId,
             ValidComment comment,
             DateTime? sheduledPostDate,

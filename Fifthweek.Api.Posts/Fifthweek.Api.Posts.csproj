@@ -80,7 +80,6 @@
     <Compile Include="AutofacRegistration.cs" />
     <Compile Include="Commands\ReorderQueueCommand.cs" />
     <Compile Include="Commands\ReorderQueueCommandHandler.cs" />
-    <Compile Include="Comment.cs" />
     <Compile Include="Controllers\CreatorNewsfeedRequestData.cs" />
     <Compile Include="DeletePostDbStatement.cs" />
     <Compile Include="IDeletePostDbStatement.cs" />
@@ -95,7 +94,6 @@
     <Compile Include="Commands\DeletePostCommand.cs" />
     <Compile Include="Commands\DeletePostCommandHandler.cs" />
     <Compile Include="Commands\PostFileCommandHandler.cs" />
-    <Compile Include="IPostSecurity.cs" />
     <Compile Include="IPostFileTypeChecks.cs" />
     <Compile Include="IPostToCollectionDbSubStatements.cs" />
     <Compile Include="IPostToCollectionDbStatement.cs" />
@@ -109,7 +107,6 @@
     <Compile Include="Controllers\NewNoteData.cs" />
     <Compile Include="Controllers\PostController.cs" />
     <Compile Include="PostFileTypeChecks.cs" />
-    <Compile Include="PostId.cs" />
     <Compile Include="PostToCollectionDbStatement.cs" />
     <Compile Include="PostToCollectionDbSubStatements.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -119,8 +116,6 @@
     <Compile Include="Queries\GetCreatorNewsfeedQuery.cs" />
     <Compile Include="Queries\GetCreatorBacklogQuery.cs" />
     <Compile Include="Queries\GetCreatorBacklogQueryHandler.cs" />
-    <Compile Include="ValidComment.cs" />
-    <Compile Include="ValidNote.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Fifthweek.Api.Azure\Fifthweek.Api.Azure.csproj">

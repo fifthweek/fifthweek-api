@@ -16,6 +16,7 @@
     using Fifthweek.Api.Persistence.Identity;
     using Fifthweek.Api.Persistence.Tests.Shared;
     using Fifthweek.Api.Posts.Commands;
+    using Fifthweek.Api.Posts.Shared;
     using Fifthweek.Shared;
 
     using Microsoft.VisualStudio.TestTools.UnitTesting;

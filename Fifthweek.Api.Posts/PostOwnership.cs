@@ -5,18 +5,16 @@
     using Dapper;
 
     using Fifthweek.Api.Core;
-    using Fifthweek.Api.Identity.Membership;
+    using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.Api.Persistence;
     using Fifthweek.CodeGeneration;
-
-    using UserId = Fifthweek.Api.Identity.Shared.Membership.UserId;
 
     [AutoConstructor]
     public partial class PostOwnership : IPostOwnership
     {
         private readonly IFifthweekDbContext databaseContext;
 
-        public Task<bool> IsOwnerAsync(UserId userId, PostId postId)
+        public Task<bool> IsOwnerAsync(UserId userId, Shared.PostId postId)
         {
             userId.AssertNotNull("userId");
             postId.AssertNotNull("postId");

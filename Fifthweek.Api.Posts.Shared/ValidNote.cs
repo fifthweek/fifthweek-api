@@ -1,20 +1,26 @@
-﻿namespace Fifthweek.Api.Posts
+﻿namespace Fifthweek.Api.Posts.Shared
 {
     using System;
     using System.Collections.Generic;
+    using System.Linq;
 
     using Fifthweek.CodeGeneration;
 
     [AutoEqualityMembers]
-    public partial class ValidComment : Comment
+    public partial class ValidNote
     {
+        public static readonly string ForbiddenCharacters = "\t"; // Tweets allow new lines, so these have been removed from the exclusion list.
         public static readonly int MinLength = 1;
-        public static readonly int MaxLength = 2000; // Some of the longer comments on Tumblr are over 1000 characters.
+        public static readonly int MaxLength = 280; // Twice a tweet :)
 
-        private ValidComment(string value)
-            : base(value)
+        private const string ForbiddenCharacterMessage = "Must not contain tabs";
+        private static readonly HashSet<char> ForbiddenCharactersHashSet = new HashSet<char>(ForbiddenCharacters);
+
+        private ValidNote()
         {
         }
+
+        public string Value { get; protected set; }
 
         public static bool IsEmpty(string value)
         {
@@ -22,24 +28,24 @@
             return string.IsNullOrEmpty(value); // Trimmed types use IsNullOrWhiteSpace
         }
 
-        public static ValidComment Parse(string value)
+        public static ValidNote Parse(string value)
         {
-            ValidComment retval;
+            ValidNote retval;
             if (!TryParse(value, out retval))
             {
-                throw new ArgumentException("Invalid comment", "value");
+                throw new ArgumentException("Invalid note", "value");
             }
 
             return retval;
         }
 
-        public static bool TryParse(string value, out ValidComment comment)
+        public static bool TryParse(string value, out ValidNote note)
         {
             IReadOnlyCollection<string> errorMessages;
-            return TryParse(value, out comment, out errorMessages);
+            return TryParse(value, out note, out errorMessages);
         }
 
-        public static bool TryParse(string value, out ValidComment comment, out IReadOnlyCollection<string> errorMessages)
+        public static bool TryParse(string value, out ValidNote note, out IReadOnlyCollection<string> errorMessages)
         {
             var errorMessageList = new List<string>();
             errorMessages = errorMessageList;
@@ -55,15 +61,23 @@
                 {
                     errorMessageList.Add(string.Format("Length must be from {0} to {1} characters", MinLength, MaxLength));
                 }
+
+                if (value.Any(ForbiddenCharactersHashSet.Contains))
+                {
+                    errorMessageList.Add(ForbiddenCharacterMessage);
+                }
             }
 
             if (errorMessageList.Count > 0)
             {
-                comment = null;
+                note = null;
                 return false;
             }
 
-            comment = new ValidComment(value);
+            note = new ValidNote
+            {
+                Value = value
+            };
 
             return true;
         }

@@ -4,6 +4,6 @@ namespace Fifthweek.Api.Posts
 
     public interface IDeletePostDbStatement
     {
-        Task ExecuteAsync(PostId postId);
+        Task ExecuteAsync(Shared.PostId postId);
     }
 }

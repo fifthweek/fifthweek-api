@@ -3,14 +3,12 @@ namespace Fifthweek.Api.Posts
     using System;
     using System.Threading.Tasks;
 
-    using Fifthweek.Api.Collections;
+    using Fifthweek.Api.Collections.Shared;
     using Fifthweek.Api.Core;
-    using Fifthweek.Api.FileManagement;
+    using Fifthweek.Api.FileManagement.Shared;
     using Fifthweek.Api.Persistence;
+    using Fifthweek.Api.Posts.Shared;
     using Fifthweek.CodeGeneration;
-
-    using CollectionId = Fifthweek.Api.Collections.Shared.CollectionId;
-    using FileId = Fifthweek.Api.FileManagement.Shared.FileId;
 
     [AutoConstructor]
     public partial class PostToCollectionDbStatement : IPostToCollectionDbStatement
@@ -18,7 +16,7 @@ namespace Fifthweek.Api.Posts
         private readonly IPostToCollectionDbSubStatements subStatements;
         
         public Task ExecuteAsync(
-            PostId newPostId,
+            Shared.PostId newPostId,
             CollectionId collectionId,
             ValidComment comment,
             DateTime? sheduledPostDate,

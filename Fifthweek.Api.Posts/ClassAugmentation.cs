@@ -3,190 +3,20 @@ using System.Linq;
 
 
 
-namespace Fifthweek.Api.Posts
-{
-    using System;
-    using System.Linq;
-    using Fifthweek.CodeGeneration;
-    using Dapper;
-    using System.Threading.Tasks;
-    using Fifthweek.Api.Persistence;
-    using Fifthweek.Api.Core;
-    using Fifthweek.Api.FileManagement;
-    using Fifthweek.Shared;
-    using Fifthweek.Api.Identity.Membership;
-    using Fifthweek.Api.Collections;
-    [Newtonsoft.Json.JsonConverter(typeof(JsonConverter))]
-    public partial class Comment 
-    {
-		public class JsonConverter : Newtonsoft.Json.JsonConverter
-        {
-            public override void WriteJson(Newtonsoft.Json.JsonWriter writer, object value, Newtonsoft.Json.JsonSerializer serializer)
-            {
-                var valueType = (Comment)value;
-                serializer.Serialize(writer, valueType.Value);
-            }
 
-            public override object ReadJson(Newtonsoft.Json.JsonReader reader, Type objectType, object existingValue, Newtonsoft.Json.JsonSerializer serializer)
-            {
-                if (objectType != typeof(Comment))
-                {
-                    throw new ArgumentException("Expected to deserialize JSON for type " + typeof(Comment).Name, "objectType");
-                }
-
-                var value = serializer.Deserialize<System.String>(reader);
-                return new Comment(value);
-            }
-
-            public override bool CanConvert(Type objectType)
-            {
-                return objectType == typeof(Comment);
-            }
-        }
-
-		public class DapperTypeHandler : Dapper.SqlMapper.TypeHandler<Comment>, Fifthweek.Api.Persistence.IAutoRegisteredTypeHandler<Comment>
-        {
-            public override void SetValue(System.Data.IDbDataParameter parameter, Comment value)
-            {
-                parameter.DbType = System.Data.DbType.String;
-                parameter.Value = value.Value;
-            }
-
-            public override Comment Parse(object value)
-            {
-                return new Comment((System.String)value);
-            }
-        }
-    }
-
-}
-namespace Fifthweek.Api.Posts
-{
-    using System;
-    using System.Linq;
-    using Fifthweek.CodeGeneration;
-    using Dapper;
-    using System.Threading.Tasks;
-    using Fifthweek.Api.Persistence;
-    using Fifthweek.Api.Core;
-    using Fifthweek.Api.FileManagement;
-    using Fifthweek.Shared;
-    using Fifthweek.Api.Identity.Membership;
-    using Fifthweek.Api.Collections;
-    [Newtonsoft.Json.JsonConverter(typeof(JsonConverter))]
-    public partial class PostId 
-    {
-		public class JsonConverter : Newtonsoft.Json.JsonConverter
-        {
-            public override void WriteJson(Newtonsoft.Json.JsonWriter writer, object value, Newtonsoft.Json.JsonSerializer serializer)
-            {
-                var valueType = (PostId)value;
-                serializer.Serialize(writer, valueType.Value);
-            }
-
-            public override object ReadJson(Newtonsoft.Json.JsonReader reader, Type objectType, object existingValue, Newtonsoft.Json.JsonSerializer serializer)
-            {
-                if (objectType != typeof(PostId))
-                {
-                    throw new ArgumentException("Expected to deserialize JSON for type " + typeof(PostId).Name, "objectType");
-                }
-
-                var value = serializer.Deserialize<System.Guid>(reader);
-                return new PostId(value);
-            }
-
-            public override bool CanConvert(Type objectType)
-            {
-                return objectType == typeof(PostId);
-            }
-        }
-
-		public class DapperTypeHandler : Dapper.SqlMapper.TypeHandler<PostId>, Fifthweek.Api.Persistence.IAutoRegisteredTypeHandler<PostId>
-        {
-            public override void SetValue(System.Data.IDbDataParameter parameter, PostId value)
-            {
-                parameter.DbType = System.Data.DbType.Guid;
-                parameter.Value = value.Value;
-            }
-
-            public override PostId Parse(object value)
-            {
-                return new PostId((System.Guid)value);
-            }
-        }
-    }
-
-}
-
-namespace Fifthweek.Api.Posts
-{
-    using System;
-    using System.Linq;
-    using Fifthweek.CodeGeneration;
-    using Dapper;
-    using System.Threading.Tasks;
-    using Fifthweek.Api.Persistence;
-    using Fifthweek.Api.Core;
-    using Fifthweek.Api.FileManagement;
-    using Fifthweek.Shared;
-    using Fifthweek.Api.Identity.Membership;
-    using Fifthweek.Api.Collections;
-    public partial class Comment 
-    {
-        public Comment(
-            System.String value)
-        {
-            if (value == null)
-            {
-                throw new ArgumentNullException("value");
-            }
-
-            this.Value = value;
-        }
-    }
-
-}
-namespace Fifthweek.Api.Posts
-{
-    using System;
-    using System.Linq;
-    using Fifthweek.CodeGeneration;
-    using Dapper;
-    using System.Threading.Tasks;
-    using Fifthweek.Api.Persistence;
-    using Fifthweek.Api.Core;
-    using Fifthweek.Api.FileManagement;
-    using Fifthweek.Shared;
-    using Fifthweek.Api.Identity.Membership;
-    using Fifthweek.Api.Collections;
-    public partial class PostId 
-    {
-        public PostId(
-            System.Guid value)
-        {
-            if (value == null)
-            {
-                throw new ArgumentNullException("value");
-            }
-
-            this.Value = value;
-        }
-    }
-
-}
 namespace Fifthweek.Api.Posts.Commands
 {
     using System;
     using System.Linq;
-    using Fifthweek.Api.Identity.Membership;
     using Fifthweek.Api.Identity.Shared.Membership;
+    using Fifthweek.Api.Posts.Shared;
     using Fifthweek.CodeGeneration;
     using System.Threading.Tasks;
-    using Fifthweek.Api.Azure;
     using Fifthweek.Api.Core;
     using Fifthweek.Api.FileManagement;
-    using Fifthweek.Api.Collections;
-    using Fifthweek.Api.Channels;
+    using Fifthweek.Api.Collections.Shared;
+    using Fifthweek.Api.FileManagement.Shared;
+    using Fifthweek.Api.Channels.Shared;
     using Fifthweek.Api.Persistence;
     using System.Collections.Generic;
     using System.Text;
@@ -194,8 +24,8 @@ namespace Fifthweek.Api.Posts.Commands
     public partial class DeletePostCommand 
     {
         public DeletePostCommand(
-            Fifthweek.Api.Posts.PostId postId, 
-            Requester requester)
+            Fifthweek.Api.Posts.Shared.PostId postId, 
+            Fifthweek.Api.Identity.Shared.Membership.Requester requester)
         {
             if (postId == null)
             {
@@ -217,15 +47,15 @@ namespace Fifthweek.Api.Posts.Commands
 {
     using System;
     using System.Linq;
-    using Fifthweek.Api.Identity.Membership;
     using Fifthweek.Api.Identity.Shared.Membership;
+    using Fifthweek.Api.Posts.Shared;
     using Fifthweek.CodeGeneration;
     using System.Threading.Tasks;
-    using Fifthweek.Api.Azure;
     using Fifthweek.Api.Core;
     using Fifthweek.Api.FileManagement;
-    using Fifthweek.Api.Collections;
-    using Fifthweek.Api.Channels;
+    using Fifthweek.Api.Collections.Shared;
+    using Fifthweek.Api.FileManagement.Shared;
+    using Fifthweek.Api.Channels.Shared;
     using Fifthweek.Api.Persistence;
     using System.Collections.Generic;
     using System.Text;
@@ -234,8 +64,8 @@ namespace Fifthweek.Api.Posts.Commands
     {
         public DeletePostCommandHandler(
             Fifthweek.Api.FileManagement.IScheduleGarbageCollectionStatement scheduleGarbageCollection, 
-            Fifthweek.Api.Posts.IPostSecurity postSecurity, 
-            IRequesterSecurity requesterSecurity, 
+            Fifthweek.Api.Posts.Shared.IPostSecurity postSecurity, 
+            Fifthweek.Api.Identity.Shared.Membership.IRequesterSecurity requesterSecurity, 
             Fifthweek.Api.Posts.IDeletePostDbStatement deletePost)
         {
             if (scheduleGarbageCollection == null)
@@ -270,31 +100,27 @@ namespace Fifthweek.Api.Posts.Commands
 {
     using System;
     using System.Linq;
-    using Fifthweek.Api.Identity.Membership;
     using Fifthweek.Api.Identity.Shared.Membership;
+    using Fifthweek.Api.Posts.Shared;
     using Fifthweek.CodeGeneration;
     using System.Threading.Tasks;
-    using Fifthweek.Api.Azure;
     using Fifthweek.Api.Core;
     using Fifthweek.Api.FileManagement;
-    using Fifthweek.Api.Collections;
-    using Fifthweek.Api.Channels;
+    using Fifthweek.Api.Collections.Shared;
+    using Fifthweek.Api.FileManagement.Shared;
+    using Fifthweek.Api.Channels.Shared;
     using Fifthweek.Api.Persistence;
     using System.Collections.Generic;
     using System.Text;
     using Dapper;
-
-    using CollectionId = Fifthweek.Api.Collections.Shared.CollectionId;
-    using FileId = Fifthweek.Api.FileManagement.Shared.FileId;
-
     public partial class PostFileCommand 
     {
         public PostFileCommand(
-            Requester requester, 
-            Fifthweek.Api.Posts.PostId newPostId, 
-            CollectionId collectionId, 
-            FileId fileId, 
-            Fifthweek.Api.Posts.ValidComment comment, 
+            Fifthweek.Api.Identity.Shared.Membership.Requester requester, 
+            Fifthweek.Api.Posts.Shared.PostId newPostId, 
+            Fifthweek.Api.Collections.Shared.CollectionId collectionId, 
+            Fifthweek.Api.FileManagement.Shared.FileId fileId, 
+            Fifthweek.Api.Posts.Shared.ValidComment comment, 
             System.Nullable<System.DateTime> scheduledPostDate, 
             System.Boolean isQueued)
         {
@@ -338,18 +164,15 @@ namespace Fifthweek.Api.Posts.Commands
 {
     using System;
     using System.Linq;
-
-    using Fifthweek.Api.Collections.Shared;
-    using Fifthweek.Api.FileManagement.Shared;
-    using Fifthweek.Api.Identity.Membership;
     using Fifthweek.Api.Identity.Shared.Membership;
+    using Fifthweek.Api.Posts.Shared;
     using Fifthweek.CodeGeneration;
     using System.Threading.Tasks;
-    using Fifthweek.Api.Azure;
     using Fifthweek.Api.Core;
     using Fifthweek.Api.FileManagement;
-    using Fifthweek.Api.Collections;
-    using Fifthweek.Api.Channels;
+    using Fifthweek.Api.Collections.Shared;
+    using Fifthweek.Api.FileManagement.Shared;
+    using Fifthweek.Api.Channels.Shared;
     using Fifthweek.Api.Persistence;
     using System.Collections.Generic;
     using System.Text;
@@ -357,9 +180,9 @@ namespace Fifthweek.Api.Posts.Commands
     public partial class PostFileCommandHandler 
     {
         public PostFileCommandHandler(
-            ICollectionSecurity collectionSecurity, 
-            IFileSecurity fileSecurity, 
-            IRequesterSecurity requesterSecurity, 
+            Fifthweek.Api.Collections.Shared.ICollectionSecurity collectionSecurity, 
+            Fifthweek.Api.FileManagement.Shared.IFileSecurity fileSecurity, 
+            Fifthweek.Api.Identity.Shared.Membership.IRequesterSecurity requesterSecurity, 
             Fifthweek.Api.Posts.IPostFileTypeChecks postFileTypeChecks, 
             Fifthweek.Api.Posts.IPostToCollectionDbStatement postToCollectionDbStatement)
         {
@@ -401,31 +224,27 @@ namespace Fifthweek.Api.Posts.Commands
 {
     using System;
     using System.Linq;
-    using Fifthweek.Api.Identity.Membership;
     using Fifthweek.Api.Identity.Shared.Membership;
+    using Fifthweek.Api.Posts.Shared;
     using Fifthweek.CodeGeneration;
     using System.Threading.Tasks;
-    using Fifthweek.Api.Azure;
     using Fifthweek.Api.Core;
     using Fifthweek.Api.FileManagement;
-    using Fifthweek.Api.Collections;
-    using Fifthweek.Api.Channels;
+    using Fifthweek.Api.Collections.Shared;
+    using Fifthweek.Api.FileManagement.Shared;
+    using Fifthweek.Api.Channels.Shared;
     using Fifthweek.Api.Persistence;
     using System.Collections.Generic;
     using System.Text;
     using Dapper;
-
-    using CollectionId = Fifthweek.Api.Collections.Shared.CollectionId;
-    using FileId = Fifthweek.Api.FileManagement.Shared.FileId;
-
     public partial class PostImageCommand 
     {
         public PostImageCommand(
-            Requester requester, 
-            Fifthweek.Api.Posts.PostId newPostId, 
-            CollectionId collectionId, 
-            FileId imageFileId, 
-            Fifthweek.Api.Posts.ValidComment comment, 
+            Fifthweek.Api.Identity.Shared.Membership.Requester requester, 
+            Fifthweek.Api.Posts.Shared.PostId newPostId, 
+            Fifthweek.Api.Collections.Shared.CollectionId collectionId, 
+            Fifthweek.Api.FileManagement.Shared.FileId imageFileId, 
+            Fifthweek.Api.Posts.Shared.ValidComment comment, 
             System.Nullable<System.DateTime> scheduledPostDate, 
             System.Boolean isQueued)
         {
@@ -469,18 +288,15 @@ namespace Fifthweek.Api.Posts.Commands
 {
     using System;
     using System.Linq;
-
-    using Fifthweek.Api.Collections.Shared;
-    using Fifthweek.Api.FileManagement.Shared;
-    using Fifthweek.Api.Identity.Membership;
     using Fifthweek.Api.Identity.Shared.Membership;
+    using Fifthweek.Api.Posts.Shared;
     using Fifthweek.CodeGeneration;
     using System.Threading.Tasks;
-    using Fifthweek.Api.Azure;
     using Fifthweek.Api.Core;
     using Fifthweek.Api.FileManagement;
-    using Fifthweek.Api.Collections;
-    using Fifthweek.Api.Channels;
+    using Fifthweek.Api.Collections.Shared;
+    using Fifthweek.Api.FileManagement.Shared;
+    using Fifthweek.Api.Channels.Shared;
     using Fifthweek.Api.Persistence;
     using System.Collections.Generic;
     using System.Text;
@@ -488,9 +304,9 @@ namespace Fifthweek.Api.Posts.Commands
     public partial class PostImageCommandHandler 
     {
         public PostImageCommandHandler(
-            ICollectionSecurity collectionSecurity, 
-            IFileSecurity fileSecurity, 
-            IRequesterSecurity requesterSecurity, 
+            Fifthweek.Api.Collections.Shared.ICollectionSecurity collectionSecurity, 
+            Fifthweek.Api.FileManagement.Shared.IFileSecurity fileSecurity, 
+            Fifthweek.Api.Identity.Shared.Membership.IRequesterSecurity requesterSecurity, 
             Fifthweek.Api.Posts.IPostFileTypeChecks postFileTypeChecks, 
             Fifthweek.Api.Posts.IPostToCollectionDbStatement postToCollectionDbStatement)
         {
@@ -532,29 +348,26 @@ namespace Fifthweek.Api.Posts.Commands
 {
     using System;
     using System.Linq;
-    using Fifthweek.Api.Identity.Membership;
     using Fifthweek.Api.Identity.Shared.Membership;
+    using Fifthweek.Api.Posts.Shared;
     using Fifthweek.CodeGeneration;
     using System.Threading.Tasks;
-    using Fifthweek.Api.Azure;
     using Fifthweek.Api.Core;
     using Fifthweek.Api.FileManagement;
-    using Fifthweek.Api.Collections;
-    using Fifthweek.Api.Channels;
+    using Fifthweek.Api.Collections.Shared;
+    using Fifthweek.Api.FileManagement.Shared;
+    using Fifthweek.Api.Channels.Shared;
     using Fifthweek.Api.Persistence;
     using System.Collections.Generic;
     using System.Text;
     using Dapper;
-
-    using ChannelId = Fifthweek.Api.Channels.Shared.ChannelId;
-
     public partial class PostNoteCommand 
     {
         public PostNoteCommand(
-            Requester requester, 
-            Fifthweek.Api.Posts.PostId newPostId, 
-            ChannelId channelId, 
-            Fifthweek.Api.Posts.ValidNote note, 
+            Fifthweek.Api.Identity.Shared.Membership.Requester requester, 
+            Fifthweek.Api.Posts.Shared.PostId newPostId, 
+            Fifthweek.Api.Channels.Shared.ChannelId channelId, 
+            Fifthweek.Api.Posts.Shared.ValidNote note, 
             System.Nullable<System.DateTime> scheduledPostDate)
         {
             if (requester == null)
@@ -590,17 +403,15 @@ namespace Fifthweek.Api.Posts.Commands
 {
     using System;
     using System.Linq;
-
-    using Fifthweek.Api.Channels.Shared;
-    using Fifthweek.Api.Identity.Membership;
     using Fifthweek.Api.Identity.Shared.Membership;
+    using Fifthweek.Api.Posts.Shared;
     using Fifthweek.CodeGeneration;
     using System.Threading.Tasks;
-    using Fifthweek.Api.Azure;
     using Fifthweek.Api.Core;
     using Fifthweek.Api.FileManagement;
-    using Fifthweek.Api.Collections;
-    using Fifthweek.Api.Channels;
+    using Fifthweek.Api.Collections.Shared;
+    using Fifthweek.Api.FileManagement.Shared;
+    using Fifthweek.Api.Channels.Shared;
     using Fifthweek.Api.Persistence;
     using System.Collections.Generic;
     using System.Text;
@@ -608,8 +419,8 @@ namespace Fifthweek.Api.Posts.Commands
     public partial class PostNoteCommandHandler 
     {
         public PostNoteCommandHandler(
-            IChannelSecurity channelSecurity, 
-            IRequesterSecurity requesterSecurity, 
+            Fifthweek.Api.Channels.Shared.IChannelSecurity channelSecurity, 
+            Fifthweek.Api.Identity.Shared.Membership.IRequesterSecurity requesterSecurity, 
             Fifthweek.Api.Persistence.IFifthweekDbContext databaseContext)
         {
             if (channelSecurity == null)
@@ -638,28 +449,25 @@ namespace Fifthweek.Api.Posts.Commands
 {
     using System;
     using System.Linq;
-    using Fifthweek.Api.Identity.Membership;
     using Fifthweek.Api.Identity.Shared.Membership;
+    using Fifthweek.Api.Posts.Shared;
     using Fifthweek.CodeGeneration;
     using System.Threading.Tasks;
-    using Fifthweek.Api.Azure;
     using Fifthweek.Api.Core;
     using Fifthweek.Api.FileManagement;
-    using Fifthweek.Api.Collections;
-    using Fifthweek.Api.Channels;
+    using Fifthweek.Api.Collections.Shared;
+    using Fifthweek.Api.FileManagement.Shared;
+    using Fifthweek.Api.Channels.Shared;
     using Fifthweek.Api.Persistence;
     using System.Collections.Generic;
     using System.Text;
     using Dapper;
-
-    using CollectionId = Fifthweek.Api.Collections.Shared.CollectionId;
-
     public partial class ReorderQueueCommand 
     {
         public ReorderQueueCommand(
-            Requester requester, 
-            CollectionId collectionId, 
-            System.Collections.Generic.IReadOnlyList<Fifthweek.Api.Posts.PostId> newPartialQueueOrder)
+            Fifthweek.Api.Identity.Shared.Membership.Requester requester, 
+            Fifthweek.Api.Collections.Shared.CollectionId collectionId, 
+            System.Collections.Generic.IReadOnlyList<Fifthweek.Api.Posts.Shared.PostId> newPartialQueueOrder)
         {
             if (requester == null)
             {
@@ -687,15 +495,15 @@ namespace Fifthweek.Api.Posts.Commands
 {
     using System;
     using System.Linq;
-    using Fifthweek.Api.Identity.Membership;
     using Fifthweek.Api.Identity.Shared.Membership;
+    using Fifthweek.Api.Posts.Shared;
     using Fifthweek.CodeGeneration;
     using System.Threading.Tasks;
-    using Fifthweek.Api.Azure;
     using Fifthweek.Api.Core;
     using Fifthweek.Api.FileManagement;
-    using Fifthweek.Api.Collections;
-    using Fifthweek.Api.Channels;
+    using Fifthweek.Api.Collections.Shared;
+    using Fifthweek.Api.FileManagement.Shared;
+    using Fifthweek.Api.Channels.Shared;
     using Fifthweek.Api.Persistence;
     using System.Collections.Generic;
     using System.Text;
@@ -703,7 +511,7 @@ namespace Fifthweek.Api.Posts.Commands
     public partial class ReorderQueueCommandHandler 
     {
         public ReorderQueueCommandHandler(
-            IRequesterSecurity requesterSecurity, 
+            Fifthweek.Api.Identity.Shared.Membership.IRequesterSecurity requesterSecurity, 
             Fifthweek.Api.Persistence.IFifthweekDbContext databaseContext)
         {
             if (requesterSecurity == null)
@@ -729,15 +537,17 @@ namespace Fifthweek.Api.Posts.Controllers
     using System.Collections.Generic;
     using System.Threading.Tasks;
     using System.Web.Http;
-    using Fifthweek.Api.Collections;
     using Fifthweek.Api.Core;
-    using Fifthweek.Api.Identity.Membership;
     using Fifthweek.Api.Identity.OAuth;
     using Fifthweek.Api.Posts.Commands;
     using Fifthweek.Api.Posts.Queries;
+    using Fifthweek.Api.Posts.Shared;
     using Fifthweek.CodeGeneration;
     using Fifthweek.Shared;
-    using Fifthweek.Api.FileManagement;
+    using Fifthweek.Api.Collections.Shared;
+    using Fifthweek.Api.FileManagement.Shared;
+    using Fifthweek.Api.Channels.Shared;
+    using Fifthweek.Api.Identity.Shared.Membership;
     public partial class PostController 
     {
         public PostController(
@@ -813,14 +623,17 @@ namespace Fifthweek.Api.Posts
 {
     using System;
     using System.Linq;
-    using Fifthweek.CodeGeneration;
     using Dapper;
     using System.Threading.Tasks;
     using Fifthweek.Api.Persistence;
+    using Fifthweek.CodeGeneration;
     using Fifthweek.Api.Core;
     using Fifthweek.Api.FileManagement;
+    using Fifthweek.Api.FileManagement.Shared;
     using Fifthweek.Shared;
-    using Fifthweek.Api.Identity.Membership;
+    using Fifthweek.Api.Identity.Shared.Membership;
+    using Fifthweek.Api.Posts.Shared;
+    using Fifthweek.Api.Collections.Shared;
     using Fifthweek.Api.Collections;
     public partial class DeletePostDbStatement 
     {
@@ -841,14 +654,17 @@ namespace Fifthweek.Api.Posts
 {
     using System;
     using System.Linq;
-    using Fifthweek.CodeGeneration;
     using Dapper;
     using System.Threading.Tasks;
     using Fifthweek.Api.Persistence;
+    using Fifthweek.CodeGeneration;
     using Fifthweek.Api.Core;
     using Fifthweek.Api.FileManagement;
+    using Fifthweek.Api.FileManagement.Shared;
     using Fifthweek.Shared;
-    using Fifthweek.Api.Identity.Membership;
+    using Fifthweek.Api.Identity.Shared.Membership;
+    using Fifthweek.Api.Posts.Shared;
+    using Fifthweek.Api.Collections.Shared;
     using Fifthweek.Api.Collections;
     public partial class PostFileTypeChecks 
     {
@@ -876,14 +692,17 @@ namespace Fifthweek.Api.Posts
 {
     using System;
     using System.Linq;
-    using Fifthweek.CodeGeneration;
     using Dapper;
     using System.Threading.Tasks;
     using Fifthweek.Api.Persistence;
+    using Fifthweek.CodeGeneration;
     using Fifthweek.Api.Core;
     using Fifthweek.Api.FileManagement;
+    using Fifthweek.Api.FileManagement.Shared;
     using Fifthweek.Shared;
-    using Fifthweek.Api.Identity.Membership;
+    using Fifthweek.Api.Identity.Shared.Membership;
+    using Fifthweek.Api.Posts.Shared;
+    using Fifthweek.Api.Collections.Shared;
     using Fifthweek.Api.Collections;
     public partial class PostOwnership 
     {
@@ -904,14 +723,17 @@ namespace Fifthweek.Api.Posts
 {
     using System;
     using System.Linq;
-    using Fifthweek.CodeGeneration;
     using Dapper;
     using System.Threading.Tasks;
     using Fifthweek.Api.Persistence;
+    using Fifthweek.CodeGeneration;
     using Fifthweek.Api.Core;
     using Fifthweek.Api.FileManagement;
+    using Fifthweek.Api.FileManagement.Shared;
     using Fifthweek.Shared;
-    using Fifthweek.Api.Identity.Membership;
+    using Fifthweek.Api.Identity.Shared.Membership;
+    using Fifthweek.Api.Posts.Shared;
+    using Fifthweek.Api.Collections.Shared;
     using Fifthweek.Api.Collections;
     public partial class PostSecurity 
     {
@@ -932,14 +754,17 @@ namespace Fifthweek.Api.Posts
 {
     using System;
     using System.Linq;
-    using Fifthweek.CodeGeneration;
     using Dapper;
     using System.Threading.Tasks;
     using Fifthweek.Api.Persistence;
+    using Fifthweek.CodeGeneration;
     using Fifthweek.Api.Core;
     using Fifthweek.Api.FileManagement;
+    using Fifthweek.Api.FileManagement.Shared;
     using Fifthweek.Shared;
-    using Fifthweek.Api.Identity.Membership;
+    using Fifthweek.Api.Identity.Shared.Membership;
+    using Fifthweek.Api.Posts.Shared;
+    using Fifthweek.Api.Collections.Shared;
     using Fifthweek.Api.Collections;
     public partial class PostToCollectionDbStatement 
     {
@@ -960,14 +785,17 @@ namespace Fifthweek.Api.Posts
 {
     using System;
     using System.Linq;
-    using Fifthweek.CodeGeneration;
     using Dapper;
     using System.Threading.Tasks;
     using Fifthweek.Api.Persistence;
+    using Fifthweek.CodeGeneration;
     using Fifthweek.Api.Core;
     using Fifthweek.Api.FileManagement;
+    using Fifthweek.Api.FileManagement.Shared;
     using Fifthweek.Shared;
-    using Fifthweek.Api.Identity.Membership;
+    using Fifthweek.Api.Identity.Shared.Membership;
+    using Fifthweek.Api.Posts.Shared;
+    using Fifthweek.Api.Collections.Shared;
     using Fifthweek.Api.Collections;
     public partial class PostToCollectionDbSubStatements 
     {
@@ -995,32 +823,28 @@ namespace Fifthweek.Api.Posts.Queries
 {
     using System;
     using System.Linq;
-    using Fifthweek.Api.Channels;
-    using Fifthweek.Api.Collections;
-    using Fifthweek.Api.FileManagement;
+    using Fifthweek.Api.Channels.Shared;
+    using Fifthweek.Api.Collections.Shared;
+    using Fifthweek.Api.FileManagement.Shared;
+    using Fifthweek.Api.Posts.Shared;
     using Fifthweek.CodeGeneration;
     using System.Collections.Generic;
     using Fifthweek.Api.Core;
-    using Fifthweek.Api.Identity.Membership;
+    using Fifthweek.Api.Identity.Shared.Membership;
     using System.Threading.Tasks;
     using Dapper;
     using Fifthweek.Api.Persistence;
     using Fifthweek.Api.Persistence.Identity;
     using Fifthweek.Shared;
-
-    using ChannelId = Fifthweek.Api.Channels.Shared.ChannelId;
-    using CollectionId = Fifthweek.Api.Collections.Shared.CollectionId;
-    using FileId = Fifthweek.Api.FileManagement.Shared.FileId;
-
     public partial class BacklogPost 
     {
         public BacklogPost(
-            Fifthweek.Api.Posts.PostId postId, 
-            ChannelId channelId, 
-            CollectionId collectionId, 
-            Fifthweek.Api.Posts.Comment comment, 
-            FileId fileId, 
-            FileId imageId, 
+            Fifthweek.Api.Posts.Shared.PostId postId, 
+            Fifthweek.Api.Channels.Shared.ChannelId channelId, 
+            Fifthweek.Api.Collections.Shared.CollectionId collectionId, 
+            Fifthweek.Api.Posts.Shared.Comment comment, 
+            Fifthweek.Api.FileManagement.Shared.FileId fileId, 
+            Fifthweek.Api.FileManagement.Shared.FileId imageId, 
             System.Boolean scheduledByQueue, 
             System.DateTime liveDate)
         {
@@ -1060,27 +884,24 @@ namespace Fifthweek.Api.Posts.Queries
 {
     using System;
     using System.Linq;
-    using Fifthweek.Api.Channels;
-    using Fifthweek.Api.Collections;
-    using Fifthweek.Api.FileManagement;
-    using Fifthweek.Api.Identity.Shared.Membership;
+    using Fifthweek.Api.Channels.Shared;
+    using Fifthweek.Api.Collections.Shared;
+    using Fifthweek.Api.FileManagement.Shared;
+    using Fifthweek.Api.Posts.Shared;
     using Fifthweek.CodeGeneration;
     using System.Collections.Generic;
     using Fifthweek.Api.Core;
-    using Fifthweek.Api.Identity.Membership;
+    using Fifthweek.Api.Identity.Shared.Membership;
     using System.Threading.Tasks;
     using Dapper;
     using Fifthweek.Api.Persistence;
     using Fifthweek.Api.Persistence.Identity;
     using Fifthweek.Shared;
-
-    using UserId = Fifthweek.Api.Identity.Shared.Membership.UserId;
-
     public partial class GetCreatorBacklogQuery 
     {
         public GetCreatorBacklogQuery(
-            Requester requester, 
-            UserId requestedUserId)
+            Fifthweek.Api.Identity.Shared.Membership.Requester requester, 
+            Fifthweek.Api.Identity.Shared.Membership.UserId requestedUserId)
         {
             if (requester == null)
             {
@@ -1102,14 +923,14 @@ namespace Fifthweek.Api.Posts.Queries
 {
     using System;
     using System.Linq;
-    using Fifthweek.Api.Channels;
-    using Fifthweek.Api.Collections;
-    using Fifthweek.Api.FileManagement;
-    using Fifthweek.Api.Identity.Shared.Membership;
+    using Fifthweek.Api.Channels.Shared;
+    using Fifthweek.Api.Collections.Shared;
+    using Fifthweek.Api.FileManagement.Shared;
+    using Fifthweek.Api.Posts.Shared;
     using Fifthweek.CodeGeneration;
     using System.Collections.Generic;
     using Fifthweek.Api.Core;
-    using Fifthweek.Api.Identity.Membership;
+    using Fifthweek.Api.Identity.Shared.Membership;
     using System.Threading.Tasks;
     using Dapper;
     using Fifthweek.Api.Persistence;
@@ -1118,7 +939,7 @@ namespace Fifthweek.Api.Posts.Queries
     public partial class GetCreatorBacklogQueryHandler 
     {
         public GetCreatorBacklogQueryHandler(
-            IRequesterSecurity requesterSecurity, 
+            Fifthweek.Api.Identity.Shared.Membership.IRequesterSecurity requesterSecurity, 
             Fifthweek.Api.Persistence.IFifthweekDbContext databaseContext)
         {
             if (requesterSecurity == null)
@@ -1141,27 +962,24 @@ namespace Fifthweek.Api.Posts.Queries
 {
     using System;
     using System.Linq;
-    using Fifthweek.Api.Channels;
-    using Fifthweek.Api.Collections;
-    using Fifthweek.Api.FileManagement;
-    using Fifthweek.Api.Identity.Shared.Membership;
+    using Fifthweek.Api.Channels.Shared;
+    using Fifthweek.Api.Collections.Shared;
+    using Fifthweek.Api.FileManagement.Shared;
+    using Fifthweek.Api.Posts.Shared;
     using Fifthweek.CodeGeneration;
     using System.Collections.Generic;
     using Fifthweek.Api.Core;
-    using Fifthweek.Api.Identity.Membership;
+    using Fifthweek.Api.Identity.Shared.Membership;
     using System.Threading.Tasks;
     using Dapper;
     using Fifthweek.Api.Persistence;
     using Fifthweek.Api.Persistence.Identity;
     using Fifthweek.Shared;
-
-    using UserId = Fifthweek.Api.Identity.Shared.Membership.UserId;
-
     public partial class GetCreatorNewsfeedQuery 
     {
         public GetCreatorNewsfeedQuery(
-            Requester requester, 
-            UserId requestedUserId, 
+            Fifthweek.Api.Identity.Shared.Membership.Requester requester, 
+            Fifthweek.Api.Identity.Shared.Membership.UserId requestedUserId, 
             Fifthweek.Shared.NonNegativeInt startIndex, 
             Fifthweek.Shared.PositiveInt count)
         {
@@ -1197,14 +1015,14 @@ namespace Fifthweek.Api.Posts.Queries
 {
     using System;
     using System.Linq;
-    using Fifthweek.Api.Channels;
-    using Fifthweek.Api.Collections;
-    using Fifthweek.Api.FileManagement;
-    using Fifthweek.Api.Identity.Shared.Membership;
+    using Fifthweek.Api.Channels.Shared;
+    using Fifthweek.Api.Collections.Shared;
+    using Fifthweek.Api.FileManagement.Shared;
+    using Fifthweek.Api.Posts.Shared;
     using Fifthweek.CodeGeneration;
     using System.Collections.Generic;
     using Fifthweek.Api.Core;
-    using Fifthweek.Api.Identity.Membership;
+    using Fifthweek.Api.Identity.Shared.Membership;
     using System.Threading.Tasks;
     using Dapper;
     using Fifthweek.Api.Persistence;
@@ -1213,7 +1031,7 @@ namespace Fifthweek.Api.Posts.Queries
     public partial class GetCreatorNewsfeedQueryHandler 
     {
         public GetCreatorNewsfeedQueryHandler(
-            IRequesterSecurity requesterSecurity, 
+            Fifthweek.Api.Identity.Shared.Membership.IRequesterSecurity requesterSecurity, 
             Fifthweek.Api.Persistence.IFifthweekDbContext databaseContext)
         {
             if (requesterSecurity == null)
@@ -1236,32 +1054,28 @@ namespace Fifthweek.Api.Posts.Queries
 {
     using System;
     using System.Linq;
-    using Fifthweek.Api.Channels;
-    using Fifthweek.Api.Collections;
-    using Fifthweek.Api.FileManagement;
+    using Fifthweek.Api.Channels.Shared;
+    using Fifthweek.Api.Collections.Shared;
+    using Fifthweek.Api.FileManagement.Shared;
+    using Fifthweek.Api.Posts.Shared;
     using Fifthweek.CodeGeneration;
     using System.Collections.Generic;
     using Fifthweek.Api.Core;
-    using Fifthweek.Api.Identity.Membership;
+    using Fifthweek.Api.Identity.Shared.Membership;
     using System.Threading.Tasks;
     using Dapper;
     using Fifthweek.Api.Persistence;
     using Fifthweek.Api.Persistence.Identity;
     using Fifthweek.Shared;
-
-    using ChannelId = Fifthweek.Api.Channels.Shared.ChannelId;
-    using CollectionId = Fifthweek.Api.Collections.Shared.CollectionId;
-    using FileId = Fifthweek.Api.FileManagement.Shared.FileId;
-
     public partial class NewsfeedPost 
     {
         public NewsfeedPost(
-            Fifthweek.Api.Posts.PostId postId, 
-            ChannelId channelId, 
-            CollectionId collectionId, 
-            Fifthweek.Api.Posts.Comment comment, 
-            FileId fileId, 
-            FileId imageId, 
+            Fifthweek.Api.Posts.Shared.PostId postId, 
+            Fifthweek.Api.Channels.Shared.ChannelId channelId, 
+            Fifthweek.Api.Collections.Shared.CollectionId collectionId, 
+            Fifthweek.Api.Posts.Shared.Comment comment, 
+            Fifthweek.Api.FileManagement.Shared.FileId fileId, 
+            Fifthweek.Api.FileManagement.Shared.FileId imageId, 
             System.DateTime liveDate)
         {
             if (postId == null)
@@ -1291,142 +1105,19 @@ namespace Fifthweek.Api.Posts.Queries
 
 }
 
-namespace Fifthweek.Api.Posts
-{
-    using System;
-    using System.Linq;
-    using Fifthweek.CodeGeneration;
-    using Dapper;
-    using System.Threading.Tasks;
-    using Fifthweek.Api.Persistence;
-    using Fifthweek.Api.Core;
-    using Fifthweek.Api.FileManagement;
-    using Fifthweek.Shared;
-    using Fifthweek.Api.Identity.Membership;
-    using Fifthweek.Api.Collections;
-    public partial class Comment 
-    {
-        public override string ToString()
-        {
-            return string.Format("Comment(\"{0}\")", this.Value == null ? "null" : this.Value.ToString());
-        }
-
-        public override bool Equals(object obj)
-        {
-            if (ReferenceEquals(null, obj))
-            {
-                return false;
-            }
-
-            if (ReferenceEquals(this, obj))
-            {
-                return true;
-            }
-
-            if (obj.GetType() != this.GetType())
-            {
-                return false;
-            }
-
-            return this.Equals((Comment)obj);
-        }
-
-        public override int GetHashCode()
-        {
-            unchecked
-            {
-                int hashCode = 0;
-                hashCode = (hashCode * 397) ^ (this.Value != null ? this.Value.GetHashCode() : 0);
-                return hashCode;
-            }
-        }
-
-        protected bool Equals(Comment other)
-        {
-            if (!object.Equals(this.Value, other.Value))
-            {
-                return false;
-            }
-
-            return true;
-        }
-    }
-
-}
-namespace Fifthweek.Api.Posts
-{
-    using System;
-    using System.Linq;
-    using Fifthweek.CodeGeneration;
-    using Dapper;
-    using System.Threading.Tasks;
-    using Fifthweek.Api.Persistence;
-    using Fifthweek.Api.Core;
-    using Fifthweek.Api.FileManagement;
-    using Fifthweek.Shared;
-    using Fifthweek.Api.Identity.Membership;
-    using Fifthweek.Api.Collections;
-    public partial class PostId 
-    {
-        public override string ToString()
-        {
-            return string.Format("PostId({0})", this.Value == null ? "null" : this.Value.ToString());
-        }
-
-        public override bool Equals(object obj)
-        {
-            if (ReferenceEquals(null, obj))
-            {
-                return false;
-            }
-
-            if (ReferenceEquals(this, obj))
-            {
-                return true;
-            }
-
-            if (obj.GetType() != this.GetType())
-            {
-                return false;
-            }
-
-            return this.Equals((PostId)obj);
-        }
-
-        public override int GetHashCode()
-        {
-            unchecked
-            {
-                int hashCode = 0;
-                hashCode = (hashCode * 397) ^ (this.Value != null ? this.Value.GetHashCode() : 0);
-                return hashCode;
-            }
-        }
-
-        protected bool Equals(PostId other)
-        {
-            if (!object.Equals(this.Value, other.Value))
-            {
-                return false;
-            }
-
-            return true;
-        }
-    }
-
-}
 namespace Fifthweek.Api.Posts.Commands
 {
     using System;
     using System.Linq;
-    using Fifthweek.Api.Identity.Membership;
+    using Fifthweek.Api.Identity.Shared.Membership;
+    using Fifthweek.Api.Posts.Shared;
     using Fifthweek.CodeGeneration;
     using System.Threading.Tasks;
-    using Fifthweek.Api.Azure;
     using Fifthweek.Api.Core;
     using Fifthweek.Api.FileManagement;
-    using Fifthweek.Api.Collections;
-    using Fifthweek.Api.Channels;
+    using Fifthweek.Api.Collections.Shared;
+    using Fifthweek.Api.FileManagement.Shared;
+    using Fifthweek.Api.Channels.Shared;
     using Fifthweek.Api.Persistence;
     using System.Collections.Generic;
     using System.Text;
@@ -1490,14 +1181,15 @@ namespace Fifthweek.Api.Posts.Commands
 {
     using System;
     using System.Linq;
-    using Fifthweek.Api.Identity.Membership;
+    using Fifthweek.Api.Identity.Shared.Membership;
+    using Fifthweek.Api.Posts.Shared;
     using Fifthweek.CodeGeneration;
     using System.Threading.Tasks;
-    using Fifthweek.Api.Azure;
     using Fifthweek.Api.Core;
     using Fifthweek.Api.FileManagement;
-    using Fifthweek.Api.Collections;
-    using Fifthweek.Api.Channels;
+    using Fifthweek.Api.Collections.Shared;
+    using Fifthweek.Api.FileManagement.Shared;
+    using Fifthweek.Api.Channels.Shared;
     using Fifthweek.Api.Persistence;
     using System.Collections.Generic;
     using System.Text;
@@ -1591,14 +1283,15 @@ namespace Fifthweek.Api.Posts.Commands
 {
     using System;
     using System.Linq;
-    using Fifthweek.Api.Identity.Membership;
+    using Fifthweek.Api.Identity.Shared.Membership;
+    using Fifthweek.Api.Posts.Shared;
     using Fifthweek.CodeGeneration;
     using System.Threading.Tasks;
-    using Fifthweek.Api.Azure;
     using Fifthweek.Api.Core;
     using Fifthweek.Api.FileManagement;
-    using Fifthweek.Api.Collections;
-    using Fifthweek.Api.Channels;
+    using Fifthweek.Api.Collections.Shared;
+    using Fifthweek.Api.FileManagement.Shared;
+    using Fifthweek.Api.Channels.Shared;
     using Fifthweek.Api.Persistence;
     using System.Collections.Generic;
     using System.Text;
@@ -1692,14 +1385,15 @@ namespace Fifthweek.Api.Posts.Commands
 {
     using System;
     using System.Linq;
-    using Fifthweek.Api.Identity.Membership;
+    using Fifthweek.Api.Identity.Shared.Membership;
+    using Fifthweek.Api.Posts.Shared;
     using Fifthweek.CodeGeneration;
     using System.Threading.Tasks;
-    using Fifthweek.Api.Azure;
     using Fifthweek.Api.Core;
     using Fifthweek.Api.FileManagement;
-    using Fifthweek.Api.Collections;
-    using Fifthweek.Api.Channels;
+    using Fifthweek.Api.Collections.Shared;
+    using Fifthweek.Api.FileManagement.Shared;
+    using Fifthweek.Api.Channels.Shared;
     using Fifthweek.Api.Persistence;
     using System.Collections.Generic;
     using System.Text;
@@ -1781,14 +1475,15 @@ namespace Fifthweek.Api.Posts.Commands
 {
     using System;
     using System.Linq;
-    using Fifthweek.Api.Identity.Membership;
+    using Fifthweek.Api.Identity.Shared.Membership;
+    using Fifthweek.Api.Posts.Shared;
     using Fifthweek.CodeGeneration;
     using System.Threading.Tasks;
-    using Fifthweek.Api.Azure;
     using Fifthweek.Api.Core;
     using Fifthweek.Api.FileManagement;
-    using Fifthweek.Api.Collections;
-    using Fifthweek.Api.Channels;
+    using Fifthweek.Api.Collections.Shared;
+    using Fifthweek.Api.FileManagement.Shared;
+    using Fifthweek.Api.Channels.Shared;
     using Fifthweek.Api.Persistence;
     using System.Collections.Generic;
     using System.Text;
@@ -1873,13 +1568,14 @@ namespace Fifthweek.Api.Posts.Queries
 {
     using System;
     using System.Linq;
-    using Fifthweek.Api.Channels;
-    using Fifthweek.Api.Collections;
-    using Fifthweek.Api.FileManagement;
+    using Fifthweek.Api.Channels.Shared;
+    using Fifthweek.Api.Collections.Shared;
+    using Fifthweek.Api.FileManagement.Shared;
+    using Fifthweek.Api.Posts.Shared;
     using Fifthweek.CodeGeneration;
     using System.Collections.Generic;
     using Fifthweek.Api.Core;
-    using Fifthweek.Api.Identity.Membership;
+    using Fifthweek.Api.Identity.Shared.Membership;
     using System.Threading.Tasks;
     using Dapper;
     using Fifthweek.Api.Persistence;
@@ -1980,13 +1676,14 @@ namespace Fifthweek.Api.Posts.Queries
 {
     using System;
     using System.Linq;
-    using Fifthweek.Api.Channels;
-    using Fifthweek.Api.Collections;
-    using Fifthweek.Api.FileManagement;
+    using Fifthweek.Api.Channels.Shared;
+    using Fifthweek.Api.Collections.Shared;
+    using Fifthweek.Api.FileManagement.Shared;
+    using Fifthweek.Api.Posts.Shared;
     using Fifthweek.CodeGeneration;
     using System.Collections.Generic;
     using Fifthweek.Api.Core;
-    using Fifthweek.Api.Identity.Membership;
+    using Fifthweek.Api.Identity.Shared.Membership;
     using System.Threading.Tasks;
     using Dapper;
     using Fifthweek.Api.Persistence;
@@ -2051,13 +1748,14 @@ namespace Fifthweek.Api.Posts.Queries
 {
     using System;
     using System.Linq;
-    using Fifthweek.Api.Channels;
-    using Fifthweek.Api.Collections;
-    using Fifthweek.Api.FileManagement;
+    using Fifthweek.Api.Channels.Shared;
+    using Fifthweek.Api.Collections.Shared;
+    using Fifthweek.Api.FileManagement.Shared;
+    using Fifthweek.Api.Posts.Shared;
     using Fifthweek.CodeGeneration;
     using System.Collections.Generic;
     using Fifthweek.Api.Core;
-    using Fifthweek.Api.Identity.Membership;
+    using Fifthweek.Api.Identity.Shared.Membership;
     using System.Threading.Tasks;
     using Dapper;
     using Fifthweek.Api.Persistence;
@@ -2134,13 +1832,14 @@ namespace Fifthweek.Api.Posts.Queries
 {
     using System;
     using System.Linq;
-    using Fifthweek.Api.Channels;
-    using Fifthweek.Api.Collections;
-    using Fifthweek.Api.FileManagement;
+    using Fifthweek.Api.Channels.Shared;
+    using Fifthweek.Api.Collections.Shared;
+    using Fifthweek.Api.FileManagement.Shared;
+    using Fifthweek.Api.Posts.Shared;
     using Fifthweek.CodeGeneration;
     using System.Collections.Generic;
     using Fifthweek.Api.Core;
-    using Fifthweek.Api.Identity.Membership;
+    using Fifthweek.Api.Identity.Shared.Membership;
     using System.Threading.Tasks;
     using Dapper;
     using Fifthweek.Api.Persistence;
@@ -2238,20 +1937,21 @@ namespace Fifthweek.Api.Posts.Controllers
     using System.Collections.Generic;
     using System.Threading.Tasks;
     using System.Web.Http;
-    using Fifthweek.Api.Collections;
     using Fifthweek.Api.Core;
-    using Fifthweek.Api.Identity.Membership;
     using Fifthweek.Api.Identity.OAuth;
     using Fifthweek.Api.Posts.Commands;
     using Fifthweek.Api.Posts.Queries;
+    using Fifthweek.Api.Posts.Shared;
     using Fifthweek.CodeGeneration;
     using Fifthweek.Shared;
-    using Fifthweek.Api.FileManagement;
+    using Fifthweek.Api.Collections.Shared;
+    using Fifthweek.Api.FileManagement.Shared;
+    using Fifthweek.Api.Channels.Shared;
     public partial class CreatorNewsfeedRequestData 
     {
         public override string ToString()
         {
-            return string.Format("CreatorNewsfeedRequestData({0}, {1})", this.StartIndex == null ? "null" : this.StartIndex.ToString(), this.Count == null ? "null" : this.Count.ToString());
+            return string.Format("CreatorNewsfeedRequestData({0}, {1}, {2}, {3})", this.StartIndexObject == null ? "null" : this.StartIndexObject.ToString(), this.CountObject == null ? "null" : this.CountObject.ToString(), this.StartIndex == null ? "null" : this.StartIndex.ToString(), this.Count == null ? "null" : this.Count.ToString());
         }
 
         public override bool Equals(object obj)
@@ -2279,6 +1979,8 @@ namespace Fifthweek.Api.Posts.Controllers
             unchecked
             {
                 int hashCode = 0;
+                hashCode = (hashCode * 397) ^ (this.StartIndexObject != null ? this.StartIndexObject.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.CountObject != null ? this.CountObject.GetHashCode() : 0);
                 hashCode = (hashCode * 397) ^ (this.StartIndex != null ? this.StartIndex.GetHashCode() : 0);
                 hashCode = (hashCode * 397) ^ (this.Count != null ? this.Count.GetHashCode() : 0);
                 return hashCode;
@@ -2287,6 +1989,16 @@ namespace Fifthweek.Api.Posts.Controllers
 
         protected bool Equals(CreatorNewsfeedRequestData other)
         {
+            if (!object.Equals(this.StartIndexObject, other.StartIndexObject))
+            {
+                return false;
+            }
+
+            if (!object.Equals(this.CountObject, other.CountObject))
+            {
+                return false;
+            }
+
             if (!object.Equals(this.StartIndex, other.StartIndex))
             {
                 return false;
@@ -2309,20 +2021,21 @@ namespace Fifthweek.Api.Posts.Controllers
     using System.Collections.Generic;
     using System.Threading.Tasks;
     using System.Web.Http;
-    using Fifthweek.Api.Collections;
     using Fifthweek.Api.Core;
-    using Fifthweek.Api.Identity.Membership;
     using Fifthweek.Api.Identity.OAuth;
     using Fifthweek.Api.Posts.Commands;
     using Fifthweek.Api.Posts.Queries;
+    using Fifthweek.Api.Posts.Shared;
     using Fifthweek.CodeGeneration;
     using Fifthweek.Shared;
-    using Fifthweek.Api.FileManagement;
+    using Fifthweek.Api.Collections.Shared;
+    using Fifthweek.Api.FileManagement.Shared;
+    using Fifthweek.Api.Channels.Shared;
     public partial class NewFileData 
     {
         public override string ToString()
         {
-            return string.Format("NewFileData({0}, {1}, \"{2}\", {3}, {4})", this.CollectionId == null ? "null" : this.CollectionId.ToString(), this.FileId == null ? "null" : this.FileId.ToString(), this.Comment == null ? "null" : this.Comment.ToString(), this.ScheduledPostDate == null ? "null" : this.ScheduledPostDate.ToString(), this.IsQueued == null ? "null" : this.IsQueued.ToString());
+            return string.Format("NewFileData({0}, {1}, {2}, \"{3}\", {4}, {5})", this.CommentObject == null ? "null" : this.CommentObject.ToString(), this.CollectionId == null ? "null" : this.CollectionId.ToString(), this.FileId == null ? "null" : this.FileId.ToString(), this.Comment == null ? "null" : this.Comment.ToString(), this.ScheduledPostDate == null ? "null" : this.ScheduledPostDate.ToString(), this.IsQueued == null ? "null" : this.IsQueued.ToString());
         }
 
         public override bool Equals(object obj)
@@ -2350,6 +2063,7 @@ namespace Fifthweek.Api.Posts.Controllers
             unchecked
             {
                 int hashCode = 0;
+                hashCode = (hashCode * 397) ^ (this.CommentObject != null ? this.CommentObject.GetHashCode() : 0);
                 hashCode = (hashCode * 397) ^ (this.CollectionId != null ? this.CollectionId.GetHashCode() : 0);
                 hashCode = (hashCode * 397) ^ (this.FileId != null ? this.FileId.GetHashCode() : 0);
                 hashCode = (hashCode * 397) ^ (this.Comment != null ? this.Comment.GetHashCode() : 0);
@@ -2361,6 +2075,11 @@ namespace Fifthweek.Api.Posts.Controllers
 
         protected bool Equals(NewFileData other)
         {
+            if (!object.Equals(this.CommentObject, other.CommentObject))
+            {
+                return false;
+            }
+
             if (!object.Equals(this.CollectionId, other.CollectionId))
             {
                 return false;
@@ -2398,20 +2117,21 @@ namespace Fifthweek.Api.Posts.Controllers
     using System.Collections.Generic;
     using System.Threading.Tasks;
     using System.Web.Http;
-    using Fifthweek.Api.Collections;
     using Fifthweek.Api.Core;
-    using Fifthweek.Api.Identity.Membership;
     using Fifthweek.Api.Identity.OAuth;
     using Fifthweek.Api.Posts.Commands;
     using Fifthweek.Api.Posts.Queries;
+    using Fifthweek.Api.Posts.Shared;
     using Fifthweek.CodeGeneration;
     using Fifthweek.Shared;
-    using Fifthweek.Api.FileManagement;
+    using Fifthweek.Api.Collections.Shared;
+    using Fifthweek.Api.FileManagement.Shared;
+    using Fifthweek.Api.Channels.Shared;
     public partial class NewImageData 
     {
         public override string ToString()
         {
-            return string.Format("NewImageData({0}, {1}, \"{2}\", {3}, {4})", this.CollectionId == null ? "null" : this.CollectionId.ToString(), this.ImageFileId == null ? "null" : this.ImageFileId.ToString(), this.Comment == null ? "null" : this.Comment.ToString(), this.ScheduledPostDate == null ? "null" : this.ScheduledPostDate.ToString(), this.IsQueued == null ? "null" : this.IsQueued.ToString());
+            return string.Format("NewImageData({0}, {1}, {2}, \"{3}\", {4}, {5})", this.CommentObject == null ? "null" : this.CommentObject.ToString(), this.CollectionId == null ? "null" : this.CollectionId.ToString(), this.ImageFileId == null ? "null" : this.ImageFileId.ToString(), this.Comment == null ? "null" : this.Comment.ToString(), this.ScheduledPostDate == null ? "null" : this.ScheduledPostDate.ToString(), this.IsQueued == null ? "null" : this.IsQueued.ToString());
         }
 
         public override bool Equals(object obj)
@@ -2439,6 +2159,7 @@ namespace Fifthweek.Api.Posts.Controllers
             unchecked
             {
                 int hashCode = 0;
+                hashCode = (hashCode * 397) ^ (this.CommentObject != null ? this.CommentObject.GetHashCode() : 0);
                 hashCode = (hashCode * 397) ^ (this.CollectionId != null ? this.CollectionId.GetHashCode() : 0);
                 hashCode = (hashCode * 397) ^ (this.ImageFileId != null ? this.ImageFileId.GetHashCode() : 0);
                 hashCode = (hashCode * 397) ^ (this.Comment != null ? this.Comment.GetHashCode() : 0);
@@ -2450,6 +2171,11 @@ namespace Fifthweek.Api.Posts.Controllers
 
         protected bool Equals(NewImageData other)
         {
+            if (!object.Equals(this.CommentObject, other.CommentObject))
+            {
+                return false;
+            }
+
             if (!object.Equals(this.CollectionId, other.CollectionId))
             {
                 return false;
@@ -2483,13 +2209,25 @@ namespace Fifthweek.Api.Posts.Controllers
 namespace Fifthweek.Api.Posts.Controllers
 {
     using System;
-    using Fifthweek.Api.Channels;
+    using System.Linq;
+    using System.Collections.Generic;
+    using System.Threading.Tasks;
+    using System.Web.Http;
+    using Fifthweek.Api.Core;
+    using Fifthweek.Api.Identity.OAuth;
+    using Fifthweek.Api.Posts.Commands;
+    using Fifthweek.Api.Posts.Queries;
+    using Fifthweek.Api.Posts.Shared;
     using Fifthweek.CodeGeneration;
+    using Fifthweek.Shared;
+    using Fifthweek.Api.Collections.Shared;
+    using Fifthweek.Api.FileManagement.Shared;
+    using Fifthweek.Api.Channels.Shared;
     public partial class NewNoteData 
     {
         public override string ToString()
         {
-            return string.Format("NewNoteData({0}, \"{1}\", {2})", this.ChannelId == null ? "null" : this.ChannelId.ToString(), this.Note == null ? "null" : this.Note.ToString(), this.ScheduledPostDate == null ? "null" : this.ScheduledPostDate.ToString());
+            return string.Format("NewNoteData({0}, {1}, \"{2}\", {3})", this.NoteObject == null ? "null" : this.NoteObject.ToString(), this.ChannelId == null ? "null" : this.ChannelId.ToString(), this.Note == null ? "null" : this.Note.ToString(), this.ScheduledPostDate == null ? "null" : this.ScheduledPostDate.ToString());
         }
 
         public override bool Equals(object obj)
@@ -2517,6 +2255,7 @@ namespace Fifthweek.Api.Posts.Controllers
             unchecked
             {
                 int hashCode = 0;
+                hashCode = (hashCode * 397) ^ (this.NoteObject != null ? this.NoteObject.GetHashCode() : 0);
                 hashCode = (hashCode * 397) ^ (this.ChannelId != null ? this.ChannelId.GetHashCode() : 0);
                 hashCode = (hashCode * 397) ^ (this.Note != null ? this.Note.GetHashCode() : 0);
                 hashCode = (hashCode * 397) ^ (this.ScheduledPostDate != null ? this.ScheduledPostDate.GetHashCode() : 0);
@@ -2526,6 +2265,11 @@ namespace Fifthweek.Api.Posts.Controllers
 
         protected bool Equals(NewNoteData other)
         {
+            if (!object.Equals(this.NoteObject, other.NoteObject))
+            {
+                return false;
+            }
+
             if (!object.Equals(this.ChannelId, other.ChannelId))
             {
                 return false;
@@ -2546,82 +2290,23 @@ namespace Fifthweek.Api.Posts.Controllers
     }
 
 }
-namespace Fifthweek.Api.Posts
-{
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using Fifthweek.CodeGeneration;
-    public partial class ValidNote 
-    {
-        public override string ToString()
-        {
-            return string.Format("ValidNote(\"{0}\")", this.Value == null ? "null" : this.Value.ToString());
-        }
-
-        public override bool Equals(object obj)
-        {
-            if (ReferenceEquals(null, obj))
-            {
-                return false;
-            }
-
-            if (ReferenceEquals(this, obj))
-            {
-                return true;
-            }
-
-            if (obj.GetType() != this.GetType())
-            {
-                return false;
-            }
-
-            return this.Equals((ValidNote)obj);
-        }
-
-        public override int GetHashCode()
-        {
-            unchecked
-            {
-                int hashCode = 0;
-                hashCode = (hashCode * 397) ^ (this.Value != null ? this.Value.GetHashCode() : 0);
-                return hashCode;
-            }
-        }
-
-        protected bool Equals(ValidNote other)
-        {
-            if (!object.Equals(this.Value, other.Value))
-            {
-                return false;
-            }
-
-            return true;
-        }
-    }
-
-}
 namespace Fifthweek.Api.Posts.Queries
 {
     using System;
     using System.Linq;
-    using Fifthweek.Api.Channels;
-    using Fifthweek.Api.Collections;
-    using Fifthweek.Api.FileManagement;
+    using Fifthweek.Api.Channels.Shared;
+    using Fifthweek.Api.Collections.Shared;
+    using Fifthweek.Api.FileManagement.Shared;
+    using Fifthweek.Api.Posts.Shared;
     using Fifthweek.CodeGeneration;
     using System.Collections.Generic;
     using Fifthweek.Api.Core;
-    using Fifthweek.Api.Identity.Membership;
+    using Fifthweek.Api.Identity.Shared.Membership;
     using System.Threading.Tasks;
     using Dapper;
     using Fifthweek.Api.Persistence;
     using Fifthweek.Api.Persistence.Identity;
     using Fifthweek.Shared;
-
-    using ChannelId = Fifthweek.Api.Channels.Shared.ChannelId;
-    using CollectionId = Fifthweek.Api.Collections.Shared.CollectionId;
-    using FileId = Fifthweek.Api.FileManagement.Shared.FileId;
-
     public partial class BacklogPost 
     {
         public Builder ToBuilder()
@@ -2647,12 +2332,12 @@ namespace Fifthweek.Api.Posts.Queries
 
         public partial class Builder
         {
-            public Fifthweek.Api.Posts.PostId PostId { get; set; }
-            public ChannelId ChannelId { get; set; }
-            public CollectionId CollectionId { get; set; }
-            public Fifthweek.Api.Posts.Comment Comment { get; set; }
-            public FileId FileId { get; set; }
-            public FileId ImageId { get; set; }
+            public Fifthweek.Api.Posts.Shared.PostId PostId { get; set; }
+            public Fifthweek.Api.Channels.Shared.ChannelId ChannelId { get; set; }
+            public Fifthweek.Api.Collections.Shared.CollectionId CollectionId { get; set; }
+            public Fifthweek.Api.Posts.Shared.Comment Comment { get; set; }
+            public Fifthweek.Api.FileManagement.Shared.FileId FileId { get; set; }
+            public Fifthweek.Api.FileManagement.Shared.FileId ImageId { get; set; }
             public System.Boolean ScheduledByQueue { get; set; }
             public System.DateTime LiveDate { get; set; }
 
@@ -2676,23 +2361,19 @@ namespace Fifthweek.Api.Posts.Queries
 {
     using System;
     using System.Linq;
-    using Fifthweek.Api.Channels;
-    using Fifthweek.Api.Collections;
-    using Fifthweek.Api.FileManagement;
+    using Fifthweek.Api.Channels.Shared;
+    using Fifthweek.Api.Collections.Shared;
+    using Fifthweek.Api.FileManagement.Shared;
+    using Fifthweek.Api.Posts.Shared;
     using Fifthweek.CodeGeneration;
     using System.Collections.Generic;
     using Fifthweek.Api.Core;
-    using Fifthweek.Api.Identity.Membership;
+    using Fifthweek.Api.Identity.Shared.Membership;
     using System.Threading.Tasks;
     using Dapper;
     using Fifthweek.Api.Persistence;
     using Fifthweek.Api.Persistence.Identity;
     using Fifthweek.Shared;
-
-    using ChannelId = Fifthweek.Api.Channels.Shared.ChannelId;
-    using CollectionId = Fifthweek.Api.Collections.Shared.CollectionId;
-    using FileId = Fifthweek.Api.FileManagement.Shared.FileId;
-
     public partial class NewsfeedPost 
     {
         public Builder ToBuilder()
@@ -2717,12 +2398,12 @@ namespace Fifthweek.Api.Posts.Queries
 
         public partial class Builder
         {
-            public Fifthweek.Api.Posts.PostId PostId { get; set; }
-            public ChannelId ChannelId { get; set; }
-            public CollectionId CollectionId { get; set; }
-            public Fifthweek.Api.Posts.Comment Comment { get; set; }
-            public FileId FileId { get; set; }
-            public FileId ImageId { get; set; }
+            public Fifthweek.Api.Posts.Shared.PostId PostId { get; set; }
+            public Fifthweek.Api.Channels.Shared.ChannelId ChannelId { get; set; }
+            public Fifthweek.Api.Collections.Shared.CollectionId CollectionId { get; set; }
+            public Fifthweek.Api.Posts.Shared.Comment Comment { get; set; }
+            public Fifthweek.Api.FileManagement.Shared.FileId FileId { get; set; }
+            public Fifthweek.Api.FileManagement.Shared.FileId ImageId { get; set; }
             public System.DateTime LiveDate { get; set; }
 
             public NewsfeedPost Build()
@@ -2747,15 +2428,16 @@ namespace Fifthweek.Api.Posts.Controllers
     using System.Collections.Generic;
     using System.Threading.Tasks;
     using System.Web.Http;
-    using Fifthweek.Api.Collections;
     using Fifthweek.Api.Core;
-    using Fifthweek.Api.Identity.Membership;
     using Fifthweek.Api.Identity.OAuth;
     using Fifthweek.Api.Posts.Commands;
     using Fifthweek.Api.Posts.Queries;
+    using Fifthweek.Api.Posts.Shared;
     using Fifthweek.CodeGeneration;
     using Fifthweek.Shared;
-    using Fifthweek.Api.FileManagement;
+    using Fifthweek.Api.Collections.Shared;
+    using Fifthweek.Api.FileManagement.Shared;
+    using Fifthweek.Api.Channels.Shared;
     public partial class CreatorNewsfeedRequestData 
     {
 		[Optional]
@@ -2824,15 +2506,16 @@ namespace Fifthweek.Api.Posts.Controllers
     using System.Collections.Generic;
     using System.Threading.Tasks;
     using System.Web.Http;
-    using Fifthweek.Api.Collections;
     using Fifthweek.Api.Core;
-    using Fifthweek.Api.Identity.Membership;
     using Fifthweek.Api.Identity.OAuth;
     using Fifthweek.Api.Posts.Commands;
     using Fifthweek.Api.Posts.Queries;
+    using Fifthweek.Api.Posts.Shared;
     using Fifthweek.CodeGeneration;
     using Fifthweek.Shared;
-    using Fifthweek.Api.FileManagement;
+    using Fifthweek.Api.Collections.Shared;
+    using Fifthweek.Api.FileManagement.Shared;
+    using Fifthweek.Api.Channels.Shared;
     public partial class NewFileData 
     {
 		[Optional]
@@ -2879,15 +2562,16 @@ namespace Fifthweek.Api.Posts.Controllers
     using System.Collections.Generic;
     using System.Threading.Tasks;
     using System.Web.Http;
-    using Fifthweek.Api.Collections;
     using Fifthweek.Api.Core;
-    using Fifthweek.Api.Identity.Membership;
     using Fifthweek.Api.Identity.OAuth;
     using Fifthweek.Api.Posts.Commands;
     using Fifthweek.Api.Posts.Queries;
+    using Fifthweek.Api.Posts.Shared;
     using Fifthweek.CodeGeneration;
     using Fifthweek.Shared;
-    using Fifthweek.Api.FileManagement;
+    using Fifthweek.Api.Collections.Shared;
+    using Fifthweek.Api.FileManagement.Shared;
+    using Fifthweek.Api.Channels.Shared;
     public partial class NewImageData 
     {
 		[Optional]
@@ -2930,8 +2614,20 @@ namespace Fifthweek.Api.Posts.Controllers
 namespace Fifthweek.Api.Posts.Controllers
 {
     using System;
-    using Fifthweek.Api.Channels;
+    using System.Linq;
+    using System.Collections.Generic;
+    using System.Threading.Tasks;
+    using System.Web.Http;
+    using Fifthweek.Api.Core;
+    using Fifthweek.Api.Identity.OAuth;
+    using Fifthweek.Api.Posts.Commands;
+    using Fifthweek.Api.Posts.Queries;
+    using Fifthweek.Api.Posts.Shared;
     using Fifthweek.CodeGeneration;
+    using Fifthweek.Shared;
+    using Fifthweek.Api.Collections.Shared;
+    using Fifthweek.Api.FileManagement.Shared;
+    using Fifthweek.Api.Channels.Shared;
     public partial class NewNoteData 
     {
 		[Optional]

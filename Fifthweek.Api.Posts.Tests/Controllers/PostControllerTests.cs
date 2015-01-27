@@ -16,6 +16,7 @@
     using Fifthweek.Api.Posts.Commands;
     using Fifthweek.Api.Posts.Controllers;
     using Fifthweek.Api.Posts.Queries;
+    using Fifthweek.Api.Posts.Shared;
     using Fifthweek.Shared;
 
     using Microsoft.VisualStudio.TestTools.UnitTesting;

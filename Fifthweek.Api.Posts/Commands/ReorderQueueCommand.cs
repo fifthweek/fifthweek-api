@@ -2,12 +2,10 @@
 {
     using System.Collections.Generic;
 
-    using Fifthweek.Api.Collections;
-    using Fifthweek.Api.Identity.Membership;
+    using Fifthweek.Api.Collections.Shared;
     using Fifthweek.Api.Identity.Shared.Membership;
+    using Fifthweek.Api.Posts.Shared;
     using Fifthweek.CodeGeneration;
-
-    using CollectionId = Fifthweek.Api.Collections.Shared.CollectionId;
 
     [AutoConstructor, AutoEqualityMembers]
     public partial class ReorderQueueCommand

@@ -10,12 +10,10 @@
         {
             Assembly.GetExecutingAssembly(),
             typeof(Channels.Shared.ChannelId).Assembly,
-            typeof(Collections.AutofacRegistration).Assembly,
-            typeof(Identity.Membership.AutofacRegistration).Assembly,
-            typeof(Identity.OAuth.AutofacRegistration).Assembly,
-            typeof(Posts.AutofacRegistration).Assembly,
-            typeof(Subscriptions.AutofacRegistration).Assembly,
-            typeof(FileManagement.AutofacRegistration).Assembly
+            typeof(Collections.Shared.CollectionId).Assembly,
+            typeof(Identity.Shared.Membership.UserId).Assembly,
+            typeof(FileManagement.Shared.FileId).Assembly,
+            typeof(Subscriptions.AutofacRegistration).Assembly
         }
         .Distinct().ToList().AsReadOnly();
     }

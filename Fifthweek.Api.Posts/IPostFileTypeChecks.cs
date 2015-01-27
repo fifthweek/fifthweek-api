@@ -2,9 +2,7 @@
 {
     using System.Threading.Tasks;
 
-    using Fifthweek.Api.FileManagement;
-
-    using FileId = Fifthweek.Api.FileManagement.Shared.FileId;
+    using Fifthweek.Api.FileManagement.Shared;
 
     public interface IPostFileTypeChecks
     {

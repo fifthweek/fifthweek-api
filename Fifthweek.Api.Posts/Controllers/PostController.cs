@@ -5,16 +5,14 @@
     using System.Threading.Tasks;
     using System.Web.Http;
 
-    using Fifthweek.Api.Collections;
+    using Fifthweek.Api.Collections.Shared;
     using Fifthweek.Api.Core;
-    using Fifthweek.Api.Identity.Membership;
     using Fifthweek.Api.Identity.OAuth;
+    using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.Api.Posts.Commands;
     using Fifthweek.Api.Posts.Queries;
+    using Fifthweek.Api.Posts.Shared;
     using Fifthweek.CodeGeneration;
-
-    using CollectionId = Fifthweek.Api.Collections.Shared.CollectionId;
-    using UserId = Fifthweek.Api.Identity.Shared.Membership.UserId;
 
     [RoutePrefix("posts"), AutoConstructor]
     public partial class PostController : ApiController

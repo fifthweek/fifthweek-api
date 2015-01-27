@@ -16,6 +16,7 @@
     using Fifthweek.Api.Persistence.Identity;
     using Fifthweek.Api.Persistence.Tests.Shared;
     using Fifthweek.Api.Posts.Queries;
+    using Fifthweek.Api.Posts.Shared;
     using Fifthweek.Api.Subscriptions;
     using Fifthweek.Shared;
 

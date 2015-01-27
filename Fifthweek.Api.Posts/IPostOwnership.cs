@@ -2,12 +2,10 @@
 {
     using System.Threading.Tasks;
 
-    using Fifthweek.Api.Identity.Membership;
-
-    using UserId = Fifthweek.Api.Identity.Shared.Membership.UserId;
+    using Fifthweek.Api.Identity.Shared.Membership;
 
     public interface IPostOwnership
     {
-        Task<bool> IsOwnerAsync(UserId userId, PostId postId);
+        Task<bool> IsOwnerAsync(UserId userId, Shared.PostId postId);
     }
 }

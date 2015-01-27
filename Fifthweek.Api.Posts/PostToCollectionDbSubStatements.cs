@@ -4,11 +4,10 @@ namespace Fifthweek.Api.Posts
     using System.Threading.Tasks;
 
     using Fifthweek.Api.Collections;
+    using Fifthweek.Api.Collections.Shared;
     using Fifthweek.Api.Core;
     using Fifthweek.Api.Persistence;
     using Fifthweek.CodeGeneration;
-
-    using CollectionId = Fifthweek.Api.Collections.Shared.CollectionId;
 
     [AutoConstructor]
     public partial class PostToCollectionDbSubStatements : IPostToCollectionDbSubStatements

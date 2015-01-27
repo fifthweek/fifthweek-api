@@ -13,6 +13,7 @@
     using Fifthweek.Api.Persistence;
     using Fifthweek.Api.Persistence.Tests.Shared;
     using Fifthweek.Api.Posts.Commands;
+    using Fifthweek.Api.Posts.Shared;
     using Fifthweek.Api.Subscriptions;
 
     using Microsoft.VisualStudio.TestTools.UnitTesting;

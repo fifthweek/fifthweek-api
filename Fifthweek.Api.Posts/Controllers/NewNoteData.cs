@@ -2,10 +2,9 @@
 {
     using System;
 
-    using Fifthweek.Api.Channels;
+    using Fifthweek.Api.Channels.Shared;
+    using Fifthweek.Api.Posts.Shared;
     using Fifthweek.CodeGeneration;
-
-    using ChannelId = Fifthweek.Api.Channels.Shared.ChannelId;
 
     [AutoEqualityMembers]
     public partial class NewNoteData

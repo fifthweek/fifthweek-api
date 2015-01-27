@@ -1,4 +1,4 @@
-﻿namespace Fifthweek.Api.Posts
+﻿namespace Fifthweek.Api.Posts.Shared
 {
     using Fifthweek.CodeGeneration;
 
