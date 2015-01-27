@@ -2,7 +2,6 @@
 {
     using Fifthweek.Api.Channels.Shared;
     using Fifthweek.Api.Identity.Shared.Membership;
-    using Fifthweek.Api.Subscriptions;
     using Fifthweek.Api.Subscriptions.Shared;
     using Fifthweek.CodeGeneration;
 
@@ -16,5 +15,7 @@
         public SubscriptionId SubscriptionId { get; private set; }
 
         public ValidChannelName Name { get; private set; }
+
+        public ValidChannelPriceInUsCentsPerWeek Price { get; private set; }
     }
 }
