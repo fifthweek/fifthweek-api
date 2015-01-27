@@ -1,17 +1,15 @@
-﻿namespace Fifthweek.WebJobs.Files.Shared
+﻿using System;
+using System.Linq;
+
+
+
+
+namespace Fifthweek.WebJobs.Files.Shared
 {
     using System;
-    using System;
-    using System;
     using System.Linq;
-    using System.Linq;
-    using System.Linq;
-
-    using Fifthweek.CodeGeneration;
     using Fifthweek.CodeGeneration;
     using Fifthweek.Shared;
-    using Fifthweek.Shared;
-
     public partial class ProcessFileMessage 
     {
         public ProcessFileMessage(
@@ -47,6 +45,14 @@
         }
     }
 
+}
+
+namespace Fifthweek.WebJobs.Files.Shared
+{
+    using System;
+    using System.Linq;
+    using Fifthweek.CodeGeneration;
+    using Fifthweek.Shared;
     public partial class ProcessFileMessage 
     {
         public override string ToString()
@@ -112,4 +118,6 @@
             return true;
         }
     }
+
 }
+

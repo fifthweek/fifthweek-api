@@ -5,7 +5,10 @@ using System.Linq;
 
 namespace Fifthweek.Api.Posts.Shared
 {
+    using System;
+    using System.Linq;
     using Fifthweek.CodeGeneration;
+    using System.Collections.Generic;
     [Newtonsoft.Json.JsonConverter(typeof(JsonConverter))]
     public partial class Comment 
     {
@@ -53,7 +56,9 @@ namespace Fifthweek.Api.Posts.Shared
 namespace Fifthweek.Api.Posts.Shared
 {
     using System;
+    using System.Linq;
     using Fifthweek.CodeGeneration;
+    using System.Collections.Generic;
     [Newtonsoft.Json.JsonConverter(typeof(JsonConverter))]
     public partial class PostId 
     {
@@ -101,7 +106,10 @@ namespace Fifthweek.Api.Posts.Shared
 
 namespace Fifthweek.Api.Posts.Shared
 {
+    using System;
+    using System.Linq;
     using Fifthweek.CodeGeneration;
+    using System.Collections.Generic;
     public partial class Comment 
     {
         public Comment(
@@ -120,7 +128,9 @@ namespace Fifthweek.Api.Posts.Shared
 namespace Fifthweek.Api.Posts.Shared
 {
     using System;
+    using System.Linq;
     using Fifthweek.CodeGeneration;
+    using System.Collections.Generic;
     public partial class PostId 
     {
         public PostId(
@@ -139,7 +149,10 @@ namespace Fifthweek.Api.Posts.Shared
 
 namespace Fifthweek.Api.Posts.Shared
 {
+    using System;
+    using System.Linq;
     using Fifthweek.CodeGeneration;
+    using System.Collections.Generic;
     public partial class Comment 
     {
         public override string ToString()
@@ -192,7 +205,9 @@ namespace Fifthweek.Api.Posts.Shared
 namespace Fifthweek.Api.Posts.Shared
 {
     using System;
+    using System.Linq;
     using Fifthweek.CodeGeneration;
+    using System.Collections.Generic;
     public partial class PostId 
     {
         public override string ToString()
@@ -245,9 +260,9 @@ namespace Fifthweek.Api.Posts.Shared
 namespace Fifthweek.Api.Posts.Shared
 {
     using System;
-    using System.Collections.Generic;
     using System.Linq;
     using Fifthweek.CodeGeneration;
+    using System.Collections.Generic;
     public partial class ValidNote 
     {
         public override string ToString()

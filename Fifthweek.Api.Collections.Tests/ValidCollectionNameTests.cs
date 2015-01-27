@@ -3,11 +3,12 @@
     using System.Collections.Generic;
 
     using Fifthweek.Api.Collections;
+    using Fifthweek.Api.Collections.Shared;
     using Fifthweek.Tests.Shared;
 
     using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-    using ValidCollectionName = Fifthweek.Api.Collections.Shared.ValidCollectionName;
+    
 
     [TestClass]
     public class ValidCollectionNameTests : ValidatedStringTests<ValidCollectionName>

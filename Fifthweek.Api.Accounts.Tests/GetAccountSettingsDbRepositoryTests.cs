@@ -5,7 +5,9 @@
 
     using Fifthweek.Api.Core;
     using Fifthweek.Api.FileManagement;
+    using Fifthweek.Api.FileManagement.Shared;
     using Fifthweek.Api.Identity.Membership;
+    using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.Api.Persistence;
     using Fifthweek.Api.Persistence.Identity;
     using Fifthweek.Api.Persistence.Tests.Shared;
@@ -15,9 +17,9 @@
 
     using Moq;
 
-    using Email = Fifthweek.Api.Identity.Shared.Membership.Email;
-    using FileId = Fifthweek.Api.FileManagement.Shared.FileId;
-    using UserId = Fifthweek.Api.Identity.Shared.Membership.UserId;
+    
+    
+    
 
     [TestClass]
     public class GetAccountSettingsDbRepositoryTests : PersistenceTestsBase

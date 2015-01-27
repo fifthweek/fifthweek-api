@@ -20,8 +20,8 @@
 
     using Moq;
 
-    using FileId = Fifthweek.Api.FileManagement.Shared.FileId;
-    using UserId = Fifthweek.Api.Identity.Shared.Membership.UserId;
+    
+    
 
     [TestClass]
     public class UpdateSubscriptionCommandHandlerTests : PersistenceTestsBase

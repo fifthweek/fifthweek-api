@@ -5,10 +5,11 @@ namespace Fifthweek.Api.Aggregations.Queries
     using Fifthweek.Api.Collections.Queries;
     using Fifthweek.Api.FileManagement.Queries;
     using Fifthweek.Api.Identity.Membership;
+    using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.Api.Subscriptions;
     using Fifthweek.CodeGeneration;
 
-    using UserId = Fifthweek.Api.Identity.Shared.Membership.UserId;
+    
 
     [AutoConstructor, AutoEqualityMembers]
     public partial class UserState

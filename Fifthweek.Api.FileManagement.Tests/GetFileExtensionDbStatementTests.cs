@@ -5,12 +5,13 @@
 
     using Fifthweek.Api.FileManagement.Shared;
     using Fifthweek.Api.Identity.Membership;
+    using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.Api.Persistence.Tests.Shared;
     using Fifthweek.Tests.Shared;
 
     using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-    using UserId = Fifthweek.Api.Identity.Shared.Membership.UserId;
+    
 
     [TestClass]
     public class GetFileExtensionDbStatementTests : PersistenceTestsBase

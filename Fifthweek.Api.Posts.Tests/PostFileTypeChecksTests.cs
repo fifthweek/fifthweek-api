@@ -5,6 +5,7 @@
 
     using Fifthweek.Api.Core;
     using Fifthweek.Api.FileManagement;
+    using Fifthweek.Api.FileManagement.Shared;
     using Fifthweek.Shared;
     using Fifthweek.Tests.Shared;
 
@@ -12,7 +13,7 @@
 
     using Moq;
 
-    using FileId = Fifthweek.Api.FileManagement.Shared.FileId;
+    
 
     [TestClass]
     public class PostFileTypeChecksTests

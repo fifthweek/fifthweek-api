@@ -10,6 +10,7 @@ namespace Fifthweek.Api.Channels
     using Dapper;
     using Fifthweek.Api.Core;
     using Fifthweek.Api.Identity.Membership;
+    using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.Api.Persistence;
     using Fifthweek.CodeGeneration;
     public partial class ChannelOwnership 
@@ -33,6 +34,7 @@ namespace Fifthweek.Api.Channels
     using Fifthweek.Api.Channels.Shared;
     using Fifthweek.Api.Core;
     using Fifthweek.Api.Identity.Membership;
+    using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.CodeGeneration;
     public partial class ChannelSecurity 
     {
@@ -55,16 +57,14 @@ namespace Fifthweek.Api.Channels.Commands
     using Fifthweek.Api.Identity.Membership;
     using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.Api.Subscriptions;
+    using Fifthweek.Api.Subscriptions.Shared;
     using Fifthweek.CodeGeneration;
-
-    using SubscriptionId = Fifthweek.Api.Subscriptions.Shared.SubscriptionId;
-
     public partial class CreateChannelCommand 
     {
         public CreateChannelCommand(
-            Requester requester, 
+            Fifthweek.Api.Identity.Shared.Membership.Requester requester, 
             Fifthweek.Api.Channels.Shared.ChannelId newChannelId, 
-            SubscriptionId subscriptionId, 
+            Fifthweek.Api.Subscriptions.Shared.SubscriptionId subscriptionId, 
             Fifthweek.Api.Channels.Shared.ValidChannelName name)
         {
             if (requester == null)
@@ -128,7 +128,9 @@ namespace Fifthweek.Api.Channels.Commands
 {
     using Fifthweek.Api.Channels.Shared;
     using Fifthweek.Api.Identity.Membership;
+    using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.Api.Subscriptions;
+    using Fifthweek.Api.Subscriptions.Shared;
     using Fifthweek.CodeGeneration;
     public partial class CreateChannelCommand 
     {

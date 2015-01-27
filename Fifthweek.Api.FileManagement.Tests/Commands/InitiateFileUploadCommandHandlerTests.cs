@@ -16,8 +16,8 @@
 
     using Moq;
 
-    using Constants = Fifthweek.Api.FileManagement.Constants;
-    using UserId = Fifthweek.Api.Identity.Shared.Membership.UserId;
+    
+    
 
     [TestClass]
     public class InitiateFileUploadCommandHandlerTests
@@ -63,7 +63,7 @@
                 UserId,
                 @"C:\test\myfile.jpeg",
                 "purpose",
-                Constants.PublicFileBlobContainerName,
+                FileManagement.Constants.PublicFileBlobContainerName,
                 "myfile",
                 "jpeg",
                 "purpose");
@@ -77,7 +77,7 @@
                 UserId,
                 @"C:\test\myfile",
                 "purpose",
-                Constants.PublicFileBlobContainerName,
+                FileManagement.Constants.PublicFileBlobContainerName,
                 "myfile",
                 string.Empty,
                 "purpose");
@@ -91,7 +91,7 @@
                 UserId,
                 @"C:\test\.myfile",
                 "purpose",
-                Constants.PublicFileBlobContainerName,
+                FileManagement.Constants.PublicFileBlobContainerName,
                 "myfile",
                 string.Empty,
                 "purpose");
@@ -105,7 +105,7 @@
                 UserId,
                 @"hello",
                 "purpose",
-                Constants.PublicFileBlobContainerName,
+                FileManagement.Constants.PublicFileBlobContainerName,
                 "hello",
                 string.Empty,
                 "purpose");
@@ -119,7 +119,7 @@
                 UserId,
                 @"C:\test\myfile.isgreat.jpeg",
                 "purpose",
-                Constants.PublicFileBlobContainerName,
+                FileManagement.Constants.PublicFileBlobContainerName,
                 "myfile.isgreat",
                 "jpeg",
                 "purpose");
@@ -133,7 +133,7 @@
                 UserId,
                 @"C:\test\myfile.jpeg",
                 null,
-                Constants.PublicFileBlobContainerName,
+                FileManagement.Constants.PublicFileBlobContainerName,
                 "myfile",
                 "jpeg",
                 string.Empty);
@@ -147,7 +147,7 @@
                 UserId,
                 null,
                 "purpose",
-                Constants.PublicFileBlobContainerName,
+                FileManagement.Constants.PublicFileBlobContainerName,
                 string.Empty,
                 string.Empty,
                 "purpose");

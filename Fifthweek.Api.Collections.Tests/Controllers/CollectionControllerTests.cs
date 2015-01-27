@@ -4,6 +4,7 @@
     using System.Threading.Tasks;
 
     using Fifthweek.Api.Channels;
+    using Fifthweek.Api.Channels.Shared;
     using Fifthweek.Api.Collections.Commands;
     using Fifthweek.Api.Collections.Controllers;
     using Fifthweek.Api.Collections.Queries;
@@ -17,8 +18,8 @@
 
     using Moq;
 
-    using ChannelId = Fifthweek.Api.Channels.Shared.ChannelId;
-    using UserId = Fifthweek.Api.Identity.Shared.Membership.UserId;
+    
+    
 
     [TestClass]
     public class CollectionControllerTests

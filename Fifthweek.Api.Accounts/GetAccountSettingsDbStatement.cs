@@ -8,13 +8,15 @@
 
     using Fifthweek.Api.Core;
     using Fifthweek.Api.FileManagement;
+    using Fifthweek.Api.FileManagement.Shared;
     using Fifthweek.Api.Identity.Membership;
+    using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.Api.Persistence;
     using Fifthweek.CodeGeneration;
 
-    using Email = Fifthweek.Api.Identity.Shared.Membership.Email;
-    using FileId = Fifthweek.Api.FileManagement.Shared.FileId;
-    using UserId = Fifthweek.Api.Identity.Shared.Membership.UserId;
+    
+    
+    
 
     [AutoConstructor]
     public partial class GetAccountSettingsDbStatement : IGetAccountSettingsDbStatement

@@ -15,13 +15,14 @@
     using Fifthweek.Api.Persistence.Identity;
     using Fifthweek.Api.Subscriptions;
     using Fifthweek.Api.Subscriptions.Queries;
+    using Fifthweek.Api.Subscriptions.Shared;
 
     using Microsoft.VisualStudio.TestTools.UnitTesting;
 
     using Moq;
 
-    using SubscriptionId = Fifthweek.Api.Subscriptions.Shared.SubscriptionId;
-    using UserId = Fifthweek.Api.Identity.Shared.Membership.UserId;
+    
+    
 
     [TestClass]
     public class GetUserStateQueryHandlerTests

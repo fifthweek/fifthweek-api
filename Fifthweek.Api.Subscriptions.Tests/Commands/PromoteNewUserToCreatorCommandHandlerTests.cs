@@ -4,6 +4,7 @@
     using System.Threading.Tasks;
 
     using Fifthweek.Api.Identity.Membership;
+    using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.Api.Persistence;
     using Fifthweek.Api.Persistence.Identity;
     using Fifthweek.Api.Subscriptions.Commands;
@@ -13,7 +14,7 @@
 
     using Moq;
 
-    using UserId = Fifthweek.Api.Identity.Shared.Membership.UserId;
+    
 
     [TestClass]
     public class PromoteNewUserToCreatorCommandHandlerTests

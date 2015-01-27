@@ -8,7 +8,7 @@
 
     using Moq;
 
-    using UserId = Fifthweek.Api.Identity.Shared.Membership.UserId;
+    
 
     public static class RequesterSecurityTests
     {

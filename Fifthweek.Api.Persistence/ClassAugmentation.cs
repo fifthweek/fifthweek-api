@@ -3,6 +3,7 @@ using System.Linq;
 
 
 
+
 namespace Fifthweek.Api.Persistence
 {
     using System;
@@ -1139,7 +1140,7 @@ namespace Fifthweek.Api.Persistence
     using System.Text;
     public partial class Channel  : IIdentityEquatable
     {
-		public const string Table = "Channels";
+        public const string Table = "Channels";
 
         public Channel(
             System.Guid id)
@@ -1243,24 +1244,56 @@ namespace Fifthweek.Api.Persistence
                 transaction);
         }
 
-		public static System.Threading.Tasks.Task<bool> InsertIfAsync(
+        public static async System.Threading.Tasks.Task<bool> InsertIfAsync(
             this System.Data.Common.DbConnection connection,
             Channel entity,
             string condition,
-			bool idempotent = true,
+            bool idempotent = true,
+            System.Data.IDbTransaction transaction = null)
+        {
+            return -1 == await InsertIfAsync(connection, entity, new[] { condition }, idempotent, transaction);
+        }
+
+        public static async System.Threading.Tasks.Task<bool> InsertIfAsync(
+            this System.Data.Common.DbConnection connection,
+            Channel entity,
+            string condition,
+            string selectValuesForInsertStatement,
+            Channel.Fields selectedFields,
+            bool idempotent = true,
+            System.Data.IDbTransaction transaction = null)
+        {
+            return -1 == await InsertIfAsync(connection, entity, new[] { condition }, selectValuesForInsertStatement, selectedFields, idempotent, transaction);
+        }
+
+        public static System.Threading.Tasks.Task<int> InsertIfAsync(
+            this System.Data.Common.DbConnection connection,
+            Channel entity,
+            System.Collections.Generic.IEnumerable<string> conditions,
+            bool idempotent = true,
             System.Data.IDbTransaction transaction = null)
         {
             var sql = new System.Text.StringBuilder();
-            sql.Append("IF ");
-            sql.AppendLine(condition); // Remember to use `WITH (UPDLOCK, HOLDLOCK)` in your conditions! See: http://samsaffron.com/blog/archive/2007/04/04/14.aspx
-            sql.AppendLine("BEGIN");
-            sql.AppendLine(InsertStatement(idempotent));
-            sql.AppendLine("SELECT 1 AS InsertAttempted"); // Indicates a (potentially idempotent) insert has been performed.
-			sql.AppendLine("END");
-			sql.AppendLine("ELSE");
-			sql.AppendLine("SELECT 0 AS InsertAttempted");
+            int currentIndex = 0;
+            foreach (var condition in conditions)
+            {
+                sql.Append("IF ");
+                sql.AppendLine(condition); // Remember to use `WITH (UPDLOCK, HOLDLOCK)` in your conditions! See: http://samsaffron.com/blog/archive/2007/04/04/14.aspx
+                sql.AppendLine("BEGIN");
+                ++currentIndex;
+            }
 
-            return Dapper.SqlMapper.ExecuteScalarAsync<bool>(
+            sql.AppendLine(InsertStatement(idempotent));
+            sql.AppendLine("SELECT -1 AS InsertAttempted"); // Indicates a (potentially idempotent) insert has been performed.
+            
+            foreach (var condition in conditions)
+            {
+                sql.AppendLine("END");
+                sql.AppendLine("ELSE");
+                sql.Append("SELECT ").Append(--currentIndex).AppendLine(" AS InsertAttempted");
+            }
+
+            return Dapper.SqlMapper.ExecuteScalarAsync<int>(
                 connection,
                 sql.ToString(),
                 new 
@@ -1270,10 +1303,10 @@ namespace Fifthweek.Api.Persistence
                 transaction);
         }
 
-        public static System.Threading.Tasks.Task<bool> InsertIfAsync(
+        public static System.Threading.Tasks.Task<int> InsertIfAsync(
             this System.Data.Common.DbConnection connection,
             Channel entity,
-            string condition,
+            System.Collections.Generic.IEnumerable<string> conditions,
             string selectValuesForInsertStatement,
             Channel.Fields selectedFields,
             bool idempotent = true,
@@ -1281,16 +1314,27 @@ namespace Fifthweek.Api.Persistence
         {
             var sql = new System.Text.StringBuilder();
             sql.AppendLine(selectValuesForInsertStatement);
-            sql.Append("IF ");
-            sql.AppendLine(condition); // Remember to use `WITH (UPDLOCK, HOLDLOCK)` in your conditions! See: http://samsaffron.com/blog/archive/2007/04/04/14.aspx
-            sql.AppendLine("BEGIN");
-            sql.AppendLine(InsertStatement(idempotent));
-            sql.AppendLine("SELECT 1 AS InsertAttempted"); // Indicates a (potentially idempotent) insert has been performed.
-			sql.AppendLine("END");
-			sql.AppendLine("ELSE");
-			sql.AppendLine("SELECT 0 AS InsertAttempted");
 
-            return Dapper.SqlMapper.ExecuteScalarAsync<bool>(
+            int currentIndex = 0;
+            foreach (var condition in conditions)
+            {
+                sql.Append("IF ");
+                sql.AppendLine(condition); // Remember to use `WITH (UPDLOCK, HOLDLOCK)` in your conditions! See: http://samsaffron.com/blog/archive/2007/04/04/14.aspx
+                sql.AppendLine("BEGIN");
+                ++currentIndex;
+            }
+
+            sql.AppendLine(InsertStatement(idempotent));
+            sql.AppendLine("SELECT -1 AS InsertAttempted"); // Indicates a (potentially idempotent) insert has been performed.
+            
+            foreach (var condition in conditions)
+            {
+                sql.AppendLine("END");
+                sql.AppendLine("ELSE");
+                sql.Append("SELECT ").Append(--currentIndex).AppendLine(" AS InsertAttempted");
+            }
+
+            return Dapper.SqlMapper.ExecuteScalarAsync<int>(
                 connection,
                 sql.ToString(),
                 MaskParameters(entity, selectedFields, true),
@@ -1330,8 +1374,8 @@ namespace Fifthweek.Api.Persistence
 
         public static string UpsertStatement(Channel.Fields fields)
         {
-			// HOLDLOCK ensures operation is concurrent by not releasing the U lock on the row after determining
-			// it does not exist. See: http://weblogs.sqlteam.com/dang/archive/2009/01/31/UPSERT-Race-Condition-With-MERGE.aspx
+            // HOLDLOCK ensures operation is concurrent by not releasing the U lock on the row after determining
+            // it does not exist. See: http://weblogs.sqlteam.com/dang/archive/2009/01/31/UPSERT-Race-Condition-With-MERGE.aspx
             var sql = new System.Text.StringBuilder();
             sql.Append(
                 @"MERGE Channels WITH (HOLDLOCK) as Target
@@ -1360,10 +1404,10 @@ namespace Fifthweek.Api.Persistence
         private static System.Collections.Generic.IReadOnlyList<string> GetFieldNames(Channel.Fields fields, bool autoIncludePrimaryKeys = true)
         {
             var fieldNames = new System.Collections.Generic.List<string>();
-			if (autoIncludePrimaryKeys)
-			{
-				fieldNames.Add("Id");
-			}
+            if (autoIncludePrimaryKeys)
+            {
+                fieldNames.Add("Id");
+            }
 
             if (fields.HasFlag(Channel.Fields.SubscriptionId))
             {
@@ -1392,8 +1436,8 @@ namespace Fifthweek.Api.Persistence
         {
             var parameters = new Dapper.DynamicParameters();
 
-			// Assume we never want to exclude primary key field(s) from our input.
-			parameters.Add("Id", entity.Id);
+            // Assume we never want to exclude primary key field(s) from our input.
+            parameters.Add("Id", entity.Id);
             if(excludeSpecified != fields.HasFlag(Channel.Fields.SubscriptionId))
             {
                 parameters.Add("SubscriptionId", entity.SubscriptionId);
@@ -1431,7 +1475,7 @@ namespace Fifthweek.Api.Persistence
     using System.Text;
     public partial class Collection  : IIdentityEquatable
     {
-		public const string Table = "Collections";
+        public const string Table = "Collections";
 
         public Collection(
             System.Guid id)
@@ -1534,24 +1578,56 @@ namespace Fifthweek.Api.Persistence
                 transaction);
         }
 
-		public static System.Threading.Tasks.Task<bool> InsertIfAsync(
+        public static async System.Threading.Tasks.Task<bool> InsertIfAsync(
             this System.Data.Common.DbConnection connection,
             Collection entity,
             string condition,
-			bool idempotent = true,
+            bool idempotent = true,
+            System.Data.IDbTransaction transaction = null)
+        {
+            return -1 == await InsertIfAsync(connection, entity, new[] { condition }, idempotent, transaction);
+        }
+
+        public static async System.Threading.Tasks.Task<bool> InsertIfAsync(
+            this System.Data.Common.DbConnection connection,
+            Collection entity,
+            string condition,
+            string selectValuesForInsertStatement,
+            Collection.Fields selectedFields,
+            bool idempotent = true,
+            System.Data.IDbTransaction transaction = null)
+        {
+            return -1 == await InsertIfAsync(connection, entity, new[] { condition }, selectValuesForInsertStatement, selectedFields, idempotent, transaction);
+        }
+
+        public static System.Threading.Tasks.Task<int> InsertIfAsync(
+            this System.Data.Common.DbConnection connection,
+            Collection entity,
+            System.Collections.Generic.IEnumerable<string> conditions,
+            bool idempotent = true,
             System.Data.IDbTransaction transaction = null)
         {
             var sql = new System.Text.StringBuilder();
-            sql.Append("IF ");
-            sql.AppendLine(condition); // Remember to use `WITH (UPDLOCK, HOLDLOCK)` in your conditions! See: http://samsaffron.com/blog/archive/2007/04/04/14.aspx
-            sql.AppendLine("BEGIN");
-            sql.AppendLine(InsertStatement(idempotent));
-            sql.AppendLine("SELECT 1 AS InsertAttempted"); // Indicates a (potentially idempotent) insert has been performed.
-			sql.AppendLine("END");
-			sql.AppendLine("ELSE");
-			sql.AppendLine("SELECT 0 AS InsertAttempted");
+            int currentIndex = 0;
+            foreach (var condition in conditions)
+            {
+                sql.Append("IF ");
+                sql.AppendLine(condition); // Remember to use `WITH (UPDLOCK, HOLDLOCK)` in your conditions! See: http://samsaffron.com/blog/archive/2007/04/04/14.aspx
+                sql.AppendLine("BEGIN");
+                ++currentIndex;
+            }
 
-            return Dapper.SqlMapper.ExecuteScalarAsync<bool>(
+            sql.AppendLine(InsertStatement(idempotent));
+            sql.AppendLine("SELECT -1 AS InsertAttempted"); // Indicates a (potentially idempotent) insert has been performed.
+            
+            foreach (var condition in conditions)
+            {
+                sql.AppendLine("END");
+                sql.AppendLine("ELSE");
+                sql.Append("SELECT ").Append(--currentIndex).AppendLine(" AS InsertAttempted");
+            }
+
+            return Dapper.SqlMapper.ExecuteScalarAsync<int>(
                 connection,
                 sql.ToString(),
                 new 
@@ -1561,10 +1637,10 @@ namespace Fifthweek.Api.Persistence
                 transaction);
         }
 
-        public static System.Threading.Tasks.Task<bool> InsertIfAsync(
+        public static System.Threading.Tasks.Task<int> InsertIfAsync(
             this System.Data.Common.DbConnection connection,
             Collection entity,
-            string condition,
+            System.Collections.Generic.IEnumerable<string> conditions,
             string selectValuesForInsertStatement,
             Collection.Fields selectedFields,
             bool idempotent = true,
@@ -1572,16 +1648,27 @@ namespace Fifthweek.Api.Persistence
         {
             var sql = new System.Text.StringBuilder();
             sql.AppendLine(selectValuesForInsertStatement);
-            sql.Append("IF ");
-            sql.AppendLine(condition); // Remember to use `WITH (UPDLOCK, HOLDLOCK)` in your conditions! See: http://samsaffron.com/blog/archive/2007/04/04/14.aspx
-            sql.AppendLine("BEGIN");
-            sql.AppendLine(InsertStatement(idempotent));
-            sql.AppendLine("SELECT 1 AS InsertAttempted"); // Indicates a (potentially idempotent) insert has been performed.
-			sql.AppendLine("END");
-			sql.AppendLine("ELSE");
-			sql.AppendLine("SELECT 0 AS InsertAttempted");
 
-            return Dapper.SqlMapper.ExecuteScalarAsync<bool>(
+            int currentIndex = 0;
+            foreach (var condition in conditions)
+            {
+                sql.Append("IF ");
+                sql.AppendLine(condition); // Remember to use `WITH (UPDLOCK, HOLDLOCK)` in your conditions! See: http://samsaffron.com/blog/archive/2007/04/04/14.aspx
+                sql.AppendLine("BEGIN");
+                ++currentIndex;
+            }
+
+            sql.AppendLine(InsertStatement(idempotent));
+            sql.AppendLine("SELECT -1 AS InsertAttempted"); // Indicates a (potentially idempotent) insert has been performed.
+            
+            foreach (var condition in conditions)
+            {
+                sql.AppendLine("END");
+                sql.AppendLine("ELSE");
+                sql.Append("SELECT ").Append(--currentIndex).AppendLine(" AS InsertAttempted");
+            }
+
+            return Dapper.SqlMapper.ExecuteScalarAsync<int>(
                 connection,
                 sql.ToString(),
                 MaskParameters(entity, selectedFields, true),
@@ -1621,8 +1708,8 @@ namespace Fifthweek.Api.Persistence
 
         public static string UpsertStatement(Collection.Fields fields)
         {
-			// HOLDLOCK ensures operation is concurrent by not releasing the U lock on the row after determining
-			// it does not exist. See: http://weblogs.sqlteam.com/dang/archive/2009/01/31/UPSERT-Race-Condition-With-MERGE.aspx
+            // HOLDLOCK ensures operation is concurrent by not releasing the U lock on the row after determining
+            // it does not exist. See: http://weblogs.sqlteam.com/dang/archive/2009/01/31/UPSERT-Race-Condition-With-MERGE.aspx
             var sql = new System.Text.StringBuilder();
             sql.Append(
                 @"MERGE Collections WITH (HOLDLOCK) as Target
@@ -1651,10 +1738,10 @@ namespace Fifthweek.Api.Persistence
         private static System.Collections.Generic.IReadOnlyList<string> GetFieldNames(Collection.Fields fields, bool autoIncludePrimaryKeys = true)
         {
             var fieldNames = new System.Collections.Generic.List<string>();
-			if (autoIncludePrimaryKeys)
-			{
-				fieldNames.Add("Id");
-			}
+            if (autoIncludePrimaryKeys)
+            {
+                fieldNames.Add("Id");
+            }
 
             if (fields.HasFlag(Collection.Fields.ChannelId))
             {
@@ -1678,8 +1765,8 @@ namespace Fifthweek.Api.Persistence
         {
             var parameters = new Dapper.DynamicParameters();
 
-			// Assume we never want to exclude primary key field(s) from our input.
-			parameters.Add("Id", entity.Id);
+            // Assume we never want to exclude primary key field(s) from our input.
+            parameters.Add("Id", entity.Id);
             if(excludeSpecified != fields.HasFlag(Collection.Fields.ChannelId))
             {
                 parameters.Add("ChannelId", entity.ChannelId);
@@ -1712,7 +1799,7 @@ namespace Fifthweek.Api.Persistence
     using System.Text;
     public partial class File  : IIdentityEquatable
     {
-		public const string Table = "Files";
+        public const string Table = "Files";
 
         public File(
             System.Guid id)
@@ -1822,24 +1909,56 @@ namespace Fifthweek.Api.Persistence
                 transaction);
         }
 
-		public static System.Threading.Tasks.Task<bool> InsertIfAsync(
+        public static async System.Threading.Tasks.Task<bool> InsertIfAsync(
             this System.Data.Common.DbConnection connection,
             File entity,
             string condition,
-			bool idempotent = true,
+            bool idempotent = true,
+            System.Data.IDbTransaction transaction = null)
+        {
+            return -1 == await InsertIfAsync(connection, entity, new[] { condition }, idempotent, transaction);
+        }
+
+        public static async System.Threading.Tasks.Task<bool> InsertIfAsync(
+            this System.Data.Common.DbConnection connection,
+            File entity,
+            string condition,
+            string selectValuesForInsertStatement,
+            File.Fields selectedFields,
+            bool idempotent = true,
+            System.Data.IDbTransaction transaction = null)
+        {
+            return -1 == await InsertIfAsync(connection, entity, new[] { condition }, selectValuesForInsertStatement, selectedFields, idempotent, transaction);
+        }
+
+        public static System.Threading.Tasks.Task<int> InsertIfAsync(
+            this System.Data.Common.DbConnection connection,
+            File entity,
+            System.Collections.Generic.IEnumerable<string> conditions,
+            bool idempotent = true,
             System.Data.IDbTransaction transaction = null)
         {
             var sql = new System.Text.StringBuilder();
-            sql.Append("IF ");
-            sql.AppendLine(condition); // Remember to use `WITH (UPDLOCK, HOLDLOCK)` in your conditions! See: http://samsaffron.com/blog/archive/2007/04/04/14.aspx
-            sql.AppendLine("BEGIN");
-            sql.AppendLine(InsertStatement(idempotent));
-            sql.AppendLine("SELECT 1 AS InsertAttempted"); // Indicates a (potentially idempotent) insert has been performed.
-			sql.AppendLine("END");
-			sql.AppendLine("ELSE");
-			sql.AppendLine("SELECT 0 AS InsertAttempted");
+            int currentIndex = 0;
+            foreach (var condition in conditions)
+            {
+                sql.Append("IF ");
+                sql.AppendLine(condition); // Remember to use `WITH (UPDLOCK, HOLDLOCK)` in your conditions! See: http://samsaffron.com/blog/archive/2007/04/04/14.aspx
+                sql.AppendLine("BEGIN");
+                ++currentIndex;
+            }
 
-            return Dapper.SqlMapper.ExecuteScalarAsync<bool>(
+            sql.AppendLine(InsertStatement(idempotent));
+            sql.AppendLine("SELECT -1 AS InsertAttempted"); // Indicates a (potentially idempotent) insert has been performed.
+            
+            foreach (var condition in conditions)
+            {
+                sql.AppendLine("END");
+                sql.AppendLine("ELSE");
+                sql.Append("SELECT ").Append(--currentIndex).AppendLine(" AS InsertAttempted");
+            }
+
+            return Dapper.SqlMapper.ExecuteScalarAsync<int>(
                 connection,
                 sql.ToString(),
                 new 
@@ -1849,10 +1968,10 @@ namespace Fifthweek.Api.Persistence
                 transaction);
         }
 
-        public static System.Threading.Tasks.Task<bool> InsertIfAsync(
+        public static System.Threading.Tasks.Task<int> InsertIfAsync(
             this System.Data.Common.DbConnection connection,
             File entity,
-            string condition,
+            System.Collections.Generic.IEnumerable<string> conditions,
             string selectValuesForInsertStatement,
             File.Fields selectedFields,
             bool idempotent = true,
@@ -1860,16 +1979,27 @@ namespace Fifthweek.Api.Persistence
         {
             var sql = new System.Text.StringBuilder();
             sql.AppendLine(selectValuesForInsertStatement);
-            sql.Append("IF ");
-            sql.AppendLine(condition); // Remember to use `WITH (UPDLOCK, HOLDLOCK)` in your conditions! See: http://samsaffron.com/blog/archive/2007/04/04/14.aspx
-            sql.AppendLine("BEGIN");
-            sql.AppendLine(InsertStatement(idempotent));
-            sql.AppendLine("SELECT 1 AS InsertAttempted"); // Indicates a (potentially idempotent) insert has been performed.
-			sql.AppendLine("END");
-			sql.AppendLine("ELSE");
-			sql.AppendLine("SELECT 0 AS InsertAttempted");
 
-            return Dapper.SqlMapper.ExecuteScalarAsync<bool>(
+            int currentIndex = 0;
+            foreach (var condition in conditions)
+            {
+                sql.Append("IF ");
+                sql.AppendLine(condition); // Remember to use `WITH (UPDLOCK, HOLDLOCK)` in your conditions! See: http://samsaffron.com/blog/archive/2007/04/04/14.aspx
+                sql.AppendLine("BEGIN");
+                ++currentIndex;
+            }
+
+            sql.AppendLine(InsertStatement(idempotent));
+            sql.AppendLine("SELECT -1 AS InsertAttempted"); // Indicates a (potentially idempotent) insert has been performed.
+            
+            foreach (var condition in conditions)
+            {
+                sql.AppendLine("END");
+                sql.AppendLine("ELSE");
+                sql.Append("SELECT ").Append(--currentIndex).AppendLine(" AS InsertAttempted");
+            }
+
+            return Dapper.SqlMapper.ExecuteScalarAsync<int>(
                 connection,
                 sql.ToString(),
                 MaskParameters(entity, selectedFields, true),
@@ -1909,8 +2039,8 @@ namespace Fifthweek.Api.Persistence
 
         public static string UpsertStatement(File.Fields fields)
         {
-			// HOLDLOCK ensures operation is concurrent by not releasing the U lock on the row after determining
-			// it does not exist. See: http://weblogs.sqlteam.com/dang/archive/2009/01/31/UPSERT-Race-Condition-With-MERGE.aspx
+            // HOLDLOCK ensures operation is concurrent by not releasing the U lock on the row after determining
+            // it does not exist. See: http://weblogs.sqlteam.com/dang/archive/2009/01/31/UPSERT-Race-Condition-With-MERGE.aspx
             var sql = new System.Text.StringBuilder();
             sql.Append(
                 @"MERGE Files WITH (HOLDLOCK) as Target
@@ -1939,10 +2069,10 @@ namespace Fifthweek.Api.Persistence
         private static System.Collections.Generic.IReadOnlyList<string> GetFieldNames(File.Fields fields, bool autoIncludePrimaryKeys = true)
         {
             var fieldNames = new System.Collections.Generic.List<string>();
-			if (autoIncludePrimaryKeys)
-			{
-				fieldNames.Add("Id");
-			}
+            if (autoIncludePrimaryKeys)
+            {
+                fieldNames.Add("Id");
+            }
 
             if (fields.HasFlag(File.Fields.UserId))
             {
@@ -2001,8 +2131,8 @@ namespace Fifthweek.Api.Persistence
         {
             var parameters = new Dapper.DynamicParameters();
 
-			// Assume we never want to exclude primary key field(s) from our input.
-			parameters.Add("Id", entity.Id);
+            // Assume we never want to exclude primary key field(s) from our input.
+            parameters.Add("Id", entity.Id);
             if(excludeSpecified != fields.HasFlag(File.Fields.UserId))
             {
                 parameters.Add("UserId", entity.UserId);
@@ -2070,7 +2200,7 @@ namespace Fifthweek.Api.Persistence
     using System.Text;
     public partial class Post  : IIdentityEquatable
     {
-		public const string Table = "Posts";
+        public const string Table = "Posts";
 
         public Post(
             System.Guid id)
@@ -2178,24 +2308,56 @@ namespace Fifthweek.Api.Persistence
                 transaction);
         }
 
-		public static System.Threading.Tasks.Task<bool> InsertIfAsync(
+        public static async System.Threading.Tasks.Task<bool> InsertIfAsync(
             this System.Data.Common.DbConnection connection,
             Post entity,
             string condition,
-			bool idempotent = true,
+            bool idempotent = true,
+            System.Data.IDbTransaction transaction = null)
+        {
+            return -1 == await InsertIfAsync(connection, entity, new[] { condition }, idempotent, transaction);
+        }
+
+        public static async System.Threading.Tasks.Task<bool> InsertIfAsync(
+            this System.Data.Common.DbConnection connection,
+            Post entity,
+            string condition,
+            string selectValuesForInsertStatement,
+            Post.Fields selectedFields,
+            bool idempotent = true,
+            System.Data.IDbTransaction transaction = null)
+        {
+            return -1 == await InsertIfAsync(connection, entity, new[] { condition }, selectValuesForInsertStatement, selectedFields, idempotent, transaction);
+        }
+
+        public static System.Threading.Tasks.Task<int> InsertIfAsync(
+            this System.Data.Common.DbConnection connection,
+            Post entity,
+            System.Collections.Generic.IEnumerable<string> conditions,
+            bool idempotent = true,
             System.Data.IDbTransaction transaction = null)
         {
             var sql = new System.Text.StringBuilder();
-            sql.Append("IF ");
-            sql.AppendLine(condition); // Remember to use `WITH (UPDLOCK, HOLDLOCK)` in your conditions! See: http://samsaffron.com/blog/archive/2007/04/04/14.aspx
-            sql.AppendLine("BEGIN");
-            sql.AppendLine(InsertStatement(idempotent));
-            sql.AppendLine("SELECT 1 AS InsertAttempted"); // Indicates a (potentially idempotent) insert has been performed.
-			sql.AppendLine("END");
-			sql.AppendLine("ELSE");
-			sql.AppendLine("SELECT 0 AS InsertAttempted");
+            int currentIndex = 0;
+            foreach (var condition in conditions)
+            {
+                sql.Append("IF ");
+                sql.AppendLine(condition); // Remember to use `WITH (UPDLOCK, HOLDLOCK)` in your conditions! See: http://samsaffron.com/blog/archive/2007/04/04/14.aspx
+                sql.AppendLine("BEGIN");
+                ++currentIndex;
+            }
 
-            return Dapper.SqlMapper.ExecuteScalarAsync<bool>(
+            sql.AppendLine(InsertStatement(idempotent));
+            sql.AppendLine("SELECT -1 AS InsertAttempted"); // Indicates a (potentially idempotent) insert has been performed.
+            
+            foreach (var condition in conditions)
+            {
+                sql.AppendLine("END");
+                sql.AppendLine("ELSE");
+                sql.Append("SELECT ").Append(--currentIndex).AppendLine(" AS InsertAttempted");
+            }
+
+            return Dapper.SqlMapper.ExecuteScalarAsync<int>(
                 connection,
                 sql.ToString(),
                 new 
@@ -2205,10 +2367,10 @@ namespace Fifthweek.Api.Persistence
                 transaction);
         }
 
-        public static System.Threading.Tasks.Task<bool> InsertIfAsync(
+        public static System.Threading.Tasks.Task<int> InsertIfAsync(
             this System.Data.Common.DbConnection connection,
             Post entity,
-            string condition,
+            System.Collections.Generic.IEnumerable<string> conditions,
             string selectValuesForInsertStatement,
             Post.Fields selectedFields,
             bool idempotent = true,
@@ -2216,16 +2378,27 @@ namespace Fifthweek.Api.Persistence
         {
             var sql = new System.Text.StringBuilder();
             sql.AppendLine(selectValuesForInsertStatement);
-            sql.Append("IF ");
-            sql.AppendLine(condition); // Remember to use `WITH (UPDLOCK, HOLDLOCK)` in your conditions! See: http://samsaffron.com/blog/archive/2007/04/04/14.aspx
-            sql.AppendLine("BEGIN");
-            sql.AppendLine(InsertStatement(idempotent));
-            sql.AppendLine("SELECT 1 AS InsertAttempted"); // Indicates a (potentially idempotent) insert has been performed.
-			sql.AppendLine("END");
-			sql.AppendLine("ELSE");
-			sql.AppendLine("SELECT 0 AS InsertAttempted");
 
-            return Dapper.SqlMapper.ExecuteScalarAsync<bool>(
+            int currentIndex = 0;
+            foreach (var condition in conditions)
+            {
+                sql.Append("IF ");
+                sql.AppendLine(condition); // Remember to use `WITH (UPDLOCK, HOLDLOCK)` in your conditions! See: http://samsaffron.com/blog/archive/2007/04/04/14.aspx
+                sql.AppendLine("BEGIN");
+                ++currentIndex;
+            }
+
+            sql.AppendLine(InsertStatement(idempotent));
+            sql.AppendLine("SELECT -1 AS InsertAttempted"); // Indicates a (potentially idempotent) insert has been performed.
+            
+            foreach (var condition in conditions)
+            {
+                sql.AppendLine("END");
+                sql.AppendLine("ELSE");
+                sql.Append("SELECT ").Append(--currentIndex).AppendLine(" AS InsertAttempted");
+            }
+
+            return Dapper.SqlMapper.ExecuteScalarAsync<int>(
                 connection,
                 sql.ToString(),
                 MaskParameters(entity, selectedFields, true),
@@ -2265,8 +2438,8 @@ namespace Fifthweek.Api.Persistence
 
         public static string UpsertStatement(Post.Fields fields)
         {
-			// HOLDLOCK ensures operation is concurrent by not releasing the U lock on the row after determining
-			// it does not exist. See: http://weblogs.sqlteam.com/dang/archive/2009/01/31/UPSERT-Race-Condition-With-MERGE.aspx
+            // HOLDLOCK ensures operation is concurrent by not releasing the U lock on the row after determining
+            // it does not exist. See: http://weblogs.sqlteam.com/dang/archive/2009/01/31/UPSERT-Race-Condition-With-MERGE.aspx
             var sql = new System.Text.StringBuilder();
             sql.Append(
                 @"MERGE Posts WITH (HOLDLOCK) as Target
@@ -2295,10 +2468,10 @@ namespace Fifthweek.Api.Persistence
         private static System.Collections.Generic.IReadOnlyList<string> GetFieldNames(Post.Fields fields, bool autoIncludePrimaryKeys = true)
         {
             var fieldNames = new System.Collections.Generic.List<string>();
-			if (autoIncludePrimaryKeys)
-			{
-				fieldNames.Add("Id");
-			}
+            if (autoIncludePrimaryKeys)
+            {
+                fieldNames.Add("Id");
+            }
 
             if (fields.HasFlag(Post.Fields.ChannelId))
             {
@@ -2347,8 +2520,8 @@ namespace Fifthweek.Api.Persistence
         {
             var parameters = new Dapper.DynamicParameters();
 
-			// Assume we never want to exclude primary key field(s) from our input.
-			parameters.Add("Id", entity.Id);
+            // Assume we never want to exclude primary key field(s) from our input.
+            parameters.Add("Id", entity.Id);
             if(excludeSpecified != fields.HasFlag(Post.Fields.ChannelId))
             {
                 parameters.Add("ChannelId", entity.ChannelId);
@@ -2406,7 +2579,7 @@ namespace Fifthweek.Api.Persistence
     using System.Text;
     public partial class Subscription  : IIdentityEquatable
     {
-		public const string Table = "Subscriptions";
+        public const string Table = "Subscriptions";
 
         public Subscription(
             System.Guid id)
@@ -2514,24 +2687,56 @@ namespace Fifthweek.Api.Persistence
                 transaction);
         }
 
-		public static System.Threading.Tasks.Task<bool> InsertIfAsync(
+        public static async System.Threading.Tasks.Task<bool> InsertIfAsync(
             this System.Data.Common.DbConnection connection,
             Subscription entity,
             string condition,
-			bool idempotent = true,
+            bool idempotent = true,
+            System.Data.IDbTransaction transaction = null)
+        {
+            return -1 == await InsertIfAsync(connection, entity, new[] { condition }, idempotent, transaction);
+        }
+
+        public static async System.Threading.Tasks.Task<bool> InsertIfAsync(
+            this System.Data.Common.DbConnection connection,
+            Subscription entity,
+            string condition,
+            string selectValuesForInsertStatement,
+            Subscription.Fields selectedFields,
+            bool idempotent = true,
+            System.Data.IDbTransaction transaction = null)
+        {
+            return -1 == await InsertIfAsync(connection, entity, new[] { condition }, selectValuesForInsertStatement, selectedFields, idempotent, transaction);
+        }
+
+        public static System.Threading.Tasks.Task<int> InsertIfAsync(
+            this System.Data.Common.DbConnection connection,
+            Subscription entity,
+            System.Collections.Generic.IEnumerable<string> conditions,
+            bool idempotent = true,
             System.Data.IDbTransaction transaction = null)
         {
             var sql = new System.Text.StringBuilder();
-            sql.Append("IF ");
-            sql.AppendLine(condition); // Remember to use `WITH (UPDLOCK, HOLDLOCK)` in your conditions! See: http://samsaffron.com/blog/archive/2007/04/04/14.aspx
-            sql.AppendLine("BEGIN");
-            sql.AppendLine(InsertStatement(idempotent));
-            sql.AppendLine("SELECT 1 AS InsertAttempted"); // Indicates a (potentially idempotent) insert has been performed.
-			sql.AppendLine("END");
-			sql.AppendLine("ELSE");
-			sql.AppendLine("SELECT 0 AS InsertAttempted");
+            int currentIndex = 0;
+            foreach (var condition in conditions)
+            {
+                sql.Append("IF ");
+                sql.AppendLine(condition); // Remember to use `WITH (UPDLOCK, HOLDLOCK)` in your conditions! See: http://samsaffron.com/blog/archive/2007/04/04/14.aspx
+                sql.AppendLine("BEGIN");
+                ++currentIndex;
+            }
 
-            return Dapper.SqlMapper.ExecuteScalarAsync<bool>(
+            sql.AppendLine(InsertStatement(idempotent));
+            sql.AppendLine("SELECT -1 AS InsertAttempted"); // Indicates a (potentially idempotent) insert has been performed.
+            
+            foreach (var condition in conditions)
+            {
+                sql.AppendLine("END");
+                sql.AppendLine("ELSE");
+                sql.Append("SELECT ").Append(--currentIndex).AppendLine(" AS InsertAttempted");
+            }
+
+            return Dapper.SqlMapper.ExecuteScalarAsync<int>(
                 connection,
                 sql.ToString(),
                 new 
@@ -2541,10 +2746,10 @@ namespace Fifthweek.Api.Persistence
                 transaction);
         }
 
-        public static System.Threading.Tasks.Task<bool> InsertIfAsync(
+        public static System.Threading.Tasks.Task<int> InsertIfAsync(
             this System.Data.Common.DbConnection connection,
             Subscription entity,
-            string condition,
+            System.Collections.Generic.IEnumerable<string> conditions,
             string selectValuesForInsertStatement,
             Subscription.Fields selectedFields,
             bool idempotent = true,
@@ -2552,16 +2757,27 @@ namespace Fifthweek.Api.Persistence
         {
             var sql = new System.Text.StringBuilder();
             sql.AppendLine(selectValuesForInsertStatement);
-            sql.Append("IF ");
-            sql.AppendLine(condition); // Remember to use `WITH (UPDLOCK, HOLDLOCK)` in your conditions! See: http://samsaffron.com/blog/archive/2007/04/04/14.aspx
-            sql.AppendLine("BEGIN");
-            sql.AppendLine(InsertStatement(idempotent));
-            sql.AppendLine("SELECT 1 AS InsertAttempted"); // Indicates a (potentially idempotent) insert has been performed.
-			sql.AppendLine("END");
-			sql.AppendLine("ELSE");
-			sql.AppendLine("SELECT 0 AS InsertAttempted");
 
-            return Dapper.SqlMapper.ExecuteScalarAsync<bool>(
+            int currentIndex = 0;
+            foreach (var condition in conditions)
+            {
+                sql.Append("IF ");
+                sql.AppendLine(condition); // Remember to use `WITH (UPDLOCK, HOLDLOCK)` in your conditions! See: http://samsaffron.com/blog/archive/2007/04/04/14.aspx
+                sql.AppendLine("BEGIN");
+                ++currentIndex;
+            }
+
+            sql.AppendLine(InsertStatement(idempotent));
+            sql.AppendLine("SELECT -1 AS InsertAttempted"); // Indicates a (potentially idempotent) insert has been performed.
+            
+            foreach (var condition in conditions)
+            {
+                sql.AppendLine("END");
+                sql.AppendLine("ELSE");
+                sql.Append("SELECT ").Append(--currentIndex).AppendLine(" AS InsertAttempted");
+            }
+
+            return Dapper.SqlMapper.ExecuteScalarAsync<int>(
                 connection,
                 sql.ToString(),
                 MaskParameters(entity, selectedFields, true),
@@ -2601,8 +2817,8 @@ namespace Fifthweek.Api.Persistence
 
         public static string UpsertStatement(Subscription.Fields fields)
         {
-			// HOLDLOCK ensures operation is concurrent by not releasing the U lock on the row after determining
-			// it does not exist. See: http://weblogs.sqlteam.com/dang/archive/2009/01/31/UPSERT-Race-Condition-With-MERGE.aspx
+            // HOLDLOCK ensures operation is concurrent by not releasing the U lock on the row after determining
+            // it does not exist. See: http://weblogs.sqlteam.com/dang/archive/2009/01/31/UPSERT-Race-Condition-With-MERGE.aspx
             var sql = new System.Text.StringBuilder();
             sql.Append(
                 @"MERGE Subscriptions WITH (HOLDLOCK) as Target
@@ -2631,10 +2847,10 @@ namespace Fifthweek.Api.Persistence
         private static System.Collections.Generic.IReadOnlyList<string> GetFieldNames(Subscription.Fields fields, bool autoIncludePrimaryKeys = true)
         {
             var fieldNames = new System.Collections.Generic.List<string>();
-			if (autoIncludePrimaryKeys)
-			{
-				fieldNames.Add("Id");
-			}
+            if (autoIncludePrimaryKeys)
+            {
+                fieldNames.Add("Id");
+            }
 
             if (fields.HasFlag(Subscription.Fields.CreatorId))
             {
@@ -2683,8 +2899,8 @@ namespace Fifthweek.Api.Persistence
         {
             var parameters = new Dapper.DynamicParameters();
 
-			// Assume we never want to exclude primary key field(s) from our input.
-			parameters.Add("Id", entity.Id);
+            // Assume we never want to exclude primary key field(s) from our input.
+            parameters.Add("Id", entity.Id);
             if(excludeSpecified != fields.HasFlag(Subscription.Fields.CreatorId))
             {
                 parameters.Add("CreatorId", entity.CreatorId);
@@ -2742,7 +2958,7 @@ namespace Fifthweek.Api.Persistence
     using System.Text;
     public partial class WeeklyReleaseTime  : IIdentityEquatable
     {
-		public const string Table = "WeeklyReleaseTimes";
+        public const string Table = "WeeklyReleaseTimes";
 
         public WeeklyReleaseTime(
             System.Guid collectionId, 
@@ -2855,24 +3071,56 @@ namespace Fifthweek.Api.Persistence
                 transaction);
         }
 
-		public static System.Threading.Tasks.Task<bool> InsertIfAsync(
+        public static async System.Threading.Tasks.Task<bool> InsertIfAsync(
             this System.Data.Common.DbConnection connection,
             WeeklyReleaseTime entity,
             string condition,
-			bool idempotent = true,
+            bool idempotent = true,
+            System.Data.IDbTransaction transaction = null)
+        {
+            return -1 == await InsertIfAsync(connection, entity, new[] { condition }, idempotent, transaction);
+        }
+
+        public static async System.Threading.Tasks.Task<bool> InsertIfAsync(
+            this System.Data.Common.DbConnection connection,
+            WeeklyReleaseTime entity,
+            string condition,
+            string selectValuesForInsertStatement,
+            WeeklyReleaseTime.Fields selectedFields,
+            bool idempotent = true,
+            System.Data.IDbTransaction transaction = null)
+        {
+            return -1 == await InsertIfAsync(connection, entity, new[] { condition }, selectValuesForInsertStatement, selectedFields, idempotent, transaction);
+        }
+
+        public static System.Threading.Tasks.Task<int> InsertIfAsync(
+            this System.Data.Common.DbConnection connection,
+            WeeklyReleaseTime entity,
+            System.Collections.Generic.IEnumerable<string> conditions,
+            bool idempotent = true,
             System.Data.IDbTransaction transaction = null)
         {
             var sql = new System.Text.StringBuilder();
-            sql.Append("IF ");
-            sql.AppendLine(condition); // Remember to use `WITH (UPDLOCK, HOLDLOCK)` in your conditions! See: http://samsaffron.com/blog/archive/2007/04/04/14.aspx
-            sql.AppendLine("BEGIN");
-            sql.AppendLine(InsertStatement(idempotent));
-            sql.AppendLine("SELECT 1 AS InsertAttempted"); // Indicates a (potentially idempotent) insert has been performed.
-			sql.AppendLine("END");
-			sql.AppendLine("ELSE");
-			sql.AppendLine("SELECT 0 AS InsertAttempted");
+            int currentIndex = 0;
+            foreach (var condition in conditions)
+            {
+                sql.Append("IF ");
+                sql.AppendLine(condition); // Remember to use `WITH (UPDLOCK, HOLDLOCK)` in your conditions! See: http://samsaffron.com/blog/archive/2007/04/04/14.aspx
+                sql.AppendLine("BEGIN");
+                ++currentIndex;
+            }
 
-            return Dapper.SqlMapper.ExecuteScalarAsync<bool>(
+            sql.AppendLine(InsertStatement(idempotent));
+            sql.AppendLine("SELECT -1 AS InsertAttempted"); // Indicates a (potentially idempotent) insert has been performed.
+            
+            foreach (var condition in conditions)
+            {
+                sql.AppendLine("END");
+                sql.AppendLine("ELSE");
+                sql.Append("SELECT ").Append(--currentIndex).AppendLine(" AS InsertAttempted");
+            }
+
+            return Dapper.SqlMapper.ExecuteScalarAsync<int>(
                 connection,
                 sql.ToString(),
                 new 
@@ -2882,10 +3130,10 @@ namespace Fifthweek.Api.Persistence
                 transaction);
         }
 
-        public static System.Threading.Tasks.Task<bool> InsertIfAsync(
+        public static System.Threading.Tasks.Task<int> InsertIfAsync(
             this System.Data.Common.DbConnection connection,
             WeeklyReleaseTime entity,
-            string condition,
+            System.Collections.Generic.IEnumerable<string> conditions,
             string selectValuesForInsertStatement,
             WeeklyReleaseTime.Fields selectedFields,
             bool idempotent = true,
@@ -2893,16 +3141,27 @@ namespace Fifthweek.Api.Persistence
         {
             var sql = new System.Text.StringBuilder();
             sql.AppendLine(selectValuesForInsertStatement);
-            sql.Append("IF ");
-            sql.AppendLine(condition); // Remember to use `WITH (UPDLOCK, HOLDLOCK)` in your conditions! See: http://samsaffron.com/blog/archive/2007/04/04/14.aspx
-            sql.AppendLine("BEGIN");
-            sql.AppendLine(InsertStatement(idempotent));
-            sql.AppendLine("SELECT 1 AS InsertAttempted"); // Indicates a (potentially idempotent) insert has been performed.
-			sql.AppendLine("END");
-			sql.AppendLine("ELSE");
-			sql.AppendLine("SELECT 0 AS InsertAttempted");
 
-            return Dapper.SqlMapper.ExecuteScalarAsync<bool>(
+            int currentIndex = 0;
+            foreach (var condition in conditions)
+            {
+                sql.Append("IF ");
+                sql.AppendLine(condition); // Remember to use `WITH (UPDLOCK, HOLDLOCK)` in your conditions! See: http://samsaffron.com/blog/archive/2007/04/04/14.aspx
+                sql.AppendLine("BEGIN");
+                ++currentIndex;
+            }
+
+            sql.AppendLine(InsertStatement(idempotent));
+            sql.AppendLine("SELECT -1 AS InsertAttempted"); // Indicates a (potentially idempotent) insert has been performed.
+            
+            foreach (var condition in conditions)
+            {
+                sql.AppendLine("END");
+                sql.AppendLine("ELSE");
+                sql.Append("SELECT ").Append(--currentIndex).AppendLine(" AS InsertAttempted");
+            }
+
+            return Dapper.SqlMapper.ExecuteScalarAsync<int>(
                 connection,
                 sql.ToString(),
                 MaskParameters(entity, selectedFields, true),
@@ -2942,8 +3201,8 @@ namespace Fifthweek.Api.Persistence
 
         public static string UpsertStatement(WeeklyReleaseTime.Fields fields)
         {
-			// HOLDLOCK ensures operation is concurrent by not releasing the U lock on the row after determining
-			// it does not exist. See: http://weblogs.sqlteam.com/dang/archive/2009/01/31/UPSERT-Race-Condition-With-MERGE.aspx
+            // HOLDLOCK ensures operation is concurrent by not releasing the U lock on the row after determining
+            // it does not exist. See: http://weblogs.sqlteam.com/dang/archive/2009/01/31/UPSERT-Race-Condition-With-MERGE.aspx
             var sql = new System.Text.StringBuilder();
             sql.Append(
                 @"MERGE WeeklyReleaseTimes WITH (HOLDLOCK) as Target
@@ -2972,15 +3231,15 @@ namespace Fifthweek.Api.Persistence
         private static System.Collections.Generic.IReadOnlyList<string> GetFieldNames(WeeklyReleaseTime.Fields fields, bool autoIncludePrimaryKeys = true)
         {
             var fieldNames = new System.Collections.Generic.List<string>();
-			if (autoIncludePrimaryKeys)
-			{
-				fieldNames.Add("CollectionId");
-			}
+            if (autoIncludePrimaryKeys)
+            {
+                fieldNames.Add("CollectionId");
+            }
 
-			if (autoIncludePrimaryKeys)
-			{
-				fieldNames.Add("HourOfWeek");
-			}
+            if (autoIncludePrimaryKeys)
+            {
+                fieldNames.Add("HourOfWeek");
+            }
 
             return fieldNames;
         }
@@ -2989,9 +3248,9 @@ namespace Fifthweek.Api.Persistence
         {
             var parameters = new Dapper.DynamicParameters();
 
-			// Assume we never want to exclude primary key field(s) from our input.
-			parameters.Add("CollectionId", entity.CollectionId);
-			parameters.Add("HourOfWeek", entity.HourOfWeek);
+            // Assume we never want to exclude primary key field(s) from our input.
+            parameters.Add("CollectionId", entity.CollectionId);
+            parameters.Add("HourOfWeek", entity.HourOfWeek);
             return parameters;
         }
     }
@@ -3006,7 +3265,7 @@ namespace Fifthweek.Api.Persistence.Identity
     using Microsoft.AspNet.Identity.EntityFramework;
     public partial class FifthweekUser  : IIdentityEquatable
     {
-		public const string Table = "AspNetUsers";
+        public const string Table = "AspNetUsers";
 
         public FifthweekUser(
             System.Guid id)
@@ -3122,24 +3381,56 @@ namespace Fifthweek.Api.Persistence.Identity
                 transaction);
         }
 
-		public static System.Threading.Tasks.Task<bool> InsertIfAsync(
+        public static async System.Threading.Tasks.Task<bool> InsertIfAsync(
             this System.Data.Common.DbConnection connection,
             FifthweekUser entity,
             string condition,
-			bool idempotent = true,
+            bool idempotent = true,
+            System.Data.IDbTransaction transaction = null)
+        {
+            return -1 == await InsertIfAsync(connection, entity, new[] { condition }, idempotent, transaction);
+        }
+
+        public static async System.Threading.Tasks.Task<bool> InsertIfAsync(
+            this System.Data.Common.DbConnection connection,
+            FifthweekUser entity,
+            string condition,
+            string selectValuesForInsertStatement,
+            FifthweekUser.Fields selectedFields,
+            bool idempotent = true,
+            System.Data.IDbTransaction transaction = null)
+        {
+            return -1 == await InsertIfAsync(connection, entity, new[] { condition }, selectValuesForInsertStatement, selectedFields, idempotent, transaction);
+        }
+
+        public static System.Threading.Tasks.Task<int> InsertIfAsync(
+            this System.Data.Common.DbConnection connection,
+            FifthweekUser entity,
+            System.Collections.Generic.IEnumerable<string> conditions,
+            bool idempotent = true,
             System.Data.IDbTransaction transaction = null)
         {
             var sql = new System.Text.StringBuilder();
-            sql.Append("IF ");
-            sql.AppendLine(condition); // Remember to use `WITH (UPDLOCK, HOLDLOCK)` in your conditions! See: http://samsaffron.com/blog/archive/2007/04/04/14.aspx
-            sql.AppendLine("BEGIN");
-            sql.AppendLine(InsertStatement(idempotent));
-            sql.AppendLine("SELECT 1 AS InsertAttempted"); // Indicates a (potentially idempotent) insert has been performed.
-			sql.AppendLine("END");
-			sql.AppendLine("ELSE");
-			sql.AppendLine("SELECT 0 AS InsertAttempted");
+            int currentIndex = 0;
+            foreach (var condition in conditions)
+            {
+                sql.Append("IF ");
+                sql.AppendLine(condition); // Remember to use `WITH (UPDLOCK, HOLDLOCK)` in your conditions! See: http://samsaffron.com/blog/archive/2007/04/04/14.aspx
+                sql.AppendLine("BEGIN");
+                ++currentIndex;
+            }
 
-            return Dapper.SqlMapper.ExecuteScalarAsync<bool>(
+            sql.AppendLine(InsertStatement(idempotent));
+            sql.AppendLine("SELECT -1 AS InsertAttempted"); // Indicates a (potentially idempotent) insert has been performed.
+            
+            foreach (var condition in conditions)
+            {
+                sql.AppendLine("END");
+                sql.AppendLine("ELSE");
+                sql.Append("SELECT ").Append(--currentIndex).AppendLine(" AS InsertAttempted");
+            }
+
+            return Dapper.SqlMapper.ExecuteScalarAsync<int>(
                 connection,
                 sql.ToString(),
                 new 
@@ -3149,10 +3440,10 @@ namespace Fifthweek.Api.Persistence.Identity
                 transaction);
         }
 
-        public static System.Threading.Tasks.Task<bool> InsertIfAsync(
+        public static System.Threading.Tasks.Task<int> InsertIfAsync(
             this System.Data.Common.DbConnection connection,
             FifthweekUser entity,
-            string condition,
+            System.Collections.Generic.IEnumerable<string> conditions,
             string selectValuesForInsertStatement,
             FifthweekUser.Fields selectedFields,
             bool idempotent = true,
@@ -3160,16 +3451,27 @@ namespace Fifthweek.Api.Persistence.Identity
         {
             var sql = new System.Text.StringBuilder();
             sql.AppendLine(selectValuesForInsertStatement);
-            sql.Append("IF ");
-            sql.AppendLine(condition); // Remember to use `WITH (UPDLOCK, HOLDLOCK)` in your conditions! See: http://samsaffron.com/blog/archive/2007/04/04/14.aspx
-            sql.AppendLine("BEGIN");
-            sql.AppendLine(InsertStatement(idempotent));
-            sql.AppendLine("SELECT 1 AS InsertAttempted"); // Indicates a (potentially idempotent) insert has been performed.
-			sql.AppendLine("END");
-			sql.AppendLine("ELSE");
-			sql.AppendLine("SELECT 0 AS InsertAttempted");
 
-            return Dapper.SqlMapper.ExecuteScalarAsync<bool>(
+            int currentIndex = 0;
+            foreach (var condition in conditions)
+            {
+                sql.Append("IF ");
+                sql.AppendLine(condition); // Remember to use `WITH (UPDLOCK, HOLDLOCK)` in your conditions! See: http://samsaffron.com/blog/archive/2007/04/04/14.aspx
+                sql.AppendLine("BEGIN");
+                ++currentIndex;
+            }
+
+            sql.AppendLine(InsertStatement(idempotent));
+            sql.AppendLine("SELECT -1 AS InsertAttempted"); // Indicates a (potentially idempotent) insert has been performed.
+            
+            foreach (var condition in conditions)
+            {
+                sql.AppendLine("END");
+                sql.AppendLine("ELSE");
+                sql.Append("SELECT ").Append(--currentIndex).AppendLine(" AS InsertAttempted");
+            }
+
+            return Dapper.SqlMapper.ExecuteScalarAsync<int>(
                 connection,
                 sql.ToString(),
                 MaskParameters(entity, selectedFields, true),
@@ -3209,8 +3511,8 @@ namespace Fifthweek.Api.Persistence.Identity
 
         public static string UpsertStatement(FifthweekUser.Fields fields)
         {
-			// HOLDLOCK ensures operation is concurrent by not releasing the U lock on the row after determining
-			// it does not exist. See: http://weblogs.sqlteam.com/dang/archive/2009/01/31/UPSERT-Race-Condition-With-MERGE.aspx
+            // HOLDLOCK ensures operation is concurrent by not releasing the U lock on the row after determining
+            // it does not exist. See: http://weblogs.sqlteam.com/dang/archive/2009/01/31/UPSERT-Race-Condition-With-MERGE.aspx
             var sql = new System.Text.StringBuilder();
             sql.Append(
                 @"MERGE AspNetUsers WITH (HOLDLOCK) as Target
@@ -3264,10 +3566,10 @@ namespace Fifthweek.Api.Persistence.Identity
                 fieldNames.Add("ProfileImageFileId");
             }
 
-			if (autoIncludePrimaryKeys)
-			{
-				fieldNames.Add("Id");
-			}
+            if (autoIncludePrimaryKeys)
+            {
+                fieldNames.Add("Id");
+            }
 
             if (fields.HasFlag(FifthweekUser.Fields.AccessFailedCount))
             {
@@ -3331,7 +3633,7 @@ namespace Fifthweek.Api.Persistence.Identity
         {
             var parameters = new Dapper.DynamicParameters();
 
-			// Assume we never want to exclude primary key field(s) from our input.
+            // Assume we never want to exclude primary key field(s) from our input.
             if(excludeSpecified != fields.HasFlag(FifthweekUser.Fields.ExampleWork))
             {
                 parameters.Add("ExampleWork", entity.ExampleWork);
@@ -3357,7 +3659,7 @@ namespace Fifthweek.Api.Persistence.Identity
                 parameters.Add("ProfileImageFileId", entity.ProfileImageFileId);
             }
 
-			parameters.Add("Id", entity.Id);
+            parameters.Add("Id", entity.Id);
             if(excludeSpecified != fields.HasFlag(FifthweekUser.Fields.AccessFailedCount))
             {
                 parameters.Add("AccessFailedCount", entity.AccessFailedCount);

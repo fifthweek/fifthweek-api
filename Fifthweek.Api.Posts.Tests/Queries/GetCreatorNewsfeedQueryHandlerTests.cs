@@ -7,9 +7,12 @@
     using System.Threading.Tasks;
 
     using Fifthweek.Api.Channels;
+    using Fifthweek.Api.Channels.Shared;
     using Fifthweek.Api.Collections;
+    using Fifthweek.Api.Collections.Shared;
     using Fifthweek.Api.Core;
     using Fifthweek.Api.FileManagement;
+    using Fifthweek.Api.FileManagement.Shared;
     using Fifthweek.Api.Identity.Membership;
     using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.Api.Persistence;
@@ -18,17 +21,18 @@
     using Fifthweek.Api.Posts.Queries;
     using Fifthweek.Api.Posts.Shared;
     using Fifthweek.Api.Subscriptions;
+    using Fifthweek.Api.Subscriptions.Shared;
     using Fifthweek.Shared;
 
     using Microsoft.VisualStudio.TestTools.UnitTesting;
 
     using Moq;
 
-    using ChannelId = Fifthweek.Api.Channels.Shared.ChannelId;
-    using CollectionId = Fifthweek.Api.Collections.Shared.CollectionId;
-    using FileId = Fifthweek.Api.FileManagement.Shared.FileId;
-    using SubscriptionId = Fifthweek.Api.Subscriptions.Shared.SubscriptionId;
-    using UserId = Fifthweek.Api.Identity.Shared.Membership.UserId;
+    
+    
+    
+    
+    
 
     [TestClass]
     public class GetCreatorNewsfeedQueryHandlerTests : PersistenceTestsBase

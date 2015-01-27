@@ -1,12 +1,13 @@
 ﻿namespace Fifthweek.Api.Accounts.Commands
 {
     using Fifthweek.Api.FileManagement;
+    using Fifthweek.Api.FileManagement.Shared;
     using Fifthweek.Api.Identity.Membership;
     using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.CodeGeneration;
 
-    using FileId = Fifthweek.Api.FileManagement.Shared.FileId;
-    using UserId = Fifthweek.Api.Identity.Shared.Membership.UserId;
+    
+    
 
     [AutoConstructor]
     [AutoEqualityMembers]

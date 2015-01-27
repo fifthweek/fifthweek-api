@@ -5,19 +5,23 @@
     using System.Threading.Tasks;
 
     using Fifthweek.Api.Channels;
+    using Fifthweek.Api.Channels.Shared;
     using Fifthweek.Api.Collections;
+    using Fifthweek.Api.Collections.Shared;
     using Fifthweek.Api.FileManagement;
+    using Fifthweek.Api.FileManagement.Shared;
     using Fifthweek.Api.Identity.Membership;
+    using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.Api.Persistence;
     using Fifthweek.Api.Persistence.Tests.Shared;
     using Fifthweek.Api.Posts.Shared;
 
     using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-    using ChannelId = Fifthweek.Api.Channels.Shared.ChannelId;
-    using CollectionId = Fifthweek.Api.Collections.Shared.CollectionId;
-    using FileId = Fifthweek.Api.FileManagement.Shared.FileId;
-    using UserId = Fifthweek.Api.Identity.Shared.Membership.UserId;
+    
+    
+    
+    
 
     [TestClass]
     public class DeletePostDbStatementTests : PersistenceTestsBase

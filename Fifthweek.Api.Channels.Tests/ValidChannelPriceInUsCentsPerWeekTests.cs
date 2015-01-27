@@ -3,11 +3,12 @@
     using System.Collections.Generic;
 
     using Fifthweek.Api.Channels;
+    using Fifthweek.Api.Channels.Shared;
     using Fifthweek.Tests.Shared;
 
     using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-    using ValidChannelPriceInUsCentsPerWeek = Fifthweek.Api.Channels.Shared.ValidChannelPriceInUsCentsPerWeek;
+    
 
     [TestClass]
     public class ValidChannelPriceInUsCentsPerWeekTests : ValidatedPrimitiveTests<ValidChannelPriceInUsCentsPerWeek, int>

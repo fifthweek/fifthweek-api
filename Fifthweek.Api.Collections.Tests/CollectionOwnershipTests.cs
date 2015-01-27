@@ -7,11 +7,12 @@
 
     using Fifthweek.Api.Collections.Shared;
     using Fifthweek.Api.Identity.Membership;
+    using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.Api.Persistence.Tests.Shared;
 
     using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-    using UserId = Fifthweek.Api.Identity.Shared.Membership.UserId;
+    
 
     [TestClass]
     public class CollectionOwnershipTests : PersistenceTestsBase

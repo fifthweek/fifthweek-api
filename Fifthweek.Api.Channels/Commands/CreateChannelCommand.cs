@@ -4,9 +4,10 @@
     using Fifthweek.Api.Identity.Membership;
     using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.Api.Subscriptions;
+    using Fifthweek.Api.Subscriptions.Shared;
     using Fifthweek.CodeGeneration;
 
-    using SubscriptionId = Fifthweek.Api.Subscriptions.Shared.SubscriptionId;
+    
 
     [AutoConstructor, AutoEqualityMembers]
     public partial class CreateChannelCommand

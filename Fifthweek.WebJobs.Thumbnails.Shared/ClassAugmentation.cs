@@ -3,6 +3,7 @@ using System.Linq;
 
 
 
+
 namespace Fifthweek.WebJobs.Thumbnails.Shared
 {
     using System;
@@ -13,6 +14,7 @@ namespace Fifthweek.WebJobs.Thumbnails.Shared
     using Fifthweek.Shared;
     using Microsoft.WindowsAzure.Storage.Queue;
     using Newtonsoft.Json;
+    using Fifthweek.WebJobs.Files.Shared;
     public partial class CreateThumbnailMessage 
     {
         public CreateThumbnailMessage(
@@ -81,6 +83,7 @@ namespace Fifthweek.WebJobs.Thumbnails.Shared
     using Fifthweek.Shared;
     using Microsoft.WindowsAzure.Storage.Queue;
     using Newtonsoft.Json;
+    using Fifthweek.WebJobs.Files.Shared;
     public partial class CreateThumbnailMessage 
     {
         public override string ToString()
@@ -238,5 +241,4 @@ namespace Fifthweek.WebJobs.Thumbnails.Shared
     }
 
 }
-
 

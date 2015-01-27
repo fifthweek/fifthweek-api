@@ -17,7 +17,7 @@
 
     using Moq;
 
-    using UserId = Fifthweek.Api.Identity.Shared.Membership.UserId;
+    
 
     [TestClass]
     public class FileUploadControllerTests

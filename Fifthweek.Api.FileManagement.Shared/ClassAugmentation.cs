@@ -6,6 +6,7 @@ using System.Linq;
 namespace Fifthweek.Api.FileManagement.Shared
 {
     using System;
+    using System.Linq;
     using Fifthweek.CodeGeneration;
     [Newtonsoft.Json.JsonConverter(typeof(JsonConverter))]
     public partial class FileId 
@@ -55,6 +56,7 @@ namespace Fifthweek.Api.FileManagement.Shared
 namespace Fifthweek.Api.FileManagement.Shared
 {
     using System;
+    using System.Linq;
     using Fifthweek.CodeGeneration;
     public partial class FileId 
     {
@@ -75,6 +77,7 @@ namespace Fifthweek.Api.FileManagement.Shared
 namespace Fifthweek.Api.FileManagement.Shared
 {
     using System;
+    using System.Linq;
     using Fifthweek.CodeGeneration;
     public partial class FileId 
     {

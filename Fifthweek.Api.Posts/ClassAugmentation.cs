@@ -1947,6 +1947,7 @@ namespace Fifthweek.Api.Posts.Controllers
     using Fifthweek.Api.Collections.Shared;
     using Fifthweek.Api.FileManagement.Shared;
     using Fifthweek.Api.Channels.Shared;
+    using Fifthweek.Api.Identity.Shared.Membership;
     public partial class CreatorNewsfeedRequestData 
     {
         public override string ToString()
@@ -2031,6 +2032,7 @@ namespace Fifthweek.Api.Posts.Controllers
     using Fifthweek.Api.Collections.Shared;
     using Fifthweek.Api.FileManagement.Shared;
     using Fifthweek.Api.Channels.Shared;
+    using Fifthweek.Api.Identity.Shared.Membership;
     public partial class NewFileData 
     {
         public override string ToString()
@@ -2127,6 +2129,7 @@ namespace Fifthweek.Api.Posts.Controllers
     using Fifthweek.Api.Collections.Shared;
     using Fifthweek.Api.FileManagement.Shared;
     using Fifthweek.Api.Channels.Shared;
+    using Fifthweek.Api.Identity.Shared.Membership;
     public partial class NewImageData 
     {
         public override string ToString()
@@ -2223,6 +2226,7 @@ namespace Fifthweek.Api.Posts.Controllers
     using Fifthweek.Api.Collections.Shared;
     using Fifthweek.Api.FileManagement.Shared;
     using Fifthweek.Api.Channels.Shared;
+    using Fifthweek.Api.Identity.Shared.Membership;
     public partial class NewNoteData 
     {
         public override string ToString()
@@ -2438,6 +2442,7 @@ namespace Fifthweek.Api.Posts.Controllers
     using Fifthweek.Api.Collections.Shared;
     using Fifthweek.Api.FileManagement.Shared;
     using Fifthweek.Api.Channels.Shared;
+    using Fifthweek.Api.Identity.Shared.Membership;
     public partial class CreatorNewsfeedRequestData 
     {
 		[Optional]
@@ -2516,6 +2521,7 @@ namespace Fifthweek.Api.Posts.Controllers
     using Fifthweek.Api.Collections.Shared;
     using Fifthweek.Api.FileManagement.Shared;
     using Fifthweek.Api.Channels.Shared;
+    using Fifthweek.Api.Identity.Shared.Membership;
     public partial class NewFileData 
     {
 		[Optional]
@@ -2572,6 +2578,7 @@ namespace Fifthweek.Api.Posts.Controllers
     using Fifthweek.Api.Collections.Shared;
     using Fifthweek.Api.FileManagement.Shared;
     using Fifthweek.Api.Channels.Shared;
+    using Fifthweek.Api.Identity.Shared.Membership;
     public partial class NewImageData 
     {
 		[Optional]
@@ -2628,6 +2635,7 @@ namespace Fifthweek.Api.Posts.Controllers
     using Fifthweek.Api.Collections.Shared;
     using Fifthweek.Api.FileManagement.Shared;
     using Fifthweek.Api.Channels.Shared;
+    using Fifthweek.Api.Identity.Shared.Membership;
     public partial class NewNoteData 
     {
 		[Optional]

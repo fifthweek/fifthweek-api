@@ -152,8 +152,9 @@ namespace Fifthweek.Shared
 namespace Fifthweek.Shared
 {
     using System;
-    using System.Collections.Generic;
+    using System.Linq;
     using Fifthweek.CodeGeneration;
+    using System.Collections.Generic;
     public partial class NonNegativeInt 
     {
         public override string ToString()

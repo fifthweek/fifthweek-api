@@ -6,16 +6,18 @@
     using System.Threading.Tasks;
 
     using Fifthweek.Api.Channels;
+    using Fifthweek.Api.Channels.Shared;
     using Fifthweek.Api.Collections.Shared;
     using Fifthweek.Api.Identity.Membership;
+    using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.Api.Persistence;
     using Fifthweek.Api.Persistence.Tests.Shared;
     using Fifthweek.Tests.Shared;
 
     using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-    using ChannelId = Fifthweek.Api.Channels.Shared.ChannelId;
-    using UserId = Fifthweek.Api.Identity.Shared.Membership.UserId;
+    
+    
 
     [TestClass]
     public class GetCollectionWeeklyReleaseTimesDbStatementTests : PersistenceTestsBase

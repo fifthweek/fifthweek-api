@@ -8,6 +8,7 @@ namespace Fifthweek.Api.Channels.Shared
     using System;
     using Fifthweek.CodeGeneration;
     using System.Linq;
+    using System.Collections.Generic;
     [Newtonsoft.Json.JsonConverter(typeof(JsonConverter))]
     public partial class ChannelId 
     {
@@ -58,6 +59,7 @@ namespace Fifthweek.Api.Channels.Shared
     using System;
     using Fifthweek.CodeGeneration;
     using System.Linq;
+    using System.Collections.Generic;
     public partial class ChannelId 
     {
         public ChannelId(
@@ -79,6 +81,7 @@ namespace Fifthweek.Api.Channels.Shared
     using System;
     using Fifthweek.CodeGeneration;
     using System.Linq;
+    using System.Collections.Generic;
     public partial class ChannelId 
     {
         public override string ToString()
@@ -131,9 +134,9 @@ namespace Fifthweek.Api.Channels.Shared
 namespace Fifthweek.Api.Channels.Shared
 {
     using System;
-    using System.Collections.Generic;
     using System.Linq;
     using Fifthweek.CodeGeneration;
+    using System.Collections.Generic;
     public partial class ValidChannelName 
     {
         public override string ToString()
@@ -186,8 +189,9 @@ namespace Fifthweek.Api.Channels.Shared
 namespace Fifthweek.Api.Channels.Shared
 {
     using System;
-    using System.Collections.Generic;
+    using System.Linq;
     using Fifthweek.CodeGeneration;
+    using System.Collections.Generic;
     public partial class ValidChannelPriceInUsCentsPerWeek 
     {
         public override string ToString()

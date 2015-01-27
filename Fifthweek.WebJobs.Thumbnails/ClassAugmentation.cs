@@ -3,14 +3,20 @@ using System.Linq;
 
 
 
+
 namespace Fifthweek.WebJobs.Thumbnails
 {
+    using System;
+    using System.Linq;
     using System.IO;
     using System.Threading;
     using System.Threading.Tasks;
     using Fifthweek.CodeGeneration;
     using Fifthweek.WebJobs.Thumbnails.Shared;
     using ImageMagick;
+    using Fifthweek.Azure;
+    using Fifthweek.WebJobs.Shared;
+    using Microsoft.WindowsAzure.Storage.Blob;
     public partial class ThumbnailProcessor 
     {
         public ThumbnailProcessor(
@@ -26,6 +32,5 @@ namespace Fifthweek.WebJobs.Thumbnails
     }
 
 }
-
 
 

@@ -9,8 +9,6 @@
     using Fifthweek.Api.Identity.Membership;
     using Fifthweek.Api.Identity.Shared.Membership;
 
-    using UserId = Fifthweek.Api.Identity.Shared.Membership.UserId;
-
     public class UserContext : IUserContext
     {
         public Requester GetRequester()

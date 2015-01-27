@@ -1,8 +1,7 @@
 ﻿namespace Fifthweek.Api.FileManagement
 {
     using Fifthweek.Api.Identity.Membership;
-
-    using UserId = Fifthweek.Api.Identity.Shared.Membership.UserId;
+    using Fifthweek.Api.Identity.Shared.Membership;
 
     public interface IBlobLocationGenerator
     {

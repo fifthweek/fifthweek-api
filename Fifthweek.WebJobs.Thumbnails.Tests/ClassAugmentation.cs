@@ -3,6 +3,7 @@ using System.Linq;
 
 
 
+
 namespace Fifthweek.WebJobs.Thumbnails.Tests
 {
     using System;
@@ -10,6 +11,7 @@ namespace Fifthweek.WebJobs.Thumbnails.Tests
     using System.IO;
     using Fifthweek.CodeGeneration;
     using System.Collections.Generic;
+    using System.Reflection;
     public partial class SampleImage 
     {
         public SampleImage(

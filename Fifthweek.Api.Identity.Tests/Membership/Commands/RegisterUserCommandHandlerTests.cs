@@ -19,7 +19,7 @@ namespace Fifthweek.Api.Identity.Tests.Membership.Commands
 
     using Moq;
 
-    using UserId = Fifthweek.Api.Identity.Shared.Membership.UserId;
+    
 
     [TestClass]
     public class RegisterUserCommandHandlerTests
