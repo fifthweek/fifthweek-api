@@ -14,9 +14,6 @@
 
     using Moq;
 
-    
-    
-
     [TestClass]
     public class PostToCollectionDbStatementTests
     {

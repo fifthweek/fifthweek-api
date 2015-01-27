@@ -16,8 +16,6 @@
 
     using Moq;
 
-    
-
     [TestClass]
     public class MembershipControllerTests
     {

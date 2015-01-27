@@ -16,8 +16,6 @@
 
     using Moq;
 
-    
-
     [TestClass]
     public class GenerateWritableBlobUriQueryHandlerTests
     {
@@ -33,7 +31,6 @@
 
         private static readonly BlobSharedAccessInformation SharedAccessInformation =
             new BlobSharedAccessInformation(ContainerName, BlobName, Url, Signature, DateTime.UtcNow);
-
 
         private Mock<IFileSecurity> fileSecurity;
         private Mock<IBlobService> blobService;

@@ -19,8 +19,6 @@ namespace Fifthweek.Api.Identity.Tests.Membership.Commands
 
     using Moq;
 
-    
-
     [TestClass]
     public class RegisterUserCommandHandlerTests
     {

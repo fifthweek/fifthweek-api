@@ -8,8 +8,6 @@
 
     using Moq;
 
-    
-
     public static class RequesterSecurityTests
     {
         public static void SetupFor(this Mock<IRequesterSecurity> requesterSecurity, Requester requester)

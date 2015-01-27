@@ -8,8 +8,6 @@
 
     using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-    
-
     [TestClass]
     public class ValidChannelPriceInUsCentsPerWeekTests : ValidatedPrimitiveTests<ValidChannelPriceInUsCentsPerWeek, int>
     {

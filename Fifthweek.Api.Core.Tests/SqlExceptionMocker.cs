@@ -29,7 +29,6 @@
                 .GetMethod("Add", BindingFlags.NonPublic | BindingFlags.Instance)
                 .Invoke(collection, new object[] { error });
 
-
             var e = typeof(SqlException)
                 .GetMethod("CreateException", BindingFlags.NonPublic | BindingFlags.Static, null, CallingConventions.ExplicitThis, new[] { typeof(SqlErrorCollection), typeof(string) }, new ParameterModifier[] { })
                 .Invoke(null, new object[] { collection, "7.0.0" }) as SqlException;

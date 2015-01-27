@@ -13,9 +13,6 @@
     using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.CodeGeneration;
 
-    
-    
-
     [AutoConstructor]
     [RoutePrefix("accountsettings")]
     public partial class AccountSettingsController : ApiController

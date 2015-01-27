@@ -21,11 +21,6 @@
 
     using Moq;
 
-    
-    
-    
-    
-
     [TestClass]
     public class PostToCollectionDbSubStatementTests : PersistenceTestsBase
     {

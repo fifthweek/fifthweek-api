@@ -1,9 +1,6 @@
 ﻿using System;
 using System.Linq;
 
-
-
-
 namespace Fifthweek.Api.Azure
 {
     using System;

@@ -15,9 +15,6 @@
 
     using Moq;
 
-    
-    
-
     [TestClass]
     public class UpdateAccountSettingsCommandHandlerTests
     {

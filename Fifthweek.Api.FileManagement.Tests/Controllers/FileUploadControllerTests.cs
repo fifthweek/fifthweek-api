@@ -17,8 +17,6 @@
 
     using Moq;
 
-    
-
     [TestClass]
     public class FileUploadControllerTests
     {

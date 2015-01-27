@@ -17,9 +17,6 @@
 
     using Moq;
 
-    
-    
-
     [TestClass]
     public class GetNewQueuedPostLiveDateLowerBoundDbStatementTests : PersistenceTestsBase
     {

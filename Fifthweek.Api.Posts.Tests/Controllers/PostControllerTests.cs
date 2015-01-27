@@ -26,11 +26,6 @@
 
     using Moq;
 
-    
-    
-    
-    
-
     [TestClass]
     public class PostControllerTests
     {

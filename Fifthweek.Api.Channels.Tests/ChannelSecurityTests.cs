@@ -13,9 +13,6 @@
 
     using Moq;
 
-    
-    
-
     [TestClass]
     public class ChannelSecurityTests
     {

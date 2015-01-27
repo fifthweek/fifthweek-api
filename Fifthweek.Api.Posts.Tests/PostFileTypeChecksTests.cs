@@ -13,8 +13,6 @@
 
     using Moq;
 
-    
-
     [TestClass]
     public class PostFileTypeChecksTests
     {

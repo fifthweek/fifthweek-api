@@ -11,7 +11,6 @@
     using Fifthweek.Shared;
     using Fifthweek.WebJobs.Files.Shared;
 
-
     [AutoConstructor]
     public partial class CompleteFileUploadCommandHandler : ICommandHandler<CompleteFileUploadCommand>
     {

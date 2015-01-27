@@ -16,9 +16,6 @@
 
     using Moq;
 
-    
-    
-
     [TestClass]
     public class GetChannelsAndCollectionsDbStatementTests : PersistenceTestsBase
     {

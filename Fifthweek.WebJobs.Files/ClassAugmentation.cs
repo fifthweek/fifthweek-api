@@ -1,9 +1,6 @@
 ﻿using System;
 using System.Linq;
 
-
-
-
 namespace Fifthweek.WebJobs.Files
 {
     using System;

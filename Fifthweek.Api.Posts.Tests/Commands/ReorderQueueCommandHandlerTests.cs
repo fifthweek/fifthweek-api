@@ -25,10 +25,6 @@
 
     using Moq;
 
-    
-    
-    
-
     [TestClass]
     public class ReorderQueueCommandHandlerTests : PersistenceTestsBase
     {

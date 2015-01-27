@@ -28,12 +28,6 @@
 
     using Moq;
 
-    
-    
-    
-    
-    
-
     [TestClass]
     public class GetCreatorNewsfeedQueryHandlerTests : PersistenceTestsBase
     {

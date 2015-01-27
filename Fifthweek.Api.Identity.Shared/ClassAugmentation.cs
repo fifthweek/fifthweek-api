@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Linq;
 
-
-
 namespace Fifthweek.Api.Identity.Shared.Membership
 {
     using System;

@@ -14,8 +14,6 @@ namespace Fifthweek.Api.Identity.Tests.Membership.Queries
 
     using Moq;
 
-    
-
     [TestClass]
     public class IsPasswordResetTokenValidQueryHandlerTests
     {

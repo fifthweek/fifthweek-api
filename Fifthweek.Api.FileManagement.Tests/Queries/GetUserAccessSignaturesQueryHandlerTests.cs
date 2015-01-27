@@ -14,8 +14,6 @@
 
     using Moq;
 
-    
-
     [TestClass]
     public class GetUserAccessSignaturesQueryHandlerTests
     {

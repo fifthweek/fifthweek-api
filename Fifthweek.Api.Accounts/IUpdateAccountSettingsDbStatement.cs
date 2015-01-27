@@ -7,9 +7,6 @@ namespace Fifthweek.Api.Accounts
     using Fifthweek.Api.Identity.Membership;
     using Fifthweek.Api.Identity.Shared.Membership;
 
-    
-    
-
     public interface IUpdateAccountSettingsDbStatement
     {
         Task<UpdateAccountSettingsDbStatement.UpdateAccountSettingsResult> ExecuteAsync(

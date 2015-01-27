@@ -20,9 +20,6 @@
 
     using Moq;
 
-    
-    
-
     [TestClass]
     public class UpdateSubscriptionCommandHandlerTests : PersistenceTestsBase
     {

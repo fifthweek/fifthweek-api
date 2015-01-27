@@ -15,8 +15,6 @@
     using Fifthweek.Api.Subscriptions.Queries;
     using Fifthweek.CodeGeneration;
 
-    
-
     [AutoConstructor]
     [RoutePrefix("userState")]
     public partial class UserStateController : ApiController

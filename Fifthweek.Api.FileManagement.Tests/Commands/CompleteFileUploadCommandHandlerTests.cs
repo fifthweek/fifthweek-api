@@ -18,8 +18,6 @@
 
     using Moq;
 
-    
-
     [TestClass]
     public class CompleteFileUploadCommandHandlerTests
     {

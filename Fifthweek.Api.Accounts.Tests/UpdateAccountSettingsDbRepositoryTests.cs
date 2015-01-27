@@ -18,10 +18,6 @@ namespace Fifthweek.Api.Accounts.Tests
 
     using Moq;
 
-    
-    
-    
-
     [TestClass]
     public class UpdateAccountSettingsDbRepositoryTests : PersistenceTestsBase
     {

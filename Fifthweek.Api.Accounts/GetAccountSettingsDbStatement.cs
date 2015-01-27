@@ -14,10 +14,6 @@
     using Fifthweek.Api.Persistence;
     using Fifthweek.CodeGeneration;
 
-    
-    
-    
-
     [AutoConstructor]
     public partial class GetAccountSettingsDbStatement : IGetAccountSettingsDbStatement
     {

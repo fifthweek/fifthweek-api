@@ -5,8 +5,6 @@
     using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.CodeGeneration;
 
-    
-
     [AutoConstructor, AutoEqualityMembers]
     public partial class GetUserStateQuery : IQuery<UserState>
     {

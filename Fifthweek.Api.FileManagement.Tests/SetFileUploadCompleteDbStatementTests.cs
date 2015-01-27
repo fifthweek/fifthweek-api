@@ -15,8 +15,6 @@ namespace Fifthweek.Api.FileManagement.Tests
 
     using Moq;
 
-    
-
     [TestClass]
     public class SetFileUploadCompleteDbStatementTests : PersistenceTestsBase
     {

@@ -18,10 +18,6 @@
 
     using Moq;
 
-    
-    
-    
-
     [TestClass]
     public class PostImageCommandHandlerTests
     {

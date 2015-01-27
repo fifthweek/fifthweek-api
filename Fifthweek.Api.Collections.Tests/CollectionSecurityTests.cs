@@ -12,8 +12,6 @@
 
     using Moq;
 
-    
-
     [TestClass]
     public class CollectionSecurityTests
     {

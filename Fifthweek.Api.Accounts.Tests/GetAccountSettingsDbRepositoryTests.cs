@@ -17,10 +17,6 @@
 
     using Moq;
 
-    
-    
-    
-
     [TestClass]
     public class GetAccountSettingsDbRepositoryTests : PersistenceTestsBase
     {

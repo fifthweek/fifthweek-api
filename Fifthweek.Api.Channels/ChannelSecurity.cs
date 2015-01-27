@@ -8,8 +8,6 @@
     using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.CodeGeneration;
 
-    
-
     [AutoConstructor]
     public partial class ChannelSecurity : IChannelSecurity
     {

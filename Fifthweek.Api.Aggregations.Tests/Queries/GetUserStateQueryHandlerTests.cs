@@ -21,9 +21,6 @@
 
     using Moq;
 
-    
-    
-
     [TestClass]
     public class GetUserStateQueryHandlerTests
     {

@@ -19,10 +19,6 @@
 
     using Moq;
 
-    
-    
-    
-
     [TestClass]
     public class PostFileCommandHandlerTests
     {

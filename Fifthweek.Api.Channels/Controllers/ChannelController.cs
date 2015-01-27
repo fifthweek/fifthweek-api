@@ -12,6 +12,5 @@
         private readonly IUserContext userContext;
         private readonly IGuidCreator guidCreator;
 
-
     }
 }

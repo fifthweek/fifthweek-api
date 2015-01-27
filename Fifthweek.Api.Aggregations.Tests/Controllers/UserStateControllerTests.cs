@@ -22,8 +22,6 @@
 
     using Moq;
 
-    
-
     [TestClass]
     public class UserStateControllerTests
     {
