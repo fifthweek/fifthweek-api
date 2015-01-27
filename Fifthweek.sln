@@ -128,6 +128,10 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "CodeSnippets", "CodeSnippet
 		CodeSnippets\TestRequester.snippet = CodeSnippets\TestRequester.snippet
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fifthweek.Api.Channels", "Fifthweek.Api.Channels\Fifthweek.Api.Channels.csproj", "{208F4ACA-4012-466F-BC49-7E2C443D3C06}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fifthweek.Api.Channels.Tests", "Fifthweek.Api.Channels.Tests\Fifthweek.Api.Channels.Tests.csproj", "{6DF534C5-85D8-41AA-A7A3-E95A13F456BE}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -318,6 +322,14 @@ Global
 		{45E1C6C7-845A-480F-BBBC-5DF3135D1E19}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{45E1C6C7-845A-480F-BBBC-5DF3135D1E19}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{45E1C6C7-845A-480F-BBBC-5DF3135D1E19}.Release|Any CPU.Build.0 = Release|Any CPU
+		{208F4ACA-4012-466F-BC49-7E2C443D3C06}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{208F4ACA-4012-466F-BC49-7E2C443D3C06}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{208F4ACA-4012-466F-BC49-7E2C443D3C06}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{208F4ACA-4012-466F-BC49-7E2C443D3C06}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6DF534C5-85D8-41AA-A7A3-E95A13F456BE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6DF534C5-85D8-41AA-A7A3-E95A13F456BE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6DF534C5-85D8-41AA-A7A3-E95A13F456BE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6DF534C5-85D8-41AA-A7A3-E95A13F456BE}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
