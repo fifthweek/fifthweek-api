@@ -31,11 +31,11 @@
         {
             this.collectionOwnership.Setup(_ => _.IsOwnerAsync(UserId, CollectionId)).ReturnsAsync(true);
 
-            var result = await this.target.IsPostingAllowedAsync(UserId, CollectionId);
+            var result = await this.target.IsWriteAllowedAsync(UserId, CollectionId);
 
             Assert.IsTrue(result);
 
-            await this.target.AssertPostingAllowedAsync(UserId, CollectionId);
+            await this.target.AssertWriteAllowedAsync(UserId, CollectionId);
         }
 
         [TestMethod]
@@ -43,7 +43,7 @@
         {
             this.collectionOwnership.Setup(_ => _.IsOwnerAsync(UserId, CollectionId)).ReturnsAsync(false);
 
-            var result = await this.target.IsPostingAllowedAsync(UserId, CollectionId);
+            var result = await this.target.IsWriteAllowedAsync(UserId, CollectionId);
 
             Assert.IsFalse(result);
 
@@ -55,7 +55,7 @@
         {
             this.collectionOwnership.Setup(_ => _.IsOwnerAsync(UserId, CollectionId)).ReturnsAsync(false);
 
-            await this.target.AssertPostingAllowedAsync(UserId, CollectionId);
+            await this.target.AssertWriteAllowedAsync(UserId, CollectionId);
         }
     }
 }

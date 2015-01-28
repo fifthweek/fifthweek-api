@@ -12,6 +12,7 @@
                 default(Guid),
                 null,
                 "Collection " + random.Next(),
+                DateTime.UtcNow,
                 DateTime.UtcNow);
         }
 

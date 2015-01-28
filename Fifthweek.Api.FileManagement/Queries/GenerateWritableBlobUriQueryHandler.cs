@@ -22,7 +22,7 @@
 
             var userId = await this.requesterSecurity.AuthenticateAsync(query.Requester);
 
-            await this.fileSecurity.AssertUsageAllowedAsync(userId, query.FileId);
+            await this.fileSecurity.AssertReferenceAllowedAsync(userId, query.FileId);
 
             var blobLocation = this.blobLocationGenerator.GetBlobLocation(userId, query.FileId, query.Purpose);
             return await this.blobService.GetBlobSharedAccessInformationForWritingAsync(blobLocation.ContainerName, blobLocation.BlobName);

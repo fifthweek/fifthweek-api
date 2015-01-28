@@ -13,7 +13,7 @@
     public partial class TestDatabase
     {
         // Increment this when changing database seed state.
-        private const int SeedStateVersion = 6;
+        private const int SeedStateVersion = 7;
 
         private static bool migrationRequired = true;
 

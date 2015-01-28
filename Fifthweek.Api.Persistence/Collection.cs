@@ -26,5 +26,8 @@
 
         [Required]
         public DateTime QueueExclusiveLowerBound { get; set; }
+
+        [Required]
+        public DateTime CreationDate { get; set; }
     }
 }

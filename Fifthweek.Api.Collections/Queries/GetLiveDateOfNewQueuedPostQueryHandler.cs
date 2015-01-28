@@ -22,7 +22,7 @@
             var authenticatedUserId = await this.requesterSecurity.AuthenticateAsync(query.Requester);
 
             // This query is only raised when a user is about to post something, so request same privileges.
-            await this.collectionSecurity.AssertPostingAllowedAsync(authenticatedUserId, query.CollectionId);
+            await this.collectionSecurity.AssertWriteAllowedAsync(authenticatedUserId, query.CollectionId);
 
             return await this.getLiveDateOfNewQueuedPost.ExecuteAsync(query.CollectionId);
         }

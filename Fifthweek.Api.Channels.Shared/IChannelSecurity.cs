@@ -6,8 +6,8 @@ namespace Fifthweek.Api.Channels.Shared
 
     public interface IChannelSecurity
     {
-        Task<bool> IsPostingAllowedAsync(UserId requester, ChannelId channelId);
+        Task<bool> IsWriteAllowedAsync(UserId requester, ChannelId channelId);
 
-        Task AssertPostingAllowedAsync(UserId requester, ChannelId channelId);
+        Task AssertWriteAllowedAsync(UserId requester, ChannelId channelId);
     }
 }

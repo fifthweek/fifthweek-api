@@ -51,7 +51,8 @@
                 command.BasePrice.Value,
                 DateTime.UtcNow);
 
-            // Assuming no lock escalation, this transaction will hold X locks on the new rows and IX locks further up the hierarchy.
+            // Assuming no lock escalation, this transaction will hold X locks on the new rows and IX locks further up the hierarchy,
+            // so no deadlocks are to be expected.
             using (var transaction = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled))
             {
                 await this.fifthweekDbContext.Database.Connection.InsertAsync(subscription);

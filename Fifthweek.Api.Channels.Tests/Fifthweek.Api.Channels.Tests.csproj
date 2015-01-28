@@ -83,6 +83,7 @@
   <ItemGroup>
     <Compile Include="ChannelOwnershipTests.cs" />
     <Compile Include="ChannelSecurityTests.cs" />
+    <Compile Include="Commands\CreateChannelCommandHandlerTests.cs" />
     <Compile Include="Controllers\ChannelControllerTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ValidChannelNameTests.cs" />
@@ -104,6 +105,10 @@
     <ProjectReference Include="..\Fifthweek.Api.Identity.Shared\Fifthweek.Api.Identity.Shared.csproj">
       <Project>{1B07E9CC-1B0E-49D7-96D6-0F8C58A7C0CA}</Project>
       <Name>Fifthweek.Api.Identity.Shared</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Fifthweek.Api.Identity.Tests.Shared\Fifthweek.Api.Identity.Tests.Shared.csproj">
+      <Project>{45E1C6C7-845A-480F-BBBC-5DF3135D1E19}</Project>
+      <Name>Fifthweek.Api.Identity.Tests.Shared</Name>
     </ProjectReference>
     <ProjectReference Include="..\Fifthweek.Api.Persistence.Tests.Shared\Fifthweek.Api.Persistence.Tests.Shared.csproj">
       <Project>{ECDE2C4E-7DD8-4210-8E09-D5762C88B3CB}</Project>

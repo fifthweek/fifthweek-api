@@ -74,7 +74,7 @@
         [ExpectedException(typeof(UnauthorizedException))]
         public async Task WhenCalledAndTheUserDoesNotOwnTheFile_ItShouldFail()
         {
-            this.fileSecurity.Setup(v => v.AssertUsageAllowedAsync(UserId, FileId))
+            this.fileSecurity.Setup(v => v.AssertReferenceAllowedAsync(UserId, FileId))
                 .Throws(new UnauthorizedException());
 
             await this.handler.HandleAsync(new GenerateWritableBlobUriQuery(Requester, FileId, Purpose));
@@ -83,7 +83,7 @@
         [TestMethod]
         public async Task WhenCalled_ItShouldCheckPermissionsAndUpdateTheDatabase()
         {
-            this.fileSecurity.Setup(v => v.AssertUsageAllowedAsync(UserId, FileId))
+            this.fileSecurity.Setup(v => v.AssertReferenceAllowedAsync(UserId, FileId))
                 .Returns(Task.FromResult(0));
 
             this.blobNameCreator.Setup(v => v.GetBlobLocation(UserId, FileId, Purpose))

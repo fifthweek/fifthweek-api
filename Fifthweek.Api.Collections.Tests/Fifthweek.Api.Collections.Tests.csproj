@@ -90,6 +90,7 @@
   <ItemGroup>
     <Compile Include="CollectionOwnershipTests.cs" />
     <Compile Include="CollectionSecurityTests.cs" />
+    <Compile Include="Commands\CreateCollectionCommandHandlerTests.cs" />
     <Compile Include="Controllers\CollectionControllerTests.cs" />
     <Compile Include="GetChannelsAndCollectionsDbStatementTests.cs" />
     <Compile Include="GetLiveDateOfNewQueuedPostDbStatementTests.cs" />
@@ -135,6 +136,10 @@
       <Project>{9C18BEE3-FAB5-4A00-8A94-A1FAEA370175}</Project>
       <Name>Fifthweek.Api.Persistence</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Fifthweek.Api.Subscriptions.Shared\Fifthweek.Api.Subscriptions.Shared.csproj">
+      <Project>{B2D572A4-86C5-4F16-AB6A-CE87A63E08DD}</Project>
+      <Name>Fifthweek.Api.Subscriptions.Shared</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Fifthweek.Shared\Fifthweek.Shared.csproj">
       <Project>{6d12ffbb-38e9-4722-a690-0f0338538ebc}</Project>
       <Name>Fifthweek.Shared</Name>
@@ -148,9 +153,7 @@
     <None Include="app.config" />
     <None Include="packages.config" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Commands\" />
-  </ItemGroup>
+  <ItemGroup />
   <Choose>
     <When Condition="'$(VisualStudioVersion)' == '10.0' And '$(IsCodedUITest)' == 'True'">
       <ItemGroup>

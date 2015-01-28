@@ -78,7 +78,8 @@ namespace Fifthweek.Api.Persistence
             System.Guid channelId, 
             Fifthweek.Api.Persistence.Channel channel, 
             System.String name, 
-            System.DateTime queueExclusiveLowerBound)
+            System.DateTime queueExclusiveLowerBound, 
+            System.DateTime creationDate)
         {
             if (id == null)
             {
@@ -100,11 +101,17 @@ namespace Fifthweek.Api.Persistence
                 throw new ArgumentNullException("queueExclusiveLowerBound");
             }
 
+            if (creationDate == null)
+            {
+                throw new ArgumentNullException("creationDate");
+            }
+
             this.Id = id;
             this.ChannelId = channelId;
             this.Channel = channel;
             this.Name = name;
             this.QueueExclusiveLowerBound = queueExclusiveLowerBound;
+            this.CreationDate = creationDate;
         }
     }
 
@@ -468,7 +475,7 @@ namespace Fifthweek.Api.Persistence
     {
         public override string ToString()
         {
-            return string.Format("Collection({0}, {1}, \"{2}\", {3})", this.Id == null ? "null" : this.Id.ToString(), this.ChannelId == null ? "null" : this.ChannelId.ToString(), this.Name == null ? "null" : this.Name.ToString(), this.QueueExclusiveLowerBound == null ? "null" : this.QueueExclusiveLowerBound.ToString());
+            return string.Format("Collection({0}, {1}, \"{2}\", {3}, {4})", this.Id == null ? "null" : this.Id.ToString(), this.ChannelId == null ? "null" : this.ChannelId.ToString(), this.Name == null ? "null" : this.Name.ToString(), this.QueueExclusiveLowerBound == null ? "null" : this.QueueExclusiveLowerBound.ToString(), this.CreationDate == null ? "null" : this.CreationDate.ToString());
         }
 
         public override bool Equals(object obj)
@@ -500,6 +507,7 @@ namespace Fifthweek.Api.Persistence
                 hashCode = (hashCode * 397) ^ (this.ChannelId != null ? this.ChannelId.GetHashCode() : 0);
                 hashCode = (hashCode * 397) ^ (this.Name != null ? this.Name.GetHashCode() : 0);
                 hashCode = (hashCode * 397) ^ (this.QueueExclusiveLowerBound != null ? this.QueueExclusiveLowerBound.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.CreationDate != null ? this.CreationDate.GetHashCode() : 0);
                 return hashCode;
             }
         }
@@ -522,6 +530,11 @@ namespace Fifthweek.Api.Persistence
             }
 
             if (!object.Equals(this.QueueExclusiveLowerBound, other.QueueExclusiveLowerBound))
+            {
+                return false;
+            }
+
+            if (!object.Equals(this.CreationDate, other.CreationDate))
             {
                 return false;
             }
@@ -1525,7 +1538,8 @@ namespace Fifthweek.Api.Persistence
             Id = 1, 
             ChannelId = 2, 
             Name = 4, 
-            QueueExclusiveLowerBound = 8
+            QueueExclusiveLowerBound = 8, 
+            CreationDate = 16
         }
     }
 
@@ -1542,7 +1556,7 @@ namespace Fifthweek.Api.Persistence
                 InsertStatement(idempotent), 
                 entities.Select(entity => new 
                 {
-                    entity.Id, entity.ChannelId, entity.Name, entity.QueueExclusiveLowerBound
+                    entity.Id, entity.ChannelId, entity.Name, entity.QueueExclusiveLowerBound, entity.CreationDate
                 }).ToArray(),
                 transaction);
         }
@@ -1558,7 +1572,7 @@ namespace Fifthweek.Api.Persistence
                 InsertStatement(idempotent), 
                 new 
                 {
-                    entity.Id, entity.ChannelId, entity.Name, entity.QueueExclusiveLowerBound
+                    entity.Id, entity.ChannelId, entity.Name, entity.QueueExclusiveLowerBound, entity.CreationDate
                 },
                 transaction);
         }
@@ -1632,7 +1646,7 @@ namespace Fifthweek.Api.Persistence
                 sql.ToString(),
                 new 
                 {
-                    entity.Id, entity.ChannelId, entity.Name, entity.QueueExclusiveLowerBound
+                    entity.Id, entity.ChannelId, entity.Name, entity.QueueExclusiveLowerBound, entity.CreationDate
                 },
                 transaction);
         }
@@ -1686,7 +1700,7 @@ namespace Fifthweek.Api.Persistence
                 UpsertStatement(fields), 
                 new 
                 {
-                    entity.Id, entity.ChannelId, entity.Name, entity.QueueExclusiveLowerBound
+                    entity.Id, entity.ChannelId, entity.Name, entity.QueueExclusiveLowerBound, entity.CreationDate
                 },
                 transaction);
         }
@@ -1702,7 +1716,7 @@ namespace Fifthweek.Api.Persistence
 
         public static string InsertStatement(bool idempotent = true)
         {
-            const string insert = "INSERT INTO Collections(Id, ChannelId, Name, QueueExclusiveLowerBound) VALUES(@Id, @ChannelId, @Name, @QueueExclusiveLowerBound)";
+            const string insert = "INSERT INTO Collections(Id, ChannelId, Name, QueueExclusiveLowerBound, CreationDate) VALUES(@Id, @ChannelId, @Name, @QueueExclusiveLowerBound, @CreationDate)";
             return idempotent ? SqlStatementTemplates.IdempotentInsert(insert) : insert;
         }
 
@@ -1713,7 +1727,7 @@ namespace Fifthweek.Api.Persistence
             var sql = new System.Text.StringBuilder();
             sql.Append(
                 @"MERGE Collections WITH (HOLDLOCK) as Target
-                USING (VALUES (@Id, @ChannelId, @Name, @QueueExclusiveLowerBound)) AS Source (Id, ChannelId, Name, QueueExclusiveLowerBound)
+                USING (VALUES (@Id, @ChannelId, @Name, @QueueExclusiveLowerBound, @CreationDate)) AS Source (Id, ChannelId, Name, QueueExclusiveLowerBound, CreationDate)
                 ON    (Target.Id = Source.Id)
                 WHEN MATCHED THEN
                     UPDATE
@@ -1721,8 +1735,8 @@ namespace Fifthweek.Api.Persistence
             sql.AppendUpdateParameters(GetFieldNames(fields));
             sql.Append(
                 @" WHEN NOT MATCHED THEN
-                    INSERT  (Id, ChannelId, Name, QueueExclusiveLowerBound)
-                    VALUES  (Source.Id, Source.ChannelId, Source.Name, Source.QueueExclusiveLowerBound);");
+                    INSERT  (Id, ChannelId, Name, QueueExclusiveLowerBound, CreationDate)
+                    VALUES  (Source.Id, Source.ChannelId, Source.Name, Source.QueueExclusiveLowerBound, Source.CreationDate);");
             return sql.ToString();
         }
 
@@ -1758,6 +1772,11 @@ namespace Fifthweek.Api.Persistence
                 fieldNames.Add("QueueExclusiveLowerBound");
             }
 
+            if (fields.HasFlag(Collection.Fields.CreationDate))
+            {
+                fieldNames.Add("CreationDate");
+            }
+
             return fieldNames;
         }
 
@@ -1780,6 +1799,11 @@ namespace Fifthweek.Api.Persistence
             if(excludeSpecified != fields.HasFlag(Collection.Fields.QueueExclusiveLowerBound))
             {
                 parameters.Add("QueueExclusiveLowerBound", entity.QueueExclusiveLowerBound);
+            }
+
+            if(excludeSpecified != fields.HasFlag(Collection.Fields.CreationDate))
+            {
+                parameters.Add("CreationDate", entity.CreationDate);
             }
 
             return parameters;

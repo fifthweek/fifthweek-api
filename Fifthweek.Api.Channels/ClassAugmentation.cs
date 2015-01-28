@@ -159,6 +159,8 @@ namespace Fifthweek.Api.Channels.Controllers
     using Fifthweek.CodeGeneration;
     using Fifthweek.Api.Channels.Shared;
     using Fifthweek.Api.Subscriptions.Shared;
+    using System.Threading.Tasks;
+    using Fifthweek.Api.Channels.Commands;
     public partial class NewChannelData 
     {
         public NewChannelData(
@@ -188,6 +190,44 @@ namespace Fifthweek.Api.Channels.Controllers
             this.SubscriptionId = subscriptionId;
             this.Name = name;
             this.Price = price;
+        }
+    }
+
+}
+namespace Fifthweek.Api.Channels.Commands
+{
+    using System;
+    using System.Threading.Tasks;
+    using Fifthweek.Api.Core;
+    using Fifthweek.Api.Identity.Shared.Membership;
+    using Fifthweek.Api.Persistence;
+    using Fifthweek.Api.Subscriptions.Shared;
+    using Fifthweek.CodeGeneration;
+    public partial class CreateChannelCommandHandler 
+    {
+        public CreateChannelCommandHandler(
+            Fifthweek.Api.Identity.Shared.Membership.IRequesterSecurity requesterSecurity, 
+            Fifthweek.Api.Subscriptions.Shared.ISubscriptionSecurity subscriptionSecurity, 
+            Fifthweek.Api.Persistence.IFifthweekDbContext databaseContext)
+        {
+            if (requesterSecurity == null)
+            {
+                throw new ArgumentNullException("requesterSecurity");
+            }
+
+            if (subscriptionSecurity == null)
+            {
+                throw new ArgumentNullException("subscriptionSecurity");
+            }
+
+            if (databaseContext == null)
+            {
+                throw new ArgumentNullException("databaseContext");
+            }
+
+            this.requesterSecurity = requesterSecurity;
+            this.subscriptionSecurity = subscriptionSecurity;
+            this.databaseContext = databaseContext;
         }
     }
 
@@ -285,6 +325,8 @@ namespace Fifthweek.Api.Channels.Controllers
     using Fifthweek.CodeGeneration;
     using Fifthweek.Api.Channels.Shared;
     using Fifthweek.Api.Subscriptions.Shared;
+    using System.Threading.Tasks;
+    using Fifthweek.Api.Channels.Commands;
     public partial class NewChannelData 
     {
         public override string ToString()
@@ -368,6 +410,8 @@ namespace Fifthweek.Api.Channels.Controllers
     using Fifthweek.CodeGeneration;
     using Fifthweek.Api.Channels.Shared;
     using Fifthweek.Api.Subscriptions.Shared;
+    using System.Threading.Tasks;
+    using Fifthweek.Api.Channels.Commands;
     public partial class NewChannelData 
     {
 		[Optional]

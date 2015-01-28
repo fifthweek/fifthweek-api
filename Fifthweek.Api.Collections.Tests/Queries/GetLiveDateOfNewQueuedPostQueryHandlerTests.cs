@@ -51,7 +51,7 @@
         [ExpectedException(typeof(UnauthorizedException))]
         public async Task WhenNotAllowedToPost_ItShouldThrowUnauthorizedException()
         {
-            this.collectionSecurity.Setup(_ => _.AssertPostingAllowedAsync(UserId, CollectionId)).Throws<UnauthorizedException>();
+            this.collectionSecurity.Setup(_ => _.AssertWriteAllowedAsync(UserId, CollectionId)).Throws<UnauthorizedException>();
 
             await this.target.HandleAsync(new GetLiveDateOfNewQueuedPostQuery(Requester, CollectionId));
         }

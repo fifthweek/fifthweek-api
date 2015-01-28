@@ -66,7 +66,7 @@
                 Password,
                 FileId);
 
-            this.fileSecurity.Setup(v => v.AssertUsageAllowedAsync(UserId, FileId))
+            this.fileSecurity.Setup(v => v.AssertReferenceAllowedAsync(UserId, FileId))
                 .Returns(Task.FromResult(0));
 
             this.updateAccountSettings.Setup(
@@ -96,7 +96,7 @@
                 Password,
                 FileId);
 
-            this.fileSecurity.Setup(v => v.AssertUsageAllowedAsync(UserId, FileId))
+            this.fileSecurity.Setup(v => v.AssertReferenceAllowedAsync(UserId, FileId))
                 .Throws(new UnauthorizedException());
 
             await this.target.HandleAsync(command);

@@ -62,11 +62,11 @@
         {
             this.subscriptionOwnership.Setup(_ => _.IsOwnerAsync(UserId, SubscriptionId)).ReturnsAsync(true);
 
-            var result = await this.target.IsUpdateAllowedAsync(UserId, SubscriptionId);
+            var result = await this.target.IsWriteAllowedAsync(UserId, SubscriptionId);
 
             Assert.IsTrue(result);
 
-            await this.target.AssertUpdateAllowedAsync(UserId, SubscriptionId);
+            await this.target.AssertWriteAllowedAsync(UserId, SubscriptionId);
         }
 
         [TestMethod]
@@ -74,11 +74,11 @@
         {
             this.subscriptionOwnership.Setup(_ => _.IsOwnerAsync(UserId, SubscriptionId)).ReturnsAsync(false);
 
-            var result = await this.target.IsUpdateAllowedAsync(UserId, SubscriptionId);
+            var result = await this.target.IsWriteAllowedAsync(UserId, SubscriptionId);
 
             Assert.IsFalse(result);
 
-            Func<Task> badMethodCall = () => this.target.AssertUpdateAllowedAsync(UserId, SubscriptionId);
+            Func<Task> badMethodCall = () => this.target.AssertWriteAllowedAsync(UserId, SubscriptionId);
 
             await badMethodCall.AssertExceptionAsync<UnauthorizedException>();
         }

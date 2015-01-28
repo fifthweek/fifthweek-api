@@ -80,7 +80,7 @@
         {
             await this.DatabaseTestAsync(async testDatabase =>
             {
-                this.subscriptionSecurity.Setup(_ => _.AssertUpdateAllowedAsync(UserId, SubscriptionId)).Throws<UnauthorizedException>();
+                this.subscriptionSecurity.Setup(_ => _.AssertWriteAllowedAsync(UserId, SubscriptionId)).Throws<UnauthorizedException>();
                 this.target = new UpdateSubscriptionCommandHandler(this.subscriptionSecurity.Object, this.fileSecurity.Object, this.requesterSecurity.Object, testDatabase.NewContext());
                 await testDatabase.TakeSnapshotAsync();
 
@@ -97,7 +97,7 @@
         {
             await this.DatabaseTestAsync(async testDatabase =>
             {
-                this.fileSecurity.Setup(_ => _.AssertUsageAllowedAsync(UserId, HeaderImageFileId)).Throws<UnauthorizedException>();
+                this.fileSecurity.Setup(_ => _.AssertReferenceAllowedAsync(UserId, HeaderImageFileId)).Throws<UnauthorizedException>();
                 this.target = new UpdateSubscriptionCommandHandler(this.subscriptionSecurity.Object, this.fileSecurity.Object, this.requesterSecurity.Object, testDatabase.NewContext());
                 await testDatabase.TakeSnapshotAsync();
 

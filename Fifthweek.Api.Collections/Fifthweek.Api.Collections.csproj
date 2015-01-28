@@ -47,6 +47,7 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Transactions" />
     <Reference Include="System.Web.Http, Version=5.2.2.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\Microsoft.AspNet.WebApi.Core.5.2.2\lib\net45\System.Web.Http.dll</HintPath>
@@ -63,6 +64,7 @@
     <Compile Include="CollectionOwnership.cs" />
     <Compile Include="CollectionSecurity.cs" />
     <Compile Include="Commands\CreateCollectionCommand.cs" />
+    <Compile Include="Commands\CreateCollectionCommandHandler.cs" />
     <Compile Include="Controllers\CollectionController.cs" />
     <Compile Include="Controllers\NewCollectionData.cs" />
     <Compile Include="GetChannelsAndCollectionsDbStatement.cs" />

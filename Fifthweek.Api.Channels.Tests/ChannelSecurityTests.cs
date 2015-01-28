@@ -32,11 +32,11 @@
         {
             this.channelOwnership.Setup(_ => _.IsOwnerAsync(UserId, ChannelId)).ReturnsAsync(true);
 
-            var result = await this.target.IsPostingAllowedAsync(UserId, ChannelId);
+            var result = await this.target.IsWriteAllowedAsync(UserId, ChannelId);
 
             Assert.IsTrue(result);
 
-            await this.target.AssertPostingAllowedAsync(UserId, ChannelId);
+            await this.target.AssertWriteAllowedAsync(UserId, ChannelId);
         }
 
         [TestMethod]
@@ -44,7 +44,7 @@
         {
             this.channelOwnership.Setup(_ => _.IsOwnerAsync(UserId, ChannelId)).ReturnsAsync(false);
 
-            var result = await this.target.IsPostingAllowedAsync(UserId, ChannelId);
+            var result = await this.target.IsWriteAllowedAsync(UserId, ChannelId);
 
             Assert.IsFalse(result);
 
@@ -56,7 +56,7 @@
         {
             this.channelOwnership.Setup(_ => _.IsOwnerAsync(UserId, ChannelId)).ReturnsAsync(false);
 
-            await this.target.AssertPostingAllowedAsync(UserId, ChannelId);
+            await this.target.AssertWriteAllowedAsync(UserId, ChannelId);
         }
     }
 }

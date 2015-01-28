@@ -6,8 +6,8 @@ namespace Fifthweek.Api.FileManagement.Shared
 
     public interface IFileSecurity
     {
-        Task<bool> IsUsageAllowedAsync(UserId requester, FileId fileId);
+        Task<bool> IsReferenceAllowedAsync(UserId requester, FileId fileId);
 
-        Task AssertUsageAllowedAsync(UserId requester, FileId fileId);
+        Task AssertReferenceAllowedAsync(UserId requester, FileId fileId);
     }
 }

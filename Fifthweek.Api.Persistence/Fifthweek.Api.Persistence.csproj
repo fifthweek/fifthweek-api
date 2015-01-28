@@ -206,6 +206,10 @@
     <Compile Include="Migrations\201501212049537_AddNameFieldToChannels.Designer.cs">
       <DependentUpon>201501212049537_AddNameFieldToChannels.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201501281033006_AddCreationDateToCollections.cs" />
+    <Compile Include="Migrations\201501281033006_AddCreationDateToCollections.Designer.cs">
+      <DependentUpon>201501281033006_AddCreationDateToCollections.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Post.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -315,6 +319,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201501212049537_AddNameFieldToChannels.resx">
       <DependentUpon>201501212049537_AddNameFieldToChannels.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201501281033006_AddCreationDateToCollections.resx">
+      <DependentUpon>201501281033006_AddCreationDateToCollections.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>

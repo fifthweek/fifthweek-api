@@ -24,9 +24,9 @@
 
             var authenticatedUserId = await this.requesterSecurity.AuthenticateAsync(command.Requester);
 
-            await this.subscriptionSecurity.AssertUpdateAllowedAsync(authenticatedUserId, command.SubscriptionId);
+            await this.subscriptionSecurity.AssertWriteAllowedAsync(authenticatedUserId, command.SubscriptionId);
 
-            await this.fileSecurity.AssertUsageAllowedAsync(authenticatedUserId, command.HeaderImageFileId);
+            await this.fileSecurity.AssertReferenceAllowedAsync(authenticatedUserId, command.HeaderImageFileId);
             
             await this.UpdateSubscriptionAsync(command);
         }

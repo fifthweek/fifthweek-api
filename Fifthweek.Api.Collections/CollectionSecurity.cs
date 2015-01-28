@@ -12,7 +12,7 @@
     {
         private readonly ICollectionOwnership collectionOwnership;
 
-        public Task<bool> IsPostingAllowedAsync(UserId requester, Shared.CollectionId collectionId)
+        public Task<bool> IsWriteAllowedAsync(UserId requester, Shared.CollectionId collectionId)
         {
             requester.AssertNotNull("requester");
             collectionId.AssertNotNull("collectionId");
@@ -20,15 +20,15 @@
             return this.collectionOwnership.IsOwnerAsync(requester, collectionId);
         }
 
-        public async Task AssertPostingAllowedAsync(UserId requester, Shared.CollectionId collectionId)
+        public async Task AssertWriteAllowedAsync(UserId requester, Shared.CollectionId collectionId)
         {
             requester.AssertNotNull("requester");
             collectionId.AssertNotNull("collectionId");
 
-            var isPostingAllowed = await this.IsPostingAllowedAsync(requester, collectionId);
-            if (!isPostingAllowed)
+            var isWriteAllowed = await this.IsWriteAllowedAsync(requester, collectionId);
+            if (!isWriteAllowed)
             {
-                throw new UnauthorizedException(string.Format("Not allowed to post to collection. {0} {1}", requester, collectionId));
+                throw new UnauthorizedException(string.Format("Not allowed to write to collection. {0} {1}", requester, collectionId));
             }
         }
     }

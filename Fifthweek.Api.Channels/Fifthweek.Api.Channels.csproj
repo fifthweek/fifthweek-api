@@ -76,6 +76,7 @@
       <DesignTime>True</DesignTime>
     </Compile>
     <Compile Include="Commands\CreateChannelCommand.cs" />
+    <Compile Include="Commands\CreateChannelCommandHandler.cs" />
     <Compile Include="Controllers\ChannelController.cs" />
     <Compile Include="Controllers\NewChannelData.cs" />
     <Compile Include="IChannelOwnership.cs" />

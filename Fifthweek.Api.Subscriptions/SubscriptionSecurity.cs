@@ -22,7 +22,7 @@ namespace Fifthweek.Api.Subscriptions
             return this.userManager.IsInRoleAsync(requester.Value, FifthweekRole.Creator);
         }
 
-        public Task<bool> IsUpdateAllowedAsync(UserId requester, Shared.SubscriptionId subscriptionId)
+        public Task<bool> IsWriteAllowedAsync(UserId requester, Shared.SubscriptionId subscriptionId)
         {
             requester.AssertNotNull("requester");
             subscriptionId.AssertNotNull("subscriptionId");
@@ -41,12 +41,12 @@ namespace Fifthweek.Api.Subscriptions
             }
         }
 
-        public async Task AssertUpdateAllowedAsync(UserId requester, Shared.SubscriptionId subscriptionId)
+        public async Task AssertWriteAllowedAsync(UserId requester, Shared.SubscriptionId subscriptionId)
         {
             requester.AssertNotNull("requester");
             subscriptionId.AssertNotNull("subscriptionId");
 
-            var isUpdateAllowed = await this.IsUpdateAllowedAsync(requester, subscriptionId);
+            var isUpdateAllowed = await this.IsWriteAllowedAsync(requester, subscriptionId);
             if (!isUpdateAllowed)
             {
                 throw new UnauthorizedException(string.Format("Not allowed to update subscription. {0} {1}", requester, subscriptionId));

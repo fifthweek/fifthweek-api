@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CodeSnippets xmlns="http://schemas.microsoft.com/VisualStudio/2005/CodeSnippet">
+    <CodeSnippet Format="1.0.0">
+      <Header>
+        <Title>Test Class (Command Handler)</Title>
+        <Description>Test scaffolding</Description>
+			  <Shortcut>testcc</Shortcut>
+      </Header>
+        <Snippet>
+          <Declarations>
+            <Literal>
+              <ID>TargetType</ID>
+              <ToolTip>Replace with target type.</ToolTip>
+              <Default>Awesome</Default>
+            </Literal>
+          </Declarations>
+          <Code Language="csharp">
+                <![CDATA[using System;
+using System.Threading.Tasks;
+
+using Fifthweek.Api.Core;
+using Fifthweek.Api.Identity.Shared.Membership;
+using Fifthweek.Api.Identity.Tests.Shared.Membership;
+using Fifthweek.Shared;
+
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+
+using Moq;
+
+[TestClass]
+public class $TargetType$Tests
+{
+    private static readonly UserId UserId = new UserId(Guid.NewGuid());
+    private static readonly Requester Requester = Requester.Authenticated(UserId);
+        
+    private $TargetType$ target;
+
+    [TestInitialize]
+    public void Initialize()
+    {
+        this.requesterSecurity = new Mock<IRequesterSecurity>();
+        this.requesterSecurity.SetupFor(Requester);
+            
+        this.target = new $TargetType$(this.requesterSecurity.Object);
+    }
+    
+    [TestMethod]
+    [ExpectedException(typeof(ArgumentNullException))]
+    public async Task ItShouldRequireCommand()
+    {
+        await this.target.HandleAsync(null);
+    }
+
+    [TestMethod]
+    [ExpectedException(typeof(UnauthorizedException))]
+    public async Task ItShouldRequireUserIsAuthenticated()
+    {
+        await this.target.HandleAsync(new CreateCollectionCommand(Requester.Unauthenticated, CollectionId, ChannelId, Name));
+    }
+    
+    [TestMethod]
+    public async Task ItShould()
+    {
+    
+    }
+}]]>
+          </Code>
+        </Snippet>
+    </CodeSnippet>
+</CodeSnippets>

@@ -63,7 +63,7 @@
         [ExpectedException(typeof(UnauthorizedException))]
         public async Task WhenNotAllowedToPost_ItShouldThrowUnauthorizedException()
         {
-            this.channelSecurity.Setup(_ => _.AssertPostingAllowedAsync(UserId, ChannelId)).Throws<UnauthorizedException>();
+            this.channelSecurity.Setup(_ => _.AssertWriteAllowedAsync(UserId, ChannelId)).Throws<UnauthorizedException>();
 
             await this.target.HandleAsync(Command);
         }

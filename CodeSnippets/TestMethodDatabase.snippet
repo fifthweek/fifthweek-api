@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CodeSnippets xmlns="http://schemas.microsoft.com/VisualStudio/2005/CodeSnippet">
+    <CodeSnippet Format="1.0.0">
+      <Header>
+        <Title>Test Method (Database)</Title>
+        <Description>Test scaffolding for database method</Description>
+			  <Shortcut>testd</Shortcut>
+      </Header>
+        <Snippet>
+          <Code Language="csharp">
+                <![CDATA[ [TestMethod]
+public async Task ItShouldHaveNoEffect()
+{
+    await this.DatabaseTestAsync(async testDatabase =>
+    {
+        this.InitializeTarget(testDatabase.NewContext());
+        await this.CreateEntitiesAsync(testDatabase);
+        await testDatabase.TakeSnapshotAsync();
+
+        await this.target.ExecuteAsync();
+
+        return ExpectedSideEffects.None;
+    });
+}
+
+private async Task CreateEntitiesAsync(TestDatabaseContext testDatabase)
+{
+    using (var databaseContext = testDatabase.NewContext())
+    {
+        
+    }
+}]]>
+          </Code>
+        </Snippet>
+    </CodeSnippet>
+</CodeSnippets>

@@ -23,7 +23,7 @@
             
             if (command.NewProfileImageId != null)
             {
-                await this.fileSecurity.AssertUsageAllowedAsync(userId, command.NewProfileImageId);
+                await this.fileSecurity.AssertReferenceAllowedAsync(userId, command.NewProfileImageId);
             }
 
             var result = await this.updateAccountSettings.ExecuteAsync(

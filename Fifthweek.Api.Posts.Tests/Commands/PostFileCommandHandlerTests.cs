@@ -69,7 +69,7 @@
         [ExpectedException(typeof(UnauthorizedException))]
         public async Task WhenNotAllowedToPost_ItShouldThrowUnauthorizedException()
         {
-            this.collectionSecurity.Setup(_ => _.AssertPostingAllowedAsync(UserId, CollectionId)).Throws<UnauthorizedException>();
+            this.collectionSecurity.Setup(_ => _.AssertWriteAllowedAsync(UserId, CollectionId)).Throws<UnauthorizedException>();
 
             await this.target.HandleAsync(Command);
         }
@@ -78,7 +78,7 @@
         [ExpectedException(typeof(UnauthorizedException))]
         public async Task WhenNotAllowedToUseFile_ItShouldThrowUnauthorizedException()
         {
-            this.fileSecurity.Setup(_ => _.AssertUsageAllowedAsync(UserId, FileId)).Throws<UnauthorizedException>();
+            this.fileSecurity.Setup(_ => _.AssertReferenceAllowedAsync(UserId, FileId)).Throws<UnauthorizedException>();
 
             await this.target.HandleAsync(Command);
         }

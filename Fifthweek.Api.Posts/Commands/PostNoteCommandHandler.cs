@@ -22,7 +22,7 @@
 
             var authenticatedUserId = await this.requesterSecurity.AuthenticateAsync(command.Requester);
 
-            await this.channelSecurity.AssertPostingAllowedAsync(authenticatedUserId, command.ChannelId);
+            await this.channelSecurity.AssertWriteAllowedAsync(authenticatedUserId, command.ChannelId);
 
             await this.SchedulePostAsync(command);
         }

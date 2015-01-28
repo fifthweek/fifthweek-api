@@ -6,8 +6,8 @@ namespace Fifthweek.Api.Collections.Shared
 
     public interface ICollectionSecurity
     {
-        Task<bool> IsPostingAllowedAsync(UserId requester, CollectionId collectionId);
+        Task<bool> IsWriteAllowedAsync(UserId requester, CollectionId collectionId);
 
-        Task AssertPostingAllowedAsync(UserId requester, CollectionId collectionId);
+        Task AssertWriteAllowedAsync(UserId requester, CollectionId collectionId);
     }
 }

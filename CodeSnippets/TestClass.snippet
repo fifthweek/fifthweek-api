@@ -2,7 +2,7 @@
 <CodeSnippets xmlns="http://schemas.microsoft.com/VisualStudio/2005/CodeSnippet">
     <CodeSnippet Format="1.0.0">
       <Header>
-        <Title>Test Class</Title>
+        <Title>Test Class (Good One)</Title>
         <Description>Test scaffolding</Description>
 			  <Shortcut>testc</Shortcut>
       </Header>
@@ -15,7 +15,14 @@
             </Literal>
           </Declarations>
           <Code Language="csharp">
-                <![CDATA[[TestClass]
+                <![CDATA[using System;
+using System.Threading.Tasks;
+
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+
+using Moq;
+
+[TestClass]
 public class $TargetType$Tests
 {
     private $TargetType$ target;

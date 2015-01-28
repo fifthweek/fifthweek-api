@@ -12,7 +12,7 @@
     {
         private readonly IFileOwnership fileOwnership;
 
-        public Task<bool> IsUsageAllowedAsync(UserId requester, Shared.FileId fileId)
+        public Task<bool> IsReferenceAllowedAsync(UserId requester, Shared.FileId fileId)
         {
             requester.AssertNotNull("requester");
             fileId.AssertNotNull("fileId");
@@ -20,16 +20,16 @@
             return this.fileOwnership.IsOwnerAsync(requester, fileId);
         }
 
-        public async Task AssertUsageAllowedAsync(UserId requester, Shared.FileId fileId)
+        public async Task AssertReferenceAllowedAsync(UserId requester, Shared.FileId fileId)
         {
             requester.AssertNotNull("requester");
             fileId.AssertNotNull("fileId");
 
-            var isUsageAllowed = await this.IsUsageAllowedAsync(requester, fileId);
+            var isUsageAllowed = await this.IsReferenceAllowedAsync(requester, fileId);
 
             if (!isUsageAllowed)
             {
-                throw new UnauthorizedException("The user " + requester.Value + " does not have permission to access file " + fileId.Value);
+                throw new UnauthorizedException("The user " + requester.Value + " does not have permission to reference file " + fileId.Value);
             }
         }
     }

@@ -574,6 +574,54 @@ namespace Fifthweek.Api.Collections.Queries
     }
 
 }
+namespace Fifthweek.Api.Collections.Commands
+{
+    using System;
+    using System.Threading.Tasks;
+    using System.Transactions;
+    using Fifthweek.Api.Channels.Shared;
+    using Fifthweek.Api.Collections.Shared;
+    using Fifthweek.Api.Core;
+    using Fifthweek.Api.Identity.Shared.Membership;
+    using Fifthweek.Api.Persistence;
+    using Fifthweek.CodeGeneration;
+    using Fifthweek.Shared;
+    public partial class CreateCollectionCommandHandler 
+    {
+        public CreateCollectionCommandHandler(
+            Fifthweek.Api.Identity.Shared.Membership.IRequesterSecurity requesterSecurity, 
+            Fifthweek.Api.Channels.Shared.IChannelSecurity channelSecurity, 
+            Fifthweek.Api.Persistence.IFifthweekDbContext databaseContext, 
+            Fifthweek.Shared.IRandom random)
+        {
+            if (requesterSecurity == null)
+            {
+                throw new ArgumentNullException("requesterSecurity");
+            }
+
+            if (channelSecurity == null)
+            {
+                throw new ArgumentNullException("channelSecurity");
+            }
+
+            if (databaseContext == null)
+            {
+                throw new ArgumentNullException("databaseContext");
+            }
+
+            if (random == null)
+            {
+                throw new ArgumentNullException("random");
+            }
+
+            this.requesterSecurity = requesterSecurity;
+            this.channelSecurity = channelSecurity;
+            this.databaseContext = databaseContext;
+            this.random = random;
+        }
+    }
+
+}
 
 namespace Fifthweek.Api.Collections.Commands
 {

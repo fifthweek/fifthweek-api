@@ -24,9 +24,9 @@
 
             var authenticatedUserId = await this.requesterSecurity.AuthenticateAsync(command.Requester);
 
-            await this.collectionSecurity.AssertPostingAllowedAsync(authenticatedUserId, command.CollectionId);
+            await this.collectionSecurity.AssertWriteAllowedAsync(authenticatedUserId, command.CollectionId);
 
-            await this.fileSecurity.AssertUsageAllowedAsync(authenticatedUserId, command.FileId);
+            await this.fileSecurity.AssertReferenceAllowedAsync(authenticatedUserId, command.FileId);
 
             await this.postFileTypeChecks.AssertValidForFilePostAsync(command.FileId);
 

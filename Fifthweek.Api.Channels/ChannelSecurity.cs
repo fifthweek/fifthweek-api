@@ -12,7 +12,7 @@
     {
         private readonly IChannelOwnership channelOwnership;
 
-        public Task<bool> IsPostingAllowedAsync(UserId requester, Shared.ChannelId channelId)
+        public Task<bool> IsWriteAllowedAsync(UserId requester, Shared.ChannelId channelId)
         {
             requester.AssertNotNull("requester");
             channelId.AssertNotNull("channelId");
@@ -20,15 +20,15 @@
             return this.channelOwnership.IsOwnerAsync(requester, channelId);
         }
 
-        public async Task AssertPostingAllowedAsync(UserId requester, Shared.ChannelId channelId)
+        public async Task AssertWriteAllowedAsync(UserId requester, Shared.ChannelId channelId)
         {
             requester.AssertNotNull("requester");
             channelId.AssertNotNull("channelId");
 
-            var isPostingAllowed = await this.IsPostingAllowedAsync(requester, channelId);
-            if (!isPostingAllowed)
+            var isWriteAllowed = await this.IsWriteAllowedAsync(requester, channelId);
+            if (!isWriteAllowed)
             {
-                throw new UnauthorizedException(string.Format("Not allowed to post to channel. {0} {1}", requester, channelId));
+                throw new UnauthorizedException(string.Format("Not allowed to write to channel. {0} {1}", requester, channelId));
             }
         }
     }

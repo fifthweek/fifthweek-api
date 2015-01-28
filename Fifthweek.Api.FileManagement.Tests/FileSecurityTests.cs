@@ -33,11 +33,11 @@
         {
             this.fileOwnership.Setup(_ => _.IsOwnerAsync(UserId, FileId)).ReturnsAsync(true);
 
-            var result = await this.target.IsUsageAllowedAsync(UserId, FileId);
+            var result = await this.target.IsReferenceAllowedAsync(UserId, FileId);
 
             Assert.IsTrue(result);
 
-            await this.target.AssertUsageAllowedAsync(UserId, FileId);
+            await this.target.AssertReferenceAllowedAsync(UserId, FileId);
         }
 
         [TestMethod]
@@ -45,11 +45,11 @@
         {
             this.fileOwnership.Setup(_ => _.IsOwnerAsync(UserId, FileId)).ReturnsAsync(false);
 
-            var result = await this.target.IsUsageAllowedAsync(UserId, FileId);
+            var result = await this.target.IsReferenceAllowedAsync(UserId, FileId);
 
             Assert.IsFalse(result);
 
-            Func<Task> badMethodCall = () => this.target.AssertUsageAllowedAsync(UserId, FileId);
+            Func<Task> badMethodCall = () => this.target.AssertReferenceAllowedAsync(UserId, FileId);
 
             await badMethodCall.AssertExceptionAsync<UnauthorizedException>();
         }
