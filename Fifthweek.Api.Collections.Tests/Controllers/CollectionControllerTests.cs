@@ -51,13 +51,14 @@
         [TestMethod]
         public async Task WhenPostingCollection_ItShouldIssueCreateCollectionCommand()
         {
+            var data = new NewCollectionData(null, ChannelId, CollectionName.Value);
             var command = new CreateCollectionCommand(Requester, CollectionId, ChannelId, CollectionName);
 
             this.requesterContext.Setup(_ => _.GetRequester()).Returns(Requester);
             this.guidCreator.Setup(_ => _.CreateSqlSequential()).Returns(CollectionId.Value);
             this.createCollection.Setup(_ => _.HandleAsync(command)).Returns(Task.FromResult(0)).Verifiable();
 
-            var result = await this.target.PostCollectionAsync(new NewCollectionData(null, ChannelId, CollectionName.Value));
+            var result = await this.target.PostCollectionAsync(data);
 
             Assert.AreEqual(result, CollectionId);
             this.createCollection.Verify();

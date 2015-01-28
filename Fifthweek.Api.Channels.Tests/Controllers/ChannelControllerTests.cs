@@ -2,6 +2,7 @@
 {
     using System;
     using System.Threading.Tasks;
+    using System.Web.Http.Results;
 
     using Fifthweek.Api.Channels.Commands;
     using Fifthweek.Api.Channels.Controllers;
@@ -43,13 +44,14 @@
         [TestMethod]
         public async Task WhenPostingChannel_ItShouldIssueCreateChannelCommand()
         {
+            var data = new NewChannelData(null, null, SubscriptionId, ChannelName.Value, Price.Value);
             var command = new CreateChannelCommand(Requester, ChannelId, SubscriptionId, ChannelName, Price);
 
             this.requesterContext.Setup(_ => _.GetRequester()).Returns(Requester);
             this.guidCreator.Setup(_ => _.CreateSqlSequential()).Returns(ChannelId.Value);
             this.createChannel.Setup(_ => _.HandleAsync(command)).Returns(Task.FromResult(0)).Verifiable();
 
-            var result = await this.target.PostChannelAsync(new NewChannelData(null, null, SubscriptionId, ChannelName.Value, Price.Value));
+            var result = await this.target.PostChannelAsync(data);
 
             Assert.AreEqual(result, ChannelId);
             this.createChannel.Verify();
@@ -60,6 +62,36 @@
         public async Task WhenPostingChannelWithoutSpecifyingChannel_ItShouldThrowBadRequestException()
         {
             await this.target.PostChannelAsync(null);
+        }
+
+
+        [TestMethod]
+        public async Task WhenPuttingChannel_ItShouldIssueUpdateChannelCommand()
+        {
+            var data = new UpdatedChannelData(ChannelName.Value, Price.Value, true);
+            var command = new UpdateChannelCommand(Requester, ChannelId, ChannelName, Price, true);
+
+            this.requesterContext.Setup(v => v.GetRequester()).Returns(Requester);
+            this.updateChannel.Setup(v => v.HandleAsync(command)).Returns(Task.FromResult(0)).Verifiable();
+
+            var result = await this.target.PutChannelAsync(ChannelId.Value.EncodeGuid(), data);
+
+            Assert.IsInstanceOfType(result, typeof(OkResult));
+            this.updateChannel.Verify();
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(BadRequestException))]
+        public async Task WhenPuttingChannelWithoutSpecifyingChannelId_ItShouldThrowBadRequestException()
+        {
+            await this.target.PutChannelAsync(string.Empty, new UpdatedChannelData());
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(BadRequestException))]
+        public async Task WhenPuttingChannelWithoutSpecifyingChannelBody_ItShouldThrowBadRequestException()
+        {
+            await this.target.PutChannelAsync(ChannelId.Value.EncodeGuid(), null);
         }
     }
 }

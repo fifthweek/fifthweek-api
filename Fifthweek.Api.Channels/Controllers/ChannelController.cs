@@ -36,5 +36,26 @@
 
             return newChannelId;
         }
+
+        [Route("{channelId}")]
+        public async Task<IHttpActionResult> PutChannelAsync(string channelId, [FromBody]UpdatedChannelData channel)
+        {
+            channelId.AssertUrlParameterProvided("channelId");
+            channel.AssertBodyProvided("channel");
+            channel.Parse();
+
+            var requester = this.requesterContext.GetRequester();
+            var channelIdObject = new ChannelId(channelId.DecodeGuid());
+
+            await this.updateChannel.HandleAsync(
+                new UpdateChannelCommand(
+                    requester,
+                    channelIdObject,
+                    channel.NameObject,
+                    channel.PriceObject,
+                    channel.IsVisibleToNonSubscribers));
+
+            return this.Ok();
+        }
     }
 }

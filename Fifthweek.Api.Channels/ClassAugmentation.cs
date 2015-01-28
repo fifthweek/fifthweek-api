@@ -303,12 +303,15 @@ namespace Fifthweek.Api.Channels.Commands
 namespace Fifthweek.Api.Channels.Commands
 {
     using System;
-    using System.Threading.Tasks;
+    using System.Linq;
     using Fifthweek.Api.Channels.Shared;
-    using Fifthweek.Api.Core;
     using Fifthweek.Api.Identity.Shared.Membership;
-    using Fifthweek.Api.Persistence;
+    using Fifthweek.Api.Subscriptions;
+    using Fifthweek.Api.Subscriptions.Shared;
     using Fifthweek.CodeGeneration;
+    using System.Threading.Tasks;
+    using Fifthweek.Api.Core;
+    using Fifthweek.Api.Persistence;
     public partial class UpdateChannelCommandHandler 
     {
         public UpdateChannelCommandHandler(
@@ -334,6 +337,39 @@ namespace Fifthweek.Api.Channels.Commands
             this.requesterSecurity = requesterSecurity;
             this.channelSecurity = channelSecurity;
             this.databaseContext = databaseContext;
+        }
+    }
+
+}
+namespace Fifthweek.Api.Channels.Controllers
+{
+    using Fifthweek.Api.Channels.Shared;
+    using Fifthweek.CodeGeneration;
+    public partial class UpdatedChannelData 
+    {
+        public UpdatedChannelData(
+            System.String name, 
+            System.Int32 price, 
+            System.Boolean isVisibleToNonSubscribers)
+        {
+            if (name == null)
+            {
+                throw new ArgumentNullException("name");
+            }
+
+            if (price == null)
+            {
+                throw new ArgumentNullException("price");
+            }
+
+            if (isVisibleToNonSubscribers == null)
+            {
+                throw new ArgumentNullException("isVisibleToNonSubscribers");
+            }
+
+            this.Name = name;
+            this.Price = price;
+            this.IsVisibleToNonSubscribers = isVisibleToNonSubscribers;
         }
     }
 
@@ -596,6 +632,71 @@ namespace Fifthweek.Api.Channels.Commands
 }
 namespace Fifthweek.Api.Channels.Controllers
 {
+    using Fifthweek.Api.Channels.Shared;
+    using Fifthweek.CodeGeneration;
+    public partial class UpdatedChannelData 
+    {
+        public override string ToString()
+        {
+            return string.Format("UpdatedChannelData(\"{0}\", {1}, {2})", this.Name == null ? "null" : this.Name.ToString(), this.Price == null ? "null" : this.Price.ToString(), this.IsVisibleToNonSubscribers == null ? "null" : this.IsVisibleToNonSubscribers.ToString());
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj))
+            {
+                return false;
+            }
+
+            if (ReferenceEquals(this, obj))
+            {
+                return true;
+            }
+
+            if (obj.GetType() != this.GetType())
+            {
+                return false;
+            }
+
+            return this.Equals((UpdatedChannelData)obj);
+        }
+
+        public override int GetHashCode()
+        {
+            unchecked
+            {
+                int hashCode = 0;
+                hashCode = (hashCode * 397) ^ (this.Name != null ? this.Name.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.Price != null ? this.Price.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.IsVisibleToNonSubscribers != null ? this.IsVisibleToNonSubscribers.GetHashCode() : 0);
+                return hashCode;
+            }
+        }
+
+        protected bool Equals(UpdatedChannelData other)
+        {
+            if (!object.Equals(this.Name, other.Name))
+            {
+                return false;
+            }
+
+            if (!object.Equals(this.Price, other.Price))
+            {
+                return false;
+            }
+
+            if (!object.Equals(this.IsVisibleToNonSubscribers, other.IsVisibleToNonSubscribers))
+            {
+                return false;
+            }
+
+            return true;
+        }
+    }
+
+}
+namespace Fifthweek.Api.Channels.Controllers
+{
     using System;
     using System.Linq;
     using System.Web.Http;
@@ -617,6 +718,71 @@ namespace Fifthweek.Api.Channels.Controllers
     public static partial class NewChannelDataExtensions
     {
         public static void Parse(this NewChannelData target)
+        {
+            var modelStateDictionary = new System.Web.Http.ModelBinding.ModelStateDictionary();
+
+            if (true || !ValidChannelName.IsEmpty(target.Name))
+            {
+                ValidChannelName @object;
+                System.Collections.Generic.IReadOnlyCollection<string> errorMessages;
+                if (ValidChannelName.TryParse(target.Name, out @object, out errorMessages))
+                {
+                    target.NameObject = @object;
+                }
+                else
+                {
+                    var modelState = new System.Web.Http.ModelBinding.ModelState();
+                    foreach (var errorMessage in errorMessages)
+                    {
+                        modelState.Errors.Add(errorMessage);
+                    }
+
+                    modelStateDictionary.Add("Name", modelState);
+                }
+            }
+
+            if (true || !ValidChannelPriceInUsCentsPerWeek.IsEmpty(target.Price))
+            {
+                ValidChannelPriceInUsCentsPerWeek @object;
+                System.Collections.Generic.IReadOnlyCollection<string> errorMessages;
+                if (ValidChannelPriceInUsCentsPerWeek.TryParse(target.Price, out @object, out errorMessages))
+                {
+                    target.PriceObject = @object;
+                }
+                else
+                {
+                    var modelState = new System.Web.Http.ModelBinding.ModelState();
+                    foreach (var errorMessage in errorMessages)
+                    {
+                        modelState.Errors.Add(errorMessage);
+                    }
+
+                    modelStateDictionary.Add("Price", modelState);
+                }
+            }
+
+            if (!modelStateDictionary.IsValid)
+            {
+                throw new Fifthweek.Api.Core.ModelValidationException(modelStateDictionary);
+            }
+        }    
+    }
+}
+namespace Fifthweek.Api.Channels.Controllers
+{
+    using Fifthweek.Api.Channels.Shared;
+    using Fifthweek.CodeGeneration;
+    public partial class UpdatedChannelData 
+    {
+		[Optional]
+        public ValidChannelName NameObject { get; set; }
+		[Optional]
+        public ValidChannelPriceInUsCentsPerWeek PriceObject { get; set; }
+    }
+
+    public static partial class UpdatedChannelDataExtensions
+    {
+        public static void Parse(this UpdatedChannelData target)
         {
             var modelStateDictionary = new System.Web.Http.ModelBinding.ModelStateDictionary();
 
