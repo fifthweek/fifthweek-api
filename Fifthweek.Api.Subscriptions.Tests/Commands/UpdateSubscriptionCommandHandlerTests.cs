@@ -115,7 +115,7 @@
             await this.DatabaseTestAsync(async testDatabase =>
             {
                 this.target = new UpdateSubscriptionCommandHandler(this.subscriptionSecurity.Object, this.fileSecurity.Object, this.requesterSecurity.Object, testDatabase.NewContext());
-                await this.CreateSubscriptionAsync(UserId, SubscriptionId, HeaderImageFileId, testDatabase);
+                await this.CreateSubscriptionAsync(UserId, SubscriptionId, testDatabase);
                 await this.target.HandleAsync(Command);
                 await testDatabase.TakeSnapshotAsync();
 
@@ -131,7 +131,7 @@
             await this.DatabaseTestAsync(async testDatabase =>
             {
                 this.target = new UpdateSubscriptionCommandHandler(this.subscriptionSecurity.Object, this.fileSecurity.Object, this.requesterSecurity.Object, testDatabase.NewContext());
-                var subscription = await this.CreateSubscriptionAsync(UserId, SubscriptionId, HeaderImageFileId, testDatabase);
+                var subscription = await this.CreateSubscriptionAsync(UserId, SubscriptionId, testDatabase);
                 await testDatabase.TakeSnapshotAsync();
 
                 await this.target.HandleAsync(Command);
@@ -151,17 +151,16 @@
 
                 return new ExpectedSideEffects
                 {
-                    Update = expectedSubscription,
-                    ExcludedFromTest = entity => entity is Channel
+                    Update = expectedSubscription
                 };
             });
         }
 
-        private async Task<Subscription> CreateSubscriptionAsync(UserId newUserId, SubscriptionId newSubscriptionId, FileId headerImageFileId, TestDatabaseContext testDatabase)
+        private async Task<Subscription> CreateSubscriptionAsync(UserId newUserId, SubscriptionId newSubscriptionId, TestDatabaseContext testDatabase)
         {
             using (var databaseContext = testDatabase.NewContext())
             {
-                await databaseContext.CreateTestSubscriptionAsync(newUserId.Value, newSubscriptionId.Value, headerImageFileId.Value);
+                await databaseContext.CreateTestSubscriptionAsync(newUserId.Value, newSubscriptionId.Value, Guid.NewGuid());
             }
 
             using (var databaseContext = testDatabase.NewContext())

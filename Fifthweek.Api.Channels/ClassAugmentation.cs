@@ -300,6 +300,44 @@ namespace Fifthweek.Api.Channels.Commands
     }
 
 }
+namespace Fifthweek.Api.Channels.Commands
+{
+    using System;
+    using System.Threading.Tasks;
+    using Fifthweek.Api.Channels.Shared;
+    using Fifthweek.Api.Core;
+    using Fifthweek.Api.Identity.Shared.Membership;
+    using Fifthweek.Api.Persistence;
+    using Fifthweek.CodeGeneration;
+    public partial class UpdateChannelCommandHandler 
+    {
+        public UpdateChannelCommandHandler(
+            Fifthweek.Api.Identity.Shared.Membership.IRequesterSecurity requesterSecurity, 
+            Fifthweek.Api.Channels.Shared.IChannelSecurity channelSecurity, 
+            Fifthweek.Api.Persistence.IFifthweekDbContext databaseContext)
+        {
+            if (requesterSecurity == null)
+            {
+                throw new ArgumentNullException("requesterSecurity");
+            }
+
+            if (channelSecurity == null)
+            {
+                throw new ArgumentNullException("channelSecurity");
+            }
+
+            if (databaseContext == null)
+            {
+                throw new ArgumentNullException("databaseContext");
+            }
+
+            this.requesterSecurity = requesterSecurity;
+            this.channelSecurity = channelSecurity;
+            this.databaseContext = databaseContext;
+        }
+    }
+
+}
 
 namespace Fifthweek.Api.Channels.Commands
 {

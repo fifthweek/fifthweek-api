@@ -83,6 +83,7 @@
   <ItemGroup>
     <Compile Include="ChannelOwnershipTests.cs" />
     <Compile Include="ChannelSecurityTests.cs" />
+    <Compile Include="Commands\UpdateChannelCommandHandlerTests.cs" />
     <Compile Include="Commands\CreateChannelCommandHandlerTests.cs" />
     <Compile Include="Controllers\ChannelControllerTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

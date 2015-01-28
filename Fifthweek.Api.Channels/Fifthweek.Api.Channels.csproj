@@ -78,6 +78,7 @@
     <Compile Include="Commands\UpdateChannelCommand.cs" />
     <Compile Include="Commands\CreateChannelCommand.cs" />
     <Compile Include="Commands\CreateChannelCommandHandler.cs" />
+    <Compile Include="Commands\UpdateChannelCommandHandler.cs" />
     <Compile Include="Controllers\ChannelController.cs" />
     <Compile Include="Controllers\NewChannelData.cs" />
     <Compile Include="IChannelOwnership.cs" />
