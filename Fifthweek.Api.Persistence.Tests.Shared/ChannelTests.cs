@@ -13,6 +13,7 @@
                 null,
                 string.Empty,
                 random.Next(1, 100),
+                random.Next(2) == 0,
                 DateTime.UtcNow.AddDays(random.NextDouble() * -100));
         }
 

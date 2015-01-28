@@ -1,6 +1,7 @@
 ﻿namespace Fifthweek.Api.Collections.Shared
 {
     using System;
+    using System.Collections.Generic;
 
     using Fifthweek.CodeGeneration;
 
@@ -17,26 +18,69 @@
         private const int HoursInDay = 24;
         private const int HoursInWeek = DaysInWeek * HoursInDay;
 
-        public HourOfWeek(DateTime value)
+        private HourOfWeek()
+        {
+        }
+
+        public byte Value { get; private set; }
+
+        public static bool IsEmpty(int value)
+        {
+            return false;
+        }
+
+        public static HourOfWeek Parse(byte value)
+        {
+            HourOfWeek retval;
+            if (!TryParse(value, out retval))
+            {
+                throw new ArgumentException("Invalid weekly price", "value");
+            }
+
+            return retval;
+        }
+
+        public static HourOfWeek Parse(DateTime value)
         {
             if (value.Kind != DateTimeKind.Utc)
             {
                 throw new ArgumentException("Must be UTC", "value");
             }
 
-            this.Value = (byte)(((int)value.DayOfWeek * 24) + value.Hour);
+            return new HourOfWeek
+            {
+                Value = (byte)(((int)value.DayOfWeek * 24) + value.Hour)
+            };
         }
 
-        public HourOfWeek(byte zeroBasedHourOfWeek)
+        public static bool TryParse(byte value, out HourOfWeek hourOfWeek)
         {
-            if (zeroBasedHourOfWeek > MaxValue)
+            IReadOnlyCollection<string> errorMessages;
+            return TryParse(value, out hourOfWeek, out errorMessages);
+        }
+
+        public static bool TryParse(byte value, out HourOfWeek hourOfWeek, out IReadOnlyCollection<string> errorMessages)
+        {
+            var errorMessageList = new List<string>();
+            errorMessages = errorMessageList;
+
+            if (value > MaxValue)
             {
-                throw new ArgumentOutOfRangeException(string.Format("Must be no greater than {0}", MaxValue));
+                errorMessageList.Add(string.Format("Must be no greater than {0}", MaxValue));
             }
 
-            this.Value = zeroBasedHourOfWeek;
-        }
+            if (errorMessageList.Count > 0)
+            {
+                hourOfWeek = null;
+                return false;
+            }
 
-        public byte Value { get; private set; }
+            hourOfWeek = new HourOfWeek
+            {
+                Value = value
+            };
+
+            return true;
+        }
     }
 }

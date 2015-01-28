@@ -2,7 +2,6 @@
 {
     using System.Collections.Generic;
 
-    using Fifthweek.Api.Channels;
     using Fifthweek.Api.Channels.Shared;
     using Fifthweek.Tests.Shared;
 
@@ -56,7 +55,5 @@
         {
             return parsedObject.Value;
         }
-
-        public static readonly int InvalidValue = 0;
     }
 }

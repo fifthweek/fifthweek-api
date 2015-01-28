@@ -72,6 +72,11 @@ namespace Fifthweek.Api.Collections.Commands
     using Fifthweek.Api.Collections.Shared;
     using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.CodeGeneration;
+    using System.Threading.Tasks;
+    using System.Transactions;
+    using Fifthweek.Api.Core;
+    using Fifthweek.Api.Persistence;
+    using Fifthweek.Shared;
     public partial class CreateCollectionCommand 
     {
         public CreateCollectionCommand(
@@ -126,6 +131,7 @@ namespace Fifthweek.Api.Collections.Controllers
     {
         public CollectionController(
             Fifthweek.Api.Core.ICommandHandler<Fifthweek.Api.Collections.Commands.CreateCollectionCommand> createCollection, 
+            Fifthweek.Api.Core.ICommandHandler<Fifthweek.Api.Collections.Commands.UpdateCollectionCommand> updateCollection, 
             Fifthweek.Api.Core.IQueryHandler<Fifthweek.Api.Collections.Queries.GetLiveDateOfNewQueuedPostQuery,System.DateTime> getLiveDateOfNewQueuedPost, 
             Fifthweek.Api.Identity.Shared.Membership.IRequesterContext requesterContext, 
             Fifthweek.Api.Core.IGuidCreator guidCreator)
@@ -133,6 +139,11 @@ namespace Fifthweek.Api.Collections.Controllers
             if (createCollection == null)
             {
                 throw new ArgumentNullException("createCollection");
+            }
+
+            if (updateCollection == null)
+            {
+                throw new ArgumentNullException("updateCollection");
             }
 
             if (getLiveDateOfNewQueuedPost == null)
@@ -151,6 +162,7 @@ namespace Fifthweek.Api.Collections.Controllers
             }
 
             this.createCollection = createCollection;
+            this.updateCollection = updateCollection;
             this.getLiveDateOfNewQueuedPost = getLiveDateOfNewQueuedPost;
             this.requesterContext = requesterContext;
             this.guidCreator = guidCreator;
@@ -577,14 +589,15 @@ namespace Fifthweek.Api.Collections.Queries
 namespace Fifthweek.Api.Collections.Commands
 {
     using System;
-    using System.Threading.Tasks;
-    using System.Transactions;
+    using System.Linq;
     using Fifthweek.Api.Channels.Shared;
     using Fifthweek.Api.Collections.Shared;
-    using Fifthweek.Api.Core;
     using Fifthweek.Api.Identity.Shared.Membership;
-    using Fifthweek.Api.Persistence;
     using Fifthweek.CodeGeneration;
+    using System.Threading.Tasks;
+    using System.Transactions;
+    using Fifthweek.Api.Core;
+    using Fifthweek.Api.Persistence;
     using Fifthweek.Shared;
     public partial class CreateCollectionCommandHandler 
     {
@@ -622,6 +635,63 @@ namespace Fifthweek.Api.Collections.Commands
     }
 
 }
+namespace Fifthweek.Api.Collections.Commands
+{
+    using System;
+    using System.Linq;
+    using Fifthweek.Api.Channels.Shared;
+    using Fifthweek.Api.Collections.Shared;
+    using Fifthweek.Api.Identity.Shared.Membership;
+    using Fifthweek.CodeGeneration;
+    using System.Threading.Tasks;
+    using System.Transactions;
+    using Fifthweek.Api.Core;
+    using Fifthweek.Api.Persistence;
+    using Fifthweek.Shared;
+    using System.Collections.Generic;
+    public partial class UpdateCollectionCommand 
+    {
+        public UpdateCollectionCommand(
+            Fifthweek.Api.Identity.Shared.Membership.Requester requester, 
+            Fifthweek.Api.Collections.Shared.CollectionId collectionId, 
+            Fifthweek.Api.Channels.Shared.ChannelId channelId, 
+            Fifthweek.Api.Collections.Shared.ValidCollectionName name, 
+            System.Collections.Generic.IReadOnlyList<Fifthweek.Api.Collections.Shared.HourOfWeek> weeklyReleaseTimes)
+        {
+            if (requester == null)
+            {
+                throw new ArgumentNullException("requester");
+            }
+
+            if (collectionId == null)
+            {
+                throw new ArgumentNullException("collectionId");
+            }
+
+            if (channelId == null)
+            {
+                throw new ArgumentNullException("channelId");
+            }
+
+            if (name == null)
+            {
+                throw new ArgumentNullException("name");
+            }
+
+            if (weeklyReleaseTimes == null)
+            {
+                throw new ArgumentNullException("weeklyReleaseTimes");
+            }
+
+            this.Requester = requester;
+            this.CollectionId = collectionId;
+            this.ChannelId = channelId;
+            this.Name = name;
+            this.WeeklyReleaseTimes = weeklyReleaseTimes;
+        }
+    }
+
+}
 
 namespace Fifthweek.Api.Collections.Commands
 {
@@ -631,6 +701,11 @@ namespace Fifthweek.Api.Collections.Commands
     using Fifthweek.Api.Collections.Shared;
     using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.CodeGeneration;
+    using System.Threading.Tasks;
+    using System.Transactions;
+    using Fifthweek.Api.Core;
+    using Fifthweek.Api.Persistence;
+    using Fifthweek.Shared;
     public partial class CreateCollectionCommand 
     {
         public override string ToString()
@@ -896,6 +971,108 @@ namespace Fifthweek.Api.Collections.Queries
             }
 
             if (!object.Equals(this.CollectionId, other.CollectionId))
+            {
+                return false;
+            }
+
+            return true;
+        }
+    }
+
+}
+namespace Fifthweek.Api.Collections.Commands
+{
+    using System;
+    using System.Linq;
+    using Fifthweek.Api.Channels.Shared;
+    using Fifthweek.Api.Collections.Shared;
+    using Fifthweek.Api.Identity.Shared.Membership;
+    using Fifthweek.CodeGeneration;
+    using System.Threading.Tasks;
+    using System.Transactions;
+    using Fifthweek.Api.Core;
+    using Fifthweek.Api.Persistence;
+    using Fifthweek.Shared;
+    using System.Collections.Generic;
+    public partial class UpdateCollectionCommand 
+    {
+        public override string ToString()
+        {
+            return string.Format("UpdateCollectionCommand({0}, {1}, {2}, {3}, {4})", this.Requester == null ? "null" : this.Requester.ToString(), this.CollectionId == null ? "null" : this.CollectionId.ToString(), this.ChannelId == null ? "null" : this.ChannelId.ToString(), this.Name == null ? "null" : this.Name.ToString(), this.WeeklyReleaseTimes == null ? "null" : this.WeeklyReleaseTimes.ToString());
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj))
+            {
+                return false;
+            }
+
+            if (ReferenceEquals(this, obj))
+            {
+                return true;
+            }
+
+            if (obj.GetType() != this.GetType())
+            {
+                return false;
+            }
+
+            return this.Equals((UpdateCollectionCommand)obj);
+        }
+
+        public override int GetHashCode()
+        {
+            unchecked
+            {
+                int hashCode = 0;
+                hashCode = (hashCode * 397) ^ (this.Requester != null ? this.Requester.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.CollectionId != null ? this.CollectionId.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.ChannelId != null ? this.ChannelId.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.Name != null ? this.Name.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.WeeklyReleaseTimes != null 
+				    ? this.WeeklyReleaseTimes.Aggregate(0, (previous, current) => 
+				        { 
+				            unchecked
+				            {
+				                return (previous * 397) ^ (current != null ? current.GetHashCode() : 0);
+				            }
+				        })
+				    : 0);
+                return hashCode;
+            }
+        }
+
+        protected bool Equals(UpdateCollectionCommand other)
+        {
+            if (!object.Equals(this.Requester, other.Requester))
+            {
+                return false;
+            }
+
+            if (!object.Equals(this.CollectionId, other.CollectionId))
+            {
+                return false;
+            }
+
+            if (!object.Equals(this.ChannelId, other.ChannelId))
+            {
+                return false;
+            }
+
+            if (!object.Equals(this.Name, other.Name))
+            {
+                return false;
+            }
+
+            if (this.WeeklyReleaseTimes != null && other.WeeklyReleaseTimes != null)
+            {
+                if (!this.WeeklyReleaseTimes.SequenceEqual(other.WeeklyReleaseTimes))
+                {
+                    return false;    
+                }
+            }
+            else if (this.WeeklyReleaseTimes != null || other.WeeklyReleaseTimes != null)
             {
                 return false;
             }

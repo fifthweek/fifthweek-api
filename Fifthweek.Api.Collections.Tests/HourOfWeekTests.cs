@@ -1,6 +1,7 @@
 ﻿namespace Fifthweek.Api.Collections.Tests
 {
     using System;
+    using System.Collections.Generic;
 
     using Fifthweek.Api.Collections.Shared;
     using Fifthweek.Tests.Shared;
@@ -8,66 +9,78 @@
     using Microsoft.VisualStudio.TestTools.UnitTesting;
 
     [TestClass]
-    public class HourOfWeekTests : PrimitiveTests<HourOfWeek>
+    public class HourOfWeekTests : ValidatedPrimitiveTests<HourOfWeek, byte>
     {
-        [TestMethod]
-        public void ItShouldRecogniseEquality()
+        protected override byte ValueA
         {
-            this.TestEquality();
+            get { return 50; }
+        }
+
+        protected override byte ValueB
+        {
+            get { return 75; }
         }
 
         [TestMethod]
         public void ItShouldAllowUtcDateTimes()
         {
             var firstSundayInFeb = new DateTime(2015, 2, 1, 0, 0, 0, DateTimeKind.Utc);
-            Assert.AreEqual(new HourOfWeek(firstSundayInFeb).Value, (byte)0);
+            Assert.AreEqual(HourOfWeek.Parse(firstSundayInFeb).Value, (byte)0);
 
             var thirdSundayInFeb = new DateTime(2015, 2, 15, 0, 0, 0, DateTimeKind.Utc);
-            Assert.AreEqual(new HourOfWeek(thirdSundayInFeb).Value, (byte)0);
+            Assert.AreEqual(HourOfWeek.Parse(thirdSundayInFeb).Value, (byte)0);
 
             var secondWednesdayInFeb = new DateTime(2015, 2, 11, 0, 0, 0, DateTimeKind.Utc);
-            Assert.AreEqual(new HourOfWeek(secondWednesdayInFeb).Value, (byte)72);
+            Assert.AreEqual(HourOfWeek.Parse(secondWednesdayInFeb).Value, (byte)72);
 
             var secondWednesdayInFebMidday = new DateTime(2015, 2, 11, 12, 0, 0, DateTimeKind.Utc);
-            Assert.AreEqual(new HourOfWeek(secondWednesdayInFebMidday).Value, (byte)84);
+            Assert.AreEqual(HourOfWeek.Parse(secondWednesdayInFebMidday).Value, (byte)84);
         }
 
         [TestMethod]
         public void ItShouldAllowValuesUnder168()
         {
-            Assert.AreEqual(new HourOfWeek(0).Value, (byte)0);
-            Assert.AreEqual(new HourOfWeek(167).Value, (byte)167);
+            this.GoodValue(0);
+            this.GoodValue(167);
+        }
+
+        [TestMethod]
+        public void ItShouldNotAllowValuesEqualTo168()
+        {
+            this.BadValue(168);
+        }
+
+        [TestMethod]
+        public void ItShouldNotAllowValuesOver168()
+        {
+            this.BadValue(169);
         }
 
         [TestMethod]
         [ExpectedException(typeof(ArgumentException))]
         public void ItShouldNotAllowNonUtcDateTimes()
         {
-            new HourOfWeek(DateTime.Now);
+            HourOfWeek.Parse(DateTime.Now);
         }
 
-        [TestMethod]
-        [ExpectedException(typeof(ArgumentOutOfRangeException))]
-        public void ItShouldNotAllowValuesEqualTo168()
+        protected override HourOfWeek Parse(byte value, bool exact)
         {
-            new HourOfWeek(168);
+            return HourOfWeek.Parse(value);
         }
 
-        [TestMethod]
-        [ExpectedException(typeof(ArgumentOutOfRangeException))]
-        public void ItShouldNotAllowValuesOver168()
+        protected override bool TryParse(byte value, out HourOfWeek parsedObject, bool exact)
         {
-            new HourOfWeek(169);
+            return HourOfWeek.TryParse(value, out parsedObject);
         }
 
-        protected override HourOfWeek NewInstanceOfObjectA()
+        protected override bool TryParse(byte value, out HourOfWeek parsedObject, out IReadOnlyCollection<string> errorMessages, bool exact)
         {
-            return new HourOfWeek(0);
+            return HourOfWeek.TryParse(value, out parsedObject, out errorMessages);
         }
 
-        protected override HourOfWeek NewInstanceOfObjectB()
+        protected override byte GetValue(HourOfWeek parsedObject)
         {
-            return new HourOfWeek(1);
+            return parsedObject.Value;
         }
     }
 }

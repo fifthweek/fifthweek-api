@@ -29,6 +29,9 @@
         public int PriceInUsCentsPerWeek { get; set; }
 
         [Required]
+        public bool IsVisibleToNonSubscribers { get; set; }
+
+        [Required]
         public DateTime CreationDate { get; set; }
     }
 }

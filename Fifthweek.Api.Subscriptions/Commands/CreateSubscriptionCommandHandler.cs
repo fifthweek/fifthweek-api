@@ -49,6 +49,7 @@
                 null,
                 string.Empty,
                 command.BasePrice.Value,
+                true,
                 DateTime.UtcNow);
 
             // Assuming no lock escalation, this transaction will hold X locks on the new rows and IX locks further up the hierarchy,

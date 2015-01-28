@@ -65,6 +65,9 @@ namespace Fifthweek.Api.Channels.Commands
     using Fifthweek.Api.Subscriptions;
     using Fifthweek.Api.Subscriptions.Shared;
     using Fifthweek.CodeGeneration;
+    using System.Threading.Tasks;
+    using Fifthweek.Api.Core;
+    using Fifthweek.Api.Persistence;
     public partial class CreateChannelCommand 
     {
         public CreateChannelCommand(
@@ -124,12 +127,18 @@ namespace Fifthweek.Api.Channels.Controllers
     {
         public ChannelController(
             Fifthweek.Api.Core.ICommandHandler<Fifthweek.Api.Channels.Commands.CreateChannelCommand> createChannel, 
+            Fifthweek.Api.Core.ICommandHandler<Fifthweek.Api.Channels.Commands.UpdateChannelCommand> updateChannel, 
             Fifthweek.Api.Identity.Shared.Membership.IRequesterContext requesterContext, 
             Fifthweek.Api.Core.IGuidCreator guidCreator)
         {
             if (createChannel == null)
             {
                 throw new ArgumentNullException("createChannel");
+            }
+
+            if (updateChannel == null)
+            {
+                throw new ArgumentNullException("updateChannel");
             }
 
             if (requesterContext == null)
@@ -143,6 +152,7 @@ namespace Fifthweek.Api.Channels.Controllers
             }
 
             this.createChannel = createChannel;
+            this.updateChannel = updateChannel;
             this.requesterContext = requesterContext;
             this.guidCreator = guidCreator;
         }
@@ -197,12 +207,15 @@ namespace Fifthweek.Api.Channels.Controllers
 namespace Fifthweek.Api.Channels.Commands
 {
     using System;
-    using System.Threading.Tasks;
-    using Fifthweek.Api.Core;
+    using System.Linq;
+    using Fifthweek.Api.Channels.Shared;
     using Fifthweek.Api.Identity.Shared.Membership;
-    using Fifthweek.Api.Persistence;
+    using Fifthweek.Api.Subscriptions;
     using Fifthweek.Api.Subscriptions.Shared;
     using Fifthweek.CodeGeneration;
+    using System.Threading.Tasks;
+    using Fifthweek.Api.Core;
+    using Fifthweek.Api.Persistence;
     public partial class CreateChannelCommandHandler 
     {
         public CreateChannelCommandHandler(
@@ -232,6 +245,61 @@ namespace Fifthweek.Api.Channels.Commands
     }
 
 }
+namespace Fifthweek.Api.Channels.Commands
+{
+    using System;
+    using System.Linq;
+    using Fifthweek.Api.Channels.Shared;
+    using Fifthweek.Api.Identity.Shared.Membership;
+    using Fifthweek.Api.Subscriptions;
+    using Fifthweek.Api.Subscriptions.Shared;
+    using Fifthweek.CodeGeneration;
+    using System.Threading.Tasks;
+    using Fifthweek.Api.Core;
+    using Fifthweek.Api.Persistence;
+    public partial class UpdateChannelCommand 
+    {
+        public UpdateChannelCommand(
+            Fifthweek.Api.Identity.Shared.Membership.Requester requester, 
+            Fifthweek.Api.Channels.Shared.ChannelId channelId, 
+            Fifthweek.Api.Channels.Shared.ValidChannelName name, 
+            Fifthweek.Api.Channels.Shared.ValidChannelPriceInUsCentsPerWeek price, 
+            System.Boolean isVisibleToNonSubscribers)
+        {
+            if (requester == null)
+            {
+                throw new ArgumentNullException("requester");
+            }
+
+            if (channelId == null)
+            {
+                throw new ArgumentNullException("channelId");
+            }
+
+            if (name == null)
+            {
+                throw new ArgumentNullException("name");
+            }
+
+            if (price == null)
+            {
+                throw new ArgumentNullException("price");
+            }
+
+            if (isVisibleToNonSubscribers == null)
+            {
+                throw new ArgumentNullException("isVisibleToNonSubscribers");
+            }
+
+            this.Requester = requester;
+            this.ChannelId = channelId;
+            this.Name = name;
+            this.Price = price;
+            this.IsVisibleToNonSubscribers = isVisibleToNonSubscribers;
+        }
+    }
+
+}
 
 namespace Fifthweek.Api.Channels.Commands
 {
@@ -242,6 +310,9 @@ namespace Fifthweek.Api.Channels.Commands
     using Fifthweek.Api.Subscriptions;
     using Fifthweek.Api.Subscriptions.Shared;
     using Fifthweek.CodeGeneration;
+    using System.Threading.Tasks;
+    using Fifthweek.Api.Core;
+    using Fifthweek.Api.Persistence;
     public partial class CreateChannelCommand 
     {
         public override string ToString()
@@ -391,6 +462,91 @@ namespace Fifthweek.Api.Channels.Controllers
             }
 
             if (!object.Equals(this.Price, other.Price))
+            {
+                return false;
+            }
+
+            return true;
+        }
+    }
+
+}
+namespace Fifthweek.Api.Channels.Commands
+{
+    using System;
+    using System.Linq;
+    using Fifthweek.Api.Channels.Shared;
+    using Fifthweek.Api.Identity.Shared.Membership;
+    using Fifthweek.Api.Subscriptions;
+    using Fifthweek.Api.Subscriptions.Shared;
+    using Fifthweek.CodeGeneration;
+    using System.Threading.Tasks;
+    using Fifthweek.Api.Core;
+    using Fifthweek.Api.Persistence;
+    public partial class UpdateChannelCommand 
+    {
+        public override string ToString()
+        {
+            return string.Format("UpdateChannelCommand({0}, {1}, {2}, {3}, {4})", this.Requester == null ? "null" : this.Requester.ToString(), this.ChannelId == null ? "null" : this.ChannelId.ToString(), this.Name == null ? "null" : this.Name.ToString(), this.Price == null ? "null" : this.Price.ToString(), this.IsVisibleToNonSubscribers == null ? "null" : this.IsVisibleToNonSubscribers.ToString());
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj))
+            {
+                return false;
+            }
+
+            if (ReferenceEquals(this, obj))
+            {
+                return true;
+            }
+
+            if (obj.GetType() != this.GetType())
+            {
+                return false;
+            }
+
+            return this.Equals((UpdateChannelCommand)obj);
+        }
+
+        public override int GetHashCode()
+        {
+            unchecked
+            {
+                int hashCode = 0;
+                hashCode = (hashCode * 397) ^ (this.Requester != null ? this.Requester.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.ChannelId != null ? this.ChannelId.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.Name != null ? this.Name.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.Price != null ? this.Price.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.IsVisibleToNonSubscribers != null ? this.IsVisibleToNonSubscribers.GetHashCode() : 0);
+                return hashCode;
+            }
+        }
+
+        protected bool Equals(UpdateChannelCommand other)
+        {
+            if (!object.Equals(this.Requester, other.Requester))
+            {
+                return false;
+            }
+
+            if (!object.Equals(this.ChannelId, other.ChannelId))
+            {
+                return false;
+            }
+
+            if (!object.Equals(this.Name, other.Name))
+            {
+                return false;
+            }
+
+            if (!object.Equals(this.Price, other.Price))
+            {
+                return false;
+            }
+
+            if (!object.Equals(this.IsVisibleToNonSubscribers, other.IsVisibleToNonSubscribers))
             {
                 return false;
             }

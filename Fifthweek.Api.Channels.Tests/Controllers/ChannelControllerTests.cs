@@ -25,6 +25,7 @@
         private static readonly ValidChannelPriceInUsCentsPerWeek Price = ValidChannelPriceInUsCentsPerWeek.Parse(10);
 
         private Mock<ICommandHandler<CreateChannelCommand>> createChannel;
+        private Mock<ICommandHandler<UpdateChannelCommand>> updateChannel;
         private Mock<IRequesterContext> requesterContext;
         private Mock<IGuidCreator> guidCreator;
         private ChannelController target;
@@ -33,9 +34,10 @@
         public void Initialize()
         {
             this.createChannel = new Mock<ICommandHandler<CreateChannelCommand>>();
+            this.updateChannel = new Mock<ICommandHandler<UpdateChannelCommand>>();
             this.requesterContext = new Mock<IRequesterContext>();
             this.guidCreator = new Mock<IGuidCreator>();
-            this.target = new ChannelController(this.createChannel.Object, this.requesterContext.Object, this.guidCreator.Object);
+            this.target = new ChannelController(this.createChannel.Object, this.updateChannel.Object, this.requesterContext.Object, this.guidCreator.Object);
         }
 
         [TestMethod]

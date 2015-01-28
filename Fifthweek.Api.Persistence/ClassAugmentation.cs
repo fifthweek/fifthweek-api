@@ -9,10 +9,10 @@ namespace Fifthweek.Api.Persistence
     using System;
     using System.ComponentModel.DataAnnotations;
     using System.ComponentModel.DataAnnotations.Schema;
-    using Fifthweek.Api.Core;
     using Fifthweek.CodeGeneration;
-    using Fifthweek.Shared;
     using System.Linq;
+    using Fifthweek.Api.Core;
+    using Fifthweek.Shared;
     using Fifthweek.Api.Persistence.Identity;
     using System.Text;
     public partial class Channel 
@@ -23,6 +23,7 @@ namespace Fifthweek.Api.Persistence
             Fifthweek.Api.Persistence.Subscription subscription, 
             System.String name, 
             System.Int32 priceInUsCentsPerWeek, 
+            System.Boolean isVisibleToNonSubscribers, 
             System.DateTime creationDate)
         {
             if (id == null)
@@ -45,6 +46,11 @@ namespace Fifthweek.Api.Persistence
                 throw new ArgumentNullException("priceInUsCentsPerWeek");
             }
 
+            if (isVisibleToNonSubscribers == null)
+            {
+                throw new ArgumentNullException("isVisibleToNonSubscribers");
+            }
+
             if (creationDate == null)
             {
                 throw new ArgumentNullException("creationDate");
@@ -55,6 +61,7 @@ namespace Fifthweek.Api.Persistence
             this.Subscription = subscription;
             this.Name = name;
             this.PriceInUsCentsPerWeek = priceInUsCentsPerWeek;
+            this.IsVisibleToNonSubscribers = isVisibleToNonSubscribers;
             this.CreationDate = creationDate;
         }
     }
@@ -381,17 +388,17 @@ namespace Fifthweek.Api.Persistence
     using System;
     using System.ComponentModel.DataAnnotations;
     using System.ComponentModel.DataAnnotations.Schema;
-    using Fifthweek.Api.Core;
     using Fifthweek.CodeGeneration;
-    using Fifthweek.Shared;
     using System.Linq;
+    using Fifthweek.Api.Core;
+    using Fifthweek.Shared;
     using Fifthweek.Api.Persistence.Identity;
     using System.Text;
     public partial class Channel 
     {
         public override string ToString()
         {
-            return string.Format("Channel({0}, {1}, \"{2}\", {3}, {4})", this.Id == null ? "null" : this.Id.ToString(), this.SubscriptionId == null ? "null" : this.SubscriptionId.ToString(), this.Name == null ? "null" : this.Name.ToString(), this.PriceInUsCentsPerWeek == null ? "null" : this.PriceInUsCentsPerWeek.ToString(), this.CreationDate == null ? "null" : this.CreationDate.ToString());
+            return string.Format("Channel({0}, {1}, \"{2}\", {3}, {4}, {5})", this.Id == null ? "null" : this.Id.ToString(), this.SubscriptionId == null ? "null" : this.SubscriptionId.ToString(), this.Name == null ? "null" : this.Name.ToString(), this.PriceInUsCentsPerWeek == null ? "null" : this.PriceInUsCentsPerWeek.ToString(), this.IsVisibleToNonSubscribers == null ? "null" : this.IsVisibleToNonSubscribers.ToString(), this.CreationDate == null ? "null" : this.CreationDate.ToString());
         }
 
         public override bool Equals(object obj)
@@ -423,6 +430,7 @@ namespace Fifthweek.Api.Persistence
                 hashCode = (hashCode * 397) ^ (this.SubscriptionId != null ? this.SubscriptionId.GetHashCode() : 0);
                 hashCode = (hashCode * 397) ^ (this.Name != null ? this.Name.GetHashCode() : 0);
                 hashCode = (hashCode * 397) ^ (this.PriceInUsCentsPerWeek != null ? this.PriceInUsCentsPerWeek.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.IsVisibleToNonSubscribers != null ? this.IsVisibleToNonSubscribers.GetHashCode() : 0);
                 hashCode = (hashCode * 397) ^ (this.CreationDate != null ? this.CreationDate.GetHashCode() : 0);
                 return hashCode;
             }
@@ -446,6 +454,11 @@ namespace Fifthweek.Api.Persistence
             }
 
             if (!object.Equals(this.PriceInUsCentsPerWeek, other.PriceInUsCentsPerWeek))
+            {
+                return false;
+            }
+
+            if (!object.Equals(this.IsVisibleToNonSubscribers, other.IsVisibleToNonSubscribers))
             {
                 return false;
             }
@@ -1145,10 +1158,10 @@ namespace Fifthweek.Api.Persistence
     using System;
     using System.ComponentModel.DataAnnotations;
     using System.ComponentModel.DataAnnotations.Schema;
-    using Fifthweek.Api.Core;
     using Fifthweek.CodeGeneration;
-    using Fifthweek.Shared;
     using System.Linq;
+    using Fifthweek.Api.Core;
+    using Fifthweek.Shared;
     using Fifthweek.Api.Persistence.Identity;
     using System.Text;
     public partial class Channel  : IIdentityEquatable
@@ -1204,7 +1217,8 @@ namespace Fifthweek.Api.Persistence
             SubscriptionId = 2, 
             Name = 4, 
             PriceInUsCentsPerWeek = 8, 
-            CreationDate = 16
+            IsVisibleToNonSubscribers = 16, 
+            CreationDate = 32
         }
     }
 
@@ -1221,7 +1235,7 @@ namespace Fifthweek.Api.Persistence
                 InsertStatement(idempotent), 
                 entities.Select(entity => new 
                 {
-                    entity.Id, entity.SubscriptionId, entity.Name, entity.PriceInUsCentsPerWeek, entity.CreationDate
+                    entity.Id, entity.SubscriptionId, entity.Name, entity.PriceInUsCentsPerWeek, entity.IsVisibleToNonSubscribers, entity.CreationDate
                 }).ToArray(),
                 transaction);
         }
@@ -1237,7 +1251,7 @@ namespace Fifthweek.Api.Persistence
                 InsertStatement(idempotent), 
                 new 
                 {
-                    entity.Id, entity.SubscriptionId, entity.Name, entity.PriceInUsCentsPerWeek, entity.CreationDate
+                    entity.Id, entity.SubscriptionId, entity.Name, entity.PriceInUsCentsPerWeek, entity.IsVisibleToNonSubscribers, entity.CreationDate
                 },
                 transaction);
         }
@@ -1311,7 +1325,7 @@ namespace Fifthweek.Api.Persistence
                 sql.ToString(),
                 new 
                 {
-                    entity.Id, entity.SubscriptionId, entity.Name, entity.PriceInUsCentsPerWeek, entity.CreationDate
+                    entity.Id, entity.SubscriptionId, entity.Name, entity.PriceInUsCentsPerWeek, entity.IsVisibleToNonSubscribers, entity.CreationDate
                 },
                 transaction);
         }
@@ -1365,7 +1379,7 @@ namespace Fifthweek.Api.Persistence
                 UpsertStatement(fields), 
                 new 
                 {
-                    entity.Id, entity.SubscriptionId, entity.Name, entity.PriceInUsCentsPerWeek, entity.CreationDate
+                    entity.Id, entity.SubscriptionId, entity.Name, entity.PriceInUsCentsPerWeek, entity.IsVisibleToNonSubscribers, entity.CreationDate
                 },
                 transaction);
         }
@@ -1381,7 +1395,7 @@ namespace Fifthweek.Api.Persistence
 
         public static string InsertStatement(bool idempotent = true)
         {
-            const string insert = "INSERT INTO Channels(Id, SubscriptionId, Name, PriceInUsCentsPerWeek, CreationDate) VALUES(@Id, @SubscriptionId, @Name, @PriceInUsCentsPerWeek, @CreationDate)";
+            const string insert = "INSERT INTO Channels(Id, SubscriptionId, Name, PriceInUsCentsPerWeek, IsVisibleToNonSubscribers, CreationDate) VALUES(@Id, @SubscriptionId, @Name, @PriceInUsCentsPerWeek, @IsVisibleToNonSubscribers, @CreationDate)";
             return idempotent ? SqlStatementTemplates.IdempotentInsert(insert) : insert;
         }
 
@@ -1392,7 +1406,7 @@ namespace Fifthweek.Api.Persistence
             var sql = new System.Text.StringBuilder();
             sql.Append(
                 @"MERGE Channels WITH (HOLDLOCK) as Target
-                USING (VALUES (@Id, @SubscriptionId, @Name, @PriceInUsCentsPerWeek, @CreationDate)) AS Source (Id, SubscriptionId, Name, PriceInUsCentsPerWeek, CreationDate)
+                USING (VALUES (@Id, @SubscriptionId, @Name, @PriceInUsCentsPerWeek, @IsVisibleToNonSubscribers, @CreationDate)) AS Source (Id, SubscriptionId, Name, PriceInUsCentsPerWeek, IsVisibleToNonSubscribers, CreationDate)
                 ON    (Target.Id = Source.Id)
                 WHEN MATCHED THEN
                     UPDATE
@@ -1400,8 +1414,8 @@ namespace Fifthweek.Api.Persistence
             sql.AppendUpdateParameters(GetFieldNames(fields));
             sql.Append(
                 @" WHEN NOT MATCHED THEN
-                    INSERT  (Id, SubscriptionId, Name, PriceInUsCentsPerWeek, CreationDate)
-                    VALUES  (Source.Id, Source.SubscriptionId, Source.Name, Source.PriceInUsCentsPerWeek, Source.CreationDate);");
+                    INSERT  (Id, SubscriptionId, Name, PriceInUsCentsPerWeek, IsVisibleToNonSubscribers, CreationDate)
+                    VALUES  (Source.Id, Source.SubscriptionId, Source.Name, Source.PriceInUsCentsPerWeek, Source.IsVisibleToNonSubscribers, Source.CreationDate);");
             return sql.ToString();
         }
 
@@ -1437,6 +1451,11 @@ namespace Fifthweek.Api.Persistence
                 fieldNames.Add("PriceInUsCentsPerWeek");
             }
 
+            if (fields.HasFlag(Channel.Fields.IsVisibleToNonSubscribers))
+            {
+                fieldNames.Add("IsVisibleToNonSubscribers");
+            }
+
             if (fields.HasFlag(Channel.Fields.CreationDate))
             {
                 fieldNames.Add("CreationDate");
@@ -1464,6 +1483,11 @@ namespace Fifthweek.Api.Persistence
             if(excludeSpecified != fields.HasFlag(Channel.Fields.PriceInUsCentsPerWeek))
             {
                 parameters.Add("PriceInUsCentsPerWeek", entity.PriceInUsCentsPerWeek);
+            }
+
+            if(excludeSpecified != fields.HasFlag(Channel.Fields.IsVisibleToNonSubscribers))
+            {
+                parameters.Add("IsVisibleToNonSubscribers", entity.IsVisibleToNonSubscribers);
             }
 
             if(excludeSpecified != fields.HasFlag(Channel.Fields.CreationDate))

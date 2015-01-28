@@ -1,12 +1,12 @@
 ﻿using System;
 using System.Linq;
 
+
+
 namespace Fifthweek.Api.Collections.Shared
 {
     using System;
-    using System.Linq;
     using Fifthweek.CodeGeneration;
-    using System.Collections.Generic;
     [Newtonsoft.Json.JsonConverter(typeof(JsonConverter))]
     public partial class CollectionId 
     {
@@ -55,9 +55,7 @@ namespace Fifthweek.Api.Collections.Shared
 namespace Fifthweek.Api.Collections.Shared
 {
     using System;
-    using System.Linq;
     using Fifthweek.CodeGeneration;
-    using System.Collections.Generic;
     public partial class CollectionId 
     {
         public CollectionId(
@@ -77,9 +75,7 @@ namespace Fifthweek.Api.Collections.Shared
 namespace Fifthweek.Api.Collections.Shared
 {
     using System;
-    using System.Linq;
     using Fifthweek.CodeGeneration;
-    using System.Collections.Generic;
     public partial class CollectionId 
     {
         public override string ToString()
@@ -132,9 +128,8 @@ namespace Fifthweek.Api.Collections.Shared
 namespace Fifthweek.Api.Collections.Shared
 {
     using System;
-    using System.Linq;
-    using Fifthweek.CodeGeneration;
     using System.Collections.Generic;
+    using Fifthweek.CodeGeneration;
     public partial class HourOfWeek 
     {
         public override string ToString()
@@ -187,9 +182,9 @@ namespace Fifthweek.Api.Collections.Shared
 namespace Fifthweek.Api.Collections.Shared
 {
     using System;
+    using System.Collections.Generic;
     using System.Linq;
     using Fifthweek.CodeGeneration;
-    using System.Collections.Generic;
     public partial class ValidCollectionName 
     {
         public override string ToString()

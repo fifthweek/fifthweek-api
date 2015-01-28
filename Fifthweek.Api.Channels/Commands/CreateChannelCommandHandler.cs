@@ -34,6 +34,7 @@
                 null,
                 command.Name.Value,
                 command.Price.Value,
+                false,
                 DateTime.UtcNow);
 
             return this.databaseContext.Database.Connection.InsertAsync(channel);

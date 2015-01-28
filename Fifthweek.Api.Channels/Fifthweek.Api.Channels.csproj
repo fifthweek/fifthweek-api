@@ -75,6 +75,7 @@
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
     </Compile>
+    <Compile Include="Commands\UpdateChannelCommand.cs" />
     <Compile Include="Commands\CreateChannelCommand.cs" />
     <Compile Include="Commands\CreateChannelCommandHandler.cs" />
     <Compile Include="Controllers\ChannelController.cs" />

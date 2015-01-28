@@ -106,6 +106,7 @@
                     null,
                     Name.Value,
                     Price.Value,
+                    false,
                     default(DateTime));
 
                 return new ExpectedSideEffects

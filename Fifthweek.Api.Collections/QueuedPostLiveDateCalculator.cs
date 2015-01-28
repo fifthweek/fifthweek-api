@@ -4,6 +4,7 @@
     using System.Collections.Generic;
     using System.Linq;
 
+    using Fifthweek.Api.Collections.Shared;
     using Fifthweek.Api.Core;
     using Fifthweek.Shared;
 
@@ -45,7 +46,7 @@
                 .AddDays(-1 * (int)exclusiveLowerBound.DayOfWeek);
 
             var releasesPerWeek = ascendingWeeklyReleaseTimes.Count;
-            var currentHourOfWeek = new Shared.HourOfWeek(exclusiveLowerBound).Value;
+            var currentHourOfWeek = HourOfWeek.Parse(exclusiveLowerBound).Value;
             var nextReleaseTimeAfterCurrentTime = ascendingWeeklyReleaseTimes.FirstOrDefault(_ => _.Value > currentHourOfWeek);
             var startFromNextWeek = nextReleaseTimeAfterCurrentTime == null;
             var releaseTimeIndexOffset = startFromNextWeek ? releasesPerWeek : ascendingWeeklyReleaseTimes.IndexOf(nextReleaseTimeAfterCurrentTime);

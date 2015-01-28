@@ -13,6 +13,7 @@
     public partial class ChannelController : ApiController
     {
         private readonly ICommandHandler<CreateChannelCommand> createChannel;
+        private readonly ICommandHandler<UpdateChannelCommand> updateChannel;
         private readonly IRequesterContext requesterContext;
         private readonly IGuidCreator guidCreator;
 

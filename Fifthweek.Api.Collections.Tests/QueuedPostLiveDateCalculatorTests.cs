@@ -11,12 +11,12 @@
     [TestClass]
     public class QueuedPostLiveDateCalculatorTests
     {
-        private static readonly HourOfWeek Sunday = new HourOfWeek(0); // Minimum hour of week.
-        private static readonly HourOfWeek Monday = new HourOfWeek(24);
-        private static readonly HourOfWeek Tuesday = new HourOfWeek(48);
-        private static readonly HourOfWeek Wednesday = new HourOfWeek(72);
-        private static readonly HourOfWeek Thursday = new HourOfWeek(96);
-        private static readonly HourOfWeek SaturdayNight = new HourOfWeek(167); // Maximum hour of week.
+        private static readonly HourOfWeek Sunday = HourOfWeek.Parse(0); // Minimum hour of week.
+        private static readonly HourOfWeek Monday = HourOfWeek.Parse(24);
+        private static readonly HourOfWeek Tuesday = HourOfWeek.Parse(48);
+        private static readonly HourOfWeek Wednesday = HourOfWeek.Parse(72);
+        private static readonly HourOfWeek Thursday = HourOfWeek.Parse(96);
+        private static readonly HourOfWeek SaturdayNight = HourOfWeek.Parse(167); // Maximum hour of week.
 
         private static readonly IReadOnlyList<HourOfWeek> ScheduleStartOfWeek = new[]
         {
@@ -290,7 +290,7 @@
                     var results = this.target.GetNextLiveDates(date, schedule, 10);
 
                     var expectedFirstReleaseTime = 0;
-                    var currentHourOfWeek = new HourOfWeek(date);
+                    var currentHourOfWeek = HourOfWeek.Parse(date);
                     for (var i = 0; i < schedule.Count; i++)
                     {
                         // If this never evaluates, it means the current date is beyond any scheduled date for this week,
@@ -305,7 +305,7 @@
                     for (var i = 0; i < results.Count; i++)
                     {
                         var expectedWeeklyReleaseTime = schedule[(i + expectedFirstReleaseTime) % schedule.Count];
-                        var actualWeeklyReleaseTime = new HourOfWeek(results[i]);
+                        var actualWeeklyReleaseTime = HourOfWeek.Parse(results[i]);
 
                         Assert.AreEqual(expectedWeeklyReleaseTime, actualWeeklyReleaseTime);
                     }

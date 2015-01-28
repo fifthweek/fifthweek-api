@@ -26,6 +26,7 @@
         private static readonly ValidCollectionName CollectionName = ValidCollectionName.Parse("Bat puns");
 
         private Mock<ICommandHandler<CreateCollectionCommand>> createCollection;
+        private Mock<ICommandHandler<UpdateCollectionCommand>> updateCollection;
         private Mock<IQueryHandler<GetLiveDateOfNewQueuedPostQuery, DateTime>> getLiveDateOfNewQueuedPost;
         private Mock<IRequesterContext> requesterContext;
         private Mock<IGuidCreator> guidCreator;
@@ -35,10 +36,16 @@
         public void Initialize()
         {
             this.createCollection = new Mock<ICommandHandler<CreateCollectionCommand>>();
+            this.updateCollection = new Mock<ICommandHandler<UpdateCollectionCommand>>();
             this.getLiveDateOfNewQueuedPost = new Mock<IQueryHandler<GetLiveDateOfNewQueuedPostQuery, DateTime>>();
             this.requesterContext = new Mock<IRequesterContext>();
             this.guidCreator = new Mock<IGuidCreator>();
-            this.target = new CollectionController(this.createCollection.Object, this.getLiveDateOfNewQueuedPost.Object, this.requesterContext.Object, this.guidCreator.Object);
+            this.target = new CollectionController(
+                this.createCollection.Object, 
+                this.updateCollection.Object,
+                this.getLiveDateOfNewQueuedPost.Object, 
+                this.requesterContext.Object, 
+                this.guidCreator.Object);
         }
 
         [TestMethod]

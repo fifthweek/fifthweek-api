@@ -16,6 +16,7 @@
     public partial class CollectionController : ApiController
     {
         private readonly ICommandHandler<CreateCollectionCommand> createCollection;
+        private readonly ICommandHandler<UpdateCollectionCommand> updateCollection;
         private readonly IQueryHandler<GetLiveDateOfNewQueuedPostQuery, DateTime> getLiveDateOfNewQueuedPost;
         private readonly IRequesterContext requesterContext;
         private readonly IGuidCreator guidCreator;

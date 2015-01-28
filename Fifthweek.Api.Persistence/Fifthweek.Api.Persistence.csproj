@@ -210,6 +210,10 @@
     <Compile Include="Migrations\201501281033006_AddCreationDateToCollections.Designer.cs">
       <DependentUpon>201501281033006_AddCreationDateToCollections.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201501281554133_AddVisibiltyFlagToChannels.cs" />
+    <Compile Include="Migrations\201501281554133_AddVisibiltyFlagToChannels.Designer.cs">
+      <DependentUpon>201501281554133_AddVisibiltyFlagToChannels.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Post.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -322,6 +326,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201501281033006_AddCreationDateToCollections.resx">
       <DependentUpon>201501281033006_AddCreationDateToCollections.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201501281554133_AddVisibiltyFlagToChannels.resx">
+      <DependentUpon>201501281554133_AddVisibiltyFlagToChannels.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
