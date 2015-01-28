@@ -66,6 +66,8 @@
 #>
 
 <#+
+	public const string Tab = "    ";
+
 	public static bool IsEnumerableType(CodeType type, AutomationHelper visualStudioHelper)
 	{
 		var interfaces = Enumerable.Empty<EnvDTE.CodeInterface>();
@@ -342,11 +344,13 @@
         {
             this.output.WriteLine("namespace " + this.FirstCodeClass.Namespace.Name);
             this.output.WriteLine("{");
+			this.output.PushIndent(Tab);
 
             this.WriteUsings();
-
-            WriteClass(mainClassSignature, mainClassHeader, renderMainClass, renderExtensionClass);
-
+			this.output.WriteLine("");
+            this.WriteClass(mainClassSignature, mainClassHeader, renderMainClass, renderExtensionClass);
+			
+			this.output.PopIndent();
             this.output.WriteLine("}");
         }
 
@@ -363,51 +367,57 @@
 
             foreach (var import in imports)
             {
-                this.output.WriteLine("    using " + import + ";"); 
+                this.output.WriteLine("using " + import + ";"); 
             }
         }
 
         private void WriteClass(string mainClassSignature = null, string mainClassHeader = null, Action renderMainClass = null, Action renderExtensionClass = null)
         {
             var classHierarchy = GetEnclosingClasses();
-            string tabs;
 
             for (var i = 0; i < classHierarchy.Count - 1; i++)
             {
-                tabs = new string(' ', (i + 1) * 4);
-                this.output.WriteLine(tabs + "public partial class " + this.GetClassSignature(classHierarchy[i]));
-                this.output.WriteLine(tabs + "{");
+                this.output.WriteLine("public partial class " + this.GetClassSignature(classHierarchy[i]));
+                this.output.WriteLine("{");
+				this.output.PushIndent(Tab);
             }
 
             var name = this.GetClassSignature(classHierarchy.Last());
-            tabs = new string(' ', classHierarchy.Count * 4);
 
             if (renderMainClass != null)
             {
 				if (mainClassHeader != null)
                 {
-					this.output.WriteLine(tabs + mainClassHeader);
+					this.output.WriteLine(mainClassHeader);
                 }
 
-                this.output.WriteLine(tabs + "public partial class " + name + " " + (mainClassSignature ?? string.Empty));
-                this.output.WriteLine(tabs + "{");
-                renderMainClass();            
-                this.output.WriteLine(tabs + "}");
-                this.output.WriteLine("");
+                this.output.WriteLine("public partial class " + name + " " + (mainClassSignature ?? string.Empty));
+                this.output.WriteLine("{");
+				this.output.PushIndent(Tab);
+                renderMainClass();
+				this.output.PopIndent();
+                this.output.WriteLine("}");
             }
 
             if (renderExtensionClass != null)
             {
-                this.output.WriteLine(tabs + "public static partial class " + this.CompanionClassName);
-                this.output.WriteLine(tabs + "{");
-                renderExtensionClass();            
-                this.output.WriteLine(tabs + "}");
+				if (renderMainClass != null)
+				{
+					this.output.WriteLine("");
+				}
+
+                this.output.WriteLine("public static partial class " + this.CompanionClassName);
+                this.output.WriteLine("{");
+				this.output.PushIndent(Tab);
+                renderExtensionClass();
+				this.output.PopIndent();
+                this.output.WriteLine("}");
             }
 
             for (var i = 0; i < classHierarchy.Count - 1; i++)
             {
-                tabs = new string(' ', (classHierarchy.Count - i) * 4);
-                this.output.WriteLine(tabs + "}");
+				this.output.PopIndent();
+                this.output.WriteLine("}");
             }
         }
 

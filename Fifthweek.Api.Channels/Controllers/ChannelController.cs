@@ -18,10 +18,10 @@
         private readonly IGuidCreator guidCreator;
 
         [Route]
-        public async Task<ChannelId> PostChannelAsync(NewChannelData newChannel)
+        public async Task<ChannelId> PostChannelAsync(NewChannelData newChannelData)
         {
-            newChannel.AssertBodyProvided("newChannel");
-            newChannel.Parse();
+            newChannelData.AssertBodyProvided("newChannel");
+            var newChannel = newChannelData.Parse();
 
             var requester = this.requesterContext.GetRequester();
             var newChannelId = new ChannelId(this.guidCreator.CreateSqlSequential());
@@ -31,18 +31,18 @@
                     requester,
                     newChannelId,
                     newChannel.SubscriptionId,
-                    newChannel.NameObject,
-                    newChannel.PriceObject));
+                    newChannel.Name,
+                    newChannel.Price));
 
             return newChannelId;
         }
 
         [Route("{channelId}")]
-        public async Task<IHttpActionResult> PutChannelAsync(string channelId, [FromBody]UpdatedChannelData channel)
+        public async Task<IHttpActionResult> PutChannelAsync(string channelId, [FromBody]UpdatedChannelData channelData)
         {
             channelId.AssertUrlParameterProvided("channelId");
-            channel.AssertBodyProvided("channel");
-            channel.Parse();
+            channelData.AssertBodyProvided("channel");
+            var channel = channelData.Parse();
 
             var requester = this.requesterContext.GetRequester();
             var channelIdObject = new ChannelId(channelId.DecodeGuid());
@@ -51,8 +51,8 @@
                 new UpdateChannelCommand(
                     requester,
                     channelIdObject,
-                    channel.NameObject,
-                    channel.PriceObject,
+                    channel.Name,
+                    channel.Price,
                     channel.IsVisibleToNonSubscribers));
 
             return this.Ok();

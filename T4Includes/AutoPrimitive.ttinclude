@@ -30,44 +30,44 @@
 
         unifiedClass.WriteNamespaceAndClassWithSignature(null, "[Newtonsoft.Json.JsonConverter(typeof(JsonConverter))]",() => {
 #>
-		public class JsonConverter : Newtonsoft.Json.JsonConverter
+public class JsonConverter : Newtonsoft.Json.JsonConverter
+{
+    public override void WriteJson(Newtonsoft.Json.JsonWriter writer, object value, Newtonsoft.Json.JsonSerializer serializer)
+    {
+        var valueType = (<#= unifiedClass.FirstCodeClass.Name #>)value;
+        serializer.Serialize(writer, valueType.Value);
+    }
+
+    public override object ReadJson(Newtonsoft.Json.JsonReader reader, Type objectType, object existingValue, Newtonsoft.Json.JsonSerializer serializer)
+    {
+        if (objectType != typeof(<#= unifiedClass.FirstCodeClass.Name #>))
         {
-            public override void WriteJson(Newtonsoft.Json.JsonWriter writer, object value, Newtonsoft.Json.JsonSerializer serializer)
-            {
-                var valueType = (<#= unifiedClass.FirstCodeClass.Name #>)value;
-                serializer.Serialize(writer, valueType.Value);
-            }
-
-            public override object ReadJson(Newtonsoft.Json.JsonReader reader, Type objectType, object existingValue, Newtonsoft.Json.JsonSerializer serializer)
-            {
-                if (objectType != typeof(<#= unifiedClass.FirstCodeClass.Name #>))
-                {
-                    throw new ArgumentException("Expected to deserialize JSON for type " + typeof(<#= unifiedClass.FirstCodeClass.Name #>).Name, "objectType");
-                }
-
-                var value = serializer.Deserialize<<#= singleProperty.Type.AsFullName #>>(reader);
-                return new <#= unifiedClass.FirstCodeClass.Name #>(value);
-            }
-
-            public override bool CanConvert(Type objectType)
-            {
-                return objectType == typeof(<#= unifiedClass.FirstCodeClass.Name #>);
-            }
+            throw new ArgumentException("Expected to deserialize JSON for type " + typeof(<#= unifiedClass.FirstCodeClass.Name #>).Name, "objectType");
         }
 
-		public class DapperTypeHandler : Dapper.SqlMapper.TypeHandler<<#= unifiedClass.FirstCodeClass.Name #>>, Fifthweek.Api.Persistence.IAutoRegisteredTypeHandler<<#= unifiedClass.FirstCodeClass.Name #>>
-        {
-            public override void SetValue(System.Data.IDbDataParameter parameter, <#= unifiedClass.FirstCodeClass.Name #> value)
-            {
-                parameter.DbType = System.Data.DbType.<#= singleProperty.Type.CodeType.Name #>;
-                parameter.Value = value.Value;
-            }
+        var value = serializer.Deserialize<<#= singleProperty.Type.AsFullName #>>(reader);
+        return new <#= unifiedClass.FirstCodeClass.Name #>(value);
+    }
 
-            public override <#= unifiedClass.FirstCodeClass.Name #> Parse(object value)
-            {
-                return new <#= unifiedClass.FirstCodeClass.Name #>((<#= singleProperty.Type.AsFullName #>)value);
-            }
-        }
+    public override bool CanConvert(Type objectType)
+    {
+        return objectType == typeof(<#= unifiedClass.FirstCodeClass.Name #>);
+    }
+}
+
+public class DapperTypeHandler : Dapper.SqlMapper.TypeHandler<<#= unifiedClass.FirstCodeClass.Name #>>, Fifthweek.Api.Persistence.IAutoRegisteredTypeHandler<<#= unifiedClass.FirstCodeClass.Name #>>
+{
+    public override void SetValue(System.Data.IDbDataParameter parameter, <#= unifiedClass.FirstCodeClass.Name #> value)
+    {
+        parameter.DbType = System.Data.DbType.<#= singleProperty.Type.CodeType.Name #>;
+        parameter.Value = value.Value;
+    }
+
+    public override <#= unifiedClass.FirstCodeClass.Name #> Parse(object value)
+    {
+        return new <#= unifiedClass.FirstCodeClass.Name #>((<#= singleProperty.Type.AsFullName #>)value);
+    }
+}
 <#
         });
     }

@@ -44,7 +44,7 @@
         [TestMethod]
         public async Task WhenPostingChannel_ItShouldIssueCreateChannelCommand()
         {
-            var data = new NewChannelData(null, null, SubscriptionId, ChannelName.Value, Price.Value);
+            var data = new NewChannelData(SubscriptionId, ChannelName.Value, Price.Value);
             var command = new CreateChannelCommand(Requester, ChannelId, SubscriptionId, ChannelName, Price);
 
             this.requesterContext.Setup(_ => _.GetRequester()).Returns(Requester);

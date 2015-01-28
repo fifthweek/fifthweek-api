@@ -7,7 +7,6 @@
 <#@ import namespace="System.Collections.Generic" #>
 <#
     var AutoConstructorAttributeName = "AutoConstructor";
-    var OptionalAttributeName = "Optional";
 
     foreach(UnifiedClass unifiedClass in allClasses)
     {
@@ -23,46 +22,62 @@
             continue;
         }
 
-        var requiredNullableParameters = parameters.Where(p => p.Attributes.OfType<CodeAttribute>().All(_ => !_.Name.StartsWith(OptionalAttributeName)));
-
         unifiedClass.WriteNamespaceAndClass(() => {
-#>
-        public <#= unifiedClass.FirstCodeClass.Name #>(
-<#
-    for (var i = 0; i < parameters.Count; i++)
-    {
-        var parameter = parameters[i];
-#>
-            <#= parameter.TypeName #> <#= parameter.ConstructorParameter #><#= i < parameters.Count - 1 ? ", " : ")" #>
-<#
-    }
-#>
-        {
-<#
-    foreach(var parameter in requiredNullableParameters)
-    {
-#>
-            if (<#= parameter.ConstructorParameter #> == null)
-            {
-                throw new ArgumentNullException("<#= parameter.ConstructorParameter #>");
-            }
-
-<#
-    }
-
-    foreach(var parameter in parameters)
-    {
-#>
-            this.<#= parameter.AssigneeName #> = <#= parameter.ConstructorParameter #>;
-<#
-    }
-#>
-        }
-<#
+			RenderConstructor(unifiedClass.FirstCodeClass.Name, parameters, this);
         });
     }
 #>
 <#+
+	public const string OptionalAttributeName = "Optional";
+
+	public static void RenderConstructor(string className, IReadOnlyList<AutoConstructorParameter> parameters, TextTransformation output)
+	{
+		var requiredNullableParameters = parameters.Where(p => p.Attributes.OfType<CodeAttribute>().All(_ => !_.Name.StartsWith(OptionalAttributeName)));
+
+		output.WriteLine("public " + className + "(");
+		output.PushIndent(Tab);
+
+		for (var i = 0; i < parameters.Count; i++)
+		{
+			var parameter = parameters[i];
+			output.Write(parameter.TypeName);
+			output.Write(" ");
+			output.Write(parameter.ConstructorParameter);
+			if (i < parameters.Count - 1)
+            {
+				output.WriteLine(",");
+            }
+			else
+            {
+				output.WriteLine(")");
+            }
+		}
+
+		output.PopIndent();
+
+		output.WriteLine("{");
+		output.PushIndent(Tab);
+
+		foreach(var parameter in requiredNullableParameters)
+		{
+			output.WriteLine("if (" + parameter.ConstructorParameter + " == null)");
+			output.WriteLine("{");
+			output.PushIndent(Tab);
+			output.WriteLine("throw new ArgumentNullException(\"" + parameter.ConstructorParameter + "\");");
+			output.PopIndent();
+			output.WriteLine("}");
+			output.WriteLine("");
+		}
+
+		foreach(var parameter in parameters)
+		{
+			output.WriteLine("this." + parameter.AssigneeName + " = " + parameter.ConstructorParameter + ";");
+		}
+
+		output.PopIndent();
+		output.WriteLine("}");
+	}
+
     public class AutoConstructorParameter
     {
         public string TypeName;

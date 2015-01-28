@@ -32,80 +32,80 @@
 			if (requiresBuilder)
 			{
 #>
-        public Builder ToBuilder()
-        {
-            var builder = new Builder();
+public Builder ToBuilder()
+{
+    var builder = new Builder();
 <#
     for (var i = 0; i < parameters.Count; i++)
     {
         var parameter = parameters[i];
 #>
-            builder.<#= parameter.AssigneeName #> = this.<#= parameter.AssigneeName #>;
+    builder.<#= parameter.AssigneeName #> = this.<#= parameter.AssigneeName #>;
 <#
     }
 #>
-            return builder;
-        }
+    return builder;
+}
 
-        public <#= unifiedClass.FirstCodeClass.Name #> Copy(Action<Builder> applyDelta)
-        {
-            var builder = this.ToBuilder();
-            applyDelta(builder);
-            return builder.Build();
-        }
+public <#= unifiedClass.FirstCodeClass.Name #> Copy(Action<Builder> applyDelta)
+{
+    var builder = this.ToBuilder();
+    applyDelta(builder);
+    return builder.Build();
+}
 
-        public partial class Builder
-        {
+public partial class Builder
+{
 <#
     for (var i = 0; i < parameters.Count; i++)
     {
         var parameter = parameters[i];
 #>
-            public <#= parameter.TypeName #> <#= parameter.AssigneeName #> { get; set; }
+    public <#= parameter.TypeName #> <#= parameter.AssigneeName #> { get; set; }
 <#
     }
 #>
 
-            public <#= unifiedClass.FirstCodeClass.Name #> Build()
-            {
-                return new <#= unifiedClass.FirstCodeClass.Name #>(
+    public <#= unifiedClass.FirstCodeClass.Name #> Build()
+    {
+        return new <#= unifiedClass.FirstCodeClass.Name #>(
 <#
     for (var i = 0; i < parameters.Count; i++)
     {
         var parameter = parameters[i];
 #>
-                    this.<#= parameter.AssigneeName #><#= i < parameters.Count - 1 ? ", " : ");" #>
+            this.<#= parameter.AssigneeName #><#= i < parameters.Count - 1 ? ", " : ");" #>
 <#
     }
 #>
-            }
-        }
+    }
+}
 <#
 			}
 			else
             {
 #>
-        public <#= unifiedClass.FirstCodeClass.Name #> Copy()
-        {
-            var copy = new <#= unifiedClass.FirstCodeClass.Name #>();
+public <#= unifiedClass.FirstCodeClass.Name #> Copy()
+{
+    var copy = new <#= unifiedClass.FirstCodeClass.Name #>();
 <#
     for (var i = 0; i < parameters.Count; i++)
     {
         var parameter = parameters[i];
 #>
-            copy.<#= parameter.AssigneeName #> = this.<#= parameter.AssigneeName #>;
+    copy.<#= parameter.AssigneeName #> = this.<#= parameter.AssigneeName #>;
 <#
     }
 #>
-            return copy;
-        }
+    return copy;
+}
 
-        public Post Copy(Action<<#= unifiedClass.FirstCodeClass.Name #>> applyDelta)
-        {
-            var copy = this.Copy();
-            applyDelta(copy);
-            return copy;
-        }
+public <#= unifiedClass.FirstCodeClass.Name #> Copy(Action<<#= unifiedClass.FirstCodeClass.Name #>> applyDelta)
+{
+    var copy = this.Copy();
+    applyDelta(copy);
+    return copy;
+}
 <#
             }
         });
