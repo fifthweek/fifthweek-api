@@ -144,7 +144,7 @@
         public async Task WhenGettingCreatorNewsfeed_ItShouldReturnResultFromCreatorBacklogQuery()
         {
             var query = new GetCreatorNewsfeedQuery(Requester, UserId, NonNegativeInt.Parse(10), PositiveInt.Parse(5));
-            var requestData = new CreatorNewsfeedRequestData { Count = 5, StartIndex = 10 };
+            var requestData = new CreatorNewsfeedPaginationData { Count = 5, StartIndex = 10 };
             var queryResult = new[] { new NewsfeedPost(PostId, ChannelId, CollectionId, new Comment(""), null, null, DateTime.UtcNow) };
 
             this.requesterContext.Setup(_ => _.GetRequester()).Returns(Requester);
@@ -159,7 +159,7 @@
         [ExpectedException(typeof(BadRequestException))]
         public async Task WhenGettingCreatorNewsfeedWithoutSpecifyingCreatorId_ItShouldThrowBadRequestException()
         {
-            await this.target.GetCreatorNewsfeed(string.Empty, new CreatorNewsfeedRequestData());
+            await this.target.GetCreatorNewsfeed(string.Empty, new CreatorNewsfeedPaginationData());
         }
 
         [TestMethod]

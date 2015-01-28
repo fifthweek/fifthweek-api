@@ -4,7 +4,7 @@
     using Fifthweek.Shared;
 
     [AutoEqualityMembers]
-    public partial class CreatorNewsfeedRequestData
+    public partial class CreatorNewsfeedPaginationData
     {
         [Parsed(typeof(NonNegativeInt))]
         public int StartIndex { get; set; }

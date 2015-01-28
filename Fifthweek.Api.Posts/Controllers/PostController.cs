@@ -27,10 +27,10 @@
         private readonly IGuidCreator guidCreator;
 
         [Route("notes")]
-        public async Task<IHttpActionResult> PostNote(NewNoteData note)
+        public async Task<IHttpActionResult> PostNote(NewNoteData noteData)
         {
-            note.AssertBodyProvided("note");
-            note.Parse();
+            noteData.AssertBodyProvided("noteData");
+            var note = noteData.Parse();
 
             var requester = this.requesterContext.GetRequester();
             var newPostId = new PostId(this.guidCreator.CreateSqlSequential());
@@ -39,17 +39,17 @@
                 requester,
                 newPostId,
                 note.ChannelId,
-                note.NoteObject,
+                note.Note,
                 note.ScheduledPostDate));
 
             return this.Ok();
         }
 
         [Route("images")]
-        public async Task<IHttpActionResult> PostImage(NewImageData image)
+        public async Task<IHttpActionResult> PostImage(NewImageData imageData)
         {
-            image.AssertBodyProvided("image");
-            image.Parse();
+            imageData.AssertBodyProvided("imageData");
+            var image = imageData.Parse();
 
             var requester = this.requesterContext.GetRequester();
             var newPostId = new PostId(this.guidCreator.CreateSqlSequential());
@@ -59,7 +59,7 @@
                 newPostId,
                 image.CollectionId,
                 image.ImageFileId,
-                image.CommentObject,
+                image.Comment,
                 image.ScheduledPostDate,
                 image.IsQueued));
 
@@ -67,10 +67,10 @@
         }
 
         [Route("files")]
-        public async Task<IHttpActionResult> PostFile(NewFileData file)
+        public async Task<IHttpActionResult> PostFile(NewFileData fileData)
         {
-            file.AssertBodyProvided("file");
-            file.Parse();
+            fileData.AssertBodyProvided("fileData");
+            var file = fileData.Parse();
 
             var requester = this.requesterContext.GetRequester();
             var newPostId = new PostId(this.guidCreator.CreateSqlSequential());
@@ -80,7 +80,7 @@
                 newPostId,
                 file.CollectionId,
                 file.FileId,
-                file.CommentObject,
+                file.Comment,
                 file.ScheduledPostDate,
                 file.IsQueued));
 
@@ -112,16 +112,16 @@
         }
 
         [Route("creatorNewsfeed/{creatorId}")]
-        public async Task<IEnumerable<NewsfeedPost>> GetCreatorNewsfeed(string creatorId, [FromUri]CreatorNewsfeedRequestData requestData)
+        public async Task<IEnumerable<NewsfeedPost>> GetCreatorNewsfeed(string creatorId, [FromUri]CreatorNewsfeedPaginationData newsfeedPaginationData)
         {
             creatorId.AssertUrlParameterProvided("creatorId");
-            requestData.AssertUrlParameterProvided("requestData");
-            requestData.Parse();
+            newsfeedPaginationData.AssertUrlParameterProvided("newsfeedPaginationData");
+            var newsfeedPagination = newsfeedPaginationData.Parse();
 
             var creatorIdObject = new UserId(creatorId.DecodeGuid());
             var requester = this.requesterContext.GetRequester();
 
-            return await this.getCreatorNewsfeed.HandleAsync(new GetCreatorNewsfeedQuery(requester, creatorIdObject, requestData.StartIndexObject, requestData.CountObject));
+            return await this.getCreatorNewsfeed.HandleAsync(new GetCreatorNewsfeedQuery(requester, creatorIdObject, newsfeedPagination.StartIndex, newsfeedPagination.Count));
         }
 
         [Route("{postId}")]

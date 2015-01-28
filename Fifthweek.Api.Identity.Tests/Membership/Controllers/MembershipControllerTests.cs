@@ -55,8 +55,14 @@
         public async Task WhenPostingRegistrations_ItShouldIssueRegisterUserCommand()
         {
             var registration = NewRegistrationData();
-            var command = RegisterUserCommandTests.NewCommand(Guid.Empty, registration);
+            var command = new RegisterUserCommand(
+                UserId,
+                registration.ExampleWork,
+                ValidEmail.Parse(registration.Email),
+                ValidUsername.Parse(registration.Username),
+                ValidPassword.Parse(registration.Password));
 
+            this.guidCreator.Setup(_ => _.CreateSqlSequential()).Returns(UserId.Value);
             this.registerUser.Setup(v => v.HandleAsync(command)).Returns(Task.FromResult(0));
 
             var result = await this.controller.PostRegistrationAsync(registration);
@@ -121,7 +127,7 @@
 
             this.isPasswordResetTokenValid.Setup(v => v.HandleAsync(query)).Returns(Task.FromResult(true));
 
-            var result = await this.controller.GetPasswordResetTokenValidityAsync(UserId.Value, Token);
+            var result = await this.controller.GetPasswordResetTokenValidityAsync(UserId.Value.EncodeGuid(), Token);
 
             Assert.IsInstanceOfType(result, typeof(OkResult));
         }
@@ -133,7 +139,7 @@
 
             this.isPasswordResetTokenValid.Setup(v => v.HandleAsync(query)).Returns(Task.FromResult(false));
 
-            var result = await this.controller.GetPasswordResetTokenValidityAsync(UserId.Value, Token);
+            var result = await this.controller.GetPasswordResetTokenValidityAsync(UserId.Value.EncodeGuid(), Token);
 
             Assert.IsInstanceOfType(result, typeof(NotFoundResult));
         }

@@ -12,9 +12,6 @@ namespace Fifthweek.Api.Channels
     using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.Api.Persistence;
     using Fifthweek.CodeGeneration;
-    using System;
-    using System.Linq;
-    using Fifthweek.Api.Channels.Shared;
 
     public partial class ChannelOwnership 
     {
@@ -37,10 +34,6 @@ namespace Fifthweek.Api.Channels
     using Fifthweek.Api.Core;
     using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.CodeGeneration;
-    using System;
-    using System.Linq;
-    using Dapper;
-    using Fifthweek.Api.Persistence;
 
     public partial class ChannelSecurity 
     {
@@ -58,15 +51,10 @@ namespace Fifthweek.Api.Channels
 }
 namespace Fifthweek.Api.Channels.Commands
 {
-    using System;
-    using System.Linq;
     using Fifthweek.Api.Channels.Shared;
     using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.Api.Subscriptions.Shared;
     using Fifthweek.CodeGeneration;
-    using System.Threading.Tasks;
-    using Fifthweek.Api.Core;
-    using Fifthweek.Api.Persistence;
 
     public partial class CreateChannelCommand 
     {
@@ -113,14 +101,12 @@ namespace Fifthweek.Api.Channels.Commands
 namespace Fifthweek.Api.Channels.Commands
 {
     using System;
-    using System.Linq;
-    using Fifthweek.Api.Channels.Shared;
-    using Fifthweek.Api.Identity.Shared.Membership;
-    using Fifthweek.Api.Subscriptions.Shared;
-    using Fifthweek.CodeGeneration;
     using System.Threading.Tasks;
     using Fifthweek.Api.Core;
+    using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.Api.Persistence;
+    using Fifthweek.Api.Subscriptions.Shared;
+    using Fifthweek.CodeGeneration;
 
     public partial class CreateChannelCommandHandler 
     {
@@ -152,15 +138,9 @@ namespace Fifthweek.Api.Channels.Commands
 }
 namespace Fifthweek.Api.Channels.Commands
 {
-    using System;
-    using System.Linq;
     using Fifthweek.Api.Channels.Shared;
     using Fifthweek.Api.Identity.Shared.Membership;
-    using Fifthweek.Api.Subscriptions.Shared;
     using Fifthweek.CodeGeneration;
-    using System.Threading.Tasks;
-    using Fifthweek.Api.Core;
-    using Fifthweek.Api.Persistence;
 
     public partial class UpdateChannelCommand 
     {
@@ -206,15 +186,12 @@ namespace Fifthweek.Api.Channels.Commands
 }
 namespace Fifthweek.Api.Channels.Commands
 {
-    using System;
-    using System.Linq;
-    using Fifthweek.Api.Channels.Shared;
-    using Fifthweek.Api.Identity.Shared.Membership;
-    using Fifthweek.Api.Subscriptions.Shared;
-    using Fifthweek.CodeGeneration;
     using System.Threading.Tasks;
+    using Fifthweek.Api.Channels.Shared;
     using Fifthweek.Api.Core;
+    using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.Api.Persistence;
+    using Fifthweek.CodeGeneration;
 
     public partial class UpdateChannelCommandHandler 
     {
@@ -246,8 +223,6 @@ namespace Fifthweek.Api.Channels.Commands
 }
 namespace Fifthweek.Api.Channels.Controllers
 {
-    using System;
-    using System.Linq;
     using System.Threading.Tasks;
     using System.Web.Http;
     using Fifthweek.Api.Channels.Commands;
@@ -255,7 +230,6 @@ namespace Fifthweek.Api.Channels.Controllers
     using Fifthweek.Api.Core;
     using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.CodeGeneration;
-    using Fifthweek.Api.Subscriptions.Shared;
 
     public partial class ChannelController 
     {
@@ -294,16 +268,9 @@ namespace Fifthweek.Api.Channels.Controllers
 }
 namespace Fifthweek.Api.Channels.Controllers
 {
-    using System;
-    using System.Linq;
-    using System.Threading.Tasks;
-    using System.Web.Http;
-    using Fifthweek.Api.Channels.Commands;
     using Fifthweek.Api.Channels.Shared;
-    using Fifthweek.Api.Core;
-    using Fifthweek.Api.Identity.Shared.Membership;
-    using Fifthweek.CodeGeneration;
     using Fifthweek.Api.Subscriptions.Shared;
+    using Fifthweek.CodeGeneration;
 
     public partial class NewChannelData 
     {
@@ -335,16 +302,8 @@ namespace Fifthweek.Api.Channels.Controllers
 }
 namespace Fifthweek.Api.Channels.Controllers
 {
-    using System;
-    using System.Linq;
-    using System.Threading.Tasks;
-    using System.Web.Http;
-    using Fifthweek.Api.Channels.Commands;
     using Fifthweek.Api.Channels.Shared;
-    using Fifthweek.Api.Core;
-    using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.CodeGeneration;
-    using Fifthweek.Api.Subscriptions.Shared;
 
     public partial class UpdatedChannelData 
     {
@@ -377,15 +336,10 @@ namespace Fifthweek.Api.Channels.Controllers
 
 namespace Fifthweek.Api.Channels.Commands
 {
-    using System;
-    using System.Linq;
     using Fifthweek.Api.Channels.Shared;
     using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.Api.Subscriptions.Shared;
     using Fifthweek.CodeGeneration;
-    using System.Threading.Tasks;
-    using Fifthweek.Api.Core;
-    using Fifthweek.Api.Persistence;
 
     public partial class CreateChannelCommand 
     {
@@ -461,15 +415,9 @@ namespace Fifthweek.Api.Channels.Commands
 }
 namespace Fifthweek.Api.Channels.Commands
 {
-    using System;
-    using System.Linq;
     using Fifthweek.Api.Channels.Shared;
     using Fifthweek.Api.Identity.Shared.Membership;
-    using Fifthweek.Api.Subscriptions.Shared;
     using Fifthweek.CodeGeneration;
-    using System.Threading.Tasks;
-    using Fifthweek.Api.Core;
-    using Fifthweek.Api.Persistence;
 
     public partial class UpdateChannelCommand 
     {
@@ -545,16 +493,9 @@ namespace Fifthweek.Api.Channels.Commands
 }
 namespace Fifthweek.Api.Channels.Controllers
 {
-    using System;
-    using System.Linq;
-    using System.Threading.Tasks;
-    using System.Web.Http;
-    using Fifthweek.Api.Channels.Commands;
     using Fifthweek.Api.Channels.Shared;
-    using Fifthweek.Api.Core;
-    using Fifthweek.Api.Identity.Shared.Membership;
-    using Fifthweek.CodeGeneration;
     using Fifthweek.Api.Subscriptions.Shared;
+    using Fifthweek.CodeGeneration;
 
     public partial class NewChannelData 
     {
@@ -618,16 +559,8 @@ namespace Fifthweek.Api.Channels.Controllers
 }
 namespace Fifthweek.Api.Channels.Controllers
 {
-    using System;
-    using System.Linq;
-    using System.Threading.Tasks;
-    using System.Web.Http;
-    using Fifthweek.Api.Channels.Commands;
     using Fifthweek.Api.Channels.Shared;
-    using Fifthweek.Api.Core;
-    using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.CodeGeneration;
-    using Fifthweek.Api.Subscriptions.Shared;
 
     public partial class UpdatedChannelData 
     {
@@ -691,16 +624,9 @@ namespace Fifthweek.Api.Channels.Controllers
 }
 namespace Fifthweek.Api.Channels.Controllers
 {
-    using System;
-    using System.Linq;
-    using System.Threading.Tasks;
-    using System.Web.Http;
-    using Fifthweek.Api.Channels.Commands;
     using Fifthweek.Api.Channels.Shared;
-    using Fifthweek.Api.Core;
-    using Fifthweek.Api.Identity.Shared.Membership;
-    using Fifthweek.CodeGeneration;
     using Fifthweek.Api.Subscriptions.Shared;
+    using Fifthweek.CodeGeneration;
 
     public partial class NewChannelData 
     {
@@ -791,16 +717,8 @@ namespace Fifthweek.Api.Channels.Controllers
 }
 namespace Fifthweek.Api.Channels.Controllers
 {
-    using System;
-    using System.Linq;
-    using System.Threading.Tasks;
-    using System.Web.Http;
-    using Fifthweek.Api.Channels.Commands;
     using Fifthweek.Api.Channels.Shared;
-    using Fifthweek.Api.Core;
-    using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.CodeGeneration;
-    using Fifthweek.Api.Subscriptions.Shared;
 
     public partial class UpdatedChannelData 
     {

@@ -23,23 +23,18 @@
     {
         private static readonly UserId UserId = new UserId(Guid.NewGuid());
         private static readonly DateTime TimeStamp = new SqlDateTime(DateTime.UtcNow).Value;
-        private static readonly RegistrationData RegistrationData = new RegistrationData
+        private static readonly RegistrationData.Parsed RegistrationData = new RegistrationData
         {
             Email = "test@testing.fifthweek.com",
             ExampleWork = "testing.fifthweek.com",
             Password = "TestPassword",
             Username = "test_username",
-        };
+        }.Parse();
 
         private Mock<IUserManager> userManager;
         private Mock<IFifthweekDbContext> fifthweekDbContext;
         private Mock<IPasswordHasher> passwordHasher;
         private RegisterUserDbStatement target;
-
-        static RegisterUserDbStatementTests()
-        {
-            RegistrationData.Parse();
-        }
 
         [TestInitialize]
         public void TestInitialize()
@@ -60,10 +55,10 @@
         {
             await this.target.ExecuteAsync(
                     null,
-                    RegistrationData.UsernameObject,
-                    RegistrationData.EmailObject,
+                    RegistrationData.Username,
+                    RegistrationData.Email,
                     RegistrationData.ExampleWork,
-                    RegistrationData.PasswordObject,
+                    RegistrationData.Password,
                     TimeStamp);
         }
 
@@ -74,9 +69,9 @@
             await this.target.ExecuteAsync(
                     UserId,
                     null,
-                    RegistrationData.EmailObject,
+                    RegistrationData.Email,
                     RegistrationData.ExampleWork,
-                    RegistrationData.PasswordObject,
+                    RegistrationData.Password,
                     TimeStamp);
         }
 
@@ -86,10 +81,10 @@
         {
             await this.target.ExecuteAsync(
                     UserId,
-                    RegistrationData.UsernameObject,
+                    RegistrationData.Username,
                     null,
                     RegistrationData.ExampleWork,
-                    RegistrationData.PasswordObject,
+                    RegistrationData.Password,
                     TimeStamp);
         }
 
@@ -99,8 +94,8 @@
         {
             await this.target.ExecuteAsync(
                     UserId,
-                    RegistrationData.UsernameObject,
-                    RegistrationData.EmailObject,
+                    RegistrationData.Username,
+                    RegistrationData.Email,
                     RegistrationData.ExampleWork,
                     null,
                     TimeStamp);
@@ -114,23 +109,23 @@
                 this.target = new RegisterUserDbStatement(this.userManager.Object, testDatabase.NewContext());
 
                 var hashedPassword = RegistrationData.Password + "1";
-                this.passwordHasher.Setup(v => v.HashPassword(RegistrationData.Password)).Returns(hashedPassword);
+                this.passwordHasher.Setup(v => v.HashPassword(RegistrationData.Password.Value)).Returns(hashedPassword);
 
                 await testDatabase.TakeSnapshotAsync();
 
                 await this.target.ExecuteAsync(
                     UserId,
-                    RegistrationData.UsernameObject,
-                    RegistrationData.EmailObject,
+                    RegistrationData.Username,
+                    RegistrationData.Email,
                     RegistrationData.ExampleWork,
-                    RegistrationData.PasswordObject,
+                    RegistrationData.Password,
                     TimeStamp);
 
                 var expectedUser = new FifthweekUser
                 {
                     Id = UserId.Value,
-                    UserName = RegistrationData.Username,
-                    Email = RegistrationData.Email,
+                    UserName = RegistrationData.Username.Value,
+                    Email = RegistrationData.Email.Value,
                     ExampleWork = RegistrationData.ExampleWork,
                     RegistrationDate = TimeStamp,
                     LastSignInDate = SqlDateTime.MinValue.Value,
@@ -153,23 +148,23 @@
                 this.target = new RegisterUserDbStatement(this.userManager.Object, testDatabase.NewContext());
 
                 var hashedPassword = RegistrationData.Password + "1";
-                this.passwordHasher.Setup(v => v.HashPassword(RegistrationData.Password)).Returns(hashedPassword);
+                this.passwordHasher.Setup(v => v.HashPassword(RegistrationData.Password.Value)).Returns(hashedPassword);
                
                 await testDatabase.TakeSnapshotAsync();
 
                 await this.target.ExecuteAsync(
                     UserId,
-                    RegistrationData.UsernameObject,
-                    RegistrationData.EmailObject,
+                    RegistrationData.Username,
+                    RegistrationData.Email,
                     null,
-                    RegistrationData.PasswordObject,
+                    RegistrationData.Password,
                     TimeStamp);
 
                 var expectedUser = new FifthweekUser
                 {
                     Id = UserId.Value,
-                    UserName = RegistrationData.Username,
-                    Email = RegistrationData.Email,
+                    UserName = RegistrationData.Username.Value,
+                    Email = RegistrationData.Email.Value,
                     ExampleWork = null,
                     RegistrationDate = TimeStamp,
                     LastSignInDate = SqlDateTime.MinValue.Value,
@@ -192,24 +187,24 @@
                 this.target = new RegisterUserDbStatement(this.userManager.Object, testDatabase.NewContext());
 
                 var hashedPassword = RegistrationData.Password + "1";
-                this.passwordHasher.Setup(v => v.HashPassword(RegistrationData.Password)).Returns(hashedPassword);
+                this.passwordHasher.Setup(v => v.HashPassword(RegistrationData.Password.Value)).Returns(hashedPassword);
 
                 await this.target.ExecuteAsync(
                     UserId,
-                    RegistrationData.UsernameObject,
-                    RegistrationData.EmailObject,
+                    RegistrationData.Username,
+                    RegistrationData.Email,
                     RegistrationData.ExampleWork,
-                    RegistrationData.PasswordObject,
+                    RegistrationData.Password,
                     TimeStamp);
 
                 await testDatabase.TakeSnapshotAsync();
 
                 await this.target.ExecuteAsync(
                     UserId,
-                    RegistrationData.UsernameObject,
-                    RegistrationData.EmailObject,
+                    RegistrationData.Username,
+                    RegistrationData.Email,
                     RegistrationData.ExampleWork,
-                    RegistrationData.PasswordObject,
+                    RegistrationData.Password,
                     TimeStamp);
 
                 return ExpectedSideEffects.None;
@@ -224,9 +219,9 @@
                 this.target = new RegisterUserDbStatement(this.userManager.Object, testDatabase.NewContext());
 
                 var hashedPassword = RegistrationData.Password + "1";
-                this.passwordHasher.Setup(v => v.HashPassword(RegistrationData.Password)).Returns(hashedPassword);
+                this.passwordHasher.Setup(v => v.HashPassword(RegistrationData.Password.Value)).Returns(hashedPassword);
 
-                await this.CreateUserAsync(testDatabase, "blah", RegistrationData.Email);
+                await this.CreateUserAsync(testDatabase, "blah", RegistrationData.Email.Value);
 
                 await testDatabase.TakeSnapshotAsync();
 
@@ -234,10 +229,10 @@
                 {
                     return this.target.ExecuteAsync(
                         UserId,
-                        RegistrationData.UsernameObject,
-                        RegistrationData.EmailObject,
+                        RegistrationData.Username,
+                        RegistrationData.Email,
                         RegistrationData.ExampleWork,
-                        RegistrationData.PasswordObject,
+                        RegistrationData.Password,
                         TimeStamp);
                 });
 
@@ -256,9 +251,9 @@
                 this.target = new RegisterUserDbStatement(this.userManager.Object, testDatabase.NewContext());
 
                 var hashedPassword = RegistrationData.Password + "1";
-                this.passwordHasher.Setup(v => v.HashPassword(RegistrationData.Password)).Returns(hashedPassword);
+                this.passwordHasher.Setup(v => v.HashPassword(RegistrationData.Password.Value)).Returns(hashedPassword);
 
-                await this.CreateUserAsync(testDatabase, RegistrationData.Username, RegistrationData.Email + "1");
+                await this.CreateUserAsync(testDatabase, RegistrationData.Username.Value, RegistrationData.Email + "1");
 
                 await testDatabase.TakeSnapshotAsync();
 
@@ -266,10 +261,10 @@
                 {
                     return this.target.ExecuteAsync(
                         UserId,
-                        RegistrationData.UsernameObject,
-                        RegistrationData.EmailObject,
+                        RegistrationData.Username,
+                        RegistrationData.Email,
                         RegistrationData.ExampleWork,
-                        RegistrationData.PasswordObject,
+                        RegistrationData.Password,
                         TimeStamp);
                 });
 

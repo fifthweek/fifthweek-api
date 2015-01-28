@@ -22,10 +22,10 @@
         private readonly IGuidCreator guidCreator;
 
         [Route]
-        public async Task<CollectionId> PostCollectionAsync(NewCollectionData newCollection)
+        public async Task<CollectionId> PostCollectionAsync(NewCollectionData newCollectionData)
         {
-            newCollection.AssertBodyProvided("newCollection");
-            newCollection.Parse();
+            newCollectionData.AssertBodyProvided("newCollectionData");
+            var newCollection = newCollectionData.Parse();
 
             var requester = this.requesterContext.GetRequester();
             var newCollectionId = new CollectionId(this.guidCreator.CreateSqlSequential());
@@ -35,7 +35,7 @@
                     requester,
                     newCollectionId,
                     newCollection.ChannelId,
-                    newCollection.NameObject));
+                    newCollection.Name));
 
             return newCollectionId;
         }

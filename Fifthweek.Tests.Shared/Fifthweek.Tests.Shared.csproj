@@ -54,7 +54,6 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
-    <Compile Include="DataTransferObjectTests.cs" />
     <Compile Include="EqualityTests.cs" />
     <Compile Include="ExpectedException.cs" />
     <Compile Include="ImmutableComplexTypeTests.cs" />

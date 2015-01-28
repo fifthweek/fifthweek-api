@@ -36,23 +36,23 @@
         }
 
         [Route("{userId}")]
-        public async Task Put(string userId, [FromBody]UpdatedAccountSettings updatedAccountSettings)
+        public async Task Put(string userId, [FromBody]UpdatedAccountSettings updatedAccountSettingsData)
         {
             userId.AssertUrlParameterProvided("userId");
-            updatedAccountSettings.AssertBodyProvided("updatedAccountSettings");
+            updatedAccountSettingsData.AssertBodyProvided("updatedAccountSettings");
 
+            var updatedAccountSettings = updatedAccountSettingsData.Parse();
             var requester = this.requesterContext.GetRequester();
             var requestedUserId = new UserId(userId.DecodeGuid());
             
-            updatedAccountSettings.Parse();
-            var newProfileImageId = new FileId(updatedAccountSettings.NewProfileImageId.DecodeGuid());
+            var newProfileImageId = new FileId(updatedAccountSettingsData.NewProfileImageId.DecodeGuid());
 
             var command = new UpdateAccountSettingsCommand(
                 requester,
                 requestedUserId,
-                updatedAccountSettings.NewUsernameObject,
-                updatedAccountSettings.NewEmailObject,
-                updatedAccountSettings.NewPasswordObject,
+                updatedAccountSettings.NewUsername,
+                updatedAccountSettings.NewEmail,
+                updatedAccountSettings.NewPassword,
                 newProfileImageId);
 
             await this.updateAccountSettings.HandleAsync(command);

@@ -1,35 +1,25 @@
 ﻿namespace Fifthweek.CodeGeneration.Tests
 {
-    using Fifthweek.Tests.Shared;
+    using System;
+
+    using Fifthweek.Api.Core;
 
     using Microsoft.VisualStudio.TestTools.UnitTesting;
 
     [TestClass]
-    public class ClassAugmentationParsingTests : DataTransferObjectTests<ClassAugmentationParsingDummy>
+    public class ClassAugmentationParsingTests
     {
-        [TestMethod]
-        public void ItShouldHaveNullCustomPrimitivesBeforeParseIsCalled()
-        {
-            var data = this.NewInstanceOfObjectA();
-
-            Assert.IsNull(data.SomeParsedStringObject);
-            Assert.IsNull(data.OptionalParsedStringObject);
-
-            Assert.IsNull(data.SomeParsedIntObject);
-            Assert.IsNull(data.OptionalParsedIntObject);
-        }
-
         [TestMethod]
         public void WhenParsingCustomPrimitives_ItShouldSetObjectPropertiesOnSuccess()
         {
             var data = this.NewInstanceOfObjectA();
-            data.Parse();
+            var parsed = data.Parse();
 
-            Assert.AreEqual<ParsedString>(data.SomeParsedStringObject, ParsedString.Parse(data.SomeParsedString));
-            Assert.AreEqual<ParsedString>(data.OptionalParsedStringObject, ParsedString.Parse(data.OptionalParsedString));
+            Assert.AreEqual(parsed.SomeParsedString, ParsedString.Parse(data.SomeParsedString));
+            Assert.AreEqual(parsed.OptionalParsedString, ParsedString.Parse(data.OptionalParsedString));
 
-            Assert.AreEqual<ParsedInt>(data.SomeParsedIntObject, ParsedInt.Parse(data.SomeParsedInt));
-            Assert.AreEqual<ParsedInt>(data.OptionalParsedIntObject, ParsedInt.Parse(data.OptionalParsedInt));
+            Assert.AreEqual(parsed.SomeParsedInt, ParsedInt.Parse(data.SomeParsedInt));
+            Assert.AreEqual(parsed.OptionalParsedInt, ParsedInt.Parse(data.OptionalParsedInt));
         }
 
         [TestMethod]
@@ -44,17 +34,27 @@
         [TestMethod]
         public void WhenParsingCustomPrimitives_ItShouldAllowNullForOptionalNonNullableObjects()
         {
-            this.GoodValue(
-                _ => _.OptionalParsedString = null,
-                _ => _.OptionalParsedStringObject == null);
+            var data = this.NewInstanceOfObjectA();
+            data.OptionalParsedString = null;
+            var parsed = data.Parse();
+            Assert.IsNull(parsed.OptionalParsedString);
         }
 
-        protected override void Parse(ClassAugmentationParsingDummy obj)
+        public void BadValue(Action<ClassAugmentationParsingDummy> setInvalidFieldValue)
         {
-            obj.Parse();
+            try
+            {
+                var data = this.NewInstanceOfObjectA();
+                setInvalidFieldValue(data);
+                data.Parse();
+                Assert.Fail("Expected model validation exception");
+            }
+            catch (ModelValidationException)
+            {
+            }
         }
 
-        protected override ClassAugmentationParsingDummy NewInstanceOfObjectA()
+        protected ClassAugmentationParsingDummy NewInstanceOfObjectA()
         {
             return new ClassAugmentationParsingDummy
             {

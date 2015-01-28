@@ -18,10 +18,10 @@
         private readonly IGuidCreator guidCreator;
 
         [Route("")]
-        public async Task<IHttpActionResult> PostSubscription(NewSubscriptionData subscription)
+        public async Task<IHttpActionResult> PostSubscription(NewSubscriptionData subscriptionData)
         {
-            subscription.AssertBodyProvided("subscription");
-            subscription.Parse();
+            subscriptionData.AssertBodyProvided("subscriptionData");
+            var subscription = subscriptionData.Parse();
 
             var requester = this.requesterContext.GetRequester();
             var newSubscriptionId = new SubscriptionId(this.guidCreator.CreateSqlSequential());
@@ -29,19 +29,19 @@
             await this.createSubscription.HandleAsync(new CreateSubscriptionCommand(
                 requester,
                 newSubscriptionId,
-                subscription.SubscriptionNameObject,
-                subscription.TaglineObject,
-                subscription.BasePriceObject));
+                subscription.SubscriptionName,
+                subscription.Tagline,
+                subscription.BasePrice));
 
             return this.Ok();
         }
 
         [Route("{subscriptionId}")]
-        public async Task<IHttpActionResult> PutSubscription(string subscriptionId, [FromBody]UpdatedSubscriptionData subscription)
+        public async Task<IHttpActionResult> PutSubscription(string subscriptionId, [FromBody]UpdatedSubscriptionData subscriptionData)
         {
             subscriptionId.AssertUrlParameterProvided("subscriptionId");
-            subscription.AssertBodyProvided("subscription");
-            subscription.Parse();
+            subscriptionData.AssertBodyProvided("subscriptionData");
+            var subscription = subscriptionData.Parse();
 
             var requester = this.requesterContext.GetRequester();
             var subscriptionIdObject = new SubscriptionId(subscriptionId.DecodeGuid());
@@ -49,12 +49,12 @@
             await this.updateSubscription.HandleAsync(new UpdateSubscriptionCommand(
                 requester,
                 subscriptionIdObject,
-                subscription.SubscriptionNameObject,
-                subscription.TaglineObject,
-                subscription.IntroductionObject,
-                subscription.DescriptionObject,
+                subscription.SubscriptionName,
+                subscription.Tagline,
+                subscription.Introduction,
+                subscription.Description,
                 subscription.HeaderImageFileId,
-                subscription.VideoObject));
+                subscription.Video));
 
             return this.Ok();
         }

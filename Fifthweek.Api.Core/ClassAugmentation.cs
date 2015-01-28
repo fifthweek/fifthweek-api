@@ -1,6 +1,9 @@
 ﻿using System;
 using System.Linq;
 
+
+
+
 namespace Fifthweek.Api.Core
 {
     using System.Collections.Generic;
@@ -8,7 +11,7 @@ namespace Fifthweek.Api.Core
     using System.Threading.Tasks;
     using Fifthweek.CodeGeneration;
     using Fifthweek.Shared;
-    using System;
+
     public partial class AggregateEventHandler<T> 
     {
         public AggregateEventHandler(
@@ -22,6 +25,5 @@ namespace Fifthweek.Api.Core
             this.eventHandlers = eventHandlers;
         }
     }
-
 }
 

@@ -51,7 +51,7 @@
         [TestMethod]
         public async Task WhenPostingCollection_ItShouldIssueCreateCollectionCommand()
         {
-            var data = new NewCollectionData(null, ChannelId, CollectionName.Value);
+            var data = new NewCollectionData(ChannelId, CollectionName.Value);
             var command = new CreateCollectionCommand(Requester, CollectionId, ChannelId, CollectionName);
 
             this.requesterContext.Setup(_ => _.GetRequester()).Returns(Requester);

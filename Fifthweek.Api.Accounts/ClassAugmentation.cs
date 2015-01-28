@@ -10,14 +10,15 @@ namespace Fifthweek.Api.Accounts.Commands
     using Fifthweek.Api.FileManagement.Shared;
     using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.CodeGeneration;
+
     public partial class UpdateAccountSettingsCommand 
     {
         public UpdateAccountSettingsCommand(
-            Fifthweek.Api.Identity.Shared.Membership.Requester requester, 
-            Fifthweek.Api.Identity.Shared.Membership.UserId requestedUserId, 
-            Fifthweek.Api.Identity.Shared.Membership.ValidUsername newUsername, 
-            Fifthweek.Api.Identity.Shared.Membership.ValidEmail newEmail, 
-            Fifthweek.Api.Identity.Shared.Membership.ValidPassword newPassword, 
+            Fifthweek.Api.Identity.Shared.Membership.Requester requester,
+            Fifthweek.Api.Identity.Shared.Membership.UserId requestedUserId,
+            Fifthweek.Api.Identity.Shared.Membership.ValidUsername newUsername,
+            Fifthweek.Api.Identity.Shared.Membership.ValidEmail newEmail,
+            Fifthweek.Api.Identity.Shared.Membership.ValidPassword newPassword,
             Fifthweek.Api.FileManagement.Shared.FileId newProfileImageId)
         {
             if (requester == null)
@@ -58,7 +59,6 @@ namespace Fifthweek.Api.Accounts.Commands
             this.NewProfileImageId = newProfileImageId;
         }
     }
-
 }
 namespace Fifthweek.Api.Accounts.Commands
 {
@@ -68,11 +68,12 @@ namespace Fifthweek.Api.Accounts.Commands
     using Fifthweek.Api.FileManagement.Shared;
     using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.CodeGeneration;
+
     public partial class UpdateAccountSettingsCommandHandler 
     {
         public UpdateAccountSettingsCommandHandler(
-            Fifthweek.Api.Accounts.IUpdateAccountSettingsDbStatement updateAccountSettings, 
-            Fifthweek.Api.Identity.Shared.Membership.IRequesterSecurity requesterSecurity, 
+            Fifthweek.Api.Accounts.IUpdateAccountSettingsDbStatement updateAccountSettings,
+            Fifthweek.Api.Identity.Shared.Membership.IRequesterSecurity requesterSecurity,
             Fifthweek.Api.FileManagement.Shared.IFileSecurity fileSecurity)
         {
             if (updateAccountSettings == null)
@@ -95,7 +96,6 @@ namespace Fifthweek.Api.Accounts.Commands
             this.fileSecurity = fileSecurity;
         }
     }
-
 }
 namespace Fifthweek.Api.Accounts.Controllers
 {
@@ -108,11 +108,12 @@ namespace Fifthweek.Api.Accounts.Controllers
     using Fifthweek.Api.FileManagement.Shared;
     using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.CodeGeneration;
+
     public partial class AccountSettingsController 
     {
         public AccountSettingsController(
-            Fifthweek.Api.Identity.Shared.Membership.IRequesterContext requesterContext, 
-            Fifthweek.Api.Core.ICommandHandler<Fifthweek.Api.Accounts.Commands.UpdateAccountSettingsCommand> updateAccountSettings, 
+            Fifthweek.Api.Identity.Shared.Membership.IRequesterContext requesterContext,
+            Fifthweek.Api.Core.ICommandHandler<Fifthweek.Api.Accounts.Commands.UpdateAccountSettingsCommand> updateAccountSettings,
             Fifthweek.Api.Core.IQueryHandler<Fifthweek.Api.Accounts.Queries.GetAccountSettingsQuery,Fifthweek.Api.Accounts.GetAccountSettingsResult> getAccountSettings)
         {
             if (requesterContext == null)
@@ -135,17 +136,17 @@ namespace Fifthweek.Api.Accounts.Controllers
             this.getAccountSettings = getAccountSettings;
         }
     }
-
 }
 namespace Fifthweek.Api.Accounts.Controllers
 {
     using Fifthweek.Api.Core;
     using Fifthweek.CodeGeneration;
     using Fifthweek.Shared;
+
     public partial class AccountSettingsResponse 
     {
         public AccountSettingsResponse(
-            System.String email, 
+            System.String email,
             System.String profileImageFileId)
         {
             if (email == null)
@@ -157,7 +158,6 @@ namespace Fifthweek.Api.Accounts.Controllers
             this.ProfileImageFileId = profileImageFileId;
         }
     }
-
 }
 namespace Fifthweek.Api.Accounts
 {
@@ -171,6 +171,7 @@ namespace Fifthweek.Api.Accounts
     using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.Api.Persistence;
     using Fifthweek.CodeGeneration;
+
     public partial class GetAccountSettingsDbStatement 
     {
         public GetAccountSettingsDbStatement(
@@ -184,7 +185,6 @@ namespace Fifthweek.Api.Accounts
             this.databaseContext = databaseContext;
         }
     }
-
 }
 namespace Fifthweek.Api.Accounts
 {
@@ -192,10 +192,11 @@ namespace Fifthweek.Api.Accounts
     using Fifthweek.Api.FileManagement.Shared;
     using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.CodeGeneration;
+
     public partial class GetAccountSettingsResult 
     {
         public GetAccountSettingsResult(
-            Fifthweek.Api.Identity.Shared.Membership.Email email, 
+            Fifthweek.Api.Identity.Shared.Membership.Email email,
             Fifthweek.Api.FileManagement.Shared.FileId profileImageFileId)
         {
             if (email == null)
@@ -212,17 +213,17 @@ namespace Fifthweek.Api.Accounts
             this.ProfileImageFileId = profileImageFileId;
         }
     }
-
 }
 namespace Fifthweek.Api.Accounts.Queries
 {
     using Fifthweek.Api.Core;
     using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.CodeGeneration;
+
     public partial class GetAccountSettingsQuery 
     {
         public GetAccountSettingsQuery(
-            Fifthweek.Api.Identity.Shared.Membership.Requester requester, 
+            Fifthweek.Api.Identity.Shared.Membership.Requester requester,
             Fifthweek.Api.Identity.Shared.Membership.UserId requestedUserId)
         {
             if (requester == null)
@@ -239,7 +240,6 @@ namespace Fifthweek.Api.Accounts.Queries
             this.RequestedUserId = requestedUserId;
         }
     }
-
 }
 namespace Fifthweek.Api.Accounts.Queries
 {
@@ -247,10 +247,11 @@ namespace Fifthweek.Api.Accounts.Queries
     using Fifthweek.Api.Core;
     using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.CodeGeneration;
+
     public partial class GetAccountSettingsQueryHandler 
     {
         public GetAccountSettingsQueryHandler(
-            Fifthweek.Api.Identity.Shared.Membership.IRequesterSecurity requesterSecurity, 
+            Fifthweek.Api.Identity.Shared.Membership.IRequesterSecurity requesterSecurity,
             Fifthweek.Api.Accounts.IGetAccountSettingsDbStatement getAccountSettings)
         {
             if (requesterSecurity == null)
@@ -267,7 +268,6 @@ namespace Fifthweek.Api.Accounts.Queries
             this.getAccountSettings = getAccountSettings;
         }
     }
-
 }
 namespace Fifthweek.Api.Accounts
 {
@@ -282,23 +282,23 @@ namespace Fifthweek.Api.Accounts
     using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.Api.Persistence;
     using Fifthweek.CodeGeneration;
+
     public partial class UpdateAccountSettingsDbStatement
     {
         public partial class UpdateAccountSettingsResult 
         {
-        public UpdateAccountSettingsResult(
-            System.Boolean emailConfirmed)
-        {
-            if (emailConfirmed == null)
+            public UpdateAccountSettingsResult(
+                System.Boolean emailConfirmed)
             {
-                throw new ArgumentNullException("emailConfirmed");
+                if (emailConfirmed == null)
+                {
+                    throw new ArgumentNullException("emailConfirmed");
+                }
+
+                this.EmailConfirmed = emailConfirmed;
             }
-
-            this.EmailConfirmed = emailConfirmed;
         }
-        }
-
-        }
+    }
 }
 namespace Fifthweek.Api.Accounts
 {
@@ -313,10 +313,11 @@ namespace Fifthweek.Api.Accounts
     using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.Api.Persistence;
     using Fifthweek.CodeGeneration;
+
     public partial class UpdateAccountSettingsDbStatement 
     {
         public UpdateAccountSettingsDbStatement(
-            Fifthweek.Api.Persistence.IFifthweekDbContext databaseContext, 
+            Fifthweek.Api.Persistence.IFifthweekDbContext databaseContext,
             Fifthweek.Api.Persistence.IUserManager userManager)
         {
             if (databaseContext == null)
@@ -333,7 +334,6 @@ namespace Fifthweek.Api.Accounts
             this.userManager = userManager;
         }
     }
-
 }
 
 namespace Fifthweek.Api.Accounts.Commands
@@ -342,33 +342,34 @@ namespace Fifthweek.Api.Accounts.Commands
     using Fifthweek.Api.FileManagement.Shared;
     using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.CodeGeneration;
+
     public partial class UpdateAccountSettingsCommand 
     {
         public override string ToString()
         {
             return string.Format("UpdateAccountSettingsCommand({0}, {1}, {2}, {3}, {4}, {5})", this.Requester == null ? "null" : this.Requester.ToString(), this.RequestedUserId == null ? "null" : this.RequestedUserId.ToString(), this.NewUsername == null ? "null" : this.NewUsername.ToString(), this.NewEmail == null ? "null" : this.NewEmail.ToString(), this.NewPassword == null ? "null" : this.NewPassword.ToString(), this.NewProfileImageId == null ? "null" : this.NewProfileImageId.ToString());
         }
-
+        
         public override bool Equals(object obj)
         {
             if (ReferenceEquals(null, obj))
             {
                 return false;
             }
-
+        
             if (ReferenceEquals(this, obj))
             {
                 return true;
             }
-
+        
             if (obj.GetType() != this.GetType())
             {
                 return false;
             }
-
+        
             return this.Equals((UpdateAccountSettingsCommand)obj);
         }
-
+        
         public override int GetHashCode()
         {
             unchecked
@@ -383,76 +384,76 @@ namespace Fifthweek.Api.Accounts.Commands
                 return hashCode;
             }
         }
-
+        
         protected bool Equals(UpdateAccountSettingsCommand other)
         {
             if (!object.Equals(this.Requester, other.Requester))
             {
                 return false;
             }
-
+        
             if (!object.Equals(this.RequestedUserId, other.RequestedUserId))
             {
                 return false;
             }
-
+        
             if (!object.Equals(this.NewUsername, other.NewUsername))
             {
                 return false;
             }
-
+        
             if (!object.Equals(this.NewEmail, other.NewEmail))
             {
                 return false;
             }
-
+        
             if (!object.Equals(this.NewPassword, other.NewPassword))
             {
                 return false;
             }
-
+        
             if (!object.Equals(this.NewProfileImageId, other.NewProfileImageId))
             {
                 return false;
             }
-
+        
             return true;
         }
     }
-
 }
 namespace Fifthweek.Api.Accounts.Controllers
 {
     using Fifthweek.Api.Core;
     using Fifthweek.CodeGeneration;
     using Fifthweek.Shared;
+
     public partial class AccountSettingsResponse 
     {
         public override string ToString()
         {
             return string.Format("AccountSettingsResponse(\"{0}\", \"{1}\")", this.Email == null ? "null" : this.Email.ToString(), this.ProfileImageFileId == null ? "null" : this.ProfileImageFileId.ToString());
         }
-
+        
         public override bool Equals(object obj)
         {
             if (ReferenceEquals(null, obj))
             {
                 return false;
             }
-
+        
             if (ReferenceEquals(this, obj))
             {
                 return true;
             }
-
+        
             if (obj.GetType() != this.GetType())
             {
                 return false;
             }
-
+        
             return this.Equals((AccountSettingsResponse)obj);
         }
-
+        
         public override int GetHashCode()
         {
             unchecked
@@ -463,55 +464,55 @@ namespace Fifthweek.Api.Accounts.Controllers
                 return hashCode;
             }
         }
-
+        
         protected bool Equals(AccountSettingsResponse other)
         {
             if (!object.Equals(this.Email, other.Email))
             {
                 return false;
             }
-
+        
             if (!object.Equals(this.ProfileImageFileId, other.ProfileImageFileId))
             {
                 return false;
             }
-
+        
             return true;
         }
     }
-
 }
 namespace Fifthweek.Api.Accounts.Controllers
 {
     using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.CodeGeneration;
+
     public partial class UpdatedAccountSettings 
     {
         public override string ToString()
         {
             return string.Format("UpdatedAccountSettings(\"{0}\", \"{1}\", \"{2}\", \"{3}\")", this.NewUsername == null ? "null" : this.NewUsername.ToString(), this.NewEmail == null ? "null" : this.NewEmail.ToString(), this.NewPassword == null ? "null" : this.NewPassword.ToString(), this.NewProfileImageId == null ? "null" : this.NewProfileImageId.ToString());
         }
-
+        
         public override bool Equals(object obj)
         {
             if (ReferenceEquals(null, obj))
             {
                 return false;
             }
-
+        
             if (ReferenceEquals(this, obj))
             {
                 return true;
             }
-
+        
             if (obj.GetType() != this.GetType())
             {
                 return false;
             }
-
+        
             return this.Equals((UpdatedAccountSettings)obj);
         }
-
+        
         public override int GetHashCode()
         {
             unchecked
@@ -524,33 +525,32 @@ namespace Fifthweek.Api.Accounts.Controllers
                 return hashCode;
             }
         }
-
+        
         protected bool Equals(UpdatedAccountSettings other)
         {
             if (!object.Equals(this.NewUsername, other.NewUsername))
             {
                 return false;
             }
-
+        
             if (!object.Equals(this.NewEmail, other.NewEmail))
             {
                 return false;
             }
-
+        
             if (!object.Equals(this.NewPassword, other.NewPassword))
             {
                 return false;
             }
-
+        
             if (!object.Equals(this.NewProfileImageId, other.NewProfileImageId))
             {
                 return false;
             }
-
+        
             return true;
         }
     }
-
 }
 namespace Fifthweek.Api.Accounts
 {
@@ -558,33 +558,34 @@ namespace Fifthweek.Api.Accounts
     using Fifthweek.Api.FileManagement.Shared;
     using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.CodeGeneration;
+
     public partial class GetAccountSettingsResult 
     {
         public override string ToString()
         {
             return string.Format("GetAccountSettingsResult({0}, {1})", this.Email == null ? "null" : this.Email.ToString(), this.ProfileImageFileId == null ? "null" : this.ProfileImageFileId.ToString());
         }
-
+        
         public override bool Equals(object obj)
         {
             if (ReferenceEquals(null, obj))
             {
                 return false;
             }
-
+        
             if (ReferenceEquals(this, obj))
             {
                 return true;
             }
-
+        
             if (obj.GetType() != this.GetType())
             {
                 return false;
             }
-
+        
             return this.Equals((GetAccountSettingsResult)obj);
         }
-
+        
         public override int GetHashCode()
         {
             unchecked
@@ -595,56 +596,56 @@ namespace Fifthweek.Api.Accounts
                 return hashCode;
             }
         }
-
+        
         protected bool Equals(GetAccountSettingsResult other)
         {
             if (!object.Equals(this.Email, other.Email))
             {
                 return false;
             }
-
+        
             if (!object.Equals(this.ProfileImageFileId, other.ProfileImageFileId))
             {
                 return false;
             }
-
+        
             return true;
         }
     }
-
 }
 namespace Fifthweek.Api.Accounts.Queries
 {
     using Fifthweek.Api.Core;
     using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.CodeGeneration;
+
     public partial class GetAccountSettingsQuery 
     {
         public override string ToString()
         {
             return string.Format("GetAccountSettingsQuery({0}, {1})", this.Requester == null ? "null" : this.Requester.ToString(), this.RequestedUserId == null ? "null" : this.RequestedUserId.ToString());
         }
-
+        
         public override bool Equals(object obj)
         {
             if (ReferenceEquals(null, obj))
             {
                 return false;
             }
-
+        
             if (ReferenceEquals(this, obj))
             {
                 return true;
             }
-
+        
             if (obj.GetType() != this.GetType())
             {
                 return false;
             }
-
+        
             return this.Equals((GetAccountSettingsQuery)obj);
         }
-
+        
         public override int GetHashCode()
         {
             unchecked
@@ -655,23 +656,22 @@ namespace Fifthweek.Api.Accounts.Queries
                 return hashCode;
             }
         }
-
+        
         protected bool Equals(GetAccountSettingsQuery other)
         {
             if (!object.Equals(this.Requester, other.Requester))
             {
                 return false;
             }
-
+        
             if (!object.Equals(this.RequestedUserId, other.RequestedUserId))
             {
                 return false;
             }
-
+        
             return true;
         }
     }
-
 }
 namespace Fifthweek.Api.Accounts
 {
@@ -686,142 +686,168 @@ namespace Fifthweek.Api.Accounts
     using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.Api.Persistence;
     using Fifthweek.CodeGeneration;
+
     public partial class UpdateAccountSettingsDbStatement
     {
         public partial class UpdateAccountSettingsResult 
         {
-        public override string ToString()
-        {
-            return string.Format("UpdateAccountSettingsResult({0})", this.EmailConfirmed == null ? "null" : this.EmailConfirmed.ToString());
-        }
-
-        public override bool Equals(object obj)
-        {
-            if (ReferenceEquals(null, obj))
+            public override string ToString()
             {
-                return false;
+                return string.Format("UpdateAccountSettingsResult({0})", this.EmailConfirmed == null ? "null" : this.EmailConfirmed.ToString());
             }
-
-            if (ReferenceEquals(this, obj))
+            
+            public override bool Equals(object obj)
             {
+                if (ReferenceEquals(null, obj))
+                {
+                    return false;
+                }
+            
+                if (ReferenceEquals(this, obj))
+                {
+                    return true;
+                }
+            
+                if (obj.GetType() != this.GetType())
+                {
+                    return false;
+                }
+            
+                return this.Equals((UpdateAccountSettingsResult)obj);
+            }
+            
+            public override int GetHashCode()
+            {
+                unchecked
+                {
+                    int hashCode = 0;
+                    hashCode = (hashCode * 397) ^ (this.EmailConfirmed != null ? this.EmailConfirmed.GetHashCode() : 0);
+                    return hashCode;
+                }
+            }
+            
+            protected bool Equals(UpdateAccountSettingsResult other)
+            {
+                if (!object.Equals(this.EmailConfirmed, other.EmailConfirmed))
+                {
+                    return false;
+                }
+            
                 return true;
             }
-
-            if (obj.GetType() != this.GetType())
-            {
-                return false;
-            }
-
-            return this.Equals((UpdateAccountSettingsResult)obj);
         }
-
-        public override int GetHashCode()
-        {
-            unchecked
-            {
-                int hashCode = 0;
-                hashCode = (hashCode * 397) ^ (this.EmailConfirmed != null ? this.EmailConfirmed.GetHashCode() : 0);
-                return hashCode;
-            }
-        }
-
-        protected bool Equals(UpdateAccountSettingsResult other)
-        {
-            if (!object.Equals(this.EmailConfirmed, other.EmailConfirmed))
-            {
-                return false;
-            }
-
-            return true;
-        }
-        }
-
-        }
+    }
 }
 namespace Fifthweek.Api.Accounts.Controllers
 {
     using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.CodeGeneration;
+
     public partial class UpdatedAccountSettings 
     {
-		[Optional]
-        public ValidUsername NewUsernameObject { get; set; }
-		[Optional]
-        public ValidEmail NewEmailObject { get; set; }
-		[Optional]
-        public ValidPassword NewPasswordObject { get; set; }
+        public class Parsed
+        {
+            public Parsed(
+                ValidUsername newUsername,
+                ValidEmail newEmail,
+                ValidPassword newPassword,
+                System.String newProfileImageId)
+            {
+                if (newUsername == null)
+                {
+                    throw new ArgumentNullException("newUsername");
+                }
+
+                if (newEmail == null)
+                {
+                    throw new ArgumentNullException("newEmail");
+                }
+
+                if (newProfileImageId == null)
+                {
+                    throw new ArgumentNullException("newProfileImageId");
+                }
+
+                this.NewUsername = newUsername;
+                this.NewEmail = newEmail;
+                this.NewPassword = newPassword;
+                this.NewProfileImageId = newProfileImageId;
+            }
+        
+        	public ValidUsername NewUsername { get; private set; }
+        
+        	public ValidEmail NewEmail { get; private set; }
+        
+        	public ValidPassword NewPassword { get; private set; }
+        
+        	public System.String NewProfileImageId { get; private set; }
+        }
     }
 
     public static partial class UpdatedAccountSettingsExtensions
     {
-        public static void Parse(this UpdatedAccountSettings target)
+        public static UpdatedAccountSettings.Parsed Parse(this UpdatedAccountSettings target)
         {
             var modelStateDictionary = new System.Web.Http.ModelBinding.ModelStateDictionary();
-
+        
+        	ValidUsername parsed0 = null;
             if (true || !ValidUsername.IsEmpty(target.NewUsername))
             {
-                ValidUsername @object;
                 System.Collections.Generic.IReadOnlyCollection<string> errorMessages;
-                if (ValidUsername.TryParse(target.NewUsername, out @object, out errorMessages))
-                {
-                    target.NewUsernameObject = @object;
-                }
-                else
+                if (!ValidUsername.TryParse(target.NewUsername, out parsed0, out errorMessages))
                 {
                     var modelState = new System.Web.Http.ModelBinding.ModelState();
                     foreach (var errorMessage in errorMessages)
                     {
                         modelState.Errors.Add(errorMessage);
                     }
-
+        
                     modelStateDictionary.Add("NewUsername", modelState);
                 }
             }
-
+        
+        	ValidEmail parsed1 = null;
             if (true || !ValidEmail.IsEmpty(target.NewEmail))
             {
-                ValidEmail @object;
                 System.Collections.Generic.IReadOnlyCollection<string> errorMessages;
-                if (ValidEmail.TryParse(target.NewEmail, out @object, out errorMessages))
-                {
-                    target.NewEmailObject = @object;
-                }
-                else
+                if (!ValidEmail.TryParse(target.NewEmail, out parsed1, out errorMessages))
                 {
                     var modelState = new System.Web.Http.ModelBinding.ModelState();
                     foreach (var errorMessage in errorMessages)
                     {
                         modelState.Errors.Add(errorMessage);
                     }
-
+        
                     modelStateDictionary.Add("NewEmail", modelState);
                 }
             }
-
+        
+        	ValidPassword parsed2 = null;
             if (false || !ValidPassword.IsEmpty(target.NewPassword))
             {
-                ValidPassword @object;
                 System.Collections.Generic.IReadOnlyCollection<string> errorMessages;
-                if (ValidPassword.TryParse(target.NewPassword, out @object, out errorMessages))
-                {
-                    target.NewPasswordObject = @object;
-                }
-                else
+                if (!ValidPassword.TryParse(target.NewPassword, out parsed2, out errorMessages))
                 {
                     var modelState = new System.Web.Http.ModelBinding.ModelState();
                     foreach (var errorMessage in errorMessages)
                     {
                         modelState.Errors.Add(errorMessage);
                     }
-
+        
                     modelStateDictionary.Add("NewPassword", modelState);
                 }
             }
-
+        
             if (!modelStateDictionary.IsValid)
             {
                 throw new Fifthweek.Api.Core.ModelValidationException(modelStateDictionary);
             }
+        
+        	return new UpdatedAccountSettings.Parsed(
+                parsed0,
+                parsed1,
+                parsed2,
+                target.NewProfileImageId);
         }    
     }
 }

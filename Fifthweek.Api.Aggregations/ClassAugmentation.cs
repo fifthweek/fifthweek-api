@@ -1,6 +1,9 @@
 ﻿using System;
 using System.Linq;
 
+
+
+
 namespace Fifthweek.Api.Aggregations.Controllers
 {
     using System.Linq;
@@ -16,11 +19,12 @@ namespace Fifthweek.Api.Aggregations.Controllers
     using Fifthweek.Api.Subscriptions.Controllers;
     using Fifthweek.Api.Subscriptions.Queries;
     using Fifthweek.CodeGeneration;
+
     public partial class UserStateController 
     {
         public UserStateController(
-            Fifthweek.Api.Core.IQueryHandler<Fifthweek.Api.Aggregations.Queries.GetUserStateQuery,Fifthweek.Api.Aggregations.Queries.UserState> getUserState, 
-            IRequesterContext requesterContext)
+            Fifthweek.Api.Core.IQueryHandler<Fifthweek.Api.Aggregations.Queries.GetUserStateQuery,Fifthweek.Api.Aggregations.Queries.UserState> getUserState,
+            Fifthweek.Api.Identity.Shared.Membership.IRequesterContext requesterContext)
         {
             if (getUserState == null)
             {
@@ -36,7 +40,6 @@ namespace Fifthweek.Api.Aggregations.Controllers
             this.requesterContext = requesterContext;
         }
     }
-
 }
 namespace Fifthweek.Api.Aggregations.Queries
 {
@@ -44,10 +47,11 @@ namespace Fifthweek.Api.Aggregations.Queries
     using Fifthweek.Api.Identity.Membership;
     using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.CodeGeneration;
+
     public partial class GetUserStateQuery 
     {
         public GetUserStateQuery(
-            Fifthweek.Api.Identity.Shared.Membership.Requester requester, 
+            Fifthweek.Api.Identity.Shared.Membership.Requester requester,
             Fifthweek.Api.Identity.Shared.Membership.UserId requestedUserId)
         {
             if (requester == null)
@@ -59,7 +63,6 @@ namespace Fifthweek.Api.Aggregations.Queries
             this.RequestedUserId = requestedUserId;
         }
     }
-
 }
 namespace Fifthweek.Api.Aggregations.Queries
 {
@@ -73,12 +76,13 @@ namespace Fifthweek.Api.Aggregations.Queries
     using Fifthweek.Api.Subscriptions;
     using Fifthweek.Api.Subscriptions.Queries;
     using Fifthweek.CodeGeneration;
+
     public partial class GetUserStateQueryHandler 
     {
         public GetUserStateQueryHandler(
-            Fifthweek.Api.Identity.Shared.Membership.IRequesterSecurity requesterSecurity, 
-            Fifthweek.Api.Core.IQueryHandler<Fifthweek.Api.FileManagement.Queries.GetUserAccessSignaturesQuery,Fifthweek.Api.FileManagement.Queries.UserAccessSignatures> getUserAccessSignatures, 
-            Fifthweek.Api.Core.IQueryHandler<Fifthweek.Api.Subscriptions.Queries.GetCreatorStatusQuery,Fifthweek.Api.Subscriptions.CreatorStatus> getCreatorStatus, 
+            Fifthweek.Api.Identity.Shared.Membership.IRequesterSecurity requesterSecurity,
+            Fifthweek.Api.Core.IQueryHandler<Fifthweek.Api.FileManagement.Queries.GetUserAccessSignaturesQuery,Fifthweek.Api.FileManagement.Queries.UserAccessSignatures> getUserAccessSignatures,
+            Fifthweek.Api.Core.IQueryHandler<Fifthweek.Api.Subscriptions.Queries.GetCreatorStatusQuery,Fifthweek.Api.Subscriptions.CreatorStatus> getCreatorStatus,
             Fifthweek.Api.Core.IQueryHandler<Fifthweek.Api.Collections.Queries.GetCreatedChannelsAndCollectionsQuery,Fifthweek.Api.Collections.Queries.ChannelsAndCollections> getCreatedChannelsAndCollections)
         {
             if (requesterSecurity == null)
@@ -107,7 +111,6 @@ namespace Fifthweek.Api.Aggregations.Queries
             this.getCreatedChannelsAndCollections = getCreatedChannelsAndCollections;
         }
     }
-
 }
 namespace Fifthweek.Api.Aggregations.Queries
 {
@@ -118,12 +121,13 @@ namespace Fifthweek.Api.Aggregations.Queries
     using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.Api.Subscriptions;
     using Fifthweek.CodeGeneration;
+
     public partial class UserState 
     {
         public UserState(
-            Fifthweek.Api.Identity.Shared.Membership.UserId userId, 
-            Fifthweek.Api.FileManagement.Queries.UserAccessSignatures accessSignatures, 
-            Fifthweek.Api.Subscriptions.CreatorStatus creatorStatus, 
+            Fifthweek.Api.Identity.Shared.Membership.UserId userId,
+            Fifthweek.Api.FileManagement.Queries.UserAccessSignatures accessSignatures,
+            Fifthweek.Api.Subscriptions.CreatorStatus creatorStatus,
             Fifthweek.Api.Collections.Queries.ChannelsAndCollections createdChannelsAndCollections)
         {
             if (accessSignatures == null)
@@ -137,7 +141,6 @@ namespace Fifthweek.Api.Aggregations.Queries
             this.CreatedChannelsAndCollections = createdChannelsAndCollections;
         }
     }
-
 }
 
 namespace Fifthweek.Api.Aggregations.Queries
@@ -146,33 +149,34 @@ namespace Fifthweek.Api.Aggregations.Queries
     using Fifthweek.Api.Identity.Membership;
     using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.CodeGeneration;
+
     public partial class GetUserStateQuery 
     {
         public override string ToString()
         {
             return string.Format("GetUserStateQuery({0}, {1})", this.Requester == null ? "null" : this.Requester.ToString(), this.RequestedUserId == null ? "null" : this.RequestedUserId.ToString());
         }
-
+        
         public override bool Equals(object obj)
         {
             if (ReferenceEquals(null, obj))
             {
                 return false;
             }
-
+        
             if (ReferenceEquals(this, obj))
             {
                 return true;
             }
-
+        
             if (obj.GetType() != this.GetType())
             {
                 return false;
             }
-
+        
             return this.Equals((GetUserStateQuery)obj);
         }
-
+        
         public override int GetHashCode()
         {
             unchecked
@@ -183,23 +187,22 @@ namespace Fifthweek.Api.Aggregations.Queries
                 return hashCode;
             }
         }
-
+        
         protected bool Equals(GetUserStateQuery other)
         {
             if (!object.Equals(this.Requester, other.Requester))
             {
                 return false;
             }
-
+        
             if (!object.Equals(this.RequestedUserId, other.RequestedUserId))
             {
                 return false;
             }
-
+        
             return true;
         }
     }
-
 }
 namespace Fifthweek.Api.Aggregations.Queries
 {
@@ -210,33 +213,34 @@ namespace Fifthweek.Api.Aggregations.Queries
     using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.Api.Subscriptions;
     using Fifthweek.CodeGeneration;
+
     public partial class UserState 
     {
         public override string ToString()
         {
             return string.Format("UserState({0}, {1}, {2}, {3})", this.UserId == null ? "null" : this.UserId.ToString(), this.AccessSignatures == null ? "null" : this.AccessSignatures.ToString(), this.CreatorStatus == null ? "null" : this.CreatorStatus.ToString(), this.CreatedChannelsAndCollections == null ? "null" : this.CreatedChannelsAndCollections.ToString());
         }
-
+        
         public override bool Equals(object obj)
         {
             if (ReferenceEquals(null, obj))
             {
                 return false;
             }
-
+        
             if (ReferenceEquals(this, obj))
             {
                 return true;
             }
-
+        
             if (obj.GetType() != this.GetType())
             {
                 return false;
             }
-
+        
             return this.Equals((UserState)obj);
         }
-
+        
         public override int GetHashCode()
         {
             unchecked
@@ -249,32 +253,31 @@ namespace Fifthweek.Api.Aggregations.Queries
                 return hashCode;
             }
         }
-
+        
         protected bool Equals(UserState other)
         {
             if (!object.Equals(this.UserId, other.UserId))
             {
                 return false;
             }
-
+        
             if (!object.Equals(this.AccessSignatures, other.AccessSignatures))
             {
                 return false;
             }
-
+        
             if (!object.Equals(this.CreatorStatus, other.CreatorStatus))
             {
                 return false;
             }
-
+        
             if (!object.Equals(this.CreatedChannelsAndCollections, other.CreatedChannelsAndCollections))
             {
                 return false;
             }
-
+        
             return true;
         }
     }
-
 }
 

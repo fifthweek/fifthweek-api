@@ -24,16 +24,17 @@
         // POST membership/registrations
         [AllowAnonymous]
         [Route("registrations")]
-        public async Task<IHttpActionResult> PostRegistrationAsync(RegistrationData registration)
+        public async Task<IHttpActionResult> PostRegistrationAsync(RegistrationData registrationData)
         {
-            registration.Parse();
+            registrationData.AssertBodyProvided("registrationData");
+            var registration = registrationData.Parse();
 
             var command = new RegisterUserCommand(
                 new UserId(this.guidCreator.CreateSqlSequential()),
                 registration.ExampleWork,
-                registration.EmailObject,
-                registration.UsernameObject,
-                registration.PasswordObject);
+                registration.Email,
+                registration.Username,
+                registration.Password);
 
             await this.registerUser.HandleAsync(command);
             return this.Ok();
@@ -45,6 +46,8 @@
         [ResponseType(typeof(bool))]
         public async Task<IHttpActionResult> GetUsernameAvailabilityAsync(string username)
         {
+            username.AssertUrlParameterProvided("username");
+
             ValidUsername usernameObject;
             if (!ValidUsername.TryParse(username, out usernameObject))
             {
@@ -64,13 +67,14 @@
         // POST membership/passwordResetRequests
         [AllowAnonymous]
         [Route("passwordResetRequests")]
-        public async Task<IHttpActionResult> PostPasswordResetRequestAsync(PasswordResetRequestData passwordResetRequest)
+        public async Task<IHttpActionResult> PostPasswordResetRequestAsync(PasswordResetRequestData passwordResetRequestData)
         {
-            passwordResetRequest.Parse();
+            passwordResetRequestData.AssertBodyProvided("passwordResetRequestData");
+            var passwordResetRequest = passwordResetRequestData.Parse();
 
             var command = new RequestPasswordResetCommand(
-                passwordResetRequest.EmailObject,
-                passwordResetRequest.UsernameObject);
+                passwordResetRequest.Email,
+                passwordResetRequest.Username);
 
             await this.requestPasswordReset.HandleAsync(command);
 
@@ -80,14 +84,15 @@
         // POST membership/passwordResetConfirmations
         [AllowAnonymous]
         [Route("passwordResetConfirmations")]
-        public async Task<IHttpActionResult> PostPasswordResetConfirmationAsync(PasswordResetConfirmationData passwordResetConfirmation)
+        public async Task<IHttpActionResult> PostPasswordResetConfirmationAsync(PasswordResetConfirmationData passwordResetConfirmationData)
         {
-            passwordResetConfirmation.Parse();
+            passwordResetConfirmationData.AssertBodyProvided("passwordResetConfirmationData");
+            var passwordResetConfirmation = passwordResetConfirmationData.Parse();
 
             var command = new ConfirmPasswordResetCommand(
                 passwordResetConfirmation.UserId,
                 passwordResetConfirmation.Token,
-                passwordResetConfirmation.NewPasswordObject);
+                passwordResetConfirmation.NewPassword);
 
             await this.confirmPasswordReset.HandleAsync(command);
 
@@ -98,9 +103,12 @@
         [AllowAnonymous]
         [Route("passwordResetTokens/{userId}/{*token}")]
         [ResponseType(typeof(bool))]
-        public async Task<IHttpActionResult> GetPasswordResetTokenValidityAsync(Guid userId, string token)
+        public async Task<IHttpActionResult> GetPasswordResetTokenValidityAsync(string userId, string token)
         {
-            var userIdObject = new UserId(userId);
+            userId.AssertUrlParameterProvided("userId");
+            token.AssertUrlParameterProvided("token");
+
+            var userIdObject = new UserId(userId.DecodeGuid());
             var query = new IsPasswordResetTokenValidQuery(userIdObject, token);
             var tokenValid = await this.isPasswordResetTokenValid.HandleAsync(query);
             if (tokenValid)
