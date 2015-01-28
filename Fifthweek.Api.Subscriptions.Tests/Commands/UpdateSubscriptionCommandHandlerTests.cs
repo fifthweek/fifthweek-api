@@ -2,6 +2,7 @@
 {
     using System;
     using System.Data.Entity;
+    using System.Net;
     using System.Threading.Tasks;
 
     using Fifthweek.Api.Core;
@@ -161,6 +162,11 @@
             using (var databaseContext = testDatabase.NewContext())
             {
                 await databaseContext.CreateTestSubscriptionAsync(newUserId.Value, newSubscriptionId.Value, Guid.NewGuid());
+
+                var newHeaderImage = FileTests.UniqueEntity(new Random());
+                newHeaderImage.Id = HeaderImageFileId.Value;
+                newHeaderImage.UserId = newUserId.Value;
+                await databaseContext.Database.Connection.InsertAsync(newHeaderImage);
             }
 
             using (var databaseContext = testDatabase.NewContext())
