@@ -44,7 +44,7 @@
 
             if (IsEmpty(value))
             {
-                // Method should never fail, so report null as an error instead of ArgumentNullException.
+                // TryParse should never fail, so report null as an error instead of ArgumentNullException.
                 errorMessageList.Add("Value required");
             }
             else if (value.Length < MinLength || value.Length > MaxLength)

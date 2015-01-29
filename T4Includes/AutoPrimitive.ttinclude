@@ -8,7 +8,7 @@
 <#
     var AutoPrimitiveAttributeName = "AutoPrimitive";
 
-    foreach(UnifiedClass unifiedClass in allClasses)
+    foreach(var unifiedClass in UnifiedClassesInProject.Values)
     {
         var allAttributes = unifiedClass.GetAllAttributes();
         if (!allAttributes.Any(_ => _.Name.StartsWith(AutoPrimitiveAttributeName)))

@@ -67,6 +67,7 @@
     <Compile Include="Commands\CreateCollectionCommand.cs" />
     <Compile Include="Commands\CreateCollectionCommandHandler.cs" />
     <Compile Include="Controllers\CollectionController.cs" />
+    <Compile Include="Controllers\UpdatedCollectionData.cs" />
     <Compile Include="Controllers\NewCollectionData.cs" />
     <Compile Include="GetChannelsAndCollectionsDbStatement.cs" />
     <Compile Include="GetNewQueuedPostLiveDateLowerBoundDbStatement.cs" />

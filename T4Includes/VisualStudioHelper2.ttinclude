@@ -5,68 +5,100 @@
 <#@ import namespace="System.Linq" #>
 <#@ import namespace="System.Text" #>
 <#@ import namespace="System.Collections.Generic" #>
+<#@ import namespace="System.Diagnostics" #>
 <#
-    var LiftMembersAttributeName = "LiftMembers";
-    var LiftedMembersChildClassName = "LiftedMembers";
-
-    var codeMap = new Dictionary<string, UnifiedClassBuilder>();
-    var codeFiles = VisualStudioHelper.GetAllProjectItems(VisualStudioHelper.CurrentProject)
-        .OfType<ProjectItem>()
-        .Where(_ => _.FileCodeModel != null);
-
-    // A file may contain many of the same partial class.
-    // A class may be split across multiple files.
-    foreach (var codeFile in codeFiles)
-    {
-        var codeClasses = VisualStudioHelper
-            .CodeModel
-            .GetAllCodeElementsOfType(codeFile.FileCodeModel.CodeElements, vsCMElement.vsCMElementClass, false)
-            .OfType<CodeClass>();
-
-        foreach (var codeClass in codeClasses)
-        {
-            var qualifiedClassName = codeClass.Namespace.Name + codeClass.Name;
-            if (!codeMap.ContainsKey(qualifiedClassName))
-            {
-                codeMap.Add(qualifiedClassName, new UnifiedClassBuilder());
-            }
-
-            // Add code file if not already added (multiple partial files can exist in one file).
-            var codeFilesForClass = codeMap[qualifiedClassName].CodeFiles;
-            if (codeFilesForClass.All(_ => _.FileNames[0] != codeFile.FileNames[0]))
-            {
-                codeMap[qualifiedClassName].CodeFiles.Add(codeFile);
-            }
-
-            // Add code class.
-            codeMap[qualifiedClassName].CodeClasses.Add(codeClass);
-
-            // Check for lifted types.
-            foreach (CodeAttribute attribute in codeClass.Attributes)
-            {
-                if (!attribute.Name.StartsWith(LiftMembersAttributeName))
-                {
-                    continue;
-                }
-
-                foreach (CodeElement codeElement in codeClass.Children)
-                {
-                    var childClass = codeElement as CodeClass;
-                    if (childClass != null && childClass.Name == LiftedMembersChildClassName)
-                    {
-                        // Add lifted members code class.
-                        codeMap[qualifiedClassName].CodeClasses.Add(childClass);
-                    }
-                }
-            }
-        }
-    }
-
-    var allClasses = codeMap.Values.Select(_ => new UnifiedClass(_.CodeFiles, _.CodeClasses, this, VisualStudioHelper)).ToList();
+	Initialize(this, VisualStudioHelper);
 #>
-
 <#+
 	public const string Tab = "    ";
+
+	public static IReadOnlyDictionary<string, UnifiedClass> UnifiedClassesInSolution;
+	public static IReadOnlyDictionary<string, UnifiedClass> UnifiedClassesInProject;
+
+	public static void Initialize(TextTransformation output, AutomationHelper visualStudioHelper)
+	{
+		var LiftMembersAttributeName = "LiftMembers";
+		var LiftedMembersChildClassName = "LiftedMembers";
+		
+		var codeMap = new Dictionary<string, UnifiedClassBuilder>();
+		var stopwatch = Stopwatch.StartNew();
+		foreach (var project in visualStudioHelper.GetAllProjects())
+        {
+			var codeFiles = visualStudioHelper.GetAllProjectItems(project)
+				.OfType<ProjectItem>()
+				.Where(_ => _.FileCodeModel != null);
+
+			// A file may contain many of the same partial class.
+			// A class may be split across multiple files.
+			foreach (var codeFile in codeFiles)
+			{
+				var codeClasses = visualStudioHelper
+					.CodeModel
+					.GetAllCodeElementsOfType(codeFile.FileCodeModel.CodeElements, vsCMElement.vsCMElementClass, false)
+					.OfType<CodeClass>();
+
+				foreach (var codeClass in codeClasses)
+				{
+					var qualifiedClassName = codeClass.Namespace.Name + "." + codeClass.Name;
+					if (!codeMap.ContainsKey(qualifiedClassName))
+					{
+						codeMap.Add(qualifiedClassName, new UnifiedClassBuilder()
+						{
+							IsCurrentProject = visualStudioHelper.CurrentProject == project
+						});
+					}
+
+					// Add code file if not already added (multiple partial files can exist in one file).
+					var codeFilesForClass = codeMap[qualifiedClassName].CodeFiles;
+					if (codeFilesForClass.All(_ => _.FileNames[0] != codeFile.FileNames[0]))
+					{
+						codeMap[qualifiedClassName].CodeFiles.Add(codeFile);
+					}
+
+					// Add code class.
+					codeMap[qualifiedClassName].CodeClasses.Add(codeClass);
+
+					// Check for lifted types.
+					foreach (CodeAttribute attribute in codeClass.Attributes)
+					{
+						if (!attribute.Name.StartsWith(LiftMembersAttributeName))
+						{
+							continue;
+						}
+
+						foreach (CodeElement codeElement in codeClass.Children)
+						{
+							var childClass = codeElement as CodeClass;
+							if (childClass != null && childClass.Name == LiftedMembersChildClassName)
+							{
+								// Add lifted members code class.
+								codeMap[qualifiedClassName].CodeClasses.Add(childClass);
+							}
+						}
+					}
+				}
+			}
+        }
+
+		var unifiedClassesInSolution = new Dictionary<string, UnifiedClass>();
+		var unifiedClassesInProject = new Dictionary<string, UnifiedClass>();
+		foreach (var kvp in codeMap)
+        {
+			var unifiedClass = new UnifiedClass(kvp.Value.CodeFiles, kvp.Value.CodeClasses, output, visualStudioHelper);
+			unifiedClassesInSolution.Add(kvp.Key, unifiedClass);
+			
+			if (kvp.Value.IsCurrentProject)
+            {
+				unifiedClassesInProject.Add(kvp.Key, unifiedClass);
+            }
+        }
+
+		UnifiedClassesInSolution = unifiedClassesInSolution;
+		UnifiedClassesInProject = unifiedClassesInProject;
+
+		output.WriteLine(string.Format("//// Generated on {0} (UTC)", DateTime.UtcNow.ToString()));
+		output.WriteLine(string.Format("//// Mapped solution in {0}s", Math.Round(stopwatch.Elapsed.TotalSeconds, 2)));
+	}
 
 	public static bool IsEnumerableType(CodeType type, AutomationHelper visualStudioHelper)
 	{
@@ -97,6 +129,11 @@
         const string nullablePrefix = "System.Nullable<";
         var typeName = type.FullName;
         return typeName.StartsWith(nullablePrefix) || typeName.EndsWith(nullablePostfix);
+    }
+
+	public static bool IsReferenceType(CodeType type)
+    {
+        return type is CodeClass || IsNullablePrimitiveType(type);
     }
 
     public static bool IsPrimitiveType(TextTransformation output, CodeType type)
@@ -209,12 +246,18 @@
 
         public List<CodeClass> CodeClasses { get; private set; }
         public List<ProjectItem> CodeFiles { get; private set; }
+		public bool IsCurrentProject { get; set; }
     }
 
     public class UnifiedClass
     {
         private readonly TextTransformation output;
         private readonly AutomationHelper visualStudioHelper;
+		private IReadOnlyList<string> usedNamespaceCache;
+		private IReadOnlyList<CodeAttribute> allAttributesCache;
+		private IReadOnlyList<CodeProperty> allPublicGettersCache;
+		private IReadOnlyList<CodeFunction> allPublicMethodsCache;
+		private IReadOnlyList<CodeVariable> allPrivateReadOnlyFieldsCache;
 
         public UnifiedClass(IReadOnlyList<ProjectItem> codeFiles, IReadOnlyList<CodeClass> codeClasses, TextTransformation output, AutomationHelper visualStudioHelper)
         {
@@ -233,8 +276,12 @@
 
         public IReadOnlyList<CodeAttribute> GetAllAttributes()
         {
-            var allAttributes = new List<CodeAttribute>();
+			if (this.allAttributesCache != null)
+            {
+				return this.allAttributesCache;
+            }
 
+            var allAttributes = new List<CodeAttribute>();
             foreach(var partialClass in this.CodeClasses)
             {
                 foreach(CodeAttribute attribute in partialClass.Attributes)
@@ -243,13 +290,17 @@
                 }
             }
         
-            return allAttributes;
+            return this.allAttributesCache = allAttributes;
         }
 
         public IReadOnlyList<CodeProperty> GetAllPublicGetters()
         {
-            var allProperties = new List<CodeProperty>();
+			if (this.allPublicGettersCache != null)
+            {
+				return this.allPublicGettersCache;
+            }
 
+            var allProperties = new List<CodeProperty>();
             foreach(var partialClass in this.CodeClasses)
             {
                 foreach (CodeElement elem in partialClass.Members)
@@ -267,13 +318,45 @@
                 }
             }
         
-            return allProperties;
+            return this.allPublicGettersCache = allProperties;
+        }
+
+		public IReadOnlyList<CodeFunction> GetAllPublicMethods()
+        {
+			if (this.allPublicMethodsCache != null)
+            {
+				return this.allPublicMethodsCache;
+            }
+
+            var allMethods = new List<CodeFunction>();
+            foreach(var partialClass in this.CodeClasses)
+            {
+                foreach (CodeElement elem in partialClass.Members)
+                {
+                    if (elem.Kind == vsCMElement.vsCMElementFunction)
+                    {
+                        var function = (CodeFunction)elem;
+                        if (function.Access != vsCMAccess.vsCMAccessPublic)
+                        {
+                            continue;
+                        }
+
+                        allMethods.Add(function);
+                    }
+                }
+            }
+        
+            return this.allPublicMethodsCache = allMethods;
         }
 
         public IReadOnlyList<CodeVariable> GetAllPrivateReadOnlyFields()
         {
-            var allFields = new List<CodeVariable>();
+			if (this.allPrivateReadOnlyFieldsCache != null)
+            {
+				return this.allPrivateReadOnlyFieldsCache;
+            }
 
+            var allFields = new List<CodeVariable>();
             foreach(var partialClass in this.CodeClasses)
             {
                 foreach (CodeElement elem in partialClass.Members)
@@ -291,48 +374,7 @@
                 }
             }
         
-            return allFields;
-        }
-
-        public IEnumerable<T> GetAllCodeElementsOfType<T>(CodeElements elements) where T : CodeElement
-        {
-            var ret = new List<T>();
-
-            foreach (CodeElement elem in elements)
-            {
-                // iterate all namespaces (even if they are external)
-                // > they might contain project code
-                if (elem.Kind == EnvDTE.vsCMElement.vsCMElementNamespace)
-                {
-                    // Only drill into namespace if it's for this type.
-                    var codeNamespace = (CodeNamespace)elem;
-                    if (codeNamespace.Name == this.FirstCodeClass.Namespace.Name)
-                    {
-                        ret.AddRange(GetAllCodeElementsOfType<T>(codeNamespace.Members));
-                    }
-                }
-                // if its not a namespace but external
-                // > ignore it
-                else if (elem.InfoLocation == EnvDTE.vsCMInfoLocation.vsCMInfoLocationExternal)
-                {
-                    continue;
-                }
-                // if its from the project
-                // > check its members
-                else if (elem.IsCodeType)
-                {
-                    ret.AddRange(GetAllCodeElementsOfType<T>(((CodeType)elem).Members));
-                }
-
-                // if this item is of the desired type
-                // > store it
-                if (elem is T)
-                {
-                    ret.Add((T)elem);
-                }
-            }
-
-            return ret;
+            return this.allPrivateReadOnlyFieldsCache = allFields;
         }
 
         public void WriteNamespaceAndClass(Action renderMainClass = null, Action renderExtensionClass = null)
@@ -354,18 +396,111 @@
             this.output.WriteLine("}");
         }
 
-        private void WriteUsings()
+		public UnifiedClass ResolveUnifiedClass(string typeName)
         {
-            var imports = new HashSet<string>();
+			// Resolve up the namespace.
+			var prefix = this.FirstCodeClass.FullName;
+			while (prefix != null)
+            {
+				var estimatedClassQualifiedName = prefix + "." + typeName;
+
+				if (UnifiedClassesInSolution.ContainsKey(estimatedClassQualifiedName))
+				{
+					return UnifiedClassesInSolution[estimatedClassQualifiedName];
+				}
+
+				var removeUpTo = prefix.LastIndexOf(".");
+				if (removeUpTo == -1)
+                {
+					prefix = null;
+                }
+				else
+				{
+					prefix = prefix.Substring(0, removeUpTo);
+                }
+            }
+
+			// Resolve from imports.
+			foreach (var import in this.GetUsedNamespaces())
+            {
+				var estimatedClassQualifiedName = import + "." + typeName;
+
+				if (UnifiedClassesInSolution.ContainsKey(estimatedClassQualifiedName))
+                {
+					return UnifiedClassesInSolution[estimatedClassQualifiedName];
+                }
+            }
+			
+			throw new Exception("Unable resolve type with short name '" + typeName + "'. Type may not exist in solution (in which case reflection is required), or using statement missing.");
+        }
+
+		public IReadOnlyList<string> GetUsedNamespaces()
+        {
+			if (this.usedNamespaceCache != null)
+            {
+				return this.usedNamespaceCache;
+            }
+
+			// Needs improving - the following will return a superset of namespaces (those from all files the class appears in, including
+			// class augmentation file!). This may even cause issues in future.
+			var imports = new HashSet<string>();
             foreach (var codeFile in this.CodeFiles)
             {
-                foreach (var import in this.GetAllCodeElementsOfType<CodeImport>(codeFile.FileCodeModel.CodeElements))
+                foreach (var import in this.GetUsedNamespacesFromChildren(codeFile.FileCodeModel.CodeElements))
                 {
                     imports.Add(import.Namespace);
                 }
             }
 
-            foreach (var import in imports)
+			this.usedNamespaceCache = imports.ToList();
+			return this.usedNamespaceCache;
+        }
+
+		private IEnumerable<CodeImport> GetUsedNamespacesFromChildren(CodeElements elements)
+        {
+            var ret = new List<CodeImport>();
+
+            foreach (CodeElement elem in elements)
+            {
+                // iterate all namespaces (even if they are external)
+                // > they might contain project code
+                if (elem.Kind == EnvDTE.vsCMElement.vsCMElementNamespace)
+                {
+                    // Only drill into namespace if it's for this type.
+					// TODO: Make sure current class is also a child of this namespace / sibling to these using statements.
+                    var codeNamespace = (CodeNamespace)elem;
+                    if (codeNamespace.Name == this.FirstCodeClass.Namespace.Name)
+                    {
+                        ret.AddRange(GetUsedNamespacesFromChildren(codeNamespace.Members));
+                    }
+                }
+                // if its not a namespace but external
+                // > ignore it
+                else if (elem.InfoLocation == EnvDTE.vsCMInfoLocation.vsCMInfoLocationExternal)
+                {
+                    continue;
+                }
+                // if its from the project
+                // > check its members
+                else if (elem.IsCodeType)
+                {
+                    ret.AddRange(GetUsedNamespacesFromChildren(((CodeType)elem).Members));
+                }
+
+                // if this item is of the desired type
+                // > store it
+                if (elem is CodeImport)
+                {
+                    ret.Add((CodeImport)elem);
+                }
+            }
+
+            return ret;
+        }
+
+        private void WriteUsings()
+        {
+            foreach (var import in this.GetUsedNamespaces())
             {
                 this.output.WriteLine("using " + import + ";"); 
             }
@@ -421,7 +556,7 @@
             }
         }
 
-        private List<CodeClass> GetEnclosingClasses()
+        private IReadOnlyList<CodeClass> GetEnclosingClasses()
         {
             var classHierarchy = new List<CodeClass>();
             var currentClass = this.FirstCodeClass;
@@ -439,12 +574,21 @@
 
         private string GetClassSignature(CodeClass codeClass)
         {
-            var upToTypeParameters = codeClass.FullName.IndexOf("<");
-            if (upToTypeParameters == -1)
-            {
-                upToTypeParameters = codeClass.FullName.Length;
-            }
-            var removeUpTo = Math.Min(upToTypeParameters, codeClass.FullName.LastIndexOf("."));
+//			  // Not entirely sure why we used to remove generic parameters - seems like that would have completely changed the type reference?
+//			  // Removing for now as this doesn't seem sensible without further explanation.
+//            var upToTypeParameters = codeClass.FullName.IndexOf("<");
+//            if (upToTypeParameters == -1)
+//            {
+//                upToTypeParameters = codeClass.FullName.Length;
+//            }
+//            var removeUpTo = Math.Min(upToTypeParameters, codeClass.FullName.LastIndexOf("."));
+//            if (removeUpTo == -1)
+//            {
+//                return codeClass.FullName;
+//            }
+//			  return codeClass.FullName.Substring(removeUpTo + 1);
+
+            var removeUpTo = codeClass.FullName.LastIndexOf(".");
             if (removeUpTo == -1)
             {
                 return codeClass.FullName;

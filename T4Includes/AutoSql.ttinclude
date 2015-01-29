@@ -9,7 +9,7 @@
     var AutoSqlAttributeName = "AutoSql";
     var TableAttributeParameterName = "Table";
 
-    foreach(UnifiedClass unifiedClass in allClasses)
+    foreach(var unifiedClass in UnifiedClassesInProject.Values)
     {
         var allAttributes = unifiedClass.GetAllAttributes();
         var autoSqlAttribute = allAttributes.FirstOrDefault(_ => _.Name.StartsWith(AutoSqlAttributeName));

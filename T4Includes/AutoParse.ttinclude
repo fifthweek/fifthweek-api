@@ -6,12 +6,11 @@
 <#@ import namespace="System.Text" #>
 <#@ import namespace="System.Collections.Generic" #>
 <#
-    var StrongPropertySuffix = "Object";
     var ParsedAttributeName = "Parsed";
-    var TypeAllowsNullAttributeParameterName = "TypeAcceptsNull";
-    var IsGuidBase64AttributeParameterName = "IsGuidBase64";
+	var ParsedCounterpartAttributeName = "ParsedCounterpart";
+	var StaticNormalizeMethodName = "Normalize";
 
-    foreach(UnifiedClass unifiedClass in allClasses)
+    foreach(var unifiedClass in UnifiedClassesInProject.Values)
     {
         var publicProperties = unifiedClass.GetAllPublicGetters();
         var stronglyTypedProperties = publicProperties
@@ -21,6 +20,17 @@
         if (stronglyTypedProperties.Count == 0)
         {
             continue;
+        }
+
+		var generateCounterpartType = true;
+		var counterpartType = unifiedClass.FirstCodeClass.Name + ".Parsed";
+		var allAttributes = unifiedClass.GetAllAttributes();
+		var parsedCounterpartAttribute = allAttributes.FirstOrDefault(_ => _.Name.StartsWith(ParsedCounterpartAttributeName));
+        if (parsedCounterpartAttribute != null)
+        {
+            var attributeParameters = ParseAttribute(parsedCounterpartAttribute.Value);
+			counterpartType = StripTypeOf(attributeParameters[0]);
+			generateCounterpartType = false;
         }
 
 		var parameters = AutoConstructorParameter.GetParametersForClass(unifiedClass);
@@ -38,6 +48,8 @@
         }
 
         unifiedClass.WriteNamespaceAndClass(() => {
+			if (generateCounterpartType)
+			{
 #>
 public class Parsed
 {
@@ -51,15 +63,16 @@ public class Parsed
     {
 #>
 
-	public <#= parameter.TypeName #> <#= parameter.AssigneeName #> { get; private set; }
+    public <#= parameter.TypeName #> <#= parameter.AssigneeName #> { get; private set; }
 <#
     }
 #>
 }
 <#
+			}
         }, () => { // Extension class. Avoid conflicts between property and type names.
 #>
-public static <#= unifiedClass.FirstCodeClass.Name #>.Parsed Parse(this <#= unifiedClass.FirstCodeClass.Name #> target)
+public static <#= counterpartType #> Parse(this <#= unifiedClass.FirstCodeClass.Name #> target)
 {
     var modelStateDictionary = new System.Web.Http.ModelBinding.ModelStateDictionary();
 
@@ -68,30 +81,24 @@ public static <#= unifiedClass.FirstCodeClass.Name #>.Parsed Parse(this <#= unif
     {
         var codeAttribute = stronglyTypedProperties[i].Attribute;
         var codeProperty = stronglyTypedProperties[i].Property;
-        var typedPropertyName = codeProperty.Name + StrongPropertySuffix;
         var attributeParameters = ParseAttribute(codeAttribute.Value);
         var strongType = StripTypeOf(attributeParameters[0]);
         var isRequired = codeProperty.Attributes.OfType<CodeAttribute>().All(_ => !_.Name.StartsWith(OptionalAttributeName));
-        var isRequiredString = isRequired ? "true" : "false";
 		var variableName = "parsed" + i;
-#>
-	<#= strongType #> <#= variableName #> = null;
-    if (<#= isRequiredString #> || !<#= strongType #>.IsEmpty(target.<#= codeProperty.Name #>))
-    {
-        System.Collections.Generic.IReadOnlyCollection<string> errorMessages;
-        if (!<#= strongType #>.TryParse(target.<#= codeProperty.Name #>, out <#= variableName #>, out errorMessages))
-        {
-            var modelState = new System.Web.Http.ModelBinding.ModelState();
-            foreach (var errorMessage in errorMessages)
-            {
-                modelState.Errors.Add(errorMessage);
-            }
+		var strongTypeUnifiedClass = unifiedClass.ResolveUnifiedClass(strongType);
+		var canNormalize = strongTypeUnifiedClass.GetAllPublicMethods().Any(_ => _.IsShared && _.Name == StaticNormalizeMethodName);
 
-            modelStateDictionary.Add("<#= codeProperty.Name #>", modelState);
-        }
-    }
-
-<#
+		this.PushIndent(Tab);
+		RenderParseBlock(
+			strongType, 
+			codeProperty.Name, 
+			variableName, 
+			isRequired, 
+			canNormalize, 
+			IsNullablePrimitiveType(codeProperty.Type.CodeType), 
+			IsReferenceType(codeProperty.Type.CodeType), 
+			this);
+		this.PopIndent();
     }
 #>
     if (!modelStateDictionary.IsValid)
@@ -99,7 +106,7 @@ public static <#= unifiedClass.FirstCodeClass.Name #>.Parsed Parse(this <#= unif
         throw new Fifthweek.Api.Core.ModelValidationException(modelStateDictionary);
     }
 
-	return new <#= unifiedClass.FirstCodeClass.Name #>.Parsed(
+	return new <#= counterpartType #>(
 <#
 	this.PushIndent(Tab);
 	this.PushIndent(Tab);
@@ -134,4 +141,98 @@ public static <#= unifiedClass.FirstCodeClass.Name #>.Parsed Parse(this <#= unif
 <#
         });
     }
+#>
+<#+
+
+	public static void RenderParseBlock(
+		string strongType, 
+		string property, 
+		string variable, 
+		bool isRequired, 
+		bool canNormalize, 
+		bool isNullableValue, 
+		bool isReferenceType, 
+		TextTransformation output)
+	{
+		var newModelState = "var modelState = new System.Web.Http.ModelBinding.ModelState();";
+		var addModelState = string.Format("modelStateDictionary.Add(\"{0}\", modelState);",  property);
+
+		output.WriteLine(string.Format("{0} {1} = null;", strongType, variable));
+
+		if (isReferenceType)
+        {
+			output.WriteLine(string.Format("if (target.{0} != null)", property));
+			output.WriteLine("{");
+			output.PushIndent(Tab);
+        }
+
+		var variableAccessor = "target." + (isNullableValue ? property + ".Value" : property);
+		if (canNormalize)
+        {
+			var oldVariableAccessor = variableAccessor;
+			variableAccessor = variable + "Normalized";
+			output.WriteLine(string.Format("var {0} = {1}.Normalize({2});", variableAccessor, strongType, oldVariableAccessor));
+			
+			// Cannot be certain what type the normalized value is, so assume it's a reference type and needs null check.
+			output.WriteLine(string.Format("if ({0} != null)", variableAccessor));
+			output.WriteLine("{");
+			output.PushIndent(Tab);
+        }
+
+		output.WriteLine(string.Format("System.Collections.Generic.IReadOnlyCollection<string> {0}Errors;", variable));
+		output.WriteLine(string.Format("if (!{0}.TryParse({1}, out {2}, out {2}Errors))", strongType, variableAccessor, variable));
+		output.WriteLine("{");
+		output.PushIndent(Tab);
+        
+		output.WriteLine(newModelState);
+		output.WriteLine(string.Format("foreach (var errorMessage in {0}Errors)", variable));
+        output.WriteLine("{");
+		output.PushIndent(Tab);
+		output.WriteLine("modelState.Errors.Add(errorMessage);");
+        output.PopIndent();
+		output.WriteLine("}");
+		output.WriteLine("");
+        output.WriteLine(addModelState);
+
+		output.PopIndent();
+		output.WriteLine("}");
+
+		if (canNormalize) 
+        {
+			output.PopIndent();
+			output.WriteLine("}");
+
+			// Cannot be certain what type the normalized value is, so assume it's a reference type and needs null check.
+			if (isRequired)
+			{
+				RenderElseValueRequired(newModelState, addModelState, output);
+			}
+		}
+
+		if (isReferenceType)
+        {
+			output.PopIndent();
+			output.WriteLine("}");
+
+			if (isRequired)
+			{
+				RenderElseValueRequired(newModelState, addModelState, output);
+			}
+        }
+
+		output.WriteLine("");
+	}
+
+	public static void RenderElseValueRequired(string newModelState, string addModelState, TextTransformation output)
+	{
+		output.WriteLine("else");
+		output.WriteLine("{");
+		output.PushIndent(Tab);
+		output.WriteLine(newModelState);
+		output.WriteLine("modelState.Errors.Add(\"Value required\");");
+		output.WriteLine(addModelState);
+		output.PopIndent();
+		output.WriteLine("}");
+	}
+
 #>

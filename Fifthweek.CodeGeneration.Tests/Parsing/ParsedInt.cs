@@ -1,4 +1,4 @@
-﻿namespace Fifthweek.CodeGeneration.Tests
+﻿namespace Fifthweek.CodeGeneration.Tests.Parsing
 {
     using System;
     using System.Collections.Generic;
@@ -12,9 +12,9 @@
 
         public int Value { get; private set; }
 
-        public static bool IsEmpty(int value)
+        public static bool IsEmpty(int? value)
         {
-            return false;
+            return !value.HasValue;
         }
 
         public static ParsedInt Parse(int value)

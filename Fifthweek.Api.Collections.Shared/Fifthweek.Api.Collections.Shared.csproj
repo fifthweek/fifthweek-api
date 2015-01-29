@@ -53,6 +53,7 @@
       <DesignTime>True</DesignTime>
     </Compile>
     <Compile Include="CollectionId.cs" />
+    <Compile Include="WeeklyReleaseSchedule.cs" />
     <Compile Include="HourOfWeek.cs" />
     <Compile Include="ICollectionSecurity.cs" />
     <Compile Include="IGetLiveDateOfNewQueuedPostDbStatement.cs" />

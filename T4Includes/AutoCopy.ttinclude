@@ -9,7 +9,7 @@
     var AutoCopyAttributeName = "AutoCopy";
 	var RequiresBuilderAttributeParameterName = "RequiresBuilder";
 
-    foreach(UnifiedClass unifiedClass in allClasses)
+    foreach(var unifiedClass in UnifiedClassesInProject.Values)
     {
         var allAttributes = unifiedClass.GetAllAttributes();
 		var autoCopyAttribute = allAttributes.FirstOrDefault(_ => _.Name.StartsWith(AutoCopyAttributeName));
