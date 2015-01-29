@@ -6,16 +6,14 @@
 <#@ import namespace="System.Text" #>
 <#@ import namespace="System.Collections.Generic" #>
 <#
-    var ParsedAttributeName = "Parsed";
 	var ParsedCounterpartAttributeName = "ParsedCounterpart";
-	var StaticIsEmptyMethodName = "IsEmpty";
 
     foreach(var unifiedClass in UnifiedClassesInProject.Values)
     {
         var publicProperties = unifiedClass.GetAllPublicGetters();
         var stronglyTypedProperties = publicProperties
-            .Select(p => new { Property = p, Attribute = p.Attributes.OfType<CodeAttribute>().FirstOrDefault(_ => _.Name.StartsWith(ParsedAttributeName)) })
-            .Where(p => p.Attribute != null)
+            .Select(p => new { Property = p, ParseInstructions = ParseInstructions.TryGetForProperty(p) })
+            .Where(p => p.ParseInstructions != null)
             .ToList();
         if (stronglyTypedProperties.Count == 0)
         {
@@ -39,11 +37,7 @@
 			var stonglyTypedProperty = stronglyTypedProperties.SingleOrDefault(_ => _.Property.Name == parameter.AssigneeName);
 			if (stonglyTypedProperty != null)
             {
-				var codeAttribute = stonglyTypedProperty.Attribute;
-				var attributeParameters = ParseAttribute(codeAttribute.Value);
-				var strongType = StripTypeOf(attributeParameters[0]);
-
-				parameter.TypeName = strongType;
+				parameter.TypeName = stonglyTypedProperty.ParseInstructions.ParsedType;
             }
         }
 
@@ -79,25 +73,19 @@ public static <#= counterpartType #> Parse(this <#= unifiedClass.FirstCodeClass.
 <#
     for (var i = 0; i < stronglyTypedProperties.Count; i++)
     {
-        var codeAttribute = stronglyTypedProperties[i].Attribute;
+        var parseInstructions = stronglyTypedProperties[i].ParseInstructions;
         var codeProperty = stronglyTypedProperties[i].Property;
-        var attributeParameters = ParseAttribute(codeAttribute.Value);
-        var strongType = StripTypeOf(attributeParameters[0]);
         var isRequired = codeProperty.Attributes.OfType<CodeAttribute>().All(_ => !_.Name.StartsWith(OptionalAttributeName));
 		var variableName = "parsed" + i;
-		var strongTypeUnifiedClass = unifiedClass.ResolveUnifiedClass(strongType);
-		var hasCustomEmptyCheck = strongTypeUnifiedClass.GetAllPublicMethods().Any(_ => _.IsShared && _.Name == StaticIsEmptyMethodName);
 
 		this.PushIndent(Tab);
 		RenderParseBlock(
-			strongType, 
-			codeProperty.Name, 
+			parseInstructions, 
+			codeProperty, 
 			variableName, 
 			isRequired, 
-			hasCustomEmptyCheck, 
-			IsNullablePrimitiveType(codeProperty.Type.CodeType), 
-			IsReferenceType(codeProperty.Type.CodeType), 
-			this);
+			this,
+			unifiedClass);
 		this.PopIndent();
     }
 #>
@@ -106,7 +94,7 @@ public static <#= counterpartType #> Parse(this <#= unifiedClass.FirstCodeClass.
         throw new Fifthweek.Api.Core.ModelValidationException(modelStateDictionary);
     }
 
-	return new <#= counterpartType #>(
+    return new <#= counterpartType #>(
 <#
 	this.PushIndent(Tab);
 	this.PushIndent(Tab);
@@ -143,42 +131,155 @@ public static <#= counterpartType #> Parse(this <#= unifiedClass.FirstCodeClass.
     }
 #>
 <#+
+	public const string StaticIsEmptyMethodName = "IsEmpty";
+	public const string ParsedAttributeName = "Parsed";
+	public const string ParsedElementsAttributeName = "ParsedElements";
+	public const string NewModelState = "var modelState = new System.Web.Http.ModelBinding.ModelState();";
 
 	public static void RenderParseBlock(
-		string strongType, 
-		string property, 
+		ParseInstructions parseInstructions, 
+		CodeProperty property, 
 		string variable, 
 		bool isRequired, 
-		bool hasCustomEmptyCheck, 
-		bool isNullableValue, 
-		bool isReferenceType, 
-		TextTransformation output)
+		TextTransformation output,
+		UnifiedClass unifiedClass)
 	{
-		var newModelState = "var modelState = new System.Web.Http.ModelBinding.ModelState();";
-		var addModelState = string.Format("modelStateDictionary.Add(\"{0}\", modelState);",  property);
+		var targetProperty = "target." + property.Name;
+		var nonIndexedFieldName = string.Format("\"{0}\"", property.Name);
 
-		output.WriteLine(string.Format("{0} {1} = null;", strongType, variable));
+		if (parseInstructions.ParsedElementType != null)
+        {
+			var listType = "System.Collections.Generic.List<" + parseInstructions.ParsedElementType + ">";
+			string bufferName;
+			if (parseInstructions.ParsedOuterType != null)
+            {
+				bufferName = variable + "Buffer";
+            }
+			else
+            {
+				bufferName = variable;
+            }
 
-		var variableAccessor = "target." + (isNullableValue ? property + ".Value" : property);
+			output.WriteLine(listType + " " + bufferName + " = null;");
+            output.WriteLine("if (" + targetProperty + " != null)");
+            output.WriteLine("{");
+			output.PushIndent(Tab);
+
+			output.WriteLine(bufferName + " = new " + listType + "();");
+			output.WriteLine("for (var i = 0; i < " + targetProperty + ".Count; i++)");
+			output.WriteLine("{");
+			output.PushIndent(Tab);
+
+			var elementType = GetGenericParameters(property.Type.CodeType.FullName)[0];
+			RenderInnerParseBlock(
+				parseInstructions.ParsedElementType, 
+				string.Format("\"{0}[\" + i + \"]\"", property.Name), 
+				"target." + property.Name + "[i]", 
+				"parsedElement", 
+				true, 
+				true,
+				elementType, 
+				output,
+				unifiedClass);
+
+			output.WriteLine("if (parsedElement != null)");
+			output.WriteLine("{");
+			output.PushIndent(Tab);
+			output.WriteLine(bufferName + ".Add(parsedElement);");
+			output.PopIndent();
+			output.WriteLine("}");
+
+			output.PopIndent();
+			output.WriteLine("}");
+			output.PopIndent();
+			output.WriteLine("}");
+			
+			if (parseInstructions.ParsedOuterType != null)
+            {
+				// Null check is taken care of for us by the following parse block.
+				output.WriteLine("");
+				output.WriteLine(parseInstructions.ParsedOuterType + " " + variable + " = null;");
+				
+				RenderInnerParseBlock(
+					parseInstructions.ParsedOuterType, 
+					nonIndexedFieldName, 
+					bufferName, 
+					variable, 
+					isRequired, 
+					false,
+					parseInstructions.ParsedElementType, 
+					output,
+					unifiedClass);
+            }
+			else if (isRequired)
+            {
+				// Need to raise valid required violation if list is null.
+				var addModelState = string.Format("modelStateDictionary.Add({0}, modelState);",  nonIndexedFieldName);
+				RenderElseValueRequired(addModelState, output);
+				output.WriteLine("");
+            }
+			else
+			{
+				output.WriteLine("");
+            }
+        }
+		else
+        {
+			RenderInnerParseBlock(
+				parseInstructions.ParsedOuterType, 
+				nonIndexedFieldName, 
+				targetProperty, 
+				variable, 
+				isRequired, 
+				true,
+				property.Type.CodeType.FullName, 
+				output,
+				unifiedClass);
+        }
+    }
+
+	public static void RenderInnerParseBlock(
+		string strongType, 
+		string fieldName, 
+		string accessor, 
+		string variable, 
+		bool isRequired, 
+		bool declareVariable,
+		string accessorType,
+		TextTransformation output,
+		UnifiedClass unifiedClass)
+	{
+		var hasCustomEmptyCheck = HasCustomEmptyCheck(strongType, unifiedClass);
+		var isNullableValue = IsNullablePrimitiveType(accessorType);
+		var isReferenceType = IsReferenceType(accessorType);
+		
+		var addModelState = string.Format("modelStateDictionary.Add({0}, modelState);",  fieldName);
+
+		if (declareVariable)
+        {
+			output.WriteLine(string.Format("{0} {1} = null;", strongType, variable));
+        }
+
+		var valueAccessor = isNullableValue ? accessor + ".Value" : accessor;
 		if (hasCustomEmptyCheck)
         {
-			output.WriteLine(string.Format("if (!{0}.IsEmpty({1}))", strongType, variableAccessor));
+			output.WriteLine(string.Format("if (!{0}.IsEmpty({1}))", strongType, valueAccessor));
 			output.WriteLine("{");
 			output.PushIndent(Tab);
         }
 		else if (isReferenceType)
         {
-			output.WriteLine(string.Format("if (target.{0} != null)", property));
+			output.WriteLine(string.Format("if ({0} != null)", accessor));
 			output.WriteLine("{");
 			output.PushIndent(Tab);
         }
 
 		output.WriteLine(string.Format("System.Collections.Generic.IReadOnlyCollection<string> {0}Errors;", variable));
-		output.WriteLine(string.Format("if (!{0}.TryParse({1}, out {2}, out {2}Errors))", strongType, variableAccessor, variable));
+		output.WriteLine(string.Format("if (!{0}.TryParse({1}, out {2}, out {2}Errors))", strongType, valueAccessor, variable));
 		output.WriteLine("{");
 		output.PushIndent(Tab);
         
-		output.WriteLine(newModelState);
+		output.WriteLine(NewModelState);
 		output.WriteLine(string.Format("foreach (var errorMessage in {0}Errors)", variable));
         output.WriteLine("{");
 		output.PushIndent(Tab);
@@ -198,7 +299,7 @@ public static <#= counterpartType #> Parse(this <#= unifiedClass.FirstCodeClass.
 
 			if (isRequired)
 			{
-				RenderElseValueRequired(newModelState, addModelState, output);
+				RenderElseValueRequired(addModelState, output);
 			}
 		}
 		else if (isReferenceType)
@@ -208,23 +309,76 @@ public static <#= counterpartType #> Parse(this <#= unifiedClass.FirstCodeClass.
 
 			if (isRequired)
 			{
-				RenderElseValueRequired(newModelState, addModelState, output);
+				RenderElseValueRequired(addModelState, output);
 			}
         }
 
 		output.WriteLine("");
 	}
 
-	public static void RenderElseValueRequired(string newModelState, string addModelState, TextTransformation output)
+	public static void RenderElseValueRequired(string addModelState, TextTransformation output)
 	{
 		output.WriteLine("else");
 		output.WriteLine("{");
 		output.PushIndent(Tab);
-		output.WriteLine(newModelState);
+		output.WriteLine(NewModelState);
 		output.WriteLine("modelState.Errors.Add(\"Value required\");");
 		output.WriteLine(addModelState);
 		output.PopIndent();
 		output.WriteLine("}");
 	}
 
+	public static bool HasCustomEmptyCheck(string shortTypeName, UnifiedClass unifiedClass)
+    {
+		var strongTypeUnifiedClass = unifiedClass.ResolveUnifiedClass(shortTypeName);
+		return strongTypeUnifiedClass.GetAllPublicMethods().Any(_ => _.IsShared && _.Name == StaticIsEmptyMethodName);
+    }
+
+	public class ParseInstructions
+    {
+		private ParseInstructions()
+        {
+        }
+
+		public string ParsedOuterType { get; private set; }
+		public string ParsedElementType { get; private set; }
+
+		public string ParsedType
+        {
+			get
+            {
+				if (this.ParsedOuterType != null)
+                {
+					return this.ParsedOuterType;
+                }
+				else
+                {
+					return string.Format("System.Collections.Generic.IReadOnlyList<{0}>", this.ParsedElementType);
+                }
+            }
+        }
+
+		public static ParseInstructions TryGetForProperty(CodeProperty property)
+        {
+			var parsedAttribute = property.Attributes.OfType<CodeAttribute>().FirstOrDefault(_ => _.Name == ParsedAttributeName);
+			var parsedElementsAttribute = property.Attributes.OfType<CodeAttribute>().FirstOrDefault(_ => _.Name == ParsedElementsAttributeName);
+
+			if (parsedAttribute == null && parsedElementsAttribute == null)
+            {
+				return null;
+            }
+
+			return new ParseInstructions
+            {
+				ParsedOuterType = parsedAttribute == null ? null : GetTypeParameter(parsedAttribute),
+				ParsedElementType = parsedElementsAttribute == null ? null : GetTypeParameter(parsedElementsAttribute)
+            };
+        }
+
+		private static string GetTypeParameter(CodeAttribute attribute)
+        {
+			var attributeParameters = ParseAttribute(attribute.Value);
+			return StripTypeOf(attributeParameters[0]);
+        }
+    }
 #>

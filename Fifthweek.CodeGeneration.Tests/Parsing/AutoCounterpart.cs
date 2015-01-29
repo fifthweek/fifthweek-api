@@ -1,5 +1,7 @@
 ﻿namespace Fifthweek.CodeGeneration.Tests.Parsing
 {
+    using System.Collections.Generic;
+
     [AutoEqualityMembers]
     public partial class AutoCounterpart
     {
@@ -33,5 +35,21 @@
         [Optional]
         [Parsed(typeof(ParsedInt))]
         public int? OptionalParsedInt { get; set; }
+
+        [ParsedElements(typeof(ParsedInt))]
+        public List<int> SomeParsedIntList { get; set; }
+
+        [Optional]
+        [ParsedElements(typeof(ParsedInt))]
+        public List<int> OptionalParsedIntList { get; set; }
+
+        [Parsed(typeof(ParsedCollection))]
+        [ParsedElements(typeof(ParsedNormalizedString))]
+        public List<string> SomeParsedCollection { get; set; }
+
+        [Optional]
+        [Parsed(typeof(ParsedCollection))]
+        [ParsedElements(typeof(ParsedNormalizedString))]
+        public List<string> OptionalParsedCollection { get; set; }
     }
 }

@@ -12,6 +12,22 @@
 <#+
 	public const string Tab = "    ";
 
+	public static readonly HashSet<string> PrimitiveTypes = new HashSet<string>(new[] {
+        "System.String",
+        "System.Guid",
+        "System.Boolean",
+        "System.DateTime",
+		"System.TimeSpan",
+        "System.Char",
+        "System.Byte",
+        "System.Decimal",
+        "System.Single",
+        "System.Double",
+        "System.Int16",
+        "System.Int32",
+        "System.Int64",
+    });
+
 	public static IReadOnlyDictionary<string, UnifiedClass> UnifiedClassesInSolution;
 	public static IReadOnlyDictionary<string, UnifiedClass> UnifiedClassesInProject;
 
@@ -100,6 +116,20 @@
 		output.WriteLine(string.Format("//// Mapped solution in {0}s", Math.Round(stopwatch.Elapsed.TotalSeconds, 2)));
 	}
 
+	public static IReadOnlyList<string> GetGenericParameters(string typeName)
+    {
+		var parameterStart = typeName.IndexOf("<");
+		if (parameterStart == -1)
+        {
+			return new string[0];
+        }
+
+		var firstPart = typeName.Substring(parameterStart + 1);
+		var middlePart = firstPart.Substring(0, firstPart.Length - 1);
+
+		return middlePart.Split(new[] { ',' }).Select(_ => _.Trim()).ToArray();
+    } 
+
 	public static bool IsEnumerableType(CodeType type, AutomationHelper visualStudioHelper)
 	{
 		var interfaces = Enumerable.Empty<EnvDTE.CodeInterface>();
@@ -123,17 +153,21 @@
 		return interfaces.Any(_ => _.FullName == "System.Collections.IEnumerable");
 	}
 
-    public static bool IsNullablePrimitiveType(CodeType type)
+    public static bool IsNullablePrimitiveType(string fullTypeName)
     {
         const string nullablePostfix = "?";
         const string nullablePrefix = "System.Nullable<";
-        var typeName = type.FullName;
-        return typeName.StartsWith(nullablePrefix) || typeName.EndsWith(nullablePostfix);
+        return fullTypeName.StartsWith(nullablePrefix) || fullTypeName.EndsWith(nullablePostfix);
     }
 
-	public static bool IsReferenceType(CodeType type)
+	public static bool IsReferenceType(string fullTypeName)
     {
-        return type is CodeClass || IsNullablePrimitiveType(type);
+		if (fullTypeName == "System.String")
+        {
+			return true;
+        }
+
+		return !PrimitiveTypes.Contains(fullTypeName);
     }
 
     public static bool IsPrimitiveType(TextTransformation output, CodeType type)
@@ -143,22 +177,6 @@
         }
 
         var typeName = type.FullName;
-        var primitiveTypes = new HashSet<string>(new[] {
-            "System.String",
-            "System.Guid",
-            "System.Boolean",
-            "System.DateTime",
-			"System.TimeSpan",
-            "System.Char",
-            "System.Byte",
-            "System.Decimal",
-            "System.Single",
-            "System.Double",
-            "System.Int16",
-            "System.Int32",
-            "System.Int64",
-        });
-
         const string nullablePrefix = "System.Nullable<";
         if (typeName.StartsWith(nullablePrefix))
         {
@@ -172,7 +190,7 @@
             typeName = typeName.Substring(0, typeName.Length - 1);
         }
 
-        return primitiveTypes.Contains(typeName);
+        return PrimitiveTypes.Contains(typeName);
     }
 
     public static string ToLowerCamelCase(string value)

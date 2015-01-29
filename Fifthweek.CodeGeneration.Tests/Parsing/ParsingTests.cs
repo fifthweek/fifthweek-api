@@ -1,6 +1,8 @@
 ﻿namespace Fifthweek.CodeGeneration.Tests.Parsing
 {
     using System;
+    using System.Collections.Generic;
+    using System.Linq;
 
     using Fifthweek.Api.Core;
 
@@ -37,6 +39,26 @@
         }
 
         [TestMethod]
+        public void ItShouldParseListsWithCustomElementType()
+        {
+            var data = this.NewInstance();
+            var parsed = data.Parse();
+
+            CollectionAssert.AreEqual(parsed.SomeParsedIntList.Select(_ => _.Value).ToList(), data.SomeParsedIntList);
+            CollectionAssert.AreEqual(parsed.OptionalParsedIntList.Select(_ => _.Value).ToList(), data.OptionalParsedIntList);
+        }
+
+        [TestMethod]
+        public void ItShouldParseListsWithCustomElementTypeAndOuterType()
+        {
+            var data = this.NewInstance();
+            var parsed = data.Parse();
+
+            CollectionAssert.AreEqual(parsed.SomeParsedCollection.Value.Select(_ => _.Value).ToList(), data.SomeParsedCollection);
+            CollectionAssert.AreEqual(parsed.OptionalParsedCollection.Value.Select(_ => _.Value).ToList(), data.OptionalParsedCollection);
+        }
+
+        [TestMethod]
         public void ItShouldRetainNonParsedValueTypes()
         {
             var data = this.NewInstance();
@@ -66,12 +88,32 @@
         }
 
         [TestMethod]
+        public void WhenParsingCustomPrimitives_ItShouldRequireNonOptionalObjects()
+        {
+            this.BadValue(_ => _.SomeParsedCollection = null);
+            this.BadValue(_ => _.SomeParsedIntList = null);
+            this.BadValue(_ => _.SomeParsedNormalizedString = null);
+            this.BadValue(_ => _.SomeParsedString = null);
+        }
+
+        [TestMethod]
+        public void WhenParsingCustomPrimitives_ItShouldInspectCustomEmptyChecks()
+        {
+            this.BadValue(_ => _.SomeParsedNormalizedString = "   ");
+            this.BadValue(_ => _.SomeParsedCollection = new List<string>() { "Just One Cornetto!" });
+            this.BadValue(_ => _.SomeParsedCollection = new List<string>() { "   " });
+            this.BadValue(_ => _.SomeParsedCollection = new List<string>() { "Just One Cornetto!", "   " });
+        }
+
+        [TestMethod]
         public void WhenParsingCustomPrimitives_ItShouldAllowNullForOptionalObjects()
         {
             this.GoodValue(_ => _.OptionalParsedInt = null, _ => _.OptionalParsedInt == null);
             this.GoodValue(_ => _.OptionalParsedString = null, _ => _.OptionalParsedString == null);
             this.GoodValue(_ => _.OptionalWeaklyTypedInt = null, _ => _.OptionalWeaklyTypedInt == null);
             this.GoodValue(_ => _.OptionalWeaklyTypedString = null, _ => _.OptionalWeaklyTypedString == null);
+            this.GoodValue(_ => _.OptionalParsedIntList = null, _ => _.OptionalParsedIntList == null);
+            this.GoodValue(_ => _.OptionalParsedCollection = null, _ => _.OptionalParsedCollection == null);
         }
 
         public void BadValue(Action<AutoCounterpart> setInvalidFieldValue)
@@ -109,7 +151,11 @@
                 SomeParsedNormalizedString = "Captain Phil 5",
                 OptionalParsedNormalizedString = "Captain Phil 6",
                 SomeParsedInt = 3, 
-                OptionalParsedInt = 4 
+                OptionalParsedInt = 4,
+                SomeParsedIntList = new List<int>() { 1, 2, 3 },
+                OptionalParsedIntList = new List<int>() { 1, 2, 3 },
+                SomeParsedCollection = new List<string>() { "Hello", "Phil" },
+                OptionalParsedCollection = new List<string>() { "Hello!", "Phil!" },
             };
         }
     }

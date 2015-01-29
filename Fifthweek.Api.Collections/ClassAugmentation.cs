@@ -1,25 +1,18 @@
 ﻿using System;
 using System.Linq;
 
-//// Generated on 29/01/2015 19:44:16 (UTC)
-//// Mapped solution in 1.25s
+//// Generated on 29/01/2015 23:31:18 (UTC)
+//// Mapped solution in 2.98s
 
 
 namespace Fifthweek.Api.Collections
 {
-    using System;
-    using System.Linq;
     using System.Threading.Tasks;
     using Dapper;
     using Fifthweek.Api.Core;
     using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.Api.Persistence;
     using Fifthweek.CodeGeneration;
-    using Fifthweek.Api.Collections.Shared;
-    using System.Collections.Generic;
-    using System.Text;
-    using Fifthweek.Api.Channels.Shared;
-    using Fifthweek.Api.Collections.Queries;
 
     public partial class CollectionOwnership 
     {
@@ -37,19 +30,11 @@ namespace Fifthweek.Api.Collections
 }
 namespace Fifthweek.Api.Collections
 {
-    using System;
-    using System.Linq;
     using System.Threading.Tasks;
-    using Dapper;
+    using Fifthweek.Api.Collections.Shared;
     using Fifthweek.Api.Core;
     using Fifthweek.Api.Identity.Shared.Membership;
-    using Fifthweek.Api.Persistence;
     using Fifthweek.CodeGeneration;
-    using Fifthweek.Api.Collections.Shared;
-    using System.Collections.Generic;
-    using System.Text;
-    using Fifthweek.Api.Channels.Shared;
-    using Fifthweek.Api.Collections.Queries;
 
     public partial class CollectionSecurity 
     {
@@ -67,18 +52,10 @@ namespace Fifthweek.Api.Collections
 }
 namespace Fifthweek.Api.Collections.Commands
 {
-    using System;
-    using System.Linq;
     using Fifthweek.Api.Channels.Shared;
     using Fifthweek.Api.Collections.Shared;
     using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.CodeGeneration;
-    using System.Threading.Tasks;
-    using System.Transactions;
-    using Fifthweek.Api.Core;
-    using Fifthweek.Api.Persistence;
-    using Fifthweek.Shared;
-    using System.Collections.Generic;
 
     public partial class CreateCollectionCommand 
     {
@@ -118,17 +95,15 @@ namespace Fifthweek.Api.Collections.Commands
 namespace Fifthweek.Api.Collections.Commands
 {
     using System;
-    using System.Linq;
-    using Fifthweek.Api.Channels.Shared;
-    using Fifthweek.Api.Collections.Shared;
-    using Fifthweek.Api.Identity.Shared.Membership;
-    using Fifthweek.CodeGeneration;
     using System.Threading.Tasks;
     using System.Transactions;
+    using Fifthweek.Api.Channels.Shared;
+    using Fifthweek.Api.Collections.Shared;
     using Fifthweek.Api.Core;
+    using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.Api.Persistence;
+    using Fifthweek.CodeGeneration;
     using Fifthweek.Shared;
-    using System.Collections.Generic;
 
     public partial class CreateCollectionCommandHandler 
     {
@@ -167,18 +142,11 @@ namespace Fifthweek.Api.Collections.Commands
 }
 namespace Fifthweek.Api.Collections.Commands
 {
-    using System;
-    using System.Linq;
+    using System.Collections.Generic;
     using Fifthweek.Api.Channels.Shared;
     using Fifthweek.Api.Collections.Shared;
     using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.CodeGeneration;
-    using System.Threading.Tasks;
-    using System.Transactions;
-    using Fifthweek.Api.Core;
-    using Fifthweek.Api.Persistence;
-    using Fifthweek.Shared;
-    using System.Collections.Generic;
 
     public partial class UpdateCollectionCommand 
     {
@@ -225,7 +193,6 @@ namespace Fifthweek.Api.Collections.Commands
 namespace Fifthweek.Api.Collections.Controllers
 {
     using System;
-    using System.Linq;
     using System.Threading.Tasks;
     using System.Web.Http;
     using System.Web.Http.Description;
@@ -235,8 +202,6 @@ namespace Fifthweek.Api.Collections.Controllers
     using Fifthweek.Api.Core;
     using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.CodeGeneration;
-    using Fifthweek.Api.Channels.Shared;
-    using System.Collections.Generic;
 
     public partial class CollectionController 
     {
@@ -282,19 +247,9 @@ namespace Fifthweek.Api.Collections.Controllers
 }
 namespace Fifthweek.Api.Collections.Controllers
 {
-    using System;
-    using System.Linq;
-    using System.Threading.Tasks;
-    using System.Web.Http;
-    using System.Web.Http.Description;
-    using Fifthweek.Api.Collections.Commands;
-    using Fifthweek.Api.Collections.Queries;
-    using Fifthweek.Api.Collections.Shared;
-    using Fifthweek.Api.Core;
-    using Fifthweek.Api.Identity.Shared.Membership;
-    using Fifthweek.CodeGeneration;
     using Fifthweek.Api.Channels.Shared;
-    using System.Collections.Generic;
+    using Fifthweek.Api.Collections.Shared;
+    using Fifthweek.CodeGeneration;
 
     public partial class NewCollectionData 
     {
@@ -317,21 +272,55 @@ namespace Fifthweek.Api.Collections.Controllers
         }
     }
 }
+namespace Fifthweek.Api.Collections.Controllers
+{
+    using System.Collections.Generic;
+    using Fifthweek.Api.Channels.Shared;
+    using Fifthweek.Api.Collections.Shared;
+    using Fifthweek.CodeGeneration;
+
+    public partial class UpdatedCollectionData 
+    {
+        public UpdatedCollectionData(
+            Fifthweek.Api.Channels.Shared.ChannelId channelId,
+            System.String name,
+            System.Collections.Generic.List<System.Byte> weeklyReleaseSchedule)
+        {
+            if (channelId == null)
+            {
+                throw new ArgumentNullException("channelId");
+            }
+
+            if (name == null)
+            {
+                throw new ArgumentNullException("name");
+            }
+
+            if (weeklyReleaseSchedule == null)
+            {
+                throw new ArgumentNullException("weeklyReleaseSchedule");
+            }
+
+            this.ChannelId = channelId;
+            this.Name = name;
+            this.WeeklyReleaseSchedule = weeklyReleaseSchedule;
+        }
+    }
+}
 namespace Fifthweek.Api.Collections
 {
     using System;
+    using System.Collections.Generic;
     using System.Linq;
+    using System.Text;
     using System.Threading.Tasks;
     using Dapper;
+    using Fifthweek.Api.Channels.Shared;
+    using Fifthweek.Api.Collections.Queries;
     using Fifthweek.Api.Core;
     using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.Api.Persistence;
     using Fifthweek.CodeGeneration;
-    using Fifthweek.Api.Collections.Shared;
-    using System.Collections.Generic;
-    using System.Text;
-    using Fifthweek.Api.Channels.Shared;
-    using Fifthweek.Api.Collections.Queries;
 
     public partial class GetChannelsAndCollectionsDbStatement 
     {
@@ -350,18 +339,13 @@ namespace Fifthweek.Api.Collections
 namespace Fifthweek.Api.Collections
 {
     using System;
+    using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
     using Dapper;
     using Fifthweek.Api.Core;
-    using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.Api.Persistence;
     using Fifthweek.CodeGeneration;
-    using Fifthweek.Api.Collections.Shared;
-    using System.Collections.Generic;
-    using System.Text;
-    using Fifthweek.Api.Channels.Shared;
-    using Fifthweek.Api.Collections.Queries;
 
     public partial class GetCollectionWeeklyReleaseTimesDbStatement 
     {
@@ -382,16 +366,9 @@ namespace Fifthweek.Api.Collections
     using System;
     using System.Linq;
     using System.Threading.Tasks;
-    using Dapper;
-    using Fifthweek.Api.Core;
-    using Fifthweek.Api.Identity.Shared.Membership;
-    using Fifthweek.Api.Persistence;
-    using Fifthweek.CodeGeneration;
     using Fifthweek.Api.Collections.Shared;
-    using System.Collections.Generic;
-    using System.Text;
-    using Fifthweek.Api.Channels.Shared;
-    using Fifthweek.Api.Collections.Queries;
+    using Fifthweek.Api.Core;
+    using Fifthweek.CodeGeneration;
 
     public partial class GetLiveDateOfNewQueuedPostDbStatement 
     {
@@ -424,18 +401,11 @@ namespace Fifthweek.Api.Collections
 namespace Fifthweek.Api.Collections
 {
     using System;
-    using System.Linq;
     using System.Threading.Tasks;
     using Dapper;
     using Fifthweek.Api.Core;
-    using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.Api.Persistence;
     using Fifthweek.CodeGeneration;
-    using Fifthweek.Api.Collections.Shared;
-    using System.Collections.Generic;
-    using System.Text;
-    using Fifthweek.Api.Channels.Shared;
-    using Fifthweek.Api.Collections.Queries;
 
     public partial class GetNewQueuedPostLiveDateLowerBoundDbStatement 
     {
@@ -453,15 +423,10 @@ namespace Fifthweek.Api.Collections
 }
 namespace Fifthweek.Api.Collections.Queries
 {
-    using System;
-    using System.Linq;
     using System.Collections.Generic;
     using Fifthweek.Api.Channels.Shared;
     using Fifthweek.Api.Collections.Shared;
     using Fifthweek.CodeGeneration;
-    using Fifthweek.Api.Core;
-    using Fifthweek.Api.Identity.Shared.Membership;
-    using System.Threading.Tasks;
 
     public partial class ChannelsAndCollections
     {
@@ -496,41 +461,10 @@ namespace Fifthweek.Api.Collections.Queries
 }
 namespace Fifthweek.Api.Collections.Queries
 {
-    using System;
-    using System.Linq;
     using System.Collections.Generic;
     using Fifthweek.Api.Channels.Shared;
     using Fifthweek.Api.Collections.Shared;
     using Fifthweek.CodeGeneration;
-    using Fifthweek.Api.Core;
-    using Fifthweek.Api.Identity.Shared.Membership;
-    using System.Threading.Tasks;
-
-    public partial class ChannelsAndCollections 
-    {
-        public ChannelsAndCollections(
-            System.Collections.Generic.IReadOnlyList<Fifthweek.Api.Collections.Queries.ChannelsAndCollections.Channel> channels)
-        {
-            if (channels == null)
-            {
-                throw new ArgumentNullException("channels");
-            }
-
-            this.Channels = channels;
-        }
-    }
-}
-namespace Fifthweek.Api.Collections.Queries
-{
-    using System;
-    using System.Linq;
-    using System.Collections.Generic;
-    using Fifthweek.Api.Channels.Shared;
-    using Fifthweek.Api.Collections.Shared;
-    using Fifthweek.CodeGeneration;
-    using Fifthweek.Api.Core;
-    using Fifthweek.Api.Identity.Shared.Membership;
-    using System.Threading.Tasks;
 
     public partial class ChannelsAndCollections
     {
@@ -558,15 +492,30 @@ namespace Fifthweek.Api.Collections.Queries
 }
 namespace Fifthweek.Api.Collections.Queries
 {
-    using System;
-    using System.Linq;
     using System.Collections.Generic;
     using Fifthweek.Api.Channels.Shared;
     using Fifthweek.Api.Collections.Shared;
     using Fifthweek.CodeGeneration;
+
+    public partial class ChannelsAndCollections 
+    {
+        public ChannelsAndCollections(
+            System.Collections.Generic.IReadOnlyList<Fifthweek.Api.Collections.Queries.ChannelsAndCollections.Channel> channels)
+        {
+            if (channels == null)
+            {
+                throw new ArgumentNullException("channels");
+            }
+
+            this.Channels = channels;
+        }
+    }
+}
+namespace Fifthweek.Api.Collections.Queries
+{
     using Fifthweek.Api.Core;
     using Fifthweek.Api.Identity.Shared.Membership;
-    using System.Threading.Tasks;
+    using Fifthweek.CodeGeneration;
 
     public partial class GetCreatedChannelsAndCollectionsQuery 
     {
@@ -591,15 +540,10 @@ namespace Fifthweek.Api.Collections.Queries
 }
 namespace Fifthweek.Api.Collections.Queries
 {
-    using System;
-    using System.Linq;
-    using System.Collections.Generic;
-    using Fifthweek.Api.Channels.Shared;
-    using Fifthweek.Api.Collections.Shared;
-    using Fifthweek.CodeGeneration;
+    using System.Threading.Tasks;
     using Fifthweek.Api.Core;
     using Fifthweek.Api.Identity.Shared.Membership;
-    using System.Threading.Tasks;
+    using Fifthweek.CodeGeneration;
 
     public partial class GetCreatedChannelsAndCollectionsQueryHandler 
     {
@@ -625,14 +569,10 @@ namespace Fifthweek.Api.Collections.Queries
 namespace Fifthweek.Api.Collections.Queries
 {
     using System;
-    using System.Linq;
-    using System.Collections.Generic;
-    using Fifthweek.Api.Channels.Shared;
     using Fifthweek.Api.Collections.Shared;
-    using Fifthweek.CodeGeneration;
     using Fifthweek.Api.Core;
     using Fifthweek.Api.Identity.Shared.Membership;
-    using System.Threading.Tasks;
+    using Fifthweek.CodeGeneration;
 
     public partial class GetLiveDateOfNewQueuedPostQuery 
     {
@@ -658,14 +598,11 @@ namespace Fifthweek.Api.Collections.Queries
 namespace Fifthweek.Api.Collections.Queries
 {
     using System;
-    using System.Linq;
-    using System.Collections.Generic;
-    using Fifthweek.Api.Channels.Shared;
+    using System.Threading.Tasks;
     using Fifthweek.Api.Collections.Shared;
-    using Fifthweek.CodeGeneration;
     using Fifthweek.Api.Core;
     using Fifthweek.Api.Identity.Shared.Membership;
-    using System.Threading.Tasks;
+    using Fifthweek.CodeGeneration;
 
     public partial class GetLiveDateOfNewQueuedPostQueryHandler 
     {
@@ -695,65 +632,13 @@ namespace Fifthweek.Api.Collections.Queries
         }
     }
 }
-namespace Fifthweek.Api.Collections.Controllers
-{
-    using System;
-    using System.Linq;
-    using System.Threading.Tasks;
-    using System.Web.Http;
-    using System.Web.Http.Description;
-    using Fifthweek.Api.Collections.Commands;
-    using Fifthweek.Api.Collections.Queries;
-    using Fifthweek.Api.Collections.Shared;
-    using Fifthweek.Api.Core;
-    using Fifthweek.Api.Identity.Shared.Membership;
-    using Fifthweek.CodeGeneration;
-    using Fifthweek.Api.Channels.Shared;
-    using System.Collections.Generic;
-
-    public partial class UpdatedCollectionData 
-    {
-        public UpdatedCollectionData(
-            Fifthweek.Api.Channels.Shared.ChannelId channelId,
-            System.String name,
-            System.Collections.Generic.List<System.Byte> weeklyReleaseTimes)
-        {
-            if (channelId == null)
-            {
-                throw new ArgumentNullException("channelId");
-            }
-
-            if (name == null)
-            {
-                throw new ArgumentNullException("name");
-            }
-
-            if (weeklyReleaseTimes == null)
-            {
-                throw new ArgumentNullException("weeklyReleaseTimes");
-            }
-
-            this.ChannelId = channelId;
-            this.Name = name;
-            this.WeeklyReleaseTimes = weeklyReleaseTimes;
-        }
-    }
-}
 
 namespace Fifthweek.Api.Collections.Commands
 {
-    using System;
-    using System.Linq;
     using Fifthweek.Api.Channels.Shared;
     using Fifthweek.Api.Collections.Shared;
     using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.CodeGeneration;
-    using System.Threading.Tasks;
-    using System.Transactions;
-    using Fifthweek.Api.Core;
-    using Fifthweek.Api.Persistence;
-    using Fifthweek.Shared;
-    using System.Collections.Generic;
 
     public partial class CreateCollectionCommand 
     {
@@ -823,18 +708,11 @@ namespace Fifthweek.Api.Collections.Commands
 }
 namespace Fifthweek.Api.Collections.Commands
 {
-    using System;
-    using System.Linq;
+    using System.Collections.Generic;
     using Fifthweek.Api.Channels.Shared;
     using Fifthweek.Api.Collections.Shared;
     using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.CodeGeneration;
-    using System.Threading.Tasks;
-    using System.Transactions;
-    using Fifthweek.Api.Core;
-    using Fifthweek.Api.Persistence;
-    using Fifthweek.Shared;
-    using System.Collections.Generic;
 
     public partial class UpdateCollectionCommand 
     {
@@ -925,19 +803,9 @@ namespace Fifthweek.Api.Collections.Commands
 }
 namespace Fifthweek.Api.Collections.Controllers
 {
-    using System;
-    using System.Linq;
-    using System.Threading.Tasks;
-    using System.Web.Http;
-    using System.Web.Http.Description;
-    using Fifthweek.Api.Collections.Commands;
-    using Fifthweek.Api.Collections.Queries;
-    using Fifthweek.Api.Collections.Shared;
-    using Fifthweek.Api.Core;
-    using Fifthweek.Api.Identity.Shared.Membership;
-    using Fifthweek.CodeGeneration;
     using Fifthweek.Api.Channels.Shared;
-    using System.Collections.Generic;
+    using Fifthweek.Api.Collections.Shared;
+    using Fifthweek.CodeGeneration;
 
     public partial class NewCollectionData 
     {
@@ -993,17 +861,93 @@ namespace Fifthweek.Api.Collections.Controllers
         }
     }
 }
-namespace Fifthweek.Api.Collections.Queries
+namespace Fifthweek.Api.Collections.Controllers
 {
-    using System;
-    using System.Linq;
     using System.Collections.Generic;
     using Fifthweek.Api.Channels.Shared;
     using Fifthweek.Api.Collections.Shared;
     using Fifthweek.CodeGeneration;
+
+    public partial class UpdatedCollectionData 
+    {
+        public override string ToString()
+        {
+            return string.Format("UpdatedCollectionData({0}, \"{1}\", {2})", this.ChannelId == null ? "null" : this.ChannelId.ToString(), this.Name == null ? "null" : this.Name.ToString(), this.WeeklyReleaseSchedule == null ? "null" : this.WeeklyReleaseSchedule.ToString());
+        }
+        
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj))
+            {
+                return false;
+            }
+        
+            if (ReferenceEquals(this, obj))
+            {
+                return true;
+            }
+        
+            if (obj.GetType() != this.GetType())
+            {
+                return false;
+            }
+        
+            return this.Equals((UpdatedCollectionData)obj);
+        }
+        
+        public override int GetHashCode()
+        {
+            unchecked
+            {
+                int hashCode = 0;
+                hashCode = (hashCode * 397) ^ (this.ChannelId != null ? this.ChannelId.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.Name != null ? this.Name.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.WeeklyReleaseSchedule != null 
+        			? this.WeeklyReleaseSchedule.Aggregate(0, (previous, current) => 
+        				{ 
+        				    unchecked
+        				    {
+        				        return (previous * 397) ^ (current != null ? current.GetHashCode() : 0);
+        				    }
+        				})
+        			: 0);
+                return hashCode;
+            }
+        }
+        
+        protected bool Equals(UpdatedCollectionData other)
+        {
+            if (!object.Equals(this.ChannelId, other.ChannelId))
+            {
+                return false;
+            }
+        
+            if (!object.Equals(this.Name, other.Name))
+            {
+                return false;
+            }
+        
+            if (this.WeeklyReleaseSchedule != null && other.WeeklyReleaseSchedule != null)
+            {
+                if (!this.WeeklyReleaseSchedule.SequenceEqual(other.WeeklyReleaseSchedule))
+                {
+                    return false;    
+                }
+            }
+            else if (this.WeeklyReleaseSchedule != null || other.WeeklyReleaseSchedule != null)
+            {
+                return false;
+            }
+        
+            return true;
+        }
+    }
+}
+namespace Fifthweek.Api.Collections.Queries
+{
     using Fifthweek.Api.Core;
     using Fifthweek.Api.Identity.Shared.Membership;
-    using System.Threading.Tasks;
+    using Fifthweek.CodeGeneration;
 
     public partial class GetCreatedChannelsAndCollectionsQuery 
     {
@@ -1062,14 +1006,10 @@ namespace Fifthweek.Api.Collections.Queries
 namespace Fifthweek.Api.Collections.Queries
 {
     using System;
-    using System.Linq;
-    using System.Collections.Generic;
-    using Fifthweek.Api.Channels.Shared;
     using Fifthweek.Api.Collections.Shared;
-    using Fifthweek.CodeGeneration;
     using Fifthweek.Api.Core;
     using Fifthweek.Api.Identity.Shared.Membership;
-    using System.Threading.Tasks;
+    using Fifthweek.CodeGeneration;
 
     public partial class GetLiveDateOfNewQueuedPostQuery 
     {
@@ -1127,110 +1067,9 @@ namespace Fifthweek.Api.Collections.Queries
 }
 namespace Fifthweek.Api.Collections.Controllers
 {
-    using System;
-    using System.Linq;
-    using System.Threading.Tasks;
-    using System.Web.Http;
-    using System.Web.Http.Description;
-    using Fifthweek.Api.Collections.Commands;
-    using Fifthweek.Api.Collections.Queries;
-    using Fifthweek.Api.Collections.Shared;
-    using Fifthweek.Api.Core;
-    using Fifthweek.Api.Identity.Shared.Membership;
-    using Fifthweek.CodeGeneration;
     using Fifthweek.Api.Channels.Shared;
-    using System.Collections.Generic;
-
-    public partial class UpdatedCollectionData 
-    {
-        public override string ToString()
-        {
-            return string.Format("UpdatedCollectionData({0}, \"{1}\", {2})", this.ChannelId == null ? "null" : this.ChannelId.ToString(), this.Name == null ? "null" : this.Name.ToString(), this.WeeklyReleaseTimes == null ? "null" : this.WeeklyReleaseTimes.ToString());
-        }
-        
-        public override bool Equals(object obj)
-        {
-            if (ReferenceEquals(null, obj))
-            {
-                return false;
-            }
-        
-            if (ReferenceEquals(this, obj))
-            {
-                return true;
-            }
-        
-            if (obj.GetType() != this.GetType())
-            {
-                return false;
-            }
-        
-            return this.Equals((UpdatedCollectionData)obj);
-        }
-        
-        public override int GetHashCode()
-        {
-            unchecked
-            {
-                int hashCode = 0;
-                hashCode = (hashCode * 397) ^ (this.ChannelId != null ? this.ChannelId.GetHashCode() : 0);
-                hashCode = (hashCode * 397) ^ (this.Name != null ? this.Name.GetHashCode() : 0);
-                hashCode = (hashCode * 397) ^ (this.WeeklyReleaseTimes != null 
-        			? this.WeeklyReleaseTimes.Aggregate(0, (previous, current) => 
-        				{ 
-        				    unchecked
-        				    {
-        				        return (previous * 397) ^ (current != null ? current.GetHashCode() : 0);
-        				    }
-        				})
-        			: 0);
-                return hashCode;
-            }
-        }
-        
-        protected bool Equals(UpdatedCollectionData other)
-        {
-            if (!object.Equals(this.ChannelId, other.ChannelId))
-            {
-                return false;
-            }
-        
-            if (!object.Equals(this.Name, other.Name))
-            {
-                return false;
-            }
-        
-            if (this.WeeklyReleaseTimes != null && other.WeeklyReleaseTimes != null)
-            {
-                if (!this.WeeklyReleaseTimes.SequenceEqual(other.WeeklyReleaseTimes))
-                {
-                    return false;    
-                }
-            }
-            else if (this.WeeklyReleaseTimes != null || other.WeeklyReleaseTimes != null)
-            {
-                return false;
-            }
-        
-            return true;
-        }
-    }
-}
-namespace Fifthweek.Api.Collections.Controllers
-{
-    using System;
-    using System.Linq;
-    using System.Threading.Tasks;
-    using System.Web.Http;
-    using System.Web.Http.Description;
-    using Fifthweek.Api.Collections.Commands;
-    using Fifthweek.Api.Collections.Queries;
     using Fifthweek.Api.Collections.Shared;
-    using Fifthweek.Api.Core;
-    using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.CodeGeneration;
-    using Fifthweek.Api.Channels.Shared;
-    using System.Collections.Generic;
 
     public partial class NewCollectionData 
     {
@@ -1293,7 +1132,7 @@ namespace Fifthweek.Api.Collections.Controllers
                 throw new Fifthweek.Api.Core.ModelValidationException(modelStateDictionary);
             }
         
-        	return new NewCollectionData.Parsed(
+            return new NewCollectionData.Parsed(
                 target.ChannelId,
                 parsed0);
         }    
@@ -1301,19 +1140,10 @@ namespace Fifthweek.Api.Collections.Controllers
 }
 namespace Fifthweek.Api.Collections.Controllers
 {
-    using System;
-    using System.Linq;
-    using System.Threading.Tasks;
-    using System.Web.Http;
-    using System.Web.Http.Description;
-    using Fifthweek.Api.Collections.Commands;
-    using Fifthweek.Api.Collections.Queries;
-    using Fifthweek.Api.Collections.Shared;
-    using Fifthweek.Api.Core;
-    using Fifthweek.Api.Identity.Shared.Membership;
-    using Fifthweek.CodeGeneration;
-    using Fifthweek.Api.Channels.Shared;
     using System.Collections.Generic;
+    using Fifthweek.Api.Channels.Shared;
+    using Fifthweek.Api.Collections.Shared;
+    using Fifthweek.CodeGeneration;
 
     public partial class UpdatedCollectionData 
     {
@@ -1322,7 +1152,7 @@ namespace Fifthweek.Api.Collections.Controllers
             public Parsed(
                 Fifthweek.Api.Channels.Shared.ChannelId channelId,
                 ValidCollectionName name,
-                System.Collections.Generic.List<System.Byte> weeklyReleaseTimes)
+                WeeklyReleaseSchedule weeklyReleaseSchedule)
             {
                 if (channelId == null)
                 {
@@ -1334,21 +1164,21 @@ namespace Fifthweek.Api.Collections.Controllers
                     throw new ArgumentNullException("name");
                 }
 
-                if (weeklyReleaseTimes == null)
+                if (weeklyReleaseSchedule == null)
                 {
-                    throw new ArgumentNullException("weeklyReleaseTimes");
+                    throw new ArgumentNullException("weeklyReleaseSchedule");
                 }
 
                 this.ChannelId = channelId;
                 this.Name = name;
-                this.WeeklyReleaseTimes = weeklyReleaseTimes;
+                this.WeeklyReleaseSchedule = weeklyReleaseSchedule;
             }
         
             public Fifthweek.Api.Channels.Shared.ChannelId ChannelId { get; private set; }
         
             public ValidCollectionName Name { get; private set; }
         
-            public System.Collections.Generic.List<System.Byte> WeeklyReleaseTimes { get; private set; }
+            public WeeklyReleaseSchedule WeeklyReleaseSchedule { get; private set; }
         }
     }
 
@@ -1380,15 +1210,63 @@ namespace Fifthweek.Api.Collections.Controllers
                 modelStateDictionary.Add("Name", modelState);
             }
 
+            System.Collections.Generic.List<HourOfWeek> parsed1Buffer = null;
+            if (target.WeeklyReleaseSchedule != null)
+            {
+                parsed1Buffer = new System.Collections.Generic.List<HourOfWeek>();
+                for (var i = 0; i < target.WeeklyReleaseSchedule.Count; i++)
+                {
+                    HourOfWeek parsedElement = null;
+                    System.Collections.Generic.IReadOnlyCollection<string> parsedElementErrors;
+                    if (!HourOfWeek.TryParse(target.WeeklyReleaseSchedule[i], out parsedElement, out parsedElementErrors))
+                    {
+                        var modelState = new System.Web.Http.ModelBinding.ModelState();
+                        foreach (var errorMessage in parsedElementErrors)
+                        {
+                            modelState.Errors.Add(errorMessage);
+                        }
+
+                        modelStateDictionary.Add("WeeklyReleaseSchedule[" + i + "]", modelState);
+                    }
+
+                    if (parsedElement != null)
+                    {
+                        parsed1Buffer.Add(parsedElement);
+                    }
+                }
+            }
+
+            WeeklyReleaseSchedule parsed1 = null;
+            if (!WeeklyReleaseSchedule.IsEmpty(parsed1Buffer))
+            {
+                System.Collections.Generic.IReadOnlyCollection<string> parsed1Errors;
+                if (!WeeklyReleaseSchedule.TryParse(parsed1Buffer, out parsed1, out parsed1Errors))
+                {
+                    var modelState = new System.Web.Http.ModelBinding.ModelState();
+                    foreach (var errorMessage in parsed1Errors)
+                    {
+                        modelState.Errors.Add(errorMessage);
+                    }
+
+                    modelStateDictionary.Add("WeeklyReleaseSchedule", modelState);
+                }
+            }
+            else
+            {
+                var modelState = new System.Web.Http.ModelBinding.ModelState();
+                modelState.Errors.Add("Value required");
+                modelStateDictionary.Add("WeeklyReleaseSchedule", modelState);
+            }
+
             if (!modelStateDictionary.IsValid)
             {
                 throw new Fifthweek.Api.Core.ModelValidationException(modelStateDictionary);
             }
         
-        	return new UpdatedCollectionData.Parsed(
+            return new UpdatedCollectionData.Parsed(
                 target.ChannelId,
                 parsed0,
-                target.WeeklyReleaseTimes);
+                parsed1);
         }    
     }
 }

@@ -18,7 +18,8 @@
         [Parsed(typeof(ValidCollectionName))]
         public string Name { get; set; }
 
-        //[Parsed(typeof(WeeklyReleaseSchedule))]
-        public List<byte> WeeklyReleaseTimes { get; set; }
+        [Parsed(typeof(WeeklyReleaseSchedule))]
+        [ParsedElements(typeof(HourOfWeek))]
+        public List<byte> WeeklyReleaseSchedule { get; set; }
     }
 }

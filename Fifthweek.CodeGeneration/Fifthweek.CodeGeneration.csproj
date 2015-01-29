@@ -48,6 +48,7 @@
     <Compile Include="LiftMembersAttribute.cs" />
     <Compile Include="NonEquatableAttribute.cs" />
     <Compile Include="OptionalAttribute.cs" />
+    <Compile Include="ParsedElementsAttribute.cs" />
     <Compile Include="ParsedCounterpartAttribute.cs" />
     <Compile Include="ParsedAttribute.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

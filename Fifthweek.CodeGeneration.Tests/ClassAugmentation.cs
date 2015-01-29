@@ -1,12 +1,14 @@
 ﻿using System;
 using System.Linq;
 
-//// Generated on 29/01/2015 20:02:18 (UTC)
-//// Mapped solution in 1.83s
+//// Generated on 29/01/2015 23:20:01 (UTC)
+//// Mapped solution in 1.39s
 
 namespace Fifthweek.CodeGeneration.Tests
 {
     using System;
+    using System.Linq;
+    using System.Collections.Generic;
 
     [Newtonsoft.Json.JsonConverter(typeof(JsonConverter))]
     public partial class PrimitiveGuidDummy 
@@ -53,6 +55,9 @@ namespace Fifthweek.CodeGeneration.Tests
 }
 namespace Fifthweek.CodeGeneration.Tests
 {
+    using System;
+    using System.Linq;
+    using System.Collections.Generic;
 
     [Newtonsoft.Json.JsonConverter(typeof(JsonConverter))]
     public partial class PrimitiveIntDummy 
@@ -99,6 +104,9 @@ namespace Fifthweek.CodeGeneration.Tests
 }
 namespace Fifthweek.CodeGeneration.Tests
 {
+    using System;
+    using System.Linq;
+    using System.Collections.Generic;
 
     [Newtonsoft.Json.JsonConverter(typeof(JsonConverter))]
     public partial class PrimitiveStringDummy 
@@ -147,6 +155,67 @@ namespace Fifthweek.CodeGeneration.Tests
 namespace Fifthweek.CodeGeneration.Tests
 {
     using System;
+    using System.Linq;
+    using System.Collections.Generic;
+
+    public partial class PrimitiveGuidDummy 
+    {
+        public PrimitiveGuidDummy(
+            System.Guid value)
+        {
+            if (value == null)
+            {
+                throw new ArgumentNullException("value");
+            }
+
+            this.Value = value;
+        }
+    }
+}
+namespace Fifthweek.CodeGeneration.Tests
+{
+    using System;
+    using System.Linq;
+    using System.Collections.Generic;
+
+    public partial class PrimitiveIntDummy 
+    {
+        public PrimitiveIntDummy(
+            System.Int32 value)
+        {
+            if (value == null)
+            {
+                throw new ArgumentNullException("value");
+            }
+
+            this.Value = value;
+        }
+    }
+}
+namespace Fifthweek.CodeGeneration.Tests
+{
+    using System;
+    using System.Linq;
+    using System.Collections.Generic;
+
+    public partial class PrimitiveStringDummy 
+    {
+        public PrimitiveStringDummy(
+            System.String value)
+        {
+            if (value == null)
+            {
+                throw new ArgumentNullException("value");
+            }
+
+            this.Value = value;
+        }
+    }
+}
+namespace Fifthweek.CodeGeneration.Tests
+{
+    using System;
+    using System.Linq;
     using System.Collections.Generic;
 
     public partial class ClassAugmentationDummy
@@ -169,6 +238,7 @@ namespace Fifthweek.CodeGeneration.Tests
 namespace Fifthweek.CodeGeneration.Tests
 {
     using System;
+    using System.Linq;
     using System.Collections.Generic;
 
     public partial class ClassAugmentationDummy 
@@ -232,62 +302,173 @@ namespace Fifthweek.CodeGeneration.Tests
         }
     }
 }
+
 namespace Fifthweek.CodeGeneration.Tests
 {
     using System;
+    using System.Linq;
+    using System.Collections.Generic;
 
     public partial class PrimitiveGuidDummy 
     {
-        public PrimitiveGuidDummy(
-            System.Guid value)
+        public override string ToString()
         {
-            if (value == null)
+            return string.Format("PrimitiveGuidDummy({0})", this.Value == null ? "null" : this.Value.ToString());
+        }
+        
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj))
             {
-                throw new ArgumentNullException("value");
+                return false;
             }
-
-            this.Value = value;
+        
+            if (ReferenceEquals(this, obj))
+            {
+                return true;
+            }
+        
+            if (obj.GetType() != this.GetType())
+            {
+                return false;
+            }
+        
+            return this.Equals((PrimitiveGuidDummy)obj);
+        }
+        
+        public override int GetHashCode()
+        {
+            unchecked
+            {
+                int hashCode = 0;
+                hashCode = (hashCode * 397) ^ (this.Value != null ? this.Value.GetHashCode() : 0);
+                return hashCode;
+            }
+        }
+        
+        protected bool Equals(PrimitiveGuidDummy other)
+        {
+            if (!object.Equals(this.Value, other.Value))
+            {
+                return false;
+            }
+        
+            return true;
         }
     }
 }
-namespace Fifthweek.CodeGeneration.Tests
-{
-
-    public partial class PrimitiveIntDummy 
-    {
-        public PrimitiveIntDummy(
-            System.Int32 value)
-        {
-            if (value == null)
-            {
-                throw new ArgumentNullException("value");
-            }
-
-            this.Value = value;
-        }
-    }
-}
-namespace Fifthweek.CodeGeneration.Tests
-{
-
-    public partial class PrimitiveStringDummy 
-    {
-        public PrimitiveStringDummy(
-            System.String value)
-        {
-            if (value == null)
-            {
-                throw new ArgumentNullException("value");
-            }
-
-            this.Value = value;
-        }
-    }
-}
-
 namespace Fifthweek.CodeGeneration.Tests
 {
     using System;
+    using System.Linq;
+    using System.Collections.Generic;
+
+    public partial class PrimitiveIntDummy 
+    {
+        public override string ToString()
+        {
+            return string.Format("PrimitiveIntDummy({0})", this.Value == null ? "null" : this.Value.ToString());
+        }
+        
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj))
+            {
+                return false;
+            }
+        
+            if (ReferenceEquals(this, obj))
+            {
+                return true;
+            }
+        
+            if (obj.GetType() != this.GetType())
+            {
+                return false;
+            }
+        
+            return this.Equals((PrimitiveIntDummy)obj);
+        }
+        
+        public override int GetHashCode()
+        {
+            unchecked
+            {
+                int hashCode = 0;
+                hashCode = (hashCode * 397) ^ (this.Value != null ? this.Value.GetHashCode() : 0);
+                return hashCode;
+            }
+        }
+        
+        protected bool Equals(PrimitiveIntDummy other)
+        {
+            if (!object.Equals(this.Value, other.Value))
+            {
+                return false;
+            }
+        
+            return true;
+        }
+    }
+}
+namespace Fifthweek.CodeGeneration.Tests
+{
+    using System;
+    using System.Linq;
+    using System.Collections.Generic;
+
+    public partial class PrimitiveStringDummy 
+    {
+        public override string ToString()
+        {
+            return string.Format("PrimitiveStringDummy(\"{0}\")", this.Value == null ? "null" : this.Value.ToString());
+        }
+        
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj))
+            {
+                return false;
+            }
+        
+            if (ReferenceEquals(this, obj))
+            {
+                return true;
+            }
+        
+            if (obj.GetType() != this.GetType())
+            {
+                return false;
+            }
+        
+            return this.Equals((PrimitiveStringDummy)obj);
+        }
+        
+        public override int GetHashCode()
+        {
+            unchecked
+            {
+                int hashCode = 0;
+                hashCode = (hashCode * 397) ^ (this.Value != null ? this.Value.GetHashCode() : 0);
+                return hashCode;
+            }
+        }
+        
+        protected bool Equals(PrimitiveStringDummy other)
+        {
+            if (!object.Equals(this.Value, other.Value))
+            {
+                return false;
+            }
+        
+            return true;
+        }
+    }
+}
+namespace Fifthweek.CodeGeneration.Tests
+{
+    using System;
+    using System.Linq;
     using System.Collections.Generic;
 
     public partial class ClassAugmentationDummy
@@ -344,6 +525,7 @@ namespace Fifthweek.CodeGeneration.Tests
 namespace Fifthweek.CodeGeneration.Tests
 {
     using System;
+    using System.Linq;
     using System.Collections.Generic;
 
     public partial class ClassAugmentationDummy 
@@ -480,12 +662,15 @@ namespace Fifthweek.CodeGeneration.Tests
 }
 namespace Fifthweek.CodeGeneration.Tests.Parsing
 {
+    using System;
+    using System.Linq;
+    using System.Collections.Generic;
 
     public partial class AutoCounterpart 
     {
         public override string ToString()
         {
-            return string.Format("AutoCounterpart(\"{0}\", \"{1}\", \"{2}\", \"{3}\", \"{4}\", \"{5}\", {6}, {7}, {8}, {9})", this.SomeWeaklyTypedString == null ? "null" : this.SomeWeaklyTypedString.ToString(), this.OptionalWeaklyTypedString == null ? "null" : this.OptionalWeaklyTypedString.ToString(), this.SomeParsedString == null ? "null" : this.SomeParsedString.ToString(), this.OptionalParsedString == null ? "null" : this.OptionalParsedString.ToString(), this.SomeParsedNormalizedString == null ? "null" : this.SomeParsedNormalizedString.ToString(), this.OptionalParsedNormalizedString == null ? "null" : this.OptionalParsedNormalizedString.ToString(), this.SomeWeaklyTypedInt == null ? "null" : this.SomeWeaklyTypedInt.ToString(), this.OptionalWeaklyTypedInt == null ? "null" : this.OptionalWeaklyTypedInt.ToString(), this.SomeParsedInt == null ? "null" : this.SomeParsedInt.ToString(), this.OptionalParsedInt == null ? "null" : this.OptionalParsedInt.ToString());
+            return string.Format("AutoCounterpart(\"{0}\", \"{1}\", \"{2}\", \"{3}\", \"{4}\", \"{5}\", {6}, {7}, {8}, {9}, {10}, {11}, {12}, {13})", this.SomeWeaklyTypedString == null ? "null" : this.SomeWeaklyTypedString.ToString(), this.OptionalWeaklyTypedString == null ? "null" : this.OptionalWeaklyTypedString.ToString(), this.SomeParsedString == null ? "null" : this.SomeParsedString.ToString(), this.OptionalParsedString == null ? "null" : this.OptionalParsedString.ToString(), this.SomeParsedNormalizedString == null ? "null" : this.SomeParsedNormalizedString.ToString(), this.OptionalParsedNormalizedString == null ? "null" : this.OptionalParsedNormalizedString.ToString(), this.SomeWeaklyTypedInt == null ? "null" : this.SomeWeaklyTypedInt.ToString(), this.OptionalWeaklyTypedInt == null ? "null" : this.OptionalWeaklyTypedInt.ToString(), this.SomeParsedInt == null ? "null" : this.SomeParsedInt.ToString(), this.OptionalParsedInt == null ? "null" : this.OptionalParsedInt.ToString(), this.SomeParsedIntList == null ? "null" : this.SomeParsedIntList.ToString(), this.OptionalParsedIntList == null ? "null" : this.OptionalParsedIntList.ToString(), this.SomeParsedCollection == null ? "null" : this.SomeParsedCollection.ToString(), this.OptionalParsedCollection == null ? "null" : this.OptionalParsedCollection.ToString());
         }
         
         public override bool Equals(object obj)
@@ -523,6 +708,42 @@ namespace Fifthweek.CodeGeneration.Tests.Parsing
                 hashCode = (hashCode * 397) ^ (this.OptionalWeaklyTypedInt != null ? this.OptionalWeaklyTypedInt.GetHashCode() : 0);
                 hashCode = (hashCode * 397) ^ (this.SomeParsedInt != null ? this.SomeParsedInt.GetHashCode() : 0);
                 hashCode = (hashCode * 397) ^ (this.OptionalParsedInt != null ? this.OptionalParsedInt.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.SomeParsedIntList != null 
+        			? this.SomeParsedIntList.Aggregate(0, (previous, current) => 
+        				{ 
+        				    unchecked
+        				    {
+        				        return (previous * 397) ^ (current != null ? current.GetHashCode() : 0);
+        				    }
+        				})
+        			: 0);
+                hashCode = (hashCode * 397) ^ (this.OptionalParsedIntList != null 
+        			? this.OptionalParsedIntList.Aggregate(0, (previous, current) => 
+        				{ 
+        				    unchecked
+        				    {
+        				        return (previous * 397) ^ (current != null ? current.GetHashCode() : 0);
+        				    }
+        				})
+        			: 0);
+                hashCode = (hashCode * 397) ^ (this.SomeParsedCollection != null 
+        			? this.SomeParsedCollection.Aggregate(0, (previous, current) => 
+        				{ 
+        				    unchecked
+        				    {
+        				        return (previous * 397) ^ (current != null ? current.GetHashCode() : 0);
+        				    }
+        				})
+        			: 0);
+                hashCode = (hashCode * 397) ^ (this.OptionalParsedCollection != null 
+        			? this.OptionalParsedCollection.Aggregate(0, (previous, current) => 
+        				{ 
+        				    unchecked
+        				    {
+        				        return (previous * 397) ^ (current != null ? current.GetHashCode() : 0);
+        				    }
+        				})
+        			: 0);
                 return hashCode;
             }
         }
@@ -579,6 +800,54 @@ namespace Fifthweek.CodeGeneration.Tests.Parsing
                 return false;
             }
         
+            if (this.SomeParsedIntList != null && other.SomeParsedIntList != null)
+            {
+                if (!this.SomeParsedIntList.SequenceEqual(other.SomeParsedIntList))
+                {
+                    return false;    
+                }
+            }
+            else if (this.SomeParsedIntList != null || other.SomeParsedIntList != null)
+            {
+                return false;
+            }
+        
+            if (this.OptionalParsedIntList != null && other.OptionalParsedIntList != null)
+            {
+                if (!this.OptionalParsedIntList.SequenceEqual(other.OptionalParsedIntList))
+                {
+                    return false;    
+                }
+            }
+            else if (this.OptionalParsedIntList != null || other.OptionalParsedIntList != null)
+            {
+                return false;
+            }
+        
+            if (this.SomeParsedCollection != null && other.SomeParsedCollection != null)
+            {
+                if (!this.SomeParsedCollection.SequenceEqual(other.SomeParsedCollection))
+                {
+                    return false;    
+                }
+            }
+            else if (this.SomeParsedCollection != null || other.SomeParsedCollection != null)
+            {
+                return false;
+            }
+        
+            if (this.OptionalParsedCollection != null && other.OptionalParsedCollection != null)
+            {
+                if (!this.OptionalParsedCollection.SequenceEqual(other.OptionalParsedCollection))
+                {
+                    return false;    
+                }
+            }
+            else if (this.OptionalParsedCollection != null || other.OptionalParsedCollection != null)
+            {
+                return false;
+            }
+        
             return true;
         }
     }
@@ -586,6 +855,76 @@ namespace Fifthweek.CodeGeneration.Tests.Parsing
 namespace Fifthweek.CodeGeneration.Tests.Parsing
 {
     using System;
+    using System.Linq;
+    using System.Collections.Generic;
+
+    public partial class ParsedCollection 
+    {
+        public override string ToString()
+        {
+            return string.Format("ParsedCollection({0})", this.Value == null ? "null" : this.Value.ToString());
+        }
+        
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj))
+            {
+                return false;
+            }
+        
+            if (ReferenceEquals(this, obj))
+            {
+                return true;
+            }
+        
+            if (obj.GetType() != this.GetType())
+            {
+                return false;
+            }
+        
+            return this.Equals((ParsedCollection)obj);
+        }
+        
+        public override int GetHashCode()
+        {
+            unchecked
+            {
+                int hashCode = 0;
+                hashCode = (hashCode * 397) ^ (this.Value != null 
+        			? this.Value.Aggregate(0, (previous, current) => 
+        				{ 
+        				    unchecked
+        				    {
+        				        return (previous * 397) ^ (current != null ? current.GetHashCode() : 0);
+        				    }
+        				})
+        			: 0);
+                return hashCode;
+            }
+        }
+        
+        protected bool Equals(ParsedCollection other)
+        {
+            if (this.Value != null && other.Value != null)
+            {
+                if (!this.Value.SequenceEqual(other.Value))
+                {
+                    return false;    
+                }
+            }
+            else if (this.Value != null || other.Value != null)
+            {
+                return false;
+            }
+        
+            return true;
+        }
+    }
+}
+namespace Fifthweek.CodeGeneration.Tests.Parsing
+{
+    using System;
+    using System.Linq;
     using System.Collections.Generic;
 
     public partial class ParsedInt 
@@ -639,6 +978,7 @@ namespace Fifthweek.CodeGeneration.Tests.Parsing
 namespace Fifthweek.CodeGeneration.Tests.Parsing
 {
     using System;
+    using System.Linq;
     using System.Collections.Generic;
 
     public partial class ParsedNormalizedString 
@@ -692,6 +1032,7 @@ namespace Fifthweek.CodeGeneration.Tests.Parsing
 namespace Fifthweek.CodeGeneration.Tests.Parsing
 {
     using System;
+    using System.Linq;
     using System.Collections.Generic;
 
     public partial class ParsedString 
@@ -745,160 +1086,7 @@ namespace Fifthweek.CodeGeneration.Tests.Parsing
 namespace Fifthweek.CodeGeneration.Tests
 {
     using System;
-
-    public partial class PrimitiveGuidDummy 
-    {
-        public override string ToString()
-        {
-            return string.Format("PrimitiveGuidDummy({0})", this.Value == null ? "null" : this.Value.ToString());
-        }
-        
-        public override bool Equals(object obj)
-        {
-            if (ReferenceEquals(null, obj))
-            {
-                return false;
-            }
-        
-            if (ReferenceEquals(this, obj))
-            {
-                return true;
-            }
-        
-            if (obj.GetType() != this.GetType())
-            {
-                return false;
-            }
-        
-            return this.Equals((PrimitiveGuidDummy)obj);
-        }
-        
-        public override int GetHashCode()
-        {
-            unchecked
-            {
-                int hashCode = 0;
-                hashCode = (hashCode * 397) ^ (this.Value != null ? this.Value.GetHashCode() : 0);
-                return hashCode;
-            }
-        }
-        
-        protected bool Equals(PrimitiveGuidDummy other)
-        {
-            if (!object.Equals(this.Value, other.Value))
-            {
-                return false;
-            }
-        
-            return true;
-        }
-    }
-}
-namespace Fifthweek.CodeGeneration.Tests
-{
-
-    public partial class PrimitiveIntDummy 
-    {
-        public override string ToString()
-        {
-            return string.Format("PrimitiveIntDummy({0})", this.Value == null ? "null" : this.Value.ToString());
-        }
-        
-        public override bool Equals(object obj)
-        {
-            if (ReferenceEquals(null, obj))
-            {
-                return false;
-            }
-        
-            if (ReferenceEquals(this, obj))
-            {
-                return true;
-            }
-        
-            if (obj.GetType() != this.GetType())
-            {
-                return false;
-            }
-        
-            return this.Equals((PrimitiveIntDummy)obj);
-        }
-        
-        public override int GetHashCode()
-        {
-            unchecked
-            {
-                int hashCode = 0;
-                hashCode = (hashCode * 397) ^ (this.Value != null ? this.Value.GetHashCode() : 0);
-                return hashCode;
-            }
-        }
-        
-        protected bool Equals(PrimitiveIntDummy other)
-        {
-            if (!object.Equals(this.Value, other.Value))
-            {
-                return false;
-            }
-        
-            return true;
-        }
-    }
-}
-namespace Fifthweek.CodeGeneration.Tests
-{
-
-    public partial class PrimitiveStringDummy 
-    {
-        public override string ToString()
-        {
-            return string.Format("PrimitiveStringDummy(\"{0}\")", this.Value == null ? "null" : this.Value.ToString());
-        }
-        
-        public override bool Equals(object obj)
-        {
-            if (ReferenceEquals(null, obj))
-            {
-                return false;
-            }
-        
-            if (ReferenceEquals(this, obj))
-            {
-                return true;
-            }
-        
-            if (obj.GetType() != this.GetType())
-            {
-                return false;
-            }
-        
-            return this.Equals((PrimitiveStringDummy)obj);
-        }
-        
-        public override int GetHashCode()
-        {
-            unchecked
-            {
-                int hashCode = 0;
-                hashCode = (hashCode * 397) ^ (this.Value != null ? this.Value.GetHashCode() : 0);
-                return hashCode;
-            }
-        }
-        
-        protected bool Equals(PrimitiveStringDummy other)
-        {
-            if (!object.Equals(this.Value, other.Value))
-            {
-                return false;
-            }
-        
-            return true;
-        }
-    }
-}
-namespace Fifthweek.CodeGeneration.Tests
-{
-    using System;
+    using System.Linq;
     using System.Collections.Generic;
 
     public partial class ClassAugmentationDummy 
@@ -964,6 +1152,9 @@ namespace Fifthweek.CodeGeneration.Tests
 }
 namespace Fifthweek.CodeGeneration.Tests.Parsing
 {
+    using System;
+    using System.Linq;
+    using System.Collections.Generic;
 
     public partial class AutoCounterpart 
     {
@@ -979,7 +1170,11 @@ namespace Fifthweek.CodeGeneration.Tests.Parsing
                 System.Int32 someWeaklyTypedInt,
                 System.Nullable<System.Int32> optionalWeaklyTypedInt,
                 ParsedInt someParsedInt,
-                ParsedInt optionalParsedInt)
+                ParsedInt optionalParsedInt,
+                System.Collections.Generic.IReadOnlyList<ParsedInt> someParsedIntList,
+                System.Collections.Generic.IReadOnlyList<ParsedInt> optionalParsedIntList,
+                ParsedCollection someParsedCollection,
+                ParsedCollection optionalParsedCollection)
             {
                 if (someWeaklyTypedString == null)
                 {
@@ -1006,6 +1201,16 @@ namespace Fifthweek.CodeGeneration.Tests.Parsing
                     throw new ArgumentNullException("someParsedInt");
                 }
 
+                if (someParsedIntList == null)
+                {
+                    throw new ArgumentNullException("someParsedIntList");
+                }
+
+                if (someParsedCollection == null)
+                {
+                    throw new ArgumentNullException("someParsedCollection");
+                }
+
                 this.SomeWeaklyTypedString = someWeaklyTypedString;
                 this.OptionalWeaklyTypedString = optionalWeaklyTypedString;
                 this.SomeParsedString = someParsedString;
@@ -1016,6 +1221,10 @@ namespace Fifthweek.CodeGeneration.Tests.Parsing
                 this.OptionalWeaklyTypedInt = optionalWeaklyTypedInt;
                 this.SomeParsedInt = someParsedInt;
                 this.OptionalParsedInt = optionalParsedInt;
+                this.SomeParsedIntList = someParsedIntList;
+                this.OptionalParsedIntList = optionalParsedIntList;
+                this.SomeParsedCollection = someParsedCollection;
+                this.OptionalParsedCollection = optionalParsedCollection;
             }
         
             public System.String SomeWeaklyTypedString { get; private set; }
@@ -1037,6 +1246,14 @@ namespace Fifthweek.CodeGeneration.Tests.Parsing
             public ParsedInt SomeParsedInt { get; private set; }
         
             public ParsedInt OptionalParsedInt { get; private set; }
+        
+            public System.Collections.Generic.IReadOnlyList<ParsedInt> SomeParsedIntList { get; private set; }
+        
+            public System.Collections.Generic.IReadOnlyList<ParsedInt> OptionalParsedIntList { get; private set; }
+        
+            public ParsedCollection SomeParsedCollection { get; private set; }
+        
+            public ParsedCollection OptionalParsedCollection { get; private set; }
         }
     }
 
@@ -1151,12 +1368,178 @@ namespace Fifthweek.CodeGeneration.Tests.Parsing
                 }
             }
 
+            System.Collections.Generic.List<ParsedInt> parsed6 = null;
+            if (target.SomeParsedIntList != null)
+            {
+                parsed6 = new System.Collections.Generic.List<ParsedInt>();
+                for (var i = 0; i < target.SomeParsedIntList.Count; i++)
+                {
+                    ParsedInt parsedElement = null;
+                    System.Collections.Generic.IReadOnlyCollection<string> parsedElementErrors;
+                    if (!ParsedInt.TryParse(target.SomeParsedIntList[i], out parsedElement, out parsedElementErrors))
+                    {
+                        var modelState = new System.Web.Http.ModelBinding.ModelState();
+                        foreach (var errorMessage in parsedElementErrors)
+                        {
+                            modelState.Errors.Add(errorMessage);
+                        }
+
+                        modelStateDictionary.Add("SomeParsedIntList[" + i + "]", modelState);
+                    }
+
+                    if (parsedElement != null)
+                    {
+                        parsed6.Add(parsedElement);
+                    }
+                }
+            }
+            else
+            {
+                var modelState = new System.Web.Http.ModelBinding.ModelState();
+                modelState.Errors.Add("Value required");
+                modelStateDictionary.Add("SomeParsedIntList", modelState);
+            }
+
+            System.Collections.Generic.List<ParsedInt> parsed7 = null;
+            if (target.OptionalParsedIntList != null)
+            {
+                parsed7 = new System.Collections.Generic.List<ParsedInt>();
+                for (var i = 0; i < target.OptionalParsedIntList.Count; i++)
+                {
+                    ParsedInt parsedElement = null;
+                    System.Collections.Generic.IReadOnlyCollection<string> parsedElementErrors;
+                    if (!ParsedInt.TryParse(target.OptionalParsedIntList[i], out parsedElement, out parsedElementErrors))
+                    {
+                        var modelState = new System.Web.Http.ModelBinding.ModelState();
+                        foreach (var errorMessage in parsedElementErrors)
+                        {
+                            modelState.Errors.Add(errorMessage);
+                        }
+
+                        modelStateDictionary.Add("OptionalParsedIntList[" + i + "]", modelState);
+                    }
+
+                    if (parsedElement != null)
+                    {
+                        parsed7.Add(parsedElement);
+                    }
+                }
+            }
+
+            System.Collections.Generic.List<ParsedNormalizedString> parsed8Buffer = null;
+            if (target.SomeParsedCollection != null)
+            {
+                parsed8Buffer = new System.Collections.Generic.List<ParsedNormalizedString>();
+                for (var i = 0; i < target.SomeParsedCollection.Count; i++)
+                {
+                    ParsedNormalizedString parsedElement = null;
+                    if (!ParsedNormalizedString.IsEmpty(target.SomeParsedCollection[i]))
+                    {
+                        System.Collections.Generic.IReadOnlyCollection<string> parsedElementErrors;
+                        if (!ParsedNormalizedString.TryParse(target.SomeParsedCollection[i], out parsedElement, out parsedElementErrors))
+                        {
+                            var modelState = new System.Web.Http.ModelBinding.ModelState();
+                            foreach (var errorMessage in parsedElementErrors)
+                            {
+                                modelState.Errors.Add(errorMessage);
+                            }
+
+                            modelStateDictionary.Add("SomeParsedCollection[" + i + "]", modelState);
+                        }
+                    }
+                    else
+                    {
+                        var modelState = new System.Web.Http.ModelBinding.ModelState();
+                        modelState.Errors.Add("Value required");
+                        modelStateDictionary.Add("SomeParsedCollection[" + i + "]", modelState);
+                    }
+
+                    if (parsedElement != null)
+                    {
+                        parsed8Buffer.Add(parsedElement);
+                    }
+                }
+            }
+
+            ParsedCollection parsed8 = null;
+            if (!ParsedCollection.IsEmpty(parsed8Buffer))
+            {
+                System.Collections.Generic.IReadOnlyCollection<string> parsed8Errors;
+                if (!ParsedCollection.TryParse(parsed8Buffer, out parsed8, out parsed8Errors))
+                {
+                    var modelState = new System.Web.Http.ModelBinding.ModelState();
+                    foreach (var errorMessage in parsed8Errors)
+                    {
+                        modelState.Errors.Add(errorMessage);
+                    }
+
+                    modelStateDictionary.Add("SomeParsedCollection", modelState);
+                }
+            }
+            else
+            {
+                var modelState = new System.Web.Http.ModelBinding.ModelState();
+                modelState.Errors.Add("Value required");
+                modelStateDictionary.Add("SomeParsedCollection", modelState);
+            }
+
+            System.Collections.Generic.List<ParsedNormalizedString> parsed9Buffer = null;
+            if (target.OptionalParsedCollection != null)
+            {
+                parsed9Buffer = new System.Collections.Generic.List<ParsedNormalizedString>();
+                for (var i = 0; i < target.OptionalParsedCollection.Count; i++)
+                {
+                    ParsedNormalizedString parsedElement = null;
+                    if (!ParsedNormalizedString.IsEmpty(target.OptionalParsedCollection[i]))
+                    {
+                        System.Collections.Generic.IReadOnlyCollection<string> parsedElementErrors;
+                        if (!ParsedNormalizedString.TryParse(target.OptionalParsedCollection[i], out parsedElement, out parsedElementErrors))
+                        {
+                            var modelState = new System.Web.Http.ModelBinding.ModelState();
+                            foreach (var errorMessage in parsedElementErrors)
+                            {
+                                modelState.Errors.Add(errorMessage);
+                            }
+
+                            modelStateDictionary.Add("OptionalParsedCollection[" + i + "]", modelState);
+                        }
+                    }
+                    else
+                    {
+                        var modelState = new System.Web.Http.ModelBinding.ModelState();
+                        modelState.Errors.Add("Value required");
+                        modelStateDictionary.Add("OptionalParsedCollection[" + i + "]", modelState);
+                    }
+
+                    if (parsedElement != null)
+                    {
+                        parsed9Buffer.Add(parsedElement);
+                    }
+                }
+            }
+
+            ParsedCollection parsed9 = null;
+            if (!ParsedCollection.IsEmpty(parsed9Buffer))
+            {
+                System.Collections.Generic.IReadOnlyCollection<string> parsed9Errors;
+                if (!ParsedCollection.TryParse(parsed9Buffer, out parsed9, out parsed9Errors))
+                {
+                    var modelState = new System.Web.Http.ModelBinding.ModelState();
+                    foreach (var errorMessage in parsed9Errors)
+                    {
+                        modelState.Errors.Add(errorMessage);
+                    }
+
+                    modelStateDictionary.Add("OptionalParsedCollection", modelState);
+                }
+            }
+
             if (!modelStateDictionary.IsValid)
             {
                 throw new Fifthweek.Api.Core.ModelValidationException(modelStateDictionary);
             }
         
-        	return new AutoCounterpart.Parsed(
+            return new AutoCounterpart.Parsed(
                 target.SomeWeaklyTypedString,
                 target.OptionalWeaklyTypedString,
                 parsed0,
@@ -1166,7 +1549,11 @@ namespace Fifthweek.CodeGeneration.Tests.Parsing
                 target.SomeWeaklyTypedInt,
                 target.OptionalWeaklyTypedInt,
                 parsed4,
-                parsed5);
+                parsed5,
+                parsed6,
+                parsed7,
+                parsed8,
+                parsed9);
         }    
     }
 }
