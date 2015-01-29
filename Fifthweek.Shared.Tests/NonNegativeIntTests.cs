@@ -33,17 +33,17 @@
             this.BadValue(int.MinValue);
         }
 
-        protected override NonNegativeInt Parse(int value, bool exact)
+        protected override NonNegativeInt Parse(int value)
         {
             return NonNegativeInt.Parse(value);
         }
 
-        protected override bool TryParse(int value, out NonNegativeInt parsedObject, bool exact)
+        protected override bool TryParse(int value, out NonNegativeInt parsedObject)
         {
             return NonNegativeInt.TryParse(value, out parsedObject);
         }
 
-        protected override bool TryParse(int value, out NonNegativeInt parsedObject, out IReadOnlyCollection<string> errorMessages, bool exact)
+        protected override bool TryParse(int value, out NonNegativeInt parsedObject, out IReadOnlyCollection<string> errorMessages)
         {
             return NonNegativeInt.TryParse(value, out parsedObject, out errorMessages);
         }

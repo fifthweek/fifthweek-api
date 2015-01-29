@@ -63,17 +63,17 @@
             this.AssertNewLinesAllowed();
         }
 
-        protected override ValidNote Parse(string value, bool exact)
+        protected override ValidNote Parse(string value)
         {
             return ValidNote.Parse(value);
         }
 
-        protected override bool TryParse(string value, out ValidNote parsedObject, bool exact)
+        protected override bool TryParse(string value, out ValidNote parsedObject)
         {
             return ValidNote.TryParse(value, out parsedObject);
         }
 
-        protected override bool TryParse(string value, out ValidNote parsedObject, out IReadOnlyCollection<string> errorMessages, bool exact)
+        protected override bool TryParse(string value, out ValidNote parsedObject, out IReadOnlyCollection<string> errorMessages)
         {
             return ValidNote.TryParse(value, out parsedObject, out errorMessages);
         }

@@ -1,12 +1,15 @@
 ﻿using System;
 using System.Linq;
 
-
+//// Generated on 29/01/2015 19:44:11 (UTC)
+//// Mapped solution in 1.44s
 
 namespace Fifthweek.Api.Collections.Shared
 {
     using System;
+    using System.Linq;
     using Fifthweek.CodeGeneration;
+    using System.Collections.Generic;
 
     [Newtonsoft.Json.JsonConverter(typeof(JsonConverter))]
     public partial class CollectionId 
@@ -55,7 +58,9 @@ namespace Fifthweek.Api.Collections.Shared
 namespace Fifthweek.Api.Collections.Shared
 {
     using System;
+    using System.Linq;
     using Fifthweek.CodeGeneration;
+    using System.Collections.Generic;
 
     public partial class CollectionId 
     {
@@ -75,7 +80,9 @@ namespace Fifthweek.Api.Collections.Shared
 namespace Fifthweek.Api.Collections.Shared
 {
     using System;
+    using System.Linq;
     using Fifthweek.CodeGeneration;
+    using System.Collections.Generic;
 
     public partial class CollectionId 
     {
@@ -128,8 +135,9 @@ namespace Fifthweek.Api.Collections.Shared
 namespace Fifthweek.Api.Collections.Shared
 {
     using System;
-    using System.Collections.Generic;
+    using System.Linq;
     using Fifthweek.CodeGeneration;
+    using System.Collections.Generic;
 
     public partial class HourOfWeek 
     {
@@ -182,9 +190,9 @@ namespace Fifthweek.Api.Collections.Shared
 namespace Fifthweek.Api.Collections.Shared
 {
     using System;
-    using System.Collections.Generic;
     using System.Linq;
     using Fifthweek.CodeGeneration;
+    using System.Collections.Generic;
 
     public partial class ValidCollectionName 
     {
@@ -234,4 +242,75 @@ namespace Fifthweek.Api.Collections.Shared
         }
     }
 }
+namespace Fifthweek.Api.Collections.Shared
+{
+    using System;
+    using System.Linq;
+    using Fifthweek.CodeGeneration;
+    using System.Collections.Generic;
+
+    public partial class WeeklyReleaseSchedule 
+    {
+        public override string ToString()
+        {
+            return string.Format("WeeklyReleaseSchedule({0})", this.Value == null ? "null" : this.Value.ToString());
+        }
+        
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj))
+            {
+                return false;
+            }
+        
+            if (ReferenceEquals(this, obj))
+            {
+                return true;
+            }
+        
+            if (obj.GetType() != this.GetType())
+            {
+                return false;
+            }
+        
+            return this.Equals((WeeklyReleaseSchedule)obj);
+        }
+        
+        public override int GetHashCode()
+        {
+            unchecked
+            {
+                int hashCode = 0;
+                hashCode = (hashCode * 397) ^ (this.Value != null 
+        			? this.Value.Aggregate(0, (previous, current) => 
+        				{ 
+        				    unchecked
+        				    {
+        				        return (previous * 397) ^ (current != null ? current.GetHashCode() : 0);
+        				    }
+        				})
+        			: 0);
+                return hashCode;
+            }
+        }
+        
+        protected bool Equals(WeeklyReleaseSchedule other)
+        {
+            if (this.Value != null && other.Value != null)
+            {
+                if (!this.Value.SequenceEqual(other.Value))
+                {
+                    return false;    
+                }
+            }
+            else if (this.Value != null || other.Value != null)
+            {
+                return false;
+            }
+        
+            return true;
+        }
+    }
+}
+
 

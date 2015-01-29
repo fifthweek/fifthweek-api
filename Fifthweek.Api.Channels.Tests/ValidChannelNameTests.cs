@@ -65,17 +65,17 @@
             this.AssertNewLinesNotAllowed();
         }
 
-        protected override ValidChannelName Parse(string value, bool exact)
+        protected override ValidChannelName Parse(string value)
         {
             return ValidChannelName.Parse(value);
         }
 
-        protected override bool TryParse(string value, out ValidChannelName parsedObject, bool exact)
+        protected override bool TryParse(string value, out ValidChannelName parsedObject)
         {
             return ValidChannelName.TryParse(value, out parsedObject);
         }
 
-        protected override bool TryParse(string value, out ValidChannelName parsedObject, out IReadOnlyCollection<string> errorMessages, bool exact)
+        protected override bool TryParse(string value, out ValidChannelName parsedObject, out IReadOnlyCollection<string> errorMessages)
         {
             return ValidChannelName.TryParse(value, out parsedObject, out errorMessages);
         }

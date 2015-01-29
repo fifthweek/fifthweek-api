@@ -30,10 +30,10 @@
 
             Assert.AreEqual(
                 parsed.SomeParsedNormalizedString, 
-                ParsedNormalizedString.Parse(ParsedNormalizedString.Normalize(data.SomeParsedNormalizedString)));
+                ParsedNormalizedString.Parse(data.SomeParsedNormalizedString));
             Assert.AreEqual(
                 parsed.OptionalParsedNormalizedString, 
-                ParsedNormalizedString.Parse(ParsedNormalizedString.Normalize(data.OptionalParsedNormalizedString)));
+                ParsedNormalizedString.Parse(data.OptionalParsedNormalizedString));
         }
 
         [TestMethod]

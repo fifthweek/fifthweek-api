@@ -103,19 +103,19 @@
             this.GoodNonExactValue("http://vimeo.com/114229222 ", "http://vimeo.com/114229222");
         }
 
-        protected override ValidExternalVideoUrl Parse(string value, bool exact)
+        protected override ValidExternalVideoUrl Parse(string value)
         {
-            return ValidExternalVideoUrl.Parse(value, exact);
+            return ValidExternalVideoUrl.Parse(value);
         }
 
-        protected override bool TryParse(string value, out ValidExternalVideoUrl parsedObject, bool exact)
+        protected override bool TryParse(string value, out ValidExternalVideoUrl parsedObject)
         {
-            return ValidExternalVideoUrl.TryParse(value, out parsedObject, exact);
+            return ValidExternalVideoUrl.TryParse(value, out parsedObject);
         }
 
-        protected override bool TryParse(string value, out ValidExternalVideoUrl parsedObject, out IReadOnlyCollection<string> errorMessages, bool exact)
+        protected override bool TryParse(string value, out ValidExternalVideoUrl parsedObject, out IReadOnlyCollection<string> errorMessages)
         {
-            return ValidExternalVideoUrl.TryParse(value, out parsedObject, out errorMessages, exact);
+            return ValidExternalVideoUrl.TryParse(value, out parsedObject, out errorMessages);
         }
 
         protected override string GetValue(ValidExternalVideoUrl parsedObject)

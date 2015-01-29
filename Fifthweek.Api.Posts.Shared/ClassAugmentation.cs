@@ -1,11 +1,15 @@
 ﻿using System;
 using System.Linq;
 
-
+//// Generated on 29/01/2015 19:45:50 (UTC)
+//// Mapped solution in 2.1s
 
 namespace Fifthweek.Api.Posts.Shared
 {
+    using System;
+    using System.Linq;
     using Fifthweek.CodeGeneration;
+    using System.Collections.Generic;
 
     [Newtonsoft.Json.JsonConverter(typeof(JsonConverter))]
     public partial class Comment 
@@ -53,7 +57,9 @@ namespace Fifthweek.Api.Posts.Shared
 namespace Fifthweek.Api.Posts.Shared
 {
     using System;
+    using System.Linq;
     using Fifthweek.CodeGeneration;
+    using System.Collections.Generic;
 
     [Newtonsoft.Json.JsonConverter(typeof(JsonConverter))]
     public partial class PostId 
@@ -101,7 +107,10 @@ namespace Fifthweek.Api.Posts.Shared
 
 namespace Fifthweek.Api.Posts.Shared
 {
+    using System;
+    using System.Linq;
     using Fifthweek.CodeGeneration;
+    using System.Collections.Generic;
 
     public partial class Comment 
     {
@@ -120,7 +129,9 @@ namespace Fifthweek.Api.Posts.Shared
 namespace Fifthweek.Api.Posts.Shared
 {
     using System;
+    using System.Linq;
     using Fifthweek.CodeGeneration;
+    using System.Collections.Generic;
 
     public partial class PostId 
     {
@@ -139,7 +150,10 @@ namespace Fifthweek.Api.Posts.Shared
 
 namespace Fifthweek.Api.Posts.Shared
 {
+    using System;
+    using System.Linq;
     using Fifthweek.CodeGeneration;
+    using System.Collections.Generic;
 
     public partial class Comment 
     {
@@ -192,7 +206,9 @@ namespace Fifthweek.Api.Posts.Shared
 namespace Fifthweek.Api.Posts.Shared
 {
     using System;
+    using System.Linq;
     using Fifthweek.CodeGeneration;
+    using System.Collections.Generic;
 
     public partial class PostId 
     {
@@ -245,9 +261,9 @@ namespace Fifthweek.Api.Posts.Shared
 namespace Fifthweek.Api.Posts.Shared
 {
     using System;
-    using System.Collections.Generic;
     using System.Linq;
     using Fifthweek.CodeGeneration;
+    using System.Collections.Generic;
 
     public partial class ValidNote 
     {
@@ -297,4 +313,5 @@ namespace Fifthweek.Api.Posts.Shared
         }
     }
 }
+
 

@@ -2,13 +2,11 @@
 {
     using System;
     using System.Collections.Generic;
-    using System.Linq;
     using System.Net.Mail;
 
     public class ValidEmail : Email
     {
         public static readonly int MinLength = 3;
-
         public static readonly int MaxLength = 256; // Taken from ASP.NET Identity.
 
         private ValidEmail(string value)
@@ -16,16 +14,16 @@
         {
         }
 
-        public static bool IsEmpty(string value, bool exact = false)
+        public static bool IsEmpty(string value)
         {
-            return exact ? string.IsNullOrEmpty(value) : string.IsNullOrWhiteSpace(value);
+            return string.IsNullOrWhiteSpace(value);
         }
 
-        public static ValidEmail Parse(string value, bool exact = false)
+        public static ValidEmail Parse(string value)
         {
             ValidEmail retval;
             IReadOnlyCollection<string> errorMessages;
-            if (!TryParse(value, out retval, out errorMessages, exact))
+            if (!TryParse(value, out retval, out errorMessages))
             {
                 throw new ArgumentException("Invalid email address", "value");
             }
@@ -33,28 +31,25 @@
             return retval;
         }
 
-        public static bool TryParse(string value, out ValidEmail email, bool exact = false)
+        public static bool TryParse(string value, out ValidEmail email)
         {
             IReadOnlyCollection<string> errorMessages;
-            return TryParse(value, out email, out errorMessages, exact);
+            return TryParse(value, out email, out errorMessages);
         }
 
-        public static bool TryParse(string value, out ValidEmail email, out IReadOnlyCollection<string> errorMessages, bool exact = false)
+        public static bool TryParse(string value, out ValidEmail email, out IReadOnlyCollection<string> errorMessages)
         {
             var errorMessageList = new List<string>();
             errorMessages = errorMessageList;
 
-            if (IsEmpty(value, exact))
+            if (IsEmpty(value))
             {
                 // TryParse should never fail, so report null as an error instead of ArgumentNullException.
                 errorMessageList.Add("Value required");
             }
             else
             {
-                if (!exact)
-                {
-                    value = Normalize(value);
-                }
+                value = Normalize(value);
 
                 if (value.Length < MinLength || value.Length > MaxLength)
                 {
@@ -77,11 +72,6 @@
                 {
                     // Quoted names are valid, but to keep things sane we're not accepting them.
                     errorMessageList.Add("Must not contain quotes");
-                }
-
-                if (value.Any(c => Char.IsUpper(c) || Char.IsWhiteSpace(c)))
-                {
-                    errorMessageList.Add("Only lowercase with no surrounding whitespace is allowed");
                 }
             }
 

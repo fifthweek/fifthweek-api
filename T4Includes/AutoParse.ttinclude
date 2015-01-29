@@ -8,7 +8,7 @@
 <#
     var ParsedAttributeName = "Parsed";
 	var ParsedCounterpartAttributeName = "ParsedCounterpart";
-	var StaticNormalizeMethodName = "Normalize";
+	var StaticIsEmptyMethodName = "IsEmpty";
 
     foreach(var unifiedClass in UnifiedClassesInProject.Values)
     {
@@ -86,7 +86,7 @@ public static <#= counterpartType #> Parse(this <#= unifiedClass.FirstCodeClass.
         var isRequired = codeProperty.Attributes.OfType<CodeAttribute>().All(_ => !_.Name.StartsWith(OptionalAttributeName));
 		var variableName = "parsed" + i;
 		var strongTypeUnifiedClass = unifiedClass.ResolveUnifiedClass(strongType);
-		var canNormalize = strongTypeUnifiedClass.GetAllPublicMethods().Any(_ => _.IsShared && _.Name == StaticNormalizeMethodName);
+		var hasCustomEmptyCheck = strongTypeUnifiedClass.GetAllPublicMethods().Any(_ => _.IsShared && _.Name == StaticIsEmptyMethodName);
 
 		this.PushIndent(Tab);
 		RenderParseBlock(
@@ -94,7 +94,7 @@ public static <#= counterpartType #> Parse(this <#= unifiedClass.FirstCodeClass.
 			codeProperty.Name, 
 			variableName, 
 			isRequired, 
-			canNormalize, 
+			hasCustomEmptyCheck, 
 			IsNullablePrimitiveType(codeProperty.Type.CodeType), 
 			IsReferenceType(codeProperty.Type.CodeType), 
 			this);
@@ -149,7 +149,7 @@ public static <#= counterpartType #> Parse(this <#= unifiedClass.FirstCodeClass.
 		string property, 
 		string variable, 
 		bool isRequired, 
-		bool canNormalize, 
+		bool hasCustomEmptyCheck, 
 		bool isNullableValue, 
 		bool isReferenceType, 
 		TextTransformation output)
@@ -159,22 +159,16 @@ public static <#= counterpartType #> Parse(this <#= unifiedClass.FirstCodeClass.
 
 		output.WriteLine(string.Format("{0} {1} = null;", strongType, variable));
 
-		if (isReferenceType)
+		var variableAccessor = "target." + (isNullableValue ? property + ".Value" : property);
+		if (hasCustomEmptyCheck)
         {
-			output.WriteLine(string.Format("if (target.{0} != null)", property));
+			output.WriteLine(string.Format("if (!{0}.IsEmpty({1}))", strongType, variableAccessor));
 			output.WriteLine("{");
 			output.PushIndent(Tab);
         }
-
-		var variableAccessor = "target." + (isNullableValue ? property + ".Value" : property);
-		if (canNormalize)
+		else if (isReferenceType)
         {
-			var oldVariableAccessor = variableAccessor;
-			variableAccessor = variable + "Normalized";
-			output.WriteLine(string.Format("var {0} = {1}.Normalize({2});", variableAccessor, strongType, oldVariableAccessor));
-			
-			// Cannot be certain what type the normalized value is, so assume it's a reference type and needs null check.
-			output.WriteLine(string.Format("if ({0} != null)", variableAccessor));
+			output.WriteLine(string.Format("if (target.{0} != null)", property));
 			output.WriteLine("{");
 			output.PushIndent(Tab);
         }
@@ -197,19 +191,17 @@ public static <#= counterpartType #> Parse(this <#= unifiedClass.FirstCodeClass.
 		output.PopIndent();
 		output.WriteLine("}");
 
-		if (canNormalize) 
+		if (hasCustomEmptyCheck) 
         {
 			output.PopIndent();
 			output.WriteLine("}");
 
-			// Cannot be certain what type the normalized value is, so assume it's a reference type and needs null check.
 			if (isRequired)
 			{
 				RenderElseValueRequired(newModelState, addModelState, output);
 			}
 		}
-
-		if (isReferenceType)
+		else if (isReferenceType)
         {
 			output.PopIndent();
 			output.WriteLine("}");

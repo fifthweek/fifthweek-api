@@ -12,12 +12,6 @@
 
         public string Value { get; private set; }
 
-        public static bool IsEmpty(string value)
-        {
-            // Dummy logic. Sometimes this is just 'IsNullOrEmpty' when the type is whitespace sensitive, like on passwords.
-            return string.IsNullOrWhiteSpace(value);
-        }
-
         public static ParsedString Parse(string value)
         {
             ParsedString retval;

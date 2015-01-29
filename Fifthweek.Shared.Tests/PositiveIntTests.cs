@@ -34,17 +34,17 @@
             this.BadValue(int.MinValue);
         }
 
-        protected override PositiveInt Parse(int value, bool exact)
+        protected override PositiveInt Parse(int value)
         {
             return PositiveInt.Parse(value);
         }
 
-        protected override bool TryParse(int value, out PositiveInt parsedObject, bool exact)
+        protected override bool TryParse(int value, out PositiveInt parsedObject)
         {
             return PositiveInt.TryParse(value, out parsedObject);
         }
 
-        protected override bool TryParse(int value, out PositiveInt parsedObject, out IReadOnlyCollection<string> errorMessages, bool exact)
+        protected override bool TryParse(int value, out PositiveInt parsedObject, out IReadOnlyCollection<string> errorMessages)
         {
             return PositiveInt.TryParse(value, out parsedObject, out errorMessages);
         }

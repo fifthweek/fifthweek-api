@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Linq;
 
-
+//// Generated on 29/01/2015 19:42:18 (UTC)
+//// Mapped solution in 1.46s
 
 namespace Fifthweek.Api.FileManagement.Shared
 {
     using System;
+    using System.Linq;
     using Fifthweek.CodeGeneration;
 
     [Newtonsoft.Json.JsonConverter(typeof(JsonConverter))]
@@ -55,6 +57,7 @@ namespace Fifthweek.Api.FileManagement.Shared
 namespace Fifthweek.Api.FileManagement.Shared
 {
     using System;
+    using System.Linq;
     using Fifthweek.CodeGeneration;
 
     public partial class FileId 
@@ -75,6 +78,7 @@ namespace Fifthweek.Api.FileManagement.Shared
 namespace Fifthweek.Api.FileManagement.Shared
 {
     using System;
+    using System.Linq;
     using Fifthweek.CodeGeneration;
 
     public partial class FileId 
@@ -125,4 +129,5 @@ namespace Fifthweek.Api.FileManagement.Shared
         }
     }
 }
+
 

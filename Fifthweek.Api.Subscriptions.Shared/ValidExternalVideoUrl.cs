@@ -31,18 +31,18 @@
         {
         }
 
-        public string Value { get; protected set; }
+        public string Value { get; private set; }
 
-        public static bool IsEmpty(string value, bool exact = false)
+        public static bool IsEmpty(string value)
         {
-            return exact ? string.IsNullOrEmpty(value) : string.IsNullOrWhiteSpace(value);
+            return string.IsNullOrWhiteSpace(value);
         }
 
-        public static ValidExternalVideoUrl Parse(string value, bool exact = false)
+        public static ValidExternalVideoUrl Parse(string value)
         {
             ValidExternalVideoUrl retval;
             IReadOnlyCollection<string> errorMessages;
-            if (!TryParse(value, out retval, out errorMessages, exact))
+            if (!TryParse(value, out retval, out errorMessages))
             {
                 throw new ArgumentException("Invalid external video URL", "value");
             }
@@ -50,34 +50,24 @@
             return retval;
         }
 
-        public static bool TryParse(string value, out ValidExternalVideoUrl externalVideoUrl, bool exact = false)
+        public static bool TryParse(string value, out ValidExternalVideoUrl externalVideoUrl)
         {
             IReadOnlyCollection<string> errorMessages;
-            return TryParse(value, out externalVideoUrl, out errorMessages, exact);
+            return TryParse(value, out externalVideoUrl, out errorMessages);
         }
 
-        public static bool TryParse(string value, out ValidExternalVideoUrl externalVideoUrl, out IReadOnlyCollection<string> errorMessages, bool exact = false)
+        public static bool TryParse(string value, out ValidExternalVideoUrl externalVideoUrl, out IReadOnlyCollection<string> errorMessages)
         {
             var errorMessageList = new List<string>();
             errorMessages = errorMessageList;
 
-            if (IsEmpty(value, exact))
+            if (IsEmpty(value))
             {
                 // TryParse should never fail, so report null as an error instead of ArgumentNullException.
                 errorMessageList.Add("Value required");
             }
             else
             {
-                if (!exact)
-                {
-                    value = value.Trim();
-                }
-
-                if (value.Length < MinLength || value.Length > MaxLength)
-                {
-                    errorMessageList.Add(string.Format("Length must be from {0} to {1} characters", MinLength, MaxLength));
-                }
-
                 Uri uri;
                 if (!Uri.TryCreate(value, UriKind.Absolute, out uri))
                 {
@@ -85,11 +75,11 @@
                 }
                 else
                 {
-                    if (!exact)
+                    value = uri.ToString();
+
+                    if (value.Length < MinLength || value.Length > MaxLength)
                     {
-                        // Gets the 'canonical string representation' - which means to normalize - so it
-                        // sets the scheme and authority to lowercase for us :)
-                        value = uri.ToString(); 
+                        errorMessageList.Add(string.Format("Length must be from {0} to {1} characters", MinLength, MaxLength));
                     }
 
                     if (uri.Scheme != Uri.UriSchemeHttp && uri.Scheme != Uri.UriSchemeHttps)
@@ -100,20 +90,6 @@
                     if (!AllowedDomains.Contains(uri.Host))
                     {
                         errorMessageList.Add("Must be from " + AllowedDomainsMessage);
-                    }
-
-                    if (value.Any(char.IsWhiteSpace))
-                    {
-                        errorMessageList.Add("No whitespace is allowed");
-                    }
-
-                    var leftPart = uri.GetLeftPart(UriPartial.Authority);
-                    if (leftPart != value.Substring(0, leftPart.Length))
-                    {
-                        // Only reason these would differ at these point is case mismatch. Since the value from the
-                        // URI type is guaranteed to be lowercase, this means there must be uppercase in the originally
-                        // provided value.
-                        errorMessageList.Add("No uppercase characters allowed in left part of URL");
                     }
                 }
             }

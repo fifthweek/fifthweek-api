@@ -87,19 +87,19 @@
             this.GoodNonExactValue("JoeBloggs", "joebloggs");
         }
 
-        protected override ValidUsername Parse(string value, bool exact)
+        protected override ValidUsername Parse(string value)
         {
-            return ValidUsername.Parse(value, exact);
+            return ValidUsername.Parse(value);
         }
 
-        protected override bool TryParse(string value, out ValidUsername parsedObject, bool exact)
+        protected override bool TryParse(string value, out ValidUsername parsedObject)
         {
-            return ValidUsername.TryParse(value, out parsedObject, exact);
+            return ValidUsername.TryParse(value, out parsedObject);
         }
 
-        protected override bool TryParse(string value, out ValidUsername parsedObject, out IReadOnlyCollection<string> errorMessages, bool exact)
+        protected override bool TryParse(string value, out ValidUsername parsedObject, out IReadOnlyCollection<string> errorMessages)
         {
-            return ValidUsername.TryParse(value, out parsedObject, out errorMessages, exact);
+            return ValidUsername.TryParse(value, out parsedObject, out errorMessages);
         }
 
         protected override string GetValue(ValidUsername parsedObject)

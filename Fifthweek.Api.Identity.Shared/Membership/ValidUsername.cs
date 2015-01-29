@@ -18,16 +18,16 @@
         {
         }
 
-        public static bool IsEmpty(string value, bool exact = false)
+        public static bool IsEmpty(string value)
         {
-            return exact ? string.IsNullOrEmpty(value) : string.IsNullOrWhiteSpace(value);
+            return string.IsNullOrWhiteSpace(value);
         }
 
-        public static ValidUsername Parse(string value, bool exact = false)
+        public static ValidUsername Parse(string value)
         {
             ValidUsername retval;
             IReadOnlyCollection<string> errorMessages;
-            if (!TryParse(value, out retval, out errorMessages, exact))
+            if (!TryParse(value, out retval, out errorMessages))
             {
                 throw new ArgumentException("Invalid username", "value");
             }
@@ -35,28 +35,25 @@
             return retval;
         }
 
-        public static bool TryParse(string value, out ValidUsername username, bool exact = false)
+        public static bool TryParse(string value, out ValidUsername username)
         {
             IReadOnlyCollection<string> errorMessages;
-            return TryParse(value, out username, out errorMessages, exact);
+            return TryParse(value, out username, out errorMessages);
         }
 
-        public static bool TryParse(string value, out ValidUsername username, out IReadOnlyCollection<string> errorMessages, bool exact = false)
+        public static bool TryParse(string value, out ValidUsername username, out IReadOnlyCollection<string> errorMessages)
         {
             var errorMessageList = new List<string>();
             errorMessages = errorMessageList;
 
-            if (IsEmpty(value, exact))
+            if (IsEmpty(value))
             {
                 // TryParse should never fail, so report null as an error instead of ArgumentNullException.
                 errorMessageList.Add("Value required");
             }
             else
             {
-                if (!exact)
-                {
-                    value = Normalize(value);
-                }
+                value = Normalize(value);
 
                 if (value.Length < MinLength || value.Length > MaxLength)
                 {
@@ -66,11 +63,6 @@
                 if (!Pattern.IsMatch(value))
                 {
                     errorMessageList.Add("Only alphanumeric characters and underscores are allowed");
-                }
-
-                if (value.Any(c => char.IsUpper(c) || char.IsWhiteSpace(c)))
-                {
-                    errorMessageList.Add("Only lowercase with no surrounding whitespace is allowed");
                 }
             }
 

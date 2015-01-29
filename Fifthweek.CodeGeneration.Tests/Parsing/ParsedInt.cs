@@ -12,11 +12,6 @@
 
         public int Value { get; private set; }
 
-        public static bool IsEmpty(int? value)
-        {
-            return !value.HasValue;
-        }
-
         public static ParsedInt Parse(int value)
         {
             ParsedInt retval;

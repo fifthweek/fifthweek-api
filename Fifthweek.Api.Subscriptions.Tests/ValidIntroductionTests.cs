@@ -65,17 +65,17 @@
             this.AssertNewLinesNotAllowed();
         }
 
-        protected override ValidIntroduction Parse(string value, bool exact)
+        protected override ValidIntroduction Parse(string value)
         {
             return ValidIntroduction.Parse(value);
         }
 
-        protected override bool TryParse(string value, out ValidIntroduction parsedObject, bool exact)
+        protected override bool TryParse(string value, out ValidIntroduction parsedObject)
         {
             return ValidIntroduction.TryParse(value, out parsedObject);
         }
 
-        protected override bool TryParse(string value, out ValidIntroduction parsedObject, out IReadOnlyCollection<string> errorMessages, bool exact)
+        protected override bool TryParse(string value, out ValidIntroduction parsedObject, out IReadOnlyCollection<string> errorMessages)
         {
             return ValidIntroduction.TryParse(value, out parsedObject, out errorMessages);
         }

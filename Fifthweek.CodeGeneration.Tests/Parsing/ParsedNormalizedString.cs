@@ -12,12 +12,9 @@
 
         public string Value { get; private set; }
 
-        public static string Normalize(string value)
+        public static bool IsEmpty(string value)
         {
-            value = value.Trim().ToLower();
-            return value.Length == 0
-              ? null
-              : value;
+            return string.IsNullOrWhiteSpace(value);
         }
 
         public static ParsedNormalizedString Parse(string value)

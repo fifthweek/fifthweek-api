@@ -66,17 +66,17 @@
             this.AssertMaxLength(2000);
         }
 
-        protected override ValidDescription Parse(string value, bool exact)
+        protected override ValidDescription Parse(string value)
         {
             return ValidDescription.Parse(value);
         }
 
-        protected override bool TryParse(string value, out ValidDescription parsedObject, bool exact)
+        protected override bool TryParse(string value, out ValidDescription parsedObject)
         {
             return ValidDescription.TryParse(value, out parsedObject);
         }
 
-        protected override bool TryParse(string value, out ValidDescription parsedObject, out IReadOnlyCollection<string> errorMessages, bool exact)
+        protected override bool TryParse(string value, out ValidDescription parsedObject, out IReadOnlyCollection<string> errorMessages)
         {
             return ValidDescription.TryParse(value, out parsedObject, out errorMessages);
         }

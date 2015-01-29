@@ -1,7 +1,8 @@
 ﻿using System;
 using System.Linq;
 
-
+//// Generated on 29/01/2015 20:01:32 (UTC)
+//// Mapped solution in 3.46s
 
 
 namespace Fifthweek.Api.Posts.Commands
@@ -1332,7 +1333,7 @@ namespace Fifthweek.Api.Posts.Controllers
     {
         public override string ToString()
         {
-            return string.Format("CreatorNewsfeedRequestData({0}, {1})", this.StartIndex == null ? "null" : this.StartIndex.ToString(), this.Count == null ? "null" : this.Count.ToString());
+            return string.Format("CreatorNewsfeedPaginationData({0}, {1})", this.StartIndex == null ? "null" : this.StartIndex.ToString(), this.Count == null ? "null" : this.Count.ToString());
         }
         
         public override bool Equals(object obj)
@@ -2076,50 +2077,44 @@ namespace Fifthweek.Api.Posts.Controllers
                 this.Count = count;
             }
         
-        	public NonNegativeInt StartIndex { get; private set; }
+            public NonNegativeInt StartIndex { get; private set; }
         
-        	public PositiveInt Count { get; private set; }
+            public PositiveInt Count { get; private set; }
         }
     }
 
-    public static partial class CreatorNewsfeedRequestDataExtensions
+    public static partial class CreatorNewsfeedPaginationDataExtensions
     {
         public static CreatorNewsfeedPaginationData.Parsed Parse(this CreatorNewsfeedPaginationData target)
         {
             var modelStateDictionary = new System.Web.Http.ModelBinding.ModelStateDictionary();
         
-        	NonNegativeInt parsed0 = null;
-            if (true || !NonNegativeInt.IsEmpty(target.StartIndex))
+            NonNegativeInt parsed0 = null;
+            System.Collections.Generic.IReadOnlyCollection<string> parsed0Errors;
+            if (!NonNegativeInt.TryParse(target.StartIndex, out parsed0, out parsed0Errors))
             {
-                System.Collections.Generic.IReadOnlyCollection<string> errorMessages;
-                if (!NonNegativeInt.TryParse(target.StartIndex, out parsed0, out errorMessages))
+                var modelState = new System.Web.Http.ModelBinding.ModelState();
+                foreach (var errorMessage in parsed0Errors)
                 {
-                    var modelState = new System.Web.Http.ModelBinding.ModelState();
-                    foreach (var errorMessage in errorMessages)
-                    {
-                        modelState.Errors.Add(errorMessage);
-                    }
-        
-                    modelStateDictionary.Add("StartIndex", modelState);
+                    modelState.Errors.Add(errorMessage);
                 }
+
+                modelStateDictionary.Add("StartIndex", modelState);
             }
-        
-        	PositiveInt parsed1 = null;
-            if (true || !PositiveInt.IsEmpty(target.Count))
+
+            PositiveInt parsed1 = null;
+            System.Collections.Generic.IReadOnlyCollection<string> parsed1Errors;
+            if (!PositiveInt.TryParse(target.Count, out parsed1, out parsed1Errors))
             {
-                System.Collections.Generic.IReadOnlyCollection<string> errorMessages;
-                if (!PositiveInt.TryParse(target.Count, out parsed1, out errorMessages))
+                var modelState = new System.Web.Http.ModelBinding.ModelState();
+                foreach (var errorMessage in parsed1Errors)
                 {
-                    var modelState = new System.Web.Http.ModelBinding.ModelState();
-                    foreach (var errorMessage in errorMessages)
-                    {
-                        modelState.Errors.Add(errorMessage);
-                    }
-        
-                    modelStateDictionary.Add("Count", modelState);
+                    modelState.Errors.Add(errorMessage);
                 }
+
+                modelStateDictionary.Add("Count", modelState);
             }
-        
+
             if (!modelStateDictionary.IsValid)
             {
                 throw new Fifthweek.Api.Core.ModelValidationException(modelStateDictionary);
@@ -2172,15 +2167,15 @@ namespace Fifthweek.Api.Posts.Controllers
                 this.IsQueued = isQueued;
             }
         
-        	public Fifthweek.Api.Collections.Shared.CollectionId CollectionId { get; private set; }
+            public Fifthweek.Api.Collections.Shared.CollectionId CollectionId { get; private set; }
         
-        	public Fifthweek.Api.FileManagement.Shared.FileId FileId { get; private set; }
+            public Fifthweek.Api.FileManagement.Shared.FileId FileId { get; private set; }
         
-        	public ValidComment Comment { get; private set; }
+            public ValidComment Comment { get; private set; }
         
-        	public System.Nullable<System.DateTime> ScheduledPostDate { get; private set; }
+            public System.Nullable<System.DateTime> ScheduledPostDate { get; private set; }
         
-        	public System.Boolean IsQueued { get; private set; }
+            public System.Boolean IsQueued { get; private set; }
         }
     }
 
@@ -2190,22 +2185,22 @@ namespace Fifthweek.Api.Posts.Controllers
         {
             var modelStateDictionary = new System.Web.Http.ModelBinding.ModelStateDictionary();
         
-        	ValidComment parsed0 = null;
-            if (false || !ValidComment.IsEmpty(target.Comment))
+            ValidComment parsed0 = null;
+            if (!ValidComment.IsEmpty(target.Comment))
             {
-                System.Collections.Generic.IReadOnlyCollection<string> errorMessages;
-                if (!ValidComment.TryParse(target.Comment, out parsed0, out errorMessages))
+                System.Collections.Generic.IReadOnlyCollection<string> parsed0Errors;
+                if (!ValidComment.TryParse(target.Comment, out parsed0, out parsed0Errors))
                 {
                     var modelState = new System.Web.Http.ModelBinding.ModelState();
-                    foreach (var errorMessage in errorMessages)
+                    foreach (var errorMessage in parsed0Errors)
                     {
                         modelState.Errors.Add(errorMessage);
                     }
-        
+
                     modelStateDictionary.Add("Comment", modelState);
                 }
             }
-        
+
             if (!modelStateDictionary.IsValid)
             {
                 throw new Fifthweek.Api.Core.ModelValidationException(modelStateDictionary);
@@ -2261,15 +2256,15 @@ namespace Fifthweek.Api.Posts.Controllers
                 this.IsQueued = isQueued;
             }
         
-        	public Fifthweek.Api.Collections.Shared.CollectionId CollectionId { get; private set; }
+            public Fifthweek.Api.Collections.Shared.CollectionId CollectionId { get; private set; }
         
-        	public Fifthweek.Api.FileManagement.Shared.FileId ImageFileId { get; private set; }
+            public Fifthweek.Api.FileManagement.Shared.FileId ImageFileId { get; private set; }
         
-        	public ValidComment Comment { get; private set; }
+            public ValidComment Comment { get; private set; }
         
-        	public System.Nullable<System.DateTime> ScheduledPostDate { get; private set; }
+            public System.Nullable<System.DateTime> ScheduledPostDate { get; private set; }
         
-        	public System.Boolean IsQueued { get; private set; }
+            public System.Boolean IsQueued { get; private set; }
         }
     }
 
@@ -2279,22 +2274,22 @@ namespace Fifthweek.Api.Posts.Controllers
         {
             var modelStateDictionary = new System.Web.Http.ModelBinding.ModelStateDictionary();
         
-        	ValidComment parsed0 = null;
-            if (false || !ValidComment.IsEmpty(target.Comment))
+            ValidComment parsed0 = null;
+            if (!ValidComment.IsEmpty(target.Comment))
             {
-                System.Collections.Generic.IReadOnlyCollection<string> errorMessages;
-                if (!ValidComment.TryParse(target.Comment, out parsed0, out errorMessages))
+                System.Collections.Generic.IReadOnlyCollection<string> parsed0Errors;
+                if (!ValidComment.TryParse(target.Comment, out parsed0, out parsed0Errors))
                 {
                     var modelState = new System.Web.Http.ModelBinding.ModelState();
-                    foreach (var errorMessage in errorMessages)
+                    foreach (var errorMessage in parsed0Errors)
                     {
                         modelState.Errors.Add(errorMessage);
                     }
-        
+
                     modelStateDictionary.Add("Comment", modelState);
                 }
             }
-        
+
             if (!modelStateDictionary.IsValid)
             {
                 throw new Fifthweek.Api.Core.ModelValidationException(modelStateDictionary);
@@ -2340,11 +2335,11 @@ namespace Fifthweek.Api.Posts.Controllers
                 this.ScheduledPostDate = scheduledPostDate;
             }
         
-        	public Fifthweek.Api.Channels.Shared.ChannelId ChannelId { get; private set; }
+            public Fifthweek.Api.Channels.Shared.ChannelId ChannelId { get; private set; }
         
-        	public ValidNote Note { get; private set; }
+            public ValidNote Note { get; private set; }
         
-        	public System.Nullable<System.DateTime> ScheduledPostDate { get; private set; }
+            public System.Nullable<System.DateTime> ScheduledPostDate { get; private set; }
         }
     }
 
@@ -2354,22 +2349,28 @@ namespace Fifthweek.Api.Posts.Controllers
         {
             var modelStateDictionary = new System.Web.Http.ModelBinding.ModelStateDictionary();
         
-        	ValidNote parsed0 = null;
-            if (true || !ValidNote.IsEmpty(target.Note))
+            ValidNote parsed0 = null;
+            if (!ValidNote.IsEmpty(target.Note))
             {
-                System.Collections.Generic.IReadOnlyCollection<string> errorMessages;
-                if (!ValidNote.TryParse(target.Note, out parsed0, out errorMessages))
+                System.Collections.Generic.IReadOnlyCollection<string> parsed0Errors;
+                if (!ValidNote.TryParse(target.Note, out parsed0, out parsed0Errors))
                 {
                     var modelState = new System.Web.Http.ModelBinding.ModelState();
-                    foreach (var errorMessage in errorMessages)
+                    foreach (var errorMessage in parsed0Errors)
                     {
                         modelState.Errors.Add(errorMessage);
                     }
-        
+
                     modelStateDictionary.Add("Note", modelState);
                 }
             }
-        
+            else
+            {
+                var modelState = new System.Web.Http.ModelBinding.ModelState();
+                modelState.Errors.Add("Value required");
+                modelStateDictionary.Add("Note", modelState);
+            }
+
             if (!modelStateDictionary.IsValid)
             {
                 throw new Fifthweek.Api.Core.ModelValidationException(modelStateDictionary);
@@ -2382,4 +2383,5 @@ namespace Fifthweek.Api.Posts.Controllers
         }    
     }
 }
+
 

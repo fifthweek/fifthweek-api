@@ -16,11 +16,6 @@
 
         public int Value { get; protected set; }
 
-        public static bool IsEmpty(int value)
-        {
-            return false;
-        }
-
         public static PositiveInt Parse(int value)
         {
             PositiveInt retval;

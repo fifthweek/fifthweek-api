@@ -48,17 +48,17 @@
             this.AssertMaxLength(100);
         }
 
-        protected override ValidPassword Parse(string value, bool exact)
+        protected override ValidPassword Parse(string value)
         {
             return ValidPassword.Parse(value);
         }
 
-        protected override bool TryParse(string value, out ValidPassword parsedObject, bool exact)
+        protected override bool TryParse(string value, out ValidPassword parsedObject)
         {
             return ValidPassword.TryParse(value, out parsedObject);
         }
 
-        protected override bool TryParse(string value, out ValidPassword parsedObject, out IReadOnlyCollection<string> errorMessages, bool exact)
+        protected override bool TryParse(string value, out ValidPassword parsedObject, out IReadOnlyCollection<string> errorMessages)
         {
             return ValidPassword.TryParse(value, out parsedObject, out errorMessages);
         }

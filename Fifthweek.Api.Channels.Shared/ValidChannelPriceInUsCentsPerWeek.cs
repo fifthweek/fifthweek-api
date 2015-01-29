@@ -14,12 +14,7 @@
         {
         }
 
-        public int Value { get; protected set; }
-
-        public static bool IsEmpty(int value)
-        {
-            return false;
-        }
+        public int Value { get; private set; }
 
         public static ValidChannelPriceInUsCentsPerWeek Parse(int value)
         {

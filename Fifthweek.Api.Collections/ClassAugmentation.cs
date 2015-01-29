@@ -1,7 +1,8 @@
 ﻿using System;
 using System.Linq;
 
-
+//// Generated on 29/01/2015 19:44:16 (UTC)
+//// Mapped solution in 1.25s
 
 
 namespace Fifthweek.Api.Collections
@@ -1253,9 +1254,9 @@ namespace Fifthweek.Api.Collections.Controllers
                 this.Name = name;
             }
         
-        	public Fifthweek.Api.Channels.Shared.ChannelId ChannelId { get; private set; }
+            public Fifthweek.Api.Channels.Shared.ChannelId ChannelId { get; private set; }
         
-        	public ValidCollectionName Name { get; private set; }
+            public ValidCollectionName Name { get; private set; }
         }
     }
 
@@ -1265,22 +1266,28 @@ namespace Fifthweek.Api.Collections.Controllers
         {
             var modelStateDictionary = new System.Web.Http.ModelBinding.ModelStateDictionary();
         
-        	ValidCollectionName parsed0 = null;
-            if (true || !ValidCollectionName.IsEmpty(target.Name))
+            ValidCollectionName parsed0 = null;
+            if (!ValidCollectionName.IsEmpty(target.Name))
             {
-                System.Collections.Generic.IReadOnlyCollection<string> errorMessages;
-                if (!ValidCollectionName.TryParse(target.Name, out parsed0, out errorMessages))
+                System.Collections.Generic.IReadOnlyCollection<string> parsed0Errors;
+                if (!ValidCollectionName.TryParse(target.Name, out parsed0, out parsed0Errors))
                 {
                     var modelState = new System.Web.Http.ModelBinding.ModelState();
-                    foreach (var errorMessage in errorMessages)
+                    foreach (var errorMessage in parsed0Errors)
                     {
                         modelState.Errors.Add(errorMessage);
                     }
-        
+
                     modelStateDictionary.Add("Name", modelState);
                 }
             }
-        
+            else
+            {
+                var modelState = new System.Web.Http.ModelBinding.ModelState();
+                modelState.Errors.Add("Value required");
+                modelStateDictionary.Add("Name", modelState);
+            }
+
             if (!modelStateDictionary.IsValid)
             {
                 throw new Fifthweek.Api.Core.ModelValidationException(modelStateDictionary);
@@ -1337,11 +1344,11 @@ namespace Fifthweek.Api.Collections.Controllers
                 this.WeeklyReleaseTimes = weeklyReleaseTimes;
             }
         
-        	public Fifthweek.Api.Channels.Shared.ChannelId ChannelId { get; private set; }
+            public Fifthweek.Api.Channels.Shared.ChannelId ChannelId { get; private set; }
         
-        	public ValidCollectionName Name { get; private set; }
+            public ValidCollectionName Name { get; private set; }
         
-        	public System.Collections.Generic.List<System.Byte> WeeklyReleaseTimes { get; private set; }
+            public System.Collections.Generic.List<System.Byte> WeeklyReleaseTimes { get; private set; }
         }
     }
 
@@ -1351,22 +1358,28 @@ namespace Fifthweek.Api.Collections.Controllers
         {
             var modelStateDictionary = new System.Web.Http.ModelBinding.ModelStateDictionary();
         
-        	ValidCollectionName parsed0 = null;
-            if (true || !ValidCollectionName.IsEmpty(target.Name))
+            ValidCollectionName parsed0 = null;
+            if (!ValidCollectionName.IsEmpty(target.Name))
             {
-                System.Collections.Generic.IReadOnlyCollection<string> errorMessages;
-                if (!ValidCollectionName.TryParse(target.Name, out parsed0, out errorMessages))
+                System.Collections.Generic.IReadOnlyCollection<string> parsed0Errors;
+                if (!ValidCollectionName.TryParse(target.Name, out parsed0, out parsed0Errors))
                 {
                     var modelState = new System.Web.Http.ModelBinding.ModelState();
-                    foreach (var errorMessage in errorMessages)
+                    foreach (var errorMessage in parsed0Errors)
                     {
                         modelState.Errors.Add(errorMessage);
                     }
-        
+
                     modelStateDictionary.Add("Name", modelState);
                 }
             }
-        
+            else
+            {
+                var modelState = new System.Web.Http.ModelBinding.ModelState();
+                modelState.Errors.Add("Value required");
+                modelStateDictionary.Add("Name", modelState);
+            }
+
             if (!modelStateDictionary.IsValid)
             {
                 throw new Fifthweek.Api.Core.ModelValidationException(modelStateDictionary);
@@ -1379,4 +1392,5 @@ namespace Fifthweek.Api.Collections.Controllers
         }    
     }
 }
+
 

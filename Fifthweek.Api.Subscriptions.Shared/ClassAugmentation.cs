@@ -1,12 +1,16 @@
 ﻿using System;
 using System.Linq;
 
-
+//// Generated on 29/01/2015 19:48:53 (UTC)
+//// Mapped solution in 2.56s
 
 namespace Fifthweek.Api.Subscriptions.Shared
 {
     using System;
+    using System.Linq;
     using Fifthweek.CodeGeneration;
+    using System.Collections.Generic;
+    using System.Diagnostics.CodeAnalysis;
 
     [Newtonsoft.Json.JsonConverter(typeof(JsonConverter))]
     public partial class SubscriptionId 
@@ -55,7 +59,10 @@ namespace Fifthweek.Api.Subscriptions.Shared
 namespace Fifthweek.Api.Subscriptions.Shared
 {
     using System;
+    using System.Linq;
     using Fifthweek.CodeGeneration;
+    using System.Collections.Generic;
+    using System.Diagnostics.CodeAnalysis;
 
     public partial class SubscriptionId 
     {
@@ -75,7 +82,10 @@ namespace Fifthweek.Api.Subscriptions.Shared
 namespace Fifthweek.Api.Subscriptions.Shared
 {
     using System;
+    using System.Linq;
     using Fifthweek.CodeGeneration;
+    using System.Collections.Generic;
+    using System.Diagnostics.CodeAnalysis;
 
     public partial class SubscriptionId 
     {
@@ -128,8 +138,10 @@ namespace Fifthweek.Api.Subscriptions.Shared
 namespace Fifthweek.Api.Subscriptions.Shared
 {
     using System;
-    using System.Collections.Generic;
+    using System.Linq;
     using Fifthweek.CodeGeneration;
+    using System.Collections.Generic;
+    using System.Diagnostics.CodeAnalysis;
 
     public partial class ValidDescription 
     {
@@ -182,9 +194,10 @@ namespace Fifthweek.Api.Subscriptions.Shared
 namespace Fifthweek.Api.Subscriptions.Shared
 {
     using System;
-    using System.Collections.Generic;
     using System.Linq;
     using Fifthweek.CodeGeneration;
+    using System.Collections.Generic;
+    using System.Diagnostics.CodeAnalysis;
 
     public partial class ValidExternalVideoUrl 
     {
@@ -237,10 +250,10 @@ namespace Fifthweek.Api.Subscriptions.Shared
 namespace Fifthweek.Api.Subscriptions.Shared
 {
     using System;
-    using System.Collections.Generic;
-    using System.Diagnostics.CodeAnalysis;
     using System.Linq;
     using Fifthweek.CodeGeneration;
+    using System.Collections.Generic;
+    using System.Diagnostics.CodeAnalysis;
 
     public partial class ValidIntroduction 
     {
@@ -293,9 +306,10 @@ namespace Fifthweek.Api.Subscriptions.Shared
 namespace Fifthweek.Api.Subscriptions.Shared
 {
     using System;
-    using System.Collections.Generic;
     using System.Linq;
     using Fifthweek.CodeGeneration;
+    using System.Collections.Generic;
+    using System.Diagnostics.CodeAnalysis;
 
     public partial class ValidSubscriptionName 
     {
@@ -348,9 +362,10 @@ namespace Fifthweek.Api.Subscriptions.Shared
 namespace Fifthweek.Api.Subscriptions.Shared
 {
     using System;
-    using System.Collections.Generic;
     using System.Linq;
     using Fifthweek.CodeGeneration;
+    using System.Collections.Generic;
+    using System.Diagnostics.CodeAnalysis;
 
     public partial class ValidTagline 
     {
@@ -400,4 +415,5 @@ namespace Fifthweek.Api.Subscriptions.Shared
         }
     }
 }
+
 

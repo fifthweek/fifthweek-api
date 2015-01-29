@@ -126,19 +126,19 @@
             this.GoodNonExactValue("Joe@Bloggs.com", "joe@bloggs.com");
         }
 
-        protected override ValidEmail Parse(string value, bool exact)
+        protected override ValidEmail Parse(string value)
         {
-            return ValidEmail.Parse(value, exact);
+            return ValidEmail.Parse(value);
         }
 
-        protected override bool TryParse(string value, out ValidEmail parsedObject, bool exact)
+        protected override bool TryParse(string value, out ValidEmail parsedObject)
         {
-            return ValidEmail.TryParse(value, out parsedObject, exact);
+            return ValidEmail.TryParse(value, out parsedObject);
         }
 
-        protected override bool TryParse(string value, out ValidEmail parsedObject, out IReadOnlyCollection<string> errorMessages, bool exact)
+        protected override bool TryParse(string value, out ValidEmail parsedObject, out IReadOnlyCollection<string> errorMessages)
         {
-            return ValidEmail.TryParse(value, out parsedObject, out errorMessages, exact);
+            return ValidEmail.TryParse(value, out parsedObject, out errorMessages);
         }
 
         protected override string GetValue(ValidEmail parsedObject)

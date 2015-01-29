@@ -24,11 +24,6 @@
 
         public byte Value { get; private set; }
 
-        public static bool IsEmpty(int value)
-        {
-            return false;
-        }
-
         public static HourOfWeek Parse(byte value)
         {
             HourOfWeek retval;

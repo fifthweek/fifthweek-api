@@ -24,8 +24,7 @@
 
         public static bool IsEmpty(string value)
         {
-            // Whitespace is considered a value, since values are not trimmed/normalized.
-            return string.IsNullOrEmpty(value); // Trimmed types use IsNullOrWhiteSpace
+            return string.IsNullOrEmpty(value);
         }
 
         public static ValidCollectionName Parse(string value)

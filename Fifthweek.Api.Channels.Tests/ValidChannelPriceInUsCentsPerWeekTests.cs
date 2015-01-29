@@ -36,17 +36,17 @@
             this.BadValue(int.MinValue);
         }
 
-        protected override ValidChannelPriceInUsCentsPerWeek Parse(int value, bool exact)
+        protected override ValidChannelPriceInUsCentsPerWeek Parse(int value)
         {
             return ValidChannelPriceInUsCentsPerWeek.Parse(value);
         }
 
-        protected override bool TryParse(int value, out ValidChannelPriceInUsCentsPerWeek parsedObject, bool exact)
+        protected override bool TryParse(int value, out ValidChannelPriceInUsCentsPerWeek parsedObject)
         {
             return ValidChannelPriceInUsCentsPerWeek.TryParse(value, out parsedObject);
         }
 
-        protected override bool TryParse(int value, out ValidChannelPriceInUsCentsPerWeek parsedObject, out IReadOnlyCollection<string> errorMessages, bool exact)
+        protected override bool TryParse(int value, out ValidChannelPriceInUsCentsPerWeek parsedObject, out IReadOnlyCollection<string> errorMessages)
         {
             return ValidChannelPriceInUsCentsPerWeek.TryParse(value, out parsedObject, out errorMessages);
         }

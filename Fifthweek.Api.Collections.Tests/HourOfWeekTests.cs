@@ -63,17 +63,17 @@
             HourOfWeek.Parse(DateTime.Now);
         }
 
-        protected override HourOfWeek Parse(byte value, bool exact)
+        protected override HourOfWeek Parse(byte value)
         {
             return HourOfWeek.Parse(value);
         }
 
-        protected override bool TryParse(byte value, out HourOfWeek parsedObject, bool exact)
+        protected override bool TryParse(byte value, out HourOfWeek parsedObject)
         {
             return HourOfWeek.TryParse(value, out parsedObject);
         }
 
-        protected override bool TryParse(byte value, out HourOfWeek parsedObject, out IReadOnlyCollection<string> errorMessages, bool exact)
+        protected override bool TryParse(byte value, out HourOfWeek parsedObject, out IReadOnlyCollection<string> errorMessages)
         {
             return HourOfWeek.TryParse(value, out parsedObject, out errorMessages);
         }
