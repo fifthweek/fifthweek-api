@@ -148,7 +148,7 @@
             {
                 this.refreshTokens.Add(
                     new RefreshToken(
-                        "hash_" + i,
+                        "hash_" + user.Id + i,
                         user.UserName,
                         "client_" + i,
                         DateTime.UtcNow.AddSeconds(-100),
