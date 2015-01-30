@@ -6,15 +6,10 @@
     using System.Threading.Tasks;
     using System.Web.Http.Results;
 
-    using Fifthweek.Api.Channels;
     using Fifthweek.Api.Channels.Shared;
-    using Fifthweek.Api.Collections;
     using Fifthweek.Api.Collections.Shared;
     using Fifthweek.Api.Core;
-    using Fifthweek.Api.FileManagement;
     using Fifthweek.Api.FileManagement.Shared;
-    using Fifthweek.Api.Identity.Membership;
-    using Fifthweek.Api.Identity.OAuth;
     using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.Api.Posts.Commands;
     using Fifthweek.Api.Posts.Controllers;
@@ -36,9 +31,11 @@
         private static readonly CollectionId CollectionId = new CollectionId(Guid.NewGuid());
         private static readonly FileId FileId = new FileId(Guid.NewGuid());
         private static readonly DateTime TwoDaysFromNow = DateTime.UtcNow.AddDays(2);
+        private static readonly ValidNote Note = ValidNote.Parse("Hey peeps ;)");
         private Mock<ICommandHandler<PostNoteCommand>> postNote;
         private Mock<ICommandHandler<PostImageCommand>> postImage;
         private Mock<ICommandHandler<PostFileCommand>> postFile;
+        private Mock<ICommandHandler<ReviseNoteCommand>> reviseNote;
         private Mock<ICommandHandler<DeletePostCommand>> deletePost;
         private Mock<ICommandHandler<ReorderQueueCommand>> reorderQueue;
         private Mock<IQueryHandler<GetCreatorBacklogQuery, IReadOnlyList<BacklogPost>>> getCreatorBacklog;
@@ -53,6 +50,7 @@
             this.postNote = new Mock<ICommandHandler<PostNoteCommand>>();
             this.postImage = new Mock<ICommandHandler<PostImageCommand>>();
             this.postFile = new Mock<ICommandHandler<PostFileCommand>>();
+            this.reviseNote = new Mock<ICommandHandler<ReviseNoteCommand>>();
             this.deletePost = new Mock<ICommandHandler<DeletePostCommand>>();
             this.reorderQueue = new Mock<ICommandHandler<ReorderQueueCommand>>();
             this.getCreatorBacklog = new Mock<IQueryHandler<GetCreatorBacklogQuery, IReadOnlyList<BacklogPost>>>();
@@ -63,6 +61,7 @@
                 this.postNote.Object,
                 this.postImage.Object,
                 this.postFile.Object,
+                this.reviseNote.Object,
                 this.deletePost.Object,
                 this.reorderQueue.Object,
                 this.getCreatorBacklog.Object,
@@ -82,6 +81,22 @@
             this.postNote.Setup(v => v.HandleAsync(command)).Returns(Task.FromResult(0)).Verifiable();
 
             var result = await this.target.PostNote(data);
+
+            Assert.IsInstanceOfType(result, typeof(OkResult));
+            this.postNote.Verify();
+        }
+
+        [TestMethod]
+        public async Task WhenPuttingNote_ItShouldIssueReviseNoteCommand()
+        {
+            var data = new RevisedNoteData(ChannelId, Note.Value, TwoDaysFromNow);
+            var command = new ReviseNoteCommand(Requester, PostId, ChannelId, Note, TwoDaysFromNow);
+
+            this.requesterContext.Setup(v => v.GetRequester()).Returns(Requester);
+            this.guidCreator.Setup(_ => _.CreateSqlSequential()).Returns(PostId.Value);
+            this.reviseNote.Setup(v => v.HandleAsync(command)).Returns(Task.FromResult(0)).Verifiable();
+
+            var result = await this.target.PutNote(PostId.Value.EncodeGuid(), data);
 
             Assert.IsInstanceOfType(result, typeof(OkResult));
             this.postNote.Verify();

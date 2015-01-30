@@ -19,6 +19,7 @@
         private readonly ICommandHandler<PostNoteCommand> postNote;
         private readonly ICommandHandler<PostImageCommand> postImage;
         private readonly ICommandHandler<PostFileCommand> postFile;
+        private readonly ICommandHandler<ReviseNoteCommand> reviseNote;
         private readonly ICommandHandler<DeletePostCommand> deletePost;
         private readonly ICommandHandler<ReorderQueueCommand> reorderQueue;
         private readonly IQueryHandler<GetCreatorBacklogQuery, IReadOnlyList<BacklogPost>> getCreatorBacklog;
@@ -38,6 +39,26 @@
             await this.postNote.HandleAsync(new PostNoteCommand(
                 requester,
                 newPostId,
+                note.ChannelId,
+                note.Note,
+                note.ScheduledPostDate));
+
+            return this.Ok();
+        }
+
+        [Route("notes/{postId}")]
+        public async Task<IHttpActionResult> PutNote(string postId, [FromBody]RevisedNoteData noteData)
+        {
+            postId.AssertUrlParameterProvided("postId");
+            noteData.AssertBodyProvided("noteData");
+            var note = noteData.Parse();
+            var postIdObject = new PostId(postId.DecodeGuid());
+
+            var requester = this.requesterContext.GetRequester();
+
+            await this.reviseNote.HandleAsync(new ReviseNoteCommand(
+                requester,
+                postIdObject,
                 note.ChannelId,
                 note.Note,
                 note.ScheduledPostDate));
