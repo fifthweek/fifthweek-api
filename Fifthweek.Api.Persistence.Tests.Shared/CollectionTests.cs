@@ -57,6 +57,7 @@
             subscription.CreatorId = creator.Id;
 
             var channel = ChannelTests.UniqueEntity(random);
+            channel.Id = newChannelId;
             channel.Subscription = subscription;
             channel.SubscriptionId = subscription.Id;
 
