@@ -7,9 +7,13 @@
     using Fifthweek.Api.Posts.Shared;
     using Fifthweek.CodeGeneration;
 
-    [AutoEqualityMembers]
+    [AutoConstructor, AutoEqualityMembers]
     public partial class NewFileData
     {
+        public NewFileData()
+        {
+        }
+
         public CollectionId CollectionId { get; set; }
 
         public FileId FileId { get; set; }

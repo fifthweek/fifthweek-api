@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Linq;
 
-//// Generated on 30/01/2015 16:38:12 (UTC)
-//// Mapped solution in 3.21s
+//// Generated on 30/01/2015 17:05:28 (UTC)
+//// Mapped solution in 3.5s
 
 
 namespace Fifthweek.Api.Posts.Commands
@@ -14,7 +14,6 @@ namespace Fifthweek.Api.Posts.Commands
     using Fifthweek.CodeGeneration;
     using System.Threading.Tasks;
     using Fifthweek.Api.Core;
-    using Fifthweek.Api.FileManagement;
     using Fifthweek.Api.FileManagement.Shared;
     using Fifthweek.Api.Collections.Shared;
     using Fifthweek.Api.Channels.Shared;
@@ -53,7 +52,6 @@ namespace Fifthweek.Api.Posts.Commands
     using Fifthweek.CodeGeneration;
     using System.Threading.Tasks;
     using Fifthweek.Api.Core;
-    using Fifthweek.Api.FileManagement;
     using Fifthweek.Api.FileManagement.Shared;
     using Fifthweek.Api.Collections.Shared;
     using Fifthweek.Api.Channels.Shared;
@@ -106,7 +104,6 @@ namespace Fifthweek.Api.Posts.Commands
     using Fifthweek.CodeGeneration;
     using System.Threading.Tasks;
     using Fifthweek.Api.Core;
-    using Fifthweek.Api.FileManagement;
     using Fifthweek.Api.FileManagement.Shared;
     using Fifthweek.Api.Collections.Shared;
     using Fifthweek.Api.Channels.Shared;
@@ -170,7 +167,6 @@ namespace Fifthweek.Api.Posts.Commands
     using Fifthweek.CodeGeneration;
     using System.Threading.Tasks;
     using Fifthweek.Api.Core;
-    using Fifthweek.Api.FileManagement;
     using Fifthweek.Api.FileManagement.Shared;
     using Fifthweek.Api.Collections.Shared;
     using Fifthweek.Api.Channels.Shared;
@@ -230,7 +226,6 @@ namespace Fifthweek.Api.Posts.Commands
     using Fifthweek.CodeGeneration;
     using System.Threading.Tasks;
     using Fifthweek.Api.Core;
-    using Fifthweek.Api.FileManagement;
     using Fifthweek.Api.FileManagement.Shared;
     using Fifthweek.Api.Collections.Shared;
     using Fifthweek.Api.Channels.Shared;
@@ -294,7 +289,6 @@ namespace Fifthweek.Api.Posts.Commands
     using Fifthweek.CodeGeneration;
     using System.Threading.Tasks;
     using Fifthweek.Api.Core;
-    using Fifthweek.Api.FileManagement;
     using Fifthweek.Api.FileManagement.Shared;
     using Fifthweek.Api.Collections.Shared;
     using Fifthweek.Api.Channels.Shared;
@@ -354,7 +348,6 @@ namespace Fifthweek.Api.Posts.Commands
     using Fifthweek.CodeGeneration;
     using System.Threading.Tasks;
     using Fifthweek.Api.Core;
-    using Fifthweek.Api.FileManagement;
     using Fifthweek.Api.FileManagement.Shared;
     using Fifthweek.Api.Collections.Shared;
     using Fifthweek.Api.Channels.Shared;
@@ -409,7 +402,6 @@ namespace Fifthweek.Api.Posts.Commands
     using Fifthweek.CodeGeneration;
     using System.Threading.Tasks;
     using Fifthweek.Api.Core;
-    using Fifthweek.Api.FileManagement;
     using Fifthweek.Api.FileManagement.Shared;
     using Fifthweek.Api.Collections.Shared;
     using Fifthweek.Api.Channels.Shared;
@@ -455,7 +447,6 @@ namespace Fifthweek.Api.Posts.Commands
     using Fifthweek.CodeGeneration;
     using System.Threading.Tasks;
     using Fifthweek.Api.Core;
-    using Fifthweek.Api.FileManagement;
     using Fifthweek.Api.FileManagement.Shared;
     using Fifthweek.Api.Collections.Shared;
     using Fifthweek.Api.Channels.Shared;
@@ -501,7 +492,6 @@ namespace Fifthweek.Api.Posts.Commands
     using Fifthweek.CodeGeneration;
     using System.Threading.Tasks;
     using Fifthweek.Api.Core;
-    using Fifthweek.Api.FileManagement;
     using Fifthweek.Api.FileManagement.Shared;
     using Fifthweek.Api.Collections.Shared;
     using Fifthweek.Api.Channels.Shared;
@@ -531,35 +521,175 @@ namespace Fifthweek.Api.Posts.Commands
         }
     }
 }
+namespace Fifthweek.Api.Posts.Commands
+{
+    using System;
+    using System.Linq;
+    using Fifthweek.Api.Identity.Shared.Membership;
+    using Fifthweek.Api.Posts.Shared;
+    using Fifthweek.CodeGeneration;
+    using System.Threading.Tasks;
+    using Fifthweek.Api.Core;
+    using Fifthweek.Api.FileManagement.Shared;
+    using Fifthweek.Api.Collections.Shared;
+    using Fifthweek.Api.Channels.Shared;
+    using Fifthweek.Api.Persistence;
+    using System.Collections.Generic;
+    using System.Text;
+    using Dapper;
+
+    public partial class ReviseNoteCommand 
+    {
+        public ReviseNoteCommand(
+            Fifthweek.Api.Identity.Shared.Membership.Requester requester,
+            Fifthweek.Api.Posts.Shared.PostId postId,
+            Fifthweek.Api.Channels.Shared.ChannelId channelId,
+            Fifthweek.Api.Posts.Shared.ValidNote note,
+            System.Nullable<System.DateTime> scheduledPostDate)
+        {
+            if (requester == null)
+            {
+                throw new ArgumentNullException("requester");
+            }
+
+            if (postId == null)
+            {
+                throw new ArgumentNullException("postId");
+            }
+
+            if (channelId == null)
+            {
+                throw new ArgumentNullException("channelId");
+            }
+
+            if (note == null)
+            {
+                throw new ArgumentNullException("note");
+            }
+
+            this.Requester = requester;
+            this.PostId = postId;
+            this.ChannelId = channelId;
+            this.Note = note;
+            this.ScheduledPostDate = scheduledPostDate;
+        }
+    }
+}
 namespace Fifthweek.Api.Posts.Controllers
 {
     using System;
     using System.Linq;
-    using System.Collections.Generic;
     using System.Threading.Tasks;
     using System.Web.Http;
-    using Fifthweek.Api.Collections.Shared;
     using Fifthweek.Api.Core;
     using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.Api.Posts.Commands;
-    using Fifthweek.Api.Posts.Queries;
     using Fifthweek.Api.Posts.Shared;
     using Fifthweek.CodeGeneration;
+    using System.Collections.Generic;
+    using Fifthweek.Api.Collections.Shared;
+    using Fifthweek.Api.Posts.Queries;
+    using Fifthweek.Api.Channels.Shared;
     using Fifthweek.Shared;
     using Fifthweek.Api.FileManagement.Shared;
-    using Fifthweek.Api.Channels.Shared;
 
-    public partial class PostController 
+    public partial class FilePostController 
     {
-        public PostController(
-            Fifthweek.Api.Core.ICommandHandler<Fifthweek.Api.Posts.Commands.PostNoteCommand> postNote,
-            Fifthweek.Api.Core.ICommandHandler<Fifthweek.Api.Posts.Commands.PostImageCommand> postImage,
+        public FilePostController(
             Fifthweek.Api.Core.ICommandHandler<Fifthweek.Api.Posts.Commands.PostFileCommand> postFile,
+            Fifthweek.Api.Identity.Shared.Membership.IRequesterContext requesterContext,
+            Fifthweek.Api.Core.IGuidCreator guidCreator)
+        {
+            if (postFile == null)
+            {
+                throw new ArgumentNullException("postFile");
+            }
+
+            if (requesterContext == null)
+            {
+                throw new ArgumentNullException("requesterContext");
+            }
+
+            if (guidCreator == null)
+            {
+                throw new ArgumentNullException("guidCreator");
+            }
+
+            this.postFile = postFile;
+            this.requesterContext = requesterContext;
+            this.guidCreator = guidCreator;
+        }
+    }
+}
+namespace Fifthweek.Api.Posts.Controllers
+{
+    using System;
+    using System.Linq;
+    using System.Threading.Tasks;
+    using System.Web.Http;
+    using Fifthweek.Api.Core;
+    using Fifthweek.Api.Identity.Shared.Membership;
+    using Fifthweek.Api.Posts.Commands;
+    using Fifthweek.Api.Posts.Shared;
+    using Fifthweek.CodeGeneration;
+    using System.Collections.Generic;
+    using Fifthweek.Api.Collections.Shared;
+    using Fifthweek.Api.Posts.Queries;
+    using Fifthweek.Api.Channels.Shared;
+    using Fifthweek.Shared;
+    using Fifthweek.Api.FileManagement.Shared;
+
+    public partial class ImagePostController 
+    {
+        public ImagePostController(
+            Fifthweek.Api.Core.ICommandHandler<Fifthweek.Api.Posts.Commands.PostImageCommand> postImage,
+            Fifthweek.Api.Identity.Shared.Membership.IRequesterContext requesterContext,
+            Fifthweek.Api.Core.IGuidCreator guidCreator)
+        {
+            if (postImage == null)
+            {
+                throw new ArgumentNullException("postImage");
+            }
+
+            if (requesterContext == null)
+            {
+                throw new ArgumentNullException("requesterContext");
+            }
+
+            if (guidCreator == null)
+            {
+                throw new ArgumentNullException("guidCreator");
+            }
+
+            this.postImage = postImage;
+            this.requesterContext = requesterContext;
+            this.guidCreator = guidCreator;
+        }
+    }
+}
+namespace Fifthweek.Api.Posts.Controllers
+{
+    using System;
+    using System.Linq;
+    using System.Threading.Tasks;
+    using System.Web.Http;
+    using Fifthweek.Api.Core;
+    using Fifthweek.Api.Identity.Shared.Membership;
+    using Fifthweek.Api.Posts.Commands;
+    using Fifthweek.Api.Posts.Shared;
+    using Fifthweek.CodeGeneration;
+    using System.Collections.Generic;
+    using Fifthweek.Api.Collections.Shared;
+    using Fifthweek.Api.Posts.Queries;
+    using Fifthweek.Api.Channels.Shared;
+    using Fifthweek.Shared;
+    using Fifthweek.Api.FileManagement.Shared;
+
+    public partial class NotePostController 
+    {
+        public NotePostController(
+            Fifthweek.Api.Core.ICommandHandler<Fifthweek.Api.Posts.Commands.PostNoteCommand> postNote,
             Fifthweek.Api.Core.ICommandHandler<Fifthweek.Api.Posts.Commands.ReviseNoteCommand> reviseNote,
-            Fifthweek.Api.Core.ICommandHandler<Fifthweek.Api.Posts.Commands.DeletePostCommand> deletePost,
-            Fifthweek.Api.Core.ICommandHandler<Fifthweek.Api.Posts.Commands.ReorderQueueCommand> reorderQueue,
-            Fifthweek.Api.Core.IQueryHandler<Fifthweek.Api.Posts.Queries.GetCreatorBacklogQuery,System.Collections.Generic.IReadOnlyList<Fifthweek.Api.Posts.Queries.BacklogPost>> getCreatorBacklog,
-            Fifthweek.Api.Core.IQueryHandler<Fifthweek.Api.Posts.Queries.GetCreatorNewsfeedQuery,System.Collections.Generic.IReadOnlyList<Fifthweek.Api.Posts.Queries.NewsfeedPost>> getCreatorNewsfeed,
             Fifthweek.Api.Identity.Shared.Membership.IRequesterContext requesterContext,
             Fifthweek.Api.Core.IGuidCreator guidCreator)
         {
@@ -568,21 +698,55 @@ namespace Fifthweek.Api.Posts.Controllers
                 throw new ArgumentNullException("postNote");
             }
 
-            if (postImage == null)
-            {
-                throw new ArgumentNullException("postImage");
-            }
-
-            if (postFile == null)
-            {
-                throw new ArgumentNullException("postFile");
-            }
-
             if (reviseNote == null)
             {
                 throw new ArgumentNullException("reviseNote");
             }
 
+            if (requesterContext == null)
+            {
+                throw new ArgumentNullException("requesterContext");
+            }
+
+            if (guidCreator == null)
+            {
+                throw new ArgumentNullException("guidCreator");
+            }
+
+            this.postNote = postNote;
+            this.reviseNote = reviseNote;
+            this.requesterContext = requesterContext;
+            this.guidCreator = guidCreator;
+        }
+    }
+}
+namespace Fifthweek.Api.Posts.Controllers
+{
+    using System;
+    using System.Linq;
+    using System.Threading.Tasks;
+    using System.Web.Http;
+    using Fifthweek.Api.Core;
+    using Fifthweek.Api.Identity.Shared.Membership;
+    using Fifthweek.Api.Posts.Commands;
+    using Fifthweek.Api.Posts.Shared;
+    using Fifthweek.CodeGeneration;
+    using System.Collections.Generic;
+    using Fifthweek.Api.Collections.Shared;
+    using Fifthweek.Api.Posts.Queries;
+    using Fifthweek.Api.Channels.Shared;
+    using Fifthweek.Shared;
+    using Fifthweek.Api.FileManagement.Shared;
+
+    public partial class PostController 
+    {
+        public PostController(
+            Fifthweek.Api.Core.ICommandHandler<Fifthweek.Api.Posts.Commands.DeletePostCommand> deletePost,
+            Fifthweek.Api.Core.ICommandHandler<Fifthweek.Api.Posts.Commands.ReorderQueueCommand> reorderQueue,
+            Fifthweek.Api.Core.IQueryHandler<Fifthweek.Api.Posts.Queries.GetCreatorBacklogQuery,System.Collections.Generic.IReadOnlyList<Fifthweek.Api.Posts.Queries.BacklogPost>> getCreatorBacklog,
+            Fifthweek.Api.Core.IQueryHandler<Fifthweek.Api.Posts.Queries.GetCreatorNewsfeedQuery,System.Collections.Generic.IReadOnlyList<Fifthweek.Api.Posts.Queries.NewsfeedPost>> getCreatorNewsfeed,
+            Fifthweek.Api.Identity.Shared.Membership.IRequesterContext requesterContext)
+        {
             if (deletePost == null)
             {
                 throw new ArgumentNullException("deletePost");
@@ -608,21 +772,52 @@ namespace Fifthweek.Api.Posts.Controllers
                 throw new ArgumentNullException("requesterContext");
             }
 
-            if (guidCreator == null)
-            {
-                throw new ArgumentNullException("guidCreator");
-            }
-
-            this.postNote = postNote;
-            this.postImage = postImage;
-            this.postFile = postFile;
-            this.reviseNote = reviseNote;
             this.deletePost = deletePost;
             this.reorderQueue = reorderQueue;
             this.getCreatorBacklog = getCreatorBacklog;
             this.getCreatorNewsfeed = getCreatorNewsfeed;
             this.requesterContext = requesterContext;
-            this.guidCreator = guidCreator;
+        }
+    }
+}
+namespace Fifthweek.Api.Posts.Controllers
+{
+    using System;
+    using System.Linq;
+    using System.Threading.Tasks;
+    using System.Web.Http;
+    using Fifthweek.Api.Core;
+    using Fifthweek.Api.Identity.Shared.Membership;
+    using Fifthweek.Api.Posts.Commands;
+    using Fifthweek.Api.Posts.Shared;
+    using Fifthweek.CodeGeneration;
+    using System.Collections.Generic;
+    using Fifthweek.Api.Collections.Shared;
+    using Fifthweek.Api.Posts.Queries;
+    using Fifthweek.Api.Channels.Shared;
+    using Fifthweek.Shared;
+    using Fifthweek.Api.FileManagement.Shared;
+
+    public partial class RevisedNoteData 
+    {
+        public RevisedNoteData(
+            Fifthweek.Api.Channels.Shared.ChannelId channelId,
+            System.String note,
+            System.Nullable<System.DateTime> scheduledPostDate)
+        {
+            if (channelId == null)
+            {
+                throw new ArgumentNullException("channelId");
+            }
+
+            if (note == null)
+            {
+                throw new ArgumentNullException("note");
+            }
+
+            this.ChannelId = channelId;
+            this.Note = note;
+            this.ScheduledPostDate = scheduledPostDate;
         }
     }
 }
@@ -630,8 +825,8 @@ namespace Fifthweek.Api.Posts
 {
     using System;
     using System.Linq;
-    using Dapper;
     using System.Threading.Tasks;
+    using Dapper;
     using Fifthweek.Api.Persistence;
     using Fifthweek.CodeGeneration;
     using Fifthweek.Api.Core;
@@ -661,8 +856,8 @@ namespace Fifthweek.Api.Posts
 {
     using System;
     using System.Linq;
-    using Dapper;
     using System.Threading.Tasks;
+    using Dapper;
     using Fifthweek.Api.Persistence;
     using Fifthweek.CodeGeneration;
     using Fifthweek.Api.Core;
@@ -699,8 +894,8 @@ namespace Fifthweek.Api.Posts
 {
     using System;
     using System.Linq;
-    using Dapper;
     using System.Threading.Tasks;
+    using Dapper;
     using Fifthweek.Api.Persistence;
     using Fifthweek.CodeGeneration;
     using Fifthweek.Api.Core;
@@ -730,8 +925,8 @@ namespace Fifthweek.Api.Posts
 {
     using System;
     using System.Linq;
-    using Dapper;
     using System.Threading.Tasks;
+    using Dapper;
     using Fifthweek.Api.Persistence;
     using Fifthweek.CodeGeneration;
     using Fifthweek.Api.Core;
@@ -761,8 +956,8 @@ namespace Fifthweek.Api.Posts
 {
     using System;
     using System.Linq;
-    using Dapper;
     using System.Threading.Tasks;
+    using Dapper;
     using Fifthweek.Api.Persistence;
     using Fifthweek.CodeGeneration;
     using Fifthweek.Api.Core;
@@ -792,8 +987,8 @@ namespace Fifthweek.Api.Posts
 {
     using System;
     using System.Linq;
-    using Dapper;
     using System.Threading.Tasks;
+    using Dapper;
     using Fifthweek.Api.Persistence;
     using Fifthweek.CodeGeneration;
     using Fifthweek.Api.Core;
@@ -1111,58 +1306,53 @@ namespace Fifthweek.Api.Posts.Queries
         }
     }
 }
-namespace Fifthweek.Api.Posts.Commands
+namespace Fifthweek.Api.Posts.Controllers
 {
     using System;
     using System.Linq;
+    using System.Threading.Tasks;
+    using System.Web.Http;
+    using Fifthweek.Api.Core;
     using Fifthweek.Api.Identity.Shared.Membership;
+    using Fifthweek.Api.Posts.Commands;
     using Fifthweek.Api.Posts.Shared;
     using Fifthweek.CodeGeneration;
-    using System.Threading.Tasks;
-    using Fifthweek.Api.Core;
-    using Fifthweek.Api.FileManagement;
-    using Fifthweek.Api.FileManagement.Shared;
-    using Fifthweek.Api.Collections.Shared;
-    using Fifthweek.Api.Channels.Shared;
-    using Fifthweek.Api.Persistence;
     using System.Collections.Generic;
-    using System.Text;
-    using Dapper;
+    using Fifthweek.Api.Collections.Shared;
+    using Fifthweek.Api.Posts.Queries;
+    using Fifthweek.Api.Channels.Shared;
+    using Fifthweek.Shared;
+    using Fifthweek.Api.FileManagement.Shared;
 
-    public partial class ReviseNoteCommand 
+    public partial class NewFileData 
     {
-        public ReviseNoteCommand(
-            Fifthweek.Api.Identity.Shared.Membership.Requester requester,
-            Fifthweek.Api.Posts.Shared.PostId postId,
-            Fifthweek.Api.Channels.Shared.ChannelId channelId,
-            Fifthweek.Api.Posts.Shared.ValidNote note,
-            System.Nullable<System.DateTime> scheduledPostDate)
+        public NewFileData(
+            Fifthweek.Api.Collections.Shared.CollectionId collectionId,
+            Fifthweek.Api.FileManagement.Shared.FileId fileId,
+            System.String comment,
+            System.Nullable<System.DateTime> scheduledPostDate,
+            System.Boolean isQueued)
         {
-            if (requester == null)
+            if (collectionId == null)
             {
-                throw new ArgumentNullException("requester");
+                throw new ArgumentNullException("collectionId");
             }
 
-            if (postId == null)
+            if (fileId == null)
             {
-                throw new ArgumentNullException("postId");
+                throw new ArgumentNullException("fileId");
             }
 
-            if (channelId == null)
+            if (isQueued == null)
             {
-                throw new ArgumentNullException("channelId");
+                throw new ArgumentNullException("isQueued");
             }
 
-            if (note == null)
-            {
-                throw new ArgumentNullException("note");
-            }
-
-            this.Requester = requester;
-            this.PostId = postId;
-            this.ChannelId = channelId;
-            this.Note = note;
+            this.CollectionId = collectionId;
+            this.FileId = fileId;
+            this.Comment = comment;
             this.ScheduledPostDate = scheduledPostDate;
+            this.IsQueued = isQueued;
         }
     }
 }
@@ -1170,23 +1360,73 @@ namespace Fifthweek.Api.Posts.Controllers
 {
     using System;
     using System.Linq;
-    using System.Collections.Generic;
     using System.Threading.Tasks;
     using System.Web.Http;
-    using Fifthweek.Api.Collections.Shared;
     using Fifthweek.Api.Core;
     using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.Api.Posts.Commands;
-    using Fifthweek.Api.Posts.Queries;
     using Fifthweek.Api.Posts.Shared;
     using Fifthweek.CodeGeneration;
+    using System.Collections.Generic;
+    using Fifthweek.Api.Collections.Shared;
+    using Fifthweek.Api.Posts.Queries;
+    using Fifthweek.Api.Channels.Shared;
     using Fifthweek.Shared;
     using Fifthweek.Api.FileManagement.Shared;
-    using Fifthweek.Api.Channels.Shared;
 
-    public partial class RevisedNoteData 
+    public partial class NewImageData 
     {
-        public RevisedNoteData(
+        public NewImageData(
+            Fifthweek.Api.Collections.Shared.CollectionId collectionId,
+            Fifthweek.Api.FileManagement.Shared.FileId imageFileId,
+            System.String comment,
+            System.Nullable<System.DateTime> scheduledPostDate,
+            System.Boolean isQueued)
+        {
+            if (collectionId == null)
+            {
+                throw new ArgumentNullException("collectionId");
+            }
+
+            if (imageFileId == null)
+            {
+                throw new ArgumentNullException("imageFileId");
+            }
+
+            if (isQueued == null)
+            {
+                throw new ArgumentNullException("isQueued");
+            }
+
+            this.CollectionId = collectionId;
+            this.ImageFileId = imageFileId;
+            this.Comment = comment;
+            this.ScheduledPostDate = scheduledPostDate;
+            this.IsQueued = isQueued;
+        }
+    }
+}
+namespace Fifthweek.Api.Posts.Controllers
+{
+    using System;
+    using System.Linq;
+    using System.Threading.Tasks;
+    using System.Web.Http;
+    using Fifthweek.Api.Core;
+    using Fifthweek.Api.Identity.Shared.Membership;
+    using Fifthweek.Api.Posts.Commands;
+    using Fifthweek.Api.Posts.Shared;
+    using Fifthweek.CodeGeneration;
+    using System.Collections.Generic;
+    using Fifthweek.Api.Collections.Shared;
+    using Fifthweek.Api.Posts.Queries;
+    using Fifthweek.Api.Channels.Shared;
+    using Fifthweek.Shared;
+    using Fifthweek.Api.FileManagement.Shared;
+
+    public partial class NewNoteData 
+    {
+        public NewNoteData(
             Fifthweek.Api.Channels.Shared.ChannelId channelId,
             System.String note,
             System.Nullable<System.DateTime> scheduledPostDate)
@@ -1217,7 +1457,6 @@ namespace Fifthweek.Api.Posts.Commands
     using Fifthweek.CodeGeneration;
     using System.Threading.Tasks;
     using Fifthweek.Api.Core;
-    using Fifthweek.Api.FileManagement;
     using Fifthweek.Api.FileManagement.Shared;
     using Fifthweek.Api.Collections.Shared;
     using Fifthweek.Api.Channels.Shared;
@@ -1289,7 +1528,6 @@ namespace Fifthweek.Api.Posts.Commands
     using Fifthweek.CodeGeneration;
     using System.Threading.Tasks;
     using Fifthweek.Api.Core;
-    using Fifthweek.Api.FileManagement;
     using Fifthweek.Api.FileManagement.Shared;
     using Fifthweek.Api.Collections.Shared;
     using Fifthweek.Api.Channels.Shared;
@@ -1391,7 +1629,6 @@ namespace Fifthweek.Api.Posts.Commands
     using Fifthweek.CodeGeneration;
     using System.Threading.Tasks;
     using Fifthweek.Api.Core;
-    using Fifthweek.Api.FileManagement;
     using Fifthweek.Api.FileManagement.Shared;
     using Fifthweek.Api.Collections.Shared;
     using Fifthweek.Api.Channels.Shared;
@@ -1493,7 +1730,6 @@ namespace Fifthweek.Api.Posts.Commands
     using Fifthweek.CodeGeneration;
     using System.Threading.Tasks;
     using Fifthweek.Api.Core;
-    using Fifthweek.Api.FileManagement;
     using Fifthweek.Api.FileManagement.Shared;
     using Fifthweek.Api.Collections.Shared;
     using Fifthweek.Api.Channels.Shared;
@@ -1583,7 +1819,6 @@ namespace Fifthweek.Api.Posts.Commands
     using Fifthweek.CodeGeneration;
     using System.Threading.Tasks;
     using Fifthweek.Api.Core;
-    using Fifthweek.Api.FileManagement;
     using Fifthweek.Api.FileManagement.Shared;
     using Fifthweek.Api.Collections.Shared;
     using Fifthweek.Api.Channels.Shared;
@@ -1659,6 +1894,173 @@ namespace Fifthweek.Api.Posts.Commands
                 }
             }
             else if (this.NewPartialQueueOrder != null || other.NewPartialQueueOrder != null)
+            {
+                return false;
+            }
+        
+            return true;
+        }
+    }
+}
+namespace Fifthweek.Api.Posts.Commands
+{
+    using System;
+    using System.Linq;
+    using Fifthweek.Api.Identity.Shared.Membership;
+    using Fifthweek.Api.Posts.Shared;
+    using Fifthweek.CodeGeneration;
+    using System.Threading.Tasks;
+    using Fifthweek.Api.Core;
+    using Fifthweek.Api.FileManagement.Shared;
+    using Fifthweek.Api.Collections.Shared;
+    using Fifthweek.Api.Channels.Shared;
+    using Fifthweek.Api.Persistence;
+    using System.Collections.Generic;
+    using System.Text;
+    using Dapper;
+
+    public partial class ReviseNoteCommand 
+    {
+        public override string ToString()
+        {
+            return string.Format("ReviseNoteCommand({0}, {1}, {2}, {3}, {4})", this.Requester == null ? "null" : this.Requester.ToString(), this.PostId == null ? "null" : this.PostId.ToString(), this.ChannelId == null ? "null" : this.ChannelId.ToString(), this.Note == null ? "null" : this.Note.ToString(), this.ScheduledPostDate == null ? "null" : this.ScheduledPostDate.ToString());
+        }
+        
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj))
+            {
+                return false;
+            }
+        
+            if (ReferenceEquals(this, obj))
+            {
+                return true;
+            }
+        
+            if (obj.GetType() != this.GetType())
+            {
+                return false;
+            }
+        
+            return this.Equals((ReviseNoteCommand)obj);
+        }
+        
+        public override int GetHashCode()
+        {
+            unchecked
+            {
+                int hashCode = 0;
+                hashCode = (hashCode * 397) ^ (this.Requester != null ? this.Requester.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.PostId != null ? this.PostId.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.ChannelId != null ? this.ChannelId.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.Note != null ? this.Note.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.ScheduledPostDate != null ? this.ScheduledPostDate.GetHashCode() : 0);
+                return hashCode;
+            }
+        }
+        
+        protected bool Equals(ReviseNoteCommand other)
+        {
+            if (!object.Equals(this.Requester, other.Requester))
+            {
+                return false;
+            }
+        
+            if (!object.Equals(this.PostId, other.PostId))
+            {
+                return false;
+            }
+        
+            if (!object.Equals(this.ChannelId, other.ChannelId))
+            {
+                return false;
+            }
+        
+            if (!object.Equals(this.Note, other.Note))
+            {
+                return false;
+            }
+        
+            if (!object.Equals(this.ScheduledPostDate, other.ScheduledPostDate))
+            {
+                return false;
+            }
+        
+            return true;
+        }
+    }
+}
+namespace Fifthweek.Api.Posts.Controllers
+{
+    using System;
+    using System.Linq;
+    using System.Threading.Tasks;
+    using System.Web.Http;
+    using Fifthweek.Api.Core;
+    using Fifthweek.Api.Identity.Shared.Membership;
+    using Fifthweek.Api.Posts.Commands;
+    using Fifthweek.Api.Posts.Shared;
+    using Fifthweek.CodeGeneration;
+    using System.Collections.Generic;
+    using Fifthweek.Api.Collections.Shared;
+    using Fifthweek.Api.Posts.Queries;
+    using Fifthweek.Api.Channels.Shared;
+    using Fifthweek.Shared;
+    using Fifthweek.Api.FileManagement.Shared;
+
+    public partial class RevisedNoteData 
+    {
+        public override string ToString()
+        {
+            return string.Format("RevisedNoteData({0}, \"{1}\", {2})", this.ChannelId == null ? "null" : this.ChannelId.ToString(), this.Note == null ? "null" : this.Note.ToString(), this.ScheduledPostDate == null ? "null" : this.ScheduledPostDate.ToString());
+        }
+        
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj))
+            {
+                return false;
+            }
+        
+            if (ReferenceEquals(this, obj))
+            {
+                return true;
+            }
+        
+            if (obj.GetType() != this.GetType())
+            {
+                return false;
+            }
+        
+            return this.Equals((RevisedNoteData)obj);
+        }
+        
+        public override int GetHashCode()
+        {
+            unchecked
+            {
+                int hashCode = 0;
+                hashCode = (hashCode * 397) ^ (this.ChannelId != null ? this.ChannelId.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.Note != null ? this.Note.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.ScheduledPostDate != null ? this.ScheduledPostDate.GetHashCode() : 0);
+                return hashCode;
+            }
+        }
+        
+        protected bool Equals(RevisedNoteData other)
+        {
+            if (!object.Equals(this.ChannelId, other.ChannelId))
+            {
+                return false;
+            }
+        
+            if (!object.Equals(this.Note, other.Note))
+            {
+                return false;
+            }
+        
+            if (!object.Equals(this.ScheduledPostDate, other.ScheduledPostDate))
             {
                 return false;
             }
@@ -2033,185 +2435,23 @@ namespace Fifthweek.Api.Posts.Queries
         }
     }
 }
-namespace Fifthweek.Api.Posts.Commands
-{
-    using System;
-    using System.Linq;
-    using Fifthweek.Api.Identity.Shared.Membership;
-    using Fifthweek.Api.Posts.Shared;
-    using Fifthweek.CodeGeneration;
-    using System.Threading.Tasks;
-    using Fifthweek.Api.Core;
-    using Fifthweek.Api.FileManagement;
-    using Fifthweek.Api.FileManagement.Shared;
-    using Fifthweek.Api.Collections.Shared;
-    using Fifthweek.Api.Channels.Shared;
-    using Fifthweek.Api.Persistence;
-    using System.Collections.Generic;
-    using System.Text;
-    using Dapper;
-
-    public partial class ReviseNoteCommand 
-    {
-        public override string ToString()
-        {
-            return string.Format("ReviseNoteCommand({0}, {1}, {2}, {3}, {4})", this.Requester == null ? "null" : this.Requester.ToString(), this.PostId == null ? "null" : this.PostId.ToString(), this.ChannelId == null ? "null" : this.ChannelId.ToString(), this.Note == null ? "null" : this.Note.ToString(), this.ScheduledPostDate == null ? "null" : this.ScheduledPostDate.ToString());
-        }
-        
-        public override bool Equals(object obj)
-        {
-            if (ReferenceEquals(null, obj))
-            {
-                return false;
-            }
-        
-            if (ReferenceEquals(this, obj))
-            {
-                return true;
-            }
-        
-            if (obj.GetType() != this.GetType())
-            {
-                return false;
-            }
-        
-            return this.Equals((ReviseNoteCommand)obj);
-        }
-        
-        public override int GetHashCode()
-        {
-            unchecked
-            {
-                int hashCode = 0;
-                hashCode = (hashCode * 397) ^ (this.Requester != null ? this.Requester.GetHashCode() : 0);
-                hashCode = (hashCode * 397) ^ (this.PostId != null ? this.PostId.GetHashCode() : 0);
-                hashCode = (hashCode * 397) ^ (this.ChannelId != null ? this.ChannelId.GetHashCode() : 0);
-                hashCode = (hashCode * 397) ^ (this.Note != null ? this.Note.GetHashCode() : 0);
-                hashCode = (hashCode * 397) ^ (this.ScheduledPostDate != null ? this.ScheduledPostDate.GetHashCode() : 0);
-                return hashCode;
-            }
-        }
-        
-        protected bool Equals(ReviseNoteCommand other)
-        {
-            if (!object.Equals(this.Requester, other.Requester))
-            {
-                return false;
-            }
-        
-            if (!object.Equals(this.PostId, other.PostId))
-            {
-                return false;
-            }
-        
-            if (!object.Equals(this.ChannelId, other.ChannelId))
-            {
-                return false;
-            }
-        
-            if (!object.Equals(this.Note, other.Note))
-            {
-                return false;
-            }
-        
-            if (!object.Equals(this.ScheduledPostDate, other.ScheduledPostDate))
-            {
-                return false;
-            }
-        
-            return true;
-        }
-    }
-}
 namespace Fifthweek.Api.Posts.Controllers
 {
     using System;
     using System.Linq;
-    using System.Collections.Generic;
     using System.Threading.Tasks;
     using System.Web.Http;
-    using Fifthweek.Api.Collections.Shared;
     using Fifthweek.Api.Core;
     using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.Api.Posts.Commands;
-    using Fifthweek.Api.Posts.Queries;
     using Fifthweek.Api.Posts.Shared;
     using Fifthweek.CodeGeneration;
-    using Fifthweek.Shared;
-    using Fifthweek.Api.FileManagement.Shared;
-    using Fifthweek.Api.Channels.Shared;
-
-    public partial class CreatorNewsfeedPaginationData 
-    {
-        public override string ToString()
-        {
-            return string.Format("CreatorNewsfeedPaginationData({0}, {1})", this.StartIndex == null ? "null" : this.StartIndex.ToString(), this.Count == null ? "null" : this.Count.ToString());
-        }
-        
-        public override bool Equals(object obj)
-        {
-            if (ReferenceEquals(null, obj))
-            {
-                return false;
-            }
-        
-            if (ReferenceEquals(this, obj))
-            {
-                return true;
-            }
-        
-            if (obj.GetType() != this.GetType())
-            {
-                return false;
-            }
-        
-            return this.Equals((CreatorNewsfeedPaginationData)obj);
-        }
-        
-        public override int GetHashCode()
-        {
-            unchecked
-            {
-                int hashCode = 0;
-                hashCode = (hashCode * 397) ^ (this.StartIndex != null ? this.StartIndex.GetHashCode() : 0);
-                hashCode = (hashCode * 397) ^ (this.Count != null ? this.Count.GetHashCode() : 0);
-                return hashCode;
-            }
-        }
-        
-        protected bool Equals(CreatorNewsfeedPaginationData other)
-        {
-            if (!object.Equals(this.StartIndex, other.StartIndex))
-            {
-                return false;
-            }
-        
-            if (!object.Equals(this.Count, other.Count))
-            {
-                return false;
-            }
-        
-            return true;
-        }
-    }
-}
-namespace Fifthweek.Api.Posts.Controllers
-{
-    using System;
-    using System.Linq;
     using System.Collections.Generic;
-    using System.Threading.Tasks;
-    using System.Web.Http;
     using Fifthweek.Api.Collections.Shared;
-    using Fifthweek.Api.Core;
-    using Fifthweek.Api.Identity.Shared.Membership;
-    using Fifthweek.Api.Posts.Commands;
     using Fifthweek.Api.Posts.Queries;
-    using Fifthweek.Api.Posts.Shared;
-    using Fifthweek.CodeGeneration;
+    using Fifthweek.Api.Channels.Shared;
     using Fifthweek.Shared;
     using Fifthweek.Api.FileManagement.Shared;
-    using Fifthweek.Api.Channels.Shared;
 
     public partial class NewFileData 
     {
@@ -2289,19 +2529,91 @@ namespace Fifthweek.Api.Posts.Controllers
 {
     using System;
     using System.Linq;
-    using System.Collections.Generic;
     using System.Threading.Tasks;
     using System.Web.Http;
-    using Fifthweek.Api.Collections.Shared;
     using Fifthweek.Api.Core;
     using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.Api.Posts.Commands;
-    using Fifthweek.Api.Posts.Queries;
     using Fifthweek.Api.Posts.Shared;
     using Fifthweek.CodeGeneration;
+    using System.Collections.Generic;
+    using Fifthweek.Api.Collections.Shared;
+    using Fifthweek.Api.Posts.Queries;
+    using Fifthweek.Api.Channels.Shared;
     using Fifthweek.Shared;
     using Fifthweek.Api.FileManagement.Shared;
+
+    public partial class CreatorNewsfeedPaginationData 
+    {
+        public override string ToString()
+        {
+            return string.Format("CreatorNewsfeedPaginationData({0}, {1})", this.StartIndex == null ? "null" : this.StartIndex.ToString(), this.Count == null ? "null" : this.Count.ToString());
+        }
+        
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj))
+            {
+                return false;
+            }
+        
+            if (ReferenceEquals(this, obj))
+            {
+                return true;
+            }
+        
+            if (obj.GetType() != this.GetType())
+            {
+                return false;
+            }
+        
+            return this.Equals((CreatorNewsfeedPaginationData)obj);
+        }
+        
+        public override int GetHashCode()
+        {
+            unchecked
+            {
+                int hashCode = 0;
+                hashCode = (hashCode * 397) ^ (this.StartIndex != null ? this.StartIndex.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.Count != null ? this.Count.GetHashCode() : 0);
+                return hashCode;
+            }
+        }
+        
+        protected bool Equals(CreatorNewsfeedPaginationData other)
+        {
+            if (!object.Equals(this.StartIndex, other.StartIndex))
+            {
+                return false;
+            }
+        
+            if (!object.Equals(this.Count, other.Count))
+            {
+                return false;
+            }
+        
+            return true;
+        }
+    }
+}
+namespace Fifthweek.Api.Posts.Controllers
+{
+    using System;
+    using System.Linq;
+    using System.Threading.Tasks;
+    using System.Web.Http;
+    using Fifthweek.Api.Core;
+    using Fifthweek.Api.Identity.Shared.Membership;
+    using Fifthweek.Api.Posts.Commands;
+    using Fifthweek.Api.Posts.Shared;
+    using Fifthweek.CodeGeneration;
+    using System.Collections.Generic;
+    using Fifthweek.Api.Collections.Shared;
+    using Fifthweek.Api.Posts.Queries;
     using Fifthweek.Api.Channels.Shared;
+    using Fifthweek.Shared;
+    using Fifthweek.Api.FileManagement.Shared;
 
     public partial class NewImageData 
     {
@@ -2379,19 +2691,19 @@ namespace Fifthweek.Api.Posts.Controllers
 {
     using System;
     using System.Linq;
-    using System.Collections.Generic;
     using System.Threading.Tasks;
     using System.Web.Http;
-    using Fifthweek.Api.Collections.Shared;
     using Fifthweek.Api.Core;
     using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.Api.Posts.Commands;
-    using Fifthweek.Api.Posts.Queries;
     using Fifthweek.Api.Posts.Shared;
     using Fifthweek.CodeGeneration;
+    using System.Collections.Generic;
+    using Fifthweek.Api.Collections.Shared;
+    using Fifthweek.Api.Posts.Queries;
+    using Fifthweek.Api.Channels.Shared;
     using Fifthweek.Shared;
     using Fifthweek.Api.FileManagement.Shared;
-    using Fifthweek.Api.Channels.Shared;
 
     public partial class NewNoteData 
     {
@@ -2433,84 +2745,6 @@ namespace Fifthweek.Api.Posts.Controllers
         }
         
         protected bool Equals(NewNoteData other)
-        {
-            if (!object.Equals(this.ChannelId, other.ChannelId))
-            {
-                return false;
-            }
-        
-            if (!object.Equals(this.Note, other.Note))
-            {
-                return false;
-            }
-        
-            if (!object.Equals(this.ScheduledPostDate, other.ScheduledPostDate))
-            {
-                return false;
-            }
-        
-            return true;
-        }
-    }
-}
-namespace Fifthweek.Api.Posts.Controllers
-{
-    using System;
-    using System.Linq;
-    using System.Collections.Generic;
-    using System.Threading.Tasks;
-    using System.Web.Http;
-    using Fifthweek.Api.Collections.Shared;
-    using Fifthweek.Api.Core;
-    using Fifthweek.Api.Identity.Shared.Membership;
-    using Fifthweek.Api.Posts.Commands;
-    using Fifthweek.Api.Posts.Queries;
-    using Fifthweek.Api.Posts.Shared;
-    using Fifthweek.CodeGeneration;
-    using Fifthweek.Shared;
-    using Fifthweek.Api.FileManagement.Shared;
-    using Fifthweek.Api.Channels.Shared;
-
-    public partial class RevisedNoteData 
-    {
-        public override string ToString()
-        {
-            return string.Format("RevisedNoteData({0}, \"{1}\", {2})", this.ChannelId == null ? "null" : this.ChannelId.ToString(), this.Note == null ? "null" : this.Note.ToString(), this.ScheduledPostDate == null ? "null" : this.ScheduledPostDate.ToString());
-        }
-        
-        public override bool Equals(object obj)
-        {
-            if (ReferenceEquals(null, obj))
-            {
-                return false;
-            }
-        
-            if (ReferenceEquals(this, obj))
-            {
-                return true;
-            }
-        
-            if (obj.GetType() != this.GetType())
-            {
-                return false;
-            }
-        
-            return this.Equals((RevisedNoteData)obj);
-        }
-        
-        public override int GetHashCode()
-        {
-            unchecked
-            {
-                int hashCode = 0;
-                hashCode = (hashCode * 397) ^ (this.ChannelId != null ? this.ChannelId.GetHashCode() : 0);
-                hashCode = (hashCode * 397) ^ (this.Note != null ? this.Note.GetHashCode() : 0);
-                hashCode = (hashCode * 397) ^ (this.ScheduledPostDate != null ? this.ScheduledPostDate.GetHashCode() : 0);
-                return hashCode;
-            }
-        }
-        
-        protected bool Equals(RevisedNoteData other)
         {
             if (!object.Equals(this.ChannelId, other.ChannelId))
             {
@@ -2666,78 +2900,78 @@ namespace Fifthweek.Api.Posts.Controllers
 {
     using System;
     using System.Linq;
-    using System.Collections.Generic;
     using System.Threading.Tasks;
     using System.Web.Http;
-    using Fifthweek.Api.Collections.Shared;
     using Fifthweek.Api.Core;
     using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.Api.Posts.Commands;
-    using Fifthweek.Api.Posts.Queries;
     using Fifthweek.Api.Posts.Shared;
     using Fifthweek.CodeGeneration;
+    using System.Collections.Generic;
+    using Fifthweek.Api.Collections.Shared;
+    using Fifthweek.Api.Posts.Queries;
+    using Fifthweek.Api.Channels.Shared;
     using Fifthweek.Shared;
     using Fifthweek.Api.FileManagement.Shared;
-    using Fifthweek.Api.Channels.Shared;
 
-    public partial class CreatorNewsfeedPaginationData 
+    public partial class RevisedNoteData 
     {
         public class Parsed
         {
             public Parsed(
-                NonNegativeInt startIndex,
-                PositiveInt count)
+                Fifthweek.Api.Channels.Shared.ChannelId channelId,
+                ValidNote note,
+                System.Nullable<System.DateTime> scheduledPostDate)
             {
-                if (startIndex == null)
+                if (channelId == null)
                 {
-                    throw new ArgumentNullException("startIndex");
+                    throw new ArgumentNullException("channelId");
                 }
 
-                if (count == null)
+                if (note == null)
                 {
-                    throw new ArgumentNullException("count");
+                    throw new ArgumentNullException("note");
                 }
 
-                this.StartIndex = startIndex;
-                this.Count = count;
+                this.ChannelId = channelId;
+                this.Note = note;
+                this.ScheduledPostDate = scheduledPostDate;
             }
         
-            public NonNegativeInt StartIndex { get; private set; }
+            public Fifthweek.Api.Channels.Shared.ChannelId ChannelId { get; private set; }
         
-            public PositiveInt Count { get; private set; }
+            public ValidNote Note { get; private set; }
+        
+            public System.Nullable<System.DateTime> ScheduledPostDate { get; private set; }
         }
     }
 
-    public static partial class CreatorNewsfeedPaginationDataExtensions
+    public static partial class RevisedNoteDataExtensions
     {
-        public static CreatorNewsfeedPaginationData.Parsed Parse(this CreatorNewsfeedPaginationData target)
+        public static RevisedNoteData.Parsed Parse(this RevisedNoteData target)
         {
             var modelStateDictionary = new System.Web.Http.ModelBinding.ModelStateDictionary();
         
-            NonNegativeInt parsed0 = null;
-            System.Collections.Generic.IReadOnlyCollection<string> parsed0Errors;
-            if (!NonNegativeInt.TryParse(target.StartIndex, out parsed0, out parsed0Errors))
+            ValidNote parsed0 = null;
+            if (!ValidNote.IsEmpty(target.Note))
             {
-                var modelState = new System.Web.Http.ModelBinding.ModelState();
-                foreach (var errorMessage in parsed0Errors)
+                System.Collections.Generic.IReadOnlyCollection<string> parsed0Errors;
+                if (!ValidNote.TryParse(target.Note, out parsed0, out parsed0Errors))
                 {
-                    modelState.Errors.Add(errorMessage);
-                }
+                    var modelState = new System.Web.Http.ModelBinding.ModelState();
+                    foreach (var errorMessage in parsed0Errors)
+                    {
+                        modelState.Errors.Add(errorMessage);
+                    }
 
-                modelStateDictionary.Add("StartIndex", modelState);
+                    modelStateDictionary.Add("Note", modelState);
+                }
             }
-
-            PositiveInt parsed1 = null;
-            System.Collections.Generic.IReadOnlyCollection<string> parsed1Errors;
-            if (!PositiveInt.TryParse(target.Count, out parsed1, out parsed1Errors))
+            else
             {
                 var modelState = new System.Web.Http.ModelBinding.ModelState();
-                foreach (var errorMessage in parsed1Errors)
-                {
-                    modelState.Errors.Add(errorMessage);
-                }
-
-                modelStateDictionary.Add("Count", modelState);
+                modelState.Errors.Add("Value required");
+                modelStateDictionary.Add("Note", modelState);
             }
 
             if (!modelStateDictionary.IsValid)
@@ -2745,9 +2979,10 @@ namespace Fifthweek.Api.Posts.Controllers
                 throw new Fifthweek.Api.Core.ModelValidationException(modelStateDictionary);
             }
         
-            return new CreatorNewsfeedPaginationData.Parsed(
+            return new RevisedNoteData.Parsed(
+                target.ChannelId,
                 parsed0,
-                parsed1);
+                target.ScheduledPostDate);
         }    
     }
 }
@@ -2755,19 +2990,19 @@ namespace Fifthweek.Api.Posts.Controllers
 {
     using System;
     using System.Linq;
-    using System.Collections.Generic;
     using System.Threading.Tasks;
     using System.Web.Http;
-    using Fifthweek.Api.Collections.Shared;
     using Fifthweek.Api.Core;
     using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.Api.Posts.Commands;
-    using Fifthweek.Api.Posts.Queries;
     using Fifthweek.Api.Posts.Shared;
     using Fifthweek.CodeGeneration;
+    using System.Collections.Generic;
+    using Fifthweek.Api.Collections.Shared;
+    using Fifthweek.Api.Posts.Queries;
+    using Fifthweek.Api.Channels.Shared;
     using Fifthweek.Shared;
     using Fifthweek.Api.FileManagement.Shared;
-    using Fifthweek.Api.Channels.Shared;
 
     public partial class NewFileData 
     {
@@ -2854,19 +3089,108 @@ namespace Fifthweek.Api.Posts.Controllers
 {
     using System;
     using System.Linq;
-    using System.Collections.Generic;
     using System.Threading.Tasks;
     using System.Web.Http;
-    using Fifthweek.Api.Collections.Shared;
     using Fifthweek.Api.Core;
     using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.Api.Posts.Commands;
-    using Fifthweek.Api.Posts.Queries;
     using Fifthweek.Api.Posts.Shared;
     using Fifthweek.CodeGeneration;
+    using System.Collections.Generic;
+    using Fifthweek.Api.Collections.Shared;
+    using Fifthweek.Api.Posts.Queries;
+    using Fifthweek.Api.Channels.Shared;
     using Fifthweek.Shared;
     using Fifthweek.Api.FileManagement.Shared;
+
+    public partial class CreatorNewsfeedPaginationData 
+    {
+        public class Parsed
+        {
+            public Parsed(
+                NonNegativeInt startIndex,
+                PositiveInt count)
+            {
+                if (startIndex == null)
+                {
+                    throw new ArgumentNullException("startIndex");
+                }
+
+                if (count == null)
+                {
+                    throw new ArgumentNullException("count");
+                }
+
+                this.StartIndex = startIndex;
+                this.Count = count;
+            }
+        
+            public NonNegativeInt StartIndex { get; private set; }
+        
+            public PositiveInt Count { get; private set; }
+        }
+    }
+
+    public static partial class CreatorNewsfeedPaginationDataExtensions
+    {
+        public static CreatorNewsfeedPaginationData.Parsed Parse(this CreatorNewsfeedPaginationData target)
+        {
+            var modelStateDictionary = new System.Web.Http.ModelBinding.ModelStateDictionary();
+        
+            NonNegativeInt parsed0 = null;
+            System.Collections.Generic.IReadOnlyCollection<string> parsed0Errors;
+            if (!NonNegativeInt.TryParse(target.StartIndex, out parsed0, out parsed0Errors))
+            {
+                var modelState = new System.Web.Http.ModelBinding.ModelState();
+                foreach (var errorMessage in parsed0Errors)
+                {
+                    modelState.Errors.Add(errorMessage);
+                }
+
+                modelStateDictionary.Add("StartIndex", modelState);
+            }
+
+            PositiveInt parsed1 = null;
+            System.Collections.Generic.IReadOnlyCollection<string> parsed1Errors;
+            if (!PositiveInt.TryParse(target.Count, out parsed1, out parsed1Errors))
+            {
+                var modelState = new System.Web.Http.ModelBinding.ModelState();
+                foreach (var errorMessage in parsed1Errors)
+                {
+                    modelState.Errors.Add(errorMessage);
+                }
+
+                modelStateDictionary.Add("Count", modelState);
+            }
+
+            if (!modelStateDictionary.IsValid)
+            {
+                throw new Fifthweek.Api.Core.ModelValidationException(modelStateDictionary);
+            }
+        
+            return new CreatorNewsfeedPaginationData.Parsed(
+                parsed0,
+                parsed1);
+        }    
+    }
+}
+namespace Fifthweek.Api.Posts.Controllers
+{
+    using System;
+    using System.Linq;
+    using System.Threading.Tasks;
+    using System.Web.Http;
+    using Fifthweek.Api.Core;
+    using Fifthweek.Api.Identity.Shared.Membership;
+    using Fifthweek.Api.Posts.Commands;
+    using Fifthweek.Api.Posts.Shared;
+    using Fifthweek.CodeGeneration;
+    using System.Collections.Generic;
+    using Fifthweek.Api.Collections.Shared;
+    using Fifthweek.Api.Posts.Queries;
     using Fifthweek.Api.Channels.Shared;
+    using Fifthweek.Shared;
+    using Fifthweek.Api.FileManagement.Shared;
 
     public partial class NewImageData 
     {
@@ -2953,19 +3277,19 @@ namespace Fifthweek.Api.Posts.Controllers
 {
     using System;
     using System.Linq;
-    using System.Collections.Generic;
     using System.Threading.Tasks;
     using System.Web.Http;
-    using Fifthweek.Api.Collections.Shared;
     using Fifthweek.Api.Core;
     using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.Api.Posts.Commands;
-    using Fifthweek.Api.Posts.Queries;
     using Fifthweek.Api.Posts.Shared;
     using Fifthweek.CodeGeneration;
+    using System.Collections.Generic;
+    using Fifthweek.Api.Collections.Shared;
+    using Fifthweek.Api.Posts.Queries;
+    using Fifthweek.Api.Channels.Shared;
     using Fifthweek.Shared;
     using Fifthweek.Api.FileManagement.Shared;
-    using Fifthweek.Api.Channels.Shared;
 
     public partial class NewNoteData 
     {
@@ -3033,96 +3357,6 @@ namespace Fifthweek.Api.Posts.Controllers
             }
         
             return new NewNoteData.Parsed(
-                target.ChannelId,
-                parsed0,
-                target.ScheduledPostDate);
-        }    
-    }
-}
-namespace Fifthweek.Api.Posts.Controllers
-{
-    using System;
-    using System.Linq;
-    using System.Collections.Generic;
-    using System.Threading.Tasks;
-    using System.Web.Http;
-    using Fifthweek.Api.Collections.Shared;
-    using Fifthweek.Api.Core;
-    using Fifthweek.Api.Identity.Shared.Membership;
-    using Fifthweek.Api.Posts.Commands;
-    using Fifthweek.Api.Posts.Queries;
-    using Fifthweek.Api.Posts.Shared;
-    using Fifthweek.CodeGeneration;
-    using Fifthweek.Shared;
-    using Fifthweek.Api.FileManagement.Shared;
-    using Fifthweek.Api.Channels.Shared;
-
-    public partial class RevisedNoteData 
-    {
-        public class Parsed
-        {
-            public Parsed(
-                Fifthweek.Api.Channels.Shared.ChannelId channelId,
-                ValidNote note,
-                System.Nullable<System.DateTime> scheduledPostDate)
-            {
-                if (channelId == null)
-                {
-                    throw new ArgumentNullException("channelId");
-                }
-
-                if (note == null)
-                {
-                    throw new ArgumentNullException("note");
-                }
-
-                this.ChannelId = channelId;
-                this.Note = note;
-                this.ScheduledPostDate = scheduledPostDate;
-            }
-        
-            public Fifthweek.Api.Channels.Shared.ChannelId ChannelId { get; private set; }
-        
-            public ValidNote Note { get; private set; }
-        
-            public System.Nullable<System.DateTime> ScheduledPostDate { get; private set; }
-        }
-    }
-
-    public static partial class RevisedNoteDataExtensions
-    {
-        public static RevisedNoteData.Parsed Parse(this RevisedNoteData target)
-        {
-            var modelStateDictionary = new System.Web.Http.ModelBinding.ModelStateDictionary();
-        
-            ValidNote parsed0 = null;
-            if (!ValidNote.IsEmpty(target.Note))
-            {
-                System.Collections.Generic.IReadOnlyCollection<string> parsed0Errors;
-                if (!ValidNote.TryParse(target.Note, out parsed0, out parsed0Errors))
-                {
-                    var modelState = new System.Web.Http.ModelBinding.ModelState();
-                    foreach (var errorMessage in parsed0Errors)
-                    {
-                        modelState.Errors.Add(errorMessage);
-                    }
-
-                    modelStateDictionary.Add("Note", modelState);
-                }
-            }
-            else
-            {
-                var modelState = new System.Web.Http.ModelBinding.ModelState();
-                modelState.Errors.Add("Value required");
-                modelStateDictionary.Add("Note", modelState);
-            }
-
-            if (!modelStateDictionary.IsValid)
-            {
-                throw new Fifthweek.Api.Core.ModelValidationException(modelStateDictionary);
-            }
-        
-            return new RevisedNoteData.Parsed(
                 target.ChannelId,
                 parsed0,
                 target.ScheduledPostDate);

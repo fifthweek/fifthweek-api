@@ -7,9 +7,13 @@
     using Fifthweek.Api.Posts.Shared;
     using Fifthweek.CodeGeneration;
 
-    [AutoEqualityMembers]
+    [AutoConstructor, AutoEqualityMembers]
     public partial class NewImageData
     {
+        public NewImageData()
+        {
+        }
+
         public CollectionId CollectionId { get; set; }
 
         public FileId ImageFileId { get; set; }

@@ -6,9 +6,13 @@
     using Fifthweek.Api.Posts.Shared;
     using Fifthweek.CodeGeneration;
 
-    [AutoEqualityMembers]
+    [AutoConstructor, AutoEqualityMembers]
     public partial class NewNoteData
     {
+        public NewNoteData()
+        {
+        }
+
         public ChannelId ChannelId { get; set; }
 
         [Parsed(typeof(ValidNote))]

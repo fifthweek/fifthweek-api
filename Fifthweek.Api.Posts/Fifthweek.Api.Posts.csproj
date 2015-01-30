@@ -82,6 +82,9 @@
     <Compile Include="Commands\ReorderQueueCommand.cs" />
     <Compile Include="Commands\ReorderQueueCommandHandler.cs" />
     <Compile Include="Controllers\CreatorNewsfeedPaginationData.cs" />
+    <Compile Include="Controllers\FilePostController.cs" />
+    <Compile Include="Controllers\NotePostController.cs" />
+    <Compile Include="Controllers\ImagePostController.cs" />
     <Compile Include="Controllers\RevisedNoteData.cs" />
     <Compile Include="DeletePostDbStatement.cs" />
     <Compile Include="IDeletePostDbStatement.cs" />

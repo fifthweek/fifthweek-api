@@ -4,12 +4,10 @@
     using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
-    using System.Web.Http.Results;
 
     using Fifthweek.Api.Channels.Shared;
     using Fifthweek.Api.Collections.Shared;
     using Fifthweek.Api.Core;
-    using Fifthweek.Api.FileManagement.Shared;
     using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.Api.Posts.Commands;
     using Fifthweek.Api.Posts.Controllers;
@@ -29,109 +27,27 @@
         private static readonly PostId PostId = new PostId(Guid.NewGuid());
         private static readonly ChannelId ChannelId = new ChannelId(Guid.NewGuid());
         private static readonly CollectionId CollectionId = new CollectionId(Guid.NewGuid());
-        private static readonly FileId FileId = new FileId(Guid.NewGuid());
-        private static readonly DateTime TwoDaysFromNow = DateTime.UtcNow.AddDays(2);
-        private static readonly ValidNote Note = ValidNote.Parse("Hey peeps ;)");
-        private Mock<ICommandHandler<PostNoteCommand>> postNote;
-        private Mock<ICommandHandler<PostImageCommand>> postImage;
-        private Mock<ICommandHandler<PostFileCommand>> postFile;
-        private Mock<ICommandHandler<ReviseNoteCommand>> reviseNote;
         private Mock<ICommandHandler<DeletePostCommand>> deletePost;
         private Mock<ICommandHandler<ReorderQueueCommand>> reorderQueue;
         private Mock<IQueryHandler<GetCreatorBacklogQuery, IReadOnlyList<BacklogPost>>> getCreatorBacklog;
         private Mock<IQueryHandler<GetCreatorNewsfeedQuery, IReadOnlyList<NewsfeedPost>>> getCreatorNewsfeed;
         private Mock<IRequesterContext> requesterContext;
-        private Mock<IGuidCreator> guidCreator;
         private PostController target;
 
         [TestInitialize]
         public void Initialize()
         {
-            this.postNote = new Mock<ICommandHandler<PostNoteCommand>>();
-            this.postImage = new Mock<ICommandHandler<PostImageCommand>>();
-            this.postFile = new Mock<ICommandHandler<PostFileCommand>>();
-            this.reviseNote = new Mock<ICommandHandler<ReviseNoteCommand>>();
             this.deletePost = new Mock<ICommandHandler<DeletePostCommand>>();
             this.reorderQueue = new Mock<ICommandHandler<ReorderQueueCommand>>();
             this.getCreatorBacklog = new Mock<IQueryHandler<GetCreatorBacklogQuery, IReadOnlyList<BacklogPost>>>();
             this.getCreatorNewsfeed = new Mock<IQueryHandler<GetCreatorNewsfeedQuery, IReadOnlyList<NewsfeedPost>>>();
             this.requesterContext = new Mock<IRequesterContext>();
-            this.guidCreator = new Mock<IGuidCreator>();
             this.target = new PostController(
-                this.postNote.Object,
-                this.postImage.Object,
-                this.postFile.Object,
-                this.reviseNote.Object,
                 this.deletePost.Object,
                 this.reorderQueue.Object,
                 this.getCreatorBacklog.Object,
                 this.getCreatorNewsfeed.Object,
-                this.requesterContext.Object,
-                this.guidCreator.Object);
-        }
-
-        [TestMethod]
-        public async Task WhenPostingNote_ItShouldIssuePostNoteCommand()
-        {
-            var data = NewNoteData();
-            var command = NewPostNoteCommand(UserId, PostId, data);
-
-            this.requesterContext.Setup(v => v.GetRequester()).Returns(Requester);
-            this.guidCreator.Setup(_ => _.CreateSqlSequential()).Returns(PostId.Value);
-            this.postNote.Setup(v => v.HandleAsync(command)).Returns(Task.FromResult(0)).Verifiable();
-
-            var result = await this.target.PostNote(data);
-
-            Assert.IsInstanceOfType(result, typeof(OkResult));
-            this.postNote.Verify();
-        }
-
-        [TestMethod]
-        public async Task WhenPuttingNote_ItShouldIssueReviseNoteCommand()
-        {
-            var data = new RevisedNoteData(ChannelId, Note.Value, TwoDaysFromNow);
-            var command = new ReviseNoteCommand(Requester, PostId, ChannelId, Note, TwoDaysFromNow);
-
-            this.requesterContext.Setup(v => v.GetRequester()).Returns(Requester);
-            this.guidCreator.Setup(_ => _.CreateSqlSequential()).Returns(PostId.Value);
-            this.reviseNote.Setup(v => v.HandleAsync(command)).Returns(Task.FromResult(0)).Verifiable();
-
-            var result = await this.target.PutNote(PostId.Value.EncodeGuid(), data);
-
-            Assert.IsInstanceOfType(result, typeof(OkResult));
-            this.postNote.Verify();
-        }
-
-        [TestMethod]
-        public async Task WhenPostingImage_ItShouldIssuePostImageCommand()
-        {
-            var data = NewImageData();
-            var command = NewPostImageCommand(UserId, PostId, data);
-
-            this.requesterContext.Setup(v => v.GetRequester()).Returns(Requester);
-            this.guidCreator.Setup(_ => _.CreateSqlSequential()).Returns(PostId.Value);
-            this.postImage.Setup(v => v.HandleAsync(command)).Returns(Task.FromResult(0)).Verifiable();
-
-            var result = await this.target.PostImage(data);
-
-            Assert.IsInstanceOfType(result, typeof(OkResult));
-            this.postNote.Verify();
-        }
-
-        [TestMethod]
-        public async Task WhenPostingFile_ItShouldIssuePostFileCommand()
-        {
-            var data = NewFileData();
-            var command = NewPostFileCommand(UserId, PostId, data);
-
-            this.requesterContext.Setup(v => v.GetRequester()).Returns(Requester);
-            this.guidCreator.Setup(_ => _.CreateSqlSequential()).Returns(PostId.Value);
-            this.postFile.Setup(v => v.HandleAsync(command)).Returns(Task.FromResult(0)).Verifiable();
-
-            var result = await this.target.PostFile(data);
-
-            Assert.IsInstanceOfType(result, typeof(OkResult));
-            this.postNote.Verify();
+                this.requesterContext.Object);
         }
 
         [TestMethod]
@@ -172,14 +88,14 @@
 
         [TestMethod]
         [ExpectedException(typeof(BadRequestException))]
-        public async Task WhenGettingCreatorNewsfeedWithoutSpecifyingCreatorId_ItShouldThrowBadRequestException()
+        public async Task WhenGettingCreatorNewsfeed_WithoutSpecifyingCreatorId_ItShouldThrowBadRequestException()
         {
             await this.target.GetCreatorNewsfeed(string.Empty, new CreatorNewsfeedPaginationData());
         }
 
         [TestMethod]
         [ExpectedException(typeof(BadRequestException))]
-        public async Task WhenGettingCreatorNewsfeedWithoutSpecifyingPagination_ItShouldThrowBadRequestException()
+        public async Task WhenGettingCreatorNewsfeed_WithoutSpecifyingPagination_ItShouldThrowBadRequestException()
         {
             await this.target.GetCreatorNewsfeed(UserId.Value.EncodeGuid(), null);
         }
@@ -199,7 +115,7 @@
 
         [TestMethod]
         [ExpectedException(typeof(BadRequestException))]
-        public async Task WhenDeletingPostWithoutSpecifyingPostId_ItShouldThrowBadRequestException()
+        public async Task WhenDeletingPost_WithoutSpecifyingPostId_ItShouldThrowBadRequestException()
         {
             await this.target.DeletePost(string.Empty);
         }
@@ -221,93 +137,16 @@
 
         [TestMethod]
         [ExpectedException(typeof(BadRequestException))]
-        public async Task WhenReorderingQueueWithoutSpecifyingCollectionId_ItShouldThrowBadRequestException()
+        public async Task WhenReorderingQueue_WithoutSpecifyingCollectionId_ItShouldThrowBadRequestException()
         {
             await this.target.PostNewQueueOrder(string.Empty, Enumerable.Empty<PostId>());
         }
 
         [TestMethod]
         [ExpectedException(typeof(BadRequestException))]
-        public async Task WhenReorderingQueueWithoutSpecifyingNewOrder_ItShouldThrowBadRequestException()
+        public async Task WhenReorderingQueue_WithoutSpecifyingNewOrder_ItShouldThrowBadRequestException()
         {
             await this.target.PostNewQueueOrder(CollectionId.Value.EncodeGuid(), null);
-        }
-
-        public static NewNoteData NewNoteData()
-        {
-            return new NewNoteData
-            {
-                ChannelId = ChannelId,
-                Note = "Hey peeps ;)",
-                ScheduledPostDate = TwoDaysFromNow
-            };
-        }
-
-        public static PostNoteCommand NewPostNoteCommand(
-            UserId userId,
-            PostId postId,
-            NewNoteData data)
-        {
-            return new PostNoteCommand(
-                Requester.Authenticated(userId),
-                postId,
-                data.ChannelId,
-                ValidNote.Parse(data.Note),
-                data.ScheduledPostDate);
-        }
-
-        public static NewImageData NewImageData()
-        {
-            return new NewImageData
-            {
-                CollectionId = CollectionId,
-                ImageFileId = FileId,
-                Comment = null,
-                ScheduledPostDate = null,
-                IsQueued = true
-            };
-        }
-
-        public static PostImageCommand NewPostImageCommand(
-            UserId userId,
-            PostId postId,
-            NewImageData data)
-        {
-            return new PostImageCommand(
-                Requester.Authenticated(userId),
-                postId,
-                data.CollectionId, 
-                data.ImageFileId,
-                data.Comment == null ? null : ValidComment.Parse(data.Comment),
-                data.ScheduledPostDate,
-                data.IsQueued);
-        }
-
-        public static NewFileData NewFileData()
-        {
-            return new NewFileData
-            {
-                CollectionId = CollectionId,
-                FileId = FileId,
-                Comment = null,
-                ScheduledPostDate = null,
-                IsQueued = true
-            };
-        }
-
-        public static PostFileCommand NewPostFileCommand(
-            UserId userId,
-            PostId postId,
-            NewFileData data)
-        {
-            return new PostFileCommand(
-                Requester.Authenticated(userId),
-                postId,
-                data.CollectionId,
-                data.FileId,
-                data.Comment == null ? null : ValidComment.Parse(data.Comment),
-                data.ScheduledPostDate,
-                data.IsQueued);
         }
     }
 }

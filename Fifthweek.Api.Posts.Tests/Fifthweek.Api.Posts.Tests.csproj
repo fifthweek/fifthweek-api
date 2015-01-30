@@ -91,6 +91,9 @@
   <ItemGroup>
     <Compile Include="Commands\ReorderQueueCommandHandlerTests.cs" />
     <Compile Include="Commands\DeletePostCommandHandlerTests.cs" />
+    <Compile Include="Controllers\FilePostControllerTests.cs" />
+    <Compile Include="Controllers\ImagePostControllerTests.cs" />
+    <Compile Include="Controllers\NotePostControllerTests.cs" />
     <Compile Include="DeletePostDbStatementTests.cs" />
     <Compile Include="PostOwnershipTests.cs" />
     <Compile Include="PostSecurityTests.cs" />

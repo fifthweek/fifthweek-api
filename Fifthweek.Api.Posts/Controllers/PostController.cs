@@ -16,97 +16,11 @@
     [RoutePrefix("posts"), AutoConstructor]
     public partial class PostController : ApiController
     {
-        private readonly ICommandHandler<PostNoteCommand> postNote;
-        private readonly ICommandHandler<PostImageCommand> postImage;
-        private readonly ICommandHandler<PostFileCommand> postFile;
-        private readonly ICommandHandler<ReviseNoteCommand> reviseNote;
         private readonly ICommandHandler<DeletePostCommand> deletePost;
         private readonly ICommandHandler<ReorderQueueCommand> reorderQueue;
         private readonly IQueryHandler<GetCreatorBacklogQuery, IReadOnlyList<BacklogPost>> getCreatorBacklog;
         private readonly IQueryHandler<GetCreatorNewsfeedQuery, IReadOnlyList<NewsfeedPost>> getCreatorNewsfeed;
         private readonly IRequesterContext requesterContext;
-        private readonly IGuidCreator guidCreator;
-
-        [Route("notes")]
-        public async Task<IHttpActionResult> PostNote(NewNoteData noteData)
-        {
-            noteData.AssertBodyProvided("noteData");
-            var note = noteData.Parse();
-
-            var requester = this.requesterContext.GetRequester();
-            var newPostId = new PostId(this.guidCreator.CreateSqlSequential());
-
-            await this.postNote.HandleAsync(new PostNoteCommand(
-                requester,
-                newPostId,
-                note.ChannelId,
-                note.Note,
-                note.ScheduledPostDate));
-
-            return this.Ok();
-        }
-
-        [Route("notes/{postId}")]
-        public async Task<IHttpActionResult> PutNote(string postId, [FromBody]RevisedNoteData noteData)
-        {
-            postId.AssertUrlParameterProvided("postId");
-            noteData.AssertBodyProvided("noteData");
-            var note = noteData.Parse();
-            var postIdObject = new PostId(postId.DecodeGuid());
-
-            var requester = this.requesterContext.GetRequester();
-
-            await this.reviseNote.HandleAsync(new ReviseNoteCommand(
-                requester,
-                postIdObject,
-                note.ChannelId,
-                note.Note,
-                note.ScheduledPostDate));
-
-            return this.Ok();
-        }
-
-        [Route("images")]
-        public async Task<IHttpActionResult> PostImage(NewImageData imageData)
-        {
-            imageData.AssertBodyProvided("imageData");
-            var image = imageData.Parse();
-
-            var requester = this.requesterContext.GetRequester();
-            var newPostId = new PostId(this.guidCreator.CreateSqlSequential());
-
-            await this.postImage.HandleAsync(new PostImageCommand(
-                requester,
-                newPostId,
-                image.CollectionId,
-                image.ImageFileId,
-                image.Comment,
-                image.ScheduledPostDate,
-                image.IsQueued));
-
-            return this.Ok();
-        }
-
-        [Route("files")]
-        public async Task<IHttpActionResult> PostFile(NewFileData fileData)
-        {
-            fileData.AssertBodyProvided("fileData");
-            var file = fileData.Parse();
-
-            var requester = this.requesterContext.GetRequester();
-            var newPostId = new PostId(this.guidCreator.CreateSqlSequential());
-
-            await this.postFile.HandleAsync(new PostFileCommand(
-                requester,
-                newPostId,
-                file.CollectionId,
-                file.FileId,
-                file.Comment,
-                file.ScheduledPostDate,
-                file.IsQueued));
-
-            return this.Ok();
-        }
 
         [Route("queues/{collectionId}")]
         public async Task<IHttpActionResult> PostNewQueueOrder(string collectionId, [FromBody]IEnumerable<PostId> newQueueOrder)
