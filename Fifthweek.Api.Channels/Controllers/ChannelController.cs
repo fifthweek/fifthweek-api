@@ -14,6 +14,7 @@
     {
         private readonly ICommandHandler<CreateChannelCommand> createChannel;
         private readonly ICommandHandler<UpdateChannelCommand> updateChannel;
+        private readonly ICommandHandler<DeleteChannelCommand> deleteChannel;
         private readonly IRequesterContext requesterContext;
         private readonly IGuidCreator guidCreator;
 
@@ -54,6 +55,19 @@
                     channel.Name,
                     channel.Price,
                     channel.IsVisibleToNonSubscribers));
+
+            return this.Ok();
+        }
+
+        [Route("{channelId}")]
+        public async Task<IHttpActionResult> DeleteChannelAsync(string channelId)
+        {
+            channelId.AssertUrlParameterProvided("channelId");
+
+            var requester = this.requesterContext.GetRequester();
+            var channelIdObject = new ChannelId(channelId.DecodeGuid());
+
+            await this.deleteChannel.HandleAsync(new DeleteChannelCommand(requester, channelIdObject));
 
             return this.Ok();
         }

@@ -27,6 +27,7 @@
 
         private Mock<ICommandHandler<CreateChannelCommand>> createChannel;
         private Mock<ICommandHandler<UpdateChannelCommand>> updateChannel;
+        private Mock<ICommandHandler<DeleteChannelCommand>> deleteChannel;
         private Mock<IRequesterContext> requesterContext;
         private Mock<IGuidCreator> guidCreator;
         private ChannelController target;
@@ -36,9 +37,10 @@
         {
             this.createChannel = new Mock<ICommandHandler<CreateChannelCommand>>();
             this.updateChannel = new Mock<ICommandHandler<UpdateChannelCommand>>();
+            this.deleteChannel = new Mock<ICommandHandler<DeleteChannelCommand>>();
             this.requesterContext = new Mock<IRequesterContext>();
             this.guidCreator = new Mock<IGuidCreator>();
-            this.target = new ChannelController(this.createChannel.Object, this.updateChannel.Object, this.requesterContext.Object, this.guidCreator.Object);
+            this.target = new ChannelController(this.createChannel.Object, this.updateChannel.Object, this.deleteChannel.Object, this.requesterContext.Object, this.guidCreator.Object);
         }
 
         [TestMethod]
@@ -91,6 +93,27 @@
         public async Task WhenPuttingChannelWithoutSpecifyingChannelBody_ItShouldThrowBadRequestException()
         {
             await this.target.PutChannelAsync(ChannelId.Value.EncodeGuid(), null);
+        }
+
+        [TestMethod]
+        public async Task WhenDeletingChannel_ItShouldIssueDeleteChannelCommand()
+        {
+            var command = new DeleteChannelCommand(Requester, ChannelId);
+
+            this.requesterContext.Setup(v => v.GetRequester()).Returns(Requester);
+            this.deleteChannel.Setup(v => v.HandleAsync(command)).Returns(Task.FromResult(0)).Verifiable();
+
+            var result = await this.target.DeleteChannelAsync(ChannelId.Value.EncodeGuid());
+
+            Assert.IsInstanceOfType(result, typeof(OkResult));
+            this.updateChannel.Verify();
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(BadRequestException))]
+        public async Task WhenDeletingChannelWithoutSpecifyingChannelId_ItShouldThrowBadRequestException()
+        {
+            await this.target.PutChannelAsync(string.Empty, new UpdatedChannelData());
         }
     }
 }

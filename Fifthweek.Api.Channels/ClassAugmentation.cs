@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Linq;
 
-//// Generated on 29/01/2015 19:43:52 (UTC)
-//// Mapped solution in 1.72s
+//// Generated on 30/01/2015 12:52:35 (UTC)
+//// Mapped solution in 2.7s
 
 
 namespace Fifthweek.Api.Channels
@@ -263,6 +263,7 @@ namespace Fifthweek.Api.Channels.Controllers
         public ChannelController(
             Fifthweek.Api.Core.ICommandHandler<Fifthweek.Api.Channels.Commands.CreateChannelCommand> createChannel,
             Fifthweek.Api.Core.ICommandHandler<Fifthweek.Api.Channels.Commands.UpdateChannelCommand> updateChannel,
+            Fifthweek.Api.Core.ICommandHandler<Fifthweek.Api.Channels.Commands.DeleteChannelCommand> deleteChannel,
             Fifthweek.Api.Identity.Shared.Membership.IRequesterContext requesterContext,
             Fifthweek.Api.Core.IGuidCreator guidCreator)
         {
@@ -274,6 +275,11 @@ namespace Fifthweek.Api.Channels.Controllers
             if (updateChannel == null)
             {
                 throw new ArgumentNullException("updateChannel");
+            }
+
+            if (deleteChannel == null)
+            {
+                throw new ArgumentNullException("deleteChannel");
             }
 
             if (requesterContext == null)
@@ -288,6 +294,7 @@ namespace Fifthweek.Api.Channels.Controllers
 
             this.createChannel = createChannel;
             this.updateChannel = updateChannel;
+            this.deleteChannel = deleteChannel;
             this.requesterContext = requesterContext;
             this.guidCreator = guidCreator;
         }
@@ -372,6 +379,39 @@ namespace Fifthweek.Api.Channels.Controllers
             this.Name = name;
             this.Price = price;
             this.IsVisibleToNonSubscribers = isVisibleToNonSubscribers;
+        }
+    }
+}
+namespace Fifthweek.Api.Channels.Commands
+{
+    using System;
+    using System.Linq;
+    using Fifthweek.Api.Channels.Shared;
+    using Fifthweek.Api.Identity.Shared.Membership;
+    using Fifthweek.Api.Subscriptions.Shared;
+    using Fifthweek.CodeGeneration;
+    using System.Threading.Tasks;
+    using Fifthweek.Api.Core;
+    using Fifthweek.Api.Persistence;
+
+    public partial class DeleteChannelCommand 
+    {
+        public DeleteChannelCommand(
+            Fifthweek.Api.Identity.Shared.Membership.Requester requester,
+            Fifthweek.Api.Channels.Shared.ChannelId channelId)
+        {
+            if (requester == null)
+            {
+                throw new ArgumentNullException("requester");
+            }
+
+            if (channelId == null)
+            {
+                throw new ArgumentNullException("channelId");
+            }
+
+            this.Requester = requester;
+            this.ChannelId = channelId;
         }
     }
 }
@@ -690,6 +730,72 @@ namespace Fifthweek.Api.Channels.Controllers
         }
     }
 }
+namespace Fifthweek.Api.Channels.Commands
+{
+    using System;
+    using System.Linq;
+    using Fifthweek.Api.Channels.Shared;
+    using Fifthweek.Api.Identity.Shared.Membership;
+    using Fifthweek.Api.Subscriptions.Shared;
+    using Fifthweek.CodeGeneration;
+    using System.Threading.Tasks;
+    using Fifthweek.Api.Core;
+    using Fifthweek.Api.Persistence;
+
+    public partial class DeleteChannelCommand 
+    {
+        public override string ToString()
+        {
+            return string.Format("DeleteChannelCommand({0}, {1})", this.Requester == null ? "null" : this.Requester.ToString(), this.ChannelId == null ? "null" : this.ChannelId.ToString());
+        }
+        
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj))
+            {
+                return false;
+            }
+        
+            if (ReferenceEquals(this, obj))
+            {
+                return true;
+            }
+        
+            if (obj.GetType() != this.GetType())
+            {
+                return false;
+            }
+        
+            return this.Equals((DeleteChannelCommand)obj);
+        }
+        
+        public override int GetHashCode()
+        {
+            unchecked
+            {
+                int hashCode = 0;
+                hashCode = (hashCode * 397) ^ (this.Requester != null ? this.Requester.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.ChannelId != null ? this.ChannelId.GetHashCode() : 0);
+                return hashCode;
+            }
+        }
+        
+        protected bool Equals(DeleteChannelCommand other)
+        {
+            if (!object.Equals(this.Requester, other.Requester))
+            {
+                return false;
+            }
+        
+            if (!object.Equals(this.ChannelId, other.ChannelId))
+            {
+                return false;
+            }
+        
+            return true;
+        }
+    }
+}
 namespace Fifthweek.Api.Channels.Controllers
 {
     using System;
@@ -786,7 +892,7 @@ namespace Fifthweek.Api.Channels.Controllers
                 throw new Fifthweek.Api.Core.ModelValidationException(modelStateDictionary);
             }
         
-        	return new NewChannelData.Parsed(
+            return new NewChannelData.Parsed(
                 target.SubscriptionId,
                 parsed0,
                 parsed1);
@@ -889,7 +995,7 @@ namespace Fifthweek.Api.Channels.Controllers
                 throw new Fifthweek.Api.Core.ModelValidationException(modelStateDictionary);
             }
         
-        	return new UpdatedChannelData.Parsed(
+            return new UpdatedChannelData.Parsed(
                 parsed0,
                 parsed1,
                 target.IsVisibleToNonSubscribers);
