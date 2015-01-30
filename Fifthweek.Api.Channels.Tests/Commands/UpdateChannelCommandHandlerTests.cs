@@ -10,7 +10,6 @@
     using Fifthweek.Api.Identity.Tests.Shared.Membership;
     using Fifthweek.Api.Persistence;
     using Fifthweek.Api.Persistence.Tests.Shared;
-    using Fifthweek.Api.Subscriptions.Shared;
 
     using Microsoft.VisualStudio.TestTools.UnitTesting;
 
@@ -23,7 +22,6 @@
         private static readonly UserId UserId = new UserId(Guid.NewGuid());
         private static readonly Requester Requester = Requester.Authenticated(UserId);
         private static readonly ChannelId ChannelId = new ChannelId(Guid.NewGuid());
-        private static readonly SubscriptionId SubscriptionId = new SubscriptionId(Guid.NewGuid());
         private static readonly ValidChannelName Name = ValidChannelName.Parse("Bat puns");
         private static readonly ValidChannelPriceInUsCentsPerWeek Price = ValidChannelPriceInUsCentsPerWeek.Parse(10);
         private static readonly UpdateChannelCommand Command = new UpdateChannelCommand(Requester, ChannelId, Name, Price, IsVisibleToNonSubscribers);

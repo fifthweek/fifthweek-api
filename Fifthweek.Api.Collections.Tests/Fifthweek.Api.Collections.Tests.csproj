@@ -91,6 +91,7 @@
     <Compile Include="CollectionOwnershipTests.cs" />
     <Compile Include="CollectionSecurityTests.cs" />
     <Compile Include="Commands\CreateCollectionCommandHandlerTests.cs" />
+    <Compile Include="Commands\UpdateCollectionCommandHandlerTests.cs" />
     <Compile Include="Controllers\CollectionControllerTests.cs" />
     <Compile Include="GetChannelsAndCollectionsDbStatementTests.cs" />
     <Compile Include="GetLiveDateOfNewQueuedPostDbStatementTests.cs" />

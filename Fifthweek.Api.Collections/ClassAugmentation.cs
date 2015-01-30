@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Linq;
 
-//// Generated on 30/01/2015 10:31:01 (UTC)
-//// Mapped solution in 1.26s
+//// Generated on 30/01/2015 11:51:08 (UTC)
+//// Mapped solution in 2.89s
 
 
 namespace Fifthweek.Api.Collections
@@ -79,6 +79,7 @@ namespace Fifthweek.Api.Collections.Commands
     using Fifthweek.Api.Persistence;
     using Fifthweek.Shared;
     using System.Collections.Generic;
+    using Dapper;
 
     public partial class CreateCollectionCommand 
     {
@@ -129,6 +130,7 @@ namespace Fifthweek.Api.Collections.Commands
     using Fifthweek.Api.Persistence;
     using Fifthweek.Shared;
     using System.Collections.Generic;
+    using Dapper;
 
     public partial class CreateCollectionCommandHandler 
     {
@@ -179,6 +181,7 @@ namespace Fifthweek.Api.Collections.Commands
     using Fifthweek.Api.Persistence;
     using Fifthweek.Shared;
     using System.Collections.Generic;
+    using Dapper;
 
     public partial class UpdateCollectionCommand 
     {
@@ -739,6 +742,57 @@ namespace Fifthweek.Api.Collections.Queries
         }
     }
 }
+namespace Fifthweek.Api.Collections.Commands
+{
+    using System;
+    using System.Linq;
+    using Fifthweek.Api.Channels.Shared;
+    using Fifthweek.Api.Collections.Shared;
+    using Fifthweek.Api.Identity.Shared.Membership;
+    using Fifthweek.CodeGeneration;
+    using System.Threading.Tasks;
+    using System.Transactions;
+    using Fifthweek.Api.Core;
+    using Fifthweek.Api.Persistence;
+    using Fifthweek.Shared;
+    using System.Collections.Generic;
+    using Dapper;
+
+    public partial class UpdateCollectionCommandHandler 
+    {
+        public UpdateCollectionCommandHandler(
+            Fifthweek.Api.Identity.Shared.Membership.IRequesterSecurity requesterSecurity,
+            Fifthweek.Api.Collections.Shared.ICollectionSecurity collectionSecurity,
+            Fifthweek.Api.Channels.Shared.IChannelSecurity channelSecurity,
+            Fifthweek.Api.Persistence.IFifthweekDbContext databaseContext)
+        {
+            if (requesterSecurity == null)
+            {
+                throw new ArgumentNullException("requesterSecurity");
+            }
+
+            if (collectionSecurity == null)
+            {
+                throw new ArgumentNullException("collectionSecurity");
+            }
+
+            if (channelSecurity == null)
+            {
+                throw new ArgumentNullException("channelSecurity");
+            }
+
+            if (databaseContext == null)
+            {
+                throw new ArgumentNullException("databaseContext");
+            }
+
+            this.requesterSecurity = requesterSecurity;
+            this.collectionSecurity = collectionSecurity;
+            this.channelSecurity = channelSecurity;
+            this.databaseContext = databaseContext;
+        }
+    }
+}
 
 namespace Fifthweek.Api.Collections.Commands
 {
@@ -754,6 +808,7 @@ namespace Fifthweek.Api.Collections.Commands
     using Fifthweek.Api.Persistence;
     using Fifthweek.Shared;
     using System.Collections.Generic;
+    using Dapper;
 
     public partial class CreateCollectionCommand 
     {
@@ -835,6 +890,7 @@ namespace Fifthweek.Api.Collections.Commands
     using Fifthweek.Api.Persistence;
     using Fifthweek.Shared;
     using System.Collections.Generic;
+    using Dapper;
 
     public partial class UpdateCollectionCommand 
     {

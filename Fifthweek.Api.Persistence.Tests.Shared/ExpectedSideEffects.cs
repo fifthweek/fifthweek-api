@@ -29,10 +29,10 @@
         }
 
         /// <summary>
-        /// Prevents checking of specific entities so they may be tested in separate tests.
+        /// Prevents checking of specific entities so they may be tested in isolation.
         /// </summary>
         /// <remarks>
-        /// Any range excluded by this predicate must be included in another test running the exact same logic.
+        /// Any range excluded by this predicate must be included in another test running the exact same Arrange & Act logic.
         /// This ensures the universal set of all entities are tested.
         /// </remarks>
         public Predicate<object> ExcludedFromTest { get; set; }

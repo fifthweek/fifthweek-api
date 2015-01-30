@@ -20,7 +20,8 @@
 
         public static bool IsEmpty(IReadOnlyList<HourOfWeek> value)
         {
-            return value == null || value.Count == 0;
+            return value == null 
+                || value.Count == 0; // Very important. There must always be at least one weekly release time per collection.
         }
 
         public static WeeklyReleaseSchedule Parse(IReadOnlyList<HourOfWeek> value)
