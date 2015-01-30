@@ -108,7 +108,7 @@
         {
             using (var databaseContext = testDatabase.NewContext())
             {
-                await databaseContext.CreateTestPostAsync(newUserId.Value, newPostId.Value);
+                await databaseContext.CreateTestNoteAsync(newUserId.Value, newPostId.Value);
             }
         }
     }

@@ -1,8 +1,8 @@
 ﻿namespace Fifthweek.Api.Posts
 {
-    using Dapper;
-
     using System.Threading.Tasks;
+
+    using Dapper;
 
     using Fifthweek.Api.Persistence;
     using Fifthweek.CodeGeneration;

@@ -144,11 +144,11 @@
                 {
                     if (sideEffects.Deletes == null)
                     {
-                        Assert.Fail("Delete was unexpected");
+                        Assert.Fail("Delete was unexpected: " + snapshotEntity);
                     }
                     else
                     {
-                        Assert.IsTrue(sideEffects.Deletes.Any(_ => AreEntitiesEqual(_, snapshotEntity)), "Delete was unexpected");
+                        Assert.IsTrue(sideEffects.Deletes.Any(_ => AreEntitiesEqual(_, snapshotEntity)), "Delete was unexpected: " + snapshotEntity);
                     }
                 }
             }

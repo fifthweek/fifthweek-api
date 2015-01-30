@@ -44,7 +44,7 @@
                 DateTime.UtcNow.AddDays(random.NextDouble() * -100));
         }
 
-        public static Task CreateTestPostAsync(this IFifthweekDbContext databaseContext, Guid newUserId, Guid newPostId)
+        public static Task CreateTestNoteAsync(this IFifthweekDbContext databaseContext, Guid newUserId, Guid newPostId)
         {
             var random = new Random();
             var creator = UserTests.UniqueEntity(random);

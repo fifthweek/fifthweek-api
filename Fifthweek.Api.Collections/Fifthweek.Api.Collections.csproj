@@ -64,6 +64,7 @@
     <Compile Include="CollectionOwnership.cs" />
     <Compile Include="CollectionSecurity.cs" />
     <Compile Include="Commands\DeleteCollectionCommand.cs" />
+    <Compile Include="Commands\DeleteCollectionCommandHandler.cs" />
     <Compile Include="Commands\UpdateCollectionCommandHandler.cs" />
     <Compile Include="Commands\UpdateCollectionCommand.cs" />
     <Compile Include="Commands\CreateCollectionCommand.cs" />
@@ -71,10 +72,12 @@
     <Compile Include="Controllers\CollectionController.cs" />
     <Compile Include="Controllers\UpdatedCollectionData.cs" />
     <Compile Include="Controllers\NewCollectionData.cs" />
+    <Compile Include="DeleteCollectionDbStatement.cs" />
     <Compile Include="GetChannelsAndCollectionsDbStatement.cs" />
     <Compile Include="GetNewQueuedPostLiveDateLowerBoundDbStatement.cs" />
     <Compile Include="GetCollectionWeeklyReleaseTimesDbStatement.cs" />
     <Compile Include="ICollectionOwnership.cs" />
+    <Compile Include="IDeleteCollectionDbStatement.cs" />
     <Compile Include="IGetChannelsAndCollectionsDbStatement.cs" />
     <Compile Include="IGetNewQueuedPostLiveDateLowerBoundDbStatement.cs" />
     <Compile Include="IGetCollectionWeeklyReleaseTimesDbStatement.cs" />
@@ -100,6 +103,10 @@
     <ProjectReference Include="..\Fifthweek.Api.Core\Fifthweek.Api.Core.csproj">
       <Project>{BD52863E-063D-45A5-9CA8-7541804D1313}</Project>
       <Name>Fifthweek.Api.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Fifthweek.Api.FileManagement.Shared\Fifthweek.Api.FileManagement.Shared.csproj">
+      <Project>{3CA706AF-5916-414E-9625-FB8FCBBD82F7}</Project>
+      <Name>Fifthweek.Api.FileManagement.Shared</Name>
     </ProjectReference>
     <ProjectReference Include="..\Fifthweek.Api.Identity.Shared\Fifthweek.Api.Identity.Shared.csproj">
       <Project>{1B07E9CC-1B0E-49D7-96D6-0F8C58A7C0CA}</Project>

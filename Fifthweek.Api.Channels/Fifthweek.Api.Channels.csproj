@@ -76,6 +76,7 @@
       <DesignTime>True</DesignTime>
     </Compile>
     <Compile Include="Commands\DeleteChannelCommand.cs" />
+    <Compile Include="Commands\DeleteChannelCommandHandler.cs" />
     <Compile Include="Commands\UpdateChannelCommand.cs" />
     <Compile Include="Commands\CreateChannelCommand.cs" />
     <Compile Include="Commands\CreateChannelCommandHandler.cs" />
@@ -83,7 +84,9 @@
     <Compile Include="Controllers\ChannelController.cs" />
     <Compile Include="Controllers\UpdatedChannelData.cs" />
     <Compile Include="Controllers\NewChannelData.cs" />
+    <Compile Include="DeleteChannelDbStatement.cs" />
     <Compile Include="IChannelOwnership.cs" />
+    <Compile Include="IDeleteChannelDbStatement.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -94,6 +97,10 @@
     <ProjectReference Include="..\Fifthweek.Api.Core\Fifthweek.Api.Core.csproj">
       <Project>{BD52863E-063D-45A5-9CA8-7541804D1313}</Project>
       <Name>Fifthweek.Api.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Fifthweek.Api.FileManagement.Shared\Fifthweek.Api.FileManagement.Shared.csproj">
+      <Project>{3CA706AF-5916-414E-9625-FB8FCBBD82F7}</Project>
+      <Name>Fifthweek.Api.FileManagement.Shared</Name>
     </ProjectReference>
     <ProjectReference Include="..\Fifthweek.Api.Identity.Shared\Fifthweek.Api.Identity.Shared.csproj">
       <Project>{1B07E9CC-1B0E-49D7-96D6-0F8C58A7C0CA}</Project>

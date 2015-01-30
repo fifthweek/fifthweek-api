@@ -15,6 +15,7 @@
             builder.RegisterType<GetCollectionWeeklyReleaseTimesDbStatement>().As<IGetCollectionWeeklyReleaseTimesDbStatement>();
             builder.RegisterType<QueuedPostLiveDateCalculator>().As<IQueuedPostLiveDateCalculator>();
             builder.RegisterType<GetChannelsAndCollectionsDbStatement>().As<IGetChannelsAndCollectionsDbStatement>();
+            builder.RegisterType<DeleteCollectionDbStatement>().As<IDeleteCollectionDbStatement>();
         }
     }
 }

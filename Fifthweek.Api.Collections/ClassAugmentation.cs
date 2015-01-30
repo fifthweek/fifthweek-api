@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Linq;
 
-//// Generated on 30/01/2015 12:56:56 (UTC)
-//// Mapped solution in 9.03s
+//// Generated on 30/01/2015 14:07:12 (UTC)
+//// Mapped solution in 2.8s
 
 
 namespace Fifthweek.Api.Collections
@@ -80,6 +80,7 @@ namespace Fifthweek.Api.Collections.Commands
     using Fifthweek.Shared;
     using System.Collections.Generic;
     using Dapper;
+    using Fifthweek.Api.FileManagement.Shared;
 
     public partial class CreateCollectionCommand 
     {
@@ -131,6 +132,7 @@ namespace Fifthweek.Api.Collections.Commands
     using Fifthweek.Shared;
     using System.Collections.Generic;
     using Dapper;
+    using Fifthweek.Api.FileManagement.Shared;
 
     public partial class CreateCollectionCommandHandler 
     {
@@ -182,6 +184,7 @@ namespace Fifthweek.Api.Collections.Commands
     using Fifthweek.Shared;
     using System.Collections.Generic;
     using Dapper;
+    using Fifthweek.Api.FileManagement.Shared;
 
     public partial class UpdateCollectionCommand 
     {
@@ -764,6 +767,7 @@ namespace Fifthweek.Api.Collections.Commands
     using Fifthweek.Shared;
     using System.Collections.Generic;
     using Dapper;
+    using Fifthweek.Api.FileManagement.Shared;
 
     public partial class UpdateCollectionCommandHandler 
     {
@@ -802,9 +806,20 @@ namespace Fifthweek.Api.Collections.Commands
 }
 namespace Fifthweek.Api.Collections.Commands
 {
+    using System;
+    using System.Linq;
+    using Fifthweek.Api.Channels.Shared;
     using Fifthweek.Api.Collections.Shared;
     using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.CodeGeneration;
+    using System.Threading.Tasks;
+    using System.Transactions;
+    using Fifthweek.Api.Core;
+    using Fifthweek.Api.Persistence;
+    using Fifthweek.Shared;
+    using System.Collections.Generic;
+    using Dapper;
+    using Fifthweek.Api.FileManagement.Shared;
 
     public partial class DeleteCollectionCommand 
     {
@@ -827,6 +842,88 @@ namespace Fifthweek.Api.Collections.Commands
         }
     }
 }
+namespace Fifthweek.Api.Collections.Commands
+{
+    using System;
+    using System.Linq;
+    using Fifthweek.Api.Channels.Shared;
+    using Fifthweek.Api.Collections.Shared;
+    using Fifthweek.Api.Identity.Shared.Membership;
+    using Fifthweek.CodeGeneration;
+    using System.Threading.Tasks;
+    using System.Transactions;
+    using Fifthweek.Api.Core;
+    using Fifthweek.Api.Persistence;
+    using Fifthweek.Shared;
+    using System.Collections.Generic;
+    using Dapper;
+    using Fifthweek.Api.FileManagement.Shared;
+
+    public partial class DeleteCollectionCommandHandler 
+    {
+        public DeleteCollectionCommandHandler(
+            Fifthweek.Api.Identity.Shared.Membership.IRequesterSecurity requesterSecurity,
+            Fifthweek.Api.Collections.Shared.ICollectionSecurity collectionSecurity,
+            Fifthweek.Api.Collections.IDeleteCollectionDbStatement deleteCollection,
+            Fifthweek.Api.FileManagement.Shared.IScheduleGarbageCollectionStatement scheduleGarbageCollection)
+        {
+            if (requesterSecurity == null)
+            {
+                throw new ArgumentNullException("requesterSecurity");
+            }
+
+            if (collectionSecurity == null)
+            {
+                throw new ArgumentNullException("collectionSecurity");
+            }
+
+            if (deleteCollection == null)
+            {
+                throw new ArgumentNullException("deleteCollection");
+            }
+
+            if (scheduleGarbageCollection == null)
+            {
+                throw new ArgumentNullException("scheduleGarbageCollection");
+            }
+
+            this.requesterSecurity = requesterSecurity;
+            this.collectionSecurity = collectionSecurity;
+            this.deleteCollection = deleteCollection;
+            this.scheduleGarbageCollection = scheduleGarbageCollection;
+        }
+    }
+}
+namespace Fifthweek.Api.Collections
+{
+    using System;
+    using System.Linq;
+    using System.Threading.Tasks;
+    using Dapper;
+    using Fifthweek.Api.Core;
+    using Fifthweek.Api.Identity.Shared.Membership;
+    using Fifthweek.Api.Persistence;
+    using Fifthweek.CodeGeneration;
+    using Fifthweek.Api.Collections.Shared;
+    using System.Collections.Generic;
+    using System.Text;
+    using Fifthweek.Api.Channels.Shared;
+    using Fifthweek.Api.Collections.Queries;
+
+    public partial class DeleteCollectionDbStatement 
+    {
+        public DeleteCollectionDbStatement(
+            Fifthweek.Api.Persistence.IFifthweekDbContext databaseContext)
+        {
+            if (databaseContext == null)
+            {
+                throw new ArgumentNullException("databaseContext");
+            }
+
+            this.databaseContext = databaseContext;
+        }
+    }
+}
 
 namespace Fifthweek.Api.Collections.Commands
 {
@@ -843,6 +940,7 @@ namespace Fifthweek.Api.Collections.Commands
     using Fifthweek.Shared;
     using System.Collections.Generic;
     using Dapper;
+    using Fifthweek.Api.FileManagement.Shared;
 
     public partial class CreateCollectionCommand 
     {
@@ -925,6 +1023,7 @@ namespace Fifthweek.Api.Collections.Commands
     using Fifthweek.Shared;
     using System.Collections.Generic;
     using Dapper;
+    using Fifthweek.Api.FileManagement.Shared;
 
     public partial class UpdateCollectionCommand 
     {
@@ -1293,9 +1392,20 @@ namespace Fifthweek.Api.Collections.Queries
 }
 namespace Fifthweek.Api.Collections.Commands
 {
+    using System;
+    using System.Linq;
+    using Fifthweek.Api.Channels.Shared;
     using Fifthweek.Api.Collections.Shared;
     using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.CodeGeneration;
+    using System.Threading.Tasks;
+    using System.Transactions;
+    using Fifthweek.Api.Core;
+    using Fifthweek.Api.Persistence;
+    using Fifthweek.Shared;
+    using System.Collections.Generic;
+    using Dapper;
+    using Fifthweek.Api.FileManagement.Shared;
 
     public partial class DeleteCollectionCommand 
     {

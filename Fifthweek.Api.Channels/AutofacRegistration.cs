@@ -11,6 +11,7 @@
         {
             builder.RegisterType<ChannelOwnership>().As<IChannelOwnership>();
             builder.RegisterType<ChannelSecurity>().As<IChannelSecurity>();
+            builder.RegisterType<DeleteChannelDbStatement>().As<IDeleteChannelDbStatement>();
         }
     }
 }
