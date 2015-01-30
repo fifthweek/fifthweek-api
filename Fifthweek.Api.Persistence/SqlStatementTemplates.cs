@@ -41,5 +41,24 @@ namespace Fifthweek.Api.Persistence
                 }
             }
         }
+
+        public static void AppendMergeOnParameters(this StringBuilder sql, IReadOnlyList<string> fields)
+        {
+            for (var i = 0; i < fields.Count; i++)
+            {
+                var isLast = i == fields.Count - 1;
+                var field = fields[i];
+
+                sql.Append("Target.");
+                sql.Append(field);
+                sql.Append("=Source.");
+                sql.Append(field);
+
+                if (!isLast)
+                {
+                    sql.Append(" AND ");
+                }
+            }
+        }
     }
 }

@@ -13,7 +13,7 @@
 
         public static RefreshTokenId Create()
         {
-            return new RefreshTokenId(Guid.NewGuid().ToString("n"));
+            return new RefreshTokenId(Guid.NewGuid().EncodeGuid());
         }
     }
 }

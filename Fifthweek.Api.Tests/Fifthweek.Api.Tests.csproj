@@ -143,6 +143,10 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Fifthweek.Api.AssemblyResolution\Fifthweek.Api.AssemblyResolution.csproj">
+      <Project>{47648FEB-DCEB-4151-8B98-EFE1388F11FD}</Project>
+      <Name>Fifthweek.Api.AssemblyResolution</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Fifthweek.Api.Availability\Fifthweek.Api.Availability.csproj">
       <Project>{f42bec68-554b-4c11-8533-92bec56f23a4}</Project>
       <Name>Fifthweek.Api.Availability</Name>

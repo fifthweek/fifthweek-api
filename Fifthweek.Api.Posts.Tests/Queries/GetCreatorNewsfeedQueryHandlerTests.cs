@@ -6,6 +6,7 @@
     using System.Linq;
     using System.Threading.Tasks;
 
+    using Fifthweek.Api.AssemblyResolution;
     using Fifthweek.Api.Channels;
     using Fifthweek.Api.Channels.Shared;
     using Fifthweek.Api.Collections;

@@ -1,7 +1,8 @@
 ﻿using System;
 using System.Linq;
 
-
+//// Generated on 30/01/2015 11:12:32 (UTC)
+//// Mapped solution in 3.57s
 
 
 namespace Fifthweek.Api.Persistence
@@ -253,6 +254,62 @@ namespace Fifthweek.Api.Persistence
             this.ScheduledByQueue = scheduledByQueue;
             this.LiveDate = liveDate;
             this.CreationDate = creationDate;
+        }
+    }
+}
+namespace Fifthweek.Api.Persistence
+{
+    using System;
+    using System.ComponentModel.DataAnnotations;
+    using System.ComponentModel.DataAnnotations.Schema;
+    using Fifthweek.CodeGeneration;
+
+    public partial class RefreshToken 
+    {
+        public RefreshToken(
+            System.String hashedId,
+            System.String username,
+            System.String clientId,
+            System.DateTime issuedDate,
+            System.DateTime expiresDate,
+            System.String protectedTicket)
+        {
+            if (hashedId == null)
+            {
+                throw new ArgumentNullException("hashedId");
+            }
+
+            if (username == null)
+            {
+                throw new ArgumentNullException("username");
+            }
+
+            if (clientId == null)
+            {
+                throw new ArgumentNullException("clientId");
+            }
+
+            if (issuedDate == null)
+            {
+                throw new ArgumentNullException("issuedDate");
+            }
+
+            if (expiresDate == null)
+            {
+                throw new ArgumentNullException("expiresDate");
+            }
+
+            if (protectedTicket == null)
+            {
+                throw new ArgumentNullException("protectedTicket");
+            }
+
+            this.HashedId = hashedId;
+            this.Username = username;
+            this.ClientId = clientId;
+            this.IssuedDate = issuedDate;
+            this.ExpiresDate = expiresDate;
+            this.ProtectedTicket = protectedTicket;
         }
     }
 }
@@ -638,6 +695,67 @@ namespace Fifthweek.Api.Persistence
 namespace Fifthweek.Api.Persistence.Identity
 {
     using System;
+    using System.ComponentModel.DataAnnotations;
+    using Fifthweek.CodeGeneration;
+    using Microsoft.AspNet.Identity.EntityFramework;
+
+    public partial class FifthweekRole 
+    {
+        public override string ToString()
+        {
+            return string.Format("FifthweekRole({0}, \"{1}\")", this.Id == null ? "null" : this.Id.ToString(), this.Name == null ? "null" : this.Name.ToString());
+        }
+        
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj))
+            {
+                return false;
+            }
+        
+            if (ReferenceEquals(this, obj))
+            {
+                return true;
+            }
+        
+            if (obj.GetType() != this.GetType())
+            {
+                return false;
+            }
+        
+            return this.Equals((FifthweekRole)obj);
+        }
+        
+        public override int GetHashCode()
+        {
+            unchecked
+            {
+                int hashCode = 0;
+                hashCode = (hashCode * 397) ^ (this.Id != null ? this.Id.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.Name != null ? this.Name.GetHashCode() : 0);
+                return hashCode;
+            }
+        }
+        
+        protected bool Equals(FifthweekRole other)
+        {
+            if (!object.Equals(this.Id, other.Id))
+            {
+                return false;
+            }
+        
+            if (!object.Equals(this.Name, other.Name))
+            {
+                return false;
+            }
+        
+            return true;
+        }
+    }
+}
+namespace Fifthweek.Api.Persistence.Identity
+{
+    using System;
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
     using Fifthweek.CodeGeneration;
@@ -787,6 +905,67 @@ namespace Fifthweek.Api.Persistence.Identity
         }
     }
 }
+namespace Fifthweek.Api.Persistence.Identity
+{
+    using System;
+    using System.ComponentModel.DataAnnotations;
+    using Fifthweek.CodeGeneration;
+    using Microsoft.AspNet.Identity.EntityFramework;
+
+    public partial class FifthweekUserRole 
+    {
+        public override string ToString()
+        {
+            return string.Format("FifthweekUserRole({0}, {1})", this.RoleId == null ? "null" : this.RoleId.ToString(), this.UserId == null ? "null" : this.UserId.ToString());
+        }
+        
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj))
+            {
+                return false;
+            }
+        
+            if (ReferenceEquals(this, obj))
+            {
+                return true;
+            }
+        
+            if (obj.GetType() != this.GetType())
+            {
+                return false;
+            }
+        
+            return this.Equals((FifthweekUserRole)obj);
+        }
+        
+        public override int GetHashCode()
+        {
+            unchecked
+            {
+                int hashCode = 0;
+                hashCode = (hashCode * 397) ^ (this.RoleId != null ? this.RoleId.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.UserId != null ? this.UserId.GetHashCode() : 0);
+                return hashCode;
+            }
+        }
+        
+        protected bool Equals(FifthweekUserRole other)
+        {
+            if (!object.Equals(this.RoleId, other.RoleId))
+            {
+                return false;
+            }
+        
+            if (!object.Equals(this.UserId, other.UserId))
+            {
+                return false;
+            }
+        
+            return true;
+        }
+    }
+}
 namespace Fifthweek.Api.Persistence
 {
     using System;
@@ -882,6 +1061,91 @@ namespace Fifthweek.Api.Persistence
             }
         
             if (!object.Equals(this.CreationDate, other.CreationDate))
+            {
+                return false;
+            }
+        
+            return true;
+        }
+    }
+}
+namespace Fifthweek.Api.Persistence
+{
+    using System;
+    using System.ComponentModel.DataAnnotations;
+    using System.ComponentModel.DataAnnotations.Schema;
+    using Fifthweek.CodeGeneration;
+
+    public partial class RefreshToken 
+    {
+        public override string ToString()
+        {
+            return string.Format("RefreshToken(\"{0}\", \"{1}\", \"{2}\", {3}, {4}, \"{5}\")", this.HashedId == null ? "null" : this.HashedId.ToString(), this.Username == null ? "null" : this.Username.ToString(), this.ClientId == null ? "null" : this.ClientId.ToString(), this.IssuedDate == null ? "null" : this.IssuedDate.ToString(), this.ExpiresDate == null ? "null" : this.ExpiresDate.ToString(), this.ProtectedTicket == null ? "null" : this.ProtectedTicket.ToString());
+        }
+        
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj))
+            {
+                return false;
+            }
+        
+            if (ReferenceEquals(this, obj))
+            {
+                return true;
+            }
+        
+            if (obj.GetType() != this.GetType())
+            {
+                return false;
+            }
+        
+            return this.Equals((RefreshToken)obj);
+        }
+        
+        public override int GetHashCode()
+        {
+            unchecked
+            {
+                int hashCode = 0;
+                hashCode = (hashCode * 397) ^ (this.HashedId != null ? this.HashedId.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.Username != null ? this.Username.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.ClientId != null ? this.ClientId.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.IssuedDate != null ? this.IssuedDate.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.ExpiresDate != null ? this.ExpiresDate.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.ProtectedTicket != null ? this.ProtectedTicket.GetHashCode() : 0);
+                return hashCode;
+            }
+        }
+        
+        protected bool Equals(RefreshToken other)
+        {
+            if (!object.Equals(this.HashedId, other.HashedId))
+            {
+                return false;
+            }
+        
+            if (!object.Equals(this.Username, other.Username))
+            {
+                return false;
+            }
+        
+            if (!object.Equals(this.ClientId, other.ClientId))
+            {
+                return false;
+            }
+        
+            if (!object.Equals(this.IssuedDate, other.IssuedDate))
+            {
+                return false;
+            }
+        
+            if (!object.Equals(this.ExpiresDate, other.ExpiresDate))
+            {
+                return false;
+            }
+        
+            if (!object.Equals(this.ProtectedTicket, other.ProtectedTicket))
             {
                 return false;
             }
@@ -1093,6 +1357,7 @@ namespace Fifthweek.Api.Persistence
         }
     }
 }
+
 namespace Fifthweek.Api.Persistence
 {
     using System;
@@ -1312,7 +1577,24 @@ namespace Fifthweek.Api.Persistence
         {
             return Dapper.SqlMapper.ExecuteAsync(
                 connection, 
-                UpsertStatement(fields), 
+                UpsertStatement(Channel.Fields.Empty, fields), 
+                new 
+                {
+                    entity.Id, entity.SubscriptionId, entity.Name, entity.PriceInUsCentsPerWeek, entity.IsVisibleToNonSubscribers, entity.CreationDate
+                },
+                transaction);
+        }
+        
+        public static System.Threading.Tasks.Task UpsertAsync(
+            this System.Data.Common.DbConnection connection, 
+            Channel entity, 
+            Channel.Fields mergeOnFields,
+            Channel.Fields updateFields,
+            System.Data.IDbTransaction transaction = null)
+        {
+            return Dapper.SqlMapper.ExecuteAsync(
+                connection, 
+                UpsertStatement(mergeOnFields, updateFields), 
                 new 
                 {
                     entity.Id, entity.SubscriptionId, entity.Name, entity.PriceInUsCentsPerWeek, entity.IsVisibleToNonSubscribers, entity.CreationDate
@@ -1335,7 +1617,7 @@ namespace Fifthweek.Api.Persistence
             return idempotent ? SqlStatementTemplates.IdempotentInsert(insert) : insert;
         }
         
-        public static string UpsertStatement(Channel.Fields fields)
+        public static string UpsertStatement(Channel.Fields mergeOnFields, Channel.Fields updateFields)
         {
             // HOLDLOCK ensures operation is concurrent by not releasing the U lock on the row after determining
             // it does not exist. See: http://weblogs.sqlteam.com/dang/archive/2009/01/31/UPSERT-Race-Condition-With-MERGE.aspx
@@ -1343,11 +1625,22 @@ namespace Fifthweek.Api.Persistence
             sql.Append(
                 @"MERGE Channels WITH (HOLDLOCK) as Target
                 USING (VALUES (@Id, @SubscriptionId, @Name, @PriceInUsCentsPerWeek, @IsVisibleToNonSubscribers, @CreationDate)) AS Source (Id, SubscriptionId, Name, PriceInUsCentsPerWeek, IsVisibleToNonSubscribers, CreationDate)
-                ON    (Target.Id = Source.Id)
+                ON    (");
+                
+            if (mergeOnFields == Channel.Fields.Empty)
+            {
+                sql.Append(@"Target.Id = Source.Id");
+            }
+            else
+            {
+                sql.AppendMergeOnParameters(GetFieldNames(mergeOnFields, false));
+            }
+                
+            sql.Append(@")
                 WHEN MATCHED THEN
                     UPDATE
                     SET        ");
-            sql.AppendUpdateParameters(GetFieldNames(fields));
+            sql.AppendUpdateParameters(GetFieldNames(updateFields));
             sql.Append(
                 @" WHEN NOT MATCHED THEN
                     INSERT  (Id, SubscriptionId, Name, PriceInUsCentsPerWeek, IsVisibleToNonSubscribers, CreationDate)
@@ -1652,7 +1945,24 @@ namespace Fifthweek.Api.Persistence
         {
             return Dapper.SqlMapper.ExecuteAsync(
                 connection, 
-                UpsertStatement(fields), 
+                UpsertStatement(Collection.Fields.Empty, fields), 
+                new 
+                {
+                    entity.Id, entity.ChannelId, entity.Name, entity.QueueExclusiveLowerBound, entity.CreationDate
+                },
+                transaction);
+        }
+        
+        public static System.Threading.Tasks.Task UpsertAsync(
+            this System.Data.Common.DbConnection connection, 
+            Collection entity, 
+            Collection.Fields mergeOnFields,
+            Collection.Fields updateFields,
+            System.Data.IDbTransaction transaction = null)
+        {
+            return Dapper.SqlMapper.ExecuteAsync(
+                connection, 
+                UpsertStatement(mergeOnFields, updateFields), 
                 new 
                 {
                     entity.Id, entity.ChannelId, entity.Name, entity.QueueExclusiveLowerBound, entity.CreationDate
@@ -1675,7 +1985,7 @@ namespace Fifthweek.Api.Persistence
             return idempotent ? SqlStatementTemplates.IdempotentInsert(insert) : insert;
         }
         
-        public static string UpsertStatement(Collection.Fields fields)
+        public static string UpsertStatement(Collection.Fields mergeOnFields, Collection.Fields updateFields)
         {
             // HOLDLOCK ensures operation is concurrent by not releasing the U lock on the row after determining
             // it does not exist. See: http://weblogs.sqlteam.com/dang/archive/2009/01/31/UPSERT-Race-Condition-With-MERGE.aspx
@@ -1683,11 +1993,22 @@ namespace Fifthweek.Api.Persistence
             sql.Append(
                 @"MERGE Collections WITH (HOLDLOCK) as Target
                 USING (VALUES (@Id, @ChannelId, @Name, @QueueExclusiveLowerBound, @CreationDate)) AS Source (Id, ChannelId, Name, QueueExclusiveLowerBound, CreationDate)
-                ON    (Target.Id = Source.Id)
+                ON    (");
+                
+            if (mergeOnFields == Collection.Fields.Empty)
+            {
+                sql.Append(@"Target.Id = Source.Id");
+            }
+            else
+            {
+                sql.AppendMergeOnParameters(GetFieldNames(mergeOnFields, false));
+            }
+                
+            sql.Append(@")
                 WHEN MATCHED THEN
                     UPDATE
                     SET        ");
-            sql.AppendUpdateParameters(GetFieldNames(fields));
+            sql.AppendUpdateParameters(GetFieldNames(updateFields));
             sql.Append(
                 @" WHEN NOT MATCHED THEN
                     INSERT  (Id, ChannelId, Name, QueueExclusiveLowerBound, CreationDate)
@@ -1990,7 +2311,24 @@ namespace Fifthweek.Api.Persistence
         {
             return Dapper.SqlMapper.ExecuteAsync(
                 connection, 
-                UpsertStatement(fields), 
+                UpsertStatement(File.Fields.Empty, fields), 
+                new 
+                {
+                    entity.Id, entity.UserId, entity.State, entity.UploadStartedDate, entity.UploadCompletedDate, entity.ProcessingStartedDate, entity.ProcessingCompletedDate, entity.FileNameWithoutExtension, entity.FileExtension, entity.BlobSizeBytes, entity.Purpose
+                },
+                transaction);
+        }
+        
+        public static System.Threading.Tasks.Task UpsertAsync(
+            this System.Data.Common.DbConnection connection, 
+            File entity, 
+            File.Fields mergeOnFields,
+            File.Fields updateFields,
+            System.Data.IDbTransaction transaction = null)
+        {
+            return Dapper.SqlMapper.ExecuteAsync(
+                connection, 
+                UpsertStatement(mergeOnFields, updateFields), 
                 new 
                 {
                     entity.Id, entity.UserId, entity.State, entity.UploadStartedDate, entity.UploadCompletedDate, entity.ProcessingStartedDate, entity.ProcessingCompletedDate, entity.FileNameWithoutExtension, entity.FileExtension, entity.BlobSizeBytes, entity.Purpose
@@ -2013,7 +2351,7 @@ namespace Fifthweek.Api.Persistence
             return idempotent ? SqlStatementTemplates.IdempotentInsert(insert) : insert;
         }
         
-        public static string UpsertStatement(File.Fields fields)
+        public static string UpsertStatement(File.Fields mergeOnFields, File.Fields updateFields)
         {
             // HOLDLOCK ensures operation is concurrent by not releasing the U lock on the row after determining
             // it does not exist. See: http://weblogs.sqlteam.com/dang/archive/2009/01/31/UPSERT-Race-Condition-With-MERGE.aspx
@@ -2021,11 +2359,22 @@ namespace Fifthweek.Api.Persistence
             sql.Append(
                 @"MERGE Files WITH (HOLDLOCK) as Target
                 USING (VALUES (@Id, @UserId, @State, @UploadStartedDate, @UploadCompletedDate, @ProcessingStartedDate, @ProcessingCompletedDate, @FileNameWithoutExtension, @FileExtension, @BlobSizeBytes, @Purpose)) AS Source (Id, UserId, State, UploadStartedDate, UploadCompletedDate, ProcessingStartedDate, ProcessingCompletedDate, FileNameWithoutExtension, FileExtension, BlobSizeBytes, Purpose)
-                ON    (Target.Id = Source.Id)
+                ON    (");
+                
+            if (mergeOnFields == File.Fields.Empty)
+            {
+                sql.Append(@"Target.Id = Source.Id");
+            }
+            else
+            {
+                sql.AppendMergeOnParameters(GetFieldNames(mergeOnFields, false));
+            }
+                
+            sql.Append(@")
                 WHEN MATCHED THEN
                     UPDATE
                     SET        ");
-            sql.AppendUpdateParameters(GetFieldNames(fields));
+            sql.AppendUpdateParameters(GetFieldNames(updateFields));
             sql.Append(
                 @" WHEN NOT MATCHED THEN
                     INSERT  (Id, UserId, State, UploadStartedDate, UploadCompletedDate, ProcessingStartedDate, ProcessingCompletedDate, FileNameWithoutExtension, FileExtension, BlobSizeBytes, Purpose)
@@ -2157,6 +2506,332 @@ namespace Fifthweek.Api.Persistence
             if(excludeSpecified != fields.HasFlag(File.Fields.Purpose))
             {
                 parameters.Add("Purpose", entity.Purpose);
+            }
+        
+            return parameters;
+        }
+    }
+}
+namespace Fifthweek.Api.Persistence.Identity
+{
+    using System;
+    using System.ComponentModel.DataAnnotations;
+    using Fifthweek.CodeGeneration;
+    using Microsoft.AspNet.Identity.EntityFramework;
+
+    public partial class FifthweekRole  : IIdentityEquatable
+    {
+        public const string Table = "AspNetRoles";
+        
+        public FifthweekRole(
+            System.Guid id)
+        {
+            if (id == null)
+            {
+                throw new ArgumentNullException("id");
+            }
+
+            this.Id = id;
+        }
+        
+        public bool IdentityEquals(object other)
+        {
+            if (ReferenceEquals(null, other))
+            {
+                return false;
+            }
+        
+            if (ReferenceEquals(this, other))
+            {
+                return true;
+            }
+        
+            if (other.GetType() != this.GetType())
+            {
+                return false;
+            }
+        
+            return this.IdentityEquals((FifthweekRole)other);
+        }
+        
+        protected bool IdentityEquals(FifthweekRole other)
+        {
+            if (!object.Equals(this.Id, other.Id))
+            {
+                return false;
+            }
+        
+            return true;
+        }
+        
+        [Flags]
+        public enum Fields
+        {
+            Empty = 0,
+            Id = 1, 
+            Name = 2
+        }
+    }
+
+    public static partial class FifthweekRoleExtensions
+    {
+        public static System.Threading.Tasks.Task InsertAsync(
+            this System.Data.Common.DbConnection connection, 
+            System.Collections.Generic.IEnumerable<FifthweekRole> entities, 
+            bool idempotent = true, 
+            System.Data.IDbTransaction transaction = null)
+        {
+            return Dapper.SqlMapper.ExecuteAsync(
+                connection, 
+                InsertStatement(idempotent), 
+                entities.Select(entity => new 
+                {
+                    entity.Id, entity.Name
+                }).ToArray(),
+                transaction);
+        }
+        
+        public static System.Threading.Tasks.Task InsertAsync(
+            this System.Data.Common.DbConnection connection, 
+            FifthweekRole entity,
+            bool idempotent = true, 
+            System.Data.IDbTransaction transaction = null)
+        {
+            return Dapper.SqlMapper.ExecuteAsync(
+                connection, 
+                InsertStatement(idempotent), 
+                new 
+                {
+                    entity.Id, entity.Name
+                },
+                transaction);
+        }
+        
+        public static System.Threading.Tasks.Task InsertAsync(
+            this System.Data.Common.DbConnection connection,
+            FifthweekRole entity,
+            string selectValuesForInsertStatement,
+            FifthweekRole.Fields selectedFields,
+            bool idempotent = true,
+            System.Data.IDbTransaction transaction = null)
+        {
+            return Dapper.SqlMapper.ExecuteAsync(
+                connection,
+                selectValuesForInsertStatement + System.Environment.NewLine + InsertStatement(idempotent),
+                MaskParameters(entity, selectedFields, true),
+                transaction);
+        }
+        
+        public static async System.Threading.Tasks.Task<bool> InsertIfAsync(
+            this System.Data.Common.DbConnection connection,
+            FifthweekRole entity,
+            string condition,
+            bool idempotent = true,
+            System.Data.IDbTransaction transaction = null)
+        {
+            return -1 == await InsertIfAsync(connection, entity, new[] { condition }, idempotent, transaction);
+        }
+        
+        public static async System.Threading.Tasks.Task<bool> InsertIfAsync(
+            this System.Data.Common.DbConnection connection,
+            FifthweekRole entity,
+            string condition,
+            string selectValuesForInsertStatement,
+            FifthweekRole.Fields selectedFields,
+            bool idempotent = true,
+            System.Data.IDbTransaction transaction = null)
+        {
+            return -1 == await InsertIfAsync(connection, entity, new[] { condition }, selectValuesForInsertStatement, selectedFields, idempotent, transaction);
+        }
+        
+        public static System.Threading.Tasks.Task<int> InsertIfAsync(
+            this System.Data.Common.DbConnection connection,
+            FifthweekRole entity,
+            System.Collections.Generic.IEnumerable<string> conditions,
+            bool idempotent = true,
+            System.Data.IDbTransaction transaction = null)
+        {
+            var sql = new System.Text.StringBuilder();
+            int currentIndex = 0;
+            foreach (var condition in conditions)
+            {
+                sql.Append("IF ");
+                sql.AppendLine(condition); // Remember to use `WITH (UPDLOCK, HOLDLOCK)` in your conditions! See: http://samsaffron.com/blog/archive/2007/04/04/14.aspx
+                sql.AppendLine("BEGIN");
+                ++currentIndex;
+            }
+        
+            sql.AppendLine(InsertStatement(idempotent));
+            sql.AppendLine("SELECT -1 AS InsertAttempted"); // Indicates a (potentially idempotent) insert has been performed.
+                    
+            foreach (var condition in conditions)
+            {
+                sql.AppendLine("END");
+                sql.AppendLine("ELSE");
+                sql.Append("SELECT ").Append(--currentIndex).AppendLine(" AS InsertAttempted");
+            }
+        
+            return Dapper.SqlMapper.ExecuteScalarAsync<int>(
+                connection,
+                sql.ToString(),
+                new 
+                {
+                    entity.Id, entity.Name
+                },
+                transaction);
+        }
+        
+        public static System.Threading.Tasks.Task<int> InsertIfAsync(
+            this System.Data.Common.DbConnection connection,
+            FifthweekRole entity,
+            System.Collections.Generic.IEnumerable<string> conditions,
+            string selectValuesForInsertStatement,
+            FifthweekRole.Fields selectedFields,
+            bool idempotent = true,
+            System.Data.IDbTransaction transaction = null)
+        {
+            var sql = new System.Text.StringBuilder();
+            sql.AppendLine(selectValuesForInsertStatement);
+        
+            int currentIndex = 0;
+            foreach (var condition in conditions)
+            {
+                sql.Append("IF ");
+                sql.AppendLine(condition); // Remember to use `WITH (UPDLOCK, HOLDLOCK)` in your conditions! See: http://samsaffron.com/blog/archive/2007/04/04/14.aspx
+                sql.AppendLine("BEGIN");
+                ++currentIndex;
+            }
+        
+            sql.AppendLine(InsertStatement(idempotent));
+            sql.AppendLine("SELECT -1 AS InsertAttempted"); // Indicates a (potentially idempotent) insert has been performed.
+                    
+            foreach (var condition in conditions)
+            {
+                sql.AppendLine("END");
+                sql.AppendLine("ELSE");
+                sql.Append("SELECT ").Append(--currentIndex).AppendLine(" AS InsertAttempted");
+            }
+        
+            return Dapper.SqlMapper.ExecuteScalarAsync<int>(
+                connection,
+                sql.ToString(),
+                MaskParameters(entity, selectedFields, true),
+                transaction);
+        }
+        
+        public static System.Threading.Tasks.Task UpsertAsync(
+            this System.Data.Common.DbConnection connection, 
+            FifthweekRole entity, 
+            FifthweekRole.Fields fields,
+            System.Data.IDbTransaction transaction = null)
+        {
+            return Dapper.SqlMapper.ExecuteAsync(
+                connection, 
+                UpsertStatement(FifthweekRole.Fields.Empty, fields), 
+                new 
+                {
+                    entity.Id, entity.Name
+                },
+                transaction);
+        }
+        
+        public static System.Threading.Tasks.Task UpsertAsync(
+            this System.Data.Common.DbConnection connection, 
+            FifthweekRole entity, 
+            FifthweekRole.Fields mergeOnFields,
+            FifthweekRole.Fields updateFields,
+            System.Data.IDbTransaction transaction = null)
+        {
+            return Dapper.SqlMapper.ExecuteAsync(
+                connection, 
+                UpsertStatement(mergeOnFields, updateFields), 
+                new 
+                {
+                    entity.Id, entity.Name
+                },
+                transaction);
+        }
+        
+        public static System.Threading.Tasks.Task UpdateAsync(
+            this System.Data.Common.DbConnection connection, 
+            FifthweekRole entity, 
+            FifthweekRole.Fields fields,
+            System.Data.IDbTransaction transaction = null)
+        {
+            return Dapper.SqlMapper.ExecuteAsync(connection, UpdateStatement(fields), MaskParameters(entity, fields, false), transaction);
+        }
+        
+        public static string InsertStatement(bool idempotent = true)
+        {
+            const string insert = "INSERT INTO AspNetRoles(Id, Name) VALUES(@Id, @Name)";
+            return idempotent ? SqlStatementTemplates.IdempotentInsert(insert) : insert;
+        }
+        
+        public static string UpsertStatement(FifthweekRole.Fields mergeOnFields, FifthweekRole.Fields updateFields)
+        {
+            // HOLDLOCK ensures operation is concurrent by not releasing the U lock on the row after determining
+            // it does not exist. See: http://weblogs.sqlteam.com/dang/archive/2009/01/31/UPSERT-Race-Condition-With-MERGE.aspx
+            var sql = new System.Text.StringBuilder();
+            sql.Append(
+                @"MERGE AspNetRoles WITH (HOLDLOCK) as Target
+                USING (VALUES (@Id, @Name)) AS Source (Id, Name)
+                ON    (");
+                
+            if (mergeOnFields == FifthweekRole.Fields.Empty)
+            {
+                sql.Append(@"Target.Id = Source.Id");
+            }
+            else
+            {
+                sql.AppendMergeOnParameters(GetFieldNames(mergeOnFields, false));
+            }
+                
+            sql.Append(@")
+                WHEN MATCHED THEN
+                    UPDATE
+                    SET        ");
+            sql.AppendUpdateParameters(GetFieldNames(updateFields));
+            sql.Append(
+                @" WHEN NOT MATCHED THEN
+                    INSERT  (Id, Name)
+                    VALUES  (Source.Id, Source.Name);");
+            return sql.ToString();
+        }
+        
+        public static string UpdateStatement(FifthweekRole.Fields fields)
+        {
+            var sql = new System.Text.StringBuilder();
+            sql.Append("UPDATE AspNetRoles SET ");
+            sql.AppendUpdateParameters(GetFieldNames(fields));
+            sql.Append(" WHERE Id = @Id");
+            return sql.ToString();
+        }
+        
+        private static System.Collections.Generic.IReadOnlyList<string> GetFieldNames(FifthweekRole.Fields fields, bool autoIncludePrimaryKeys = true)
+        {
+            var fieldNames = new System.Collections.Generic.List<string>();
+            if (autoIncludePrimaryKeys)
+            {
+                fieldNames.Add("Id");
+            }
+        
+            if (fields.HasFlag(FifthweekRole.Fields.Name))
+            {
+                fieldNames.Add("Name");
+            }
+        
+            return fieldNames;
+        }
+        
+        private static object MaskParameters(FifthweekRole entity, FifthweekRole.Fields fields, bool excludeSpecified)
+        {
+            var parameters = new Dapper.DynamicParameters();
+        
+            // Assume we never want to exclude primary key field(s) from our input.
+            parameters.Add("Id", entity.Id);
+            if(excludeSpecified != fields.HasFlag(FifthweekRole.Fields.Name))
+            {
+                parameters.Add("Name", entity.Name);
             }
         
             return parameters;
@@ -2394,7 +3069,24 @@ namespace Fifthweek.Api.Persistence.Identity
         {
             return Dapper.SqlMapper.ExecuteAsync(
                 connection, 
-                UpsertStatement(fields), 
+                UpsertStatement(FifthweekUser.Fields.Empty, fields), 
+                new 
+                {
+                    entity.ExampleWork, entity.RegistrationDate, entity.LastSignInDate, entity.LastAccessTokenDate, entity.ProfileImageFileId, entity.Id, entity.AccessFailedCount, entity.Email, entity.EmailConfirmed, entity.LockoutEnabled, entity.LockoutEndDateUtc, entity.PasswordHash, entity.PhoneNumber, entity.PhoneNumberConfirmed, entity.SecurityStamp, entity.TwoFactorEnabled, entity.UserName
+                },
+                transaction);
+        }
+        
+        public static System.Threading.Tasks.Task UpsertAsync(
+            this System.Data.Common.DbConnection connection, 
+            FifthweekUser entity, 
+            FifthweekUser.Fields mergeOnFields,
+            FifthweekUser.Fields updateFields,
+            System.Data.IDbTransaction transaction = null)
+        {
+            return Dapper.SqlMapper.ExecuteAsync(
+                connection, 
+                UpsertStatement(mergeOnFields, updateFields), 
                 new 
                 {
                     entity.ExampleWork, entity.RegistrationDate, entity.LastSignInDate, entity.LastAccessTokenDate, entity.ProfileImageFileId, entity.Id, entity.AccessFailedCount, entity.Email, entity.EmailConfirmed, entity.LockoutEnabled, entity.LockoutEndDateUtc, entity.PasswordHash, entity.PhoneNumber, entity.PhoneNumberConfirmed, entity.SecurityStamp, entity.TwoFactorEnabled, entity.UserName
@@ -2417,7 +3109,7 @@ namespace Fifthweek.Api.Persistence.Identity
             return idempotent ? SqlStatementTemplates.IdempotentInsert(insert) : insert;
         }
         
-        public static string UpsertStatement(FifthweekUser.Fields fields)
+        public static string UpsertStatement(FifthweekUser.Fields mergeOnFields, FifthweekUser.Fields updateFields)
         {
             // HOLDLOCK ensures operation is concurrent by not releasing the U lock on the row after determining
             // it does not exist. See: http://weblogs.sqlteam.com/dang/archive/2009/01/31/UPSERT-Race-Condition-With-MERGE.aspx
@@ -2425,11 +3117,22 @@ namespace Fifthweek.Api.Persistence.Identity
             sql.Append(
                 @"MERGE AspNetUsers WITH (HOLDLOCK) as Target
                 USING (VALUES (@ExampleWork, @RegistrationDate, @LastSignInDate, @LastAccessTokenDate, @ProfileImageFileId, @Id, @AccessFailedCount, @Email, @EmailConfirmed, @LockoutEnabled, @LockoutEndDateUtc, @PasswordHash, @PhoneNumber, @PhoneNumberConfirmed, @SecurityStamp, @TwoFactorEnabled, @UserName)) AS Source (ExampleWork, RegistrationDate, LastSignInDate, LastAccessTokenDate, ProfileImageFileId, Id, AccessFailedCount, Email, EmailConfirmed, LockoutEnabled, LockoutEndDateUtc, PasswordHash, PhoneNumber, PhoneNumberConfirmed, SecurityStamp, TwoFactorEnabled, UserName)
-                ON    (Target.Id = Source.Id)
+                ON    (");
+                
+            if (mergeOnFields == FifthweekUser.Fields.Empty)
+            {
+                sql.Append(@"Target.Id = Source.Id");
+            }
+            else
+            {
+                sql.AppendMergeOnParameters(GetFieldNames(mergeOnFields, false));
+            }
+                
+            sql.Append(@")
                 WHEN MATCHED THEN
                     UPDATE
                     SET        ");
-            sql.AppendUpdateParameters(GetFieldNames(fields));
+            sql.AppendUpdateParameters(GetFieldNames(updateFields));
             sql.Append(
                 @" WHEN NOT MATCHED THEN
                     INSERT  (ExampleWork, RegistrationDate, LastSignInDate, LastAccessTokenDate, ProfileImageFileId, Id, AccessFailedCount, Email, EmailConfirmed, LockoutEnabled, LockoutEndDateUtc, PasswordHash, PhoneNumber, PhoneNumberConfirmed, SecurityStamp, TwoFactorEnabled, UserName)
@@ -2623,6 +3326,340 @@ namespace Fifthweek.Api.Persistence.Identity
                 parameters.Add("UserName", entity.UserName);
             }
         
+            return parameters;
+        }
+    }
+}
+namespace Fifthweek.Api.Persistence.Identity
+{
+    using System;
+    using System.ComponentModel.DataAnnotations;
+    using Fifthweek.CodeGeneration;
+    using Microsoft.AspNet.Identity.EntityFramework;
+
+    public partial class FifthweekUserRole  : IIdentityEquatable
+    {
+        public const string Table = "AspNetUserRoles";
+        
+        public FifthweekUserRole(
+            System.Guid roleId,
+            System.Guid userId)
+        {
+            if (roleId == null)
+            {
+                throw new ArgumentNullException("roleId");
+            }
+
+            if (userId == null)
+            {
+                throw new ArgumentNullException("userId");
+            }
+
+            this.RoleId = roleId;
+            this.UserId = userId;
+        }
+        
+        public bool IdentityEquals(object other)
+        {
+            if (ReferenceEquals(null, other))
+            {
+                return false;
+            }
+        
+            if (ReferenceEquals(this, other))
+            {
+                return true;
+            }
+        
+            if (other.GetType() != this.GetType())
+            {
+                return false;
+            }
+        
+            return this.IdentityEquals((FifthweekUserRole)other);
+        }
+        
+        protected bool IdentityEquals(FifthweekUserRole other)
+        {
+            if (!object.Equals(this.RoleId, other.RoleId))
+            {
+                return false;
+            }
+        
+            if (!object.Equals(this.UserId, other.UserId))
+            {
+                return false;
+            }
+        
+            return true;
+        }
+        
+        [Flags]
+        public enum Fields
+        {
+            Empty = 0,
+            RoleId = 1, 
+            UserId = 2
+        }
+    }
+
+    public static partial class FifthweekUserRoleExtensions
+    {
+        public static System.Threading.Tasks.Task InsertAsync(
+            this System.Data.Common.DbConnection connection, 
+            System.Collections.Generic.IEnumerable<FifthweekUserRole> entities, 
+            bool idempotent = true, 
+            System.Data.IDbTransaction transaction = null)
+        {
+            return Dapper.SqlMapper.ExecuteAsync(
+                connection, 
+                InsertStatement(idempotent), 
+                entities.Select(entity => new 
+                {
+                    entity.RoleId, entity.UserId
+                }).ToArray(),
+                transaction);
+        }
+        
+        public static System.Threading.Tasks.Task InsertAsync(
+            this System.Data.Common.DbConnection connection, 
+            FifthweekUserRole entity,
+            bool idempotent = true, 
+            System.Data.IDbTransaction transaction = null)
+        {
+            return Dapper.SqlMapper.ExecuteAsync(
+                connection, 
+                InsertStatement(idempotent), 
+                new 
+                {
+                    entity.RoleId, entity.UserId
+                },
+                transaction);
+        }
+        
+        public static System.Threading.Tasks.Task InsertAsync(
+            this System.Data.Common.DbConnection connection,
+            FifthweekUserRole entity,
+            string selectValuesForInsertStatement,
+            FifthweekUserRole.Fields selectedFields,
+            bool idempotent = true,
+            System.Data.IDbTransaction transaction = null)
+        {
+            return Dapper.SqlMapper.ExecuteAsync(
+                connection,
+                selectValuesForInsertStatement + System.Environment.NewLine + InsertStatement(idempotent),
+                MaskParameters(entity, selectedFields, true),
+                transaction);
+        }
+        
+        public static async System.Threading.Tasks.Task<bool> InsertIfAsync(
+            this System.Data.Common.DbConnection connection,
+            FifthweekUserRole entity,
+            string condition,
+            bool idempotent = true,
+            System.Data.IDbTransaction transaction = null)
+        {
+            return -1 == await InsertIfAsync(connection, entity, new[] { condition }, idempotent, transaction);
+        }
+        
+        public static async System.Threading.Tasks.Task<bool> InsertIfAsync(
+            this System.Data.Common.DbConnection connection,
+            FifthweekUserRole entity,
+            string condition,
+            string selectValuesForInsertStatement,
+            FifthweekUserRole.Fields selectedFields,
+            bool idempotent = true,
+            System.Data.IDbTransaction transaction = null)
+        {
+            return -1 == await InsertIfAsync(connection, entity, new[] { condition }, selectValuesForInsertStatement, selectedFields, idempotent, transaction);
+        }
+        
+        public static System.Threading.Tasks.Task<int> InsertIfAsync(
+            this System.Data.Common.DbConnection connection,
+            FifthweekUserRole entity,
+            System.Collections.Generic.IEnumerable<string> conditions,
+            bool idempotent = true,
+            System.Data.IDbTransaction transaction = null)
+        {
+            var sql = new System.Text.StringBuilder();
+            int currentIndex = 0;
+            foreach (var condition in conditions)
+            {
+                sql.Append("IF ");
+                sql.AppendLine(condition); // Remember to use `WITH (UPDLOCK, HOLDLOCK)` in your conditions! See: http://samsaffron.com/blog/archive/2007/04/04/14.aspx
+                sql.AppendLine("BEGIN");
+                ++currentIndex;
+            }
+        
+            sql.AppendLine(InsertStatement(idempotent));
+            sql.AppendLine("SELECT -1 AS InsertAttempted"); // Indicates a (potentially idempotent) insert has been performed.
+                    
+            foreach (var condition in conditions)
+            {
+                sql.AppendLine("END");
+                sql.AppendLine("ELSE");
+                sql.Append("SELECT ").Append(--currentIndex).AppendLine(" AS InsertAttempted");
+            }
+        
+            return Dapper.SqlMapper.ExecuteScalarAsync<int>(
+                connection,
+                sql.ToString(),
+                new 
+                {
+                    entity.RoleId, entity.UserId
+                },
+                transaction);
+        }
+        
+        public static System.Threading.Tasks.Task<int> InsertIfAsync(
+            this System.Data.Common.DbConnection connection,
+            FifthweekUserRole entity,
+            System.Collections.Generic.IEnumerable<string> conditions,
+            string selectValuesForInsertStatement,
+            FifthweekUserRole.Fields selectedFields,
+            bool idempotent = true,
+            System.Data.IDbTransaction transaction = null)
+        {
+            var sql = new System.Text.StringBuilder();
+            sql.AppendLine(selectValuesForInsertStatement);
+        
+            int currentIndex = 0;
+            foreach (var condition in conditions)
+            {
+                sql.Append("IF ");
+                sql.AppendLine(condition); // Remember to use `WITH (UPDLOCK, HOLDLOCK)` in your conditions! See: http://samsaffron.com/blog/archive/2007/04/04/14.aspx
+                sql.AppendLine("BEGIN");
+                ++currentIndex;
+            }
+        
+            sql.AppendLine(InsertStatement(idempotent));
+            sql.AppendLine("SELECT -1 AS InsertAttempted"); // Indicates a (potentially idempotent) insert has been performed.
+                    
+            foreach (var condition in conditions)
+            {
+                sql.AppendLine("END");
+                sql.AppendLine("ELSE");
+                sql.Append("SELECT ").Append(--currentIndex).AppendLine(" AS InsertAttempted");
+            }
+        
+            return Dapper.SqlMapper.ExecuteScalarAsync<int>(
+                connection,
+                sql.ToString(),
+                MaskParameters(entity, selectedFields, true),
+                transaction);
+        }
+        
+        public static System.Threading.Tasks.Task UpsertAsync(
+            this System.Data.Common.DbConnection connection, 
+            FifthweekUserRole entity, 
+            FifthweekUserRole.Fields fields,
+            System.Data.IDbTransaction transaction = null)
+        {
+            return Dapper.SqlMapper.ExecuteAsync(
+                connection, 
+                UpsertStatement(FifthweekUserRole.Fields.Empty, fields), 
+                new 
+                {
+                    entity.RoleId, entity.UserId
+                },
+                transaction);
+        }
+        
+        public static System.Threading.Tasks.Task UpsertAsync(
+            this System.Data.Common.DbConnection connection, 
+            FifthweekUserRole entity, 
+            FifthweekUserRole.Fields mergeOnFields,
+            FifthweekUserRole.Fields updateFields,
+            System.Data.IDbTransaction transaction = null)
+        {
+            return Dapper.SqlMapper.ExecuteAsync(
+                connection, 
+                UpsertStatement(mergeOnFields, updateFields), 
+                new 
+                {
+                    entity.RoleId, entity.UserId
+                },
+                transaction);
+        }
+        
+        public static System.Threading.Tasks.Task UpdateAsync(
+            this System.Data.Common.DbConnection connection, 
+            FifthweekUserRole entity, 
+            FifthweekUserRole.Fields fields,
+            System.Data.IDbTransaction transaction = null)
+        {
+            return Dapper.SqlMapper.ExecuteAsync(connection, UpdateStatement(fields), MaskParameters(entity, fields, false), transaction);
+        }
+        
+        public static string InsertStatement(bool idempotent = true)
+        {
+            const string insert = "INSERT INTO AspNetUserRoles(RoleId, UserId) VALUES(@RoleId, @UserId)";
+            return idempotent ? SqlStatementTemplates.IdempotentInsert(insert) : insert;
+        }
+        
+        public static string UpsertStatement(FifthweekUserRole.Fields mergeOnFields, FifthweekUserRole.Fields updateFields)
+        {
+            // HOLDLOCK ensures operation is concurrent by not releasing the U lock on the row after determining
+            // it does not exist. See: http://weblogs.sqlteam.com/dang/archive/2009/01/31/UPSERT-Race-Condition-With-MERGE.aspx
+            var sql = new System.Text.StringBuilder();
+            sql.Append(
+                @"MERGE AspNetUserRoles WITH (HOLDLOCK) as Target
+                USING (VALUES (@RoleId, @UserId)) AS Source (RoleId, UserId)
+                ON    (");
+                
+            if (mergeOnFields == FifthweekUserRole.Fields.Empty)
+            {
+                sql.Append(@"Target.RoleId = Source.RoleId AND Target.UserId = Source.UserId");
+            }
+            else
+            {
+                sql.AppendMergeOnParameters(GetFieldNames(mergeOnFields, false));
+            }
+                
+            sql.Append(@")
+                WHEN MATCHED THEN
+                    UPDATE
+                    SET        ");
+            sql.AppendUpdateParameters(GetFieldNames(updateFields));
+            sql.Append(
+                @" WHEN NOT MATCHED THEN
+                    INSERT  (RoleId, UserId)
+                    VALUES  (Source.RoleId, Source.UserId);");
+            return sql.ToString();
+        }
+        
+        public static string UpdateStatement(FifthweekUserRole.Fields fields)
+        {
+            var sql = new System.Text.StringBuilder();
+            sql.Append("UPDATE AspNetUserRoles SET ");
+            sql.AppendUpdateParameters(GetFieldNames(fields));
+            sql.Append(" WHERE RoleId = @RoleId AND UserId = @UserId");
+            return sql.ToString();
+        }
+        
+        private static System.Collections.Generic.IReadOnlyList<string> GetFieldNames(FifthweekUserRole.Fields fields, bool autoIncludePrimaryKeys = true)
+        {
+            var fieldNames = new System.Collections.Generic.List<string>();
+            if (autoIncludePrimaryKeys)
+            {
+                fieldNames.Add("RoleId");
+            }
+        
+            if (autoIncludePrimaryKeys)
+            {
+                fieldNames.Add("UserId");
+            }
+        
+            return fieldNames;
+        }
+        
+        private static object MaskParameters(FifthweekUserRole entity, FifthweekUserRole.Fields fields, bool excludeSpecified)
+        {
+            var parameters = new Dapper.DynamicParameters();
+        
+            // Assume we never want to exclude primary key field(s) from our input.
+            parameters.Add("RoleId", entity.RoleId);
+            parameters.Add("UserId", entity.UserId);
             return parameters;
         }
     }
@@ -2849,7 +3886,24 @@ namespace Fifthweek.Api.Persistence
         {
             return Dapper.SqlMapper.ExecuteAsync(
                 connection, 
-                UpsertStatement(fields), 
+                UpsertStatement(Post.Fields.Empty, fields), 
+                new 
+                {
+                    entity.Id, entity.ChannelId, entity.CollectionId, entity.FileId, entity.ImageId, entity.Comment, entity.ScheduledByQueue, entity.LiveDate, entity.CreationDate
+                },
+                transaction);
+        }
+        
+        public static System.Threading.Tasks.Task UpsertAsync(
+            this System.Data.Common.DbConnection connection, 
+            Post entity, 
+            Post.Fields mergeOnFields,
+            Post.Fields updateFields,
+            System.Data.IDbTransaction transaction = null)
+        {
+            return Dapper.SqlMapper.ExecuteAsync(
+                connection, 
+                UpsertStatement(mergeOnFields, updateFields), 
                 new 
                 {
                     entity.Id, entity.ChannelId, entity.CollectionId, entity.FileId, entity.ImageId, entity.Comment, entity.ScheduledByQueue, entity.LiveDate, entity.CreationDate
@@ -2872,7 +3926,7 @@ namespace Fifthweek.Api.Persistence
             return idempotent ? SqlStatementTemplates.IdempotentInsert(insert) : insert;
         }
         
-        public static string UpsertStatement(Post.Fields fields)
+        public static string UpsertStatement(Post.Fields mergeOnFields, Post.Fields updateFields)
         {
             // HOLDLOCK ensures operation is concurrent by not releasing the U lock on the row after determining
             // it does not exist. See: http://weblogs.sqlteam.com/dang/archive/2009/01/31/UPSERT-Race-Condition-With-MERGE.aspx
@@ -2880,11 +3934,22 @@ namespace Fifthweek.Api.Persistence
             sql.Append(
                 @"MERGE Posts WITH (HOLDLOCK) as Target
                 USING (VALUES (@Id, @ChannelId, @CollectionId, @FileId, @ImageId, @Comment, @ScheduledByQueue, @LiveDate, @CreationDate)) AS Source (Id, ChannelId, CollectionId, FileId, ImageId, Comment, ScheduledByQueue, LiveDate, CreationDate)
-                ON    (Target.Id = Source.Id)
+                ON    (");
+                
+            if (mergeOnFields == Post.Fields.Empty)
+            {
+                sql.Append(@"Target.Id = Source.Id");
+            }
+            else
+            {
+                sql.AppendMergeOnParameters(GetFieldNames(mergeOnFields, false));
+            }
+                
+            sql.Append(@")
                 WHEN MATCHED THEN
                     UPDATE
                     SET        ");
-            sql.AppendUpdateParameters(GetFieldNames(fields));
+            sql.AppendUpdateParameters(GetFieldNames(updateFields));
             sql.Append(
                 @" WHEN NOT MATCHED THEN
                     INSERT  (Id, ChannelId, CollectionId, FileId, ImageId, Comment, ScheduledByQueue, LiveDate, CreationDate)
@@ -2996,6 +4061,376 @@ namespace Fifthweek.Api.Persistence
             if(excludeSpecified != fields.HasFlag(Post.Fields.CreationDate))
             {
                 parameters.Add("CreationDate", entity.CreationDate);
+            }
+        
+            return parameters;
+        }
+    }
+}
+namespace Fifthweek.Api.Persistence
+{
+    using System;
+    using System.ComponentModel.DataAnnotations;
+    using System.ComponentModel.DataAnnotations.Schema;
+    using Fifthweek.CodeGeneration;
+
+    public partial class RefreshToken  : IIdentityEquatable
+    {
+        public const string Table = "RefreshTokens";
+        
+        public RefreshToken(
+            System.String hashedId)
+        {
+            if (hashedId == null)
+            {
+                throw new ArgumentNullException("hashedId");
+            }
+
+            this.HashedId = hashedId;
+        }
+        
+        public bool IdentityEquals(object other)
+        {
+            if (ReferenceEquals(null, other))
+            {
+                return false;
+            }
+        
+            if (ReferenceEquals(this, other))
+            {
+                return true;
+            }
+        
+            if (other.GetType() != this.GetType())
+            {
+                return false;
+            }
+        
+            return this.IdentityEquals((RefreshToken)other);
+        }
+        
+        protected bool IdentityEquals(RefreshToken other)
+        {
+            if (!object.Equals(this.HashedId, other.HashedId))
+            {
+                return false;
+            }
+        
+            return true;
+        }
+        
+        [Flags]
+        public enum Fields
+        {
+            Empty = 0,
+            HashedId = 1, 
+            Username = 2, 
+            ClientId = 4, 
+            IssuedDate = 8, 
+            ExpiresDate = 16, 
+            ProtectedTicket = 32
+        }
+    }
+
+    public static partial class RefreshTokenExtensions
+    {
+        public static System.Threading.Tasks.Task InsertAsync(
+            this System.Data.Common.DbConnection connection, 
+            System.Collections.Generic.IEnumerable<RefreshToken> entities, 
+            bool idempotent = true, 
+            System.Data.IDbTransaction transaction = null)
+        {
+            return Dapper.SqlMapper.ExecuteAsync(
+                connection, 
+                InsertStatement(idempotent), 
+                entities.Select(entity => new 
+                {
+                    entity.HashedId, entity.Username, entity.ClientId, entity.IssuedDate, entity.ExpiresDate, entity.ProtectedTicket
+                }).ToArray(),
+                transaction);
+        }
+        
+        public static System.Threading.Tasks.Task InsertAsync(
+            this System.Data.Common.DbConnection connection, 
+            RefreshToken entity,
+            bool idempotent = true, 
+            System.Data.IDbTransaction transaction = null)
+        {
+            return Dapper.SqlMapper.ExecuteAsync(
+                connection, 
+                InsertStatement(idempotent), 
+                new 
+                {
+                    entity.HashedId, entity.Username, entity.ClientId, entity.IssuedDate, entity.ExpiresDate, entity.ProtectedTicket
+                },
+                transaction);
+        }
+        
+        public static System.Threading.Tasks.Task InsertAsync(
+            this System.Data.Common.DbConnection connection,
+            RefreshToken entity,
+            string selectValuesForInsertStatement,
+            RefreshToken.Fields selectedFields,
+            bool idempotent = true,
+            System.Data.IDbTransaction transaction = null)
+        {
+            return Dapper.SqlMapper.ExecuteAsync(
+                connection,
+                selectValuesForInsertStatement + System.Environment.NewLine + InsertStatement(idempotent),
+                MaskParameters(entity, selectedFields, true),
+                transaction);
+        }
+        
+        public static async System.Threading.Tasks.Task<bool> InsertIfAsync(
+            this System.Data.Common.DbConnection connection,
+            RefreshToken entity,
+            string condition,
+            bool idempotent = true,
+            System.Data.IDbTransaction transaction = null)
+        {
+            return -1 == await InsertIfAsync(connection, entity, new[] { condition }, idempotent, transaction);
+        }
+        
+        public static async System.Threading.Tasks.Task<bool> InsertIfAsync(
+            this System.Data.Common.DbConnection connection,
+            RefreshToken entity,
+            string condition,
+            string selectValuesForInsertStatement,
+            RefreshToken.Fields selectedFields,
+            bool idempotent = true,
+            System.Data.IDbTransaction transaction = null)
+        {
+            return -1 == await InsertIfAsync(connection, entity, new[] { condition }, selectValuesForInsertStatement, selectedFields, idempotent, transaction);
+        }
+        
+        public static System.Threading.Tasks.Task<int> InsertIfAsync(
+            this System.Data.Common.DbConnection connection,
+            RefreshToken entity,
+            System.Collections.Generic.IEnumerable<string> conditions,
+            bool idempotent = true,
+            System.Data.IDbTransaction transaction = null)
+        {
+            var sql = new System.Text.StringBuilder();
+            int currentIndex = 0;
+            foreach (var condition in conditions)
+            {
+                sql.Append("IF ");
+                sql.AppendLine(condition); // Remember to use `WITH (UPDLOCK, HOLDLOCK)` in your conditions! See: http://samsaffron.com/blog/archive/2007/04/04/14.aspx
+                sql.AppendLine("BEGIN");
+                ++currentIndex;
+            }
+        
+            sql.AppendLine(InsertStatement(idempotent));
+            sql.AppendLine("SELECT -1 AS InsertAttempted"); // Indicates a (potentially idempotent) insert has been performed.
+                    
+            foreach (var condition in conditions)
+            {
+                sql.AppendLine("END");
+                sql.AppendLine("ELSE");
+                sql.Append("SELECT ").Append(--currentIndex).AppendLine(" AS InsertAttempted");
+            }
+        
+            return Dapper.SqlMapper.ExecuteScalarAsync<int>(
+                connection,
+                sql.ToString(),
+                new 
+                {
+                    entity.HashedId, entity.Username, entity.ClientId, entity.IssuedDate, entity.ExpiresDate, entity.ProtectedTicket
+                },
+                transaction);
+        }
+        
+        public static System.Threading.Tasks.Task<int> InsertIfAsync(
+            this System.Data.Common.DbConnection connection,
+            RefreshToken entity,
+            System.Collections.Generic.IEnumerable<string> conditions,
+            string selectValuesForInsertStatement,
+            RefreshToken.Fields selectedFields,
+            bool idempotent = true,
+            System.Data.IDbTransaction transaction = null)
+        {
+            var sql = new System.Text.StringBuilder();
+            sql.AppendLine(selectValuesForInsertStatement);
+        
+            int currentIndex = 0;
+            foreach (var condition in conditions)
+            {
+                sql.Append("IF ");
+                sql.AppendLine(condition); // Remember to use `WITH (UPDLOCK, HOLDLOCK)` in your conditions! See: http://samsaffron.com/blog/archive/2007/04/04/14.aspx
+                sql.AppendLine("BEGIN");
+                ++currentIndex;
+            }
+        
+            sql.AppendLine(InsertStatement(idempotent));
+            sql.AppendLine("SELECT -1 AS InsertAttempted"); // Indicates a (potentially idempotent) insert has been performed.
+                    
+            foreach (var condition in conditions)
+            {
+                sql.AppendLine("END");
+                sql.AppendLine("ELSE");
+                sql.Append("SELECT ").Append(--currentIndex).AppendLine(" AS InsertAttempted");
+            }
+        
+            return Dapper.SqlMapper.ExecuteScalarAsync<int>(
+                connection,
+                sql.ToString(),
+                MaskParameters(entity, selectedFields, true),
+                transaction);
+        }
+        
+        public static System.Threading.Tasks.Task UpsertAsync(
+            this System.Data.Common.DbConnection connection, 
+            RefreshToken entity, 
+            RefreshToken.Fields fields,
+            System.Data.IDbTransaction transaction = null)
+        {
+            return Dapper.SqlMapper.ExecuteAsync(
+                connection, 
+                UpsertStatement(RefreshToken.Fields.Empty, fields), 
+                new 
+                {
+                    entity.HashedId, entity.Username, entity.ClientId, entity.IssuedDate, entity.ExpiresDate, entity.ProtectedTicket
+                },
+                transaction);
+        }
+        
+        public static System.Threading.Tasks.Task UpsertAsync(
+            this System.Data.Common.DbConnection connection, 
+            RefreshToken entity, 
+            RefreshToken.Fields mergeOnFields,
+            RefreshToken.Fields updateFields,
+            System.Data.IDbTransaction transaction = null)
+        {
+            return Dapper.SqlMapper.ExecuteAsync(
+                connection, 
+                UpsertStatement(mergeOnFields, updateFields), 
+                new 
+                {
+                    entity.HashedId, entity.Username, entity.ClientId, entity.IssuedDate, entity.ExpiresDate, entity.ProtectedTicket
+                },
+                transaction);
+        }
+        
+        public static System.Threading.Tasks.Task UpdateAsync(
+            this System.Data.Common.DbConnection connection, 
+            RefreshToken entity, 
+            RefreshToken.Fields fields,
+            System.Data.IDbTransaction transaction = null)
+        {
+            return Dapper.SqlMapper.ExecuteAsync(connection, UpdateStatement(fields), MaskParameters(entity, fields, false), transaction);
+        }
+        
+        public static string InsertStatement(bool idempotent = true)
+        {
+            const string insert = "INSERT INTO RefreshTokens(HashedId, Username, ClientId, IssuedDate, ExpiresDate, ProtectedTicket) VALUES(@HashedId, @Username, @ClientId, @IssuedDate, @ExpiresDate, @ProtectedTicket)";
+            return idempotent ? SqlStatementTemplates.IdempotentInsert(insert) : insert;
+        }
+        
+        public static string UpsertStatement(RefreshToken.Fields mergeOnFields, RefreshToken.Fields updateFields)
+        {
+            // HOLDLOCK ensures operation is concurrent by not releasing the U lock on the row after determining
+            // it does not exist. See: http://weblogs.sqlteam.com/dang/archive/2009/01/31/UPSERT-Race-Condition-With-MERGE.aspx
+            var sql = new System.Text.StringBuilder();
+            sql.Append(
+                @"MERGE RefreshTokens WITH (HOLDLOCK) as Target
+                USING (VALUES (@HashedId, @Username, @ClientId, @IssuedDate, @ExpiresDate, @ProtectedTicket)) AS Source (HashedId, Username, ClientId, IssuedDate, ExpiresDate, ProtectedTicket)
+                ON    (");
+                
+            if (mergeOnFields == RefreshToken.Fields.Empty)
+            {
+                sql.Append(@"Target.HashedId = Source.HashedId");
+            }
+            else
+            {
+                sql.AppendMergeOnParameters(GetFieldNames(mergeOnFields, false));
+            }
+                
+            sql.Append(@")
+                WHEN MATCHED THEN
+                    UPDATE
+                    SET        ");
+            sql.AppendUpdateParameters(GetFieldNames(updateFields));
+            sql.Append(
+                @" WHEN NOT MATCHED THEN
+                    INSERT  (HashedId, Username, ClientId, IssuedDate, ExpiresDate, ProtectedTicket)
+                    VALUES  (Source.HashedId, Source.Username, Source.ClientId, Source.IssuedDate, Source.ExpiresDate, Source.ProtectedTicket);");
+            return sql.ToString();
+        }
+        
+        public static string UpdateStatement(RefreshToken.Fields fields)
+        {
+            var sql = new System.Text.StringBuilder();
+            sql.Append("UPDATE RefreshTokens SET ");
+            sql.AppendUpdateParameters(GetFieldNames(fields));
+            sql.Append(" WHERE HashedId = @HashedId");
+            return sql.ToString();
+        }
+        
+        private static System.Collections.Generic.IReadOnlyList<string> GetFieldNames(RefreshToken.Fields fields, bool autoIncludePrimaryKeys = true)
+        {
+            var fieldNames = new System.Collections.Generic.List<string>();
+            if (autoIncludePrimaryKeys)
+            {
+                fieldNames.Add("HashedId");
+            }
+        
+            if (fields.HasFlag(RefreshToken.Fields.Username))
+            {
+                fieldNames.Add("Username");
+            }
+        
+            if (fields.HasFlag(RefreshToken.Fields.ClientId))
+            {
+                fieldNames.Add("ClientId");
+            }
+        
+            if (fields.HasFlag(RefreshToken.Fields.IssuedDate))
+            {
+                fieldNames.Add("IssuedDate");
+            }
+        
+            if (fields.HasFlag(RefreshToken.Fields.ExpiresDate))
+            {
+                fieldNames.Add("ExpiresDate");
+            }
+        
+            if (fields.HasFlag(RefreshToken.Fields.ProtectedTicket))
+            {
+                fieldNames.Add("ProtectedTicket");
+            }
+        
+            return fieldNames;
+        }
+        
+        private static object MaskParameters(RefreshToken entity, RefreshToken.Fields fields, bool excludeSpecified)
+        {
+            var parameters = new Dapper.DynamicParameters();
+        
+            // Assume we never want to exclude primary key field(s) from our input.
+            parameters.Add("HashedId", entity.HashedId);
+            if(excludeSpecified != fields.HasFlag(RefreshToken.Fields.Username))
+            {
+                parameters.Add("Username", entity.Username);
+            }
+        
+            if(excludeSpecified != fields.HasFlag(RefreshToken.Fields.ClientId))
+            {
+                parameters.Add("ClientId", entity.ClientId);
+            }
+        
+            if(excludeSpecified != fields.HasFlag(RefreshToken.Fields.IssuedDate))
+            {
+                parameters.Add("IssuedDate", entity.IssuedDate);
+            }
+        
+            if(excludeSpecified != fields.HasFlag(RefreshToken.Fields.ExpiresDate))
+            {
+                parameters.Add("ExpiresDate", entity.ExpiresDate);
+            }
+        
+            if(excludeSpecified != fields.HasFlag(RefreshToken.Fields.ProtectedTicket))
+            {
+                parameters.Add("ProtectedTicket", entity.ProtectedTicket);
             }
         
             return parameters;
@@ -3227,7 +4662,24 @@ namespace Fifthweek.Api.Persistence
         {
             return Dapper.SqlMapper.ExecuteAsync(
                 connection, 
-                UpsertStatement(fields), 
+                UpsertStatement(Subscription.Fields.Empty, fields), 
+                new 
+                {
+                    entity.Id, entity.CreatorId, entity.Name, entity.Tagline, entity.Introduction, entity.Description, entity.ExternalVideoUrl, entity.HeaderImageFileId, entity.CreationDate
+                },
+                transaction);
+        }
+        
+        public static System.Threading.Tasks.Task UpsertAsync(
+            this System.Data.Common.DbConnection connection, 
+            Subscription entity, 
+            Subscription.Fields mergeOnFields,
+            Subscription.Fields updateFields,
+            System.Data.IDbTransaction transaction = null)
+        {
+            return Dapper.SqlMapper.ExecuteAsync(
+                connection, 
+                UpsertStatement(mergeOnFields, updateFields), 
                 new 
                 {
                     entity.Id, entity.CreatorId, entity.Name, entity.Tagline, entity.Introduction, entity.Description, entity.ExternalVideoUrl, entity.HeaderImageFileId, entity.CreationDate
@@ -3250,7 +4702,7 @@ namespace Fifthweek.Api.Persistence
             return idempotent ? SqlStatementTemplates.IdempotentInsert(insert) : insert;
         }
         
-        public static string UpsertStatement(Subscription.Fields fields)
+        public static string UpsertStatement(Subscription.Fields mergeOnFields, Subscription.Fields updateFields)
         {
             // HOLDLOCK ensures operation is concurrent by not releasing the U lock on the row after determining
             // it does not exist. See: http://weblogs.sqlteam.com/dang/archive/2009/01/31/UPSERT-Race-Condition-With-MERGE.aspx
@@ -3258,11 +4710,22 @@ namespace Fifthweek.Api.Persistence
             sql.Append(
                 @"MERGE Subscriptions WITH (HOLDLOCK) as Target
                 USING (VALUES (@Id, @CreatorId, @Name, @Tagline, @Introduction, @Description, @ExternalVideoUrl, @HeaderImageFileId, @CreationDate)) AS Source (Id, CreatorId, Name, Tagline, Introduction, Description, ExternalVideoUrl, HeaderImageFileId, CreationDate)
-                ON    (Target.Id = Source.Id)
+                ON    (");
+                
+            if (mergeOnFields == Subscription.Fields.Empty)
+            {
+                sql.Append(@"Target.Id = Source.Id");
+            }
+            else
+            {
+                sql.AppendMergeOnParameters(GetFieldNames(mergeOnFields, false));
+            }
+                
+            sql.Append(@")
                 WHEN MATCHED THEN
                     UPDATE
                     SET        ");
-            sql.AppendUpdateParameters(GetFieldNames(fields));
+            sql.AppendUpdateParameters(GetFieldNames(updateFields));
             sql.Append(
                 @" WHEN NOT MATCHED THEN
                     INSERT  (Id, CreatorId, Name, Tagline, Introduction, Description, ExternalVideoUrl, HeaderImageFileId, CreationDate)
@@ -3607,7 +5070,24 @@ namespace Fifthweek.Api.Persistence
         {
             return Dapper.SqlMapper.ExecuteAsync(
                 connection, 
-                UpsertStatement(fields), 
+                UpsertStatement(WeeklyReleaseTime.Fields.Empty, fields), 
+                new 
+                {
+                    entity.CollectionId, entity.HourOfWeek
+                },
+                transaction);
+        }
+        
+        public static System.Threading.Tasks.Task UpsertAsync(
+            this System.Data.Common.DbConnection connection, 
+            WeeklyReleaseTime entity, 
+            WeeklyReleaseTime.Fields mergeOnFields,
+            WeeklyReleaseTime.Fields updateFields,
+            System.Data.IDbTransaction transaction = null)
+        {
+            return Dapper.SqlMapper.ExecuteAsync(
+                connection, 
+                UpsertStatement(mergeOnFields, updateFields), 
                 new 
                 {
                     entity.CollectionId, entity.HourOfWeek
@@ -3630,7 +5110,7 @@ namespace Fifthweek.Api.Persistence
             return idempotent ? SqlStatementTemplates.IdempotentInsert(insert) : insert;
         }
         
-        public static string UpsertStatement(WeeklyReleaseTime.Fields fields)
+        public static string UpsertStatement(WeeklyReleaseTime.Fields mergeOnFields, WeeklyReleaseTime.Fields updateFields)
         {
             // HOLDLOCK ensures operation is concurrent by not releasing the U lock on the row after determining
             // it does not exist. See: http://weblogs.sqlteam.com/dang/archive/2009/01/31/UPSERT-Race-Condition-With-MERGE.aspx
@@ -3638,11 +5118,22 @@ namespace Fifthweek.Api.Persistence
             sql.Append(
                 @"MERGE WeeklyReleaseTimes WITH (HOLDLOCK) as Target
                 USING (VALUES (@CollectionId, @HourOfWeek)) AS Source (CollectionId, HourOfWeek)
-                ON    (Target.CollectionId = Source.CollectionId AND Target.HourOfWeek = Source.HourOfWeek)
+                ON    (");
+                
+            if (mergeOnFields == WeeklyReleaseTime.Fields.Empty)
+            {
+                sql.Append(@"Target.CollectionId = Source.CollectionId AND Target.HourOfWeek = Source.HourOfWeek");
+            }
+            else
+            {
+                sql.AppendMergeOnParameters(GetFieldNames(mergeOnFields, false));
+            }
+                
+            sql.Append(@")
                 WHEN MATCHED THEN
                     UPDATE
                     SET        ");
-            sql.AppendUpdateParameters(GetFieldNames(fields));
+            sql.AppendUpdateParameters(GetFieldNames(updateFields));
             sql.Append(
                 @" WHEN NOT MATCHED THEN
                     INSERT  (CollectionId, HourOfWeek)

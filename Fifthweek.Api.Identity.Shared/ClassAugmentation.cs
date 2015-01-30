@@ -1,55 +1,9 @@
 ﻿using System;
 using System.Linq;
 
+//// Generated on 30/01/2015 11:11:43 (UTC)
+//// Mapped solution in 13.87s
 
-
-namespace Fifthweek.Api.Identity.Shared.Membership
-{
-    using Fifthweek.CodeGeneration;
-
-    [Newtonsoft.Json.JsonConverter(typeof(JsonConverter))]
-    public partial class Email 
-    {
-        public class JsonConverter : Newtonsoft.Json.JsonConverter
-        {
-            public override void WriteJson(Newtonsoft.Json.JsonWriter writer, object value, Newtonsoft.Json.JsonSerializer serializer)
-            {
-                var valueType = (Email)value;
-                serializer.Serialize(writer, valueType.Value);
-            }
-        
-            public override object ReadJson(Newtonsoft.Json.JsonReader reader, Type objectType, object existingValue, Newtonsoft.Json.JsonSerializer serializer)
-            {
-                if (objectType != typeof(Email))
-                {
-                    throw new ArgumentException("Expected to deserialize JSON for type " + typeof(Email).Name, "objectType");
-                }
-        
-                var value = serializer.Deserialize<System.String>(reader);
-                return new Email(value);
-            }
-        
-            public override bool CanConvert(Type objectType)
-            {
-                return objectType == typeof(Email);
-            }
-        }
-        
-        public class DapperTypeHandler : Dapper.SqlMapper.TypeHandler<Email>, Fifthweek.Api.Persistence.IAutoRegisteredTypeHandler<Email>
-        {
-            public override void SetValue(System.Data.IDbDataParameter parameter, Email value)
-            {
-                parameter.DbType = System.Data.DbType.String;
-                parameter.Value = value.Value;
-            }
-        
-            public override Email Parse(object value)
-            {
-                return new Email((System.String)value);
-            }
-        }
-    }
-}
 namespace Fifthweek.Api.Identity.Shared.Membership
 {
     using System;
@@ -98,72 +52,7 @@ namespace Fifthweek.Api.Identity.Shared.Membership
         }
     }
 }
-namespace Fifthweek.Api.Identity.Shared.Membership
-{
-    using Fifthweek.CodeGeneration;
 
-    [Newtonsoft.Json.JsonConverter(typeof(JsonConverter))]
-    public partial class Username 
-    {
-        public class JsonConverter : Newtonsoft.Json.JsonConverter
-        {
-            public override void WriteJson(Newtonsoft.Json.JsonWriter writer, object value, Newtonsoft.Json.JsonSerializer serializer)
-            {
-                var valueType = (Username)value;
-                serializer.Serialize(writer, valueType.Value);
-            }
-        
-            public override object ReadJson(Newtonsoft.Json.JsonReader reader, Type objectType, object existingValue, Newtonsoft.Json.JsonSerializer serializer)
-            {
-                if (objectType != typeof(Username))
-                {
-                    throw new ArgumentException("Expected to deserialize JSON for type " + typeof(Username).Name, "objectType");
-                }
-        
-                var value = serializer.Deserialize<System.String>(reader);
-                return new Username(value);
-            }
-        
-            public override bool CanConvert(Type objectType)
-            {
-                return objectType == typeof(Username);
-            }
-        }
-        
-        public class DapperTypeHandler : Dapper.SqlMapper.TypeHandler<Username>, Fifthweek.Api.Persistence.IAutoRegisteredTypeHandler<Username>
-        {
-            public override void SetValue(System.Data.IDbDataParameter parameter, Username value)
-            {
-                parameter.DbType = System.Data.DbType.String;
-                parameter.Value = value.Value;
-            }
-        
-            public override Username Parse(object value)
-            {
-                return new Username((System.String)value);
-            }
-        }
-    }
-}
-
-namespace Fifthweek.Api.Identity.Shared.Membership
-{
-    using Fifthweek.CodeGeneration;
-
-    public partial class Email 
-    {
-        public Email(
-            System.String value)
-        {
-            if (value == null)
-            {
-                throw new ArgumentNullException("value");
-            }
-
-            this.Value = value;
-        }
-    }
-}
 namespace Fifthweek.Api.Identity.Shared.Membership.Events
 {
     using Fifthweek.CodeGeneration;
@@ -209,24 +98,6 @@ namespace Fifthweek.Api.Identity.Shared.Membership
     {
         public UserId(
             System.Guid value)
-        {
-            if (value == null)
-            {
-                throw new ArgumentNullException("value");
-            }
-
-            this.Value = value;
-        }
-    }
-}
-namespace Fifthweek.Api.Identity.Shared.Membership
-{
-    using Fifthweek.CodeGeneration;
-
-    public partial class Username 
-    {
-        public Username(
-            System.String value)
         {
             if (value == null)
             {
@@ -499,4 +370,5 @@ namespace Fifthweek.Api.Identity.Shared.Membership
         }
     }
 }
+
 

@@ -3,20 +3,18 @@
     using System.Threading.Tasks;
 
     using Fifthweek.Api.Core;
+    using Fifthweek.CodeGeneration;
 
-    public class RemoveRefreshTokenCommandHandler : ICommandHandler<RemoveRefreshTokenCommand>
+    [AutoConstructor]
+    public partial class RemoveRefreshTokenCommandHandler : ICommandHandler<RemoveRefreshTokenCommand>
     {
-        private readonly IRefreshTokenRepository refreshTokenRepository;
-
-        public RemoveRefreshTokenCommandHandler(
-            IRefreshTokenRepository refreshTokenRepository)
-        {
-            this.refreshTokenRepository = refreshTokenRepository;
-        }
+        private readonly IRemoveRefreshTokenDbStatement removeRefreshToken;
 
         public async Task HandleAsync(RemoveRefreshTokenCommand command)
         {
-            await this.refreshTokenRepository.RemoveRefreshToken(command.HashedRefreshTokenId.Value);
+            command.AssertNotNull("command");
+
+            await this.removeRefreshToken.ExecuteAsync(command.HashedRefreshTokenId);
         }
     }
 }

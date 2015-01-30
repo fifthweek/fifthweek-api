@@ -90,7 +90,6 @@
   </Choose>
   <ItemGroup>
     <Compile Include="Commands\ReorderQueueCommandHandlerTests.cs" />
-    <Compile Include="FifthweekAssembliesResolver.cs" />
     <Compile Include="Commands\DeletePostCommandHandlerTests.cs" />
     <Compile Include="DeletePostDbStatementTests.cs" />
     <Compile Include="PostOwnershipTests.cs" />
@@ -109,6 +108,10 @@
     <Compile Include="ValidNoteTests.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Fifthweek.Api.AssemblyResolution\Fifthweek.Api.AssemblyResolution.csproj">
+      <Project>{47648FEB-DCEB-4151-8B98-EFE1388F11FD}</Project>
+      <Name>Fifthweek.Api.AssemblyResolution</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Fifthweek.Api.Channels.Shared\Fifthweek.Api.Channels.Shared.csproj">
       <Project>{df1bb4e7-5315-4e5c-ba73-6dfa4d9e7564}</Project>
       <Name>Fifthweek.Api.Channels.Shared</Name>

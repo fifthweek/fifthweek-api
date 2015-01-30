@@ -8,6 +8,8 @@
 
     public class ClientRepository : IClientRepository
     {
+        private readonly object syncRoot = new object();
+
         private readonly Dictionary<ClientId, Client> clients = new Dictionary<ClientId, Client>();
 
         public ClientRepository()
@@ -25,13 +27,20 @@
 
         public Task<Client> TryGetClientAsync(ClientId clientId)
         {
-            Client result = null;
-            this.clients.TryGetValue(clientId, out result);
-            return Task.FromResult(result);
+            clientId.AssertNotNull("clientId");
+            lock (this.syncRoot)
+            {
+                Client result = null;
+                this.clients.TryGetValue(clientId, out result);
+                return Task.FromResult(result);
+            }
         }
 
         private void AddClient(Client client)
         {
+            client.AssertNotNull("client");
+            client.ClientId.AssertNotNull("clientId");
+
             this.clients.Add(client.ClientId, client);
         }
     }

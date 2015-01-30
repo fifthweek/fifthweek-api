@@ -180,7 +180,6 @@
     <Compile Include="ConvertExceptionsToResponsesAttribute.cs" />
     <Compile Include="ExceptionHandler.cs" />
     <Compile Include="ExceptionHandlerUtilities.cs" />
-    <Compile Include="FifthweekAssembliesResolver.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RequireHttpsAttribute.cs" />
     <Compile Include="Startup.cs" />
@@ -208,6 +207,10 @@
     <Folder Include="App_Data\" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Fifthweek.Api.AssemblyResolution\Fifthweek.Api.AssemblyResolution.csproj">
+      <Project>{47648feb-dceb-4151-8b98-efe1388f11fd}</Project>
+      <Name>Fifthweek.Api.AssemblyResolution</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Fifthweek.Api.Availability\Fifthweek.Api.Availability.csproj">
       <Project>{f42bec68-554b-4c11-8533-92bec56f23a4}</Project>
       <Name>Fifthweek.Api.Availability</Name>

@@ -5,6 +5,7 @@
     using System.Security.Claims;
     using System.Web;
 
+    using Fifthweek.Api.Core;
     using Fifthweek.Api.Identity.Shared.Membership;
 
     public class RequesterContext : IRequesterContext
@@ -20,7 +21,7 @@
                     throw new InvalidOperationException("The authenticated user does not have a UserId present in their authentication token.");
                 }
 
-                var userId = new UserId(Guid.Parse(userIdClaim.Value));
+                var userId = new UserId(userIdClaim.Value.DecodeGuid());
                 var roles = identity.FindAll(ClaimTypes.Role).Select(v => v.Value).ToList();
              
                 // This isn't currently used.

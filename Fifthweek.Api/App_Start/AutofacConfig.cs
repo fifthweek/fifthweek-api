@@ -11,6 +11,7 @@
     using Autofac.Core;
     using Autofac.Integration.WebApi;
 
+    using Fifthweek.Api.AssemblyResolution;
     using Fifthweek.Api.Core;
     using Fifthweek.Api.Logging;
     using Fifthweek.Shared;

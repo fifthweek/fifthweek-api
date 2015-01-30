@@ -35,6 +35,7 @@
             this.tables.Add(this.Load(databaseContext => databaseContext.WeeklyReleaseTimes));
             this.tables.Add(this.Load(databaseContext => databaseContext.Posts));
             this.tables.Add(this.Load(databaseContext => databaseContext.Files));
+            this.tables.Add(this.Load(databaseContext => databaseContext.RefreshTokens));
 
             Trace.WriteLine(string.Format("Snapshot taken in {0}s", Math.Round(stopwatch.Elapsed.TotalSeconds, 2)));
         }

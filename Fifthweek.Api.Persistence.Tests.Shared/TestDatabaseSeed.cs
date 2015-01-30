@@ -26,6 +26,7 @@
         private const int NotesPerChannel = 3;
         private const int ImagesPerCollection = 3;
         private const int FilesPerCollection = 3;
+        private const int RefreshTokensPerCreator = 2;
 
         private static readonly Random Random = new Random();
 
@@ -38,6 +39,7 @@
         private readonly List<WeeklyReleaseTime> weeklyReleaseTimes = new List<WeeklyReleaseTime>();
         private readonly List<Post> posts = new List<Post>();
         private readonly List<File> files = new List<File>();
+        private readonly List<RefreshToken> refreshTokens = new List<RefreshToken>();
 
         public TestDatabaseSeed(Func<IFifthweekDbContext> databaseContextFactory)
         {
@@ -105,6 +107,7 @@
                     await connection.InsertAsync(this.collections, false);
                     await connection.InsertAsync(this.weeklyReleaseTimes, false);
                     await connection.InsertAsync(this.posts, false);
+                    await connection.InsertAsync(this.refreshTokens, false);
                 }
                 finally
                 {
@@ -134,6 +137,23 @@
                 {
                     this.CreateSubscriptions(user);
                 }
+
+                this.CreateRefreshTokens(user);
+            }
+        }
+
+        private void CreateRefreshTokens(FifthweekUser user)
+        {
+            for (int i = 0; i < RefreshTokensPerCreator; i++)
+            {
+                this.refreshTokens.Add(
+                    new RefreshToken(
+                        "hash_" + i,
+                        user.UserName,
+                        "client_" + i,
+                        DateTime.UtcNow.AddSeconds(-100),
+                        DateTime.UtcNow,
+                        "protected_" + i));
             }
         }
 

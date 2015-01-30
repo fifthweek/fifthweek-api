@@ -6,6 +6,7 @@
     using System.Security.Principal;
     using System.Web;
 
+    using Fifthweek.Api.Core;
     using Fifthweek.Api.Identity.Membership;
     using Fifthweek.Api.Identity.OAuth;
     using Fifthweek.Api.Identity.Shared.Membership;
@@ -60,7 +61,7 @@
         public void WhenUserIdClaimExists_RequesterShouldBeAuthenticated()
         {
             var principal = new Principal(AuthenticationType);
-            principal.ClaimsIdentity.AddClaim(new Claim(ClaimTypes.NameIdentifier, UserId.Value.ToString()));
+            principal.ClaimsIdentity.AddClaim(new Claim(ClaimTypes.NameIdentifier, UserId.Value.EncodeGuid()));
 
             HttpContext.Current.User = principal;
 
@@ -73,7 +74,7 @@
         public void WhenNotAuthenticatedButNameIdentifierClamExists_RequesterShouldBeUnauthenticated()
         {
             var principal = new Principal(null);
-            principal.ClaimsIdentity.AddClaim(new Claim(ClaimTypes.NameIdentifier, UserId.Value.ToString()));
+            principal.ClaimsIdentity.AddClaim(new Claim(ClaimTypes.NameIdentifier, UserId.Value.EncodeGuid()));
 
             HttpContext.Current.User = principal;
 
@@ -86,7 +87,7 @@
         public void IsInRoleShouldReturnTrueIfTheAuthenticatedUserIsInRole()
         {
             var principal = new Principal(AuthenticationType);
-            principal.ClaimsIdentity.AddClaim(new Claim(ClaimTypes.NameIdentifier, UserId.Value.ToString()));
+            principal.ClaimsIdentity.AddClaim(new Claim(ClaimTypes.NameIdentifier, UserId.Value.EncodeGuid()));
             principal.ClaimsIdentity.AddClaim(new Claim(ClaimTypes.Role, "One"));
             principal.ClaimsIdentity.AddClaim(new Claim(ClaimTypes.Role, "Two"));
             principal.ClaimsIdentity.AddClaim(new Claim(ClaimTypes.Role, "Three"));
@@ -103,7 +104,7 @@
         public void IsInRoleShouldReturnFalseIfNotAuthenticated()
         {
             var principal = new Principal(null);
-            principal.ClaimsIdentity.AddClaim(new Claim(ClaimTypes.NameIdentifier, UserId.Value.ToString()));
+            principal.ClaimsIdentity.AddClaim(new Claim(ClaimTypes.NameIdentifier, UserId.Value.EncodeGuid()));
             principal.ClaimsIdentity.AddClaim(new Claim(ClaimTypes.Role, "One"));
             principal.ClaimsIdentity.AddClaim(new Claim(ClaimTypes.Role, "Two"));
             principal.ClaimsIdentity.AddClaim(new Claim(ClaimTypes.Role, "Three"));

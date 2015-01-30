@@ -49,7 +49,7 @@
             }
             else
             {
-                value = Normalize(value);
+                value = Email.Normalize(value);
 
                 if (value.Length < MinLength || value.Length > MaxLength)
                 {
@@ -84,11 +84,6 @@
             email = new ValidEmail(value);
 
             return true;
-        }
-
-        private static string Normalize(string value)
-        {
-            return value.Trim().ToLower();
         }
     }
 }

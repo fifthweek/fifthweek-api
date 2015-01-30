@@ -10,81 +10,63 @@ namespace Fifthweek.Api.Identity.OAuth
     using Fifthweek.Api.Identity.OAuth.Queries;
     using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.Api.Persistence;
+    using Fifthweek.CodeGeneration;
 
     using Microsoft.Owin.Security.Infrastructure;
 
-    public class FifthweekRefreshTokenHandler : IFifthweekRefreshTokenHandler
+    [AutoConstructor]
+    public partial class FifthweekRefreshTokenHandler : IFifthweekRefreshTokenHandler
     {
-        private readonly ICommandHandler<AddRefreshTokenCommand> addRefreshToken;
+        private readonly ICommandHandler<CreateRefreshTokenCommand> createRefreshToken;
         private readonly ICommandHandler<RemoveRefreshTokenCommand> removeRefreshToken;
-        private readonly IQueryHandler<GetRefreshTokenQuery, RefreshToken> getRefreshToken;
-
-        public FifthweekRefreshTokenHandler(
-            ICommandHandler<AddRefreshTokenCommand> addRefreshToken,
-            ICommandHandler<RemoveRefreshTokenCommand> removeRefreshToken,
-            IQueryHandler<GetRefreshTokenQuery, RefreshToken> getRefreshToken)
-        {
-            if (addRefreshToken == null)
-            {
-                throw new ArgumentNullException("addRefreshToken");
-            }
-
-            if (removeRefreshToken == null)
-            {
-                throw new ArgumentNullException("removeRefreshToken");
-            }
-
-            if (getRefreshToken == null)
-            {
-                throw new ArgumentNullException("getRefreshToken");
-            }
-
-            this.addRefreshToken = addRefreshToken;
-            this.removeRefreshToken = removeRefreshToken;
-            this.getRefreshToken = getRefreshToken;
-        }
+        private readonly IQueryHandler<TryGetRefreshTokenQuery, RefreshToken> tryGetRefreshToken;
 
         public async Task CreateAsync(AuthenticationTokenCreateContext context)
         {
+            context.AssertNotNull("context");
+
             var refreshTokenId = RefreshTokenId.Create();
+            var clientId = new ClientId(context.Ticket.Properties.Dictionary[Constants.TokenClientIdKey]);
+            var username = new Username(context.Ticket.Identity.Name);
 
-            var clientid = context.Ticket.Properties.Dictionary[Constants.TokenClientIdKey];
-
-            if (string.IsNullOrEmpty(clientid))
+            var refreshTokenLifeTime = context.OwinContext.Get<int>(Constants.TokenRefreshTokenLifeTimeKey);
+            if (refreshTokenLifeTime == default(int))
             {
-                return;
+                throw new InvalidOperationException("Refresh token lifetime not found.");
             }
 
-            var refreshTokenLifeTime = context.OwinContext.Get<string>(Constants.TokenRefreshTokenLifeTimeKey);
+            var issuedDate = DateTime.UtcNow;
+            var expiresDate = issuedDate.AddMinutes(refreshTokenLifeTime);
 
-            var username = ValidUsername.Parse(context.Ticket.Identity.Name);
+            context.Ticket.Properties.IssuedUtc = issuedDate;
+            context.Ticket.Properties.ExpiresUtc = expiresDate;
 
-            var token = new RefreshToken()
-            {
-                HashedId = Helper.GetHash(refreshTokenId.Value),
-                ClientId = clientid,
-                Username = username.Value,
-                IssuedUtc = DateTime.UtcNow,
-                ExpiresUtc = DateTime.UtcNow.AddMinutes(Convert.ToDouble((string)refreshTokenLifeTime))
-            };
-
-            context.Ticket.Properties.IssuedUtc = token.IssuedUtc;
-            context.Ticket.Properties.ExpiresUtc = token.ExpiresUtc;
-
-            token.ProtectedTicket = context.SerializeTicket();
-
-            await this.addRefreshToken.HandleAsync(new AddRefreshTokenCommand(token));
+            await this.createRefreshToken.HandleAsync(new CreateRefreshTokenCommand(
+                refreshTokenId,
+                clientId,
+                username,
+                context.SerializeTicket(),
+                issuedDate,
+                expiresDate));
 
             context.SetToken(refreshTokenId.Value);
         }
 
         public async Task ReceiveAsync(AuthenticationTokenReceiveContext context)
         {
+            context.AssertNotNull("context");
+
             var allowedOrigin = context.OwinContext.Get<string>(Constants.TokenAllowedOriginKey);
+
+            if (allowedOrigin == null)
+            {
+                throw new InvalidOperationException("Allowed origin not found.");
+            }
+
             Helper.SetAccessControlAllowOrigin(context.OwinContext, allowedOrigin);
 
             var hashedRefreshTokenId = HashedRefreshTokenId.FromRefreshToken(context.Token);
-            var refreshToken = await this.getRefreshToken.HandleAsync(new GetRefreshTokenQuery(hashedRefreshTokenId));
+            var refreshToken = await this.tryGetRefreshToken.HandleAsync(new TryGetRefreshTokenQuery(hashedRefreshTokenId));
 
             if (refreshToken != null)
             {

@@ -214,6 +214,10 @@
     <Compile Include="Migrations\201501281554133_AddVisibiltyFlagToChannels.Designer.cs">
       <DependentUpon>201501281554133_AddVisibiltyFlagToChannels.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201501301215198_RefactorRefreshTokens.cs" />
+    <Compile Include="Migrations\201501301215198_RefactorRefreshTokens.Designer.cs">
+      <DependentUpon>201501301215198_RefactorRefreshTokens.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Post.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -329,6 +333,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201501281554133_AddVisibiltyFlagToChannels.resx">
       <DependentUpon>201501281554133_AddVisibiltyFlagToChannels.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201501301215198_RefactorRefreshTokens.resx">
+      <DependentUpon>201501301215198_RefactorRefreshTokens.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>

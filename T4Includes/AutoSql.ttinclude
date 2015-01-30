@@ -280,7 +280,24 @@ public static System.Threading.Tasks.Task UpsertAsync(
 {
     return Dapper.SqlMapper.ExecuteAsync(
         connection, 
-        UpsertStatement(fields), 
+        UpsertStatement(<#= unifiedClass.FirstCodeClass.Name #>.Fields.Empty, fields), 
+        new 
+        {
+            <#= entityMaskInitialization #>
+        },
+        transaction);
+}
+
+public static System.Threading.Tasks.Task UpsertAsync(
+    this System.Data.Common.DbConnection connection, 
+    <#= unifiedClass.FirstCodeClass.Name #> entity, 
+    <#= unifiedClass.FirstCodeClass.Name #>.Fields mergeOnFields,
+    <#= unifiedClass.FirstCodeClass.Name #>.Fields updateFields,
+    System.Data.IDbTransaction transaction = null)
+{
+    return Dapper.SqlMapper.ExecuteAsync(
+        connection, 
+        UpsertStatement(mergeOnFields, updateFields), 
         new 
         {
             <#= entityMaskInitialization #>
@@ -303,7 +320,7 @@ public static string InsertStatement(bool idempotent = true)
     return idempotent ? SqlStatementTemplates.IdempotentInsert(insert) : insert;
 }
 
-public static string UpsertStatement(<#= unifiedClass.FirstCodeClass.Name #>.Fields fields)
+public static string UpsertStatement(<#= unifiedClass.FirstCodeClass.Name #>.Fields mergeOnFields, <#= unifiedClass.FirstCodeClass.Name #>.Fields updateFields)
 {
     // HOLDLOCK ensures operation is concurrent by not releasing the U lock on the row after determining
     // it does not exist. See: http://weblogs.sqlteam.com/dang/archive/2009/01/31/UPSERT-Race-Condition-With-MERGE.aspx
@@ -311,11 +328,22 @@ public static string UpsertStatement(<#= unifiedClass.FirstCodeClass.Name #>.Fie
     sql.Append(
         @"MERGE <#= tableName #> WITH (HOLDLOCK) as Target
         USING (VALUES (<#= properties #>)) AS Source (<#= propertiesWithoutAt #>)
-        ON    (<#= targetSourceIdentityPredicate #>)
+        ON    (");
+        
+    if (mergeOnFields == <#= unifiedClass.FirstCodeClass.Name #>.Fields.Empty)
+    {
+        sql.Append(@"<#= targetSourceIdentityPredicate #>");
+    }
+    else
+    {
+        sql.AppendMergeOnParameters(GetFieldNames(mergeOnFields, false));
+    }
+        
+    sql.Append(@")
         WHEN MATCHED THEN
             UPDATE
             SET        ");
-    sql.AppendUpdateParameters(GetFieldNames(fields));
+    sql.AppendUpdateParameters(GetFieldNames(updateFields));
     sql.Append(
         @" WHEN NOT MATCHED THEN
             INSERT  (<#= propertiesWithoutAt #>)

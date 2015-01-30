@@ -1,5 +1,6 @@
 ﻿namespace Fifthweek.Api.Identity.Tests.OAuth.Commands
 {
+    using System;
     using System.Threading.Tasks;
 
     using Fifthweek.Api.Identity.OAuth;
@@ -12,22 +13,33 @@
     [TestClass]
     public class RemoveRefreshTokenCommandHandlerTests
     {
-        [TestMethod]
-        public async Task ItShouldRemoveTheRefreshToken()
+        private static readonly HashedRefreshTokenId HashedRefreshTokenId = new HashedRefreshTokenId("h");
+
+        private RemoveRefreshTokenCommandHandler target;
+        private Mock<IRemoveRefreshTokenDbStatement> removeRefreshTokenDbStatement;
+
+        [TestInitialize]
+        public void TestInitialize()
         {
-            var command = new RemoveRefreshTokenCommand(new HashedRefreshTokenId("ABC"));
+            this.removeRefreshTokenDbStatement = new Mock<IRemoveRefreshTokenDbStatement>(MockBehavior.Strict);
+            this.target = new RemoveRefreshTokenCommandHandler(this.removeRefreshTokenDbStatement.Object);
+        }
 
-            var refreshTokenRepository = new Mock<IRefreshTokenRepository>();
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentNullException))]
+        public async Task WhenQueryIsNull_ItShouldThrowAnException()
+        {
+            await this.target.HandleAsync(null);
+        }
 
-            refreshTokenRepository.Setup(v => v.RemoveRefreshToken(command.HashedRefreshTokenId.Value))
-                .Returns(Task.FromResult(0)).Verifiable();
+        [TestMethod]
+        public async Task WhenQueryIsValid_ItShouldReturnTheRefreshToken()
+        {
+            this.removeRefreshTokenDbStatement.Setup(v => v.ExecuteAsync(HashedRefreshTokenId)).Returns(Task.FromResult(0)).Verifiable();
 
-            var handler = new RemoveRefreshTokenCommandHandler(
-                refreshTokenRepository.Object);
+            await this.target.HandleAsync(new RemoveRefreshTokenCommand(HashedRefreshTokenId));
 
-            await handler.HandleAsync(command);
-
-            refreshTokenRepository.Verify();
+            this.removeRefreshTokenDbStatement.Verify();
         }
     }
 }

@@ -101,6 +101,11 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>ClassAugmentation.tt</DependentUpon>
     </Compile>
+    <Compile Include="OAuth\IRemoveRefreshTokenDbStatement.cs" />
+    <Compile Include="OAuth\ITryGetRefreshTokenDbStatement.cs" />
+    <Compile Include="OAuth\IUpsertRefreshTokenDbStatement.cs" />
+    <Compile Include="OAuth\UpsertRefreshTokenDbStatement.cs" />
+    <Compile Include="OAuth\IGetUserAndRolesFromUserIdDbStatement.cs" />
     <Compile Include="Membership\AutofacRegistration.cs" />
     <Compile Include="Membership\Commands\ConfirmPasswordResetCommand.cs" />
     <Compile Include="Membership\Commands\RequestPasswordResetCommand.cs" />
@@ -108,8 +113,6 @@
     <Compile Include="Membership\Commands\ConfirmPasswordResetCommandHandler.cs" />
     <Compile Include="Membership\Commands\RequestPasswordResetCommandHandler.cs" />
     <Compile Include="Membership\Commands\RegisterUserCommandHandler.cs" />
-    <Compile Include="Membership\Commands\UpdateLastAccessTokenDateCommand.cs" />
-    <Compile Include="Membership\Commands\UpdateLastAccessTokenDateCommandHandler.cs" />
     <Compile Include="Membership\Controllers\MembershipController.cs" />
     <Compile Include="Membership\Controllers\PasswordResetConfirmationData.cs" />
     <Compile Include="Membership\Controllers\PasswordResetRequestData.cs" />
@@ -123,37 +126,45 @@
     <Compile Include="Membership\IUpdateUserTimeStampsDbStatement.cs" />
     <Compile Include="Membership\Queries\IsUsernameAvailableQuery.cs" />
     <Compile Include="Membership\Queries\IsUsernameAvailableQueryHandler.cs" />
-    <Compile Include="Membership\Queries\GetUserQuery.cs" />
-    <Compile Include="Membership\Queries\GetUserQueryHandler.cs" />
-    <Compile Include="Membership\UpdateUserTimeStampsDbStatement.cs" />
     <Compile Include="OAuth\ApplicationType.cs" />
     <Compile Include="OAuth\AutofacRegistration.cs" />
-    <Compile Include="OAuth\ChallengeResult.cs" />
     <Compile Include="OAuth\Client.cs" />
     <Compile Include="OAuth\ClientId.cs" />
     <Compile Include="OAuth\ClientRepository.cs" />
-    <Compile Include="OAuth\Commands\AddRefreshTokenCommand.cs" />
-    <Compile Include="OAuth\Commands\AddRefreshTokenCommandHandler.cs" />
+    <Compile Include="OAuth\Commands\CreateRefreshTokenCommand.cs" />
+    <Compile Include="OAuth\Commands\CreateRefreshTokenCommandHandler.cs" />
     <Compile Include="OAuth\Commands\RemoveRefreshTokenCommand.cs" />
     <Compile Include="OAuth\Commands\RemoveRefreshTokenCommandHandler.cs" />
+    <Compile Include="OAuth\Commands\UpdateLastAccessTokenDateCommand.cs" />
+    <Compile Include="OAuth\Commands\UpdateLastAccessTokenDateCommandHandler.cs" />
     <Compile Include="OAuth\FifthweekAuthorizationServerHandler.cs" />
     <Compile Include="OAuth\FifthweekAuthorizationServerProvider.cs" />
     <Compile Include="OAuth\FifthweekClaimTypes.cs" />
     <Compile Include="OAuth\FifthweekRefreshTokenHandler.cs" />
     <Compile Include="OAuth\FifthweekRefreshTokenProvider.cs" />
+    <Compile Include="OAuth\GetUserAndRolesFromUserIdDbStatement.cs" />
+    <Compile Include="OAuth\GetUserAndRolesFromCredentialsDbStatement.cs" />
     <Compile Include="OAuth\HashedRefreshTokenId.cs" />
     <Compile Include="OAuth\Helper.cs" />
     <Compile Include="OAuth\IClientRepository.cs" />
     <Compile Include="OAuth\IFifthweekAuthorizationServerHandler.cs" />
     <Compile Include="OAuth\IFifthweekRefreshTokenHandler.cs" />
-    <Compile Include="OAuth\IRefreshTokenRepository.cs" />
+    <Compile Include="OAuth\IGetUserAndRolesFromCredentialsDbStatement.cs" />
     <Compile Include="OAuth\ProviderErrorHandler.cs" />
-    <Compile Include="OAuth\Queries\GetClientQuery.cs" />
-    <Compile Include="OAuth\Queries\GetClientQueryHandler.cs" />
-    <Compile Include="OAuth\Queries\GetRefreshTokenQuery.cs" />
-    <Compile Include="OAuth\Queries\GetRefreshTokenQueryHandler.cs" />
+    <Compile Include="OAuth\Queries\ClientRequestException.cs" />
+    <Compile Include="OAuth\Queries\GetUserClaimsIdentityQuery.cs" />
+    <Compile Include="OAuth\Queries\GetUserClaimsIdentityQueryHandler.cs" />
+    <Compile Include="OAuth\Queries\GetValidatedClientQuery.cs" />
+    <Compile Include="OAuth\Queries\GetValidatedClientQueryHandler.cs" />
+    <Compile Include="OAuth\Queries\TryGetRefreshTokenQuery.cs" />
+    <Compile Include="OAuth\Queries\TryGetRefreshTokenQueryHandler.cs" />
+    <Compile Include="OAuth\Queries\UserClaimsIdentity.cs" />
     <Compile Include="OAuth\RefreshTokenId.cs" />
-    <Compile Include="OAuth\RefreshTokenRepository.cs" />
+    <Compile Include="OAuth\RemoveRefreshTokenDbStatement.cs" />
+    <Compile Include="OAuth\TryGetRefreshTokenDbStatement.cs" />
+    <Compile Include="OAuth\UpdateUserTimeStampsDbStatement.cs" />
+    <Compile Include="OAuth\UserIdAndRoles.cs" />
+    <Compile Include="OAuth\UsernameAndRoles.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

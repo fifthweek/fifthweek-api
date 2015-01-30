@@ -4,6 +4,7 @@
 
     using Autofac;
 
+    using Fifthweek.Api.AssemblyResolution;
     using Fifthweek.Api.Core;
 
     using Microsoft.VisualStudio.TestTools.UnitTesting;

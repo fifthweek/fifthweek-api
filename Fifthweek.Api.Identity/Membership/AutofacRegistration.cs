@@ -9,7 +9,7 @@
     {
         public void Register(ContainerBuilder builder)
         {
-            builder.RegisterType<UpdateUserTimeStampsDbStatement>().As<IUpdateUserTimeStampsDbStatement>().InstancePerRequest();
+            builder.RegisterType<OAuth.UpdateUserTimeStampsDbStatement>().As<IUpdateUserTimeStampsDbStatement>().InstancePerRequest();
             builder.RegisterType<RegisterUserDbStatement>().As<IRegisterUserDbStatement>().InstancePerRequest();
         }
     }

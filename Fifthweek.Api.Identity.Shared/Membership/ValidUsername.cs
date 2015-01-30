@@ -53,7 +53,7 @@
             }
             else
             {
-                value = Normalize(value);
+                value = Username.Normalize(value);
 
                 if (value.Length < MinLength || value.Length > MaxLength)
                 {
@@ -75,11 +75,6 @@
             username = new ValidUsername(value);
 
             return true;
-        }
-
-        private static string Normalize(string value)
-        {
-            return value.Trim().ToLower();
         }
     }
 }

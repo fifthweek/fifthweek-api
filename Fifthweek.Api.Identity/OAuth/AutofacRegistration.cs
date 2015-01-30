@@ -11,9 +11,14 @@
     {
         public void Register(ContainerBuilder builder)
         {
-            builder.RegisterType<RefreshTokenRepository>().As<IRefreshTokenRepository>().InstancePerRequest();
-            builder.RegisterType<ClientRepository>().As<IClientRepository>().InstancePerRequest();
+            builder.RegisterType<UpsertRefreshTokenDbStatement>().As<IUpsertRefreshTokenDbStatement>();
+            builder.RegisterType<RemoveRefreshTokenDbStatement>().As<IRemoveRefreshTokenDbStatement>();
+            builder.RegisterType<TryGetRefreshTokenDbStatement>().As<ITryGetRefreshTokenDbStatement>();
+            builder.RegisterType<UpdateUserTimeStampsDbStatement>().As<IUpdateUserTimeStampsDbStatement>();
+            builder.RegisterType<GetUserAndRolesFromCredentialsDbStatement>().As<IGetUserAndRolesFromCredentialsDbStatement>();
+            builder.RegisterType<GetUserAndRolesFromUserIdDbStatement>().As<IGetUserAndRolesFromUserIdDbStatement>();
 
+            builder.RegisterType<ClientRepository>().As<IClientRepository>().SingleInstance();
             builder.RegisterType<FifthweekAuthorizationServerProvider>().SingleInstance();
             builder.RegisterType<FifthweekAuthorizationServerHandler>().As<IFifthweekAuthorizationServerHandler>().InstancePerRequest();
             builder.RegisterType<FifthweekRefreshTokenProvider>().SingleInstance();
