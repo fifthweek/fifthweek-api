@@ -6,6 +6,7 @@
     [AutoEqualityMembers]
     public partial class RegistrationData
     {
+        [Optional]
         public string ExampleWork { get; set; }
 
         [Parsed(typeof(ValidEmail))]
