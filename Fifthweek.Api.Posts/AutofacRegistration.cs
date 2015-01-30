@@ -14,6 +14,7 @@
             builder.RegisterType<PostFileTypeChecks>().As<IPostFileTypeChecks>();
             builder.RegisterType<PostSecurity>().As<IPostSecurity>();
             builder.RegisterType<PostOwnership>().As<IPostOwnership>();
+            builder.RegisterType<ScheduledDateClippingFunction>().As<IScheduledDateClippingFunction>();
         }
     }
 }

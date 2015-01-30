@@ -3,9 +3,7 @@
     using System;
     using System.Threading.Tasks;
 
-    using Fifthweek.Api.Collections;
     using Fifthweek.Api.Collections.Shared;
-    using Fifthweek.Api.FileManagement;
     using Fifthweek.Api.FileManagement.Shared;
     using Fifthweek.Api.Persistence;
     using Fifthweek.Api.Posts.Shared;
@@ -134,7 +132,7 @@
         [TestMethod]
         public async Task ItShouldAllowImmediatePosts()
         {
-            this.subStatements.Setup(_ => _.PostNowAsync(CommentedImage, Now)).Returns(Task.FromResult(0)).Verifiable();
+            this.subStatements.Setup(_ => _.SchedulePostAsync(CommentedImage, null, Now)).Returns(Task.FromResult(0)).Verifiable();
 
             await this.target.ExecuteAsync(PostId, CollectionId, Comment, null, false, FileId, true, Now);
 

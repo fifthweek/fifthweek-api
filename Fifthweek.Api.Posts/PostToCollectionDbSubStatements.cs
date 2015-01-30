@@ -3,7 +3,6 @@ namespace Fifthweek.Api.Posts
     using System;
     using System.Threading.Tasks;
 
-    using Fifthweek.Api.Collections;
     using Fifthweek.Api.Collections.Shared;
     using Fifthweek.Api.Core;
     using Fifthweek.Api.Persistence;
@@ -37,6 +36,7 @@ namespace Fifthweek.Api.Posts
 
         private readonly IFifthweekDbContext databaseContext;
         private readonly IGetLiveDateOfNewQueuedPostDbStatement getLiveDateOfNewQueuedPost;
+        private readonly IScheduledDateClippingFunction scheduledDateClipping;
 
         public async Task QueuePostAsync(Post unscheduledPostWithoutChannel)
         {
@@ -82,33 +82,21 @@ namespace Fifthweek.Api.Posts
             }
         }
 
-        public Task SchedulePostAsync(Post unscheduledPostWithoutChannel, DateTime scheduledPostDate, DateTime now)
+        public Task SchedulePostAsync(Post unscheduledPostWithoutChannel, DateTime? scheduledPostDate, DateTime now)
         {
             unscheduledPostWithoutChannel.AssertNotNull("unscheduledPostWithoutChannel");
-            now.AssertUtc("scheduledPostDate");
+
+            if (scheduledPostDate.HasValue)
+            {
+                now.AssertUtc("scheduledPostDate");    
+            }
+            
             now.AssertUtc("now");
 
             var scheduledPostWithoutChannel = unscheduledPostWithoutChannel.Copy(_ =>
             {
                 _.ScheduledByQueue = false;
-                _.LiveDate = scheduledPostDate > now ? scheduledPostDate : now;
-            });
-
-            return this.databaseContext.Database.Connection.InsertAsync(
-                scheduledPostWithoutChannel,
-                DeclareChannelId,
-                Post.Fields.ChannelId);
-        }
-
-        public Task PostNowAsync(Post unscheduledPostWithoutChannel, DateTime now)
-        {
-            unscheduledPostWithoutChannel.AssertNotNull("unscheduledPostWithoutChannel");
-            now.AssertUtc("now");
-
-            var scheduledPostWithoutChannel = unscheduledPostWithoutChannel.Copy(_ =>
-            {
-                _.ScheduledByQueue = false;
-                _.LiveDate = now;
+                _.LiveDate = this.scheduledDateClipping.Apply(now, scheduledPostDate);
             });
 
             return this.databaseContext.Database.Connection.InsertAsync(

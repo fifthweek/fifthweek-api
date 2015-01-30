@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Linq;
 
-//// Generated on 30/01/2015 17:05:28 (UTC)
-//// Mapped solution in 3.5s
+//// Generated on 30/01/2015 18:40:07 (UTC)
+//// Mapped solution in 3.82s
 
 
 namespace Fifthweek.Api.Posts.Commands
@@ -415,7 +415,8 @@ namespace Fifthweek.Api.Posts.Commands
         public PostNoteCommandHandler(
             Fifthweek.Api.Channels.Shared.IChannelSecurity channelSecurity,
             Fifthweek.Api.Identity.Shared.Membership.IRequesterSecurity requesterSecurity,
-            Fifthweek.Api.Persistence.IFifthweekDbContext databaseContext)
+            Fifthweek.Api.Persistence.IFifthweekDbContext databaseContext,
+            Fifthweek.Api.Posts.IScheduledDateClippingFunction scheduledDateClipping)
         {
             if (channelSecurity == null)
             {
@@ -432,9 +433,15 @@ namespace Fifthweek.Api.Posts.Commands
                 throw new ArgumentNullException("databaseContext");
             }
 
+            if (scheduledDateClipping == null)
+            {
+                throw new ArgumentNullException("scheduledDateClipping");
+            }
+
             this.channelSecurity = channelSecurity;
             this.requesterSecurity = requesterSecurity;
             this.databaseContext = databaseContext;
+            this.scheduledDateClipping = scheduledDateClipping;
         }
     }
 }
@@ -1004,7 +1011,8 @@ namespace Fifthweek.Api.Posts
     {
         public PostToCollectionDbSubStatements(
             Fifthweek.Api.Persistence.IFifthweekDbContext databaseContext,
-            Fifthweek.Api.Collections.Shared.IGetLiveDateOfNewQueuedPostDbStatement getLiveDateOfNewQueuedPost)
+            Fifthweek.Api.Collections.Shared.IGetLiveDateOfNewQueuedPostDbStatement getLiveDateOfNewQueuedPost,
+            Fifthweek.Api.Posts.IScheduledDateClippingFunction scheduledDateClipping)
         {
             if (databaseContext == null)
             {
@@ -1016,8 +1024,14 @@ namespace Fifthweek.Api.Posts
                 throw new ArgumentNullException("getLiveDateOfNewQueuedPost");
             }
 
+            if (scheduledDateClipping == null)
+            {
+                throw new ArgumentNullException("scheduledDateClipping");
+            }
+
             this.databaseContext = databaseContext;
             this.getLiveDateOfNewQueuedPost = getLiveDateOfNewQueuedPost;
+            this.scheduledDateClipping = scheduledDateClipping;
         }
     }
 }
@@ -2543,78 +2557,6 @@ namespace Fifthweek.Api.Posts.Controllers
     using Fifthweek.Shared;
     using Fifthweek.Api.FileManagement.Shared;
 
-    public partial class CreatorNewsfeedPaginationData 
-    {
-        public override string ToString()
-        {
-            return string.Format("CreatorNewsfeedPaginationData({0}, {1})", this.StartIndex == null ? "null" : this.StartIndex.ToString(), this.Count == null ? "null" : this.Count.ToString());
-        }
-        
-        public override bool Equals(object obj)
-        {
-            if (ReferenceEquals(null, obj))
-            {
-                return false;
-            }
-        
-            if (ReferenceEquals(this, obj))
-            {
-                return true;
-            }
-        
-            if (obj.GetType() != this.GetType())
-            {
-                return false;
-            }
-        
-            return this.Equals((CreatorNewsfeedPaginationData)obj);
-        }
-        
-        public override int GetHashCode()
-        {
-            unchecked
-            {
-                int hashCode = 0;
-                hashCode = (hashCode * 397) ^ (this.StartIndex != null ? this.StartIndex.GetHashCode() : 0);
-                hashCode = (hashCode * 397) ^ (this.Count != null ? this.Count.GetHashCode() : 0);
-                return hashCode;
-            }
-        }
-        
-        protected bool Equals(CreatorNewsfeedPaginationData other)
-        {
-            if (!object.Equals(this.StartIndex, other.StartIndex))
-            {
-                return false;
-            }
-        
-            if (!object.Equals(this.Count, other.Count))
-            {
-                return false;
-            }
-        
-            return true;
-        }
-    }
-}
-namespace Fifthweek.Api.Posts.Controllers
-{
-    using System;
-    using System.Linq;
-    using System.Threading.Tasks;
-    using System.Web.Http;
-    using Fifthweek.Api.Core;
-    using Fifthweek.Api.Identity.Shared.Membership;
-    using Fifthweek.Api.Posts.Commands;
-    using Fifthweek.Api.Posts.Shared;
-    using Fifthweek.CodeGeneration;
-    using System.Collections.Generic;
-    using Fifthweek.Api.Collections.Shared;
-    using Fifthweek.Api.Posts.Queries;
-    using Fifthweek.Api.Channels.Shared;
-    using Fifthweek.Shared;
-    using Fifthweek.Api.FileManagement.Shared;
-
     public partial class NewImageData 
     {
         public override string ToString()
@@ -2757,6 +2699,78 @@ namespace Fifthweek.Api.Posts.Controllers
             }
         
             if (!object.Equals(this.ScheduledPostDate, other.ScheduledPostDate))
+            {
+                return false;
+            }
+        
+            return true;
+        }
+    }
+}
+namespace Fifthweek.Api.Posts.Controllers
+{
+    using System;
+    using System.Linq;
+    using System.Threading.Tasks;
+    using System.Web.Http;
+    using Fifthweek.Api.Core;
+    using Fifthweek.Api.Identity.Shared.Membership;
+    using Fifthweek.Api.Posts.Commands;
+    using Fifthweek.Api.Posts.Shared;
+    using Fifthweek.CodeGeneration;
+    using System.Collections.Generic;
+    using Fifthweek.Api.Collections.Shared;
+    using Fifthweek.Api.Posts.Queries;
+    using Fifthweek.Api.Channels.Shared;
+    using Fifthweek.Shared;
+    using Fifthweek.Api.FileManagement.Shared;
+
+    public partial class CreatorNewsfeedPaginationData 
+    {
+        public override string ToString()
+        {
+            return string.Format("CreatorNewsfeedPaginationData({0}, {1})", this.StartIndex == null ? "null" : this.StartIndex.ToString(), this.Count == null ? "null" : this.Count.ToString());
+        }
+        
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj))
+            {
+                return false;
+            }
+        
+            if (ReferenceEquals(this, obj))
+            {
+                return true;
+            }
+        
+            if (obj.GetType() != this.GetType())
+            {
+                return false;
+            }
+        
+            return this.Equals((CreatorNewsfeedPaginationData)obj);
+        }
+        
+        public override int GetHashCode()
+        {
+            unchecked
+            {
+                int hashCode = 0;
+                hashCode = (hashCode * 397) ^ (this.StartIndex != null ? this.StartIndex.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.Count != null ? this.Count.GetHashCode() : 0);
+                return hashCode;
+            }
+        }
+        
+        protected bool Equals(CreatorNewsfeedPaginationData other)
+        {
+            if (!object.Equals(this.StartIndex, other.StartIndex))
+            {
+                return false;
+            }
+        
+            if (!object.Equals(this.Count, other.Count))
             {
                 return false;
             }
@@ -3103,95 +3117,6 @@ namespace Fifthweek.Api.Posts.Controllers
     using Fifthweek.Shared;
     using Fifthweek.Api.FileManagement.Shared;
 
-    public partial class CreatorNewsfeedPaginationData 
-    {
-        public class Parsed
-        {
-            public Parsed(
-                NonNegativeInt startIndex,
-                PositiveInt count)
-            {
-                if (startIndex == null)
-                {
-                    throw new ArgumentNullException("startIndex");
-                }
-
-                if (count == null)
-                {
-                    throw new ArgumentNullException("count");
-                }
-
-                this.StartIndex = startIndex;
-                this.Count = count;
-            }
-        
-            public NonNegativeInt StartIndex { get; private set; }
-        
-            public PositiveInt Count { get; private set; }
-        }
-    }
-
-    public static partial class CreatorNewsfeedPaginationDataExtensions
-    {
-        public static CreatorNewsfeedPaginationData.Parsed Parse(this CreatorNewsfeedPaginationData target)
-        {
-            var modelStateDictionary = new System.Web.Http.ModelBinding.ModelStateDictionary();
-        
-            NonNegativeInt parsed0 = null;
-            System.Collections.Generic.IReadOnlyCollection<string> parsed0Errors;
-            if (!NonNegativeInt.TryParse(target.StartIndex, out parsed0, out parsed0Errors))
-            {
-                var modelState = new System.Web.Http.ModelBinding.ModelState();
-                foreach (var errorMessage in parsed0Errors)
-                {
-                    modelState.Errors.Add(errorMessage);
-                }
-
-                modelStateDictionary.Add("StartIndex", modelState);
-            }
-
-            PositiveInt parsed1 = null;
-            System.Collections.Generic.IReadOnlyCollection<string> parsed1Errors;
-            if (!PositiveInt.TryParse(target.Count, out parsed1, out parsed1Errors))
-            {
-                var modelState = new System.Web.Http.ModelBinding.ModelState();
-                foreach (var errorMessage in parsed1Errors)
-                {
-                    modelState.Errors.Add(errorMessage);
-                }
-
-                modelStateDictionary.Add("Count", modelState);
-            }
-
-            if (!modelStateDictionary.IsValid)
-            {
-                throw new Fifthweek.Api.Core.ModelValidationException(modelStateDictionary);
-            }
-        
-            return new CreatorNewsfeedPaginationData.Parsed(
-                parsed0,
-                parsed1);
-        }    
-    }
-}
-namespace Fifthweek.Api.Posts.Controllers
-{
-    using System;
-    using System.Linq;
-    using System.Threading.Tasks;
-    using System.Web.Http;
-    using Fifthweek.Api.Core;
-    using Fifthweek.Api.Identity.Shared.Membership;
-    using Fifthweek.Api.Posts.Commands;
-    using Fifthweek.Api.Posts.Shared;
-    using Fifthweek.CodeGeneration;
-    using System.Collections.Generic;
-    using Fifthweek.Api.Collections.Shared;
-    using Fifthweek.Api.Posts.Queries;
-    using Fifthweek.Api.Channels.Shared;
-    using Fifthweek.Shared;
-    using Fifthweek.Api.FileManagement.Shared;
-
     public partial class NewImageData 
     {
         public class Parsed
@@ -3360,6 +3285,95 @@ namespace Fifthweek.Api.Posts.Controllers
                 target.ChannelId,
                 parsed0,
                 target.ScheduledPostDate);
+        }    
+    }
+}
+namespace Fifthweek.Api.Posts.Controllers
+{
+    using System;
+    using System.Linq;
+    using System.Threading.Tasks;
+    using System.Web.Http;
+    using Fifthweek.Api.Core;
+    using Fifthweek.Api.Identity.Shared.Membership;
+    using Fifthweek.Api.Posts.Commands;
+    using Fifthweek.Api.Posts.Shared;
+    using Fifthweek.CodeGeneration;
+    using System.Collections.Generic;
+    using Fifthweek.Api.Collections.Shared;
+    using Fifthweek.Api.Posts.Queries;
+    using Fifthweek.Api.Channels.Shared;
+    using Fifthweek.Shared;
+    using Fifthweek.Api.FileManagement.Shared;
+
+    public partial class CreatorNewsfeedPaginationData 
+    {
+        public class Parsed
+        {
+            public Parsed(
+                NonNegativeInt startIndex,
+                PositiveInt count)
+            {
+                if (startIndex == null)
+                {
+                    throw new ArgumentNullException("startIndex");
+                }
+
+                if (count == null)
+                {
+                    throw new ArgumentNullException("count");
+                }
+
+                this.StartIndex = startIndex;
+                this.Count = count;
+            }
+        
+            public NonNegativeInt StartIndex { get; private set; }
+        
+            public PositiveInt Count { get; private set; }
+        }
+    }
+
+    public static partial class CreatorNewsfeedPaginationDataExtensions
+    {
+        public static CreatorNewsfeedPaginationData.Parsed Parse(this CreatorNewsfeedPaginationData target)
+        {
+            var modelStateDictionary = new System.Web.Http.ModelBinding.ModelStateDictionary();
+        
+            NonNegativeInt parsed0 = null;
+            System.Collections.Generic.IReadOnlyCollection<string> parsed0Errors;
+            if (!NonNegativeInt.TryParse(target.StartIndex, out parsed0, out parsed0Errors))
+            {
+                var modelState = new System.Web.Http.ModelBinding.ModelState();
+                foreach (var errorMessage in parsed0Errors)
+                {
+                    modelState.Errors.Add(errorMessage);
+                }
+
+                modelStateDictionary.Add("StartIndex", modelState);
+            }
+
+            PositiveInt parsed1 = null;
+            System.Collections.Generic.IReadOnlyCollection<string> parsed1Errors;
+            if (!PositiveInt.TryParse(target.Count, out parsed1, out parsed1Errors))
+            {
+                var modelState = new System.Web.Http.ModelBinding.ModelState();
+                foreach (var errorMessage in parsed1Errors)
+                {
+                    modelState.Errors.Add(errorMessage);
+                }
+
+                modelStateDictionary.Add("Count", modelState);
+            }
+
+            if (!modelStateDictionary.IsValid)
+            {
+                throw new Fifthweek.Api.Core.ModelValidationException(modelStateDictionary);
+            }
+        
+            return new CreatorNewsfeedPaginationData.Parsed(
+                parsed0,
+                parsed1);
         }    
     }
 }

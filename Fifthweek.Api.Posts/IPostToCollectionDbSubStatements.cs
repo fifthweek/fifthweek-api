@@ -9,8 +9,6 @@ namespace Fifthweek.Api.Posts
     {
         Task QueuePostAsync(Post unscheduledPostWithoutChannel);
 
-        Task SchedulePostAsync(Post unscheduledPostWithoutChannel, DateTime scheduledPostDate, DateTime now);
-
-        Task PostNowAsync(Post unscheduledPostWithoutChannel, DateTime now);
+        Task SchedulePostAsync(Post unscheduledPostWithoutChannel, DateTime? scheduledPostDate, DateTime now);
     }
 }

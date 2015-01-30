@@ -33,18 +33,25 @@
         private static readonly DateTime Now = DateTime.UtcNow;
 
         private Mock<IGetLiveDateOfNewQueuedPostDbStatement> getLiveDateOfNewQueuedPost;
+        private Mock<IScheduledDateClippingFunction> scheduledDateClipping;
         private Mock<IFifthweekDbContext> databaseContext;
         private PostToCollectionDbSubStatements target;
 
         [TestInitialize]
         public void Initialize()
         {
-            this.getLiveDateOfNewQueuedPost =  new Mock<IGetLiveDateOfNewQueuedPostDbStatement>();
-            
+            this.getLiveDateOfNewQueuedPost = new Mock<IGetLiveDateOfNewQueuedPostDbStatement>();
+            this.scheduledDateClipping = new Mock<IScheduledDateClippingFunction>();
+
             // Give potentially side-effecting components strict mock behaviour.
             this.databaseContext = new Mock<IFifthweekDbContext>(MockBehavior.Strict);
 
-            this.target = new PostToCollectionDbSubStatements(this.databaseContext.Object, this.getLiveDateOfNewQueuedPost.Object);
+            this.InitializeTarget(this.databaseContext.Object);
+        }
+
+        public void InitializeTarget(IFifthweekDbContext databaseContext)
+        {
+            this.target = new PostToCollectionDbSubStatements(databaseContext, this.getLiveDateOfNewQueuedPost.Object, this.scheduledDateClipping.Object);
         }
 
         // We test for this as nullable strings are not explicitly defined by the language, so this is a good way of checking we've
@@ -54,13 +61,15 @@
         {
             await this.DatabaseTestAsync(async testDatabase =>
             {
-                this.target = new PostToCollectionDbSubStatements(testDatabase.NewContext(), this.getLiveDateOfNewQueuedPost.Object);
+                this.InitializeTarget(testDatabase.NewContext());
                 await this.CreateEntitiesAsync(testDatabase);
                 await testDatabase.TakeSnapshotAsync();
+                this.scheduledDateClipping.Setup(_ => _.Apply(Now, Now)).Returns(Now);
 
                 var givenPost = UnscheduledPostWithoutChannel();
                 givenPost.Comment = null;
-                await this.target.PostNowAsync(givenPost, Now);
+
+                await this.target.SchedulePostAsync(givenPost, Now, Now);
 
                 var expectedPost = givenPost.Copy(_ =>
                 {
@@ -77,95 +86,26 @@
         }
 
         [TestMethod]
-        public async Task WhenPostingNow_ItShouldSchedulePostForNow()
+        public async Task WhenScheduling_ItShouldSchedulePostUsingDateClippingFunction()
         {
             await this.DatabaseTestAsync(async testDatabase =>
             {
-                this.target = new PostToCollectionDbSubStatements(testDatabase.NewContext(), this.getLiveDateOfNewQueuedPost.Object);
+                var scheduleDate = Now.AddDays(-2);
+                var clippedDate = Now.AddDays(1);
+                this.scheduledDateClipping.Setup(_ => _.Apply(Now, scheduleDate)).Returns(clippedDate);
+
+                this.InitializeTarget(testDatabase.NewContext());
                 await this.CreateEntitiesAsync(testDatabase);
                 await testDatabase.TakeSnapshotAsync();
 
                 var givenPost = UnscheduledPostWithoutChannel();
-                await this.target.PostNowAsync(givenPost, Now);
+
+                await this.target.SchedulePostAsync(givenPost, scheduleDate, Now);
 
                 var expectedPost = givenPost.Copy(_ =>
                 {
                     _.ChannelId = ChannelId.Value;
-                    _.LiveDate = new SqlDateTime(Now).Value;
-                    _.ScheduledByQueue = false;
-                });
-
-                return new ExpectedSideEffects
-                {
-                    Insert = expectedPost
-                };
-            });
-        }
-
-        [TestMethod]
-        public async Task WhenPostingNow_ItShouldBeIdempotent()
-        {
-            await this.DatabaseTestAsync(async testDatabase =>
-            {
-                var givenPost = UnscheduledPostWithoutChannel();
-
-                this.target = new PostToCollectionDbSubStatements(testDatabase.NewContext(), this.getLiveDateOfNewQueuedPost.Object);
-                await this.CreateEntitiesAsync(testDatabase);
-                await this.target.PostNowAsync(givenPost, Now);
-                await testDatabase.TakeSnapshotAsync();
-
-                await this.target.PostNowAsync(givenPost, Now);
-
-                return ExpectedSideEffects.None;
-            });
-        }
-
-        [TestMethod]
-        public async Task WhenSchedulingWithDateInPast_ItShouldSchedulePostForNow()
-        {
-            await this.DatabaseTestAsync(async testDatabase =>
-            {
-                var pastScheduleDate = DateTime.UtcNow.AddDays(-2);
-
-                this.target = new PostToCollectionDbSubStatements(testDatabase.NewContext(), this.getLiveDateOfNewQueuedPost.Object);
-                await this.CreateEntitiesAsync(testDatabase);
-                await testDatabase.TakeSnapshotAsync();
-
-                var givenPost = UnscheduledPostWithoutChannel();
-                await this.target.SchedulePostAsync(givenPost, pastScheduleDate, Now);
-
-                var expectedPost = givenPost.Copy(_ =>
-                {
-                    _.ChannelId = ChannelId.Value;
-                    _.LiveDate = new SqlDateTime(Now).Value;
-                    _.ScheduledByQueue = false;
-                });
-
-                return new ExpectedSideEffects
-                {
-                    Insert = expectedPost
-                };
-            });
-        }
-
-        [TestMethod]
-        public async Task WhenSchedulingWithDateInFuture_ItShouldSchedulePostForFuture()
-        {
-            await this.DatabaseTestAsync(async testDatabase =>
-            {
-                var futureScheduleDate = DateTime.UtcNow.AddDays(2);
-
-                this.target = new PostToCollectionDbSubStatements(testDatabase.NewContext(), this.getLiveDateOfNewQueuedPost.Object);
-                await this.CreateEntitiesAsync(testDatabase);
-                await testDatabase.TakeSnapshotAsync();
-
-                var givenPost = UnscheduledPostWithoutChannel();
-                await this.target.SchedulePostAsync(givenPost, futureScheduleDate, Now);
-
-                var expectedPost = givenPost.Copy(_ =>
-                {
-                    _.ChannelId = ChannelId.Value;
-                    _.LiveDate = new SqlDateTime(futureScheduleDate).Value;
+                    _.LiveDate = new SqlDateTime(clippedDate).Value;
                     _.ScheduledByQueue = false;
                 });
 
@@ -184,7 +124,7 @@
                 var uniqueLiveDate = DateTime.UtcNow.AddDays(42);
                 this.getLiveDateOfNewQueuedPost.Setup(_ => _.ExecuteAsync(CollectionId)).ReturnsAsync(uniqueLiveDate);
 
-                this.target = new PostToCollectionDbSubStatements(testDatabase.NewContext(), this.getLiveDateOfNewQueuedPost.Object);
+                this.InitializeTarget(testDatabase.NewContext());
                 await this.CreateEntitiesAsync(testDatabase);
                 await testDatabase.TakeSnapshotAsync();
 
@@ -213,7 +153,7 @@
                 var sharedLiveDate = DateTime.UtcNow.AddDays(42);
                 this.getLiveDateOfNewQueuedPost.Setup(_ => _.ExecuteAsync(CollectionId)).ReturnsAsync(sharedLiveDate);
 
-                this.target = new PostToCollectionDbSubStatements(testDatabase.NewContext(), this.getLiveDateOfNewQueuedPost.Object);
+                this.InitializeTarget(testDatabase.NewContext());
                 await this.CreateEntitiesAsync(testDatabase);
                 await this.CreatePostAsync(testDatabase, sharedLiveDate, scheduledByQueue: true, differentCollection: true);
                 await testDatabase.TakeSnapshotAsync();
@@ -243,7 +183,7 @@
                 var sharedLiveDate = DateTime.UtcNow.AddDays(42);
                 this.getLiveDateOfNewQueuedPost.Setup(_ => _.ExecuteAsync(CollectionId)).ReturnsAsync(sharedLiveDate);
 
-                this.target = new PostToCollectionDbSubStatements(testDatabase.NewContext(), this.getLiveDateOfNewQueuedPost.Object);
+                this.InitializeTarget(testDatabase.NewContext());
                 await this.CreateEntitiesAsync(testDatabase);
                 await this.CreatePostAsync(testDatabase, sharedLiveDate, scheduledByQueue: false, differentCollection: false);
                 await testDatabase.TakeSnapshotAsync();
@@ -274,7 +214,7 @@
                 var uniqueLiveDate = DateTime.UtcNow.AddDays(43);
                 this.getLiveDateOfNewQueuedPost.Setup(_ => _.ExecuteAsync(CollectionId)).ReturnsInOrderAsync(sharedLiveDate, uniqueLiveDate);
 
-                this.target = new PostToCollectionDbSubStatements(testDatabase.NewContext(), this.getLiveDateOfNewQueuedPost.Object);
+                this.InitializeTarget(testDatabase.NewContext());
                 await this.CreateEntitiesAsync(testDatabase);
                 await this.CreatePostAsync(testDatabase, sharedLiveDate, scheduledByQueue: true, differentCollection: false);
                 await testDatabase.TakeSnapshotAsync();
@@ -309,7 +249,7 @@
                 var sharedLiveDate = DateTime.UtcNow.AddDays(42);
                 this.getLiveDateOfNewQueuedPost.Setup(_ => _.ExecuteAsync(CollectionId)).ReturnsAsync(sharedLiveDate).Verifiable();
 
-                this.target = new PostToCollectionDbSubStatements(testDatabase.NewContext(), this.getLiveDateOfNewQueuedPost.Object);
+                this.InitializeTarget(testDatabase.NewContext());
                 await this.CreateEntitiesAsync(testDatabase);
                 await this.CreatePostAsync(testDatabase, sharedLiveDate, scheduledByQueue: true, differentCollection: false);
                 await testDatabase.TakeSnapshotAsync();
@@ -336,7 +276,7 @@
                 var secondUniqueDate = DateTime.UtcNow.AddDays(43);
                 this.getLiveDateOfNewQueuedPost.Setup(_ => _.ExecuteAsync(CollectionId)).ReturnsInOrderAsync(firstUniqueDate, secondUniqueDate);
 
-                this.target = new PostToCollectionDbSubStatements(testDatabase.NewContext(), this.getLiveDateOfNewQueuedPost.Object);
+                this.InitializeTarget(testDatabase.NewContext());
                 await this.CreateEntitiesAsync(testDatabase);
                 await this.target.QueuePostAsync(UnscheduledPostWithoutChannel());
                 await testDatabase.TakeSnapshotAsync();

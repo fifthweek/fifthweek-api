@@ -48,13 +48,8 @@ namespace Fifthweek.Api.Posts
             {
                 return this.subStatements.QueuePostAsync(post);
             }
-            
-            if (sheduledPostDate.HasValue)
-            {
-                return this.subStatements.SchedulePostAsync(post, sheduledPostDate.Value, now);
-            }
 
-            return this.subStatements.PostNowAsync(post, now);
+            return this.subStatements.SchedulePostAsync(post, sheduledPostDate, now);
         }
     }
 }

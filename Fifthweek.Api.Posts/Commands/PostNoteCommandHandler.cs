@@ -15,6 +15,7 @@
         private readonly IChannelSecurity channelSecurity;
         private readonly IRequesterSecurity requesterSecurity;
         private readonly IFifthweekDbContext databaseContext;
+        private readonly IScheduledDateClippingFunction scheduledDateClipping;
 
         public async Task HandleAsync(PostNoteCommand command)
         {
@@ -30,17 +31,7 @@
         private Task SchedulePostAsync(PostNoteCommand command)
         {
             var now = DateTime.UtcNow;
-
-            var liveDate = now;
-            if (command.ScheduledPostDate != null)
-            {
-                var scheduledPostDate = command.ScheduledPostDate.Value;
-                if (scheduledPostDate > now)
-                {
-                    liveDate = scheduledPostDate;    
-                }
-            }
-
+            var scheduledDate = this.scheduledDateClipping.Apply(now, command.ScheduledPostDate);
             var post = new Post(
                 command.NewPostId.Value,
                 command.ChannelId.Value,
@@ -53,7 +44,7 @@
                 null,
                 command.Note.Value,
                 false,
-                liveDate,
+                scheduledDate,
                 now);
 
             return this.databaseContext.Database.Connection.InsertAsync(post);
