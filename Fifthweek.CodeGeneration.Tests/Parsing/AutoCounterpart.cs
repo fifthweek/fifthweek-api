@@ -36,20 +36,25 @@
         [Parsed(typeof(ParsedInt))]
         public int? OptionalParsedInt { get; set; }
 
-        [ParsedElements(typeof(ParsedInt))]
+        [Parsed(typeof(ParsedInt))]
         public List<int> SomeParsedIntList { get; set; }
 
         [Optional]
-        [ParsedElements(typeof(ParsedInt))]
+        [Parsed(typeof(ParsedInt))]
         public List<int> OptionalParsedIntList { get; set; }
 
         [Parsed(typeof(ParsedCollection))]
-        [ParsedElements(typeof(ParsedNormalizedString))]
         public List<string> SomeParsedCollection { get; set; }
 
         [Optional]
         [Parsed(typeof(ParsedCollection))]
-        [ParsedElements(typeof(ParsedNormalizedString))]
         public List<string> OptionalParsedCollection { get; set; }
+
+        [Parsed(typeof(ParsedMappedCollection))]
+        public List<string> SomeParsedMappedCollection { get; set; }
+
+        [Optional]
+        [Parsed(typeof(ParsedMappedCollection))]
+        public List<string> OptionalParsedMappedCollection { get; set; }
     }
 }

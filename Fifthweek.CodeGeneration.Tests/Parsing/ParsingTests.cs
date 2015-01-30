@@ -54,8 +54,11 @@
             var data = this.NewInstance();
             var parsed = data.Parse();
 
-            CollectionAssert.AreEqual(parsed.SomeParsedCollection.Value.Select(_ => _.Value).ToList(), data.SomeParsedCollection);
-            CollectionAssert.AreEqual(parsed.OptionalParsedCollection.Value.Select(_ => _.Value).ToList(), data.OptionalParsedCollection);
+            CollectionAssert.AreEqual(parsed.SomeParsedCollection.Value.ToList(), data.SomeParsedCollection);
+            CollectionAssert.AreEqual(parsed.OptionalParsedCollection.Value.ToList(), data.OptionalParsedCollection);
+
+            CollectionAssert.AreEqual(parsed.SomeParsedMappedCollection.Value.Select(_ => _.Value).ToList(), data.SomeParsedMappedCollection);
+            CollectionAssert.AreEqual(parsed.OptionalParsedMappedCollection.Value.Select(_ => _.Value).ToList(), data.OptionalParsedMappedCollection);
         }
 
         [TestMethod]
@@ -91,6 +94,7 @@
         public void WhenParsingCustomPrimitives_ItShouldRequireNonOptionalObjects()
         {
             this.BadValue(_ => _.SomeParsedCollection = null);
+            this.BadValue(_ => _.SomeParsedMappedCollection = null);
             this.BadValue(_ => _.SomeParsedIntList = null);
             this.BadValue(_ => _.SomeParsedNormalizedString = null);
             this.BadValue(_ => _.SomeParsedString = null);
@@ -101,8 +105,9 @@
         {
             this.BadValue(_ => _.SomeParsedNormalizedString = "   ");
             this.BadValue(_ => _.SomeParsedCollection = new List<string>() { "Just One Cornetto!" });
-            this.BadValue(_ => _.SomeParsedCollection = new List<string>() { "   " });
-            this.BadValue(_ => _.SomeParsedCollection = new List<string>() { "Just One Cornetto!", "   " });
+            this.BadValue(_ => _.SomeParsedMappedCollection = new List<string>() { "Just One Cornetto!" });
+            this.BadValue(_ => _.SomeParsedMappedCollection = new List<string>() { "   " });
+            this.BadValue(_ => _.SomeParsedMappedCollection = new List<string>() { "Just One Cornetto!", "   " });
         }
 
         [TestMethod]
@@ -114,6 +119,7 @@
             this.GoodValue(_ => _.OptionalWeaklyTypedString = null, _ => _.OptionalWeaklyTypedString == null);
             this.GoodValue(_ => _.OptionalParsedIntList = null, _ => _.OptionalParsedIntList == null);
             this.GoodValue(_ => _.OptionalParsedCollection = null, _ => _.OptionalParsedCollection == null);
+            this.GoodValue(_ => _.OptionalParsedMappedCollection = null, _ => _.OptionalParsedMappedCollection == null);
         }
 
         public void BadValue(Action<AutoCounterpart> setInvalidFieldValue)
@@ -156,6 +162,8 @@
                 OptionalParsedIntList = new List<int>() { 1, 2, 3 },
                 SomeParsedCollection = new List<string>() { "Hello", "Phil" },
                 OptionalParsedCollection = new List<string>() { "Hello!", "Phil!" },
+                SomeParsedMappedCollection = new List<string>() { "Hello!!", "Phil!!" },
+                OptionalParsedMappedCollection = new List<string>() { "Hello!!!", "Phil!!!" },
             };
         }
     }

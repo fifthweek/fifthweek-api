@@ -4,22 +4,22 @@
     using System.Collections.Generic;
 
     [AutoEqualityMembers]
-    public partial class ParsedCollection
+    public partial class ParsedMappedCollection
     {
-        private ParsedCollection()
+        private ParsedMappedCollection()
         {
         }
 
-        public IReadOnlyList<string> Value { get; private set; }
+        public IReadOnlyList<ParsedNormalizedString> Value { get; private set; }
 
-        public static bool IsEmpty(IReadOnlyList<string> value)
+        public static bool IsEmpty(IReadOnlyList<ParsedNormalizedString> value)
         {
             return value == null || value.Count == 0;
         }
 
-        public static ParsedCollection Parse(IReadOnlyList<string> value)
+        public static ParsedMappedCollection Parse(IReadOnlyList<ParsedNormalizedString> value)
         {
-            ParsedCollection retval;
+            ParsedMappedCollection retval;
             IReadOnlyCollection<string> errorMessages;
             if (!TryParse(value, out retval, out errorMessages))
             {
@@ -29,7 +29,7 @@
             return retval;
         }
 
-        public static bool TryParse(IReadOnlyList<string> value, out ParsedCollection @object, out IReadOnlyCollection<string> errorMessages)
+        public static bool TryParse(IReadOnlyList<ParsedNormalizedString> value, out ParsedMappedCollection @object, out IReadOnlyCollection<string> errorMessages)
         {
             var errorMessageList = new List<string>();
             errorMessages = errorMessageList;
@@ -53,7 +53,7 @@
                 return false;
             }
 
-            @object = new ParsedCollection
+            @object = new ParsedMappedCollection
             {
                 Value = value
             };

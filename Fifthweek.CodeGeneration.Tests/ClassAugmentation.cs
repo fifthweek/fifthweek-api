@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Linq;
 
-//// Generated on 29/01/2015 23:20:01 (UTC)
-//// Mapped solution in 1.39s
+//// Generated on 30/01/2015 10:00:27 (UTC)
+//// Mapped solution in 3.55s
 
 namespace Fifthweek.CodeGeneration.Tests
 {
@@ -670,7 +670,7 @@ namespace Fifthweek.CodeGeneration.Tests.Parsing
     {
         public override string ToString()
         {
-            return string.Format("AutoCounterpart(\"{0}\", \"{1}\", \"{2}\", \"{3}\", \"{4}\", \"{5}\", {6}, {7}, {8}, {9}, {10}, {11}, {12}, {13})", this.SomeWeaklyTypedString == null ? "null" : this.SomeWeaklyTypedString.ToString(), this.OptionalWeaklyTypedString == null ? "null" : this.OptionalWeaklyTypedString.ToString(), this.SomeParsedString == null ? "null" : this.SomeParsedString.ToString(), this.OptionalParsedString == null ? "null" : this.OptionalParsedString.ToString(), this.SomeParsedNormalizedString == null ? "null" : this.SomeParsedNormalizedString.ToString(), this.OptionalParsedNormalizedString == null ? "null" : this.OptionalParsedNormalizedString.ToString(), this.SomeWeaklyTypedInt == null ? "null" : this.SomeWeaklyTypedInt.ToString(), this.OptionalWeaklyTypedInt == null ? "null" : this.OptionalWeaklyTypedInt.ToString(), this.SomeParsedInt == null ? "null" : this.SomeParsedInt.ToString(), this.OptionalParsedInt == null ? "null" : this.OptionalParsedInt.ToString(), this.SomeParsedIntList == null ? "null" : this.SomeParsedIntList.ToString(), this.OptionalParsedIntList == null ? "null" : this.OptionalParsedIntList.ToString(), this.SomeParsedCollection == null ? "null" : this.SomeParsedCollection.ToString(), this.OptionalParsedCollection == null ? "null" : this.OptionalParsedCollection.ToString());
+            return string.Format("AutoCounterpart(\"{0}\", \"{1}\", \"{2}\", \"{3}\", \"{4}\", \"{5}\", {6}, {7}, {8}, {9}, {10}, {11}, {12}, {13}, {14}, {15})", this.SomeWeaklyTypedString == null ? "null" : this.SomeWeaklyTypedString.ToString(), this.OptionalWeaklyTypedString == null ? "null" : this.OptionalWeaklyTypedString.ToString(), this.SomeParsedString == null ? "null" : this.SomeParsedString.ToString(), this.OptionalParsedString == null ? "null" : this.OptionalParsedString.ToString(), this.SomeParsedNormalizedString == null ? "null" : this.SomeParsedNormalizedString.ToString(), this.OptionalParsedNormalizedString == null ? "null" : this.OptionalParsedNormalizedString.ToString(), this.SomeWeaklyTypedInt == null ? "null" : this.SomeWeaklyTypedInt.ToString(), this.OptionalWeaklyTypedInt == null ? "null" : this.OptionalWeaklyTypedInt.ToString(), this.SomeParsedInt == null ? "null" : this.SomeParsedInt.ToString(), this.OptionalParsedInt == null ? "null" : this.OptionalParsedInt.ToString(), this.SomeParsedIntList == null ? "null" : this.SomeParsedIntList.ToString(), this.OptionalParsedIntList == null ? "null" : this.OptionalParsedIntList.ToString(), this.SomeParsedCollection == null ? "null" : this.SomeParsedCollection.ToString(), this.OptionalParsedCollection == null ? "null" : this.OptionalParsedCollection.ToString(), this.SomeParsedMappedCollection == null ? "null" : this.SomeParsedMappedCollection.ToString(), this.OptionalParsedMappedCollection == null ? "null" : this.OptionalParsedMappedCollection.ToString());
         }
         
         public override bool Equals(object obj)
@@ -737,6 +737,24 @@ namespace Fifthweek.CodeGeneration.Tests.Parsing
         			: 0);
                 hashCode = (hashCode * 397) ^ (this.OptionalParsedCollection != null 
         			? this.OptionalParsedCollection.Aggregate(0, (previous, current) => 
+        				{ 
+        				    unchecked
+        				    {
+        				        return (previous * 397) ^ (current != null ? current.GetHashCode() : 0);
+        				    }
+        				})
+        			: 0);
+                hashCode = (hashCode * 397) ^ (this.SomeParsedMappedCollection != null 
+        			? this.SomeParsedMappedCollection.Aggregate(0, (previous, current) => 
+        				{ 
+        				    unchecked
+        				    {
+        				        return (previous * 397) ^ (current != null ? current.GetHashCode() : 0);
+        				    }
+        				})
+        			: 0);
+                hashCode = (hashCode * 397) ^ (this.OptionalParsedMappedCollection != null 
+        			? this.OptionalParsedMappedCollection.Aggregate(0, (previous, current) => 
         				{ 
         				    unchecked
         				    {
@@ -844,6 +862,30 @@ namespace Fifthweek.CodeGeneration.Tests.Parsing
                 }
             }
             else if (this.OptionalParsedCollection != null || other.OptionalParsedCollection != null)
+            {
+                return false;
+            }
+        
+            if (this.SomeParsedMappedCollection != null && other.SomeParsedMappedCollection != null)
+            {
+                if (!this.SomeParsedMappedCollection.SequenceEqual(other.SomeParsedMappedCollection))
+                {
+                    return false;    
+                }
+            }
+            else if (this.SomeParsedMappedCollection != null || other.SomeParsedMappedCollection != null)
+            {
+                return false;
+            }
+        
+            if (this.OptionalParsedMappedCollection != null && other.OptionalParsedMappedCollection != null)
+            {
+                if (!this.OptionalParsedMappedCollection.SequenceEqual(other.OptionalParsedMappedCollection))
+                {
+                    return false;    
+                }
+            }
+            else if (this.OptionalParsedMappedCollection != null || other.OptionalParsedMappedCollection != null)
             {
                 return false;
             }
@@ -1083,6 +1125,74 @@ namespace Fifthweek.CodeGeneration.Tests.Parsing
         }
     }
 }
+namespace Fifthweek.CodeGeneration.Tests.Parsing
+{
+    using System;
+    using System.Collections.Generic;
+
+    public partial class ParsedMappedCollection 
+    {
+        public override string ToString()
+        {
+            return string.Format("ParsedMappedCollection({0})", this.Value == null ? "null" : this.Value.ToString());
+        }
+        
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj))
+            {
+                return false;
+            }
+        
+            if (ReferenceEquals(this, obj))
+            {
+                return true;
+            }
+        
+            if (obj.GetType() != this.GetType())
+            {
+                return false;
+            }
+        
+            return this.Equals((ParsedMappedCollection)obj);
+        }
+        
+        public override int GetHashCode()
+        {
+            unchecked
+            {
+                int hashCode = 0;
+                hashCode = (hashCode * 397) ^ (this.Value != null 
+        			? this.Value.Aggregate(0, (previous, current) => 
+        				{ 
+        				    unchecked
+        				    {
+        				        return (previous * 397) ^ (current != null ? current.GetHashCode() : 0);
+        				    }
+        				})
+        			: 0);
+                return hashCode;
+            }
+        }
+        
+        protected bool Equals(ParsedMappedCollection other)
+        {
+            if (this.Value != null && other.Value != null)
+            {
+                if (!this.Value.SequenceEqual(other.Value))
+                {
+                    return false;    
+                }
+            }
+            else if (this.Value != null || other.Value != null)
+            {
+                return false;
+            }
+        
+            return true;
+        }
+    }
+}
 namespace Fifthweek.CodeGeneration.Tests
 {
     using System;
@@ -1174,7 +1284,9 @@ namespace Fifthweek.CodeGeneration.Tests.Parsing
                 System.Collections.Generic.IReadOnlyList<ParsedInt> someParsedIntList,
                 System.Collections.Generic.IReadOnlyList<ParsedInt> optionalParsedIntList,
                 ParsedCollection someParsedCollection,
-                ParsedCollection optionalParsedCollection)
+                ParsedCollection optionalParsedCollection,
+                ParsedMappedCollection someParsedMappedCollection,
+                ParsedMappedCollection optionalParsedMappedCollection)
             {
                 if (someWeaklyTypedString == null)
                 {
@@ -1211,6 +1323,11 @@ namespace Fifthweek.CodeGeneration.Tests.Parsing
                     throw new ArgumentNullException("someParsedCollection");
                 }
 
+                if (someParsedMappedCollection == null)
+                {
+                    throw new ArgumentNullException("someParsedMappedCollection");
+                }
+
                 this.SomeWeaklyTypedString = someWeaklyTypedString;
                 this.OptionalWeaklyTypedString = optionalWeaklyTypedString;
                 this.SomeParsedString = someParsedString;
@@ -1225,6 +1342,8 @@ namespace Fifthweek.CodeGeneration.Tests.Parsing
                 this.OptionalParsedIntList = optionalParsedIntList;
                 this.SomeParsedCollection = someParsedCollection;
                 this.OptionalParsedCollection = optionalParsedCollection;
+                this.SomeParsedMappedCollection = someParsedMappedCollection;
+                this.OptionalParsedMappedCollection = optionalParsedMappedCollection;
             }
         
             public System.String SomeWeaklyTypedString { get; private set; }
@@ -1254,6 +1373,10 @@ namespace Fifthweek.CodeGeneration.Tests.Parsing
             public ParsedCollection SomeParsedCollection { get; private set; }
         
             public ParsedCollection OptionalParsedCollection { get; private set; }
+        
+            public ParsedMappedCollection SomeParsedMappedCollection { get; private set; }
+        
+            public ParsedMappedCollection OptionalParsedMappedCollection { get; private set; }
         }
     }
 
@@ -1426,46 +1549,11 @@ namespace Fifthweek.CodeGeneration.Tests.Parsing
                 }
             }
 
-            System.Collections.Generic.List<ParsedNormalizedString> parsed8Buffer = null;
-            if (target.SomeParsedCollection != null)
-            {
-                parsed8Buffer = new System.Collections.Generic.List<ParsedNormalizedString>();
-                for (var i = 0; i < target.SomeParsedCollection.Count; i++)
-                {
-                    ParsedNormalizedString parsedElement = null;
-                    if (!ParsedNormalizedString.IsEmpty(target.SomeParsedCollection[i]))
-                    {
-                        System.Collections.Generic.IReadOnlyCollection<string> parsedElementErrors;
-                        if (!ParsedNormalizedString.TryParse(target.SomeParsedCollection[i], out parsedElement, out parsedElementErrors))
-                        {
-                            var modelState = new System.Web.Http.ModelBinding.ModelState();
-                            foreach (var errorMessage in parsedElementErrors)
-                            {
-                                modelState.Errors.Add(errorMessage);
-                            }
-
-                            modelStateDictionary.Add("SomeParsedCollection[" + i + "]", modelState);
-                        }
-                    }
-                    else
-                    {
-                        var modelState = new System.Web.Http.ModelBinding.ModelState();
-                        modelState.Errors.Add("Value required");
-                        modelStateDictionary.Add("SomeParsedCollection[" + i + "]", modelState);
-                    }
-
-                    if (parsedElement != null)
-                    {
-                        parsed8Buffer.Add(parsedElement);
-                    }
-                }
-            }
-
             ParsedCollection parsed8 = null;
-            if (!ParsedCollection.IsEmpty(parsed8Buffer))
+            if (!ParsedCollection.IsEmpty(target.SomeParsedCollection))
             {
                 System.Collections.Generic.IReadOnlyCollection<string> parsed8Errors;
-                if (!ParsedCollection.TryParse(parsed8Buffer, out parsed8, out parsed8Errors))
+                if (!ParsedCollection.TryParse(target.SomeParsedCollection, out parsed8, out parsed8Errors))
                 {
                     var modelState = new System.Web.Http.ModelBinding.ModelState();
                     foreach (var errorMessage in parsed8Errors)
@@ -1483,46 +1571,11 @@ namespace Fifthweek.CodeGeneration.Tests.Parsing
                 modelStateDictionary.Add("SomeParsedCollection", modelState);
             }
 
-            System.Collections.Generic.List<ParsedNormalizedString> parsed9Buffer = null;
-            if (target.OptionalParsedCollection != null)
-            {
-                parsed9Buffer = new System.Collections.Generic.List<ParsedNormalizedString>();
-                for (var i = 0; i < target.OptionalParsedCollection.Count; i++)
-                {
-                    ParsedNormalizedString parsedElement = null;
-                    if (!ParsedNormalizedString.IsEmpty(target.OptionalParsedCollection[i]))
-                    {
-                        System.Collections.Generic.IReadOnlyCollection<string> parsedElementErrors;
-                        if (!ParsedNormalizedString.TryParse(target.OptionalParsedCollection[i], out parsedElement, out parsedElementErrors))
-                        {
-                            var modelState = new System.Web.Http.ModelBinding.ModelState();
-                            foreach (var errorMessage in parsedElementErrors)
-                            {
-                                modelState.Errors.Add(errorMessage);
-                            }
-
-                            modelStateDictionary.Add("OptionalParsedCollection[" + i + "]", modelState);
-                        }
-                    }
-                    else
-                    {
-                        var modelState = new System.Web.Http.ModelBinding.ModelState();
-                        modelState.Errors.Add("Value required");
-                        modelStateDictionary.Add("OptionalParsedCollection[" + i + "]", modelState);
-                    }
-
-                    if (parsedElement != null)
-                    {
-                        parsed9Buffer.Add(parsedElement);
-                    }
-                }
-            }
-
             ParsedCollection parsed9 = null;
-            if (!ParsedCollection.IsEmpty(parsed9Buffer))
+            if (!ParsedCollection.IsEmpty(target.OptionalParsedCollection))
             {
                 System.Collections.Generic.IReadOnlyCollection<string> parsed9Errors;
-                if (!ParsedCollection.TryParse(parsed9Buffer, out parsed9, out parsed9Errors))
+                if (!ParsedCollection.TryParse(target.OptionalParsedCollection, out parsed9, out parsed9Errors))
                 {
                     var modelState = new System.Web.Http.ModelBinding.ModelState();
                     foreach (var errorMessage in parsed9Errors)
@@ -1531,6 +1584,114 @@ namespace Fifthweek.CodeGeneration.Tests.Parsing
                     }
 
                     modelStateDictionary.Add("OptionalParsedCollection", modelState);
+                }
+            }
+
+            System.Collections.Generic.List<Fifthweek.CodeGeneration.Tests.Parsing.ParsedNormalizedString> parsed10Buffer = null;
+            if (target.SomeParsedMappedCollection != null)
+            {
+                parsed10Buffer = new System.Collections.Generic.List<Fifthweek.CodeGeneration.Tests.Parsing.ParsedNormalizedString>();
+                for (var i = 0; i < target.SomeParsedMappedCollection.Count; i++)
+                {
+                    Fifthweek.CodeGeneration.Tests.Parsing.ParsedNormalizedString parsedElement = null;
+                    if (!Fifthweek.CodeGeneration.Tests.Parsing.ParsedNormalizedString.IsEmpty(target.SomeParsedMappedCollection[i]))
+                    {
+                        System.Collections.Generic.IReadOnlyCollection<string> parsedElementErrors;
+                        if (!Fifthweek.CodeGeneration.Tests.Parsing.ParsedNormalizedString.TryParse(target.SomeParsedMappedCollection[i], out parsedElement, out parsedElementErrors))
+                        {
+                            var modelState = new System.Web.Http.ModelBinding.ModelState();
+                            foreach (var errorMessage in parsedElementErrors)
+                            {
+                                modelState.Errors.Add(errorMessage);
+                            }
+
+                            modelStateDictionary.Add("SomeParsedMappedCollection[" + i + "]", modelState);
+                        }
+                    }
+                    else
+                    {
+                        var modelState = new System.Web.Http.ModelBinding.ModelState();
+                        modelState.Errors.Add("Value required");
+                        modelStateDictionary.Add("SomeParsedMappedCollection[" + i + "]", modelState);
+                    }
+
+                    if (parsedElement != null)
+                    {
+                        parsed10Buffer.Add(parsedElement);
+                    }
+                }
+            }
+
+            ParsedMappedCollection parsed10 = null;
+            if (!ParsedMappedCollection.IsEmpty(parsed10Buffer))
+            {
+                System.Collections.Generic.IReadOnlyCollection<string> parsed10Errors;
+                if (!ParsedMappedCollection.TryParse(parsed10Buffer, out parsed10, out parsed10Errors))
+                {
+                    var modelState = new System.Web.Http.ModelBinding.ModelState();
+                    foreach (var errorMessage in parsed10Errors)
+                    {
+                        modelState.Errors.Add(errorMessage);
+                    }
+
+                    modelStateDictionary.Add("SomeParsedMappedCollection", modelState);
+                }
+            }
+            else
+            {
+                var modelState = new System.Web.Http.ModelBinding.ModelState();
+                modelState.Errors.Add("Value required");
+                modelStateDictionary.Add("SomeParsedMappedCollection", modelState);
+            }
+
+            System.Collections.Generic.List<Fifthweek.CodeGeneration.Tests.Parsing.ParsedNormalizedString> parsed11Buffer = null;
+            if (target.OptionalParsedMappedCollection != null)
+            {
+                parsed11Buffer = new System.Collections.Generic.List<Fifthweek.CodeGeneration.Tests.Parsing.ParsedNormalizedString>();
+                for (var i = 0; i < target.OptionalParsedMappedCollection.Count; i++)
+                {
+                    Fifthweek.CodeGeneration.Tests.Parsing.ParsedNormalizedString parsedElement = null;
+                    if (!Fifthweek.CodeGeneration.Tests.Parsing.ParsedNormalizedString.IsEmpty(target.OptionalParsedMappedCollection[i]))
+                    {
+                        System.Collections.Generic.IReadOnlyCollection<string> parsedElementErrors;
+                        if (!Fifthweek.CodeGeneration.Tests.Parsing.ParsedNormalizedString.TryParse(target.OptionalParsedMappedCollection[i], out parsedElement, out parsedElementErrors))
+                        {
+                            var modelState = new System.Web.Http.ModelBinding.ModelState();
+                            foreach (var errorMessage in parsedElementErrors)
+                            {
+                                modelState.Errors.Add(errorMessage);
+                            }
+
+                            modelStateDictionary.Add("OptionalParsedMappedCollection[" + i + "]", modelState);
+                        }
+                    }
+                    else
+                    {
+                        var modelState = new System.Web.Http.ModelBinding.ModelState();
+                        modelState.Errors.Add("Value required");
+                        modelStateDictionary.Add("OptionalParsedMappedCollection[" + i + "]", modelState);
+                    }
+
+                    if (parsedElement != null)
+                    {
+                        parsed11Buffer.Add(parsedElement);
+                    }
+                }
+            }
+
+            ParsedMappedCollection parsed11 = null;
+            if (!ParsedMappedCollection.IsEmpty(parsed11Buffer))
+            {
+                System.Collections.Generic.IReadOnlyCollection<string> parsed11Errors;
+                if (!ParsedMappedCollection.TryParse(parsed11Buffer, out parsed11, out parsed11Errors))
+                {
+                    var modelState = new System.Web.Http.ModelBinding.ModelState();
+                    foreach (var errorMessage in parsed11Errors)
+                    {
+                        modelState.Errors.Add(errorMessage);
+                    }
+
+                    modelStateDictionary.Add("OptionalParsedMappedCollection", modelState);
                 }
             }
 
@@ -1553,7 +1714,9 @@ namespace Fifthweek.CodeGeneration.Tests.Parsing
                 parsed6,
                 parsed7,
                 parsed8,
-                parsed9);
+                parsed9,
+                parsed10,
+                parsed11);
         }    
     }
 }

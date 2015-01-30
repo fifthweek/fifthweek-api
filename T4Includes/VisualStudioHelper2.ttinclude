@@ -116,6 +116,27 @@
 		output.WriteLine(string.Format("//// Mapped solution in {0}s", Math.Round(stopwatch.Elapsed.TotalSeconds, 2)));
 	}
 
+	public static IReadOnlyList<string> GetMethodSignature(CodeFunction codeFunction)
+	{
+		var parameters = new List<string>();
+		foreach (CodeParameter paramater in codeFunction.Parameters)
+        {
+			parameters.Add(paramater.Type.AsFullName);
+        }
+
+		return parameters;
+	}
+
+	public static string TryGetCollectionElementType(string fullTypeName)
+    {
+		if (fullTypeName.StartsWith("System.Collections.Generic."))
+        {
+			return GetGenericParameters(fullTypeName).SingleOrDefault();
+        }
+
+		return null;
+    }
+
 	public static IReadOnlyList<string> GetGenericParameters(string typeName)
     {
 		var parameterStart = typeName.IndexOf("<");
@@ -416,6 +437,12 @@
 
 		public UnifiedClass ResolveUnifiedClass(string typeName)
         {
+			// Resolve directly.
+			if (UnifiedClassesInSolution.ContainsKey(typeName))
+            {
+				return UnifiedClassesInSolution[typeName];
+            }
+
 			// Resolve up the namespace.
 			var prefix = this.FirstCodeClass.FullName;
 			while (prefix != null)

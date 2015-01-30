@@ -6,13 +6,25 @@
 <#@ import namespace="System.Text" #>
 <#@ import namespace="System.Collections.Generic" #>
 <#
-	var ParsedCounterpartAttributeName = "ParsedCounterpart";
+    /* Known limitations:
+	 * - Error limit: there should probably be one!
+     * - Dictionaries: have not considered support for these.
+     * - Multidimensional lists: adding support for this would probably clean-up the existing list support code! There's
+	 *   obvious repetition in the ParseInstructions code when dealing with folded types that would disappear if it were
+	 *   dimension agnostic.
+     * - Complex types: We can resolve the referenced type to see if it is also a 'data type', i.e. if it has a Parse 
+	 *   method. Complexity will be in aggregating error messages appropriately, and in supporting multidimensional lists
+	 *   of complex types (although we won't need to worry about aggregation with complex types - they will always be a
+	 *   straight map of DTO -> Parsed Type).
+     */
+
+    var ParsedCounterpartAttributeName = "ParsedCounterpart";
 
     foreach(var unifiedClass in UnifiedClassesInProject.Values)
     {
         var publicProperties = unifiedClass.GetAllPublicGetters();
         var stronglyTypedProperties = publicProperties
-            .Select(p => new { Property = p, ParseInstructions = ParseInstructions.TryGetForProperty(p) })
+            .Select(p => new { Property = p, ParseInstructions = ParseInstructions.TryGetForProperty(p, unifiedClass) })
             .Where(p => p.ParseInstructions != null)
             .ToList();
         if (stronglyTypedProperties.Count == 0)
@@ -131,9 +143,9 @@ public static <#= counterpartType #> Parse(this <#= unifiedClass.FirstCodeClass.
     }
 #>
 <#+
+	public const string StaticTryParseMethodName = "TryParse";	
 	public const string StaticIsEmptyMethodName = "IsEmpty";
 	public const string ParsedAttributeName = "Parsed";
-	public const string ParsedElementsAttributeName = "ParsedElements";
 	public const string NewModelState = "var modelState = new System.Web.Http.ModelBinding.ModelState();";
 
 	public static void RenderParseBlock(
@@ -275,7 +287,7 @@ public static <#= counterpartType #> Parse(this <#= unifiedClass.FirstCodeClass.
         }
 
 		output.WriteLine(string.Format("System.Collections.Generic.IReadOnlyCollection<string> {0}Errors;", variable));
-		output.WriteLine(string.Format("if (!{0}.TryParse({1}, out {2}, out {2}Errors))", strongType, valueAccessor, variable));
+		output.WriteLine(string.Format("if (!{0}.{3}({1}, out {2}, out {2}Errors))", strongType, valueAccessor, variable, StaticTryParseMethodName));
 		output.WriteLine("{");
 		output.PushIndent(Tab);
         
@@ -358,21 +370,79 @@ public static <#= counterpartType #> Parse(this <#= unifiedClass.FirstCodeClass.
             }
         }
 
-		public static ParseInstructions TryGetForProperty(CodeProperty property)
+		// This really needs cleaning up. Would be good to tie this in with multidimensional list support.
+		public static ParseInstructions TryGetForProperty(CodeProperty property, UnifiedClass unifiedClass)
         {
-			var parsedAttribute = property.Attributes.OfType<CodeAttribute>().FirstOrDefault(_ => _.Name == ParsedAttributeName);
-			var parsedElementsAttribute = property.Attributes.OfType<CodeAttribute>().FirstOrDefault(_ => _.Name == ParsedElementsAttributeName);
-
-			if (parsedAttribute == null && parsedElementsAttribute == null)
+			var parseAttribute = property.Attributes.OfType<CodeAttribute>().SingleOrDefault(_ => _.Name == ParsedAttributeName);
+			if (parseAttribute == null)
             {
+				// Not a parsed type.
 				return null;
             }
 
-			return new ParseInstructions
+			var instructedType = GetTypeParameter(parseAttribute);
+			var typeInProperty = property.Type.AsFullName;
+			var propertyCollectionType = TryGetCollectionElementType(typeInProperty);
+			if (propertyCollectionType == null)
             {
-				ParsedOuterType = parsedAttribute == null ? null : GetTypeParameter(parsedAttribute),
-				ParsedElementType = parsedElementsAttribute == null ? null : GetTypeParameter(parsedElementsAttribute)
-            };
+				// Not a collection type.
+				return new ParseInstructions
+				{
+					ParsedOuterType = instructedType,
+					ParsedElementType = null
+				};
+            }
+
+			// Get the first type in first TryParse signature. All parse methods have the weaker type as their first parameter.
+			var instructedUnifiedClass = unifiedClass.ResolveUnifiedClass(instructedType);
+			var typeInParseMethod = GetTryParseWeakerType(instructedUnifiedClass);
+			if (typeInParseMethod == propertyCollectionType)
+            {
+				// Map (Type[] -> MyType[])
+				return new ParseInstructions
+				{
+					ParsedOuterType = null,
+					ParsedElementType = instructedType
+				};
+            }
+
+			var parseMethodCollectionType = TryGetCollectionElementType(typeInParseMethod);
+			if (parseMethodCollectionType != null)
+            {
+				if (parseMethodCollectionType == propertyCollectionType)
+				{
+					// Fold (Type[] -> MyAggregateType)
+					return new ParseInstructions
+					{
+						ParsedOuterType = instructedType,
+						ParsedElementType = null
+					};
+				}
+
+				// Get the first type in first TryParse signature. All parse methods have the weaker type as their first parameter.
+				var instructedUnifiedClassInner = instructedUnifiedClass.ResolveUnifiedClass(parseMethodCollectionType);
+				var typeInParseMethodInner = GetTryParseWeakerType(instructedUnifiedClassInner);
+				if (typeInParseMethodInner == propertyCollectionType)
+				{
+					// Map, Fold (Type[] -> MyType[] -> MyAggregateType)
+					return new ParseInstructions
+					{
+						ParsedOuterType = instructedType,
+						ParsedElementType = parseMethodCollectionType
+					};
+				}
+            }
+			
+			throw new Exception(string.Format("Type mismatch parsing from {0} to {1}", propertyCollectionType, typeInParseMethod));
+        }
+
+		private static string GetTryParseWeakerType(UnifiedClass unifiedClass)
+        {
+			// Get the first method overload (does not matter which one). 
+			var tryParseMethod = unifiedClass.GetAllPublicMethods().First(_ => _.IsShared && _.Name == StaticTryParseMethodName);
+
+			// All parse methods have the weaker type as their first parameter.
+			return GetMethodSignature(tryParseMethod).First(); 
         }
 
 		private static string GetTypeParameter(CodeAttribute attribute)
