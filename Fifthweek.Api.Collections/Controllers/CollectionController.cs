@@ -17,6 +17,7 @@
     {
         private readonly ICommandHandler<CreateCollectionCommand> createCollection;
         private readonly ICommandHandler<UpdateCollectionCommand> updateCollection;
+        private readonly ICommandHandler<DeleteCollectionCommand> deleteCollection;
         private readonly IQueryHandler<GetLiveDateOfNewQueuedPostQuery, DateTime> getLiveDateOfNewQueuedPost;
         private readonly IRequesterContext requesterContext;
         private readonly IGuidCreator guidCreator;
@@ -57,6 +58,19 @@
                     collection.ChannelId,
                     collection.Name,
                     collection.WeeklyReleaseSchedule));
+
+            return this.Ok();
+        }
+
+        [Route("{collectionId}")]
+        public async Task<IHttpActionResult> DeleteCollectionAsync(string collectionId)
+        {
+            collectionId.AssertUrlParameterProvided("collectionId");
+
+            var requester = this.requesterContext.GetRequester();
+            var collectionIdObject = new CollectionId(collectionId.DecodeGuid());
+
+            await this.deleteCollection.HandleAsync(new DeleteCollectionCommand(requester, collectionIdObject));
 
             return this.Ok();
         }

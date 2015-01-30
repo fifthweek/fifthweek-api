@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Linq;
 
-//// Generated on 30/01/2015 11:51:08 (UTC)
-//// Mapped solution in 2.89s
+//// Generated on 30/01/2015 12:56:56 (UTC)
+//// Mapped solution in 9.03s
 
 
 namespace Fifthweek.Api.Collections
@@ -246,6 +246,7 @@ namespace Fifthweek.Api.Collections.Controllers
         public CollectionController(
             Fifthweek.Api.Core.ICommandHandler<Fifthweek.Api.Collections.Commands.CreateCollectionCommand> createCollection,
             Fifthweek.Api.Core.ICommandHandler<Fifthweek.Api.Collections.Commands.UpdateCollectionCommand> updateCollection,
+            Fifthweek.Api.Core.ICommandHandler<Fifthweek.Api.Collections.Commands.DeleteCollectionCommand> deleteCollection,
             Fifthweek.Api.Core.IQueryHandler<Fifthweek.Api.Collections.Queries.GetLiveDateOfNewQueuedPostQuery,System.DateTime> getLiveDateOfNewQueuedPost,
             Fifthweek.Api.Identity.Shared.Membership.IRequesterContext requesterContext,
             Fifthweek.Api.Core.IGuidCreator guidCreator)
@@ -258,6 +259,11 @@ namespace Fifthweek.Api.Collections.Controllers
             if (updateCollection == null)
             {
                 throw new ArgumentNullException("updateCollection");
+            }
+
+            if (deleteCollection == null)
+            {
+                throw new ArgumentNullException("deleteCollection");
             }
 
             if (getLiveDateOfNewQueuedPost == null)
@@ -277,6 +283,7 @@ namespace Fifthweek.Api.Collections.Controllers
 
             this.createCollection = createCollection;
             this.updateCollection = updateCollection;
+            this.deleteCollection = deleteCollection;
             this.getLiveDateOfNewQueuedPost = getLiveDateOfNewQueuedPost;
             this.requesterContext = requesterContext;
             this.guidCreator = guidCreator;
@@ -793,6 +800,33 @@ namespace Fifthweek.Api.Collections.Commands
         }
     }
 }
+namespace Fifthweek.Api.Collections.Commands
+{
+    using Fifthweek.Api.Collections.Shared;
+    using Fifthweek.Api.Identity.Shared.Membership;
+    using Fifthweek.CodeGeneration;
+
+    public partial class DeleteCollectionCommand 
+    {
+        public DeleteCollectionCommand(
+            Fifthweek.Api.Identity.Shared.Membership.Requester requester,
+            Fifthweek.Api.Collections.Shared.CollectionId collectionId)
+        {
+            if (requester == null)
+            {
+                throw new ArgumentNullException("requester");
+            }
+
+            if (collectionId == null)
+            {
+                throw new ArgumentNullException("collectionId");
+            }
+
+            this.Requester = requester;
+            this.CollectionId = collectionId;
+        }
+    }
+}
 
 namespace Fifthweek.Api.Collections.Commands
 {
@@ -1242,6 +1276,66 @@ namespace Fifthweek.Api.Collections.Queries
         }
         
         protected bool Equals(GetLiveDateOfNewQueuedPostQuery other)
+        {
+            if (!object.Equals(this.Requester, other.Requester))
+            {
+                return false;
+            }
+        
+            if (!object.Equals(this.CollectionId, other.CollectionId))
+            {
+                return false;
+            }
+        
+            return true;
+        }
+    }
+}
+namespace Fifthweek.Api.Collections.Commands
+{
+    using Fifthweek.Api.Collections.Shared;
+    using Fifthweek.Api.Identity.Shared.Membership;
+    using Fifthweek.CodeGeneration;
+
+    public partial class DeleteCollectionCommand 
+    {
+        public override string ToString()
+        {
+            return string.Format("DeleteCollectionCommand({0}, {1})", this.Requester == null ? "null" : this.Requester.ToString(), this.CollectionId == null ? "null" : this.CollectionId.ToString());
+        }
+        
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj))
+            {
+                return false;
+            }
+        
+            if (ReferenceEquals(this, obj))
+            {
+                return true;
+            }
+        
+            if (obj.GetType() != this.GetType())
+            {
+                return false;
+            }
+        
+            return this.Equals((DeleteCollectionCommand)obj);
+        }
+        
+        public override int GetHashCode()
+        {
+            unchecked
+            {
+                int hashCode = 0;
+                hashCode = (hashCode * 397) ^ (this.Requester != null ? this.Requester.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.CollectionId != null ? this.CollectionId.GetHashCode() : 0);
+                return hashCode;
+            }
+        }
+        
+        protected bool Equals(DeleteCollectionCommand other)
         {
             if (!object.Equals(this.Requester, other.Requester))
             {

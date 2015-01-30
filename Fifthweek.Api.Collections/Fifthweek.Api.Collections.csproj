@@ -63,6 +63,7 @@
     </Compile>
     <Compile Include="CollectionOwnership.cs" />
     <Compile Include="CollectionSecurity.cs" />
+    <Compile Include="Commands\DeleteCollectionCommand.cs" />
     <Compile Include="Commands\UpdateCollectionCommandHandler.cs" />
     <Compile Include="Commands\UpdateCollectionCommand.cs" />
     <Compile Include="Commands\CreateCollectionCommand.cs" />

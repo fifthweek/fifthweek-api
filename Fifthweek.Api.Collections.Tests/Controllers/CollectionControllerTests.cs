@@ -29,6 +29,7 @@
         private static readonly WeeklyReleaseSchedule WeeklyReleaseSchedule = WeeklyReleaseSchedule.Parse(new[] { HourOfWeek.Parse(0) });
         private Mock<ICommandHandler<CreateCollectionCommand>> createCollection;
         private Mock<ICommandHandler<UpdateCollectionCommand>> updateCollection;
+        private Mock<ICommandHandler<DeleteCollectionCommand>> deleteCollection;
         private Mock<IQueryHandler<GetLiveDateOfNewQueuedPostQuery, DateTime>> getLiveDateOfNewQueuedPost;
         private Mock<IRequesterContext> requesterContext;
         private Mock<IGuidCreator> guidCreator;
@@ -39,12 +40,14 @@
         {
             this.createCollection = new Mock<ICommandHandler<CreateCollectionCommand>>();
             this.updateCollection = new Mock<ICommandHandler<UpdateCollectionCommand>>();
+            this.deleteCollection = new Mock<ICommandHandler<DeleteCollectionCommand>>();
             this.getLiveDateOfNewQueuedPost = new Mock<IQueryHandler<GetLiveDateOfNewQueuedPostQuery, DateTime>>();
             this.requesterContext = new Mock<IRequesterContext>();
             this.guidCreator = new Mock<IGuidCreator>();
             this.target = new CollectionController(
                 this.createCollection.Object, 
                 this.updateCollection.Object,
+                this.deleteCollection.Object,
                 this.getLiveDateOfNewQueuedPost.Object, 
                 this.requesterContext.Object, 
                 this.guidCreator.Object);
@@ -100,6 +103,27 @@
         public async Task WhenPuttingCollectionWithoutSpecifyingCollectionBody_ItShouldThrowBadRequestException()
         {
             await this.target.PutCollectionAsync(CollectionId.Value.EncodeGuid(), null);
+        }
+
+        [TestMethod]
+        public async Task WhenDeletingCollection_ItShouldIssueDeleteCollectionCommand()
+        {
+            var command = new DeleteCollectionCommand(Requester, CollectionId);
+
+            this.requesterContext.Setup(v => v.GetRequester()).Returns(Requester);
+            this.deleteCollection.Setup(v => v.HandleAsync(command)).Returns(Task.FromResult(0)).Verifiable();
+
+            var result = await this.target.DeleteCollectionAsync(CollectionId.Value.EncodeGuid());
+
+            Assert.IsInstanceOfType(result, typeof(OkResult));
+            this.updateCollection.Verify();
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(BadRequestException))]
+        public async Task WhenDeletingCollectionWithoutSpecifyingCollectionId_ItShouldThrowBadRequestException()
+        {
+            await this.target.PutCollectionAsync(string.Empty, new UpdatedCollectionData());
         }
 
         [TestMethod]
