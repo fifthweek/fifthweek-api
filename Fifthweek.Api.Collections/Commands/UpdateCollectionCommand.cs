@@ -1,7 +1,5 @@
 ﻿namespace Fifthweek.Api.Collections.Commands
 {
-    using System.Collections.Generic;
-
     using Fifthweek.Api.Channels.Shared;
     using Fifthweek.Api.Collections.Shared;
     using Fifthweek.Api.Identity.Shared.Membership;
@@ -18,6 +16,6 @@
 
         public ValidCollectionName Name { get; private set; }
 
-        public IReadOnlyList<HourOfWeek> WeeklyReleaseTimes { get; private set; } 
+        public WeeklyReleaseSchedule WeeklyReleaseSchedule { get; private set; } 
     }
 }

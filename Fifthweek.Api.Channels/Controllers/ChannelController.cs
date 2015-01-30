@@ -41,7 +41,7 @@
         public async Task<IHttpActionResult> PutChannelAsync(string channelId, [FromBody]UpdatedChannelData channelData)
         {
             channelId.AssertUrlParameterProvided("channelId");
-            channelData.AssertBodyProvided("channel");
+            channelData.AssertBodyProvided("channelData");
             var channel = channelData.Parse();
 
             var requester = this.requesterContext.GetRequester();

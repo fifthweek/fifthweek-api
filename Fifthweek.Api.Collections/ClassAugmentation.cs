@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Linq;
 
-//// Generated on 30/01/2015 10:08:25 (UTC)
-//// Mapped solution in 4.6s
+//// Generated on 30/01/2015 10:31:01 (UTC)
+//// Mapped solution in 1.26s
 
 
 namespace Fifthweek.Api.Collections
@@ -187,7 +187,7 @@ namespace Fifthweek.Api.Collections.Commands
             Fifthweek.Api.Collections.Shared.CollectionId collectionId,
             Fifthweek.Api.Channels.Shared.ChannelId channelId,
             Fifthweek.Api.Collections.Shared.ValidCollectionName name,
-            System.Collections.Generic.IReadOnlyList<Fifthweek.Api.Collections.Shared.HourOfWeek> weeklyReleaseTimes)
+            Fifthweek.Api.Collections.Shared.WeeklyReleaseSchedule weeklyReleaseSchedule)
         {
             if (requester == null)
             {
@@ -209,16 +209,16 @@ namespace Fifthweek.Api.Collections.Commands
                 throw new ArgumentNullException("name");
             }
 
-            if (weeklyReleaseTimes == null)
+            if (weeklyReleaseSchedule == null)
             {
-                throw new ArgumentNullException("weeklyReleaseTimes");
+                throw new ArgumentNullException("weeklyReleaseSchedule");
             }
 
             this.Requester = requester;
             this.CollectionId = collectionId;
             this.ChannelId = channelId;
             this.Name = name;
-            this.WeeklyReleaseTimes = weeklyReleaseTimes;
+            this.WeeklyReleaseSchedule = weeklyReleaseSchedule;
         }
     }
 }
@@ -840,7 +840,7 @@ namespace Fifthweek.Api.Collections.Commands
     {
         public override string ToString()
         {
-            return string.Format("UpdateCollectionCommand({0}, {1}, {2}, {3}, {4})", this.Requester == null ? "null" : this.Requester.ToString(), this.CollectionId == null ? "null" : this.CollectionId.ToString(), this.ChannelId == null ? "null" : this.ChannelId.ToString(), this.Name == null ? "null" : this.Name.ToString(), this.WeeklyReleaseTimes == null ? "null" : this.WeeklyReleaseTimes.ToString());
+            return string.Format("UpdateCollectionCommand({0}, {1}, {2}, {3}, {4})", this.Requester == null ? "null" : this.Requester.ToString(), this.CollectionId == null ? "null" : this.CollectionId.ToString(), this.ChannelId == null ? "null" : this.ChannelId.ToString(), this.Name == null ? "null" : this.Name.ToString(), this.WeeklyReleaseSchedule == null ? "null" : this.WeeklyReleaseSchedule.ToString());
         }
         
         public override bool Equals(object obj)
@@ -872,15 +872,7 @@ namespace Fifthweek.Api.Collections.Commands
                 hashCode = (hashCode * 397) ^ (this.CollectionId != null ? this.CollectionId.GetHashCode() : 0);
                 hashCode = (hashCode * 397) ^ (this.ChannelId != null ? this.ChannelId.GetHashCode() : 0);
                 hashCode = (hashCode * 397) ^ (this.Name != null ? this.Name.GetHashCode() : 0);
-                hashCode = (hashCode * 397) ^ (this.WeeklyReleaseTimes != null 
-        			? this.WeeklyReleaseTimes.Aggregate(0, (previous, current) => 
-        				{ 
-        				    unchecked
-        				    {
-        				        return (previous * 397) ^ (current != null ? current.GetHashCode() : 0);
-        				    }
-        				})
-        			: 0);
+                hashCode = (hashCode * 397) ^ (this.WeeklyReleaseSchedule != null ? this.WeeklyReleaseSchedule.GetHashCode() : 0);
                 return hashCode;
             }
         }
@@ -907,14 +899,7 @@ namespace Fifthweek.Api.Collections.Commands
                 return false;
             }
         
-            if (this.WeeklyReleaseTimes != null && other.WeeklyReleaseTimes != null)
-            {
-                if (!this.WeeklyReleaseTimes.SequenceEqual(other.WeeklyReleaseTimes))
-                {
-                    return false;    
-                }
-            }
-            else if (this.WeeklyReleaseTimes != null || other.WeeklyReleaseTimes != null)
+            if (!object.Equals(this.WeeklyReleaseSchedule, other.WeeklyReleaseSchedule))
             {
                 return false;
             }

@@ -40,6 +40,27 @@
             return newCollectionId;
         }
 
+        [Route("{collectionId}")]
+        public async Task<IHttpActionResult> PutCollectionAsync(string collectionId, [FromBody]UpdatedCollectionData collectionData)
+        {
+            collectionId.AssertUrlParameterProvided("collectionId");
+            collectionData.AssertBodyProvided("collectionData");
+            var collection = collectionData.Parse();
+
+            var requester = this.requesterContext.GetRequester();
+            var collectionIdObject = new CollectionId(collectionId.DecodeGuid());
+
+            await this.updateCollection.HandleAsync(
+                new UpdateCollectionCommand(
+                    requester,
+                    collectionIdObject,
+                    collection.ChannelId,
+                    collection.Name,
+                    collection.WeeklyReleaseSchedule));
+
+            return this.Ok();
+        }
+
         [ResponseType(typeof(DateTime))]
         [Route("{collectionId}/newQueuedPostLiveDate")]
         public async Task<DateTime> GetLiveDateOfNewQueuedPost(string collectionId)

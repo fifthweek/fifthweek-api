@@ -1,7 +1,9 @@
 ﻿namespace Fifthweek.Api.Collections.Tests.Controllers
 {
     using System;
+    using System.Linq;
     using System.Threading.Tasks;
+    using System.Web.Http.Results;
 
     using Fifthweek.Api.Channels.Shared;
     using Fifthweek.Api.Collections.Commands;
@@ -24,7 +26,7 @@
         private static readonly CollectionId CollectionId = new CollectionId(Guid.NewGuid());
         private static readonly ChannelId ChannelId = new ChannelId(Guid.NewGuid());
         private static readonly ValidCollectionName CollectionName = ValidCollectionName.Parse("Bat puns");
-
+        private static readonly WeeklyReleaseSchedule WeeklyReleaseSchedule = WeeklyReleaseSchedule.Parse(new[] { HourOfWeek.Parse(0) });
         private Mock<ICommandHandler<CreateCollectionCommand>> createCollection;
         private Mock<ICommandHandler<UpdateCollectionCommand>> updateCollection;
         private Mock<IQueryHandler<GetLiveDateOfNewQueuedPostQuery, DateTime>> getLiveDateOfNewQueuedPost;
@@ -69,6 +71,35 @@
         public async Task WhenPostingCollectionWithoutSpecifyingCollection_ItShouldThrowBadRequestException()
         {
             await this.target.PostCollectionAsync(null);
+        }
+
+        [TestMethod]
+        public async Task WhenPuttingCollection_ItShouldIssueUpdateCollectionCommand()
+        {
+            var data = new UpdatedCollectionData(ChannelId, CollectionName.Value, WeeklyReleaseSchedule.Value.Select(_ => _.Value).ToList());
+            var command = new UpdateCollectionCommand(Requester, CollectionId, ChannelId, CollectionName, WeeklyReleaseSchedule);
+
+            this.requesterContext.Setup(v => v.GetRequester()).Returns(Requester);
+            this.updateCollection.Setup(v => v.HandleAsync(command)).Returns(Task.FromResult(0)).Verifiable();
+
+            var result = await this.target.PutCollectionAsync(CollectionId.Value.EncodeGuid(), data);
+
+            Assert.IsInstanceOfType(result, typeof(OkResult));
+            this.updateCollection.Verify();
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(BadRequestException))]
+        public async Task WhenPuttingCollectionWithoutSpecifyingCollectionId_ItShouldThrowBadRequestException()
+        {
+            await this.target.PutCollectionAsync(string.Empty, new UpdatedCollectionData());
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(BadRequestException))]
+        public async Task WhenPuttingCollectionWithoutSpecifyingCollectionBody_ItShouldThrowBadRequestException()
+        {
+            await this.target.PutCollectionAsync(CollectionId.Value.EncodeGuid(), null);
         }
 
         [TestMethod]

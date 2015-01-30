@@ -64,7 +64,6 @@
             await this.target.PostChannelAsync(null);
         }
 
-
         [TestMethod]
         public async Task WhenPuttingChannel_ItShouldIssueUpdateChannelCommand()
         {
