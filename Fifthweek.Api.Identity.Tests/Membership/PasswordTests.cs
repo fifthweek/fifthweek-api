@@ -2,7 +2,6 @@
 {
     using System.Collections.Generic;
 
-    using Fifthweek.Api.Identity.Membership;
     using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.Tests.Shared;
 
@@ -21,6 +20,34 @@
         protected override string ValueB
         {
             get { return "password2"; }
+        }
+
+        [TestMethod]
+        public void ItShouldTreatNullAsEmpty()
+        {
+            var result = ValidPassword.IsEmpty(null);
+            Assert.IsTrue(result);
+        }
+
+        [TestMethod]
+        public void ItShouldTreatEmptyStringAsEmpty()
+        {
+            var result = ValidPassword.IsEmpty(string.Empty);
+            Assert.IsTrue(result);
+        }
+
+        [TestMethod]
+        public void ItShouldTreatStringWithOnlyWhiteSpaceCharactersAsNonEmpty()
+        {
+            var result = ValidPassword.IsEmpty(" ");
+            Assert.IsFalse(result);
+        }
+
+        [TestMethod]
+        public void ItShouldTreatStringWithAtLeast1NonWhiteSpaceCharacterAsNonEmpty()
+        {
+            var result = ValidPassword.IsEmpty("a");
+            Assert.IsFalse(result);
         }
 
         [TestMethod]
