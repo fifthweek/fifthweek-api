@@ -21,6 +21,34 @@
         }
 
         [TestMethod]
+        public void ItShouldTreatNullAsEmpty()
+        {
+            var result = ValidNote.IsEmpty(null);
+            Assert.IsTrue(result);
+        }
+
+        [TestMethod]
+        public void ItShouldTreatEmptyStringAsEmpty()
+        {
+            var result = ValidNote.IsEmpty(string.Empty);
+            Assert.IsTrue(result);
+        }
+
+        [TestMethod]
+        public void ItShouldTreatStringWithOnlyWhiteSpaceCharactersAsNonEmpty()
+        {
+            var result = ValidNote.IsEmpty(" ");
+            Assert.IsFalse(result);
+        }
+
+        [TestMethod]
+        public void ItShouldTreatStringWithAtLeast1NonWhiteSpaceCharacterAsNonEmpty()
+        {
+            var result = ValidNote.IsEmpty("a");
+            Assert.IsFalse(result);
+        }
+
+        [TestMethod]
         public void ItShouldAllowBasicTaglines()
         {
             this.GoodValue(this.ValueA);
