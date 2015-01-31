@@ -28,6 +28,34 @@
         }
 
         [TestMethod]
+        public void ItShouldTreatNullAsEmpty()
+        {
+            var result = ValidExternalVideoUrl.IsEmpty(null);
+            Assert.IsTrue(result);
+        }
+
+        [TestMethod]
+        public void ItShouldTreatEmptyStringAsEmpty()
+        {
+            var result = ValidExternalVideoUrl.IsEmpty(string.Empty);
+            Assert.IsTrue(result);
+        }
+
+        [TestMethod]
+        public void ItShouldTreatStringWithOnlyWhiteSpaceCharactersAsEmpty()
+        {
+            var result = ValidExternalVideoUrl.IsEmpty(" ");
+            Assert.IsTrue(result);
+        }
+
+        [TestMethod]
+        public void ItShouldTreatStringWithAtLeast1NonWhiteSpaceCharacterAsNonEmpty()
+        {
+            var result = ValidExternalVideoUrl.IsEmpty("a");
+            Assert.IsFalse(result);
+        }
+
+        [TestMethod]
         public void ItShouldAllowBasicExternalVideoUrls()
         {
             this.GoodValue(this.ValueA);

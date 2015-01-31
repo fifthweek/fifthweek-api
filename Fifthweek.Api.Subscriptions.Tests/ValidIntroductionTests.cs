@@ -23,6 +23,34 @@
         }
 
         [TestMethod]
+        public void ItShouldTreatNullAsEmpty()
+        {
+            var result = ValidIntroduction.IsEmpty(null);
+            Assert.IsTrue(result);
+        }
+
+        [TestMethod]
+        public void ItShouldTreatEmptyStringAsEmpty()
+        {
+            var result = ValidIntroduction.IsEmpty(string.Empty);
+            Assert.IsTrue(result);
+        }
+
+        [TestMethod]
+        public void ItShouldTreatStringWithOnlyWhiteSpaceCharactersAsNonEmpty()
+        {
+            var result = ValidIntroduction.IsEmpty(" ");
+            Assert.IsFalse(result);
+        }
+
+        [TestMethod]
+        public void ItShouldTreatStringWithAtLeast1NonWhiteSpaceCharacterAsNonEmpty()
+        {
+            var result = ValidIntroduction.IsEmpty("a");
+            Assert.IsFalse(result);
+        }
+
+        [TestMethod]
         public void ItShouldAllowBasicIntroductions()
         {
             this.GoodValue(this.ValueA);
