@@ -2,7 +2,6 @@
 {
     using System.Collections.Generic;
 
-    using Fifthweek.Api.Collections;
     using Fifthweek.Api.Collections.Shared;
     using Fifthweek.Tests.Shared;
 
@@ -21,6 +20,34 @@
         protected override string ValueB
         {
             get { return "James"; }
+        }
+
+        [TestMethod]
+        public void ItShouldTreatNullAsEmpty()
+        {
+            var result = ValidCollectionName.IsEmpty(null);
+            Assert.IsTrue(result);
+        }
+
+        [TestMethod]
+        public void ItShouldTreatEmptyStringAsEmpty()
+        {
+            var result = ValidCollectionName.IsEmpty(string.Empty);
+            Assert.IsTrue(result);
+        }
+
+        [TestMethod]
+        public void ItShouldTreatStringWithOnlyWhiteSpaceCharactersAsNonEmpty()
+        {
+            var result = ValidCollectionName.IsEmpty(" ");
+            Assert.IsFalse(result);
+        }
+
+        [TestMethod]
+        public void ItShouldTreatStringWithAtLeast1NonWhiteSpaceCharacterAsNonEmpty()
+        {
+            var result = ValidCollectionName.IsEmpty("a");
+            Assert.IsFalse(result);
         }
 
         [TestMethod]
