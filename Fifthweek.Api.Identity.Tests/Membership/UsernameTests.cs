@@ -2,7 +2,6 @@
 {
     using System.Collections.Generic;
 
-    using Fifthweek.Api.Identity.Membership;
     using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.Tests.Shared;
 
@@ -19,6 +18,34 @@
         protected override string ValueB
         {
             get { return "joebloggs2"; }
+        }
+
+        [TestMethod]
+        public void ItShouldTreatNullAsEmpty()
+        {
+            var result = ValidUsername.IsEmpty(null);
+            Assert.IsTrue(result);
+        }
+
+        [TestMethod]
+        public void ItShouldTreatEmptyStringAsEmpty()
+        {
+            var result = ValidUsername.IsEmpty(string.Empty);
+            Assert.IsTrue(result);
+        }
+
+        [TestMethod]
+        public void ItShouldTreatStringWithOnlyWhiteSpaceCharactersAsEmpty()
+        {
+            var result = ValidUsername.IsEmpty(" ");
+            Assert.IsTrue(result);
+        }
+
+        [TestMethod]
+        public void ItShouldTreatStringWithAtLeast1NonWhiteSpaceCharacterAsNonEmpty()
+        {
+            var result = ValidUsername.IsEmpty("a");
+            Assert.IsFalse(result);
         }
 
         [TestMethod]
