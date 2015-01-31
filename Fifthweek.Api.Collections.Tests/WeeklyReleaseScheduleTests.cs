@@ -21,6 +21,27 @@
         }
 
         [TestMethod]
+        public void ItShouldTreatNullAsEmpty()
+        {
+            var result = WeeklyReleaseSchedule.IsEmpty(null);
+            Assert.IsTrue(result);
+        }
+
+        [TestMethod]
+        public void ItShouldTreatEmptyListAsEmpty()
+        {
+            var result = WeeklyReleaseSchedule.IsEmpty(new HourOfWeek[0]);
+            Assert.IsTrue(result);
+        }
+
+        [TestMethod]
+        public void ItShouldTreatListWithAtLeast1ElementAsNonEmpty()
+        {
+            var result = WeeklyReleaseSchedule.IsEmpty(new HourOfWeek[1]);
+            Assert.IsFalse(result);
+        }
+
+        [TestMethod]
         public void ItShouldAllowUpTo168Elements()
         {
             var buffer = new List<HourOfWeek>();
