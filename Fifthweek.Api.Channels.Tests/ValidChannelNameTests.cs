@@ -23,6 +23,34 @@
         }
 
         [TestMethod]
+        public void ItShouldTreatNullAsEmpty()
+        {
+            var result = ValidChannelName.IsEmpty(null);
+            Assert.IsTrue(result);
+        }
+
+        [TestMethod]
+        public void ItShouldTreatEmptyStringAsEmpty()
+        {
+            var result = ValidChannelName.IsEmpty(string.Empty);
+            Assert.IsTrue(result);
+        }
+
+        [TestMethod]
+        public void ItShouldTreatStringWithOnlyWhiteSpaceCharactersAsNonEmpty()
+        {
+            var result = ValidChannelName.IsEmpty(" ");
+            Assert.IsFalse(result);
+        }
+
+        [TestMethod]
+        public void ItShouldTreatStringWithAtLeast1NonWhiteSpaceCharacterAsNonEmpty()
+        {
+            var result = ValidChannelName.IsEmpty("a");
+            Assert.IsFalse(result);
+        }
+
+        [TestMethod]
         public void ItShouldAllowBasicChannelNames()
         {
             this.GoodValue(this.ValueA);
