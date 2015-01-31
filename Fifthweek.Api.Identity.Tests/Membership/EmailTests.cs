@@ -2,7 +2,6 @@
 {
     using System.Collections.Generic;
 
-    using Fifthweek.Api.Identity.Membership;
     using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.Tests.Shared;
 
@@ -19,6 +18,34 @@
         protected override string ValueB
         {
             get { return "bloggs@example.com"; }
+        }
+
+        [TestMethod]
+        public void ItShouldTreatNullAsEmpty()
+        {
+            var result = ValidEmail.IsEmpty(null);
+            Assert.IsTrue(result);
+        }
+
+        [TestMethod]
+        public void ItShouldTreatEmptyStringAsEmpty()
+        {
+            var result = ValidEmail.IsEmpty(string.Empty);
+            Assert.IsTrue(result);
+        }
+
+        [TestMethod]
+        public void ItShouldTreatStringWithOnlyWhiteSpaceCharactersAsEmpty()
+        {
+            var result = ValidEmail.IsEmpty(" ");
+            Assert.IsTrue(result);
+        }
+
+        [TestMethod]
+        public void ItShouldTreatStringWithAtLeast1NonWhiteSpaceCharacterAsNonEmpty()
+        {
+            var result = ValidEmail.IsEmpty("a");
+            Assert.IsFalse(result);
         }
 
         [TestMethod]
