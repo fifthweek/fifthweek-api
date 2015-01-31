@@ -99,6 +99,7 @@
     <Compile Include="GetLiveDateOfNewQueuedPostDbStatementTests.cs" />
     <Compile Include="GetNewQueuedPostLiveDateLowerBoundDbStatementTests.cs" />
     <Compile Include="GetCollectionWeeklyReleaseTimesDbStatementTests.cs" />
+    <Compile Include="WeeklyReleaseScheduleTests.cs" />
     <Compile Include="HourOfWeekTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Queries\GetCreatedChannelsAndCollectionsQueryHandlerTests.cs" />

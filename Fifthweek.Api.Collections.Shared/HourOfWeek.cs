@@ -29,7 +29,7 @@
             HourOfWeek retval;
             if (!TryParse(value, out retval))
             {
-                throw new ArgumentException("Invalid weekly price", "value");
+                throw new ArgumentException("Invalid hour of week", "value");
             }
 
             return retval;
