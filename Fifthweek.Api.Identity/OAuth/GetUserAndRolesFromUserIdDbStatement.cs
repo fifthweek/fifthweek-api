@@ -1,5 +1,6 @@
 ﻿namespace Fifthweek.Api.Identity.OAuth
 {
+    using System;
     using System.Linq;
     using System.Threading.Tasks;
 
@@ -17,9 +18,9 @@
         private static readonly string Query = string.Format(
             @"SELECT u.{8}, role.{2}
               FROM {1} u 
-                INNER JOIN {4} as userRole
+                LEFT OUTER JOIN {4} as userRole
                  ON u.{0} = userRole.{7}
-                INNER JOIN {3} role
+                LEFT OUTER JOIN {3} role
                  ON role.{5} = userRole.{6}
               WHERE u.{0} = @{0}",
             FifthweekUser.Fields.Id,
@@ -44,8 +45,13 @@
 
             if (result.Count > 0)
             {
+                if (result.Select(v => v.UserName).Distinct().Count() != 1)
+                {
+                    throw new InvalidOperationException("Multiple user IDs returned.");
+                }
+                
                 var username = result[0].UserName;
-                var roles = result.Select(v => v.Name).ToList();
+                var roles = result.Select(v => v.Name).Where(v => v != null).ToList();
 
                 return new UsernameAndRoles(new Username(username), roles);
             }

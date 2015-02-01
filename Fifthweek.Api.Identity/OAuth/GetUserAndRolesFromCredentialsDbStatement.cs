@@ -20,9 +20,9 @@
         private static readonly string Query = string.Format(
             @"SELECT u.{0}, u.{3}, role.{4}
               FROM {1} u 
-                INNER JOIN {6} as userRole
+                LEFT OUTER JOIN {6} as userRole
                  ON u.{0} = userRole.{9}
-                INNER JOIN {5} role
+                LEFT OUTER JOIN {5} role
                  ON role.{7} = userRole.{8}
               WHERE {2} = @{2}",
             FifthweekUser.Fields.Id,
@@ -64,7 +64,7 @@
                     != PasswordVerificationResult.Failed)
                 {
                     var userId = result[0].Id;
-                    var roles = result.Select(v => v.Name).ToList();
+                    var roles = result.Select(v => v.Name).Where(v => v != null).ToList();
 
                     return new UserIdAndRoles(userId, roles);
                 }
