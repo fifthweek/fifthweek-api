@@ -42,7 +42,7 @@ namespace Fifthweek.Api.Posts
                 note.Value,
                 false,
                 liveDate,
-                default(DateTime));
+                now);
 
             if (isNewPost)
             {
