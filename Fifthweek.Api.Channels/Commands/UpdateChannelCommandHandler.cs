@@ -1,5 +1,7 @@
 ﻿namespace Fifthweek.Api.Channels.Commands
 {
+    using System.Data.Entity;
+    using System.Linq;
     using System.Threading.Tasks;
 
     using Fifthweek.Api.Channels.Shared;
@@ -25,7 +27,7 @@
             await this.UpdateChannelAsync(command);
         }
 
-        private Task UpdateChannelAsync(UpdateChannelCommand command)
+        private async Task UpdateChannelAsync(UpdateChannelCommand command)
         {
             var channel = new Channel(command.ChannelId.Value)
             {
@@ -39,7 +41,15 @@
                 Channel.Fields.Name | 
                 Channel.Fields.PriceInUsCentsPerWeek;
 
-            return this.databaseContext.Database.Connection.UpdateAsync(channel, updatedFields);
+            // Do not update visibility for the default channel: it must always be visible.
+            var channelId = command.ChannelId.Value;
+            var subscriptionId = await this.databaseContext.Channels.Where(_ => _.Id == channelId).Select(_ => _.SubscriptionId).FirstAsync();
+            if (subscriptionId == channelId)
+            {
+                updatedFields &= ~Channel.Fields.IsVisibleToNonSubscribers;
+            }
+
+            await this.databaseContext.Database.Connection.UpdateAsync(channel, updatedFields);
         }
     }
 }

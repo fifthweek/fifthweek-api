@@ -18,7 +18,7 @@
     [TestClass]
     public class UpdateChannelCommandHandlerTests : PersistenceTestsBase
     {
-        private const bool IsVisibleToNonSubscribers = true;
+        private const bool IsVisibleToNonSubscribers = false;
         private static readonly UserId UserId = new UserId(Guid.NewGuid());
         private static readonly Requester Requester = Requester.Authenticated(UserId);
         private static readonly ChannelId ChannelId = new ChannelId(Guid.NewGuid());
@@ -78,7 +78,7 @@
             await this.DatabaseTestAsync(async testDatabase =>
             {
                 this.InitializeTarget(testDatabase.NewContext());
-                await this.CreateEntitiesAsync(testDatabase);
+                await this.CreateChannelAsync(testDatabase);
                 await this.target.HandleAsync(Command);
                 await testDatabase.TakeSnapshotAsync();
 
@@ -94,7 +94,7 @@
             await this.DatabaseTestAsync(async testDatabase =>
             {
                 this.InitializeTarget(testDatabase.NewContext());
-                await this.CreateEntitiesAsync(testDatabase);
+                await this.CreateChannelAsync(testDatabase);
                 await testDatabase.TakeSnapshotAsync();
 
                 await this.target.HandleAsync(Command);
@@ -121,11 +121,47 @@
             });
         }
 
-        private async Task CreateEntitiesAsync(TestDatabaseContext testDatabase)
+        [TestMethod]
+        public async Task ItShouldNotAllowDefaultChannelToBeHidden()
+        {
+            await this.DatabaseTestAsync(async testDatabase =>
+            {
+                this.InitializeTarget(testDatabase.NewContext());
+                await this.CreateChannelAsync(testDatabase, createAsDefaultChannel: true);
+                await testDatabase.TakeSnapshotAsync();
+
+                await this.target.HandleAsync(new UpdateChannelCommand(Requester, ChannelId, Name, Price, isVisibleToNonSubscribers: false));
+
+                var expectedChannel = new Channel(ChannelId.Value)
+                {
+                    IsVisibleToNonSubscribers = true,
+                    Name = Name.Value,
+                    PriceInUsCentsPerWeek = Price.Value
+                };
+
+                return new ExpectedSideEffects
+                {
+                    Update = new WildcardEntity<Channel>(expectedChannel)
+                    {
+                        Expected = actual =>
+                        {
+                            expectedChannel.SubscriptionId = actual.SubscriptionId;
+                            expectedChannel.CreationDate = actual.CreationDate;
+                            return expectedChannel;
+                        }
+                    }
+                };
+            });
+        }
+
+        private async Task CreateChannelAsync(TestDatabaseContext testDatabase, bool createAsDefaultChannel = false)
         {
             using (var databaseContext = testDatabase.NewContext())
             {
-                await databaseContext.CreateTestChannelAsync(UserId.Value, ChannelId.Value);
+                await databaseContext.CreateTestChannelAsync(UserId.Value, ChannelId.Value, createAsDefaultChannel ? ChannelId.Value : Guid.NewGuid());
+                await databaseContext.Database.Connection.UpdateAsync(
+                    new Channel(ChannelId.Value) { IsVisibleToNonSubscribers = true },
+                    Channel.Fields.IsVisibleToNonSubscribers);
             }
         }
     } 
