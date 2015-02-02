@@ -12,7 +12,7 @@
     {
         private readonly IPostOwnership postOwnership;
 
-        public Task<bool> IsDeletionAllowedAsync(UserId requester, Shared.PostId postId)
+        public Task<bool> IsWriteAllowedAsync(UserId requester, PostId postId)
         {
             requester.AssertNotNull("requester");
             postId.AssertNotNull("postId");
@@ -20,15 +20,15 @@
             return this.postOwnership.IsOwnerAsync(requester, postId);
         }
 
-        public async Task AssertDeletionAllowedAsync(UserId requester, Shared.PostId postlId)
+        public async Task AssertWriteAllowedAsync(UserId requester, PostId postlId)
         {
             requester.AssertNotNull("requester");
             postlId.AssertNotNull("postId");
 
-            var isPostingAllowed = await this.IsDeletionAllowedAsync(requester, postlId);
+            var isPostingAllowed = await this.IsWriteAllowedAsync(requester, postlId);
             if (!isPostingAllowed)
             {
-                throw new UnauthorizedException(string.Format("Not allowed to delete post. {0} {1}", requester, postlId));
+                throw new UnauthorizedException(string.Format("Not allowed to write post. {0} {1}", requester, postlId));
             }
         }
     }

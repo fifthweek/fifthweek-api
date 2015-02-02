@@ -62,7 +62,7 @@
         [ExpectedException(typeof(UnauthorizedException))]
         public async Task WhenDeletingPost_ShouldCheckTheUserCanDeleteTheFile()
         {
-            this.postSecurity.Setup(v => v.AssertDeletionAllowedAsync(UserId, PostId))
+            this.postSecurity.Setup(v => v.AssertWriteAllowedAsync(UserId, PostId))
                 .Throws(new UnauthorizedException());
 
             await this.target.HandleAsync(new DeletePostCommand(PostId, Requester));
@@ -71,7 +71,7 @@
         [TestMethod]
         public async Task WhenDeletingPost_ShouldDeleteFromTheDatabaseAndScheduleGarbageCollection()
         {
-            this.postSecurity.Setup(v => v.AssertDeletionAllowedAsync(UserId, PostId))
+            this.postSecurity.Setup(v => v.AssertWriteAllowedAsync(UserId, PostId))
                 .Returns(Task.FromResult(0));
 
             this.deletePost.Setup(v => v.ExecuteAsync(PostId))

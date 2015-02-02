@@ -22,7 +22,7 @@
 
             var userId = await this.requesterSecurity.AuthenticateAsync(command.Requester);
 
-            await this.postSecurity.AssertDeletionAllowedAsync(userId, command.PostId);
+            await this.postSecurity.AssertWriteAllowedAsync(userId, command.PostId);
             await this.deletePost.ExecuteAsync(command.PostId);
             await this.scheduleGarbageCollection.ExecuteAsync();
         }

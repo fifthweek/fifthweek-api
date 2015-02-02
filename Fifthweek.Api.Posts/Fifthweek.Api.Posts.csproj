@@ -78,6 +78,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AutofacRegistration.cs" />
+    <Compile Include="Commands\ReviseNoteCommandHandler.cs" />
     <Compile Include="Commands\ReviseFileCommand.cs" />
     <Compile Include="Commands\ReviseImageCommand.cs" />
     <Compile Include="Controllers\RevisedFileData.cs" />

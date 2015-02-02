@@ -33,11 +33,11 @@
         {
             this.postOwnership.Setup(_ => _.IsOwnerAsync(UserId, PostId)).ReturnsAsync(true);
 
-            var result = await this.target.IsDeletionAllowedAsync(UserId, PostId);
+            var result = await this.target.IsWriteAllowedAsync(UserId, PostId);
 
             Assert.IsTrue(result);
 
-            await this.target.AssertDeletionAllowedAsync(UserId, PostId);
+            await this.target.AssertWriteAllowedAsync(UserId, PostId);
         }
 
         [TestMethod]
@@ -45,13 +45,13 @@
         {
             this.postOwnership.Setup(_ => _.IsOwnerAsync(UserId, PostId)).ReturnsAsync(false);
 
-            var result = await this.target.IsDeletionAllowedAsync(UserId, PostId);
+            var result = await this.target.IsWriteAllowedAsync(UserId, PostId);
 
             Assert.IsFalse(result);
 
             await ExpectedException.AssertExceptionAsync<UnauthorizedException>(() =>
             {
-                 return this.target.AssertDeletionAllowedAsync(UserId, PostId);
+                 return this.target.AssertWriteAllowedAsync(UserId, PostId);
             });
         }
     }

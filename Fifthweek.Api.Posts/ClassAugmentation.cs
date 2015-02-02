@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Linq;
 
-//// Generated on 02/02/2015 20:44:49 (UTC)
-//// Mapped solution in 3.38s
+//// Generated on 02/02/2015 20:59:58 (UTC)
+//// Mapped solution in 3.51s
 
 
 namespace Fifthweek.Api.Posts.Commands
@@ -1698,6 +1698,59 @@ namespace Fifthweek.Api.Posts.Controllers
             this.Comment = comment;
             this.ScheduledPostDate = scheduledPostDate;
             this.IsQueued = isQueued;
+        }
+    }
+}
+namespace Fifthweek.Api.Posts.Commands
+{
+    using System;
+    using System.Threading.Tasks;
+    using Fifthweek.Api.Channels.Shared;
+    using Fifthweek.Api.Core;
+    using Fifthweek.Api.Identity.Shared.Membership;
+    using Fifthweek.Api.Persistence;
+    using Fifthweek.Api.Posts.Shared;
+    using Fifthweek.CodeGeneration;
+
+    public partial class ReviseNoteCommandHandler 
+    {
+        public ReviseNoteCommandHandler(
+            Fifthweek.Api.Channels.Shared.IChannelSecurity channelSecurity,
+            Fifthweek.Api.Posts.Shared.IPostSecurity postSecurity,
+            Fifthweek.Api.Identity.Shared.Membership.IRequesterSecurity requesterSecurity,
+            Fifthweek.Api.Persistence.IFifthweekDbContext databaseContext,
+            Fifthweek.Api.Posts.IScheduledDateClippingFunction scheduledDateClipping)
+        {
+            if (channelSecurity == null)
+            {
+                throw new ArgumentNullException("channelSecurity");
+            }
+
+            if (postSecurity == null)
+            {
+                throw new ArgumentNullException("postSecurity");
+            }
+
+            if (requesterSecurity == null)
+            {
+                throw new ArgumentNullException("requesterSecurity");
+            }
+
+            if (databaseContext == null)
+            {
+                throw new ArgumentNullException("databaseContext");
+            }
+
+            if (scheduledDateClipping == null)
+            {
+                throw new ArgumentNullException("scheduledDateClipping");
+            }
+
+            this.channelSecurity = channelSecurity;
+            this.postSecurity = postSecurity;
+            this.requesterSecurity = requesterSecurity;
+            this.databaseContext = databaseContext;
+            this.scheduledDateClipping = scheduledDateClipping;
         }
     }
 }

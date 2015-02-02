@@ -6,8 +6,8 @@ namespace Fifthweek.Api.Posts.Shared
 
     public interface IPostSecurity
     {
-        Task<bool> IsDeletionAllowedAsync(UserId requester, PostId postId);
+        Task<bool> IsWriteAllowedAsync(UserId requester, PostId postId);
 
-        Task AssertDeletionAllowedAsync(UserId requester, PostId postId);
+        Task AssertWriteAllowedAsync(UserId requester, PostId postId);
     }
 }
