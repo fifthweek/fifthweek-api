@@ -13,6 +13,10 @@
         [Parsed(typeof(ValidChannelName))]
         public string Name { get; set; }
 
+        [Optional]
+        [Parsed(typeof(ValidChannelDescription))]
+        public string Description { get; set; }
+
         [Parsed(typeof(ValidChannelPriceInUsCentsPerWeek))]
         public int Price { get; set; }
 

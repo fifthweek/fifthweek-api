@@ -221,7 +221,7 @@ namespace Fifthweek.Api.Subscriptions.Commands
             Fifthweek.Api.Subscriptions.Shared.ValidSubscriptionName subscriptionName,
             Fifthweek.Api.Subscriptions.Shared.ValidTagline tagline,
             Fifthweek.Api.Subscriptions.Shared.ValidIntroduction introduction,
-            Fifthweek.Api.Subscriptions.Shared.ValidDescription description,
+            Fifthweek.Api.Subscriptions.Shared.ValidSubscriptionDescription description,
             Fifthweek.Api.FileManagement.Shared.FileId headerImageFileId,
             Fifthweek.Api.Subscriptions.Shared.ValidExternalVideoUrl video)
         {
@@ -1225,7 +1225,7 @@ namespace Fifthweek.Api.Subscriptions.Controllers
                 ValidIntroduction introduction,
                 Fifthweek.Api.FileManagement.Shared.FileId headerImageFileId,
                 ValidExternalVideoUrl video,
-                ValidDescription description)
+                ValidSubscriptionDescription description)
             {
                 if (subscriptionName == null)
                 {
@@ -1265,7 +1265,7 @@ namespace Fifthweek.Api.Subscriptions.Controllers
         
             public ValidExternalVideoUrl Video { get; private set; }
         
-            public ValidDescription Description { get; private set; }
+            public ValidSubscriptionDescription Description { get; private set; }
         }
     }
 
@@ -1357,11 +1357,11 @@ namespace Fifthweek.Api.Subscriptions.Controllers
                 }
             }
 
-            ValidDescription parsed4 = null;
-            if (!ValidDescription.IsEmpty(target.Description))
+            ValidSubscriptionDescription parsed4 = null;
+            if (!ValidSubscriptionDescription.IsEmpty(target.Description))
             {
                 System.Collections.Generic.IReadOnlyCollection<string> parsed4Errors;
-                if (!ValidDescription.TryParse(target.Description, out parsed4, out parsed4Errors))
+                if (!ValidSubscriptionDescription.TryParse(target.Description, out parsed4, out parsed4Errors))
                 {
                     var modelState = new System.Web.Http.ModelBinding.ModelState();
                     foreach (var errorMessage in parsed4Errors)

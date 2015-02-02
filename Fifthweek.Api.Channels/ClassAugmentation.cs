@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Linq;
 
-//// Generated on 30/01/2015 14:10:20 (UTC)
-//// Mapped solution in 3.06s
+//// Generated on 02/02/2015 19:48:56 (UTC)
+//// Mapped solution in 3.2s
 
 
 namespace Fifthweek.Api.Channels
@@ -70,6 +70,7 @@ namespace Fifthweek.Api.Channels.Commands
     using Fifthweek.Api.Persistence;
     using Dapper;
     using Fifthweek.Api.FileManagement.Shared;
+    using System.Data.Entity;
 
     public partial class CreateChannelCommand 
     {
@@ -126,6 +127,7 @@ namespace Fifthweek.Api.Channels.Commands
     using Fifthweek.Api.Persistence;
     using Dapper;
     using Fifthweek.Api.FileManagement.Shared;
+    using System.Data.Entity;
 
     public partial class CreateChannelCommandHandler 
     {
@@ -168,6 +170,7 @@ namespace Fifthweek.Api.Channels.Commands
     using Fifthweek.Api.Persistence;
     using Dapper;
     using Fifthweek.Api.FileManagement.Shared;
+    using System.Data.Entity;
 
     public partial class UpdateChannelCommand 
     {
@@ -175,6 +178,7 @@ namespace Fifthweek.Api.Channels.Commands
             Fifthweek.Api.Identity.Shared.Membership.Requester requester,
             Fifthweek.Api.Channels.Shared.ChannelId channelId,
             Fifthweek.Api.Channels.Shared.ValidChannelName name,
+            Fifthweek.Api.Channels.Shared.ValidChannelDescription description,
             Fifthweek.Api.Channels.Shared.ValidChannelPriceInUsCentsPerWeek price,
             System.Boolean isVisibleToNonSubscribers)
         {
@@ -206,6 +210,7 @@ namespace Fifthweek.Api.Channels.Commands
             this.Requester = requester;
             this.ChannelId = channelId;
             this.Name = name;
+            this.Description = description;
             this.Price = price;
             this.IsVisibleToNonSubscribers = isVisibleToNonSubscribers;
         }
@@ -224,6 +229,7 @@ namespace Fifthweek.Api.Channels.Commands
     using Fifthweek.Api.Persistence;
     using Dapper;
     using Fifthweek.Api.FileManagement.Shared;
+    using System.Data.Entity;
 
     public partial class UpdateChannelCommandHandler 
     {
@@ -366,6 +372,7 @@ namespace Fifthweek.Api.Channels.Controllers
     {
         public UpdatedChannelData(
             System.String name,
+            System.String description,
             System.Int32 price,
             System.Boolean isVisibleToNonSubscribers)
         {
@@ -385,6 +392,7 @@ namespace Fifthweek.Api.Channels.Controllers
             }
 
             this.Name = name;
+            this.Description = description;
             this.Price = price;
             this.IsVisibleToNonSubscribers = isVisibleToNonSubscribers;
         }
@@ -403,6 +411,7 @@ namespace Fifthweek.Api.Channels.Commands
     using Fifthweek.Api.Persistence;
     using Dapper;
     using Fifthweek.Api.FileManagement.Shared;
+    using System.Data.Entity;
 
     public partial class DeleteChannelCommand 
     {
@@ -438,6 +447,7 @@ namespace Fifthweek.Api.Channels.Commands
     using Fifthweek.Api.Persistence;
     using Dapper;
     using Fifthweek.Api.FileManagement.Shared;
+    using System.Data.Entity;
 
     public partial class DeleteChannelCommandHandler 
     {
@@ -514,6 +524,7 @@ namespace Fifthweek.Api.Channels.Commands
     using Fifthweek.Api.Persistence;
     using Dapper;
     using Fifthweek.Api.FileManagement.Shared;
+    using System.Data.Entity;
 
     public partial class CreateChannelCommand 
     {
@@ -600,12 +611,13 @@ namespace Fifthweek.Api.Channels.Commands
     using Fifthweek.Api.Persistence;
     using Dapper;
     using Fifthweek.Api.FileManagement.Shared;
+    using System.Data.Entity;
 
     public partial class UpdateChannelCommand 
     {
         public override string ToString()
         {
-            return string.Format("UpdateChannelCommand({0}, {1}, {2}, {3}, {4})", this.Requester == null ? "null" : this.Requester.ToString(), this.ChannelId == null ? "null" : this.ChannelId.ToString(), this.Name == null ? "null" : this.Name.ToString(), this.Price == null ? "null" : this.Price.ToString(), this.IsVisibleToNonSubscribers == null ? "null" : this.IsVisibleToNonSubscribers.ToString());
+            return string.Format("UpdateChannelCommand({0}, {1}, {2}, {3}, {4}, {5})", this.Requester == null ? "null" : this.Requester.ToString(), this.ChannelId == null ? "null" : this.ChannelId.ToString(), this.Name == null ? "null" : this.Name.ToString(), this.Description == null ? "null" : this.Description.ToString(), this.Price == null ? "null" : this.Price.ToString(), this.IsVisibleToNonSubscribers == null ? "null" : this.IsVisibleToNonSubscribers.ToString());
         }
         
         public override bool Equals(object obj)
@@ -636,6 +648,7 @@ namespace Fifthweek.Api.Channels.Commands
                 hashCode = (hashCode * 397) ^ (this.Requester != null ? this.Requester.GetHashCode() : 0);
                 hashCode = (hashCode * 397) ^ (this.ChannelId != null ? this.ChannelId.GetHashCode() : 0);
                 hashCode = (hashCode * 397) ^ (this.Name != null ? this.Name.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.Description != null ? this.Description.GetHashCode() : 0);
                 hashCode = (hashCode * 397) ^ (this.Price != null ? this.Price.GetHashCode() : 0);
                 hashCode = (hashCode * 397) ^ (this.IsVisibleToNonSubscribers != null ? this.IsVisibleToNonSubscribers.GetHashCode() : 0);
                 return hashCode;
@@ -655,6 +668,11 @@ namespace Fifthweek.Api.Channels.Commands
             }
         
             if (!object.Equals(this.Name, other.Name))
+            {
+                return false;
+            }
+        
+            if (!object.Equals(this.Description, other.Description))
             {
                 return false;
             }
@@ -763,7 +781,7 @@ namespace Fifthweek.Api.Channels.Controllers
     {
         public override string ToString()
         {
-            return string.Format("UpdatedChannelData(\"{0}\", {1}, {2})", this.Name == null ? "null" : this.Name.ToString(), this.Price == null ? "null" : this.Price.ToString(), this.IsVisibleToNonSubscribers == null ? "null" : this.IsVisibleToNonSubscribers.ToString());
+            return string.Format("UpdatedChannelData(\"{0}\", \"{1}\", {2}, {3})", this.Name == null ? "null" : this.Name.ToString(), this.Description == null ? "null" : this.Description.ToString(), this.Price == null ? "null" : this.Price.ToString(), this.IsVisibleToNonSubscribers == null ? "null" : this.IsVisibleToNonSubscribers.ToString());
         }
         
         public override bool Equals(object obj)
@@ -792,6 +810,7 @@ namespace Fifthweek.Api.Channels.Controllers
             {
                 int hashCode = 0;
                 hashCode = (hashCode * 397) ^ (this.Name != null ? this.Name.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.Description != null ? this.Description.GetHashCode() : 0);
                 hashCode = (hashCode * 397) ^ (this.Price != null ? this.Price.GetHashCode() : 0);
                 hashCode = (hashCode * 397) ^ (this.IsVisibleToNonSubscribers != null ? this.IsVisibleToNonSubscribers.GetHashCode() : 0);
                 return hashCode;
@@ -801,6 +820,11 @@ namespace Fifthweek.Api.Channels.Controllers
         protected bool Equals(UpdatedChannelData other)
         {
             if (!object.Equals(this.Name, other.Name))
+            {
+                return false;
+            }
+        
+            if (!object.Equals(this.Description, other.Description))
             {
                 return false;
             }
@@ -832,6 +856,7 @@ namespace Fifthweek.Api.Channels.Commands
     using Fifthweek.Api.Persistence;
     using Dapper;
     using Fifthweek.Api.FileManagement.Shared;
+    using System.Data.Entity;
 
     public partial class DeleteChannelCommand 
     {
@@ -1009,6 +1034,7 @@ namespace Fifthweek.Api.Channels.Controllers
         {
             public Parsed(
                 ValidChannelName name,
+                ValidChannelDescription description,
                 ValidChannelPriceInUsCentsPerWeek price,
                 System.Boolean isVisibleToNonSubscribers)
             {
@@ -1028,11 +1054,14 @@ namespace Fifthweek.Api.Channels.Controllers
                 }
 
                 this.Name = name;
+                this.Description = description;
                 this.Price = price;
                 this.IsVisibleToNonSubscribers = isVisibleToNonSubscribers;
             }
         
             public ValidChannelName Name { get; private set; }
+        
+            public ValidChannelDescription Description { get; private set; }
         
             public ValidChannelPriceInUsCentsPerWeek Price { get; private set; }
         
@@ -1068,12 +1097,28 @@ namespace Fifthweek.Api.Channels.Controllers
                 modelStateDictionary.Add("Name", modelState);
             }
 
-            ValidChannelPriceInUsCentsPerWeek parsed1 = null;
-            System.Collections.Generic.IReadOnlyCollection<string> parsed1Errors;
-            if (!ValidChannelPriceInUsCentsPerWeek.TryParse(target.Price, out parsed1, out parsed1Errors))
+            ValidChannelDescription parsed1 = null;
+            if (!ValidChannelDescription.IsEmpty(target.Description))
+            {
+                System.Collections.Generic.IReadOnlyCollection<string> parsed1Errors;
+                if (!ValidChannelDescription.TryParse(target.Description, out parsed1, out parsed1Errors))
+                {
+                    var modelState = new System.Web.Http.ModelBinding.ModelState();
+                    foreach (var errorMessage in parsed1Errors)
+                    {
+                        modelState.Errors.Add(errorMessage);
+                    }
+
+                    modelStateDictionary.Add("Description", modelState);
+                }
+            }
+
+            ValidChannelPriceInUsCentsPerWeek parsed2 = null;
+            System.Collections.Generic.IReadOnlyCollection<string> parsed2Errors;
+            if (!ValidChannelPriceInUsCentsPerWeek.TryParse(target.Price, out parsed2, out parsed2Errors))
             {
                 var modelState = new System.Web.Http.ModelBinding.ModelState();
-                foreach (var errorMessage in parsed1Errors)
+                foreach (var errorMessage in parsed2Errors)
                 {
                     modelState.Errors.Add(errorMessage);
                 }
@@ -1089,6 +1134,7 @@ namespace Fifthweek.Api.Channels.Controllers
             return new UpdatedChannelData.Parsed(
                 parsed0,
                 parsed1,
+                parsed2,
                 target.IsVisibleToNonSubscribers);
         }    
     }

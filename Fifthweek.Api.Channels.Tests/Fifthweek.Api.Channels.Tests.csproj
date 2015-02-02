@@ -91,6 +91,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ValidChannelNameTests.cs" />
     <Compile Include="ValidChannelPriceInUsCentsPerWeekTests.cs" />
+    <Compile Include="ValidChannelDescriptionTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Fifthweek.Api.Channels.Shared\Fifthweek.Api.Channels.Shared.csproj">

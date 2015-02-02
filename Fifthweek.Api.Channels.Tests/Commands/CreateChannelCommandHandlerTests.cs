@@ -105,6 +105,7 @@
                     SubscriptionId.Value,
                     null,
                     Name.Value,
+                    null,
                     Price.Value,
                     false,
                     default(DateTime));

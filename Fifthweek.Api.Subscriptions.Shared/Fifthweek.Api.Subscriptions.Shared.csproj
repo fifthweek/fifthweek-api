@@ -55,7 +55,7 @@
     <Compile Include="ISubscriptionSecurity.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SubscriptionId.cs" />
-    <Compile Include="ValidDescription.cs" />
+    <Compile Include="ValidSubscriptionDescription.cs" />
     <Compile Include="ValidExternalVideoUrl.cs" />
     <Compile Include="ValidIntroduction.cs" />
     <Compile Include="ValidSubscriptionName.cs" />

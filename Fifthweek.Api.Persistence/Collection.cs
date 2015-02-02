@@ -22,6 +22,7 @@
         public Channel Channel { get; set; }
 
         [Required]
+        [MaxLength(50)] // See: ValidCollectionName.MaxLength
         public string Name { get; set; }
 
         [Required]

@@ -76,9 +76,9 @@
         }
 
         [TestMethod]
-        public void ItShouldNotAllowCollectionNamesOver25Characters()
+        public void ItShouldNotAllowCollectionNamesOver50Characters()
         {
-            this.AssertMaxLength(25);
+            this.AssertMaxLength(50);
         }
 
         [TestMethod]

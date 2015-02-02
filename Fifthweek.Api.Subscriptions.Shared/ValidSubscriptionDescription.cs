@@ -6,12 +6,12 @@
     using Fifthweek.CodeGeneration;
 
     [AutoEqualityMembers]
-    public partial class ValidDescription
+    public partial class ValidSubscriptionDescription
     {
         public static readonly int MinLength = 1;
         public static readonly int MaxLength = 2000; // Seems to be the maximum size used on other sites for landing page blubs.
 
-        private ValidDescription()
+        private ValidSubscriptionDescription()
         {
         }
 
@@ -22,9 +22,9 @@
             return string.IsNullOrEmpty(value);
         }
 
-        public static ValidDescription Parse(string value)
+        public static ValidSubscriptionDescription Parse(string value)
         {
-            ValidDescription retval;
+            ValidSubscriptionDescription retval;
             if (!TryParse(value, out retval))
             {
                 throw new ArgumentException("Invalid description", "value");
@@ -33,13 +33,13 @@
             return retval;
         }
 
-        public static bool TryParse(string value, out ValidDescription description)
+        public static bool TryParse(string value, out ValidSubscriptionDescription description)
         {
             IReadOnlyCollection<string> errorMessages;
             return TryParse(value, out description, out errorMessages);
         }
 
-        public static bool TryParse(string value, out ValidDescription description, out IReadOnlyCollection<string> errorMessages)
+        public static bool TryParse(string value, out ValidSubscriptionDescription description, out IReadOnlyCollection<string> errorMessages)
         {
             var errorMessageList = new List<string>();
             errorMessages = errorMessageList;
@@ -63,7 +63,7 @@
                 return false;
             }
 
-            description = new ValidDescription
+            description = new ValidSubscriptionDescription
             {
                 Value = value
             };

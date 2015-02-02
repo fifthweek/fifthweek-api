@@ -11,7 +11,8 @@
                 Guid.NewGuid(),
                 default(Guid),
                 null,
-                string.Empty,
+                "Name " + random.Next(1000),
+                "Description " + random.Next(1000),
                 random.Next(1, 100),
                 random.Next(2) == 0,
                 DateTime.UtcNow.AddDays(random.NextDouble() * -100));

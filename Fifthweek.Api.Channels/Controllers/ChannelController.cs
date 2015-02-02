@@ -53,6 +53,7 @@
                     requester,
                     channelIdObject,
                     channel.Name,
+                    channel.Description,
                     channel.Price,
                     channel.IsVisibleToNonSubscribers));
 

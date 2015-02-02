@@ -121,7 +121,7 @@
                 ValidSubscriptionName.Parse(data.SubscriptionName),
                 ValidTagline.Parse(data.Tagline),
                 ValidIntroduction.Parse(data.Introduction),
-                ValidDescription.Parse(data.Description),
+                ValidSubscriptionDescription.Parse(data.Description),
                 data.HeaderImageFileId,
                 ValidExternalVideoUrl.Parse(data.Video));
         }

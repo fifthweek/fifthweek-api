@@ -33,6 +33,7 @@
                 command.SubscriptionId.Value,
                 null,
                 command.Name.Value,
+                null,
                 command.Price.Value,
                 false,
                 DateTime.UtcNow);

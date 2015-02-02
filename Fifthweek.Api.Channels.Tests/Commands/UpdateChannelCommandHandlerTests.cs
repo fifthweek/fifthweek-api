@@ -23,8 +23,9 @@
         private static readonly Requester Requester = Requester.Authenticated(UserId);
         private static readonly ChannelId ChannelId = new ChannelId(Guid.NewGuid());
         private static readonly ValidChannelName Name = ValidChannelName.Parse("Bat puns");
+        private static readonly ValidChannelDescription Description = ValidChannelDescription.Parse("Bat puns\nBadPuns");
         private static readonly ValidChannelPriceInUsCentsPerWeek Price = ValidChannelPriceInUsCentsPerWeek.Parse(10);
-        private static readonly UpdateChannelCommand Command = new UpdateChannelCommand(Requester, ChannelId, Name, Price, IsVisibleToNonSubscribers);
+        private static readonly UpdateChannelCommand Command = new UpdateChannelCommand(Requester, ChannelId, Name, Description, Price, IsVisibleToNonSubscribers);
         
         private Mock<IRequesterSecurity> requesterSecurity;
         private Mock<IChannelSecurity> channelSecurity;
@@ -60,7 +61,7 @@
         [ExpectedException(typeof(UnauthorizedException))]
         public async Task ItShouldRequireUserIsAuthenticated()
         {
-            await this.target.HandleAsync(new UpdateChannelCommand(Requester.Unauthenticated, ChannelId, Name, Price, IsVisibleToNonSubscribers));
+            await this.target.HandleAsync(new UpdateChannelCommand(Requester.Unauthenticated, ChannelId, Name, Description, Price, IsVisibleToNonSubscribers));
         }
 
         [TestMethod]
@@ -103,6 +104,41 @@
                 {
                     IsVisibleToNonSubscribers = IsVisibleToNonSubscribers,
                     Name = Name.Value,
+                    Description = Description.Value,
+                    PriceInUsCentsPerWeek = Price.Value
+                };
+
+                return new ExpectedSideEffects
+                {
+                    Update = new WildcardEntity<Channel>(expectedChannel)
+                    {
+                        Expected = actual =>
+                        {
+                            expectedChannel.SubscriptionId = actual.SubscriptionId;
+                            expectedChannel.CreationDate = actual.CreationDate;
+                            return expectedChannel;
+                        }
+                    }
+                };
+            });
+        }
+
+        [TestMethod]
+        public async Task ItShouldAllowNullDescriptions()
+        {
+            await this.DatabaseTestAsync(async testDatabase =>
+            {
+                this.InitializeTarget(testDatabase.NewContext());
+                await this.CreateChannelAsync(testDatabase);
+                await testDatabase.TakeSnapshotAsync();
+
+                await this.target.HandleAsync(new UpdateChannelCommand(Requester, ChannelId, Name, null, Price, IsVisibleToNonSubscribers));
+
+                var expectedChannel = new Channel(ChannelId.Value)
+                {
+                    IsVisibleToNonSubscribers = IsVisibleToNonSubscribers,
+                    Name = Name.Value,
+                    Description = null,
                     PriceInUsCentsPerWeek = Price.Value
                 };
 
@@ -130,12 +166,13 @@
                 await this.CreateChannelAsync(testDatabase, createAsDefaultChannel: true);
                 await testDatabase.TakeSnapshotAsync();
 
-                await this.target.HandleAsync(new UpdateChannelCommand(Requester, ChannelId, Name, Price, isVisibleToNonSubscribers: false));
+                await this.target.HandleAsync(new UpdateChannelCommand(Requester, ChannelId, Name, Description, Price, isVisibleToNonSubscribers: false));
 
                 var expectedChannel = new Channel(ChannelId.Value)
                 {
                     IsVisibleToNonSubscribers = true,
                     Name = Name.Value,
+                    Description = Description.Value,
                     PriceInUsCentsPerWeek = Price.Value
                 };
 

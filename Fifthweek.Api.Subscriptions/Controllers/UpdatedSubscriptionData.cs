@@ -23,7 +23,7 @@
         [Parsed(typeof(ValidExternalVideoUrl))]
         public string Video { get; set; }
 
-        [Parsed(typeof(ValidDescription))]
+        [Parsed(typeof(ValidSubscriptionDescription))]
         public string Description { get; set; }
     }
 }

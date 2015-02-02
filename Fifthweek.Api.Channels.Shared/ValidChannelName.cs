@@ -11,7 +11,7 @@
     {
         public static readonly string ForbiddenCharacters = "\r\n\t";
         public static readonly int MinLength = 1;
-        public static readonly int MaxLength = 25;
+        public static readonly int MaxLength = 50;
 
         private const string ForbiddenCharacterMessage = "Must not contain new lines or tabs";
         private static readonly HashSet<char> ForbiddenCharactersHashSet = new HashSet<char>(ForbiddenCharacters);

@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Linq;
 
-//// Generated on 29/01/2015 19:37:49 (UTC)
-//// Mapped solution in 3.33s
+//// Generated on 02/02/2015 20:02:09 (UTC)
+//// Mapped solution in 3.23s
 
 namespace Fifthweek.Api.Channels.Shared
 {
@@ -232,6 +232,60 @@ namespace Fifthweek.Api.Channels.Shared
         }
         
         protected bool Equals(ValidChannelPriceInUsCentsPerWeek other)
+        {
+            if (!object.Equals(this.Value, other.Value))
+            {
+                return false;
+            }
+        
+            return true;
+        }
+    }
+}
+namespace Fifthweek.Api.Channels.Shared
+{
+    using System;
+    using System.Collections.Generic;
+    using Fifthweek.CodeGeneration;
+
+    public partial class ValidChannelDescription 
+    {
+        public override string ToString()
+        {
+            return string.Format("ValidChannelDescription(\"{0}\")", this.Value == null ? "null" : this.Value.ToString());
+        }
+        
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj))
+            {
+                return false;
+            }
+        
+            if (ReferenceEquals(this, obj))
+            {
+                return true;
+            }
+        
+            if (obj.GetType() != this.GetType())
+            {
+                return false;
+            }
+        
+            return this.Equals((ValidChannelDescription)obj);
+        }
+        
+        public override int GetHashCode()
+        {
+            unchecked
+            {
+                int hashCode = 0;
+                hashCode = (hashCode * 397) ^ (this.Value != null ? this.Value.GetHashCode() : 0);
+                return hashCode;
+            }
+        }
+        
+        protected bool Equals(ValidChannelDescription other)
         {
             if (!object.Equals(this.Value, other.Value))
             {

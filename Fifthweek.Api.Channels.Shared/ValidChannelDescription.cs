@@ -1,50 +1,45 @@
-﻿namespace Fifthweek.Api.Collections.Shared
+﻿namespace Fifthweek.Api.Channels.Shared
 {
     using System;
     using System.Collections.Generic;
-    using System.Linq;
 
     using Fifthweek.CodeGeneration;
 
     [AutoEqualityMembers]
-    public partial class ValidCollectionName
+    public partial class ValidChannelDescription
     {
-        public static readonly string ForbiddenCharacters = "\r\n\t";
         public static readonly int MinLength = 1;
-        public static readonly int MaxLength = 50;
+        public static readonly int MaxLength = 250;
 
-        private const string ForbiddenCharacterMessage = "Must not contain new lines or tabs";
-        private static readonly HashSet<char> ForbiddenCharactersHashSet = new HashSet<char>(ForbiddenCharacters);
-
-        private ValidCollectionName()
+        private ValidChannelDescription()
         {
         }
 
-        public string Value { get; protected set; }
+        public string Value { get; private set; }
 
         public static bool IsEmpty(string value)
         {
             return string.IsNullOrEmpty(value);
         }
 
-        public static ValidCollectionName Parse(string value)
+        public static ValidChannelDescription Parse(string value)
         {
-            ValidCollectionName retval;
+            ValidChannelDescription retval;
             if (!TryParse(value, out retval))
             {
-                throw new ArgumentException("Invalid collection name", "value");
+                throw new ArgumentException("Invalid description", "value");
             }
 
             return retval;
         }
 
-        public static bool TryParse(string value, out ValidCollectionName collectionName)
+        public static bool TryParse(string value, out ValidChannelDescription description)
         {
             IReadOnlyCollection<string> errorMessages;
-            return TryParse(value, out collectionName, out errorMessages);
+            return TryParse(value, out description, out errorMessages);
         }
 
-        public static bool TryParse(string value, out ValidCollectionName collectionName, out IReadOnlyCollection<string> errorMessages)
+        public static bool TryParse(string value, out ValidChannelDescription description, out IReadOnlyCollection<string> errorMessages)
         {
             var errorMessageList = new List<string>();
             errorMessages = errorMessageList;
@@ -60,20 +55,15 @@
                 {
                     errorMessageList.Add(string.Format("Length must be from {0} to {1} characters", MinLength, MaxLength));
                 }
-
-                if (value.Any(ForbiddenCharactersHashSet.Contains))
-                {
-                    errorMessageList.Add(ForbiddenCharacterMessage);
-                }
             }
 
             if (errorMessageList.Count > 0)
             {
-                collectionName = null;
+                description = null;
                 return false;
             }
 
-            collectionName = new ValidCollectionName
+            description = new ValidChannelDescription
             {
                 Value = value
             };

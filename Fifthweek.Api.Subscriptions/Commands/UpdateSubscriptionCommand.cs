@@ -19,7 +19,7 @@
         public ValidIntroduction Introduction { get; private set; }
 
         [Optional]
-        public ValidDescription Description { get; private set; }
+        public ValidSubscriptionDescription Description { get; private set; }
 
         [Optional]
         public FileId HeaderImageFileId { get; private set; }

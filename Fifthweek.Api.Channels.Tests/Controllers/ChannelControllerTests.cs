@@ -23,6 +23,7 @@
         private static readonly ChannelId ChannelId = new ChannelId(Guid.NewGuid());
         private static readonly SubscriptionId SubscriptionId = new SubscriptionId(Guid.NewGuid());
         private static readonly ValidChannelName ChannelName = ValidChannelName.Parse("Premium");
+        private static readonly ValidChannelDescription ChannelDescription = ValidChannelDescription.Parse("Premium");
         private static readonly ValidChannelPriceInUsCentsPerWeek Price = ValidChannelPriceInUsCentsPerWeek.Parse(10);
 
         private Mock<ICommandHandler<CreateChannelCommand>> createChannel;
@@ -69,8 +70,8 @@
         [TestMethod]
         public async Task WhenPuttingChannel_ItShouldIssueUpdateChannelCommand()
         {
-            var data = new UpdatedChannelData(ChannelName.Value, Price.Value, true);
-            var command = new UpdateChannelCommand(Requester, ChannelId, ChannelName, Price, true);
+            var data = new UpdatedChannelData(ChannelName.Value, ChannelDescription.Value, Price.Value, true);
+            var command = new UpdateChannelCommand(Requester, ChannelId, ChannelName, ChannelDescription, Price, true);
 
             this.requesterContext.Setup(v => v.GetRequester()).Returns(Requester);
             this.updateChannel.Setup(v => v.HandleAsync(command)).Returns(Task.FromResult(0)).Verifiable();

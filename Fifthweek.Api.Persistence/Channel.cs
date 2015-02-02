@@ -22,8 +22,13 @@
         [Required, Optional, NonEquatable]
         public Subscription Subscription { get; set; }
 
-        [Required(AllowEmptyStrings = true)]
+        [Optional]
+        [MaxLength(50)] // See: ValidChannelName.MaxLength
         public string Name { get; set; }
+
+        [Optional]
+        [MaxLength(250)] // See: ValidChannelDescription.MaxLength
+        public string Description { get; set; }
 
         [Required]
         public int PriceInUsCentsPerWeek { get; set; }

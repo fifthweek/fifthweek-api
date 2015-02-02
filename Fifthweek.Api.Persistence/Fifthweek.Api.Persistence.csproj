@@ -218,6 +218,14 @@
     <Compile Include="Migrations\201501301215198_RefactorRefreshTokens.Designer.cs">
       <DependentUpon>201501301215198_RefactorRefreshTokens.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201502021921357_AddChannelDescription.cs" />
+    <Compile Include="Migrations\201502021921357_AddChannelDescription.Designer.cs">
+      <DependentUpon>201502021921357_AddChannelDescription.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201502021958010_UpdateDescriptionLengths.cs" />
+    <Compile Include="Migrations\201502021958010_UpdateDescriptionLengths.Designer.cs">
+      <DependentUpon>201502021958010_UpdateDescriptionLengths.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Post.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -336,6 +344,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201501301215198_RefactorRefreshTokens.resx">
       <DependentUpon>201501301215198_RefactorRefreshTokens.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201502021921357_AddChannelDescription.resx">
+      <DependentUpon>201502021921357_AddChannelDescription.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201502021958010_UpdateDescriptionLengths.resx">
+      <DependentUpon>201502021958010_UpdateDescriptionLengths.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>

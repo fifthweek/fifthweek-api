@@ -138,7 +138,8 @@
                 SubscriptionId.Value, // The default channel uses the subscription ID.
                 SubscriptionId.Value,
                 null,
-                string.Empty,
+                null,
+                null,
                 BasePrice.Value,
                 true,
                 DateTime.MinValue);

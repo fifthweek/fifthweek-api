@@ -76,9 +76,9 @@
         }
 
         [TestMethod]
-        public void ItShouldNotAllowChannelNamesOver25Characters()
+        public void ItShouldNotAllowChannelNamesOver50Characters()
         {
-            this.AssertMaxLength(25);
+            this.AssertMaxLength(50);
         }
 
         [TestMethod]

@@ -1,14 +1,14 @@
-﻿namespace Fifthweek.Api.Subscriptions.Tests
+﻿namespace Fifthweek.Api.Channels.Tests
 {
     using System.Collections.Generic;
 
-    using Fifthweek.Api.Subscriptions.Shared;
+    using Fifthweek.Api.Channels.Shared;
     using Fifthweek.Tests.Shared;
 
     using Microsoft.VisualStudio.TestTools.UnitTesting;
 
     [TestClass]
-    public class ValidDescriptionTests : ValidatedStringTests<ValidDescription>
+    public class ValidChannelDescriptionTests : ValidatedStringTests<ValidChannelDescription>
     {
         public static readonly string InvalidValue = "!";
 
@@ -25,28 +25,28 @@
         [TestMethod]
         public void ItShouldTreatNullAsEmpty()
         {
-            var result = ValidDescription.IsEmpty(null);
+            var result = ValidChannelDescription.IsEmpty(null);
             Assert.IsTrue(result);
         }
 
         [TestMethod]
         public void ItShouldTreatEmptyStringAsEmpty()
         {
-            var result = ValidDescription.IsEmpty(string.Empty);
+            var result = ValidChannelDescription.IsEmpty(string.Empty);
             Assert.IsTrue(result);
         }
 
         [TestMethod]
         public void ItShouldTreatStringWithOnlyWhiteSpaceCharactersAsNonEmpty()
         {
-            var result = ValidDescription.IsEmpty(" ");
+            var result = ValidChannelDescription.IsEmpty(" ");
             Assert.IsFalse(result);
         }
 
         [TestMethod]
         public void ItShouldTreatStringWithAtLeast1NonWhiteSpaceCharacterAsNonEmpty()
         {
-            var result = ValidDescription.IsEmpty("a");
+            var result = ValidChannelDescription.IsEmpty("a");
             Assert.IsFalse(result);
         }
 
@@ -89,27 +89,27 @@
         }
 
         [TestMethod]
-        public void ItShouldNotAllowDescriptionsOver2000Characters()
+        public void ItShouldNotAllowDescriptionsOver250Characters()
         {
-            this.AssertMaxLength(2000);
+            this.AssertMaxLength(250);
         }
 
-        protected override ValidDescription Parse(string value)
+        protected override ValidChannelDescription Parse(string value)
         {
-            return ValidDescription.Parse(value);
+            return ValidChannelDescription.Parse(value);
         }
 
-        protected override bool TryParse(string value, out ValidDescription parsedObject)
+        protected override bool TryParse(string value, out ValidChannelDescription parsedObject)
         {
-            return ValidDescription.TryParse(value, out parsedObject);
+            return ValidChannelDescription.TryParse(value, out parsedObject);
         }
 
-        protected override bool TryParse(string value, out ValidDescription parsedObject, out IReadOnlyCollection<string> errorMessages)
+        protected override bool TryParse(string value, out ValidChannelDescription parsedObject, out IReadOnlyCollection<string> errorMessages)
         {
-            return ValidDescription.TryParse(value, out parsedObject, out errorMessages);
+            return ValidChannelDescription.TryParse(value, out parsedObject, out errorMessages);
         }
 
-        protected override string GetValue(ValidDescription parsedObject)
+        protected override string GetValue(ValidChannelDescription parsedObject)
         {
             return parsedObject.Value;
         }

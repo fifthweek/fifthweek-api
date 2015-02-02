@@ -143,7 +143,7 @@ namespace Fifthweek.Api.Subscriptions.Shared
     using System.Collections.Generic;
     using System.Diagnostics.CodeAnalysis;
 
-    public partial class ValidDescription 
+    public partial class ValidSubscriptionDescription 
     {
         public override string ToString()
         {
@@ -167,7 +167,7 @@ namespace Fifthweek.Api.Subscriptions.Shared
                 return false;
             }
         
-            return this.Equals((ValidDescription)obj);
+            return this.Equals((ValidSubscriptionDescription)obj);
         }
         
         public override int GetHashCode()
@@ -180,7 +180,7 @@ namespace Fifthweek.Api.Subscriptions.Shared
             }
         }
         
-        protected bool Equals(ValidDescription other)
+        protected bool Equals(ValidSubscriptionDescription other)
         {
             if (!object.Equals(this.Value, other.Value))
             {

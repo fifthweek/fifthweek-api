@@ -29,7 +29,7 @@
         private static readonly ValidSubscriptionName SubscriptionName = ValidSubscriptionName.Parse("Lawrence");
         private static readonly ValidTagline Tagline = ValidTagline.Parse("Web Comics and More");
         private static readonly ValidIntroduction Introduction = ValidIntroduction.Default;
-        private static readonly ValidDescription Description = ValidDescription.Parse("Hello all!");
+        private static readonly ValidSubscriptionDescription Description = ValidSubscriptionDescription.Parse("Hello all!");
         private static readonly FileId HeaderImageFileId = new FileId(Guid.NewGuid());
         private static readonly ValidExternalVideoUrl Video = ValidExternalVideoUrl.Parse("http://youtube.com/3135");
         private static readonly UpdateSubscriptionCommand Command = new UpdateSubscriptionCommand(

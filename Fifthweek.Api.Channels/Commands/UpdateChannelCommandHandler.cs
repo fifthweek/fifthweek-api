@@ -33,13 +33,15 @@
             {
                 IsVisibleToNonSubscribers = command.IsVisibleToNonSubscribers,
                 Name = command.Name.Value,
-                PriceInUsCentsPerWeek = command.Price.Value
+                PriceInUsCentsPerWeek = command.Price.Value,
+                Description = command.Description == null ? null : command.Description.Value
             };
 
             var updatedFields = 
                 Channel.Fields.IsVisibleToNonSubscribers | 
                 Channel.Fields.Name | 
-                Channel.Fields.PriceInUsCentsPerWeek;
+                Channel.Fields.PriceInUsCentsPerWeek |
+                Channel.Fields.Description;
 
             // Do not update visibility for the default channel: it must always be visible.
             var channelId = command.ChannelId.Value;
