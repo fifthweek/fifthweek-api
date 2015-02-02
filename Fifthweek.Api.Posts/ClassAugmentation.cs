@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Linq;
 
-//// Generated on 02/02/2015 20:59:58 (UTC)
-//// Mapped solution in 3.51s
+//// Generated on 02/02/2015 21:34:10 (UTC)
+//// Mapped solution in 3.47s
 
 
 namespace Fifthweek.Api.Posts.Commands
@@ -413,35 +413,28 @@ namespace Fifthweek.Api.Posts.Commands
     public partial class PostNoteCommandHandler 
     {
         public PostNoteCommandHandler(
-            Fifthweek.Api.Channels.Shared.IChannelSecurity channelSecurity,
             Fifthweek.Api.Identity.Shared.Membership.IRequesterSecurity requesterSecurity,
-            Fifthweek.Api.Persistence.IFifthweekDbContext databaseContext,
-            Fifthweek.Api.Posts.IScheduledDateClippingFunction scheduledDateClipping)
+            Fifthweek.Api.Channels.Shared.IChannelSecurity channelSecurity,
+            Fifthweek.Api.Posts.IUpsertNoteDbStatement upsertNote)
         {
-            if (channelSecurity == null)
-            {
-                throw new ArgumentNullException("channelSecurity");
-            }
-
             if (requesterSecurity == null)
             {
                 throw new ArgumentNullException("requesterSecurity");
             }
 
-            if (databaseContext == null)
+            if (channelSecurity == null)
             {
-                throw new ArgumentNullException("databaseContext");
+                throw new ArgumentNullException("channelSecurity");
             }
 
-            if (scheduledDateClipping == null)
+            if (upsertNote == null)
             {
-                throw new ArgumentNullException("scheduledDateClipping");
+                throw new ArgumentNullException("upsertNote");
             }
 
-            this.channelSecurity = channelSecurity;
             this.requesterSecurity = requesterSecurity;
-            this.databaseContext = databaseContext;
-            this.scheduledDateClipping = scheduledDateClipping;
+            this.channelSecurity = channelSecurity;
+            this.upsertNote = upsertNote;
         }
     }
 }
@@ -1704,23 +1697,33 @@ namespace Fifthweek.Api.Posts.Controllers
 namespace Fifthweek.Api.Posts.Commands
 {
     using System;
-    using System.Threading.Tasks;
-    using Fifthweek.Api.Channels.Shared;
-    using Fifthweek.Api.Core;
+    using System.Linq;
     using Fifthweek.Api.Identity.Shared.Membership;
-    using Fifthweek.Api.Persistence;
     using Fifthweek.Api.Posts.Shared;
     using Fifthweek.CodeGeneration;
+    using System.Threading.Tasks;
+    using Fifthweek.Api.Core;
+    using Fifthweek.Api.FileManagement.Shared;
+    using Fifthweek.Api.Collections.Shared;
+    using Fifthweek.Api.Channels.Shared;
+    using Fifthweek.Api.Persistence;
+    using System.Collections.Generic;
+    using System.Text;
+    using Dapper;
 
     public partial class ReviseNoteCommandHandler 
     {
         public ReviseNoteCommandHandler(
+            Fifthweek.Api.Identity.Shared.Membership.IRequesterSecurity requesterSecurity,
             Fifthweek.Api.Channels.Shared.IChannelSecurity channelSecurity,
             Fifthweek.Api.Posts.Shared.IPostSecurity postSecurity,
-            Fifthweek.Api.Identity.Shared.Membership.IRequesterSecurity requesterSecurity,
-            Fifthweek.Api.Persistence.IFifthweekDbContext databaseContext,
-            Fifthweek.Api.Posts.IScheduledDateClippingFunction scheduledDateClipping)
+            Fifthweek.Api.Posts.IUpsertNoteDbStatement upsertNote)
         {
+            if (requesterSecurity == null)
+            {
+                throw new ArgumentNullException("requesterSecurity");
+            }
+
             if (channelSecurity == null)
             {
                 throw new ArgumentNullException("channelSecurity");
@@ -1731,9 +1734,37 @@ namespace Fifthweek.Api.Posts.Commands
                 throw new ArgumentNullException("postSecurity");
             }
 
-            if (requesterSecurity == null)
+            if (upsertNote == null)
             {
-                throw new ArgumentNullException("requesterSecurity");
+                throw new ArgumentNullException("upsertNote");
+            }
+
+            this.requesterSecurity = requesterSecurity;
+            this.channelSecurity = channelSecurity;
+            this.postSecurity = postSecurity;
+            this.upsertNote = upsertNote;
+        }
+    }
+}
+namespace Fifthweek.Api.Posts
+{
+    using System;
+    using System.Threading.Tasks;
+    using Fifthweek.Api.Channels.Shared;
+    using Fifthweek.Api.Core;
+    using Fifthweek.Api.Persistence;
+    using Fifthweek.Api.Posts.Shared;
+    using Fifthweek.CodeGeneration;
+
+    public partial class UpsertNoteDbStatement 
+    {
+        public UpsertNoteDbStatement(
+            Fifthweek.Api.Posts.IScheduledDateClippingFunction scheduledDateClipping,
+            Fifthweek.Api.Persistence.IFifthweekDbContext databaseContext)
+        {
+            if (scheduledDateClipping == null)
+            {
+                throw new ArgumentNullException("scheduledDateClipping");
             }
 
             if (databaseContext == null)
@@ -1741,16 +1772,8 @@ namespace Fifthweek.Api.Posts.Commands
                 throw new ArgumentNullException("databaseContext");
             }
 
-            if (scheduledDateClipping == null)
-            {
-                throw new ArgumentNullException("scheduledDateClipping");
-            }
-
-            this.channelSecurity = channelSecurity;
-            this.postSecurity = postSecurity;
-            this.requesterSecurity = requesterSecurity;
-            this.databaseContext = databaseContext;
             this.scheduledDateClipping = scheduledDateClipping;
+            this.databaseContext = databaseContext;
         }
     }
 }

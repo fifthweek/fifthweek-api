@@ -108,6 +108,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Queries\GetCreatorNewsfeedQueryHandlerTests.cs" />
     <Compile Include="Queries\GetCreatorBacklogQueryHandlerTests.cs" />
+    <Compile Include="UpsertNoteDbStatementTests.cs" />
     <Compile Include="ScheduledDateClippingFunctionTests.cs" />
     <Compile Include="ValidCommentTests.cs" />
     <Compile Include="ValidNoteTests.cs" />

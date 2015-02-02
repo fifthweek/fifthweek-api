@@ -6,16 +6,14 @@
     using Fifthweek.Api.Channels.Shared;
     using Fifthweek.Api.Core;
     using Fifthweek.Api.Identity.Shared.Membership;
-    using Fifthweek.Api.Persistence;
     using Fifthweek.CodeGeneration;
 
     [AutoConstructor]
     public partial class PostNoteCommandHandler : ICommandHandler<PostNoteCommand>
     {
-        private readonly IChannelSecurity channelSecurity;
         private readonly IRequesterSecurity requesterSecurity;
-        private readonly IFifthweekDbContext databaseContext;
-        private readonly IScheduledDateClippingFunction scheduledDateClipping;
+        private readonly IChannelSecurity channelSecurity;
+        private readonly IUpsertNoteDbStatement upsertNote;
 
         public async Task HandleAsync(PostNoteCommand command)
         {
@@ -25,29 +23,12 @@
 
             await this.channelSecurity.AssertWriteAllowedAsync(authenticatedUserId, command.ChannelId);
 
-            await this.SchedulePostAsync(command);
-        }
-
-        private Task SchedulePostAsync(PostNoteCommand command)
-        {
-            var now = DateTime.UtcNow;
-            var scheduledDate = this.scheduledDateClipping.Apply(now, command.ScheduledPostDate);
-            var post = new Post(
-                command.NewPostId.Value,
-                command.ChannelId.Value,
-                null,
-                null,
-                null,
-                null,
-                null,
-                null,
-                null,
-                command.Note.Value,
-                false,
-                scheduledDate,
-                now);
-
-            return this.databaseContext.Database.Connection.InsertAsync(post);
+            await this.upsertNote.ExecuteAsync(
+                command.NewPostId,
+                command.ChannelId,
+                command.Note,
+                command.ScheduledPostDate,
+                DateTime.UtcNow);
         }
     }
 }

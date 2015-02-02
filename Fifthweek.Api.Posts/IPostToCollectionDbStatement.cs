@@ -10,7 +10,7 @@ namespace Fifthweek.Api.Posts
     public interface IPostToCollectionDbStatement
     {
         Task ExecuteAsync(
-            Shared.PostId newPostId,
+            PostId newPostId,
             CollectionId collectionId,
             ValidComment comment,
             DateTime? sheduledPostDate,

@@ -1,15 +1,12 @@
 ﻿namespace Fifthweek.Api.Posts.Tests.Commands
 {
     using System;
-    using System.Data.SqlTypes;
     using System.Threading.Tasks;
 
     using Fifthweek.Api.Channels.Shared;
     using Fifthweek.Api.Core;
     using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.Api.Identity.Tests.Shared.Membership;
-    using Fifthweek.Api.Persistence;
-    using Fifthweek.Api.Persistence.Tests.Shared;
     using Fifthweek.Api.Posts.Commands;
     using Fifthweek.Api.Posts.Shared;
 
@@ -18,7 +15,7 @@
     using Moq;
 
     [TestClass]
-    public class PostNoteCommandHandlerTests : PersistenceTestsBase
+    public class PostNoteCommandHandlerTests
     {
         private static readonly UserId UserId = new UserId(Guid.NewGuid());
         private static readonly Requester Requester = Requester.Authenticated(UserId);
@@ -26,37 +23,26 @@
         private static readonly PostId PostId = new PostId(Guid.NewGuid());
         private static readonly ValidNote Note = ValidNote.Parse("Hey peeps!");
         private static readonly DateTime ScheduleDate = DateTime.UtcNow.AddDays(2);
-        private static readonly DateTime ClippedScheduleDate = DateTime.UtcNow.AddDays(1);
         private static readonly PostNoteCommand Command = new PostNoteCommand(Requester, PostId, ChannelId, Note, ScheduleDate);
         private Mock<IChannelSecurity> channelSecurity;
         private Mock<IRequesterSecurity> requesterSecurity;
-        private Mock<IScheduledDateClippingFunction> scheduledDateClipping;
+        private Mock<IUpsertNoteDbStatement> upsertNote;
         private PostNoteCommandHandler target;
 
         [TestInitialize]
         public void Initialize()
         {
             this.channelSecurity = new Mock<IChannelSecurity>();
-
-            this.scheduledDateClipping = new Mock<IScheduledDateClippingFunction>();
-            this.scheduledDateClipping.Setup(_ => _.Apply(It.IsAny<DateTime>(), ScheduleDate)).Returns(ClippedScheduleDate);
-
             this.requesterSecurity = new Mock<IRequesterSecurity>();
             this.requesterSecurity.SetupFor(Requester);
 
             // Give side-effecting components strict mock behaviour.
-            var databaseContext = new Mock<IFifthweekDbContext>(MockBehavior.Strict);
+            this.upsertNote = new Mock<IUpsertNoteDbStatement>(MockBehavior.Strict);
 
-            this.InitializeTarget(databaseContext.Object);
-        }
-
-        public void InitializeTarget(IFifthweekDbContext databaseContext)
-        {
             this.target = new PostNoteCommandHandler(
-                this.channelSecurity.Object,
                 this.requesterSecurity.Object,
-                databaseContext,
-                this.scheduledDateClipping.Object);
+                this.channelSecurity.Object,
+                this.upsertNote.Object);
         }
 
         [TestMethod]
@@ -68,7 +54,7 @@
 
         [TestMethod]
         [ExpectedException(typeof(UnauthorizedException))]
-        public async Task WhenNotAllowedToPost_ItShouldThrowUnauthorizedException()
+        public async Task WhenNotAllowedToWriteToChannel_ItShouldThrowUnauthorizedException()
         {
             this.channelSecurity.Setup(_ => _.AssertWriteAllowedAsync(UserId, ChannelId)).Throws<UnauthorizedException>();
 
@@ -76,68 +62,15 @@
         }
 
         [TestMethod]
-        public async Task WhenReRun_ItShouldHaveNoEffect()
+        public async Task ItShouldUpsertNote()
         {
-            await this.DatabaseTestAsync(async testDatabase =>
-            {
-                this.InitializeTarget(testDatabase.NewContext());
-                await this.CreateChannelAsync(UserId, ChannelId, testDatabase);
-                await this.target.HandleAsync(Command);
-                await testDatabase.TakeSnapshotAsync();
+            this.upsertNote.Setup(_ => _.ExecuteAsync(PostId, ChannelId, Note, ScheduleDate, It.Is<DateTime>(now => now.Kind == DateTimeKind.Utc)))
+                .Returns(Task.FromResult(0))
+                .Verifiable();
 
-                await this.target.HandleAsync(Command);
+            await this.target.HandleAsync(Command);
 
-                return ExpectedSideEffects.None;
-            });
-        }
-
-        [TestMethod]
-        public async Task ItShouldSchedulePostUsingDateClippingFunction()
-        {
-            await this.DatabaseTestAsync(async testDatabase =>
-            {
-                this.InitializeTarget(testDatabase.NewContext());
-                var scheduledPostCommand = new PostNoteCommand(Requester, PostId, ChannelId, Note, ScheduleDate);
-                await this.CreateChannelAsync(UserId, ChannelId, testDatabase);
-                await testDatabase.TakeSnapshotAsync();
-
-                await this.target.HandleAsync(scheduledPostCommand);
-
-                var expectedPost = new Post(
-                    PostId.Value,
-                    ChannelId.Value,
-                    null,
-                    null,
-                    null,
-                    null,
-                    null,
-                    null,
-                    null,
-                    Note.Value,
-                    false,
-                    new SqlDateTime(ClippedScheduleDate).Value,
-                    default(DateTime));
-            
-                return new ExpectedSideEffects
-                {
-                    Insert = new WildcardEntity<Post>(expectedPost)
-                    {
-                        Expected = actualPost =>
-                        {
-                            expectedPost.CreationDate = actualPost.CreationDate; // Take wildcard properties from actual value.
-                            return expectedPost;
-                        }
-                    }
-                };
-            });
-        }
-
-        private async Task CreateChannelAsync(UserId newUserId, ChannelId newChannelId, TestDatabaseContext testDatabase)
-        {
-            using (var databaseContext = testDatabase.NewContext())
-            {
-                await databaseContext.CreateTestChannelAsync(newUserId.Value, newChannelId.Value);
-            }
+            this.upsertNote.Verify();
         }
     }
 }
