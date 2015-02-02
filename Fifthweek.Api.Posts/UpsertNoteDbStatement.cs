@@ -15,7 +15,7 @@ namespace Fifthweek.Api.Posts
         private readonly IScheduledDateClippingFunction scheduledDateClipping;
         private readonly IFifthweekDbContext databaseContext;
 
-        public Task ExecuteAsync(PostId postId, ChannelId channelId, ValidNote note, DateTime? sheduledPostDate, DateTime now)
+        public Task ExecuteAsync(PostId postId, ChannelId channelId, ValidNote note, DateTime? sheduledPostDate, DateTime now, bool isNewPost)
         {
             postId.AssertNotNull("postId");
             channelId.AssertNotNull("channelId");
@@ -44,8 +44,12 @@ namespace Fifthweek.Api.Posts
                 liveDate,
                 default(DateTime));
 
-            var updatedFields = Post.Fields.ChannelId | Post.Fields.Comment | Post.Fields.LiveDate;
+            if (isNewPost)
+            {
+                return this.databaseContext.Database.Connection.InsertAsync(post);
+            }
 
+            var updatedFields = Post.Fields.ChannelId | Post.Fields.Comment | Post.Fields.LiveDate;
             return this.databaseContext.Database.Connection.UpdateAsync(post, updatedFields);
         }
     }

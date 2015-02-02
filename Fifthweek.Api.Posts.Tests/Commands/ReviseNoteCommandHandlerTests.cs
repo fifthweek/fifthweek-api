@@ -74,9 +74,9 @@
         }
 
         [TestMethod]
-        public async Task ItShouldUpsertNote()
+        public async Task ItShouldUpdateNote()
         {
-            this.upsertNote.Setup(_ => _.ExecuteAsync(PostId, ChannelId, Note, ScheduleDate, It.Is<DateTime>(now => now.Kind == DateTimeKind.Utc)))
+            this.upsertNote.Setup(_ => _.ExecuteAsync(PostId, ChannelId, Note, ScheduleDate, It.Is<DateTime>(now => now.Kind == DateTimeKind.Utc), false))
                 .Returns(Task.FromResult(0))
                 .Verifiable();
 

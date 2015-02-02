@@ -31,7 +31,8 @@
                 command.ChannelId,
                 command.Note,
                 command.ScheduledPostDate,
-                DateTime.UtcNow);
+                DateTime.UtcNow,
+                false);
         }
     }
 }

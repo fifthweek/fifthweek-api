@@ -13,6 +13,7 @@ namespace Fifthweek.Api.Posts
             ChannelId channelId,
             ValidNote note,
             DateTime? sheduledPostDate,
-            DateTime now);
+            DateTime now,
+            bool isNewPost);
     }
 }

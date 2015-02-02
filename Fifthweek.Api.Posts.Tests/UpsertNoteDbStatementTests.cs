@@ -1,16 +1,13 @@
-﻿namespace Fifthweek.Api.Posts.Tests.Commands
+﻿namespace Fifthweek.Api.Posts.Tests
 {
     using System;
     using System.Data.SqlTypes;
     using System.Threading.Tasks;
 
     using Fifthweek.Api.Channels.Shared;
-    using Fifthweek.Api.Core;
     using Fifthweek.Api.Identity.Shared.Membership;
-    using Fifthweek.Api.Identity.Tests.Shared.Membership;
     using Fifthweek.Api.Persistence;
     using Fifthweek.Api.Persistence.Tests.Shared;
-    using Fifthweek.Api.Posts.Commands;
     using Fifthweek.Api.Posts.Shared;
 
     using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -21,14 +18,12 @@
     public class UpsertNoteDbStatementTests : PersistenceTestsBase
     {
         private static readonly UserId UserId = new UserId(Guid.NewGuid());
-        private static readonly Requester Requester = Requester.Authenticated(UserId);
         private static readonly ChannelId ChannelId = new ChannelId(Guid.NewGuid());
         private static readonly PostId PostId = new PostId(Guid.NewGuid());
         private static readonly ValidNote Note = ValidNote.Parse("Hey peeps!");
         private static readonly DateTime Now = DateTime.UtcNow;
         private static readonly DateTime ScheduleDate = Now.AddDays(2);
         private static readonly DateTime ClippedScheduleDate = DateTime.UtcNow.AddDays(1);
-        private static readonly ReviseNoteCommand Command = new ReviseNoteCommand(Requester, PostId, ChannelId, Note, ScheduleDate);
         private Mock<IScheduledDateClippingFunction> scheduledDateClipping;
         private UpsertNoteDbStatement target;
 
@@ -53,35 +48,35 @@
         [ExpectedException(typeof(ArgumentNullException))]
         public async Task ItShouldRequirePostId()
         {
-            await this.target.ExecuteAsync(null, ChannelId, Note, ScheduleDate, Now);
+            await this.target.ExecuteAsync(null, ChannelId, Note, ScheduleDate, Now, true);
         }
 
         [TestMethod]
         [ExpectedException(typeof(ArgumentNullException))]
         public async Task ItShouldRequireChannelId()
         {
-            await this.target.ExecuteAsync(PostId, null, Note, ScheduleDate, Now);
+            await this.target.ExecuteAsync(PostId, null, Note, ScheduleDate, Now, true);
         }
 
         [TestMethod]
         [ExpectedException(typeof(ArgumentNullException))]
         public async Task ItShouldRequireNote()
         {
-            await this.target.ExecuteAsync(PostId, ChannelId, null, ScheduleDate, Now);
+            await this.target.ExecuteAsync(PostId, ChannelId, null, ScheduleDate, Now, true);
         }
 
         [TestMethod]
         [ExpectedException(typeof(ArgumentException))]
         public async Task ItShouldRequireUtcScheduleDate()
         {
-            await this.target.ExecuteAsync(PostId, ChannelId, Note, DateTime.Now, Now);
+            await this.target.ExecuteAsync(PostId, ChannelId, Note, DateTime.Now, Now, true);
         }
 
         [TestMethod]
-        [ExpectedException(typeof(ArgumentNullException))]
+        [ExpectedException(typeof(ArgumentException))]
         public async Task ItShouldRequireUtcNowDate()
         {
-            await this.target.ExecuteAsync(PostId, ChannelId, Note, ScheduleDate, DateTime.Now);
+            await this.target.ExecuteAsync(PostId, ChannelId, Note, ScheduleDate, DateTime.Now, true);
         }
 
         [TestMethod]
@@ -91,17 +86,29 @@
             {
                 this.InitializeTarget(testDatabase.NewContext());
                 await this.CreateChannelAsync(UserId, ChannelId, testDatabase, createPost: false);
-                await this.target.ExecuteAsync(PostId, ChannelId, Note, ScheduleDate, Now);
+                await this.target.ExecuteAsync(PostId, ChannelId, Note, ScheduleDate, Now, true);
                 await testDatabase.TakeSnapshotAsync();
 
-                await this.target.ExecuteAsync(PostId, ChannelId, Note, ScheduleDate, Now);
+                await this.target.ExecuteAsync(PostId, ChannelId, Note, ScheduleDate, Now, true);
+
+                return ExpectedSideEffects.None;
+            });
+
+            await this.DatabaseTestAsync(async testDatabase =>
+            {
+                this.InitializeTarget(testDatabase.NewContext());
+                await this.CreateChannelAsync(UserId, ChannelId, testDatabase, createPost: true);
+                await this.target.ExecuteAsync(PostId, ChannelId, Note, ScheduleDate, Now, false);
+                await testDatabase.TakeSnapshotAsync();
+
+                await this.target.ExecuteAsync(PostId, ChannelId, Note, ScheduleDate, Now, false);
 
                 return ExpectedSideEffects.None;
             });
         }
 
         [TestMethod]
-        public async Task ItShouldInsertIfPostDoesNotExist()
+        public async Task ItShouldInsertIfPostIsNew()
         {
             await this.DatabaseTestAsync(async testDatabase =>
             {
@@ -109,7 +116,7 @@
                 await this.CreateChannelAsync(UserId, ChannelId, testDatabase, createPost: false);
                 await testDatabase.TakeSnapshotAsync();
 
-                await this.target.ExecuteAsync(PostId, ChannelId, Note, ScheduleDate, Now);
+                await this.target.ExecuteAsync(PostId, ChannelId, Note, ScheduleDate, Now, true);
 
                 var expectedPost = new Post(
                     PostId.Value,
@@ -149,7 +156,7 @@
                 await this.CreateChannelAsync(UserId, ChannelId, testDatabase, createPost: true);
                 await testDatabase.TakeSnapshotAsync();
 
-                await this.target.ExecuteAsync(PostId, ChannelId, Note, ScheduleDate, Now);
+                await this.target.ExecuteAsync(PostId, ChannelId, Note, ScheduleDate, Now, false);
 
                 var expectedPost = new Post(
                     PostId.Value,
