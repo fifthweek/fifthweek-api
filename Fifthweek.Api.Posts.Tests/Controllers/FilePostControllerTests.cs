@@ -25,6 +25,7 @@
         private static readonly CollectionId CollectionId = new CollectionId(Guid.NewGuid());
         private static readonly FileId FileId = new FileId(Guid.NewGuid());
         private Mock<ICommandHandler<PostFileCommand>> postFile;
+        private Mock<ICommandHandler<ReviseFileCommand>> reviseFile;
         private Mock<IRequesterContext> requesterContext;
         private Mock<IGuidCreator> guidCreator;
         private FilePostController target;
@@ -33,10 +34,12 @@
         public void Initialize()
         {
             this.postFile = new Mock<ICommandHandler<PostFileCommand>>();
+            this.reviseFile = new Mock<ICommandHandler<ReviseFileCommand>>();
             this.requesterContext = new Mock<IRequesterContext>();
             this.guidCreator = new Mock<IGuidCreator>();
             this.target = new FilePostController(
                 this.postFile.Object,
+                this.reviseFile.Object,
                 this.requesterContext.Object,
                 this.guidCreator.Object);
         }
@@ -62,6 +65,36 @@
         public async Task WhenPostingFile_WithoutSpecifyingNewFileData_ItShouldThrowBadRequestException()
         {
             await this.target.PostFile(null);
+        }
+
+        [TestMethod]
+        public async Task WhenPuttingFile_ItShouldIssuePostFileCommand()
+        {
+            var data = new RevisedFileData(CollectionId, FileId, null, null, true);
+            var command = new ReviseFileCommand(Requester, PostId, CollectionId, FileId, null, null, true);
+
+            this.requesterContext.Setup(v => v.GetRequester()).Returns(Requester);
+            this.guidCreator.Setup(_ => _.CreateSqlSequential()).Returns(PostId.Value);
+            this.reviseFile.Setup(v => v.HandleAsync(command)).Returns(Task.FromResult(0)).Verifiable();
+
+            var result = await this.target.PutFile(PostId.Value.EncodeGuid(), data);
+
+            Assert.IsInstanceOfType(result, typeof(OkResult));
+            this.postFile.Verify();
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(BadRequestException))]
+        public async Task WhenPuttingFile_WithoutSpecifyingRevisedFileId_ItShouldThrowBadRequestException()
+        {
+            await this.target.PutFile(string.Empty, new RevisedFileData(CollectionId, FileId, null, null, true));
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(BadRequestException))]
+        public async Task WhenPuttingFile_WithoutSpecifyingRevisedFileData_ItShouldThrowBadRequestException()
+        {
+            await this.target.PutFile(PostId.Value.EncodeGuid(), null);
         }
     }
 }

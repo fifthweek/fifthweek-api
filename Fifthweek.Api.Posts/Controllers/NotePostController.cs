@@ -17,7 +17,6 @@
         private readonly IRequesterContext requesterContext;
         private readonly IGuidCreator guidCreator;
 
-        [Route("notes")]
         public async Task<IHttpActionResult> PostNote(NewNoteData noteData)
         {
             noteData.AssertBodyProvided("noteData");
@@ -36,7 +35,7 @@
             return this.Ok();
         }
 
-        [Route("notes/{postId}")]
+        [Route("{postId}")]
         public async Task<IHttpActionResult> PutNote(string postId, [FromBody]RevisedNoteData noteData)
         {
             postId.AssertUrlParameterProvided("postId");

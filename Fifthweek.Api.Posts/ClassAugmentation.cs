@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Linq;
 
-//// Generated on 30/01/2015 18:40:07 (UTC)
-//// Mapped solution in 3.82s
+//// Generated on 02/02/2015 20:44:49 (UTC)
+//// Mapped solution in 3.38s
 
 
 namespace Fifthweek.Api.Posts.Commands
@@ -604,12 +604,18 @@ namespace Fifthweek.Api.Posts.Controllers
     {
         public FilePostController(
             Fifthweek.Api.Core.ICommandHandler<Fifthweek.Api.Posts.Commands.PostFileCommand> postFile,
+            Fifthweek.Api.Core.ICommandHandler<Fifthweek.Api.Posts.Commands.ReviseFileCommand> reviseFile,
             Fifthweek.Api.Identity.Shared.Membership.IRequesterContext requesterContext,
             Fifthweek.Api.Core.IGuidCreator guidCreator)
         {
             if (postFile == null)
             {
                 throw new ArgumentNullException("postFile");
+            }
+
+            if (reviseFile == null)
+            {
+                throw new ArgumentNullException("reviseFile");
             }
 
             if (requesterContext == null)
@@ -623,6 +629,7 @@ namespace Fifthweek.Api.Posts.Controllers
             }
 
             this.postFile = postFile;
+            this.reviseFile = reviseFile;
             this.requesterContext = requesterContext;
             this.guidCreator = guidCreator;
         }
@@ -650,12 +657,18 @@ namespace Fifthweek.Api.Posts.Controllers
     {
         public ImagePostController(
             Fifthweek.Api.Core.ICommandHandler<Fifthweek.Api.Posts.Commands.PostImageCommand> postImage,
+            Fifthweek.Api.Core.ICommandHandler<Fifthweek.Api.Posts.Commands.ReviseImageCommand> reviseImage,
             Fifthweek.Api.Identity.Shared.Membership.IRequesterContext requesterContext,
             Fifthweek.Api.Core.IGuidCreator guidCreator)
         {
             if (postImage == null)
             {
                 throw new ArgumentNullException("postImage");
+            }
+
+            if (reviseImage == null)
+            {
+                throw new ArgumentNullException("reviseImage");
             }
 
             if (requesterContext == null)
@@ -669,6 +682,7 @@ namespace Fifthweek.Api.Posts.Controllers
             }
 
             this.postImage = postImage;
+            this.reviseImage = reviseImage;
             this.requesterContext = requesterContext;
             this.guidCreator = guidCreator;
         }
@@ -1458,6 +1472,232 @@ namespace Fifthweek.Api.Posts.Controllers
             this.ChannelId = channelId;
             this.Note = note;
             this.ScheduledPostDate = scheduledPostDate;
+        }
+    }
+}
+namespace Fifthweek.Api.Posts.Commands
+{
+    using System;
+    using System.Linq;
+    using Fifthweek.Api.Identity.Shared.Membership;
+    using Fifthweek.Api.Posts.Shared;
+    using Fifthweek.CodeGeneration;
+    using System.Threading.Tasks;
+    using Fifthweek.Api.Core;
+    using Fifthweek.Api.FileManagement.Shared;
+    using Fifthweek.Api.Collections.Shared;
+    using Fifthweek.Api.Channels.Shared;
+    using Fifthweek.Api.Persistence;
+    using System.Collections.Generic;
+    using System.Text;
+    using Dapper;
+
+    public partial class ReviseFileCommand 
+    {
+        public ReviseFileCommand(
+            Fifthweek.Api.Identity.Shared.Membership.Requester requester,
+            Fifthweek.Api.Posts.Shared.PostId postId,
+            Fifthweek.Api.Collections.Shared.CollectionId collectionId,
+            Fifthweek.Api.FileManagement.Shared.FileId fileId,
+            Fifthweek.Api.Posts.Shared.ValidComment comment,
+            System.Nullable<System.DateTime> scheduledPostDate,
+            System.Boolean isQueued)
+        {
+            if (requester == null)
+            {
+                throw new ArgumentNullException("requester");
+            }
+
+            if (postId == null)
+            {
+                throw new ArgumentNullException("postId");
+            }
+
+            if (collectionId == null)
+            {
+                throw new ArgumentNullException("collectionId");
+            }
+
+            if (fileId == null)
+            {
+                throw new ArgumentNullException("fileId");
+            }
+
+            if (isQueued == null)
+            {
+                throw new ArgumentNullException("isQueued");
+            }
+
+            this.Requester = requester;
+            this.PostId = postId;
+            this.CollectionId = collectionId;
+            this.FileId = fileId;
+            this.Comment = comment;
+            this.ScheduledPostDate = scheduledPostDate;
+            this.IsQueued = isQueued;
+        }
+    }
+}
+namespace Fifthweek.Api.Posts.Commands
+{
+    using System;
+    using System.Linq;
+    using Fifthweek.Api.Identity.Shared.Membership;
+    using Fifthweek.Api.Posts.Shared;
+    using Fifthweek.CodeGeneration;
+    using System.Threading.Tasks;
+    using Fifthweek.Api.Core;
+    using Fifthweek.Api.FileManagement.Shared;
+    using Fifthweek.Api.Collections.Shared;
+    using Fifthweek.Api.Channels.Shared;
+    using Fifthweek.Api.Persistence;
+    using System.Collections.Generic;
+    using System.Text;
+    using Dapper;
+
+    public partial class ReviseImageCommand 
+    {
+        public ReviseImageCommand(
+            Fifthweek.Api.Identity.Shared.Membership.Requester requester,
+            Fifthweek.Api.Posts.Shared.PostId postId,
+            Fifthweek.Api.Collections.Shared.CollectionId collectionId,
+            Fifthweek.Api.FileManagement.Shared.FileId imageFileId,
+            Fifthweek.Api.Posts.Shared.ValidComment comment,
+            System.Nullable<System.DateTime> scheduledPostDate,
+            System.Boolean isQueued)
+        {
+            if (requester == null)
+            {
+                throw new ArgumentNullException("requester");
+            }
+
+            if (postId == null)
+            {
+                throw new ArgumentNullException("postId");
+            }
+
+            if (collectionId == null)
+            {
+                throw new ArgumentNullException("collectionId");
+            }
+
+            if (imageFileId == null)
+            {
+                throw new ArgumentNullException("imageFileId");
+            }
+
+            if (isQueued == null)
+            {
+                throw new ArgumentNullException("isQueued");
+            }
+
+            this.Requester = requester;
+            this.PostId = postId;
+            this.CollectionId = collectionId;
+            this.ImageFileId = imageFileId;
+            this.Comment = comment;
+            this.ScheduledPostDate = scheduledPostDate;
+            this.IsQueued = isQueued;
+        }
+    }
+}
+namespace Fifthweek.Api.Posts.Controllers
+{
+    using System;
+    using System.Linq;
+    using System.Threading.Tasks;
+    using System.Web.Http;
+    using Fifthweek.Api.Core;
+    using Fifthweek.Api.Identity.Shared.Membership;
+    using Fifthweek.Api.Posts.Commands;
+    using Fifthweek.Api.Posts.Shared;
+    using Fifthweek.CodeGeneration;
+    using System.Collections.Generic;
+    using Fifthweek.Api.Collections.Shared;
+    using Fifthweek.Api.Posts.Queries;
+    using Fifthweek.Api.Channels.Shared;
+    using Fifthweek.Shared;
+    using Fifthweek.Api.FileManagement.Shared;
+
+    public partial class RevisedFileData 
+    {
+        public RevisedFileData(
+            Fifthweek.Api.Collections.Shared.CollectionId collectionId,
+            Fifthweek.Api.FileManagement.Shared.FileId fileId,
+            System.String comment,
+            System.Nullable<System.DateTime> scheduledPostDate,
+            System.Boolean isQueued)
+        {
+            if (collectionId == null)
+            {
+                throw new ArgumentNullException("collectionId");
+            }
+
+            if (fileId == null)
+            {
+                throw new ArgumentNullException("fileId");
+            }
+
+            if (isQueued == null)
+            {
+                throw new ArgumentNullException("isQueued");
+            }
+
+            this.CollectionId = collectionId;
+            this.FileId = fileId;
+            this.Comment = comment;
+            this.ScheduledPostDate = scheduledPostDate;
+            this.IsQueued = isQueued;
+        }
+    }
+}
+namespace Fifthweek.Api.Posts.Controllers
+{
+    using System;
+    using System.Linq;
+    using System.Threading.Tasks;
+    using System.Web.Http;
+    using Fifthweek.Api.Core;
+    using Fifthweek.Api.Identity.Shared.Membership;
+    using Fifthweek.Api.Posts.Commands;
+    using Fifthweek.Api.Posts.Shared;
+    using Fifthweek.CodeGeneration;
+    using System.Collections.Generic;
+    using Fifthweek.Api.Collections.Shared;
+    using Fifthweek.Api.Posts.Queries;
+    using Fifthweek.Api.Channels.Shared;
+    using Fifthweek.Shared;
+    using Fifthweek.Api.FileManagement.Shared;
+
+    public partial class RevisedImageData 
+    {
+        public RevisedImageData(
+            Fifthweek.Api.Collections.Shared.CollectionId collectionId,
+            Fifthweek.Api.FileManagement.Shared.FileId imageFileId,
+            System.String comment,
+            System.Nullable<System.DateTime> scheduledPostDate,
+            System.Boolean isQueued)
+        {
+            if (collectionId == null)
+            {
+                throw new ArgumentNullException("collectionId");
+            }
+
+            if (imageFileId == null)
+            {
+                throw new ArgumentNullException("imageFileId");
+            }
+
+            if (isQueued == null)
+            {
+                throw new ArgumentNullException("isQueued");
+            }
+
+            this.CollectionId = collectionId;
+            this.ImageFileId = imageFileId;
+            this.Comment = comment;
+            this.ScheduledPostDate = scheduledPostDate;
+            this.IsQueued = isQueued;
         }
     }
 }
@@ -2707,6 +2947,388 @@ namespace Fifthweek.Api.Posts.Controllers
         }
     }
 }
+namespace Fifthweek.Api.Posts.Commands
+{
+    using System;
+    using System.Linq;
+    using Fifthweek.Api.Identity.Shared.Membership;
+    using Fifthweek.Api.Posts.Shared;
+    using Fifthweek.CodeGeneration;
+    using System.Threading.Tasks;
+    using Fifthweek.Api.Core;
+    using Fifthweek.Api.FileManagement.Shared;
+    using Fifthweek.Api.Collections.Shared;
+    using Fifthweek.Api.Channels.Shared;
+    using Fifthweek.Api.Persistence;
+    using System.Collections.Generic;
+    using System.Text;
+    using Dapper;
+
+    public partial class ReviseFileCommand 
+    {
+        public override string ToString()
+        {
+            return string.Format("ReviseFileCommand({0}, {1}, {2}, {3}, {4}, {5}, {6})", this.Requester == null ? "null" : this.Requester.ToString(), this.PostId == null ? "null" : this.PostId.ToString(), this.CollectionId == null ? "null" : this.CollectionId.ToString(), this.FileId == null ? "null" : this.FileId.ToString(), this.Comment == null ? "null" : this.Comment.ToString(), this.ScheduledPostDate == null ? "null" : this.ScheduledPostDate.ToString(), this.IsQueued == null ? "null" : this.IsQueued.ToString());
+        }
+        
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj))
+            {
+                return false;
+            }
+        
+            if (ReferenceEquals(this, obj))
+            {
+                return true;
+            }
+        
+            if (obj.GetType() != this.GetType())
+            {
+                return false;
+            }
+        
+            return this.Equals((ReviseFileCommand)obj);
+        }
+        
+        public override int GetHashCode()
+        {
+            unchecked
+            {
+                int hashCode = 0;
+                hashCode = (hashCode * 397) ^ (this.Requester != null ? this.Requester.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.PostId != null ? this.PostId.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.CollectionId != null ? this.CollectionId.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.FileId != null ? this.FileId.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.Comment != null ? this.Comment.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.ScheduledPostDate != null ? this.ScheduledPostDate.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.IsQueued != null ? this.IsQueued.GetHashCode() : 0);
+                return hashCode;
+            }
+        }
+        
+        protected bool Equals(ReviseFileCommand other)
+        {
+            if (!object.Equals(this.Requester, other.Requester))
+            {
+                return false;
+            }
+        
+            if (!object.Equals(this.PostId, other.PostId))
+            {
+                return false;
+            }
+        
+            if (!object.Equals(this.CollectionId, other.CollectionId))
+            {
+                return false;
+            }
+        
+            if (!object.Equals(this.FileId, other.FileId))
+            {
+                return false;
+            }
+        
+            if (!object.Equals(this.Comment, other.Comment))
+            {
+                return false;
+            }
+        
+            if (!object.Equals(this.ScheduledPostDate, other.ScheduledPostDate))
+            {
+                return false;
+            }
+        
+            if (!object.Equals(this.IsQueued, other.IsQueued))
+            {
+                return false;
+            }
+        
+            return true;
+        }
+    }
+}
+namespace Fifthweek.Api.Posts.Commands
+{
+    using System;
+    using System.Linq;
+    using Fifthweek.Api.Identity.Shared.Membership;
+    using Fifthweek.Api.Posts.Shared;
+    using Fifthweek.CodeGeneration;
+    using System.Threading.Tasks;
+    using Fifthweek.Api.Core;
+    using Fifthweek.Api.FileManagement.Shared;
+    using Fifthweek.Api.Collections.Shared;
+    using Fifthweek.Api.Channels.Shared;
+    using Fifthweek.Api.Persistence;
+    using System.Collections.Generic;
+    using System.Text;
+    using Dapper;
+
+    public partial class ReviseImageCommand 
+    {
+        public override string ToString()
+        {
+            return string.Format("ReviseImageCommand({0}, {1}, {2}, {3}, {4}, {5}, {6})", this.Requester == null ? "null" : this.Requester.ToString(), this.PostId == null ? "null" : this.PostId.ToString(), this.CollectionId == null ? "null" : this.CollectionId.ToString(), this.ImageFileId == null ? "null" : this.ImageFileId.ToString(), this.Comment == null ? "null" : this.Comment.ToString(), this.ScheduledPostDate == null ? "null" : this.ScheduledPostDate.ToString(), this.IsQueued == null ? "null" : this.IsQueued.ToString());
+        }
+        
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj))
+            {
+                return false;
+            }
+        
+            if (ReferenceEquals(this, obj))
+            {
+                return true;
+            }
+        
+            if (obj.GetType() != this.GetType())
+            {
+                return false;
+            }
+        
+            return this.Equals((ReviseImageCommand)obj);
+        }
+        
+        public override int GetHashCode()
+        {
+            unchecked
+            {
+                int hashCode = 0;
+                hashCode = (hashCode * 397) ^ (this.Requester != null ? this.Requester.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.PostId != null ? this.PostId.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.CollectionId != null ? this.CollectionId.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.ImageFileId != null ? this.ImageFileId.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.Comment != null ? this.Comment.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.ScheduledPostDate != null ? this.ScheduledPostDate.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.IsQueued != null ? this.IsQueued.GetHashCode() : 0);
+                return hashCode;
+            }
+        }
+        
+        protected bool Equals(ReviseImageCommand other)
+        {
+            if (!object.Equals(this.Requester, other.Requester))
+            {
+                return false;
+            }
+        
+            if (!object.Equals(this.PostId, other.PostId))
+            {
+                return false;
+            }
+        
+            if (!object.Equals(this.CollectionId, other.CollectionId))
+            {
+                return false;
+            }
+        
+            if (!object.Equals(this.ImageFileId, other.ImageFileId))
+            {
+                return false;
+            }
+        
+            if (!object.Equals(this.Comment, other.Comment))
+            {
+                return false;
+            }
+        
+            if (!object.Equals(this.ScheduledPostDate, other.ScheduledPostDate))
+            {
+                return false;
+            }
+        
+            if (!object.Equals(this.IsQueued, other.IsQueued))
+            {
+                return false;
+            }
+        
+            return true;
+        }
+    }
+}
+namespace Fifthweek.Api.Posts.Controllers
+{
+    using System;
+    using System.Linq;
+    using System.Threading.Tasks;
+    using System.Web.Http;
+    using Fifthweek.Api.Core;
+    using Fifthweek.Api.Identity.Shared.Membership;
+    using Fifthweek.Api.Posts.Commands;
+    using Fifthweek.Api.Posts.Shared;
+    using Fifthweek.CodeGeneration;
+    using System.Collections.Generic;
+    using Fifthweek.Api.Collections.Shared;
+    using Fifthweek.Api.Posts.Queries;
+    using Fifthweek.Api.Channels.Shared;
+    using Fifthweek.Shared;
+    using Fifthweek.Api.FileManagement.Shared;
+
+    public partial class RevisedFileData 
+    {
+        public override string ToString()
+        {
+            return string.Format("RevisedFileData({0}, {1}, \"{2}\", {3}, {4})", this.CollectionId == null ? "null" : this.CollectionId.ToString(), this.FileId == null ? "null" : this.FileId.ToString(), this.Comment == null ? "null" : this.Comment.ToString(), this.ScheduledPostDate == null ? "null" : this.ScheduledPostDate.ToString(), this.IsQueued == null ? "null" : this.IsQueued.ToString());
+        }
+        
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj))
+            {
+                return false;
+            }
+        
+            if (ReferenceEquals(this, obj))
+            {
+                return true;
+            }
+        
+            if (obj.GetType() != this.GetType())
+            {
+                return false;
+            }
+        
+            return this.Equals((RevisedFileData)obj);
+        }
+        
+        public override int GetHashCode()
+        {
+            unchecked
+            {
+                int hashCode = 0;
+                hashCode = (hashCode * 397) ^ (this.CollectionId != null ? this.CollectionId.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.FileId != null ? this.FileId.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.Comment != null ? this.Comment.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.ScheduledPostDate != null ? this.ScheduledPostDate.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.IsQueued != null ? this.IsQueued.GetHashCode() : 0);
+                return hashCode;
+            }
+        }
+        
+        protected bool Equals(RevisedFileData other)
+        {
+            if (!object.Equals(this.CollectionId, other.CollectionId))
+            {
+                return false;
+            }
+        
+            if (!object.Equals(this.FileId, other.FileId))
+            {
+                return false;
+            }
+        
+            if (!object.Equals(this.Comment, other.Comment))
+            {
+                return false;
+            }
+        
+            if (!object.Equals(this.ScheduledPostDate, other.ScheduledPostDate))
+            {
+                return false;
+            }
+        
+            if (!object.Equals(this.IsQueued, other.IsQueued))
+            {
+                return false;
+            }
+        
+            return true;
+        }
+    }
+}
+namespace Fifthweek.Api.Posts.Controllers
+{
+    using System;
+    using System.Linq;
+    using System.Threading.Tasks;
+    using System.Web.Http;
+    using Fifthweek.Api.Core;
+    using Fifthweek.Api.Identity.Shared.Membership;
+    using Fifthweek.Api.Posts.Commands;
+    using Fifthweek.Api.Posts.Shared;
+    using Fifthweek.CodeGeneration;
+    using System.Collections.Generic;
+    using Fifthweek.Api.Collections.Shared;
+    using Fifthweek.Api.Posts.Queries;
+    using Fifthweek.Api.Channels.Shared;
+    using Fifthweek.Shared;
+    using Fifthweek.Api.FileManagement.Shared;
+
+    public partial class RevisedImageData 
+    {
+        public override string ToString()
+        {
+            return string.Format("RevisedImageData({0}, {1}, \"{2}\", {3}, {4})", this.CollectionId == null ? "null" : this.CollectionId.ToString(), this.ImageFileId == null ? "null" : this.ImageFileId.ToString(), this.Comment == null ? "null" : this.Comment.ToString(), this.ScheduledPostDate == null ? "null" : this.ScheduledPostDate.ToString(), this.IsQueued == null ? "null" : this.IsQueued.ToString());
+        }
+        
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj))
+            {
+                return false;
+            }
+        
+            if (ReferenceEquals(this, obj))
+            {
+                return true;
+            }
+        
+            if (obj.GetType() != this.GetType())
+            {
+                return false;
+            }
+        
+            return this.Equals((RevisedImageData)obj);
+        }
+        
+        public override int GetHashCode()
+        {
+            unchecked
+            {
+                int hashCode = 0;
+                hashCode = (hashCode * 397) ^ (this.CollectionId != null ? this.CollectionId.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.ImageFileId != null ? this.ImageFileId.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.Comment != null ? this.Comment.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.ScheduledPostDate != null ? this.ScheduledPostDate.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.IsQueued != null ? this.IsQueued.GetHashCode() : 0);
+                return hashCode;
+            }
+        }
+        
+        protected bool Equals(RevisedImageData other)
+        {
+            if (!object.Equals(this.CollectionId, other.CollectionId))
+            {
+                return false;
+            }
+        
+            if (!object.Equals(this.ImageFileId, other.ImageFileId))
+            {
+                return false;
+            }
+        
+            if (!object.Equals(this.Comment, other.Comment))
+            {
+                return false;
+            }
+        
+            if (!object.Equals(this.ScheduledPostDate, other.ScheduledPostDate))
+            {
+                return false;
+            }
+        
+            if (!object.Equals(this.IsQueued, other.IsQueued))
+            {
+                return false;
+            }
+        
+            return true;
+        }
+    }
+}
 namespace Fifthweek.Api.Posts.Controllers
 {
     using System;
@@ -3285,6 +3907,204 @@ namespace Fifthweek.Api.Posts.Controllers
                 target.ChannelId,
                 parsed0,
                 target.ScheduledPostDate);
+        }    
+    }
+}
+namespace Fifthweek.Api.Posts.Controllers
+{
+    using System;
+    using System.Linq;
+    using System.Threading.Tasks;
+    using System.Web.Http;
+    using Fifthweek.Api.Core;
+    using Fifthweek.Api.Identity.Shared.Membership;
+    using Fifthweek.Api.Posts.Commands;
+    using Fifthweek.Api.Posts.Shared;
+    using Fifthweek.CodeGeneration;
+    using System.Collections.Generic;
+    using Fifthweek.Api.Collections.Shared;
+    using Fifthweek.Api.Posts.Queries;
+    using Fifthweek.Api.Channels.Shared;
+    using Fifthweek.Shared;
+    using Fifthweek.Api.FileManagement.Shared;
+
+    public partial class RevisedFileData 
+    {
+        public class Parsed
+        {
+            public Parsed(
+                Fifthweek.Api.Collections.Shared.CollectionId collectionId,
+                Fifthweek.Api.FileManagement.Shared.FileId fileId,
+                ValidComment comment,
+                System.Nullable<System.DateTime> scheduledPostDate,
+                System.Boolean isQueued)
+            {
+                if (collectionId == null)
+                {
+                    throw new ArgumentNullException("collectionId");
+                }
+
+                if (fileId == null)
+                {
+                    throw new ArgumentNullException("fileId");
+                }
+
+                if (isQueued == null)
+                {
+                    throw new ArgumentNullException("isQueued");
+                }
+
+                this.CollectionId = collectionId;
+                this.FileId = fileId;
+                this.Comment = comment;
+                this.ScheduledPostDate = scheduledPostDate;
+                this.IsQueued = isQueued;
+            }
+        
+            public Fifthweek.Api.Collections.Shared.CollectionId CollectionId { get; private set; }
+        
+            public Fifthweek.Api.FileManagement.Shared.FileId FileId { get; private set; }
+        
+            public ValidComment Comment { get; private set; }
+        
+            public System.Nullable<System.DateTime> ScheduledPostDate { get; private set; }
+        
+            public System.Boolean IsQueued { get; private set; }
+        }
+    }
+
+    public static partial class RevisedFileDataExtensions
+    {
+        public static RevisedFileData.Parsed Parse(this RevisedFileData target)
+        {
+            var modelStateDictionary = new System.Web.Http.ModelBinding.ModelStateDictionary();
+        
+            ValidComment parsed0 = null;
+            if (!ValidComment.IsEmpty(target.Comment))
+            {
+                System.Collections.Generic.IReadOnlyCollection<string> parsed0Errors;
+                if (!ValidComment.TryParse(target.Comment, out parsed0, out parsed0Errors))
+                {
+                    var modelState = new System.Web.Http.ModelBinding.ModelState();
+                    foreach (var errorMessage in parsed0Errors)
+                    {
+                        modelState.Errors.Add(errorMessage);
+                    }
+
+                    modelStateDictionary.Add("Comment", modelState);
+                }
+            }
+
+            if (!modelStateDictionary.IsValid)
+            {
+                throw new Fifthweek.Api.Core.ModelValidationException(modelStateDictionary);
+            }
+        
+            return new RevisedFileData.Parsed(
+                target.CollectionId,
+                target.FileId,
+                parsed0,
+                target.ScheduledPostDate,
+                target.IsQueued);
+        }    
+    }
+}
+namespace Fifthweek.Api.Posts.Controllers
+{
+    using System;
+    using System.Linq;
+    using System.Threading.Tasks;
+    using System.Web.Http;
+    using Fifthweek.Api.Core;
+    using Fifthweek.Api.Identity.Shared.Membership;
+    using Fifthweek.Api.Posts.Commands;
+    using Fifthweek.Api.Posts.Shared;
+    using Fifthweek.CodeGeneration;
+    using System.Collections.Generic;
+    using Fifthweek.Api.Collections.Shared;
+    using Fifthweek.Api.Posts.Queries;
+    using Fifthweek.Api.Channels.Shared;
+    using Fifthweek.Shared;
+    using Fifthweek.Api.FileManagement.Shared;
+
+    public partial class RevisedImageData 
+    {
+        public class Parsed
+        {
+            public Parsed(
+                Fifthweek.Api.Collections.Shared.CollectionId collectionId,
+                Fifthweek.Api.FileManagement.Shared.FileId imageFileId,
+                ValidComment comment,
+                System.Nullable<System.DateTime> scheduledPostDate,
+                System.Boolean isQueued)
+            {
+                if (collectionId == null)
+                {
+                    throw new ArgumentNullException("collectionId");
+                }
+
+                if (imageFileId == null)
+                {
+                    throw new ArgumentNullException("imageFileId");
+                }
+
+                if (isQueued == null)
+                {
+                    throw new ArgumentNullException("isQueued");
+                }
+
+                this.CollectionId = collectionId;
+                this.ImageFileId = imageFileId;
+                this.Comment = comment;
+                this.ScheduledPostDate = scheduledPostDate;
+                this.IsQueued = isQueued;
+            }
+        
+            public Fifthweek.Api.Collections.Shared.CollectionId CollectionId { get; private set; }
+        
+            public Fifthweek.Api.FileManagement.Shared.FileId ImageFileId { get; private set; }
+        
+            public ValidComment Comment { get; private set; }
+        
+            public System.Nullable<System.DateTime> ScheduledPostDate { get; private set; }
+        
+            public System.Boolean IsQueued { get; private set; }
+        }
+    }
+
+    public static partial class RevisedImageDataExtensions
+    {
+        public static RevisedImageData.Parsed Parse(this RevisedImageData target)
+        {
+            var modelStateDictionary = new System.Web.Http.ModelBinding.ModelStateDictionary();
+        
+            ValidComment parsed0 = null;
+            if (!ValidComment.IsEmpty(target.Comment))
+            {
+                System.Collections.Generic.IReadOnlyCollection<string> parsed0Errors;
+                if (!ValidComment.TryParse(target.Comment, out parsed0, out parsed0Errors))
+                {
+                    var modelState = new System.Web.Http.ModelBinding.ModelState();
+                    foreach (var errorMessage in parsed0Errors)
+                    {
+                        modelState.Errors.Add(errorMessage);
+                    }
+
+                    modelStateDictionary.Add("Comment", modelState);
+                }
+            }
+
+            if (!modelStateDictionary.IsValid)
+            {
+                throw new Fifthweek.Api.Core.ModelValidationException(modelStateDictionary);
+            }
+        
+            return new RevisedImageData.Parsed(
+                target.CollectionId,
+                target.ImageFileId,
+                parsed0,
+                target.ScheduledPostDate,
+                target.IsQueued);
         }    
     }
 }
