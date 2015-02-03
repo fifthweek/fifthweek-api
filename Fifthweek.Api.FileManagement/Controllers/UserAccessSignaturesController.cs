@@ -10,7 +10,7 @@
 
     [AutoConstructor]
     [RoutePrefix("userAccessSignatures")]
-    public partial class UserAccessSignaturesController
+    public partial class UserAccessSignaturesController : ApiController
     {
         private readonly IQueryHandler<GetUserAccessSignaturesQuery, UserAccessSignatures> getUserAccessSignatures;
 
