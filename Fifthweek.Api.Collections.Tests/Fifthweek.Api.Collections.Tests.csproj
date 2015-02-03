@@ -94,11 +94,14 @@
     <Compile Include="Commands\DeleteCollectionCommandHandlerTests.cs" />
     <Compile Include="Commands\UpdateCollectionCommandHandlerTests.cs" />
     <Compile Include="Controllers\CollectionControllerTests.cs" />
+    <Compile Include="DefragmentQueueDbStatementTests.cs" />
     <Compile Include="DeleteCollectionDbStatementTests.cs" />
     <Compile Include="GetChannelsAndCollectionsDbStatementTests.cs" />
     <Compile Include="GetLiveDateOfNewQueuedPostDbStatementTests.cs" />
     <Compile Include="GetNewQueuedPostLiveDateLowerBoundDbStatementTests.cs" />
-    <Compile Include="GetCollectionWeeklyReleaseTimesDbStatementTests.cs" />
+    <Compile Include="GetCollectionWeeklyReleaseScheduleDbStatementTests.cs" />
+    <Compile Include="GetQueueSizeDbStatementTests.cs" />
+    <Compile Include="UpdateAllLiveDatesInQueueDbStatementTests.cs" />
     <Compile Include="WeeklyReleaseScheduleTests.cs" />
     <Compile Include="HourOfWeekTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

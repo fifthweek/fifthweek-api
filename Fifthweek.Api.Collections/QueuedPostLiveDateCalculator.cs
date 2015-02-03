@@ -10,30 +10,19 @@
 
     public class QueuedPostLiveDateCalculator : IQueuedPostLiveDateCalculator
     {
-        public DateTime GetNextLiveDate(DateTime exclusiveLowerBound, IReadOnlyList<Shared.HourOfWeek> ascendingWeeklyReleaseTimes)
+        public DateTime GetNextLiveDate(DateTime exclusiveLowerBound, WeeklyReleaseSchedule weeklyReleaseSchedule)
         {
-            return this.GetNextLiveDates(exclusiveLowerBound, ascendingWeeklyReleaseTimes, 1)[0];
+            return this.GetNextLiveDates(exclusiveLowerBound, weeklyReleaseSchedule, 1)[0];
         }
 
         public IReadOnlyList<DateTime> GetNextLiveDates(
             DateTime exclusiveLowerBound,
-            IReadOnlyList<Shared.HourOfWeek> ascendingWeeklyReleaseTimes,
+            WeeklyReleaseSchedule weeklyReleaseSchedule,
             int numberOfLiveDatesToReturn)
         {
             exclusiveLowerBound.AssertUtc("exclusiveLowerBound");
-            ascendingWeeklyReleaseTimes.AssertNotNull("ascendingWeeklyReleaseTimes");
-            ascendingWeeklyReleaseTimes.AssertNonEmpty("ascendingWeeklyReleaseTimes");
+            weeklyReleaseSchedule.AssertNotNull("weeklyReleaseSchedule");
             numberOfLiveDatesToReturn.AssertNonNegative("numberOfLiveDatesToReturn");
-
-            ascendingWeeklyReleaseTimes.Aggregate((previous, current) =>
-            {
-                if (previous.Value >= current.Value)
-                {
-                    throw new ArgumentException("Must be in ascending order with no duplicates", "ascendingWeeklyReleaseTimes");
-                }
-
-                return current;
-            });
 
             var startTimeWithWeekReset = new DateTime(
                 exclusiveLowerBound.Year,
@@ -45,6 +34,7 @@
                 DateTimeKind.Utc)
                 .AddDays(-1 * (int)exclusiveLowerBound.DayOfWeek);
 
+            var ascendingWeeklyReleaseTimes = weeklyReleaseSchedule.Value;
             var releasesPerWeek = ascendingWeeklyReleaseTimes.Count;
             var currentHourOfWeek = HourOfWeek.Parse(exclusiveLowerBound).Value;
             var nextReleaseTimeAfterCurrentTime = ascendingWeeklyReleaseTimes.FirstOrDefault(_ => _.Value > currentHourOfWeek);

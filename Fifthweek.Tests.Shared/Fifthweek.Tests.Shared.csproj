@@ -60,6 +60,7 @@
     <Compile Include="MoqExtensions.cs" />
     <Compile Include="PrimitiveTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ValidatedCollectionTests.cs" />
     <Compile Include="ValidatedPrimitiveTests.cs" />
     <Compile Include="ValidatedStringTests.cs" />
   </ItemGroup>

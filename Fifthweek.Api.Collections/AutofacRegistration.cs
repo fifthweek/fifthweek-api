@@ -12,10 +12,13 @@
             builder.RegisterType<CollectionOwnership>().As<ICollectionOwnership>();
             builder.RegisterType<CollectionSecurity>().As<ICollectionSecurity>();
             builder.RegisterType<GetNewQueuedPostLiveDateLowerBoundDbStatement>().As<IGetNewQueuedPostLiveDateLowerBoundDbStatement>();
-            builder.RegisterType<GetCollectionWeeklyReleaseTimesDbStatement>().As<IGetCollectionWeeklyReleaseTimesDbStatement>();
+            builder.RegisterType<GetWeeklyReleaseScheduleDbStatement>().As<IGetWeeklyReleaseScheduleDbStatement>();
             builder.RegisterType<QueuedPostLiveDateCalculator>().As<IQueuedPostLiveDateCalculator>();
             builder.RegisterType<GetChannelsAndCollectionsDbStatement>().As<IGetChannelsAndCollectionsDbStatement>();
             builder.RegisterType<DeleteCollectionDbStatement>().As<IDeleteCollectionDbStatement>();
+            builder.RegisterType<DefragmentQueueDbStatement>().As<IDefragmentQueueDbStatement>();
+            builder.RegisterType<GetQueueSizeDbStatement>().As<IGetQueueSizeDbStatement>();
+            builder.RegisterType<UpdateAllLiveDatesInQueueDbStatement>().As<IUpdateAllLiveDatesInQueueDbStatement>();
         }
     }
 }

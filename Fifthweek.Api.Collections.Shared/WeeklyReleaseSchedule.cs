@@ -72,7 +72,7 @@
 
             weeklyReleaseSchedule = new WeeklyReleaseSchedule
             {
-                Value = value
+                Value = value.OrderBy(_ => _.Value).ToArray()
             };
 
             return true;

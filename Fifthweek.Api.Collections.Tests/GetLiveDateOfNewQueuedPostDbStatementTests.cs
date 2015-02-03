@@ -19,10 +19,11 @@
         private static readonly CollectionId CollectionId = new CollectionId(Guid.NewGuid());
         private static readonly IReadOnlyList<WeeklyReleaseTime> SortedReleaseTimes = WeeklyReleaseTimeTests.GenerateSortedWeeklyReleaseTimes(CollectionId.Value, 10);
         private static readonly IReadOnlyList<HourOfWeek> SortedHoursOfWeek = SortedReleaseTimes.Select(_ => HourOfWeek.Parse(_.HourOfWeek)).ToList();
+        private static readonly WeeklyReleaseSchedule WeeklyReleaseSchedule = WeeklyReleaseSchedule.Parse(SortedHoursOfWeek);
         private static readonly DateTime LiveDateLowerBound = DateTime.UtcNow.AddDays(5);
         private static readonly DateTime CalculatedLiveDate = DateTime.UtcNow.AddDays(8);
         private Mock<IGetNewQueuedPostLiveDateLowerBoundDbStatement> getNewQueuedPostLiveDateLowerBound;
-        private Mock<IGetCollectionWeeklyReleaseTimesDbStatement> getCollectionWeeklyReleaseTimes;
+        private Mock<IGetWeeklyReleaseScheduleDbStatement> getCollectionWeeklyReleaseTimes;
         private Mock<IQueuedPostLiveDateCalculator> queuedPostReleaseTimeCalculator;
         private GetLiveDateOfNewQueuedPostDbStatement target;
 
@@ -30,7 +31,7 @@
         public void Initialize()
         {
             this.getNewQueuedPostLiveDateLowerBound = new Mock<IGetNewQueuedPostLiveDateLowerBoundDbStatement>();
-            this.getCollectionWeeklyReleaseTimes = new Mock<IGetCollectionWeeklyReleaseTimesDbStatement>();
+            this.getCollectionWeeklyReleaseTimes = new Mock<IGetWeeklyReleaseScheduleDbStatement>();
             this.queuedPostReleaseTimeCalculator = new Mock<IQueuedPostLiveDateCalculator>();
             this.target = new GetLiveDateOfNewQueuedPostDbStatement(
                 this.getNewQueuedPostLiveDateLowerBound.Object, 
@@ -48,22 +49,13 @@
         [TestMethod]
         public async Task ItShouldCalculateReleaseTimeOfHypotheticalNewQueuedPost()
         {
-            IReadOnlyList<HourOfWeek> actualReleaseTimes = null;
-
             this.getNewQueuedPostLiveDateLowerBound.Setup(_ => _.ExecuteAsync(CollectionId, It.IsAny<DateTime>())).ReturnsAsync(LiveDateLowerBound);
-            this.getCollectionWeeklyReleaseTimes.Setup(_ => _.ExecuteAsync(CollectionId)).ReturnsAsync(SortedReleaseTimes);
+            this.getCollectionWeeklyReleaseTimes.Setup(_ => _.ExecuteAsync(CollectionId)).ReturnsAsync(WeeklyReleaseSchedule);
             this.queuedPostReleaseTimeCalculator
-                .Setup(_ => _.GetNextLiveDate(LiveDateLowerBound, It.IsAny<IReadOnlyList<HourOfWeek>>()))
-                .Returns(CalculatedLiveDate)
-                .Callback((DateTime dateTime, IReadOnlyList<HourOfWeek> releaseTimes) =>
-                {
-                    actualReleaseTimes = releaseTimes;
-                });
+                .Setup(_ => _.GetNextLiveDate(LiveDateLowerBound, WeeklyReleaseSchedule))
+                .Returns(CalculatedLiveDate);
 
             var result = await this.target.ExecuteAsync(CollectionId);
-
-            Assert.IsNotNull(actualReleaseTimes);
-            CollectionAssert.AreEqual(actualReleaseTimes.ToList(), SortedHoursOfWeek.ToList());
 
             Assert.AreEqual(result, CalculatedLiveDate);
         }

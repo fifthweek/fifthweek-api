@@ -79,91 +79,7 @@
         {
             foreach (var schedule in Schedules)
             {
-                this.target.GetNextLiveDates(DateTime.Now, schedule, 1);    
-            }
-        }
-
-        [TestMethod]
-        [ExpectedException(typeof(ArgumentException))]
-        public void ItShouldRequireNonEmptyReleaseTimes()
-        {
-            foreach (var date in Dates)
-            {
-                this.target.GetNextLiveDates(date, new HourOfWeek[0], 1);
-            }
-        }
-
-        [TestMethod]
-        [ExpectedException(typeof(ArgumentException))]
-        public void ItShouldRequireAscendingReleaseTimes()
-        {
-            var nonAscendingReleaseSchedule = new[]
-            {
-                Tuesday,
-                Monday,
-                Wednesday,
-                Thursday
-            };
-
-            foreach (var date in Dates)
-            {
-                this.target.GetNextLiveDates(date, nonAscendingReleaseSchedule, 1);
-            }
-        }
-
-        [TestMethod]
-        [ExpectedException(typeof(ArgumentException))]
-        public void ItShouldRequireAscendingReleaseTimes2()
-        {
-            var nonAscendingReleaseSchedule = new[]
-            {
-                Monday,
-                Tuesday,
-                Thursday,
-                Wednesday
-            };
-
-            foreach (var date in Dates)
-            {
-                this.target.GetNextLiveDates(date, nonAscendingReleaseSchedule, 1);
-            }
-        }
-
-        [TestMethod]
-        [ExpectedException(typeof(ArgumentException))]
-        public void ItShouldRequireDistinctReleaseTimes()
-        {
-            var indistinctReleaseSchedule = new[]
-            {
-                Monday,
-                Monday,
-                Tuesday,
-                Wednesday,
-                Thursday
-            };
-
-            foreach (var date in Dates)
-            {
-                this.target.GetNextLiveDates(date, indistinctReleaseSchedule, 1);
-            }
-        }
-
-        [TestMethod]
-        [ExpectedException(typeof(ArgumentException))]
-        public void ItShouldRequireDistinctReleaseTimes2()
-        {
-            var indistinctReleaseSchedule = new[]
-            {
-                Monday,
-                Tuesday,
-                Wednesday,
-                Thursday,
-                Thursday
-            };
-
-            foreach (var date in Dates)
-            {
-                this.target.GetNextLiveDates(date, indistinctReleaseSchedule, 1);
+                this.target.GetNextLiveDates(DateTime.Now, WeeklyReleaseSchedule.Parse(schedule), 1);    
             }
         }
 
@@ -175,7 +91,7 @@
             {
                 foreach (var date in Dates)
                 {
-                    this.target.GetNextLiveDates(date, schedule, -1);
+                    this.target.GetNextLiveDates(date, WeeklyReleaseSchedule.Parse(schedule), -1);
                 }
             }
         }
@@ -187,7 +103,7 @@
             {
                 foreach (var date in Dates)
                 {
-                    this.target.GetNextLiveDates(date, schedule, 0);
+                    this.target.GetNextLiveDates(date, WeeklyReleaseSchedule.Parse(schedule), 0);
                 }
             }
         }
@@ -199,9 +115,10 @@
             {
                 foreach (var date in Dates)
                 {
-                    Assert.AreEqual(0, this.target.GetNextLiveDates(date, schedule, 0).Count);
-                    Assert.AreEqual(1, this.target.GetNextLiveDates(date, schedule, 1).Count);
-                    Assert.AreEqual(10, this.target.GetNextLiveDates(date, schedule, 10).Count);
+                    var weeklyReleaseSchedule = WeeklyReleaseSchedule.Parse(schedule);
+                    Assert.AreEqual(0, this.target.GetNextLiveDates(date, weeklyReleaseSchedule, 0).Count);
+                    Assert.AreEqual(1, this.target.GetNextLiveDates(date, weeklyReleaseSchedule, 1).Count);
+                    Assert.AreEqual(10, this.target.GetNextLiveDates(date, weeklyReleaseSchedule, 10).Count);
                 }
             }
         }
@@ -213,7 +130,7 @@
             {
                 foreach (var date in Dates)
                 {
-                    foreach (var result in this.target.GetNextLiveDates(date, schedule, 10))
+                    foreach (var result in this.target.GetNextLiveDates(date, WeeklyReleaseSchedule.Parse(schedule), 10))
                     {
                         Assert.AreEqual(result.Kind, DateTimeKind.Utc);
                     }
@@ -228,7 +145,7 @@
             {
                 foreach (var date in Dates)
                 {
-                    foreach (var result in this.target.GetNextLiveDates(date, schedule, 10))
+                    foreach (var result in this.target.GetNextLiveDates(date, WeeklyReleaseSchedule.Parse(schedule), 10))
                     {
                         var timeWithHourPrecision = new DateTime(
                             result.Year,
@@ -252,7 +169,7 @@
             {
                 foreach (var date in Dates)
                 {
-                    foreach (var result in this.target.GetNextLiveDates(date, schedule, 10))
+                    foreach (var result in this.target.GetNextLiveDates(date, WeeklyReleaseSchedule.Parse(schedule), 10))
                     {
                         Assert.IsTrue(result > date);
                     }
@@ -267,7 +184,7 @@
             {
                 foreach (var date in Dates)
                 {
-                    var result = this.target.GetNextLiveDates(date, schedule, 10);
+                    var result = this.target.GetNextLiveDates(date, WeeklyReleaseSchedule.Parse(schedule), 10);
 
                     result.Aggregate(
                         date,
@@ -287,7 +204,7 @@
             {
                 foreach (var date in Dates)
                 {
-                    var results = this.target.GetNextLiveDates(date, schedule, 10);
+                    var results = this.target.GetNextLiveDates(date, WeeklyReleaseSchedule.Parse(schedule), 10);
 
                     var expectedFirstReleaseTime = 0;
                     var currentHourOfWeek = HourOfWeek.Parse(date);

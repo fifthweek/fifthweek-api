@@ -1,6 +1,7 @@
 ﻿namespace Fifthweek.Api.Collections.Tests
 {
     using System.Collections.Generic;
+    using System.Linq;
 
     using Fifthweek.Api.Collections.Shared;
     using Fifthweek.Tests.Shared;
@@ -8,7 +9,7 @@
     using Microsoft.VisualStudio.TestTools.UnitTesting;
 
     [TestClass]
-    public class WeeklyReleaseScheduleTests : ValidatedPrimitiveTests<WeeklyReleaseSchedule, IReadOnlyList<HourOfWeek>>
+    public class WeeklyReleaseScheduleTests : ValidatedCollectionTests<WeeklyReleaseSchedule, HourOfWeek>
     {
         protected override IReadOnlyList<HourOfWeek> ValueA
         {
@@ -77,6 +78,17 @@
             this.BadValue(new[] { HourOfWeek.Parse(24), HourOfWeek.Parse(24) });
             this.BadValue(new[] { HourOfWeek.Parse(0), HourOfWeek.Parse(24), HourOfWeek.Parse(25), HourOfWeek.Parse(24) });
             this.BadValue(new[] { HourOfWeek.Parse(0), HourOfWeek.Parse(24), HourOfWeek.Parse(25), HourOfWeek.Parse(24), HourOfWeek.Parse(26) });
+        }
+
+        [TestMethod]
+        public void ItShouldSortValuesAscending()
+        {
+            var unsorted = new[] { HourOfWeek.Parse(12), HourOfWeek.Parse(20), HourOfWeek.Parse(19), HourOfWeek.Parse(24) };
+            var sorted = new[] { HourOfWeek.Parse(12), HourOfWeek.Parse(19), HourOfWeek.Parse(20), HourOfWeek.Parse(24) };
+
+            var actual = WeeklyReleaseSchedule.Parse(unsorted).Value;
+
+            CollectionAssert.AreEqual(sorted, actual.ToArray());
         }
 
         protected override WeeklyReleaseSchedule Parse(IReadOnlyList<HourOfWeek> value)

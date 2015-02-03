@@ -9,8 +9,10 @@
     {
         public void Register(ContainerBuilder builder)
         {
+            builder.RegisterType<PostNoteDbStatement>().As<IPostNoteDbStatement>();
             builder.RegisterType<PostToCollectionDbStatement>().As<IPostToCollectionDbStatement>();
             builder.RegisterType<PostToCollectionDbSubStatements>().As<IPostToCollectionDbSubStatements>();
+            builder.RegisterType<TryGetQueuedPostCollectionDbStatement>().As<ITryGetQueuedPostCollectionDbStatement>();
             builder.RegisterType<PostFileTypeChecks>().As<IPostFileTypeChecks>();
             builder.RegisterType<PostSecurity>().As<IPostSecurity>();
             builder.RegisterType<PostOwnership>().As<IPostOwnership>();

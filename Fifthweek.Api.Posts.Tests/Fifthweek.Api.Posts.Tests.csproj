@@ -112,6 +112,7 @@
     <Compile Include="Queries\GetCreatorBacklogQueryHandlerTests.cs" />
     <Compile Include="PostNoteDbStatementTests.cs" />
     <Compile Include="ScheduledDateClippingFunctionTests.cs" />
+    <Compile Include="TryGetQueuedPostCollectionDbStatementTests.cs" />
     <Compile Include="ValidCommentTests.cs" />
     <Compile Include="ValidNoteTests.cs" />
   </ItemGroup>

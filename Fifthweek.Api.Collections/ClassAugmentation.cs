@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Linq;
 
-//// Generated on 30/01/2015 14:07:12 (UTC)
-//// Mapped solution in 2.8s
+//// Generated on 03/02/2015 18:22:11 (UTC)
+//// Mapped solution in 3.41s
 
 
 namespace Fifthweek.Api.Collections
@@ -420,9 +420,9 @@ namespace Fifthweek.Api.Collections
     using Fifthweek.Api.Channels.Shared;
     using Fifthweek.Api.Collections.Queries;
 
-    public partial class GetCollectionWeeklyReleaseTimesDbStatement 
+    public partial class GetWeeklyReleaseScheduleDbStatement 
     {
-        public GetCollectionWeeklyReleaseTimesDbStatement(
+        public GetWeeklyReleaseScheduleDbStatement(
             Fifthweek.Api.Persistence.IFifthweekDbContext databaseContext)
         {
             if (databaseContext == null)
@@ -454,7 +454,7 @@ namespace Fifthweek.Api.Collections
     {
         public GetLiveDateOfNewQueuedPostDbStatement(
             Fifthweek.Api.Collections.IGetNewQueuedPostLiveDateLowerBoundDbStatement getNewQueuedPostLiveDateLowerBound,
-            Fifthweek.Api.Collections.IGetCollectionWeeklyReleaseTimesDbStatement getCollectionWeeklyReleaseTimes,
+            Fifthweek.Api.Collections.Shared.IGetWeeklyReleaseScheduleDbStatement getWeeklyReleaseSchedule,
             Fifthweek.Api.Collections.IQueuedPostLiveDateCalculator queuedPostLiveDateCalculator)
         {
             if (getNewQueuedPostLiveDateLowerBound == null)
@@ -462,9 +462,9 @@ namespace Fifthweek.Api.Collections
                 throw new ArgumentNullException("getNewQueuedPostLiveDateLowerBound");
             }
 
-            if (getCollectionWeeklyReleaseTimes == null)
+            if (getWeeklyReleaseSchedule == null)
             {
-                throw new ArgumentNullException("getCollectionWeeklyReleaseTimes");
+                throw new ArgumentNullException("getWeeklyReleaseSchedule");
             }
 
             if (queuedPostLiveDateCalculator == null)
@@ -473,7 +473,7 @@ namespace Fifthweek.Api.Collections
             }
 
             this.getNewQueuedPostLiveDateLowerBound = getNewQueuedPostLiveDateLowerBound;
-            this.getCollectionWeeklyReleaseTimes = getCollectionWeeklyReleaseTimes;
+            this.getWeeklyReleaseSchedule = getWeeklyReleaseSchedule;
             this.queuedPostLiveDateCalculator = queuedPostLiveDateCalculator;
         }
     }
@@ -913,6 +913,105 @@ namespace Fifthweek.Api.Collections
     public partial class DeleteCollectionDbStatement 
     {
         public DeleteCollectionDbStatement(
+            Fifthweek.Api.Persistence.IFifthweekDbContext databaseContext)
+        {
+            if (databaseContext == null)
+            {
+                throw new ArgumentNullException("databaseContext");
+            }
+
+            this.databaseContext = databaseContext;
+        }
+    }
+}
+namespace Fifthweek.Api.Collections
+{
+    using System;
+    using System.Linq;
+    using System.Threading.Tasks;
+    using Dapper;
+    using Fifthweek.Api.Core;
+    using Fifthweek.Api.Identity.Shared.Membership;
+    using Fifthweek.Api.Persistence;
+    using Fifthweek.CodeGeneration;
+    using Fifthweek.Api.Collections.Shared;
+    using System.Collections.Generic;
+    using System.Text;
+    using Fifthweek.Api.Channels.Shared;
+    using Fifthweek.Api.Collections.Queries;
+
+    public partial class DefragmentQueueDbStatement 
+    {
+        public DefragmentQueueDbStatement(
+            Fifthweek.Api.Collections.IGetQueueSizeDbStatement getQueueSize,
+            Fifthweek.Api.Collections.IQueuedPostLiveDateCalculator liveDateCalculator,
+            Fifthweek.Api.Collections.IUpdateAllLiveDatesInQueueDbStatement updateAllLiveDatesInQueue)
+        {
+            if (getQueueSize == null)
+            {
+                throw new ArgumentNullException("getQueueSize");
+            }
+
+            if (liveDateCalculator == null)
+            {
+                throw new ArgumentNullException("liveDateCalculator");
+            }
+
+            if (updateAllLiveDatesInQueue == null)
+            {
+                throw new ArgumentNullException("updateAllLiveDatesInQueue");
+            }
+
+            this.getQueueSize = getQueueSize;
+            this.liveDateCalculator = liveDateCalculator;
+            this.updateAllLiveDatesInQueue = updateAllLiveDatesInQueue;
+        }
+    }
+}
+namespace Fifthweek.Api.Collections
+{
+    using System;
+    using System.Linq;
+    using System.Threading.Tasks;
+    using Dapper;
+    using Fifthweek.Api.Core;
+    using Fifthweek.Api.Identity.Shared.Membership;
+    using Fifthweek.Api.Persistence;
+    using Fifthweek.CodeGeneration;
+    using Fifthweek.Api.Collections.Shared;
+    using System.Collections.Generic;
+    using System.Text;
+    using Fifthweek.Api.Channels.Shared;
+    using Fifthweek.Api.Collections.Queries;
+
+    public partial class GetQueueSizeDbStatement 
+    {
+        public GetQueueSizeDbStatement(
+            Fifthweek.Api.Persistence.IFifthweekDbContext databaseContext)
+        {
+            if (databaseContext == null)
+            {
+                throw new ArgumentNullException("databaseContext");
+            }
+
+            this.databaseContext = databaseContext;
+        }
+    }
+}
+namespace Fifthweek.Api.Collections
+{
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Threading.Tasks;
+    using Fifthweek.Api.Collections.Shared;
+    using Fifthweek.Api.Core;
+    using Fifthweek.Api.Persistence;
+    using Fifthweek.CodeGeneration;
+
+    public partial class UpdateAllLiveDatesInQueueDbStatement 
+    {
+        public UpdateAllLiveDatesInQueueDbStatement(
             Fifthweek.Api.Persistence.IFifthweekDbContext databaseContext)
         {
             if (databaseContext == null)

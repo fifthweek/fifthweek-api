@@ -53,6 +53,8 @@
       <DesignTime>True</DesignTime>
     </Compile>
     <Compile Include="CollectionId.cs" />
+    <Compile Include="IDefragmentQueueDbStatement.cs" />
+    <Compile Include="IGetWeeklyReleaseScheduleDbStatement.cs" />
     <Compile Include="WeeklyReleaseSchedule.cs" />
     <Compile Include="HourOfWeek.cs" />
     <Compile Include="ICollectionSecurity.cs" />

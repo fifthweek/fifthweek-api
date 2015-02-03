@@ -3,15 +3,17 @@
     using System;
     using System.Collections.Generic;
 
+    using Fifthweek.Api.Collections.Shared;
+
     public interface IQueuedPostLiveDateCalculator
     {
         DateTime GetNextLiveDate(
             DateTime exclusiveLowerBound,
-            IReadOnlyList<Shared.HourOfWeek> ascendingWeeklyReleaseTimes);
+            WeeklyReleaseSchedule weeklyReleaseSchedule);
 
         IReadOnlyList<DateTime> GetNextLiveDates(
             DateTime exclusiveLowerBound,
-            IReadOnlyList<Shared.HourOfWeek> ascendingWeeklyReleaseTimes,
+            WeeklyReleaseSchedule weeklyReleaseSchedule,
             int numberOfLiveDatesToReturn);
     }
 }

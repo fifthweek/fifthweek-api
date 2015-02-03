@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Linq;
 
-//// Generated on 03/02/2015 13:25:43 (UTC)
-//// Mapped solution in 3.03s
+//// Generated on 03/02/2015 16:10:17 (UTC)
+//// Mapped solution in 4.51s
 
 
 namespace Fifthweek.Api.Posts.Commands
@@ -21,6 +21,7 @@ namespace Fifthweek.Api.Posts.Commands
     using System.Collections.Generic;
     using System.Text;
     using Dapper;
+    using System.Transactions;
 
     public partial class DeletePostCommand 
     {
@@ -59,18 +60,22 @@ namespace Fifthweek.Api.Posts.Commands
     using System.Collections.Generic;
     using System.Text;
     using Dapper;
+    using System.Transactions;
 
     public partial class DeletePostCommandHandler 
     {
         public DeletePostCommandHandler(
-            Fifthweek.Api.FileManagement.Shared.IScheduleGarbageCollectionStatement scheduleGarbageCollection,
-            Fifthweek.Api.Posts.Shared.IPostSecurity postSecurity,
             Fifthweek.Api.Identity.Shared.Membership.IRequesterSecurity requesterSecurity,
-            Fifthweek.Api.Posts.IDeletePostDbStatement deletePost)
+            Fifthweek.Api.Posts.Shared.IPostSecurity postSecurity,
+            Fifthweek.Api.Posts.ITryGetQueuedPostCollectionDbStatement tryGetQueuedPostCollection,
+            Fifthweek.Api.Collections.Shared.IGetWeeklyReleaseScheduleDbStatement getWeeklyReleaseSchedule,
+            Fifthweek.Api.Posts.IDeletePostDbStatement deletePost,
+            Fifthweek.Api.Collections.Shared.IDefragmentQueueDbStatement defragmentQueue,
+            Fifthweek.Api.FileManagement.Shared.IScheduleGarbageCollectionStatement scheduleGarbageCollection)
         {
-            if (scheduleGarbageCollection == null)
+            if (requesterSecurity == null)
             {
-                throw new ArgumentNullException("scheduleGarbageCollection");
+                throw new ArgumentNullException("requesterSecurity");
             }
 
             if (postSecurity == null)
@@ -78,9 +83,14 @@ namespace Fifthweek.Api.Posts.Commands
                 throw new ArgumentNullException("postSecurity");
             }
 
-            if (requesterSecurity == null)
+            if (tryGetQueuedPostCollection == null)
             {
-                throw new ArgumentNullException("requesterSecurity");
+                throw new ArgumentNullException("tryGetQueuedPostCollection");
+            }
+
+            if (getWeeklyReleaseSchedule == null)
+            {
+                throw new ArgumentNullException("getWeeklyReleaseSchedule");
             }
 
             if (deletePost == null)
@@ -88,10 +98,23 @@ namespace Fifthweek.Api.Posts.Commands
                 throw new ArgumentNullException("deletePost");
             }
 
-            this.scheduleGarbageCollection = scheduleGarbageCollection;
-            this.postSecurity = postSecurity;
+            if (defragmentQueue == null)
+            {
+                throw new ArgumentNullException("defragmentQueue");
+            }
+
+            if (scheduleGarbageCollection == null)
+            {
+                throw new ArgumentNullException("scheduleGarbageCollection");
+            }
+
             this.requesterSecurity = requesterSecurity;
+            this.postSecurity = postSecurity;
+            this.tryGetQueuedPostCollection = tryGetQueuedPostCollection;
+            this.getWeeklyReleaseSchedule = getWeeklyReleaseSchedule;
             this.deletePost = deletePost;
+            this.defragmentQueue = defragmentQueue;
+            this.scheduleGarbageCollection = scheduleGarbageCollection;
         }
     }
 }
@@ -111,6 +134,7 @@ namespace Fifthweek.Api.Posts.Commands
     using System.Collections.Generic;
     using System.Text;
     using Dapper;
+    using System.Transactions;
 
     public partial class PostFileCommand 
     {
@@ -174,6 +198,7 @@ namespace Fifthweek.Api.Posts.Commands
     using System.Collections.Generic;
     using System.Text;
     using Dapper;
+    using System.Transactions;
 
     public partial class PostFileCommandHandler 
     {
@@ -233,6 +258,7 @@ namespace Fifthweek.Api.Posts.Commands
     using System.Collections.Generic;
     using System.Text;
     using Dapper;
+    using System.Transactions;
 
     public partial class PostImageCommand 
     {
@@ -296,6 +322,7 @@ namespace Fifthweek.Api.Posts.Commands
     using System.Collections.Generic;
     using System.Text;
     using Dapper;
+    using System.Transactions;
 
     public partial class PostImageCommandHandler 
     {
@@ -355,6 +382,7 @@ namespace Fifthweek.Api.Posts.Commands
     using System.Collections.Generic;
     using System.Text;
     using Dapper;
+    using System.Transactions;
 
     public partial class PostNoteCommand 
     {
@@ -409,6 +437,7 @@ namespace Fifthweek.Api.Posts.Commands
     using System.Collections.Generic;
     using System.Text;
     using Dapper;
+    using System.Transactions;
 
     public partial class PostNoteCommandHandler 
     {
@@ -454,6 +483,7 @@ namespace Fifthweek.Api.Posts.Commands
     using System.Collections.Generic;
     using System.Text;
     using Dapper;
+    using System.Transactions;
 
     public partial class ReorderQueueCommand 
     {
@@ -499,6 +529,7 @@ namespace Fifthweek.Api.Posts.Commands
     using System.Collections.Generic;
     using System.Text;
     using Dapper;
+    using System.Transactions;
 
     public partial class ReorderQueueCommandHandler 
     {
@@ -537,6 +568,7 @@ namespace Fifthweek.Api.Posts.Commands
     using System.Collections.Generic;
     using System.Text;
     using Dapper;
+    using System.Transactions;
 
     public partial class ReviseNoteCommand 
     {
@@ -1488,6 +1520,7 @@ namespace Fifthweek.Api.Posts.Commands
     using System.Collections.Generic;
     using System.Text;
     using Dapper;
+    using System.Transactions;
 
     public partial class ReviseFileCommand 
     {
@@ -1542,6 +1575,7 @@ namespace Fifthweek.Api.Posts.Commands
     using System.Collections.Generic;
     using System.Text;
     using Dapper;
+    using System.Transactions;
 
     public partial class ReviseImageCommand 
     {
@@ -1678,6 +1712,7 @@ namespace Fifthweek.Api.Posts.Commands
     using System.Collections.Generic;
     using System.Text;
     using Dapper;
+    using System.Transactions;
 
     public partial class ReviseNoteCommandHandler 
     {
@@ -1769,6 +1804,7 @@ namespace Fifthweek.Api.Posts.Commands
     using System.Collections.Generic;
     using System.Text;
     using Dapper;
+    using System.Transactions;
 
     public partial class ReviseImageCommandHandler 
     {
@@ -1814,14 +1850,21 @@ namespace Fifthweek.Api.Posts.Commands
 }
 namespace Fifthweek.Api.Posts.Commands
 {
-    using System.Threading.Tasks;
-    using Fifthweek.Api.Collections.Shared;
-    using Fifthweek.Api.Core;
-    using Fifthweek.Api.FileManagement.Shared;
+    using System;
+    using System.Linq;
     using Fifthweek.Api.Identity.Shared.Membership;
-    using Fifthweek.Api.Persistence;
     using Fifthweek.Api.Posts.Shared;
     using Fifthweek.CodeGeneration;
+    using System.Threading.Tasks;
+    using Fifthweek.Api.Core;
+    using Fifthweek.Api.FileManagement.Shared;
+    using Fifthweek.Api.Collections.Shared;
+    using Fifthweek.Api.Channels.Shared;
+    using Fifthweek.Api.Persistence;
+    using System.Collections.Generic;
+    using System.Text;
+    using Dapper;
+    using System.Transactions;
 
     public partial class ReviseFileCommandHandler 
     {
@@ -1865,6 +1908,38 @@ namespace Fifthweek.Api.Posts.Commands
         }
     }
 }
+namespace Fifthweek.Api.Posts
+{
+    using System;
+    using System.Linq;
+    using System.Threading.Tasks;
+    using Dapper;
+    using Fifthweek.Api.Persistence;
+    using Fifthweek.CodeGeneration;
+    using Fifthweek.Api.Core;
+    using Fifthweek.Api.FileManagement;
+    using Fifthweek.Api.FileManagement.Shared;
+    using Fifthweek.Shared;
+    using Fifthweek.Api.Identity.Shared.Membership;
+    using Fifthweek.Api.Posts.Shared;
+    using Fifthweek.Api.Collections.Shared;
+    using Fifthweek.Api.Collections;
+    using Fifthweek.Api.Channels.Shared;
+
+    public partial class TryGetQueuedPostCollectionDbStatement 
+    {
+        public TryGetQueuedPostCollectionDbStatement(
+            Fifthweek.Api.Persistence.IFifthweekDbContext databaseContext)
+        {
+            if (databaseContext == null)
+            {
+                throw new ArgumentNullException("databaseContext");
+            }
+
+            this.databaseContext = databaseContext;
+        }
+    }
+}
 
 namespace Fifthweek.Api.Posts.Commands
 {
@@ -1882,6 +1957,7 @@ namespace Fifthweek.Api.Posts.Commands
     using System.Collections.Generic;
     using System.Text;
     using Dapper;
+    using System.Transactions;
 
     public partial class DeletePostCommand 
     {
@@ -1953,6 +2029,7 @@ namespace Fifthweek.Api.Posts.Commands
     using System.Collections.Generic;
     using System.Text;
     using Dapper;
+    using System.Transactions;
 
     public partial class PostFileCommand 
     {
@@ -2054,6 +2131,7 @@ namespace Fifthweek.Api.Posts.Commands
     using System.Collections.Generic;
     using System.Text;
     using Dapper;
+    using System.Transactions;
 
     public partial class PostImageCommand 
     {
@@ -2155,6 +2233,7 @@ namespace Fifthweek.Api.Posts.Commands
     using System.Collections.Generic;
     using System.Text;
     using Dapper;
+    using System.Transactions;
 
     public partial class PostNoteCommand 
     {
@@ -2244,6 +2323,7 @@ namespace Fifthweek.Api.Posts.Commands
     using System.Collections.Generic;
     using System.Text;
     using Dapper;
+    using System.Transactions;
 
     public partial class ReorderQueueCommand 
     {
@@ -2336,6 +2416,7 @@ namespace Fifthweek.Api.Posts.Commands
     using System.Collections.Generic;
     using System.Text;
     using Dapper;
+    using System.Transactions;
 
     public partial class ReviseNoteCommand 
     {
@@ -3121,6 +3202,7 @@ namespace Fifthweek.Api.Posts.Commands
     using System.Collections.Generic;
     using System.Text;
     using Dapper;
+    using System.Transactions;
 
     public partial class ReviseFileCommand 
     {
@@ -3210,6 +3292,7 @@ namespace Fifthweek.Api.Posts.Commands
     using System.Collections.Generic;
     using System.Text;
     using Dapper;
+    using System.Transactions;
 
     public partial class ReviseImageCommand 
     {
