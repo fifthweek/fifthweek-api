@@ -100,6 +100,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AddNewFileDbStatement.cs" />
+    <Compile Include="Controllers\UserAccessSignaturesController.cs" />
     <Compile Include="GetFileWaitingForUploadDbStatement.cs" />
     <Compile Include="IAddNewFileDbStatement.cs" />
     <Compile Include="IGetFileWaitingForUploadDbStatement.cs" />

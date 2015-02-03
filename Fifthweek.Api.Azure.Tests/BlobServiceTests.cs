@@ -63,14 +63,21 @@ namespace Fifthweek.Api.Azure.Tests
         [ExpectedException(typeof(ArgumentNullException))]
         public async Task WhenRequestingBlobSasUriForWriting_ItShouldCheckContainerNameIsNotNull()
         {
-            await this.target.GetBlobSharedAccessInformationForWritingAsync(null, BlobName);
+            await this.target.GetBlobSharedAccessInformationForWritingAsync(null, BlobName, DateTime.UtcNow);
         }
 
         [TestMethod]
         [ExpectedException(typeof(ArgumentNullException))]
         public async Task WhenRequestingBlobSasUriForWriting_ItShouldCheckBlobNameIsNotNull()
         {
-            await this.target.GetBlobSharedAccessInformationForWritingAsync(ContainerName, null);
+            await this.target.GetBlobSharedAccessInformationForWritingAsync(ContainerName, null, DateTime.UtcNow);
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(InvalidOperationException))]
+        public async Task WhenRequestingBlobSasUriForWriting_ItShouldExpiryTimeIsUtc()
+        {
+            await this.target.GetBlobSharedAccessInformationForWritingAsync(ContainerName, BlobName, DateTime.Now);
         }
 
         [TestMethod]
@@ -86,21 +93,19 @@ namespace Fifthweek.Api.Azure.Tests
             this.cloudBlockBlob.Setup(v => v.GetSharedAccessSignature(It.IsAny<SharedAccessBlobPolicy>()))
                 .Callback<SharedAccessBlobPolicy>(v => submittedPolicy = v).Returns(Token).Verifiable();
 
-            var result = await this.target.GetBlobSharedAccessInformationForWritingAsync(ContainerName, BlobName);
+            var expiry = DateTime.UtcNow;
+            var result = await this.target.GetBlobSharedAccessInformationForWritingAsync(ContainerName, BlobName, expiry);
 
             Assert.IsNotNull(submittedPolicy);
             Assert.AreEqual(SharedAccessBlobPermissions.Write, submittedPolicy.Permissions);
             Assert.AreEqual(null, submittedPolicy.SharedAccessStartTime);
             Assert.IsTrue(submittedPolicy.SharedAccessExpiryTime.HasValue);
-            var expiry = submittedPolicy.SharedAccessExpiryTime.Value;
-            Assert.IsTrue(expiry.Offset.Ticks == 0);
-            Assert.IsTrue(expiry > DateTime.UtcNow.AddMinutes(15));
-            Assert.IsTrue(expiry < DateTime.UtcNow.AddDays(1));
+            Assert.AreEqual(expiry, submittedPolicy.SharedAccessExpiryTime.Value);
 
             Assert.IsNotNull(result);
             Assert.AreEqual(ContainerName, result.ContainerName);
             Assert.AreEqual(BlobName, result.BlobName);
-            Assert.AreEqual(submittedPolicy.SharedAccessExpiryTime, (DateTimeOffset)result.Expiry);
+            Assert.AreEqual(submittedPolicy.SharedAccessExpiryTime, result.Expiry);
             Assert.AreEqual(Token, result.Signature);
             Assert.AreEqual(Uri, result.Uri);
         }
@@ -109,7 +114,14 @@ namespace Fifthweek.Api.Azure.Tests
         [ExpectedException(typeof(ArgumentNullException))]
         public async Task WhenRequestingBlobContainerSasUriForReading_ItShouldCheckContainerNameIsNotNull()
         {
-            await this.target.GetBlobContainerSharedAccessInformationForReadingAsync(null);
+            await this.target.GetBlobContainerSharedAccessInformationForReadingAsync(null, DateTime.UtcNow);
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(InvalidOperationException))]
+        public async Task WhenRequestingBlobContainerSasUriForReading_ItShouldExpiryTimeIsUtc()
+        {
+            await this.target.GetBlobContainerSharedAccessInformationForReadingAsync(ContainerName, DateTime.Now);
         }
 
         [TestMethod]
@@ -124,20 +136,18 @@ namespace Fifthweek.Api.Azure.Tests
             this.cloudBlobContainer.Setup(v => v.GetSharedAccessSignature(It.IsAny<SharedAccessBlobPolicy>()))
                 .Callback<SharedAccessBlobPolicy>(v => submittedPolicy = v).Returns(Token);
 
-            var result = await this.target.GetBlobContainerSharedAccessInformationForReadingAsync(ContainerName);
+            var expiry = DateTime.UtcNow;
+            var result = await this.target.GetBlobContainerSharedAccessInformationForReadingAsync(ContainerName, expiry);
 
             Assert.IsNotNull(submittedPolicy);
             Assert.AreEqual(SharedAccessBlobPermissions.Read, submittedPolicy.Permissions);
             Assert.AreEqual(null, submittedPolicy.SharedAccessStartTime);
             Assert.IsTrue(submittedPolicy.SharedAccessExpiryTime.HasValue);
-            var expiry = submittedPolicy.SharedAccessExpiryTime.Value;
-            Assert.IsTrue(expiry.Offset.Ticks == 0);
-            Assert.IsTrue(expiry > DateTime.UtcNow.AddMinutes(15));
-            Assert.IsTrue(expiry < DateTime.UtcNow.AddDays(1));
+            Assert.AreEqual(expiry, submittedPolicy.SharedAccessExpiryTime.Value);
 
             Assert.IsNotNull(result);
             Assert.AreEqual(ContainerName, result.ContainerName);
-            Assert.AreEqual(submittedPolicy.SharedAccessExpiryTime, (DateTimeOffset)result.Expiry);
+            Assert.AreEqual(submittedPolicy.SharedAccessExpiryTime, result.Expiry);
             Assert.AreEqual(Token, result.Signature);
             Assert.AreEqual(Uri, result.Uri);
         }

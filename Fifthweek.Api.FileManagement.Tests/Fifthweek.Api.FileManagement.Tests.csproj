@@ -118,6 +118,7 @@
     <Compile Include="Commands\InitiateFileUploadCommandHandlerTests.cs" />
     <Compile Include="Commands\CompleteFileUploadCommandHandlerTests.cs" />
     <Compile Include="Controllers\FileUploadControllerTests.cs" />
+    <Compile Include="Controllers\GetUserAccessSignaturesControllerTests.cs" />
     <Compile Include="GetFileExtensionDbStatementTests.cs" />
     <Compile Include="FileSecurityTests.cs" />
     <Compile Include="GetFileWaitingForUploadDbStatementTests.cs" />

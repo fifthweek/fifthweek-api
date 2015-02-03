@@ -89,7 +89,7 @@
             this.blobNameCreator.Setup(v => v.GetBlobLocation(UserId, FileId, Purpose))
                 .Returns(new BlobLocation(ContainerName, BlobName));
 
-            this.blobService.Setup(v => v.GetBlobSharedAccessInformationForWritingAsync(ContainerName, BlobName))
+            this.blobService.Setup(v => v.GetBlobSharedAccessInformationForWritingAsync(ContainerName, BlobName, It.IsAny<DateTime>()))
                 .ReturnsAsync(SharedAccessInformation);
 
             var result = await this.handler.HandleAsync(new GenerateWritableBlobUriQuery(Requester, FileId, Purpose));

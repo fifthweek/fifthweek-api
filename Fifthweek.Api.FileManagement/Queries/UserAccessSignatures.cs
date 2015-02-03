@@ -9,6 +9,8 @@
     [AutoConstructor]
     public partial class UserAccessSignatures
     {
+        public int TimeToLiveSeconds { get; private set; }
+
         public BlobContainerSharedAccessInformation PublicSignature { get; private set; }
 
         public IReadOnlyList<PrivateAccessSignature> PrivateSignatures { get; private set; }

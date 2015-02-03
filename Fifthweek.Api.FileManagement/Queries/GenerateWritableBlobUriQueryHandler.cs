@@ -1,5 +1,6 @@
 ﻿namespace Fifthweek.Api.FileManagement.Queries
 {
+    using System;
     using System.Threading.Tasks;
 
     using Fifthweek.Api.Azure;
@@ -25,7 +26,8 @@
             await this.fileSecurity.AssertReferenceAllowedAsync(userId, query.FileId);
 
             var blobLocation = this.blobLocationGenerator.GetBlobLocation(userId, query.FileId, query.Purpose);
-            return await this.blobService.GetBlobSharedAccessInformationForWritingAsync(blobLocation.ContainerName, blobLocation.BlobName);
+            var expiry = DateTime.UtcNow.AddHours(1);
+            return await this.blobService.GetBlobSharedAccessInformationForWritingAsync(blobLocation.ContainerName, blobLocation.BlobName, expiry);
         }
     }
 }

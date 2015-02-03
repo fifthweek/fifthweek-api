@@ -26,16 +26,20 @@ namespace Fifthweek.Api.Azure
             await container.CreateIfNotExistsAsync();
         }
 
-        public Task<BlobSharedAccessInformation> GetBlobSharedAccessInformationForWritingAsync(string containerName, string blobName)
+        public Task<BlobSharedAccessInformation> GetBlobSharedAccessInformationForWritingAsync(string containerName, string blobName, DateTime expiry)
         {
             containerName.AssertNotNull("containerName");
             blobName.AssertNotNull("blobName");
+
+            if (expiry.Kind != DateTimeKind.Utc)
+            {
+                throw new InvalidOperationException("Expiry time must be in UTC");
+            }
 
             var client = this.cloudStorageAccount.CreateCloudBlobClient();
             var container = client.GetContainerReference(containerName);
             var blob = container.GetBlockBlobReference(blobName);
 
-            var expiry = DateTime.UtcNow.AddHours(1);
             var policy = new SharedAccessBlobPolicy
             {
                 SharedAccessExpiryTime = expiry,
@@ -47,14 +51,18 @@ namespace Fifthweek.Api.Azure
             return Task.FromResult(new BlobSharedAccessInformation(containerName, blobName, blob.Uri.ToString(), token, expiry));
         }
 
-        public Task<BlobContainerSharedAccessInformation> GetBlobContainerSharedAccessInformationForReadingAsync(string containerName)
+        public Task<BlobContainerSharedAccessInformation> GetBlobContainerSharedAccessInformationForReadingAsync(string containerName, DateTime expiry)
         {
             containerName.AssertNotNull("containerName");
 
+            if (expiry.Kind != DateTimeKind.Utc)
+            {
+                throw new InvalidOperationException("Expiry time must be in UTC");
+            }
+            
             var client = this.cloudStorageAccount.CreateCloudBlobClient();
             var container = client.GetContainerReference(containerName);
 
-            var expiry = DateTime.UtcNow.AddHours(1);
             var policy = new SharedAccessBlobPolicy
             {
                 SharedAccessExpiryTime = expiry,

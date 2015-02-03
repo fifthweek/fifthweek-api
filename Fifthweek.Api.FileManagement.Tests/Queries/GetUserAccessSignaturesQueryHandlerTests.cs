@@ -66,7 +66,7 @@
         {
             var filesInformation = new BlobContainerSharedAccessInformation("files", "uri", "sig", DateTime.UtcNow);
 
-            this.blobService.Setup(v => v.GetBlobContainerSharedAccessInformationForReadingAsync(FileManagement.Constants.PublicFileBlobContainerName))
+            this.blobService.Setup(v => v.GetBlobContainerSharedAccessInformationForReadingAsync(FileManagement.Constants.PublicFileBlobContainerName, It.IsAny<DateTime>()))
                 .ReturnsAsync(filesInformation);
 
             var result = await this.target.HandleAsync(new GetUserAccessSignaturesQuery(Requester.Unauthenticated, null));
@@ -82,7 +82,7 @@
         {
             var filesInformation = new BlobContainerSharedAccessInformation("files", "uri", "sig", DateTime.UtcNow);
 
-            this.blobService.Setup(v => v.GetBlobContainerSharedAccessInformationForReadingAsync(FileManagement.Constants.PublicFileBlobContainerName))
+            this.blobService.Setup(v => v.GetBlobContainerSharedAccessInformationForReadingAsync(FileManagement.Constants.PublicFileBlobContainerName, It.IsAny<DateTime>()))
                 .ReturnsAsync(filesInformation);
 
             var userContainerName = "containerName";
@@ -90,7 +90,7 @@
 
             var userInformation = new BlobContainerSharedAccessInformation(userContainerName, "useruri", "usersig", DateTime.UtcNow);
 
-            this.blobService.Setup(v => v.GetBlobContainerSharedAccessInformationForReadingAsync(userContainerName))
+            this.blobService.Setup(v => v.GetBlobContainerSharedAccessInformationForReadingAsync(userContainerName, It.IsAny<DateTime>()))
                 .ReturnsAsync(userInformation);
 
             var result = await this.target.HandleAsync(new GetUserAccessSignaturesQuery(Requester, UserId));

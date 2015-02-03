@@ -29,6 +29,7 @@
 
         private static readonly UserAccessSignatures UserAccessSignatures =
             new UserAccessSignatures(
+                100,
                 new BlobContainerSharedAccessInformation("containerName", "uri", "signature", DateTime.UtcNow),
                 new List<UserAccessSignatures.PrivateAccessSignature>
                     {

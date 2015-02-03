@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Linq;
 
-//// Generated on 29/01/2015 19:42:24 (UTC)
-//// Mapped solution in 1.3s
+//// Generated on 03/02/2015 12:42:38 (UTC)
+//// Mapped solution in 4.79s
 
 
 namespace Fifthweek.Api.FileManagement
@@ -770,9 +770,15 @@ namespace Fifthweek.Api.FileManagement.Queries
     public partial class UserAccessSignatures 
     {
         public UserAccessSignatures(
+            System.Int32 timeToLiveSeconds,
             Fifthweek.Api.Azure.BlobContainerSharedAccessInformation publicSignature,
             System.Collections.Generic.IReadOnlyList<Fifthweek.Api.FileManagement.Queries.UserAccessSignatures.PrivateAccessSignature> privateSignatures)
         {
+            if (timeToLiveSeconds == null)
+            {
+                throw new ArgumentNullException("timeToLiveSeconds");
+            }
+
             if (publicSignature == null)
             {
                 throw new ArgumentNullException("publicSignature");
@@ -783,6 +789,7 @@ namespace Fifthweek.Api.FileManagement.Queries
                 throw new ArgumentNullException("privateSignatures");
             }
 
+            this.TimeToLiveSeconds = timeToLiveSeconds;
             this.PublicSignature = publicSignature;
             this.PrivateSignatures = privateSignatures;
         }
@@ -843,6 +850,43 @@ namespace Fifthweek.Api.FileManagement
             }
 
             this.fifthweekDbContext = fifthweekDbContext;
+        }
+    }
+}
+namespace Fifthweek.Api.FileManagement.Controllers
+{
+    using System;
+    using System.Linq;
+    using System.Threading.Tasks;
+    using System.Web.Http;
+    using System.Web.Http.Description;
+    using Fifthweek.Api.Azure;
+    using Fifthweek.Api.Core;
+    using Fifthweek.Api.FileManagement.Commands;
+    using Fifthweek.Api.FileManagement.Queries;
+    using Fifthweek.Api.FileManagement.Shared;
+    using Fifthweek.Api.Identity.Shared.Membership;
+    using Fifthweek.CodeGeneration;
+    using Fifthweek.Shared;
+
+    public partial class UserAccessSignaturesController 
+    {
+        public UserAccessSignaturesController(
+            Fifthweek.Api.Core.IQueryHandler<Fifthweek.Api.FileManagement.Queries.GetUserAccessSignaturesQuery,Fifthweek.Api.FileManagement.Queries.UserAccessSignatures> getUserAccessSignatures,
+            Fifthweek.Api.Identity.Shared.Membership.IRequesterContext requesterContext)
+        {
+            if (getUserAccessSignatures == null)
+            {
+                throw new ArgumentNullException("getUserAccessSignatures");
+            }
+
+            if (requesterContext == null)
+            {
+                throw new ArgumentNullException("requesterContext");
+            }
+
+            this.getUserAccessSignatures = getUserAccessSignatures;
+            this.requesterContext = requesterContext;
         }
     }
 }
