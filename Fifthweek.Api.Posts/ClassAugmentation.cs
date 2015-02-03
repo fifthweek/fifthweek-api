@@ -182,7 +182,7 @@ namespace Fifthweek.Api.Posts.Commands
             Fifthweek.Api.FileManagement.Shared.IFileSecurity fileSecurity,
             Fifthweek.Api.Identity.Shared.Membership.IRequesterSecurity requesterSecurity,
             Fifthweek.Api.Posts.IPostFileTypeChecks postFileTypeChecks,
-            Fifthweek.Api.Posts.IPostToCollectionDbStatement postToCollectionDbStatement)
+            Fifthweek.Api.Posts.IPostToCollectionDbStatement postToCollection)
         {
             if (collectionSecurity == null)
             {
@@ -204,16 +204,16 @@ namespace Fifthweek.Api.Posts.Commands
                 throw new ArgumentNullException("postFileTypeChecks");
             }
 
-            if (postToCollectionDbStatement == null)
+            if (postToCollection == null)
             {
-                throw new ArgumentNullException("postToCollectionDbStatement");
+                throw new ArgumentNullException("postToCollection");
             }
 
             this.collectionSecurity = collectionSecurity;
             this.fileSecurity = fileSecurity;
             this.requesterSecurity = requesterSecurity;
             this.postFileTypeChecks = postFileTypeChecks;
-            this.postToCollectionDbStatement = postToCollectionDbStatement;
+            this.postToCollection = postToCollection;
         }
     }
 }
@@ -304,7 +304,7 @@ namespace Fifthweek.Api.Posts.Commands
             Fifthweek.Api.FileManagement.Shared.IFileSecurity fileSecurity,
             Fifthweek.Api.Identity.Shared.Membership.IRequesterSecurity requesterSecurity,
             Fifthweek.Api.Posts.IPostFileTypeChecks postFileTypeChecks,
-            Fifthweek.Api.Posts.IPostToCollectionDbStatement postToCollectionDbStatement)
+            Fifthweek.Api.Posts.IPostToCollectionDbStatement postToCollection)
         {
             if (collectionSecurity == null)
             {
@@ -326,16 +326,16 @@ namespace Fifthweek.Api.Posts.Commands
                 throw new ArgumentNullException("postFileTypeChecks");
             }
 
-            if (postToCollectionDbStatement == null)
+            if (postToCollection == null)
             {
-                throw new ArgumentNullException("postToCollectionDbStatement");
+                throw new ArgumentNullException("postToCollection");
             }
 
             this.collectionSecurity = collectionSecurity;
             this.fileSecurity = fileSecurity;
             this.requesterSecurity = requesterSecurity;
             this.postFileTypeChecks = postFileTypeChecks;
-            this.postToCollectionDbStatement = postToCollectionDbStatement;
+            this.postToCollection = postToCollection;
         }
     }
 }

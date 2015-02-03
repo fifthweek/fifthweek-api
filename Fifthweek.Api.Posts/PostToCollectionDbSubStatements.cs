@@ -63,13 +63,11 @@ namespace Fifthweek.Api.Posts
                     _.LiveDate = nextLiveDate;
                 });
 
-                var inserted = await this.databaseContext.Database.Connection.InsertIfAsync(
-                    scheduledPostWithoutChannel,
-                    WhereLiveDateUniqueToCollection,
-                    DeclareChannelId,
-                    Post.Fields.ChannelId);
+                var parameters = GetSqlGenerationParameters(scheduledPostWithoutChannel, ensureLiveDateUniqueToCollection: true);
 
-                if (inserted)
+                var success = -1 == await this.databaseContext.Database.Connection.InsertAsync(parameters);
+
+                if (success)
                 {
                     break;
                 }
@@ -99,10 +97,32 @@ namespace Fifthweek.Api.Posts
                 _.LiveDate = this.scheduledDateClipping.Apply(now, scheduledPostDate);
             });
 
-            return this.databaseContext.Database.Connection.InsertAsync(
-                scheduledPostWithoutChannel,
-                DeclareChannelId,
-                Post.Fields.ChannelId);
+            var parameters = GetSqlGenerationParameters(scheduledPostWithoutChannel, ensureLiveDateUniqueToCollection: false);
+
+            return this.databaseContext.Database.Connection.InsertAsync(parameters);
+        }
+
+        private static SqlGenerationParameters<Post, Post.Fields> GetSqlGenerationParameters(Post scheduledPostWithoutChannel, bool ensureLiveDateUniqueToCollection)
+        {
+            var parameters = new SqlGenerationParameters<Post, Post.Fields>(scheduledPostWithoutChannel)
+            {
+                Declarations = DeclareChannelId,
+                ExcludedFromInput = Post.Fields.ChannelId,
+                UpdateMask = 
+                    Post.Fields.CollectionId | 
+                    Post.Fields.FileId | 
+                    Post.Fields.ImageId |
+                    Post.Fields.Comment |
+                    Post.Fields.LiveDate | 
+                    Post.Fields.ScheduledByQueue
+            };
+
+            if (ensureLiveDateUniqueToCollection)
+            {
+                parameters.Conditions = new[] { WhereLiveDateUniqueToCollection };
+            }
+
+            return parameters;
         }
     }
 }

@@ -16,7 +16,7 @@ namespace Fifthweek.Api.Posts
         private readonly IPostToCollectionDbSubStatements subStatements;
         
         public Task ExecuteAsync(
-            Shared.PostId newPostId,
+            PostId newPostId,
             CollectionId collectionId,
             ValidComment comment,
             DateTime? sheduledPostDate,

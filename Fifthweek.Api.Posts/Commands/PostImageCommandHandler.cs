@@ -16,7 +16,7 @@
         private readonly IFileSecurity fileSecurity;
         private readonly IRequesterSecurity requesterSecurity;
         private readonly IPostFileTypeChecks postFileTypeChecks;
-        private readonly IPostToCollectionDbStatement postToCollectionDbStatement;
+        private readonly IPostToCollectionDbStatement postToCollection;
 
         public async Task HandleAsync(PostImageCommand command)
         {
@@ -30,7 +30,7 @@
 
             await this.postFileTypeChecks.AssertValidForImagePostAsync(command.ImageFileId);
 
-            await this.postToCollectionDbStatement.ExecuteAsync(
+            await this.postToCollection.ExecuteAsync(
                 command.NewPostId,
                 command.CollectionId,
                 command.Comment,

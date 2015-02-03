@@ -160,116 +160,52 @@ public static System.Threading.Tasks.Task InsertAsync(
         transaction);
 }
 
-public static System.Threading.Tasks.Task InsertAsync(
+public static System.Threading.Tasks.Task<int> InsertAsync(
     this System.Data.Common.DbConnection connection,
-    <#= unifiedClass.FirstCodeClass.Name #> entity,
-    string selectValuesForInsertStatement,
-    <#= unifiedClass.FirstCodeClass.Name #>.Fields selectedFields,
-    bool idempotent = true,
-    System.Data.IDbTransaction transaction = null)
-{
-    return Dapper.SqlMapper.ExecuteAsync(
-        connection,
-        selectValuesForInsertStatement + System.Environment.NewLine + InsertStatement(idempotent),
-        MaskParameters(entity, selectedFields, true),
-        transaction);
-}
-
-public static async System.Threading.Tasks.Task<bool> InsertIfAsync(
-    this System.Data.Common.DbConnection connection,
-    <#= unifiedClass.FirstCodeClass.Name #> entity,
-    string condition,
-    bool idempotent = true,
-    System.Data.IDbTransaction transaction = null)
-{
-    return -1 == await InsertIfAsync(connection, entity, new[] { condition }, idempotent, transaction);
-}
-
-public static async System.Threading.Tasks.Task<bool> InsertIfAsync(
-    this System.Data.Common.DbConnection connection,
-    <#= unifiedClass.FirstCodeClass.Name #> entity,
-    string condition,
-    string selectValuesForInsertStatement,
-    <#= unifiedClass.FirstCodeClass.Name #>.Fields selectedFields,
-    bool idempotent = true,
-    System.Data.IDbTransaction transaction = null)
-{
-    return -1 == await InsertIfAsync(connection, entity, new[] { condition }, selectValuesForInsertStatement, selectedFields, idempotent, transaction);
-}
-
-public static System.Threading.Tasks.Task<int> InsertIfAsync(
-    this System.Data.Common.DbConnection connection,
-    <#= unifiedClass.FirstCodeClass.Name #> entity,
-    System.Collections.Generic.IEnumerable<string> conditions,
-    bool idempotent = true,
-    System.Data.IDbTransaction transaction = null)
+    SqlGenerationParameters<<#= unifiedClass.FirstCodeClass.Name #>, <#= unifiedClass.FirstCodeClass.Name #>.Fields> parameters)
 {
     var sql = new System.Text.StringBuilder();
+
+    if (parameters.Declarations != null)
+    {
+        sql.AppendLine(parameters.Declarations);
+    }
+    
     int currentIndex = 0;
-    foreach (var condition in conditions)
+    if (parameters.Conditions != null)
     {
-        sql.Append("IF ");
-        sql.AppendLine(condition); // Remember to use `WITH (UPDLOCK, HOLDLOCK)` in your conditions! See: http://samsaffron.com/blog/archive/2007/04/04/14.aspx
-        sql.AppendLine("BEGIN");
-        ++currentIndex;
-    }
-
-    sql.AppendLine(InsertStatement(idempotent));
-    sql.AppendLine("SELECT -1 AS InsertAttempted"); // Indicates a (potentially idempotent) insert has been performed.
-            
-    foreach (var condition in conditions)
-    {
-        sql.AppendLine("END");
-        sql.AppendLine("ELSE");
-        sql.Append("SELECT ").Append(--currentIndex).AppendLine(" AS InsertAttempted");
-    }
-
-    return Dapper.SqlMapper.ExecuteScalarAsync<int>(
-        connection,
-        sql.ToString(),
-        new 
+        foreach (var condition in parameters.Conditions)
         {
-            <#= entityMaskInitialization #>
-        },
-        transaction);
-}
-
-public static System.Threading.Tasks.Task<int> InsertIfAsync(
-    this System.Data.Common.DbConnection connection,
-    <#= unifiedClass.FirstCodeClass.Name #> entity,
-    System.Collections.Generic.IEnumerable<string> conditions,
-    string selectValuesForInsertStatement,
-    <#= unifiedClass.FirstCodeClass.Name #>.Fields selectedFields,
-    bool idempotent = true,
-    System.Data.IDbTransaction transaction = null)
-{
-    var sql = new System.Text.StringBuilder();
-    sql.AppendLine(selectValuesForInsertStatement);
-
-    int currentIndex = 0;
-    foreach (var condition in conditions)
-    {
-        sql.Append("IF ");
-        sql.AppendLine(condition); // Remember to use `WITH (UPDLOCK, HOLDLOCK)` in your conditions! See: http://samsaffron.com/blog/archive/2007/04/04/14.aspx
-        sql.AppendLine("BEGIN");
-        ++currentIndex;
+            sql.Append("IF ");
+            sql.AppendLine(condition); // Remember to use `WITH (UPDLOCK, HOLDLOCK)` in your conditions! See: http://samsaffron.com/blog/archive/2007/04/04/14.aspx
+            sql.AppendLine("BEGIN");
+            ++currentIndex;
+        }
     }
 
-    sql.AppendLine(InsertStatement(idempotent));
-    sql.AppendLine("SELECT -1 AS InsertAttempted"); // Indicates a (potentially idempotent) insert has been performed.
+    sql.AppendLine(InsertStatement(parameters.IdempotentInsert));
+
+    if (parameters.Conditions != null)
+    {
+        sql.AppendLine("SELECT -1 AS FailedConditionIndex"); // Indicates all conditions passed and operation was attempted.
             
-    foreach (var condition in conditions)
-    {
-        sql.AppendLine("END");
-        sql.AppendLine("ELSE");
-        sql.Append("SELECT ").Append(--currentIndex).AppendLine(" AS InsertAttempted");
+        foreach (var condition in parameters.Conditions)
+        {
+            sql.AppendLine("END");
+            sql.AppendLine("ELSE");
+            sql.Append("SELECT ").Append(--currentIndex).AppendLine(" AS FailedConditionIndex");
+        }
     }
+
+    var entity = parameters.Entity;
+    var parameterObject = parameters.ExcludedFromInput != null
+        ? AllExceptSpecifiedParameters(entity, parameters.ExcludedFromInput.Value)
+        : new { <#= entityMaskInitialization #> };
 
     return Dapper.SqlMapper.ExecuteScalarAsync<int>(
         connection,
         sql.ToString(),
-        MaskParameters(entity, selectedFields, true),
-        transaction);
+        parameterObject);
 }
 
 public static System.Threading.Tasks.Task UpsertAsync(
@@ -311,7 +247,57 @@ public static System.Threading.Tasks.Task UpdateAsync(
     <#= unifiedClass.FirstCodeClass.Name #>.Fields fields,
     System.Data.IDbTransaction transaction = null)
 {
-    return Dapper.SqlMapper.ExecuteAsync(connection, UpdateStatement(fields), MaskParameters(entity, fields, false), transaction);
+    return Dapper.SqlMapper.ExecuteAsync(connection, UpdateStatement(fields), OnlySpecifiedParameters(entity, fields), transaction);
+}
+
+public static System.Threading.Tasks.Task<int> UpdateAsync(
+    this System.Data.Common.DbConnection connection,
+    SqlGenerationParameters<<#= unifiedClass.FirstCodeClass.Name #>, <#= unifiedClass.FirstCodeClass.Name #>.Fields> parameters)
+{
+    if (parameters.UpdateMask == null)
+    {
+        throw new ArgumentException("Must contain update mask", "parameters");
+    }
+
+    var sql = new System.Text.StringBuilder();
+
+    if (parameters.Declarations != null)
+    {
+        sql.AppendLine(parameters.Declarations);
+    }
+    
+    int currentIndex = 0;
+    if (parameters.Conditions != null)
+    {
+        foreach (var condition in parameters.Conditions)
+        {
+            sql.Append("IF ");
+            sql.AppendLine(condition); // Remember to use `WITH (UPDLOCK, HOLDLOCK)` in your conditions! See: http://samsaffron.com/blog/archive/2007/04/04/14.aspx
+            sql.AppendLine("BEGIN");
+            ++currentIndex;
+        }
+    }
+
+    sql.AppendLine(UpdateStatement(parameters.UpdateMask.Value));
+
+    if (parameters.Conditions != null)
+    {
+        sql.AppendLine("SELECT -1 AS FailedConditionIndex"); // Indicates all conditions passed and operation was attempted.
+            
+        foreach (var condition in parameters.Conditions)
+        {
+            sql.AppendLine("END");
+            sql.AppendLine("ELSE");
+            sql.Append("SELECT ").Append(--currentIndex).AppendLine(" AS FailedConditionIndex");
+        }
+    }
+
+    var parameterObject = OnlySpecifiedParameters(parameters.Entity, parameters.UpdateMask.Value, parameters.ExcludedFromInput);
+
+    return Dapper.SqlMapper.ExecuteScalarAsync<int>(
+        connection,
+        sql.ToString(),
+        parameterObject);
 }
 
 public static string InsertStatement(bool idempotent = true)
@@ -392,7 +378,10 @@ private static System.Collections.Generic.IReadOnlyList<string> GetFieldNames(<#
     return fieldNames;
 }
 
-private static object MaskParameters(<#= unifiedClass.FirstCodeClass.Name #> entity, <#= unifiedClass.FirstCodeClass.Name #>.Fields fields, bool excludeSpecified)
+private static object OnlySpecifiedParameters(
+    <#= unifiedClass.FirstCodeClass.Name #> entity, 
+    <#= unifiedClass.FirstCodeClass.Name #>.Fields fields,
+    <#= unifiedClass.FirstCodeClass.Name #>.Fields? excludedFields = null)
 {
     var parameters = new Dapper.DynamicParameters();
 
@@ -409,7 +398,7 @@ private static object MaskParameters(<#= unifiedClass.FirstCodeClass.Name #> ent
                 else
                 {
 #>
-    if(excludeSpecified != fields.HasFlag(<#= unifiedClass.FirstCodeClass.Name #>.Fields.<#= property.Name #>))
+    if (fields.HasFlag(<#= unifiedClass.FirstCodeClass.Name #>.Fields.<#= property.Name #>) && (excludedFields == null || !excludedFields.Value.HasFlag(<#= unifiedClass.FirstCodeClass.Name #>.Fields.<#= property.Name #>)))
     {
         parameters.Add("<#= property.Name #>", entity.<#= property.Name #>);
     }
@@ -421,6 +410,39 @@ private static object MaskParameters(<#= unifiedClass.FirstCodeClass.Name #> ent
 #>
     return parameters;
 }
+
+private static object AllExceptSpecifiedParameters(
+    <#= unifiedClass.FirstCodeClass.Name #> entity, 
+    <#= unifiedClass.FirstCodeClass.Name #>.Fields fields)
+{
+    var parameters = new Dapper.DynamicParameters();
+
+    // Assume we never want to exclude primary key field(s) from our input.
+<#
+            foreach (var property in publicPrimitiveProperties)
+            {
+                if (IsPrimaryKey(property))
+                {
+#>
+    parameters.Add("<#= property.Name #>", entity.<#= property.Name #>);
+<#
+                }
+                else
+                {
+#>
+    if (!fields.HasFlag(<#= unifiedClass.FirstCodeClass.Name #>.Fields.<#= property.Name #>))
+    {
+        parameters.Add("<#= property.Name #>", entity.<#= property.Name #>);
+    }
+
+<#
+                }
+
+            }
+#>
+    return parameters;
+}
+
 <#
         });
     }

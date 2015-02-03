@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Linq;
 
-//// Generated on 02/02/2015 20:03:50 (UTC)
-//// Mapped solution in 2.4s
+//// Generated on 03/02/2015 10:00:56 (UTC)
+//// Mapped solution in 2.92s
 
 
 namespace Fifthweek.Api.Persistence
@@ -1524,116 +1524,52 @@ namespace Fifthweek.Api.Persistence
                 transaction);
         }
         
-        public static System.Threading.Tasks.Task InsertAsync(
+        public static System.Threading.Tasks.Task<int> InsertAsync(
             this System.Data.Common.DbConnection connection,
-            Channel entity,
-            string selectValuesForInsertStatement,
-            Channel.Fields selectedFields,
-            bool idempotent = true,
-            System.Data.IDbTransaction transaction = null)
-        {
-            return Dapper.SqlMapper.ExecuteAsync(
-                connection,
-                selectValuesForInsertStatement + System.Environment.NewLine + InsertStatement(idempotent),
-                MaskParameters(entity, selectedFields, true),
-                transaction);
-        }
-        
-        public static async System.Threading.Tasks.Task<bool> InsertIfAsync(
-            this System.Data.Common.DbConnection connection,
-            Channel entity,
-            string condition,
-            bool idempotent = true,
-            System.Data.IDbTransaction transaction = null)
-        {
-            return -1 == await InsertIfAsync(connection, entity, new[] { condition }, idempotent, transaction);
-        }
-        
-        public static async System.Threading.Tasks.Task<bool> InsertIfAsync(
-            this System.Data.Common.DbConnection connection,
-            Channel entity,
-            string condition,
-            string selectValuesForInsertStatement,
-            Channel.Fields selectedFields,
-            bool idempotent = true,
-            System.Data.IDbTransaction transaction = null)
-        {
-            return -1 == await InsertIfAsync(connection, entity, new[] { condition }, selectValuesForInsertStatement, selectedFields, idempotent, transaction);
-        }
-        
-        public static System.Threading.Tasks.Task<int> InsertIfAsync(
-            this System.Data.Common.DbConnection connection,
-            Channel entity,
-            System.Collections.Generic.IEnumerable<string> conditions,
-            bool idempotent = true,
-            System.Data.IDbTransaction transaction = null)
+            SqlGenerationParameters<Channel, Channel.Fields> parameters)
         {
             var sql = new System.Text.StringBuilder();
+        
+            if (parameters.Declarations != null)
+            {
+                sql.AppendLine(parameters.Declarations);
+            }
+            
             int currentIndex = 0;
-            foreach (var condition in conditions)
+            if (parameters.Conditions != null)
             {
-                sql.Append("IF ");
-                sql.AppendLine(condition); // Remember to use `WITH (UPDLOCK, HOLDLOCK)` in your conditions! See: http://samsaffron.com/blog/archive/2007/04/04/14.aspx
-                sql.AppendLine("BEGIN");
-                ++currentIndex;
-            }
-        
-            sql.AppendLine(InsertStatement(idempotent));
-            sql.AppendLine("SELECT -1 AS InsertAttempted"); // Indicates a (potentially idempotent) insert has been performed.
-                    
-            foreach (var condition in conditions)
-            {
-                sql.AppendLine("END");
-                sql.AppendLine("ELSE");
-                sql.Append("SELECT ").Append(--currentIndex).AppendLine(" AS InsertAttempted");
-            }
-        
-            return Dapper.SqlMapper.ExecuteScalarAsync<int>(
-                connection,
-                sql.ToString(),
-                new 
+                foreach (var condition in parameters.Conditions)
                 {
-                    entity.Id, entity.SubscriptionId, entity.Name, entity.Description, entity.PriceInUsCentsPerWeek, entity.IsVisibleToNonSubscribers, entity.CreationDate
-                },
-                transaction);
-        }
-        
-        public static System.Threading.Tasks.Task<int> InsertIfAsync(
-            this System.Data.Common.DbConnection connection,
-            Channel entity,
-            System.Collections.Generic.IEnumerable<string> conditions,
-            string selectValuesForInsertStatement,
-            Channel.Fields selectedFields,
-            bool idempotent = true,
-            System.Data.IDbTransaction transaction = null)
-        {
-            var sql = new System.Text.StringBuilder();
-            sql.AppendLine(selectValuesForInsertStatement);
-        
-            int currentIndex = 0;
-            foreach (var condition in conditions)
-            {
-                sql.Append("IF ");
-                sql.AppendLine(condition); // Remember to use `WITH (UPDLOCK, HOLDLOCK)` in your conditions! See: http://samsaffron.com/blog/archive/2007/04/04/14.aspx
-                sql.AppendLine("BEGIN");
-                ++currentIndex;
+                    sql.Append("IF ");
+                    sql.AppendLine(condition); // Remember to use `WITH (UPDLOCK, HOLDLOCK)` in your conditions! See: http://samsaffron.com/blog/archive/2007/04/04/14.aspx
+                    sql.AppendLine("BEGIN");
+                    ++currentIndex;
+                }
             }
         
-            sql.AppendLine(InsertStatement(idempotent));
-            sql.AppendLine("SELECT -1 AS InsertAttempted"); // Indicates a (potentially idempotent) insert has been performed.
+            sql.AppendLine(InsertStatement(parameters.IdempotentInsert));
+        
+            if (parameters.Conditions != null)
+            {
+                sql.AppendLine("SELECT -1 AS FailedConditionIndex"); // Indicates all conditions passed and operation was attempted.
                     
-            foreach (var condition in conditions)
-            {
-                sql.AppendLine("END");
-                sql.AppendLine("ELSE");
-                sql.Append("SELECT ").Append(--currentIndex).AppendLine(" AS InsertAttempted");
+                foreach (var condition in parameters.Conditions)
+                {
+                    sql.AppendLine("END");
+                    sql.AppendLine("ELSE");
+                    sql.Append("SELECT ").Append(--currentIndex).AppendLine(" AS FailedConditionIndex");
+                }
             }
+        
+            var entity = parameters.Entity;
+            var parameterObject = parameters.ExcludedFromInput != null
+                ? AllExceptSpecifiedParameters(entity, parameters.ExcludedFromInput.Value)
+                : new { entity.Id, entity.SubscriptionId, entity.Name, entity.Description, entity.PriceInUsCentsPerWeek, entity.IsVisibleToNonSubscribers, entity.CreationDate };
         
             return Dapper.SqlMapper.ExecuteScalarAsync<int>(
                 connection,
                 sql.ToString(),
-                MaskParameters(entity, selectedFields, true),
-                transaction);
+                parameterObject);
         }
         
         public static System.Threading.Tasks.Task UpsertAsync(
@@ -1675,7 +1611,57 @@ namespace Fifthweek.Api.Persistence
             Channel.Fields fields,
             System.Data.IDbTransaction transaction = null)
         {
-            return Dapper.SqlMapper.ExecuteAsync(connection, UpdateStatement(fields), MaskParameters(entity, fields, false), transaction);
+            return Dapper.SqlMapper.ExecuteAsync(connection, UpdateStatement(fields), OnlySpecifiedParameters(entity, fields), transaction);
+        }
+        
+        public static System.Threading.Tasks.Task<int> UpdateAsync(
+            this System.Data.Common.DbConnection connection,
+            SqlGenerationParameters<Channel, Channel.Fields> parameters)
+        {
+            if (parameters.UpdateMask == null)
+            {
+                throw new ArgumentException("Must contain update mask", "parameters");
+            }
+        
+            var sql = new System.Text.StringBuilder();
+        
+            if (parameters.Declarations != null)
+            {
+                sql.AppendLine(parameters.Declarations);
+            }
+            
+            int currentIndex = 0;
+            if (parameters.Conditions != null)
+            {
+                foreach (var condition in parameters.Conditions)
+                {
+                    sql.Append("IF ");
+                    sql.AppendLine(condition); // Remember to use `WITH (UPDLOCK, HOLDLOCK)` in your conditions! See: http://samsaffron.com/blog/archive/2007/04/04/14.aspx
+                    sql.AppendLine("BEGIN");
+                    ++currentIndex;
+                }
+            }
+        
+            sql.AppendLine(UpdateStatement(parameters.UpdateMask.Value));
+        
+            if (parameters.Conditions != null)
+            {
+                sql.AppendLine("SELECT -1 AS FailedConditionIndex"); // Indicates all conditions passed and operation was attempted.
+                    
+                foreach (var condition in parameters.Conditions)
+                {
+                    sql.AppendLine("END");
+                    sql.AppendLine("ELSE");
+                    sql.Append("SELECT ").Append(--currentIndex).AppendLine(" AS FailedConditionIndex");
+                }
+            }
+        
+            var parameterObject = OnlySpecifiedParameters(parameters.Entity, parameters.UpdateMask.Value, parameters.ExcludedFromInput);
+        
+            return Dapper.SqlMapper.ExecuteScalarAsync<int>(
+                connection,
+                sql.ToString(),
+                parameterObject);
         }
         
         public static string InsertStatement(bool idempotent = true)
@@ -1765,44 +1751,89 @@ namespace Fifthweek.Api.Persistence
             return fieldNames;
         }
         
-        private static object MaskParameters(Channel entity, Channel.Fields fields, bool excludeSpecified)
+        private static object OnlySpecifiedParameters(
+            Channel entity, 
+            Channel.Fields fields,
+            Channel.Fields? excludedFields = null)
         {
             var parameters = new Dapper.DynamicParameters();
         
             // Assume we never want to exclude primary key field(s) from our input.
             parameters.Add("Id", entity.Id);
-            if(excludeSpecified != fields.HasFlag(Channel.Fields.SubscriptionId))
+            if (fields.HasFlag(Channel.Fields.SubscriptionId) && (excludedFields == null || !excludedFields.Value.HasFlag(Channel.Fields.SubscriptionId)))
             {
                 parameters.Add("SubscriptionId", entity.SubscriptionId);
             }
         
-            if(excludeSpecified != fields.HasFlag(Channel.Fields.Name))
+            if (fields.HasFlag(Channel.Fields.Name) && (excludedFields == null || !excludedFields.Value.HasFlag(Channel.Fields.Name)))
             {
                 parameters.Add("Name", entity.Name);
             }
         
-            if(excludeSpecified != fields.HasFlag(Channel.Fields.Description))
+            if (fields.HasFlag(Channel.Fields.Description) && (excludedFields == null || !excludedFields.Value.HasFlag(Channel.Fields.Description)))
             {
                 parameters.Add("Description", entity.Description);
             }
         
-            if(excludeSpecified != fields.HasFlag(Channel.Fields.PriceInUsCentsPerWeek))
+            if (fields.HasFlag(Channel.Fields.PriceInUsCentsPerWeek) && (excludedFields == null || !excludedFields.Value.HasFlag(Channel.Fields.PriceInUsCentsPerWeek)))
             {
                 parameters.Add("PriceInUsCentsPerWeek", entity.PriceInUsCentsPerWeek);
             }
         
-            if(excludeSpecified != fields.HasFlag(Channel.Fields.IsVisibleToNonSubscribers))
+            if (fields.HasFlag(Channel.Fields.IsVisibleToNonSubscribers) && (excludedFields == null || !excludedFields.Value.HasFlag(Channel.Fields.IsVisibleToNonSubscribers)))
             {
                 parameters.Add("IsVisibleToNonSubscribers", entity.IsVisibleToNonSubscribers);
             }
         
-            if(excludeSpecified != fields.HasFlag(Channel.Fields.CreationDate))
+            if (fields.HasFlag(Channel.Fields.CreationDate) && (excludedFields == null || !excludedFields.Value.HasFlag(Channel.Fields.CreationDate)))
             {
                 parameters.Add("CreationDate", entity.CreationDate);
             }
         
             return parameters;
         }
+        
+        private static object AllExceptSpecifiedParameters(
+            Channel entity, 
+            Channel.Fields fields)
+        {
+            var parameters = new Dapper.DynamicParameters();
+        
+            // Assume we never want to exclude primary key field(s) from our input.
+            parameters.Add("Id", entity.Id);
+            if (!fields.HasFlag(Channel.Fields.SubscriptionId))
+            {
+                parameters.Add("SubscriptionId", entity.SubscriptionId);
+            }
+        
+            if (!fields.HasFlag(Channel.Fields.Name))
+            {
+                parameters.Add("Name", entity.Name);
+            }
+        
+            if (!fields.HasFlag(Channel.Fields.Description))
+            {
+                parameters.Add("Description", entity.Description);
+            }
+        
+            if (!fields.HasFlag(Channel.Fields.PriceInUsCentsPerWeek))
+            {
+                parameters.Add("PriceInUsCentsPerWeek", entity.PriceInUsCentsPerWeek);
+            }
+        
+            if (!fields.HasFlag(Channel.Fields.IsVisibleToNonSubscribers))
+            {
+                parameters.Add("IsVisibleToNonSubscribers", entity.IsVisibleToNonSubscribers);
+            }
+        
+            if (!fields.HasFlag(Channel.Fields.CreationDate))
+            {
+                parameters.Add("CreationDate", entity.CreationDate);
+            }
+        
+            return parameters;
+        }
+        
     }
 }
 namespace Fifthweek.Api.Persistence
@@ -1907,116 +1938,52 @@ namespace Fifthweek.Api.Persistence
                 transaction);
         }
         
-        public static System.Threading.Tasks.Task InsertAsync(
+        public static System.Threading.Tasks.Task<int> InsertAsync(
             this System.Data.Common.DbConnection connection,
-            Collection entity,
-            string selectValuesForInsertStatement,
-            Collection.Fields selectedFields,
-            bool idempotent = true,
-            System.Data.IDbTransaction transaction = null)
-        {
-            return Dapper.SqlMapper.ExecuteAsync(
-                connection,
-                selectValuesForInsertStatement + System.Environment.NewLine + InsertStatement(idempotent),
-                MaskParameters(entity, selectedFields, true),
-                transaction);
-        }
-        
-        public static async System.Threading.Tasks.Task<bool> InsertIfAsync(
-            this System.Data.Common.DbConnection connection,
-            Collection entity,
-            string condition,
-            bool idempotent = true,
-            System.Data.IDbTransaction transaction = null)
-        {
-            return -1 == await InsertIfAsync(connection, entity, new[] { condition }, idempotent, transaction);
-        }
-        
-        public static async System.Threading.Tasks.Task<bool> InsertIfAsync(
-            this System.Data.Common.DbConnection connection,
-            Collection entity,
-            string condition,
-            string selectValuesForInsertStatement,
-            Collection.Fields selectedFields,
-            bool idempotent = true,
-            System.Data.IDbTransaction transaction = null)
-        {
-            return -1 == await InsertIfAsync(connection, entity, new[] { condition }, selectValuesForInsertStatement, selectedFields, idempotent, transaction);
-        }
-        
-        public static System.Threading.Tasks.Task<int> InsertIfAsync(
-            this System.Data.Common.DbConnection connection,
-            Collection entity,
-            System.Collections.Generic.IEnumerable<string> conditions,
-            bool idempotent = true,
-            System.Data.IDbTransaction transaction = null)
+            SqlGenerationParameters<Collection, Collection.Fields> parameters)
         {
             var sql = new System.Text.StringBuilder();
+        
+            if (parameters.Declarations != null)
+            {
+                sql.AppendLine(parameters.Declarations);
+            }
+            
             int currentIndex = 0;
-            foreach (var condition in conditions)
+            if (parameters.Conditions != null)
             {
-                sql.Append("IF ");
-                sql.AppendLine(condition); // Remember to use `WITH (UPDLOCK, HOLDLOCK)` in your conditions! See: http://samsaffron.com/blog/archive/2007/04/04/14.aspx
-                sql.AppendLine("BEGIN");
-                ++currentIndex;
-            }
-        
-            sql.AppendLine(InsertStatement(idempotent));
-            sql.AppendLine("SELECT -1 AS InsertAttempted"); // Indicates a (potentially idempotent) insert has been performed.
-                    
-            foreach (var condition in conditions)
-            {
-                sql.AppendLine("END");
-                sql.AppendLine("ELSE");
-                sql.Append("SELECT ").Append(--currentIndex).AppendLine(" AS InsertAttempted");
-            }
-        
-            return Dapper.SqlMapper.ExecuteScalarAsync<int>(
-                connection,
-                sql.ToString(),
-                new 
+                foreach (var condition in parameters.Conditions)
                 {
-                    entity.Id, entity.ChannelId, entity.Name, entity.QueueExclusiveLowerBound, entity.CreationDate
-                },
-                transaction);
-        }
-        
-        public static System.Threading.Tasks.Task<int> InsertIfAsync(
-            this System.Data.Common.DbConnection connection,
-            Collection entity,
-            System.Collections.Generic.IEnumerable<string> conditions,
-            string selectValuesForInsertStatement,
-            Collection.Fields selectedFields,
-            bool idempotent = true,
-            System.Data.IDbTransaction transaction = null)
-        {
-            var sql = new System.Text.StringBuilder();
-            sql.AppendLine(selectValuesForInsertStatement);
-        
-            int currentIndex = 0;
-            foreach (var condition in conditions)
-            {
-                sql.Append("IF ");
-                sql.AppendLine(condition); // Remember to use `WITH (UPDLOCK, HOLDLOCK)` in your conditions! See: http://samsaffron.com/blog/archive/2007/04/04/14.aspx
-                sql.AppendLine("BEGIN");
-                ++currentIndex;
+                    sql.Append("IF ");
+                    sql.AppendLine(condition); // Remember to use `WITH (UPDLOCK, HOLDLOCK)` in your conditions! See: http://samsaffron.com/blog/archive/2007/04/04/14.aspx
+                    sql.AppendLine("BEGIN");
+                    ++currentIndex;
+                }
             }
         
-            sql.AppendLine(InsertStatement(idempotent));
-            sql.AppendLine("SELECT -1 AS InsertAttempted"); // Indicates a (potentially idempotent) insert has been performed.
+            sql.AppendLine(InsertStatement(parameters.IdempotentInsert));
+        
+            if (parameters.Conditions != null)
+            {
+                sql.AppendLine("SELECT -1 AS FailedConditionIndex"); // Indicates all conditions passed and operation was attempted.
                     
-            foreach (var condition in conditions)
-            {
-                sql.AppendLine("END");
-                sql.AppendLine("ELSE");
-                sql.Append("SELECT ").Append(--currentIndex).AppendLine(" AS InsertAttempted");
+                foreach (var condition in parameters.Conditions)
+                {
+                    sql.AppendLine("END");
+                    sql.AppendLine("ELSE");
+                    sql.Append("SELECT ").Append(--currentIndex).AppendLine(" AS FailedConditionIndex");
+                }
             }
+        
+            var entity = parameters.Entity;
+            var parameterObject = parameters.ExcludedFromInput != null
+                ? AllExceptSpecifiedParameters(entity, parameters.ExcludedFromInput.Value)
+                : new { entity.Id, entity.ChannelId, entity.Name, entity.QueueExclusiveLowerBound, entity.CreationDate };
         
             return Dapper.SqlMapper.ExecuteScalarAsync<int>(
                 connection,
                 sql.ToString(),
-                MaskParameters(entity, selectedFields, true),
-                transaction);
+                parameterObject);
         }
         
         public static System.Threading.Tasks.Task UpsertAsync(
@@ -2058,7 +2025,57 @@ namespace Fifthweek.Api.Persistence
             Collection.Fields fields,
             System.Data.IDbTransaction transaction = null)
         {
-            return Dapper.SqlMapper.ExecuteAsync(connection, UpdateStatement(fields), MaskParameters(entity, fields, false), transaction);
+            return Dapper.SqlMapper.ExecuteAsync(connection, UpdateStatement(fields), OnlySpecifiedParameters(entity, fields), transaction);
+        }
+        
+        public static System.Threading.Tasks.Task<int> UpdateAsync(
+            this System.Data.Common.DbConnection connection,
+            SqlGenerationParameters<Collection, Collection.Fields> parameters)
+        {
+            if (parameters.UpdateMask == null)
+            {
+                throw new ArgumentException("Must contain update mask", "parameters");
+            }
+        
+            var sql = new System.Text.StringBuilder();
+        
+            if (parameters.Declarations != null)
+            {
+                sql.AppendLine(parameters.Declarations);
+            }
+            
+            int currentIndex = 0;
+            if (parameters.Conditions != null)
+            {
+                foreach (var condition in parameters.Conditions)
+                {
+                    sql.Append("IF ");
+                    sql.AppendLine(condition); // Remember to use `WITH (UPDLOCK, HOLDLOCK)` in your conditions! See: http://samsaffron.com/blog/archive/2007/04/04/14.aspx
+                    sql.AppendLine("BEGIN");
+                    ++currentIndex;
+                }
+            }
+        
+            sql.AppendLine(UpdateStatement(parameters.UpdateMask.Value));
+        
+            if (parameters.Conditions != null)
+            {
+                sql.AppendLine("SELECT -1 AS FailedConditionIndex"); // Indicates all conditions passed and operation was attempted.
+                    
+                foreach (var condition in parameters.Conditions)
+                {
+                    sql.AppendLine("END");
+                    sql.AppendLine("ELSE");
+                    sql.Append("SELECT ").Append(--currentIndex).AppendLine(" AS FailedConditionIndex");
+                }
+            }
+        
+            var parameterObject = OnlySpecifiedParameters(parameters.Entity, parameters.UpdateMask.Value, parameters.ExcludedFromInput);
+        
+            return Dapper.SqlMapper.ExecuteScalarAsync<int>(
+                connection,
+                sql.ToString(),
+                parameterObject);
         }
         
         public static string InsertStatement(bool idempotent = true)
@@ -2138,34 +2155,69 @@ namespace Fifthweek.Api.Persistence
             return fieldNames;
         }
         
-        private static object MaskParameters(Collection entity, Collection.Fields fields, bool excludeSpecified)
+        private static object OnlySpecifiedParameters(
+            Collection entity, 
+            Collection.Fields fields,
+            Collection.Fields? excludedFields = null)
         {
             var parameters = new Dapper.DynamicParameters();
         
             // Assume we never want to exclude primary key field(s) from our input.
             parameters.Add("Id", entity.Id);
-            if(excludeSpecified != fields.HasFlag(Collection.Fields.ChannelId))
+            if (fields.HasFlag(Collection.Fields.ChannelId) && (excludedFields == null || !excludedFields.Value.HasFlag(Collection.Fields.ChannelId)))
             {
                 parameters.Add("ChannelId", entity.ChannelId);
             }
         
-            if(excludeSpecified != fields.HasFlag(Collection.Fields.Name))
+            if (fields.HasFlag(Collection.Fields.Name) && (excludedFields == null || !excludedFields.Value.HasFlag(Collection.Fields.Name)))
             {
                 parameters.Add("Name", entity.Name);
             }
         
-            if(excludeSpecified != fields.HasFlag(Collection.Fields.QueueExclusiveLowerBound))
+            if (fields.HasFlag(Collection.Fields.QueueExclusiveLowerBound) && (excludedFields == null || !excludedFields.Value.HasFlag(Collection.Fields.QueueExclusiveLowerBound)))
             {
                 parameters.Add("QueueExclusiveLowerBound", entity.QueueExclusiveLowerBound);
             }
         
-            if(excludeSpecified != fields.HasFlag(Collection.Fields.CreationDate))
+            if (fields.HasFlag(Collection.Fields.CreationDate) && (excludedFields == null || !excludedFields.Value.HasFlag(Collection.Fields.CreationDate)))
             {
                 parameters.Add("CreationDate", entity.CreationDate);
             }
         
             return parameters;
         }
+        
+        private static object AllExceptSpecifiedParameters(
+            Collection entity, 
+            Collection.Fields fields)
+        {
+            var parameters = new Dapper.DynamicParameters();
+        
+            // Assume we never want to exclude primary key field(s) from our input.
+            parameters.Add("Id", entity.Id);
+            if (!fields.HasFlag(Collection.Fields.ChannelId))
+            {
+                parameters.Add("ChannelId", entity.ChannelId);
+            }
+        
+            if (!fields.HasFlag(Collection.Fields.Name))
+            {
+                parameters.Add("Name", entity.Name);
+            }
+        
+            if (!fields.HasFlag(Collection.Fields.QueueExclusiveLowerBound))
+            {
+                parameters.Add("QueueExclusiveLowerBound", entity.QueueExclusiveLowerBound);
+            }
+        
+            if (!fields.HasFlag(Collection.Fields.CreationDate))
+            {
+                parameters.Add("CreationDate", entity.CreationDate);
+            }
+        
+            return parameters;
+        }
+        
     }
 }
 namespace Fifthweek.Api.Persistence
@@ -2276,116 +2328,52 @@ namespace Fifthweek.Api.Persistence
                 transaction);
         }
         
-        public static System.Threading.Tasks.Task InsertAsync(
+        public static System.Threading.Tasks.Task<int> InsertAsync(
             this System.Data.Common.DbConnection connection,
-            File entity,
-            string selectValuesForInsertStatement,
-            File.Fields selectedFields,
-            bool idempotent = true,
-            System.Data.IDbTransaction transaction = null)
-        {
-            return Dapper.SqlMapper.ExecuteAsync(
-                connection,
-                selectValuesForInsertStatement + System.Environment.NewLine + InsertStatement(idempotent),
-                MaskParameters(entity, selectedFields, true),
-                transaction);
-        }
-        
-        public static async System.Threading.Tasks.Task<bool> InsertIfAsync(
-            this System.Data.Common.DbConnection connection,
-            File entity,
-            string condition,
-            bool idempotent = true,
-            System.Data.IDbTransaction transaction = null)
-        {
-            return -1 == await InsertIfAsync(connection, entity, new[] { condition }, idempotent, transaction);
-        }
-        
-        public static async System.Threading.Tasks.Task<bool> InsertIfAsync(
-            this System.Data.Common.DbConnection connection,
-            File entity,
-            string condition,
-            string selectValuesForInsertStatement,
-            File.Fields selectedFields,
-            bool idempotent = true,
-            System.Data.IDbTransaction transaction = null)
-        {
-            return -1 == await InsertIfAsync(connection, entity, new[] { condition }, selectValuesForInsertStatement, selectedFields, idempotent, transaction);
-        }
-        
-        public static System.Threading.Tasks.Task<int> InsertIfAsync(
-            this System.Data.Common.DbConnection connection,
-            File entity,
-            System.Collections.Generic.IEnumerable<string> conditions,
-            bool idempotent = true,
-            System.Data.IDbTransaction transaction = null)
+            SqlGenerationParameters<File, File.Fields> parameters)
         {
             var sql = new System.Text.StringBuilder();
+        
+            if (parameters.Declarations != null)
+            {
+                sql.AppendLine(parameters.Declarations);
+            }
+            
             int currentIndex = 0;
-            foreach (var condition in conditions)
+            if (parameters.Conditions != null)
             {
-                sql.Append("IF ");
-                sql.AppendLine(condition); // Remember to use `WITH (UPDLOCK, HOLDLOCK)` in your conditions! See: http://samsaffron.com/blog/archive/2007/04/04/14.aspx
-                sql.AppendLine("BEGIN");
-                ++currentIndex;
-            }
-        
-            sql.AppendLine(InsertStatement(idempotent));
-            sql.AppendLine("SELECT -1 AS InsertAttempted"); // Indicates a (potentially idempotent) insert has been performed.
-                    
-            foreach (var condition in conditions)
-            {
-                sql.AppendLine("END");
-                sql.AppendLine("ELSE");
-                sql.Append("SELECT ").Append(--currentIndex).AppendLine(" AS InsertAttempted");
-            }
-        
-            return Dapper.SqlMapper.ExecuteScalarAsync<int>(
-                connection,
-                sql.ToString(),
-                new 
+                foreach (var condition in parameters.Conditions)
                 {
-                    entity.Id, entity.UserId, entity.State, entity.UploadStartedDate, entity.UploadCompletedDate, entity.ProcessingStartedDate, entity.ProcessingCompletedDate, entity.FileNameWithoutExtension, entity.FileExtension, entity.BlobSizeBytes, entity.Purpose
-                },
-                transaction);
-        }
-        
-        public static System.Threading.Tasks.Task<int> InsertIfAsync(
-            this System.Data.Common.DbConnection connection,
-            File entity,
-            System.Collections.Generic.IEnumerable<string> conditions,
-            string selectValuesForInsertStatement,
-            File.Fields selectedFields,
-            bool idempotent = true,
-            System.Data.IDbTransaction transaction = null)
-        {
-            var sql = new System.Text.StringBuilder();
-            sql.AppendLine(selectValuesForInsertStatement);
-        
-            int currentIndex = 0;
-            foreach (var condition in conditions)
-            {
-                sql.Append("IF ");
-                sql.AppendLine(condition); // Remember to use `WITH (UPDLOCK, HOLDLOCK)` in your conditions! See: http://samsaffron.com/blog/archive/2007/04/04/14.aspx
-                sql.AppendLine("BEGIN");
-                ++currentIndex;
+                    sql.Append("IF ");
+                    sql.AppendLine(condition); // Remember to use `WITH (UPDLOCK, HOLDLOCK)` in your conditions! See: http://samsaffron.com/blog/archive/2007/04/04/14.aspx
+                    sql.AppendLine("BEGIN");
+                    ++currentIndex;
+                }
             }
         
-            sql.AppendLine(InsertStatement(idempotent));
-            sql.AppendLine("SELECT -1 AS InsertAttempted"); // Indicates a (potentially idempotent) insert has been performed.
+            sql.AppendLine(InsertStatement(parameters.IdempotentInsert));
+        
+            if (parameters.Conditions != null)
+            {
+                sql.AppendLine("SELECT -1 AS FailedConditionIndex"); // Indicates all conditions passed and operation was attempted.
                     
-            foreach (var condition in conditions)
-            {
-                sql.AppendLine("END");
-                sql.AppendLine("ELSE");
-                sql.Append("SELECT ").Append(--currentIndex).AppendLine(" AS InsertAttempted");
+                foreach (var condition in parameters.Conditions)
+                {
+                    sql.AppendLine("END");
+                    sql.AppendLine("ELSE");
+                    sql.Append("SELECT ").Append(--currentIndex).AppendLine(" AS FailedConditionIndex");
+                }
             }
+        
+            var entity = parameters.Entity;
+            var parameterObject = parameters.ExcludedFromInput != null
+                ? AllExceptSpecifiedParameters(entity, parameters.ExcludedFromInput.Value)
+                : new { entity.Id, entity.UserId, entity.State, entity.UploadStartedDate, entity.UploadCompletedDate, entity.ProcessingStartedDate, entity.ProcessingCompletedDate, entity.FileNameWithoutExtension, entity.FileExtension, entity.BlobSizeBytes, entity.Purpose };
         
             return Dapper.SqlMapper.ExecuteScalarAsync<int>(
                 connection,
                 sql.ToString(),
-                MaskParameters(entity, selectedFields, true),
-                transaction);
+                parameterObject);
         }
         
         public static System.Threading.Tasks.Task UpsertAsync(
@@ -2427,7 +2415,57 @@ namespace Fifthweek.Api.Persistence
             File.Fields fields,
             System.Data.IDbTransaction transaction = null)
         {
-            return Dapper.SqlMapper.ExecuteAsync(connection, UpdateStatement(fields), MaskParameters(entity, fields, false), transaction);
+            return Dapper.SqlMapper.ExecuteAsync(connection, UpdateStatement(fields), OnlySpecifiedParameters(entity, fields), transaction);
+        }
+        
+        public static System.Threading.Tasks.Task<int> UpdateAsync(
+            this System.Data.Common.DbConnection connection,
+            SqlGenerationParameters<File, File.Fields> parameters)
+        {
+            if (parameters.UpdateMask == null)
+            {
+                throw new ArgumentException("Must contain update mask", "parameters");
+            }
+        
+            var sql = new System.Text.StringBuilder();
+        
+            if (parameters.Declarations != null)
+            {
+                sql.AppendLine(parameters.Declarations);
+            }
+            
+            int currentIndex = 0;
+            if (parameters.Conditions != null)
+            {
+                foreach (var condition in parameters.Conditions)
+                {
+                    sql.Append("IF ");
+                    sql.AppendLine(condition); // Remember to use `WITH (UPDLOCK, HOLDLOCK)` in your conditions! See: http://samsaffron.com/blog/archive/2007/04/04/14.aspx
+                    sql.AppendLine("BEGIN");
+                    ++currentIndex;
+                }
+            }
+        
+            sql.AppendLine(UpdateStatement(parameters.UpdateMask.Value));
+        
+            if (parameters.Conditions != null)
+            {
+                sql.AppendLine("SELECT -1 AS FailedConditionIndex"); // Indicates all conditions passed and operation was attempted.
+                    
+                foreach (var condition in parameters.Conditions)
+                {
+                    sql.AppendLine("END");
+                    sql.AppendLine("ELSE");
+                    sql.Append("SELECT ").Append(--currentIndex).AppendLine(" AS FailedConditionIndex");
+                }
+            }
+        
+            var parameterObject = OnlySpecifiedParameters(parameters.Entity, parameters.UpdateMask.Value, parameters.ExcludedFromInput);
+        
+            return Dapper.SqlMapper.ExecuteScalarAsync<int>(
+                connection,
+                sql.ToString(),
+                parameterObject);
         }
         
         public static string InsertStatement(bool idempotent = true)
@@ -2537,64 +2575,129 @@ namespace Fifthweek.Api.Persistence
             return fieldNames;
         }
         
-        private static object MaskParameters(File entity, File.Fields fields, bool excludeSpecified)
+        private static object OnlySpecifiedParameters(
+            File entity, 
+            File.Fields fields,
+            File.Fields? excludedFields = null)
         {
             var parameters = new Dapper.DynamicParameters();
         
             // Assume we never want to exclude primary key field(s) from our input.
             parameters.Add("Id", entity.Id);
-            if(excludeSpecified != fields.HasFlag(File.Fields.UserId))
+            if (fields.HasFlag(File.Fields.UserId) && (excludedFields == null || !excludedFields.Value.HasFlag(File.Fields.UserId)))
             {
                 parameters.Add("UserId", entity.UserId);
             }
         
-            if(excludeSpecified != fields.HasFlag(File.Fields.State))
+            if (fields.HasFlag(File.Fields.State) && (excludedFields == null || !excludedFields.Value.HasFlag(File.Fields.State)))
             {
                 parameters.Add("State", entity.State);
             }
         
-            if(excludeSpecified != fields.HasFlag(File.Fields.UploadStartedDate))
+            if (fields.HasFlag(File.Fields.UploadStartedDate) && (excludedFields == null || !excludedFields.Value.HasFlag(File.Fields.UploadStartedDate)))
             {
                 parameters.Add("UploadStartedDate", entity.UploadStartedDate);
             }
         
-            if(excludeSpecified != fields.HasFlag(File.Fields.UploadCompletedDate))
+            if (fields.HasFlag(File.Fields.UploadCompletedDate) && (excludedFields == null || !excludedFields.Value.HasFlag(File.Fields.UploadCompletedDate)))
             {
                 parameters.Add("UploadCompletedDate", entity.UploadCompletedDate);
             }
         
-            if(excludeSpecified != fields.HasFlag(File.Fields.ProcessingStartedDate))
+            if (fields.HasFlag(File.Fields.ProcessingStartedDate) && (excludedFields == null || !excludedFields.Value.HasFlag(File.Fields.ProcessingStartedDate)))
             {
                 parameters.Add("ProcessingStartedDate", entity.ProcessingStartedDate);
             }
         
-            if(excludeSpecified != fields.HasFlag(File.Fields.ProcessingCompletedDate))
+            if (fields.HasFlag(File.Fields.ProcessingCompletedDate) && (excludedFields == null || !excludedFields.Value.HasFlag(File.Fields.ProcessingCompletedDate)))
             {
                 parameters.Add("ProcessingCompletedDate", entity.ProcessingCompletedDate);
             }
         
-            if(excludeSpecified != fields.HasFlag(File.Fields.FileNameWithoutExtension))
+            if (fields.HasFlag(File.Fields.FileNameWithoutExtension) && (excludedFields == null || !excludedFields.Value.HasFlag(File.Fields.FileNameWithoutExtension)))
             {
                 parameters.Add("FileNameWithoutExtension", entity.FileNameWithoutExtension);
             }
         
-            if(excludeSpecified != fields.HasFlag(File.Fields.FileExtension))
+            if (fields.HasFlag(File.Fields.FileExtension) && (excludedFields == null || !excludedFields.Value.HasFlag(File.Fields.FileExtension)))
             {
                 parameters.Add("FileExtension", entity.FileExtension);
             }
         
-            if(excludeSpecified != fields.HasFlag(File.Fields.BlobSizeBytes))
+            if (fields.HasFlag(File.Fields.BlobSizeBytes) && (excludedFields == null || !excludedFields.Value.HasFlag(File.Fields.BlobSizeBytes)))
             {
                 parameters.Add("BlobSizeBytes", entity.BlobSizeBytes);
             }
         
-            if(excludeSpecified != fields.HasFlag(File.Fields.Purpose))
+            if (fields.HasFlag(File.Fields.Purpose) && (excludedFields == null || !excludedFields.Value.HasFlag(File.Fields.Purpose)))
             {
                 parameters.Add("Purpose", entity.Purpose);
             }
         
             return parameters;
         }
+        
+        private static object AllExceptSpecifiedParameters(
+            File entity, 
+            File.Fields fields)
+        {
+            var parameters = new Dapper.DynamicParameters();
+        
+            // Assume we never want to exclude primary key field(s) from our input.
+            parameters.Add("Id", entity.Id);
+            if (!fields.HasFlag(File.Fields.UserId))
+            {
+                parameters.Add("UserId", entity.UserId);
+            }
+        
+            if (!fields.HasFlag(File.Fields.State))
+            {
+                parameters.Add("State", entity.State);
+            }
+        
+            if (!fields.HasFlag(File.Fields.UploadStartedDate))
+            {
+                parameters.Add("UploadStartedDate", entity.UploadStartedDate);
+            }
+        
+            if (!fields.HasFlag(File.Fields.UploadCompletedDate))
+            {
+                parameters.Add("UploadCompletedDate", entity.UploadCompletedDate);
+            }
+        
+            if (!fields.HasFlag(File.Fields.ProcessingStartedDate))
+            {
+                parameters.Add("ProcessingStartedDate", entity.ProcessingStartedDate);
+            }
+        
+            if (!fields.HasFlag(File.Fields.ProcessingCompletedDate))
+            {
+                parameters.Add("ProcessingCompletedDate", entity.ProcessingCompletedDate);
+            }
+        
+            if (!fields.HasFlag(File.Fields.FileNameWithoutExtension))
+            {
+                parameters.Add("FileNameWithoutExtension", entity.FileNameWithoutExtension);
+            }
+        
+            if (!fields.HasFlag(File.Fields.FileExtension))
+            {
+                parameters.Add("FileExtension", entity.FileExtension);
+            }
+        
+            if (!fields.HasFlag(File.Fields.BlobSizeBytes))
+            {
+                parameters.Add("BlobSizeBytes", entity.BlobSizeBytes);
+            }
+        
+            if (!fields.HasFlag(File.Fields.Purpose))
+            {
+                parameters.Add("Purpose", entity.Purpose);
+            }
+        
+            return parameters;
+        }
+        
     }
 }
 namespace Fifthweek.Api.Persistence
@@ -2703,116 +2806,52 @@ namespace Fifthweek.Api.Persistence
                 transaction);
         }
         
-        public static System.Threading.Tasks.Task InsertAsync(
+        public static System.Threading.Tasks.Task<int> InsertAsync(
             this System.Data.Common.DbConnection connection,
-            Post entity,
-            string selectValuesForInsertStatement,
-            Post.Fields selectedFields,
-            bool idempotent = true,
-            System.Data.IDbTransaction transaction = null)
-        {
-            return Dapper.SqlMapper.ExecuteAsync(
-                connection,
-                selectValuesForInsertStatement + System.Environment.NewLine + InsertStatement(idempotent),
-                MaskParameters(entity, selectedFields, true),
-                transaction);
-        }
-        
-        public static async System.Threading.Tasks.Task<bool> InsertIfAsync(
-            this System.Data.Common.DbConnection connection,
-            Post entity,
-            string condition,
-            bool idempotent = true,
-            System.Data.IDbTransaction transaction = null)
-        {
-            return -1 == await InsertIfAsync(connection, entity, new[] { condition }, idempotent, transaction);
-        }
-        
-        public static async System.Threading.Tasks.Task<bool> InsertIfAsync(
-            this System.Data.Common.DbConnection connection,
-            Post entity,
-            string condition,
-            string selectValuesForInsertStatement,
-            Post.Fields selectedFields,
-            bool idempotent = true,
-            System.Data.IDbTransaction transaction = null)
-        {
-            return -1 == await InsertIfAsync(connection, entity, new[] { condition }, selectValuesForInsertStatement, selectedFields, idempotent, transaction);
-        }
-        
-        public static System.Threading.Tasks.Task<int> InsertIfAsync(
-            this System.Data.Common.DbConnection connection,
-            Post entity,
-            System.Collections.Generic.IEnumerable<string> conditions,
-            bool idempotent = true,
-            System.Data.IDbTransaction transaction = null)
+            SqlGenerationParameters<Post, Post.Fields> parameters)
         {
             var sql = new System.Text.StringBuilder();
+        
+            if (parameters.Declarations != null)
+            {
+                sql.AppendLine(parameters.Declarations);
+            }
+            
             int currentIndex = 0;
-            foreach (var condition in conditions)
+            if (parameters.Conditions != null)
             {
-                sql.Append("IF ");
-                sql.AppendLine(condition); // Remember to use `WITH (UPDLOCK, HOLDLOCK)` in your conditions! See: http://samsaffron.com/blog/archive/2007/04/04/14.aspx
-                sql.AppendLine("BEGIN");
-                ++currentIndex;
-            }
-        
-            sql.AppendLine(InsertStatement(idempotent));
-            sql.AppendLine("SELECT -1 AS InsertAttempted"); // Indicates a (potentially idempotent) insert has been performed.
-                    
-            foreach (var condition in conditions)
-            {
-                sql.AppendLine("END");
-                sql.AppendLine("ELSE");
-                sql.Append("SELECT ").Append(--currentIndex).AppendLine(" AS InsertAttempted");
-            }
-        
-            return Dapper.SqlMapper.ExecuteScalarAsync<int>(
-                connection,
-                sql.ToString(),
-                new 
+                foreach (var condition in parameters.Conditions)
                 {
-                    entity.Id, entity.ChannelId, entity.CollectionId, entity.FileId, entity.ImageId, entity.Comment, entity.ScheduledByQueue, entity.LiveDate, entity.CreationDate
-                },
-                transaction);
-        }
-        
-        public static System.Threading.Tasks.Task<int> InsertIfAsync(
-            this System.Data.Common.DbConnection connection,
-            Post entity,
-            System.Collections.Generic.IEnumerable<string> conditions,
-            string selectValuesForInsertStatement,
-            Post.Fields selectedFields,
-            bool idempotent = true,
-            System.Data.IDbTransaction transaction = null)
-        {
-            var sql = new System.Text.StringBuilder();
-            sql.AppendLine(selectValuesForInsertStatement);
-        
-            int currentIndex = 0;
-            foreach (var condition in conditions)
-            {
-                sql.Append("IF ");
-                sql.AppendLine(condition); // Remember to use `WITH (UPDLOCK, HOLDLOCK)` in your conditions! See: http://samsaffron.com/blog/archive/2007/04/04/14.aspx
-                sql.AppendLine("BEGIN");
-                ++currentIndex;
+                    sql.Append("IF ");
+                    sql.AppendLine(condition); // Remember to use `WITH (UPDLOCK, HOLDLOCK)` in your conditions! See: http://samsaffron.com/blog/archive/2007/04/04/14.aspx
+                    sql.AppendLine("BEGIN");
+                    ++currentIndex;
+                }
             }
         
-            sql.AppendLine(InsertStatement(idempotent));
-            sql.AppendLine("SELECT -1 AS InsertAttempted"); // Indicates a (potentially idempotent) insert has been performed.
+            sql.AppendLine(InsertStatement(parameters.IdempotentInsert));
+        
+            if (parameters.Conditions != null)
+            {
+                sql.AppendLine("SELECT -1 AS FailedConditionIndex"); // Indicates all conditions passed and operation was attempted.
                     
-            foreach (var condition in conditions)
-            {
-                sql.AppendLine("END");
-                sql.AppendLine("ELSE");
-                sql.Append("SELECT ").Append(--currentIndex).AppendLine(" AS InsertAttempted");
+                foreach (var condition in parameters.Conditions)
+                {
+                    sql.AppendLine("END");
+                    sql.AppendLine("ELSE");
+                    sql.Append("SELECT ").Append(--currentIndex).AppendLine(" AS FailedConditionIndex");
+                }
             }
+        
+            var entity = parameters.Entity;
+            var parameterObject = parameters.ExcludedFromInput != null
+                ? AllExceptSpecifiedParameters(entity, parameters.ExcludedFromInput.Value)
+                : new { entity.Id, entity.ChannelId, entity.CollectionId, entity.FileId, entity.ImageId, entity.Comment, entity.ScheduledByQueue, entity.LiveDate, entity.CreationDate };
         
             return Dapper.SqlMapper.ExecuteScalarAsync<int>(
                 connection,
                 sql.ToString(),
-                MaskParameters(entity, selectedFields, true),
-                transaction);
+                parameterObject);
         }
         
         public static System.Threading.Tasks.Task UpsertAsync(
@@ -2854,7 +2893,57 @@ namespace Fifthweek.Api.Persistence
             Post.Fields fields,
             System.Data.IDbTransaction transaction = null)
         {
-            return Dapper.SqlMapper.ExecuteAsync(connection, UpdateStatement(fields), MaskParameters(entity, fields, false), transaction);
+            return Dapper.SqlMapper.ExecuteAsync(connection, UpdateStatement(fields), OnlySpecifiedParameters(entity, fields), transaction);
+        }
+        
+        public static System.Threading.Tasks.Task<int> UpdateAsync(
+            this System.Data.Common.DbConnection connection,
+            SqlGenerationParameters<Post, Post.Fields> parameters)
+        {
+            if (parameters.UpdateMask == null)
+            {
+                throw new ArgumentException("Must contain update mask", "parameters");
+            }
+        
+            var sql = new System.Text.StringBuilder();
+        
+            if (parameters.Declarations != null)
+            {
+                sql.AppendLine(parameters.Declarations);
+            }
+            
+            int currentIndex = 0;
+            if (parameters.Conditions != null)
+            {
+                foreach (var condition in parameters.Conditions)
+                {
+                    sql.Append("IF ");
+                    sql.AppendLine(condition); // Remember to use `WITH (UPDLOCK, HOLDLOCK)` in your conditions! See: http://samsaffron.com/blog/archive/2007/04/04/14.aspx
+                    sql.AppendLine("BEGIN");
+                    ++currentIndex;
+                }
+            }
+        
+            sql.AppendLine(UpdateStatement(parameters.UpdateMask.Value));
+        
+            if (parameters.Conditions != null)
+            {
+                sql.AppendLine("SELECT -1 AS FailedConditionIndex"); // Indicates all conditions passed and operation was attempted.
+                    
+                foreach (var condition in parameters.Conditions)
+                {
+                    sql.AppendLine("END");
+                    sql.AppendLine("ELSE");
+                    sql.Append("SELECT ").Append(--currentIndex).AppendLine(" AS FailedConditionIndex");
+                }
+            }
+        
+            var parameterObject = OnlySpecifiedParameters(parameters.Entity, parameters.UpdateMask.Value, parameters.ExcludedFromInput);
+        
+            return Dapper.SqlMapper.ExecuteScalarAsync<int>(
+                connection,
+                sql.ToString(),
+                parameterObject);
         }
         
         public static string InsertStatement(bool idempotent = true)
@@ -2954,54 +3043,109 @@ namespace Fifthweek.Api.Persistence
             return fieldNames;
         }
         
-        private static object MaskParameters(Post entity, Post.Fields fields, bool excludeSpecified)
+        private static object OnlySpecifiedParameters(
+            Post entity, 
+            Post.Fields fields,
+            Post.Fields? excludedFields = null)
         {
             var parameters = new Dapper.DynamicParameters();
         
             // Assume we never want to exclude primary key field(s) from our input.
             parameters.Add("Id", entity.Id);
-            if(excludeSpecified != fields.HasFlag(Post.Fields.ChannelId))
+            if (fields.HasFlag(Post.Fields.ChannelId) && (excludedFields == null || !excludedFields.Value.HasFlag(Post.Fields.ChannelId)))
             {
                 parameters.Add("ChannelId", entity.ChannelId);
             }
         
-            if(excludeSpecified != fields.HasFlag(Post.Fields.CollectionId))
+            if (fields.HasFlag(Post.Fields.CollectionId) && (excludedFields == null || !excludedFields.Value.HasFlag(Post.Fields.CollectionId)))
             {
                 parameters.Add("CollectionId", entity.CollectionId);
             }
         
-            if(excludeSpecified != fields.HasFlag(Post.Fields.FileId))
+            if (fields.HasFlag(Post.Fields.FileId) && (excludedFields == null || !excludedFields.Value.HasFlag(Post.Fields.FileId)))
             {
                 parameters.Add("FileId", entity.FileId);
             }
         
-            if(excludeSpecified != fields.HasFlag(Post.Fields.ImageId))
+            if (fields.HasFlag(Post.Fields.ImageId) && (excludedFields == null || !excludedFields.Value.HasFlag(Post.Fields.ImageId)))
             {
                 parameters.Add("ImageId", entity.ImageId);
             }
         
-            if(excludeSpecified != fields.HasFlag(Post.Fields.Comment))
+            if (fields.HasFlag(Post.Fields.Comment) && (excludedFields == null || !excludedFields.Value.HasFlag(Post.Fields.Comment)))
             {
                 parameters.Add("Comment", entity.Comment);
             }
         
-            if(excludeSpecified != fields.HasFlag(Post.Fields.ScheduledByQueue))
+            if (fields.HasFlag(Post.Fields.ScheduledByQueue) && (excludedFields == null || !excludedFields.Value.HasFlag(Post.Fields.ScheduledByQueue)))
             {
                 parameters.Add("ScheduledByQueue", entity.ScheduledByQueue);
             }
         
-            if(excludeSpecified != fields.HasFlag(Post.Fields.LiveDate))
+            if (fields.HasFlag(Post.Fields.LiveDate) && (excludedFields == null || !excludedFields.Value.HasFlag(Post.Fields.LiveDate)))
             {
                 parameters.Add("LiveDate", entity.LiveDate);
             }
         
-            if(excludeSpecified != fields.HasFlag(Post.Fields.CreationDate))
+            if (fields.HasFlag(Post.Fields.CreationDate) && (excludedFields == null || !excludedFields.Value.HasFlag(Post.Fields.CreationDate)))
             {
                 parameters.Add("CreationDate", entity.CreationDate);
             }
         
             return parameters;
         }
+        
+        private static object AllExceptSpecifiedParameters(
+            Post entity, 
+            Post.Fields fields)
+        {
+            var parameters = new Dapper.DynamicParameters();
+        
+            // Assume we never want to exclude primary key field(s) from our input.
+            parameters.Add("Id", entity.Id);
+            if (!fields.HasFlag(Post.Fields.ChannelId))
+            {
+                parameters.Add("ChannelId", entity.ChannelId);
+            }
+        
+            if (!fields.HasFlag(Post.Fields.CollectionId))
+            {
+                parameters.Add("CollectionId", entity.CollectionId);
+            }
+        
+            if (!fields.HasFlag(Post.Fields.FileId))
+            {
+                parameters.Add("FileId", entity.FileId);
+            }
+        
+            if (!fields.HasFlag(Post.Fields.ImageId))
+            {
+                parameters.Add("ImageId", entity.ImageId);
+            }
+        
+            if (!fields.HasFlag(Post.Fields.Comment))
+            {
+                parameters.Add("Comment", entity.Comment);
+            }
+        
+            if (!fields.HasFlag(Post.Fields.ScheduledByQueue))
+            {
+                parameters.Add("ScheduledByQueue", entity.ScheduledByQueue);
+            }
+        
+            if (!fields.HasFlag(Post.Fields.LiveDate))
+            {
+                parameters.Add("LiveDate", entity.LiveDate);
+            }
+        
+            if (!fields.HasFlag(Post.Fields.CreationDate))
+            {
+                parameters.Add("CreationDate", entity.CreationDate);
+            }
+        
+            return parameters;
+        }
+        
     }
 }
 namespace Fifthweek.Api.Persistence
@@ -3107,116 +3251,52 @@ namespace Fifthweek.Api.Persistence
                 transaction);
         }
         
-        public static System.Threading.Tasks.Task InsertAsync(
+        public static System.Threading.Tasks.Task<int> InsertAsync(
             this System.Data.Common.DbConnection connection,
-            RefreshToken entity,
-            string selectValuesForInsertStatement,
-            RefreshToken.Fields selectedFields,
-            bool idempotent = true,
-            System.Data.IDbTransaction transaction = null)
-        {
-            return Dapper.SqlMapper.ExecuteAsync(
-                connection,
-                selectValuesForInsertStatement + System.Environment.NewLine + InsertStatement(idempotent),
-                MaskParameters(entity, selectedFields, true),
-                transaction);
-        }
-        
-        public static async System.Threading.Tasks.Task<bool> InsertIfAsync(
-            this System.Data.Common.DbConnection connection,
-            RefreshToken entity,
-            string condition,
-            bool idempotent = true,
-            System.Data.IDbTransaction transaction = null)
-        {
-            return -1 == await InsertIfAsync(connection, entity, new[] { condition }, idempotent, transaction);
-        }
-        
-        public static async System.Threading.Tasks.Task<bool> InsertIfAsync(
-            this System.Data.Common.DbConnection connection,
-            RefreshToken entity,
-            string condition,
-            string selectValuesForInsertStatement,
-            RefreshToken.Fields selectedFields,
-            bool idempotent = true,
-            System.Data.IDbTransaction transaction = null)
-        {
-            return -1 == await InsertIfAsync(connection, entity, new[] { condition }, selectValuesForInsertStatement, selectedFields, idempotent, transaction);
-        }
-        
-        public static System.Threading.Tasks.Task<int> InsertIfAsync(
-            this System.Data.Common.DbConnection connection,
-            RefreshToken entity,
-            System.Collections.Generic.IEnumerable<string> conditions,
-            bool idempotent = true,
-            System.Data.IDbTransaction transaction = null)
+            SqlGenerationParameters<RefreshToken, RefreshToken.Fields> parameters)
         {
             var sql = new System.Text.StringBuilder();
+        
+            if (parameters.Declarations != null)
+            {
+                sql.AppendLine(parameters.Declarations);
+            }
+            
             int currentIndex = 0;
-            foreach (var condition in conditions)
+            if (parameters.Conditions != null)
             {
-                sql.Append("IF ");
-                sql.AppendLine(condition); // Remember to use `WITH (UPDLOCK, HOLDLOCK)` in your conditions! See: http://samsaffron.com/blog/archive/2007/04/04/14.aspx
-                sql.AppendLine("BEGIN");
-                ++currentIndex;
-            }
-        
-            sql.AppendLine(InsertStatement(idempotent));
-            sql.AppendLine("SELECT -1 AS InsertAttempted"); // Indicates a (potentially idempotent) insert has been performed.
-                    
-            foreach (var condition in conditions)
-            {
-                sql.AppendLine("END");
-                sql.AppendLine("ELSE");
-                sql.Append("SELECT ").Append(--currentIndex).AppendLine(" AS InsertAttempted");
-            }
-        
-            return Dapper.SqlMapper.ExecuteScalarAsync<int>(
-                connection,
-                sql.ToString(),
-                new 
+                foreach (var condition in parameters.Conditions)
                 {
-                    entity.HashedId, entity.Username, entity.ClientId, entity.IssuedDate, entity.ExpiresDate, entity.ProtectedTicket
-                },
-                transaction);
-        }
-        
-        public static System.Threading.Tasks.Task<int> InsertIfAsync(
-            this System.Data.Common.DbConnection connection,
-            RefreshToken entity,
-            System.Collections.Generic.IEnumerable<string> conditions,
-            string selectValuesForInsertStatement,
-            RefreshToken.Fields selectedFields,
-            bool idempotent = true,
-            System.Data.IDbTransaction transaction = null)
-        {
-            var sql = new System.Text.StringBuilder();
-            sql.AppendLine(selectValuesForInsertStatement);
-        
-            int currentIndex = 0;
-            foreach (var condition in conditions)
-            {
-                sql.Append("IF ");
-                sql.AppendLine(condition); // Remember to use `WITH (UPDLOCK, HOLDLOCK)` in your conditions! See: http://samsaffron.com/blog/archive/2007/04/04/14.aspx
-                sql.AppendLine("BEGIN");
-                ++currentIndex;
+                    sql.Append("IF ");
+                    sql.AppendLine(condition); // Remember to use `WITH (UPDLOCK, HOLDLOCK)` in your conditions! See: http://samsaffron.com/blog/archive/2007/04/04/14.aspx
+                    sql.AppendLine("BEGIN");
+                    ++currentIndex;
+                }
             }
         
-            sql.AppendLine(InsertStatement(idempotent));
-            sql.AppendLine("SELECT -1 AS InsertAttempted"); // Indicates a (potentially idempotent) insert has been performed.
+            sql.AppendLine(InsertStatement(parameters.IdempotentInsert));
+        
+            if (parameters.Conditions != null)
+            {
+                sql.AppendLine("SELECT -1 AS FailedConditionIndex"); // Indicates all conditions passed and operation was attempted.
                     
-            foreach (var condition in conditions)
-            {
-                sql.AppendLine("END");
-                sql.AppendLine("ELSE");
-                sql.Append("SELECT ").Append(--currentIndex).AppendLine(" AS InsertAttempted");
+                foreach (var condition in parameters.Conditions)
+                {
+                    sql.AppendLine("END");
+                    sql.AppendLine("ELSE");
+                    sql.Append("SELECT ").Append(--currentIndex).AppendLine(" AS FailedConditionIndex");
+                }
             }
+        
+            var entity = parameters.Entity;
+            var parameterObject = parameters.ExcludedFromInput != null
+                ? AllExceptSpecifiedParameters(entity, parameters.ExcludedFromInput.Value)
+                : new { entity.HashedId, entity.Username, entity.ClientId, entity.IssuedDate, entity.ExpiresDate, entity.ProtectedTicket };
         
             return Dapper.SqlMapper.ExecuteScalarAsync<int>(
                 connection,
                 sql.ToString(),
-                MaskParameters(entity, selectedFields, true),
-                transaction);
+                parameterObject);
         }
         
         public static System.Threading.Tasks.Task UpsertAsync(
@@ -3258,7 +3338,57 @@ namespace Fifthweek.Api.Persistence
             RefreshToken.Fields fields,
             System.Data.IDbTransaction transaction = null)
         {
-            return Dapper.SqlMapper.ExecuteAsync(connection, UpdateStatement(fields), MaskParameters(entity, fields, false), transaction);
+            return Dapper.SqlMapper.ExecuteAsync(connection, UpdateStatement(fields), OnlySpecifiedParameters(entity, fields), transaction);
+        }
+        
+        public static System.Threading.Tasks.Task<int> UpdateAsync(
+            this System.Data.Common.DbConnection connection,
+            SqlGenerationParameters<RefreshToken, RefreshToken.Fields> parameters)
+        {
+            if (parameters.UpdateMask == null)
+            {
+                throw new ArgumentException("Must contain update mask", "parameters");
+            }
+        
+            var sql = new System.Text.StringBuilder();
+        
+            if (parameters.Declarations != null)
+            {
+                sql.AppendLine(parameters.Declarations);
+            }
+            
+            int currentIndex = 0;
+            if (parameters.Conditions != null)
+            {
+                foreach (var condition in parameters.Conditions)
+                {
+                    sql.Append("IF ");
+                    sql.AppendLine(condition); // Remember to use `WITH (UPDLOCK, HOLDLOCK)` in your conditions! See: http://samsaffron.com/blog/archive/2007/04/04/14.aspx
+                    sql.AppendLine("BEGIN");
+                    ++currentIndex;
+                }
+            }
+        
+            sql.AppendLine(UpdateStatement(parameters.UpdateMask.Value));
+        
+            if (parameters.Conditions != null)
+            {
+                sql.AppendLine("SELECT -1 AS FailedConditionIndex"); // Indicates all conditions passed and operation was attempted.
+                    
+                foreach (var condition in parameters.Conditions)
+                {
+                    sql.AppendLine("END");
+                    sql.AppendLine("ELSE");
+                    sql.Append("SELECT ").Append(--currentIndex).AppendLine(" AS FailedConditionIndex");
+                }
+            }
+        
+            var parameterObject = OnlySpecifiedParameters(parameters.Entity, parameters.UpdateMask.Value, parameters.ExcludedFromInput);
+        
+            return Dapper.SqlMapper.ExecuteScalarAsync<int>(
+                connection,
+                sql.ToString(),
+                parameterObject);
         }
         
         public static string InsertStatement(bool idempotent = true)
@@ -3343,39 +3473,79 @@ namespace Fifthweek.Api.Persistence
             return fieldNames;
         }
         
-        private static object MaskParameters(RefreshToken entity, RefreshToken.Fields fields, bool excludeSpecified)
+        private static object OnlySpecifiedParameters(
+            RefreshToken entity, 
+            RefreshToken.Fields fields,
+            RefreshToken.Fields? excludedFields = null)
         {
             var parameters = new Dapper.DynamicParameters();
         
             // Assume we never want to exclude primary key field(s) from our input.
             parameters.Add("HashedId", entity.HashedId);
-            if(excludeSpecified != fields.HasFlag(RefreshToken.Fields.Username))
+            if (fields.HasFlag(RefreshToken.Fields.Username) && (excludedFields == null || !excludedFields.Value.HasFlag(RefreshToken.Fields.Username)))
             {
                 parameters.Add("Username", entity.Username);
             }
         
-            if(excludeSpecified != fields.HasFlag(RefreshToken.Fields.ClientId))
+            if (fields.HasFlag(RefreshToken.Fields.ClientId) && (excludedFields == null || !excludedFields.Value.HasFlag(RefreshToken.Fields.ClientId)))
             {
                 parameters.Add("ClientId", entity.ClientId);
             }
         
-            if(excludeSpecified != fields.HasFlag(RefreshToken.Fields.IssuedDate))
+            if (fields.HasFlag(RefreshToken.Fields.IssuedDate) && (excludedFields == null || !excludedFields.Value.HasFlag(RefreshToken.Fields.IssuedDate)))
             {
                 parameters.Add("IssuedDate", entity.IssuedDate);
             }
         
-            if(excludeSpecified != fields.HasFlag(RefreshToken.Fields.ExpiresDate))
+            if (fields.HasFlag(RefreshToken.Fields.ExpiresDate) && (excludedFields == null || !excludedFields.Value.HasFlag(RefreshToken.Fields.ExpiresDate)))
             {
                 parameters.Add("ExpiresDate", entity.ExpiresDate);
             }
         
-            if(excludeSpecified != fields.HasFlag(RefreshToken.Fields.ProtectedTicket))
+            if (fields.HasFlag(RefreshToken.Fields.ProtectedTicket) && (excludedFields == null || !excludedFields.Value.HasFlag(RefreshToken.Fields.ProtectedTicket)))
             {
                 parameters.Add("ProtectedTicket", entity.ProtectedTicket);
             }
         
             return parameters;
         }
+        
+        private static object AllExceptSpecifiedParameters(
+            RefreshToken entity, 
+            RefreshToken.Fields fields)
+        {
+            var parameters = new Dapper.DynamicParameters();
+        
+            // Assume we never want to exclude primary key field(s) from our input.
+            parameters.Add("HashedId", entity.HashedId);
+            if (!fields.HasFlag(RefreshToken.Fields.Username))
+            {
+                parameters.Add("Username", entity.Username);
+            }
+        
+            if (!fields.HasFlag(RefreshToken.Fields.ClientId))
+            {
+                parameters.Add("ClientId", entity.ClientId);
+            }
+        
+            if (!fields.HasFlag(RefreshToken.Fields.IssuedDate))
+            {
+                parameters.Add("IssuedDate", entity.IssuedDate);
+            }
+        
+            if (!fields.HasFlag(RefreshToken.Fields.ExpiresDate))
+            {
+                parameters.Add("ExpiresDate", entity.ExpiresDate);
+            }
+        
+            if (!fields.HasFlag(RefreshToken.Fields.ProtectedTicket))
+            {
+                parameters.Add("ProtectedTicket", entity.ProtectedTicket);
+            }
+        
+            return parameters;
+        }
+        
     }
 }
 namespace Fifthweek.Api.Persistence
@@ -3484,116 +3654,52 @@ namespace Fifthweek.Api.Persistence
                 transaction);
         }
         
-        public static System.Threading.Tasks.Task InsertAsync(
+        public static System.Threading.Tasks.Task<int> InsertAsync(
             this System.Data.Common.DbConnection connection,
-            Subscription entity,
-            string selectValuesForInsertStatement,
-            Subscription.Fields selectedFields,
-            bool idempotent = true,
-            System.Data.IDbTransaction transaction = null)
-        {
-            return Dapper.SqlMapper.ExecuteAsync(
-                connection,
-                selectValuesForInsertStatement + System.Environment.NewLine + InsertStatement(idempotent),
-                MaskParameters(entity, selectedFields, true),
-                transaction);
-        }
-        
-        public static async System.Threading.Tasks.Task<bool> InsertIfAsync(
-            this System.Data.Common.DbConnection connection,
-            Subscription entity,
-            string condition,
-            bool idempotent = true,
-            System.Data.IDbTransaction transaction = null)
-        {
-            return -1 == await InsertIfAsync(connection, entity, new[] { condition }, idempotent, transaction);
-        }
-        
-        public static async System.Threading.Tasks.Task<bool> InsertIfAsync(
-            this System.Data.Common.DbConnection connection,
-            Subscription entity,
-            string condition,
-            string selectValuesForInsertStatement,
-            Subscription.Fields selectedFields,
-            bool idempotent = true,
-            System.Data.IDbTransaction transaction = null)
-        {
-            return -1 == await InsertIfAsync(connection, entity, new[] { condition }, selectValuesForInsertStatement, selectedFields, idempotent, transaction);
-        }
-        
-        public static System.Threading.Tasks.Task<int> InsertIfAsync(
-            this System.Data.Common.DbConnection connection,
-            Subscription entity,
-            System.Collections.Generic.IEnumerable<string> conditions,
-            bool idempotent = true,
-            System.Data.IDbTransaction transaction = null)
+            SqlGenerationParameters<Subscription, Subscription.Fields> parameters)
         {
             var sql = new System.Text.StringBuilder();
+        
+            if (parameters.Declarations != null)
+            {
+                sql.AppendLine(parameters.Declarations);
+            }
+            
             int currentIndex = 0;
-            foreach (var condition in conditions)
+            if (parameters.Conditions != null)
             {
-                sql.Append("IF ");
-                sql.AppendLine(condition); // Remember to use `WITH (UPDLOCK, HOLDLOCK)` in your conditions! See: http://samsaffron.com/blog/archive/2007/04/04/14.aspx
-                sql.AppendLine("BEGIN");
-                ++currentIndex;
-            }
-        
-            sql.AppendLine(InsertStatement(idempotent));
-            sql.AppendLine("SELECT -1 AS InsertAttempted"); // Indicates a (potentially idempotent) insert has been performed.
-                    
-            foreach (var condition in conditions)
-            {
-                sql.AppendLine("END");
-                sql.AppendLine("ELSE");
-                sql.Append("SELECT ").Append(--currentIndex).AppendLine(" AS InsertAttempted");
-            }
-        
-            return Dapper.SqlMapper.ExecuteScalarAsync<int>(
-                connection,
-                sql.ToString(),
-                new 
+                foreach (var condition in parameters.Conditions)
                 {
-                    entity.Id, entity.CreatorId, entity.Name, entity.Tagline, entity.Introduction, entity.Description, entity.ExternalVideoUrl, entity.HeaderImageFileId, entity.CreationDate
-                },
-                transaction);
-        }
-        
-        public static System.Threading.Tasks.Task<int> InsertIfAsync(
-            this System.Data.Common.DbConnection connection,
-            Subscription entity,
-            System.Collections.Generic.IEnumerable<string> conditions,
-            string selectValuesForInsertStatement,
-            Subscription.Fields selectedFields,
-            bool idempotent = true,
-            System.Data.IDbTransaction transaction = null)
-        {
-            var sql = new System.Text.StringBuilder();
-            sql.AppendLine(selectValuesForInsertStatement);
-        
-            int currentIndex = 0;
-            foreach (var condition in conditions)
-            {
-                sql.Append("IF ");
-                sql.AppendLine(condition); // Remember to use `WITH (UPDLOCK, HOLDLOCK)` in your conditions! See: http://samsaffron.com/blog/archive/2007/04/04/14.aspx
-                sql.AppendLine("BEGIN");
-                ++currentIndex;
+                    sql.Append("IF ");
+                    sql.AppendLine(condition); // Remember to use `WITH (UPDLOCK, HOLDLOCK)` in your conditions! See: http://samsaffron.com/blog/archive/2007/04/04/14.aspx
+                    sql.AppendLine("BEGIN");
+                    ++currentIndex;
+                }
             }
         
-            sql.AppendLine(InsertStatement(idempotent));
-            sql.AppendLine("SELECT -1 AS InsertAttempted"); // Indicates a (potentially idempotent) insert has been performed.
+            sql.AppendLine(InsertStatement(parameters.IdempotentInsert));
+        
+            if (parameters.Conditions != null)
+            {
+                sql.AppendLine("SELECT -1 AS FailedConditionIndex"); // Indicates all conditions passed and operation was attempted.
                     
-            foreach (var condition in conditions)
-            {
-                sql.AppendLine("END");
-                sql.AppendLine("ELSE");
-                sql.Append("SELECT ").Append(--currentIndex).AppendLine(" AS InsertAttempted");
+                foreach (var condition in parameters.Conditions)
+                {
+                    sql.AppendLine("END");
+                    sql.AppendLine("ELSE");
+                    sql.Append("SELECT ").Append(--currentIndex).AppendLine(" AS FailedConditionIndex");
+                }
             }
+        
+            var entity = parameters.Entity;
+            var parameterObject = parameters.ExcludedFromInput != null
+                ? AllExceptSpecifiedParameters(entity, parameters.ExcludedFromInput.Value)
+                : new { entity.Id, entity.CreatorId, entity.Name, entity.Tagline, entity.Introduction, entity.Description, entity.ExternalVideoUrl, entity.HeaderImageFileId, entity.CreationDate };
         
             return Dapper.SqlMapper.ExecuteScalarAsync<int>(
                 connection,
                 sql.ToString(),
-                MaskParameters(entity, selectedFields, true),
-                transaction);
+                parameterObject);
         }
         
         public static System.Threading.Tasks.Task UpsertAsync(
@@ -3635,7 +3741,57 @@ namespace Fifthweek.Api.Persistence
             Subscription.Fields fields,
             System.Data.IDbTransaction transaction = null)
         {
-            return Dapper.SqlMapper.ExecuteAsync(connection, UpdateStatement(fields), MaskParameters(entity, fields, false), transaction);
+            return Dapper.SqlMapper.ExecuteAsync(connection, UpdateStatement(fields), OnlySpecifiedParameters(entity, fields), transaction);
+        }
+        
+        public static System.Threading.Tasks.Task<int> UpdateAsync(
+            this System.Data.Common.DbConnection connection,
+            SqlGenerationParameters<Subscription, Subscription.Fields> parameters)
+        {
+            if (parameters.UpdateMask == null)
+            {
+                throw new ArgumentException("Must contain update mask", "parameters");
+            }
+        
+            var sql = new System.Text.StringBuilder();
+        
+            if (parameters.Declarations != null)
+            {
+                sql.AppendLine(parameters.Declarations);
+            }
+            
+            int currentIndex = 0;
+            if (parameters.Conditions != null)
+            {
+                foreach (var condition in parameters.Conditions)
+                {
+                    sql.Append("IF ");
+                    sql.AppendLine(condition); // Remember to use `WITH (UPDLOCK, HOLDLOCK)` in your conditions! See: http://samsaffron.com/blog/archive/2007/04/04/14.aspx
+                    sql.AppendLine("BEGIN");
+                    ++currentIndex;
+                }
+            }
+        
+            sql.AppendLine(UpdateStatement(parameters.UpdateMask.Value));
+        
+            if (parameters.Conditions != null)
+            {
+                sql.AppendLine("SELECT -1 AS FailedConditionIndex"); // Indicates all conditions passed and operation was attempted.
+                    
+                foreach (var condition in parameters.Conditions)
+                {
+                    sql.AppendLine("END");
+                    sql.AppendLine("ELSE");
+                    sql.Append("SELECT ").Append(--currentIndex).AppendLine(" AS FailedConditionIndex");
+                }
+            }
+        
+            var parameterObject = OnlySpecifiedParameters(parameters.Entity, parameters.UpdateMask.Value, parameters.ExcludedFromInput);
+        
+            return Dapper.SqlMapper.ExecuteScalarAsync<int>(
+                connection,
+                sql.ToString(),
+                parameterObject);
         }
         
         public static string InsertStatement(bool idempotent = true)
@@ -3735,54 +3891,109 @@ namespace Fifthweek.Api.Persistence
             return fieldNames;
         }
         
-        private static object MaskParameters(Subscription entity, Subscription.Fields fields, bool excludeSpecified)
+        private static object OnlySpecifiedParameters(
+            Subscription entity, 
+            Subscription.Fields fields,
+            Subscription.Fields? excludedFields = null)
         {
             var parameters = new Dapper.DynamicParameters();
         
             // Assume we never want to exclude primary key field(s) from our input.
             parameters.Add("Id", entity.Id);
-            if(excludeSpecified != fields.HasFlag(Subscription.Fields.CreatorId))
+            if (fields.HasFlag(Subscription.Fields.CreatorId) && (excludedFields == null || !excludedFields.Value.HasFlag(Subscription.Fields.CreatorId)))
             {
                 parameters.Add("CreatorId", entity.CreatorId);
             }
         
-            if(excludeSpecified != fields.HasFlag(Subscription.Fields.Name))
+            if (fields.HasFlag(Subscription.Fields.Name) && (excludedFields == null || !excludedFields.Value.HasFlag(Subscription.Fields.Name)))
             {
                 parameters.Add("Name", entity.Name);
             }
         
-            if(excludeSpecified != fields.HasFlag(Subscription.Fields.Tagline))
+            if (fields.HasFlag(Subscription.Fields.Tagline) && (excludedFields == null || !excludedFields.Value.HasFlag(Subscription.Fields.Tagline)))
             {
                 parameters.Add("Tagline", entity.Tagline);
             }
         
-            if(excludeSpecified != fields.HasFlag(Subscription.Fields.Introduction))
+            if (fields.HasFlag(Subscription.Fields.Introduction) && (excludedFields == null || !excludedFields.Value.HasFlag(Subscription.Fields.Introduction)))
             {
                 parameters.Add("Introduction", entity.Introduction);
             }
         
-            if(excludeSpecified != fields.HasFlag(Subscription.Fields.Description))
+            if (fields.HasFlag(Subscription.Fields.Description) && (excludedFields == null || !excludedFields.Value.HasFlag(Subscription.Fields.Description)))
             {
                 parameters.Add("Description", entity.Description);
             }
         
-            if(excludeSpecified != fields.HasFlag(Subscription.Fields.ExternalVideoUrl))
+            if (fields.HasFlag(Subscription.Fields.ExternalVideoUrl) && (excludedFields == null || !excludedFields.Value.HasFlag(Subscription.Fields.ExternalVideoUrl)))
             {
                 parameters.Add("ExternalVideoUrl", entity.ExternalVideoUrl);
             }
         
-            if(excludeSpecified != fields.HasFlag(Subscription.Fields.HeaderImageFileId))
+            if (fields.HasFlag(Subscription.Fields.HeaderImageFileId) && (excludedFields == null || !excludedFields.Value.HasFlag(Subscription.Fields.HeaderImageFileId)))
             {
                 parameters.Add("HeaderImageFileId", entity.HeaderImageFileId);
             }
         
-            if(excludeSpecified != fields.HasFlag(Subscription.Fields.CreationDate))
+            if (fields.HasFlag(Subscription.Fields.CreationDate) && (excludedFields == null || !excludedFields.Value.HasFlag(Subscription.Fields.CreationDate)))
             {
                 parameters.Add("CreationDate", entity.CreationDate);
             }
         
             return parameters;
         }
+        
+        private static object AllExceptSpecifiedParameters(
+            Subscription entity, 
+            Subscription.Fields fields)
+        {
+            var parameters = new Dapper.DynamicParameters();
+        
+            // Assume we never want to exclude primary key field(s) from our input.
+            parameters.Add("Id", entity.Id);
+            if (!fields.HasFlag(Subscription.Fields.CreatorId))
+            {
+                parameters.Add("CreatorId", entity.CreatorId);
+            }
+        
+            if (!fields.HasFlag(Subscription.Fields.Name))
+            {
+                parameters.Add("Name", entity.Name);
+            }
+        
+            if (!fields.HasFlag(Subscription.Fields.Tagline))
+            {
+                parameters.Add("Tagline", entity.Tagline);
+            }
+        
+            if (!fields.HasFlag(Subscription.Fields.Introduction))
+            {
+                parameters.Add("Introduction", entity.Introduction);
+            }
+        
+            if (!fields.HasFlag(Subscription.Fields.Description))
+            {
+                parameters.Add("Description", entity.Description);
+            }
+        
+            if (!fields.HasFlag(Subscription.Fields.ExternalVideoUrl))
+            {
+                parameters.Add("ExternalVideoUrl", entity.ExternalVideoUrl);
+            }
+        
+            if (!fields.HasFlag(Subscription.Fields.HeaderImageFileId))
+            {
+                parameters.Add("HeaderImageFileId", entity.HeaderImageFileId);
+            }
+        
+            if (!fields.HasFlag(Subscription.Fields.CreationDate))
+            {
+                parameters.Add("CreationDate", entity.CreationDate);
+            }
+        
+            return parameters;
+        }
+        
     }
 }
 namespace Fifthweek.Api.Persistence
@@ -3896,116 +4107,52 @@ namespace Fifthweek.Api.Persistence
                 transaction);
         }
         
-        public static System.Threading.Tasks.Task InsertAsync(
+        public static System.Threading.Tasks.Task<int> InsertAsync(
             this System.Data.Common.DbConnection connection,
-            WeeklyReleaseTime entity,
-            string selectValuesForInsertStatement,
-            WeeklyReleaseTime.Fields selectedFields,
-            bool idempotent = true,
-            System.Data.IDbTransaction transaction = null)
-        {
-            return Dapper.SqlMapper.ExecuteAsync(
-                connection,
-                selectValuesForInsertStatement + System.Environment.NewLine + InsertStatement(idempotent),
-                MaskParameters(entity, selectedFields, true),
-                transaction);
-        }
-        
-        public static async System.Threading.Tasks.Task<bool> InsertIfAsync(
-            this System.Data.Common.DbConnection connection,
-            WeeklyReleaseTime entity,
-            string condition,
-            bool idempotent = true,
-            System.Data.IDbTransaction transaction = null)
-        {
-            return -1 == await InsertIfAsync(connection, entity, new[] { condition }, idempotent, transaction);
-        }
-        
-        public static async System.Threading.Tasks.Task<bool> InsertIfAsync(
-            this System.Data.Common.DbConnection connection,
-            WeeklyReleaseTime entity,
-            string condition,
-            string selectValuesForInsertStatement,
-            WeeklyReleaseTime.Fields selectedFields,
-            bool idempotent = true,
-            System.Data.IDbTransaction transaction = null)
-        {
-            return -1 == await InsertIfAsync(connection, entity, new[] { condition }, selectValuesForInsertStatement, selectedFields, idempotent, transaction);
-        }
-        
-        public static System.Threading.Tasks.Task<int> InsertIfAsync(
-            this System.Data.Common.DbConnection connection,
-            WeeklyReleaseTime entity,
-            System.Collections.Generic.IEnumerable<string> conditions,
-            bool idempotent = true,
-            System.Data.IDbTransaction transaction = null)
+            SqlGenerationParameters<WeeklyReleaseTime, WeeklyReleaseTime.Fields> parameters)
         {
             var sql = new System.Text.StringBuilder();
+        
+            if (parameters.Declarations != null)
+            {
+                sql.AppendLine(parameters.Declarations);
+            }
+            
             int currentIndex = 0;
-            foreach (var condition in conditions)
+            if (parameters.Conditions != null)
             {
-                sql.Append("IF ");
-                sql.AppendLine(condition); // Remember to use `WITH (UPDLOCK, HOLDLOCK)` in your conditions! See: http://samsaffron.com/blog/archive/2007/04/04/14.aspx
-                sql.AppendLine("BEGIN");
-                ++currentIndex;
-            }
-        
-            sql.AppendLine(InsertStatement(idempotent));
-            sql.AppendLine("SELECT -1 AS InsertAttempted"); // Indicates a (potentially idempotent) insert has been performed.
-                    
-            foreach (var condition in conditions)
-            {
-                sql.AppendLine("END");
-                sql.AppendLine("ELSE");
-                sql.Append("SELECT ").Append(--currentIndex).AppendLine(" AS InsertAttempted");
-            }
-        
-            return Dapper.SqlMapper.ExecuteScalarAsync<int>(
-                connection,
-                sql.ToString(),
-                new 
+                foreach (var condition in parameters.Conditions)
                 {
-                    entity.CollectionId, entity.HourOfWeek
-                },
-                transaction);
-        }
-        
-        public static System.Threading.Tasks.Task<int> InsertIfAsync(
-            this System.Data.Common.DbConnection connection,
-            WeeklyReleaseTime entity,
-            System.Collections.Generic.IEnumerable<string> conditions,
-            string selectValuesForInsertStatement,
-            WeeklyReleaseTime.Fields selectedFields,
-            bool idempotent = true,
-            System.Data.IDbTransaction transaction = null)
-        {
-            var sql = new System.Text.StringBuilder();
-            sql.AppendLine(selectValuesForInsertStatement);
-        
-            int currentIndex = 0;
-            foreach (var condition in conditions)
-            {
-                sql.Append("IF ");
-                sql.AppendLine(condition); // Remember to use `WITH (UPDLOCK, HOLDLOCK)` in your conditions! See: http://samsaffron.com/blog/archive/2007/04/04/14.aspx
-                sql.AppendLine("BEGIN");
-                ++currentIndex;
+                    sql.Append("IF ");
+                    sql.AppendLine(condition); // Remember to use `WITH (UPDLOCK, HOLDLOCK)` in your conditions! See: http://samsaffron.com/blog/archive/2007/04/04/14.aspx
+                    sql.AppendLine("BEGIN");
+                    ++currentIndex;
+                }
             }
         
-            sql.AppendLine(InsertStatement(idempotent));
-            sql.AppendLine("SELECT -1 AS InsertAttempted"); // Indicates a (potentially idempotent) insert has been performed.
+            sql.AppendLine(InsertStatement(parameters.IdempotentInsert));
+        
+            if (parameters.Conditions != null)
+            {
+                sql.AppendLine("SELECT -1 AS FailedConditionIndex"); // Indicates all conditions passed and operation was attempted.
                     
-            foreach (var condition in conditions)
-            {
-                sql.AppendLine("END");
-                sql.AppendLine("ELSE");
-                sql.Append("SELECT ").Append(--currentIndex).AppendLine(" AS InsertAttempted");
+                foreach (var condition in parameters.Conditions)
+                {
+                    sql.AppendLine("END");
+                    sql.AppendLine("ELSE");
+                    sql.Append("SELECT ").Append(--currentIndex).AppendLine(" AS FailedConditionIndex");
+                }
             }
+        
+            var entity = parameters.Entity;
+            var parameterObject = parameters.ExcludedFromInput != null
+                ? AllExceptSpecifiedParameters(entity, parameters.ExcludedFromInput.Value)
+                : new { entity.CollectionId, entity.HourOfWeek };
         
             return Dapper.SqlMapper.ExecuteScalarAsync<int>(
                 connection,
                 sql.ToString(),
-                MaskParameters(entity, selectedFields, true),
-                transaction);
+                parameterObject);
         }
         
         public static System.Threading.Tasks.Task UpsertAsync(
@@ -4047,7 +4194,57 @@ namespace Fifthweek.Api.Persistence
             WeeklyReleaseTime.Fields fields,
             System.Data.IDbTransaction transaction = null)
         {
-            return Dapper.SqlMapper.ExecuteAsync(connection, UpdateStatement(fields), MaskParameters(entity, fields, false), transaction);
+            return Dapper.SqlMapper.ExecuteAsync(connection, UpdateStatement(fields), OnlySpecifiedParameters(entity, fields), transaction);
+        }
+        
+        public static System.Threading.Tasks.Task<int> UpdateAsync(
+            this System.Data.Common.DbConnection connection,
+            SqlGenerationParameters<WeeklyReleaseTime, WeeklyReleaseTime.Fields> parameters)
+        {
+            if (parameters.UpdateMask == null)
+            {
+                throw new ArgumentException("Must contain update mask", "parameters");
+            }
+        
+            var sql = new System.Text.StringBuilder();
+        
+            if (parameters.Declarations != null)
+            {
+                sql.AppendLine(parameters.Declarations);
+            }
+            
+            int currentIndex = 0;
+            if (parameters.Conditions != null)
+            {
+                foreach (var condition in parameters.Conditions)
+                {
+                    sql.Append("IF ");
+                    sql.AppendLine(condition); // Remember to use `WITH (UPDLOCK, HOLDLOCK)` in your conditions! See: http://samsaffron.com/blog/archive/2007/04/04/14.aspx
+                    sql.AppendLine("BEGIN");
+                    ++currentIndex;
+                }
+            }
+        
+            sql.AppendLine(UpdateStatement(parameters.UpdateMask.Value));
+        
+            if (parameters.Conditions != null)
+            {
+                sql.AppendLine("SELECT -1 AS FailedConditionIndex"); // Indicates all conditions passed and operation was attempted.
+                    
+                foreach (var condition in parameters.Conditions)
+                {
+                    sql.AppendLine("END");
+                    sql.AppendLine("ELSE");
+                    sql.Append("SELECT ").Append(--currentIndex).AppendLine(" AS FailedConditionIndex");
+                }
+            }
+        
+            var parameterObject = OnlySpecifiedParameters(parameters.Entity, parameters.UpdateMask.Value, parameters.ExcludedFromInput);
+        
+            return Dapper.SqlMapper.ExecuteScalarAsync<int>(
+                connection,
+                sql.ToString(),
+                parameterObject);
         }
         
         public static string InsertStatement(bool idempotent = true)
@@ -4112,7 +4309,10 @@ namespace Fifthweek.Api.Persistence
             return fieldNames;
         }
         
-        private static object MaskParameters(WeeklyReleaseTime entity, WeeklyReleaseTime.Fields fields, bool excludeSpecified)
+        private static object OnlySpecifiedParameters(
+            WeeklyReleaseTime entity, 
+            WeeklyReleaseTime.Fields fields,
+            WeeklyReleaseTime.Fields? excludedFields = null)
         {
             var parameters = new Dapper.DynamicParameters();
         
@@ -4121,6 +4321,19 @@ namespace Fifthweek.Api.Persistence
             parameters.Add("HourOfWeek", entity.HourOfWeek);
             return parameters;
         }
+        
+        private static object AllExceptSpecifiedParameters(
+            WeeklyReleaseTime entity, 
+            WeeklyReleaseTime.Fields fields)
+        {
+            var parameters = new Dapper.DynamicParameters();
+        
+            // Assume we never want to exclude primary key field(s) from our input.
+            parameters.Add("CollectionId", entity.CollectionId);
+            parameters.Add("HourOfWeek", entity.HourOfWeek);
+            return parameters;
+        }
+        
     }
 }
 namespace Fifthweek.Api.Persistence.Identity
@@ -4220,116 +4433,52 @@ namespace Fifthweek.Api.Persistence.Identity
                 transaction);
         }
         
-        public static System.Threading.Tasks.Task InsertAsync(
+        public static System.Threading.Tasks.Task<int> InsertAsync(
             this System.Data.Common.DbConnection connection,
-            FifthweekRole entity,
-            string selectValuesForInsertStatement,
-            FifthweekRole.Fields selectedFields,
-            bool idempotent = true,
-            System.Data.IDbTransaction transaction = null)
-        {
-            return Dapper.SqlMapper.ExecuteAsync(
-                connection,
-                selectValuesForInsertStatement + System.Environment.NewLine + InsertStatement(idempotent),
-                MaskParameters(entity, selectedFields, true),
-                transaction);
-        }
-        
-        public static async System.Threading.Tasks.Task<bool> InsertIfAsync(
-            this System.Data.Common.DbConnection connection,
-            FifthweekRole entity,
-            string condition,
-            bool idempotent = true,
-            System.Data.IDbTransaction transaction = null)
-        {
-            return -1 == await InsertIfAsync(connection, entity, new[] { condition }, idempotent, transaction);
-        }
-        
-        public static async System.Threading.Tasks.Task<bool> InsertIfAsync(
-            this System.Data.Common.DbConnection connection,
-            FifthweekRole entity,
-            string condition,
-            string selectValuesForInsertStatement,
-            FifthweekRole.Fields selectedFields,
-            bool idempotent = true,
-            System.Data.IDbTransaction transaction = null)
-        {
-            return -1 == await InsertIfAsync(connection, entity, new[] { condition }, selectValuesForInsertStatement, selectedFields, idempotent, transaction);
-        }
-        
-        public static System.Threading.Tasks.Task<int> InsertIfAsync(
-            this System.Data.Common.DbConnection connection,
-            FifthweekRole entity,
-            System.Collections.Generic.IEnumerable<string> conditions,
-            bool idempotent = true,
-            System.Data.IDbTransaction transaction = null)
+            SqlGenerationParameters<FifthweekRole, FifthweekRole.Fields> parameters)
         {
             var sql = new System.Text.StringBuilder();
+        
+            if (parameters.Declarations != null)
+            {
+                sql.AppendLine(parameters.Declarations);
+            }
+            
             int currentIndex = 0;
-            foreach (var condition in conditions)
+            if (parameters.Conditions != null)
             {
-                sql.Append("IF ");
-                sql.AppendLine(condition); // Remember to use `WITH (UPDLOCK, HOLDLOCK)` in your conditions! See: http://samsaffron.com/blog/archive/2007/04/04/14.aspx
-                sql.AppendLine("BEGIN");
-                ++currentIndex;
-            }
-        
-            sql.AppendLine(InsertStatement(idempotent));
-            sql.AppendLine("SELECT -1 AS InsertAttempted"); // Indicates a (potentially idempotent) insert has been performed.
-                    
-            foreach (var condition in conditions)
-            {
-                sql.AppendLine("END");
-                sql.AppendLine("ELSE");
-                sql.Append("SELECT ").Append(--currentIndex).AppendLine(" AS InsertAttempted");
-            }
-        
-            return Dapper.SqlMapper.ExecuteScalarAsync<int>(
-                connection,
-                sql.ToString(),
-                new 
+                foreach (var condition in parameters.Conditions)
                 {
-                    entity.Id, entity.Name
-                },
-                transaction);
-        }
-        
-        public static System.Threading.Tasks.Task<int> InsertIfAsync(
-            this System.Data.Common.DbConnection connection,
-            FifthweekRole entity,
-            System.Collections.Generic.IEnumerable<string> conditions,
-            string selectValuesForInsertStatement,
-            FifthweekRole.Fields selectedFields,
-            bool idempotent = true,
-            System.Data.IDbTransaction transaction = null)
-        {
-            var sql = new System.Text.StringBuilder();
-            sql.AppendLine(selectValuesForInsertStatement);
-        
-            int currentIndex = 0;
-            foreach (var condition in conditions)
-            {
-                sql.Append("IF ");
-                sql.AppendLine(condition); // Remember to use `WITH (UPDLOCK, HOLDLOCK)` in your conditions! See: http://samsaffron.com/blog/archive/2007/04/04/14.aspx
-                sql.AppendLine("BEGIN");
-                ++currentIndex;
+                    sql.Append("IF ");
+                    sql.AppendLine(condition); // Remember to use `WITH (UPDLOCK, HOLDLOCK)` in your conditions! See: http://samsaffron.com/blog/archive/2007/04/04/14.aspx
+                    sql.AppendLine("BEGIN");
+                    ++currentIndex;
+                }
             }
         
-            sql.AppendLine(InsertStatement(idempotent));
-            sql.AppendLine("SELECT -1 AS InsertAttempted"); // Indicates a (potentially idempotent) insert has been performed.
+            sql.AppendLine(InsertStatement(parameters.IdempotentInsert));
+        
+            if (parameters.Conditions != null)
+            {
+                sql.AppendLine("SELECT -1 AS FailedConditionIndex"); // Indicates all conditions passed and operation was attempted.
                     
-            foreach (var condition in conditions)
-            {
-                sql.AppendLine("END");
-                sql.AppendLine("ELSE");
-                sql.Append("SELECT ").Append(--currentIndex).AppendLine(" AS InsertAttempted");
+                foreach (var condition in parameters.Conditions)
+                {
+                    sql.AppendLine("END");
+                    sql.AppendLine("ELSE");
+                    sql.Append("SELECT ").Append(--currentIndex).AppendLine(" AS FailedConditionIndex");
+                }
             }
+        
+            var entity = parameters.Entity;
+            var parameterObject = parameters.ExcludedFromInput != null
+                ? AllExceptSpecifiedParameters(entity, parameters.ExcludedFromInput.Value)
+                : new { entity.Id, entity.Name };
         
             return Dapper.SqlMapper.ExecuteScalarAsync<int>(
                 connection,
                 sql.ToString(),
-                MaskParameters(entity, selectedFields, true),
-                transaction);
+                parameterObject);
         }
         
         public static System.Threading.Tasks.Task UpsertAsync(
@@ -4371,7 +4520,57 @@ namespace Fifthweek.Api.Persistence.Identity
             FifthweekRole.Fields fields,
             System.Data.IDbTransaction transaction = null)
         {
-            return Dapper.SqlMapper.ExecuteAsync(connection, UpdateStatement(fields), MaskParameters(entity, fields, false), transaction);
+            return Dapper.SqlMapper.ExecuteAsync(connection, UpdateStatement(fields), OnlySpecifiedParameters(entity, fields), transaction);
+        }
+        
+        public static System.Threading.Tasks.Task<int> UpdateAsync(
+            this System.Data.Common.DbConnection connection,
+            SqlGenerationParameters<FifthweekRole, FifthweekRole.Fields> parameters)
+        {
+            if (parameters.UpdateMask == null)
+            {
+                throw new ArgumentException("Must contain update mask", "parameters");
+            }
+        
+            var sql = new System.Text.StringBuilder();
+        
+            if (parameters.Declarations != null)
+            {
+                sql.AppendLine(parameters.Declarations);
+            }
+            
+            int currentIndex = 0;
+            if (parameters.Conditions != null)
+            {
+                foreach (var condition in parameters.Conditions)
+                {
+                    sql.Append("IF ");
+                    sql.AppendLine(condition); // Remember to use `WITH (UPDLOCK, HOLDLOCK)` in your conditions! See: http://samsaffron.com/blog/archive/2007/04/04/14.aspx
+                    sql.AppendLine("BEGIN");
+                    ++currentIndex;
+                }
+            }
+        
+            sql.AppendLine(UpdateStatement(parameters.UpdateMask.Value));
+        
+            if (parameters.Conditions != null)
+            {
+                sql.AppendLine("SELECT -1 AS FailedConditionIndex"); // Indicates all conditions passed and operation was attempted.
+                    
+                foreach (var condition in parameters.Conditions)
+                {
+                    sql.AppendLine("END");
+                    sql.AppendLine("ELSE");
+                    sql.Append("SELECT ").Append(--currentIndex).AppendLine(" AS FailedConditionIndex");
+                }
+            }
+        
+            var parameterObject = OnlySpecifiedParameters(parameters.Entity, parameters.UpdateMask.Value, parameters.ExcludedFromInput);
+        
+            return Dapper.SqlMapper.ExecuteScalarAsync<int>(
+                connection,
+                sql.ToString(),
+                parameterObject);
         }
         
         public static string InsertStatement(bool idempotent = true)
@@ -4436,19 +4635,39 @@ namespace Fifthweek.Api.Persistence.Identity
             return fieldNames;
         }
         
-        private static object MaskParameters(FifthweekRole entity, FifthweekRole.Fields fields, bool excludeSpecified)
+        private static object OnlySpecifiedParameters(
+            FifthweekRole entity, 
+            FifthweekRole.Fields fields,
+            FifthweekRole.Fields? excludedFields = null)
         {
             var parameters = new Dapper.DynamicParameters();
         
             // Assume we never want to exclude primary key field(s) from our input.
             parameters.Add("Id", entity.Id);
-            if(excludeSpecified != fields.HasFlag(FifthweekRole.Fields.Name))
+            if (fields.HasFlag(FifthweekRole.Fields.Name) && (excludedFields == null || !excludedFields.Value.HasFlag(FifthweekRole.Fields.Name)))
             {
                 parameters.Add("Name", entity.Name);
             }
         
             return parameters;
         }
+        
+        private static object AllExceptSpecifiedParameters(
+            FifthweekRole entity, 
+            FifthweekRole.Fields fields)
+        {
+            var parameters = new Dapper.DynamicParameters();
+        
+            // Assume we never want to exclude primary key field(s) from our input.
+            parameters.Add("Id", entity.Id);
+            if (!fields.HasFlag(FifthweekRole.Fields.Name))
+            {
+                parameters.Add("Name", entity.Name);
+            }
+        
+            return parameters;
+        }
+        
     }
 }
 namespace Fifthweek.Api.Persistence.Identity
@@ -4563,116 +4782,52 @@ namespace Fifthweek.Api.Persistence.Identity
                 transaction);
         }
         
-        public static System.Threading.Tasks.Task InsertAsync(
+        public static System.Threading.Tasks.Task<int> InsertAsync(
             this System.Data.Common.DbConnection connection,
-            FifthweekUser entity,
-            string selectValuesForInsertStatement,
-            FifthweekUser.Fields selectedFields,
-            bool idempotent = true,
-            System.Data.IDbTransaction transaction = null)
-        {
-            return Dapper.SqlMapper.ExecuteAsync(
-                connection,
-                selectValuesForInsertStatement + System.Environment.NewLine + InsertStatement(idempotent),
-                MaskParameters(entity, selectedFields, true),
-                transaction);
-        }
-        
-        public static async System.Threading.Tasks.Task<bool> InsertIfAsync(
-            this System.Data.Common.DbConnection connection,
-            FifthweekUser entity,
-            string condition,
-            bool idempotent = true,
-            System.Data.IDbTransaction transaction = null)
-        {
-            return -1 == await InsertIfAsync(connection, entity, new[] { condition }, idempotent, transaction);
-        }
-        
-        public static async System.Threading.Tasks.Task<bool> InsertIfAsync(
-            this System.Data.Common.DbConnection connection,
-            FifthweekUser entity,
-            string condition,
-            string selectValuesForInsertStatement,
-            FifthweekUser.Fields selectedFields,
-            bool idempotent = true,
-            System.Data.IDbTransaction transaction = null)
-        {
-            return -1 == await InsertIfAsync(connection, entity, new[] { condition }, selectValuesForInsertStatement, selectedFields, idempotent, transaction);
-        }
-        
-        public static System.Threading.Tasks.Task<int> InsertIfAsync(
-            this System.Data.Common.DbConnection connection,
-            FifthweekUser entity,
-            System.Collections.Generic.IEnumerable<string> conditions,
-            bool idempotent = true,
-            System.Data.IDbTransaction transaction = null)
+            SqlGenerationParameters<FifthweekUser, FifthweekUser.Fields> parameters)
         {
             var sql = new System.Text.StringBuilder();
+        
+            if (parameters.Declarations != null)
+            {
+                sql.AppendLine(parameters.Declarations);
+            }
+            
             int currentIndex = 0;
-            foreach (var condition in conditions)
+            if (parameters.Conditions != null)
             {
-                sql.Append("IF ");
-                sql.AppendLine(condition); // Remember to use `WITH (UPDLOCK, HOLDLOCK)` in your conditions! See: http://samsaffron.com/blog/archive/2007/04/04/14.aspx
-                sql.AppendLine("BEGIN");
-                ++currentIndex;
-            }
-        
-            sql.AppendLine(InsertStatement(idempotent));
-            sql.AppendLine("SELECT -1 AS InsertAttempted"); // Indicates a (potentially idempotent) insert has been performed.
-                    
-            foreach (var condition in conditions)
-            {
-                sql.AppendLine("END");
-                sql.AppendLine("ELSE");
-                sql.Append("SELECT ").Append(--currentIndex).AppendLine(" AS InsertAttempted");
-            }
-        
-            return Dapper.SqlMapper.ExecuteScalarAsync<int>(
-                connection,
-                sql.ToString(),
-                new 
+                foreach (var condition in parameters.Conditions)
                 {
-                    entity.ExampleWork, entity.RegistrationDate, entity.LastSignInDate, entity.LastAccessTokenDate, entity.ProfileImageFileId, entity.Id, entity.AccessFailedCount, entity.Email, entity.EmailConfirmed, entity.LockoutEnabled, entity.LockoutEndDateUtc, entity.PasswordHash, entity.PhoneNumber, entity.PhoneNumberConfirmed, entity.SecurityStamp, entity.TwoFactorEnabled, entity.UserName
-                },
-                transaction);
-        }
-        
-        public static System.Threading.Tasks.Task<int> InsertIfAsync(
-            this System.Data.Common.DbConnection connection,
-            FifthweekUser entity,
-            System.Collections.Generic.IEnumerable<string> conditions,
-            string selectValuesForInsertStatement,
-            FifthweekUser.Fields selectedFields,
-            bool idempotent = true,
-            System.Data.IDbTransaction transaction = null)
-        {
-            var sql = new System.Text.StringBuilder();
-            sql.AppendLine(selectValuesForInsertStatement);
-        
-            int currentIndex = 0;
-            foreach (var condition in conditions)
-            {
-                sql.Append("IF ");
-                sql.AppendLine(condition); // Remember to use `WITH (UPDLOCK, HOLDLOCK)` in your conditions! See: http://samsaffron.com/blog/archive/2007/04/04/14.aspx
-                sql.AppendLine("BEGIN");
-                ++currentIndex;
+                    sql.Append("IF ");
+                    sql.AppendLine(condition); // Remember to use `WITH (UPDLOCK, HOLDLOCK)` in your conditions! See: http://samsaffron.com/blog/archive/2007/04/04/14.aspx
+                    sql.AppendLine("BEGIN");
+                    ++currentIndex;
+                }
             }
         
-            sql.AppendLine(InsertStatement(idempotent));
-            sql.AppendLine("SELECT -1 AS InsertAttempted"); // Indicates a (potentially idempotent) insert has been performed.
+            sql.AppendLine(InsertStatement(parameters.IdempotentInsert));
+        
+            if (parameters.Conditions != null)
+            {
+                sql.AppendLine("SELECT -1 AS FailedConditionIndex"); // Indicates all conditions passed and operation was attempted.
                     
-            foreach (var condition in conditions)
-            {
-                sql.AppendLine("END");
-                sql.AppendLine("ELSE");
-                sql.Append("SELECT ").Append(--currentIndex).AppendLine(" AS InsertAttempted");
+                foreach (var condition in parameters.Conditions)
+                {
+                    sql.AppendLine("END");
+                    sql.AppendLine("ELSE");
+                    sql.Append("SELECT ").Append(--currentIndex).AppendLine(" AS FailedConditionIndex");
+                }
             }
+        
+            var entity = parameters.Entity;
+            var parameterObject = parameters.ExcludedFromInput != null
+                ? AllExceptSpecifiedParameters(entity, parameters.ExcludedFromInput.Value)
+                : new { entity.ExampleWork, entity.RegistrationDate, entity.LastSignInDate, entity.LastAccessTokenDate, entity.ProfileImageFileId, entity.Id, entity.AccessFailedCount, entity.Email, entity.EmailConfirmed, entity.LockoutEnabled, entity.LockoutEndDateUtc, entity.PasswordHash, entity.PhoneNumber, entity.PhoneNumberConfirmed, entity.SecurityStamp, entity.TwoFactorEnabled, entity.UserName };
         
             return Dapper.SqlMapper.ExecuteScalarAsync<int>(
                 connection,
                 sql.ToString(),
-                MaskParameters(entity, selectedFields, true),
-                transaction);
+                parameterObject);
         }
         
         public static System.Threading.Tasks.Task UpsertAsync(
@@ -4714,7 +4869,57 @@ namespace Fifthweek.Api.Persistence.Identity
             FifthweekUser.Fields fields,
             System.Data.IDbTransaction transaction = null)
         {
-            return Dapper.SqlMapper.ExecuteAsync(connection, UpdateStatement(fields), MaskParameters(entity, fields, false), transaction);
+            return Dapper.SqlMapper.ExecuteAsync(connection, UpdateStatement(fields), OnlySpecifiedParameters(entity, fields), transaction);
+        }
+        
+        public static System.Threading.Tasks.Task<int> UpdateAsync(
+            this System.Data.Common.DbConnection connection,
+            SqlGenerationParameters<FifthweekUser, FifthweekUser.Fields> parameters)
+        {
+            if (parameters.UpdateMask == null)
+            {
+                throw new ArgumentException("Must contain update mask", "parameters");
+            }
+        
+            var sql = new System.Text.StringBuilder();
+        
+            if (parameters.Declarations != null)
+            {
+                sql.AppendLine(parameters.Declarations);
+            }
+            
+            int currentIndex = 0;
+            if (parameters.Conditions != null)
+            {
+                foreach (var condition in parameters.Conditions)
+                {
+                    sql.Append("IF ");
+                    sql.AppendLine(condition); // Remember to use `WITH (UPDLOCK, HOLDLOCK)` in your conditions! See: http://samsaffron.com/blog/archive/2007/04/04/14.aspx
+                    sql.AppendLine("BEGIN");
+                    ++currentIndex;
+                }
+            }
+        
+            sql.AppendLine(UpdateStatement(parameters.UpdateMask.Value));
+        
+            if (parameters.Conditions != null)
+            {
+                sql.AppendLine("SELECT -1 AS FailedConditionIndex"); // Indicates all conditions passed and operation was attempted.
+                    
+                foreach (var condition in parameters.Conditions)
+                {
+                    sql.AppendLine("END");
+                    sql.AppendLine("ELSE");
+                    sql.Append("SELECT ").Append(--currentIndex).AppendLine(" AS FailedConditionIndex");
+                }
+            }
+        
+            var parameterObject = OnlySpecifiedParameters(parameters.Entity, parameters.UpdateMask.Value, parameters.ExcludedFromInput);
+        
+            return Dapper.SqlMapper.ExecuteScalarAsync<int>(
+                connection,
+                sql.ToString(),
+                parameterObject);
         }
         
         public static string InsertStatement(bool idempotent = true)
@@ -4854,94 +5059,189 @@ namespace Fifthweek.Api.Persistence.Identity
             return fieldNames;
         }
         
-        private static object MaskParameters(FifthweekUser entity, FifthweekUser.Fields fields, bool excludeSpecified)
+        private static object OnlySpecifiedParameters(
+            FifthweekUser entity, 
+            FifthweekUser.Fields fields,
+            FifthweekUser.Fields? excludedFields = null)
         {
             var parameters = new Dapper.DynamicParameters();
         
             // Assume we never want to exclude primary key field(s) from our input.
-            if(excludeSpecified != fields.HasFlag(FifthweekUser.Fields.ExampleWork))
+            if (fields.HasFlag(FifthweekUser.Fields.ExampleWork) && (excludedFields == null || !excludedFields.Value.HasFlag(FifthweekUser.Fields.ExampleWork)))
             {
                 parameters.Add("ExampleWork", entity.ExampleWork);
             }
         
-            if(excludeSpecified != fields.HasFlag(FifthweekUser.Fields.RegistrationDate))
+            if (fields.HasFlag(FifthweekUser.Fields.RegistrationDate) && (excludedFields == null || !excludedFields.Value.HasFlag(FifthweekUser.Fields.RegistrationDate)))
             {
                 parameters.Add("RegistrationDate", entity.RegistrationDate);
             }
         
-            if(excludeSpecified != fields.HasFlag(FifthweekUser.Fields.LastSignInDate))
+            if (fields.HasFlag(FifthweekUser.Fields.LastSignInDate) && (excludedFields == null || !excludedFields.Value.HasFlag(FifthweekUser.Fields.LastSignInDate)))
             {
                 parameters.Add("LastSignInDate", entity.LastSignInDate);
             }
         
-            if(excludeSpecified != fields.HasFlag(FifthweekUser.Fields.LastAccessTokenDate))
+            if (fields.HasFlag(FifthweekUser.Fields.LastAccessTokenDate) && (excludedFields == null || !excludedFields.Value.HasFlag(FifthweekUser.Fields.LastAccessTokenDate)))
             {
                 parameters.Add("LastAccessTokenDate", entity.LastAccessTokenDate);
             }
         
-            if(excludeSpecified != fields.HasFlag(FifthweekUser.Fields.ProfileImageFileId))
+            if (fields.HasFlag(FifthweekUser.Fields.ProfileImageFileId) && (excludedFields == null || !excludedFields.Value.HasFlag(FifthweekUser.Fields.ProfileImageFileId)))
             {
                 parameters.Add("ProfileImageFileId", entity.ProfileImageFileId);
             }
         
             parameters.Add("Id", entity.Id);
-            if(excludeSpecified != fields.HasFlag(FifthweekUser.Fields.AccessFailedCount))
+            if (fields.HasFlag(FifthweekUser.Fields.AccessFailedCount) && (excludedFields == null || !excludedFields.Value.HasFlag(FifthweekUser.Fields.AccessFailedCount)))
             {
                 parameters.Add("AccessFailedCount", entity.AccessFailedCount);
             }
         
-            if(excludeSpecified != fields.HasFlag(FifthweekUser.Fields.Email))
+            if (fields.HasFlag(FifthweekUser.Fields.Email) && (excludedFields == null || !excludedFields.Value.HasFlag(FifthweekUser.Fields.Email)))
             {
                 parameters.Add("Email", entity.Email);
             }
         
-            if(excludeSpecified != fields.HasFlag(FifthweekUser.Fields.EmailConfirmed))
+            if (fields.HasFlag(FifthweekUser.Fields.EmailConfirmed) && (excludedFields == null || !excludedFields.Value.HasFlag(FifthweekUser.Fields.EmailConfirmed)))
             {
                 parameters.Add("EmailConfirmed", entity.EmailConfirmed);
             }
         
-            if(excludeSpecified != fields.HasFlag(FifthweekUser.Fields.LockoutEnabled))
+            if (fields.HasFlag(FifthweekUser.Fields.LockoutEnabled) && (excludedFields == null || !excludedFields.Value.HasFlag(FifthweekUser.Fields.LockoutEnabled)))
             {
                 parameters.Add("LockoutEnabled", entity.LockoutEnabled);
             }
         
-            if(excludeSpecified != fields.HasFlag(FifthweekUser.Fields.LockoutEndDateUtc))
+            if (fields.HasFlag(FifthweekUser.Fields.LockoutEndDateUtc) && (excludedFields == null || !excludedFields.Value.HasFlag(FifthweekUser.Fields.LockoutEndDateUtc)))
             {
                 parameters.Add("LockoutEndDateUtc", entity.LockoutEndDateUtc);
             }
         
-            if(excludeSpecified != fields.HasFlag(FifthweekUser.Fields.PasswordHash))
+            if (fields.HasFlag(FifthweekUser.Fields.PasswordHash) && (excludedFields == null || !excludedFields.Value.HasFlag(FifthweekUser.Fields.PasswordHash)))
             {
                 parameters.Add("PasswordHash", entity.PasswordHash);
             }
         
-            if(excludeSpecified != fields.HasFlag(FifthweekUser.Fields.PhoneNumber))
+            if (fields.HasFlag(FifthweekUser.Fields.PhoneNumber) && (excludedFields == null || !excludedFields.Value.HasFlag(FifthweekUser.Fields.PhoneNumber)))
             {
                 parameters.Add("PhoneNumber", entity.PhoneNumber);
             }
         
-            if(excludeSpecified != fields.HasFlag(FifthweekUser.Fields.PhoneNumberConfirmed))
+            if (fields.HasFlag(FifthweekUser.Fields.PhoneNumberConfirmed) && (excludedFields == null || !excludedFields.Value.HasFlag(FifthweekUser.Fields.PhoneNumberConfirmed)))
             {
                 parameters.Add("PhoneNumberConfirmed", entity.PhoneNumberConfirmed);
             }
         
-            if(excludeSpecified != fields.HasFlag(FifthweekUser.Fields.SecurityStamp))
+            if (fields.HasFlag(FifthweekUser.Fields.SecurityStamp) && (excludedFields == null || !excludedFields.Value.HasFlag(FifthweekUser.Fields.SecurityStamp)))
             {
                 parameters.Add("SecurityStamp", entity.SecurityStamp);
             }
         
-            if(excludeSpecified != fields.HasFlag(FifthweekUser.Fields.TwoFactorEnabled))
+            if (fields.HasFlag(FifthweekUser.Fields.TwoFactorEnabled) && (excludedFields == null || !excludedFields.Value.HasFlag(FifthweekUser.Fields.TwoFactorEnabled)))
             {
                 parameters.Add("TwoFactorEnabled", entity.TwoFactorEnabled);
             }
         
-            if(excludeSpecified != fields.HasFlag(FifthweekUser.Fields.UserName))
+            if (fields.HasFlag(FifthweekUser.Fields.UserName) && (excludedFields == null || !excludedFields.Value.HasFlag(FifthweekUser.Fields.UserName)))
             {
                 parameters.Add("UserName", entity.UserName);
             }
         
             return parameters;
         }
+        
+        private static object AllExceptSpecifiedParameters(
+            FifthweekUser entity, 
+            FifthweekUser.Fields fields)
+        {
+            var parameters = new Dapper.DynamicParameters();
+        
+            // Assume we never want to exclude primary key field(s) from our input.
+            if (!fields.HasFlag(FifthweekUser.Fields.ExampleWork))
+            {
+                parameters.Add("ExampleWork", entity.ExampleWork);
+            }
+        
+            if (!fields.HasFlag(FifthweekUser.Fields.RegistrationDate))
+            {
+                parameters.Add("RegistrationDate", entity.RegistrationDate);
+            }
+        
+            if (!fields.HasFlag(FifthweekUser.Fields.LastSignInDate))
+            {
+                parameters.Add("LastSignInDate", entity.LastSignInDate);
+            }
+        
+            if (!fields.HasFlag(FifthweekUser.Fields.LastAccessTokenDate))
+            {
+                parameters.Add("LastAccessTokenDate", entity.LastAccessTokenDate);
+            }
+        
+            if (!fields.HasFlag(FifthweekUser.Fields.ProfileImageFileId))
+            {
+                parameters.Add("ProfileImageFileId", entity.ProfileImageFileId);
+            }
+        
+            parameters.Add("Id", entity.Id);
+            if (!fields.HasFlag(FifthweekUser.Fields.AccessFailedCount))
+            {
+                parameters.Add("AccessFailedCount", entity.AccessFailedCount);
+            }
+        
+            if (!fields.HasFlag(FifthweekUser.Fields.Email))
+            {
+                parameters.Add("Email", entity.Email);
+            }
+        
+            if (!fields.HasFlag(FifthweekUser.Fields.EmailConfirmed))
+            {
+                parameters.Add("EmailConfirmed", entity.EmailConfirmed);
+            }
+        
+            if (!fields.HasFlag(FifthweekUser.Fields.LockoutEnabled))
+            {
+                parameters.Add("LockoutEnabled", entity.LockoutEnabled);
+            }
+        
+            if (!fields.HasFlag(FifthweekUser.Fields.LockoutEndDateUtc))
+            {
+                parameters.Add("LockoutEndDateUtc", entity.LockoutEndDateUtc);
+            }
+        
+            if (!fields.HasFlag(FifthweekUser.Fields.PasswordHash))
+            {
+                parameters.Add("PasswordHash", entity.PasswordHash);
+            }
+        
+            if (!fields.HasFlag(FifthweekUser.Fields.PhoneNumber))
+            {
+                parameters.Add("PhoneNumber", entity.PhoneNumber);
+            }
+        
+            if (!fields.HasFlag(FifthweekUser.Fields.PhoneNumberConfirmed))
+            {
+                parameters.Add("PhoneNumberConfirmed", entity.PhoneNumberConfirmed);
+            }
+        
+            if (!fields.HasFlag(FifthweekUser.Fields.SecurityStamp))
+            {
+                parameters.Add("SecurityStamp", entity.SecurityStamp);
+            }
+        
+            if (!fields.HasFlag(FifthweekUser.Fields.TwoFactorEnabled))
+            {
+                parameters.Add("TwoFactorEnabled", entity.TwoFactorEnabled);
+            }
+        
+            if (!fields.HasFlag(FifthweekUser.Fields.UserName))
+            {
+                parameters.Add("UserName", entity.UserName);
+            }
+        
+            return parameters;
+        }
+        
     }
 }
 namespace Fifthweek.Api.Persistence.Identity
@@ -5053,116 +5353,52 @@ namespace Fifthweek.Api.Persistence.Identity
                 transaction);
         }
         
-        public static System.Threading.Tasks.Task InsertAsync(
+        public static System.Threading.Tasks.Task<int> InsertAsync(
             this System.Data.Common.DbConnection connection,
-            FifthweekUserRole entity,
-            string selectValuesForInsertStatement,
-            FifthweekUserRole.Fields selectedFields,
-            bool idempotent = true,
-            System.Data.IDbTransaction transaction = null)
-        {
-            return Dapper.SqlMapper.ExecuteAsync(
-                connection,
-                selectValuesForInsertStatement + System.Environment.NewLine + InsertStatement(idempotent),
-                MaskParameters(entity, selectedFields, true),
-                transaction);
-        }
-        
-        public static async System.Threading.Tasks.Task<bool> InsertIfAsync(
-            this System.Data.Common.DbConnection connection,
-            FifthweekUserRole entity,
-            string condition,
-            bool idempotent = true,
-            System.Data.IDbTransaction transaction = null)
-        {
-            return -1 == await InsertIfAsync(connection, entity, new[] { condition }, idempotent, transaction);
-        }
-        
-        public static async System.Threading.Tasks.Task<bool> InsertIfAsync(
-            this System.Data.Common.DbConnection connection,
-            FifthweekUserRole entity,
-            string condition,
-            string selectValuesForInsertStatement,
-            FifthweekUserRole.Fields selectedFields,
-            bool idempotent = true,
-            System.Data.IDbTransaction transaction = null)
-        {
-            return -1 == await InsertIfAsync(connection, entity, new[] { condition }, selectValuesForInsertStatement, selectedFields, idempotent, transaction);
-        }
-        
-        public static System.Threading.Tasks.Task<int> InsertIfAsync(
-            this System.Data.Common.DbConnection connection,
-            FifthweekUserRole entity,
-            System.Collections.Generic.IEnumerable<string> conditions,
-            bool idempotent = true,
-            System.Data.IDbTransaction transaction = null)
+            SqlGenerationParameters<FifthweekUserRole, FifthweekUserRole.Fields> parameters)
         {
             var sql = new System.Text.StringBuilder();
+        
+            if (parameters.Declarations != null)
+            {
+                sql.AppendLine(parameters.Declarations);
+            }
+            
             int currentIndex = 0;
-            foreach (var condition in conditions)
+            if (parameters.Conditions != null)
             {
-                sql.Append("IF ");
-                sql.AppendLine(condition); // Remember to use `WITH (UPDLOCK, HOLDLOCK)` in your conditions! See: http://samsaffron.com/blog/archive/2007/04/04/14.aspx
-                sql.AppendLine("BEGIN");
-                ++currentIndex;
-            }
-        
-            sql.AppendLine(InsertStatement(idempotent));
-            sql.AppendLine("SELECT -1 AS InsertAttempted"); // Indicates a (potentially idempotent) insert has been performed.
-                    
-            foreach (var condition in conditions)
-            {
-                sql.AppendLine("END");
-                sql.AppendLine("ELSE");
-                sql.Append("SELECT ").Append(--currentIndex).AppendLine(" AS InsertAttempted");
-            }
-        
-            return Dapper.SqlMapper.ExecuteScalarAsync<int>(
-                connection,
-                sql.ToString(),
-                new 
+                foreach (var condition in parameters.Conditions)
                 {
-                    entity.RoleId, entity.UserId
-                },
-                transaction);
-        }
-        
-        public static System.Threading.Tasks.Task<int> InsertIfAsync(
-            this System.Data.Common.DbConnection connection,
-            FifthweekUserRole entity,
-            System.Collections.Generic.IEnumerable<string> conditions,
-            string selectValuesForInsertStatement,
-            FifthweekUserRole.Fields selectedFields,
-            bool idempotent = true,
-            System.Data.IDbTransaction transaction = null)
-        {
-            var sql = new System.Text.StringBuilder();
-            sql.AppendLine(selectValuesForInsertStatement);
-        
-            int currentIndex = 0;
-            foreach (var condition in conditions)
-            {
-                sql.Append("IF ");
-                sql.AppendLine(condition); // Remember to use `WITH (UPDLOCK, HOLDLOCK)` in your conditions! See: http://samsaffron.com/blog/archive/2007/04/04/14.aspx
-                sql.AppendLine("BEGIN");
-                ++currentIndex;
+                    sql.Append("IF ");
+                    sql.AppendLine(condition); // Remember to use `WITH (UPDLOCK, HOLDLOCK)` in your conditions! See: http://samsaffron.com/blog/archive/2007/04/04/14.aspx
+                    sql.AppendLine("BEGIN");
+                    ++currentIndex;
+                }
             }
         
-            sql.AppendLine(InsertStatement(idempotent));
-            sql.AppendLine("SELECT -1 AS InsertAttempted"); // Indicates a (potentially idempotent) insert has been performed.
+            sql.AppendLine(InsertStatement(parameters.IdempotentInsert));
+        
+            if (parameters.Conditions != null)
+            {
+                sql.AppendLine("SELECT -1 AS FailedConditionIndex"); // Indicates all conditions passed and operation was attempted.
                     
-            foreach (var condition in conditions)
-            {
-                sql.AppendLine("END");
-                sql.AppendLine("ELSE");
-                sql.Append("SELECT ").Append(--currentIndex).AppendLine(" AS InsertAttempted");
+                foreach (var condition in parameters.Conditions)
+                {
+                    sql.AppendLine("END");
+                    sql.AppendLine("ELSE");
+                    sql.Append("SELECT ").Append(--currentIndex).AppendLine(" AS FailedConditionIndex");
+                }
             }
+        
+            var entity = parameters.Entity;
+            var parameterObject = parameters.ExcludedFromInput != null
+                ? AllExceptSpecifiedParameters(entity, parameters.ExcludedFromInput.Value)
+                : new { entity.RoleId, entity.UserId };
         
             return Dapper.SqlMapper.ExecuteScalarAsync<int>(
                 connection,
                 sql.ToString(),
-                MaskParameters(entity, selectedFields, true),
-                transaction);
+                parameterObject);
         }
         
         public static System.Threading.Tasks.Task UpsertAsync(
@@ -5204,7 +5440,57 @@ namespace Fifthweek.Api.Persistence.Identity
             FifthweekUserRole.Fields fields,
             System.Data.IDbTransaction transaction = null)
         {
-            return Dapper.SqlMapper.ExecuteAsync(connection, UpdateStatement(fields), MaskParameters(entity, fields, false), transaction);
+            return Dapper.SqlMapper.ExecuteAsync(connection, UpdateStatement(fields), OnlySpecifiedParameters(entity, fields), transaction);
+        }
+        
+        public static System.Threading.Tasks.Task<int> UpdateAsync(
+            this System.Data.Common.DbConnection connection,
+            SqlGenerationParameters<FifthweekUserRole, FifthweekUserRole.Fields> parameters)
+        {
+            if (parameters.UpdateMask == null)
+            {
+                throw new ArgumentException("Must contain update mask", "parameters");
+            }
+        
+            var sql = new System.Text.StringBuilder();
+        
+            if (parameters.Declarations != null)
+            {
+                sql.AppendLine(parameters.Declarations);
+            }
+            
+            int currentIndex = 0;
+            if (parameters.Conditions != null)
+            {
+                foreach (var condition in parameters.Conditions)
+                {
+                    sql.Append("IF ");
+                    sql.AppendLine(condition); // Remember to use `WITH (UPDLOCK, HOLDLOCK)` in your conditions! See: http://samsaffron.com/blog/archive/2007/04/04/14.aspx
+                    sql.AppendLine("BEGIN");
+                    ++currentIndex;
+                }
+            }
+        
+            sql.AppendLine(UpdateStatement(parameters.UpdateMask.Value));
+        
+            if (parameters.Conditions != null)
+            {
+                sql.AppendLine("SELECT -1 AS FailedConditionIndex"); // Indicates all conditions passed and operation was attempted.
+                    
+                foreach (var condition in parameters.Conditions)
+                {
+                    sql.AppendLine("END");
+                    sql.AppendLine("ELSE");
+                    sql.Append("SELECT ").Append(--currentIndex).AppendLine(" AS FailedConditionIndex");
+                }
+            }
+        
+            var parameterObject = OnlySpecifiedParameters(parameters.Entity, parameters.UpdateMask.Value, parameters.ExcludedFromInput);
+        
+            return Dapper.SqlMapper.ExecuteScalarAsync<int>(
+                connection,
+                sql.ToString(),
+                parameterObject);
         }
         
         public static string InsertStatement(bool idempotent = true)
@@ -5269,7 +5555,10 @@ namespace Fifthweek.Api.Persistence.Identity
             return fieldNames;
         }
         
-        private static object MaskParameters(FifthweekUserRole entity, FifthweekUserRole.Fields fields, bool excludeSpecified)
+        private static object OnlySpecifiedParameters(
+            FifthweekUserRole entity, 
+            FifthweekUserRole.Fields fields,
+            FifthweekUserRole.Fields? excludedFields = null)
         {
             var parameters = new Dapper.DynamicParameters();
         
@@ -5278,6 +5567,19 @@ namespace Fifthweek.Api.Persistence.Identity
             parameters.Add("UserId", entity.UserId);
             return parameters;
         }
+        
+        private static object AllExceptSpecifiedParameters(
+            FifthweekUserRole entity, 
+            FifthweekUserRole.Fields fields)
+        {
+            var parameters = new Dapper.DynamicParameters();
+        
+            // Assume we never want to exclude primary key field(s) from our input.
+            parameters.Add("RoleId", entity.RoleId);
+            parameters.Add("UserId", entity.UserId);
+            return parameters;
+        }
+        
     }
 }
 

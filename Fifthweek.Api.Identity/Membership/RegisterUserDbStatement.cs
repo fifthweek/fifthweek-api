@@ -62,9 +62,16 @@
                 PasswordHash = passwordHash,
             };
 
-            var result = await this.fifthweekDbContext.Database.Connection.InsertIfAsync(
-                user,
-                new[] { WhereUsernameNotTaken, WhereEmailNotTaken });
+            var parameters = new SqlGenerationParameters<FifthweekUser, FifthweekUser.Fields>(user)
+            {
+                Conditions = new[]
+                {
+                    WhereUsernameNotTaken, 
+                    WhereEmailNotTaken
+                }
+            };
+
+            var result = await this.fifthweekDbContext.Database.Connection.InsertAsync(parameters);
 
             switch (result)
             {
