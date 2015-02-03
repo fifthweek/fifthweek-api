@@ -49,8 +49,7 @@
                 requester,
                 postIdObject,
                 note.ChannelId,
-                note.Note,
-                note.ScheduledPostDate));
+                note.Note));
 
             return this.Ok();
         }

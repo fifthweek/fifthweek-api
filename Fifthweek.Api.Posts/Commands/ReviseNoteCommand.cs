@@ -1,7 +1,5 @@
 ﻿namespace Fifthweek.Api.Posts.Commands
 {
-    using System;
-
     using Fifthweek.Api.Channels.Shared;
     using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.Api.Posts.Shared;
@@ -17,8 +15,5 @@
         public ChannelId ChannelId { get; private set; }
 
         public ValidNote Note { get; private set; }
-
-        [Optional]
-        public DateTime? ScheduledPostDate { get; private set; }
     }
 }

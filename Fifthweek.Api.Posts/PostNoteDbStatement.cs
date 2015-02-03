@@ -10,12 +10,12 @@ namespace Fifthweek.Api.Posts
     using Fifthweek.CodeGeneration;
 
     [AutoConstructor]
-    public partial class UpsertNoteDbStatement : IUpsertNoteDbStatement
+    public partial class PostNoteDbStatement : IPostNoteDbStatement
     {
         private readonly IScheduledDateClippingFunction scheduledDateClipping;
         private readonly IFifthweekDbContext databaseContext;
 
-        public Task ExecuteAsync(PostId postId, ChannelId channelId, ValidNote note, DateTime? sheduledPostDate, DateTime now, bool isNewPost)
+        public Task ExecuteAsync(PostId postId, ChannelId channelId, ValidNote note, DateTime? sheduledPostDate, DateTime now)
         {
             postId.AssertNotNull("postId");
             channelId.AssertNotNull("channelId");
@@ -44,13 +44,7 @@ namespace Fifthweek.Api.Posts
                 liveDate,
                 now);
 
-            if (isNewPost)
-            {
-                return this.databaseContext.Database.Connection.InsertAsync(post);
-            }
-
-            var updatedFields = Post.Fields.ChannelId | Post.Fields.Comment | Post.Fields.LiveDate;
-            return this.databaseContext.Database.Connection.UpdateAsync(post, updatedFields);
+            return this.databaseContext.Database.Connection.InsertAsync(post);
         }
     }
 }

@@ -70,8 +70,8 @@
         [TestMethod]
         public async Task WhenPuttingImage_ItShouldIssuePostImageCommand()
         {
-            var data = new RevisedImageData(CollectionId, FileId, null, null, true);
-            var command = new ReviseImageCommand(Requester, PostId, CollectionId, FileId, null, null, true);
+            var data = new RevisedImageData(CollectionId, FileId, null);
+            var command = new ReviseImageCommand(Requester, PostId, CollectionId, FileId, null);
 
             this.requesterContext.Setup(v => v.GetRequester()).Returns(Requester);
             this.guidCreator.Setup(_ => _.CreateSqlSequential()).Returns(PostId.Value);
@@ -87,7 +87,7 @@
         [ExpectedException(typeof(BadRequestException))]
         public async Task WhenPuttingImage_WithoutSpecifyingRevisedImageId_ItShouldThrowBadRequestException()
         {
-            await this.target.PutImage(string.Empty, new RevisedImageData(CollectionId, FileId, null, null, true));
+            await this.target.PutImage(string.Empty, new RevisedImageData(CollectionId, FileId, null));
         }
 
         [TestMethod]

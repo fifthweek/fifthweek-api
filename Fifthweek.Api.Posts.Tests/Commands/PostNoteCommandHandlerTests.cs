@@ -26,7 +26,7 @@
         private static readonly PostNoteCommand Command = new PostNoteCommand(Requester, PostId, ChannelId, Note, ScheduleDate);
         private Mock<IChannelSecurity> channelSecurity;
         private Mock<IRequesterSecurity> requesterSecurity;
-        private Mock<IUpsertNoteDbStatement> upsertNote;
+        private Mock<IPostNoteDbStatement> upsertNote;
         private PostNoteCommandHandler target;
 
         [TestInitialize]
@@ -37,7 +37,7 @@
             this.requesterSecurity.SetupFor(Requester);
 
             // Give side-effecting components strict mock behaviour.
-            this.upsertNote = new Mock<IUpsertNoteDbStatement>(MockBehavior.Strict);
+            this.upsertNote = new Mock<IPostNoteDbStatement>(MockBehavior.Strict);
 
             this.target = new PostNoteCommandHandler(
                 this.requesterSecurity.Object,
@@ -64,7 +64,7 @@
         [TestMethod]
         public async Task ItShouldInsertNote()
         {
-            this.upsertNote.Setup(_ => _.ExecuteAsync(PostId, ChannelId, Note, ScheduleDate, It.Is<DateTime>(now => now.Kind == DateTimeKind.Utc), true))
+            this.upsertNote.Setup(_ => _.ExecuteAsync(PostId, ChannelId, Note, ScheduleDate, It.Is<DateTime>(now => now.Kind == DateTimeKind.Utc)))
                 .Returns(Task.FromResult(0))
                 .Verifiable();
 

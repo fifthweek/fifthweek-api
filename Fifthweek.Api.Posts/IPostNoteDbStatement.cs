@@ -6,14 +6,13 @@ namespace Fifthweek.Api.Posts
     using Fifthweek.Api.Channels.Shared;
     using Fifthweek.Api.Posts.Shared;
 
-    public interface IUpsertNoteDbStatement
+    public interface IPostNoteDbStatement
     {
         Task ExecuteAsync(
             PostId postId,
             ChannelId channelId,
             ValidNote note,
             DateTime? sheduledPostDate,
-            DateTime now,
-            bool isNewPost);
+            DateTime now);
     }
 }

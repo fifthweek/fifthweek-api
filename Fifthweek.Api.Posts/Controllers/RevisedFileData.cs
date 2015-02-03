@@ -1,7 +1,5 @@
 ﻿namespace Fifthweek.Api.Posts.Controllers
 {
-    using System;
-
     using Fifthweek.Api.Collections.Shared;
     using Fifthweek.Api.FileManagement.Shared;
     using Fifthweek.Api.Posts.Shared;
@@ -21,10 +19,5 @@
         [Optional]
         [Parsed(typeof(ValidComment))]
         public string Comment { get; set; }
-
-        [Optional]
-        public DateTime? ScheduledPostDate { get; set; }
-
-        public bool IsQueued { get; set; }
     }
 }

@@ -52,9 +52,7 @@
                 postIdObject,
                 image.CollectionId,
                 image.ImageFileId,
-                image.Comment,
-                image.ScheduledPostDate,
-                image.IsQueued));
+                image.Comment));
 
             return this.Ok();
         }

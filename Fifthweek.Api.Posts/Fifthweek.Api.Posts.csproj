@@ -83,7 +83,7 @@
     <Compile Include="Commands\ReviseImageCommand.cs" />
     <Compile Include="Controllers\RevisedFileData.cs" />
     <Compile Include="Controllers\RevisedImageData.cs" />
-    <Compile Include="IUpsertNoteDbStatement.cs" />
+    <Compile Include="IPostNoteDbStatement.cs" />
     <Compile Include="IScheduledDateClippingFunction.cs" />
     <Compile Include="Commands\ReviseNoteCommand.cs" />
     <Compile Include="Commands\ReorderQueueCommand.cs" />
@@ -129,7 +129,7 @@
     <Compile Include="Queries\GetCreatorBacklogQuery.cs" />
     <Compile Include="Queries\GetCreatorBacklogQueryHandler.cs" />
     <Compile Include="ScheduledDateClippingFunction.cs" />
-    <Compile Include="UpsertNoteDbStatement.cs" />
+    <Compile Include="PostNoteDbStatement.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Fifthweek.Api.Azure\Fifthweek.Api.Azure.csproj">

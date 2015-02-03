@@ -52,9 +52,7 @@
                 postIdObject,
                 file.CollectionId,
                 file.FileId,
-                file.Comment,
-                file.ScheduledPostDate,
-                file.IsQueued));
+                file.Comment));
 
             return this.Ok();
         }

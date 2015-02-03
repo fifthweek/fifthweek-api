@@ -15,7 +15,7 @@
     using Moq;
 
     [TestClass]
-    public class UpsertNoteDbStatementTests : PersistenceTestsBase
+    public class PostNoteDbStatementTests : PersistenceTestsBase
     {
         private static readonly UserId UserId = new UserId(Guid.NewGuid());
         private static readonly ChannelId ChannelId = new ChannelId(Guid.NewGuid());
@@ -25,7 +25,7 @@
         private static readonly DateTime ScheduleDate = Now.AddDays(2);
         private static readonly DateTime ClippedScheduleDate = DateTime.UtcNow.AddDays(1);
         private Mock<IScheduledDateClippingFunction> scheduledDateClipping;
-        private UpsertNoteDbStatement target;
+        private PostNoteDbStatement target;
 
         [TestInitialize]
         public void Initialize()
@@ -41,42 +41,42 @@
 
         public void InitializeTarget(IFifthweekDbContext databaseContext)
         {
-            this.target = new UpsertNoteDbStatement(this.scheduledDateClipping.Object, databaseContext);
+            this.target = new PostNoteDbStatement(this.scheduledDateClipping.Object, databaseContext);
         }
 
         [TestMethod]
         [ExpectedException(typeof(ArgumentNullException))]
         public async Task ItShouldRequirePostId()
         {
-            await this.target.ExecuteAsync(null, ChannelId, Note, ScheduleDate, Now, true);
+            await this.target.ExecuteAsync(null, ChannelId, Note, ScheduleDate, Now);
         }
 
         [TestMethod]
         [ExpectedException(typeof(ArgumentNullException))]
         public async Task ItShouldRequireChannelId()
         {
-            await this.target.ExecuteAsync(PostId, null, Note, ScheduleDate, Now, true);
+            await this.target.ExecuteAsync(PostId, null, Note, ScheduleDate, Now);
         }
 
         [TestMethod]
         [ExpectedException(typeof(ArgumentNullException))]
         public async Task ItShouldRequireNote()
         {
-            await this.target.ExecuteAsync(PostId, ChannelId, null, ScheduleDate, Now, true);
+            await this.target.ExecuteAsync(PostId, ChannelId, null, ScheduleDate, Now);
         }
 
         [TestMethod]
         [ExpectedException(typeof(ArgumentException))]
         public async Task ItShouldRequireUtcScheduleDate()
         {
-            await this.target.ExecuteAsync(PostId, ChannelId, Note, DateTime.Now, Now, true);
+            await this.target.ExecuteAsync(PostId, ChannelId, Note, DateTime.Now, Now);
         }
 
         [TestMethod]
         [ExpectedException(typeof(ArgumentException))]
         public async Task ItShouldRequireUtcNowDate()
         {
-            await this.target.ExecuteAsync(PostId, ChannelId, Note, ScheduleDate, DateTime.Now, true);
+            await this.target.ExecuteAsync(PostId, ChannelId, Note, ScheduleDate, DateTime.Now);
         }
 
         [TestMethod]
@@ -85,38 +85,26 @@
             await this.DatabaseTestAsync(async testDatabase =>
             {
                 this.InitializeTarget(testDatabase.NewContext());
-                await this.CreateChannelAsync(UserId, ChannelId, testDatabase, createPost: false);
-                await this.target.ExecuteAsync(PostId, ChannelId, Note, ScheduleDate, Now, true);
+                await this.CreateChannelAsync(UserId, ChannelId, testDatabase);
+                await this.target.ExecuteAsync(PostId, ChannelId, Note, ScheduleDate, Now);
                 await testDatabase.TakeSnapshotAsync();
 
-                await this.target.ExecuteAsync(PostId, ChannelId, Note, ScheduleDate, Now, true);
-
-                return ExpectedSideEffects.None;
-            });
-
-            await this.DatabaseTestAsync(async testDatabase =>
-            {
-                this.InitializeTarget(testDatabase.NewContext());
-                await this.CreateChannelAsync(UserId, ChannelId, testDatabase, createPost: true);
-                await this.target.ExecuteAsync(PostId, ChannelId, Note, ScheduleDate, Now, false);
-                await testDatabase.TakeSnapshotAsync();
-
-                await this.target.ExecuteAsync(PostId, ChannelId, Note, ScheduleDate, Now, false);
+                await this.target.ExecuteAsync(PostId, ChannelId, Note, ScheduleDate, Now);
 
                 return ExpectedSideEffects.None;
             });
         }
 
         [TestMethod]
-        public async Task ItShouldInsertIfPostIsNew()
+        public async Task ItShouldInsertPost()
         {
             await this.DatabaseTestAsync(async testDatabase =>
             {
                 this.InitializeTarget(testDatabase.NewContext());
-                await this.CreateChannelAsync(UserId, ChannelId, testDatabase, createPost: false);
+                await this.CreateChannelAsync(UserId, ChannelId, testDatabase);
                 await testDatabase.TakeSnapshotAsync();
 
-                await this.target.ExecuteAsync(PostId, ChannelId, Note, ScheduleDate, Now, true);
+                await this.target.ExecuteAsync(PostId, ChannelId, Note, ScheduleDate, Now);
 
                 var expectedPost = new Post(
                     PostId.Value,
@@ -147,59 +135,11 @@
             });
         }
 
-        [TestMethod]
-        public async Task ItShouldUpdateIfPostExists()
-        {
-            await this.DatabaseTestAsync(async testDatabase =>
-            {
-                this.InitializeTarget(testDatabase.NewContext());
-                await this.CreateChannelAsync(UserId, ChannelId, testDatabase, createPost: true);
-                await testDatabase.TakeSnapshotAsync();
-
-                await this.target.ExecuteAsync(PostId, ChannelId, Note, ScheduleDate, Now, false);
-
-                var expectedPost = new Post(
-                    PostId.Value,
-                    ChannelId.Value,
-                    null,
-                    null,
-                    null,
-                    null,
-                    null,
-                    null,
-                    null,
-                    Note.Value,
-                    false,
-                    new SqlDateTime(ClippedScheduleDate).Value,
-                    default(DateTime));
-            
-                return new ExpectedSideEffects
-                {
-                    Update = new WildcardEntity<Post>(expectedPost)
-                    {
-                        Expected = actualPost =>
-                        {
-                            expectedPost.CreationDate = actualPost.CreationDate; // Take wildcard properties from actual value.
-                            return expectedPost;
-                        }
-                    }
-                };
-            });
-        }
-
-        private async Task CreateChannelAsync(UserId newUserId, ChannelId newChannelId, TestDatabaseContext testDatabase, bool createPost)
+        private async Task CreateChannelAsync(UserId newUserId, ChannelId newChannelId, TestDatabaseContext testDatabase)
         {
             using (var databaseContext = testDatabase.NewContext())
             {
                 await databaseContext.CreateTestChannelAsync(newUserId.Value, newChannelId.Value);
-
-                if (createPost)
-                {
-                    var post = PostTests.UniqueNote(new Random());
-                    post.Id = PostId.Value;
-                    post.ChannelId = newChannelId.Value;
-                    await databaseContext.Database.Connection.InsertAsync(post);
-                }
             }
         }
     }

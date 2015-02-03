@@ -13,7 +13,7 @@
     {
         private readonly IRequesterSecurity requesterSecurity;
         private readonly IChannelSecurity channelSecurity;
-        private readonly IUpsertNoteDbStatement upsertNote;
+        private readonly IPostNoteDbStatement postNote;
 
         public async Task HandleAsync(PostNoteCommand command)
         {
@@ -23,13 +23,12 @@
 
             await this.channelSecurity.AssertWriteAllowedAsync(authenticatedUserId, command.ChannelId);
 
-            await this.upsertNote.ExecuteAsync(
+            await this.postNote.ExecuteAsync(
                 command.NewPostId,
                 command.ChannelId,
                 command.Note,
                 command.ScheduledPostDate,
-                DateTime.UtcNow,
-                true);
+                DateTime.UtcNow);
         }
     }
 }

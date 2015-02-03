@@ -71,7 +71,7 @@
         public async Task WhenPuttingNote_ItShouldIssuePostNoteCommand()
         {
             var data = new RevisedNoteData(ChannelId, Note.Value, ScheduledDate);
-            var command = new ReviseNoteCommand(Requester, PostId, ChannelId, Note, ScheduledDate);
+            var command = new ReviseNoteCommand(Requester, PostId, ChannelId, Note);
 
             this.requesterContext.Setup(v => v.GetRequester()).Returns(Requester);
             this.guidCreator.Setup(_ => _.CreateSqlSequential()).Returns(PostId.Value);

@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Linq;
 
-//// Generated on 02/02/2015 21:34:10 (UTC)
-//// Mapped solution in 3.47s
+//// Generated on 03/02/2015 11:55:53 (UTC)
+//// Mapped solution in 2.95s
 
 
 namespace Fifthweek.Api.Posts.Commands
@@ -415,7 +415,7 @@ namespace Fifthweek.Api.Posts.Commands
         public PostNoteCommandHandler(
             Fifthweek.Api.Identity.Shared.Membership.IRequesterSecurity requesterSecurity,
             Fifthweek.Api.Channels.Shared.IChannelSecurity channelSecurity,
-            Fifthweek.Api.Posts.IUpsertNoteDbStatement upsertNote)
+            Fifthweek.Api.Posts.IPostNoteDbStatement postNote)
         {
             if (requesterSecurity == null)
             {
@@ -427,14 +427,14 @@ namespace Fifthweek.Api.Posts.Commands
                 throw new ArgumentNullException("channelSecurity");
             }
 
-            if (upsertNote == null)
+            if (postNote == null)
             {
-                throw new ArgumentNullException("upsertNote");
+                throw new ArgumentNullException("postNote");
             }
 
             this.requesterSecurity = requesterSecurity;
             this.channelSecurity = channelSecurity;
-            this.upsertNote = upsertNote;
+            this.postNote = postNote;
         }
     }
 }
@@ -544,8 +544,7 @@ namespace Fifthweek.Api.Posts.Commands
             Fifthweek.Api.Identity.Shared.Membership.Requester requester,
             Fifthweek.Api.Posts.Shared.PostId postId,
             Fifthweek.Api.Channels.Shared.ChannelId channelId,
-            Fifthweek.Api.Posts.Shared.ValidNote note,
-            System.Nullable<System.DateTime> scheduledPostDate)
+            Fifthweek.Api.Posts.Shared.ValidNote note)
         {
             if (requester == null)
             {
@@ -571,7 +570,6 @@ namespace Fifthweek.Api.Posts.Commands
             this.PostId = postId;
             this.ChannelId = channelId;
             this.Note = note;
-            this.ScheduledPostDate = scheduledPostDate;
         }
     }
 }
@@ -851,6 +849,7 @@ namespace Fifthweek.Api.Posts
     using Fifthweek.Api.Posts.Shared;
     using Fifthweek.Api.Collections.Shared;
     using Fifthweek.Api.Collections;
+    using Fifthweek.Api.Channels.Shared;
 
     public partial class DeletePostDbStatement 
     {
@@ -882,6 +881,7 @@ namespace Fifthweek.Api.Posts
     using Fifthweek.Api.Posts.Shared;
     using Fifthweek.Api.Collections.Shared;
     using Fifthweek.Api.Collections;
+    using Fifthweek.Api.Channels.Shared;
 
     public partial class PostFileTypeChecks 
     {
@@ -920,6 +920,7 @@ namespace Fifthweek.Api.Posts
     using Fifthweek.Api.Posts.Shared;
     using Fifthweek.Api.Collections.Shared;
     using Fifthweek.Api.Collections;
+    using Fifthweek.Api.Channels.Shared;
 
     public partial class PostOwnership 
     {
@@ -951,6 +952,7 @@ namespace Fifthweek.Api.Posts
     using Fifthweek.Api.Posts.Shared;
     using Fifthweek.Api.Collections.Shared;
     using Fifthweek.Api.Collections;
+    using Fifthweek.Api.Channels.Shared;
 
     public partial class PostSecurity 
     {
@@ -982,6 +984,7 @@ namespace Fifthweek.Api.Posts
     using Fifthweek.Api.Posts.Shared;
     using Fifthweek.Api.Collections.Shared;
     using Fifthweek.Api.Collections;
+    using Fifthweek.Api.Channels.Shared;
 
     public partial class PostToCollectionDbStatement 
     {
@@ -1013,6 +1016,7 @@ namespace Fifthweek.Api.Posts
     using Fifthweek.Api.Posts.Shared;
     using Fifthweek.Api.Collections.Shared;
     using Fifthweek.Api.Collections;
+    using Fifthweek.Api.Channels.Shared;
 
     public partial class PostToCollectionDbSubStatements 
     {
@@ -1492,9 +1496,7 @@ namespace Fifthweek.Api.Posts.Commands
             Fifthweek.Api.Posts.Shared.PostId postId,
             Fifthweek.Api.Collections.Shared.CollectionId collectionId,
             Fifthweek.Api.FileManagement.Shared.FileId fileId,
-            Fifthweek.Api.Posts.Shared.ValidComment comment,
-            System.Nullable<System.DateTime> scheduledPostDate,
-            System.Boolean isQueued)
+            Fifthweek.Api.Posts.Shared.ValidComment comment)
         {
             if (requester == null)
             {
@@ -1516,18 +1518,11 @@ namespace Fifthweek.Api.Posts.Commands
                 throw new ArgumentNullException("fileId");
             }
 
-            if (isQueued == null)
-            {
-                throw new ArgumentNullException("isQueued");
-            }
-
             this.Requester = requester;
             this.PostId = postId;
             this.CollectionId = collectionId;
             this.FileId = fileId;
             this.Comment = comment;
-            this.ScheduledPostDate = scheduledPostDate;
-            this.IsQueued = isQueued;
         }
     }
 }
@@ -1555,9 +1550,7 @@ namespace Fifthweek.Api.Posts.Commands
             Fifthweek.Api.Posts.Shared.PostId postId,
             Fifthweek.Api.Collections.Shared.CollectionId collectionId,
             Fifthweek.Api.FileManagement.Shared.FileId imageFileId,
-            Fifthweek.Api.Posts.Shared.ValidComment comment,
-            System.Nullable<System.DateTime> scheduledPostDate,
-            System.Boolean isQueued)
+            Fifthweek.Api.Posts.Shared.ValidComment comment)
         {
             if (requester == null)
             {
@@ -1579,18 +1572,11 @@ namespace Fifthweek.Api.Posts.Commands
                 throw new ArgumentNullException("imageFileId");
             }
 
-            if (isQueued == null)
-            {
-                throw new ArgumentNullException("isQueued");
-            }
-
             this.Requester = requester;
             this.PostId = postId;
             this.CollectionId = collectionId;
             this.ImageFileId = imageFileId;
             this.Comment = comment;
-            this.ScheduledPostDate = scheduledPostDate;
-            this.IsQueued = isQueued;
         }
     }
 }
@@ -1617,9 +1603,7 @@ namespace Fifthweek.Api.Posts.Controllers
         public RevisedFileData(
             Fifthweek.Api.Collections.Shared.CollectionId collectionId,
             Fifthweek.Api.FileManagement.Shared.FileId fileId,
-            System.String comment,
-            System.Nullable<System.DateTime> scheduledPostDate,
-            System.Boolean isQueued)
+            System.String comment)
         {
             if (collectionId == null)
             {
@@ -1631,16 +1615,9 @@ namespace Fifthweek.Api.Posts.Controllers
                 throw new ArgumentNullException("fileId");
             }
 
-            if (isQueued == null)
-            {
-                throw new ArgumentNullException("isQueued");
-            }
-
             this.CollectionId = collectionId;
             this.FileId = fileId;
             this.Comment = comment;
-            this.ScheduledPostDate = scheduledPostDate;
-            this.IsQueued = isQueued;
         }
     }
 }
@@ -1667,9 +1644,7 @@ namespace Fifthweek.Api.Posts.Controllers
         public RevisedImageData(
             Fifthweek.Api.Collections.Shared.CollectionId collectionId,
             Fifthweek.Api.FileManagement.Shared.FileId imageFileId,
-            System.String comment,
-            System.Nullable<System.DateTime> scheduledPostDate,
-            System.Boolean isQueued)
+            System.String comment)
         {
             if (collectionId == null)
             {
@@ -1681,16 +1656,9 @@ namespace Fifthweek.Api.Posts.Controllers
                 throw new ArgumentNullException("imageFileId");
             }
 
-            if (isQueued == null)
-            {
-                throw new ArgumentNullException("isQueued");
-            }
-
             this.CollectionId = collectionId;
             this.ImageFileId = imageFileId;
             this.Comment = comment;
-            this.ScheduledPostDate = scheduledPostDate;
-            this.IsQueued = isQueued;
         }
     }
 }
@@ -1717,7 +1685,7 @@ namespace Fifthweek.Api.Posts.Commands
             Fifthweek.Api.Identity.Shared.Membership.IRequesterSecurity requesterSecurity,
             Fifthweek.Api.Channels.Shared.IChannelSecurity channelSecurity,
             Fifthweek.Api.Posts.Shared.IPostSecurity postSecurity,
-            Fifthweek.Api.Posts.IUpsertNoteDbStatement upsertNote)
+            Fifthweek.Api.Persistence.IFifthweekDbContext databaseContext)
         {
             if (requesterSecurity == null)
             {
@@ -1734,31 +1702,39 @@ namespace Fifthweek.Api.Posts.Commands
                 throw new ArgumentNullException("postSecurity");
             }
 
-            if (upsertNote == null)
+            if (databaseContext == null)
             {
-                throw new ArgumentNullException("upsertNote");
+                throw new ArgumentNullException("databaseContext");
             }
 
             this.requesterSecurity = requesterSecurity;
             this.channelSecurity = channelSecurity;
             this.postSecurity = postSecurity;
-            this.upsertNote = upsertNote;
+            this.databaseContext = databaseContext;
         }
     }
 }
 namespace Fifthweek.Api.Posts
 {
     using System;
+    using System.Linq;
     using System.Threading.Tasks;
-    using Fifthweek.Api.Channels.Shared;
-    using Fifthweek.Api.Core;
+    using Dapper;
     using Fifthweek.Api.Persistence;
-    using Fifthweek.Api.Posts.Shared;
     using Fifthweek.CodeGeneration;
+    using Fifthweek.Api.Core;
+    using Fifthweek.Api.FileManagement;
+    using Fifthweek.Api.FileManagement.Shared;
+    using Fifthweek.Shared;
+    using Fifthweek.Api.Identity.Shared.Membership;
+    using Fifthweek.Api.Posts.Shared;
+    using Fifthweek.Api.Collections.Shared;
+    using Fifthweek.Api.Collections;
+    using Fifthweek.Api.Channels.Shared;
 
-    public partial class UpsertNoteDbStatement 
+    public partial class PostNoteDbStatement 
     {
-        public UpsertNoteDbStatement(
+        public PostNoteDbStatement(
             Fifthweek.Api.Posts.IScheduledDateClippingFunction scheduledDateClipping,
             Fifthweek.Api.Persistence.IFifthweekDbContext databaseContext)
         {
@@ -2253,7 +2229,7 @@ namespace Fifthweek.Api.Posts.Commands
     {
         public override string ToString()
         {
-            return string.Format("ReviseNoteCommand({0}, {1}, {2}, {3}, {4})", this.Requester == null ? "null" : this.Requester.ToString(), this.PostId == null ? "null" : this.PostId.ToString(), this.ChannelId == null ? "null" : this.ChannelId.ToString(), this.Note == null ? "null" : this.Note.ToString(), this.ScheduledPostDate == null ? "null" : this.ScheduledPostDate.ToString());
+            return string.Format("ReviseNoteCommand({0}, {1}, {2}, {3})", this.Requester == null ? "null" : this.Requester.ToString(), this.PostId == null ? "null" : this.PostId.ToString(), this.ChannelId == null ? "null" : this.ChannelId.ToString(), this.Note == null ? "null" : this.Note.ToString());
         }
         
         public override bool Equals(object obj)
@@ -2285,7 +2261,6 @@ namespace Fifthweek.Api.Posts.Commands
                 hashCode = (hashCode * 397) ^ (this.PostId != null ? this.PostId.GetHashCode() : 0);
                 hashCode = (hashCode * 397) ^ (this.ChannelId != null ? this.ChannelId.GetHashCode() : 0);
                 hashCode = (hashCode * 397) ^ (this.Note != null ? this.Note.GetHashCode() : 0);
-                hashCode = (hashCode * 397) ^ (this.ScheduledPostDate != null ? this.ScheduledPostDate.GetHashCode() : 0);
                 return hashCode;
             }
         }
@@ -2308,11 +2283,6 @@ namespace Fifthweek.Api.Posts.Commands
             }
         
             if (!object.Equals(this.Note, other.Note))
-            {
-                return false;
-            }
-        
-            if (!object.Equals(this.ScheduledPostDate, other.ScheduledPostDate))
             {
                 return false;
             }
@@ -3044,7 +3014,7 @@ namespace Fifthweek.Api.Posts.Commands
     {
         public override string ToString()
         {
-            return string.Format("ReviseFileCommand({0}, {1}, {2}, {3}, {4}, {5}, {6})", this.Requester == null ? "null" : this.Requester.ToString(), this.PostId == null ? "null" : this.PostId.ToString(), this.CollectionId == null ? "null" : this.CollectionId.ToString(), this.FileId == null ? "null" : this.FileId.ToString(), this.Comment == null ? "null" : this.Comment.ToString(), this.ScheduledPostDate == null ? "null" : this.ScheduledPostDate.ToString(), this.IsQueued == null ? "null" : this.IsQueued.ToString());
+            return string.Format("ReviseFileCommand({0}, {1}, {2}, {3}, {4})", this.Requester == null ? "null" : this.Requester.ToString(), this.PostId == null ? "null" : this.PostId.ToString(), this.CollectionId == null ? "null" : this.CollectionId.ToString(), this.FileId == null ? "null" : this.FileId.ToString(), this.Comment == null ? "null" : this.Comment.ToString());
         }
         
         public override bool Equals(object obj)
@@ -3077,8 +3047,6 @@ namespace Fifthweek.Api.Posts.Commands
                 hashCode = (hashCode * 397) ^ (this.CollectionId != null ? this.CollectionId.GetHashCode() : 0);
                 hashCode = (hashCode * 397) ^ (this.FileId != null ? this.FileId.GetHashCode() : 0);
                 hashCode = (hashCode * 397) ^ (this.Comment != null ? this.Comment.GetHashCode() : 0);
-                hashCode = (hashCode * 397) ^ (this.ScheduledPostDate != null ? this.ScheduledPostDate.GetHashCode() : 0);
-                hashCode = (hashCode * 397) ^ (this.IsQueued != null ? this.IsQueued.GetHashCode() : 0);
                 return hashCode;
             }
         }
@@ -3110,16 +3078,6 @@ namespace Fifthweek.Api.Posts.Commands
                 return false;
             }
         
-            if (!object.Equals(this.ScheduledPostDate, other.ScheduledPostDate))
-            {
-                return false;
-            }
-        
-            if (!object.Equals(this.IsQueued, other.IsQueued))
-            {
-                return false;
-            }
-        
             return true;
         }
     }
@@ -3145,7 +3103,7 @@ namespace Fifthweek.Api.Posts.Commands
     {
         public override string ToString()
         {
-            return string.Format("ReviseImageCommand({0}, {1}, {2}, {3}, {4}, {5}, {6})", this.Requester == null ? "null" : this.Requester.ToString(), this.PostId == null ? "null" : this.PostId.ToString(), this.CollectionId == null ? "null" : this.CollectionId.ToString(), this.ImageFileId == null ? "null" : this.ImageFileId.ToString(), this.Comment == null ? "null" : this.Comment.ToString(), this.ScheduledPostDate == null ? "null" : this.ScheduledPostDate.ToString(), this.IsQueued == null ? "null" : this.IsQueued.ToString());
+            return string.Format("ReviseImageCommand({0}, {1}, {2}, {3}, {4})", this.Requester == null ? "null" : this.Requester.ToString(), this.PostId == null ? "null" : this.PostId.ToString(), this.CollectionId == null ? "null" : this.CollectionId.ToString(), this.ImageFileId == null ? "null" : this.ImageFileId.ToString(), this.Comment == null ? "null" : this.Comment.ToString());
         }
         
         public override bool Equals(object obj)
@@ -3178,8 +3136,6 @@ namespace Fifthweek.Api.Posts.Commands
                 hashCode = (hashCode * 397) ^ (this.CollectionId != null ? this.CollectionId.GetHashCode() : 0);
                 hashCode = (hashCode * 397) ^ (this.ImageFileId != null ? this.ImageFileId.GetHashCode() : 0);
                 hashCode = (hashCode * 397) ^ (this.Comment != null ? this.Comment.GetHashCode() : 0);
-                hashCode = (hashCode * 397) ^ (this.ScheduledPostDate != null ? this.ScheduledPostDate.GetHashCode() : 0);
-                hashCode = (hashCode * 397) ^ (this.IsQueued != null ? this.IsQueued.GetHashCode() : 0);
                 return hashCode;
             }
         }
@@ -3211,16 +3167,6 @@ namespace Fifthweek.Api.Posts.Commands
                 return false;
             }
         
-            if (!object.Equals(this.ScheduledPostDate, other.ScheduledPostDate))
-            {
-                return false;
-            }
-        
-            if (!object.Equals(this.IsQueued, other.IsQueued))
-            {
-                return false;
-            }
-        
             return true;
         }
     }
@@ -3247,7 +3193,7 @@ namespace Fifthweek.Api.Posts.Controllers
     {
         public override string ToString()
         {
-            return string.Format("RevisedFileData({0}, {1}, \"{2}\", {3}, {4})", this.CollectionId == null ? "null" : this.CollectionId.ToString(), this.FileId == null ? "null" : this.FileId.ToString(), this.Comment == null ? "null" : this.Comment.ToString(), this.ScheduledPostDate == null ? "null" : this.ScheduledPostDate.ToString(), this.IsQueued == null ? "null" : this.IsQueued.ToString());
+            return string.Format("RevisedFileData({0}, {1}, \"{2}\")", this.CollectionId == null ? "null" : this.CollectionId.ToString(), this.FileId == null ? "null" : this.FileId.ToString(), this.Comment == null ? "null" : this.Comment.ToString());
         }
         
         public override bool Equals(object obj)
@@ -3278,8 +3224,6 @@ namespace Fifthweek.Api.Posts.Controllers
                 hashCode = (hashCode * 397) ^ (this.CollectionId != null ? this.CollectionId.GetHashCode() : 0);
                 hashCode = (hashCode * 397) ^ (this.FileId != null ? this.FileId.GetHashCode() : 0);
                 hashCode = (hashCode * 397) ^ (this.Comment != null ? this.Comment.GetHashCode() : 0);
-                hashCode = (hashCode * 397) ^ (this.ScheduledPostDate != null ? this.ScheduledPostDate.GetHashCode() : 0);
-                hashCode = (hashCode * 397) ^ (this.IsQueued != null ? this.IsQueued.GetHashCode() : 0);
                 return hashCode;
             }
         }
@@ -3297,16 +3241,6 @@ namespace Fifthweek.Api.Posts.Controllers
             }
         
             if (!object.Equals(this.Comment, other.Comment))
-            {
-                return false;
-            }
-        
-            if (!object.Equals(this.ScheduledPostDate, other.ScheduledPostDate))
-            {
-                return false;
-            }
-        
-            if (!object.Equals(this.IsQueued, other.IsQueued))
             {
                 return false;
             }
@@ -3337,7 +3271,7 @@ namespace Fifthweek.Api.Posts.Controllers
     {
         public override string ToString()
         {
-            return string.Format("RevisedImageData({0}, {1}, \"{2}\", {3}, {4})", this.CollectionId == null ? "null" : this.CollectionId.ToString(), this.ImageFileId == null ? "null" : this.ImageFileId.ToString(), this.Comment == null ? "null" : this.Comment.ToString(), this.ScheduledPostDate == null ? "null" : this.ScheduledPostDate.ToString(), this.IsQueued == null ? "null" : this.IsQueued.ToString());
+            return string.Format("RevisedImageData({0}, {1}, \"{2}\")", this.CollectionId == null ? "null" : this.CollectionId.ToString(), this.ImageFileId == null ? "null" : this.ImageFileId.ToString(), this.Comment == null ? "null" : this.Comment.ToString());
         }
         
         public override bool Equals(object obj)
@@ -3368,8 +3302,6 @@ namespace Fifthweek.Api.Posts.Controllers
                 hashCode = (hashCode * 397) ^ (this.CollectionId != null ? this.CollectionId.GetHashCode() : 0);
                 hashCode = (hashCode * 397) ^ (this.ImageFileId != null ? this.ImageFileId.GetHashCode() : 0);
                 hashCode = (hashCode * 397) ^ (this.Comment != null ? this.Comment.GetHashCode() : 0);
-                hashCode = (hashCode * 397) ^ (this.ScheduledPostDate != null ? this.ScheduledPostDate.GetHashCode() : 0);
-                hashCode = (hashCode * 397) ^ (this.IsQueued != null ? this.IsQueued.GetHashCode() : 0);
                 return hashCode;
             }
         }
@@ -3387,16 +3319,6 @@ namespace Fifthweek.Api.Posts.Controllers
             }
         
             if (!object.Equals(this.Comment, other.Comment))
-            {
-                return false;
-            }
-        
-            if (!object.Equals(this.ScheduledPostDate, other.ScheduledPostDate))
-            {
-                return false;
-            }
-        
-            if (!object.Equals(this.IsQueued, other.IsQueued))
             {
                 return false;
             }
@@ -4011,9 +3933,7 @@ namespace Fifthweek.Api.Posts.Controllers
             public Parsed(
                 Fifthweek.Api.Collections.Shared.CollectionId collectionId,
                 Fifthweek.Api.FileManagement.Shared.FileId fileId,
-                ValidComment comment,
-                System.Nullable<System.DateTime> scheduledPostDate,
-                System.Boolean isQueued)
+                ValidComment comment)
             {
                 if (collectionId == null)
                 {
@@ -4025,16 +3945,9 @@ namespace Fifthweek.Api.Posts.Controllers
                     throw new ArgumentNullException("fileId");
                 }
 
-                if (isQueued == null)
-                {
-                    throw new ArgumentNullException("isQueued");
-                }
-
                 this.CollectionId = collectionId;
                 this.FileId = fileId;
                 this.Comment = comment;
-                this.ScheduledPostDate = scheduledPostDate;
-                this.IsQueued = isQueued;
             }
         
             public Fifthweek.Api.Collections.Shared.CollectionId CollectionId { get; private set; }
@@ -4042,10 +3955,6 @@ namespace Fifthweek.Api.Posts.Controllers
             public Fifthweek.Api.FileManagement.Shared.FileId FileId { get; private set; }
         
             public ValidComment Comment { get; private set; }
-        
-            public System.Nullable<System.DateTime> ScheduledPostDate { get; private set; }
-        
-            public System.Boolean IsQueued { get; private set; }
         }
     }
 
@@ -4079,9 +3988,7 @@ namespace Fifthweek.Api.Posts.Controllers
             return new RevisedFileData.Parsed(
                 target.CollectionId,
                 target.FileId,
-                parsed0,
-                target.ScheduledPostDate,
-                target.IsQueued);
+                parsed0);
         }    
     }
 }
@@ -4110,9 +4017,7 @@ namespace Fifthweek.Api.Posts.Controllers
             public Parsed(
                 Fifthweek.Api.Collections.Shared.CollectionId collectionId,
                 Fifthweek.Api.FileManagement.Shared.FileId imageFileId,
-                ValidComment comment,
-                System.Nullable<System.DateTime> scheduledPostDate,
-                System.Boolean isQueued)
+                ValidComment comment)
             {
                 if (collectionId == null)
                 {
@@ -4124,16 +4029,9 @@ namespace Fifthweek.Api.Posts.Controllers
                     throw new ArgumentNullException("imageFileId");
                 }
 
-                if (isQueued == null)
-                {
-                    throw new ArgumentNullException("isQueued");
-                }
-
                 this.CollectionId = collectionId;
                 this.ImageFileId = imageFileId;
                 this.Comment = comment;
-                this.ScheduledPostDate = scheduledPostDate;
-                this.IsQueued = isQueued;
             }
         
             public Fifthweek.Api.Collections.Shared.CollectionId CollectionId { get; private set; }
@@ -4141,10 +4039,6 @@ namespace Fifthweek.Api.Posts.Controllers
             public Fifthweek.Api.FileManagement.Shared.FileId ImageFileId { get; private set; }
         
             public ValidComment Comment { get; private set; }
-        
-            public System.Nullable<System.DateTime> ScheduledPostDate { get; private set; }
-        
-            public System.Boolean IsQueued { get; private set; }
         }
     }
 
@@ -4178,9 +4072,7 @@ namespace Fifthweek.Api.Posts.Controllers
             return new RevisedImageData.Parsed(
                 target.CollectionId,
                 target.ImageFileId,
-                parsed0,
-                target.ScheduledPostDate,
-                target.IsQueued);
+                parsed0);
         }    
     }
 }
