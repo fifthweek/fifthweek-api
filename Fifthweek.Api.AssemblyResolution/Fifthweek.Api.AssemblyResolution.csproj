@@ -44,6 +44,10 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Fifthweek.Api.Aggregations\Fifthweek.Api.Aggregations.csproj">
+      <Project>{cc71b97b-13cc-4333-a681-d192dd87bccd}</Project>
+      <Name>Fifthweek.Api.Aggregations</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Fifthweek.Api.Availability\Fifthweek.Api.Availability.csproj">
       <Project>{f42bec68-554b-4c11-8533-92bec56f23a4}</Project>
       <Name>Fifthweek.Api.Availability</Name>
