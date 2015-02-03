@@ -11,6 +11,7 @@
     {
         public void Register(ContainerBuilder builder)
         {
+            builder.RegisterType<UpdateUserTimeStampsDbStatement>().As<IUpdateUserTimeStampsDbStatement>();
             builder.RegisterType<UpsertRefreshTokenDbStatement>().As<IUpsertRefreshTokenDbStatement>();
             builder.RegisterType<RemoveRefreshTokenDbStatement>().As<IRemoveRefreshTokenDbStatement>();
             builder.RegisterType<TryGetRefreshTokenDbStatement>().As<ITryGetRefreshTokenDbStatement>();

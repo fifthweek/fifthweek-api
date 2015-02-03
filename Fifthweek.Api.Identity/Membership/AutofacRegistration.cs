@@ -3,14 +3,16 @@
     using Autofac;
 
     using Fifthweek.Api.Core;
+    using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.Shared;
 
     public class AutofacRegistration : IAutofacRegistration
     {
         public void Register(ContainerBuilder builder)
         {
-            builder.RegisterType<OAuth.UpdateUserTimeStampsDbStatement>().As<IUpdateUserTimeStampsDbStatement>().InstancePerRequest();
-            builder.RegisterType<RegisterUserDbStatement>().As<IRegisterUserDbStatement>().InstancePerRequest();
+            builder.RegisterType<RegisterUserDbStatement>().As<IRegisterUserDbStatement>();
+            builder.RegisterType<RequesterSecurity>().As<IRequesterSecurity>().SingleInstance();
+            builder.RegisterType<RequesterContext>().As<IRequesterContext>().SingleInstance();
         }
     }
 }

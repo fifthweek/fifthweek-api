@@ -16,8 +16,9 @@
 
         private readonly IRequesterContext requesterContext;
 
+        [Route("")]
         [Route("{userId}")]
-        public async Task<UserAccessSignatures> Get(string userId)
+        public async Task<UserAccessSignatures> Get(string userId = null)
         {
             var requestedUserId = string.IsNullOrWhiteSpace(userId) ? null : new UserId(userId.DecodeGuid());
             var requester = this.requesterContext.GetRequester();
