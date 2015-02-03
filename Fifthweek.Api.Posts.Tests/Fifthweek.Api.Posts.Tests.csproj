@@ -89,6 +89,8 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
+    <Compile Include="Commands\ReviseFileCommandHandlerTests.cs" />
+    <Compile Include="Commands\ReviseImageCommandHandlerTests.cs" />
     <Compile Include="Commands\ReviseNoteCommandHandlerTests.cs" />
     <Compile Include="Commands\ReorderQueueCommandHandlerTests.cs" />
     <Compile Include="Commands\DeletePostCommandHandlerTests.cs" />

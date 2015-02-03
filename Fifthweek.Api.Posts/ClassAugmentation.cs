@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Linq;
 
-//// Generated on 03/02/2015 11:55:53 (UTC)
-//// Mapped solution in 2.95s
+//// Generated on 03/02/2015 13:25:43 (UTC)
+//// Mapped solution in 3.03s
 
 
 namespace Fifthweek.Api.Posts.Commands
@@ -1750,6 +1750,118 @@ namespace Fifthweek.Api.Posts
 
             this.scheduledDateClipping = scheduledDateClipping;
             this.databaseContext = databaseContext;
+        }
+    }
+}
+namespace Fifthweek.Api.Posts.Commands
+{
+    using System;
+    using System.Linq;
+    using Fifthweek.Api.Identity.Shared.Membership;
+    using Fifthweek.Api.Posts.Shared;
+    using Fifthweek.CodeGeneration;
+    using System.Threading.Tasks;
+    using Fifthweek.Api.Core;
+    using Fifthweek.Api.FileManagement.Shared;
+    using Fifthweek.Api.Collections.Shared;
+    using Fifthweek.Api.Channels.Shared;
+    using Fifthweek.Api.Persistence;
+    using System.Collections.Generic;
+    using System.Text;
+    using Dapper;
+
+    public partial class ReviseImageCommandHandler 
+    {
+        public ReviseImageCommandHandler(
+            Fifthweek.Api.Identity.Shared.Membership.IRequesterSecurity requesterSecurity,
+            Fifthweek.Api.Collections.Shared.ICollectionSecurity collectionSecurity,
+            Fifthweek.Api.Posts.Shared.IPostSecurity postSecurity,
+            Fifthweek.Api.Persistence.IFifthweekDbContext databaseContext,
+            Fifthweek.Api.FileManagement.Shared.IScheduleGarbageCollectionStatement scheduleGarbageCollection)
+        {
+            if (requesterSecurity == null)
+            {
+                throw new ArgumentNullException("requesterSecurity");
+            }
+
+            if (collectionSecurity == null)
+            {
+                throw new ArgumentNullException("collectionSecurity");
+            }
+
+            if (postSecurity == null)
+            {
+                throw new ArgumentNullException("postSecurity");
+            }
+
+            if (databaseContext == null)
+            {
+                throw new ArgumentNullException("databaseContext");
+            }
+
+            if (scheduleGarbageCollection == null)
+            {
+                throw new ArgumentNullException("scheduleGarbageCollection");
+            }
+
+            this.requesterSecurity = requesterSecurity;
+            this.collectionSecurity = collectionSecurity;
+            this.postSecurity = postSecurity;
+            this.databaseContext = databaseContext;
+            this.scheduleGarbageCollection = scheduleGarbageCollection;
+        }
+    }
+}
+namespace Fifthweek.Api.Posts.Commands
+{
+    using System.Threading.Tasks;
+    using Fifthweek.Api.Collections.Shared;
+    using Fifthweek.Api.Core;
+    using Fifthweek.Api.FileManagement.Shared;
+    using Fifthweek.Api.Identity.Shared.Membership;
+    using Fifthweek.Api.Persistence;
+    using Fifthweek.Api.Posts.Shared;
+    using Fifthweek.CodeGeneration;
+
+    public partial class ReviseFileCommandHandler 
+    {
+        public ReviseFileCommandHandler(
+            Fifthweek.Api.Identity.Shared.Membership.IRequesterSecurity requesterSecurity,
+            Fifthweek.Api.Collections.Shared.ICollectionSecurity collectionSecurity,
+            Fifthweek.Api.Posts.Shared.IPostSecurity postSecurity,
+            Fifthweek.Api.Persistence.IFifthweekDbContext databaseContext,
+            Fifthweek.Api.FileManagement.Shared.IScheduleGarbageCollectionStatement scheduleGarbageCollection)
+        {
+            if (requesterSecurity == null)
+            {
+                throw new ArgumentNullException("requesterSecurity");
+            }
+
+            if (collectionSecurity == null)
+            {
+                throw new ArgumentNullException("collectionSecurity");
+            }
+
+            if (postSecurity == null)
+            {
+                throw new ArgumentNullException("postSecurity");
+            }
+
+            if (databaseContext == null)
+            {
+                throw new ArgumentNullException("databaseContext");
+            }
+
+            if (scheduleGarbageCollection == null)
+            {
+                throw new ArgumentNullException("scheduleGarbageCollection");
+            }
+
+            this.requesterSecurity = requesterSecurity;
+            this.collectionSecurity = collectionSecurity;
+            this.postSecurity = postSecurity;
+            this.databaseContext = databaseContext;
+            this.scheduleGarbageCollection = scheduleGarbageCollection;
         }
     }
 }

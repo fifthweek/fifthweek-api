@@ -113,22 +113,22 @@
                 {
                     if (sideEffects.Inserts == null)
                     {
-                        Assert.Fail("Insert was unexpected");
+                        Assert.Fail("Insert was unexpected: " + databaseEntity);
                     }
                     else
                     {
-                        Assert.IsTrue(sideEffects.Inserts.Any(_ => AreEntitiesEqual(_, databaseEntity)), "Insert was unexpected");
+                        Assert.IsTrue(sideEffects.Inserts.Any(_ => AreEntitiesEqual(_, databaseEntity)), "Insert was unexpected: " + databaseEntity);
                     }
                 }
                 else if (!snapshotEntity.Equals(databaseEntity))
                 {
                     if (sideEffects.Updates == null)
                     {
-                        Assert.Fail("Update was unexpected");
+                        Assert.Fail("Update was unexpected: " + databaseEntity);
                     }
                     else
                     {
-                        Assert.IsTrue(sideEffects.Updates.Any(_ => AreEntitiesEqual(_, databaseEntity)), "Update was unexpected");
+                        Assert.IsTrue(sideEffects.Updates.Any(_ => AreEntitiesEqual(_, databaseEntity)), "Update was unexpected: " + databaseEntity);
                     }
                 }
             }
