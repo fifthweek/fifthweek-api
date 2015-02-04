@@ -6,6 +6,6 @@
     {
         Type EntityType { get; }
 
-        object GetExpectedValue(object other);
+        IIdentityEquatable GetExpectedValue(IIdentityEquatable other);
     }
 }

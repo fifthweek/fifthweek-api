@@ -26,7 +26,7 @@
 
         public Type EntityType { get; private set; }
 
-        public object GetExpectedValue(object other)
+        public IIdentityEquatable GetExpectedValue(IIdentityEquatable other)
         {
             if (this.Expected == null)
             {

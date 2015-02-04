@@ -82,8 +82,13 @@
             Trace.WriteLine(string.Format("Asserted expected side effects in {0}s", Math.Round(stopwatch.Elapsed.TotalSeconds, 2)));
         }
 
-        private static bool AreEntitiesEqual(object possibleWildcard, object standardEntity)
+        private static bool AreEntitiesEqual(IIdentityEquatable possibleWildcard, IIdentityEquatable standardEntity)
         {
+            if (!possibleWildcard.IdentityEquals(standardEntity))
+            {
+                return false;
+            }
+
             var wildcardEntity = possibleWildcard as IWildcardEntity;
             if (wildcardEntity != null && standardEntity != null)
             {

@@ -12,7 +12,14 @@
     [AutoConstructor]
     public partial class RescheduleForNowCommandHandler : ICommandHandler<RescheduleForNowCommand>
     {
-        private static readonly string WhereNotLive = @"";
+        private static readonly string WhereNotLive = string.Format(
+            @"EXISTS (SELECT * 
+                      FROM  {0} WITH (UPDLOCK, HOLDLOCK)
+                      WHERE {1} = @{1}
+                      AND   {2} > @{2})", // Equivalent to `LiveDate > Now`
+            Post.Table,
+            Post.Fields.Id,
+            Post.Fields.LiveDate);
 
         private readonly IRequesterSecurity requesterSecurity;
         private readonly IPostSecurity postSecurity;
