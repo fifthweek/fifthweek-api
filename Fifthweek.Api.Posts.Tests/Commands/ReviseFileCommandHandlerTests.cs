@@ -147,6 +147,7 @@
                     {
                         Expected = actualPost =>
                         {
+                            expectedPost.ScheduledByQueue = actualPost.ScheduledByQueue;
                             expectedPost.LiveDate = actualPost.LiveDate;
                             expectedPost.CreationDate = actualPost.CreationDate; // Take wildcard properties from actual value.
                             return expectedPost;
