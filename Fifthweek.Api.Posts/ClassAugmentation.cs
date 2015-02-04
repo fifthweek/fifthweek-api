@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Linq;
 
-//// Generated on 04/02/2015 15:22:51 (UTC)
-//// Mapped solution in 4.17s
+//// Generated on 04/02/2015 16:40:48 (UTC)
+//// Mapped solution in 3.57s
 
 
 namespace Fifthweek.Api.Posts.Commands
@@ -1534,7 +1534,6 @@ namespace Fifthweek.Api.Posts.Commands
         public ReviseFileCommand(
             Fifthweek.Api.Identity.Shared.Membership.Requester requester,
             Fifthweek.Api.Posts.Shared.PostId postId,
-            Fifthweek.Api.Collections.Shared.CollectionId collectionId,
             Fifthweek.Api.FileManagement.Shared.FileId fileId,
             Fifthweek.Api.Posts.Shared.ValidComment comment)
         {
@@ -1548,11 +1547,6 @@ namespace Fifthweek.Api.Posts.Commands
                 throw new ArgumentNullException("postId");
             }
 
-            if (collectionId == null)
-            {
-                throw new ArgumentNullException("collectionId");
-            }
-
             if (fileId == null)
             {
                 throw new ArgumentNullException("fileId");
@@ -1560,7 +1554,6 @@ namespace Fifthweek.Api.Posts.Commands
 
             this.Requester = requester;
             this.PostId = postId;
-            this.CollectionId = collectionId;
             this.FileId = fileId;
             this.Comment = comment;
         }
@@ -1589,7 +1582,6 @@ namespace Fifthweek.Api.Posts.Commands
         public ReviseImageCommand(
             Fifthweek.Api.Identity.Shared.Membership.Requester requester,
             Fifthweek.Api.Posts.Shared.PostId postId,
-            Fifthweek.Api.Collections.Shared.CollectionId collectionId,
             Fifthweek.Api.FileManagement.Shared.FileId imageFileId,
             Fifthweek.Api.Posts.Shared.ValidComment comment)
         {
@@ -1603,11 +1595,6 @@ namespace Fifthweek.Api.Posts.Commands
                 throw new ArgumentNullException("postId");
             }
 
-            if (collectionId == null)
-            {
-                throw new ArgumentNullException("collectionId");
-            }
-
             if (imageFileId == null)
             {
                 throw new ArgumentNullException("imageFileId");
@@ -1615,7 +1602,6 @@ namespace Fifthweek.Api.Posts.Commands
 
             this.Requester = requester;
             this.PostId = postId;
-            this.CollectionId = collectionId;
             this.ImageFileId = imageFileId;
             this.Comment = comment;
         }
@@ -1642,21 +1628,14 @@ namespace Fifthweek.Api.Posts.Controllers
     public partial class RevisedFileData 
     {
         public RevisedFileData(
-            Fifthweek.Api.Collections.Shared.CollectionId collectionId,
             Fifthweek.Api.FileManagement.Shared.FileId fileId,
             System.String comment)
         {
-            if (collectionId == null)
-            {
-                throw new ArgumentNullException("collectionId");
-            }
-
             if (fileId == null)
             {
                 throw new ArgumentNullException("fileId");
             }
 
-            this.CollectionId = collectionId;
             this.FileId = fileId;
             this.Comment = comment;
         }
@@ -1683,21 +1662,14 @@ namespace Fifthweek.Api.Posts.Controllers
     public partial class RevisedImageData 
     {
         public RevisedImageData(
-            Fifthweek.Api.Collections.Shared.CollectionId collectionId,
             Fifthweek.Api.FileManagement.Shared.FileId imageFileId,
             System.String comment)
         {
-            if (collectionId == null)
-            {
-                throw new ArgumentNullException("collectionId");
-            }
-
             if (imageFileId == null)
             {
                 throw new ArgumentNullException("imageFileId");
             }
 
-            this.CollectionId = collectionId;
             this.ImageFileId = imageFileId;
             this.Comment = comment;
         }
@@ -1817,7 +1789,6 @@ namespace Fifthweek.Api.Posts.Commands
     {
         public ReviseImageCommandHandler(
             Fifthweek.Api.Identity.Shared.Membership.IRequesterSecurity requesterSecurity,
-            Fifthweek.Api.Collections.Shared.ICollectionSecurity collectionSecurity,
             Fifthweek.Api.Posts.Shared.IPostSecurity postSecurity,
             Fifthweek.Api.Persistence.IFifthweekDbContext databaseContext,
             Fifthweek.Api.FileManagement.Shared.IScheduleGarbageCollectionStatement scheduleGarbageCollection)
@@ -1825,11 +1796,6 @@ namespace Fifthweek.Api.Posts.Commands
             if (requesterSecurity == null)
             {
                 throw new ArgumentNullException("requesterSecurity");
-            }
-
-            if (collectionSecurity == null)
-            {
-                throw new ArgumentNullException("collectionSecurity");
             }
 
             if (postSecurity == null)
@@ -1848,7 +1814,6 @@ namespace Fifthweek.Api.Posts.Commands
             }
 
             this.requesterSecurity = requesterSecurity;
-            this.collectionSecurity = collectionSecurity;
             this.postSecurity = postSecurity;
             this.databaseContext = databaseContext;
             this.scheduleGarbageCollection = scheduleGarbageCollection;
@@ -1877,7 +1842,6 @@ namespace Fifthweek.Api.Posts.Commands
     {
         public ReviseFileCommandHandler(
             Fifthweek.Api.Identity.Shared.Membership.IRequesterSecurity requesterSecurity,
-            Fifthweek.Api.Collections.Shared.ICollectionSecurity collectionSecurity,
             Fifthweek.Api.Posts.Shared.IPostSecurity postSecurity,
             Fifthweek.Api.Persistence.IFifthweekDbContext databaseContext,
             Fifthweek.Api.FileManagement.Shared.IScheduleGarbageCollectionStatement scheduleGarbageCollection)
@@ -1885,11 +1849,6 @@ namespace Fifthweek.Api.Posts.Commands
             if (requesterSecurity == null)
             {
                 throw new ArgumentNullException("requesterSecurity");
-            }
-
-            if (collectionSecurity == null)
-            {
-                throw new ArgumentNullException("collectionSecurity");
             }
 
             if (postSecurity == null)
@@ -1908,7 +1867,6 @@ namespace Fifthweek.Api.Posts.Commands
             }
 
             this.requesterSecurity = requesterSecurity;
-            this.collectionSecurity = collectionSecurity;
             this.postSecurity = postSecurity;
             this.databaseContext = databaseContext;
             this.scheduleGarbageCollection = scheduleGarbageCollection;
@@ -1949,9 +1907,21 @@ namespace Fifthweek.Api.Posts
 }
 namespace Fifthweek.Api.Posts.Commands
 {
+    using System;
+    using System.Linq;
     using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.Api.Posts.Shared;
     using Fifthweek.CodeGeneration;
+    using System.Threading.Tasks;
+    using Fifthweek.Api.Core;
+    using Fifthweek.Api.FileManagement.Shared;
+    using Fifthweek.Api.Collections.Shared;
+    using Fifthweek.Api.Channels.Shared;
+    using Fifthweek.Api.Persistence;
+    using System.Collections.Generic;
+    using System.Text;
+    using Dapper;
+    using System.Transactions;
 
     public partial class RescheduleForNowCommand 
     {
@@ -1971,6 +1941,52 @@ namespace Fifthweek.Api.Posts.Commands
 
             this.Requester = requester;
             this.PostId = postId;
+        }
+    }
+}
+namespace Fifthweek.Api.Posts.Commands
+{
+    using System;
+    using System.Linq;
+    using Fifthweek.Api.Identity.Shared.Membership;
+    using Fifthweek.Api.Posts.Shared;
+    using Fifthweek.CodeGeneration;
+    using System.Threading.Tasks;
+    using Fifthweek.Api.Core;
+    using Fifthweek.Api.FileManagement.Shared;
+    using Fifthweek.Api.Collections.Shared;
+    using Fifthweek.Api.Channels.Shared;
+    using Fifthweek.Api.Persistence;
+    using System.Collections.Generic;
+    using System.Text;
+    using Dapper;
+    using System.Transactions;
+
+    public partial class RescheduleForNowCommandHandler 
+    {
+        public RescheduleForNowCommandHandler(
+            Fifthweek.Api.Identity.Shared.Membership.IRequesterSecurity requesterSecurity,
+            Fifthweek.Api.Posts.Shared.IPostSecurity postSecurity,
+            Fifthweek.Api.Persistence.IFifthweekDbContext databaseContext)
+        {
+            if (requesterSecurity == null)
+            {
+                throw new ArgumentNullException("requesterSecurity");
+            }
+
+            if (postSecurity == null)
+            {
+                throw new ArgumentNullException("postSecurity");
+            }
+
+            if (databaseContext == null)
+            {
+                throw new ArgumentNullException("databaseContext");
+            }
+
+            this.requesterSecurity = requesterSecurity;
+            this.postSecurity = postSecurity;
+            this.databaseContext = databaseContext;
         }
     }
 }
@@ -3242,7 +3258,7 @@ namespace Fifthweek.Api.Posts.Commands
     {
         public override string ToString()
         {
-            return string.Format("ReviseFileCommand({0}, {1}, {2}, {3}, {4})", this.Requester == null ? "null" : this.Requester.ToString(), this.PostId == null ? "null" : this.PostId.ToString(), this.CollectionId == null ? "null" : this.CollectionId.ToString(), this.FileId == null ? "null" : this.FileId.ToString(), this.Comment == null ? "null" : this.Comment.ToString());
+            return string.Format("ReviseFileCommand({0}, {1}, {2}, {3})", this.Requester == null ? "null" : this.Requester.ToString(), this.PostId == null ? "null" : this.PostId.ToString(), this.FileId == null ? "null" : this.FileId.ToString(), this.Comment == null ? "null" : this.Comment.ToString());
         }
         
         public override bool Equals(object obj)
@@ -3272,7 +3288,6 @@ namespace Fifthweek.Api.Posts.Commands
                 int hashCode = 0;
                 hashCode = (hashCode * 397) ^ (this.Requester != null ? this.Requester.GetHashCode() : 0);
                 hashCode = (hashCode * 397) ^ (this.PostId != null ? this.PostId.GetHashCode() : 0);
-                hashCode = (hashCode * 397) ^ (this.CollectionId != null ? this.CollectionId.GetHashCode() : 0);
                 hashCode = (hashCode * 397) ^ (this.FileId != null ? this.FileId.GetHashCode() : 0);
                 hashCode = (hashCode * 397) ^ (this.Comment != null ? this.Comment.GetHashCode() : 0);
                 return hashCode;
@@ -3287,11 +3302,6 @@ namespace Fifthweek.Api.Posts.Commands
             }
         
             if (!object.Equals(this.PostId, other.PostId))
-            {
-                return false;
-            }
-        
-            if (!object.Equals(this.CollectionId, other.CollectionId))
             {
                 return false;
             }
@@ -3332,7 +3342,7 @@ namespace Fifthweek.Api.Posts.Commands
     {
         public override string ToString()
         {
-            return string.Format("ReviseImageCommand({0}, {1}, {2}, {3}, {4})", this.Requester == null ? "null" : this.Requester.ToString(), this.PostId == null ? "null" : this.PostId.ToString(), this.CollectionId == null ? "null" : this.CollectionId.ToString(), this.ImageFileId == null ? "null" : this.ImageFileId.ToString(), this.Comment == null ? "null" : this.Comment.ToString());
+            return string.Format("ReviseImageCommand({0}, {1}, {2}, {3})", this.Requester == null ? "null" : this.Requester.ToString(), this.PostId == null ? "null" : this.PostId.ToString(), this.ImageFileId == null ? "null" : this.ImageFileId.ToString(), this.Comment == null ? "null" : this.Comment.ToString());
         }
         
         public override bool Equals(object obj)
@@ -3362,7 +3372,6 @@ namespace Fifthweek.Api.Posts.Commands
                 int hashCode = 0;
                 hashCode = (hashCode * 397) ^ (this.Requester != null ? this.Requester.GetHashCode() : 0);
                 hashCode = (hashCode * 397) ^ (this.PostId != null ? this.PostId.GetHashCode() : 0);
-                hashCode = (hashCode * 397) ^ (this.CollectionId != null ? this.CollectionId.GetHashCode() : 0);
                 hashCode = (hashCode * 397) ^ (this.ImageFileId != null ? this.ImageFileId.GetHashCode() : 0);
                 hashCode = (hashCode * 397) ^ (this.Comment != null ? this.Comment.GetHashCode() : 0);
                 return hashCode;
@@ -3377,11 +3386,6 @@ namespace Fifthweek.Api.Posts.Commands
             }
         
             if (!object.Equals(this.PostId, other.PostId))
-            {
-                return false;
-            }
-        
-            if (!object.Equals(this.CollectionId, other.CollectionId))
             {
                 return false;
             }
@@ -3422,7 +3426,7 @@ namespace Fifthweek.Api.Posts.Controllers
     {
         public override string ToString()
         {
-            return string.Format("RevisedFileData({0}, {1}, \"{2}\")", this.CollectionId == null ? "null" : this.CollectionId.ToString(), this.FileId == null ? "null" : this.FileId.ToString(), this.Comment == null ? "null" : this.Comment.ToString());
+            return string.Format("RevisedFileData({0}, \"{1}\")", this.FileId == null ? "null" : this.FileId.ToString(), this.Comment == null ? "null" : this.Comment.ToString());
         }
         
         public override bool Equals(object obj)
@@ -3450,7 +3454,6 @@ namespace Fifthweek.Api.Posts.Controllers
             unchecked
             {
                 int hashCode = 0;
-                hashCode = (hashCode * 397) ^ (this.CollectionId != null ? this.CollectionId.GetHashCode() : 0);
                 hashCode = (hashCode * 397) ^ (this.FileId != null ? this.FileId.GetHashCode() : 0);
                 hashCode = (hashCode * 397) ^ (this.Comment != null ? this.Comment.GetHashCode() : 0);
                 return hashCode;
@@ -3459,11 +3462,6 @@ namespace Fifthweek.Api.Posts.Controllers
         
         protected bool Equals(RevisedFileData other)
         {
-            if (!object.Equals(this.CollectionId, other.CollectionId))
-            {
-                return false;
-            }
-        
             if (!object.Equals(this.FileId, other.FileId))
             {
                 return false;
@@ -3500,7 +3498,7 @@ namespace Fifthweek.Api.Posts.Controllers
     {
         public override string ToString()
         {
-            return string.Format("RevisedImageData({0}, {1}, \"{2}\")", this.CollectionId == null ? "null" : this.CollectionId.ToString(), this.ImageFileId == null ? "null" : this.ImageFileId.ToString(), this.Comment == null ? "null" : this.Comment.ToString());
+            return string.Format("RevisedImageData({0}, \"{1}\")", this.ImageFileId == null ? "null" : this.ImageFileId.ToString(), this.Comment == null ? "null" : this.Comment.ToString());
         }
         
         public override bool Equals(object obj)
@@ -3528,7 +3526,6 @@ namespace Fifthweek.Api.Posts.Controllers
             unchecked
             {
                 int hashCode = 0;
-                hashCode = (hashCode * 397) ^ (this.CollectionId != null ? this.CollectionId.GetHashCode() : 0);
                 hashCode = (hashCode * 397) ^ (this.ImageFileId != null ? this.ImageFileId.GetHashCode() : 0);
                 hashCode = (hashCode * 397) ^ (this.Comment != null ? this.Comment.GetHashCode() : 0);
                 return hashCode;
@@ -3537,17 +3534,84 @@ namespace Fifthweek.Api.Posts.Controllers
         
         protected bool Equals(RevisedImageData other)
         {
-            if (!object.Equals(this.CollectionId, other.CollectionId))
-            {
-                return false;
-            }
-        
             if (!object.Equals(this.ImageFileId, other.ImageFileId))
             {
                 return false;
             }
         
             if (!object.Equals(this.Comment, other.Comment))
+            {
+                return false;
+            }
+        
+            return true;
+        }
+    }
+}
+namespace Fifthweek.Api.Posts.Commands
+{
+    using System;
+    using System.Linq;
+    using Fifthweek.Api.Identity.Shared.Membership;
+    using Fifthweek.Api.Posts.Shared;
+    using Fifthweek.CodeGeneration;
+    using System.Threading.Tasks;
+    using Fifthweek.Api.Core;
+    using Fifthweek.Api.FileManagement.Shared;
+    using Fifthweek.Api.Collections.Shared;
+    using Fifthweek.Api.Channels.Shared;
+    using Fifthweek.Api.Persistence;
+    using System.Collections.Generic;
+    using System.Text;
+    using Dapper;
+    using System.Transactions;
+
+    public partial class RescheduleForNowCommand 
+    {
+        public override string ToString()
+        {
+            return string.Format("RescheduleForNowCommand({0}, {1})", this.Requester == null ? "null" : this.Requester.ToString(), this.PostId == null ? "null" : this.PostId.ToString());
+        }
+        
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj))
+            {
+                return false;
+            }
+        
+            if (ReferenceEquals(this, obj))
+            {
+                return true;
+            }
+        
+            if (obj.GetType() != this.GetType())
+            {
+                return false;
+            }
+        
+            return this.Equals((RescheduleForNowCommand)obj);
+        }
+        
+        public override int GetHashCode()
+        {
+            unchecked
+            {
+                int hashCode = 0;
+                hashCode = (hashCode * 397) ^ (this.Requester != null ? this.Requester.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.PostId != null ? this.PostId.GetHashCode() : 0);
+                return hashCode;
+            }
+        }
+        
+        protected bool Equals(RescheduleForNowCommand other)
+        {
+            if (!object.Equals(this.Requester, other.Requester))
+            {
+                return false;
+            }
+        
+            if (!object.Equals(this.PostId, other.PostId))
             {
                 return false;
             }
@@ -3620,66 +3684,6 @@ namespace Fifthweek.Api.Posts.Controllers
             }
         
             if (!object.Equals(this.Count, other.Count))
-            {
-                return false;
-            }
-        
-            return true;
-        }
-    }
-}
-namespace Fifthweek.Api.Posts.Commands
-{
-    using Fifthweek.Api.Identity.Shared.Membership;
-    using Fifthweek.Api.Posts.Shared;
-    using Fifthweek.CodeGeneration;
-
-    public partial class RescheduleForNowCommand 
-    {
-        public override string ToString()
-        {
-            return string.Format("RescheduleForNowCommand({0}, {1})", this.Requester == null ? "null" : this.Requester.ToString(), this.PostId == null ? "null" : this.PostId.ToString());
-        }
-        
-        public override bool Equals(object obj)
-        {
-            if (ReferenceEquals(null, obj))
-            {
-                return false;
-            }
-        
-            if (ReferenceEquals(this, obj))
-            {
-                return true;
-            }
-        
-            if (obj.GetType() != this.GetType())
-            {
-                return false;
-            }
-        
-            return this.Equals((RescheduleForNowCommand)obj);
-        }
-        
-        public override int GetHashCode()
-        {
-            unchecked
-            {
-                int hashCode = 0;
-                hashCode = (hashCode * 397) ^ (this.Requester != null ? this.Requester.GetHashCode() : 0);
-                hashCode = (hashCode * 397) ^ (this.PostId != null ? this.PostId.GetHashCode() : 0);
-                return hashCode;
-            }
-        }
-        
-        protected bool Equals(RescheduleForNowCommand other)
-        {
-            if (!object.Equals(this.Requester, other.Requester))
-            {
-                return false;
-            }
-        
-            if (!object.Equals(this.PostId, other.PostId))
             {
                 return false;
             }
@@ -4220,26 +4224,17 @@ namespace Fifthweek.Api.Posts.Controllers
         public class Parsed
         {
             public Parsed(
-                Fifthweek.Api.Collections.Shared.CollectionId collectionId,
                 Fifthweek.Api.FileManagement.Shared.FileId fileId,
                 ValidComment comment)
             {
-                if (collectionId == null)
-                {
-                    throw new ArgumentNullException("collectionId");
-                }
-
                 if (fileId == null)
                 {
                     throw new ArgumentNullException("fileId");
                 }
 
-                this.CollectionId = collectionId;
                 this.FileId = fileId;
                 this.Comment = comment;
             }
-        
-            public Fifthweek.Api.Collections.Shared.CollectionId CollectionId { get; private set; }
         
             public Fifthweek.Api.FileManagement.Shared.FileId FileId { get; private set; }
         
@@ -4275,7 +4270,6 @@ namespace Fifthweek.Api.Posts.Controllers
             }
         
             return new RevisedFileData.Parsed(
-                target.CollectionId,
                 target.FileId,
                 parsed0);
         }    
@@ -4304,26 +4298,17 @@ namespace Fifthweek.Api.Posts.Controllers
         public class Parsed
         {
             public Parsed(
-                Fifthweek.Api.Collections.Shared.CollectionId collectionId,
                 Fifthweek.Api.FileManagement.Shared.FileId imageFileId,
                 ValidComment comment)
             {
-                if (collectionId == null)
-                {
-                    throw new ArgumentNullException("collectionId");
-                }
-
                 if (imageFileId == null)
                 {
                     throw new ArgumentNullException("imageFileId");
                 }
 
-                this.CollectionId = collectionId;
                 this.ImageFileId = imageFileId;
                 this.Comment = comment;
             }
-        
-            public Fifthweek.Api.Collections.Shared.CollectionId CollectionId { get; private set; }
         
             public Fifthweek.Api.FileManagement.Shared.FileId ImageFileId { get; private set; }
         
@@ -4359,7 +4344,6 @@ namespace Fifthweek.Api.Posts.Controllers
             }
         
             return new RevisedImageData.Parsed(
-                target.CollectionId,
                 target.ImageFileId,
                 parsed0);
         }    

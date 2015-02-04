@@ -28,8 +28,7 @@
         private static readonly ValidComment Comment = ValidComment.Parse("Hey peeps!");
         private static readonly PostId PostId = new PostId(Guid.NewGuid());
         private static readonly FileId FileId = new FileId(Guid.NewGuid());
-        private static readonly ReviseFileCommand Command = new ReviseFileCommand(Requester, PostId, CollectionId, FileId, Comment);
-        private Mock<ICollectionSecurity> channelSecurity;
+        private static readonly ReviseFileCommand Command = new ReviseFileCommand(Requester, PostId, FileId, Comment);
         private Mock<IPostSecurity> postSecurity;
         private Mock<IRequesterSecurity> requesterSecurity;
         private Mock<IFifthweekDbContext> databaseContext;
@@ -39,7 +38,6 @@
         [TestInitialize]
         public void Initialize()
         {
-            this.channelSecurity = new Mock<ICollectionSecurity>();
             this.postSecurity = new Mock<IPostSecurity>();
             this.requesterSecurity = new Mock<IRequesterSecurity>();
             this.requesterSecurity.SetupFor(Requester);
@@ -55,7 +53,6 @@
         {
             this.target = new ReviseFileCommandHandler(
                 this.requesterSecurity.Object,
-                this.channelSecurity.Object,
                 this.postSecurity.Object,
                 databaseContext,
                 this.scheduleGarbageCollection.Object);
@@ -65,16 +62,7 @@
         [ExpectedException(typeof(UnauthorizedException))]
         public async Task WhenUnauthenticated_ItShouldThrowUnauthorizedException()
         {
-            await this.target.HandleAsync(new ReviseFileCommand(Requester.Unauthenticated, PostId, CollectionId, FileId, Comment));
-        }
-
-        [TestMethod]
-        [ExpectedException(typeof(UnauthorizedException))]
-        public async Task WhenNotAllowedToWriteToCollection_ItShouldThrowUnauthorizedException()
-        {
-            this.channelSecurity.Setup(_ => _.AssertWriteAllowedAsync(UserId, CollectionId)).Throws<UnauthorizedException>();
-
-            await this.target.HandleAsync(Command);
+            await this.target.HandleAsync(new ReviseFileCommand(Requester.Unauthenticated, PostId, FileId, Comment));
         }
 
         [TestMethod]

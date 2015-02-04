@@ -70,8 +70,8 @@
         [TestMethod]
         public async Task WhenPuttingFile_ItShouldIssuePostFileCommand()
         {
-            var data = new RevisedFileData(CollectionId, FileId, null);
-            var command = new ReviseFileCommand(Requester, PostId, CollectionId, FileId, null);
+            var data = new RevisedFileData(FileId, null);
+            var command = new ReviseFileCommand(Requester, PostId, FileId, null);
 
             this.requesterContext.Setup(v => v.GetRequester()).Returns(Requester);
             this.guidCreator.Setup(_ => _.CreateSqlSequential()).Returns(PostId.Value);
@@ -87,7 +87,7 @@
         [ExpectedException(typeof(BadRequestException))]
         public async Task WhenPuttingFile_WithoutSpecifyingRevisedFileId_ItShouldThrowBadRequestException()
         {
-            await this.target.PutFile(string.Empty, new RevisedFileData(CollectionId, FileId, null));
+            await this.target.PutFile(string.Empty, new RevisedFileData(FileId, null));
         }
 
         [TestMethod]

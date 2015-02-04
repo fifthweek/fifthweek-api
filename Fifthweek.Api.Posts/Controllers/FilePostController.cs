@@ -50,7 +50,6 @@
             await this.reviseFile.HandleAsync(new ReviseFileCommand(
                 requester,
                 postIdObject,
-                file.CollectionId,
                 file.FileId,
                 file.Comment));
 

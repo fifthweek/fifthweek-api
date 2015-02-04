@@ -1,6 +1,5 @@
 ﻿namespace Fifthweek.Api.Posts.Controllers
 {
-    using Fifthweek.Api.Collections.Shared;
     using Fifthweek.Api.FileManagement.Shared;
     using Fifthweek.Api.Posts.Shared;
     using Fifthweek.CodeGeneration;
@@ -11,8 +10,6 @@
         public RevisedFileData()
         {
         }
-
-        public CollectionId CollectionId { get; set; }
 
         public FileId FileId { get; set; }
 

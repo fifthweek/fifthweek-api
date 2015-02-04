@@ -50,7 +50,6 @@
             await this.reviseImage.HandleAsync(new ReviseImageCommand(
                 requester,
                 postIdObject,
-                image.CollectionId,
                 image.ImageFileId,
                 image.Comment));
 
