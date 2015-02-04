@@ -9,7 +9,7 @@
     {
         public static readonly Regex Pattern = new Regex(@"^[a-z0-9_]+$", RegexOptions.Compiled | RegexOptions.IgnoreCase);
 
-        public static readonly int MinLength = 6;
+        public static readonly int MinLength = 2;
 
         public static readonly int MaxLength = 20;
 

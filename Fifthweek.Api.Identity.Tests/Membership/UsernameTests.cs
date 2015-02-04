@@ -75,9 +75,9 @@
         }
 
         [TestMethod]
-        public void ItShouldNotAllowUsernamesUnder6Characters()
+        public void ItShouldNotAllowUsernamesUnder2Characters()
         {
-            this.AssertMinLength(6, whitespaceSensitive: false);
+            this.AssertMinLength(2, whitespaceSensitive: false);
         }
 
         [TestMethod]
