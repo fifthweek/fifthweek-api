@@ -112,6 +112,8 @@
     <Compile Include="Queries\GetCreatorBacklogQueryHandlerTests.cs" />
     <Compile Include="PostNoteDbStatementTests.cs" />
     <Compile Include="Commands\RescheduleForNowCommandHandlerTests.cs" />
+    <Compile Include="RemoveFromQueueIfRequiredDbStatementTestExtensions.cs" />
+    <Compile Include="RemoveFromQueueIfRequiredDbStatementTests.cs" />
     <Compile Include="ScheduledDateClippingFunctionTests.cs" />
     <Compile Include="SetBacklogPostLiveDateToNowDbStatementTests.cs" />
     <Compile Include="TryGetQueuedPostCollectionDbStatementTests.cs" />

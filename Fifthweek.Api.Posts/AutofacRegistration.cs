@@ -18,6 +18,7 @@
             builder.RegisterType<PostOwnership>().As<IPostOwnership>();
             builder.RegisterType<ScheduledDateClippingFunction>().As<IScheduledDateClippingFunction>();
             builder.RegisterType<SetBacklogPostLiveDateToNowDbStatement>().As<ISetBacklogPostLiveDateToNowDbStatement>();
+            builder.RegisterType<RemoveFromQueueIfRequiredDbStatement>().As<IRemoveFromQueueIfRequiredDbStatement>();
         }
     }
 }

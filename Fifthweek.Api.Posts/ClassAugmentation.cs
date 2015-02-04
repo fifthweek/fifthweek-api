@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Linq;
 
-//// Generated on 04/02/2015 17:48:53 (UTC)
-//// Mapped solution in 3.82s
+//// Generated on 04/02/2015 18:23:48 (UTC)
+//// Mapped solution in 3.63s
 
 
 namespace Fifthweek.Api.Posts.Commands
@@ -67,10 +67,8 @@ namespace Fifthweek.Api.Posts.Commands
         public DeletePostCommandHandler(
             Fifthweek.Api.Identity.Shared.Membership.IRequesterSecurity requesterSecurity,
             Fifthweek.Api.Posts.Shared.IPostSecurity postSecurity,
-            Fifthweek.Api.Posts.ITryGetQueuedPostCollectionDbStatement tryGetQueuedPostCollection,
-            Fifthweek.Api.Collections.Shared.IGetWeeklyReleaseScheduleDbStatement getWeeklyReleaseSchedule,
             Fifthweek.Api.Posts.IDeletePostDbStatement deletePost,
-            Fifthweek.Api.Collections.Shared.IDefragmentQueueDbStatement defragmentQueue,
+            Fifthweek.Api.Posts.IRemoveFromQueueIfRequiredDbStatement removeFromQueueIfRequired,
             Fifthweek.Api.FileManagement.Shared.IScheduleGarbageCollectionStatement scheduleGarbageCollection)
         {
             if (requesterSecurity == null)
@@ -83,24 +81,14 @@ namespace Fifthweek.Api.Posts.Commands
                 throw new ArgumentNullException("postSecurity");
             }
 
-            if (tryGetQueuedPostCollection == null)
-            {
-                throw new ArgumentNullException("tryGetQueuedPostCollection");
-            }
-
-            if (getWeeklyReleaseSchedule == null)
-            {
-                throw new ArgumentNullException("getWeeklyReleaseSchedule");
-            }
-
             if (deletePost == null)
             {
                 throw new ArgumentNullException("deletePost");
             }
 
-            if (defragmentQueue == null)
+            if (removeFromQueueIfRequired == null)
             {
-                throw new ArgumentNullException("defragmentQueue");
+                throw new ArgumentNullException("removeFromQueueIfRequired");
             }
 
             if (scheduleGarbageCollection == null)
@@ -110,10 +98,8 @@ namespace Fifthweek.Api.Posts.Commands
 
             this.requesterSecurity = requesterSecurity;
             this.postSecurity = postSecurity;
-            this.tryGetQueuedPostCollection = tryGetQueuedPostCollection;
-            this.getWeeklyReleaseSchedule = getWeeklyReleaseSchedule;
             this.deletePost = deletePost;
-            this.defragmentQueue = defragmentQueue;
+            this.removeFromQueueIfRequired = removeFromQueueIfRequired;
             this.scheduleGarbageCollection = scheduleGarbageCollection;
         }
     }
@@ -1967,7 +1953,8 @@ namespace Fifthweek.Api.Posts.Commands
         public RescheduleForNowCommandHandler(
             Fifthweek.Api.Identity.Shared.Membership.IRequesterSecurity requesterSecurity,
             Fifthweek.Api.Posts.Shared.IPostSecurity postSecurity,
-            Fifthweek.Api.Posts.ISetBacklogPostLiveDateToNowDbStatement setBacklogPostLiveDateToNow)
+            Fifthweek.Api.Posts.ISetBacklogPostLiveDateToNowDbStatement setBacklogPostLiveDateToNow,
+            Fifthweek.Api.Posts.IRemoveFromQueueIfRequiredDbStatement removeFromQueueIfRequired)
         {
             if (requesterSecurity == null)
             {
@@ -1984,19 +1971,35 @@ namespace Fifthweek.Api.Posts.Commands
                 throw new ArgumentNullException("setBacklogPostLiveDateToNow");
             }
 
+            if (removeFromQueueIfRequired == null)
+            {
+                throw new ArgumentNullException("removeFromQueueIfRequired");
+            }
+
             this.requesterSecurity = requesterSecurity;
             this.postSecurity = postSecurity;
             this.setBacklogPostLiveDateToNow = setBacklogPostLiveDateToNow;
+            this.removeFromQueueIfRequired = removeFromQueueIfRequired;
         }
     }
 }
 namespace Fifthweek.Api.Posts
 {
     using System;
+    using System.Linq;
     using System.Threading.Tasks;
+    using Dapper;
     using Fifthweek.Api.Persistence;
-    using Fifthweek.Api.Posts.Shared;
     using Fifthweek.CodeGeneration;
+    using Fifthweek.Api.Core;
+    using Fifthweek.Api.FileManagement;
+    using Fifthweek.Api.FileManagement.Shared;
+    using Fifthweek.Shared;
+    using Fifthweek.Api.Identity.Shared.Membership;
+    using Fifthweek.Api.Posts.Shared;
+    using Fifthweek.Api.Collections.Shared;
+    using Fifthweek.Api.Collections;
+    using Fifthweek.Api.Channels.Shared;
 
     public partial class SetBacklogPostLiveDateToNowDbStatement 
     {
@@ -2009,6 +2012,44 @@ namespace Fifthweek.Api.Posts
             }
 
             this.databaseContext = databaseContext;
+        }
+    }
+}
+namespace Fifthweek.Api.Posts
+{
+    using System;
+    using System.Threading.Tasks;
+    using System.Transactions;
+    using Fifthweek.Api.Collections.Shared;
+    using Fifthweek.Api.Core;
+    using Fifthweek.Api.Posts.Shared;
+    using Fifthweek.CodeGeneration;
+
+    public partial class RemoveFromQueueIfRequiredDbStatement 
+    {
+        public RemoveFromQueueIfRequiredDbStatement(
+            Fifthweek.Api.Posts.ITryGetQueuedPostCollectionDbStatement tryGetQueuedPostCollection,
+            Fifthweek.Api.Collections.Shared.IGetWeeklyReleaseScheduleDbStatement getWeeklyReleaseSchedule,
+            Fifthweek.Api.Collections.Shared.IDefragmentQueueDbStatement defragmentQueue)
+        {
+            if (tryGetQueuedPostCollection == null)
+            {
+                throw new ArgumentNullException("tryGetQueuedPostCollection");
+            }
+
+            if (getWeeklyReleaseSchedule == null)
+            {
+                throw new ArgumentNullException("getWeeklyReleaseSchedule");
+            }
+
+            if (defragmentQueue == null)
+            {
+                throw new ArgumentNullException("defragmentQueue");
+            }
+
+            this.tryGetQueuedPostCollection = tryGetQueuedPostCollection;
+            this.getWeeklyReleaseSchedule = getWeeklyReleaseSchedule;
+            this.defragmentQueue = defragmentQueue;
         }
     }
 }

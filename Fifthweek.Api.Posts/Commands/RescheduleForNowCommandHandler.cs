@@ -14,6 +14,7 @@
         private readonly IRequesterSecurity requesterSecurity;
         private readonly IPostSecurity postSecurity;
         private readonly ISetBacklogPostLiveDateToNowDbStatement setBacklogPostLiveDateToNow;
+        private readonly IRemoveFromQueueIfRequiredDbStatement removeFromQueueIfRequired;
 
         public async Task HandleAsync(RescheduleForNowCommand command)
         {
@@ -22,8 +23,17 @@
             var userId = await this.requesterSecurity.AuthenticateAsync(command.Requester);
             await this.postSecurity.AssertWriteAllowedAsync(userId, command.PostId);
 
+            await this.RescheduleForNowAsync(command.PostId);
+        }
+
+        private Task RescheduleForNowAsync(PostId postId)
+        {
             var now = DateTime.UtcNow;
-            await this.setBacklogPostLiveDateToNow.ExecuteAsync(command.PostId, now);
+
+            return this.removeFromQueueIfRequired.ExecuteAsync(
+                postId,
+                now,
+                () => this.setBacklogPostLiveDateToNow.ExecuteAsync(postId, now));
         }
     }
 }

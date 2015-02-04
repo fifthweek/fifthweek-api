@@ -27,6 +27,7 @@
         private Mock<IRequesterSecurity> requesterSecurity;
         private Mock<IPostSecurity> postSecurity;
         private Mock<ISetBacklogPostLiveDateToNowDbStatement> setBacklogPostLiveDateToNow;
+        private Mock<IRemoveFromQueueIfRequiredDbStatement> removeFromQueueIfRequired;
         private RescheduleForNowCommandHandler target;
 
         [TestInitialize]
@@ -38,11 +39,13 @@
 
             // Mock potentially side-effecting components with strict behaviour.            
             this.setBacklogPostLiveDateToNow = new Mock<ISetBacklogPostLiveDateToNowDbStatement>(MockBehavior.Strict);
+            this.removeFromQueueIfRequired = new Mock<IRemoveFromQueueIfRequiredDbStatement>(MockBehavior.Strict);
 
             this.target = new RescheduleForNowCommandHandler(
                 this.requesterSecurity.Object, 
                 this.postSecurity.Object, 
-                this.setBacklogPostLiveDateToNow.Object);
+                this.setBacklogPostLiveDateToNow.Object,
+                this.removeFromQueueIfRequired.Object);
         }
 
         [TestMethod]
@@ -64,6 +67,7 @@
         [TestMethod]
         public async Task ItShouldSetBacklogPostLiveDateToNow()
         {
+            this.removeFromQueueIfRequired.SetupFor(PostId);
             this.setBacklogPostLiveDateToNow.Setup(_ => _.ExecuteAsync(PostId, It.Is<DateTime>(now => now.Kind == DateTimeKind.Utc)))
                 .Returns(Task.FromResult(0))
                 .Verifiable();
