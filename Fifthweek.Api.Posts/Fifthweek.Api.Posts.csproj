@@ -79,6 +79,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AutofacRegistration.cs" />
+    <Compile Include="Commands\RescheduleForTimeCommandHandler.cs" />
     <Compile Include="Commands\RescheduleForTimeCommand.cs" />
     <Compile Include="Commands\RescheduleForNowCommand.cs" />
     <Compile Include="Commands\RescheduleForNowCommandHandler.cs" />
@@ -91,7 +92,7 @@
     <Compile Include="Controllers\RevisedFileData.cs" />
     <Compile Include="Controllers\RevisedImageData.cs" />
     <Compile Include="IRemoveFromQueueIfRequiredDbStatement.cs" />
-    <Compile Include="ISetBacklogPostLiveDateToNowDbStatement.cs" />
+    <Compile Include="ISetBacklogPostLiveDateDbStatement.cs" />
     <Compile Include="ITryGetQueuedPostCollectionDbStatement.cs" />
     <Compile Include="IPostNoteDbStatement.cs" />
     <Compile Include="IScheduledDateClippingFunction.cs" />
@@ -141,7 +142,7 @@
     <Compile Include="RemoveFromQueueIfRequiredDbStatement.cs" />
     <Compile Include="ScheduledDateClippingFunction.cs" />
     <Compile Include="PostNoteDbStatement.cs" />
-    <Compile Include="SetBacklogPostLiveDateToNowDbStatement.cs" />
+    <Compile Include="SetBacklogPostLiveDateDbStatement.cs" />
     <Compile Include="TryGetQueuedPostCollectionDbStatement.cs" />
   </ItemGroup>
   <ItemGroup>

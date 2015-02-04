@@ -9,31 +9,31 @@
     using Fifthweek.CodeGeneration;
 
     [AutoConstructor]
-    public partial class RescheduleForNowCommandHandler : ICommandHandler<RescheduleForNowCommand>
+    public partial class RescheduleForTimeCommandHandler : ICommandHandler<RescheduleForTimeCommand>
     {
         private readonly IRequesterSecurity requesterSecurity;
         private readonly IPostSecurity postSecurity;
         private readonly ISetBacklogPostLiveDateDbStatement setBacklogPostLiveDate;
         private readonly IRemoveFromQueueIfRequiredDbStatement removeFromQueueIfRequired;
 
-        public async Task HandleAsync(RescheduleForNowCommand command)
+        public async Task HandleAsync(RescheduleForTimeCommand command)
         {
             command.AssertNotNull("command");
 
             var userId = await this.requesterSecurity.AuthenticateAsync(command.Requester);
             await this.postSecurity.AssertWriteAllowedAsync(userId, command.PostId);
 
-            await this.RescheduleForNowAsync(command.PostId);
+            await this.RescheduleForTimeAsync(command.PostId, command.ScheduledPostTime);
         }
 
-        private Task RescheduleForNowAsync(PostId postId)
+        private Task RescheduleForTimeAsync(PostId postId, DateTime scheduledPostTime)
         {
             var now = DateTime.UtcNow;
 
             return this.removeFromQueueIfRequired.ExecuteAsync(
                 postId,
                 now,
-                () => this.setBacklogPostLiveDate.ExecuteAsync(postId, now, now));
+                () => this.setBacklogPostLiveDate.ExecuteAsync(postId, scheduledPostTime, now));
         }
     }
 }

@@ -89,6 +89,7 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
+    <Compile Include="Commands\RescheduleForTimeCommandHandlerTests.cs" />
     <Compile Include="Commands\ReviseFileCommandHandlerTests.cs" />
     <Compile Include="Commands\ReviseImageCommandHandlerTests.cs" />
     <Compile Include="Commands\ReviseNoteCommandHandlerTests.cs" />

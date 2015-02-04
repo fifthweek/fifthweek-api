@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Linq;
 
-//// Generated on 04/02/2015 11:41:29 (UTC)
-//// Mapped solution in 3.25s
+//// Generated on 04/02/2015 20:27:43 (UTC)
+//// Mapped solution in 3.73s
 
 
 namespace Fifthweek.Api.Persistence
@@ -15,6 +15,7 @@ namespace Fifthweek.Api.Persistence
     using Fifthweek.Api.Persistence.Identity;
     using Fifthweek.Api.Core;
     using Fifthweek.Shared;
+    using Dapper;
 
     public partial class Channel 
     {
@@ -74,6 +75,7 @@ namespace Fifthweek.Api.Persistence
     using Fifthweek.Api.Persistence.Identity;
     using Fifthweek.Api.Core;
     using Fifthweek.Shared;
+    using Dapper;
 
     public partial class Collection 
     {
@@ -129,6 +131,7 @@ namespace Fifthweek.Api.Persistence
     using Fifthweek.Api.Persistence.Identity;
     using Fifthweek.Api.Core;
     using Fifthweek.Shared;
+    using Dapper;
 
     public partial class File 
     {
@@ -211,6 +214,7 @@ namespace Fifthweek.Api.Persistence
     using Fifthweek.Api.Persistence.Identity;
     using Fifthweek.Api.Core;
     using Fifthweek.Shared;
+    using Dapper;
 
     public partial class Post 
     {
@@ -280,6 +284,7 @@ namespace Fifthweek.Api.Persistence
     using Fifthweek.Api.Persistence.Identity;
     using Fifthweek.Api.Core;
     using Fifthweek.Shared;
+    using Dapper;
 
     public partial class RefreshToken 
     {
@@ -340,6 +345,7 @@ namespace Fifthweek.Api.Persistence
     using Fifthweek.Api.Persistence.Identity;
     using Fifthweek.Api.Core;
     using Fifthweek.Shared;
+    using Dapper;
 
     public partial class Subscription 
     {
@@ -410,6 +416,7 @@ namespace Fifthweek.Api.Persistence
     using Fifthweek.Api.Persistence.Identity;
     using Fifthweek.Api.Core;
     using Fifthweek.Shared;
+    using Dapper;
 
     public partial class WeeklyReleaseTime 
     {
@@ -445,6 +452,7 @@ namespace Fifthweek.Api.Persistence
     using Fifthweek.Api.Persistence.Identity;
     using Fifthweek.Api.Core;
     using Fifthweek.Shared;
+    using Dapper;
 
     public partial class Channel 
     {
@@ -540,6 +548,7 @@ namespace Fifthweek.Api.Persistence
     using Fifthweek.Api.Persistence.Identity;
     using Fifthweek.Api.Core;
     using Fifthweek.Shared;
+    using Dapper;
 
     public partial class Collection 
     {
@@ -623,6 +632,7 @@ namespace Fifthweek.Api.Persistence
     using Fifthweek.Api.Persistence.Identity;
     using Fifthweek.Api.Core;
     using Fifthweek.Shared;
+    using Dapper;
 
     public partial class File 
     {
@@ -742,6 +752,7 @@ namespace Fifthweek.Api.Persistence
     using Fifthweek.Api.Persistence.Identity;
     using Fifthweek.Api.Core;
     using Fifthweek.Shared;
+    using Dapper;
 
     public partial class Post 
     {
@@ -849,6 +860,7 @@ namespace Fifthweek.Api.Persistence
     using Fifthweek.Api.Persistence.Identity;
     using Fifthweek.Api.Core;
     using Fifthweek.Shared;
+    using Dapper;
 
     public partial class RefreshToken 
     {
@@ -938,6 +950,7 @@ namespace Fifthweek.Api.Persistence
     using Fifthweek.Api.Persistence.Identity;
     using Fifthweek.Api.Core;
     using Fifthweek.Shared;
+    using Dapper;
 
     public partial class Subscription 
     {
@@ -1045,6 +1058,7 @@ namespace Fifthweek.Api.Persistence
     using Fifthweek.Api.Persistence.Identity;
     using Fifthweek.Api.Core;
     using Fifthweek.Shared;
+    using Dapper;
 
     public partial class WeeklyReleaseTime 
     {
@@ -1389,6 +1403,7 @@ namespace Fifthweek.Api.Persistence
     using Fifthweek.Api.Persistence.Identity;
     using Fifthweek.Api.Core;
     using Fifthweek.Shared;
+    using Dapper;
 
     public partial class Collection 
     {
@@ -1422,6 +1437,7 @@ namespace Fifthweek.Api.Persistence
     using Fifthweek.Api.Persistence.Identity;
     using Fifthweek.Api.Core;
     using Fifthweek.Shared;
+    using Dapper;
 
     public partial class Post 
     {
@@ -1463,6 +1479,7 @@ namespace Fifthweek.Api.Persistence
     using Fifthweek.Api.Persistence.Identity;
     using Fifthweek.Api.Core;
     using Fifthweek.Shared;
+    using Dapper;
 
     public partial class Channel  : IIdentityEquatable
     {
@@ -1597,7 +1614,12 @@ namespace Fifthweek.Api.Persistence
             var entity = parameters.Entity;
             var parameterObject = parameters.ExcludedFromInput != null
                 ? AllExceptSpecifiedParameters(entity, parameters.ExcludedFromInput.Value)
-                : new { entity.Id, entity.SubscriptionId, entity.Name, entity.Description, entity.PriceInUsCentsPerWeek, entity.IsVisibleToNonSubscribers, entity.CreationDate };
+                : new Dapper.DynamicParameters(new { entity.Id, entity.SubscriptionId, entity.Name, entity.Description, entity.PriceInUsCentsPerWeek, entity.IsVisibleToNonSubscribers, entity.CreationDate });
+        
+            if (parameters.AdditionalParameters != null)
+            {
+                parameterObject.AddDynamicParams(parameters.AdditionalParameters);
+            }
         
             return Dapper.SqlMapper.ExecuteScalarAsync<int>(
                 connection,
@@ -1690,6 +1712,11 @@ namespace Fifthweek.Api.Persistence
             }
         
             var parameterObject = OnlySpecifiedParameters(parameters.Entity, parameters.UpdateMask.Value, parameters.ExcludedFromInput);
+        
+            if (parameters.AdditionalParameters != null)
+            {
+                parameterObject.AddDynamicParams(parameters.AdditionalParameters);
+            }
         
             return Dapper.SqlMapper.ExecuteScalarAsync<int>(
                 connection,
@@ -1784,7 +1811,7 @@ namespace Fifthweek.Api.Persistence
             return fieldNames;
         }
         
-        private static object OnlySpecifiedParameters(
+        private static Dapper.DynamicParameters OnlySpecifiedParameters(
             Channel entity, 
             Channel.Fields fields,
             Channel.Fields? excludedFields = null)
@@ -1826,7 +1853,7 @@ namespace Fifthweek.Api.Persistence
             return parameters;
         }
         
-        private static object AllExceptSpecifiedParameters(
+        private static Dapper.DynamicParameters AllExceptSpecifiedParameters(
             Channel entity, 
             Channel.Fields fields)
         {
@@ -1879,6 +1906,7 @@ namespace Fifthweek.Api.Persistence
     using Fifthweek.Api.Persistence.Identity;
     using Fifthweek.Api.Core;
     using Fifthweek.Shared;
+    using Dapper;
 
     public partial class Collection  : IIdentityEquatable
     {
@@ -2011,7 +2039,12 @@ namespace Fifthweek.Api.Persistence
             var entity = parameters.Entity;
             var parameterObject = parameters.ExcludedFromInput != null
                 ? AllExceptSpecifiedParameters(entity, parameters.ExcludedFromInput.Value)
-                : new { entity.Id, entity.ChannelId, entity.Name, entity.QueueExclusiveLowerBound, entity.CreationDate };
+                : new Dapper.DynamicParameters(new { entity.Id, entity.ChannelId, entity.Name, entity.QueueExclusiveLowerBound, entity.CreationDate });
+        
+            if (parameters.AdditionalParameters != null)
+            {
+                parameterObject.AddDynamicParams(parameters.AdditionalParameters);
+            }
         
             return Dapper.SqlMapper.ExecuteScalarAsync<int>(
                 connection,
@@ -2105,6 +2138,11 @@ namespace Fifthweek.Api.Persistence
         
             var parameterObject = OnlySpecifiedParameters(parameters.Entity, parameters.UpdateMask.Value, parameters.ExcludedFromInput);
         
+            if (parameters.AdditionalParameters != null)
+            {
+                parameterObject.AddDynamicParams(parameters.AdditionalParameters);
+            }
+        
             return Dapper.SqlMapper.ExecuteScalarAsync<int>(
                 connection,
                 sql.ToString(),
@@ -2188,7 +2226,7 @@ namespace Fifthweek.Api.Persistence
             return fieldNames;
         }
         
-        private static object OnlySpecifiedParameters(
+        private static Dapper.DynamicParameters OnlySpecifiedParameters(
             Collection entity, 
             Collection.Fields fields,
             Collection.Fields? excludedFields = null)
@@ -2220,7 +2258,7 @@ namespace Fifthweek.Api.Persistence
             return parameters;
         }
         
-        private static object AllExceptSpecifiedParameters(
+        private static Dapper.DynamicParameters AllExceptSpecifiedParameters(
             Collection entity, 
             Collection.Fields fields)
         {
@@ -2263,6 +2301,7 @@ namespace Fifthweek.Api.Persistence
     using Fifthweek.Api.Persistence.Identity;
     using Fifthweek.Api.Core;
     using Fifthweek.Shared;
+    using Dapper;
 
     public partial class File  : IIdentityEquatable
     {
@@ -2401,7 +2440,12 @@ namespace Fifthweek.Api.Persistence
             var entity = parameters.Entity;
             var parameterObject = parameters.ExcludedFromInput != null
                 ? AllExceptSpecifiedParameters(entity, parameters.ExcludedFromInput.Value)
-                : new { entity.Id, entity.UserId, entity.State, entity.UploadStartedDate, entity.UploadCompletedDate, entity.ProcessingStartedDate, entity.ProcessingCompletedDate, entity.FileNameWithoutExtension, entity.FileExtension, entity.BlobSizeBytes, entity.Purpose };
+                : new Dapper.DynamicParameters(new { entity.Id, entity.UserId, entity.State, entity.UploadStartedDate, entity.UploadCompletedDate, entity.ProcessingStartedDate, entity.ProcessingCompletedDate, entity.FileNameWithoutExtension, entity.FileExtension, entity.BlobSizeBytes, entity.Purpose });
+        
+            if (parameters.AdditionalParameters != null)
+            {
+                parameterObject.AddDynamicParams(parameters.AdditionalParameters);
+            }
         
             return Dapper.SqlMapper.ExecuteScalarAsync<int>(
                 connection,
@@ -2494,6 +2538,11 @@ namespace Fifthweek.Api.Persistence
             }
         
             var parameterObject = OnlySpecifiedParameters(parameters.Entity, parameters.UpdateMask.Value, parameters.ExcludedFromInput);
+        
+            if (parameters.AdditionalParameters != null)
+            {
+                parameterObject.AddDynamicParams(parameters.AdditionalParameters);
+            }
         
             return Dapper.SqlMapper.ExecuteScalarAsync<int>(
                 connection,
@@ -2608,7 +2657,7 @@ namespace Fifthweek.Api.Persistence
             return fieldNames;
         }
         
-        private static object OnlySpecifiedParameters(
+        private static Dapper.DynamicParameters OnlySpecifiedParameters(
             File entity, 
             File.Fields fields,
             File.Fields? excludedFields = null)
@@ -2670,7 +2719,7 @@ namespace Fifthweek.Api.Persistence
             return parameters;
         }
         
-        private static object AllExceptSpecifiedParameters(
+        private static Dapper.DynamicParameters AllExceptSpecifiedParameters(
             File entity, 
             File.Fields fields)
         {
@@ -2743,6 +2792,7 @@ namespace Fifthweek.Api.Persistence
     using Fifthweek.Api.Persistence.Identity;
     using Fifthweek.Api.Core;
     using Fifthweek.Shared;
+    using Dapper;
 
     public partial class Post  : IIdentityEquatable
     {
@@ -2879,7 +2929,12 @@ namespace Fifthweek.Api.Persistence
             var entity = parameters.Entity;
             var parameterObject = parameters.ExcludedFromInput != null
                 ? AllExceptSpecifiedParameters(entity, parameters.ExcludedFromInput.Value)
-                : new { entity.Id, entity.ChannelId, entity.CollectionId, entity.FileId, entity.ImageId, entity.Comment, entity.ScheduledByQueue, entity.LiveDate, entity.CreationDate };
+                : new Dapper.DynamicParameters(new { entity.Id, entity.ChannelId, entity.CollectionId, entity.FileId, entity.ImageId, entity.Comment, entity.ScheduledByQueue, entity.LiveDate, entity.CreationDate });
+        
+            if (parameters.AdditionalParameters != null)
+            {
+                parameterObject.AddDynamicParams(parameters.AdditionalParameters);
+            }
         
             return Dapper.SqlMapper.ExecuteScalarAsync<int>(
                 connection,
@@ -2972,6 +3027,11 @@ namespace Fifthweek.Api.Persistence
             }
         
             var parameterObject = OnlySpecifiedParameters(parameters.Entity, parameters.UpdateMask.Value, parameters.ExcludedFromInput);
+        
+            if (parameters.AdditionalParameters != null)
+            {
+                parameterObject.AddDynamicParams(parameters.AdditionalParameters);
+            }
         
             return Dapper.SqlMapper.ExecuteScalarAsync<int>(
                 connection,
@@ -3076,7 +3136,7 @@ namespace Fifthweek.Api.Persistence
             return fieldNames;
         }
         
-        private static object OnlySpecifiedParameters(
+        private static Dapper.DynamicParameters OnlySpecifiedParameters(
             Post entity, 
             Post.Fields fields,
             Post.Fields? excludedFields = null)
@@ -3128,7 +3188,7 @@ namespace Fifthweek.Api.Persistence
             return parameters;
         }
         
-        private static object AllExceptSpecifiedParameters(
+        private static Dapper.DynamicParameters AllExceptSpecifiedParameters(
             Post entity, 
             Post.Fields fields)
         {
@@ -3191,6 +3251,7 @@ namespace Fifthweek.Api.Persistence
     using Fifthweek.Api.Persistence.Identity;
     using Fifthweek.Api.Core;
     using Fifthweek.Shared;
+    using Dapper;
 
     public partial class RefreshToken  : IIdentityEquatable
     {
@@ -3324,7 +3385,12 @@ namespace Fifthweek.Api.Persistence
             var entity = parameters.Entity;
             var parameterObject = parameters.ExcludedFromInput != null
                 ? AllExceptSpecifiedParameters(entity, parameters.ExcludedFromInput.Value)
-                : new { entity.HashedId, entity.Username, entity.ClientId, entity.IssuedDate, entity.ExpiresDate, entity.ProtectedTicket };
+                : new Dapper.DynamicParameters(new { entity.HashedId, entity.Username, entity.ClientId, entity.IssuedDate, entity.ExpiresDate, entity.ProtectedTicket });
+        
+            if (parameters.AdditionalParameters != null)
+            {
+                parameterObject.AddDynamicParams(parameters.AdditionalParameters);
+            }
         
             return Dapper.SqlMapper.ExecuteScalarAsync<int>(
                 connection,
@@ -3418,6 +3484,11 @@ namespace Fifthweek.Api.Persistence
         
             var parameterObject = OnlySpecifiedParameters(parameters.Entity, parameters.UpdateMask.Value, parameters.ExcludedFromInput);
         
+            if (parameters.AdditionalParameters != null)
+            {
+                parameterObject.AddDynamicParams(parameters.AdditionalParameters);
+            }
+        
             return Dapper.SqlMapper.ExecuteScalarAsync<int>(
                 connection,
                 sql.ToString(),
@@ -3506,7 +3577,7 @@ namespace Fifthweek.Api.Persistence
             return fieldNames;
         }
         
-        private static object OnlySpecifiedParameters(
+        private static Dapper.DynamicParameters OnlySpecifiedParameters(
             RefreshToken entity, 
             RefreshToken.Fields fields,
             RefreshToken.Fields? excludedFields = null)
@@ -3543,7 +3614,7 @@ namespace Fifthweek.Api.Persistence
             return parameters;
         }
         
-        private static object AllExceptSpecifiedParameters(
+        private static Dapper.DynamicParameters AllExceptSpecifiedParameters(
             RefreshToken entity, 
             RefreshToken.Fields fields)
         {
@@ -3591,6 +3662,7 @@ namespace Fifthweek.Api.Persistence
     using Fifthweek.Api.Persistence.Identity;
     using Fifthweek.Api.Core;
     using Fifthweek.Shared;
+    using Dapper;
 
     public partial class Subscription  : IIdentityEquatable
     {
@@ -3727,7 +3799,12 @@ namespace Fifthweek.Api.Persistence
             var entity = parameters.Entity;
             var parameterObject = parameters.ExcludedFromInput != null
                 ? AllExceptSpecifiedParameters(entity, parameters.ExcludedFromInput.Value)
-                : new { entity.Id, entity.CreatorId, entity.Name, entity.Tagline, entity.Introduction, entity.Description, entity.ExternalVideoUrl, entity.HeaderImageFileId, entity.CreationDate };
+                : new Dapper.DynamicParameters(new { entity.Id, entity.CreatorId, entity.Name, entity.Tagline, entity.Introduction, entity.Description, entity.ExternalVideoUrl, entity.HeaderImageFileId, entity.CreationDate });
+        
+            if (parameters.AdditionalParameters != null)
+            {
+                parameterObject.AddDynamicParams(parameters.AdditionalParameters);
+            }
         
             return Dapper.SqlMapper.ExecuteScalarAsync<int>(
                 connection,
@@ -3820,6 +3897,11 @@ namespace Fifthweek.Api.Persistence
             }
         
             var parameterObject = OnlySpecifiedParameters(parameters.Entity, parameters.UpdateMask.Value, parameters.ExcludedFromInput);
+        
+            if (parameters.AdditionalParameters != null)
+            {
+                parameterObject.AddDynamicParams(parameters.AdditionalParameters);
+            }
         
             return Dapper.SqlMapper.ExecuteScalarAsync<int>(
                 connection,
@@ -3924,7 +4006,7 @@ namespace Fifthweek.Api.Persistence
             return fieldNames;
         }
         
-        private static object OnlySpecifiedParameters(
+        private static Dapper.DynamicParameters OnlySpecifiedParameters(
             Subscription entity, 
             Subscription.Fields fields,
             Subscription.Fields? excludedFields = null)
@@ -3976,7 +4058,7 @@ namespace Fifthweek.Api.Persistence
             return parameters;
         }
         
-        private static object AllExceptSpecifiedParameters(
+        private static Dapper.DynamicParameters AllExceptSpecifiedParameters(
             Subscription entity, 
             Subscription.Fields fields)
         {
@@ -4039,6 +4121,7 @@ namespace Fifthweek.Api.Persistence
     using Fifthweek.Api.Persistence.Identity;
     using Fifthweek.Api.Core;
     using Fifthweek.Shared;
+    using Dapper;
 
     public partial class WeeklyReleaseTime  : IIdentityEquatable
     {
@@ -4180,7 +4263,12 @@ namespace Fifthweek.Api.Persistence
             var entity = parameters.Entity;
             var parameterObject = parameters.ExcludedFromInput != null
                 ? AllExceptSpecifiedParameters(entity, parameters.ExcludedFromInput.Value)
-                : new { entity.CollectionId, entity.HourOfWeek };
+                : new Dapper.DynamicParameters(new { entity.CollectionId, entity.HourOfWeek });
+        
+            if (parameters.AdditionalParameters != null)
+            {
+                parameterObject.AddDynamicParams(parameters.AdditionalParameters);
+            }
         
             return Dapper.SqlMapper.ExecuteScalarAsync<int>(
                 connection,
@@ -4274,6 +4362,11 @@ namespace Fifthweek.Api.Persistence
         
             var parameterObject = OnlySpecifiedParameters(parameters.Entity, parameters.UpdateMask.Value, parameters.ExcludedFromInput);
         
+            if (parameters.AdditionalParameters != null)
+            {
+                parameterObject.AddDynamicParams(parameters.AdditionalParameters);
+            }
+        
             return Dapper.SqlMapper.ExecuteScalarAsync<int>(
                 connection,
                 sql.ToString(),
@@ -4342,7 +4435,7 @@ namespace Fifthweek.Api.Persistence
             return fieldNames;
         }
         
-        private static object OnlySpecifiedParameters(
+        private static Dapper.DynamicParameters OnlySpecifiedParameters(
             WeeklyReleaseTime entity, 
             WeeklyReleaseTime.Fields fields,
             WeeklyReleaseTime.Fields? excludedFields = null)
@@ -4355,7 +4448,7 @@ namespace Fifthweek.Api.Persistence
             return parameters;
         }
         
-        private static object AllExceptSpecifiedParameters(
+        private static Dapper.DynamicParameters AllExceptSpecifiedParameters(
             WeeklyReleaseTime entity, 
             WeeklyReleaseTime.Fields fields)
         {
@@ -4506,7 +4599,12 @@ namespace Fifthweek.Api.Persistence.Identity
             var entity = parameters.Entity;
             var parameterObject = parameters.ExcludedFromInput != null
                 ? AllExceptSpecifiedParameters(entity, parameters.ExcludedFromInput.Value)
-                : new { entity.Id, entity.Name };
+                : new Dapper.DynamicParameters(new { entity.Id, entity.Name });
+        
+            if (parameters.AdditionalParameters != null)
+            {
+                parameterObject.AddDynamicParams(parameters.AdditionalParameters);
+            }
         
             return Dapper.SqlMapper.ExecuteScalarAsync<int>(
                 connection,
@@ -4600,6 +4698,11 @@ namespace Fifthweek.Api.Persistence.Identity
         
             var parameterObject = OnlySpecifiedParameters(parameters.Entity, parameters.UpdateMask.Value, parameters.ExcludedFromInput);
         
+            if (parameters.AdditionalParameters != null)
+            {
+                parameterObject.AddDynamicParams(parameters.AdditionalParameters);
+            }
+        
             return Dapper.SqlMapper.ExecuteScalarAsync<int>(
                 connection,
                 sql.ToString(),
@@ -4668,7 +4771,7 @@ namespace Fifthweek.Api.Persistence.Identity
             return fieldNames;
         }
         
-        private static object OnlySpecifiedParameters(
+        private static Dapper.DynamicParameters OnlySpecifiedParameters(
             FifthweekRole entity, 
             FifthweekRole.Fields fields,
             FifthweekRole.Fields? excludedFields = null)
@@ -4685,7 +4788,7 @@ namespace Fifthweek.Api.Persistence.Identity
             return parameters;
         }
         
-        private static object AllExceptSpecifiedParameters(
+        private static Dapper.DynamicParameters AllExceptSpecifiedParameters(
             FifthweekRole entity, 
             FifthweekRole.Fields fields)
         {
@@ -4855,7 +4958,12 @@ namespace Fifthweek.Api.Persistence.Identity
             var entity = parameters.Entity;
             var parameterObject = parameters.ExcludedFromInput != null
                 ? AllExceptSpecifiedParameters(entity, parameters.ExcludedFromInput.Value)
-                : new { entity.ExampleWork, entity.RegistrationDate, entity.LastSignInDate, entity.LastAccessTokenDate, entity.ProfileImageFileId, entity.Id, entity.AccessFailedCount, entity.Email, entity.EmailConfirmed, entity.LockoutEnabled, entity.LockoutEndDateUtc, entity.PasswordHash, entity.PhoneNumber, entity.PhoneNumberConfirmed, entity.SecurityStamp, entity.TwoFactorEnabled, entity.UserName };
+                : new Dapper.DynamicParameters(new { entity.ExampleWork, entity.RegistrationDate, entity.LastSignInDate, entity.LastAccessTokenDate, entity.ProfileImageFileId, entity.Id, entity.AccessFailedCount, entity.Email, entity.EmailConfirmed, entity.LockoutEnabled, entity.LockoutEndDateUtc, entity.PasswordHash, entity.PhoneNumber, entity.PhoneNumberConfirmed, entity.SecurityStamp, entity.TwoFactorEnabled, entity.UserName });
+        
+            if (parameters.AdditionalParameters != null)
+            {
+                parameterObject.AddDynamicParams(parameters.AdditionalParameters);
+            }
         
             return Dapper.SqlMapper.ExecuteScalarAsync<int>(
                 connection,
@@ -4948,6 +5056,11 @@ namespace Fifthweek.Api.Persistence.Identity
             }
         
             var parameterObject = OnlySpecifiedParameters(parameters.Entity, parameters.UpdateMask.Value, parameters.ExcludedFromInput);
+        
+            if (parameters.AdditionalParameters != null)
+            {
+                parameterObject.AddDynamicParams(parameters.AdditionalParameters);
+            }
         
             return Dapper.SqlMapper.ExecuteScalarAsync<int>(
                 connection,
@@ -5092,7 +5205,7 @@ namespace Fifthweek.Api.Persistence.Identity
             return fieldNames;
         }
         
-        private static object OnlySpecifiedParameters(
+        private static Dapper.DynamicParameters OnlySpecifiedParameters(
             FifthweekUser entity, 
             FifthweekUser.Fields fields,
             FifthweekUser.Fields? excludedFields = null)
@@ -5184,7 +5297,7 @@ namespace Fifthweek.Api.Persistence.Identity
             return parameters;
         }
         
-        private static object AllExceptSpecifiedParameters(
+        private static Dapper.DynamicParameters AllExceptSpecifiedParameters(
             FifthweekUser entity, 
             FifthweekUser.Fields fields)
         {
@@ -5426,7 +5539,12 @@ namespace Fifthweek.Api.Persistence.Identity
             var entity = parameters.Entity;
             var parameterObject = parameters.ExcludedFromInput != null
                 ? AllExceptSpecifiedParameters(entity, parameters.ExcludedFromInput.Value)
-                : new { entity.RoleId, entity.UserId };
+                : new Dapper.DynamicParameters(new { entity.RoleId, entity.UserId });
+        
+            if (parameters.AdditionalParameters != null)
+            {
+                parameterObject.AddDynamicParams(parameters.AdditionalParameters);
+            }
         
             return Dapper.SqlMapper.ExecuteScalarAsync<int>(
                 connection,
@@ -5520,6 +5638,11 @@ namespace Fifthweek.Api.Persistence.Identity
         
             var parameterObject = OnlySpecifiedParameters(parameters.Entity, parameters.UpdateMask.Value, parameters.ExcludedFromInput);
         
+            if (parameters.AdditionalParameters != null)
+            {
+                parameterObject.AddDynamicParams(parameters.AdditionalParameters);
+            }
+        
             return Dapper.SqlMapper.ExecuteScalarAsync<int>(
                 connection,
                 sql.ToString(),
@@ -5588,7 +5711,7 @@ namespace Fifthweek.Api.Persistence.Identity
             return fieldNames;
         }
         
-        private static object OnlySpecifiedParameters(
+        private static Dapper.DynamicParameters OnlySpecifiedParameters(
             FifthweekUserRole entity, 
             FifthweekUserRole.Fields fields,
             FifthweekUserRole.Fields? excludedFields = null)
@@ -5601,7 +5724,7 @@ namespace Fifthweek.Api.Persistence.Identity
             return parameters;
         }
         
-        private static object AllExceptSpecifiedParameters(
+        private static Dapper.DynamicParameters AllExceptSpecifiedParameters(
             FifthweekUserRole entity, 
             FifthweekUserRole.Fields fields)
         {

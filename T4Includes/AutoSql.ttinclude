@@ -200,7 +200,12 @@ public static System.Threading.Tasks.Task<int> InsertAsync(
     var entity = parameters.Entity;
     var parameterObject = parameters.ExcludedFromInput != null
         ? AllExceptSpecifiedParameters(entity, parameters.ExcludedFromInput.Value)
-        : new { <#= entityMaskInitialization #> };
+        : new Dapper.DynamicParameters(new { <#= entityMaskInitialization #> });
+
+    if (parameters.AdditionalParameters != null)
+    {
+        parameterObject.AddDynamicParams(parameters.AdditionalParameters);
+    }
 
     return Dapper.SqlMapper.ExecuteScalarAsync<int>(
         connection,
@@ -294,6 +299,11 @@ public static System.Threading.Tasks.Task<int> UpdateAsync(
 
     var parameterObject = OnlySpecifiedParameters(parameters.Entity, parameters.UpdateMask.Value, parameters.ExcludedFromInput);
 
+    if (parameters.AdditionalParameters != null)
+    {
+        parameterObject.AddDynamicParams(parameters.AdditionalParameters);
+    }
+
     return Dapper.SqlMapper.ExecuteScalarAsync<int>(
         connection,
         sql.ToString(),
@@ -378,7 +388,7 @@ private static System.Collections.Generic.IReadOnlyList<string> GetFieldNames(<#
     return fieldNames;
 }
 
-private static object OnlySpecifiedParameters(
+private static Dapper.DynamicParameters OnlySpecifiedParameters(
     <#= unifiedClass.FirstCodeClass.Name #> entity, 
     <#= unifiedClass.FirstCodeClass.Name #>.Fields fields,
     <#= unifiedClass.FirstCodeClass.Name #>.Fields? excludedFields = null)
@@ -411,7 +421,7 @@ private static object OnlySpecifiedParameters(
     return parameters;
 }
 
-private static object AllExceptSpecifiedParameters(
+private static Dapper.DynamicParameters AllExceptSpecifiedParameters(
     <#= unifiedClass.FirstCodeClass.Name #> entity, 
     <#= unifiedClass.FirstCodeClass.Name #>.Fields fields)
 {

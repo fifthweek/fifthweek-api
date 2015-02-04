@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Linq;
 
-//// Generated on 04/02/2015 19:45:33 (UTC)
-//// Mapped solution in 4.45s
+//// Generated on 04/02/2015 21:42:14 (UTC)
+//// Mapped solution in 6.9s
 
 
 namespace Fifthweek.Api.Posts.Commands
@@ -1975,7 +1975,7 @@ namespace Fifthweek.Api.Posts.Commands
         public RescheduleForNowCommandHandler(
             Fifthweek.Api.Identity.Shared.Membership.IRequesterSecurity requesterSecurity,
             Fifthweek.Api.Posts.Shared.IPostSecurity postSecurity,
-            Fifthweek.Api.Posts.ISetBacklogPostLiveDateToNowDbStatement setBacklogPostLiveDateToNow,
+            Fifthweek.Api.Posts.ISetBacklogPostLiveDateDbStatement setBacklogPostLiveDate,
             Fifthweek.Api.Posts.IRemoveFromQueueIfRequiredDbStatement removeFromQueueIfRequired)
         {
             if (requesterSecurity == null)
@@ -1988,9 +1988,9 @@ namespace Fifthweek.Api.Posts.Commands
                 throw new ArgumentNullException("postSecurity");
             }
 
-            if (setBacklogPostLiveDateToNow == null)
+            if (setBacklogPostLiveDate == null)
             {
-                throw new ArgumentNullException("setBacklogPostLiveDateToNow");
+                throw new ArgumentNullException("setBacklogPostLiveDate");
             }
 
             if (removeFromQueueIfRequired == null)
@@ -2000,7 +2000,7 @@ namespace Fifthweek.Api.Posts.Commands
 
             this.requesterSecurity = requesterSecurity;
             this.postSecurity = postSecurity;
-            this.setBacklogPostLiveDateToNow = setBacklogPostLiveDateToNow;
+            this.setBacklogPostLiveDate = setBacklogPostLiveDate;
             this.removeFromQueueIfRequired = removeFromQueueIfRequired;
         }
     }
@@ -2024,16 +2024,23 @@ namespace Fifthweek.Api.Posts
     using Fifthweek.Api.Channels.Shared;
     using System.Transactions;
 
-    public partial class SetBacklogPostLiveDateToNowDbStatement 
+    public partial class SetBacklogPostLiveDateDbStatement 
     {
-        public SetBacklogPostLiveDateToNowDbStatement(
+        public SetBacklogPostLiveDateDbStatement(
+            Fifthweek.Api.Posts.IScheduledDateClippingFunction scheduledDateClipping,
             Fifthweek.Api.Persistence.IFifthweekDbContext databaseContext)
         {
+            if (scheduledDateClipping == null)
+            {
+                throw new ArgumentNullException("scheduledDateClipping");
+            }
+
             if (databaseContext == null)
             {
                 throw new ArgumentNullException("databaseContext");
             }
 
+            this.scheduledDateClipping = scheduledDateClipping;
             this.databaseContext = databaseContext;
         }
     }
@@ -2167,6 +2174,50 @@ namespace Fifthweek.Api.Posts.Commands
 
             this.Requester = requester;
             this.PostId = postId;
+        }
+    }
+}
+namespace Fifthweek.Api.Posts.Commands
+{
+    using System;
+    using System.Threading.Tasks;
+    using Fifthweek.Api.Core;
+    using Fifthweek.Api.Identity.Shared.Membership;
+    using Fifthweek.Api.Posts.Shared;
+    using Fifthweek.CodeGeneration;
+
+    public partial class RescheduleForTimeCommandHandler 
+    {
+        public RescheduleForTimeCommandHandler(
+            Fifthweek.Api.Identity.Shared.Membership.IRequesterSecurity requesterSecurity,
+            Fifthweek.Api.Posts.Shared.IPostSecurity postSecurity,
+            Fifthweek.Api.Posts.ISetBacklogPostLiveDateDbStatement setBacklogPostLiveDate,
+            Fifthweek.Api.Posts.IRemoveFromQueueIfRequiredDbStatement removeFromQueueIfRequired)
+        {
+            if (requesterSecurity == null)
+            {
+                throw new ArgumentNullException("requesterSecurity");
+            }
+
+            if (postSecurity == null)
+            {
+                throw new ArgumentNullException("postSecurity");
+            }
+
+            if (setBacklogPostLiveDate == null)
+            {
+                throw new ArgumentNullException("setBacklogPostLiveDate");
+            }
+
+            if (removeFromQueueIfRequired == null)
+            {
+                throw new ArgumentNullException("removeFromQueueIfRequired");
+            }
+
+            this.requesterSecurity = requesterSecurity;
+            this.postSecurity = postSecurity;
+            this.setBacklogPostLiveDate = setBacklogPostLiveDate;
+            this.removeFromQueueIfRequired = removeFromQueueIfRequired;
         }
     }
 }

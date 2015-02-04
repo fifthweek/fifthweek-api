@@ -14,18 +14,19 @@
     using Moq;
 
     [TestClass]
-    public class RescheduleForNowCommandHandlerTests
+    public class RescheduleForTimeCommandHandlerTests
     {
         private static readonly UserId UserId = new UserId(Guid.NewGuid());
         private static readonly Requester Requester = Requester.Authenticated(UserId);
         private static readonly PostId PostId = new PostId(Guid.NewGuid());
-        private static readonly RescheduleForNowCommand Command = new RescheduleForNowCommand(Requester, PostId);
+        private static readonly DateTime ScheduledPostTime = DateTime.UtcNow.AddDays(100);
+        private static readonly RescheduleForTimeCommand Command = new RescheduleForTimeCommand(Requester, PostId, ScheduledPostTime);
 
         private Mock<IRequesterSecurity> requesterSecurity;
         private Mock<IPostSecurity> postSecurity;
         private Mock<ISetBacklogPostLiveDateDbStatement> setBacklogPostLiveDateToNow;
         private Mock<IRemoveFromQueueIfRequiredDbStatement> removeFromQueueIfRequired;
-        private RescheduleForNowCommandHandler target;
+        private RescheduleForTimeCommandHandler target;
 
         [TestInitialize]
         public void Initialize()
@@ -38,7 +39,7 @@
             this.setBacklogPostLiveDateToNow = new Mock<ISetBacklogPostLiveDateDbStatement>(MockBehavior.Strict);
             this.removeFromQueueIfRequired = new Mock<IRemoveFromQueueIfRequiredDbStatement>(MockBehavior.Strict);
 
-            this.target = new RescheduleForNowCommandHandler(
+            this.target = new RescheduleForTimeCommandHandler(
                 this.requesterSecurity.Object, 
                 this.postSecurity.Object, 
                 this.setBacklogPostLiveDateToNow.Object,
@@ -49,7 +50,7 @@
         [ExpectedException(typeof(UnauthorizedException))]
         public async Task WhenUnauthenticated_ItShouldThrowUnauthorizedException()
         {
-            await this.target.HandleAsync(new RescheduleForNowCommand(Requester.Unauthenticated, PostId));
+            await this.target.HandleAsync(new RescheduleForTimeCommand(Requester.Unauthenticated, PostId, ScheduledPostTime));
         }
 
         [TestMethod]
@@ -65,7 +66,7 @@
         public async Task ItShouldSetBacklogPostLiveDateToNow()
         {
             this.removeFromQueueIfRequired.SetupFor(PostId);
-            this.setBacklogPostLiveDateToNow.Setup(_ => _.ExecuteAsync(PostId, It.Is<DateTime>(now => now.Kind == DateTimeKind.Utc), It.Is<DateTime>(now => now.Kind == DateTimeKind.Utc)))
+            this.setBacklogPostLiveDateToNow.Setup(_ => _.ExecuteAsync(PostId, ScheduledPostTime, It.Is<DateTime>(now => now.Kind == DateTimeKind.Utc)))
                 .Returns(Task.FromResult(0))
                 .Verifiable();
 

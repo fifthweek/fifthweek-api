@@ -12,13 +12,15 @@
 
         public T Entity { get; private set; }
 
-        public IReadOnlyList<string> Conditions { get; set; }
-
-        public string Declarations { get; set; }
-
         public TFields? ExcludedFromInput { get; set; }
 
         public TFields? UpdateMask { get; set; }
+
+        public object AdditionalParameters { get; set; }
+
+        public IReadOnlyList<string> Conditions { get; set; }
+
+        public string Declarations { get; set; }
 
         public bool IdempotentInsert { get; set; }
     }
