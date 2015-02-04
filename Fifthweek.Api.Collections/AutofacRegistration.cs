@@ -19,6 +19,9 @@
             builder.RegisterType<DefragmentQueueDbStatement>().As<IDefragmentQueueDbStatement>();
             builder.RegisterType<GetQueueSizeDbStatement>().As<IGetQueueSizeDbStatement>();
             builder.RegisterType<UpdateAllLiveDatesInQueueDbStatement>().As<IUpdateAllLiveDatesInQueueDbStatement>();
+            builder.RegisterType<UpdateWeeklyReleaseScheduleDbStatement>().As<IUpdateWeeklyReleaseScheduleDbStatement>();
+            builder.RegisterType<ReplaceWeeklyReleaseTimesDbStatement>().As<IReplaceWeeklyReleaseTimesDbStatement>();
+            builder.RegisterType<UpdateCollectionFieldsDbStatement>().As<IUpdateCollectionFieldsDbStatement>();
         }
     }
 }

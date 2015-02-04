@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Linq;
 
-//// Generated on 03/02/2015 10:00:56 (UTC)
-//// Mapped solution in 2.92s
+//// Generated on 04/02/2015 11:41:29 (UTC)
+//// Mapped solution in 3.25s
 
 
 namespace Fifthweek.Api.Persistence
@@ -1376,6 +1376,39 @@ namespace Fifthweek.Api.Persistence.Identity
             }
         
             return true;
+        }
+    }
+}
+namespace Fifthweek.Api.Persistence
+{
+    using System;
+    using System.Linq;
+    using System.ComponentModel.DataAnnotations;
+    using System.ComponentModel.DataAnnotations.Schema;
+    using Fifthweek.CodeGeneration;
+    using Fifthweek.Api.Persistence.Identity;
+    using Fifthweek.Api.Core;
+    using Fifthweek.Shared;
+
+    public partial class Collection 
+    {
+        public Collection Copy()
+        {
+            var copy = new Collection();
+            copy.Id = this.Id;
+            copy.ChannelId = this.ChannelId;
+            copy.Channel = this.Channel;
+            copy.Name = this.Name;
+            copy.QueueExclusiveLowerBound = this.QueueExclusiveLowerBound;
+            copy.CreationDate = this.CreationDate;
+            return copy;
+        }
+        
+        public Collection Copy(Action<Collection> applyDelta)
+        {
+            var copy = this.Copy();
+            applyDelta(copy);
+            return copy;
         }
     }
 }

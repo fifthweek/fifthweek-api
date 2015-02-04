@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Linq;
 
-//// Generated on 03/02/2015 18:22:11 (UTC)
-//// Mapped solution in 3.41s
+//// Generated on 04/02/2015 11:07:45 (UTC)
+//// Mapped solution in 9.73s
 
 
 namespace Fifthweek.Api.Collections
@@ -775,7 +775,8 @@ namespace Fifthweek.Api.Collections.Commands
             Fifthweek.Api.Identity.Shared.Membership.IRequesterSecurity requesterSecurity,
             Fifthweek.Api.Collections.Shared.ICollectionSecurity collectionSecurity,
             Fifthweek.Api.Channels.Shared.IChannelSecurity channelSecurity,
-            Fifthweek.Api.Persistence.IFifthweekDbContext databaseContext)
+            Fifthweek.Api.Collections.IUpdateCollectionFieldsDbStatement updateCollectionFields,
+            Fifthweek.Api.Collections.IUpdateWeeklyReleaseScheduleDbStatement updateWeeklyReleaseSchedule)
         {
             if (requesterSecurity == null)
             {
@@ -792,15 +793,21 @@ namespace Fifthweek.Api.Collections.Commands
                 throw new ArgumentNullException("channelSecurity");
             }
 
-            if (databaseContext == null)
+            if (updateCollectionFields == null)
             {
-                throw new ArgumentNullException("databaseContext");
+                throw new ArgumentNullException("updateCollectionFields");
+            }
+
+            if (updateWeeklyReleaseSchedule == null)
+            {
+                throw new ArgumentNullException("updateWeeklyReleaseSchedule");
             }
 
             this.requesterSecurity = requesterSecurity;
             this.collectionSecurity = collectionSecurity;
             this.channelSecurity = channelSecurity;
-            this.databaseContext = databaseContext;
+            this.updateCollectionFields = updateCollectionFields;
+            this.updateWeeklyReleaseSchedule = updateWeeklyReleaseSchedule;
         }
     }
 }
@@ -1001,13 +1008,18 @@ namespace Fifthweek.Api.Collections
 namespace Fifthweek.Api.Collections
 {
     using System;
-    using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
-    using Fifthweek.Api.Collections.Shared;
+    using Dapper;
     using Fifthweek.Api.Core;
+    using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.Api.Persistence;
     using Fifthweek.CodeGeneration;
+    using Fifthweek.Api.Collections.Shared;
+    using System.Collections.Generic;
+    using System.Text;
+    using Fifthweek.Api.Channels.Shared;
+    using Fifthweek.Api.Collections.Queries;
 
     public partial class UpdateAllLiveDatesInQueueDbStatement 
     {
@@ -1020,6 +1032,82 @@ namespace Fifthweek.Api.Collections
             }
 
             this.databaseContext = databaseContext;
+        }
+    }
+}
+namespace Fifthweek.Api.Collections
+{
+    using System.Linq;
+    using System.Threading.Tasks;
+    using System.Transactions;
+    using Dapper;
+    using Fifthweek.Api.Collections.Shared;
+    using Fifthweek.Api.Core;
+    using Fifthweek.Api.Persistence;
+    using Fifthweek.CodeGeneration;
+
+    public partial class ReplaceWeeklyReleaseTimesDbStatement 
+    {
+        public ReplaceWeeklyReleaseTimesDbStatement(
+            Fifthweek.Api.Persistence.IFifthweekDbContext databaseContext)
+        {
+            if (databaseContext == null)
+            {
+                throw new ArgumentNullException("databaseContext");
+            }
+
+            this.databaseContext = databaseContext;
+        }
+    }
+}
+namespace Fifthweek.Api.Collections
+{
+    using System.Threading.Tasks;
+    using Fifthweek.Api.Core;
+    using Fifthweek.Api.Persistence;
+    using Fifthweek.CodeGeneration;
+
+    public partial class UpdateCollectionFieldsDbStatement 
+    {
+        public UpdateCollectionFieldsDbStatement(
+            Fifthweek.Api.Persistence.IFifthweekDbContext databaseContext)
+        {
+            if (databaseContext == null)
+            {
+                throw new ArgumentNullException("databaseContext");
+            }
+
+            this.databaseContext = databaseContext;
+        }
+    }
+}
+namespace Fifthweek.Api.Collections
+{
+    using System;
+    using System.Threading.Tasks;
+    using System.Transactions;
+    using Fifthweek.Api.Collections.Shared;
+    using Fifthweek.Api.Core;
+    using Fifthweek.CodeGeneration;
+
+    public partial class UpdateWeeklyReleaseScheduleDbStatement 
+    {
+        public UpdateWeeklyReleaseScheduleDbStatement(
+            Fifthweek.Api.Collections.IReplaceWeeklyReleaseTimesDbStatement replaceWeeklyReleaseTimes,
+            Fifthweek.Api.Collections.Shared.IDefragmentQueueDbStatement defragmentQueue)
+        {
+            if (replaceWeeklyReleaseTimes == null)
+            {
+                throw new ArgumentNullException("replaceWeeklyReleaseTimes");
+            }
+
+            if (defragmentQueue == null)
+            {
+                throw new ArgumentNullException("defragmentQueue");
+            }
+
+            this.replaceWeeklyReleaseTimes = replaceWeeklyReleaseTimes;
+            this.defragmentQueue = defragmentQueue;
         }
     }
 }

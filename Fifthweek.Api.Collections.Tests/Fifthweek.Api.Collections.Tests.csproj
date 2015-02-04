@@ -101,7 +101,10 @@
     <Compile Include="GetNewQueuedPostLiveDateLowerBoundDbStatementTests.cs" />
     <Compile Include="GetCollectionWeeklyReleaseScheduleDbStatementTests.cs" />
     <Compile Include="GetQueueSizeDbStatementTests.cs" />
+    <Compile Include="ReplaceWeeklyReleaseTimesDbStatementTests.cs" />
     <Compile Include="UpdateAllLiveDatesInQueueDbStatementTests.cs" />
+    <Compile Include="UpdateCollectionFieldsDbStatementTests.cs" />
+    <Compile Include="UpdateWeeklyReleaseScheduleDbStatementTests.cs" />
     <Compile Include="WeeklyReleaseScheduleTests.cs" />
     <Compile Include="HourOfWeekTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

@@ -85,7 +85,10 @@
     <Compile Include="IGetNewQueuedPostLiveDateLowerBoundDbStatement.cs" />
     <Compile Include="IGetQueueSizeDbStatement.cs" />
     <Compile Include="IQueuedPostLiveDateCalculator.cs" />
+    <Compile Include="IReplaceWeeklyReleaseTimesDbStatement.cs" />
     <Compile Include="IUpdateAllLiveDatesInQueueDbStatement.cs" />
+    <Compile Include="IUpdateCollectionFieldsDbStatement.cs" />
+    <Compile Include="IUpdateWeeklyReleaseScheduleDbStatement.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="GetLiveDateOfNewQueuedPostDbStatement.cs" />
     <Compile Include="Queries\ChannelsAndCollections.cs" />
@@ -94,7 +97,10 @@
     <Compile Include="Queries\GetLiveDateOfNewQueuedPostQuery.cs" />
     <Compile Include="Queries\GetLiveDateOfNewQueuedPostQueryHandler.cs" />
     <Compile Include="QueuedPostLiveDateCalculator.cs" />
+    <Compile Include="ReplaceWeeklyReleaseTimesDbStatement.cs" />
     <Compile Include="UpdateAllLiveDatesInQueueDbStatement.cs" />
+    <Compile Include="UpdateCollectionFieldsDbStatement.cs" />
+    <Compile Include="UpdateWeeklyReleaseScheduleDbStatement.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Fifthweek.Api.Channels.Shared\Fifthweek.Api.Channels.Shared.csproj">
