@@ -91,25 +91,28 @@
                 return current;
             });
 
+            var parameters = new DynamicParameters(new
+            {
+                CollectionId = collectionId.Value,
+                Now = now
+            });
+
             var sql = new StringBuilder();
             sql.AppendLine(SqlPreInserts);
             for (var i = 0; i < ascendingLiveDates.Count; i++)
             {
-                var liveDate = ascendingLiveDates[i];
-                sql.Append("INSERT INTO #NewLiveDates VALUES (");
-                sql.Append(liveDate.ToSqlUtcString());
+                var rowNumber = i + 1; // Need to match the output of ROW_NUMBER, which is 1-based.
+                sql.Append("INSERT INTO #NewLiveDates VALUES (@LiveDate");
+                sql.Append(rowNumber);
                 sql.Append(", ");
-                sql.Append(i + 1); // Need to match the output of ROW_NUMBER, which is 1-based.
+                sql.Append(rowNumber);
                 sql.AppendLine(");");
+
+                var liveDate = ascendingLiveDates[i];
+                parameters.Add("LiveDate" + rowNumber, liveDate);
             }
 
             sql.AppendLine(SqlPostInserts);
-
-            var parameters = new
-            {
-                CollectionId = collectionId.Value,
-                Now = now
-            };
 
             var queueOverflow = await this.databaseContext.Database.Connection.ExecuteScalarAsync<int>(sql.ToString(), parameters);
 

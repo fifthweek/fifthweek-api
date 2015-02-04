@@ -79,6 +79,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AutofacRegistration.cs" />
+    <Compile Include="Commands\RescheduleForNowCommand.cs" />
     <Compile Include="Commands\ReviseFileCommandHandler.cs" />
     <Compile Include="Commands\ReviseImageCommandHandler.cs" />
     <Compile Include="Commands\ReviseNoteCommandHandler.cs" />
