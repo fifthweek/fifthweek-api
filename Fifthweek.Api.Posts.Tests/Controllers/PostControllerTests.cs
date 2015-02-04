@@ -30,6 +30,8 @@
         private Mock<ICommandHandler<DeletePostCommand>> deletePost;
         private Mock<ICommandHandler<ReorderQueueCommand>> reorderQueue;
         private Mock<ICommandHandler<RescheduleForNowCommand>> rescheduleForNow;
+        private Mock<ICommandHandler<RescheduleForTimeCommand>> rescheduleForTime;
+        private Mock<ICommandHandler<RescheduleWithQueueCommand>> rescheduleWithQueue;
         private Mock<IQueryHandler<GetCreatorBacklogQuery, IReadOnlyList<BacklogPost>>> getCreatorBacklog;
         private Mock<IQueryHandler<GetCreatorNewsfeedQuery, IReadOnlyList<NewsfeedPost>>> getCreatorNewsfeed;
         private Mock<IRequesterContext> requesterContext;
@@ -41,6 +43,8 @@
             this.deletePost = new Mock<ICommandHandler<DeletePostCommand>>();
             this.reorderQueue = new Mock<ICommandHandler<ReorderQueueCommand>>();
             this.rescheduleForNow = new Mock<ICommandHandler<RescheduleForNowCommand>>();
+            this.rescheduleForTime = new Mock<ICommandHandler<RescheduleForTimeCommand>>();
+            this.rescheduleWithQueue = new Mock<ICommandHandler<RescheduleWithQueueCommand>>();
             this.getCreatorBacklog = new Mock<IQueryHandler<GetCreatorBacklogQuery, IReadOnlyList<BacklogPost>>>();
             this.getCreatorNewsfeed = new Mock<IQueryHandler<GetCreatorNewsfeedQuery, IReadOnlyList<NewsfeedPost>>>();
             this.requesterContext = new Mock<IRequesterContext>();
@@ -48,6 +52,8 @@
                 this.deletePost.Object,
                 this.reorderQueue.Object,
                 this.rescheduleForNow.Object,
+                this.rescheduleForTime.Object,
+                this.rescheduleWithQueue.Object,
                 this.getCreatorBacklog.Object,
                 this.getCreatorNewsfeed.Object,
                 this.requesterContext.Object);
@@ -153,6 +159,26 @@
         }
 
         [TestMethod]
+        public async Task WhenReschedulingWithQueue_ItShouldIssueRescheduleWithQueueCommand()
+        {
+            this.requesterContext.Setup(v => v.GetRequester()).Returns(Requester);
+            this.rescheduleWithQueue.Setup(_ => _.HandleAsync(new RescheduleWithQueueCommand(Requester, PostId)))
+                .Returns(Task.FromResult(0))
+                .Verifiable();
+
+            await this.target.PostToQueue(PostId.Value.EncodeGuid());
+
+            this.rescheduleForNow.Verify();
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(BadRequestException))]
+        public async Task WhenReschedulingWithQueue_WithoutSpecifyingPostId_ItShouldThrowBadRequestException()
+        {
+            await this.target.PostToQueue(string.Empty);
+        }
+
+        [TestMethod]
         public async Task WhenReschedulingForNow_ItShouldIssueRescheduleForNowCommand()
         {
             this.requesterContext.Setup(v => v.GetRequester()).Returns(Requester);
@@ -160,7 +186,7 @@
                 .Returns(Task.FromResult(0))
                 .Verifiable();
 
-            await this.target.ReschedulePostForNow(PostId.Value.EncodeGuid());
+            await this.target.PostToLive(PostId.Value.EncodeGuid());
 
             this.rescheduleForNow.Verify();
         }
@@ -169,7 +195,36 @@
         [ExpectedException(typeof(BadRequestException))]
         public async Task WhenReschedulingForNow_WithoutSpecifyingPostId_ItShouldThrowBadRequestException()
         {
-            await this.target.ReschedulePostForNow(string.Empty);
+            await this.target.PostToLive(string.Empty);
+        }
+
+        [TestMethod]
+        public async Task WhenReschedulingForTime_ItShouldIssueRescheduleForTimeCommand()
+        {
+            var newLiveDate = DateTime.UtcNow;
+
+            this.requesterContext.Setup(v => v.GetRequester()).Returns(Requester);
+            this.rescheduleForTime.Setup(_ => _.HandleAsync(new RescheduleForTimeCommand(Requester, PostId, newLiveDate)))
+                .Returns(Task.FromResult(0))
+                .Verifiable();
+
+            await this.target.PutLiveDate(PostId.Value.EncodeGuid(), newLiveDate);
+
+            this.rescheduleForTime.Verify();
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(BadRequestException))]
+        public async Task WhenReschedulingForTime_WithoutSpecifyingPostId_ItShouldThrowBadRequestException()
+        {
+            await this.target.PutLiveDate(string.Empty, DateTime.UtcNow);
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentException))]
+        public async Task WhenReschedulingForTime_AndNewDateIsNonUtc_ItShouldThrowBadRequestException()
+        {
+            await this.target.PutLiveDate(PostId.Value.EncodeGuid(), DateTime.Now);
         }
     }
 }

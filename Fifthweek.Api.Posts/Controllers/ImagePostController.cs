@@ -31,7 +31,7 @@
                 image.CollectionId,
                 image.ImageFileId,
                 image.Comment,
-                image.ScheduledPostDate,
+                image.ScheduledPostTime,
                 image.IsQueued));
 
             return this.Ok();

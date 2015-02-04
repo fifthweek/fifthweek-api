@@ -30,7 +30,7 @@
                 newPostId,
                 note.ChannelId,
                 note.Note,
-                note.ScheduledPostDate));
+                note.ScheduledPostTime));
 
             return this.Ok();
         }

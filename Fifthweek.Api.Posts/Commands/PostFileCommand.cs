@@ -23,7 +23,7 @@
         public ValidComment Comment { get; private set; }
 
         [Optional]
-        public DateTime? ScheduledPostDate { get; private set; }
+        public DateTime? ScheduledPostTime { get; private set; }
 
         public bool IsQueued { get; private set; }
     }

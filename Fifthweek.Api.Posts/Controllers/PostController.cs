@@ -1,5 +1,6 @@
 ﻿namespace Fifthweek.Api.Posts.Controllers
 {
+    using System;
     using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
@@ -19,6 +20,8 @@
         private readonly ICommandHandler<DeletePostCommand> deletePost;
         private readonly ICommandHandler<ReorderQueueCommand> reorderQueue;
         private readonly ICommandHandler<RescheduleForNowCommand> rescheduleForNow;
+        private readonly ICommandHandler<RescheduleForTimeCommand> rescheduleForTime;
+        private readonly ICommandHandler<RescheduleWithQueueCommand> rescheduleWithQueue;
         private readonly IQueryHandler<GetCreatorBacklogQuery, IReadOnlyList<BacklogPost>> getCreatorBacklog;
         private readonly IQueryHandler<GetCreatorNewsfeedQuery, IReadOnlyList<NewsfeedPost>> getCreatorNewsfeed;
         private readonly IRequesterContext requesterContext;
@@ -70,14 +73,37 @@
             return this.Ok();
         }
 
-        [Route("expeditions")]
-        public Task ReschedulePostForNow(string postId)
+        [Route("queued")]
+        public Task PostToQueue(string postId)
+        {
+            postId.AssertUrlParameterProvided("postId");
+
+            var parsedPostId = new PostId(postId.DecodeGuid());
+            var requester = this.requesterContext.GetRequester();
+
+            return this.rescheduleWithQueue.HandleAsync(new RescheduleWithQueueCommand(requester, parsedPostId));
+        }
+
+        [Route("live")]
+        public Task PostToLive(string postId)
         {
             postId.AssertBodyProvided("postId");
             var parsedPostId = new PostId(postId.DecodeGuid());
             var requester = this.requesterContext.GetRequester();
 
             return this.rescheduleForNow.HandleAsync(new RescheduleForNowCommand(requester, parsedPostId));
+        }
+
+        [Route("{postId}/liveDate")]
+        public Task PutLiveDate(string postId, [FromBody]DateTime newLiveDate)
+        {
+            postId.AssertUrlParameterProvided("postId");
+            newLiveDate.AssertUtc("newLiveDate");
+
+            var parsedPostId = new PostId(postId.DecodeGuid());
+            var requester = this.requesterContext.GetRequester();
+
+            return this.rescheduleForTime.HandleAsync(new RescheduleForTimeCommand(requester, parsedPostId, newLiveDate));
         }
     }
 }

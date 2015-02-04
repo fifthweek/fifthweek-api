@@ -34,7 +34,7 @@
                 command.NewPostId,
                 command.CollectionId,
                 command.Comment,
-                command.ScheduledPostDate,
+                command.ScheduledPostTime,
                 command.IsQueued,
                 command.ImageFileId,
                 true,

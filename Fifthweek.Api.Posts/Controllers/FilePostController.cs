@@ -31,7 +31,7 @@
                 file.CollectionId,
                 file.FileId,
                 file.Comment,
-                file.ScheduledPostDate,
+                file.ScheduledPostTime,
                 file.IsQueued));
 
             return this.Ok();

@@ -19,6 +19,6 @@
         public string Note { get; set; }
 
         [Optional]
-        public DateTime? ScheduledPostDate { get; set; }
+        public DateTime? ScheduledPostTime { get; set; }
     }
 }

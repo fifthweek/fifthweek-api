@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Linq;
 
-//// Generated on 04/02/2015 18:23:48 (UTC)
-//// Mapped solution in 3.63s
+//// Generated on 04/02/2015 19:45:33 (UTC)
+//// Mapped solution in 4.45s
 
 
 namespace Fifthweek.Api.Posts.Commands
@@ -130,7 +130,7 @@ namespace Fifthweek.Api.Posts.Commands
             Fifthweek.Api.Collections.Shared.CollectionId collectionId,
             Fifthweek.Api.FileManagement.Shared.FileId fileId,
             Fifthweek.Api.Posts.Shared.ValidComment comment,
-            System.Nullable<System.DateTime> scheduledPostDate,
+            System.Nullable<System.DateTime> scheduledPostTime,
             System.Boolean isQueued)
         {
             if (requester == null)
@@ -163,7 +163,7 @@ namespace Fifthweek.Api.Posts.Commands
             this.CollectionId = collectionId;
             this.FileId = fileId;
             this.Comment = comment;
-            this.ScheduledPostDate = scheduledPostDate;
+            this.ScheduledPostTime = scheduledPostTime;
             this.IsQueued = isQueued;
         }
     }
@@ -254,7 +254,7 @@ namespace Fifthweek.Api.Posts.Commands
             Fifthweek.Api.Collections.Shared.CollectionId collectionId,
             Fifthweek.Api.FileManagement.Shared.FileId imageFileId,
             Fifthweek.Api.Posts.Shared.ValidComment comment,
-            System.Nullable<System.DateTime> scheduledPostDate,
+            System.Nullable<System.DateTime> scheduledPostTime,
             System.Boolean isQueued)
         {
             if (requester == null)
@@ -287,7 +287,7 @@ namespace Fifthweek.Api.Posts.Commands
             this.CollectionId = collectionId;
             this.ImageFileId = imageFileId;
             this.Comment = comment;
-            this.ScheduledPostDate = scheduledPostDate;
+            this.ScheduledPostTime = scheduledPostTime;
             this.IsQueued = isQueued;
         }
     }
@@ -774,6 +774,8 @@ namespace Fifthweek.Api.Posts.Controllers
             Fifthweek.Api.Core.ICommandHandler<Fifthweek.Api.Posts.Commands.DeletePostCommand> deletePost,
             Fifthweek.Api.Core.ICommandHandler<Fifthweek.Api.Posts.Commands.ReorderQueueCommand> reorderQueue,
             Fifthweek.Api.Core.ICommandHandler<Fifthweek.Api.Posts.Commands.RescheduleForNowCommand> rescheduleForNow,
+            Fifthweek.Api.Core.ICommandHandler<Fifthweek.Api.Posts.Commands.RescheduleForTimeCommand> rescheduleForTime,
+            Fifthweek.Api.Core.ICommandHandler<Fifthweek.Api.Posts.Commands.RescheduleWithQueueCommand> rescheduleWithQueue,
             Fifthweek.Api.Core.IQueryHandler<Fifthweek.Api.Posts.Queries.GetCreatorBacklogQuery,System.Collections.Generic.IReadOnlyList<Fifthweek.Api.Posts.Queries.BacklogPost>> getCreatorBacklog,
             Fifthweek.Api.Core.IQueryHandler<Fifthweek.Api.Posts.Queries.GetCreatorNewsfeedQuery,System.Collections.Generic.IReadOnlyList<Fifthweek.Api.Posts.Queries.NewsfeedPost>> getCreatorNewsfeed,
             Fifthweek.Api.Identity.Shared.Membership.IRequesterContext requesterContext)
@@ -791,6 +793,16 @@ namespace Fifthweek.Api.Posts.Controllers
             if (rescheduleForNow == null)
             {
                 throw new ArgumentNullException("rescheduleForNow");
+            }
+
+            if (rescheduleForTime == null)
+            {
+                throw new ArgumentNullException("rescheduleForTime");
+            }
+
+            if (rescheduleWithQueue == null)
+            {
+                throw new ArgumentNullException("rescheduleWithQueue");
             }
 
             if (getCreatorBacklog == null)
@@ -811,6 +823,8 @@ namespace Fifthweek.Api.Posts.Controllers
             this.deletePost = deletePost;
             this.reorderQueue = reorderQueue;
             this.rescheduleForNow = rescheduleForNow;
+            this.rescheduleForTime = rescheduleForTime;
+            this.rescheduleWithQueue = rescheduleWithQueue;
             this.getCreatorBacklog = getCreatorBacklog;
             this.getCreatorNewsfeed = getCreatorNewsfeed;
             this.requesterContext = requesterContext;
@@ -875,6 +889,7 @@ namespace Fifthweek.Api.Posts
     using Fifthweek.Api.Collections.Shared;
     using Fifthweek.Api.Collections;
     using Fifthweek.Api.Channels.Shared;
+    using System.Transactions;
 
     public partial class DeletePostDbStatement 
     {
@@ -907,6 +922,7 @@ namespace Fifthweek.Api.Posts
     using Fifthweek.Api.Collections.Shared;
     using Fifthweek.Api.Collections;
     using Fifthweek.Api.Channels.Shared;
+    using System.Transactions;
 
     public partial class PostFileTypeChecks 
     {
@@ -946,6 +962,7 @@ namespace Fifthweek.Api.Posts
     using Fifthweek.Api.Collections.Shared;
     using Fifthweek.Api.Collections;
     using Fifthweek.Api.Channels.Shared;
+    using System.Transactions;
 
     public partial class PostOwnership 
     {
@@ -978,6 +995,7 @@ namespace Fifthweek.Api.Posts
     using Fifthweek.Api.Collections.Shared;
     using Fifthweek.Api.Collections;
     using Fifthweek.Api.Channels.Shared;
+    using System.Transactions;
 
     public partial class PostSecurity 
     {
@@ -1010,6 +1028,7 @@ namespace Fifthweek.Api.Posts
     using Fifthweek.Api.Collections.Shared;
     using Fifthweek.Api.Collections;
     using Fifthweek.Api.Channels.Shared;
+    using System.Transactions;
 
     public partial class PostToCollectionDbStatement 
     {
@@ -1042,6 +1061,7 @@ namespace Fifthweek.Api.Posts
     using Fifthweek.Api.Collections.Shared;
     using Fifthweek.Api.Collections;
     using Fifthweek.Api.Channels.Shared;
+    using System.Transactions;
 
     public partial class PostToCollectionDbSubStatements 
     {
@@ -1380,7 +1400,7 @@ namespace Fifthweek.Api.Posts.Controllers
             Fifthweek.Api.Collections.Shared.CollectionId collectionId,
             Fifthweek.Api.FileManagement.Shared.FileId fileId,
             System.String comment,
-            System.Nullable<System.DateTime> scheduledPostDate,
+            System.Nullable<System.DateTime> scheduledPostTime,
             System.Boolean isQueued)
         {
             if (collectionId == null)
@@ -1401,7 +1421,7 @@ namespace Fifthweek.Api.Posts.Controllers
             this.CollectionId = collectionId;
             this.FileId = fileId;
             this.Comment = comment;
-            this.ScheduledPostDate = scheduledPostDate;
+            this.ScheduledPostTime = scheduledPostTime;
             this.IsQueued = isQueued;
         }
     }
@@ -1430,7 +1450,7 @@ namespace Fifthweek.Api.Posts.Controllers
             Fifthweek.Api.Collections.Shared.CollectionId collectionId,
             Fifthweek.Api.FileManagement.Shared.FileId imageFileId,
             System.String comment,
-            System.Nullable<System.DateTime> scheduledPostDate,
+            System.Nullable<System.DateTime> scheduledPostTime,
             System.Boolean isQueued)
         {
             if (collectionId == null)
@@ -1451,7 +1471,7 @@ namespace Fifthweek.Api.Posts.Controllers
             this.CollectionId = collectionId;
             this.ImageFileId = imageFileId;
             this.Comment = comment;
-            this.ScheduledPostDate = scheduledPostDate;
+            this.ScheduledPostTime = scheduledPostTime;
             this.IsQueued = isQueued;
         }
     }
@@ -1479,7 +1499,7 @@ namespace Fifthweek.Api.Posts.Controllers
         public NewNoteData(
             Fifthweek.Api.Channels.Shared.ChannelId channelId,
             System.String note,
-            System.Nullable<System.DateTime> scheduledPostDate)
+            System.Nullable<System.DateTime> scheduledPostTime)
         {
             if (channelId == null)
             {
@@ -1493,7 +1513,7 @@ namespace Fifthweek.Api.Posts.Controllers
 
             this.ChannelId = channelId;
             this.Note = note;
-            this.ScheduledPostDate = scheduledPostDate;
+            this.ScheduledPostTime = scheduledPostTime;
         }
     }
 }
@@ -1731,6 +1751,7 @@ namespace Fifthweek.Api.Posts
     using Fifthweek.Api.Collections.Shared;
     using Fifthweek.Api.Collections;
     using Fifthweek.Api.Channels.Shared;
+    using System.Transactions;
 
     public partial class PostNoteDbStatement 
     {
@@ -1876,6 +1897,7 @@ namespace Fifthweek.Api.Posts
     using Fifthweek.Api.Collections.Shared;
     using Fifthweek.Api.Collections;
     using Fifthweek.Api.Channels.Shared;
+    using System.Transactions;
 
     public partial class TryGetQueuedPostCollectionDbStatement 
     {
@@ -2000,6 +2022,7 @@ namespace Fifthweek.Api.Posts
     using Fifthweek.Api.Collections.Shared;
     using Fifthweek.Api.Collections;
     using Fifthweek.Api.Channels.Shared;
+    using System.Transactions;
 
     public partial class SetBacklogPostLiveDateToNowDbStatement 
     {
@@ -2018,12 +2041,21 @@ namespace Fifthweek.Api.Posts
 namespace Fifthweek.Api.Posts
 {
     using System;
+    using System.Linq;
     using System.Threading.Tasks;
-    using System.Transactions;
-    using Fifthweek.Api.Collections.Shared;
-    using Fifthweek.Api.Core;
-    using Fifthweek.Api.Posts.Shared;
+    using Dapper;
+    using Fifthweek.Api.Persistence;
     using Fifthweek.CodeGeneration;
+    using Fifthweek.Api.Core;
+    using Fifthweek.Api.FileManagement;
+    using Fifthweek.Api.FileManagement.Shared;
+    using Fifthweek.Shared;
+    using Fifthweek.Api.Identity.Shared.Membership;
+    using Fifthweek.Api.Posts.Shared;
+    using Fifthweek.Api.Collections.Shared;
+    using Fifthweek.Api.Collections;
+    using Fifthweek.Api.Channels.Shared;
+    using System.Transactions;
 
     public partial class RemoveFromQueueIfRequiredDbStatement 
     {
@@ -2050,6 +2082,91 @@ namespace Fifthweek.Api.Posts
             this.tryGetQueuedPostCollection = tryGetQueuedPostCollection;
             this.getWeeklyReleaseSchedule = getWeeklyReleaseSchedule;
             this.defragmentQueue = defragmentQueue;
+        }
+    }
+}
+namespace Fifthweek.Api.Posts.Commands
+{
+    using System;
+    using System.Linq;
+    using Fifthweek.Api.Identity.Shared.Membership;
+    using Fifthweek.Api.Posts.Shared;
+    using Fifthweek.CodeGeneration;
+    using System.Threading.Tasks;
+    using Fifthweek.Api.Core;
+    using Fifthweek.Api.FileManagement.Shared;
+    using Fifthweek.Api.Collections.Shared;
+    using Fifthweek.Api.Channels.Shared;
+    using Fifthweek.Api.Persistence;
+    using System.Collections.Generic;
+    using System.Text;
+    using Dapper;
+    using System.Transactions;
+
+    public partial class RescheduleForTimeCommand 
+    {
+        public RescheduleForTimeCommand(
+            Fifthweek.Api.Identity.Shared.Membership.Requester requester,
+            Fifthweek.Api.Posts.Shared.PostId postId,
+            System.DateTime scheduledPostTime)
+        {
+            if (requester == null)
+            {
+                throw new ArgumentNullException("requester");
+            }
+
+            if (postId == null)
+            {
+                throw new ArgumentNullException("postId");
+            }
+
+            if (scheduledPostTime == null)
+            {
+                throw new ArgumentNullException("scheduledPostTime");
+            }
+
+            this.Requester = requester;
+            this.PostId = postId;
+            this.ScheduledPostTime = scheduledPostTime;
+        }
+    }
+}
+namespace Fifthweek.Api.Posts.Commands
+{
+    using System;
+    using System.Linq;
+    using Fifthweek.Api.Identity.Shared.Membership;
+    using Fifthweek.Api.Posts.Shared;
+    using Fifthweek.CodeGeneration;
+    using System.Threading.Tasks;
+    using Fifthweek.Api.Core;
+    using Fifthweek.Api.FileManagement.Shared;
+    using Fifthweek.Api.Collections.Shared;
+    using Fifthweek.Api.Channels.Shared;
+    using Fifthweek.Api.Persistence;
+    using System.Collections.Generic;
+    using System.Text;
+    using Dapper;
+    using System.Transactions;
+
+    public partial class RescheduleWithQueueCommand 
+    {
+        public RescheduleWithQueueCommand(
+            Fifthweek.Api.Identity.Shared.Membership.Requester requester,
+            Fifthweek.Api.Posts.Shared.PostId postId)
+        {
+            if (requester == null)
+            {
+                throw new ArgumentNullException("requester");
+            }
+
+            if (postId == null)
+            {
+                throw new ArgumentNullException("postId");
+            }
+
+            this.Requester = requester;
+            this.PostId = postId;
         }
     }
 }
@@ -2148,7 +2265,7 @@ namespace Fifthweek.Api.Posts.Commands
     {
         public override string ToString()
         {
-            return string.Format("PostFileCommand({0}, {1}, {2}, {3}, {4}, {5}, {6})", this.Requester == null ? "null" : this.Requester.ToString(), this.NewPostId == null ? "null" : this.NewPostId.ToString(), this.CollectionId == null ? "null" : this.CollectionId.ToString(), this.FileId == null ? "null" : this.FileId.ToString(), this.Comment == null ? "null" : this.Comment.ToString(), this.ScheduledPostDate == null ? "null" : this.ScheduledPostDate.ToString(), this.IsQueued == null ? "null" : this.IsQueued.ToString());
+            return string.Format("PostFileCommand({0}, {1}, {2}, {3}, {4}, {5}, {6})", this.Requester == null ? "null" : this.Requester.ToString(), this.NewPostId == null ? "null" : this.NewPostId.ToString(), this.CollectionId == null ? "null" : this.CollectionId.ToString(), this.FileId == null ? "null" : this.FileId.ToString(), this.Comment == null ? "null" : this.Comment.ToString(), this.ScheduledPostTime == null ? "null" : this.ScheduledPostTime.ToString(), this.IsQueued == null ? "null" : this.IsQueued.ToString());
         }
         
         public override bool Equals(object obj)
@@ -2181,7 +2298,7 @@ namespace Fifthweek.Api.Posts.Commands
                 hashCode = (hashCode * 397) ^ (this.CollectionId != null ? this.CollectionId.GetHashCode() : 0);
                 hashCode = (hashCode * 397) ^ (this.FileId != null ? this.FileId.GetHashCode() : 0);
                 hashCode = (hashCode * 397) ^ (this.Comment != null ? this.Comment.GetHashCode() : 0);
-                hashCode = (hashCode * 397) ^ (this.ScheduledPostDate != null ? this.ScheduledPostDate.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.ScheduledPostTime != null ? this.ScheduledPostTime.GetHashCode() : 0);
                 hashCode = (hashCode * 397) ^ (this.IsQueued != null ? this.IsQueued.GetHashCode() : 0);
                 return hashCode;
             }
@@ -2214,7 +2331,7 @@ namespace Fifthweek.Api.Posts.Commands
                 return false;
             }
         
-            if (!object.Equals(this.ScheduledPostDate, other.ScheduledPostDate))
+            if (!object.Equals(this.ScheduledPostTime, other.ScheduledPostTime))
             {
                 return false;
             }
@@ -2250,7 +2367,7 @@ namespace Fifthweek.Api.Posts.Commands
     {
         public override string ToString()
         {
-            return string.Format("PostImageCommand({0}, {1}, {2}, {3}, {4}, {5}, {6})", this.Requester == null ? "null" : this.Requester.ToString(), this.NewPostId == null ? "null" : this.NewPostId.ToString(), this.CollectionId == null ? "null" : this.CollectionId.ToString(), this.ImageFileId == null ? "null" : this.ImageFileId.ToString(), this.Comment == null ? "null" : this.Comment.ToString(), this.ScheduledPostDate == null ? "null" : this.ScheduledPostDate.ToString(), this.IsQueued == null ? "null" : this.IsQueued.ToString());
+            return string.Format("PostImageCommand({0}, {1}, {2}, {3}, {4}, {5}, {6})", this.Requester == null ? "null" : this.Requester.ToString(), this.NewPostId == null ? "null" : this.NewPostId.ToString(), this.CollectionId == null ? "null" : this.CollectionId.ToString(), this.ImageFileId == null ? "null" : this.ImageFileId.ToString(), this.Comment == null ? "null" : this.Comment.ToString(), this.ScheduledPostTime == null ? "null" : this.ScheduledPostTime.ToString(), this.IsQueued == null ? "null" : this.IsQueued.ToString());
         }
         
         public override bool Equals(object obj)
@@ -2283,7 +2400,7 @@ namespace Fifthweek.Api.Posts.Commands
                 hashCode = (hashCode * 397) ^ (this.CollectionId != null ? this.CollectionId.GetHashCode() : 0);
                 hashCode = (hashCode * 397) ^ (this.ImageFileId != null ? this.ImageFileId.GetHashCode() : 0);
                 hashCode = (hashCode * 397) ^ (this.Comment != null ? this.Comment.GetHashCode() : 0);
-                hashCode = (hashCode * 397) ^ (this.ScheduledPostDate != null ? this.ScheduledPostDate.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.ScheduledPostTime != null ? this.ScheduledPostTime.GetHashCode() : 0);
                 hashCode = (hashCode * 397) ^ (this.IsQueued != null ? this.IsQueued.GetHashCode() : 0);
                 return hashCode;
             }
@@ -2316,7 +2433,7 @@ namespace Fifthweek.Api.Posts.Commands
                 return false;
             }
         
-            if (!object.Equals(this.ScheduledPostDate, other.ScheduledPostDate))
+            if (!object.Equals(this.ScheduledPostTime, other.ScheduledPostTime))
             {
                 return false;
             }
@@ -3063,7 +3180,7 @@ namespace Fifthweek.Api.Posts.Controllers
     {
         public override string ToString()
         {
-            return string.Format("NewFileData({0}, {1}, \"{2}\", {3}, {4})", this.CollectionId == null ? "null" : this.CollectionId.ToString(), this.FileId == null ? "null" : this.FileId.ToString(), this.Comment == null ? "null" : this.Comment.ToString(), this.ScheduledPostDate == null ? "null" : this.ScheduledPostDate.ToString(), this.IsQueued == null ? "null" : this.IsQueued.ToString());
+            return string.Format("NewFileData({0}, {1}, \"{2}\", {3}, {4})", this.CollectionId == null ? "null" : this.CollectionId.ToString(), this.FileId == null ? "null" : this.FileId.ToString(), this.Comment == null ? "null" : this.Comment.ToString(), this.ScheduledPostTime == null ? "null" : this.ScheduledPostTime.ToString(), this.IsQueued == null ? "null" : this.IsQueued.ToString());
         }
         
         public override bool Equals(object obj)
@@ -3094,7 +3211,7 @@ namespace Fifthweek.Api.Posts.Controllers
                 hashCode = (hashCode * 397) ^ (this.CollectionId != null ? this.CollectionId.GetHashCode() : 0);
                 hashCode = (hashCode * 397) ^ (this.FileId != null ? this.FileId.GetHashCode() : 0);
                 hashCode = (hashCode * 397) ^ (this.Comment != null ? this.Comment.GetHashCode() : 0);
-                hashCode = (hashCode * 397) ^ (this.ScheduledPostDate != null ? this.ScheduledPostDate.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.ScheduledPostTime != null ? this.ScheduledPostTime.GetHashCode() : 0);
                 hashCode = (hashCode * 397) ^ (this.IsQueued != null ? this.IsQueued.GetHashCode() : 0);
                 return hashCode;
             }
@@ -3117,7 +3234,7 @@ namespace Fifthweek.Api.Posts.Controllers
                 return false;
             }
         
-            if (!object.Equals(this.ScheduledPostDate, other.ScheduledPostDate))
+            if (!object.Equals(this.ScheduledPostTime, other.ScheduledPostTime))
             {
                 return false;
             }
@@ -3153,7 +3270,7 @@ namespace Fifthweek.Api.Posts.Controllers
     {
         public override string ToString()
         {
-            return string.Format("NewImageData({0}, {1}, \"{2}\", {3}, {4})", this.CollectionId == null ? "null" : this.CollectionId.ToString(), this.ImageFileId == null ? "null" : this.ImageFileId.ToString(), this.Comment == null ? "null" : this.Comment.ToString(), this.ScheduledPostDate == null ? "null" : this.ScheduledPostDate.ToString(), this.IsQueued == null ? "null" : this.IsQueued.ToString());
+            return string.Format("NewImageData({0}, {1}, \"{2}\", {3}, {4})", this.CollectionId == null ? "null" : this.CollectionId.ToString(), this.ImageFileId == null ? "null" : this.ImageFileId.ToString(), this.Comment == null ? "null" : this.Comment.ToString(), this.ScheduledPostTime == null ? "null" : this.ScheduledPostTime.ToString(), this.IsQueued == null ? "null" : this.IsQueued.ToString());
         }
         
         public override bool Equals(object obj)
@@ -3184,7 +3301,7 @@ namespace Fifthweek.Api.Posts.Controllers
                 hashCode = (hashCode * 397) ^ (this.CollectionId != null ? this.CollectionId.GetHashCode() : 0);
                 hashCode = (hashCode * 397) ^ (this.ImageFileId != null ? this.ImageFileId.GetHashCode() : 0);
                 hashCode = (hashCode * 397) ^ (this.Comment != null ? this.Comment.GetHashCode() : 0);
-                hashCode = (hashCode * 397) ^ (this.ScheduledPostDate != null ? this.ScheduledPostDate.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.ScheduledPostTime != null ? this.ScheduledPostTime.GetHashCode() : 0);
                 hashCode = (hashCode * 397) ^ (this.IsQueued != null ? this.IsQueued.GetHashCode() : 0);
                 return hashCode;
             }
@@ -3207,7 +3324,7 @@ namespace Fifthweek.Api.Posts.Controllers
                 return false;
             }
         
-            if (!object.Equals(this.ScheduledPostDate, other.ScheduledPostDate))
+            if (!object.Equals(this.ScheduledPostTime, other.ScheduledPostTime))
             {
                 return false;
             }
@@ -3243,7 +3360,7 @@ namespace Fifthweek.Api.Posts.Controllers
     {
         public override string ToString()
         {
-            return string.Format("NewNoteData({0}, \"{1}\", {2})", this.ChannelId == null ? "null" : this.ChannelId.ToString(), this.Note == null ? "null" : this.Note.ToString(), this.ScheduledPostDate == null ? "null" : this.ScheduledPostDate.ToString());
+            return string.Format("NewNoteData({0}, \"{1}\", {2})", this.ChannelId == null ? "null" : this.ChannelId.ToString(), this.Note == null ? "null" : this.Note.ToString(), this.ScheduledPostTime == null ? "null" : this.ScheduledPostTime.ToString());
         }
         
         public override bool Equals(object obj)
@@ -3273,7 +3390,7 @@ namespace Fifthweek.Api.Posts.Controllers
                 int hashCode = 0;
                 hashCode = (hashCode * 397) ^ (this.ChannelId != null ? this.ChannelId.GetHashCode() : 0);
                 hashCode = (hashCode * 397) ^ (this.Note != null ? this.Note.GetHashCode() : 0);
-                hashCode = (hashCode * 397) ^ (this.ScheduledPostDate != null ? this.ScheduledPostDate.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.ScheduledPostTime != null ? this.ScheduledPostTime.GetHashCode() : 0);
                 return hashCode;
             }
         }
@@ -3290,7 +3407,7 @@ namespace Fifthweek.Api.Posts.Controllers
                 return false;
             }
         
-            if (!object.Equals(this.ScheduledPostDate, other.ScheduledPostDate))
+            if (!object.Equals(this.ScheduledPostTime, other.ScheduledPostTime))
             {
                 return false;
             }
@@ -3683,6 +3800,156 @@ namespace Fifthweek.Api.Posts.Commands
         }
     }
 }
+namespace Fifthweek.Api.Posts.Commands
+{
+    using System;
+    using System.Linq;
+    using Fifthweek.Api.Identity.Shared.Membership;
+    using Fifthweek.Api.Posts.Shared;
+    using Fifthweek.CodeGeneration;
+    using System.Threading.Tasks;
+    using Fifthweek.Api.Core;
+    using Fifthweek.Api.FileManagement.Shared;
+    using Fifthweek.Api.Collections.Shared;
+    using Fifthweek.Api.Channels.Shared;
+    using Fifthweek.Api.Persistence;
+    using System.Collections.Generic;
+    using System.Text;
+    using Dapper;
+    using System.Transactions;
+
+    public partial class RescheduleForTimeCommand 
+    {
+        public override string ToString()
+        {
+            return string.Format("RescheduleForTimeCommand({0}, {1}, {2})", this.Requester == null ? "null" : this.Requester.ToString(), this.PostId == null ? "null" : this.PostId.ToString(), this.ScheduledPostTime == null ? "null" : this.ScheduledPostTime.ToString());
+        }
+        
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj))
+            {
+                return false;
+            }
+        
+            if (ReferenceEquals(this, obj))
+            {
+                return true;
+            }
+        
+            if (obj.GetType() != this.GetType())
+            {
+                return false;
+            }
+        
+            return this.Equals((RescheduleForTimeCommand)obj);
+        }
+        
+        public override int GetHashCode()
+        {
+            unchecked
+            {
+                int hashCode = 0;
+                hashCode = (hashCode * 397) ^ (this.Requester != null ? this.Requester.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.PostId != null ? this.PostId.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.ScheduledPostTime != null ? this.ScheduledPostTime.GetHashCode() : 0);
+                return hashCode;
+            }
+        }
+        
+        protected bool Equals(RescheduleForTimeCommand other)
+        {
+            if (!object.Equals(this.Requester, other.Requester))
+            {
+                return false;
+            }
+        
+            if (!object.Equals(this.PostId, other.PostId))
+            {
+                return false;
+            }
+        
+            if (!object.Equals(this.ScheduledPostTime, other.ScheduledPostTime))
+            {
+                return false;
+            }
+        
+            return true;
+        }
+    }
+}
+namespace Fifthweek.Api.Posts.Commands
+{
+    using System;
+    using System.Linq;
+    using Fifthweek.Api.Identity.Shared.Membership;
+    using Fifthweek.Api.Posts.Shared;
+    using Fifthweek.CodeGeneration;
+    using System.Threading.Tasks;
+    using Fifthweek.Api.Core;
+    using Fifthweek.Api.FileManagement.Shared;
+    using Fifthweek.Api.Collections.Shared;
+    using Fifthweek.Api.Channels.Shared;
+    using Fifthweek.Api.Persistence;
+    using System.Collections.Generic;
+    using System.Text;
+    using Dapper;
+    using System.Transactions;
+
+    public partial class RescheduleWithQueueCommand 
+    {
+        public override string ToString()
+        {
+            return string.Format("RescheduleWithQueueCommand({0}, {1})", this.Requester == null ? "null" : this.Requester.ToString(), this.PostId == null ? "null" : this.PostId.ToString());
+        }
+        
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj))
+            {
+                return false;
+            }
+        
+            if (ReferenceEquals(this, obj))
+            {
+                return true;
+            }
+        
+            if (obj.GetType() != this.GetType())
+            {
+                return false;
+            }
+        
+            return this.Equals((RescheduleWithQueueCommand)obj);
+        }
+        
+        public override int GetHashCode()
+        {
+            unchecked
+            {
+                int hashCode = 0;
+                hashCode = (hashCode * 397) ^ (this.Requester != null ? this.Requester.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.PostId != null ? this.PostId.GetHashCode() : 0);
+                return hashCode;
+            }
+        }
+        
+        protected bool Equals(RescheduleWithQueueCommand other)
+        {
+            if (!object.Equals(this.Requester, other.Requester))
+            {
+                return false;
+            }
+        
+            if (!object.Equals(this.PostId, other.PostId))
+            {
+                return false;
+            }
+        
+            return true;
+        }
+    }
+}
 namespace Fifthweek.Api.Posts.Controllers
 {
     using System;
@@ -4002,7 +4269,7 @@ namespace Fifthweek.Api.Posts.Controllers
                 Fifthweek.Api.Collections.Shared.CollectionId collectionId,
                 Fifthweek.Api.FileManagement.Shared.FileId fileId,
                 ValidComment comment,
-                System.Nullable<System.DateTime> scheduledPostDate,
+                System.Nullable<System.DateTime> scheduledPostTime,
                 System.Boolean isQueued)
             {
                 if (collectionId == null)
@@ -4023,7 +4290,7 @@ namespace Fifthweek.Api.Posts.Controllers
                 this.CollectionId = collectionId;
                 this.FileId = fileId;
                 this.Comment = comment;
-                this.ScheduledPostDate = scheduledPostDate;
+                this.ScheduledPostTime = scheduledPostTime;
                 this.IsQueued = isQueued;
             }
         
@@ -4033,7 +4300,7 @@ namespace Fifthweek.Api.Posts.Controllers
         
             public ValidComment Comment { get; private set; }
         
-            public System.Nullable<System.DateTime> ScheduledPostDate { get; private set; }
+            public System.Nullable<System.DateTime> ScheduledPostTime { get; private set; }
         
             public System.Boolean IsQueued { get; private set; }
         }
@@ -4070,7 +4337,7 @@ namespace Fifthweek.Api.Posts.Controllers
                 target.CollectionId,
                 target.FileId,
                 parsed0,
-                target.ScheduledPostDate,
+                target.ScheduledPostTime,
                 target.IsQueued);
         }    
     }
@@ -4101,7 +4368,7 @@ namespace Fifthweek.Api.Posts.Controllers
                 Fifthweek.Api.Collections.Shared.CollectionId collectionId,
                 Fifthweek.Api.FileManagement.Shared.FileId imageFileId,
                 ValidComment comment,
-                System.Nullable<System.DateTime> scheduledPostDate,
+                System.Nullable<System.DateTime> scheduledPostTime,
                 System.Boolean isQueued)
             {
                 if (collectionId == null)
@@ -4122,7 +4389,7 @@ namespace Fifthweek.Api.Posts.Controllers
                 this.CollectionId = collectionId;
                 this.ImageFileId = imageFileId;
                 this.Comment = comment;
-                this.ScheduledPostDate = scheduledPostDate;
+                this.ScheduledPostTime = scheduledPostTime;
                 this.IsQueued = isQueued;
             }
         
@@ -4132,7 +4399,7 @@ namespace Fifthweek.Api.Posts.Controllers
         
             public ValidComment Comment { get; private set; }
         
-            public System.Nullable<System.DateTime> ScheduledPostDate { get; private set; }
+            public System.Nullable<System.DateTime> ScheduledPostTime { get; private set; }
         
             public System.Boolean IsQueued { get; private set; }
         }
@@ -4169,7 +4436,7 @@ namespace Fifthweek.Api.Posts.Controllers
                 target.CollectionId,
                 target.ImageFileId,
                 parsed0,
-                target.ScheduledPostDate,
+                target.ScheduledPostTime,
                 target.IsQueued);
         }    
     }
@@ -4199,7 +4466,7 @@ namespace Fifthweek.Api.Posts.Controllers
             public Parsed(
                 Fifthweek.Api.Channels.Shared.ChannelId channelId,
                 ValidNote note,
-                System.Nullable<System.DateTime> scheduledPostDate)
+                System.Nullable<System.DateTime> scheduledPostTime)
             {
                 if (channelId == null)
                 {
@@ -4213,14 +4480,14 @@ namespace Fifthweek.Api.Posts.Controllers
 
                 this.ChannelId = channelId;
                 this.Note = note;
-                this.ScheduledPostDate = scheduledPostDate;
+                this.ScheduledPostTime = scheduledPostTime;
             }
         
             public Fifthweek.Api.Channels.Shared.ChannelId ChannelId { get; private set; }
         
             public ValidNote Note { get; private set; }
         
-            public System.Nullable<System.DateTime> ScheduledPostDate { get; private set; }
+            public System.Nullable<System.DateTime> ScheduledPostTime { get; private set; }
         }
     }
 
@@ -4260,7 +4527,7 @@ namespace Fifthweek.Api.Posts.Controllers
             return new NewNoteData.Parsed(
                 target.ChannelId,
                 parsed0,
-                target.ScheduledPostDate);
+                target.ScheduledPostTime);
         }    
     }
 }
