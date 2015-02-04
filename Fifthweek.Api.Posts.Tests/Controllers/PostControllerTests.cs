@@ -29,6 +29,7 @@
         private static readonly CollectionId CollectionId = new CollectionId(Guid.NewGuid());
         private Mock<ICommandHandler<DeletePostCommand>> deletePost;
         private Mock<ICommandHandler<ReorderQueueCommand>> reorderQueue;
+        private Mock<ICommandHandler<RescheduleForNowCommand>> rescheduleForNow;
         private Mock<IQueryHandler<GetCreatorBacklogQuery, IReadOnlyList<BacklogPost>>> getCreatorBacklog;
         private Mock<IQueryHandler<GetCreatorNewsfeedQuery, IReadOnlyList<NewsfeedPost>>> getCreatorNewsfeed;
         private Mock<IRequesterContext> requesterContext;
@@ -39,12 +40,14 @@
         {
             this.deletePost = new Mock<ICommandHandler<DeletePostCommand>>();
             this.reorderQueue = new Mock<ICommandHandler<ReorderQueueCommand>>();
+            this.rescheduleForNow = new Mock<ICommandHandler<RescheduleForNowCommand>>();
             this.getCreatorBacklog = new Mock<IQueryHandler<GetCreatorBacklogQuery, IReadOnlyList<BacklogPost>>>();
             this.getCreatorNewsfeed = new Mock<IQueryHandler<GetCreatorNewsfeedQuery, IReadOnlyList<NewsfeedPost>>>();
             this.requesterContext = new Mock<IRequesterContext>();
             this.target = new PostController(
                 this.deletePost.Object,
                 this.reorderQueue.Object,
+                this.rescheduleForNow.Object,
                 this.getCreatorBacklog.Object,
                 this.getCreatorNewsfeed.Object,
                 this.requesterContext.Object);
@@ -147,6 +150,26 @@
         public async Task WhenReorderingQueue_WithoutSpecifyingNewOrder_ItShouldThrowBadRequestException()
         {
             await this.target.PostNewQueueOrder(CollectionId.Value.EncodeGuid(), null);
+        }
+
+        [TestMethod]
+        public async Task WhenReschedulingForNow_ItShouldIssueRescheduleForNowCommand()
+        {
+            this.requesterContext.Setup(v => v.GetRequester()).Returns(Requester);
+            this.rescheduleForNow.Setup(_ => _.HandleAsync(new RescheduleForNowCommand(Requester, PostId)))
+                .Returns(Task.FromResult(0))
+                .Verifiable();
+
+            await this.target.ReschedulePostForNow(PostId.Value.EncodeGuid());
+
+            this.rescheduleForNow.Verify();
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(BadRequestException))]
+        public async Task WhenReschedulingForNow_WithoutSpecifyingPostId_ItShouldThrowBadRequestException()
+        {
+            await this.target.ReschedulePostForNow(string.Empty);
         }
     }
 }

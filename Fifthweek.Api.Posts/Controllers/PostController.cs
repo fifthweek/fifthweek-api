@@ -18,23 +18,10 @@
     {
         private readonly ICommandHandler<DeletePostCommand> deletePost;
         private readonly ICommandHandler<ReorderQueueCommand> reorderQueue;
+        private readonly ICommandHandler<RescheduleForNowCommand> rescheduleForNow;
         private readonly IQueryHandler<GetCreatorBacklogQuery, IReadOnlyList<BacklogPost>> getCreatorBacklog;
         private readonly IQueryHandler<GetCreatorNewsfeedQuery, IReadOnlyList<NewsfeedPost>> getCreatorNewsfeed;
         private readonly IRequesterContext requesterContext;
-
-        [Route("queues/{collectionId}")]
-        public async Task<IHttpActionResult> PostNewQueueOrder(string collectionId, [FromBody]IEnumerable<PostId> newQueueOrder)
-        {
-            collectionId.AssertUrlParameterProvided("collectionId");
-            newQueueOrder.AssertBodyProvided("newQueueOrder");
-
-            var collectionIdObject = new CollectionId(collectionId.DecodeGuid());
-            var requester = this.requesterContext.GetRequester();
-
-            await this.reorderQueue.HandleAsync(new ReorderQueueCommand(requester, collectionIdObject, newQueueOrder.ToList()));
-
-            return this.Ok();
-        }
 
         [Route("creatorBacklog/{creatorId}")]
         public async Task<IEnumerable<BacklogPost>> GetCreatorBacklog(string creatorId)
@@ -67,6 +54,30 @@
             var requester = this.requesterContext.GetRequester();
 
             return this.deletePost.HandleAsync(new DeletePostCommand(parsedPostId, requester));
+        }
+
+        [Route("queues/{collectionId}")]
+        public async Task<IHttpActionResult> PostNewQueueOrder(string collectionId, [FromBody]IEnumerable<PostId> newQueueOrder)
+        {
+            collectionId.AssertUrlParameterProvided("collectionId");
+            newQueueOrder.AssertBodyProvided("newQueueOrder");
+
+            var collectionIdObject = new CollectionId(collectionId.DecodeGuid());
+            var requester = this.requesterContext.GetRequester();
+
+            await this.reorderQueue.HandleAsync(new ReorderQueueCommand(requester, collectionIdObject, newQueueOrder.ToList()));
+
+            return this.Ok();
+        }
+
+        [Route("expeditions")]
+        public Task ReschedulePostForNow(string postId)
+        {
+            postId.AssertBodyProvided("postId");
+            var parsedPostId = new PostId(postId.DecodeGuid());
+            var requester = this.requesterContext.GetRequester();
+
+            return this.rescheduleForNow.HandleAsync(new RescheduleForNowCommand(requester, parsedPostId));
         }
     }
 }

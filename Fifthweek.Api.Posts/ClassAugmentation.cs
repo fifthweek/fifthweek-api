@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Linq;
 
-//// Generated on 03/02/2015 16:10:17 (UTC)
-//// Mapped solution in 4.51s
+//// Generated on 04/02/2015 15:22:51 (UTC)
+//// Mapped solution in 4.17s
 
 
 namespace Fifthweek.Api.Posts.Commands
@@ -787,6 +787,7 @@ namespace Fifthweek.Api.Posts.Controllers
         public PostController(
             Fifthweek.Api.Core.ICommandHandler<Fifthweek.Api.Posts.Commands.DeletePostCommand> deletePost,
             Fifthweek.Api.Core.ICommandHandler<Fifthweek.Api.Posts.Commands.ReorderQueueCommand> reorderQueue,
+            Fifthweek.Api.Core.ICommandHandler<Fifthweek.Api.Posts.Commands.RescheduleForNowCommand> rescheduleForNow,
             Fifthweek.Api.Core.IQueryHandler<Fifthweek.Api.Posts.Queries.GetCreatorBacklogQuery,System.Collections.Generic.IReadOnlyList<Fifthweek.Api.Posts.Queries.BacklogPost>> getCreatorBacklog,
             Fifthweek.Api.Core.IQueryHandler<Fifthweek.Api.Posts.Queries.GetCreatorNewsfeedQuery,System.Collections.Generic.IReadOnlyList<Fifthweek.Api.Posts.Queries.NewsfeedPost>> getCreatorNewsfeed,
             Fifthweek.Api.Identity.Shared.Membership.IRequesterContext requesterContext)
@@ -799,6 +800,11 @@ namespace Fifthweek.Api.Posts.Controllers
             if (reorderQueue == null)
             {
                 throw new ArgumentNullException("reorderQueue");
+            }
+
+            if (rescheduleForNow == null)
+            {
+                throw new ArgumentNullException("rescheduleForNow");
             }
 
             if (getCreatorBacklog == null)
@@ -818,6 +824,7 @@ namespace Fifthweek.Api.Posts.Controllers
 
             this.deletePost = deletePost;
             this.reorderQueue = reorderQueue;
+            this.rescheduleForNow = rescheduleForNow;
             this.getCreatorBacklog = getCreatorBacklog;
             this.getCreatorNewsfeed = getCreatorNewsfeed;
             this.requesterContext = requesterContext;
@@ -1937,6 +1944,33 @@ namespace Fifthweek.Api.Posts
             }
 
             this.databaseContext = databaseContext;
+        }
+    }
+}
+namespace Fifthweek.Api.Posts.Commands
+{
+    using Fifthweek.Api.Identity.Shared.Membership;
+    using Fifthweek.Api.Posts.Shared;
+    using Fifthweek.CodeGeneration;
+
+    public partial class RescheduleForNowCommand 
+    {
+        public RescheduleForNowCommand(
+            Fifthweek.Api.Identity.Shared.Membership.Requester requester,
+            Fifthweek.Api.Posts.Shared.PostId postId)
+        {
+            if (requester == null)
+            {
+                throw new ArgumentNullException("requester");
+            }
+
+            if (postId == null)
+            {
+                throw new ArgumentNullException("postId");
+            }
+
+            this.Requester = requester;
+            this.PostId = postId;
         }
     }
 }
@@ -3586,6 +3620,66 @@ namespace Fifthweek.Api.Posts.Controllers
             }
         
             if (!object.Equals(this.Count, other.Count))
+            {
+                return false;
+            }
+        
+            return true;
+        }
+    }
+}
+namespace Fifthweek.Api.Posts.Commands
+{
+    using Fifthweek.Api.Identity.Shared.Membership;
+    using Fifthweek.Api.Posts.Shared;
+    using Fifthweek.CodeGeneration;
+
+    public partial class RescheduleForNowCommand 
+    {
+        public override string ToString()
+        {
+            return string.Format("RescheduleForNowCommand({0}, {1})", this.Requester == null ? "null" : this.Requester.ToString(), this.PostId == null ? "null" : this.PostId.ToString());
+        }
+        
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj))
+            {
+                return false;
+            }
+        
+            if (ReferenceEquals(this, obj))
+            {
+                return true;
+            }
+        
+            if (obj.GetType() != this.GetType())
+            {
+                return false;
+            }
+        
+            return this.Equals((RescheduleForNowCommand)obj);
+        }
+        
+        public override int GetHashCode()
+        {
+            unchecked
+            {
+                int hashCode = 0;
+                hashCode = (hashCode * 397) ^ (this.Requester != null ? this.Requester.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.PostId != null ? this.PostId.GetHashCode() : 0);
+                return hashCode;
+            }
+        }
+        
+        protected bool Equals(RescheduleForNowCommand other)
+        {
+            if (!object.Equals(this.Requester, other.Requester))
+            {
+                return false;
+            }
+        
+            if (!object.Equals(this.PostId, other.PostId))
             {
                 return false;
             }
