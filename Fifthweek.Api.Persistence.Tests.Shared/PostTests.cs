@@ -19,14 +19,14 @@
                 null,
                 "Note " + random.Next(),
                 false,
-                DateTime.UtcNow.AddDays((random.NextDouble() * -100) + (random.NextDouble() * 100)),
-                DateTime.UtcNow.AddDays(random.NextDouble() * -100));
+                DateTime.UtcNow.AddDays((random.NextDouble() * -1000) + (random.NextDouble() * 1000)),
+                DateTime.UtcNow.AddDays(random.NextDouble() * -1000));
         }
 
         public static Post UniqueFileOrImage(Random random)
         {
-            var isQueued = random.Next(1) == 1;
-            var hasComment = random.Next(1) == 1;
+            var isQueued = random.Next(2) == 0;
+            var hasComment = random.Next(2) == 0;
 
             return new Post(
                 Guid.NewGuid(),
@@ -40,8 +40,8 @@
                 null,
                 hasComment ? "Comment " + random.Next() : null,
                 isQueued,
-                DateTime.UtcNow.AddDays((random.NextDouble() * -100) + (random.NextDouble() * 100)),
-                DateTime.UtcNow.AddDays(random.NextDouble() * -100));
+                DateTime.UtcNow.AddDays((random.NextDouble() * -1000) + (random.NextDouble() * 1000)),
+                DateTime.UtcNow.AddDays(random.NextDouble() * -1000));
         }
 
         public static Task CreateTestNoteAsync(this IFifthweekDbContext databaseContext, Guid newUserId, Guid newPostId)

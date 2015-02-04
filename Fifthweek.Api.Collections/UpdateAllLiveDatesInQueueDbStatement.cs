@@ -2,7 +2,6 @@
 {
     using System;
     using System.Collections.Generic;
-    using System.Data.SqlTypes;
     using System.Linq;
     using System.Text;
     using System.Threading.Tasks;
@@ -100,7 +99,7 @@
                 sql.Append("INSERT INTO #NewLiveDates VALUES (");
                 sql.Append(liveDate.ToSqlUtcString());
                 sql.Append(", ");
-                sql.Append(i);
+                sql.Append(i + 1); // Need to match the output of ROW_NUMBER, which is 1-based.
                 sql.AppendLine(");");
             }
 

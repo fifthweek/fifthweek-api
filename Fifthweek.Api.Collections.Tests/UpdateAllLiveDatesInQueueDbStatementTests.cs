@@ -10,6 +10,7 @@
     using Fifthweek.Api.Persistence;
     using Fifthweek.Api.Persistence.Identity;
     using Fifthweek.Api.Persistence.Tests.Shared;
+    using Fifthweek.Tests.Shared;
 
     using Microsoft.VisualStudio.TestTools.UnitTesting;
 
@@ -21,7 +22,10 @@
         private static readonly Random Random = new Random(); 
         private static readonly CollectionId CollectionId = new CollectionId(Guid.NewGuid());
         private static readonly DateTime Now = DateTime.UtcNow;
-        private static readonly IReadOnlyList<DateTime> AscendingLiveDates = new[] { Now.AddDays(1), Now.AddDays(2), Now.AddDays(3), new DateTime(2015, 2, 12, 4, 56, 23, DateTimeKind.Utc),  };
+        private static readonly IReadOnlyList<DateTime> PastDates = new[] { Now.AddDays(-1), Now.AddDays(-2), Now.AddDays(-3) };
+        private static readonly IReadOnlyList<DateTime> FutureDatesA = new[] { Now.AddDays(1), Now.AddDays(2), Now.AddDays(3) };
+        private static readonly IReadOnlyList<DateTime> FutureDatesB = new[] { Now.AddDays(4), Now.AddDays(5), Now.AddDays(6) };
+        private static readonly IReadOnlyList<DateTime> FutureDatesC = new[] { Now.AddDays(7), Now.AddDays(8), Now.AddDays(9) };
 
         private Mock<IFifthweekDbContext> databaseContext;
         private UpdateAllLiveDatesInQueueDbStatement target;
@@ -44,7 +48,7 @@
         [ExpectedException(typeof(ArgumentNullException))]
         public async Task ItShouldRequireCollectionId()
         {
-            await this.target.ExecuteAsync(null, AscendingLiveDates, Now);
+            await this.target.ExecuteAsync(null, FutureDatesA, Now);
         }
 
         [TestMethod]
@@ -108,9 +112,8 @@
         [ExpectedException(typeof(ArgumentException))]
         public async Task ItShouldRequireUtcDate()
         {
-            await this.target.ExecuteAsync(CollectionId, AscendingLiveDates, DateTime.Now);
+            await this.target.ExecuteAsync(CollectionId, FutureDatesA, DateTime.Now);
         }
-
 
         [TestMethod]
         public async Task WhenReRun_ItShouldHaveNoEffect()
@@ -118,13 +121,139 @@
             await this.DatabaseTestAsync(async testDatabase =>
             {
                 this.InitializeTarget(testDatabase.NewContext());
-                await this.CreatePostsAsync(testDatabase, CollectionId, AscendingLiveDates, scheduledByQueue: true);
-                await this.target.ExecuteAsync(CollectionId, AscendingLiveDates, Now);
+                await this.CreatePostsAsync(testDatabase, CollectionId, FutureDatesA, scheduledByQueue: true);
+                await this.target.ExecuteAsync(CollectionId, FutureDatesB, Now);
                 await testDatabase.TakeSnapshotAsync();
 
-                await this.target.ExecuteAsync(CollectionId, AscendingLiveDates, Now);
+                await this.target.ExecuteAsync(CollectionId, FutureDatesB, Now);
 
                 return ExpectedSideEffects.None;
+            });
+        }
+
+        [TestMethod]
+        public async Task WhenAllLiveDatesAlreadyMatchExistingDates_ItShouldHaveNoEffect()
+        {
+            await this.DatabaseTestAsync(async testDatabase =>
+            {
+                this.InitializeTarget(testDatabase.NewContext());
+                await this.CreatePostsAsync(testDatabase, CollectionId, FutureDatesA, scheduledByQueue: true);
+                await testDatabase.TakeSnapshotAsync();
+
+                await this.target.ExecuteAsync(CollectionId, FutureDatesA, Now);
+
+                return ExpectedSideEffects.None;
+            });
+        }
+
+        [TestMethod]
+        public async Task WhenAllQueuedPostsAreAlreadyLive_ItShouldHaveNoEffect()
+        {
+            await this.DatabaseTestAsync(async testDatabase =>
+            {
+                this.InitializeTarget(testDatabase.NewContext());
+                await this.CreatePostsAsync(testDatabase, CollectionId, PastDates, scheduledByQueue: true);
+                await testDatabase.TakeSnapshotAsync();
+
+                await this.target.ExecuteAsync(CollectionId, FutureDatesA, Now);
+
+                return ExpectedSideEffects.None;
+            });
+        }
+
+        [TestMethod]
+        public async Task WhenAllNewDatesAreDifferent_ItShouldUpdateLiveDates()
+        {
+            await this.AssertSuccessAsync(FutureDatesA, FutureDatesB);
+        }
+
+        [TestMethod]
+        public async Task WhenSomeNewDatesAreDifferent_ItShouldOnlyUpdateChangedLiveDates()
+        {
+            var futureDatesWithSameFirstElement = FutureDatesA.Take(1).Concat(FutureDatesB).ToArray();
+            await this.AssertSuccessAsync(FutureDatesA, futureDatesWithSameFirstElement);
+        }
+
+        [TestMethod]
+        public async Task WhenSomePostsAreAlreadyLive_ItShouldOnlyUpdateQueuedPostLiveDates()
+        {
+            await this.AssertSuccessAsync(FutureDatesA, FutureDatesB, PastDates);
+        }
+
+        [TestMethod]
+        public async Task WhenTooManyLiveDatesAreProvided_ItShouldOnlyUpdateUsingLowestDates()
+        {
+            await this.AssertSuccessAsync(FutureDatesA, FutureDatesB.Concat(FutureDatesC).ToArray());
+        }
+
+        [TestMethod]
+        public async Task WhenPostsAreNotScheduledByQueue_ItShouldHaveNoEffect()
+        {
+            await this.DatabaseTestAsync(async testDatabase =>
+            {
+                this.InitializeTarget(testDatabase.NewContext());
+                await this.CreatePostsAsync(testDatabase, CollectionId, FutureDatesA, scheduledByQueue: false);
+                await testDatabase.TakeSnapshotAsync();
+
+                await this.target.ExecuteAsync(CollectionId, FutureDatesB, Now);
+
+                return ExpectedSideEffects.None;
+            });
+        }
+
+        [TestMethod]
+        public async Task WhenNotEnoughLiveDatesAreProvided_ItShouldThrowException()
+        {
+            await this.DatabaseTestAsync(async testDatabase =>
+            {
+                this.InitializeTarget(testDatabase.NewContext());
+                await this.CreatePostsAsync(testDatabase, CollectionId, FutureDatesA, scheduledByQueue: true);
+                await testDatabase.TakeSnapshotAsync();
+
+                await ExpectedException.AssertExceptionAsync<ArgumentException>(() =>
+                {
+                    return this.target.ExecuteAsync(CollectionId, FutureDatesB.Skip(1).ToArray(), Now);
+                });
+
+                return ExpectedSideEffects.None;
+            });
+        }
+
+        private async Task AssertSuccessAsync(IReadOnlyList<DateTime> existingFutureLiveDates, IReadOnlyList<DateTime> newLiveDates, IReadOnlyList<DateTime> existingPastLiveDates = null)
+        {
+            await this.DatabaseTestAsync(async testDatabase =>
+            {
+                this.InitializeTarget(testDatabase.NewContext());
+
+                var newEntityDates = existingPastLiveDates == null 
+                    ? existingFutureLiveDates
+                    : existingFutureLiveDates.Concat(existingPastLiveDates).ToArray();
+
+                var posts = await this.CreatePostsAsync(testDatabase, CollectionId, newEntityDates, scheduledByQueue: true);
+                var futurePostFilter = new HashSet<DateTime>(existingFutureLiveDates.Select(_ => new SqlDateTime(_).Value));                
+                var futurePosts = posts.Where(_ => futurePostFilter.Contains(_.LiveDate)).ToArray();
+
+                await testDatabase.TakeSnapshotAsync();
+
+                await this.target.ExecuteAsync(CollectionId, newLiveDates, Now);
+
+                var updatedPosts = new List<Post>();
+                for (var i = 0; i < futurePosts.Length; i++)
+                {
+                    var newDate = new SqlDateTime(newLiveDates[i]).Value;
+                    if (futurePosts[i].LiveDate == newDate)
+                    {
+                        continue;
+                    }
+
+                    futurePosts[i].LiveDate = newDate;
+                    updatedPosts.Add(futurePosts[i]);
+                }
+
+                return new ExpectedSideEffects
+                {
+                    Updates = updatedPosts
+                };
             });
         }
 
