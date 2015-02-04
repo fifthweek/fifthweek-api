@@ -113,6 +113,7 @@
     <Compile Include="PostNoteDbStatementTests.cs" />
     <Compile Include="Commands\RescheduleForNowCommandHandlerTests.cs" />
     <Compile Include="ScheduledDateClippingFunctionTests.cs" />
+    <Compile Include="SetBacklogPostLiveDateToNowDbStatementTests.cs" />
     <Compile Include="TryGetQueuedPostCollectionDbStatementTests.cs" />
     <Compile Include="ValidCommentTests.cs" />
     <Compile Include="ValidNoteTests.cs" />

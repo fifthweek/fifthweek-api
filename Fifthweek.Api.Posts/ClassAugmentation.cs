@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Linq;
 
-//// Generated on 04/02/2015 16:40:48 (UTC)
-//// Mapped solution in 3.57s
+//// Generated on 04/02/2015 17:48:53 (UTC)
+//// Mapped solution in 3.82s
 
 
 namespace Fifthweek.Api.Posts.Commands
@@ -1967,7 +1967,7 @@ namespace Fifthweek.Api.Posts.Commands
         public RescheduleForNowCommandHandler(
             Fifthweek.Api.Identity.Shared.Membership.IRequesterSecurity requesterSecurity,
             Fifthweek.Api.Posts.Shared.IPostSecurity postSecurity,
-            Fifthweek.Api.Persistence.IFifthweekDbContext databaseContext)
+            Fifthweek.Api.Posts.ISetBacklogPostLiveDateToNowDbStatement setBacklogPostLiveDateToNow)
         {
             if (requesterSecurity == null)
             {
@@ -1979,13 +1979,35 @@ namespace Fifthweek.Api.Posts.Commands
                 throw new ArgumentNullException("postSecurity");
             }
 
+            if (setBacklogPostLiveDateToNow == null)
+            {
+                throw new ArgumentNullException("setBacklogPostLiveDateToNow");
+            }
+
+            this.requesterSecurity = requesterSecurity;
+            this.postSecurity = postSecurity;
+            this.setBacklogPostLiveDateToNow = setBacklogPostLiveDateToNow;
+        }
+    }
+}
+namespace Fifthweek.Api.Posts
+{
+    using System;
+    using System.Threading.Tasks;
+    using Fifthweek.Api.Persistence;
+    using Fifthweek.Api.Posts.Shared;
+    using Fifthweek.CodeGeneration;
+
+    public partial class SetBacklogPostLiveDateToNowDbStatement 
+    {
+        public SetBacklogPostLiveDateToNowDbStatement(
+            Fifthweek.Api.Persistence.IFifthweekDbContext databaseContext)
+        {
             if (databaseContext == null)
             {
                 throw new ArgumentNullException("databaseContext");
             }
 
-            this.requesterSecurity = requesterSecurity;
-            this.postSecurity = postSecurity;
             this.databaseContext = databaseContext;
         }
     }

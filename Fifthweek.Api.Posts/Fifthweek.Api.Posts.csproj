@@ -88,6 +88,7 @@
     <Compile Include="Commands\ReviseImageCommand.cs" />
     <Compile Include="Controllers\RevisedFileData.cs" />
     <Compile Include="Controllers\RevisedImageData.cs" />
+    <Compile Include="ISetBacklogPostLiveDateToNowDbStatement.cs" />
     <Compile Include="ITryGetQueuedPostCollectionDbStatement.cs" />
     <Compile Include="IPostNoteDbStatement.cs" />
     <Compile Include="IScheduledDateClippingFunction.cs" />
@@ -136,6 +137,7 @@
     <Compile Include="Queries\GetCreatorBacklogQueryHandler.cs" />
     <Compile Include="ScheduledDateClippingFunction.cs" />
     <Compile Include="PostNoteDbStatement.cs" />
+    <Compile Include="SetBacklogPostLiveDateToNowDbStatement.cs" />
     <Compile Include="TryGetQueuedPostCollectionDbStatement.cs" />
   </ItemGroup>
   <ItemGroup>
