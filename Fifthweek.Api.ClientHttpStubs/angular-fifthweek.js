@@ -1,8 +1,7 @@
-﻿var moduleName = 'webApp';
+﻿//
+// Availability API stub.
 //
-// Availability API
-//
-angular.module(moduleName).factory('availabilityService',
+angular.module('webApp').factory('availabilityStub',
   function($http, $q, fifthweekConstants, utilities) {
     'use strict';
 
@@ -25,9 +24,9 @@ angular.module(moduleName).factory('availabilityService',
   });
 
 //
-// Channel API
+// Channel API stub.
 //
-angular.module(moduleName).factory('channelService',
+angular.module('webApp').factory('channelStub',
   function($http, $q, fifthweekConstants, utilities) {
     'use strict';
 
@@ -56,9 +55,9 @@ angular.module(moduleName).factory('channelService',
   });
 
 //
-// Collection API
+// Collection API stub.
 //
-angular.module(moduleName).factory('collectionService',
+angular.module('webApp').factory('collectionStub',
   function($http, $q, fifthweekConstants, utilities) {
     'use strict';
 
@@ -93,9 +92,9 @@ angular.module(moduleName).factory('collectionService',
   });
 
 //
-// Membership API
+// Membership API stub.
 //
-angular.module(moduleName).factory('membershipService',
+angular.module('webApp').factory('membershipStub',
   function($http, $q, fifthweekConstants, utilities) {
     'use strict';
 
@@ -127,7 +126,7 @@ angular.module(moduleName).factory('membershipService',
     };
 
     service.getPasswordResetTokenValidity = function(userId, token) {
-      return $http.get(apiBaseUri + 'membership/passwordResetTokens/' + userId + '/{*token}', token).catch(function(response) {
+      return $http.get(apiBaseUri + 'membership/passwordResetTokens/' + userId + '/' + token).catch(function(response) {
         return $q.reject(utilities.getHttpError(response));
       });
     };
@@ -136,9 +135,9 @@ angular.module(moduleName).factory('membershipService',
   });
 
 //
-// Log API
+// Log API stub.
 //
-angular.module(moduleName).factory('logService',
+angular.module('webApp').factory('logStub',
   function($http, $q, fifthweekConstants, utilities) {
     'use strict';
 
@@ -155,9 +154,9 @@ angular.module(moduleName).factory('logService',
   });
 
 //
-// File post API
+// File post API stub.
 //
-angular.module(moduleName).factory('filePostService',
+angular.module('webApp').factory('filePostStub',
   function($http, $q, fifthweekConstants, utilities) {
     'use strict';
 
@@ -180,9 +179,9 @@ angular.module(moduleName).factory('filePostService',
   });
 
 //
-// Note post API
+// Note post API stub.
 //
-angular.module(moduleName).factory('notePostService',
+angular.module('webApp').factory('notePostStub',
   function($http, $q, fifthweekConstants, utilities) {
     'use strict';
 
@@ -205,9 +204,9 @@ angular.module(moduleName).factory('notePostService',
   });
 
 //
-// Image post API
+// Image post API stub.
 //
-angular.module(moduleName).factory('imagePostService',
+angular.module('webApp').factory('imagePostStub',
   function($http, $q, fifthweekConstants, utilities) {
     'use strict';
 
@@ -230,9 +229,9 @@ angular.module(moduleName).factory('imagePostService',
   });
 
 //
-// Post API
+// Post API stub.
 //
-angular.module(moduleName).factory('postService',
+angular.module('webApp').factory('postStub',
   function($http, $q, fifthweekConstants, utilities) {
     'use strict';
 
@@ -285,9 +284,9 @@ angular.module(moduleName).factory('postService',
   });
 
 //
-// Subscription API
+// Subscription API stub.
 //
-angular.module(moduleName).factory('subscriptionService',
+angular.module('webApp').factory('subscriptionStub',
   function($http, $q, fifthweekConstants, utilities) {
     'use strict';
 
@@ -310,9 +309,9 @@ angular.module(moduleName).factory('subscriptionService',
   });
 
 //
-// User access signatures API
+// User access signatures API stub.
 //
-angular.module(moduleName).factory('userAccessSignaturesService',
+angular.module('webApp').factory('userAccessSignaturesStub',
   function($http, $q, fifthweekConstants, utilities) {
     'use strict';
 
@@ -335,9 +334,9 @@ angular.module(moduleName).factory('userAccessSignaturesService',
   });
 
 //
-// File upload API
+// File upload API stub.
 //
-angular.module(moduleName).factory('fileUploadService',
+angular.module('webApp').factory('fileUploadStub',
   function($http, $q, fifthweekConstants, utilities) {
     'use strict';
 
@@ -360,9 +359,9 @@ angular.module(moduleName).factory('fileUploadService',
   });
 
 //
-// User state API
+// User state API stub.
 //
-angular.module(moduleName).factory('userStateService',
+angular.module('webApp').factory('userStateStub',
   function($http, $q, fifthweekConstants, utilities) {
     'use strict';
 

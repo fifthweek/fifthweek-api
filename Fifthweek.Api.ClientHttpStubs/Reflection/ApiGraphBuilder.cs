@@ -32,9 +32,7 @@
 
                     foreach (var parameter in methodInfo.GetParameters())
                     {
-                        var parameterToken = "{" + parameter.Name + "}";
-
-                        if (parameter.GetCustomAttribute<FromUriAttribute>() != null || fullRoute.Contains(parameterToken))
+                        if (parameter.GetCustomAttribute<FromUriAttribute>() != null || RouteUtility.GetPlaceholders(parameter.Name).Any(fullRoute.Contains))
                         {
                             if (parameter.ParameterType.IsPrimitiveEx())
                             {

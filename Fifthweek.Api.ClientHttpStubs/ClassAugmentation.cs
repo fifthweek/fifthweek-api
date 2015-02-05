@@ -1,21 +1,14 @@
 ﻿using System;
 using System.Linq;
 
-//// Generated on 05/02/2015 21:28:51 (UTC)
-//// Mapped solution in 11.77s
+//// Generated on 05/02/2015 21:43:53 (UTC)
+//// Mapped solution in 3.18s
 
 
 namespace Fifthweek.Api.ClientHttpStubs
 {
     using System.Collections.Generic;
     using Fifthweek.CodeGeneration;
-    using System;
-    using System.Linq;
-    using Fifthweek.Api.AssemblyResolution;
-    using Fifthweek.Api.ClientHttpStubs.Reflection;
-    using Fifthweek.Api.ClientHttpStubs.Templates;
-    using Microsoft.VisualStudio.TextTemplating;
-    using System.Reflection;
 
     public partial class ApiGraph 
     {
@@ -33,15 +26,8 @@ namespace Fifthweek.Api.ClientHttpStubs
 }
 namespace Fifthweek.Api.ClientHttpStubs
 {
-    using System;
-    using System.Linq;
     using System.Collections.Generic;
     using Fifthweek.CodeGeneration;
-    using Fifthweek.Api.AssemblyResolution;
-    using Fifthweek.Api.ClientHttpStubs.Reflection;
-    using Fifthweek.Api.ClientHttpStubs.Templates;
-    using Microsoft.VisualStudio.TextTemplating;
-    using System.Reflection;
 
     public partial class ControllerElement 
     {
@@ -66,15 +52,9 @@ namespace Fifthweek.Api.ClientHttpStubs
 }
 namespace Fifthweek.Api.ClientHttpStubs
 {
-    using System;
-    using System.Linq;
     using System.Collections.Generic;
+    using System.Linq;
     using Fifthweek.CodeGeneration;
-    using Fifthweek.Api.AssemblyResolution;
-    using Fifthweek.Api.ClientHttpStubs.Reflection;
-    using Fifthweek.Api.ClientHttpStubs.Templates;
-    using Microsoft.VisualStudio.TextTemplating;
-    using System.Reflection;
 
     public partial class MethodElement 
     {
@@ -115,15 +95,7 @@ namespace Fifthweek.Api.ClientHttpStubs
 }
 namespace Fifthweek.Api.ClientHttpStubs
 {
-    using System;
-    using System.Linq;
-    using System.Collections.Generic;
     using Fifthweek.CodeGeneration;
-    using Fifthweek.Api.AssemblyResolution;
-    using Fifthweek.Api.ClientHttpStubs.Reflection;
-    using Fifthweek.Api.ClientHttpStubs.Templates;
-    using Microsoft.VisualStudio.TextTemplating;
-    using System.Reflection;
 
     public partial class ParameterElement 
     {
@@ -139,48 +111,11 @@ namespace Fifthweek.Api.ClientHttpStubs
         }
     }
 }
-namespace Fifthweek.Api.ClientHttpStubs.Templates
-{
-    using System;
-    using System.Linq;
-    using System.Threading.Tasks;
-    using Fifthweek.CodeGeneration;
-    using Microsoft.VisualStudio.TextTemplating;
-    using System.Collections.Generic;
-    using Fifthweek.Api.Core;
-    using Humanizer;
-    using System.Reflection;
-    using Fifthweek.Shared;
-
-    public partial class AngularTemplate
-    {
-        public partial class RenderingSession 
-        {
-            public RenderingSession(
-                Fifthweek.Api.ClientHttpStubs.ApiGraph api,
-                Microsoft.VisualStudio.TextTemplating.TextTransformation output)
-            {
-                if (api == null)
-                {
-                    throw new ArgumentNullException("api");
-                }
-
-                if (output == null)
-                {
-                    throw new ArgumentNullException("output");
-                }
-
-                this.api = api;
-                this.output = output;
-            }
-        }
-    }
-}
 namespace Fifthweek.Api.ClientHttpStubs.Reflection
 {
     using System;
-    using System.Linq;
     using System.Collections.Generic;
+    using System.Linq;
     using System.Reflection;
     using System.Web.Http;
     using Fifthweek.CodeGeneration;
@@ -201,15 +136,11 @@ namespace Fifthweek.Api.ClientHttpStubs.Reflection
 }
 namespace Fifthweek.Api.ClientHttpStubs
 {
-    using System;
-    using System.Linq;
-    using System.Collections.Generic;
-    using Fifthweek.CodeGeneration;
     using Fifthweek.Api.AssemblyResolution;
     using Fifthweek.Api.ClientHttpStubs.Reflection;
     using Fifthweek.Api.ClientHttpStubs.Templates;
+    using Fifthweek.CodeGeneration;
     using Microsoft.VisualStudio.TextTemplating;
-    using System.Reflection;
 
     public partial class StubFile 
     {
@@ -232,18 +163,69 @@ namespace Fifthweek.Api.ClientHttpStubs
         }
     }
 }
+namespace Fifthweek.Api.ClientHttpStubs.Templates
+{
+    using System;
+    using System.Linq;
+    using Fifthweek.CodeGeneration;
+    using Humanizer;
+    using Microsoft.VisualStudio.TextTemplating;
+
+    public partial class AngularAppCodeRenderingSession 
+    {
+        public AngularAppCodeRenderingSession(
+            Fifthweek.Api.ClientHttpStubs.ApiGraph api,
+            Microsoft.VisualStudio.TextTemplating.TextTransformation output)
+        {
+            if (api == null)
+            {
+                throw new ArgumentNullException("api");
+            }
+
+            if (output == null)
+            {
+                throw new ArgumentNullException("output");
+            }
+
+            this.api = api;
+            this.output = output;
+        }
+    }
+}
+namespace Fifthweek.Api.ClientHttpStubs.Templates
+{
+    using System;
+    using System.Linq;
+    using Fifthweek.CodeGeneration;
+    using Humanizer;
+    using Microsoft.VisualStudio.TextTemplating;
+
+    public partial class AngularTestCodeRenderingSession 
+    {
+        public AngularTestCodeRenderingSession(
+            Fifthweek.Api.ClientHttpStubs.ApiGraph api,
+            Microsoft.VisualStudio.TextTemplating.TextTransformation output)
+        {
+            if (api == null)
+            {
+                throw new ArgumentNullException("api");
+            }
+
+            if (output == null)
+            {
+                throw new ArgumentNullException("output");
+            }
+
+            this.api = api;
+            this.output = output;
+        }
+    }
+}
 
 namespace Fifthweek.Api.ClientHttpStubs
 {
     using System.Collections.Generic;
     using Fifthweek.CodeGeneration;
-    using System;
-    using System.Linq;
-    using Fifthweek.Api.AssemblyResolution;
-    using Fifthweek.Api.ClientHttpStubs.Reflection;
-    using Fifthweek.Api.ClientHttpStubs.Templates;
-    using Microsoft.VisualStudio.TextTemplating;
-    using System.Reflection;
 
     public partial class ApiGraph 
     {
@@ -310,15 +292,8 @@ namespace Fifthweek.Api.ClientHttpStubs
 }
 namespace Fifthweek.Api.ClientHttpStubs
 {
-    using System;
-    using System.Linq;
     using System.Collections.Generic;
     using Fifthweek.CodeGeneration;
-    using Fifthweek.Api.AssemblyResolution;
-    using Fifthweek.Api.ClientHttpStubs.Reflection;
-    using Fifthweek.Api.ClientHttpStubs.Templates;
-    using Microsoft.VisualStudio.TextTemplating;
-    using System.Reflection;
 
     public partial class ControllerElement 
     {
@@ -391,15 +366,9 @@ namespace Fifthweek.Api.ClientHttpStubs
 }
 namespace Fifthweek.Api.ClientHttpStubs
 {
-    using System;
-    using System.Linq;
     using System.Collections.Generic;
+    using System.Linq;
     using Fifthweek.CodeGeneration;
-    using Fifthweek.Api.AssemblyResolution;
-    using Fifthweek.Api.ClientHttpStubs.Reflection;
-    using Fifthweek.Api.ClientHttpStubs.Templates;
-    using Microsoft.VisualStudio.TextTemplating;
-    using System.Reflection;
 
     public partial class MethodElement 
     {
@@ -490,15 +459,7 @@ namespace Fifthweek.Api.ClientHttpStubs
 }
 namespace Fifthweek.Api.ClientHttpStubs
 {
-    using System;
-    using System.Linq;
-    using System.Collections.Generic;
     using Fifthweek.CodeGeneration;
-    using Fifthweek.Api.AssemblyResolution;
-    using Fifthweek.Api.ClientHttpStubs.Reflection;
-    using Fifthweek.Api.ClientHttpStubs.Templates;
-    using Microsoft.VisualStudio.TextTemplating;
-    using System.Reflection;
 
     public partial class ParameterElement 
     {

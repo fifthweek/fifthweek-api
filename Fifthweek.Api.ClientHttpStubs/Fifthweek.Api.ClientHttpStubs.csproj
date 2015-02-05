@@ -70,8 +70,13 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Reflection\ApiGraphBuilder.cs" />
     <Compile Include="Reflection\ControllerSource.cs" />
+    <Compile Include="RouteUtility.cs" />
     <Compile Include="StubFile.cs" />
-    <Compile Include="Templates\AngularTemplate.cs" />
+    <Compile Include="Templates\AngularAppCodeRenderingSession.cs" />
+    <Compile Include="Templates\AngularTestCode.cs" />
+    <Compile Include="Templates\AngularAppCode.cs" />
+    <Compile Include="Templates\AngularTestCodeRenderingSession.cs" />
+    <Compile Include="Templates\AngularUtility.cs" />
     <Compile Include="Templates\ITemplate.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -93,10 +98,14 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <None Include="app.config" />
-    <None Include="AngularClientHttpStubs.tt">
+    <None Include="angular-fifthweek-test.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
-      <LastGenOutput>AngularClientHttpStubs.js</LastGenOutput>
+      <LastGenOutput>angular-fifthweek-test.js</LastGenOutput>
+    </None>
+    <None Include="app.config" />
+    <None Include="angular-fifthweek.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>angular-fifthweek.js</LastGenOutput>
     </None>
     <None Include="ClassAugmentation.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
@@ -108,10 +117,15 @@
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="AngularClientHttpStubs.js">
+    <Content Include="angular-fifthweek-test.js">
+      <DependentUpon>angular-fifthweek-test.tt</DependentUpon>
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
-      <DependentUpon>AngularClientHttpStubs.tt</DependentUpon>
+    </Content>
+    <Content Include="angular-fifthweek.js">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>angular-fifthweek.tt</DependentUpon>
     </Content>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

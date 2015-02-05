@@ -4,5 +4,5 @@
 <#@ import namespace="Fifthweek.Api.ClientHttpStubs" #>
 <#@ import namespace="Fifthweek.Api.ClientHttpStubs.Templates" #>
 <#
-new StubFile(this, new AngularTemplate()).Render();
+new StubFile(this, new AngularTestCode()).Render();
 #>
