@@ -1,10 +1,13 @@
 ﻿namespace Fifthweek.Api.ClientHttpStubs.Templates
 {
+    using System;
     using System.Collections.Generic;
     using System.Linq;
+    using System.Reflection;
 
     using Fifthweek.Api.Core;
     using Fifthweek.CodeGeneration;
+    using Fifthweek.Shared;
 
     using Humanizer;
 
@@ -75,7 +78,7 @@
                 this.output.Write(method.Name.Camelize());
                 this.output.Write(" = function(");
 
-                this.RenderDelimitted(method.GetAllParameters().Select(_ => _.Name).ToArray(), ", ");
+                this.output.Write(string.Join(", ", method.GetAllParameters().Select(_ => _.Name)));
 
                 this.output.WriteLine(") {");
 
@@ -84,8 +87,8 @@
                 this.output.Write("return $http.");
                 this.output.Write(method.HttpMethod.ToString().ToLower());
                 this.output.Write("(apiBaseUri + ");
-                
-                this.RenderRouteBuilder(method);
+
+                this.output.Write(this.GetRouteBuilder(method));
 
                 if (method.BodyParameter != null)
                 {
@@ -106,21 +109,7 @@
                 this.output.WriteLine(string.Empty);
             }
 
-            private void RenderDelimitted(IReadOnlyList<string> items, string delimitter)
-            {
-                for (var i = 0; i < items.Count; i++)
-                {
-                    var parameter = items[i];
-                    this.output.Write(parameter.Camelize());
-
-                    if (i < items.Count - 1)
-                    {
-                        this.output.Write(delimitter);
-                    }
-                }
-            }
-
-            private void RenderRouteBuilder(MethodElement method)
+            private string GetRouteBuilder(MethodElement method)
             {
                 var route = "'" + method.Route + "'";
                 var queryParameters = method.UrlParameters.ToList();
@@ -153,18 +142,17 @@
                     }
                     else
                     {
-                        route += "+ '?";
+                        route += " + '?";
                     }
+
+                    var querystring = queryParameters.Select(_ => string.Format("{0}=' + {0} + '", _.Name));
+                    route += string.Join("&", querystring);
+
+                    // Trim trailing " + '"
+                    route = route.Substring(0, route.Length - 4);
                 }
 
-                this.output.Write(route);
-
-                this.RenderDelimitted(queryParameters.Select(_ => string.Format("{0}=' + {0} + '", _.Name)).ToArray(), "&");
-
-                if (queryParameters.Count > 0)
-                {
-                    this.output.Write("'");
-                }
+                return route;
             }
         }
     }

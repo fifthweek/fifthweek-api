@@ -35,7 +35,7 @@ angular.module(moduleName).factory('channelService',
     var service = {};
 
     service.postChannel = function(newChannelData) {
-      return $http.post(apiBaseUri + 'collections/', newChannelData).catch(function(response) {
+      return $http.post(apiBaseUri + 'collections', newChannelData).catch(function(response) {
         return $q.reject(utilities.getHttpError(response));
       });
     };
@@ -66,7 +66,7 @@ angular.module(moduleName).factory('collectionService',
     var service = {};
 
     service.postCollection = function(newCollectionData) {
-      return $http.post(apiBaseUri + 'collections/', newCollectionData).catch(function(response) {
+      return $http.post(apiBaseUri + 'collections', newCollectionData).catch(function(response) {
         return $q.reject(utilities.getHttpError(response));
       });
     };
@@ -245,8 +245,8 @@ angular.module(moduleName).factory('postService',
       });
     };
 
-    service.getCreatorNewsfeed = function(creatorId, newsfeedPaginationData) {
-      return $http.get(apiBaseUri + 'posts/creatorNewsfeed/' + creatorId+ '?newsfeedPaginationData=' + newsfeedPaginationData + '').catch(function(response) {
+    service.getCreatorNewsfeed = function(creatorId, startIndex, count) {
+      return $http.get(apiBaseUri + 'posts/creatorNewsfeed/' + creatorId + '?startIndex=' + startIndex + '&count=' + count).catch(function(response) {
         return $q.reject(utilities.getHttpError(response));
       });
     };
@@ -295,7 +295,7 @@ angular.module(moduleName).factory('subscriptionService',
     var service = {};
 
     service.postSubscription = function(subscriptionData) {
-      return $http.post(apiBaseUri + 'subscriptions/', subscriptionData).catch(function(response) {
+      return $http.post(apiBaseUri + 'subscriptions', subscriptionData).catch(function(response) {
         return $q.reject(utilities.getHttpError(response));
       });
     };
@@ -320,7 +320,7 @@ angular.module(moduleName).factory('userAccessSignaturesService',
     var service = {};
 
     service.getForVisitor = function() {
-      return $http.get(apiBaseUri + 'userAccessSignatures/').catch(function(response) {
+      return $http.get(apiBaseUri + 'userAccessSignatures').catch(function(response) {
         return $q.reject(utilities.getHttpError(response));
       });
     };

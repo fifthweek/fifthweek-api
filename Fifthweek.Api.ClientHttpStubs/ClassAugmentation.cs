@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Linq;
 
-//// Generated on 05/02/2015 19:57:23 (UTC)
-//// Mapped solution in 3.39s
+//// Generated on 05/02/2015 21:28:51 (UTC)
+//// Mapped solution in 11.77s
 
 
 namespace Fifthweek.Api.ClientHttpStubs
@@ -11,6 +11,11 @@ namespace Fifthweek.Api.ClientHttpStubs
     using Fifthweek.CodeGeneration;
     using System;
     using System.Linq;
+    using Fifthweek.Api.AssemblyResolution;
+    using Fifthweek.Api.ClientHttpStubs.Reflection;
+    using Fifthweek.Api.ClientHttpStubs.Templates;
+    using Microsoft.VisualStudio.TextTemplating;
+    using System.Reflection;
 
     public partial class ApiGraph 
     {
@@ -32,6 +37,11 @@ namespace Fifthweek.Api.ClientHttpStubs
     using System.Linq;
     using System.Collections.Generic;
     using Fifthweek.CodeGeneration;
+    using Fifthweek.Api.AssemblyResolution;
+    using Fifthweek.Api.ClientHttpStubs.Reflection;
+    using Fifthweek.Api.ClientHttpStubs.Templates;
+    using Microsoft.VisualStudio.TextTemplating;
+    using System.Reflection;
 
     public partial class ControllerElement 
     {
@@ -60,6 +70,11 @@ namespace Fifthweek.Api.ClientHttpStubs
     using System.Linq;
     using System.Collections.Generic;
     using Fifthweek.CodeGeneration;
+    using Fifthweek.Api.AssemblyResolution;
+    using Fifthweek.Api.ClientHttpStubs.Reflection;
+    using Fifthweek.Api.ClientHttpStubs.Templates;
+    using Microsoft.VisualStudio.TextTemplating;
+    using System.Reflection;
 
     public partial class MethodElement 
     {
@@ -104,6 +119,11 @@ namespace Fifthweek.Api.ClientHttpStubs
     using System.Linq;
     using System.Collections.Generic;
     using Fifthweek.CodeGeneration;
+    using Fifthweek.Api.AssemblyResolution;
+    using Fifthweek.Api.ClientHttpStubs.Reflection;
+    using Fifthweek.Api.ClientHttpStubs.Templates;
+    using Microsoft.VisualStudio.TextTemplating;
+    using System.Reflection;
 
     public partial class ParameterElement 
     {
@@ -129,6 +149,8 @@ namespace Fifthweek.Api.ClientHttpStubs.Templates
     using System.Collections.Generic;
     using Fifthweek.Api.Core;
     using Humanizer;
+    using System.Reflection;
+    using Fifthweek.Shared;
 
     public partial class AngularTemplate
     {
@@ -179,11 +201,15 @@ namespace Fifthweek.Api.ClientHttpStubs.Reflection
 }
 namespace Fifthweek.Api.ClientHttpStubs
 {
+    using System;
+    using System.Linq;
+    using System.Collections.Generic;
+    using Fifthweek.CodeGeneration;
     using Fifthweek.Api.AssemblyResolution;
     using Fifthweek.Api.ClientHttpStubs.Reflection;
     using Fifthweek.Api.ClientHttpStubs.Templates;
-    using Fifthweek.CodeGeneration;
     using Microsoft.VisualStudio.TextTemplating;
+    using System.Reflection;
 
     public partial class StubFile 
     {
@@ -213,6 +239,11 @@ namespace Fifthweek.Api.ClientHttpStubs
     using Fifthweek.CodeGeneration;
     using System;
     using System.Linq;
+    using Fifthweek.Api.AssemblyResolution;
+    using Fifthweek.Api.ClientHttpStubs.Reflection;
+    using Fifthweek.Api.ClientHttpStubs.Templates;
+    using Microsoft.VisualStudio.TextTemplating;
+    using System.Reflection;
 
     public partial class ApiGraph 
     {
@@ -283,6 +314,11 @@ namespace Fifthweek.Api.ClientHttpStubs
     using System.Linq;
     using System.Collections.Generic;
     using Fifthweek.CodeGeneration;
+    using Fifthweek.Api.AssemblyResolution;
+    using Fifthweek.Api.ClientHttpStubs.Reflection;
+    using Fifthweek.Api.ClientHttpStubs.Templates;
+    using Microsoft.VisualStudio.TextTemplating;
+    using System.Reflection;
 
     public partial class ControllerElement 
     {
@@ -359,6 +395,11 @@ namespace Fifthweek.Api.ClientHttpStubs
     using System.Linq;
     using System.Collections.Generic;
     using Fifthweek.CodeGeneration;
+    using Fifthweek.Api.AssemblyResolution;
+    using Fifthweek.Api.ClientHttpStubs.Reflection;
+    using Fifthweek.Api.ClientHttpStubs.Templates;
+    using Microsoft.VisualStudio.TextTemplating;
+    using System.Reflection;
 
     public partial class MethodElement 
     {
@@ -453,6 +494,11 @@ namespace Fifthweek.Api.ClientHttpStubs
     using System.Linq;
     using System.Collections.Generic;
     using Fifthweek.CodeGeneration;
+    using Fifthweek.Api.AssemblyResolution;
+    using Fifthweek.Api.ClientHttpStubs.Reflection;
+    using Fifthweek.Api.ClientHttpStubs.Templates;
+    using Microsoft.VisualStudio.TextTemplating;
+    using System.Reflection;
 
     public partial class ParameterElement 
     {

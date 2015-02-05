@@ -6,6 +6,10 @@
     using System.Reflection;
     using System.Web.Http;
 
+    using Fifthweek.Shared;
+
+    using Humanizer;
+
     public class ApiGraphBuilder
     {
         private const string ControllerSuffix = "Controller";
@@ -29,15 +33,26 @@
                     foreach (var parameter in methodInfo.GetParameters())
                     {
                         var parameterToken = "{" + parameter.Name + "}";
-                        var parameterElement = new ParameterElement(parameter.Name);
 
                         if (parameter.GetCustomAttribute<FromUriAttribute>() != null || fullRoute.Contains(parameterToken))
                         {
-                            urlParameters.Add(parameterElement);
+                            if (parameter.ParameterType.IsPrimitiveEx())
+                            {
+                                urlParameters.Add(new ParameterElement(parameter.Name));    
+                            }
+                            else
+                            {
+                                // Flatten complex types used as URL parameters.
+                                var flattenedComplexType = parameter.ParameterType.GetProperties().Where(_ => _.PropertyType.IsPrimitiveEx() && _.CanWrite);
+                                foreach (var property in flattenedComplexType)
+                                {
+                                    urlParameters.Add(new ParameterElement(property.Name.Camelize()));    
+                                }
+                            }
                         }
                         else if (bodyParameter == null)
                         {
-                            bodyParameter = parameterElement;
+                            bodyParameter = new ParameterElement(parameter.Name);
                         }
                         else
                         {
@@ -117,14 +132,18 @@
                 throw new Exception("Multiple routes not supported. Please use separate methods.");
             }
 
-            if (routes.Length == 1 && routePrefix != null)
+            var methodRoute = routes.Length == 1 && !string.IsNullOrEmpty(routes[0].Template)
+                ? routes[0].Template
+                : null;
+
+            if (methodRoute != null && routePrefix != null)
             {
-                return routePrefix.Prefix + "/" + routes[0].Template;
+                return routePrefix.Prefix + "/" + methodRoute;
             }
 
-            if (routes.Length == 1)
+            if (methodRoute != null)
             {
-                return routes[0].Template;
+                return methodRoute;
             }
 
             if (routePrefix != null)

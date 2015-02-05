@@ -61,6 +61,7 @@
     <Compile Include="OptimisticConcurrencyException.cs" />
     <Compile Include="PositiveInt.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ReflectionExtensions.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="ClassAugmentation.tt">
