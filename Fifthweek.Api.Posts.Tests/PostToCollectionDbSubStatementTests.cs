@@ -11,6 +11,7 @@
     using Fifthweek.Api.Persistence;
     using Fifthweek.Api.Persistence.Tests.Shared;
     using Fifthweek.Api.Posts.Shared;
+    using Fifthweek.Shared;
     using Fifthweek.Tests.Shared;
 
     using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -206,63 +207,23 @@
         }
 
         [TestMethod]
-        public async Task WhenQueueing_AndCalculatedLiveDateMatchesAnotherQueuedPostInTheCollection_ItShouldRetryWithDifferentDate()
+        public async Task WhenQueueing_AndCalculatedLiveDateMatchesAnotherQueuedPostInTheCollection_ItShouldThrowOptimisticConcurrencyException()
         {
             await this.DatabaseTestAsync(async testDatabase =>
             {
                 var sharedLiveDate = DateTime.UtcNow.AddDays(42);
-                var uniqueLiveDate = DateTime.UtcNow.AddDays(43);
-                this.getLiveDateOfNewQueuedPost.Setup(_ => _.ExecuteAsync(CollectionId)).ReturnsInOrderAsync(sharedLiveDate, uniqueLiveDate);
+                this.getLiveDateOfNewQueuedPost.Setup(_ => _.ExecuteAsync(CollectionId)).ReturnsAsync(sharedLiveDate);
 
                 this.InitializeTarget(testDatabase.NewContext());
                 await this.CreateEntitiesAsync(testDatabase);
                 await this.CreatePostAsync(testDatabase, sharedLiveDate, scheduledByQueue: true, differentCollection: false);
                 await testDatabase.TakeSnapshotAsync();
 
-                var givenPost = UnscheduledPostWithoutChannel();
-                await this.target.QueuePostAsync(givenPost);
-
-                var expectedPost = givenPost.Copy(_ =>
+                await ExpectedException.AssertExceptionAsync<OptimisticConcurrencyException>(() =>
                 {
-                    _.ChannelId = ChannelId.Value;
-                    _.LiveDate = new SqlDateTime(uniqueLiveDate).Value;
-                    _.ScheduledByQueue = true;
+                    return this.target.QueuePostAsync(UnscheduledPostWithoutChannel());            
                 });
-
-                return new ExpectedSideEffects
-                {
-                    Insert = expectedPost
-                };
-            });
-        }
-
-        [TestMethod]
-        public async Task WhenQueueing_ItShouldRetryForMaximumOf3TimesBeforeThrowingException()
-        {
-            await this.DatabaseTestAsync(async testDatabase =>
-            {
-                const int MaxNumberOfRetries = 3;
-
-                // We keep returning the same live date to simulate a recurring collision. Under a normal race condition, the date would increment
-                // forward. In the unlikely event that a new post is independently queued for each of the 3 times we calculate the next queue date, 
-                // the operation should fail. Using the same date and a single contending post is a simpler way of recreating this condition.
-                var sharedLiveDate = DateTime.UtcNow.AddDays(42);
-                this.getLiveDateOfNewQueuedPost.Setup(_ => _.ExecuteAsync(CollectionId)).ReturnsAsync(sharedLiveDate).Verifiable();
-
-                this.InitializeTarget(testDatabase.NewContext());
-                await this.CreateEntitiesAsync(testDatabase);
-                await this.CreatePostAsync(testDatabase, sharedLiveDate, scheduledByQueue: true, differentCollection: false);
-                await testDatabase.TakeSnapshotAsync();
-
-                var givenPost = UnscheduledPostWithoutChannel();
-
-                await ExpectedException.AssertExceptionAsync<Exception>(() =>
-                {
-                    return this.target.QueuePostAsync(givenPost);
-                });
-
-                this.getLiveDateOfNewQueuedPost.Verify(_ => _.ExecuteAsync(CollectionId), Times.Exactly(MaxNumberOfRetries));
-
+                
                 return ExpectedSideEffects.None;
             });
         }

@@ -58,6 +58,7 @@
     <Compile Include="IRandom.cs" />
     <Compile Include="MimeTypeMap.cs" />
     <Compile Include="NonNegativeInt.cs" />
+    <Compile Include="OptimisticConcurrencyException.cs" />
     <Compile Include="PositiveInt.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

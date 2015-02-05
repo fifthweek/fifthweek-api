@@ -84,6 +84,7 @@
     <Compile Include="Commands\RescheduleForNowCommand.cs" />
     <Compile Include="Commands\RescheduleForNowCommandHandler.cs" />
     <Compile Include="Commands\RescheduleWithQueueCommand.cs" />
+    <Compile Include="Commands\RescheduleWithQueueCommandHandler.cs" />
     <Compile Include="Commands\ReviseFileCommandHandler.cs" />
     <Compile Include="Commands\ReviseImageCommandHandler.cs" />
     <Compile Include="Commands\ReviseNoteCommandHandler.cs" />
@@ -91,8 +92,10 @@
     <Compile Include="Commands\ReviseImageCommand.cs" />
     <Compile Include="Controllers\RevisedFileData.cs" />
     <Compile Include="Controllers\RevisedImageData.cs" />
+    <Compile Include="IMoveBacklogPostToQueueDbStatement.cs" />
     <Compile Include="IRemoveFromQueueIfRequiredDbStatement.cs" />
     <Compile Include="ISetBacklogPostLiveDateDbStatement.cs" />
+    <Compile Include="ITryGetUnqueuedPostCollectionDbStatement.cs" />
     <Compile Include="ITryGetQueuedPostCollectionDbStatement.cs" />
     <Compile Include="IPostNoteDbStatement.cs" />
     <Compile Include="IScheduledDateClippingFunction.cs" />
@@ -106,6 +109,7 @@
     <Compile Include="Controllers\RevisedNoteData.cs" />
     <Compile Include="DeletePostDbStatement.cs" />
     <Compile Include="IDeletePostDbStatement.cs" />
+    <Compile Include="MoveBacklogPostToQueueDbStatement.cs" />
     <Compile Include="PostOwnership.cs" />
     <Compile Include="IPostOwnership.cs" />
     <Compile Include="PostSecurity.cs" />
@@ -143,6 +147,7 @@
     <Compile Include="ScheduledDateClippingFunction.cs" />
     <Compile Include="PostNoteDbStatement.cs" />
     <Compile Include="SetBacklogPostLiveDateDbStatement.cs" />
+    <Compile Include="TryGetUnqueuedPostCollectionDbStatement.cs" />
     <Compile Include="TryGetQueuedPostCollectionDbStatement.cs" />
   </ItemGroup>
   <ItemGroup>

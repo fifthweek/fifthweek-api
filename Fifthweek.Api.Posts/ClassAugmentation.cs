@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Linq;
 
-//// Generated on 04/02/2015 21:42:14 (UTC)
-//// Mapped solution in 6.9s
+//// Generated on 05/02/2015 13:20:14 (UTC)
+//// Mapped solution in 6.93s
 
 
 namespace Fifthweek.Api.Posts.Commands
@@ -2180,11 +2180,20 @@ namespace Fifthweek.Api.Posts.Commands
 namespace Fifthweek.Api.Posts.Commands
 {
     using System;
-    using System.Threading.Tasks;
-    using Fifthweek.Api.Core;
+    using System.Linq;
     using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.Api.Posts.Shared;
     using Fifthweek.CodeGeneration;
+    using System.Threading.Tasks;
+    using Fifthweek.Api.Core;
+    using Fifthweek.Api.FileManagement.Shared;
+    using Fifthweek.Api.Collections.Shared;
+    using Fifthweek.Api.Channels.Shared;
+    using Fifthweek.Api.Persistence;
+    using System.Collections.Generic;
+    using System.Text;
+    using Dapper;
+    using System.Transactions;
 
     public partial class RescheduleForTimeCommandHandler 
     {
@@ -2218,6 +2227,132 @@ namespace Fifthweek.Api.Posts.Commands
             this.postSecurity = postSecurity;
             this.setBacklogPostLiveDate = setBacklogPostLiveDate;
             this.removeFromQueueIfRequired = removeFromQueueIfRequired;
+        }
+    }
+}
+namespace Fifthweek.Api.Posts.Commands
+{
+    using System;
+    using System.Linq;
+    using Fifthweek.Api.Identity.Shared.Membership;
+    using Fifthweek.Api.Posts.Shared;
+    using Fifthweek.CodeGeneration;
+    using System.Threading.Tasks;
+    using Fifthweek.Api.Core;
+    using Fifthweek.Api.FileManagement.Shared;
+    using Fifthweek.Api.Collections.Shared;
+    using Fifthweek.Api.Channels.Shared;
+    using Fifthweek.Api.Persistence;
+    using System.Collections.Generic;
+    using System.Text;
+    using Dapper;
+    using System.Transactions;
+
+    public partial class RescheduleWithQueueCommandHandler 
+    {
+        public RescheduleWithQueueCommandHandler(
+            Fifthweek.Api.Identity.Shared.Membership.IRequesterSecurity requesterSecurity,
+            Fifthweek.Api.Posts.Shared.IPostSecurity postSecurity,
+            Fifthweek.Api.Posts.ITryGetUnqueuedPostCollectionDbStatement tryGetUnqueuedPostCollection,
+            Fifthweek.Api.Posts.IMoveBacklogPostToQueueDbStatement moveBacklogPostToQueue)
+        {
+            if (requesterSecurity == null)
+            {
+                throw new ArgumentNullException("requesterSecurity");
+            }
+
+            if (postSecurity == null)
+            {
+                throw new ArgumentNullException("postSecurity");
+            }
+
+            if (tryGetUnqueuedPostCollection == null)
+            {
+                throw new ArgumentNullException("tryGetUnqueuedPostCollection");
+            }
+
+            if (moveBacklogPostToQueue == null)
+            {
+                throw new ArgumentNullException("moveBacklogPostToQueue");
+            }
+
+            this.requesterSecurity = requesterSecurity;
+            this.postSecurity = postSecurity;
+            this.tryGetUnqueuedPostCollection = tryGetUnqueuedPostCollection;
+            this.moveBacklogPostToQueue = moveBacklogPostToQueue;
+        }
+    }
+}
+namespace Fifthweek.Api.Posts
+{
+    using System;
+    using System.Linq;
+    using System.Threading.Tasks;
+    using Dapper;
+    using Fifthweek.Api.Persistence;
+    using Fifthweek.CodeGeneration;
+    using Fifthweek.Api.Core;
+    using Fifthweek.Api.FileManagement;
+    using Fifthweek.Api.FileManagement.Shared;
+    using Fifthweek.Shared;
+    using Fifthweek.Api.Identity.Shared.Membership;
+    using Fifthweek.Api.Posts.Shared;
+    using Fifthweek.Api.Collections.Shared;
+    using Fifthweek.Api.Collections;
+    using Fifthweek.Api.Channels.Shared;
+    using System.Transactions;
+
+    public partial class MoveBacklogPostToQueueDbStatement 
+    {
+        public MoveBacklogPostToQueueDbStatement(
+            Fifthweek.Api.Persistence.IFifthweekDbContext databaseContext,
+            Fifthweek.Api.Collections.Shared.IGetLiveDateOfNewQueuedPostDbStatement getLiveDateOfNewQueuedPost)
+        {
+            if (databaseContext == null)
+            {
+                throw new ArgumentNullException("databaseContext");
+            }
+
+            if (getLiveDateOfNewQueuedPost == null)
+            {
+                throw new ArgumentNullException("getLiveDateOfNewQueuedPost");
+            }
+
+            this.databaseContext = databaseContext;
+            this.getLiveDateOfNewQueuedPost = getLiveDateOfNewQueuedPost;
+        }
+    }
+}
+namespace Fifthweek.Api.Posts
+{
+    using System;
+    using System.Linq;
+    using System.Threading.Tasks;
+    using Dapper;
+    using Fifthweek.Api.Persistence;
+    using Fifthweek.CodeGeneration;
+    using Fifthweek.Api.Core;
+    using Fifthweek.Api.FileManagement;
+    using Fifthweek.Api.FileManagement.Shared;
+    using Fifthweek.Shared;
+    using Fifthweek.Api.Identity.Shared.Membership;
+    using Fifthweek.Api.Posts.Shared;
+    using Fifthweek.Api.Collections.Shared;
+    using Fifthweek.Api.Collections;
+    using Fifthweek.Api.Channels.Shared;
+    using System.Transactions;
+
+    public partial class TryGetUnqueuedPostCollectionDbStatement 
+    {
+        public TryGetUnqueuedPostCollectionDbStatement(
+            Fifthweek.Api.Persistence.IFifthweekDbContext databaseContext)
+        {
+            if (databaseContext == null)
+            {
+                throw new ArgumentNullException("databaseContext");
+            }
+
+            this.databaseContext = databaseContext;
         }
     }
 }

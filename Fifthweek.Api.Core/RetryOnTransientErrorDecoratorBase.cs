@@ -145,8 +145,6 @@
 
             private bool CustomStrategyIsTransient(Exception exception)
             {
-                bool isTransient = false;
-
                 var sqlException = exception as SqlException;
                 if (sqlException != null)
                 {
@@ -156,24 +154,27 @@
                         {
                             case RetryOnTransientErrorDecoratorBase.SqlTimeoutErrorCode:
                             case RetryOnTransientErrorDecoratorBase.SqlDeadlockErrorCode:
-                                isTransient = true;
-                                break;
-                        }
-                    }
-                }
-                else
-                {
-                    var entityException = exception as EntityException;
-                    if (entityException != null)
-                    {
-                        if (entityException.ToString().Contains("transient failure"))
-                        {
-                            isTransient = true;
+                                return true;
                         }
                     }
                 }
 
-                return isTransient;
+                var entityException = exception as EntityException;
+                if (entityException != null)
+                {
+                    if (entityException.ToString().Contains("transient failure"))
+                    {
+                        return true;
+                    }
+                }
+
+                var optimisticConcurrencyException = exception as OptimisticConcurrencyException;
+                if (optimisticConcurrencyException != null)
+                {
+                    return true;
+                }
+
+                return false;
             }
 
             private IReadOnlyList<Exception> Flatten(Exception exception)

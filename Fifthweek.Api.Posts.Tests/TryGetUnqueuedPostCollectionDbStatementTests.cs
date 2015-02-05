@@ -14,14 +14,14 @@
     using Moq;
 
     [TestClass]
-    public class TryGetQueuedPostCollectionDbStatementTests : PersistenceTestsBase
+    public class TryGetUnqueuedPostCollectionDbStatementTests : PersistenceTestsBase
     {
         private static readonly PostId PostId = new PostId(Guid.NewGuid());
         private static readonly CollectionId CollectionId = new CollectionId(Guid.NewGuid());
         private static readonly DateTime Now = DateTime.UtcNow;
 
         private Mock<IFifthweekDbContext> databaseContext;
-        private TryGetQueuedPostCollectionDbStatement target;
+        private TryGetUnqueuedPostCollectionDbStatement target;
 
         [TestInitialize]
         public void Initialize()
@@ -36,7 +36,7 @@
 
         public void InitializeTarget(IFifthweekDbContext databaseContext)
         {
-            this.target = new TryGetQueuedPostCollectionDbStatement(databaseContext);
+            this.target = new TryGetUnqueuedPostCollectionDbStatement(databaseContext);
         }
 
         [TestMethod]
@@ -70,12 +70,12 @@
         }
 
         [TestMethod]
-        public async Task WhenPostExistsAndIsNotQueued_ItShouldReturnNull()
+        public async Task WhenPostExistsAndIsQueued_ItShouldReturnNull()
         {
             await this.DatabaseTestAsync(async testDatabase =>
             {
                 this.InitializeTarget(testDatabase.NewContext());
-                await this.CreateEntitiesAsync(testDatabase, queuePost: false);
+                await this.CreateEntitiesAsync(testDatabase, queuePost: true);
                 await testDatabase.TakeSnapshotAsync();
 
                 var result = await this.target.ExecuteAsync(PostId, Now);
@@ -87,12 +87,12 @@
         }
 
         [TestMethod]
-        public async Task WhenPostExistsAndWasQueuedButNowLive_ItShouldReturnNull()
+        public async Task WhenPostExistsAndWasNotQueuedButNowLive_ItShouldReturnNull()
         {
             await this.DatabaseTestAsync(async testDatabase =>
             {
                 this.InitializeTarget(testDatabase.NewContext());
-                await this.CreateEntitiesAsync(testDatabase, queuePost: true, liveDateInFuture: false);
+                await this.CreateEntitiesAsync(testDatabase, queuePost: false, liveDateInFuture: false);
                 await testDatabase.TakeSnapshotAsync();
 
                 var result = await this.target.ExecuteAsync(PostId, Now);
@@ -104,12 +104,12 @@
         }
 
         [TestMethod]
-        public async Task WhenPostExistsAndIsQueued_ItShouldReturnCollectionId()
+        public async Task WhenPostExistsAndIsNotQueued_ItShouldReturnCollectionId()
         {
             await this.DatabaseTestAsync(async testDatabase =>
             {
                 this.InitializeTarget(testDatabase.NewContext());
-                await this.CreateEntitiesAsync(testDatabase, queuePost: true, liveDateInFuture: true);
+                await this.CreateEntitiesAsync(testDatabase, queuePost: false, liveDateInFuture: true);
                 await testDatabase.TakeSnapshotAsync();
 
                 var result = await this.target.ExecuteAsync(PostId, Now);

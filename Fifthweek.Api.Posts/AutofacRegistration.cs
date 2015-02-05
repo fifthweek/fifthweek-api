@@ -13,12 +13,14 @@
             builder.RegisterType<PostToCollectionDbStatement>().As<IPostToCollectionDbStatement>();
             builder.RegisterType<PostToCollectionDbSubStatements>().As<IPostToCollectionDbSubStatements>();
             builder.RegisterType<TryGetQueuedPostCollectionDbStatement>().As<ITryGetQueuedPostCollectionDbStatement>();
+            builder.RegisterType<TryGetUnqueuedPostCollectionDbStatement>().As<ITryGetUnqueuedPostCollectionDbStatement>();
             builder.RegisterType<PostFileTypeChecks>().As<IPostFileTypeChecks>();
             builder.RegisterType<PostSecurity>().As<IPostSecurity>();
             builder.RegisterType<PostOwnership>().As<IPostOwnership>();
             builder.RegisterType<ScheduledDateClippingFunction>().As<IScheduledDateClippingFunction>();
             builder.RegisterType<SetBacklogPostLiveDateDbStatement>().As<ISetBacklogPostLiveDateDbStatement>();
             builder.RegisterType<RemoveFromQueueIfRequiredDbStatement>().As<IRemoveFromQueueIfRequiredDbStatement>();
+            builder.RegisterType<MoveBacklogPostToQueueDbStatement>().As<IMoveBacklogPostToQueueDbStatement>();
         }
     }
 }
