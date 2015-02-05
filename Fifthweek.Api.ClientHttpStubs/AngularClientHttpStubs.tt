@@ -1,0 +1,8 @@
+﻿<#@ template debug="true" hostspecific="true" language="C#" #>
+<#@ output extension=".js" #>
+<#@ assembly name="$(SolutionDir)Fifthweek.Api.ClientHttpStubs\bin\Debug\Fifthweek.Api.ClientHttpStubs.dll" #>
+<#@ import namespace="Fifthweek.Api.ClientHttpStubs" #>
+<#@ import namespace="Fifthweek.Api.ClientHttpStubs.Templates" #>
+<#
+new StubFile(this, new AngularTemplate()).Render();
+#>

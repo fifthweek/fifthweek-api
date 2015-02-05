@@ -50,53 +50,27 @@
         }
 
         [TestMethod]
-        public async Task WhenGettingUserAccessSignatures_ItShouldReturnResultFromUserAccessSignaturesQuery()
+        public async Task WhenGettingUserAccessSignaturesForUser_ItShouldReturnResultFromUserAccessSignaturesQuery()
         {
             this.requesterContext.Setup(v => v.GetRequester()).Returns(Requester);
 
             this.getUserState.Setup(v => v.HandleAsync(new GetUserAccessSignaturesQuery(Requester, UserId)))
                 .ReturnsAsync(UserAccessSignatures);
 
-            var result = await this.target.Get(UserId.Value.EncodeGuid());
+            var result = await this.target.GetForUser(UserId.Value.EncodeGuid());
 
             Assert.AreEqual(UserAccessSignatures, result);
         }
 
         [TestMethod]
-        public async Task WhenGettingUserAccessSignatures_ItShouldReturnResultFromUserAccessSignaturesQuery2()
-        {
-            this.requesterContext.Setup(v => v.GetRequester()).Returns(Requester.Unauthenticated);
-
-            this.getUserState.Setup(v => v.HandleAsync(new GetUserAccessSignaturesQuery(Requester.Unauthenticated, UserId)))
-                .ReturnsAsync(UserAccessSignatures);
-
-            var result = await this.target.Get(UserId.Value.EncodeGuid());
-
-            Assert.AreEqual(UserAccessSignatures, result);
-        }
-
-        [TestMethod]
-        public async Task WhenGettingUserAccessSignatures_ItShouldReturnResultFromUserAccessSignaturesQuery3()
+        public async Task WhenGettingUserAccessSignaturesForVisitor_ItShouldReturnResultFromUserAccessSignaturesQuery()
         {
             this.requesterContext.Setup(v => v.GetRequester()).Returns(Requester.Unauthenticated);
 
             this.getUserState.Setup(v => v.HandleAsync(new GetUserAccessSignaturesQuery(Requester.Unauthenticated, null)))
                 .ReturnsAsync(UserAccessSignatures);
 
-            var result = await this.target.Get(null);
-
-            Assert.AreEqual(UserAccessSignatures, result);
-        }
-
-        [TestMethod]
-        public async Task WhenGettingUserAccessSignatures_ItShouldReturnResultFromUserAccessSignaturesQuery4()
-        {
-            this.requesterContext.Setup(v => v.GetRequester()).Returns(Requester);
-
-            this.getUserState.Setup(v => v.HandleAsync(new GetUserAccessSignaturesQuery(Requester, null)))
-                .ReturnsAsync(UserAccessSignatures);
-
-            var result = await this.target.Get(" ");
+            var result = await this.target.GetForVisitor();
 
             Assert.AreEqual(UserAccessSignatures, result);
         }

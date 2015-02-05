@@ -163,6 +163,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fifthweek.Api.Subscriptions
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fifthweek.Api.AssemblyResolution", "Fifthweek.Api.AssemblyResolution\Fifthweek.Api.AssemblyResolution.csproj", "{47648FEB-DCEB-4151-8B98-EFE1388F11FD}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fifthweek.Api.ClientHttpStubs", "Fifthweek.Api.ClientHttpStubs\Fifthweek.Api.ClientHttpStubs.csproj", "{EEC44FF8-062F-4A57-9320-3D15804BBFF1}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -389,6 +391,10 @@ Global
 		{47648FEB-DCEB-4151-8B98-EFE1388F11FD}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{47648FEB-DCEB-4151-8B98-EFE1388F11FD}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{47648FEB-DCEB-4151-8B98-EFE1388F11FD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EEC44FF8-062F-4A57-9320-3D15804BBFF1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EEC44FF8-062F-4A57-9320-3D15804BBFF1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EEC44FF8-062F-4A57-9320-3D15804BBFF1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EEC44FF8-062F-4A57-9320-3D15804BBFF1}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

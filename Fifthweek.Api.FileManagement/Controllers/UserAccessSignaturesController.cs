@@ -17,15 +17,26 @@
         private readonly IRequesterContext requesterContext;
 
         [Route("")]
-        [Route("{userId}")]
-        public async Task<UserAccessSignatures> Get(string userId = null)
+        public Task<UserAccessSignatures> GetForVisitor()
         {
-            var requestedUserId = string.IsNullOrWhiteSpace(userId) ? null : new UserId(userId.DecodeGuid());
+            return this.GetForUser();
+        }
+
+        [Route("{userId}")]
+        public Task<UserAccessSignatures> GetForUser(string userId)
+        {
+            userId.AssertUrlParameterProvided("userId");
+
+            var requestedUserId = new UserId(userId.DecodeGuid());
+
+            return this.GetForUser(requestedUserId);
+        }
+
+        private Task<UserAccessSignatures> GetForUser(UserId userId = null)
+        {
             var requester = this.requesterContext.GetRequester();
 
-            var userState = await this.getUserAccessSignatures.HandleAsync(new GetUserAccessSignaturesQuery(requester, requestedUserId));
-
-            return userState;
+            return this.getUserAccessSignatures.HandleAsync(new GetUserAccessSignaturesQuery(requester, userId));
         }
     }
 }
