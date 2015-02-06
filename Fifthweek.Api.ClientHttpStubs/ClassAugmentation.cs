@@ -1,14 +1,20 @@
 ﻿using System;
 using System.Linq;
 
-//// Generated on 05/02/2015 21:43:53 (UTC)
-//// Mapped solution in 3.18s
+//// Generated on 06/02/2015 08:42:06 (UTC)
+//// Mapped solution in 3.07s
 
 
 namespace Fifthweek.Api.ClientHttpStubs
 {
     using System.Collections.Generic;
     using Fifthweek.CodeGeneration;
+    using System;
+    using System.Linq;
+    using Fifthweek.Api.AssemblyResolution;
+    using Fifthweek.Api.ClientHttpStubs.Reflection;
+    using Fifthweek.Api.ClientHttpStubs.Templates;
+    using Microsoft.VisualStudio.TextTemplating;
 
     public partial class ApiGraph 
     {
@@ -26,8 +32,14 @@ namespace Fifthweek.Api.ClientHttpStubs
 }
 namespace Fifthweek.Api.ClientHttpStubs
 {
+    using System;
+    using System.Linq;
     using System.Collections.Generic;
     using Fifthweek.CodeGeneration;
+    using Fifthweek.Api.AssemblyResolution;
+    using Fifthweek.Api.ClientHttpStubs.Reflection;
+    using Fifthweek.Api.ClientHttpStubs.Templates;
+    using Microsoft.VisualStudio.TextTemplating;
 
     public partial class ControllerElement 
     {
@@ -52,9 +64,14 @@ namespace Fifthweek.Api.ClientHttpStubs
 }
 namespace Fifthweek.Api.ClientHttpStubs
 {
-    using System.Collections.Generic;
+    using System;
     using System.Linq;
+    using System.Collections.Generic;
     using Fifthweek.CodeGeneration;
+    using Fifthweek.Api.AssemblyResolution;
+    using Fifthweek.Api.ClientHttpStubs.Reflection;
+    using Fifthweek.Api.ClientHttpStubs.Templates;
+    using Microsoft.VisualStudio.TextTemplating;
 
     public partial class MethodElement 
     {
@@ -63,7 +80,8 @@ namespace Fifthweek.Api.ClientHttpStubs
             System.String name,
             System.String route,
             System.Collections.Generic.IReadOnlyList<Fifthweek.Api.ClientHttpStubs.ParameterElement> urlParameters,
-            Fifthweek.Api.ClientHttpStubs.ParameterElement bodyParameter)
+            Fifthweek.Api.ClientHttpStubs.ParameterElement bodyParameter,
+            System.Type returnType)
         {
             if (httpMethod == null)
             {
@@ -90,32 +108,54 @@ namespace Fifthweek.Api.ClientHttpStubs
             this.Route = route;
             this.UrlParameters = urlParameters;
             this.BodyParameter = bodyParameter;
+            this.ReturnType = returnType;
         }
     }
 }
 namespace Fifthweek.Api.ClientHttpStubs
 {
+    using System;
+    using System.Linq;
+    using System.Collections.Generic;
     using Fifthweek.CodeGeneration;
+    using Fifthweek.Api.AssemblyResolution;
+    using Fifthweek.Api.ClientHttpStubs.Reflection;
+    using Fifthweek.Api.ClientHttpStubs.Templates;
+    using Microsoft.VisualStudio.TextTemplating;
 
     public partial class ParameterElement 
     {
         public ParameterElement(
-            System.String name)
+            System.String name,
+            System.Type type,
+            System.Boolean isRequired)
         {
             if (name == null)
             {
                 throw new ArgumentNullException("name");
             }
 
+            if (type == null)
+            {
+                throw new ArgumentNullException("type");
+            }
+
+            if (isRequired == null)
+            {
+                throw new ArgumentNullException("isRequired");
+            }
+
             this.Name = name;
+            this.Type = type;
+            this.IsRequired = isRequired;
         }
     }
 }
 namespace Fifthweek.Api.ClientHttpStubs.Reflection
 {
     using System;
-    using System.Collections.Generic;
     using System.Linq;
+    using System.Collections.Generic;
     using System.Reflection;
     using System.Web.Http;
     using Fifthweek.CodeGeneration;
@@ -136,10 +176,13 @@ namespace Fifthweek.Api.ClientHttpStubs.Reflection
 }
 namespace Fifthweek.Api.ClientHttpStubs
 {
+    using System;
+    using System.Linq;
+    using System.Collections.Generic;
+    using Fifthweek.CodeGeneration;
     using Fifthweek.Api.AssemblyResolution;
     using Fifthweek.Api.ClientHttpStubs.Reflection;
     using Fifthweek.Api.ClientHttpStubs.Templates;
-    using Fifthweek.CodeGeneration;
     using Microsoft.VisualStudio.TextTemplating;
 
     public partial class StubFile 
@@ -226,6 +269,12 @@ namespace Fifthweek.Api.ClientHttpStubs
 {
     using System.Collections.Generic;
     using Fifthweek.CodeGeneration;
+    using System;
+    using System.Linq;
+    using Fifthweek.Api.AssemblyResolution;
+    using Fifthweek.Api.ClientHttpStubs.Reflection;
+    using Fifthweek.Api.ClientHttpStubs.Templates;
+    using Microsoft.VisualStudio.TextTemplating;
 
     public partial class ApiGraph 
     {
@@ -292,8 +341,14 @@ namespace Fifthweek.Api.ClientHttpStubs
 }
 namespace Fifthweek.Api.ClientHttpStubs
 {
+    using System;
+    using System.Linq;
     using System.Collections.Generic;
     using Fifthweek.CodeGeneration;
+    using Fifthweek.Api.AssemblyResolution;
+    using Fifthweek.Api.ClientHttpStubs.Reflection;
+    using Fifthweek.Api.ClientHttpStubs.Templates;
+    using Microsoft.VisualStudio.TextTemplating;
 
     public partial class ControllerElement 
     {
@@ -366,15 +421,20 @@ namespace Fifthweek.Api.ClientHttpStubs
 }
 namespace Fifthweek.Api.ClientHttpStubs
 {
-    using System.Collections.Generic;
+    using System;
     using System.Linq;
+    using System.Collections.Generic;
     using Fifthweek.CodeGeneration;
+    using Fifthweek.Api.AssemblyResolution;
+    using Fifthweek.Api.ClientHttpStubs.Reflection;
+    using Fifthweek.Api.ClientHttpStubs.Templates;
+    using Microsoft.VisualStudio.TextTemplating;
 
     public partial class MethodElement 
     {
         public override string ToString()
         {
-            return string.Format("MethodElement({0}, \"{1}\", \"{2}\", {3}, {4})", this.HttpMethod == null ? "null" : this.HttpMethod.ToString(), this.Name == null ? "null" : this.Name.ToString(), this.Route == null ? "null" : this.Route.ToString(), this.UrlParameters == null ? "null" : this.UrlParameters.ToString(), this.BodyParameter == null ? "null" : this.BodyParameter.ToString());
+            return string.Format("MethodElement({0}, \"{1}\", \"{2}\", {3}, {4}, {5})", this.HttpMethod == null ? "null" : this.HttpMethod.ToString(), this.Name == null ? "null" : this.Name.ToString(), this.Route == null ? "null" : this.Route.ToString(), this.UrlParameters == null ? "null" : this.UrlParameters.ToString(), this.BodyParameter == null ? "null" : this.BodyParameter.ToString(), this.ReturnType == null ? "null" : this.ReturnType.ToString());
         }
         
         public override bool Equals(object obj)
@@ -415,6 +475,7 @@ namespace Fifthweek.Api.ClientHttpStubs
         				})
         			: 0);
                 hashCode = (hashCode * 397) ^ (this.BodyParameter != null ? this.BodyParameter.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.ReturnType != null ? this.ReturnType.GetHashCode() : 0);
                 return hashCode;
             }
         }
@@ -453,19 +514,31 @@ namespace Fifthweek.Api.ClientHttpStubs
                 return false;
             }
         
+            if (!object.Equals(this.ReturnType, other.ReturnType))
+            {
+                return false;
+            }
+        
             return true;
         }
     }
 }
 namespace Fifthweek.Api.ClientHttpStubs
 {
+    using System;
+    using System.Linq;
+    using System.Collections.Generic;
     using Fifthweek.CodeGeneration;
+    using Fifthweek.Api.AssemblyResolution;
+    using Fifthweek.Api.ClientHttpStubs.Reflection;
+    using Fifthweek.Api.ClientHttpStubs.Templates;
+    using Microsoft.VisualStudio.TextTemplating;
 
     public partial class ParameterElement 
     {
         public override string ToString()
         {
-            return string.Format("ParameterElement(\"{0}\")", this.Name == null ? "null" : this.Name.ToString());
+            return string.Format("ParameterElement(\"{0}\", {1}, {2})", this.Name == null ? "null" : this.Name.ToString(), this.Type == null ? "null" : this.Type.ToString(), this.IsRequired == null ? "null" : this.IsRequired.ToString());
         }
         
         public override bool Equals(object obj)
@@ -494,6 +567,8 @@ namespace Fifthweek.Api.ClientHttpStubs
             {
                 int hashCode = 0;
                 hashCode = (hashCode * 397) ^ (this.Name != null ? this.Name.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.Type != null ? this.Type.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.IsRequired != null ? this.IsRequired.GetHashCode() : 0);
                 return hashCode;
             }
         }
@@ -501,6 +576,16 @@ namespace Fifthweek.Api.ClientHttpStubs
         protected bool Equals(ParameterElement other)
         {
             if (!object.Equals(this.Name, other.Name))
+            {
+                return false;
+            }
+        
+            if (!object.Equals(this.Type, other.Type))
+            {
+                return false;
+            }
+        
+            if (!object.Equals(this.IsRequired, other.IsRequired))
             {
                 return false;
             }

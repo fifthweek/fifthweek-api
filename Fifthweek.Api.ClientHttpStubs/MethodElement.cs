@@ -1,5 +1,6 @@
 ﻿namespace Fifthweek.Api.ClientHttpStubs
 {
+    using System;
     using System.Collections.Generic;
     using System.Linq;
 
@@ -18,6 +19,9 @@
 
         [Optional]
         public ParameterElement BodyParameter { get; private set; }
+
+        [Optional]
+        public Type ReturnType { get; private set; }
 
         public IReadOnlyList<ParameterElement> GetAllParameters()
         {

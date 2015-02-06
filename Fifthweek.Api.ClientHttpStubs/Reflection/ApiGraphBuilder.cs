@@ -3,12 +3,17 @@
     using System;
     using System.Collections.Generic;
     using System.Linq;
+    using System.Net.Http;
     using System.Reflection;
+    using System.Threading.Tasks;
     using System.Web.Http;
+    using System.Web.Http.Description;
 
     using Fifthweek.Shared;
 
     using Humanizer;
+
+    using HttpMethod = Fifthweek.Api.ClientHttpStubs.HttpMethod;
 
     public class ApiGraphBuilder
     {
@@ -36,7 +41,7 @@
                         {
                             if (parameter.ParameterType.IsPrimitiveEx())
                             {
-                                urlParameters.Add(new ParameterElement(parameter.Name));    
+                                urlParameters.Add(new ParameterElement(parameter.Name, parameter.ParameterType, !parameter.HasDefaultValue));
                             }
                             else
                             {
@@ -44,13 +49,13 @@
                                 var flattenedComplexType = parameter.ParameterType.GetProperties().Where(_ => _.PropertyType.IsPrimitiveEx() && _.CanWrite);
                                 foreach (var property in flattenedComplexType)
                                 {
-                                    urlParameters.Add(new ParameterElement(property.Name.Camelize()));    
+                                    urlParameters.Add(new ParameterElement(property.Name.Camelize(), property.PropertyType, !parameter.HasDefaultValue));    
                                 }
                             }
                         }
                         else if (bodyParameter == null)
                         {
-                            bodyParameter = new ParameterElement(parameter.Name);
+                            bodyParameter = new ParameterElement(parameter.Name, parameter.ParameterType, true);
                         }
                         else
                         {
@@ -63,7 +68,8 @@
                         methodName,
                         fullRoute,
                         urlParameters,
-                        bodyParameter));
+                        bodyParameter,
+                        TryGetReturnType(controllerType, methodInfo)));
                 }
 
                 var controllerName = controllerType.Name.Substring(0, controllerType.Name.Length - ControllerSuffix.Length);
@@ -150,6 +156,28 @@
             }
 
             throw new Exception("No route information found.");
+        }
+
+        private static Type TryGetReturnType(Type classType, MethodInfo methodInfo)
+        {
+            var responseType = methodInfo.GetCustomAttribute<ResponseTypeAttribute>();
+            if (responseType != null)
+            {
+                return responseType.ResponseType;
+            }
+
+            var type = methodInfo.ReturnType;
+            if (type == typeof(void) || type == typeof(Task) || type == typeof(Task<IHttpActionResult>) || type == typeof(Task<HttpResponseMessage>))
+            {
+                return null;
+            }
+
+            if (type.IsGenericType && type.GetGenericTypeDefinition() == typeof(Task<>))
+            {
+                return type.GetGenericArguments().First();
+            }
+
+            throw new Exception(string.Format("Unable to determine return type for '{0}' from method '{1}.{2}'", type.Name, classType.Name, methodInfo.Name));
         }
     }
 }
