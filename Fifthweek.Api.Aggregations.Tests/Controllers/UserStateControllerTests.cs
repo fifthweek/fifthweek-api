@@ -7,16 +7,10 @@
     using Fifthweek.Api.Aggregations.Controllers;
     using Fifthweek.Api.Aggregations.Queries;
     using Fifthweek.Api.Azure;
-    using Fifthweek.Api.Collections;
-    using Fifthweek.Api.Collections.Queries;
     using Fifthweek.Api.Core;
     using Fifthweek.Api.FileManagement.Queries;
-    using Fifthweek.Api.Identity.Membership;
-    using Fifthweek.Api.Identity.OAuth;
     using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.Api.Persistence.Identity;
-    using Fifthweek.Api.Subscriptions;
-    using Fifthweek.Api.Subscriptions.Queries;
 
     using Microsoft.VisualStudio.TestTools.UnitTesting;
 
@@ -66,46 +60,20 @@
             this.getUserState.Setup(v => v.HandleAsync(new GetUserStateQuery(Requester, UserId)))
                 .ReturnsAsync(UserState);
 
-            var result = await this.target.Get(UserId.Value.EncodeGuid());
+            var result = await this.target.GetUserState(UserId.Value.EncodeGuid());
 
             Assert.AreEqual(UserState, result);
         }
 
         [TestMethod]
-        public async Task WhenGettingUserState_ItShouldReturnResultFromUserStateQuery2()
-        {
-            this.requesterContext.Setup(v => v.GetRequester()).Returns(Requester.Unauthenticated);
-
-            this.getUserState.Setup(v => v.HandleAsync(new GetUserStateQuery(Requester.Unauthenticated, UserId)))
-                .ReturnsAsync(UserState);
-
-            var result = await this.target.Get(UserId.Value.EncodeGuid());
-
-            Assert.AreEqual(UserState, result);
-        }
-
-        [TestMethod]
-        public async Task WhenGettingUserState_ItShouldReturnResultFromUserStateQuery3()
+        public async Task WhenGettingVisitorState_ItShouldReturnResultFromUserStateQuery()
         {
             this.requesterContext.Setup(v => v.GetRequester()).Returns(Requester.Unauthenticated);
 
             this.getUserState.Setup(v => v.HandleAsync(new GetUserStateQuery(Requester.Unauthenticated, null)))
                 .ReturnsAsync(UserState);
 
-            var result = await this.target.Get(null);
-
-            Assert.AreEqual(UserState, result);
-        }
-
-        [TestMethod]
-        public async Task WhenGettingUserState_ItShouldReturnResultFromUserStateQuery4()
-        {
-            this.requesterContext.Setup(v => v.GetRequester()).Returns(Requester);
-
-            this.getUserState.Setup(v => v.HandleAsync(new GetUserStateQuery(Requester, null)))
-                .ReturnsAsync(UserState);
-
-            var result = await this.target.Get(" ");
+            var result = await this.target.GetVisitorState();
 
             Assert.AreEqual(UserState, result);
         }

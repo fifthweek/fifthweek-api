@@ -814,14 +814,28 @@ describe('user state stub', function() {
     $httpBackend.verifyNoOutstandingRequest();
   });
 
-  it('should get', function() {
+  it('should get user state', function() {
     var userId = 'value0';
 
     var responseData = 'response data';
     $httpBackend.expectGET(fifthweekConstants.apiBaseUri + 'userState/' + userId).respond(200, responseData);
 
     var result = null;
-    target.get(userId).then(function(response) { result = response.data; });
+    target.getUserState(userId).then(function(response) { result = response.data; });
+
+    $httpBackend.flush();
+    $rootScope.$apply();
+
+    expect(result).toBe(responseData);
+  });
+
+  it('should get visitor state', function() {
+
+    var responseData = 'response data';
+    $httpBackend.expectGET(fifthweekConstants.apiBaseUri + 'userState').respond(200, responseData);
+
+    var result = null;
+    target.getVisitorState().then(function(response) { result = response.data; });
 
     $httpBackend.flush();
     $rootScope.$apply();

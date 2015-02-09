@@ -570,8 +570,55 @@ angular.module('webApp').factory('userStateStub',
     //     ]
     //   }
     // }
-    service.get = function(userId) {
+    service.getUserState = function(userId) {
       return $http.get(apiBaseUri + 'userState/' + userId).catch(function(response) {
+        return $q.reject(utilities.getHttpError(response));
+      });
+    };
+
+    // result = {
+    //   userId: 'Base64Guid', /* optional */
+    //   accessSignatures: {
+    //     timeToLiveSeconds: 0,
+    //     publicSignature: {
+    //       containerName: '',
+    //       uri: '',
+    //       signature: '',
+    //       expiry: '2015-12-25T14:45:05Z'
+    //     },
+    //     privateSignatures: [
+    //       {
+    //         creatorId: 'Base64Guid',
+    //         information: {
+    //           containerName: '',
+    //           uri: '',
+    //           signature: '',
+    //           expiry: '2015-12-25T14:45:05Z'
+    //         }
+    //       }
+    //     ]
+    //   },
+    //   creatorStatus: { /* optional */
+    //     subscriptionId: 'Base64Guid', /* optional */
+    //     mustWriteFirstPost: false
+    //   },
+    //   createdChannelsAndCollections: { /* optional */
+    //     channels: [
+    //       {
+    //         channelId: 'Base64Guid',
+    //         name: '',
+    //         collections: [
+    //           {
+    //             collectionId: 'Base64Guid',
+    //             name: ''
+    //           }
+    //         ]
+    //       }
+    //     ]
+    //   }
+    // }
+    service.getVisitorState = function() {
+      return $http.get(apiBaseUri + 'userState').catch(function(response) {
         return $q.reject(utilities.getHttpError(response));
       });
     };
