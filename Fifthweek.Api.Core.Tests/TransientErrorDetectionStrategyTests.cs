@@ -74,6 +74,12 @@
         }
 
         [TestMethod]
+        public async Task ItShouldRetryOnOptimisticConcurrencyExceptions()
+        {
+            Assert.IsTrue(this.target.IsTransient(new OptimisticConcurrencyException()));
+        }
+
+        [TestMethod]
         public async Task ItShouldRetryOnNestedSqlError()
         {
             Assert.IsTrue(this.target.IsTransient(new InvalidOperationException(
