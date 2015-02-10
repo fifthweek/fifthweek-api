@@ -89,6 +89,7 @@
     <Compile Include="SqlExceptionMocker.cs" />
     <Compile Include="TestCommand.cs" />
     <Compile Include="TestQuery.cs" />
+    <Compile Include="TransientErrorDetectionStrategyTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Fifthweek.Api.Core\Fifthweek.Api.Core.csproj">

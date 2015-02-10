@@ -8,9 +8,12 @@
     using System.IO;
     using System.Threading.Tasks;
 
+    using Microsoft.Practices.EnterpriseLibrary.TransientFaultHandling;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
 
     using Moq;
+
+    using RetryLimitExceededException = Fifthweek.Api.Core.RetryLimitExceededException;
 
     [TestClass]
     public class RetryOnTransientErrorDecoratorTests
@@ -18,6 +21,8 @@
         private Mock<IExceptionHandler> exceptionHandler;
 
         private Mock<ICommandHandler<TestCommand>> command;
+
+        private Mock<ITransientErrorDetectionStrategy> transientErrorDetectionStrategy;
 
         private RetryOnTransientErrorCommandHandlerDecorator<TestCommand> decorator;
 
@@ -28,9 +33,13 @@
             this.exceptionHandler.Setup(v => v.ReportExceptionAsync(It.IsAny<Exception>()))
                 .Callback<Exception>(v => Trace.WriteLine(v));
 
+            this.transientErrorDetectionStrategy = new Mock<ITransientErrorDetectionStrategy>();
+            this.transientErrorDetectionStrategy.Setup(v => v.IsTransient(It.IsAny<Exception>())).Returns(true);
+
             this.command = new Mock<ICommandHandler<TestCommand>>();
             this.decorator = new RetryOnTransientErrorCommandHandlerDecorator<TestCommand>(
                 this.exceptionHandler.Object,
+                this.transientErrorDetectionStrategy.Object,
                 this.command.Object,
                 RetryOnTransientErrorDecoratorBase.MaxRetryCount,
                 TimeSpan.FromMilliseconds(10));
@@ -71,6 +80,7 @@
             var query = new Mock<IQueryHandler<TestQuery, bool>>();
             var queryDecorator = new RetryOnTransientErrorQueryHandlerDecorator<TestQuery, bool>(
                 this.exceptionHandler.Object,
+                this.transientErrorDetectionStrategy.Object,
                 query.Object,
                 RetryOnTransientErrorDecoratorBase.MaxRetryCount,
                 TimeSpan.FromMilliseconds(10));
@@ -129,6 +139,7 @@
             var query = new Mock<IQueryHandler<TestQuery, bool>>();
             var queryDecorator = new RetryOnTransientErrorQueryHandlerDecorator<TestQuery, bool>(
                 this.exceptionHandler.Object,
+                this.transientErrorDetectionStrategy.Object,
                 query.Object,
                 RetryOnTransientErrorDecoratorBase.MaxRetryCount,
                 TimeSpan.FromMilliseconds(10));
@@ -168,6 +179,7 @@
                     }
                     else
                     {
+                        this.transientErrorDetectionStrategy.Setup(v => v.IsTransient(It.IsAny<Exception>())).Returns(false);
                         throw new DivideByZeroException();
                     }
                 }).Returns(Task.FromResult(0));
@@ -186,276 +198,6 @@
             Assert.IsInstanceOfType(exception, typeof(DivideByZeroException));
             Assert.AreEqual(RetryOnTransientErrorDecoratorBase.MaxRetryCount + 1, tryCount);
             Assert.AreEqual(RetryOnTransientErrorDecoratorBase.MaxRetryCount, this.decorator.RetryCount);
-        }
-
-        [TestMethod]
-        public async Task ItShouldRetryOnSqlDeadlock()
-        {
-            int tryCount = 0;
-
-            this.command.Setup(v => v.HandleAsync(It.IsAny<TestCommand>()))
-                .Callback(() =>
-                {
-                    ++tryCount;
-                    if (tryCount == 1)
-                    {
-                        throw SqlExceptionMocker.MakeSqlException(
-                            RetryOnTransientErrorDecoratorBase.SqlDeadlockErrorCode);
-                    }
-                }).Returns(Task.FromResult(false));
-
-            await this.decorator.HandleAsync(new TestCommand());
-
-            Assert.AreEqual(2, tryCount);
-            Assert.AreEqual(1, this.decorator.RetryCount);
-        }
-
-        [TestMethod]
-        public async Task ItShouldRetryOnSqlTimeout()
-        {
-            int tryCount = 0;
-
-            this.command.Setup(v => v.HandleAsync(It.IsAny<TestCommand>()))
-                .Callback(() =>
-                {
-                    ++tryCount;
-                    if (tryCount == 1)
-                    {
-                        throw SqlExceptionMocker.MakeSqlException(
-                            RetryOnTransientErrorDecoratorBase.SqlTimeoutErrorCode);
-                    }
-                }).Returns(Task.FromResult(0));
-
-            await this.decorator.HandleAsync(new TestCommand());
-
-            Assert.AreEqual(2, tryCount);
-            Assert.AreEqual(1, this.decorator.RetryCount);
-        }
-
-        [TestMethod]
-        public async Task ItShouldRetryWhenEntityFrameworkThinksThereIsATransientFailure()
-        {
-            int tryCount = 0;
-
-            this.command.Setup(v => v.HandleAsync(It.IsAny<TestCommand>()))
-                .Callback(() =>
-                {
-                    ++tryCount;
-                    if (tryCount == 1)
-                    {
-                        throw new EntityException("An exception has been raised that is likely due to a transient failure. If you are connecting to a SQL Azure database consider using SqlAzureExecutionStrategy.");
-                    }
-                }).Returns(Task.FromResult(0));
-
-            await this.decorator.HandleAsync(new TestCommand());
-
-            Assert.AreEqual(2, tryCount);
-        }
-
-        [TestMethod]
-        public async Task ItShouldRetryOnTimeout()
-        {
-            int tryCount = 0;
-
-            this.command.Setup(v => v.HandleAsync(It.IsAny<TestCommand>()))
-                .Callback(() =>
-                {
-                    ++tryCount;
-                    if (tryCount == 1)
-                    {
-                        throw new TimeoutException("A timeout occured");
-                    }
-                }).Returns(Task.FromResult(0));
-
-            await this.decorator.HandleAsync(new TestCommand());
-
-            Assert.AreEqual(2, tryCount);
-            Assert.AreEqual(1, this.decorator.RetryCount);
-        }
-
-        [TestMethod]
-        public async Task ItShouldRetryOnSqlAzureTransientError()
-        {
-            int tryCount = 0;
-
-            this.command.Setup(v => v.HandleAsync(It.IsAny<TestCommand>()))
-                .Callback(() =>
-                {
-                    ++tryCount;
-                    if (tryCount == 1)
-                    {
-                        throw SqlExceptionMocker.MakeSqlException(
-                            40501);
-                    }
-                }).Returns(Task.FromResult(0));
-
-            await this.decorator.HandleAsync(new TestCommand());
-
-            Assert.AreEqual(2, tryCount);
-            Assert.AreEqual(1, this.decorator.RetryCount);
-        }
-
-        [TestMethod]
-        public async Task ItShouldRetryOnSqlAzureTransientError2()
-        {
-            int tryCount = 0;
-
-            this.command.Setup(v => v.HandleAsync(It.IsAny<TestCommand>()))
-                .Callback(() =>
-                {
-                    ++tryCount;
-                    if (tryCount == 1)
-                    {
-                        throw SqlExceptionMocker.MakeSqlException(
-                            40143);
-                    }
-                }).Returns(Task.FromResult(0));
-
-            await this.decorator.HandleAsync(new TestCommand());
-
-            Assert.AreEqual(2, tryCount);
-            Assert.AreEqual(1, this.decorator.RetryCount);
-        }
-
-        [TestMethod]
-        public async Task ItShouldRetryOnAzureStorageTransientError()
-        {
-            int tryCount = 0;
-
-            this.command.Setup(v => v.HandleAsync(It.IsAny<TestCommand>()))
-                .Callback(() =>
-                {
-                    ++tryCount;
-                    if (tryCount == 1)
-                    {
-                        throw new IOException();
-                    }
-                }).Returns(Task.FromResult(0));
-
-            await this.decorator.HandleAsync(new TestCommand());
-
-            Assert.AreEqual(2, tryCount);
-            Assert.AreEqual(1, this.decorator.RetryCount);
-        }
-
-        [TestMethod]
-        public async Task ItShouldRetryOnNestedSqlError()
-        {
-            int tryCount = 0;
-
-            this.command.Setup(v => v.HandleAsync(It.IsAny<TestCommand>()))
-                .Callback(() =>
-                {
-                    ++tryCount;
-                    if (tryCount == 1)
-                    {
-                        throw new InvalidOperationException(
-                            "blah",
-                            new DivideByZeroException(
-                                "blah",
-                                SqlExceptionMocker.MakeSqlException(
-                                    RetryOnTransientErrorDecoratorBase.SqlTimeoutErrorCode)));
-                    }
-                }).Returns(Task.FromResult(0));
-
-            await this.decorator.HandleAsync(new TestCommand());
-
-            Assert.AreEqual(2, tryCount);
-            Assert.AreEqual(1, this.decorator.RetryCount);
-        }
-
-        [TestMethod]
-        public async Task ItShouldRetryOnNestedAggregateSqlError()
-        {
-            int tryCount = 0;
-
-            this.command.Setup(v => v.HandleAsync(It.IsAny<TestCommand>()))
-                .Callback(() =>
-                {
-                    ++tryCount;
-                    if (tryCount == 1)
-                    {
-                        throw new AggregateException(
-                            "blah",
-                            new DivideByZeroException(
-                                "blah",
-                                new Exception("Dead end")),
-                            new DivideByZeroException(
-                                "blah",
-                                new AggregateException(
-                                    "blah",
-                                    new ExternalErrorException("blah"),
-                                    new Exception(
-                                        "blah",
-                                        SqlExceptionMocker.MakeSqlException(RetryOnTransientErrorDecoratorBase.SqlTimeoutErrorCode)),
-                                    new EntryPointNotFoundException("blah"))));
-                    }
-                }).Returns(Task.FromResult(0));
-
-            await this.decorator.HandleAsync(new TestCommand());
-
-            Assert.AreEqual(2, tryCount);
-            Assert.AreEqual(1, this.decorator.RetryCount);
-        }
-
-        [TestMethod]
-        public async Task ItShouldNotRetryOnStandardExceptions()
-        {
-            int tryCount = 0;
-
-            this.command.Setup(v => v.HandleAsync(It.IsAny<TestCommand>()))
-                .Callback(() =>
-                {
-                    ++tryCount;
-                    if (tryCount == 1)
-                    {
-                        throw new DivideByZeroException();
-                    }
-                }).Returns(Task.FromResult(0));
-
-            Exception exception = null;
-            try
-            {
-                await this.decorator.HandleAsync(new TestCommand());
-            }
-            catch (Exception t)
-            {
-                exception = t;
-            }
-
-            Assert.AreEqual(1, tryCount);
-            Assert.AreEqual(0, this.decorator.RetryCount);
-            Assert.IsInstanceOfType(exception, typeof(DivideByZeroException));
-        }
-
-        [TestMethod]
-        public async Task ItShouldNotRetryOnUnsupportedSqlExceptionErrorNumbers()
-        {
-            int tryCount = 0;
-
-            this.command.Setup(v => v.HandleAsync(It.IsAny<TestCommand>()))
-                .Callback(() =>
-                {
-                    ++tryCount;
-                    if (tryCount == 1)
-                    {
-                        throw SqlExceptionMocker.MakeSqlException(0);
-                    }
-                }).Returns(Task.FromResult(0));
-
-            Exception exception = null;
-            try
-            {
-                await this.decorator.HandleAsync(new TestCommand());
-            }
-            catch (Exception t)
-            {
-                exception = t;
-            }
-
-            Assert.AreEqual(1, tryCount);
-            Assert.AreEqual(0, this.decorator.RetryCount);
-            Assert.IsInstanceOfType(exception, typeof(SqlException));
         }
 
         [TestMethod]

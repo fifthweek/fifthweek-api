@@ -1,25 +1,35 @@
 ﻿namespace Fifthweek.Api.Availability.Queries
 {
     using System;
+    using System.ComponentModel;
     using System.Data.Entity;
     using System.Threading.Tasks;
 
     using Fifthweek.Api.Core;
     using Fifthweek.Api.Persistence;
+    using Fifthweek.CodeGeneration;
 
-    public class GetAvailabilityQueryHandler : IQueryHandler<GetAvailabilityQuery, AvailabilityResult>
+    using Microsoft.Practices.EnterpriseLibrary.TransientFaultHandling;
+
+    [AutoConstructor]
+    public partial class GetAvailabilityQueryHandler : IQueryHandler<GetAvailabilityQuery, AvailabilityResult>
     {
         private readonly IFifthweekDbContext fifthweekDbContext;
 
         private readonly IExceptionHandler exceptionHandler;
 
-        public GetAvailabilityQueryHandler(IFifthweekDbContext fifthweekDbContext, IExceptionHandler exceptionHandler)
-        {
-            this.fifthweekDbContext = fifthweekDbContext;
-            this.exceptionHandler = exceptionHandler;
-        }
+        private readonly ITransientErrorDetectionStrategy transientErrorDetectionStrategy;
 
         public async Task<AvailabilityResult> HandleAsync(GetAvailabilityQuery query)
+        {
+            query.AssertNotNull("query");
+
+            var database = await this.TestSqlAzureAvailability();
+
+            return new AvailabilityResult(true, database);
+        }
+
+        private async Task<bool> TestSqlAzureAvailability()
         {
             bool database = false;
             try
@@ -30,10 +40,26 @@
             }
             catch (Exception t)
             {
-                this.exceptionHandler.ReportExceptionAsync(t);
+                if (this.transientErrorDetectionStrategy.IsTransient(t))
+                {
+                    this.exceptionHandler.ReportExceptionAsync(
+                        new TransientErrorException("A transient error occured while checking SQL Azure availability.", t));
+                }
+                else
+                {
+                    this.exceptionHandler.ReportExceptionAsync(t);
+                }
             }
 
-            return new AvailabilityResult(true, database);
+            return database;
+        }
+
+        public class TransientErrorException : Exception
+        {
+            public TransientErrorException(string message, Exception exception)
+                : base(message, exception)
+            {
+            }
         }
     }
 }

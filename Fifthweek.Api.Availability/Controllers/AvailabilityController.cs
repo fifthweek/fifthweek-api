@@ -8,16 +8,13 @@
 
     using Fifthweek.Api.Availability.Queries;
     using Fifthweek.Api.Core;
+    using Fifthweek.CodeGeneration;
 
+    [AutoConstructor]
     [RoutePrefix("availability")]
-    public class AvailabilityController : ApiController
+    public partial class AvailabilityController : ApiController
     {
         private readonly IQueryHandler<GetAvailabilityQuery, AvailabilityResult> getAvailability;
-
-        public AvailabilityController(IQueryHandler<GetAvailabilityQuery, AvailabilityResult> getAvailability)
-        {
-            this.getAvailability = getAvailability;
-        }
 
         // GET: availability
         [AllowAnonymous]

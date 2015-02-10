@@ -46,6 +46,10 @@
     <Reference Include="Microsoft.AspNet.Identity.EntityFramework">
       <HintPath>..\packages\Microsoft.AspNet.Identity.EntityFramework.2.1.0\lib\net45\Microsoft.AspNet.Identity.EntityFramework.dll</HintPath>
     </Reference>
+    <Reference Include="Microsoft.Practices.EnterpriseLibrary.TransientFaultHandling, Version=6.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\EnterpriseLibrary.TransientFaultHandling.6.0.1304.0\lib\portable-net45+win+wp8\Microsoft.Practices.EnterpriseLibrary.TransientFaultHandling.dll</HintPath>
+    </Reference>
     <Reference Include="Newtonsoft.Json, Version=6.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\Newtonsoft.Json.6.0.4\lib\net45\Newtonsoft.Json.dll</HintPath>
@@ -75,6 +79,11 @@
   <ItemGroup>
     <Compile Include="AutofacRegistration.cs" />
     <Compile Include="AvailabilityResult.cs" />
+    <Compile Include="ClassAugmentation.cs">
+      <DependentUpon>ClassAugmentation.tt</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+    </Compile>
     <Compile Include="Controllers\AvailabilityController.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Queries\GetAvailabilityQuery.cs" />
@@ -89,6 +98,10 @@
       <Project>{9c18bee3-fab5-4a00-8a94-a1faea370175}</Project>
       <Name>Fifthweek.Api.Persistence</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Fifthweek.CodeGeneration\Fifthweek.CodeGeneration.csproj">
+      <Project>{770F450E-2166-4269-BEC1-DF59AA16B1E8}</Project>
+      <Name>Fifthweek.CodeGeneration</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Fifthweek.Shared\Fifthweek.Shared.csproj">
       <Project>{6D12FFBB-38E9-4722-A690-0F0338538EBC}</Project>
       <Name>Fifthweek.Shared</Name>
@@ -96,7 +109,14 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+    <None Include="ClassAugmentation.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>ClassAugmentation.cs</LastGenOutput>
+    </None>
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
