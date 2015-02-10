@@ -16,6 +16,7 @@
         {
             public ChannelId ChannelId { get; private set; }
 
+            [Optional]
             public string Name { get; private set; }
 
             public IReadOnlyList<Collection> Collections { get; private set; }
