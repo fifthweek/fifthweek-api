@@ -2,6 +2,10 @@
 {
     using System;
     using System.Data.Entity;
+    using System.Data.Entity.Infrastructure;
+    using System.Linq;
+    using System.Linq.Expressions;
+    using System.Threading;
     using System.Threading.Tasks;
 
     using Fifthweek.Api.Availability.Queries;
@@ -19,10 +23,8 @@
     {
         private readonly GetAvailabilityQuery query = new GetAvailabilityQuery();
 
-        private Mock<IFifthweekDbContext> fifthweekDbContext;
-
+        private Mock<ICountUsersDbStatement> countUsersDbStatement;
         private Mock<IExceptionHandler> exceptionHandler;
-
         private Mock<ITransientErrorDetectionStrategy> transientErrorDetectionStrategy;
         
         private GetAvailabilityQueryHandler target;
@@ -30,14 +32,14 @@
         [TestInitialize]
         public void TestInitialize()
         {
-            this.fifthweekDbContext = new Mock<IFifthweekDbContext>();
+            this.countUsersDbStatement = new Mock<ICountUsersDbStatement>();
             this.exceptionHandler = new Mock<IExceptionHandler>(MockBehavior.Strict);
             this.transientErrorDetectionStrategy = new Mock<ITransientErrorDetectionStrategy>(MockBehavior.Strict);
 
             this.target = new GetAvailabilityQueryHandler(
-                this.fifthweekDbContext.Object,
                 this.exceptionHandler.Object,
-                this.transientErrorDetectionStrategy.Object);
+                this.transientErrorDetectionStrategy.Object,
+                this.countUsersDbStatement.Object);
         }
 
         [TestMethod]
@@ -50,9 +52,7 @@
         [TestMethod]
         public async Task WhenDatabaseIsAvailable_ItShouldReturnAHealthyStatus()
         {
-            var mockDbSet = new Mock<IDbSet<FifthweekUser>>();
-            mockDbSet.Setup(v => v.CountAsync()).ReturnsAsync(0);
-            this.fifthweekDbContext.Setup(v => v.Users).Returns(mockDbSet.Object);
+            this.countUsersDbStatement.Setup(v => v.ExecuteAsync()).ReturnsAsync(2);
 
             var result = await this.target.HandleAsync(this.query);
 
@@ -65,9 +65,9 @@
         public async Task WhenDatabaseIsNotAvailable_ItShouldReturnAnUnhealthyStatusAndReportTheError()
         {
             var exception = new Exception("Bad");
-            var mockDbSet = new Mock<IDbSet<FifthweekUser>>();
-            mockDbSet.Setup(v => v.CountAsync()).Throws(exception);
-            this.fifthweekDbContext.Setup(v => v.Users).Returns(mockDbSet.Object);
+            this.countUsersDbStatement.Setup(v => v.ExecuteAsync()).Throws(exception);
+
+            this.transientErrorDetectionStrategy.Setup(v => v.IsTransient(exception)).Returns(false);
 
             this.exceptionHandler.Setup(v => v.ReportExceptionAsync(exception)).Verifiable();
 
@@ -83,11 +83,10 @@
         [TestMethod]
         public async Task WhenDatabaseIsNotAvailableWithTransientError_ItShouldReturnAnUnhealthyStatusAndReportTheTransientError()
         {
-            var exception = new TimeoutException("Bad");
+            var exception = new Exception("Bad");
+            this.countUsersDbStatement.Setup(v => v.ExecuteAsync()).Throws(exception);
 
-            var mockDbSet = new Mock<IDbSet<FifthweekUser>>();
-            mockDbSet.Setup(v => v.CountAsync()).Throws(exception);
-            this.fifthweekDbContext.Setup(v => v.Users).Returns(mockDbSet.Object);
+            this.transientErrorDetectionStrategy.Setup(v => v.IsTransient(exception)).Returns(true);
 
             Exception reportedException = null;
             this.exceptionHandler

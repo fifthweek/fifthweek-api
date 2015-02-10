@@ -14,11 +14,11 @@
     [AutoConstructor]
     public partial class GetAvailabilityQueryHandler : IQueryHandler<GetAvailabilityQuery, AvailabilityResult>
     {
-        private readonly IFifthweekDbContext fifthweekDbContext;
-
         private readonly IExceptionHandler exceptionHandler;
 
         private readonly ITransientErrorDetectionStrategy transientErrorDetectionStrategy;
+
+        private readonly ICountUsersDbStatement countUsersDbStatement;
 
         public async Task<AvailabilityResult> HandleAsync(GetAvailabilityQuery query)
         {
@@ -35,7 +35,7 @@
             try
             {
                 // A simple test that the database is available.
-                await this.fifthweekDbContext.Users.CountAsync();
+                await this.countUsersDbStatement.ExecuteAsync();
                 database = true;
             }
             catch (Exception t)

@@ -8,6 +8,7 @@
     {
         public void Register(ContainerBuilder builder)
         {
+            builder.RegisterType<CountUsersDbStatement>().As<ICountUsersDbStatement>();
         }
     }
 }

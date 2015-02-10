@@ -1,12 +1,14 @@
 ﻿using System;
 using System.Linq;
 
-//// Generated on 10/02/2015 12:14:25 (UTC)
-//// Mapped solution in 15.81s
+//// Generated on 10/02/2015 16:58:12 (UTC)
+//// Mapped solution in 5.85s
 
 
 namespace Fifthweek.Api.Availability.Controllers
 {
+    using System;
+    using System.Linq;
     using System.Net;
     using System.Net.Http;
     using System.Threading.Tasks;
@@ -33,6 +35,7 @@ namespace Fifthweek.Api.Availability.Controllers
 namespace Fifthweek.Api.Availability.Queries
 {
     using System;
+    using System.Linq;
     using System.ComponentModel;
     using System.Data.Entity;
     using System.Threading.Tasks;
@@ -44,15 +47,10 @@ namespace Fifthweek.Api.Availability.Queries
     public partial class GetAvailabilityQueryHandler 
     {
         public GetAvailabilityQueryHandler(
-            Fifthweek.Api.Persistence.IFifthweekDbContext fifthweekDbContext,
             Fifthweek.Api.Core.IExceptionHandler exceptionHandler,
-            Microsoft.Practices.EnterpriseLibrary.TransientFaultHandling.ITransientErrorDetectionStrategy transientErrorDetectionStrategy)
+            Microsoft.Practices.EnterpriseLibrary.TransientFaultHandling.ITransientErrorDetectionStrategy transientErrorDetectionStrategy,
+            Fifthweek.Api.Availability.ICountUsersDbStatement countUsersDbStatement)
         {
-            if (fifthweekDbContext == null)
-            {
-                throw new ArgumentNullException("fifthweekDbContext");
-            }
-
             if (exceptionHandler == null)
             {
                 throw new ArgumentNullException("exceptionHandler");
@@ -63,9 +61,38 @@ namespace Fifthweek.Api.Availability.Queries
                 throw new ArgumentNullException("transientErrorDetectionStrategy");
             }
 
-            this.fifthweekDbContext = fifthweekDbContext;
+            if (countUsersDbStatement == null)
+            {
+                throw new ArgumentNullException("countUsersDbStatement");
+            }
+
             this.exceptionHandler = exceptionHandler;
             this.transientErrorDetectionStrategy = transientErrorDetectionStrategy;
+            this.countUsersDbStatement = countUsersDbStatement;
+        }
+    }
+}
+namespace Fifthweek.Api.Availability
+{
+    using System;
+    using System.Linq;
+    using System.Threading.Tasks;
+    using Dapper;
+    using Fifthweek.Api.Persistence;
+    using Fifthweek.Api.Persistence.Identity;
+    using Fifthweek.CodeGeneration;
+
+    public partial class CountUsersDbStatement 
+    {
+        public CountUsersDbStatement(
+            Fifthweek.Api.Persistence.IFifthweekDbContext databaseContext)
+        {
+            if (databaseContext == null)
+            {
+                throw new ArgumentNullException("databaseContext");
+            }
+
+            this.databaseContext = databaseContext;
         }
     }
 }
