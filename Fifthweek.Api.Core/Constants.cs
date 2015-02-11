@@ -1,9 +1,12 @@
 ﻿namespace Fifthweek.Api.Core
 {
+    using System.Configuration;
     using System.Net.Mail;
 
     public class Constants
     {
+        public const string DeveloperNameRequestHeaderKey = "Developer-Name";
+
         public const string DefaultAllowedOrigin = "*";
 
         public const string AllowedOriginHeaderKey = "Access-Control-Allow-Origin";
@@ -23,12 +26,12 @@
 
         private static string GetWebsiteOriginDefault()
         {
-            return System.Configuration.ConfigurationManager.AppSettings["ACCESS_CONTROL_ALLOW_ORIGIN_DEFAULT"];
+            return ConfigurationManager.AppSettings["ACCESS_CONTROL_ALLOW_ORIGIN_DEFAULT"];
         }
 
         private static string GetWebsiteOriginRegex()
         {
-            return System.Configuration.ConfigurationManager.AppSettings["ACCESS_CONTROL_ALLOW_ORIGIN_REGEX"];
+            return ConfigurationManager.AppSettings["ACCESS_CONTROL_ALLOW_ORIGIN_REGEX"];
         }
     }
 }

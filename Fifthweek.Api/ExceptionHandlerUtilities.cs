@@ -110,7 +110,7 @@
         {
             if (HttpContext.Current != null)
             {
-                return HttpContext.Current.Request.Headers[Constants.DeveloperNameRequestHeaderKey];
+                return HttpContext.Current.Request.Headers[Core.Constants.DeveloperNameRequestHeaderKey];
             }
 
             return null;

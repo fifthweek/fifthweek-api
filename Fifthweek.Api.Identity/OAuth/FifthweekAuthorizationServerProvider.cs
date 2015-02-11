@@ -37,6 +37,28 @@
                 context);
         }
 
+        public override Task MatchEndpoint(OAuthMatchEndpointContext context)
+        {
+            // Handle the pre-flight options. Taken from http://stackoverflow.com/a/27083151/37725.
+            if (context.OwinContext.Request.Method == "OPTIONS" && context.IsTokenEndpoint)
+            {
+                context.OwinContext.Response.Headers.Add(
+                    "Access-Control-Allow-Methods", new[] { "POST" });
+
+                context.OwinContext.Response.Headers.Add(
+                    "Access-Control-Allow-Headers", new[] { "accept", "authorization", "content-type", Core.Constants.DeveloperNameRequestHeaderKey });
+                
+                context.OwinContext.Response.Headers.Add(
+                    "Access-Control-Allow-Origin", new[] { Core.Constants.DefaultAllowedOrigin });
+                
+                context.OwinContext.Response.StatusCode = 200;
+                context.RequestCompleted();
+                return Task.FromResult<object>(null);
+            }
+
+            return base.MatchEndpoint(context);
+        }
+
         private static IFifthweekAuthorizationServerHandler GetAuthorizationServerHandler()
         {
             return Helper.GetOwinScopeService<IFifthweekAuthorizationServerHandler>();
