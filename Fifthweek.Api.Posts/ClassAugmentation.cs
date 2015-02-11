@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Linq;
 
-//// Generated on 05/02/2015 13:20:14 (UTC)
-//// Mapped solution in 6.93s
+//// Generated on 11/02/2015 18:28:43 (UTC)
+//// Mapped solution in 10.77s
 
 
 namespace Fifthweek.Api.Posts.Commands
@@ -521,20 +521,20 @@ namespace Fifthweek.Api.Posts.Commands
     {
         public ReorderQueueCommandHandler(
             Fifthweek.Api.Identity.Shared.Membership.IRequesterSecurity requesterSecurity,
-            Fifthweek.Api.Persistence.IFifthweekDbContext databaseContext)
+            Fifthweek.Api.Persistence.IFifthweekDbConnectionFactory connectionFactory)
         {
             if (requesterSecurity == null)
             {
                 throw new ArgumentNullException("requesterSecurity");
             }
 
-            if (databaseContext == null)
+            if (connectionFactory == null)
             {
-                throw new ArgumentNullException("databaseContext");
+                throw new ArgumentNullException("connectionFactory");
             }
 
             this.requesterSecurity = requesterSecurity;
-            this.databaseContext = databaseContext;
+            this.connectionFactory = connectionFactory;
         }
     }
 }
@@ -894,14 +894,14 @@ namespace Fifthweek.Api.Posts
     public partial class DeletePostDbStatement 
     {
         public DeletePostDbStatement(
-            Fifthweek.Api.Persistence.IFifthweekDbContext fifthweekDbContext)
+            Fifthweek.Api.Persistence.IFifthweekDbConnectionFactory connectionFactory)
         {
-            if (fifthweekDbContext == null)
+            if (connectionFactory == null)
             {
-                throw new ArgumentNullException("fifthweekDbContext");
+                throw new ArgumentNullException("connectionFactory");
             }
 
-            this.fifthweekDbContext = fifthweekDbContext;
+            this.connectionFactory = connectionFactory;
         }
     }
 }
@@ -967,14 +967,14 @@ namespace Fifthweek.Api.Posts
     public partial class PostOwnership 
     {
         public PostOwnership(
-            Fifthweek.Api.Persistence.IFifthweekDbContext databaseContext)
+            Fifthweek.Api.Persistence.IFifthweekDbConnectionFactory connectionFactory)
         {
-            if (databaseContext == null)
+            if (connectionFactory == null)
             {
-                throw new ArgumentNullException("databaseContext");
+                throw new ArgumentNullException("connectionFactory");
             }
 
-            this.databaseContext = databaseContext;
+            this.connectionFactory = connectionFactory;
         }
     }
 }
@@ -1066,13 +1066,13 @@ namespace Fifthweek.Api.Posts
     public partial class PostToCollectionDbSubStatements 
     {
         public PostToCollectionDbSubStatements(
-            Fifthweek.Api.Persistence.IFifthweekDbContext databaseContext,
+            Fifthweek.Api.Persistence.IFifthweekDbConnectionFactory connectionFactory,
             Fifthweek.Api.Collections.Shared.IGetLiveDateOfNewQueuedPostDbStatement getLiveDateOfNewQueuedPost,
             Fifthweek.Api.Posts.IScheduledDateClippingFunction scheduledDateClipping)
         {
-            if (databaseContext == null)
+            if (connectionFactory == null)
             {
-                throw new ArgumentNullException("databaseContext");
+                throw new ArgumentNullException("connectionFactory");
             }
 
             if (getLiveDateOfNewQueuedPost == null)
@@ -1085,7 +1085,7 @@ namespace Fifthweek.Api.Posts
                 throw new ArgumentNullException("scheduledDateClipping");
             }
 
-            this.databaseContext = databaseContext;
+            this.connectionFactory = connectionFactory;
             this.getLiveDateOfNewQueuedPost = getLiveDateOfNewQueuedPost;
             this.scheduledDateClipping = scheduledDateClipping;
         }
@@ -1213,20 +1213,20 @@ namespace Fifthweek.Api.Posts.Queries
     {
         public GetCreatorBacklogQueryHandler(
             Fifthweek.Api.Identity.Shared.Membership.IRequesterSecurity requesterSecurity,
-            Fifthweek.Api.Persistence.IFifthweekDbContext databaseContext)
+            Fifthweek.Api.Persistence.IFifthweekDbConnectionFactory connectionFactory)
         {
             if (requesterSecurity == null)
             {
                 throw new ArgumentNullException("requesterSecurity");
             }
 
-            if (databaseContext == null)
+            if (connectionFactory == null)
             {
-                throw new ArgumentNullException("databaseContext");
+                throw new ArgumentNullException("connectionFactory");
             }
 
             this.requesterSecurity = requesterSecurity;
-            this.databaseContext = databaseContext;
+            this.connectionFactory = connectionFactory;
         }
     }
 }
@@ -1305,20 +1305,20 @@ namespace Fifthweek.Api.Posts.Queries
     {
         public GetCreatorNewsfeedQueryHandler(
             Fifthweek.Api.Identity.Shared.Membership.IRequesterSecurity requesterSecurity,
-            Fifthweek.Api.Persistence.IFifthweekDbContext databaseContext)
+            Fifthweek.Api.Persistence.IFifthweekDbConnectionFactory connectionFactory)
         {
             if (requesterSecurity == null)
             {
                 throw new ArgumentNullException("requesterSecurity");
             }
 
-            if (databaseContext == null)
+            if (connectionFactory == null)
             {
-                throw new ArgumentNullException("databaseContext");
+                throw new ArgumentNullException("connectionFactory");
             }
 
             this.requesterSecurity = requesterSecurity;
-            this.databaseContext = databaseContext;
+            this.connectionFactory = connectionFactory;
         }
     }
 }
@@ -1705,7 +1705,7 @@ namespace Fifthweek.Api.Posts.Commands
             Fifthweek.Api.Identity.Shared.Membership.IRequesterSecurity requesterSecurity,
             Fifthweek.Api.Channels.Shared.IChannelSecurity channelSecurity,
             Fifthweek.Api.Posts.Shared.IPostSecurity postSecurity,
-            Fifthweek.Api.Persistence.IFifthweekDbContext databaseContext)
+            Fifthweek.Api.Persistence.IFifthweekDbConnectionFactory connectionFactory)
         {
             if (requesterSecurity == null)
             {
@@ -1722,15 +1722,15 @@ namespace Fifthweek.Api.Posts.Commands
                 throw new ArgumentNullException("postSecurity");
             }
 
-            if (databaseContext == null)
+            if (connectionFactory == null)
             {
-                throw new ArgumentNullException("databaseContext");
+                throw new ArgumentNullException("connectionFactory");
             }
 
             this.requesterSecurity = requesterSecurity;
             this.channelSecurity = channelSecurity;
             this.postSecurity = postSecurity;
-            this.databaseContext = databaseContext;
+            this.connectionFactory = connectionFactory;
         }
     }
 }
@@ -1757,20 +1757,20 @@ namespace Fifthweek.Api.Posts
     {
         public PostNoteDbStatement(
             Fifthweek.Api.Posts.IScheduledDateClippingFunction scheduledDateClipping,
-            Fifthweek.Api.Persistence.IFifthweekDbContext databaseContext)
+            Fifthweek.Api.Persistence.IFifthweekDbConnectionFactory connectionFactory)
         {
             if (scheduledDateClipping == null)
             {
                 throw new ArgumentNullException("scheduledDateClipping");
             }
 
-            if (databaseContext == null)
+            if (connectionFactory == null)
             {
-                throw new ArgumentNullException("databaseContext");
+                throw new ArgumentNullException("connectionFactory");
             }
 
             this.scheduledDateClipping = scheduledDateClipping;
-            this.databaseContext = databaseContext;
+            this.connectionFactory = connectionFactory;
         }
     }
 }
@@ -1797,7 +1797,7 @@ namespace Fifthweek.Api.Posts.Commands
         public ReviseImageCommandHandler(
             Fifthweek.Api.Identity.Shared.Membership.IRequesterSecurity requesterSecurity,
             Fifthweek.Api.Posts.Shared.IPostSecurity postSecurity,
-            Fifthweek.Api.Persistence.IFifthweekDbContext databaseContext,
+            Fifthweek.Api.Persistence.IFifthweekDbConnectionFactory connectionFactory,
             Fifthweek.Api.FileManagement.Shared.IScheduleGarbageCollectionStatement scheduleGarbageCollection)
         {
             if (requesterSecurity == null)
@@ -1810,9 +1810,9 @@ namespace Fifthweek.Api.Posts.Commands
                 throw new ArgumentNullException("postSecurity");
             }
 
-            if (databaseContext == null)
+            if (connectionFactory == null)
             {
-                throw new ArgumentNullException("databaseContext");
+                throw new ArgumentNullException("connectionFactory");
             }
 
             if (scheduleGarbageCollection == null)
@@ -1822,7 +1822,7 @@ namespace Fifthweek.Api.Posts.Commands
 
             this.requesterSecurity = requesterSecurity;
             this.postSecurity = postSecurity;
-            this.databaseContext = databaseContext;
+            this.connectionFactory = connectionFactory;
             this.scheduleGarbageCollection = scheduleGarbageCollection;
         }
     }
@@ -1850,7 +1850,7 @@ namespace Fifthweek.Api.Posts.Commands
         public ReviseFileCommandHandler(
             Fifthweek.Api.Identity.Shared.Membership.IRequesterSecurity requesterSecurity,
             Fifthweek.Api.Posts.Shared.IPostSecurity postSecurity,
-            Fifthweek.Api.Persistence.IFifthweekDbContext databaseContext,
+            Fifthweek.Api.Persistence.IFifthweekDbConnectionFactory connectionFactory,
             Fifthweek.Api.FileManagement.Shared.IScheduleGarbageCollectionStatement scheduleGarbageCollection)
         {
             if (requesterSecurity == null)
@@ -1863,9 +1863,9 @@ namespace Fifthweek.Api.Posts.Commands
                 throw new ArgumentNullException("postSecurity");
             }
 
-            if (databaseContext == null)
+            if (connectionFactory == null)
             {
-                throw new ArgumentNullException("databaseContext");
+                throw new ArgumentNullException("connectionFactory");
             }
 
             if (scheduleGarbageCollection == null)
@@ -1875,7 +1875,7 @@ namespace Fifthweek.Api.Posts.Commands
 
             this.requesterSecurity = requesterSecurity;
             this.postSecurity = postSecurity;
-            this.databaseContext = databaseContext;
+            this.connectionFactory = connectionFactory;
             this.scheduleGarbageCollection = scheduleGarbageCollection;
         }
     }
@@ -1902,14 +1902,14 @@ namespace Fifthweek.Api.Posts
     public partial class TryGetQueuedPostCollectionDbStatement 
     {
         public TryGetQueuedPostCollectionDbStatement(
-            Fifthweek.Api.Persistence.IFifthweekDbContext databaseContext)
+            Fifthweek.Api.Persistence.IFifthweekDbConnectionFactory connectionFactory)
         {
-            if (databaseContext == null)
+            if (connectionFactory == null)
             {
-                throw new ArgumentNullException("databaseContext");
+                throw new ArgumentNullException("connectionFactory");
             }
 
-            this.databaseContext = databaseContext;
+            this.connectionFactory = connectionFactory;
         }
     }
 }
@@ -2028,20 +2028,20 @@ namespace Fifthweek.Api.Posts
     {
         public SetBacklogPostLiveDateDbStatement(
             Fifthweek.Api.Posts.IScheduledDateClippingFunction scheduledDateClipping,
-            Fifthweek.Api.Persistence.IFifthweekDbContext databaseContext)
+            Fifthweek.Api.Persistence.IFifthweekDbConnectionFactory connectionFactory)
         {
             if (scheduledDateClipping == null)
             {
                 throw new ArgumentNullException("scheduledDateClipping");
             }
 
-            if (databaseContext == null)
+            if (connectionFactory == null)
             {
-                throw new ArgumentNullException("databaseContext");
+                throw new ArgumentNullException("connectionFactory");
             }
 
             this.scheduledDateClipping = scheduledDateClipping;
-            this.databaseContext = databaseContext;
+            this.connectionFactory = connectionFactory;
         }
     }
 }
@@ -2305,12 +2305,12 @@ namespace Fifthweek.Api.Posts
     public partial class MoveBacklogPostToQueueDbStatement 
     {
         public MoveBacklogPostToQueueDbStatement(
-            Fifthweek.Api.Persistence.IFifthweekDbContext databaseContext,
+            Fifthweek.Api.Persistence.IFifthweekDbConnectionFactory connectionFactory,
             Fifthweek.Api.Collections.Shared.IGetLiveDateOfNewQueuedPostDbStatement getLiveDateOfNewQueuedPost)
         {
-            if (databaseContext == null)
+            if (connectionFactory == null)
             {
-                throw new ArgumentNullException("databaseContext");
+                throw new ArgumentNullException("connectionFactory");
             }
 
             if (getLiveDateOfNewQueuedPost == null)
@@ -2318,7 +2318,7 @@ namespace Fifthweek.Api.Posts
                 throw new ArgumentNullException("getLiveDateOfNewQueuedPost");
             }
 
-            this.databaseContext = databaseContext;
+            this.connectionFactory = connectionFactory;
             this.getLiveDateOfNewQueuedPost = getLiveDateOfNewQueuedPost;
         }
     }
@@ -2345,14 +2345,14 @@ namespace Fifthweek.Api.Posts
     public partial class TryGetUnqueuedPostCollectionDbStatement 
     {
         public TryGetUnqueuedPostCollectionDbStatement(
-            Fifthweek.Api.Persistence.IFifthweekDbContext databaseContext)
+            Fifthweek.Api.Persistence.IFifthweekDbConnectionFactory connectionFactory)
         {
-            if (databaseContext == null)
+            if (connectionFactory == null)
             {
-                throw new ArgumentNullException("databaseContext");
+                throw new ArgumentNullException("connectionFactory");
             }
 
-            this.databaseContext = databaseContext;
+            this.connectionFactory = connectionFactory;
         }
     }
 }

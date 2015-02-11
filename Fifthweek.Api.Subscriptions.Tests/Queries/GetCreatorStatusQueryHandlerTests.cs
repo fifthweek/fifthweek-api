@@ -41,9 +41,9 @@
         [ExpectedException(typeof(UnauthorizedException))]
         public async Task WhenUnauthenticated_ItShouldThrowUnauthorizedException()
         {
-            var databaseContext = new Mock<IFifthweekDbContext>(MockBehavior.Strict);
+            var connectionFactory = new Mock<IFifthweekDbConnectionFactory>(MockBehavior.Strict);
 
-            this.target = new GetCreatorStatusQueryHandler(this.requesterSecurity.Object, databaseContext.Object);
+            this.target = new GetCreatorStatusQueryHandler(this.requesterSecurity.Object, connectionFactory.Object);
 
             await this.target.HandleAsync(new GetCreatorStatusQuery(Requester.Unauthenticated, UserId));
         }
@@ -52,9 +52,9 @@
         [ExpectedException(typeof(UnauthorizedException))]
         public async Task WhenNotAuthenticatedAsRequiredUser_ItShouldThrowUnauthorizedException()
         {
-            var databaseContext = new Mock<IFifthweekDbContext>(MockBehavior.Strict);
+            var connectionFactory = new Mock<IFifthweekDbConnectionFactory>(MockBehavior.Strict);
 
-            this.target = new GetCreatorStatusQueryHandler(this.requesterSecurity.Object, databaseContext.Object);
+            this.target = new GetCreatorStatusQueryHandler(this.requesterSecurity.Object, connectionFactory.Object);
 
             await this.target.HandleAsync(new GetCreatorStatusQuery(Requester, new UserId(Guid.NewGuid())));
         }
@@ -64,7 +64,7 @@
         {
             await this.DatabaseTestAsync(async testDatabase =>
             {
-                this.target = new GetCreatorStatusQueryHandler(this.requesterSecurity.Object, testDatabase.NewContext());
+                this.target = new GetCreatorStatusQueryHandler(this.requesterSecurity.Object, testDatabase);
                 await this.CreateSubscriptionAsync(UserId, SubscriptionId, testDatabase);
                 await testDatabase.TakeSnapshotAsync();
 
@@ -82,7 +82,7 @@
         {
             await this.DatabaseTestAsync(async testDatabase =>
             {
-                this.target = new GetCreatorStatusQueryHandler(this.requesterSecurity.Object, testDatabase.NewContext());
+                this.target = new GetCreatorStatusQueryHandler(this.requesterSecurity.Object, testDatabase);
                 await this.CreateSubscriptionAsync(UserId, SubscriptionId, testDatabase);
                 await testDatabase.TakeSnapshotAsync();
 
@@ -100,7 +100,7 @@
         {
             await this.DatabaseTestAsync(async testDatabase =>
             {
-                this.target = new GetCreatorStatusQueryHandler(this.requesterSecurity.Object, testDatabase.NewContext());
+                this.target = new GetCreatorStatusQueryHandler(this.requesterSecurity.Object, testDatabase);
                 await this.CreateSubscriptionAsync(UserId, SubscriptionId, testDatabase);
                 await this.CreatePostAsync(testDatabase);
                 await testDatabase.TakeSnapshotAsync();
@@ -119,7 +119,7 @@
         {
             await this.DatabaseTestAsync(async testDatabase =>
             {
-                this.target = new GetCreatorStatusQueryHandler(this.requesterSecurity.Object, testDatabase.NewContext());
+                this.target = new GetCreatorStatusQueryHandler(this.requesterSecurity.Object, testDatabase);
                 await this.CreateSubscriptionAsync(UserId, SubscriptionId, testDatabase);
                 await this.CreatePostAsync(testDatabase);
                 await this.CreatePostAsync(testDatabase);
@@ -140,7 +140,7 @@
         {
             await this.DatabaseTestAsync(async testDatabase =>
             {
-                this.target = new GetCreatorStatusQueryHandler(this.requesterSecurity.Object, testDatabase.NewContext());
+                this.target = new GetCreatorStatusQueryHandler(this.requesterSecurity.Object, testDatabase);
                 await this.CreateSubscriptionAsync(UserId, SubscriptionId, testDatabase);
                 await this.CreatePostAsync(testDatabase);
                 await this.CreatePostAsync(testDatabase);
@@ -162,7 +162,7 @@
         {
             await this.DatabaseTestAsync(async testDatabase =>
             {
-                this.target = new GetCreatorStatusQueryHandler(this.requesterSecurity.Object, testDatabase.NewContext());
+                this.target = new GetCreatorStatusQueryHandler(this.requesterSecurity.Object, testDatabase);
                 await this.CreateSubscriptionAsync(UserId, new SubscriptionId(Guid.NewGuid()), testDatabase, newUser: true, setTodaysDate: false);
                 await this.CreateSubscriptionsAsync(UserId, 100, testDatabase);
                 await this.CreateSubscriptionAsync(UserId, SubscriptionId, testDatabase, newUser: false, setTodaysDate: true);
@@ -182,9 +182,9 @@
         {
             await this.DatabaseTestAsync(async testDatabase =>
             {
-                this.target = new GetCreatorStatusQueryHandler(this.requesterSecurity.Object, testDatabase.NewContext());
+                this.target = new GetCreatorStatusQueryHandler(this.requesterSecurity.Object, testDatabase);
 
-                using (var databaseContext = testDatabase.NewContext())
+                using (var databaseContext = testDatabase.CreateContext())
                 {
                     await databaseContext.Database.Connection.ExecuteAsync("DELETE FROM Subscriptions");
                 }
@@ -205,7 +205,7 @@
         {
             await this.DatabaseTestAsync(async testDatabase =>
             {
-                this.target = new GetCreatorStatusQueryHandler(this.requesterSecurity.Object, testDatabase.NewContext());
+                this.target = new GetCreatorStatusQueryHandler(this.requesterSecurity.Object, testDatabase);
                 await testDatabase.TakeSnapshotAsync();
 
                 var result = await this.target.HandleAsync(Query);
@@ -255,7 +255,7 @@
                 subscription.CreationDate = DateTime.UtcNow;
             }
 
-            using (var databaseContext = testDatabase.NewContext())
+            using (var databaseContext = testDatabase.CreateContext())
             {
                 if (newUser)
                 {
@@ -270,7 +270,7 @@
 
         private async Task CreatePostAsync(TestDatabaseContext testDatabase, bool createNewChannel = false)
         {
-            using (var databaseContext = testDatabase.NewContext())
+            using (var databaseContext = testDatabase.CreateContext())
             {
                 var random = new Random();
 

@@ -15,7 +15,7 @@
     {
         private readonly IRequesterSecurity requesterSecurity;
         private readonly IChannelSecurity channelSecurity;
-        private readonly IFifthweekDbContext databaseContext;
+        private readonly IFifthweekDbConnectionFactory connectionFactory;
 
         public async Task HandleAsync(UpdateChannelCommand command)
         {
@@ -43,15 +43,18 @@
                 Channel.Fields.PriceInUsCentsPerWeek |
                 Channel.Fields.Description;
 
-            // Do not update visibility for the default channel: it must always be visible.
-            var channelId = command.ChannelId.Value;
-            var subscriptionId = await this.databaseContext.Channels.Where(_ => _.Id == channelId).Select(_ => _.SubscriptionId).FirstAsync();
-            if (subscriptionId == channelId)
+            using (var context = this.connectionFactory.CreateContext())
             {
-                updatedFields &= ~Channel.Fields.IsVisibleToNonSubscribers;
-            }
+                // Do not update visibility for the default channel: it must always be visible.
+                var channelId = command.ChannelId.Value;
+                var subscriptionId = await context.Channels.Where(_ => _.Id == channelId).Select(_ => _.SubscriptionId).FirstAsync();
+                if (subscriptionId == channelId)
+                {
+                    updatedFields &= ~Channel.Fields.IsVisibleToNonSubscribers;
+                }
 
-            await this.databaseContext.Database.Connection.UpdateAsync(channel, updatedFields);
+                await context.Database.Connection.UpdateAsync(channel, updatedFields);
+            }
         }
     }
 }

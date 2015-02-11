@@ -11,9 +11,9 @@
     [AutoConstructor]
     public partial class AddNewFileDbStatement : IAddNewFileDbStatement
     {
-        private readonly IFifthweekDbContext fifthweekDbContext;
+        private readonly IFifthweekDbConnectionFactory connectionFactory;
 
-        public Task ExecuteAsync(
+        public async Task ExecuteAsync(
             Shared.FileId fileId,
             UserId userId,
             string fileNameWithoutExtension,
@@ -41,7 +41,10 @@
                 0L,
                 purpose);
 
-            return this.fifthweekDbContext.Database.Connection.InsertAsync(file, true);
+            using (var connection = this.connectionFactory.CreateConnection())
+            {
+                await connection.InsertAsync(file);
+            }
         }
     }
 }

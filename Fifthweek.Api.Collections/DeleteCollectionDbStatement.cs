@@ -21,9 +21,9 @@
             Collection.Table,
             Collection.Fields.Id);
 
-        private readonly IFifthweekDbContext databaseContext;
+        private readonly IFifthweekDbConnectionFactory connectionFactory;
 
-        public Task ExecuteAsync(CollectionId collectionId)
+        public async Task ExecuteAsync(CollectionId collectionId)
         {
             collectionId.AssertNotNull("collectionId");
             var collectionIdParameter = new
@@ -31,7 +31,10 @@
                 CollectionId = collectionId.Value
             };
 
-            return this.databaseContext.Database.Connection.ExecuteAsync(DeleteSql, collectionIdParameter);
+            using (var connection = this.connectionFactory.CreateConnection())
+            {
+                await connection.ExecuteAsync(DeleteSql, collectionIdParameter);
+            }
         }
     }
 }

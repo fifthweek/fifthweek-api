@@ -37,40 +37,43 @@
             FifthweekUserRole.Fields.UserId);
 
         private readonly IUserManager userManager;
-        private readonly IFifthweekDbContext fifthweekDbContext;
+        private readonly IFifthweekDbConnectionFactory connectionFactory;
 
         public async Task<UserIdAndRoles> ExecuteAsync(Username username, Password password)
         {
             username.AssertNotNull("username");
             password.AssertNotNull("password");
 
-            var result = (await this.fifthweekDbContext.Database.Connection.QueryAsync<DapperResult>(
-                Query,
-                new { UserName = username.Value })).ToList();
-
-            if (result.Count > 0)
+            using (var connection = this.connectionFactory.CreateConnection())
             {
-                if (result.Select(v => v.Id).Distinct().Count() != 1)
+                var result = (await connection.QueryAsync<DapperResult>(
+                    Query,
+                    new { UserName = username.Value })).ToList();
+
+                if (result.Count > 0)
                 {
-                    throw new InvalidOperationException("Multiple user IDs returned.");
+                    if (result.Select(v => v.Id).Distinct().Count() != 1)
+                    {
+                        throw new InvalidOperationException("Multiple user IDs returned.");
+                    }
+
+                    if (result.Select(v => v.PasswordHash).Distinct().Count() != 1)
+                    {
+                        throw new InvalidOperationException("Multiple hashed passwords returned.");
+                    }
+
+                    if (this.userManager.PasswordHasher.VerifyHashedPassword(result[0].PasswordHash, password.Value)
+                        != PasswordVerificationResult.Failed)
+                    {
+                        var userId = result[0].Id;
+                        var roles = result.Select(v => v.Name).Where(v => v != null).ToList();
+
+                        return new UserIdAndRoles(userId, roles);
+                    }
                 }
 
-                if (result.Select(v => v.PasswordHash).Distinct().Count() != 1)
-                {
-                    throw new InvalidOperationException("Multiple hashed passwords returned.");
-                }
-
-                if (this.userManager.PasswordHasher.VerifyHashedPassword(result[0].PasswordHash, password.Value)
-                    != PasswordVerificationResult.Failed)
-                {
-                    var userId = result[0].Id;
-                    var roles = result.Select(v => v.Name).Where(v => v != null).ToList();
-
-                    return new UserIdAndRoles(userId, roles);
-                }
+                return null;
             }
-
-            return null;
         }
 
         private class DapperResult

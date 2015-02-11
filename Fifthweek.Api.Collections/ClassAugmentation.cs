@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Linq;
 
-//// Generated on 10/02/2015 22:56:46 (UTC)
-//// Mapped solution in 11.34s
+//// Generated on 11/02/2015 17:54:35 (UTC)
+//// Mapped solution in 8.53s
 
 
 namespace Fifthweek.Api.Collections
@@ -25,14 +25,14 @@ namespace Fifthweek.Api.Collections
     public partial class CollectionOwnership 
     {
         public CollectionOwnership(
-            Fifthweek.Api.Persistence.IFifthweekDbContext databaseContext)
+            Fifthweek.Api.Persistence.IFifthweekDbConnectionFactory connectionFactory)
         {
-            if (databaseContext == null)
+            if (connectionFactory == null)
             {
-                throw new ArgumentNullException("databaseContext");
+                throw new ArgumentNullException("connectionFactory");
             }
 
-            this.databaseContext = databaseContext;
+            this.connectionFactory = connectionFactory;
         }
     }
 }
@@ -141,7 +141,7 @@ namespace Fifthweek.Api.Collections.Commands
         public CreateCollectionCommandHandler(
             Fifthweek.Api.Identity.Shared.Membership.IRequesterSecurity requesterSecurity,
             Fifthweek.Api.Channels.Shared.IChannelSecurity channelSecurity,
-            Fifthweek.Api.Persistence.IFifthweekDbContext databaseContext,
+            Fifthweek.Api.Persistence.IFifthweekDbConnectionFactory connectionFactory,
             Fifthweek.Shared.IRandom random)
         {
             if (requesterSecurity == null)
@@ -154,9 +154,9 @@ namespace Fifthweek.Api.Collections.Commands
                 throw new ArgumentNullException("channelSecurity");
             }
 
-            if (databaseContext == null)
+            if (connectionFactory == null)
             {
-                throw new ArgumentNullException("databaseContext");
+                throw new ArgumentNullException("connectionFactory");
             }
 
             if (random == null)
@@ -166,7 +166,7 @@ namespace Fifthweek.Api.Collections.Commands
 
             this.requesterSecurity = requesterSecurity;
             this.channelSecurity = channelSecurity;
-            this.databaseContext = databaseContext;
+            this.connectionFactory = connectionFactory;
             this.random = random;
         }
     }
@@ -396,14 +396,14 @@ namespace Fifthweek.Api.Collections
     public partial class GetChannelsAndCollectionsDbStatement 
     {
         public GetChannelsAndCollectionsDbStatement(
-            Fifthweek.Api.Persistence.IFifthweekDbContext databaseContext)
+            Fifthweek.Api.Persistence.IFifthweekDbConnectionFactory connectionFactory)
         {
-            if (databaseContext == null)
+            if (connectionFactory == null)
             {
-                throw new ArgumentNullException("databaseContext");
+                throw new ArgumentNullException("connectionFactory");
             }
 
-            this.databaseContext = databaseContext;
+            this.connectionFactory = connectionFactory;
         }
     }
 }
@@ -427,14 +427,14 @@ namespace Fifthweek.Api.Collections
     public partial class GetWeeklyReleaseScheduleDbStatement 
     {
         public GetWeeklyReleaseScheduleDbStatement(
-            Fifthweek.Api.Persistence.IFifthweekDbContext databaseContext)
+            Fifthweek.Api.Persistence.IFifthweekDbConnectionFactory connectionFactory)
         {
-            if (databaseContext == null)
+            if (connectionFactory == null)
             {
-                throw new ArgumentNullException("databaseContext");
+                throw new ArgumentNullException("connectionFactory");
             }
 
-            this.databaseContext = databaseContext;
+            this.connectionFactory = connectionFactory;
         }
     }
 }
@@ -503,14 +503,14 @@ namespace Fifthweek.Api.Collections
     public partial class GetNewQueuedPostLiveDateLowerBoundDbStatement 
     {
         public GetNewQueuedPostLiveDateLowerBoundDbStatement(
-            Fifthweek.Api.Persistence.IFifthweekDbContext databaseContext)
+            Fifthweek.Api.Persistence.IFifthweekDbConnectionFactory connectionFactory)
         {
-            if (databaseContext == null)
+            if (connectionFactory == null)
             {
-                throw new ArgumentNullException("databaseContext");
+                throw new ArgumentNullException("connectionFactory");
             }
 
-            this.databaseContext = databaseContext;
+            this.connectionFactory = connectionFactory;
         }
     }
 }
@@ -922,14 +922,14 @@ namespace Fifthweek.Api.Collections
     public partial class DeleteCollectionDbStatement 
     {
         public DeleteCollectionDbStatement(
-            Fifthweek.Api.Persistence.IFifthweekDbContext databaseContext)
+            Fifthweek.Api.Persistence.IFifthweekDbConnectionFactory connectionFactory)
         {
-            if (databaseContext == null)
+            if (connectionFactory == null)
             {
-                throw new ArgumentNullException("databaseContext");
+                throw new ArgumentNullException("connectionFactory");
             }
 
-            this.databaseContext = databaseContext;
+            this.connectionFactory = connectionFactory;
         }
     }
 }
@@ -998,14 +998,14 @@ namespace Fifthweek.Api.Collections
     public partial class GetQueueSizeDbStatement 
     {
         public GetQueueSizeDbStatement(
-            Fifthweek.Api.Persistence.IFifthweekDbContext databaseContext)
+            Fifthweek.Api.Persistence.IFifthweekDbConnectionFactory connectionFactory)
         {
-            if (databaseContext == null)
+            if (connectionFactory == null)
             {
-                throw new ArgumentNullException("databaseContext");
+                throw new ArgumentNullException("connectionFactory");
             }
 
-            this.databaseContext = databaseContext;
+            this.connectionFactory = connectionFactory;
         }
     }
 }
@@ -1029,14 +1029,14 @@ namespace Fifthweek.Api.Collections
     public partial class UpdateAllLiveDatesInQueueDbStatement 
     {
         public UpdateAllLiveDatesInQueueDbStatement(
-            Fifthweek.Api.Persistence.IFifthweekDbContext databaseContext)
+            Fifthweek.Api.Persistence.IFifthweekDbConnectionFactory connectionFactory)
         {
-            if (databaseContext == null)
+            if (connectionFactory == null)
             {
-                throw new ArgumentNullException("databaseContext");
+                throw new ArgumentNullException("connectionFactory");
             }
 
-            this.databaseContext = databaseContext;
+            this.connectionFactory = connectionFactory;
         }
     }
 }
@@ -1060,14 +1060,14 @@ namespace Fifthweek.Api.Collections
     public partial class ReplaceWeeklyReleaseTimesDbStatement 
     {
         public ReplaceWeeklyReleaseTimesDbStatement(
-            Fifthweek.Api.Persistence.IFifthweekDbContext databaseContext)
+            Fifthweek.Api.Persistence.IFifthweekDbConnectionFactory connectionFactory)
         {
-            if (databaseContext == null)
+            if (connectionFactory == null)
             {
-                throw new ArgumentNullException("databaseContext");
+                throw new ArgumentNullException("connectionFactory");
             }
 
-            this.databaseContext = databaseContext;
+            this.connectionFactory = connectionFactory;
         }
     }
 }
@@ -1091,14 +1091,14 @@ namespace Fifthweek.Api.Collections
     public partial class UpdateCollectionFieldsDbStatement 
     {
         public UpdateCollectionFieldsDbStatement(
-            Fifthweek.Api.Persistence.IFifthweekDbContext databaseContext)
+            Fifthweek.Api.Persistence.IFifthweekDbConnectionFactory connectionFactory)
         {
-            if (databaseContext == null)
+            if (connectionFactory == null)
             {
-                throw new ArgumentNullException("databaseContext");
+                throw new ArgumentNullException("connectionFactory");
             }
 
-            this.databaseContext = databaseContext;
+            this.connectionFactory = connectionFactory;
         }
     }
 }

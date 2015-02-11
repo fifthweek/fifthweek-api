@@ -43,7 +43,7 @@
             Subscription.Fields.CreationDate);
 
         private readonly IRequesterSecurity requesterSecurity;
-        private readonly IFifthweekDbContext databaseContext;
+        private readonly IFifthweekDbConnectionFactory connectionFactory;
 
         public async Task<CreatorStatus> HandleAsync(GetCreatorStatusQuery query)
         {
@@ -56,11 +56,14 @@
 
         private async Task<CreatorStatus> GetCreatorStatusAsync(UserId creatorId)
         {
-            var creatorData = (await this.databaseContext.Database.Connection.QueryAsync<CreatorStatusData>(Sql, new { CreatorId = creatorId.Value })).SingleOrDefault();
+            using (var connection = this.connectionFactory.CreateConnection())
+            {
+                var creatorData = (await connection.QueryAsync<CreatorStatusData>(Sql, new { CreatorId = creatorId.Value })).SingleOrDefault();
 
-            return creatorData == null
-                ? CreatorStatus.NoSubscriptions
-                : new CreatorStatus(new SubscriptionId(creatorData.SubscriptionId), !creatorData.HasAtLeastOnePost);
+                return creatorData == null
+                    ? CreatorStatus.NoSubscriptions
+                    : new CreatorStatus(new SubscriptionId(creatorData.SubscriptionId), !creatorData.HasAtLeastOnePost);
+            }
         }
 
         private class CreatorStatusData

@@ -22,7 +22,7 @@
         private static readonly DateTime ClippedDate = Now.AddDays(1);
 
         private Mock<IScheduledDateClippingFunction> scheduledDateClipping;
-        private Mock<IFifthweekDbContext> databaseContext;
+        private Mock<IFifthweekDbConnectionFactory> connectionFactory;
         private SetBacklogPostLiveDateDbStatement target;
 
         [TestInitialize]
@@ -32,14 +32,14 @@
             this.scheduledDateClipping.Setup(_ => _.Apply(Now, NewDate)).Returns(ClippedDate);
 
             // Mock potentially side-effecting components with strict behaviour.            
-            this.databaseContext = new Mock<IFifthweekDbContext>(MockBehavior.Strict);
+            this.connectionFactory = new Mock<IFifthweekDbConnectionFactory>(MockBehavior.Strict);
 
-            this.InitializeTarget(this.databaseContext.Object);
+            this.InitializeTarget(this.connectionFactory.Object);
         }
 
-        public void InitializeTarget(IFifthweekDbContext databaseContext)
+        public void InitializeTarget(IFifthweekDbConnectionFactory connectionFactory)
         {
-            this.target = new SetBacklogPostLiveDateDbStatement(this.scheduledDateClipping.Object, databaseContext);
+            this.target = new SetBacklogPostLiveDateDbStatement(this.scheduledDateClipping.Object, connectionFactory);
         }
 
         [TestMethod]
@@ -68,7 +68,7 @@
         {
             await this.DatabaseTestAsync(async testDatabase =>
             {
-                this.InitializeTarget(testDatabase.NewContext());
+                this.InitializeTarget(testDatabase);
                 await this.CreateEntitiesAsync(testDatabase, liveDateInFuture: true, scheduledByQueue: true);
                 await this.target.ExecuteAsync(PostId, NewDate, Now);
                 await testDatabase.TakeSnapshotAsync();
@@ -84,7 +84,7 @@
         {
             await this.DatabaseTestAsync(async testDatabase =>
             {
-                this.InitializeTarget(testDatabase.NewContext());
+                this.InitializeTarget(testDatabase);
                 await this.CreateEntitiesAsync(testDatabase, liveDateInFuture: false, scheduledByQueue: true);
                 await testDatabase.TakeSnapshotAsync();
 
@@ -95,7 +95,7 @@
 
             await this.DatabaseTestAsync(async testDatabase =>
             {
-                this.InitializeTarget(testDatabase.NewContext());
+                this.InitializeTarget(testDatabase);
                 await this.CreateEntitiesAsync(testDatabase, liveDateInFuture: false, scheduledByQueue: false);
                 await testDatabase.TakeSnapshotAsync();
 
@@ -110,7 +110,7 @@
         {
             await this.DatabaseTestAsync(async testDatabase =>
             {
-                this.InitializeTarget(testDatabase.NewContext());
+                this.InitializeTarget(testDatabase);
                 var post = await this.CreateEntitiesAsync(testDatabase, liveDateInFuture: true, scheduledByQueue: false);
                 await testDatabase.TakeSnapshotAsync();
 
@@ -130,7 +130,7 @@
         {
             await this.DatabaseTestAsync(async testDatabase =>
             {
-                this.InitializeTarget(testDatabase.NewContext());
+                this.InitializeTarget(testDatabase);
                 var post = await this.CreateEntitiesAsync(testDatabase, liveDateInFuture: true, scheduledByQueue: true);
                 await testDatabase.TakeSnapshotAsync();
 
@@ -148,7 +148,7 @@
 
         private async Task<Post> CreateEntitiesAsync(TestDatabaseContext testDatabase, bool liveDateInFuture, bool scheduledByQueue)
         {
-            using (var databaseContext = testDatabase.NewContext())
+            using (var databaseContext = testDatabase.CreateContext())
             {
                 var channelId = Guid.NewGuid();
                 var collectionId = Guid.NewGuid();
@@ -163,7 +163,7 @@
                 await databaseContext.Database.Connection.InsertAsync(post);
             }
 
-            using (var databaseContext = testDatabase.NewContext())
+            using (var databaseContext = testDatabase.CreateContext())
             {
                 var postId = PostId.Value;
                 return await databaseContext.Posts.FirstAsync(_ => _.Id == postId);

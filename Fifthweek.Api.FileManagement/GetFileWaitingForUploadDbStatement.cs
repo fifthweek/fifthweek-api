@@ -14,30 +14,33 @@
     [AutoConstructor]
     public partial class GetFileWaitingForUploadDbStatement : IGetFileWaitingForUploadDbStatement
     {
-        private readonly IFifthweekDbContext fifthweekDbContext;
+        private readonly IFifthweekDbConnectionFactory connectionFactory;
 
         public async Task<FileWaitingForUpload> ExecuteAsync(Shared.FileId fileId)
         {
             fileId.AssertNotNull("fileId");
-
-            var items = await this.fifthweekDbContext.Database.Connection.QueryAsync<File>(
-                string.Format(
-                    @"SELECT {0}, {1}, {2}, {3}, {4} FROM Files WHERE Id=@FileId",
-                    File.Fields.Id,
-                    File.Fields.UserId,
-                    File.Fields.FileNameWithoutExtension,
-                    File.Fields.FileExtension,
-                    File.Fields.Purpose),
-                new { FileId = fileId.Value });
-
-            var result = items.SingleOrDefault();
-
-            if (result == null)
+            
+            using (var connection = this.connectionFactory.CreateConnection())
             {
-                throw new InvalidOperationException("The File " + fileId + " couldn't be found.");
-            }
+                var items = await connection.QueryAsync<File>(
+                    string.Format(
+                        @"SELECT {0}, {1}, {2}, {3}, {4} FROM Files WHERE Id=@FileId",
+                        File.Fields.Id,
+                        File.Fields.UserId,
+                        File.Fields.FileNameWithoutExtension,
+                        File.Fields.FileExtension,
+                        File.Fields.Purpose),
+                    new { FileId = fileId.Value });
 
-            return new FileWaitingForUpload(new Shared.FileId(result.Id), new UserId(result.UserId), result.FileNameWithoutExtension, result.FileExtension, result.Purpose);
+                var result = items.SingleOrDefault();
+
+                if (result == null)
+                {
+                    throw new InvalidOperationException("The File " + fileId + " couldn't be found.");
+                }
+
+                return new FileWaitingForUpload(new Shared.FileId(result.Id), new UserId(result.UserId), result.FileNameWithoutExtension, result.FileExtension, result.Purpose);
+            }
         }
     }
 }

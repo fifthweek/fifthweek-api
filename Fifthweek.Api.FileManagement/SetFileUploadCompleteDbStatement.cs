@@ -10,9 +10,9 @@
     [AutoConstructor]
     public partial class SetFileUploadCompleteDbStatement : ISetFileUploadCompleteDbStatement
     {
-        private readonly IFifthweekDbContext fifthweekDbContext;
+        private readonly IFifthweekDbConnectionFactory connectionFactory;
 
-        public Task ExecuteAsync(Shared.FileId fileId, long blobSize, DateTime timeStamp)
+        public async Task ExecuteAsync(Shared.FileId fileId, long blobSize, DateTime timeStamp)
         {
             fileId.AssertNotNull("fileId");
 
@@ -24,9 +24,12 @@
                 Id = fileId.Value,
             };
 
-            return this.fifthweekDbContext.Database.Connection.UpdateAsync(
-                newFile,
-                File.Fields.State | File.Fields.UploadCompletedDate | File.Fields.BlobSizeBytes);
+            using (var connection = this.connectionFactory.CreateConnection())
+            {
+                await connection.UpdateAsync(
+                    newFile,
+                    File.Fields.State | File.Fields.UploadCompletedDate | File.Fields.BlobSizeBytes);
+            }
         }
     }
 }

@@ -28,7 +28,7 @@
         private Mock<IChannelSecurity> channelSecurity;
         private Mock<IPostSecurity> postSecurity;
         private Mock<IRequesterSecurity> requesterSecurity;
-        private Mock<IFifthweekDbContext> databaseContext;
+        private Mock<IFifthweekDbConnectionFactory> connectionFactory;
         private ReviseNoteCommandHandler target;
 
         [TestInitialize]
@@ -40,18 +40,18 @@
             this.requesterSecurity.SetupFor(Requester);
 
             // Give potentially side-effective components strict mock behaviour.
-            this.databaseContext = new Mock<IFifthweekDbContext>(MockBehavior.Strict);
+            this.connectionFactory = new Mock<IFifthweekDbConnectionFactory>(MockBehavior.Strict);
 
-            this.InitializeTarget(this.databaseContext.Object);
+            this.InitializeTarget(this.connectionFactory.Object);
         }
 
-        public void InitializeTarget(IFifthweekDbContext databaseContext)
+        public void InitializeTarget(IFifthweekDbConnectionFactory connectionFactory)
         {
             this.target = new ReviseNoteCommandHandler(
                 this.requesterSecurity.Object,
                 this.channelSecurity.Object,
                 this.postSecurity.Object,
-                databaseContext);
+                connectionFactory);
         }
 
         [TestMethod]
@@ -84,7 +84,7 @@
         {
             await this.DatabaseTestAsync(async testDatabase =>
             {
-                this.InitializeTarget(testDatabase.NewContext());
+                this.InitializeTarget(testDatabase);
                 await this.CreateChannelAsync(UserId, ChannelId, testDatabase, createPost: true);
                 await this.target.HandleAsync(Command);
                 await testDatabase.TakeSnapshotAsync();
@@ -100,7 +100,7 @@
         {
             await this.DatabaseTestAsync(async testDatabase =>
             {
-                this.InitializeTarget(testDatabase.NewContext());
+                this.InitializeTarget(testDatabase);
                 await this.CreateChannelAsync(UserId, ChannelId, testDatabase, createPost: false);
                 await testDatabase.TakeSnapshotAsync();
 
@@ -115,7 +115,7 @@
         {
             await this.DatabaseTestAsync(async testDatabase =>
             {
-                this.InitializeTarget(testDatabase.NewContext());
+                this.InitializeTarget(testDatabase);
                 await this.CreateChannelAsync(UserId, ChannelId, testDatabase, createPost: true);
                 await testDatabase.TakeSnapshotAsync();
 
@@ -144,7 +144,7 @@
 
         private async Task CreateChannelAsync(UserId newUserId, ChannelId newChannelId, TestDatabaseContext testDatabase, bool createPost)
         {
-            using (var databaseContext = testDatabase.NewContext())
+            using (var databaseContext = testDatabase.CreateContext())
             {
                 await databaseContext.CreateTestChannelAsync(newUserId.Value, newChannelId.Value);
 

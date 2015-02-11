@@ -18,7 +18,7 @@
     [AutoConstructor]
     public partial class GetChannelsAndCollectionsDbStatement : IGetChannelsAndCollectionsDbStatement
     {
-        private readonly IFifthweekDbContext databaseContext;
+        private readonly IFifthweekDbConnectionFactory connectionFactory;
 
         public async Task<ChannelsAndCollections> ExecuteAsync(UserId userId)
         {
@@ -61,7 +61,8 @@
 
             List<Channel> channels;
             List<Collection> collections;
-            using (var multi = await this.databaseContext.Database.Connection.QueryMultipleAsync(
+            using (var connection = this.connectionFactory.CreateConnection())
+            using (var multi = await connection.QueryMultipleAsync(
                 query,
                 new { CreatorId = userId.Value }))
             {

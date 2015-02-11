@@ -49,7 +49,7 @@ namespace Fifthweek.Api.Posts
             Post.Fields.LiveDate,
             Post.Fields.ScheduledByQueue);
 
-        private readonly IFifthweekDbContext databaseContext;
+        private readonly IFifthweekDbConnectionFactory connectionFactory;
         private readonly IGetLiveDateOfNewQueuedPostDbStatement getLiveDateOfNewQueuedPost;
 
         public async Task ExecuteAsync(PostId postId, CollectionId currentCollectionId, DateTime now)
@@ -82,13 +82,16 @@ namespace Fifthweek.Api.Posts
                 }
             };
 
-            var failedConditionIndex = await this.databaseContext.Database.Connection.UpdateAsync(parameters);
-            var concurrencyFailure = failedConditionIndex == 0 || failedConditionIndex == 1;
-
-            if (concurrencyFailure)
+            using (var connection = this.connectionFactory.CreateConnection())
             {
-                // Log the collection ID, as the post ID will be useless for debugging (as it was never created).
-                throw new OptimisticConcurrencyException(string.Format("Failed to optimistically queue post. {0}", currentCollectionId));
+                var failedConditionIndex = await connection.UpdateAsync(parameters);
+                var concurrencyFailure = failedConditionIndex == 0 || failedConditionIndex == 1;
+
+                if (concurrencyFailure)
+                {
+                    // Log the collection ID, as the post ID will be useless for debugging (as it was never created).
+                    throw new OptimisticConcurrencyException(string.Format("Failed to optimistically queue post. {0}", currentCollectionId));
+                }
             }
         }
     }

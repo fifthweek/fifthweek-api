@@ -24,7 +24,7 @@
         {
             await this.DatabaseTestAsync(async testDatabase =>
             {
-                this.target = new FileOwnership(testDatabase.NewContext());
+                this.target = new FileOwnership(testDatabase);
                 await this.CreateFileAsync(UserId, FileId, testDatabase);
                 await testDatabase.TakeSnapshotAsync();
 
@@ -40,9 +40,9 @@
         {
             await this.DatabaseTestAsync(async testDatabase =>
             {
-                this.target = new FileOwnership(testDatabase.NewContext());
+                this.target = new FileOwnership(testDatabase);
 
-                using (var databaseContext = testDatabase.NewContext())
+                using (var databaseContext = testDatabase.CreateContext())
                 {
                     await databaseContext.Database.Connection.ExecuteAsync("DELETE FROM Posts");
                     await databaseContext.Database.Connection.ExecuteAsync("DELETE FROM Files");
@@ -62,7 +62,7 @@
         {
             await this.DatabaseTestAsync(async testDatabase =>
             {
-                this.target = new FileOwnership(testDatabase.NewContext());
+                this.target = new FileOwnership(testDatabase);
                 await this.CreateFileAsync(new UserId(Guid.NewGuid()), new FileId(Guid.NewGuid()), testDatabase);
                 await testDatabase.TakeSnapshotAsync();
 
@@ -78,7 +78,7 @@
         {
             await this.DatabaseTestAsync(async testDatabase =>
             {
-                this.target = new FileOwnership(testDatabase.NewContext());
+                this.target = new FileOwnership(testDatabase);
                 await this.CreateFileAsync(UserId, new FileId(Guid.NewGuid()), testDatabase);
                 await testDatabase.TakeSnapshotAsync();
 
@@ -94,7 +94,7 @@
         {
             await this.DatabaseTestAsync(async testDatabase =>
             {
-                this.target = new FileOwnership(testDatabase.NewContext());
+                this.target = new FileOwnership(testDatabase);
                 await this.CreateFileAsync(new UserId(Guid.NewGuid()), FileId, testDatabase);
                 await testDatabase.TakeSnapshotAsync();
 
@@ -116,7 +116,7 @@
             file.User = user;
             file.UserId = newFileId.Value;
 
-            using (var databaseContext = testDatabase.NewContext())
+            using (var databaseContext = testDatabase.CreateContext())
             {
                 databaseContext.Users.Add(user);
                 databaseContext.Files.Add(file);

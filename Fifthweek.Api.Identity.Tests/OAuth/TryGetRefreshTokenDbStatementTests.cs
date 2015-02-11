@@ -24,13 +24,13 @@
             "protectedTicket");
 
         private TryGetRefreshTokenDbStatement target;
-        private Mock<IFifthweekDbContext> fifthweekDbContext;
+        private Mock<IFifthweekDbConnectionFactory> connectionFactory;
 
         [TestInitialize]
         public void TestInitialize()
         {
-            this.fifthweekDbContext = new Mock<IFifthweekDbContext>(MockBehavior.Strict);
-            this.target = new TryGetRefreshTokenDbStatement(this.fifthweekDbContext.Object);
+            this.connectionFactory = new Mock<IFifthweekDbConnectionFactory>(MockBehavior.Strict);
+            this.target = new TryGetRefreshTokenDbStatement(this.connectionFactory.Object);
         }
 
         [TestMethod]
@@ -45,7 +45,7 @@
         {
             await this.DatabaseTestAsync(async testDatabase =>
             {
-                this.target = new TryGetRefreshTokenDbStatement(testDatabase.NewContext());
+                this.target = new TryGetRefreshTokenDbStatement(testDatabase);
 
                 await InsertRefreshToken(testDatabase);
                 await testDatabase.TakeSnapshotAsync();
@@ -63,7 +63,7 @@
         {
             await this.DatabaseTestAsync(async testDatabase =>
             {
-                this.target = new TryGetRefreshTokenDbStatement(testDatabase.NewContext());
+                this.target = new TryGetRefreshTokenDbStatement(testDatabase);
 
                 await testDatabase.TakeSnapshotAsync();
 
@@ -77,7 +77,7 @@
 
         private static async Task InsertRefreshToken(TestDatabaseContext testDatabase)
         {
-            using (var context = testDatabase.NewContext())
+            using (var context = testDatabase.CreateContext())
             {
                 await context.Database.Connection.InsertAsync(RefreshToken);
             }

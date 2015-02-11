@@ -17,7 +17,7 @@
     [AutoConstructor]
     public partial class UpdateAccountSettingsDbStatement : IUpdateAccountSettingsDbStatement
     {
-        private readonly IFifthweekDbContext databaseContext;
+        private readonly IFifthweekDbConnectionFactory connectionFactory;
 
         private readonly IUserManager userManager;
 
@@ -70,18 +70,21 @@
 
             query.Append(@"select @emailConfirmed");
 
-            var emailConfirmed = await this.databaseContext.Database.Connection.ExecuteScalarAsync<bool>(
-                query.ToString(),
-                new
-                {
-                    UserId = userId.Value,
-                    Username = newUsername.Value,
-                    Email = newEmail.Value,
-                    PasswordHash = passwordHash,
-                    ProfileImageFileId = newProfileImageFileId == null ? (Guid?)null : newProfileImageFileId.Value
-                });
+            using (var connection = this.connectionFactory.CreateConnection())
+            {
+                var emailConfirmed = await connection.ExecuteScalarAsync<bool>(
+                    query.ToString(),
+                    new
+                    {
+                        UserId = userId.Value,
+                        Username = newUsername.Value,
+                        Email = newEmail.Value,
+                        PasswordHash = passwordHash,
+                        ProfileImageFileId = newProfileImageFileId == null ? (Guid?)null : newProfileImageFileId.Value
+                    });
 
-            return new UpdateAccountSettingsResult(emailConfirmed);
+                return new UpdateAccountSettingsResult(emailConfirmed);
+            }
         }
 
         [AutoConstructor, AutoEqualityMembers]

@@ -26,16 +26,16 @@
         private static readonly DateTime LatestQueuedPostTime = DateTime.SpecifyKind(new SqlDateTime(Now.AddDays(100)).Value, DateTimeKind.Utc);
         private static readonly DateTime CollectionLowerBound = DateTime.SpecifyKind(new SqlDateTime(Now.AddDays(50)).Value, DateTimeKind.Utc);
 
-        private Mock<IFifthweekDbContext> databaseContext;
+        private Mock<IFifthweekDbConnectionFactory> connectionFactory;
         private GetNewQueuedPostLiveDateLowerBoundDbStatement target;
 
         [TestInitialize]
         public void Initialize()
         {
             // Give potential side-effecting components strict mock behaviour.
-            this.databaseContext = new Mock<IFifthweekDbContext>(MockBehavior.Strict);
+            this.connectionFactory = new Mock<IFifthweekDbConnectionFactory>(MockBehavior.Strict);
 
-            this.target = new GetNewQueuedPostLiveDateLowerBoundDbStatement(this.databaseContext.Object);
+            this.target = new GetNewQueuedPostLiveDateLowerBoundDbStatement(this.connectionFactory.Object);
         }
 
         [TestMethod]
@@ -57,7 +57,7 @@
         {
             await this.DatabaseTestAsync(async testDatabase =>
             {
-                this.target = new GetNewQueuedPostLiveDateLowerBoundDbStatement(testDatabase.NewContext());
+                this.target = new GetNewQueuedPostLiveDateLowerBoundDbStatement(testDatabase);
                 await this.CreateEntitiesAsync(
                     testDatabase,
                     setCollectionLowerBoundInFuture: false);
@@ -77,7 +77,7 @@
         {
             await this.DatabaseTestAsync(async testDatabase =>
             {
-                this.target = new GetNewQueuedPostLiveDateLowerBoundDbStatement(testDatabase.NewContext());
+                this.target = new GetNewQueuedPostLiveDateLowerBoundDbStatement(testDatabase);
                 await this.CreateEntitiesAsync(
                     testDatabase,
                     setCollectionLowerBoundInFuture: false,
@@ -98,7 +98,7 @@
         {
             await this.DatabaseTestAsync(async testDatabase =>
             {
-                this.target = new GetNewQueuedPostLiveDateLowerBoundDbStatement(testDatabase.NewContext());
+                this.target = new GetNewQueuedPostLiveDateLowerBoundDbStatement(testDatabase);
                 await this.CreateEntitiesAsync(
                     testDatabase,
                     setCollectionLowerBoundInFuture: false,
@@ -120,7 +120,7 @@
         {
             await this.DatabaseTestAsync(async testDatabase =>
             {
-                this.target = new GetNewQueuedPostLiveDateLowerBoundDbStatement(testDatabase.NewContext());
+                this.target = new GetNewQueuedPostLiveDateLowerBoundDbStatement(testDatabase);
                 await this.CreateEntitiesAsync(
                     testDatabase,
                     setCollectionLowerBoundInFuture: false,
@@ -143,7 +143,7 @@
         {
             await this.DatabaseTestAsync(async testDatabase =>
             {
-                this.target = new GetNewQueuedPostLiveDateLowerBoundDbStatement(testDatabase.NewContext());
+                this.target = new GetNewQueuedPostLiveDateLowerBoundDbStatement(testDatabase);
                 await this.CreateEntitiesAsync(
                     testDatabase,
                     setCollectionLowerBoundInFuture: true);
@@ -163,7 +163,7 @@
         {
             await this.DatabaseTestAsync(async testDatabase =>
             {
-                this.target = new GetNewQueuedPostLiveDateLowerBoundDbStatement(testDatabase.NewContext());
+                this.target = new GetNewQueuedPostLiveDateLowerBoundDbStatement(testDatabase);
                 await this.CreateEntitiesAsync(
                     testDatabase,
                     setCollectionLowerBoundInFuture: true,
@@ -184,7 +184,7 @@
         {
             await this.DatabaseTestAsync(async testDatabase =>
             {
-                this.target = new GetNewQueuedPostLiveDateLowerBoundDbStatement(testDatabase.NewContext());
+                this.target = new GetNewQueuedPostLiveDateLowerBoundDbStatement(testDatabase);
                 await this.CreateEntitiesAsync(
                     testDatabase,
                     setCollectionLowerBoundInFuture: true,
@@ -206,7 +206,7 @@
         {
             await this.DatabaseTestAsync(async testDatabase =>
             {
-                this.target = new GetNewQueuedPostLiveDateLowerBoundDbStatement(testDatabase.NewContext());
+                this.target = new GetNewQueuedPostLiveDateLowerBoundDbStatement(testDatabase);
                 await this.CreateEntitiesAsync(
                     testDatabase,
                     setCollectionLowerBoundInFuture: true,
@@ -229,7 +229,7 @@
         {
             await this.DatabaseTestAsync(async testDatabase =>
             {
-                this.target = new GetNewQueuedPostLiveDateLowerBoundDbStatement(testDatabase.NewContext());
+                this.target = new GetNewQueuedPostLiveDateLowerBoundDbStatement(testDatabase);
                 await this.CreateEntitiesAsync(
                     testDatabase,
                     setCollectionLowerBoundInFuture: false,
@@ -257,7 +257,7 @@
         {
             await this.DatabaseTestAsync(async testDatabase =>
             {
-                this.target = new GetNewQueuedPostLiveDateLowerBoundDbStatement(testDatabase.NewContext());
+                this.target = new GetNewQueuedPostLiveDateLowerBoundDbStatement(testDatabase);
                 await this.CreateEntitiesAsync(
                     testDatabase,
                     setCollectionLowerBoundInFuture: true,
@@ -286,7 +286,7 @@
         {
             const int PostsToCreateForEachCategory = 5;
 
-            using (var databaseContext = testDatabase.NewContext())
+            using (var databaseContext = testDatabase.CreateContext())
             {
                 var random = new Random();
                 var collection = CollectionTests.UniqueEntityWithForeignEntities(

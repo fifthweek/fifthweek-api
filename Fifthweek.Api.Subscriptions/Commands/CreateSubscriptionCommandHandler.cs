@@ -15,7 +15,7 @@
     {
         private readonly ISubscriptionSecurity subscriptionSecurity;
         private readonly IRequesterSecurity requesterSecurity;
-        private readonly IFifthweekDbContext fifthweekDbContext;
+        private readonly IFifthweekDbConnectionFactory connectionFactory;
 
         public async Task HandleAsync(CreateSubscriptionCommand command)
         {
@@ -57,8 +57,11 @@
             // so no deadlocks are to be expected.
             using (var transaction = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled))
             {
-                await this.fifthweekDbContext.Database.Connection.InsertAsync(subscription);
-                await this.fifthweekDbContext.Database.Connection.InsertAsync(channel);
+                using (var connection = this.connectionFactory.CreateConnection())
+                {
+                    await connection.InsertAsync(subscription);
+                    await connection.InsertAsync(channel);
+                }
 
                 transaction.Complete();
             }

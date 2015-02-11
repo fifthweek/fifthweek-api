@@ -31,7 +31,7 @@
 
         private Mock<IRequesterSecurity> requesterSecurity;
         private Mock<IChannelSecurity> channelSecurity;
-        private Mock<IFifthweekDbContext> databaseContext;
+        private Mock<IFifthweekDbConnectionFactory> connectionFactory;
         private Mock<IRandom> random;
         private CreateCollectionCommandHandler target;
 
@@ -44,14 +44,14 @@
             this.random = new Mock<IRandom>();
 
             // Give potentially side-effective components strict mock behaviour.
-            this.databaseContext = new Mock<IFifthweekDbContext>(MockBehavior.Strict);
+            this.connectionFactory = new Mock<IFifthweekDbConnectionFactory>(MockBehavior.Strict);
 
-            this.InitializeTarget(this.databaseContext.Object);
+            this.InitializeTarget(this.connectionFactory.Object);
         }
 
-        public void InitializeTarget(IFifthweekDbContext databaseContext)
+        public void InitializeTarget(IFifthweekDbConnectionFactory connectionFactory)
         {
-            this.target = new CreateCollectionCommandHandler(this.requesterSecurity.Object, this.channelSecurity.Object, databaseContext, this.random.Object);
+            this.target = new CreateCollectionCommandHandler(this.requesterSecurity.Object, this.channelSecurity.Object, connectionFactory, this.random.Object);
         }
 
         [TestMethod]
@@ -82,7 +82,7 @@
         {
             await this.DatabaseTestAsync(async testDatabase =>
             {
-                this.InitializeTarget(testDatabase.NewContext());
+                this.InitializeTarget(testDatabase);
                 await this.CreateEntitiesAsync(testDatabase);
                 await this.target.HandleAsync(Command);
                 await testDatabase.TakeSnapshotAsync();
@@ -98,7 +98,7 @@
         {
             await this.DatabaseTestAsync(async testDatabase =>
             {
-                this.InitializeTarget(testDatabase.NewContext());
+                this.InitializeTarget(testDatabase);
                 await this.CreateEntitiesAsync(testDatabase);
                 await testDatabase.TakeSnapshotAsync();
 
@@ -134,7 +134,7 @@
             {
                 const byte HourOfWeek = 42;
                 this.random.Setup(_ => _.Next(0, 7 * 24)).Returns(HourOfWeek);
-                this.InitializeTarget(testDatabase.NewContext());
+                this.InitializeTarget(testDatabase);
                 await this.CreateEntitiesAsync(testDatabase);
                 await testDatabase.TakeSnapshotAsync();
 
@@ -155,7 +155,7 @@
 
         private async Task CreateEntitiesAsync(TestDatabaseContext testDatabase)
         {
-            using (var databaseContext = testDatabase.NewContext())
+            using (var databaseContext = testDatabase.CreateContext())
             {
                 await databaseContext.CreateTestChannelAsync(UserId.Value, ChannelId.Value);
             }

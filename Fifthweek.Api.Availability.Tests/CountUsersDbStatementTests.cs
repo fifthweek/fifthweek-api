@@ -13,21 +13,21 @@
     [TestClass]
     public class CountUsersDbStatementTests : PersistenceTestsBase
     {
-        private Mock<IFifthweekDbContext> databaseContext;
+        private Mock<IFifthweekDbConnectionFactory> connectionFactory;
         private CountUsersDbStatement target;
 
         [TestInitialize]
         public void Initialize()
         {
             // Give potentially side-effective components strict mock behaviour.
-            this.databaseContext = new Mock<IFifthweekDbContext>(MockBehavior.Strict);
+            this.connectionFactory = new Mock<IFifthweekDbConnectionFactory>(MockBehavior.Strict);
 
-            this.InitializeTarget(this.databaseContext.Object);
+            this.InitializeTarget(this.connectionFactory.Object);
         }
 
-        public void InitializeTarget(IFifthweekDbContext databaseContext)
+        public void InitializeTarget(IFifthweekDbConnectionFactory connectionFactory)
         {
-            this.target = new CountUsersDbStatement(databaseContext);
+            this.target = new CountUsersDbStatement(connectionFactory);
         }
 
         [TestMethod]
@@ -35,7 +35,7 @@
         {
             await this.DatabaseTestAsync(async testDatabase =>
             {
-                this.InitializeTarget(testDatabase.NewContext());
+                this.InitializeTarget(testDatabase);
 
                 var result = await this.target.ExecuteAsync();
 
@@ -43,7 +43,7 @@
 
                 var random = new Random();
                 var user = UserTests.UniqueEntity(random);
-                using (var context = testDatabase.NewContext())
+                using (var context = testDatabase.CreateContext())
                 {
                     context.Users.Add(user);
                     await context.SaveChangesAsync();

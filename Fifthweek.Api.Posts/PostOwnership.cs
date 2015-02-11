@@ -12,30 +12,33 @@
     [AutoConstructor]
     public partial class PostOwnership : IPostOwnership
     {
-        private readonly IFifthweekDbContext databaseContext;
+        private readonly IFifthweekDbConnectionFactory connectionFactory;
 
-        public Task<bool> IsOwnerAsync(UserId userId, Shared.PostId postId)
+        public async Task<bool> IsOwnerAsync(UserId userId, Shared.PostId postId)
         {
             userId.AssertNotNull("userId");
             postId.AssertNotNull("postId");
 
-            return this.databaseContext.Database.Connection.ExecuteScalarAsync<bool>(
-                @"IF EXISTS(SELECT *
-                            FROM        Posts post
-                            INNER JOIN  Channels channel
-                                ON      post.ChannelId          = channel.Id
-                            INNER JOIN  Subscriptions subscription 
-                                ON      channel.SubscriptionId  = subscription.Id
-                            WHERE       post.Id                 = @PostId
-                            AND         subscription.CreatorId  = @CreatorId)
-                    SELECT 1 AS FOUND
-                ELSE
-                    SELECT 0 AS FOUND",
-                new
-                {
-                    PostId = postId.Value,
-                    CreatorId = userId.Value
-                });
+            using (var connection = this.connectionFactory.CreateConnection())
+            {
+                return await connection.ExecuteScalarAsync<bool>(
+                    @"IF EXISTS(SELECT *
+                                FROM        Posts post
+                                INNER JOIN  Channels channel
+                                    ON      post.ChannelId          = channel.Id
+                                INNER JOIN  Subscriptions subscription 
+                                    ON      channel.SubscriptionId  = subscription.Id
+                                WHERE       post.Id                 = @PostId
+                                AND         subscription.CreatorId  = @CreatorId)
+                        SELECT 1 AS FOUND
+                    ELSE
+                        SELECT 0 AS FOUND",
+                    new
+                    {
+                        PostId = postId.Value,
+                        CreatorId = userId.Value
+                    });
+            }
         }
     }
 }

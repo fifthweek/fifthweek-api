@@ -16,13 +16,13 @@
     {
         public void Register(ContainerBuilder builder)
         {
-            builder.RegisterType<FifthweekDbContext>().As<IFifthweekDbContext>();
-            builder.Register(c => CreateUserManager(c.Resolve<ISendEmailService>(), c.Resolve<IFifthweekDbContext>())).As<IUserManager>();
+            builder.RegisterType<FifthweekDbConnectionFactory>().As<IFifthweekDbConnectionFactory>().SingleInstance();
+            builder.Register(c => CreateUserManager(c.Resolve<ISendEmailService>(), c.Resolve<IFifthweekDbConnectionFactory>())).As<IUserManager>();
         }
 
-        public static FifthweekUserManager CreateUserManager(ISendEmailService sendEmailService, IFifthweekDbContext dbContext)
+        public static FifthweekUserManager CreateUserManager(ISendEmailService sendEmailService, IFifthweekDbConnectionFactory connectionFactory)
         {
-            var userStore = new FifthweekUserStore((FifthweekDbContext)dbContext);
+            var userStore = new FifthweekUserStore(connectionFactory.CreateContext());
             var dataProtectionProvider = IdentityConfig.FarmedMachineDataProtectionProvider ?? IdentityConfig.NonFarmedMachineDataProtectionProvider;
             var userManager = new FifthweekUserManager(userStore)
             {

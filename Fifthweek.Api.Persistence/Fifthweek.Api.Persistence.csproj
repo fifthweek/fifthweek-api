@@ -73,6 +73,7 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.configuration" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
@@ -91,6 +92,7 @@
     <Compile Include="Collection.cs" />
     <Compile Include="DapperExtensions.cs" />
     <Compile Include="DapperTypeHandlerRegistration.cs" />
+    <Compile Include="FifthweekDbConnectionFactory.cs" />
     <Compile Include="FifthweekDbContext.cs" />
     <Compile Include="FileState.cs" />
     <Compile Include="IAutoRegisteredTypeHandler.cs" />
@@ -103,6 +105,7 @@
     <Compile Include="Identity\FifthweekUserManager.cs" />
     <Compile Include="Identity\FifthweekUserRole.cs" />
     <Compile Include="Identity\FifthweekUserStore.cs" />
+    <Compile Include="IFifthweekDbConnectionFactory.cs" />
     <Compile Include="IFifthweekDbContext.cs" />
     <Compile Include="IIdentityEquatable.cs" />
     <Compile Include="IUserManager.cs" />

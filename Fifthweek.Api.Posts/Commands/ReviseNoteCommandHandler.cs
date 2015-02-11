@@ -15,7 +15,7 @@
         private readonly IRequesterSecurity requesterSecurity;
         private readonly IChannelSecurity channelSecurity;
         private readonly IPostSecurity postSecurity;
-        private readonly IFifthweekDbContext databaseContext;
+        private readonly IFifthweekDbConnectionFactory connectionFactory;
 
         public async Task HandleAsync(ReviseNoteCommand command)
         {
@@ -29,7 +29,7 @@
             await this.ReviseNoteAsync(command);
         }
 
-        private Task ReviseNoteAsync(ReviseNoteCommand command)
+        private async Task ReviseNoteAsync(ReviseNoteCommand command)
         {
             var post = new Post(command.PostId.Value)
             {
@@ -37,7 +37,10 @@
                 Comment = command.Note.Value
             };
 
-            return this.databaseContext.Database.Connection.UpdateAsync(post, Post.Fields.ChannelId | Post.Fields.Comment);
+            using (var connection = this.connectionFactory.CreateConnection())
+            {
+                await connection.UpdateAsync(post, Post.Fields.ChannelId | Post.Fields.Comment);
+            }
         }
     }
 }

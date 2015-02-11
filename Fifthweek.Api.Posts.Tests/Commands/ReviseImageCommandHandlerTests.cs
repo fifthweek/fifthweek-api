@@ -31,7 +31,7 @@
         private static readonly ReviseImageCommand Command = new ReviseImageCommand(Requester, PostId, FileId, Comment);
         private Mock<IPostSecurity> postSecurity;
         private Mock<IRequesterSecurity> requesterSecurity;
-        private Mock<IFifthweekDbContext> databaseContext;
+        private Mock<IFifthweekDbConnectionFactory> connectionFactory;
         private Mock<IScheduleGarbageCollectionStatement> scheduleGarbageCollection;
         private ReviseImageCommandHandler target;
 
@@ -43,18 +43,18 @@
             this.requesterSecurity.SetupFor(Requester);
 
             // Give potentially side-effective components strict mock behaviour.
-            this.databaseContext = new Mock<IFifthweekDbContext>(MockBehavior.Strict);
+            this.connectionFactory = new Mock<IFifthweekDbConnectionFactory>(MockBehavior.Strict);
             this.scheduleGarbageCollection = new Mock<IScheduleGarbageCollectionStatement>(MockBehavior.Strict);
 
-            this.InitializeTarget(this.databaseContext.Object);
+            this.InitializeTarget(this.connectionFactory.Object);
         }
 
-        public void InitializeTarget(IFifthweekDbContext databaseContext)
+        public void InitializeTarget(IFifthweekDbConnectionFactory connectionFactory)
         {
             this.target = new ReviseImageCommandHandler(
                 this.requesterSecurity.Object,
                 this.postSecurity.Object,
-                databaseContext,
+                connectionFactory,
                 this.scheduleGarbageCollection.Object);
         }
 
@@ -80,7 +80,7 @@
             await this.DatabaseTestAsync(async testDatabase =>
             {
                 this.scheduleGarbageCollection.Setup(_ => _.ExecuteAsync()).Returns(Task.FromResult(0));
-                this.InitializeTarget(testDatabase.NewContext());
+                this.InitializeTarget(testDatabase);
                 await this.CreateCollectionAsync(testDatabase, createPost: true);
                 await this.target.HandleAsync(Command);
                 await testDatabase.TakeSnapshotAsync();
@@ -97,7 +97,7 @@
             await this.DatabaseTestAsync(async testDatabase =>
             {
                 this.scheduleGarbageCollection.Setup(_ => _.ExecuteAsync()).Returns(Task.FromResult(0));
-                this.InitializeTarget(testDatabase.NewContext());
+                this.InitializeTarget(testDatabase);
                 await this.CreateCollectionAsync(testDatabase, createPost: false);
                 await testDatabase.TakeSnapshotAsync();
 
@@ -113,7 +113,7 @@
             await this.DatabaseTestAsync(async testDatabase =>
             {
                 this.scheduleGarbageCollection.Setup(_ => _.ExecuteAsync()).Returns(Task.FromResult(0)).Verifiable();
-                this.InitializeTarget(testDatabase.NewContext());
+                this.InitializeTarget(testDatabase);
                 await this.CreateCollectionAsync(testDatabase, createPost: true);
                 await testDatabase.TakeSnapshotAsync();
 
@@ -147,7 +147,7 @@
 
         private async Task CreateCollectionAsync(TestDatabaseContext testDatabase, bool createPost)
         {
-            using (var databaseContext = testDatabase.NewContext())
+            using (var databaseContext = testDatabase.CreateContext())
             {
                 await databaseContext.CreateTestCollectionAsync(UserId.Value, ChannelId.Value, CollectionId.Value);
 

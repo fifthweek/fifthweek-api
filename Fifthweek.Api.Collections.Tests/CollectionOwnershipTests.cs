@@ -23,7 +23,7 @@
         {
             await this.DatabaseTestAsync(async testDatabase =>
             {
-                this.target = new CollectionOwnership(testDatabase.NewContext());
+                this.target = new CollectionOwnership(testDatabase);
                 await this.CreateCollectionAsync(UserId, CollectionId, testDatabase);
                 await testDatabase.TakeSnapshotAsync();
 
@@ -39,9 +39,9 @@
         {
             await this.DatabaseTestAsync(async testDatabase =>
             {
-                this.target = new CollectionOwnership(testDatabase.NewContext());
+                this.target = new CollectionOwnership(testDatabase);
 
-                using (var databaseContext = testDatabase.NewContext())
+                using (var databaseContext = testDatabase.CreateContext())
                 {
                     await databaseContext.Database.Connection.ExecuteAsync("DELETE FROM Channels");
 
@@ -65,7 +65,7 @@
         {
             await this.DatabaseTestAsync(async testDatabase =>
             {
-                this.target = new CollectionOwnership(testDatabase.NewContext());
+                this.target = new CollectionOwnership(testDatabase);
                 await this.CreateCollectionAsync(new UserId(Guid.NewGuid()), new CollectionId(Guid.NewGuid()), testDatabase);
                 await testDatabase.TakeSnapshotAsync();
 
@@ -81,7 +81,7 @@
         {
             await this.DatabaseTestAsync(async testDatabase =>
             {
-                this.target = new CollectionOwnership(testDatabase.NewContext());
+                this.target = new CollectionOwnership(testDatabase);
                 await this.CreateCollectionAsync(UserId, new CollectionId(Guid.NewGuid()), testDatabase);
                 await testDatabase.TakeSnapshotAsync();
 
@@ -97,7 +97,7 @@
         {
             await this.DatabaseTestAsync(async testDatabase =>
             {
-                this.target = new CollectionOwnership(testDatabase.NewContext());
+                this.target = new CollectionOwnership(testDatabase);
                 await this.CreateCollectionAsync(new UserId(Guid.NewGuid()), CollectionId, testDatabase);
                 await testDatabase.TakeSnapshotAsync();
 
@@ -110,7 +110,7 @@
 
         private async Task CreateCollectionAsync(UserId newUserId, CollectionId newCollectionId, TestDatabaseContext testDatabase)
         {
-            using (var databaseContext = testDatabase.NewContext())
+            using (var databaseContext = testDatabase.CreateContext())
             {
                 await databaseContext.CreateTestCollectionAsync(newUserId.Value, Guid.NewGuid(), newCollectionId.Value);
             }

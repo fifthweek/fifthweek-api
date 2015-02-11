@@ -23,7 +23,7 @@
         {
             await this.DatabaseTestAsync(async testDatabase =>
             {
-                this.target = new SubscriptionOwnership(testDatabase.NewContext());
+                this.target = new SubscriptionOwnership(testDatabase);
                 await this.CreateSubscriptionAsync(UserId, SubscriptionId, testDatabase);
                 await testDatabase.TakeSnapshotAsync();
 
@@ -39,9 +39,9 @@
         {
             await this.DatabaseTestAsync(async testDatabase =>
             {
-                this.target = new SubscriptionOwnership(testDatabase.NewContext());
+                this.target = new SubscriptionOwnership(testDatabase);
 
-                using (var databaseContext = testDatabase.NewContext())
+                using (var databaseContext = testDatabase.CreateContext())
                 {
                     await databaseContext.Database.Connection.ExecuteAsync("DELETE FROM Subscriptions");
                 }
@@ -60,7 +60,7 @@
         {
             await this.DatabaseTestAsync(async testDatabase =>
             {
-                this.target = new SubscriptionOwnership(testDatabase.NewContext());
+                this.target = new SubscriptionOwnership(testDatabase);
                 await this.CreateSubscriptionAsync(new UserId(Guid.NewGuid()), new SubscriptionId(Guid.NewGuid()), testDatabase);
                 await testDatabase.TakeSnapshotAsync();
 
@@ -76,7 +76,7 @@
         {
             await this.DatabaseTestAsync(async testDatabase =>
             {
-                this.target = new SubscriptionOwnership(testDatabase.NewContext());
+                this.target = new SubscriptionOwnership(testDatabase);
                 await this.CreateSubscriptionAsync(UserId, new SubscriptionId(Guid.NewGuid()), testDatabase);
                 await testDatabase.TakeSnapshotAsync();
 
@@ -92,7 +92,7 @@
         {
             await this.DatabaseTestAsync(async testDatabase =>
             {
-                this.target = new SubscriptionOwnership(testDatabase.NewContext());
+                this.target = new SubscriptionOwnership(testDatabase);
                 await this.CreateSubscriptionAsync(new UserId(Guid.NewGuid()), SubscriptionId, testDatabase);
                 await testDatabase.TakeSnapshotAsync();
 
@@ -105,7 +105,7 @@
 
         private async Task CreateSubscriptionAsync(UserId newUserId, SubscriptionId newSubscriptionId, TestDatabaseContext testDatabase)
         {
-            using (var databaseContext = testDatabase.NewContext())
+            using (var databaseContext = testDatabase.CreateContext())
             {
                 await databaseContext.CreateTestSubscriptionAsync(newUserId.Value, newSubscriptionId.Value);
             }

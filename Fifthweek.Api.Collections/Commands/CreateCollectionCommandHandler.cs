@@ -20,7 +20,7 @@
 
         private readonly IRequesterSecurity requesterSecurity;
         private readonly IChannelSecurity channelSecurity;
-        private readonly IFifthweekDbContext databaseContext;
+        private readonly IFifthweekDbConnectionFactory connectionFactory;
         private readonly IRandom random;
 
         public async Task HandleAsync(CreateCollectionCommand command)
@@ -55,8 +55,11 @@
             // so no deadlocks are to be expected.
             using (var transaction = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled))
             {
-                await this.databaseContext.Database.Connection.InsertAsync(collection);
-                await this.databaseContext.Database.Connection.InsertAsync(releaseDate);
+                using (var connection = this.connectionFactory.CreateConnection())
+                {
+                    await connection.InsertAsync(collection);
+                    await connection.InsertAsync(releaseDate);
+                }
 
                 transaction.Complete();
             }

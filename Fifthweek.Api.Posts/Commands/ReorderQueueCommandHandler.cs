@@ -77,7 +77,7 @@
             Subscription.Fields.CreatorId);
 
         private readonly IRequesterSecurity requesterSecurity;
-        private readonly IFifthweekDbContext databaseContext;
+        private readonly IFifthweekDbConnectionFactory connectionFactory;
 
         public async Task HandleAsync(ReorderQueueCommand command)
         {
@@ -117,7 +117,10 @@
                 Now = DateTime.UtcNow
             };
 
-            await this.databaseContext.Database.Connection.ExecuteAsync(sql.ToString(), parameters);
+            using (var connection = this.connectionFactory.CreateConnection())
+            {
+                await connection.ExecuteAsync(sql.ToString(), parameters);
+            }
         }
     }
 }

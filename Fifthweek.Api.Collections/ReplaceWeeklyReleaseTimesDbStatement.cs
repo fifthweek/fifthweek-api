@@ -21,7 +21,7 @@ namespace Fifthweek.Api.Collections
             WeeklyReleaseTime.Table,
             WeeklyReleaseTime.Fields.CollectionId);
 
-        private readonly IFifthweekDbContext databaseContext;
+        private readonly IFifthweekDbConnectionFactory connectionFactory;
 
         public async Task ExecuteAsync(CollectionId collectionId, WeeklyReleaseSchedule weeklyReleaseSchedule)
         {
@@ -40,8 +40,11 @@ namespace Fifthweek.Api.Collections
             // collection. The absence of weekly release times would cause a breaking inconsistency.
             using (var transaction = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled))
             {
-                await this.databaseContext.Database.Connection.ExecuteAsync(DeleteWeeklyReleaseTimesSql, deletionParameters);
-                await this.databaseContext.Database.Connection.InsertAsync(newWeeklyReleaseTimes);
+                using (var connection = this.connectionFactory.CreateConnection())
+                {
+                    await connection.ExecuteAsync(DeleteWeeklyReleaseTimesSql, deletionParameters);
+                    await connection.InsertAsync(newWeeklyReleaseTimes);
+                }
 
                 transaction.Complete();
             }

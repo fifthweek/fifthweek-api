@@ -32,8 +32,8 @@
         public void TestInitialize()
         {
             // Give potentially side-effecting components strict mock behaviour.
-            var strictDbContext = new Mock<IFifthweekDbContext>(MockBehavior.Strict);
-            this.target = new GetChannelsAndCollectionsDbStatement(strictDbContext.Object);
+            var connectionFactory = new Mock<IFifthweekDbConnectionFactory>(MockBehavior.Strict);
+            this.target = new GetChannelsAndCollectionsDbStatement(connectionFactory.Object);
         }
 
         [TestMethod]
@@ -48,7 +48,7 @@
         {
             await this.DatabaseTestAsync(async testDatabase =>
             {
-                this.target = new GetChannelsAndCollectionsDbStatement(testDatabase.NewContext());
+                this.target = new GetChannelsAndCollectionsDbStatement(testDatabase);
                 await this.CreateEntitiesAsync(testDatabase);
                 await testDatabase.TakeSnapshotAsync();
 
@@ -78,7 +78,7 @@
         {
             await this.DatabaseTestAsync(async testDatabase =>
             {
-                this.target = new GetChannelsAndCollectionsDbStatement(testDatabase.NewContext());
+                this.target = new GetChannelsAndCollectionsDbStatement(testDatabase);
                 await testDatabase.TakeSnapshotAsync();
 
                 var result = await this.target.ExecuteAsync(UserId);
@@ -92,64 +92,58 @@
 
         private async Task CreateEntitiesAsync(TestDatabaseContext testDatabase)
         {
-            using (var databaseContext = testDatabase.NewContext())
+            using (var databaseContext = testDatabase.CreateContext())
             {
-                await this.CreateTestCollectionAsync(databaseContext);
+                var random = new Random();
+                var creator = UserTests.UniqueEntity(random);
+                creator.Id = UserId.Value;
+
+                var subscription = SubscriptionTests.UniqueEntity(random);
+                subscription.Creator = creator;
+                subscription.CreatorId = creator.Id;
+
+                // First channel has no collections.
+                var channel1 = ChannelTests.UniqueEntity(random);
+                channel1.Id = ChannelId1.Value;
+                channel1.Subscription = subscription;
+                channel1.SubscriptionId = subscription.Id;
+
+                // Second channel has one collection.
+                var channel2 = ChannelTests.UniqueEntity(random);
+                channel2.Id = ChannelId2.Value;
+                channel2.Subscription = subscription;
+                channel2.SubscriptionId = subscription.Id;
+
+                var collection1 = CollectionTests.UniqueEntity(random);
+                collection1.Id = CollectionId1.Value;
+                collection1.Channel = channel2;
+                collection1.ChannelId = channel2.Id;
+
+                // Third channel has two collections.
+                var channel3 = ChannelTests.UniqueEntity(random);
+                channel3.Id = ChannelId3.Value;
+                channel3.Subscription = subscription;
+                channel3.SubscriptionId = subscription.Id;
+
+                var collection2 = CollectionTests.UniqueEntity(random);
+                collection2.Id = CollectionId2.Value;
+                collection2.Channel = channel3;
+                collection2.ChannelId = channel3.Id;
+
+                var collection3 = CollectionTests.UniqueEntity(random);
+                collection3.Id = CollectionId3.Value;
+                collection3.Channel = channel3;
+                collection3.ChannelId = channel3.Id;
+
+                databaseContext.Channels.Add(channel1);
+                databaseContext.Channels.Add(channel2);
+                databaseContext.Channels.Add(channel3);
+                databaseContext.Collections.Add(collection1);
+                databaseContext.Collections.Add(collection2);
+                databaseContext.Collections.Add(collection3);
+
+                await databaseContext.SaveChangesAsync();
             }
-        }
-
-        private Task CreateTestCollectionAsync(
-            IFifthweekDbContext databaseContext)
-        {
-            var random = new Random();
-            var creator = UserTests.UniqueEntity(random);
-            creator.Id = UserId.Value;
-
-            var subscription = SubscriptionTests.UniqueEntity(random);
-            subscription.Creator = creator;
-            subscription.CreatorId = creator.Id;
-
-            // First channel has no collections.
-            var channel1 = ChannelTests.UniqueEntity(random);
-            channel1.Id = ChannelId1.Value;
-            channel1.Subscription = subscription;
-            channel1.SubscriptionId = subscription.Id;
-
-            // Second channel has one collection.
-            var channel2 = ChannelTests.UniqueEntity(random);
-            channel2.Id = ChannelId2.Value;
-            channel2.Subscription = subscription;
-            channel2.SubscriptionId = subscription.Id;
-
-            var collection1 = CollectionTests.UniqueEntity(random);
-            collection1.Id = CollectionId1.Value;
-            collection1.Channel = channel2;
-            collection1.ChannelId = channel2.Id;
-
-            // Third channel has two collections.
-            var channel3 = ChannelTests.UniqueEntity(random);
-            channel3.Id = ChannelId3.Value;
-            channel3.Subscription = subscription;
-            channel3.SubscriptionId = subscription.Id;
-
-            var collection2 = CollectionTests.UniqueEntity(random);
-            collection2.Id = CollectionId2.Value;
-            collection2.Channel = channel3;
-            collection2.ChannelId = channel3.Id;
-
-            var collection3 = CollectionTests.UniqueEntity(random);
-            collection3.Id = CollectionId3.Value;
-            collection3.Channel = channel3;
-            collection3.ChannelId = channel3.Id;
-
-            databaseContext.Channels.Add(channel1);
-            databaseContext.Channels.Add(channel2);
-            databaseContext.Channels.Add(channel3);
-            databaseContext.Collections.Add(collection1);
-            databaseContext.Collections.Add(collection2);
-            databaseContext.Collections.Add(collection3);
-
-            return databaseContext.SaveChangesAsync();
         }
     }
 }

@@ -35,7 +35,7 @@
         private static readonly DateTime UniqueLiveDate = Now.AddDays(50);
 
         private Mock<IGetLiveDateOfNewQueuedPostDbStatement> getLiveDateOfNewQueuedPost;
-        private Mock<IFifthweekDbContext> databaseContext;
+        private Mock<IFifthweekDbConnectionFactory> connectionFactory;
         private MoveBacklogPostToQueueDbStatement target;
 
         [TestInitialize]
@@ -44,14 +44,14 @@
             this.getLiveDateOfNewQueuedPost = new Mock<IGetLiveDateOfNewQueuedPostDbStatement>();
 
             // Give potentially side-effecting components strict mock behaviour.
-            this.databaseContext = new Mock<IFifthweekDbContext>(MockBehavior.Strict);
+            this.connectionFactory = new Mock<IFifthweekDbConnectionFactory>(MockBehavior.Strict);
 
-            this.InitializeTarget(this.databaseContext.Object);
+            this.InitializeTarget(this.connectionFactory.Object);
         }
 
-        public void InitializeTarget(IFifthweekDbContext databaseContext)
+        public void InitializeTarget(IFifthweekDbConnectionFactory connectionFactory)
         {
-            this.target = new MoveBacklogPostToQueueDbStatement(databaseContext, this.getLiveDateOfNewQueuedPost.Object);
+            this.target = new MoveBacklogPostToQueueDbStatement(connectionFactory, this.getLiveDateOfNewQueuedPost.Object);
         }
 
         [TestMethod]
@@ -82,7 +82,7 @@
             {
                 this.getLiveDateOfNewQueuedPost.Setup(_ => _.ExecuteAsync(CollectionId)).ReturnsAsync(UniqueLiveDate);
 
-                this.InitializeTarget(testDatabase.NewContext());
+                this.InitializeTarget(testDatabase);
                 await this.CreateEntitiesAsync(testDatabase);
                 await this.CreatePostAsync(testDatabase, ExistingFutureLiveDate);
                 await this.target.ExecuteAsync(PostId, CollectionId, Now);
@@ -101,7 +101,7 @@
             {
                 this.getLiveDateOfNewQueuedPost.Setup(_ => _.ExecuteAsync(CollectionId)).ReturnsAsync(UniqueLiveDate);
 
-                this.InitializeTarget(testDatabase.NewContext());
+                this.InitializeTarget(testDatabase);
                 await this.CreateEntitiesAsync(testDatabase);
                 var post = await this.CreatePostAsync(testDatabase, ExistingFutureLiveDate);
                 await testDatabase.TakeSnapshotAsync();
@@ -125,7 +125,7 @@
             {
                 this.getLiveDateOfNewQueuedPost.Setup(_ => _.ExecuteAsync(CollectionId)).ReturnsAsync(UniqueLiveDate);
 
-                this.InitializeTarget(testDatabase.NewContext());
+                this.InitializeTarget(testDatabase);
                 await this.CreateEntitiesAsync(testDatabase);
                 await this.CreatePostAsync(testDatabase, ExistingFutureLiveDate, scheduledByQueue: true);
                 await testDatabase.TakeSnapshotAsync();
@@ -143,7 +143,7 @@
             {
                 this.getLiveDateOfNewQueuedPost.Setup(_ => _.ExecuteAsync(CollectionId)).ReturnsAsync(UniqueLiveDate);
 
-                this.InitializeTarget(testDatabase.NewContext());
+                this.InitializeTarget(testDatabase);
                 await this.CreateEntitiesAsync(testDatabase);
                 await this.CreatePostAsync(testDatabase, ExistingPastLiveDate);
                 await testDatabase.TakeSnapshotAsync();
@@ -161,7 +161,7 @@
             {
                 this.getLiveDateOfNewQueuedPost.Setup(_ => _.ExecuteAsync(CollectionId)).ReturnsAsync(UniqueLiveDate);
 
-                this.InitializeTarget(testDatabase.NewContext());
+                this.InitializeTarget(testDatabase);
                 await this.CreateEntitiesAsync(testDatabase);
                 await this.CreatePostAsync(testDatabase, ExistingFutureLiveDate, differentCollection: true);
                 await testDatabase.TakeSnapshotAsync();
@@ -182,7 +182,7 @@
             {
                 this.getLiveDateOfNewQueuedPost.Setup(_ => _.ExecuteAsync(CollectionId)).ReturnsAsync(UniqueLiveDate);
 
-                this.InitializeTarget(testDatabase.NewContext());
+                this.InitializeTarget(testDatabase);
                 await this.CreateEntitiesAsync(testDatabase);
                 var post = await this.CreatePostAsync(testDatabase, ExistingFutureLiveDate);
                 await this.CreateOtherPostAsync(testDatabase, UniqueLiveDate, scheduledByQueue: true, differentCollection: true);
@@ -207,7 +207,7 @@
             {
                 this.getLiveDateOfNewQueuedPost.Setup(_ => _.ExecuteAsync(CollectionId)).ReturnsAsync(UniqueLiveDate);
 
-                this.InitializeTarget(testDatabase.NewContext());
+                this.InitializeTarget(testDatabase);
                 await this.CreateEntitiesAsync(testDatabase);
                 var post = await this.CreatePostAsync(testDatabase, ExistingFutureLiveDate);
                 await this.CreateOtherPostAsync(testDatabase, UniqueLiveDate, scheduledByQueue: false, differentCollection: false);
@@ -232,7 +232,7 @@
             {
                 this.getLiveDateOfNewQueuedPost.Setup(_ => _.ExecuteAsync(CollectionId)).ReturnsAsync(UniqueLiveDate);
 
-                this.InitializeTarget(testDatabase.NewContext());
+                this.InitializeTarget(testDatabase);
                 await this.CreateEntitiesAsync(testDatabase);
                 await this.CreatePostAsync(testDatabase, ExistingFutureLiveDate);
                 await this.CreateOtherPostAsync(testDatabase, UniqueLiveDate, scheduledByQueue: true, differentCollection: false);
@@ -272,7 +272,7 @@
             bool differentCollection,
             Guid postId)
         {
-            using (var databaseContext = testDatabase.NewContext())
+            using (var databaseContext = testDatabase.CreateContext())
             {
                 if (differentCollection)
                 {
@@ -291,7 +291,7 @@
                 await databaseContext.Database.Connection.InsertAsync(post);
             }
 
-            using (var databaseContext = testDatabase.NewContext())
+            using (var databaseContext = testDatabase.CreateContext())
             {
                 return await databaseContext.Posts.FirstAsync(_ => _.Id == postId);
             }
@@ -299,7 +299,7 @@
 
         private async Task CreateEntitiesAsync(TestDatabaseContext testDatabase, bool createQueuedPosts = false)
         {
-            using (var databaseContext = testDatabase.NewContext())
+            using (var databaseContext = testDatabase.CreateContext())
             {
                 await databaseContext.CreateTestCollectionAsync(UserId.Value, ChannelId.Value, CollectionId.Value);
 

@@ -26,7 +26,7 @@ namespace Fifthweek.Api.FileManagement.Tests
         [TestInitialize]
         public void Initialize()
         {
-            this.target = new GetFileWaitingForUploadDbStatement(new Mock<IFifthweekDbContext>(MockBehavior.Strict).Object);
+            this.target = new GetFileWaitingForUploadDbStatement(new Mock<IFifthweekDbConnectionFactory>(MockBehavior.Strict).Object);
         }
 
         [TestMethod]
@@ -34,7 +34,7 @@ namespace Fifthweek.Api.FileManagement.Tests
         {
             await this.DatabaseTestAsync(async testDatabase =>
                 {
-                    this.target = new GetFileWaitingForUploadDbStatement(testDatabase.NewContext());
+                    this.target = new GetFileWaitingForUploadDbStatement(testDatabase);
 
                     await this.CreateUserAsync(testDatabase);
                     await this.AddFileAsync(testDatabase);
@@ -58,7 +58,7 @@ namespace Fifthweek.Api.FileManagement.Tests
         {
             await this.DatabaseTestAsync(async testDatabase =>
                 {
-                    this.target = new GetFileWaitingForUploadDbStatement(testDatabase.NewContext());
+                    this.target = new GetFileWaitingForUploadDbStatement(testDatabase);
 
                     await this.CreateUserAsync(testDatabase);
                     await this.AddFileAsync(testDatabase);
@@ -82,7 +82,7 @@ namespace Fifthweek.Api.FileManagement.Tests
             var user = UserTests.UniqueEntity(random);
             user.Id = UserId.Value;
 
-            using (var databaseContext = testDatabase.NewContext())
+            using (var databaseContext = testDatabase.CreateContext())
             {
                 databaseContext.Users.Add(user);
                 await databaseContext.SaveChangesAsync();
@@ -105,7 +105,7 @@ namespace Fifthweek.Api.FileManagement.Tests
                 0,
                 Purpose);
 
-            using (var databaseContext = testDatabase.NewContext())
+            using (var databaseContext = testDatabase.CreateContext())
             {
                 await databaseContext.Database.Connection.InsertAsync(file);
             }

@@ -33,7 +33,7 @@ namespace Fifthweek.Api.Posts
             Collection.Fields.Id,
             Post.Fields.CollectionId);
 
-        private readonly IFifthweekDbContext databaseContext;
+        private readonly IFifthweekDbConnectionFactory connectionFactory;
         private readonly IGetLiveDateOfNewQueuedPostDbStatement getLiveDateOfNewQueuedPost;
         private readonly IScheduledDateClippingFunction scheduledDateClipping;
 
@@ -67,16 +67,19 @@ namespace Fifthweek.Api.Posts
                 Conditions = new[] { WherePostLiveDateUniqueToCollection }
             };
 
-            var success = -1 == await this.databaseContext.Database.Connection.InsertAsync(parameters);
-
-            if (!success)
+            using (var connection = this.connectionFactory.CreateConnection())
             {
-                // Log the collection ID, as the post ID will be useless for debugging (as it was never created).
-                throw new OptimisticConcurrencyException(string.Format("Failed to optimistically queue post. {0}", collectionId));
+                var success = -1 == await connection.InsertAsync(parameters);
+
+                if (!success)
+                {
+                    // Log the collection ID, as the post ID will be useless for debugging (as it was never created).
+                    throw new OptimisticConcurrencyException(string.Format("Failed to optimistically queue post. {0}", collectionId));
+                }
             }
         }
 
-        public Task SchedulePostAsync(Post unscheduledPostWithoutChannel, DateTime? scheduledPostDate, DateTime now)
+        public async Task SchedulePostAsync(Post unscheduledPostWithoutChannel, DateTime? scheduledPostDate, DateTime now)
         {
             unscheduledPostWithoutChannel.AssertNotNull("unscheduledPostWithoutChannel");
 
@@ -99,7 +102,10 @@ namespace Fifthweek.Api.Posts
                 ExcludedFromInput = Post.Fields.ChannelId
             };
 
-            return this.databaseContext.Database.Connection.InsertAsync(parameters);
+            using (var connection = this.connectionFactory.CreateConnection())
+            {
+                await connection.InsertAsync(parameters);
+            }
         }
     }
 }

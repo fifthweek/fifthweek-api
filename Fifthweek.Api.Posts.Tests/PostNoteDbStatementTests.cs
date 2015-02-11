@@ -34,14 +34,14 @@
             this.scheduledDateClipping.Setup(_ => _.Apply(It.IsAny<DateTime>(), ScheduleDate)).Returns(ClippedScheduleDate);
 
             // Give side-effecting components strict mock behaviour.
-            var databaseContext = new Mock<IFifthweekDbContext>(MockBehavior.Strict);
+            var connectionFactory = new Mock<IFifthweekDbConnectionFactory>(MockBehavior.Strict);
 
-            this.InitializeTarget(databaseContext.Object);
+            this.InitializeTarget(connectionFactory.Object);
         }
 
-        public void InitializeTarget(IFifthweekDbContext databaseContext)
+        public void InitializeTarget(IFifthweekDbConnectionFactory connectionFactory)
         {
-            this.target = new PostNoteDbStatement(this.scheduledDateClipping.Object, databaseContext);
+            this.target = new PostNoteDbStatement(this.scheduledDateClipping.Object, connectionFactory);
         }
 
         [TestMethod]
@@ -84,7 +84,7 @@
         {
             await this.DatabaseTestAsync(async testDatabase =>
             {
-                this.InitializeTarget(testDatabase.NewContext());
+                this.InitializeTarget(testDatabase);
                 await this.CreateChannelAsync(UserId, ChannelId, testDatabase);
                 await this.target.ExecuteAsync(PostId, ChannelId, Note, ScheduleDate, Now);
                 await testDatabase.TakeSnapshotAsync();
@@ -100,7 +100,7 @@
         {
             await this.DatabaseTestAsync(async testDatabase =>
             {
-                this.InitializeTarget(testDatabase.NewContext());
+                this.InitializeTarget(testDatabase);
                 await this.CreateChannelAsync(UserId, ChannelId, testDatabase);
                 await testDatabase.TakeSnapshotAsync();
 
@@ -137,7 +137,7 @@
 
         private async Task CreateChannelAsync(UserId newUserId, ChannelId newChannelId, TestDatabaseContext testDatabase)
         {
-            using (var databaseContext = testDatabase.NewContext())
+            using (var databaseContext = testDatabase.CreateContext())
             {
                 await databaseContext.CreateTestChannelAsync(newUserId.Value, newChannelId.Value);
             }

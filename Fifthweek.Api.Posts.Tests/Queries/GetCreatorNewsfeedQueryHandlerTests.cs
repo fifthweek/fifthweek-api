@@ -43,7 +43,7 @@
         private static readonly IReadOnlyList<NewsfeedPost> SortedNewsfeedPosts = GetSortedNewsfeedPosts().ToList();
 
         private Mock<IRequesterSecurity> requesterSecurity;
-        private Mock<IFifthweekDbContext> databaseContext;
+        private Mock<IFifthweekDbConnectionFactory> connectionFactory;
 
         private GetCreatorNewsfeedQueryHandler target;
 
@@ -53,9 +53,9 @@
             DapperTypeHandlerRegistration.Register(FifthweekAssembliesResolver.Assemblies);
 
             this.requesterSecurity = new Mock<IRequesterSecurity>();
-            this.databaseContext = new Mock<IFifthweekDbContext>(MockBehavior.Strict);
+            this.connectionFactory = new Mock<IFifthweekDbConnectionFactory>(MockBehavior.Strict);
 
-            this.target = new GetCreatorNewsfeedQueryHandler(this.requesterSecurity.Object, this.databaseContext.Object);
+            this.target = new GetCreatorNewsfeedQueryHandler(this.requesterSecurity.Object, this.connectionFactory.Object);
         }
 
         [TestMethod]
@@ -101,7 +101,7 @@
             {
                 await this.DatabaseTestAsync(async testDatabase =>
                 {
-                    this.target = new GetCreatorNewsfeedQueryHandler(this.requesterSecurity.Object, testDatabase.NewContext());
+                    this.target = new GetCreatorNewsfeedQueryHandler(this.requesterSecurity.Object, testDatabase);
                     await this.CreateEntitiesAsync(testDatabase, createLivePosts: true, createFuturePosts: true);
                     await testDatabase.TakeSnapshotAsync();
 
@@ -124,7 +124,7 @@
             {
                 await this.DatabaseTestAsync(async testDatabase =>
                 {
-                    this.target = new GetCreatorNewsfeedQueryHandler(this.requesterSecurity.Object, testDatabase.NewContext());
+                    this.target = new GetCreatorNewsfeedQueryHandler(this.requesterSecurity.Object, testDatabase);
                     await this.CreateEntitiesAsync(testDatabase, createLivePosts: true, createFuturePosts: true);
                     await testDatabase.TakeSnapshotAsync();
 
@@ -144,7 +144,7 @@
             {
                 await this.DatabaseTestAsync(async testDatabase =>
                 {
-                    this.target = new GetCreatorNewsfeedQueryHandler(this.requesterSecurity.Object, testDatabase.NewContext());
+                    this.target = new GetCreatorNewsfeedQueryHandler(this.requesterSecurity.Object, testDatabase);
                     await this.CreateEntitiesAsync(testDatabase, createLivePosts: true, createFuturePosts: true);
                     await testDatabase.TakeSnapshotAsync();
 
@@ -180,7 +180,7 @@
             {
                 await this.DatabaseTestAsync(async testDatabase =>
                 {
-                    this.target = new GetCreatorNewsfeedQueryHandler(this.requesterSecurity.Object, testDatabase.NewContext());
+                    this.target = new GetCreatorNewsfeedQueryHandler(this.requesterSecurity.Object, testDatabase);
                     await this.CreateEntitiesAsync(testDatabase, createLivePosts: false, createFuturePosts: false);
                     await testDatabase.TakeSnapshotAsync();
 
@@ -200,7 +200,7 @@
             {
                 await this.DatabaseTestAsync(async testDatabase =>
                 {
-                    this.target = new GetCreatorNewsfeedQueryHandler(this.requesterSecurity.Object, testDatabase.NewContext());
+                    this.target = new GetCreatorNewsfeedQueryHandler(this.requesterSecurity.Object, testDatabase);
                     await this.CreateEntitiesAsync(testDatabase, createLivePosts: false, createFuturePosts: true);
                     await testDatabase.TakeSnapshotAsync();
 
@@ -260,7 +260,7 @@
 
         private async Task CreateEntitiesAsync(TestDatabaseContext testDatabase, bool createLivePosts, bool createFuturePosts)
         {
-            using (var databaseContext = testDatabase.NewContext())
+            using (var databaseContext = testDatabase.CreateContext())
             {
                 var channels = new Dictionary<ChannelId, List<CollectionId>>();
                 var files = new List<FileId>();

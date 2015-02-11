@@ -11,15 +11,18 @@
     [AutoConstructor]
     public partial class RemoveRefreshTokenDbStatement : IRemoveRefreshTokenDbStatement
     {
-        private readonly IFifthweekDbContext fifthweekDbContext;
+        private readonly IFifthweekDbConnectionFactory connectionFactory;
 
-        public Task ExecuteAsync(HashedRefreshTokenId hashedTokenId)
+        public async Task ExecuteAsync(HashedRefreshTokenId hashedTokenId)
         {
             hashedTokenId.AssertNotNull("hashedTokenId");
 
-            return this.fifthweekDbContext.Database.Connection.ExecuteAsync(
-                string.Format(@"DELETE FROM {0} WHERE {1}=@{1}", RefreshToken.Table, RefreshToken.Fields.HashedId),
-                new { HashedId = hashedTokenId.Value });
+            using (var connection = this.connectionFactory.CreateConnection())
+            {
+                await connection.ExecuteAsync(
+                    string.Format(@"DELETE FROM {0} WHERE {1}=@{1}", RefreshToken.Table, RefreshToken.Fields.HashedId),
+                    new { HashedId = hashedTokenId.Value });
+            }
         }
     }
 }

@@ -62,7 +62,7 @@
             Post.Fields.ScheduledByQueue,
             Post.Fields.CollectionId);
 
-        private readonly IFifthweekDbContext databaseContext;
+        private readonly IFifthweekDbConnectionFactory connectionFactory;
 
         public async Task ExecuteAsync(CollectionId collectionId, IReadOnlyList<DateTime> ascendingLiveDates, DateTime now)
         {
@@ -114,16 +114,19 @@
 
             sql.AppendLine(SqlPostInserts);
 
-            var queueOverflow = await this.databaseContext.Database.Connection.ExecuteScalarAsync<int>(sql.ToString(), parameters);
-
-            if (queueOverflow != -1)
+            using (var connection = this.connectionFactory.CreateConnection())
             {
-                throw new ArgumentException(
-                    string.Format(
-                        "Insufficient quantity of live dates provided. Given {0}. Required at least {1}.", 
-                        ascendingLiveDates.Count,
-                        queueOverflow), 
-                    "ascendingLiveDates");
+                var queueOverflow = await connection.ExecuteScalarAsync<int>(sql.ToString(), parameters);
+
+                if (queueOverflow != -1)
+                {
+                    throw new ArgumentException(
+                        string.Format(
+                            "Insufficient quantity of live dates provided. Given {0}. Required at least {1}.",
+                            ascendingLiveDates.Count,
+                            queueOverflow),
+                        "ascendingLiveDates");
+                }
             }
         }
     }

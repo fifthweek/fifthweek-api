@@ -1,6 +1,7 @@
 ﻿namespace Fifthweek.Api.Persistence.Tests.Shared
 {
     using System;
+    using System.Data.Common;
     using System.Data.Entity.Infrastructure;
     using System.Data.Entity.Migrations;
     using System.Diagnostics;
@@ -10,14 +11,14 @@
     using Fifthweek.CodeGeneration;
 
     [AutoConstructor]
-    public partial class TestDatabase
+    public partial class TestDatabase : IFifthweekDbConnectionFactory
     {
         // Increment this when changing database seed state.
         private const int SeedStateVersion = 14;
 
         private static bool migrationRequired = true;
 
-        private readonly string connectionString;
+        private readonly FifthweekDbConnectionFactory connectionFactory;
 
         public static async Task<TestDatabase> CreateNewAsync()
         {
@@ -53,12 +54,17 @@
                 await seed.AssertSeedStateUnchangedAsync();
             }
 
-            return new TestDatabase(connectionString);
+            return new TestDatabase(new FifthweekDbConnectionFactory(connectionString));
         }
 
-        public FifthweekDbContext NewDatabaseContext()
+        public DbConnection CreateConnection()
         {
-            return new FifthweekDbContext(this.connectionString);
+            return this.connectionFactory.CreateConnection();
+        }
+
+        public FifthweekDbContext CreateContext()
+        {
+            return this.connectionFactory.CreateContext();
         }
 
         private static string NewLocalDbConnectionString()

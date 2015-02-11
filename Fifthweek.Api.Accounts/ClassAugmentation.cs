@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Linq;
 
-//// Generated on 29/01/2015 18:18:43 (UTC)
-//// Mapped solution in 4.11s
+//// Generated on 11/02/2015 17:38:48 (UTC)
+//// Mapped solution in 20.52s
 
 
 namespace Fifthweek.Api.Accounts.Commands
@@ -195,14 +195,14 @@ namespace Fifthweek.Api.Accounts
     public partial class GetAccountSettingsDbStatement 
     {
         public GetAccountSettingsDbStatement(
-            Fifthweek.Api.Persistence.IFifthweekDbContext databaseContext)
+            Fifthweek.Api.Persistence.IFifthweekDbConnectionFactory connectionFactory)
         {
-            if (databaseContext == null)
+            if (connectionFactory == null)
             {
-                throw new ArgumentNullException("databaseContext");
+                throw new ArgumentNullException("connectionFactory");
             }
 
-            this.databaseContext = databaseContext;
+            this.connectionFactory = connectionFactory;
         }
     }
 }
@@ -349,12 +349,12 @@ namespace Fifthweek.Api.Accounts
     public partial class UpdateAccountSettingsDbStatement 
     {
         public UpdateAccountSettingsDbStatement(
-            Fifthweek.Api.Persistence.IFifthweekDbContext databaseContext,
+            Fifthweek.Api.Persistence.IFifthweekDbConnectionFactory connectionFactory,
             Fifthweek.Api.Persistence.IUserManager userManager)
         {
-            if (databaseContext == null)
+            if (connectionFactory == null)
             {
-                throw new ArgumentNullException("databaseContext");
+                throw new ArgumentNullException("connectionFactory");
             }
 
             if (userManager == null)
@@ -362,7 +362,7 @@ namespace Fifthweek.Api.Accounts
                 throw new ArgumentNullException("userManager");
             }
 
-            this.databaseContext = databaseContext;
+            this.connectionFactory = connectionFactory;
             this.userManager = userManager;
         }
     }
@@ -866,7 +866,7 @@ namespace Fifthweek.Api.Accounts.Controllers
             var modelStateDictionary = new System.Web.Http.ModelBinding.ModelStateDictionary();
         
             ValidUsername parsed0 = null;
-            if (target.NewUsername != null)
+            if (!ValidUsername.IsEmpty(target.NewUsername))
             {
                 System.Collections.Generic.IReadOnlyCollection<string> parsed0Errors;
                 if (!ValidUsername.TryParse(target.NewUsername, out parsed0, out parsed0Errors))
@@ -888,7 +888,7 @@ namespace Fifthweek.Api.Accounts.Controllers
             }
 
             ValidEmail parsed1 = null;
-            if (target.NewEmail != null)
+            if (!ValidEmail.IsEmpty(target.NewEmail))
             {
                 System.Collections.Generic.IReadOnlyCollection<string> parsed1Errors;
                 if (!ValidEmail.TryParse(target.NewEmail, out parsed1, out parsed1Errors))
@@ -910,7 +910,7 @@ namespace Fifthweek.Api.Accounts.Controllers
             }
 
             ValidPassword parsed2 = null;
-            if (target.NewPassword != null)
+            if (!ValidPassword.IsEmpty(target.NewPassword))
             {
                 System.Collections.Generic.IReadOnlyCollection<string> parsed2Errors;
                 if (!ValidPassword.TryParse(target.NewPassword, out parsed2, out parsed2Errors))
@@ -930,7 +930,7 @@ namespace Fifthweek.Api.Accounts.Controllers
                 throw new Fifthweek.Api.Core.ModelValidationException(modelStateDictionary);
             }
         
-        	return new UpdatedAccountSettings.Parsed(
+            return new UpdatedAccountSettings.Parsed(
                 parsed0,
                 parsed1,
                 parsed2,

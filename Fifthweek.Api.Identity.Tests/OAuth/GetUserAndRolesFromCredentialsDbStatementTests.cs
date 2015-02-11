@@ -24,7 +24,7 @@
         private static readonly Password Password = new Password("password");
 
         private GetUserAndRolesFromCredentialsDbStatement target;
-        private Mock<IFifthweekDbContext> fifthweekDbContext;
+        private Mock<IFifthweekDbConnectionFactory> connectionFactory;
         private Mock<IUserManager> userManager;
 
         [TestInitialize]
@@ -32,7 +32,7 @@
         {
             DapperTypeHandlerRegistration.Register(FifthweekAssembliesResolver.Assemblies);
 
-            this.fifthweekDbContext = new Mock<IFifthweekDbContext>(MockBehavior.Strict);
+            this.connectionFactory = new Mock<IFifthweekDbConnectionFactory>(MockBehavior.Strict);
             this.userManager = new Mock<IUserManager>(MockBehavior.Strict);
 
             var passwordHasher = new Mock<IPasswordHasher>();
@@ -42,7 +42,7 @@
 
             this.target = new GetUserAndRolesFromCredentialsDbStatement(
                 this.userManager.Object,
-                this.fifthweekDbContext.Object);
+                this.connectionFactory.Object);
         }
 
         [TestMethod]
@@ -66,9 +66,9 @@
             {
                 this.target = new GetUserAndRolesFromCredentialsDbStatement(
                     this.userManager.Object,
-                    testDatabase.NewContext());
+                    testDatabase);
 
-                var userId = await this.CreateUser(testDatabase.NewContext());
+                var userId = await this.CreateUser(testDatabase);
 
                 await testDatabase.TakeSnapshotAsync();
 
@@ -90,9 +90,9 @@
             {
                 this.target = new GetUserAndRolesFromCredentialsDbStatement(
                     this.userManager.Object,
-                    testDatabase.NewContext());
+                    testDatabase);
 
-                var userId = await this.CreateUser(testDatabase.NewContext(), false);
+                var userId = await this.CreateUser(testDatabase, false);
 
                 await testDatabase.TakeSnapshotAsync();
 
@@ -112,9 +112,9 @@
             {
                 this.target = new GetUserAndRolesFromCredentialsDbStatement(
                     this.userManager.Object,
-                    testDatabase.NewContext());
+                    testDatabase);
 
-                await this.CreateUser(testDatabase.NewContext());
+                await this.CreateUser(testDatabase);
 
                 await testDatabase.TakeSnapshotAsync();
 
@@ -132,9 +132,9 @@
             {
                 this.target = new GetUserAndRolesFromCredentialsDbStatement(
                     this.userManager.Object,
-                    testDatabase.NewContext());
+                    testDatabase);
 
-                await this.CreateUser(testDatabase.NewContext());
+                await this.CreateUser(testDatabase);
 
                 await testDatabase.TakeSnapshotAsync();
 
@@ -145,59 +145,62 @@
             });
         }
 
-        private async Task<UserId> CreateUser(IFifthweekDbContext databaseContext, bool addUser1Roles = true)
+        private async Task<UserId> CreateUser(TestDatabaseContext testDatabase, bool addUser1Roles = true)
         {
-            var random = new Random();
-            var user1 = UserTests.UniqueEntity(random);
-            user1.UserName = Username.Value;
-            user1.PasswordHash = PasswordHash;
-
-            var user2 = UserTests.UniqueEntity(random);
-            user2.UserName = Username + "2";
-            user2.PasswordHash = PasswordHash;
-
-            await databaseContext.Database.Connection.InsertAsync(user1);
-            await databaseContext.Database.Connection.InsertAsync(user2);
-
-            var role1 = new FifthweekRole(Guid.NewGuid());
-            role1.Name = "One";
-
-            var role2 = new FifthweekRole(Guid.NewGuid());
-            role2.Name = "Two";
-
-            var role3 = new FifthweekRole(Guid.NewGuid());
-            role3.Name = "Three";
-
-            await databaseContext.Database.Connection.InsertAsync(role1);
-            await databaseContext.Database.Connection.InsertAsync(role2);
-            await databaseContext.Database.Connection.InsertAsync(role3);
-
-            if (addUser1Roles)
+            using (var connection = testDatabase.CreateConnection())
             {
-                var userRole1 = new FifthweekUserRole();
-                userRole1.UserId = user1.Id;
-                userRole1.RoleId = role1.Id;
+                var random = new Random();
+                var user1 = UserTests.UniqueEntity(random);
+                user1.UserName = Username.Value;
+                user1.PasswordHash = PasswordHash;
 
-                var userRole2 = new FifthweekUserRole();
-                userRole2.UserId = user1.Id;
-                userRole2.RoleId = role2.Id;
+                var user2 = UserTests.UniqueEntity(random);
+                user2.UserName = Username + "2";
+                user2.PasswordHash = PasswordHash;
 
-                await databaseContext.Database.Connection.InsertAsync(userRole1);
-                await databaseContext.Database.Connection.InsertAsync(userRole2);
+                await connection.InsertAsync(user1);
+                await connection.InsertAsync(user2);
+
+                var role1 = new FifthweekRole(Guid.NewGuid());
+                role1.Name = "One";
+
+                var role2 = new FifthweekRole(Guid.NewGuid());
+                role2.Name = "Two";
+
+                var role3 = new FifthweekRole(Guid.NewGuid());
+                role3.Name = "Three";
+
+                await connection.InsertAsync(role1);
+                await connection.InsertAsync(role2);
+                await connection.InsertAsync(role3);
+
+                if (addUser1Roles)
+                {
+                    var userRole1 = new FifthweekUserRole();
+                    userRole1.UserId = user1.Id;
+                    userRole1.RoleId = role1.Id;
+
+                    var userRole2 = new FifthweekUserRole();
+                    userRole2.UserId = user1.Id;
+                    userRole2.RoleId = role2.Id;
+
+                    await connection.InsertAsync(userRole1);
+                    await connection.InsertAsync(userRole2);
+                }
+
+                var userRole3 = new FifthweekUserRole();
+                userRole3.UserId = user2.Id;
+                userRole3.RoleId = role2.Id;
+
+                var userRole4 = new FifthweekUserRole();
+                userRole4.UserId = user2.Id;
+                userRole4.RoleId = role3.Id;
+
+                await connection.InsertAsync(userRole3);
+                await connection.InsertAsync(userRole4);
+
+                return new UserId(user1.Id);
             }
-
-            var userRole3 = new FifthweekUserRole();
-            userRole3.UserId = user2.Id;
-            userRole3.RoleId = role2.Id;
-
-            var userRole4 = new FifthweekUserRole();
-            userRole4.UserId = user2.Id;
-            userRole4.RoleId = role3.Id;
-
-            await databaseContext.Database.Connection.InsertAsync(userRole3);
-            await databaseContext.Database.Connection.InsertAsync(userRole4);
-
-            return new UserId(user1.Id);
         }
     }
 }

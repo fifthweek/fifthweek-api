@@ -33,7 +33,7 @@
                 Collection.Fields.Id,
                 Collection.Fields.QueueExclusiveLowerBound);
 
-        private readonly IFifthweekDbContext databaseContext;
+        private readonly IFifthweekDbConnectionFactory connectionFactory;
 
         public async Task<DateTime> ExecuteAsync(Shared.CollectionId collectionId, DateTime now)
         {
@@ -46,9 +46,12 @@
                 Now = now
             };
 
-            var result = await this.databaseContext.Database.Connection.ExecuteScalarAsync<DateTime>(Sql, parameters);
+            using (var connection = this.connectionFactory.CreateConnection())
+            {
+                var result = await connection.ExecuteScalarAsync<DateTime>(Sql, parameters);
 
-            return DateTime.SpecifyKind(result, DateTimeKind.Utc);
+                return DateTime.SpecifyKind(result, DateTimeKind.Utc);
+            }
         }
     }
 }

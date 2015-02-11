@@ -17,21 +17,21 @@
     {
         private static readonly CollectionId CollectionId = new CollectionId(Guid.NewGuid());
         
-        private Mock<IFifthweekDbContext> databaseContext;
+        private Mock<IFifthweekDbConnectionFactory> connectionFactory;
         private DeleteCollectionDbStatement target;
 
         [TestInitialize]
         public void Initialize()
         {
             // Give potentially side-effective components strict mock behaviour.
-            this.databaseContext = new Mock<IFifthweekDbContext>(MockBehavior.Strict);
+            this.connectionFactory = new Mock<IFifthweekDbConnectionFactory>(MockBehavior.Strict);
 
-            this.InitializeTarget(this.databaseContext.Object);
+            this.InitializeTarget(this.connectionFactory.Object);
         }
 
-        public void InitializeTarget(IFifthweekDbContext databaseContext)
+        public void InitializeTarget(IFifthweekDbConnectionFactory connectionFactory)
         {
-            this.target = new DeleteCollectionDbStatement(databaseContext);
+            this.target = new DeleteCollectionDbStatement(connectionFactory);
         }
 
         [TestMethod]
@@ -46,7 +46,7 @@
         {
             await this.DatabaseTestAsync(async testDatabase =>
             {
-                this.InitializeTarget(testDatabase.NewContext());
+                this.InitializeTarget(testDatabase);
                 await this.CreateCollectionAsync(testDatabase);
                 await this.target.ExecuteAsync(CollectionId);
                 await testDatabase.TakeSnapshotAsync();
@@ -62,7 +62,7 @@
         {
             await this.DatabaseTestAsync(async testDatabase =>
             {
-                this.InitializeTarget(testDatabase.NewContext());
+                this.InitializeTarget(testDatabase);
                 var expectedDeletion = await this.CreateCollectionAsync(testDatabase);
                 await testDatabase.TakeSnapshotAsync();
 
@@ -80,12 +80,12 @@
 
         private async Task<Collection> CreateCollectionAsync(TestDatabaseContext testDatabase)
         {
-            using (var databaseContext = testDatabase.NewContext())
+            using (var databaseContext = testDatabase.CreateContext())
             {
                 await databaseContext.CreatePopulatedTestCollectionAsync(Guid.NewGuid(), Guid.NewGuid(), CollectionId.Value);
             }
 
-            using (var databaseContext = testDatabase.NewContext())
+            using (var databaseContext = testDatabase.CreateContext())
             {
                 var collectionId = CollectionId.Value;
                 return await databaseContext.Collections.FirstAsync(_ => _.Id == collectionId);

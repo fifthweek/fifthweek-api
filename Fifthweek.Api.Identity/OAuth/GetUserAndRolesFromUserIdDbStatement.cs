@@ -33,30 +33,33 @@
             FifthweekUserRole.Fields.UserId,
             FifthweekUser.Fields.UserName);
 
-        private readonly IFifthweekDbContext fifthweekDbContext;
+        private readonly IFifthweekDbConnectionFactory connectionFactory;
 
         public async Task<UsernameAndRoles> ExecuteAsync(UserId userId)
         {
             userId.AssertNotNull("userId");
 
-            var result = (await this.fifthweekDbContext.Database.Connection.QueryAsync<DapperResult>(
-                Query,
-                new { Id = userId.Value })).ToList();
-
-            if (result.Count > 0)
+            using (var connection = this.connectionFactory.CreateConnection())
             {
-                if (result.Select(v => v.UserName).Distinct().Count() != 1)
+                var result = (await connection.QueryAsync<DapperResult>(
+                    Query,
+                    new { Id = userId.Value })).ToList();
+
+                if (result.Count > 0)
                 {
-                    throw new InvalidOperationException("Multiple user IDs returned.");
-                }
+                    if (result.Select(v => v.UserName).Distinct().Count() != 1)
+                    {
+                        throw new InvalidOperationException("Multiple user IDs returned.");
+                    }
                 
-                var username = result[0].UserName;
-                var roles = result.Select(v => v.Name).Where(v => v != null).ToList();
+                    var username = result[0].UserName;
+                    var roles = result.Select(v => v.Name).Where(v => v != null).ToList();
 
-                return new UsernameAndRoles(new Username(username), roles);
+                    return new UsernameAndRoles(new Username(username), roles);
+                }
+
+                return null;
             }
-
-            return null;
         }
 
         private class DapperResult

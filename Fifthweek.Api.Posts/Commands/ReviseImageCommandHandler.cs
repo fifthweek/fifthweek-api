@@ -14,7 +14,7 @@
     {
         private readonly IRequesterSecurity requesterSecurity;
         private readonly IPostSecurity postSecurity;
-        private readonly IFifthweekDbContext databaseContext;
+        private readonly IFifthweekDbConnectionFactory connectionFactory;
         private readonly IScheduleGarbageCollectionStatement scheduleGarbageCollection;
 
         public async Task HandleAsync(ReviseImageCommand command)
@@ -31,7 +31,7 @@
             await this.scheduleGarbageCollection.ExecuteAsync();
         }
 
-        private Task ReviseImageAsync(ReviseImageCommand command)
+        private async Task ReviseImageAsync(ReviseImageCommand command)
         {
             var post = new Post(command.PostId.Value)
             {
@@ -40,7 +40,10 @@
                 Comment = command.Comment == null ? null : command.Comment.Value
             };
 
-            return this.databaseContext.Database.Connection.UpdateAsync(post, Post.Fields.ImageId | Post.Fields.Comment);
+            using (var connection = this.connectionFactory.CreateConnection())
+            {
+                await connection.UpdateAsync(post, Post.Fields.ImageId | Post.Fields.Comment);
+            }
         }
     }
 }

@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Linq;
 
-//// Generated on 02/02/2015 19:48:56 (UTC)
-//// Mapped solution in 3.2s
+//// Generated on 11/02/2015 17:46:23 (UTC)
+//// Mapped solution in 8.02s
 
 
 namespace Fifthweek.Api.Channels
@@ -20,14 +20,14 @@ namespace Fifthweek.Api.Channels
     public partial class ChannelOwnership 
     {
         public ChannelOwnership(
-            Fifthweek.Api.Persistence.IFifthweekDbContext databaseContext)
+            Fifthweek.Api.Persistence.IFifthweekDbConnectionFactory connectionFactory)
         {
-            if (databaseContext == null)
+            if (connectionFactory == null)
             {
-                throw new ArgumentNullException("databaseContext");
+                throw new ArgumentNullException("connectionFactory");
             }
 
-            this.databaseContext = databaseContext;
+            this.connectionFactory = connectionFactory;
         }
     }
 }
@@ -134,7 +134,7 @@ namespace Fifthweek.Api.Channels.Commands
         public CreateChannelCommandHandler(
             Fifthweek.Api.Identity.Shared.Membership.IRequesterSecurity requesterSecurity,
             Fifthweek.Api.Subscriptions.Shared.ISubscriptionSecurity subscriptionSecurity,
-            Fifthweek.Api.Persistence.IFifthweekDbContext databaseContext)
+            Fifthweek.Api.Persistence.IFifthweekDbConnectionFactory connectionFactory)
         {
             if (requesterSecurity == null)
             {
@@ -146,14 +146,14 @@ namespace Fifthweek.Api.Channels.Commands
                 throw new ArgumentNullException("subscriptionSecurity");
             }
 
-            if (databaseContext == null)
+            if (connectionFactory == null)
             {
-                throw new ArgumentNullException("databaseContext");
+                throw new ArgumentNullException("connectionFactory");
             }
 
             this.requesterSecurity = requesterSecurity;
             this.subscriptionSecurity = subscriptionSecurity;
-            this.databaseContext = databaseContext;
+            this.connectionFactory = connectionFactory;
         }
     }
 }
@@ -236,7 +236,7 @@ namespace Fifthweek.Api.Channels.Commands
         public UpdateChannelCommandHandler(
             Fifthweek.Api.Identity.Shared.Membership.IRequesterSecurity requesterSecurity,
             Fifthweek.Api.Channels.Shared.IChannelSecurity channelSecurity,
-            Fifthweek.Api.Persistence.IFifthweekDbContext databaseContext)
+            Fifthweek.Api.Persistence.IFifthweekDbConnectionFactory connectionFactory)
         {
             if (requesterSecurity == null)
             {
@@ -248,14 +248,14 @@ namespace Fifthweek.Api.Channels.Commands
                 throw new ArgumentNullException("channelSecurity");
             }
 
-            if (databaseContext == null)
+            if (connectionFactory == null)
             {
-                throw new ArgumentNullException("databaseContext");
+                throw new ArgumentNullException("connectionFactory");
             }
 
             this.requesterSecurity = requesterSecurity;
             this.channelSecurity = channelSecurity;
-            this.databaseContext = databaseContext;
+            this.connectionFactory = connectionFactory;
         }
     }
 }
@@ -499,14 +499,14 @@ namespace Fifthweek.Api.Channels
     public partial class DeleteChannelDbStatement 
     {
         public DeleteChannelDbStatement(
-            Fifthweek.Api.Persistence.IFifthweekDbContext databaseContext)
+            Fifthweek.Api.Persistence.IFifthweekDbConnectionFactory connectionFactory)
         {
-            if (databaseContext == null)
+            if (connectionFactory == null)
             {
-                throw new ArgumentNullException("databaseContext");
+                throw new ArgumentNullException("connectionFactory");
             }
 
-            this.databaseContext = databaseContext;
+            this.connectionFactory = connectionFactory;
         }
     }
 }

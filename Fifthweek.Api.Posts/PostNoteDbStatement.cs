@@ -13,9 +13,9 @@ namespace Fifthweek.Api.Posts
     public partial class PostNoteDbStatement : IPostNoteDbStatement
     {
         private readonly IScheduledDateClippingFunction scheduledDateClipping;
-        private readonly IFifthweekDbContext databaseContext;
+        private readonly IFifthweekDbConnectionFactory connectionFactory;
 
-        public Task ExecuteAsync(PostId postId, ChannelId channelId, ValidNote note, DateTime? sheduledPostDate, DateTime now)
+        public async Task ExecuteAsync(PostId postId, ChannelId channelId, ValidNote note, DateTime? sheduledPostDate, DateTime now)
         {
             postId.AssertNotNull("postId");
             channelId.AssertNotNull("channelId");
@@ -44,7 +44,10 @@ namespace Fifthweek.Api.Posts
                 liveDate,
                 now);
 
-            return this.databaseContext.Database.Connection.InsertAsync(post);
+            using (var connection = this.connectionFactory.CreateConnection())
+            {
+                await connection.InsertAsync(post);
+            }
         }
     }
 }

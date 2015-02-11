@@ -24,7 +24,7 @@
         {
             await this.DatabaseTestAsync(async testDatabase =>
             {
-                this.target = new PostOwnership(testDatabase.NewContext());
+                this.target = new PostOwnership(testDatabase);
                 await this.CreatePostAsync(UserId, PostId, testDatabase);
                 await testDatabase.TakeSnapshotAsync();
 
@@ -40,9 +40,9 @@
         {
             await this.DatabaseTestAsync(async testDatabase =>
             {
-                this.target = new PostOwnership(testDatabase.NewContext());
+                this.target = new PostOwnership(testDatabase);
 
-                using (var databaseContext = testDatabase.NewContext())
+                using (var databaseContext = testDatabase.CreateContext())
                 {
                     await databaseContext.Database.Connection.ExecuteAsync("DELETE FROM Posts");
                 }
@@ -61,7 +61,7 @@
         {
             await this.DatabaseTestAsync(async testDatabase =>
             {
-                this.target = new PostOwnership(testDatabase.NewContext());
+                this.target = new PostOwnership(testDatabase);
                 await this.CreatePostAsync(new UserId(Guid.NewGuid()), new PostId(Guid.NewGuid()), testDatabase);
                 await testDatabase.TakeSnapshotAsync();
 
@@ -77,7 +77,7 @@
         {
             await this.DatabaseTestAsync(async testDatabase =>
             {
-                this.target = new PostOwnership(testDatabase.NewContext());
+                this.target = new PostOwnership(testDatabase);
                 await this.CreatePostAsync(UserId, new PostId(Guid.NewGuid()), testDatabase);
                 await testDatabase.TakeSnapshotAsync();
 
@@ -93,7 +93,7 @@
         {
             await this.DatabaseTestAsync(async testDatabase =>
             {
-                this.target = new PostOwnership(testDatabase.NewContext());
+                this.target = new PostOwnership(testDatabase);
                 await this.CreatePostAsync(new UserId(Guid.NewGuid()), PostId, testDatabase);
                 await testDatabase.TakeSnapshotAsync();
 
@@ -106,7 +106,7 @@
 
         private async Task CreatePostAsync(UserId newUserId, PostId newPostId, TestDatabaseContext testDatabase)
         {
-            using (var databaseContext = testDatabase.NewContext())
+            using (var databaseContext = testDatabase.CreateContext())
             {
                 await databaseContext.CreateTestNoteAsync(newUserId.Value, newPostId.Value);
             }

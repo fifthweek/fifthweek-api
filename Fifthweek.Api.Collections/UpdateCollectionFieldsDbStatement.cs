@@ -9,13 +9,18 @@ namespace Fifthweek.Api.Collections
     [AutoConstructor]
     public partial class UpdateCollectionFieldsDbStatement : IUpdateCollectionFieldsDbStatement
     {
-        private readonly IFifthweekDbContext databaseContext;
+        private readonly IFifthweekDbConnectionFactory connectionFactory;
 
-        public Task ExecuteAsync(Collection collection)
+        public async Task ExecuteAsync(Collection collection)
         {
             collection.AssertNotNull("collection");
-            
-            return this.databaseContext.Database.Connection.UpdateAsync(collection, Collection.Fields.Name | Collection.Fields.ChannelId);
+
+            using (var connection = this.connectionFactory.CreateConnection())
+            {
+                await connection.UpdateAsync(
+                    collection,
+                    Collection.Fields.Name | Collection.Fields.ChannelId);
+            }
         }
     }
 }

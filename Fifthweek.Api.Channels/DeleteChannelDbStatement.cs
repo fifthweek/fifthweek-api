@@ -19,9 +19,9 @@
             Channel.Table,
             Channel.Fields.Id);
 
-        private readonly IFifthweekDbContext databaseContext;
+        private readonly IFifthweekDbConnectionFactory connectionFactory;
 
-        public Task ExecuteAsync(ChannelId channelId)
+        public async Task ExecuteAsync(ChannelId channelId)
         {
             channelId.AssertNotNull("channelId");
             var channelIdParameter = new
@@ -29,7 +29,10 @@
                 ChannelId = channelId.Value
             };
 
-            return this.databaseContext.Database.Connection.ExecuteAsync(DeleteSql, channelIdParameter);
+            using (var connection = this.connectionFactory.CreateConnection())
+            {
+                await connection.ExecuteAsync(DeleteSql, channelIdParameter);
+            }
         }
     }
 }

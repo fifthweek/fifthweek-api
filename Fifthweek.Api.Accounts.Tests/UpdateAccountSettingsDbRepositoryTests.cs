@@ -39,7 +39,7 @@ namespace Fifthweek.Api.Accounts.Tests
             this.userManager.Setup(v => v.PasswordHasher).Returns(this.passwordHasher.Object);
 
             // Required for non-database tests.
-            this.target = new UpdateAccountSettingsDbStatement(new Mock<IFifthweekDbContext>(MockBehavior.Strict).Object, this.userManager.Object);
+            this.target = new UpdateAccountSettingsDbStatement(new Mock<IFifthweekDbConnectionFactory>(MockBehavior.Strict).Object, this.userManager.Object);
         }
 
         [TestMethod]
@@ -47,7 +47,7 @@ namespace Fifthweek.Api.Accounts.Tests
         {
             await this.DatabaseTestAsync(async testDatabase =>
             {
-                this.target = new UpdateAccountSettingsDbStatement(testDatabase.NewContext(), this.userManager.Object);
+                this.target = new UpdateAccountSettingsDbStatement(testDatabase, this.userManager.Object);
                 await this.CreateUserAsync(testDatabase);
                 await testDatabase.TakeSnapshotAsync();
 
@@ -82,7 +82,7 @@ namespace Fifthweek.Api.Accounts.Tests
         {
             await this.DatabaseTestAsync(async testDatabase =>
             {
-                this.target = new UpdateAccountSettingsDbStatement(testDatabase.NewContext(), this.userManager.Object);
+                this.target = new UpdateAccountSettingsDbStatement(testDatabase, this.userManager.Object);
                 await this.CreateUserAsync(testDatabase);
 
                 var hashedNewPassword = this.newPassword.Value + "1";
@@ -115,7 +115,7 @@ namespace Fifthweek.Api.Accounts.Tests
         {
             await this.DatabaseTestAsync(async testDatabase =>
             {
-                this.target = new UpdateAccountSettingsDbStatement(testDatabase.NewContext(), this.userManager.Object);
+                this.target = new UpdateAccountSettingsDbStatement(testDatabase, this.userManager.Object);
                 await this.CreateUserAsync(testDatabase, false);
                 await testDatabase.TakeSnapshotAsync();
 
@@ -150,7 +150,7 @@ namespace Fifthweek.Api.Accounts.Tests
         {
             await this.DatabaseTestAsync(async testDatabase =>
                 {
-                    this.target = new UpdateAccountSettingsDbStatement(testDatabase.NewContext(), this.userManager.Object);
+                    this.target = new UpdateAccountSettingsDbStatement(testDatabase, this.userManager.Object);
                     await this.CreateUserAsync(testDatabase);
                     await testDatabase.TakeSnapshotAsync();
 
@@ -181,7 +181,7 @@ namespace Fifthweek.Api.Accounts.Tests
         {
             await this.DatabaseTestAsync(async testDatabase =>
             {
-                this.target = new UpdateAccountSettingsDbStatement(testDatabase.NewContext(), this.userManager.Object);
+                this.target = new UpdateAccountSettingsDbStatement(testDatabase, this.userManager.Object);
                 await this.CreateUserAsync(testDatabase);
                 await testDatabase.TakeSnapshotAsync();
 
@@ -210,7 +210,7 @@ namespace Fifthweek.Api.Accounts.Tests
         {
             await this.DatabaseTestAsync(async testDatabase =>
             {
-                this.target = new UpdateAccountSettingsDbStatement(testDatabase.NewContext(), this.userManager.Object);
+                this.target = new UpdateAccountSettingsDbStatement(testDatabase, this.userManager.Object);
                 await this.CreateUserAsync(testDatabase, false);
                 await testDatabase.TakeSnapshotAsync();
 
@@ -239,7 +239,7 @@ namespace Fifthweek.Api.Accounts.Tests
         {
             await this.DatabaseTestAsync(async testDatabase =>
                 {
-                    this.target = new UpdateAccountSettingsDbStatement(testDatabase.NewContext(), this.userManager.Object);
+                    this.target = new UpdateAccountSettingsDbStatement(testDatabase, this.userManager.Object);
                     await this.CreateUserAsync(testDatabase);
                     await testDatabase.TakeSnapshotAsync();
 
@@ -306,7 +306,7 @@ namespace Fifthweek.Api.Accounts.Tests
 
         private async Task<FifthweekUser> GetUserAsync(TestDatabaseContext testDatabase)
         {
-            using (var databaseContext = testDatabase.NewContext())
+            using (var databaseContext = testDatabase.CreateContext())
             {
                 databaseContext.Configuration.ProxyCreationEnabled = false;
                 return await databaseContext.Users.SingleAsync(v => v.Id == this.userId.Value);
@@ -321,7 +321,7 @@ namespace Fifthweek.Api.Accounts.Tests
             user.Email = this.email.Value;
             user.EmailConfirmed = emailConfirmed;
 
-            using (var databaseContext = testDatabase.NewContext())
+            using (var databaseContext = testDatabase.CreateContext())
             {
                 databaseContext.Users.Add(user);
                 await databaseContext.SaveChangesAsync();
@@ -337,7 +337,7 @@ namespace Fifthweek.Api.Accounts.Tests
             otherFile.User = user;
             otherFile.UserId = user.Id;
 
-            using (var databaseContext = testDatabase.NewContext())
+            using (var databaseContext = testDatabase.CreateContext())
             {
                 await databaseContext.Database.Connection.InsertAsync(profileImageFile);
                 await databaseContext.Database.Connection.InsertAsync(otherFile);

@@ -1,6 +1,7 @@
 namespace Fifthweek.Api.Persistence
 {
     using System;
+    using System.Data.Common;
     using System.Data.Entity;
 
     using Fifthweek.Api.Persistence.Identity;
@@ -10,7 +11,7 @@ namespace Fifthweek.Api.Persistence
     public class FifthweekDbContext : IdentityDbContext<FifthweekUser, FifthweekRole, Guid, FifthweekUserLogin, FifthweekUserRole, FifthweekUserClaim>, IFifthweekDbContext
     {
         public FifthweekDbContext()
-            : base("FifthweekDbContext")
+            : base(FifthweekDbConnectionFactory.DefaultConnectionString)
         {
         }
 

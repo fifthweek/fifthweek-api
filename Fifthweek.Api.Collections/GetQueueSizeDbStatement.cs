@@ -25,9 +25,9 @@
             Post.Fields.LiveDate, 
             Post.Fields.ScheduledByQueue);
 
-        private readonly IFifthweekDbContext databaseContext;
+        private readonly IFifthweekDbConnectionFactory connectionFactory;
 
-        public Task<int> ExecuteAsync(CollectionId collectionId, DateTime now)
+        public async Task<int> ExecuteAsync(CollectionId collectionId, DateTime now)
         {
             collectionId.AssertNotNull("collectionId");
             now.AssertUtc("now");
@@ -38,7 +38,10 @@
                 Now = now
             };
 
-            return this.databaseContext.Database.Connection.ExecuteScalarAsync<int>(Sql, parameters);
+            using (var connection = this.connectionFactory.CreateConnection())
+            {
+                return await connection.ExecuteScalarAsync<int>(Sql, parameters);
+            }
         }
     }
 }

@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Linq;
 
-//// Generated on 29/01/2015 19:48:58 (UTC)
-//// Mapped solution in 1.35s
+//// Generated on 11/02/2015 18:06:45 (UTC)
+//// Mapped solution in 11.52s
 
 
 namespace Fifthweek.Api.Subscriptions.Commands
@@ -84,7 +84,7 @@ namespace Fifthweek.Api.Subscriptions.Commands
         public CreateSubscriptionCommandHandler(
             Fifthweek.Api.Subscriptions.Shared.ISubscriptionSecurity subscriptionSecurity,
             Fifthweek.Api.Identity.Shared.Membership.IRequesterSecurity requesterSecurity,
-            Fifthweek.Api.Persistence.IFifthweekDbContext fifthweekDbContext)
+            Fifthweek.Api.Persistence.IFifthweekDbConnectionFactory connectionFactory)
         {
             if (subscriptionSecurity == null)
             {
@@ -96,14 +96,14 @@ namespace Fifthweek.Api.Subscriptions.Commands
                 throw new ArgumentNullException("requesterSecurity");
             }
 
-            if (fifthweekDbContext == null)
+            if (connectionFactory == null)
             {
-                throw new ArgumentNullException("fifthweekDbContext");
+                throw new ArgumentNullException("connectionFactory");
             }
 
             this.subscriptionSecurity = subscriptionSecurity;
             this.requesterSecurity = requesterSecurity;
-            this.fifthweekDbContext = fifthweekDbContext;
+            this.connectionFactory = connectionFactory;
         }
     }
 }
@@ -283,7 +283,7 @@ namespace Fifthweek.Api.Subscriptions.Commands
             Fifthweek.Api.Subscriptions.Shared.ISubscriptionSecurity subscriptionSecurity,
             Fifthweek.Api.FileManagement.Shared.IFileSecurity fileSecurity,
             Fifthweek.Api.Identity.Shared.Membership.IRequesterSecurity requesterSecurity,
-            Fifthweek.Api.Persistence.IFifthweekDbContext databaseContext)
+            Fifthweek.Api.Persistence.IFifthweekDbConnectionFactory connectionFactory)
         {
             if (subscriptionSecurity == null)
             {
@@ -300,15 +300,15 @@ namespace Fifthweek.Api.Subscriptions.Commands
                 throw new ArgumentNullException("requesterSecurity");
             }
 
-            if (databaseContext == null)
+            if (connectionFactory == null)
             {
-                throw new ArgumentNullException("databaseContext");
+                throw new ArgumentNullException("connectionFactory");
             }
 
             this.subscriptionSecurity = subscriptionSecurity;
             this.fileSecurity = fileSecurity;
             this.requesterSecurity = requesterSecurity;
-            this.databaseContext = databaseContext;
+            this.connectionFactory = connectionFactory;
         }
     }
 }
@@ -439,20 +439,20 @@ namespace Fifthweek.Api.Subscriptions.Queries
     {
         public GetCreatorStatusQueryHandler(
             Fifthweek.Api.Identity.Shared.Membership.IRequesterSecurity requesterSecurity,
-            Fifthweek.Api.Persistence.IFifthweekDbContext databaseContext)
+            Fifthweek.Api.Persistence.IFifthweekDbConnectionFactory connectionFactory)
         {
             if (requesterSecurity == null)
             {
                 throw new ArgumentNullException("requesterSecurity");
             }
 
-            if (databaseContext == null)
+            if (connectionFactory == null)
             {
-                throw new ArgumentNullException("databaseContext");
+                throw new ArgumentNullException("connectionFactory");
             }
 
             this.requesterSecurity = requesterSecurity;
-            this.databaseContext = databaseContext;
+            this.connectionFactory = connectionFactory;
         }
     }
 }
@@ -472,14 +472,14 @@ namespace Fifthweek.Api.Subscriptions
     public partial class SubscriptionOwnership 
     {
         public SubscriptionOwnership(
-            Fifthweek.Api.Persistence.IFifthweekDbContext databaseContext)
+            Fifthweek.Api.Persistence.IFifthweekDbConnectionFactory connectionFactory)
         {
-            if (databaseContext == null)
+            if (connectionFactory == null)
             {
-                throw new ArgumentNullException("databaseContext");
+                throw new ArgumentNullException("connectionFactory");
             }
 
-            this.databaseContext = databaseContext;
+            this.connectionFactory = connectionFactory;
         }
     }
 }
@@ -1194,7 +1194,7 @@ namespace Fifthweek.Api.Subscriptions.Controllers
                 throw new Fifthweek.Api.Core.ModelValidationException(modelStateDictionary);
             }
         
-        	return new NewSubscriptionData.Parsed(
+            return new NewSubscriptionData.Parsed(
                 parsed0,
                 parsed1,
                 parsed2);
@@ -1384,7 +1384,7 @@ namespace Fifthweek.Api.Subscriptions.Controllers
                 throw new Fifthweek.Api.Core.ModelValidationException(modelStateDictionary);
             }
         
-        	return new UpdatedSubscriptionData.Parsed(
+            return new UpdatedSubscriptionData.Parsed(
                 parsed0,
                 parsed1,
                 parsed2,

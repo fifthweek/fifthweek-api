@@ -12,26 +12,29 @@
     [AutoConstructor]
     public partial class FileOwnership : IFileOwnership
     {
-        private readonly IFifthweekDbContext fifthweekDbContext;
+        private readonly IFifthweekDbConnectionFactory connectionFactory;
 
-        public Task<bool> IsOwnerAsync(UserId userId, Shared.FileId fileId)
+        public async Task<bool> IsOwnerAsync(UserId userId, Shared.FileId fileId)
         {
             userId.AssertNotNull("userId");
             fileId.AssertNotNull("fileId");
 
-            return this.fifthweekDbContext.Database.Connection.ExecuteScalarAsync<bool>(
-                @"IF EXISTS(SELECT *
-                            FROM   Files
-                            WHERE  Id = @FileId
-                            AND    UserId = @UserId)
-                    SELECT 1 AS FOUND
-                ELSE
-                    SELECT 0 AS FOUND",
-                new
-                {
-                    FileId = fileId.Value,
-                    UserId = userId.Value
-                });
+            using (var connection = this.connectionFactory.CreateConnection())
+            {
+                return await connection.ExecuteScalarAsync<bool>(
+                    @"IF EXISTS(SELECT *
+                                FROM   Files
+                                WHERE  Id = @FileId
+                                AND    UserId = @UserId)
+                        SELECT 1 AS FOUND
+                    ELSE
+                        SELECT 0 AS FOUND",
+                    new
+                    {
+                        FileId = fileId.Value,
+                        UserId = userId.Value
+                    });
+            }
         }
     }
 }

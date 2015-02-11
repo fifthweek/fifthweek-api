@@ -16,24 +16,27 @@
     [AutoConstructor]
     public partial class GetAccountSettingsDbStatement : IGetAccountSettingsDbStatement
     {
-        private readonly IFifthweekDbContext databaseContext;
+        private readonly IFifthweekDbConnectionFactory connectionFactory;
 
         public async Task<GetAccountSettingsResult> ExecuteAsync(UserId userId)
         {
             userId.AssertNotNull("userId");
 
-            var result = (await this.databaseContext.Database.Connection.QueryAsync<GetAccountSettingsDapperResult>(
-                @"SELECT Email, ProfileImageFileId FROM dbo.AspNetUsers WHERE Id=@UserId",
-                new { UserId = userId.Value })).SingleOrDefault();
-
-            if (result == null)
+            using (var connection = this.connectionFactory.CreateConnection())
             {
-                throw new DetailedRecoverableException(
-                    "Unknown user.",
-                    "The user ID " + userId.Value + " was not found in the database.");
-            }
+                var result = (await connection.QueryAsync<GetAccountSettingsDapperResult>(
+                         @"SELECT Email, ProfileImageFileId FROM dbo.AspNetUsers WHERE Id=@UserId",
+                         new { UserId = userId.Value })).SingleOrDefault();
 
-            return new GetAccountSettingsResult(new Email(result.Email), new FileId(result.ProfileImageFileId));
+                if (result == null)
+                {
+                    throw new DetailedRecoverableException(
+                        "Unknown user.",
+                        "The user ID " + userId.Value + " was not found in the database.");
+                }
+
+                return new GetAccountSettingsResult(new Email(result.Email), new FileId(result.ProfileImageFileId));
+            }
         }
 
         private class GetAccountSettingsDapperResult

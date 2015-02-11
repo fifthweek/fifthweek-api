@@ -33,7 +33,7 @@
 
         private readonly IUserManager userManager;
 
-        private readonly IFifthweekDbContext fifthweekDbContext;
+        private readonly IFifthweekDbConnectionFactory connectionFactory;
 
         public async Task ExecuteAsync(
             UserId userId, 
@@ -71,12 +71,15 @@
                 }
             };
 
-            var result = await this.fifthweekDbContext.Database.Connection.InsertAsync(parameters);
-
-            switch (result)
+            using (var connection = this.connectionFactory.CreateConnection())
             {
-                case 0: throw new RecoverableException("The username '" + username.Value + "' is already taken.");
-                case 1: throw new RecoverableException("The email address '" + email.Value + "' is already taken.");
+                var result = await connection.InsertAsync(parameters);
+
+                switch (result)
+                {
+                    case 0: throw new RecoverableException("The username '" + username.Value + "' is already taken.");
+                    case 1: throw new RecoverableException("The email address '" + email.Value + "' is already taken.");
+                }
             }
         }
     }

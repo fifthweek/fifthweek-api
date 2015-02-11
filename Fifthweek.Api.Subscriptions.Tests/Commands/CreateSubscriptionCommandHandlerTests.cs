@@ -44,9 +44,9 @@
         public async Task WhenUnauthenticated_ItShouldThrowUnauthorizedException()
         {
             // Give side-effecting components strict mock behaviour.
-            var databaseContext = new Mock<IFifthweekDbContext>(MockBehavior.Strict);
+            var connectionFactory = new Mock<IFifthweekDbConnectionFactory>(MockBehavior.Strict);
 
-            this.target = new CreateSubscriptionCommandHandler(this.subscriptionSecurity.Object, this.requesterSecurity.Object, databaseContext.Object);
+            this.target = new CreateSubscriptionCommandHandler(this.subscriptionSecurity.Object, this.requesterSecurity.Object, connectionFactory.Object);
 
             await this.target.HandleAsync(new CreateSubscriptionCommand(Requester.Unauthenticated, SubscriptionId, SubscriptionName, Tagline, BasePrice));
         }
@@ -57,7 +57,7 @@
             await this.DatabaseTestAsync(async testDatabase =>
             {
                 this.subscriptionSecurity.Setup(_ => _.AssertCreationAllowedAsync(UserId)).Throws<UnauthorizedException>();
-                this.target = new CreateSubscriptionCommandHandler(this.subscriptionSecurity.Object, this.requesterSecurity.Object, testDatabase.NewContext());
+                this.target = new CreateSubscriptionCommandHandler(this.subscriptionSecurity.Object, this.requesterSecurity.Object, testDatabase);
                 await testDatabase.TakeSnapshotAsync();
 
                 Func<Task> badMethodCall = () => this.target.HandleAsync(Command);
@@ -73,7 +73,7 @@
         {
             await this.DatabaseTestAsync(async testDatabase =>
             {
-                this.target = new CreateSubscriptionCommandHandler(this.subscriptionSecurity.Object, this.requesterSecurity.Object, testDatabase.NewContext());
+                this.target = new CreateSubscriptionCommandHandler(this.subscriptionSecurity.Object, this.requesterSecurity.Object, testDatabase);
                 await this.CreateUserAsync(UserId, testDatabase);
                 await this.target.HandleAsync(Command);
                 await testDatabase.TakeSnapshotAsync();
@@ -89,7 +89,7 @@
         {
             await this.DatabaseTestAsync(async testDatabase =>
             {
-                this.target = new CreateSubscriptionCommandHandler(this.subscriptionSecurity.Object, this.requesterSecurity.Object, testDatabase.NewContext());
+                this.target = new CreateSubscriptionCommandHandler(this.subscriptionSecurity.Object, this.requesterSecurity.Object, testDatabase);
                 await this.CreateUserAsync(UserId, testDatabase);
                 await testDatabase.TakeSnapshotAsync();
 
@@ -128,7 +128,7 @@
         {
             await this.DatabaseTestAsync(async testDatabase =>
             {
-                this.target = new CreateSubscriptionCommandHandler(this.subscriptionSecurity.Object, this.requesterSecurity.Object, testDatabase.NewContext());
+                this.target = new CreateSubscriptionCommandHandler(this.subscriptionSecurity.Object, this.requesterSecurity.Object, testDatabase);
                 await this.CreateUserAsync(UserId, testDatabase);
                 await testDatabase.TakeSnapshotAsync();
 
@@ -161,7 +161,7 @@
 
         private async Task CreateUserAsync(UserId newUserId, TestDatabaseContext testDatabase)
         {
-            using (var databaseContext = testDatabase.NewContext())
+            using (var databaseContext = testDatabase.CreateContext())
             {
                 await databaseContext.CreateTestUserAsync(newUserId.Value);
             }

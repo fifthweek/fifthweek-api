@@ -30,7 +30,7 @@
         {
             await this.DatabaseTestAsync(async testDatabase =>
             {
-                target = new DeletePostDbStatement(testDatabase.NewContext());
+                target = new DeletePostDbStatement(testDatabase);
                 var post = await this.CreateEntitiesAsync(testDatabase);
                 await testDatabase.TakeSnapshotAsync();
 
@@ -48,7 +48,7 @@
         {
             await this.DatabaseTestAsync(async testDatabase =>
             {
-                target = new DeletePostDbStatement(testDatabase.NewContext());
+                target = new DeletePostDbStatement(testDatabase);
                 await this.CreateEntitiesAsync(testDatabase);
                 await testDatabase.TakeSnapshotAsync();
 
@@ -60,7 +60,7 @@
 
         private async Task<Post> CreateEntitiesAsync(TestDatabaseContext testDatabase)
         {
-            using (var databaseContext = testDatabase.NewContext())
+            using (var databaseContext = testDatabase.CreateContext())
             {
                 await databaseContext.CreateTestCollectionAsync(UserId.Value, ChannelId.Value, CollectionId.Value);
                 await databaseContext.CreateTestFileWithExistingUserAsync(UserId.Value, FileId.Value);

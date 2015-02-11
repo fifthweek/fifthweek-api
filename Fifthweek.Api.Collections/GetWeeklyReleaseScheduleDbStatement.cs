@@ -20,8 +20,8 @@
             WHERE   {1}=@CollectionId",
             WeeklyReleaseTime.Table,
             WeeklyReleaseTime.Fields.CollectionId);
-        
-        private readonly IFifthweekDbContext databaseContext;
+
+        private readonly IFifthweekDbConnectionFactory connectionFactory;
 
         public async Task<WeeklyReleaseSchedule> ExecuteAsync(CollectionId collectionId)
         {
@@ -32,17 +32,21 @@
                 CollectionId = collectionId.Value
             };
 
-            var releaseTimes = await this.databaseContext.Database.Connection.QueryAsync<WeeklyReleaseTime>(Sql, parameters);
-            var hoursOfWeek = releaseTimes.Select(_ => HourOfWeek.Parse(_.HourOfWeek)).ToArray();
-
-            if (hoursOfWeek.Length == 0)
+            using (var connection = this.connectionFactory.CreateConnection())
             {
-                throw new Exception(string.Format(
-                    "Collection does not have any weekly release times defined. At least one should exist per collection at all times. {0}",
-                    collectionId));
-            }
+                var releaseTimes = await connection.QueryAsync<WeeklyReleaseTime>(Sql, parameters);
+                var hoursOfWeek = releaseTimes.Select(_ => HourOfWeek.Parse(_.HourOfWeek)).ToArray();
 
-            return WeeklyReleaseSchedule.Parse(hoursOfWeek);
+                if (hoursOfWeek.Length == 0)
+                {
+                    throw new Exception(
+                        string.Format(
+                            "Collection does not have any weekly release times defined. At least one should exist per collection at all times. {0}",
+                            collectionId));
+                }
+
+                return WeeklyReleaseSchedule.Parse(hoursOfWeek);
+            }
         }
     }
 }

@@ -43,7 +43,7 @@
             Subscription.Fields.CreatorId);
 
         private readonly IRequesterSecurity requesterSecurity;
-        private readonly IFifthweekDbContext databaseContext;
+        private readonly IFifthweekDbConnectionFactory connectionFactory;
 
         public async Task<IReadOnlyList<BacklogPost>> HandleAsync(GetCreatorBacklogQuery query)
         {
@@ -62,8 +62,12 @@
                 CreatorId = creatorId.Value,
                 Now = DateTime.UtcNow
             };
-            var entities = await this.databaseContext.Database.Connection.QueryAsync<BacklogPost.Builder>(Sql, parameters);
-            return entities.Select(_ => _.Build()).ToList();
+
+            using (var connection = this.connectionFactory.CreateConnection())
+            {
+                var entities = await connection.QueryAsync<BacklogPost.Builder>(Sql, parameters);
+                return entities.Select(_ => _.Build()).ToList();
+            }
         }
     }
 }

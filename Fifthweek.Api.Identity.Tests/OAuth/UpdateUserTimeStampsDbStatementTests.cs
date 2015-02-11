@@ -21,14 +21,14 @@
         private static readonly UserId UserId = new UserId(Guid.NewGuid());
         private static readonly DateTime TimeStamp = new SqlDateTime(DateTime.UtcNow).Value;
 
-        private Mock<IFifthweekDbContext> fifthweekDbContext;
+        private Mock<IFifthweekDbConnectionFactory> connectionFactory;
         private UpdateUserTimeStampsDbStatement target;
 
         [TestInitialize]
         public void TestInitialize()
         {
-            this.fifthweekDbContext = new Mock<IFifthweekDbContext>(MockBehavior.Strict);
-            this.target = new UpdateUserTimeStampsDbStatement(this.fifthweekDbContext.Object);
+            this.connectionFactory = new Mock<IFifthweekDbConnectionFactory>(MockBehavior.Strict);
+            this.target = new UpdateUserTimeStampsDbStatement(this.connectionFactory.Object);
         }
 
         [TestMethod]
@@ -50,7 +50,7 @@
         {
             await this.DatabaseTestAsync(async testDatabase =>
             {
-                this.target = new UpdateUserTimeStampsDbStatement(testDatabase.NewContext());
+                this.target = new UpdateUserTimeStampsDbStatement(testDatabase);
 
                 await this.CreateUserAsync(testDatabase);
                 await testDatabase.TakeSnapshotAsync();
@@ -72,7 +72,7 @@
         {
             await this.DatabaseTestAsync(async testDatabase =>
             {
-                this.target = new UpdateUserTimeStampsDbStatement(testDatabase.NewContext());
+                this.target = new UpdateUserTimeStampsDbStatement(testDatabase);
 
                 await this.CreateUserAsync(testDatabase);
                 await testDatabase.TakeSnapshotAsync();
@@ -95,7 +95,7 @@
         {
             await this.DatabaseTestAsync(async testDatabase =>
             {
-                this.target = new UpdateUserTimeStampsDbStatement(testDatabase.NewContext());
+                this.target = new UpdateUserTimeStampsDbStatement(testDatabase);
 
                 await this.CreateUserAsync(testDatabase);
                 await this.target.UpdateAccessTokenAsync(UserId, TimeStamp);
@@ -111,7 +111,7 @@
         {
             await this.DatabaseTestAsync(async testDatabase =>
             {
-                this.target = new UpdateUserTimeStampsDbStatement(testDatabase.NewContext());
+                this.target = new UpdateUserTimeStampsDbStatement(testDatabase);
 
                 await this.CreateUserAsync(testDatabase);
                 await this.target.UpdateSignInAndAccessTokenAsync(UserId, TimeStamp);
@@ -127,7 +127,7 @@
         {
             await this.DatabaseTestAsync(async testDatabase =>
             {
-                this.target = new UpdateUserTimeStampsDbStatement(testDatabase.NewContext());
+                this.target = new UpdateUserTimeStampsDbStatement(testDatabase);
 
                 await this.CreateUserAsync(testDatabase);
                 await testDatabase.TakeSnapshotAsync();
@@ -143,7 +143,7 @@
         {
             await this.DatabaseTestAsync(async testDatabase =>
             {
-                this.target = new UpdateUserTimeStampsDbStatement(testDatabase.NewContext());
+                this.target = new UpdateUserTimeStampsDbStatement(testDatabase);
 
                 await this.CreateUserAsync(testDatabase);
                 await testDatabase.TakeSnapshotAsync();
@@ -156,7 +156,7 @@
 
         private async Task<FifthweekUser> GetUserAsync(TestDatabaseContext testDatabase)
         {
-            using (var databaseContext = testDatabase.NewContext())
+            using (var databaseContext = testDatabase.CreateContext())
             {
                 databaseContext.Configuration.ProxyCreationEnabled = false;
                 return await databaseContext.Users.SingleAsync(v => v.Id == UserId.Value);
@@ -171,7 +171,7 @@
             user.LastSignInDate = TimeStamp.AddSeconds(-360);
             user.LastAccessTokenDate = TimeStamp.AddSeconds(-180);
 
-            using (var databaseContext = testDatabase.NewContext())
+            using (var databaseContext = testDatabase.CreateContext())
             {
                 databaseContext.Users.Add(user);
                 await databaseContext.SaveChangesAsync();

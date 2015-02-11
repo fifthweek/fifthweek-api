@@ -31,7 +31,7 @@
         {
             await this.DatabaseTestAsync(async testDatabase =>
             {
-                this.target = new GetWeeklyReleaseScheduleDbStatement(testDatabase.NewContext());
+                this.target = new GetWeeklyReleaseScheduleDbStatement(testDatabase);
                 await testDatabase.TakeSnapshotAsync();
 
                 await ExpectedException.AssertExceptionAsync<Exception>(() =>
@@ -48,7 +48,7 @@
         {
             await this.DatabaseTestAsync(async testDatabase =>
             {
-                this.target = new GetWeeklyReleaseScheduleDbStatement(testDatabase.NewContext());
+                this.target = new GetWeeklyReleaseScheduleDbStatement(testDatabase);
                 await this.CreateEntitiesAsync(testDatabase);
                 await testDatabase.TakeSnapshotAsync();
 
@@ -62,7 +62,7 @@
 
         private async Task CreateEntitiesAsync(TestDatabaseContext testDatabase)
         {
-            using (var databaseContext = testDatabase.NewContext())
+            using (var databaseContext = testDatabase.CreateContext())
             {
                 await databaseContext.CreateTestCollectionAsync(UserId.Value, ChannelId.Value, CollectionId.Value);
                 await databaseContext.Database.Connection.InsertAsync(SortedReleaseTimes);

@@ -27,21 +27,21 @@
         private static readonly IReadOnlyList<DateTime> FutureDatesB = new[] { Now.AddDays(4), Now.AddDays(5), Now.AddDays(6) };
         private static readonly IReadOnlyList<DateTime> FutureDatesC = new[] { Now.AddDays(7), Now.AddDays(8), Now.AddDays(9) };
 
-        private Mock<IFifthweekDbContext> databaseContext;
+        private Mock<IFifthweekDbConnectionFactory> connectionFactory;
         private UpdateAllLiveDatesInQueueDbStatement target;
 
         [TestInitialize]
         public void Initialize()
         {
             // Give potentially side-effecting components strict mock behaviour.
-            this.databaseContext = new Mock<IFifthweekDbContext>(MockBehavior.Strict);
+            this.connectionFactory = new Mock<IFifthweekDbConnectionFactory>(MockBehavior.Strict);
 
-            this.InitializeTarget(this.databaseContext.Object);
+            this.InitializeTarget(this.connectionFactory.Object);
         }
 
-        public void InitializeTarget(IFifthweekDbContext databaseContext)
+        public void InitializeTarget(IFifthweekDbConnectionFactory connectionFactory)
         {
-            this.target = new UpdateAllLiveDatesInQueueDbStatement(databaseContext);
+            this.target = new UpdateAllLiveDatesInQueueDbStatement(connectionFactory);
         }
 
         [TestMethod]
@@ -120,7 +120,7 @@
         {
             await this.DatabaseTestAsync(async testDatabase =>
             {
-                this.InitializeTarget(testDatabase.NewContext());
+                this.InitializeTarget(testDatabase);
                 await this.CreatePostsAsync(testDatabase, CollectionId, FutureDatesA, scheduledByQueue: true);
                 await this.target.ExecuteAsync(CollectionId, FutureDatesB, Now);
                 await testDatabase.TakeSnapshotAsync();
@@ -136,7 +136,7 @@
         {
             await this.DatabaseTestAsync(async testDatabase =>
             {
-                this.InitializeTarget(testDatabase.NewContext());
+                this.InitializeTarget(testDatabase);
                 await this.CreatePostsAsync(testDatabase, CollectionId, FutureDatesA, scheduledByQueue: true);
                 await testDatabase.TakeSnapshotAsync();
 
@@ -151,7 +151,7 @@
         {
             await this.DatabaseTestAsync(async testDatabase =>
             {
-                this.InitializeTarget(testDatabase.NewContext());
+                this.InitializeTarget(testDatabase);
                 await this.CreatePostsAsync(testDatabase, CollectionId, PastDates, scheduledByQueue: true);
                 await testDatabase.TakeSnapshotAsync();
 
@@ -191,7 +191,7 @@
         {
             await this.DatabaseTestAsync(async testDatabase =>
             {
-                this.InitializeTarget(testDatabase.NewContext());
+                this.InitializeTarget(testDatabase);
                 await this.CreatePostsAsync(testDatabase, CollectionId, FutureDatesA, scheduledByQueue: false);
                 await testDatabase.TakeSnapshotAsync();
 
@@ -206,7 +206,7 @@
         {
             await this.DatabaseTestAsync(async testDatabase =>
             {
-                this.InitializeTarget(testDatabase.NewContext());
+                this.InitializeTarget(testDatabase);
                 await this.CreatePostsAsync(testDatabase, CollectionId, FutureDatesA, scheduledByQueue: true);
                 await testDatabase.TakeSnapshotAsync();
 
@@ -223,7 +223,7 @@
         {
             await this.DatabaseTestAsync(async testDatabase =>
             {
-                this.InitializeTarget(testDatabase.NewContext());
+                this.InitializeTarget(testDatabase);
 
                 var newEntityDates = existingPastLiveDates == null 
                     ? existingFutureLiveDates
@@ -263,7 +263,7 @@
             IReadOnlyList<DateTime> liveDates,
             bool scheduledByQueue)
         {
-            using (var databaseContext = testDatabase.NewContext())
+            using (var databaseContext = testDatabase.CreateContext())
             {
                 var user = UserTests.UniqueEntity(Random);
                 await databaseContext.Database.Connection.InsertAsync(user);

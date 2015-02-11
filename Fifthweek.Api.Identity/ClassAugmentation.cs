@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Linq;
 
-//// Generated on 30/01/2015 17:12:24 (UTC)
-//// Mapped solution in 16.09s
+//// Generated on 11/02/2015 18:03:58 (UTC)
+//// Mapped solution in 9.24s
 
 
 namespace Fifthweek.Api.Identity.Membership.Commands
@@ -291,20 +291,20 @@ namespace Fifthweek.Api.Identity.Membership
     {
         public RegisterUserDbStatement(
             Fifthweek.Api.Persistence.IUserManager userManager,
-            Fifthweek.Api.Persistence.IFifthweekDbContext fifthweekDbContext)
+            Fifthweek.Api.Persistence.IFifthweekDbConnectionFactory connectionFactory)
         {
             if (userManager == null)
             {
                 throw new ArgumentNullException("userManager");
             }
 
-            if (fifthweekDbContext == null)
+            if (connectionFactory == null)
             {
-                throw new ArgumentNullException("fifthweekDbContext");
+                throw new ArgumentNullException("connectionFactory");
             }
 
             this.userManager = userManager;
-            this.fifthweekDbContext = fifthweekDbContext;
+            this.connectionFactory = connectionFactory;
         }
     }
 }
@@ -751,20 +751,20 @@ namespace Fifthweek.Api.Identity.OAuth
     {
         public GetUserAndRolesFromCredentialsDbStatement(
             Fifthweek.Api.Persistence.IUserManager userManager,
-            Fifthweek.Api.Persistence.IFifthweekDbContext fifthweekDbContext)
+            Fifthweek.Api.Persistence.IFifthweekDbConnectionFactory connectionFactory)
         {
             if (userManager == null)
             {
                 throw new ArgumentNullException("userManager");
             }
 
-            if (fifthweekDbContext == null)
+            if (connectionFactory == null)
             {
-                throw new ArgumentNullException("fifthweekDbContext");
+                throw new ArgumentNullException("connectionFactory");
             }
 
             this.userManager = userManager;
-            this.fifthweekDbContext = fifthweekDbContext;
+            this.connectionFactory = connectionFactory;
         }
     }
 }
@@ -796,14 +796,14 @@ namespace Fifthweek.Api.Identity.OAuth
     public partial class GetUserAndRolesFromUserIdDbStatement 
     {
         public GetUserAndRolesFromUserIdDbStatement(
-            Fifthweek.Api.Persistence.IFifthweekDbContext fifthweekDbContext)
+            Fifthweek.Api.Persistence.IFifthweekDbConnectionFactory connectionFactory)
         {
-            if (fifthweekDbContext == null)
+            if (connectionFactory == null)
             {
-                throw new ArgumentNullException("fifthweekDbContext");
+                throw new ArgumentNullException("connectionFactory");
             }
 
-            this.fifthweekDbContext = fifthweekDbContext;
+            this.connectionFactory = connectionFactory;
         }
     }
 }
@@ -1110,14 +1110,14 @@ namespace Fifthweek.Api.Identity.OAuth
     public partial class RemoveRefreshTokenDbStatement 
     {
         public RemoveRefreshTokenDbStatement(
-            Fifthweek.Api.Persistence.IFifthweekDbContext fifthweekDbContext)
+            Fifthweek.Api.Persistence.IFifthweekDbConnectionFactory connectionFactory)
         {
-            if (fifthweekDbContext == null)
+            if (connectionFactory == null)
             {
-                throw new ArgumentNullException("fifthweekDbContext");
+                throw new ArgumentNullException("connectionFactory");
             }
 
-            this.fifthweekDbContext = fifthweekDbContext;
+            this.connectionFactory = connectionFactory;
         }
     }
 }
@@ -1149,14 +1149,14 @@ namespace Fifthweek.Api.Identity.OAuth
     public partial class TryGetRefreshTokenDbStatement 
     {
         public TryGetRefreshTokenDbStatement(
-            Fifthweek.Api.Persistence.IFifthweekDbContext fifthweekDbContext)
+            Fifthweek.Api.Persistence.IFifthweekDbConnectionFactory connectionFactory)
         {
-            if (fifthweekDbContext == null)
+            if (connectionFactory == null)
             {
-                throw new ArgumentNullException("fifthweekDbContext");
+                throw new ArgumentNullException("connectionFactory");
             }
 
-            this.fifthweekDbContext = fifthweekDbContext;
+            this.connectionFactory = connectionFactory;
         }
     }
 }
@@ -1188,14 +1188,14 @@ namespace Fifthweek.Api.Identity.OAuth
     public partial class UpdateUserTimeStampsDbStatement 
     {
         public UpdateUserTimeStampsDbStatement(
-            Fifthweek.Api.Persistence.IFifthweekDbContext fifthweekDbContext)
+            Fifthweek.Api.Persistence.IFifthweekDbConnectionFactory connectionFactory)
         {
-            if (fifthweekDbContext == null)
+            if (connectionFactory == null)
             {
-                throw new ArgumentNullException("fifthweekDbContext");
+                throw new ArgumentNullException("connectionFactory");
             }
 
-            this.fifthweekDbContext = fifthweekDbContext;
+            this.connectionFactory = connectionFactory;
         }
     }
 }
@@ -1227,14 +1227,14 @@ namespace Fifthweek.Api.Identity.OAuth
     public partial class UpsertRefreshTokenDbStatement 
     {
         public UpsertRefreshTokenDbStatement(
-            Fifthweek.Api.Persistence.IFifthweekDbContext fifthweekDbContext)
+            Fifthweek.Api.Persistence.IFifthweekDbConnectionFactory connectionFactory)
         {
-            if (fifthweekDbContext == null)
+            if (connectionFactory == null)
             {
-                throw new ArgumentNullException("fifthweekDbContext");
+                throw new ArgumentNullException("connectionFactory");
             }
 
-            this.fifthweekDbContext = fifthweekDbContext;
+            this.connectionFactory = connectionFactory;
         }
     }
 }

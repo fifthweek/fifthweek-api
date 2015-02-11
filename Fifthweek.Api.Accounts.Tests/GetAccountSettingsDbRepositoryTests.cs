@@ -29,7 +29,7 @@
         public void Initialize()
         {
             // Required for non-database tests.
-            this.target = new GetAccountSettingsDbStatement(new Mock<IFifthweekDbContext>(MockBehavior.Strict).Object);
+            this.target = new GetAccountSettingsDbStatement(new Mock<IFifthweekDbConnectionFactory>(MockBehavior.Strict).Object);
         }
 
         [TestMethod]
@@ -37,7 +37,7 @@
         {
             await this.DatabaseTestAsync(async testDatabase =>
             {
-                this.target = new GetAccountSettingsDbStatement(testDatabase.NewContext());
+                this.target = new GetAccountSettingsDbStatement(testDatabase);
                 await this.CreateFileAsync(testDatabase);
                 await testDatabase.TakeSnapshotAsync();
 
@@ -55,7 +55,7 @@
         {
             await this.DatabaseTestAsync(async testDatabase =>
             {
-                this.target = new GetAccountSettingsDbStatement(testDatabase.NewContext());
+                this.target = new GetAccountSettingsDbStatement(testDatabase);
                 await this.CreateFileAsync(testDatabase);
                 await testDatabase.TakeSnapshotAsync();
 
@@ -82,7 +82,7 @@
             user.Id = this.userId.Value;
             user.Email = this.email.Value;
 
-            using (var databaseContext = testDatabase.NewContext())
+            using (var databaseContext = testDatabase.CreateContext())
             {
                 databaseContext.Users.Add(user);
                 await databaseContext.SaveChangesAsync();
@@ -98,7 +98,7 @@
             otherFile.User = user;
             otherFile.UserId = user.Id;
 
-            using (var databaseContext = testDatabase.NewContext())
+            using (var databaseContext = testDatabase.CreateContext())
             {
                 await databaseContext.Database.Connection.InsertAsync(profileImageFile);
                 await databaseContext.Database.Connection.InsertAsync(otherFile);

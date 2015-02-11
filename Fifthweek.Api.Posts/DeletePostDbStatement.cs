@@ -10,13 +10,16 @@
     [AutoConstructor]
     public partial class DeletePostDbStatement : IDeletePostDbStatement
     {
-        private readonly IFifthweekDbContext fifthweekDbContext;
+        private readonly IFifthweekDbConnectionFactory connectionFactory;
 
-        public Task ExecuteAsync(Shared.PostId postId)
+        public async Task ExecuteAsync(Shared.PostId postId)
         {
-            return this.fifthweekDbContext.Database.Connection.ExecuteAsync(
-                string.Format(@"DELETE FROM {0} WHERE {1}=@Id", Post.Table, Post.Fields.Id),
-                new { Id = postId.Value });
+            using (var connection = this.connectionFactory.CreateConnection())
+            {
+                await connection.ExecuteAsync(
+                        string.Format(@"DELETE FROM {0} WHERE {1}=@Id", Post.Table, Post.Fields.Id),
+                        new { Id = postId.Value });
+            }
         }
     }
 }

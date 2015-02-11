@@ -27,9 +27,9 @@ namespace Fifthweek.Api.Posts
             Post.Fields.LiveDate,
             Post.Fields.ScheduledByQueue);
 
-        private readonly IFifthweekDbContext databaseContext;
+        private readonly IFifthweekDbConnectionFactory connectionFactory;
 
-        public Task<CollectionId> ExecuteAsync(PostId postId, DateTime now)
+        public async Task<CollectionId> ExecuteAsync(PostId postId, DateTime now)
         {
             postId.AssertNotNull("postId");
             now.AssertUtc("now");
@@ -40,7 +40,10 @@ namespace Fifthweek.Api.Posts
                 Now = now
             };
 
-            return this.databaseContext.Database.Connection.ExecuteScalarAsync<CollectionId>(Sql, parameters);
+            using (var connection = this.connectionFactory.CreateConnection())
+            {
+                return await connection.ExecuteScalarAsync<CollectionId>(Sql, parameters);
+            }
         }
     }
 }

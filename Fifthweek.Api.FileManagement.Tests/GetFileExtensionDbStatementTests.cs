@@ -24,7 +24,7 @@
         {
             await this.DatabaseTestAsync(async testDatabase =>
             {
-                this.target = new GetFileExtensionDbStatement(testDatabase.NewContext());
+                this.target = new GetFileExtensionDbStatement(testDatabase);
                 await this.CreateFileAsync(UserId, FileId, FileExtension, testDatabase);
                 await testDatabase.TakeSnapshotAsync();
 
@@ -41,7 +41,7 @@
         {
             await this.DatabaseTestAsync(async testDatabase =>
             {
-                this.target = new GetFileExtensionDbStatement(testDatabase.NewContext());
+                this.target = new GetFileExtensionDbStatement(testDatabase);
                 await testDatabase.TakeSnapshotAsync();
 
                 Func<Task> badMethodCall = () => this.target.ExecuteAsync(FileId);
@@ -64,7 +64,7 @@
             file.UserId = newFileId.Value;
             file.FileExtension = extension;
 
-            using (var databaseContext = testDatabase.NewContext())
+            using (var databaseContext = testDatabase.CreateContext())
             {
                 databaseContext.Users.Add(user);
                 databaseContext.Files.Add(file);

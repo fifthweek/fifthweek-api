@@ -46,7 +46,7 @@
         };
 
         private Mock<IRequesterSecurity> requesterSecurity;
-        private Mock<IFifthweekDbContext> fifthweekDbContext;
+        private Mock<IFifthweekDbConnectionFactory> connectionFactory;
 
         private ReorderQueueCommandHandler target;
 
@@ -57,9 +57,9 @@
             this.requesterSecurity.SetupFor(Requester);
 
             // Mock potentially side-effecting components with strict behaviour.            
-            this.fifthweekDbContext = new Mock<IFifthweekDbContext>(MockBehavior.Strict);
+            this.connectionFactory = new Mock<IFifthweekDbConnectionFactory>(MockBehavior.Strict);
 
-            this.target = new ReorderQueueCommandHandler(this.requesterSecurity.Object, this.fifthweekDbContext.Object);
+            this.target = new ReorderQueueCommandHandler(this.requesterSecurity.Object, this.connectionFactory.Object);
         }
 
         [TestMethod]
@@ -88,7 +88,7 @@
         {
             await this.DatabaseTestAsync(async testDatabase =>
             {
-                this.target = new ReorderQueueCommandHandler(this.requesterSecurity.Object, testDatabase.NewContext());
+                this.target = new ReorderQueueCommandHandler(this.requesterSecurity.Object, testDatabase);
 
                 var validPosts = await this.CreateValidQueueCandidatesAsync(testDatabase);
                 var attemptedNewQueueOrder = GetRandomSubset(validPosts);
@@ -231,7 +231,7 @@
 
         private async Task<ExpectedSideEffects> TestExpectedQueueOrderAsync(TestDatabaseContext testDatabase, IReadOnlyList<Post> validSuperset, ReorderQueueCommand command)
         {
-            this.target = new ReorderQueueCommandHandler(this.requesterSecurity.Object, testDatabase.NewContext());
+            this.target = new ReorderQueueCommandHandler(this.requesterSecurity.Object, testDatabase);
 
             await testDatabase.TakeSnapshotAsync();
 
@@ -299,7 +299,7 @@
             bool liveDateInFuture,
             bool scheduledByQueue)
         {
-            using (var databaseContext = testDatabase.NewContext())
+            using (var databaseContext = testDatabase.CreateContext())
             {
                 var user = UserTests.UniqueEntity(Random);
                 user.Id = userId.Value;

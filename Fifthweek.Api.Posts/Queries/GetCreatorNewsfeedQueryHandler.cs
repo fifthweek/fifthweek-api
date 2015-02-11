@@ -44,7 +44,7 @@
             Subscription.Fields.CreatorId);
 
         private readonly IRequesterSecurity requesterSecurity;
-        private readonly IFifthweekDbContext databaseContext;
+        private readonly IFifthweekDbConnectionFactory connectionFactory;
 
         public async Task<IReadOnlyList<NewsfeedPost>> HandleAsync(GetCreatorNewsfeedQuery query)
         {
@@ -67,8 +67,12 @@
                 StartIndex = query.StartIndex.Value,
                 Count = query.Count.Value
             };
-            var entities = await this.databaseContext.Database.Connection.QueryAsync<NewsfeedPost.Builder>(Sql, parameters);
-            return entities.Select(_ => _.Build()).ToList();
+
+            using (var connection = this.connectionFactory.CreateConnection())
+            {
+                var entities = await connection.QueryAsync<NewsfeedPost.Builder>(Sql, parameters);
+                return entities.Select(_ => _.Build()).ToList();
+            }
         }
     }
 }

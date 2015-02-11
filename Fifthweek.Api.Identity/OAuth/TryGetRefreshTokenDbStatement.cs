@@ -12,16 +12,19 @@
     [AutoConstructor]
     public partial class TryGetRefreshTokenDbStatement : ITryGetRefreshTokenDbStatement
     {
-        private readonly IFifthweekDbContext fifthweekDbContext;
+        private readonly IFifthweekDbConnectionFactory connectionFactory;
 
         public async Task<RefreshToken> ExecuteAsync(HashedRefreshTokenId hashedTokenId)
         {
             hashedTokenId.AssertNotNull("hashedTokenId");
 
-            var results = await this.fifthweekDbContext.Database.Connection.QueryAsync<RefreshToken>(
-                string.Format(@"SELECT * FROM {0} WHERE {1}=@{1}", RefreshToken.Table, RefreshToken.Fields.HashedId),
-                new { HashedId = hashedTokenId.Value });
-            return results.SingleOrDefault();
+            using (var connection = this.connectionFactory.CreateConnection())
+            {
+                var results = await connection.QueryAsync<RefreshToken>(
+                    string.Format(@"SELECT * FROM {0} WHERE {1}=@{1}", RefreshToken.Table, RefreshToken.Fields.HashedId),
+                    new { HashedId = hashedTokenId.Value });
+                return results.SingleOrDefault();
+            }
         }
     }
 }

@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Linq;
 
-//// Generated on 10/02/2015 16:58:12 (UTC)
-//// Mapped solution in 5.85s
+//// Generated on 11/02/2015 17:39:35 (UTC)
+//// Mapped solution in 5.36s
 
 
 namespace Fifthweek.Api.Availability.Controllers
@@ -85,14 +85,14 @@ namespace Fifthweek.Api.Availability
     public partial class CountUsersDbStatement 
     {
         public CountUsersDbStatement(
-            Fifthweek.Api.Persistence.IFifthweekDbContext databaseContext)
+            Fifthweek.Api.Persistence.IFifthweekDbConnectionFactory connectionFactory)
         {
-            if (databaseContext == null)
+            if (connectionFactory == null)
             {
-                throw new ArgumentNullException("databaseContext");
+                throw new ArgumentNullException("connectionFactory");
             }
 
-            this.databaseContext = databaseContext;
+            this.connectionFactory = connectionFactory;
         }
     }
 }

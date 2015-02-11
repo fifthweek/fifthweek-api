@@ -24,21 +24,21 @@
             Name = Name.Value
         };
 
-        private Mock<IFifthweekDbContext> databaseContext;
+        private Mock<IFifthweekDbConnectionFactory> connectionFactory;
         private UpdateCollectionFieldsDbStatement target;
 
         [TestInitialize]
         public void Initialize()
         {
             // Give potentially side-effective components strict mock behaviour.
-            this.databaseContext = new Mock<IFifthweekDbContext>(MockBehavior.Strict);
+            this.connectionFactory = new Mock<IFifthweekDbConnectionFactory>(MockBehavior.Strict);
 
-            this.InitializeTarget(this.databaseContext.Object);
+            this.InitializeTarget(this.connectionFactory.Object);
         }
 
-        public void InitializeTarget(IFifthweekDbContext databaseContext)
+        public void InitializeTarget(IFifthweekDbConnectionFactory connectionFactory)
         {
-            this.target = new UpdateCollectionFieldsDbStatement(databaseContext);
+            this.target = new UpdateCollectionFieldsDbStatement(connectionFactory);
         }
 
         [TestMethod]
@@ -46,7 +46,7 @@
         {
             await this.DatabaseTestAsync(async testDatabase =>
             {
-                this.InitializeTarget(testDatabase.NewContext());
+                this.InitializeTarget(testDatabase);
                 await this.CreateEntitiesAsync(testDatabase);
                 await this.target.ExecuteAsync(Collection);
                 await testDatabase.TakeSnapshotAsync();
@@ -62,7 +62,7 @@
         {
             await this.DatabaseTestAsync(async testDatabase =>
             {
-                this.InitializeTarget(testDatabase.NewContext());
+                this.InitializeTarget(testDatabase);
                 await this.CreateEntitiesAsync(testDatabase);
                 await testDatabase.TakeSnapshotAsync();
 
@@ -87,7 +87,7 @@
 
         private async Task CreateEntitiesAsync(TestDatabaseContext testDatabase)
         {
-            using (var databaseContext = testDatabase.NewContext())
+            using (var databaseContext = testDatabase.CreateContext())
             {
                 var random = new Random();
                 var creator = UserTests.UniqueEntity(random);

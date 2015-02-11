@@ -35,7 +35,7 @@
 
         private Mock<IGetLiveDateOfNewQueuedPostDbStatement> getLiveDateOfNewQueuedPost;
         private Mock<IScheduledDateClippingFunction> scheduledDateClipping;
-        private Mock<IFifthweekDbContext> databaseContext;
+        private Mock<IFifthweekDbConnectionFactory> connectionFactory;
         private PostToCollectionDbSubStatements target;
 
         [TestInitialize]
@@ -45,14 +45,14 @@
             this.scheduledDateClipping = new Mock<IScheduledDateClippingFunction>();
 
             // Give potentially side-effecting components strict mock behaviour.
-            this.databaseContext = new Mock<IFifthweekDbContext>(MockBehavior.Strict);
+            this.connectionFactory = new Mock<IFifthweekDbConnectionFactory>(MockBehavior.Strict);
 
-            this.InitializeTarget(this.databaseContext.Object);
+            this.InitializeTarget(this.connectionFactory.Object);
         }
 
-        public void InitializeTarget(IFifthweekDbContext databaseContext)
+        public void InitializeTarget(IFifthweekDbConnectionFactory connectionFactory)
         {
-            this.target = new PostToCollectionDbSubStatements(databaseContext, this.getLiveDateOfNewQueuedPost.Object, this.scheduledDateClipping.Object);
+            this.target = new PostToCollectionDbSubStatements(connectionFactory, this.getLiveDateOfNewQueuedPost.Object, this.scheduledDateClipping.Object);
         }
 
         // We test for this as nullable strings are not explicitly defined by the language, so this is a good way of checking we've
@@ -62,7 +62,7 @@
         {
             await this.DatabaseTestAsync(async testDatabase =>
             {
-                this.InitializeTarget(testDatabase.NewContext());
+                this.InitializeTarget(testDatabase);
                 await this.CreateEntitiesAsync(testDatabase);
                 await testDatabase.TakeSnapshotAsync();
                 this.scheduledDateClipping.Setup(_ => _.Apply(Now, Now)).Returns(Now);
@@ -95,7 +95,7 @@
                 var clippedDate = Now.AddDays(1);
                 this.scheduledDateClipping.Setup(_ => _.Apply(Now, scheduleDate)).Returns(clippedDate);
 
-                this.InitializeTarget(testDatabase.NewContext());
+                this.InitializeTarget(testDatabase);
                 await this.CreateEntitiesAsync(testDatabase);
                 await testDatabase.TakeSnapshotAsync();
 
@@ -125,7 +125,7 @@
                 var uniqueLiveDate = DateTime.UtcNow.AddDays(42);
                 this.getLiveDateOfNewQueuedPost.Setup(_ => _.ExecuteAsync(CollectionId)).ReturnsAsync(uniqueLiveDate);
 
-                this.InitializeTarget(testDatabase.NewContext());
+                this.InitializeTarget(testDatabase);
                 await this.CreateEntitiesAsync(testDatabase);
                 await testDatabase.TakeSnapshotAsync();
 
@@ -154,7 +154,7 @@
                 var sharedLiveDate = DateTime.UtcNow.AddDays(42);
                 this.getLiveDateOfNewQueuedPost.Setup(_ => _.ExecuteAsync(CollectionId)).ReturnsAsync(sharedLiveDate);
 
-                this.InitializeTarget(testDatabase.NewContext());
+                this.InitializeTarget(testDatabase);
                 await this.CreateEntitiesAsync(testDatabase);
                 await this.CreatePostAsync(testDatabase, sharedLiveDate, scheduledByQueue: true, differentCollection: true);
                 await testDatabase.TakeSnapshotAsync();
@@ -184,7 +184,7 @@
                 var sharedLiveDate = DateTime.UtcNow.AddDays(42);
                 this.getLiveDateOfNewQueuedPost.Setup(_ => _.ExecuteAsync(CollectionId)).ReturnsAsync(sharedLiveDate);
 
-                this.InitializeTarget(testDatabase.NewContext());
+                this.InitializeTarget(testDatabase);
                 await this.CreateEntitiesAsync(testDatabase);
                 await this.CreatePostAsync(testDatabase, sharedLiveDate, scheduledByQueue: false, differentCollection: false);
                 await testDatabase.TakeSnapshotAsync();
@@ -214,7 +214,7 @@
                 var sharedLiveDate = DateTime.UtcNow.AddDays(42);
                 this.getLiveDateOfNewQueuedPost.Setup(_ => _.ExecuteAsync(CollectionId)).ReturnsAsync(sharedLiveDate);
 
-                this.InitializeTarget(testDatabase.NewContext());
+                this.InitializeTarget(testDatabase);
                 await this.CreateEntitiesAsync(testDatabase);
                 await this.CreatePostAsync(testDatabase, sharedLiveDate, scheduledByQueue: true, differentCollection: false);
                 await testDatabase.TakeSnapshotAsync();
@@ -237,7 +237,7 @@
                 var secondUniqueDate = DateTime.UtcNow.AddDays(43);
                 this.getLiveDateOfNewQueuedPost.Setup(_ => _.ExecuteAsync(CollectionId)).ReturnsInOrderAsync(firstUniqueDate, secondUniqueDate);
 
-                this.InitializeTarget(testDatabase.NewContext());
+                this.InitializeTarget(testDatabase);
                 await this.CreateEntitiesAsync(testDatabase);
                 await this.target.QueuePostAsync(UnscheduledPostWithoutChannel());
                 await testDatabase.TakeSnapshotAsync();
@@ -268,7 +268,7 @@
 
         private async Task CreatePostAsync(TestDatabaseContext testDatabase, DateTime liveDate, bool scheduledByQueue, bool differentCollection)
         {
-            using (var databaseContext = testDatabase.NewContext())
+            using (var databaseContext = testDatabase.CreateContext())
             {
                 if (differentCollection)
                 {
@@ -290,7 +290,7 @@
 
         private async Task CreateEntitiesAsync(TestDatabaseContext testDatabase, bool createQueuedPosts = false)
         {
-            using (var databaseContext = testDatabase.NewContext())
+            using (var databaseContext = testDatabase.CreateContext())
             {
                 await databaseContext.CreateTestCollectionAsync(UserId.Value, ChannelId.Value, CollectionId.Value);
                 await databaseContext.CreateTestFileWithExistingUserAsync(UserId.Value, FileId.Value);

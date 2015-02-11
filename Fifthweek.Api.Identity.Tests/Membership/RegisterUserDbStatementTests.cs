@@ -32,7 +32,7 @@
         }.Parse();
 
         private Mock<IUserManager> userManager;
-        private Mock<IFifthweekDbContext> fifthweekDbContext;
+        private Mock<IFifthweekDbConnectionFactory> connectionFactory;
         private Mock<IPasswordHasher> passwordHasher;
         private RegisterUserDbStatement target;
 
@@ -44,9 +44,9 @@
             this.userManager.Setup(v => v.PasswordHasher).Returns(this.passwordHasher.Object);
 
             // Give potentially side-effecting components strict mock behaviour.
-            this.fifthweekDbContext = new Mock<IFifthweekDbContext>(MockBehavior.Strict);
+            this.connectionFactory = new Mock<IFifthweekDbConnectionFactory>(MockBehavior.Strict);
 
-            this.target = new RegisterUserDbStatement(this.userManager.Object, this.fifthweekDbContext.Object);
+            this.target = new RegisterUserDbStatement(this.userManager.Object, this.connectionFactory.Object);
         }
 
         [TestMethod]
@@ -106,7 +106,7 @@
         {
             await this.DatabaseTestAsync(async testDatabase =>
             {
-                this.target = new RegisterUserDbStatement(this.userManager.Object, testDatabase.NewContext());
+                this.target = new RegisterUserDbStatement(this.userManager.Object, testDatabase);
 
                 var hashedPassword = RegistrationData.Password + "1";
                 this.passwordHasher.Setup(v => v.HashPassword(RegistrationData.Password.Value)).Returns(hashedPassword);
@@ -145,7 +145,7 @@
         {
             await this.DatabaseTestAsync(async testDatabase =>
             {
-                this.target = new RegisterUserDbStatement(this.userManager.Object, testDatabase.NewContext());
+                this.target = new RegisterUserDbStatement(this.userManager.Object, testDatabase);
 
                 var hashedPassword = RegistrationData.Password + "1";
                 this.passwordHasher.Setup(v => v.HashPassword(RegistrationData.Password.Value)).Returns(hashedPassword);
@@ -184,7 +184,7 @@
         {
             await this.DatabaseTestAsync(async testDatabase =>
             {
-                this.target = new RegisterUserDbStatement(this.userManager.Object, testDatabase.NewContext());
+                this.target = new RegisterUserDbStatement(this.userManager.Object, testDatabase);
 
                 var hashedPassword = RegistrationData.Password + "1";
                 this.passwordHasher.Setup(v => v.HashPassword(RegistrationData.Password.Value)).Returns(hashedPassword);
@@ -216,7 +216,7 @@
         {
             await this.DatabaseTestAsync(async testDatabase =>
             {
-                this.target = new RegisterUserDbStatement(this.userManager.Object, testDatabase.NewContext());
+                this.target = new RegisterUserDbStatement(this.userManager.Object, testDatabase);
 
                 var hashedPassword = RegistrationData.Password + "1";
                 this.passwordHasher.Setup(v => v.HashPassword(RegistrationData.Password.Value)).Returns(hashedPassword);
@@ -248,7 +248,7 @@
         {
             await this.DatabaseTestAsync(async testDatabase =>
             {
-                this.target = new RegisterUserDbStatement(this.userManager.Object, testDatabase.NewContext());
+                this.target = new RegisterUserDbStatement(this.userManager.Object, testDatabase);
 
                 var hashedPassword = RegistrationData.Password + "1";
                 this.passwordHasher.Setup(v => v.HashPassword(RegistrationData.Password.Value)).Returns(hashedPassword);
@@ -282,7 +282,7 @@
             user.Email = email;
             user.UserName = username;
 
-            using (var databaseContext = testDatabase.NewContext())
+            using (var databaseContext = testDatabase.CreateContext())
             {
                 databaseContext.Users.Add(user);
                 await databaseContext.SaveChangesAsync();

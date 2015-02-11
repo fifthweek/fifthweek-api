@@ -16,22 +16,22 @@
     public class DeleteChannelDbStatementTests : PersistenceTestsBase
     {
         private static readonly ChannelId ChannelId = new ChannelId(Guid.NewGuid());
-        
-        private Mock<IFifthweekDbContext> databaseContext;
+
+        private Mock<IFifthweekDbConnectionFactory> connectionFactory;
         private DeleteChannelDbStatement target;
 
         [TestInitialize]
         public void Initialize()
         {
             // Give potentially side-effective components strict mock behaviour.
-            this.databaseContext = new Mock<IFifthweekDbContext>(MockBehavior.Strict);
+            this.connectionFactory = new Mock<IFifthweekDbConnectionFactory>(MockBehavior.Strict);
 
-            this.InitializeTarget(this.databaseContext.Object);
+            this.InitializeTarget(this.connectionFactory.Object);
         }
 
-        public void InitializeTarget(IFifthweekDbContext databaseContext)
+        public void InitializeTarget(IFifthweekDbConnectionFactory connectionFactory)
         {
-            this.target = new DeleteChannelDbStatement(databaseContext);
+            this.target = new DeleteChannelDbStatement(connectionFactory);
         }
 
         [TestMethod]
@@ -46,7 +46,7 @@
         {
             await this.DatabaseTestAsync(async testDatabase =>
             {
-                this.InitializeTarget(testDatabase.NewContext());
+                this.InitializeTarget(testDatabase);
                 await this.CreateChannelAsync(testDatabase);
                 await this.target.ExecuteAsync(ChannelId);
                 await testDatabase.TakeSnapshotAsync();
@@ -62,7 +62,7 @@
         {
             await this.DatabaseTestAsync(async testDatabase =>
             {
-                this.InitializeTarget(testDatabase.NewContext());
+                this.InitializeTarget(testDatabase);
                 var expectedDeletion = await this.CreateChannelAsync(testDatabase);
                 await testDatabase.TakeSnapshotAsync();
 
@@ -81,12 +81,12 @@
 
         private async Task<Channel> CreateChannelAsync(TestDatabaseContext testDatabase)
         {
-            using (var databaseContext = testDatabase.NewContext())
+            using (var databaseContext = testDatabase.CreateContext())
             {
                 await databaseContext.CreatePopulatedTestCollectionAsync(Guid.NewGuid(), ChannelId.Value, Guid.NewGuid());
             }
 
-            using (var databaseContext = testDatabase.NewContext())
+            using (var databaseContext = testDatabase.CreateContext())
             {
                 var channelId = ChannelId.Value;
                 return await databaseContext.Channels.FirstAsync(_ => _.Id == channelId);

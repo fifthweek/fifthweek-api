@@ -20,7 +20,7 @@
         private static readonly CollectionId CollectionId = new CollectionId(Guid.NewGuid());
         private static readonly DateTime Now = DateTime.UtcNow;
 
-        private Mock<IFifthweekDbContext> databaseContext;
+        private Mock<IFifthweekDbConnectionFactory> connectionFactory;
         private TryGetUnqueuedPostCollectionDbStatement target;
 
         [TestInitialize]
@@ -29,14 +29,14 @@
             DapperTypeHandlerRegistration.Register(FifthweekAssembliesResolver.Assemblies);
 
             // Give potentially side-effecting components strict mock behaviour.
-            this.databaseContext = new Mock<IFifthweekDbContext>(MockBehavior.Strict);
+            this.connectionFactory = new Mock<IFifthweekDbConnectionFactory>(MockBehavior.Strict);
 
-            this.InitializeTarget(this.databaseContext.Object);
+            this.InitializeTarget(this.connectionFactory.Object);
         }
 
-        public void InitializeTarget(IFifthweekDbContext databaseContext)
+        public void InitializeTarget(IFifthweekDbConnectionFactory connectionFactory)
         {
-            this.target = new TryGetUnqueuedPostCollectionDbStatement(databaseContext);
+            this.target = new TryGetUnqueuedPostCollectionDbStatement(connectionFactory);
         }
 
         [TestMethod]
@@ -58,7 +58,7 @@
         {
             await this.DatabaseTestAsync(async testDatabase =>
             {
-                this.InitializeTarget(testDatabase.NewContext());
+                this.InitializeTarget(testDatabase);
                 await testDatabase.TakeSnapshotAsync();
 
                 var result = await this.target.ExecuteAsync(PostId, Now);
@@ -74,7 +74,7 @@
         {
             await this.DatabaseTestAsync(async testDatabase =>
             {
-                this.InitializeTarget(testDatabase.NewContext());
+                this.InitializeTarget(testDatabase);
                 await this.CreateEntitiesAsync(testDatabase, queuePost: true);
                 await testDatabase.TakeSnapshotAsync();
 
@@ -91,7 +91,7 @@
         {
             await this.DatabaseTestAsync(async testDatabase =>
             {
-                this.InitializeTarget(testDatabase.NewContext());
+                this.InitializeTarget(testDatabase);
                 await this.CreateEntitiesAsync(testDatabase, queuePost: false, liveDateInFuture: false);
                 await testDatabase.TakeSnapshotAsync();
 
@@ -108,7 +108,7 @@
         {
             await this.DatabaseTestAsync(async testDatabase =>
             {
-                this.InitializeTarget(testDatabase.NewContext());
+                this.InitializeTarget(testDatabase);
                 await this.CreateEntitiesAsync(testDatabase, queuePost: false, liveDateInFuture: true);
                 await testDatabase.TakeSnapshotAsync();
 
@@ -122,7 +122,7 @@
 
         private async Task CreateEntitiesAsync(TestDatabaseContext testDatabase, bool queuePost, bool liveDateInFuture = false)
         {
-            using (var databaseContext = testDatabase.NewContext())
+            using (var databaseContext = testDatabase.CreateContext())
             {
                 var userId = Guid.NewGuid();
                 var channelId = Guid.NewGuid();

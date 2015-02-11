@@ -21,21 +21,21 @@
         private static readonly CollectionId CollectionId = new CollectionId(Guid.NewGuid());
         private static readonly DateTime Now = DateTime.UtcNow;
 
-        private Mock<IFifthweekDbContext> databaseContext;
+        private Mock<IFifthweekDbConnectionFactory> connectionFactory;
         private GetQueueSizeDbStatement target;
 
         [TestInitialize]
         public void Initialize()
         {
             // Give potentially side-effecting components strict mock behaviour.
-            this.databaseContext = new Mock<IFifthweekDbContext>(MockBehavior.Strict);
+            this.connectionFactory = new Mock<IFifthweekDbConnectionFactory>(MockBehavior.Strict);
 
-            this.InitializeTarget(this.databaseContext.Object);
+            this.InitializeTarget(this.connectionFactory.Object);
         }
 
-        public void InitializeTarget(IFifthweekDbContext databaseContext)
+        public void InitializeTarget(IFifthweekDbConnectionFactory connectionFactory)
         {
-            this.target = new GetQueueSizeDbStatement(databaseContext);
+            this.target = new GetQueueSizeDbStatement(connectionFactory);
         }
 
         [TestMethod]
@@ -57,7 +57,7 @@
         {
             await this.DatabaseTestAsync(async testDatabase =>
             {
-                this.InitializeTarget(testDatabase.NewContext());
+                this.InitializeTarget(testDatabase);
                 await this.CreateCollectionWithoutPostsAsync(testDatabase);
                 await testDatabase.TakeSnapshotAsync();
 
@@ -74,7 +74,7 @@
         {
             await this.DatabaseTestAsync(async testDatabase =>
             {
-                this.InitializeTarget(testDatabase.NewContext());
+                this.InitializeTarget(testDatabase);
                 await this.CreateCollectionWithPostsAsync(testDatabase);
                 await testDatabase.TakeSnapshotAsync();
 
@@ -91,7 +91,7 @@
         {
             await this.DatabaseTestAsync(async testDatabase =>
             {
-                this.InitializeTarget(testDatabase.NewContext());
+                this.InitializeTarget(testDatabase);
                 await this.CreateCollectionWithPostsAsync(testDatabase, queuePosts: true);
                 await testDatabase.TakeSnapshotAsync();
 
@@ -108,7 +108,7 @@
         {
             await this.DatabaseTestAsync(async testDatabase =>
             {
-                this.InitializeTarget(testDatabase.NewContext());
+                this.InitializeTarget(testDatabase);
                 await this.CreateCollectionWithPostsAsync(testDatabase, queuePosts: true, queueInFuture: true);
                 await testDatabase.TakeSnapshotAsync();
 
@@ -125,7 +125,7 @@
         {
             await this.DatabaseTestAsync(async testDatabase =>
             {
-                this.InitializeTarget(testDatabase.NewContext());
+                this.InitializeTarget(testDatabase);
                 await this.CreateQueuedPostsForAnotherCollectionAsync(testDatabase);
                 await testDatabase.TakeSnapshotAsync();
 
@@ -139,7 +139,7 @@
 
         private async Task CreateCollectionWithoutPostsAsync(TestDatabaseContext testDatabase)
         {
-            using (var databaseContext = testDatabase.NewContext())
+            using (var databaseContext = testDatabase.CreateContext())
             {
                 var userId = Guid.NewGuid();
                 var channelId = Guid.NewGuid();
@@ -149,7 +149,7 @@
 
         private async Task CreateCollectionWithPostsAsync(TestDatabaseContext testDatabase, bool queuePosts = false, bool queueInFuture = false)
         {
-            using (var databaseContext = testDatabase.NewContext())
+            using (var databaseContext = testDatabase.CreateContext())
             {
                 var userId = Guid.NewGuid();
                 var channelId = Guid.NewGuid();
@@ -172,7 +172,7 @@
 
         private async Task CreateQueuedPostsForAnotherCollectionAsync(TestDatabaseContext testDatabase)
         {
-            using (var databaseContext = testDatabase.NewContext())
+            using (var databaseContext = testDatabase.CreateContext())
             {
                 var userId = Guid.NewGuid();
                 var channelId = Guid.NewGuid();

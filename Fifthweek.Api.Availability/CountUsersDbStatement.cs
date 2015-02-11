@@ -15,11 +15,14 @@
             @"SELECT COUNT(*) FROM {0}",
             FifthweekUser.Table);
 
-        private readonly IFifthweekDbContext databaseContext;
+        private readonly IFifthweekDbConnectionFactory connectionFactory;
 
-        public Task<int> ExecuteAsync()
+        public async Task<int> ExecuteAsync()
         {
-            return this.databaseContext.Database.Connection.ExecuteScalarAsync<int>(Sql);
+            using (var connection = this.connectionFactory.CreateConnection())
+            {
+                return await connection.ExecuteScalarAsync<int>(Sql);
+            }
         }
     }
 }

@@ -24,7 +24,7 @@
         {
             await this.DatabaseTestAsync(async testDatabase =>
             {
-                this.target = new ChannelOwnership(testDatabase.NewContext());
+                this.target = new ChannelOwnership(testDatabase);
                 await this.CreateChannelAsync(UserId, ChannelId, testDatabase);
                 await testDatabase.TakeSnapshotAsync();
 
@@ -40,9 +40,9 @@
         {
             await this.DatabaseTestAsync(async testDatabase =>
             {
-                this.target = new ChannelOwnership(testDatabase.NewContext());
+                this.target = new ChannelOwnership(testDatabase);
 
-                using (var databaseContext = testDatabase.NewContext())
+                using (var databaseContext = testDatabase.CreateContext())
                 {
                     await databaseContext.Database.Connection.ExecuteAsync("DELETE FROM Channels");
                 }
@@ -61,7 +61,7 @@
         {
             await this.DatabaseTestAsync(async testDatabase =>
             {
-                this.target = new ChannelOwnership(testDatabase.NewContext());
+                this.target = new ChannelOwnership(testDatabase);
                 await this.CreateChannelAsync(new UserId(Guid.NewGuid()), new ChannelId(Guid.NewGuid()), testDatabase);
                 await testDatabase.TakeSnapshotAsync();
 
@@ -77,7 +77,7 @@
         {
             await this.DatabaseTestAsync(async testDatabase =>
             {
-                this.target = new ChannelOwnership(testDatabase.NewContext());
+                this.target = new ChannelOwnership(testDatabase);
                 await this.CreateChannelAsync(UserId, new ChannelId(Guid.NewGuid()), testDatabase);
                 await testDatabase.TakeSnapshotAsync();
 
@@ -93,7 +93,7 @@
         {
             await this.DatabaseTestAsync(async testDatabase =>
             {
-                this.target = new ChannelOwnership(testDatabase.NewContext());
+                this.target = new ChannelOwnership(testDatabase);
                 await this.CreateChannelAsync(new UserId(Guid.NewGuid()), ChannelId, testDatabase);
                 await testDatabase.TakeSnapshotAsync();
 
@@ -106,7 +106,7 @@
 
         private async Task CreateChannelAsync(UserId newUserId, ChannelId newChannelId, TestDatabaseContext testDatabase)
         {
-            using (var databaseContext = testDatabase.NewContext())
+            using (var databaseContext = testDatabase.CreateContext())
             {
                 await databaseContext.CreateTestChannelAsync(newUserId.Value, newChannelId.Value);
             }

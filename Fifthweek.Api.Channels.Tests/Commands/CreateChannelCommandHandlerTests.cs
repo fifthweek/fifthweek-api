@@ -29,7 +29,7 @@
 
         private Mock<IRequesterSecurity> requesterSecurity;
         private Mock<ISubscriptionSecurity> subscriptionSecurity;
-        private Mock<IFifthweekDbContext> databaseContext;
+        private Mock<IFifthweekDbConnectionFactory> connectionFactory;
         private CreateChannelCommandHandler target;
 
         [TestInitialize]
@@ -40,14 +40,14 @@
             this.subscriptionSecurity = new Mock<ISubscriptionSecurity>();
 
             // Give potentially side-effective components strict mock behaviour.
-            this.databaseContext = new Mock<IFifthweekDbContext>(MockBehavior.Strict);
+            this.connectionFactory = new Mock<IFifthweekDbConnectionFactory>(MockBehavior.Strict);
 
-            this.InitializeTarget(this.databaseContext.Object);
+            this.InitializeTarget(this.connectionFactory.Object);
         }
 
-        public void InitializeTarget(IFifthweekDbContext databaseContext)
+        public void InitializeTarget(IFifthweekDbConnectionFactory connectionFactory)
         {
-            this.target = new CreateChannelCommandHandler(this.requesterSecurity.Object, this.subscriptionSecurity.Object, databaseContext);
+            this.target = new CreateChannelCommandHandler(this.requesterSecurity.Object, this.subscriptionSecurity.Object, connectionFactory);
         }
 
         [TestMethod]
@@ -78,7 +78,7 @@
         {
             await this.DatabaseTestAsync(async testDatabase =>
             {
-                this.InitializeTarget(testDatabase.NewContext());
+                this.InitializeTarget(testDatabase);
                 await this.CreateEntitiesAsync(testDatabase);
                 await this.target.HandleAsync(Command);
                 await testDatabase.TakeSnapshotAsync();
@@ -94,7 +94,7 @@
         {
             await this.DatabaseTestAsync(async testDatabase =>
             {
-                this.InitializeTarget(testDatabase.NewContext());
+                this.InitializeTarget(testDatabase);
                 await this.CreateEntitiesAsync(testDatabase);
                 await testDatabase.TakeSnapshotAsync();
 
@@ -126,7 +126,7 @@
 
         private async Task CreateEntitiesAsync(TestDatabaseContext testDatabase)
         {
-            using (var databaseContext = testDatabase.NewContext())
+            using (var databaseContext = testDatabase.CreateContext())
             {
                 await databaseContext.CreateTestSubscriptionAsync(UserId.Value, SubscriptionId.Value);
             }

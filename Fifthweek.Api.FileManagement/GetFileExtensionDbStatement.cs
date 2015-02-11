@@ -13,27 +13,30 @@
     [AutoConstructor]
     public partial class GetFileExtensionDbStatement : IGetFileExtensionDbStatement
     {
-        private readonly IFifthweekDbContext databaseContext;
+        private readonly IFifthweekDbConnectionFactory connectionFactory;
 
         public async Task<string> ExecuteAsync(Shared.FileId fileId)
         {
             fileId.AssertNotNull("fileId");
 
-            var extension = await this.databaseContext.Database.Connection.ExecuteScalarAsync<string>(
-                @"SELECT FileExtension
-                  FROM   Files
-                  WHERE  Id = @FileId",
-                new
-                {
-                    FileId = fileId.Value
-                });
-
-            if (extension == null)
+            using (var connection = this.connectionFactory.CreateConnection())
             {
-                throw new Exception(string.Format("File not found. {0}", fileId));
-            }
+                var extension = await connection.ExecuteScalarAsync<string>(
+                    @"SELECT FileExtension
+                      FROM   Files
+                      WHERE  Id = @FileId",
+                    new
+                    {
+                        FileId = fileId.Value
+                    });
 
-            return extension;
+                if (extension == null)
+                {
+                    throw new Exception(string.Format("File not found. {0}", fileId));
+                }
+
+                return extension;
+            }
         }
     }
 }

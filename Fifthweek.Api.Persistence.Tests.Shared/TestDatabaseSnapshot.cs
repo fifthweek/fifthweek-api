@@ -49,7 +49,7 @@
 
             var stopwatch = Stopwatch.StartNew();
 
-            using (var databaseContext = this.testDatabase.NewDatabaseContext())
+            using (var databaseContext = this.testDatabase.CreateContext())
             {
                 databaseContext.Configuration.AutoDetectChangesEnabled = false;
                 databaseContext.Configuration.LazyLoadingEnabled = false;
@@ -195,7 +195,7 @@
         {
             var table = new TableBeforeAndAfter<T>(setFactory);
 
-            using (var databaseContext = this.testDatabase.NewDatabaseContext())
+            using (var databaseContext = this.testDatabase.CreateContext())
             {
                 databaseContext.Configuration.AutoDetectChangesEnabled = false;
                 databaseContext.Configuration.LazyLoadingEnabled = false;

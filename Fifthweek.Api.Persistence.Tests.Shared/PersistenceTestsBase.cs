@@ -1,6 +1,7 @@
 ﻿namespace Fifthweek.Api.Persistence.Tests.Shared
 {
     using System;
+    using System.Data.Common;
     using System.Threading.Tasks;
     using System.Transactions;
 
@@ -22,7 +23,7 @@
         }
 
         [AutoConstructor]
-        public partial class TestDatabaseContext
+        public partial class TestDatabaseContext : IFifthweekDbConnectionFactory
         {
             private readonly TestDatabase testDatabase;
             private readonly TestDatabaseSnapshot testDatabaseSnapshot;
@@ -32,9 +33,14 @@
                 return this.testDatabaseSnapshot.InitializeAsync();
             }
 
-            public FifthweekDbContext NewContext()
+            public DbConnection CreateConnection()
             {
-                return this.testDatabase.NewDatabaseContext();
+                return this.testDatabase.CreateConnection();
+            }
+
+            public FifthweekDbContext CreateContext()
+            {
+                return this.testDatabase.CreateContext();
             }
         }
     }

@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Linq;
 
-//// Generated on 03/02/2015 12:42:38 (UTC)
-//// Mapped solution in 4.79s
+//// Generated on 11/02/2015 17:58:01 (UTC)
+//// Mapped solution in 10.37s
 
 
 namespace Fifthweek.Api.FileManagement
@@ -23,14 +23,14 @@ namespace Fifthweek.Api.FileManagement
     public partial class AddNewFileDbStatement 
     {
         public AddNewFileDbStatement(
-            Fifthweek.Api.Persistence.IFifthweekDbContext fifthweekDbContext)
+            Fifthweek.Api.Persistence.IFifthweekDbConnectionFactory connectionFactory)
         {
-            if (fifthweekDbContext == null)
+            if (connectionFactory == null)
             {
-                throw new ArgumentNullException("fifthweekDbContext");
+                throw new ArgumentNullException("connectionFactory");
             }
 
-            this.fifthweekDbContext = fifthweekDbContext;
+            this.connectionFactory = connectionFactory;
         }
     }
 }
@@ -409,14 +409,14 @@ namespace Fifthweek.Api.FileManagement
     public partial class FileOwnership 
     {
         public FileOwnership(
-            Fifthweek.Api.Persistence.IFifthweekDbContext fifthweekDbContext)
+            Fifthweek.Api.Persistence.IFifthweekDbConnectionFactory connectionFactory)
         {
-            if (fifthweekDbContext == null)
+            if (connectionFactory == null)
             {
-                throw new ArgumentNullException("fifthweekDbContext");
+                throw new ArgumentNullException("connectionFactory");
             }
 
-            this.fifthweekDbContext = fifthweekDbContext;
+            this.connectionFactory = connectionFactory;
         }
     }
 }
@@ -524,14 +524,14 @@ namespace Fifthweek.Api.FileManagement
     public partial class GetFileExtensionDbStatement 
     {
         public GetFileExtensionDbStatement(
-            Fifthweek.Api.Persistence.IFifthweekDbContext databaseContext)
+            Fifthweek.Api.Persistence.IFifthweekDbConnectionFactory connectionFactory)
         {
-            if (databaseContext == null)
+            if (connectionFactory == null)
             {
-                throw new ArgumentNullException("databaseContext");
+                throw new ArgumentNullException("connectionFactory");
             }
 
-            this.databaseContext = databaseContext;
+            this.connectionFactory = connectionFactory;
         }
     }
 }
@@ -553,14 +553,14 @@ namespace Fifthweek.Api.FileManagement
     public partial class GetFileWaitingForUploadDbStatement 
     {
         public GetFileWaitingForUploadDbStatement(
-            Fifthweek.Api.Persistence.IFifthweekDbContext fifthweekDbContext)
+            Fifthweek.Api.Persistence.IFifthweekDbConnectionFactory connectionFactory)
         {
-            if (fifthweekDbContext == null)
+            if (connectionFactory == null)
             {
-                throw new ArgumentNullException("fifthweekDbContext");
+                throw new ArgumentNullException("connectionFactory");
             }
 
-            this.fifthweekDbContext = fifthweekDbContext;
+            this.connectionFactory = connectionFactory;
         }
     }
 }
@@ -842,14 +842,14 @@ namespace Fifthweek.Api.FileManagement
     public partial class SetFileUploadCompleteDbStatement 
     {
         public SetFileUploadCompleteDbStatement(
-            Fifthweek.Api.Persistence.IFifthweekDbContext fifthweekDbContext)
+            Fifthweek.Api.Persistence.IFifthweekDbConnectionFactory connectionFactory)
         {
-            if (fifthweekDbContext == null)
+            if (connectionFactory == null)
             {
-                throw new ArgumentNullException("fifthweekDbContext");
+                throw new ArgumentNullException("connectionFactory");
             }
 
-            this.fifthweekDbContext = fifthweekDbContext;
+            this.connectionFactory = connectionFactory;
         }
     }
 }

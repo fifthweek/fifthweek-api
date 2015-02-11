@@ -34,24 +34,30 @@
                 FifthweekUser.Fields.LastAccessTokenDate,
                 FifthweekUser.Fields.Id);
 
-        private readonly IFifthweekDbContext fifthweekDbContext;
+        private readonly IFifthweekDbConnectionFactory connectionFactory;
 
-        public Task UpdateSignInAndAccessTokenAsync(UserId userId, DateTime timestamp)
+        public async Task UpdateSignInAndAccessTokenAsync(UserId userId, DateTime timestamp)
         {
             userId.AssertNotNull("userId");
 
-            return this.fifthweekDbContext.Database.Connection.ExecuteAsync(
-                UpdateLastSignInDateAndAccessTokenDate,
-                new { UserId = userId.Value, TimeStamp = timestamp });
+            using (var connection = this.connectionFactory.CreateConnection())
+            {
+                await connection.ExecuteAsync(
+                    UpdateLastSignInDateAndAccessTokenDate,
+                    new { UserId = userId.Value, TimeStamp = timestamp });
+            }
         }
 
-        public Task UpdateAccessTokenAsync(UserId userId, DateTime timestamp)
+        public async Task UpdateAccessTokenAsync(UserId userId, DateTime timestamp)
         {
             userId.AssertNotNull("userId");
 
-            return this.fifthweekDbContext.Database.Connection.ExecuteAsync(
-                UpdateLastAccessTokenDate,
-                new { UserId = userId.Value, TimeStamp = timestamp });
+            using (var connection = this.connectionFactory.CreateConnection())
+            {
+                 await connection.ExecuteAsync(
+                    UpdateLastAccessTokenDate,
+                    new { UserId = userId.Value, TimeStamp = timestamp });
+            }
         }
     }
 }

@@ -61,9 +61,9 @@
         public async Task WhenUnauthenticated_ItShouldThrowUnauthorizedException()
         {
             // Give side-effecting components strict mock behaviour.
-            var databaseContext = new Mock<IFifthweekDbContext>(MockBehavior.Strict);
+            var connectionFactory = new Mock<IFifthweekDbConnectionFactory>(MockBehavior.Strict);
 
-            this.target = new UpdateSubscriptionCommandHandler(this.subscriptionSecurity.Object, this.fileSecurity.Object, this.requesterSecurity.Object, databaseContext.Object);
+            this.target = new UpdateSubscriptionCommandHandler(this.subscriptionSecurity.Object, this.fileSecurity.Object, this.requesterSecurity.Object, connectionFactory.Object);
             
             await this.target.HandleAsync(new UpdateSubscriptionCommand(
                 Requester.Unauthenticated,
@@ -82,7 +82,7 @@
             await this.DatabaseTestAsync(async testDatabase =>
             {
                 this.subscriptionSecurity.Setup(_ => _.AssertWriteAllowedAsync(UserId, SubscriptionId)).Throws<UnauthorizedException>();
-                this.target = new UpdateSubscriptionCommandHandler(this.subscriptionSecurity.Object, this.fileSecurity.Object, this.requesterSecurity.Object, testDatabase.NewContext());
+                this.target = new UpdateSubscriptionCommandHandler(this.subscriptionSecurity.Object, this.fileSecurity.Object, this.requesterSecurity.Object, testDatabase);
                 await testDatabase.TakeSnapshotAsync();
 
                 Func<Task> badMethodCall = () => this.target.HandleAsync(Command);
@@ -99,7 +99,7 @@
             await this.DatabaseTestAsync(async testDatabase =>
             {
                 this.fileSecurity.Setup(_ => _.AssertReferenceAllowedAsync(UserId, HeaderImageFileId)).Throws<UnauthorizedException>();
-                this.target = new UpdateSubscriptionCommandHandler(this.subscriptionSecurity.Object, this.fileSecurity.Object, this.requesterSecurity.Object, testDatabase.NewContext());
+                this.target = new UpdateSubscriptionCommandHandler(this.subscriptionSecurity.Object, this.fileSecurity.Object, this.requesterSecurity.Object, testDatabase);
                 await testDatabase.TakeSnapshotAsync();
 
                 Func<Task> badMethodCall = () => this.target.HandleAsync(Command);
@@ -115,7 +115,7 @@
         {
             await this.DatabaseTestAsync(async testDatabase =>
             {
-                this.target = new UpdateSubscriptionCommandHandler(this.subscriptionSecurity.Object, this.fileSecurity.Object, this.requesterSecurity.Object, testDatabase.NewContext());
+                this.target = new UpdateSubscriptionCommandHandler(this.subscriptionSecurity.Object, this.fileSecurity.Object, this.requesterSecurity.Object, testDatabase);
                 await this.CreateSubscriptionAsync(UserId, SubscriptionId, testDatabase);
                 await this.target.HandleAsync(Command);
                 await testDatabase.TakeSnapshotAsync();
@@ -131,7 +131,7 @@
         {
             await this.DatabaseTestAsync(async testDatabase =>
             {
-                this.target = new UpdateSubscriptionCommandHandler(this.subscriptionSecurity.Object, this.fileSecurity.Object, this.requesterSecurity.Object, testDatabase.NewContext());
+                this.target = new UpdateSubscriptionCommandHandler(this.subscriptionSecurity.Object, this.fileSecurity.Object, this.requesterSecurity.Object, testDatabase);
                 var subscription = await this.CreateSubscriptionAsync(UserId, SubscriptionId, testDatabase);
                 await testDatabase.TakeSnapshotAsync();
 
@@ -159,7 +159,7 @@
 
         private async Task<Subscription> CreateSubscriptionAsync(UserId newUserId, SubscriptionId newSubscriptionId, TestDatabaseContext testDatabase)
         {
-            using (var databaseContext = testDatabase.NewContext())
+            using (var databaseContext = testDatabase.CreateContext())
             {
                 await databaseContext.CreateTestSubscriptionAsync(newUserId.Value, newSubscriptionId.Value, Guid.NewGuid());
 
@@ -169,7 +169,7 @@
                 await databaseContext.Database.Connection.InsertAsync(newHeaderImage);
             }
 
-            using (var databaseContext = testDatabase.NewContext())
+            using (var databaseContext = testDatabase.CreateContext())
             {
                 return await databaseContext.Subscriptions.SingleAsync(_ => _.Id == newSubscriptionId.Value);
             }

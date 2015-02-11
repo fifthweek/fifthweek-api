@@ -24,13 +24,13 @@
             "protectedTicket");
 
         private RemoveRefreshTokenDbStatement target;
-        private Mock<IFifthweekDbContext> fifthweekDbContext;
+        private Mock<IFifthweekDbConnectionFactory> connectionFactory;
 
         [TestInitialize]
         public void TestInitialize()
         {
-            this.fifthweekDbContext = new Mock<IFifthweekDbContext>(MockBehavior.Strict);
-            this.target = new RemoveRefreshTokenDbStatement(this.fifthweekDbContext.Object);
+            this.connectionFactory = new Mock<IFifthweekDbConnectionFactory>(MockBehavior.Strict);
+            this.target = new RemoveRefreshTokenDbStatement(this.connectionFactory.Object);
         }
 
         [TestMethod]
@@ -45,7 +45,7 @@
         {
             await this.DatabaseTestAsync(async testDatabase =>
             {
-                this.target = new RemoveRefreshTokenDbStatement(testDatabase.NewContext());
+                this.target = new RemoveRefreshTokenDbStatement(testDatabase);
 
                 await InsertRefreshToken(testDatabase);
                 await testDatabase.TakeSnapshotAsync();
@@ -64,7 +64,7 @@
         {
             await this.DatabaseTestAsync(async testDatabase =>
             {
-                this.target = new RemoveRefreshTokenDbStatement(testDatabase.NewContext());
+                this.target = new RemoveRefreshTokenDbStatement(testDatabase);
 
                 await InsertRefreshToken(testDatabase);
                 await this.target.ExecuteAsync(new HashedRefreshTokenId(RefreshToken.HashedId));
@@ -82,7 +82,7 @@
         {
             await this.DatabaseTestAsync(async testDatabase =>
             {
-                this.target = new RemoveRefreshTokenDbStatement(testDatabase.NewContext());
+                this.target = new RemoveRefreshTokenDbStatement(testDatabase);
 
                 await testDatabase.TakeSnapshotAsync();
 
@@ -97,7 +97,7 @@
         {
             await this.DatabaseTestAsync(async testDatabase =>
             {
-                this.target = new RemoveRefreshTokenDbStatement(testDatabase.NewContext());
+                this.target = new RemoveRefreshTokenDbStatement(testDatabase);
 
                 await this.target.ExecuteAsync(new HashedRefreshTokenId(RefreshToken.HashedId));
 
@@ -111,7 +111,7 @@
 
         private static async Task InsertRefreshToken(TestDatabaseContext testDatabase)
         {
-            using (var context = testDatabase.NewContext())
+            using (var context = testDatabase.CreateContext())
             {
                 await context.Database.Connection.InsertAsync(RefreshToken);
             }

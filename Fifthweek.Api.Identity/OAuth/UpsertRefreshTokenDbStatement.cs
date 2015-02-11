@@ -11,20 +11,23 @@
     [AutoConstructor]
     public partial class UpsertRefreshTokenDbStatement : IUpsertRefreshTokenDbStatement
     {
-        private readonly IFifthweekDbContext fifthweekDbContext;
+        private readonly IFifthweekDbConnectionFactory connectionFactory;
 
-        public Task ExecuteAsync(RefreshToken refreshToken)
+        public async Task ExecuteAsync(RefreshToken refreshToken)
         {
             refreshToken.AssertNotNull("refreshToken");
 
-            return this.fifthweekDbContext.Database.Connection.UpsertAsync(
-                refreshToken,
-                RefreshToken.Fields.Username |
-                RefreshToken.Fields.ClientId,
-                RefreshToken.Fields.HashedId |
-                RefreshToken.Fields.ProtectedTicket |
-                RefreshToken.Fields.IssuedDate |
-                RefreshToken.Fields.ExpiresDate);
+            using (var connection = this.connectionFactory.CreateConnection())
+            {
+                await connection.UpsertAsync(
+                    refreshToken,
+                    RefreshToken.Fields.Username |
+                    RefreshToken.Fields.ClientId,
+                    RefreshToken.Fields.HashedId |
+                    RefreshToken.Fields.ProtectedTicket |
+                    RefreshToken.Fields.IssuedDate |
+                    RefreshToken.Fields.ExpiresDate);
+            }
         }
     }
 }

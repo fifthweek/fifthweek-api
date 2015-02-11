@@ -14,7 +14,7 @@
     {
         private readonly IRequesterSecurity requesterSecurity;
         private readonly ISubscriptionSecurity subscriptionSecurity;
-        private readonly IFifthweekDbContext databaseContext;
+        private readonly IFifthweekDbConnectionFactory connectionFactory;
 
         public async Task HandleAsync(CreateChannelCommand command)
         {
@@ -26,7 +26,7 @@
             await this.CreateChannelAsync(command);
         }
 
-        private Task CreateChannelAsync(CreateChannelCommand command)
+        private async Task CreateChannelAsync(CreateChannelCommand command)
         {
             var channel = new Channel(
                 command.NewChannelId.Value,
@@ -38,7 +38,10 @@
                 false,
                 DateTime.UtcNow);
 
-            return this.databaseContext.Database.Connection.InsertAsync(channel);
+            using (var connection = this.connectionFactory.CreateConnection())
+            {
+                await connection.InsertAsync(channel);
+            }
         }
     }
 }

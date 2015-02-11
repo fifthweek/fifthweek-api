@@ -21,9 +21,9 @@
             Post.Fields.LiveDate);
 
         private readonly IScheduledDateClippingFunction scheduledDateClipping;
-        private readonly IFifthweekDbContext databaseContext;
+        private readonly IFifthweekDbConnectionFactory connectionFactory;
 
-        public Task ExecuteAsync(PostId postId, DateTime newTime, DateTime now)
+        public async Task ExecuteAsync(PostId postId, DateTime newTime, DateTime now)
         {
             postId.AssertNotNull("postId");
             newTime.AssertUtc("newTime");
@@ -42,7 +42,10 @@
                 UpdateMask = Post.Fields.LiveDate | Post.Fields.ScheduledByQueue
             };
 
-            return this.databaseContext.Database.Connection.UpdateAsync(parameters);
+            using (var connection = this.connectionFactory.CreateConnection())
+            {
+                await connection.UpdateAsync(parameters);
+            }
         }
     }
 }

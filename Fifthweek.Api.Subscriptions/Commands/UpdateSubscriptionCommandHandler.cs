@@ -16,7 +16,7 @@
         private readonly ISubscriptionSecurity subscriptionSecurity;
         private readonly IFileSecurity fileSecurity;
         private readonly IRequesterSecurity requesterSecurity;
-        private readonly IFifthweekDbContext databaseContext;
+        private readonly IFifthweekDbConnectionFactory connectionFactory;
 
         public async Task HandleAsync(UpdateSubscriptionCommand command)
         {
@@ -31,7 +31,7 @@
             await this.UpdateSubscriptionAsync(command);
         }
 
-        private Task UpdateSubscriptionAsync(UpdateSubscriptionCommand command)
+        private async Task UpdateSubscriptionAsync(UpdateSubscriptionCommand command)
         {
             var subscription = new Subscription(
                 command.SubscriptionId.Value,
@@ -46,14 +46,17 @@
                 null,
                 default(DateTime));
 
-            return this.databaseContext.Database.Connection.UpdateAsync(
-                subscription,
-                Subscription.Fields.Name |
-                Subscription.Fields.Tagline |
-                Subscription.Fields.Introduction |
-                Subscription.Fields.Description |
-                Subscription.Fields.ExternalVideoUrl |
-                Subscription.Fields.HeaderImageFileId);
+            using (var connection = this.connectionFactory.CreateConnection())
+            {
+                await connection.UpdateAsync(
+                    subscription,
+                    Subscription.Fields.Name |
+                    Subscription.Fields.Tagline |
+                    Subscription.Fields.Introduction |
+                    Subscription.Fields.Description |
+                    Subscription.Fields.ExternalVideoUrl |
+                    Subscription.Fields.HeaderImageFileId);
+            }
         }
     }
 }

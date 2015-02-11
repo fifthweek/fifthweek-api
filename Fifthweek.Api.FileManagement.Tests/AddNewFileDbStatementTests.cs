@@ -28,7 +28,7 @@
         [TestInitialize]
         public void Initialize()
         {
-            this.target = new AddNewFileDbStatement(new Mock<IFifthweekDbContext>(MockBehavior.Strict).Object);
+            this.target = new AddNewFileDbStatement(new Mock<IFifthweekDbConnectionFactory>(MockBehavior.Strict).Object);
         }
 
         [TestMethod]
@@ -36,7 +36,7 @@
         {
             await this.DatabaseTestAsync(async testDatabase =>
             {
-                this.target = new AddNewFileDbStatement(testDatabase.NewContext());
+                this.target = new AddNewFileDbStatement(testDatabase);
                 await this.CreateUserAsync(testDatabase);
                 await testDatabase.TakeSnapshotAsync();
 
@@ -68,7 +68,7 @@
         {
             await this.DatabaseTestAsync(async testDatabase =>
             {
-                this.target = new AddNewFileDbStatement(testDatabase.NewContext());
+                this.target = new AddNewFileDbStatement(testDatabase);
                 await this.CreateUserAsync(testDatabase);
                 await this.target.ExecuteAsync(FileId, UserId, FileNameWithoutExtension, FileExtension, Purpose, TimeStamp);
                 await testDatabase.TakeSnapshotAsync();
@@ -120,7 +120,7 @@
             var user = UserTests.UniqueEntity(random);
             user.Id = UserId.Value;
 
-            using (var databaseContext = testDatabase.NewContext())
+            using (var databaseContext = testDatabase.CreateContext())
             {
                 databaseContext.Users.Add(user);
                 await databaseContext.SaveChangesAsync();
