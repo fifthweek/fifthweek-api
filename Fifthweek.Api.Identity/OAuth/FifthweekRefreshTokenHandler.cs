@@ -3,6 +3,7 @@
 namespace Fifthweek.Api.Identity.OAuth
 {
     using System;
+    using System.Diagnostics;
     using System.Threading.Tasks;
 
     using Fifthweek.Api.Core;
@@ -77,6 +78,10 @@ namespace Fifthweek.Api.Identity.OAuth
                 // is created in the CreateAsync method when a new auth token
                 // is requested using the refresh token.
                 await this.removeRefreshToken.HandleAsync(new RemoveRefreshTokenCommand(hashedRefreshTokenId));
+            }
+            else
+            {
+                Trace.TraceWarning("Refresh token not found: " + hashedRefreshTokenId);
             }
         }
     }

@@ -34,7 +34,7 @@
         }
 
         [TestMethod]
-        [ExpectedException(typeof(UnauthorizedException))]
+        [ExpectedException(typeof(UnauthenticatedException))]
         public async Task WhenCallingAuthenticate_ItShouldThrowAnExceptionWhenNotAuthenticated()
         {
             await this.target.AuthenticateAsync(Requester.Unauthenticated);
@@ -62,7 +62,7 @@
         }
 
         [TestMethod]
-        [ExpectedException(typeof(UnauthorizedException))]
+        [ExpectedException(typeof(UnauthenticatedException))]
         public async Task WhenCallingAuthenticateAs_ItShouldThrowAnExceptionWhenNotAuthenticated()
         {
             await this.target.AuthenticateAsAsync(Requester.Unauthenticated, UserId);
@@ -114,6 +114,13 @@
         public async Task WhenCallingAssertInRole_ItShouldThrowAnExceptionWhenRequesterIsNull()
         {
             await this.target.AssertInRoleAsync(null, "role");
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(UnauthenticatedException))]
+        public async Task WhenCallingAssertInRole_ItShouldThrowAnExceptionWhenRequesterIsUnauthenticated()
+        {
+            await this.target.AssertInRoleAsync(Requester.Unauthenticated, "role");
         }
 
         [TestMethod]
@@ -221,6 +228,13 @@
         public async Task WhenCallingAssertInAnyRole_ItShouldThrowAnExceptionWhenRequesterIsNull()
         {
             await this.target.AssertInAnyRoleAsync(null, "role");
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(UnauthenticatedException))]
+        public async Task WhenCallingAssertInAnyRole_ItShouldThrowAnExceptionWhenRequesterIsUnauthenticated()
+        {
+            await this.target.AssertInAnyRoleAsync(Requester.Unauthenticated, "role");
         }
 
         [TestMethod]
@@ -381,6 +395,13 @@
         public async Task WhenCallingAssertInAllRoles_ItShouldThrowAnExceptionWhenRequesterIsNull()
         {
             await this.target.AssertInAllRolesAsync(null, "role");
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(UnauthenticatedException))]
+        public async Task WhenCallingAssertInAllRoles_ItShouldThrowAnExceptionWhenRequesterIsUnauthenticated()
+        {
+            await this.target.AssertInAllRolesAsync(Requester.Unauthenticated, "role");
         }
 
         [TestMethod]

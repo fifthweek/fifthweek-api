@@ -22,7 +22,7 @@ namespace Fifthweek.Api.Subscriptions
             return this.userManager.IsInRoleAsync(requester.Value, FifthweekRole.Creator);
         }
 
-        public Task<bool> IsWriteAllowedAsync(UserId requester, Shared.SubscriptionId subscriptionId)
+        public Task<bool> IsWriteAllowedAsync(UserId requester, SubscriptionId subscriptionId)
         {
             requester.AssertNotNull("requester");
             subscriptionId.AssertNotNull("subscriptionId");
@@ -37,11 +37,11 @@ namespace Fifthweek.Api.Subscriptions
             var isCreationAllowed = await this.IsCreationAllowedAsync(requester);
             if (!isCreationAllowed)
             {
-                throw new UnauthorizedException(string.Format("Not allowed to create subscription. {0}", requester));
+                throw new UnauthorizedException("Not allowed to create subscription. {0}", requester);
             }
         }
 
-        public async Task AssertWriteAllowedAsync(UserId requester, Shared.SubscriptionId subscriptionId)
+        public async Task AssertWriteAllowedAsync(UserId requester, SubscriptionId subscriptionId)
         {
             requester.AssertNotNull("requester");
             subscriptionId.AssertNotNull("subscriptionId");
@@ -49,7 +49,7 @@ namespace Fifthweek.Api.Subscriptions
             var isUpdateAllowed = await this.IsWriteAllowedAsync(requester, subscriptionId);
             if (!isUpdateAllowed)
             {
-                throw new UnauthorizedException(string.Format("Not allowed to update subscription. {0} {1}", requester, subscriptionId));
+                throw new UnauthorizedException("Not allowed to update subscription. {0} {1}", requester, subscriptionId);
             }
         }
     }

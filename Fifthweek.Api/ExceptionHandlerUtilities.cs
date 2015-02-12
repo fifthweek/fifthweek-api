@@ -48,9 +48,16 @@
                     HttpStatusCode.BadRequest,
                     exception.Message);
             }
+            else if (exception is UnauthenticatedException)
+            {
+                // Yes, it is counterintuative that an UnauthenticatedException goes to Unauthorized status code,
+                // while UnauthorizedException goes to Forbidden staus code, but that is the recommended practice.
+                // Even the tooltip for HttpStatusCode.Unauthorized says so.
+                return request.CreateErrorResponse(HttpStatusCode.Unauthorized, HttpStatusCode.Unauthorized.ToString());
+            }
             else if (exception is UnauthorizedException || exception is UnauthorizedAccessException)
             {
-                return request.CreateErrorResponse(HttpStatusCode.Unauthorized, HttpStatusCode.Unauthorized.ToString());
+                return request.CreateErrorResponse(HttpStatusCode.Forbidden, HttpStatusCode.Unauthorized.ToString());
             }
             else
             {

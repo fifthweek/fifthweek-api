@@ -125,6 +125,7 @@
     <Compile Include="RetryOnTransientErrorQueryHandlerDecorator.cs" />
     <Compile Include="GuidCreator.cs" />
     <Compile Include="TraceService.cs" />
+    <Compile Include="UnauthenticatedException.cs" />
     <Compile Include="UnauthorizedException.cs" />
   </ItemGroup>
   <ItemGroup>

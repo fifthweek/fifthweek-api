@@ -28,7 +28,7 @@
             var isWriteAllowed = await this.IsWriteAllowedAsync(requester, collectionId);
             if (!isWriteAllowed)
             {
-                throw new UnauthorizedException(string.Format("Not allowed to write to collection. {0} {1}", requester, collectionId));
+                throw new UnauthorizedException("Not allowed to write to collection. {0} {1}", requester, collectionId);
             }
         }
     }

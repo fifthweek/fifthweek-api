@@ -12,5 +12,10 @@
             : base(message)
         {
         }
+
+        public UnauthorizedException(string format, params object[] args)
+            : base(string.Format(format, args))
+        {
+        }
     }
 }

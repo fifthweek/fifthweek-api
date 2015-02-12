@@ -10,30 +10,31 @@
 
     public class RequesterSecurity : IRequesterSecurity
     {
-        public Task<Shared.Membership.UserId> AuthenticateAsync(Requester requester)
+        public Task<UserId> AuthenticateAsync(Requester requester)
         {
             requester.AssertNotNull("requester");
 
             if (requester.UserId == null)
             {
-                throw new UnauthorizedException();
+                throw new UnauthenticatedException();
             }
 
             return Task.FromResult(requester.UserId);
         }
 
-        public Task<Shared.Membership.UserId> AuthenticateAsAsync(Requester requester, Shared.Membership.UserId userId)
+        public async Task<UserId> AuthenticateAsAsync(Requester requester, UserId userId)
         {
             requester.AssertNotNull("requester");
             userId.AssertNotNull("userId");
 
-            // This handles requester being Unauthorized as requester.UserId will be null.
+            await this.AuthenticateAsync(requester);
+
             if (!userId.Equals(requester.UserId))
             {
-                throw new UnauthorizedException();
+                throw new UnauthorizedException("User '{0}' is could not be authenticated as '{1}'.", requester.UserId, userId);
             }
 
-            return Task.FromResult(requester.UserId);
+            return requester.UserId;
         }
 
         public Task<bool> IsInRoleAsync(Requester requester, string role)
@@ -69,29 +70,41 @@
             return Task.FromResult(roles.Where(v => v != null).All(requester.IsInRole));
         }
 
-        public Task AssertInRoleAsync(Requester requester, string role)
+        public async Task AssertInRoleAsync(Requester requester, string role)
         {
-            return this.AssertTrueAsync(this.IsInRoleAsync(requester, role));
+            await this.AuthenticateAsync(requester);
+            if (!await this.IsInRoleAsync(requester, role))
+            {
+                throw new UnauthorizedException("User '{0}' is not in role '{1}'.", requester.UserId, role);
+            }
         }
 
         public Task AssertInAnyRoleAsync(Requester requester, params string[] roles)
         {
-            return this.AssertTrueAsync(this.IsInAnyRoleAsync(requester, roles));
+            return this.AssertInAnyRoleAsync(requester, (IEnumerable<string>)roles);
         }
 
-        public Task AssertInAnyRoleAsync(Requester requester, IEnumerable<string> roles)
+        public async Task AssertInAnyRoleAsync(Requester requester, IEnumerable<string> roles)
         {
-            return this.AssertTrueAsync(this.IsInAnyRoleAsync(requester, roles));
+            await this.AuthenticateAsync(requester);
+            if (!await this.IsInAnyRoleAsync(requester, roles))
+            {
+                throw new UnauthorizedException("User '{0}' is not in any role from '{1}'.", requester.UserId, string.Join(",", roles));
+            }
         }
 
         public Task AssertInAllRolesAsync(Requester requester, params string[] roles)
         {
-            return this.AssertTrueAsync(this.IsInAllRolesAsync(requester, roles));
+            return this.AssertInAllRolesAsync(requester, (IEnumerable<string>)roles);
         }
 
-        public Task AssertInAllRolesAsync(Requester requester, IEnumerable<string> roles)
+        public async Task AssertInAllRolesAsync(Requester requester, IEnumerable<string> roles)
         {
-            return this.AssertTrueAsync(this.IsInAllRolesAsync(requester, roles));
+            await this.AuthenticateAsync(requester);
+            if (!await this.IsInAllRolesAsync(requester, roles))
+            {
+                throw new UnauthorizedException("User '{0}' is not in all roles from '{1}'.", requester.UserId, string.Join(",", roles));
+            }
         }
 
         private IEnumerable<string> CheckRoles(IEnumerable<string> roles)
@@ -103,14 +116,6 @@
             }
 
             return result;
-        }
-
-        private async Task AssertTrueAsync(Task<bool> task)
-        {
-            if (!await task)
-            {
-                throw new UnauthorizedException();
-            }
         }
     }
 }

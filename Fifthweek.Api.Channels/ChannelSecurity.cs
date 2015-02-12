@@ -28,7 +28,7 @@
             var isWriteAllowed = await this.IsWriteAllowedAsync(requester, channelId);
             if (!isWriteAllowed)
             {
-                throw new UnauthorizedException(string.Format("Not allowed to write to channel. {0} {1}", requester, channelId));
+                throw new UnauthorizedException("Not allowed to write to channel. {0} {1}", requester, channelId);
             }
         }
     }

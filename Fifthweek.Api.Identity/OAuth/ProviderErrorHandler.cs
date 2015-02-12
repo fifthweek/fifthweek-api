@@ -1,6 +1,7 @@
 ﻿namespace Fifthweek.Api.Identity.OAuth
 {
     using System;
+    using System.Diagnostics;
     using System.Threading.Tasks;
 
     using Fifthweek.Api.Core;
@@ -15,6 +16,15 @@
             try
             {
                 await action();
+
+                if (context.HasError)
+                {
+                    Trace.TraceWarning(
+                        "Non-exceptional error during authorization. Error: '{0}', ErrorDescription: '{1}', ErrorUri: '{2}'",
+                        context.Error,
+                        context.ErrorDescription,
+                        context.ErrorUri);
+                }
             }
             catch (Exception t)
             {

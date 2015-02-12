@@ -20,15 +20,15 @@
             return this.postOwnership.IsOwnerAsync(requester, postId);
         }
 
-        public async Task AssertWriteAllowedAsync(UserId requester, PostId postlId)
+        public async Task AssertWriteAllowedAsync(UserId requester, PostId postId)
         {
             requester.AssertNotNull("requester");
-            postlId.AssertNotNull("postId");
+            postId.AssertNotNull("postId");
 
-            var isPostingAllowed = await this.IsWriteAllowedAsync(requester, postlId);
+            var isPostingAllowed = await this.IsWriteAllowedAsync(requester, postId);
             if (!isPostingAllowed)
             {
-                throw new UnauthorizedException(string.Format("Not allowed to write post. {0} {1}", requester, postlId));
+                throw new UnauthorizedException("Not allowed to write post. {0} {1}", requester, postId);
             }
         }
     }
