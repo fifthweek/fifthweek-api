@@ -27,7 +27,6 @@
             this.controller = new AvailabilityController(this.getAvailability.Object);
             this.controller.Request = new HttpRequestMessage();
             this.controller.Configuration = new System.Web.Http.HttpConfiguration();
-
         }
 
         [TestMethod]
