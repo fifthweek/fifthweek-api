@@ -22,15 +22,15 @@
         private static readonly MailboxName MailboxName = MailboxName.Parse("wd_1234567890123");
 
         private Mock<ICommandHandler<DeleteAllMessagesCommand>> deleteAllMessages;
-        private Mock<IQueryHandler<GetLatestMessageQuery, Message>> getLatestMessage;
+        private Mock<IQueryHandler<TryGetLatestMessageQuery, Message>> tryGetLatestMessage;
         private EndToEndTestInboxController target;
 
         [TestInitialize]
         public void TestInitialize()
         {
             this.deleteAllMessages = new Mock<ICommandHandler<DeleteAllMessagesCommand>>();
-            this.getLatestMessage = new Mock<IQueryHandler<GetLatestMessageQuery, Message>>();
-            this.target = new EndToEndTestInboxController(this.deleteAllMessages.Object, this.getLatestMessage.Object);
+            this.tryGetLatestMessage = new Mock<IQueryHandler<TryGetLatestMessageQuery, Message>>();
+            this.target = new EndToEndTestInboxController(this.deleteAllMessages.Object, this.tryGetLatestMessage.Object);
         }
 
         [TestMethod]
@@ -48,9 +48,9 @@
         }
 
         [TestMethod]
-        public async Task ItShouldQueryMailboxAndFormatResult()
+        public async Task WhenEmailExists_ItShouldReturnFormattedEmail()
         {
-            this.getLatestMessage.Setup(_ => _.HandleAsync(new GetLatestMessageQuery(MailboxName))).ReturnsAsync(new Message(Subject, Body));
+            this.tryGetLatestMessage.Setup(_ => _.HandleAsync(new TryGetLatestMessageQuery(MailboxName))).ReturnsAsync(new Message(Subject, Body));
 
             var result = await this.target.GetLatestMessageAndClearMailboxAsync(MailboxName.Value);
             var response = await result.Content.ReadAsStringAsync();
@@ -59,6 +59,19 @@
             Assert.IsTrue(result.Content.Headers.ContentType.MediaType == "text/html");
             Assert.IsTrue(response.Contains(string.Format(@"<span id=""email-subject"">{0}</span>", Subject)));
             Assert.IsTrue(response.Contains(Body));
+        }
+
+        [TestMethod]
+        public async Task WhenNoEmailsExist_ItShouldReturnEmptyNotification()
+        {
+            this.tryGetLatestMessage.Setup(_ => _.HandleAsync(new TryGetLatestMessageQuery(MailboxName))).ReturnsAsync(null);
+
+            var result = await this.target.GetLatestMessageAndClearMailboxAsync(MailboxName.Value);
+            var response = await result.Content.ReadAsStringAsync();
+
+            Assert.AreEqual(result.StatusCode, HttpStatusCode.OK);
+            Assert.IsTrue(result.Content.Headers.ContentType.MediaType == "text/html");
+            Assert.IsTrue(response.Contains(@"<span id=""mailbox-empty"">Mailbox Empty!</span>"));
         }
     }
 }

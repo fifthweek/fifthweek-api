@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Linq;
 
-//// Generated on 13/02/2015 19:47:44 (UTC)
-//// Mapped solution in 3.93s
+//// Generated on 13/02/2015 21:40:52 (UTC)
+//// Mapped solution in 6.39s
 
 
 namespace Fifthweek.Api.EndToEndTestMailboxes.Queries
@@ -13,9 +13,9 @@ namespace Fifthweek.Api.EndToEndTestMailboxes.Queries
     using Fifthweek.CodeGeneration;
     using Fifthweek.Api.Core;
 
-    public partial class GetLatestMessageQuery 
+    public partial class TryGetLatestMessageQuery 
     {
-        public GetLatestMessageQuery(
+        public TryGetLatestMessageQuery(
             Fifthweek.Api.EndToEndTestMailboxes.Shared.MailboxName mailboxName)
         {
             if (mailboxName == null)
@@ -74,20 +74,20 @@ namespace Fifthweek.Api.EndToEndTestMailboxes.Controllers
     {
         public EndToEndTestInboxController(
             Fifthweek.Api.Core.ICommandHandler<Fifthweek.Api.EndToEndTestMailboxes.Commands.DeleteAllMessagesCommand> deleteAllMessages,
-            Fifthweek.Api.Core.IQueryHandler<Fifthweek.Api.EndToEndTestMailboxes.Queries.GetLatestMessageQuery,Fifthweek.Api.EndToEndTestMailboxes.Queries.Message> getLatestMessage)
+            Fifthweek.Api.Core.IQueryHandler<Fifthweek.Api.EndToEndTestMailboxes.Queries.TryGetLatestMessageQuery,Fifthweek.Api.EndToEndTestMailboxes.Queries.Message> tryGetLatestMessage)
         {
             if (deleteAllMessages == null)
             {
                 throw new ArgumentNullException("deleteAllMessages");
             }
 
-            if (getLatestMessage == null)
+            if (tryGetLatestMessage == null)
             {
-                throw new ArgumentNullException("getLatestMessage");
+                throw new ArgumentNullException("tryGetLatestMessage");
             }
 
             this.deleteAllMessages = deleteAllMessages;
-            this.getLatestMessage = getLatestMessage;
+            this.tryGetLatestMessage = tryGetLatestMessage;
         }
     }
 }
@@ -195,6 +195,51 @@ namespace Fifthweek.Api.EndToEndTestMailboxes
         }
     }
 }
+namespace Fifthweek.Api.EndToEndTestMailboxes.Commands
+{
+    using System.Threading.Tasks;
+    using Dapper;
+    using Fifthweek.Api.Core;
+    using Fifthweek.Api.Persistence;
+    using Fifthweek.CodeGeneration;
+
+    public partial class DeleteAllMessagesCommandHandler 
+    {
+        public DeleteAllMessagesCommandHandler(
+            Fifthweek.Api.Persistence.IFifthweekDbConnectionFactory connectionFactory)
+        {
+            if (connectionFactory == null)
+            {
+                throw new ArgumentNullException("connectionFactory");
+            }
+
+            this.connectionFactory = connectionFactory;
+        }
+    }
+}
+namespace Fifthweek.Api.EndToEndTestMailboxes.Queries
+{
+    using System.Linq;
+    using System.Threading.Tasks;
+    using Dapper;
+    using Fifthweek.Api.Core;
+    using Fifthweek.Api.Persistence;
+    using Fifthweek.CodeGeneration;
+
+    public partial class TryGetLatestMessageQueryHandler 
+    {
+        public TryGetLatestMessageQueryHandler(
+            Fifthweek.Api.Persistence.IFifthweekDbConnectionFactory connectionFactory)
+        {
+            if (connectionFactory == null)
+            {
+                throw new ArgumentNullException("connectionFactory");
+            }
+
+            this.connectionFactory = connectionFactory;
+        }
+    }
+}
 
 namespace Fifthweek.Api.EndToEndTestMailboxes.Queries
 {
@@ -204,11 +249,11 @@ namespace Fifthweek.Api.EndToEndTestMailboxes.Queries
     using Fifthweek.CodeGeneration;
     using Fifthweek.Api.Core;
 
-    public partial class GetLatestMessageQuery 
+    public partial class TryGetLatestMessageQuery 
     {
         public override string ToString()
         {
-            return string.Format("GetLatestMessageQuery({0})", this.MailboxName == null ? "null" : this.MailboxName.ToString());
+            return string.Format("TryGetLatestMessageQuery({0})", this.MailboxName == null ? "null" : this.MailboxName.ToString());
         }
         
         public override bool Equals(object obj)
@@ -228,7 +273,7 @@ namespace Fifthweek.Api.EndToEndTestMailboxes.Queries
                 return false;
             }
         
-            return this.Equals((GetLatestMessageQuery)obj);
+            return this.Equals((TryGetLatestMessageQuery)obj);
         }
         
         public override int GetHashCode()
@@ -241,7 +286,7 @@ namespace Fifthweek.Api.EndToEndTestMailboxes.Queries
             }
         }
         
-        protected bool Equals(GetLatestMessageQuery other)
+        protected bool Equals(TryGetLatestMessageQuery other)
         {
             if (!object.Equals(this.MailboxName, other.MailboxName))
             {

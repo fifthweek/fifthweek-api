@@ -86,10 +86,12 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
+    <Compile Include="Commands\DeleteAllMessagesCommandHandlerTests.cs" />
     <Compile Include="Controllers\EndToEndTestInboxControllerTests.cs" />
     <Compile Include="EndToEndTestSendEmailServiceDecorator.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="MailboxNameTests.cs" />
+    <Compile Include="Queries\TryGetLatestMessageQueryHandlerTests.cs" />
     <Compile Include="SetLatestMessageDbStatementTests.cs" />
   </ItemGroup>
   <ItemGroup>

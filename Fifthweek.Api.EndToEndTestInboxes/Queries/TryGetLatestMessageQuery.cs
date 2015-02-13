@@ -5,7 +5,7 @@
     using Fifthweek.CodeGeneration;
 
     [AutoConstructor, AutoEqualityMembers]
-    public partial class GetLatestMessageQuery : IQuery<Message>
+    public partial class TryGetLatestMessageQuery : IQuery<Message>
     {
         public MailboxName MailboxName { get; private set; }
     }

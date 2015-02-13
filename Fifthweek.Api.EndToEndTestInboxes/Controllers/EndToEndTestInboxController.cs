@@ -14,7 +14,7 @@
     public partial class EndToEndTestInboxController : ApiController
     {
         private readonly ICommandHandler<DeleteAllMessagesCommand> deleteAllMessages; 
-        private readonly IQueryHandler<GetLatestMessageQuery, Message> getLatestMessage;
+        private readonly IQueryHandler<TryGetLatestMessageQuery, Message> tryGetLatestMessage;
             
         [Route("{mailboxName}")]
         public async Task<HttpResponseMessage> GetLatestMessageAndClearMailboxAsync(string mailboxName)
@@ -22,31 +22,45 @@
             mailboxName.AssertUrlParameterProvided("mailboxName");
             var parsedMailboxName = new MailboxNameData(mailboxName).Parse().MailboxName;
 
-            var latestMessage = await this.getLatestMessage.HandleAsync(new GetLatestMessageQuery(parsedMailboxName));
+            string responseBody;
+            var latestMessage = await this.tryGetLatestMessage.HandleAsync(new TryGetLatestMessageQuery(parsedMailboxName));
+            if (latestMessage == null)
+            {
+                responseBody = @"<p style=""color:#c00""><strong><span id=""mailbox-empty"">Mailbox Empty!</span></strong></p>";
+            }
+            else
+            {
+                await this.deleteAllMessages.HandleAsync(new DeleteAllMessagesCommand(parsedMailboxName));
 
-            await this.deleteAllMessages.HandleAsync(new DeleteAllMessagesCommand(parsedMailboxName));
-
-            var response = new HttpResponseMessage 
-            { 
-                Content = new StringContent(string.Format(
-                    @"<html>
-                    <body>
-                    <div style=""width:700px; padding:30px; border:1px solid #333;"">
-                        <p><strong><span id=""email-subject"">{0}</span></strong></p>
-                        <hr />
-                        <div id=""email-body"">
-                        {1}
-                        </div>
-                    </div>
-                    </body>
-                    </html>", 
+                responseBody = string.Format(
+                    @"<p><strong><span id=""email-subject"">{0}</span></strong></p>
+                    <hr />
+                    <div id=""email-body"">{1}</div>", 
                     latestMessage.Subject, 
-                    latestMessage.Body)) 
+                    latestMessage.Body);
+            }
+
+            var response = new HttpResponseMessage
+            {
+                Content = new StringContent(ApplyHtmlTemplate(responseBody))
             };
 
             response.Content.Headers.ContentType = new MediaTypeHeaderValue("text/html");
 
             return response;
+        }
+
+        private static string ApplyHtmlTemplate(string innerHtml)
+        {
+            return string.Format(
+                @"<html>
+                <body>
+                <div style=""width:700px; padding:30px; border:1px solid #333;"">
+                    {0}
+                </div>
+                </body>
+                </html>",
+                innerHtml);
         }
     }
 }
