@@ -53,9 +53,13 @@
         private static string ApplyHtmlTemplate(string innerHtml)
         {
             return string.Format(
-                @"<html>
+                @"<!DOCTYPE html>
+                <html ng-app>
+                <head>
+                <script src=""//ajax.googleapis.com/ajax/libs/angularjs/1.3.13/angular.min.js""></script>
+                </head>
                 <body>
-                <div style=""width:700px; padding:30px; border:1px solid #333;"">
+                <div style=""width:700px; padding:30px; margin:30px auto; border:1px solid #333;"">
                     {0}
                 </div>
                 </body>
