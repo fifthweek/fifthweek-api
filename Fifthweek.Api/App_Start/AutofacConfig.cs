@@ -50,9 +50,9 @@
             RegisterModules(builder);
 
             builder.RegisterType<ExceptionHandler>().As<IExceptionHandler>().SingleInstance();
-            builder.RegisterInstance(Constants.DefaultDeveloperRepository).As<IDeveloperRepository>().SingleInstance();
-            builder.RegisterInstance(Constants.DefaultSendEmailService).As<ISendEmailService>().SingleInstance();
-            builder.RegisterInstance(Constants.DefaultReportingService).As<IReportingService>().SingleInstance();
+            builder.RegisterInstance(HardwiredDependencies.NewDefaultDeveloperRepository()).As<IDeveloperRepository>().SingleInstance();
+            builder.RegisterInstance(HardwiredDependencies.NewDefaultSendEmailService()).As<ISendEmailService>().SingleInstance();
+            builder.RegisterInstance(HardwiredDependencies.NewDefaultReportingService()).As<IReportingService>().SingleInstance();
 
             builder.RegisterType<HttpClient>().InstancePerDependency();
 

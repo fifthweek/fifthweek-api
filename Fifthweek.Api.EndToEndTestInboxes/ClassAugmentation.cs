@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Linq;
 
-//// Generated on 13/02/2015 17:16:52 (UTC)
-//// Mapped solution in 3.16s
+//// Generated on 13/02/2015 19:47:44 (UTC)
+//// Mapped solution in 3.93s
 
 
 namespace Fifthweek.Api.EndToEndTestMailboxes.Queries
@@ -38,15 +38,9 @@ namespace Fifthweek.Api.EndToEndTestMailboxes.Queries
     public partial class Message 
     {
         public Message(
-            System.String to,
             System.String subject,
             System.String body)
         {
-            if (to == null)
-            {
-                throw new ArgumentNullException("to");
-            }
-
             if (subject == null)
             {
                 throw new ArgumentNullException("subject");
@@ -57,7 +51,6 @@ namespace Fifthweek.Api.EndToEndTestMailboxes.Queries
                 throw new ArgumentNullException("body");
             }
 
-            this.To = to;
             this.Subject = subject;
             this.Body = body;
         }
@@ -128,6 +121,8 @@ namespace Fifthweek.Api.EndToEndTestMailboxes.Controllers
 }
 namespace Fifthweek.Api.EndToEndTestMailboxes.Commands
 {
+    using System;
+    using System.Linq;
     using Fifthweek.Api.EndToEndTestMailboxes.Shared;
     using Fifthweek.CodeGeneration;
 
@@ -142,6 +137,61 @@ namespace Fifthweek.Api.EndToEndTestMailboxes.Commands
             }
 
             this.MailboxName = mailboxName;
+        }
+    }
+}
+namespace Fifthweek.Api.EndToEndTestMailboxes
+{
+    using System;
+    using System.Linq;
+    using System.Threading.Tasks;
+    using Fifthweek.Api.Core;
+    using Fifthweek.Api.EndToEndTestMailboxes.Shared;
+    using Fifthweek.CodeGeneration;
+    using Fifthweek.Api.Persistence;
+
+    public partial class EndToEndTestSendEmailServiceDecorator 
+    {
+        public EndToEndTestSendEmailServiceDecorator(
+            Fifthweek.Api.Core.ISendEmailService baseService,
+            Fifthweek.Api.EndToEndTestMailboxes.ISetLatestMessageDbStatement setLatestMessage)
+        {
+            if (baseService == null)
+            {
+                throw new ArgumentNullException("baseService");
+            }
+
+            if (setLatestMessage == null)
+            {
+                throw new ArgumentNullException("setLatestMessage");
+            }
+
+            this.baseService = baseService;
+            this.setLatestMessage = setLatestMessage;
+        }
+    }
+}
+namespace Fifthweek.Api.EndToEndTestMailboxes
+{
+    using System;
+    using System.Linq;
+    using System.Threading.Tasks;
+    using Fifthweek.Api.Core;
+    using Fifthweek.Api.EndToEndTestMailboxes.Shared;
+    using Fifthweek.CodeGeneration;
+    using Fifthweek.Api.Persistence;
+
+    public partial class SetLatestMessageDbStatement 
+    {
+        public SetLatestMessageDbStatement(
+            Fifthweek.Api.Persistence.IFifthweekDbConnectionFactory connectionFactory)
+        {
+            if (connectionFactory == null)
+            {
+                throw new ArgumentNullException("connectionFactory");
+            }
+
+            this.connectionFactory = connectionFactory;
         }
     }
 }
@@ -214,7 +264,7 @@ namespace Fifthweek.Api.EndToEndTestMailboxes.Queries
     {
         public override string ToString()
         {
-            return string.Format("Message(\"{0}\", \"{1}\", \"{2}\")", this.To == null ? "null" : this.To.ToString(), this.Subject == null ? "null" : this.Subject.ToString(), this.Body == null ? "null" : this.Body.ToString());
+            return string.Format("Message(\"{0}\", \"{1}\")", this.Subject == null ? "null" : this.Subject.ToString(), this.Body == null ? "null" : this.Body.ToString());
         }
         
         public override bool Equals(object obj)
@@ -242,7 +292,6 @@ namespace Fifthweek.Api.EndToEndTestMailboxes.Queries
             unchecked
             {
                 int hashCode = 0;
-                hashCode = (hashCode * 397) ^ (this.To != null ? this.To.GetHashCode() : 0);
                 hashCode = (hashCode * 397) ^ (this.Subject != null ? this.Subject.GetHashCode() : 0);
                 hashCode = (hashCode * 397) ^ (this.Body != null ? this.Body.GetHashCode() : 0);
                 return hashCode;
@@ -251,11 +300,6 @@ namespace Fifthweek.Api.EndToEndTestMailboxes.Queries
         
         protected bool Equals(Message other)
         {
-            if (!object.Equals(this.To, other.To))
-            {
-                return false;
-            }
-        
             if (!object.Equals(this.Subject, other.Subject))
             {
                 return false;
@@ -272,6 +316,8 @@ namespace Fifthweek.Api.EndToEndTestMailboxes.Queries
 }
 namespace Fifthweek.Api.EndToEndTestMailboxes.Commands
 {
+    using System;
+    using System.Linq;
     using Fifthweek.Api.EndToEndTestMailboxes.Shared;
     using Fifthweek.CodeGeneration;
 

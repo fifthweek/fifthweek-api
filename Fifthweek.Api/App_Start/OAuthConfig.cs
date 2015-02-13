@@ -34,7 +34,7 @@
             {
                 AllowInsecureHttp = false,
                 TokenEndpointPath = new PathString("/token"),
-                AccessTokenExpireTimeSpan = Constants.AccessTokenExpiryTime,
+                AccessTokenExpireTimeSpan = HardwiredDependencies.AccessTokenExpiryTime,
                 Provider = authorizationServerProvider,
                 RefreshTokenProvider = refreshTokenProvider,
             };

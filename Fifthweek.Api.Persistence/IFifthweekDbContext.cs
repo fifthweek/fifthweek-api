@@ -29,6 +29,8 @@
 
         IDbSet<File> Files { get; set; }
 
+        IDbSet<EndToEndTestEmail> EndToEndTestEmails { get; set; }
+
         Task<int> SaveChangesAsync();
 
         Task<int> SaveChangesAsync(CancellationToken cancellationToken);

@@ -25,10 +25,10 @@
             {
                 // I don't want to use Autofac here as it may be the dependency resolution
                 // causing the error.
-                var developer = await Constants.DefaultDeveloperRepository.TryGetByGitNameAsync(developerName);
+                var developer = await HardwiredDependencies.NewDefaultDeveloperRepository().TryGetByGitNameAsync(developerName);
                 identifier = exception.GetExceptionIdentifier();
 
-                await Constants.DefaultReportingService.ReportErrorAsync(exception, identifier, developer);
+                await HardwiredDependencies.NewDefaultReportingService().ReportErrorAsync(exception, identifier, developer);
             }
             catch (Exception t)
             {
@@ -79,10 +79,10 @@
             {
                 // I don't want to use Autofac here as it may be the dependency resolution
                 // causing the error.
-                var developer = await Constants.DefaultDeveloperRepository.TryGetByGitNameAsync(developerName);
+                var developer = await HardwiredDependencies.NewDefaultDeveloperRepository().TryGetByGitNameAsync(developerName);
                 identifier = exception.GetExceptionIdentifier();
 
-                await Constants.DefaultReportingService.ReportErrorAsync(exception, identifier, developer);
+                await HardwiredDependencies.NewDefaultReportingService().ReportErrorAsync(exception, identifier, developer);
                 context.SetError("internal_error", "Something went wrong: " + identifier);
             }
             catch (Exception t)
@@ -120,8 +120,8 @@
         {
             // I don't want to use Autofac here as it may be the dependency resolution
             // causing the error.
-            var developer = await Constants.DefaultDeveloperRepository.TryGetByGitNameAsync(developerName);
-            await Constants.DefaultReportingService.ReportErrorAsync(exception, exceptionIdentifier, developer);
+            var developer = await HardwiredDependencies.NewDefaultDeveloperRepository().TryGetByGitNameAsync(developerName);
+            await HardwiredDependencies.NewDefaultReportingService().ReportErrorAsync(exception, exceptionIdentifier, developer);
         }
     }
 }

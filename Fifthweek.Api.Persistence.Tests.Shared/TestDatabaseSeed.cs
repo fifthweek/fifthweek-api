@@ -18,6 +18,7 @@
     /// </summary>
     public class TestDatabaseSeed
     {
+        private const int EndToEndTestEmails = 10;
         private const int Users = 10;
         private const int Creators = 5;
         private const int SubscriptionsPerCreator = 1; // That's all our interface supports for now!
@@ -32,6 +33,7 @@
 
         private readonly Func<IFifthweekDbContext> databaseContextFactory;
 
+        private readonly List<EndToEndTestEmail> endToEndTestEmails = new List<EndToEndTestEmail>();
         private readonly List<FifthweekUser> users = new List<FifthweekUser>();
         private readonly List<Subscription> subscriptions = new List<Subscription>();
         private readonly List<Channel> channels = new List<Channel>();
@@ -69,6 +71,7 @@
             Trace.WriteLine("Resetting database! This should only occur once after making changes to the seeding code.");
 
             var stopwatch = Stopwatch.StartNew();
+            this.CreateEndToEndTestEmails();
             this.CreateUsers();
             Trace.WriteLine(string.Format("Generated in-memory entities in {0}s", Math.Round(stopwatch.Elapsed.TotalSeconds, 2)));
 
@@ -100,6 +103,7 @@
                 await connection.OpenAsync();
                 try
                 {
+                    await connection.InsertAsync(this.endToEndTestEmails, false);
                     await connection.InsertAsync(this.users, false);
                     await connection.InsertAsync(this.files, false);
                     await connection.InsertAsync(this.subscriptions, false);
@@ -113,6 +117,15 @@
                 {
                     connection.Close();
                 }
+            }
+        }
+
+        private void CreateEndToEndTestEmails()
+        {
+            for (var i = 0; i < EndToEndTestEmails; i++)
+            {
+                var email = EndToEndTestEmailTests.UniqueEntity(Random);
+                this.endToEndTestEmails.Add(email);
             }
         }
 

@@ -32,16 +32,14 @@
                     @"<html>
                     <body>
                     <div style=""width:700px; padding:30px; border:1px solid #333;"">
-                        <p><strong>To:</strong> <span id=""email-to"">{0}</span></p>
-                        <p><strong>Subject:</strong> <span id=""email-subject"">{1}</span></p>
+                        <p><strong><span id=""email-subject"">{0}</span></strong></p>
                         <hr />
                         <div id=""email-body"">
-                        {2}
+                        {1}
                         </div>
                     </div>
                     </body>
                     </html>", 
-                    latestMessage.To, 
                     latestMessage.Subject, 
                     latestMessage.Body)) 
             };

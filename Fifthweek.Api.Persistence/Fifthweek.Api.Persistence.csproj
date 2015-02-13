@@ -92,6 +92,7 @@
     <Compile Include="Collection.cs" />
     <Compile Include="DapperExtensions.cs" />
     <Compile Include="DapperTypeHandlerRegistration.cs" />
+    <Compile Include="EndToEndTestEmail.cs" />
     <Compile Include="FifthweekDbConnectionFactory.cs" />
     <Compile Include="FifthweekDbContext.cs" />
     <Compile Include="FileState.cs" />
@@ -229,6 +230,10 @@
     <Compile Include="Migrations\201502021958010_UpdateDescriptionLengths.Designer.cs">
       <DependentUpon>201502021958010_UpdateDescriptionLengths.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201502131922541_AddEndToEndTestEmails.cs" />
+    <Compile Include="Migrations\201502131922541_AddEndToEndTestEmails.Designer.cs">
+      <DependentUpon>201502131922541_AddEndToEndTestEmails.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Post.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -354,6 +359,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201502021958010_UpdateDescriptionLengths.resx">
       <DependentUpon>201502021958010_UpdateDescriptionLengths.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201502131922541_AddEndToEndTestEmails.resx">
+      <DependentUpon>201502131922541_AddEndToEndTestEmails.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>

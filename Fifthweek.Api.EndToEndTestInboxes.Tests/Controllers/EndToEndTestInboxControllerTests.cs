@@ -16,7 +16,6 @@
     [TestClass]
     public class EndToEndTestInboxControllerTests
     {
-        private const string To = "captain.phil@fifthweek.com";
         private const string Subject = "Meow";
         private const string Body = "Paw-some";
 
@@ -51,14 +50,13 @@
         [TestMethod]
         public async Task ItShouldQueryMailboxAndFormatResult()
         {
-            this.getLatestMessage.Setup(_ => _.HandleAsync(new GetLatestMessageQuery(MailboxName))).ReturnsAsync(new Message(To, Subject, Body));
+            this.getLatestMessage.Setup(_ => _.HandleAsync(new GetLatestMessageQuery(MailboxName))).ReturnsAsync(new Message(Subject, Body));
 
             var result = await this.target.GetLatestMessageAndClearMailboxAsync(MailboxName.Value);
             var response = await result.Content.ReadAsStringAsync();
 
             Assert.AreEqual(result.StatusCode, HttpStatusCode.OK);
             Assert.IsTrue(result.Content.Headers.ContentType.MediaType == "text/html");
-            Assert.IsTrue(response.Contains(string.Format(@"<span id=""email-to"">{0}</span>", To)));
             Assert.IsTrue(response.Contains(string.Format(@"<span id=""email-subject"">{0}</span>", Subject)));
             Assert.IsTrue(response.Contains(Body));
         }

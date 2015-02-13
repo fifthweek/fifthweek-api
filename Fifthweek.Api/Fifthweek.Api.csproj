@@ -181,7 +181,7 @@
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
     </Compile>
-    <Compile Include="Constants.cs" />
+    <Compile Include="HardwiredDependencies.cs" />
     <Compile Include="ConvertExceptionsToResponsesAttribute.cs" />
     <Compile Include="ExceptionHandler.cs" />
     <Compile Include="ExceptionHandlerUtilities.cs" />
@@ -248,6 +248,10 @@
     <ProjectReference Include="..\Fifthweek.Api.Core\Fifthweek.Api.Core.csproj">
       <Project>{bd52863e-063d-45a5-9ca8-7541804d1313}</Project>
       <Name>Fifthweek.Api.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Fifthweek.Api.EndToEndTestInboxes\Fifthweek.Api.EndToEndTestMailboxes.csproj">
+      <Project>{74D1E6F3-4F1D-4A58-A6D4-1D05EE33CEBA}</Project>
+      <Name>Fifthweek.Api.EndToEndTestMailboxes</Name>
     </ProjectReference>
     <ProjectReference Include="..\Fifthweek.Api.FileManagement.Shared\Fifthweek.Api.FileManagement.Shared.csproj">
       <Project>{3ca706af-5916-414e-9625-fb8fcbbd82f7}</Project>

@@ -4,6 +4,8 @@
     using System.Linq;
     using System.Reflection;
 
+    using Fifthweek.Api.Persistence;
+
     public static class FifthweekAssembliesResolver
     {
         public static readonly IEnumerable<Assembly> FifthweekAssemblies = new[] 
@@ -16,6 +18,8 @@
             typeof(Channels.Shared.ChannelId).Assembly,
             typeof(Collections.AutofacRegistration).Assembly,
             typeof(Collections.Shared.CollectionId).Assembly,
+            typeof(EndToEndTestMailboxes.SetLatestMessageDbStatement).Assembly,
+            typeof(EndToEndTestMailboxes.Shared.MailboxName).Assembly,
             typeof(Identity.Membership.AutofacRegistration).Assembly,
             typeof(Identity.OAuth.AutofacRegistration).Assembly,
             typeof(Identity.Shared.Membership.UserId).Assembly,

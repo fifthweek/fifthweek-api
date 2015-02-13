@@ -1,7 +1,6 @@
 namespace Fifthweek.Api.Persistence
 {
     using System;
-    using System.Data.Common;
     using System.Data.Entity;
 
     using Fifthweek.Api.Persistence.Identity;
@@ -33,6 +32,8 @@ namespace Fifthweek.Api.Persistence
         public IDbSet<Post> Posts { get; set; }
 
         public IDbSet<File> Files { get; set; }
+
+        public IDbSet<EndToEndTestEmail> EndToEndTestEmails { get; set; }
 
         public static FifthweekDbContext Create()
         {
