@@ -31,11 +31,9 @@
                 = allowedOrigin ?? Constants.DefaultAllowedOrigin;
         }
 
-        public static LifetimeScope GetOwinRequestLifetimeScope()
+        public static LifetimeScope GetOwinRequestLifetimeScope(IOwinContext owinContext)
         {
             const string OwinLifetimeScopeKey = "autofac:OwinLifetimeScope";
-            var owinContext = HttpContext.Current.Request.GetOwinContext();
-
             if (owinContext.Environment.ContainsKey(OwinLifetimeScopeKey) == false)
             {
                 throw new Exception("Request lifetime scope not found.");
@@ -51,9 +49,9 @@
             return (LifetimeScope)requestScopeObject;
         }
 
-        public static T GetOwinScopeService<T>()
+        public static T GetOwinScopeService<T>(IOwinContext owinContext)
         {
-            return (T)GetOwinRequestLifetimeScope().GetService(typeof(T));
+            return (T)GetOwinRequestLifetimeScope(owinContext).GetService(typeof(T));
         }
     }
 }

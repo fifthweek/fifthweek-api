@@ -30,7 +30,7 @@
             }
             catch (Exception t)
             {
-                ExceptionHandlerUtilities.ReportExceptionAsync(t);
+                ExceptionHandlerUtilities.ReportExceptionAsync(t, null);
             }
         }
 
@@ -48,7 +48,7 @@
             }
             catch (Exception t)
             {
-                ExceptionHandlerUtilities.ReportExceptionAsync(t);
+                ExceptionHandlerUtilities.ReportExceptionAsync(t, null);
             }
         }
 
@@ -76,7 +76,7 @@
             }
             catch (Exception t)
             {
-                ExceptionHandlerUtilities.ReportExceptionAsync(t);
+                ExceptionHandlerUtilities.ReportExceptionAsync(t, null);
             }
         }
 

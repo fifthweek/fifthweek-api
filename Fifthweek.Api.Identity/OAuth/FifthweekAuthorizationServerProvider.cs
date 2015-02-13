@@ -1,40 +1,52 @@
 ﻿namespace Fifthweek.Api.Identity.OAuth
 {
     using System.Threading.Tasks;
+    using System.Web;
 
+    using Fifthweek.Api.Core;
+
+    using Microsoft.Owin;
     using Microsoft.Owin.Security.OAuth;
 
     public class FifthweekAuthorizationServerProvider : OAuthAuthorizationServerProvider
     {
-        public FifthweekAuthorizationServerProvider()
-        {
-        }
-
         public override Task ValidateClientAuthentication(OAuthValidateClientAuthenticationContext context)
         {
+            var exceptionHandler = Helper.GetOwinScopeService<IExceptionHandler>(context.OwinContext);
+            var authorizationServerHandler = Helper.GetOwinScopeService<IFifthweekAuthorizationServerHandler>(context.OwinContext);
             return ProviderErrorHandler.CallAndHandleError(
-                () => GetAuthorizationServerHandler().ValidateClientAuthenticationAsync(context), 
-                context);
+                () => authorizationServerHandler.ValidateClientAuthenticationAsync(context), 
+                context,
+                exceptionHandler);
         }
 
         public override Task GrantResourceOwnerCredentials(OAuthGrantResourceOwnerCredentialsContext context)
         {
+            var exceptionHandler = Helper.GetOwinScopeService<IExceptionHandler>(context.OwinContext);
+            var authorizationServerHandler = Helper.GetOwinScopeService<IFifthweekAuthorizationServerHandler>(context.OwinContext);
             return ProviderErrorHandler.CallAndHandleError(
-                () => GetAuthorizationServerHandler().GrantResourceOwnerCredentialsAsync(context), 
-                context);
+                () => authorizationServerHandler.GrantResourceOwnerCredentialsAsync(context),
+                context,
+                exceptionHandler);
         }
 
         public override Task TokenEndpoint(OAuthTokenEndpointContext context)
         {
+            var exceptionHandler = Helper.GetOwinScopeService<IExceptionHandler>(context.OwinContext);
+            var authorizationServerHandler = Helper.GetOwinScopeService<IFifthweekAuthorizationServerHandler>(context.OwinContext);
             return ProviderErrorHandler.CallAndHandleError(
-               () => GetAuthorizationServerHandler().TokenEndpointAsync(context));
+                () => authorizationServerHandler.TokenEndpointAsync(context),
+                exceptionHandler);
         }
 
         public override Task GrantRefreshToken(OAuthGrantRefreshTokenContext context)
         {
+            var exceptionHandler = Helper.GetOwinScopeService<IExceptionHandler>(context.OwinContext);
+            var authorizationServerHandler = Helper.GetOwinScopeService<IFifthweekAuthorizationServerHandler>(context.OwinContext);
             return ProviderErrorHandler.CallAndHandleError(
-                () => GetAuthorizationServerHandler().GrantRefreshTokenAsync(context),
-                context);
+                () => authorizationServerHandler.GrantRefreshTokenAsync(context),
+                context,
+                exceptionHandler);
         }
 
         public override Task MatchEndpoint(OAuthMatchEndpointContext context)
@@ -57,11 +69,6 @@
             }
 
             return base.MatchEndpoint(context);
-        }
-
-        private static IFifthweekAuthorizationServerHandler GetAuthorizationServerHandler()
-        {
-            return Helper.GetOwinScopeService<IFifthweekAuthorizationServerHandler>();
         }
     }
 }

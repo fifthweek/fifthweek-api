@@ -14,6 +14,8 @@
 
     using Microsoft.VisualStudio.TestTools.UnitTesting;
 
+    using Moq;
+
     [TestClass]
     public class UserContextTests
     {
@@ -21,39 +23,58 @@
 
         private const string AuthenticationType = "bearer";
 
+        private MockRequestContext mockRequestContext;
+        private RequesterContext requesterContext;
+
+        [TestInitialize]
+        public void TestInitialize()
+        {
+            this.mockRequestContext = new MockRequestContext();
+            TextWriter tw = new StreamWriter(new MemoryStream());
+            this.mockRequestContext.HttpContext = new HttpContext(new HttpRequest("blah", "http://blah.com", "blah"), new HttpResponse(tw));
+            
+            this.requesterContext = new RequesterContext(this.mockRequestContext);
+        }
+
+        [TestCleanup]
+        public void TestCleanup()
+        {
+            this.mockRequestContext.HttpContext = null;
+        }
+
         [TestMethod]
         [ExpectedException(typeof(InvalidOperationException))]
         public void WhenAuthenticatedButNoNameIdentifierClaimExists_GetRequesterShouldThrowAnException()
         {
-            HttpContext.Current.User = new Principal(AuthenticationType);
+            this.mockRequestContext.HttpContext.User = new Principal(AuthenticationType);
             Assert.AreEqual(Requester.Unauthenticated, this.requesterContext.GetRequester());
         }
 
         [TestMethod]
         public void WhenNoHttpContext_RequesterShouldBeUnauthenticated()
         {
-            HttpContext.Current = null;
+            this.mockRequestContext.HttpContext = null;
             Assert.AreEqual(Requester.Unauthenticated, this.requesterContext.GetRequester());
         }
 
         [TestMethod]
         public void WhenNoUser_RequesterShouldBeUnauthenticated()
         {
-            HttpContext.Current.User = null;
+            this.mockRequestContext.HttpContext.User = null;
             Assert.AreEqual(Requester.Unauthenticated, this.requesterContext.GetRequester());
         }
 
         [TestMethod]
         public void WhenNoIdentity_RequesterShouldBeUnauthenticated()
         {
-            HttpContext.Current.User = new NullIdentityPrincipal();
+            this.mockRequestContext.HttpContext.User = new NullIdentityPrincipal();
             Assert.AreEqual(Requester.Unauthenticated, this.requesterContext.GetRequester());
         }
 
         [TestMethod]
         public void WhenNoAuthenticationType_RequesterShouldBeUnauthenticated()
         {
-            HttpContext.Current.User = new Principal(null);
+            this.mockRequestContext.HttpContext.User = new Principal(null);
             Assert.AreEqual(Requester.Unauthenticated, this.requesterContext.GetRequester());
         }
 
@@ -63,7 +84,7 @@
             var principal = new Principal(AuthenticationType);
             principal.ClaimsIdentity.AddClaim(new Claim(ClaimTypes.NameIdentifier, UserId.Value.EncodeGuid()));
 
-            HttpContext.Current.User = principal;
+            this.mockRequestContext.HttpContext.User = principal;
 
             var result = this.requesterContext.GetRequester();
 
@@ -76,7 +97,7 @@
             var principal = new Principal(null);
             principal.ClaimsIdentity.AddClaim(new Claim(ClaimTypes.NameIdentifier, UserId.Value.EncodeGuid()));
 
-            HttpContext.Current.User = principal;
+            this.mockRequestContext.HttpContext.User = principal;
 
             var result = this.requesterContext.GetRequester();
 
@@ -92,7 +113,7 @@
             principal.ClaimsIdentity.AddClaim(new Claim(ClaimTypes.Role, "Two"));
             principal.ClaimsIdentity.AddClaim(new Claim(ClaimTypes.Role, "Three"));
 
-            HttpContext.Current.User = principal;
+            this.mockRequestContext.HttpContext.User = principal;
 
             var result = this.requesterContext.GetRequester();
 
@@ -109,29 +130,12 @@
             principal.ClaimsIdentity.AddClaim(new Claim(ClaimTypes.Role, "Two"));
             principal.ClaimsIdentity.AddClaim(new Claim(ClaimTypes.Role, "Three"));
 
-            HttpContext.Current.User = principal;
+            this.mockRequestContext.HttpContext.User = principal;
 
             var result = this.requesterContext.GetRequester();
 
             Assert.IsFalse(result.IsInRole("Two"));
         }
-
-        [TestInitialize]
-        public void TestInitialize()
-        {
-            TextWriter tw = new StreamWriter(new MemoryStream());
-            HttpContext.Current = new HttpContext(new HttpRequest("blah", "http://blah.com", "blah"), new HttpResponse(tw));
-
-            this.requesterContext = new RequesterContext();
-        }
-
-        [TestCleanup]
-        public void TestCleanup()
-        {
-            HttpContext.Current = null;
-        }
-
-        private RequesterContext requesterContext;
 
         private class Principal : IPrincipal
         {
@@ -170,6 +174,11 @@
                     return null;
                 }
             }
+        }
+
+        private class MockRequestContext : IRequestContext
+        {
+            public HttpContext HttpContext { get; set; }
         }
     }
 }

@@ -17,14 +17,15 @@
     {
         public static async Task<HttpResponseMessage> ReportExceptionAndCreateResponseAsync(
             HttpRequestMessage request,
-            Exception exception)
+            Exception exception,
+            string developerName)
         {
             string identifier = string.Empty;
             try
             {
                 // I don't want to use Autofac here as it may be the dependency resolution
                 // causing the error.
-                var developer = await Constants.DefaultDeveloperRepository.TryGetByGitNameAsync(GetDeveloperName());
+                var developer = await Constants.DefaultDeveloperRepository.TryGetByGitNameAsync(developerName);
                 identifier = exception.GetExceptionIdentifier();
 
                 await Constants.DefaultReportingService.ReportErrorAsync(exception, identifier, developer);
@@ -70,14 +71,15 @@
 
         public static async Task ReportExceptionAndCreateResponseAsync<T>(
             BaseValidatingContext<T> context,
-            Exception exception)
+            Exception exception, 
+            string developerName)
         {
             string identifier = string.Empty;
             try
             {
                 // I don't want to use Autofac here as it may be the dependency resolution
                 // causing the error.
-                var developer = await Constants.DefaultDeveloperRepository.TryGetByGitNameAsync(GetDeveloperName());
+                var developer = await Constants.DefaultDeveloperRepository.TryGetByGitNameAsync(developerName);
                 identifier = exception.GetExceptionIdentifier();
 
                 await Constants.DefaultReportingService.ReportErrorAsync(exception, identifier, developer);
@@ -90,11 +92,10 @@
             }
         }
 
-        public static void ReportExceptionAsync(Exception exception)
+        public static void ReportExceptionAsync(Exception exception, string developerName)
         {
             try
             {
-                var developerName = GetDeveloperName();
                 var identifier = exception.GetExceptionIdentifier();
 
                 HostingEnvironment.QueueBackgroundWorkItem(ct => ReportErrorInBackground(developerName, exception, identifier));
@@ -105,22 +106,22 @@
             }
         }
 
+        public static string GetDeveloperName(HttpContext httpContext)
+        {
+            if (httpContext != null)
+            {
+                return httpContext.Request.Headers[Core.Constants.DeveloperNameRequestHeaderKey];
+            }
+
+            return null;
+        }
+
         private static async Task ReportErrorInBackground(string developerName, Exception exception, string exceptionIdentifier)
         {
             // I don't want to use Autofac here as it may be the dependency resolution
             // causing the error.
             var developer = await Constants.DefaultDeveloperRepository.TryGetByGitNameAsync(developerName);
             await Constants.DefaultReportingService.ReportErrorAsync(exception, exceptionIdentifier, developer);
-        }
-
-        private static string GetDeveloperName()
-        {
-            if (HttpContext.Current != null)
-            {
-                return HttpContext.Current.Request.Headers[Core.Constants.DeveloperNameRequestHeaderKey];
-            }
-
-            return null;
         }
     }
 }

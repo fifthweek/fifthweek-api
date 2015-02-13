@@ -12,9 +12,6 @@ namespace Fifthweek.Api.Aggregations.Queries
     [AutoConstructor, AutoEqualityMembers]
     public partial class UserState
     {
-        [Optional]
-        public UserId UserId { get; private set; }
-
         public UserAccessSignatures AccessSignatures { get; private set; }
 
         [Optional]

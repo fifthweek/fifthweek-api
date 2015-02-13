@@ -176,6 +176,11 @@
     <Compile Include="App_Start\OAuthConfig.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="App_Start\LogRequestModule.cs" />
+    <Compile Include="ClassAugmentation.cs">
+      <DependentUpon>ClassAugmentation.tt</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+    </Compile>
     <Compile Include="Constants.cs" />
     <Compile Include="ConvertExceptionsToResponsesAttribute.cs" />
     <Compile Include="ExceptionHandler.cs" />
@@ -193,6 +198,10 @@
     <Content Include="newrelic\newrelic.config" />
     <Content Include="newrelic\extensions\extension.xsd">
       <SubType>Designer</SubType>
+    </Content>
+    <Content Include="ClassAugmentation.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>ClassAugmentation.cs</LastGenOutput>
     </Content>
     <None Include="newrelic\newrelic.xsd">
       <SubType>Designer</SubType>
@@ -288,6 +297,10 @@
       <Project>{890CD4C4-993F-482D-BBB5-A50767ACE55B}</Project>
       <Name>Fifthweek.Azure</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Fifthweek.CodeGeneration\Fifthweek.CodeGeneration.csproj">
+      <Project>{770F450E-2166-4269-BEC1-DF59AA16B1E8}</Project>
+      <Name>Fifthweek.CodeGeneration</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Fifthweek.Shared\Fifthweek.Shared.csproj">
       <Project>{6D12FFBB-38E9-4722-A690-0F0338538EBC}</Project>
       <Name>Fifthweek.Shared</Name>
@@ -304,6 +317,9 @@
       <Project>{36d94253-0a3d-4062-9fb9-635b402c68c6}</Project>
       <Name>Fifthweek.WebJobs.Thumbnails.Shared</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

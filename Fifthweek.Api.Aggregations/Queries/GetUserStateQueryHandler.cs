@@ -44,7 +44,6 @@
             }
 
             return new UserState(
-                query.RequestedUserId, 
                 userAccessSignatures, 
                 creatorStatus, 
                 createdChannelsAndCollections);

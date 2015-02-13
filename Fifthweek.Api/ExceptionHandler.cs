@@ -5,28 +5,35 @@
     using System.Threading.Tasks;
 
     using Fifthweek.Api.Core;
+    using Fifthweek.CodeGeneration;
 
     using Microsoft.Owin.Security.OAuth;
 
-    public class ExceptionHandler : IExceptionHandler
+    [AutoConstructor]
+    public partial class ExceptionHandler : IExceptionHandler
     {
+        private readonly IRequestContext requestContext;
+
         public Task<HttpResponseMessage> ReportExceptionAndCreateResponseAsync(
             HttpRequestMessage request,
             Exception exception)
         {
-            return ExceptionHandlerUtilities.ReportExceptionAndCreateResponseAsync(request, exception);
+            var developerName = ExceptionHandlerUtilities.GetDeveloperName(this.requestContext.HttpContext);
+            return ExceptionHandlerUtilities.ReportExceptionAndCreateResponseAsync(request, exception, developerName);
         }
 
         public Task ReportExceptionAndCreateResponseAsync<T>(
             BaseValidatingContext<T> context,
             Exception exception)
         {
-            return ExceptionHandlerUtilities.ReportExceptionAndCreateResponseAsync(context, exception);
+            var developerName = ExceptionHandlerUtilities.GetDeveloperName(this.requestContext.HttpContext);
+            return ExceptionHandlerUtilities.ReportExceptionAndCreateResponseAsync(context, exception, developerName);
         }
 
         public void ReportExceptionAsync(Exception exception)
         {
-            ExceptionHandlerUtilities.ReportExceptionAsync(exception);
+            var developerName = ExceptionHandlerUtilities.GetDeveloperName(this.requestContext.HttpContext);
+            ExceptionHandlerUtilities.ReportExceptionAsync(exception, developerName);
         } 
     }
 }

@@ -13,6 +13,7 @@
             builder.RegisterType<GuidCreator>().As<IGuidCreator>().SingleInstance();
             builder.RegisterType<TraceService>().As<ITraceService>().SingleInstance();
             builder.RegisterType<FifthweekTransientErrorDetectionStrategy>().As<ITransientErrorDetectionStrategy>().SingleInstance();
+            builder.RegisterType<RequestContext>().As<IRequestContext>();
         }
     }
 }

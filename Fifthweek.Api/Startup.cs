@@ -30,7 +30,7 @@ namespace Fifthweek.Api
             }
             catch (Exception t)
             {
-                ExceptionHandlerUtilities.ReportExceptionAsync(t);
+                ExceptionHandlerUtilities.ReportExceptionAsync(t, null);
                 throw;
             }
         }

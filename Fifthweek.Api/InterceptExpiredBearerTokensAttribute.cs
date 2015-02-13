@@ -12,7 +12,8 @@
             // If they have supplied authentication information but are still not authenticated
             // then it is likely that their access token has expired so we return a 401
             // as soon as possible.  This also allows us not to log expired access tokens.
-            if (HttpContext.Current.User.Identity == null || HttpContext.Current.User.Identity.IsAuthenticated == false)
+            var identity = HttpContext.Current.User.Identity;
+            if (identity == null || identity.IsAuthenticated == false)
             {
                 var authorizationHeader = actionContext.Request.Headers.Authorization;
                 if (authorizationHeader != null)

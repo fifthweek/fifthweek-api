@@ -3,6 +3,8 @@
     using System;
     using System.Threading.Tasks;
 
+    using Fifthweek.Api.Core;
+
     using Microsoft.Owin.Security.Infrastructure;
 
     public class FifthweekRefreshTokenProvider : IAuthenticationTokenProvider
@@ -18,8 +20,11 @@
 
         public Task CreateAsync(AuthenticationTokenCreateContext context)
         {
+            var exceptionHandler = Helper.GetOwinScopeService<IExceptionHandler>(context.OwinContext);
+            var refreshTokenHandler = Helper.GetOwinScopeService<IFifthweekRefreshTokenHandler>(context.OwinContext);
             return ProviderErrorHandler.CallAndHandleError(
-                () => Helper.GetOwinScopeService<IFifthweekRefreshTokenHandler>().CreateAsync(context));
+                () => refreshTokenHandler.CreateAsync(context),
+                exceptionHandler);
         }
 
         public void Receive(AuthenticationTokenReceiveContext context)
@@ -29,8 +34,11 @@
 
         public Task ReceiveAsync(AuthenticationTokenReceiveContext context)
         {
+            var exceptionHandler = Helper.GetOwinScopeService<IExceptionHandler>(context.OwinContext);
+            var refreshTokenHandler = Helper.GetOwinScopeService<IFifthweekRefreshTokenHandler>(context.OwinContext);
             return ProviderErrorHandler.CallAndHandleError(
-                () => Helper.GetOwinScopeService<IFifthweekRefreshTokenHandler>().ReceiveAsync(context));
+                () => refreshTokenHandler.ReceiveAsync(context),
+                exceptionHandler);
         }
     }
 }

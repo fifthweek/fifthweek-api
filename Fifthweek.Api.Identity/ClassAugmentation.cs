@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Linq;
 
-//// Generated on 11/02/2015 18:03:58 (UTC)
-//// Mapped solution in 9.24s
+//// Generated on 13/02/2015 17:39:27 (UTC)
+//// Mapped solution in 9.58s
 
 
 namespace Fifthweek.Api.Identity.Membership.Commands
@@ -332,6 +332,7 @@ namespace Fifthweek.Api.Identity.OAuth
     using Microsoft.Owin.Security.Infrastructure;
     using Dapper;
     using Microsoft.AspNet.Identity;
+    using System.Diagnostics;
 
     public partial class Client 
     {
@@ -420,6 +421,7 @@ namespace Fifthweek.Api.Identity.OAuth
     using Microsoft.Owin.Security.Infrastructure;
     using Dapper;
     using Microsoft.AspNet.Identity;
+    using System.Diagnostics;
 
     public partial class ClientId 
     {
@@ -633,6 +635,7 @@ namespace Fifthweek.Api.Identity.OAuth
     using Microsoft.Owin.Security.Infrastructure;
     using Dapper;
     using Microsoft.AspNet.Identity;
+    using System.Diagnostics;
 
     public partial class FifthweekAuthorizationServerHandler 
     {
@@ -693,6 +696,7 @@ namespace Fifthweek.Api.Identity.OAuth
     using Microsoft.Owin.Security.Infrastructure;
     using Dapper;
     using Microsoft.AspNet.Identity;
+    using System.Diagnostics;
 
     public partial class FifthweekRefreshTokenHandler 
     {
@@ -746,6 +750,7 @@ namespace Fifthweek.Api.Identity.OAuth
     using Microsoft.Owin.Security.Infrastructure;
     using Dapper;
     using Microsoft.AspNet.Identity;
+    using System.Diagnostics;
 
     public partial class GetUserAndRolesFromCredentialsDbStatement 
     {
@@ -792,6 +797,7 @@ namespace Fifthweek.Api.Identity.OAuth
     using Microsoft.Owin.Security.Infrastructure;
     using Dapper;
     using Microsoft.AspNet.Identity;
+    using System.Diagnostics;
 
     public partial class GetUserAndRolesFromUserIdDbStatement 
     {
@@ -831,6 +837,7 @@ namespace Fifthweek.Api.Identity.OAuth
     using Microsoft.Owin.Security.Infrastructure;
     using Dapper;
     using Microsoft.AspNet.Identity;
+    using System.Diagnostics;
 
     public partial class HashedRefreshTokenId 
     {
@@ -1067,6 +1074,7 @@ namespace Fifthweek.Api.Identity.OAuth
     using Microsoft.Owin.Security.Infrastructure;
     using Dapper;
     using Microsoft.AspNet.Identity;
+    using System.Diagnostics;
 
     public partial class RefreshTokenId 
     {
@@ -1106,6 +1114,7 @@ namespace Fifthweek.Api.Identity.OAuth
     using Microsoft.Owin.Security.Infrastructure;
     using Dapper;
     using Microsoft.AspNet.Identity;
+    using System.Diagnostics;
 
     public partial class RemoveRefreshTokenDbStatement 
     {
@@ -1145,6 +1154,7 @@ namespace Fifthweek.Api.Identity.OAuth
     using Microsoft.Owin.Security.Infrastructure;
     using Dapper;
     using Microsoft.AspNet.Identity;
+    using System.Diagnostics;
 
     public partial class TryGetRefreshTokenDbStatement 
     {
@@ -1184,6 +1194,7 @@ namespace Fifthweek.Api.Identity.OAuth
     using Microsoft.Owin.Security.Infrastructure;
     using Dapper;
     using Microsoft.AspNet.Identity;
+    using System.Diagnostics;
 
     public partial class UpdateUserTimeStampsDbStatement 
     {
@@ -1223,6 +1234,7 @@ namespace Fifthweek.Api.Identity.OAuth
     using Microsoft.Owin.Security.Infrastructure;
     using Dapper;
     using Microsoft.AspNet.Identity;
+    using System.Diagnostics;
 
     public partial class UpsertRefreshTokenDbStatement 
     {
@@ -1262,6 +1274,7 @@ namespace Fifthweek.Api.Identity.OAuth
     using Microsoft.Owin.Security.Infrastructure;
     using Dapper;
     using Microsoft.AspNet.Identity;
+    using System.Diagnostics;
 
     public partial class UserIdAndRoles 
     {
@@ -1308,6 +1321,7 @@ namespace Fifthweek.Api.Identity.OAuth
     using Microsoft.Owin.Security.Infrastructure;
     using Dapper;
     using Microsoft.AspNet.Identity;
+    using System.Diagnostics;
 
     public partial class UsernameAndRoles 
     {
@@ -1327,6 +1341,30 @@ namespace Fifthweek.Api.Identity.OAuth
 
             this.Username = username;
             this.Roles = roles;
+        }
+    }
+}
+namespace Fifthweek.Api.Identity.Membership
+{
+    using System;
+    using System.Linq;
+    using System.Security.Claims;
+    using System.Web;
+    using Fifthweek.Api.Core;
+    using Fifthweek.Api.Identity.Shared.Membership;
+    using Fifthweek.CodeGeneration;
+
+    public partial class RequesterContext 
+    {
+        public RequesterContext(
+            Fifthweek.Api.Core.IRequestContext requestContext)
+        {
+            if (requestContext == null)
+            {
+                throw new ArgumentNullException("requestContext");
+            }
+
+            this.requestContext = requestContext;
         }
     }
 }
@@ -1703,6 +1741,7 @@ namespace Fifthweek.Api.Identity.OAuth
     using Microsoft.Owin.Security.Infrastructure;
     using Dapper;
     using Microsoft.AspNet.Identity;
+    using System.Diagnostics;
 
     public partial class Client 
     {
@@ -1818,6 +1857,7 @@ namespace Fifthweek.Api.Identity.OAuth
     using Microsoft.Owin.Security.Infrastructure;
     using Dapper;
     using Microsoft.AspNet.Identity;
+    using System.Diagnostics;
 
     public partial class ClientId 
     {
@@ -2110,6 +2150,7 @@ namespace Fifthweek.Api.Identity.OAuth
     using Microsoft.Owin.Security.Infrastructure;
     using Dapper;
     using Microsoft.AspNet.Identity;
+    using System.Diagnostics;
 
     public partial class HashedRefreshTokenId 
     {
@@ -2467,6 +2508,7 @@ namespace Fifthweek.Api.Identity.OAuth
     using Microsoft.Owin.Security.Infrastructure;
     using Dapper;
     using Microsoft.AspNet.Identity;
+    using System.Diagnostics;
 
     public partial class RefreshTokenId 
     {
@@ -2540,6 +2582,7 @@ namespace Fifthweek.Api.Identity.OAuth
     using Microsoft.Owin.Security.Infrastructure;
     using Dapper;
     using Microsoft.AspNet.Identity;
+    using System.Diagnostics;
 
     public partial class UserIdAndRoles 
     {
@@ -2634,6 +2677,7 @@ namespace Fifthweek.Api.Identity.OAuth
     using Microsoft.Owin.Security.Infrastructure;
     using Dapper;
     using Microsoft.AspNet.Identity;
+    using System.Diagnostics;
 
     public partial class UsernameAndRoles 
     {
