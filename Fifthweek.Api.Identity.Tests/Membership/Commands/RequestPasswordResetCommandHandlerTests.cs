@@ -4,12 +4,12 @@
     using System.Threading.Tasks;
 
     using Fifthweek.Api.Core;
-    using Fifthweek.Api.Identity.Membership;
     using Fifthweek.Api.Identity.Membership.Commands;
     using Fifthweek.Api.Identity.Membership.Controllers;
     using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.Api.Persistence;
     using Fifthweek.Api.Persistence.Identity;
+    using Fifthweek.Shared;
 
     using Microsoft.VisualStudio.TestTools.UnitTesting;
 
@@ -28,7 +28,20 @@
         
         private readonly string activationLink = string.Format("\"https://www.fifthweek.com/#/resetPassword?userId={0}&token={1}\"", UserId.EncodeGuid(), Token);
         private Mock<IUserManager> userManager;
+        private Mock<IHtmlLinter> htmlLinter;
         private RequestPasswordResetCommandHandler target;
+
+        [TestInitialize]
+        public void TestInitialize()
+        {
+            this.htmlLinter = new Mock<IHtmlLinter>();
+            this.htmlLinter.Setup(_ => _.RemoveWhitespaceForHtmlEmail(It.IsAny<string>())).Returns((string result) => result);
+
+            // Mock potentially side-effecting components with strict mock behaviour.
+            this.userManager = new Mock<IUserManager>(MockBehavior.Strict);
+            
+            this.target = new RequestPasswordResetCommandHandler(this.userManager.Object, this.htmlLinter.Object);
+        }
 
         [TestMethod]
         public async Task WhenUsernameAndEmailAreNotProvided_ItShouldDoNothing()
@@ -76,7 +89,8 @@
 
             this.userManager.Setup(_ => _.FindByNameAsync(Username)).ReturnsAsync(new FifthweekUser()
             {
-                Id = UserId
+                Id = UserId,
+                UserName = Username
             });
 
             await this.AssertEmailSent(command);
@@ -89,7 +103,8 @@
 
             this.userManager.Setup(_ => _.FindByEmailAsync(EmailAddress)).ReturnsAsync(new FifthweekUser()
             {
-                Id = UserId
+                Id = UserId,
+                UserName = Username
             });
 
             await this.AssertEmailSent(command);
@@ -103,7 +118,8 @@
             this.userManager.Setup(_ => _.FindByEmailAsync(EmailAddress)).ReturnsAsync(null);
             this.userManager.Setup(_ => _.FindByNameAsync(Username)).ReturnsAsync(new FifthweekUser()
             {
-                Id = UserId
+                Id = UserId,
+                UserName = Username
             });
 
             await this.AssertEmailSent(command);
@@ -117,7 +133,8 @@
             this.userManager.Setup(_ => _.FindByNameAsync(Username)).ReturnsAsync(null);
             this.userManager.Setup(_ => _.FindByEmailAsync(EmailAddress)).ReturnsAsync(new FifthweekUser()
             {
-                Id = UserId
+                Id = UserId,
+                UserName = Username
             });
 
             await this.AssertEmailSent(command);
@@ -130,11 +147,13 @@
 
             this.userManager.Setup(_ => _.FindByNameAsync(Username)).ReturnsAsync(new FifthweekUser()
             {
-                Id = UserId
+                Id = UserId,
+                UserName = Username
             });
             this.userManager.Setup(_ => _.FindByEmailAsync(EmailAddress)).ReturnsAsync(new FifthweekUser()
             {
-                Id = UserId2
+                Id = UserId2,
+                UserName = Username
             });
             
             await this.AssertEmailSent(command);
@@ -148,20 +167,13 @@
                 _.SendEmailAsync(
                     UserId,
                     EmailSubject,
-                    It.Is<string>(emailBody => emailBody.Contains(activationLink))))
+                    It.Is<string>(emailBody => emailBody.Contains(activationLink) && emailBody.Contains(Username))))
                 .Returns(Task.FromResult(0))
                 .Verifiable();
 
             await this.target.HandleAsync(command);
 
             this.userManager.Verify();
-        }
-
-        [TestInitialize]
-        public void TestInitialize()
-        {
-            this.userManager = new Mock<IUserManager>(MockBehavior.Strict);
-            this.target = new RequestPasswordResetCommandHandler(this.userManager.Object);
         }
     }
 

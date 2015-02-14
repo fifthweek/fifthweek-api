@@ -1,28 +1,33 @@
-﻿using System.Web;
-using Fifthweek.Api.Persistence;
-
-namespace Fifthweek.Api.Identity.Membership.Commands
+﻿namespace Fifthweek.Api.Identity.Membership.Commands
 {
     using System;
+    using System.Text.RegularExpressions;
     using System.Threading.Tasks;
+    using System.Web;
 
     using Fifthweek.Api.Core;
     using Fifthweek.Api.Persistence;
     using Fifthweek.Api.Persistence.Identity;
+    using Fifthweek.CodeGeneration;
+    using Fifthweek.Shared;
 
-    public class RequestPasswordResetCommandHandler : ICommandHandler<RequestPasswordResetCommand>
+    [AutoConstructor]
+    public partial class RequestPasswordResetCommandHandler : ICommandHandler<RequestPasswordResetCommand>
     {
+        private const string EmailBodyTemplate = @"
+            <p>Hey, we heard you lost your Fifthweek password. Don't worry!</p>
+
+            <p>Use the following link to reset your password:</p>
+
+            <p><strong><a id=""reset-password-link"" href=""{0}"">Reset Password</a></strong></p>
+
+            <p>Oh, and incase you forgot, your username is <strong id=""username"">{1}</strong>.</p>
+
+            <p>Thanks,<br />
+            The Fifthweek Team</p>";
+
         private readonly IUserManager userManager;
-
-        public RequestPasswordResetCommandHandler(IUserManager userManager)
-        {
-            if (userManager == null)
-            {
-                throw new ArgumentNullException("userManager");
-            }
-
-            this.userManager = userManager;
-        }
+        private readonly IHtmlLinter htmlLinter;
 
         public async Task HandleAsync(RequestPasswordResetCommand command)
         {
@@ -47,17 +52,11 @@ namespace Fifthweek.Api.Identity.Membership.Commands
             var token = await this.userManager.GeneratePasswordResetTokenAsync(user.Id);
 
             var callbackUrl = string.Format("https://www.fifthweek.com/#/resetPassword?userId={0}&token={1}", user.Id.EncodeGuid(), HttpUtility.UrlEncode(token));
-            const string emailBodyTemplate = @"
-Hey, we heard you lost your Fifthweek password. Don't worry!
 
-Use the following link to reset your password:
+            // Some email clients render whitespace.
+            var lintedTemplate = this.htmlLinter.RemoveWhitespaceForHtmlEmail(EmailBodyTemplate);
 
-<strong><a href=""{0}"">Reset Password</a></strong>
-
-Thanks,
-The Fifthweek Team";
-
-            var emailBody = string.Format(emailBodyTemplate.Trim(), callbackUrl).Replace("\n", "<br />");
+            var emailBody = string.Format(lintedTemplate, callbackUrl, user.UserName).Replace("\n", "<br />");
             await this.userManager.SendEmailAsync(user.Id, "Reset Password", emailBody);
         }
     }

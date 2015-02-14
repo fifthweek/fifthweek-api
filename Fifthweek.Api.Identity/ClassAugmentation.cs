@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Linq;
 
-//// Generated on 13/02/2015 17:39:27 (UTC)
-//// Mapped solution in 9.58s
+//// Generated on 14/02/2015 11:00:10 (UTC)
+//// Mapped solution in 3.39s
 
 
 namespace Fifthweek.Api.Identity.Membership.Commands
@@ -18,6 +18,7 @@ namespace Fifthweek.Api.Identity.Membership.Commands
     using Fifthweek.Api.Identity.Shared.Membership.Events;
     using Fifthweek.Api.Persistence;
     using Fifthweek.Api.Persistence.Identity;
+    using System.Web;
 
     public partial class ConfirmPasswordResetCommand 
     {
@@ -60,6 +61,7 @@ namespace Fifthweek.Api.Identity.Membership.Commands
     using Fifthweek.Api.Identity.Shared.Membership.Events;
     using Fifthweek.Api.Persistence;
     using Fifthweek.Api.Persistence.Identity;
+    using System.Web;
 
     public partial class RegisterUserCommand 
     {
@@ -111,6 +113,7 @@ namespace Fifthweek.Api.Identity.Membership.Commands
     using Fifthweek.Api.Identity.Shared.Membership.Events;
     using Fifthweek.Api.Persistence;
     using Fifthweek.Api.Persistence.Identity;
+    using System.Web;
 
     public partial class RegisterUserCommandHandler 
     {
@@ -146,6 +149,7 @@ namespace Fifthweek.Api.Identity.Membership.Commands
     using Fifthweek.Api.Identity.Shared.Membership.Events;
     using Fifthweek.Api.Persistence;
     using Fifthweek.Api.Persistence.Identity;
+    using System.Web;
 
     public partial class RequestPasswordResetCommand 
     {
@@ -286,6 +290,8 @@ namespace Fifthweek.Api.Identity.Membership
     using Fifthweek.Api.Persistence;
     using Fifthweek.Api.Persistence.Identity;
     using Fifthweek.CodeGeneration;
+    using System.Security.Claims;
+    using System.Web;
 
     public partial class RegisterUserDbStatement 
     {
@@ -1348,11 +1354,15 @@ namespace Fifthweek.Api.Identity.Membership
 {
     using System;
     using System.Linq;
-    using System.Security.Claims;
-    using System.Web;
+    using System.Data.SqlTypes;
+    using System.Threading.Tasks;
     using Fifthweek.Api.Core;
     using Fifthweek.Api.Identity.Shared.Membership;
+    using Fifthweek.Api.Persistence;
+    using Fifthweek.Api.Persistence.Identity;
     using Fifthweek.CodeGeneration;
+    using System.Security.Claims;
+    using System.Web;
 
     public partial class RequesterContext 
     {
@@ -1365,6 +1375,43 @@ namespace Fifthweek.Api.Identity.Membership
             }
 
             this.requestContext = requestContext;
+        }
+    }
+}
+namespace Fifthweek.Api.Identity.Membership.Commands
+{
+    using System;
+    using System.Linq;
+    using Fifthweek.Api.Core;
+    using Fifthweek.Api.Identity.Shared.Membership;
+    using Fifthweek.CodeGeneration;
+    using Fifthweek.Shared;
+    using System.Data.SqlTypes;
+    using System.Threading.Tasks;
+    using Fifthweek.Api.Identity.Shared.Membership.Events;
+    using Fifthweek.Api.Persistence;
+    using Fifthweek.Api.Persistence.Identity;
+    using System.Web;
+    using System.Text.RegularExpressions;
+
+    public partial class RequestPasswordResetCommandHandler 
+    {
+        public RequestPasswordResetCommandHandler(
+            Fifthweek.Api.Persistence.IUserManager userManager,
+            Fifthweek.Shared.IHtmlLinter htmlLinter)
+        {
+            if (userManager == null)
+            {
+                throw new ArgumentNullException("userManager");
+            }
+
+            if (htmlLinter == null)
+            {
+                throw new ArgumentNullException("htmlLinter");
+            }
+
+            this.userManager = userManager;
+            this.htmlLinter = htmlLinter;
         }
     }
 }
@@ -1382,6 +1429,7 @@ namespace Fifthweek.Api.Identity.Membership.Commands
     using Fifthweek.Api.Identity.Shared.Membership.Events;
     using Fifthweek.Api.Persistence;
     using Fifthweek.Api.Persistence.Identity;
+    using System.Web;
 
     public partial class ConfirmPasswordResetCommand 
     {
@@ -1456,6 +1504,7 @@ namespace Fifthweek.Api.Identity.Membership.Commands
     using Fifthweek.Api.Identity.Shared.Membership.Events;
     using Fifthweek.Api.Persistence;
     using Fifthweek.Api.Persistence.Identity;
+    using System.Web;
 
     public partial class RegisterUserCommand 
     {
@@ -1542,6 +1591,7 @@ namespace Fifthweek.Api.Identity.Membership.Commands
     using Fifthweek.Api.Identity.Shared.Membership.Events;
     using Fifthweek.Api.Persistence;
     using Fifthweek.Api.Persistence.Identity;
+    using System.Web;
 
     public partial class RequestPasswordResetCommand 
     {

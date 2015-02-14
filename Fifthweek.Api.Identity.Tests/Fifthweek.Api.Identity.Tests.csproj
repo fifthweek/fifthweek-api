@@ -159,6 +159,10 @@
       <Project>{9C18BEE3-FAB5-4A00-8A94-A1FAEA370175}</Project>
       <Name>Fifthweek.Api.Persistence</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Fifthweek.Shared\Fifthweek.Shared.csproj">
+      <Project>{6D12FFBB-38E9-4722-A690-0F0338538EBC}</Project>
+      <Name>Fifthweek.Shared</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Fifthweek.Tests.Shared\Fifthweek.Tests.Shared.csproj">
       <Project>{85691D93-9C0C-498B-8341-1990BC8E24B2}</Project>
       <Name>Fifthweek.Tests.Shared</Name>
