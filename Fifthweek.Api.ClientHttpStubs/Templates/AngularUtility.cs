@@ -18,7 +18,7 @@
                     }
 
                     queryParameters.Remove(urlParameter);
-                    route = route.Replace(placeholder, string.Format("' + {0} + '", urlParameter.Name));
+                    route = route.Replace(placeholder, string.Format("' + encodeURIComponent({0}) + '", urlParameter.Name));
                     break;
                 }
             }
@@ -45,7 +45,7 @@
                     route += " + '?";
                 }
 
-                var querystring = queryParameters.Select(_ => string.Format("{0}=' + {0} + '", _.Name));
+                var querystring = queryParameters.Select(_ => string.Format("{0}=' + encodeURIComponent({0}) + '", _.Name));
                 route += string.Join("&", querystring);
 
                 // Trim trailing " + '"
