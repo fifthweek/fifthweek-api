@@ -43,7 +43,6 @@
         // GET membership/availableUsernames
         [AllowAnonymous]
         [Route("availableUsernames/{username}")]
-        [ResponseType(typeof(bool))]
         public async Task<IHttpActionResult> GetUsernameAvailabilityAsync(string username)
         {
             username.AssertUrlParameterProvided("username");
@@ -102,7 +101,6 @@
         // GET membership/passwordResetTokens/{userId}/{token}
         [AllowAnonymous]
         [Route("passwordResetTokens/{userId}/{*token}")]
-        [ResponseType(typeof(bool))]
         public async Task<IHttpActionResult> GetPasswordResetTokenValidityAsync(string userId, string token)
         {
             userId.AssertUrlParameterProvided("userId");
