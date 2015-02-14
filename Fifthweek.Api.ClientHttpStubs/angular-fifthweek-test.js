@@ -202,6 +202,44 @@ describe('collection stub', function() {
   });
 });
 
+describe('end to end test inbox stub', function() {
+  'use strict';
+
+  var fifthweekConstants;
+  var $httpBackend;
+  var $rootScope;
+  var target;
+
+  beforeEach(module('webApp', 'stateMock'));
+
+  beforeEach(inject(function($injector) {
+    fifthweekConstants = $injector.get('fifthweekConstants');
+    $httpBackend = $injector.get('$httpBackend');
+    $rootScope = $injector.get('$rootScope');
+    target = $injector.get('endToEndTestInboxStub');
+  }));
+
+  afterEach(function() {
+    $httpBackend.verifyNoOutstandingExpectation();
+    $httpBackend.verifyNoOutstandingRequest();
+  });
+
+  it('should get latest message and clear mailbox', function() {
+    var mailboxName = 'value0';
+
+    var responseData = 'response data';
+    $httpBackend.expectGET(fifthweekConstants.apiBaseUri + 'testMailboxes/' + mailboxName).respond(200, responseData);
+
+    var result = null;
+    target.getLatestMessageAndClearMailbox(mailboxName).then(function(response) { result = response.data; });
+
+    $httpBackend.flush();
+    $rootScope.$apply();
+
+    expect(result).toBe(responseData);
+  });
+});
+
 describe('membership stub', function() {
   'use strict';
 
@@ -289,7 +327,7 @@ describe('membership stub', function() {
     var token = 'value1';
 
     var responseData = 'response data';
-    $httpBackend.expectGET(fifthweekConstants.apiBaseUri + 'membership/passwordResetTokens/' + userId + '/' + token).respond(200, responseData);
+    $httpBackend.expectGET(fifthweekConstants.apiBaseUri + 'membership/passwordResetTokens/' + userId + '?token=' + token).respond(200, responseData);
 
     var result = null;
     target.getPasswordResetTokenValidity(userId, token).then(function(response) { result = response.data; });

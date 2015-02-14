@@ -98,10 +98,10 @@
             return this.Ok();
         }
 
-        // GET membership/passwordResetTokens/{userId}/{token}
+        // GET membership/passwordResetTokens/{userId}?token={token}
         [AllowAnonymous]
-        [Route("passwordResetTokens/{userId}/{*token}")]
-        public async Task<IHttpActionResult> GetPasswordResetTokenValidityAsync(string userId, string token)
+        [Route("passwordResetTokens/{userId}")]
+        public async Task<IHttpActionResult> GetPasswordResetTokenValidityAsync(string userId, [FromUri]string token)
         {
             userId.AssertUrlParameterProvided("userId");
             token.AssertUrlParameterProvided("token");

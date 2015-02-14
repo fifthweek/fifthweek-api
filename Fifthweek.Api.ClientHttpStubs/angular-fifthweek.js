@@ -116,6 +116,23 @@ angular.module('webApp').factory('collectionStub',
     return service;
   });
 
+angular.module('webApp').factory('endToEndTestInboxStub',
+  function($http, $q, fifthweekConstants, utilities) {
+    'use strict';
+
+    var apiBaseUri = fifthweekConstants.apiBaseUri;
+    var service = {};
+
+    // mailboxName = ''
+    service.getLatestMessageAndClearMailbox = function(mailboxName) {
+      return $http.get(apiBaseUri + 'testMailboxes/' + mailboxName).catch(function(response) {
+        return $q.reject(utilities.getHttpError(response));
+      });
+    };
+
+    return service;
+  });
+
 angular.module('webApp').factory('membershipStub',
   function($http, $q, fifthweekConstants, utilities) {
     'use strict';
@@ -136,7 +153,6 @@ angular.module('webApp').factory('membershipStub',
     };
 
     // username = ''
-    // result = false
     service.getUsernameAvailability = function(username) {
       return $http.get(apiBaseUri + 'membership/availableUsernames/' + username).catch(function(response) {
         return $q.reject(utilities.getHttpError(response));
@@ -166,9 +182,8 @@ angular.module('webApp').factory('membershipStub',
 
     // userId = 'Base64Guid'
     // token = ''
-    // result = false
     service.getPasswordResetTokenValidity = function(userId, token) {
-      return $http.get(apiBaseUri + 'membership/passwordResetTokens/' + userId + '/' + token).catch(function(response) {
+      return $http.get(apiBaseUri + 'membership/passwordResetTokens/' + userId + '?token=' + token).catch(function(response) {
         return $q.reject(utilities.getHttpError(response));
       });
     };
@@ -530,7 +545,6 @@ angular.module('webApp').factory('userStateStub',
 
     // userId = 'Base64Guid'
     // result = {
-    //   userId: 'Base64Guid', /* optional */
     //   accessSignatures: {
     //     timeToLiveSeconds: 0,
     //     publicSignature: {
@@ -559,7 +573,7 @@ angular.module('webApp').factory('userStateStub',
     //     channels: [
     //       {
     //         channelId: 'Base64Guid',
-    //         name: '',
+    //         name: '', /* optional */
     //         collections: [
     //           {
     //             collectionId: 'Base64Guid',
@@ -577,7 +591,6 @@ angular.module('webApp').factory('userStateStub',
     };
 
     // result = {
-    //   userId: 'Base64Guid', /* optional */
     //   accessSignatures: {
     //     timeToLiveSeconds: 0,
     //     publicSignature: {
@@ -606,7 +619,7 @@ angular.module('webApp').factory('userStateStub',
     //     channels: [
     //       {
     //         channelId: 'Base64Guid',
-    //         name: '',
+    //         name: '', /* optional */
     //         collections: [
     //           {
     //             collectionId: 'Base64Guid',
