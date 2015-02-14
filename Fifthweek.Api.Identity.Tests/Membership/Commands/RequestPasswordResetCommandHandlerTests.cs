@@ -26,7 +26,7 @@
         private static readonly Guid UserId = Guid.NewGuid();
         private static readonly Guid UserId2 = Guid.NewGuid();
         
-        private readonly string activationLink = string.Format("\"https://www.fifthweek.com/#/resetPassword?userId={0}&token={1}\"", UserId.EncodeGuid(), Token);
+        private readonly string activationLink = string.Format("\"/#/resetPassword?userId={0}&token={1}\"", UserId.EncodeGuid(), Token);
         private Mock<IUserManager> userManager;
         private Mock<IHtmlLinter> htmlLinter;
         private RequestPasswordResetCommandHandler target;

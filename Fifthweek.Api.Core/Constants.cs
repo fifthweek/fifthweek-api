@@ -23,6 +23,7 @@
 
         public static readonly string FifthweekWebsiteOriginRegex = GetWebsiteOriginRegex();
         public static readonly string FifthweekWebsiteOriginDefault = GetWebsiteOriginDefault();
+        public static readonly string FifthweekWebsiteBaseUrl = GetWebsiteBaseUrl();
 
         private static string GetWebsiteOriginDefault()
         {
@@ -32,6 +33,11 @@
         private static string GetWebsiteOriginRegex()
         {
             return ConfigurationManager.AppSettings["ACCESS_CONTROL_ALLOW_ORIGIN_REGEX"];
+        }
+
+        private static string GetWebsiteBaseUrl()
+        {
+            return ConfigurationManager.AppSettings["WEBSITE_BASE_URL"];
         }
     }
 }

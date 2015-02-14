@@ -1,7 +1,5 @@
 ﻿namespace Fifthweek.Api.Identity.Membership.Commands
 {
-    using System;
-    using System.Text.RegularExpressions;
     using System.Threading.Tasks;
     using System.Web;
 
@@ -51,7 +49,7 @@
 
             var token = await this.userManager.GeneratePasswordResetTokenAsync(user.Id);
 
-            var callbackUrl = string.Format("https://www.fifthweek.com/#/resetPassword?userId={0}&token={1}", user.Id.EncodeGuid(), HttpUtility.UrlEncode(token));
+            var callbackUrl = string.Format("{0}/#/resetPassword?userId={1}&token={2}", Constants.FifthweekWebsiteBaseUrl, user.Id.EncodeGuid(), HttpUtility.UrlEncode(token));
 
             // Some email clients render whitespace.
             var lintedTemplate = this.htmlLinter.RemoveWhitespaceForHtmlEmail(EmailBodyTemplate);
