@@ -59,6 +59,7 @@
                 RegistrationDate = timeStamp,
                 LastSignInDate = SqlDateTime.MinValue.Value,
                 LastAccessTokenDate = SqlDateTime.MinValue.Value,
+                SecurityStamp = Guid.NewGuid().ToString(),
                 PasswordHash = passwordHash,
             };
 

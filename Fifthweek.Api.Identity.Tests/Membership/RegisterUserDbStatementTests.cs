@@ -135,7 +135,14 @@
 
                 return new ExpectedSideEffects
                 {
-                    Insert = expectedUser,
+                    Insert = new WildcardEntity<FifthweekUser>(expectedUser)
+                    {
+                        Expected = actual =>
+                        {
+                            expectedUser.SecurityStamp = actual.SecurityStamp;
+                            return expectedUser;
+                        }
+                    }
                 };
             });
         }
@@ -174,7 +181,14 @@
 
                 return new ExpectedSideEffects
                 {
-                    Insert = expectedUser,
+                    Insert = new WildcardEntity<FifthweekUser>(expectedUser)
+                    {
+                        Expected = actual =>
+                        {
+                            expectedUser.SecurityStamp = actual.SecurityStamp;
+                            return expectedUser;
+                        }
+                    }
                 };
             });
         }

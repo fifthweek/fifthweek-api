@@ -1,14 +1,10 @@
 ﻿namespace Fifthweek.Api.Identity.Membership.Commands
 {
     using System;
-    using System.Data.SqlTypes;
-    using System.Linq;
     using System.Threading.Tasks;
 
     using Fifthweek.Api.Core;
     using Fifthweek.Api.Identity.Shared.Membership.Events;
-    using Fifthweek.Api.Persistence;
-    using Fifthweek.Api.Persistence.Identity;
     using Fifthweek.CodeGeneration;
 
     [AutoConstructor]
