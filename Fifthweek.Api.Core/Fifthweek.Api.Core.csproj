@@ -110,6 +110,7 @@
     <Compile Include="ExternalErrorException.cs" />
     <Compile Include="ICommandHandler.cs" />
     <Compile Include="IExceptionHandler.cs" />
+    <Compile Include="IOwinExceptionHandler.cs" />
     <Compile Include="IQuery.cs" />
     <Compile Include="IQueryHandler.cs" />
     <Compile Include="IRequestContext.cs" />

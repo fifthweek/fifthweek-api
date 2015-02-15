@@ -185,7 +185,9 @@
     <Compile Include="ConvertExceptionsToResponsesAttribute.cs" />
     <Compile Include="ExceptionHandler.cs" />
     <Compile Include="ExceptionHandlerUtilities.cs" />
+    <Compile Include="InitializeRequestContextAttribute.cs" />
     <Compile Include="InterceptExpiredBearerTokensAttribute.cs" />
+    <Compile Include="OwinExceptionHandler.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RequireHttpsAttribute.cs" />
     <Compile Include="Startup.cs" />

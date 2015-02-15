@@ -20,10 +20,11 @@
 
         public Task CreateAsync(AuthenticationTokenCreateContext context)
         {
-            var exceptionHandler = Helper.GetOwinScopeService<IExceptionHandler>(context.OwinContext);
+            var exceptionHandler = Helper.GetOwinScopeService<IOwinExceptionHandler>(context.OwinContext);
             var refreshTokenHandler = Helper.GetOwinScopeService<IFifthweekRefreshTokenHandler>(context.OwinContext);
             return ProviderErrorHandler.CallAndHandleError(
                 () => refreshTokenHandler.CreateAsync(context),
+                context.Request,
                 exceptionHandler);
         }
 
@@ -34,10 +35,11 @@
 
         public Task ReceiveAsync(AuthenticationTokenReceiveContext context)
         {
-            var exceptionHandler = Helper.GetOwinScopeService<IExceptionHandler>(context.OwinContext);
+            var exceptionHandler = Helper.GetOwinScopeService<IOwinExceptionHandler>(context.OwinContext);
             var refreshTokenHandler = Helper.GetOwinScopeService<IFifthweekRefreshTokenHandler>(context.OwinContext);
             return ProviderErrorHandler.CallAndHandleError(
                 () => refreshTokenHandler.ReceiveAsync(context),
+                context.Request,
                 exceptionHandler);
         }
     }

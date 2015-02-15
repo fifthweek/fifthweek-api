@@ -1,8 +1,11 @@
 ﻿namespace Fifthweek.Api
 {
     using System;
+    using System.Collections.Generic;
+    using System.Linq;
     using System.Net;
     using System.Net.Http;
+    using System.Net.Http.Headers;
     using System.Security;
     using System.Threading.Tasks;
     using System.Web;
@@ -11,6 +14,7 @@
     using Fifthweek.Api.Core;
     using Fifthweek.Api.Logging;
 
+    using Microsoft.Owin;
     using Microsoft.Owin.Security.OAuth;
 
     public static class ExceptionHandlerUtilities
@@ -106,11 +110,29 @@
             }
         }
 
-        public static string GetDeveloperName(HttpContext httpContext)
+        public static string GetDeveloperName(HttpRequestMessage request)
         {
-            if (httpContext != null)
+            if (request != null && request.Headers != null)
             {
-                return httpContext.Request.Headers[Core.Constants.DeveloperNameRequestHeaderKey];
+                IEnumerable<string> values;
+                if (request.Headers.TryGetValues(Core.Constants.DeveloperNameRequestHeaderKey, out values))
+                {
+                    return values.FirstOrDefault();
+                }
+            }
+
+            return null;
+        }
+
+        public static string GetDeveloperName(IOwinRequest request)
+        {
+            if (request != null && request.Headers != null)
+            {
+                string[] values;
+                if (request.Headers.TryGetValue(Core.Constants.DeveloperNameRequestHeaderKey, out values))
+                {
+                    return values.FirstOrDefault();
+                }
             }
 
             return null;

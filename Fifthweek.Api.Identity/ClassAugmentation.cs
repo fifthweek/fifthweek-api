@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Linq;
 
-//// Generated on 14/02/2015 11:00:10 (UTC)
-//// Mapped solution in 3.39s
+//// Generated on 15/02/2015 15:21:24 (UTC)
+//// Mapped solution in 16.43s
 
 
 namespace Fifthweek.Api.Identity.Membership.Commands
@@ -19,6 +19,7 @@ namespace Fifthweek.Api.Identity.Membership.Commands
     using Fifthweek.Api.Persistence;
     using Fifthweek.Api.Persistence.Identity;
     using System.Web;
+    using System.Text.RegularExpressions;
 
     public partial class ConfirmPasswordResetCommand 
     {
@@ -62,6 +63,7 @@ namespace Fifthweek.Api.Identity.Membership.Commands
     using Fifthweek.Api.Persistence;
     using Fifthweek.Api.Persistence.Identity;
     using System.Web;
+    using System.Text.RegularExpressions;
 
     public partial class RegisterUserCommand 
     {
@@ -114,6 +116,7 @@ namespace Fifthweek.Api.Identity.Membership.Commands
     using Fifthweek.Api.Persistence;
     using Fifthweek.Api.Persistence.Identity;
     using System.Web;
+    using System.Text.RegularExpressions;
 
     public partial class RegisterUserCommandHandler 
     {
@@ -150,6 +153,7 @@ namespace Fifthweek.Api.Identity.Membership.Commands
     using Fifthweek.Api.Persistence;
     using Fifthweek.Api.Persistence.Identity;
     using System.Web;
+    using System.Text.RegularExpressions;
 
     public partial class RequestPasswordResetCommand 
     {
@@ -649,7 +653,7 @@ namespace Fifthweek.Api.Identity.OAuth
             Fifthweek.Api.Core.IQueryHandler<Fifthweek.Api.Identity.OAuth.Queries.GetValidatedClientQuery,Fifthweek.Api.Identity.OAuth.Client> getValidatedClient,
             Fifthweek.Api.Core.IQueryHandler<Fifthweek.Api.Identity.OAuth.Queries.GetUserClaimsIdentityQuery,Fifthweek.Api.Identity.OAuth.Queries.UserClaimsIdentity> getUserClaimsIdentity,
             Fifthweek.Api.Core.ICommandHandler<Fifthweek.Api.Identity.OAuth.Commands.UpdateLastAccessTokenDateCommand> updateLastAccessTokenDate,
-            Fifthweek.Api.Core.IExceptionHandler exceptionHandler)
+            Fifthweek.Api.Core.IOwinExceptionHandler exceptionHandler)
         {
             if (getValidatedClient == null)
             {
@@ -1363,6 +1367,7 @@ namespace Fifthweek.Api.Identity.Membership
     using Fifthweek.CodeGeneration;
     using System.Security.Claims;
     using System.Web;
+    using System.ServiceModel.Channels;
 
     public partial class RequesterContext 
     {
@@ -1430,6 +1435,7 @@ namespace Fifthweek.Api.Identity.Membership.Commands
     using Fifthweek.Api.Persistence;
     using Fifthweek.Api.Persistence.Identity;
     using System.Web;
+    using System.Text.RegularExpressions;
 
     public partial class ConfirmPasswordResetCommand 
     {
@@ -1505,6 +1511,7 @@ namespace Fifthweek.Api.Identity.Membership.Commands
     using Fifthweek.Api.Persistence;
     using Fifthweek.Api.Persistence.Identity;
     using System.Web;
+    using System.Text.RegularExpressions;
 
     public partial class RegisterUserCommand 
     {
@@ -1592,6 +1599,7 @@ namespace Fifthweek.Api.Identity.Membership.Commands
     using Fifthweek.Api.Persistence;
     using Fifthweek.Api.Persistence.Identity;
     using System.Web;
+    using System.Text.RegularExpressions;
 
     public partial class RequestPasswordResetCommand 
     {

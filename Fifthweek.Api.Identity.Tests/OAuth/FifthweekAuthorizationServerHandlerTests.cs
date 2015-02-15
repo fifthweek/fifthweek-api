@@ -55,7 +55,7 @@
         private Mock<IQueryHandler<GetValidatedClientQuery, Client>> getValidatedClient;
         private Mock<IQueryHandler<GetUserClaimsIdentityQuery, UserClaimsIdentity>> getUserClaimsIdentity;
         private Mock<ICommandHandler<UpdateLastAccessTokenDateCommand>> updateLastAccessTokenDate;
-        private Mock<IExceptionHandler> exceptionHandler;
+        private Mock<IOwinExceptionHandler> exceptionHandler;
 
         private IDictionary<string, object> environment;
         private Dictionary<string, string[]> requestHeaders;
@@ -71,7 +71,7 @@
             this.getValidatedClient = new Mock<IQueryHandler<GetValidatedClientQuery, Client>>(MockBehavior.Strict);
             this.getUserClaimsIdentity = new Mock<IQueryHandler<GetUserClaimsIdentityQuery, UserClaimsIdentity>>(MockBehavior.Strict);
             this.updateLastAccessTokenDate = new Mock<ICommandHandler<UpdateLastAccessTokenDateCommand>>(MockBehavior.Strict);
-            this.exceptionHandler = new Mock<IExceptionHandler>();
+            this.exceptionHandler = new Mock<IOwinExceptionHandler>();
 
             this.target = new FifthweekAuthorizationServerHandler(
                 this.getValidatedClient.Object,
@@ -189,8 +189,8 @@
                 .ReturnsAsync(Client);
 
             Exception reportedException = null;
-            this.exceptionHandler.Setup(v => v.ReportExceptionAsync(It.IsAny<Exception>()))
-                .Callback<Exception>(e => reportedException = e);
+            this.exceptionHandler.Setup(v => v.ReportExceptionAsync(context.Request, It.IsAny<Exception>()))
+                .Callback<IOwinRequest, Exception>((r, e) => reportedException = e);
 
             await this.target.ValidateClientAuthenticationAsync(context);
 
@@ -216,8 +216,8 @@
                 .ReturnsAsync(Client);
 
             Exception reportedException = null;
-            this.exceptionHandler.Setup(v => v.ReportExceptionAsync(It.IsAny<Exception>()))
-                .Callback<Exception>(e => reportedException = e);
+            this.exceptionHandler.Setup(v => v.ReportExceptionAsync(context.Request, It.IsAny<Exception>()))
+                .Callback<IOwinRequest, Exception>((r, e) => reportedException = e);
 
             await this.target.ValidateClientAuthenticationAsync(context);
 
@@ -242,8 +242,8 @@
                 .ReturnsAsync(Client);
 
             Exception reportedException = null;
-            this.exceptionHandler.Setup(v => v.ReportExceptionAsync(It.IsAny<Exception>()))
-                .Callback<Exception>(e => reportedException = e);
+            this.exceptionHandler.Setup(v => v.ReportExceptionAsync(context.Request, It.IsAny<Exception>()))
+                .Callback<IOwinRequest, Exception>((r, e) => reportedException = e);
 
             await this.target.ValidateClientAuthenticationAsync(context);
 

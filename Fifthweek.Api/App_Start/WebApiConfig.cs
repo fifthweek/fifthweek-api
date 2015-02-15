@@ -13,6 +13,7 @@
         public static void Register(HttpConfiguration config)
         {
             config.Filters.Add(new RequireHttpsAttribute());
+            config.Filters.Add(new InitializeRequestContextAttribute());
             config.Filters.Add(new InterceptExpiredBearerTokensAttribute());
             config.Filters.Add(new ValidateModelAttribute());
             config.Filters.Add(new ConvertExceptionsToResponsesAttribute());

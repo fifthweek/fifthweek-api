@@ -12,7 +12,7 @@
         {
             builder.RegisterType<RegisterUserDbStatement>().As<IRegisterUserDbStatement>();
             builder.RegisterType<RequesterSecurity>().As<IRequesterSecurity>().SingleInstance();
-            builder.RegisterType<RequesterContext>().As<IRequesterContext>().SingleInstance();
+            builder.RegisterType<RequesterContext>().As<IRequesterContext>().InstancePerRequest();
         }
     }
 }

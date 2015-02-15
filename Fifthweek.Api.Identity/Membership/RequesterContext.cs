@@ -3,6 +3,7 @@
     using System;
     using System.Linq;
     using System.Security.Claims;
+    using System.ServiceModel.Channels;
     using System.Web;
 
     using Fifthweek.Api.Core;
@@ -39,10 +40,10 @@
 
         private ClaimsIdentity TryGetIdentity()
         {
-            var httpContext = this.requestContext.HttpContext;
-            if (httpContext != null && httpContext.User != null)
+            var user = this.requestContext.Context.Principal;
+            if (user != null)
             {
-                return (ClaimsIdentity)httpContext.User.Identity;
+                return (ClaimsIdentity)user.Identity;
             }
 
             return null;

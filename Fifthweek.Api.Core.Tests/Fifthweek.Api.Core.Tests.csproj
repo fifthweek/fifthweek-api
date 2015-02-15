@@ -84,6 +84,7 @@
   <ItemGroup>
     <Compile Include="ExtensionsTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="RequestContextTests.cs" />
     <Compile Include="RetryOnTransientErrorDecoratorTests.cs" />
     <Compile Include="GuidCreatorTests.cs" />
     <Compile Include="SqlExceptionMocker.cs" />

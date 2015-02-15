@@ -9,20 +9,12 @@
 
     public class ConvertExceptionsToResponsesAttribute : ActionFilterAttribute
     {
-        private HttpContext requestHttpContext;
-        
-        public override void OnActionExecuting(System.Web.Http.Controllers.HttpActionContext actionContext)
-        {
-            this.requestHttpContext = HttpContext.Current;
-            base.OnActionExecuting(actionContext);
-        }
-
         public override async Task OnActionExecutedAsync(HttpActionExecutedContext actionExecutedContext, CancellationToken cancellationToken)
         {
             var exception = actionExecutedContext.Exception;
             if (exception != null)
             {
-                var developerName = ExceptionHandlerUtilities.GetDeveloperName(this.requestHttpContext);
+                var developerName = ExceptionHandlerUtilities.GetDeveloperName(actionExecutedContext.Request);
                 actionExecutedContext.Response = await ExceptionHandlerUtilities.ReportExceptionAndCreateResponseAsync(actionExecutedContext.Request, exception, developerName);
             }
         }

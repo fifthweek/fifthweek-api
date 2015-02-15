@@ -12,7 +12,7 @@
     {
         public override Task ValidateClientAuthentication(OAuthValidateClientAuthenticationContext context)
         {
-            var exceptionHandler = Helper.GetOwinScopeService<IExceptionHandler>(context.OwinContext);
+            var exceptionHandler = Helper.GetOwinScopeService<IOwinExceptionHandler>(context.OwinContext);
             var authorizationServerHandler = Helper.GetOwinScopeService<IFifthweekAuthorizationServerHandler>(context.OwinContext);
             return ProviderErrorHandler.CallAndHandleError(
                 () => authorizationServerHandler.ValidateClientAuthenticationAsync(context), 
@@ -22,7 +22,7 @@
 
         public override Task GrantResourceOwnerCredentials(OAuthGrantResourceOwnerCredentialsContext context)
         {
-            var exceptionHandler = Helper.GetOwinScopeService<IExceptionHandler>(context.OwinContext);
+            var exceptionHandler = Helper.GetOwinScopeService<IOwinExceptionHandler>(context.OwinContext);
             var authorizationServerHandler = Helper.GetOwinScopeService<IFifthweekAuthorizationServerHandler>(context.OwinContext);
             return ProviderErrorHandler.CallAndHandleError(
                 () => authorizationServerHandler.GrantResourceOwnerCredentialsAsync(context),
@@ -32,16 +32,17 @@
 
         public override Task TokenEndpoint(OAuthTokenEndpointContext context)
         {
-            var exceptionHandler = Helper.GetOwinScopeService<IExceptionHandler>(context.OwinContext);
+            var exceptionHandler = Helper.GetOwinScopeService<IOwinExceptionHandler>(context.OwinContext);
             var authorizationServerHandler = Helper.GetOwinScopeService<IFifthweekAuthorizationServerHandler>(context.OwinContext);
             return ProviderErrorHandler.CallAndHandleError(
                 () => authorizationServerHandler.TokenEndpointAsync(context),
+                context.Request,
                 exceptionHandler);
         }
 
         public override Task GrantRefreshToken(OAuthGrantRefreshTokenContext context)
         {
-            var exceptionHandler = Helper.GetOwinScopeService<IExceptionHandler>(context.OwinContext);
+            var exceptionHandler = Helper.GetOwinScopeService<IOwinExceptionHandler>(context.OwinContext);
             var authorizationServerHandler = Helper.GetOwinScopeService<IFifthweekAuthorizationServerHandler>(context.OwinContext);
             return ProviderErrorHandler.CallAndHandleError(
                 () => authorizationServerHandler.GrantRefreshTokenAsync(context),

@@ -2,9 +2,11 @@
 {
     using System;
     using System.IO;
+    using System.Net.Http;
     using System.Security.Claims;
     using System.Security.Principal;
     using System.Web;
+    using System.Web.Http.Controllers;
 
     using Fifthweek.Api.Core;
     using Fifthweek.Api.Identity.Membership;
@@ -17,64 +19,48 @@
     using Moq;
 
     [TestClass]
-    public class UserContextTests
+    public class RequesterContextTests
     {
         private static readonly UserId UserId = new UserId(Guid.NewGuid());
 
         private const string AuthenticationType = "bearer";
 
-        private MockRequestContext mockRequestContext;
+        private Mock<IRequestContext> requestContext;
         private RequesterContext requesterContext;
 
         [TestInitialize]
         public void TestInitialize()
         {
-            this.mockRequestContext = new MockRequestContext();
-            TextWriter tw = new StreamWriter(new MemoryStream());
-            this.mockRequestContext.HttpContext = new HttpContext(new HttpRequest("blah", "http://blah.com", "blah"), new HttpResponse(tw));
-            
-            this.requesterContext = new RequesterContext(this.mockRequestContext);
-        }
-
-        [TestCleanup]
-        public void TestCleanup()
-        {
-            this.mockRequestContext.HttpContext = null;
+            this.requestContext = new Mock<IRequestContext>();
+            this.requesterContext = new RequesterContext(this.requestContext.Object);
         }
 
         [TestMethod]
         [ExpectedException(typeof(InvalidOperationException))]
         public void WhenAuthenticatedButNoNameIdentifierClaimExists_GetRequesterShouldThrowAnException()
         {
-            this.mockRequestContext.HttpContext.User = new Principal(AuthenticationType);
-            Assert.AreEqual(Requester.Unauthenticated, this.requesterContext.GetRequester());
-        }
-
-        [TestMethod]
-        public void WhenNoHttpContext_RequesterShouldBeUnauthenticated()
-        {
-            this.mockRequestContext.HttpContext = null;
+            this.SetupRequestContext(new Principal(AuthenticationType));
             Assert.AreEqual(Requester.Unauthenticated, this.requesterContext.GetRequester());
         }
 
         [TestMethod]
         public void WhenNoUser_RequesterShouldBeUnauthenticated()
         {
-            this.mockRequestContext.HttpContext.User = null;
+            this.SetupRequestContext(null);
             Assert.AreEqual(Requester.Unauthenticated, this.requesterContext.GetRequester());
         }
 
         [TestMethod]
         public void WhenNoIdentity_RequesterShouldBeUnauthenticated()
         {
-            this.mockRequestContext.HttpContext.User = new NullIdentityPrincipal();
+            this.SetupRequestContext(new NullIdentityPrincipal());
             Assert.AreEqual(Requester.Unauthenticated, this.requesterContext.GetRequester());
         }
 
         [TestMethod]
         public void WhenNoAuthenticationType_RequesterShouldBeUnauthenticated()
         {
-            this.mockRequestContext.HttpContext.User = new Principal(null);
+            this.SetupRequestContext(new Principal(null));
             Assert.AreEqual(Requester.Unauthenticated, this.requesterContext.GetRequester());
         }
 
@@ -84,7 +70,7 @@
             var principal = new Principal(AuthenticationType);
             principal.ClaimsIdentity.AddClaim(new Claim(ClaimTypes.NameIdentifier, UserId.Value.EncodeGuid()));
 
-            this.mockRequestContext.HttpContext.User = principal;
+            this.SetupRequestContext(principal);
 
             var result = this.requesterContext.GetRequester();
 
@@ -97,7 +83,7 @@
             var principal = new Principal(null);
             principal.ClaimsIdentity.AddClaim(new Claim(ClaimTypes.NameIdentifier, UserId.Value.EncodeGuid()));
 
-            this.mockRequestContext.HttpContext.User = principal;
+            this.SetupRequestContext(principal);
 
             var result = this.requesterContext.GetRequester();
 
@@ -113,7 +99,7 @@
             principal.ClaimsIdentity.AddClaim(new Claim(ClaimTypes.Role, "Two"));
             principal.ClaimsIdentity.AddClaim(new Claim(ClaimTypes.Role, "Three"));
 
-            this.mockRequestContext.HttpContext.User = principal;
+            this.SetupRequestContext(principal);
 
             var result = this.requesterContext.GetRequester();
 
@@ -130,11 +116,17 @@
             principal.ClaimsIdentity.AddClaim(new Claim(ClaimTypes.Role, "Two"));
             principal.ClaimsIdentity.AddClaim(new Claim(ClaimTypes.Role, "Three"));
 
-            this.mockRequestContext.HttpContext.User = principal;
+            this.SetupRequestContext(principal);
 
             var result = this.requesterContext.GetRequester();
 
             Assert.IsFalse(result.IsInRole("Two"));
+        }
+
+        private void SetupRequestContext(IPrincipal principle)
+        {
+            var context = new HttpRequestContext() { Principal = principle };
+            this.requestContext.Setup(v => v.Context).Returns(context);
         }
 
         private class Principal : IPrincipal
@@ -174,11 +166,6 @@
                     return null;
                 }
             }
-        }
-
-        private class MockRequestContext : IRequestContext
-        {
-            public HttpContext HttpContext { get; set; }
         }
     }
 }

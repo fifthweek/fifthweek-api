@@ -2,6 +2,7 @@
 {
     using System;
     using System.Diagnostics;
+    using System.Net.Http;
     using System.Threading.Tasks;
     using System.Web;
 
@@ -12,7 +13,7 @@
 
     public static class ProviderErrorHandler
     {
-        public static async Task CallAndHandleError<T>(Func<Task> action, BaseValidatingContext<T> context, IExceptionHandler exceptionHandler)
+        public static async Task CallAndHandleError<T>(Func<Task> action, BaseValidatingContext<T> context, IOwinExceptionHandler exceptionHandler)
         {
             Exception exception = null;
             try
@@ -39,7 +40,7 @@
             }
         }
 
-        public static async Task CallAndHandleError(Func<Task> action, IExceptionHandler exceptionHandler)
+        public static async Task CallAndHandleError(Func<Task> action, IOwinRequest request, IOwinExceptionHandler exceptionHandler)
         {
             try
             {
@@ -47,7 +48,7 @@
             }
             catch (Exception t)
             {
-                exceptionHandler.ReportExceptionAsync(t);
+                exceptionHandler.ReportExceptionAsync(request, t);
                 throw;
             }
         }

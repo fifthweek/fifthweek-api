@@ -3,10 +3,12 @@
     using System;
     using System.IO;
     using System.Net;
+    using System.Net.Http;
     using System.Net.Http.Headers;
     using System.Security.Claims;
     using System.Security.Principal;
     using System.Web;
+    using System.Web.Http;
     using System.Web.Http.Controllers;
     using System.Web.Http.Routing;
 
@@ -24,15 +26,14 @@
         {
             this.target = new InterceptExpiredBearerTokensAttribute();
             TextWriter tw = new StreamWriter(new MemoryStream());
-            HttpContext.Current = new HttpContext(new HttpRequest("blah", "http://blah.com", "blah"), new HttpResponse(tw));
         }
 
         [TestMethod]
         public void WhenUserIsAuthenticated_ItShouldDoNothing()
         {
-            HttpContext.Current.User = new Principal(AuthenticationType);
-
-            var context = new System.Web.Http.Controllers.HttpActionContext();
+            var principle = new Principal(AuthenticationType);
+            var context = this.CreateHttpActionContext(principle);
+            
             this.target.OnActionExecuting(context);
 
             Assert.IsNull(context.Response);
@@ -41,8 +42,8 @@
         [TestMethod]
         public void WhenUserIsNotAuthenticatedAndNoAuthorizationExists_ItShouldDoNothing()
         {
-            HttpContext.Current.User = new Principal(null);
-            var context = this.CreateHttpActionContext();
+            var principle = new Principal(null);
+            var context = this.CreateHttpActionContext(principle);
             
             this.target.OnActionExecuting(context);
 
@@ -52,8 +53,8 @@
         [TestMethod]
         public void WhenUserIdentityIsNullAndNoAuthorizationExists_ItShouldDoNothing()
         {
-            HttpContext.Current.User = new NullIdentityPrincipal();
-            var context = this.CreateHttpActionContext();
+            var principle = new NullIdentityPrincipal();
+            var context = this.CreateHttpActionContext(principle);
             
             this.target.OnActionExecuting(context);
 
@@ -63,9 +64,8 @@
         [TestMethod]
         public void WhenUserIsNotAuthenticatedAndAuthorizationExists_ItShouldSetTheResponseToUnauthorized()
         {
-            HttpContext.Current.User = new Principal(null);
-
-            var context = this.CreateHttpActionContext();
+            var principle = new Principal(null);
+            var context = this.CreateHttpActionContext(principle);
             context.Request.Headers.Authorization = new AuthenticationHeaderValue(AuthenticationType);
 
             this.target.OnActionExecuting(context);
@@ -74,16 +74,22 @@
             Assert.AreEqual(HttpStatusCode.Unauthorized, context.Response.StatusCode);
         }
 
-        private HttpActionContext CreateHttpActionContext()
+        private HttpActionContext CreateHttpActionContext(IPrincipal principle)
         {
             var context =
                 new System.Web.Http.Controllers.HttpActionContext(
                     new System.Web.Http.Controllers.HttpControllerContext(
-                        new System.Web.Http.HttpConfiguration(),
-                        new HttpRouteData(new HttpRoute()),
-                        new System.Net.Http.HttpRequestMessage()),
+                        new HttpRequestContext() { Principal = principle },
+                        new HttpRequestMessage(),
+                        new HttpControllerDescriptor(),
+                        new Controller()),
                     new ReflectedHttpActionDescriptor());
+            
             return context;
+        }
+
+        private class Controller : ApiController
+        {
         }
 
         private class Principal : IPrincipal

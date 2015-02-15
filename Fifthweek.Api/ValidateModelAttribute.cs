@@ -15,7 +15,7 @@
             if (actionContext.ModelState.IsValid == false)
             {
                 var exception = new ModelValidationException(actionContext.ModelState);
-                var developerName = ExceptionHandlerUtilities.GetDeveloperName(HttpContext.Current);
+                var developerName = ExceptionHandlerUtilities.GetDeveloperName(actionContext.Request);
                 actionContext.Response = await ExceptionHandlerUtilities.ReportExceptionAndCreateResponseAsync(actionContext.Request, exception, developerName);
             }
         }

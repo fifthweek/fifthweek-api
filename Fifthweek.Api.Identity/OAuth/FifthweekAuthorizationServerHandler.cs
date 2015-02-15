@@ -29,7 +29,7 @@ namespace Fifthweek.Api.Identity.OAuth
         private readonly IQueryHandler<GetValidatedClientQuery, Client> getValidatedClient;
         private readonly IQueryHandler<GetUserClaimsIdentityQuery, UserClaimsIdentity> getUserClaimsIdentity;
         private readonly ICommandHandler<UpdateLastAccessTokenDateCommand> updateLastAccessTokenDate;
-        private readonly IExceptionHandler exceptionHandler;
+        private readonly IOwinExceptionHandler exceptionHandler;
 
         /// <summary>
         /// Called to validate that the origin of the request is a registered "client_id", and that the 
@@ -246,7 +246,7 @@ namespace Fifthweek.Api.Identity.OAuth
             }
             catch (Exception t)
             {
-                this.exceptionHandler.ReportExceptionAsync(t);
+                this.exceptionHandler.ReportExceptionAsync(context.Request, t);
             }
 
             return allowedOrigin;
