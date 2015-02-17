@@ -8,6 +8,9 @@
     {
         public BlobLocation GetBlobLocation(UserId userId, Shared.FileId fileId, string filePurpose)
         {
+            fileId.AssertNotNull("fileId");
+            filePurpose.AssertNotNull("filePurpose");
+
             var purpose = FilePurposes.TryGetFilePurpose(filePurpose);
 
             if (purpose == null)
@@ -20,6 +23,7 @@
                 return new BlobLocation(Constants.PublicFileBlobContainerName, fileId.Value.EncodeGuid());
             }
 
+            userId.AssertNotNull("userId");
             return new BlobLocation(this.GetBlobContainerName(userId), fileId.Value.ToString("N"));
         }
 

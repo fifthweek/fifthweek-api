@@ -2,14 +2,18 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Linq;
     using System.Text;
     using System.Web;
 
+    using Fifthweek.Api.Core;
     using Fifthweek.Api.FileManagement.Shared;
     using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.Shared;
 
     using Microsoft.VisualStudio.TestTools.UnitTesting;
+
+    using Constants = Fifthweek.Api.FileManagement.Constants;
 
     [TestClass]
     public class BlobNameCreatorTests
@@ -22,12 +26,56 @@
 
         private readonly UserId userId2 = new UserId(Guid.NewGuid());
 
+        private readonly FilePurpose validPublicPurpose = FilePurposes.GetAll().First(v => v.IsPublic);
+        private readonly FilePurpose validPrivatePurpose = FilePurposes.GetAll().First(v => !v.IsPublic);
+
         private BlobLocationGenerator target;
 
         [TestInitialize]
         public void TestInitialize()
         {
             this.target = new BlobLocationGenerator();
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentNullException))]
+        public void WhenCalledWithNullPublicPurpose_ItShouldThrowAnException()
+        {
+            this.target.GetBlobLocation(this.userId, this.fileId, null);
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentNullException))]
+        public void WhenCalledWithNullFileIdAndPublicPurpose_ItShouldThrowAnException()
+        {
+            this.target.GetBlobLocation(this.userId, null, this.validPublicPurpose.Name);
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentNullException))]
+        public void WhenCalledWithNullFileIdAndPrivatePurpose_ItShouldThrowAnException()
+        {
+            this.target.GetBlobLocation(this.userId, null, this.validPrivatePurpose.Name);
+        }
+
+        [TestMethod]
+        public void WhenCalledWithNullUserIdAndPublicPurpose_ItShouldNotThrowAnException()
+        {
+            this.target.GetBlobLocation(this.userId, this.fileId, this.validPublicPurpose.Name);
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentNullException))]
+        public void WhenCalledWithNullUserIdAndPrivatePurpose_ItShouldThrowAnException()
+        {
+            this.target.GetBlobLocation(null, this.fileId, this.validPrivatePurpose.Name);
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(BadRequestException))]
+        public void WhenCalledWithUnknownPurpose_ItShouldThrowAnException()
+        {
+            this.target.GetBlobLocation(this.userId, this.fileId, "Unknown_Purpose");
         }
 
         [TestMethod]

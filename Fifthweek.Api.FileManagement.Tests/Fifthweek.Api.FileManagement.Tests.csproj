@@ -114,7 +114,7 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
-    <Compile Include="BlobNameCreatorTests.cs" />
+    <Compile Include="BlobLocationGeneratorTests.cs" />
     <Compile Include="Commands\InitiateFileUploadCommandHandlerTests.cs" />
     <Compile Include="Commands\CompleteFileUploadCommandHandlerTests.cs" />
     <Compile Include="Controllers\FileUploadControllerTests.cs" />

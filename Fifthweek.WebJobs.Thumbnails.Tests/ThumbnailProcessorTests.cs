@@ -108,7 +108,7 @@
             this.output.Setup(v => v.Properties).Returns(properties.Object);
             this.output.Setup(v => v.SetPropertiesAsync(CancellationToken.None)).Returns(Task.FromResult(0));
 
-            properties.Setup(v => v.Length).Returns(100);
+            this.output.Setup(v => v.ExistsAsync(CancellationToken.None)).ReturnsAsync(true);
 
             var outputStream = new MockCloudBlobStream();
             this.output.Setup(v => v.OpenWriteAsync(CancellationToken.None)).ReturnsAsync(outputStream);
@@ -138,7 +138,7 @@
             var properties = new Mock<IBlobProperties>();
             this.output.Setup(v => v.Properties).Returns(properties.Object);
 
-            properties.Setup(v => v.Length).Returns(100);
+            this.output.Setup(v => v.ExistsAsync(CancellationToken.None)).ReturnsAsync(true);
 
             using (var input = SampleImagesLoader.Instance.LargeLandscape.Open())
             {
@@ -200,7 +200,7 @@
             var outputStream = new MockCloudBlobStream();
             this.output.Setup(v => v.OpenWriteAsync(CancellationToken.None)).ReturnsAsync(outputStream);
 
-            properties.Setup(v => v.Length).Returns(100);
+            this.output.Setup(v => v.ExistsAsync(CancellationToken.None)).ReturnsAsync(true);
             properties.SetupProperty(v => v.ContentType, null);
 
             await this.target.CreatePoisonThumbnailAsync(
@@ -236,7 +236,7 @@
             this.output.Setup(v => v.OpenWriteAsync(CancellationToken.None))
                 .Throws(new Exception("This should not be called"));
 
-            properties.Setup(v => v.Length).Returns(100);
+            this.output.Setup(v => v.ExistsAsync(CancellationToken.None)).ReturnsAsync(true);
 
             await this.target.CreatePoisonThumbnailAsync(
                     Message,

@@ -70,7 +70,6 @@
                     }
 
                     output.Properties.ContentType = image.FormatInfo.MimeType;
-                    ////await output.SetPropertiesAsync(cancellationToken);
                     
                     using (var outputStream = await output.OpenWriteAsync(cancellationToken))
                     {
