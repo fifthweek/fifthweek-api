@@ -9,6 +9,12 @@
         public BlobLocation GetBlobLocation(UserId userId, Shared.FileId fileId, string filePurpose)
         {
             var purpose = FilePurposes.TryGetFilePurpose(filePurpose);
+
+            if (purpose == null)
+            {
+                throw new BadRequestException("Unknown file purpose.");
+            }
+
             if (purpose.IsPublic)
             {
                 return new BlobLocation(Constants.PublicFileBlobContainerName, fileId.Value.EncodeGuid());

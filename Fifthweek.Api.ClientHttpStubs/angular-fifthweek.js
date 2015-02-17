@@ -528,7 +528,7 @@ angular.module('webApp').factory('fileUploadStub',
 
     // fileId = 'Base64Guid'
     service.postUploadCompleteNotification = function(fileId) {
-      return $http.post(apiBaseUri + 'files/uploadCompleteNotifications', fileId).catch(function(response) {
+      return $http.post(apiBaseUri + 'files/uploadCompleteNotifications/' + encodeURIComponent(fileId)).catch(function(response) {
         return $q.reject(utilities.getHttpError(response));
       });
     };

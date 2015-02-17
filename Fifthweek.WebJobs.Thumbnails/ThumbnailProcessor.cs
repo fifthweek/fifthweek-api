@@ -26,14 +26,18 @@
             ILogger logger,
             CancellationToken cancellationToken)
         {
-            await output.FetchAttributesAsync(cancellationToken);
+            var exists = await output.ExistsAsync(cancellationToken);
 
-            if (thumbnail.Overwrite || output.Properties.Length == 0)
+            if (thumbnail.Overwrite || !exists)
             {
                 using (var image = new MagickImage(input))
                 {
+                    if (exists)
+                    {
+                        await output.FetchAttributesAsync(cancellationToken);
+                    }
+
                     output.Properties.ContentType = image.FormatInfo.MimeType;
-                    await output.SetPropertiesAsync(cancellationToken);
 
                     using (var outputStream = await output.OpenWriteAsync(cancellationToken))
                     {
@@ -51,18 +55,23 @@
             ILogger logger,
             CancellationToken cancellationToken)
         {
-            await output.FetchAttributesAsync(cancellationToken);
+            var exists = await output.ExistsAsync(cancellationToken);
 
-            if (thumbnail.Overwrite || output.Properties.Length == 0)
+            if (thumbnail.Overwrite || !exists)
             {
                 // Create a small red image.
                 using (var image = new MagickImage(new MagickColor(0, 0, 0), 1, 1))
                 {
                     image.Format = MagickFormat.Png;
 
-                    output.Properties.ContentType = image.FormatInfo.MimeType;
-                    await output.SetPropertiesAsync(cancellationToken);
+                    if (exists)
+                    {
+                        await output.FetchAttributesAsync(cancellationToken);
+                    }
 
+                    output.Properties.ContentType = image.FormatInfo.MimeType;
+                    ////await output.SetPropertiesAsync(cancellationToken);
+                    
                     using (var outputStream = await output.OpenWriteAsync(cancellationToken))
                     {
                         image.Write(outputStream);

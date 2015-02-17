@@ -5,8 +5,10 @@
 
     public static class FilePurposes
     {
+        // Remember to also update Fifthweek.WebJobs.Files.FilePurposeTasks to assign processing tasks to this file purpose.
         public const string ProfileImage = "profile-image";
         public const string ProfileHeaderImage = "profile-header-image";
+        public const string PostImage = "post-image";
 
         private static readonly Dictionary<string, FilePurpose> Items = new Dictionary<string, FilePurpose>();
 
@@ -14,6 +16,7 @@
         {
             Add(ProfileImage, true);
             Add(ProfileHeaderImage, true);
+            Add(PostImage, false);
         }
 
         public static FilePurpose TryGetFilePurpose(string purpose)

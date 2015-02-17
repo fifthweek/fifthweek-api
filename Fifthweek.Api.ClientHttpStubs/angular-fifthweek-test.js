@@ -91,7 +91,7 @@ describe('channel stub', function() {
     var channelData = 'value1';
 
     var responseData = 'response data';
-    $httpBackend.expectPUT(fifthweekConstants.apiBaseUri + 'collections/' + channelId, channelData).respond(200, responseData);
+    $httpBackend.expectPUT(fifthweekConstants.apiBaseUri + 'collections/' + encodeURIComponent(channelId), channelData).respond(200, responseData);
 
     var result = null;
     target.putChannel(channelId, channelData).then(function(response) { result = response.data; });
@@ -106,7 +106,7 @@ describe('channel stub', function() {
     var channelId = 'value0';
 
     var responseData = 'response data';
-    $httpBackend.expectDELETE(fifthweekConstants.apiBaseUri + 'collections/' + channelId).respond(200, responseData);
+    $httpBackend.expectDELETE(fifthweekConstants.apiBaseUri + 'collections/' + encodeURIComponent(channelId)).respond(200, responseData);
 
     var result = null;
     target.deleteChannel(channelId).then(function(response) { result = response.data; });
@@ -160,7 +160,7 @@ describe('collection stub', function() {
     var collectionData = 'value1';
 
     var responseData = 'response data';
-    $httpBackend.expectPUT(fifthweekConstants.apiBaseUri + 'collections/' + collectionId, collectionData).respond(200, responseData);
+    $httpBackend.expectPUT(fifthweekConstants.apiBaseUri + 'collections/' + encodeURIComponent(collectionId), collectionData).respond(200, responseData);
 
     var result = null;
     target.putCollection(collectionId, collectionData).then(function(response) { result = response.data; });
@@ -175,7 +175,7 @@ describe('collection stub', function() {
     var collectionId = 'value0';
 
     var responseData = 'response data';
-    $httpBackend.expectDELETE(fifthweekConstants.apiBaseUri + 'collections/' + collectionId).respond(200, responseData);
+    $httpBackend.expectDELETE(fifthweekConstants.apiBaseUri + 'collections/' + encodeURIComponent(collectionId)).respond(200, responseData);
 
     var result = null;
     target.deleteCollection(collectionId).then(function(response) { result = response.data; });
@@ -190,7 +190,7 @@ describe('collection stub', function() {
     var collectionId = 'value0';
 
     var responseData = 'response data';
-    $httpBackend.expectGET(fifthweekConstants.apiBaseUri + 'collections/' + collectionId + '/newQueuedPostLiveDate').respond(200, responseData);
+    $httpBackend.expectGET(fifthweekConstants.apiBaseUri + 'collections/' + encodeURIComponent(collectionId) + '/newQueuedPostLiveDate').respond(200, responseData);
 
     var result = null;
     target.getLiveDateOfNewQueuedPost(collectionId).then(function(response) { result = response.data; });
@@ -228,7 +228,7 @@ describe('end to end test inbox stub', function() {
     var mailboxName = 'value0';
 
     var responseData = 'response data';
-    $httpBackend.expectGET(fifthweekConstants.apiBaseUri + 'testMailboxes/' + mailboxName).respond(200, responseData);
+    $httpBackend.expectGET(fifthweekConstants.apiBaseUri + 'testMailboxes/' + encodeURIComponent(mailboxName)).respond(200, responseData);
 
     var result = null;
     target.getLatestMessageAndClearMailbox(mailboxName).then(function(response) { result = response.data; });
@@ -281,7 +281,7 @@ describe('membership stub', function() {
     var username = 'value0';
 
     var responseData = 'response data';
-    $httpBackend.expectGET(fifthweekConstants.apiBaseUri + 'membership/availableUsernames/' + username).respond(200, responseData);
+    $httpBackend.expectGET(fifthweekConstants.apiBaseUri + 'membership/availableUsernames/' + encodeURIComponent(username)).respond(200, responseData);
 
     var result = null;
     target.getUsernameAvailability(username).then(function(response) { result = response.data; });
@@ -327,7 +327,7 @@ describe('membership stub', function() {
     var token = 'value1';
 
     var responseData = 'response data';
-    $httpBackend.expectGET(fifthweekConstants.apiBaseUri + 'membership/passwordResetTokens/' + userId + '?token=' + token).respond(200, responseData);
+    $httpBackend.expectGET(fifthweekConstants.apiBaseUri + 'membership/passwordResetTokens/' + encodeURIComponent(userId) + '?token=' + encodeURIComponent(token)).respond(200, responseData);
 
     var result = null;
     target.getPasswordResetTokenValidity(userId, token).then(function(response) { result = response.data; });
@@ -419,7 +419,7 @@ describe('file post stub', function() {
     var fileData = 'value1';
 
     var responseData = 'response data';
-    $httpBackend.expectPUT(fifthweekConstants.apiBaseUri + 'posts/files/' + postId, fileData).respond(200, responseData);
+    $httpBackend.expectPUT(fifthweekConstants.apiBaseUri + 'posts/files/' + encodeURIComponent(postId), fileData).respond(200, responseData);
 
     var result = null;
     target.putFile(postId, fileData).then(function(response) { result = response.data; });
@@ -473,7 +473,7 @@ describe('note post stub', function() {
     var noteData = 'value1';
 
     var responseData = 'response data';
-    $httpBackend.expectPUT(fifthweekConstants.apiBaseUri + 'posts/notes/' + postId, noteData).respond(200, responseData);
+    $httpBackend.expectPUT(fifthweekConstants.apiBaseUri + 'posts/notes/' + encodeURIComponent(postId), noteData).respond(200, responseData);
 
     var result = null;
     target.putNote(postId, noteData).then(function(response) { result = response.data; });
@@ -527,7 +527,7 @@ describe('image post stub', function() {
     var imageData = 'value1';
 
     var responseData = 'response data';
-    $httpBackend.expectPUT(fifthweekConstants.apiBaseUri + 'posts/images/' + postId, imageData).respond(200, responseData);
+    $httpBackend.expectPUT(fifthweekConstants.apiBaseUri + 'posts/images/' + encodeURIComponent(postId), imageData).respond(200, responseData);
 
     var result = null;
     target.putImage(postId, imageData).then(function(response) { result = response.data; });
@@ -565,7 +565,7 @@ describe('post stub', function() {
     var creatorId = 'value0';
 
     var responseData = 'response data';
-    $httpBackend.expectGET(fifthweekConstants.apiBaseUri + 'posts/creatorBacklog/' + creatorId).respond(200, responseData);
+    $httpBackend.expectGET(fifthweekConstants.apiBaseUri + 'posts/creatorBacklog/' + encodeURIComponent(creatorId)).respond(200, responseData);
 
     var result = null;
     target.getCreatorBacklog(creatorId).then(function(response) { result = response.data; });
@@ -582,7 +582,7 @@ describe('post stub', function() {
     var count = 'value2';
 
     var responseData = 'response data';
-    $httpBackend.expectGET(fifthweekConstants.apiBaseUri + 'posts/creatorNewsfeed/' + creatorId + '?startIndex=' + startIndex + '&count=' + count).respond(200, responseData);
+    $httpBackend.expectGET(fifthweekConstants.apiBaseUri + 'posts/creatorNewsfeed/' + encodeURIComponent(creatorId) + '?startIndex=' + encodeURIComponent(startIndex) + '&count=' + encodeURIComponent(count)).respond(200, responseData);
 
     var result = null;
     target.getCreatorNewsfeed(creatorId, startIndex, count).then(function(response) { result = response.data; });
@@ -597,7 +597,7 @@ describe('post stub', function() {
     var postId = 'value0';
 
     var responseData = 'response data';
-    $httpBackend.expectDELETE(fifthweekConstants.apiBaseUri + 'posts/' + postId).respond(200, responseData);
+    $httpBackend.expectDELETE(fifthweekConstants.apiBaseUri + 'posts/' + encodeURIComponent(postId)).respond(200, responseData);
 
     var result = null;
     target.deletePost(postId).then(function(response) { result = response.data; });
@@ -613,7 +613,7 @@ describe('post stub', function() {
     var newQueueOrder = 'value1';
 
     var responseData = 'response data';
-    $httpBackend.expectPOST(fifthweekConstants.apiBaseUri + 'posts/queues/' + collectionId, newQueueOrder).respond(200, responseData);
+    $httpBackend.expectPOST(fifthweekConstants.apiBaseUri + 'posts/queues/' + encodeURIComponent(collectionId), newQueueOrder).respond(200, responseData);
 
     var result = null;
     target.postNewQueueOrder(collectionId, newQueueOrder).then(function(response) { result = response.data; });
@@ -659,7 +659,7 @@ describe('post stub', function() {
     var newLiveDate = 'value1';
 
     var responseData = 'response data';
-    $httpBackend.expectPUT(fifthweekConstants.apiBaseUri + 'posts/' + postId + '/liveDate', newLiveDate).respond(200, responseData);
+    $httpBackend.expectPUT(fifthweekConstants.apiBaseUri + 'posts/' + encodeURIComponent(postId) + '/liveDate', newLiveDate).respond(200, responseData);
 
     var result = null;
     target.putLiveDate(postId, newLiveDate).then(function(response) { result = response.data; });
@@ -713,7 +713,7 @@ describe('subscription stub', function() {
     var subscriptionData = 'value1';
 
     var responseData = 'response data';
-    $httpBackend.expectPUT(fifthweekConstants.apiBaseUri + 'subscriptions/' + subscriptionId, subscriptionData).respond(200, responseData);
+    $httpBackend.expectPUT(fifthweekConstants.apiBaseUri + 'subscriptions/' + encodeURIComponent(subscriptionId), subscriptionData).respond(200, responseData);
 
     var result = null;
     target.putSubscription(subscriptionId, subscriptionData).then(function(response) { result = response.data; });
@@ -765,7 +765,7 @@ describe('user access signatures stub', function() {
     var userId = 'value0';
 
     var responseData = 'response data';
-    $httpBackend.expectGET(fifthweekConstants.apiBaseUri + 'userAccessSignatures/' + userId).respond(200, responseData);
+    $httpBackend.expectGET(fifthweekConstants.apiBaseUri + 'userAccessSignatures/' + encodeURIComponent(userId)).respond(200, responseData);
 
     var result = null;
     target.getForUser(userId).then(function(response) { result = response.data; });
@@ -818,7 +818,7 @@ describe('file upload stub', function() {
     var fileId = 'value0';
 
     var responseData = 'response data';
-    $httpBackend.expectPOST(fifthweekConstants.apiBaseUri + 'files/uploadCompleteNotifications', fileId).respond(200, responseData);
+    $httpBackend.expectPOST(fifthweekConstants.apiBaseUri + 'files/uploadCompleteNotifications/' + encodeURIComponent(fileId)).respond(200, responseData);
 
     var result = null;
     target.postUploadCompleteNotification(fileId).then(function(response) { result = response.data; });
@@ -856,7 +856,7 @@ describe('user state stub', function() {
     var userId = 'value0';
 
     var responseData = 'response data';
-    $httpBackend.expectGET(fifthweekConstants.apiBaseUri + 'userState/' + userId).respond(200, responseData);
+    $httpBackend.expectGET(fifthweekConstants.apiBaseUri + 'userState/' + encodeURIComponent(userId)).respond(200, responseData);
 
     var result = null;
     target.getUserState(userId).then(function(response) { result = response.data; });

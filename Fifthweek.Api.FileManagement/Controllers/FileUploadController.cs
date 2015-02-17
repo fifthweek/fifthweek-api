@@ -43,7 +43,7 @@
             return new GrantedUpload(fileId, accessInformation);
         }
 
-        [Route("uploadCompleteNotifications")]
+        [Route("uploadCompleteNotifications/{fileId}")]
         public async Task PostUploadCompleteNotificationAsync(string fileId)
         {
             fileId.AssertBodyProvided("fileId");

@@ -28,9 +28,13 @@ namespace Fifthweek.Azure
         {
             get
             {
-
                 return new FifthweekBlobProperties(this.blob.Properties);
             }
+        }
+
+        public Task<bool> ExistsAsync(CancellationToken cancellationToken)
+        {
+            return this.blob.ExistsAsync(cancellationToken);
         }
 
         public string GetSharedAccessSignature(SharedAccessBlobPolicy policy)
