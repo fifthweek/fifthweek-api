@@ -26,6 +26,10 @@
                 FilePurposes.ProfileHeaderImage,
                 new ThumbnailFileTask(1500, 400, ResizeBehaviour.CropToAspectRatio),
                 new ThumbnailFileTask(480, 128, ResizeBehaviour.CropToAspectRatio));
+
+            this.Add(
+                FilePurposes.PostImage,
+                new ThumbnailFileTask(600, 8000, ResizeBehaviour.MaintainAspectRatio));
         }
 
         public IEnumerable<IFileTask> GetTasks(string purpose)
