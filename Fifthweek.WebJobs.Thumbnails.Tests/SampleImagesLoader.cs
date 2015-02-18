@@ -46,6 +46,8 @@
 
         public SampleImage ColoredEdges { get; private set; }
 
+        public SampleImage Tiff { get; private set; }
+
         private void GetSampleImages()
         {
             var resources = Assembly.GetExecutingAssembly().GetManifestResourceNames();
@@ -84,6 +86,11 @@
             if (this.IsFile(path, "colored-edges.png"))
             {
                 return this.ColoredEdges = new SampleImage(path, 1000, 1000);
+            }
+
+            if (this.IsFile(path, "pc260001.tif"))
+            {
+                return this.Tiff = new SampleImage(path, 640, 480);
             }
 
             return new SampleImage(path, 0, 0);

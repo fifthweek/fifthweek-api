@@ -1,7 +1,9 @@
 ﻿namespace Fifthweek.WebJobs.Thumbnails
 {
     using System;
+    using System.Collections.Generic;
     using System.IO;
+    using System.Linq;
     using System.Threading;
     using System.Threading.Tasks;
 
@@ -17,6 +19,10 @@
     [AutoConstructor]
     public partial class ThumbnailProcessor : IThumbnailProcessor
     {
+        public const string DefaultOutputMimeType = "image/jpeg";
+        private const MagickFormat DefaultOutputFormat = MagickFormat.Jpeg;
+        private static readonly List<string> SupportedOutputMimeTypes = new List<string>{ DefaultOutputMimeType, "image/gif", "image/png" };
+
         private readonly IImageService imageService;
 
         public async Task CreateThumbnailAsync(
@@ -37,7 +43,15 @@
                         await output.FetchAttributesAsync(cancellationToken);
                     }
 
-                    output.Properties.ContentType = image.FormatInfo.MimeType;
+                    // Convert to JPEG if not a standard web format.
+                    var outputMimeType = image.FormatInfo.MimeType;
+                    if (!SupportedOutputMimeTypes.Contains(outputMimeType))
+                    {
+                        outputMimeType = DefaultOutputMimeType;
+                        image.Format = DefaultOutputFormat;
+                    }
+                    
+                    output.Properties.ContentType = outputMimeType;
 
                     using (var outputStream = await output.OpenWriteAsync(cancellationToken))
                     {

@@ -154,6 +154,48 @@
         }
 
         [TestMethod]
+        public async Task WhenCreatingThumbnailFromUnsupportedOutputFormat_ItShouldConvertToJpeg()
+        {
+            var properties = new Mock<IBlobProperties>();
+            this.output.Setup(v => v.Properties).Returns(properties.Object);
+            this.output.Setup(v => v.SetPropertiesAsync(CancellationToken.None)).Returns(Task.FromResult(0));
+
+            var outputStream = new MockCloudBlobStream();
+            this.output.Setup(v => v.OpenWriteAsync(CancellationToken.None)).ReturnsAsync(outputStream);
+
+            properties.SetupProperty(v => v.ContentType, null);
+
+            int width = -1;
+            int height = -1;
+            var format = MagickFormat.Tiff;
+            string mimeType = null;
+            this.imageService.Setup(v => v.Resize(It.IsAny<MagickImage>(), outputStream, Message.Width, Message.Height, Message.ResizeBehaviour))
+                .Callback<MagickImage, Stream, int, int, ResizeBehaviour>(
+                    (a, b, c, d, e) =>
+                    {
+                        width = a.Width;
+                        height = a.Height;
+                        format = a.Format;
+                        mimeType = a.FormatInfo.MimeType;
+                    })
+                .Verifiable();
+
+            using (var input = SampleImagesLoader.Instance.Tiff.Open())
+            {
+                await this.target.CreateThumbnailAsync(
+                        Message,
+                        input,
+                        this.output.Object,
+                        this.logger.Object,
+                        CancellationToken.None);
+            }
+
+            this.imageService.Verify();
+            Assert.AreEqual(ThumbnailProcessor.DefaultOutputMimeType, properties.Object.ContentType);
+            Assert.AreEqual(MagickFormat.Jpeg, format);
+        }
+
+        [TestMethod]
         public async Task WhenCreatingNewPoisonThumbnail_ItShouldCreateAnImage()
         {
             var mimeTypeMap = new MimeTypeMap();
