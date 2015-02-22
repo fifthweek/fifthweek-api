@@ -67,6 +67,11 @@ namespace Fifthweek.Azure
             return this.blob.SetPropertiesAsync(cancellationToken);
         }
 
+        public Task<Stream> OpenReadAsync(CancellationToken cancellationToken)
+        {
+            return this.blob.OpenReadAsync(cancellationToken);
+        }
+
         public Task<CloudBlobStream> OpenWriteAsync(CancellationToken cancellationToken)
         {
             return this.blob.OpenWriteAsync(cancellationToken);

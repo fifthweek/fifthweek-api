@@ -28,5 +28,7 @@ namespace Fifthweek.Azure
         Task<CloudBlobStream> OpenWriteAsync(CancellationToken cancellationToken);
 
         Task<bool> ExistsAsync(CancellationToken cancellationToken);
+
+        Task<Stream> OpenReadAsync(CancellationToken cancellationToken);
     }
 }

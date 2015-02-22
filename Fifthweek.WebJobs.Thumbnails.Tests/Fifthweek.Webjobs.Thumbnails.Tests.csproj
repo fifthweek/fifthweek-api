@@ -98,7 +98,7 @@
     <Compile Include="SampleImage.cs" />
     <Compile Include="SampleImagesLoader.cs" />
     <Compile Include="TestMimeTypes.cs" />
-    <Compile Include="ThumbnailFileTaskTests.cs" />
+    <Compile Include="ThumbnailSetFileTaskTests.cs" />
     <Compile Include="ThumbnailProcessorTests.cs" />
   </ItemGroup>
   <ItemGroup>

@@ -1,6 +1,10 @@
 ﻿using System;
 using System.Linq;
 
+//// Generated on 20/02/2015 15:29:49 (UTC)
+//// Mapped solution in 12.2s
+
+
 namespace Fifthweek.WebJobs.Thumbnails
 {
     using System;
@@ -14,6 +18,9 @@ namespace Fifthweek.WebJobs.Thumbnails
     using Fifthweek.Azure;
     using Fifthweek.WebJobs.Shared;
     using Microsoft.WindowsAzure.Storage.Blob;
+    using System.Collections.Generic;
+    using System.Diagnostics;
+
     public partial class ThumbnailProcessor 
     {
         public ThumbnailProcessor(
@@ -27,7 +34,7 @@ namespace Fifthweek.WebJobs.Thumbnails
             this.imageService = imageService;
         }
     }
-
 }
+
 
 

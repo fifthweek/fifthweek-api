@@ -12,16 +12,16 @@
 
     public interface IThumbnailProcessor
     {
-        Task CreateThumbnailAsync(
-            CreateThumbnailMessage thumbnail,
-            Stream input,
-            ICloudBlockBlob output,
+        Task CreateThumbnailSetAsync(
+            CreateThumbnailSetMessage message,
+            ICloudBlockBlob input,
+            ICloudStorageAccount cloudStorageAccount,
             ILogger logger,
             CancellationToken cancellationToken);
 
-        Task CreatePoisonThumbnailAsync(
-            CreateThumbnailMessage thumbnail,
-            ICloudBlockBlob output,
+        Task CreatePoisonThumbnailSetAsync(
+            CreateThumbnailSetMessage message,
+            ICloudStorageAccount cloudStorageAccount,
             ILogger logger,
             CancellationToken cancellationToken);
     }

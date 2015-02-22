@@ -16,20 +16,41 @@
         {
             this.Add(
                 FilePurposes.ProfileImage,
-                new ThumbnailFileTask(300, 300, ResizeBehaviour.CropToAspectRatio),
-                new ThumbnailFileTask(150, 150, ResizeBehaviour.CropToAspectRatio),
-                new ThumbnailFileTask(128, 128, ResizeBehaviour.CropToAspectRatio),
-                new ThumbnailFileTask(64, 64, ResizeBehaviour.CropToAspectRatio),
-                new ThumbnailFileTask(32, 32, ResizeBehaviour.CropToAspectRatio));
+                new ThumbnailSetFileTask(
+                    new Thumbnail(
+                        300, 
+                        300, 
+                        ResizeBehaviour.CropToAspectRatio, 
+                        new Thumbnail(
+                            150, 
+                            150, 
+                            ResizeBehaviour.CropToAspectRatio, 
+                            new Thumbnail(
+                                128, 
+                                128, 
+                                ResizeBehaviour.CropToAspectRatio, 
+                                new Thumbnail(
+                                    64, 
+                                    64, 
+                                    ResizeBehaviour.CropToAspectRatio,
+                                     new Thumbnail(
+                                         32, 
+                                         32, 
+                                         ResizeBehaviour.CropToAspectRatio)))))));
 
             this.Add(
                 FilePurposes.ProfileHeaderImage,
-                new ThumbnailFileTask(1500, 400, ResizeBehaviour.CropToAspectRatio),
-                new ThumbnailFileTask(480, 128, ResizeBehaviour.CropToAspectRatio));
+                new ThumbnailSetFileTask(
+                    new Thumbnail(
+                        1500, 
+                        400, 
+                        ResizeBehaviour.CropToAspectRatio,
+                        new Thumbnail(480, 128, ResizeBehaviour.CropToAspectRatio))));
 
             this.Add(
                 FilePurposes.PostImage,
-                new ThumbnailFileTask(600, 8000, ResizeBehaviour.MaintainAspectRatio));
+                new ThumbnailSetFileTask(
+                    new Thumbnail(600, 8000, ResizeBehaviour.MaintainAspectRatio)));
         }
 
         public IEnumerable<IFileTask> GetTasks(string purpose)

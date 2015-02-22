@@ -1,7 +1,9 @@
 ﻿namespace Fifthweek.WebJobs.Files
 {
     using System;
+    using System.Diagnostics;
     using System.IO;
+    using System.Net;
     using System.Threading;
     using System.Threading.Tasks;
 
@@ -39,7 +41,8 @@
             config.DashboardConnectionString = config.StorageConnectionString = AzureConfiguration.GetStorageConnectionString();
             config.Queues.BatchSize = 8;
             config.Queues.MaxDequeueCount = 3;
-            config.Queues.MaxPollingInterval = TimeSpan.FromSeconds(5);
+            config.Queues.MaxPollingInterval = TimeSpan.FromSeconds(2);
+            
             var host = new JobHost(config);
             host.RunAndBlock();
         }

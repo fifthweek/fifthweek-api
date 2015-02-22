@@ -1,6 +1,7 @@
 ﻿namespace Fifthweek.WebJobs.Files
 {
     using System;
+    using System.Diagnostics;
     using System.IO;
     using System.Threading;
     using System.Threading.Tasks;
@@ -25,7 +26,11 @@
             ILogger logger,
             CancellationToken cancellationToken)
         {
+            var sw = new Stopwatch();
+            sw.Start();
+            logger.Info("StartFileProcessor: " + sw.ElapsedMilliseconds);
             var tasks = this.filePurposeTasks.GetTasks(message.Purpose);
+            logger.Info("GetTasks: " + sw.ElapsedMilliseconds);
 
             ICloudQueue queue = null;
             foreach (var task in tasks)
@@ -33,14 +38,17 @@
                 try
                 {
                     cancellationToken.ThrowIfCancellationRequested();
+                    logger.Info("CheckCancellation: " + sw.ElapsedMilliseconds);
 
                     var queueName = task.QueueName;
                     if (queue == null || queue.Name != queueName)
                     {
                         queue = await this.cloudQueueResolver.GetQueueAsync(binder, queueName);
                     }
+                    logger.Info("GetQueue: " + sw.ElapsedMilliseconds);
 
                     await task.HandleAsync(queue, message);
+                    logger.Info("HandleTask: " + sw.ElapsedMilliseconds);
                 }
                 catch (Exception t)
                 {

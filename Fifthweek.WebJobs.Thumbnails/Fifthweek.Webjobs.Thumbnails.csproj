@@ -34,6 +34,9 @@
     <WarningLevel>4</WarningLevel>
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
+  <PropertyGroup>
+    <StartupObject />
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="Magick.NET-AnyCPU">
       <HintPath>..\packages\Magick.NET-Q16-AnyCPU.7.0.0.0008\lib\net40-client\Magick.NET-AnyCPU.dll</HintPath>

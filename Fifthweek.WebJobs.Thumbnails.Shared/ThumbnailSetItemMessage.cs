@@ -1,19 +1,17 @@
 namespace Fifthweek.WebJobs.Thumbnails.Shared
 {
+    using System.Collections.Generic;
+
     using Fifthweek.CodeGeneration;
 
     [AutoConstructor]
     [AutoEqualityMembers]
-    public partial class CreateThumbnailMessage
+    public partial class ThumbnailSetItemMessage
     {
-        public CreateThumbnailMessage()
+        public ThumbnailSetItemMessage()
         {
         }
 
-        public string ContainerName { get; set; }
-
-        public string InputBlobName { get; set; }
-        
         public string OutputBlobName { get; set; }
 
         public int Width { get; set; }
@@ -22,6 +20,7 @@ namespace Fifthweek.WebJobs.Thumbnails.Shared
 
         public ResizeBehaviour ResizeBehaviour { get; set; }
 
-        public bool Overwrite { get; set; }
+        [Optional]
+        public List<ThumbnailSetItemMessage> Children { get; set; }
     }
 }

@@ -1,6 +1,7 @@
 ﻿namespace Fifthweek.WebJobs.Thumbnails.Tests
 {
     using System;
+    using System.Collections.Generic;
     using System.Diagnostics;
     using System.Drawing;
     using System.IO;
@@ -21,40 +22,133 @@
     [TestClass]
     public class ThumbnailProcessorTests
     {
-        private static readonly CreateThumbnailMessage Message = new CreateThumbnailMessage(
-            "containerName",
-            "inputBlob",
-            "outputBlob",
-            123,
-            456,
-            ResizeBehaviour.MaintainAspectRatio,
+        private static readonly string ContainerName = "containerName";
+        private static readonly string InputBlobName = "inputBlob";
+        private static readonly string OutputBlobName = "outputBlob";
+        private static readonly string OutputBlobName2 = "outputBlob2";
+
+        private static readonly CreateThumbnailSetMessage Message = new CreateThumbnailSetMessage(
+            ContainerName,
+            InputBlobName,
+            new List<ThumbnailSetItemMessage> 
+            {
+                new ThumbnailSetItemMessage(
+                    OutputBlobName,
+                    200,
+                    100,
+                    ResizeBehaviour.MaintainAspectRatio,
+                    null)
+            },
             false);
-  
-        private static readonly CreateThumbnailMessage OverwriteMessage = new CreateThumbnailMessage(
+
+        private static readonly CreateThumbnailSetMessage OverwriteMessage = new CreateThumbnailSetMessage(
             Message.ContainerName,
             Message.InputBlobName,
-            Message.OutputBlobName,
-            Message.Width,
-            Message.Height,
-            Message.ResizeBehaviour,
+            new List<ThumbnailSetItemMessage> 
+            {
+                new ThumbnailSetItemMessage(
+                    OutputBlobName,
+                    200,
+                    100,
+                    ResizeBehaviour.MaintainAspectRatio,
+                    null)
+            },
             true);
+
+        private static readonly CreateThumbnailSetMessage MessageWithChild = new CreateThumbnailSetMessage(
+            ContainerName,
+            InputBlobName,
+            new List<ThumbnailSetItemMessage> 
+            {
+                new ThumbnailSetItemMessage(
+                    OutputBlobName,
+                    200,
+                    100,
+                    ResizeBehaviour.MaintainAspectRatio,
+                    new List<ThumbnailSetItemMessage>
+                    {
+                        new ThumbnailSetItemMessage(
+                            OutputBlobName2,
+                            100,
+                            50,
+                            ResizeBehaviour.MaintainAspectRatio,
+                            null)
+                    })
+            },
+            false);
+
+        private static readonly CreateThumbnailSetMessage MessageWithSibling = new CreateThumbnailSetMessage(
+            ContainerName,
+            InputBlobName,
+            new List<ThumbnailSetItemMessage> 
+            {
+                new ThumbnailSetItemMessage(
+                    OutputBlobName,
+                    200,
+                    100,
+                    ResizeBehaviour.MaintainAspectRatio,
+                    null),
+                new ThumbnailSetItemMessage(
+                    OutputBlobName2,
+                    100,
+                    50,
+                    ResizeBehaviour.MaintainAspectRatio,
+                    null)
+            },
+            false);
 
         private static readonly Color PoisonColor = Color.FromArgb(Color.Black.A, Color.Black.R, Color.Black.G, Color.Black.B);
 
+        private readonly MimeTypeMap mimeTypeMap = new MimeTypeMap();
+
         private Mock<IImageService> imageService;
-
         private Mock<ILogger> logger;
-
+        private Mock<ICloudStorageAccount> storageAccount;
+        private Mock<ICloudBlobClient> blobClient;
+        private Mock<ICloudBlobContainer> container;
+        private Mock<ICloudBlockBlob> input;
         private Mock<ICloudBlockBlob> output;
-
+        private Mock<ICloudBlockBlob> output2;
+        private Mock<IBlobProperties> outputProperties;
+        private Mock<IBlobProperties> outputProperties2;
+        private MockCloudBlobStream outputStream;
+        private MockCloudBlobStream outputStream2;
         private ThumbnailProcessor target;
 
         [TestInitialize]
         public void TestInitialize()
         {
             this.imageService = new Mock<IImageService>(MockBehavior.Strict);
-            this.output = new Mock<ICloudBlockBlob>();
             this.logger = new Mock<ILogger>();
+
+            this.storageAccount = new Mock<ICloudStorageAccount>();
+            this.blobClient = new Mock<ICloudBlobClient>();
+            this.container = new Mock<ICloudBlobContainer>();
+            this.output = new Mock<ICloudBlockBlob>();
+            this.output2 = new Mock<ICloudBlockBlob>();
+
+            this.input = new Mock<ICloudBlockBlob>();
+
+            this.storageAccount.Setup(v => v.CreateCloudBlobClient()).Returns(this.blobClient.Object);
+            this.blobClient.Setup(v => v.GetContainerReference(ContainerName)).Returns(this.container.Object);
+            this.container.Setup(v => v.GetBlockBlobReference(OutputBlobName)).Returns(this.output.Object);
+            this.container.Setup(v => v.GetBlockBlobReference(OutputBlobName2)).Returns(this.output2.Object);
+
+            this.outputProperties = new Mock<IBlobProperties>();
+            this.output.Setup(v => v.Properties).Returns(this.outputProperties.Object);
+            this.output.Setup(v => v.SetPropertiesAsync(CancellationToken.None)).Returns(Task.FromResult(0));
+            this.outputProperties.SetupProperty(v => v.ContentType, null);
+
+            this.outputProperties2 = new Mock<IBlobProperties>();
+            this.output2.Setup(v => v.Properties).Returns(this.outputProperties2.Object);
+            this.output2.Setup(v => v.SetPropertiesAsync(CancellationToken.None)).Returns(Task.FromResult(0));
+            this.outputProperties2.SetupProperty(v => v.ContentType, null);
+
+            this.outputStream = new MockCloudBlobStream();
+            this.output.Setup(v => v.OpenWriteAsync(CancellationToken.None)).ReturnsAsync(this.outputStream);
+
+            this.outputStream2 = new MockCloudBlobStream();
+            this.output2.Setup(v => v.OpenWriteAsync(CancellationToken.None)).ReturnsAsync(this.outputStream2);
 
             this.target = new ThumbnailProcessor(this.imageService.Object);
         }
@@ -62,20 +156,9 @@
         [TestMethod]
         public async Task WhenCreatingNewThumbnail_ItShouldResizeTheImage()
         {
-            var mimeTypeMap = new MimeTypeMap();
-
-            var properties = new Mock<IBlobProperties>();
-            this.output.Setup(v => v.Properties).Returns(properties.Object);
-            this.output.Setup(v => v.SetPropertiesAsync(CancellationToken.None)).Returns(Task.FromResult(0));
-
-            var outputStream = new MockCloudBlobStream();
-            this.output.Setup(v => v.OpenWriteAsync(CancellationToken.None)).ReturnsAsync(outputStream);
-
-            properties.SetupProperty(v => v.ContentType, null);
-
             int width = -1;
             int height = -1;
-            this.imageService.Setup(v => v.Resize(It.IsAny<MagickImage>(), outputStream, Message.Width, Message.Height, Message.ResizeBehaviour))
+            this.imageService.Setup(v => v.Resize(It.IsAny<MagickImage>(), this.outputStream, Message.Items[0].Width, Message.Items[0].Height, Message.Items[0].ResizeBehaviour))
                 .Callback<MagickImage, Stream, int, int, ResizeBehaviour>(
                     (a, b, c, d, e) =>
                     {
@@ -84,12 +167,13 @@
                     })
                 .Verifiable();
 
-            using (var input = SampleImagesLoader.Instance.LargeLandscape.Open())
+            using (var inputStream = SampleImagesLoader.Instance.LargeLandscape.Open())
             {
-                await this.target.CreateThumbnailAsync(
+                this.input.Setup(v => v.OpenReadAsync(It.IsAny<CancellationToken>())).ReturnsAsync(inputStream);
+                await this.target.CreateThumbnailSetAsync(
                         Message,
-                        input,
-                        this.output.Object,
+                        this.input.Object,
+                        this.storageAccount.Object,
                         this.logger.Object,
                         CancellationToken.None);
             }
@@ -97,55 +181,156 @@
             this.imageService.Verify();
             Assert.AreEqual(SampleImagesLoader.Instance.LargeLandscape.Width, width);
             Assert.AreEqual(SampleImagesLoader.Instance.LargeLandscape.Height, height);
-            Assert.AreEqual(mimeTypeMap.GetMimeType(Path.GetExtension(SampleImagesLoader.Instance.LargeLandscape.Path)), properties.Object.ContentType);
-            Assert.IsTrue(outputStream.IsCommitted);
+            Assert.AreEqual(this.mimeTypeMap.GetMimeType(Path.GetExtension(SampleImagesLoader.Instance.LargeLandscape.Path)), this.outputProperties.Object.ContentType);
+            Assert.IsTrue(this.outputStream.IsCommitted);
         }
 
         [TestMethod]
-        public async Task WhenCreatingExistingThumbnailWithOverwrite_ItShouldResizeTheImage()
+        public async Task WhenCreatingNewThumbnailsAsAncestors_ItShouldShareTheImageObject()
         {
-            var properties = new Mock<IBlobProperties>();
-            this.output.Setup(v => v.Properties).Returns(properties.Object);
-            this.output.Setup(v => v.SetPropertiesAsync(CancellationToken.None)).Returns(Task.FromResult(0));
+            MagickImage first = null;
+            int firstWidth = -1;
+            int firstHeight = -1;
+            var firstThumbnail = MessageWithChild.Items[0];
+            this.imageService.Setup(v => v.Resize(It.IsAny<MagickImage>(), this.outputStream, firstThumbnail.Width, firstThumbnail.Height, firstThumbnail.ResizeBehaviour))
+                .Callback<MagickImage, Stream, int, int, ResizeBehaviour>(
+                    (a, b, c, d, e) =>
+                    { 
+                        first = a;
+                        firstWidth = a.Width;
+                        firstHeight = a.Height;
+                        a.Crop(c, d);
+                    }).Verifiable();
 
-            this.output.Setup(v => v.ExistsAsync(CancellationToken.None)).ReturnsAsync(true);
+            MagickImage second = null;
+            int secondWidth = -1;
+            int secondHeight = -1;
+            var secondThumbnail = MessageWithChild.Items[0].Children[0];
+            this.imageService.Setup(v => v.Resize(It.IsAny<MagickImage>(), this.outputStream2, secondThumbnail.Width, secondThumbnail.Height, secondThumbnail.ResizeBehaviour))
+                .Callback<MagickImage, Stream, int, int, ResizeBehaviour>(
+                    (a, b, c, d, e) => 
+                    { 
+                        second = a;
+                        secondWidth = a.Width;
+                        secondHeight = a.Height;
+                        a.Crop(c, d);
+                    }).Verifiable();
 
-            var outputStream = new MockCloudBlobStream();
-            this.output.Setup(v => v.OpenWriteAsync(CancellationToken.None)).ReturnsAsync(outputStream);
-
-            MagickImage image = null;
-            this.imageService.Setup(v => v.Resize(It.IsAny<MagickImage>(), outputStream, Message.Width, Message.Height, Message.ResizeBehaviour))
-                .Callback<MagickImage, Stream, int, int, ResizeBehaviour>((a, b, c, d, e) => image = a)
-                .Verifiable();
-
-            using (var input = SampleImagesLoader.Instance.LargeLandscape.Open())
+            using (var inputStream = SampleImagesLoader.Instance.LargeLandscape.Open())
             {
-                await this.target.CreateThumbnailAsync(
-                        OverwriteMessage,
-                        input,
-                        this.output.Object,
+                this.input.Setup(v => v.OpenReadAsync(It.IsAny<CancellationToken>())).ReturnsAsync(inputStream);
+                await this.target.CreateThumbnailSetAsync(
+                        MessageWithChild,
+                        this.input.Object,
+                        this.storageAccount.Object,
                         this.logger.Object,
                         CancellationToken.None);
             }
 
             this.imageService.Verify();
-            Assert.IsTrue(outputStream.IsCommitted);
+            Assert.IsNotNull(first);
+            Assert.IsNotNull(second);
+            Assert.AreSame(first, second);
+
+            Assert.AreEqual(SampleImagesLoader.Instance.LargeLandscape.Width, firstWidth);
+            Assert.AreEqual(SampleImagesLoader.Instance.LargeLandscape.Height, firstHeight);
+            Assert.AreEqual(MessageWithChild.Items[0].Width, secondWidth);
+            Assert.AreEqual(MessageWithChild.Items[0].Height, secondHeight);
+            Assert.IsTrue(this.outputStream.IsCommitted);
+            Assert.IsTrue(this.outputStream2.IsCommitted);
+        }
+
+        [TestMethod]
+        public async Task WhenCreatingNewThumbnailsAsSiblings_ItShouldNotShareTheImageObject()
+        {
+            MagickImage first = null;
+            int firstWidth = -1;
+            int firstHeight = -1;
+            var firstThumbnail = MessageWithSibling.Items[0];
+            this.imageService.Setup(v => v.Resize(It.IsAny<MagickImage>(), this.outputStream, firstThumbnail.Width, firstThumbnail.Height, firstThumbnail.ResizeBehaviour))
+                .Callback<MagickImage, Stream, int, int, ResizeBehaviour>(
+                    (a, b, c, d, e) => 
+                    {
+                        first = a;
+                        firstWidth = a.Width;
+                        firstHeight = a.Height;
+                        a.Crop(c, d);
+                    }).Verifiable();
+
+            MagickImage second = null;
+            int secondWidth = -1;
+            int secondHeight = -1;
+            var secondThumbnail = MessageWithSibling.Items[1];
+            this.imageService.Setup(v => v.Resize(It.IsAny<MagickImage>(), this.outputStream2, secondThumbnail.Width, secondThumbnail.Height, secondThumbnail.ResizeBehaviour))
+                .Callback<MagickImage, Stream, int, int, ResizeBehaviour>(
+                    (a, b, c, d, e) => 
+                    {
+                        second = a;
+                        secondWidth = a.Width;
+                        secondHeight = a.Height;
+                        a.Crop(c, d);
+                    }).Verifiable();
+
+            using (var inputStream = SampleImagesLoader.Instance.LargeLandscape.Open())
+            {
+                this.input.Setup(v => v.OpenReadAsync(It.IsAny<CancellationToken>())).ReturnsAsync(inputStream);
+                await this.target.CreateThumbnailSetAsync(
+                        MessageWithSibling,
+                        this.input.Object,
+                        this.storageAccount.Object,
+                        this.logger.Object,
+                        CancellationToken.None);
+            }
+
+            this.imageService.Verify();
+            Assert.IsNotNull(first);
+            Assert.IsNotNull(second);
+            Assert.AreNotSame(first, second);
+            Assert.AreEqual(SampleImagesLoader.Instance.LargeLandscape.Width, firstWidth);
+            Assert.AreEqual(SampleImagesLoader.Instance.LargeLandscape.Height, firstHeight);
+            Assert.AreEqual(SampleImagesLoader.Instance.LargeLandscape.Width, secondWidth);
+            Assert.AreEqual(SampleImagesLoader.Instance.LargeLandscape.Height, secondHeight);
+            Assert.IsTrue(this.outputStream.IsCommitted);
+            Assert.IsTrue(this.outputStream2.IsCommitted);
+        }
+
+        [TestMethod]
+        public async Task WhenCreatingExistingThumbnailWithOverwrite_ItShouldResizeTheImage()
+        {
+            this.output.Setup(v => v.ExistsAsync(CancellationToken.None)).ReturnsAsync(true);
+
+            MagickImage image = null;
+            this.imageService.Setup(v => v.Resize(It.IsAny<MagickImage>(), this.outputStream, Message.Items[0].Width, Message.Items[0].Height, Message.Items[0].ResizeBehaviour))
+                .Callback<MagickImage, Stream, int, int, ResizeBehaviour>((a, b, c, d, e) => image = a)
+                .Verifiable();
+
+            using (var inputStream = SampleImagesLoader.Instance.LargeLandscape.Open())
+            {
+                this.input.Setup(v => v.OpenReadAsync(It.IsAny<CancellationToken>())).ReturnsAsync(inputStream);
+                await this.target.CreateThumbnailSetAsync(
+                        OverwriteMessage,
+                        this.input.Object,
+                        this.storageAccount.Object,
+                        this.logger.Object,
+                        CancellationToken.None);
+            }
+
+            this.imageService.Verify();
+            Assert.IsTrue(this.outputStream.IsCommitted);
         }
 
         [TestMethod]
         public async Task WhenCreatingExistingThumbnail_ItShouldNotResizeTheImage()
         {
-            var properties = new Mock<IBlobProperties>();
-            this.output.Setup(v => v.Properties).Returns(properties.Object);
-
             this.output.Setup(v => v.ExistsAsync(CancellationToken.None)).ReturnsAsync(true);
 
-            using (var input = SampleImagesLoader.Instance.LargeLandscape.Open())
+            using (var inputStream = SampleImagesLoader.Instance.LargeLandscape.Open())
             {
-                await this.target.CreateThumbnailAsync(
+                this.input.Setup(v => v.OpenReadAsync(It.IsAny<CancellationToken>())).ReturnsAsync(inputStream);
+                await this.target.CreateThumbnailSetAsync(
                         Message,
-                        input,
-                        this.output.Object,
+                        this.input.Object,
+                        this.storageAccount.Object,
                         this.logger.Object,
                         CancellationToken.None);
             }
@@ -156,20 +341,11 @@
         [TestMethod]
         public async Task WhenCreatingThumbnailFromUnsupportedOutputFormat_ItShouldConvertToJpeg()
         {
-            var properties = new Mock<IBlobProperties>();
-            this.output.Setup(v => v.Properties).Returns(properties.Object);
-            this.output.Setup(v => v.SetPropertiesAsync(CancellationToken.None)).Returns(Task.FromResult(0));
-
-            var outputStream = new MockCloudBlobStream();
-            this.output.Setup(v => v.OpenWriteAsync(CancellationToken.None)).ReturnsAsync(outputStream);
-
-            properties.SetupProperty(v => v.ContentType, null);
-
             int width = -1;
             int height = -1;
             var format = MagickFormat.Tiff;
             string mimeType = null;
-            this.imageService.Setup(v => v.Resize(It.IsAny<MagickImage>(), outputStream, Message.Width, Message.Height, Message.ResizeBehaviour))
+            this.imageService.Setup(v => v.Resize(It.IsAny<MagickImage>(), this.outputStream, Message.Items[0].Width, Message.Items[0].Height, Message.Items[0].ResizeBehaviour))
                 .Callback<MagickImage, Stream, int, int, ResizeBehaviour>(
                     (a, b, c, d, e) =>
                     {
@@ -180,45 +356,35 @@
                     })
                 .Verifiable();
 
-            using (var input = SampleImagesLoader.Instance.Tiff.Open())
+            using (var inputStream = SampleImagesLoader.Instance.Tiff.Open())
             {
-                await this.target.CreateThumbnailAsync(
+                this.input.Setup(v => v.OpenReadAsync(It.IsAny<CancellationToken>())).ReturnsAsync(inputStream);
+                await this.target.CreateThumbnailSetAsync(
                         Message,
-                        input,
-                        this.output.Object,
+                        this.input.Object,
+                        this.storageAccount.Object,
                         this.logger.Object,
                         CancellationToken.None);
             }
 
             this.imageService.Verify();
-            Assert.AreEqual(ThumbnailProcessor.DefaultOutputMimeType, properties.Object.ContentType);
+            Assert.AreEqual(ThumbnailProcessor.DefaultOutputMimeType, this.outputProperties.Object.ContentType);
             Assert.AreEqual(MagickFormat.Jpeg, format);
         }
 
         [TestMethod]
         public async Task WhenCreatingNewPoisonThumbnail_ItShouldCreateAnImage()
         {
-            var mimeTypeMap = new MimeTypeMap();
-
-            var properties = new Mock<IBlobProperties>();
-            this.output.Setup(v => v.Properties).Returns(properties.Object);
-            this.output.Setup(v => v.SetPropertiesAsync(CancellationToken.None)).Returns(Task.FromResult(0));
-
-            var outputStream = new MockCloudBlobStream();
-            this.output.Setup(v => v.OpenWriteAsync(CancellationToken.None)).ReturnsAsync(outputStream);
-
-            properties.SetupProperty(v => v.ContentType, null);
-
-            await this.target.CreatePoisonThumbnailAsync(
+            await this.target.CreatePoisonThumbnailSetAsync(
                     Message,
-                    this.output.Object,
+                    this.storageAccount.Object,
                     this.logger.Object,
                     CancellationToken.None);
 
-            Assert.AreEqual(mimeTypeMap.GetMimeType("png"), properties.Object.ContentType);
-            Assert.IsTrue(outputStream.IsCommitted);
+            Assert.AreEqual(this.mimeTypeMap.GetMimeType("png"), this.outputProperties.Object.ContentType);
+            Assert.IsTrue(this.outputStream.IsCommitted);
 
-            var imageBytes = outputStream.ToArray();
+            var imageBytes = this.outputStream.ToArray();
             Trace.WriteLine("Poison image is " + imageBytes.Length + " bytes.");
 
             using (var memoryStream = new MemoryStream(imageBytes))
@@ -233,28 +399,18 @@
         [TestMethod]
         public async Task WhenCreatingExistingPoisonThumbnailWithOverwrite_ItShouldCreateAnImage()
         {
-            var mimeTypeMap = new MimeTypeMap();
-
-            var properties = new Mock<IBlobProperties>();
-            this.output.Setup(v => v.Properties).Returns(properties.Object);
-            this.output.Setup(v => v.SetPropertiesAsync(CancellationToken.None)).Returns(Task.FromResult(0));
-
-            var outputStream = new MockCloudBlobStream();
-            this.output.Setup(v => v.OpenWriteAsync(CancellationToken.None)).ReturnsAsync(outputStream);
-
             this.output.Setup(v => v.ExistsAsync(CancellationToken.None)).ReturnsAsync(true);
-            properties.SetupProperty(v => v.ContentType, null);
 
-            await this.target.CreatePoisonThumbnailAsync(
+            await this.target.CreatePoisonThumbnailSetAsync(
                     OverwriteMessage,
-                    this.output.Object,
+                    this.storageAccount.Object,
                     this.logger.Object,
                     CancellationToken.None);
 
-            Assert.AreEqual(mimeTypeMap.GetMimeType("png"), properties.Object.ContentType);
-            Assert.IsTrue(outputStream.IsCommitted);
+            Assert.AreEqual(this.mimeTypeMap.GetMimeType("png"), this.outputProperties.Object.ContentType);
+            Assert.IsTrue(this.outputStream.IsCommitted);
 
-            var imageBytes = outputStream.ToArray();
+            var imageBytes = this.outputStream.ToArray();
             Trace.WriteLine("Poison image is " + imageBytes.Length + " bytes.");
 
             using (var memoryStream = new MemoryStream(imageBytes))
@@ -269,20 +425,14 @@
         [TestMethod]
         public async Task WhenCreatingExistingPoisonThumbnailWithNoOverwrite_ItShouldNotCreateAnImage()
         {
-            var mimeTypeMap = new MimeTypeMap();
-
-            var properties = new Mock<IBlobProperties>();
-            this.output.Setup(v => v.Properties).Returns(properties.Object);
-            this.output.Setup(v => v.SetPropertiesAsync(CancellationToken.None)).Returns(Task.FromResult(0));
-
             this.output.Setup(v => v.OpenWriteAsync(CancellationToken.None))
                 .Throws(new Exception("This should not be called"));
 
             this.output.Setup(v => v.ExistsAsync(CancellationToken.None)).ReturnsAsync(true);
 
-            await this.target.CreatePoisonThumbnailAsync(
+            await this.target.CreatePoisonThumbnailSetAsync(
                     Message,
-                    this.output.Object,
+                    this.storageAccount.Object,
                     this.logger.Object,
                     CancellationToken.None);
         }

@@ -1,15 +1,11 @@
 ﻿namespace Fifthweek.WebJobs.Thumbnails.Shared
 {
     using System;
-    using System.Threading.Tasks;
+    using System.Collections.Generic;
+    using System.Linq;
 
-    using Fifthweek.Azure;
     using Fifthweek.CodeGeneration;
     using Fifthweek.WebJobs.Files.Shared;
-
-    using Microsoft.WindowsAzure.Storage.Queue;
-
-    using Newtonsoft.Json;
 
     public enum ResizeBehaviour
     {
@@ -18,13 +14,14 @@
     }
 
     [AutoEqualityMembers]
-    public partial class ThumbnailFileTask : IFileTask
+    public partial class Thumbnail
     {
-        public ThumbnailFileTask(int width, int height, ResizeBehaviour resizeBehaviour)
+        public Thumbnail(int width, int height, ResizeBehaviour resizeBehaviour, params Thumbnail[] children)
         {
             this.Width = width;
             this.Height = height;
             this.ResizeBehaviour = resizeBehaviour;
+            this.Children = children == null ? new List<Thumbnail>() : children.ToList();
         }
 
         public int Width { get; private set; }
@@ -32,6 +29,8 @@
         public int Height { get; private set; }
 
         public ResizeBehaviour ResizeBehaviour { get; private set; }
+
+        public IReadOnlyList<Thumbnail> Children { get; private set; }
 
         [NonEquatable]
         public string QueueName
@@ -42,19 +41,16 @@
             }
         }
 
-        public Task HandleAsync(ICloudQueue cloudQueue, ProcessFileMessage message)
+        public ThumbnailSetItemMessage ToMessage(ProcessFileMessage message)
         {
-            var messageContent = new CreateThumbnailMessage(
-                message.ContainerName,
-                message.BlobName,
+            var outputMessage = new ThumbnailSetItemMessage(
                 this.GetOutputBlobName(message.BlobName),
                 this.Width,
                 this.Height,
                 this.ResizeBehaviour,
-                message.Overwrite);
+                this.Children.Select(v => v.ToMessage(message)).ToList());
 
-            var serializedContent = JsonConvert.SerializeObject(messageContent);
-            return cloudQueue.AddMessageAsync(new CloudQueueMessage(serializedContent));
+            return outputMessage;
         }
 
         private string GetOutputBlobName(string inputBlobName)
