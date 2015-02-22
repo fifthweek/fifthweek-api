@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Linq;
 
-//// Generated on 11/02/2015 17:58:01 (UTC)
-//// Mapped solution in 10.37s
+//// Generated on 22/02/2015 19:21:01 (UTC)
+//// Mapped solution in 8.15s
 
 
 namespace Fifthweek.Api.FileManagement
@@ -81,7 +81,6 @@ namespace Fifthweek.Api.FileManagement.Commands
     using Fifthweek.Api.Azure;
     using Fifthweek.Api.Core;
     using Fifthweek.Shared;
-    using Fifthweek.WebJobs.Files.Shared;
 
     public partial class CompleteFileUploadCommand 
     {
@@ -115,7 +114,6 @@ namespace Fifthweek.Api.FileManagement.Commands
     using Fifthweek.Api.Azure;
     using Fifthweek.Api.Core;
     using Fifthweek.Shared;
-    using Fifthweek.WebJobs.Files.Shared;
 
     public partial class CompleteFileUploadCommandHandler 
     {
@@ -124,9 +122,9 @@ namespace Fifthweek.Api.FileManagement.Commands
             Fifthweek.Api.FileManagement.ISetFileUploadCompleteDbStatement setFileUploadComplete,
             Fifthweek.Shared.IMimeTypeMap mimeTypeMap,
             Fifthweek.Api.Azure.IBlobService blobService,
-            Fifthweek.Api.Azure.IQueueService queueService,
             Fifthweek.Api.FileManagement.IBlobLocationGenerator blobLocationGenerator,
-            Fifthweek.Api.Identity.Shared.Membership.IRequesterSecurity requesterSecurity)
+            Fifthweek.Api.Identity.Shared.Membership.IRequesterSecurity requesterSecurity,
+            Fifthweek.Api.FileManagement.IFileProcessor fileProcessor)
         {
             if (getFileWaitingForUpload == null)
             {
@@ -148,11 +146,6 @@ namespace Fifthweek.Api.FileManagement.Commands
                 throw new ArgumentNullException("blobService");
             }
 
-            if (queueService == null)
-            {
-                throw new ArgumentNullException("queueService");
-            }
-
             if (blobLocationGenerator == null)
             {
                 throw new ArgumentNullException("blobLocationGenerator");
@@ -163,13 +156,18 @@ namespace Fifthweek.Api.FileManagement.Commands
                 throw new ArgumentNullException("requesterSecurity");
             }
 
+            if (fileProcessor == null)
+            {
+                throw new ArgumentNullException("fileProcessor");
+            }
+
             this.getFileWaitingForUpload = getFileWaitingForUpload;
             this.setFileUploadComplete = setFileUploadComplete;
             this.mimeTypeMap = mimeTypeMap;
             this.blobService = blobService;
-            this.queueService = queueService;
             this.blobLocationGenerator = blobLocationGenerator;
             this.requesterSecurity = requesterSecurity;
+            this.fileProcessor = fileProcessor;
         }
     }
 }
@@ -184,7 +182,6 @@ namespace Fifthweek.Api.FileManagement.Commands
     using Fifthweek.Api.Azure;
     using Fifthweek.Api.Core;
     using Fifthweek.Shared;
-    using Fifthweek.WebJobs.Files.Shared;
 
     public partial class InitiateFileUploadCommand 
     {
@@ -222,7 +219,6 @@ namespace Fifthweek.Api.FileManagement.Commands
     using Fifthweek.Api.Azure;
     using Fifthweek.Api.Core;
     using Fifthweek.Shared;
-    using Fifthweek.WebJobs.Files.Shared;
 
     public partial class InitiateFileUploadCommandHandler 
     {
@@ -890,6 +886,42 @@ namespace Fifthweek.Api.FileManagement.Controllers
         }
     }
 }
+namespace Fifthweek.Api.FileManagement
+{
+    using System;
+    using System.Linq;
+    using System.Threading.Tasks;
+    using Fifthweek.Api.Core;
+    using Fifthweek.Api.Identity.Shared.Membership;
+    using Fifthweek.Api.Persistence;
+    using Fifthweek.CodeGeneration;
+    using Fifthweek.Shared;
+    using Dapper;
+    using Fifthweek.Api.FileManagement.Shared;
+    using Fifthweek.Api.Azure;
+    using Fifthweek.WebJobs.GarbageCollection.Shared;
+
+    public partial class FileProcessor 
+    {
+        public FileProcessor(
+            Fifthweek.Api.FileManagement.IFilePurposeTasks filePurposeTasks,
+            Fifthweek.Api.Azure.IQueueService queueService)
+        {
+            if (filePurposeTasks == null)
+            {
+                throw new ArgumentNullException("filePurposeTasks");
+            }
+
+            if (queueService == null)
+            {
+                throw new ArgumentNullException("queueService");
+            }
+
+            this.filePurposeTasks = filePurposeTasks;
+            this.queueService = queueService;
+        }
+    }
+}
 
 namespace Fifthweek.Api.FileManagement
 {
@@ -971,7 +1003,6 @@ namespace Fifthweek.Api.FileManagement.Commands
     using Fifthweek.Api.Azure;
     using Fifthweek.Api.Core;
     using Fifthweek.Shared;
-    using Fifthweek.WebJobs.Files.Shared;
 
     public partial class CompleteFileUploadCommand 
     {
@@ -1038,7 +1069,6 @@ namespace Fifthweek.Api.FileManagement.Commands
     using Fifthweek.Api.Azure;
     using Fifthweek.Api.Core;
     using Fifthweek.Shared;
-    using Fifthweek.WebJobs.Files.Shared;
 
     public partial class InitiateFileUploadCommand 
     {
@@ -1376,6 +1406,170 @@ namespace Fifthweek.Api.FileManagement.Queries
             }
         
             if (!object.Equals(this.RequestedUserId, other.RequestedUserId))
+            {
+                return false;
+            }
+        
+            return true;
+        }
+    }
+}
+namespace Fifthweek.Api.FileManagement.FileTasks
+{
+    using System;
+    using System.Linq;
+    using System.Collections.Generic;
+    using Fifthweek.CodeGeneration;
+    using Fifthweek.WebJobs.Thumbnails.Shared;
+    using System.Threading.Tasks;
+    using Fifthweek.Api.Azure;
+
+    public partial class Thumbnail 
+    {
+        public override string ToString()
+        {
+            return string.Format("Thumbnail({0}, {1}, {2}, {3})", this.Width == null ? "null" : this.Width.ToString(), this.Height == null ? "null" : this.Height.ToString(), this.ResizeBehaviour == null ? "null" : this.ResizeBehaviour.ToString(), this.Children == null ? "null" : this.Children.ToString());
+        }
+        
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj))
+            {
+                return false;
+            }
+        
+            if (ReferenceEquals(this, obj))
+            {
+                return true;
+            }
+        
+            if (obj.GetType() != this.GetType())
+            {
+                return false;
+            }
+        
+            return this.Equals((Thumbnail)obj);
+        }
+        
+        public override int GetHashCode()
+        {
+            unchecked
+            {
+                int hashCode = 0;
+                hashCode = (hashCode * 397) ^ (this.Width != null ? this.Width.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.Height != null ? this.Height.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.ResizeBehaviour != null ? this.ResizeBehaviour.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.Children != null 
+        			? this.Children.Aggregate(0, (previous, current) => 
+        				{ 
+        				    unchecked
+        				    {
+        				        return (previous * 397) ^ (current != null ? current.GetHashCode() : 0);
+        				    }
+        				})
+        			: 0);
+                return hashCode;
+            }
+        }
+        
+        protected bool Equals(Thumbnail other)
+        {
+            if (!object.Equals(this.Width, other.Width))
+            {
+                return false;
+            }
+        
+            if (!object.Equals(this.Height, other.Height))
+            {
+                return false;
+            }
+        
+            if (!object.Equals(this.ResizeBehaviour, other.ResizeBehaviour))
+            {
+                return false;
+            }
+        
+            if (this.Children != null && other.Children != null)
+            {
+                if (!this.Children.SequenceEqual(other.Children))
+                {
+                    return false;    
+                }
+            }
+            else if (this.Children != null || other.Children != null)
+            {
+                return false;
+            }
+        
+            return true;
+        }
+    }
+}
+namespace Fifthweek.Api.FileManagement.FileTasks
+{
+    using System;
+    using System.Linq;
+    using System.Collections.Generic;
+    using Fifthweek.CodeGeneration;
+    using Fifthweek.WebJobs.Thumbnails.Shared;
+    using System.Threading.Tasks;
+    using Fifthweek.Api.Azure;
+
+    public partial class ThumbnailSetFileTask 
+    {
+        public override string ToString()
+        {
+            return string.Format("ThumbnailSetFileTask({0})", this.Items == null ? "null" : this.Items.ToString());
+        }
+        
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj))
+            {
+                return false;
+            }
+        
+            if (ReferenceEquals(this, obj))
+            {
+                return true;
+            }
+        
+            if (obj.GetType() != this.GetType())
+            {
+                return false;
+            }
+        
+            return this.Equals((ThumbnailSetFileTask)obj);
+        }
+        
+        public override int GetHashCode()
+        {
+            unchecked
+            {
+                int hashCode = 0;
+                hashCode = (hashCode * 397) ^ (this.Items != null 
+        			? this.Items.Aggregate(0, (previous, current) => 
+        				{ 
+        				    unchecked
+        				    {
+        				        return (previous * 397) ^ (current != null ? current.GetHashCode() : 0);
+        				    }
+        				})
+        			: 0);
+                return hashCode;
+            }
+        }
+        
+        protected bool Equals(ThumbnailSetFileTask other)
+        {
+            if (this.Items != null && other.Items != null)
+            {
+                if (!this.Items.SequenceEqual(other.Items))
+                {
+                    return false;    
+                }
+            }
+            else if (this.Items != null || other.Items != null)
             {
                 return false;
             }

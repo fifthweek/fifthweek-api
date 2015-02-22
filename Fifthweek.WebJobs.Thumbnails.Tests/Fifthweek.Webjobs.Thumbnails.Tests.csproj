@@ -98,7 +98,6 @@
     <Compile Include="SampleImage.cs" />
     <Compile Include="SampleImagesLoader.cs" />
     <Compile Include="TestMimeTypes.cs" />
-    <Compile Include="ThumbnailSetFileTaskTests.cs" />
     <Compile Include="ThumbnailProcessorTests.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -356,10 +355,6 @@
     <ProjectReference Include="..\Fifthweek.Shared\Fifthweek.Shared.csproj">
       <Project>{6D12FFBB-38E9-4722-A690-0F0338538EBC}</Project>
       <Name>Fifthweek.Shared</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Fifthweek.WebJobs.Files.Shared\Fifthweek.WebJobs.Files.Shared.csproj">
-      <Project>{227AE1D7-E7A5-44A2-87CC-82EB29033B0D}</Project>
-      <Name>Fifthweek.WebJobs.Files.Shared</Name>
     </ProjectReference>
     <ProjectReference Include="..\Fifthweek.WebJobs.Shared\Fifthweek.WebJobs.Shared.csproj">
       <Project>{EFBACD48-98A1-4FA3-9BEA-E13414141484}</Project>

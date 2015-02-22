@@ -20,10 +20,6 @@
     {
         private static readonly IThumbnailProcessor ThumbnailProcessor = new ThumbnailProcessor(new ImageService());
 
-        public static void Include()
-        {
-        }
-
         public static Task CreateThumbnailSetAsync(
             [QueueTrigger(Constants.ThumbnailsQueueName)] CreateThumbnailSetMessage message,
             [Blob("{ContainerName}/{InputBlobName}")] CloudBlockBlob input,
@@ -66,7 +62,6 @@
             config.Queues.MaxDequeueCount = 3;
             config.Queues.MaxPollingInterval = TimeSpan.FromSeconds(2);
             var host = new JobHost(config);
-            host.
             host.RunAndBlock();
         }
     }

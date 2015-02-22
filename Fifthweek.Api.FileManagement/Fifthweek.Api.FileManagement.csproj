@@ -101,8 +101,15 @@
   <ItemGroup>
     <Compile Include="AddNewFileDbStatement.cs" />
     <Compile Include="Controllers\UserAccessSignaturesController.cs" />
+    <Compile Include="FileProcessor.cs" />
+    <Compile Include="FilePurposeTasks.cs" />
+    <Compile Include="FileTasks\IFileTask.cs" />
+    <Compile Include="FileTasks\Thumbnail.cs" />
+    <Compile Include="FileTasks\ThumbnailSetFileTask.cs" />
     <Compile Include="GetFileWaitingForUploadDbStatement.cs" />
     <Compile Include="IAddNewFileDbStatement.cs" />
+    <Compile Include="IFileProcessor.cs" />
+    <Compile Include="IFilePurposeTasks.cs" />
     <Compile Include="IGetFileWaitingForUploadDbStatement.cs" />
     <Compile Include="ISetFileUploadCompleteDbStatement.cs" />
     <Compile Include="Queries\GetUserAccessSignaturesQueryHandler.cs" />
@@ -174,13 +181,13 @@
       <Project>{6D12FFBB-38E9-4722-A690-0F0338538EBC}</Project>
       <Name>Fifthweek.Shared</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Fifthweek.WebJobs.Files.Shared\Fifthweek.WebJobs.Files.Shared.csproj">
-      <Project>{227AE1D7-E7A5-44A2-87CC-82EB29033B0D}</Project>
-      <Name>Fifthweek.WebJobs.Files.Shared</Name>
-    </ProjectReference>
     <ProjectReference Include="..\Fifthweek.WebJobs.GarbageCollection.Shared\Fifthweek.WebJobs.GarbageCollection.Shared.csproj">
       <Project>{6328c758-26d7-4fb4-a626-d8aad17435fd}</Project>
       <Name>Fifthweek.WebJobs.GarbageCollection.Shared</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Fifthweek.WebJobs.Thumbnails.Shared\Fifthweek.WebJobs.Thumbnails.Shared.csproj">
+      <Project>{36D94253-0A3D-4062-9FB9-635B402C68C6}</Project>
+      <Name>Fifthweek.WebJobs.Thumbnails.Shared</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

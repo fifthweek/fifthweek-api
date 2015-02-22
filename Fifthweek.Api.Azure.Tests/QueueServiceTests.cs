@@ -4,7 +4,6 @@
     using System.Threading.Tasks;
 
     using Fifthweek.Azure;
-    using Fifthweek.WebJobs.Files.Shared;
 
     using Microsoft.VisualStudio.TestTools.UnitTesting;
     using Microsoft.WindowsAzure.Storage.Queue;

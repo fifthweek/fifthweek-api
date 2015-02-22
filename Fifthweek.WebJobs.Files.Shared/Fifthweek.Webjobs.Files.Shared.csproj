@@ -66,14 +66,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ClassAugmentation.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>ClassAugmentation.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Constants.cs" />
     <Compile Include="IFileTask.cs" />
-    <Compile Include="ProcessFileMessage.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -92,10 +85,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
-    <None Include="ClassAugmentation.tt">
-      <Generator>TextTemplatingFileGenerator</Generator>
-      <LastGenOutput>ClassAugmentation.cs</LastGenOutput>
-    </None>
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>

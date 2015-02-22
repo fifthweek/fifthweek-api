@@ -98,10 +98,6 @@
       <Project>{890CD4C4-993F-482D-BBB5-A50767ACE55B}</Project>
       <Name>Fifthweek.Azure</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Fifthweek.WebJobs.Files.Shared\Fifthweek.WebJobs.Files.Shared.csproj">
-      <Project>{227ae1d7-e7a5-44a2-87cc-82eb29033b0d}</Project>
-      <Name>Fifthweek.WebJobs.Files.Shared</Name>
-    </ProjectReference>
   </ItemGroup>
   <Choose>
     <When Condition="'$(VisualStudioVersion)' == '10.0' And '$(IsCodedUITest)' == 'True'">

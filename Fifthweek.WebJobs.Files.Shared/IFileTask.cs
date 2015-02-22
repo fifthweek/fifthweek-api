@@ -6,8 +6,6 @@
 
     public interface IFileTask
     {
-        string QueueName { get; }
-
-        Task HandleAsync(ICloudQueue cloudQueue, ProcessFileMessage message);
+        Task HandleAsync(string containerName, string blobName, string filePurpose);
     }
 }

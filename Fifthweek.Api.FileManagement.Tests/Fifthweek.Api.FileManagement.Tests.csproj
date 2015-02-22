@@ -119,6 +119,9 @@
     <Compile Include="Commands\CompleteFileUploadCommandHandlerTests.cs" />
     <Compile Include="Controllers\FileUploadControllerTests.cs" />
     <Compile Include="Controllers\GetUserAccessSignaturesControllerTests.cs" />
+    <Compile Include="FileProcessorTests.cs" />
+    <Compile Include="FilePurposeTasksTests.cs" />
+    <Compile Include="FileTasks\ThumbnailSetFileTaskTests.cs" />
     <Compile Include="GetFileExtensionDbStatementTests.cs" />
     <Compile Include="FileSecurityTests.cs" />
     <Compile Include="GetFileWaitingForUploadDbStatementTests.cs" />
@@ -171,13 +174,13 @@
       <Project>{85691D93-9C0C-498B-8341-1990BC8E24B2}</Project>
       <Name>Fifthweek.Tests.Shared</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Fifthweek.WebJobs.Files.Shared\Fifthweek.WebJobs.Files.Shared.csproj">
-      <Project>{227AE1D7-E7A5-44A2-87CC-82EB29033B0D}</Project>
-      <Name>Fifthweek.WebJobs.Files.Shared</Name>
-    </ProjectReference>
     <ProjectReference Include="..\Fifthweek.WebJobs.GarbageCollection.Shared\Fifthweek.WebJobs.GarbageCollection.Shared.csproj">
       <Project>{6328c758-26d7-4fb4-a626-d8aad17435fd}</Project>
       <Name>Fifthweek.WebJobs.GarbageCollection.Shared</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Fifthweek.WebJobs.Thumbnails.Shared\Fifthweek.WebJobs.Thumbnails.Shared.csproj">
+      <Project>{36d94253-0a3d-4062-9fb9-635b402c68c6}</Project>
+      <Name>Fifthweek.WebJobs.Thumbnails.Shared</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

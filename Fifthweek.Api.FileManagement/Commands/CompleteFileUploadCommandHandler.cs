@@ -8,7 +8,6 @@
     using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.CodeGeneration;
     using Fifthweek.Shared;
-    using Fifthweek.WebJobs.Files.Shared;
 
     [AutoConstructor]
     public partial class CompleteFileUploadCommandHandler : ICommandHandler<CompleteFileUploadCommand>
@@ -17,9 +16,9 @@
         private readonly ISetFileUploadCompleteDbStatement setFileUploadComplete;
         private readonly IMimeTypeMap mimeTypeMap;
         private readonly IBlobService blobService;
-        private readonly IQueueService queueService;
         private readonly IBlobLocationGenerator blobLocationGenerator;
         private readonly IRequesterSecurity requesterSecurity;
+        private readonly IFileProcessor fileProcessor;
         
         public async Task HandleAsync(CompleteFileUploadCommand command)
         {
@@ -37,8 +36,7 @@
 
             await this.setFileUploadComplete.ExecuteAsync(command.FileId, blobLength, DateTime.UtcNow);
 
-            var messageContent = new ProcessFileMessage(blobLocation.ContainerName, blobLocation.BlobName, file.Purpose, false);
-            await this.queueService.AddMessageToQueueAsync(WebJobs.Files.Shared.Constants.FilesQueueName, messageContent);
+            await this.fileProcessor.ProcessFileAsync(blobLocation.ContainerName, blobLocation.BlobName, file.Purpose);
         }
     }
 }

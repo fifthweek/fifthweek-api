@@ -1,17 +1,11 @@
-﻿namespace Fifthweek.WebJobs.Thumbnails.Shared
+﻿namespace Fifthweek.Api.FileManagement.FileTasks
 {
     using System;
     using System.Collections.Generic;
     using System.Linq;
 
     using Fifthweek.CodeGeneration;
-    using Fifthweek.WebJobs.Files.Shared;
-
-    public enum ResizeBehaviour
-    {
-        CropToAspectRatio,
-        MaintainAspectRatio,
-    }
+    using Fifthweek.WebJobs.Thumbnails.Shared;
 
     [AutoEqualityMembers]
     public partial class Thumbnail
@@ -41,14 +35,14 @@
             }
         }
 
-        public ThumbnailSetItemMessage ToMessage(ProcessFileMessage message)
+        public ThumbnailSetItemMessage ToMessage(string blobName)
         {
             var outputMessage = new ThumbnailSetItemMessage(
-                this.GetOutputBlobName(message.BlobName),
+                this.GetOutputBlobName(blobName),
                 this.Width,
                 this.Height,
                 this.ResizeBehaviour,
-                this.Children.Select(v => v.ToMessage(message)).ToList());
+                this.Children.Select(v => v.ToMessage(blobName)).ToList());
 
             return outputMessage;
         }

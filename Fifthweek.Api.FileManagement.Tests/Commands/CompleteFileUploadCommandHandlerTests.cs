@@ -11,7 +11,6 @@
     using Fifthweek.Api.Identity.Tests.Shared.Membership;
     using Fifthweek.Shared;
     using Fifthweek.Tests.Shared;
-    using Fifthweek.WebJobs.Files.Shared;
 
     using Microsoft.VisualStudio.TestTools.UnitTesting;
 
@@ -34,9 +33,9 @@
         private Mock<ISetFileUploadCompleteDbStatement> setFileUploadComplete;
         private Mock<IMimeTypeMap> mimeTypeMap;
         private Mock<IBlobService> blobService;
-        private Mock<IQueueService> queueService;
         private Mock<IBlobLocationGenerator> blobNameCreator;
         private Mock<IRequesterSecurity> requesterSecurity;
+        private Mock<IFileProcessor> fileProcessor;
 
         private CompleteFileUploadCommandHandler handler;
 
@@ -51,16 +50,16 @@
             // Give side-effecting components strict mock behaviour.
             this.setFileUploadComplete = new Mock<ISetFileUploadCompleteDbStatement>(MockBehavior.Strict);
             this.blobService = new Mock<IBlobService>(MockBehavior.Strict);
-            this.queueService = new Mock<IQueueService>(MockBehavior.Strict);
+            this.fileProcessor = new Mock<IFileProcessor>(MockBehavior.Strict);
 
             this.handler = new CompleteFileUploadCommandHandler(
                 this.getFileWaitingForUpload.Object,
                 this.setFileUploadComplete.Object,
                 this.mimeTypeMap.Object,
                 this.blobService.Object,
-                this.queueService.Object,
                 this.blobNameCreator.Object,
-                this.requesterSecurity.Object);
+                this.requesterSecurity.Object,
+                this.fileProcessor.Object);
 
             this.requesterSecurity.SetupFor(Requester);
         }
@@ -102,7 +101,7 @@
                 .Returns(Task.FromResult(0))
                 .Verifiable();
 
-            this.queueService.Setup(v => v.AddMessageToQueueAsync(WebJobs.Files.Shared.Constants.FilesQueueName, new ProcessFileMessage(ContainerName, BlobName, Purpose, false)))
+            this.fileProcessor.Setup(v => v.ProcessFileAsync(ContainerName, BlobName, Purpose))
                 .Returns(Task.FromResult(0))
                 .Verifiable();
 
@@ -110,7 +109,7 @@
 
             this.setFileUploadComplete.Verify();
             this.blobService.Verify();
-            this.queueService.Verify();
+            this.fileProcessor.Verify();
         }
     }
 }

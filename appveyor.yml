@@ -16,7 +16,6 @@ build_script:
   - msbuild.exe "%APPVEYOR_BUILD_FOLDER%\Fifthweek.sln" /t:Clean /p:Configuration=Release
   - msbuild.exe "%APPVEYOR_BUILD_FOLDER%\Fifthweek.sln" /t:Clean /p:Configuration=Debug
   - msbuild.exe "%APPVEYOR_BUILD_FOLDER%\Fifthweek.sln" /t:Build /p:Configuration=Release
-  - xcopy /e /h "%APPVEYOR_BUILD_FOLDER%\Fifthweek.WebJobs.Files\bin\Release" "%WEBJOBS_DEPLOYMENT_TEMP%\files\"
   - xcopy /e /h "%APPVEYOR_BUILD_FOLDER%\Fifthweek.WebJobs.Thumbnails\bin\Release" "%WEBJOBS_DEPLOYMENT_TEMP%\thumbnails\"
   - xcopy /e /h "%APPVEYOR_BUILD_FOLDER%\Fifthweek.WebJobs.GarbageCollection\bin\Release" "%WEBJOBS_DEPLOYMENT_TEMP%\garbage-collection\"
   - msbuild.exe "%APPVEYOR_BUILD_FOLDER%\Fifthweek.Api\Fifthweek.Api.csproj" /nologo /verbosity:m /t:Build /t:pipelinePreDeployCopyAllFilesToOneFolder /p:_PackageTempDir="%API_DEPLOYMENT_TEMP%";AutoParameterizationWebConfigConnectionStrings=false;Configuration=Release /p:SolutionDir="%APPVEYOR_BUILD_FOLDER%\.\\"
