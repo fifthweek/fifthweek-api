@@ -48,12 +48,22 @@
                         1500, 
                         400, 
                         ResizeBehaviour.CropToAspectRatio,
-                        new Thumbnail(480, 128, ResizeBehaviour.CropToAspectRatio))));
+                        new Thumbnail(
+                            480, 
+                            128, 
+                            ResizeBehaviour.CropToAspectRatio))));
 
             this.Add(
                 FilePurposes.PostImage,
                 new ThumbnailSetFileTask(
-                    new Thumbnail(600, 8000, ResizeBehaviour.MaintainAspectRatio)));
+                    new Thumbnail(
+                        600, 
+                        8000, 
+                        ResizeBehaviour.MaintainAspectRatio,
+                        new Thumbnail(
+                            300, 
+                            300, 
+                            ResizeBehaviour.MaintainAspectRatio))));
         }
 
         public IEnumerable<IFileTask> GetTasks(string purpose)
