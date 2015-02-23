@@ -27,7 +27,7 @@
         private readonly IImageService imageService;
 
         public async Task CreateThumbnailSetAsync(
-            CreateThumbnailSetMessage message,
+            CreateThumbnailsMessage message,
             ICloudBlockBlob input,
             ICloudStorageAccount cloudStorageAccount,
             ILogger logger,
@@ -77,7 +77,7 @@
         }
 
         public async Task CreatePoisonThumbnailSetAsync(
-            CreateThumbnailSetMessage message,
+            CreateThumbnailsMessage message,
             ICloudStorageAccount cloudStorageAccount,
             ILogger logger,
             CancellationToken cancellationToken)
@@ -122,8 +122,8 @@
         }
 
         private async Task ProcessThumbnailItems(
-            List<ThumbnailSetItemMessage> items, 
-            Dictionary<ThumbnailSetItemMessage, ThumbnailSetItemData> cache, 
+            List<ThumbnailDefinition> items, 
+            Dictionary<ThumbnailDefinition, ThumbnailSetItemData> cache, 
             MagickImage image, 
             JobData jobData, 
             CancellationToken cancellationToken)
@@ -160,19 +160,19 @@
             }
         }
 
-        private Dictionary<ThumbnailSetItemMessage, ThumbnailSetItemData> GetItemsCache(CreateThumbnailSetMessage message, ICloudStorageAccount cloudStorageAccount)
+        private Dictionary<ThumbnailDefinition, ThumbnailSetItemData> GetItemsCache(CreateThumbnailsMessage message, ICloudStorageAccount cloudStorageAccount)
         {
             var client = cloudStorageAccount.CreateCloudBlobClient();
             var container = client.GetContainerReference(message.ContainerName);
-            var cache = new Dictionary<ThumbnailSetItemMessage, ThumbnailSetItemData>();
+            var cache = new Dictionary<ThumbnailDefinition, ThumbnailSetItemData>();
             this.GetItemsCache(container, cache, message.Items);
             return cache;
         }
 
         private void GetItemsCache(
             ICloudBlobContainer container,
-            Dictionary<ThumbnailSetItemMessage, ThumbnailSetItemData> data,
-            IEnumerable<ThumbnailSetItemMessage> items)
+            Dictionary<ThumbnailDefinition, ThumbnailSetItemData> data,
+            IEnumerable<ThumbnailDefinition> items)
         {
             if (items == null)
             {
@@ -187,7 +187,7 @@
             }
         }
 
-        private async Task PopulateExists(CreateThumbnailSetMessage message, CancellationToken cancellationToken, Dictionary<ThumbnailSetItemMessage, ThumbnailSetItemData> cache)
+        private async Task PopulateExists(CreateThumbnailsMessage message, CancellationToken cancellationToken, Dictionary<ThumbnailDefinition, ThumbnailSetItemData> cache)
         {
             foreach (var item in cache.Values)
             {

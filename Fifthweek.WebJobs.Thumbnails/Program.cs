@@ -21,7 +21,7 @@
         private static readonly IThumbnailProcessor ThumbnailProcessor = new ThumbnailProcessor(new ImageService());
 
         public static Task CreateThumbnailSetAsync(
-            [QueueTrigger(Constants.ThumbnailsQueueName)] CreateThumbnailSetMessage message,
+            [QueueTrigger(Constants.ThumbnailsQueueName)] CreateThumbnailsMessage message,
             [Blob("{ContainerName}/{InputBlobName}")] CloudBlockBlob input,
             CloudStorageAccount cloudStorageAccount,
             TextWriter logger,
@@ -36,7 +36,7 @@
         }
 
         public static Task ProcessPoisonMessage(
-            [QueueTrigger(Constants.ThumbnailsQueueName + "-poison")] CreateThumbnailSetMessage message,
+            [QueueTrigger(Constants.ThumbnailsQueueName + "-poison")] CreateThumbnailsMessage message,
             CloudStorageAccount cloudStorageAccount,
             TextWriter logger,
             CancellationToken cancellationToken)

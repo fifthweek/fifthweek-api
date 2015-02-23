@@ -8,7 +8,6 @@
     using Fifthweek.WebJobs.Thumbnails.Shared;
 
     using Thumbnail = Fifthweek.Api.FileManagement.FileTasks.Thumbnail;
-    using ThumbnailSetFileTask = Fifthweek.Api.FileManagement.FileTasks.ThumbnailSetFileTask;
 
     public class FilePurposeTasks : IFilePurposeTasks
     {
@@ -19,7 +18,7 @@
         {
             this.Add(
                 FilePurposes.ProfileImage,
-                new ThumbnailSetFileTask(
+                new CreateThumbnailsTask(
                     new Thumbnail(
                         300, 
                         300, 
@@ -43,7 +42,7 @@
 
             this.Add(
                 FilePurposes.ProfileHeaderImage,
-                new ThumbnailSetFileTask(
+                new CreateThumbnailsTask(
                     new Thumbnail(
                         1500, 
                         400, 
@@ -55,7 +54,7 @@
 
             this.Add(
                 FilePurposes.PostImage,
-                new ThumbnailSetFileTask(
+                new CreateThumbnailsTask(
                     new Thumbnail(
                         600, 
                         8000, 

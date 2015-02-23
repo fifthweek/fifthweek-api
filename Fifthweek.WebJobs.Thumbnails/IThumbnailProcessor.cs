@@ -13,14 +13,14 @@
     public interface IThumbnailProcessor
     {
         Task CreateThumbnailSetAsync(
-            CreateThumbnailSetMessage message,
+            CreateThumbnailsMessage message,
             ICloudBlockBlob input,
             ICloudStorageAccount cloudStorageAccount,
             ILogger logger,
             CancellationToken cancellationToken);
 
         Task CreatePoisonThumbnailSetAsync(
-            CreateThumbnailSetMessage message,
+            CreateThumbnailsMessage message,
             ICloudStorageAccount cloudStorageAccount,
             ILogger logger,
             CancellationToken cancellationToken);

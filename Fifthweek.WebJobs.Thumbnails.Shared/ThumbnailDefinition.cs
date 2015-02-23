@@ -6,9 +6,9 @@ namespace Fifthweek.WebJobs.Thumbnails.Shared
 
     [AutoConstructor]
     [AutoEqualityMembers]
-    public partial class ThumbnailSetItemMessage
+    public partial class ThumbnailDefinition
     {
-        public ThumbnailSetItemMessage()
+        public ThumbnailDefinition()
         {
         }
 
@@ -21,6 +21,6 @@ namespace Fifthweek.WebJobs.Thumbnails.Shared
         public ResizeBehaviour ResizeBehaviour { get; set; }
 
         [Optional]
-        public List<ThumbnailSetItemMessage> Children { get; set; }
+        public List<ThumbnailDefinition> Children { get; set; }
     }
 }

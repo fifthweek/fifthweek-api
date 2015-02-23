@@ -6,9 +6,9 @@ namespace Fifthweek.WebJobs.Thumbnails.Shared
 
     [AutoConstructor]
     [AutoEqualityMembers]
-    public partial class CreateThumbnailSetMessage
+    public partial class CreateThumbnailsMessage
     {
-        public CreateThumbnailSetMessage()
+        public CreateThumbnailsMessage()
         {
         }
 
@@ -17,7 +17,7 @@ namespace Fifthweek.WebJobs.Thumbnails.Shared
         public string InputBlobName { get; set; }
 
         [Optional]
-        public List<ThumbnailSetItemMessage> Items { get; set; }
+        public List<ThumbnailDefinition> Items { get; set; }
    
         public bool Overwrite { get; set; }
     }

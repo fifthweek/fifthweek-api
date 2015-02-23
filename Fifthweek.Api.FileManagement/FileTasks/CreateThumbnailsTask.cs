@@ -9,9 +9,9 @@
     using Fifthweek.WebJobs.Thumbnails.Shared;
 
     [AutoEqualityMembers]
-    public partial class ThumbnailSetFileTask : IFileTask
+    public partial class CreateThumbnailsTask : IFileTask
     {
-        public ThumbnailSetFileTask(params Thumbnail[] items)
+        public CreateThumbnailsTask(params Thumbnail[] items)
         {
             this.Items = items == null ? new List<Thumbnail>() : items.ToList();
         }
@@ -20,7 +20,7 @@
 
         public async Task HandleAsync(IQueueService queueService, string containerName, string blobName, string filePurpose)
         {
-            var outputMessage = new CreateThumbnailSetMessage(
+            var outputMessage = new CreateThumbnailsMessage(
                 containerName,
                 blobName,
                 this.Items.Select(v => v.ToMessage(blobName)).ToList(),

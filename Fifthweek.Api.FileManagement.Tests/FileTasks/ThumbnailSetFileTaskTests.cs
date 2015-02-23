@@ -32,13 +32,13 @@
         [TestMethod]
         public async Task WhenMaintainingAspectRatio_TestHandleAsync()
         {
-            CreateThumbnailSetMessage outputMessage = null;
+            CreateThumbnailsMessage outputMessage = null;
 
-            this.queueService.Setup(v => v.AddMessageToQueueAsync(Constants.ThumbnailsQueueName, It.IsAny<CreateThumbnailSetMessage>()))
-                .Callback<string, CreateThumbnailSetMessage>((s, v) => outputMessage = v)
+            this.queueService.Setup(v => v.AddMessageToQueueAsync(Constants.ThumbnailsQueueName, It.IsAny<CreateThumbnailsMessage>()))
+                .Callback<string, CreateThumbnailsMessage>((s, v) => outputMessage = v)
                 .Returns(Task.FromResult(0));
 
-            var target = new ThumbnailSetFileTask(new Thumbnail(1000, 1000, ResizeBehaviour.MaintainAspectRatio));
+            var target = new CreateThumbnailsTask(new Thumbnail(1000, 1000, ResizeBehaviour.MaintainAspectRatio));
             await target.HandleAsync(this.queueService.Object, ContainerName, BlobName, FilePurpose);
 
             Assert.AreEqual(ContainerName, outputMessage.ContainerName);
@@ -53,13 +53,13 @@
         [TestMethod]
         public async Task WhenCropping_TestHandleAsync()
         {
-            CreateThumbnailSetMessage outputMessage = null;
+            CreateThumbnailsMessage outputMessage = null;
 
-            this.queueService.Setup(v => v.AddMessageToQueueAsync(Constants.ThumbnailsQueueName, It.IsAny<CreateThumbnailSetMessage>()))
-                .Callback<string, CreateThumbnailSetMessage>((s, v) => outputMessage = v)
+            this.queueService.Setup(v => v.AddMessageToQueueAsync(Constants.ThumbnailsQueueName, It.IsAny<CreateThumbnailsMessage>()))
+                .Callback<string, CreateThumbnailsMessage>((s, v) => outputMessage = v)
                 .Returns(Task.FromResult(0));
 
-            var target = new ThumbnailSetFileTask(new Thumbnail(1000, 1000, ResizeBehaviour.CropToAspectRatio));
+            var target = new CreateThumbnailsTask(new Thumbnail(1000, 1000, ResizeBehaviour.CropToAspectRatio));
             await target.HandleAsync(this.queueService.Object, ContainerName, BlobName, FilePurpose);
 
             Assert.AreEqual(ContainerName, outputMessage.ContainerName);

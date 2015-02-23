@@ -35,9 +35,9 @@
             }
         }
 
-        public ThumbnailSetItemMessage ToMessage(string blobName)
+        public ThumbnailDefinition ToMessage(string blobName)
         {
-            var outputMessage = new ThumbnailSetItemMessage(
+            var outputMessage = new ThumbnailDefinition(
                 this.GetOutputBlobName(blobName),
                 this.Width,
                 this.Height,

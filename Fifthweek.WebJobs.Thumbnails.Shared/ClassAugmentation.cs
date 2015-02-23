@@ -10,12 +10,12 @@ namespace Fifthweek.WebJobs.Thumbnails.Shared
     using System.Collections.Generic;
     using Fifthweek.CodeGeneration;
 
-    public partial class CreateThumbnailSetMessage 
+    public partial class CreateThumbnailsMessage 
     {
-        public CreateThumbnailSetMessage(
+        public CreateThumbnailsMessage(
             System.String containerName,
             System.String inputBlobName,
-            System.Collections.Generic.List<Fifthweek.WebJobs.Thumbnails.Shared.ThumbnailSetItemMessage> items,
+            System.Collections.Generic.List<Fifthweek.WebJobs.Thumbnails.Shared.ThumbnailDefinition> items,
             System.Boolean overwrite)
         {
             if (containerName == null)
@@ -45,14 +45,14 @@ namespace Fifthweek.WebJobs.Thumbnails.Shared
     using System.Collections.Generic;
     using Fifthweek.CodeGeneration;
 
-    public partial class ThumbnailSetItemMessage 
+    public partial class ThumbnailDefinition 
     {
-        public ThumbnailSetItemMessage(
+        public ThumbnailDefinition(
             System.String outputBlobName,
             System.Int32 width,
             System.Int32 height,
             Fifthweek.WebJobs.Thumbnails.Shared.ResizeBehaviour resizeBehaviour,
-            System.Collections.Generic.List<Fifthweek.WebJobs.Thumbnails.Shared.ThumbnailSetItemMessage> children)
+            System.Collections.Generic.List<Fifthweek.WebJobs.Thumbnails.Shared.ThumbnailDefinition> children)
         {
             if (outputBlobName == null)
             {
@@ -88,7 +88,7 @@ namespace Fifthweek.WebJobs.Thumbnails.Shared
     using System.Collections.Generic;
     using Fifthweek.CodeGeneration;
 
-    public partial class CreateThumbnailSetMessage 
+    public partial class CreateThumbnailsMessage 
     {
         public override string ToString()
         {
@@ -112,7 +112,7 @@ namespace Fifthweek.WebJobs.Thumbnails.Shared
                 return false;
             }
         
-            return this.Equals((CreateThumbnailSetMessage)obj);
+            return this.Equals((CreateThumbnailsMessage)obj);
         }
         
         public override int GetHashCode()
@@ -136,7 +136,7 @@ namespace Fifthweek.WebJobs.Thumbnails.Shared
             }
         }
         
-        protected bool Equals(CreateThumbnailSetMessage other)
+        protected bool Equals(CreateThumbnailsMessage other)
         {
             if (!object.Equals(this.ContainerName, other.ContainerName))
             {
@@ -174,7 +174,7 @@ namespace Fifthweek.WebJobs.Thumbnails.Shared
     using System.Collections.Generic;
     using Fifthweek.CodeGeneration;
 
-    public partial class ThumbnailSetItemMessage 
+    public partial class ThumbnailDefinition 
     {
         public override string ToString()
         {
@@ -198,7 +198,7 @@ namespace Fifthweek.WebJobs.Thumbnails.Shared
                 return false;
             }
         
-            return this.Equals((ThumbnailSetItemMessage)obj);
+            return this.Equals((ThumbnailDefinition)obj);
         }
         
         public override int GetHashCode()
@@ -223,7 +223,7 @@ namespace Fifthweek.WebJobs.Thumbnails.Shared
             }
         }
         
-        protected bool Equals(ThumbnailSetItemMessage other)
+        protected bool Equals(ThumbnailDefinition other)
         {
             if (!object.Equals(this.OutputBlobName, other.OutputBlobName))
             {

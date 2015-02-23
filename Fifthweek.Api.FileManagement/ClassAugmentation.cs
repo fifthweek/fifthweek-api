@@ -1515,7 +1515,7 @@ namespace Fifthweek.Api.FileManagement.FileTasks
     using System.Threading.Tasks;
     using Fifthweek.Api.Azure;
 
-    public partial class ThumbnailSetFileTask 
+    public partial class CreateThumbnailsTask 
     {
         public override string ToString()
         {
@@ -1539,7 +1539,7 @@ namespace Fifthweek.Api.FileManagement.FileTasks
                 return false;
             }
         
-            return this.Equals((ThumbnailSetFileTask)obj);
+            return this.Equals((CreateThumbnailsTask)obj);
         }
         
         public override int GetHashCode()
@@ -1560,7 +1560,7 @@ namespace Fifthweek.Api.FileManagement.FileTasks
             }
         }
         
-        protected bool Equals(ThumbnailSetFileTask other)
+        protected bool Equals(CreateThumbnailsTask other)
         {
             if (this.Items != null && other.Items != null)
             {

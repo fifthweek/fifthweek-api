@@ -27,12 +27,12 @@
         private static readonly string OutputBlobName = "outputBlob";
         private static readonly string OutputBlobName2 = "outputBlob2";
 
-        private static readonly CreateThumbnailSetMessage Message = new CreateThumbnailSetMessage(
+        private static readonly CreateThumbnailsMessage Message = new CreateThumbnailsMessage(
             ContainerName,
             InputBlobName,
-            new List<ThumbnailSetItemMessage> 
+            new List<ThumbnailDefinition> 
             {
-                new ThumbnailSetItemMessage(
+                new ThumbnailDefinition(
                     OutputBlobName,
                     200,
                     100,
@@ -41,12 +41,12 @@
             },
             false);
 
-        private static readonly CreateThumbnailSetMessage OverwriteMessage = new CreateThumbnailSetMessage(
+        private static readonly CreateThumbnailsMessage OverwriteMessage = new CreateThumbnailsMessage(
             Message.ContainerName,
             Message.InputBlobName,
-            new List<ThumbnailSetItemMessage> 
+            new List<ThumbnailDefinition> 
             {
-                new ThumbnailSetItemMessage(
+                new ThumbnailDefinition(
                     OutputBlobName,
                     200,
                     100,
@@ -55,19 +55,19 @@
             },
             true);
 
-        private static readonly CreateThumbnailSetMessage MessageWithChild = new CreateThumbnailSetMessage(
+        private static readonly CreateThumbnailsMessage MessageWithChild = new CreateThumbnailsMessage(
             ContainerName,
             InputBlobName,
-            new List<ThumbnailSetItemMessage> 
+            new List<ThumbnailDefinition> 
             {
-                new ThumbnailSetItemMessage(
+                new ThumbnailDefinition(
                     OutputBlobName,
                     200,
                     100,
                     ResizeBehaviour.MaintainAspectRatio,
-                    new List<ThumbnailSetItemMessage>
+                    new List<ThumbnailDefinition>
                     {
-                        new ThumbnailSetItemMessage(
+                        new ThumbnailDefinition(
                             OutputBlobName2,
                             100,
                             50,
@@ -77,18 +77,18 @@
             },
             false);
 
-        private static readonly CreateThumbnailSetMessage MessageWithSibling = new CreateThumbnailSetMessage(
+        private static readonly CreateThumbnailsMessage MessageWithSibling = new CreateThumbnailsMessage(
             ContainerName,
             InputBlobName,
-            new List<ThumbnailSetItemMessage> 
+            new List<ThumbnailDefinition> 
             {
-                new ThumbnailSetItemMessage(
+                new ThumbnailDefinition(
                     OutputBlobName,
                     200,
                     100,
                     ResizeBehaviour.MaintainAspectRatio,
                     null),
-                new ThumbnailSetItemMessage(
+                new ThumbnailDefinition(
                     OutputBlobName2,
                     100,
                     50,

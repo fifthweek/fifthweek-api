@@ -105,7 +105,7 @@
     <Compile Include="FilePurposeTasks.cs" />
     <Compile Include="FileTasks\IFileTask.cs" />
     <Compile Include="FileTasks\Thumbnail.cs" />
-    <Compile Include="FileTasks\ThumbnailSetFileTask.cs" />
+    <Compile Include="FileTasks\CreateThumbnailsTask.cs" />
     <Compile Include="GetFileWaitingForUploadDbStatement.cs" />
     <Compile Include="IAddNewFileDbStatement.cs" />
     <Compile Include="IFileProcessor.cs" />
