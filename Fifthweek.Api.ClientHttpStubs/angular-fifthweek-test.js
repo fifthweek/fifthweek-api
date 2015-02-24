@@ -240,6 +240,60 @@ describe('end to end test inbox stub', function() {
   });
 });
 
+describe('account settings stub', function() {
+  'use strict';
+
+  var fifthweekConstants;
+  var $httpBackend;
+  var $rootScope;
+  var target;
+
+  beforeEach(module('webApp', 'stateMock'));
+
+  beforeEach(inject(function($injector) {
+    fifthweekConstants = $injector.get('fifthweekConstants');
+    $httpBackend = $injector.get('$httpBackend');
+    $rootScope = $injector.get('$rootScope');
+    target = $injector.get('accountSettingsStub');
+  }));
+
+  afterEach(function() {
+    $httpBackend.verifyNoOutstandingExpectation();
+    $httpBackend.verifyNoOutstandingRequest();
+  });
+
+  it('should get', function() {
+    var userId = 'value0';
+
+    var responseData = 'response data';
+    $httpBackend.expectGET(fifthweekConstants.apiBaseUri + 'accountSettings/' + encodeURIComponent(userId)).respond(200, responseData);
+
+    var result = null;
+    target.get(userId).then(function(response) { result = response.data; });
+
+    $httpBackend.flush();
+    $rootScope.$apply();
+
+    expect(result).toBe(responseData);
+  });
+
+  it('should put', function() {
+    var userId = 'value0';
+    var updatedAccountSettingsData = 'value1';
+
+    var responseData = 'response data';
+    $httpBackend.expectPUT(fifthweekConstants.apiBaseUri + 'accountSettings/' + encodeURIComponent(userId), updatedAccountSettingsData).respond(200, responseData);
+
+    var result = null;
+    target.put(userId, updatedAccountSettingsData).then(function(response) { result = response.data; });
+
+    $httpBackend.flush();
+    $rootScope.$apply();
+
+    expect(result).toBe(responseData);
+  });
+});
+
 describe('membership stub', function() {
   'use strict';
 

@@ -133,6 +133,40 @@ angular.module('webApp').factory('endToEndTestInboxStub',
     return service;
   });
 
+angular.module('webApp').factory('accountSettingsStub',
+  function($http, $q, fifthweekConstants, utilities) {
+    'use strict';
+
+    var apiBaseUri = fifthweekConstants.apiBaseUri;
+    var service = {};
+
+    // userId = 'Base64Guid'
+    // result = {
+    //   email: '',
+    //   profileImageFileId: 'Base64Guid' /* optional */
+    // }
+    service.get = function(userId) {
+      return $http.get(apiBaseUri + 'accountSettings/' + encodeURIComponent(userId)).catch(function(response) {
+        return $q.reject(utilities.getHttpError(response));
+      });
+    };
+
+    // userId = 'Base64Guid'
+    // updatedAccountSettingsData = {
+    //   newUsername: '',
+    //   newEmail: '',
+    //   newPassword: '', /* optional */
+    //   newProfileImageId: 'Base64Guid'
+    // }
+    service.put = function(userId, updatedAccountSettingsData) {
+      return $http.put(apiBaseUri + 'accountSettings/' + encodeURIComponent(userId), updatedAccountSettingsData).catch(function(response) {
+        return $q.reject(utilities.getHttpError(response));
+      });
+    };
+
+    return service;
+  });
+
 angular.module('webApp').factory('membershipStub',
   function($http, $q, fifthweekConstants, utilities) {
     'use strict';
