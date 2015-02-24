@@ -2,7 +2,7 @@ namespace Fifthweek.Api.Identity.Shared.Membership
 {
     using Fifthweek.CodeGeneration;
 
-    [AutoEqualityMembers]
+    [AutoEqualityMembers, AutoJson]
     public partial class Email
     {
         public Email(string value)

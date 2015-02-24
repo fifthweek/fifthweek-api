@@ -6,12 +6,13 @@
 <#@ import namespace="System.Text" #>
 <#@ import namespace="System.Collections.Generic" #>
 <#
+    var AutoJsonAttributeName = "AutoJson";
     var AutoPrimitiveAttributeName = "AutoPrimitive";
 
     foreach(var unifiedClass in UnifiedClassesInProject.Values)
     {
         var allAttributes = unifiedClass.GetAllAttributes();
-        if (!allAttributes.Any(_ => _.Name.StartsWith(AutoPrimitiveAttributeName)))
+        if (!allAttributes.Any(_ => _.Name.StartsWith(AutoJsonAttributeName) || _.Name.StartsWith(AutoPrimitiveAttributeName)))
         {
             continue;
         }

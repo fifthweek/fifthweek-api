@@ -15,6 +15,8 @@
         private static readonly Func<PrimitiveStringDummy> PrimitiveStringB = () => new PrimitiveStringDummy("world");
         private static readonly Func<PrimitiveGuidDummy> PrimitiveGuidA = () => new PrimitiveGuidDummy(Guid.Parse("{2271BC88-2C7A-4F03-B213-C350059C8022}"));
         private static readonly Func<PrimitiveGuidDummy> PrimitiveGuidB = () => new PrimitiveGuidDummy(Guid.Parse("{FA9BC8F7-DBBD-40DB-8750-555B1DDDD472}"));
+        private static readonly Func<PrimitiveDoubleWithIndividualAttributesDummy> PrimitiveDoubleA = () => new PrimitiveDoubleWithIndividualAttributesDummy(0.0);
+        private static readonly Func<PrimitiveDoubleWithIndividualAttributesDummy> PrimitiveDoubleB = () => new PrimitiveDoubleWithIndividualAttributesDummy(0.2);
 
         [TestMethod]
         public void ItShouldRecogniseEqualObjects()
@@ -22,6 +24,7 @@
             Assert.AreEqual(PrimitiveIntA(), PrimitiveIntA());
             Assert.AreEqual(PrimitiveStringA(), PrimitiveStringA());
             Assert.AreEqual(PrimitiveGuidA(), PrimitiveGuidA());
+            Assert.AreEqual(PrimitiveDoubleA(), PrimitiveDoubleA());
         }
 
         [TestMethod]
@@ -30,6 +33,7 @@
             Assert.AreNotEqual(PrimitiveIntA(), PrimitiveIntB());
             Assert.AreNotEqual(PrimitiveStringA(), PrimitiveStringB());
             Assert.AreNotEqual(PrimitiveGuidA(), PrimitiveGuidB());
+            Assert.AreNotEqual(PrimitiveDoubleA(), PrimitiveDoubleB());
         }
 
         [TestMethod]
@@ -38,6 +42,7 @@
             Assert.AreNotEqual(PrimitiveIntA(), null);
             Assert.AreNotEqual(PrimitiveStringA(), null);
             Assert.AreNotEqual(PrimitiveGuidA(), null);
+            Assert.AreNotEqual(PrimitiveDoubleA(), null);
         }
 
         [TestMethod]
@@ -57,6 +62,10 @@
             serialized = JsonConvert.SerializeObject(PrimitiveGuidA());
             deserialized = JsonConvert.DeserializeObject<PrimitiveGuidDummy>(serialized);
             Assert.AreEqual(PrimitiveGuidA(), deserialized);
+
+            serialized = JsonConvert.SerializeObject(PrimitiveDoubleA());
+            deserialized = JsonConvert.DeserializeObject<PrimitiveDoubleWithIndividualAttributesDummy>(serialized);
+            Assert.AreEqual(PrimitiveDoubleA(), deserialized);
         }
     }
 }

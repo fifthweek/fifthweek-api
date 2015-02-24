@@ -2,7 +2,7 @@
 {
     using Fifthweek.CodeGeneration;
 
-    [AutoEqualityMembers]
+    [AutoEqualityMembers, AutoJson]
     public partial class Username
     {
         public Username(string value)

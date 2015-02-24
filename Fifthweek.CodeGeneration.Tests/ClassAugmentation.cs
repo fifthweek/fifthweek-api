@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Linq;
 
-//// Generated on 30/01/2015 10:00:27 (UTC)
-//// Mapped solution in 3.55s
+//// Generated on 24/02/2015 15:04:06 (UTC)
+//// Mapped solution in 10.95s
 
 namespace Fifthweek.CodeGeneration.Tests
 {
@@ -151,6 +151,55 @@ namespace Fifthweek.CodeGeneration.Tests
         }
     }
 }
+namespace Fifthweek.CodeGeneration.Tests
+{
+    using System;
+    using System.Linq;
+    using System.Collections.Generic;
+
+    [Newtonsoft.Json.JsonConverter(typeof(JsonConverter))]
+    public partial class PrimitiveDoubleWithIndividualAttributesDummy 
+    {
+        public class JsonConverter : Newtonsoft.Json.JsonConverter
+        {
+            public override void WriteJson(Newtonsoft.Json.JsonWriter writer, object value, Newtonsoft.Json.JsonSerializer serializer)
+            {
+                var valueType = (PrimitiveDoubleWithIndividualAttributesDummy)value;
+                serializer.Serialize(writer, valueType.Value);
+            }
+        
+            public override object ReadJson(Newtonsoft.Json.JsonReader reader, Type objectType, object existingValue, Newtonsoft.Json.JsonSerializer serializer)
+            {
+                if (objectType != typeof(PrimitiveDoubleWithIndividualAttributesDummy))
+                {
+                    throw new ArgumentException("Expected to deserialize JSON for type " + typeof(PrimitiveDoubleWithIndividualAttributesDummy).Name, "objectType");
+                }
+        
+                var value = serializer.Deserialize<System.Double>(reader);
+                return new PrimitiveDoubleWithIndividualAttributesDummy(value);
+            }
+        
+            public override bool CanConvert(Type objectType)
+            {
+                return objectType == typeof(PrimitiveDoubleWithIndividualAttributesDummy);
+            }
+        }
+        
+        public class DapperTypeHandler : Dapper.SqlMapper.TypeHandler<PrimitiveDoubleWithIndividualAttributesDummy>, Fifthweek.Api.Persistence.IAutoRegisteredTypeHandler<PrimitiveDoubleWithIndividualAttributesDummy>
+        {
+            public override void SetValue(System.Data.IDbDataParameter parameter, PrimitiveDoubleWithIndividualAttributesDummy value)
+            {
+                parameter.DbType = System.Data.DbType.Double;
+                parameter.Value = value.Value;
+            }
+        
+            public override PrimitiveDoubleWithIndividualAttributesDummy Parse(object value)
+            {
+                return new PrimitiveDoubleWithIndividualAttributesDummy((System.Double)value);
+            }
+        }
+    }
+}
 
 namespace Fifthweek.CodeGeneration.Tests
 {
@@ -202,6 +251,26 @@ namespace Fifthweek.CodeGeneration.Tests
     {
         public PrimitiveStringDummy(
             System.String value)
+        {
+            if (value == null)
+            {
+                throw new ArgumentNullException("value");
+            }
+
+            this.Value = value;
+        }
+    }
+}
+namespace Fifthweek.CodeGeneration.Tests
+{
+    using System;
+    using System.Linq;
+    using System.Collections.Generic;
+
+    public partial class PrimitiveDoubleWithIndividualAttributesDummy 
+    {
+        public PrimitiveDoubleWithIndividualAttributesDummy(
+            System.Double value)
         {
             if (value == null)
             {
@@ -455,6 +524,60 @@ namespace Fifthweek.CodeGeneration.Tests
         }
         
         protected bool Equals(PrimitiveStringDummy other)
+        {
+            if (!object.Equals(this.Value, other.Value))
+            {
+                return false;
+            }
+        
+            return true;
+        }
+    }
+}
+namespace Fifthweek.CodeGeneration.Tests
+{
+    using System;
+    using System.Linq;
+    using System.Collections.Generic;
+
+    public partial class PrimitiveDoubleWithIndividualAttributesDummy 
+    {
+        public override string ToString()
+        {
+            return string.Format("PrimitiveDoubleWithIndividualAttributesDummy({0})", this.Value == null ? "null" : this.Value.ToString());
+        }
+        
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj))
+            {
+                return false;
+            }
+        
+            if (ReferenceEquals(this, obj))
+            {
+                return true;
+            }
+        
+            if (obj.GetType() != this.GetType())
+            {
+                return false;
+            }
+        
+            return this.Equals((PrimitiveDoubleWithIndividualAttributesDummy)obj);
+        }
+        
+        public override int GetHashCode()
+        {
+            unchecked
+            {
+                int hashCode = 0;
+                hashCode = (hashCode * 397) ^ (this.Value != null ? this.Value.GetHashCode() : 0);
+                return hashCode;
+            }
+        }
+        
+        protected bool Equals(PrimitiveDoubleWithIndividualAttributesDummy other)
         {
             if (!object.Equals(this.Value, other.Value))
             {
@@ -1128,6 +1251,7 @@ namespace Fifthweek.CodeGeneration.Tests.Parsing
 namespace Fifthweek.CodeGeneration.Tests.Parsing
 {
     using System;
+    using System.Linq;
     using System.Collections.Generic;
 
     public partial class ParsedMappedCollection 

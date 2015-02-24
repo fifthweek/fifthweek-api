@@ -40,6 +40,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AutoJsonAttribute.cs" />
     <Compile Include="AutoPrimitiveAttribute.cs" />
     <Compile Include="AutoCopyAttribute.cs" />
     <Compile Include="AutoConstructorAttribute.cs" />

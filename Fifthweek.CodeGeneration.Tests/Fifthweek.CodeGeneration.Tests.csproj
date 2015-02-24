@@ -84,6 +84,7 @@
     <Compile Include="ClassAugmentationTests.cs" />
     <Compile Include="Parsing\ParsedInt.cs" />
     <Compile Include="Parsing\ParsedString.cs" />
+    <Compile Include="PrimitiveDoubleWithIndividualAttributesDummy.cs" />
     <Compile Include="PrimitiveIntDummy.cs" />
     <Compile Include="PrimitiveStringDummy.cs" />
     <Compile Include="PrimitiveGuidDummy.cs" />
