@@ -34,7 +34,9 @@
                         "The user ID " + userId.Value + " was not found in the database.");
                 }
 
-                return new GetAccountSettingsDbResult(new Email(result.Email), new FileId(result.ProfileImageFileId));
+                return new GetAccountSettingsDbResult(
+                    new Email(result.Email), 
+                    result.ProfileImageFileId == null ? null : new FileId(result.ProfileImageFileId.Value));
             }
         }
 
@@ -42,7 +44,7 @@
         {
             public string Email { get; set; }
 
-            public Guid ProfileImageFileId { get; set; }
+            public Guid? ProfileImageFileId { get; set; }
         }
     }
 

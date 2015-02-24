@@ -20,8 +20,10 @@
     public class GetAccountSettingsDbRepositoryTests : PersistenceTestsBase
     {
         private readonly UserId userId = new UserId(Guid.NewGuid());
+        private readonly UserId userId2 = new UserId(Guid.NewGuid());
         private readonly FileId fileId = new FileId(Guid.NewGuid());
         private readonly Email email = new Email("accountrepositorytests@testing.fifthweek.com");
+        private readonly Email email2 = new Email("accountrepositorytests2@testing.fifthweek.com");
         private readonly FileId newFileId = new FileId(Guid.NewGuid());
         private GetAccountSettingsDbStatement target;
 
@@ -42,9 +44,27 @@
                 await testDatabase.TakeSnapshotAsync();
 
                 var result = await this.target.ExecuteAsync(this.userId);
-                
+
                 Assert.AreEqual(result.Email, this.email);
                 Assert.AreEqual(result.ProfileImageFileId, this.fileId);
+
+                return ExpectedSideEffects.None;
+            });
+        }
+
+        [TestMethod]
+        public async Task WhenGetAccountSettingsCalledAndNoProfileImageExists_ItShouldGetAccountSettingsFromTheDatabase()
+        {
+            await this.DatabaseTestAsync(async testDatabase =>
+            {
+                this.target = new GetAccountSettingsDbStatement(testDatabase);
+                await this.CreateFileAsync(testDatabase);
+                await testDatabase.TakeSnapshotAsync();
+
+                var result = await this.target.ExecuteAsync(this.userId2);
+
+                Assert.AreEqual(this.email2, result.Email);
+                Assert.AreEqual(null, result.ProfileImageFileId);
 
                 return ExpectedSideEffects.None;
             });
@@ -82,9 +102,14 @@
             user.Id = this.userId.Value;
             user.Email = this.email.Value;
 
+            var user2 = UserTests.UniqueEntity(random);
+            user2.Id = this.userId2.Value;
+            user2.Email = this.email2.Value;
+
             using (var databaseContext = testDatabase.CreateContext())
             {
                 databaseContext.Users.Add(user);
+                databaseContext.Users.Add(user2);
                 await databaseContext.SaveChangesAsync();
             }
 
