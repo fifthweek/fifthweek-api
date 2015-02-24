@@ -44,6 +44,31 @@
 
         [TestMethod]
         [ExpectedException(typeof(UnauthorizedException))]
+        public async Task WhenCalledWithUnauthorizedFileId_ItShouldCallThrowAnUnauthroizedException()
+        {
+            var command = new UpdateAccountSettingsCommand(
+                Requester,
+                UserId,
+                Username,
+                Email,
+                Password,
+                FileId);
+
+            this.fileSecurity.Setup(v => v.AssertReferenceAllowedAsync(UserId, FileId))
+                .Throws(new UnauthorizedException());
+
+            await this.target.HandleAsync(command);
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentNullException))]
+        public async Task WhenCalledWithoutACommand_ItShouldThrowAnException()
+        {
+            await this.target.HandleAsync(null);
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(UnauthorizedException))]
         public async Task WhenUnauthenticated_ItShouldThrowUnauthorizedException()
         {
             await this.target.HandleAsync(new UpdateAccountSettingsCommand(
@@ -82,31 +107,6 @@
             await this.target.HandleAsync(command);
 
             this.updateAccountSettings.Verify();
-        }
-
-        [TestMethod]
-        [ExpectedException(typeof(UnauthorizedException))]
-        public async Task WhenCalledWithUnauthorizedFileId_ItShouldCallThrowAnUnauthroizedException()
-        {
-            var command = new UpdateAccountSettingsCommand(
-                Requester,
-                UserId,
-                Username,
-                Email,
-                Password,
-                FileId);
-
-            this.fileSecurity.Setup(v => v.AssertReferenceAllowedAsync(UserId, FileId))
-                .Throws(new UnauthorizedException());
-
-            await this.target.HandleAsync(command);
-        }
-
-        [TestMethod]
-        [ExpectedException(typeof(ArgumentNullException))]
-        public async Task WhenCalledWithoutACommand_ItShouldThrowAnException()
-        {
-            await this.target.HandleAsync(null);
         }
     }
 }

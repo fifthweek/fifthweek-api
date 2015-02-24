@@ -48,6 +48,20 @@
         }
 
         [TestMethod]
+        [ExpectedException(typeof(BadRequestException))]
+        public async Task WhenGetIsCalledWithEmptyUserId_ItShouldThrowAnException()
+        {
+            await this.target.Get(" ");
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(BadRequestException))]
+        public async Task WhenGetIsCalledWithNullUserId_ItShouldThrowAnException()
+        {
+            await this.target.Get(null);
+        }
+
+        [TestMethod]
         public async Task WhenGetIsCalled_ItShouldCallTheQueryHandler()
         {
             this.requesterContext.Setup(v => v.GetRequester()).Returns(Requester);
@@ -87,16 +101,16 @@
 
         [TestMethod]
         [ExpectedException(typeof(BadRequestException))]
-        public async Task WhenGetIsCalledWithEmptyUserId_ItShouldThrowAnException()
+        public async Task WhenPutIsCalledWithNullUserId_ItShouldThrowAnException()
         {
-            await this.target.Get(" ");
+            await this.target.Put(null, new UpdatedAccountSettings());
         }
 
         [TestMethod]
         [ExpectedException(typeof(BadRequestException))]
-        public async Task WhenGetIsCalledWithNullUserId_ItShouldThrowAnException()
+        public async Task WhenPutIsCalledWithNullUpdatedAccountSettings_ItShouldThrowAnException()
         {
-            await this.target.Get(null);
+            await this.target.Put(RequestedUserId.Value.EncodeGuid(), null);
         }
 
         [TestMethod]
@@ -109,31 +123,63 @@
                 .Returns(Task.FromResult(0))
                 .Verifiable();
 
-            var updatedAccountSettings = new UpdatedAccountSettings 
+            var updatedAccountSettings = new UpdatedAccountSettings
             {
-                 NewEmail = Email.Value,
-                 NewPassword = Password.Value,
-                 NewUsername = Username.Value,
-                 NewProfileImageId = FileId.Value.EncodeGuid(),
+                NewEmail = Email.Value,
+                NewPassword = Password.Value,
+                NewUsername = Username.Value,
+                NewProfileImageId = FileId.Value.EncodeGuid(),
             };
-            
+
             await this.target.Put(RequestedUserId.Value.EncodeGuid(), updatedAccountSettings);
 
             this.updateAccountSettings.Verify();
         }
 
         [TestMethod]
-        [ExpectedException(typeof(BadRequestException))]
-        public async Task WhenPutIsCalledWithNullUserId_ItShouldThrowAnException()
+        public async Task WhenPutIsCalledWithNullPassword_ItShouldCallTheCommandHandler()
         {
-            await this.target.Put(null, new UpdatedAccountSettings());
+            this.requesterContext.Setup(v => v.GetRequester()).Returns(Requester);
+
+            var command = new UpdateAccountSettingsCommand(Requester, RequestedUserId, Username, Email, null, FileId);
+            this.updateAccountSettings.Setup(v => v.HandleAsync(command))
+                .Returns(Task.FromResult(0))
+                .Verifiable();
+
+            var updatedAccountSettings = new UpdatedAccountSettings
+            {
+                NewEmail = Email.Value,
+                NewPassword = null,
+                NewUsername = Username.Value,
+                NewProfileImageId = FileId.Value.EncodeGuid(),
+            };
+
+            await this.target.Put(RequestedUserId.Value.EncodeGuid(), updatedAccountSettings);
+
+            this.updateAccountSettings.Verify();
         }
 
         [TestMethod]
-        [ExpectedException(typeof(BadRequestException))]
-        public async Task WhenPutIsCalledWithNullUpdatedAccountSettings_ItShouldThrowAnException()
+        public async Task WhenPutIsCalledWithNullProfileImageId_ItShouldCallTheCommandHandler()
         {
-            await this.target.Put(RequestedUserId.Value.EncodeGuid(), null);
+            this.requesterContext.Setup(v => v.GetRequester()).Returns(Requester);
+
+            var command = new UpdateAccountSettingsCommand(Requester, RequestedUserId, Username, Email, Password, null);
+            this.updateAccountSettings.Setup(v => v.HandleAsync(command))
+                .Returns(Task.FromResult(0))
+                .Verifiable();
+
+            var updatedAccountSettings = new UpdatedAccountSettings
+            {
+                NewEmail = Email.Value,
+                NewPassword = Password.Value,
+                NewUsername = Username.Value,
+                NewProfileImageId = null,
+            };
+
+            await this.target.Put(RequestedUserId.Value.EncodeGuid(), updatedAccountSettings);
+
+            this.updateAccountSettings.Verify();
         }
     }
 }

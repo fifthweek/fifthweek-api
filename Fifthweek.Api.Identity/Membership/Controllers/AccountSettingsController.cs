@@ -43,7 +43,10 @@
             var requester = this.requesterContext.GetRequester();
             var requestedUserId = new UserId(userId.DecodeGuid());
             
-            var newProfileImageId = new FileId(updatedAccountSettingsData.NewProfileImageId.DecodeGuid());
+            var newProfileImageId 
+                = updatedAccountSettingsData.NewProfileImageId == null
+                ? null
+                : new FileId(updatedAccountSettingsData.NewProfileImageId.DecodeGuid());
 
             var command = new UpdateAccountSettingsCommand(
                 requester,

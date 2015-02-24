@@ -16,8 +16,10 @@
 
         public ValidEmail NewEmail { get; private set; }
 
+        [Optional]
         public ValidPassword NewPassword { get; private set; }
 
+        [Optional]
         public FileId NewProfileImageId { get; private set; }
     }
 }

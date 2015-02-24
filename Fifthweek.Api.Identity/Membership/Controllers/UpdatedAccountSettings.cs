@@ -16,6 +16,7 @@
         [Parsed(typeof(ValidPassword))]
         public string NewPassword { get; set; }
 
+        [Optional]
         public string NewProfileImageId { get; set; }
     }
 }
