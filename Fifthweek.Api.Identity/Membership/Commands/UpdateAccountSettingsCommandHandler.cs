@@ -1,9 +1,8 @@
-﻿namespace Fifthweek.Api.Accounts.Commands
+﻿namespace Fifthweek.Api.Identity.Membership.Commands
 {
     using System.Threading.Tasks;
 
     using Fifthweek.Api.Core;
-    using Fifthweek.Api.FileManagement;
     using Fifthweek.Api.FileManagement.Shared;
     using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.CodeGeneration;

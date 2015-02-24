@@ -1,18 +1,17 @@
-﻿namespace Fifthweek.Api.Accounts.Controllers
+﻿namespace Fifthweek.Api.Identity.Membership.Controllers
 {
     using System.Threading.Tasks;
     using System.Web.Http;
 
-    using Fifthweek.Api.Accounts.Commands;
-    using Fifthweek.Api.Accounts.Queries;
+    using Fifthweek.Api.Identity.Membership.Commands;
+    using Fifthweek.Api.Identity.Membership.Queries;
     using Fifthweek.Api.Core;
-    using Fifthweek.Api.FileManagement;
     using Fifthweek.Api.FileManagement.Shared;
     using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.CodeGeneration;
 
     [AutoConstructor]
-    [RoutePrefix("accountsettings")]
+    [RoutePrefix("accountSettings")]
     public partial class AccountSettingsController : ApiController
     {
         private readonly IRequesterContext requesterContext;

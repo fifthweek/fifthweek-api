@@ -1,9 +1,9 @@
-﻿namespace Fifthweek.Api.Accounts.Tests.Commands
+﻿namespace Fifthweek.Api.Identity.Membership.Tests.Commands
 {
     using System;
     using System.Threading.Tasks;
 
-    using Fifthweek.Api.Accounts.Commands;
+    using Fifthweek.Api.Identity.Membership.Commands;
     using Fifthweek.Api.Core;
     using Fifthweek.Api.FileManagement;
     using Fifthweek.Api.FileManagement.Shared;

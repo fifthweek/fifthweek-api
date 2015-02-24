@@ -1,11 +1,11 @@
-﻿namespace Fifthweek.Api.Accounts.Tests.Controllers
+﻿namespace Fifthweek.Api.Identity.Membership.Tests.Controllers
 {
     using System;
     using System.Threading.Tasks;
 
-    using Fifthweek.Api.Accounts.Commands;
-    using Fifthweek.Api.Accounts.Controllers;
-    using Fifthweek.Api.Accounts.Queries;
+    using Fifthweek.Api.Identity.Membership.Commands;
+    using Fifthweek.Api.Identity.Membership.Controllers;
+    using Fifthweek.Api.Identity.Membership.Queries;
     using Fifthweek.Api.Core;
     using Fifthweek.Api.FileManagement.Shared;
     using Fifthweek.Api.Identity.Shared.Membership;

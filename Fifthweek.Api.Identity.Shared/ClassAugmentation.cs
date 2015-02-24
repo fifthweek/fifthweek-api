@@ -1,12 +1,13 @@
 ﻿using System;
 using System.Linq;
 
-//// Generated on 30/01/2015 11:11:43 (UTC)
-//// Mapped solution in 13.87s
+//// Generated on 24/02/2015 09:48:03 (UTC)
+//// Mapped solution in 11.76s
 
 namespace Fifthweek.Api.Identity.Shared.Membership
 {
     using System;
+    using System.Linq;
     using Fifthweek.CodeGeneration;
 
     [Newtonsoft.Json.JsonConverter(typeof(JsonConverter))]
@@ -53,8 +54,30 @@ namespace Fifthweek.Api.Identity.Shared.Membership
     }
 }
 
+namespace Fifthweek.Api.Identity.Shared.Membership
+{
+    using System;
+    using System.Linq;
+    using Fifthweek.CodeGeneration;
+
+    public partial class UserId 
+    {
+        public UserId(
+            System.Guid value)
+        {
+            if (value == null)
+            {
+                throw new ArgumentNullException("value");
+            }
+
+            this.Value = value;
+        }
+    }
+}
 namespace Fifthweek.Api.Identity.Shared.Membership.Events
 {
+    using System;
+    using System.Linq;
     using Fifthweek.CodeGeneration;
 
     public partial class UserRegisteredEvent 
@@ -73,6 +96,8 @@ namespace Fifthweek.Api.Identity.Shared.Membership.Events
 }
 namespace Fifthweek.Api.Identity.Shared.Membership
 {
+    using System;
+    using System.Linq;
     using Fifthweek.CodeGeneration;
 
     public partial class Password 
@@ -89,35 +114,18 @@ namespace Fifthweek.Api.Identity.Shared.Membership
         }
     }
 }
+
 namespace Fifthweek.Api.Identity.Shared.Membership
 {
     using System;
+    using System.Linq;
     using Fifthweek.CodeGeneration;
 
     public partial class UserId 
     {
-        public UserId(
-            System.Guid value)
-        {
-            if (value == null)
-            {
-                throw new ArgumentNullException("value");
-            }
-
-            this.Value = value;
-        }
-    }
-}
-
-namespace Fifthweek.Api.Identity.Shared.Membership
-{
-    using Fifthweek.CodeGeneration;
-
-    public partial class Email 
-    {
         public override string ToString()
         {
-            return string.Format("Email(\"{0}\")", this.Value == null ? "null" : this.Value.ToString());
+            return string.Format("UserId({0})", this.Value == null ? "null" : this.Value.ToString());
         }
         
         public override bool Equals(object obj)
@@ -137,7 +145,7 @@ namespace Fifthweek.Api.Identity.Shared.Membership
                 return false;
             }
         
-            return this.Equals((Email)obj);
+            return this.Equals((UserId)obj);
         }
         
         public override int GetHashCode()
@@ -150,7 +158,7 @@ namespace Fifthweek.Api.Identity.Shared.Membership
             }
         }
         
-        protected bool Equals(Email other)
+        protected bool Equals(UserId other)
         {
             if (!object.Equals(this.Value, other.Value))
             {
@@ -163,6 +171,8 @@ namespace Fifthweek.Api.Identity.Shared.Membership
 }
 namespace Fifthweek.Api.Identity.Shared.Membership.Events
 {
+    using System;
+    using System.Linq;
     using Fifthweek.CodeGeneration;
 
     public partial class UserRegisteredEvent 
@@ -215,6 +225,8 @@ namespace Fifthweek.Api.Identity.Shared.Membership.Events
 }
 namespace Fifthweek.Api.Identity.Shared.Membership
 {
+    using System;
+    using System.Linq;
     using Fifthweek.CodeGeneration;
 
     public partial class Password 
@@ -268,13 +280,14 @@ namespace Fifthweek.Api.Identity.Shared.Membership
 namespace Fifthweek.Api.Identity.Shared.Membership
 {
     using System;
+    using System.Linq;
     using Fifthweek.CodeGeneration;
 
-    public partial class UserId 
+    public partial class Email 
     {
         public override string ToString()
         {
-            return string.Format("UserId({0})", this.Value == null ? "null" : this.Value.ToString());
+            return string.Format("Email(\"{0}\")", this.Value == null ? "null" : this.Value.ToString());
         }
         
         public override bool Equals(object obj)
@@ -294,7 +307,7 @@ namespace Fifthweek.Api.Identity.Shared.Membership
                 return false;
             }
         
-            return this.Equals((UserId)obj);
+            return this.Equals((Email)obj);
         }
         
         public override int GetHashCode()
@@ -307,7 +320,7 @@ namespace Fifthweek.Api.Identity.Shared.Membership
             }
         }
         
-        protected bool Equals(UserId other)
+        protected bool Equals(Email other)
         {
             if (!object.Equals(this.Value, other.Value))
             {
@@ -320,6 +333,8 @@ namespace Fifthweek.Api.Identity.Shared.Membership
 }
 namespace Fifthweek.Api.Identity.Shared.Membership
 {
+    using System;
+    using System.Linq;
     using Fifthweek.CodeGeneration;
 
     public partial class Username 

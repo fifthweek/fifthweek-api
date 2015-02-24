@@ -1,4 +1,4 @@
-﻿namespace Fifthweek.Api.Accounts.Tests
+﻿namespace Fifthweek.Api.Identity.Membership.Tests
 {
     using System;
     using System.Threading.Tasks;

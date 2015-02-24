@@ -1,4 +1,4 @@
-﻿namespace Fifthweek.Api.Accounts.Queries
+﻿namespace Fifthweek.Api.Identity.Membership.Queries
 {
     using System.Threading.Tasks;
 

@@ -1,4 +1,4 @@
-﻿namespace Fifthweek.Api.Accounts.Controllers
+﻿namespace Fifthweek.Api.Identity.Membership.Controllers
 {
     using Fifthweek.Api.Core;
     using Fifthweek.CodeGeneration;

@@ -65,10 +65,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fifthweek.Api.Azure.Tests",
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fifthweek.Api.Persistence.Tests.Shared", "Fifthweek.Api.Persistence.Tests.Shared\Fifthweek.Api.Persistence.Tests.Shared.csproj", "{ECDE2C4E-7DD8-4210-8E09-D5762C88B3CB}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fifthweek.Api.Accounts", "Fifthweek.Api.Accounts\Fifthweek.Api.Accounts.csproj", "{8DFF9D76-471F-4D91-9859-3543CF32D5D0}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fifthweek.Api.Accounts.Tests", "Fifthweek.Api.Accounts.Tests\Fifthweek.Api.Accounts.Tests.csproj", "{F2E923C5-B18D-41F1-9742-61ED576EF0FC}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fifthweek.WebJobs.Thumbnails", "Fifthweek.WebJobs.Thumbnails\Fifthweek.WebJobs.Thumbnails.csproj", "{38210173-9A08-4C53-9D64-D9FDCC44107A}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fifthweek.WebJobs.Shared", "Fifthweek.WebJobs.Shared\Fifthweek.WebJobs.Shared.csproj", "{EFBACD48-98A1-4FA3-9BEA-E13414141484}"
@@ -255,14 +251,6 @@ Global
 		{ECDE2C4E-7DD8-4210-8E09-D5762C88B3CB}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{ECDE2C4E-7DD8-4210-8E09-D5762C88B3CB}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{ECDE2C4E-7DD8-4210-8E09-D5762C88B3CB}.Release|Any CPU.Build.0 = Release|Any CPU
-		{8DFF9D76-471F-4D91-9859-3543CF32D5D0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{8DFF9D76-471F-4D91-9859-3543CF32D5D0}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{8DFF9D76-471F-4D91-9859-3543CF32D5D0}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{8DFF9D76-471F-4D91-9859-3543CF32D5D0}.Release|Any CPU.Build.0 = Release|Any CPU
-		{F2E923C5-B18D-41F1-9742-61ED576EF0FC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{F2E923C5-B18D-41F1-9742-61ED576EF0FC}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{F2E923C5-B18D-41F1-9742-61ED576EF0FC}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{F2E923C5-B18D-41F1-9742-61ED576EF0FC}.Release|Any CPU.Build.0 = Release|Any CPU
 		{38210173-9A08-4C53-9D64-D9FDCC44107A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{38210173-9A08-4C53-9D64-D9FDCC44107A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{38210173-9A08-4C53-9D64-D9FDCC44107A}.Release|Any CPU.ActiveCfg = Release|Any CPU
