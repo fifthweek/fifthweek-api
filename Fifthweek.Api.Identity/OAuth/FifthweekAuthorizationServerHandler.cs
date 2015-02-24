@@ -247,6 +247,7 @@ namespace Fifthweek.Api.Identity.OAuth
             catch (Exception t)
             {
                 this.exceptionHandler.ReportExceptionAsync(context.Request, t);
+                allowedOrigin = Constants.DefaultAllowedOrigin;  // Remove this line to restrict origins to those defined by the client.
             }
 
             return allowedOrigin;
