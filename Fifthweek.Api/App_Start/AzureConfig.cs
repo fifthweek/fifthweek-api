@@ -2,12 +2,10 @@
 {
     using System;
     using System.Collections.Generic;
-    using System.Threading;
     using System.Threading.Tasks;
     using System.Web.Hosting;
     using System.Web.Http;
 
-    using Fifthweek.Api.Azure;
     using Fifthweek.Azure;
 
     using Microsoft.WindowsAzure.Storage.Shared.Protocol;
@@ -43,7 +41,7 @@
                 await CreateQueueIfNotExists(cloudQueueClient, WebJobs.GarbageCollection.Shared.Constants.GarbageCollectionQueueName);
 
                 var cloudBlobClient = storageAccount.CreateCloudBlobClient();
-                await CreateBlobIfNotExists(cloudBlobClient, FileManagement.Constants.PublicFileBlobContainerName);
+                await CreateBlobContainerIfNotExists(cloudBlobClient, FileManagement.Constants.PublicFileBlobContainerName);
             }
             catch (Exception t)
             {
@@ -57,7 +55,7 @@
             await queue.CreateIfNotExistsAsync();
         }
 
-        private static async Task CreateBlobIfNotExists(ICloudBlobClient cloudBlobClient, string containerName)
+        private static async Task CreateBlobContainerIfNotExists(ICloudBlobClient cloudBlobClient, string containerName)
         {
             var container = cloudBlobClient.GetContainerReference(containerName);
             await container.CreateIfNotExistsAsync();

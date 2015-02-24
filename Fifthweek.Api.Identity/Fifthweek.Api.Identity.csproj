@@ -104,7 +104,6 @@
     <Compile Include="Membership\Commands\UpdateAccountSettingsCommand.cs" />
     <Compile Include="Membership\Commands\UpdateAccountSettingsCommandHandler.cs" />
     <Compile Include="Membership\Controllers\AccountSettingsController.cs" />
-    <Compile Include="Membership\Controllers\AccountSettingsResponse.cs" />
     <Compile Include="Membership\Controllers\UpdatedAccountSettings.cs" />
     <Compile Include="Membership\GetAccountSettingsDbStatement.cs" />
     <Compile Include="Membership\GetAccountSettingsResult.cs" />
@@ -180,6 +179,10 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Fifthweek.Api.Azure\Fifthweek.Api.Azure.csproj">
+      <Project>{ABC43617-3AAA-4B7A-B4DC-D10E023F1846}</Project>
+      <Name>Fifthweek.Api.Azure</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Fifthweek.Api.Core\Fifthweek.Api.Core.csproj">
       <Project>{bd52863e-063d-45a5-9ca8-7541804d1313}</Project>
       <Name>Fifthweek.Api.Core</Name>

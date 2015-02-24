@@ -26,6 +26,18 @@ namespace Fifthweek.Api.Azure
             await container.CreateIfNotExistsAsync();
         }
 
+        public Task<BlobInformation> GetBlobInformationAsync(string containerName, string blobName)
+        {
+            containerName.AssertNotNull("containerName");
+            blobName.AssertNotNull("blobName");
+
+            var client = this.cloudStorageAccount.CreateCloudBlobClient();
+            var container = client.GetContainerReference(containerName);
+            var blob = container.GetBlockBlobReference(blobName);
+
+            return Task.FromResult(new BlobInformation(containerName, blobName, blob.Uri.ToString()));
+        }
+
         public Task<BlobSharedAccessInformation> GetBlobSharedAccessInformationForWritingAsync(string containerName, string blobName, DateTime expiry)
         {
             containerName.AssertNotNull("containerName");

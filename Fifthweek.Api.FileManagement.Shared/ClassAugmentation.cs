@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Linq;
 
-//// Generated on 29/01/2015 19:42:18 (UTC)
-//// Mapped solution in 1.46s
+//// Generated on 24/02/2015 12:38:57 (UTC)
+//// Mapped solution in 9.08s
 
 namespace Fifthweek.Api.FileManagement.Shared
 {
@@ -56,6 +56,33 @@ namespace Fifthweek.Api.FileManagement.Shared
 
 namespace Fifthweek.Api.FileManagement.Shared
 {
+    using Fifthweek.CodeGeneration;
+    using System;
+    using System.Linq;
+
+    public partial class BlobLocation 
+    {
+        public BlobLocation(
+            System.String containerName,
+            System.String blobName)
+        {
+            if (containerName == null)
+            {
+                throw new ArgumentNullException("containerName");
+            }
+
+            if (blobName == null)
+            {
+                throw new ArgumentNullException("blobName");
+            }
+
+            this.ContainerName = containerName;
+            this.BlobName = blobName;
+        }
+    }
+}
+namespace Fifthweek.Api.FileManagement.Shared
+{
     using System;
     using System.Linq;
     using Fifthweek.CodeGeneration;
@@ -74,7 +101,106 @@ namespace Fifthweek.Api.FileManagement.Shared
         }
     }
 }
+namespace Fifthweek.Api.FileManagement.Shared
+{
+    using Fifthweek.CodeGeneration;
 
+    public partial class FileInformation 
+    {
+        public FileInformation(
+            Fifthweek.Api.FileManagement.Shared.FileId fileId,
+            System.String containerName,
+            System.String blobName,
+            System.String uri)
+        {
+            if (fileId == null)
+            {
+                throw new ArgumentNullException("fileId");
+            }
+
+            if (containerName == null)
+            {
+                throw new ArgumentNullException("containerName");
+            }
+
+            if (blobName == null)
+            {
+                throw new ArgumentNullException("blobName");
+            }
+
+            if (uri == null)
+            {
+                throw new ArgumentNullException("uri");
+            }
+
+            this.FileId = fileId;
+            this.ContainerName = containerName;
+            this.BlobName = blobName;
+            this.Uri = uri;
+        }
+    }
+}
+
+namespace Fifthweek.Api.FileManagement.Shared
+{
+    using Fifthweek.CodeGeneration;
+    using System;
+    using System.Linq;
+
+    public partial class BlobLocation 
+    {
+        public override string ToString()
+        {
+            return string.Format("BlobLocation(\"{0}\", \"{1}\")", this.ContainerName == null ? "null" : this.ContainerName.ToString(), this.BlobName == null ? "null" : this.BlobName.ToString());
+        }
+        
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj))
+            {
+                return false;
+            }
+        
+            if (ReferenceEquals(this, obj))
+            {
+                return true;
+            }
+        
+            if (obj.GetType() != this.GetType())
+            {
+                return false;
+            }
+        
+            return this.Equals((BlobLocation)obj);
+        }
+        
+        public override int GetHashCode()
+        {
+            unchecked
+            {
+                int hashCode = 0;
+                hashCode = (hashCode * 397) ^ (this.ContainerName != null ? this.ContainerName.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.BlobName != null ? this.BlobName.GetHashCode() : 0);
+                return hashCode;
+            }
+        }
+        
+        protected bool Equals(BlobLocation other)
+        {
+            if (!object.Equals(this.ContainerName, other.ContainerName))
+            {
+                return false;
+            }
+        
+            if (!object.Equals(this.BlobName, other.BlobName))
+            {
+                return false;
+            }
+        
+            return true;
+        }
+    }
+}
 namespace Fifthweek.Api.FileManagement.Shared
 {
     using System;
@@ -121,6 +247,76 @@ namespace Fifthweek.Api.FileManagement.Shared
         protected bool Equals(FileId other)
         {
             if (!object.Equals(this.Value, other.Value))
+            {
+                return false;
+            }
+        
+            return true;
+        }
+    }
+}
+namespace Fifthweek.Api.FileManagement.Shared
+{
+    using Fifthweek.CodeGeneration;
+
+    public partial class FileInformation 
+    {
+        public override string ToString()
+        {
+            return string.Format("FileInformation({0}, \"{1}\", \"{2}\", \"{3}\")", this.FileId == null ? "null" : this.FileId.ToString(), this.ContainerName == null ? "null" : this.ContainerName.ToString(), this.BlobName == null ? "null" : this.BlobName.ToString(), this.Uri == null ? "null" : this.Uri.ToString());
+        }
+        
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj))
+            {
+                return false;
+            }
+        
+            if (ReferenceEquals(this, obj))
+            {
+                return true;
+            }
+        
+            if (obj.GetType() != this.GetType())
+            {
+                return false;
+            }
+        
+            return this.Equals((FileInformation)obj);
+        }
+        
+        public override int GetHashCode()
+        {
+            unchecked
+            {
+                int hashCode = 0;
+                hashCode = (hashCode * 397) ^ (this.FileId != null ? this.FileId.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.ContainerName != null ? this.ContainerName.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.BlobName != null ? this.BlobName.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.Uri != null ? this.Uri.GetHashCode() : 0);
+                return hashCode;
+            }
+        }
+        
+        protected bool Equals(FileInformation other)
+        {
+            if (!object.Equals(this.FileId, other.FileId))
+            {
+                return false;
+            }
+        
+            if (!object.Equals(this.ContainerName, other.ContainerName))
+            {
+                return false;
+            }
+        
+            if (!object.Equals(this.BlobName, other.BlobName))
+            {
+                return false;
+            }
+        
+            if (!object.Equals(this.Uri, other.Uri))
             {
                 return false;
             }

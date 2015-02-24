@@ -21,7 +21,7 @@
         private readonly IQueryHandler<GetAccountSettingsQuery, GetAccountSettingsResult> getAccountSettings;
 
         [Route("{userId}")]
-        public async Task<AccountSettingsResponse> Get(string userId)
+        public async Task<GetAccountSettingsResult> Get(string userId)
         {
             userId.AssertUrlParameterProvided("userId");
 
@@ -30,8 +30,7 @@
 
             var query = new GetAccountSettingsQuery(requester, requestedUserId);
             var result = await this.getAccountSettings.HandleAsync(query);
-
-            return new AccountSettingsResponse(result.Email.Value, result.ProfileImageFileId.Value.EncodeGuid());
+            return result;
         }
 
         [Route("{userId}")]

@@ -1,12 +1,13 @@
 ﻿namespace Fifthweek.Api.FileManagement
 {
     using Fifthweek.Api.Core;
+    using Fifthweek.Api.FileManagement.Shared;
     using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.Shared;
 
     public class BlobLocationGenerator : IBlobLocationGenerator
     {
-        public BlobLocation GetBlobLocation(UserId userId, Shared.FileId fileId, string filePurpose)
+        public BlobLocation GetBlobLocation(UserId userId, FileId fileId, string filePurpose)
         {
             fileId.AssertNotNull("fileId");
             filePurpose.AssertNotNull("filePurpose");

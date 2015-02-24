@@ -13,6 +13,7 @@
             builder.RegisterType<FileProcessor>().As<IFileProcessor>().SingleInstance();
             builder.RegisterType<FilePurposeTasks>().As<IFilePurposeTasks>().SingleInstance();
             builder.RegisterType<BlobLocationGenerator>().As<IBlobLocationGenerator>().SingleInstance();
+            builder.RegisterType<FileInformationAggregator>().As<IFileInformationAggregator>().SingleInstance();
             builder.RegisterType<AddNewFileDbStatement>().As<IAddNewFileDbStatement>();
             builder.RegisterType<GetFileWaitingForUploadDbStatement>().As<IGetFileWaitingForUploadDbStatement>();
             builder.RegisterType<SetFileUploadCompleteDbStatement>().As<ISetFileUploadCompleteDbStatement>();

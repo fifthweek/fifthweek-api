@@ -100,7 +100,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AddNewFileDbStatement.cs" />
+    <Compile Include="Constants.cs" />
     <Compile Include="Controllers\UserAccessSignaturesController.cs" />
+    <Compile Include="FileInformationAggregator.cs" />
     <Compile Include="FileProcessor.cs" />
     <Compile Include="FilePurposeTasks.cs" />
     <Compile Include="FileTasks\IFileTask.cs" />
@@ -117,7 +119,6 @@
     <Compile Include="Queries\UserAccessSignatures.cs" />
     <Compile Include="ScheduleGarbageCollectionStatement.cs" />
     <Compile Include="AutofacRegistration.cs" />
-    <Compile Include="BlobLocation.cs" />
     <Compile Include="BlobLocationGenerator.cs" />
     <Compile Include="ClassAugmentation.cs">
       <DependentUpon>ClassAugmentation.tt</DependentUpon>
@@ -129,14 +130,12 @@
     <Compile Include="Commands\CompleteFileUploadCommandHandler.cs" />
     <Compile Include="Commands\InitiateFileUploadCommand.cs" />
     <Compile Include="Commands\InitiateFileUploadCommandHandler.cs" />
-    <Compile Include="Constants.cs" />
     <Compile Include="Controllers\FileUploadController.cs" />
     <Compile Include="Controllers\GrantedUpload.cs" />
     <Compile Include="Controllers\UploadRequest.cs" />
     <Compile Include="FileOwnership.cs" />
     <Compile Include="FileSecurity.cs" />
     <Compile Include="FileWaitingForUpload.cs" />
-    <Compile Include="IBlobLocationGenerator.cs" />
     <Compile Include="IFileOwnership.cs" />
     <Compile Include="GetFileExtensionDbStatement.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

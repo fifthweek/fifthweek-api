@@ -24,6 +24,10 @@
         private static readonly ValidUsername Username = ValidUsername.Parse("username");
         private static readonly ValidPassword Password = ValidPassword.Parse("passw0rd");
         private static readonly FileId FileId = new FileId(Guid.NewGuid());
+        private static readonly string ContainerName = "containerName";
+        private static readonly string BlobName = "blobName";
+        private static readonly string FileUri = "uri";
+        private static readonly FileInformation FileInformation = new FileInformation(FileId, ContainerName, BlobName, FileUri);
 
         private Mock<IRequesterContext> requesterContext;
         private Mock<ICommandHandler<UpdateAccountSettingsCommand>> updateAccountSettings;
@@ -50,7 +54,7 @@
 
             var query = new GetAccountSettingsQuery(Requester, RequestedUserId);
             this.getAccountSettings.Setup(v => v.HandleAsync(query))
-                .ReturnsAsync(new GetAccountSettingsResult(Email, FileId))
+                .ReturnsAsync(new GetAccountSettingsResult(Email, FileInformation))
                 .Verifiable();
 
             var result = await this.target.Get(RequestedUserId.Value.EncodeGuid());
@@ -58,8 +62,27 @@
             this.getAccountSettings.Verify();
 
             Assert.IsNotNull(result);
-            Assert.AreEqual(Email.Value, result.Email);
-            Assert.AreEqual(FileId.Value.EncodeGuid(), result.ProfileImageFileId);
+            Assert.AreEqual(Email, result.Email);
+            Assert.AreEqual(FileInformation, result.ProfileImage);
+        }
+
+        [TestMethod]
+        public async Task WhenGetIsCalledAndNoProfileImageExists_ItShouldNotReturnAnyFileInformation()
+        {
+            this.requesterContext.Setup(v => v.GetRequester()).Returns(Requester);
+
+            var query = new GetAccountSettingsQuery(Requester, RequestedUserId);
+            this.getAccountSettings.Setup(v => v.HandleAsync(query))
+                .ReturnsAsync(new GetAccountSettingsResult(Email, null))
+                .Verifiable();
+
+            var result = await this.target.Get(RequestedUserId.Value.EncodeGuid());
+
+            this.getAccountSettings.Verify();
+
+            Assert.IsNotNull(result);
+            Assert.AreEqual(Email, result.Email);
+            Assert.IsNull(result.ProfileImage);
         }
 
         [TestMethod]

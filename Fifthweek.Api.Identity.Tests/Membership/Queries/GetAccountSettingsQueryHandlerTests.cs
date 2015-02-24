@@ -1,14 +1,17 @@
-﻿namespace Fifthweek.Api.Identity.Membership.Tests.Queries
+﻿namespace Fifthweek.Api.Identity.Tests.Membership.Queries
 {
     using System;
     using System.Threading.Tasks;
 
+    using Fifthweek.Api.Azure;
+    using Fifthweek.Api.Identity.Membership;
     using Fifthweek.Api.Identity.Membership.Queries;
     using Fifthweek.Api.Core;
     using Fifthweek.Api.FileManagement;
     using Fifthweek.Api.FileManagement.Shared;
     using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.Api.Identity.Tests.Shared.Membership;
+    using Fifthweek.Shared;
 
     using Microsoft.VisualStudio.TestTools.UnitTesting;
 
@@ -25,6 +28,7 @@
         private GetAccountSettingsQueryHandler target;
         private Mock<IGetAccountSettingsDbStatement> getAccountSettings;
         private Mock<IRequesterSecurity> requesterSecurity;
+        private Mock<IFileInformationAggregator> fileInformationAggregator;
 
         [TestInitialize]
         public void TestInitialize()
@@ -33,8 +37,9 @@
             this.requesterSecurity.SetupFor(Requester);
 
             this.getAccountSettings = new Mock<IGetAccountSettingsDbStatement>();
+            this.fileInformationAggregator = new Mock<IFileInformationAggregator>();
 
-            this.target = new GetAccountSettingsQueryHandler(this.requesterSecurity.Object, this.getAccountSettings.Object);
+            this.target = new GetAccountSettingsQueryHandler(this.requesterSecurity.Object, this.getAccountSettings.Object, this.fileInformationAggregator.Object);
         }
 
         [TestMethod]
@@ -42,22 +47,6 @@
         public async Task WhenUnauthenticated_ItShouldThrowUnauthorizedException()
         {
             await this.target.HandleAsync(new GetAccountSettingsQuery(Requester.Unauthenticated, UserId));
-        }
-
-        [TestMethod]
-        public async Task WhenCalled_ItShouldCallTheAccountRepository()
-        {
-            this.getAccountSettings.Setup(v => v.ExecuteAsync(UserId))
-                .ReturnsAsync(new GetAccountSettingsResult(Email, FileId))
-                .Verifiable();
-
-            var result = await this.target.HandleAsync(new GetAccountSettingsQuery(Requester, UserId));
-
-            this.getAccountSettings.Verify();
-
-            Assert.IsNotNull(result);
-            Assert.AreEqual(Email, result.Email);
-            Assert.AreEqual(FileId, result.ProfileImageFileId);
         }
 
         [TestMethod]
@@ -75,6 +64,46 @@
         public async Task WhenCalledWithNullQuery_ItThrowAnException()
         {
             await this.target.HandleAsync(null);
+        }
+
+        [TestMethod]
+        public async Task WhenCalled_ItShouldCallTheAccountRepository()
+        {
+            this.getAccountSettings.Setup(v => v.ExecuteAsync(UserId))
+                .ReturnsAsync(new GetAccountSettingsDbResult(Email, null))
+                .Verifiable();
+
+            var result = await this.target.HandleAsync(new GetAccountSettingsQuery(Requester, UserId));
+
+            this.getAccountSettings.Verify();
+
+            Assert.IsNotNull(result);
+            Assert.AreEqual(Email, result.Email);
+            Assert.AreEqual(null, result.ProfileImage);
+        }
+
+        [TestMethod]
+        public async Task WhenAccountSettingsHasAProfileImageFileId_ItShouldReturnTheBlobInformation()
+        {
+            const string ContainerName = "containerName";
+            const string BlobName = "blobName";
+            const string BlobUri = "uri";
+
+            this.getAccountSettings.Setup(v => v.ExecuteAsync(UserId))
+                .ReturnsAsync(new GetAccountSettingsDbResult(Email, FileId));
+
+            this.fileInformationAggregator.Setup(v => v.GetFileInformationAsync(UserId, FileId, FilePurposes.ProfileImage))
+                .ReturnsAsync(new FileInformation(FileId, ContainerName, BlobName, BlobUri));
+
+            var result = await this.target.HandleAsync(new GetAccountSettingsQuery(Requester, UserId));
+
+            Assert.IsNotNull(result);
+            Assert.AreEqual(Email, result.Email);
+            Assert.IsNotNull(result.ProfileImage);
+            Assert.AreEqual(FileId, result.ProfileImage.FileId);
+            Assert.AreEqual(ContainerName, result.ProfileImage.ContainerName);
+            Assert.AreEqual(BlobName, result.ProfileImage.BlobName);
+            Assert.AreEqual(BlobUri, result.ProfileImage.Uri);
         }
     }
 }

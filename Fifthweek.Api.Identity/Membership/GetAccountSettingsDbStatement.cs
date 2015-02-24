@@ -17,7 +17,7 @@
     {
         private readonly IFifthweekDbConnectionFactory connectionFactory;
 
-        public async Task<GetAccountSettingsResult> ExecuteAsync(UserId userId)
+        public async Task<GetAccountSettingsDbResult> ExecuteAsync(UserId userId)
         {
             userId.AssertNotNull("userId");
 
@@ -34,7 +34,7 @@
                         "The user ID " + userId.Value + " was not found in the database.");
                 }
 
-                return new GetAccountSettingsResult(new Email(result.Email), new FileId(result.ProfileImageFileId));
+                return new GetAccountSettingsDbResult(new Email(result.Email), new FileId(result.ProfileImageFileId));
             }
         }
 
@@ -44,5 +44,15 @@
 
             public Guid ProfileImageFileId { get; set; }
         }
+    }
+
+    [AutoConstructor]
+    [AutoEqualityMembers]
+    public partial class GetAccountSettingsDbResult
+    {
+        public Email Email { get; private set; }
+
+        [Optional]
+        public FileId ProfileImageFileId { get; private set; }
     }
 }

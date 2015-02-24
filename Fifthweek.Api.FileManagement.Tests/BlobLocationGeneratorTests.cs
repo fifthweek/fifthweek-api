@@ -13,8 +13,6 @@
 
     using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-    using Constants = Fifthweek.Api.FileManagement.Constants;
-
     [TestClass]
     public class BlobNameCreatorTests
     {
@@ -132,11 +130,11 @@
 
             if (isPublic)
             {
-                Assert.AreEqual(Constants.PublicFileBlobContainerName, result.ContainerName);
+                Assert.AreEqual(FileManagement.Constants.PublicFileBlobContainerName, result.ContainerName);
             }
             else
             {
-                Assert.AreNotEqual(Constants.PublicFileBlobContainerName, result.ContainerName);
+                Assert.AreNotEqual(FileManagement.Constants.PublicFileBlobContainerName, result.ContainerName);
             }
         }
     }

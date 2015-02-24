@@ -46,12 +46,16 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="BlobLocation.cs" />
     <Compile Include="ClassAugmentation.cs">
       <DependentUpon>ClassAugmentation.tt</DependentUpon>
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
     </Compile>
     <Compile Include="FileId.cs" />
+    <Compile Include="FileInformation.cs" />
+    <Compile Include="IBlobLocationGenerator.cs" />
+    <Compile Include="IFileInformationAggregator.cs" />
     <Compile Include="IFileSecurity.cs" />
     <Compile Include="IGetFileExtensionDbStatement.cs" />
     <Compile Include="IScheduleGarbageCollectionStatement.cs" />

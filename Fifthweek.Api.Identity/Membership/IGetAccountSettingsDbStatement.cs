@@ -6,6 +6,6 @@ namespace Fifthweek.Api.Identity.Membership
 
     public interface IGetAccountSettingsDbStatement
     {
-        Task<GetAccountSettingsResult> ExecuteAsync(UserId userId);
+        Task<GetAccountSettingsDbResult> ExecuteAsync(UserId userId);
     }
 }

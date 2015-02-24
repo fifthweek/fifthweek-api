@@ -1,5 +1,6 @@
 ﻿namespace Fifthweek.Api.Identity.Membership
 {
+    using Fifthweek.Api.Azure;
     using Fifthweek.Api.FileManagement.Shared;
     using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.CodeGeneration;
@@ -10,6 +11,7 @@
     {
         public Email Email { get; private set; }
 
-        public FileId ProfileImageFileId { get; private set; }
+        [Optional]
+        public FileInformation ProfileImage { get; private set; }
     }
 }
