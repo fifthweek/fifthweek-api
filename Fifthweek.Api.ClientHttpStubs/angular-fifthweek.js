@@ -142,8 +142,15 @@ angular.module('webApp').factory('accountSettingsStub',
 
     // userId = 'Base64Guid'
     // result = {
-    //   email: '',
-    //   profileImageFileId: 'Base64Guid' /* optional */
+    //   email: {
+    //     value: ''
+    //   },
+    //   profileImage: { /* optional */
+    //     fileId: 'Base64Guid',
+    //     containerName: '',
+    //     blobName: '',
+    //     uri: ''
+    //   }
     // }
     service.get = function(userId) {
       return $http.get(apiBaseUri + 'accountSettings/' + encodeURIComponent(userId)).catch(function(response) {
@@ -156,7 +163,7 @@ angular.module('webApp').factory('accountSettingsStub',
     //   newUsername: '',
     //   newEmail: '',
     //   newPassword: '', /* optional */
-    //   newProfileImageId: 'Base64Guid'
+    //   newProfileImageId: 'Base64Guid' /* optional */
     // }
     service.put = function(userId, updatedAccountSettingsData) {
       return $http.put(apiBaseUri + 'accountSettings/' + encodeURIComponent(userId), updatedAccountSettingsData).catch(function(response) {
