@@ -197,7 +197,8 @@
             Assert.IsNotNull(reportedException);
             Assert.AreEqual("Origin header not found.", reportedException.Message);
 
-            Assert.AreEqual(Client.DefaultAllowedOrigin, context.Response.Headers[Constants.AllowedOriginHeaderKey]);
+            ////Assert.AreEqual(Client.DefaultAllowedOrigin, context.Response.Headers[Constants.AllowedOriginHeaderKey]);
+            Assert.AreEqual(Constants.DefaultAllowedOrigin, context.Response.Headers[Constants.AllowedOriginHeaderKey]);
         }
 
         [TestMethod]
@@ -227,7 +228,7 @@
         }
 
         [TestMethod]
-        public async Task WhenValidatingClientAuthentication_AndOriginHeaderPresentButUnexpected_ItShouldReportAndUseOrigin()
+        public async Task WhenValidatingClientAuthentication_AndOriginHeaderPresentButUnexpected_ItShouldReportAndUseDefaultOrigin()
         {
             this.AddBasicAuthorization();
 
@@ -250,7 +251,8 @@
             Assert.IsNotNull(reportedException);
             Assert.AreEqual("Unexpected origin: UNEXPECTED", reportedException.Message);
 
-            Assert.AreEqual(Client.DefaultAllowedOrigin, context.Response.Headers[Constants.AllowedOriginHeaderKey]);
+            ////Assert.AreEqual(Client.DefaultAllowedOrigin, context.Response.Headers[Constants.AllowedOriginHeaderKey]);
+            Assert.AreEqual(Constants.DefaultAllowedOrigin, context.Response.Headers[Constants.AllowedOriginHeaderKey]);
         }
 
         [TestMethod]
