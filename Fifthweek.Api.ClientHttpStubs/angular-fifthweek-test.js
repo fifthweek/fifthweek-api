@@ -777,6 +777,21 @@ describe('subscription stub', function() {
 
     expect(result).toBe(responseData);
   });
+
+  it('should get subscription', function() {
+    var subscriptionId = 'value0';
+
+    var responseData = 'response data';
+    $httpBackend.expectGET(fifthweekConstants.apiBaseUri + 'subscriptions/' + encodeURIComponent(subscriptionId)).respond(200, responseData);
+
+    var result = null;
+    target.getSubscription(subscriptionId).then(function(response) { result = response.data; });
+
+    $httpBackend.flush();
+    $rootScope.$apply();
+
+    expect(result).toBe(responseData);
+  });
 });
 
 describe('user access signatures stub', function() {

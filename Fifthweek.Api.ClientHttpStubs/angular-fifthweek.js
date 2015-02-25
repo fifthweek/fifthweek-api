@@ -474,6 +474,28 @@ angular.module('webApp').factory('subscriptionStub',
       });
     };
 
+    // subscriptionId = 'Base64Guid'
+    // result = {
+    //   subscriptionId: 'Base64Guid',
+    //   creatorId: 'Base64Guid',
+    //   name: '',
+    //   creationDate: '2015-12-25T14:45:05Z',
+    //   introduction: '',
+    //   description: '', /* optional */
+    //   externalVideoUrl: '', /* optional */
+    //   headerImage: { /* optional */
+    //     fileId: 'Base64Guid',
+    //     containerName: '',
+    //     blobName: '',
+    //     uri: ''
+    //   }
+    // }
+    service.getSubscription = function(subscriptionId) {
+      return $http.get(apiBaseUri + 'subscriptions/' + encodeURIComponent(subscriptionId)).catch(function(response) {
+        return $q.reject(utilities.getHttpError(response));
+      });
+    };
+
     return service;
   });
 
