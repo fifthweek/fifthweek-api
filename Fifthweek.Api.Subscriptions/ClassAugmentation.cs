@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Linq;
 
-//// Generated on 25/02/2015 11:57:07 (UTC)
-//// Mapped solution in 8.75s
+//// Generated on 25/02/2015 15:32:06 (UTC)
+//// Mapped solution in 10.74s
 
 
 namespace Fifthweek.Api.Subscriptions.Commands
@@ -553,12 +553,13 @@ namespace Fifthweek.Api.Subscriptions
             public GetSubscriptionDataDbResult(
                 Fifthweek.Api.Subscriptions.Shared.SubscriptionId subscriptionId,
                 Fifthweek.Api.Identity.Shared.Membership.UserId creatorId,
-                Fifthweek.Api.Subscriptions.Shared.SubscriptionName name,
-                System.DateTime creationDate,
+                Fifthweek.Api.Subscriptions.Shared.SubscriptionName subscriptionName,
+                Fifthweek.Api.Subscriptions.Shared.Tagline tagline,
                 Fifthweek.Api.Subscriptions.Shared.Introduction introduction,
-                Fifthweek.Api.Subscriptions.Shared.SubscriptionDescription description,
-                Fifthweek.Api.Subscriptions.Shared.ExternalVideoUrl externalVideoUrl,
-                Fifthweek.Api.FileManagement.Shared.FileId headerImageFileId)
+                System.DateTime creationDate,
+                Fifthweek.Api.FileManagement.Shared.FileId headerImageFileId,
+                Fifthweek.Api.Subscriptions.Shared.ExternalVideoUrl video,
+                Fifthweek.Api.Subscriptions.Shared.SubscriptionDescription description)
             {
                 if (subscriptionId == null)
                 {
@@ -570,14 +571,14 @@ namespace Fifthweek.Api.Subscriptions
                     throw new ArgumentNullException("creatorId");
                 }
 
-                if (name == null)
+                if (subscriptionName == null)
                 {
-                    throw new ArgumentNullException("name");
+                    throw new ArgumentNullException("subscriptionName");
                 }
 
-                if (creationDate == null)
+                if (tagline == null)
                 {
-                    throw new ArgumentNullException("creationDate");
+                    throw new ArgumentNullException("tagline");
                 }
 
                 if (introduction == null)
@@ -585,14 +586,20 @@ namespace Fifthweek.Api.Subscriptions
                     throw new ArgumentNullException("introduction");
                 }
 
+                if (creationDate == null)
+                {
+                    throw new ArgumentNullException("creationDate");
+                }
+
                 this.SubscriptionId = subscriptionId;
                 this.CreatorId = creatorId;
-                this.Name = name;
-                this.CreationDate = creationDate;
+                this.SubscriptionName = subscriptionName;
+                this.Tagline = tagline;
                 this.Introduction = introduction;
-                this.Description = description;
-                this.ExternalVideoUrl = externalVideoUrl;
+                this.CreationDate = creationDate;
                 this.HeaderImageFileId = headerImageFileId;
+                this.Video = video;
+                this.Description = description;
             }
         }
     }
@@ -707,12 +714,13 @@ namespace Fifthweek.Api.Subscriptions.Queries
         public GetSubscriptionResult(
             Fifthweek.Api.Subscriptions.Shared.SubscriptionId subscriptionId,
             Fifthweek.Api.Identity.Shared.Membership.UserId creatorId,
-            Fifthweek.Api.Subscriptions.Shared.SubscriptionName name,
-            System.DateTime creationDate,
+            Fifthweek.Api.Subscriptions.Shared.SubscriptionName subscriptionName,
+            Fifthweek.Api.Subscriptions.Shared.Tagline tagline,
             Fifthweek.Api.Subscriptions.Shared.Introduction introduction,
-            Fifthweek.Api.Subscriptions.Shared.SubscriptionDescription description,
-            Fifthweek.Api.Subscriptions.Shared.ExternalVideoUrl externalVideoUrl,
-            Fifthweek.Api.FileManagement.Shared.FileInformation headerImage)
+            System.DateTime creationDate,
+            Fifthweek.Api.FileManagement.Shared.FileInformation headerImage,
+            Fifthweek.Api.Subscriptions.Shared.ExternalVideoUrl video,
+            Fifthweek.Api.Subscriptions.Shared.SubscriptionDescription description)
         {
             if (subscriptionId == null)
             {
@@ -724,14 +732,14 @@ namespace Fifthweek.Api.Subscriptions.Queries
                 throw new ArgumentNullException("creatorId");
             }
 
-            if (name == null)
+            if (subscriptionName == null)
             {
-                throw new ArgumentNullException("name");
+                throw new ArgumentNullException("subscriptionName");
             }
 
-            if (creationDate == null)
+            if (tagline == null)
             {
-                throw new ArgumentNullException("creationDate");
+                throw new ArgumentNullException("tagline");
             }
 
             if (introduction == null)
@@ -739,14 +747,20 @@ namespace Fifthweek.Api.Subscriptions.Queries
                 throw new ArgumentNullException("introduction");
             }
 
+            if (creationDate == null)
+            {
+                throw new ArgumentNullException("creationDate");
+            }
+
             this.SubscriptionId = subscriptionId;
             this.CreatorId = creatorId;
-            this.Name = name;
-            this.CreationDate = creationDate;
+            this.SubscriptionName = subscriptionName;
+            this.Tagline = tagline;
             this.Introduction = introduction;
-            this.Description = description;
-            this.ExternalVideoUrl = externalVideoUrl;
+            this.CreationDate = creationDate;
             this.HeaderImage = headerImage;
+            this.Video = video;
+            this.Description = description;
         }
     }
 }
@@ -1225,7 +1239,7 @@ namespace Fifthweek.Api.Subscriptions.Queries
     {
         public override string ToString()
         {
-            return string.Format("GetSubscriptionResult({0}, {1}, {2}, {3}, {4}, {5}, {6}, {7})", this.SubscriptionId == null ? "null" : this.SubscriptionId.ToString(), this.CreatorId == null ? "null" : this.CreatorId.ToString(), this.Name == null ? "null" : this.Name.ToString(), this.CreationDate == null ? "null" : this.CreationDate.ToString(), this.Introduction == null ? "null" : this.Introduction.ToString(), this.Description == null ? "null" : this.Description.ToString(), this.ExternalVideoUrl == null ? "null" : this.ExternalVideoUrl.ToString(), this.HeaderImage == null ? "null" : this.HeaderImage.ToString());
+            return string.Format("GetSubscriptionResult({0}, {1}, {2}, {3}, {4}, {5}, {6}, {7}, {8})", this.SubscriptionId == null ? "null" : this.SubscriptionId.ToString(), this.CreatorId == null ? "null" : this.CreatorId.ToString(), this.SubscriptionName == null ? "null" : this.SubscriptionName.ToString(), this.Tagline == null ? "null" : this.Tagline.ToString(), this.Introduction == null ? "null" : this.Introduction.ToString(), this.CreationDate == null ? "null" : this.CreationDate.ToString(), this.HeaderImage == null ? "null" : this.HeaderImage.ToString(), this.Video == null ? "null" : this.Video.ToString(), this.Description == null ? "null" : this.Description.ToString());
         }
         
         public override bool Equals(object obj)
@@ -1255,12 +1269,13 @@ namespace Fifthweek.Api.Subscriptions.Queries
                 int hashCode = 0;
                 hashCode = (hashCode * 397) ^ (this.SubscriptionId != null ? this.SubscriptionId.GetHashCode() : 0);
                 hashCode = (hashCode * 397) ^ (this.CreatorId != null ? this.CreatorId.GetHashCode() : 0);
-                hashCode = (hashCode * 397) ^ (this.Name != null ? this.Name.GetHashCode() : 0);
-                hashCode = (hashCode * 397) ^ (this.CreationDate != null ? this.CreationDate.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.SubscriptionName != null ? this.SubscriptionName.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.Tagline != null ? this.Tagline.GetHashCode() : 0);
                 hashCode = (hashCode * 397) ^ (this.Introduction != null ? this.Introduction.GetHashCode() : 0);
-                hashCode = (hashCode * 397) ^ (this.Description != null ? this.Description.GetHashCode() : 0);
-                hashCode = (hashCode * 397) ^ (this.ExternalVideoUrl != null ? this.ExternalVideoUrl.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.CreationDate != null ? this.CreationDate.GetHashCode() : 0);
                 hashCode = (hashCode * 397) ^ (this.HeaderImage != null ? this.HeaderImage.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.Video != null ? this.Video.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.Description != null ? this.Description.GetHashCode() : 0);
                 return hashCode;
             }
         }
@@ -1277,12 +1292,12 @@ namespace Fifthweek.Api.Subscriptions.Queries
                 return false;
             }
         
-            if (!object.Equals(this.Name, other.Name))
+            if (!object.Equals(this.SubscriptionName, other.SubscriptionName))
             {
                 return false;
             }
         
-            if (!object.Equals(this.CreationDate, other.CreationDate))
+            if (!object.Equals(this.Tagline, other.Tagline))
             {
                 return false;
             }
@@ -1292,17 +1307,22 @@ namespace Fifthweek.Api.Subscriptions.Queries
                 return false;
             }
         
-            if (!object.Equals(this.Description, other.Description))
-            {
-                return false;
-            }
-        
-            if (!object.Equals(this.ExternalVideoUrl, other.ExternalVideoUrl))
+            if (!object.Equals(this.CreationDate, other.CreationDate))
             {
                 return false;
             }
         
             if (!object.Equals(this.HeaderImage, other.HeaderImage))
+            {
+                return false;
+            }
+        
+            if (!object.Equals(this.Video, other.Video))
+            {
+                return false;
+            }
+        
+            if (!object.Equals(this.Description, other.Description))
             {
                 return false;
             }

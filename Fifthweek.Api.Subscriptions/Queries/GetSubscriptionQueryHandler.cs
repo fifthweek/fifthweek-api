@@ -32,12 +32,13 @@
             return new GetSubscriptionResult(
                 subscription.SubscriptionId,
                 subscription.CreatorId,
-                subscription.Name,
-                subscription.CreationDate,
+                subscription.SubscriptionName,
+                subscription.Tagline,
                 subscription.Introduction,
-                subscription.Description,
-                subscription.ExternalVideoUrl,
-                headerFileInformation);
+                subscription.CreationDate,
+                headerFileInformation,
+                subscription.Video,
+                subscription.Description);
         }
     }
 }

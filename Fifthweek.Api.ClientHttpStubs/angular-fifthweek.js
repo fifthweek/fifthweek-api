@@ -478,17 +478,18 @@ angular.module('webApp').factory('subscriptionStub',
     // result = {
     //   subscriptionId: 'Base64Guid',
     //   creatorId: 'Base64Guid',
-    //   name: '',
-    //   creationDate: '2015-12-25T14:45:05Z',
+    //   subscriptionName: '',
+    //   tagline: '',
     //   introduction: '',
-    //   description: '', /* optional */
-    //   externalVideoUrl: '', /* optional */
+    //   creationDate: '2015-12-25T14:45:05Z',
     //   headerImage: { /* optional */
     //     fileId: 'Base64Guid',
     //     containerName: '',
     //     blobName: '',
     //     uri: ''
-    //   }
+    //   },
+    //   video: '', /* optional */
+    //   description: '' /* optional */
     // }
     service.getSubscription = function(subscriptionId) {
       return $http.get(apiBaseUri + 'subscriptions/' + encodeURIComponent(subscriptionId)).catch(function(response) {

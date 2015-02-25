@@ -19,6 +19,7 @@
         private static readonly SubscriptionId SubscriptionId = new SubscriptionId(Guid.NewGuid());
         private static readonly UserId CreatorId = new UserId(Guid.NewGuid());
         private static readonly SubscriptionName Name = new SubscriptionName("name");
+        private static readonly Tagline Tagline = new Tagline("tagline");
         private static readonly DateTime CreationDate = DateTime.UtcNow;
         private static readonly Introduction Introduction = new Introduction("intro");
         private static readonly SubscriptionDescription Description = new SubscriptionDescription("description");
@@ -55,8 +56,9 @@
                     SubscriptionId,
                     CreatorId,
                     Name,
-                    CreationDate,
+                    Tagline,
                     Introduction,
+                    CreationDate,
                     null,
                     null,
                     null));
@@ -65,12 +67,13 @@
 
             Assert.AreEqual(SubscriptionId, result.SubscriptionId);
             Assert.AreEqual(CreatorId, result.CreatorId);
-            Assert.AreEqual(Name, result.Name);
-            Assert.AreEqual(CreationDate, result.CreationDate);
+            Assert.AreEqual(Name, result.SubscriptionName);
+            Assert.AreEqual(Tagline, result.Tagline);
             Assert.AreEqual(Introduction, result.Introduction);
-            Assert.AreEqual(null, result.Description);
-            Assert.AreEqual(null, result.ExternalVideoUrl);
+            Assert.AreEqual(CreationDate, result.CreationDate);
             Assert.AreEqual(null, result.HeaderImage);
+            Assert.AreEqual(null, result.Video);
+            Assert.AreEqual(null, result.Description);
         }
 
         [TestMethod]
@@ -81,11 +84,12 @@
                     SubscriptionId,
                     CreatorId,
                     Name,
-                    CreationDate,
+                    Tagline,
                     Introduction,
-                    Description,
+                    CreationDate,
+                    HeaderFileId,
                     ExternalVideoUrl,
-                    HeaderFileId));
+                    Description));
 
             var fileInformation = new FileInformation(HeaderFileId, "container", "blob", "bloburi");
             this.fileInformationAggregator.Setup(
@@ -96,12 +100,13 @@
 
             Assert.AreEqual(SubscriptionId, result.SubscriptionId);
             Assert.AreEqual(CreatorId, result.CreatorId);
-            Assert.AreEqual(Name, result.Name);
-            Assert.AreEqual(CreationDate, result.CreationDate);
+            Assert.AreEqual(Name, result.SubscriptionName);
+            Assert.AreEqual(Tagline, result.Tagline);
             Assert.AreEqual(Introduction, result.Introduction);
-            Assert.AreEqual(Description, result.Description);
-            Assert.AreEqual(ExternalVideoUrl, result.ExternalVideoUrl);
+            Assert.AreEqual(CreationDate, result.CreationDate);
             Assert.AreEqual(fileInformation, result.HeaderImage);
+            Assert.AreEqual(ExternalVideoUrl, result.Video);
+            Assert.AreEqual(Description, result.Description);
         }
     }
 }

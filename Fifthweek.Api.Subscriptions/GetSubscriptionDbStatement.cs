@@ -42,11 +42,12 @@
                     new SubscriptionId(result.Id), 
                     new UserId(result.CreatorId), 
                     new SubscriptionName(result.Name),
-                    result.CreationDate,
+                    new Tagline(result.Tagline),
                     new Introduction(result.Introduction),
-                    result.Description == null ? null : new SubscriptionDescription(result.Description),
+                    result.CreationDate,
+                    result.HeaderImageFileId == null ? null : new FileId(result.HeaderImageFileId.Value),
                     result.ExternalVideoUrl == null ? null : new ExternalVideoUrl(result.ExternalVideoUrl),
-                    result.HeaderImageFileId == null ? null : new FileId(result.HeaderImageFileId.Value));
+                    result.Description == null ? null : new SubscriptionDescription(result.Description));
             }
         }
 
@@ -57,20 +58,22 @@
 
             public UserId CreatorId { get; private set; }
 
-            public SubscriptionName Name { get; private set; }
+            public SubscriptionName SubscriptionName { get; private set; }
 
-            public DateTime CreationDate { get; private set; }
+            public Tagline Tagline { get; private set; }
 
             public Introduction Introduction { get; private set; }
 
-            [Optional]
-            public SubscriptionDescription Description { get; private set; }
-
-            [Optional]
-            public ExternalVideoUrl ExternalVideoUrl { get; private set; }
+            public DateTime CreationDate { get; private set; }
 
             [Optional]
             public FileId HeaderImageFileId { get; private set; }
+
+            [Optional]
+            public ExternalVideoUrl Video { get; private set; }
+
+            [Optional]
+            public SubscriptionDescription Description { get; private set; }
         }
     }
 }

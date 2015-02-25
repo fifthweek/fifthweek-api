@@ -97,8 +97,9 @@
                 SubscriptionId,
                 UserId,
                 new SubscriptionName("name"),
-                Now,
+                new Tagline("tagline"),
                 new Introduction("intro"),
+                Now,
                 null,
                 null,
                 null);

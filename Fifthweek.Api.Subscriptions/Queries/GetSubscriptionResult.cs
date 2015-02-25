@@ -15,19 +15,21 @@
 
         public UserId CreatorId { get; private set; }
 
-        public SubscriptionName Name { get; private set; }
+        public SubscriptionName SubscriptionName { get; private set; }
 
-        public DateTime CreationDate { get; private set; }
+        public Tagline Tagline { get; private set; }
 
         public Introduction Introduction { get; private set; }
 
-        [Optional]
-        public SubscriptionDescription Description { get; private set; }
-
-        [Optional]
-        public ExternalVideoUrl ExternalVideoUrl { get; private set; }
+        public DateTime CreationDate { get; private set; }
 
         [Optional]
         public FileInformation HeaderImage { get; private set; }
+
+        [Optional]
+        public ExternalVideoUrl Video { get; private set; }
+
+        [Optional]
+        public SubscriptionDescription Description { get; private set; }
     }
 }
