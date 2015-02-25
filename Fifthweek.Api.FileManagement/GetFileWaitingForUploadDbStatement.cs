@@ -24,7 +24,7 @@
             {
                 var items = await connection.QueryAsync<File>(
                     string.Format(
-                        @"SELECT {0}, {1}, {2}, {3}, {4} FROM Files WHERE Id=@FileId",
+                        @"SELECT {1}, {2}, {3}, {4} FROM Files WHERE {0}=@FileId",
                         File.Fields.Id,
                         File.Fields.UserId,
                         File.Fields.FileNameWithoutExtension,
@@ -36,10 +36,10 @@
 
                 if (result == null)
                 {
-                    throw new InvalidOperationException("The File " + fileId + " couldn't be found.");
+                    throw new InvalidOperationException("The file " + fileId + " couldn't be found.");
                 }
 
-                return new FileWaitingForUpload(new Shared.FileId(result.Id), new UserId(result.UserId), result.FileNameWithoutExtension, result.FileExtension, result.Purpose);
+                return new FileWaitingForUpload(fileId, new UserId(result.UserId), result.FileNameWithoutExtension, result.FileExtension, result.Purpose);
             }
         }
     }
