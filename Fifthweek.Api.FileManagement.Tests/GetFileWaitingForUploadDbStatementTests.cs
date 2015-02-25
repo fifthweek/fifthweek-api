@@ -33,23 +33,42 @@ namespace Fifthweek.Api.FileManagement.Tests
         public async Task WhenGettingFileWaitingForUpload_ItShouldReturnTheFile()
         {
             await this.DatabaseTestAsync(async testDatabase =>
-                {
-                    this.target = new GetFileWaitingForUploadDbStatement(testDatabase);
+            {
+                this.target = new GetFileWaitingForUploadDbStatement(testDatabase);
 
-                    await this.CreateUserAsync(testDatabase);
-                    await this.AddFileAsync(testDatabase);
-                    await testDatabase.TakeSnapshotAsync();
+                await this.CreateUserAsync(testDatabase);
+                await this.AddFileAsync(testDatabase);
+                await testDatabase.TakeSnapshotAsync();
 
-                    var result = await this.target.ExecuteAsync(FileId);
+                var result = await this.target.ExecuteAsync(FileId);
 
-                    Assert.AreEqual(FileId, result.FileId);
-                    Assert.AreEqual(UserId, result.UserId);
-                    Assert.AreEqual(FileNameWithoutExtension, result.FileNameWithoutExtension);
-                    Assert.AreEqual(FileExtension, result.FileExtension);
-                    Assert.AreEqual(Purpose, result.Purpose);
+                Assert.AreEqual(FileId, result.FileId);
+                Assert.AreEqual(UserId, result.UserId);
+                Assert.AreEqual(FileNameWithoutExtension, result.FileNameWithoutExtension);
+                Assert.AreEqual(FileExtension, result.FileExtension);
+                Assert.AreEqual(Purpose, result.Purpose);
 
-                    return ExpectedSideEffects.None;
-                });
+                return ExpectedSideEffects.None;
+            });
+        }
+
+        [TestMethod]
+        public async Task WhenGettingFileWaitingForUpload_ItShouldBeIdempotent()
+        {
+            await this.DatabaseTestAsync(async testDatabase =>
+            {
+                this.target = new GetFileWaitingForUploadDbStatement(testDatabase);
+
+                await this.CreateUserAsync(testDatabase);
+                await this.AddFileAsync(testDatabase);
+
+                await this.target.ExecuteAsync(FileId);
+                await testDatabase.TakeSnapshotAsync();
+
+                await this.target.ExecuteAsync(FileId);
+                
+                return ExpectedSideEffects.None;
+            });
         }
 
         [TestMethod]
