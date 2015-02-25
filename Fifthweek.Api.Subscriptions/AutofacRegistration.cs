@@ -11,6 +11,7 @@
         {
             builder.RegisterType<SubscriptionOwnership>().As<ISubscriptionOwnership>();
             builder.RegisterType<SubscriptionSecurity>().As<ISubscriptionSecurity>();
+            builder.RegisterType<GetSubscriptionDbStatement>().As<IGetSubscriptionDbStatement>();
         }
     }
 }

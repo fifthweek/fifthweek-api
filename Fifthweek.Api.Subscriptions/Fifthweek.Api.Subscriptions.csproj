@@ -79,6 +79,11 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AutofacRegistration.cs" />
+    <Compile Include="Queries\GetSubscriptionQuery.cs" />
+    <Compile Include="Queries\GetSubscriptionQueryHandler.cs" />
+    <Compile Include="GetSubscriptionDbStatement.cs" />
+    <Compile Include="IGetSubscriptionDbStatement.cs" />
+    <Compile Include="Queries\GetSubscriptionResult.cs" />
     <Compile Include="SubscriptionOwnership.cs" />
     <Compile Include="ISubscriptionOwnership.cs" />
     <Compile Include="ClassAugmentation.cs">

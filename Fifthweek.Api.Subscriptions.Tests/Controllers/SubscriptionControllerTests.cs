@@ -10,6 +10,7 @@
     using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.Api.Subscriptions.Commands;
     using Fifthweek.Api.Subscriptions.Controllers;
+    using Fifthweek.Api.Subscriptions.Queries;
     using Fifthweek.Api.Subscriptions.Shared;
 
     using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -19,12 +20,14 @@
     [TestClass]
     public class SubscriptionControllerTests
     {
+        private static readonly DateTime Now = DateTime.UtcNow;
         private static readonly UserId UserId = new UserId(Guid.NewGuid());
         private static readonly Requester Requester = Requester.Authenticated(UserId);
         private static readonly SubscriptionId SubscriptionId = new SubscriptionId(Guid.NewGuid());
         private static readonly FileId HeaderImageFileId = new FileId(Guid.NewGuid());
         private Mock<ICommandHandler<CreateSubscriptionCommand>> createSubscription;
         private Mock<ICommandHandler<UpdateSubscriptionCommand>> updateSubscription;
+        private Mock<IQueryHandler<GetSubscriptionQuery, GetSubscriptionResult>> getSubscription;
         private Mock<IRequesterContext> requesterContext;
         private Mock<IGuidCreator> guidCreator;
         private SubscriptionController target;
@@ -34,11 +37,13 @@
         {
             this.createSubscription = new Mock<ICommandHandler<CreateSubscriptionCommand>>();
             this.updateSubscription = new Mock<ICommandHandler<UpdateSubscriptionCommand>>();
+            this.getSubscription = new Mock<IQueryHandler<GetSubscriptionQuery, GetSubscriptionResult>>();
             this.requesterContext = new Mock<IRequesterContext>();
             this.guidCreator = new Mock<IGuidCreator>();
             this.target = new SubscriptionController(
                 this.createSubscription.Object,
                 this.updateSubscription.Object,
+                this.getSubscription.Object,
                 this.requesterContext.Object,
                 this.guidCreator.Object);
         }
@@ -72,6 +77,31 @@
 
             Assert.IsInstanceOfType(result, typeof(OkResult));
             this.updateSubscription.Verify();
+        }
+
+        [TestMethod]
+        public async Task WhenGettingSubscription_ItShouldIssueGetSubscriptionQuery()
+        {
+            this.getSubscription.Setup(v => v.HandleAsync(new GetSubscriptionQuery(SubscriptionId)))
+                .Returns(Task.FromResult(NewGetSubscriptionResult())).Verifiable();
+
+            var result = await this.target.GetSubscription(SubscriptionId.Value.EncodeGuid());
+
+            Assert.AreEqual(NewGetSubscriptionResult(), result);
+            this.getSubscription.Verify();
+        }
+
+        public static GetSubscriptionResult NewGetSubscriptionResult()
+        {
+            return new GetSubscriptionResult(
+                SubscriptionId,
+                UserId,
+                new SubscriptionName("name"),
+                Now,
+                new Introduction("intro"),
+                null,
+                null,
+                null);
         }
 
         public static NewSubscriptionData NewCreateSubscriptionData()

@@ -6,6 +6,7 @@
     using Fifthweek.Api.Core;
     using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.Api.Subscriptions.Commands;
+    using Fifthweek.Api.Subscriptions.Queries;
     using Fifthweek.Api.Subscriptions.Shared;
     using Fifthweek.CodeGeneration;
 
@@ -14,6 +15,7 @@
     {
         private readonly ICommandHandler<CreateSubscriptionCommand> createSubscription;
         private readonly ICommandHandler<UpdateSubscriptionCommand> updateSubscription;
+        private readonly IQueryHandler<GetSubscriptionQuery, GetSubscriptionResult> getSubscription;
         private readonly IRequesterContext requesterContext;
         private readonly IGuidCreator guidCreator;
 
@@ -57,6 +59,19 @@
                 subscription.Video));
 
             return this.Ok();
+        }
+
+        [Route("{subscriptionId}")]
+        public async Task<GetSubscriptionResult> GetSubscription(string subscriptionId)
+        {
+            subscriptionId.AssertUrlParameterProvided("subscriptionId");
+
+            var subscriptionIdObject = new SubscriptionId(subscriptionId.DecodeGuid());
+
+            var result = await this.getSubscription.HandleAsync(new GetSubscriptionQuery(
+                subscriptionIdObject));
+
+            return result;
         }
     }
 }
