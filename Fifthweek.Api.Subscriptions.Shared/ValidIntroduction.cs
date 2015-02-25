@@ -5,10 +5,7 @@
     using System.Diagnostics.CodeAnalysis;
     using System.Linq;
 
-    using Fifthweek.CodeGeneration;
-
-    [AutoEqualityMembers]
-    public partial class ValidIntroduction
+    public partial class ValidIntroduction : Introduction
     {
         public static readonly string ForbiddenCharacters = "\r\n\t";
         public static readonly int MinLength = 15; // Must be at least a few words.
@@ -21,11 +18,10 @@
         public static readonly ValidIntroduction Default = Parse(
             "Hello! Thinking of subscribing? Awesome! Subscriptions allow me to produce more of my awesome creations for all you lovely people to see here!");
 
-        private ValidIntroduction()
+        private ValidIntroduction(string value)
+            : base(value)
         {
         }
-
-        public string Value { get; private set; }
 
         public static bool IsEmpty(string value)
         {
@@ -78,10 +74,7 @@
                 return false;
             }
 
-            introduction = new ValidIntroduction
-            {
-                Value = value
-            };
+            introduction = new ValidIntroduction(value);
 
             return true;
         }

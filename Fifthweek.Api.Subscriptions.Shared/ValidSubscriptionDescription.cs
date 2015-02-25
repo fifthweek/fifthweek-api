@@ -3,19 +3,15 @@
     using System;
     using System.Collections.Generic;
 
-    using Fifthweek.CodeGeneration;
-
-    [AutoEqualityMembers]
-    public partial class ValidSubscriptionDescription
+    public partial class ValidSubscriptionDescription : SubscriptionDescription
     {
         public static readonly int MinLength = 1;
         public static readonly int MaxLength = 2000; // Seems to be the maximum size used on other sites for landing page blubs.
 
-        private ValidSubscriptionDescription()
+        private ValidSubscriptionDescription(string value)
+            : base(value)
         {
         }
-
-        public string Value { get; private set; }
 
         public static bool IsEmpty(string value)
         {
@@ -63,10 +59,7 @@
                 return false;
             }
 
-            description = new ValidSubscriptionDescription
-            {
-                Value = value
-            };
+            description = new ValidSubscriptionDescription(value);
 
             return true;
         }

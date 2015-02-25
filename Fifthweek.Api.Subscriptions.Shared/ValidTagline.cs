@@ -4,10 +4,7 @@
     using System.Collections.Generic;
     using System.Linq;
 
-    using Fifthweek.CodeGeneration;
-
-    [AutoEqualityMembers]
-    public partial class ValidTagline
+    public partial class ValidTagline : Tagline
     {
         public static readonly string ForbiddenCharacters = "\r\n\t";
         public static readonly int MinLength = 5;
@@ -16,11 +13,10 @@
         private const string ForbiddenCharacterMessage = "Must not contain new lines or tabs";
         private static readonly HashSet<char> ForbiddenCharactersHashSet = new HashSet<char>(ForbiddenCharacters);
 
-        private ValidTagline()
+        private ValidTagline(string value)
+            : base(value)
         {
         }
-
-        public string Value { get; private set; }
 
         public static bool IsEmpty(string value)
         {
@@ -73,10 +69,7 @@
                 return false;
             }
 
-            tagline = new ValidTagline
-            {
-                Value = value
-            };
+            tagline = new ValidTagline(value);
 
             return true;
         }

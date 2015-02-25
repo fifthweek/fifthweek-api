@@ -4,10 +4,7 @@
     using System.Collections.Generic;
     using System.Linq;
 
-    using Fifthweek.CodeGeneration;
-
-    [AutoEqualityMembers]
-    public partial class ValidSubscriptionName
+    public partial class ValidSubscriptionName : SubscriptionName
     {
         public static readonly string ForbiddenCharacters = "\r\n\t";
         public static readonly int MinLength = 1;
@@ -16,11 +13,10 @@
         private const string ForbiddenCharacterMessage = "Must not contain new lines or tabs";
         private static readonly HashSet<char> ForbiddenCharactersHashSet = new HashSet<char>(ForbiddenCharacters);
 
-        private ValidSubscriptionName()
+        private ValidSubscriptionName(string value)
+            : base(value)
         {
         }
-
-        public string Value { get; private set; }
 
         public static bool IsEmpty(string value)
         {
@@ -73,10 +69,7 @@
                 return false;
             }
 
-            subscriptionName = new ValidSubscriptionName
-            {
-                Value = value
-            };
+            subscriptionName = new ValidSubscriptionName(value);
 
             return true;
         }
