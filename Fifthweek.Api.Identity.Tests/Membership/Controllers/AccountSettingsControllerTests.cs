@@ -17,6 +17,8 @@
     [TestClass]
     public class AccountSettingsControllerTests
     {
+        private static readonly Guid SecurityGuid = Guid.NewGuid();
+        private static readonly string SecurityToken = SecurityGuid.ToString();
         private static readonly UserId UserId = new UserId(Guid.NewGuid());
         private static readonly Requester Requester = Requester.Authenticated(UserId);
         private static readonly UserId RequestedUserId = new UserId(Guid.NewGuid());
@@ -29,6 +31,7 @@
         private static readonly string FileUri = "uri";
         private static readonly FileInformation FileInformation = new FileInformation(FileId, ContainerName, BlobName, FileUri);
 
+        private Mock<IGuidCreator> guidCreator;
         private Mock<IRequesterContext> requesterContext;
         private Mock<ICommandHandler<UpdateAccountSettingsCommand>> updateAccountSettings;
         private Mock<IQueryHandler<GetAccountSettingsQuery, GetAccountSettingsResult>> getAccountSettings;
@@ -37,11 +40,16 @@
         [TestInitialize]
         public void TestInitialize()
         {
+            this.guidCreator = new Mock<IGuidCreator>();
             this.requesterContext = new Mock<IRequesterContext>();
             this.updateAccountSettings = new Mock<ICommandHandler<UpdateAccountSettingsCommand>>();
             this.getAccountSettings = new Mock<IQueryHandler<GetAccountSettingsQuery, GetAccountSettingsResult>>();
 
+            this.guidCreator.Setup(v => v.Create()).Returns(SecurityGuid);
+            this.requesterContext.Setup(v => v.GetRequester()).Returns(Requester);
+
             this.target = new AccountSettingsController(
+                this.guidCreator.Object,
                 this.requesterContext.Object,
                 this.updateAccountSettings.Object,
                 this.getAccountSettings.Object);
@@ -64,8 +72,6 @@
         [TestMethod]
         public async Task WhenGetIsCalled_ItShouldCallTheQueryHandler()
         {
-            this.requesterContext.Setup(v => v.GetRequester()).Returns(Requester);
-
             var query = new GetAccountSettingsQuery(Requester, RequestedUserId);
             this.getAccountSettings.Setup(v => v.HandleAsync(query))
                 .ReturnsAsync(new GetAccountSettingsResult(Email, FileInformation))
@@ -83,8 +89,6 @@
         [TestMethod]
         public async Task WhenGetIsCalledAndNoProfileImageExists_ItShouldNotReturnAnyFileInformation()
         {
-            this.requesterContext.Setup(v => v.GetRequester()).Returns(Requester);
-
             var query = new GetAccountSettingsQuery(Requester, RequestedUserId);
             this.getAccountSettings.Setup(v => v.HandleAsync(query))
                 .ReturnsAsync(new GetAccountSettingsResult(Email, null))
@@ -116,9 +120,7 @@
         [TestMethod]
         public async Task WhenPutIsCalled_ItShouldCallTheCommandHandler()
         {
-            this.requesterContext.Setup(v => v.GetRequester()).Returns(Requester);
-
-            var command = new UpdateAccountSettingsCommand(Requester, RequestedUserId, Username, Email, Password, FileId);
+            var command = new UpdateAccountSettingsCommand(Requester, RequestedUserId, Username, Email, SecurityToken, Password, FileId);
             this.updateAccountSettings.Setup(v => v.HandleAsync(command))
                 .Returns(Task.FromResult(0))
                 .Verifiable();
@@ -141,7 +143,7 @@
         {
             this.requesterContext.Setup(v => v.GetRequester()).Returns(Requester);
 
-            var command = new UpdateAccountSettingsCommand(Requester, RequestedUserId, Username, Email, null, FileId);
+            var command = new UpdateAccountSettingsCommand(Requester, RequestedUserId, Username, Email, SecurityToken, null, FileId);
             this.updateAccountSettings.Setup(v => v.HandleAsync(command))
                 .Returns(Task.FromResult(0))
                 .Verifiable();
@@ -164,7 +166,7 @@
         {
             this.requesterContext.Setup(v => v.GetRequester()).Returns(Requester);
 
-            var command = new UpdateAccountSettingsCommand(Requester, RequestedUserId, Username, Email, Password, null);
+            var command = new UpdateAccountSettingsCommand(Requester, RequestedUserId, Username, Email, SecurityToken, Password, null);
             this.updateAccountSettings.Setup(v => v.HandleAsync(command))
                 .Returns(Task.FromResult(0))
                 .Verifiable();

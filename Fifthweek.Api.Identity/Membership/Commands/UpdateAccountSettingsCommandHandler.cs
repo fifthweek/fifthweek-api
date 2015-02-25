@@ -30,7 +30,8 @@
                     command.NewUsername,
                     command.NewEmail,
                     command.NewPassword,
-                    command.NewProfileImageId);
+                    command.NewProfileImageId,
+                    command.NewSecurityStamp);
 
             if (!result.EmailConfirmed)
             {

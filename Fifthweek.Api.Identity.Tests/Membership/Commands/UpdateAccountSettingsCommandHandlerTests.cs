@@ -23,6 +23,7 @@
         private static readonly ValidUsername Username = ValidUsername.Parse("username");
         private static readonly ValidEmail Email = ValidEmail.Parse("test@testing.fifthweek.com");
         private static readonly ValidPassword Password = ValidPassword.Parse("passw0rd");
+        private static readonly string SecurityToken = Guid.NewGuid().ToString();
 
         private Mock<IUpdateAccountSettingsDbStatement> updateAccountSettings;
         private Mock<IFileSecurity> fileSecurity;
@@ -51,6 +52,7 @@
                 UserId,
                 Username,
                 Email,
+                SecurityToken,
                 Password,
                 FileId);
 
@@ -76,6 +78,7 @@
                 UserId,
                 Username,
                 Email,
+                SecurityToken,
                 Password,
                 FileId));
         }
@@ -88,6 +91,7 @@
                 UserId,
                 Username,
                 Email,
+                SecurityToken,
                 Password,
                 FileId);
 
@@ -101,7 +105,8 @@
                     Username,
                     Email,
                     Password,
-                    FileId)).ReturnsAsync(new UpdateAccountSettingsDbStatement.UpdateAccountSettingsResult(false))
+                    FileId,
+                    SecurityToken)).ReturnsAsync(new UpdateAccountSettingsDbStatement.UpdateAccountSettingsResult(false))
                     .Verifiable();
 
             await this.target.HandleAsync(command);

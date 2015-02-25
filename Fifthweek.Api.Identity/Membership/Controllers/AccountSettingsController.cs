@@ -1,5 +1,6 @@
 ﻿namespace Fifthweek.Api.Identity.Membership.Controllers
 {
+    using System;
     using System.Threading.Tasks;
     using System.Web.Http;
 
@@ -14,6 +15,8 @@
     [RoutePrefix("accountSettings")]
     public partial class AccountSettingsController : ApiController
     {
+        private readonly IGuidCreator guidCreator;
+
         private readonly IRequesterContext requesterContext;
 
         private readonly ICommandHandler<UpdateAccountSettingsCommand> updateAccountSettings;
@@ -53,6 +56,7 @@
                 requestedUserId,
                 updatedAccountSettings.NewUsername,
                 updatedAccountSettings.NewEmail,
+                this.guidCreator.Create().ToString(),
                 updatedAccountSettings.NewPassword,
                 newProfileImageId);
 

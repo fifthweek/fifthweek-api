@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Linq;
 
-//// Generated on 24/02/2015 13:32:52 (UTC)
-//// Mapped solution in 10.34s
+//// Generated on 25/02/2015 12:32:56 (UTC)
+//// Mapped solution in 27.27s
 
 
 namespace Fifthweek.Api.Identity.Membership.Commands
@@ -220,6 +220,7 @@ namespace Fifthweek.Api.Identity.Membership.Commands
             Fifthweek.Api.Identity.Shared.Membership.UserId requestedUserId,
             Fifthweek.Api.Identity.Shared.Membership.ValidUsername newUsername,
             Fifthweek.Api.Identity.Shared.Membership.ValidEmail newEmail,
+            System.String newSecurityStamp,
             Fifthweek.Api.Identity.Shared.Membership.ValidPassword newPassword,
             Fifthweek.Api.FileManagement.Shared.FileId newProfileImageId)
         {
@@ -243,10 +244,16 @@ namespace Fifthweek.Api.Identity.Membership.Commands
                 throw new ArgumentNullException("newEmail");
             }
 
+            if (newSecurityStamp == null)
+            {
+                throw new ArgumentNullException("newSecurityStamp");
+            }
+
             this.Requester = requester;
             this.RequestedUserId = requestedUserId;
             this.NewUsername = newUsername;
             this.NewEmail = newEmail;
+            this.NewSecurityStamp = newSecurityStamp;
             this.NewPassword = newPassword;
             this.NewProfileImageId = newProfileImageId;
         }
@@ -314,10 +321,16 @@ namespace Fifthweek.Api.Identity.Membership.Controllers
     public partial class AccountSettingsController 
     {
         public AccountSettingsController(
+            Fifthweek.Api.Core.IGuidCreator guidCreator,
             Fifthweek.Api.Identity.Shared.Membership.IRequesterContext requesterContext,
             Fifthweek.Api.Core.ICommandHandler<Fifthweek.Api.Identity.Membership.Commands.UpdateAccountSettingsCommand> updateAccountSettings,
             Fifthweek.Api.Core.IQueryHandler<Fifthweek.Api.Identity.Membership.Queries.GetAccountSettingsQuery,Fifthweek.Api.Identity.Membership.GetAccountSettingsResult> getAccountSettings)
         {
+            if (guidCreator == null)
+            {
+                throw new ArgumentNullException("guidCreator");
+            }
+
             if (requesterContext == null)
             {
                 throw new ArgumentNullException("requesterContext");
@@ -333,6 +346,7 @@ namespace Fifthweek.Api.Identity.Membership.Controllers
                 throw new ArgumentNullException("getAccountSettings");
             }
 
+            this.guidCreator = guidCreator;
             this.requesterContext = requesterContext;
             this.updateAccountSettings = updateAccountSettings;
             this.getAccountSettings = getAccountSettings;
@@ -2075,7 +2089,7 @@ namespace Fifthweek.Api.Identity.Membership.Commands
     {
         public override string ToString()
         {
-            return string.Format("UpdateAccountSettingsCommand({0}, {1}, {2}, {3}, {4}, {5})", this.Requester == null ? "null" : this.Requester.ToString(), this.RequestedUserId == null ? "null" : this.RequestedUserId.ToString(), this.NewUsername == null ? "null" : this.NewUsername.ToString(), this.NewEmail == null ? "null" : this.NewEmail.ToString(), this.NewPassword == null ? "null" : this.NewPassword.ToString(), this.NewProfileImageId == null ? "null" : this.NewProfileImageId.ToString());
+            return string.Format("UpdateAccountSettingsCommand({0}, {1}, {2}, {3}, \"{4}\", {5}, {6})", this.Requester == null ? "null" : this.Requester.ToString(), this.RequestedUserId == null ? "null" : this.RequestedUserId.ToString(), this.NewUsername == null ? "null" : this.NewUsername.ToString(), this.NewEmail == null ? "null" : this.NewEmail.ToString(), this.NewSecurityStamp == null ? "null" : this.NewSecurityStamp.ToString(), this.NewPassword == null ? "null" : this.NewPassword.ToString(), this.NewProfileImageId == null ? "null" : this.NewProfileImageId.ToString());
         }
         
         public override bool Equals(object obj)
@@ -2107,6 +2121,7 @@ namespace Fifthweek.Api.Identity.Membership.Commands
                 hashCode = (hashCode * 397) ^ (this.RequestedUserId != null ? this.RequestedUserId.GetHashCode() : 0);
                 hashCode = (hashCode * 397) ^ (this.NewUsername != null ? this.NewUsername.GetHashCode() : 0);
                 hashCode = (hashCode * 397) ^ (this.NewEmail != null ? this.NewEmail.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.NewSecurityStamp != null ? this.NewSecurityStamp.GetHashCode() : 0);
                 hashCode = (hashCode * 397) ^ (this.NewPassword != null ? this.NewPassword.GetHashCode() : 0);
                 hashCode = (hashCode * 397) ^ (this.NewProfileImageId != null ? this.NewProfileImageId.GetHashCode() : 0);
                 return hashCode;
@@ -2131,6 +2146,11 @@ namespace Fifthweek.Api.Identity.Membership.Commands
             }
         
             if (!object.Equals(this.NewEmail, other.NewEmail))
+            {
+                return false;
+            }
+        
+            if (!object.Equals(this.NewSecurityStamp, other.NewSecurityStamp))
             {
                 return false;
             }

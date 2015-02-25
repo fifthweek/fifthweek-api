@@ -25,7 +25,8 @@
             ValidUsername newUsername,
             ValidEmail newEmail,
             ValidPassword newPassword,
-            FileId newProfileImageFileId)
+            FileId newProfileImageFileId,
+            string newSecurityStamp)
         {
             userId.AssertNotNull("userId");
             newUsername.AssertNotNull("newUsername");
@@ -47,6 +48,7 @@
                     Email = @Email, 
                     UserName = @Username, 
                     ProfileImageFileId = @ProfileImageFileId,
+                    SecurityStamp = @SecurityStamp,
                     @emailConfirmed =
                     (
                         CASE
@@ -79,6 +81,7 @@
                         Username = newUsername.Value,
                         Email = newEmail.Value,
                         PasswordHash = passwordHash,
+                        SecurityStamp = newSecurityStamp,
                         ProfileImageFileId = newProfileImageFileId == null ? (Guid?)null : newProfileImageFileId.Value
                     });
 

@@ -12,6 +12,7 @@ namespace Fifthweek.Api.Identity.Membership
             ValidUsername newUsername,
             ValidEmail newEmail,
             ValidPassword newPassword,
-            FileId newProfileImageFileId);
+            FileId newProfileImageFileId,
+            string newSecurityStamp);
     }
 }

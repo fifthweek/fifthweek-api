@@ -27,6 +27,7 @@ namespace Fifthweek.Api.Identity.Membership.Tests
         private readonly ValidUsername newUsername = ValidUsername.Parse("newtestusername");
         private readonly ValidPassword newPassword = ValidPassword.Parse("newtestpassword");
         private readonly FileId newFileId = new FileId(Guid.NewGuid());
+        private readonly string securityStamp = Guid.NewGuid().ToString();
         private UpdateAccountSettingsDbStatement target;
         private Mock<IUserManager> userManager;
         private Mock<IPasswordHasher> passwordHasher;
@@ -60,13 +61,15 @@ namespace Fifthweek.Api.Identity.Membership.Tests
                 expectedUser.EmailConfirmed = false;
                 expectedUser.PasswordHash = hashedNewPassword;
                 expectedUser.ProfileImageFileId = this.newFileId.Value;
+                expectedUser.SecurityStamp = this.securityStamp;
 
                 var result = await this.target.ExecuteAsync(
                     this.userId,
                     this.newUsername,
                     this.newEmail,
                     this.newPassword,
-                    this.newFileId);
+                    this.newFileId,
+                    this.securityStamp);
 
                 Assert.AreEqual(false, result.EmailConfirmed);
 
@@ -93,7 +96,8 @@ namespace Fifthweek.Api.Identity.Membership.Tests
                     this.newUsername,
                     this.newEmail,
                     this.newPassword,
-                    this.newFileId);
+                    this.newFileId,
+                    this.securityStamp);
 
                 await testDatabase.TakeSnapshotAsync();
 
@@ -102,7 +106,8 @@ namespace Fifthweek.Api.Identity.Membership.Tests
                     this.newUsername,
                     this.newEmail,
                     this.newPassword,
-                    this.newFileId);
+                    this.newFileId,
+                    this.securityStamp);
 
                 Assert.AreEqual(result, result2);
 
@@ -127,13 +132,15 @@ namespace Fifthweek.Api.Identity.Membership.Tests
                 expectedUser.Email = this.newEmail.Value;
                 expectedUser.PasswordHash = hashedNewPassword;
                 expectedUser.ProfileImageFileId = this.newFileId.Value;
+                expectedUser.SecurityStamp = this.securityStamp;
 
                 var result = await this.target.ExecuteAsync(
                     this.userId,
                     this.newUsername,
                     this.newEmail,
                     this.newPassword,
-                    this.newFileId);
+                    this.newFileId,
+                    this.securityStamp);
 
                 Assert.AreEqual(false, result.EmailConfirmed);
 
@@ -159,13 +166,15 @@ namespace Fifthweek.Api.Identity.Membership.Tests
                     expectedUser.Email = this.newEmail.Value;
                     expectedUser.EmailConfirmed = false;
                     expectedUser.ProfileImageFileId = this.newFileId.Value;
+                    expectedUser.SecurityStamp = this.securityStamp;
 
                     var result = await this.target.ExecuteAsync(
                         this.userId,
                         this.newUsername,
                         this.newEmail,
                         null,
-                        this.newFileId);
+                        this.newFileId,
+                        this.securityStamp);
 
                     Assert.AreEqual(false, result.EmailConfirmed);
 
@@ -188,13 +197,15 @@ namespace Fifthweek.Api.Identity.Membership.Tests
                 var expectedUser = await this.GetUserAsync(testDatabase);
                 expectedUser.UserName = this.newUsername.Value;
                 expectedUser.ProfileImageFileId = this.newFileId.Value;
+                expectedUser.SecurityStamp = this.securityStamp;
 
                 var result = await this.target.ExecuteAsync(
                     this.userId,
                     this.newUsername,
                     ValidEmail.Parse(this.email.Value),
                     null,
-                    this.newFileId);
+                    this.newFileId,
+                    this.securityStamp);
 
                 Assert.AreEqual(true, result.EmailConfirmed);
 
@@ -217,13 +228,15 @@ namespace Fifthweek.Api.Identity.Membership.Tests
                 var expectedUser = await this.GetUserAsync(testDatabase);
                 expectedUser.UserName = this.newUsername.Value;
                 expectedUser.ProfileImageFileId = this.newFileId.Value;
+                expectedUser.SecurityStamp = this.securityStamp;
 
                 var result = await this.target.ExecuteAsync(
                     this.userId,
                     this.newUsername,
                     ValidEmail.Parse(this.email.Value),
                     null,
-                    this.newFileId);
+                    this.newFileId,
+                    this.securityStamp);
 
                 Assert.AreEqual(false, result.EmailConfirmed);
 
@@ -248,13 +261,15 @@ namespace Fifthweek.Api.Identity.Membership.Tests
                     expectedUser.Email = this.newEmail.Value;
                     expectedUser.EmailConfirmed = false;
                     expectedUser.ProfileImageFileId = null;
+                    expectedUser.SecurityStamp = this.securityStamp;
 
                     var result = await this.target.ExecuteAsync(
                         this.userId,
                         this.newUsername,
                         this.newEmail,
                         null,
-                        null);
+                        null,
+                        this.securityStamp);
 
                     Assert.AreEqual(false, result.EmailConfirmed);
 
@@ -273,7 +288,8 @@ namespace Fifthweek.Api.Identity.Membership.Tests
                 this.newUsername,
                 this.newEmail,
                 this.newPassword,
-                this.newFileId);
+                this.newFileId,
+                this.securityStamp);
 
             await badMethodCall.AssertExceptionAsync<ArgumentNullException>();
         }
@@ -286,7 +302,8 @@ namespace Fifthweek.Api.Identity.Membership.Tests
                 this.newUsername,
                 null,
                 this.newPassword,
-                this.newFileId);
+                this.newFileId,
+                this.securityStamp);
 
             await badMethodCall.AssertExceptionAsync<ArgumentNullException>();
         }
@@ -299,7 +316,8 @@ namespace Fifthweek.Api.Identity.Membership.Tests
                 null,
                 this.newEmail,
                 this.newPassword,
-                this.newFileId);
+                this.newFileId,
+                this.securityStamp);
 
             await badMethodCall.AssertExceptionAsync<ArgumentNullException>();
         }

@@ -16,6 +16,8 @@
 
         public ValidEmail NewEmail { get; private set; }
 
+        public string NewSecurityStamp { get; private set; }
+
         [Optional]
         public ValidPassword NewPassword { get; private set; }
 
