@@ -33,13 +33,22 @@
         private static readonly FileId HeaderImageFileId = new FileId(Guid.NewGuid());
         private static readonly ValidExternalVideoUrl Video = ValidExternalVideoUrl.Parse("http://youtube.com/3135");
         private static readonly UpdateSubscriptionCommand Command = new UpdateSubscriptionCommand(
-            Requester, 
-            SubscriptionId, 
-            SubscriptionName, 
-            Tagline, 
-            Introduction, 
+            Requester,
+            SubscriptionId,
+            SubscriptionName,
+            Tagline,
+            Introduction,
             Description,
             HeaderImageFileId,
+            Video);
+        private static readonly UpdateSubscriptionCommand CommandWithoutHeaderImage = new UpdateSubscriptionCommand(
+            Requester,
+            SubscriptionId,
+            SubscriptionName,
+            Tagline,
+            Introduction,
+            Description,
+            null,
             Video);
 
         private Mock<ISubscriptionSecurity> subscriptionSecurity;
@@ -147,6 +156,37 @@
                     Description.Value,
                     Video.Value,
                     HeaderImageFileId.Value,
+                    null,
+                    subscription.CreationDate);
+
+                return new ExpectedSideEffects
+                {
+                    Update = expectedSubscription
+                };
+            });
+        }
+
+        [TestMethod]
+        public async Task WhenNoHeaderImage_ItShouldUpdateSubscription()
+        {
+            await this.DatabaseTestAsync(async testDatabase =>
+            {
+                this.target = new UpdateSubscriptionCommandHandler(this.subscriptionSecurity.Object, this.fileSecurity.Object, this.requesterSecurity.Object, testDatabase);
+                var subscription = await this.CreateSubscriptionAsync(UserId, SubscriptionId, testDatabase);
+                await testDatabase.TakeSnapshotAsync();
+
+                await this.target.HandleAsync(CommandWithoutHeaderImage);
+
+                var expectedSubscription = new Subscription(
+                    SubscriptionId.Value,
+                    UserId.Value,
+                    null,
+                    SubscriptionName.Value,
+                    Tagline.Value,
+                    Introduction.Value,
+                    Description.Value,
+                    Video.Value,
+                    null,
                     null,
                     subscription.CreationDate);
 

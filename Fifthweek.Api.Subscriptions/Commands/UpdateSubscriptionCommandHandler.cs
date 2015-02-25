@@ -26,8 +26,11 @@
 
             await this.subscriptionSecurity.AssertWriteAllowedAsync(authenticatedUserId, command.SubscriptionId);
 
-            await this.fileSecurity.AssertReferenceAllowedAsync(authenticatedUserId, command.HeaderImageFileId);
-            
+            if (command.HeaderImageFileId != null)
+            {
+                await this.fileSecurity.AssertReferenceAllowedAsync(authenticatedUserId, command.HeaderImageFileId);
+            }
+
             await this.UpdateSubscriptionAsync(command);
         }
 
