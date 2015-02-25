@@ -24,6 +24,7 @@
         public string Video { get; set; }
 
         [Parsed(typeof(ValidSubscriptionDescription))]
+        [Optional]
         public string Description { get; set; }
     }
 }

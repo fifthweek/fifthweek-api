@@ -466,7 +466,7 @@ angular.module('webApp').factory('subscriptionStub',
     //   introduction: '',
     //   headerImageFileId: 'Base64Guid', /* optional */
     //   video: '', /* optional */
-    //   description: ''
+    //   description: '' /* optional */
     // }
     service.putSubscription = function(subscriptionId, subscriptionData) {
       return $http.put(apiBaseUri + 'subscriptions/' + encodeURIComponent(subscriptionId), subscriptionData).catch(function(response) {

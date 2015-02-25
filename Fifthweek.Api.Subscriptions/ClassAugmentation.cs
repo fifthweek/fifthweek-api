@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Linq;
 
-//// Generated on 25/02/2015 15:32:06 (UTC)
-//// Mapped solution in 10.74s
+//// Generated on 25/02/2015 17:43:24 (UTC)
+//// Mapped solution in 27.87s
 
 
 namespace Fifthweek.Api.Subscriptions.Commands
@@ -1668,11 +1668,6 @@ namespace Fifthweek.Api.Subscriptions.Controllers
                     throw new ArgumentNullException("introduction");
                 }
 
-                if (description == null)
-                {
-                    throw new ArgumentNullException("description");
-                }
-
                 this.SubscriptionName = subscriptionName;
                 this.Tagline = tagline;
                 this.Introduction = introduction;
@@ -1797,12 +1792,6 @@ namespace Fifthweek.Api.Subscriptions.Controllers
 
                     modelStateDictionary.Add("Description", modelState);
                 }
-            }
-            else
-            {
-                var modelState = new System.Web.Http.ModelBinding.ModelState();
-                modelState.Errors.Add("Value required");
-                modelStateDictionary.Add("Description", modelState);
             }
 
             if (!modelStateDictionary.IsValid)
