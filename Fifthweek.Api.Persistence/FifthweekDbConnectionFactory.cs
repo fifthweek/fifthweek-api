@@ -6,14 +6,23 @@
 
     public class FifthweekDbConnectionFactory : IFifthweekDbConnectionFactory
     {
-        public const string DefaultConnectionString = "FifthweekDbContext";
+        public const string DefaultConnectionStringKey = "FifthweekDbContext";
+        public static readonly string DefaultConnectionString;
 
         private readonly string connectionString;
+
+        static FifthweekDbConnectionFactory()
+        {
+            var configuration = ConfigurationManager.ConnectionStrings[DefaultConnectionStringKey];
+            if (configuration != null)
+            {
+                DefaultConnectionString = configuration.ConnectionString;
+            }
+        }
 
         public FifthweekDbConnectionFactory()
             : this(DefaultConnectionString)
         {
-            this.connectionString = ConfigurationManager.ConnectionStrings[DefaultConnectionString].ConnectionString;
         }
 
         public FifthweekDbConnectionFactory(string connectionString)

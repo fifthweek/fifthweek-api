@@ -16,7 +16,7 @@
     {
         public void Register(ContainerBuilder builder)
         {
-            builder.RegisterType<FifthweekDbConnectionFactory>().As<IFifthweekDbConnectionFactory>().SingleInstance();
+            builder.RegisterType<FifthweekDbConnectionFactory>().As<IFifthweekDbConnectionFactory>();
             builder.Register(c => CreateUserManager(c.Resolve<ISendEmailService>(), c.Resolve<IFifthweekDbConnectionFactory>())).As<IUserManager>();
         }
 

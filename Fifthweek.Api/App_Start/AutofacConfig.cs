@@ -49,13 +49,14 @@
             RegisterHandlers(builder);
             RegisterModules(builder);
 
-            builder.RegisterType<OwinExceptionHandler>().As<IOwinExceptionHandler>().SingleInstance();
+            builder.RegisterType<OwinExceptionHandler>().As<IOwinExceptionHandler>();
             builder.RegisterType<ExceptionHandler>().As<IExceptionHandler>().InstancePerRequest();
-            builder.RegisterInstance(HardwiredDependencies.NewDefaultDeveloperRepository()).As<IDeveloperRepository>().SingleInstance();
-            builder.RegisterInstance(HardwiredDependencies.NewDefaultSendEmailService()).As<ISendEmailService>().SingleInstance();
-            builder.RegisterInstance(HardwiredDependencies.NewDefaultReportingService()).As<IReportingService>().SingleInstance();
 
-            builder.RegisterType<HttpClient>().InstancePerDependency();
+            builder.RegisterInstance(HardwiredDependencies.NewDefaultDeveloperRepository()).As<IDeveloperRepository>();
+            builder.RegisterInstance(HardwiredDependencies.NewDefaultSendEmailService()).As<ISendEmailService>();
+            builder.RegisterInstance(HardwiredDependencies.NewDefaultReportingService()).As<IReportingService>();
+
+            builder.RegisterType<HttpClient>();
 
             // Uncoment this to log Autofac requests to trace output.
             //// builder.RegisterModule<LogRequestModule>();

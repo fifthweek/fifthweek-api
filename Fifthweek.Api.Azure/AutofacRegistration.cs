@@ -9,9 +9,9 @@
     {
         public void Register(ContainerBuilder builder)
         {
-            builder.RegisterType<BlobService>().As<IBlobService>().SingleInstance();
-            builder.RegisterType<QueueService>().As<IQueueService>().SingleInstance();
-            builder.RegisterType<FifthweekCloudStorageAccount>().As<ICloudStorageAccount>().SingleInstance();
+            builder.RegisterType<BlobService>().As<IBlobService>();
+            builder.RegisterType<QueueService>().As<IQueueService>();
+            builder.RegisterType<FifthweekCloudStorageAccount>().As<ICloudStorageAccount>();
         }
     }
 }

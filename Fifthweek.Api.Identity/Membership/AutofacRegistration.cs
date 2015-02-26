@@ -11,7 +11,7 @@
         public void Register(ContainerBuilder builder)
         {
             builder.RegisterType<RegisterUserDbStatement>().As<IRegisterUserDbStatement>();
-            builder.RegisterType<RequesterSecurity>().As<IRequesterSecurity>().SingleInstance();
+            builder.RegisterType<RequesterSecurity>().As<IRequesterSecurity>();
             builder.RegisterType<RequesterContext>().As<IRequesterContext>().InstancePerRequest();
             builder.RegisterType<GetAccountSettingsDbStatement>().As<IGetAccountSettingsDbStatement>();
             builder.RegisterType<UpdateAccountSettingsDbStatement>().As<IUpdateAccountSettingsDbStatement>();

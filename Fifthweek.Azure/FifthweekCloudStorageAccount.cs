@@ -7,11 +7,22 @@ namespace Fifthweek.Azure
 
     public class FifthweekCloudStorageAccount : ICloudStorageAccount
     {
+        private static readonly CloudStorageAccount DefaultStorageAccount;
+
         private readonly CloudStorageAccount storageAccount;
+
+        static FifthweekCloudStorageAccount()
+        {
+            var connectionString = AzureConfiguration.TryGetStorageConnectionString();
+            if (connectionString != null)
+            {
+                DefaultStorageAccount = CloudStorageAccount.Parse(connectionString);
+            }
+        }
 
         public FifthweekCloudStorageAccount()
         {
-            this.storageAccount = CloudStorageAccount.Parse(AzureConfiguration.GetStorageConnectionString());
+            this.storageAccount = DefaultStorageAccount;
         }
 
         public FifthweekCloudStorageAccount(CloudStorageAccount storageAccount)

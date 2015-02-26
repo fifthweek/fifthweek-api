@@ -10,7 +10,7 @@ namespace Fifthweek.Api.Persistence
     public class FifthweekDbContext : IdentityDbContext<FifthweekUser, FifthweekRole, Guid, FifthweekUserLogin, FifthweekUserRole, FifthweekUserClaim>, IFifthweekDbContext
     {
         public FifthweekDbContext()
-            : base(FifthweekDbConnectionFactory.DefaultConnectionString)
+            : base(FifthweekDbConnectionFactory.DefaultConnectionStringKey)
         {
         }
 

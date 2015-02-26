@@ -11,13 +11,13 @@
 
     public class FilePurposeTasks : IFilePurposeTasks
     {
-        private readonly Dictionary<string, IEnumerable<IFileTask>> mappings =
+        private static readonly Dictionary<string, IEnumerable<IFileTask>> Mappings =
             new Dictionary<string, IEnumerable<IFileTask>>();
 
-        public FilePurposeTasks()
+        static FilePurposeTasks()
         {
             // NOTE: These are retina display resolutions, so twice what you might expect.
-            this.Add(
+            Add(
                 FilePurposes.ProfileImage,
                 new CreateThumbnailsTask(
                     new Thumbnail(
@@ -41,7 +41,7 @@
                                          64, 
                                          ResizeBehaviour.CropToAspectRatio)))))));
 
-            this.Add(
+            Add(
                 FilePurposes.ProfileHeaderImage,
                 new CreateThumbnailsTask(
                     new Thumbnail(
@@ -53,7 +53,7 @@
                             256, 
                             ResizeBehaviour.CropToAspectRatio))));
 
-            this.Add(
+            Add(
                 FilePurposes.PostImage,
                 new CreateThumbnailsTask(
                     new Thumbnail(
@@ -73,12 +73,12 @@
         public IEnumerable<IFileTask> GetTasks(string purpose)
         {
             IEnumerable<IFileTask> result;
-            return this.mappings.TryGetValue(purpose, out result) ? result : Enumerable.Empty<IFileTask>();
+            return Mappings.TryGetValue(purpose, out result) ? result : Enumerable.Empty<IFileTask>();
         }
 
-        private void Add(string purpose, params IFileTask[] tasks)
+        private static void Add(string purpose, params IFileTask[] tasks)
         {
-            this.mappings.Add(purpose, tasks);
+            Mappings.Add(purpose, tasks);
         }
     }
 }

@@ -18,13 +18,11 @@
             builder.RegisterType<UpdateUserTimeStampsDbStatement>().As<IUpdateUserTimeStampsDbStatement>();
             builder.RegisterType<GetUserAndRolesFromCredentialsDbStatement>().As<IGetUserAndRolesFromCredentialsDbStatement>();
             builder.RegisterType<GetUserAndRolesFromUserIdDbStatement>().As<IGetUserAndRolesFromUserIdDbStatement>();
-
-            builder.RegisterType<ClientRepository>().As<IClientRepository>().SingleInstance();
-            builder.RegisterType<FifthweekAuthorizationServerProvider>().SingleInstance();
-            builder.RegisterType<FifthweekAuthorizationServerHandler>().As<IFifthweekAuthorizationServerHandler>().InstancePerRequest();
-            builder.RegisterType<FifthweekRefreshTokenProvider>().SingleInstance();
-            builder.RegisterType<FifthweekRefreshTokenHandler>().As<IFifthweekRefreshTokenHandler>().InstancePerRequest();
-            builder.RegisterType<RequesterContext>().As<IRequesterContext>().InstancePerRequest();
+            builder.RegisterType<FifthweekAuthorizationServerProvider>();
+            builder.RegisterType<FifthweekAuthorizationServerHandler>().As<IFifthweekAuthorizationServerHandler>();
+            builder.RegisterType<FifthweekRefreshTokenProvider>();
+            builder.RegisterType<FifthweekRefreshTokenHandler>().As<IFifthweekRefreshTokenHandler>();
+            builder.RegisterType<ClientRepository>().As<IClientRepository>();
         }
     }
 }

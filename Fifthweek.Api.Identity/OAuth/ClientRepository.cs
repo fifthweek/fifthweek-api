@@ -8,13 +8,13 @@
 
     public class ClientRepository : IClientRepository
     {
+        private static readonly Dictionary<ClientId, Client> Clients = new Dictionary<ClientId, Client>();
+
         private readonly object syncRoot = new object();
 
-        private readonly Dictionary<ClientId, Client> clients = new Dictionary<ClientId, Client>();
-
-        public ClientRepository()
+        static ClientRepository()
         {
-            this.AddClient(new Client(
+            AddClient(new Client(
                 new ClientId("fifthweek.web.1"),
                 string.Empty,
                 "Fifthweek Website",
@@ -31,17 +31,17 @@
             lock (this.syncRoot)
             {
                 Client result = null;
-                this.clients.TryGetValue(clientId, out result);
+                Clients.TryGetValue(clientId, out result);
                 return Task.FromResult(result);
             }
         }
 
-        private void AddClient(Client client)
+        private static void AddClient(Client client)
         {
             client.AssertNotNull("client");
             client.ClientId.AssertNotNull("clientId");
 
-            this.clients.Add(client.ClientId, client);
+            Clients.Add(client.ClientId, client);
         }
     }
 }

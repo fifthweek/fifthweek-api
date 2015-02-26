@@ -10,9 +10,9 @@
     {
         public void Register(ContainerBuilder builder)
         {
-            builder.RegisterType<GuidCreator>().As<IGuidCreator>().SingleInstance();
-            builder.RegisterType<TraceService>().As<ITraceService>().SingleInstance();
-            builder.RegisterType<FifthweekTransientErrorDetectionStrategy>().As<ITransientErrorDetectionStrategy>().SingleInstance();
+            builder.RegisterType<GuidCreator>().As<IGuidCreator>();
+            builder.RegisterType<TraceService>().As<ITraceService>();
+            builder.RegisterType<FifthweekTransientErrorDetectionStrategy>().As<ITransientErrorDetectionStrategy>();
             builder.RegisterType<RequestContext>().As<IRequestContext>().InstancePerRequest();
         }
     }
