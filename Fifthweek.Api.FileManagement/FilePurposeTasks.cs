@@ -16,53 +16,58 @@
 
         public FilePurposeTasks()
         {
+            // NOTE: These are retina display resolutions, so twice what you might expect.
             this.Add(
                 FilePurposes.ProfileImage,
                 new CreateThumbnailsTask(
                     new Thumbnail(
-                        300, 
-                        300, 
+                        600, 
+                        600, 
                         ResizeBehaviour.CropToAspectRatio, 
                         new Thumbnail(
-                            150, 
-                            150, 
+                            300, 
+                            300, 
                             ResizeBehaviour.CropToAspectRatio, 
                             new Thumbnail(
-                                128, 
-                                128, 
+                                256, 
+                                256, 
                                 ResizeBehaviour.CropToAspectRatio, 
                                 new Thumbnail(
-                                    64, 
-                                    64, 
+                                    128, 
+                                    128, 
                                     ResizeBehaviour.CropToAspectRatio,
                                      new Thumbnail(
-                                         32, 
-                                         32, 
+                                         64, 
+                                         64, 
                                          ResizeBehaviour.CropToAspectRatio)))))));
 
             this.Add(
                 FilePurposes.ProfileHeaderImage,
                 new CreateThumbnailsTask(
                     new Thumbnail(
-                        1500, 
-                        400, 
+                        3000, 
+                        800, 
                         ResizeBehaviour.CropToAspectRatio,
                         new Thumbnail(
-                            480, 
-                            128, 
+                            960, 
+                            256, 
                             ResizeBehaviour.CropToAspectRatio))));
 
             this.Add(
                 FilePurposes.PostImage,
                 new CreateThumbnailsTask(
                     new Thumbnail(
-                        600, 
-                        8000, 
+                        1200, 
+                        16000, 
                         ResizeBehaviour.MaintainAspectRatio,
                         new Thumbnail(
-                            300, 
-                            300, 
-                            ResizeBehaviour.MaintainAspectRatio))));
+                            600, 
+                            600, 
+                            ResizeBehaviour.MaintainAspectRatio,
+                            new Thumbnail(
+                                332,
+                                250,
+                                ResizeBehaviour.MaintainAspectRatio)))));
         }
 
         public IEnumerable<IFileTask> GetTasks(string purpose)
