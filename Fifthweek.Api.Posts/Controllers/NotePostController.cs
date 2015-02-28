@@ -9,15 +9,15 @@
     using Fifthweek.Api.Posts.Shared;
     using Fifthweek.CodeGeneration;
 
-    [RoutePrefix("posts/notes"), AutoConstructor]
-    public partial class NotePostController : ApiController
+    [AutoConstructor]
+    public partial class NotePostController : INotePostController
     {
         private readonly ICommandHandler<PostNoteCommand> postNote;
         private readonly ICommandHandler<ReviseNoteCommand> reviseNote;
         private readonly IRequesterContext requesterContext;
         private readonly IGuidCreator guidCreator;
 
-        public async Task<IHttpActionResult> PostNote(NewNoteData noteData)
+        public async Task PostNote(NewNoteData noteData)
         {
             noteData.AssertBodyProvided("noteData");
             var note = noteData.Parse();
@@ -31,12 +31,9 @@
                 note.ChannelId,
                 note.Note,
                 note.ScheduledPostTime));
-
-            return this.Ok();
         }
 
-        [Route("{postId}")]
-        public async Task<IHttpActionResult> PutNote(string postId, [FromBody]RevisedNoteData noteData)
+        public async Task PutNote(string postId, RevisedNoteData noteData)
         {
             postId.AssertUrlParameterProvided("postId");
             noteData.AssertBodyProvided("noteData");
@@ -50,8 +47,6 @@
                 postIdObject,
                 note.ChannelId,
                 note.Note));
-
-            return this.Ok();
         }
     }
 }

@@ -54,9 +54,8 @@
             this.guidCreator.Setup(_ => _.CreateSqlSequential()).Returns(PostId.Value);
             this.postFile.Setup(v => v.HandleAsync(command)).Returns(Task.FromResult(0)).Verifiable();
 
-            var result = await this.target.PostFile(data);
+            await this.target.PostFile(data);
 
-            Assert.IsInstanceOfType(result, typeof(OkResult));
             this.postFile.Verify();
         }
 
@@ -77,9 +76,8 @@
             this.guidCreator.Setup(_ => _.CreateSqlSequential()).Returns(PostId.Value);
             this.reviseFile.Setup(v => v.HandleAsync(command)).Returns(Task.FromResult(0)).Verifiable();
 
-            var result = await this.target.PutFile(PostId.Value.EncodeGuid(), data);
+            await this.target.PutFile(PostId.Value.EncodeGuid(), data);
 
-            Assert.IsInstanceOfType(result, typeof(OkResult));
             this.postFile.Verify();
         }
 

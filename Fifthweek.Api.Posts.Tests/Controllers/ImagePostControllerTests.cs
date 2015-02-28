@@ -54,9 +54,8 @@
             this.guidCreator.Setup(_ => _.CreateSqlSequential()).Returns(PostId.Value);
             this.postImage.Setup(v => v.HandleAsync(command)).Returns(Task.FromResult(0)).Verifiable();
 
-            var result = await this.target.PostImage(data);
+            await this.target.PostImage(data);
 
-            Assert.IsInstanceOfType(result, typeof(OkResult));
             this.postImage.Verify();
         }
 
@@ -77,9 +76,8 @@
             this.guidCreator.Setup(_ => _.CreateSqlSequential()).Returns(PostId.Value);
             this.reviseImage.Setup(v => v.HandleAsync(command)).Returns(Task.FromResult(0)).Verifiable();
 
-            var result = await this.target.PutImage(PostId.Value.EncodeGuid(), data);
+            await this.target.PutImage(PostId.Value.EncodeGuid(), data);
 
-            Assert.IsInstanceOfType(result, typeof(OkResult));
             this.postImage.Verify();
         }
 

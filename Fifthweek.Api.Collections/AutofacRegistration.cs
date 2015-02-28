@@ -12,6 +12,7 @@
             builder.RegisterType<CollectionOwnership>().As<ICollectionOwnership>();
             builder.RegisterType<CollectionSecurity>().As<ICollectionSecurity>();
             builder.RegisterType<GetNewQueuedPostLiveDateLowerBoundDbStatement>().As<IGetNewQueuedPostLiveDateLowerBoundDbStatement>();
+            builder.RegisterType<GetLiveDateOfNewQueuedPostDbStatement>().As<IGetLiveDateOfNewQueuedPostDbStatement>();
             builder.RegisterType<GetWeeklyReleaseScheduleDbStatement>().As<IGetWeeklyReleaseScheduleDbStatement>();
             builder.RegisterType<QueuedPostLiveDateCalculator>().As<IQueuedPostLiveDateCalculator>();
             builder.RegisterType<GetChannelsAndCollectionsDbStatement>().As<IGetChannelsAndCollectionsDbStatement>();

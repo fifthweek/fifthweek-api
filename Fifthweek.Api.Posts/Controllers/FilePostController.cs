@@ -9,15 +9,15 @@
     using Fifthweek.Api.Posts.Shared;
     using Fifthweek.CodeGeneration;
 
-    [RoutePrefix("posts/files"), AutoConstructor]
-    public partial class FilePostController : ApiController
+    [AutoConstructor]
+    public partial class FilePostController : IFilePostController
     {
         private readonly ICommandHandler<PostFileCommand> postFile;
         private readonly ICommandHandler<ReviseFileCommand> reviseFile;
         private readonly IRequesterContext requesterContext;
         private readonly IGuidCreator guidCreator;
 
-        public async Task<IHttpActionResult> PostFile(NewFileData fileData)
+        public async Task PostFile(NewFileData fileData)
         {
             fileData.AssertBodyProvided("fileData");
             var file = fileData.Parse();
@@ -33,12 +33,9 @@
                 file.Comment,
                 file.ScheduledPostTime,
                 file.IsQueued));
-
-            return this.Ok();
         }
 
-        [Route("{postId}")]
-        public async Task<IHttpActionResult> PutFile(string postId, [FromBody]RevisedFileData fileData)
+        public async Task PutFile(string postId, RevisedFileData fileData)
         {
             postId.AssertUrlParameterProvided("postId");
             fileData.AssertBodyProvided("fileData");
@@ -52,8 +49,6 @@
                 postIdObject,
                 file.FileId,
                 file.Comment));
-
-            return this.Ok();
         }
     }
 }

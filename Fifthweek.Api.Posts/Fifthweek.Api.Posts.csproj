@@ -90,6 +90,11 @@
     <Compile Include="Commands\ReviseNoteCommandHandler.cs" />
     <Compile Include="Commands\ReviseFileCommand.cs" />
     <Compile Include="Commands\ReviseImageCommand.cs" />
+    <Compile Include="Controllers\IFilePostController.cs" />
+    <Compile Include="Controllers\IImagePostController.cs" />
+    <Compile Include="Controllers\INotePostController.cs" />
+    <Compile Include="Controllers\IPostController.cs" />
+    <Compile Include="Controllers\PostsController.cs" />
     <Compile Include="Controllers\RevisedFileData.cs" />
     <Compile Include="Controllers\RevisedImageData.cs" />
     <Compile Include="IMoveBacklogPostToQueueDbStatement.cs" />

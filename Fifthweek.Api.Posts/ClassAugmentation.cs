@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Linq;
 
-//// Generated on 11/02/2015 18:28:43 (UTC)
-//// Mapped solution in 10.77s
+//// Generated on 28/02/2015 18:24:29 (UTC)
+//// Mapped solution in 9.37s
 
 
 namespace Fifthweek.Api.Posts.Commands
@@ -2353,6 +2353,51 @@ namespace Fifthweek.Api.Posts
             }
 
             this.connectionFactory = connectionFactory;
+        }
+    }
+}
+namespace Fifthweek.Api.Posts.Controllers
+{
+    using System;
+    using System.Collections.Generic;
+    using System.Threading.Tasks;
+    using System.Web.Http;
+    using Fifthweek.Api.Posts.Queries;
+    using Fifthweek.Api.Posts.Shared;
+    using Fifthweek.CodeGeneration;
+
+    public partial class PostsController 
+    {
+        public PostsController(
+            Fifthweek.Api.Posts.Controllers.IPostController postController,
+            Fifthweek.Api.Posts.Controllers.INotePostController notePostController,
+            Fifthweek.Api.Posts.Controllers.IImagePostController imagePostController,
+            Fifthweek.Api.Posts.Controllers.IFilePostController filePostController)
+        {
+            if (postController == null)
+            {
+                throw new ArgumentNullException("postController");
+            }
+
+            if (notePostController == null)
+            {
+                throw new ArgumentNullException("notePostController");
+            }
+
+            if (imagePostController == null)
+            {
+                throw new ArgumentNullException("imagePostController");
+            }
+
+            if (filePostController == null)
+            {
+                throw new ArgumentNullException("filePostController");
+            }
+
+            this.postController = postController;
+            this.notePostController = notePostController;
+            this.imagePostController = imagePostController;
+            this.filePostController = filePostController;
         }
     }
 }

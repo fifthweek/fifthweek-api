@@ -14,8 +14,8 @@
     using Fifthweek.Api.Posts.Shared;
     using Fifthweek.CodeGeneration;
 
-    [RoutePrefix("posts"), AutoConstructor]
-    public partial class PostController : ApiController
+    [AutoConstructor]
+    public partial class PostController : IPostController
     {
         private readonly ICommandHandler<DeletePostCommand> deletePost;
         private readonly ICommandHandler<ReorderQueueCommand> reorderQueue;
@@ -26,7 +26,6 @@
         private readonly IQueryHandler<GetCreatorNewsfeedQuery, IReadOnlyList<NewsfeedPost>> getCreatorNewsfeed;
         private readonly IRequesterContext requesterContext;
 
-        [Route("creatorBacklog/{creatorId}")]
         public async Task<IEnumerable<BacklogPost>> GetCreatorBacklog(string creatorId)
         {
             creatorId.AssertUrlParameterProvided("creatorId");
@@ -36,8 +35,7 @@
             return await this.getCreatorBacklog.HandleAsync(new GetCreatorBacklogQuery(requester, creatorIdObject));
         }
 
-        [Route("creatorNewsfeed/{creatorId}")]
-        public async Task<IEnumerable<NewsfeedPost>> GetCreatorNewsfeed(string creatorId, [FromUri]CreatorNewsfeedPaginationData newsfeedPaginationData)
+        public async Task<IEnumerable<NewsfeedPost>> GetCreatorNewsfeed(string creatorId, CreatorNewsfeedPaginationData newsfeedPaginationData)
         {
             creatorId.AssertUrlParameterProvided("creatorId");
             newsfeedPaginationData.AssertUrlParameterProvided("newsfeedPaginationData");
@@ -49,7 +47,6 @@
             return await this.getCreatorNewsfeed.HandleAsync(new GetCreatorNewsfeedQuery(requester, creatorIdObject, newsfeedPagination.StartIndex, newsfeedPagination.Count));
         }
 
-        [Route("{postId}")]
         public Task DeletePost(string postId)
         {
             postId.AssertUrlParameterProvided("postId");
@@ -59,8 +56,7 @@
             return this.deletePost.HandleAsync(new DeletePostCommand(parsedPostId, requester));
         }
 
-        [Route("queues/{collectionId}")]
-        public async Task<IHttpActionResult> PostNewQueueOrder(string collectionId, [FromBody]IEnumerable<PostId> newQueueOrder)
+        public async Task PostNewQueueOrder(string collectionId, IEnumerable<PostId> newQueueOrder)
         {
             collectionId.AssertUrlParameterProvided("collectionId");
             newQueueOrder.AssertBodyProvided("newQueueOrder");
@@ -69,11 +65,8 @@
             var requester = this.requesterContext.GetRequester();
 
             await this.reorderQueue.HandleAsync(new ReorderQueueCommand(requester, collectionIdObject, newQueueOrder.ToList()));
-
-            return this.Ok();
         }
 
-        [Route("queued")]
         public Task PostToQueue(string postId)
         {
             postId.AssertUrlParameterProvided("postId");
@@ -84,7 +77,6 @@
             return this.rescheduleWithQueue.HandleAsync(new RescheduleWithQueueCommand(requester, parsedPostId));
         }
 
-        [Route("live")]
         public Task PostToLive(string postId)
         {
             postId.AssertBodyProvided("postId");
@@ -94,8 +86,7 @@
             return this.rescheduleForNow.HandleAsync(new RescheduleForNowCommand(requester, parsedPostId));
         }
 
-        [Route("{postId}/liveDate")]
-        public Task PutLiveDate(string postId, [FromBody]DateTime newLiveDate)
+        public Task PutLiveDate(string postId, DateTime newLiveDate)
         {
             postId.AssertUrlParameterProvided("postId");
             newLiveDate.AssertUtc("newLiveDate");

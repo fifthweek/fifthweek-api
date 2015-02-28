@@ -9,15 +9,15 @@
     using Fifthweek.Api.Posts.Shared;
     using Fifthweek.CodeGeneration;
 
-    [RoutePrefix("posts/images"), AutoConstructor]
-    public partial class ImagePostController : ApiController
+    [AutoConstructor]
+    public partial class ImagePostController : IImagePostController
     {
         private readonly ICommandHandler<PostImageCommand> postImage;
         private readonly ICommandHandler<ReviseImageCommand> reviseImage;
         private readonly IRequesterContext requesterContext;
         private readonly IGuidCreator guidCreator;
 
-        public async Task<IHttpActionResult> PostImage(NewImageData imageData)
+        public async Task PostImage(NewImageData imageData)
         {
             imageData.AssertBodyProvided("imageData");
             var image = imageData.Parse();
@@ -33,12 +33,9 @@
                 image.Comment,
                 image.ScheduledPostTime,
                 image.IsQueued));
-
-            return this.Ok();
         }
 
-        [Route("{postId}")]
-        public async Task<IHttpActionResult> PutImage(string postId, [FromBody]RevisedImageData imageData)
+        public async Task PutImage(string postId, RevisedImageData imageData)
         {
             postId.AssertUrlParameterProvided("postId");
             imageData.AssertBodyProvided("imageData");
@@ -52,8 +49,6 @@
                 postIdObject,
                 image.ImageFileId,
                 image.Comment));
-
-            return this.Ok();
         }
     }
 }

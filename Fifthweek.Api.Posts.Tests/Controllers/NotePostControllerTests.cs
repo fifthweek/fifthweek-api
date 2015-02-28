@@ -54,9 +54,8 @@
             this.guidCreator.Setup(_ => _.CreateSqlSequential()).Returns(PostId.Value);
             this.postNote.Setup(v => v.HandleAsync(command)).Returns(Task.FromResult(0)).Verifiable();
 
-            var result = await this.target.PostNote(data);
+            await this.target.PostNote(data);
 
-            Assert.IsInstanceOfType(result, typeof(OkResult));
             this.postNote.Verify();
         }
 
@@ -77,9 +76,8 @@
             this.guidCreator.Setup(_ => _.CreateSqlSequential()).Returns(PostId.Value);
             this.reviseNote.Setup(v => v.HandleAsync(command)).Returns(Task.FromResult(0)).Verifiable();
 
-            var result = await this.target.PutNote(PostId.Value.EncodeGuid(), data);
+            await this.target.PutNote(PostId.Value.EncodeGuid(), data);
 
-            Assert.IsInstanceOfType(result, typeof(OkResult));
             this.postNote.Verify();
         }
 

@@ -2,6 +2,7 @@
 {
     using Autofac;
 
+    using Fifthweek.Api.Posts.Controllers;
     using Fifthweek.Api.Posts.Shared;
     using Fifthweek.Shared;
 
@@ -9,6 +10,7 @@
     {
         public void Register(ContainerBuilder builder)
         {
+            builder.RegisterType<DeletePostDbStatement>().As<IDeletePostDbStatement>();
             builder.RegisterType<PostNoteDbStatement>().As<IPostNoteDbStatement>();
             builder.RegisterType<PostToCollectionDbStatement>().As<IPostToCollectionDbStatement>();
             builder.RegisterType<PostToCollectionDbSubStatements>().As<IPostToCollectionDbSubStatements>();
@@ -21,6 +23,11 @@
             builder.RegisterType<SetBacklogPostLiveDateDbStatement>().As<ISetBacklogPostLiveDateDbStatement>();
             builder.RegisterType<RemoveFromQueueIfRequiredDbStatement>().As<IRemoveFromQueueIfRequiredDbStatement>();
             builder.RegisterType<MoveBacklogPostToQueueDbStatement>().As<IMoveBacklogPostToQueueDbStatement>();
+
+            builder.RegisterType<FilePostController>().As<IFilePostController>();
+            builder.RegisterType<ImagePostController>().As<IImagePostController>();
+            builder.RegisterType<NotePostController>().As<INotePostController>();
+            builder.RegisterType<PostController>().As<IPostController>();
         }
     }
 }
