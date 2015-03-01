@@ -252,108 +252,7 @@ angular.module('webApp').factory('logStub',
     return service;
   });
 
-angular.module('webApp').factory('filePostStub',
-  function($http, $q, fifthweekConstants, utilities) {
-    'use strict';
-
-    var apiBaseUri = fifthweekConstants.apiBaseUri;
-    var service = {};
-
-    // fileData = {
-    //   collectionId: 'Base64Guid',
-    //   fileId: 'Base64Guid',
-    //   comment: '', /* optional */
-    //   scheduledPostTime: '2015-12-25T14:45:05Z', /* optional */
-    //   isQueued: false
-    // }
-    service.postFile = function(fileData) {
-      return $http.post(apiBaseUri + 'posts/files', fileData).catch(function(response) {
-        return $q.reject(utilities.getHttpError(response));
-      });
-    };
-
-    // postId = 'Base64Guid'
-    // fileData = {
-    //   fileId: 'Base64Guid',
-    //   comment: '' /* optional */
-    // }
-    service.putFile = function(postId, fileData) {
-      return $http.put(apiBaseUri + 'posts/files/' + encodeURIComponent(postId), fileData).catch(function(response) {
-        return $q.reject(utilities.getHttpError(response));
-      });
-    };
-
-    return service;
-  });
-
-angular.module('webApp').factory('notePostStub',
-  function($http, $q, fifthweekConstants, utilities) {
-    'use strict';
-
-    var apiBaseUri = fifthweekConstants.apiBaseUri;
-    var service = {};
-
-    // noteData = {
-    //   channelId: 'Base64Guid',
-    //   note: '',
-    //   scheduledPostTime: '2015-12-25T14:45:05Z' /* optional */
-    // }
-    service.postNote = function(noteData) {
-      return $http.post(apiBaseUri + 'posts/notes', noteData).catch(function(response) {
-        return $q.reject(utilities.getHttpError(response));
-      });
-    };
-
-    // postId = 'Base64Guid'
-    // noteData = {
-    //   channelId: 'Base64Guid',
-    //   note: '',
-    //   scheduledPostDate: '2015-12-25T14:45:05Z' /* optional */
-    // }
-    service.putNote = function(postId, noteData) {
-      return $http.put(apiBaseUri + 'posts/notes/' + encodeURIComponent(postId), noteData).catch(function(response) {
-        return $q.reject(utilities.getHttpError(response));
-      });
-    };
-
-    return service;
-  });
-
-angular.module('webApp').factory('imagePostStub',
-  function($http, $q, fifthweekConstants, utilities) {
-    'use strict';
-
-    var apiBaseUri = fifthweekConstants.apiBaseUri;
-    var service = {};
-
-    // imageData = {
-    //   collectionId: 'Base64Guid',
-    //   imageFileId: 'Base64Guid',
-    //   comment: '', /* optional */
-    //   scheduledPostTime: '2015-12-25T14:45:05Z', /* optional */
-    //   isQueued: false
-    // }
-    service.postImage = function(imageData) {
-      return $http.post(apiBaseUri + 'posts/images', imageData).catch(function(response) {
-        return $q.reject(utilities.getHttpError(response));
-      });
-    };
-
-    // postId = 'Base64Guid'
-    // imageData = {
-    //   imageFileId: 'Base64Guid',
-    //   comment: '' /* optional */
-    // }
-    service.putImage = function(postId, imageData) {
-      return $http.put(apiBaseUri + 'posts/images/' + encodeURIComponent(postId), imageData).catch(function(response) {
-        return $q.reject(utilities.getHttpError(response));
-      });
-    };
-
-    return service;
-  });
-
-angular.module('webApp').factory('postStub',
+angular.module('webApp').factory('postsStub',
   function($http, $q, fifthweekConstants, utilities) {
     'use strict';
 
@@ -434,6 +333,77 @@ angular.module('webApp').factory('postStub',
     // newLiveDate = '2015-12-25T14:45:05Z'
     service.putLiveDate = function(postId, newLiveDate) {
       return $http.put(apiBaseUri + 'posts/' + encodeURIComponent(postId) + '/liveDate', newLiveDate).catch(function(response) {
+        return $q.reject(utilities.getHttpError(response));
+      });
+    };
+
+    // noteData = {
+    //   channelId: 'Base64Guid',
+    //   note: '',
+    //   scheduledPostTime: '2015-12-25T14:45:05Z' /* optional */
+    // }
+    service.postNote = function(noteData) {
+      return $http.post(apiBaseUri + 'posts/notes', noteData).catch(function(response) {
+        return $q.reject(utilities.getHttpError(response));
+      });
+    };
+
+    // postId = 'Base64Guid'
+    // noteData = {
+    //   channelId: 'Base64Guid',
+    //   note: '',
+    //   scheduledPostDate: '2015-12-25T14:45:05Z' /* optional */
+    // }
+    service.putNote = function(postId, noteData) {
+      return $http.put(apiBaseUri + 'posts/notes/' + encodeURIComponent(postId), noteData).catch(function(response) {
+        return $q.reject(utilities.getHttpError(response));
+      });
+    };
+
+    // imageData = {
+    //   collectionId: 'Base64Guid',
+    //   imageFileId: 'Base64Guid',
+    //   comment: '', /* optional */
+    //   scheduledPostTime: '2015-12-25T14:45:05Z', /* optional */
+    //   isQueued: false
+    // }
+    service.postImage = function(imageData) {
+      return $http.post(apiBaseUri + 'posts/images', imageData).catch(function(response) {
+        return $q.reject(utilities.getHttpError(response));
+      });
+    };
+
+    // postId = 'Base64Guid'
+    // imageData = {
+    //   imageFileId: 'Base64Guid',
+    //   comment: '' /* optional */
+    // }
+    service.putImage = function(postId, imageData) {
+      return $http.put(apiBaseUri + 'posts/images/' + encodeURIComponent(postId), imageData).catch(function(response) {
+        return $q.reject(utilities.getHttpError(response));
+      });
+    };
+
+    // fileData = {
+    //   collectionId: 'Base64Guid',
+    //   fileId: 'Base64Guid',
+    //   comment: '', /* optional */
+    //   scheduledPostTime: '2015-12-25T14:45:05Z', /* optional */
+    //   isQueued: false
+    // }
+    service.postFile = function(fileData) {
+      return $http.post(apiBaseUri + 'posts/files', fileData).catch(function(response) {
+        return $q.reject(utilities.getHttpError(response));
+      });
+    };
+
+    // postId = 'Base64Guid'
+    // fileData = {
+    //   fileId: 'Base64Guid',
+    //   comment: '' /* optional */
+    // }
+    service.putFile = function(postId, fileData) {
+      return $http.put(apiBaseUri + 'posts/files/' + encodeURIComponent(postId), fileData).catch(function(response) {
         return $q.reject(utilities.getHttpError(response));
       });
     };

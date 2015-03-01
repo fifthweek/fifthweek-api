@@ -431,7 +431,7 @@ describe('log stub', function() {
   });
 });
 
-describe('file post stub', function() {
+describe('posts stub', function() {
   'use strict';
 
   var fifthweekConstants;
@@ -445,169 +445,7 @@ describe('file post stub', function() {
     fifthweekConstants = $injector.get('fifthweekConstants');
     $httpBackend = $injector.get('$httpBackend');
     $rootScope = $injector.get('$rootScope');
-    target = $injector.get('filePostStub');
-  }));
-
-  afterEach(function() {
-    $httpBackend.verifyNoOutstandingExpectation();
-    $httpBackend.verifyNoOutstandingRequest();
-  });
-
-  it('should post file', function() {
-    var fileData = 'value0';
-
-    var responseData = 'response data';
-    $httpBackend.expectPOST(fifthweekConstants.apiBaseUri + 'posts/files', fileData).respond(200, responseData);
-
-    var result = null;
-    target.postFile(fileData).then(function(response) { result = response.data; });
-
-    $httpBackend.flush();
-    $rootScope.$apply();
-
-    expect(result).toBe(responseData);
-  });
-
-  it('should put file', function() {
-    var postId = 'value0';
-    var fileData = 'value1';
-
-    var responseData = 'response data';
-    $httpBackend.expectPUT(fifthweekConstants.apiBaseUri + 'posts/files/' + encodeURIComponent(postId), fileData).respond(200, responseData);
-
-    var result = null;
-    target.putFile(postId, fileData).then(function(response) { result = response.data; });
-
-    $httpBackend.flush();
-    $rootScope.$apply();
-
-    expect(result).toBe(responseData);
-  });
-});
-
-describe('note post stub', function() {
-  'use strict';
-
-  var fifthweekConstants;
-  var $httpBackend;
-  var $rootScope;
-  var target;
-
-  beforeEach(module('webApp', 'stateMock'));
-
-  beforeEach(inject(function($injector) {
-    fifthweekConstants = $injector.get('fifthweekConstants');
-    $httpBackend = $injector.get('$httpBackend');
-    $rootScope = $injector.get('$rootScope');
-    target = $injector.get('notePostStub');
-  }));
-
-  afterEach(function() {
-    $httpBackend.verifyNoOutstandingExpectation();
-    $httpBackend.verifyNoOutstandingRequest();
-  });
-
-  it('should post note', function() {
-    var noteData = 'value0';
-
-    var responseData = 'response data';
-    $httpBackend.expectPOST(fifthweekConstants.apiBaseUri + 'posts/notes', noteData).respond(200, responseData);
-
-    var result = null;
-    target.postNote(noteData).then(function(response) { result = response.data; });
-
-    $httpBackend.flush();
-    $rootScope.$apply();
-
-    expect(result).toBe(responseData);
-  });
-
-  it('should put note', function() {
-    var postId = 'value0';
-    var noteData = 'value1';
-
-    var responseData = 'response data';
-    $httpBackend.expectPUT(fifthweekConstants.apiBaseUri + 'posts/notes/' + encodeURIComponent(postId), noteData).respond(200, responseData);
-
-    var result = null;
-    target.putNote(postId, noteData).then(function(response) { result = response.data; });
-
-    $httpBackend.flush();
-    $rootScope.$apply();
-
-    expect(result).toBe(responseData);
-  });
-});
-
-describe('image post stub', function() {
-  'use strict';
-
-  var fifthweekConstants;
-  var $httpBackend;
-  var $rootScope;
-  var target;
-
-  beforeEach(module('webApp', 'stateMock'));
-
-  beforeEach(inject(function($injector) {
-    fifthweekConstants = $injector.get('fifthweekConstants');
-    $httpBackend = $injector.get('$httpBackend');
-    $rootScope = $injector.get('$rootScope');
-    target = $injector.get('imagePostStub');
-  }));
-
-  afterEach(function() {
-    $httpBackend.verifyNoOutstandingExpectation();
-    $httpBackend.verifyNoOutstandingRequest();
-  });
-
-  it('should post image', function() {
-    var imageData = 'value0';
-
-    var responseData = 'response data';
-    $httpBackend.expectPOST(fifthweekConstants.apiBaseUri + 'posts/images', imageData).respond(200, responseData);
-
-    var result = null;
-    target.postImage(imageData).then(function(response) { result = response.data; });
-
-    $httpBackend.flush();
-    $rootScope.$apply();
-
-    expect(result).toBe(responseData);
-  });
-
-  it('should put image', function() {
-    var postId = 'value0';
-    var imageData = 'value1';
-
-    var responseData = 'response data';
-    $httpBackend.expectPUT(fifthweekConstants.apiBaseUri + 'posts/images/' + encodeURIComponent(postId), imageData).respond(200, responseData);
-
-    var result = null;
-    target.putImage(postId, imageData).then(function(response) { result = response.data; });
-
-    $httpBackend.flush();
-    $rootScope.$apply();
-
-    expect(result).toBe(responseData);
-  });
-});
-
-describe('post stub', function() {
-  'use strict';
-
-  var fifthweekConstants;
-  var $httpBackend;
-  var $rootScope;
-  var target;
-
-  beforeEach(module('webApp', 'stateMock'));
-
-  beforeEach(inject(function($injector) {
-    fifthweekConstants = $injector.get('fifthweekConstants');
-    $httpBackend = $injector.get('$httpBackend');
-    $rootScope = $injector.get('$rootScope');
-    target = $injector.get('postStub');
+    target = $injector.get('postsStub');
   }));
 
   afterEach(function() {
@@ -717,6 +555,99 @@ describe('post stub', function() {
 
     var result = null;
     target.putLiveDate(postId, newLiveDate).then(function(response) { result = response.data; });
+
+    $httpBackend.flush();
+    $rootScope.$apply();
+
+    expect(result).toBe(responseData);
+  });
+
+  it('should post note', function() {
+    var noteData = 'value0';
+
+    var responseData = 'response data';
+    $httpBackend.expectPOST(fifthweekConstants.apiBaseUri + 'posts/notes', noteData).respond(200, responseData);
+
+    var result = null;
+    target.postNote(noteData).then(function(response) { result = response.data; });
+
+    $httpBackend.flush();
+    $rootScope.$apply();
+
+    expect(result).toBe(responseData);
+  });
+
+  it('should put note', function() {
+    var postId = 'value0';
+    var noteData = 'value1';
+
+    var responseData = 'response data';
+    $httpBackend.expectPUT(fifthweekConstants.apiBaseUri + 'posts/notes/' + encodeURIComponent(postId), noteData).respond(200, responseData);
+
+    var result = null;
+    target.putNote(postId, noteData).then(function(response) { result = response.data; });
+
+    $httpBackend.flush();
+    $rootScope.$apply();
+
+    expect(result).toBe(responseData);
+  });
+
+  it('should post image', function() {
+    var imageData = 'value0';
+
+    var responseData = 'response data';
+    $httpBackend.expectPOST(fifthweekConstants.apiBaseUri + 'posts/images', imageData).respond(200, responseData);
+
+    var result = null;
+    target.postImage(imageData).then(function(response) { result = response.data; });
+
+    $httpBackend.flush();
+    $rootScope.$apply();
+
+    expect(result).toBe(responseData);
+  });
+
+  it('should put image', function() {
+    var postId = 'value0';
+    var imageData = 'value1';
+
+    var responseData = 'response data';
+    $httpBackend.expectPUT(fifthweekConstants.apiBaseUri + 'posts/images/' + encodeURIComponent(postId), imageData).respond(200, responseData);
+
+    var result = null;
+    target.putImage(postId, imageData).then(function(response) { result = response.data; });
+
+    $httpBackend.flush();
+    $rootScope.$apply();
+
+    expect(result).toBe(responseData);
+  });
+
+  it('should post file', function() {
+    var fileData = 'value0';
+
+    var responseData = 'response data';
+    $httpBackend.expectPOST(fifthweekConstants.apiBaseUri + 'posts/files', fileData).respond(200, responseData);
+
+    var result = null;
+    target.postFile(fileData).then(function(response) { result = response.data; });
+
+    $httpBackend.flush();
+    $rootScope.$apply();
+
+    expect(result).toBe(responseData);
+  });
+
+  it('should put file', function() {
+    var postId = 'value0';
+    var fileData = 'value1';
+
+    var responseData = 'response data';
+    $httpBackend.expectPUT(fifthweekConstants.apiBaseUri + 'posts/files/' + encodeURIComponent(postId), fileData).respond(200, responseData);
+
+    var result = null;
+    target.putFile(postId, fileData).then(function(response) { result = response.data; });
 
     $httpBackend.flush();
     $rootScope.$apply();
