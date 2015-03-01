@@ -60,7 +60,7 @@
 
             var result = await this.target.PostSubscription(data);
 
-            Assert.IsInstanceOfType(result, typeof(OkResult));
+            Assert.AreEqual(command.NewSubscriptionId, result);
             this.createSubscription.Verify();
         }
 

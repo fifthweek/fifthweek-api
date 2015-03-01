@@ -20,7 +20,7 @@
         private readonly IGuidCreator guidCreator;
 
         [Route("")]
-        public async Task<IHttpActionResult> PostSubscription(NewSubscriptionData subscriptionData)
+        public async Task<SubscriptionId> PostSubscription(NewSubscriptionData subscriptionData)
         {
             subscriptionData.AssertBodyProvided("subscriptionData");
             var subscription = subscriptionData.Parse();
@@ -35,7 +35,7 @@
                 subscription.Tagline,
                 subscription.BasePrice));
 
-            return this.Ok();
+            return newSubscriptionId;
         }
 
         [Route("{subscriptionId}")]
