@@ -9,7 +9,7 @@
     using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.CodeGeneration;
 
-    [RoutePrefix("collections"), AutoConstructor]
+    [RoutePrefix("channels"), AutoConstructor]
     public partial class ChannelController : ApiController
     {
         private readonly ICommandHandler<CreateChannelCommand> createChannel;
