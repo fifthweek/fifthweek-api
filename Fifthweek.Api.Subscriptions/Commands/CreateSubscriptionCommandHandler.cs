@@ -4,6 +4,7 @@
     using System.Threading.Tasks;
     using System.Transactions;
 
+    using Fifthweek.Api.Channels.Shared;
     using Fifthweek.Api.Core;
     using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.Api.Persistence;
@@ -13,6 +14,9 @@
     [AutoConstructor]
     public partial class CreateSubscriptionCommandHandler : ICommandHandler<CreateSubscriptionCommand>
     {
+        private static readonly ValidChannelDescription DefaultChannelDescription = ValidChannelDescription.Parse(
+            "Exclusive News Feed" + Environment.NewLine + "Early Updates on New Releases");
+
         private readonly ISubscriptionSecurity subscriptionSecurity;
         private readonly IRequesterSecurity requesterSecurity;
         private readonly IFifthweekDbConnectionFactory connectionFactory;
@@ -47,7 +51,7 @@
                 command.NewSubscriptionId.Value, // Default channel uses same ID as subscription.
                 command.NewSubscriptionId.Value,
                 null,
-                null,
+                DefaultChannelDescription.Value,
                 null,
                 command.BasePrice.Value,
                 true,

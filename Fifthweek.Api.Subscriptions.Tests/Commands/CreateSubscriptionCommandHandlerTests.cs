@@ -138,7 +138,7 @@
                 SubscriptionId.Value, // The default channel uses the subscription ID.
                 SubscriptionId.Value,
                 null,
-                null,
+                "Exclusive News Feed" + Environment.NewLine + "Early Updates on New Releases",
                 null,
                 BasePrice.Value,
                 true,
