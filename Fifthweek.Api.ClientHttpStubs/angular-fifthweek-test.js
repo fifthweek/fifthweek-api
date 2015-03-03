@@ -75,7 +75,7 @@ describe('channel stub', function() {
     var newChannelData = 'value0';
 
     var responseData = 'response data';
-    $httpBackend.expectPOST(fifthweekConstants.apiBaseUri + 'collections', newChannelData).respond(200, responseData);
+    $httpBackend.expectPOST(fifthweekConstants.apiBaseUri + 'channels', newChannelData).respond(200, responseData);
 
     var result = null;
     target.postChannel(newChannelData).then(function(response) { result = response.data; });
@@ -91,7 +91,7 @@ describe('channel stub', function() {
     var channelData = 'value1';
 
     var responseData = 'response data';
-    $httpBackend.expectPUT(fifthweekConstants.apiBaseUri + 'collections/' + encodeURIComponent(channelId), channelData).respond(200, responseData);
+    $httpBackend.expectPUT(fifthweekConstants.apiBaseUri + 'channels/' + encodeURIComponent(channelId), channelData).respond(200, responseData);
 
     var result = null;
     target.putChannel(channelId, channelData).then(function(response) { result = response.data; });
@@ -106,7 +106,7 @@ describe('channel stub', function() {
     var channelId = 'value0';
 
     var responseData = 'response data';
-    $httpBackend.expectDELETE(fifthweekConstants.apiBaseUri + 'collections/' + encodeURIComponent(channelId)).respond(200, responseData);
+    $httpBackend.expectDELETE(fifthweekConstants.apiBaseUri + 'channels/' + encodeURIComponent(channelId)).respond(200, responseData);
 
     var result = null;
     target.deleteChannel(channelId).then(function(response) { result = response.data; });

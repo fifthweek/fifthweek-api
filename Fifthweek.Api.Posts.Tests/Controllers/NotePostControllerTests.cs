@@ -69,7 +69,7 @@
         [TestMethod]
         public async Task WhenPuttingNote_ItShouldIssuePostNoteCommand()
         {
-            var data = new RevisedNoteData(ChannelId, Note.Value, ScheduledDate);
+            var data = new RevisedNoteData(ChannelId, Note.Value);
             var command = new ReviseNoteCommand(Requester, PostId, ChannelId, Note);
 
             this.requesterContext.Setup(v => v.GetRequester()).Returns(Requester);
@@ -85,7 +85,7 @@
         [ExpectedException(typeof(BadRequestException))]
         public async Task WhenPuttingNote_WithoutSpecifyingRevisedNoteId_ItShouldThrowBadRequestException()
         {
-            await this.target.PutNote(string.Empty, new RevisedNoteData(ChannelId, Note.Value, ScheduledDate));
+            await this.target.PutNote(string.Empty, new RevisedNoteData(ChannelId, Note.Value));
         }
 
         [TestMethod]

@@ -1,7 +1,5 @@
 ﻿namespace Fifthweek.Api.Posts.Controllers
 {
-    using System;
-
     using Fifthweek.Api.Channels.Shared;
     using Fifthweek.Api.Posts.Shared;
     using Fifthweek.CodeGeneration;
@@ -17,8 +15,5 @@
 
         [Parsed(typeof(ValidNote))]
         public string Note { get; set; }
-
-        [Optional]
-        public DateTime? ScheduledPostDate { get; set; }
     }
 }

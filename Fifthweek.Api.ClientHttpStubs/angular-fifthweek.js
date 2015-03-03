@@ -38,7 +38,7 @@ angular.module('webApp').factory('channelStub',
     // }
     // result = 'Base64Guid'
     service.postChannel = function(newChannelData) {
-      return $http.post(apiBaseUri + 'collections', newChannelData).catch(function(response) {
+      return $http.post(apiBaseUri + 'channels', newChannelData).catch(function(response) {
         return $q.reject(utilities.getHttpError(response));
       });
     };
@@ -51,14 +51,14 @@ angular.module('webApp').factory('channelStub',
     //   isVisibleToNonSubscribers: false
     // }
     service.putChannel = function(channelId, channelData) {
-      return $http.put(apiBaseUri + 'collections/' + encodeURIComponent(channelId), channelData).catch(function(response) {
+      return $http.put(apiBaseUri + 'channels/' + encodeURIComponent(channelId), channelData).catch(function(response) {
         return $q.reject(utilities.getHttpError(response));
       });
     };
 
     // channelId = 'Base64Guid'
     service.deleteChannel = function(channelId) {
-      return $http.delete(apiBaseUri + 'collections/' + encodeURIComponent(channelId)).catch(function(response) {
+      return $http.delete(apiBaseUri + 'channels/' + encodeURIComponent(channelId)).catch(function(response) {
         return $q.reject(utilities.getHttpError(response));
       });
     };
@@ -351,8 +351,7 @@ angular.module('webApp').factory('postsStub',
     // postId = 'Base64Guid'
     // noteData = {
     //   channelId: 'Base64Guid',
-    //   note: '',
-    //   scheduledPostDate: '2015-12-25T14:45:05Z' /* optional */
+    //   note: ''
     // }
     service.putNote = function(postId, noteData) {
       return $http.put(apiBaseUri + 'posts/notes/' + encodeURIComponent(postId), noteData).catch(function(response) {
@@ -423,6 +422,7 @@ angular.module('webApp').factory('subscriptionStub',
     //   tagline: '',
     //   basePrice: 0
     // }
+    // result = 'Base64Guid'
     service.postSubscription = function(subscriptionData) {
       return $http.post(apiBaseUri + 'subscriptions', subscriptionData).catch(function(response) {
         return $q.reject(utilities.getHttpError(response));

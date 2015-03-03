@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Linq;
 
-//// Generated on 28/02/2015 18:24:29 (UTC)
-//// Mapped solution in 9.37s
+//// Generated on 03/03/2015 11:37:34 (UTC)
+//// Mapped solution in 4.73s
 
 
 namespace Fifthweek.Api.Posts.Commands
@@ -853,8 +853,7 @@ namespace Fifthweek.Api.Posts.Controllers
     {
         public RevisedNoteData(
             Fifthweek.Api.Channels.Shared.ChannelId channelId,
-            System.String note,
-            System.Nullable<System.DateTime> scheduledPostDate)
+            System.String note)
         {
             if (channelId == null)
             {
@@ -868,7 +867,6 @@ namespace Fifthweek.Api.Posts.Controllers
 
             this.ChannelId = channelId;
             this.Note = note;
-            this.ScheduledPostDate = scheduledPostDate;
         }
     }
 }
@@ -2359,12 +2357,20 @@ namespace Fifthweek.Api.Posts
 namespace Fifthweek.Api.Posts.Controllers
 {
     using System;
-    using System.Collections.Generic;
+    using System.Linq;
     using System.Threading.Tasks;
     using System.Web.Http;
-    using Fifthweek.Api.Posts.Queries;
+    using Fifthweek.Api.Core;
+    using Fifthweek.Api.Identity.Shared.Membership;
+    using Fifthweek.Api.Posts.Commands;
     using Fifthweek.Api.Posts.Shared;
     using Fifthweek.CodeGeneration;
+    using System.Collections.Generic;
+    using Fifthweek.Api.Collections.Shared;
+    using Fifthweek.Api.Posts.Queries;
+    using Fifthweek.Api.Channels.Shared;
+    using Fifthweek.Shared;
+    using Fifthweek.Api.FileManagement.Shared;
 
     public partial class PostsController 
     {
@@ -2967,7 +2973,7 @@ namespace Fifthweek.Api.Posts.Controllers
     {
         public override string ToString()
         {
-            return string.Format("RevisedNoteData({0}, \"{1}\", {2})", this.ChannelId == null ? "null" : this.ChannelId.ToString(), this.Note == null ? "null" : this.Note.ToString(), this.ScheduledPostDate == null ? "null" : this.ScheduledPostDate.ToString());
+            return string.Format("RevisedNoteData({0}, \"{1}\")", this.ChannelId == null ? "null" : this.ChannelId.ToString(), this.Note == null ? "null" : this.Note.ToString());
         }
         
         public override bool Equals(object obj)
@@ -2997,7 +3003,6 @@ namespace Fifthweek.Api.Posts.Controllers
                 int hashCode = 0;
                 hashCode = (hashCode * 397) ^ (this.ChannelId != null ? this.ChannelId.GetHashCode() : 0);
                 hashCode = (hashCode * 397) ^ (this.Note != null ? this.Note.GetHashCode() : 0);
-                hashCode = (hashCode * 397) ^ (this.ScheduledPostDate != null ? this.ScheduledPostDate.GetHashCode() : 0);
                 return hashCode;
             }
         }
@@ -3010,11 +3015,6 @@ namespace Fifthweek.Api.Posts.Controllers
             }
         
             if (!object.Equals(this.Note, other.Note))
-            {
-                return false;
-            }
-        
-            if (!object.Equals(this.ScheduledPostDate, other.ScheduledPostDate))
             {
                 return false;
             }
@@ -4408,8 +4408,7 @@ namespace Fifthweek.Api.Posts.Controllers
         {
             public Parsed(
                 Fifthweek.Api.Channels.Shared.ChannelId channelId,
-                ValidNote note,
-                System.Nullable<System.DateTime> scheduledPostDate)
+                ValidNote note)
             {
                 if (channelId == null)
                 {
@@ -4423,14 +4422,11 @@ namespace Fifthweek.Api.Posts.Controllers
 
                 this.ChannelId = channelId;
                 this.Note = note;
-                this.ScheduledPostDate = scheduledPostDate;
             }
         
             public Fifthweek.Api.Channels.Shared.ChannelId ChannelId { get; private set; }
         
             public ValidNote Note { get; private set; }
-        
-            public System.Nullable<System.DateTime> ScheduledPostDate { get; private set; }
         }
     }
 
@@ -4469,8 +4465,7 @@ namespace Fifthweek.Api.Posts.Controllers
         
             return new RevisedNoteData.Parsed(
                 target.ChannelId,
-                parsed0,
-                target.ScheduledPostDate);
+                parsed0);
         }    
     }
 }
