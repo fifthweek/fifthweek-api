@@ -34,7 +34,9 @@ angular.module('webApp').factory('channelStub',
     // newChannelData = {
     //   subscriptionId: 'Base64Guid',
     //   name: '',
-    //   price: 0
+    //   description: '',
+    //   price: 0,
+    //   isVisibleToNonSubscribers: false
     // }
     // result = 'Base64Guid'
     service.postChannel = function(newChannelData) {
@@ -46,7 +48,7 @@ angular.module('webApp').factory('channelStub',
     // channelId = 'Base64Guid'
     // channelData = {
     //   name: '',
-    //   description: '', /* optional */
+    //   description: '',
     //   price: 0,
     //   isVisibleToNonSubscribers: false
     // }
@@ -607,8 +609,8 @@ angular.module('webApp').factory('userStateStub',
     //     channels: [
     //       {
     //         channelId: 'Base64Guid',
-    //         name: '', /* optional */
-    //         description: '', /* optional */
+    //         name: '',
+    //         description: '',
     //         priceInUsCentsPerWeek: 0,
     //         collections: [
     //           {
@@ -655,8 +657,8 @@ angular.module('webApp').factory('userStateStub',
     //     channels: [
     //       {
     //         channelId: 'Base64Guid',
-    //         name: '', /* optional */
-    //         description: '', /* optional */
+    //         name: '',
+    //         description: '',
     //         priceInUsCentsPerWeek: 0,
     //         collections: [
     //           {
