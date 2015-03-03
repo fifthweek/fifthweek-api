@@ -234,6 +234,10 @@
     <Compile Include="Migrations\201502131922541_AddEndToEndTestEmails.Designer.cs">
       <DependentUpon>201502131922541_AddEndToEndTestEmails.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201503031543081_MakeChannelNameAndDescriptionRequired.cs" />
+    <Compile Include="Migrations\201503031543081_MakeChannelNameAndDescriptionRequired.Designer.cs">
+      <DependentUpon>201503031543081_MakeChannelNameAndDescriptionRequired.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Post.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -362,6 +366,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201502131922541_AddEndToEndTestEmails.resx">
       <DependentUpon>201502131922541_AddEndToEndTestEmails.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201503031543081_MakeChannelNameAndDescriptionRequired.resx">
+      <DependentUpon>201503031543081_MakeChannelNameAndDescriptionRequired.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>

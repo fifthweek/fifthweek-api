@@ -22,11 +22,11 @@
         [Required, Optional, NonEquatable]
         public Subscription Subscription { get; set; }
 
-        [Optional]
+        [Required]
         [MaxLength(50)] // See: ValidChannelName.MaxLength
         public string Name { get; set; }
 
-        [Optional]
+        [Required]
         [MaxLength(250)] // See: ValidChannelDescription.MaxLength
         public string Description { get; set; }
 

@@ -33,7 +33,9 @@
                     newChannelId,
                     newChannel.SubscriptionId,
                     newChannel.Name,
-                    newChannel.Price));
+                    newChannel.Description,
+                    newChannel.Price,
+                    newChannel.IsVisibleToNonSubscribers));
 
             return newChannelId;
         }

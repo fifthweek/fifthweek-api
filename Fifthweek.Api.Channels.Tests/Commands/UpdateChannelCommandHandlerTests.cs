@@ -124,40 +124,6 @@
         }
 
         [TestMethod]
-        public async Task ItShouldAllowNullDescriptions()
-        {
-            await this.DatabaseTestAsync(async testDatabase =>
-            {
-                this.InitializeTarget(testDatabase);
-                await this.CreateChannelAsync(testDatabase);
-                await testDatabase.TakeSnapshotAsync();
-
-                await this.target.HandleAsync(new UpdateChannelCommand(Requester, ChannelId, Name, null, Price, IsVisibleToNonSubscribers));
-
-                var expectedChannel = new Channel(ChannelId.Value)
-                {
-                    IsVisibleToNonSubscribers = IsVisibleToNonSubscribers,
-                    Name = Name.Value,
-                    Description = null,
-                    PriceInUsCentsPerWeek = Price.Value
-                };
-
-                return new ExpectedSideEffects
-                {
-                    Update = new WildcardEntity<Channel>(expectedChannel)
-                    {
-                        Expected = actual =>
-                        {
-                            expectedChannel.SubscriptionId = actual.SubscriptionId;
-                            expectedChannel.CreationDate = actual.CreationDate;
-                            return expectedChannel;
-                        }
-                    }
-                };
-            });
-        }
-
-        [TestMethod]
         public async Task ItShouldNotAllowDefaultChannelToBeHidden()
         {
             await this.DatabaseTestAsync(async testDatabase =>

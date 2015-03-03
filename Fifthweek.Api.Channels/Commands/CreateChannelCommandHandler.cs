@@ -33,9 +33,9 @@
                 command.SubscriptionId.Value,
                 null,
                 command.Name.Value,
-                null,
+                command.Description.Value,
                 command.Price.Value,
-                false,
+                command.IsVisibleToNonSubscribers,
                 DateTime.UtcNow);
 
             using (var connection = this.connectionFactory.CreateConnection())

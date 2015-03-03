@@ -16,13 +16,11 @@
         {
             public ChannelId ChannelId { get; private set; }
 
-            [Optional]
             public string Name { get; private set; }
 
-            [Optional]
-            public string Description { get; set; }
+            public string Description { get; private set; }
 
-            public int PriceInUsCentsPerWeek { get; set; }
+            public int PriceInUsCentsPerWeek { get; private set; }
 
             public IReadOnlyList<Collection> Collections { get; private set; }
         }

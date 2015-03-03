@@ -34,7 +34,7 @@
                 IsVisibleToNonSubscribers = command.IsVisibleToNonSubscribers,
                 Name = command.Name.Value,
                 PriceInUsCentsPerWeek = command.Price.Value,
-                Description = command.Description == null ? null : command.Description.Value
+                Description = command.Description.Value
             };
 
             var updatedFields = 

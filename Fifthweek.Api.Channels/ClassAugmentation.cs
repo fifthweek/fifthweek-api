@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Linq;
 
-//// Generated on 11/02/2015 17:46:23 (UTC)
-//// Mapped solution in 8.02s
+//// Generated on 03/03/2015 16:04:47 (UTC)
+//// Mapped solution in 6.29s
 
 
 namespace Fifthweek.Api.Channels
@@ -79,7 +79,9 @@ namespace Fifthweek.Api.Channels.Commands
             Fifthweek.Api.Channels.Shared.ChannelId newChannelId,
             Fifthweek.Api.Subscriptions.Shared.SubscriptionId subscriptionId,
             Fifthweek.Api.Channels.Shared.ValidChannelName name,
-            Fifthweek.Api.Channels.Shared.ValidChannelPriceInUsCentsPerWeek price)
+            Fifthweek.Api.Channels.Shared.ValidChannelDescription description,
+            Fifthweek.Api.Channels.Shared.ValidChannelPriceInUsCentsPerWeek price,
+            System.Boolean isVisibleToNonSubscribers)
         {
             if (requester == null)
             {
@@ -101,16 +103,28 @@ namespace Fifthweek.Api.Channels.Commands
                 throw new ArgumentNullException("name");
             }
 
+            if (description == null)
+            {
+                throw new ArgumentNullException("description");
+            }
+
             if (price == null)
             {
                 throw new ArgumentNullException("price");
+            }
+
+            if (isVisibleToNonSubscribers == null)
+            {
+                throw new ArgumentNullException("isVisibleToNonSubscribers");
             }
 
             this.Requester = requester;
             this.NewChannelId = newChannelId;
             this.SubscriptionId = subscriptionId;
             this.Name = name;
+            this.Description = description;
             this.Price = price;
+            this.IsVisibleToNonSubscribers = isVisibleToNonSubscribers;
         }
     }
 }
@@ -195,6 +209,11 @@ namespace Fifthweek.Api.Channels.Commands
             if (name == null)
             {
                 throw new ArgumentNullException("name");
+            }
+
+            if (description == null)
+            {
+                throw new ArgumentNullException("description");
             }
 
             if (price == null)
@@ -332,7 +351,9 @@ namespace Fifthweek.Api.Channels.Controllers
         public NewChannelData(
             Fifthweek.Api.Subscriptions.Shared.SubscriptionId subscriptionId,
             System.String name,
-            System.Int32 price)
+            System.String description,
+            System.Int32 price,
+            System.Boolean isVisibleToNonSubscribers)
         {
             if (subscriptionId == null)
             {
@@ -344,14 +365,26 @@ namespace Fifthweek.Api.Channels.Controllers
                 throw new ArgumentNullException("name");
             }
 
+            if (description == null)
+            {
+                throw new ArgumentNullException("description");
+            }
+
             if (price == null)
             {
                 throw new ArgumentNullException("price");
             }
 
+            if (isVisibleToNonSubscribers == null)
+            {
+                throw new ArgumentNullException("isVisibleToNonSubscribers");
+            }
+
             this.SubscriptionId = subscriptionId;
             this.Name = name;
+            this.Description = description;
             this.Price = price;
+            this.IsVisibleToNonSubscribers = isVisibleToNonSubscribers;
         }
     }
 }
@@ -379,6 +412,11 @@ namespace Fifthweek.Api.Channels.Controllers
             if (name == null)
             {
                 throw new ArgumentNullException("name");
+            }
+
+            if (description == null)
+            {
+                throw new ArgumentNullException("description");
             }
 
             if (price == null)
@@ -530,7 +568,7 @@ namespace Fifthweek.Api.Channels.Commands
     {
         public override string ToString()
         {
-            return string.Format("CreateChannelCommand({0}, {1}, {2}, {3}, {4})", this.Requester == null ? "null" : this.Requester.ToString(), this.NewChannelId == null ? "null" : this.NewChannelId.ToString(), this.SubscriptionId == null ? "null" : this.SubscriptionId.ToString(), this.Name == null ? "null" : this.Name.ToString(), this.Price == null ? "null" : this.Price.ToString());
+            return string.Format("CreateChannelCommand({0}, {1}, {2}, {3}, {4}, {5}, {6})", this.Requester == null ? "null" : this.Requester.ToString(), this.NewChannelId == null ? "null" : this.NewChannelId.ToString(), this.SubscriptionId == null ? "null" : this.SubscriptionId.ToString(), this.Name == null ? "null" : this.Name.ToString(), this.Description == null ? "null" : this.Description.ToString(), this.Price == null ? "null" : this.Price.ToString(), this.IsVisibleToNonSubscribers == null ? "null" : this.IsVisibleToNonSubscribers.ToString());
         }
         
         public override bool Equals(object obj)
@@ -562,7 +600,9 @@ namespace Fifthweek.Api.Channels.Commands
                 hashCode = (hashCode * 397) ^ (this.NewChannelId != null ? this.NewChannelId.GetHashCode() : 0);
                 hashCode = (hashCode * 397) ^ (this.SubscriptionId != null ? this.SubscriptionId.GetHashCode() : 0);
                 hashCode = (hashCode * 397) ^ (this.Name != null ? this.Name.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.Description != null ? this.Description.GetHashCode() : 0);
                 hashCode = (hashCode * 397) ^ (this.Price != null ? this.Price.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.IsVisibleToNonSubscribers != null ? this.IsVisibleToNonSubscribers.GetHashCode() : 0);
                 return hashCode;
             }
         }
@@ -589,7 +629,17 @@ namespace Fifthweek.Api.Channels.Commands
                 return false;
             }
         
+            if (!object.Equals(this.Description, other.Description))
+            {
+                return false;
+            }
+        
             if (!object.Equals(this.Price, other.Price))
+            {
+                return false;
+            }
+        
+            if (!object.Equals(this.IsVisibleToNonSubscribers, other.IsVisibleToNonSubscribers))
             {
                 return false;
             }
@@ -708,7 +758,7 @@ namespace Fifthweek.Api.Channels.Controllers
     {
         public override string ToString()
         {
-            return string.Format("NewChannelData({0}, \"{1}\", {2})", this.SubscriptionId == null ? "null" : this.SubscriptionId.ToString(), this.Name == null ? "null" : this.Name.ToString(), this.Price == null ? "null" : this.Price.ToString());
+            return string.Format("NewChannelData({0}, \"{1}\", \"{2}\", {3}, {4})", this.SubscriptionId == null ? "null" : this.SubscriptionId.ToString(), this.Name == null ? "null" : this.Name.ToString(), this.Description == null ? "null" : this.Description.ToString(), this.Price == null ? "null" : this.Price.ToString(), this.IsVisibleToNonSubscribers == null ? "null" : this.IsVisibleToNonSubscribers.ToString());
         }
         
         public override bool Equals(object obj)
@@ -738,7 +788,9 @@ namespace Fifthweek.Api.Channels.Controllers
                 int hashCode = 0;
                 hashCode = (hashCode * 397) ^ (this.SubscriptionId != null ? this.SubscriptionId.GetHashCode() : 0);
                 hashCode = (hashCode * 397) ^ (this.Name != null ? this.Name.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.Description != null ? this.Description.GetHashCode() : 0);
                 hashCode = (hashCode * 397) ^ (this.Price != null ? this.Price.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.IsVisibleToNonSubscribers != null ? this.IsVisibleToNonSubscribers.GetHashCode() : 0);
                 return hashCode;
             }
         }
@@ -755,7 +807,17 @@ namespace Fifthweek.Api.Channels.Controllers
                 return false;
             }
         
+            if (!object.Equals(this.Description, other.Description))
+            {
+                return false;
+            }
+        
             if (!object.Equals(this.Price, other.Price))
+            {
+                return false;
+            }
+        
+            if (!object.Equals(this.IsVisibleToNonSubscribers, other.IsVisibleToNonSubscribers))
             {
                 return false;
             }
@@ -932,7 +994,9 @@ namespace Fifthweek.Api.Channels.Controllers
             public Parsed(
                 Fifthweek.Api.Subscriptions.Shared.SubscriptionId subscriptionId,
                 ValidChannelName name,
-                ValidChannelPriceInUsCentsPerWeek price)
+                ValidChannelDescription description,
+                ValidChannelPriceInUsCentsPerWeek price,
+                System.Boolean isVisibleToNonSubscribers)
             {
                 if (subscriptionId == null)
                 {
@@ -944,21 +1008,37 @@ namespace Fifthweek.Api.Channels.Controllers
                     throw new ArgumentNullException("name");
                 }
 
+                if (description == null)
+                {
+                    throw new ArgumentNullException("description");
+                }
+
                 if (price == null)
                 {
                     throw new ArgumentNullException("price");
                 }
 
+                if (isVisibleToNonSubscribers == null)
+                {
+                    throw new ArgumentNullException("isVisibleToNonSubscribers");
+                }
+
                 this.SubscriptionId = subscriptionId;
                 this.Name = name;
+                this.Description = description;
                 this.Price = price;
+                this.IsVisibleToNonSubscribers = isVisibleToNonSubscribers;
             }
         
             public Fifthweek.Api.Subscriptions.Shared.SubscriptionId SubscriptionId { get; private set; }
         
             public ValidChannelName Name { get; private set; }
         
+            public ValidChannelDescription Description { get; private set; }
+        
             public ValidChannelPriceInUsCentsPerWeek Price { get; private set; }
+        
+            public System.Boolean IsVisibleToNonSubscribers { get; private set; }
         }
     }
 
@@ -990,12 +1070,34 @@ namespace Fifthweek.Api.Channels.Controllers
                 modelStateDictionary.Add("Name", modelState);
             }
 
-            ValidChannelPriceInUsCentsPerWeek parsed1 = null;
-            System.Collections.Generic.IReadOnlyCollection<string> parsed1Errors;
-            if (!ValidChannelPriceInUsCentsPerWeek.TryParse(target.Price, out parsed1, out parsed1Errors))
+            ValidChannelDescription parsed1 = null;
+            if (!ValidChannelDescription.IsEmpty(target.Description))
+            {
+                System.Collections.Generic.IReadOnlyCollection<string> parsed1Errors;
+                if (!ValidChannelDescription.TryParse(target.Description, out parsed1, out parsed1Errors))
+                {
+                    var modelState = new System.Web.Http.ModelBinding.ModelState();
+                    foreach (var errorMessage in parsed1Errors)
+                    {
+                        modelState.Errors.Add(errorMessage);
+                    }
+
+                    modelStateDictionary.Add("Description", modelState);
+                }
+            }
+            else
             {
                 var modelState = new System.Web.Http.ModelBinding.ModelState();
-                foreach (var errorMessage in parsed1Errors)
+                modelState.Errors.Add("Value required");
+                modelStateDictionary.Add("Description", modelState);
+            }
+
+            ValidChannelPriceInUsCentsPerWeek parsed2 = null;
+            System.Collections.Generic.IReadOnlyCollection<string> parsed2Errors;
+            if (!ValidChannelPriceInUsCentsPerWeek.TryParse(target.Price, out parsed2, out parsed2Errors))
+            {
+                var modelState = new System.Web.Http.ModelBinding.ModelState();
+                foreach (var errorMessage in parsed2Errors)
                 {
                     modelState.Errors.Add(errorMessage);
                 }
@@ -1011,7 +1113,9 @@ namespace Fifthweek.Api.Channels.Controllers
             return new NewChannelData.Parsed(
                 target.SubscriptionId,
                 parsed0,
-                parsed1);
+                parsed1,
+                parsed2,
+                target.IsVisibleToNonSubscribers);
         }    
     }
 }
@@ -1041,6 +1145,11 @@ namespace Fifthweek.Api.Channels.Controllers
                 if (name == null)
                 {
                     throw new ArgumentNullException("name");
+                }
+
+                if (description == null)
+                {
+                    throw new ArgumentNullException("description");
                 }
 
                 if (price == null)
@@ -1111,6 +1220,12 @@ namespace Fifthweek.Api.Channels.Controllers
 
                     modelStateDictionary.Add("Description", modelState);
                 }
+            }
+            else
+            {
+                var modelState = new System.Web.Http.ModelBinding.ModelState();
+                modelState.Errors.Add("Value required");
+                modelStateDictionary.Add("Description", modelState);
             }
 
             ValidChannelPriceInUsCentsPerWeek parsed2 = null;

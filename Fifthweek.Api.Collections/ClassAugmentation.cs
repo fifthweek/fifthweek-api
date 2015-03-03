@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Linq;
 
-//// Generated on 03/03/2015 14:14:39 (UTC)
-//// Mapped solution in 4.84s
+//// Generated on 03/03/2015 15:55:58 (UTC)
+//// Mapped solution in 2.08s
 
 
 namespace Fifthweek.Api.Collections
@@ -540,6 +540,16 @@ namespace Fifthweek.Api.Collections.Queries
                 if (channelId == null)
                 {
                     throw new ArgumentNullException("channelId");
+                }
+
+                if (name == null)
+                {
+                    throw new ArgumentNullException("name");
+                }
+
+                if (description == null)
+                {
+                    throw new ArgumentNullException("description");
                 }
 
                 if (priceInUsCentsPerWeek == null)

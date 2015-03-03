@@ -18,6 +18,7 @@
     [TestClass]
     public class ChannelControllerTests
     {
+        private const bool IsVisibleToNonSubscribers = false;
         private static readonly UserId UserId = new UserId(Guid.NewGuid());
         private static readonly Requester Requester = Requester.Authenticated(UserId);
         private static readonly ChannelId ChannelId = new ChannelId(Guid.NewGuid());
@@ -47,8 +48,8 @@
         [TestMethod]
         public async Task WhenPostingChannel_ItShouldIssueCreateChannelCommand()
         {
-            var data = new NewChannelData(SubscriptionId, ChannelName.Value, Price.Value);
-            var command = new CreateChannelCommand(Requester, ChannelId, SubscriptionId, ChannelName, Price);
+            var data = new NewChannelData(SubscriptionId, ChannelName.Value, ChannelDescription.Value, Price.Value, IsVisibleToNonSubscribers);
+            var command = new CreateChannelCommand(Requester, ChannelId, SubscriptionId, ChannelName, ChannelDescription, Price, IsVisibleToNonSubscribers);
 
             this.requesterContext.Setup(_ => _.GetRequester()).Returns(Requester);
             this.guidCreator.Setup(_ => _.CreateSqlSequential()).Returns(ChannelId.Value);

@@ -19,13 +19,15 @@
     [TestClass]
     public class CreateChannelCommandHandlerTests : PersistenceTestsBase
     {
+        private const bool IsVisibleToNonSubscribers = true;
         private static readonly UserId UserId = new UserId(Guid.NewGuid());
         private static readonly Requester Requester = Requester.Authenticated(UserId);
         private static readonly ChannelId ChannelId = new ChannelId(Guid.NewGuid());
         private static readonly SubscriptionId SubscriptionId = new SubscriptionId(Guid.NewGuid());
         private static readonly ValidChannelName Name = ValidChannelName.Parse("Bat puns");
+        private static readonly ValidChannelDescription Description = ValidChannelDescription.Parse("It's just a load of really, really bat puns! *bad");
         private static readonly ValidChannelPriceInUsCentsPerWeek Price = ValidChannelPriceInUsCentsPerWeek.Parse(10);
-        private static readonly CreateChannelCommand Command = new CreateChannelCommand(Requester, ChannelId, SubscriptionId, Name, Price);
+        private static readonly CreateChannelCommand Command = new CreateChannelCommand(Requester, ChannelId, SubscriptionId, Name, Description, Price, IsVisibleToNonSubscribers);
 
         private Mock<IRequesterSecurity> requesterSecurity;
         private Mock<ISubscriptionSecurity> subscriptionSecurity;
@@ -61,7 +63,7 @@
         [ExpectedException(typeof(UnauthorizedException))]
         public async Task ItShouldRequireUserIsAuthenticated()
         {
-            await this.target.HandleAsync(new CreateChannelCommand(Requester.Unauthenticated, ChannelId, SubscriptionId, Name, Price));
+            await this.target.HandleAsync(new CreateChannelCommand(Requester.Unauthenticated, ChannelId, SubscriptionId, Name, Description, Price, IsVisibleToNonSubscribers));
         }
 
         [TestMethod]
@@ -105,9 +107,9 @@
                     SubscriptionId.Value,
                     null,
                     Name.Value,
-                    null,
+                    Description.Value,
                     Price.Value,
-                    false,
+                    IsVisibleToNonSubscribers,
                     default(DateTime));
 
                 return new ExpectedSideEffects
