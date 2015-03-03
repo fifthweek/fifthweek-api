@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Linq;
 
-//// Generated on 11/02/2015 17:54:35 (UTC)
-//// Mapped solution in 8.53s
+//// Generated on 03/03/2015 14:14:39 (UTC)
+//// Mapped solution in 4.84s
 
 
 namespace Fifthweek.Api.Collections
@@ -533,11 +533,18 @@ namespace Fifthweek.Api.Collections.Queries
             public Channel(
                 Fifthweek.Api.Channels.Shared.ChannelId channelId,
                 System.String name,
+                System.String description,
+                System.Int32 priceInUsCentsPerWeek,
                 System.Collections.Generic.IReadOnlyList<Fifthweek.Api.Collections.Queries.ChannelsAndCollections.Collection> collections)
             {
                 if (channelId == null)
                 {
                     throw new ArgumentNullException("channelId");
+                }
+
+                if (priceInUsCentsPerWeek == null)
+                {
+                    throw new ArgumentNullException("priceInUsCentsPerWeek");
                 }
 
                 if (collections == null)
@@ -547,6 +554,8 @@ namespace Fifthweek.Api.Collections.Queries
 
                 this.ChannelId = channelId;
                 this.Name = name;
+                this.Description = description;
+                this.PriceInUsCentsPerWeek = priceInUsCentsPerWeek;
                 this.Collections = collections;
             }
         }

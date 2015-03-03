@@ -19,6 +19,11 @@
             [Optional]
             public string Name { get; private set; }
 
+            [Optional]
+            public string Description { get; set; }
+
+            public int PriceInUsCentsPerWeek { get; set; }
+
             public IReadOnlyList<Collection> Collections { get; private set; }
         }
 
