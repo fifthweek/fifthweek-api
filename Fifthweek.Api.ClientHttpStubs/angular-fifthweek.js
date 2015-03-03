@@ -612,6 +612,7 @@ angular.module('webApp').factory('userStateStub',
     //         name: '',
     //         description: '',
     //         priceInUsCentsPerWeek: 0,
+    //         isDefault: false,
     //         collections: [
     //           {
     //             collectionId: 'Base64Guid',
@@ -660,6 +661,7 @@ angular.module('webApp').factory('userStateStub',
     //         name: '',
     //         description: '',
     //         priceInUsCentsPerWeek: 0,
+    //         isDefault: false,
     //         collections: [
     //           {
     //             collectionId: 'Base64Guid',

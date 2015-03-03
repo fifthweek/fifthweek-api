@@ -22,6 +22,8 @@
 
             public int PriceInUsCentsPerWeek { get; private set; }
 
+            public bool IsDefault { get; private set; }
+
             public IReadOnlyList<Collection> Collections { get; private set; }
         }
 
