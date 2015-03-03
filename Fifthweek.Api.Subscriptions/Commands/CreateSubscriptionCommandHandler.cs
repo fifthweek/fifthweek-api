@@ -14,6 +14,9 @@
     [AutoConstructor]
     public partial class CreateSubscriptionCommandHandler : ICommandHandler<CreateSubscriptionCommand>
     {
+        private static readonly ValidChannelName DefaultChannelName = ValidChannelName.Parse(
+            "Basic Subscription");
+
         private static readonly ValidChannelDescription DefaultChannelDescription = ValidChannelDescription.Parse(
             "Exclusive News Feed" + Environment.NewLine + "Early Updates on New Releases");
 
@@ -51,8 +54,8 @@
                 command.NewSubscriptionId.Value, // Default channel uses same ID as subscription.
                 command.NewSubscriptionId.Value,
                 null,
+                DefaultChannelName.Value,
                 DefaultChannelDescription.Value,
-                null,
                 command.BasePrice.Value,
                 true,
                 DateTime.UtcNow);

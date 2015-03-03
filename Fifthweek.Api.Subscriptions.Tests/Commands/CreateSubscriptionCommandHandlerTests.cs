@@ -138,8 +138,8 @@
                 SubscriptionId.Value, // The default channel uses the subscription ID.
                 SubscriptionId.Value,
                 null,
+                "Basic Subscription",
                 "Exclusive News Feed" + Environment.NewLine + "Early Updates on New Releases",
-                null,
                 BasePrice.Value,
                 true,
                 DateTime.MinValue);
