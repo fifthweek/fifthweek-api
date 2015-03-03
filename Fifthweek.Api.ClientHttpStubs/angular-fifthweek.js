@@ -608,6 +608,8 @@ angular.module('webApp').factory('userStateStub',
     //       {
     //         channelId: 'Base64Guid',
     //         name: '', /* optional */
+    //         description: '', /* optional */
+    //         priceInUsCentsPerWeek: 0,
     //         collections: [
     //           {
     //             collectionId: 'Base64Guid',
@@ -654,6 +656,8 @@ angular.module('webApp').factory('userStateStub',
     //       {
     //         channelId: 'Base64Guid',
     //         name: '', /* optional */
+    //         description: '', /* optional */
+    //         priceInUsCentsPerWeek: 0,
     //         collections: [
     //           {
     //             collectionId: 'Base64Guid',
