@@ -9,6 +9,7 @@
         public const string ProfileImage = "profile-image";
         public const string ProfileHeaderImage = "profile-header-image";
         public const string PostImage = "post-image";
+        public const string PostFile = "post-file";
 
         private static readonly Dictionary<string, FilePurpose> Items = new Dictionary<string, FilePurpose>();
 
@@ -17,6 +18,7 @@
             Add(ProfileImage, true);
             Add(ProfileHeaderImage, true);
             Add(PostImage, false);
+            Add(PostFile, false);
         }
 
         public static FilePurpose TryGetFilePurpose(string purpose)

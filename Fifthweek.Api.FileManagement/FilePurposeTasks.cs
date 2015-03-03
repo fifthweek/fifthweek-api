@@ -57,17 +57,19 @@
                 FilePurposes.PostImage,
                 new CreateThumbnailsTask(
                     new Thumbnail(
-                        1200, 
-                        16000, 
+                        1200,
+                        16000,
                         ResizeBehaviour.MaintainAspectRatio,
                         new Thumbnail(
-                            600, 
-                            600, 
+                            600,
+                            600,
                             ResizeBehaviour.MaintainAspectRatio,
                             new Thumbnail(
                                 332,
                                 250,
                                 ResizeBehaviour.MaintainAspectRatio)))));
+
+            Add(FilePurposes.PostFile);
         }
 
         public IEnumerable<IFileTask> GetTasks(string purpose)
