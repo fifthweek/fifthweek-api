@@ -19,14 +19,9 @@
     public partial class GetChannelsAndCollectionsDbStatement : IGetChannelsAndCollectionsDbStatement
     {
         private static readonly string ChannelsQuery = string.Format(
-                @"SELECT c.{0}, c.{1}, c.{2}, c.{3}, c.{4} FROM {5} c 
-                INNER JOIN {6} s ON c.{7} = s.{8} 
-                WHERE s.{9} = @CreatorId;",
-                Persistence.Channel.Fields.Id,
-                Persistence.Channel.Fields.SubscriptionId,
-                Persistence.Channel.Fields.Name,
-                Persistence.Channel.Fields.Description,
-                Persistence.Channel.Fields.PriceInUsCentsPerWeek,
+                @"SELECT c.* FROM {0} c 
+                INNER JOIN {1} s ON c.{2} = s.{3} 
+                WHERE s.{4} = @CreatorId;",
                 Persistence.Channel.Table,
                 Persistence.Subscription.Table,
                 Persistence.Channel.Fields.SubscriptionId,
@@ -78,6 +73,7 @@
                     v.Description,
                     v.PriceInUsCentsPerWeek,
                     v.Id == v.SubscriptionId,
+                    v.IsVisibleToNonSubscribers,
                     (from c in collections 
                      where c.ChannelId == v.Id
                      select new ChannelsAndCollections.Collection(new Shared.CollectionId(c.Id), c.Name))
@@ -97,6 +93,8 @@
             public string Description { get; set; }
 
             public int PriceInUsCentsPerWeek { get; set; }
+
+            public bool IsVisibleToNonSubscribers { get; set; }
         }
 
         public partial class Collection

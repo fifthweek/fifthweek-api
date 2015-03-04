@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Linq;
 
-//// Generated on 03/03/2015 16:42:20 (UTC)
-//// Mapped solution in 2.63s
+//// Generated on 04/03/2015 13:22:29 (UTC)
+//// Mapped solution in 11.02s
 
 
 namespace Fifthweek.Api.Collections
@@ -536,6 +536,7 @@ namespace Fifthweek.Api.Collections.Queries
                 System.String description,
                 System.Int32 priceInUsCentsPerWeek,
                 System.Boolean isDefault,
+                System.Boolean isVisibleToNonSubscribers,
                 System.Collections.Generic.IReadOnlyList<Fifthweek.Api.Collections.Queries.ChannelsAndCollections.Collection> collections)
             {
                 if (channelId == null)
@@ -563,6 +564,11 @@ namespace Fifthweek.Api.Collections.Queries
                     throw new ArgumentNullException("isDefault");
                 }
 
+                if (isVisibleToNonSubscribers == null)
+                {
+                    throw new ArgumentNullException("isVisibleToNonSubscribers");
+                }
+
                 if (collections == null)
                 {
                     throw new ArgumentNullException("collections");
@@ -573,6 +579,7 @@ namespace Fifthweek.Api.Collections.Queries
                 this.Description = description;
                 this.PriceInUsCentsPerWeek = priceInUsCentsPerWeek;
                 this.IsDefault = isDefault;
+                this.IsVisibleToNonSubscribers = isVisibleToNonSubscribers;
                 this.Collections = collections;
             }
         }
