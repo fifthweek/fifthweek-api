@@ -1446,7 +1446,7 @@ namespace Fifthweek.Api.Posts.Controllers
     {
         public NewImageData(
             Fifthweek.Api.Collections.Shared.CollectionId collectionId,
-            Fifthweek.Api.FileManagement.Shared.FileId imageFileId,
+            Fifthweek.Api.FileManagement.Shared.FileId fileId,
             System.String comment,
             System.Nullable<System.DateTime> scheduledPostTime,
             System.Boolean isQueued)
@@ -1456,9 +1456,9 @@ namespace Fifthweek.Api.Posts.Controllers
                 throw new ArgumentNullException("collectionId");
             }
 
-            if (imageFileId == null)
+            if (fileId == null)
             {
-                throw new ArgumentNullException("imageFileId");
+                throw new ArgumentNullException("fileId");
             }
 
             if (isQueued == null)
@@ -1467,7 +1467,7 @@ namespace Fifthweek.Api.Posts.Controllers
             }
 
             this.CollectionId = collectionId;
-            this.ImageFileId = imageFileId;
+            this.FileId = fileId;
             this.Comment = comment;
             this.ScheduledPostTime = scheduledPostTime;
             this.IsQueued = isQueued;
@@ -3501,7 +3501,7 @@ namespace Fifthweek.Api.Posts.Controllers
     {
         public override string ToString()
         {
-            return string.Format("NewImageData({0}, {1}, \"{2}\", {3}, {4})", this.CollectionId == null ? "null" : this.CollectionId.ToString(), this.ImageFileId == null ? "null" : this.ImageFileId.ToString(), this.Comment == null ? "null" : this.Comment.ToString(), this.ScheduledPostTime == null ? "null" : this.ScheduledPostTime.ToString(), this.IsQueued == null ? "null" : this.IsQueued.ToString());
+            return string.Format("NewImageData({0}, {1}, \"{2}\", {3}, {4})", this.CollectionId == null ? "null" : this.CollectionId.ToString(), this.FileId == null ? "null" : this.FileId.ToString(), this.Comment == null ? "null" : this.Comment.ToString(), this.ScheduledPostTime == null ? "null" : this.ScheduledPostTime.ToString(), this.IsQueued == null ? "null" : this.IsQueued.ToString());
         }
         
         public override bool Equals(object obj)
@@ -3530,7 +3530,7 @@ namespace Fifthweek.Api.Posts.Controllers
             {
                 int hashCode = 0;
                 hashCode = (hashCode * 397) ^ (this.CollectionId != null ? this.CollectionId.GetHashCode() : 0);
-                hashCode = (hashCode * 397) ^ (this.ImageFileId != null ? this.ImageFileId.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.FileId != null ? this.FileId.GetHashCode() : 0);
                 hashCode = (hashCode * 397) ^ (this.Comment != null ? this.Comment.GetHashCode() : 0);
                 hashCode = (hashCode * 397) ^ (this.ScheduledPostTime != null ? this.ScheduledPostTime.GetHashCode() : 0);
                 hashCode = (hashCode * 397) ^ (this.IsQueued != null ? this.IsQueued.GetHashCode() : 0);
@@ -3545,7 +3545,7 @@ namespace Fifthweek.Api.Posts.Controllers
                 return false;
             }
         
-            if (!object.Equals(this.ImageFileId, other.ImageFileId))
+            if (!object.Equals(this.FileId, other.FileId))
             {
                 return false;
             }
@@ -4660,7 +4660,7 @@ namespace Fifthweek.Api.Posts.Controllers
         
             return new NewImageData.Parsed(
                 target.CollectionId,
-                target.ImageFileId,
+                target.FileId,
                 parsed0,
                 target.ScheduledPostTime,
                 target.IsQueued);

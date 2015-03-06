@@ -16,7 +16,7 @@
 
         public CollectionId CollectionId { get; set; }
 
-        public FileId ImageFileId { get; set; }
+        public FileId FileId { get; set; }
         
         [Optional]
         [Parsed(typeof(ValidComment))]
