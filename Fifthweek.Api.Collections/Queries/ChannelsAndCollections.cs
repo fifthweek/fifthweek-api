@@ -35,6 +35,8 @@
             public CollectionId CollectionId { get; private set; }
 
             public string Name { get; private set; }
+
+            public IReadOnlyList<byte> WeeklyReleaseSchedule { get; private set; }
         }
     }
 }

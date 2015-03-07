@@ -363,7 +363,7 @@ angular.module('webApp').factory('postsStub',
 
     // imageData = {
     //   collectionId: 'Base64Guid',
-    //   imageFileId: 'Base64Guid',
+    //   fileId: 'Base64Guid',
     //   comment: '', /* optional */
     //   scheduledPostTime: '2015-12-25T14:45:05Z', /* optional */
     //   isQueued: false
@@ -617,7 +617,10 @@ angular.module('webApp').factory('userStateStub',
     //         collections: [
     //           {
     //             collectionId: 'Base64Guid',
-    //             name: ''
+    //             name: '',
+    //             weeklyReleaseSchedule: [
+    //               0
+    //             ]
     //           }
     //         ]
     //       }
@@ -667,7 +670,10 @@ angular.module('webApp').factory('userStateStub',
     //         collections: [
     //           {
     //             collectionId: 'Base64Guid',
-    //             name: ''
+    //             name: '',
+    //             weeklyReleaseSchedule: [
+    //               0
+    //             ]
     //           }
     //         ]
     //       }

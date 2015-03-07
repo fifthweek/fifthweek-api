@@ -46,7 +46,25 @@
             Persistence.Subscription.Fields.Id,
             Persistence.Subscription.Fields.CreatorId);
 
-        private static readonly string Query = ChannelsQuery + CollectionsQuery;
+        private static readonly string WeeklyReleaseScheduleQuery = string.Format(
+            @"SELECT wrt.* FROM {0} wrt
+                INNER JOIN {1} col ON wrt.{2} = col.{3} 
+                INNER JOIN {4} ch ON col.{5} = ch.{6} 
+                INNER JOIN {7} s ON ch.{8} = s.{9} 
+                WHERE s.{10} = @CreatorId;",
+            Persistence.WeeklyReleaseTime.Table,
+            Persistence.Collection.Table,
+            Persistence.WeeklyReleaseTime.Fields.CollectionId,
+            Persistence.Collection.Fields.Id,
+            Persistence.Channel.Table,
+            Persistence.Collection.Fields.ChannelId,
+            Persistence.Channel.Fields.Id,
+            Persistence.Subscription.Table,
+            Persistence.Channel.Fields.SubscriptionId,
+            Persistence.Subscription.Fields.Id,
+            Persistence.Subscription.Fields.CreatorId);
+
+        private static readonly string Query = ChannelsQuery + CollectionsQuery + WeeklyReleaseScheduleQuery;
 
         private readonly IFifthweekDbConnectionFactory connectionFactory;
 
@@ -56,6 +74,7 @@
 
             List<Channel> channels;
             List<Collection> collections;
+            List<WeeklyReleaseTime> releaseTimes;
             using (var connection = this.connectionFactory.CreateConnection())
             using (var multi = await connection.QueryMultipleAsync(
                 Query,
@@ -63,21 +82,25 @@
             {
                 channels = multi.Read<Channel>().ToList();
                 collections = multi.Read<Collection>().ToList();
+                releaseTimes = multi.Read<WeeklyReleaseTime>().ToList();
             }
 
             var result = new ChannelsAndCollections(
-                (from v in channels
+                (from c in channels
                  select new ChannelsAndCollections.Channel(
-                    new ChannelId(v.Id),
-                    v.Name,
-                    v.Description,
-                    v.PriceInUsCentsPerWeek,
-                    v.Id == v.SubscriptionId,
-                    v.IsVisibleToNonSubscribers,
-                    (from c in collections 
-                     where c.ChannelId == v.Id
-                     select new ChannelsAndCollections.Collection(new Shared.CollectionId(c.Id), c.Name))
-                        .AsReadOnlyList())).AsReadOnlyList());
+                    new ChannelId(c.Id),
+                    c.Name,
+                    c.Description,
+                    c.PriceInUsCentsPerWeek,
+                    c.Id == c.SubscriptionId,
+                    c.IsVisibleToNonSubscribers,
+                    (from col in collections 
+                     where col.ChannelId == c.Id
+                     select new ChannelsAndCollections.Collection(
+                         new Shared.CollectionId(col.Id), 
+                         col.Name, 
+                         releaseTimes.Where(wrt => wrt.CollectionId == col.Id).Select(wrt => wrt.HourOfWeek).ToArray()))
+                        .ToArray())).ToArray());
 
             return result;
         }

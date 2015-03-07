@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Linq;
 
-//// Generated on 04/03/2015 13:22:29 (UTC)
-//// Mapped solution in 11.02s
+//// Generated on 07/03/2015 11:16:28 (UTC)
+//// Mapped solution in 4.09s
 
 
 namespace Fifthweek.Api.Collections
@@ -629,7 +629,8 @@ namespace Fifthweek.Api.Collections.Queries
         {
             public Collection(
                 Fifthweek.Api.Collections.Shared.CollectionId collectionId,
-                System.String name)
+                System.String name,
+                System.Collections.Generic.IReadOnlyList<System.Byte> weeklyReleaseSchedule)
             {
                 if (collectionId == null)
                 {
@@ -641,8 +642,14 @@ namespace Fifthweek.Api.Collections.Queries
                     throw new ArgumentNullException("name");
                 }
 
+                if (weeklyReleaseSchedule == null)
+                {
+                    throw new ArgumentNullException("weeklyReleaseSchedule");
+                }
+
                 this.CollectionId = collectionId;
                 this.Name = name;
+                this.WeeklyReleaseSchedule = weeklyReleaseSchedule;
             }
         }
     }
