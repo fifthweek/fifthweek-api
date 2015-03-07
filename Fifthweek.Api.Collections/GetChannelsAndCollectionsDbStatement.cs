@@ -99,7 +99,7 @@
                      select new ChannelsAndCollections.Collection(
                          new Shared.CollectionId(col.Id), 
                          col.Name, 
-                         releaseTimes.Where(wrt => wrt.CollectionId == col.Id).Select(wrt => wrt.HourOfWeek).ToArray()))
+                         releaseTimes.Where(wrt => wrt.CollectionId == col.Id).Select(wrt => (int)wrt.HourOfWeek).ToArray()))
                         .ToArray())).ToArray());
 
             return result;

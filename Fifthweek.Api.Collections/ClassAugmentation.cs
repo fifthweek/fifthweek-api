@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Linq;
 
-//// Generated on 07/03/2015 11:16:28 (UTC)
-//// Mapped solution in 4.09s
+//// Generated on 07/03/2015 11:48:49 (UTC)
+//// Mapped solution in 4.3s
 
 
 namespace Fifthweek.Api.Collections
@@ -630,7 +630,7 @@ namespace Fifthweek.Api.Collections.Queries
             public Collection(
                 Fifthweek.Api.Collections.Shared.CollectionId collectionId,
                 System.String name,
-                System.Collections.Generic.IReadOnlyList<System.Byte> weeklyReleaseSchedule)
+                System.Collections.Generic.IReadOnlyList<System.Int32> weeklyReleaseSchedule)
             {
                 if (collectionId == null)
                 {

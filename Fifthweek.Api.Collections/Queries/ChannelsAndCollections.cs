@@ -36,7 +36,7 @@
 
             public string Name { get; private set; }
 
-            public IReadOnlyList<byte> WeeklyReleaseSchedule { get; private set; }
+            public IReadOnlyList<int> WeeklyReleaseSchedule { get; private set; }
         }
     }
 }
