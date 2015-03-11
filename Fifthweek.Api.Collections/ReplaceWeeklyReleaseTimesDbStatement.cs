@@ -29,7 +29,7 @@ namespace Fifthweek.Api.Collections
             weeklyReleaseSchedule.AssertNotNull("weeklyReleaseSchedule");
 
             var newWeeklyReleaseTimes = weeklyReleaseSchedule.Value.Select(
-                _ => new WeeklyReleaseTime(collectionId.Value, null, _.Value));
+                _ => new WeeklyReleaseTime(collectionId.Value, null, (byte)_.Value));
 
             var deletionParameters = new
             {

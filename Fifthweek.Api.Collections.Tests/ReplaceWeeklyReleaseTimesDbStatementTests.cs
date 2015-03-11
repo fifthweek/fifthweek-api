@@ -122,8 +122,8 @@
 
                 return new ExpectedSideEffects
                 {
-                    Inserts = expectedInserts.Select(_ => new WeeklyReleaseTime(CollectionId.Value, null, _.Value)).ToArray(),
-                    Deletes = expectedDeletes.Select(_ => new WeeklyReleaseTime(CollectionId.Value, null, _.Value)).ToArray()
+                    Inserts = expectedInserts.Select(_ => new WeeklyReleaseTime(CollectionId.Value, null, (byte)_.Value)).ToArray(),
+                    Deletes = expectedDeletes.Select(_ => new WeeklyReleaseTime(CollectionId.Value, null, (byte)_.Value)).ToArray()
                 };
             });
         }
@@ -151,7 +151,7 @@
 
                 var weeklyReleaseTimes =
                     new[] { ExistingReleaseA, ExistingReleaseB, ExistingReleaseC }.Select(
-                        _ => new WeeklyReleaseTime(CollectionId.Value, _.Value));
+                        _ => new WeeklyReleaseTime(CollectionId.Value, (byte)_.Value));
 
                 databaseContext.Collections.Add(collection);
                 await databaseContext.SaveChangesAsync();

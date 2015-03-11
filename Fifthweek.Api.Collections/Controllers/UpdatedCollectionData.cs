@@ -19,6 +19,6 @@
         public string Name { get; set; }
 
         [Parsed(typeof(WeeklyReleaseSchedule))]
-        public List<byte> WeeklyReleaseSchedule { get; set; }
+        public List<int> WeeklyReleaseSchedule { get; set; }
     }
 }

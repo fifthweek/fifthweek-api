@@ -43,7 +43,7 @@
             var releaseDate = new WeeklyReleaseTime(
                 command.NewCollectionId.Value,
                 null,
-                command.InitialWeeklyReleaseTime.Value);
+                (byte)command.InitialWeeklyReleaseTime.Value);
 
             // Assuming no lock escalation, this transaction will hold X locks on the new rows and IX locks further up the hierarchy,
             // so no deadlocks are to be expected.

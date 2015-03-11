@@ -142,7 +142,7 @@
                 var expectedWeeklyReleaseTime = new WeeklyReleaseTime(
                     CollectionId.Value,
                     null,
-                    InitialWeeklyReleaseTime.Value);
+                    (byte)InitialWeeklyReleaseTime.Value);
 
                 return new ExpectedSideEffects
                 {

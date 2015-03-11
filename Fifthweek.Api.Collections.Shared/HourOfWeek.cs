@@ -22,9 +22,9 @@
         {
         }
 
-        public byte Value { get; private set; }
+        public int Value { get; private set; }
 
-        public static HourOfWeek Parse(byte value)
+        public static HourOfWeek Parse(int value)
         {
             HourOfWeek retval;
             if (!TryParse(value, out retval))
@@ -44,17 +44,17 @@
 
             return new HourOfWeek
             {
-                Value = (byte)(((int)value.DayOfWeek * 24) + value.Hour)
+                Value = ((int)value.DayOfWeek * 24) + value.Hour
             };
         }
 
-        public static bool TryParse(byte value, out HourOfWeek hourOfWeek)
+        public static bool TryParse(int value, out HourOfWeek hourOfWeek)
         {
             IReadOnlyCollection<string> errorMessages;
             return TryParse(value, out hourOfWeek, out errorMessages);
         }
 
-        public static bool TryParse(byte value, out HourOfWeek hourOfWeek, out IReadOnlyCollection<string> errorMessages)
+        public static bool TryParse(int value, out HourOfWeek hourOfWeek, out IReadOnlyCollection<string> errorMessages)
         {
             var errorMessageList = new List<string>();
             errorMessages = errorMessageList;

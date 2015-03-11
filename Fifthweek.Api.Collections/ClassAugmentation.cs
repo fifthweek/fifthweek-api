@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Linq;
 
-//// Generated on 11/03/2015 17:47:30 (UTC)
-//// Mapped solution in 4.14s
+//// Generated on 11/03/2015 18:23:40 (UTC)
+//// Mapped solution in 4.24s
 
 
 namespace Fifthweek.Api.Collections
@@ -363,7 +363,7 @@ namespace Fifthweek.Api.Collections.Controllers
         public UpdatedCollectionData(
             Fifthweek.Api.Channels.Shared.ChannelId channelId,
             System.String name,
-            System.Collections.Generic.List<System.Byte> weeklyReleaseSchedule)
+            System.Collections.Generic.List<System.Int32> weeklyReleaseSchedule)
         {
             if (channelId == null)
             {
@@ -1192,8 +1192,20 @@ namespace Fifthweek.Api.Collections
 }
 namespace Fifthweek.Api.Collections.Controllers
 {
+    using System;
+    using System.Linq;
+    using System.Threading.Tasks;
+    using System.Web.Http;
+    using System.Web.Http.Description;
+    using Fifthweek.Api.Collections.Commands;
+    using Fifthweek.Api.Collections.Queries;
     using Fifthweek.Api.Collections.Shared;
+    using Fifthweek.Api.Core;
+    using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.CodeGeneration;
+    using Fifthweek.Api.Channels.Shared;
+    using System.Collections.Generic;
+    using Fifthweek.Shared;
 
     public partial class CollectionCreation 
     {
@@ -1763,8 +1775,20 @@ namespace Fifthweek.Api.Collections.Commands
 }
 namespace Fifthweek.Api.Collections.Controllers
 {
+    using System;
+    using System.Linq;
+    using System.Threading.Tasks;
+    using System.Web.Http;
+    using System.Web.Http.Description;
+    using Fifthweek.Api.Collections.Commands;
+    using Fifthweek.Api.Collections.Queries;
     using Fifthweek.Api.Collections.Shared;
+    using Fifthweek.Api.Core;
+    using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.CodeGeneration;
+    using Fifthweek.Api.Channels.Shared;
+    using System.Collections.Generic;
+    using Fifthweek.Shared;
 
     public partial class CollectionCreation 
     {
