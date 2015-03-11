@@ -8,7 +8,7 @@
     /// <summary>
     /// Hour of the week, represented as UTC, starting with Sunday 00:00AM as 0, to be consistent with .NET's DayOfWeek enum.
     /// </summary>
-    [AutoEqualityMembers]
+    [AutoEqualityMembers, AutoJson]
     public partial class HourOfWeek
     {
         public const int MinValue = 0;
@@ -17,6 +17,15 @@
         private const int DaysInWeek = 7;
         private const int HoursInDay = 24;
         private const int HoursInWeek = DaysInWeek * HoursInDay;
+
+        /// <remarks>
+        /// Public constructor provided to allow JSON serialisation. As a note going forward: perhaps all types should have a constructor,
+        /// either instead of Parse, or as synonymous functionality to Parse.
+        /// </remarks>
+        public HourOfWeek(int value)
+        {
+            this.Value = Parse(value).Value;
+        }
 
         private HourOfWeek()
         {

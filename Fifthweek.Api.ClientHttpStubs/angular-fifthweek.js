@@ -624,7 +624,9 @@ angular.module('webApp').factory('userStateStub',
     //             collectionId: 'Base64Guid',
     //             name: '',
     //             weeklyReleaseSchedule: [
-    //               0
+    //               {
+    //                 value: 0
+    //               }
     //             ]
     //           }
     //         ]
@@ -677,7 +679,9 @@ angular.module('webApp').factory('userStateStub',
     //             collectionId: 'Base64Guid',
     //             name: '',
     //             weeklyReleaseSchedule: [
-    //               0
+    //               {
+    //                 value: 0
+    //               }
     //             ]
     //           }
     //         ]

@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Linq;
 
-//// Generated on 11/03/2015 18:21:27 (UTC)
-//// Mapped solution in 4.73s
+//// Generated on 11/03/2015 18:39:30 (UTC)
+//// Mapped solution in 3.94s
 
 namespace Fifthweek.Api.Collections.Shared
 {
@@ -50,6 +50,56 @@ namespace Fifthweek.Api.Collections.Shared
             public override CollectionId Parse(object value)
             {
                 return new CollectionId((System.Guid)value);
+            }
+        }
+    }
+}
+namespace Fifthweek.Api.Collections.Shared
+{
+    using System;
+    using System.Linq;
+    using Fifthweek.CodeGeneration;
+    using System.Collections.Generic;
+
+    [Newtonsoft.Json.JsonConverter(typeof(JsonConverter))]
+    public partial class HourOfWeek 
+    {
+        public class JsonConverter : Newtonsoft.Json.JsonConverter
+        {
+            public override void WriteJson(Newtonsoft.Json.JsonWriter writer, object value, Newtonsoft.Json.JsonSerializer serializer)
+            {
+                var valueType = (HourOfWeek)value;
+                serializer.Serialize(writer, valueType.Value);
+            }
+        
+            public override object ReadJson(Newtonsoft.Json.JsonReader reader, Type objectType, object existingValue, Newtonsoft.Json.JsonSerializer serializer)
+            {
+                if (objectType != typeof(HourOfWeek))
+                {
+                    throw new ArgumentException("Expected to deserialize JSON for type " + typeof(HourOfWeek).Name, "objectType");
+                }
+        
+                var value = serializer.Deserialize<System.Int32>(reader);
+                return new HourOfWeek(value);
+            }
+        
+            public override bool CanConvert(Type objectType)
+            {
+                return objectType == typeof(HourOfWeek);
+            }
+        }
+        
+        public class DapperTypeHandler : Dapper.SqlMapper.TypeHandler<HourOfWeek>, Fifthweek.Api.Persistence.IAutoRegisteredTypeHandler<HourOfWeek>
+        {
+            public override void SetValue(System.Data.IDbDataParameter parameter, HourOfWeek value)
+            {
+                parameter.DbType = System.Data.DbType.Int32;
+                parameter.Value = value.Value;
+            }
+        
+            public override HourOfWeek Parse(object value)
+            {
+                return new HourOfWeek((System.Int32)value);
             }
         }
     }

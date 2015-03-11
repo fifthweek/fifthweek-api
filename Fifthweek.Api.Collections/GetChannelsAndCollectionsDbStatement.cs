@@ -10,6 +10,7 @@
 
     using Fifthweek.Api.Channels.Shared;
     using Fifthweek.Api.Collections.Queries;
+    using Fifthweek.Api.Collections.Shared;
     using Fifthweek.Api.Core;
     using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.Api.Persistence;
@@ -97,9 +98,9 @@
                     (from col in collections 
                      where col.ChannelId == c.Id
                      select new ChannelsAndCollections.Collection(
-                         new Shared.CollectionId(col.Id), 
+                         new CollectionId(col.Id), 
                          col.Name, 
-                         releaseTimes.Where(wrt => wrt.CollectionId == col.Id).Select(wrt => (int)wrt.HourOfWeek).ToArray()))
+                         releaseTimes.Where(wrt => wrt.CollectionId == col.Id).Select(wrt => new HourOfWeek(wrt.HourOfWeek)).ToArray()))
                         .ToArray())).ToArray());
 
             return result;
