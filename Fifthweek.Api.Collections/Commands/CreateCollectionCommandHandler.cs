@@ -15,8 +15,8 @@
     [AutoConstructor]
     public partial class CreateCollectionCommandHandler : ICommandHandler<CreateCollectionCommand>
     {
-        // This is an exclusive lower-bound. To achieve and inclusive lower-bound of 1st April, we set the time to 1 minute before.
-        private static readonly DateTime DefaultQueueLowerBound = new DateTime(2015, 3, 31, 23, 59, 0, DateTimeKind.Utc);
+        // This is an exclusive lower-bound. To achieve and inclusive lower-bound of 1st June, we set the time to 1 minute before.
+        private static readonly DateTime DefaultQueueLowerBound = new DateTime(2015, 5, 31, 23, 59, 0, DateTimeKind.Utc);
 
         private readonly IRequesterSecurity requesterSecurity;
         private readonly IChannelSecurity channelSecurity;
