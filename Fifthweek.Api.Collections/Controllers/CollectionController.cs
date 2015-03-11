@@ -11,6 +11,7 @@
     using Fifthweek.Api.Core;
     using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.CodeGeneration;
+    using Fifthweek.Shared;
 
     [RoutePrefix("collections"), AutoConstructor]
     public partial class CollectionController : ApiController
@@ -21,6 +22,7 @@
         private readonly IQueryHandler<GetLiveDateOfNewQueuedPostQuery, DateTime> getLiveDateOfNewQueuedPost;
         private readonly IRequesterContext requesterContext;
         private readonly IGuidCreator guidCreator;
+        private readonly IRandom random;
 
         [Route]
         public async Task<CollectionId> PostCollectionAsync(NewCollectionData newCollectionData)
@@ -31,12 +33,16 @@
             var requester = this.requesterContext.GetRequester();
             var newCollectionId = new CollectionId(this.guidCreator.CreateSqlSequential());
 
+            // Spread default release dates so posts are not delivered on same date as standard.
+            var hourOfWeek = (byte)this.random.Next(HourOfWeek.MinValue, HourOfWeek.MaxValue + 1);
+
             await this.createCollection.HandleAsync(
                 new CreateCollectionCommand(
                     requester,
                     newCollectionId,
                     newCollection.ChannelId,
-                    newCollection.Name));
+                    newCollection.Name,
+                    HourOfWeek.Parse(hourOfWeek)));
 
             return newCollectionId;
         }

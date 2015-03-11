@@ -5,12 +5,10 @@
     using System.Transactions;
 
     using Fifthweek.Api.Channels.Shared;
-    using Fifthweek.Api.Collections.Shared;
     using Fifthweek.Api.Core;
     using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.Api.Persistence;
     using Fifthweek.CodeGeneration;
-    using Fifthweek.Shared;
 
     [AutoConstructor]
     public partial class CreateCollectionCommandHandler : ICommandHandler<CreateCollectionCommand>
@@ -21,7 +19,6 @@
         private readonly IRequesterSecurity requesterSecurity;
         private readonly IChannelSecurity channelSecurity;
         private readonly IFifthweekDbConnectionFactory connectionFactory;
-        private readonly IRandom random;
 
         public async Task HandleAsync(CreateCollectionCommand command)
         {
@@ -43,13 +40,10 @@
                 DefaultQueueLowerBound,
                 DateTime.UtcNow);
 
-            // Spread default release dates so posts are not delivered on same date as standard.
-            var hourOfWeek = (byte)this.random.Next(HourOfWeek.MinValue, HourOfWeek.MaxValue + 1);
-
             var releaseDate = new WeeklyReleaseTime(
                 command.NewCollectionId.Value,
                 null,
-                hourOfWeek);
+                command.InitialWeeklyReleaseTime.Value);
 
             // Assuming no lock escalation, this transaction will hold X locks on the new rows and IX locks further up the hierarchy,
             // so no deadlocks are to be expected.

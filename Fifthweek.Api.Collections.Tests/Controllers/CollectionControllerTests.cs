@@ -12,6 +12,7 @@
     using Fifthweek.Api.Collections.Shared;
     using Fifthweek.Api.Core;
     using Fifthweek.Api.Identity.Shared.Membership;
+    using Fifthweek.Shared;
 
     using Microsoft.VisualStudio.TestTools.UnitTesting;
 
@@ -33,6 +34,7 @@
         private Mock<IQueryHandler<GetLiveDateOfNewQueuedPostQuery, DateTime>> getLiveDateOfNewQueuedPost;
         private Mock<IRequesterContext> requesterContext;
         private Mock<IGuidCreator> guidCreator;
+        private Mock<IRandom> random;
         private CollectionController target;
 
         [TestInitialize]
@@ -44,20 +46,25 @@
             this.getLiveDateOfNewQueuedPost = new Mock<IQueryHandler<GetLiveDateOfNewQueuedPostQuery, DateTime>>();
             this.requesterContext = new Mock<IRequesterContext>();
             this.guidCreator = new Mock<IGuidCreator>();
+            this.random = new Mock<IRandom>();
+
             this.target = new CollectionController(
                 this.createCollection.Object, 
                 this.updateCollection.Object,
                 this.deleteCollection.Object,
                 this.getLiveDateOfNewQueuedPost.Object, 
                 this.requesterContext.Object, 
-                this.guidCreator.Object);
+                this.guidCreator.Object, 
+                this.random.Object);
         }
 
         [TestMethod]
         public async Task WhenPostingCollection_ItShouldIssueCreateCollectionCommand()
         {
+            const byte HourOfWeekValue = 42;
+            this.random.Setup(_ => _.Next(Shared.HourOfWeek.MinValue, Shared.HourOfWeek.MaxValue + 1)).Returns(HourOfWeekValue);
             var data = new NewCollectionData(ChannelId, CollectionName.Value);
-            var command = new CreateCollectionCommand(Requester, CollectionId, ChannelId, CollectionName);
+            var command = new CreateCollectionCommand(Requester, CollectionId, ChannelId, CollectionName, HourOfWeek.Parse(HourOfWeekValue));
 
             this.requesterContext.Setup(_ => _.GetRequester()).Returns(Requester);
             this.guidCreator.Setup(_ => _.CreateSqlSequential()).Returns(CollectionId.Value);

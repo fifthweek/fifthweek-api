@@ -26,8 +26,9 @@
         private static readonly CollectionId CollectionId = new CollectionId(Guid.NewGuid());
         private static readonly ChannelId ChannelId = new ChannelId(Guid.NewGuid());
         private static readonly ValidCollectionName Name = ValidCollectionName.Parse("Bat puns");
-        private static readonly CreateCollectionCommand Command = new CreateCollectionCommand(Requester, CollectionId, ChannelId, Name);
-        private static readonly DateTime DefaultQueueLowerBound = new DateTime(2015, 3, 31, 23, 59, 0, DateTimeKind.Utc);
+        private static readonly HourOfWeek InitialWeeklyReleaseTime = HourOfWeek.Parse(27);
+        private static readonly CreateCollectionCommand Command = new CreateCollectionCommand(Requester, CollectionId, ChannelId, Name, InitialWeeklyReleaseTime);
+        private static readonly DateTime DefaultQueueLowerBound = new DateTime(2015, 5, 31, 23, 59, 0, DateTimeKind.Utc);
 
         private Mock<IRequesterSecurity> requesterSecurity;
         private Mock<IChannelSecurity> channelSecurity;
@@ -51,7 +52,7 @@
 
         public void InitializeTarget(IFifthweekDbConnectionFactory connectionFactory)
         {
-            this.target = new CreateCollectionCommandHandler(this.requesterSecurity.Object, this.channelSecurity.Object, connectionFactory, this.random.Object);
+            this.target = new CreateCollectionCommandHandler(this.requesterSecurity.Object, this.channelSecurity.Object, connectionFactory);
         }
 
         [TestMethod]
@@ -65,7 +66,7 @@
         [ExpectedException(typeof(UnauthorizedException))]
         public async Task ItShouldRequireUserIsAuthenticated()
         {
-            await this.target.HandleAsync(new CreateCollectionCommand(Requester.Unauthenticated, CollectionId, ChannelId, Name));
+            await this.target.HandleAsync(new CreateCollectionCommand(Requester.Unauthenticated, CollectionId, ChannelId, Name, InitialWeeklyReleaseTime));
         }
 
         [TestMethod]
@@ -132,8 +133,6 @@
         {
             await this.DatabaseTestAsync(async testDatabase =>
             {
-                const byte HourOfWeek = 42;
-                this.random.Setup(_ => _.Next(0, 7 * 24)).Returns(HourOfWeek);
                 this.InitializeTarget(testDatabase);
                 await this.CreateEntitiesAsync(testDatabase);
                 await testDatabase.TakeSnapshotAsync();
@@ -143,7 +142,7 @@
                 var expectedWeeklyReleaseTime = new WeeklyReleaseTime(
                     CollectionId.Value,
                     null,
-                    HourOfWeek);
+                    InitialWeeklyReleaseTime.Value);
 
                 return new ExpectedSideEffects
                 {

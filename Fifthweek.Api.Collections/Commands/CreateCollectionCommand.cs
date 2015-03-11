@@ -15,5 +15,7 @@
         public ChannelId ChannelId { get; private set; }
 
         public ValidCollectionName Name { get; private set; }
+
+        public HourOfWeek InitialWeeklyReleaseTime { get; private set; }
     }
 }
