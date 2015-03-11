@@ -62,9 +62,10 @@
         public async Task WhenPostingCollection_ItShouldIssueCreateCollectionCommand()
         {
             const byte HourOfWeekValue = 42;
+            var initialWeeklyReleaseTime = HourOfWeek.Parse(HourOfWeekValue);
             this.random.Setup(_ => _.Next(Shared.HourOfWeek.MinValue, Shared.HourOfWeek.MaxValue + 1)).Returns(HourOfWeekValue);
             var data = new NewCollectionData(ChannelId, CollectionName.Value);
-            var command = new CreateCollectionCommand(Requester, CollectionId, ChannelId, CollectionName, HourOfWeek.Parse(HourOfWeekValue));
+            var command = new CreateCollectionCommand(Requester, CollectionId, ChannelId, CollectionName, initialWeeklyReleaseTime);
 
             this.requesterContext.Setup(_ => _.GetRequester()).Returns(Requester);
             this.guidCreator.Setup(_ => _.CreateSqlSequential()).Returns(CollectionId.Value);
@@ -72,7 +73,7 @@
 
             var result = await this.target.PostCollectionAsync(data);
 
-            Assert.AreEqual(result, CollectionId);
+            Assert.AreEqual(result, new CollectionCreation(CollectionId, initialWeeklyReleaseTime));
             this.createCollection.Verify();
         }
 

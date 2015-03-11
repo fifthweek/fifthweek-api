@@ -25,7 +25,7 @@
         private readonly IRandom random;
 
         [Route]
-        public async Task<CollectionId> PostCollectionAsync(NewCollectionData newCollectionData)
+        public async Task<CollectionCreation> PostCollectionAsync(NewCollectionData newCollectionData)
         {
             newCollectionData.AssertBodyProvided("newCollectionData");
             var newCollection = newCollectionData.Parse();
@@ -35,6 +35,7 @@
 
             // Spread default release dates so posts are not delivered on same date as standard.
             var hourOfWeek = (byte)this.random.Next(HourOfWeek.MinValue, HourOfWeek.MaxValue + 1);
+            var initialWeeklyReleaseTime = HourOfWeek.Parse(hourOfWeek);
 
             await this.createCollection.HandleAsync(
                 new CreateCollectionCommand(
@@ -42,9 +43,9 @@
                     newCollectionId,
                     newCollection.ChannelId,
                     newCollection.Name,
-                    HourOfWeek.Parse(hourOfWeek)));
+                    initialWeeklyReleaseTime));
 
-            return newCollectionId;
+            return new CollectionCreation(newCollectionId, initialWeeklyReleaseTime);
         }
 
         [Route("{collectionId}")]

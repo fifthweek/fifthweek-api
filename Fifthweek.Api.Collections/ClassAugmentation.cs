@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Linq;
 
-//// Generated on 11/03/2015 17:35:08 (UTC)
-//// Mapped solution in 3.11s
+//// Generated on 11/03/2015 17:47:30 (UTC)
+//// Mapped solution in 4.14s
 
 
 namespace Fifthweek.Api.Collections
@@ -318,6 +318,7 @@ namespace Fifthweek.Api.Collections.Controllers
     using Fifthweek.CodeGeneration;
     using Fifthweek.Api.Channels.Shared;
     using System.Collections.Generic;
+    using Fifthweek.Shared;
 
     public partial class NewCollectionData 
     {
@@ -355,6 +356,7 @@ namespace Fifthweek.Api.Collections.Controllers
     using Fifthweek.CodeGeneration;
     using Fifthweek.Api.Channels.Shared;
     using System.Collections.Generic;
+    using Fifthweek.Shared;
 
     public partial class UpdatedCollectionData 
     {
@@ -1188,6 +1190,32 @@ namespace Fifthweek.Api.Collections
         }
     }
 }
+namespace Fifthweek.Api.Collections.Controllers
+{
+    using Fifthweek.Api.Collections.Shared;
+    using Fifthweek.CodeGeneration;
+
+    public partial class CollectionCreation 
+    {
+        public CollectionCreation(
+            Fifthweek.Api.Collections.Shared.CollectionId collectionId,
+            Fifthweek.Api.Collections.Shared.HourOfWeek defaultWeeklyReleaseTime)
+        {
+            if (collectionId == null)
+            {
+                throw new ArgumentNullException("collectionId");
+            }
+
+            if (defaultWeeklyReleaseTime == null)
+            {
+                throw new ArgumentNullException("defaultWeeklyReleaseTime");
+            }
+
+            this.CollectionId = collectionId;
+            this.DefaultWeeklyReleaseTime = defaultWeeklyReleaseTime;
+        }
+    }
+}
 
 namespace Fifthweek.Api.Collections.Commands
 {
@@ -1382,6 +1410,7 @@ namespace Fifthweek.Api.Collections.Controllers
     using Fifthweek.CodeGeneration;
     using Fifthweek.Api.Channels.Shared;
     using System.Collections.Generic;
+    using Fifthweek.Shared;
 
     public partial class NewCollectionData 
     {
@@ -1452,6 +1481,7 @@ namespace Fifthweek.Api.Collections.Controllers
     using Fifthweek.CodeGeneration;
     using Fifthweek.Api.Channels.Shared;
     using System.Collections.Generic;
+    using Fifthweek.Shared;
 
     public partial class UpdatedCollectionData 
     {
@@ -1733,6 +1763,65 @@ namespace Fifthweek.Api.Collections.Commands
 }
 namespace Fifthweek.Api.Collections.Controllers
 {
+    using Fifthweek.Api.Collections.Shared;
+    using Fifthweek.CodeGeneration;
+
+    public partial class CollectionCreation 
+    {
+        public override string ToString()
+        {
+            return string.Format("CollectionCreation({0}, {1})", this.CollectionId == null ? "null" : this.CollectionId.ToString(), this.DefaultWeeklyReleaseTime == null ? "null" : this.DefaultWeeklyReleaseTime.ToString());
+        }
+        
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj))
+            {
+                return false;
+            }
+        
+            if (ReferenceEquals(this, obj))
+            {
+                return true;
+            }
+        
+            if (obj.GetType() != this.GetType())
+            {
+                return false;
+            }
+        
+            return this.Equals((CollectionCreation)obj);
+        }
+        
+        public override int GetHashCode()
+        {
+            unchecked
+            {
+                int hashCode = 0;
+                hashCode = (hashCode * 397) ^ (this.CollectionId != null ? this.CollectionId.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.DefaultWeeklyReleaseTime != null ? this.DefaultWeeklyReleaseTime.GetHashCode() : 0);
+                return hashCode;
+            }
+        }
+        
+        protected bool Equals(CollectionCreation other)
+        {
+            if (!object.Equals(this.CollectionId, other.CollectionId))
+            {
+                return false;
+            }
+        
+            if (!object.Equals(this.DefaultWeeklyReleaseTime, other.DefaultWeeklyReleaseTime))
+            {
+                return false;
+            }
+        
+            return true;
+        }
+    }
+}
+namespace Fifthweek.Api.Collections.Controllers
+{
     using System;
     using System.Linq;
     using System.Threading.Tasks;
@@ -1746,6 +1835,7 @@ namespace Fifthweek.Api.Collections.Controllers
     using Fifthweek.CodeGeneration;
     using Fifthweek.Api.Channels.Shared;
     using System.Collections.Generic;
+    using Fifthweek.Shared;
 
     public partial class NewCollectionData 
     {
@@ -1829,6 +1919,7 @@ namespace Fifthweek.Api.Collections.Controllers
     using Fifthweek.CodeGeneration;
     using Fifthweek.Api.Channels.Shared;
     using System.Collections.Generic;
+    using Fifthweek.Shared;
 
     public partial class UpdatedCollectionData 
     {
