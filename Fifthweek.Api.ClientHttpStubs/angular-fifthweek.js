@@ -79,7 +79,12 @@ angular.module('webApp').factory('collectionStub',
     //   channelId: 'Base64Guid',
     //   name: ''
     // }
-    // result = 'Base64Guid'
+    // result = {
+    //   collectionId: 'Base64Guid',
+    //   defaultWeeklyReleaseTime: {
+    //     value: 0
+    //   }
+    // }
     service.postCollection = function(newCollectionData) {
       return $http.post(apiBaseUri + 'collections', newCollectionData).catch(function(response) {
         return $q.reject(utilities.getHttpError(response));
