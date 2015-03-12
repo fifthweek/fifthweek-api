@@ -29,7 +29,7 @@
                 requester,
                 newPostId,
                 image.CollectionId,
-                image.ImageFileId,
+                image.FileId,
                 image.Comment,
                 image.ScheduledPostTime,
                 image.IsQueued));

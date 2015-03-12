@@ -100,6 +100,8 @@
     <Compile Include="Controllers\ImagePostControllerTests.cs" />
     <Compile Include="Controllers\NotePostControllerTests.cs" />
     <Compile Include="DeletePostDbStatementTests.cs" />
+    <Compile Include="GetCreatorBacklogDbStatementTests.cs" />
+    <Compile Include="GetCreatorNewsfeedDbStatementTests.cs" />
     <Compile Include="MoveBacklogPostToQueueDbStatementTests.cs" />
     <Compile Include="PostOwnershipTests.cs" />
     <Compile Include="PostSecurityTests.cs" />

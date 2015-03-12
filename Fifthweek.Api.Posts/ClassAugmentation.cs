@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Linq;
 
-//// Generated on 03/03/2015 11:37:34 (UTC)
-//// Mapped solution in 4.73s
+//// Generated on 12/03/2015 17:01:05 (UTC)
+//// Mapped solution in 30.9s
 
 
 namespace Fifthweek.Api.Posts.Commands
@@ -1211,20 +1211,20 @@ namespace Fifthweek.Api.Posts.Queries
     {
         public GetCreatorBacklogQueryHandler(
             Fifthweek.Api.Identity.Shared.Membership.IRequesterSecurity requesterSecurity,
-            Fifthweek.Api.Persistence.IFifthweekDbConnectionFactory connectionFactory)
+            Fifthweek.Api.Posts.IGetCreatorBacklogDbStatement getCreatorBacklogDbStatement)
         {
             if (requesterSecurity == null)
             {
                 throw new ArgumentNullException("requesterSecurity");
             }
 
-            if (connectionFactory == null)
+            if (getCreatorBacklogDbStatement == null)
             {
-                throw new ArgumentNullException("connectionFactory");
+                throw new ArgumentNullException("getCreatorBacklogDbStatement");
             }
 
             this.requesterSecurity = requesterSecurity;
-            this.connectionFactory = connectionFactory;
+            this.getCreatorBacklogDbStatement = getCreatorBacklogDbStatement;
         }
     }
 }
@@ -1303,20 +1303,20 @@ namespace Fifthweek.Api.Posts.Queries
     {
         public GetCreatorNewsfeedQueryHandler(
             Fifthweek.Api.Identity.Shared.Membership.IRequesterSecurity requesterSecurity,
-            Fifthweek.Api.Persistence.IFifthweekDbConnectionFactory connectionFactory)
+            Fifthweek.Api.Posts.IGetCreatorNewsfeedDbStatement getCreatorNewsfeedDbStatement)
         {
             if (requesterSecurity == null)
             {
                 throw new ArgumentNullException("requesterSecurity");
             }
 
-            if (connectionFactory == null)
+            if (getCreatorNewsfeedDbStatement == null)
             {
-                throw new ArgumentNullException("connectionFactory");
+                throw new ArgumentNullException("getCreatorNewsfeedDbStatement");
             }
 
             this.requesterSecurity = requesterSecurity;
-            this.connectionFactory = connectionFactory;
+            this.getCreatorNewsfeedDbStatement = getCreatorNewsfeedDbStatement;
         }
     }
 }
@@ -2404,6 +2404,59 @@ namespace Fifthweek.Api.Posts.Controllers
             this.notePostController = notePostController;
             this.imagePostController = imagePostController;
             this.filePostController = filePostController;
+        }
+    }
+}
+namespace Fifthweek.Api.Posts
+{
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Threading.Tasks;
+    using Dapper;
+    using Fifthweek.Api.Identity.Shared.Membership;
+    using Fifthweek.Api.Persistence;
+    using Fifthweek.Api.Posts.Queries;
+    using Fifthweek.CodeGeneration;
+
+    public partial class GetCreatorBacklogDbStatement 
+    {
+        public GetCreatorBacklogDbStatement(
+            Fifthweek.Api.Persistence.IFifthweekDbConnectionFactory connectionFactory)
+        {
+            if (connectionFactory == null)
+            {
+                throw new ArgumentNullException("connectionFactory");
+            }
+
+            this.connectionFactory = connectionFactory;
+        }
+    }
+}
+namespace Fifthweek.Api.Posts
+{
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Threading.Tasks;
+    using Dapper;
+    using Fifthweek.Api.Identity.Shared.Membership;
+    using Fifthweek.Api.Persistence;
+    using Fifthweek.Api.Posts.Queries;
+    using Fifthweek.CodeGeneration;
+    using Fifthweek.Shared;
+
+    public partial class GetCreatorNewsfeedDbStatement 
+    {
+        public GetCreatorNewsfeedDbStatement(
+            Fifthweek.Api.Persistence.IFifthweekDbConnectionFactory connectionFactory)
+        {
+            if (connectionFactory == null)
+            {
+                throw new ArgumentNullException("connectionFactory");
+            }
+
+            this.connectionFactory = connectionFactory;
         }
     }
 }
@@ -4592,7 +4645,7 @@ namespace Fifthweek.Api.Posts.Controllers
         {
             public Parsed(
                 Fifthweek.Api.Collections.Shared.CollectionId collectionId,
-                Fifthweek.Api.FileManagement.Shared.FileId imageFileId,
+                Fifthweek.Api.FileManagement.Shared.FileId fileId,
                 ValidComment comment,
                 System.Nullable<System.DateTime> scheduledPostTime,
                 System.Boolean isQueued)
@@ -4602,9 +4655,9 @@ namespace Fifthweek.Api.Posts.Controllers
                     throw new ArgumentNullException("collectionId");
                 }
 
-                if (imageFileId == null)
+                if (fileId == null)
                 {
-                    throw new ArgumentNullException("imageFileId");
+                    throw new ArgumentNullException("fileId");
                 }
 
                 if (isQueued == null)
@@ -4613,7 +4666,7 @@ namespace Fifthweek.Api.Posts.Controllers
                 }
 
                 this.CollectionId = collectionId;
-                this.ImageFileId = imageFileId;
+                this.FileId = fileId;
                 this.Comment = comment;
                 this.ScheduledPostTime = scheduledPostTime;
                 this.IsQueued = isQueued;
@@ -4621,7 +4674,7 @@ namespace Fifthweek.Api.Posts.Controllers
         
             public Fifthweek.Api.Collections.Shared.CollectionId CollectionId { get; private set; }
         
-            public Fifthweek.Api.FileManagement.Shared.FileId ImageFileId { get; private set; }
+            public Fifthweek.Api.FileManagement.Shared.FileId FileId { get; private set; }
         
             public ValidComment Comment { get; private set; }
         

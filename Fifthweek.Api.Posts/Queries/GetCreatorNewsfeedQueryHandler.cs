@@ -16,35 +16,8 @@
     [AutoConstructor]
     public partial class GetCreatorNewsfeedQueryHandler : IQueryHandler<GetCreatorNewsfeedQuery, IReadOnlyList<NewsfeedPost>>
     {
-        private static readonly string Sql = string.Format(
-            @"SELECT    post.{1} AS PostId, {2}, {4}, {5}, {6}, {7}, {3}
-            FROM        {0} post
-            INNER JOIN  {8} channel
-                ON      post.{2} = channel.{9}
-            INNER JOIN  {11} subscription
-                ON      channel.{10} = subscription.{12}
-            WHERE       post.{3} <= @Now
-            AND         subscription.{13} = @CreatorId
-            ORDER BY    post.{3} DESC
-            OFFSET      @StartIndex ROWS
-            FETCH NEXT  @Count ROWS ONLY",
-            Post.Table,
-            Post.Fields.Id,
-            Post.Fields.ChannelId,
-            Post.Fields.LiveDate,
-            Post.Fields.CollectionId,
-            Post.Fields.Comment,
-            Post.Fields.FileId,
-            Post.Fields.ImageId,
-            Channel.Table,
-            Channel.Fields.Id,
-            Channel.Fields.SubscriptionId,
-            Subscription.Table,
-            Subscription.Fields.Id,
-            Subscription.Fields.CreatorId);
-
         private readonly IRequesterSecurity requesterSecurity;
-        private readonly IFifthweekDbConnectionFactory connectionFactory;
+        private readonly IGetCreatorNewsfeedDbStatement getCreatorNewsfeedDbStatement;
 
         public async Task<IReadOnlyList<NewsfeedPost>> HandleAsync(GetCreatorNewsfeedQuery query)
         {
@@ -55,24 +28,11 @@
             await this.requesterSecurity.AuthenticateAsAsync(query.Requester, query.RequestedUserId);
             await this.requesterSecurity.AssertInRoleAsync(query.Requester, FifthweekRole.Creator);
 
-            return await this.GetCreatorBacklogAsync(query);
-        }
-
-        private async Task<IReadOnlyList<NewsfeedPost>> GetCreatorBacklogAsync(GetCreatorNewsfeedQuery query)
-        {
-            var parameters = new
-            {
-                CreatorId = query.RequestedUserId.Value,
-                Now = DateTime.UtcNow,
-                StartIndex = query.StartIndex.Value,
-                Count = query.Count.Value
-            };
-
-            using (var connection = this.connectionFactory.CreateConnection())
-            {
-                var entities = await connection.QueryAsync<NewsfeedPost.Builder>(Sql, parameters);
-                return entities.Select(_ => _.Build()).ToList();
-            }
+            return await this.getCreatorNewsfeedDbStatement.ExecuteAsync(
+              query.RequestedUserId,
+              DateTime.UtcNow,
+              query.StartIndex,
+              query.Count);
         }
     }
 }
