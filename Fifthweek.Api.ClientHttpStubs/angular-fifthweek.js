@@ -273,8 +273,18 @@ angular.module('webApp').factory('postsStub',
     //     channelId: 'Base64Guid',
     //     collectionId: 'Base64Guid', /* optional */
     //     comment: '', /* optional */
-    //     fileId: 'Base64Guid', /* optional */
-    //     imageId: 'Base64Guid', /* optional */
+    //     file: { /* optional */
+    //       fileId: 'Base64Guid',
+    //       containerName: '',
+    //       blobName: '',
+    //       uri: ''
+    //     },
+    //     image: { /* optional */
+    //       fileId: 'Base64Guid',
+    //       containerName: '',
+    //       blobName: '',
+    //       uri: ''
+    //     },
     //     scheduledByQueue: false,
     //     liveDate: '2015-12-25T14:45:05Z'
     //   }
@@ -294,8 +304,18 @@ angular.module('webApp').factory('postsStub',
     //     channelId: 'Base64Guid',
     //     collectionId: 'Base64Guid', /* optional */
     //     comment: '', /* optional */
-    //     fileId: 'Base64Guid', /* optional */
-    //     imageId: 'Base64Guid', /* optional */
+    //     file: { /* optional */
+    //       fileId: 'Base64Guid',
+    //       containerName: '',
+    //       blobName: '',
+    //       uri: ''
+    //     },
+    //     image: { /* optional */
+    //       fileId: 'Base64Guid',
+    //       containerName: '',
+    //       blobName: '',
+    //       uri: ''
+    //     },
     //     liveDate: '2015-12-25T14:45:05Z'
     //   }
     // ]
