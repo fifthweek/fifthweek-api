@@ -16,6 +16,7 @@
     using Fifthweek.Api.Persistence.Identity;
     using Fifthweek.Api.Posts.Queries;
     using Fifthweek.Api.Posts.Shared;
+    using Fifthweek.Shared;
 
     using Microsoft.VisualStudio.TestTools.UnitTesting;
 
@@ -32,6 +33,7 @@
 
         private Mock<IRequesterSecurity> requesterSecurity;
         private Mock<IGetCreatorBacklogDbStatement> getCreatorBacklogDbStatement;
+        private Mock<IFileInformationAggregator> fileInformationAggregator;
 
         private GetCreatorBacklogQueryHandler target;
 
@@ -42,8 +44,12 @@
 
             this.requesterSecurity = new Mock<IRequesterSecurity>();
             this.getCreatorBacklogDbStatement = new Mock<IGetCreatorBacklogDbStatement>(MockBehavior.Strict);
+            this.fileInformationAggregator = new Mock<IFileInformationAggregator>();
 
-            this.target = new GetCreatorBacklogQueryHandler(this.requesterSecurity.Object, this.getCreatorBacklogDbStatement.Object);
+            this.target = new GetCreatorBacklogQueryHandler(
+                this.requesterSecurity.Object, 
+                this.getCreatorBacklogDbStatement.Object,
+                this.fileInformationAggregator.Object);
         }
 
         [TestMethod]
@@ -93,10 +99,34 @@
         [TestMethod]
         public async Task ItShouldReturnPosts()
         {
-            this.getCreatorBacklogDbStatement.Setup(v => v.ExecuteAsync(UserId, It.IsAny<DateTime>())).ReturnsAsync(SortedBacklogPosts);
+            this.getCreatorBacklogDbStatement.Setup(v => v.ExecuteAsync(UserId, It.IsAny<DateTime>()))
+                .ReturnsAsync(SortedBacklogPosts);
+
+            this.fileInformationAggregator.Setup(v => v.GetFileInformationAsync(UserId, It.IsAny<FileId>(), It.IsAny<string>()))
+                .Returns<UserId, FileId, string>((u, f, p) => Task.FromResult(new FileInformation(f, string.Empty, string.Empty, string.Empty)));
+
             var result = await this.target.HandleAsync(new GetCreatorBacklogQuery(Requester, UserId));
 
-            Assert.AreEqual(SortedBacklogPosts, result);
+            Assert.AreEqual(SortedBacklogPosts.Count, result.Count);
+            foreach (var item in result.Zip(SortedBacklogPosts, (a, b) => new { Output = a, Input = b } ))
+            {
+                if (item.Input.FileId != null)
+                {
+                    Assert.AreEqual(item.Input.FileId, item.Output.File.FileId);
+                }
+
+                if (item.Input.ImageId != null)
+                {
+                    Assert.AreEqual(item.Input.ImageId, item.Output.Image.FileId);
+                }
+
+                Assert.AreEqual(item.Input.PostId, item.Output.PostId);
+                Assert.AreEqual(item.Input.ChannelId, item.Output.ChannelId);
+                Assert.AreEqual(item.Input.CollectionId, item.Output.CollectionId);
+                Assert.AreEqual(item.Input.Comment, item.Output.Comment);
+                Assert.AreEqual(item.Input.ScheduledByQueue, item.Output.ScheduledByQueue);
+                Assert.AreEqual(item.Input.LiveDate, item.Output.LiveDate);
+            }
         }
 
         private static IEnumerable<BacklogPost> GetSortedBacklogPosts()

@@ -7,7 +7,7 @@
     using Fifthweek.CodeGeneration;
 
     [AutoConstructor, AutoEqualityMembers]
-    public partial class GetCreatorBacklogQuery : IQuery<IReadOnlyList<BacklogPost>>
+    public partial class GetCreatorBacklogQuery : IQuery<IReadOnlyList<GetCreatorBacklogQueryResult>>
     {
         public Requester Requester { get; private set; }
 

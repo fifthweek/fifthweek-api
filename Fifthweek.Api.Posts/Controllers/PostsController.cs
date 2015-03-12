@@ -18,13 +18,13 @@
         private readonly IFilePostController filePostController;
 
         [Route("creatorBacklog/{creatorId}")]
-        public Task<IEnumerable<BacklogPost>> GetCreatorBacklog(string creatorId)
+        public Task<IEnumerable<GetCreatorBacklogQueryResult>> GetCreatorBacklog(string creatorId)
         {
             return this.postController.GetCreatorBacklog(creatorId);
         }
 
         [Route("creatorNewsfeed/{creatorId}")]
-        public Task<IEnumerable<NewsfeedPost>> GetCreatorNewsfeed(string creatorId, [FromUri]CreatorNewsfeedPaginationData newsfeedPaginationData)
+        public Task<IEnumerable<GetCreatorNewsfeedQueryResult>> GetCreatorNewsfeed(string creatorId, [FromUri]CreatorNewsfeedPaginationData newsfeedPaginationData)
         {
             return this.postController.GetCreatorNewsfeed(creatorId, newsfeedPaginationData);
         }

@@ -32,8 +32,8 @@
         private Mock<ICommandHandler<RescheduleForNowCommand>> rescheduleForNow;
         private Mock<ICommandHandler<RescheduleForTimeCommand>> rescheduleForTime;
         private Mock<ICommandHandler<RescheduleWithQueueCommand>> rescheduleWithQueue;
-        private Mock<IQueryHandler<GetCreatorBacklogQuery, IReadOnlyList<BacklogPost>>> getCreatorBacklog;
-        private Mock<IQueryHandler<GetCreatorNewsfeedQuery, IReadOnlyList<NewsfeedPost>>> getCreatorNewsfeed;
+        private Mock<IQueryHandler<GetCreatorBacklogQuery, IReadOnlyList<GetCreatorBacklogQueryResult>>> getCreatorBacklog;
+        private Mock<IQueryHandler<GetCreatorNewsfeedQuery, IReadOnlyList<GetCreatorNewsfeedQueryResult>>> getCreatorNewsfeed;
         private Mock<IRequesterContext> requesterContext;
         private PostController target;
 
@@ -45,8 +45,8 @@
             this.rescheduleForNow = new Mock<ICommandHandler<RescheduleForNowCommand>>();
             this.rescheduleForTime = new Mock<ICommandHandler<RescheduleForTimeCommand>>();
             this.rescheduleWithQueue = new Mock<ICommandHandler<RescheduleWithQueueCommand>>();
-            this.getCreatorBacklog = new Mock<IQueryHandler<GetCreatorBacklogQuery, IReadOnlyList<BacklogPost>>>();
-            this.getCreatorNewsfeed = new Mock<IQueryHandler<GetCreatorNewsfeedQuery, IReadOnlyList<NewsfeedPost>>>();
+            this.getCreatorBacklog = new Mock<IQueryHandler<GetCreatorBacklogQuery, IReadOnlyList<GetCreatorBacklogQueryResult>>>();
+            this.getCreatorNewsfeed = new Mock<IQueryHandler<GetCreatorNewsfeedQuery, IReadOnlyList<GetCreatorNewsfeedQueryResult>>>();
             this.requesterContext = new Mock<IRequesterContext>();
             this.target = new PostController(
                 this.deletePost.Object,
@@ -63,7 +63,7 @@
         public async Task WhenGettingCreatorBacklog_ItShouldReturnResultFromCreatorBacklogQuery()
         {
             var query = new GetCreatorBacklogQuery(Requester, UserId);
-            var queryResult = new[] { new BacklogPost(PostId, ChannelId, CollectionId, new Comment(""), null, null, false, DateTime.UtcNow) };
+            var queryResult = new[] { new GetCreatorBacklogQueryResult(PostId, ChannelId, CollectionId, new Comment(""), null, null, false, DateTime.UtcNow) };
 
             this.requesterContext.Setup(_ => _.GetRequester()).Returns(Requester);
             this.getCreatorBacklog.Setup(_ => _.HandleAsync(query)).ReturnsAsync(queryResult);
@@ -85,7 +85,7 @@
         {
             var query = new GetCreatorNewsfeedQuery(Requester, UserId, NonNegativeInt.Parse(10), PositiveInt.Parse(5));
             var requestData = new CreatorNewsfeedPaginationData { Count = 5, StartIndex = 10 };
-            var queryResult = new[] { new NewsfeedPost(PostId, ChannelId, CollectionId, new Comment(""), null, null, DateTime.UtcNow) };
+            var queryResult = new[] { new GetCreatorNewsfeedQueryResult(PostId, ChannelId, CollectionId, new Comment(""), null, null, DateTime.UtcNow) };
 
             this.requesterContext.Setup(_ => _.GetRequester()).Returns(Requester);
             this.getCreatorNewsfeed.Setup(_ => _.HandleAsync(query)).ReturnsAsync(queryResult);

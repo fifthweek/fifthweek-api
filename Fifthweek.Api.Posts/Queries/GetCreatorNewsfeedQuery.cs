@@ -8,7 +8,7 @@
     using Fifthweek.Shared;
 
     [AutoConstructor, AutoEqualityMembers]
-    public partial class GetCreatorNewsfeedQuery : IQuery<IReadOnlyList<NewsfeedPost>>
+    public partial class GetCreatorNewsfeedQuery : IQuery<IReadOnlyList<GetCreatorNewsfeedQueryResult>>
     {
         public Requester Requester { get; private set; }
 

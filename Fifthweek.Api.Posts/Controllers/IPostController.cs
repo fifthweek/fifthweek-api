@@ -10,9 +10,9 @@
 
     public interface IPostController
     {
-        Task<IEnumerable<BacklogPost>> GetCreatorBacklog(string creatorId);
+        Task<IEnumerable<GetCreatorBacklogQueryResult>> GetCreatorBacklog(string creatorId);
 
-        Task<IEnumerable<NewsfeedPost>> GetCreatorNewsfeed(string creatorId, CreatorNewsfeedPaginationData newsfeedPaginationData);
+        Task<IEnumerable<GetCreatorNewsfeedQueryResult>> GetCreatorNewsfeed(string creatorId, CreatorNewsfeedPaginationData newsfeedPaginationData);
 
         Task DeletePost(string postId);
 

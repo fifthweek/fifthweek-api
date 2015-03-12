@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Linq;
 
-//// Generated on 12/03/2015 17:01:05 (UTC)
-//// Mapped solution in 30.9s
+//// Generated on 12/03/2015 18:24:41 (UTC)
+//// Mapped solution in 10.08s
 
 
 namespace Fifthweek.Api.Posts.Commands
@@ -776,8 +776,8 @@ namespace Fifthweek.Api.Posts.Controllers
             Fifthweek.Api.Core.ICommandHandler<Fifthweek.Api.Posts.Commands.RescheduleForNowCommand> rescheduleForNow,
             Fifthweek.Api.Core.ICommandHandler<Fifthweek.Api.Posts.Commands.RescheduleForTimeCommand> rescheduleForTime,
             Fifthweek.Api.Core.ICommandHandler<Fifthweek.Api.Posts.Commands.RescheduleWithQueueCommand> rescheduleWithQueue,
-            Fifthweek.Api.Core.IQueryHandler<Fifthweek.Api.Posts.Queries.GetCreatorBacklogQuery,System.Collections.Generic.IReadOnlyList<Fifthweek.Api.Posts.Queries.BacklogPost>> getCreatorBacklog,
-            Fifthweek.Api.Core.IQueryHandler<Fifthweek.Api.Posts.Queries.GetCreatorNewsfeedQuery,System.Collections.Generic.IReadOnlyList<Fifthweek.Api.Posts.Queries.NewsfeedPost>> getCreatorNewsfeed,
+            Fifthweek.Api.Core.IQueryHandler<Fifthweek.Api.Posts.Queries.GetCreatorBacklogQuery,System.Collections.Generic.IReadOnlyList<Fifthweek.Api.Posts.Queries.GetCreatorBacklogQueryResult>> getCreatorBacklog,
+            Fifthweek.Api.Core.IQueryHandler<Fifthweek.Api.Posts.Queries.GetCreatorNewsfeedQuery,System.Collections.Generic.IReadOnlyList<Fifthweek.Api.Posts.Queries.GetCreatorNewsfeedQueryResult>> getCreatorNewsfeed,
             Fifthweek.Api.Identity.Shared.Membership.IRequesterContext requesterContext)
         {
             if (deletePost == null)
@@ -888,6 +888,8 @@ namespace Fifthweek.Api.Posts
     using Fifthweek.Api.Collections;
     using Fifthweek.Api.Channels.Shared;
     using System.Transactions;
+    using System.Collections.Generic;
+    using Fifthweek.Api.Posts.Queries;
 
     public partial class DeletePostDbStatement 
     {
@@ -921,6 +923,8 @@ namespace Fifthweek.Api.Posts
     using Fifthweek.Api.Collections;
     using Fifthweek.Api.Channels.Shared;
     using System.Transactions;
+    using System.Collections.Generic;
+    using Fifthweek.Api.Posts.Queries;
 
     public partial class PostFileTypeChecks 
     {
@@ -961,6 +965,8 @@ namespace Fifthweek.Api.Posts
     using Fifthweek.Api.Collections;
     using Fifthweek.Api.Channels.Shared;
     using System.Transactions;
+    using System.Collections.Generic;
+    using Fifthweek.Api.Posts.Queries;
 
     public partial class PostOwnership 
     {
@@ -994,6 +1000,8 @@ namespace Fifthweek.Api.Posts
     using Fifthweek.Api.Collections;
     using Fifthweek.Api.Channels.Shared;
     using System.Transactions;
+    using System.Collections.Generic;
+    using Fifthweek.Api.Posts.Queries;
 
     public partial class PostSecurity 
     {
@@ -1027,6 +1035,8 @@ namespace Fifthweek.Api.Posts
     using Fifthweek.Api.Collections;
     using Fifthweek.Api.Channels.Shared;
     using System.Transactions;
+    using System.Collections.Generic;
+    using Fifthweek.Api.Posts.Queries;
 
     public partial class PostToCollectionDbStatement 
     {
@@ -1060,6 +1070,8 @@ namespace Fifthweek.Api.Posts
     using Fifthweek.Api.Collections;
     using Fifthweek.Api.Channels.Shared;
     using System.Transactions;
+    using System.Collections.Generic;
+    using Fifthweek.Api.Posts.Queries;
 
     public partial class PostToCollectionDbSubStatements 
     {
@@ -1211,7 +1223,8 @@ namespace Fifthweek.Api.Posts.Queries
     {
         public GetCreatorBacklogQueryHandler(
             Fifthweek.Api.Identity.Shared.Membership.IRequesterSecurity requesterSecurity,
-            Fifthweek.Api.Posts.IGetCreatorBacklogDbStatement getCreatorBacklogDbStatement)
+            Fifthweek.Api.Posts.IGetCreatorBacklogDbStatement getCreatorBacklogDbStatement,
+            Fifthweek.Api.FileManagement.Shared.IFileInformationAggregator fileInformationAggregator)
         {
             if (requesterSecurity == null)
             {
@@ -1223,8 +1236,14 @@ namespace Fifthweek.Api.Posts.Queries
                 throw new ArgumentNullException("getCreatorBacklogDbStatement");
             }
 
+            if (fileInformationAggregator == null)
+            {
+                throw new ArgumentNullException("fileInformationAggregator");
+            }
+
             this.requesterSecurity = requesterSecurity;
             this.getCreatorBacklogDbStatement = getCreatorBacklogDbStatement;
+            this.fileInformationAggregator = fileInformationAggregator;
         }
     }
 }
@@ -1303,7 +1322,8 @@ namespace Fifthweek.Api.Posts.Queries
     {
         public GetCreatorNewsfeedQueryHandler(
             Fifthweek.Api.Identity.Shared.Membership.IRequesterSecurity requesterSecurity,
-            Fifthweek.Api.Posts.IGetCreatorNewsfeedDbStatement getCreatorNewsfeedDbStatement)
+            Fifthweek.Api.Posts.IGetCreatorNewsfeedDbStatement getCreatorNewsfeedDbStatement,
+            Fifthweek.Api.FileManagement.Shared.IFileInformationAggregator fileInformationAggregator)
         {
             if (requesterSecurity == null)
             {
@@ -1315,8 +1335,14 @@ namespace Fifthweek.Api.Posts.Queries
                 throw new ArgumentNullException("getCreatorNewsfeedDbStatement");
             }
 
+            if (fileInformationAggregator == null)
+            {
+                throw new ArgumentNullException("fileInformationAggregator");
+            }
+
             this.requesterSecurity = requesterSecurity;
             this.getCreatorNewsfeedDbStatement = getCreatorNewsfeedDbStatement;
+            this.fileInformationAggregator = fileInformationAggregator;
         }
     }
 }
@@ -1750,6 +1776,8 @@ namespace Fifthweek.Api.Posts
     using Fifthweek.Api.Collections;
     using Fifthweek.Api.Channels.Shared;
     using System.Transactions;
+    using System.Collections.Generic;
+    using Fifthweek.Api.Posts.Queries;
 
     public partial class PostNoteDbStatement 
     {
@@ -1896,6 +1924,8 @@ namespace Fifthweek.Api.Posts
     using Fifthweek.Api.Collections;
     using Fifthweek.Api.Channels.Shared;
     using System.Transactions;
+    using System.Collections.Generic;
+    using Fifthweek.Api.Posts.Queries;
 
     public partial class TryGetQueuedPostCollectionDbStatement 
     {
@@ -2021,6 +2051,8 @@ namespace Fifthweek.Api.Posts
     using Fifthweek.Api.Collections;
     using Fifthweek.Api.Channels.Shared;
     using System.Transactions;
+    using System.Collections.Generic;
+    using Fifthweek.Api.Posts.Queries;
 
     public partial class SetBacklogPostLiveDateDbStatement 
     {
@@ -2061,6 +2093,8 @@ namespace Fifthweek.Api.Posts
     using Fifthweek.Api.Collections;
     using Fifthweek.Api.Channels.Shared;
     using System.Transactions;
+    using System.Collections.Generic;
+    using Fifthweek.Api.Posts.Queries;
 
     public partial class RemoveFromQueueIfRequiredDbStatement 
     {
@@ -2299,6 +2333,8 @@ namespace Fifthweek.Api.Posts
     using Fifthweek.Api.Collections;
     using Fifthweek.Api.Channels.Shared;
     using System.Transactions;
+    using System.Collections.Generic;
+    using Fifthweek.Api.Posts.Queries;
 
     public partial class MoveBacklogPostToQueueDbStatement 
     {
@@ -2339,6 +2375,8 @@ namespace Fifthweek.Api.Posts
     using Fifthweek.Api.Collections;
     using Fifthweek.Api.Channels.Shared;
     using System.Transactions;
+    using System.Collections.Generic;
+    using Fifthweek.Api.Posts.Queries;
 
     public partial class TryGetUnqueuedPostCollectionDbStatement 
     {
@@ -2410,14 +2448,23 @@ namespace Fifthweek.Api.Posts.Controllers
 namespace Fifthweek.Api.Posts
 {
     using System;
-    using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
     using Dapper;
-    using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.Api.Persistence;
-    using Fifthweek.Api.Posts.Queries;
     using Fifthweek.CodeGeneration;
+    using Fifthweek.Api.Core;
+    using Fifthweek.Api.FileManagement;
+    using Fifthweek.Api.FileManagement.Shared;
+    using Fifthweek.Shared;
+    using Fifthweek.Api.Identity.Shared.Membership;
+    using Fifthweek.Api.Posts.Shared;
+    using Fifthweek.Api.Collections.Shared;
+    using Fifthweek.Api.Collections;
+    using Fifthweek.Api.Channels.Shared;
+    using System.Transactions;
+    using System.Collections.Generic;
+    using Fifthweek.Api.Posts.Queries;
 
     public partial class GetCreatorBacklogDbStatement 
     {
@@ -2436,15 +2483,23 @@ namespace Fifthweek.Api.Posts
 namespace Fifthweek.Api.Posts
 {
     using System;
-    using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
     using Dapper;
-    using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.Api.Persistence;
-    using Fifthweek.Api.Posts.Queries;
     using Fifthweek.CodeGeneration;
+    using Fifthweek.Api.Core;
+    using Fifthweek.Api.FileManagement;
+    using Fifthweek.Api.FileManagement.Shared;
     using Fifthweek.Shared;
+    using Fifthweek.Api.Identity.Shared.Membership;
+    using Fifthweek.Api.Posts.Shared;
+    using Fifthweek.Api.Collections.Shared;
+    using Fifthweek.Api.Collections;
+    using Fifthweek.Api.Channels.Shared;
+    using System.Transactions;
+    using System.Collections.Generic;
+    using Fifthweek.Api.Posts.Queries;
 
     public partial class GetCreatorNewsfeedDbStatement 
     {
@@ -2457,6 +2512,121 @@ namespace Fifthweek.Api.Posts
             }
 
             this.connectionFactory = connectionFactory;
+        }
+    }
+}
+namespace Fifthweek.Api.Posts.Queries
+{
+    using System;
+    using System.Linq;
+    using Fifthweek.Api.Channels.Shared;
+    using Fifthweek.Api.Collections.Shared;
+    using Fifthweek.Api.FileManagement.Shared;
+    using Fifthweek.Api.Posts.Shared;
+    using Fifthweek.CodeGeneration;
+    using System.Collections.Generic;
+    using Fifthweek.Api.Core;
+    using Fifthweek.Api.Identity.Shared.Membership;
+    using System.Threading.Tasks;
+    using Dapper;
+    using Fifthweek.Api.Persistence;
+    using Fifthweek.Api.Persistence.Identity;
+    using Fifthweek.Shared;
+
+    public partial class GetCreatorBacklogQueryResult 
+    {
+        public GetCreatorBacklogQueryResult(
+            Fifthweek.Api.Posts.Shared.PostId postId,
+            Fifthweek.Api.Channels.Shared.ChannelId channelId,
+            Fifthweek.Api.Collections.Shared.CollectionId collectionId,
+            Fifthweek.Api.Posts.Shared.Comment comment,
+            Fifthweek.Api.FileManagement.Shared.FileInformation file,
+            Fifthweek.Api.FileManagement.Shared.FileInformation image,
+            System.Boolean scheduledByQueue,
+            System.DateTime liveDate)
+        {
+            if (postId == null)
+            {
+                throw new ArgumentNullException("postId");
+            }
+
+            if (channelId == null)
+            {
+                throw new ArgumentNullException("channelId");
+            }
+
+            if (scheduledByQueue == null)
+            {
+                throw new ArgumentNullException("scheduledByQueue");
+            }
+
+            if (liveDate == null)
+            {
+                throw new ArgumentNullException("liveDate");
+            }
+
+            this.PostId = postId;
+            this.ChannelId = channelId;
+            this.CollectionId = collectionId;
+            this.Comment = comment;
+            this.File = file;
+            this.Image = image;
+            this.ScheduledByQueue = scheduledByQueue;
+            this.LiveDate = liveDate;
+        }
+    }
+}
+namespace Fifthweek.Api.Posts.Queries
+{
+    using System;
+    using System.Linq;
+    using Fifthweek.Api.Channels.Shared;
+    using Fifthweek.Api.Collections.Shared;
+    using Fifthweek.Api.FileManagement.Shared;
+    using Fifthweek.Api.Posts.Shared;
+    using Fifthweek.CodeGeneration;
+    using System.Collections.Generic;
+    using Fifthweek.Api.Core;
+    using Fifthweek.Api.Identity.Shared.Membership;
+    using System.Threading.Tasks;
+    using Dapper;
+    using Fifthweek.Api.Persistence;
+    using Fifthweek.Api.Persistence.Identity;
+    using Fifthweek.Shared;
+
+    public partial class GetCreatorNewsfeedQueryResult 
+    {
+        public GetCreatorNewsfeedQueryResult(
+            Fifthweek.Api.Posts.Shared.PostId postId,
+            Fifthweek.Api.Channels.Shared.ChannelId channelId,
+            Fifthweek.Api.Collections.Shared.CollectionId collectionId,
+            Fifthweek.Api.Posts.Shared.Comment comment,
+            Fifthweek.Api.FileManagement.Shared.FileInformation file,
+            Fifthweek.Api.FileManagement.Shared.FileInformation image,
+            System.DateTime liveDate)
+        {
+            if (postId == null)
+            {
+                throw new ArgumentNullException("postId");
+            }
+
+            if (channelId == null)
+            {
+                throw new ArgumentNullException("channelId");
+            }
+
+            if (liveDate == null)
+            {
+                throw new ArgumentNullException("liveDate");
+            }
+
+            this.PostId = postId;
+            this.ChannelId = channelId;
+            this.CollectionId = collectionId;
+            this.Comment = comment;
+            this.File = file;
+            this.Image = image;
+            this.LiveDate = liveDate;
         }
     }
 }
@@ -4226,6 +4396,216 @@ namespace Fifthweek.Api.Posts.Commands
             }
         
             if (!object.Equals(this.PostId, other.PostId))
+            {
+                return false;
+            }
+        
+            return true;
+        }
+    }
+}
+namespace Fifthweek.Api.Posts.Queries
+{
+    using System;
+    using System.Linq;
+    using Fifthweek.Api.Channels.Shared;
+    using Fifthweek.Api.Collections.Shared;
+    using Fifthweek.Api.FileManagement.Shared;
+    using Fifthweek.Api.Posts.Shared;
+    using Fifthweek.CodeGeneration;
+    using System.Collections.Generic;
+    using Fifthweek.Api.Core;
+    using Fifthweek.Api.Identity.Shared.Membership;
+    using System.Threading.Tasks;
+    using Dapper;
+    using Fifthweek.Api.Persistence;
+    using Fifthweek.Api.Persistence.Identity;
+    using Fifthweek.Shared;
+
+    public partial class GetCreatorBacklogQueryResult 
+    {
+        public override string ToString()
+        {
+            return string.Format("GetCreatorBacklogQueryResult({0}, {1}, {2}, {3}, {4}, {5}, {6}, {7})", this.PostId == null ? "null" : this.PostId.ToString(), this.ChannelId == null ? "null" : this.ChannelId.ToString(), this.CollectionId == null ? "null" : this.CollectionId.ToString(), this.Comment == null ? "null" : this.Comment.ToString(), this.File == null ? "null" : this.File.ToString(), this.Image == null ? "null" : this.Image.ToString(), this.ScheduledByQueue == null ? "null" : this.ScheduledByQueue.ToString(), this.LiveDate == null ? "null" : this.LiveDate.ToString());
+        }
+        
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj))
+            {
+                return false;
+            }
+        
+            if (ReferenceEquals(this, obj))
+            {
+                return true;
+            }
+        
+            if (obj.GetType() != this.GetType())
+            {
+                return false;
+            }
+        
+            return this.Equals((GetCreatorBacklogQueryResult)obj);
+        }
+        
+        public override int GetHashCode()
+        {
+            unchecked
+            {
+                int hashCode = 0;
+                hashCode = (hashCode * 397) ^ (this.PostId != null ? this.PostId.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.ChannelId != null ? this.ChannelId.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.CollectionId != null ? this.CollectionId.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.Comment != null ? this.Comment.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.File != null ? this.File.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.Image != null ? this.Image.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.ScheduledByQueue != null ? this.ScheduledByQueue.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.LiveDate != null ? this.LiveDate.GetHashCode() : 0);
+                return hashCode;
+            }
+        }
+        
+        protected bool Equals(GetCreatorBacklogQueryResult other)
+        {
+            if (!object.Equals(this.PostId, other.PostId))
+            {
+                return false;
+            }
+        
+            if (!object.Equals(this.ChannelId, other.ChannelId))
+            {
+                return false;
+            }
+        
+            if (!object.Equals(this.CollectionId, other.CollectionId))
+            {
+                return false;
+            }
+        
+            if (!object.Equals(this.Comment, other.Comment))
+            {
+                return false;
+            }
+        
+            if (!object.Equals(this.File, other.File))
+            {
+                return false;
+            }
+        
+            if (!object.Equals(this.Image, other.Image))
+            {
+                return false;
+            }
+        
+            if (!object.Equals(this.ScheduledByQueue, other.ScheduledByQueue))
+            {
+                return false;
+            }
+        
+            if (!object.Equals(this.LiveDate, other.LiveDate))
+            {
+                return false;
+            }
+        
+            return true;
+        }
+    }
+}
+namespace Fifthweek.Api.Posts.Queries
+{
+    using System;
+    using System.Linq;
+    using Fifthweek.Api.Channels.Shared;
+    using Fifthweek.Api.Collections.Shared;
+    using Fifthweek.Api.FileManagement.Shared;
+    using Fifthweek.Api.Posts.Shared;
+    using Fifthweek.CodeGeneration;
+    using System.Collections.Generic;
+    using Fifthweek.Api.Core;
+    using Fifthweek.Api.Identity.Shared.Membership;
+    using System.Threading.Tasks;
+    using Dapper;
+    using Fifthweek.Api.Persistence;
+    using Fifthweek.Api.Persistence.Identity;
+    using Fifthweek.Shared;
+
+    public partial class GetCreatorNewsfeedQueryResult 
+    {
+        public override string ToString()
+        {
+            return string.Format("GetCreatorNewsfeedQueryResult({0}, {1}, {2}, {3}, {4}, {5}, {6})", this.PostId == null ? "null" : this.PostId.ToString(), this.ChannelId == null ? "null" : this.ChannelId.ToString(), this.CollectionId == null ? "null" : this.CollectionId.ToString(), this.Comment == null ? "null" : this.Comment.ToString(), this.File == null ? "null" : this.File.ToString(), this.Image == null ? "null" : this.Image.ToString(), this.LiveDate == null ? "null" : this.LiveDate.ToString());
+        }
+        
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj))
+            {
+                return false;
+            }
+        
+            if (ReferenceEquals(this, obj))
+            {
+                return true;
+            }
+        
+            if (obj.GetType() != this.GetType())
+            {
+                return false;
+            }
+        
+            return this.Equals((GetCreatorNewsfeedQueryResult)obj);
+        }
+        
+        public override int GetHashCode()
+        {
+            unchecked
+            {
+                int hashCode = 0;
+                hashCode = (hashCode * 397) ^ (this.PostId != null ? this.PostId.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.ChannelId != null ? this.ChannelId.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.CollectionId != null ? this.CollectionId.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.Comment != null ? this.Comment.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.File != null ? this.File.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.Image != null ? this.Image.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.LiveDate != null ? this.LiveDate.GetHashCode() : 0);
+                return hashCode;
+            }
+        }
+        
+        protected bool Equals(GetCreatorNewsfeedQueryResult other)
+        {
+            if (!object.Equals(this.PostId, other.PostId))
+            {
+                return false;
+            }
+        
+            if (!object.Equals(this.ChannelId, other.ChannelId))
+            {
+                return false;
+            }
+        
+            if (!object.Equals(this.CollectionId, other.CollectionId))
+            {
+                return false;
+            }
+        
+            if (!object.Equals(this.Comment, other.Comment))
+            {
+                return false;
+            }
+        
+            if (!object.Equals(this.File, other.File))
+            {
+                return false;
+            }
+        
+            if (!object.Equals(this.Image, other.Image))
+            {
+                return false;
+            }
+        
+            if (!object.Equals(this.LiveDate, other.LiveDate))
             {
                 return false;
             }

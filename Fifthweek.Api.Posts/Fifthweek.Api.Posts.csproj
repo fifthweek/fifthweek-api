@@ -146,7 +146,9 @@
     <Compile Include="PostToCollectionDbStatement.cs" />
     <Compile Include="PostToCollectionDbSubStatements.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Queries\GetCreatorBacklogQueryResult.cs" />
     <Compile Include="Queries\GetCreatorNewsfeedQueryHandler.cs" />
+    <Compile Include="Queries\GetCreatorNewsfeedQueryResult.cs" />
     <Compile Include="Queries\NewsfeedPost.cs" />
     <Compile Include="Queries\BacklogPost.cs" />
     <Compile Include="Queries\GetCreatorNewsfeedQuery.cs" />

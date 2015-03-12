@@ -22,11 +22,11 @@
         private readonly ICommandHandler<RescheduleForNowCommand> rescheduleForNow;
         private readonly ICommandHandler<RescheduleForTimeCommand> rescheduleForTime;
         private readonly ICommandHandler<RescheduleWithQueueCommand> rescheduleWithQueue;
-        private readonly IQueryHandler<GetCreatorBacklogQuery, IReadOnlyList<BacklogPost>> getCreatorBacklog;
-        private readonly IQueryHandler<GetCreatorNewsfeedQuery, IReadOnlyList<NewsfeedPost>> getCreatorNewsfeed;
+        private readonly IQueryHandler<GetCreatorBacklogQuery, IReadOnlyList<GetCreatorBacklogQueryResult>> getCreatorBacklog;
+        private readonly IQueryHandler<GetCreatorNewsfeedQuery, IReadOnlyList<GetCreatorNewsfeedQueryResult>> getCreatorNewsfeed;
         private readonly IRequesterContext requesterContext;
 
-        public async Task<IEnumerable<BacklogPost>> GetCreatorBacklog(string creatorId)
+        public async Task<IEnumerable<GetCreatorBacklogQueryResult>> GetCreatorBacklog(string creatorId)
         {
             creatorId.AssertUrlParameterProvided("creatorId");
             var creatorIdObject = new UserId(creatorId.DecodeGuid());
@@ -35,7 +35,7 @@
             return await this.getCreatorBacklog.HandleAsync(new GetCreatorBacklogQuery(requester, creatorIdObject));
         }
 
-        public async Task<IEnumerable<NewsfeedPost>> GetCreatorNewsfeed(string creatorId, CreatorNewsfeedPaginationData newsfeedPaginationData)
+        public async Task<IEnumerable<GetCreatorNewsfeedQueryResult>> GetCreatorNewsfeed(string creatorId, CreatorNewsfeedPaginationData newsfeedPaginationData)
         {
             creatorId.AssertUrlParameterProvided("creatorId");
             newsfeedPaginationData.AssertUrlParameterProvided("newsfeedPaginationData");

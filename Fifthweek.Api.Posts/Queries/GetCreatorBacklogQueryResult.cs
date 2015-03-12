@@ -8,8 +8,8 @@
     using Fifthweek.Api.Posts.Shared;
     using Fifthweek.CodeGeneration;
 
-    [AutoConstructor, AutoEqualityMembers, AutoCopy]
-    public partial class BacklogPost
+    [AutoConstructor, AutoEqualityMembers]
+    public partial class GetCreatorBacklogQueryResult
     {
         public PostId PostId { get; private set; }
 
@@ -22,10 +22,10 @@
         public Comment Comment { get; private set; }
 
         [Optional]
-        public FileId FileId { get; private set; }
+        public FileInformation File { get; private set; }
 
         [Optional]
-        public FileId ImageId { get; private set; }
+        public FileInformation Image { get; private set; }
 
         public bool ScheduledByQueue { get; private set; }
 

@@ -7,22 +7,16 @@
     using System.Threading.Tasks;
 
     using Fifthweek.Api.AssemblyResolution;
-    using Fifthweek.Api.Channels;
     using Fifthweek.Api.Channels.Shared;
-    using Fifthweek.Api.Collections;
     using Fifthweek.Api.Collections.Shared;
     using Fifthweek.Api.Core;
-    using Fifthweek.Api.FileManagement;
     using Fifthweek.Api.FileManagement.Shared;
-    using Fifthweek.Api.Identity.Membership;
     using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.Api.Persistence;
     using Fifthweek.Api.Persistence.Identity;
     using Fifthweek.Api.Persistence.Tests.Shared;
     using Fifthweek.Api.Posts.Queries;
     using Fifthweek.Api.Posts.Shared;
-    using Fifthweek.Api.Subscriptions;
-    using Fifthweek.Api.Subscriptions.Shared;
     using Fifthweek.Shared;
 
     using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -36,14 +30,13 @@
         private static readonly Requester Requester = Requester.Authenticated(UserId);
         private static readonly NonNegativeInt StartIndex = NonNegativeInt.Parse(10);
         private static readonly PositiveInt Count = PositiveInt.Parse(5);
-        private static readonly SubscriptionId SubscriptionId = new SubscriptionId(Guid.NewGuid());
         private static readonly Comment Comment = new Comment("Hey guys!");
-        private static readonly Random Random = new Random();
         private static readonly DateTime Now = new SqlDateTime(DateTime.UtcNow).Value;
         private static readonly IReadOnlyList<NewsfeedPost> SortedNewsfeedPosts = GetSortedNewsfeedPosts().ToList();
 
         private Mock<IRequesterSecurity> requesterSecurity;
         private Mock<IGetCreatorNewsfeedDbStatement> getCreatorNewsfeedDbStatement;
+        private Mock<IFileInformationAggregator> fileInformationAggregator;
 
         private GetCreatorNewsfeedQueryHandler target;
 
@@ -54,8 +47,12 @@
 
             this.requesterSecurity = new Mock<IRequesterSecurity>();
             this.getCreatorNewsfeedDbStatement = new Mock<IGetCreatorNewsfeedDbStatement>(MockBehavior.Strict);
+            this.fileInformationAggregator = new Mock<IFileInformationAggregator>();
 
-            this.target = new GetCreatorNewsfeedQueryHandler(this.requesterSecurity.Object, this.getCreatorNewsfeedDbStatement.Object);
+            this.target = new GetCreatorNewsfeedQueryHandler(
+                this.requesterSecurity.Object, 
+                this.getCreatorNewsfeedDbStatement.Object,
+                this.fileInformationAggregator.Object);
         }
 
         [TestMethod]
@@ -105,10 +102,33 @@
         [TestMethod]
         public async Task ItShouldReturnPosts()
         {
-            this.getCreatorNewsfeedDbStatement.Setup(v => v.ExecuteAsync(UserId, It.IsAny<DateTime>(), StartIndex, Count)).ReturnsAsync(SortedNewsfeedPosts);
+            this.getCreatorNewsfeedDbStatement.Setup(v => v.ExecuteAsync(UserId, It.IsAny<DateTime>(), StartIndex, Count))
+                .ReturnsAsync(SortedNewsfeedPosts);
+
+            this.fileInformationAggregator.Setup(v => v.GetFileInformationAsync(UserId, It.IsAny<FileId>(), It.IsAny<string>()))
+                .Returns<UserId, FileId, string>((u, f, p) => Task.FromResult(new FileInformation(f, string.Empty, string.Empty, string.Empty)));
+            
             var result = await this.target.HandleAsync(new GetCreatorNewsfeedQuery(Requester, UserId, StartIndex, Count));
 
-            Assert.AreEqual(SortedNewsfeedPosts, result);
+            Assert.AreEqual(SortedNewsfeedPosts.Count, result.Count);
+            foreach (var item in result.Zip(SortedNewsfeedPosts, (a, b) => new { Output = a, Input = b }))
+            {
+                if (item.Input.FileId != null)
+                {
+                    Assert.AreEqual(item.Input.FileId, item.Output.File.FileId);
+                }
+
+                if (item.Input.ImageId != null)
+                {
+                    Assert.AreEqual(item.Input.ImageId, item.Output.Image.FileId);
+                }
+
+                Assert.AreEqual(item.Input.PostId, item.Output.PostId);
+                Assert.AreEqual(item.Input.ChannelId, item.Output.ChannelId);
+                Assert.AreEqual(item.Input.CollectionId, item.Output.CollectionId);
+                Assert.AreEqual(item.Input.Comment, item.Output.Comment);
+                Assert.AreEqual(item.Input.LiveDate, item.Output.LiveDate);
+            }
         }
 
         private static IEnumerable<NewsfeedPost> GetSortedNewsfeedPosts()
