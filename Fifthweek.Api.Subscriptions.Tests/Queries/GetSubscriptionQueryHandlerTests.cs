@@ -91,7 +91,7 @@
                     ExternalVideoUrl,
                     Description));
 
-            var fileInformation = new FileInformation(HeaderFileId, "container", "blob", "bloburi");
+            var fileInformation = new FileInformation(HeaderFileId, "container", "bloburi");
             this.fileInformationAggregator.Setup(
                 v => v.GetFileInformationAsync(CreatorId, HeaderFileId, FilePurposes.ProfileHeaderImage))
                 .ReturnsAsync(fileInformation);

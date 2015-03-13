@@ -88,14 +88,13 @@
         public async Task WhenAccountSettingsHasAProfileImageFileId_ItShouldReturnTheBlobInformation()
         {
             const string ContainerName = "containerName";
-            const string BlobName = "blobName";
             const string BlobUri = "uri";
 
             this.getAccountSettings.Setup(v => v.ExecuteAsync(UserId))
                 .ReturnsAsync(new GetAccountSettingsDbResult(Username, Email, FileId));
 
             this.fileInformationAggregator.Setup(v => v.GetFileInformationAsync(UserId, FileId, FilePurposes.ProfileImage))
-                .ReturnsAsync(new FileInformation(FileId, ContainerName, BlobName, BlobUri));
+                .ReturnsAsync(new FileInformation(FileId, ContainerName, BlobUri));
 
             var result = await this.target.HandleAsync(new GetAccountSettingsQuery(Requester, UserId));
 
@@ -105,7 +104,6 @@
             Assert.IsNotNull(result.ProfileImage);
             Assert.AreEqual(FileId, result.ProfileImage.FileId);
             Assert.AreEqual(ContainerName, result.ProfileImage.ContainerName);
-            Assert.AreEqual(BlobName, result.ProfileImage.BlobName);
             Assert.AreEqual(BlobUri, result.ProfileImage.Uri);
         }
     }

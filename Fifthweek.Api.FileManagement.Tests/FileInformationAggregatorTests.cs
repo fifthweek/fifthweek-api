@@ -63,7 +63,6 @@
             Assert.IsNotNull(result);
             Assert.AreEqual(FileId, result.FileId);
             Assert.AreEqual(ContainerName, result.ContainerName);
-            Assert.AreEqual(BlobName, result.BlobName);
             Assert.AreEqual(BlobUri, result.Uri);
         }
 
@@ -85,7 +84,6 @@
             Assert.IsNotNull(result);
             Assert.AreEqual(FileId, result.FileId);
             Assert.AreEqual(ContainerName, result.ContainerName);
-            Assert.AreEqual(BlobName, result.BlobName);
             Assert.AreEqual(BlobUri, result.Uri);
         }
     }

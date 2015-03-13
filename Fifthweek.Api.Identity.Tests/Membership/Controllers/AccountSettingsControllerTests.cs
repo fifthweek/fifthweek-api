@@ -29,7 +29,7 @@
         private static readonly string ContainerName = "containerName";
         private static readonly string BlobName = "blobName";
         private static readonly string FileUri = "uri";
-        private static readonly FileInformation FileInformation = new FileInformation(FileId, ContainerName, BlobName, FileUri);
+        private static readonly FileInformation FileInformation = new FileInformation(FileId, ContainerName, FileUri);
 
         private Mock<IGuidCreator> guidCreator;
         private Mock<IRequesterContext> requesterContext;

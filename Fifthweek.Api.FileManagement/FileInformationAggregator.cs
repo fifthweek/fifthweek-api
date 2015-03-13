@@ -29,7 +29,6 @@
             return new FileInformation(
                 fileId,
                 blobInformation.ContainerName,
-                blobInformation.BlobName,
                 blobInformation.Uri);
         }
     }

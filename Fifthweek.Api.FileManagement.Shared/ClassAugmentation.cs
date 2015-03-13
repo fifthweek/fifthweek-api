@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Linq;
 
-//// Generated on 24/02/2015 12:38:57 (UTC)
-//// Mapped solution in 9.08s
+//// Generated on 13/03/2015 19:28:46 (UTC)
+//// Mapped solution in 34.59s
 
 namespace Fifthweek.Api.FileManagement.Shared
 {
@@ -103,6 +103,8 @@ namespace Fifthweek.Api.FileManagement.Shared
 }
 namespace Fifthweek.Api.FileManagement.Shared
 {
+    using System;
+    using System.Linq;
     using Fifthweek.CodeGeneration;
 
     public partial class FileInformation 
@@ -110,7 +112,6 @@ namespace Fifthweek.Api.FileManagement.Shared
         public FileInformation(
             Fifthweek.Api.FileManagement.Shared.FileId fileId,
             System.String containerName,
-            System.String blobName,
             System.String uri)
         {
             if (fileId == null)
@@ -123,11 +124,6 @@ namespace Fifthweek.Api.FileManagement.Shared
                 throw new ArgumentNullException("containerName");
             }
 
-            if (blobName == null)
-            {
-                throw new ArgumentNullException("blobName");
-            }
-
             if (uri == null)
             {
                 throw new ArgumentNullException("uri");
@@ -135,7 +131,6 @@ namespace Fifthweek.Api.FileManagement.Shared
 
             this.FileId = fileId;
             this.ContainerName = containerName;
-            this.BlobName = blobName;
             this.Uri = uri;
         }
     }
@@ -257,13 +252,15 @@ namespace Fifthweek.Api.FileManagement.Shared
 }
 namespace Fifthweek.Api.FileManagement.Shared
 {
+    using System;
+    using System.Linq;
     using Fifthweek.CodeGeneration;
 
     public partial class FileInformation 
     {
         public override string ToString()
         {
-            return string.Format("FileInformation({0}, \"{1}\", \"{2}\", \"{3}\")", this.FileId == null ? "null" : this.FileId.ToString(), this.ContainerName == null ? "null" : this.ContainerName.ToString(), this.BlobName == null ? "null" : this.BlobName.ToString(), this.Uri == null ? "null" : this.Uri.ToString());
+            return string.Format("FileInformation({0}, \"{1}\", \"{2}\")", this.FileId == null ? "null" : this.FileId.ToString(), this.ContainerName == null ? "null" : this.ContainerName.ToString(), this.Uri == null ? "null" : this.Uri.ToString());
         }
         
         public override bool Equals(object obj)
@@ -293,7 +290,6 @@ namespace Fifthweek.Api.FileManagement.Shared
                 int hashCode = 0;
                 hashCode = (hashCode * 397) ^ (this.FileId != null ? this.FileId.GetHashCode() : 0);
                 hashCode = (hashCode * 397) ^ (this.ContainerName != null ? this.ContainerName.GetHashCode() : 0);
-                hashCode = (hashCode * 397) ^ (this.BlobName != null ? this.BlobName.GetHashCode() : 0);
                 hashCode = (hashCode * 397) ^ (this.Uri != null ? this.Uri.GetHashCode() : 0);
                 return hashCode;
             }
@@ -307,11 +303,6 @@ namespace Fifthweek.Api.FileManagement.Shared
             }
         
             if (!object.Equals(this.ContainerName, other.ContainerName))
-            {
-                return false;
-            }
-        
-            if (!object.Equals(this.BlobName, other.BlobName))
             {
                 return false;
             }
