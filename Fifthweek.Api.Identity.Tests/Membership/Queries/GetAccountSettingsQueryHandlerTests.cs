@@ -20,6 +20,7 @@
     [TestClass]
     public class GetAccountSettingsQueryHandlerTests
     {
+        private static readonly Username Username = new Username("username");
         private static readonly UserId UserId = new UserId(Guid.NewGuid());
         private static readonly Requester Requester = Requester.Authenticated(UserId);
         private static readonly FileId FileId = new FileId(Guid.NewGuid());
@@ -70,7 +71,7 @@
         public async Task WhenCalled_ItShouldCallTheAccountRepository()
         {
             this.getAccountSettings.Setup(v => v.ExecuteAsync(UserId))
-                .ReturnsAsync(new GetAccountSettingsDbResult(Email, null))
+                .ReturnsAsync(new GetAccountSettingsDbResult(Username, Email, null))
                 .Verifiable();
 
             var result = await this.target.HandleAsync(new GetAccountSettingsQuery(Requester, UserId));
@@ -78,6 +79,7 @@
             this.getAccountSettings.Verify();
 
             Assert.IsNotNull(result);
+            Assert.AreEqual(Username, result.Username);
             Assert.AreEqual(Email, result.Email);
             Assert.AreEqual(null, result.ProfileImage);
         }
@@ -90,7 +92,7 @@
             const string BlobUri = "uri";
 
             this.getAccountSettings.Setup(v => v.ExecuteAsync(UserId))
-                .ReturnsAsync(new GetAccountSettingsDbResult(Email, FileId));
+                .ReturnsAsync(new GetAccountSettingsDbResult(Username, Email, FileId));
 
             this.fileInformationAggregator.Setup(v => v.GetFileInformationAsync(UserId, FileId, FilePurposes.ProfileImage))
                 .ReturnsAsync(new FileInformation(FileId, ContainerName, BlobName, BlobUri));
@@ -98,6 +100,7 @@
             var result = await this.target.HandleAsync(new GetAccountSettingsQuery(Requester, UserId));
 
             Assert.IsNotNull(result);
+            Assert.AreEqual(Username, result.Username);
             Assert.AreEqual(Email, result.Email);
             Assert.IsNotNull(result.ProfileImage);
             Assert.AreEqual(FileId, result.ProfileImage.FileId);

@@ -19,6 +19,8 @@
     [TestClass]
     public class GetAccountSettingsDbRepositoryTests : PersistenceTestsBase
     {
+        private readonly Username username = new Username("username");
+        private readonly Username username2 = new Username("username2");
         private readonly UserId userId = new UserId(Guid.NewGuid());
         private readonly UserId userId2 = new UserId(Guid.NewGuid());
         private readonly FileId fileId = new FileId(Guid.NewGuid());
@@ -45,6 +47,7 @@
 
                 var result = await this.target.ExecuteAsync(this.userId);
 
+                Assert.AreEqual(result.Username, this.username);
                 Assert.AreEqual(result.Email, this.email);
                 Assert.AreEqual(result.ProfileImageFileId, this.fileId);
 
@@ -63,6 +66,7 @@
 
                 var result = await this.target.ExecuteAsync(this.userId2);
 
+                Assert.AreEqual(this.username2, result.Username);
                 Assert.AreEqual(this.email2, result.Email);
                 Assert.AreEqual(null, result.ProfileImageFileId);
 
@@ -101,10 +105,12 @@
             var user = UserTests.UniqueEntity(random);
             user.Id = this.userId.Value;
             user.Email = this.email.Value;
+            user.UserName = this.username.Value;
 
             var user2 = UserTests.UniqueEntity(random);
             user2.Id = this.userId2.Value;
             user2.Email = this.email2.Value;
+            user2.UserName = this.username2.Value;
 
             using (var databaseContext = testDatabase.CreateContext())
             {

@@ -10,6 +10,7 @@
     using Fifthweek.Api.Core;
     using Fifthweek.Api.FileManagement.Queries;
     using Fifthweek.Api.Identity.Membership;
+    using Fifthweek.Api.Identity.Membership.Queries;
     using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.Api.Identity.Tests.Shared.Membership;
     using Fifthweek.Api.Persistence.Identity;
@@ -49,6 +50,8 @@
         private Mock<IQueryHandler<GetUserAccessSignaturesQuery, UserAccessSignatures>> getUserAccessSignatures;
         private Mock<IQueryHandler<GetCreatorStatusQuery, CreatorStatus>> getCreatorStatus;
         private Mock<IQueryHandler<GetCreatedChannelsAndCollectionsQuery, ChannelsAndCollections>> getCreatedChannelsAndCollections;
+        private Mock<IQueryHandler<GetAccountSettingsQuery, GetAccountSettingsResult>> getAccountSettings;
+        private Mock<IQueryHandler<GetSubscriptionQuery, GetSubscriptionResult>> getSubscription;
 
         [TestInitialize]
         public void TestInitialize()
@@ -60,12 +63,16 @@
             // Give potentially side-effecting components strict mock behaviour.
             this.getCreatorStatus = new Mock<IQueryHandler<GetCreatorStatusQuery, CreatorStatus>>(MockBehavior.Strict);
             this.getCreatedChannelsAndCollections = new Mock<IQueryHandler<GetCreatedChannelsAndCollectionsQuery, ChannelsAndCollections>>(MockBehavior.Strict);
+            this.getAccountSettings = new Mock<IQueryHandler<GetAccountSettingsQuery, GetAccountSettingsResult>>(MockBehavior.Strict);
+            this.getSubscription = new Mock<IQueryHandler<GetSubscriptionQuery, GetSubscriptionResult>>(MockBehavior.Strict);
             
             this.target = new GetUserStateQueryHandler(
                 this.requesterSecurity.Object, 
                 this.getUserAccessSignatures.Object,
                 this.getCreatorStatus.Object, 
-                this.getCreatedChannelsAndCollections.Object);
+                this.getCreatedChannelsAndCollections.Object,
+                this.getAccountSettings.Object,
+                this.getSubscription.Object);
         }
 
         [TestMethod]
@@ -98,6 +105,8 @@
             Assert.AreEqual(UserAccessSignatures, result.AccessSignatures);
             Assert.IsNull(result.CreatorStatus);
             Assert.IsNull(result.CreatedChannelsAndCollections);
+            Assert.IsNull(result.AccountSettings);
+            Assert.IsNull(result.Subscription);
         }
 
         [TestMethod]
@@ -114,6 +123,8 @@
             Assert.AreEqual(UserAccessSignatures, result.AccessSignatures);
             Assert.IsNull(result.CreatorStatus);
             Assert.IsNull(result.CreatedChannelsAndCollections);
+            Assert.IsNull(result.AccountSettings);
+            Assert.IsNull(result.Subscription);
         }
 
         [TestMethod]
@@ -125,6 +136,8 @@
 
             var creatorStatus = new CreatorStatus(new SubscriptionId(Guid.NewGuid()), true);
             var createdChannelsAndCollections = new ChannelsAndCollections(new List<ChannelsAndCollections.Channel>());
+            var accountSettings = new GetAccountSettingsResult(new Username("username"), new Email("a@b.com"), null);
+            var subscription = new GetSubscriptionResult(new SubscriptionId(Guid.NewGuid()), UserId, new SubscriptionName("My Subscription"), new Tagline("Tagline is great"), new Introduction("Once upon a time there was an intro."), DateTime.UtcNow, null, null, null);
 
             this.getUserAccessSignatures.Setup(v => v.HandleAsync(new GetUserAccessSignaturesQuery(Requester, UserId)))
                 .ReturnsAsync(UserAccessSignatures);
@@ -132,6 +145,10 @@
                 .ReturnsAsync(creatorStatus);
             this.getCreatedChannelsAndCollections.Setup(v => v.HandleAsync(new GetCreatedChannelsAndCollectionsQuery(Requester, UserId)))
                 .ReturnsAsync(createdChannelsAndCollections);
+            this.getAccountSettings.Setup(v => v.HandleAsync(new GetAccountSettingsQuery(Requester, UserId)))
+                .ReturnsAsync(accountSettings);
+            this.getSubscription.Setup(v => v.HandleAsync(new GetSubscriptionQuery(creatorStatus.SubscriptionId)))
+                .ReturnsAsync(subscription);
 
             var result = await this.target.HandleAsync(new GetUserStateQuery(Requester, UserId));
 
@@ -139,6 +156,38 @@
             Assert.AreEqual(UserAccessSignatures, result.AccessSignatures);
             Assert.AreEqual(creatorStatus, result.CreatorStatus);
             Assert.AreEqual(createdChannelsAndCollections, result.CreatedChannelsAndCollections);
+            Assert.AreEqual(accountSettings, result.AccountSettings);
+            Assert.AreEqual(subscription, result.Subscription);
+        }
+
+        [TestMethod]
+        public async Task WhenCalledAsACreatorWithNoSubscription_ItShouldReturnUserStateWithoutSubscription()
+        {
+            this.requesterSecurity.SetupFor(Requester);
+
+            this.requesterSecurity.Setup(v => v.IsInRoleAsync(Requester, FifthweekRole.Creator)).ReturnsAsync(true);
+
+            var creatorStatus = new CreatorStatus(null, true);
+            var createdChannelsAndCollections = new ChannelsAndCollections(new List<ChannelsAndCollections.Channel>());
+            var accountSettings = new GetAccountSettingsResult(new Username("username"), new Email("a@b.com"), null);
+
+            this.getUserAccessSignatures.Setup(v => v.HandleAsync(new GetUserAccessSignaturesQuery(Requester, UserId)))
+                .ReturnsAsync(UserAccessSignatures);
+            this.getCreatorStatus.Setup(v => v.HandleAsync(new GetCreatorStatusQuery(Requester, UserId)))
+                .ReturnsAsync(creatorStatus);
+            this.getCreatedChannelsAndCollections.Setup(v => v.HandleAsync(new GetCreatedChannelsAndCollectionsQuery(Requester, UserId)))
+                .ReturnsAsync(createdChannelsAndCollections);
+            this.getAccountSettings.Setup(v => v.HandleAsync(new GetAccountSettingsQuery(Requester, UserId)))
+                .ReturnsAsync(accountSettings);
+
+            var result = await this.target.HandleAsync(new GetUserStateQuery(Requester, UserId));
+
+            Assert.IsNotNull(result);
+            Assert.AreEqual(UserAccessSignatures, result.AccessSignatures);
+            Assert.AreEqual(creatorStatus, result.CreatorStatus);
+            Assert.AreEqual(createdChannelsAndCollections, result.CreatedChannelsAndCollections);
+            Assert.AreEqual(accountSettings, result.AccountSettings);
+            Assert.IsNull(result.Subscription);
         }
     }
 }

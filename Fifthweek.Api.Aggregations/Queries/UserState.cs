@@ -7,6 +7,7 @@ namespace Fifthweek.Api.Aggregations.Queries
     using Fifthweek.Api.Identity.Membership;
     using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.Api.Subscriptions;
+    using Fifthweek.Api.Subscriptions.Queries;
     using Fifthweek.CodeGeneration;
 
     [AutoConstructor, AutoEqualityMembers]
@@ -19,5 +20,11 @@ namespace Fifthweek.Api.Aggregations.Queries
         
         [Optional]
         public ChannelsAndCollections CreatedChannelsAndCollections { get; private set; }
+
+        [Optional]
+        public GetAccountSettingsResult AccountSettings { get; private set; }
+
+        [Optional]
+        public GetSubscriptionResult Subscription { get; private set; }
     }
 }

@@ -9,6 +9,8 @@
     [AutoEqualityMembers]
     public partial class GetAccountSettingsResult
     {
+        public Username Username { get; private set; }
+
         public Email Email { get; private set; }
 
         [Optional]

@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Linq;
 
-//// Generated on 25/02/2015 12:32:56 (UTC)
-//// Mapped solution in 27.27s
+//// Generated on 13/03/2015 14:47:14 (UTC)
+//// Mapped solution in 9.56s
 
 
 namespace Fifthweek.Api.Identity.Membership.Commands
@@ -473,14 +473,21 @@ namespace Fifthweek.Api.Identity.Membership
     public partial class GetAccountSettingsDbResult 
     {
         public GetAccountSettingsDbResult(
+            Fifthweek.Api.Identity.Shared.Membership.Username username,
             Fifthweek.Api.Identity.Shared.Membership.Email email,
             Fifthweek.Api.FileManagement.Shared.FileId profileImageFileId)
         {
+            if (username == null)
+            {
+                throw new ArgumentNullException("username");
+            }
+
             if (email == null)
             {
                 throw new ArgumentNullException("email");
             }
 
+            this.Username = username;
             this.Email = email;
             this.ProfileImageFileId = profileImageFileId;
         }
@@ -508,14 +515,21 @@ namespace Fifthweek.Api.Identity.Membership
     public partial class GetAccountSettingsResult 
     {
         public GetAccountSettingsResult(
+            Fifthweek.Api.Identity.Shared.Membership.Username username,
             Fifthweek.Api.Identity.Shared.Membership.Email email,
             Fifthweek.Api.FileManagement.Shared.FileInformation profileImage)
         {
+            if (username == null)
+            {
+                throw new ArgumentNullException("username");
+            }
+
             if (email == null)
             {
                 throw new ArgumentNullException("email");
             }
 
+            this.Username = username;
             this.Email = email;
             this.ProfileImage = profileImage;
         }
@@ -2192,7 +2206,7 @@ namespace Fifthweek.Api.Identity.Membership
     {
         public override string ToString()
         {
-            return string.Format("GetAccountSettingsDbResult({0}, {1})", this.Email == null ? "null" : this.Email.ToString(), this.ProfileImageFileId == null ? "null" : this.ProfileImageFileId.ToString());
+            return string.Format("GetAccountSettingsDbResult({0}, {1}, {2})", this.Username == null ? "null" : this.Username.ToString(), this.Email == null ? "null" : this.Email.ToString(), this.ProfileImageFileId == null ? "null" : this.ProfileImageFileId.ToString());
         }
         
         public override bool Equals(object obj)
@@ -2220,6 +2234,7 @@ namespace Fifthweek.Api.Identity.Membership
             unchecked
             {
                 int hashCode = 0;
+                hashCode = (hashCode * 397) ^ (this.Username != null ? this.Username.GetHashCode() : 0);
                 hashCode = (hashCode * 397) ^ (this.Email != null ? this.Email.GetHashCode() : 0);
                 hashCode = (hashCode * 397) ^ (this.ProfileImageFileId != null ? this.ProfileImageFileId.GetHashCode() : 0);
                 return hashCode;
@@ -2228,6 +2243,11 @@ namespace Fifthweek.Api.Identity.Membership
         
         protected bool Equals(GetAccountSettingsDbResult other)
         {
+            if (!object.Equals(this.Username, other.Username))
+            {
+                return false;
+            }
+        
             if (!object.Equals(this.Email, other.Email))
             {
                 return false;
@@ -2265,7 +2285,7 @@ namespace Fifthweek.Api.Identity.Membership
     {
         public override string ToString()
         {
-            return string.Format("GetAccountSettingsResult({0}, {1})", this.Email == null ? "null" : this.Email.ToString(), this.ProfileImage == null ? "null" : this.ProfileImage.ToString());
+            return string.Format("GetAccountSettingsResult({0}, {1}, {2})", this.Username == null ? "null" : this.Username.ToString(), this.Email == null ? "null" : this.Email.ToString(), this.ProfileImage == null ? "null" : this.ProfileImage.ToString());
         }
         
         public override bool Equals(object obj)
@@ -2293,6 +2313,7 @@ namespace Fifthweek.Api.Identity.Membership
             unchecked
             {
                 int hashCode = 0;
+                hashCode = (hashCode * 397) ^ (this.Username != null ? this.Username.GetHashCode() : 0);
                 hashCode = (hashCode * 397) ^ (this.Email != null ? this.Email.GetHashCode() : 0);
                 hashCode = (hashCode * 397) ^ (this.ProfileImage != null ? this.ProfileImage.GetHashCode() : 0);
                 return hashCode;
@@ -2301,6 +2322,11 @@ namespace Fifthweek.Api.Identity.Membership
         
         protected bool Equals(GetAccountSettingsResult other)
         {
+            if (!object.Equals(this.Username, other.Username))
+            {
+                return false;
+            }
+        
             if (!object.Equals(this.Email, other.Email))
             {
                 return false;

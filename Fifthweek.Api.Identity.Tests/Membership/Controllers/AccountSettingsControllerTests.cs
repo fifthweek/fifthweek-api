@@ -74,7 +74,7 @@
         {
             var query = new GetAccountSettingsQuery(Requester, RequestedUserId);
             this.getAccountSettings.Setup(v => v.HandleAsync(query))
-                .ReturnsAsync(new GetAccountSettingsResult(Email, FileInformation))
+                .ReturnsAsync(new GetAccountSettingsResult(Username, Email, FileInformation))
                 .Verifiable();
 
             var result = await this.target.Get(RequestedUserId.Value.EncodeGuid());
@@ -82,6 +82,7 @@
             this.getAccountSettings.Verify();
 
             Assert.IsNotNull(result);
+            Assert.AreEqual(Username, result.Username);
             Assert.AreEqual(Email, result.Email);
             Assert.AreEqual(FileInformation, result.ProfileImage);
         }
@@ -91,7 +92,7 @@
         {
             var query = new GetAccountSettingsQuery(Requester, RequestedUserId);
             this.getAccountSettings.Setup(v => v.HandleAsync(query))
-                .ReturnsAsync(new GetAccountSettingsResult(Email, null))
+                .ReturnsAsync(new GetAccountSettingsResult(Username, Email, null))
                 .Verifiable();
 
             var result = await this.target.Get(RequestedUserId.Value.EncodeGuid());
@@ -99,6 +100,7 @@
             this.getAccountSettings.Verify();
 
             Assert.IsNotNull(result);
+            Assert.AreEqual(Username, result.Username);
             Assert.AreEqual(Email, result.Email);
             Assert.IsNull(result.ProfileImage);
         }
