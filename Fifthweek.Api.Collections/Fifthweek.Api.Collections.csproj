@@ -77,12 +77,14 @@
     <Compile Include="DefragmentQueueDbStatement.cs" />
     <Compile Include="DeleteCollectionDbStatement.cs" />
     <Compile Include="GetChannelsAndCollectionsDbStatement.cs" />
+    <Compile Include="GetQueueLowerBoundDbStatement.cs" />
     <Compile Include="GetNewQueuedPostLiveDateLowerBoundDbStatement.cs" />
     <Compile Include="GetQueueSizeDbStatement.cs" />
     <Compile Include="GetWeeklyReleaseScheduleDbStatement.cs" />
     <Compile Include="ICollectionOwnership.cs" />
     <Compile Include="IDeleteCollectionDbStatement.cs" />
     <Compile Include="IGetChannelsAndCollectionsDbStatement.cs" />
+    <Compile Include="IGetQueueLowerBoundDbStatement.cs" />
     <Compile Include="IGetNewQueuedPostLiveDateLowerBoundDbStatement.cs" />
     <Compile Include="IGetQueueSizeDbStatement.cs" />
     <Compile Include="IQueuedPostLiveDateCalculator.cs" />

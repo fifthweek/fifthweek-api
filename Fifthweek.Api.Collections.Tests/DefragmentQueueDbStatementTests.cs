@@ -18,9 +18,11 @@
         private static readonly CollectionId CollectionId = new CollectionId(Guid.NewGuid());
         private static readonly WeeklyReleaseSchedule WeeklyReleaseSchedule = WeeklyReleaseSchedule.Parse(new[] { HourOfWeek.Parse(42) });
         private static readonly DateTime Now = DateTime.UtcNow;
+        private static readonly DateTime ExclusiveLowerBound = Now.AddDays(10);
         private static readonly IReadOnlyList<DateTime> UnfragmentedDates = new[] { Now.AddDays(1), Now.AddDays(2), Now.AddDays(3) };
 
         private Mock<IGetQueueSizeDbStatement> getQueueSize;
+        private Mock<IGetQueueLowerBoundDbStatement> getQueueLowerBound;
         private Mock<IQueuedPostLiveDateCalculator> liveDateCalculator;
         private Mock<IUpdateAllLiveDatesInQueueDbStatement> updateAllLiveDatesInQueue;
 
@@ -30,12 +32,13 @@
         public void Initialize()
         {
             this.getQueueSize = new Mock<IGetQueueSizeDbStatement>();
+            this.getQueueLowerBound = new Mock<IGetQueueLowerBoundDbStatement>();
             this.liveDateCalculator = new Mock<IQueuedPostLiveDateCalculator>();
 
             // Give side-effecting components strict mock behaviour.
             this.updateAllLiveDatesInQueue = new Mock<IUpdateAllLiveDatesInQueueDbStatement>(MockBehavior.Strict);
 
-            this.target = new DefragmentQueueDbStatement(this.getQueueSize.Object, this.liveDateCalculator.Object, this.updateAllLiveDatesInQueue.Object);
+            this.target = new DefragmentQueueDbStatement(this.getQueueSize.Object, this.getQueueLowerBound.Object, this.liveDateCalculator.Object, this.updateAllLiveDatesInQueue.Object);
         }
 
         [TestMethod]
@@ -71,7 +74,8 @@
         public async Task WhenQueueIsNotEmpty_ItShouldUpdateAllLiveDatesInQueueWithUnfragmentedDates()
         {
             this.getQueueSize.Setup(_ => _.ExecuteAsync(CollectionId, Now)).ReturnsAsync(QueueSize);
-            this.liveDateCalculator.Setup(_ => _.GetNextLiveDates(Now, WeeklyReleaseSchedule, QueueSize)).Returns(UnfragmentedDates);
+            this.getQueueLowerBound.Setup(_ => _.ExecuteAsync(CollectionId, Now)).ReturnsAsync(ExclusiveLowerBound);
+            this.liveDateCalculator.Setup(_ => _.GetNextLiveDates(ExclusiveLowerBound, WeeklyReleaseSchedule, QueueSize)).Returns(UnfragmentedDates);
             this.updateAllLiveDatesInQueue.Setup(_ => _.ExecuteAsync(CollectionId, UnfragmentedDates, Now)).Returns(Task.FromResult(0)).Verifiable();
 
             await this.target.ExecuteAsync(CollectionId, WeeklyReleaseSchedule, Now);

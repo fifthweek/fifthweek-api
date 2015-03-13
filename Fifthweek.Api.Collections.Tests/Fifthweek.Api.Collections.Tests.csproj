@@ -97,6 +97,7 @@
     <Compile Include="DefragmentQueueDbStatementTests.cs" />
     <Compile Include="DeleteCollectionDbStatementTests.cs" />
     <Compile Include="GetChannelsAndCollectionsDbStatementTests.cs" />
+    <Compile Include="GetQueueLowerBoundDbStatementTests.cs" />
     <Compile Include="GetLiveDateOfNewQueuedPostDbStatementTests.cs" />
     <Compile Include="GetNewQueuedPostLiveDateLowerBoundDbStatementTests.cs" />
     <Compile Include="GetCollectionWeeklyReleaseScheduleDbStatementTests.cs" />

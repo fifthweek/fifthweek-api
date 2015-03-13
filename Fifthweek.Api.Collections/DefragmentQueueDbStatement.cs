@@ -11,6 +11,7 @@
     public partial class DefragmentQueueDbStatement : IDefragmentQueueDbStatement
     {
         private readonly IGetQueueSizeDbStatement getQueueSize;
+        private readonly IGetQueueLowerBoundDbStatement getQueueLowerBound;
         private readonly IQueuedPostLiveDateCalculator liveDateCalculator;
         private readonly IUpdateAllLiveDatesInQueueDbStatement updateAllLiveDatesInQueue;
 
@@ -26,8 +27,9 @@
             {
                 return;
             }
-            
-            var unfragmentedLiveDates = this.liveDateCalculator.GetNextLiveDates(now, weeklyReleaseSchedule, queueSize);
+
+            var exclusiveLowerBound = await this.getQueueLowerBound.ExecuteAsync(collectionId, now);
+            var unfragmentedLiveDates = this.liveDateCalculator.GetNextLiveDates(exclusiveLowerBound, weeklyReleaseSchedule, queueSize);
             
             await this.updateAllLiveDatesInQueue.ExecuteAsync(collectionId, unfragmentedLiveDates, now);
         }

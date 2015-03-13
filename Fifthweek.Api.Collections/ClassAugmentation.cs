@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Linq;
 
-//// Generated on 11/03/2015 18:39:39 (UTC)
-//// Mapped solution in 1.83s
+//// Generated on 13/03/2015 18:02:36 (UTC)
+//// Mapped solution in 4.11s
 
 
 namespace Fifthweek.Api.Collections
@@ -1004,12 +1004,18 @@ namespace Fifthweek.Api.Collections
     {
         public DefragmentQueueDbStatement(
             Fifthweek.Api.Collections.IGetQueueSizeDbStatement getQueueSize,
+            Fifthweek.Api.Collections.IGetQueueLowerBoundDbStatement getQueueLowerBound,
             Fifthweek.Api.Collections.IQueuedPostLiveDateCalculator liveDateCalculator,
             Fifthweek.Api.Collections.IUpdateAllLiveDatesInQueueDbStatement updateAllLiveDatesInQueue)
         {
             if (getQueueSize == null)
             {
                 throw new ArgumentNullException("getQueueSize");
+            }
+
+            if (getQueueLowerBound == null)
+            {
+                throw new ArgumentNullException("getQueueLowerBound");
             }
 
             if (liveDateCalculator == null)
@@ -1023,6 +1029,7 @@ namespace Fifthweek.Api.Collections
             }
 
             this.getQueueSize = getQueueSize;
+            this.getQueueLowerBound = getQueueLowerBound;
             this.liveDateCalculator = liveDateCalculator;
             this.updateAllLiveDatesInQueue = updateAllLiveDatesInQueue;
         }
@@ -1225,6 +1232,37 @@ namespace Fifthweek.Api.Collections.Controllers
 
             this.CollectionId = collectionId;
             this.DefaultWeeklyReleaseTime = defaultWeeklyReleaseTime;
+        }
+    }
+}
+namespace Fifthweek.Api.Collections
+{
+    using System;
+    using System.Linq;
+    using System.Threading.Tasks;
+    using Dapper;
+    using Fifthweek.Api.Core;
+    using Fifthweek.Api.Identity.Shared.Membership;
+    using Fifthweek.Api.Persistence;
+    using Fifthweek.CodeGeneration;
+    using Fifthweek.Api.Collections.Shared;
+    using System.Collections.Generic;
+    using System.Text;
+    using Fifthweek.Api.Channels.Shared;
+    using Fifthweek.Api.Collections.Queries;
+    using System.Transactions;
+
+    public partial class GetQueueLowerBoundDbStatement 
+    {
+        public GetQueueLowerBoundDbStatement(
+            Fifthweek.Api.Persistence.IFifthweekDbConnectionFactory connectionFactory)
+        {
+            if (connectionFactory == null)
+            {
+                throw new ArgumentNullException("connectionFactory");
+            }
+
+            this.connectionFactory = connectionFactory;
         }
     }
 }
