@@ -31,6 +31,11 @@ namespace Fifthweek.Api.ClientHttpStubs.Templates
             }
         }
 
+        private static bool IsCustomPrimitive(Type type, PropertyInfo[] properties)
+        {
+            return properties.Length == 1 && (type.GetCustomAttribute<AutoJsonAttribute>() != null || type.GetCustomAttribute<AutoPrimitiveAttribute>() != null);
+        }
+
         private void RenderController(ControllerElement controller)
         {
             this.output.WriteLine(string.Format("angular.module('webApp').factory('{0}Stub',", controller.Name.Camelize()));
@@ -200,7 +205,7 @@ namespace Fifthweek.Api.ClientHttpStubs.Templates
             {
                 var properties = type.GetProperties().Where(_ => _.CanWrite).ToArray();
 
-                if (type.GetCustomAttribute<AutoPrimitiveAttribute>() != null && properties.Length == 1)
+                if (IsCustomPrimitive(type, properties))
                 {
                     var property = properties.First();
                     this.DocumentType(property.Name, property.PropertyType, isRequired, delimit);

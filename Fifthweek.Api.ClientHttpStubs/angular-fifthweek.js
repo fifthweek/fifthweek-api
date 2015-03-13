@@ -81,9 +81,7 @@ angular.module('webApp').factory('collectionStub',
     // }
     // result = {
     //   collectionId: 'Base64Guid',
-    //   defaultWeeklyReleaseTime: {
-    //     value: 0
-    //   }
+    //   defaultWeeklyReleaseTime: 0
     // }
     service.postCollection = function(newCollectionData) {
       return $http.post(apiBaseUri + 'collections', newCollectionData).catch(function(response) {
@@ -149,9 +147,7 @@ angular.module('webApp').factory('accountSettingsStub',
 
     // userId = 'Base64Guid'
     // result = {
-    //   email: {
-    //     value: ''
-    //   },
+    //   email: '',
     //   profileImage: { /* optional */
     //     fileId: 'Base64Guid',
     //     containerName: '',
@@ -644,9 +640,7 @@ angular.module('webApp').factory('userStateStub',
     //             collectionId: 'Base64Guid',
     //             name: '',
     //             weeklyReleaseSchedule: [
-    //               {
-    //                 value: 0
-    //               }
+    //               0
     //             ]
     //           }
     //         ]
@@ -699,9 +693,7 @@ angular.module('webApp').factory('userStateStub',
     //             collectionId: 'Base64Guid',
     //             name: '',
     //             weeklyReleaseSchedule: [
-    //               {
-    //                 value: 0
-    //               }
+    //               0
     //             ]
     //           }
     //         ]
