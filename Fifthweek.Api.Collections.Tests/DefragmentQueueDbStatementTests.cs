@@ -60,7 +60,15 @@
         }
 
         [TestMethod]
-        public async Task ItShouldUpdateAllLiveDatesInQueueWithUnfragmentedDates()
+        public async Task WhenQueueIsEmpty_ItShouldHaveNoEffect()
+        {
+            this.getQueueSize.Setup(_ => _.ExecuteAsync(CollectionId, Now)).ReturnsAsync(0);
+            
+            await this.target.ExecuteAsync(CollectionId, WeeklyReleaseSchedule, Now);
+        }
+
+        [TestMethod]
+        public async Task WhenQueueIsNotEmpty_ItShouldUpdateAllLiveDatesInQueueWithUnfragmentedDates()
         {
             this.getQueueSize.Setup(_ => _.ExecuteAsync(CollectionId, Now)).ReturnsAsync(QueueSize);
             this.liveDateCalculator.Setup(_ => _.GetNextLiveDates(Now, WeeklyReleaseSchedule, QueueSize)).Returns(UnfragmentedDates);

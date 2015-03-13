@@ -21,6 +21,11 @@
             now.AssertUtc("now");
 
             var queueSize = await this.getQueueSize.ExecuteAsync(collectionId, now);
+
+            if (queueSize == 0)
+            {
+                return;
+            }
             
             var unfragmentedLiveDates = this.liveDateCalculator.GetNextLiveDates(now, weeklyReleaseSchedule, queueSize);
             
