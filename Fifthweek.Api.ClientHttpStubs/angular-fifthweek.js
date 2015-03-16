@@ -275,9 +275,9 @@ angular.module('webApp').factory('postsStub',
     //       uri: ''
     //     },
     //     fileSource: { /* optional */
-    //       fileName: '', /* optional */
-    //       fileExtension: '', /* optional */
-    //       size: 0 /* optional */
+    //       fileName: '',
+    //       fileExtension: '',
+    //       size: 0
     //     },
     //     image: { /* optional */
     //       fileId: 'Base64Guid',
@@ -285,9 +285,9 @@ angular.module('webApp').factory('postsStub',
     //       uri: ''
     //     },
     //     imageSource: { /* optional */
-    //       fileName: '', /* optional */
-    //       fileExtension: '', /* optional */
-    //       size: 0 /* optional */
+    //       fileName: '',
+    //       fileExtension: '',
+    //       size: 0
     //     },
     //     scheduledByQueue: false,
     //     liveDate: '2015-12-25T14:45:05Z'
@@ -314,9 +314,9 @@ angular.module('webApp').factory('postsStub',
     //       uri: ''
     //     },
     //     fileSource: { /* optional */
-    //       fileName: '', /* optional */
-    //       fileExtension: '', /* optional */
-    //       size: 0 /* optional */
+    //       fileName: '',
+    //       fileExtension: '',
+    //       size: 0
     //     },
     //     image: { /* optional */
     //       fileId: 'Base64Guid',
@@ -324,9 +324,9 @@ angular.module('webApp').factory('postsStub',
     //       uri: ''
     //     },
     //     imageSource: { /* optional */
-    //       fileName: '', /* optional */
-    //       fileExtension: '', /* optional */
-    //       size: 0 /* optional */
+    //       fileName: '',
+    //       fileExtension: '',
+    //       size: 0
     //     },
     //     liveDate: '2015-12-25T14:45:05Z'
     //   }
