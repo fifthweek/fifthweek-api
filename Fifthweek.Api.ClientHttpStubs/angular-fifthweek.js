@@ -147,11 +147,11 @@ angular.module('webApp').factory('accountSettingsStub',
 
     // userId = 'Base64Guid'
     // result = {
+    //   username: '',
     //   email: '',
     //   profileImage: { /* optional */
     //     fileId: 'Base64Guid',
     //     containerName: '',
-    //     blobName: '',
     //     uri: ''
     //   }
     // }
@@ -272,13 +272,11 @@ angular.module('webApp').factory('postsStub',
     //     file: { /* optional */
     //       fileId: 'Base64Guid',
     //       containerName: '',
-    //       blobName: '',
     //       uri: ''
     //     },
     //     image: { /* optional */
     //       fileId: 'Base64Guid',
     //       containerName: '',
-    //       blobName: '',
     //       uri: ''
     //     },
     //     scheduledByQueue: false,
@@ -303,13 +301,11 @@ angular.module('webApp').factory('postsStub',
     //     file: { /* optional */
     //       fileId: 'Base64Guid',
     //       containerName: '',
-    //       blobName: '',
     //       uri: ''
     //     },
     //     image: { /* optional */
     //       fileId: 'Base64Guid',
     //       containerName: '',
-    //       blobName: '',
     //       uri: ''
     //     },
     //     liveDate: '2015-12-25T14:45:05Z'
@@ -478,7 +474,6 @@ angular.module('webApp').factory('subscriptionStub',
     //   headerImage: { /* optional */
     //     fileId: 'Base64Guid',
     //     containerName: '',
-    //     blobName: '',
     //     uri: ''
     //   },
     //   video: '', /* optional */
@@ -646,6 +641,30 @@ angular.module('webApp').factory('userStateStub',
     //         ]
     //       }
     //     ]
+    //   },
+    //   accountSettings: { /* optional */
+    //     username: '',
+    //     email: '',
+    //     profileImage: { /* optional */
+    //       fileId: 'Base64Guid',
+    //       containerName: '',
+    //       uri: ''
+    //     }
+    //   },
+    //   subscription: { /* optional */
+    //     subscriptionId: 'Base64Guid',
+    //     creatorId: 'Base64Guid',
+    //     subscriptionName: '',
+    //     tagline: '',
+    //     introduction: '',
+    //     creationDate: '2015-12-25T14:45:05Z',
+    //     headerImage: { /* optional */
+    //       fileId: 'Base64Guid',
+    //       containerName: '',
+    //       uri: ''
+    //     },
+    //     video: '', /* optional */
+    //     description: '' /* optional */
     //   }
     // }
     service.getUserState = function(userId) {
@@ -699,6 +718,30 @@ angular.module('webApp').factory('userStateStub',
     //         ]
     //       }
     //     ]
+    //   },
+    //   accountSettings: { /* optional */
+    //     username: '',
+    //     email: '',
+    //     profileImage: { /* optional */
+    //       fileId: 'Base64Guid',
+    //       containerName: '',
+    //       uri: ''
+    //     }
+    //   },
+    //   subscription: { /* optional */
+    //     subscriptionId: 'Base64Guid',
+    //     creatorId: 'Base64Guid',
+    //     subscriptionName: '',
+    //     tagline: '',
+    //     introduction: '',
+    //     creationDate: '2015-12-25T14:45:05Z',
+    //     headerImage: { /* optional */
+    //       fileId: 'Base64Guid',
+    //       containerName: '',
+    //       uri: ''
+    //     },
+    //     video: '', /* optional */
+    //     description: '' /* optional */
     //   }
     // }
     service.getVisitorState = function() {
