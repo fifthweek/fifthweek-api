@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Linq;
 
-//// Generated on 16/03/2015 13:06:12 (UTC)
-//// Mapped solution in 4.97s
+//// Generated on 16/03/2015 15:57:13 (UTC)
+//// Mapped solution in 22.84s
 
 
 namespace Fifthweek.Api.Posts.Commands
@@ -2687,6 +2687,21 @@ namespace Fifthweek.Api.Posts.Queries
             System.String fileExtension,
             System.Int64 size)
         {
+            if (fileName == null)
+            {
+                throw new ArgumentNullException("fileName");
+            }
+
+            if (fileExtension == null)
+            {
+                throw new ArgumentNullException("fileExtension");
+            }
+
+            if (size == null)
+            {
+                throw new ArgumentNullException("size");
+            }
+
             this.FileName = fileName;
             this.FileExtension = fileExtension;
             this.Size = size;
