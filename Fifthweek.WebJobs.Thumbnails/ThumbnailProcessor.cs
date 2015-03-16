@@ -52,25 +52,21 @@
                 return;
             }
             
-            using (var inputStream = await input.OpenReadAsync(cancellationToken))
+            using (var image = await this.OpenImageAsync(input, cancellationToken, logger, sw))
             {
-                logger.Info("OpenStream: " + sw.ElapsedMilliseconds);
-                using (var image = new MagickImage(inputStream))
+                logger.Info("OpenImage: " + sw.ElapsedMilliseconds);
+                var outputMimeType = image.FormatInfo.MimeType;
+                if (!SupportedOutputMimeTypes.Contains(outputMimeType))
                 {
-                    logger.Info("OpenImage: " + sw.ElapsedMilliseconds);
-                    var outputMimeType = image.FormatInfo.MimeType;
-                    if (!SupportedOutputMimeTypes.Contains(outputMimeType))
-                    {
-                        outputMimeType = DefaultOutputMimeType;
-                        image.Format = DefaultOutputFormat;
-                    }
-
-                    var jobData = new JobData(outputMimeType);
-
-                    logger.Info("Processing: " + sw.ElapsedMilliseconds);
-                    await this.ProcessThumbnailItems(message.Items, cache, image, jobData, cancellationToken);
-                    logger.Info("ProcessingComplete: " + sw.ElapsedMilliseconds);
+                    outputMimeType = DefaultOutputMimeType;
+                    image.Format = DefaultOutputFormat;
                 }
+
+                var jobData = new JobData(outputMimeType);
+
+                logger.Info("Processing: " + sw.ElapsedMilliseconds);
+                await this.ProcessThumbnailItems(message.Items, cache, image, jobData, cancellationToken);
+                logger.Info("ProcessingComplete: " + sw.ElapsedMilliseconds);
             }
 
             logger.Info("Disposed: " + sw.ElapsedMilliseconds);
@@ -119,6 +115,26 @@
                     }
                 }
             }
+        }
+
+        private async Task<MagickImage> OpenImageAsync(ICloudBlockBlob input, CancellationToken cancellationToken, ILogger logger, Stopwatch sw)
+        {
+            // Magick.NET doesn't read from the blob stream correctly, so we download the entire blob first to a buffer and read from there.
+            // The buffer only exists for a short period in this scope, lessening memory pressure.
+            byte[] buffer;
+            using (var inputStream = await input.OpenReadAsync(cancellationToken))
+            {
+                logger.Info("OpenStream: " + sw.ElapsedMilliseconds);
+                buffer = new byte[inputStream.Length];
+                using (var ms = new MemoryStream(buffer))
+                {
+                    await inputStream.CopyToAsync(ms, buffer.Length, cancellationToken);
+                }
+
+                logger.Info("ReadData: " + sw.ElapsedMilliseconds);
+            }
+
+            return new MagickImage(buffer);
         }
 
         private async Task ProcessThumbnailItems(
