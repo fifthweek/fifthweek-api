@@ -40,7 +40,7 @@
 
                 return request.CreateErrorResponse(
                         HttpStatusCode.InternalServerError,
-                        "An error occured and could not be reported: " + identifier);
+                        "An error occurred and could not be reported: " + identifier);
             }
 
             if (exception is RecoverableException)
@@ -92,7 +92,7 @@
             catch (Exception t)
             {
                 System.Diagnostics.Trace.TraceError("Failed to report errors: " + t);
-                context.SetError("internal_error", "An error occured and could not be reported: " + identifier);
+                context.SetError("internal_error", "An error occurred and could not be reported: " + identifier);
             }
         }
 

@@ -44,7 +44,7 @@
         [TestMethod]
         public async Task ItShouldRetryOnTimeout()
         {
-            Assert.IsTrue(this.target.IsTransient(new TimeoutException("A timeout occured")));
+            Assert.IsTrue(this.target.IsTransient(new TimeoutException("A timeout occurred")));
         }
 
         [TestMethod]

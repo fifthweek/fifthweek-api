@@ -43,7 +43,7 @@
                 if (this.transientErrorDetectionStrategy.IsTransient(t))
                 {
                     this.exceptionHandler.ReportExceptionAsync(
-                        new TransientErrorException("A transient error occured while checking SQL Azure availability.", t));
+                        new TransientErrorException("A transient error occurred while checking SQL Azure availability.", t));
                 }
                 else
                 {

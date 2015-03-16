@@ -32,7 +32,7 @@
             }
             else
             {
-                sb.AppendLine("An exception occured:");
+                sb.AppendLine("An exception occurred:");
                 sb.Append("```");
                 sb.Append(TruncateError(exception.ToString()));
                 sb.Append("```");

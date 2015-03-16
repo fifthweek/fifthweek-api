@@ -23,7 +23,7 @@
 
             return this.sendEmailService.SendEmailAsync(
                 developer == null ? Constants.ErrorEmailAddress : developer.FifthweekEmail,
-                "An error occured: " + identifier,
+                "An error occurred: " + identifier,
                 t.ToString());
         }
     }
