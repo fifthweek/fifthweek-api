@@ -30,5 +30,23 @@
         public bool ScheduledByQueue { get; private set; }
 
         public DateTime LiveDate { get; private set; }
+
+        [Optional]
+        public string FileName { get; private set; }
+
+        [Optional]
+        public string FileExtension { get; private set; }
+
+        [Optional]
+        public long? FileSize { get; private set; }
+
+        [Optional]
+        public string ImageName { get; private set; }
+
+        [Optional]
+        public string ImageExtension { get; private set; }
+
+        [Optional]
+        public long? ImageSize { get; private set; }
     }
 }

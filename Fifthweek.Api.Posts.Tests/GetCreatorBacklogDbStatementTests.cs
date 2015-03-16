@@ -23,6 +23,7 @@
 
     using Moq;
 
+    [TestClass]
     public class GetCreatorBacklogDbStatementTests : PersistenceTestsBase
     {
         private static readonly UserId UserId = new UserId(Guid.NewGuid());
@@ -30,6 +31,9 @@
         private static readonly Comment Comment = new Comment("Hey guys!");
         private static readonly Random Random = new Random();
         private static readonly DateTime Now = DateTime.UtcNow;
+        private static readonly string FileName = "FileName";
+        private static readonly string FileExtension = "FileExtension";
+        private static readonly long FileSize = 1024;
         private static readonly IReadOnlyList<BacklogPost> SortedBacklogPosts = GetSortedBacklogPosts().ToList();
 
         private Mock<IFifthweekDbConnectionFactory> connectionFactory;
@@ -110,7 +114,13 @@
                     // Non required fields.
                     _.Comment = null;
                     _.FileId = null;
+                    _.FileName = null;
+                    _.FileExtension = null;
+                    _.FileSize = null;
                     _.ImageId = null;
+                    _.ImageName = null;
+                    _.ImageExtension = null;
+                    _.ImageSize = null;
                     _.CollectionId = null;
                 });
 
@@ -249,6 +259,9 @@
                     var file = FileTests.UniqueEntity(Random);
                     file.Id = fileId.Value;
                     file.UserId = UserId.Value;
+                    file.FileNameWithoutExtension = FileName;
+                    file.FileExtension = FileExtension;
+                    file.BlobSizeBytes = FileSize;
                     return file;
                 });
 
@@ -289,13 +302,19 @@
                                 i % 3 == 1 ? new FileId(Guid.NewGuid()) : null,
                                 i % 3 == 2 ? new FileId(Guid.NewGuid()) : null,
                                 i % 2 == 0,
-                                liveDate));
+                                liveDate,
+                                i % 3 == 1 ? FileName : null,
+                                i % 3 == 1 ? FileExtension : null,
+                                i % 3 == 1 ? FileSize : (long?)null,
+                                i % 3 == 2 ? FileName : null,
+                                i % 3 == 2 ? FileExtension : null,
+                                i % 3 == 2 ? FileSize : (long?)null));
                         }
                     }
                 }
             }
 
-            return result.OrderByDescending(_ => _.LiveDate).ThenByDescending(_ => _.ScheduledByQueue);
+            return result.OrderBy(_ => _.LiveDate).ThenByDescending(_ => _.ScheduledByQueue);
         }
     }
 }

@@ -63,7 +63,7 @@
         public async Task WhenGettingCreatorBacklog_ItShouldReturnResultFromCreatorBacklogQuery()
         {
             var query = new GetCreatorBacklogQuery(Requester, UserId);
-            var queryResult = new[] { new GetCreatorBacklogQueryResult(PostId, ChannelId, CollectionId, new Comment(""), null, null, false, DateTime.UtcNow) };
+            var queryResult = new[] { new GetCreatorBacklogQueryResult(PostId, ChannelId, CollectionId, new Comment(""), null, null, null, null, false, DateTime.UtcNow) };
 
             this.requesterContext.Setup(_ => _.GetRequester()).Returns(Requester);
             this.getCreatorBacklog.Setup(_ => _.HandleAsync(query)).ReturnsAsync(queryResult);
@@ -85,7 +85,7 @@
         {
             var query = new GetCreatorNewsfeedQuery(Requester, UserId, NonNegativeInt.Parse(10), PositiveInt.Parse(5));
             var requestData = new CreatorNewsfeedPaginationData { Count = 5, StartIndex = 10 };
-            var queryResult = new[] { new GetCreatorNewsfeedQueryResult(PostId, ChannelId, CollectionId, new Comment(""), null, null, DateTime.UtcNow) };
+            var queryResult = new[] { new GetCreatorNewsfeedQueryResult(PostId, ChannelId, CollectionId, new Comment(""), null, null, null, null, DateTime.UtcNow) };
 
             this.requesterContext.Setup(_ => _.GetRequester()).Returns(Requester);
             this.getCreatorNewsfeed.Setup(_ => _.HandleAsync(query)).ReturnsAsync(queryResult);

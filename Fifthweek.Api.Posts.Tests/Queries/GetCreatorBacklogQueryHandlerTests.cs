@@ -29,6 +29,9 @@
         private static readonly Requester Requester = Requester.Authenticated(UserId);
         private static readonly Comment Comment = new Comment("Hey guys!");
         private static readonly DateTime Now = DateTime.UtcNow;
+        private static readonly string FileName = "FileName";
+        private static readonly string FileExtension = "FileExtension";
+        private static readonly long FileSize = 1024;
         private static readonly IReadOnlyList<BacklogPost> SortedBacklogPosts = GetSortedBacklogPosts().ToList();
 
         private Mock<IRequesterSecurity> requesterSecurity;
@@ -113,11 +116,17 @@
                 if (item.Input.FileId != null)
                 {
                     Assert.AreEqual(item.Input.FileId, item.Output.File.FileId);
+                    Assert.AreEqual(item.Input.FileName, item.Output.FileSource.FileName);
+                    Assert.AreEqual(item.Input.FileExtension, item.Output.FileSource.FileExtension);
+                    Assert.AreEqual(item.Input.FileSize, item.Output.FileSource.Size);
                 }
 
                 if (item.Input.ImageId != null)
                 {
                     Assert.AreEqual(item.Input.ImageId, item.Output.Image.FileId);
+                    Assert.AreEqual(item.Input.ImageName, item.Output.ImageSource.FileName);
+                    Assert.AreEqual(item.Input.ImageExtension, item.Output.ImageSource.FileExtension);
+                    Assert.AreEqual(item.Input.ImageSize, item.Output.ImageSource.Size);
                 }
 
                 Assert.AreEqual(item.Input.PostId, item.Output.PostId);
@@ -158,13 +167,19 @@
                                 i % 3 == 1 ? new FileId(Guid.NewGuid()) : null,
                                 i % 3 == 2 ? new FileId(Guid.NewGuid()) : null,
                                 i % 2 == 0,
-                                liveDate));
+                                liveDate,
+                                i % 3 == 1 ? FileName : null,
+                                i % 3 == 1 ? FileExtension : null,
+                                i % 3 == 1 ? FileSize : (long?)null,
+                                i % 3 == 2 ? FileName : null,
+                                i % 3 == 2 ? FileExtension : null,
+                                i % 3 == 2 ? FileSize : (long?)null));
                         }
                     }
                 }
             }
 
-            return result.OrderByDescending(_ => _.LiveDate).ThenByDescending(_ => _.ScheduledByQueue);
+            return result.OrderBy(_ => _.LiveDate).ThenByDescending(_ => _.ScheduledByQueue);
         }
     }
 }

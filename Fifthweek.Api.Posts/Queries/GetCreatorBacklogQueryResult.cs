@@ -25,7 +25,13 @@
         public FileInformation File { get; private set; }
 
         [Optional]
+        public FileSourceInformation FileSource { get; private set; }
+
+        [Optional]
         public FileInformation Image { get; private set; }
+
+        [Optional]
+        public FileSourceInformation ImageSource { get; private set; }
 
         public bool ScheduledByQueue { get; private set; }
 

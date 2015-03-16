@@ -17,15 +17,19 @@
     public partial class GetCreatorBacklogDbStatement : IGetCreatorBacklogDbStatement
     {
         private static readonly string Sql = string.Format(
-          @"SELECT    post.{1} AS PostId, {2}, {4}, {5}, {6}, {7}, {8}, {3}
+          @"SELECT    post.{1} AS PostId, {2}, {4}, {5}, {6}, {7}, {8}, {3}, [file].{17} as FileName, [file].{18} as FileExtension, [file].{19} as FileSize, image.{17} as ImageName, image.{18} as ImageExtension, image.{19} as ImageSize
             FROM        {0} post
             INNER JOIN  {9} channel
                 ON      post.{2} = channel.{10}
             INNER JOIN  {12} subscription
                 ON      channel.{11} = subscription.{13}
+            LEFT OUTER JOIN {15} [file]
+                ON      post.{6} = [file].{16}
+            LEFT OUTER JOIN {15} image
+                ON      post.{7} = image.{16}
             WHERE       post.{3} > @Now
             AND         subscription.{14} = @CreatorId
-            ORDER BY    post.{3} DESC, post.{8} DESC",
+            ORDER BY    post.{3} ASC, post.{8} DESC",
           Post.Table,
           Post.Fields.Id,
           Post.Fields.ChannelId,
@@ -40,7 +44,12 @@
           Channel.Fields.SubscriptionId,
           Subscription.Table,
           Subscription.Fields.Id,
-          Subscription.Fields.CreatorId);
+          Subscription.Fields.CreatorId,
+          File.Table,
+          File.Fields.Id,
+          File.Fields.FileNameWithoutExtension,
+          File.Fields.FileExtension,
+          File.Fields.BlobSizeBytes);
 
         private readonly IFifthweekDbConnectionFactory connectionFactory;
 

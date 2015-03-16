@@ -64,7 +64,9 @@
                     post.CollectionId,
                     post.Comment,
                     file,
+                    file == null ? null : new FileSourceInformation(post.FileName, post.FileExtension, post.FileSize ?? 0),
                     image,
+                    image == null ? null : new FileSourceInformation(post.ImageName, post.ImageExtension, post.ImageSize ?? 0),
                     post.LiveDate);
 
                 result.Add(completePost);
