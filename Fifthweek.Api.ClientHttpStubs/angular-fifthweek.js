@@ -277,6 +277,7 @@ angular.module('webApp').factory('postsStub',
     //     fileSource: { /* optional */
     //       fileName: '',
     //       fileExtension: '',
+    //       contentType: '',
     //       size: 0
     //     },
     //     image: { /* optional */
@@ -287,6 +288,7 @@ angular.module('webApp').factory('postsStub',
     //     imageSource: { /* optional */
     //       fileName: '',
     //       fileExtension: '',
+    //       contentType: '',
     //       size: 0
     //     },
     //     scheduledByQueue: false,
@@ -316,6 +318,7 @@ angular.module('webApp').factory('postsStub',
     //     fileSource: { /* optional */
     //       fileName: '',
     //       fileExtension: '',
+    //       contentType: '',
     //       size: 0
     //     },
     //     image: { /* optional */
@@ -326,6 +329,7 @@ angular.module('webApp').factory('postsStub',
     //     imageSource: { /* optional */
     //       fileName: '',
     //       fileExtension: '',
+    //       contentType: '',
     //       size: 0
     //     },
     //     liveDate: '2015-12-25T14:45:05Z'
