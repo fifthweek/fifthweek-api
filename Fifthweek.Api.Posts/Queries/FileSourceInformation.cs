@@ -9,6 +9,8 @@
 
         public string FileExtension { get; private set; }
 
+        public string ContentType { get; private set; }
+
         public long Size { get; private set; }
     }
 }

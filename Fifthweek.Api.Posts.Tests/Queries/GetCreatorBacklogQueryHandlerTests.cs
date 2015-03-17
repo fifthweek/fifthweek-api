@@ -32,11 +32,13 @@
         private static readonly string FileName = "FileName";
         private static readonly string FileExtension = "FileExtension";
         private static readonly long FileSize = 1024;
+        private static readonly string ContentType = "ContentType";
         private static readonly IReadOnlyList<BacklogPost> SortedBacklogPosts = GetSortedBacklogPosts().ToList();
 
         private Mock<IRequesterSecurity> requesterSecurity;
         private Mock<IGetCreatorBacklogDbStatement> getCreatorBacklogDbStatement;
         private Mock<IFileInformationAggregator> fileInformationAggregator;
+        private Mock<IMimeTypeMap> mimeTypeMap;
 
         private GetCreatorBacklogQueryHandler target;
 
@@ -48,11 +50,15 @@
             this.requesterSecurity = new Mock<IRequesterSecurity>();
             this.getCreatorBacklogDbStatement = new Mock<IGetCreatorBacklogDbStatement>(MockBehavior.Strict);
             this.fileInformationAggregator = new Mock<IFileInformationAggregator>();
+            this.mimeTypeMap = new Mock<IMimeTypeMap>();
+
+            this.mimeTypeMap.Setup(v => v.GetMimeType(FileExtension)).Returns(ContentType);
 
             this.target = new GetCreatorBacklogQueryHandler(
                 this.requesterSecurity.Object, 
                 this.getCreatorBacklogDbStatement.Object,
-                this.fileInformationAggregator.Object);
+                this.fileInformationAggregator.Object,
+                this.mimeTypeMap.Object);
         }
 
         [TestMethod]
@@ -119,6 +125,7 @@
                     Assert.AreEqual(item.Input.FileName, item.Output.FileSource.FileName);
                     Assert.AreEqual(item.Input.FileExtension, item.Output.FileSource.FileExtension);
                     Assert.AreEqual(item.Input.FileSize, item.Output.FileSource.Size);
+                    Assert.AreEqual(ContentType, item.Output.FileSource.ContentType);
                 }
 
                 if (item.Input.ImageId != null)
@@ -127,6 +134,7 @@
                     Assert.AreEqual(item.Input.ImageName, item.Output.ImageSource.FileName);
                     Assert.AreEqual(item.Input.ImageExtension, item.Output.ImageSource.FileExtension);
                     Assert.AreEqual(item.Input.ImageSize, item.Output.ImageSource.Size);
+                    Assert.AreEqual(ContentType, item.Output.ImageSource.ContentType);
                 }
 
                 Assert.AreEqual(item.Input.PostId, item.Output.PostId);

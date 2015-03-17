@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Linq;
 
-//// Generated on 16/03/2015 15:57:13 (UTC)
-//// Mapped solution in 22.84s
+//// Generated on 17/03/2015 10:03:01 (UTC)
+//// Mapped solution in 8.5s
 
 
 namespace Fifthweek.Api.Posts.Commands
@@ -1236,7 +1236,8 @@ namespace Fifthweek.Api.Posts.Queries
         public GetCreatorBacklogQueryHandler(
             Fifthweek.Api.Identity.Shared.Membership.IRequesterSecurity requesterSecurity,
             Fifthweek.Api.Posts.IGetCreatorBacklogDbStatement getCreatorBacklogDbStatement,
-            Fifthweek.Api.FileManagement.Shared.IFileInformationAggregator fileInformationAggregator)
+            Fifthweek.Api.FileManagement.Shared.IFileInformationAggregator fileInformationAggregator,
+            Fifthweek.Shared.IMimeTypeMap mimeTypeMap)
         {
             if (requesterSecurity == null)
             {
@@ -1253,9 +1254,15 @@ namespace Fifthweek.Api.Posts.Queries
                 throw new ArgumentNullException("fileInformationAggregator");
             }
 
+            if (mimeTypeMap == null)
+            {
+                throw new ArgumentNullException("mimeTypeMap");
+            }
+
             this.requesterSecurity = requesterSecurity;
             this.getCreatorBacklogDbStatement = getCreatorBacklogDbStatement;
             this.fileInformationAggregator = fileInformationAggregator;
+            this.mimeTypeMap = mimeTypeMap;
         }
     }
 }
@@ -1335,7 +1342,8 @@ namespace Fifthweek.Api.Posts.Queries
         public GetCreatorNewsfeedQueryHandler(
             Fifthweek.Api.Identity.Shared.Membership.IRequesterSecurity requesterSecurity,
             Fifthweek.Api.Posts.IGetCreatorNewsfeedDbStatement getCreatorNewsfeedDbStatement,
-            Fifthweek.Api.FileManagement.Shared.IFileInformationAggregator fileInformationAggregator)
+            Fifthweek.Api.FileManagement.Shared.IFileInformationAggregator fileInformationAggregator,
+            Fifthweek.Shared.IMimeTypeMap mimeTypeMap)
         {
             if (requesterSecurity == null)
             {
@@ -1352,9 +1360,15 @@ namespace Fifthweek.Api.Posts.Queries
                 throw new ArgumentNullException("fileInformationAggregator");
             }
 
+            if (mimeTypeMap == null)
+            {
+                throw new ArgumentNullException("mimeTypeMap");
+            }
+
             this.requesterSecurity = requesterSecurity;
             this.getCreatorNewsfeedDbStatement = getCreatorNewsfeedDbStatement;
             this.fileInformationAggregator = fileInformationAggregator;
+            this.mimeTypeMap = mimeTypeMap;
         }
     }
 }
@@ -2685,6 +2699,7 @@ namespace Fifthweek.Api.Posts.Queries
         public FileSourceInformation(
             System.String fileName,
             System.String fileExtension,
+            System.String contentType,
             System.Int64 size)
         {
             if (fileName == null)
@@ -2697,6 +2712,11 @@ namespace Fifthweek.Api.Posts.Queries
                 throw new ArgumentNullException("fileExtension");
             }
 
+            if (contentType == null)
+            {
+                throw new ArgumentNullException("contentType");
+            }
+
             if (size == null)
             {
                 throw new ArgumentNullException("size");
@@ -2704,6 +2724,7 @@ namespace Fifthweek.Api.Posts.Queries
 
             this.FileName = fileName;
             this.FileExtension = fileExtension;
+            this.ContentType = contentType;
             this.Size = size;
         }
     }
@@ -4810,7 +4831,7 @@ namespace Fifthweek.Api.Posts.Queries
     {
         public override string ToString()
         {
-            return string.Format("FileSourceInformation(\"{0}\", \"{1}\", {2})", this.FileName == null ? "null" : this.FileName.ToString(), this.FileExtension == null ? "null" : this.FileExtension.ToString(), this.Size == null ? "null" : this.Size.ToString());
+            return string.Format("FileSourceInformation(\"{0}\", \"{1}\", \"{2}\", {3})", this.FileName == null ? "null" : this.FileName.ToString(), this.FileExtension == null ? "null" : this.FileExtension.ToString(), this.ContentType == null ? "null" : this.ContentType.ToString(), this.Size == null ? "null" : this.Size.ToString());
         }
         
         public override bool Equals(object obj)
@@ -4840,6 +4861,7 @@ namespace Fifthweek.Api.Posts.Queries
                 int hashCode = 0;
                 hashCode = (hashCode * 397) ^ (this.FileName != null ? this.FileName.GetHashCode() : 0);
                 hashCode = (hashCode * 397) ^ (this.FileExtension != null ? this.FileExtension.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.ContentType != null ? this.ContentType.GetHashCode() : 0);
                 hashCode = (hashCode * 397) ^ (this.Size != null ? this.Size.GetHashCode() : 0);
                 return hashCode;
             }
@@ -4853,6 +4875,11 @@ namespace Fifthweek.Api.Posts.Queries
             }
         
             if (!object.Equals(this.FileExtension, other.FileExtension))
+            {
+                return false;
+            }
+        
+            if (!object.Equals(this.ContentType, other.ContentType))
             {
                 return false;
             }
