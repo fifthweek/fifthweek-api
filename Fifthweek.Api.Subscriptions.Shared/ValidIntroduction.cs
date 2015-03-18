@@ -16,7 +16,7 @@
 
         [SuppressMessage("StyleCop.CSharp.OrderingRules", "SA1202:ElementsMustBeOrderedByAccess", Justification = "Parse method requires other private static members to be initialized.")]
         public static readonly ValidIntroduction Default = Parse(
-            "Hello! Thinking of subscribing? Awesome! Subscriptions allow me to produce more of my awesome creations for all you lovely people to see here!");
+            "Welcome to my new exclusive series. More of your favourites released every week, available to subscribers only.");
 
         private ValidIntroduction(string value)
             : base(value)
