@@ -5,5 +5,7 @@
         long Length { get; }
 
         string ContentType { get; set; }
+
+        string CacheControl { get; set; }
     }
 }

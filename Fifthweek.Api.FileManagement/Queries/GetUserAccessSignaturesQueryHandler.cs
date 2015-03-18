@@ -27,7 +27,7 @@
             }
 
             var now = DateTime.UtcNow;
-            var expiry = now.AddHours(1);
+            var expiry = this.GetNextExpiry(now);
 
             // Get public files access information.
             var publicSignature = await this.blobService.GetBlobContainerSharedAccessInformationForReadingAsync(
@@ -52,11 +52,36 @@
                 privateSignatures.AddRange(subscribedCreatorsInformation);
             }
 
-            var timeToLiveSeconds = (int)(expiry - now).TotalSeconds;
+            // Doing a ceiling here means that the client may wait a fraction longer
+            // than required, which is fine. If we did a floor, then the client may
+            // request new signatures fractionally early, and get the same set back.
+            var timeToLiveSeconds = (int)Math.Ceiling((expiry - now).TotalSeconds);
             return new UserAccessSignatures(
                 timeToLiveSeconds,
                 publicSignature,
                 privateSignatures);
+        }
+
+        internal DateTime GetNextExpiry(DateTime now)
+        {
+            var expiry = this.RoundUp(now, FileManagement.Constants.ReadSignatureTimeSpan);
+
+            if ((expiry - now) <= FileManagement.Constants.ReadSignatureMinimumExpiryTime)
+            {
+                expiry = expiry.Add(FileManagement.Constants.ReadSignatureTimeSpan);
+            }
+
+            return expiry;
+        }
+
+        private DateTime RoundUp(DateTime dt, TimeSpan d)
+        {
+            if (dt.Kind != DateTimeKind.Utc)
+            {
+                throw new InvalidOperationException("Expiry time must be in UTC");
+            }
+
+            return new DateTime(((dt.Ticks + d.Ticks - 1) / d.Ticks) * d.Ticks, DateTimeKind.Utc);
         }
     }
 }

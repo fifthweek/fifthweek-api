@@ -1,5 +1,6 @@
 ﻿namespace Fifthweek.Api.Core
 {
+    using System;
     using System.Configuration;
     using System.Net.Mail;
 

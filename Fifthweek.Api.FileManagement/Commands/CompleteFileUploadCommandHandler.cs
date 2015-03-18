@@ -32,8 +32,13 @@
 
             var mimeType = this.mimeTypeMap.GetMimeType(file.FileExtension);
 
+            // We set the cache to the maximum time a SAS URL needs to be valid.
+            var timeSpan = FileManagement.Constants.ReadSignatureTimeSpan
+                           + FileManagement.Constants.ReadSignatureMinimumExpiryTime;
+
             var blobLocation = this.blobLocationGenerator.GetBlobLocation(userId, command.FileId, file.Purpose);
-            var blobLength = await this.blobService.GetBlobLengthAndSetContentTypeAsync(blobLocation.ContainerName, blobLocation.BlobName, mimeType);
+            var blobLength = await this.blobService.GetBlobLengthAndSetPropertiesAsync(
+                blobLocation.ContainerName, blobLocation.BlobName, mimeType, timeSpan);
 
             await this.setFileUploadComplete.ExecuteAsync(command.FileId, blobLength, DateTime.UtcNow);
 

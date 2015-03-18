@@ -31,5 +31,18 @@
                 this.blobProperties.ContentType = value;
             }
         }
+
+        public string CacheControl 
+        {
+            get
+            {
+                return this.blobProperties.CacheControl;
+            }
+
+            set
+            {
+                this.blobProperties.CacheControl = value;
+            }
+        }
     }
 }

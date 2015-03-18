@@ -5,6 +5,7 @@ namespace Fifthweek.Api.Azure.Tests
 {
     using System.Threading.Tasks;
 
+    using Fifthweek.Api.Core;
     using Fifthweek.Azure;
 
     using Microsoft.WindowsAzure.Storage.Blob;
@@ -16,15 +17,19 @@ namespace Fifthweek.Api.Azure.Tests
     {
         private static readonly string ContainerName = "testContainer";
         private static readonly string BlobName = "testBlob";
-        private static readonly string Uri = "http://uri/";
+        private static readonly string Uri = "http://uri/container/blob";
+        private static readonly string CdnDomain = "cdndomain";
+        private static readonly string CdnUri = "http://cdndomain/container/blob";
         private static readonly string Token = "token";
         private static readonly string ContentType = "test/fifthweek";
         private static readonly int BlobLength = 1111;
+        private static readonly TimeSpan MaxAge = TimeSpan.FromMinutes(33);
 
         private Mock<ICloudStorageAccount> cloudStorageAccount;
         private Mock<ICloudBlobContainer> cloudBlobContainer;
         private Mock<ICloudBlobClient> cloudBlobClient;
         private Mock<ICloudBlockBlob> cloudBlockBlob;
+        private Mock<IAzureConfiguration> azureConfiguration;
 
         private BlobService target;
 
@@ -35,8 +40,11 @@ namespace Fifthweek.Api.Azure.Tests
             this.cloudBlobClient = new Mock<ICloudBlobClient>();
             this.cloudBlobContainer = new Mock<ICloudBlobContainer>();
             this.cloudBlockBlob = new Mock<ICloudBlockBlob>();
+            this.azureConfiguration = new Mock<IAzureConfiguration>();
 
-            this.target = new BlobService(this.cloudStorageAccount.Object);
+            this.azureConfiguration.Setup(v => v.CdnDomain).Returns(CdnDomain);
+
+            this.target = new BlobService(this.cloudStorageAccount.Object, this.azureConfiguration.Object);
         }
 
         [TestMethod]
@@ -149,28 +157,28 @@ namespace Fifthweek.Api.Azure.Tests
             Assert.AreEqual(ContainerName, result.ContainerName);
             Assert.AreEqual(submittedPolicy.SharedAccessExpiryTime, result.Expiry);
             Assert.AreEqual(Token, result.Signature);
-            Assert.AreEqual(Uri, result.Uri);
+            Assert.AreEqual(CdnUri, result.Uri);
         }
 
         [TestMethod]
         [ExpectedException(typeof(ArgumentNullException))]
         public async Task WhenGettingBlobLengthAndSettingContentType_ItShouldCheckContainerNameIsNotNull()
         {
-            await this.target.GetBlobLengthAndSetContentTypeAsync(null, BlobName, ContentType);
+            await this.target.GetBlobLengthAndSetPropertiesAsync(null, BlobName, ContentType, MaxAge);
         }
 
         [TestMethod]
         [ExpectedException(typeof(ArgumentNullException))]
         public async Task WhenGettingBlobLengthAndSettingContentType_ItShouldCheckBlobNameIsNotNull()
         {
-            await this.target.GetBlobLengthAndSetContentTypeAsync(ContainerName, null, ContentType);
+            await this.target.GetBlobLengthAndSetPropertiesAsync(ContainerName, null, ContentType, MaxAge);
         }
 
         [TestMethod]
         [ExpectedException(typeof(ArgumentNullException))]
         public async Task WhenGettingBlobLengthAndSettingContentType_ItShouldCheckContentTypeNameIsNotNull()
         {
-            await this.target.GetBlobLengthAndSetContentTypeAsync(ContainerName, BlobName, null);
+            await this.target.GetBlobLengthAndSetPropertiesAsync(ContainerName, BlobName, null, MaxAge);
         }
 
         [TestMethod]
@@ -186,9 +194,10 @@ namespace Fifthweek.Api.Azure.Tests
 
             this.cloudBlockBlob.Setup(v => v.FetchAttributesAsync()).Returns(Task.FromResult(0)).Verifiable();
             properties.SetupSet(v => v.ContentType = ContentType).Verifiable();
+            properties.SetupSet(v => v.CacheControl = "public, max-age=1980").Verifiable();
             this.cloudBlockBlob.Setup(v => v.SetPropertiesAsync()).Returns(Task.FromResult(0)).Verifiable();
 
-            var result = await this.target.GetBlobLengthAndSetContentTypeAsync(ContainerName, BlobName, ContentType);
+            var result = await this.target.GetBlobLengthAndSetPropertiesAsync(ContainerName, BlobName, ContentType, MaxAge);
 
             this.cloudBlockBlob.Verify();
             properties.Verify();

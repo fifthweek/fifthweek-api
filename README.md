@@ -25,6 +25,7 @@
         SENDGRID_USERNAME=<password>
         SENDGRID_PASSWORD=<email>
 		StorageConnectionString=<DevAzureStorageConnectionString>
+		CDN_DOMAIN = <cdn>
 
 4.  Run the Azure Emulators (required each time you start your machine):
 

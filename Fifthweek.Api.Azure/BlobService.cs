@@ -12,9 +12,12 @@ namespace Fifthweek.Api.Azure
     {
         private readonly ICloudStorageAccount cloudStorageAccount;
 
-        public BlobService(ICloudStorageAccount cloudStorageAccount)
+        private readonly IAzureConfiguration azureConfiguration;
+
+        public BlobService(ICloudStorageAccount cloudStorageAccount, IAzureConfiguration azureConfiguration)
         {
             this.cloudStorageAccount = cloudStorageAccount;
+            this.azureConfiguration = azureConfiguration;
         }
 
         public async Task CreateBlobContainerAsync(string containerName)
@@ -83,10 +86,20 @@ namespace Fifthweek.Api.Azure
 
             var token = container.GetSharedAccessSignature(policy);
 
-            return Task.FromResult(new BlobContainerSharedAccessInformation(containerName, container.Uri.ToString(), token, expiry));
+            var blobUri = container.Uri;
+            var cdnDomain = this.azureConfiguration.CdnDomain;
+            if (string.IsNullOrWhiteSpace(cdnDomain))
+            {
+                throw new InvalidOperationException("CDN domain has not been configured.");
+            }
+
+            var cdnUriBuilder = new UriBuilder(blobUri) { Host = cdnDomain };
+            var cdnUri = cdnUriBuilder.Uri.GetComponents(UriComponents.AbsoluteUri & ~UriComponents.Port, UriFormat.UriEscaped);
+
+            return Task.FromResult(new BlobContainerSharedAccessInformation(containerName, cdnUri, token, expiry));
         }
 
-        public async Task<long> GetBlobLengthAndSetContentTypeAsync(string containerName, string blobName, string contentType)
+        public async Task<long> GetBlobLengthAndSetPropertiesAsync(string containerName, string blobName, string contentType, TimeSpan cacheControlMaxAge)
         {
             containerName.AssertNotNull("containerName");
             blobName.AssertNotNull("blobName");
@@ -97,6 +110,7 @@ namespace Fifthweek.Api.Azure
             var blob = container.GetBlockBlobReference(blobName);
             await blob.FetchAttributesAsync();
             blob.Properties.ContentType = contentType;
+            blob.Properties.CacheControl = "public, max-age=" + (int)cacheControlMaxAge.TotalSeconds;
             await blob.SetPropertiesAsync();
             return blob.Properties.Length;
         }

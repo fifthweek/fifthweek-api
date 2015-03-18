@@ -81,17 +81,19 @@
         [TestMethod]
         public async Task WhenAuthenticated_ItShouldReturnAccessSignaturesForTheUser()
         {
-            var filesInformation = new BlobContainerSharedAccessInformation("files", "uri", "sig", DateTime.UtcNow);
+            var now = DateTime.UtcNow;
+            var expectedExpiry = this.target.GetNextExpiry(now);
+            var filesInformation = new BlobContainerSharedAccessInformation("files", "uri", "sig", expectedExpiry);
 
-            this.blobService.Setup(v => v.GetBlobContainerSharedAccessInformationForReadingAsync(FileManagement.Constants.PublicFileBlobContainerName, It.IsAny<DateTime>()))
+            this.blobService.Setup(v => v.GetBlobContainerSharedAccessInformationForReadingAsync(FileManagement.Constants.PublicFileBlobContainerName, expectedExpiry))
                 .ReturnsAsync(filesInformation);
 
             var userContainerName = "containerName";
             this.blobLocationGenerator.Setup(v => v.GetBlobContainerName(UserId)).Returns(userContainerName);
 
-            var userInformation = new BlobContainerSharedAccessInformation(userContainerName, "useruri", "usersig", DateTime.UtcNow);
+            var userInformation = new BlobContainerSharedAccessInformation(userContainerName, "useruri", "usersig", now);
 
-            this.blobService.Setup(v => v.GetBlobContainerSharedAccessInformationForReadingAsync(userContainerName, It.IsAny<DateTime>()))
+            this.blobService.Setup(v => v.GetBlobContainerSharedAccessInformationForReadingAsync(userContainerName, expectedExpiry))
                 .ReturnsAsync(userInformation);
 
             var result = await this.target.HandleAsync(new GetUserAccessSignaturesQuery(Requester, UserId));
@@ -104,6 +106,37 @@
 
             Assert.AreEqual(UserId, result.PrivateSignatures[0].CreatorId);
             Assert.AreEqual(userInformation, result.PrivateSignatures[0].Information);
+        }
+
+        [TestMethod]
+        public async Task WhenGettingNextExpiry_ItShouldReturnTheNextWholeHourTakingMinimumExpiryIntoAccount()
+        {
+            DateTime result;
+            result = this.target.GetNextExpiry(new DateTime(2015, 3, 18, 10, 00, 00, DateTimeKind.Utc));
+            Assert.AreEqual(new DateTime(2015, 3, 18, 11, 00, 00, DateTimeKind.Utc), result);
+
+            result = this.target.GetNextExpiry(new DateTime(2015, 3, 18, 10, 30, 00, DateTimeKind.Utc));
+            Assert.AreEqual(new DateTime(2015, 3, 18, 11, 00, 00, DateTimeKind.Utc), result);
+
+            result = this.target.GetNextExpiry(new DateTime(2015, 3, 18, 10, 49, 59, DateTimeKind.Utc));
+            Assert.AreEqual(new DateTime(2015, 3, 18, 11, 00, 00, DateTimeKind.Utc), result);
+
+            result = this.target.GetNextExpiry(new DateTime(2015, 3, 18, 10, 50, 00, DateTimeKind.Utc));
+            Assert.AreEqual(new DateTime(2015, 3, 18, 12, 00, 00, DateTimeKind.Utc), result);
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(InvalidOperationException))]
+        public async Task WhenGettingNextExpiry_ItShouldExpectTimesAsUtc()
+        {
+            this.target.GetNextExpiry(new DateTime(2015, 3, 18, 10, 00, 00));
+        }
+
+        [TestMethod]
+        public async Task WhenGettingNextExpiry_ItShouldReturnTimesAsUtc()
+        {
+            var result = this.target.GetNextExpiry(new DateTime(2015, 3, 18, 10, 00, 00, DateTimeKind.Utc));
+            Assert.AreEqual(DateTimeKind.Utc, result.Kind);
         }
     }
 }

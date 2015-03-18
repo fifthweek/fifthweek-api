@@ -94,7 +94,7 @@
             this.blobNameCreator.Setup(v => v.GetBlobLocation(UserId, FileId, Purpose))
                 .Returns(new BlobLocation(ContainerName, BlobName));
 
-            this.blobService.Setup(v => v.GetBlobLengthAndSetContentTypeAsync(ContainerName, BlobName, MimeType))
+            this.blobService.Setup(v => v.GetBlobLengthAndSetPropertiesAsync(ContainerName, BlobName, MimeType, FileManagement.Constants.ReadSignatureTimeSpan + FileManagement.Constants.ReadSignatureMinimumExpiryTime))
                 .ReturnsAsync(BlobSize).Verifiable();
 
             this.setFileUploadComplete.Setup(v => v.ExecuteAsync(FileId, BlobSize, It.IsAny<DateTime>()))
