@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Linq;
 
-//// Generated on 24/02/2015 12:41:32 (UTC)
-//// Mapped solution in 10.66s
+//// Generated on 18/03/2015 15:24:47 (UTC)
+//// Mapped solution in 13.92s
 
 
 namespace Fifthweek.Api.FileManagement
@@ -879,29 +879,28 @@ namespace Fifthweek.Api.FileManagement
 }
 namespace Fifthweek.Api.FileManagement
 {
+    using System;
+    using System.Linq;
     using System.Threading.Tasks;
+    using Fifthweek.Api.Core;
+    using Fifthweek.Api.Identity.Shared.Membership;
+    using Fifthweek.Api.Persistence;
+    using Fifthweek.CodeGeneration;
+    using Dapper;
     using Fifthweek.Api.Azure;
     using Fifthweek.Api.FileManagement.Shared;
-    using Fifthweek.Api.Identity.Shared.Membership;
-    using Fifthweek.CodeGeneration;
+    using Fifthweek.WebJobs.GarbageCollection.Shared;
 
     public partial class FileInformationAggregator 
     {
         public FileInformationAggregator(
-            Fifthweek.Api.Azure.IBlobService blobService,
             Fifthweek.Api.FileManagement.Shared.IBlobLocationGenerator blobLocationGenerator)
         {
-            if (blobService == null)
-            {
-                throw new ArgumentNullException("blobService");
-            }
-
             if (blobLocationGenerator == null)
             {
                 throw new ArgumentNullException("blobLocationGenerator");
             }
 
-            this.blobService = blobService;
             this.blobLocationGenerator = blobLocationGenerator;
         }
     }

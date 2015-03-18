@@ -11,7 +11,7 @@
     [AutoConstructor]
     public partial class FileInformationAggregator : IFileInformationAggregator
     {
-        private readonly IBlobService blobService;
+        ////private readonly IBlobService blobService;
         private readonly IBlobLocationGenerator blobLocationGenerator;
 
         public async Task<FileInformation> GetFileInformationAsync(UserId fileOwnerId, FileId fileId, string filePurpose)
@@ -24,12 +24,11 @@
                 fileId,
                 filePurpose);
 
-            var blobInformation = await this.blobService.GetBlobInformationAsync(blobLocation.ContainerName, blobLocation.BlobName);
+            ////var blobInformation = await this.blobService.GetBlobInformationAsync(blobLocation.ContainerName, blobLocation.BlobName);
 
             return new FileInformation(
                 fileId,
-                blobInformation.ContainerName,
-                blobInformation.Uri);
+                blobLocation.ContainerName);
         }
     }
 }

@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Linq;
 
-//// Generated on 13/03/2015 19:28:46 (UTC)
-//// Mapped solution in 34.59s
+//// Generated on 18/03/2015 15:15:05 (UTC)
+//// Mapped solution in 28.16s
 
 namespace Fifthweek.Api.FileManagement.Shared
 {
@@ -111,8 +111,7 @@ namespace Fifthweek.Api.FileManagement.Shared
     {
         public FileInformation(
             Fifthweek.Api.FileManagement.Shared.FileId fileId,
-            System.String containerName,
-            System.String uri)
+            System.String containerName)
         {
             if (fileId == null)
             {
@@ -124,14 +123,8 @@ namespace Fifthweek.Api.FileManagement.Shared
                 throw new ArgumentNullException("containerName");
             }
 
-            if (uri == null)
-            {
-                throw new ArgumentNullException("uri");
-            }
-
             this.FileId = fileId;
             this.ContainerName = containerName;
-            this.Uri = uri;
         }
     }
 }
@@ -260,7 +253,7 @@ namespace Fifthweek.Api.FileManagement.Shared
     {
         public override string ToString()
         {
-            return string.Format("FileInformation({0}, \"{1}\", \"{2}\")", this.FileId == null ? "null" : this.FileId.ToString(), this.ContainerName == null ? "null" : this.ContainerName.ToString(), this.Uri == null ? "null" : this.Uri.ToString());
+            return string.Format("FileInformation({0}, \"{1}\")", this.FileId == null ? "null" : this.FileId.ToString(), this.ContainerName == null ? "null" : this.ContainerName.ToString());
         }
         
         public override bool Equals(object obj)
@@ -290,7 +283,6 @@ namespace Fifthweek.Api.FileManagement.Shared
                 int hashCode = 0;
                 hashCode = (hashCode * 397) ^ (this.FileId != null ? this.FileId.GetHashCode() : 0);
                 hashCode = (hashCode * 397) ^ (this.ContainerName != null ? this.ContainerName.GetHashCode() : 0);
-                hashCode = (hashCode * 397) ^ (this.Uri != null ? this.Uri.GetHashCode() : 0);
                 return hashCode;
             }
         }
@@ -303,11 +295,6 @@ namespace Fifthweek.Api.FileManagement.Shared
             }
         
             if (!object.Equals(this.ContainerName, other.ContainerName))
-            {
-                return false;
-            }
-        
-            if (!object.Equals(this.Uri, other.Uri))
             {
                 return false;
             }

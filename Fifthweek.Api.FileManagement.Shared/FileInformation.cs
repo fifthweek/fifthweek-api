@@ -9,7 +9,5 @@
         public FileId FileId { get; private set; }
 
         public string ContainerName { get; private set; }
-
-        public string Uri { get; private set; }
     }
 }

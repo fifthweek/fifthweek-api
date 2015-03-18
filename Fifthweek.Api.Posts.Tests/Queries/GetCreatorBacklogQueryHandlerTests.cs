@@ -112,7 +112,7 @@
                 .ReturnsAsync(SortedBacklogPosts);
 
             this.fileInformationAggregator.Setup(v => v.GetFileInformationAsync(UserId, It.IsAny<FileId>(), It.IsAny<string>()))
-                .Returns<UserId, FileId, string>((u, f, p) => Task.FromResult(new FileInformation(f, string.Empty, string.Empty)));
+                .Returns<UserId, FileId, string>((u, f, p) => Task.FromResult(new FileInformation(f, string.Empty)));
 
             var result = await this.target.HandleAsync(new GetCreatorBacklogQuery(Requester, UserId));
 
