@@ -25,11 +25,12 @@
             }
 
             userId.AssertNotNull("userId");
-            return new BlobLocation(this.GetBlobContainerName(userId), fileId.Value.ToString("N"));
+            return new BlobLocation(this.GetBlobContainerName(userId), fileId.Value.EncodeGuid());
         }
 
         public string GetBlobContainerName(UserId userId)
         {
+            // https://msdn.microsoft.com/en-us/library/azure/dd135715.aspx
             return userId.Value.ToString("N");
         }
     }

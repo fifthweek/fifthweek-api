@@ -82,6 +82,8 @@
             foreach (var filePurpose in FilePurposes.GetAll())
             {
                 this.ItShouldGenerateAUrlFriendlyName(filePurpose.Name);
+                this.ItShouldGenerateGuidStyleContainerNames(filePurpose.Name, filePurpose.IsPublic);
+                this.ItShouldGenerateEncodeStyleBlobNames(filePurpose.Name);
                 this.ItShouldGenerateTheSameOutputGivenTheSameInputs(filePurpose.Name);
                 this.ItShouldGenerateDifferentOutputsGivenDifferentInputs(filePurpose.Name, filePurpose.IsPublic);
                 this.ItShouldGeneratePublicAndPrivateUrlsCorrectly(filePurpose.Name, filePurpose.IsPublic);
@@ -97,6 +99,21 @@
 
             Assert.AreEqual(encodedContainerName, result.ContainerName);
             Assert.AreEqual(encodedBlobName, result.BlobName);
+        }
+
+        private void ItShouldGenerateGuidStyleContainerNames(string purpose, bool isPublic)
+        {
+            if (!isPublic)
+            {
+                var result = this.target.GetBlobLocation(this.userId, this.fileId, purpose);
+                Assert.AreEqual(this.userId.Value.ToString("N"), result.ContainerName);
+            }
+        }
+
+        private void ItShouldGenerateEncodeStyleBlobNames(string purpose)
+        {
+            var result = this.target.GetBlobLocation(this.userId, this.fileId, purpose);
+            Assert.AreEqual(this.fileId.Value.EncodeGuid(), result.BlobName);
         }
 
         private void ItShouldGenerateTheSameOutputGivenTheSameInputs(string purpose)
