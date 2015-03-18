@@ -151,8 +151,7 @@ angular.module('webApp').factory('accountSettingsStub',
     //   email: '',
     //   profileImage: { /* optional */
     //     fileId: 'Base64Guid',
-    //     containerName: '',
-    //     uri: ''
+    //     containerName: ''
     //   }
     // }
     service.get = function(userId) {
@@ -271,8 +270,7 @@ angular.module('webApp').factory('postsStub',
     //     comment: '', /* optional */
     //     file: { /* optional */
     //       fileId: 'Base64Guid',
-    //       containerName: '',
-    //       uri: ''
+    //       containerName: ''
     //     },
     //     fileSource: { /* optional */
     //       fileName: '',
@@ -282,8 +280,7 @@ angular.module('webApp').factory('postsStub',
     //     },
     //     image: { /* optional */
     //       fileId: 'Base64Guid',
-    //       containerName: '',
-    //       uri: ''
+    //       containerName: ''
     //     },
     //     imageSource: { /* optional */
     //       fileName: '',
@@ -312,8 +309,7 @@ angular.module('webApp').factory('postsStub',
     //     comment: '', /* optional */
     //     file: { /* optional */
     //       fileId: 'Base64Guid',
-    //       containerName: '',
-    //       uri: ''
+    //       containerName: ''
     //     },
     //     fileSource: { /* optional */
     //       fileName: '',
@@ -323,8 +319,7 @@ angular.module('webApp').factory('postsStub',
     //     },
     //     image: { /* optional */
     //       fileId: 'Base64Guid',
-    //       containerName: '',
-    //       uri: ''
+    //       containerName: ''
     //     },
     //     imageSource: { /* optional */
     //       fileName: '',
@@ -497,8 +492,7 @@ angular.module('webApp').factory('subscriptionStub',
     //   creationDate: '2015-12-25T14:45:05Z',
     //   headerImage: { /* optional */
     //     fileId: 'Base64Guid',
-    //     containerName: '',
-    //     uri: ''
+    //     containerName: ''
     //   },
     //   video: '', /* optional */
     //   description: '' /* optional */
@@ -671,8 +665,7 @@ angular.module('webApp').factory('userStateStub',
     //     email: '',
     //     profileImage: { /* optional */
     //       fileId: 'Base64Guid',
-    //       containerName: '',
-    //       uri: ''
+    //       containerName: ''
     //     }
     //   },
     //   subscription: { /* optional */
@@ -684,8 +677,7 @@ angular.module('webApp').factory('userStateStub',
     //     creationDate: '2015-12-25T14:45:05Z',
     //     headerImage: { /* optional */
     //       fileId: 'Base64Guid',
-    //       containerName: '',
-    //       uri: ''
+    //       containerName: ''
     //     },
     //     video: '', /* optional */
     //     description: '' /* optional */
@@ -748,8 +740,7 @@ angular.module('webApp').factory('userStateStub',
     //     email: '',
     //     profileImage: { /* optional */
     //       fileId: 'Base64Guid',
-    //       containerName: '',
-    //       uri: ''
+    //       containerName: ''
     //     }
     //   },
     //   subscription: { /* optional */
@@ -761,8 +752,7 @@ angular.module('webApp').factory('userStateStub',
     //     creationDate: '2015-12-25T14:45:05Z',
     //     headerImage: { /* optional */
     //       fileId: 'Base64Guid',
-    //       containerName: '',
-    //       uri: ''
+    //       containerName: ''
     //     },
     //     video: '', /* optional */
     //     description: '' /* optional */
