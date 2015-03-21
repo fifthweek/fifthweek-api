@@ -10,10 +10,11 @@
     [AutoEqualityMembers]
     public partial class Thumbnail
     {
-        public Thumbnail(int width, int height, ResizeBehaviour resizeBehaviour, params Thumbnail[] children)
+        public Thumbnail(int width, int height, string alias, ResizeBehaviour resizeBehaviour, params Thumbnail[] children)
         {
             this.Width = width;
             this.Height = height;
+            this.Alias = alias;
             this.ResizeBehaviour = resizeBehaviour;
             this.Children = children == null ? new List<Thumbnail>() : children.ToList();
         }
@@ -22,18 +23,11 @@
 
         public int Height { get; private set; }
 
+        public string Alias { get; private set; }
+
         public ResizeBehaviour ResizeBehaviour { get; private set; }
 
         public IReadOnlyList<Thumbnail> Children { get; private set; }
-
-        [NonEquatable]
-        public string QueueName
-        {
-            get
-            {
-                return Constants.ThumbnailsQueueName;
-            }
-        }
 
         public ThumbnailDefinition ToMessage(string blobName)
         {
@@ -49,26 +43,9 @@
 
         private string GetOutputBlobName(string inputBlobName)
         {
-            string resizeBehaviourTag;
-
-            switch (this.ResizeBehaviour)
-            {
-                case ResizeBehaviour.MaintainAspectRatio:
-                    resizeBehaviourTag = string.Empty;
-                    break;
-
-                case ResizeBehaviour.CropToAspectRatio:
-                    resizeBehaviourTag = "-crop";
-                    break;
-
-                default:
-                    throw new Exception(
-                        "Unable to generate output blob name for resize behaviour: " + this.ResizeBehaviour);
-            }
-
             // Note we use a forwardslash here to take advantage of Azure Blob virtual hierarchy structure
             // which allows us to easily delete all blobs generated from the input blob.
-            return string.Format("{0}/{1}x{2}{3}", inputBlobName, this.Width, this.Height, resizeBehaviourTag);
+            return string.Format("{0}/{1}", inputBlobName, this.Alias);
         }
     }
 }

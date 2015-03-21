@@ -22,35 +22,32 @@
                 new CreateThumbnailsTask(
                     new Thumbnail(
                         600, 
-                        600, 
+                        600,
+                        "header",
                         ResizeBehaviour.CropToAspectRatio, 
                         new Thumbnail(
                             300, 
-                            300, 
+                            300,
+                            "preview",
                             ResizeBehaviour.CropToAspectRatio, 
-                            new Thumbnail(
-                                256, 
-                                256, 
-                                ResizeBehaviour.CropToAspectRatio, 
                                 new Thumbnail(
-                                    128, 
-                                    128, 
-                                    ResizeBehaviour.CropToAspectRatio,
-                                     new Thumbnail(
-                                         64, 
-                                         64, 
-                                         ResizeBehaviour.CropToAspectRatio)))))));
+                                    64, 
+                                    64, 
+                                    "footer",
+                                    ResizeBehaviour.CropToAspectRatio)))));
 
             Add(
                 FilePurposes.ProfileHeaderImage,
                 new CreateThumbnailsTask(
                     new Thumbnail(
                         3000, 
-                        800, 
+                        1000,
+                        "header",
                         ResizeBehaviour.CropToAspectRatio,
                         new Thumbnail(
                             960, 
-                            256, 
+                            320,
+                            "preview",
                             ResizeBehaviour.CropToAspectRatio))));
 
             Add(
@@ -59,15 +56,18 @@
                     new Thumbnail(
                         1200,
                         16000,
+                        "feed",
                         ResizeBehaviour.MaintainAspectRatio,
                         new Thumbnail(
                             600,
                             600,
+                            "preview",
                             ResizeBehaviour.MaintainAspectRatio,
                             new Thumbnail(
                                 332,
                                 250,
-                                ResizeBehaviour.MaintainAspectRatio)))));
+                                "queue",
+                                ResizeBehaviour.CropToAspectRatio)))));
 
             Add(FilePurposes.PostFile);
         }

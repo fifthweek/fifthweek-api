@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Linq;
 
-//// Generated on 18/03/2015 15:24:47 (UTC)
-//// Mapped solution in 13.92s
+//// Generated on 21/03/2015 12:26:48 (UTC)
+//// Mapped solution in 8.86s
 
 
 namespace Fifthweek.Api.FileManagement
@@ -1415,7 +1415,7 @@ namespace Fifthweek.Api.FileManagement.FileTasks
     {
         public override string ToString()
         {
-            return string.Format("Thumbnail({0}, {1}, {2}, {3})", this.Width == null ? "null" : this.Width.ToString(), this.Height == null ? "null" : this.Height.ToString(), this.ResizeBehaviour == null ? "null" : this.ResizeBehaviour.ToString(), this.Children == null ? "null" : this.Children.ToString());
+            return string.Format("Thumbnail({0}, {1}, \"{2}\", {3}, {4})", this.Width == null ? "null" : this.Width.ToString(), this.Height == null ? "null" : this.Height.ToString(), this.Alias == null ? "null" : this.Alias.ToString(), this.ResizeBehaviour == null ? "null" : this.ResizeBehaviour.ToString(), this.Children == null ? "null" : this.Children.ToString());
         }
         
         public override bool Equals(object obj)
@@ -1445,6 +1445,7 @@ namespace Fifthweek.Api.FileManagement.FileTasks
                 int hashCode = 0;
                 hashCode = (hashCode * 397) ^ (this.Width != null ? this.Width.GetHashCode() : 0);
                 hashCode = (hashCode * 397) ^ (this.Height != null ? this.Height.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.Alias != null ? this.Alias.GetHashCode() : 0);
                 hashCode = (hashCode * 397) ^ (this.ResizeBehaviour != null ? this.ResizeBehaviour.GetHashCode() : 0);
                 hashCode = (hashCode * 397) ^ (this.Children != null 
         			? this.Children.Aggregate(0, (previous, current) => 
@@ -1467,6 +1468,11 @@ namespace Fifthweek.Api.FileManagement.FileTasks
             }
         
             if (!object.Equals(this.Height, other.Height))
+            {
+                return false;
+            }
+        
+            if (!object.Equals(this.Alias, other.Alias))
             {
                 return false;
             }
