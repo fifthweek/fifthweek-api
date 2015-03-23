@@ -118,6 +118,29 @@
         }
 
         [TestMethod]
+        public async Task ItShouldReturnPostsWithLiveDatesAsUtc()
+        {
+            await this.ParameterizedTestAsync(async (creatorId, startIndex, count, expectedPosts) =>
+            {
+                await this.DatabaseTestAsync(async testDatabase =>
+                {
+                    this.target = new GetCreatorNewsfeedDbStatement(testDatabase);
+                    await this.CreateEntitiesAsync(testDatabase, createLivePosts: true, createFuturePosts: true);
+                    await testDatabase.TakeSnapshotAsync();
+
+                    var result = await this.target.ExecuteAsync(creatorId, Now, startIndex, count);
+
+                    foreach (var item in result)
+                    {
+                        Assert.AreEqual(DateTimeKind.Utc, item.LiveDate.Kind);
+                    }
+
+                    return ExpectedSideEffects.None;
+                });
+            });
+        }
+
+        [TestMethod]
         public async Task ItShouldOrderPostsByLiveDateDescending()
         {
             await this.ParameterizedTestAsync(async (creatorId, startIndex, count, expectedPosts) =>

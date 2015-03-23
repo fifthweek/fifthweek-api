@@ -95,6 +95,26 @@
         }
 
         [TestMethod]
+        public async Task ItShouldReturnPostsWithLiveDatesAsUtc()
+        {
+            await this.DatabaseTestAsync(async testDatabase =>
+            {
+                this.target = new GetCreatorBacklogDbStatement(testDatabase);
+                await this.CreateEntitiesAsync(testDatabase, createLivePosts: true, createFuturePosts: true);
+                await testDatabase.TakeSnapshotAsync();
+
+                var result = await this.target.ExecuteAsync(UserId, Now);
+
+                foreach (var item in result)
+                {
+                    Assert.AreEqual(DateTimeKind.Utc, item.LiveDate.Kind);
+                }
+
+                return ExpectedSideEffects.None;
+            });
+        }
+
+        [TestMethod]
         public async Task ItShouldOrderPostsByLiveDateDescending_ThenByQueueMechanism()
         {
             await this.DatabaseTestAsync(async testDatabase =>

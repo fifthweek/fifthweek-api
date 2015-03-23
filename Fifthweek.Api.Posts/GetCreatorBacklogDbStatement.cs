@@ -65,7 +65,12 @@
 
             using (var connection = this.connectionFactory.CreateConnection())
             {
-                var entities = await connection.QueryAsync<BacklogPost.Builder>(Sql, parameters);
+                var entities = (await connection.QueryAsync<BacklogPost.Builder>(Sql, parameters)).ToList();
+                foreach (var entity in entities)
+                {
+                    entity.LiveDate = DateTime.SpecifyKind(entity.LiveDate, DateTimeKind.Utc);
+                }
+
                 return entities.Select(_ => _.Build()).ToList();
             }
         }
