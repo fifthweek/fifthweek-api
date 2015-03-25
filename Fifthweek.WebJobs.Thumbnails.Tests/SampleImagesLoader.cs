@@ -48,6 +48,12 @@
 
         public SampleImage Tiff { get; private set; }
 
+        public SampleImage NoProfile { get; private set; }
+        
+        public SampleImage LowQuality { get; private set; }
+        
+        public SampleImage HighQuality { get; private set; }
+
         private void GetSampleImages()
         {
             var resources = Assembly.GetExecutingAssembly().GetManifestResourceNames();
@@ -91,6 +97,21 @@
             if (this.IsFile(path, "pc260001.tif"))
             {
                 return this.Tiff = new SampleImage(path, 640, 480);
+            }
+
+            if (this.IsFile(path, "trees-no-profile.jpg"))
+            {
+                return this.NoProfile = new SampleImage(path, 640, 480);
+            }
+
+            if (this.IsFile(path, "trees-quality-50.jpg"))
+            {
+                return this.LowQuality = new SampleImage(path, 640, 480);
+            }
+
+            if (this.IsFile(path, "trees-quality-95.jpg"))
+            {
+                return this.HighQuality = new SampleImage(path, 640, 480);
             }
 
             return new SampleImage(path, 0, 0);

@@ -373,6 +373,87 @@
         }
 
         [TestMethod]
+        public async Task WhenCreatingThumbnailFromImageWithNoColorProfile_ItShouldAddColorProfile()
+        {
+            bool profileExists = false;
+            this.imageService.Setup(v => v.Resize(It.IsAny<MagickImage>(), this.outputStream, Message.Items[0].Width, Message.Items[0].Height, Message.Items[0].ResizeBehaviour))
+                .Callback<MagickImage, Stream, int, int, ResizeBehaviour>(
+                    (a, b, c, d, e) =>
+                    {
+                        profileExists = a.GetColorProfile() != null;
+                    })
+                .Verifiable();
+
+            using (var inputStream = SampleImagesLoader.Instance.NoProfile.Open())
+            {
+                this.input.Setup(v => v.OpenReadAsync(It.IsAny<CancellationToken>())).ReturnsAsync(inputStream);
+                await this.target.CreateThumbnailSetAsync(
+                        Message,
+                        this.input.Object,
+                        this.storageAccount.Object,
+                        this.logger.Object,
+                        CancellationToken.None);
+            }
+
+            this.imageService.Verify();
+            Assert.IsTrue(profileExists);
+        }
+
+        [TestMethod]
+        public async Task WhenCreatingThumbnailFromImageWithLowQuality_ItShouldNotAdjustQuality()
+        {
+            int quality = 0;
+            this.imageService.Setup(v => v.Resize(It.IsAny<MagickImage>(), this.outputStream, Message.Items[0].Width, Message.Items[0].Height, Message.Items[0].ResizeBehaviour))
+                .Callback<MagickImage, Stream, int, int, ResizeBehaviour>(
+                    (a, b, c, d, e) =>
+                    {
+                        quality = a.Quality;
+                    })
+                .Verifiable();
+
+            using (var inputStream = SampleImagesLoader.Instance.LowQuality.Open())
+            {
+                this.input.Setup(v => v.OpenReadAsync(It.IsAny<CancellationToken>())).ReturnsAsync(inputStream);
+                await this.target.CreateThumbnailSetAsync(
+                        Message,
+                        this.input.Object,
+                        this.storageAccount.Object,
+                        this.logger.Object,
+                        CancellationToken.None);
+            }
+
+            this.imageService.Verify();
+            Assert.IsTrue(quality < 85);
+        }
+
+        [TestMethod]
+        public async Task WhenCreatingThumbnailFromImageWithHighQuality_ItShouldSetQualityTo85()
+        {
+            int quality = 0;
+            this.imageService.Setup(v => v.Resize(It.IsAny<MagickImage>(), this.outputStream, Message.Items[0].Width, Message.Items[0].Height, Message.Items[0].ResizeBehaviour))
+                .Callback<MagickImage, Stream, int, int, ResizeBehaviour>(
+                    (a, b, c, d, e) =>
+                    {
+                        quality = a.Quality;
+                    })
+                .Verifiable();
+
+            using (var inputStream = SampleImagesLoader.Instance.HighQuality.Open())
+            {
+                this.input.Setup(v => v.OpenReadAsync(It.IsAny<CancellationToken>())).ReturnsAsync(inputStream);
+                await this.target.CreateThumbnailSetAsync(
+                        Message,
+                        this.input.Object,
+                        this.storageAccount.Object,
+                        this.logger.Object,
+                        CancellationToken.None);
+            }
+
+            this.imageService.Verify();
+            Assert.AreEqual(85, quality);
+        }
+
+        [TestMethod]
         public async Task WhenCreatingNewPoisonThumbnail_ItShouldCreateAnImage()
         {
             await this.target.CreatePoisonThumbnailSetAsync(

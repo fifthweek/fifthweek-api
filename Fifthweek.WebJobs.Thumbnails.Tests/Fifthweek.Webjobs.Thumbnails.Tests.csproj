@@ -379,6 +379,11 @@
   <ItemGroup>
     <EmbeddedResource Include="SampleImages\colored-edges.png" />
   </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="SampleImages\trees-no-profile.jpg" />
+    <EmbeddedResource Include="SampleImages\trees-quality-50.jpg" />
+    <EmbeddedResource Include="SampleImages\trees-quality-95.jpg" />
+  </ItemGroup>
   <Choose>
     <When Condition="'$(VisualStudioVersion)' == '10.0' And '$(IsCodedUITest)' == 'True'">
       <ItemGroup>

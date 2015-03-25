@@ -20,9 +20,10 @@
     [AutoConstructor]
     public partial class ThumbnailProcessor : IThumbnailProcessor
     {
-        public const string DefaultOutputMimeType = "image/jpeg";
+        public const string JpegMimeType = "image/jpeg";
+        public const string DefaultOutputMimeType = JpegMimeType;
         private const MagickFormat DefaultOutputFormat = MagickFormat.Jpeg;
-        private static readonly List<string> SupportedOutputMimeTypes = new List<string> { DefaultOutputMimeType, "image/gif", "image/png" };
+        private static readonly List<string> SupportedOutputMimeTypes = new List<string> { JpegMimeType, "image/gif", "image/png" };
 
         private readonly IImageService imageService;
 
@@ -60,6 +61,22 @@
                 {
                     outputMimeType = DefaultOutputMimeType;
                     image.Format = DefaultOutputFormat;
+                    logger.Info("ConvertToJpeg: " + sw.ElapsedMilliseconds);
+                }
+
+                if (image.Format == MagickFormat.Jpg || image.Format == MagickFormat.Jpeg)
+                {
+                    var colorProfile = image.GetColorProfile();
+                    if (colorProfile == null)
+                    {
+                        image.AddProfile(ColorProfile.SRGB);
+                        logger.Info("AddColorProfile: " + sw.ElapsedMilliseconds);
+                    }
+
+                    if (image.Quality > 85)
+                    {
+                        image.Quality = 85;
+                    }
                 }
 
                 var jobData = new JobData(outputMimeType);
