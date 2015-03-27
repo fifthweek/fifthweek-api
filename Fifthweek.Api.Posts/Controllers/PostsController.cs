@@ -42,13 +42,13 @@
         }
 
         [Route("queued")]
-        public Task PostToQueue(string postId)
+        public Task PostToQueue([FromBody]string postId)
         {
             return this.postController.PostToQueue(postId);
         }
 
         [Route("live")]
-        public Task PostToLive(string postId)
+        public Task PostToLive([FromBody]string postId)
         {
             return this.postController.PostToLive(postId);
         }
