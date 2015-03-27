@@ -520,7 +520,7 @@ describe('posts stub', function() {
     var postId = 'value0';
 
     var responseData = 'response data';
-    $httpBackend.expectPOST(fifthweekConstants.apiBaseUri + 'posts/queued', postId).respond(200, responseData);
+    $httpBackend.expectPOST(fifthweekConstants.apiBaseUri + 'posts/queued', JSON.stringify(postId)).respond(200, responseData);
 
     var result = null;
     target.postToQueue(postId).then(function(response) { result = response.data; });
@@ -535,7 +535,7 @@ describe('posts stub', function() {
     var postId = 'value0';
 
     var responseData = 'response data';
-    $httpBackend.expectPOST(fifthweekConstants.apiBaseUri + 'posts/live', postId).respond(200, responseData);
+    $httpBackend.expectPOST(fifthweekConstants.apiBaseUri + 'posts/live', JSON.stringify(postId)).respond(200, responseData);
 
     var result = null;
     target.postToLive(postId).then(function(response) { result = response.data; });
@@ -551,7 +551,7 @@ describe('posts stub', function() {
     var newLiveDate = 'value1';
 
     var responseData = 'response data';
-    $httpBackend.expectPUT(fifthweekConstants.apiBaseUri + 'posts/' + encodeURIComponent(postId) + '/liveDate', newLiveDate).respond(200, responseData);
+    $httpBackend.expectPUT(fifthweekConstants.apiBaseUri + 'posts/' + encodeURIComponent(postId) + '/liveDate', JSON.stringify(newLiveDate)).respond(200, responseData);
 
     var result = null;
     target.putLiveDate(postId, newLiveDate).then(function(response) { result = response.data; });

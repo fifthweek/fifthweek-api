@@ -355,14 +355,14 @@ angular.module('webApp').factory('postsStub',
 
     // postId = 'Base64Guid'
     service.postToQueue = function(postId) {
-      return $http.post(apiBaseUri + 'posts/queued', postId).catch(function(response) {
+      return $http.post(apiBaseUri + 'posts/queued', JSON.stringify(postId)).catch(function(response) {
         return $q.reject(utilities.getHttpError(response));
       });
     };
 
     // postId = 'Base64Guid'
     service.postToLive = function(postId) {
-      return $http.post(apiBaseUri + 'posts/live', postId).catch(function(response) {
+      return $http.post(apiBaseUri + 'posts/live', JSON.stringify(postId)).catch(function(response) {
         return $q.reject(utilities.getHttpError(response));
       });
     };
@@ -370,7 +370,7 @@ angular.module('webApp').factory('postsStub',
     // postId = 'Base64Guid'
     // newLiveDate = '2015-12-25T14:45:05Z'
     service.putLiveDate = function(postId, newLiveDate) {
-      return $http.put(apiBaseUri + 'posts/' + encodeURIComponent(postId) + '/liveDate', newLiveDate).catch(function(response) {
+      return $http.put(apiBaseUri + 'posts/' + encodeURIComponent(postId) + '/liveDate', JSON.stringify(newLiveDate)).catch(function(response) {
         return $q.reject(utilities.getHttpError(response));
       });
     };

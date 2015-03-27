@@ -87,7 +87,17 @@ namespace Fifthweek.Api.ClientHttpStubs.Templates
             if (method.BodyParameter != null)
             {
                 this.output.Write(", ");
-                this.output.Write(method.BodyParameter.Name);
+
+                if (method.BodyParameter.Type.IsValueType || method.BodyParameter.Type == typeof(string))
+                {
+                    this.output.Write("JSON.stringify(");
+                    this.output.Write(method.BodyParameter.Name);
+                    this.output.Write(")");
+                }
+                else
+                {
+                    this.output.Write(method.BodyParameter.Name);
+                }
             }
 
             this.output.WriteLine(").catch(function(response) {");
