@@ -88,7 +88,7 @@ namespace Fifthweek.Api.ClientHttpStubs.Templates
             {
                 this.output.Write(", ");
 
-                if (method.BodyParameter.Type.IsValueType || method.BodyParameter.Type == typeof(string))
+                if (method.BodyParameter.Type == typeof(string))
                 {
                     this.output.Write("JSON.stringify(");
                     this.output.Write(method.BodyParameter.Name);

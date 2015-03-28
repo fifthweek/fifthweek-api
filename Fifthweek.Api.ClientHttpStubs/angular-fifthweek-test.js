@@ -551,7 +551,7 @@ describe('posts stub', function() {
     var newLiveDate = 'value1';
 
     var responseData = 'response data';
-    $httpBackend.expectPUT(fifthweekConstants.apiBaseUri + 'posts/' + encodeURIComponent(postId) + '/liveDate', JSON.stringify(newLiveDate)).respond(200, responseData);
+    $httpBackend.expectPUT(fifthweekConstants.apiBaseUri + 'posts/' + encodeURIComponent(postId) + '/liveDate', newLiveDate).respond(200, responseData);
 
     var result = null;
     target.putLiveDate(postId, newLiveDate).then(function(response) { result = response.data; });

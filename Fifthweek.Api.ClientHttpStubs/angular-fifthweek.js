@@ -370,7 +370,7 @@ angular.module('webApp').factory('postsStub',
     // postId = 'Base64Guid'
     // newLiveDate = '2015-12-25T14:45:05Z'
     service.putLiveDate = function(postId, newLiveDate) {
-      return $http.put(apiBaseUri + 'posts/' + encodeURIComponent(postId) + '/liveDate', JSON.stringify(newLiveDate)).catch(function(response) {
+      return $http.put(apiBaseUri + 'posts/' + encodeURIComponent(postId) + '/liveDate', newLiveDate).catch(function(response) {
         return $q.reject(utilities.getHttpError(response));
       });
     };
