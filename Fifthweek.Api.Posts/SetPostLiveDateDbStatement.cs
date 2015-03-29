@@ -9,17 +9,8 @@
     using Fifthweek.CodeGeneration;
 
     [AutoConstructor]
-    public partial class SetBacklogPostLiveDateDbStatement : ISetBacklogPostLiveDateDbStatement
+    public partial class SetPostLiveDateDbStatement : ISetPostLiveDateDbStatement
     {
-        private static readonly string WhereNotLive = string.Format(
-            @"EXISTS (SELECT * 
-                      FROM  {0} WITH (UPDLOCK, HOLDLOCK)
-                      WHERE {1} = @{1}
-                      AND   {2} > @Now)",
-            Post.Table,
-            Post.Fields.Id,
-            Post.Fields.LiveDate);
-
         private readonly IScheduledDateClippingFunction scheduledDateClipping;
         private readonly IFifthweekDbConnectionFactory connectionFactory;
 
@@ -37,8 +28,6 @@
 
             var parameters = new SqlGenerationParameters<Post, Post.Fields>(post)
             {
-                AdditionalParameters = new { Now = now },
-                Conditions = new[] { WhereNotLive },
                 UpdateMask = Post.Fields.LiveDate | Post.Fields.ScheduledByQueue
             };
 

@@ -14,7 +14,7 @@
         private readonly IRequesterSecurity requesterSecurity;
         private readonly IPostSecurity postSecurity;
         private readonly ITryGetUnqueuedPostCollectionDbStatement tryGetUnqueuedPostCollection;
-        private readonly IMoveBacklogPostToQueueDbStatement moveBacklogPostToQueue;
+        private readonly IMovePostToQueueDbStatement movePostToQueue;
 
         public async Task HandleAsync(RescheduleWithQueueCommand command)
         {
@@ -28,15 +28,14 @@
 
         private async Task RescheduleWithQueueAsync(RescheduleWithQueueCommand command)
         {
-            var now = DateTime.UtcNow;
-            var collectionId = await this.tryGetUnqueuedPostCollection.ExecuteAsync(command.PostId, now);
+            var collectionId = await this.tryGetUnqueuedPostCollection.ExecuteAsync(command.PostId);
             if (collectionId == null)
             {
-                // Post is already queued within the collection, not within a collection, or is already live.
+                // Post is already queued within the collection, or not within a collection.
                 return;
             }
 
-            await this.moveBacklogPostToQueue.ExecuteAsync(command.PostId, collectionId, now);
+            await this.movePostToQueue.ExecuteAsync(command.PostId, collectionId);
         }
     }
 }

@@ -8,6 +8,6 @@
 
     public interface ITryGetUnqueuedPostCollectionDbStatement
     {
-        Task<CollectionId> ExecuteAsync(PostId postId, DateTime now);
+        Task<CollectionId> ExecuteAsync(PostId postId);
     }
 }

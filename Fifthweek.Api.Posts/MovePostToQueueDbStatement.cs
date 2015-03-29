@@ -11,7 +11,7 @@ namespace Fifthweek.Api.Posts
     using Fifthweek.Shared;
 
     [AutoConstructor]
-    public partial class MoveBacklogPostToQueueDbStatement : IMoveBacklogPostToQueueDbStatement
+    public partial class MovePostToQueueDbStatement : IMovePostToQueueDbStatement
     {
         public static readonly string WherePostLiveDateUniqueToCollection = string.Format(
             @"
@@ -37,26 +37,23 @@ namespace Fifthweek.Api.Posts
             Post.Fields.Id,
             Post.Fields.CollectionId);
 
-        private static readonly string WherePostInBacklogButNotQueued = string.Format(
+        private static readonly string WherePostNotQueued = string.Format(
             @"
             EXISTS (SELECT * 
                     FROM    {0} WITH (UPDLOCK, HOLDLOCK)
                     WHERE   {1} = @{1}
-                    AND     {2} > @Now
-                    AND     {3} = 0)",
+                    AND     {2} = 0)",
             Post.Table,
             Post.Fields.Id,
-            Post.Fields.LiveDate,
             Post.Fields.ScheduledByQueue);
 
         private readonly IFifthweekDbConnectionFactory connectionFactory;
         private readonly IGetLiveDateOfNewQueuedPostDbStatement getLiveDateOfNewQueuedPost;
 
-        public async Task ExecuteAsync(PostId postId, CollectionId currentCollectionId, DateTime now)
+        public async Task ExecuteAsync(PostId postId, CollectionId currentCollectionId)
         {
             postId.AssertNotNull("postId");
             currentCollectionId.AssertNotNull("currentCollectionId");
-            now.AssertUtc("now");
 
             var nextLiveDate = await this.getLiveDateOfNewQueuedPost.ExecuteAsync(currentCollectionId);
 
@@ -71,14 +68,13 @@ namespace Fifthweek.Api.Posts
                 UpdateMask = Post.Fields.ScheduledByQueue | Post.Fields.LiveDate,
                 AdditionalParameters = new
                 {
-                    CollectionId = currentCollectionId.Value,
-                    Now = now
+                    CollectionId = currentCollectionId.Value
                 },
                 Conditions = new[]
                 {
                     WherePostLiveDateUniqueToCollection, // Perform locks in 'descending supersets' to avoid deadlock.
                     WherePostInCollection, // May have changed between calculation and update.
-                    WherePostInBacklogButNotQueued // Make operation idempotent.
+                    WherePostNotQueued // Make operation idempotent.
                 }
             };
 

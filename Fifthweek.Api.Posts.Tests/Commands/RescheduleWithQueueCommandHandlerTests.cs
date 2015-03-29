@@ -26,7 +26,7 @@
         private Mock<IRequesterSecurity> requesterSecurity;
         private Mock<IPostSecurity> postSecurity;
         private Mock<ITryGetUnqueuedPostCollectionDbStatement> tryGetUnqueuedPostCollection;
-        private Mock<IMoveBacklogPostToQueueDbStatement> moveBacklogPostToQueue;
+        private Mock<IMovePostToQueueDbStatement> moveBacklogPostToQueue;
         private RescheduleWithQueueCommandHandler target;
 
         [TestInitialize]
@@ -38,7 +38,7 @@
             this.tryGetUnqueuedPostCollection = new Mock<ITryGetUnqueuedPostCollectionDbStatement>();
 
             // Mock potentially side-effecting components with strict behaviour.            
-            this.moveBacklogPostToQueue = new Mock<IMoveBacklogPostToQueueDbStatement>(MockBehavior.Strict);
+            this.moveBacklogPostToQueue = new Mock<IMovePostToQueueDbStatement>(MockBehavior.Strict);
 
             this.target = new RescheduleWithQueueCommandHandler(
                 this.requesterSecurity.Object, 
@@ -64,21 +64,21 @@
         }
 
         [TestMethod]
-        public async Task WhenPostIsNotScheduledInCollectionBacklog_ItShouldHaveNoEffect()
+        public async Task WhenPostIsNotScheduledInCollection_ItShouldHaveNoEffect()
         {
-            this.tryGetUnqueuedPostCollection.Setup(_ => _.ExecuteAsync(PostId, It.Is<DateTime>(now => now.Kind == DateTimeKind.Utc)))
+            this.tryGetUnqueuedPostCollection.Setup(_ => _.ExecuteAsync(PostId))
                 .ReturnsAsync(null);
 
             await this.target.HandleAsync(Command);
         }
 
         [TestMethod]
-        public async Task WhenPostIsScheduledInCollectionBacklog_ItShouldMovePostToQueue()
+        public async Task WhenPostIsScheduledInCollection_ItShouldMovePostToQueue()
         {
-            this.tryGetUnqueuedPostCollection.Setup(_ => _.ExecuteAsync(PostId, It.Is<DateTime>(now => now.Kind == DateTimeKind.Utc)))
+            this.tryGetUnqueuedPostCollection.Setup(_ => _.ExecuteAsync(PostId))
                 .ReturnsAsync(CollectionId);
 
-            this.moveBacklogPostToQueue.Setup(_ => _.ExecuteAsync(PostId, CollectionId, It.Is<DateTime>(now => now.Kind == DateTimeKind.Utc)))
+            this.moveBacklogPostToQueue.Setup(_ => _.ExecuteAsync(PostId, CollectionId))
                 .Returns(Task.FromResult(0))
                 .Verifiable();
 

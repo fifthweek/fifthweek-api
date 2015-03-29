@@ -101,9 +101,9 @@
     <Compile Include="GetCreatorNewsfeedDbStatement.cs" />
     <Compile Include="IGetCreatorBacklogDbStatement.cs" />
     <Compile Include="IGetCreatorNewsfeedDbStatement.cs" />
-    <Compile Include="IMoveBacklogPostToQueueDbStatement.cs" />
+    <Compile Include="IMovePostToQueueDbStatement.cs" />
     <Compile Include="IRemoveFromQueueIfRequiredDbStatement.cs" />
-    <Compile Include="ISetBacklogPostLiveDateDbStatement.cs" />
+    <Compile Include="ISetPostLiveDateDbStatement.cs" />
     <Compile Include="ITryGetUnqueuedPostCollectionDbStatement.cs" />
     <Compile Include="ITryGetQueuedPostCollectionDbStatement.cs" />
     <Compile Include="IPostNoteDbStatement.cs" />
@@ -118,7 +118,7 @@
     <Compile Include="Controllers\RevisedNoteData.cs" />
     <Compile Include="DeletePostDbStatement.cs" />
     <Compile Include="IDeletePostDbStatement.cs" />
-    <Compile Include="MoveBacklogPostToQueueDbStatement.cs" />
+    <Compile Include="MovePostToQueueDbStatement.cs" />
     <Compile Include="PostOwnership.cs" />
     <Compile Include="IPostOwnership.cs" />
     <Compile Include="PostSecurity.cs" />
@@ -158,7 +158,7 @@
     <Compile Include="RemoveFromQueueIfRequiredDbStatement.cs" />
     <Compile Include="ScheduledDateClippingFunction.cs" />
     <Compile Include="PostNoteDbStatement.cs" />
-    <Compile Include="SetBacklogPostLiveDateDbStatement.cs" />
+    <Compile Include="SetPostLiveDateDbStatement.cs" />
     <Compile Include="TryGetUnqueuedPostCollectionDbStatement.cs" />
     <Compile Include="TryGetQueuedPostCollectionDbStatement.cs" />
   </ItemGroup>

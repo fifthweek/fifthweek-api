@@ -1,6 +1,7 @@
 ﻿namespace Fifthweek.Api.Posts.Tests
 {
     using System;
+    using System.Data.SqlTypes;
     using System.Threading.Tasks;
 
     using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -34,10 +35,24 @@
         }
 
         [TestMethod]
-        public async Task WhenDateIsProvidedAndIsInPast_ItShouldScheduleForNow()
+        public async Task WhenDateIsProvidedAndIsInPast_ItShouldScheduleForPast()
         {
             var result = this.target.Apply(Now, Past);
-            Assert.AreEqual(Now, result);
+            Assert.AreEqual(Past, result);
+        }
+
+        [TestMethod]
+        public async Task WhenDateIsProvidedInPastBeyondSqlDateTimeMin_ItShouldScheduleForSqlDateTimeMin()
+        {
+            var result = this.target.Apply(Now, SqlDateTime.MinValue.Value.AddTicks(-1));
+            Assert.AreEqual(SqlDateTime.MinValue.Value, result);
+        }
+
+        [TestMethod]
+        public async Task WhenDateIsProvidedAndIsInFutureBeyondSqlDateTimeMax_ItShouldScheduleForSqlDateTimeMax()
+        {
+            var result = this.target.Apply(Now, SqlDateTime.MaxValue.Value.AddTicks(1));
+            Assert.AreEqual(SqlDateTime.MaxValue.Value, result);
         }
 
         [TestMethod]

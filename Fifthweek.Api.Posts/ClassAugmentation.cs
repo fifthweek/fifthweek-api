@@ -2041,7 +2041,7 @@ namespace Fifthweek.Api.Posts.Commands
         public RescheduleForNowCommandHandler(
             Fifthweek.Api.Identity.Shared.Membership.IRequesterSecurity requesterSecurity,
             Fifthweek.Api.Posts.Shared.IPostSecurity postSecurity,
-            Fifthweek.Api.Posts.ISetBacklogPostLiveDateDbStatement setBacklogPostLiveDate,
+            Fifthweek.Api.Posts.ISetPostLiveDateDbStatement setPostLiveDate,
             Fifthweek.Api.Posts.IRemoveFromQueueIfRequiredDbStatement removeFromQueueIfRequired)
         {
             if (requesterSecurity == null)
@@ -2054,9 +2054,9 @@ namespace Fifthweek.Api.Posts.Commands
                 throw new ArgumentNullException("postSecurity");
             }
 
-            if (setBacklogPostLiveDate == null)
+            if (setPostLiveDate == null)
             {
-                throw new ArgumentNullException("setBacklogPostLiveDate");
+                throw new ArgumentNullException("setPostLiveDate");
             }
 
             if (removeFromQueueIfRequired == null)
@@ -2066,7 +2066,7 @@ namespace Fifthweek.Api.Posts.Commands
 
             this.requesterSecurity = requesterSecurity;
             this.postSecurity = postSecurity;
-            this.setBacklogPostLiveDate = setBacklogPostLiveDate;
+            this.setPostLiveDate = setPostLiveDate;
             this.removeFromQueueIfRequired = removeFromQueueIfRequired;
         }
     }
@@ -2092,9 +2092,9 @@ namespace Fifthweek.Api.Posts
     using System.Collections.Generic;
     using Fifthweek.Api.Posts.Queries;
 
-    public partial class SetBacklogPostLiveDateDbStatement 
+    public partial class SetPostLiveDateDbStatement 
     {
-        public SetBacklogPostLiveDateDbStatement(
+        public SetPostLiveDateDbStatement(
             Fifthweek.Api.Posts.IScheduledDateClippingFunction scheduledDateClipping,
             Fifthweek.Api.Persistence.IFifthweekDbConnectionFactory connectionFactory)
         {
@@ -2270,7 +2270,7 @@ namespace Fifthweek.Api.Posts.Commands
         public RescheduleForTimeCommandHandler(
             Fifthweek.Api.Identity.Shared.Membership.IRequesterSecurity requesterSecurity,
             Fifthweek.Api.Posts.Shared.IPostSecurity postSecurity,
-            Fifthweek.Api.Posts.ISetBacklogPostLiveDateDbStatement setBacklogPostLiveDate,
+            Fifthweek.Api.Posts.ISetPostLiveDateDbStatement setPostLiveDate,
             Fifthweek.Api.Posts.IRemoveFromQueueIfRequiredDbStatement removeFromQueueIfRequired)
         {
             if (requesterSecurity == null)
@@ -2283,9 +2283,9 @@ namespace Fifthweek.Api.Posts.Commands
                 throw new ArgumentNullException("postSecurity");
             }
 
-            if (setBacklogPostLiveDate == null)
+            if (setPostLiveDate == null)
             {
-                throw new ArgumentNullException("setBacklogPostLiveDate");
+                throw new ArgumentNullException("setPostLiveDate");
             }
 
             if (removeFromQueueIfRequired == null)
@@ -2295,7 +2295,7 @@ namespace Fifthweek.Api.Posts.Commands
 
             this.requesterSecurity = requesterSecurity;
             this.postSecurity = postSecurity;
-            this.setBacklogPostLiveDate = setBacklogPostLiveDate;
+            this.setPostLiveDate = setPostLiveDate;
             this.removeFromQueueIfRequired = removeFromQueueIfRequired;
         }
     }
@@ -2324,7 +2324,7 @@ namespace Fifthweek.Api.Posts.Commands
             Fifthweek.Api.Identity.Shared.Membership.IRequesterSecurity requesterSecurity,
             Fifthweek.Api.Posts.Shared.IPostSecurity postSecurity,
             Fifthweek.Api.Posts.ITryGetUnqueuedPostCollectionDbStatement tryGetUnqueuedPostCollection,
-            Fifthweek.Api.Posts.IMoveBacklogPostToQueueDbStatement moveBacklogPostToQueue)
+            Fifthweek.Api.Posts.IMovePostToQueueDbStatement movePostToQueue)
         {
             if (requesterSecurity == null)
             {
@@ -2341,15 +2341,15 @@ namespace Fifthweek.Api.Posts.Commands
                 throw new ArgumentNullException("tryGetUnqueuedPostCollection");
             }
 
-            if (moveBacklogPostToQueue == null)
+            if (movePostToQueue == null)
             {
-                throw new ArgumentNullException("moveBacklogPostToQueue");
+                throw new ArgumentNullException("movePostToQueue");
             }
 
             this.requesterSecurity = requesterSecurity;
             this.postSecurity = postSecurity;
             this.tryGetUnqueuedPostCollection = tryGetUnqueuedPostCollection;
-            this.moveBacklogPostToQueue = moveBacklogPostToQueue;
+            this.movePostToQueue = movePostToQueue;
         }
     }
 }
@@ -2374,9 +2374,9 @@ namespace Fifthweek.Api.Posts
     using System.Collections.Generic;
     using Fifthweek.Api.Posts.Queries;
 
-    public partial class MoveBacklogPostToQueueDbStatement 
+    public partial class MovePostToQueueDbStatement 
     {
-        public MoveBacklogPostToQueueDbStatement(
+        public MovePostToQueueDbStatement(
             Fifthweek.Api.Persistence.IFifthweekDbConnectionFactory connectionFactory,
             Fifthweek.Api.Collections.Shared.IGetLiveDateOfNewQueuedPostDbStatement getLiveDateOfNewQueuedPost)
         {

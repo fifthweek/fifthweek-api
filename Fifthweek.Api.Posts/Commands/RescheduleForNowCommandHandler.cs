@@ -13,7 +13,7 @@
     {
         private readonly IRequesterSecurity requesterSecurity;
         private readonly IPostSecurity postSecurity;
-        private readonly ISetBacklogPostLiveDateDbStatement setBacklogPostLiveDate;
+        private readonly ISetPostLiveDateDbStatement setPostLiveDate;
         private readonly IRemoveFromQueueIfRequiredDbStatement removeFromQueueIfRequired;
 
         public async Task HandleAsync(RescheduleForNowCommand command)
@@ -33,7 +33,7 @@
             return this.removeFromQueueIfRequired.ExecuteAsync(
                 postId,
                 now,
-                () => this.setBacklogPostLiveDate.ExecuteAsync(postId, now, now));
+                () => this.setPostLiveDate.ExecuteAsync(postId, now, now));
         }
     }
 }

@@ -102,7 +102,7 @@
     <Compile Include="DeletePostDbStatementTests.cs" />
     <Compile Include="GetCreatorBacklogDbStatementTests.cs" />
     <Compile Include="GetCreatorNewsfeedDbStatementTests.cs" />
-    <Compile Include="MoveBacklogPostToQueueDbStatementTests.cs" />
+    <Compile Include="MovePostToQueueDbStatementTests.cs" />
     <Compile Include="PostOwnershipTests.cs" />
     <Compile Include="PostSecurityTests.cs" />
     <Compile Include="Commands\PostFileCommandHandlerTests.cs" />
@@ -120,7 +120,7 @@
     <Compile Include="RemoveFromQueueIfRequiredDbStatementTestExtensions.cs" />
     <Compile Include="RemoveFromQueueIfRequiredDbStatementTests.cs" />
     <Compile Include="ScheduledDateClippingFunctionTests.cs" />
-    <Compile Include="SetBacklogPostLiveDateToNowDbStatementTests.cs" />
+    <Compile Include="SetPostLiveDateDbStatementTests.cs" />
     <Compile Include="TryGetUnqueuedPostCollectionDbStatementTests.cs" />
     <Compile Include="TryGetQueuedPostCollectionDbStatementTests.cs" />
     <Compile Include="ValidCommentTests.cs" />

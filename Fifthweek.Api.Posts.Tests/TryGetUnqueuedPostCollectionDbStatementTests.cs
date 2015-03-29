@@ -43,14 +43,7 @@
         [ExpectedException(typeof(ArgumentNullException))]
         public async Task ItShouldRequirePostId()
         {
-            await this.target.ExecuteAsync(null, DateTime.UtcNow);
-        }
-
-        [TestMethod]
-        [ExpectedException(typeof(ArgumentException))]
-        public async Task ItShouldRequireUtcDate()
-        {
-            await this.target.ExecuteAsync(PostId, DateTime.Now);
+            await this.target.ExecuteAsync(null);
         }
 
         [TestMethod]
@@ -61,7 +54,7 @@
                 this.InitializeTarget(testDatabase);
                 await testDatabase.TakeSnapshotAsync();
 
-                var result = await this.target.ExecuteAsync(PostId, Now);
+                var result = await this.target.ExecuteAsync(PostId);
 
                 Assert.IsNull(result);
 
@@ -78,7 +71,7 @@
                 await this.CreateEntitiesAsync(testDatabase, queuePost: true);
                 await testDatabase.TakeSnapshotAsync();
 
-                var result = await this.target.ExecuteAsync(PostId, Now);
+                var result = await this.target.ExecuteAsync(PostId);
 
                 Assert.IsNull(result);
 
@@ -87,7 +80,7 @@
         }
 
         [TestMethod]
-        public async Task WhenPostExistsAndWasNotQueuedButNowLive_ItShouldReturnNull()
+        public async Task WhenPostExistsAndWasNotQueuedAndIsLive_ItShouldReturnCollectionId()
         {
             await this.DatabaseTestAsync(async testDatabase =>
             {
@@ -95,9 +88,9 @@
                 await this.CreateEntitiesAsync(testDatabase, queuePost: false, liveDateInFuture: false);
                 await testDatabase.TakeSnapshotAsync();
 
-                var result = await this.target.ExecuteAsync(PostId, Now);
+                var result = await this.target.ExecuteAsync(PostId);
 
-                Assert.IsNull(result);
+                Assert.AreEqual(result, CollectionId);
 
                 return ExpectedSideEffects.None;
             });
@@ -112,7 +105,7 @@
                 await this.CreateEntitiesAsync(testDatabase, queuePost: false, liveDateInFuture: true);
                 await testDatabase.TakeSnapshotAsync();
 
-                var result = await this.target.ExecuteAsync(PostId, Now);
+                var result = await this.target.ExecuteAsync(PostId);
 
                 Assert.AreEqual(result, CollectionId);
 

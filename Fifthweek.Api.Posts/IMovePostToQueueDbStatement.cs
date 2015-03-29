@@ -6,8 +6,8 @@
     using Fifthweek.Api.Collections.Shared;
     using Fifthweek.Api.Posts.Shared;
 
-    public interface IMoveBacklogPostToQueueDbStatement
+    public interface IMovePostToQueueDbStatement
     {
-        Task ExecuteAsync(PostId postId, CollectionId currentCollectionId, DateTime now);
+        Task ExecuteAsync(PostId postId, CollectionId currentCollectionId);
     }
 }

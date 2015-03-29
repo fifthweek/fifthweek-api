@@ -14,7 +14,7 @@
     using Moq;
 
     [TestClass]
-    public class SetBacklogPostLiveDateToNowDbStatementTests : PersistenceTestsBase
+    public class SetPostLiveDateDbStatementTests : PersistenceTestsBase
     {
         private static readonly PostId PostId = new PostId(Guid.NewGuid());
         private static readonly DateTime Now = DateTime.UtcNow;
@@ -23,7 +23,7 @@
 
         private Mock<IScheduledDateClippingFunction> scheduledDateClipping;
         private Mock<IFifthweekDbConnectionFactory> connectionFactory;
-        private SetBacklogPostLiveDateDbStatement target;
+        private SetPostLiveDateDbStatement target;
 
         [TestInitialize]
         public void Initialize()
@@ -39,7 +39,7 @@
 
         public void InitializeTarget(IFifthweekDbConnectionFactory connectionFactory)
         {
-            this.target = new SetBacklogPostLiveDateDbStatement(this.scheduledDateClipping.Object, connectionFactory);
+            this.target = new SetPostLiveDateDbStatement(this.scheduledDateClipping.Object, connectionFactory);
         }
 
         [TestMethod]
@@ -80,33 +80,7 @@
         }
 
         [TestMethod]
-        public async Task PostIsAlreadyLive_ItShouldHaveNoEffect()
-        {
-            await this.DatabaseTestAsync(async testDatabase =>
-            {
-                this.InitializeTarget(testDatabase);
-                await this.CreateEntitiesAsync(testDatabase, liveDateInFuture: false, scheduledByQueue: true);
-                await testDatabase.TakeSnapshotAsync();
-
-                await this.target.ExecuteAsync(PostId, NewDate, Now);
-
-                return ExpectedSideEffects.None;
-            });
-
-            await this.DatabaseTestAsync(async testDatabase =>
-            {
-                this.InitializeTarget(testDatabase);
-                await this.CreateEntitiesAsync(testDatabase, liveDateInFuture: false, scheduledByQueue: false);
-                await testDatabase.TakeSnapshotAsync();
-
-                await this.target.ExecuteAsync(PostId, NewDate, Now);
-
-                return ExpectedSideEffects.None;
-            });
-        }
-
-        [TestMethod]
-        public async Task WhenPostIsNotScheduledByQueue_ItShouldSetLiveDateToNow()
+        public async Task WhenBacklogPostIsNotScheduledByQueue_ItShouldSetLiveDate()
         {
             await this.DatabaseTestAsync(async testDatabase =>
             {
@@ -126,12 +100,53 @@
         }
 
         [TestMethod]
-        public async Task WhenPostIsScheduledByQueue_ItShouldSetLiveDateToNowAndUnscheduledFromQueue()
+        public async Task WhenBacklogPostIsScheduledByQueue_ItShouldSetLiveDateAndUnscheduledFromQueue()
         {
             await this.DatabaseTestAsync(async testDatabase =>
             {
                 this.InitializeTarget(testDatabase);
                 var post = await this.CreateEntitiesAsync(testDatabase, liveDateInFuture: true, scheduledByQueue: true);
+                await testDatabase.TakeSnapshotAsync();
+
+                await this.target.ExecuteAsync(PostId, NewDate, Now);
+
+                post.ScheduledByQueue = false;
+                post.LiveDate = new SqlDateTime(ClippedDate).Value;
+
+                return new ExpectedSideEffects
+                {
+                    Update = post
+                };
+            });
+        }
+
+        [TestMethod]
+        public async Task WhenLivePostIsNotScheduledByQueue_ItShouldSetLiveDate()
+        {
+            await this.DatabaseTestAsync(async testDatabase =>
+            {
+                this.InitializeTarget(testDatabase);
+                var post = await this.CreateEntitiesAsync(testDatabase, liveDateInFuture: false, scheduledByQueue: false);
+                await testDatabase.TakeSnapshotAsync();
+
+                await this.target.ExecuteAsync(PostId, NewDate, Now);
+
+                post.LiveDate = new SqlDateTime(ClippedDate).Value;
+
+                return new ExpectedSideEffects
+                {
+                    Update = post
+                };
+            });
+        }
+
+        [TestMethod]
+        public async Task WhenLivePostIsScheduledByQueue_ItShouldSetLiveDateAndUnscheduledFromQueue()
+        {
+            await this.DatabaseTestAsync(async testDatabase =>
+            {
+                this.InitializeTarget(testDatabase);
+                var post = await this.CreateEntitiesAsync(testDatabase, liveDateInFuture: false, scheduledByQueue: true);
                 await testDatabase.TakeSnapshotAsync();
 
                 await this.target.ExecuteAsync(PostId, NewDate, Now);

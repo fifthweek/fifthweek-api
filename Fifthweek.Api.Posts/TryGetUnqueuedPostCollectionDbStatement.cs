@@ -19,25 +19,21 @@ namespace Fifthweek.Api.Posts
             SELECT  {1}
             FROM    {0}
             WHERE   {2} = @PostId
-            AND     {3} > @Now
-            AND     {4} = 0",
+            AND     {3} = 0",
             Post.Table, 
             Post.Fields.CollectionId, 
             Post.Fields.Id, 
-            Post.Fields.LiveDate,
             Post.Fields.ScheduledByQueue);
 
         private readonly IFifthweekDbConnectionFactory connectionFactory;
 
-        public async Task<CollectionId> ExecuteAsync(PostId postId, DateTime now)
+        public async Task<CollectionId> ExecuteAsync(PostId postId)
         {
             postId.AssertNotNull("postId");
-            now.AssertUtc("now");
 
             var parameters = new
             {
                 PostId = postId.Value,
-                Now = now
             };
 
             using (var connection = this.connectionFactory.CreateConnection())

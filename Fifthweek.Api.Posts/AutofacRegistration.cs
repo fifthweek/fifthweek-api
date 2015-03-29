@@ -22,9 +22,9 @@
             builder.RegisterType<PostSecurity>().As<IPostSecurity>();
             builder.RegisterType<PostOwnership>().As<IPostOwnership>();
             builder.RegisterType<ScheduledDateClippingFunction>().As<IScheduledDateClippingFunction>();
-            builder.RegisterType<SetBacklogPostLiveDateDbStatement>().As<ISetBacklogPostLiveDateDbStatement>();
+            builder.RegisterType<SetPostLiveDateDbStatement>().As<ISetPostLiveDateDbStatement>();
             builder.RegisterType<RemoveFromQueueIfRequiredDbStatement>().As<IRemoveFromQueueIfRequiredDbStatement>();
-            builder.RegisterType<MoveBacklogPostToQueueDbStatement>().As<IMoveBacklogPostToQueueDbStatement>();
+            builder.RegisterType<MovePostToQueueDbStatement>().As<IMovePostToQueueDbStatement>();
 
             builder.RegisterType<FilePostController>().As<IFilePostController>();
             builder.RegisterType<ImagePostController>().As<IImagePostController>();

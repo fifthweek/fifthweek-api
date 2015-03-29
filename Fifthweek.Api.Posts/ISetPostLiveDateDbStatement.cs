@@ -5,7 +5,7 @@
 
     using Fifthweek.Api.Posts.Shared;
 
-    public interface ISetBacklogPostLiveDateDbStatement
+    public interface ISetPostLiveDateDbStatement
     {
         Task ExecuteAsync(PostId postId, DateTime newTime, DateTime now);
     }
