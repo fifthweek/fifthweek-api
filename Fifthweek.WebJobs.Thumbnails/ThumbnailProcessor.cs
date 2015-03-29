@@ -52,6 +52,10 @@
             {
                 return;
             }
+
+            await input.FetchAttributesAsync(cancellationToken);
+            var cacheControl = input.Properties.CacheControl;
+            this.PopulateCacheControl(cacheControl, cache);
             
             using (var image = await this.OpenImageAsync(input, cancellationToken, logger, sw))
             {
@@ -180,6 +184,7 @@
                     }
 
                     itemData.BlockBlob.Properties.ContentType = jobData.OutputMimeType;
+                    itemData.BlockBlob.Properties.CacheControl = itemData.CacheControl;
 
                     using (var outputStream = await itemData.BlockBlob.OpenWriteAsync(cancellationToken))
                     {
@@ -229,6 +234,14 @@
             }
         }
 
+        private void PopulateCacheControl(string cacheControl, Dictionary<ThumbnailDefinition, ThumbnailSetItemData> cache)
+        {
+            foreach (var item in cache.Values)
+            {
+                item.CacheControl = cacheControl;
+            }
+        }
+
 
         private class ThumbnailSetItemData
         {
@@ -242,6 +255,8 @@
             public bool Exists { get; set; }
 
             public bool ShouldCreate { get; set; }
+
+            public string CacheControl { get; set; }
         }
 
         private class JobData

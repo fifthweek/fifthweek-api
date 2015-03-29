@@ -82,25 +82,26 @@
         public async Task WhenAuthenticated_ItShouldReturnAccessSignaturesForTheUser()
         {
             var now = DateTime.UtcNow;
-            var expectedExpiry = this.target.GetNextExpiry(now);
-            var filesInformation = new BlobContainerSharedAccessInformation("files", "uri", "sig", expectedExpiry);
+            var expectedPublicExpiry = this.target.GetNextExpiry(now, true);
+            var expectedPrivateExpiry = this.target.GetNextExpiry(now, false);
+            var publicFilesInformation = new BlobContainerSharedAccessInformation("files", "uri", "sig", expectedPublicExpiry);
 
-            this.blobService.Setup(v => v.GetBlobContainerSharedAccessInformationForReadingAsync(FileManagement.Constants.PublicFileBlobContainerName, expectedExpiry))
-                .ReturnsAsync(filesInformation);
+            this.blobService.Setup(v => v.GetBlobContainerSharedAccessInformationForReadingAsync(FileManagement.Constants.PublicFileBlobContainerName, expectedPublicExpiry))
+                .ReturnsAsync(publicFilesInformation);
 
             var userContainerName = "containerName";
             this.blobLocationGenerator.Setup(v => v.GetBlobContainerName(UserId)).Returns(userContainerName);
 
-            var userInformation = new BlobContainerSharedAccessInformation(userContainerName, "useruri", "usersig", now);
+            var userInformation = new BlobContainerSharedAccessInformation(userContainerName, "useruri", "usersig", expectedPrivateExpiry);
 
-            this.blobService.Setup(v => v.GetBlobContainerSharedAccessInformationForReadingAsync(userContainerName, expectedExpiry))
+            this.blobService.Setup(v => v.GetBlobContainerSharedAccessInformationForReadingAsync(userContainerName, expectedPrivateExpiry))
                 .ReturnsAsync(userInformation);
 
             var result = await this.target.HandleAsync(new GetUserAccessSignaturesQuery(Requester, UserId));
 
             Assert.IsNotNull(result);
             Assert.IsNotNull(result.PublicSignature);
-            Assert.AreEqual(filesInformation, result.PublicSignature);
+            Assert.AreEqual(publicFilesInformation, result.PublicSignature);
 
             Assert.AreEqual(1, result.PrivateSignatures.Count);
 
@@ -109,33 +110,64 @@
         }
 
         [TestMethod]
-        public async Task WhenGettingNextExpiry_ItShouldReturnTheNextWholeHourTakingMinimumExpiryIntoAccount()
+        public async Task WhenGettingNextPublicExpiry_ItShouldReturnTheNextWholeWeekTakingMinimumExpiryIntoAccount()
         {
             DateTime result;
-            result = this.target.GetNextExpiry(new DateTime(2015, 3, 18, 10, 00, 00, DateTimeKind.Utc));
+            result = this.target.GetNextExpiry(new DateTime(2015, 3, 18, 10, 00, 00, DateTimeKind.Utc), true);
+            Assert.AreEqual(new DateTime(2015, 3, 23, 00, 00, 00, DateTimeKind.Utc), result);
+
+            result = this.target.GetNextExpiry(new DateTime(2015, 3, 22, 23, 30, 00, DateTimeKind.Utc), true);
+            Assert.AreEqual(new DateTime(2015, 3, 23, 00, 00, 00, DateTimeKind.Utc), result);
+
+            result = this.target.GetNextExpiry(new DateTime(2015, 3, 22, 23, 49, 59, DateTimeKind.Utc), true);
+            Assert.AreEqual(new DateTime(2015, 3, 23, 00, 00, 00, DateTimeKind.Utc), result);
+
+            result = this.target.GetNextExpiry(new DateTime(2015, 3, 22, 23, 50, 00, DateTimeKind.Utc), true);
+            Assert.AreEqual(new DateTime(2015, 3, 30, 00, 00, 00, DateTimeKind.Utc), result);
+        }
+
+        [TestMethod]
+        public async Task WhenGettingNextPrivateExpiry_ItShouldReturnTheNextWholeHourTakingMinimumExpiryIntoAccount()
+        {
+            DateTime result;
+            result = this.target.GetNextExpiry(new DateTime(2015, 3, 18, 10, 00, 00, DateTimeKind.Utc), false);
             Assert.AreEqual(new DateTime(2015, 3, 18, 11, 00, 00, DateTimeKind.Utc), result);
 
-            result = this.target.GetNextExpiry(new DateTime(2015, 3, 18, 10, 30, 00, DateTimeKind.Utc));
+            result = this.target.GetNextExpiry(new DateTime(2015, 3, 18, 10, 30, 00, DateTimeKind.Utc), false);
             Assert.AreEqual(new DateTime(2015, 3, 18, 11, 00, 00, DateTimeKind.Utc), result);
 
-            result = this.target.GetNextExpiry(new DateTime(2015, 3, 18, 10, 49, 59, DateTimeKind.Utc));
+            result = this.target.GetNextExpiry(new DateTime(2015, 3, 18, 10, 49, 59, DateTimeKind.Utc), false);
             Assert.AreEqual(new DateTime(2015, 3, 18, 11, 00, 00, DateTimeKind.Utc), result);
 
-            result = this.target.GetNextExpiry(new DateTime(2015, 3, 18, 10, 50, 00, DateTimeKind.Utc));
+            result = this.target.GetNextExpiry(new DateTime(2015, 3, 18, 10, 50, 00, DateTimeKind.Utc), false);
             Assert.AreEqual(new DateTime(2015, 3, 18, 12, 00, 00, DateTimeKind.Utc), result);
         }
 
         [TestMethod]
         [ExpectedException(typeof(InvalidOperationException))]
-        public async Task WhenGettingNextExpiry_ItShouldExpectTimesAsUtc()
+        public async Task WhenGettingNextPublicExpiry_ItShouldExpectTimesAsUtc()
         {
-            this.target.GetNextExpiry(new DateTime(2015, 3, 18, 10, 00, 00));
+            this.target.GetNextExpiry(new DateTime(2015, 3, 18, 10, 00, 00), true);
         }
 
         [TestMethod]
-        public async Task WhenGettingNextExpiry_ItShouldReturnTimesAsUtc()
+        [ExpectedException(typeof(InvalidOperationException))]
+        public async Task WhenGettingNextPrivateExpiry_ItShouldExpectTimesAsUtc()
         {
-            var result = this.target.GetNextExpiry(new DateTime(2015, 3, 18, 10, 00, 00, DateTimeKind.Utc));
+            this.target.GetNextExpiry(new DateTime(2015, 3, 18, 10, 00, 00), false);
+        }
+
+        [TestMethod]
+        public async Task WhenGettingNextPublicExpiry_ItShouldReturnTimesAsUtc()
+        {
+            var result = this.target.GetNextExpiry(new DateTime(2015, 3, 18, 10, 00, 00, DateTimeKind.Utc), true);
+            Assert.AreEqual(DateTimeKind.Utc, result.Kind);
+        }
+
+        [TestMethod]
+        public async Task WhenGettingNextPrivateExpiry_ItShouldReturnTimesAsUtc()
+        {
+            var result = this.target.GetNextExpiry(new DateTime(2015, 3, 18, 10, 00, 00, DateTimeKind.Utc), false);
             Assert.AreEqual(DateTimeKind.Utc, result.Kind);
         }
     }

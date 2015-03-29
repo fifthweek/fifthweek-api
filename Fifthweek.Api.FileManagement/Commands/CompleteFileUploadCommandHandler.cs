@@ -32,17 +32,32 @@
 
             var mimeType = this.mimeTypeMap.GetMimeType(file.FileExtension);
 
-            // We set the cache to the maximum time a SAS URL needs to be valid.
-            var timeSpan = FileManagement.Constants.ReadSignatureTimeSpan
-                           + FileManagement.Constants.ReadSignatureMinimumExpiryTime;
-
             var blobLocation = this.blobLocationGenerator.GetBlobLocation(userId, command.FileId, file.Purpose);
+
+            var timeSpan = this.GetExpiryTimeSpan(blobLocation);
+
             var blobLength = await this.blobService.GetBlobLengthAndSetPropertiesAsync(
                 blobLocation.ContainerName, blobLocation.BlobName, mimeType, timeSpan);
 
             await this.setFileUploadComplete.ExecuteAsync(command.FileId, blobLength, DateTime.UtcNow);
 
             await this.fileProcessor.ProcessFileAsync(blobLocation.ContainerName, blobLocation.BlobName, file.Purpose);
+        }
+
+        private TimeSpan GetExpiryTimeSpan(BlobLocation blobLocation)
+        {
+            // We set the cache to the maximum time a SAS URL needs to be valid.
+            var baseTimeSpan
+                = this.IsPublic(blobLocation.ContainerName)
+                ? FileManagement.Constants.PublicReadSignatureTimeSpan
+                : FileManagement.Constants.PrivateReadSignatureTimeSpan;
+
+            return baseTimeSpan + FileManagement.Constants.ReadSignatureMinimumExpiryTime;
+        }
+
+        private bool IsPublic(string containerName)
+        {
+            return containerName == FileManagement.Constants.PublicFileBlobContainerName;
         }
     }
 }

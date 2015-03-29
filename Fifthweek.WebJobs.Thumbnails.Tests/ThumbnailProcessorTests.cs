@@ -128,6 +128,9 @@
             this.output2 = new Mock<ICloudBlockBlob>();
 
             this.input = new Mock<ICloudBlockBlob>();
+            var inputProperties = new Mock<IBlobProperties>();
+            inputProperties.Setup(v => v.CacheControl).Returns("cache-control");
+            this.input.Setup(v => v.Properties).Returns(inputProperties.Object);
 
             this.storageAccount.Setup(v => v.CreateCloudBlobClient()).Returns(this.blobClient.Object);
             this.blobClient.Setup(v => v.GetContainerReference(ContainerName)).Returns(this.container.Object);
@@ -138,11 +141,13 @@
             this.output.Setup(v => v.Properties).Returns(this.outputProperties.Object);
             this.output.Setup(v => v.SetPropertiesAsync(CancellationToken.None)).Returns(Task.FromResult(0));
             this.outputProperties.SetupProperty(v => v.ContentType, null);
+            this.outputProperties.SetupProperty(v => v.CacheControl, null);
 
             this.outputProperties2 = new Mock<IBlobProperties>();
             this.output2.Setup(v => v.Properties).Returns(this.outputProperties2.Object);
             this.output2.Setup(v => v.SetPropertiesAsync(CancellationToken.None)).Returns(Task.FromResult(0));
             this.outputProperties2.SetupProperty(v => v.ContentType, null);
+            this.outputProperties2.SetupProperty(v => v.CacheControl, null);
 
             this.outputStream = new MockCloudBlobStream();
             this.output.Setup(v => v.OpenWriteAsync(CancellationToken.None)).ReturnsAsync(this.outputStream);
@@ -182,6 +187,7 @@
             Assert.AreEqual(SampleImagesLoader.Instance.LargeLandscape.Width, width);
             Assert.AreEqual(SampleImagesLoader.Instance.LargeLandscape.Height, height);
             Assert.AreEqual(this.mimeTypeMap.GetMimeType(Path.GetExtension(SampleImagesLoader.Instance.LargeLandscape.Path)), this.outputProperties.Object.ContentType);
+            Assert.AreEqual("cache-control", this.outputProperties.Object.CacheControl);
             Assert.IsTrue(this.outputStream.IsCommitted);
         }
 
