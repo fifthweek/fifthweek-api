@@ -43,12 +43,12 @@
                         3000, 
                         1000,
                         "header",
-                        ResizeBehaviour.CropToAspectRatio,
-                        new Thumbnail(
-                            960, 
-                            320,
-                            "preview",
-                            ResizeBehaviour.CropToAspectRatio))));
+                        ResizeBehaviour.CropToAspectRatio),
+                    new Thumbnail( // Having this as a child was causing the image to be cropped incorrectly to 960x160 (using e2e/sample-image.jpg).
+                        960,
+                        320,
+                        "preview",
+                        ResizeBehaviour.CropToAspectRatio)));
 
             Add(
                 FilePurposes.PostImage,
