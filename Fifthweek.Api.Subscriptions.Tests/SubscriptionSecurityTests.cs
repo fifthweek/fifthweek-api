@@ -18,41 +18,42 @@
     public class SubscriptionSecurityTests
     {
         private static readonly UserId UserId = new UserId(Guid.NewGuid());
+        private static readonly Requester Requester = Requester.Authenticated(UserId);
         private static readonly SubscriptionId SubscriptionId = new SubscriptionId(Guid.NewGuid());
-        private Mock<IUserManager> userManager;
+        private Mock<IRequesterSecurity> requesterSecurity;
         private Mock<ISubscriptionOwnership> subscriptionOwnership;
         private SubscriptionSecurity target;
 
         [TestInitialize]
         public void Initialize()
         {
-            this.userManager = new Mock<IUserManager>();
+            this.requesterSecurity = new Mock<IRequesterSecurity>();
             this.subscriptionOwnership = new Mock<ISubscriptionOwnership>();
-            this.target = new SubscriptionSecurity(this.userManager.Object, this.subscriptionOwnership.Object);
+            this.target = new SubscriptionSecurity(this.requesterSecurity.Object, this.subscriptionOwnership.Object);
         }
 
         [TestMethod]
         public async Task WhenAuthorizingCreation_ItShouldAllowIfUserHasCreatorRole()
         {
-            this.userManager.Setup(_ => _.IsInRoleAsync(UserId.Value, FifthweekRole.Creator)).ReturnsAsync(true);
-            
-            var result = await this.target.IsCreationAllowedAsync(UserId);
+            this.requesterSecurity.Setup(_ => _.IsInRoleAsync(Requester, FifthweekRole.Creator)).ReturnsAsync(true);
+
+            var result = await this.target.IsCreationAllowedAsync(Requester);
 
             Assert.IsTrue(result);
 
-            await this.target.AssertCreationAllowedAsync(UserId);
+            await this.target.AssertCreationAllowedAsync(Requester);
         }
 
         [TestMethod]
         public async Task WhenAuthorizingCreation_ItShouldForbidIfUserHasCreatorRole()
         {
-            this.userManager.Setup(_ => _.IsInRoleAsync(UserId.Value, FifthweekRole.Creator)).ReturnsAsync(false);
-            
-            var result = await this.target.IsCreationAllowedAsync(UserId);
+            this.requesterSecurity.Setup(_ => _.IsInRoleAsync(Requester, FifthweekRole.Creator)).ReturnsAsync(false);
+
+            var result = await this.target.IsCreationAllowedAsync(Requester);
 
             Assert.IsFalse(result);
 
-            Func<Task> badMethodCall = () => this.target.AssertCreationAllowedAsync(UserId);
+            Func<Task> badMethodCall = () => this.target.AssertCreationAllowedAsync(Requester);
 
             await badMethodCall.AssertExceptionAsync<UnauthorizedException>();
         }

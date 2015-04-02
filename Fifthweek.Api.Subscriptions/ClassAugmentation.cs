@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Linq;
 
-//// Generated on 25/02/2015 17:43:24 (UTC)
-//// Mapped solution in 27.87s
+//// Generated on 02/04/2015 16:38:50 (UTC)
+//// Mapped solution in 20.83s
 
 
 namespace Fifthweek.Api.Subscriptions.Commands
@@ -514,12 +514,12 @@ namespace Fifthweek.Api.Subscriptions
     public partial class SubscriptionSecurity 
     {
         public SubscriptionSecurity(
-            Fifthweek.Api.Persistence.IUserManager userManager,
+            Fifthweek.Api.Identity.Shared.Membership.IRequesterSecurity requesterSecurity,
             Fifthweek.Api.Subscriptions.ISubscriptionOwnership subscriptionOwnership)
         {
-            if (userManager == null)
+            if (requesterSecurity == null)
             {
-                throw new ArgumentNullException("userManager");
+                throw new ArgumentNullException("requesterSecurity");
             }
 
             if (subscriptionOwnership == null)
@@ -527,7 +527,7 @@ namespace Fifthweek.Api.Subscriptions
                 throw new ArgumentNullException("subscriptionOwnership");
             }
 
-            this.userManager = userManager;
+            this.requesterSecurity = requesterSecurity;
             this.subscriptionOwnership = subscriptionOwnership;
         }
     }

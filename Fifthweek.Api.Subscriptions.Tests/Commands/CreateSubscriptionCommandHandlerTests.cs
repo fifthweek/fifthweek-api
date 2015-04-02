@@ -56,7 +56,7 @@
         {
             await this.DatabaseTestAsync(async testDatabase =>
             {
-                this.subscriptionSecurity.Setup(_ => _.AssertCreationAllowedAsync(UserId)).Throws<UnauthorizedException>();
+                this.subscriptionSecurity.Setup(_ => _.AssertCreationAllowedAsync(Requester)).Throws<UnauthorizedException>();
                 this.target = new CreateSubscriptionCommandHandler(this.subscriptionSecurity.Object, this.requesterSecurity.Object, testDatabase);
                 await testDatabase.TakeSnapshotAsync();
 

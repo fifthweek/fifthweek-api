@@ -6,11 +6,11 @@ namespace Fifthweek.Api.Subscriptions.Shared
 
     public interface ISubscriptionSecurity
     {
-        Task<bool> IsCreationAllowedAsync(UserId requester);
+        Task<bool> IsCreationAllowedAsync(Requester requester);
 
         Task<bool> IsWriteAllowedAsync(UserId requester, SubscriptionId subscriptionId);
 
-        Task AssertCreationAllowedAsync(UserId requester);
+        Task AssertCreationAllowedAsync(Requester requester);
 
         Task AssertWriteAllowedAsync(UserId requester, SubscriptionId subscriptionId);
     }

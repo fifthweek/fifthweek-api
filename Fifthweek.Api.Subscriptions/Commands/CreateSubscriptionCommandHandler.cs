@@ -33,7 +33,7 @@
 
             var authenticatedUserId = await this.requesterSecurity.AuthenticateAsync(command.Requester);
 
-            await this.subscriptionSecurity.AssertCreationAllowedAsync(authenticatedUserId);
+            await this.subscriptionSecurity.AssertCreationAllowedAsync(command.Requester);
 
             await this.CreateEntitiesAsync(command, authenticatedUserId);
         }

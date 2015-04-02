@@ -12,14 +12,14 @@ namespace Fifthweek.Api.Subscriptions
     [AutoConstructor]
     public partial class SubscriptionSecurity : ISubscriptionSecurity
     {
-        private readonly IUserManager userManager;
+        private readonly IRequesterSecurity requesterSecurity;
         private readonly ISubscriptionOwnership subscriptionOwnership;
 
-        public Task<bool> IsCreationAllowedAsync(UserId requester)
+        public Task<bool> IsCreationAllowedAsync(Requester requester)
         {
             requester.AssertNotNull("requester");
 
-            return this.userManager.IsInRoleAsync(requester.Value, FifthweekRole.Creator);
+            return this.requesterSecurity.IsInRoleAsync(requester, FifthweekRole.Creator);
         }
 
         public Task<bool> IsWriteAllowedAsync(UserId requester, SubscriptionId subscriptionId)
@@ -30,7 +30,7 @@ namespace Fifthweek.Api.Subscriptions
             return this.subscriptionOwnership.IsOwnerAsync(requester, subscriptionId);
         }
 
-        public async Task AssertCreationAllowedAsync(UserId requester)
+        public async Task AssertCreationAllowedAsync(Requester requester)
         {
             requester.AssertNotNull("requester");
 
