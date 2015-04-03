@@ -238,6 +238,10 @@
     <Compile Include="Migrations\201503031543081_MakeChannelNameAndDescriptionRequired.Designer.cs">
       <DependentUpon>201503031543081_MakeChannelNameAndDescriptionRequired.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201504031543042_AddFileProcessingInformationToFilesTable.cs" />
+    <Compile Include="Migrations\201504031543042_AddFileProcessingInformationToFilesTable.Designer.cs">
+      <DependentUpon>201504031543042_AddFileProcessingInformationToFilesTable.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Post.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -365,6 +369,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201503031543081_MakeChannelNameAndDescriptionRequired.resx">
       <DependentUpon>201503031543081_MakeChannelNameAndDescriptionRequired.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201504031543042_AddFileProcessingInformationToFilesTable.resx">
+      <DependentUpon>201504031543042_AddFileProcessingInformationToFilesTable.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
