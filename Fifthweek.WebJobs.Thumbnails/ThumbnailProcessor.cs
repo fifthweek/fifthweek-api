@@ -192,7 +192,9 @@
                     using (var outputStream = await itemData.BlockBlob.OpenWriteAsync(cancellationToken))
                     {
                         this.imageService.Resize(itemImage, outputStream, item.Width, item.Height, item.ResizeBehaviour);
-
+                        itemData.BlockBlob.Metadata["width"] = image.Width.ToString();
+                        itemData.BlockBlob.Metadata["height"] = image.Height.ToString();
+                        
                         await Task.Factory.FromAsync(outputStream.BeginCommit(null, null), outputStream.EndCommit);
                     }
                 }

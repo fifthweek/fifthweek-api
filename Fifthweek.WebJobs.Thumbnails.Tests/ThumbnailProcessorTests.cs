@@ -117,6 +117,8 @@
         private Mock<ICloudBlockBlob> output2;
         private Mock<IBlobProperties> outputProperties;
         private Mock<IBlobProperties> outputProperties2;
+        private Dictionary<string, string> outputMetadata;
+        private Dictionary<string, string> outputMetadata2;
         private MockCloudBlobStream outputStream;
         private MockCloudBlobStream outputStream2;
         private ThumbnailProcessor target;
@@ -155,6 +157,11 @@
             this.outputProperties2.SetupProperty(v => v.ContentType, null);
             this.outputProperties2.SetupProperty(v => v.CacheControl, null);
 
+            this.outputMetadata = new Dictionary<string, string>();
+            this.outputMetadata2 = new Dictionary<string, string>();
+            this.output.Setup(v => v.Metadata).Returns(this.outputMetadata);
+            this.output2.Setup(v => v.Metadata).Returns(this.outputMetadata2);
+
             this.outputStream = new MockCloudBlobStream();
             this.output.Setup(v => v.OpenWriteAsync(CancellationToken.None)).ReturnsAsync(this.outputStream);
 
@@ -175,6 +182,7 @@
                     {
                         width = a.Width;
                         height = a.Height;
+                        a.Resize(Message.Items[0].Width, Message.Items[0].Height);
                     })
                 .Verifiable();
 
@@ -195,6 +203,8 @@
             Assert.AreEqual(SampleImagesLoader.Instance.LargeLandscape.Height, height);
             Assert.AreEqual(SampleImagesLoader.Instance.LargeLandscape.Width, result.RenderWidth);
             Assert.AreEqual(SampleImagesLoader.Instance.LargeLandscape.Height, result.RenderHeight);
+            Assert.AreEqual("150", this.outputMetadata["width"]);
+            Assert.AreEqual("100", this.outputMetadata["height"]);
             Assert.AreEqual(this.mimeTypeMap.GetMimeType(Path.GetExtension(SampleImagesLoader.Instance.LargeLandscape.Path)), this.outputProperties.Object.ContentType);
             Assert.AreEqual("cache-control", this.outputProperties.Object.CacheControl);
             Assert.IsTrue(this.outputStream.IsCommitted);

@@ -1,6 +1,7 @@
 namespace Fifthweek.Azure
 {
     using System;
+    using System.Collections.Generic;
     using System.IO;
     using System.Threading;
     using System.Threading.Tasks;
@@ -29,6 +30,14 @@ namespace Fifthweek.Azure
             get
             {
                 return new FifthweekBlobProperties(this.blob.Properties);
+            }
+        }
+
+        public IDictionary<string, string> Metadata
+        {
+            get
+            {
+                return this.blob.Metadata;
             }
         }
 

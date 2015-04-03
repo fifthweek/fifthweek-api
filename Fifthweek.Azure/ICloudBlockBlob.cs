@@ -1,6 +1,7 @@
 namespace Fifthweek.Azure
 {
     using System;
+    using System.Collections.Generic;
     using System.IO;
     using System.Threading;
     using System.Threading.Tasks;
@@ -12,6 +13,8 @@ namespace Fifthweek.Azure
         Uri Uri { get; }
 
         IBlobProperties Properties { get; }
+
+        IDictionary<string, string> Metadata { get; }
 
         string GetSharedAccessSignature(SharedAccessBlobPolicy policy, SharedAccessBlobHeaders headers);
 
