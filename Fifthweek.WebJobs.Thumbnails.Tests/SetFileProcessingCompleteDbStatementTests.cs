@@ -71,14 +71,6 @@
                     RenderWidth,
                     RenderWidth);
 
-                //using (var databaseContext = testDatabase.CreateContext())
-                //{
-                //    var newFile = databaseContext.Files.Find(FileId.Value);
-                //    Assert.IsTrue(newFile.UploadStartedDate < newFile.ProcessingCompletedDate);
-                //    Assert.IsTrue((DateTime.UtcNow - newFile.UploadStartedDate) < TimeSpan.FromMinutes(5));
-                //    Assert.IsTrue((newFile.ProcessingCompletedDate - newFile.UploadStartedDate) < TimeSpan.FromMinutes(5));
-                //}
-
                 return new ExpectedSideEffects
                 {
                     Update = expectedFile,

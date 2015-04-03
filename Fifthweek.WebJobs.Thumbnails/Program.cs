@@ -6,6 +6,8 @@
     using System.Threading;
     using System.Threading.Tasks;
 
+    using Dapper;
+
     using Fifthweek.Api.Persistence;
     using Fifthweek.Azure;
     using Fifthweek.Logging;
@@ -61,6 +63,8 @@
             // This is just a sanity check to ensure we run as 64 bit when processing images.
             Console.WriteLine("Thumbnails WebJob running as {0} bit process.", Environment.Is64BitProcess ? "64" : "32");
             Trace.TraceInformation("Thumbnails WebJob running as {0} bit process.", Environment.Is64BitProcess ? "64" : "32");
+
+            DataDirectory.ConfigureDataDirectory();
 
             var config = new JobHostConfiguration();
             config.DashboardConnectionString = config.StorageConnectionString = AzureConfiguration.GetStorageConnectionString();
