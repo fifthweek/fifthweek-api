@@ -33,5 +33,7 @@ namespace Fifthweek.Azure
         Task<bool> ExistsAsync(CancellationToken cancellationToken);
 
         Task<Stream> OpenReadAsync(CancellationToken cancellationToken);
+
+        Task SetMetadataAsync();
     }
 }

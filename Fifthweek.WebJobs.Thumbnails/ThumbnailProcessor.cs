@@ -22,6 +22,8 @@
     {
         public const string JpegMimeType = "image/jpeg";
         public const string DefaultOutputMimeType = JpegMimeType;
+        private const string WidthHeaderKey = "width";
+        private const string HeightHeaderKey = "height";
         private const MagickFormat DefaultOutputFormat = MagickFormat.Jpeg;
         private static readonly List<string> SupportedOutputMimeTypes = new List<string> { JpegMimeType, "image/gif", "image/png" };
 
@@ -60,6 +62,10 @@
 
             using (var image = await this.OpenImageAsync(input, cancellationToken, logger, sw))
             {
+                input.Metadata[WidthHeaderKey] = image.Width.ToString();
+                input.Metadata[HeightHeaderKey] = image.Height.ToString();
+                await input.SetMetadataAsync();
+
                 result = new CreateThumbnailSetResult(image.Width, image.Height);
                 logger.Info("OpenImage: " + sw.ElapsedMilliseconds);
                 var outputMimeType = image.FormatInfo.MimeType;
@@ -192,8 +198,8 @@
                     using (var outputStream = await itemData.BlockBlob.OpenWriteAsync(cancellationToken))
                     {
                         this.imageService.Resize(itemImage, outputStream, item.Width, item.Height, item.ResizeBehaviour);
-                        itemData.BlockBlob.Metadata["width"] = image.Width.ToString();
-                        itemData.BlockBlob.Metadata["height"] = image.Height.ToString();
+                        itemData.BlockBlob.Metadata[WidthHeaderKey] = image.Width.ToString();
+                        itemData.BlockBlob.Metadata[HeightHeaderKey] = image.Height.ToString();
                         
                         await Task.Factory.FromAsync(outputStream.BeginCommit(null, null), outputStream.EndCommit);
                     }

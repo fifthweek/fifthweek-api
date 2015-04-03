@@ -71,6 +71,11 @@ namespace Fifthweek.Azure
             return this.blob.SetPropertiesAsync();
         }
 
+        public Task SetMetadataAsync()
+        {
+            return this.blob.SetMetadataAsync();
+        }
+
         public Task SetPropertiesAsync(CancellationToken cancellationToken)
         {
             return this.blob.SetPropertiesAsync(cancellationToken);

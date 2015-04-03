@@ -117,6 +117,7 @@
         private Mock<ICloudBlockBlob> output2;
         private Mock<IBlobProperties> outputProperties;
         private Mock<IBlobProperties> outputProperties2;
+        private Dictionary<string, string> inputMetadata;
         private Dictionary<string, string> outputMetadata;
         private Dictionary<string, string> outputMetadata2;
         private MockCloudBlobStream outputStream;
@@ -139,6 +140,10 @@
             var inputProperties = new Mock<IBlobProperties>();
             inputProperties.Setup(v => v.CacheControl).Returns("cache-control");
             this.input.Setup(v => v.Properties).Returns(inputProperties.Object);
+            input.Setup(v => v.SetMetadataAsync()).Returns(Task.FromResult(0));
+
+            this.inputMetadata = new Dictionary<string, string>();
+            this.input.Setup(v => v.Metadata).Returns(this.inputMetadata);
 
             this.storageAccount.Setup(v => v.CreateCloudBlobClient()).Returns(this.blobClient.Object);
             this.blobClient.Setup(v => v.GetContainerReference(ContainerName)).Returns(this.container.Object);
@@ -189,6 +194,7 @@
             CreateThumbnailSetResult result;
             using (var inputStream = SampleImagesLoader.Instance.LargeLandscape.Open())
             {
+                this.input.Setup(v => v.SetMetadataAsync()).Returns(Task.FromResult(0)).Verifiable();
                 this.input.Setup(v => v.OpenReadAsync(It.IsAny<CancellationToken>())).ReturnsAsync(inputStream);
                 result = await this.target.CreateThumbnailSetAsync(
                         Message,
@@ -208,6 +214,10 @@
             Assert.AreEqual(this.mimeTypeMap.GetMimeType(Path.GetExtension(SampleImagesLoader.Instance.LargeLandscape.Path)), this.outputProperties.Object.ContentType);
             Assert.AreEqual("cache-control", this.outputProperties.Object.CacheControl);
             Assert.IsTrue(this.outputStream.IsCommitted);
+
+            Assert.AreEqual(SampleImagesLoader.Instance.LargeLandscape.Width.ToString(), this.inputMetadata["width"]);
+            Assert.AreEqual(SampleImagesLoader.Instance.LargeLandscape.Height.ToString(), this.inputMetadata["height"]);
+            this.input.Verify();
         }
 
         [TestMethod]
