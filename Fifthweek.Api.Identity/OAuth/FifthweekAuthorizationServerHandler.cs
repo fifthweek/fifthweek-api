@@ -76,8 +76,8 @@ namespace Fifthweek.Api.Identity.OAuth
 
             Helper.SetAccessControlAllowOrigin(context.OwinContext, allowedOrigin);
 
-            context.OwinContext.Set<string>(Constants.TokenAllowedOriginKey, allowedOrigin);
-            context.OwinContext.Set<int>(Constants.TokenRefreshTokenLifeTimeKey, client.RefreshTokenLifeTimeMinutes);
+            context.OwinContext.Set<string>(Core.Constants.TokenAllowedOriginKey, allowedOrigin);
+            context.OwinContext.Set<int>(Core.Constants.TokenRefreshTokenLifeTimeKey, client.RefreshTokenLifeTimeMinutes);
 
             context.Validated();
         }
@@ -97,7 +97,7 @@ namespace Fifthweek.Api.Identity.OAuth
         {
             context.AssertNotNull("context");
 
-            var allowedOrigin = context.OwinContext.Get<string>(Constants.TokenAllowedOriginKey); // ?? Constants.DefaultAllowedOrigin;
+            var allowedOrigin = context.OwinContext.Get<string>(Core.Constants.TokenAllowedOriginKey); // ?? Constants.DefaultAllowedOrigin;
 
             if (string.IsNullOrEmpty(allowedOrigin))
             {
@@ -168,7 +168,7 @@ namespace Fifthweek.Api.Identity.OAuth
         {
             context.AssertNotNull("context");
 
-            var originalClient = context.Ticket.Properties.Dictionary[Constants.TokenClientIdKey];
+            var originalClient = context.Ticket.Properties.Dictionary[Core.Constants.TokenClientIdKey];
             var currentClient = context.ClientId;
 
             if (originalClient != currentClient)
@@ -206,7 +206,7 @@ namespace Fifthweek.Api.Identity.OAuth
             var props = new AuthenticationProperties(new Dictionary<string, string>
             {
                 {
-                    Constants.TokenClientIdKey, clientId
+                    Core.Constants.TokenClientIdKey, clientId
                 },
                 { 
                     "username", userClaimsIdentity.Username.Value 
@@ -247,7 +247,7 @@ namespace Fifthweek.Api.Identity.OAuth
             catch (Exception t)
             {
                 this.exceptionHandler.ReportExceptionAsync(context.Request, t);
-                allowedOrigin = Constants.DefaultAllowedOrigin;  // Remove this line to restrict origins to those defined by the client.
+                allowedOrigin = Core.Constants.DefaultAllowedOrigin;  // Remove this line to restrict origins to those defined by the client.
             }
 
             return allowedOrigin;

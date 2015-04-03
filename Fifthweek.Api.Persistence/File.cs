@@ -39,6 +39,9 @@
         [Optional]
         public DateTime? ProcessingCompletedDate { get; set; }
 
+        //[Optional]
+        //public int? ProcessingAttempts { get; set; }
+
         [Required]
         [MaxLength(255)] // This is the limit on some OSs. Again, somewhat arbitrary, but a safe limitation for us to enforce.
         public string FileNameWithoutExtension { get; set; }
@@ -52,5 +55,11 @@
 
         [Required]
         public string Purpose { get; set; }
+
+        //[Optional]
+        //public int? RenderWidth { get; set; }
+
+        //[Optional]
+        //public int? RenderHeight { get; set; }
     }
 }

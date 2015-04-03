@@ -307,6 +307,10 @@
       <Project>{770F450E-2166-4269-BEC1-DF59AA16B1E8}</Project>
       <Name>Fifthweek.CodeGeneration</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Fifthweek.Logging\Fifthweek.Logging.csproj">
+      <Project>{6cb9eac7-e00a-4dac-b6a4-d14c4503c6cd}</Project>
+      <Name>Fifthweek.Logging</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Fifthweek.Shared\Fifthweek.Shared.csproj">
       <Project>{6D12FFBB-38E9-4722-A690-0F0338538EBC}</Project>
       <Name>Fifthweek.Shared</Name>

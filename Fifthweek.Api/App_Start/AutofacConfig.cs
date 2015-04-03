@@ -14,6 +14,7 @@
     using Fifthweek.Api.AssemblyResolution;
     using Fifthweek.Api.Core;
     using Fifthweek.Api.Logging;
+    using Fifthweek.Logging;
     using Fifthweek.Shared;
 
     using Owin;

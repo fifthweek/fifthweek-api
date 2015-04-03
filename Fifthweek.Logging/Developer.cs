@@ -1,4 +1,4 @@
-﻿namespace Fifthweek.Api.Logging
+﻿namespace Fifthweek.Logging
 {
     public class Developer
     {

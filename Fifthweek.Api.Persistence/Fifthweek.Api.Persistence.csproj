@@ -257,10 +257,6 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Fifthweek.Api.Core\Fifthweek.Api.Core.csproj">
-      <Project>{bd52863e-063d-45a5-9ca8-7541804d1313}</Project>
-      <Name>Fifthweek.Api.Core</Name>
-    </ProjectReference>
     <ProjectReference Include="..\Fifthweek.CodeGeneration\Fifthweek.CodeGeneration.csproj">
       <Project>{770f450e-2166-4269-bec1-df59aa16b1e8}</Project>
       <Name>Fifthweek.CodeGeneration</Name>

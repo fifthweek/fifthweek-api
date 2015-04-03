@@ -1,12 +1,14 @@
-﻿namespace Fifthweek.Api.Logging
+﻿namespace Fifthweek.Logging
 {
     using System;
     using System.Threading.Tasks;
 
-    using Fifthweek.Api.Core;
+    using Fifthweek.Shared;
 
     public class EmailReportingService : IReportingService
     {
+        public const string ErrorEmailAddress = "services@fifthweek.com";
+
         private readonly ISendEmailService sendEmailService;
 
         public EmailReportingService(ISendEmailService sendEmailService)
@@ -22,7 +24,7 @@
             }
 
             return this.sendEmailService.SendEmailAsync(
-                developer == null ? Constants.ErrorEmailAddress : developer.FifthweekEmail,
+                developer == null ? ErrorEmailAddress : developer.FifthweekEmail,
                 "An error occurred: " + identifier,
                 t.ToString());
         }

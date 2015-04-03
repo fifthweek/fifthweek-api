@@ -1,4 +1,4 @@
-﻿namespace Fifthweek.Api.Logging
+﻿namespace Fifthweek.Logging
 {
     using System.Collections.Generic;
     using System.Linq;

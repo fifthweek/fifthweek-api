@@ -149,11 +149,12 @@ namespace Fifthweek.Api.EndToEndTestMailboxes
     using Fifthweek.Api.EndToEndTestMailboxes.Shared;
     using Fifthweek.CodeGeneration;
     using Fifthweek.Api.Persistence;
+    using Fifthweek.Shared;
 
     public partial class EndToEndTestSendEmailServiceDecorator 
     {
         public EndToEndTestSendEmailServiceDecorator(
-            Fifthweek.Api.Core.ISendEmailService baseService,
+            ISendEmailService baseService,
             Fifthweek.Api.EndToEndTestMailboxes.ISetLatestMessageDbStatement setLatestMessage)
         {
             if (baseService == null)

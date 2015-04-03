@@ -4,15 +4,22 @@
     using System.IO;
     using System.Threading.Tasks;
 
+    using Fifthweek.Logging;
+
     public class WebJobLogger : ILogger
     {
+        private static readonly IReportingService ReportingService = HardwiredDependencies.NewDefaultReportingService();
+
         private readonly string id = Guid.NewGuid().ToString().Substring(0, 8);
 
         private readonly TextWriter textWriter;
 
-        public WebJobLogger(TextWriter textWriter)
+        private readonly string webJobIdentifier;
+
+        public WebJobLogger(TextWriter textWriter, string webJobIdentifier)
         {
             this.textWriter = textWriter;
+            this.webJobIdentifier = webJobIdentifier;
         }
 
         public void Info(string message, params object[] args)
@@ -22,12 +29,27 @@
 
         public void Warn(string message, params object[] args)
         {
-            this.Log(string.Format("Warn: " + message, args));
+            var formattedMessage = string.Format("Warn: " + message, args);
+            this.Log(formattedMessage);
+            this.ReportException(new WarningException(formattedMessage));
         }
 
-        public void Error(string message, params object[] args)
+        public void Error(Exception exception)
         {
-            this.Log(string.Format("Error: " + message, args));
+            this.Log(string.Format("Error: " + exception));
+            this.ReportException(exception);
+        }
+
+        private async void ReportException(Exception exception)
+        {
+            try
+            {
+                await ReportingService.ReportErrorAsync(exception, this.webJobIdentifier, null);
+            }
+            catch (Exception t)
+            {
+                this.Log(string.Format("Error: Failed to report error: " + t));
+            }
         }
 
         private void Log(string output)
@@ -39,6 +61,14 @@
         private string GetNowString()
         {
             return DateTime.UtcNow.ToString("yyyy/MM/dd HH:mm:ss.fff");
+        }
+
+        private class WarningException : Exception
+        {
+            public WarningException(string message)
+                : base(message)
+            {
+            }
         }
     }
 }

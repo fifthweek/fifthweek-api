@@ -1,5 +1,6 @@
 ﻿namespace Fifthweek.WebJobs.Shared
 {
+    using System;
     using System.Threading.Tasks;
 
     public interface ILogger
@@ -8,6 +9,6 @@
 
         void Warn(string message, params object[] args);
 
-        void Error(string message, params object[] args);
+        void Error(Exception exception);
     }
 }

@@ -161,6 +161,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fifthweek.Api.EndToEndTestM
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fifthweek.Api.EndToEndTestMailboxes.Shared", "Fifthweek.Api.EndToEndTestMailboxes.Shared\Fifthweek.Api.EndToEndTestMailboxes.Shared.csproj", "{DA56BC7E-7E27-4211-B5C0-63E7205B769D}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fifthweek.Logging", "Fifthweek.Logging\Fifthweek.Logging.csproj", "{6CB9EAC7-E00A-4DAC-B6A4-D14C4503C6CD}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fifthweek.Logging.Tests", "Fifthweek.Logging.Tests\Fifthweek.Logging.Tests.csproj", "{8516FA7A-01CB-4E4E-B26B-547D025BB038}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -383,6 +387,14 @@ Global
 		{DA56BC7E-7E27-4211-B5C0-63E7205B769D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DA56BC7E-7E27-4211-B5C0-63E7205B769D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{DA56BC7E-7E27-4211-B5C0-63E7205B769D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6CB9EAC7-E00A-4DAC-B6A4-D14C4503C6CD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6CB9EAC7-E00A-4DAC-B6A4-D14C4503C6CD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6CB9EAC7-E00A-4DAC-B6A4-D14C4503C6CD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6CB9EAC7-E00A-4DAC-B6A4-D14C4503C6CD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8516FA7A-01CB-4E4E-B26B-547D025BB038}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8516FA7A-01CB-4E4E-B26B-547D025BB038}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8516FA7A-01CB-4E4E-B26B-547D025BB038}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8516FA7A-01CB-4E4E-B26B-547D025BB038}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

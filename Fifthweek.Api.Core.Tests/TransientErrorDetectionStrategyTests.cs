@@ -7,9 +7,13 @@
     using System.IO;
     using System.Threading.Tasks;
 
+    using Fifthweek.Shared;
+
     using Microsoft.VisualStudio.TestTools.UnitTesting;
 
     using Moq;
+
+    using OptimisticConcurrencyException = System.Data.Entity.Core.OptimisticConcurrencyException;
 
     [TestClass]
     public class TransientErrorDetectionStrategyTests

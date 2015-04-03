@@ -49,7 +49,7 @@
 
             var token = await this.userManager.GeneratePasswordResetTokenAsync(user.Id);
 
-            var callbackUrl = string.Format("{0}/#/sign-in/reset?userId={1}&token={2}", Constants.FifthweekWebsiteBaseUrl, user.Id.EncodeGuid(), HttpUtility.UrlEncode(token));
+            var callbackUrl = string.Format("{0}/#/sign-in/reset?userId={1}&token={2}", Core.Constants.FifthweekWebsiteBaseUrl, user.Id.EncodeGuid(), HttpUtility.UrlEncode(token));
 
             // Some email clients render whitespace.
             var lintedTemplate = this.htmlLinter.RemoveWhitespaceForHtmlEmail(EmailBodyTemplate);

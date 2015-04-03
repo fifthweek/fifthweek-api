@@ -5,6 +5,7 @@
     using System.Web.Http;
 
     using Fifthweek.Api.Core;
+    using Fifthweek.Shared;
 
     [RoutePrefix("log")]
     public class LogController : ApiController

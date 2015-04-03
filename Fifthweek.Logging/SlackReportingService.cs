@@ -1,4 +1,4 @@
-﻿namespace Fifthweek.Api.Logging
+﻿namespace Fifthweek.Logging
 {
     using System;
     using System.Net.Http;
@@ -6,7 +6,7 @@
     using System.Text;
     using System.Threading.Tasks;
 
-    using Fifthweek.Api.Core;
+    using Fifthweek.Shared;
 
     using Newtonsoft.Json;
 

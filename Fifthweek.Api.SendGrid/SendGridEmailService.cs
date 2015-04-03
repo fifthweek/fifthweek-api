@@ -4,7 +4,7 @@
     using System.Net;
     using System.Threading.Tasks;
 
-    using Fifthweek.Api.Core;
+    using Fifthweek.Shared;
 
     using global::SendGrid;
 

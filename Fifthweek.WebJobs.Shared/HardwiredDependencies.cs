@@ -1,11 +1,11 @@
-﻿namespace Fifthweek.Api
-{
-    using System;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
-    using Fifthweek.Api.Core;
-    using Fifthweek.Api.EndToEndTestMailboxes;
-    using Fifthweek.Api.Logging;
-    using Fifthweek.Api.Persistence;
+namespace Fifthweek.WebJobs.Shared
+{
     using Fifthweek.Api.SendGrid;
     using Fifthweek.Logging;
     using Fifthweek.Shared;
@@ -23,12 +23,9 @@
         // This is used for reporting errors, as we can't rely on AutoFac being in a good state.
         public static ISendEmailService NewDefaultSendEmailService()
         {
-            return new EndToEndTestSendEmailServiceDecorator(
-                new SendGridEmailService(),
-                new SetLatestMessageDbStatement(
-                    new FifthweekDbConnectionFactory()));
+            return new SendGridEmailService();
         }
-            
+
         // This is used for reporting errors, as we can't rely on AutoFac being in a good state.
         public static IReportingService NewDefaultReportingService()
         {

@@ -7,10 +7,9 @@
     using System.Threading.Tasks;
 
     using Fifthweek.Azure;
+    using Fifthweek.Logging;
     using Fifthweek.WebJobs.Shared;
     using Fifthweek.WebJobs.Thumbnails.Shared;
-
-    using ImageMagick;
 
     using Microsoft.Azure.WebJobs;
     using Microsoft.WindowsAzure.Storage;
@@ -18,36 +17,59 @@
 
     public class Program
     {
+        private const string ErrorIdentifier = "Thumbnails WebJob";
+
         private static readonly IThumbnailProcessor ThumbnailProcessor = new ThumbnailProcessor(new ImageService());
 
-        public static Task CreateThumbnailSetAsync(
+        public static async Task CreateThumbnailSetAsync(
             [QueueTrigger(Constants.ThumbnailsQueueName)] CreateThumbnailsMessage message,
             [Blob("{ContainerName}/{InputBlobName}")] CloudBlockBlob input,
             CloudStorageAccount cloudStorageAccount,
-            TextWriter logger,
+            TextWriter webJobsLogger,
             CancellationToken cancellationToken)
         {
-            return ThumbnailProcessor.CreateThumbnailSetAsync(
-                message,
-                new FifthweekCloudBlockBlob(input),
-                new FifthweekCloudStorageAccount(cloudStorageAccount),
-                new WebJobLogger(logger),
-                cancellationToken);
+            var logger = CreateLogger(webJobsLogger);
+            try
+            {
+                await ThumbnailProcessor.CreateThumbnailSetAsync(
+                        message,
+                        new FifthweekCloudBlockBlob(input),
+                        new FifthweekCloudStorageAccount(cloudStorageAccount),
+                        logger,
+                        cancellationToken);
+            }
+            catch (Exception t)
+            {
+                logger.Error(t);
+                throw;
+            }
         }
 
-        public static Task ProcessPoisonMessage(
+        public static async Task ProcessPoisonMessage(
             [QueueTrigger(Constants.ThumbnailsQueueName + "-poison")] CreateThumbnailsMessage message,
             CloudStorageAccount cloudStorageAccount,
-            TextWriter logger,
+            TextWriter webJobsLogger,
             CancellationToken cancellationToken)
         {
-            logger.WriteLine("Failed to resize image from path {0}/{1}", message.ContainerName, message.InputBlobName);
+            var logger = CreateLogger(webJobsLogger);
+            try
+            {
+                logger.Warn(
+                    "Failed to resize image from blob {0}/{1}",
+                    message.ContainerName,
+                    message.InputBlobName);
 
-            return ThumbnailProcessor.CreatePoisonThumbnailSetAsync(
-                message,
-                new FifthweekCloudStorageAccount(cloudStorageAccount),
-                new WebJobLogger(logger), 
-                cancellationToken);
+                await ThumbnailProcessor.CreatePoisonThumbnailSetAsync(
+                    message,
+                    new FifthweekCloudStorageAccount(cloudStorageAccount),
+                    logger,
+                    cancellationToken);
+            }
+            catch (Exception t)
+            {
+                logger.Error(t);
+                throw;
+            }
         }
 
         public static void Main(string[] args)
@@ -63,6 +85,11 @@
             config.Queues.MaxPollingInterval = TimeSpan.FromSeconds(2);
             var host = new JobHost(config);
             host.RunAndBlock();
+        }
+
+        private static ILogger CreateLogger(TextWriter webJobsLogger)
+        {
+            return new WebJobLogger(webJobsLogger, ErrorIdentifier);
         }
     }
 }
