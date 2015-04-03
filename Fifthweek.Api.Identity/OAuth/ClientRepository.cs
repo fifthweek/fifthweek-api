@@ -4,7 +4,7 @@
     using System.Collections.Generic;
     using System.Threading.Tasks;
 
-    using Fifthweek.Api.Core;
+    using Fifthweek.Shared;
 
     public class ClientRepository : IClientRepository
     {
@@ -21,8 +21,8 @@
                 ApplicationType.JavaScript,
                 true,
                 (int)TimeSpan.FromDays(365).TotalMinutes,
-                Constants.FifthweekWebsiteOriginRegex,
-                Constants.FifthweekWebsiteOriginDefault));
+                Core.Constants.FifthweekWebsiteOriginRegex,
+                Core.Constants.FifthweekWebsiteOriginDefault));
         }
 
         public Task<Client> TryGetClientAsync(ClientId clientId)

@@ -3,6 +3,7 @@
     using System.Threading.Tasks;
 
     using Fifthweek.Api.Azure;
+    using Fifthweek.Api.FileManagement.Shared;
     using Fifthweek.CodeGeneration;
 
     [AutoConstructor]
@@ -12,12 +13,12 @@
 
         private readonly IQueueService queueService;
 
-        public async Task ProcessFileAsync(string containerName, string blobName, string filePurpose)
+        public async Task ProcessFileAsync(FileId fileId, string containerName, string blobName, string filePurpose)
         {
             var tasks = this.filePurposeTasks.GetTasks(filePurpose);
             foreach (var task in tasks)
             {
-                await task.HandleAsync(this.queueService, containerName, blobName, filePurpose);
+                await task.HandleAsync(this.queueService, fileId, containerName, blobName, filePurpose);
             }
         }
     }

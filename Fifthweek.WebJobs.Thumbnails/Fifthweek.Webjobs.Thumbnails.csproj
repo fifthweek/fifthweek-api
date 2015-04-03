@@ -91,11 +91,16 @@
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
     </Compile>
+    <Compile Include="CreateThumbnailSetResult.cs" />
     <Compile Include="IImageService.cs" />
+    <Compile Include="ILoggingThumbnailProcessorWrapper.cs" />
     <Compile Include="ImageService.cs" />
+    <Compile Include="ISetFileProcessingCompleteDbStatement.cs" />
     <Compile Include="IThumbnailProcessor.cs" />
+    <Compile Include="LoggingThumbnailProcessorWrapper.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SetFileProcessingCompleteDbStatement.cs" />
     <Compile Include="ThumbnailProcessor.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -111,6 +116,14 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Fifthweek.Api.FileManagement.Shared\Fifthweek.Api.FileManagement.Shared.csproj">
+      <Project>{3CA706AF-5916-414E-9625-FB8FCBBD82F7}</Project>
+      <Name>Fifthweek.Api.FileManagement.Shared</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Fifthweek.Api.Persistence\Fifthweek.Api.Persistence.csproj">
+      <Project>{9c18bee3-fab5-4a00-8a94-a1faea370175}</Project>
+      <Name>Fifthweek.Api.Persistence</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Fifthweek.Azure\Fifthweek.Azure.csproj">
       <Project>{890CD4C4-993F-482D-BBB5-A50767ACE55B}</Project>
       <Name>Fifthweek.Azure</Name>
@@ -122,6 +135,10 @@
     <ProjectReference Include="..\Fifthweek.Logging\Fifthweek.Logging.csproj">
       <Project>{6cb9eac7-e00a-4dac-b6a4-d14c4503c6cd}</Project>
       <Name>Fifthweek.Logging</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Fifthweek.Shared\Fifthweek.Shared.csproj">
+      <Project>{6d12ffbb-38e9-4722-a690-0f0338538ebc}</Project>
+      <Name>Fifthweek.Shared</Name>
     </ProjectReference>
     <ProjectReference Include="..\Fifthweek.WebJobs.Shared\Fifthweek.WebJobs.Shared.csproj">
       <Project>{EFBACD48-98A1-4FA3-9BEA-E13414141484}</Project>

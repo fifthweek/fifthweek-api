@@ -12,6 +12,7 @@
     using Fifthweek.Api.Subscriptions;
     using Fifthweek.Api.Subscriptions.Queries;
     using Fifthweek.CodeGeneration;
+    using Fifthweek.Shared;
 
     [AutoConstructor]
     [Decorator(OmitDefaultDecorators = true)]

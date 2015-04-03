@@ -27,20 +27,21 @@
 
         private readonly IImageService imageService;
 
-        public async Task CreateThumbnailSetAsync(
+        public async Task<CreateThumbnailSetResult> CreateThumbnailSetAsync(
             CreateThumbnailsMessage message,
             ICloudBlockBlob input,
             ICloudStorageAccount cloudStorageAccount,
             ILogger logger,
             CancellationToken cancellationToken)
         {
+            CreateThumbnailSetResult result = null;
             var sw = new Stopwatch();
             sw.Start();
             logger.Info("StartFileProcessor: " + sw.ElapsedMilliseconds);
 
             if (message.Items == null || message.Items.Count == 0)
             {
-                return;
+                return null;
             }
 
             var cache = this.GetItemsCache(message, cloudStorageAccount);
@@ -50,15 +51,16 @@
 
             if (message.Overwrite == false && cache.Values.All(v => v.Exists))
             {
-                return;
+                return null;
             }
 
             await input.FetchAttributesAsync(cancellationToken);
             var cacheControl = input.Properties.CacheControl;
             this.PopulateCacheControl(cacheControl, cache);
-            
+
             using (var image = await this.OpenImageAsync(input, cancellationToken, logger, sw))
             {
+                result = new CreateThumbnailSetResult(image.Width, image.Height);
                 logger.Info("OpenImage: " + sw.ElapsedMilliseconds);
                 var outputMimeType = image.FormatInfo.MimeType;
                 if (!SupportedOutputMimeTypes.Contains(outputMimeType))
@@ -91,6 +93,7 @@
             }
 
             logger.Info("Disposed: " + sw.ElapsedMilliseconds);
+            return result;
         }
 
         public async Task CreatePoisonThumbnailSetAsync(

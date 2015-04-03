@@ -4,6 +4,7 @@
     using System.Threading.Tasks;
 
     using Fifthweek.Api.Core;
+    using Fifthweek.Shared;
 
     public class GetValidatedClientQueryHandler : IQueryHandler<GetValidatedClientQuery, Client>
     {

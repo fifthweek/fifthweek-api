@@ -5,6 +5,7 @@
 
     using Fifthweek.Api.Core;
     using Fifthweek.Azure;
+    using Fifthweek.Shared;
 
     using Microsoft.WindowsAzure.Storage.Queue;
 

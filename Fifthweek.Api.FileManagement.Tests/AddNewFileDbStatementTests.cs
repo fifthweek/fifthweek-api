@@ -51,10 +51,13 @@
                     null,
                     null,
                     null,
+                    null,
                     FileNameWithoutExtension,
                     FileExtension,
                     0,
-                    Purpose);
+                    Purpose,
+                    null,
+                    null);
 
                 return new ExpectedSideEffects
                 {

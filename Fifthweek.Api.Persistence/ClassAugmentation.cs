@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Linq;
 
-//// Generated on 03/04/2015 09:54:57 (UTC)
-//// Mapped solution in 8.29s
+//// Generated on 03/04/2015 14:42:21 (UTC)
+//// Mapped solution in 10.21s
 
 
 namespace Fifthweek.Api.Persistence
@@ -189,10 +189,13 @@ namespace Fifthweek.Api.Persistence
             System.Nullable<System.DateTime> uploadCompletedDate,
             System.Nullable<System.DateTime> processingStartedDate,
             System.Nullable<System.DateTime> processingCompletedDate,
+            System.Nullable<System.Int32> processingAttempts,
             System.String fileNameWithoutExtension,
             System.String fileExtension,
             System.Int64 blobSizeBytes,
-            System.String purpose)
+            System.String purpose,
+            System.Nullable<System.Int32> renderWidth,
+            System.Nullable<System.Int32> renderHeight)
         {
             if (id == null)
             {
@@ -242,10 +245,13 @@ namespace Fifthweek.Api.Persistence
             this.UploadCompletedDate = uploadCompletedDate;
             this.ProcessingStartedDate = processingStartedDate;
             this.ProcessingCompletedDate = processingCompletedDate;
+            this.ProcessingAttempts = processingAttempts;
             this.FileNameWithoutExtension = fileNameWithoutExtension;
             this.FileExtension = fileExtension;
             this.BlobSizeBytes = blobSizeBytes;
             this.Purpose = purpose;
+            this.RenderWidth = renderWidth;
+            this.RenderHeight = renderHeight;
         }
     }
 }
@@ -737,7 +743,7 @@ namespace Fifthweek.Api.Persistence
     {
         public override string ToString()
         {
-            return string.Format("File({0}, {1}, {2}, {3}, {4}, {5}, {6}, \"{7}\", \"{8}\", {9}, \"{10}\")", this.Id == null ? "null" : this.Id.ToString(), this.UserId == null ? "null" : this.UserId.ToString(), this.State == null ? "null" : this.State.ToString(), this.UploadStartedDate == null ? "null" : this.UploadStartedDate.ToString(), this.UploadCompletedDate == null ? "null" : this.UploadCompletedDate.ToString(), this.ProcessingStartedDate == null ? "null" : this.ProcessingStartedDate.ToString(), this.ProcessingCompletedDate == null ? "null" : this.ProcessingCompletedDate.ToString(), this.FileNameWithoutExtension == null ? "null" : this.FileNameWithoutExtension.ToString(), this.FileExtension == null ? "null" : this.FileExtension.ToString(), this.BlobSizeBytes == null ? "null" : this.BlobSizeBytes.ToString(), this.Purpose == null ? "null" : this.Purpose.ToString());
+            return string.Format("File({0}, {1}, {2}, {3}, {4}, {5}, {6}, {7}, \"{8}\", \"{9}\", {10}, \"{11}\", {12}, {13})", this.Id == null ? "null" : this.Id.ToString(), this.UserId == null ? "null" : this.UserId.ToString(), this.State == null ? "null" : this.State.ToString(), this.UploadStartedDate == null ? "null" : this.UploadStartedDate.ToString(), this.UploadCompletedDate == null ? "null" : this.UploadCompletedDate.ToString(), this.ProcessingStartedDate == null ? "null" : this.ProcessingStartedDate.ToString(), this.ProcessingCompletedDate == null ? "null" : this.ProcessingCompletedDate.ToString(), this.ProcessingAttempts == null ? "null" : this.ProcessingAttempts.ToString(), this.FileNameWithoutExtension == null ? "null" : this.FileNameWithoutExtension.ToString(), this.FileExtension == null ? "null" : this.FileExtension.ToString(), this.BlobSizeBytes == null ? "null" : this.BlobSizeBytes.ToString(), this.Purpose == null ? "null" : this.Purpose.ToString(), this.RenderWidth == null ? "null" : this.RenderWidth.ToString(), this.RenderHeight == null ? "null" : this.RenderHeight.ToString());
         }
         
         public override bool Equals(object obj)
@@ -772,10 +778,13 @@ namespace Fifthweek.Api.Persistence
                 hashCode = (hashCode * 397) ^ (this.UploadCompletedDate != null ? this.UploadCompletedDate.GetHashCode() : 0);
                 hashCode = (hashCode * 397) ^ (this.ProcessingStartedDate != null ? this.ProcessingStartedDate.GetHashCode() : 0);
                 hashCode = (hashCode * 397) ^ (this.ProcessingCompletedDate != null ? this.ProcessingCompletedDate.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.ProcessingAttempts != null ? this.ProcessingAttempts.GetHashCode() : 0);
                 hashCode = (hashCode * 397) ^ (this.FileNameWithoutExtension != null ? this.FileNameWithoutExtension.GetHashCode() : 0);
                 hashCode = (hashCode * 397) ^ (this.FileExtension != null ? this.FileExtension.GetHashCode() : 0);
                 hashCode = (hashCode * 397) ^ (this.BlobSizeBytes != null ? this.BlobSizeBytes.GetHashCode() : 0);
                 hashCode = (hashCode * 397) ^ (this.Purpose != null ? this.Purpose.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.RenderWidth != null ? this.RenderWidth.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.RenderHeight != null ? this.RenderHeight.GetHashCode() : 0);
                 return hashCode;
             }
         }
@@ -817,6 +826,11 @@ namespace Fifthweek.Api.Persistence
                 return false;
             }
         
+            if (!object.Equals(this.ProcessingAttempts, other.ProcessingAttempts))
+            {
+                return false;
+            }
+        
             if (!object.Equals(this.FileNameWithoutExtension, other.FileNameWithoutExtension))
             {
                 return false;
@@ -833,6 +847,16 @@ namespace Fifthweek.Api.Persistence
             }
         
             if (!object.Equals(this.Purpose, other.Purpose))
+            {
+                return false;
+            }
+        
+            if (!object.Equals(this.RenderWidth, other.RenderWidth))
+            {
+                return false;
+            }
+        
+            if (!object.Equals(this.RenderHeight, other.RenderHeight))
             {
                 return false;
             }
@@ -2807,10 +2831,13 @@ namespace Fifthweek.Api.Persistence
             UploadCompletedDate = 16, 
             ProcessingStartedDate = 32, 
             ProcessingCompletedDate = 64, 
-            FileNameWithoutExtension = 128, 
-            FileExtension = 256, 
-            BlobSizeBytes = 512, 
-            Purpose = 1024
+            ProcessingAttempts = 128, 
+            FileNameWithoutExtension = 256, 
+            FileExtension = 512, 
+            BlobSizeBytes = 1024, 
+            Purpose = 2048, 
+            RenderWidth = 4096, 
+            RenderHeight = 8192
         }
     }
 
@@ -2827,7 +2854,7 @@ namespace Fifthweek.Api.Persistence
                 InsertStatement(idempotent), 
                 entities.Select(entity => new 
                 {
-                    entity.Id, entity.UserId, entity.State, entity.UploadStartedDate, entity.UploadCompletedDate, entity.ProcessingStartedDate, entity.ProcessingCompletedDate, entity.FileNameWithoutExtension, entity.FileExtension, entity.BlobSizeBytes, entity.Purpose
+                    entity.Id, entity.UserId, entity.State, entity.UploadStartedDate, entity.UploadCompletedDate, entity.ProcessingStartedDate, entity.ProcessingCompletedDate, entity.ProcessingAttempts, entity.FileNameWithoutExtension, entity.FileExtension, entity.BlobSizeBytes, entity.Purpose, entity.RenderWidth, entity.RenderHeight
                 }).ToArray(),
                 transaction);
         }
@@ -2843,7 +2870,7 @@ namespace Fifthweek.Api.Persistence
                 InsertStatement(idempotent), 
                 new 
                 {
-                    entity.Id, entity.UserId, entity.State, entity.UploadStartedDate, entity.UploadCompletedDate, entity.ProcessingStartedDate, entity.ProcessingCompletedDate, entity.FileNameWithoutExtension, entity.FileExtension, entity.BlobSizeBytes, entity.Purpose
+                    entity.Id, entity.UserId, entity.State, entity.UploadStartedDate, entity.UploadCompletedDate, entity.ProcessingStartedDate, entity.ProcessingCompletedDate, entity.ProcessingAttempts, entity.FileNameWithoutExtension, entity.FileExtension, entity.BlobSizeBytes, entity.Purpose, entity.RenderWidth, entity.RenderHeight
                 },
                 transaction);
         }
@@ -2888,7 +2915,7 @@ namespace Fifthweek.Api.Persistence
             var entity = parameters.Entity;
             var parameterObject = parameters.ExcludedFromInput != null
                 ? AllExceptSpecifiedParameters(entity, parameters.ExcludedFromInput.Value)
-                : new Dapper.DynamicParameters(new { entity.Id, entity.UserId, entity.State, entity.UploadStartedDate, entity.UploadCompletedDate, entity.ProcessingStartedDate, entity.ProcessingCompletedDate, entity.FileNameWithoutExtension, entity.FileExtension, entity.BlobSizeBytes, entity.Purpose });
+                : new Dapper.DynamicParameters(new { entity.Id, entity.UserId, entity.State, entity.UploadStartedDate, entity.UploadCompletedDate, entity.ProcessingStartedDate, entity.ProcessingCompletedDate, entity.ProcessingAttempts, entity.FileNameWithoutExtension, entity.FileExtension, entity.BlobSizeBytes, entity.Purpose, entity.RenderWidth, entity.RenderHeight });
         
             if (parameters.AdditionalParameters != null)
             {
@@ -2912,7 +2939,7 @@ namespace Fifthweek.Api.Persistence
                 UpsertStatement(File.Fields.Empty, fields), 
                 new 
                 {
-                    entity.Id, entity.UserId, entity.State, entity.UploadStartedDate, entity.UploadCompletedDate, entity.ProcessingStartedDate, entity.ProcessingCompletedDate, entity.FileNameWithoutExtension, entity.FileExtension, entity.BlobSizeBytes, entity.Purpose
+                    entity.Id, entity.UserId, entity.State, entity.UploadStartedDate, entity.UploadCompletedDate, entity.ProcessingStartedDate, entity.ProcessingCompletedDate, entity.ProcessingAttempts, entity.FileNameWithoutExtension, entity.FileExtension, entity.BlobSizeBytes, entity.Purpose, entity.RenderWidth, entity.RenderHeight
                 },
                 transaction);
         }
@@ -2929,7 +2956,7 @@ namespace Fifthweek.Api.Persistence
                 UpsertStatement(mergeOnFields, updateFields), 
                 new 
                 {
-                    entity.Id, entity.UserId, entity.State, entity.UploadStartedDate, entity.UploadCompletedDate, entity.ProcessingStartedDate, entity.ProcessingCompletedDate, entity.FileNameWithoutExtension, entity.FileExtension, entity.BlobSizeBytes, entity.Purpose
+                    entity.Id, entity.UserId, entity.State, entity.UploadStartedDate, entity.UploadCompletedDate, entity.ProcessingStartedDate, entity.ProcessingCompletedDate, entity.ProcessingAttempts, entity.FileNameWithoutExtension, entity.FileExtension, entity.BlobSizeBytes, entity.Purpose, entity.RenderWidth, entity.RenderHeight
                 },
                 transaction);
         }
@@ -3000,7 +3027,7 @@ namespace Fifthweek.Api.Persistence
         
         public static string InsertStatement(bool idempotent = true)
         {
-            const string insert = "INSERT INTO Files(Id, UserId, State, UploadStartedDate, UploadCompletedDate, ProcessingStartedDate, ProcessingCompletedDate, FileNameWithoutExtension, FileExtension, BlobSizeBytes, Purpose) VALUES(@Id, @UserId, @State, @UploadStartedDate, @UploadCompletedDate, @ProcessingStartedDate, @ProcessingCompletedDate, @FileNameWithoutExtension, @FileExtension, @BlobSizeBytes, @Purpose)";
+            const string insert = "INSERT INTO Files(Id, UserId, State, UploadStartedDate, UploadCompletedDate, ProcessingStartedDate, ProcessingCompletedDate, ProcessingAttempts, FileNameWithoutExtension, FileExtension, BlobSizeBytes, Purpose, RenderWidth, RenderHeight) VALUES(@Id, @UserId, @State, @UploadStartedDate, @UploadCompletedDate, @ProcessingStartedDate, @ProcessingCompletedDate, @ProcessingAttempts, @FileNameWithoutExtension, @FileExtension, @BlobSizeBytes, @Purpose, @RenderWidth, @RenderHeight)";
             return idempotent ? SqlStatementTemplates.IdempotentInsert(insert) : insert;
         }
         
@@ -3011,7 +3038,7 @@ namespace Fifthweek.Api.Persistence
             var sql = new System.Text.StringBuilder();
             sql.Append(
                 @"MERGE Files WITH (HOLDLOCK) as Target
-                USING (VALUES (@Id, @UserId, @State, @UploadStartedDate, @UploadCompletedDate, @ProcessingStartedDate, @ProcessingCompletedDate, @FileNameWithoutExtension, @FileExtension, @BlobSizeBytes, @Purpose)) AS Source (Id, UserId, State, UploadStartedDate, UploadCompletedDate, ProcessingStartedDate, ProcessingCompletedDate, FileNameWithoutExtension, FileExtension, BlobSizeBytes, Purpose)
+                USING (VALUES (@Id, @UserId, @State, @UploadStartedDate, @UploadCompletedDate, @ProcessingStartedDate, @ProcessingCompletedDate, @ProcessingAttempts, @FileNameWithoutExtension, @FileExtension, @BlobSizeBytes, @Purpose, @RenderWidth, @RenderHeight)) AS Source (Id, UserId, State, UploadStartedDate, UploadCompletedDate, ProcessingStartedDate, ProcessingCompletedDate, ProcessingAttempts, FileNameWithoutExtension, FileExtension, BlobSizeBytes, Purpose, RenderWidth, RenderHeight)
                 ON    (");
                 
             if (mergeOnFields == File.Fields.Empty)
@@ -3030,8 +3057,8 @@ namespace Fifthweek.Api.Persistence
             sql.AppendUpdateParameters(GetFieldNames(updateFields));
             sql.Append(
                 @" WHEN NOT MATCHED THEN
-                    INSERT  (Id, UserId, State, UploadStartedDate, UploadCompletedDate, ProcessingStartedDate, ProcessingCompletedDate, FileNameWithoutExtension, FileExtension, BlobSizeBytes, Purpose)
-                    VALUES  (Source.Id, Source.UserId, Source.State, Source.UploadStartedDate, Source.UploadCompletedDate, Source.ProcessingStartedDate, Source.ProcessingCompletedDate, Source.FileNameWithoutExtension, Source.FileExtension, Source.BlobSizeBytes, Source.Purpose);");
+                    INSERT  (Id, UserId, State, UploadStartedDate, UploadCompletedDate, ProcessingStartedDate, ProcessingCompletedDate, ProcessingAttempts, FileNameWithoutExtension, FileExtension, BlobSizeBytes, Purpose, RenderWidth, RenderHeight)
+                    VALUES  (Source.Id, Source.UserId, Source.State, Source.UploadStartedDate, Source.UploadCompletedDate, Source.ProcessingStartedDate, Source.ProcessingCompletedDate, Source.ProcessingAttempts, Source.FileNameWithoutExtension, Source.FileExtension, Source.BlobSizeBytes, Source.Purpose, Source.RenderWidth, Source.RenderHeight);");
             return sql.ToString();
         }
         
@@ -3082,6 +3109,11 @@ namespace Fifthweek.Api.Persistence
                 fieldNames.Add("ProcessingCompletedDate");
             }
         
+            if (fields.HasFlag(File.Fields.ProcessingAttempts))
+            {
+                fieldNames.Add("ProcessingAttempts");
+            }
+        
             if (fields.HasFlag(File.Fields.FileNameWithoutExtension))
             {
                 fieldNames.Add("FileNameWithoutExtension");
@@ -3100,6 +3132,16 @@ namespace Fifthweek.Api.Persistence
             if (fields.HasFlag(File.Fields.Purpose))
             {
                 fieldNames.Add("Purpose");
+            }
+        
+            if (fields.HasFlag(File.Fields.RenderWidth))
+            {
+                fieldNames.Add("RenderWidth");
+            }
+        
+            if (fields.HasFlag(File.Fields.RenderHeight))
+            {
+                fieldNames.Add("RenderHeight");
             }
         
             return fieldNames;
@@ -3144,6 +3186,11 @@ namespace Fifthweek.Api.Persistence
                 parameters.Add("ProcessingCompletedDate", entity.ProcessingCompletedDate);
             }
         
+            if (fields.HasFlag(File.Fields.ProcessingAttempts) && (excludedFields == null || !excludedFields.Value.HasFlag(File.Fields.ProcessingAttempts)))
+            {
+                parameters.Add("ProcessingAttempts", entity.ProcessingAttempts);
+            }
+        
             if (fields.HasFlag(File.Fields.FileNameWithoutExtension) && (excludedFields == null || !excludedFields.Value.HasFlag(File.Fields.FileNameWithoutExtension)))
             {
                 parameters.Add("FileNameWithoutExtension", entity.FileNameWithoutExtension);
@@ -3162,6 +3209,16 @@ namespace Fifthweek.Api.Persistence
             if (fields.HasFlag(File.Fields.Purpose) && (excludedFields == null || !excludedFields.Value.HasFlag(File.Fields.Purpose)))
             {
                 parameters.Add("Purpose", entity.Purpose);
+            }
+        
+            if (fields.HasFlag(File.Fields.RenderWidth) && (excludedFields == null || !excludedFields.Value.HasFlag(File.Fields.RenderWidth)))
+            {
+                parameters.Add("RenderWidth", entity.RenderWidth);
+            }
+        
+            if (fields.HasFlag(File.Fields.RenderHeight) && (excludedFields == null || !excludedFields.Value.HasFlag(File.Fields.RenderHeight)))
+            {
+                parameters.Add("RenderHeight", entity.RenderHeight);
             }
         
             return parameters;
@@ -3205,6 +3262,11 @@ namespace Fifthweek.Api.Persistence
                 parameters.Add("ProcessingCompletedDate", entity.ProcessingCompletedDate);
             }
         
+            if (!fields.HasFlag(File.Fields.ProcessingAttempts))
+            {
+                parameters.Add("ProcessingAttempts", entity.ProcessingAttempts);
+            }
+        
             if (!fields.HasFlag(File.Fields.FileNameWithoutExtension))
             {
                 parameters.Add("FileNameWithoutExtension", entity.FileNameWithoutExtension);
@@ -3223,6 +3285,16 @@ namespace Fifthweek.Api.Persistence
             if (!fields.HasFlag(File.Fields.Purpose))
             {
                 parameters.Add("Purpose", entity.Purpose);
+            }
+        
+            if (!fields.HasFlag(File.Fields.RenderWidth))
+            {
+                parameters.Add("RenderWidth", entity.RenderWidth);
+            }
+        
+            if (!fields.HasFlag(File.Fields.RenderHeight))
+            {
+                parameters.Add("RenderHeight", entity.RenderHeight);
             }
         
             return parameters;

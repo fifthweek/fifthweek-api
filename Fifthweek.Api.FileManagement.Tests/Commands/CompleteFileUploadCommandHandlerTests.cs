@@ -101,7 +101,7 @@
                 .Returns(Task.FromResult(0))
                 .Verifiable();
 
-            this.fileProcessor.Setup(v => v.ProcessFileAsync(ContainerName, BlobName, Purpose))
+            this.fileProcessor.Setup(v => v.ProcessFileAsync(FileId, ContainerName, BlobName, Purpose))
                 .Returns(Task.FromResult(0))
                 .Verifiable();
 

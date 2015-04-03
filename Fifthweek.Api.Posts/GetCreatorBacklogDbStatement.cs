@@ -12,6 +12,7 @@
     using Fifthweek.Api.Persistence;
     using Fifthweek.Api.Posts.Queries;
     using Fifthweek.CodeGeneration;
+    using Fifthweek.Shared;
 
     [AutoConstructor]
     public partial class GetCreatorBacklogDbStatement : IGetCreatorBacklogDbStatement

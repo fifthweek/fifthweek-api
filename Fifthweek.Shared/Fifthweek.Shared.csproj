@@ -51,6 +51,7 @@
     </Compile>
     <Compile Include="CollectionExtensions.cs" />
     <Compile Include="Constants.cs" />
+    <Compile Include="Extensions.cs" />
     <Compile Include="ExternalErrorException.cs" />
     <Compile Include="FilePurpose.cs" />
     <Compile Include="FilePurposes.cs" />

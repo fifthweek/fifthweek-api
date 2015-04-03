@@ -7,6 +7,7 @@
     using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.Api.Persistence;
     using Fifthweek.CodeGeneration;
+    using Fifthweek.Shared;
 
     [AutoConstructor]
     public partial class AddNewFileDbStatement : IAddNewFileDbStatement
@@ -36,10 +37,13 @@
                 null,
                 null,
                 null,
+                null,
                 fileNameWithoutExtension,
                 fileExtension,
                 0L,
-                purpose);
+                purpose,
+                null,
+                null);
 
             using (var connection = this.connectionFactory.CreateConnection())
             {

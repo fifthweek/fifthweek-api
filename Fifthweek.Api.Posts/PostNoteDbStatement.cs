@@ -8,6 +8,7 @@ namespace Fifthweek.Api.Posts
     using Fifthweek.Api.Persistence;
     using Fifthweek.Api.Posts.Shared;
     using Fifthweek.CodeGeneration;
+    using Fifthweek.Shared;
 
     [AutoConstructor]
     public partial class PostNoteDbStatement : IPostNoteDbStatement

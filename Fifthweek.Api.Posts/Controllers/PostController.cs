@@ -13,6 +13,7 @@
     using Fifthweek.Api.Posts.Queries;
     using Fifthweek.Api.Posts.Shared;
     using Fifthweek.CodeGeneration;
+    using Fifthweek.Shared;
 
     [AutoConstructor]
     public partial class PostController : IPostController

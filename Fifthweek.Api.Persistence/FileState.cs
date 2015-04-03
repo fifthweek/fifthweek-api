@@ -4,7 +4,6 @@
     {
         WaitingForUpload,
         UploadComplete,
-        ProcessingStarted,
         ProcessingComplete
     }
 }

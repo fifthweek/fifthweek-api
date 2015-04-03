@@ -5,7 +5,6 @@
     using System.Linq;
 
     using Fifthweek.Api.Collections.Shared;
-    using Fifthweek.Api.Core;
     using Fifthweek.Shared;
 
     public class QueuedPostLiveDateCalculator : IQueuedPostLiveDateCalculator

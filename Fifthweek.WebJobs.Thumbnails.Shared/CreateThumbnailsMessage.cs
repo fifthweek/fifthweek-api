@@ -2,6 +2,7 @@ namespace Fifthweek.WebJobs.Thumbnails.Shared
 {
     using System.Collections.Generic;
 
+    using Fifthweek.Api.FileManagement.Shared;
     using Fifthweek.CodeGeneration;
 
     [AutoConstructor]
@@ -11,6 +12,8 @@ namespace Fifthweek.WebJobs.Thumbnails.Shared
         public CreateThumbnailsMessage()
         {
         }
+
+        public FileId FileId { get; set; }
 
         public string ContainerName { get; set; }
 

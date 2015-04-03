@@ -4,6 +4,7 @@
 
     using Fifthweek.Api.Core;
     using Fifthweek.CodeGeneration;
+    using Fifthweek.Shared;
 
     [AutoConstructor]
     public partial class RemoveRefreshTokenCommandHandler : ICommandHandler<RemoveRefreshTokenCommand>

@@ -78,6 +78,10 @@
     <Compile Include="ThumbnailDefinition.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Fifthweek.Api.FileManagement.Shared\Fifthweek.Api.FileManagement.Shared.csproj">
+      <Project>{3CA706AF-5916-414E-9625-FB8FCBBD82F7}</Project>
+      <Name>Fifthweek.Api.FileManagement.Shared</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Fifthweek.Azure\Fifthweek.Azure.csproj">
       <Project>{890CD4C4-993F-482D-BBB5-A50767ACE55B}</Project>
       <Name>Fifthweek.Azure</Name>

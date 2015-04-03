@@ -41,7 +41,7 @@
 
             await this.setFileUploadComplete.ExecuteAsync(command.FileId, blobLength, DateTime.UtcNow);
 
-            await this.fileProcessor.ProcessFileAsync(blobLocation.ContainerName, blobLocation.BlobName, file.Purpose);
+            await this.fileProcessor.ProcessFileAsync(command.FileId, blobLocation.ContainerName, blobLocation.BlobName, file.Purpose);
         }
 
         private TimeSpan GetExpiryTimeSpan(BlobLocation blobLocation)

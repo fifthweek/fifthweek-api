@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Linq;
 
-//// Generated on 20/02/2015 15:29:49 (UTC)
-//// Mapped solution in 12.2s
+//// Generated on 03/04/2015 14:58:08 (UTC)
+//// Mapped solution in 10.91s
 
 
 namespace Fifthweek.WebJobs.Thumbnails
@@ -20,6 +20,9 @@ namespace Fifthweek.WebJobs.Thumbnails
     using Microsoft.WindowsAzure.Storage.Blob;
     using System.Collections.Generic;
     using System.Diagnostics;
+    using Fifthweek.Api.FileManagement.Shared;
+    using Fifthweek.Api.Persistence;
+    using Fifthweek.Shared;
 
     public partial class ThumbnailProcessor 
     {
@@ -32,6 +35,110 @@ namespace Fifthweek.WebJobs.Thumbnails
             }
 
             this.imageService = imageService;
+        }
+    }
+}
+namespace Fifthweek.WebJobs.Thumbnails
+{
+    using System;
+    using System.Linq;
+    using System.IO;
+    using System.Threading;
+    using System.Threading.Tasks;
+    using Fifthweek.CodeGeneration;
+    using Fifthweek.WebJobs.Thumbnails.Shared;
+    using ImageMagick;
+    using Fifthweek.Azure;
+    using Fifthweek.WebJobs.Shared;
+    using Microsoft.WindowsAzure.Storage.Blob;
+    using System.Collections.Generic;
+    using System.Diagnostics;
+    using Fifthweek.Api.FileManagement.Shared;
+    using Fifthweek.Api.Persistence;
+    using Fifthweek.Shared;
+
+    public partial class SetFileProcessingCompleteDbStatement 
+    {
+        public SetFileProcessingCompleteDbStatement(
+            Fifthweek.Api.Persistence.IFifthweekDbConnectionFactory connectionFactory)
+        {
+            if (connectionFactory == null)
+            {
+                throw new ArgumentNullException("connectionFactory");
+            }
+
+            this.connectionFactory = connectionFactory;
+        }
+    }
+}
+namespace Fifthweek.WebJobs.Thumbnails
+{
+    using System;
+    using System.Linq;
+    using System.IO;
+    using System.Threading;
+    using System.Threading.Tasks;
+    using Fifthweek.CodeGeneration;
+    using Fifthweek.WebJobs.Thumbnails.Shared;
+    using ImageMagick;
+    using Fifthweek.Azure;
+    using Fifthweek.WebJobs.Shared;
+    using Microsoft.WindowsAzure.Storage.Blob;
+    using System.Collections.Generic;
+    using System.Diagnostics;
+    using Fifthweek.Api.FileManagement.Shared;
+    using Fifthweek.Api.Persistence;
+    using Fifthweek.Shared;
+
+    public partial class CreateThumbnailSetResult 
+    {
+        public CreateThumbnailSetResult(
+            System.Int32 renderWidth,
+            System.Int32 renderHeight)
+        {
+            if (renderWidth == null)
+            {
+                throw new ArgumentNullException("renderWidth");
+            }
+
+            if (renderHeight == null)
+            {
+                throw new ArgumentNullException("renderHeight");
+            }
+
+            this.RenderWidth = renderWidth;
+            this.RenderHeight = renderHeight;
+        }
+    }
+}
+namespace Fifthweek.WebJobs.Thumbnails
+{
+    using System;
+    using System.Threading;
+    using System.Threading.Tasks;
+    using Fifthweek.Azure;
+    using Fifthweek.CodeGeneration;
+    using Fifthweek.WebJobs.Shared;
+    using Fifthweek.WebJobs.Thumbnails.Shared;
+
+    public partial class LoggingThumbnailProcessorWrapper 
+    {
+        public LoggingThumbnailProcessorWrapper(
+            Fifthweek.WebJobs.Thumbnails.IThumbnailProcessor thumbnailProcessor,
+            Fifthweek.WebJobs.Thumbnails.ISetFileProcessingCompleteDbStatement setFileProcessingComplete)
+        {
+            if (thumbnailProcessor == null)
+            {
+                throw new ArgumentNullException("thumbnailProcessor");
+            }
+
+            if (setFileProcessingComplete == null)
+            {
+                throw new ArgumentNullException("setFileProcessingComplete");
+            }
+
+            this.thumbnailProcessor = thumbnailProcessor;
+            this.setFileProcessingComplete = setFileProcessingComplete;
         }
     }
 }

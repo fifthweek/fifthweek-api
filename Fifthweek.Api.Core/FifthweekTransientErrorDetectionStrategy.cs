@@ -8,6 +8,8 @@ namespace Fifthweek.Api.Core
 
     using Microsoft.Practices.EnterpriseLibrary.TransientFaultHandling;
 
+    using Fifthweek.Shared;
+
     public class FifthweekTransientErrorDetectionStrategy : ITransientErrorDetectionStrategy
     {
         private static readonly SqlDatabaseTransientErrorDetectionStrategy SqlDatabaseStrategy = new SqlDatabaseTransientErrorDetectionStrategy();
@@ -44,7 +46,7 @@ namespace Fifthweek.Api.Core
         {
             bool isTransient = false;
 
-            if (exception is OptimisticConcurrencyException)
+            if (exception is System.Data.Entity.Core.OptimisticConcurrencyException || exception is Shared.OptimisticConcurrencyException)
             {
                 return true;
             }

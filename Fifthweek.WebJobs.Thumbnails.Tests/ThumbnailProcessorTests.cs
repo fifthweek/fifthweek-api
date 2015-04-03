@@ -8,6 +8,7 @@
     using System.Threading;
     using System.Threading.Tasks;
 
+    using Fifthweek.Api.FileManagement.Shared;
     using Fifthweek.Azure;
     using Fifthweek.Shared;
     using Fifthweek.WebJobs.Shared;
@@ -22,12 +23,14 @@
     [TestClass]
     public class ThumbnailProcessorTests
     {
+        private static readonly FileId FileId = new FileId(Guid.NewGuid());
         private static readonly string ContainerName = "containerName";
         private static readonly string InputBlobName = "inputBlob";
         private static readonly string OutputBlobName = "outputBlob";
         private static readonly string OutputBlobName2 = "outputBlob2";
 
         private static readonly CreateThumbnailsMessage Message = new CreateThumbnailsMessage(
+            FileId,
             ContainerName,
             InputBlobName,
             new List<ThumbnailDefinition> 
@@ -42,6 +45,7 @@
             false);
 
         private static readonly CreateThumbnailsMessage OverwriteMessage = new CreateThumbnailsMessage(
+            FileId,
             Message.ContainerName,
             Message.InputBlobName,
             new List<ThumbnailDefinition> 
@@ -56,6 +60,7 @@
             true);
 
         private static readonly CreateThumbnailsMessage MessageWithChild = new CreateThumbnailsMessage(
+            FileId,
             ContainerName,
             InputBlobName,
             new List<ThumbnailDefinition> 
@@ -78,6 +83,7 @@
             false);
 
         private static readonly CreateThumbnailsMessage MessageWithSibling = new CreateThumbnailsMessage(
+            FileId,
             ContainerName,
             InputBlobName,
             new List<ThumbnailDefinition> 
@@ -172,10 +178,11 @@
                     })
                 .Verifiable();
 
+            CreateThumbnailSetResult result;
             using (var inputStream = SampleImagesLoader.Instance.LargeLandscape.Open())
             {
                 this.input.Setup(v => v.OpenReadAsync(It.IsAny<CancellationToken>())).ReturnsAsync(inputStream);
-                await this.target.CreateThumbnailSetAsync(
+                result = await this.target.CreateThumbnailSetAsync(
                         Message,
                         this.input.Object,
                         this.storageAccount.Object,
@@ -186,6 +193,8 @@
             this.imageService.Verify();
             Assert.AreEqual(SampleImagesLoader.Instance.LargeLandscape.Width, width);
             Assert.AreEqual(SampleImagesLoader.Instance.LargeLandscape.Height, height);
+            Assert.AreEqual(SampleImagesLoader.Instance.LargeLandscape.Width, result.RenderWidth);
+            Assert.AreEqual(SampleImagesLoader.Instance.LargeLandscape.Height, result.RenderHeight);
             Assert.AreEqual(this.mimeTypeMap.GetMimeType(Path.GetExtension(SampleImagesLoader.Instance.LargeLandscape.Path)), this.outputProperties.Object.ContentType);
             Assert.AreEqual("cache-control", this.outputProperties.Object.CacheControl);
             Assert.IsTrue(this.outputStream.IsCommitted);
@@ -222,10 +231,11 @@
                         a.Crop(c, d);
                     }).Verifiable();
 
+            CreateThumbnailSetResult result;
             using (var inputStream = SampleImagesLoader.Instance.LargeLandscape.Open())
             {
                 this.input.Setup(v => v.OpenReadAsync(It.IsAny<CancellationToken>())).ReturnsAsync(inputStream);
-                await this.target.CreateThumbnailSetAsync(
+                result = await this.target.CreateThumbnailSetAsync(
                         MessageWithChild,
                         this.input.Object,
                         this.storageAccount.Object,
@@ -240,6 +250,8 @@
 
             Assert.AreEqual(SampleImagesLoader.Instance.LargeLandscape.Width, firstWidth);
             Assert.AreEqual(SampleImagesLoader.Instance.LargeLandscape.Height, firstHeight);
+            Assert.AreEqual(SampleImagesLoader.Instance.LargeLandscape.Width, result.RenderWidth);
+            Assert.AreEqual(SampleImagesLoader.Instance.LargeLandscape.Height, result.RenderHeight);
             Assert.AreEqual(MessageWithChild.Items[0].Width, secondWidth);
             Assert.AreEqual(MessageWithChild.Items[0].Height, secondHeight);
             Assert.IsTrue(this.outputStream.IsCommitted);
@@ -277,10 +289,11 @@
                         a.Crop(c, d);
                     }).Verifiable();
 
+            CreateThumbnailSetResult result;
             using (var inputStream = SampleImagesLoader.Instance.LargeLandscape.Open())
             {
                 this.input.Setup(v => v.OpenReadAsync(It.IsAny<CancellationToken>())).ReturnsAsync(inputStream);
-                await this.target.CreateThumbnailSetAsync(
+                result = await this.target.CreateThumbnailSetAsync(
                         MessageWithSibling,
                         this.input.Object,
                         this.storageAccount.Object,
@@ -296,6 +309,8 @@
             Assert.AreEqual(SampleImagesLoader.Instance.LargeLandscape.Height, firstHeight);
             Assert.AreEqual(SampleImagesLoader.Instance.LargeLandscape.Width, secondWidth);
             Assert.AreEqual(SampleImagesLoader.Instance.LargeLandscape.Height, secondHeight);
+            Assert.AreEqual(SampleImagesLoader.Instance.LargeLandscape.Width, result.RenderWidth);
+            Assert.AreEqual(SampleImagesLoader.Instance.LargeLandscape.Height, result.RenderHeight);
             Assert.IsTrue(this.outputStream.IsCommitted);
             Assert.IsTrue(this.outputStream2.IsCommitted);
         }

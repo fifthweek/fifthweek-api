@@ -12,6 +12,7 @@ namespace Fifthweek.Api.Identity.OAuth
     using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.Api.Persistence;
     using Fifthweek.CodeGeneration;
+    using Fifthweek.Shared;
 
     using Microsoft.Owin.Security.Infrastructure;
 
@@ -27,10 +28,10 @@ namespace Fifthweek.Api.Identity.OAuth
             context.AssertNotNull("context");
 
             var refreshTokenId = RefreshTokenId.Create();
-            var clientId = new ClientId(context.Ticket.Properties.Dictionary[Constants.TokenClientIdKey]);
+            var clientId = new ClientId(context.Ticket.Properties.Dictionary[Core.Constants.TokenClientIdKey]);
             var username = new Username(context.Ticket.Identity.Name);
 
-            var refreshTokenLifeTime = context.OwinContext.Get<int>(Constants.TokenRefreshTokenLifeTimeKey);
+            var refreshTokenLifeTime = context.OwinContext.Get<int>(Core.Constants.TokenRefreshTokenLifeTimeKey);
             if (refreshTokenLifeTime == default(int))
             {
                 throw new InvalidOperationException("Refresh token lifetime not found.");
@@ -57,7 +58,7 @@ namespace Fifthweek.Api.Identity.OAuth
         {
             context.AssertNotNull("context");
 
-            var allowedOrigin = context.OwinContext.Get<string>(Constants.TokenAllowedOriginKey);
+            var allowedOrigin = context.OwinContext.Get<string>(Core.Constants.TokenAllowedOriginKey);
 
             if (allowedOrigin == null)
             {

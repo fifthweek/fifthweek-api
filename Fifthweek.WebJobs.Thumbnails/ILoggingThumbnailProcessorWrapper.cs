@@ -1,6 +1,5 @@
 ﻿namespace Fifthweek.WebJobs.Thumbnails
 {
-    using System.IO;
     using System.Threading;
     using System.Threading.Tasks;
 
@@ -8,21 +7,21 @@
     using Fifthweek.WebJobs.Shared;
     using Fifthweek.WebJobs.Thumbnails.Shared;
 
-    using Microsoft.WindowsAzure.Storage.Blob;
-
-    public interface IThumbnailProcessor
+    public interface ILoggingThumbnailProcessorWrapper
     {
-        Task<CreateThumbnailSetResult> CreateThumbnailSetAsync(
+        Task CreateThumbnailSetAsync(
             CreateThumbnailsMessage message,
             ICloudBlockBlob input,
             ICloudStorageAccount cloudStorageAccount,
             ILogger logger,
+            int dequeueCount,
             CancellationToken cancellationToken);
 
         Task CreatePoisonThumbnailSetAsync(
             CreateThumbnailsMessage message,
             ICloudStorageAccount cloudStorageAccount,
             ILogger logger,
+            int dequeueCount,
             CancellationToken cancellationToken);
     }
 }

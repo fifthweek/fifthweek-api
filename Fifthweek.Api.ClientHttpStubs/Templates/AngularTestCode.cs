@@ -1,6 +1,7 @@
 ﻿namespace Fifthweek.Api.ClientHttpStubs.Templates
 {
     using Fifthweek.Api.Core;
+    using Fifthweek.Shared;
 
     using Microsoft.VisualStudio.TextTemplating;
 

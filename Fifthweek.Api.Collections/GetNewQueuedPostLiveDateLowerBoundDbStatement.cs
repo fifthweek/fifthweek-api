@@ -8,6 +8,7 @@
     using Fifthweek.Api.Core;
     using Fifthweek.Api.Persistence;
     using Fifthweek.CodeGeneration;
+    using Fifthweek.Shared;
 
     /// <summary>
     /// Gets the exclusive lower bound for a hypothetical new post's live date when queued in the given collection.

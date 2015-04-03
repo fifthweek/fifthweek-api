@@ -5,6 +5,7 @@
 
     using Fifthweek.Api.Azure;
     using Fifthweek.Api.FileManagement.FileTasks;
+    using Fifthweek.Api.FileManagement.Shared;
     using Fifthweek.WebJobs.Thumbnails.Shared;
 
     using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -20,6 +21,7 @@
         private const string ContainerName = "containerName";
         private const string BlobName = "blobName";
         private const string FilePurpose = "file-purpose";
+        private static readonly FileId FileId = new FileId(Guid.NewGuid());
 
         private Mock<IQueueService> queueService;
 
@@ -39,8 +41,9 @@
                 .Returns(Task.FromResult(0));
 
             var target = new CreateThumbnailsTask(new Thumbnail(1000, 1000, "alias", ResizeBehaviour.MaintainAspectRatio));
-            await target.HandleAsync(this.queueService.Object, ContainerName, BlobName, FilePurpose);
+            await target.HandleAsync(this.queueService.Object, FileId, ContainerName, BlobName, FilePurpose);
 
+            Assert.AreEqual(FileId, outputMessage.FileId);
             Assert.AreEqual(ContainerName, outputMessage.ContainerName);
             Assert.AreEqual(BlobName, outputMessage.InputBlobName);
             Assert.AreEqual(string.Format("{0}/{1}", BlobName, target.Items[0].Alias), outputMessage.Items[0].OutputBlobName);
@@ -60,8 +63,9 @@
                 .Returns(Task.FromResult(0));
 
             var target = new CreateThumbnailsTask(new Thumbnail(1000, 1000, "alias", ResizeBehaviour.CropToAspectRatio));
-            await target.HandleAsync(this.queueService.Object, ContainerName, BlobName, FilePurpose);
+            await target.HandleAsync(this.queueService.Object, FileId, ContainerName, BlobName, FilePurpose);
 
+            Assert.AreEqual(FileId, outputMessage.FileId);
             Assert.AreEqual(ContainerName, outputMessage.ContainerName);
             Assert.AreEqual(BlobName, outputMessage.InputBlobName);
             Assert.AreEqual(string.Format("{0}/{1}", BlobName, target.Items[0].Alias), outputMessage.Items[0].OutputBlobName);

@@ -5,6 +5,7 @@
     using System.Threading.Tasks;
 
     using Fifthweek.Api.Azure;
+    using Fifthweek.Api.FileManagement.Shared;
     using Fifthweek.CodeGeneration;
     using Fifthweek.WebJobs.Thumbnails.Shared;
 
@@ -18,9 +19,10 @@
 
         public IReadOnlyList<Thumbnail> Items { get; private set; }
 
-        public async Task HandleAsync(IQueueService queueService, string containerName, string blobName, string filePurpose)
+        public async Task HandleAsync(IQueueService queueService, FileId fileId, string containerName, string blobName, string filePurpose)
         {
             var outputMessage = new CreateThumbnailsMessage(
+                fileId,
                 containerName,
                 blobName,
                 this.Items.Select(v => v.ToMessage(blobName)).ToList(),

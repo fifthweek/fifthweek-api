@@ -8,6 +8,7 @@
     using Fifthweek.Api.Core;
     using Fifthweek.Api.Posts.Shared;
     using Fifthweek.CodeGeneration;
+    using Fifthweek.Shared;
 
     [AutoConstructor]
     public partial class RemoveFromQueueIfRequiredDbStatement : IRemoveFromQueueIfRequiredDbStatement

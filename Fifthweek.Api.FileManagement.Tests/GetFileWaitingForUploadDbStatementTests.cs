@@ -119,10 +119,13 @@ namespace Fifthweek.Api.FileManagement.Tests
                 null,
                 null,
                 null,
+                null,
                 FileNameWithoutExtension,
                 FileExtension,
                 0,
-                Purpose);
+                Purpose,
+                null,
+                null);
 
             using (var databaseContext = testDatabase.CreateContext())
             {

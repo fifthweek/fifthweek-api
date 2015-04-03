@@ -10,6 +10,7 @@
     using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.Api.Persistence;
     using Fifthweek.CodeGeneration;
+    using Fifthweek.Shared;
 
     [AutoConstructor]
     public partial class ReorderQueueCommandHandler : ICommandHandler<ReorderQueueCommand>

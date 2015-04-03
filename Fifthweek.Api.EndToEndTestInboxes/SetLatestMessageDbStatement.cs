@@ -7,6 +7,7 @@
     using Fifthweek.Api.EndToEndTestMailboxes.Shared;
     using Fifthweek.Api.Persistence;
     using Fifthweek.CodeGeneration;
+    using Fifthweek.Shared;
 
     [AutoConstructor]
     public partial class SetLatestMessageDbStatement : ISetLatestMessageDbStatement

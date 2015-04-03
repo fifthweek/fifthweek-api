@@ -1,23 +1,32 @@
 ﻿using System;
 using System.Linq;
 
-//// Generated on 22/02/2015 19:38:02 (UTC)
-//// Mapped solution in 12.25s
+//// Generated on 03/04/2015 14:30:40 (UTC)
+//// Mapped solution in 7.99s
 
 
 namespace Fifthweek.WebJobs.Thumbnails.Shared
 {
+    using System;
+    using System.Linq;
     using System.Collections.Generic;
     using Fifthweek.CodeGeneration;
+    using Fifthweek.Api.FileManagement.Shared;
 
     public partial class CreateThumbnailsMessage 
     {
         public CreateThumbnailsMessage(
+            Fifthweek.Api.FileManagement.Shared.FileId fileId,
             System.String containerName,
             System.String inputBlobName,
             System.Collections.Generic.List<Fifthweek.WebJobs.Thumbnails.Shared.ThumbnailDefinition> items,
             System.Boolean overwrite)
         {
+            if (fileId == null)
+            {
+                throw new ArgumentNullException("fileId");
+            }
+
             if (containerName == null)
             {
                 throw new ArgumentNullException("containerName");
@@ -33,6 +42,7 @@ namespace Fifthweek.WebJobs.Thumbnails.Shared
                 throw new ArgumentNullException("overwrite");
             }
 
+            this.FileId = fileId;
             this.ContainerName = containerName;
             this.InputBlobName = inputBlobName;
             this.Items = items;
@@ -42,6 +52,8 @@ namespace Fifthweek.WebJobs.Thumbnails.Shared
 }
 namespace Fifthweek.WebJobs.Thumbnails.Shared
 {
+    using System;
+    using System.Linq;
     using System.Collections.Generic;
     using Fifthweek.CodeGeneration;
 
@@ -85,14 +97,17 @@ namespace Fifthweek.WebJobs.Thumbnails.Shared
 
 namespace Fifthweek.WebJobs.Thumbnails.Shared
 {
+    using System;
+    using System.Linq;
     using System.Collections.Generic;
     using Fifthweek.CodeGeneration;
+    using Fifthweek.Api.FileManagement.Shared;
 
     public partial class CreateThumbnailsMessage 
     {
         public override string ToString()
         {
-            return string.Format("CreateThumbnailSetMessage(\"{0}\", \"{1}\", {2}, {3})", this.ContainerName == null ? "null" : this.ContainerName.ToString(), this.InputBlobName == null ? "null" : this.InputBlobName.ToString(), this.Items == null ? "null" : this.Items.ToString(), this.Overwrite == null ? "null" : this.Overwrite.ToString());
+            return string.Format("CreateThumbnailsMessage({0}, \"{1}\", \"{2}\", {3}, {4})", this.FileId == null ? "null" : this.FileId.ToString(), this.ContainerName == null ? "null" : this.ContainerName.ToString(), this.InputBlobName == null ? "null" : this.InputBlobName.ToString(), this.Items == null ? "null" : this.Items.ToString(), this.Overwrite == null ? "null" : this.Overwrite.ToString());
         }
         
         public override bool Equals(object obj)
@@ -120,6 +135,7 @@ namespace Fifthweek.WebJobs.Thumbnails.Shared
             unchecked
             {
                 int hashCode = 0;
+                hashCode = (hashCode * 397) ^ (this.FileId != null ? this.FileId.GetHashCode() : 0);
                 hashCode = (hashCode * 397) ^ (this.ContainerName != null ? this.ContainerName.GetHashCode() : 0);
                 hashCode = (hashCode * 397) ^ (this.InputBlobName != null ? this.InputBlobName.GetHashCode() : 0);
                 hashCode = (hashCode * 397) ^ (this.Items != null 
@@ -138,6 +154,11 @@ namespace Fifthweek.WebJobs.Thumbnails.Shared
         
         protected bool Equals(CreateThumbnailsMessage other)
         {
+            if (!object.Equals(this.FileId, other.FileId))
+            {
+                return false;
+            }
+        
             if (!object.Equals(this.ContainerName, other.ContainerName))
             {
                 return false;
@@ -171,6 +192,8 @@ namespace Fifthweek.WebJobs.Thumbnails.Shared
 }
 namespace Fifthweek.WebJobs.Thumbnails.Shared
 {
+    using System;
+    using System.Linq;
     using System.Collections.Generic;
     using Fifthweek.CodeGeneration;
 
@@ -178,7 +201,7 @@ namespace Fifthweek.WebJobs.Thumbnails.Shared
     {
         public override string ToString()
         {
-            return string.Format("ThumbnailSetItemMessage(\"{0}\", {1}, {2}, {3}, {4})", this.OutputBlobName == null ? "null" : this.OutputBlobName.ToString(), this.Width == null ? "null" : this.Width.ToString(), this.Height == null ? "null" : this.Height.ToString(), this.ResizeBehaviour == null ? "null" : this.ResizeBehaviour.ToString(), this.Children == null ? "null" : this.Children.ToString());
+            return string.Format("ThumbnailDefinition(\"{0}\", {1}, {2}, {3}, {4})", this.OutputBlobName == null ? "null" : this.OutputBlobName.ToString(), this.Width == null ? "null" : this.Width.ToString(), this.Height == null ? "null" : this.Height.ToString(), this.ResizeBehaviour == null ? "null" : this.ResizeBehaviour.ToString(), this.Children == null ? "null" : this.Children.ToString());
         }
         
         public override bool Equals(object obj)

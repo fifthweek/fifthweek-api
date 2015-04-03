@@ -4,7 +4,7 @@
     using System.Collections.Generic;
     using System.Linq;
 
-    using Fifthweek.Api.Core;
+    using Fifthweek.Shared;
 
     public class Requester
     {

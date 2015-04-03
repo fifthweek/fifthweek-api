@@ -13,15 +13,18 @@
                 Guid.NewGuid(),
                 null,
                 default(Guid),
-                (FileState)random.Next(0, 3),
+                (FileState)random.Next(0, 2),
                 DateTime.UtcNow.AddDays(random.NextDouble() * -100),
                 DateTime.UtcNow.AddDays(random.NextDouble() * -100),
                 DateTime.UtcNow.AddDays(random.NextDouble() * -100),
                 DateTime.UtcNow.AddDays(random.NextDouble() * -100),
+                random.Next(0,3),
                 "File Name " + random.Next(),
                 "ext" + random.Next(100),
                 random.Next(),
-                "Purpose " + random.Next());
+                "Purpose " + random.Next(),
+                random.Next(1, 1024),
+                random.Next(1, 1024));
         }
 
         public static Task CreateTestFileWithExistingUserAsync(this IFifthweekDbContext databaseContext, Guid existingUserId, Guid newFileId)

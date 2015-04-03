@@ -5,6 +5,8 @@
     using System.Web;
     using System.Web.Http.Controllers;
 
+    using Fifthweek.Shared;
+
     public class RequestContext : IRequestContext
     {
         private bool initialized = false;

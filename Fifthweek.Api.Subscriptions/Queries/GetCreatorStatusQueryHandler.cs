@@ -11,6 +11,7 @@
     using Fifthweek.Api.Persistence;
     using Fifthweek.Api.Subscriptions.Shared;
     using Fifthweek.CodeGeneration;
+    using Fifthweek.Shared;
 
     [AutoConstructor]
     public partial class GetCreatorStatusQueryHandler : IQueryHandler<GetCreatorStatusQuery, CreatorStatus>

@@ -6,6 +6,7 @@
     using Fifthweek.Api.Collections.Shared;
     using Fifthweek.Api.Core;
     using Fifthweek.CodeGeneration;
+    using Fifthweek.Shared;
 
     [AutoConstructor]
     public partial class DefragmentQueueDbStatement : IDefragmentQueueDbStatement

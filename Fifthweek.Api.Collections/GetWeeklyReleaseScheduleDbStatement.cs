@@ -10,6 +10,7 @@
     using Fifthweek.Api.Core;
     using Fifthweek.Api.Persistence;
     using Fifthweek.CodeGeneration;
+    using Fifthweek.Shared;
 
     [AutoConstructor]
     public partial class GetWeeklyReleaseScheduleDbStatement : IGetWeeklyReleaseScheduleDbStatement

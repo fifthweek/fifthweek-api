@@ -8,6 +8,7 @@ namespace Fifthweek.Api.Collections
     using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.Api.Persistence;
     using Fifthweek.CodeGeneration;
+    using Fifthweek.Shared;
 
     [AutoConstructor]
     public partial class CollectionOwnership : ICollectionOwnership
