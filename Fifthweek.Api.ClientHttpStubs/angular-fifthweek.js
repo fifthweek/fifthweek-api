@@ -276,7 +276,11 @@ angular.module('webApp').factory('postsStub',
     //       fileName: '',
     //       fileExtension: '',
     //       contentType: '',
-    //       size: 0
+    //       size: 0,
+    //       renderSize: { /* optional */
+    //         width: 0,
+    //         height: 0
+    //       }
     //     },
     //     image: { /* optional */
     //       fileId: 'Base64Guid',
@@ -286,7 +290,11 @@ angular.module('webApp').factory('postsStub',
     //       fileName: '',
     //       fileExtension: '',
     //       contentType: '',
-    //       size: 0
+    //       size: 0,
+    //       renderSize: { /* optional */
+    //         width: 0,
+    //         height: 0
+    //       }
     //     },
     //     scheduledByQueue: false,
     //     liveDate: '2015-12-25T14:45:05Z'
@@ -315,7 +323,11 @@ angular.module('webApp').factory('postsStub',
     //       fileName: '',
     //       fileExtension: '',
     //       contentType: '',
-    //       size: 0
+    //       size: 0,
+    //       renderSize: { /* optional */
+    //         width: 0,
+    //         height: 0
+    //       }
     //     },
     //     image: { /* optional */
     //       fileId: 'Base64Guid',
@@ -325,7 +337,11 @@ angular.module('webApp').factory('postsStub',
     //       fileName: '',
     //       fileExtension: '',
     //       contentType: '',
-    //       size: 0
+    //       size: 0,
+    //       renderSize: { /* optional */
+    //         width: 0,
+    //         height: 0
+    //       }
     //     },
     //     liveDate: '2015-12-25T14:45:05Z'
     //   }
