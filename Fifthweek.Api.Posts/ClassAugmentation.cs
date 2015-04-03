@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Linq;
 
-//// Generated on 17/03/2015 10:03:01 (UTC)
-//// Mapped solution in 8.5s
+//// Generated on 03/04/2015 18:07:31 (UTC)
+//// Mapped solution in 7.1s
 
 
 namespace Fifthweek.Api.Posts.Commands
@@ -22,6 +22,7 @@ namespace Fifthweek.Api.Posts.Commands
     using System.Text;
     using Dapper;
     using System.Transactions;
+    using Fifthweek.Shared;
 
     public partial class DeletePostCommand 
     {
@@ -61,6 +62,7 @@ namespace Fifthweek.Api.Posts.Commands
     using System.Text;
     using Dapper;
     using System.Transactions;
+    using Fifthweek.Shared;
 
     public partial class DeletePostCommandHandler 
     {
@@ -121,6 +123,7 @@ namespace Fifthweek.Api.Posts.Commands
     using System.Text;
     using Dapper;
     using System.Transactions;
+    using Fifthweek.Shared;
 
     public partial class PostFileCommand 
     {
@@ -185,6 +188,7 @@ namespace Fifthweek.Api.Posts.Commands
     using System.Text;
     using Dapper;
     using System.Transactions;
+    using Fifthweek.Shared;
 
     public partial class PostFileCommandHandler 
     {
@@ -245,6 +249,7 @@ namespace Fifthweek.Api.Posts.Commands
     using System.Text;
     using Dapper;
     using System.Transactions;
+    using Fifthweek.Shared;
 
     public partial class PostImageCommand 
     {
@@ -309,6 +314,7 @@ namespace Fifthweek.Api.Posts.Commands
     using System.Text;
     using Dapper;
     using System.Transactions;
+    using Fifthweek.Shared;
 
     public partial class PostImageCommandHandler 
     {
@@ -369,6 +375,7 @@ namespace Fifthweek.Api.Posts.Commands
     using System.Text;
     using Dapper;
     using System.Transactions;
+    using Fifthweek.Shared;
 
     public partial class PostNoteCommand 
     {
@@ -424,6 +431,7 @@ namespace Fifthweek.Api.Posts.Commands
     using System.Text;
     using Dapper;
     using System.Transactions;
+    using Fifthweek.Shared;
 
     public partial class PostNoteCommandHandler 
     {
@@ -470,6 +478,7 @@ namespace Fifthweek.Api.Posts.Commands
     using System.Text;
     using Dapper;
     using System.Transactions;
+    using Fifthweek.Shared;
 
     public partial class ReorderQueueCommand 
     {
@@ -516,6 +525,7 @@ namespace Fifthweek.Api.Posts.Commands
     using System.Text;
     using Dapper;
     using System.Transactions;
+    using Fifthweek.Shared;
 
     public partial class ReorderQueueCommandHandler 
     {
@@ -555,6 +565,7 @@ namespace Fifthweek.Api.Posts.Commands
     using System.Text;
     using Dapper;
     using System.Transactions;
+    using Fifthweek.Shared;
 
     public partial class ReviseNoteCommand 
     {
@@ -1135,7 +1146,9 @@ namespace Fifthweek.Api.Posts.Queries
             System.Nullable<System.Int64> fileSize,
             System.String imageName,
             System.String imageExtension,
-            System.Nullable<System.Int64> imageSize)
+            System.Nullable<System.Int64> imageSize,
+            System.Nullable<System.Int32> imageRenderWidth,
+            System.Nullable<System.Int32> imageRenderHeight)
         {
             if (postId == null)
             {
@@ -1171,6 +1184,8 @@ namespace Fifthweek.Api.Posts.Queries
             this.ImageName = imageName;
             this.ImageExtension = imageExtension;
             this.ImageSize = imageSize;
+            this.ImageRenderWidth = imageRenderWidth;
+            this.ImageRenderHeight = imageRenderHeight;
         }
     }
 }
@@ -1405,7 +1420,9 @@ namespace Fifthweek.Api.Posts.Queries
             System.Nullable<System.Int64> fileSize,
             System.String imageName,
             System.String imageExtension,
-            System.Nullable<System.Int64> imageSize)
+            System.Nullable<System.Int64> imageSize,
+            System.Nullable<System.Int32> imageRenderWidth,
+            System.Nullable<System.Int32> imageRenderHeight)
         {
             if (postId == null)
             {
@@ -1435,6 +1452,8 @@ namespace Fifthweek.Api.Posts.Queries
             this.ImageName = imageName;
             this.ImageExtension = imageExtension;
             this.ImageSize = imageSize;
+            this.ImageRenderWidth = imageRenderWidth;
+            this.ImageRenderHeight = imageRenderHeight;
         }
     }
 }
@@ -1596,6 +1615,7 @@ namespace Fifthweek.Api.Posts.Commands
     using System.Text;
     using Dapper;
     using System.Transactions;
+    using Fifthweek.Shared;
 
     public partial class ReviseFileCommand 
     {
@@ -1644,6 +1664,7 @@ namespace Fifthweek.Api.Posts.Commands
     using System.Text;
     using Dapper;
     using System.Transactions;
+    using Fifthweek.Shared;
 
     public partial class ReviseImageCommand 
     {
@@ -1760,6 +1781,7 @@ namespace Fifthweek.Api.Posts.Commands
     using System.Text;
     using Dapper;
     using System.Transactions;
+    using Fifthweek.Shared;
 
     public partial class ReviseNoteCommandHandler 
     {
@@ -1855,6 +1877,7 @@ namespace Fifthweek.Api.Posts.Commands
     using System.Text;
     using Dapper;
     using System.Transactions;
+    using Fifthweek.Shared;
 
     public partial class ReviseImageCommandHandler 
     {
@@ -1908,6 +1931,7 @@ namespace Fifthweek.Api.Posts.Commands
     using System.Text;
     using Dapper;
     using System.Transactions;
+    using Fifthweek.Shared;
 
     public partial class ReviseFileCommandHandler 
     {
@@ -1996,6 +2020,7 @@ namespace Fifthweek.Api.Posts.Commands
     using System.Text;
     using Dapper;
     using System.Transactions;
+    using Fifthweek.Shared;
 
     public partial class RescheduleForNowCommand 
     {
@@ -2035,6 +2060,7 @@ namespace Fifthweek.Api.Posts.Commands
     using System.Text;
     using Dapper;
     using System.Transactions;
+    using Fifthweek.Shared;
 
     public partial class RescheduleForNowCommandHandler 
     {
@@ -2179,6 +2205,7 @@ namespace Fifthweek.Api.Posts.Commands
     using System.Text;
     using Dapper;
     using System.Transactions;
+    using Fifthweek.Shared;
 
     public partial class RescheduleForTimeCommand 
     {
@@ -2225,6 +2252,7 @@ namespace Fifthweek.Api.Posts.Commands
     using System.Text;
     using Dapper;
     using System.Transactions;
+    using Fifthweek.Shared;
 
     public partial class RescheduleWithQueueCommand 
     {
@@ -2264,6 +2292,7 @@ namespace Fifthweek.Api.Posts.Commands
     using System.Text;
     using Dapper;
     using System.Transactions;
+    using Fifthweek.Shared;
 
     public partial class RescheduleForTimeCommandHandler 
     {
@@ -2317,6 +2346,7 @@ namespace Fifthweek.Api.Posts.Commands
     using System.Text;
     using Dapper;
     using System.Transactions;
+    using Fifthweek.Shared;
 
     public partial class RescheduleWithQueueCommandHandler 
     {
@@ -2700,7 +2730,8 @@ namespace Fifthweek.Api.Posts.Queries
             System.String fileName,
             System.String fileExtension,
             System.String contentType,
-            System.Int64 size)
+            System.Int64 size,
+            Fifthweek.Api.Posts.Queries.RenderSize renderSize)
         {
             if (fileName == null)
             {
@@ -2726,6 +2757,46 @@ namespace Fifthweek.Api.Posts.Queries
             this.FileExtension = fileExtension;
             this.ContentType = contentType;
             this.Size = size;
+            this.RenderSize = renderSize;
+        }
+    }
+}
+namespace Fifthweek.Api.Posts.Queries
+{
+    using System;
+    using System.Linq;
+    using Fifthweek.Api.Channels.Shared;
+    using Fifthweek.Api.Collections.Shared;
+    using Fifthweek.Api.FileManagement.Shared;
+    using Fifthweek.Api.Posts.Shared;
+    using Fifthweek.CodeGeneration;
+    using System.Collections.Generic;
+    using Fifthweek.Api.Core;
+    using Fifthweek.Api.Identity.Shared.Membership;
+    using System.Threading.Tasks;
+    using Dapper;
+    using Fifthweek.Api.Persistence;
+    using Fifthweek.Api.Persistence.Identity;
+    using Fifthweek.Shared;
+
+    public partial class RenderSize 
+    {
+        public RenderSize(
+            System.Int32 width,
+            System.Int32 height)
+        {
+            if (width == null)
+            {
+                throw new ArgumentNullException("width");
+            }
+
+            if (height == null)
+            {
+                throw new ArgumentNullException("height");
+            }
+
+            this.Width = width;
+            this.Height = height;
         }
     }
 }
@@ -2747,6 +2818,7 @@ namespace Fifthweek.Api.Posts.Commands
     using System.Text;
     using Dapper;
     using System.Transactions;
+    using Fifthweek.Shared;
 
     public partial class DeletePostCommand 
     {
@@ -2819,6 +2891,7 @@ namespace Fifthweek.Api.Posts.Commands
     using System.Text;
     using Dapper;
     using System.Transactions;
+    using Fifthweek.Shared;
 
     public partial class PostFileCommand 
     {
@@ -2921,6 +2994,7 @@ namespace Fifthweek.Api.Posts.Commands
     using System.Text;
     using Dapper;
     using System.Transactions;
+    using Fifthweek.Shared;
 
     public partial class PostImageCommand 
     {
@@ -3023,6 +3097,7 @@ namespace Fifthweek.Api.Posts.Commands
     using System.Text;
     using Dapper;
     using System.Transactions;
+    using Fifthweek.Shared;
 
     public partial class PostNoteCommand 
     {
@@ -3113,6 +3188,7 @@ namespace Fifthweek.Api.Posts.Commands
     using System.Text;
     using Dapper;
     using System.Transactions;
+    using Fifthweek.Shared;
 
     public partial class ReorderQueueCommand 
     {
@@ -3206,6 +3282,7 @@ namespace Fifthweek.Api.Posts.Commands
     using System.Text;
     using Dapper;
     using System.Transactions;
+    using Fifthweek.Shared;
 
     public partial class ReviseNoteCommand 
     {
@@ -3367,7 +3444,7 @@ namespace Fifthweek.Api.Posts.Queries
     {
         public override string ToString()
         {
-            return string.Format("BacklogPost({0}, {1}, {2}, {3}, {4}, {5}, {6}, {7}, \"{8}\", \"{9}\", {10}, \"{11}\", \"{12}\", {13})", this.PostId == null ? "null" : this.PostId.ToString(), this.ChannelId == null ? "null" : this.ChannelId.ToString(), this.CollectionId == null ? "null" : this.CollectionId.ToString(), this.Comment == null ? "null" : this.Comment.ToString(), this.FileId == null ? "null" : this.FileId.ToString(), this.ImageId == null ? "null" : this.ImageId.ToString(), this.ScheduledByQueue == null ? "null" : this.ScheduledByQueue.ToString(), this.LiveDate == null ? "null" : this.LiveDate.ToString(), this.FileName == null ? "null" : this.FileName.ToString(), this.FileExtension == null ? "null" : this.FileExtension.ToString(), this.FileSize == null ? "null" : this.FileSize.ToString(), this.ImageName == null ? "null" : this.ImageName.ToString(), this.ImageExtension == null ? "null" : this.ImageExtension.ToString(), this.ImageSize == null ? "null" : this.ImageSize.ToString());
+            return string.Format("BacklogPost({0}, {1}, {2}, {3}, {4}, {5}, {6}, {7}, \"{8}\", \"{9}\", {10}, \"{11}\", \"{12}\", {13}, {14}, {15})", this.PostId == null ? "null" : this.PostId.ToString(), this.ChannelId == null ? "null" : this.ChannelId.ToString(), this.CollectionId == null ? "null" : this.CollectionId.ToString(), this.Comment == null ? "null" : this.Comment.ToString(), this.FileId == null ? "null" : this.FileId.ToString(), this.ImageId == null ? "null" : this.ImageId.ToString(), this.ScheduledByQueue == null ? "null" : this.ScheduledByQueue.ToString(), this.LiveDate == null ? "null" : this.LiveDate.ToString(), this.FileName == null ? "null" : this.FileName.ToString(), this.FileExtension == null ? "null" : this.FileExtension.ToString(), this.FileSize == null ? "null" : this.FileSize.ToString(), this.ImageName == null ? "null" : this.ImageName.ToString(), this.ImageExtension == null ? "null" : this.ImageExtension.ToString(), this.ImageSize == null ? "null" : this.ImageSize.ToString(), this.ImageRenderWidth == null ? "null" : this.ImageRenderWidth.ToString(), this.ImageRenderHeight == null ? "null" : this.ImageRenderHeight.ToString());
         }
         
         public override bool Equals(object obj)
@@ -3409,6 +3486,8 @@ namespace Fifthweek.Api.Posts.Queries
                 hashCode = (hashCode * 397) ^ (this.ImageName != null ? this.ImageName.GetHashCode() : 0);
                 hashCode = (hashCode * 397) ^ (this.ImageExtension != null ? this.ImageExtension.GetHashCode() : 0);
                 hashCode = (hashCode * 397) ^ (this.ImageSize != null ? this.ImageSize.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.ImageRenderWidth != null ? this.ImageRenderWidth.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.ImageRenderHeight != null ? this.ImageRenderHeight.GetHashCode() : 0);
                 return hashCode;
             }
         }
@@ -3481,6 +3560,16 @@ namespace Fifthweek.Api.Posts.Queries
             }
         
             if (!object.Equals(this.ImageSize, other.ImageSize))
+            {
+                return false;
+            }
+        
+            if (!object.Equals(this.ImageRenderWidth, other.ImageRenderWidth))
+            {
+                return false;
+            }
+        
+            if (!object.Equals(this.ImageRenderHeight, other.ImageRenderHeight))
             {
                 return false;
             }
@@ -3667,7 +3756,7 @@ namespace Fifthweek.Api.Posts.Queries
     {
         public override string ToString()
         {
-            return string.Format("NewsfeedPost({0}, {1}, {2}, {3}, {4}, {5}, {6}, \"{7}\", \"{8}\", {9}, \"{10}\", \"{11}\", {12})", this.PostId == null ? "null" : this.PostId.ToString(), this.ChannelId == null ? "null" : this.ChannelId.ToString(), this.CollectionId == null ? "null" : this.CollectionId.ToString(), this.Comment == null ? "null" : this.Comment.ToString(), this.FileId == null ? "null" : this.FileId.ToString(), this.ImageId == null ? "null" : this.ImageId.ToString(), this.LiveDate == null ? "null" : this.LiveDate.ToString(), this.FileName == null ? "null" : this.FileName.ToString(), this.FileExtension == null ? "null" : this.FileExtension.ToString(), this.FileSize == null ? "null" : this.FileSize.ToString(), this.ImageName == null ? "null" : this.ImageName.ToString(), this.ImageExtension == null ? "null" : this.ImageExtension.ToString(), this.ImageSize == null ? "null" : this.ImageSize.ToString());
+            return string.Format("NewsfeedPost({0}, {1}, {2}, {3}, {4}, {5}, {6}, \"{7}\", \"{8}\", {9}, \"{10}\", \"{11}\", {12}, {13}, {14})", this.PostId == null ? "null" : this.PostId.ToString(), this.ChannelId == null ? "null" : this.ChannelId.ToString(), this.CollectionId == null ? "null" : this.CollectionId.ToString(), this.Comment == null ? "null" : this.Comment.ToString(), this.FileId == null ? "null" : this.FileId.ToString(), this.ImageId == null ? "null" : this.ImageId.ToString(), this.LiveDate == null ? "null" : this.LiveDate.ToString(), this.FileName == null ? "null" : this.FileName.ToString(), this.FileExtension == null ? "null" : this.FileExtension.ToString(), this.FileSize == null ? "null" : this.FileSize.ToString(), this.ImageName == null ? "null" : this.ImageName.ToString(), this.ImageExtension == null ? "null" : this.ImageExtension.ToString(), this.ImageSize == null ? "null" : this.ImageSize.ToString(), this.ImageRenderWidth == null ? "null" : this.ImageRenderWidth.ToString(), this.ImageRenderHeight == null ? "null" : this.ImageRenderHeight.ToString());
         }
         
         public override bool Equals(object obj)
@@ -3708,6 +3797,8 @@ namespace Fifthweek.Api.Posts.Queries
                 hashCode = (hashCode * 397) ^ (this.ImageName != null ? this.ImageName.GetHashCode() : 0);
                 hashCode = (hashCode * 397) ^ (this.ImageExtension != null ? this.ImageExtension.GetHashCode() : 0);
                 hashCode = (hashCode * 397) ^ (this.ImageSize != null ? this.ImageSize.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.ImageRenderWidth != null ? this.ImageRenderWidth.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.ImageRenderHeight != null ? this.ImageRenderHeight.GetHashCode() : 0);
                 return hashCode;
             }
         }
@@ -3775,6 +3866,16 @@ namespace Fifthweek.Api.Posts.Queries
             }
         
             if (!object.Equals(this.ImageSize, other.ImageSize))
+            {
+                return false;
+            }
+        
+            if (!object.Equals(this.ImageRenderWidth, other.ImageRenderWidth))
+            {
+                return false;
+            }
+        
+            if (!object.Equals(this.ImageRenderHeight, other.ImageRenderHeight))
             {
                 return false;
             }
@@ -4058,6 +4159,7 @@ namespace Fifthweek.Api.Posts.Commands
     using System.Text;
     using Dapper;
     using System.Transactions;
+    using Fifthweek.Shared;
 
     public partial class ReviseFileCommand 
     {
@@ -4142,6 +4244,7 @@ namespace Fifthweek.Api.Posts.Commands
     using System.Text;
     using Dapper;
     using System.Transactions;
+    using Fifthweek.Shared;
 
     public partial class ReviseImageCommand 
     {
@@ -4370,6 +4473,7 @@ namespace Fifthweek.Api.Posts.Commands
     using System.Text;
     using Dapper;
     using System.Transactions;
+    using Fifthweek.Shared;
 
     public partial class RescheduleForNowCommand 
     {
@@ -4442,6 +4546,7 @@ namespace Fifthweek.Api.Posts.Commands
     using System.Text;
     using Dapper;
     using System.Transactions;
+    using Fifthweek.Shared;
 
     public partial class RescheduleForTimeCommand 
     {
@@ -4520,6 +4625,7 @@ namespace Fifthweek.Api.Posts.Commands
     using System.Text;
     using Dapper;
     using System.Transactions;
+    using Fifthweek.Shared;
 
     public partial class RescheduleWithQueueCommand 
     {
@@ -4831,7 +4937,7 @@ namespace Fifthweek.Api.Posts.Queries
     {
         public override string ToString()
         {
-            return string.Format("FileSourceInformation(\"{0}\", \"{1}\", \"{2}\", {3})", this.FileName == null ? "null" : this.FileName.ToString(), this.FileExtension == null ? "null" : this.FileExtension.ToString(), this.ContentType == null ? "null" : this.ContentType.ToString(), this.Size == null ? "null" : this.Size.ToString());
+            return string.Format("FileSourceInformation(\"{0}\", \"{1}\", \"{2}\", {3}, {4})", this.FileName == null ? "null" : this.FileName.ToString(), this.FileExtension == null ? "null" : this.FileExtension.ToString(), this.ContentType == null ? "null" : this.ContentType.ToString(), this.Size == null ? "null" : this.Size.ToString(), this.RenderSize == null ? "null" : this.RenderSize.ToString());
         }
         
         public override bool Equals(object obj)
@@ -4863,6 +4969,7 @@ namespace Fifthweek.Api.Posts.Queries
                 hashCode = (hashCode * 397) ^ (this.FileExtension != null ? this.FileExtension.GetHashCode() : 0);
                 hashCode = (hashCode * 397) ^ (this.ContentType != null ? this.ContentType.GetHashCode() : 0);
                 hashCode = (hashCode * 397) ^ (this.Size != null ? this.Size.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.RenderSize != null ? this.RenderSize.GetHashCode() : 0);
                 return hashCode;
             }
         }
@@ -4885,6 +4992,83 @@ namespace Fifthweek.Api.Posts.Queries
             }
         
             if (!object.Equals(this.Size, other.Size))
+            {
+                return false;
+            }
+        
+            if (!object.Equals(this.RenderSize, other.RenderSize))
+            {
+                return false;
+            }
+        
+            return true;
+        }
+    }
+}
+namespace Fifthweek.Api.Posts.Queries
+{
+    using System;
+    using System.Linq;
+    using Fifthweek.Api.Channels.Shared;
+    using Fifthweek.Api.Collections.Shared;
+    using Fifthweek.Api.FileManagement.Shared;
+    using Fifthweek.Api.Posts.Shared;
+    using Fifthweek.CodeGeneration;
+    using System.Collections.Generic;
+    using Fifthweek.Api.Core;
+    using Fifthweek.Api.Identity.Shared.Membership;
+    using System.Threading.Tasks;
+    using Dapper;
+    using Fifthweek.Api.Persistence;
+    using Fifthweek.Api.Persistence.Identity;
+    using Fifthweek.Shared;
+
+    public partial class RenderSize 
+    {
+        public override string ToString()
+        {
+            return string.Format("RenderSize({0}, {1})", this.Width == null ? "null" : this.Width.ToString(), this.Height == null ? "null" : this.Height.ToString());
+        }
+        
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj))
+            {
+                return false;
+            }
+        
+            if (ReferenceEquals(this, obj))
+            {
+                return true;
+            }
+        
+            if (obj.GetType() != this.GetType())
+            {
+                return false;
+            }
+        
+            return this.Equals((RenderSize)obj);
+        }
+        
+        public override int GetHashCode()
+        {
+            unchecked
+            {
+                int hashCode = 0;
+                hashCode = (hashCode * 397) ^ (this.Width != null ? this.Width.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.Height != null ? this.Height.GetHashCode() : 0);
+                return hashCode;
+            }
+        }
+        
+        protected bool Equals(RenderSize other)
+        {
+            if (!object.Equals(this.Width, other.Width))
+            {
+                return false;
+            }
+        
+            if (!object.Equals(this.Height, other.Height))
             {
                 return false;
             }
@@ -5002,6 +5186,8 @@ namespace Fifthweek.Api.Posts.Queries
             builder.ImageName = this.ImageName;
             builder.ImageExtension = this.ImageExtension;
             builder.ImageSize = this.ImageSize;
+            builder.ImageRenderWidth = this.ImageRenderWidth;
+            builder.ImageRenderHeight = this.ImageRenderHeight;
             return builder;
         }
         
@@ -5028,6 +5214,8 @@ namespace Fifthweek.Api.Posts.Queries
             public System.String ImageName { get; set; }
             public System.String ImageExtension { get; set; }
             public System.Nullable<System.Int64> ImageSize { get; set; }
+            public System.Nullable<System.Int32> ImageRenderWidth { get; set; }
+            public System.Nullable<System.Int32> ImageRenderHeight { get; set; }
         
             public BacklogPost Build()
             {
@@ -5045,7 +5233,9 @@ namespace Fifthweek.Api.Posts.Queries
                     this.FileSize, 
                     this.ImageName, 
                     this.ImageExtension, 
-                    this.ImageSize);
+                    this.ImageSize, 
+                    this.ImageRenderWidth, 
+                    this.ImageRenderHeight);
             }
         }
     }
@@ -5086,6 +5276,8 @@ namespace Fifthweek.Api.Posts.Queries
             builder.ImageName = this.ImageName;
             builder.ImageExtension = this.ImageExtension;
             builder.ImageSize = this.ImageSize;
+            builder.ImageRenderWidth = this.ImageRenderWidth;
+            builder.ImageRenderHeight = this.ImageRenderHeight;
             return builder;
         }
         
@@ -5111,6 +5303,8 @@ namespace Fifthweek.Api.Posts.Queries
             public System.String ImageName { get; set; }
             public System.String ImageExtension { get; set; }
             public System.Nullable<System.Int64> ImageSize { get; set; }
+            public System.Nullable<System.Int32> ImageRenderWidth { get; set; }
+            public System.Nullable<System.Int32> ImageRenderHeight { get; set; }
         
             public NewsfeedPost Build()
             {
@@ -5127,7 +5321,9 @@ namespace Fifthweek.Api.Posts.Queries
                     this.FileSize, 
                     this.ImageName, 
                     this.ImageExtension, 
-                    this.ImageSize);
+                    this.ImageSize, 
+                    this.ImageRenderWidth, 
+                    this.ImageRenderHeight);
             }
         }
     }

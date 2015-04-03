@@ -37,6 +37,8 @@
         private static readonly string FileName = "FileName";
         private static readonly string FileExtension = "FileExtension";
         private static readonly long FileSize = 1024;
+        private static readonly int FileWidth = 800;
+        private static readonly int FileHeight = 600;
         private static readonly IReadOnlyList<NewsfeedPost> SortedNewsfeedPosts = GetSortedNewsfeedPosts().ToList();
 
         private Mock<IFifthweekDbConnectionFactory> connectionFactory;
@@ -169,6 +171,8 @@
                         _.ImageName = null;
                         _.ImageExtension = null;
                         _.ImageSize = null;
+                        _.ImageRenderWidth = null;
+                        _.ImageRenderHeight = null;
                         _.CollectionId = null;
                     });
 
@@ -265,6 +269,7 @@
             {
                 var channels = new Dictionary<ChannelId, List<CollectionId>>();
                 var files = new List<FileId>();
+                var images = new List<FileId>();
                 var channelEntities = new List<Channel>();
                 var collectionEntities = new List<Collection>();
                 var postEntities = new List<Post>();
@@ -296,7 +301,7 @@
 
                         if (newsfeedPost.ImageId != null)
                         {
-                            files.Add(newsfeedPost.ImageId);
+                            images.Add(newsfeedPost.ImageId);
                         }
 
                         if (!channels.ContainsKey(newsfeedPost.ChannelId))
@@ -357,10 +362,24 @@
                     return file;
                 });
 
+                var imageEntities = images.Select(fileId =>
+                {
+                    var file = FileTests.UniqueEntity(Random);
+                    file.Id = fileId.Value;
+                    file.UserId = UserId.Value;
+                    file.FileNameWithoutExtension = FileName;
+                    file.FileExtension = FileExtension;
+                    file.BlobSizeBytes = FileSize;
+                    file.RenderWidth = FileWidth;
+                    file.RenderHeight = FileHeight;
+                    return file;
+                });
+
                 await databaseContext.CreateTestSubscriptionAsync(UserId.Value, SubscriptionId.Value);
                 await databaseContext.Database.Connection.InsertAsync(channelEntities);
                 await databaseContext.Database.Connection.InsertAsync(collectionEntities);
                 await databaseContext.Database.Connection.InsertAsync(fileEntities);
+                await databaseContext.Database.Connection.InsertAsync(imageEntities);
                 await databaseContext.Database.Connection.InsertAsync(postEntities);
             }
         }
@@ -399,7 +418,9 @@
                             i % 3 == 1 ? FileSize : (long?)null,
                             i % 3 == 2 ? FileName : null,
                             i % 3 == 2 ? FileExtension : null,
-                            i % 3 == 2 ? FileSize : (long?)null));
+                            i % 3 == 2 ? FileSize : (long?)null,
+                            i % 3 == 2 ? FileWidth : (int?)null,
+                            i % 3 == 2 ? FileHeight : (int?)null));
                     }
                 }
             }

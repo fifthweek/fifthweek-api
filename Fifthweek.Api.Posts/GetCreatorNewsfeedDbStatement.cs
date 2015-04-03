@@ -18,7 +18,7 @@
     public partial class GetCreatorNewsfeedDbStatement : IGetCreatorNewsfeedDbStatement
     {
         private static readonly string Sql = string.Format(
-            @"SELECT    post.{1} AS PostId, {2}, {4}, {5}, {6}, {7}, {3}, [file].{16} as FileName, [file].{17} as FileExtension, [file].{18} as FileSize, image.{16} as ImageName, image.{17} as ImageExtension, image.{18} as ImageSize
+            @"SELECT    post.{1} AS PostId, {2}, {4}, {5}, {6}, {7}, {3}, [file].{16} as FileName, [file].{17} as FileExtension, [file].{18} as FileSize, image.{16} as ImageName, image.{17} as ImageExtension, image.{18} as ImageSize, image.{19} as ImageRenderWidth, image.{20} as ImageRenderHeight
             FROM        {0} post
             INNER JOIN  {8} channel
                 ON      post.{2} = channel.{9}
@@ -51,7 +51,9 @@
             File.Fields.Id,
             File.Fields.FileNameWithoutExtension,
             File.Fields.FileExtension,
-            File.Fields.BlobSizeBytes);
+            File.Fields.BlobSizeBytes,
+            File.Fields.RenderWidth,
+            File.Fields.RenderHeight);
 
         private readonly IFifthweekDbConnectionFactory connectionFactory;
 

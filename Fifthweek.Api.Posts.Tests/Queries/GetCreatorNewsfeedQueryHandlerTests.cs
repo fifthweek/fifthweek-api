@@ -35,6 +35,8 @@
         private static readonly string FileName = "FileName";
         private static readonly string FileExtension = "FileExtension";
         private static readonly long FileSize = 1024;
+        private static readonly int FileWidth = 800;
+        private static readonly int FileHeight = 600;
         private static readonly string ContentType = "ContentType";
         private static readonly IReadOnlyList<NewsfeedPost> SortedNewsfeedPosts = GetSortedNewsfeedPosts().ToList();
 
@@ -182,7 +184,9 @@
                             i % 3 == 1 ? FileSize : (long?)null,
                             i % 3 == 2 ? FileName : null,
                             i % 3 == 2 ? FileExtension : null,
-                            i % 3 == 2 ? FileSize : (long?)null));
+                            i % 3 == 2 ? FileSize : (long?)null,
+                            i % 3 == 2 ? FileWidth : (int?)null,
+                            i % 3 == 2 ? FileHeight : (int?)null));
                     }
                 }
             }

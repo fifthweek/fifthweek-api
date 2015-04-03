@@ -46,5 +46,11 @@
 
         [Optional]
         public long? ImageSize { get; private set; }
+
+        [Optional]
+        public int? ImageRenderWidth { get; private set; }
+
+        [Optional]
+        public int? ImageRenderHeight { get; private set; }
     }
 }

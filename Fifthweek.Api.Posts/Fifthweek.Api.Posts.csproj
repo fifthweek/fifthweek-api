@@ -155,6 +155,7 @@
     <Compile Include="Queries\GetCreatorNewsfeedQuery.cs" />
     <Compile Include="Queries\GetCreatorBacklogQuery.cs" />
     <Compile Include="Queries\GetCreatorBacklogQueryHandler.cs" />
+    <Compile Include="Queries\RenderSize.cs" />
     <Compile Include="RemoveFromQueueIfRequiredDbStatement.cs" />
     <Compile Include="ScheduledDateClippingFunction.cs" />
     <Compile Include="PostNoteDbStatement.cs" />

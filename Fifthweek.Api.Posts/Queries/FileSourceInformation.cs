@@ -12,5 +12,8 @@
         public string ContentType { get; private set; }
 
         public long Size { get; private set; }
+
+        [Optional]
+        public RenderSize RenderSize { get; private set; }
     }
 }

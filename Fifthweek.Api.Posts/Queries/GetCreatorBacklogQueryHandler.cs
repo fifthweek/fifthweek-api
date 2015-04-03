@@ -53,15 +53,21 @@
                        FilePurposes.PostImage);
                 }
 
+                RenderSize imageRenderSize = null;
+                if (post.ImageRenderWidth.HasValue && post.ImageRenderHeight.HasValue)
+                {
+                    imageRenderSize = new RenderSize(post.ImageRenderWidth.Value, post.ImageRenderHeight.Value);
+                }
+
                 var completePost = new GetCreatorBacklogQueryResult(
                     post.PostId,
                     post.ChannelId,
                     post.CollectionId,
                     post.Comment,
                     file,
-                    file == null ? null : new FileSourceInformation(post.FileName, post.FileExtension, this.mimeTypeMap.GetMimeType(post.FileExtension), post.FileSize ?? 0),
+                    file == null ? null : new FileSourceInformation(post.FileName, post.FileExtension, this.mimeTypeMap.GetMimeType(post.FileExtension), post.FileSize ?? 0, null),
                     image,
-                    image == null ? null : new FileSourceInformation(post.ImageName, post.ImageExtension, this.mimeTypeMap.GetMimeType(post.ImageExtension), post.ImageSize ?? 0),
+                    image == null ? null : new FileSourceInformation(post.ImageName, post.ImageExtension, this.mimeTypeMap.GetMimeType(post.ImageExtension), post.ImageSize ?? 0, imageRenderSize),
                     post.ScheduledByQueue,
                     post.LiveDate);
                 
