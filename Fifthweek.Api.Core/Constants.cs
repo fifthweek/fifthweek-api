@@ -6,11 +6,11 @@
 
     public class Constants
     {
-        public const string DeveloperNameRequestHeaderKey = "Developer-Name";
+        public const string DeveloperNameRequestHeaderKey = "developer-name";
 
         public const string DefaultAllowedOrigin = "*";
 
-        public const string AllowedOriginHeaderKey = "Access-Control-Allow-Origin";
+        public const string AllowedOriginHeaderKey = "access-control-allow-origin";
 
         public const string TokenAllowedOriginKey = "fifthweek:clientAllowedOrigin";
 
