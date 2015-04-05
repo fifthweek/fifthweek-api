@@ -423,6 +423,9 @@
     <EmbeddedResource Include="SampleImages\trees-quality-50.jpg" />
     <EmbeddedResource Include="SampleImages\trees-quality-95.jpg" />
   </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="SampleImages\phone-portrait-photo.jpeg" />
+  </ItemGroup>
   <Choose>
     <When Condition="'$(VisualStudioVersion)' == '10.0' And '$(IsCodedUITest)' == 'True'">
       <ItemGroup>

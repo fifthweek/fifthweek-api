@@ -209,6 +209,8 @@
             Assert.AreEqual(SampleImagesLoader.Instance.LargeLandscape.Height, height);
             Assert.AreEqual(SampleImagesLoader.Instance.LargeLandscape.Width, result.RenderWidth);
             Assert.AreEqual(SampleImagesLoader.Instance.LargeLandscape.Height, result.RenderHeight);
+            Assert.AreEqual(SampleImagesLoader.Instance.LargeLandscape.Width.ToString(), this.inputMetadata["width"]);
+            Assert.AreEqual(SampleImagesLoader.Instance.LargeLandscape.Height.ToString(), this.inputMetadata["height"]);
             Assert.AreEqual("150", this.outputMetadata["width"]);
             Assert.AreEqual("100", this.outputMetadata["height"]);
             Assert.AreEqual(this.mimeTypeMap.GetMimeType(Path.GetExtension(SampleImagesLoader.Instance.LargeLandscape.Path)), this.outputProperties.Object.ContentType);
@@ -382,16 +384,12 @@
         [TestMethod]
         public async Task WhenCreatingThumbnailFromUnsupportedOutputFormat_ItShouldConvertToJpeg()
         {
-            int width = -1;
-            int height = -1;
             var format = MagickFormat.Tiff;
             string mimeType = null;
             this.imageService.Setup(v => v.Resize(It.IsAny<MagickImage>(), this.outputStream, Message.Items[0].Width, Message.Items[0].Height, Message.Items[0].ResizeBehaviour))
                 .Callback<MagickImage, Stream, int, int, ResizeBehaviour>(
                     (a, b, c, d, e) =>
                     {
-                        width = a.Width;
-                        height = a.Height;
                         format = a.Format;
                         mimeType = a.FormatInfo.MimeType;
                     })
@@ -438,6 +436,50 @@
 
             this.imageService.Verify();
             Assert.IsTrue(profileExists);
+        }
+
+        [TestMethod]
+        public async Task WhenCreatingThumbnailFromImageWithExifRotation_ItShouldOrientTheImage()
+        {
+            int width = -1;
+            int height = -1;
+            this.imageService.Setup(v => v.Resize(It.IsAny<MagickImage>(), this.outputStream, Message.Items[0].Width, Message.Items[0].Height, Message.Items[0].ResizeBehaviour))
+                .Callback<MagickImage, Stream, int, int, ResizeBehaviour>(
+                    (a, b, c, d, e) =>
+                    {
+                        width = a.Width;
+                        height = a.Height;
+                        a.Resize(Message.Items[0].Width, Message.Items[0].Height);
+                    })
+                .Verifiable();
+
+            var originalImageOutputStream = new MockCloudBlobStream();
+            this.input.Setup(v => v.OpenWriteAsync(CancellationToken.None))
+                .ReturnsAsync(originalImageOutputStream)
+                .Verifiable();
+
+            CreateThumbnailSetResult result;
+            using (var inputStream = SampleImagesLoader.Instance.ExifRotated.Open())
+            {
+                this.input.Setup(v => v.OpenReadAsync(It.IsAny<CancellationToken>())).ReturnsAsync(inputStream);
+                result = await this.target.CreateThumbnailSetAsync(
+                        Message,
+                        this.input.Object,
+                        this.storageAccount.Object,
+                        this.logger.Object,
+                        CancellationToken.None);
+            }
+
+            this.imageService.Verify();
+            this.input.Verify();
+            Assert.AreEqual(SampleImagesLoader.Instance.ExifRotated.Width, width);
+            Assert.AreEqual(SampleImagesLoader.Instance.ExifRotated.Height, height);
+            Assert.AreEqual("75", this.outputMetadata["width"]);
+            Assert.AreEqual("100", this.outputMetadata["height"]);
+            Assert.AreEqual(SampleImagesLoader.Instance.ExifRotated.Width.ToString(), this.inputMetadata["width"]);
+            Assert.AreEqual(SampleImagesLoader.Instance.ExifRotated.Height.ToString(), this.inputMetadata["height"]);
+            Assert.AreEqual(SampleImagesLoader.Instance.ExifRotated.Width, result.RenderWidth);
+            Assert.AreEqual(SampleImagesLoader.Instance.ExifRotated.Height, result.RenderHeight);
         }
 
         [TestMethod]

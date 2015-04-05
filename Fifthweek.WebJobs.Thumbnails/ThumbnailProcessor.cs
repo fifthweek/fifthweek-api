@@ -62,11 +62,6 @@
 
             using (var image = await this.OpenImageAsync(input, cancellationToken, logger, sw))
             {
-                input.Metadata[WidthHeaderKey] = image.Width.ToString();
-                input.Metadata[HeightHeaderKey] = image.Height.ToString();
-                await input.SetMetadataAsync();
-
-                result = new CreateThumbnailSetResult(image.Width, image.Height);
                 logger.Info("OpenImage: " + sw.ElapsedMilliseconds);
                 var outputMimeType = image.FormatInfo.MimeType;
                 if (!SupportedOutputMimeTypes.Contains(outputMimeType))
@@ -89,17 +84,36 @@
                     {
                         image.Quality = 85;
                     }
+
+                    await this.OrientAndSetMetadataAsync(image, input, cancellationToken, logger, sw);
+                }
+                else
+                {
+                    await SetAndSaveMetadata(input, image);
                 }
 
                 var jobData = new JobData(outputMimeType);
 
                 logger.Info("Processing: " + sw.ElapsedMilliseconds);
+                result = new CreateThumbnailSetResult(image.Width, image.Height);
                 await this.ProcessThumbnailItems(message.Items, cache, image, jobData, cancellationToken);
                 logger.Info("ProcessingComplete: " + sw.ElapsedMilliseconds);
             }
 
             logger.Info("Disposed: " + sw.ElapsedMilliseconds);
             return result;
+        }
+
+        private static void SetMetadata(MagickImage image, ICloudBlockBlob blockBlob)
+        {
+            blockBlob.Metadata[WidthHeaderKey] = image.Width.ToString();
+            blockBlob.Metadata[HeightHeaderKey] = image.Height.ToString();
+        }
+
+        private static async Task SetAndSaveMetadata(ICloudBlockBlob input, MagickImage image)
+        {
+            SetMetadata(image, input);
+            await input.SetMetadataAsync();
         }
 
         public async Task CreatePoisonThumbnailSetAsync(
@@ -165,6 +179,26 @@
             }
 
             return new MagickImage(buffer);
+        }
+
+        private async Task OrientAndSetMetadataAsync(MagickImage image, ICloudBlockBlob output, CancellationToken cancellationToken, ILogger logger, Stopwatch sw)
+        {
+            if (image.Orientation != OrientationType.Undefined && image.Orientation != OrientationType.TopLeft)
+            {
+                image.AutoOrient();
+                using (var outputStream = await output.OpenWriteAsync(cancellationToken))
+                {
+                    image.Write(outputStream);
+                    SetMetadata(image, output);
+                    await Task.Factory.FromAsync(outputStream.BeginCommit(null, null), outputStream.EndCommit);
+                }
+
+                logger.Info("Orient: " + sw.ElapsedMilliseconds);
+            }
+            else
+            {
+                await SetAndSaveMetadata(output, image);
+            }
         }
 
         private async Task ProcessThumbnailItems(

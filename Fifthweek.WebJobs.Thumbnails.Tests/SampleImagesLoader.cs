@@ -51,8 +51,10 @@
         public SampleImage NoProfile { get; private set; }
         
         public SampleImage LowQuality { get; private set; }
-        
+
         public SampleImage HighQuality { get; private set; }
+        
+        public SampleImage ExifRotated { get; private set; }
 
         private void GetSampleImages()
         {
@@ -112,6 +114,11 @@
             if (this.IsFile(path, "trees-quality-95.jpg"))
             {
                 return this.HighQuality = new SampleImage(path, 640, 480);
+            }
+
+            if (this.IsFile(path, "phone-portrait-photo.jpeg"))
+            {
+                return this.ExifRotated = new SampleImage(path, 2448, 3264);
             }
 
             return new SampleImage(path, 0, 0);
