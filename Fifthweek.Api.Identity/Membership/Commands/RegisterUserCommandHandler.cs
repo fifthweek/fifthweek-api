@@ -12,6 +12,7 @@
     {
         private readonly IEventHandler<UserRegisteredEvent> userRegistered;
         private readonly IRegisterUserDbStatement registerUser;
+        private readonly IReservedUsernameService reservedUsernames;
 
         public async Task HandleAsync(RegisterUserCommand command)
         {
@@ -19,6 +20,8 @@
             {
                 throw new ArgumentNullException("command");
             }
+
+            this.reservedUsernames.AssertNotReserved(command.Username);
 
             await this.registerUser.ExecuteAsync(
                 command.UserId,

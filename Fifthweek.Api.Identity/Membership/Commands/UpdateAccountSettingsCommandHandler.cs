@@ -14,13 +14,16 @@
         private readonly IUpdateAccountSettingsDbStatement updateAccountSettings;
         private readonly IRequesterSecurity requesterSecurity;
         private readonly IFileSecurity fileSecurity;
+        private readonly IReservedUsernameService reservedUsernames;
 
         public async Task HandleAsync(UpdateAccountSettingsCommand command)
         {
             command.AssertNotNull("command");
 
             var userId = await this.requesterSecurity.AuthenticateAsAsync(command.Requester, command.RequestedUserId);
-            
+
+            this.reservedUsernames.AssertNotReserved(command.NewUsername);
+
             if (command.NewProfileImageId != null)
             {
                 await this.fileSecurity.AssertReferenceAllowedAsync(userId, command.NewProfileImageId);

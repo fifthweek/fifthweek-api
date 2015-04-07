@@ -108,9 +108,11 @@
     <Compile Include="Membership\GetAccountSettingsDbStatement.cs" />
     <Compile Include="Membership\GetAccountSettingsResult.cs" />
     <Compile Include="Membership\IGetAccountSettingsDbStatement.cs" />
+    <Compile Include="Membership\IReservedUsernameService.cs" />
     <Compile Include="Membership\IUpdateAccountSettingsDbStatement.cs" />
     <Compile Include="Membership\Queries\GetAccountSettingsQuery.cs" />
     <Compile Include="Membership\Queries\GetAccountSettingsQueryHandler.cs" />
+    <Compile Include="Membership\ReservedUsernameService.cs" />
     <Compile Include="Membership\UpdateAccountSettingsDbStatement.cs" />
     <Compile Include="OAuth\IRemoveRefreshTokenDbStatement.cs" />
     <Compile Include="OAuth\ITryGetRefreshTokenDbStatement.cs" />

@@ -116,6 +116,7 @@
     <Compile Include="Membership\ExtensionsTests.cs" />
     <Compile Include="Membership\Queries\IsPasswordResetTokenValidQueryHandlerTests.cs" />
     <Compile Include="Membership\PasswordTests.cs" />
+    <Compile Include="Membership\ReservedUsernameServiceTests.cs" />
     <Compile Include="Membership\UpdateAccountSettingsDbRepositoryTests.cs" />
     <Compile Include="Membership\UsernameTests.cs" />
     <Compile Include="Membership\EmailTests.cs" />

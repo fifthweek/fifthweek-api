@@ -35,17 +35,19 @@
 
         private Mock<IEventHandler<UserRegisteredEvent>> userRegistered;
         private Mock<IRegisterUserDbStatement> registerUser;
+        private Mock<IReservedUsernameService> reservedUsernames;
         private RegisterUserCommandHandler target;
 
         [TestInitialize]
         public void TestInitialize()
         {
             this.userRegistered = new Mock<IEventHandler<UserRegisteredEvent>>();
+            this.reservedUsernames = new Mock<IReservedUsernameService>();
 
             // Give potentially side-effecting components strict mock behaviour.
             this.registerUser = new Mock<IRegisterUserDbStatement>(MockBehavior.Strict);
 
-            this.target = new RegisterUserCommandHandler(this.userRegistered.Object, this.registerUser.Object);
+            this.target = new RegisterUserCommandHandler(this.userRegistered.Object, this.registerUser.Object, this.reservedUsernames.Object);
         }
 
         [TestMethod]
@@ -58,6 +60,8 @@
         [TestMethod]
         public async Task WhenUserCreationRequested_ItShouldCallTheRegisterUserDbStatement()
         {
+            this.reservedUsernames.Setup(v => v.AssertNotReserved(Command.Username)).Verifiable();
+
             this.registerUser.Setup(v => v.ExecuteAsync(UserId, RegistrationData.Username, RegistrationData.Email, RegistrationData.ExampleWork, RegistrationData.Password, It.IsAny<DateTime>()))
                 .Returns(Task.FromResult(0)).Verifiable();
 
@@ -65,12 +69,15 @@
 
             await this.target.HandleAsync(Command);
 
+            this.reservedUsernames.Verify();
             this.registerUser.Verify();
         }
 
         [TestMethod]
         public async Task WhenUserCreationSucceeds_ItShouldPublishEvent()
         {
+            this.reservedUsernames.Setup(v => v.AssertNotReserved(Command.Username)).Verifiable();
+
             this.registerUser.Setup(v => v.ExecuteAsync(UserId, RegistrationData.Username, RegistrationData.Email, RegistrationData.ExampleWork, RegistrationData.Password, It.IsAny<DateTime>()))
                 .Returns(Task.FromResult(0));
 
@@ -78,6 +85,7 @@
 
             await this.target.HandleAsync(Command);
 
+            this.reservedUsernames.Verify();
             this.userRegistered.Verify();
         }
     }

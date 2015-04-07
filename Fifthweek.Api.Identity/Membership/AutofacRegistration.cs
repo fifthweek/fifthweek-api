@@ -15,6 +15,7 @@
             builder.RegisterType<RequesterContext>().As<IRequesterContext>().InstancePerRequest();
             builder.RegisterType<GetAccountSettingsDbStatement>().As<IGetAccountSettingsDbStatement>();
             builder.RegisterType<UpdateAccountSettingsDbStatement>().As<IUpdateAccountSettingsDbStatement>();
+            builder.RegisterType<ReservedUsernameService>().As<IReservedUsernameService>();
         }
     }
 }

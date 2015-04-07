@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Linq;
 
-//// Generated on 13/03/2015 14:47:14 (UTC)
-//// Mapped solution in 9.56s
+//// Generated on 07/04/2015 15:58:27 (UTC)
+//// Mapped solution in 8.48s
 
 
 namespace Fifthweek.Api.Identity.Membership.Commands
@@ -119,7 +119,8 @@ namespace Fifthweek.Api.Identity.Membership.Commands
     {
         public RegisterUserCommandHandler(
             Fifthweek.Api.Core.IEventHandler<Fifthweek.Api.Identity.Shared.Membership.Events.UserRegisteredEvent> userRegistered,
-            Fifthweek.Api.Identity.Membership.IRegisterUserDbStatement registerUser)
+            Fifthweek.Api.Identity.Membership.IRegisterUserDbStatement registerUser,
+            Fifthweek.Api.Identity.Membership.IReservedUsernameService reservedUsernames)
         {
             if (userRegistered == null)
             {
@@ -131,8 +132,14 @@ namespace Fifthweek.Api.Identity.Membership.Commands
                 throw new ArgumentNullException("registerUser");
             }
 
+            if (reservedUsernames == null)
+            {
+                throw new ArgumentNullException("reservedUsernames");
+            }
+
             this.userRegistered = userRegistered;
             this.registerUser = registerUser;
+            this.reservedUsernames = reservedUsernames;
         }
     }
 }
@@ -279,7 +286,8 @@ namespace Fifthweek.Api.Identity.Membership.Commands
         public UpdateAccountSettingsCommandHandler(
             Fifthweek.Api.Identity.Membership.IUpdateAccountSettingsDbStatement updateAccountSettings,
             Fifthweek.Api.Identity.Shared.Membership.IRequesterSecurity requesterSecurity,
-            Fifthweek.Api.FileManagement.Shared.IFileSecurity fileSecurity)
+            Fifthweek.Api.FileManagement.Shared.IFileSecurity fileSecurity,
+            Fifthweek.Api.Identity.Membership.IReservedUsernameService reservedUsernames)
         {
             if (updateAccountSettings == null)
             {
@@ -296,9 +304,15 @@ namespace Fifthweek.Api.Identity.Membership.Commands
                 throw new ArgumentNullException("fileSecurity");
             }
 
+            if (reservedUsernames == null)
+            {
+                throw new ArgumentNullException("reservedUsernames");
+            }
+
             this.updateAccountSettings = updateAccountSettings;
             this.requesterSecurity = requesterSecurity;
             this.fileSecurity = fileSecurity;
+            this.reservedUsernames = reservedUsernames;
         }
     }
 }
@@ -436,6 +450,7 @@ namespace Fifthweek.Api.Identity.Membership
     using System.ServiceModel.Channels;
     using System.Web;
     using System.Text;
+    using Fifthweek.Shared;
 
     public partial class GetAccountSettingsDbStatement 
     {
@@ -469,6 +484,7 @@ namespace Fifthweek.Api.Identity.Membership
     using System.ServiceModel.Channels;
     using System.Web;
     using System.Text;
+    using Fifthweek.Shared;
 
     public partial class GetAccountSettingsDbResult 
     {
@@ -511,6 +527,7 @@ namespace Fifthweek.Api.Identity.Membership
     using System.ServiceModel.Channels;
     using System.Web;
     using System.Text;
+    using Fifthweek.Shared;
 
     public partial class GetAccountSettingsResult 
     {
@@ -685,6 +702,7 @@ namespace Fifthweek.Api.Identity.Membership
     using System.ServiceModel.Channels;
     using System.Web;
     using System.Text;
+    using Fifthweek.Shared;
 
     public partial class RegisterUserDbStatement 
     {
@@ -725,6 +743,7 @@ namespace Fifthweek.Api.Identity.Membership
     using System.ServiceModel.Channels;
     using System.Web;
     using System.Text;
+    using Fifthweek.Shared;
 
     public partial class RequesterContext 
     {
@@ -758,6 +777,7 @@ namespace Fifthweek.Api.Identity.Membership
     using System.ServiceModel.Channels;
     using System.Web;
     using System.Text;
+    using Fifthweek.Shared;
 
     public partial class UpdateAccountSettingsDbStatement
     {
@@ -794,6 +814,7 @@ namespace Fifthweek.Api.Identity.Membership
     using System.ServiceModel.Channels;
     using System.Web;
     using System.Text;
+    using Fifthweek.Shared;
 
     public partial class UpdateAccountSettingsDbStatement 
     {
@@ -1852,6 +1873,36 @@ namespace Fifthweek.Api.Identity.OAuth
         }
     }
 }
+namespace Fifthweek.Api.Identity.Membership.Queries
+{
+    using System;
+    using System.Threading.Tasks;
+    using Fifthweek.Api.Core;
+    using Fifthweek.Api.Persistence;
+    using Fifthweek.Api.Persistence.Identity;
+    using Fifthweek.CodeGeneration;
+
+    public partial class IsUsernameAvailableQueryHandler 
+    {
+        public IsUsernameAvailableQueryHandler(
+            Fifthweek.Api.Persistence.IUserManager userManager,
+            Fifthweek.Api.Identity.Membership.IReservedUsernameService reservedUsernames)
+        {
+            if (userManager == null)
+            {
+                throw new ArgumentNullException("userManager");
+            }
+
+            if (reservedUsernames == null)
+            {
+                throw new ArgumentNullException("reservedUsernames");
+            }
+
+            this.userManager = userManager;
+            this.reservedUsernames = reservedUsernames;
+        }
+    }
+}
 
 namespace Fifthweek.Api.Identity.Membership.Commands
 {
@@ -2201,6 +2252,7 @@ namespace Fifthweek.Api.Identity.Membership
     using System.ServiceModel.Channels;
     using System.Web;
     using System.Text;
+    using Fifthweek.Shared;
 
     public partial class GetAccountSettingsDbResult 
     {
@@ -2280,6 +2332,7 @@ namespace Fifthweek.Api.Identity.Membership
     using System.ServiceModel.Channels;
     using System.Web;
     using System.Text;
+    using Fifthweek.Shared;
 
     public partial class GetAccountSettingsResult 
     {
@@ -2551,6 +2604,7 @@ namespace Fifthweek.Api.Identity.Membership
     using System.ServiceModel.Channels;
     using System.Web;
     using System.Text;
+    using Fifthweek.Shared;
 
     public partial class UpdateAccountSettingsDbStatement
     {

@@ -28,6 +28,7 @@
         private Mock<IUpdateAccountSettingsDbStatement> updateAccountSettings;
         private Mock<IFileSecurity> fileSecurity;
         private Mock<IRequesterSecurity> requesterSecurity;
+        private Mock<IReservedUsernameService> reservedUsernames;
         private UpdateAccountSettingsCommandHandler target;
 
         [TestInitialize]
@@ -35,12 +36,13 @@
         {
             this.fileSecurity = new Mock<IFileSecurity>();
             this.requesterSecurity = new Mock<IRequesterSecurity>();
+            this.reservedUsernames = new Mock<IReservedUsernameService>();
             this.requesterSecurity.SetupFor(Requester);
 
             // Give side-effecting components strict mock behaviour.
             this.updateAccountSettings = new Mock<IUpdateAccountSettingsDbStatement>(MockBehavior.Strict);
 
-            this.target = new UpdateAccountSettingsCommandHandler(this.updateAccountSettings.Object, this.requesterSecurity.Object, this.fileSecurity.Object);
+            this.target = new UpdateAccountSettingsCommandHandler(this.updateAccountSettings.Object, this.requesterSecurity.Object, this.fileSecurity.Object, this.reservedUsernames.Object);
         }
 
         [TestMethod]
@@ -86,6 +88,8 @@
         [TestMethod]
         public async Task WhenCalledWithValidData_ItShouldCallTheAccountRepository()
         {
+            this.reservedUsernames.Setup(v => v.AssertNotReserved(Username)).Verifiable();
+
             var command = new UpdateAccountSettingsCommand(
                 Requester,
                 UserId,
@@ -111,6 +115,7 @@
 
             await this.target.HandleAsync(command);
 
+            this.reservedUsernames.Verify();
             this.updateAccountSettings.Verify();
         }
     }

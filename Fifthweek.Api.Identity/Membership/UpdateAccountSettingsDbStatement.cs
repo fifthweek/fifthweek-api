@@ -41,7 +41,7 @@
 
             var query = new StringBuilder();
 
-            query.AppendLine(@"DECLARE @emailConfirmed bit");
+            query.AppendLine(@"DECLARE @result int");
 
             query.Append(@"
                 UPDATE dbo.AspNetUsers 
@@ -74,6 +74,7 @@
 
             using (var connection = this.connectionFactory.CreateConnection())
             {
+
                 var emailConfirmed = await connection.ExecuteScalarAsync<bool>(
                     query.ToString(),
                     new

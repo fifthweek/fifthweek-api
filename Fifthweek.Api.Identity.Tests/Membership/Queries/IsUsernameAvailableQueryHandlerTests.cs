@@ -15,27 +15,47 @@
     [TestClass]
     public class IsUsernameAvailableQueryHandlerTests
     {
-        [TestMethod]
-        public async Task WhenUsernameNotRegistered_ItShouldReturnTrue()
+        private static readonly ValidUsername Username = ValidUsername.Parse("lawrence");
+        private static readonly IsUsernameAvailableQuery Query = new IsUsernameAvailableQuery(Username);
+
+        private Mock<IUserManager> userManager;
+        private Mock<IReservedUsernameService> reservedUsernames;
+
+        private IsUsernameAvailableQueryHandler target;
+
+        [TestInitialize]
+        public void TestInitialize()
         {
-            var userManager = new Mock<IUserManager>();
-            userManager.Setup(v => v.FindByNameAsync(Username.Value)).ReturnsAsync(null);
-            var handler = new IsUsernameAvailableQueryHandler(userManager.Object);
-            var result = await handler.HandleAsync(Query);
+            this.userManager = new Mock<IUserManager>();
+            this.reservedUsernames = new Mock<IReservedUsernameService>();
+            this.target = new IsUsernameAvailableQueryHandler(this.userManager.Object, this.reservedUsernames.Object);
+        }
+
+
+        [TestMethod]
+        public async Task WhenUsernameNotRegisteredOrReservedItShouldReturnTrue()
+        {
+            this.reservedUsernames.Setup(v => v.IsReserved(Username)).Returns(false);
+            this.userManager.Setup(v => v.FindByNameAsync(Username.Value)).ReturnsAsync(null);
+            var result = await this.target.HandleAsync(Query);
             Assert.IsTrue(result);
         }
 
         [TestMethod]
-        public async Task WhenUsernameRegistered_ItShouldReturnFalse()
+        public async Task WhenUsernameReserved_ItShouldReturnFalse()
         {
-            var userManager = new Mock<IUserManager>();
-            userManager.Setup(v => v.FindByNameAsync(Username.Value)).ReturnsAsync(new FifthweekUser());
-            var handler = new IsUsernameAvailableQueryHandler(userManager.Object);
-            var result = await handler.HandleAsync(Query);
+            this.reservedUsernames.Setup(v => v.IsReserved(Username)).Returns(true);
+            this.userManager.Setup(v => v.FindByNameAsync(Username.Value)).ReturnsAsync(null);
+            var result = await this.target.HandleAsync(Query);
             Assert.IsFalse(result);
         }
-
-        private static readonly ValidUsername Username = ValidUsername.Parse("lawrence");
-        private static readonly IsUsernameAvailableQuery Query = new IsUsernameAvailableQuery(Username);
+        [TestMethod]
+        public async Task WhenUsernameRegistered_ItShouldReturnFalse()
+        {
+            this.reservedUsernames.Setup(v => v.IsReserved(Username)).Returns(false);
+            this.userManager.Setup(v => v.FindByNameAsync(Username.Value)).ReturnsAsync(new FifthweekUser());
+            var result = await this.target.HandleAsync(Query);
+            Assert.IsFalse(result);
+        }
     }
 }
