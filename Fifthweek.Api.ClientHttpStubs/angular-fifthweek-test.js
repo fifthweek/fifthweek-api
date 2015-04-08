@@ -678,14 +678,14 @@ describe('blog stub', function() {
     $httpBackend.verifyNoOutstandingRequest();
   });
 
-  it('should post subscription', function() {
+  it('should post blog', function() {
     var blogData = 'value0';
 
     var responseData = 'response data';
     $httpBackend.expectPOST(fifthweekConstants.apiBaseUri + 'blogs', blogData).respond(200, responseData);
 
     var result = null;
-    target.postSubscription(blogData).then(function(response) { result = response.data; });
+    target.postBlog(blogData).then(function(response) { result = response.data; });
 
     $httpBackend.flush();
     $rootScope.$apply();
@@ -693,7 +693,7 @@ describe('blog stub', function() {
     expect(result).toBe(responseData);
   });
 
-  it('should put subscription', function() {
+  it('should put blog', function() {
     var blogId = 'value0';
     var blogData = 'value1';
 
@@ -701,7 +701,7 @@ describe('blog stub', function() {
     $httpBackend.expectPUT(fifthweekConstants.apiBaseUri + 'blogs/' + encodeURIComponent(blogId), blogData).respond(200, responseData);
 
     var result = null;
-    target.putSubscription(blogId, blogData).then(function(response) { result = response.data; });
+    target.putBlog(blogId, blogData).then(function(response) { result = response.data; });
 
     $httpBackend.flush();
     $rootScope.$apply();
@@ -709,14 +709,14 @@ describe('blog stub', function() {
     expect(result).toBe(responseData);
   });
 
-  it('should get subscription', function() {
+  it('should get blog', function() {
     var blogId = 'value0';
 
     var responseData = 'response data';
     $httpBackend.expectGET(fifthweekConstants.apiBaseUri + 'blogs/' + encodeURIComponent(blogId)).respond(200, responseData);
 
     var result = null;
-    target.getSubscription(blogId).then(function(response) { result = response.data; });
+    target.getBlog(blogId).then(function(response) { result = response.data; });
 
     $httpBackend.flush();
     $rootScope.$apply();

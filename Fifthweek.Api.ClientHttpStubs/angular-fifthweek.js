@@ -477,7 +477,7 @@ angular.module('webApp').factory('blogStub',
     //   basePrice: 0
     // }
     // result = 'Base64Guid'
-    service.postSubscription = function(blogData) {
+    service.postBlog = function(blogData) {
       return $http.post(apiBaseUri + 'blogs', blogData).catch(function(response) {
         return $q.reject(utilities.getHttpError(response));
       });
@@ -492,7 +492,7 @@ angular.module('webApp').factory('blogStub',
     //   video: '', /* optional */
     //   description: '' /* optional */
     // }
-    service.putSubscription = function(blogId, blogData) {
+    service.putBlog = function(blogId, blogData) {
       return $http.put(apiBaseUri + 'blogs/' + encodeURIComponent(blogId), blogData).catch(function(response) {
         return $q.reject(utilities.getHttpError(response));
       });
@@ -513,7 +513,7 @@ angular.module('webApp').factory('blogStub',
     //   video: '', /* optional */
     //   description: '' /* optional */
     // }
-    service.getSubscription = function(blogId) {
+    service.getBlog = function(blogId) {
       return $http.get(apiBaseUri + 'blogs/' + encodeURIComponent(blogId)).catch(function(response) {
         return $q.reject(utilities.getHttpError(response));
       });
