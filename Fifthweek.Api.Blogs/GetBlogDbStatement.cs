@@ -18,9 +18,9 @@
     {
         private readonly IFifthweekDbConnectionFactory connectionFactory;
 
-        public async Task<GetSubscriptionDataDbResult> ExecuteAsync(BlogId blogId)
+        public async Task<GetBlogDataDbResult> ExecuteAsync(BlogId blogId)
         {
-            blogId.AssertNotNull("subscriptionId");
+            blogId.AssertNotNull("blogId");
 
             using (var connection = this.connectionFactory.CreateConnection())
             {
@@ -35,10 +35,10 @@
 
                 if (result == null)
                 {
-                    throw new InvalidOperationException("The subscription " + blogId + " couldn't be found.");
+                    throw new InvalidOperationException("The blog " + blogId + " couldn't be found.");
                 }
 
-                return new GetSubscriptionDataDbResult(
+                return new GetBlogDataDbResult(
                     new BlogId(result.Id), 
                     new UserId(result.CreatorId), 
                     new BlogName(result.Name),
@@ -52,7 +52,7 @@
         }
 
         [AutoConstructor]
-        public partial class GetSubscriptionDataDbResult
+        public partial class GetBlogDataDbResult
         {
             public BlogId BlogId { get; private set; }
 

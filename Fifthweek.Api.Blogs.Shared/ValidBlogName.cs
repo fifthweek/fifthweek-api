@@ -28,7 +28,7 @@
             ValidBlogName retval;
             if (!TryParse(value, out retval))
             {
-                throw new ArgumentException("Invalid subscription name", "value");
+                throw new ArgumentException("Invalid blog name", "value");
             }
 
             return retval;

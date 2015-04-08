@@ -28,7 +28,7 @@
             var creator = UserTests.UniqueEntity(random);
             creator.Id = newUserId;
 
-            var subscription = SubscriptionTests.UniqueEntity(random);
+            var subscription = BlogTests.UniqueEntity(random);
             subscription.Id = subscriptionId;
             subscription.Creator = creator;
             subscription.CreatorId = creator.Id;

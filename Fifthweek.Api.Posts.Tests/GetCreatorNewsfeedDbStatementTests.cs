@@ -375,7 +375,7 @@
                     return file;
                 });
 
-                await databaseContext.CreateTestSubscriptionAsync(UserId.Value, BlogId.Value);
+                await databaseContext.CreateTestBlogAsync(UserId.Value, BlogId.Value);
                 await databaseContext.Database.Connection.InsertAsync(channelEntities);
                 await databaseContext.Database.Connection.InsertAsync(collectionEntities);
                 await databaseContext.Database.Connection.InsertAsync(fileEntities);

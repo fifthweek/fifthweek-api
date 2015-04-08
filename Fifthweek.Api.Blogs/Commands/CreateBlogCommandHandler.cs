@@ -41,7 +41,7 @@
 
         private async Task CreateEntitiesAsync(CreateBlogCommand command, UserId authenticatedUserId)
         {
-            var subscription = new Blog(
+            var blog = new Blog(
                 command.NewBlogId.Value,
                 authenticatedUserId.Value,
                 null,
@@ -55,7 +55,7 @@
                 DateTime.UtcNow);
 
             var channel = new Channel(
-                command.NewBlogId.Value, // Default channel uses same ID as subscription.
+                command.NewBlogId.Value, // Default channel uses same ID as blog.
                 command.NewBlogId.Value,
                 null,
                 DefaultChannelName.Value,
@@ -70,7 +70,7 @@
             {
                 using (var connection = this.connectionFactory.CreateConnection())
                 {
-                    await connection.InsertAsync(subscription);
+                    await connection.InsertAsync(blog);
                     await connection.InsertAsync(channel);
                 }
 

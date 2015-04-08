@@ -18,7 +18,7 @@
     using Moq;
 
     [TestClass]
-    public class CreateSubscriptionCommandHandlerTests : PersistenceTestsBase
+    public class CreateBlogCommandHandlerTests : PersistenceTestsBase
     {
         private static readonly UserId UserId = new UserId(Guid.NewGuid());
         private static readonly Requester Requester = Requester.Authenticated(UserId);
@@ -27,14 +27,14 @@
         private static readonly ValidTagline Tagline = ValidTagline.Parse("Web Comics and More");
         private static readonly ValidChannelPriceInUsCentsPerWeek BasePrice = ValidChannelPriceInUsCentsPerWeek.Parse(10);
         private static readonly CreateBlogCommand Command = new CreateBlogCommand(Requester, BlogId, BlogName, Tagline, BasePrice);
-        private Mock<IBlogSecurity> subscriptionSecurity;
+        private Mock<IBlogSecurity> blogSecurity;
         private Mock<IRequesterSecurity> requesterSecurity;
         private CreateBlogCommandHandler target;
 
         [TestInitialize]
         public void Initialize()
         {
-            this.subscriptionSecurity = new Mock<IBlogSecurity>();
+            this.blogSecurity = new Mock<IBlogSecurity>();
             this.requesterSecurity = new Mock<IRequesterSecurity>();
             this.requesterSecurity.SetupFor(Requester);
         }
@@ -46,7 +46,7 @@
             // Give side-effecting components strict mock behaviour.
             var connectionFactory = new Mock<IFifthweekDbConnectionFactory>(MockBehavior.Strict);
 
-            this.target = new CreateBlogCommandHandler(this.subscriptionSecurity.Object, this.requesterSecurity.Object, connectionFactory.Object);
+            this.target = new CreateBlogCommandHandler(this.blogSecurity.Object, this.requesterSecurity.Object, connectionFactory.Object);
 
             await this.target.HandleAsync(new CreateBlogCommand(Requester.Unauthenticated, BlogId, BlogName, Tagline, BasePrice));
         }
@@ -56,8 +56,8 @@
         {
             await this.DatabaseTestAsync(async testDatabase =>
             {
-                this.subscriptionSecurity.Setup(_ => _.AssertCreationAllowedAsync(Requester)).Throws<UnauthorizedException>();
-                this.target = new CreateBlogCommandHandler(this.subscriptionSecurity.Object, this.requesterSecurity.Object, testDatabase);
+                this.blogSecurity.Setup(_ => _.AssertCreationAllowedAsync(Requester)).Throws<UnauthorizedException>();
+                this.target = new CreateBlogCommandHandler(this.blogSecurity.Object, this.requesterSecurity.Object, testDatabase);
                 await testDatabase.TakeSnapshotAsync();
 
                 Func<Task> badMethodCall = () => this.target.HandleAsync(Command);
@@ -73,7 +73,7 @@
         {
             await this.DatabaseTestAsync(async testDatabase =>
             {
-                this.target = new CreateBlogCommandHandler(this.subscriptionSecurity.Object, this.requesterSecurity.Object, testDatabase);
+                this.target = new CreateBlogCommandHandler(this.blogSecurity.Object, this.requesterSecurity.Object, testDatabase);
                 await this.CreateUserAsync(UserId, testDatabase);
                 await this.target.HandleAsync(Command);
                 await testDatabase.TakeSnapshotAsync();
@@ -85,17 +85,17 @@
         }
 
         [TestMethod]
-        public async Task ItShouldCreateSubscription()
+        public async Task ItShouldCreateBlog()
         {
             await this.DatabaseTestAsync(async testDatabase =>
             {
-                this.target = new CreateBlogCommandHandler(this.subscriptionSecurity.Object, this.requesterSecurity.Object, testDatabase);
+                this.target = new CreateBlogCommandHandler(this.blogSecurity.Object, this.requesterSecurity.Object, testDatabase);
                 await this.CreateUserAsync(UserId, testDatabase);
                 await testDatabase.TakeSnapshotAsync();
 
                 await this.target.HandleAsync(Command);
 
-                var expectedSubscription = new Blog(
+                var expectedBlog = new Blog(
                     BlogId.Value,
                     UserId.Value,
                     null,
@@ -110,12 +110,12 @@
 
                 return new ExpectedSideEffects
                 {
-                    Insert = new WildcardEntity<Blog>(expectedSubscription)
+                    Insert = new WildcardEntity<Blog>(expectedBlog)
                     {
-                        Expected = actualSubscription =>
+                        Expected = actualBlog =>
                         {
-                            expectedSubscription.CreationDate = actualSubscription.CreationDate; // Take wildcard properties from actual value.
-                            return expectedSubscription;
+                            expectedBlog.CreationDate = actualBlog.CreationDate; // Take wildcard properties from actual value.
+                            return expectedBlog;
                         }
                     },
                     ExcludedFromTest = entity => entity is Channel
@@ -128,14 +128,14 @@
         {
             await this.DatabaseTestAsync(async testDatabase =>
             {
-                this.target = new CreateBlogCommandHandler(this.subscriptionSecurity.Object, this.requesterSecurity.Object, testDatabase);
+                this.target = new CreateBlogCommandHandler(this.blogSecurity.Object, this.requesterSecurity.Object, testDatabase);
                 await this.CreateUserAsync(UserId, testDatabase);
                 await testDatabase.TakeSnapshotAsync();
 
                 await this.target.HandleAsync(Command);
 
                 var expectedChannel = new Channel(
-                BlogId.Value, // The default channel uses the subscription ID.
+                BlogId.Value, // The default channel uses the blog ID.
                 BlogId.Value,
                 null,
                 "Basic Subscription",

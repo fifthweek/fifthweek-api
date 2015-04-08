@@ -3,7 +3,7 @@
     using System;
     using System.Threading.Tasks;
 
-    public static class SubscriptionTests
+    public static class BlogTests
     {
         public static Blog UniqueEntity(Random random)
         {
@@ -12,25 +12,25 @@
                 default(Guid),
                 null,
                 "Name " + random.Next(),
-                "Subscription tagline " + random.Next(),
-                "Subscription intro " + random.Next(),
-                random.Next(1) == 1 ? null : "Subscription description " + random.Next(),
+                "Blog tagline " + random.Next(),
+                "Blog intro " + random.Next(),
+                random.Next(1) == 1 ? null : "Blog description " + random.Next(),
                 random.Next(1) == 1 ? null : "http://external/video" + random.Next(),
                 null,
                 null,
                 DateTime.UtcNow.AddDays(random.NextDouble() * -100));
         }
 
-        public static Task CreateTestSubscriptionAsync(this IFifthweekDbContext databaseContext, Guid newUserId, Guid newSubscriptionId, Guid? headerImageFileId = null)
+        public static Task CreateTestBlogAsync(this IFifthweekDbContext databaseContext, Guid newUserId, Guid newBlogId, Guid? headerImageFileId = null)
         {
             var random = new Random();
             var creator = UserTests.UniqueEntity(random);
             creator.Id = newUserId;
 
-            var subscription = SubscriptionTests.UniqueEntity(random);
-            subscription.Id = newSubscriptionId;
-            subscription.Creator = creator;
-            subscription.CreatorId = creator.Id;
+            var blog = BlogTests.UniqueEntity(random);
+            blog.Id = newBlogId;
+            blog.Creator = creator;
+            blog.CreatorId = creator.Id;
 
             if (headerImageFileId.HasValue)
             {
@@ -39,11 +39,11 @@
                 file.User = creator;
                 file.UserId = creator.Id;
 
-                subscription.HeaderImageFile = file;
-                subscription.HeaderImageFileId = file.Id;
+                blog.HeaderImageFile = file;
+                blog.HeaderImageFileId = file.Id;
             }
 
-            databaseContext.Blogs.Add(subscription);
+            databaseContext.Blogs.Add(blog);
             return databaseContext.SaveChangesAsync();
         }
     }

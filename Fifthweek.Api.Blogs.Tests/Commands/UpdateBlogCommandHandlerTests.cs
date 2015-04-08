@@ -19,7 +19,7 @@
     using Moq;
 
     [TestClass]
-    public class UpdateSubscriptionCommandHandlerTests : PersistenceTestsBase
+    public class UpdateBlogCommandHandlerTests : PersistenceTestsBase
     {
         private static readonly UserId UserId = new UserId(Guid.NewGuid());
         private static readonly Requester Requester = Requester.Authenticated(UserId);
@@ -49,7 +49,7 @@
             null,
             Video);
 
-        private Mock<IBlogSecurity> subscriptionSecurity;
+        private Mock<IBlogSecurity> blogSecurity;
         private Mock<IFileSecurity> fileSecurity;
         private Mock<IRequesterSecurity> requesterSecurity;
         private UpdateBlogCommandHandler target;
@@ -57,7 +57,7 @@
         [TestInitialize]
         public void Initialize()
         {
-            this.subscriptionSecurity = new Mock<IBlogSecurity>();
+            this.blogSecurity = new Mock<IBlogSecurity>();
             this.fileSecurity = new Mock<IFileSecurity>();
             this.requesterSecurity = new Mock<IRequesterSecurity>();
             this.requesterSecurity.SetupFor(Requester);
@@ -70,7 +70,7 @@
             // Give side-effecting components strict mock behaviour.
             var connectionFactory = new Mock<IFifthweekDbConnectionFactory>(MockBehavior.Strict);
 
-            this.target = new UpdateBlogCommandHandler(this.subscriptionSecurity.Object, this.fileSecurity.Object, this.requesterSecurity.Object, connectionFactory.Object);
+            this.target = new UpdateBlogCommandHandler(this.blogSecurity.Object, this.fileSecurity.Object, this.requesterSecurity.Object, connectionFactory.Object);
             
             await this.target.HandleAsync(new UpdateBlogCommand(
                 Requester.Unauthenticated,
@@ -88,8 +88,8 @@
         {
             await this.DatabaseTestAsync(async testDatabase =>
             {
-                this.subscriptionSecurity.Setup(_ => _.AssertWriteAllowedAsync(UserId, BlogId)).Throws<UnauthorizedException>();
-                this.target = new UpdateBlogCommandHandler(this.subscriptionSecurity.Object, this.fileSecurity.Object, this.requesterSecurity.Object, testDatabase);
+                this.blogSecurity.Setup(_ => _.AssertWriteAllowedAsync(UserId, BlogId)).Throws<UnauthorizedException>();
+                this.target = new UpdateBlogCommandHandler(this.blogSecurity.Object, this.fileSecurity.Object, this.requesterSecurity.Object, testDatabase);
                 await testDatabase.TakeSnapshotAsync();
 
                 Func<Task> badMethodCall = () => this.target.HandleAsync(Command);
@@ -106,7 +106,7 @@
             await this.DatabaseTestAsync(async testDatabase =>
             {
                 this.fileSecurity.Setup(_ => _.AssertReferenceAllowedAsync(UserId, HeaderImageFileId)).Throws<UnauthorizedException>();
-                this.target = new UpdateBlogCommandHandler(this.subscriptionSecurity.Object, this.fileSecurity.Object, this.requesterSecurity.Object, testDatabase);
+                this.target = new UpdateBlogCommandHandler(this.blogSecurity.Object, this.fileSecurity.Object, this.requesterSecurity.Object, testDatabase);
                 await testDatabase.TakeSnapshotAsync();
 
                 Func<Task> badMethodCall = () => this.target.HandleAsync(Command);
@@ -122,8 +122,8 @@
         {
             await this.DatabaseTestAsync(async testDatabase =>
             {
-                this.target = new UpdateBlogCommandHandler(this.subscriptionSecurity.Object, this.fileSecurity.Object, this.requesterSecurity.Object, testDatabase);
-                await this.CreateSubscriptionAsync(UserId, BlogId, testDatabase);
+                this.target = new UpdateBlogCommandHandler(this.blogSecurity.Object, this.fileSecurity.Object, this.requesterSecurity.Object, testDatabase);
+                await this.CreateBlogAsync(UserId, BlogId, testDatabase);
                 await this.target.HandleAsync(Command);
                 await testDatabase.TakeSnapshotAsync();
 
@@ -134,17 +134,17 @@
         }
 
         [TestMethod]
-        public async Task ItShouldUpdateSubscription()
+        public async Task ItShouldUpdateBlog()
         {
             await this.DatabaseTestAsync(async testDatabase =>
             {
-                this.target = new UpdateBlogCommandHandler(this.subscriptionSecurity.Object, this.fileSecurity.Object, this.requesterSecurity.Object, testDatabase);
-                var subscription = await this.CreateSubscriptionAsync(UserId, BlogId, testDatabase);
+                this.target = new UpdateBlogCommandHandler(this.blogSecurity.Object, this.fileSecurity.Object, this.requesterSecurity.Object, testDatabase);
+                var blog = await this.CreateBlogAsync(UserId, BlogId, testDatabase);
                 await testDatabase.TakeSnapshotAsync();
 
                 await this.target.HandleAsync(Command);
 
-                var expectedSubscription = new Blog(
+                var expectedBlog = new Blog(
                     BlogId.Value,
                     UserId.Value,
                     null,
@@ -155,27 +155,27 @@
                     Video.Value,
                     HeaderImageFileId.Value,
                     null,
-                    subscription.CreationDate);
+                    blog.CreationDate);
 
                 return new ExpectedSideEffects
                 {
-                    Update = expectedSubscription
+                    Update = expectedBlog
                 };
             });
         }
 
         [TestMethod]
-        public async Task WhenNoHeaderImage_ItShouldUpdateSubscription()
+        public async Task WhenNoHeaderImage_ItShouldUpdateBlog()
         {
             await this.DatabaseTestAsync(async testDatabase =>
             {
-                this.target = new UpdateBlogCommandHandler(this.subscriptionSecurity.Object, this.fileSecurity.Object, this.requesterSecurity.Object, testDatabase);
-                var subscription = await this.CreateSubscriptionAsync(UserId, BlogId, testDatabase);
+                this.target = new UpdateBlogCommandHandler(this.blogSecurity.Object, this.fileSecurity.Object, this.requesterSecurity.Object, testDatabase);
+                var blog = await this.CreateBlogAsync(UserId, BlogId, testDatabase);
                 await testDatabase.TakeSnapshotAsync();
 
                 await this.target.HandleAsync(CommandWithoutHeaderImage);
 
-                var expectedSubscription = new Blog(
+                var expectedBlog = new Blog(
                     BlogId.Value,
                     UserId.Value,
                     null,
@@ -186,20 +186,20 @@
                     Video.Value,
                     null,
                     null,
-                    subscription.CreationDate);
+                    blog.CreationDate);
 
                 return new ExpectedSideEffects
                 {
-                    Update = expectedSubscription
+                    Update = expectedBlog
                 };
             });
         }
 
-        private async Task<Blog> CreateSubscriptionAsync(UserId newUserId, BlogId newBlogId, TestDatabaseContext testDatabase)
+        private async Task<Blog> CreateBlogAsync(UserId newUserId, BlogId newBlogId, TestDatabaseContext testDatabase)
         {
             using (var databaseContext = testDatabase.CreateContext())
             {
-                await databaseContext.CreateTestSubscriptionAsync(newUserId.Value, newBlogId.Value, Guid.NewGuid());
+                await databaseContext.CreateTestBlogAsync(newUserId.Value, newBlogId.Value, Guid.NewGuid());
 
                 var newHeaderImage = FileTests.UniqueEntity(new Random());
                 newHeaderImage.Id = HeaderImageFileId.Value;

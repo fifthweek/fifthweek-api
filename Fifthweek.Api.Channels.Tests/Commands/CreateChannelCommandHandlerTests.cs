@@ -130,7 +130,7 @@
         {
             using (var databaseContext = testDatabase.CreateContext())
             {
-                await databaseContext.CreateTestSubscriptionAsync(UserId.Value, BlogId.Value);
+                await databaseContext.CreateTestBlogAsync(UserId.Value, BlogId.Value);
             }
         }
     } 

@@ -489,9 +489,9 @@ namespace Fifthweek.Api.Blogs
 
     public partial class GetBlogDbStatement
     {
-        public partial class GetSubscriptionDataDbResult 
+        public partial class GetBlogDataDbResult 
         {
-            public GetSubscriptionDataDbResult(
+            public GetBlogDataDbResult(
                 Fifthweek.Api.Blogs.Shared.BlogId blogId,
                 Fifthweek.Api.Identity.Shared.Membership.UserId creatorId,
                 Fifthweek.Api.Blogs.Shared.BlogName blogName,

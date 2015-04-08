@@ -95,18 +95,18 @@
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
     </Compile>
-    <Compile Include="Commands\UpdateSubscriptionCommandHandlerTests.cs" />
+    <Compile Include="Commands\UpdateBlogCommandHandlerTests.cs" />
     <Compile Include="Commands\PromoteNewUserToCreatorCommandHandlerTests.cs" />
-    <Compile Include="Commands\CreateSubscriptionCommandHandlerTests.cs" />
-    <Compile Include="Controllers\SubscriptionControllerTests.cs" />
-    <Compile Include="GetSubscriptionDbStatementTests.cs" />
-    <Compile Include="Queries\GetSubscriptionQueryHandlerTests.cs" />
-    <Compile Include="ValidSubscriptionDescriptionTests.cs" />
+    <Compile Include="Commands\CreateBlogCommandHandlerTests.cs" />
+    <Compile Include="Controllers\BlogControllerTests.cs" />
+    <Compile Include="GetBlogDbStatementTests.cs" />
+    <Compile Include="Queries\GetBlogQueryHandlerTests.cs" />
+    <Compile Include="ValidBlogDescriptionTests.cs" />
     <Compile Include="ValidExternalVideoUrlTests.cs" />
     <Compile Include="Queries\GetCreatorStatusQueryHandlerTests.cs" />
-    <Compile Include="ValidSubscriptionNameTests.cs" />
-    <Compile Include="SubscriptionOwnershipTests.cs" />
-    <Compile Include="SubscriptionSecurityTests.cs" />
+    <Compile Include="ValidBlogNameTests.cs" />
+    <Compile Include="BlogOwnershipTests.cs" />
+    <Compile Include="BlogSecurityTests.cs" />
     <Compile Include="ValidIntroductionTests.cs" />
     <Compile Include="ValidTaglineTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

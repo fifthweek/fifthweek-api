@@ -174,7 +174,7 @@
         {
             for (var subscriptionIndex = 0; subscriptionIndex < SubscriptionsPerCreator; subscriptionIndex++)
             {
-                var subscription = SubscriptionTests.UniqueEntity(Random);
+                var subscription = BlogTests.UniqueEntity(Random);
 
                 if (subscription.HeaderImageFile != null)
                 {

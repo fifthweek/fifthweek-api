@@ -8,7 +8,7 @@
     using Microsoft.VisualStudio.TestTools.UnitTesting;
 
     [TestClass]
-    public class ValidSubscriptionDescriptionTests : ValidatedStringTests<ValidBlogDescription>
+    public class ValidBlogDescriptionTests : ValidatedStringTests<ValidBlogDescription>
     {
         public static readonly string InvalidValue = "!";
 

@@ -59,12 +59,12 @@
         }
 
         [TestMethod]
-        public async Task WhenAtLeastOneSubscriptionMatchesCreator_ItShouldReturnThatSubscriptionId()
+        public async Task WhenAtLeastOneBlogMatchesCreator_ItShouldReturnThatBlogId()
         {
             await this.DatabaseTestAsync(async testDatabase =>
             {
                 this.target = new GetCreatorStatusQueryHandler(this.requesterSecurity.Object, testDatabase);
-                await this.CreateSubscriptionAsync(UserId, BlogId, testDatabase);
+                await this.CreateBlogAsync(UserId, BlogId, testDatabase);
                 await testDatabase.TakeSnapshotAsync();
 
                 var result = await this.target.HandleAsync(Query);
@@ -82,7 +82,7 @@
             await this.DatabaseTestAsync(async testDatabase =>
             {
                 this.target = new GetCreatorStatusQueryHandler(this.requesterSecurity.Object, testDatabase);
-                await this.CreateSubscriptionAsync(UserId, BlogId, testDatabase);
+                await this.CreateBlogAsync(UserId, BlogId, testDatabase);
                 await testDatabase.TakeSnapshotAsync();
 
                 var result = await this.target.HandleAsync(Query);
@@ -100,7 +100,7 @@
             await this.DatabaseTestAsync(async testDatabase =>
             {
                 this.target = new GetCreatorStatusQueryHandler(this.requesterSecurity.Object, testDatabase);
-                await this.CreateSubscriptionAsync(UserId, BlogId, testDatabase);
+                await this.CreateBlogAsync(UserId, BlogId, testDatabase);
                 await this.CreatePostAsync(testDatabase);
                 await testDatabase.TakeSnapshotAsync();
 
@@ -119,7 +119,7 @@
             await this.DatabaseTestAsync(async testDatabase =>
             {
                 this.target = new GetCreatorStatusQueryHandler(this.requesterSecurity.Object, testDatabase);
-                await this.CreateSubscriptionAsync(UserId, BlogId, testDatabase);
+                await this.CreateBlogAsync(UserId, BlogId, testDatabase);
                 await this.CreatePostAsync(testDatabase);
                 await this.CreatePostAsync(testDatabase);
                 await this.CreatePostAsync(testDatabase);
@@ -140,7 +140,7 @@
             await this.DatabaseTestAsync(async testDatabase =>
             {
                 this.target = new GetCreatorStatusQueryHandler(this.requesterSecurity.Object, testDatabase);
-                await this.CreateSubscriptionAsync(UserId, BlogId, testDatabase);
+                await this.CreateBlogAsync(UserId, BlogId, testDatabase);
                 await this.CreatePostAsync(testDatabase);
                 await this.CreatePostAsync(testDatabase);
                 await this.CreatePostAsync(testDatabase, true);
@@ -157,14 +157,14 @@
         }
 
         [TestMethod]
-        public async Task WhenMultipleSubscriptionsMatchCreator_ItShouldReturnTheLatestSubscriptionId()
+        public async Task WhenMultipleBlogsMatchCreator_ItShouldReturnTheLatestBlogId()
         {
             await this.DatabaseTestAsync(async testDatabase =>
             {
                 this.target = new GetCreatorStatusQueryHandler(this.requesterSecurity.Object, testDatabase);
-                await this.CreateSubscriptionAsync(UserId, new BlogId(Guid.NewGuid()), testDatabase, newUser: true, setTodaysDate: false);
-                await this.CreateSubscriptionsAsync(UserId, 100, testDatabase);
-                await this.CreateSubscriptionAsync(UserId, BlogId, testDatabase, newUser: false, setTodaysDate: true);
+                await this.CreateBlogAsync(UserId, new BlogId(Guid.NewGuid()), testDatabase, newUser: true, setTodaysDate: false);
+                await this.CreateBlogsAsync(UserId, 100, testDatabase);
+                await this.CreateBlogAsync(UserId, BlogId, testDatabase, newUser: false, setTodaysDate: true);
                 await testDatabase.TakeSnapshotAsync();
 
                 var result = await this.target.HandleAsync(Query);
@@ -177,7 +177,7 @@
         }
 
         [TestMethod]
-        public async Task WhenNoSubscriptionsExist_ItShouldReturnEmptySubscriptionId()
+        public async Task WhenNoBlogsExist_ItShouldReturnEmptyBlogId()
         {
             await this.DatabaseTestAsync(async testDatabase =>
             {
@@ -200,7 +200,7 @@
         }
 
         [TestMethod]
-        public async Task WhenNoSubscriptionsMatchCreator_ItShouldReturnEmptySubscriptionId()
+        public async Task WhenNoBlogsMatchCreator_ItShouldReturnEmptyBlogId()
         {
             await this.DatabaseTestAsync(async testDatabase =>
             {
@@ -216,42 +216,42 @@
             });
         }
 
-        private async Task CreateSubscriptionsAsync(UserId newUserId, int subscriptions, TestDatabaseContext testDatabase)
+        private async Task CreateBlogsAsync(UserId newUserId, int blogs, TestDatabaseContext testDatabase)
         {
-            for (var i = 0; i < subscriptions; i++)
+            for (var i = 0; i < blogs; i++)
             {
-                await this.CreateSubscriptionAsync(newUserId, new BlogId(Guid.NewGuid()), testDatabase, false);
+                await this.CreateBlogAsync(newUserId, new BlogId(Guid.NewGuid()), testDatabase, false);
             }
         }
 
-        private async Task CreateSubscriptionAsync(UserId newUserId, BlogId newBlogId, TestDatabaseContext testDatabase, bool newUser = true, bool setTodaysDate = false)
+        private async Task CreateBlogAsync(UserId newUserId, BlogId newBlogId, TestDatabaseContext testDatabase, bool newUser = true, bool setTodaysDate = false)
         {
             var random = new Random();
             var creator = UserTests.UniqueEntity(random);
             creator.Id = newUserId.Value;
 
-            var subscription = SubscriptionTests.UniqueEntity(random);
-            subscription.Id = newBlogId.Value;
-            subscription.CreatorId = creator.Id;
-            subscription.HeaderImageFileId = null;
+            var blog = BlogTests.UniqueEntity(random);
+            blog.Id = newBlogId.Value;
+            blog.CreatorId = creator.Id;
+            blog.HeaderImageFileId = null;
 
             var channel = ChannelTests.UniqueEntity(random);
             channel.Id = newBlogId.Value; // Create default channel.
-            channel.Blog = subscription;
-            channel.BlogId = subscription.Id;
+            channel.Blog = blog;
+            channel.BlogId = blog.Id;
 
             if (newUser)
             {
-                subscription.Creator = creator;
+                blog.Creator = creator;
             }
             else
             {
-                subscription.Creator = null; // Set by helper method.
+                blog.Creator = null; // Set by helper method.
             }
 
             if (setTodaysDate)
             {
-                subscription.CreationDate = DateTime.UtcNow;
+                blog.CreationDate = DateTime.UtcNow;
             }
 
             using (var databaseContext = testDatabase.CreateContext())
@@ -262,7 +262,7 @@
                     await databaseContext.SaveChangesAsync();
                 }
 
-                await databaseContext.Database.Connection.InsertAsync(subscription, false);
+                await databaseContext.Database.Connection.InsertAsync(blog, false);
                 await databaseContext.Database.Connection.InsertAsync(channel, false);
             }
         }

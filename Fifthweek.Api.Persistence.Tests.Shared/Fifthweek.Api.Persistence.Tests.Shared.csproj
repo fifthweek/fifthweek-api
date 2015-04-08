@@ -84,7 +84,7 @@
     <Compile Include="TestDatabaseSnapshot.cs" />
     <Compile Include="ChannelTests.cs" />
     <Compile Include="PersistenceTestsBase.cs" />
-    <Compile Include="SubscriptionTests.cs" />
+    <Compile Include="BlogTests.cs" />
     <Compile Include="TestDatabase.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="EndToEndTestEmailTests.cs" />

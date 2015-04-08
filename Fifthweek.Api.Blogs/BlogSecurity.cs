@@ -25,7 +25,7 @@ namespace Fifthweek.Api.Blogs
         public Task<bool> IsWriteAllowedAsync(UserId requester, BlogId blogId)
         {
             requester.AssertNotNull("requester");
-            blogId.AssertNotNull("subscriptionId");
+            blogId.AssertNotNull("blogId");
 
             return this.blogOwnership.IsOwnerAsync(requester, blogId);
         }
@@ -37,19 +37,19 @@ namespace Fifthweek.Api.Blogs
             var isCreationAllowed = await this.IsCreationAllowedAsync(requester);
             if (!isCreationAllowed)
             {
-                throw new UnauthorizedException("Not allowed to create subscription. {0}", requester);
+                throw new UnauthorizedException("Not allowed to create blog. {0}", requester);
             }
         }
 
         public async Task AssertWriteAllowedAsync(UserId requester, BlogId blogId)
         {
             requester.AssertNotNull("requester");
-            blogId.AssertNotNull("subscriptionId");
+            blogId.AssertNotNull("blogId");
 
             var isUpdateAllowed = await this.IsWriteAllowedAsync(requester, blogId);
             if (!isUpdateAllowed)
             {
-                throw new UnauthorizedException("Not allowed to update subscription. {0} {1}", requester, blogId);
+                throw new UnauthorizedException("Not allowed to update blog. {0} {1}", requester, blogId);
             }
         }
     }

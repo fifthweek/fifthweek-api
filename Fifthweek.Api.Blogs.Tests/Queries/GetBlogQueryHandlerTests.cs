@@ -14,7 +14,7 @@
     using Moq;
 
     [TestClass]
-    public class GetSubscriptionQueryHandlerTests
+    public class GetBlogQueryHandlerTests
     {
         private static readonly BlogId BlogId = new BlogId(Guid.NewGuid());
         private static readonly UserId CreatorId = new UserId(Guid.NewGuid());
@@ -27,7 +27,7 @@
         private static readonly FileId HeaderFileId = new FileId(Guid.NewGuid());
 
         private Mock<IFileInformationAggregator> fileInformationAggregator;
-        private Mock<IGetBlogDbStatement> getSubscription;
+        private Mock<IGetBlogDbStatement> getBlog;
 
         private GetBlogQueryHandler target;
 
@@ -35,10 +35,10 @@
         public void TestInitialize()
         {
             this.fileInformationAggregator = new Mock<IFileInformationAggregator>();
-            this.getSubscription = new Mock<IGetBlogDbStatement>();
+            this.getBlog = new Mock<IGetBlogDbStatement>();
             this.target = new GetBlogQueryHandler(
                 this.fileInformationAggregator.Object,
-                this.getSubscription.Object);
+                this.getBlog.Object);
         }
 
         [TestMethod]
@@ -49,10 +49,10 @@
         }
 
         [TestMethod]
-        public async Task WhenNoHeaderImageExists_ItShouldReturnTheSubscriptionData()
+        public async Task WhenNoHeaderImageExists_ItShouldReturnTheBlogData()
         {
-            this.getSubscription.Setup(v => v.ExecuteAsync(BlogId))
-                .ReturnsAsync(new GetBlogDbStatement.GetSubscriptionDataDbResult(
+            this.getBlog.Setup(v => v.ExecuteAsync(BlogId))
+                .ReturnsAsync(new GetBlogDbStatement.GetBlogDataDbResult(
                     BlogId,
                     CreatorId,
                     Name,
@@ -77,10 +77,10 @@
         }
 
         [TestMethod]
-        public async Task WhenHeaderImageExists_ItShouldReturnTheSubscriptionData()
+        public async Task WhenHeaderImageExists_ItShouldReturnTheBlogData()
         {
-            this.getSubscription.Setup(v => v.ExecuteAsync(BlogId))
-                .ReturnsAsync(new GetBlogDbStatement.GetSubscriptionDataDbResult(
+            this.getBlog.Setup(v => v.ExecuteAsync(BlogId))
+                .ReturnsAsync(new GetBlogDbStatement.GetBlogDataDbResult(
                     BlogId,
                     CreatorId,
                     Name,

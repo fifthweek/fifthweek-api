@@ -98,7 +98,7 @@
                 var creator = UserTests.UniqueEntity(random);
                 creator.Id = UserId.Value;
 
-                var subscription = SubscriptionTests.UniqueEntity(random);
+                var subscription = BlogTests.UniqueEntity(random);
                 subscription.Creator = creator;
                 subscription.CreatorId = creator.Id;
 

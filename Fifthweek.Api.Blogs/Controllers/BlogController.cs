@@ -20,7 +20,7 @@
         private readonly IGuidCreator guidCreator;
 
         [Route("")]
-        public async Task<BlogId> PostSubscription(NewBlogData blogData)
+        public async Task<BlogId> PostBlog(NewBlogData blogData)
         {
             blogData.AssertBodyProvided("blogData");
             var blog = blogData.Parse();
@@ -39,7 +39,7 @@
         }
 
         [Route("{blogId}")]
-        public async Task<IHttpActionResult> PutSubscription(string blogId, [FromBody]UpdatedBlogData blogData)
+        public async Task<IHttpActionResult> PutBlog(string blogId, [FromBody]UpdatedBlogData blogData)
         {
             blogId.AssertUrlParameterProvided("blogId");
             blogData.AssertBodyProvided("blogData");
@@ -62,7 +62,7 @@
         }
 
         [Route("{blogId}")]
-        public async Task<GetBlogResult> GetSubscription(string blogId)
+        public async Task<GetBlogResult> GetBlog(string blogId)
         {
             blogId.AssertUrlParameterProvided("blogId");
 

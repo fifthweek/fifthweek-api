@@ -16,23 +16,23 @@
     [AutoConstructor]
     public partial class GetCreatorStatusQueryHandler : IQueryHandler<GetCreatorStatusQuery, CreatorStatus>
     {
-        // Ensure we return the same subscription each time by ordering by creation date descending. This means the latest
-        // subscription is returned. Latest seems to make most sense: if a user double-posts, they'll get the ID of the 
-        // latest subscription, which they'll probably then start filling out. It also provides us with a mechanism for 
-        // overriding / soft deleting subscriptions by inserting a new subscription record (not saying that's the solution 
+        // Ensure we return the same blog each time by ordering by creation date descending. This means the latest
+        // blog is returned. Latest seems to make most sense: if a user double-posts, they'll get the ID of the 
+        // latest blog, which they'll probably then start filling out. It also provides us with a mechanism for 
+        // overriding / soft deleting blogs by inserting a new blog record (not saying that's the solution 
         // in that case, but its another option enabled by the decision to sort descending!).
         private static readonly string Sql = string.Format(
             @"
-            SELECT TOP 1	subscription.{6} AS SubscriptionId, ISNULL((SELECT 1 WHERE EXISTS(
+            SELECT TOP 1	blog.{6} AS BlogId, ISNULL((SELECT 1 WHERE EXISTS(
 	            SELECT		* 
 	            FROM		{0} channel
 	            INNER JOIN	{3} post -- Only yield rows when post(s) exist.
 		            ON		channel.{1} = post.{4}
-	            WHERE		channel.{2} = subscription.{6}))
+	            WHERE		channel.{2} = blog.{6}))
 	            , 0) AS HasAtLeastOnePost
-            FROM			{5} subscription
-            WHERE			subscription.{7} = @CreatorId
-            ORDER BY		subscription.{8} DESC",
+            FROM			{5} blog
+            WHERE			blog.{7} = @CreatorId
+            ORDER BY		blog.{8} DESC",
             Channel.Table,
             Channel.Fields.Id,
             Channel.Fields.BlogId,
@@ -62,14 +62,14 @@
                 var creatorData = (await connection.QueryAsync<CreatorStatusData>(Sql, new { CreatorId = creatorId.Value })).SingleOrDefault();
 
                 return creatorData == null
-                    ? CreatorStatus.NoSubscriptions
-                    : new CreatorStatus(new BlogId(creatorData.SubscriptionId), !creatorData.HasAtLeastOnePost);
+                    ? CreatorStatus.NoBlogs
+                    : new CreatorStatus(new BlogId(creatorData.BlogId), !creatorData.HasAtLeastOnePost);
             }
         }
 
         private class CreatorStatusData
         {
-            public Guid SubscriptionId { get; set; }
+            public Guid BlogId { get; set; }
 
             public bool HasAtLeastOnePost { get; set; }
         }

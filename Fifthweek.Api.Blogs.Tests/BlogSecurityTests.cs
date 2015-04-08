@@ -14,21 +14,21 @@
     using Moq;
 
     [TestClass]
-    public class SubscriptionSecurityTests
+    public class BlogSecurityTests
     {
         private static readonly UserId UserId = new UserId(Guid.NewGuid());
         private static readonly Requester Requester = Requester.Authenticated(UserId);
         private static readonly BlogId BlogId = new BlogId(Guid.NewGuid());
         private Mock<IRequesterSecurity> requesterSecurity;
-        private Mock<IBlogOwnership> subscriptionOwnership;
+        private Mock<IBlogOwnership> blogOwnership;
         private BlogSecurity target;
 
         [TestInitialize]
         public void Initialize()
         {
             this.requesterSecurity = new Mock<IRequesterSecurity>();
-            this.subscriptionOwnership = new Mock<IBlogOwnership>();
-            this.target = new BlogSecurity(this.requesterSecurity.Object, this.subscriptionOwnership.Object);
+            this.blogOwnership = new Mock<IBlogOwnership>();
+            this.target = new BlogSecurity(this.requesterSecurity.Object, this.blogOwnership.Object);
         }
 
         [TestMethod]
@@ -58,9 +58,9 @@
         }
 
         [TestMethod]
-        public async Task WhenAuthorizingUpdate_ItShouldAllowIfUserOwnsSubscription()
+        public async Task WhenAuthorizingUpdate_ItShouldAllowIfUserOwnsBlog()
         {
-            this.subscriptionOwnership.Setup(_ => _.IsOwnerAsync(UserId, BlogId)).ReturnsAsync(true);
+            this.blogOwnership.Setup(_ => _.IsOwnerAsync(UserId, BlogId)).ReturnsAsync(true);
 
             var result = await this.target.IsWriteAllowedAsync(UserId, BlogId);
 
@@ -70,9 +70,9 @@
         }
 
         [TestMethod]
-        public async Task WhenAuthorizingUpdate_ItShouldForbidIfUserDoesNotOwnSubscription()
+        public async Task WhenAuthorizingUpdate_ItShouldForbidIfUserDoesNotOwnBlog()
         {
-            this.subscriptionOwnership.Setup(_ => _.IsOwnerAsync(UserId, BlogId)).ReturnsAsync(false);
+            this.blogOwnership.Setup(_ => _.IsOwnerAsync(UserId, BlogId)).ReturnsAsync(false);
 
             var result = await this.target.IsWriteAllowedAsync(UserId, BlogId);
 

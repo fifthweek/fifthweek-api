@@ -272,7 +272,7 @@
                 file.UserId = user.Id;
                 await databaseContext.Database.Connection.InsertAsync(file);
 
-                var subscription = SubscriptionTests.UniqueEntity(Random);
+                var subscription = BlogTests.UniqueEntity(Random);
                 subscription.CreatorId = user.Id;
                 await databaseContext.Database.Connection.InsertAsync(subscription);
 

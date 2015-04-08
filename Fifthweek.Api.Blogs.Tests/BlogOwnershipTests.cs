@@ -12,19 +12,19 @@
     using Microsoft.VisualStudio.TestTools.UnitTesting;
 
     [TestClass]
-    public class SubscriptionOwnershipTests : PersistenceTestsBase
+    public class BlogOwnershipTests : PersistenceTestsBase
     {
         private static readonly UserId UserId = new UserId(Guid.NewGuid());
         private static readonly BlogId BlogId = new BlogId(Guid.NewGuid());
         private BlogOwnership target;
 
         [TestMethod]
-        public async Task WhenCheckingSubscriptionOwnership_ItShouldPassIfAtLeastOneSubscriptionMatchesSubscriptionAndCreator()
+        public async Task WhenCheckingBlogOwnership_ItShouldPassIfAtLeastOneBlogMatchesBlogAndCreator()
         {
             await this.DatabaseTestAsync(async testDatabase =>
             {
                 this.target = new BlogOwnership(testDatabase);
-                await this.CreateSubscriptionAsync(UserId, BlogId, testDatabase);
+                await this.CreateBlogAsync(UserId, BlogId, testDatabase);
                 await testDatabase.TakeSnapshotAsync();
 
                 var result = await this.target.IsOwnerAsync(UserId, BlogId);
@@ -35,7 +35,7 @@
         }
 
         [TestMethod]
-        public async Task WhenCheckingSubscriptionOwnership_ItShouldFailIfNoSubscriptionsExist()
+        public async Task WhenCheckingBlogOwnership_ItShouldFailIfNoBlogsExist()
         {
             await this.DatabaseTestAsync(async testDatabase =>
             {
@@ -56,12 +56,12 @@
         }
 
         [TestMethod]
-        public async Task WhenCheckingSubscriptionOwnership_ItShouldFailIfNoSubscriptionsMatchSubscriptionOrCreator()
+        public async Task WhenCheckingBlogOwnership_ItShouldFailIfNoBlogsMatchBlogOrCreator()
         {
             await this.DatabaseTestAsync(async testDatabase =>
             {
                 this.target = new BlogOwnership(testDatabase);
-                await this.CreateSubscriptionAsync(new UserId(Guid.NewGuid()), new BlogId(Guid.NewGuid()), testDatabase);
+                await this.CreateBlogAsync(new UserId(Guid.NewGuid()), new BlogId(Guid.NewGuid()), testDatabase);
                 await testDatabase.TakeSnapshotAsync();
 
                 var result = await this.target.IsOwnerAsync(UserId, BlogId);
@@ -72,12 +72,12 @@
         }
 
         [TestMethod]
-        public async Task WhenCheckingSubscriptionOwnership_ItShouldFailIfNoSubscriptionsMatchSubscription()
+        public async Task WhenCheckingBlogOwnership_ItShouldFailIfNoBlogsMatchBlog()
         {
             await this.DatabaseTestAsync(async testDatabase =>
             {
                 this.target = new BlogOwnership(testDatabase);
-                await this.CreateSubscriptionAsync(UserId, new BlogId(Guid.NewGuid()), testDatabase);
+                await this.CreateBlogAsync(UserId, new BlogId(Guid.NewGuid()), testDatabase);
                 await testDatabase.TakeSnapshotAsync();
 
                 var result = await this.target.IsOwnerAsync(UserId, BlogId);
@@ -88,12 +88,12 @@
         }
 
         [TestMethod]
-        public async Task WhenCheckingSubscriptionOwnership_ItShouldFailIfNoSubscriptionsMatchCreator()
+        public async Task WhenCheckingBlogOwnership_ItShouldFailIfNoBlogsMatchCreator()
         {
             await this.DatabaseTestAsync(async testDatabase =>
             {
                 this.target = new BlogOwnership(testDatabase);
-                await this.CreateSubscriptionAsync(new UserId(Guid.NewGuid()), BlogId, testDatabase);
+                await this.CreateBlogAsync(new UserId(Guid.NewGuid()), BlogId, testDatabase);
                 await testDatabase.TakeSnapshotAsync();
 
                 var result = await this.target.IsOwnerAsync(UserId, BlogId);
@@ -103,11 +103,11 @@
             });
         }
 
-        private async Task CreateSubscriptionAsync(UserId newUserId, BlogId newBlogId, TestDatabaseContext testDatabase)
+        private async Task CreateBlogAsync(UserId newUserId, BlogId newBlogId, TestDatabaseContext testDatabase)
         {
             using (var databaseContext = testDatabase.CreateContext())
             {
-                await databaseContext.CreateTestSubscriptionAsync(newUserId.Value, newBlogId.Value);
+                await databaseContext.CreateTestBlogAsync(newUserId.Value, newBlogId.Value);
             }
         }
     }

@@ -8,7 +8,7 @@
     using Microsoft.VisualStudio.TestTools.UnitTesting;
 
     [TestClass]
-    public class ValidSubscriptionNameTests : ValidatedStringTests<ValidBlogName>
+    public class ValidBlogNameTests : ValidatedStringTests<ValidBlogName>
     {
         public static readonly string InvalidValue = string.Empty;
 
@@ -51,7 +51,7 @@
         }
 
         [TestMethod]
-        public void ItShouldAllowBasicSubscriptionNames()
+        public void ItShouldAllowBasicBlogNames()
         {
             this.GoodValue(this.ValueA);
             this.GoodValue(this.ValueB);
@@ -70,13 +70,13 @@
         }
 
         [TestMethod]
-        public void ItShouldNotAllowEmptySubscriptionNames()
+        public void ItShouldNotAllowEmptyBlogNames()
         {
             this.AssertMinLength(1);
         }
 
         [TestMethod]
-        public void ItShouldNotAllowSubscriptionNamesOver25Characters()
+        public void ItShouldNotAllowBlogNamesOver25Characters()
         {
             this.AssertMaxLength(25);
         }

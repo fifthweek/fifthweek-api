@@ -6,6 +6,6 @@
 
     public interface IGetBlogDbStatement
     {
-        Task<GetBlogDbStatement.GetSubscriptionDataDbResult> ExecuteAsync(BlogId blogId);
+        Task<GetBlogDbStatement.GetBlogDataDbResult> ExecuteAsync(BlogId blogId);
     }
 }

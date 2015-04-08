@@ -5,7 +5,7 @@
     [AutoConstructor, AutoEqualityMembers]
     public partial class CreatorStatus
     {
-        public static readonly CreatorStatus NoSubscriptions = new CreatorStatus(null, false);
+        public static readonly CreatorStatus NoBlogs = new CreatorStatus(null, false);
 
         [Optional]
         public Shared.BlogId BlogId { get; private set; }

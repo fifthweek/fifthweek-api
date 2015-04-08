@@ -18,16 +18,16 @@
     using Moq;
 
     [TestClass]
-    public class SubscriptionControllerTests
+    public class BlogControllerTests
     {
         private static readonly DateTime Now = DateTime.UtcNow;
         private static readonly UserId UserId = new UserId(Guid.NewGuid());
         private static readonly Requester Requester = Requester.Authenticated(UserId);
         private static readonly BlogId BlogId = new BlogId(Guid.NewGuid());
         private static readonly FileId HeaderImageFileId = new FileId(Guid.NewGuid());
-        private Mock<ICommandHandler<CreateBlogCommand>> createSubscription;
-        private Mock<ICommandHandler<UpdateBlogCommand>> updateSubscription;
-        private Mock<IQueryHandler<GetBlogQuery, GetBlogResult>> getSubscription;
+        private Mock<ICommandHandler<CreateBlogCommand>> createBlog;
+        private Mock<ICommandHandler<UpdateBlogCommand>> updateBlog;
+        private Mock<IQueryHandler<GetBlogQuery, GetBlogResult>> getBlog;
         private Mock<IRequesterContext> requesterContext;
         private Mock<IGuidCreator> guidCreator;
         private BlogController target;
@@ -35,63 +35,63 @@
         [TestInitialize]
         public void Initialize()
         {
-            this.createSubscription = new Mock<ICommandHandler<CreateBlogCommand>>();
-            this.updateSubscription = new Mock<ICommandHandler<UpdateBlogCommand>>();
-            this.getSubscription = new Mock<IQueryHandler<GetBlogQuery, GetBlogResult>>();
+            this.createBlog = new Mock<ICommandHandler<CreateBlogCommand>>();
+            this.updateBlog = new Mock<ICommandHandler<UpdateBlogCommand>>();
+            this.getBlog = new Mock<IQueryHandler<GetBlogQuery, GetBlogResult>>();
             this.requesterContext = new Mock<IRequesterContext>();
             this.guidCreator = new Mock<IGuidCreator>();
             this.target = new BlogController(
-                this.createSubscription.Object,
-                this.updateSubscription.Object,
-                this.getSubscription.Object,
+                this.createBlog.Object,
+                this.updateBlog.Object,
+                this.getBlog.Object,
                 this.requesterContext.Object,
                 this.guidCreator.Object);
         }
 
         [TestMethod]
-        public async Task WhenPostingSubscription_ItShouldIssueCreateSubscriptionCommand()
+        public async Task WhenPostingBlog_ItShouldIssueCreateBlogCommand()
         {
-            var data = NewCreateSubscriptionData();
-            var command = NewCreateSubscriptionCommand(UserId, BlogId, data);
+            var data = NewCreateBlogData();
+            var command = NewCreateBlogCommand(UserId, BlogId, data);
 
             this.requesterContext.Setup(v => v.GetRequester()).Returns(Requester);
             this.guidCreator.Setup(_ => _.CreateSqlSequential()).Returns(BlogId.Value);
-            this.createSubscription.Setup(v => v.HandleAsync(command)).Returns(Task.FromResult(0)).Verifiable();
+            this.createBlog.Setup(v => v.HandleAsync(command)).Returns(Task.FromResult(0)).Verifiable();
 
-            var result = await this.target.PostSubscription(data);
+            var result = await this.target.PostBlog(data);
 
             Assert.AreEqual(command.NewBlogId, result);
-            this.createSubscription.Verify();
+            this.createBlog.Verify();
         }
 
         [TestMethod]
-        public async Task WhenPuttingSubscription_ItShouldIssueUpdateSubscriptionCommand()
+        public async Task WhenPuttingBlog_ItShouldIssueUpdateBlogCommand()
         {
-            var data = NewUpdatedSubscriptionData();
-            var command = NewUpdateSubscriptionCommand(UserId, BlogId, data);
+            var data = NewUpdatedBlogData();
+            var command = NewUpdateBlogCommand(UserId, BlogId, data);
 
             this.requesterContext.Setup(v => v.GetRequester()).Returns(Requester);
-            this.updateSubscription.Setup(v => v.HandleAsync(command)).Returns(Task.FromResult(0)).Verifiable();
+            this.updateBlog.Setup(v => v.HandleAsync(command)).Returns(Task.FromResult(0)).Verifiable();
 
-            var result = await this.target.PutSubscription(BlogId.Value.EncodeGuid(), data);
+            var result = await this.target.PutBlog(BlogId.Value.EncodeGuid(), data);
 
             Assert.IsInstanceOfType(result, typeof(OkResult));
-            this.updateSubscription.Verify();
+            this.updateBlog.Verify();
         }
 
         [TestMethod]
-        public async Task WhenGettingSubscription_ItShouldIssueGetSubscriptionQuery()
+        public async Task WhenGettingBlog_ItShouldIssueGetBlogQuery()
         {
-            this.getSubscription.Setup(v => v.HandleAsync(new GetBlogQuery(BlogId)))
-                .Returns(Task.FromResult(NewGetSubscriptionResult())).Verifiable();
+            this.getBlog.Setup(v => v.HandleAsync(new GetBlogQuery(BlogId)))
+                .Returns(Task.FromResult(NewGetBlogResult())).Verifiable();
 
-            var result = await this.target.GetSubscription(BlogId.Value.EncodeGuid());
+            var result = await this.target.GetBlog(BlogId.Value.EncodeGuid());
 
-            Assert.AreEqual(NewGetSubscriptionResult(), result);
-            this.getSubscription.Verify();
+            Assert.AreEqual(NewGetBlogResult(), result);
+            this.getBlog.Verify();
         }
 
-        public static GetBlogResult NewGetSubscriptionResult()
+        public static GetBlogResult NewGetBlogResult()
         {
             return new GetBlogResult(
                 BlogId,
@@ -105,7 +105,7 @@
                 null);
         }
 
-        public static NewBlogData NewCreateSubscriptionData()
+        public static NewBlogData NewCreateBlogData()
         {
             return new NewBlogData
             {
@@ -115,7 +115,7 @@
             };
         }
 
-        public static CreateBlogCommand NewCreateSubscriptionCommand(
+        public static CreateBlogCommand NewCreateBlogCommand(
             UserId userId,
             BlogId blogId,
             NewBlogData data)
@@ -128,20 +128,20 @@
                 ValidChannelPriceInUsCentsPerWeek.Parse(data.BasePrice));
         }
 
-        public static UpdatedBlogData NewUpdatedSubscriptionData()
+        public static UpdatedBlogData NewUpdatedBlogData()
         {
             return new UpdatedBlogData
             {
                 BlogName = "Captain Phil",
                 Tagline = "Web Comics And More",
-                Introduction = "Subscription introduction",
+                Introduction = "Blog introduction",
                 HeaderImageFileId = HeaderImageFileId,
                 Video = "http://youtube.com/3135",
                 Description = "Hello all!"
             };
         }
 
-        public static UpdateBlogCommand NewUpdateSubscriptionCommand(
+        public static UpdateBlogCommand NewUpdateBlogCommand(
             UserId userId,
             BlogId blogId,
             UpdatedBlogData data)

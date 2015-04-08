@@ -135,7 +135,7 @@
                 var random = new Random();
                 var creator = UserTests.UniqueEntity(random);
 
-                var subscription = SubscriptionTests.UniqueEntity(random);
+                var subscription = BlogTests.UniqueEntity(random);
                 subscription.Creator = creator;
                 subscription.CreatorId = creator.Id;
 

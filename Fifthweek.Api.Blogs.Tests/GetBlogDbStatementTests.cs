@@ -14,7 +14,7 @@
     using Moq;
 
     [TestClass]
-    public class GetSubscriptionDbStatementTests : PersistenceTestsBase
+    public class GetBlogDbStatementTests : PersistenceTestsBase
     {
         private static readonly BlogId BlogId = new BlogId(Guid.NewGuid());
         private static readonly UserId CreatorId = new UserId(Guid.NewGuid());
@@ -30,13 +30,13 @@
 
         [TestMethod]
         [ExpectedException(typeof(ArgumentNullException))]
-        public async Task WhenSubscriptionIdIsNull_ItShouldThrowAnException()
+        public async Task WhenBlogIdIsNull_ItShouldThrowAnException()
         {
             await this.target.ExecuteAsync(null);
         }
 
         [TestMethod]
-        public async Task WhenGettingSubscription_ItShouldReturnTheResult()
+        public async Task WhenGettingBlog_ItShouldReturnTheResult()
         {
             await this.DatabaseTestAsync(async testDatabase =>
             {
@@ -56,7 +56,7 @@
         }
 
         [TestMethod]
-        public async Task WhenGettingSubscription_ItShouldBeIdempotent()
+        public async Task WhenGettingBlog_ItShouldBeIdempotent()
         {
             await this.DatabaseTestAsync(async testDatabase =>
             {
@@ -75,7 +75,7 @@
 
         [TestMethod]
         [ExpectedException(typeof(InvalidOperationException))]
-        public async Task WhenGettingANonExistantSubscription_ItShouldThrowAnException()
+        public async Task WhenGettingANonExistantBlog_ItShouldThrowAnException()
         {
             await this.DatabaseTestAsync(async testDatabase =>
             {
@@ -94,7 +94,7 @@
         {
             await this.CreateUserAsync(testDatabase);
             await this.CreateFileAsync(testDatabase);
-            await this.CreateSubscriptionAsync(testDatabase);
+            await this.CreateBlogAsync(testDatabase);
         }
 
         private async Task CreateUserAsync(TestDatabaseContext testDatabase)
@@ -123,17 +123,17 @@
             }
         }
 
-        private async Task CreateSubscriptionAsync(TestDatabaseContext testDatabase)
+        private async Task CreateBlogAsync(TestDatabaseContext testDatabase)
         {
             var random = new Random();
-            var subscription = SubscriptionTests.UniqueEntity(random);
-            subscription.Id = BlogId.Value;
-            subscription.CreatorId = CreatorId.Value;
-            subscription.HeaderImageFileId = HeaderFileId.Value;
+            var blog = BlogTests.UniqueEntity(random);
+            blog.Id = BlogId.Value;
+            blog.CreatorId = CreatorId.Value;
+            blog.HeaderImageFileId = HeaderFileId.Value;
 
             using (var connection = testDatabase.CreateConnection())
             {
-                await connection.InsertAsync(subscription);
+                await connection.InsertAsync(blog);
             }
         }
     }

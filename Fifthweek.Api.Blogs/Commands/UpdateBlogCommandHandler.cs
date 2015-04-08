@@ -32,12 +32,12 @@
                 await this.fileSecurity.AssertReferenceAllowedAsync(authenticatedUserId, command.HeaderImageFileId);
             }
 
-            await this.UpdateSubscriptionAsync(command);
+            await this.UpdateBlogAsync(command);
         }
 
-        private async Task UpdateSubscriptionAsync(UpdateBlogCommand command)
+        private async Task UpdateBlogAsync(UpdateBlogCommand command)
         {
-            var subscription = new Blog(
+            var blog = new Blog(
                 command.BlogId.Value,
                 default(Guid),
                 null,
@@ -53,7 +53,7 @@
             using (var connection = this.connectionFactory.CreateConnection())
             {
                 await connection.UpdateAsync(
-                    subscription,
+                    blog,
                     Blog.Fields.Name |
                     Blog.Fields.Tagline |
                     Blog.Fields.Introduction |
