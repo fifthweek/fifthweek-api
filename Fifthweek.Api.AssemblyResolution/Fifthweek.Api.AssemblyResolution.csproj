@@ -56,6 +56,14 @@
       <Project>{abc43617-3aaa-4b7a-b4dc-d10e023f1846}</Project>
       <Name>Fifthweek.Api.Azure</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Fifthweek.Api.Blogs.Shared\Fifthweek.Api.Blogs.Shared.csproj">
+      <Project>{b2d572a4-86c5-4f16-ab6a-ce87a63e08dd}</Project>
+      <Name>Fifthweek.Api.Blogs.Shared</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Fifthweek.Api.Blogs\Fifthweek.Api.Blogs.csproj">
+      <Project>{5db142b7-3152-447e-8816-33a90ba9ef76}</Project>
+      <Name>Fifthweek.Api.Blogs</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Fifthweek.Api.Channels.Shared\Fifthweek.Api.Channels.Shared.csproj">
       <Project>{df1bb4e7-5315-4e5c-ba73-6dfa4d9e7564}</Project>
       <Name>Fifthweek.Api.Channels.Shared</Name>
@@ -119,14 +127,6 @@
     <ProjectReference Include="..\Fifthweek.Api.SendGrid\Fifthweek.Api.SendGrid.csproj">
       <Project>{5f5df240-536a-41b6-bfec-4f89940eb053}</Project>
       <Name>Fifthweek.Api.SendGrid</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Fifthweek.Api.Subscriptions.Shared\Fifthweek.Api.Blogs.Shared.csproj">
-      <Project>{b2d572a4-86c5-4f16-ab6a-ce87a63e08dd}</Project>
-      <Name>Fifthweek.Api.Blogs.Shared</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Fifthweek.Api.Subscriptions\Fifthweek.Api.Blogs.csproj">
-      <Project>{5db142b7-3152-447e-8816-33a90ba9ef76}</Project>
-      <Name>Fifthweek.Api.Blogs</Name>
     </ProjectReference>
     <ProjectReference Include="..\Fifthweek.Shared\Fifthweek.Shared.csproj">
       <Project>{6d12ffbb-38e9-4722-a690-0f0338538ebc}</Project>

@@ -131,6 +131,10 @@
       <Project>{47648FEB-DCEB-4151-8B98-EFE1388F11FD}</Project>
       <Name>Fifthweek.Api.AssemblyResolution</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Fifthweek.Api.Blogs.Shared\Fifthweek.Api.Blogs.Shared.csproj">
+      <Project>{b2d572a4-86c5-4f16-ab6a-ce87a63e08dd}</Project>
+      <Name>Fifthweek.Api.Blogs.Shared</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Fifthweek.Api.Channels.Shared\Fifthweek.Api.Channels.Shared.csproj">
       <Project>{df1bb4e7-5315-4e5c-ba73-6dfa4d9e7564}</Project>
       <Name>Fifthweek.Api.Channels.Shared</Name>
@@ -186,14 +190,6 @@
     <ProjectReference Include="..\Fifthweek.Api.Posts\Fifthweek.Api.Posts.csproj">
       <Project>{154cbde0-8eeb-44dc-bfa4-769542a24080}</Project>
       <Name>Fifthweek.Api.Posts</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Fifthweek.Api.Subscriptions.Shared\Fifthweek.Api.Blogs.Shared.csproj">
-      <Project>{B2D572A4-86C5-4F16-AB6A-CE87A63E08DD}</Project>
-      <Name>Fifthweek.Api.Blogs.Shared</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Fifthweek.Api.Subscriptions\Fifthweek.Api.Blogs.csproj">
-      <Project>{5DB142B7-3152-447E-8816-33A90BA9EF76}</Project>
-      <Name>Fifthweek.Api.Blogs</Name>
     </ProjectReference>
     <ProjectReference Include="..\Fifthweek.Shared\Fifthweek.Shared.csproj">
       <Project>{6D12FFBB-38E9-4722-A690-0F0338538EBC}</Project>

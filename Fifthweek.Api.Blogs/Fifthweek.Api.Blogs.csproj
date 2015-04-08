@@ -1,21 +1,16 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{F11F6CD5-E9FF-4324-9EF9-0ED9CE26C8BE}</ProjectGuid>
+    <ProjectGuid>{5DB142B7-3152-447E-8816-33A90BA9EF76}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Fifthweek.Api.Blogs.Tests</RootNamespace>
-    <AssemblyName>Fifthweek.Api.Blogs.Tests</AssemblyName>
+    <RootNamespace>Fifthweek.Api.Blogs</RootNamespace>
+    <AssemblyName>Fifthweek.Api.Blogs</AssemblyName>
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
-    <ProjectTypeGuids>{3AC096D0-A1C2-E12C-1390-A8335801FDAB};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
-    <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
-    <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
-    <ReferencePath>$(ProgramFiles)\Common Files\microsoft shared\VSTT\$(VisualStudioVersion)\UITestExtensionPackages</ReferencePath>
-    <IsCodedUITest>False</IsCodedUITest>
-    <TestProjectType>UnitTest</TestProjectType>
     <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
@@ -36,6 +31,10 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Autofac, Version=3.5.0.0, Culture=neutral, PublicKeyToken=17863af14b0044da, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Autofac.3.5.2\lib\net40\Autofac.dll</HintPath>
+    </Reference>
     <Reference Include="Dapper, Version=1.38.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\Dapper.1.38\lib\net45\Dapper.dll</HintPath>
@@ -55,70 +54,63 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\Microsoft.AspNet.Identity.EntityFramework.2.1.0\lib\net45\Microsoft.AspNet.Identity.EntityFramework.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.CSharp" />
-    <Reference Include="Moq">
-      <HintPath>..\packages\Moq.4.2.1409.1722\lib\net40\Moq.dll</HintPath>
-    </Reference>
     <Reference Include="Newtonsoft.Json, Version=6.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\Newtonsoft.Json.6.0.4\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
-    <Reference Include="System.Data" />
+    <Reference Include="System.Core" />
     <Reference Include="System.Net.Http" />
     <Reference Include="System.Net.Http.Formatting, Version=5.2.2.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\Microsoft.AspNet.WebApi.Client.5.2.2\lib\net45\System.Net.Http.Formatting.dll</HintPath>
     </Reference>
+    <Reference Include="System.Transactions" />
     <Reference Include="System.Web.Http, Version=5.2.2.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\Microsoft.AspNet.WebApi.Core.5.2.2\lib\net45\System.Web.Http.dll</HintPath>
     </Reference>
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
   </ItemGroup>
-  <Choose>
-    <When Condition="('$(VisualStudioVersion)' == '10.0' or '$(VisualStudioVersion)' == '') and '$(TargetFrameworkVersion)' == 'v3.5'">
-      <ItemGroup>
-        <Reference Include="Microsoft.VisualStudio.QualityTools.UnitTestFramework, Version=10.1.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
-      </ItemGroup>
-    </When>
-    <Otherwise>
-      <ItemGroup>
-        <Reference Include="Microsoft.VisualStudio.QualityTools.UnitTestFramework" />
-      </ItemGroup>
-    </Otherwise>
-  </Choose>
   <ItemGroup>
+    <Compile Include="AutofacRegistration.cs" />
+    <Compile Include="Queries\GetBlogQuery.cs" />
+    <Compile Include="Queries\GetBlogQueryHandler.cs" />
+    <Compile Include="GetBlogDbStatement.cs" />
+    <Compile Include="IGetBlogDbStatement.cs" />
+    <Compile Include="Queries\GetBlogResult.cs" />
+    <Compile Include="BlogOwnership.cs" />
+    <Compile Include="IBlogOwnership.cs" />
     <Compile Include="ClassAugmentation.cs">
-      <DependentUpon>ClassAugmentation.tt</DependentUpon>
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
+      <DependentUpon>ClassAugmentation.tt</DependentUpon>
     </Compile>
-    <Compile Include="Commands\UpdateSubscriptionCommandHandlerTests.cs" />
-    <Compile Include="Commands\PromoteNewUserToCreatorCommandHandlerTests.cs" />
-    <Compile Include="Commands\CreateSubscriptionCommandHandlerTests.cs" />
-    <Compile Include="Controllers\SubscriptionControllerTests.cs" />
-    <Compile Include="GetSubscriptionDbStatementTests.cs" />
-    <Compile Include="Queries\GetSubscriptionQueryHandlerTests.cs" />
-    <Compile Include="ValidSubscriptionDescriptionTests.cs" />
-    <Compile Include="ValidExternalVideoUrlTests.cs" />
-    <Compile Include="Queries\GetCreatorStatusQueryHandlerTests.cs" />
-    <Compile Include="ValidSubscriptionNameTests.cs" />
-    <Compile Include="SubscriptionOwnershipTests.cs" />
-    <Compile Include="SubscriptionSecurityTests.cs" />
-    <Compile Include="ValidIntroductionTests.cs" />
-    <Compile Include="ValidTaglineTests.cs" />
+    <Compile Include="Commands\PromoteNewUserToCreatorCommand.cs" />
+    <Compile Include="Commands\PromoteNewUserToCreatorCommandInitiator.cs" />
+    <Compile Include="Commands\PromoteNewUserToCreatorCommandHandler.cs" />
+    <Compile Include="Commands\CreateBlogCommand.cs" />
+    <Compile Include="Commands\CreateBlogCommandHandler.cs" />
+    <Compile Include="Commands\UpdateBlogCommand.cs" />
+    <Compile Include="Commands\UpdateBlogCommandHandler.cs" />
+    <Compile Include="Controllers\NewBlogData.cs" />
+    <Compile Include="Controllers\BlogController.cs" />
+    <Compile Include="Controllers\UpdatedBlogData.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="CreatorStatus.cs" />
+    <Compile Include="Queries\GetCreatorStatusQuery.cs" />
+    <Compile Include="Queries\GetCreatorStatusQueryHandler.cs" />
+    <Compile Include="BlogSecurity.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Fifthweek.Api.Channels.Shared\Fifthweek.Api.Channels.Shared.csproj">
       <Project>{df1bb4e7-5315-4e5c-ba73-6dfa4d9e7564}</Project>
       <Name>Fifthweek.Api.Channels.Shared</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Fifthweek.Api.Channels\Fifthweek.Api.Channels.csproj">
-      <Project>{208F4ACA-4012-466F-BC49-7E2C443D3C06}</Project>
-      <Name>Fifthweek.Api.Channels</Name>
     </ProjectReference>
     <ProjectReference Include="..\Fifthweek.Api.Core\Fifthweek.Api.Core.csproj">
       <Project>{BD52863E-063D-45A5-9CA8-7541804D1313}</Project>
@@ -132,36 +124,23 @@
       <Project>{1B07E9CC-1B0E-49D7-96D6-0F8C58A7C0CA}</Project>
       <Name>Fifthweek.Api.Identity.Shared</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Fifthweek.Api.Identity.Tests.Shared\Fifthweek.Api.Identity.Tests.Shared.csproj">
-      <Project>{45E1C6C7-845A-480F-BBBC-5DF3135D1E19}</Project>
-      <Name>Fifthweek.Api.Identity.Tests.Shared</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Fifthweek.Api.Persistence.Tests.Shared\Fifthweek.Api.Persistence.Tests.Shared.csproj">
-      <Project>{ECDE2C4E-7DD8-4210-8E09-D5762C88B3CB}</Project>
-      <Name>Fifthweek.Api.Persistence.Tests.Shared</Name>
-    </ProjectReference>
     <ProjectReference Include="..\Fifthweek.Api.Persistence\Fifthweek.Api.Persistence.csproj">
       <Project>{9C18BEE3-FAB5-4A00-8A94-A1FAEA370175}</Project>
       <Name>Fifthweek.Api.Persistence</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Fifthweek.Api.Subscriptions.Shared\Fifthweek.Api.Blogs.Shared.csproj">
+    <ProjectReference Include="..\Fifthweek.Api.Blogs.Shared\Fifthweek.Api.Blogs.Shared.csproj">
       <Project>{B2D572A4-86C5-4F16-AB6A-CE87A63E08DD}</Project>
       <Name>Fifthweek.Api.Blogs.Shared</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Fifthweek.Api.Subscriptions\Fifthweek.Api.Blogs.csproj">
-      <Project>{5DB142B7-3152-447E-8816-33A90BA9EF76}</Project>
-      <Name>Fifthweek.Api.Blogs</Name>
+    <ProjectReference Include="..\Fifthweek.CodeGeneration\Fifthweek.CodeGeneration.csproj">
+      <Project>{770f450e-2166-4269-bec1-df59aa16b1e8}</Project>
+      <Name>Fifthweek.CodeGeneration</Name>
     </ProjectReference>
     <ProjectReference Include="..\Fifthweek.Shared\Fifthweek.Shared.csproj">
-      <Project>{6D12FFBB-38E9-4722-A690-0F0338538EBC}</Project>
+      <Project>{6d12ffbb-38e9-4722-a690-0f0338538ebc}</Project>
       <Name>Fifthweek.Shared</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Fifthweek.Tests.Shared\Fifthweek.Tests.Shared.csproj">
-      <Project>{85691D93-9C0C-498B-8341-1990BC8E24B2}</Project>
-      <Name>Fifthweek.Tests.Shared</Name>
-    </ProjectReference>
   </ItemGroup>
-  <ItemGroup />
   <ItemGroup>
     <None Include="app.config" />
     <None Include="ClassAugmentation.tt">
@@ -173,25 +152,6 @@
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
   </ItemGroup>
-  <Choose>
-    <When Condition="'$(VisualStudioVersion)' == '10.0' And '$(IsCodedUITest)' == 'True'">
-      <ItemGroup>
-        <Reference Include="Microsoft.VisualStudio.QualityTools.CodedUITestFramework, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-          <Private>False</Private>
-        </Reference>
-        <Reference Include="Microsoft.VisualStudio.TestTools.UITest.Common, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-          <Private>False</Private>
-        </Reference>
-        <Reference Include="Microsoft.VisualStudio.TestTools.UITest.Extension, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-          <Private>False</Private>
-        </Reference>
-        <Reference Include="Microsoft.VisualStudio.TestTools.UITesting, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-          <Private>False</Private>
-        </Reference>
-      </ItemGroup>
-    </When>
-  </Choose>
-  <Import Project="$(VSToolsPath)\TeamTest\Microsoft.TestTools.targets" Condition="Exists('$(VSToolsPath)\TeamTest\Microsoft.TestTools.targets')" />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

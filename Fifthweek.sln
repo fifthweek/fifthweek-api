@@ -38,10 +38,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fifthweek.Api.Persistence.T
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fifthweek.Api.SendGrid.Tests", "Fifthweek.Api.SendGrid.Tests\Fifthweek.Api.SendGrid.Tests.csproj", "{F91E5854-C180-4F6D-9AA5-D657C202F1AE}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fifthweek.Api.Blogs", "Fifthweek.Api.Subscriptions\Fifthweek.Api.Blogs.csproj", "{5DB142B7-3152-447E-8816-33A90BA9EF76}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fifthweek.Api.Blogs.Tests", "Fifthweek.Api.Subscriptions.Tests\Fifthweek.Api.Blogs.Tests.csproj", "{F11F6CD5-E9FF-4324-9EF9-0ED9CE26C8BE}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fifthweek.Api.FileManagement", "Fifthweek.Api.FileManagement\Fifthweek.Api.FileManagement.csproj", "{3242E7FC-35CE-4E69-B07B-B8DCB3C69348}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fifthweek.Api.FileManagement.Tests", "Fifthweek.Api.FileManagement.Tests\Fifthweek.Api.FileManagement.Tests.csproj", "{6449285D-CBBE-4186-B840-D757A63389DA}"
@@ -146,11 +142,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fifthweek.Api.Posts.Shared"
 		{9C18BEE3-FAB5-4A00-8A94-A1FAEA370175} = {9C18BEE3-FAB5-4A00-8A94-A1FAEA370175}
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fifthweek.Api.Blogs.Shared", "Fifthweek.Api.Subscriptions.Shared\Fifthweek.Api.Blogs.Shared.csproj", "{B2D572A4-86C5-4F16-AB6A-CE87A63E08DD}"
-	ProjectSection(ProjectDependencies) = postProject
-		{9C18BEE3-FAB5-4A00-8A94-A1FAEA370175} = {9C18BEE3-FAB5-4A00-8A94-A1FAEA370175}
-	EndProjectSection
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fifthweek.Api.AssemblyResolution", "Fifthweek.Api.AssemblyResolution\Fifthweek.Api.AssemblyResolution.csproj", "{47648FEB-DCEB-4151-8B98-EFE1388F11FD}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fifthweek.Api.ClientHttpStubs", "Fifthweek.Api.ClientHttpStubs\Fifthweek.Api.ClientHttpStubs.csproj", "{EEC44FF8-062F-4A57-9320-3D15804BBFF1}"
@@ -164,6 +155,12 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fifthweek.Logging", "Fifthweek.Logging\Fifthweek.Logging.csproj", "{6CB9EAC7-E00A-4DAC-B6A4-D14C4503C6CD}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fifthweek.Logging.Tests", "Fifthweek.Logging.Tests\Fifthweek.Logging.Tests.csproj", "{8516FA7A-01CB-4E4E-B26B-547D025BB038}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fifthweek.Api.Blogs.Shared", "Fifthweek.Api.Blogs.Shared\Fifthweek.Api.Blogs.Shared.csproj", "{B2D572A4-86C5-4F16-AB6A-CE87A63E08DD}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fifthweek.Api.Blogs", "Fifthweek.Api.Blogs\Fifthweek.Api.Blogs.csproj", "{5DB142B7-3152-447E-8816-33A90BA9EF76}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fifthweek.Api.Blogs.Tests", "Fifthweek.Api.Blogs.Tests\Fifthweek.Api.Blogs.Tests.csproj", "{F11F6CD5-E9FF-4324-9EF9-0ED9CE26C8BE}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -227,14 +224,6 @@ Global
 		{F91E5854-C180-4F6D-9AA5-D657C202F1AE}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F91E5854-C180-4F6D-9AA5-D657C202F1AE}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F91E5854-C180-4F6D-9AA5-D657C202F1AE}.Release|Any CPU.Build.0 = Release|Any CPU
-		{5DB142B7-3152-447E-8816-33A90BA9EF76}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{5DB142B7-3152-447E-8816-33A90BA9EF76}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{5DB142B7-3152-447E-8816-33A90BA9EF76}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{5DB142B7-3152-447E-8816-33A90BA9EF76}.Release|Any CPU.Build.0 = Release|Any CPU
-		{F11F6CD5-E9FF-4324-9EF9-0ED9CE26C8BE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{F11F6CD5-E9FF-4324-9EF9-0ED9CE26C8BE}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{F11F6CD5-E9FF-4324-9EF9-0ED9CE26C8BE}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{F11F6CD5-E9FF-4324-9EF9-0ED9CE26C8BE}.Release|Any CPU.Build.0 = Release|Any CPU
 		{3242E7FC-35CE-4E69-B07B-B8DCB3C69348}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{3242E7FC-35CE-4E69-B07B-B8DCB3C69348}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3242E7FC-35CE-4E69-B07B-B8DCB3C69348}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -363,10 +352,6 @@ Global
 		{493FC9F2-6A6B-46C0-9BC9-83F8A3B60F9E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{493FC9F2-6A6B-46C0-9BC9-83F8A3B60F9E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{493FC9F2-6A6B-46C0-9BC9-83F8A3B60F9E}.Release|Any CPU.Build.0 = Release|Any CPU
-		{B2D572A4-86C5-4F16-AB6A-CE87A63E08DD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{B2D572A4-86C5-4F16-AB6A-CE87A63E08DD}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{B2D572A4-86C5-4F16-AB6A-CE87A63E08DD}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{B2D572A4-86C5-4F16-AB6A-CE87A63E08DD}.Release|Any CPU.Build.0 = Release|Any CPU
 		{47648FEB-DCEB-4151-8B98-EFE1388F11FD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{47648FEB-DCEB-4151-8B98-EFE1388F11FD}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{47648FEB-DCEB-4151-8B98-EFE1388F11FD}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -395,6 +380,18 @@ Global
 		{8516FA7A-01CB-4E4E-B26B-547D025BB038}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8516FA7A-01CB-4E4E-B26B-547D025BB038}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8516FA7A-01CB-4E4E-B26B-547D025BB038}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B2D572A4-86C5-4F16-AB6A-CE87A63E08DD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B2D572A4-86C5-4F16-AB6A-CE87A63E08DD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B2D572A4-86C5-4F16-AB6A-CE87A63E08DD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B2D572A4-86C5-4F16-AB6A-CE87A63E08DD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5DB142B7-3152-447E-8816-33A90BA9EF76}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5DB142B7-3152-447E-8816-33A90BA9EF76}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5DB142B7-3152-447E-8816-33A90BA9EF76}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5DB142B7-3152-447E-8816-33A90BA9EF76}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F11F6CD5-E9FF-4324-9EF9-0ED9CE26C8BE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F11F6CD5-E9FF-4324-9EF9-0ED9CE26C8BE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F11F6CD5-E9FF-4324-9EF9-0ED9CE26C8BE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F11F6CD5-E9FF-4324-9EF9-0ED9CE26C8BE}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

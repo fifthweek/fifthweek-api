@@ -100,6 +100,14 @@
       <Project>{ABC43617-3AAA-4B7A-B4DC-D10E023F1846}</Project>
       <Name>Fifthweek.Api.Azure</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Fifthweek.Api.Blogs.Shared\Fifthweek.Api.Blogs.Shared.csproj">
+      <Project>{b2d572a4-86c5-4f16-ab6a-ce87a63e08dd}</Project>
+      <Name>Fifthweek.Api.Blogs.Shared</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Fifthweek.Api.Blogs\Fifthweek.Api.Blogs.csproj">
+      <Project>{5db142b7-3152-447e-8816-33a90ba9ef76}</Project>
+      <Name>Fifthweek.Api.Blogs</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Fifthweek.Api.Collections\Fifthweek.Api.Collections.csproj">
       <Project>{92FF5E2B-F153-433F-92F6-DD580D9E09B8}</Project>
       <Name>Fifthweek.Api.Collections</Name>
@@ -131,14 +139,6 @@
     <ProjectReference Include="..\Fifthweek.Api.Persistence\Fifthweek.Api.Persistence.csproj">
       <Project>{9C18BEE3-FAB5-4A00-8A94-A1FAEA370175}</Project>
       <Name>Fifthweek.Api.Persistence</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Fifthweek.Api.Subscriptions.Shared\Fifthweek.Api.Blogs.Shared.csproj">
-      <Project>{b2d572a4-86c5-4f16-ab6a-ce87a63e08dd}</Project>
-      <Name>Fifthweek.Api.Blogs.Shared</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Fifthweek.Api.Subscriptions\Fifthweek.Api.Blogs.csproj">
-      <Project>{5DB142B7-3152-447E-8816-33A90BA9EF76}</Project>
-      <Name>Fifthweek.Api.Blogs</Name>
     </ProjectReference>
   </ItemGroup>
   <Choose>
