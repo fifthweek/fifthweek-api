@@ -1,19 +1,18 @@
-﻿namespace Fifthweek.Api.Subscriptions.Tests.Queries
+﻿namespace Fifthweek.Api.Blogs.Tests.Queries
 {
     using System;
     using System.Threading.Tasks;
 
     using Dapper;
 
-    using Fifthweek.Api.Channels;
+    using Fifthweek.Api.Blogs.Queries;
+    using Fifthweek.Api.Blogs.Shared;
     using Fifthweek.Api.Channels.Shared;
     using Fifthweek.Api.Core;
     using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.Api.Identity.Tests.Shared.Membership;
     using Fifthweek.Api.Persistence;
     using Fifthweek.Api.Persistence.Tests.Shared;
-    using Fifthweek.Api.Subscriptions.Queries;
-    using Fifthweek.Api.Subscriptions.Shared;
 
     using Microsoft.VisualStudio.TestTools.UnitTesting;
 

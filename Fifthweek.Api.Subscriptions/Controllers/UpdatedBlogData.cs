@@ -1,14 +1,14 @@
-﻿namespace Fifthweek.Api.Subscriptions.Controllers
+﻿namespace Fifthweek.Api.Blogs.Controllers
 {
+    using Fifthweek.Api.Blogs.Shared;
     using Fifthweek.Api.FileManagement.Shared;
-    using Fifthweek.Api.Subscriptions.Shared;
     using Fifthweek.CodeGeneration;
 
     [AutoEqualityMembers]
     public partial class UpdatedBlogData
     {
         [Parsed(typeof(ValidBlogName))]
-        public string SubscriptionName { get; set; }
+        public string BlogName { get; set; }
 
         [Parsed(typeof(ValidTagline))]
         public string Tagline { get; set; }

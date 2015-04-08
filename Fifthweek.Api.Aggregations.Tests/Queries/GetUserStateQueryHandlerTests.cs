@@ -6,6 +6,9 @@
 
     using Fifthweek.Api.Aggregations.Queries;
     using Fifthweek.Api.Azure;
+    using Fifthweek.Api.Blogs;
+    using Fifthweek.Api.Blogs.Queries;
+    using Fifthweek.Api.Blogs.Shared;
     using Fifthweek.Api.Collections.Queries;
     using Fifthweek.Api.Core;
     using Fifthweek.Api.FileManagement.Queries;
@@ -14,9 +17,6 @@
     using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.Api.Identity.Tests.Shared.Membership;
     using Fifthweek.Api.Persistence.Identity;
-    using Fifthweek.Api.Subscriptions;
-    using Fifthweek.Api.Subscriptions.Queries;
-    using Fifthweek.Api.Subscriptions.Shared;
 
     using Microsoft.VisualStudio.TestTools.UnitTesting;
 

@@ -1,4 +1,4 @@
-﻿namespace Fifthweek.Api.Subscriptions.Shared
+﻿namespace Fifthweek.Api.Blogs.Shared
 {
     using System;
 

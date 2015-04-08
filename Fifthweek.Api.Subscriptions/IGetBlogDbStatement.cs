@@ -1,8 +1,8 @@
-﻿namespace Fifthweek.Api.Subscriptions
+﻿namespace Fifthweek.Api.Blogs
 {
     using System.Threading.Tasks;
 
-    using Fifthweek.Api.Subscriptions.Shared;
+    using Fifthweek.Api.Blogs.Shared;
 
     public interface IGetBlogDbStatement
     {

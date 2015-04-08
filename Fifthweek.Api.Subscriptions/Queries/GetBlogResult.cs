@@ -1,10 +1,10 @@
-﻿namespace Fifthweek.Api.Subscriptions.Queries
+﻿namespace Fifthweek.Api.Blogs.Queries
 {
     using System;
 
+    using Fifthweek.Api.Blogs.Shared;
     using Fifthweek.Api.FileManagement.Shared;
     using Fifthweek.Api.Identity.Shared.Membership;
-    using Fifthweek.Api.Subscriptions.Shared;
     using Fifthweek.CodeGeneration;
 
     [AutoConstructor]

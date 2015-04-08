@@ -1,12 +1,12 @@
-﻿namespace Fifthweek.Api.Subscriptions.Tests.Commands
+﻿namespace Fifthweek.Api.Blogs.Tests.Commands
 {
     using System;
     using System.Threading.Tasks;
 
+    using Fifthweek.Api.Blogs.Commands;
     using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.Api.Persistence;
     using Fifthweek.Api.Persistence.Identity;
-    using Fifthweek.Api.Subscriptions.Commands;
 
     using Microsoft.AspNet.Identity;
     using Microsoft.VisualStudio.TestTools.UnitTesting;

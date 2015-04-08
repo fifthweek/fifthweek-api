@@ -4,12 +4,12 @@
     using System.Threading.Tasks;
     using System.Web.Http.Results;
 
+    using Fifthweek.Api.Blogs.Shared;
     using Fifthweek.Api.Channels.Commands;
     using Fifthweek.Api.Channels.Controllers;
     using Fifthweek.Api.Channels.Shared;
     using Fifthweek.Api.Core;
     using Fifthweek.Api.Identity.Shared.Membership;
-    using Fifthweek.Api.Subscriptions.Shared;
 
     using Microsoft.VisualStudio.TestTools.UnitTesting;
 

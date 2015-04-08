@@ -1,4 +1,4 @@
-﻿namespace Fifthweek.Api.Subscriptions.Commands
+﻿namespace Fifthweek.Api.Blogs.Commands
 {
     using System;
     using System.Threading.Tasks;

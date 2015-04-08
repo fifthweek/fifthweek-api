@@ -187,13 +187,13 @@
       <Project>{154cbde0-8eeb-44dc-bfa4-769542a24080}</Project>
       <Name>Fifthweek.Api.Posts</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Fifthweek.Api.Subscriptions.Shared\Fifthweek.Api.Subscriptions.Shared.csproj">
+    <ProjectReference Include="..\Fifthweek.Api.Subscriptions.Shared\Fifthweek.Api.Blogs.Shared.csproj">
       <Project>{B2D572A4-86C5-4F16-AB6A-CE87A63E08DD}</Project>
-      <Name>Fifthweek.Api.Subscriptions.Shared</Name>
+      <Name>Fifthweek.Api.Blogs.Shared</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Fifthweek.Api.Subscriptions\Fifthweek.Api.Subscriptions.csproj">
+    <ProjectReference Include="..\Fifthweek.Api.Subscriptions\Fifthweek.Api.Blogs.csproj">
       <Project>{5DB142B7-3152-447E-8816-33A90BA9EF76}</Project>
-      <Name>Fifthweek.Api.Subscriptions</Name>
+      <Name>Fifthweek.Api.Blogs</Name>
     </ProjectReference>
     <ProjectReference Include="..\Fifthweek.Shared\Fifthweek.Shared.csproj">
       <Project>{6D12FFBB-38E9-4722-A690-0F0338538EBC}</Project>

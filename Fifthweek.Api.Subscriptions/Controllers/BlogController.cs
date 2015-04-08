@@ -1,13 +1,13 @@
-﻿namespace Fifthweek.Api.Subscriptions.Controllers
+﻿namespace Fifthweek.Api.Blogs.Controllers
 {
     using System.Threading.Tasks;
     using System.Web.Http;
 
+    using Fifthweek.Api.Blogs.Commands;
+    using Fifthweek.Api.Blogs.Queries;
+    using Fifthweek.Api.Blogs.Shared;
     using Fifthweek.Api.Core;
     using Fifthweek.Api.Identity.Shared.Membership;
-    using Fifthweek.Api.Subscriptions.Commands;
-    using Fifthweek.Api.Subscriptions.Queries;
-    using Fifthweek.Api.Subscriptions.Shared;
     using Fifthweek.CodeGeneration;
 
     [RoutePrefix("blogs"), AutoConstructor]

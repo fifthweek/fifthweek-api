@@ -1,17 +1,17 @@
-﻿namespace Fifthweek.Api.Subscriptions.Tests.Controllers
+﻿namespace Fifthweek.Api.Blogs.Tests.Controllers
 {
     using System;
     using System.Threading.Tasks;
     using System.Web.Http.Results;
 
+    using Fifthweek.Api.Blogs.Commands;
+    using Fifthweek.Api.Blogs.Controllers;
+    using Fifthweek.Api.Blogs.Queries;
+    using Fifthweek.Api.Blogs.Shared;
     using Fifthweek.Api.Channels.Shared;
     using Fifthweek.Api.Core;
     using Fifthweek.Api.FileManagement.Shared;
     using Fifthweek.Api.Identity.Shared.Membership;
-    using Fifthweek.Api.Subscriptions.Commands;
-    using Fifthweek.Api.Subscriptions.Controllers;
-    using Fifthweek.Api.Subscriptions.Queries;
-    using Fifthweek.Api.Subscriptions.Shared;
 
     using Microsoft.VisualStudio.TestTools.UnitTesting;
 
@@ -132,7 +132,7 @@
         {
             return new UpdatedBlogData
             {
-                SubscriptionName = "Captain Phil",
+                BlogName = "Captain Phil",
                 Tagline = "Web Comics And More",
                 Introduction = "Subscription introduction",
                 HeaderImageFileId = HeaderImageFileId,
@@ -149,7 +149,7 @@
             return new UpdateBlogCommand(
                 Requester.Authenticated(userId),
                 blogId,
-                ValidBlogName.Parse(data.SubscriptionName),
+                ValidBlogName.Parse(data.BlogName),
                 ValidTagline.Parse(data.Tagline),
                 ValidIntroduction.Parse(data.Introduction),
                 ValidBlogDescription.Parse(data.Description),

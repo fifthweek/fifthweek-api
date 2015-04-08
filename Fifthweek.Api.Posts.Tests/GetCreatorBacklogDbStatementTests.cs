@@ -7,6 +7,7 @@
     using System.Threading.Tasks;
 
     using Fifthweek.Api.AssemblyResolution;
+    using Fifthweek.Api.Blogs.Shared;
     using Fifthweek.Api.Channels.Shared;
     using Fifthweek.Api.Collections.Shared;
     using Fifthweek.Api.Core;
@@ -17,7 +18,6 @@
     using Fifthweek.Api.Persistence.Tests.Shared;
     using Fifthweek.Api.Posts.Queries;
     using Fifthweek.Api.Posts.Shared;
-    using Fifthweek.Api.Subscriptions.Shared;
 
     using Microsoft.VisualStudio.TestTools.UnitTesting;
 

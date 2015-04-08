@@ -1,7 +1,7 @@
-﻿namespace Fifthweek.Api.Subscriptions.Controllers
+﻿namespace Fifthweek.Api.Blogs.Controllers
 {
+    using Fifthweek.Api.Blogs.Shared;
     using Fifthweek.Api.Channels.Shared;
-    using Fifthweek.Api.Subscriptions.Shared;
     using Fifthweek.CodeGeneration;
 
     [AutoEqualityMembers]

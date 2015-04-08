@@ -1,8 +1,8 @@
-﻿namespace Fifthweek.Api.Subscriptions.Tests
+﻿namespace Fifthweek.Api.Blogs.Tests
 {
     using System.Collections.Generic;
 
-    using Fifthweek.Api.Subscriptions.Shared;
+    using Fifthweek.Api.Blogs.Shared;
     using Fifthweek.Tests.Shared;
 
     using Microsoft.VisualStudio.TestTools.UnitTesting;

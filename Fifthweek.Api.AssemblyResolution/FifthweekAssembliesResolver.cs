@@ -4,7 +4,10 @@
     using System.Linq;
     using System.Reflection;
 
+    using Fifthweek.Api.Blogs.Shared;
     using Fifthweek.Api.Persistence;
+
+    using AutofacRegistration = Fifthweek.Api.Blogs.AutofacRegistration;
 
     public static class FifthweekAssembliesResolver
     {
@@ -28,8 +31,8 @@
             typeof(Posts.AutofacRegistration).Assembly,
             typeof(Posts.Shared.PostId).Assembly,
             typeof(SendGrid.AutofacRegistration).Assembly,
-            typeof(Subscriptions.AutofacRegistration).Assembly,
-            typeof(Subscriptions.Shared.BlogId).Assembly,
+            typeof(AutofacRegistration).Assembly,
+            typeof(BlogId).Assembly,
             typeof(Azure.AutofacRegistration).Assembly,
             typeof(FileManagement.AutofacRegistration).Assembly,
             typeof(FileManagement.Shared.FileId).Assembly,

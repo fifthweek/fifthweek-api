@@ -291,13 +291,13 @@
       <Project>{5f5df240-536a-41b6-bfec-4f89940eb053}</Project>
       <Name>Fifthweek.Api.SendGrid</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Fifthweek.Api.Subscriptions.Shared\Fifthweek.Api.Subscriptions.Shared.csproj">
+    <ProjectReference Include="..\Fifthweek.Api.Subscriptions.Shared\Fifthweek.Api.Blogs.Shared.csproj">
       <Project>{b2d572a4-86c5-4f16-ab6a-ce87a63e08dd}</Project>
-      <Name>Fifthweek.Api.Subscriptions.Shared</Name>
+      <Name>Fifthweek.Api.Blogs.Shared</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Fifthweek.Api.Subscriptions\Fifthweek.Api.Subscriptions.csproj">
+    <ProjectReference Include="..\Fifthweek.Api.Subscriptions\Fifthweek.Api.Blogs.csproj">
       <Project>{5db142b7-3152-447e-8816-33a90ba9ef76}</Project>
-      <Name>Fifthweek.Api.Subscriptions</Name>
+      <Name>Fifthweek.Api.Blogs</Name>
     </ProjectReference>
     <ProjectReference Include="..\Fifthweek.Azure\Fifthweek.Azure.csproj">
       <Project>{890CD4C4-993F-482D-BBB5-A50767ACE55B}</Project>

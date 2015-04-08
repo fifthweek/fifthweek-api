@@ -1,8 +1,8 @@
-﻿namespace Fifthweek.Api.Subscriptions.Commands
+﻿namespace Fifthweek.Api.Blogs.Commands
 {
+    using Fifthweek.Api.Blogs.Shared;
     using Fifthweek.Api.Channels.Shared;
     using Fifthweek.Api.Identity.Shared.Membership;
-    using Fifthweek.Api.Subscriptions.Shared;
     using Fifthweek.CodeGeneration;
 
     [AutoEqualityMembers, AutoConstructor]

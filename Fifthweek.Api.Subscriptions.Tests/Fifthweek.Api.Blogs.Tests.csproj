@@ -6,8 +6,8 @@
     <ProjectGuid>{F11F6CD5-E9FF-4324-9EF9-0ED9CE26C8BE}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Fifthweek.Api.Subscriptions.Tests</RootNamespace>
-    <AssemblyName>Fifthweek.Api.Subscriptions.Tests</AssemblyName>
+    <RootNamespace>Fifthweek.Api.Blogs.Tests</RootNamespace>
+    <AssemblyName>Fifthweek.Api.Blogs.Tests</AssemblyName>
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{3AC096D0-A1C2-E12C-1390-A8335801FDAB};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
@@ -144,13 +144,13 @@
       <Project>{9C18BEE3-FAB5-4A00-8A94-A1FAEA370175}</Project>
       <Name>Fifthweek.Api.Persistence</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Fifthweek.Api.Subscriptions.Shared\Fifthweek.Api.Subscriptions.Shared.csproj">
+    <ProjectReference Include="..\Fifthweek.Api.Subscriptions.Shared\Fifthweek.Api.Blogs.Shared.csproj">
       <Project>{B2D572A4-86C5-4F16-AB6A-CE87A63E08DD}</Project>
-      <Name>Fifthweek.Api.Subscriptions.Shared</Name>
+      <Name>Fifthweek.Api.Blogs.Shared</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Fifthweek.Api.Subscriptions\Fifthweek.Api.Subscriptions.csproj">
+    <ProjectReference Include="..\Fifthweek.Api.Subscriptions\Fifthweek.Api.Blogs.csproj">
       <Project>{5DB142B7-3152-447E-8816-33A90BA9EF76}</Project>
-      <Name>Fifthweek.Api.Subscriptions</Name>
+      <Name>Fifthweek.Api.Blogs</Name>
     </ProjectReference>
     <ProjectReference Include="..\Fifthweek.Shared\Fifthweek.Shared.csproj">
       <Project>{6D12FFBB-38E9-4722-A690-0F0338538EBC}</Project>

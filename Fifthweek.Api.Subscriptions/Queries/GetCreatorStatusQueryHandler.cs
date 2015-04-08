@@ -1,4 +1,4 @@
-﻿namespace Fifthweek.Api.Subscriptions.Queries
+﻿namespace Fifthweek.Api.Blogs.Queries
 {
     using System;
     using System.Linq;
@@ -6,10 +6,10 @@
 
     using Dapper;
 
+    using Fifthweek.Api.Blogs.Shared;
     using Fifthweek.Api.Core;
     using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.Api.Persistence;
-    using Fifthweek.Api.Subscriptions.Shared;
     using Fifthweek.CodeGeneration;
     using Fifthweek.Shared;
 

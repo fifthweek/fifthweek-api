@@ -7,8 +7,8 @@
     <ProjectGuid>{B2D572A4-86C5-4F16-AB6A-CE87A63E08DD}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Fifthweek.Api.Subscriptions.Shared</RootNamespace>
-    <AssemblyName>Fifthweek.Api.Subscriptions.Shared</AssemblyName>
+    <RootNamespace>Fifthweek.Api.Blogs.Shared</RootNamespace>
+    <AssemblyName>Fifthweek.Api.Blogs.Shared</AssemblyName>
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />

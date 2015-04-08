@@ -126,9 +126,9 @@
       <Project>{9C18BEE3-FAB5-4A00-8A94-A1FAEA370175}</Project>
       <Name>Fifthweek.Api.Persistence</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Fifthweek.Api.Subscriptions.Shared\Fifthweek.Api.Subscriptions.Shared.csproj">
+    <ProjectReference Include="..\Fifthweek.Api.Subscriptions.Shared\Fifthweek.Api.Blogs.Shared.csproj">
       <Project>{B2D572A4-86C5-4F16-AB6A-CE87A63E08DD}</Project>
-      <Name>Fifthweek.Api.Subscriptions.Shared</Name>
+      <Name>Fifthweek.Api.Blogs.Shared</Name>
     </ProjectReference>
     <ProjectReference Include="..\Fifthweek.Tests.Shared\Fifthweek.Tests.Shared.csproj">
       <Project>{85691D93-9C0C-498B-8341-1990BC8E24B2}</Project>

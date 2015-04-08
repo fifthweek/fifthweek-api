@@ -1,8 +1,8 @@
-﻿namespace Fifthweek.Api.Subscriptions
+﻿namespace Fifthweek.Api.Blogs
 {
     using Autofac;
 
-    using Fifthweek.Api.Subscriptions.Shared;
+    using Fifthweek.Api.Blogs.Shared;
     using Fifthweek.Shared;
 
     public class AutofacRegistration : IAutofacRegistration

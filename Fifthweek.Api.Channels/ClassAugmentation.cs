@@ -61,9 +61,10 @@ namespace Fifthweek.Api.Channels.Commands
 {
     using System;
     using System.Linq;
+
+    using Fifthweek.Api.Blogs.Shared;
     using Fifthweek.Api.Channels.Shared;
     using Fifthweek.Api.Identity.Shared.Membership;
-    using Fifthweek.Api.Subscriptions.Shared;
     using Fifthweek.CodeGeneration;
     using System.Threading.Tasks;
     using Fifthweek.Api.Core;
@@ -77,7 +78,7 @@ namespace Fifthweek.Api.Channels.Commands
         public CreateChannelCommand(
             Fifthweek.Api.Identity.Shared.Membership.Requester requester,
             Fifthweek.Api.Channels.Shared.ChannelId newChannelId,
-            Fifthweek.Api.Subscriptions.Shared.BlogId blogId,
+            BlogId blogId,
             Fifthweek.Api.Channels.Shared.ValidChannelName name,
             Fifthweek.Api.Channels.Shared.ValidChannelDescription description,
             Fifthweek.Api.Channels.Shared.ValidChannelPriceInUsCentsPerWeek price,
@@ -132,9 +133,10 @@ namespace Fifthweek.Api.Channels.Commands
 {
     using System;
     using System.Linq;
+
+    using Fifthweek.Api.Blogs.Shared;
     using Fifthweek.Api.Channels.Shared;
     using Fifthweek.Api.Identity.Shared.Membership;
-    using Fifthweek.Api.Subscriptions.Shared;
     using Fifthweek.CodeGeneration;
     using System.Threading.Tasks;
     using Fifthweek.Api.Core;
@@ -147,7 +149,7 @@ namespace Fifthweek.Api.Channels.Commands
     {
         public CreateChannelCommandHandler(
             Fifthweek.Api.Identity.Shared.Membership.IRequesterSecurity requesterSecurity,
-            Fifthweek.Api.Subscriptions.Shared.IBlogSecurity blogSecurity,
+            IBlogSecurity blogSecurity,
             Fifthweek.Api.Persistence.IFifthweekDbConnectionFactory connectionFactory)
         {
             if (requesterSecurity == null)
@@ -177,7 +179,6 @@ namespace Fifthweek.Api.Channels.Commands
     using System.Linq;
     using Fifthweek.Api.Channels.Shared;
     using Fifthweek.Api.Identity.Shared.Membership;
-    using Fifthweek.Api.Subscriptions.Shared;
     using Fifthweek.CodeGeneration;
     using System.Threading.Tasks;
     using Fifthweek.Api.Core;
@@ -241,7 +242,6 @@ namespace Fifthweek.Api.Channels.Commands
     using System.Linq;
     using Fifthweek.Api.Channels.Shared;
     using Fifthweek.Api.Identity.Shared.Membership;
-    using Fifthweek.Api.Subscriptions.Shared;
     using Fifthweek.CodeGeneration;
     using System.Threading.Tasks;
     using Fifthweek.Api.Core;
@@ -289,7 +289,6 @@ namespace Fifthweek.Api.Channels.Controllers
     using Fifthweek.Api.Core;
     using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.CodeGeneration;
-    using Fifthweek.Api.Subscriptions.Shared;
 
     public partial class ChannelController 
     {
@@ -339,17 +338,18 @@ namespace Fifthweek.Api.Channels.Controllers
     using System.Linq;
     using System.Threading.Tasks;
     using System.Web.Http;
+
+    using Fifthweek.Api.Blogs.Shared;
     using Fifthweek.Api.Channels.Commands;
     using Fifthweek.Api.Channels.Shared;
     using Fifthweek.Api.Core;
     using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.CodeGeneration;
-    using Fifthweek.Api.Subscriptions.Shared;
 
     public partial class NewChannelData 
     {
         public NewChannelData(
-            Fifthweek.Api.Subscriptions.Shared.BlogId blogId,
+            BlogId blogId,
             System.String name,
             System.String description,
             System.Int32 price,
@@ -399,7 +399,6 @@ namespace Fifthweek.Api.Channels.Controllers
     using Fifthweek.Api.Core;
     using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.CodeGeneration;
-    using Fifthweek.Api.Subscriptions.Shared;
 
     public partial class UpdatedChannelData 
     {
@@ -442,7 +441,6 @@ namespace Fifthweek.Api.Channels.Commands
     using System.Linq;
     using Fifthweek.Api.Channels.Shared;
     using Fifthweek.Api.Identity.Shared.Membership;
-    using Fifthweek.Api.Subscriptions.Shared;
     using Fifthweek.CodeGeneration;
     using System.Threading.Tasks;
     using Fifthweek.Api.Core;
@@ -478,7 +476,6 @@ namespace Fifthweek.Api.Channels.Commands
     using System.Linq;
     using Fifthweek.Api.Channels.Shared;
     using Fifthweek.Api.Identity.Shared.Membership;
-    using Fifthweek.Api.Subscriptions.Shared;
     using Fifthweek.CodeGeneration;
     using System.Threading.Tasks;
     using Fifthweek.Api.Core;
@@ -555,7 +552,6 @@ namespace Fifthweek.Api.Channels.Commands
     using System.Linq;
     using Fifthweek.Api.Channels.Shared;
     using Fifthweek.Api.Identity.Shared.Membership;
-    using Fifthweek.Api.Subscriptions.Shared;
     using Fifthweek.CodeGeneration;
     using System.Threading.Tasks;
     using Fifthweek.Api.Core;
@@ -654,7 +650,6 @@ namespace Fifthweek.Api.Channels.Commands
     using System.Linq;
     using Fifthweek.Api.Channels.Shared;
     using Fifthweek.Api.Identity.Shared.Membership;
-    using Fifthweek.Api.Subscriptions.Shared;
     using Fifthweek.CodeGeneration;
     using System.Threading.Tasks;
     using Fifthweek.Api.Core;
@@ -752,7 +747,6 @@ namespace Fifthweek.Api.Channels.Controllers
     using Fifthweek.Api.Core;
     using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.CodeGeneration;
-    using Fifthweek.Api.Subscriptions.Shared;
 
     public partial class NewChannelData 
     {
@@ -837,7 +831,6 @@ namespace Fifthweek.Api.Channels.Controllers
     using Fifthweek.Api.Core;
     using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.CodeGeneration;
-    using Fifthweek.Api.Subscriptions.Shared;
 
     public partial class UpdatedChannelData 
     {
@@ -911,7 +904,6 @@ namespace Fifthweek.Api.Channels.Commands
     using System.Linq;
     using Fifthweek.Api.Channels.Shared;
     using Fifthweek.Api.Identity.Shared.Membership;
-    using Fifthweek.Api.Subscriptions.Shared;
     using Fifthweek.CodeGeneration;
     using System.Threading.Tasks;
     using Fifthweek.Api.Core;
@@ -980,19 +972,20 @@ namespace Fifthweek.Api.Channels.Controllers
     using System.Linq;
     using System.Threading.Tasks;
     using System.Web.Http;
+
+    using Fifthweek.Api.Blogs.Shared;
     using Fifthweek.Api.Channels.Commands;
     using Fifthweek.Api.Channels.Shared;
     using Fifthweek.Api.Core;
     using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.CodeGeneration;
-    using Fifthweek.Api.Subscriptions.Shared;
 
     public partial class NewChannelData 
     {
         public class Parsed
         {
             public Parsed(
-                Fifthweek.Api.Subscriptions.Shared.BlogId blogId,
+                BlogId blogId,
                 ValidChannelName name,
                 ValidChannelDescription description,
                 ValidChannelPriceInUsCentsPerWeek price,
@@ -1030,7 +1023,7 @@ namespace Fifthweek.Api.Channels.Controllers
                 this.IsVisibleToNonSubscribers = isVisibleToNonSubscribers;
             }
         
-            public Fifthweek.Api.Subscriptions.Shared.BlogId BlogId { get; private set; }
+            public BlogId BlogId { get; private set; }
         
             public ValidChannelName Name { get; private set; }
         
@@ -1130,7 +1123,6 @@ namespace Fifthweek.Api.Channels.Controllers
     using Fifthweek.Api.Core;
     using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.CodeGeneration;
-    using Fifthweek.Api.Subscriptions.Shared;
 
     public partial class UpdatedChannelData 
     {

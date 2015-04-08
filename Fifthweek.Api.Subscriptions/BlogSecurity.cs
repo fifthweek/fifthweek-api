@@ -1,12 +1,11 @@
-namespace Fifthweek.Api.Subscriptions
+namespace Fifthweek.Api.Blogs
 {
     using System.Threading.Tasks;
 
+    using Fifthweek.Api.Blogs.Shared;
     using Fifthweek.Api.Core;
     using Fifthweek.Api.Identity.Shared.Membership;
-    using Fifthweek.Api.Persistence;
     using Fifthweek.Api.Persistence.Identity;
-    using Fifthweek.Api.Subscriptions.Shared;
     using Fifthweek.CodeGeneration;
     using Fifthweek.Shared;
 

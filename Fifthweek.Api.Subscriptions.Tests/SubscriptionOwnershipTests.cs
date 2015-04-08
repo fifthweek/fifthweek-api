@@ -1,13 +1,13 @@
-﻿namespace Fifthweek.Api.Subscriptions.Tests
+﻿namespace Fifthweek.Api.Blogs.Tests
 {
     using System;
     using System.Threading.Tasks;
 
     using Dapper;
 
+    using Fifthweek.Api.Blogs.Shared;
     using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.Api.Persistence.Tests.Shared;
-    using Fifthweek.Api.Subscriptions.Shared;
 
     using Microsoft.VisualStudio.TestTools.UnitTesting;
 

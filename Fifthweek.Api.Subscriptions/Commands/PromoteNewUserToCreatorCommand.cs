@@ -1,4 +1,4 @@
-﻿namespace Fifthweek.Api.Subscriptions.Commands
+﻿namespace Fifthweek.Api.Blogs.Commands
 {
     using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.CodeGeneration;

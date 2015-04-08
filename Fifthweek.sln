@@ -38,9 +38,9 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fifthweek.Api.Persistence.T
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fifthweek.Api.SendGrid.Tests", "Fifthweek.Api.SendGrid.Tests\Fifthweek.Api.SendGrid.Tests.csproj", "{F91E5854-C180-4F6D-9AA5-D657C202F1AE}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fifthweek.Api.Subscriptions", "Fifthweek.Api.Subscriptions\Fifthweek.Api.Subscriptions.csproj", "{5DB142B7-3152-447E-8816-33A90BA9EF76}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fifthweek.Api.Blogs", "Fifthweek.Api.Subscriptions\Fifthweek.Api.Blogs.csproj", "{5DB142B7-3152-447E-8816-33A90BA9EF76}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fifthweek.Api.Subscriptions.Tests", "Fifthweek.Api.Subscriptions.Tests\Fifthweek.Api.Subscriptions.Tests.csproj", "{F11F6CD5-E9FF-4324-9EF9-0ED9CE26C8BE}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fifthweek.Api.Blogs.Tests", "Fifthweek.Api.Subscriptions.Tests\Fifthweek.Api.Blogs.Tests.csproj", "{F11F6CD5-E9FF-4324-9EF9-0ED9CE26C8BE}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fifthweek.Api.FileManagement", "Fifthweek.Api.FileManagement\Fifthweek.Api.FileManagement.csproj", "{3242E7FC-35CE-4E69-B07B-B8DCB3C69348}"
 EndProject
@@ -146,7 +146,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fifthweek.Api.Posts.Shared"
 		{9C18BEE3-FAB5-4A00-8A94-A1FAEA370175} = {9C18BEE3-FAB5-4A00-8A94-A1FAEA370175}
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fifthweek.Api.Subscriptions.Shared", "Fifthweek.Api.Subscriptions.Shared\Fifthweek.Api.Subscriptions.Shared.csproj", "{B2D572A4-86C5-4F16-AB6A-CE87A63E08DD}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fifthweek.Api.Blogs.Shared", "Fifthweek.Api.Subscriptions.Shared\Fifthweek.Api.Blogs.Shared.csproj", "{B2D572A4-86C5-4F16-AB6A-CE87A63E08DD}"
 	ProjectSection(ProjectDependencies) = postProject
 		{9C18BEE3-FAB5-4A00-8A94-A1FAEA370175} = {9C18BEE3-FAB5-4A00-8A94-A1FAEA370175}
 	EndProjectSection

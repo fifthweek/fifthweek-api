@@ -2,6 +2,8 @@
 {
     using System.Threading.Tasks;
 
+    using Fifthweek.Api.Blogs;
+    using Fifthweek.Api.Blogs.Queries;
     using Fifthweek.Api.Collections.Queries;
     using Fifthweek.Api.Core;
     using Fifthweek.Api.FileManagement.Queries;
@@ -9,8 +11,6 @@
     using Fifthweek.Api.Identity.Membership.Queries;
     using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.Api.Persistence.Identity;
-    using Fifthweek.Api.Subscriptions;
-    using Fifthweek.Api.Subscriptions.Queries;
     using Fifthweek.CodeGeneration;
     using Fifthweek.Shared;
 
