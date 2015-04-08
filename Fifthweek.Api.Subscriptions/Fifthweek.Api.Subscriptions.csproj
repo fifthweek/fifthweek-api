@@ -84,8 +84,8 @@
     <Compile Include="GetSubscriptionDbStatement.cs" />
     <Compile Include="IGetSubscriptionDbStatement.cs" />
     <Compile Include="Queries\GetSubscriptionResult.cs" />
-    <Compile Include="SubscriptionOwnership.cs" />
-    <Compile Include="ISubscriptionOwnership.cs" />
+    <Compile Include="BlogOwnership.cs" />
+    <Compile Include="IBlogOwnership.cs" />
     <Compile Include="ClassAugmentation.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>

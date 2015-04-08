@@ -315,7 +315,7 @@
                 await databaseContext.Database.Connection.InsertAsync(subscription);
 
                 var channel = ChannelTests.UniqueEntity(Random);
-                channel.SubscriptionId = subscription.Id;
+                channel.BlogId = subscription.Id;
                 await databaseContext.Database.Connection.InsertAsync(channel);
 
                 var collection = CollectionTests.UniqueEntity(Random);

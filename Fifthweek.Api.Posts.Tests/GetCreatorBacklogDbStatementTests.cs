@@ -265,7 +265,7 @@
 
                     var channel = ChannelTests.UniqueEntity(Random);
                     channel.Id = channelId.Value;
-                    channel.SubscriptionId = SubscriptionId.Value;
+                    channel.BlogId = SubscriptionId.Value;
 
                     channelEntities.Add(channel);
 

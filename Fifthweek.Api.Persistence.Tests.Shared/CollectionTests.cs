@@ -31,8 +31,8 @@
 
             var channel = ChannelTests.UniqueEntity(random);
             channel.Id = newChannelId;
-            channel.Subscription = subscription;
-            channel.SubscriptionId = subscription.Id;
+            channel.Blog = subscription;
+            channel.BlogId = subscription.Id;
 
             var collection = CollectionTests.UniqueEntity(random);
             collection.Id = newCollectionId;
@@ -58,8 +58,8 @@
 
             var channel = ChannelTests.UniqueEntity(random);
             channel.Id = newChannelId;
-            channel.Subscription = subscription;
-            channel.SubscriptionId = subscription.Id;
+            channel.Blog = subscription;
+            channel.BlogId = subscription.Id;
 
             var collection = CollectionTests.UniqueEntity(random);
             collection.Id = newCollectionId;

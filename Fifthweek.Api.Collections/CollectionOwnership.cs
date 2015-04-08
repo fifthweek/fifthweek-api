@@ -27,10 +27,10 @@ namespace Fifthweek.Api.Collections
                                 FROM        Collections collection
                                 INNER JOIN  Channels channel        
                                     ON      collection.ChannelId = channel.Id
-                                INNER JOIN  Subscriptions subscription
-                                    ON      channel.SubscriptionId  = subscription.Id
+                                INNER JOIN  Blogs blog
+                                    ON      channel.BlogId  = blog.Id
                                 WHERE       collection.Id           = @CollectionId
-                                AND         subscription.CreatorId  = @CreatorId)
+                                AND         blog.CreatorId  = @CreatorId)
                         SELECT 1 AS FOUND
                     ELSE
                         SELECT 0 AS FOUND",

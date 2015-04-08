@@ -25,10 +25,10 @@
                 INNER JOIN {1} s ON c.{2} = s.{3} 
                 WHERE s.{4} = @CreatorId;",
                 Persistence.Channel.Table,
-                Persistence.Subscription.Table,
-                Persistence.Channel.Fields.SubscriptionId,
-                Persistence.Subscription.Fields.Id,
-                Persistence.Subscription.Fields.CreatorId);
+                Persistence.Blog.Table,
+                Persistence.Channel.Fields.BlogId,
+                Persistence.Blog.Fields.Id,
+                Persistence.Blog.Fields.CreatorId);
 
         private static readonly string CollectionsQuery = string.Format(
             @"SELECT col.{0}, col.{1}, ch.{2} AS {3} FROM {4} col 
@@ -43,10 +43,10 @@
             Persistence.Channel.Table,
             Persistence.Collection.Fields.ChannelId,
             Persistence.Channel.Fields.Id,
-            Persistence.Subscription.Table,
-            Persistence.Channel.Fields.SubscriptionId,
-            Persistence.Subscription.Fields.Id,
-            Persistence.Subscription.Fields.CreatorId);
+            Persistence.Blog.Table,
+            Persistence.Channel.Fields.BlogId,
+            Persistence.Blog.Fields.Id,
+            Persistence.Blog.Fields.CreatorId);
 
         private static readonly string WeeklyReleaseScheduleQuery = string.Format(
             @"SELECT wrt.* FROM {0} wrt
@@ -61,10 +61,10 @@
             Persistence.Channel.Table,
             Persistence.Collection.Fields.ChannelId,
             Persistence.Channel.Fields.Id,
-            Persistence.Subscription.Table,
-            Persistence.Channel.Fields.SubscriptionId,
-            Persistence.Subscription.Fields.Id,
-            Persistence.Subscription.Fields.CreatorId);
+            Persistence.Blog.Table,
+            Persistence.Channel.Fields.BlogId,
+            Persistence.Blog.Fields.Id,
+            Persistence.Blog.Fields.CreatorId);
 
         private static readonly string Query = ChannelsQuery + CollectionsQuery + WeeklyReleaseScheduleQuery;
 

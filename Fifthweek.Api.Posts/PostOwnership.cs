@@ -27,10 +27,10 @@
                                 FROM        Posts post
                                 INNER JOIN  Channels channel
                                     ON      post.ChannelId          = channel.Id
-                                INNER JOIN  Subscriptions subscription 
-                                    ON      channel.SubscriptionId  = subscription.Id
+                                INNER JOIN  Blogs blog 
+                                    ON      channel.BlogId  = blog.Id
                                 WHERE       post.Id                 = @PostId
-                                AND         subscription.CreatorId  = @CreatorId)
+                                AND         blog.CreatorId  = @CreatorId)
                         SELECT 1 AS FOUND
                     ELSE
                         SELECT 0 AS FOUND",

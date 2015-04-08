@@ -17,7 +17,7 @@
 
         IDbSet<FifthweekRole> Roles { get; }
 
-        IDbSet<Subscription> Subscriptions { get; }
+        IDbSet<Blog> Blogs { get; }
 
         IDbSet<Channel> Channels { get; }
 

@@ -5,9 +5,9 @@
 
     public static class SubscriptionTests
     {
-        public static Subscription UniqueEntity(Random random)
+        public static Blog UniqueEntity(Random random)
         {
-            return new Subscription(
+            return new Blog(
                 Guid.NewGuid(),
                 default(Guid),
                 null,
@@ -43,7 +43,7 @@
                 subscription.HeaderImageFileId = file.Id;
             }
 
-            databaseContext.Subscriptions.Add(subscription);
+            databaseContext.Blogs.Add(subscription);
             return databaseContext.SaveChangesAsync();
         }
     }

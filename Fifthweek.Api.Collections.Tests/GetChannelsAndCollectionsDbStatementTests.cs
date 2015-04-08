@@ -105,14 +105,14 @@
                 // First channel has no collections.
                 var channel1 = ChannelTests.UniqueEntity(random);
                 channel1.Id = ChannelId1.Value;
-                channel1.Subscription = subscription;
-                channel1.SubscriptionId = subscription.Id;
+                channel1.Blog = subscription;
+                channel1.BlogId = subscription.Id;
 
                 // Second channel has one collection.
                 var channel2 = ChannelTests.UniqueEntity(random);
                 channel2.Id = ChannelId2.Value;
-                channel2.Subscription = subscription;
-                channel2.SubscriptionId = subscription.Id;
+                channel2.Blog = subscription;
+                channel2.BlogId = subscription.Id;
 
                 var collection1 = CollectionTests.UniqueEntity(random);
                 collection1.Id = CollectionId1.Value;
@@ -122,8 +122,8 @@
                 // Third channel has two collections.
                 var channel3 = ChannelTests.UniqueEntity(random);
                 channel3.Id = ChannelId3.Value;
-                channel3.Subscription = subscription;
-                channel3.SubscriptionId = subscription.Id;
+                channel3.Blog = subscription;
+                channel3.BlogId = subscription.Id;
 
                 var collection2 = CollectionTests.UniqueEntity(random);
                 collection2.Id = CollectionId2.Value;

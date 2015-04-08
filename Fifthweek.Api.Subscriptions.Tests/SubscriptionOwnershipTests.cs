@@ -16,14 +16,14 @@
     {
         private static readonly UserId UserId = new UserId(Guid.NewGuid());
         private static readonly SubscriptionId SubscriptionId = new SubscriptionId(Guid.NewGuid());
-        private SubscriptionOwnership target;
+        private BlogOwnership target;
 
         [TestMethod]
         public async Task WhenCheckingSubscriptionOwnership_ItShouldPassIfAtLeastOneSubscriptionMatchesSubscriptionAndCreator()
         {
             await this.DatabaseTestAsync(async testDatabase =>
             {
-                this.target = new SubscriptionOwnership(testDatabase);
+                this.target = new BlogOwnership(testDatabase);
                 await this.CreateSubscriptionAsync(UserId, SubscriptionId, testDatabase);
                 await testDatabase.TakeSnapshotAsync();
 
@@ -39,11 +39,11 @@
         {
             await this.DatabaseTestAsync(async testDatabase =>
             {
-                this.target = new SubscriptionOwnership(testDatabase);
+                this.target = new BlogOwnership(testDatabase);
 
                 using (var databaseContext = testDatabase.CreateContext())
                 {
-                    await databaseContext.Database.Connection.ExecuteAsync("DELETE FROM Subscriptions");
+                    await databaseContext.Database.Connection.ExecuteAsync("DELETE FROM Blogs");
                 }
 
                 await testDatabase.TakeSnapshotAsync();
@@ -60,7 +60,7 @@
         {
             await this.DatabaseTestAsync(async testDatabase =>
             {
-                this.target = new SubscriptionOwnership(testDatabase);
+                this.target = new BlogOwnership(testDatabase);
                 await this.CreateSubscriptionAsync(new UserId(Guid.NewGuid()), new SubscriptionId(Guid.NewGuid()), testDatabase);
                 await testDatabase.TakeSnapshotAsync();
 
@@ -76,7 +76,7 @@
         {
             await this.DatabaseTestAsync(async testDatabase =>
             {
-                this.target = new SubscriptionOwnership(testDatabase);
+                this.target = new BlogOwnership(testDatabase);
                 await this.CreateSubscriptionAsync(UserId, new SubscriptionId(Guid.NewGuid()), testDatabase);
                 await testDatabase.TakeSnapshotAsync();
 
@@ -92,7 +92,7 @@
         {
             await this.DatabaseTestAsync(async testDatabase =>
             {
-                this.target = new SubscriptionOwnership(testDatabase);
+                this.target = new BlogOwnership(testDatabase);
                 await this.CreateSubscriptionAsync(new UserId(Guid.NewGuid()), SubscriptionId, testDatabase);
                 await testDatabase.TakeSnapshotAsync();
 

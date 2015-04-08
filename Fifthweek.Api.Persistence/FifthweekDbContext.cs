@@ -21,7 +21,7 @@ namespace Fifthweek.Api.Persistence
 
         public IDbSet<RefreshToken> RefreshTokens { get; set; }
 
-        public IDbSet<Subscription> Subscriptions { get; set; }
+        public IDbSet<Blog> Blogs { get; set; }
 
         public IDbSet<Channel> Channels { get; set; }
         

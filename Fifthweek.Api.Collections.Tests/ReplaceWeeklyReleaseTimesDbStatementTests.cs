@@ -141,8 +141,8 @@
 
                 var channel = ChannelTests.UniqueEntity(random);
                 channel.Id = ChannelId.Value;
-                channel.Subscription = subscription;
-                channel.SubscriptionId = subscription.Id;
+                channel.Blog = subscription;
+                channel.BlogId = subscription.Id;
 
                 var collection = CollectionTests.UniqueEntity(random);
                 collection.Id = CollectionId.Value;

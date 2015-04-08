@@ -98,13 +98,13 @@
 
                 var orignalChannel = ChannelTests.UniqueEntity(random);
                 orignalChannel.Id = Guid.NewGuid();
-                orignalChannel.Subscription = subscription;
-                orignalChannel.SubscriptionId = subscription.Id;
+                orignalChannel.Blog = subscription;
+                orignalChannel.BlogId = subscription.Id;
 
                 var newChannel = ChannelTests.UniqueEntity(random);
                 newChannel.Id = ChannelId.Value;
-                newChannel.Subscription = subscription;
-                newChannel.SubscriptionId = subscription.Id;
+                newChannel.Blog = subscription;
+                newChannel.BlogId = subscription.Id;
 
                 var collection = CollectionTests.UniqueEntity(random);
                 collection.Id = CollectionId.Value;

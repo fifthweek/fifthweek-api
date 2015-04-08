@@ -21,14 +21,14 @@
         private static readonly Requester Requester = Requester.Authenticated(UserId);
         private static readonly SubscriptionId SubscriptionId = new SubscriptionId(Guid.NewGuid());
         private Mock<IRequesterSecurity> requesterSecurity;
-        private Mock<ISubscriptionOwnership> subscriptionOwnership;
+        private Mock<IBlogOwnership> subscriptionOwnership;
         private SubscriptionSecurity target;
 
         [TestInitialize]
         public void Initialize()
         {
             this.requesterSecurity = new Mock<IRequesterSecurity>();
-            this.subscriptionOwnership = new Mock<ISubscriptionOwnership>();
+            this.subscriptionOwnership = new Mock<IBlogOwnership>();
             this.target = new SubscriptionSecurity(this.requesterSecurity.Object, this.subscriptionOwnership.Object);
         }
 

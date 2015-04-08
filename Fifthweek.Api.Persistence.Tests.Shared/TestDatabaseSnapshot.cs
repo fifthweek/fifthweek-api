@@ -30,7 +30,7 @@
 
             this.tables.Add(this.Load(databaseContext => databaseContext.EndToEndTestEmails));
             this.tables.Add(this.Load(databaseContext => databaseContext.Users));
-            this.tables.Add(this.Load(databaseContext => databaseContext.Subscriptions));
+            this.tables.Add(this.Load(databaseContext => databaseContext.Blogs));
             this.tables.Add(this.Load(databaseContext => databaseContext.Channels));
             this.tables.Add(this.Load(databaseContext => databaseContext.Collections));
             this.tables.Add(this.Load(databaseContext => databaseContext.WeeklyReleaseTimes));

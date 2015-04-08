@@ -41,7 +41,7 @@
 
         private async Task CreateEntitiesAsync(CreateSubscriptionCommand command, UserId authenticatedUserId)
         {
-            var subscription = new Subscription(
+            var subscription = new Blog(
                 command.NewSubscriptionId.Value,
                 authenticatedUserId.Value,
                 null,

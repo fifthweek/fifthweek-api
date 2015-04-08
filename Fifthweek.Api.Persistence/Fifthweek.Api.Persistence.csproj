@@ -242,6 +242,10 @@
     <Compile Include="Migrations\201504031543042_AddFileProcessingInformationToFilesTable.Designer.cs">
       <DependentUpon>201504031543042_AddFileProcessingInformationToFilesTable.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201504080915446_RenameSubscriptionToBlog.cs" />
+    <Compile Include="Migrations\201504080915446_RenameSubscriptionToBlog.Designer.cs">
+      <DependentUpon>201504080915446_RenameSubscriptionToBlog.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Post.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -249,7 +253,7 @@
     <Compile Include="File.cs" />
     <Compile Include="SqlGenerationParameters.cs" />
     <Compile Include="SqlStatementTemplates.cs" />
-    <Compile Include="Subscription.cs" />
+    <Compile Include="Blog.cs" />
     <Compile Include="WeeklyReleaseTime.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -372,6 +376,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201504031543042_AddFileProcessingInformationToFilesTable.resx">
       <DependentUpon>201504031543042_AddFileProcessingInformationToFilesTable.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201504080915446_RenameSubscriptionToBlog.resx">
+      <DependentUpon>201504080915446_RenameSubscriptionToBlog.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>

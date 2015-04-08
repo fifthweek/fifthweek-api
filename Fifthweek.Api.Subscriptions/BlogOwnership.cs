@@ -10,35 +10,35 @@
     using Fifthweek.CodeGeneration;
 
     [AutoConstructor]
-    public partial class SubscriptionOwnership : ISubscriptionOwnership
+    public partial class BlogOwnership : IBlogOwnership
     {
         private readonly IFifthweekDbConnectionFactory connectionFactory;
 
-        public async Task<bool> IsOwnerAsync(UserId userId, Shared.SubscriptionId subscriptionId)
+        public async Task<bool> IsOwnerAsync(UserId userId, Shared.SubscriptionId blogId)
         {
             if (userId == null)
             {
                 throw new ArgumentNullException("userId");
             }
 
-            if (subscriptionId == null)
+            if (blogId == null)
             {
-                throw new ArgumentNullException("subscriptionId");
+                throw new ArgumentNullException("blogId");
             }
 
             using (var connection = this.connectionFactory.CreateConnection())
             {
                 return await connection.ExecuteScalarAsync<bool>(
                     @"IF EXISTS(SELECT *
-                                FROM   Subscriptions
-                                WHERE  Id = @SubscriptionId
+                                FROM   Blogs
+                                WHERE  Id = @BlogId
                                 AND    CreatorId = @CreatorId)
                         SELECT 1 AS FOUND
                     ELSE
                         SELECT 0 AS FOUND",
                     new
                     {
-                        SubscriptionId = subscriptionId.Value,
+                        BlogId = blogId.Value,
                         CreatorId = userId.Value
                     });
             }

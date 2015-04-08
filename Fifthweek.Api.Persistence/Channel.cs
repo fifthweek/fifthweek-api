@@ -17,10 +17,10 @@
         public Guid Id { get; set; }
 
         [Required, Index]
-        public Guid SubscriptionId { get; set; }
+        public Guid BlogId { get; set; }
 
         [Required, Optional, NonEquatable]
-        public Subscription Subscription { get; set; }
+        public Blog Blog { get; set; }
 
         [Required]
         [MaxLength(50)] // See: ValidChannelName.MaxLength

@@ -95,7 +95,7 @@
 
                 await this.target.HandleAsync(Command);
 
-                var expectedSubscription = new Subscription(
+                var expectedSubscription = new Blog(
                     SubscriptionId.Value,
                     UserId.Value,
                     null,
@@ -110,7 +110,7 @@
 
                 return new ExpectedSideEffects
                 {
-                    Insert = new WildcardEntity<Subscription>(expectedSubscription)
+                    Insert = new WildcardEntity<Blog>(expectedSubscription)
                     {
                         Expected = actualSubscription =>
                         {
@@ -154,7 +154,7 @@
                             return expectedChannel;
                         }
                     },
-                    ExcludedFromTest = entity => entity is Subscription
+                    ExcludedFromTest = entity => entity is Blog
                 };
             });
         }

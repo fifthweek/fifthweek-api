@@ -48,7 +48,7 @@
             {
                 // Do not update visibility for the default channel: it must always be visible.
                 var channelId = command.ChannelId.Value;
-                var subscriptionId = await context.Channels.Where(_ => _.Id == channelId).Select(_ => _.SubscriptionId).FirstAsync();
+                var subscriptionId = await context.Channels.Where(_ => _.Id == channelId).Select(_ => _.BlogId).FirstAsync();
                 if (subscriptionId == channelId)
                 {
                     updatedFields &= ~Channel.Fields.IsVisibleToNonSubscribers;

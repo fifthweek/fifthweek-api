@@ -146,7 +146,7 @@
 
                 await this.target.HandleAsync(Command);
 
-                var expectedSubscription = new Subscription(
+                var expectedSubscription = new Blog(
                     SubscriptionId.Value,
                     UserId.Value,
                     null,
@@ -177,7 +177,7 @@
 
                 await this.target.HandleAsync(CommandWithoutHeaderImage);
 
-                var expectedSubscription = new Subscription(
+                var expectedSubscription = new Blog(
                     SubscriptionId.Value,
                     UserId.Value,
                     null,
@@ -197,7 +197,7 @@
             });
         }
 
-        private async Task<Subscription> CreateSubscriptionAsync(UserId newUserId, SubscriptionId newSubscriptionId, TestDatabaseContext testDatabase)
+        private async Task<Blog> CreateSubscriptionAsync(UserId newUserId, SubscriptionId newSubscriptionId, TestDatabaseContext testDatabase)
         {
             using (var databaseContext = testDatabase.CreateContext())
             {
@@ -211,7 +211,7 @@
 
             using (var databaseContext = testDatabase.CreateContext())
             {
-                return await databaseContext.Subscriptions.SingleAsync(_ => _.Id == newSubscriptionId.Value);
+                return await databaseContext.Blogs.SingleAsync(_ => _.Id == newSubscriptionId.Value);
             }
         }
     }

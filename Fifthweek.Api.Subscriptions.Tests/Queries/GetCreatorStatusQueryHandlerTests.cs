@@ -186,7 +186,7 @@
 
                 using (var databaseContext = testDatabase.CreateContext())
                 {
-                    await databaseContext.Database.Connection.ExecuteAsync("DELETE FROM Subscriptions");
+                    await databaseContext.Database.Connection.ExecuteAsync("DELETE FROM Blogs");
                 }
 
                 await testDatabase.TakeSnapshotAsync();
@@ -238,8 +238,8 @@
 
             var channel = ChannelTests.UniqueEntity(random);
             channel.Id = newSubscriptionId.Value; // Create default channel.
-            channel.Subscription = subscription;
-            channel.SubscriptionId = subscription.Id;
+            channel.Blog = subscription;
+            channel.BlogId = subscription.Id;
 
             if (newUser)
             {
@@ -280,7 +280,7 @@
                 if (createNewChannel)
                 {
                     var channel = ChannelTests.UniqueEntity(random);
-                    channel.SubscriptionId = SubscriptionId.Value;
+                    channel.BlogId = SubscriptionId.Value;
                     await databaseContext.Database.Connection.InsertAsync(channel, false);
 
                     post.ChannelId = channel.Id;

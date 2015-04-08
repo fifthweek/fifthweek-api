@@ -35,13 +35,13 @@
             ORDER BY		subscription.{8} DESC",
             Channel.Table,
             Channel.Fields.Id,
-            Channel.Fields.SubscriptionId,
+            Channel.Fields.BlogId,
             Post.Table,
             Post.Fields.ChannelId,
-            Subscription.Table,
-            Subscription.Fields.Id,
-            Subscription.Fields.CreatorId,
-            Subscription.Fields.CreationDate);
+            Blog.Table,
+            Blog.Fields.Id,
+            Blog.Fields.CreatorId,
+            Blog.Fields.CreationDate);
 
         private readonly IRequesterSecurity requesterSecurity;
         private readonly IFifthweekDbConnectionFactory connectionFactory;

@@ -4,7 +4,7 @@
 
     using Fifthweek.Api.Identity.Shared.Membership;
 
-    public interface ISubscriptionOwnership
+    public interface IBlogOwnership
     {
         Task<bool> IsOwnerAsync(UserId userId, Shared.SubscriptionId subscriptionId);
     }

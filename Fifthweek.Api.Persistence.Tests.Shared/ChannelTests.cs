@@ -35,8 +35,8 @@
 
             var channel = ChannelTests.UniqueEntity(random);
             channel.Id = newChannelId;
-            channel.Subscription = subscription;
-            channel.SubscriptionId = subscription.Id;
+            channel.Blog = subscription;
+            channel.BlogId = subscription.Id;
 
             databaseContext.Channels.Add(channel);
             return databaseContext.SaveChangesAsync();

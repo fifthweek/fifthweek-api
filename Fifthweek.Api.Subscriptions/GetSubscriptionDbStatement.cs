@@ -25,11 +25,11 @@
 
             using (var connection = this.connectionFactory.CreateConnection())
             {
-                var items = await connection.QueryAsync<Subscription>(
+                var items = await connection.QueryAsync<Blog>(
                     string.Format(
                         @"SELECT * FROM {0} WHERE {1}=@{1}",
-                        Subscription.Table,
-                        Subscription.Fields.Id),
+                        Blog.Table,
+                        Blog.Fields.Id),
                     new { Id = subscriptionId.Value });
 
                 var result = items.SingleOrDefault();

@@ -72,10 +72,10 @@
             Post.Fields.CollectionId,
             Channel.Table,
             Channel.Fields.Id,
-            Channel.Fields.SubscriptionId,
-            Subscription.Table,
-            Subscription.Fields.Id,
-            Subscription.Fields.CreatorId);
+            Channel.Fields.BlogId,
+            Blog.Table,
+            Blog.Fields.Id,
+            Blog.Fields.CreatorId);
 
         private readonly IRequesterSecurity requesterSecurity;
         private readonly IFifthweekDbConnectionFactory connectionFactory;

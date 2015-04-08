@@ -8,9 +8,9 @@
     using Fifthweek.CodeGeneration;
 
     [AutoConstructor, AutoEqualityMembers, AutoSql]
-    public partial class Subscription
+    public partial class Blog
     {
-        public Subscription()
+        public Blog()
         {
         }
 
@@ -24,7 +24,7 @@
         public FifthweekUser Creator { get; set; }
 
         [Required]
-        [MaxLength(25)] // See: ValidSubscriptionName.MaxLength
+        [MaxLength(25)] // See: ValidBlogName.MaxLength
         public string Name { get; set; }
 
         [Required]

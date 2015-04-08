@@ -35,7 +35,7 @@
 
         private readonly List<EndToEndTestEmail> endToEndTestEmails = new List<EndToEndTestEmail>();
         private readonly List<FifthweekUser> users = new List<FifthweekUser>();
-        private readonly List<Subscription> subscriptions = new List<Subscription>();
+        private readonly List<Blog> subscriptions = new List<Blog>();
         private readonly List<Channel> channels = new List<Channel>();
         private readonly List<Collection> collections = new List<Collection>();
         private readonly List<WeeklyReleaseTime> weeklyReleaseTimes = new List<WeeklyReleaseTime>();
@@ -193,13 +193,13 @@
             }
         }
 
-        private void CreateChannels(Subscription subscription)
+        private void CreateChannels(Blog blog)
         {
             for (var channelIndex = 0; channelIndex < ChannelsPerSubscription; channelIndex++)
             {
                 var channel = ChannelTests.UniqueEntity(Random);
-                channel.Subscription = subscription;
-                channel.SubscriptionId = subscription.Id;
+                channel.Blog = blog;
+                channel.BlogId = blog.Id;
                 this.channels.Add(channel);
 
                 this.CreateNotes(channel);
@@ -246,8 +246,8 @@
                 post.CollectionId = collection.Id;
 
                 var file = FileTests.UniqueEntity(Random);
-                file.User = collection.Channel.Subscription.Creator;
-                file.UserId = collection.Channel.Subscription.Creator.Id;
+                file.User = collection.Channel.Blog.Creator;
+                file.UserId = collection.Channel.Blog.Creator.Id;
                 post.Image = file;
                 post.ImageId = file.Id;
 
@@ -264,8 +264,8 @@
                 post.CollectionId = collection.Id;
 
                 var file = FileTests.UniqueEntity(Random);
-                file.User = collection.Channel.Subscription.Creator;
-                file.UserId = collection.Channel.Subscription.Creator.Id;
+                file.User = collection.Channel.Blog.Creator;
+                file.UserId = collection.Channel.Blog.Creator.Id;
                 post.File = file;
                 post.FileId = file.Id;
 

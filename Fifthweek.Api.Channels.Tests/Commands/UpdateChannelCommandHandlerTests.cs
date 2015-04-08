@@ -114,7 +114,7 @@
                     {
                         Expected = actual =>
                         {
-                            expectedChannel.SubscriptionId = actual.SubscriptionId;
+                            expectedChannel.BlogId = actual.BlogId;
                             expectedChannel.CreationDate = actual.CreationDate;
                             return expectedChannel;
                         }
@@ -148,7 +148,7 @@
                     {
                         Expected = actual =>
                         {
-                            expectedChannel.SubscriptionId = actual.SubscriptionId;
+                            expectedChannel.BlogId = actual.BlogId;
                             expectedChannel.CreationDate = actual.CreationDate;
                             return expectedChannel;
                         }

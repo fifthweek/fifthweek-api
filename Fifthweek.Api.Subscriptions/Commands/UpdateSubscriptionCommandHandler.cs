@@ -37,7 +37,7 @@
 
         private async Task UpdateSubscriptionAsync(UpdateSubscriptionCommand command)
         {
-            var subscription = new Subscription(
+            var subscription = new Blog(
                 command.SubscriptionId.Value,
                 default(Guid),
                 null,
@@ -54,12 +54,12 @@
             {
                 await connection.UpdateAsync(
                     subscription,
-                    Subscription.Fields.Name |
-                    Subscription.Fields.Tagline |
-                    Subscription.Fields.Introduction |
-                    Subscription.Fields.Description |
-                    Subscription.Fields.ExternalVideoUrl |
-                    Subscription.Fields.HeaderImageFileId);
+                    Blog.Fields.Name |
+                    Blog.Fields.Tagline |
+                    Blog.Fields.Introduction |
+                    Blog.Fields.Description |
+                    Blog.Fields.ExternalVideoUrl |
+                    Blog.Fields.HeaderImageFileId);
             }
         }
     }

@@ -14,7 +14,7 @@ namespace Fifthweek.Api.Subscriptions
     public partial class SubscriptionSecurity : ISubscriptionSecurity
     {
         private readonly IRequesterSecurity requesterSecurity;
-        private readonly ISubscriptionOwnership subscriptionOwnership;
+        private readonly IBlogOwnership blogOwnership;
 
         public Task<bool> IsCreationAllowedAsync(Requester requester)
         {
@@ -28,7 +28,7 @@ namespace Fifthweek.Api.Subscriptions
             requester.AssertNotNull("requester");
             subscriptionId.AssertNotNull("subscriptionId");
 
-            return this.subscriptionOwnership.IsOwnerAsync(requester, subscriptionId);
+            return this.blogOwnership.IsOwnerAsync(requester, subscriptionId);
         }
 
         public async Task AssertCreationAllowedAsync(Requester requester)

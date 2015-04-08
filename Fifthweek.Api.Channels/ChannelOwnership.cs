@@ -25,10 +25,10 @@
                 return await connection.ExecuteScalarAsync<bool>(
                     @"IF EXISTS(SELECT *
                                 FROM        Channels channel
-                                INNER JOIN  Subscriptions subscription 
-                                    ON      channel.SubscriptionId  = subscription.Id
+                                INNER JOIN  Blogs blog
+                                    ON      channel.BlogId  = blog.Id
                                 WHERE       channel.Id              = @ChannelId
-                                AND         subscription.CreatorId  = @CreatorId)
+                                AND         blog.CreatorId  = @CreatorId)
                         SELECT 1 AS FOUND
                     ELSE
                         SELECT 0 AS FOUND",

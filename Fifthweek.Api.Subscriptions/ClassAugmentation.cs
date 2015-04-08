@@ -483,9 +483,9 @@ namespace Fifthweek.Api.Subscriptions
     using Fifthweek.Api.Subscriptions.Shared;
     using Fifthweek.Api.FileManagement.Shared;
 
-    public partial class SubscriptionOwnership 
+    public partial class BlogOwnership 
     {
-        public SubscriptionOwnership(
+        public BlogOwnership(
             Fifthweek.Api.Persistence.IFifthweekDbConnectionFactory connectionFactory)
         {
             if (connectionFactory == null)
@@ -515,20 +515,20 @@ namespace Fifthweek.Api.Subscriptions
     {
         public SubscriptionSecurity(
             Fifthweek.Api.Identity.Shared.Membership.IRequesterSecurity requesterSecurity,
-            Fifthweek.Api.Subscriptions.ISubscriptionOwnership subscriptionOwnership)
+            Fifthweek.Api.Subscriptions.IBlogOwnership blogOwnership)
         {
             if (requesterSecurity == null)
             {
                 throw new ArgumentNullException("requesterSecurity");
             }
 
-            if (subscriptionOwnership == null)
+            if (blogOwnership == null)
             {
-                throw new ArgumentNullException("subscriptionOwnership");
+                throw new ArgumentNullException("blogOwnership");
             }
 
             this.requesterSecurity = requesterSecurity;
-            this.subscriptionOwnership = subscriptionOwnership;
+            this.blogOwnership = blogOwnership;
         }
     }
 }
