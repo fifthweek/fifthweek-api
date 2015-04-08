@@ -32,7 +32,7 @@ angular.module('webApp').factory('channelStub',
     var service = {};
 
     // newChannelData = {
-    //   subscriptionId: 'Base64Guid',
+    //   blogId: 'Base64Guid',
     //   name: '',
     //   description: '',
     //   price: 0,
@@ -464,45 +464,45 @@ angular.module('webApp').factory('postsStub',
     return service;
   });
 
-angular.module('webApp').factory('subscriptionStub',
+angular.module('webApp').factory('blogStub',
   function($http, $q, fifthweekConstants, utilities) {
     'use strict';
 
     var apiBaseUri = fifthweekConstants.apiBaseUri;
     var service = {};
 
-    // subscriptionData = {
-    //   subscriptionName: '',
+    // blogData = {
+    //   blogName: '',
     //   tagline: '',
     //   basePrice: 0
     // }
     // result = 'Base64Guid'
-    service.postSubscription = function(subscriptionData) {
-      return $http.post(apiBaseUri + 'subscriptions', subscriptionData).catch(function(response) {
+    service.postSubscription = function(blogData) {
+      return $http.post(apiBaseUri + 'blogs', blogData).catch(function(response) {
         return $q.reject(utilities.getHttpError(response));
       });
     };
 
-    // subscriptionId = 'Base64Guid'
-    // subscriptionData = {
-    //   subscriptionName: '',
+    // blogId = 'Base64Guid'
+    // blogData = {
+    //   blogName: '',
     //   tagline: '',
     //   introduction: '',
     //   headerImageFileId: 'Base64Guid', /* optional */
     //   video: '', /* optional */
     //   description: '' /* optional */
     // }
-    service.putSubscription = function(subscriptionId, subscriptionData) {
-      return $http.put(apiBaseUri + 'subscriptions/' + encodeURIComponent(subscriptionId), subscriptionData).catch(function(response) {
+    service.putSubscription = function(blogId, blogData) {
+      return $http.put(apiBaseUri + 'blogs/' + encodeURIComponent(blogId), blogData).catch(function(response) {
         return $q.reject(utilities.getHttpError(response));
       });
     };
 
-    // subscriptionId = 'Base64Guid'
+    // blogId = 'Base64Guid'
     // result = {
-    //   subscriptionId: 'Base64Guid',
+    //   blogId: 'Base64Guid',
     //   creatorId: 'Base64Guid',
-    //   subscriptionName: '',
+    //   blogName: '',
     //   tagline: '',
     //   introduction: '',
     //   creationDate: '2015-12-25T14:45:05Z',
@@ -513,8 +513,8 @@ angular.module('webApp').factory('subscriptionStub',
     //   video: '', /* optional */
     //   description: '' /* optional */
     // }
-    service.getSubscription = function(subscriptionId) {
-      return $http.get(apiBaseUri + 'subscriptions/' + encodeURIComponent(subscriptionId)).catch(function(response) {
+    service.getSubscription = function(blogId) {
+      return $http.get(apiBaseUri + 'blogs/' + encodeURIComponent(blogId)).catch(function(response) {
         return $q.reject(utilities.getHttpError(response));
       });
     };
@@ -652,7 +652,7 @@ angular.module('webApp').factory('userStateStub',
     //     ]
     //   },
     //   creatorStatus: { /* optional */
-    //     subscriptionId: 'Base64Guid', /* optional */
+    //     blogId: 'Base64Guid', /* optional */
     //     mustWriteFirstPost: false
     //   },
     //   createdChannelsAndCollections: { /* optional */
@@ -684,10 +684,10 @@ angular.module('webApp').factory('userStateStub',
     //       containerName: ''
     //     }
     //   },
-    //   subscription: { /* optional */
-    //     subscriptionId: 'Base64Guid',
+    //   blog: { /* optional */
+    //     blogId: 'Base64Guid',
     //     creatorId: 'Base64Guid',
-    //     subscriptionName: '',
+    //     blogName: '',
     //     tagline: '',
     //     introduction: '',
     //     creationDate: '2015-12-25T14:45:05Z',
@@ -727,7 +727,7 @@ angular.module('webApp').factory('userStateStub',
     //     ]
     //   },
     //   creatorStatus: { /* optional */
-    //     subscriptionId: 'Base64Guid', /* optional */
+    //     blogId: 'Base64Guid', /* optional */
     //     mustWriteFirstPost: false
     //   },
     //   createdChannelsAndCollections: { /* optional */
@@ -759,10 +759,10 @@ angular.module('webApp').factory('userStateStub',
     //       containerName: ''
     //     }
     //   },
-    //   subscription: { /* optional */
-    //     subscriptionId: 'Base64Guid',
+    //   blog: { /* optional */
+    //     blogId: 'Base64Guid',
     //     creatorId: 'Base64Guid',
-    //     subscriptionName: '',
+    //     blogName: '',
     //     tagline: '',
     //     introduction: '',
     //     creationDate: '2015-12-25T14:45:05Z',
