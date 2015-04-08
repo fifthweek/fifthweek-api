@@ -94,7 +94,7 @@
                     c.Name,
                     c.Description,
                     c.PriceInUsCentsPerWeek,
-                    c.Id == c.SubscriptionId,
+                    c.Id == c.BlogId,
                     c.IsVisibleToNonSubscribers,
                     (from col in collections 
                      where col.ChannelId == c.Id
@@ -111,7 +111,7 @@
         {
             public Guid Id { get; set; }
 
-            public Guid SubscriptionId { get; set; }
+            public Guid BlogId { get; set; }
 
             public string Name { get; set; }
 
