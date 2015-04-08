@@ -8,7 +8,7 @@
     using Microsoft.VisualStudio.TestTools.UnitTesting;
 
     [TestClass]
-    public class ValidSubscriptionNameTests : ValidatedStringTests<ValidSubscriptionName>
+    public class ValidSubscriptionNameTests : ValidatedStringTests<ValidBlogName>
     {
         public static readonly string InvalidValue = string.Empty;
 
@@ -25,28 +25,28 @@
         [TestMethod]
         public void ItShouldTreatNullAsEmpty()
         {
-            var result = ValidSubscriptionName.IsEmpty(null);
+            var result = ValidBlogName.IsEmpty(null);
             Assert.IsTrue(result);
         }
 
         [TestMethod]
         public void ItShouldTreatEmptyStringAsEmpty()
         {
-            var result = ValidSubscriptionName.IsEmpty(string.Empty);
+            var result = ValidBlogName.IsEmpty(string.Empty);
             Assert.IsTrue(result);
         }
 
         [TestMethod]
         public void ItShouldTreatStringWithOnlyWhiteSpaceCharactersAsNonEmpty()
         {
-            var result = ValidSubscriptionName.IsEmpty(" ");
+            var result = ValidBlogName.IsEmpty(" ");
             Assert.IsFalse(result);
         }
 
         [TestMethod]
         public void ItShouldTreatStringWithAtLeast1NonWhiteSpaceCharacterAsNonEmpty()
         {
-            var result = ValidSubscriptionName.IsEmpty("a");
+            var result = ValidBlogName.IsEmpty("a");
             Assert.IsFalse(result);
         }
 
@@ -93,22 +93,22 @@
             this.AssertNewLinesNotAllowed();
         }
 
-        protected override ValidSubscriptionName Parse(string value)
+        protected override ValidBlogName Parse(string value)
         {
-            return ValidSubscriptionName.Parse(value);
+            return ValidBlogName.Parse(value);
         }
 
-        protected override bool TryParse(string value, out ValidSubscriptionName parsedObject)
+        protected override bool TryParse(string value, out ValidBlogName parsedObject)
         {
-            return ValidSubscriptionName.TryParse(value, out parsedObject);
+            return ValidBlogName.TryParse(value, out parsedObject);
         }
 
-        protected override bool TryParse(string value, out ValidSubscriptionName parsedObject, out IReadOnlyCollection<string> errorMessages)
+        protected override bool TryParse(string value, out ValidBlogName parsedObject, out IReadOnlyCollection<string> errorMessages)
         {
-            return ValidSubscriptionName.TryParse(value, out parsedObject, out errorMessages);
+            return ValidBlogName.TryParse(value, out parsedObject, out errorMessages);
         }
 
-        protected override string GetValue(ValidSubscriptionName parsedObject)
+        protected override string GetValue(ValidBlogName parsedObject)
         {
             return parsedObject.Value;
         }

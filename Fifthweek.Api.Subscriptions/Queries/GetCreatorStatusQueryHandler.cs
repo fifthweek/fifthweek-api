@@ -63,7 +63,7 @@
 
                 return creatorData == null
                     ? CreatorStatus.NoSubscriptions
-                    : new CreatorStatus(new SubscriptionId(creatorData.SubscriptionId), !creatorData.HasAtLeastOnePost);
+                    : new CreatorStatus(new BlogId(creatorData.SubscriptionId), !creatorData.HasAtLeastOnePost);
             }
         }
 

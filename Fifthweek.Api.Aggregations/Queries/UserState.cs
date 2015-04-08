@@ -25,6 +25,6 @@ namespace Fifthweek.Api.Aggregations.Queries
         public GetAccountSettingsResult AccountSettings { get; private set; }
 
         [Optional]
-        public GetSubscriptionResult Subscription { get; private set; }
+        public GetBlogResult Blog { get; private set; }
     }
 }

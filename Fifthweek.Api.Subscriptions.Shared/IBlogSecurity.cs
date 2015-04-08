@@ -4,14 +4,14 @@ namespace Fifthweek.Api.Subscriptions.Shared
 
     using Fifthweek.Api.Identity.Shared.Membership;
 
-    public interface ISubscriptionSecurity
+    public interface IBlogSecurity
     {
         Task<bool> IsCreationAllowedAsync(Requester requester);
 
-        Task<bool> IsWriteAllowedAsync(UserId requester, SubscriptionId subscriptionId);
+        Task<bool> IsWriteAllowedAsync(UserId requester, BlogId blogId);
 
         Task AssertCreationAllowedAsync(Requester requester);
 
-        Task AssertWriteAllowedAsync(UserId requester, SubscriptionId subscriptionId);
+        Task AssertWriteAllowedAsync(UserId requester, BlogId blogId);
     }
 }

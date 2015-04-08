@@ -79,11 +79,11 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AutofacRegistration.cs" />
-    <Compile Include="Queries\GetSubscriptionQuery.cs" />
-    <Compile Include="Queries\GetSubscriptionQueryHandler.cs" />
-    <Compile Include="GetSubscriptionDbStatement.cs" />
-    <Compile Include="IGetSubscriptionDbStatement.cs" />
-    <Compile Include="Queries\GetSubscriptionResult.cs" />
+    <Compile Include="Queries\GetBlogQuery.cs" />
+    <Compile Include="Queries\GetBlogQueryHandler.cs" />
+    <Compile Include="GetBlogDbStatement.cs" />
+    <Compile Include="IGetBlogDbStatement.cs" />
+    <Compile Include="Queries\GetBlogResult.cs" />
     <Compile Include="BlogOwnership.cs" />
     <Compile Include="IBlogOwnership.cs" />
     <Compile Include="ClassAugmentation.cs">
@@ -94,18 +94,18 @@
     <Compile Include="Commands\PromoteNewUserToCreatorCommand.cs" />
     <Compile Include="Commands\PromoteNewUserToCreatorCommandInitiator.cs" />
     <Compile Include="Commands\PromoteNewUserToCreatorCommandHandler.cs" />
-    <Compile Include="Commands\CreateSubscriptionCommand.cs" />
-    <Compile Include="Commands\CreateSubscriptionCommandHandler.cs" />
-    <Compile Include="Commands\UpdateSubscriptionCommand.cs" />
-    <Compile Include="Commands\UpdateSubscriptionCommandHandler.cs" />
-    <Compile Include="Controllers\NewSubscriptionData.cs" />
-    <Compile Include="Controllers\SubscriptionController.cs" />
-    <Compile Include="Controllers\UpdatedSubscriptionData.cs" />
+    <Compile Include="Commands\CreateBlogCommand.cs" />
+    <Compile Include="Commands\CreateBlogCommandHandler.cs" />
+    <Compile Include="Commands\UpdateBlogCommand.cs" />
+    <Compile Include="Commands\UpdateBlogCommandHandler.cs" />
+    <Compile Include="Controllers\NewBlogData.cs" />
+    <Compile Include="Controllers\BlogController.cs" />
+    <Compile Include="Controllers\UpdatedBlogData.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="CreatorStatus.cs" />
     <Compile Include="Queries\GetCreatorStatusQuery.cs" />
     <Compile Include="Queries\GetCreatorStatusQueryHandler.cs" />
-    <Compile Include="SubscriptionSecurity.cs" />
+    <Compile Include="BlogSecurity.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Fifthweek.Api.Channels.Shared\Fifthweek.Api.Channels.Shared.csproj">

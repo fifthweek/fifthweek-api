@@ -24,8 +24,8 @@
     {
         private static readonly UserId UserId = new UserId(Guid.NewGuid());
         private static readonly Requester Requester = Requester.Authenticated(UserId);
-        private static readonly SubscriptionId SubscriptionId = new SubscriptionId(Guid.NewGuid());
-        private static readonly ChannelId DefaultChannelId = new ChannelId(SubscriptionId.Value);
+        private static readonly BlogId BlogId = new BlogId(Guid.NewGuid());
+        private static readonly ChannelId DefaultChannelId = new ChannelId(BlogId.Value);
         private static readonly GetCreatorStatusQuery Query = new GetCreatorStatusQuery(Requester, UserId);
         private GetCreatorStatusQueryHandler target;
         private Mock<IRequesterSecurity> requesterSecurity;
@@ -65,12 +65,12 @@
             await this.DatabaseTestAsync(async testDatabase =>
             {
                 this.target = new GetCreatorStatusQueryHandler(this.requesterSecurity.Object, testDatabase);
-                await this.CreateSubscriptionAsync(UserId, SubscriptionId, testDatabase);
+                await this.CreateSubscriptionAsync(UserId, BlogId, testDatabase);
                 await testDatabase.TakeSnapshotAsync();
 
                 var result = await this.target.HandleAsync(Query);
 
-                Assert.AreEqual(result.SubscriptionId, SubscriptionId);
+                Assert.AreEqual(result.BlogId, BlogId);
                 Assert.IsTrue(result.MustWriteFirstPost);
 
                 return ExpectedSideEffects.None;
@@ -83,12 +83,12 @@
             await this.DatabaseTestAsync(async testDatabase =>
             {
                 this.target = new GetCreatorStatusQueryHandler(this.requesterSecurity.Object, testDatabase);
-                await this.CreateSubscriptionAsync(UserId, SubscriptionId, testDatabase);
+                await this.CreateSubscriptionAsync(UserId, BlogId, testDatabase);
                 await testDatabase.TakeSnapshotAsync();
 
                 var result = await this.target.HandleAsync(Query);
 
-                Assert.AreEqual(result.SubscriptionId, SubscriptionId);
+                Assert.AreEqual(result.BlogId, BlogId);
                 Assert.IsTrue(result.MustWriteFirstPost);
 
                 return ExpectedSideEffects.None;
@@ -101,13 +101,13 @@
             await this.DatabaseTestAsync(async testDatabase =>
             {
                 this.target = new GetCreatorStatusQueryHandler(this.requesterSecurity.Object, testDatabase);
-                await this.CreateSubscriptionAsync(UserId, SubscriptionId, testDatabase);
+                await this.CreateSubscriptionAsync(UserId, BlogId, testDatabase);
                 await this.CreatePostAsync(testDatabase);
                 await testDatabase.TakeSnapshotAsync();
 
                 var result = await this.target.HandleAsync(Query);
 
-                Assert.AreEqual(result.SubscriptionId, SubscriptionId);
+                Assert.AreEqual(result.BlogId, BlogId);
                 Assert.IsFalse(result.MustWriteFirstPost);
 
                 return ExpectedSideEffects.None;
@@ -120,7 +120,7 @@
             await this.DatabaseTestAsync(async testDatabase =>
             {
                 this.target = new GetCreatorStatusQueryHandler(this.requesterSecurity.Object, testDatabase);
-                await this.CreateSubscriptionAsync(UserId, SubscriptionId, testDatabase);
+                await this.CreateSubscriptionAsync(UserId, BlogId, testDatabase);
                 await this.CreatePostAsync(testDatabase);
                 await this.CreatePostAsync(testDatabase);
                 await this.CreatePostAsync(testDatabase);
@@ -128,7 +128,7 @@
 
                 var result = await this.target.HandleAsync(Query);
 
-                Assert.AreEqual(result.SubscriptionId, SubscriptionId);
+                Assert.AreEqual(result.BlogId, BlogId);
                 Assert.IsFalse(result.MustWriteFirstPost);
 
                 return ExpectedSideEffects.None;
@@ -141,7 +141,7 @@
             await this.DatabaseTestAsync(async testDatabase =>
             {
                 this.target = new GetCreatorStatusQueryHandler(this.requesterSecurity.Object, testDatabase);
-                await this.CreateSubscriptionAsync(UserId, SubscriptionId, testDatabase);
+                await this.CreateSubscriptionAsync(UserId, BlogId, testDatabase);
                 await this.CreatePostAsync(testDatabase);
                 await this.CreatePostAsync(testDatabase);
                 await this.CreatePostAsync(testDatabase, true);
@@ -150,7 +150,7 @@
 
                 var result = await this.target.HandleAsync(Query);
 
-                Assert.AreEqual(result.SubscriptionId, SubscriptionId);
+                Assert.AreEqual(result.BlogId, BlogId);
                 Assert.IsFalse(result.MustWriteFirstPost);
 
                 return ExpectedSideEffects.None;
@@ -163,14 +163,14 @@
             await this.DatabaseTestAsync(async testDatabase =>
             {
                 this.target = new GetCreatorStatusQueryHandler(this.requesterSecurity.Object, testDatabase);
-                await this.CreateSubscriptionAsync(UserId, new SubscriptionId(Guid.NewGuid()), testDatabase, newUser: true, setTodaysDate: false);
+                await this.CreateSubscriptionAsync(UserId, new BlogId(Guid.NewGuid()), testDatabase, newUser: true, setTodaysDate: false);
                 await this.CreateSubscriptionsAsync(UserId, 100, testDatabase);
-                await this.CreateSubscriptionAsync(UserId, SubscriptionId, testDatabase, newUser: false, setTodaysDate: true);
+                await this.CreateSubscriptionAsync(UserId, BlogId, testDatabase, newUser: false, setTodaysDate: true);
                 await testDatabase.TakeSnapshotAsync();
 
                 var result = await this.target.HandleAsync(Query);
 
-                Assert.AreEqual(result.SubscriptionId, SubscriptionId);
+                Assert.AreEqual(result.BlogId, BlogId);
                 Assert.IsTrue(result.MustWriteFirstPost);
 
                 return ExpectedSideEffects.None;
@@ -193,7 +193,7 @@
 
                 var result = await this.target.HandleAsync(Query);
 
-                Assert.IsNull(result.SubscriptionId);
+                Assert.IsNull(result.BlogId);
                 Assert.IsFalse(result.MustWriteFirstPost);
 
                 return ExpectedSideEffects.None;
@@ -210,7 +210,7 @@
 
                 var result = await this.target.HandleAsync(Query);
 
-                Assert.IsNull(result.SubscriptionId);
+                Assert.IsNull(result.BlogId);
                 Assert.IsFalse(result.MustWriteFirstPost);
 
                 return ExpectedSideEffects.None;
@@ -221,23 +221,23 @@
         {
             for (var i = 0; i < subscriptions; i++)
             {
-                await this.CreateSubscriptionAsync(newUserId, new SubscriptionId(Guid.NewGuid()), testDatabase, false);
+                await this.CreateSubscriptionAsync(newUserId, new BlogId(Guid.NewGuid()), testDatabase, false);
             }
         }
 
-        private async Task CreateSubscriptionAsync(UserId newUserId, SubscriptionId newSubscriptionId, TestDatabaseContext testDatabase, bool newUser = true, bool setTodaysDate = false)
+        private async Task CreateSubscriptionAsync(UserId newUserId, BlogId newBlogId, TestDatabaseContext testDatabase, bool newUser = true, bool setTodaysDate = false)
         {
             var random = new Random();
             var creator = UserTests.UniqueEntity(random);
             creator.Id = newUserId.Value;
 
             var subscription = SubscriptionTests.UniqueEntity(random);
-            subscription.Id = newSubscriptionId.Value;
+            subscription.Id = newBlogId.Value;
             subscription.CreatorId = creator.Id;
             subscription.HeaderImageFileId = null;
 
             var channel = ChannelTests.UniqueEntity(random);
-            channel.Id = newSubscriptionId.Value; // Create default channel.
+            channel.Id = newBlogId.Value; // Create default channel.
             channel.Blog = subscription;
             channel.BlogId = subscription.Id;
 
@@ -280,7 +280,7 @@
                 if (createNewChannel)
                 {
                     var channel = ChannelTests.UniqueEntity(random);
-                    channel.BlogId = SubscriptionId.Value;
+                    channel.BlogId = BlogId.Value;
                     await databaseContext.Database.Connection.InsertAsync(channel, false);
 
                     post.ChannelId = channel.Id;

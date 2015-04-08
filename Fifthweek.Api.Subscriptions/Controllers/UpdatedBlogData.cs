@@ -5,9 +5,9 @@
     using Fifthweek.CodeGeneration;
 
     [AutoEqualityMembers]
-    public partial class UpdatedSubscriptionData
+    public partial class UpdatedBlogData
     {
-        [Parsed(typeof(ValidSubscriptionName))]
+        [Parsed(typeof(ValidBlogName))]
         public string SubscriptionName { get; set; }
 
         [Parsed(typeof(ValidTagline))]
@@ -23,7 +23,7 @@
         [Parsed(typeof(ValidExternalVideoUrl))]
         public string Video { get; set; }
 
-        [Parsed(typeof(ValidSubscriptionDescription))]
+        [Parsed(typeof(ValidBlogDescription))]
         [Optional]
         public string Description { get; set; }
     }

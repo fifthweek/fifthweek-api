@@ -100,7 +100,7 @@ namespace Fifthweek.Api.Aggregations.Queries
             Fifthweek.Api.Core.IQueryHandler<Fifthweek.Api.Subscriptions.Queries.GetCreatorStatusQuery,Fifthweek.Api.Subscriptions.CreatorStatus> getCreatorStatus,
             Fifthweek.Api.Core.IQueryHandler<Fifthweek.Api.Collections.Queries.GetCreatedChannelsAndCollectionsQuery,Fifthweek.Api.Collections.Queries.ChannelsAndCollections> getCreatedChannelsAndCollections,
             Fifthweek.Api.Core.IQueryHandler<Fifthweek.Api.Identity.Membership.Queries.GetAccountSettingsQuery,Fifthweek.Api.Identity.Membership.GetAccountSettingsResult> getAccountSettings,
-            Fifthweek.Api.Core.IQueryHandler<Fifthweek.Api.Subscriptions.Queries.GetSubscriptionQuery,Fifthweek.Api.Subscriptions.Queries.GetSubscriptionResult> getSubscription)
+            Fifthweek.Api.Core.IQueryHandler<Fifthweek.Api.Subscriptions.Queries.GetBlogQuery,Fifthweek.Api.Subscriptions.Queries.GetBlogResult> getSubscription)
         {
             if (requesterSecurity == null)
             {
@@ -164,7 +164,7 @@ namespace Fifthweek.Api.Aggregations.Queries
             Fifthweek.Api.Subscriptions.CreatorStatus creatorStatus,
             Fifthweek.Api.Collections.Queries.ChannelsAndCollections createdChannelsAndCollections,
             Fifthweek.Api.Identity.Membership.GetAccountSettingsResult accountSettings,
-            Fifthweek.Api.Subscriptions.Queries.GetSubscriptionResult subscription)
+            Fifthweek.Api.Subscriptions.Queries.GetBlogResult blog)
         {
             if (accessSignatures == null)
             {
@@ -175,7 +175,7 @@ namespace Fifthweek.Api.Aggregations.Queries
             this.CreatorStatus = creatorStatus;
             this.CreatedChannelsAndCollections = createdChannelsAndCollections;
             this.AccountSettings = accountSettings;
-            this.Subscription = subscription;
+            this.Blog = blog;
         }
     }
 }
@@ -270,7 +270,7 @@ namespace Fifthweek.Api.Aggregations.Queries
     {
         public override string ToString()
         {
-            return string.Format("UserState({0}, {1}, {2}, {3}, {4})", this.AccessSignatures == null ? "null" : this.AccessSignatures.ToString(), this.CreatorStatus == null ? "null" : this.CreatorStatus.ToString(), this.CreatedChannelsAndCollections == null ? "null" : this.CreatedChannelsAndCollections.ToString(), this.AccountSettings == null ? "null" : this.AccountSettings.ToString(), this.Subscription == null ? "null" : this.Subscription.ToString());
+            return string.Format("UserState({0}, {1}, {2}, {3}, {4})", this.AccessSignatures == null ? "null" : this.AccessSignatures.ToString(), this.CreatorStatus == null ? "null" : this.CreatorStatus.ToString(), this.CreatedChannelsAndCollections == null ? "null" : this.CreatedChannelsAndCollections.ToString(), this.AccountSettings == null ? "null" : this.AccountSettings.ToString(), this.Blog == null ? "null" : this.Blog.ToString());
         }
         
         public override bool Equals(object obj)
@@ -302,7 +302,7 @@ namespace Fifthweek.Api.Aggregations.Queries
                 hashCode = (hashCode * 397) ^ (this.CreatorStatus != null ? this.CreatorStatus.GetHashCode() : 0);
                 hashCode = (hashCode * 397) ^ (this.CreatedChannelsAndCollections != null ? this.CreatedChannelsAndCollections.GetHashCode() : 0);
                 hashCode = (hashCode * 397) ^ (this.AccountSettings != null ? this.AccountSettings.GetHashCode() : 0);
-                hashCode = (hashCode * 397) ^ (this.Subscription != null ? this.Subscription.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.Blog != null ? this.Blog.GetHashCode() : 0);
                 return hashCode;
             }
         }
@@ -329,7 +329,7 @@ namespace Fifthweek.Api.Aggregations.Queries
                 return false;
             }
         
-            if (!object.Equals(this.Subscription, other.Subscription))
+            if (!object.Equals(this.Blog, other.Blog))
             {
                 return false;
             }

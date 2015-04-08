@@ -11,7 +11,7 @@ namespace Fifthweek.Api.Subscriptions
     using Fifthweek.Shared;
 
     [AutoConstructor]
-    public partial class SubscriptionSecurity : ISubscriptionSecurity
+    public partial class BlogSecurity : IBlogSecurity
     {
         private readonly IRequesterSecurity requesterSecurity;
         private readonly IBlogOwnership blogOwnership;
@@ -23,12 +23,12 @@ namespace Fifthweek.Api.Subscriptions
             return this.requesterSecurity.IsInRoleAsync(requester, FifthweekRole.Creator);
         }
 
-        public Task<bool> IsWriteAllowedAsync(UserId requester, SubscriptionId subscriptionId)
+        public Task<bool> IsWriteAllowedAsync(UserId requester, BlogId blogId)
         {
             requester.AssertNotNull("requester");
-            subscriptionId.AssertNotNull("subscriptionId");
+            blogId.AssertNotNull("subscriptionId");
 
-            return this.blogOwnership.IsOwnerAsync(requester, subscriptionId);
+            return this.blogOwnership.IsOwnerAsync(requester, blogId);
         }
 
         public async Task AssertCreationAllowedAsync(Requester requester)
@@ -42,15 +42,15 @@ namespace Fifthweek.Api.Subscriptions
             }
         }
 
-        public async Task AssertWriteAllowedAsync(UserId requester, SubscriptionId subscriptionId)
+        public async Task AssertWriteAllowedAsync(UserId requester, BlogId blogId)
         {
             requester.AssertNotNull("requester");
-            subscriptionId.AssertNotNull("subscriptionId");
+            blogId.AssertNotNull("subscriptionId");
 
-            var isUpdateAllowed = await this.IsWriteAllowedAsync(requester, subscriptionId);
+            var isUpdateAllowed = await this.IsWriteAllowedAsync(requester, blogId);
             if (!isUpdateAllowed)
             {
-                throw new UnauthorizedException("Not allowed to update subscription. {0} {1}", requester, subscriptionId);
+                throw new UnauthorizedException("Not allowed to update subscription. {0} {1}", requester, blogId);
             }
         }
     }

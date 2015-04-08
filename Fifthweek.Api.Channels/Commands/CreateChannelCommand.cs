@@ -12,7 +12,7 @@
 
         public ChannelId NewChannelId { get; private set; }
 
-        public SubscriptionId SubscriptionId { get; private set; }
+        public BlogId BlogId { get; private set; }
 
         public ValidChannelName Name { get; private set; }
 

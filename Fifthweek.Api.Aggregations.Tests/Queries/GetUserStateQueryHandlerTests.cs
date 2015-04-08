@@ -51,7 +51,7 @@
         private Mock<IQueryHandler<GetCreatorStatusQuery, CreatorStatus>> getCreatorStatus;
         private Mock<IQueryHandler<GetCreatedChannelsAndCollectionsQuery, ChannelsAndCollections>> getCreatedChannelsAndCollections;
         private Mock<IQueryHandler<GetAccountSettingsQuery, GetAccountSettingsResult>> getAccountSettings;
-        private Mock<IQueryHandler<GetSubscriptionQuery, GetSubscriptionResult>> getSubscription;
+        private Mock<IQueryHandler<GetBlogQuery, GetBlogResult>> getSubscription;
 
         [TestInitialize]
         public void TestInitialize()
@@ -64,7 +64,7 @@
             this.getCreatorStatus = new Mock<IQueryHandler<GetCreatorStatusQuery, CreatorStatus>>(MockBehavior.Strict);
             this.getCreatedChannelsAndCollections = new Mock<IQueryHandler<GetCreatedChannelsAndCollectionsQuery, ChannelsAndCollections>>(MockBehavior.Strict);
             this.getAccountSettings = new Mock<IQueryHandler<GetAccountSettingsQuery, GetAccountSettingsResult>>(MockBehavior.Strict);
-            this.getSubscription = new Mock<IQueryHandler<GetSubscriptionQuery, GetSubscriptionResult>>(MockBehavior.Strict);
+            this.getSubscription = new Mock<IQueryHandler<GetBlogQuery, GetBlogResult>>(MockBehavior.Strict);
             
             this.target = new GetUserStateQueryHandler(
                 this.requesterSecurity.Object, 
@@ -106,7 +106,7 @@
             Assert.IsNull(result.CreatorStatus);
             Assert.IsNull(result.CreatedChannelsAndCollections);
             Assert.IsNull(result.AccountSettings);
-            Assert.IsNull(result.Subscription);
+            Assert.IsNull(result.Blog);
         }
 
         [TestMethod]
@@ -124,7 +124,7 @@
             Assert.IsNull(result.CreatorStatus);
             Assert.IsNull(result.CreatedChannelsAndCollections);
             Assert.IsNull(result.AccountSettings);
-            Assert.IsNull(result.Subscription);
+            Assert.IsNull(result.Blog);
         }
 
         [TestMethod]
@@ -134,10 +134,10 @@
 
             this.requesterSecurity.Setup(v => v.IsInRoleAsync(Requester, FifthweekRole.Creator)).ReturnsAsync(true);
 
-            var creatorStatus = new CreatorStatus(new SubscriptionId(Guid.NewGuid()), true);
+            var creatorStatus = new CreatorStatus(new BlogId(Guid.NewGuid()), true);
             var createdChannelsAndCollections = new ChannelsAndCollections(new List<ChannelsAndCollections.Channel>());
             var accountSettings = new GetAccountSettingsResult(new Username("username"), new Email("a@b.com"), null);
-            var subscription = new GetSubscriptionResult(new SubscriptionId(Guid.NewGuid()), UserId, new SubscriptionName("My Subscription"), new Tagline("Tagline is great"), new Introduction("Once upon a time there was an intro."), DateTime.UtcNow, null, null, null);
+            var subscription = new GetBlogResult(new BlogId(Guid.NewGuid()), UserId, new BlogName("My Subscription"), new Tagline("Tagline is great"), new Introduction("Once upon a time there was an intro."), DateTime.UtcNow, null, null, null);
 
             this.getUserAccessSignatures.Setup(v => v.HandleAsync(new GetUserAccessSignaturesQuery(Requester, UserId)))
                 .ReturnsAsync(UserAccessSignatures);
@@ -147,7 +147,7 @@
                 .ReturnsAsync(createdChannelsAndCollections);
             this.getAccountSettings.Setup(v => v.HandleAsync(new GetAccountSettingsQuery(Requester, UserId)))
                 .ReturnsAsync(accountSettings);
-            this.getSubscription.Setup(v => v.HandleAsync(new GetSubscriptionQuery(creatorStatus.SubscriptionId)))
+            this.getSubscription.Setup(v => v.HandleAsync(new GetBlogQuery(creatorStatus.BlogId)))
                 .ReturnsAsync(subscription);
 
             var result = await this.target.HandleAsync(new GetUserStateQuery(Requester, UserId));
@@ -157,7 +157,7 @@
             Assert.AreEqual(creatorStatus, result.CreatorStatus);
             Assert.AreEqual(createdChannelsAndCollections, result.CreatedChannelsAndCollections);
             Assert.AreEqual(accountSettings, result.AccountSettings);
-            Assert.AreEqual(subscription, result.Subscription);
+            Assert.AreEqual(subscription, result.Blog);
         }
 
         [TestMethod]
@@ -187,7 +187,7 @@
             Assert.AreEqual(creatorStatus, result.CreatorStatus);
             Assert.AreEqual(createdChannelsAndCollections, result.CreatedChannelsAndCollections);
             Assert.AreEqual(accountSettings, result.AccountSettings);
-            Assert.IsNull(result.Subscription);
+            Assert.IsNull(result.Blog);
         }
     }
 }

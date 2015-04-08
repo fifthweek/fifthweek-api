@@ -15,7 +15,7 @@
     public class SubscriptionOwnershipTests : PersistenceTestsBase
     {
         private static readonly UserId UserId = new UserId(Guid.NewGuid());
-        private static readonly SubscriptionId SubscriptionId = new SubscriptionId(Guid.NewGuid());
+        private static readonly BlogId BlogId = new BlogId(Guid.NewGuid());
         private BlogOwnership target;
 
         [TestMethod]
@@ -24,10 +24,10 @@
             await this.DatabaseTestAsync(async testDatabase =>
             {
                 this.target = new BlogOwnership(testDatabase);
-                await this.CreateSubscriptionAsync(UserId, SubscriptionId, testDatabase);
+                await this.CreateSubscriptionAsync(UserId, BlogId, testDatabase);
                 await testDatabase.TakeSnapshotAsync();
 
-                var result = await this.target.IsOwnerAsync(UserId, SubscriptionId);
+                var result = await this.target.IsOwnerAsync(UserId, BlogId);
 
                 Assert.IsTrue(result);
                 return ExpectedSideEffects.None;
@@ -48,7 +48,7 @@
 
                 await testDatabase.TakeSnapshotAsync();
 
-                var result = await this.target.IsOwnerAsync(UserId, SubscriptionId);
+                var result = await this.target.IsOwnerAsync(UserId, BlogId);
 
                 Assert.IsFalse(result);
                 return ExpectedSideEffects.None;
@@ -61,10 +61,10 @@
             await this.DatabaseTestAsync(async testDatabase =>
             {
                 this.target = new BlogOwnership(testDatabase);
-                await this.CreateSubscriptionAsync(new UserId(Guid.NewGuid()), new SubscriptionId(Guid.NewGuid()), testDatabase);
+                await this.CreateSubscriptionAsync(new UserId(Guid.NewGuid()), new BlogId(Guid.NewGuid()), testDatabase);
                 await testDatabase.TakeSnapshotAsync();
 
-                var result = await this.target.IsOwnerAsync(UserId, SubscriptionId);
+                var result = await this.target.IsOwnerAsync(UserId, BlogId);
 
                 Assert.IsFalse(result);
                 return ExpectedSideEffects.None;
@@ -77,10 +77,10 @@
             await this.DatabaseTestAsync(async testDatabase =>
             {
                 this.target = new BlogOwnership(testDatabase);
-                await this.CreateSubscriptionAsync(UserId, new SubscriptionId(Guid.NewGuid()), testDatabase);
+                await this.CreateSubscriptionAsync(UserId, new BlogId(Guid.NewGuid()), testDatabase);
                 await testDatabase.TakeSnapshotAsync();
 
-                var result = await this.target.IsOwnerAsync(UserId, SubscriptionId);
+                var result = await this.target.IsOwnerAsync(UserId, BlogId);
 
                 Assert.IsFalse(result);
                 return ExpectedSideEffects.None;
@@ -93,21 +93,21 @@
             await this.DatabaseTestAsync(async testDatabase =>
             {
                 this.target = new BlogOwnership(testDatabase);
-                await this.CreateSubscriptionAsync(new UserId(Guid.NewGuid()), SubscriptionId, testDatabase);
+                await this.CreateSubscriptionAsync(new UserId(Guid.NewGuid()), BlogId, testDatabase);
                 await testDatabase.TakeSnapshotAsync();
 
-                var result = await this.target.IsOwnerAsync(UserId, SubscriptionId);
+                var result = await this.target.IsOwnerAsync(UserId, BlogId);
 
                 Assert.IsFalse(result);
                 return ExpectedSideEffects.None;
             });
         }
 
-        private async Task CreateSubscriptionAsync(UserId newUserId, SubscriptionId newSubscriptionId, TestDatabaseContext testDatabase)
+        private async Task CreateSubscriptionAsync(UserId newUserId, BlogId newBlogId, TestDatabaseContext testDatabase)
         {
             using (var databaseContext = testDatabase.CreateContext())
             {
-                await databaseContext.CreateTestSubscriptionAsync(newUserId.Value, newSubscriptionId.Value);
+                await databaseContext.CreateTestSubscriptionAsync(newUserId.Value, newBlogId.Value);
             }
         }
     }

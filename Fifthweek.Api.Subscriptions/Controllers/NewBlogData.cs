@@ -5,10 +5,10 @@
     using Fifthweek.CodeGeneration;
 
     [AutoEqualityMembers]
-    public partial class NewSubscriptionData
+    public partial class NewBlogData
     {
-        [Parsed(typeof(ValidSubscriptionName))]
-        public string SubscriptionName { get; set; }
+        [Parsed(typeof(ValidBlogName))]
+        public string BlogName { get; set; }
 
         [Parsed(typeof(ValidTagline))]
         public string Tagline { get; set; }

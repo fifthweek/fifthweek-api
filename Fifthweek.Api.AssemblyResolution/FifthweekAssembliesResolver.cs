@@ -29,7 +29,7 @@
             typeof(Posts.Shared.PostId).Assembly,
             typeof(SendGrid.AutofacRegistration).Assembly,
             typeof(Subscriptions.AutofacRegistration).Assembly,
-            typeof(Subscriptions.Shared.SubscriptionId).Assembly,
+            typeof(Subscriptions.Shared.BlogId).Assembly,
             typeof(Azure.AutofacRegistration).Assembly,
             typeof(FileManagement.AutofacRegistration).Assembly,
             typeof(FileManagement.Shared.FileId).Assembly,

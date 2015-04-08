@@ -54,16 +54,16 @@
     </Compile>
     <Compile Include="ExternalVideoUrl.cs" />
     <Compile Include="Introduction.cs" />
-    <Compile Include="ISubscriptionSecurity.cs" />
+    <Compile Include="IBlogSecurity.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="SubscriptionDescription.cs" />
-    <Compile Include="SubscriptionId.cs" />
-    <Compile Include="SubscriptionName.cs" />
+    <Compile Include="BlogDescription.cs" />
+    <Compile Include="BlogId.cs" />
+    <Compile Include="BlogName.cs" />
     <Compile Include="Tagline.cs" />
-    <Compile Include="ValidSubscriptionDescription.cs" />
+    <Compile Include="ValidBlogDescription.cs" />
     <Compile Include="ValidExternalVideoUrl.cs" />
     <Compile Include="ValidIntroduction.cs" />
-    <Compile Include="ValidSubscriptionName.cs" />
+    <Compile Include="ValidBlogName.cs" />
     <Compile Include="ValidTagline.cs" />
   </ItemGroup>
   <ItemGroup>

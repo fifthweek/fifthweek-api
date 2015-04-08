@@ -23,14 +23,14 @@
         private static readonly UserId UserId = new UserId(Guid.NewGuid());
         private static readonly Requester Requester = Requester.Authenticated(UserId);
         private static readonly ChannelId ChannelId = new ChannelId(Guid.NewGuid());
-        private static readonly SubscriptionId SubscriptionId = new SubscriptionId(Guid.NewGuid());
+        private static readonly BlogId BlogId = new BlogId(Guid.NewGuid());
         private static readonly ValidChannelName Name = ValidChannelName.Parse("Bat puns");
         private static readonly ValidChannelDescription Description = ValidChannelDescription.Parse("It's just a load of really, really bat puns! *bad");
         private static readonly ValidChannelPriceInUsCentsPerWeek Price = ValidChannelPriceInUsCentsPerWeek.Parse(10);
-        private static readonly CreateChannelCommand Command = new CreateChannelCommand(Requester, ChannelId, SubscriptionId, Name, Description, Price, IsVisibleToNonSubscribers);
+        private static readonly CreateChannelCommand Command = new CreateChannelCommand(Requester, ChannelId, BlogId, Name, Description, Price, IsVisibleToNonSubscribers);
 
         private Mock<IRequesterSecurity> requesterSecurity;
-        private Mock<ISubscriptionSecurity> subscriptionSecurity;
+        private Mock<IBlogSecurity> subscriptionSecurity;
         private Mock<IFifthweekDbConnectionFactory> connectionFactory;
         private CreateChannelCommandHandler target;
 
@@ -39,7 +39,7 @@
         {
             this.requesterSecurity = new Mock<IRequesterSecurity>();
             this.requesterSecurity.SetupFor(Requester);
-            this.subscriptionSecurity = new Mock<ISubscriptionSecurity>();
+            this.subscriptionSecurity = new Mock<IBlogSecurity>();
 
             // Give potentially side-effective components strict mock behaviour.
             this.connectionFactory = new Mock<IFifthweekDbConnectionFactory>(MockBehavior.Strict);
@@ -63,14 +63,14 @@
         [ExpectedException(typeof(UnauthorizedException))]
         public async Task ItShouldRequireUserIsAuthenticated()
         {
-            await this.target.HandleAsync(new CreateChannelCommand(Requester.Unauthenticated, ChannelId, SubscriptionId, Name, Description, Price, IsVisibleToNonSubscribers));
+            await this.target.HandleAsync(new CreateChannelCommand(Requester.Unauthenticated, ChannelId, BlogId, Name, Description, Price, IsVisibleToNonSubscribers));
         }
 
         [TestMethod]
         [ExpectedException(typeof(UnauthorizedException))]
         public async Task ItShouldRequireUserHasWriteAccessToSubscription()
         {
-            this.subscriptionSecurity.Setup(_ => _.AssertWriteAllowedAsync(UserId, SubscriptionId)).Throws<UnauthorizedException>();
+            this.subscriptionSecurity.Setup(_ => _.AssertWriteAllowedAsync(UserId, BlogId)).Throws<UnauthorizedException>();
 
             await this.target.HandleAsync(Command);
         }
@@ -104,7 +104,7 @@
 
                 var expectedChannel = new Channel(
                     ChannelId.Value,
-                    SubscriptionId.Value,
+                    BlogId.Value,
                     null,
                     Name.Value,
                     Description.Value,
@@ -130,7 +130,7 @@
         {
             using (var databaseContext = testDatabase.CreateContext())
             {
-                await databaseContext.CreateTestSubscriptionAsync(UserId.Value, SubscriptionId.Value);
+                await databaseContext.CreateTestSubscriptionAsync(UserId.Value, BlogId.Value);
             }
         }
     } 

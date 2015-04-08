@@ -24,7 +24,7 @@
         private readonly IQueryHandler<GetCreatorStatusQuery, CreatorStatus> getCreatorStatus;
         private readonly IQueryHandler<GetCreatedChannelsAndCollectionsQuery, ChannelsAndCollections> getCreatedChannelsAndCollections;
         private readonly IQueryHandler<GetAccountSettingsQuery, GetAccountSettingsResult> getAccountSettings;
-        private readonly IQueryHandler<GetSubscriptionQuery, GetSubscriptionResult> getSubscription;
+        private readonly IQueryHandler<GetBlogQuery, GetBlogResult> getSubscription;
 
         public async Task<UserState> HandleAsync(GetUserStateQuery query)
         {
@@ -42,7 +42,7 @@
             CreatorStatus creatorStatus = null;
             ChannelsAndCollections createdChannelsAndCollections = null;
             GetAccountSettingsResult accountSettings = null;
-            GetSubscriptionResult subscription = null;
+            GetBlogResult blog = null;
             if (isCreator)
             {
                 var creatorStatusTask = this.getCreatorStatus.HandleAsync(new GetCreatorStatusQuery(query.Requester, query.RequestedUserId));
@@ -51,15 +51,15 @@
 
                 creatorStatus = await creatorStatusTask;
 
-                var subscriptionTask = Task.FromResult<GetSubscriptionResult>(null);
-                if (creatorStatus.SubscriptionId != null)
+                var subscriptionTask = Task.FromResult<GetBlogResult>(null);
+                if (creatorStatus.BlogId != null)
                 {
-                    subscriptionTask = this.getSubscription.HandleAsync(new GetSubscriptionQuery(creatorStatus.SubscriptionId));
+                    subscriptionTask = this.getSubscription.HandleAsync(new GetBlogQuery(creatorStatus.BlogId));
                 }
 
                 createdChannelsAndCollections = await createdChannelsAndCollectionsTask;
                 accountSettings = await accountSettingsTask;
-                subscription = await subscriptionTask;
+                blog = await subscriptionTask;
             }
 
             return new UserState(
@@ -67,7 +67,7 @@
                 creatorStatus, 
                 createdChannelsAndCollections,
                 accountSettings,
-                subscription);
+                blog);
         }
     }
 }

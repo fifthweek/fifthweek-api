@@ -5,7 +5,7 @@
     using Fifthweek.CodeGeneration;
 
     [AutoPrimitive]
-    public partial class SubscriptionId
+    public partial class BlogId
     {
         public Guid Value { get; private set; }
     }

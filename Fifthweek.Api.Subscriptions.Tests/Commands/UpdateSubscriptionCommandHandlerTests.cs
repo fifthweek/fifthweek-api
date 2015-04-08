@@ -25,41 +25,41 @@
     {
         private static readonly UserId UserId = new UserId(Guid.NewGuid());
         private static readonly Requester Requester = Requester.Authenticated(UserId);
-        private static readonly SubscriptionId SubscriptionId = new SubscriptionId(Guid.NewGuid());
-        private static readonly ValidSubscriptionName SubscriptionName = ValidSubscriptionName.Parse("Lawrence");
+        private static readonly BlogId BlogId = new BlogId(Guid.NewGuid());
+        private static readonly ValidBlogName BlogName = ValidBlogName.Parse("Lawrence");
         private static readonly ValidTagline Tagline = ValidTagline.Parse("Web Comics and More");
         private static readonly ValidIntroduction Introduction = ValidIntroduction.Default;
-        private static readonly ValidSubscriptionDescription Description = ValidSubscriptionDescription.Parse("Hello all!");
+        private static readonly ValidBlogDescription Description = ValidBlogDescription.Parse("Hello all!");
         private static readonly FileId HeaderImageFileId = new FileId(Guid.NewGuid());
         private static readonly ValidExternalVideoUrl Video = ValidExternalVideoUrl.Parse("http://youtube.com/3135");
-        private static readonly UpdateSubscriptionCommand Command = new UpdateSubscriptionCommand(
+        private static readonly UpdateBlogCommand Command = new UpdateBlogCommand(
             Requester,
-            SubscriptionId,
-            SubscriptionName,
+            BlogId,
+            BlogName,
             Tagline,
             Introduction,
             Description,
             HeaderImageFileId,
             Video);
-        private static readonly UpdateSubscriptionCommand CommandWithoutHeaderImage = new UpdateSubscriptionCommand(
+        private static readonly UpdateBlogCommand CommandWithoutHeaderImage = new UpdateBlogCommand(
             Requester,
-            SubscriptionId,
-            SubscriptionName,
+            BlogId,
+            BlogName,
             Tagline,
             Introduction,
             Description,
             null,
             Video);
 
-        private Mock<ISubscriptionSecurity> subscriptionSecurity;
+        private Mock<IBlogSecurity> subscriptionSecurity;
         private Mock<IFileSecurity> fileSecurity;
         private Mock<IRequesterSecurity> requesterSecurity;
-        private UpdateSubscriptionCommandHandler target;
+        private UpdateBlogCommandHandler target;
 
         [TestInitialize]
         public void Initialize()
         {
-            this.subscriptionSecurity = new Mock<ISubscriptionSecurity>();
+            this.subscriptionSecurity = new Mock<IBlogSecurity>();
             this.fileSecurity = new Mock<IFileSecurity>();
             this.requesterSecurity = new Mock<IRequesterSecurity>();
             this.requesterSecurity.SetupFor(Requester);
@@ -72,12 +72,12 @@
             // Give side-effecting components strict mock behaviour.
             var connectionFactory = new Mock<IFifthweekDbConnectionFactory>(MockBehavior.Strict);
 
-            this.target = new UpdateSubscriptionCommandHandler(this.subscriptionSecurity.Object, this.fileSecurity.Object, this.requesterSecurity.Object, connectionFactory.Object);
+            this.target = new UpdateBlogCommandHandler(this.subscriptionSecurity.Object, this.fileSecurity.Object, this.requesterSecurity.Object, connectionFactory.Object);
             
-            await this.target.HandleAsync(new UpdateSubscriptionCommand(
+            await this.target.HandleAsync(new UpdateBlogCommand(
                 Requester.Unauthenticated,
-                SubscriptionId,
-                SubscriptionName,
+                BlogId,
+                BlogName,
                 Tagline,
                 Introduction,
                 Description,
@@ -90,8 +90,8 @@
         {
             await this.DatabaseTestAsync(async testDatabase =>
             {
-                this.subscriptionSecurity.Setup(_ => _.AssertWriteAllowedAsync(UserId, SubscriptionId)).Throws<UnauthorizedException>();
-                this.target = new UpdateSubscriptionCommandHandler(this.subscriptionSecurity.Object, this.fileSecurity.Object, this.requesterSecurity.Object, testDatabase);
+                this.subscriptionSecurity.Setup(_ => _.AssertWriteAllowedAsync(UserId, BlogId)).Throws<UnauthorizedException>();
+                this.target = new UpdateBlogCommandHandler(this.subscriptionSecurity.Object, this.fileSecurity.Object, this.requesterSecurity.Object, testDatabase);
                 await testDatabase.TakeSnapshotAsync();
 
                 Func<Task> badMethodCall = () => this.target.HandleAsync(Command);
@@ -108,7 +108,7 @@
             await this.DatabaseTestAsync(async testDatabase =>
             {
                 this.fileSecurity.Setup(_ => _.AssertReferenceAllowedAsync(UserId, HeaderImageFileId)).Throws<UnauthorizedException>();
-                this.target = new UpdateSubscriptionCommandHandler(this.subscriptionSecurity.Object, this.fileSecurity.Object, this.requesterSecurity.Object, testDatabase);
+                this.target = new UpdateBlogCommandHandler(this.subscriptionSecurity.Object, this.fileSecurity.Object, this.requesterSecurity.Object, testDatabase);
                 await testDatabase.TakeSnapshotAsync();
 
                 Func<Task> badMethodCall = () => this.target.HandleAsync(Command);
@@ -124,8 +124,8 @@
         {
             await this.DatabaseTestAsync(async testDatabase =>
             {
-                this.target = new UpdateSubscriptionCommandHandler(this.subscriptionSecurity.Object, this.fileSecurity.Object, this.requesterSecurity.Object, testDatabase);
-                await this.CreateSubscriptionAsync(UserId, SubscriptionId, testDatabase);
+                this.target = new UpdateBlogCommandHandler(this.subscriptionSecurity.Object, this.fileSecurity.Object, this.requesterSecurity.Object, testDatabase);
+                await this.CreateSubscriptionAsync(UserId, BlogId, testDatabase);
                 await this.target.HandleAsync(Command);
                 await testDatabase.TakeSnapshotAsync();
 
@@ -140,17 +140,17 @@
         {
             await this.DatabaseTestAsync(async testDatabase =>
             {
-                this.target = new UpdateSubscriptionCommandHandler(this.subscriptionSecurity.Object, this.fileSecurity.Object, this.requesterSecurity.Object, testDatabase);
-                var subscription = await this.CreateSubscriptionAsync(UserId, SubscriptionId, testDatabase);
+                this.target = new UpdateBlogCommandHandler(this.subscriptionSecurity.Object, this.fileSecurity.Object, this.requesterSecurity.Object, testDatabase);
+                var subscription = await this.CreateSubscriptionAsync(UserId, BlogId, testDatabase);
                 await testDatabase.TakeSnapshotAsync();
 
                 await this.target.HandleAsync(Command);
 
                 var expectedSubscription = new Blog(
-                    SubscriptionId.Value,
+                    BlogId.Value,
                     UserId.Value,
                     null,
-                    SubscriptionName.Value,
+                    BlogName.Value,
                     Tagline.Value,
                     Introduction.Value,
                     Description.Value,
@@ -171,17 +171,17 @@
         {
             await this.DatabaseTestAsync(async testDatabase =>
             {
-                this.target = new UpdateSubscriptionCommandHandler(this.subscriptionSecurity.Object, this.fileSecurity.Object, this.requesterSecurity.Object, testDatabase);
-                var subscription = await this.CreateSubscriptionAsync(UserId, SubscriptionId, testDatabase);
+                this.target = new UpdateBlogCommandHandler(this.subscriptionSecurity.Object, this.fileSecurity.Object, this.requesterSecurity.Object, testDatabase);
+                var subscription = await this.CreateSubscriptionAsync(UserId, BlogId, testDatabase);
                 await testDatabase.TakeSnapshotAsync();
 
                 await this.target.HandleAsync(CommandWithoutHeaderImage);
 
                 var expectedSubscription = new Blog(
-                    SubscriptionId.Value,
+                    BlogId.Value,
                     UserId.Value,
                     null,
-                    SubscriptionName.Value,
+                    BlogName.Value,
                     Tagline.Value,
                     Introduction.Value,
                     Description.Value,
@@ -197,11 +197,11 @@
             });
         }
 
-        private async Task<Blog> CreateSubscriptionAsync(UserId newUserId, SubscriptionId newSubscriptionId, TestDatabaseContext testDatabase)
+        private async Task<Blog> CreateSubscriptionAsync(UserId newUserId, BlogId newBlogId, TestDatabaseContext testDatabase)
         {
             using (var databaseContext = testDatabase.CreateContext())
             {
-                await databaseContext.CreateTestSubscriptionAsync(newUserId.Value, newSubscriptionId.Value, Guid.NewGuid());
+                await databaseContext.CreateTestSubscriptionAsync(newUserId.Value, newBlogId.Value, Guid.NewGuid());
 
                 var newHeaderImage = FileTests.UniqueEntity(new Random());
                 newHeaderImage.Id = HeaderImageFileId.Value;
@@ -211,7 +211,7 @@
 
             using (var databaseContext = testDatabase.CreateContext())
             {
-                return await databaseContext.Blogs.SingleAsync(_ => _.Id == newSubscriptionId.Value);
+                return await databaseContext.Blogs.SingleAsync(_ => _.Id == newBlogId.Value);
             }
         }
     }

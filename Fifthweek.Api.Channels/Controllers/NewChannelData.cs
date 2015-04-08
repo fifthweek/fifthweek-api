@@ -11,7 +11,7 @@
         {
         }
 
-        public SubscriptionId SubscriptionId { get; set; }
+        public BlogId BlogId { get; set; }
 
         [Parsed(typeof(ValidChannelName))]
         public string Name { get; set; }

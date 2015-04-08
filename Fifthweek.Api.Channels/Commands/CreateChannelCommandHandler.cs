@@ -14,7 +14,7 @@
     public partial class CreateChannelCommandHandler : ICommandHandler<CreateChannelCommand>
     {
         private readonly IRequesterSecurity requesterSecurity;
-        private readonly ISubscriptionSecurity subscriptionSecurity;
+        private readonly IBlogSecurity blogSecurity;
         private readonly IFifthweekDbConnectionFactory connectionFactory;
 
         public async Task HandleAsync(CreateChannelCommand command)
@@ -22,7 +22,7 @@
             command.AssertNotNull("command");
 
             var userId = await this.requesterSecurity.AuthenticateAsync(command.Requester);
-            await this.subscriptionSecurity.AssertWriteAllowedAsync(userId, command.SubscriptionId);
+            await this.blogSecurity.AssertWriteAllowedAsync(userId, command.BlogId);
 
             await this.CreateChannelAsync(command);
         }
@@ -31,7 +31,7 @@
         {
             var channel = new Channel(
                 command.NewChannelId.Value,
-                command.SubscriptionId.Value,
+                command.BlogId.Value,
                 null,
                 command.Name.Value,
                 command.Description.Value,

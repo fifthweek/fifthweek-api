@@ -6,20 +6,20 @@
     using Fifthweek.CodeGeneration;
 
     [AutoEqualityMembers, AutoConstructor]
-    public partial class UpdateSubscriptionCommand
+    public partial class UpdateBlogCommand
     {
         public Requester Requester { get; private set; }
 
-        public SubscriptionId SubscriptionId { get; private set; }
+        public BlogId BlogId { get; private set; }
 
-        public ValidSubscriptionName SubscriptionName { get; private set; }
+        public ValidBlogName BlogName { get; private set; }
 
         public ValidTagline Tagline { get; private set; }
 
         public ValidIntroduction Introduction { get; private set; }
 
         [Optional]
-        public ValidSubscriptionDescription Description { get; private set; }
+        public ValidBlogDescription Description { get; private set; }
 
         [Optional]
         public FileId HeaderImageFileId { get; private set; }

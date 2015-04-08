@@ -16,27 +16,27 @@
     [TestClass]
     public class GetSubscriptionQueryHandlerTests
     {
-        private static readonly SubscriptionId SubscriptionId = new SubscriptionId(Guid.NewGuid());
+        private static readonly BlogId BlogId = new BlogId(Guid.NewGuid());
         private static readonly UserId CreatorId = new UserId(Guid.NewGuid());
-        private static readonly SubscriptionName Name = new SubscriptionName("name");
+        private static readonly BlogName Name = new BlogName("name");
         private static readonly Tagline Tagline = new Tagline("tagline");
         private static readonly DateTime CreationDate = DateTime.UtcNow;
         private static readonly Introduction Introduction = new Introduction("intro");
-        private static readonly SubscriptionDescription Description = new SubscriptionDescription("description");
+        private static readonly BlogDescription Description = new BlogDescription("description");
         private static readonly ExternalVideoUrl ExternalVideoUrl = new ExternalVideoUrl("url");
         private static readonly FileId HeaderFileId = new FileId(Guid.NewGuid());
 
         private Mock<IFileInformationAggregator> fileInformationAggregator;
-        private Mock<IGetSubscriptionDbStatement> getSubscription;
+        private Mock<IGetBlogDbStatement> getSubscription;
 
-        private GetSubscriptionQueryHandler target;
+        private GetBlogQueryHandler target;
 
         [TestInitialize]
         public void TestInitialize()
         {
             this.fileInformationAggregator = new Mock<IFileInformationAggregator>();
-            this.getSubscription = new Mock<IGetSubscriptionDbStatement>();
-            this.target = new GetSubscriptionQueryHandler(
+            this.getSubscription = new Mock<IGetBlogDbStatement>();
+            this.target = new GetBlogQueryHandler(
                 this.fileInformationAggregator.Object,
                 this.getSubscription.Object);
         }
@@ -51,9 +51,9 @@
         [TestMethod]
         public async Task WhenNoHeaderImageExists_ItShouldReturnTheSubscriptionData()
         {
-            this.getSubscription.Setup(v => v.ExecuteAsync(SubscriptionId))
-                .ReturnsAsync(new GetSubscriptionDbStatement.GetSubscriptionDataDbResult(
-                    SubscriptionId,
+            this.getSubscription.Setup(v => v.ExecuteAsync(BlogId))
+                .ReturnsAsync(new GetBlogDbStatement.GetSubscriptionDataDbResult(
+                    BlogId,
                     CreatorId,
                     Name,
                     Tagline,
@@ -63,11 +63,11 @@
                     null,
                     null));
 
-            var result = await this.target.HandleAsync(new GetSubscriptionQuery(SubscriptionId));
+            var result = await this.target.HandleAsync(new GetBlogQuery(BlogId));
 
-            Assert.AreEqual(SubscriptionId, result.SubscriptionId);
+            Assert.AreEqual(BlogId, result.BlogId);
             Assert.AreEqual(CreatorId, result.CreatorId);
-            Assert.AreEqual(Name, result.SubscriptionName);
+            Assert.AreEqual(Name, result.BlogName);
             Assert.AreEqual(Tagline, result.Tagline);
             Assert.AreEqual(Introduction, result.Introduction);
             Assert.AreEqual(CreationDate, result.CreationDate);
@@ -79,9 +79,9 @@
         [TestMethod]
         public async Task WhenHeaderImageExists_ItShouldReturnTheSubscriptionData()
         {
-            this.getSubscription.Setup(v => v.ExecuteAsync(SubscriptionId))
-                .ReturnsAsync(new GetSubscriptionDbStatement.GetSubscriptionDataDbResult(
-                    SubscriptionId,
+            this.getSubscription.Setup(v => v.ExecuteAsync(BlogId))
+                .ReturnsAsync(new GetBlogDbStatement.GetSubscriptionDataDbResult(
+                    BlogId,
                     CreatorId,
                     Name,
                     Tagline,
@@ -96,11 +96,11 @@
                 v => v.GetFileInformationAsync(CreatorId, HeaderFileId, FilePurposes.ProfileHeaderImage))
                 .ReturnsAsync(fileInformation);
 
-            var result = await this.target.HandleAsync(new GetSubscriptionQuery(SubscriptionId));
+            var result = await this.target.HandleAsync(new GetBlogQuery(BlogId));
 
-            Assert.AreEqual(SubscriptionId, result.SubscriptionId);
+            Assert.AreEqual(BlogId, result.BlogId);
             Assert.AreEqual(CreatorId, result.CreatorId);
-            Assert.AreEqual(Name, result.SubscriptionName);
+            Assert.AreEqual(Name, result.BlogName);
             Assert.AreEqual(Tagline, result.Tagline);
             Assert.AreEqual(Introduction, result.Introduction);
             Assert.AreEqual(CreationDate, result.CreationDate);

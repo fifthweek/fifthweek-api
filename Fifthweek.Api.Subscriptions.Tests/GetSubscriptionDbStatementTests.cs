@@ -16,16 +16,16 @@
     [TestClass]
     public class GetSubscriptionDbStatementTests : PersistenceTestsBase
     {
-        private static readonly SubscriptionId SubscriptionId = new SubscriptionId(Guid.NewGuid());
+        private static readonly BlogId BlogId = new BlogId(Guid.NewGuid());
         private static readonly UserId CreatorId = new UserId(Guid.NewGuid());
         private static readonly FileId HeaderFileId = new FileId(Guid.NewGuid());
         
-        private GetSubscriptionDbStatement target;
+        private GetBlogDbStatement target;
 
         [TestInitialize]
         public void TestInitialize()
         {
-            this.target = new GetSubscriptionDbStatement(new Mock<IFifthweekDbConnectionFactory>(MockBehavior.Strict).Object);
+            this.target = new GetBlogDbStatement(new Mock<IFifthweekDbConnectionFactory>(MockBehavior.Strict).Object);
         }
 
         [TestMethod]
@@ -40,14 +40,14 @@
         {
             await this.DatabaseTestAsync(async testDatabase =>
             {
-                this.target = new GetSubscriptionDbStatement(testDatabase);
+                this.target = new GetBlogDbStatement(testDatabase);
 
                 await this.CreateDataAsync(testDatabase);
                 await testDatabase.TakeSnapshotAsync();
 
-                var result = await this.target.ExecuteAsync(SubscriptionId);
+                var result = await this.target.ExecuteAsync(BlogId);
 
-                Assert.AreEqual(SubscriptionId, result.SubscriptionId);
+                Assert.AreEqual(BlogId, result.BlogId);
                 Assert.AreEqual(CreatorId, result.CreatorId);
                 Assert.AreEqual(HeaderFileId, result.HeaderImageFileId);
 
@@ -60,14 +60,14 @@
         {
             await this.DatabaseTestAsync(async testDatabase =>
             {
-                this.target = new GetSubscriptionDbStatement(testDatabase);
+                this.target = new GetBlogDbStatement(testDatabase);
 
                 await this.CreateDataAsync(testDatabase);
 
-                await this.target.ExecuteAsync(SubscriptionId);
+                await this.target.ExecuteAsync(BlogId);
                 await testDatabase.TakeSnapshotAsync();
 
-                await this.target.ExecuteAsync(SubscriptionId);
+                await this.target.ExecuteAsync(BlogId);
 
                 return ExpectedSideEffects.None;
             });
@@ -79,12 +79,12 @@
         {
             await this.DatabaseTestAsync(async testDatabase =>
             {
-                this.target = new GetSubscriptionDbStatement(testDatabase);
+                this.target = new GetBlogDbStatement(testDatabase);
 
                 await this.CreateDataAsync(testDatabase);
                 await testDatabase.TakeSnapshotAsync();
 
-                await this.target.ExecuteAsync(new SubscriptionId(Guid.NewGuid()));
+                await this.target.ExecuteAsync(new BlogId(Guid.NewGuid()));
 
                 return ExpectedSideEffects.None;
             });
@@ -127,7 +127,7 @@
         {
             var random = new Random();
             var subscription = SubscriptionTests.UniqueEntity(random);
-            subscription.Id = SubscriptionId.Value;
+            subscription.Id = BlogId.Value;
             subscription.CreatorId = CreatorId.Value;
             subscription.HeaderImageFileId = HeaderFileId.Value;
 

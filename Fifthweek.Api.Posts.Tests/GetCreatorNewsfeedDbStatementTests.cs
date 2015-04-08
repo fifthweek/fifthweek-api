@@ -30,7 +30,7 @@
         private static readonly UserId UserId = new UserId(Guid.NewGuid());
         private static readonly NonNegativeInt StartIndex = NonNegativeInt.Parse(10);
         private static readonly PositiveInt Count = PositiveInt.Parse(5);
-        private static readonly SubscriptionId SubscriptionId = new SubscriptionId(Guid.NewGuid());
+        private static readonly BlogId BlogId = new BlogId(Guid.NewGuid());
         private static readonly Comment Comment = new Comment("Hey guys!");
         private static readonly Random Random = new Random();
         private static readonly DateTime Now = new SqlDateTime(DateTime.UtcNow).Value;
@@ -337,7 +337,7 @@
 
                     var channel = ChannelTests.UniqueEntity(Random);
                     channel.Id = channelId.Value;
-                    channel.BlogId = SubscriptionId.Value;
+                    channel.BlogId = BlogId.Value;
 
                     channelEntities.Add(channel);
 
@@ -375,7 +375,7 @@
                     return file;
                 });
 
-                await databaseContext.CreateTestSubscriptionAsync(UserId.Value, SubscriptionId.Value);
+                await databaseContext.CreateTestSubscriptionAsync(UserId.Value, BlogId.Value);
                 await databaseContext.Database.Connection.InsertAsync(channelEntities);
                 await databaseContext.Database.Connection.InsertAsync(collectionEntities);
                 await databaseContext.Database.Connection.InsertAsync(fileEntities);

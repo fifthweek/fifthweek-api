@@ -10,8 +10,8 @@
         public void Register(ContainerBuilder builder)
         {
             builder.RegisterType<BlogOwnership>().As<IBlogOwnership>();
-            builder.RegisterType<SubscriptionSecurity>().As<ISubscriptionSecurity>();
-            builder.RegisterType<GetSubscriptionDbStatement>().As<IGetSubscriptionDbStatement>();
+            builder.RegisterType<BlogSecurity>().As<IBlogSecurity>();
+            builder.RegisterType<GetBlogDbStatement>().As<IGetBlogDbStatement>();
         }
     }
 }

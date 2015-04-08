@@ -19,17 +19,17 @@
     {
         private static readonly UserId UserId = new UserId(Guid.NewGuid());
         private static readonly Requester Requester = Requester.Authenticated(UserId);
-        private static readonly SubscriptionId SubscriptionId = new SubscriptionId(Guid.NewGuid());
+        private static readonly BlogId BlogId = new BlogId(Guid.NewGuid());
         private Mock<IRequesterSecurity> requesterSecurity;
         private Mock<IBlogOwnership> subscriptionOwnership;
-        private SubscriptionSecurity target;
+        private BlogSecurity target;
 
         [TestInitialize]
         public void Initialize()
         {
             this.requesterSecurity = new Mock<IRequesterSecurity>();
             this.subscriptionOwnership = new Mock<IBlogOwnership>();
-            this.target = new SubscriptionSecurity(this.requesterSecurity.Object, this.subscriptionOwnership.Object);
+            this.target = new BlogSecurity(this.requesterSecurity.Object, this.subscriptionOwnership.Object);
         }
 
         [TestMethod]
@@ -61,25 +61,25 @@
         [TestMethod]
         public async Task WhenAuthorizingUpdate_ItShouldAllowIfUserOwnsSubscription()
         {
-            this.subscriptionOwnership.Setup(_ => _.IsOwnerAsync(UserId, SubscriptionId)).ReturnsAsync(true);
+            this.subscriptionOwnership.Setup(_ => _.IsOwnerAsync(UserId, BlogId)).ReturnsAsync(true);
 
-            var result = await this.target.IsWriteAllowedAsync(UserId, SubscriptionId);
+            var result = await this.target.IsWriteAllowedAsync(UserId, BlogId);
 
             Assert.IsTrue(result);
 
-            await this.target.AssertWriteAllowedAsync(UserId, SubscriptionId);
+            await this.target.AssertWriteAllowedAsync(UserId, BlogId);
         }
 
         [TestMethod]
         public async Task WhenAuthorizingUpdate_ItShouldForbidIfUserDoesNotOwnSubscription()
         {
-            this.subscriptionOwnership.Setup(_ => _.IsOwnerAsync(UserId, SubscriptionId)).ReturnsAsync(false);
+            this.subscriptionOwnership.Setup(_ => _.IsOwnerAsync(UserId, BlogId)).ReturnsAsync(false);
 
-            var result = await this.target.IsWriteAllowedAsync(UserId, SubscriptionId);
+            var result = await this.target.IsWriteAllowedAsync(UserId, BlogId);
 
             Assert.IsFalse(result);
 
-            Func<Task> badMethodCall = () => this.target.AssertWriteAllowedAsync(UserId, SubscriptionId);
+            Func<Task> badMethodCall = () => this.target.AssertWriteAllowedAsync(UserId, BlogId);
 
             await badMethodCall.AssertExceptionAsync<UnauthorizedException>();
         }

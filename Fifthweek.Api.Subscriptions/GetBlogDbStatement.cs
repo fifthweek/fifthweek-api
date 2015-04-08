@@ -15,13 +15,13 @@
     using Fifthweek.Shared;
 
     [AutoConstructor]
-    public partial class GetSubscriptionDbStatement : IGetSubscriptionDbStatement
+    public partial class GetBlogDbStatement : IGetBlogDbStatement
     {
         private readonly IFifthweekDbConnectionFactory connectionFactory;
 
-        public async Task<GetSubscriptionDataDbResult> ExecuteAsync(SubscriptionId subscriptionId)
+        public async Task<GetSubscriptionDataDbResult> ExecuteAsync(BlogId blogId)
         {
-            subscriptionId.AssertNotNull("subscriptionId");
+            blogId.AssertNotNull("subscriptionId");
 
             using (var connection = this.connectionFactory.CreateConnection())
             {
@@ -30,36 +30,36 @@
                         @"SELECT * FROM {0} WHERE {1}=@{1}",
                         Blog.Table,
                         Blog.Fields.Id),
-                    new { Id = subscriptionId.Value });
+                    new { Id = blogId.Value });
 
                 var result = items.SingleOrDefault();
 
                 if (result == null)
                 {
-                    throw new InvalidOperationException("The subscription " + subscriptionId + " couldn't be found.");
+                    throw new InvalidOperationException("The subscription " + blogId + " couldn't be found.");
                 }
 
                 return new GetSubscriptionDataDbResult(
-                    new SubscriptionId(result.Id), 
+                    new BlogId(result.Id), 
                     new UserId(result.CreatorId), 
-                    new SubscriptionName(result.Name),
+                    new BlogName(result.Name),
                     new Tagline(result.Tagline),
                     new Introduction(result.Introduction),
                     result.CreationDate,
                     result.HeaderImageFileId == null ? null : new FileId(result.HeaderImageFileId.Value),
                     result.ExternalVideoUrl == null ? null : new ExternalVideoUrl(result.ExternalVideoUrl),
-                    result.Description == null ? null : new SubscriptionDescription(result.Description));
+                    result.Description == null ? null : new BlogDescription(result.Description));
             }
         }
 
         [AutoConstructor]
         public partial class GetSubscriptionDataDbResult
         {
-            public SubscriptionId SubscriptionId { get; private set; }
+            public BlogId BlogId { get; private set; }
 
             public UserId CreatorId { get; private set; }
 
-            public SubscriptionName SubscriptionName { get; private set; }
+            public BlogName BlogName { get; private set; }
 
             public Tagline Tagline { get; private set; }
 
@@ -74,7 +74,7 @@
             public ExternalVideoUrl Video { get; private set; }
 
             [Optional]
-            public SubscriptionDescription Description { get; private set; }
+            public BlogDescription Description { get; private set; }
         }
     }
 }

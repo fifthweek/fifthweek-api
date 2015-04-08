@@ -6,13 +6,13 @@
     using Fifthweek.CodeGeneration;
 
     [AutoEqualityMembers, AutoConstructor]
-    public partial class CreateSubscriptionCommand
+    public partial class CreateBlogCommand
     {
         public Requester Requester { get; private set; }
         
-        public SubscriptionId NewSubscriptionId { get; private set; }
+        public BlogId NewBlogId { get; private set; }
 
-        public ValidSubscriptionName SubscriptionName { get; private set; }
+        public ValidBlogName BlogName { get; private set; }
 
         public ValidTagline Tagline { get; private set; }
 

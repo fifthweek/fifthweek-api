@@ -6,6 +6,6 @@
 
     public interface IBlogOwnership
     {
-        Task<bool> IsOwnerAsync(UserId userId, Shared.SubscriptionId subscriptionId);
+        Task<bool> IsOwnerAsync(UserId userId, Shared.BlogId blogId);
     }
 }

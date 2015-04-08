@@ -22,7 +22,7 @@
         private static readonly UserId UserId = new UserId(Guid.NewGuid());
         private static readonly Requester Requester = Requester.Authenticated(UserId);
         private static readonly ChannelId ChannelId = new ChannelId(Guid.NewGuid());
-        private static readonly SubscriptionId SubscriptionId = new SubscriptionId(Guid.NewGuid());
+        private static readonly BlogId BlogId = new BlogId(Guid.NewGuid());
         private static readonly ValidChannelName ChannelName = ValidChannelName.Parse("Premium");
         private static readonly ValidChannelDescription ChannelDescription = ValidChannelDescription.Parse("Premium");
         private static readonly ValidChannelPriceInUsCentsPerWeek Price = ValidChannelPriceInUsCentsPerWeek.Parse(10);
@@ -48,8 +48,8 @@
         [TestMethod]
         public async Task WhenPostingChannel_ItShouldIssueCreateChannelCommand()
         {
-            var data = new NewChannelData(SubscriptionId, ChannelName.Value, ChannelDescription.Value, Price.Value, IsVisibleToNonSubscribers);
-            var command = new CreateChannelCommand(Requester, ChannelId, SubscriptionId, ChannelName, ChannelDescription, Price, IsVisibleToNonSubscribers);
+            var data = new NewChannelData(BlogId, ChannelName.Value, ChannelDescription.Value, Price.Value, IsVisibleToNonSubscribers);
+            var command = new CreateChannelCommand(Requester, ChannelId, BlogId, ChannelName, ChannelDescription, Price, IsVisibleToNonSubscribers);
 
             this.requesterContext.Setup(_ => _.GetRequester()).Returns(Requester);
             this.guidCreator.Setup(_ => _.CreateSqlSequential()).Returns(ChannelId.Value);

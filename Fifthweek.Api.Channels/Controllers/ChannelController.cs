@@ -31,7 +31,7 @@
                 new CreateChannelCommand(
                     requester,
                     newChannelId,
-                    newChannel.SubscriptionId,
+                    newChannel.BlogId,
                     newChannel.Name,
                     newChannel.Description,
                     newChannel.Price,

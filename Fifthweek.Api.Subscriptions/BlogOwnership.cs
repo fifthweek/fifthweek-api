@@ -14,7 +14,7 @@
     {
         private readonly IFifthweekDbConnectionFactory connectionFactory;
 
-        public async Task<bool> IsOwnerAsync(UserId userId, Shared.SubscriptionId blogId)
+        public async Task<bool> IsOwnerAsync(UserId userId, Shared.BlogId blogId)
         {
             if (userId == null)
             {

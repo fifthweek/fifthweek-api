@@ -9,13 +9,13 @@
 
     [AutoConstructor]
     [AutoEqualityMembers]
-    public partial class GetSubscriptionResult
+    public partial class GetBlogResult
     {
-        public SubscriptionId SubscriptionId { get; private set; }
+        public BlogId BlogId { get; private set; }
 
         public UserId CreatorId { get; private set; }
 
-        public SubscriptionName SubscriptionName { get; private set; }
+        public BlogName BlogName { get; private set; }
 
         public Tagline Tagline { get; private set; }
 
@@ -30,6 +30,6 @@
         public ExternalVideoUrl Video { get; private set; }
 
         [Optional]
-        public SubscriptionDescription Description { get; private set; }
+        public BlogDescription Description { get; private set; }
     }
 }

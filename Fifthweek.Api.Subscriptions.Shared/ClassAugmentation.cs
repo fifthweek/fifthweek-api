@@ -13,44 +13,44 @@ namespace Fifthweek.Api.Subscriptions.Shared
     using System.Diagnostics.CodeAnalysis;
 
     [Newtonsoft.Json.JsonConverter(typeof(JsonConverter))]
-    public partial class SubscriptionId 
+    public partial class BlogId 
     {
         public class JsonConverter : Newtonsoft.Json.JsonConverter
         {
             public override void WriteJson(Newtonsoft.Json.JsonWriter writer, object value, Newtonsoft.Json.JsonSerializer serializer)
             {
-                var valueType = (SubscriptionId)value;
+                var valueType = (BlogId)value;
                 serializer.Serialize(writer, valueType.Value);
             }
         
             public override object ReadJson(Newtonsoft.Json.JsonReader reader, Type objectType, object existingValue, Newtonsoft.Json.JsonSerializer serializer)
             {
-                if (objectType != typeof(SubscriptionId))
+                if (objectType != typeof(BlogId))
                 {
-                    throw new ArgumentException("Expected to deserialize JSON for type " + typeof(SubscriptionId).Name, "objectType");
+                    throw new ArgumentException("Expected to deserialize JSON for type " + typeof(BlogId).Name, "objectType");
                 }
         
                 var value = serializer.Deserialize<System.Guid>(reader);
-                return new SubscriptionId(value);
+                return new BlogId(value);
             }
         
             public override bool CanConvert(Type objectType)
             {
-                return objectType == typeof(SubscriptionId);
+                return objectType == typeof(BlogId);
             }
         }
         
-        public class DapperTypeHandler : Dapper.SqlMapper.TypeHandler<SubscriptionId>, Fifthweek.Api.Persistence.IAutoRegisteredTypeHandler<SubscriptionId>
+        public class DapperTypeHandler : Dapper.SqlMapper.TypeHandler<BlogId>, Fifthweek.Api.Persistence.IAutoRegisteredTypeHandler<BlogId>
         {
-            public override void SetValue(System.Data.IDbDataParameter parameter, SubscriptionId value)
+            public override void SetValue(System.Data.IDbDataParameter parameter, BlogId value)
             {
                 parameter.DbType = System.Data.DbType.Guid;
                 parameter.Value = value.Value;
             }
         
-            public override SubscriptionId Parse(object value)
+            public override BlogId Parse(object value)
             {
-                return new SubscriptionId((System.Guid)value);
+                return new BlogId((System.Guid)value);
             }
         }
     }
@@ -163,44 +163,44 @@ namespace Fifthweek.Api.Subscriptions.Shared
     using Fifthweek.CodeGeneration;
 
     [Newtonsoft.Json.JsonConverter(typeof(JsonConverter))]
-    public partial class SubscriptionDescription 
+    public partial class BlogDescription 
     {
         public class JsonConverter : Newtonsoft.Json.JsonConverter
         {
             public override void WriteJson(Newtonsoft.Json.JsonWriter writer, object value, Newtonsoft.Json.JsonSerializer serializer)
             {
-                var valueType = (SubscriptionDescription)value;
+                var valueType = (BlogDescription)value;
                 serializer.Serialize(writer, valueType.Value);
             }
         
             public override object ReadJson(Newtonsoft.Json.JsonReader reader, Type objectType, object existingValue, Newtonsoft.Json.JsonSerializer serializer)
             {
-                if (objectType != typeof(SubscriptionDescription))
+                if (objectType != typeof(BlogDescription))
                 {
-                    throw new ArgumentException("Expected to deserialize JSON for type " + typeof(SubscriptionDescription).Name, "objectType");
+                    throw new ArgumentException("Expected to deserialize JSON for type " + typeof(BlogDescription).Name, "objectType");
                 }
         
                 var value = serializer.Deserialize<System.String>(reader);
-                return new SubscriptionDescription(value);
+                return new BlogDescription(value);
             }
         
             public override bool CanConvert(Type objectType)
             {
-                return objectType == typeof(SubscriptionDescription);
+                return objectType == typeof(BlogDescription);
             }
         }
         
-        public class DapperTypeHandler : Dapper.SqlMapper.TypeHandler<SubscriptionDescription>, Fifthweek.Api.Persistence.IAutoRegisteredTypeHandler<SubscriptionDescription>
+        public class DapperTypeHandler : Dapper.SqlMapper.TypeHandler<BlogDescription>, Fifthweek.Api.Persistence.IAutoRegisteredTypeHandler<BlogDescription>
         {
-            public override void SetValue(System.Data.IDbDataParameter parameter, SubscriptionDescription value)
+            public override void SetValue(System.Data.IDbDataParameter parameter, BlogDescription value)
             {
                 parameter.DbType = System.Data.DbType.String;
                 parameter.Value = value.Value;
             }
         
-            public override SubscriptionDescription Parse(object value)
+            public override BlogDescription Parse(object value)
             {
-                return new SubscriptionDescription((System.String)value);
+                return new BlogDescription((System.String)value);
             }
         }
     }
@@ -213,44 +213,44 @@ namespace Fifthweek.Api.Subscriptions.Shared
     using Fifthweek.CodeGeneration;
 
     [Newtonsoft.Json.JsonConverter(typeof(JsonConverter))]
-    public partial class SubscriptionName 
+    public partial class BlogName 
     {
         public class JsonConverter : Newtonsoft.Json.JsonConverter
         {
             public override void WriteJson(Newtonsoft.Json.JsonWriter writer, object value, Newtonsoft.Json.JsonSerializer serializer)
             {
-                var valueType = (SubscriptionName)value;
+                var valueType = (BlogName)value;
                 serializer.Serialize(writer, valueType.Value);
             }
         
             public override object ReadJson(Newtonsoft.Json.JsonReader reader, Type objectType, object existingValue, Newtonsoft.Json.JsonSerializer serializer)
             {
-                if (objectType != typeof(SubscriptionName))
+                if (objectType != typeof(BlogName))
                 {
-                    throw new ArgumentException("Expected to deserialize JSON for type " + typeof(SubscriptionName).Name, "objectType");
+                    throw new ArgumentException("Expected to deserialize JSON for type " + typeof(BlogName).Name, "objectType");
                 }
         
                 var value = serializer.Deserialize<System.String>(reader);
-                return new SubscriptionName(value);
+                return new BlogName(value);
             }
         
             public override bool CanConvert(Type objectType)
             {
-                return objectType == typeof(SubscriptionName);
+                return objectType == typeof(BlogName);
             }
         }
         
-        public class DapperTypeHandler : Dapper.SqlMapper.TypeHandler<SubscriptionName>, Fifthweek.Api.Persistence.IAutoRegisteredTypeHandler<SubscriptionName>
+        public class DapperTypeHandler : Dapper.SqlMapper.TypeHandler<BlogName>, Fifthweek.Api.Persistence.IAutoRegisteredTypeHandler<BlogName>
         {
-            public override void SetValue(System.Data.IDbDataParameter parameter, SubscriptionName value)
+            public override void SetValue(System.Data.IDbDataParameter parameter, BlogName value)
             {
                 parameter.DbType = System.Data.DbType.String;
                 parameter.Value = value.Value;
             }
         
-            public override SubscriptionName Parse(object value)
+            public override BlogName Parse(object value)
             {
-                return new SubscriptionName((System.String)value);
+                return new BlogName((System.String)value);
             }
         }
     }
@@ -314,9 +314,9 @@ namespace Fifthweek.Api.Subscriptions.Shared
     using System.Collections.Generic;
     using System.Diagnostics.CodeAnalysis;
 
-    public partial class SubscriptionId 
+    public partial class BlogId 
     {
-        public SubscriptionId(
+        public BlogId(
             System.Guid value)
         {
             if (value == null)
@@ -377,9 +377,9 @@ namespace Fifthweek.Api.Subscriptions.Shared
     using System.Collections.Generic;
     using Fifthweek.CodeGeneration;
 
-    public partial class SubscriptionDescription 
+    public partial class BlogDescription 
     {
-        public SubscriptionDescription(
+        public BlogDescription(
             System.String value)
         {
             if (value == null)
@@ -398,9 +398,9 @@ namespace Fifthweek.Api.Subscriptions.Shared
     using System.Linq;
     using Fifthweek.CodeGeneration;
 
-    public partial class SubscriptionName 
+    public partial class BlogName 
     {
-        public SubscriptionName(
+        public BlogName(
             System.String value)
         {
             if (value == null)
@@ -442,7 +442,7 @@ namespace Fifthweek.Api.Subscriptions.Shared
     using System.Collections.Generic;
     using System.Diagnostics.CodeAnalysis;
 
-    public partial class SubscriptionId 
+    public partial class BlogId 
     {
         public override string ToString()
         {
@@ -466,7 +466,7 @@ namespace Fifthweek.Api.Subscriptions.Shared
                 return false;
             }
         
-            return this.Equals((SubscriptionId)obj);
+            return this.Equals((BlogId)obj);
         }
         
         public override int GetHashCode()
@@ -479,7 +479,7 @@ namespace Fifthweek.Api.Subscriptions.Shared
             }
         }
         
-        protected bool Equals(SubscriptionId other)
+        protected bool Equals(BlogId other)
         {
             if (!object.Equals(this.Value, other.Value))
             {
@@ -607,7 +607,7 @@ namespace Fifthweek.Api.Subscriptions.Shared
     using System.Collections.Generic;
     using Fifthweek.CodeGeneration;
 
-    public partial class SubscriptionDescription 
+    public partial class BlogDescription 
     {
         public override string ToString()
         {
@@ -631,7 +631,7 @@ namespace Fifthweek.Api.Subscriptions.Shared
                 return false;
             }
         
-            return this.Equals((SubscriptionDescription)obj);
+            return this.Equals((BlogDescription)obj);
         }
         
         public override int GetHashCode()
@@ -644,7 +644,7 @@ namespace Fifthweek.Api.Subscriptions.Shared
             }
         }
         
-        protected bool Equals(SubscriptionDescription other)
+        protected bool Equals(BlogDescription other)
         {
             if (!object.Equals(this.Value, other.Value))
             {
@@ -662,7 +662,7 @@ namespace Fifthweek.Api.Subscriptions.Shared
     using System.Linq;
     using Fifthweek.CodeGeneration;
 
-    public partial class SubscriptionName 
+    public partial class BlogName 
     {
         public override string ToString()
         {
@@ -686,7 +686,7 @@ namespace Fifthweek.Api.Subscriptions.Shared
                 return false;
             }
         
-            return this.Equals((SubscriptionName)obj);
+            return this.Equals((BlogName)obj);
         }
         
         public override int GetHashCode()
@@ -699,7 +699,7 @@ namespace Fifthweek.Api.Subscriptions.Shared
             }
         }
         
-        protected bool Equals(SubscriptionName other)
+        protected bool Equals(BlogName other)
         {
             if (!object.Equals(this.Value, other.Value))
             {
