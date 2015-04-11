@@ -142,6 +142,7 @@
                 "Exclusive News Feed" + Environment.NewLine + "Early Updates on New Releases",
                 BasePrice.Value,
                 true,
+                DateTime.MinValue,
                 DateTime.MinValue);
 
                 return new ExpectedSideEffects
@@ -151,6 +152,8 @@
                         Expected = actualChannel =>
                         {
                             expectedChannel.CreationDate = actualChannel.CreationDate; // Take wildcard properties from actual value.
+                            expectedChannel.PriceLastSetDate = actualChannel.PriceLastSetDate;
+                            Assert.AreEqual(expectedChannel.CreationDate, expectedChannel.PriceLastSetDate);
                             return expectedChannel;
                         }
                     },

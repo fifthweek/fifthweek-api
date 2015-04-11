@@ -89,6 +89,7 @@
     <Compile Include="Controllers\ChannelControllerTests.cs" />
     <Compile Include="DeleteChannelDbStatementTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="UpdateChannelDbStatementTests.cs" />
     <Compile Include="ValidChannelNameTests.cs" />
     <Compile Include="ValidChannelPriceInUsCentsPerWeekTests.cs" />
     <Compile Include="ValidChannelDescriptionTests.cs" />

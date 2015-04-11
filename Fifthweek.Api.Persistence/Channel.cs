@@ -38,5 +38,8 @@
 
         [Required]
         public DateTime CreationDate { get; set; }
+
+        [Required]
+        public DateTime PriceLastSetDate { get; set; }
     }
 }

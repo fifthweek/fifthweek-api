@@ -7,6 +7,9 @@
     {
         public static Channel UniqueEntity(Random random)
         {
+            var dateCreated = DateTime.UtcNow.AddDays(random.NextDouble() * -100);
+            var datePriceLastSet = DateTime.UtcNow.AddDays(random.NextDouble() * -100);
+            datePriceLastSet = new DateTime(Math.Max(dateCreated.Ticks, datePriceLastSet.Ticks));
             return new Channel(
                 Guid.NewGuid(),
                 default(Guid),
@@ -15,10 +18,11 @@
                 "Description " + random.Next(1000),
                 random.Next(1, 100),
                 random.Next(2) == 0,
-                DateTime.UtcNow.AddDays(random.NextDouble() * -100));
+                dateCreated,
+                datePriceLastSet);
         }
 
-        public static Task CreateTestChannelAsync(
+        public static async Task<Channel> CreateTestChannelAsync(
             this IFifthweekDbContext databaseContext,
             Guid newUserId,
             Guid newChannelId,
@@ -39,7 +43,8 @@
             channel.BlogId = subscription.Id;
 
             databaseContext.Channels.Add(channel);
-            return databaseContext.SaveChangesAsync();
+            await databaseContext.SaveChangesAsync();
+            return channel;
         }
 
         public static Task CreateTestChannelAsync(this IFifthweekDbContext databaseContext, Guid newUserId, Guid newChannelId)

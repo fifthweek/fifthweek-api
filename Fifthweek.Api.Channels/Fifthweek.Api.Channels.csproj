@@ -95,7 +95,9 @@
     <Compile Include="DeleteChannelDbStatement.cs" />
     <Compile Include="IChannelOwnership.cs" />
     <Compile Include="IDeleteChannelDbStatement.cs" />
+    <Compile Include="IUpdateChannelDbStatement.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="UpdateChannelDbStatement.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Fifthweek.Api.Blogs.Shared\Fifthweek.Api.Blogs.Shared.csproj">

@@ -29,6 +29,7 @@
 
         private async Task CreateChannelAsync(CreateChannelCommand command)
         {
+            var now = DateTime.UtcNow;
             var channel = new Channel(
                 command.NewChannelId.Value,
                 command.BlogId.Value,
@@ -37,7 +38,8 @@
                 command.Description.Value,
                 command.Price.Value,
                 command.IsVisibleToNonSubscribers,
-                DateTime.UtcNow);
+                now,
+                now);
 
             using (var connection = this.connectionFactory.CreateConnection())
             {

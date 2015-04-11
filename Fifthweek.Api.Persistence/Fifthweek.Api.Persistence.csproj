@@ -84,6 +84,7 @@
   <ItemGroup>
     <Compile Include="AutofacRegistration.cs" />
     <Compile Include="Channel.cs" />
+    <Compile Include="ChannelSubscription.cs" />
     <Compile Include="ClassAugmentation.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -96,6 +97,7 @@
     <Compile Include="FifthweekDbConnectionFactory.cs" />
     <Compile Include="FifthweekDbContext.cs" />
     <Compile Include="FileState.cs" />
+    <Compile Include="FreeAccessUser.cs" />
     <Compile Include="IAutoRegisteredTypeHandler.cs" />
     <Compile Include="IdentityConfig.cs" />
     <Compile Include="Identity\FifthweekRole.cs" />
@@ -246,6 +248,14 @@
     <Compile Include="Migrations\201504080915446_RenameSubscriptionToBlog.Designer.cs">
       <DependentUpon>201504080915446_RenameSubscriptionToBlog.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201504091839514_AddPriceLastSetDate.cs" />
+    <Compile Include="Migrations\201504091839514_AddPriceLastSetDate.Designer.cs">
+      <DependentUpon>201504091839514_AddPriceLastSetDate.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201504091846482_AddFreeAccessUsers.cs" />
+    <Compile Include="Migrations\201504091846482_AddFreeAccessUsers.Designer.cs">
+      <DependentUpon>201504091846482_AddFreeAccessUsers.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Post.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -379,6 +389,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201504080915446_RenameSubscriptionToBlog.resx">
       <DependentUpon>201504080915446_RenameSubscriptionToBlog.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201504091839514_AddPriceLastSetDate.resx">
+      <DependentUpon>201504091839514_AddPriceLastSetDate.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201504091846482_AddFreeAccessUsers.resx">
+      <DependentUpon>201504091846482_AddFreeAccessUsers.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>

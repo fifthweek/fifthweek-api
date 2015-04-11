@@ -37,6 +37,7 @@
             this.tables.Add(this.Load(databaseContext => databaseContext.Posts));
             this.tables.Add(this.Load(databaseContext => databaseContext.Files));
             this.tables.Add(this.Load(databaseContext => databaseContext.RefreshTokens));
+            this.tables.Add(this.Load(databaseContext => databaseContext.FreeAccessUsers));
 
             Trace.WriteLine(string.Format("Snapshot taken in {0}s", Math.Round(stopwatch.Elapsed.TotalSeconds, 2)));
         }

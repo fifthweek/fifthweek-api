@@ -110,6 +110,7 @@
                     Description.Value,
                     Price.Value,
                     IsVisibleToNonSubscribers,
+                    default(DateTime),
                     default(DateTime));
 
                 return new ExpectedSideEffects
@@ -119,6 +120,8 @@
                         Expected = actual =>
                         {
                             expectedChannel.CreationDate = actual.CreationDate;
+                            expectedChannel.PriceLastSetDate = actual.PriceLastSetDate;
+                            Assert.AreEqual(actual.CreationDate, actual.PriceLastSetDate);
                             return expectedChannel;
                         }
                     }

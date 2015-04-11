@@ -31,6 +31,8 @@
 
         IDbSet<EndToEndTestEmail> EndToEndTestEmails { get; set; }
 
+        IDbSet<FreeAccessUser> FreeAccessUsers { get; set; }
+
         Task<int> SaveChangesAsync();
 
         Task<int> SaveChangesAsync(CancellationToken cancellationToken);

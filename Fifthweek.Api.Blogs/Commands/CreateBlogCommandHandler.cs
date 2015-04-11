@@ -41,6 +41,7 @@
 
         private async Task CreateEntitiesAsync(CreateBlogCommand command, UserId authenticatedUserId)
         {
+            var now = DateTime.UtcNow;
             var blog = new Blog(
                 command.NewBlogId.Value,
                 authenticatedUserId.Value,
@@ -52,7 +53,7 @@
                 null,
                 null,
                 null,
-                DateTime.UtcNow);
+                now);
 
             var channel = new Channel(
                 command.NewBlogId.Value, // Default channel uses same ID as blog.
@@ -62,7 +63,8 @@
                 DefaultChannelDescription.Value,
                 command.BasePrice.Value,
                 true,
-                DateTime.UtcNow);
+                now, 
+                now);
 
             // Assuming no lock escalation, this transaction will hold X locks on the new rows and IX locks further up the hierarchy,
             // so no deadlocks are to be expected.

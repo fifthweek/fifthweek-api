@@ -35,6 +35,8 @@ namespace Fifthweek.Api.Persistence
 
         public IDbSet<EndToEndTestEmail> EndToEndTestEmails { get; set; }
 
+        public IDbSet<FreeAccessUser> FreeAccessUsers { get; set; }
+
         public static FifthweekDbContext Create()
         {
             return new FifthweekDbContext();

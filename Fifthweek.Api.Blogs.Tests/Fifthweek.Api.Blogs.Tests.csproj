@@ -98,9 +98,17 @@
     <Compile Include="Commands\UpdateBlogCommandHandlerTests.cs" />
     <Compile Include="Commands\PromoteNewUserToCreatorCommandHandlerTests.cs" />
     <Compile Include="Commands\CreateBlogCommandHandlerTests.cs" />
+    <Compile Include="Commands\UpdateFreeAccessUsersCommandHandlerTests.cs" />
+    <Compile Include="Controllers\BlogAccessControllerTests.cs" />
     <Compile Include="Controllers\BlogControllerTests.cs" />
+    <Compile Include="Controllers\UserBlogAccessControllerTests.cs" />
     <Compile Include="GetBlogDbStatementTests.cs" />
+    <Compile Include="GetFreeAccessUsersDbStatementTests.cs" />
+    <Compile Include="IsUserInFreeAccessListDbStatementTests.cs" />
+    <Compile Include="Queries\GetBlogAccessStatusQueryHandlerTests.cs" />
     <Compile Include="Queries\GetBlogQueryHandlerTests.cs" />
+    <Compile Include="Queries\GetFreeAccessUsersQueryHandlerTests.cs" />
+    <Compile Include="UpdateFreeAccessUsersDbStatementTests.cs" />
     <Compile Include="ValidBlogDescriptionTests.cs" />
     <Compile Include="ValidExternalVideoUrlTests.cs" />
     <Compile Include="Queries\GetCreatorStatusQueryHandlerTests.cs" />
@@ -151,6 +159,10 @@
     <ProjectReference Include="..\Fifthweek.Api.Blogs\Fifthweek.Api.Blogs.csproj">
       <Project>{5DB142B7-3152-447E-8816-33A90BA9EF76}</Project>
       <Name>Fifthweek.Api.Blogs</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Fifthweek.CodeGeneration\Fifthweek.CodeGeneration.csproj">
+      <Project>{770F450E-2166-4269-BEC1-DF59AA16B1E8}</Project>
+      <Name>Fifthweek.CodeGeneration</Name>
     </ProjectReference>
     <ProjectReference Include="..\Fifthweek.Shared\Fifthweek.Shared.csproj">
       <Project>{6D12FFBB-38E9-4722-A690-0F0338538EBC}</Project>

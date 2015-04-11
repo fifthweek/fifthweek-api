@@ -16,7 +16,7 @@
     using Moq;
 
     [TestClass]
-    public class UpdateChannelCommandHandlerTests : PersistenceTestsBase
+    public class UpdateChannelCommandHandlerTests
     {
         private const bool IsVisibleToNonSubscribers = false;
         private static readonly UserId UserId = new UserId(Guid.NewGuid());
@@ -29,7 +29,7 @@
         
         private Mock<IRequesterSecurity> requesterSecurity;
         private Mock<IChannelSecurity> channelSecurity;
-        private Mock<IFifthweekDbConnectionFactory> connectionFactory;
+        private Mock<IUpdateChannelDbStatement> updateChannelDbStatement;
         private UpdateChannelCommandHandler target;
 
         [TestInitialize]
@@ -40,14 +40,9 @@
             this.channelSecurity = new Mock<IChannelSecurity>();
 
             // Give potentially side-effective components strict mock behaviour.
-            this.connectionFactory = new Mock<IFifthweekDbConnectionFactory>(MockBehavior.Strict);
+            this.updateChannelDbStatement = new Mock<IUpdateChannelDbStatement>(MockBehavior.Strict);
 
-            this.InitializeTarget(this.connectionFactory.Object);
-        }
-
-        public void InitializeTarget(IFifthweekDbConnectionFactory connectionFactory)
-        {
-            this.target = new UpdateChannelCommandHandler(this.requesterSecurity.Object, this.channelSecurity.Object, connectionFactory);
+            this.target = new UpdateChannelCommandHandler(this.requesterSecurity.Object, this.channelSecurity.Object, this.updateChannelDbStatement.Object);
         }
 
         [TestMethod]
@@ -74,98 +69,18 @@
         }
 
         [TestMethod]
-        public async Task ItShouldBeIdempotent()
+        public async Task ItShouldCallTheUpdateChannelDbStatement()
         {
-            await this.DatabaseTestAsync(async testDatabase =>
-            {
-                this.InitializeTarget(testDatabase);
-                await this.CreateChannelAsync(testDatabase);
-                await this.target.HandleAsync(Command);
-                await testDatabase.TakeSnapshotAsync();
+            this.updateChannelDbStatement.Setup(v => v.ExecuteAsync(
+                ChannelId,
+                Name,
+                Description,
+                Price,
+                IsVisibleToNonSubscribers,
+                It.Is<DateTime>(dt => dt.Kind == DateTimeKind.Utc)))
+                .Returns(Task.FromResult(0));
 
-                await this.target.HandleAsync(Command);
-
-                return ExpectedSideEffects.None;
-            });
-        }
-
-        [TestMethod]
-        public async Task ItShouldUpdateChannel()
-        {
-            await this.DatabaseTestAsync(async testDatabase =>
-            {
-                this.InitializeTarget(testDatabase);
-                await this.CreateChannelAsync(testDatabase);
-                await testDatabase.TakeSnapshotAsync();
-
-                await this.target.HandleAsync(Command);
-
-                var expectedChannel = new Channel(ChannelId.Value)
-                {
-                    IsVisibleToNonSubscribers = IsVisibleToNonSubscribers,
-                    Name = Name.Value,
-                    Description = Description.Value,
-                    PriceInUsCentsPerWeek = Price.Value
-                };
-
-                return new ExpectedSideEffects
-                {
-                    Update = new WildcardEntity<Channel>(expectedChannel)
-                    {
-                        Expected = actual =>
-                        {
-                            expectedChannel.BlogId = actual.BlogId;
-                            expectedChannel.CreationDate = actual.CreationDate;
-                            return expectedChannel;
-                        }
-                    }
-                };
-            });
-        }
-
-        [TestMethod]
-        public async Task ItShouldNotAllowDefaultChannelToBeHidden()
-        {
-            await this.DatabaseTestAsync(async testDatabase =>
-            {
-                this.InitializeTarget(testDatabase);
-                await this.CreateChannelAsync(testDatabase, createAsDefaultChannel: true);
-                await testDatabase.TakeSnapshotAsync();
-
-                await this.target.HandleAsync(new UpdateChannelCommand(Requester, ChannelId, Name, Description, Price, isVisibleToNonSubscribers: false));
-
-                var expectedChannel = new Channel(ChannelId.Value)
-                {
-                    IsVisibleToNonSubscribers = true,
-                    Name = Name.Value,
-                    Description = Description.Value,
-                    PriceInUsCentsPerWeek = Price.Value
-                };
-
-                return new ExpectedSideEffects
-                {
-                    Update = new WildcardEntity<Channel>(expectedChannel)
-                    {
-                        Expected = actual =>
-                        {
-                            expectedChannel.BlogId = actual.BlogId;
-                            expectedChannel.CreationDate = actual.CreationDate;
-                            return expectedChannel;
-                        }
-                    }
-                };
-            });
-        }
-
-        private async Task CreateChannelAsync(TestDatabaseContext testDatabase, bool createAsDefaultChannel = false)
-        {
-            using (var databaseContext = testDatabase.CreateContext())
-            {
-                await databaseContext.CreateTestChannelAsync(UserId.Value, ChannelId.Value, createAsDefaultChannel ? ChannelId.Value : Guid.NewGuid());
-                await databaseContext.Database.Connection.UpdateAsync(
-                    new Channel(ChannelId.Value) { IsVisibleToNonSubscribers = true },
-                    Channel.Fields.IsVisibleToNonSubscribers);
-            }
+            await this.target.HandleAsync(Command);
         }
     } 
 }
