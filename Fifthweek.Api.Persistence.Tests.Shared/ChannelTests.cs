@@ -1,15 +1,20 @@
 ﻿namespace Fifthweek.Api.Persistence.Tests.Shared
 {
     using System;
+    using System.Data.SqlTypes;
     using System.Threading.Tasks;
 
     public static class ChannelTests
     {
         public static Channel UniqueEntity(Random random)
         {
-            var dateCreated = DateTime.UtcNow.AddDays(1 + random.NextDouble() * -100);
-            var datePriceLastSet = DateTime.UtcNow.AddDays(1 + random.NextDouble() * -100);
+            var dateCreated = DateTime.UtcNow.AddDays(random.NextDouble() * -100);
+            var datePriceLastSet = DateTime.UtcNow.AddDays(random.NextDouble() * -100);
             datePriceLastSet = new DateTime(Math.Max(dateCreated.Ticks, datePriceLastSet.Ticks));
+
+            dateCreated = new SqlDateTime(dateCreated).Value;
+            datePriceLastSet = new SqlDateTime(datePriceLastSet).Value;
+
             return new Channel(
                 Guid.NewGuid(),
                 default(Guid),

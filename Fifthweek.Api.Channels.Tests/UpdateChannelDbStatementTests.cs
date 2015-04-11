@@ -77,20 +77,14 @@
                     Name = Name.Value,
                     Description = Description.Value,
                     PriceInUsCentsPerWeek = Price.Value,
-                    PriceLastSetDate = Now
+                    PriceLastSetDate = Now,
+                    BlogId = channel.BlogId,
+                    CreationDate = channel.CreationDate
                 };
 
                 return new ExpectedSideEffects
                 {
-                    Update = new WildcardEntity<Channel>(expectedChannel)
-                    {
-                        Expected = actual =>
-                        {
-                            expectedChannel.BlogId = actual.BlogId;
-                            expectedChannel.CreationDate = actual.CreationDate;
-                            return expectedChannel;
-                        }
-                    }
+                    Update = expectedChannel
                 };
             });
         }
@@ -113,19 +107,48 @@
                     Description = Description.Value,
                     PriceInUsCentsPerWeek = Price.Value,
                     PriceLastSetDate = Now,
+                    BlogId = channel.BlogId,
+                    CreationDate = channel.CreationDate
                 };
 
                 return new ExpectedSideEffects
                 {
-                    Update = new WildcardEntity<Channel>(expectedChannel)
-                    {
-                        Expected = actual =>
-                        {
-                            expectedChannel.BlogId = actual.BlogId;
-                            expectedChannel.CreationDate = actual.CreationDate;
-                            return expectedChannel;
-                        }
-                    }
+                    Update = expectedChannel
+                };
+            });
+        }
+
+        [TestMethod]
+        public async Task ItShouldNotUpdatePriceLastSetDateIfPriceHasNotChanged()
+        {
+            await this.DatabaseTestAsync(async testDatabase =>
+            {
+                this.InitializeTarget(testDatabase);
+                var channel = await this.CreateChannelAsync(testDatabase);
+                await testDatabase.TakeSnapshotAsync();
+
+                await this.target.ExecuteAsync(
+                    ChannelId, 
+                    Name, 
+                    Description, 
+                    ValidChannelPriceInUsCentsPerWeek.Parse(channel.PriceInUsCentsPerWeek), 
+                    IsVisibleToNonSubscribers,
+                    Now);
+
+                var expectedChannel = new Channel(ChannelId.Value)
+                {
+                    IsVisibleToNonSubscribers = IsVisibleToNonSubscribers,
+                    Name = Name.Value,
+                    Description = Description.Value,
+                    PriceInUsCentsPerWeek = channel.PriceInUsCentsPerWeek,
+                    PriceLastSetDate = channel.PriceLastSetDate,
+                    BlogId = channel.BlogId,
+                    CreationDate = channel.CreationDate,
+                };
+
+                return new ExpectedSideEffects
+                {
+                    Update = expectedChannel
                 };
             });
         }

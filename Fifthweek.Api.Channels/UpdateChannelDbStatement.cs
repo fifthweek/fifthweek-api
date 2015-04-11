@@ -15,6 +15,45 @@
     [AutoConstructor]
     public partial class UpdateChannelDbStatement : IUpdateChannelDbStatement
     {
+        private static readonly string UpdateStatement = string.Format(
+            @"
+            UPDATE {0} 
+            SET 
+                {1} = @Name, 
+                {2} = @PriceInUsCentsPerWeek,
+                {3} = @Description,
+                {4} = 
+                (
+                    CASE
+                        WHEN 
+                            {6} != {7}
+                        THEN
+                             @IsVisibleToNonSubscribers
+                        ELSE
+                            {4}
+                    END
+                ),
+                {5} =
+                (
+                    CASE
+                        WHEN 
+                            {2} != @PriceInUsCentsPerWeek
+                        THEN
+                            @PriceLastSetDate
+                        ELSE
+                            {5}
+                    END
+                )
+                WHERE {6}=@Id",
+            Channel.Table,
+            Channel.Fields.Name,
+            Channel.Fields.PriceInUsCentsPerWeek,
+            Channel.Fields.Description,
+            Channel.Fields.IsVisibleToNonSubscribers,
+            Channel.Fields.PriceLastSetDate,
+            Channel.Fields.Id,
+            Channel.Fields.BlogId);
+
         private readonly IFifthweekDbConnectionFactory connectionFactory;
 
         public async Task ExecuteAsync(
@@ -25,33 +64,19 @@
             bool isVisibleToNonSubscribers, 
             DateTime now)
         {
-            var channel = new Channel(channelId.Value)
+            using (var connection = this.connectionFactory.CreateConnection())
             {
-                IsVisibleToNonSubscribers = isVisibleToNonSubscribers,
-                Name = name.Value,
-                PriceInUsCentsPerWeek = price.Value,
-                Description = description.Value,
-                PriceLastSetDate = now
-            };
-
-            var updatedFields =
-                Channel.Fields.IsVisibleToNonSubscribers |
-                Channel.Fields.Name |
-                Channel.Fields.PriceInUsCentsPerWeek |
-                Channel.Fields.Description |
-                Channel.Fields.PriceLastSetDate;
-
-            using (var context = this.connectionFactory.CreateContext())
-            {
-                // Do not update visibility for the default channel: it must always be visible.
-                var channelIdGuid = channelId.Value;
-                var subscriptionId = await context.Channels.Where(_ => _.Id == channelIdGuid).Select(_ => _.BlogId).FirstAsync();
-                if (subscriptionId == channelIdGuid)
-                {
-                    updatedFields &= ~Channel.Fields.IsVisibleToNonSubscribers;
-                }
-
-                await context.Database.Connection.UpdateAsync(channel, updatedFields);
+                await connection.ExecuteAsync(
+                    UpdateStatement,
+                    new 
+                    {
+                        Id = channelId.Value,
+                        IsVisibleToNonSubscribers = isVisibleToNonSubscribers,
+                        Name = name.Value,
+                        PriceInUsCentsPerWeek = price.Value,
+                        Description = description.Value,
+                        PriceLastSetDate = now
+                    });
             }
         }
     }
