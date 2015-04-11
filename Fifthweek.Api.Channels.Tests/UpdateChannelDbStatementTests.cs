@@ -1,6 +1,7 @@
 ﻿namespace Fifthweek.Api.Channels.Tests
 {
     using System;
+    using System.Data.SqlTypes;
     using System.Threading.Tasks;
 
     using Fifthweek.Api.Channels.Commands;
@@ -24,7 +25,7 @@
         private static readonly ValidChannelName Name = ValidChannelName.Parse("Bat puns");
         private static readonly ValidChannelDescription Description = ValidChannelDescription.Parse("Bat puns\nBadPuns");
         private static readonly ValidChannelPriceInUsCentsPerWeek Price = ValidChannelPriceInUsCentsPerWeek.Parse(10);
-        private static readonly DateTime Now = DateTime.UtcNow;
+        private static readonly DateTime Now = new SqlDateTime(DateTime.UtcNow).Value;
 
         private Mock<IFifthweekDbConnectionFactory> connectionFactory;
         private UpdateChannelDbStatement target;
@@ -75,7 +76,8 @@
                     IsVisibleToNonSubscribers = IsVisibleToNonSubscribers,
                     Name = Name.Value,
                     Description = Description.Value,
-                    PriceInUsCentsPerWeek = Price.Value
+                    PriceInUsCentsPerWeek = Price.Value,
+                    PriceLastSetDate = Now
                 };
 
                 return new ExpectedSideEffects
@@ -86,7 +88,6 @@
                         {
                             expectedChannel.BlogId = actual.BlogId;
                             expectedChannel.CreationDate = actual.CreationDate;
-                            Assert.IsTrue(channel.PriceLastSetDate < expectedChannel.PriceLastSetDate);
                             return expectedChannel;
                         }
                     }
@@ -110,7 +111,8 @@
                     IsVisibleToNonSubscribers = true,
                     Name = Name.Value,
                     Description = Description.Value,
-                    PriceInUsCentsPerWeek = Price.Value
+                    PriceInUsCentsPerWeek = Price.Value,
+                    PriceLastSetDate = Now,
                 };
 
                 return new ExpectedSideEffects
@@ -121,7 +123,6 @@
                         {
                             expectedChannel.BlogId = actual.BlogId;
                             expectedChannel.CreationDate = actual.CreationDate;
-                            Assert.IsTrue(channel.PriceLastSetDate < expectedChannel.PriceLastSetDate);
                             return expectedChannel;
                         }
                     }
