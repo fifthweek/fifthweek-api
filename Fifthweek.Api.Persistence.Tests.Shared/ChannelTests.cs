@@ -1,11 +1,16 @@
 ﻿namespace Fifthweek.Api.Persistence.Tests.Shared
 {
     using System;
+    using System.Collections.Generic;
+    using System.Data.Entity.Validation;
     using System.Data.SqlTypes;
+    using System.Linq;
     using System.Threading.Tasks;
 
     public static class ChannelTests
     {
+        private static readonly Random Random = new Random();
+
         public static Channel UniqueEntity(Random random)
         {
             var dateCreated = DateTime.UtcNow.AddDays(random.NextDouble() * -100);
@@ -27,34 +32,49 @@
                 datePriceLastSet);
         }
 
+        public static async Task<IReadOnlyList<Channel>> CreateTestChannelsAsync(
+            this IFifthweekDbContext databaseContext, 
+            Guid newUserId, 
+            Guid newBlogId, 
+            params Guid[] newChannelIds)
+        {
+            var creator = UserTests.UniqueEntity(Random);
+            creator.Id = newUserId;
+
+            var blog = BlogTests.UniqueEntity(Random);
+            blog.Id = newBlogId;
+            blog.Creator = creator;
+            blog.CreatorId = creator.Id;
+
+            var channels = new List<Channel>();
+            foreach (var newChannelId in newChannelIds)
+            {
+                var channel = ChannelTests.UniqueEntity(Random);
+                channel.Id = newChannelId;
+                channel.Blog = blog;
+                channel.BlogId = blog.Id;
+                databaseContext.Channels.Add(channel);
+                channels.Add(channel);
+            }
+
+            await databaseContext.SaveChangesAsync();
+            return channels;
+        }
+
+
         public static async Task<Channel> CreateTestChannelAsync(
             this IFifthweekDbContext databaseContext,
             Guid newUserId,
-            Guid newChannelId,
-            Guid subscriptionId)
+            Guid newBlogId,
+            Guid newChannelId)
         {
-            var random = new Random();
-            var creator = UserTests.UniqueEntity(random);
-            creator.Id = newUserId;
-
-            var subscription = BlogTests.UniqueEntity(random);
-            subscription.Id = subscriptionId;
-            subscription.Creator = creator;
-            subscription.CreatorId = creator.Id;
-
-            var channel = ChannelTests.UniqueEntity(random);
-            channel.Id = newChannelId;
-            channel.Blog = subscription;
-            channel.BlogId = subscription.Id;
-
-            databaseContext.Channels.Add(channel);
-            await databaseContext.SaveChangesAsync();
-            return channel;
+            var result = await CreateTestChannelsAsync(databaseContext, newUserId, newBlogId, newChannelId);
+            return result.First();
         }
 
         public static Task CreateTestChannelAsync(this IFifthweekDbContext databaseContext, Guid newUserId, Guid newChannelId)
         {
-            return CreateTestChannelAsync(databaseContext, newUserId, newChannelId, Guid.NewGuid());
+            return CreateTestChannelsAsync(databaseContext, newUserId, Guid.NewGuid(), newChannelId);
         }
     }
 }

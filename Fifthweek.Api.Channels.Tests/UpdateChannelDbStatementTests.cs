@@ -157,7 +157,7 @@
         {
             using (var databaseContext = testDatabase.CreateContext())
             {
-                var channel = await databaseContext.CreateTestChannelAsync(UserId.Value, ChannelId.Value, createAsDefaultChannel ? ChannelId.Value : Guid.NewGuid());
+                var channel = await databaseContext.CreateTestChannelAsync(UserId.Value, createAsDefaultChannel ? ChannelId.Value : Guid.NewGuid(), ChannelId.Value);
 
                 channel.IsVisibleToNonSubscribers = true;
 

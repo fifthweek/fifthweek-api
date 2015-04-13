@@ -7,7 +7,6 @@
     using System.Linq;
     using System.Threading.Tasks;
 
-    using Fifthweek.Api.Blogs.Shared;
     using Fifthweek.Api.Persistence.Identity;
 
     using Microsoft.VisualStudio.TestTools.UnitTesting;
