@@ -15,6 +15,7 @@
             builder.RegisterType<UpdateFreeAccessUsersDbStatement>().As<IUpdateFreeAccessUsersDbStatement>();
             builder.RegisterType<DoesUserHaveFreeAccessDbStatement>().As<IDoesUserHaveFreeAccessDbStatement>();
             builder.RegisterType<GetFreeAccessUsersDbStatement>().As<IGetFreeAccessUsersDbStatement>();
+            builder.RegisterType<GetBlogSubscriptionsDbStatement>().As<IGetBlogSubscriptionsDbStatement>();
         }
     }
 }

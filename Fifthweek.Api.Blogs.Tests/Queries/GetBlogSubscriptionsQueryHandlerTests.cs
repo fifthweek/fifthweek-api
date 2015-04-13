@@ -15,12 +15,15 @@
     using Moq;
 
     [TestClass]
-    public class GetBlogAccessStatusQueryHandlerTests
+    public class GetBlogSubscriptionsQueryHandlerTests
     {
-        private static readonly UserId RequesterId = new UserId(Guid.NewGuid());
+        private static readonly UserId UserId = new UserId(Guid.NewGuid());
+
         private static readonly GetBlogSubscriptionsQuery Query =
-            new GetBlogSubscriptionsQuery(Requester.Authenticated(RequesterId));
-        private static readonly GetBlogSubscriptionsResult Result = new GetBlogSubscriptionsResult(new List<BlogSubscriptionStatus>());
+            new GetBlogSubscriptionsQuery(Requester.Authenticated(UserId));
+
+        private static readonly GetBlogSubscriptionsResult Result =
+            new GetBlogSubscriptionsResult(new List<BlogSubscriptionStatus>());
 
         private Mock<IRequesterSecurity> requesterSecurity;
         private Mock<IGetBlogSubscriptionsDbStatement> getBlogSubscriptions;
@@ -33,7 +36,7 @@
             this.requesterSecurity = new Mock<IRequesterSecurity>();
             this.requesterSecurity.SetupFor(Query.Requester);
             this.getBlogSubscriptions = new Mock<IGetBlogSubscriptionsDbStatement>(MockBehavior.Strict);
-            
+
             this.target = new GetBlogSubscriptionsQueryHandler(
                 this.requesterSecurity.Object,
                 this.getBlogSubscriptions.Object);
@@ -41,9 +44,7 @@
 
         private void SetupDbStatement()
         {
-            this.getBlogSubscriptions.Setup(v => v.ExecuteAsync( RequesterId))
-                .ReturnsAsync(Result)
-                .Verifiable();
+            this.getBlogSubscriptions.Setup(v => v.ExecuteAsync(UserId)).ReturnsAsync(Result).Verifiable();
         }
 
         [TestMethod]
@@ -61,7 +62,7 @@
         }
 
         [TestMethod]
-        public async Task WhenQueryIsValid_ItShouldGetFreeAccessStatus()
+        public async Task WhenQueryIsValid_ItShouldGetFreeAccessUsers()
         {
             this.SetupDbStatement();
             await this.target.HandleAsync(Query);

@@ -14,14 +14,15 @@
 
     using Moq;
 
+    [TestClass]
     public class GetFreeAccessUsersQueryHandlerTests
     {
+        private static readonly UserId UserId = new UserId(Guid.NewGuid());
+
         private static readonly GetFreeAccessUsersQuery Query =
             new GetFreeAccessUsersQuery(
-                Requester.Authenticated(new UserId(Guid.NewGuid())),
+                Requester.Authenticated(UserId),
                 new BlogId(Guid.NewGuid()));
-
-        private static readonly UserId UserId = new UserId(Guid.NewGuid());
 
         private static readonly GetFreeAccessUsersResult Result =
             new GetFreeAccessUsersResult(

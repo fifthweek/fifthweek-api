@@ -9,19 +9,19 @@
     using Fifthweek.Shared;
 
     [AutoConstructor]
-    public partial class GetBlogAccessStatusQueryHandler : IQueryHandler<GetBlogAccessStatusQuery, GetBlogAccessStatusResult>
+    public partial class GetBlogSubscriptionsQueryHandler : IQueryHandler<GetBlogSubscriptionsQuery, GetBlogSubscriptionsResult>
     {
         private readonly IRequesterSecurity requesterSecurity;
-        private readonly IDoesUserHaveFreeAccessDbStatement doesUserHaveFreeAccess;
+        private readonly IGetBlogSubscriptionsDbStatement getBlogSubscriptions;
         
-        public async Task<GetBlogAccessStatusResult> HandleAsync(GetBlogAccessStatusQuery query)
+        public async Task<GetBlogSubscriptionsResult> HandleAsync(GetBlogSubscriptionsQuery query)
         {
             query.AssertNotNull("query");
 
             var authenticatedUserId = await this.requesterSecurity.AuthenticateAsync(query.Requester);
-            var userHasFreeAccess = await this.doesUserHaveFreeAccess.ExecuteAsync(query.BlogId, authenticatedUserId);
+            var result = await this.getBlogSubscriptions.ExecuteAsync(authenticatedUserId);
 
-            return new GetBlogAccessStatusResult(userHasFreeAccess);
+            return result;
         }
     }
 }

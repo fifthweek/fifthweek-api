@@ -85,13 +85,16 @@
     <Compile Include="Controllers\BlogAccessController.cs" />
     <Compile Include="Controllers\FreeAccessUsersData.cs" />
     <Compile Include="Controllers\PutFreeAccessUsersResult.cs" />
-    <Compile Include="Controllers\UserBlogAccessController.cs" />
+    <Compile Include="GetBlogSubscriptionsDbStatement.cs" />
     <Compile Include="GetFreeAccessUsersDbStatement.cs" />
     <Compile Include="IDoesUserHaveFreeAccessDbStatement.cs" />
     <Compile Include="DoesUserHaveFreeAccessDbStatement.cs" />
+    <Compile Include="IGetBlogSubscriptionsDbStatement.cs" />
     <Compile Include="IGetFreeAccessUsersDbStatement.cs" />
     <Compile Include="IUpdateFreeAccessUsersDbStatement.cs" />
-    <Compile Include="Queries\GetBlogAccessStatusResult.cs" />
+    <Compile Include="Queries\BlogSubscriptionStatus.cs" />
+    <Compile Include="Queries\ChannelSubscriptionStatus.cs" />
+    <Compile Include="Queries\GetBlogSubscriptionsResult.cs" />
     <Compile Include="Queries\GetBlogQuery.cs" />
     <Compile Include="Queries\GetBlogQueryHandler.cs" />
     <Compile Include="GetBlogDbStatement.cs" />
@@ -122,8 +125,8 @@
     <Compile Include="Queries\GetFreeAccessUsersQuery.cs" />
     <Compile Include="Queries\GetFreeAccessUsersQueryHandler.cs" />
     <Compile Include="Queries\GetFreeAccessUsersResult.cs" />
-    <Compile Include="Queries\GetBlogAccessStatusQuery.cs" />
-    <Compile Include="Queries\GetBlogAccessStatusQueryHandler.cs" />
+    <Compile Include="Queries\GetBlogSubscriptionsQuery.cs" />
+    <Compile Include="Queries\GetBlogSubscriptionsQueryHandler.cs" />
     <Compile Include="UpdateFreeAccessUsersDbStatement.cs" />
   </ItemGroup>
   <ItemGroup>
