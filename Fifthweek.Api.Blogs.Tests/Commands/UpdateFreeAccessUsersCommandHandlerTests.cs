@@ -15,15 +15,19 @@
 
     using Moq;
 
+    [TestClass]
     public class UpdateFreeAccessUsersCommandHandlerTests
     {
-        private static readonly UpdateFreeAccessUsersCommand Command =
-            new UpdateFreeAccessUsersCommand(
-                Requester.Authenticated(new UserId(Guid.NewGuid())),
-                new BlogId(Guid.NewGuid()),
-                new List<ValidEmail> { ValidEmail.Parse("a@b.com"), ValidEmail.Parse("b@b.com") });
+        private static readonly List<ValidEmail> InputEmailAddresses = new List<ValidEmail> { ValidEmail.Parse("a@b.com"), ValidEmail.Parse("b@b.com"), ValidEmail.Parse("a@b.com") };
+        private static readonly List<ValidEmail> UniqueEmailAddresses = new List<ValidEmail> { ValidEmail.Parse("a@b.com"), ValidEmail.Parse("b@b.com") };
 
         private static readonly UserId UserId = new UserId(Guid.NewGuid());
+
+        private static readonly UpdateFreeAccessUsersCommand Command =
+            new UpdateFreeAccessUsersCommand(
+                Requester.Authenticated(UserId),
+                new BlogId(Guid.NewGuid()),
+                InputEmailAddresses);
 
         private Mock<IBlogSecurity> blogSecurity;
         private Mock<IRequesterSecurity> requesterSecurity;
@@ -51,7 +55,7 @@
 
         private void SetupDbStatement()
         {
-            this.updateFreeAccessUsers.Setup(v => v.ExecuteAsync(Command.BlogId, Command.EmailAddresses))
+            this.updateFreeAccessUsers.Setup(v => v.ExecuteAsync(Command.BlogId, UniqueEmailAddresses))
                 .Returns(Task.FromResult(0))
                 .Verifiable();
         }
@@ -82,7 +86,7 @@
         }
 
         [TestMethod]
-        public async Task WhenQueryIsValid_ItShouldGetFreeAccessUsers()
+        public async Task WhenQueryIsValid_ItShouldGetFreeAccessUsersPassingUniqueEmailAddresses()
         {
             this.SetupDbStatement();
             await this.target.HandleAsync(Command);

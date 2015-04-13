@@ -1,6 +1,7 @@
 ﻿namespace Fifthweek.Api.Blogs.Commands
 {
     using System.Collections.Generic;
+    using System.Linq;
     using System.Threading.Tasks;
 
     using Fifthweek.Api.Blogs.Shared;
@@ -23,7 +24,14 @@
             var authenticatedUserId = await this.requesterSecurity.AuthenticateAsync(command.Requester);
             await this.blogSecurity.AssertWriteAllowedAsync(authenticatedUserId, command.BlogId);
 
-            await this.updateFreeAccessUsers.ExecuteAsync(command.BlogId, command.EmailAddresses);
+            // Remove duplicates
+            var emailAddresses = new HashSet<ValidEmail>();
+            foreach (var item in command.EmailAddresses)
+            {
+                emailAddresses.Add(item);
+            }
+
+            await this.updateFreeAccessUsers.ExecuteAsync(command.BlogId, emailAddresses.ToList());
         }
     }
 }
