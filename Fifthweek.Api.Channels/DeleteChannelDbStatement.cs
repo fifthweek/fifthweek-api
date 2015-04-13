@@ -15,8 +15,10 @@
     {
         private static readonly string DeleteSql = string.Format(
             @"
-            DELETE FROM {0}
-            WHERE {1} = @ChannelId",
+            DELETE FROM {0} WHERE {1} = @ChannelId;
+            DELETE FROM {2} WHERE {3} = @ChannelId;",
+            ChannelSubscription.Table,
+            ChannelSubscription.Fields.ChannelId,
             Channel.Table,
             Channel.Fields.Id);
 

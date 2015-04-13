@@ -260,6 +260,10 @@
     <Compile Include="Migrations\201504130826486_AddUniqueIndexToUserEmailAddress.Designer.cs">
       <DependentUpon>201504130826486_AddUniqueIndexToUserEmailAddress.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201504130916564_AddChannelSubscriptionsTable.cs" />
+    <Compile Include="Migrations\201504130916564_AddChannelSubscriptionsTable.Designer.cs">
+      <DependentUpon>201504130916564_AddChannelSubscriptionsTable.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Post.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -402,6 +406,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201504130826486_AddUniqueIndexToUserEmailAddress.resx">
       <DependentUpon>201504130826486_AddUniqueIndexToUserEmailAddress.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201504130916564_AddChannelSubscriptionsTable.resx">
+      <DependentUpon>201504130916564_AddChannelSubscriptionsTable.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>

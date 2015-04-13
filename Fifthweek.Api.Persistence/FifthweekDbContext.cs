@@ -37,6 +37,8 @@ namespace Fifthweek.Api.Persistence
 
         public IDbSet<FreeAccessUser> FreeAccessUsers { get; set; }
 
+        public IDbSet<ChannelSubscription> ChannelSubscriptions { get; set; }
+
         public static FifthweekDbContext Create()
         {
             return new FifthweekDbContext();
