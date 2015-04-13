@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Linq;
 
-//// Generated on 13/03/2015 12:57:12 (UTC)
-//// Mapped solution in 14.84s
+//// Generated on 13/04/2015 14:07:15 (UTC)
+//// Mapped solution in 7.2s
 
 
 namespace Fifthweek.Api.Aggregations.Controllers
@@ -52,8 +52,10 @@ namespace Fifthweek.Api.Aggregations.Queries
     using Fifthweek.Api.Collections.Queries;
     using Fifthweek.Api.FileManagement.Queries;
     using Fifthweek.Api.Persistence.Identity;
-
     using System.Collections.Generic;
+    using Fifthweek.Api.Blogs;
+    using Fifthweek.Api.Blogs.Queries;
+    using Fifthweek.Api.Identity.Membership.Queries;
 
     public partial class GetUserStateQuery 
     {
@@ -75,9 +77,6 @@ namespace Fifthweek.Api.Aggregations.Queries
 {
     using System;
     using System.Linq;
-
-    using Fifthweek.Api.Blogs;
-    using Fifthweek.Api.Blogs.Queries;
     using Fifthweek.Api.Core;
     using Fifthweek.Api.Identity.Membership;
     using Fifthweek.Api.Identity.Shared.Membership;
@@ -86,19 +85,22 @@ namespace Fifthweek.Api.Aggregations.Queries
     using Fifthweek.Api.Collections.Queries;
     using Fifthweek.Api.FileManagement.Queries;
     using Fifthweek.Api.Persistence.Identity;
-
     using System.Collections.Generic;
+    using Fifthweek.Api.Blogs;
+    using Fifthweek.Api.Blogs.Queries;
     using Fifthweek.Api.Identity.Membership.Queries;
+    using Fifthweek.Shared;
 
     public partial class GetUserStateQueryHandler 
     {
         public GetUserStateQueryHandler(
             Fifthweek.Api.Identity.Shared.Membership.IRequesterSecurity requesterSecurity,
             Fifthweek.Api.Core.IQueryHandler<Fifthweek.Api.FileManagement.Queries.GetUserAccessSignaturesQuery,Fifthweek.Api.FileManagement.Queries.UserAccessSignatures> getUserAccessSignatures,
-            Fifthweek.Api.Core.IQueryHandler<GetCreatorStatusQuery,CreatorStatus> getCreatorStatus,
+            Fifthweek.Api.Core.IQueryHandler<Fifthweek.Api.Blogs.Queries.GetCreatorStatusQuery,Fifthweek.Api.Blogs.CreatorStatus> getCreatorStatus,
             Fifthweek.Api.Core.IQueryHandler<Fifthweek.Api.Collections.Queries.GetCreatedChannelsAndCollectionsQuery,Fifthweek.Api.Collections.Queries.ChannelsAndCollections> getCreatedChannelsAndCollections,
             Fifthweek.Api.Core.IQueryHandler<Fifthweek.Api.Identity.Membership.Queries.GetAccountSettingsQuery,Fifthweek.Api.Identity.Membership.GetAccountSettingsResult> getAccountSettings,
-            Fifthweek.Api.Core.IQueryHandler<GetBlogQuery,GetBlogResult> getSubscription)
+            Fifthweek.Api.Core.IQueryHandler<Fifthweek.Api.Blogs.Queries.GetBlogQuery,Fifthweek.Api.Blogs.Queries.GetBlogResult> getBlog,
+            Fifthweek.Api.Core.IQueryHandler<Fifthweek.Api.Blogs.Queries.GetBlogSubscriptionsQuery,Fifthweek.Api.Blogs.Queries.GetBlogSubscriptionsResult> getBlogSubscriptions)
         {
             if (requesterSecurity == null)
             {
@@ -125,9 +127,14 @@ namespace Fifthweek.Api.Aggregations.Queries
                 throw new ArgumentNullException("getAccountSettings");
             }
 
-            if (getSubscription == null)
+            if (getBlog == null)
             {
-                throw new ArgumentNullException("getSubscription");
+                throw new ArgumentNullException("getBlog");
+            }
+
+            if (getBlogSubscriptions == null)
+            {
+                throw new ArgumentNullException("getBlogSubscriptions");
             }
 
             this.requesterSecurity = requesterSecurity;
@@ -135,7 +142,8 @@ namespace Fifthweek.Api.Aggregations.Queries
             this.getCreatorStatus = getCreatorStatus;
             this.getCreatedChannelsAndCollections = getCreatedChannelsAndCollections;
             this.getAccountSettings = getAccountSettings;
-            this.getSubscription = getSubscription;
+            this.getBlog = getBlog;
+            this.getBlogSubscriptions = getBlogSubscriptions;
         }
     }
 }
@@ -143,9 +151,6 @@ namespace Fifthweek.Api.Aggregations.Queries
 {
     using System;
     using System.Linq;
-
-    using Fifthweek.Api.Blogs;
-    using Fifthweek.Api.Blogs.Queries;
     using Fifthweek.Api.Core;
     using Fifthweek.Api.Identity.Membership;
     using Fifthweek.Api.Identity.Shared.Membership;
@@ -154,17 +159,20 @@ namespace Fifthweek.Api.Aggregations.Queries
     using Fifthweek.Api.Collections.Queries;
     using Fifthweek.Api.FileManagement.Queries;
     using Fifthweek.Api.Persistence.Identity;
-
     using System.Collections.Generic;
+    using Fifthweek.Api.Blogs;
+    using Fifthweek.Api.Blogs.Queries;
+    using Fifthweek.Api.Identity.Membership.Queries;
 
     public partial class UserState 
     {
         public UserState(
             Fifthweek.Api.FileManagement.Queries.UserAccessSignatures accessSignatures,
-            CreatorStatus creatorStatus,
+            Fifthweek.Api.Blogs.CreatorStatus creatorStatus,
             Fifthweek.Api.Collections.Queries.ChannelsAndCollections createdChannelsAndCollections,
             Fifthweek.Api.Identity.Membership.GetAccountSettingsResult accountSettings,
-            GetBlogResult blog)
+            Fifthweek.Api.Blogs.Queries.GetBlogResult blog,
+            Fifthweek.Api.Blogs.Queries.GetBlogSubscriptionsResult blogSubscriptions)
         {
             if (accessSignatures == null)
             {
@@ -176,6 +184,7 @@ namespace Fifthweek.Api.Aggregations.Queries
             this.CreatedChannelsAndCollections = createdChannelsAndCollections;
             this.AccountSettings = accountSettings;
             this.Blog = blog;
+            this.BlogSubscriptions = blogSubscriptions;
         }
     }
 }
@@ -192,8 +201,10 @@ namespace Fifthweek.Api.Aggregations.Queries
     using Fifthweek.Api.Collections.Queries;
     using Fifthweek.Api.FileManagement.Queries;
     using Fifthweek.Api.Persistence.Identity;
-
     using System.Collections.Generic;
+    using Fifthweek.Api.Blogs;
+    using Fifthweek.Api.Blogs.Queries;
+    using Fifthweek.Api.Identity.Membership.Queries;
 
     public partial class GetUserStateQuery 
     {
@@ -261,14 +272,16 @@ namespace Fifthweek.Api.Aggregations.Queries
     using Fifthweek.Api.Collections.Queries;
     using Fifthweek.Api.FileManagement.Queries;
     using Fifthweek.Api.Persistence.Identity;
-
     using System.Collections.Generic;
+    using Fifthweek.Api.Blogs;
+    using Fifthweek.Api.Blogs.Queries;
+    using Fifthweek.Api.Identity.Membership.Queries;
 
     public partial class UserState 
     {
         public override string ToString()
         {
-            return string.Format("UserState({0}, {1}, {2}, {3}, {4})", this.AccessSignatures == null ? "null" : this.AccessSignatures.ToString(), this.CreatorStatus == null ? "null" : this.CreatorStatus.ToString(), this.CreatedChannelsAndCollections == null ? "null" : this.CreatedChannelsAndCollections.ToString(), this.AccountSettings == null ? "null" : this.AccountSettings.ToString(), this.Blog == null ? "null" : this.Blog.ToString());
+            return string.Format("UserState({0}, {1}, {2}, {3}, {4}, {5})", this.AccessSignatures == null ? "null" : this.AccessSignatures.ToString(), this.CreatorStatus == null ? "null" : this.CreatorStatus.ToString(), this.CreatedChannelsAndCollections == null ? "null" : this.CreatedChannelsAndCollections.ToString(), this.AccountSettings == null ? "null" : this.AccountSettings.ToString(), this.Blog == null ? "null" : this.Blog.ToString(), this.BlogSubscriptions == null ? "null" : this.BlogSubscriptions.ToString());
         }
         
         public override bool Equals(object obj)
@@ -301,6 +314,7 @@ namespace Fifthweek.Api.Aggregations.Queries
                 hashCode = (hashCode * 397) ^ (this.CreatedChannelsAndCollections != null ? this.CreatedChannelsAndCollections.GetHashCode() : 0);
                 hashCode = (hashCode * 397) ^ (this.AccountSettings != null ? this.AccountSettings.GetHashCode() : 0);
                 hashCode = (hashCode * 397) ^ (this.Blog != null ? this.Blog.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.BlogSubscriptions != null ? this.BlogSubscriptions.GetHashCode() : 0);
                 return hashCode;
             }
         }
@@ -328,6 +342,11 @@ namespace Fifthweek.Api.Aggregations.Queries
             }
         
             if (!object.Equals(this.Blog, other.Blog))
+            {
+                return false;
+            }
+        
+            if (!object.Equals(this.BlogSubscriptions, other.BlogSubscriptions))
             {
                 return false;
             }

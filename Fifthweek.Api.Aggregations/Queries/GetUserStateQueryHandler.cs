@@ -24,42 +24,49 @@
         private readonly IQueryHandler<GetCreatorStatusQuery, CreatorStatus> getCreatorStatus;
         private readonly IQueryHandler<GetCreatedChannelsAndCollectionsQuery, ChannelsAndCollections> getCreatedChannelsAndCollections;
         private readonly IQueryHandler<GetAccountSettingsQuery, GetAccountSettingsResult> getAccountSettings;
-        private readonly IQueryHandler<GetBlogQuery, GetBlogResult> getSubscription;
+        private readonly IQueryHandler<GetBlogQuery, GetBlogResult> getBlog;
+        private readonly IQueryHandler<GetBlogSubscriptionsQuery, GetBlogSubscriptionsResult> getBlogSubscriptions;
 
         public async Task<UserState> HandleAsync(GetUserStateQuery query)
         {
             query.AssertNotNull("query");
 
-            if (query.RequestedUserId != null)
-            {
-                await this.requesterSecurity.AuthenticateAsAsync(query.Requester, query.RequestedUserId);
-            }
-
-            bool isCreator = await this.requesterSecurity.IsInRoleAsync(query.Requester, FifthweekRole.Creator);
-
             var userAccessSignatures = await this.getUserAccessSignatures.HandleAsync(new GetUserAccessSignaturesQuery(query.Requester, query.RequestedUserId));
 
+            GetBlogSubscriptionsResult blogSubscriptions = null;
             CreatorStatus creatorStatus = null;
             ChannelsAndCollections createdChannelsAndCollections = null;
             GetAccountSettingsResult accountSettings = null;
             GetBlogResult blog = null;
-            if (isCreator)
+            
+            if (query.RequestedUserId != null)
             {
-                var creatorStatusTask = this.getCreatorStatus.HandleAsync(new GetCreatorStatusQuery(query.Requester, query.RequestedUserId));
-                var createdChannelsAndCollectionsTask = this.getCreatedChannelsAndCollections.HandleAsync(new GetCreatedChannelsAndCollectionsQuery(query.Requester, query.RequestedUserId));
-                var accountSettingsTask = this.getAccountSettings.HandleAsync(new GetAccountSettingsQuery(query.Requester, query.RequestedUserId));
+                await this.requesterSecurity.AuthenticateAsAsync(query.Requester, query.RequestedUserId);
 
-                creatorStatus = await creatorStatusTask;
+                var blogSubscriptionsTask = this.getBlogSubscriptions.HandleAsync(new GetBlogSubscriptionsQuery(query.Requester));
 
-                var subscriptionTask = Task.FromResult<GetBlogResult>(null);
-                if (creatorStatus.BlogId != null)
+                bool isCreator = await this.requesterSecurity.IsInRoleAsync(query.Requester, FifthweekRole.Creator);
+               
+                if (isCreator)
                 {
-                    subscriptionTask = this.getSubscription.HandleAsync(new GetBlogQuery(creatorStatus.BlogId));
+                    var creatorStatusTask = this.getCreatorStatus.HandleAsync(new GetCreatorStatusQuery(query.Requester, query.RequestedUserId));
+                    var createdChannelsAndCollectionsTask = this.getCreatedChannelsAndCollections.HandleAsync(new GetCreatedChannelsAndCollectionsQuery(query.Requester, query.RequestedUserId));
+                    var accountSettingsTask = this.getAccountSettings.HandleAsync(new GetAccountSettingsQuery(query.Requester, query.RequestedUserId));
+
+                    creatorStatus = await creatorStatusTask;
+
+                    var subscriptionTask = Task.FromResult<GetBlogResult>(null);
+                    if (creatorStatus.BlogId != null)
+                    {
+                        subscriptionTask = this.getBlog.HandleAsync(new GetBlogQuery(creatorStatus.BlogId));
+                    }
+
+                    createdChannelsAndCollections = await createdChannelsAndCollectionsTask;
+                    accountSettings = await accountSettingsTask;
+                    blog = await subscriptionTask;
                 }
 
-                createdChannelsAndCollections = await createdChannelsAndCollectionsTask;
-                accountSettings = await accountSettingsTask;
-                blog = await subscriptionTask;
+                blogSubscriptions = await blogSubscriptionsTask;
             }
 
             return new UserState(
@@ -67,7 +74,8 @@
                 creatorStatus, 
                 createdChannelsAndCollections,
                 accountSettings,
-                blog);
+                blog,
+                blogSubscriptions);
         }
     }
 }

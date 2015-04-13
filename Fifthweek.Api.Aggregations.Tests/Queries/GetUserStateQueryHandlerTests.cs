@@ -44,6 +44,9 @@
                             DateTime.UtcNow)),
                     });
 
+        private static readonly GetBlogSubscriptionsResult BlogSubscriptions =
+            new GetBlogSubscriptionsResult(new List<BlogSubscriptionStatus>());
+
         private GetUserStateQueryHandler target;
 
         private Mock<IRequesterSecurity> requesterSecurity;
@@ -52,6 +55,7 @@
         private Mock<IQueryHandler<GetCreatedChannelsAndCollectionsQuery, ChannelsAndCollections>> getCreatedChannelsAndCollections;
         private Mock<IQueryHandler<GetAccountSettingsQuery, GetAccountSettingsResult>> getAccountSettings;
         private Mock<IQueryHandler<GetBlogQuery, GetBlogResult>> getSubscription;
+        private Mock<IQueryHandler<GetBlogSubscriptionsQuery, GetBlogSubscriptionsResult>> getBlogSubscriptions;
 
         [TestInitialize]
         public void TestInitialize()
@@ -65,14 +69,16 @@
             this.getCreatedChannelsAndCollections = new Mock<IQueryHandler<GetCreatedChannelsAndCollectionsQuery, ChannelsAndCollections>>(MockBehavior.Strict);
             this.getAccountSettings = new Mock<IQueryHandler<GetAccountSettingsQuery, GetAccountSettingsResult>>(MockBehavior.Strict);
             this.getSubscription = new Mock<IQueryHandler<GetBlogQuery, GetBlogResult>>(MockBehavior.Strict);
-            
+            this.getBlogSubscriptions = new Mock<IQueryHandler<GetBlogSubscriptionsQuery, GetBlogSubscriptionsResult>>(MockBehavior.Strict);
+
             this.target = new GetUserStateQueryHandler(
                 this.requesterSecurity.Object, 
                 this.getUserAccessSignatures.Object,
                 this.getCreatorStatus.Object, 
                 this.getCreatedChannelsAndCollections.Object,
                 this.getAccountSettings.Object,
-                this.getSubscription.Object);
+                this.getSubscription.Object,
+                this.getBlogSubscriptions.Object);
         }
 
         [TestMethod]
@@ -91,7 +97,7 @@
         }
 
         [TestMethod]
-        public async Task WhenCalledAsASignedOutUser_ItShouldReturnUserStateWithoutCreatorState()
+        public async Task WhenCalledAsASignedOutUser_ItShouldReturnAnonymousUserStateWithoutCreatorState()
         {
             // Should not be called.
             this.requesterSecurity = new Mock<IRequesterSecurity>(MockBehavior.Strict);
@@ -107,20 +113,26 @@
             Assert.IsNull(result.CreatedChannelsAndCollections);
             Assert.IsNull(result.AccountSettings);
             Assert.IsNull(result.Blog);
+            Assert.IsNull(result.BlogSubscriptions);
         }
 
         [TestMethod]
-        public async Task WhenCalledAsAUser_ItShouldReturnUserStateWithoutCreatorState()
+        public async Task WhenCalledAsAUser_ItShouldReturnRegisteredUserStateWithoutCreatorState()
         {
             this.requesterSecurity.SetupFor(Requester);
 
             this.getUserAccessSignatures.Setup(v => v.HandleAsync(new GetUserAccessSignaturesQuery(Requester, UserId)))
                 .ReturnsAsync(UserAccessSignatures);
 
+            this.getBlogSubscriptions.Setup(v => v.HandleAsync(new GetBlogSubscriptionsQuery(Requester)))
+                .ReturnsAsync(BlogSubscriptions);
+
             var result = await this.target.HandleAsync(new GetUserStateQuery(Requester, UserId));
 
             Assert.IsNotNull(result);
             Assert.AreEqual(UserAccessSignatures, result.AccessSignatures);
+            Assert.AreEqual(BlogSubscriptions, result.BlogSubscriptions);
+
             Assert.IsNull(result.CreatorStatus);
             Assert.IsNull(result.CreatedChannelsAndCollections);
             Assert.IsNull(result.AccountSettings);
@@ -141,6 +153,8 @@
 
             this.getUserAccessSignatures.Setup(v => v.HandleAsync(new GetUserAccessSignaturesQuery(Requester, UserId)))
                 .ReturnsAsync(UserAccessSignatures);
+            this.getBlogSubscriptions.Setup(v => v.HandleAsync(new GetBlogSubscriptionsQuery(Requester)))
+                .ReturnsAsync(BlogSubscriptions);
             this.getCreatorStatus.Setup(v => v.HandleAsync(new GetCreatorStatusQuery(Requester, UserId)))
                 .ReturnsAsync(creatorStatus);
             this.getCreatedChannelsAndCollections.Setup(v => v.HandleAsync(new GetCreatedChannelsAndCollectionsQuery(Requester, UserId)))
@@ -154,6 +168,7 @@
 
             Assert.IsNotNull(result);
             Assert.AreEqual(UserAccessSignatures, result.AccessSignatures);
+            Assert.AreEqual(BlogSubscriptions, result.BlogSubscriptions);
             Assert.AreEqual(creatorStatus, result.CreatorStatus);
             Assert.AreEqual(createdChannelsAndCollections, result.CreatedChannelsAndCollections);
             Assert.AreEqual(accountSettings, result.AccountSettings);
@@ -173,6 +188,8 @@
 
             this.getUserAccessSignatures.Setup(v => v.HandleAsync(new GetUserAccessSignaturesQuery(Requester, UserId)))
                 .ReturnsAsync(UserAccessSignatures);
+            this.getBlogSubscriptions.Setup(v => v.HandleAsync(new GetBlogSubscriptionsQuery(Requester)))
+                .ReturnsAsync(BlogSubscriptions);
             this.getCreatorStatus.Setup(v => v.HandleAsync(new GetCreatorStatusQuery(Requester, UserId)))
                 .ReturnsAsync(creatorStatus);
             this.getCreatedChannelsAndCollections.Setup(v => v.HandleAsync(new GetCreatedChannelsAndCollectionsQuery(Requester, UserId)))
@@ -184,6 +201,7 @@
 
             Assert.IsNotNull(result);
             Assert.AreEqual(UserAccessSignatures, result.AccessSignatures);
+            Assert.AreEqual(BlogSubscriptions, result.BlogSubscriptions);
             Assert.AreEqual(creatorStatus, result.CreatorStatus);
             Assert.AreEqual(createdChannelsAndCollections, result.CreatedChannelsAndCollections);
             Assert.AreEqual(accountSettings, result.AccountSettings);
