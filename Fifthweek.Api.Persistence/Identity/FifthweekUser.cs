@@ -36,19 +36,19 @@ namespace Fifthweek.Api.Persistence.Identity
         [Optional, NonEquatable]
         public ICollection<File> Files { get; set; }
 
-        //[Index(IsUnique = true)]
-        //public override string Email
-        //{
-        //    get
-        //    {
-        //        return base.Email;
-        //    }
+        [Index(IsUnique = true)]
+        public override string Email
+        {
+            get
+            {
+                return base.Email;
+            }
 
-        //    set
-        //    {
-        //        base.Email = value;
-        //    }
-        //}
+            set
+            {
+                base.Email = value;
+            }
+        }
 
         // Inherit IdentityUser and override members to provide a little extra safety in case a base member ever got renamed.
         private class LiftedMembers : IdentityUser<Guid, FifthweekUserLogin, FifthweekUserRole, FifthweekUserClaim>
