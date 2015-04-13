@@ -58,8 +58,6 @@ namespace Fifthweek.Api.Persistence.Identity
 
             public override int AccessFailedCount { get; set; }
 
-            public override string Email { get; set; }
-
             public override bool EmailConfirmed { get; set; }
 
             public override bool LockoutEnabled { get; set; }
