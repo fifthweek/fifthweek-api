@@ -13,7 +13,6 @@
             builder.RegisterType<BlogSecurity>().As<IBlogSecurity>();
             builder.RegisterType<GetBlogDbStatement>().As<IGetBlogDbStatement>();
             builder.RegisterType<UpdateFreeAccessUsersDbStatement>().As<IUpdateFreeAccessUsersDbStatement>();
-            builder.RegisterType<DoesUserHaveFreeAccessDbStatement>().As<IDoesUserHaveFreeAccessDbStatement>();
             builder.RegisterType<GetFreeAccessUsersDbStatement>().As<IGetFreeAccessUsersDbStatement>();
             builder.RegisterType<GetBlogSubscriptionsDbStatement>().As<IGetBlogSubscriptionsDbStatement>();
         }

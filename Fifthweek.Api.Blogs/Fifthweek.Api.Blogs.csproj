@@ -87,8 +87,6 @@
     <Compile Include="Controllers\PutFreeAccessUsersResult.cs" />
     <Compile Include="GetBlogSubscriptionsDbStatement.cs" />
     <Compile Include="GetFreeAccessUsersDbStatement.cs" />
-    <Compile Include="IDoesUserHaveFreeAccessDbStatement.cs" />
-    <Compile Include="DoesUserHaveFreeAccessDbStatement.cs" />
     <Compile Include="IGetBlogSubscriptionsDbStatement.cs" />
     <Compile Include="IGetFreeAccessUsersDbStatement.cs" />
     <Compile Include="IUpdateFreeAccessUsersDbStatement.cs" />

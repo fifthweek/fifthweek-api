@@ -104,7 +104,6 @@
     <Compile Include="GetBlogDbStatementTests.cs" />
     <Compile Include="GetBlogSubscriptionsDbStatementTests.cs" />
     <Compile Include="GetFreeAccessUsersDbStatementTests.cs" />
-    <Compile Include="IsUserInFreeAccessListDbStatementTests.cs" />
     <Compile Include="Queries\GetBlogAccessStatusQueryHandlerTests.cs" />
     <Compile Include="Queries\GetBlogQueryHandlerTests.cs" />
     <Compile Include="Queries\GetBlogSubscriptionsQueryHandlerTests.cs" />

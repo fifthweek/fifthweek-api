@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Linq;
 
-//// Generated on 13/04/2015 15:49:45 (UTC)
-//// Mapped solution in 8.45s
+//// Generated on 13/04/2015 18:23:09 (UTC)
+//// Mapped solution in 8.93s
 
 
 namespace Fifthweek.Api.Blogs
@@ -1113,39 +1113,6 @@ namespace Fifthweek.Api.Blogs
         }
     }
 }
-namespace Fifthweek.Api.Blogs
-{
-    using System;
-    using System.Linq;
-    using System.Threading.Tasks;
-    using Dapper;
-    using Fifthweek.Api.Identity.Shared.Membership;
-    using Fifthweek.Api.Persistence;
-    using Fifthweek.CodeGeneration;
-    using Fifthweek.Api.Blogs.Shared;
-    using Fifthweek.Api.Core;
-    using Fifthweek.Api.Persistence.Identity;
-    using Fifthweek.Shared;
-    using Fifthweek.Api.FileManagement.Shared;
-    using System.Collections.Generic;
-    using System.Transactions;
-    using Fifthweek.Api.Blogs.Queries;
-    using Fifthweek.Api.Channels.Shared;
-
-    public partial class DoesUserHaveFreeAccessDbStatement 
-    {
-        public DoesUserHaveFreeAccessDbStatement(
-            Fifthweek.Api.Persistence.IFifthweekDbConnectionFactory connectionFactory)
-        {
-            if (connectionFactory == null)
-            {
-                throw new ArgumentNullException("connectionFactory");
-            }
-
-            this.connectionFactory = connectionFactory;
-        }
-    }
-}
 namespace Fifthweek.Api.Blogs.Queries
 {
     using System;
@@ -1321,91 +1288,6 @@ namespace Fifthweek.Api.Blogs.Queries
             }
 
             this.Blogs = blogs;
-        }
-    }
-}
-namespace Fifthweek.Api.Blogs.Commands
-{
-    using System;
-    using System.Linq;
-    using Fifthweek.Api.Blogs.Shared;
-    using Fifthweek.Api.Channels.Shared;
-    using Fifthweek.Api.Identity.Shared.Membership;
-    using Fifthweek.CodeGeneration;
-    using System.Threading.Tasks;
-    using System.Transactions;
-    using Fifthweek.Api.Core;
-    using Fifthweek.Api.Persistence;
-    using Fifthweek.Shared;
-    using Fifthweek.Api.Persistence.Identity;
-    using Fifthweek.Api.Identity.Shared.Membership.Events;
-    using Fifthweek.Api.FileManagement.Shared;
-    using System.Collections.Generic;
-
-    public partial class AcceptedChannelSubscription 
-    {
-        public AcceptedChannelSubscription(
-            Fifthweek.Api.Channels.Shared.ChannelId channelId,
-            Fifthweek.Api.Channels.Shared.ValidAcceptedChannelPriceInUsCentsPerWeek acceptedPrice)
-        {
-            if (channelId == null)
-            {
-                throw new ArgumentNullException("channelId");
-            }
-
-            if (acceptedPrice == null)
-            {
-                throw new ArgumentNullException("acceptedPrice");
-            }
-
-            this.ChannelId = channelId;
-            this.AcceptedPrice = acceptedPrice;
-        }
-    }
-}
-namespace Fifthweek.Api.Blogs.Commands
-{
-    using System;
-    using System.Linq;
-    using Fifthweek.Api.Blogs.Shared;
-    using Fifthweek.Api.Channels.Shared;
-    using Fifthweek.Api.Identity.Shared.Membership;
-    using Fifthweek.CodeGeneration;
-    using System.Threading.Tasks;
-    using System.Transactions;
-    using Fifthweek.Api.Core;
-    using Fifthweek.Api.Persistence;
-    using Fifthweek.Shared;
-    using Fifthweek.Api.Persistence.Identity;
-    using Fifthweek.Api.Identity.Shared.Membership.Events;
-    using Fifthweek.Api.FileManagement.Shared;
-    using System.Collections.Generic;
-
-    public partial class UpdateBlogSubscriptionsCommand 
-    {
-        public UpdateBlogSubscriptionsCommand(
-            Fifthweek.Api.Identity.Shared.Membership.Requester requester,
-            Fifthweek.Api.Blogs.Shared.BlogId blogId,
-            System.Collections.Generic.IReadOnlyList<Fifthweek.Api.Blogs.Commands.AcceptedChannelSubscription> channels)
-        {
-            if (requester == null)
-            {
-                throw new ArgumentNullException("requester");
-            }
-
-            if (blogId == null)
-            {
-                throw new ArgumentNullException("blogId");
-            }
-
-            if (channels == null)
-            {
-                throw new ArgumentNullException("channels");
-            }
-
-            this.Requester = requester;
-            this.BlogId = blogId;
-            this.Channels = channels;
         }
     }
 }
