@@ -56,9 +56,11 @@
     </Compile>
     <Compile Include="IChannelSecurity.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ValidAcceptedChannelPriceInUsCentsPerWeek.cs" />
     <Compile Include="ValidChannelName.cs" />
     <Compile Include="ValidChannelPriceInUsCentsPerWeek.cs" />
     <Compile Include="ValidChannelDescription.cs" />
+    <Compile Include="ValidChannelPriceInUsCentsPerWeekBase.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Fifthweek.Api.Identity.Shared\Fifthweek.Api.Identity.Shared.csproj">

@@ -6,55 +6,28 @@
     using Fifthweek.CodeGeneration;
 
     [AutoEqualityMembers]
-    public partial class ValidChannelPriceInUsCentsPerWeek
+    public partial class ValidChannelPriceInUsCentsPerWeek : ValidChannelPriceInUsCentsPerWeekBase<ValidChannelPriceInUsCentsPerWeek>
     {
         public static readonly int MinValue = 1;
+        private static readonly Func<ValidChannelPriceInUsCentsPerWeek> Construct = () => new ValidChannelPriceInUsCentsPerWeek();
 
         private ValidChannelPriceInUsCentsPerWeek()
         {
         }
 
-        public int Value { get; private set; }
-
         public static ValidChannelPriceInUsCentsPerWeek Parse(int value)
         {
-            ValidChannelPriceInUsCentsPerWeek retval;
-            if (!TryParse(value, out retval))
-            {
-                throw new ArgumentException("Invalid weekly price", "value");
-            }
-
-            return retval;
+            return Parse(value, MinValue, Construct);
         }
 
         public static bool TryParse(int value, out ValidChannelPriceInUsCentsPerWeek weeklySubscriptionPrice)
         {
-            IReadOnlyCollection<string> errorMessages;
-            return TryParse(value, out weeklySubscriptionPrice, out errorMessages);
+            return TryParse(value, MinValue, Construct, out weeklySubscriptionPrice);
         }
 
         public static bool TryParse(int value, out ValidChannelPriceInUsCentsPerWeek weeklySubscriptionPrice, out IReadOnlyCollection<string> errorMessages)
         {
-            var errorMessageList = new List<string>();
-            errorMessages = errorMessageList;
-
-            if (value < MinValue)
-            {
-                errorMessageList.Add(string.Format("Weekly price must be at least {0}", MinValue));
-            }
-
-            if (errorMessageList.Count > 0)
-            {
-                weeklySubscriptionPrice = null;
-                return false;
-            }
-
-            weeklySubscriptionPrice = new ValidChannelPriceInUsCentsPerWeek
-            {
-                Value = value
-            };
-
-            return true;
+            return TryParse(value, MinValue, Construct, out weeklySubscriptionPrice, out errorMessages);
         }
     }
 }
