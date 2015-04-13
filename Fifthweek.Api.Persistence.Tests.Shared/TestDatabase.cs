@@ -14,7 +14,7 @@
     public partial class TestDatabase : IFifthweekDbConnectionFactory
     {
         // Increment this when changing database seed state.
-        private const int SeedStateVersion = 18;
+        private const int SeedStateVersion = 19;
 
         private static bool migrationRequired = true;
 
