@@ -9,7 +9,7 @@
 
     [AutoConstructor]
     [AutoEqualityMembers]
-    public partial class GetBlogResult
+    public partial class BlogWithFileInformation
     {
         public BlogId BlogId { get; private set; }
 

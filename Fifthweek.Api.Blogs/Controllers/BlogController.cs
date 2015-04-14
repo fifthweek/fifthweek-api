@@ -15,7 +15,7 @@
     {
         private readonly ICommandHandler<CreateBlogCommand> createBlog;
         private readonly ICommandHandler<UpdateBlogCommand> updateBlog;
-        private readonly IQueryHandler<GetBlogQuery, GetBlogResult> getBlog;
+        private readonly IQueryHandler<GetLandingPageQuery, GetLandingPageResult> getLandingPage;
         private readonly IRequesterContext requesterContext;
         private readonly IGuidCreator guidCreator;
 
@@ -61,15 +61,12 @@
             return this.Ok();
         }
 
-        [Route("{blogId}")]
-        public async Task<GetBlogResult> GetBlog(string blogId)
+        [Route("landingPages/{username}")]
+        public async Task<GetLandingPageResult> GetLandingPage(string username)
         {
-            blogId.AssertUrlParameterProvided("blogId");
+            username.AssertUrlParameterProvided("username");
 
-            var blogIdObject = new BlogId(blogId.DecodeGuid());
-
-            var result = await this.getBlog.HandleAsync(new GetBlogQuery(
-                blogIdObject));
+            var result = await this.getLandingPage.HandleAsync(new GetLandingPageQuery(new Username(username)));
 
             return result;
         }

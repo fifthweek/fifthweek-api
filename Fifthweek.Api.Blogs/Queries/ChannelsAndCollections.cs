@@ -1,4 +1,4 @@
-﻿namespace Fifthweek.Api.Collections.Queries
+﻿namespace Fifthweek.Api.Blogs.Queries
 {
     using System.Collections.Generic;
 

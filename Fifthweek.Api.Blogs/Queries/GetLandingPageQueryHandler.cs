@@ -8,16 +8,19 @@
     using Fifthweek.Shared;
 
     [AutoConstructor]
-    public partial class GetBlogQueryHandler : IQueryHandler<GetBlogQuery, GetBlogResult>
+    public partial class GetLandingPageQueryHandler : IQueryHandler<GetLandingPageQuery, GetLandingPageResult>
     {
         private readonly IFileInformationAggregator fileInformationAggregator;
-        private readonly IGetBlogDbStatement getBlog;
-
-        public async Task<GetBlogResult> HandleAsync(GetBlogQuery query)
+        private readonly IGetLandingPageDbStatement getLandingPageDbStatement;
+        
+        public async Task<GetLandingPageResult> HandleAsync(GetLandingPageQuery query)
         {
             query.AssertNotNull("query");
 
-            var blog = await this.getBlog.ExecuteAsync(query.NewBlogId);
+            var queryResult = await this.getLandingPageDbStatement.ExecuteAsync(query.CreatorUsername);
+
+            var blog = queryResult.Blog;
+            var channels = queryResult.Channels;
 
             FileInformation headerFileInformation = null;
 
@@ -29,7 +32,7 @@
                         FilePurposes.ProfileHeaderImage);
             }
 
-            return new GetBlogResult(
+            var blogWithFileInformation = new BlogWithFileInformation(
                 blog.BlogId,
                 blog.CreatorId,
                 blog.BlogName,
@@ -39,6 +42,8 @@
                 headerFileInformation,
                 blog.Video,
                 blog.Description);
+
+            return new GetLandingPageResult(blogWithFileInformation, channels);
         }
     }
 }

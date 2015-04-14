@@ -85,19 +85,27 @@
     <Compile Include="Controllers\BlogAccessController.cs" />
     <Compile Include="Controllers\FreeAccessUsersData.cs" />
     <Compile Include="Controllers\PutFreeAccessUsersResult.cs" />
+    <Compile Include="GetLandingPageDbStatement.cs" />
     <Compile Include="GetUserSubscriptionsDbStatement.cs" />
     <Compile Include="GetFreeAccessUsersDbStatement.cs" />
+    <Compile Include="IGetLandingPageDbStatement.cs" />
     <Compile Include="IGetUserSubscriptionsDbStatement.cs" />
     <Compile Include="IGetFreeAccessUsersDbStatement.cs" />
     <Compile Include="IUpdateFreeAccessUsersDbStatement.cs" />
     <Compile Include="Queries\BlogSubscriptionStatus.cs" />
+    <Compile Include="Queries\ChannelResult.cs" />
+    <Compile Include="Queries\ChannelsAndCollections.cs" />
     <Compile Include="Queries\ChannelSubscriptionStatus.cs" />
+    <Compile Include="Queries\GetBlogChannelsAndCollectionsResult.cs" />
+    <Compile Include="Queries\GetLandingPageQuery.cs" />
+    <Compile Include="Queries\GetLandingPageQueryHandler.cs" />
+    <Compile Include="Queries\GetLandingPageResult.cs" />
     <Compile Include="Queries\GetUserSubscriptionsResult.cs" />
-    <Compile Include="Queries\GetBlogQuery.cs" />
-    <Compile Include="Queries\GetBlogQueryHandler.cs" />
-    <Compile Include="GetBlogDbStatement.cs" />
-    <Compile Include="IGetBlogDbStatement.cs" />
-    <Compile Include="Queries\GetBlogResult.cs" />
+    <Compile Include="Queries\GetBlogChannelsAndCollectionsQuery.cs" />
+    <Compile Include="Queries\GetBlogChannelsAndCollectionsQueryHandler.cs" />
+    <Compile Include="GetBlogChannelsAndCollectionsDbStatement.cs" />
+    <Compile Include="IGetBlogChannelsAndCollectionsDbStatement.cs" />
+    <Compile Include="Queries\BlogWithFileInformation.cs" />
     <Compile Include="BlogOwnership.cs" />
     <Compile Include="IBlogOwnership.cs" />
     <Compile Include="ClassAugmentation.cs">
@@ -131,6 +139,10 @@
     <ProjectReference Include="..\Fifthweek.Api.Channels.Shared\Fifthweek.Api.Channels.Shared.csproj">
       <Project>{df1bb4e7-5315-4e5c-ba73-6dfa4d9e7564}</Project>
       <Name>Fifthweek.Api.Channels.Shared</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Fifthweek.Api.Collections.Shared\Fifthweek.Api.Collections.Shared.csproj">
+      <Project>{23B50A6B-D27C-4761-BE96-1F90B9408A87}</Project>
+      <Name>Fifthweek.Api.Collections.Shared</Name>
     </ProjectReference>
     <ProjectReference Include="..\Fifthweek.Api.Core\Fifthweek.Api.Core.csproj">
       <Project>{BD52863E-063D-45A5-9CA8-7541804D1313}</Project>

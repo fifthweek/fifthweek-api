@@ -22,9 +22,8 @@
 
         private readonly IQueryHandler<GetUserAccessSignaturesQuery, UserAccessSignatures> getUserAccessSignatures;
         private readonly IQueryHandler<GetCreatorStatusQuery, CreatorStatus> getCreatorStatus;
-        private readonly IQueryHandler<GetCreatedChannelsAndCollectionsQuery, ChannelsAndCollections> getCreatedChannelsAndCollections;
         private readonly IQueryHandler<GetAccountSettingsQuery, GetAccountSettingsResult> getAccountSettings;
-        private readonly IQueryHandler<GetBlogQuery, GetBlogResult> getBlog;
+        private readonly IQueryHandler<GetBlogChannelsAndCollectionsQuery, GetBlogChannelsAndCollectionsResult> getBlogChannelsAndCollections;
         private readonly IQueryHandler<GetUserSubscriptionsQuery, GetUserSubscriptionsResult> getBlogSubscriptions;
 
         public async Task<UserState> HandleAsync(GetUserStateQuery query)
@@ -37,7 +36,7 @@
             CreatorStatus creatorStatus = null;
             ChannelsAndCollections createdChannelsAndCollections = null;
             GetAccountSettingsResult accountSettings = null;
-            GetBlogResult blog = null;
+            BlogWithFileInformation blog = null;
             
             if (query.RequestedUserId != null)
             {
@@ -50,20 +49,23 @@
                 if (isCreator)
                 {
                     var creatorStatusTask = this.getCreatorStatus.HandleAsync(new GetCreatorStatusQuery(query.Requester, query.RequestedUserId));
-                    var createdChannelsAndCollectionsTask = this.getCreatedChannelsAndCollections.HandleAsync(new GetCreatedChannelsAndCollectionsQuery(query.Requester, query.RequestedUserId));
                     var accountSettingsTask = this.getAccountSettings.HandleAsync(new GetAccountSettingsQuery(query.Requester, query.RequestedUserId));
 
                     creatorStatus = await creatorStatusTask;
 
-                    var subscriptionTask = Task.FromResult<GetBlogResult>(null);
+                    var blogChannelsAndCollectionsTask = Task.FromResult<GetBlogChannelsAndCollectionsResult>(null);
                     if (creatorStatus.BlogId != null)
                     {
-                        subscriptionTask = this.getBlog.HandleAsync(new GetBlogQuery(creatorStatus.BlogId));
+                        blogChannelsAndCollectionsTask = this.getBlogChannelsAndCollections.HandleAsync(new GetBlogChannelsAndCollectionsQuery(creatorStatus.BlogId));
                     }
 
-                    createdChannelsAndCollections = await createdChannelsAndCollectionsTask;
                     accountSettings = await accountSettingsTask;
-                    blog = await subscriptionTask;
+                    var blogChannelsAndCollections = await blogChannelsAndCollectionsTask;
+                    if (blogChannelsAndCollections != null)
+                    {
+                        blog = blogChannelsAndCollections.Blog;
+                        createdChannelsAndCollections = blogChannelsAndCollections.ChannelsAndCollections;
+                    }
                 }
 
                 userSubscriptions = await blogSubscriptionsTask;

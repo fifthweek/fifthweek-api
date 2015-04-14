@@ -1,6 +1,7 @@
 ﻿namespace Fifthweek.Api.Blogs.Tests.Controllers
 {
     using System;
+    using System.Collections.Generic;
     using System.Threading.Tasks;
     using System.Web.Http.Results;
 
@@ -25,9 +26,10 @@
         private static readonly Requester Requester = Requester.Authenticated(UserId);
         private static readonly BlogId BlogId = new BlogId(Guid.NewGuid());
         private static readonly FileId HeaderImageFileId = new FileId(Guid.NewGuid());
+        private static readonly Username Username = new Username("username");
         private Mock<ICommandHandler<CreateBlogCommand>> createBlog;
         private Mock<ICommandHandler<UpdateBlogCommand>> updateBlog;
-        private Mock<IQueryHandler<GetBlogQuery, GetBlogResult>> getBlog;
+        private Mock<IQueryHandler<GetLandingPageQuery, GetLandingPageResult>> getLandingPage;
         private Mock<IRequesterContext> requesterContext;
         private Mock<IGuidCreator> guidCreator;
         private BlogController target;
@@ -37,13 +39,13 @@
         {
             this.createBlog = new Mock<ICommandHandler<CreateBlogCommand>>();
             this.updateBlog = new Mock<ICommandHandler<UpdateBlogCommand>>();
-            this.getBlog = new Mock<IQueryHandler<GetBlogQuery, GetBlogResult>>();
+            this.getLandingPage = new Mock<IQueryHandler<GetLandingPageQuery, GetLandingPageResult>>();
             this.requesterContext = new Mock<IRequesterContext>();
             this.guidCreator = new Mock<IGuidCreator>();
             this.target = new BlogController(
                 this.createBlog.Object,
                 this.updateBlog.Object,
-                this.getBlog.Object,
+                this.getLandingPage.Object,
                 this.requesterContext.Object,
                 this.guidCreator.Object);
         }
@@ -80,29 +82,31 @@
         }
 
         [TestMethod]
-        public async Task WhenGettingBlog_ItShouldIssueGetBlogQuery()
+        public async Task WhenGettingLandingPage_ItShouldIssueGetLandingPageQuery()
         {
-            this.getBlog.Setup(v => v.HandleAsync(new GetBlogQuery(BlogId)))
-                .Returns(Task.FromResult(NewGetBlogResult())).Verifiable();
+            this.getLandingPage.Setup(v => v.HandleAsync(new GetLandingPageQuery(Username)))
+                .Returns(Task.FromResult(NewGetLandingPageResult())).Verifiable();
 
-            var result = await this.target.GetBlog(BlogId.Value.EncodeGuid());
+            var result = await this.target.GetLandingPage(Username.Value);
 
-            Assert.AreEqual(NewGetBlogResult(), result);
-            this.getBlog.Verify();
+            Assert.AreEqual(NewGetLandingPageResult(), result);
+            this.getLandingPage.Verify();
         }
 
-        public static GetBlogResult NewGetBlogResult()
+        public static GetLandingPageResult NewGetLandingPageResult()
         {
-            return new GetBlogResult(
-                BlogId,
-                UserId,
-                new BlogName("name"),
-                new Tagline("tagline"),
-                new Introduction("intro"),
-                Now,
-                null,
-                null,
-                null);
+            return new GetLandingPageResult(
+                new BlogWithFileInformation(
+                    BlogId,
+                    UserId,
+                    new BlogName("name"),
+                    new Tagline("tagline"),
+                    new Introduction("intro"),
+                    Now,
+                    null,
+                    null,
+                    null),
+                new List<ChannelResult>());
         }
 
         public static NewBlogData NewCreateBlogData()

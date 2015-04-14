@@ -15,7 +15,6 @@
             builder.RegisterType<GetLiveDateOfNewQueuedPostDbStatement>().As<IGetLiveDateOfNewQueuedPostDbStatement>();
             builder.RegisterType<GetWeeklyReleaseScheduleDbStatement>().As<IGetWeeklyReleaseScheduleDbStatement>();
             builder.RegisterType<QueuedPostLiveDateCalculator>().As<IQueuedPostLiveDateCalculator>();
-            builder.RegisterType<GetChannelsAndCollectionsDbStatement>().As<IGetChannelsAndCollectionsDbStatement>();
             builder.RegisterType<DeleteCollectionDbStatement>().As<IDeleteCollectionDbStatement>();
             builder.RegisterType<DefragmentQueueDbStatement>().As<IDefragmentQueueDbStatement>();
             builder.RegisterType<GetQueueSizeDbStatement>().As<IGetQueueSizeDbStatement>();
