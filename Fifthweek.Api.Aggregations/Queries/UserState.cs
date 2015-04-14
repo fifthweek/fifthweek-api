@@ -28,6 +28,6 @@ namespace Fifthweek.Api.Aggregations.Queries
         public BlogWithFileInformation Blog { get; private set; }
 
         [Optional]
-        public GetUserSubscriptionsResult UserSubscriptions { get; private set; }
+        public GetUserSubscriptionsResult Subscriptions { get; private set; }
     }
 }

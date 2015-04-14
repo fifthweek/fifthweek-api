@@ -110,7 +110,7 @@
             Assert.IsNull(result.CreatedChannelsAndCollections);
             Assert.IsNull(result.AccountSettings);
             Assert.IsNull(result.Blog);
-            Assert.IsNull(result.UserSubscriptions);
+            Assert.IsNull(result.Subscriptions);
         }
 
         [TestMethod]
@@ -128,7 +128,7 @@
 
             Assert.IsNotNull(result);
             Assert.AreEqual(UserAccessSignatures, result.AccessSignatures);
-            Assert.AreEqual(UserSubscriptions, result.UserSubscriptions);
+            Assert.AreEqual(UserSubscriptions, result.Subscriptions);
 
             Assert.IsNull(result.CreatorStatus);
             Assert.IsNull(result.CreatedChannelsAndCollections);
@@ -164,7 +164,7 @@
 
             Assert.IsNotNull(result);
             Assert.AreEqual(UserAccessSignatures, result.AccessSignatures);
-            Assert.AreEqual(UserSubscriptions, result.UserSubscriptions);
+            Assert.AreEqual(UserSubscriptions, result.Subscriptions);
             Assert.AreEqual(creatorStatus, result.CreatorStatus);
             Assert.AreEqual(accountSettings, result.AccountSettings);
             Assert.AreEqual(blogChannelsAndCollections.Blog, result.Blog);
@@ -194,7 +194,7 @@
 
             Assert.IsNotNull(result);
             Assert.AreEqual(UserAccessSignatures, result.AccessSignatures);
-            Assert.AreEqual(UserSubscriptions, result.UserSubscriptions);
+            Assert.AreEqual(UserSubscriptions, result.Subscriptions);
             Assert.AreEqual(creatorStatus, result.CreatorStatus);
             Assert.AreEqual(accountSettings, result.AccountSettings);
             Assert.IsNull(result.Blog);

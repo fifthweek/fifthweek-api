@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Linq;
 
-//// Generated on 14/04/2015 11:51:11 (UTC)
-//// Mapped solution in 8.66s
+//// Generated on 14/04/2015 16:00:09 (UTC)
+//// Mapped solution in 8.96s
 
 
 namespace Fifthweek.Api.Aggregations.Controllers
@@ -167,7 +167,7 @@ namespace Fifthweek.Api.Aggregations.Queries
             Fifthweek.Api.Blogs.Queries.ChannelsAndCollections createdChannelsAndCollections,
             Fifthweek.Api.Identity.Membership.GetAccountSettingsResult accountSettings,
             Fifthweek.Api.Blogs.Queries.BlogWithFileInformation blog,
-            Fifthweek.Api.Blogs.Queries.GetUserSubscriptionsResult userSubscriptions)
+            Fifthweek.Api.Blogs.Queries.GetUserSubscriptionsResult subscriptions)
         {
             if (accessSignatures == null)
             {
@@ -179,7 +179,7 @@ namespace Fifthweek.Api.Aggregations.Queries
             this.CreatedChannelsAndCollections = createdChannelsAndCollections;
             this.AccountSettings = accountSettings;
             this.Blog = blog;
-            this.UserSubscriptions = userSubscriptions;
+            this.Subscriptions = subscriptions;
         }
     }
 }
@@ -278,7 +278,7 @@ namespace Fifthweek.Api.Aggregations.Queries
     {
         public override string ToString()
         {
-            return string.Format("UserState({0}, {1}, {2}, {3}, {4}, {5})", this.AccessSignatures == null ? "null" : this.AccessSignatures.ToString(), this.CreatorStatus == null ? "null" : this.CreatorStatus.ToString(), this.CreatedChannelsAndCollections == null ? "null" : this.CreatedChannelsAndCollections.ToString(), this.AccountSettings == null ? "null" : this.AccountSettings.ToString(), this.Blog == null ? "null" : this.Blog.ToString(), this.UserSubscriptions == null ? "null" : this.UserSubscriptions.ToString());
+            return string.Format("UserState({0}, {1}, {2}, {3}, {4}, {5})", this.AccessSignatures == null ? "null" : this.AccessSignatures.ToString(), this.CreatorStatus == null ? "null" : this.CreatorStatus.ToString(), this.CreatedChannelsAndCollections == null ? "null" : this.CreatedChannelsAndCollections.ToString(), this.AccountSettings == null ? "null" : this.AccountSettings.ToString(), this.Blog == null ? "null" : this.Blog.ToString(), this.Subscriptions == null ? "null" : this.Subscriptions.ToString());
         }
         
         public override bool Equals(object obj)
@@ -311,7 +311,7 @@ namespace Fifthweek.Api.Aggregations.Queries
                 hashCode = (hashCode * 397) ^ (this.CreatedChannelsAndCollections != null ? this.CreatedChannelsAndCollections.GetHashCode() : 0);
                 hashCode = (hashCode * 397) ^ (this.AccountSettings != null ? this.AccountSettings.GetHashCode() : 0);
                 hashCode = (hashCode * 397) ^ (this.Blog != null ? this.Blog.GetHashCode() : 0);
-                hashCode = (hashCode * 397) ^ (this.UserSubscriptions != null ? this.UserSubscriptions.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.Subscriptions != null ? this.Subscriptions.GetHashCode() : 0);
                 return hashCode;
             }
         }
@@ -343,7 +343,7 @@ namespace Fifthweek.Api.Aggregations.Queries
                 return false;
             }
         
-            if (!object.Equals(this.UserSubscriptions, other.UserSubscriptions))
+            if (!object.Equals(this.Subscriptions, other.Subscriptions))
             {
                 return false;
             }

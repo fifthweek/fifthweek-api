@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Linq;
 
-//// Generated on 14/04/2015 12:17:58 (UTC)
-//// Mapped solution in 6.09s
+//// Generated on 14/04/2015 15:55:11 (UTC)
+//// Mapped solution in 10.53s
 
 
 namespace Fifthweek.Api.Blogs
@@ -1364,91 +1364,6 @@ namespace Fifthweek.Api.Blogs.Queries
         }
     }
 }
-namespace Fifthweek.Api.Blogs.Commands
-{
-    using System;
-    using System.Linq;
-    using Fifthweek.Api.Blogs.Shared;
-    using Fifthweek.Api.Channels.Shared;
-    using Fifthweek.Api.Identity.Shared.Membership;
-    using Fifthweek.CodeGeneration;
-    using System.Threading.Tasks;
-    using System.Transactions;
-    using Fifthweek.Api.Core;
-    using Fifthweek.Api.Persistence;
-    using Fifthweek.Shared;
-    using Fifthweek.Api.Persistence.Identity;
-    using Fifthweek.Api.Identity.Shared.Membership.Events;
-    using Fifthweek.Api.FileManagement.Shared;
-    using System.Collections.Generic;
-
-    public partial class AcceptedChannelSubscription 
-    {
-        public AcceptedChannelSubscription(
-            Fifthweek.Api.Channels.Shared.ChannelId channelId,
-            Fifthweek.Api.Channels.Shared.ValidAcceptedChannelPriceInUsCentsPerWeek acceptedPrice)
-        {
-            if (channelId == null)
-            {
-                throw new ArgumentNullException("channelId");
-            }
-
-            if (acceptedPrice == null)
-            {
-                throw new ArgumentNullException("acceptedPrice");
-            }
-
-            this.ChannelId = channelId;
-            this.AcceptedPrice = acceptedPrice;
-        }
-    }
-}
-namespace Fifthweek.Api.Blogs.Commands
-{
-    using System;
-    using System.Linq;
-    using Fifthweek.Api.Blogs.Shared;
-    using Fifthweek.Api.Channels.Shared;
-    using Fifthweek.Api.Identity.Shared.Membership;
-    using Fifthweek.CodeGeneration;
-    using System.Threading.Tasks;
-    using System.Transactions;
-    using Fifthweek.Api.Core;
-    using Fifthweek.Api.Persistence;
-    using Fifthweek.Shared;
-    using Fifthweek.Api.Persistence.Identity;
-    using Fifthweek.Api.Identity.Shared.Membership.Events;
-    using Fifthweek.Api.FileManagement.Shared;
-    using System.Collections.Generic;
-
-    public partial class UpdateBlogSubscriptionsCommand 
-    {
-        public UpdateBlogSubscriptionsCommand(
-            Fifthweek.Api.Identity.Shared.Membership.Requester requester,
-            Fifthweek.Api.Blogs.Shared.BlogId blogId,
-            System.Collections.Generic.IReadOnlyList<Fifthweek.Api.Blogs.Commands.AcceptedChannelSubscription> channels)
-        {
-            if (requester == null)
-            {
-                throw new ArgumentNullException("requester");
-            }
-
-            if (blogId == null)
-            {
-                throw new ArgumentNullException("blogId");
-            }
-
-            if (channels == null)
-            {
-                throw new ArgumentNullException("channels");
-            }
-
-            this.Requester = requester;
-            this.BlogId = blogId;
-            this.Channels = channels;
-        }
-    }
-}
 namespace Fifthweek.Api.Blogs.Queries
 {
     using System;
@@ -1982,9 +1897,20 @@ namespace Fifthweek.Api.Blogs.Queries
 }
 namespace Fifthweek.Api.Blogs.Queries
 {
+    using System;
+    using System.Linq;
+    using Fifthweek.Api.Blogs.Shared;
     using Fifthweek.Api.Core;
-    using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.CodeGeneration;
+    using System.Threading.Tasks;
+    using Fifthweek.Api.FileManagement.Shared;
+    using Fifthweek.Shared;
+    using Fifthweek.Api.Identity.Shared.Membership;
+    using Dapper;
+    using Fifthweek.Api.Persistence;
+    using System.Collections.Generic;
+    using Fifthweek.Api.Channels.Shared;
+    using Fifthweek.Api.Collections.Shared;
 
     public partial class GetLandingPageQuery 
     {
@@ -2002,11 +1928,20 @@ namespace Fifthweek.Api.Blogs.Queries
 }
 namespace Fifthweek.Api.Blogs.Queries
 {
-    using System.Threading.Tasks;
+    using System;
+    using System.Linq;
+    using Fifthweek.Api.Blogs.Shared;
     using Fifthweek.Api.Core;
-    using Fifthweek.Api.FileManagement.Shared;
     using Fifthweek.CodeGeneration;
+    using System.Threading.Tasks;
+    using Fifthweek.Api.FileManagement.Shared;
     using Fifthweek.Shared;
+    using Fifthweek.Api.Identity.Shared.Membership;
+    using Dapper;
+    using Fifthweek.Api.Persistence;
+    using System.Collections.Generic;
+    using Fifthweek.Api.Channels.Shared;
+    using Fifthweek.Api.Collections.Shared;
 
     public partial class GetLandingPageQueryHandler 
     {
@@ -3619,6 +3554,71 @@ namespace Fifthweek.Api.Blogs.Queries
         }
     }
 }
+namespace Fifthweek.Api.Blogs.Queries
+{
+    using System;
+    using System.Linq;
+    using Fifthweek.Api.Blogs.Shared;
+    using Fifthweek.Api.Core;
+    using Fifthweek.CodeGeneration;
+    using System.Threading.Tasks;
+    using Fifthweek.Api.FileManagement.Shared;
+    using Fifthweek.Shared;
+    using Fifthweek.Api.Identity.Shared.Membership;
+    using Dapper;
+    using Fifthweek.Api.Persistence;
+    using System.Collections.Generic;
+    using Fifthweek.Api.Channels.Shared;
+    using Fifthweek.Api.Collections.Shared;
+
+    public partial class GetLandingPageQuery 
+    {
+        public override string ToString()
+        {
+            return string.Format("GetLandingPageQuery({0})", this.CreatorUsername == null ? "null" : this.CreatorUsername.ToString());
+        }
+        
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj))
+            {
+                return false;
+            }
+        
+            if (ReferenceEquals(this, obj))
+            {
+                return true;
+            }
+        
+            if (obj.GetType() != this.GetType())
+            {
+                return false;
+            }
+        
+            return this.Equals((GetLandingPageQuery)obj);
+        }
+        
+        public override int GetHashCode()
+        {
+            unchecked
+            {
+                int hashCode = 0;
+                hashCode = (hashCode * 397) ^ (this.CreatorUsername != null ? this.CreatorUsername.GetHashCode() : 0);
+                return hashCode;
+            }
+        }
+        
+        protected bool Equals(GetLandingPageQuery other)
+        {
+            if (!object.Equals(this.CreatorUsername, other.CreatorUsername))
+            {
+                return false;
+            }
+        
+            return true;
+        }
+    }
+}
 namespace Fifthweek.Api.Blogs.Controllers
 {
     using System;
@@ -3860,60 +3860,6 @@ namespace Fifthweek.Api.Blogs.Controllers
                 }
             }
             else if (this.Emails != null || other.Emails != null)
-            {
-                return false;
-            }
-        
-            return true;
-        }
-    }
-}
-namespace Fifthweek.Api.Blogs.Queries
-{
-    using Fifthweek.Api.Core;
-    using Fifthweek.Api.Identity.Shared.Membership;
-    using Fifthweek.CodeGeneration;
-
-    public partial class GetLandingPageQuery 
-    {
-        public override string ToString()
-        {
-            return string.Format("GetLandingPageQuery({0})", this.CreatorUsername == null ? "null" : this.CreatorUsername.ToString());
-        }
-        
-        public override bool Equals(object obj)
-        {
-            if (ReferenceEquals(null, obj))
-            {
-                return false;
-            }
-        
-            if (ReferenceEquals(this, obj))
-            {
-                return true;
-            }
-        
-            if (obj.GetType() != this.GetType())
-            {
-                return false;
-            }
-        
-            return this.Equals((GetLandingPageQuery)obj);
-        }
-        
-        public override int GetHashCode()
-        {
-            unchecked
-            {
-                int hashCode = 0;
-                hashCode = (hashCode * 397) ^ (this.CreatorUsername != null ? this.CreatorUsername.GetHashCode() : 0);
-                return hashCode;
-            }
-        }
-        
-        protected bool Equals(GetLandingPageQuery other)
-        {
-            if (!object.Equals(this.CreatorUsername, other.CreatorUsername))
             {
                 return false;
             }
