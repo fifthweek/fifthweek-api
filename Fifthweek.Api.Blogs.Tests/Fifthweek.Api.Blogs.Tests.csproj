@@ -102,11 +102,10 @@
     <Compile Include="Controllers\BlogAccessControllerTests.cs" />
     <Compile Include="Controllers\BlogControllerTests.cs" />
     <Compile Include="GetBlogDbStatementTests.cs" />
-    <Compile Include="GetBlogSubscriptionsDbStatementTests.cs" />
+    <Compile Include="GetUserSubscriptionsDbStatementTests.cs" />
     <Compile Include="GetFreeAccessUsersDbStatementTests.cs" />
-    <Compile Include="Queries\GetBlogAccessStatusQueryHandlerTests.cs" />
     <Compile Include="Queries\GetBlogQueryHandlerTests.cs" />
-    <Compile Include="Queries\GetBlogSubscriptionsQueryHandlerTests.cs" />
+    <Compile Include="Queries\GetUserSubscriptionsQueryHandlerTests.cs" />
     <Compile Include="Queries\GetFreeAccessUsersQueryHandlerTests.cs" />
     <Compile Include="UpdateFreeAccessUsersDbStatementTests.cs" />
     <Compile Include="ValidBlogDescriptionTests.cs" />

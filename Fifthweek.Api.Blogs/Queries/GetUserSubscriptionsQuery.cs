@@ -6,7 +6,7 @@
     using Fifthweek.CodeGeneration;
 
     [AutoConstructor, AutoEqualityMembers]
-    public partial class GetBlogSubscriptionsQuery : IQuery<GetBlogSubscriptionsResult>
+    public partial class GetUserSubscriptionsQuery : IQuery<GetUserSubscriptionsResult>
     {
         public Requester Requester { get; private set; }
     }

@@ -18,7 +18,7 @@
     using Moq;
 
     [TestClass]
-    public class GetBlogSubscriptionsDbStatementTests : PersistenceTestsBase
+    public class GetUserSubscriptionsDbStatementTests : PersistenceTestsBase
     {
         private static readonly BlogId Blog1Id = new BlogId(Guid.NewGuid());
         private static readonly ChannelId[] Blog1ChannelIds = new [] { new ChannelId(Guid.NewGuid()),  new ChannelId(Guid.NewGuid()) };
@@ -57,12 +57,12 @@
 
         private readonly Random random = new Random();
 
-        private GetBlogSubscriptionsDbStatement target;
+        private GetUserSubscriptionsDbStatement target;
 
         [TestInitialize]
         public void TestInitialize()
         {
-            this.target = new GetBlogSubscriptionsDbStatement(new Mock<IFifthweekDbConnectionFactory>(MockBehavior.Strict).Object);
+            this.target = new GetUserSubscriptionsDbStatement(new Mock<IFifthweekDbConnectionFactory>(MockBehavior.Strict).Object);
         }
 
         [TestMethod]
@@ -77,7 +77,7 @@
         {
             await this.DatabaseTestAsync(async testDatabase =>
             {
-                this.target = new GetBlogSubscriptionsDbStatement(testDatabase);
+                this.target = new GetUserSubscriptionsDbStatement(testDatabase);
 
                 await this.CreateDataAsync(testDatabase);
                 await testDatabase.TakeSnapshotAsync();
@@ -94,7 +94,7 @@
         {
             await this.DatabaseTestAsync(async testDatabase =>
             {
-                this.target = new GetBlogSubscriptionsDbStatement(testDatabase);
+                this.target = new GetUserSubscriptionsDbStatement(testDatabase);
 
                 await this.CreateDataAsync(testDatabase);
                 await testDatabase.TakeSnapshotAsync();
@@ -156,7 +156,7 @@
             });
         }
 
-        private static void OrderResults(GetBlogSubscriptionsResult result)
+        private static void OrderResults(GetUserSubscriptionsResult result)
         {
             ((List<BlogSubscriptionStatus>)result.Blogs).Sort((a, b) => a.BlogId.Value.CompareTo(b.BlogId.Value));
 

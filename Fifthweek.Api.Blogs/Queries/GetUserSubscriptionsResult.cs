@@ -5,7 +5,7 @@
     using Fifthweek.CodeGeneration;
 
     [AutoConstructor, AutoEqualityMembers]
-    public partial class GetBlogSubscriptionsResult
+    public partial class GetUserSubscriptionsResult
     {
         public IReadOnlyList<BlogSubscriptionStatus> Blogs { get; private set; }
     }

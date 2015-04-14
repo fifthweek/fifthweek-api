@@ -14,7 +14,7 @@
             builder.RegisterType<GetBlogDbStatement>().As<IGetBlogDbStatement>();
             builder.RegisterType<UpdateFreeAccessUsersDbStatement>().As<IUpdateFreeAccessUsersDbStatement>();
             builder.RegisterType<GetFreeAccessUsersDbStatement>().As<IGetFreeAccessUsersDbStatement>();
-            builder.RegisterType<GetBlogSubscriptionsDbStatement>().As<IGetBlogSubscriptionsDbStatement>();
+            builder.RegisterType<GetUserSubscriptionsDbStatement>().As<IGetUserSubscriptionsDbStatement>();
         }
     }
 }

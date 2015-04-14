@@ -17,7 +17,7 @@
     using Fifthweek.Shared;
 
     [AutoConstructor]
-    public partial class GetBlogSubscriptionsDbStatement : IGetBlogSubscriptionsDbStatement
+    public partial class GetUserSubscriptionsDbStatement : IGetUserSubscriptionsDbStatement
     {
         private static readonly string SubscriptionsQuery = string.Format(
             @"SELECT 
@@ -83,7 +83,7 @@
 
         private readonly IFifthweekDbConnectionFactory connectionFactory;
 
-        public async Task<GetBlogSubscriptionsResult> ExecuteAsync(UserId userId)
+        public async Task<GetUserSubscriptionsResult> ExecuteAsync(UserId userId)
         {
             userId.AssertNotNull("userId");
 
@@ -145,7 +145,7 @@
                 ((List<ChannelSubscriptionStatus>)blog.Channels).Add(channel);
             }
 
-            return new GetBlogSubscriptionsResult(blogs.Values.ToList());
+            return new GetUserSubscriptionsResult(blogs.Values.ToList());
         }
 
         private class DbResult

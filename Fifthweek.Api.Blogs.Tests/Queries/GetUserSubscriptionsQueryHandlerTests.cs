@@ -15,36 +15,36 @@
     using Moq;
 
     [TestClass]
-    public class GetBlogSubscriptionsQueryHandlerTests
+    public class GetUserSubscriptionsQueryHandlerTests
     {
         private static readonly UserId UserId = new UserId(Guid.NewGuid());
 
-        private static readonly GetBlogSubscriptionsQuery Query =
-            new GetBlogSubscriptionsQuery(Requester.Authenticated(UserId));
+        private static readonly GetUserSubscriptionsQuery Query =
+            new GetUserSubscriptionsQuery(Requester.Authenticated(UserId));
 
-        private static readonly GetBlogSubscriptionsResult Result =
-            new GetBlogSubscriptionsResult(new List<BlogSubscriptionStatus>());
+        private static readonly GetUserSubscriptionsResult Result =
+            new GetUserSubscriptionsResult(new List<BlogSubscriptionStatus>());
 
         private Mock<IRequesterSecurity> requesterSecurity;
-        private Mock<IGetBlogSubscriptionsDbStatement> getBlogSubscriptions;
+        private Mock<IGetUserSubscriptionsDbStatement> getUserSubscriptions;
 
-        private GetBlogSubscriptionsQueryHandler target;
+        private GetUserSubscriptionsQueryHandler target;
 
         [TestInitialize]
         public void Initialize()
         {
             this.requesterSecurity = new Mock<IRequesterSecurity>();
             this.requesterSecurity.SetupFor(Query.Requester);
-            this.getBlogSubscriptions = new Mock<IGetBlogSubscriptionsDbStatement>(MockBehavior.Strict);
+            this.getUserSubscriptions = new Mock<IGetUserSubscriptionsDbStatement>(MockBehavior.Strict);
 
-            this.target = new GetBlogSubscriptionsQueryHandler(
+            this.target = new GetUserSubscriptionsQueryHandler(
                 this.requesterSecurity.Object,
-                this.getBlogSubscriptions.Object);
+                this.getUserSubscriptions.Object);
         }
 
         private void SetupDbStatement()
         {
-            this.getBlogSubscriptions.Setup(v => v.ExecuteAsync(UserId)).ReturnsAsync(Result).Verifiable();
+            this.getUserSubscriptions.Setup(v => v.ExecuteAsync(UserId)).ReturnsAsync(Result).Verifiable();
         }
 
         [TestMethod]
@@ -58,7 +58,7 @@
         [ExpectedException(typeof(UnauthorizedException))]
         public async Task WhenUserIsUnautorized_ItShouldThrowAnException()
         {
-            await this.target.HandleAsync(new GetBlogSubscriptionsQuery(Requester.Unauthenticated));
+            await this.target.HandleAsync(new GetUserSubscriptionsQuery(Requester.Unauthenticated));
         }
 
         [TestMethod]
@@ -66,7 +66,7 @@
         {
             this.SetupDbStatement();
             await this.target.HandleAsync(Query);
-            this.getBlogSubscriptions.Verify();
+            this.getUserSubscriptions.Verify();
         }
 
         [TestMethod]

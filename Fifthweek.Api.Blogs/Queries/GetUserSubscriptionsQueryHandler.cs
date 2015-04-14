@@ -9,17 +9,17 @@
     using Fifthweek.Shared;
 
     [AutoConstructor]
-    public partial class GetBlogSubscriptionsQueryHandler : IQueryHandler<GetBlogSubscriptionsQuery, GetBlogSubscriptionsResult>
+    public partial class GetUserSubscriptionsQueryHandler : IQueryHandler<GetUserSubscriptionsQuery, GetUserSubscriptionsResult>
     {
         private readonly IRequesterSecurity requesterSecurity;
-        private readonly IGetBlogSubscriptionsDbStatement getBlogSubscriptions;
+        private readonly IGetUserSubscriptionsDbStatement getUserSubscriptions;
         
-        public async Task<GetBlogSubscriptionsResult> HandleAsync(GetBlogSubscriptionsQuery query)
+        public async Task<GetUserSubscriptionsResult> HandleAsync(GetUserSubscriptionsQuery query)
         {
             query.AssertNotNull("query");
 
             var authenticatedUserId = await this.requesterSecurity.AuthenticateAsync(query.Requester);
-            var result = await this.getBlogSubscriptions.ExecuteAsync(authenticatedUserId);
+            var result = await this.getUserSubscriptions.ExecuteAsync(authenticatedUserId);
 
             return result;
         }

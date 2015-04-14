@@ -100,7 +100,7 @@ namespace Fifthweek.Api.Aggregations.Queries
             Fifthweek.Api.Core.IQueryHandler<Fifthweek.Api.Collections.Queries.GetCreatedChannelsAndCollectionsQuery,Fifthweek.Api.Collections.Queries.ChannelsAndCollections> getCreatedChannelsAndCollections,
             Fifthweek.Api.Core.IQueryHandler<Fifthweek.Api.Identity.Membership.Queries.GetAccountSettingsQuery,Fifthweek.Api.Identity.Membership.GetAccountSettingsResult> getAccountSettings,
             Fifthweek.Api.Core.IQueryHandler<Fifthweek.Api.Blogs.Queries.GetBlogQuery,Fifthweek.Api.Blogs.Queries.GetBlogResult> getBlog,
-            Fifthweek.Api.Core.IQueryHandler<Fifthweek.Api.Blogs.Queries.GetBlogSubscriptionsQuery,Fifthweek.Api.Blogs.Queries.GetBlogSubscriptionsResult> getBlogSubscriptions)
+            Fifthweek.Api.Core.IQueryHandler<Fifthweek.Api.Blogs.Queries.GetUserSubscriptionsQuery,Fifthweek.Api.Blogs.Queries.GetUserSubscriptionsResult> getBlogSubscriptions)
         {
             if (requesterSecurity == null)
             {
@@ -172,7 +172,7 @@ namespace Fifthweek.Api.Aggregations.Queries
             Fifthweek.Api.Collections.Queries.ChannelsAndCollections createdChannelsAndCollections,
             Fifthweek.Api.Identity.Membership.GetAccountSettingsResult accountSettings,
             Fifthweek.Api.Blogs.Queries.GetBlogResult blog,
-            Fifthweek.Api.Blogs.Queries.GetBlogSubscriptionsResult blogSubscriptions)
+            Fifthweek.Api.Blogs.Queries.GetUserSubscriptionsResult userSubscriptions)
         {
             if (accessSignatures == null)
             {
@@ -184,7 +184,7 @@ namespace Fifthweek.Api.Aggregations.Queries
             this.CreatedChannelsAndCollections = createdChannelsAndCollections;
             this.AccountSettings = accountSettings;
             this.Blog = blog;
-            this.BlogSubscriptions = blogSubscriptions;
+            this.UserSubscriptions = userSubscriptions;
         }
     }
 }
@@ -281,7 +281,7 @@ namespace Fifthweek.Api.Aggregations.Queries
     {
         public override string ToString()
         {
-            return string.Format("UserState({0}, {1}, {2}, {3}, {4}, {5})", this.AccessSignatures == null ? "null" : this.AccessSignatures.ToString(), this.CreatorStatus == null ? "null" : this.CreatorStatus.ToString(), this.CreatedChannelsAndCollections == null ? "null" : this.CreatedChannelsAndCollections.ToString(), this.AccountSettings == null ? "null" : this.AccountSettings.ToString(), this.Blog == null ? "null" : this.Blog.ToString(), this.BlogSubscriptions == null ? "null" : this.BlogSubscriptions.ToString());
+            return string.Format("UserState({0}, {1}, {2}, {3}, {4}, {5})", this.AccessSignatures == null ? "null" : this.AccessSignatures.ToString(), this.CreatorStatus == null ? "null" : this.CreatorStatus.ToString(), this.CreatedChannelsAndCollections == null ? "null" : this.CreatedChannelsAndCollections.ToString(), this.AccountSettings == null ? "null" : this.AccountSettings.ToString(), this.Blog == null ? "null" : this.Blog.ToString(), this.UserSubscriptions == null ? "null" : this.UserSubscriptions.ToString());
         }
         
         public override bool Equals(object obj)
@@ -314,7 +314,7 @@ namespace Fifthweek.Api.Aggregations.Queries
                 hashCode = (hashCode * 397) ^ (this.CreatedChannelsAndCollections != null ? this.CreatedChannelsAndCollections.GetHashCode() : 0);
                 hashCode = (hashCode * 397) ^ (this.AccountSettings != null ? this.AccountSettings.GetHashCode() : 0);
                 hashCode = (hashCode * 397) ^ (this.Blog != null ? this.Blog.GetHashCode() : 0);
-                hashCode = (hashCode * 397) ^ (this.BlogSubscriptions != null ? this.BlogSubscriptions.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.UserSubscriptions != null ? this.UserSubscriptions.GetHashCode() : 0);
                 return hashCode;
             }
         }
@@ -346,7 +346,7 @@ namespace Fifthweek.Api.Aggregations.Queries
                 return false;
             }
         
-            if (!object.Equals(this.BlogSubscriptions, other.BlogSubscriptions))
+            if (!object.Equals(this.UserSubscriptions, other.UserSubscriptions))
             {
                 return false;
             }

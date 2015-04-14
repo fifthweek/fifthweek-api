@@ -5,8 +5,8 @@
     using Fifthweek.Api.Blogs.Queries;
     using Fifthweek.Api.Identity.Shared.Membership;
 
-    public interface IGetBlogSubscriptionsDbStatement
+    public interface IGetUserSubscriptionsDbStatement
     {
-        Task<GetBlogSubscriptionsResult> ExecuteAsync(UserId userId);
+        Task<GetUserSubscriptionsResult> ExecuteAsync(UserId userId);
     }
 }

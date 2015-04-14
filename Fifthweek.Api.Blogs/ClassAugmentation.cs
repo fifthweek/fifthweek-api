@@ -867,9 +867,9 @@ namespace Fifthweek.Api.Blogs.Queries
     using System.Collections.Generic;
     using Fifthweek.Api.Channels.Shared;
 
-    public partial class GetBlogSubscriptionsQuery 
+    public partial class GetUserSubscriptionsQuery 
     {
-        public GetBlogSubscriptionsQuery(
+        public GetUserSubscriptionsQuery(
             Fifthweek.Api.Identity.Shared.Membership.Requester requester)
         {
             if (requester == null)
@@ -1129,24 +1129,24 @@ namespace Fifthweek.Api.Blogs.Queries
     using System.Collections.Generic;
     using Fifthweek.Api.Channels.Shared;
 
-    public partial class GetBlogSubscriptionsQueryHandler 
+    public partial class GetUserSubscriptionsQueryHandler 
     {
-        public GetBlogSubscriptionsQueryHandler(
+        public GetUserSubscriptionsQueryHandler(
             Fifthweek.Api.Identity.Shared.Membership.IRequesterSecurity requesterSecurity,
-            Fifthweek.Api.Blogs.IGetBlogSubscriptionsDbStatement getBlogSubscriptions)
+            Fifthweek.Api.Blogs.IGetUserSubscriptionsDbStatement getUserSubscriptions)
         {
             if (requesterSecurity == null)
             {
                 throw new ArgumentNullException("requesterSecurity");
             }
 
-            if (getBlogSubscriptions == null)
+            if (getUserSubscriptions == null)
             {
-                throw new ArgumentNullException("getBlogSubscriptions");
+                throw new ArgumentNullException("getUserSubscriptions");
             }
 
             this.requesterSecurity = requesterSecurity;
-            this.getBlogSubscriptions = getBlogSubscriptions;
+            this.getUserSubscriptions = getUserSubscriptions;
         }
     }
 }
@@ -1277,9 +1277,9 @@ namespace Fifthweek.Api.Blogs.Queries
     using System.Collections.Generic;
     using Fifthweek.Api.Channels.Shared;
 
-    public partial class GetBlogSubscriptionsResult 
+    public partial class GetUserSubscriptionsResult 
     {
-        public GetBlogSubscriptionsResult(
+        public GetUserSubscriptionsResult(
             System.Collections.Generic.IReadOnlyList<Fifthweek.Api.Blogs.Queries.BlogSubscriptionStatus> blogs)
         {
             if (blogs == null)
@@ -1310,9 +1310,9 @@ namespace Fifthweek.Api.Blogs
     using Fifthweek.Api.Blogs.Queries;
     using Fifthweek.Api.Channels.Shared;
 
-    public partial class GetBlogSubscriptionsDbStatement 
+    public partial class GetUserSubscriptionsDbStatement 
     {
-        public GetBlogSubscriptionsDbStatement(
+        public GetUserSubscriptionsDbStatement(
             Fifthweek.Api.Persistence.IFifthweekDbConnectionFactory connectionFactory)
         {
             if (connectionFactory == null)
@@ -2124,7 +2124,7 @@ namespace Fifthweek.Api.Blogs.Queries
     using System.Collections.Generic;
     using Fifthweek.Api.Channels.Shared;
 
-    public partial class GetBlogSubscriptionsQuery 
+    public partial class GetUserSubscriptionsQuery 
     {
         public override string ToString()
         {
@@ -2148,7 +2148,7 @@ namespace Fifthweek.Api.Blogs.Queries
                 return false;
             }
         
-            return this.Equals((GetBlogSubscriptionsQuery)obj);
+            return this.Equals((GetUserSubscriptionsQuery)obj);
         }
         
         public override int GetHashCode()
@@ -2161,7 +2161,7 @@ namespace Fifthweek.Api.Blogs.Queries
             }
         }
         
-        protected bool Equals(GetBlogSubscriptionsQuery other)
+        protected bool Equals(GetUserSubscriptionsQuery other)
         {
             if (!object.Equals(this.Requester, other.Requester))
             {
@@ -2518,7 +2518,7 @@ namespace Fifthweek.Api.Blogs.Queries
     using System.Collections.Generic;
     using Fifthweek.Api.Channels.Shared;
 
-    public partial class GetBlogSubscriptionsResult 
+    public partial class GetUserSubscriptionsResult 
     {
         public override string ToString()
         {
@@ -2542,7 +2542,7 @@ namespace Fifthweek.Api.Blogs.Queries
                 return false;
             }
         
-            return this.Equals((GetBlogSubscriptionsResult)obj);
+            return this.Equals((GetUserSubscriptionsResult)obj);
         }
         
         public override int GetHashCode()
@@ -2563,7 +2563,7 @@ namespace Fifthweek.Api.Blogs.Queries
             }
         }
         
-        protected bool Equals(GetBlogSubscriptionsResult other)
+        protected bool Equals(GetUserSubscriptionsResult other)
         {
             if (this.Blogs != null && other.Blogs != null)
             {

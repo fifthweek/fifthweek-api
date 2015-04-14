@@ -25,7 +25,7 @@
         private readonly IQueryHandler<GetCreatedChannelsAndCollectionsQuery, ChannelsAndCollections> getCreatedChannelsAndCollections;
         private readonly IQueryHandler<GetAccountSettingsQuery, GetAccountSettingsResult> getAccountSettings;
         private readonly IQueryHandler<GetBlogQuery, GetBlogResult> getBlog;
-        private readonly IQueryHandler<GetBlogSubscriptionsQuery, GetBlogSubscriptionsResult> getBlogSubscriptions;
+        private readonly IQueryHandler<GetUserSubscriptionsQuery, GetUserSubscriptionsResult> getBlogSubscriptions;
 
         public async Task<UserState> HandleAsync(GetUserStateQuery query)
         {
@@ -33,7 +33,7 @@
 
             var userAccessSignatures = await this.getUserAccessSignatures.HandleAsync(new GetUserAccessSignaturesQuery(query.Requester, query.RequestedUserId));
 
-            GetBlogSubscriptionsResult blogSubscriptions = null;
+            GetUserSubscriptionsResult userSubscriptions = null;
             CreatorStatus creatorStatus = null;
             ChannelsAndCollections createdChannelsAndCollections = null;
             GetAccountSettingsResult accountSettings = null;
@@ -43,7 +43,7 @@
             {
                 await this.requesterSecurity.AuthenticateAsAsync(query.Requester, query.RequestedUserId);
 
-                var blogSubscriptionsTask = this.getBlogSubscriptions.HandleAsync(new GetBlogSubscriptionsQuery(query.Requester));
+                var blogSubscriptionsTask = this.getBlogSubscriptions.HandleAsync(new GetUserSubscriptionsQuery(query.Requester));
 
                 bool isCreator = await this.requesterSecurity.IsInRoleAsync(query.Requester, FifthweekRole.Creator);
                
@@ -66,7 +66,7 @@
                     blog = await subscriptionTask;
                 }
 
-                blogSubscriptions = await blogSubscriptionsTask;
+                userSubscriptions = await blogSubscriptionsTask;
             }
 
             return new UserState(
@@ -75,7 +75,7 @@
                 createdChannelsAndCollections,
                 accountSettings,
                 blog,
-                blogSubscriptions);
+                userSubscriptions);
         }
     }
 }
