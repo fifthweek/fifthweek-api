@@ -33,6 +33,8 @@
 
         IDbSet<FreeAccessUser> FreeAccessUsers { get; set; }
 
+        IDbSet<ChannelSubscription> ChannelSubscriptions { get; set; }
+
         Task<int> SaveChangesAsync();
 
         Task<int> SaveChangesAsync(CancellationToken cancellationToken);

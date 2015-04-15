@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Linq;
 
-//// Generated on 02/02/2015 20:02:09 (UTC)
-//// Mapped solution in 3.23s
+//// Generated on 15/04/2015 15:16:52 (UTC)
+//// Mapped solution in 10.26s
 
 namespace Fifthweek.Api.Channels.Shared
 {
@@ -10,6 +10,7 @@ namespace Fifthweek.Api.Channels.Shared
     using Fifthweek.CodeGeneration;
     using System.Linq;
     using System.Collections.Generic;
+    using System.Diagnostics.CodeAnalysis;
 
     [Newtonsoft.Json.JsonConverter(typeof(JsonConverter))]
     public partial class ChannelId 
@@ -61,6 +62,7 @@ namespace Fifthweek.Api.Channels.Shared
     using Fifthweek.CodeGeneration;
     using System.Linq;
     using System.Collections.Generic;
+    using System.Diagnostics.CodeAnalysis;
 
     public partial class ChannelId 
     {
@@ -83,6 +85,7 @@ namespace Fifthweek.Api.Channels.Shared
     using Fifthweek.CodeGeneration;
     using System.Linq;
     using System.Collections.Generic;
+    using System.Diagnostics.CodeAnalysis;
 
     public partial class ChannelId 
     {
@@ -138,6 +141,7 @@ namespace Fifthweek.Api.Channels.Shared
     using System.Linq;
     using Fifthweek.CodeGeneration;
     using System.Collections.Generic;
+    using System.Diagnostics.CodeAnalysis;
 
     public partial class ValidChannelName 
     {
@@ -193,60 +197,7 @@ namespace Fifthweek.Api.Channels.Shared
     using System.Linq;
     using Fifthweek.CodeGeneration;
     using System.Collections.Generic;
-
-    public partial class ValidChannelPriceInUsCentsPerWeek 
-    {
-        public override string ToString()
-        {
-            return string.Format("ValidChannelPriceInUsCentsPerWeek({0})", this.Value == null ? "null" : this.Value.ToString());
-        }
-        
-        public override bool Equals(object obj)
-        {
-            if (ReferenceEquals(null, obj))
-            {
-                return false;
-            }
-        
-            if (ReferenceEquals(this, obj))
-            {
-                return true;
-            }
-        
-            if (obj.GetType() != this.GetType())
-            {
-                return false;
-            }
-        
-            return this.Equals((ValidChannelPriceInUsCentsPerWeek)obj);
-        }
-        
-        public override int GetHashCode()
-        {
-            unchecked
-            {
-                int hashCode = 0;
-                hashCode = (hashCode * 397) ^ (this.Value != null ? this.Value.GetHashCode() : 0);
-                return hashCode;
-            }
-        }
-        
-        protected bool Equals(ValidChannelPriceInUsCentsPerWeek other)
-        {
-            if (!object.Equals(this.Value, other.Value))
-            {
-                return false;
-            }
-        
-            return true;
-        }
-    }
-}
-namespace Fifthweek.Api.Channels.Shared
-{
-    using System;
-    using System.Collections.Generic;
-    using Fifthweek.CodeGeneration;
+    using System.Diagnostics.CodeAnalysis;
 
     public partial class ValidChannelDescription 
     {
@@ -286,6 +237,114 @@ namespace Fifthweek.Api.Channels.Shared
         }
         
         protected bool Equals(ValidChannelDescription other)
+        {
+            if (!object.Equals(this.Value, other.Value))
+            {
+                return false;
+            }
+        
+            return true;
+        }
+    }
+}
+namespace Fifthweek.Api.Channels.Shared
+{
+    using System;
+    using System.Collections.Generic;
+    using Fifthweek.CodeGeneration;
+
+    public partial class ValidAcceptedChannelPriceInUsCentsPerWeek 
+    {
+        public override string ToString()
+        {
+            return string.Format("ValidAcceptedChannelPriceInUsCentsPerWeek({0})", this.Value == null ? "null" : this.Value.ToString());
+        }
+        
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj))
+            {
+                return false;
+            }
+        
+            if (ReferenceEquals(this, obj))
+            {
+                return true;
+            }
+        
+            if (obj.GetType() != this.GetType())
+            {
+                return false;
+            }
+        
+            return this.Equals((ValidAcceptedChannelPriceInUsCentsPerWeek)obj);
+        }
+        
+        public override int GetHashCode()
+        {
+            unchecked
+            {
+                int hashCode = 0;
+                hashCode = (hashCode * 397) ^ (this.Value != null ? this.Value.GetHashCode() : 0);
+                return hashCode;
+            }
+        }
+        
+        protected bool Equals(ValidAcceptedChannelPriceInUsCentsPerWeek other)
+        {
+            if (!object.Equals(this.Value, other.Value))
+            {
+                return false;
+            }
+        
+            return true;
+        }
+    }
+}
+namespace Fifthweek.Api.Channels.Shared
+{
+    using System;
+    using System.Collections.Generic;
+    using Fifthweek.CodeGeneration;
+
+    public partial class ValidChannelPriceInUsCentsPerWeek 
+    {
+        public override string ToString()
+        {
+            return string.Format("ValidChannelPriceInUsCentsPerWeek({0})", this.Value == null ? "null" : this.Value.ToString());
+        }
+        
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj))
+            {
+                return false;
+            }
+        
+            if (ReferenceEquals(this, obj))
+            {
+                return true;
+            }
+        
+            if (obj.GetType() != this.GetType())
+            {
+                return false;
+            }
+        
+            return this.Equals((ValidChannelPriceInUsCentsPerWeek)obj);
+        }
+        
+        public override int GetHashCode()
+        {
+            unchecked
+            {
+                int hashCode = 0;
+                hashCode = (hashCode * 397) ^ (this.Value != null ? this.Value.GetHashCode() : 0);
+                return hashCode;
+            }
+        }
+        
+        protected bool Equals(ValidChannelPriceInUsCentsPerWeek other)
         {
             if (!object.Equals(this.Value, other.Value))
             {

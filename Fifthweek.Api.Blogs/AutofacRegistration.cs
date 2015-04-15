@@ -16,6 +16,9 @@
             builder.RegisterType<GetFreeAccessUsersDbStatement>().As<IGetFreeAccessUsersDbStatement>();
             builder.RegisterType<GetUserSubscriptionsDbStatement>().As<IGetUserSubscriptionsDbStatement>();
             builder.RegisterType<GetLandingPageDbStatement>().As<IGetLandingPageDbStatement>();
+            builder.RegisterType<AcceptChannelSubscriptionPriceChangeDbStatement>().As<IAcceptChannelSubscriptionPriceChangeDbStatement>();
+            builder.RegisterType<UnsubscribeFromChannelDbStatement>().As<IUnsubscribeFromChannelDbStatement>();
+            builder.RegisterType<UpdateBlogSubscriptionsDbStatement>().As<IUpdateBlogSubscriptionsDbStatement>();
         }
     }
 }

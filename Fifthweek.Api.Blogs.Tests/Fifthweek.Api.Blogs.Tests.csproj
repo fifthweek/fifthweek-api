@@ -90,17 +90,22 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
+    <Compile Include="AcceptChannelSubscriptionPriceChangeDbStatementTests.cs" />
     <Compile Include="ClassAugmentation.cs">
       <DependentUpon>ClassAugmentation.tt</DependentUpon>
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
     </Compile>
+    <Compile Include="Commands\AcceptChannelSubscriptionPriceChangeCommandHandlerTests.cs" />
+    <Compile Include="Commands\UnsubscribeFromChannelCommandHandlerTests.cs" />
     <Compile Include="Commands\UpdateBlogCommandHandlerTests.cs" />
     <Compile Include="Commands\PromoteNewUserToCreatorCommandHandlerTests.cs" />
     <Compile Include="Commands\CreateBlogCommandHandlerTests.cs" />
+    <Compile Include="Commands\UpdateBlogSubscriptionsCommandHandlerTests.cs" />
     <Compile Include="Commands\UpdateFreeAccessUsersCommandHandlerTests.cs" />
     <Compile Include="Controllers\BlogAccessControllerTests.cs" />
     <Compile Include="Controllers\BlogControllerTests.cs" />
+    <Compile Include="Controllers\SubscriptionControllerTests.cs" />
     <Compile Include="GetBlogChannelsAndCollectionsDbStatementTests.cs" />
     <Compile Include="GetLandingPageDbStatementTests.cs" />
     <Compile Include="GetUserSubscriptionsDbStatementTests.cs" />
@@ -109,6 +114,8 @@
     <Compile Include="Queries\GetLandingPageQueryHandlerTests.cs" />
     <Compile Include="Queries\GetUserSubscriptionsQueryHandlerTests.cs" />
     <Compile Include="Queries\GetFreeAccessUsersQueryHandlerTests.cs" />
+    <Compile Include="UnsubscribeFromChannelDbStatementTests.cs" />
+    <Compile Include="UpdateBlogSubscriptionsDbStatementTest.cs" />
     <Compile Include="UpdateFreeAccessUsersDbStatementTests.cs" />
     <Compile Include="ValidBlogDescriptionTests.cs" />
     <Compile Include="ValidExternalVideoUrlTests.cs" />

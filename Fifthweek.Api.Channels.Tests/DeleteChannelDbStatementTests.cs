@@ -78,7 +78,7 @@
                 };
             });
         }
-
+        
         private async Task<Channel> CreateChannelAsync(TestDatabaseContext testDatabase)
         {
             using (var databaseContext = testDatabase.CreateContext())

@@ -78,19 +78,44 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AcceptChannelSubscriptionPriceChangeDbStatement.cs" />
     <Compile Include="AutofacRegistration.cs" />
+    <Compile Include="Commands\AcceptChannelSubscriptionPriceChangeCommand.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Commands\AcceptChannelSubscriptionPriceChangeCommandHandler.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Commands\AcceptedChannelSubscription.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="Commands\SetSubscribedChannelsCommand.cs" />
+    <Compile Include="Commands\UnsubscribeFromChannelCommand.cs" />
+    <Compile Include="Commands\UnsubscribeFromChannelCommandHandler.cs" />
+    <Compile Include="Commands\UpdateBlogSubscriptionsCommand.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Commands\UpdateBlogSubscriptionsCommandHandler.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="Commands\UpdateFreeAccessUsersCommand.cs" />
     <Compile Include="Commands\UpdateFreeAccessUsersCommandHandler.cs" />
     <Compile Include="Controllers\BlogAccessController.cs" />
+    <Compile Include="Controllers\ChannelSubscriptionDataWithChannelId.cs" />
+    <Compile Include="Controllers\ChannelSubscriptionDataWithoutChannelId.cs" />
     <Compile Include="Controllers\FreeAccessUsersData.cs" />
     <Compile Include="Controllers\PutFreeAccessUsersResult.cs" />
+    <Compile Include="Controllers\SubscriptionController.cs" />
+    <Compile Include="Controllers\UpdatedBlogSubscriptionData.cs" />
     <Compile Include="GetLandingPageDbStatement.cs" />
     <Compile Include="GetUserSubscriptionsDbStatement.cs" />
     <Compile Include="GetFreeAccessUsersDbStatement.cs" />
+    <Compile Include="IAcceptChannelSubscriptionPriceChangeDbStatement.cs" />
     <Compile Include="IGetLandingPageDbStatement.cs" />
     <Compile Include="IGetUserSubscriptionsDbStatement.cs" />
     <Compile Include="IGetFreeAccessUsersDbStatement.cs" />
+    <Compile Include="IUnsubscribeFromChannelDbStatement.cs" />
+    <Compile Include="IUpdateBlogSubscriptionsDbStatement.cs" />
     <Compile Include="IUpdateFreeAccessUsersDbStatement.cs" />
     <Compile Include="Queries\BlogSubscriptionStatus.cs" />
     <Compile Include="Queries\ChannelResult.cs" />
@@ -133,6 +158,8 @@
     <Compile Include="Queries\GetFreeAccessUsersResult.cs" />
     <Compile Include="Queries\GetUserSubscriptionsQuery.cs" />
     <Compile Include="Queries\GetUserSubscriptionsQueryHandler.cs" />
+    <Compile Include="UnsubscribeFromChannelDbStatement.cs" />
+    <Compile Include="UpdateBlogSubscriptionsDbStatement.cs" />
     <Compile Include="UpdateFreeAccessUsersDbStatement.cs" />
   </ItemGroup>
   <ItemGroup>

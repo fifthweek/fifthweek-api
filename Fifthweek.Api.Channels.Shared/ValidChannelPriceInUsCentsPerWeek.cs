@@ -15,6 +15,8 @@
         {
         }
 
+        public override int Value { get; protected set; }
+
         public static ValidChannelPriceInUsCentsPerWeek Parse(int value)
         {
             return Parse(value, MinValue, Construct);

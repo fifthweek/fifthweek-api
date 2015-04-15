@@ -6,7 +6,7 @@ namespace Fifthweek.Api.Channels.Shared
     public abstract class ValidChannelPriceInUsCentsPerWeekBase<T>
         where T : ValidChannelPriceInUsCentsPerWeekBase<T>
     {
-        public int Value { get; private set; }
+        public abstract int Value { get; protected set; }
 
         protected static T Parse(int value, int minValue, Func<T> construct)
         {

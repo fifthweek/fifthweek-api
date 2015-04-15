@@ -15,6 +15,8 @@ namespace Fifthweek.Api.Channels.Shared
         {
         }
 
+        public override int Value { get; protected set; }
+
         public static ValidAcceptedChannelPriceInUsCentsPerWeek Parse(int value)
         {
             return Parse(value, MinValue, Construct);
