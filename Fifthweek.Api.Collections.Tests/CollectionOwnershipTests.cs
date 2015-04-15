@@ -43,7 +43,9 @@
 
                 using (var databaseContext = testDatabase.CreateContext())
                 {
-                    await databaseContext.Database.Connection.ExecuteAsync("DELETE FROM Channels");
+                    // We must delete ChannelSubscriptions first as there isn't a cascade delete setup
+                    // due to multiple cascade branches.
+                    await databaseContext.Database.Connection.ExecuteAsync("DELETE FROM ChannelSubscriptions;DELETE FROM Channels");
 
                     // Deleting all channels will actually delete all collections. We don't delete collections directly due to cascading deletes
                     // not being possible on this table due to possible cyclic references in the schema. The following line should have no effect
