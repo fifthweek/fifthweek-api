@@ -71,6 +71,23 @@
         }
 
         [TestMethod]
+        public async Task ItShouldBeIdempotent()
+        {
+            await this.DatabaseTestAsync(async testDatabase =>
+            {
+                this.target = new AcceptChannelSubscriptionPriceChangeDbStatement(testDatabase);
+
+                await this.CreateDataAsync(testDatabase);
+
+                await this.target.ExecuteAsync(UserId, Subscriptions[0].ChannelId, NewAcceptedPrice, Now);
+                await testDatabase.TakeSnapshotAsync();
+                await this.target.ExecuteAsync(UserId, Subscriptions[0].ChannelId, NewAcceptedPrice, Now);
+
+                return ExpectedSideEffects.None;
+            });
+        }
+
+        [TestMethod]
         public async Task WhenTheSubscriptionExists_ItShouldUpdateTheSubscription()
         {
             await this.DatabaseTestAsync(async testDatabase =>

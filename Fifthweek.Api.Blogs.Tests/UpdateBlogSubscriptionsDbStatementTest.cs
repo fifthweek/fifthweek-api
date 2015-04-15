@@ -84,6 +84,23 @@
         }
 
         [TestMethod]
+        public async Task ItShouldBeIdempotent()
+        {
+            await this.DatabaseTestAsync(async testDatabase =>
+            {
+                this.target = new UpdateBlogSubscriptionsDbStatement(testDatabase);
+
+                await this.CreateDataAsync(testDatabase);
+
+                await this.target.ExecuteAsync(UserId, Blog3Id, AcceptedBlog3Subscriptions1, Now);
+                await testDatabase.TakeSnapshotAsync();
+                await this.target.ExecuteAsync(UserId, Blog3Id, AcceptedBlog3Subscriptions1, Now);
+
+                return ExpectedSideEffects.None;
+            });
+        }
+
+        [TestMethod]
         public async Task WhenTheSubscriptionHasNotChanged_ItShouldUpdatePriceLastAcceptedDate()
         {
             await this.DatabaseTestAsync(async testDatabase =>

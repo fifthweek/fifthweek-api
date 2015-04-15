@@ -62,6 +62,23 @@
         }
 
         [TestMethod]
+        public async Task ItShouldBeIdempotent()
+        {
+            await this.DatabaseTestAsync(async testDatabase =>
+            {
+                this.target = new UnsubscribeFromChannelDbStatement(testDatabase);
+
+                await this.CreateDataAsync(testDatabase);
+
+                await this.target.ExecuteAsync(UserId, Subscriptions[0].ChannelId);
+                await testDatabase.TakeSnapshotAsync();
+                await this.target.ExecuteAsync(UserId, Subscriptions[0].ChannelId);
+
+                return ExpectedSideEffects.None;
+            });
+        }
+
+        [TestMethod]
         public async Task WhenTheSubscriptionExists_ItShouldDeleteTheSubscription()
         {
             await this.DatabaseTestAsync(async testDatabase =>
