@@ -1,6 +1,7 @@
 ﻿namespace Fifthweek.Api.Blogs.Controllers
 {
     using System.Collections.Generic;
+    using System.Linq;
     using System.Threading.Tasks;
     using System.Web.Http;
 
@@ -30,7 +31,7 @@
             }
 
             var validEmails = new List<ValidEmail>();
-            var invalidEmails = new List<Email>();
+            var invalidEmails = new HashSet<Email>();
             foreach (var email in data.Emails)
             {
                 if (string.IsNullOrWhiteSpace(email))
@@ -57,7 +58,7 @@
                 blogIdObject,
                 validEmails));
 
-            return new PutFreeAccessUsersResult(invalidEmails);
+            return new PutFreeAccessUsersResult(invalidEmails.ToList());
         }
 
         [Route("freeAccessList/{blogId}")]

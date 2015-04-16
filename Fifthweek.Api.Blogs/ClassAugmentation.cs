@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Linq;
 
-//// Generated on 15/04/2015 15:06:56 (UTC)
-//// Mapped solution in 23.01s
+//// Generated on 16/04/2015 15:42:01 (UTC)
+//// Mapped solution in 28.01s
 
 
 namespace Fifthweek.Api.Blogs
@@ -1193,16 +1193,23 @@ namespace Fifthweek.Api.Blogs.Queries
             public FreeAccessUser(
                 Fifthweek.Api.Identity.Shared.Membership.Email email,
                 Fifthweek.Api.Identity.Shared.Membership.UserId userId,
-                Fifthweek.Api.Identity.Shared.Membership.Username username)
+                Fifthweek.Api.Identity.Shared.Membership.Username username,
+                System.Collections.Generic.IReadOnlyList<Fifthweek.Api.Channels.Shared.ChannelId> channelIds)
             {
                 if (email == null)
                 {
                     throw new ArgumentNullException("email");
                 }
 
+                if (channelIds == null)
+                {
+                    throw new ArgumentNullException("channelIds");
+                }
+
                 this.Email = email;
                 this.UserId = userId;
                 this.Username = username;
+                this.ChannelIds = channelIds;
             }
         }
     }
@@ -3418,7 +3425,7 @@ namespace Fifthweek.Api.Blogs.Queries
         {
             public override string ToString()
             {
-                return string.Format("FreeAccessUser({0}, {1}, {2})", this.Email == null ? "null" : this.Email.ToString(), this.UserId == null ? "null" : this.UserId.ToString(), this.Username == null ? "null" : this.Username.ToString());
+                return string.Format("FreeAccessUser({0}, {1}, {2}, {3})", this.Email == null ? "null" : this.Email.ToString(), this.UserId == null ? "null" : this.UserId.ToString(), this.Username == null ? "null" : this.Username.ToString(), this.ChannelIds == null ? "null" : this.ChannelIds.ToString());
             }
             
             public override bool Equals(object obj)
@@ -3449,6 +3456,15 @@ namespace Fifthweek.Api.Blogs.Queries
                     hashCode = (hashCode * 397) ^ (this.Email != null ? this.Email.GetHashCode() : 0);
                     hashCode = (hashCode * 397) ^ (this.UserId != null ? this.UserId.GetHashCode() : 0);
                     hashCode = (hashCode * 397) ^ (this.Username != null ? this.Username.GetHashCode() : 0);
+                    hashCode = (hashCode * 397) ^ (this.ChannelIds != null 
+            			? this.ChannelIds.Aggregate(0, (previous, current) => 
+            				{ 
+            				    unchecked
+            				    {
+            				        return (previous * 397) ^ (current != null ? current.GetHashCode() : 0);
+            				    }
+            				})
+            			: 0);
                     return hashCode;
                 }
             }
@@ -3466,6 +3482,18 @@ namespace Fifthweek.Api.Blogs.Queries
                 }
             
                 if (!object.Equals(this.Username, other.Username))
+                {
+                    return false;
+                }
+            
+                if (this.ChannelIds != null && other.ChannelIds != null)
+                {
+                    if (!this.ChannelIds.SequenceEqual(other.ChannelIds))
+                    {
+                        return false;    
+                    }
+                }
+                else if (this.ChannelIds != null || other.ChannelIds != null)
                 {
                     return false;
                 }

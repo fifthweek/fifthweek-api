@@ -2,6 +2,7 @@
 {
     using System.Collections.Generic;
 
+    using Fifthweek.Api.Channels.Shared;
     using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.CodeGeneration;
 
@@ -20,6 +21,8 @@
 
             [Optional]
             public Username Username { get; private set; }
+
+            public IReadOnlyList<ChannelId> ChannelIds { get; private set; }
         }
     }
 }

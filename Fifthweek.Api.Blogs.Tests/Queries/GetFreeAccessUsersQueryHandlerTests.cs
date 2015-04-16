@@ -6,6 +6,7 @@
 
     using Fifthweek.Api.Blogs.Queries;
     using Fifthweek.Api.Blogs.Shared;
+    using Fifthweek.Api.Channels.Shared;
     using Fifthweek.Api.Core;
     using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.Api.Identity.Tests.Shared.Membership;
@@ -31,7 +32,8 @@
                     new GetFreeAccessUsersResult.FreeAccessUser(
                         new Email("a@b.com"),
                         new UserId(Guid.NewGuid()),
-                        new Username("username"))
+                        new Username("username"),
+                        new List<ChannelId>())
                 });
 
         private Mock<IBlogSecurity> blogSecurity;

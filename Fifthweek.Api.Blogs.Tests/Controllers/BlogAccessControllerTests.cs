@@ -131,13 +131,35 @@
             }
 
             [TestMethod]
-            public async Task WhenSomeEmailAddressesWhitespace_ItShouldCallUpdateFreeAccessUsersAndItShouldReturnValidEmailAddresses()
+            public async Task WhenSomeEmailAddressesWhitespace_ItShouldIgnoreBlankEmails()
             {
                 var emailList = new List<string> { "one@test.com", "    ", "\t", "two@test.com" };
                 var freeAccessUsersData = new FreeAccessUsersData { Emails = emailList };
 
                 var validEmailList = new List<ValidEmail> { ValidEmail.Parse(emailList[0]), ValidEmail.Parse(emailList[3]) };
                 var invalidEmailList = new List<Email>();
+
+                var expectedResult = new PutFreeAccessUsersResult(invalidEmailList);
+
+                this.updateFreeAccessUsers
+                    .Setup(v => v.HandleAsync(new UpdateFreeAccessUsersCommand(Requester, BlogId, validEmailList)))
+                    .Returns(Task.FromResult(0))
+                    .Verifiable();
+
+                var result = await this.target.PutFreeAccessList(BlogId.Value.EncodeGuid(), freeAccessUsersData);
+
+                this.updateFreeAccessUsers.Verify();
+                Assert.AreEqual(expectedResult, result);
+            }
+
+            [TestMethod]
+            public async Task WhenDuplicateEmailsAreInvalid_ItDeDuplicateBeforeReturningInvalidEmails()
+            {
+                var emailList = new List<string> { "one.test.com", "one.test.com" };
+                var freeAccessUsersData = new FreeAccessUsersData { Emails = emailList };
+
+                var validEmailList = new List<ValidEmail>();
+                var invalidEmailList = new List<Email> { new Email(emailList[0]) };
 
                 var expectedResult = new PutFreeAccessUsersResult(invalidEmailList);
 
