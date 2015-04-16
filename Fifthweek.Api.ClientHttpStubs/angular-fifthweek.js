@@ -464,6 +464,48 @@ angular.module('webApp').factory('postsStub',
     return service;
   });
 
+angular.module('webApp').factory('subscriptionStub',
+  function($http, $q, fifthweekConstants, utilities) {
+    'use strict';
+
+    var apiBaseUri = fifthweekConstants.apiBaseUri;
+    var service = {};
+
+    // blogId = 'Base64Guid'
+    // subscriptionData = {
+    //   subscriptions: [
+    //     {
+    //       channelId: 'Base64Guid',
+    //       acceptedPrice: 0
+    //     }
+    //   ]
+    // }
+    service.putBlogSubscriptions = function(blogId, subscriptionData) {
+      return $http.put(apiBaseUri + 'subscriptions/blogs/' + encodeURIComponent(blogId), subscriptionData).catch(function(response) {
+        return $q.reject(utilities.getHttpError(response));
+      });
+    };
+
+    // channelId = 'Base64Guid'
+    service.deleteChannelSubscription = function(channelId) {
+      return $http.delete(apiBaseUri + 'subscriptions/channels/' + encodeURIComponent(channelId)).catch(function(response) {
+        return $q.reject(utilities.getHttpError(response));
+      });
+    };
+
+    // channelId = 'Base64Guid'
+    // subscriptionData = {
+    //   acceptedPrice: 0
+    // }
+    service.putChannelSubscription = function(channelId, subscriptionData) {
+      return $http.put(apiBaseUri + 'subscriptions/channels/' + encodeURIComponent(channelId), subscriptionData).catch(function(response) {
+        return $q.reject(utilities.getHttpError(response));
+      });
+    };
+
+    return service;
+  });
+
 angular.module('webApp').factory('blogStub',
   function($http, $q, fifthweekConstants, utilities) {
     'use strict';
@@ -498,23 +540,35 @@ angular.module('webApp').factory('blogStub',
       });
     };
 
-    // blogId = 'Base64Guid'
+    // username = ''
     // result = {
-    //   blogId: 'Base64Guid',
-    //   creatorId: 'Base64Guid',
-    //   blogName: '',
-    //   tagline: '',
-    //   introduction: '',
-    //   creationDate: '2015-12-25T14:45:05Z',
-    //   headerImage: { /* optional */
-    //     fileId: 'Base64Guid',
-    //     containerName: ''
+    //   blog: {
+    //     blogId: 'Base64Guid',
+    //     creatorId: 'Base64Guid',
+    //     blogName: '',
+    //     tagline: '',
+    //     introduction: '',
+    //     creationDate: '2015-12-25T14:45:05Z',
+    //     headerImage: { /* optional */
+    //       fileId: 'Base64Guid',
+    //       containerName: ''
+    //     },
+    //     video: '', /* optional */
+    //     description: '' /* optional */
     //   },
-    //   video: '', /* optional */
-    //   description: '' /* optional */
+    //   channels: [
+    //     {
+    //       channelId: 'Base64Guid',
+    //       name: '',
+    //       description: '',
+    //       priceInUsCentsPerWeek: 0,
+    //       isDefault: false,
+    //       isVisibleToNonSubscribers: false
+    //     }
+    //   ]
     // }
-    service.getBlog = function(blogId) {
-      return $http.get(apiBaseUri + 'blogs/' + encodeURIComponent(blogId)).catch(function(response) {
+    service.getLandingPage = function(username) {
+      return $http.get(apiBaseUri + 'blogs/landingPages/' + encodeURIComponent(username)).catch(function(response) {
         return $q.reject(utilities.getHttpError(response));
       });
     };
@@ -697,6 +751,27 @@ angular.module('webApp').factory('userStateStub',
     //     },
     //     video: '', /* optional */
     //     description: '' /* optional */
+    //   },
+    //   subscriptions: { /* optional */
+    //     blogs: [
+    //       {
+    //         blogId: 'Base64Guid',
+    //         blogName: '',
+    //         creatorId: 'Base64Guid',
+    //         creatorUsername: '',
+    //         guestList: false,
+    //         channels: [
+    //           {
+    //             channelId: 'Base64Guid',
+    //             channelName: '',
+    //             acceptedPrice: 0,
+    //             currentPrice: 0,
+    //             priceLastSetDate: '2015-12-25T14:45:05Z',
+    //             subscriptionStartDate: '2015-12-25T14:45:05Z'
+    //           }
+    //         ]
+    //       }
+    //     ]
     //   }
     // }
     service.getUserState = function(userId) {
@@ -772,6 +847,27 @@ angular.module('webApp').factory('userStateStub',
     //     },
     //     video: '', /* optional */
     //     description: '' /* optional */
+    //   },
+    //   subscriptions: { /* optional */
+    //     blogs: [
+    //       {
+    //         blogId: 'Base64Guid',
+    //         blogName: '',
+    //         creatorId: 'Base64Guid',
+    //         creatorUsername: '',
+    //         guestList: false,
+    //         channels: [
+    //           {
+    //             channelId: 'Base64Guid',
+    //             channelName: '',
+    //             acceptedPrice: 0,
+    //             currentPrice: 0,
+    //             priceLastSetDate: '2015-12-25T14:45:05Z',
+    //             subscriptionStartDate: '2015-12-25T14:45:05Z'
+    //           }
+    //         ]
+    //       }
+    //     ]
     //   }
     // }
     service.getVisitorState = function() {

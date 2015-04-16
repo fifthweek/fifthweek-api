@@ -656,6 +656,76 @@ describe('posts stub', function() {
   });
 });
 
+describe('subscription stub', function() {
+  'use strict';
+
+  var fifthweekConstants;
+  var $httpBackend;
+  var $rootScope;
+  var target;
+
+  beforeEach(module('webApp', 'stateMock'));
+
+  beforeEach(inject(function($injector) {
+    fifthweekConstants = $injector.get('fifthweekConstants');
+    $httpBackend = $injector.get('$httpBackend');
+    $rootScope = $injector.get('$rootScope');
+    target = $injector.get('subscriptionStub');
+  }));
+
+  afterEach(function() {
+    $httpBackend.verifyNoOutstandingExpectation();
+    $httpBackend.verifyNoOutstandingRequest();
+  });
+
+  it('should put blog subscriptions', function() {
+    var blogId = 'value0';
+    var subscriptionData = 'value1';
+
+    var responseData = 'response data';
+    $httpBackend.expectPUT(fifthweekConstants.apiBaseUri + 'subscriptions/blogs/' + encodeURIComponent(blogId), subscriptionData).respond(200, responseData);
+
+    var result = null;
+    target.putBlogSubscriptions(blogId, subscriptionData).then(function(response) { result = response.data; });
+
+    $httpBackend.flush();
+    $rootScope.$apply();
+
+    expect(result).toBe(responseData);
+  });
+
+  it('should delete channel subscription', function() {
+    var channelId = 'value0';
+
+    var responseData = 'response data';
+    $httpBackend.expectDELETE(fifthweekConstants.apiBaseUri + 'subscriptions/channels/' + encodeURIComponent(channelId)).respond(200, responseData);
+
+    var result = null;
+    target.deleteChannelSubscription(channelId).then(function(response) { result = response.data; });
+
+    $httpBackend.flush();
+    $rootScope.$apply();
+
+    expect(result).toBe(responseData);
+  });
+
+  it('should put channel subscription', function() {
+    var channelId = 'value0';
+    var subscriptionData = 'value1';
+
+    var responseData = 'response data';
+    $httpBackend.expectPUT(fifthweekConstants.apiBaseUri + 'subscriptions/channels/' + encodeURIComponent(channelId), subscriptionData).respond(200, responseData);
+
+    var result = null;
+    target.putChannelSubscription(channelId, subscriptionData).then(function(response) { result = response.data; });
+
+    $httpBackend.flush();
+    $rootScope.$apply();
+
+    expect(result).toBe(responseData);
+  });
+});
+
 describe('blog stub', function() {
   'use strict';
 
@@ -709,14 +779,14 @@ describe('blog stub', function() {
     expect(result).toBe(responseData);
   });
 
-  it('should get blog', function() {
-    var blogId = 'value0';
+  it('should get landing page', function() {
+    var username = 'value0';
 
     var responseData = 'response data';
-    $httpBackend.expectGET(fifthweekConstants.apiBaseUri + 'blogs/' + encodeURIComponent(blogId)).respond(200, responseData);
+    $httpBackend.expectGET(fifthweekConstants.apiBaseUri + 'blogs/landingPages/' + encodeURIComponent(username)).respond(200, responseData);
 
     var result = null;
-    target.getBlog(blogId).then(function(response) { result = response.data; });
+    target.getLandingPage(username).then(function(response) { result = response.data; });
 
     $httpBackend.flush();
     $rootScope.$apply();
