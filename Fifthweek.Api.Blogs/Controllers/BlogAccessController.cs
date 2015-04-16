@@ -12,14 +12,14 @@
     using Fifthweek.CodeGeneration;
 
     [RoutePrefix("blogAccess"), AutoConstructor]
-    public partial class BlogAccessController
+    public partial class BlogAccessController : ApiController
     {
         private readonly IRequesterContext requesterContext;
         private readonly ICommandHandler<UpdateFreeAccessUsersCommand> updateFreeAccessUsers;
         private readonly IQueryHandler<GetFreeAccessUsersQuery, GetFreeAccessUsersResult> getFreeAccessUsers;
 
-        [Route("guestList/{blogId}")]
-        public async Task<PutFreeAccessUsersResult> PutGuestList(string blogId, [FromBody]FreeAccessUsersData data)
+        [Route("freeAccessList/{blogId}")]
+        public async Task<PutFreeAccessUsersResult> PutFreeAccessList(string blogId, [FromBody]FreeAccessUsersData data)
         {
             blogId.AssertUrlParameterProvided("blogId");
             data.AssertBodyProvided("blogData");
@@ -33,6 +33,11 @@
             var invalidEmails = new List<Email>();
             foreach (var email in data.Emails)
             {
+                if (string.IsNullOrWhiteSpace(email))
+                {
+                    continue;
+                }
+
                 ValidEmail validEmail;
                 if (ValidEmail.TryParse(email, out validEmail))
                 {
@@ -55,8 +60,8 @@
             return new PutFreeAccessUsersResult(invalidEmails);
         }
 
-        [Route("guestList/{blogId}")]
-        public async Task<GetFreeAccessUsersResult> GetGuestList(string blogId)
+        [Route("freeAccessList/{blogId}")]
+        public async Task<GetFreeAccessUsersResult> GetFreeAccessList(string blogId)
         {
             blogId.AssertUrlParameterProvided("blogId");
 

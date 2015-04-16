@@ -1297,7 +1297,7 @@ namespace Fifthweek.Api.Blogs.Queries
             System.String blogName,
             Fifthweek.Api.Identity.Shared.Membership.UserId creatorId,
             Fifthweek.Api.Identity.Shared.Membership.Username creatorUsername,
-            System.Boolean guestList,
+            System.Boolean freeAccess,
             System.Collections.Generic.IReadOnlyList<Fifthweek.Api.Blogs.Queries.ChannelSubscriptionStatus> channels)
         {
             if (blogId == null)
@@ -1320,9 +1320,9 @@ namespace Fifthweek.Api.Blogs.Queries
                 throw new ArgumentNullException("creatorUsername");
             }
 
-            if (guestList == null)
+            if (freeAccess == null)
             {
-                throw new ArgumentNullException("guestList");
+                throw new ArgumentNullException("freeAccess");
             }
 
             if (channels == null)
@@ -1334,7 +1334,7 @@ namespace Fifthweek.Api.Blogs.Queries
             this.BlogName = blogName;
             this.CreatorId = creatorId;
             this.CreatorUsername = creatorUsername;
-            this.GuestList = guestList;
+            this.FreeAccess = freeAccess;
             this.Channels = channels;
         }
     }
@@ -3576,7 +3576,7 @@ namespace Fifthweek.Api.Blogs.Queries
     {
         public override string ToString()
         {
-            return string.Format("BlogSubscriptionStatus({0}, \"{1}\", {2}, {3}, {4}, {5})", this.BlogId == null ? "null" : this.BlogId.ToString(), this.BlogName == null ? "null" : this.BlogName.ToString(), this.CreatorId == null ? "null" : this.CreatorId.ToString(), this.CreatorUsername == null ? "null" : this.CreatorUsername.ToString(), this.GuestList == null ? "null" : this.GuestList.ToString(), this.Channels == null ? "null" : this.Channels.ToString());
+            return string.Format("BlogSubscriptionStatus({0}, \"{1}\", {2}, {3}, {4}, {5})", this.BlogId == null ? "null" : this.BlogId.ToString(), this.BlogName == null ? "null" : this.BlogName.ToString(), this.CreatorId == null ? "null" : this.CreatorId.ToString(), this.CreatorUsername == null ? "null" : this.CreatorUsername.ToString(), this.FreeAccess == null ? "null" : this.FreeAccess.ToString(), this.Channels == null ? "null" : this.Channels.ToString());
         }
         
         public override bool Equals(object obj)
@@ -3608,7 +3608,7 @@ namespace Fifthweek.Api.Blogs.Queries
                 hashCode = (hashCode * 397) ^ (this.BlogName != null ? this.BlogName.GetHashCode() : 0);
                 hashCode = (hashCode * 397) ^ (this.CreatorId != null ? this.CreatorId.GetHashCode() : 0);
                 hashCode = (hashCode * 397) ^ (this.CreatorUsername != null ? this.CreatorUsername.GetHashCode() : 0);
-                hashCode = (hashCode * 397) ^ (this.GuestList != null ? this.GuestList.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.FreeAccess != null ? this.FreeAccess.GetHashCode() : 0);
                 hashCode = (hashCode * 397) ^ (this.Channels != null 
         			? this.Channels.Aggregate(0, (previous, current) => 
         				{ 
@@ -3644,7 +3644,7 @@ namespace Fifthweek.Api.Blogs.Queries
                 return false;
             }
         
-            if (!object.Equals(this.GuestList, other.GuestList))
+            if (!object.Equals(this.FreeAccess, other.FreeAccess))
             {
                 return false;
             }

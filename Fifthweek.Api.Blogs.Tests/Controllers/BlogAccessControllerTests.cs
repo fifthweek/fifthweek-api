@@ -40,7 +40,7 @@
         }
 
         [TestClass]
-        public class PutGuestListTests : BlogAccessControllerTests
+        public class PutFreeAccessListTests : BlogAccessControllerTests
         {
             private static readonly FreeAccessUsersData EmptyData = new FreeAccessUsersData();
 
@@ -54,18 +54,18 @@
             [ExpectedException(typeof(BadRequestException))]
             public async Task WhenBlogIdIsNull_ItShouldThrowAnException()
             {
-                await this.target.PutGuestList(null, EmptyData);
+                await this.target.PutFreeAccessList(null, EmptyData);
             }
 
             [TestMethod]
             [ExpectedException(typeof(BadRequestException))]
             public async Task WhenDataIsNull_ItShouldThrowAnException()
             {
-                await this.target.PutGuestList(BlogId.Value.EncodeGuid(), null);
+                await this.target.PutFreeAccessList(BlogId.Value.EncodeGuid(), null);
             }
 
             [TestMethod]
-            public async Task WhenParametersAreProvided_ItShouldCallUpdateFreeAccessUsers()
+            public async Task ItShouldCallUpdateFreeAccessUsers()
             {
                 var emailList = new List<string> { "one@test.com", "two@test.com" };
                 var freeAccessUsersData = new FreeAccessUsersData { Emails = emailList };
@@ -80,14 +80,14 @@
                     .Returns(Task.FromResult(0))
                     .Verifiable();
 
-                var result = await this.target.PutGuestList(BlogId.Value.EncodeGuid(), freeAccessUsersData);
+                var result = await this.target.PutFreeAccessList(BlogId.Value.EncodeGuid(), freeAccessUsersData);
 
                 this.updateFreeAccessUsers.Verify();
                 Assert.AreEqual(expectedResult, result);
             }
 
             [TestMethod]
-            public async Task WhenParametersAreProvided_AndSomeEmailAddressesAreInvalid_ItShouldCallUpdateFreeAccessUsersAndItShouldReturnValidEmailAddresses()
+            public async Task WhenSomeEmailAddressesAreInvalid_ItShouldCallUpdateFreeAccessUsersAndItShouldReturnValidEmailAddresses()
             {
                 var emailList = new List<string> { "one@test.com", "two.test.com" };
                 var freeAccessUsersData = new FreeAccessUsersData { Emails = emailList };
@@ -102,14 +102,14 @@
                     .Returns(Task.FromResult(0))
                     .Verifiable();
 
-                var result = await this.target.PutGuestList(BlogId.Value.EncodeGuid(), freeAccessUsersData);
+                var result = await this.target.PutFreeAccessList(BlogId.Value.EncodeGuid(), freeAccessUsersData);
 
                 this.updateFreeAccessUsers.Verify();
                 Assert.AreEqual(expectedResult, result);
             }
 
             [TestMethod]
-            public async Task WhenParametersAreProvided_AndAllEmailAddressesAreInvalid_ItShouldCallUpdateFreeAccessUsersAndItShouldReturnValidEmailAddresses()
+            public async Task WhenAllEmailAddressesAreInvalid_ItShouldCallUpdateFreeAccessUsersAndItShouldReturnValidEmailAddresses()
             {
                 var emailList = new List<string> { "one.test.com", "two.test.com" };
                 var freeAccessUsersData = new FreeAccessUsersData { Emails = emailList };
@@ -124,7 +124,29 @@
                     .Returns(Task.FromResult(0))
                     .Verifiable();
 
-                var result = await this.target.PutGuestList(BlogId.Value.EncodeGuid(), freeAccessUsersData);
+                var result = await this.target.PutFreeAccessList(BlogId.Value.EncodeGuid(), freeAccessUsersData);
+
+                this.updateFreeAccessUsers.Verify();
+                Assert.AreEqual(expectedResult, result);
+            }
+
+            [TestMethod]
+            public async Task WhenSomeEmailAddressesWhitespace_ItShouldCallUpdateFreeAccessUsersAndItShouldReturnValidEmailAddresses()
+            {
+                var emailList = new List<string> { "one@test.com", "    ", "\t", "two@test.com" };
+                var freeAccessUsersData = new FreeAccessUsersData { Emails = emailList };
+
+                var validEmailList = new List<ValidEmail> { ValidEmail.Parse(emailList[0]), ValidEmail.Parse(emailList[3]) };
+                var invalidEmailList = new List<Email>();
+
+                var expectedResult = new PutFreeAccessUsersResult(invalidEmailList);
+
+                this.updateFreeAccessUsers
+                    .Setup(v => v.HandleAsync(new UpdateFreeAccessUsersCommand(Requester, BlogId, validEmailList)))
+                    .Returns(Task.FromResult(0))
+                    .Verifiable();
+
+                var result = await this.target.PutFreeAccessList(BlogId.Value.EncodeGuid(), freeAccessUsersData);
 
                 this.updateFreeAccessUsers.Verify();
                 Assert.AreEqual(expectedResult, result);
@@ -132,7 +154,7 @@
         }
 
         [TestClass]
-        public class GetGuestListTests : BlogAccessControllerTests
+        public class GetFreeAccessListTests : BlogAccessControllerTests
         {
             [TestInitialize]
             public override void TestInitialize()
@@ -144,7 +166,7 @@
             [ExpectedException(typeof(BadRequestException))]
             public async Task WhenBlogIdIsNull_ItShouldThrowAnException()
             {
-                await this.target.GetGuestList(null);
+                await this.target.GetFreeAccessList(null);
             }
 
             [TestMethod]
@@ -155,7 +177,7 @@
                 this.getFreeAccessUsers.Setup(v => v.HandleAsync(new GetFreeAccessUsersQuery(Requester, BlogId)))
                     .ReturnsAsync(expectedResult);
 
-                var result = await this.target.GetGuestList(BlogId.Value.EncodeGuid());
+                var result = await this.target.GetFreeAccessList(BlogId.Value.EncodeGuid());
 
                 Assert.AreEqual(expectedResult, result);
             }

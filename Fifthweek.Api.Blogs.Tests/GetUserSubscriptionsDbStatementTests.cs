@@ -107,9 +107,9 @@
                 var blog2 = result.Blogs.First(v => v.BlogId.Equals(Blog2Id));
                 var blog3 = result.Blogs.First(v => v.BlogId.Equals(Blog3Id));
 
-                Assert.IsTrue(blog1.GuestList);
-                Assert.IsTrue(blog2.GuestList);
-                Assert.IsFalse(blog3.GuestList);
+                Assert.IsTrue(blog1.FreeAccess);
+                Assert.IsTrue(blog2.FreeAccess);
+                Assert.IsFalse(blog3.FreeAccess);
 
                 Assert.AreEqual(0, blog1.Channels.Count);
                 Assert.AreEqual(1, blog2.Channels.Count);

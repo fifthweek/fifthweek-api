@@ -464,6 +464,49 @@ angular.module('webApp').factory('postsStub',
     return service;
   });
 
+angular.module('webApp').factory('blogAccessStub',
+  function($http, $q, fifthweekConstants, utilities) {
+    'use strict';
+
+    var apiBaseUri = fifthweekConstants.apiBaseUri;
+    var service = {};
+
+    // blogId = 'Base64Guid'
+    // data = {
+    //   emails: [
+    //     ''
+    //   ]
+    // }
+    // result = {
+    //   invalidEmailAddresses: [
+    //     ''
+    //   ]
+    // }
+    service.putFreeAccessList = function(blogId, data) {
+      return $http.put(apiBaseUri + 'blogAccess/freeAccessList/' + encodeURIComponent(blogId), data).catch(function(response) {
+        return $q.reject(utilities.getHttpError(response));
+      });
+    };
+
+    // blogId = 'Base64Guid'
+    // result = {
+    //   freeAccessUsers: [
+    //     {
+    //       email: '',
+    //       userId: 'Base64Guid', /* optional */
+    //       username: '' /* optional */
+    //     }
+    //   ]
+    // }
+    service.getFreeAccessList = function(blogId) {
+      return $http.get(apiBaseUri + 'blogAccess/freeAccessList/' + encodeURIComponent(blogId)).catch(function(response) {
+        return $q.reject(utilities.getHttpError(response));
+      });
+    };
+
+    return service;
+  });
+
 angular.module('webApp').factory('subscriptionStub',
   function($http, $q, fifthweekConstants, utilities) {
     'use strict';
@@ -759,7 +802,7 @@ angular.module('webApp').factory('userStateStub',
     //         blogName: '',
     //         creatorId: 'Base64Guid',
     //         creatorUsername: '',
-    //         guestList: false,
+    //         freeAccess: false,
     //         channels: [
     //           {
     //             channelId: 'Base64Guid',
@@ -855,7 +898,7 @@ angular.module('webApp').factory('userStateStub',
     //         blogName: '',
     //         creatorId: 'Base64Guid',
     //         creatorUsername: '',
-    //         guestList: false,
+    //         freeAccess: false,
     //         channels: [
     //           {
     //             channelId: 'Base64Guid',

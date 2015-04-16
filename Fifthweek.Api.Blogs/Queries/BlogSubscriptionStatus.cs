@@ -17,7 +17,7 @@ namespace Fifthweek.Api.Blogs.Queries
 
         public Username CreatorUsername { get; private set; }
 
-        public bool GuestList { get; private set; }
+        public bool FreeAccess { get; private set; }
 
         public IReadOnlyList<ChannelSubscriptionStatus> Channels { get; private set; }
     }

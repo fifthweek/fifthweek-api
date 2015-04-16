@@ -656,6 +656,60 @@ describe('posts stub', function() {
   });
 });
 
+describe('blog access stub', function() {
+  'use strict';
+
+  var fifthweekConstants;
+  var $httpBackend;
+  var $rootScope;
+  var target;
+
+  beforeEach(module('webApp', 'stateMock'));
+
+  beforeEach(inject(function($injector) {
+    fifthweekConstants = $injector.get('fifthweekConstants');
+    $httpBackend = $injector.get('$httpBackend');
+    $rootScope = $injector.get('$rootScope');
+    target = $injector.get('blogAccessStub');
+  }));
+
+  afterEach(function() {
+    $httpBackend.verifyNoOutstandingExpectation();
+    $httpBackend.verifyNoOutstandingRequest();
+  });
+
+  it('should put free access list', function() {
+    var blogId = 'value0';
+    var data = 'value1';
+
+    var responseData = 'response data';
+    $httpBackend.expectPUT(fifthweekConstants.apiBaseUri + 'blogAccess/freeAccessList/' + encodeURIComponent(blogId), data).respond(200, responseData);
+
+    var result = null;
+    target.putFreeAccessList(blogId, data).then(function(response) { result = response.data; });
+
+    $httpBackend.flush();
+    $rootScope.$apply();
+
+    expect(result).toBe(responseData);
+  });
+
+  it('should get free access list', function() {
+    var blogId = 'value0';
+
+    var responseData = 'response data';
+    $httpBackend.expectGET(fifthweekConstants.apiBaseUri + 'blogAccess/freeAccessList/' + encodeURIComponent(blogId)).respond(200, responseData);
+
+    var result = null;
+    target.getFreeAccessList(blogId).then(function(response) { result = response.data; });
+
+    $httpBackend.flush();
+    $rootScope.$apply();
+
+    expect(result).toBe(responseData);
+  });
+});
+
 describe('subscription stub', function() {
   'use strict';
 
