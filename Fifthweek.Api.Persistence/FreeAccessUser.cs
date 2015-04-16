@@ -20,7 +20,7 @@
         [Required, Optional, NonEquatable]
         public Blog Blog { get; set; }
 
-        [Required, Key, Column(Order = 1)]
+        [Required, Key, Column(Order = 1), Index]
         [MaxLength(256)] // See: ValidEmail.MaxLength
         public string Email { get; set; }
     }
