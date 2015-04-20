@@ -494,7 +494,10 @@ angular.module('webApp').factory('blogAccessStub',
     //     {
     //       email: '',
     //       userId: 'Base64Guid', /* optional */
-    //       username: '' /* optional */
+    //       username: '', /* optional */
+    //       channelIds: [
+    //         'Base64Guid'
+    //       ]
     //     }
     //   ]
     // }
@@ -585,9 +588,13 @@ angular.module('webApp').factory('blogStub',
 
     // username = ''
     // result = {
+    //   userId: 'Base64Guid',
+    //   profileImage: {
+    //     fileId: 'Base64Guid',
+    //     containerName: ''
+    //   },
     //   blog: {
     //     blogId: 'Base64Guid',
-    //     creatorId: 'Base64Guid',
     //     blogName: '',
     //     tagline: '',
     //     introduction: '',
@@ -783,7 +790,6 @@ angular.module('webApp').factory('userStateStub',
     //   },
     //   blog: { /* optional */
     //     blogId: 'Base64Guid',
-    //     creatorId: 'Base64Guid',
     //     blogName: '',
     //     tagline: '',
     //     introduction: '',
@@ -879,7 +885,6 @@ angular.module('webApp').factory('userStateStub',
     //   },
     //   blog: { /* optional */
     //     blogId: 'Base64Guid',
-    //     creatorId: 'Base64Guid',
     //     blogName: '',
     //     tagline: '',
     //     introduction: '',
