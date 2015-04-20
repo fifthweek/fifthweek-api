@@ -2,7 +2,9 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Net;
     using System.Threading.Tasks;
+    using System.Web.Http;
     using System.Web.Http.Results;
 
     using Fifthweek.Api.Blogs.Commands;
@@ -13,6 +15,7 @@
     using Fifthweek.Api.Core;
     using Fifthweek.Api.FileManagement.Shared;
     using Fifthweek.Api.Identity.Shared.Membership;
+    using Fifthweek.Tests.Shared;
 
     using Microsoft.VisualStudio.TestTools.UnitTesting;
 
@@ -90,6 +93,18 @@
             var result = await this.target.GetLandingPage(Username.Value);
 
             Assert.AreEqual(NewGetLandingPageResult(), result);
+            this.getLandingPage.Verify();
+        }
+
+        [TestMethod]
+        public async Task WhenGettingLandingPage_AndLandingPageDoesNotExist_ItShouldThrowHttpResponseExceptionWith404()
+        {
+            this.getLandingPage.Setup(v => v.HandleAsync(new GetLandingPageQuery(Username)))
+                .Returns(Task.FromResult<GetLandingPageResult>(null)).Verifiable();
+
+            var exception = await ExpectedException.GetExceptionAsync<HttpResponseException>(() => this.target.GetLandingPage(Username.Value));
+
+            Assert.AreEqual(HttpStatusCode.NotFound, exception.Response.StatusCode);
             this.getLandingPage.Verify();
         }
 

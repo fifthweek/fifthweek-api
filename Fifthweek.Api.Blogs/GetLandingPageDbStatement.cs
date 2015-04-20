@@ -44,10 +44,16 @@
              FifthweekUser.Fields.ProfileImageFileId,
              FifthweekUser.Fields.UserName);
 
+        public static readonly string ChannelsQuery = string.Format(
+            @"SELECT * FROM {0} WHERE {1} = @BlogId AND {2}='True';",
+            Channel.Table,
+            Channel.Fields.BlogId,
+            Channel.Fields.IsVisibleToNonSubscribers);
+
         private static readonly string Query =
             BlogIdQuery + 
             GetBlogChannelsAndCollectionsDbStatement.BlogQuery + 
-            GetBlogChannelsAndCollectionsDbStatement.ChannelsQuery +
+            ChannelsQuery +
             UserQuery;
 
         private readonly IFifthweekDbConnectionFactory connectionFactory;
@@ -73,7 +79,7 @@
 
             if (user == null)
             {
-                throw new InvalidOperationException("The user " + username + " could not be found.");
+                return null;
             }
 
             var blog = blogs.SingleOrDefault();

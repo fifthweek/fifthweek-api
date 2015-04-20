@@ -1,5 +1,6 @@
 ﻿namespace Fifthweek.Api.Blogs.Controllers
 {
+    using System.Net;
     using System.Threading.Tasks;
     using System.Web.Http;
 
@@ -67,6 +68,11 @@
             username.AssertUrlParameterProvided("username");
 
             var result = await this.getLandingPage.HandleAsync(new GetLandingPageQuery(new Username(username)));
+
+            if (result == null)
+            {
+                throw new HttpResponseException(HttpStatusCode.NotFound);
+            }
 
             return result;
         }

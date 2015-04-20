@@ -19,9 +19,13 @@
 
             var queryResult = await this.getLandingPageDbStatement.ExecuteAsync(query.CreatorUsername);
 
+            if (queryResult == null)
+            {
+                return null;
+            }
+
             var blog = queryResult.Blog;
             var channels = queryResult.Channels;
-
 
             FileInformation headerFileInformation = null;
             if (blog.HeaderImageFileId != null)

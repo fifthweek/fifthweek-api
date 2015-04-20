@@ -29,6 +29,7 @@
         private static readonly ChannelId ChannelId1 = new ChannelId(Guid.NewGuid());
         private static readonly ChannelId ChannelId2 = new ChannelId(Guid.NewGuid());
         private static readonly ChannelId ChannelId3 = new ChannelId(Guid.NewGuid());
+        private static readonly ChannelId ChannelId4 = new ChannelId(Guid.NewGuid());
         private static readonly DateTime CreationDate = new SqlDateTime(DateTime.UtcNow.AddDays(-10)).Value;
         private static readonly DateTime PriceLastSetDate = new SqlDateTime(DateTime.UtcNow.AddDays(-5)).Value;
         private static readonly string Description = "description";
@@ -52,6 +53,24 @@
         public async Task WhenBlogIdIsNull_ItShouldThrowAnException()
         {
             await this.target.ExecuteAsync(null);
+        }
+
+        [TestMethod]
+        public async Task WhenUsernameDoesNotExist_ItShouldReturnNull()
+        {
+            await this.DatabaseTestAsync(async testDatabase =>
+            {
+                this.target = new GetLandingPageDbStatement(testDatabase);
+
+                await this.CreateDataAsync(testDatabase);
+                await testDatabase.TakeSnapshotAsync();
+
+                var result = await this.target.ExecuteAsync(new Username(Guid.NewGuid().ToString()));
+
+                Assert.IsNull(result);
+
+                return ExpectedSideEffects.None;
+            });
         }
 
         [TestMethod]
@@ -111,23 +130,6 @@
                 await testDatabase.TakeSnapshotAsync();
 
                 await this.target.ExecuteAsync(Username);
-
-                return ExpectedSideEffects.None;
-            });
-        }
-
-        [TestMethod]
-        [ExpectedException(typeof(InvalidOperationException))]
-        public async Task WhenGettingANonExistantBlog_ItShouldThrowAnException()
-        {
-            await this.DatabaseTestAsync(async testDatabase =>
-            {
-                this.target = new GetLandingPageDbStatement(testDatabase);
-
-                await this.CreateDataAsync(testDatabase);
-                await testDatabase.TakeSnapshotAsync();
-
-                await this.target.ExecuteAsync(new Username(Guid.NewGuid().ToString()));
 
                 return ExpectedSideEffects.None;
             });
@@ -210,26 +212,30 @@
         {
             var random = new Random();
 
-            // First channel has no collections.
             var channel1 = ChannelTests.UniqueEntity(random);
             channel1.Id = ChannelId1.Value;
             ConfigureChannel(channel1);
 
-            // Second channel has one collection.
             var channel2 = ChannelTests.UniqueEntity(random);
             channel2.Id = ChannelId2.Value;
             ConfigureChannel(channel2);
 
-            // Third channel has two collections.
             var channel3 = ChannelTests.UniqueEntity(random);
             channel3.Id = ChannelId3.Value;
             ConfigureChannel(channel3);
+
+            // Forth channel is not visible.
+            var channel4 = ChannelTests.UniqueEntity(random);
+            channel4.Id = ChannelId4.Value;
+            ConfigureChannel(channel4);
+            channel4.IsVisibleToNonSubscribers = false;
 
             using (var connection = testDatabase.CreateConnection())
             {
                 await connection.InsertAsync(channel1);
                 await connection.InsertAsync(channel2);
                 await connection.InsertAsync(channel3);
+                await connection.InsertAsync(channel4);
             }
         }
 

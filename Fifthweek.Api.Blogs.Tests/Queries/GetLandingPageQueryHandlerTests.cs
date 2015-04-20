@@ -52,6 +52,17 @@
         }
 
         [TestMethod]
+        public async Task WhenUserDoesNotExist_ItShouldReturnNull()
+        {
+            this.getLandingPage.Setup(v => v.ExecuteAsync(Username))
+                .ReturnsAsync(null);
+
+            var result = await this.target.HandleAsync(new GetLandingPageQuery(Username));
+
+            Assert.IsNull(result);
+        }
+
+        [TestMethod]
         public async Task WhenNoHeaderImageOrProfileImageExists_ItShouldReturnTheBlogData()
         {
             var databaseResult = new GetLandingPageDbStatement.GetLandingPageDbResult(
