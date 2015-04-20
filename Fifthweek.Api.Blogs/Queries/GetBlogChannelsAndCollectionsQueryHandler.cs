@@ -34,7 +34,6 @@
 
             var blogWithFileInformation = new BlogWithFileInformation(
                 blog.BlogId,
-                blog.CreatorId,
                 blog.BlogName,
                 blog.Tagline,
                 blog.Introduction,

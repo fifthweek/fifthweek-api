@@ -22,8 +22,8 @@
             var blog = queryResult.Blog;
             var channels = queryResult.Channels;
 
-            FileInformation headerFileInformation = null;
 
+            FileInformation headerFileInformation = null;
             if (blog.HeaderImageFileId != null)
             {
                 headerFileInformation = await this.fileInformationAggregator.GetFileInformationAsync(
@@ -32,9 +32,17 @@
                         FilePurposes.ProfileHeaderImage);
             }
 
+            FileInformation profileImageFileInformation = null;
+            if (queryResult.ProfileImageFileId != null)
+            {
+                profileImageFileInformation = await this.fileInformationAggregator.GetFileInformationAsync(
+                        queryResult.UserId,
+                        queryResult.ProfileImageFileId,
+                        FilePurposes.ProfileImage);
+            }
+
             var blogWithFileInformation = new BlogWithFileInformation(
                 blog.BlogId,
-                blog.CreatorId,
                 blog.BlogName,
                 blog.Tagline,
                 blog.Introduction,
@@ -43,7 +51,11 @@
                 blog.Video,
                 blog.Description);
 
-            return new GetLandingPageResult(blogWithFileInformation, channels);
+            return new GetLandingPageResult(
+                queryResult.UserId, 
+                profileImageFileInformation, 
+                blogWithFileInformation, 
+                channels);
         }
     }
 }

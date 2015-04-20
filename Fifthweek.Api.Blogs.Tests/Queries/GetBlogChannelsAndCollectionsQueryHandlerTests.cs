@@ -71,7 +71,6 @@
             var result = await this.target.HandleAsync(new GetBlogChannelsAndCollectionsQuery(BlogId));
 
             Assert.AreEqual(BlogId, result.Blog.BlogId);
-            Assert.AreEqual(CreatorId, result.Blog.CreatorId);
             Assert.AreEqual(Name, result.Blog.BlogName);
             Assert.AreEqual(Tagline, result.Blog.Tagline);
             Assert.AreEqual(Introduction, result.Blog.Introduction);
@@ -111,7 +110,6 @@
             var result = await this.target.HandleAsync(new GetBlogChannelsAndCollectionsQuery(BlogId));
 
             Assert.AreEqual(BlogId, result.Blog.BlogId);
-            Assert.AreEqual(CreatorId, result.Blog.CreatorId);
             Assert.AreEqual(Name, result.Blog.BlogName);
             Assert.AreEqual(Tagline, result.Blog.Tagline);
             Assert.AreEqual(Introduction, result.Blog.Introduction);

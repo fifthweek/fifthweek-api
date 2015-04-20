@@ -26,6 +26,7 @@
         private static readonly Introduction Introduction = new Introduction("intro");
         private static readonly BlogDescription Description = new BlogDescription("description");
         private static readonly ExternalVideoUrl ExternalVideoUrl = new ExternalVideoUrl("url");
+        private static readonly FileId ProfileImageFileId = new FileId(Guid.NewGuid());
         private static readonly FileId HeaderFileId = new FileId(Guid.NewGuid());
 
         private Mock<IFileInformationAggregator> fileInformationAggregator;
@@ -51,9 +52,11 @@
         }
 
         [TestMethod]
-        public async Task WhenNoHeaderImageExists_ItShouldReturnTheBlogData()
+        public async Task WhenNoHeaderImageOrProfileImageExists_ItShouldReturnTheBlogData()
         {
             var databaseResult = new GetLandingPageDbStatement.GetLandingPageDbResult(
+                    CreatorId,
+                    null,
                     new GetBlogChannelsAndCollectionsDbStatement.BlogDbResult(
                         BlogId,
                         CreatorId,
@@ -71,8 +74,9 @@
 
             var result = await this.target.HandleAsync(new GetLandingPageQuery(Username));
 
+            Assert.AreEqual(CreatorId, result.UserId);
+            Assert.AreEqual(null, result.ProfileImage);
             Assert.AreEqual(BlogId, result.Blog.BlogId);
-            Assert.AreEqual(CreatorId, result.Blog.CreatorId);
             Assert.AreEqual(Name, result.Blog.BlogName);
             Assert.AreEqual(Tagline, result.Blog.Tagline);
             Assert.AreEqual(Introduction, result.Blog.Introduction);
@@ -85,9 +89,11 @@
         }
 
         [TestMethod]
-        public async Task WhenHeaderImageExists_ItShouldReturnTheBlogData()
+        public async Task WhenImagesExists_ItShouldReturnTheBlogData()
         {
             var databaseResult = new GetLandingPageDbStatement.GetLandingPageDbResult(
+                    CreatorId,
+                    ProfileImageFileId,
                     new GetBlogChannelsAndCollectionsDbStatement.BlogDbResult(
                         BlogId,
                         CreatorId,
@@ -103,20 +109,26 @@
             this.getLandingPage.Setup(v => v.ExecuteAsync(Username))
                 .ReturnsAsync(databaseResult);
 
-            var fileInformation = new FileInformation(HeaderFileId, "container");
+            var headerFileInformation = new FileInformation(HeaderFileId, "container");
             this.fileInformationAggregator.Setup(
                 v => v.GetFileInformationAsync(CreatorId, HeaderFileId, FilePurposes.ProfileHeaderImage))
-                .ReturnsAsync(fileInformation);
+                .ReturnsAsync(headerFileInformation);
+
+            var profileFileInformation = new FileInformation(ProfileImageFileId, "container");
+            this.fileInformationAggregator.Setup(
+                v => v.GetFileInformationAsync(CreatorId, ProfileImageFileId, FilePurposes.ProfileImage))
+                .ReturnsAsync(profileFileInformation);
 
             var result = await this.target.HandleAsync(new GetLandingPageQuery(Username));
 
+            Assert.AreEqual(CreatorId, result.UserId);
+            Assert.AreEqual(ProfileImageFileId, result.ProfileImage.FileId);
             Assert.AreEqual(BlogId, result.Blog.BlogId);
-            Assert.AreEqual(CreatorId, result.Blog.CreatorId);
             Assert.AreEqual(Name, result.Blog.BlogName);
             Assert.AreEqual(Tagline, result.Blog.Tagline);
             Assert.AreEqual(Introduction, result.Blog.Introduction);
             Assert.AreEqual(CreationDate, result.Blog.CreationDate);
-            Assert.AreEqual(fileInformation, result.Blog.HeaderImage);
+            Assert.AreEqual(headerFileInformation, result.Blog.HeaderImage);
             Assert.AreEqual(ExternalVideoUrl, result.Blog.Video);
             Assert.AreEqual(Description, result.Blog.Description);
 

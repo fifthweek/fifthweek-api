@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Linq;
 
-//// Generated on 16/04/2015 15:42:01 (UTC)
-//// Mapped solution in 28.01s
+//// Generated on 20/04/2015 11:39:08 (UTC)
+//// Mapped solution in 9.31s
 
 
 namespace Fifthweek.Api.Blogs
@@ -623,7 +623,6 @@ namespace Fifthweek.Api.Blogs.Queries
     {
         public BlogWithFileInformation(
             Fifthweek.Api.Blogs.Shared.BlogId blogId,
-            Fifthweek.Api.Identity.Shared.Membership.UserId creatorId,
             Fifthweek.Api.Blogs.Shared.BlogName blogName,
             Fifthweek.Api.Blogs.Shared.Tagline tagline,
             Fifthweek.Api.Blogs.Shared.Introduction introduction,
@@ -635,11 +634,6 @@ namespace Fifthweek.Api.Blogs.Queries
             if (blogId == null)
             {
                 throw new ArgumentNullException("blogId");
-            }
-
-            if (creatorId == null)
-            {
-                throw new ArgumentNullException("creatorId");
             }
 
             if (blogName == null)
@@ -663,7 +657,6 @@ namespace Fifthweek.Api.Blogs.Queries
             }
 
             this.BlogId = blogId;
-            this.CreatorId = creatorId;
             this.BlogName = blogName;
             this.Tagline = tagline;
             this.Introduction = introduction;
@@ -1790,9 +1783,16 @@ namespace Fifthweek.Api.Blogs
         public partial class GetLandingPageDbResult 
         {
             public GetLandingPageDbResult(
+                Fifthweek.Api.Identity.Shared.Membership.UserId userId,
+                Fifthweek.Api.FileManagement.Shared.FileId profileImageFileId,
                 Fifthweek.Api.Blogs.GetBlogChannelsAndCollectionsDbStatement.BlogDbResult blog,
                 System.Collections.Generic.IReadOnlyList<Fifthweek.Api.Blogs.Queries.ChannelResult> channels)
             {
+                if (userId == null)
+                {
+                    throw new ArgumentNullException("userId");
+                }
+
                 if (blog == null)
                 {
                     throw new ArgumentNullException("blog");
@@ -1803,6 +1803,8 @@ namespace Fifthweek.Api.Blogs
                     throw new ArgumentNullException("channels");
                 }
 
+                this.UserId = userId;
+                this.ProfileImageFileId = profileImageFileId;
                 this.Blog = blog;
                 this.Channels = channels;
             }
@@ -1930,9 +1932,16 @@ namespace Fifthweek.Api.Blogs.Queries
     public partial class GetLandingPageResult 
     {
         public GetLandingPageResult(
+            Fifthweek.Api.Identity.Shared.Membership.UserId userId,
+            Fifthweek.Api.FileManagement.Shared.FileInformation profileImage,
             Fifthweek.Api.Blogs.Queries.BlogWithFileInformation blog,
             System.Collections.Generic.IReadOnlyList<Fifthweek.Api.Blogs.Queries.ChannelResult> channels)
         {
+            if (userId == null)
+            {
+                throw new ArgumentNullException("userId");
+            }
+
             if (blog == null)
             {
                 throw new ArgumentNullException("blog");
@@ -1943,6 +1952,8 @@ namespace Fifthweek.Api.Blogs.Queries
                 throw new ArgumentNullException("channels");
             }
 
+            this.UserId = userId;
+            this.ProfileImage = profileImage;
             this.Blog = blog;
             this.Channels = channels;
         }
@@ -2851,7 +2862,7 @@ namespace Fifthweek.Api.Blogs.Queries
     {
         public override string ToString()
         {
-            return string.Format("BlogWithFileInformation({0}, {1}, {2}, {3}, {4}, {5}, {6}, {7}, {8})", this.BlogId == null ? "null" : this.BlogId.ToString(), this.CreatorId == null ? "null" : this.CreatorId.ToString(), this.BlogName == null ? "null" : this.BlogName.ToString(), this.Tagline == null ? "null" : this.Tagline.ToString(), this.Introduction == null ? "null" : this.Introduction.ToString(), this.CreationDate == null ? "null" : this.CreationDate.ToString(), this.HeaderImage == null ? "null" : this.HeaderImage.ToString(), this.Video == null ? "null" : this.Video.ToString(), this.Description == null ? "null" : this.Description.ToString());
+            return string.Format("BlogWithFileInformation({0}, {1}, {2}, {3}, {4}, {5}, {6}, {7})", this.BlogId == null ? "null" : this.BlogId.ToString(), this.BlogName == null ? "null" : this.BlogName.ToString(), this.Tagline == null ? "null" : this.Tagline.ToString(), this.Introduction == null ? "null" : this.Introduction.ToString(), this.CreationDate == null ? "null" : this.CreationDate.ToString(), this.HeaderImage == null ? "null" : this.HeaderImage.ToString(), this.Video == null ? "null" : this.Video.ToString(), this.Description == null ? "null" : this.Description.ToString());
         }
         
         public override bool Equals(object obj)
@@ -2880,7 +2891,6 @@ namespace Fifthweek.Api.Blogs.Queries
             {
                 int hashCode = 0;
                 hashCode = (hashCode * 397) ^ (this.BlogId != null ? this.BlogId.GetHashCode() : 0);
-                hashCode = (hashCode * 397) ^ (this.CreatorId != null ? this.CreatorId.GetHashCode() : 0);
                 hashCode = (hashCode * 397) ^ (this.BlogName != null ? this.BlogName.GetHashCode() : 0);
                 hashCode = (hashCode * 397) ^ (this.Tagline != null ? this.Tagline.GetHashCode() : 0);
                 hashCode = (hashCode * 397) ^ (this.Introduction != null ? this.Introduction.GetHashCode() : 0);
@@ -2895,11 +2905,6 @@ namespace Fifthweek.Api.Blogs.Queries
         protected bool Equals(BlogWithFileInformation other)
         {
             if (!object.Equals(this.BlogId, other.BlogId))
-            {
-                return false;
-            }
-        
-            if (!object.Equals(this.CreatorId, other.CreatorId))
             {
                 return false;
             }
@@ -3886,7 +3891,7 @@ namespace Fifthweek.Api.Blogs
         {
             public override string ToString()
             {
-                return string.Format("GetLandingPageDbResult({0}, {1})", this.Blog == null ? "null" : this.Blog.ToString(), this.Channels == null ? "null" : this.Channels.ToString());
+                return string.Format("GetLandingPageDbResult({0}, {1}, {2}, {3})", this.UserId == null ? "null" : this.UserId.ToString(), this.ProfileImageFileId == null ? "null" : this.ProfileImageFileId.ToString(), this.Blog == null ? "null" : this.Blog.ToString(), this.Channels == null ? "null" : this.Channels.ToString());
             }
             
             public override bool Equals(object obj)
@@ -3914,6 +3919,8 @@ namespace Fifthweek.Api.Blogs
                 unchecked
                 {
                     int hashCode = 0;
+                    hashCode = (hashCode * 397) ^ (this.UserId != null ? this.UserId.GetHashCode() : 0);
+                    hashCode = (hashCode * 397) ^ (this.ProfileImageFileId != null ? this.ProfileImageFileId.GetHashCode() : 0);
                     hashCode = (hashCode * 397) ^ (this.Blog != null ? this.Blog.GetHashCode() : 0);
                     hashCode = (hashCode * 397) ^ (this.Channels != null 
             			? this.Channels.Aggregate(0, (previous, current) => 
@@ -3930,6 +3937,16 @@ namespace Fifthweek.Api.Blogs
             
             protected bool Equals(GetLandingPageDbResult other)
             {
+                if (!object.Equals(this.UserId, other.UserId))
+                {
+                    return false;
+                }
+            
+                if (!object.Equals(this.ProfileImageFileId, other.ProfileImageFileId))
+                {
+                    return false;
+                }
+            
                 if (!object.Equals(this.Blog, other.Blog))
                 {
                     return false;
@@ -3973,7 +3990,7 @@ namespace Fifthweek.Api.Blogs.Queries
     {
         public override string ToString()
         {
-            return string.Format("GetLandingPageResult({0}, {1})", this.Blog == null ? "null" : this.Blog.ToString(), this.Channels == null ? "null" : this.Channels.ToString());
+            return string.Format("GetLandingPageResult({0}, {1}, {2}, {3})", this.UserId == null ? "null" : this.UserId.ToString(), this.ProfileImage == null ? "null" : this.ProfileImage.ToString(), this.Blog == null ? "null" : this.Blog.ToString(), this.Channels == null ? "null" : this.Channels.ToString());
         }
         
         public override bool Equals(object obj)
@@ -4001,6 +4018,8 @@ namespace Fifthweek.Api.Blogs.Queries
             unchecked
             {
                 int hashCode = 0;
+                hashCode = (hashCode * 397) ^ (this.UserId != null ? this.UserId.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.ProfileImage != null ? this.ProfileImage.GetHashCode() : 0);
                 hashCode = (hashCode * 397) ^ (this.Blog != null ? this.Blog.GetHashCode() : 0);
                 hashCode = (hashCode * 397) ^ (this.Channels != null 
         			? this.Channels.Aggregate(0, (previous, current) => 
@@ -4017,6 +4036,16 @@ namespace Fifthweek.Api.Blogs.Queries
         
         protected bool Equals(GetLandingPageResult other)
         {
+            if (!object.Equals(this.UserId, other.UserId))
+            {
+                return false;
+            }
+        
+            if (!object.Equals(this.ProfileImage, other.ProfileImage))
+            {
+                return false;
+            }
+        
             if (!object.Equals(this.Blog, other.Blog))
             {
                 return false;

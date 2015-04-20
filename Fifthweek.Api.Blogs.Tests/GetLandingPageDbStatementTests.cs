@@ -1,6 +1,7 @@
 ﻿namespace Fifthweek.Api.Blogs.Tests
 {
     using System;
+    using System.Data.Entity;
     using System.Data.SqlTypes;
     using System.Linq;
     using System.Threading.Tasks;
@@ -23,6 +24,7 @@
         private static readonly Username Username = new Username(Guid.NewGuid().ToString());
         private static readonly BlogId BlogId = new BlogId(Guid.NewGuid());
         private static readonly UserId CreatorId = new UserId(Guid.NewGuid());
+        private static readonly FileId ProfileFileId = new FileId(Guid.NewGuid());
         private static readonly FileId HeaderFileId = new FileId(Guid.NewGuid());
         private static readonly ChannelId ChannelId1 = new ChannelId(Guid.NewGuid());
         private static readonly ChannelId ChannelId2 = new ChannelId(Guid.NewGuid());
@@ -63,6 +65,9 @@
                 await testDatabase.TakeSnapshotAsync();
 
                 var result = await this.target.ExecuteAsync(Username);
+
+                Assert.AreEqual(CreatorId, result.UserId);
+                Assert.AreEqual(ProfileFileId, result.ProfileImageFileId);
 
                 Assert.AreEqual(BlogId, result.Blog.BlogId);
                 Assert.AreEqual(CreatorId, result.Blog.CreatorId);
@@ -131,7 +136,7 @@
         private async Task CreateDataAsync(TestDatabaseContext testDatabase)
         {
             await this.CreateUserAsync(testDatabase);
-            await this.CreateFileAsync(testDatabase);
+            await this.CreateHeaderFileAsync(testDatabase);
             await this.CreateBlogAsync(testDatabase);
             await this.CreateChannelsAndCollectionsAsync(testDatabase);
         }
@@ -143,14 +148,32 @@
             user.Id = CreatorId.Value;
             user.UserName = Username.Value;
 
+            var file = FileTests.UniqueEntity(random);
+            file.Id = ProfileFileId.Value;
+            file.UserId = CreatorId.Value;
+
             using (var databaseContext = testDatabase.CreateContext())
             {
                 databaseContext.Users.Add(user);
                 await databaseContext.SaveChangesAsync();
             }
+
+            using (var connection = testDatabase.CreateConnection())
+            {
+                await connection.InsertAsync(file);
+            }
+
+            using (var databaseContext = testDatabase.CreateContext())
+            {
+                file = await databaseContext.Files.FirstAsync(v => v.Id == ProfileFileId.Value);
+                user = await databaseContext.Users.FirstAsync(v => v.Id == CreatorId.Value);
+                user.ProfileImageFile = file;
+                user.ProfileImageFileId = file.Id;
+                await databaseContext.SaveChangesAsync();
+            }
         }
 
-        private async Task CreateFileAsync(TestDatabaseContext testDatabase)
+        private async Task CreateHeaderFileAsync(TestDatabaseContext testDatabase)
         {
             var random = new Random();
             var file = FileTests.UniqueEntity(random);

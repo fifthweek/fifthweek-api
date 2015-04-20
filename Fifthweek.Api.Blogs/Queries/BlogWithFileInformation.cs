@@ -13,8 +13,6 @@
     {
         public BlogId BlogId { get; private set; }
 
-        public UserId CreatorId { get; private set; }
-
         public BlogName BlogName { get; private set; }
 
         public Tagline Tagline { get; private set; }

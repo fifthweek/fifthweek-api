@@ -37,9 +37,18 @@
             Blog.Fields.CreationDate,
             Blog.Fields.Id);
 
-        private static readonly string Query = BlogIdQuery + 
+        private static readonly string UserQuery = string.Format(
+             @"SELECT TOP 1 {1}, {2} FROM {0} WHERE {3}=@Username;",
+             FifthweekUser.Table,
+             FifthweekUser.Fields.Id,
+             FifthweekUser.Fields.ProfileImageFileId,
+             FifthweekUser.Fields.UserName);
+
+        private static readonly string Query =
+            BlogIdQuery + 
             GetBlogChannelsAndCollectionsDbStatement.BlogQuery + 
-            GetBlogChannelsAndCollectionsDbStatement.ChannelsQuery;
+            GetBlogChannelsAndCollectionsDbStatement.ChannelsQuery +
+            UserQuery;
 
         private readonly IFifthweekDbConnectionFactory connectionFactory;
 
@@ -49,17 +58,26 @@
 
             List<Blog> blogs;
             List<Channel> channels;
+            List<FifthweekUser> users;
             using (var connection = this.connectionFactory.CreateConnection())
             {
                 using (var multi = await connection.QueryMultipleAsync(Query, new { Username = username.Value }))
                 {
                     blogs = multi.Read<Blog>().ToList();
                     channels = multi.Read<Channel>().ToList();
+                    users = multi.Read<FifthweekUser>().ToList();
                 }
             }
 
-            var blog = blogs.SingleOrDefault();
+            var user = users.SingleOrDefault();
 
+            if (user == null)
+            {
+                throw new InvalidOperationException("The user " + username + " could not be found.");
+            }
+
+            var blog = blogs.SingleOrDefault();
+            
             if (blog == null)
             {
                 throw new InvalidOperationException("The blog couldn't be found for user " + username + ".");
@@ -74,12 +92,21 @@
                 v.Id == v.BlogId,
                 v.IsVisibleToNonSubscribers)).ToList();
 
-            return new GetLandingPageDbResult(blogResult, channelsResult);
+            return new GetLandingPageDbResult(
+                new UserId(user.Id), 
+                user.ProfileImageFileId.HasValue ? new FileId(user.ProfileImageFileId.Value) : null, 
+                blogResult, 
+                channelsResult);
         }
 
         [AutoConstructor, AutoEqualityMembers]
         public partial class GetLandingPageDbResult
         {
+            public UserId UserId { get; private set; }
+
+            [Optional]
+            public FileId ProfileImageFileId { get; private set; }
+
             public GetBlogChannelsAndCollectionsDbStatement.BlogDbResult Blog { get; private set; }
 
             public IReadOnlyList<ChannelResult> Channels { get; private set; }

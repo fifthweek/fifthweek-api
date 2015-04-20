@@ -96,9 +96,10 @@
         public static GetLandingPageResult NewGetLandingPageResult()
         {
             return new GetLandingPageResult(
+                UserId,
+                null,
                 new BlogWithFileInformation(
                     BlogId,
-                    UserId,
                     new BlogName("name"),
                     new Tagline("tagline"),
                     new Introduction("intro"),
