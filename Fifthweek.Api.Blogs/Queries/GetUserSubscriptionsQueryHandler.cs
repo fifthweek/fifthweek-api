@@ -1,9 +1,11 @@
 ﻿namespace Fifthweek.Api.Blogs.Queries
 {
+    using System.Collections.Generic;
     using System.Threading.Tasks;
 
     using Fifthweek.Api.Blogs.Shared;
     using Fifthweek.Api.Core;
+    using Fifthweek.Api.FileManagement.Shared;
     using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.CodeGeneration;
     using Fifthweek.Shared;
@@ -13,15 +15,39 @@
     {
         private readonly IRequesterSecurity requesterSecurity;
         private readonly IGetUserSubscriptionsDbStatement getUserSubscriptions;
+        private readonly IFileInformationAggregator fileInformationAggregator;
         
         public async Task<GetUserSubscriptionsResult> HandleAsync(GetUserSubscriptionsQuery query)
         {
             query.AssertNotNull("query");
 
             var authenticatedUserId = await this.requesterSecurity.AuthenticateAsync(query.Requester);
-            var result = await this.getUserSubscriptions.ExecuteAsync(authenticatedUserId);
+            var subscriptions = await this.getUserSubscriptions.ExecuteAsync(authenticatedUserId);
 
-            return result;
+            var results = new List<BlogSubscriptionStatus>();
+            foreach (var item in subscriptions)
+            {
+                FileInformation profileImage = null;
+
+                if (item.ProfileImageFileId != null)
+                {
+                    profileImage = await this.fileInformationAggregator.GetFileInformationAsync(
+                    item.CreatorId,
+                    item.ProfileImageFileId,
+                    FilePurposes.ProfileImage);
+                }
+
+                results.Add(new BlogSubscriptionStatus(
+                    item.BlogId,
+                    item.Name,
+                    item.CreatorId,
+                    item.CreatorUsername,
+                    profileImage,
+                    item.FreeAccess,
+                    item.Channels));
+            }
+
+            return new GetUserSubscriptionsResult(results);
         }
     }
 }

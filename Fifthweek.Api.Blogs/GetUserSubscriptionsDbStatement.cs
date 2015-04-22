@@ -10,6 +10,8 @@
     using Fifthweek.Api.Blogs.Queries;
     using Fifthweek.Api.Blogs.Shared;
     using Fifthweek.Api.Channels.Shared;
+    using Fifthweek.Api.Collections.Shared;
+    using Fifthweek.Api.FileManagement.Shared;
     using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.Api.Persistence;
     using Fifthweek.Api.Persistence.Identity;
@@ -25,6 +27,7 @@
                 blog.{11} AS BlogName, 
                 creator.{9} AS CreatorId, 
                 creator.{12} AS CreatorUsername,
+                creator.{18} AS ProfileImageFileId,
                 channel.{6} AS ChannelId,
                 channel.{13} AS ChannelName,
                 channel.{14} AS CurrentPrice,
@@ -54,14 +57,16 @@
             Channel.Fields.PriceInUsCentsPerWeek,
             Channel.Fields.PriceLastSetDate,
             ChannelSubscription.Fields.AcceptedPriceInUsCentsPerWeek,
-            ChannelSubscription.Fields.SubscriptionStartDate);
+            ChannelSubscription.Fields.SubscriptionStartDate,
+            FifthweekUser.Fields.ProfileImageFileId);
 
         private static readonly string FreeAccessQuery = string.Format(
             @"SELECT 
                 blog.{3} AS BlogId, 
                 blog.{9} AS BlogName, 
                 creator.{6} AS CreatorId, 
-                creator.{10} AS CreatorUsername
+                creator.{10} AS CreatorUsername,
+                creator.{11} AS ProfileImageFileId
                 FROM {0} blog
                 INNER JOIN {1} freeaccess ON blog.{3} = freeaccess.{4}
                 INNER JOIN {2} creator ON blog.{5} = creator.{6}
@@ -77,37 +82,65 @@
             FreeAccessUser.Fields.Email,
             FifthweekUser.Fields.Email,
             Blog.Fields.Name,
-            FifthweekUser.Fields.UserName);
+            FifthweekUser.Fields.UserName,
+            FifthweekUser.Fields.ProfileImageFileId);
 
-        private static readonly string Sql = SubscriptionsQuery + ";" + FreeAccessQuery;
+
+        private static readonly string CollectionsQuery = string.Format(
+            @"SELECT collection.{0}, collection.{1}, channel.{2} AS ChannelId
+                FROM {4} collection 
+                INNER JOIN {5} channel ON collection.{6} = channel.{7} 
+                INNER JOIN {8} subscription ON channel.{7} = subscription.{9}
+                INNER JOIN {11} subscriber ON subscription.{10} = subscriber.{12}
+                WHERE subscriber.{12} = @UserId",
+            Collection.Fields.Id,
+            Collection.Fields.Name,
+            Channel.Fields.Id,
+            Collection.Fields.ChannelId,
+            Collection.Table,
+            Channel.Table,
+            Collection.Fields.ChannelId,
+            Channel.Fields.Id,
+            ChannelSubscription.Table,
+            ChannelSubscription.Fields.ChannelId,
+            ChannelSubscription.Fields.UserId,
+            FifthweekUser.Table,
+            FifthweekUser.Fields.Id);
+
+        private static readonly string Sql = SubscriptionsQuery + ";" + FreeAccessQuery + ";" + CollectionsQuery;
 
         private readonly IFifthweekDbConnectionFactory connectionFactory;
 
-        public async Task<GetUserSubscriptionsResult> ExecuteAsync(UserId userId)
+        public async Task<IReadOnlyList<BlogSubscriptionDbResult>> ExecuteAsync(UserId userId)
         {
             userId.AssertNotNull("userId");
 
             List<DbResult> subscriptionResults;
             List<DbResult> freeAccessResults;
+            List<PartialCollection> collectionResults;
             using (var connection = this.connectionFactory.CreateConnection())
             {
                 using (var multi = await connection.QueryMultipleAsync(Sql, new { UserId = userId.Value }))
                 {
                     subscriptionResults = multi.Read<DbResult>().ToList();
                     freeAccessResults = multi.Read<DbResult>().ToList();
+                    collectionResults = multi.Read<PartialCollection>().ToList();
                 } 
             }
 
-            var blogs = new Dictionary<BlogId, BlogSubscriptionStatus>();
+            var groupdedCollections = collectionResults.ToLookup(v => v.ChannelId);
+
+            var blogs = new Dictionary<BlogId, BlogSubscriptionDbResult>();
 
             foreach (var item in freeAccessResults)
             {
                 var blogId = new BlogId(item.BlogId);
-                var blog = new BlogSubscriptionStatus(
+                var blog = new BlogSubscriptionDbResult(
                     blogId,
                     item.BlogName,
                     new UserId(item.CreatorId),
                     new Username(item.CreatorUsername),
+                    item.ProfileImageFileId.HasValue ? new FileId(item.ProfileImageFileId.Value) : null,
                     true,
                     new List<ChannelSubscriptionStatus>());
       
@@ -120,32 +153,36 @@
                 item.SubscriptionStartDate = DateTime.SpecifyKind(item.SubscriptionStartDate, DateTimeKind.Utc);
 
                 var blogId = new BlogId(item.BlogId);
-                BlogSubscriptionStatus blog;
+                BlogSubscriptionDbResult blog;
                 if (!blogs.TryGetValue(blogId, out blog))
                 {
-                    blog = new BlogSubscriptionStatus(
+                    blog = new BlogSubscriptionDbResult(
                         blogId,
                         item.BlogName,
                         new UserId(item.CreatorId),
                         new Username(item.CreatorUsername),
+                        item.ProfileImageFileId.HasValue ? new FileId(item.ProfileImageFileId.Value) : null,
                         false,
                         new List<ChannelSubscriptionStatus>());
 
                     blogs.Add(blogId, blog);
                 }
 
+                var collections = groupdedCollections[item.ChannelId].Select(v => new CollectionSubscriptionStatus(new CollectionId(v.Id), v.Name)).ToList();
                 var channel = new ChannelSubscriptionStatus(
                     new ChannelId(item.ChannelId),
                     item.ChannelName,
                     item.AcceptedPrice,
                     item.CurrentPrice,
+                    item.ChannelId == item.BlogId,
                     item.PriceLastSetDate,
-                    item.SubscriptionStartDate);
+                    item.SubscriptionStartDate,
+                    collections);
 
                 ((List<ChannelSubscriptionStatus>)blog.Channels).Add(channel);
             }
 
-            return new GetUserSubscriptionsResult(blogs.Values.ToList());
+            return blogs.Values.ToList();
         }
 
         private class DbResult
@@ -158,6 +195,8 @@
 
             public string CreatorUsername { get; set; }
 
+            public Guid? ProfileImageFileId { get; set; }
+
             public Guid ChannelId { get; set; }
 
             public string ChannelName { get; set; }
@@ -169,6 +208,15 @@
             public DateTime PriceLastSetDate { get; set; }
 
             public DateTime SubscriptionStartDate { get; set; }
+        }
+
+        public class PartialCollection
+        {
+            public Guid Id { get; set; }
+
+            public Guid ChannelId { get; set; }
+
+            public string Name { get; set; }
         }
     }
 }

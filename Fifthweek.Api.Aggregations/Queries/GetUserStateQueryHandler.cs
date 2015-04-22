@@ -43,13 +43,13 @@
                 await this.requesterSecurity.AuthenticateAsAsync(query.Requester, query.RequestedUserId);
 
                 var blogSubscriptionsTask = this.getBlogSubscriptions.HandleAsync(new GetUserSubscriptionsQuery(query.Requester));
+                var accountSettingsTask = this.getAccountSettings.HandleAsync(new GetAccountSettingsQuery(query.Requester, query.RequestedUserId));
 
                 bool isCreator = await this.requesterSecurity.IsInRoleAsync(query.Requester, FifthweekRole.Creator);
                
                 if (isCreator)
                 {
                     var creatorStatusTask = this.getCreatorStatus.HandleAsync(new GetCreatorStatusQuery(query.Requester, query.RequestedUserId));
-                    var accountSettingsTask = this.getAccountSettings.HandleAsync(new GetAccountSettingsQuery(query.Requester, query.RequestedUserId));
 
                     creatorStatus = await creatorStatusTask;
 

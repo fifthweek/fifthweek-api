@@ -1,14 +1,15 @@
-namespace Fifthweek.Api.Blogs.Queries
+namespace Fifthweek.Api.Blogs
 {
     using System.Collections.Generic;
 
+    using Fifthweek.Api.Blogs.Queries;
     using Fifthweek.Api.Blogs.Shared;
     using Fifthweek.Api.FileManagement.Shared;
     using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.CodeGeneration;
 
     [AutoConstructor, AutoEqualityMembers]
-    public partial class BlogSubscriptionStatus
+    public partial class BlogSubscriptionDbResult
     {
         public BlogId BlogId { get; private set; }
 
@@ -19,7 +20,7 @@ namespace Fifthweek.Api.Blogs.Queries
         public Username CreatorUsername { get; private set; }
 
         [Optional]
-        public FileInformation ProfileImage { get; private set; }
+        public FileId ProfileImageFileId { get; private set; }
 
         public bool FreeAccess { get; private set; }
 

@@ -1,5 +1,6 @@
 ﻿namespace Fifthweek.Api.Blogs
 {
+    using System.Collections.Generic;
     using System.Threading.Tasks;
 
     using Fifthweek.Api.Blogs.Queries;
@@ -7,6 +8,6 @@
 
     public interface IGetUserSubscriptionsDbStatement
     {
-        Task<GetUserSubscriptionsResult> ExecuteAsync(UserId userId);
+        Task<IReadOnlyList<BlogSubscriptionDbResult>> ExecuteAsync(UserId userId);
     }
 }

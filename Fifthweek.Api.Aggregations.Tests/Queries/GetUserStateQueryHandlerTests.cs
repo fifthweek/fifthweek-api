@@ -118,9 +118,12 @@
         {
             this.requesterSecurity.SetupFor(Requester);
 
+            var accountSettings = new GetAccountSettingsResult(new Username("username"), new Email("a@b.com"), null);
+
             this.getUserAccessSignatures.Setup(v => v.HandleAsync(new GetUserAccessSignaturesQuery(Requester, UserId)))
                 .ReturnsAsync(UserAccessSignatures);
-
+            this.getAccountSettings.Setup(v => v.HandleAsync(new GetAccountSettingsQuery(Requester, UserId)))
+                .ReturnsAsync(accountSettings);
             this.getBlogSubscriptions.Setup(v => v.HandleAsync(new GetUserSubscriptionsQuery(Requester)))
                 .ReturnsAsync(UserSubscriptions);
 
