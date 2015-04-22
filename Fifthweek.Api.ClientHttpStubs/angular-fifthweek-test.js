@@ -485,6 +485,21 @@ describe('posts stub', function() {
     expect(result).toBe(responseData);
   });
 
+  it('should get newsfeed', function() {
+    var filter = 'value0';
+
+    var responseData = 'response data';
+    $httpBackend.expectGET(fifthweekConstants.apiBaseUri + 'posts/newsfeed', filter).respond(200, responseData);
+
+    var result = null;
+    target.getNewsfeed(filter).then(function(response) { result = response.data; });
+
+    $httpBackend.flush();
+    $rootScope.$apply();
+
+    expect(result).toBe(responseData);
+  });
+
   it('should delete post', function() {
     var postId = 'value0';
 
