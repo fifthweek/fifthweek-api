@@ -20,7 +20,6 @@
             var queryResult = await this.getBlogChannelsAndCollections.ExecuteAsync(query.BlogId);
 
             var blog = queryResult.Blog;
-            var channelsAndCollections = queryResult.ChannelsAndCollections;
 
             FileInformation headerFileInformation = null;
 
@@ -35,14 +34,16 @@
             var blogWithFileInformation = new BlogWithFileInformation(
                 blog.BlogId,
                 blog.BlogName,
+                blog.BlogName,
                 blog.Tagline,
                 blog.Introduction,
                 blog.CreationDate,
                 headerFileInformation,
                 blog.Video,
-                blog.Description);
+                blog.Description,
+                queryResult.Channels);
 
-            return new GetBlogChannelsAndCollectionsResult(blogWithFileInformation, channelsAndCollections);
+            return new GetBlogChannelsAndCollectionsResult(blogWithFileInformation);
         }
     }
 }

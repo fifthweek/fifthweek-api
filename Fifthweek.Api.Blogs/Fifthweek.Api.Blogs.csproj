@@ -121,6 +121,7 @@
     <Compile Include="Queries\ChannelResult.cs" />
     <Compile Include="Queries\ChannelsAndCollections.cs" />
     <Compile Include="Queries\ChannelSubscriptionStatus.cs" />
+    <Compile Include="Queries\CollectionResult.cs" />
     <Compile Include="Queries\GetBlogChannelsAndCollectionsResult.cs" />
     <Compile Include="Queries\GetLandingPageQuery.cs" />
     <Compile Include="Queries\GetLandingPageQueryHandler.cs" />

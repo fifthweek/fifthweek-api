@@ -11,7 +11,7 @@ namespace Fifthweek.Api.Blogs.Queries
     {
         public BlogId BlogId { get; private set; }
 
-        public string BlogName { get; private set; }
+        public string Name { get; private set; }
 
         public UserId CreatorId { get; private set; }
 

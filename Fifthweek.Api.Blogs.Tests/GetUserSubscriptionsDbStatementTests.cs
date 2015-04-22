@@ -115,9 +115,9 @@
                 Assert.AreEqual(1, blog2.Channels.Count);
                 Assert.AreEqual(2, blog3.Channels.Count);
 
-                Assert.IsTrue(blog1.BlogName.Length > 0);
-                Assert.IsTrue(blog2.BlogName.Length > 0);
-                Assert.IsTrue(blog3.BlogName.Length > 0);
+                Assert.IsTrue(blog1.Name.Length > 0);
+                Assert.IsTrue(blog2.Name.Length > 0);
+                Assert.IsTrue(blog3.Name.Length > 0);
 
                 Assert.AreEqual(Creator1Id, blog1.CreatorId);
                 Assert.AreEqual(Creator2Id, blog2.CreatorId);
@@ -131,9 +131,9 @@
                 var blog3Channel1 = blog3.Channels.First(v => v.ChannelId.Equals(Blog3ChannelIds[0]));
                 var blog3Channel3 = blog3.Channels.First(v => v.ChannelId.Equals(Blog3ChannelIds[2]));
 
-                Assert.IsTrue(blog2Channel1.ChannelName.Length > 0);
-                Assert.IsTrue(blog3Channel1.ChannelName.Length > 0);
-                Assert.IsTrue(blog3Channel3.ChannelName.Length > 0);
+                Assert.IsTrue(blog2Channel1.Name.Length > 0);
+                Assert.IsTrue(blog3Channel1.Name.Length > 0);
+                Assert.IsTrue(blog3Channel3.Name.Length > 0);
 
                 Assert.AreEqual(Blog2Channel1CurrentPrice, blog2Channel1.CurrentPrice);
                 Assert.AreEqual(Blog2Channel1AcceptedPrice, blog2Channel1.AcceptedPrice);

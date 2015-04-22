@@ -146,8 +146,7 @@
             var creatorStatus = new CreatorStatus(new BlogId(Guid.NewGuid()), true);
             var accountSettings = new GetAccountSettingsResult(new Username("username"), new Email("a@b.com"), null);
             var blogChannelsAndCollections = new GetBlogChannelsAndCollectionsResult(
-                new BlogWithFileInformation(new BlogId(Guid.NewGuid()), new BlogName("My Subscription"), new Tagline("Tagline is great"), new Introduction("Once upon a time there was an intro."), DateTime.UtcNow, null, null, null),
-                new ChannelsAndCollections(new List<ChannelsAndCollections.Channel>()));
+                new BlogWithFileInformation(new BlogId(Guid.NewGuid()), new BlogName("My Subscription"), new BlogName("My Subscription"), new Tagline("Tagline is great"), new Introduction("Once upon a time there was an intro."), DateTime.UtcNow, null, null, null, new List<ChannelResult>()));
 
             this.getUserAccessSignatures.Setup(v => v.HandleAsync(new GetUserAccessSignaturesQuery(Requester, UserId)))
                 .ReturnsAsync(UserAccessSignatures);
@@ -168,7 +167,6 @@
             Assert.AreEqual(creatorStatus, result.CreatorStatus);
             Assert.AreEqual(accountSettings, result.AccountSettings);
             Assert.AreEqual(blogChannelsAndCollections.Blog, result.Blog);
-            Assert.AreEqual(blogChannelsAndCollections.ChannelsAndCollections, result.CreatedChannelsAndCollections);
         }
 
         [TestMethod]

@@ -116,13 +116,14 @@
                 new BlogWithFileInformation(
                     BlogId,
                     new BlogName("name"),
+                    new BlogName("name"),
                     new Tagline("tagline"),
                     new Introduction("intro"),
                     Now,
                     null,
                     null,
-                    null),
-                new List<ChannelResult>());
+                    null,
+                    new List<ChannelResult>()));
         }
 
         public static NewBlogData NewCreateBlogData()

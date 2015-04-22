@@ -1,5 +1,7 @@
 ﻿namespace Fifthweek.Api.Blogs.Queries
 {
+    using System.Collections.Generic;
+
     using Fifthweek.Api.Channels.Shared;
     using Fifthweek.CodeGeneration;
 
@@ -17,5 +19,7 @@
         public bool IsDefault { get; private set; }
 
         public bool IsVisibleToNonSubscribers { get; private set; }
+
+        public IReadOnlyList<CollectionResult> Collections { get; private set; }
     }
 }

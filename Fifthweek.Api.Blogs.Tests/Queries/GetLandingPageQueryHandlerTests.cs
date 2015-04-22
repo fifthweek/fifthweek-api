@@ -88,7 +88,7 @@
             Assert.AreEqual(CreatorId, result.UserId);
             Assert.AreEqual(null, result.ProfileImage);
             Assert.AreEqual(BlogId, result.Blog.BlogId);
-            Assert.AreEqual(Name, result.Blog.BlogName);
+            Assert.AreEqual(Name, result.Blog.Name);
             Assert.AreEqual(Tagline, result.Blog.Tagline);
             Assert.AreEqual(Introduction, result.Blog.Introduction);
             Assert.AreEqual(CreationDate, result.Blog.CreationDate);
@@ -96,7 +96,7 @@
             Assert.AreEqual(null, result.Blog.Video);
             Assert.AreEqual(null, result.Blog.Description);
 
-            Assert.AreEqual(databaseResult.Channels, result.Channels);
+            Assert.AreEqual(databaseResult.Channels, result.Blog.Channels);
         }
 
         [TestMethod]
@@ -135,7 +135,7 @@
             Assert.AreEqual(CreatorId, result.UserId);
             Assert.AreEqual(ProfileImageFileId, result.ProfileImage.FileId);
             Assert.AreEqual(BlogId, result.Blog.BlogId);
-            Assert.AreEqual(Name, result.Blog.BlogName);
+            Assert.AreEqual(Name, result.Blog.Name);
             Assert.AreEqual(Tagline, result.Blog.Tagline);
             Assert.AreEqual(Introduction, result.Blog.Introduction);
             Assert.AreEqual(CreationDate, result.Blog.CreationDate);
@@ -143,7 +143,7 @@
             Assert.AreEqual(ExternalVideoUrl, result.Blog.Video);
             Assert.AreEqual(Description, result.Blog.Description);
 
-            Assert.AreEqual(databaseResult.Channels, result.Channels);
+            Assert.AreEqual(databaseResult.Channels, result.Blog.Channels);
         }
     }
 }

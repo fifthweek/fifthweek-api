@@ -96,7 +96,8 @@
                 v.Description,
                 v.PriceInUsCentsPerWeek,
                 v.Id == v.BlogId,
-                v.IsVisibleToNonSubscribers)).ToList();
+                v.IsVisibleToNonSubscribers,
+                new List<CollectionResult>())).ToList();
 
             return new GetLandingPageDbResult(
                 new UserId(user.Id), 

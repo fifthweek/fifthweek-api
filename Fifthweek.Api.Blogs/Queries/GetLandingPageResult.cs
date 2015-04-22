@@ -15,7 +15,5 @@
         public FileInformation ProfileImage { get; private set; }
 
         public BlogWithFileInformation Blog { get; private set; }
-
-        public IReadOnlyList<ChannelResult> Channels { get; private set; }
     }
 }

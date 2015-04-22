@@ -10,7 +10,7 @@
     {
         public ChannelId ChannelId { get; private set; }
 
-        public string ChannelName { get; private set; }
+        public string Name { get; private set; }
 
         public int AcceptedPrice { get; private set; }
 

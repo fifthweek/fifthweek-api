@@ -48,18 +48,19 @@
             var blogWithFileInformation = new BlogWithFileInformation(
                 blog.BlogId,
                 blog.BlogName,
+                blog.BlogName,
                 blog.Tagline,
                 blog.Introduction,
                 blog.CreationDate,
                 headerFileInformation,
                 blog.Video,
-                blog.Description);
+                blog.Description,
+                channels);
 
             return new GetLandingPageResult(
                 queryResult.UserId, 
                 profileImageFileInformation, 
-                blogWithFileInformation, 
-                channels);
+                blogWithFileInformation);
         }
     }
 }

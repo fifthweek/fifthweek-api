@@ -64,14 +64,14 @@
                         null,
                         null,
                         null),
-                    new ChannelsAndCollections(new List<ChannelsAndCollections.Channel>()));
+                    new List<ChannelResult>());
             this.getBlogChannelsAndCollections.Setup(v => v.ExecuteAsync(BlogId))
                 .ReturnsAsync(databaseResult);
 
             var result = await this.target.HandleAsync(new GetBlogChannelsAndCollectionsQuery(BlogId));
 
             Assert.AreEqual(BlogId, result.Blog.BlogId);
-            Assert.AreEqual(Name, result.Blog.BlogName);
+            Assert.AreEqual(Name, result.Blog.Name);
             Assert.AreEqual(Tagline, result.Blog.Tagline);
             Assert.AreEqual(Introduction, result.Blog.Introduction);
             Assert.AreEqual(CreationDate, result.Blog.CreationDate);
@@ -79,7 +79,7 @@
             Assert.AreEqual(null, result.Blog.Video);
             Assert.AreEqual(null, result.Blog.Description);
 
-            Assert.AreEqual(databaseResult.ChannelsAndCollections, result.ChannelsAndCollections);
+            Assert.AreEqual(databaseResult.Channels, result.Blog.Channels);
         }
 
         [TestMethod]
@@ -97,7 +97,7 @@
                         HeaderFileId,
                         ExternalVideoUrl,
                         Description),
-                    new ChannelsAndCollections(new List<ChannelsAndCollections.Channel>()));
+                    new List<ChannelResult>());
 
             this.getBlogChannelsAndCollections.Setup(v => v.ExecuteAsync(BlogId))
                 .ReturnsAsync(databaseResult);
@@ -110,7 +110,7 @@
             var result = await this.target.HandleAsync(new GetBlogChannelsAndCollectionsQuery(BlogId));
 
             Assert.AreEqual(BlogId, result.Blog.BlogId);
-            Assert.AreEqual(Name, result.Blog.BlogName);
+            Assert.AreEqual(Name, result.Blog.Name);
             Assert.AreEqual(Tagline, result.Blog.Tagline);
             Assert.AreEqual(Introduction, result.Blog.Introduction);
             Assert.AreEqual(CreationDate, result.Blog.CreationDate);
@@ -118,7 +118,7 @@
             Assert.AreEqual(ExternalVideoUrl, result.Blog.Video);
             Assert.AreEqual(Description, result.Blog.Description);
 
-            Assert.AreEqual(databaseResult.ChannelsAndCollections, result.ChannelsAndCollections);
+            Assert.AreEqual(databaseResult.Channels, result.Blog.Channels);
         }
     }
 }

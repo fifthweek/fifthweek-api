@@ -78,13 +78,13 @@
                 Assert.AreEqual(Tagline, result.Blog.Tagline.Value);
 
                 Assert.IsNotNull(result);
-                Assert.AreEqual(3, result.ChannelsAndCollections.Channels.Count);
+                Assert.AreEqual(3, result.Channels.Count);
 
-                var channel1 = result.ChannelsAndCollections.Channels.Single(v => v.ChannelId.Equals(ChannelId1));
-                var channel2 = result.ChannelsAndCollections.Channels.Single(v => v.ChannelId.Equals(ChannelId2));
-                var channel3 = result.ChannelsAndCollections.Channels.Single(v => v.ChannelId.Equals(ChannelId3));
+                var channel1 = result.Channels.Single(v => v.ChannelId.Equals(ChannelId1));
+                var channel2 = result.Channels.Single(v => v.ChannelId.Equals(ChannelId2));
+                var channel3 = result.Channels.Single(v => v.ChannelId.Equals(ChannelId3));
 
-                foreach (var channel in result.ChannelsAndCollections.Channels)
+                foreach (var channel in result.Channels)
                 {
                     Assert.AreEqual(Description, channel.Description);
                     Assert.AreEqual(IsVisibleToNonSubscribers, channel.IsVisibleToNonSubscribers);

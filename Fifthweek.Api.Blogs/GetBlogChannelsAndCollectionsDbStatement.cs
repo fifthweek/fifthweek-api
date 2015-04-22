@@ -92,9 +92,9 @@
 
             var blogResult = GetBlogDbResult(blog);
 
-            var channelsAndCollectionsResult = new ChannelsAndCollections(
+            var channelsAndCollectionsResult = 
                 (from c in channels
-                 select new ChannelsAndCollections.Channel(
+                 select new ChannelResult(
                     new ChannelId(c.Id),
                     c.Name,
                     c.Description,
@@ -103,11 +103,11 @@
                     c.IsVisibleToNonSubscribers,
                     (from col in collections
                      where col.ChannelId == c.Id
-                     select new ChannelsAndCollections.Collection(
+                     select new CollectionResult(
                          new CollectionId(col.Id),
                          col.Name,
                          releaseTimes.Where(wrt => wrt.CollectionId == col.Id).Select(wrt => new HourOfWeek(wrt.HourOfWeek)).ToArray()))
-                        .ToArray())).ToArray());
+                        .ToArray())).ToList();
 
             return new GetBlogChannelsAndCollectionsDbResult(blogResult, channelsAndCollectionsResult);
         }
@@ -142,7 +142,7 @@
         {
             public BlogDbResult Blog { get; private set; }
 
-            public ChannelsAndCollections ChannelsAndCollections { get; private set; }
+            public IReadOnlyList<ChannelResult> Channels { get; private set; }
         }
 
         [AutoConstructor]

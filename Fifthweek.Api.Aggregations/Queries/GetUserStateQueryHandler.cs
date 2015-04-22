@@ -64,7 +64,9 @@
                     if (blogChannelsAndCollections != null)
                     {
                         blog = blogChannelsAndCollections.Blog;
-                        createdChannelsAndCollections = blogChannelsAndCollections.ChannelsAndCollections;
+                        
+                        // Temporary for backwards compatibility with live site.
+                        createdChannelsAndCollections = new ChannelsAndCollections(blog.Channels);
                     }
                 }
 
