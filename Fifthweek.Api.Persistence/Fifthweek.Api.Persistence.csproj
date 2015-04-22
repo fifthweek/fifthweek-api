@@ -268,6 +268,10 @@
     <Compile Include="Migrations\201504161643556_AddIndexToEmailColumnOfFreeAccessUser.Designer.cs">
       <DependentUpon>201504161643556_AddIndexToEmailColumnOfFreeAccessUser.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201504221340483_ReplacePostIndexOnLiveDateWithIndexOnLiveDateAndCreationDate.cs" />
+    <Compile Include="Migrations\201504221340483_ReplacePostIndexOnLiveDateWithIndexOnLiveDateAndCreationDate.Designer.cs">
+      <DependentUpon>201504221340483_ReplacePostIndexOnLiveDateWithIndexOnLiveDateAndCreationDate.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Post.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -416,6 +420,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201504161643556_AddIndexToEmailColumnOfFreeAccessUser.resx">
       <DependentUpon>201504161643556_AddIndexToEmailColumnOfFreeAccessUser.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201504221340483_ReplacePostIndexOnLiveDateWithIndexOnLiveDateAndCreationDate.resx">
+      <DependentUpon>201504221340483_ReplacePostIndexOnLiveDateWithIndexOnLiveDateAndCreationDate.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>

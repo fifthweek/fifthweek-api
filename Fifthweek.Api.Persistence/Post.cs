@@ -55,10 +55,12 @@
         [Required]
         public bool ScheduledByQueue { get; set; }
 
-        [Required, Index]
+        [Required]
+        [Index("IX_LiveDateAndCreationDate", 1)]
         public DateTime LiveDate { get; set; }
 
         [Required]
+        [Index("IX_LiveDateAndCreationDate", 2)]
         public DateTime CreationDate { get; set; }
     }
 }
