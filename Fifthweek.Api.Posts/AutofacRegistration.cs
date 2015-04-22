@@ -10,7 +10,7 @@
     {
         public void Register(ContainerBuilder builder)
         {
-            builder.RegisterType<GetCreatorNewsfeedDbStatement>().As<IGetCreatorNewsfeedDbStatement>();
+            builder.RegisterType<GetNewsfeedDbStatement>().As<IGetNewsfeedDbStatement>();
             builder.RegisterType<GetCreatorBacklogDbStatement>().As<IGetCreatorBacklogDbStatement>();
             builder.RegisterType<DeletePostDbStatement>().As<IDeletePostDbStatement>();
             builder.RegisterType<PostNoteDbStatement>().As<IPostNoteDbStatement>();

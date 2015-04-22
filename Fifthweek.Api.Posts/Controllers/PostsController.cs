@@ -29,6 +29,12 @@
             return this.postController.GetCreatorNewsfeed(creatorId, newsfeedPaginationData);
         }
 
+        [Route("newsfeed")]
+        public Task<GetNewsfeedQueryResult> GetNewsfeed([FromBody]NewsfeedFilter filter)
+        {
+            return this.postController.GetNewsfeed(filter);
+        }
+
         [Route("{postId}")]
         public Task DeletePost(string postId)
         {

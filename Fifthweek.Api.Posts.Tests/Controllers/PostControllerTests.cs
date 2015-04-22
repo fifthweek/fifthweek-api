@@ -27,13 +27,15 @@
         private static readonly PostId PostId = new PostId(Guid.NewGuid());
         private static readonly ChannelId ChannelId = new ChannelId(Guid.NewGuid());
         private static readonly CollectionId CollectionId = new CollectionId(Guid.NewGuid());
+        private static readonly DateTime? Origin = DateTime.UtcNow;
+        private static readonly bool SearchForwards = true;
         private Mock<ICommandHandler<DeletePostCommand>> deletePost;
         private Mock<ICommandHandler<ReorderQueueCommand>> reorderQueue;
         private Mock<ICommandHandler<RescheduleForNowCommand>> rescheduleForNow;
         private Mock<ICommandHandler<RescheduleForTimeCommand>> rescheduleForTime;
         private Mock<ICommandHandler<RescheduleWithQueueCommand>> rescheduleWithQueue;
         private Mock<IQueryHandler<GetCreatorBacklogQuery, IReadOnlyList<GetCreatorBacklogQueryResult>>> getCreatorBacklog;
-        private Mock<IQueryHandler<GetCreatorNewsfeedQuery, IReadOnlyList<GetCreatorNewsfeedQueryResult>>> getCreatorNewsfeed;
+        private Mock<IQueryHandler<GetNewsfeedQuery, GetNewsfeedQueryResult>> getNewsfeed;
         private Mock<IRequesterContext> requesterContext;
         private PostController target;
 
@@ -46,7 +48,7 @@
             this.rescheduleForTime = new Mock<ICommandHandler<RescheduleForTimeCommand>>();
             this.rescheduleWithQueue = new Mock<ICommandHandler<RescheduleWithQueueCommand>>();
             this.getCreatorBacklog = new Mock<IQueryHandler<GetCreatorBacklogQuery, IReadOnlyList<GetCreatorBacklogQueryResult>>>();
-            this.getCreatorNewsfeed = new Mock<IQueryHandler<GetCreatorNewsfeedQuery, IReadOnlyList<GetCreatorNewsfeedQueryResult>>>();
+            this.getNewsfeed = new Mock<IQueryHandler<GetNewsfeedQuery, GetNewsfeedQueryResult>>();
             this.requesterContext = new Mock<IRequesterContext>();
             this.target = new PostController(
                 this.deletePost.Object,
@@ -55,7 +57,7 @@
                 this.rescheduleForTime.Object,
                 this.rescheduleWithQueue.Object,
                 this.getCreatorBacklog.Object,
-                this.getCreatorNewsfeed.Object,
+                this.getNewsfeed.Object,
                 this.requesterContext.Object);
         }
 
@@ -81,18 +83,21 @@
         }
 
         [TestMethod]
-        public async Task WhenGettingCreatorNewsfeed_ItShouldReturnResultFromCreatorBacklogQuery()
+        public async Task WhenGettingCreatorNewsfeed_ItShouldReturnResultFromNewsfeedQuery()
         {
-            var query = new GetCreatorNewsfeedQuery(Requester, UserId, NonNegativeInt.Parse(10), PositiveInt.Parse(5));
+            var query = new GetNewsfeedQuery(Requester, UserId, null, null, null, false, NonNegativeInt.Parse(10), PositiveInt.Parse(5));
             var requestData = new CreatorNewsfeedPaginationData { Count = 5, StartIndex = 10 };
-            var queryResult = new[] { new GetCreatorNewsfeedQueryResult(PostId, ChannelId, CollectionId, new Comment(""), null, null, null, null, DateTime.UtcNow) };
+
+            var now = DateTime.UtcNow;
+            var queryResult = new GetNewsfeedQueryResult(new[] { new GetNewsfeedQueryResult.Post(UserId, PostId, ChannelId, CollectionId, new Comment(string.Empty), null, null, null, null, now) });
+            var expectedResult = new[] { new GetCreatorNewsfeedQueryResult(PostId, ChannelId, CollectionId, new Comment(string.Empty), null, null, null, null, now) };
 
             this.requesterContext.Setup(_ => _.GetRequester()).Returns(Requester);
-            this.getCreatorNewsfeed.Setup(_ => _.HandleAsync(query)).ReturnsAsync(queryResult);
+            this.getNewsfeed.Setup(_ => _.HandleAsync(query)).ReturnsAsync(queryResult);
 
             var result = await this.target.GetCreatorNewsfeed(UserId.Value.EncodeGuid(), requestData);
 
-            Assert.AreEqual(result, queryResult);
+            CollectionAssert.AreEqual(expectedResult, result.ToList());
         }
 
         [TestMethod]
@@ -107,6 +112,38 @@
         public async Task WhenGettingCreatorNewsfeed_WithoutSpecifyingPagination_ItShouldThrowBadRequestException()
         {
             await this.target.GetCreatorNewsfeed(UserId.Value.EncodeGuid(), null);
+        }
+
+        [TestMethod]
+        public async Task WhenGettingNewsfeed_ItShouldReturnResultFromNewsfeedQuery()
+        {
+            var query = new GetNewsfeedQuery(Requester, UserId, new[] { ChannelId }, new[] { CollectionId }, Origin, SearchForwards, NonNegativeInt.Parse(10), PositiveInt.Parse(5));
+            var requestData = new NewsfeedFilter 
+            { 
+                CreatorId = UserId.Value.EncodeGuid(), 
+                ChannelIds = new List<string> { ChannelId.Value.EncodeGuid() },
+                CollectionIds = new List<string> { CollectionId.Value.EncodeGuid() },
+                Origin = Origin,
+                SearchForwards = SearchForwards,
+                Count = 5, 
+                StartIndex = 10 
+            };
+
+            var queryResult = new GetNewsfeedQueryResult(new[] { new GetNewsfeedQueryResult.Post(UserId, PostId, ChannelId, CollectionId, new Comment(string.Empty), null, null, null, null, DateTime.UtcNow) });
+
+            this.requesterContext.Setup(_ => _.GetRequester()).Returns(Requester);
+            this.getNewsfeed.Setup(_ => _.HandleAsync(query)).ReturnsAsync(queryResult);
+
+            var result = await this.target.GetNewsfeed(requestData);
+
+            Assert.AreEqual(queryResult, result);
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(BadRequestException))]
+        public async Task WhenGettingNewsfeed_WithoutSpecifyingFilter_ItShouldThrowBadRequestException()
+        {
+            await this.target.GetNewsfeed(null);
         }
 
         [TestMethod]

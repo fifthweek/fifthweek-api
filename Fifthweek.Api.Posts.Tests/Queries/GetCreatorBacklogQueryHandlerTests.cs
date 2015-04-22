@@ -35,7 +35,7 @@
         private static readonly int FileWidth = 800;
         private static readonly int FileHeight = 600;
         private static readonly string ContentType = "ContentType";
-        private static readonly IReadOnlyList<BacklogPost> SortedBacklogPosts = GetSortedBacklogPosts().ToList();
+        private static readonly IReadOnlyList<BacklogPost> BacklogPosts = GetBacklogPosts().ToList();
 
         private Mock<IRequesterSecurity> requesterSecurity;
         private Mock<IGetCreatorBacklogDbStatement> getCreatorBacklogDbStatement;
@@ -111,15 +111,15 @@
         public async Task ItShouldReturnPosts()
         {
             this.getCreatorBacklogDbStatement.Setup(v => v.ExecuteAsync(UserId, It.IsAny<DateTime>()))
-                .ReturnsAsync(SortedBacklogPosts);
+                .ReturnsAsync(BacklogPosts);
 
             this.fileInformationAggregator.Setup(v => v.GetFileInformationAsync(UserId, It.IsAny<FileId>(), It.IsAny<string>()))
                 .Returns<UserId, FileId, string>((u, f, p) => Task.FromResult(new FileInformation(f, string.Empty)));
 
             var result = await this.target.HandleAsync(new GetCreatorBacklogQuery(Requester, UserId));
 
-            Assert.AreEqual(SortedBacklogPosts.Count, result.Count);
-            foreach (var item in result.Zip(SortedBacklogPosts, (a, b) => new { Output = a, Input = b } ))
+            Assert.AreEqual(BacklogPosts.Count, result.Count);
+            foreach (var item in result.Zip(BacklogPosts, (a, b) => new { Output = a, Input = b } ))
             {
                 if (item.Input.FileId != null)
                 {
@@ -148,7 +148,7 @@
             }
         }
 
-        private static IEnumerable<BacklogPost> GetSortedBacklogPosts()
+        private static IEnumerable<BacklogPost> GetBacklogPosts()
         {
             // 1 in 3 chance of coincidental ordering being correct, yielding a false positive when implementation fails to order explicitly.
             const int Days = 3;
@@ -185,13 +185,14 @@
                                 i % 3 == 2 ? FileExtension : null,
                                 i % 3 == 2 ? FileSize : (long?)null,
                                 i % 3 == 2 ? FileWidth : (int?)null,
-                                i % 3 == 2 ? FileHeight : (int?)null));
+                                i % 3 == 2 ? FileHeight : (int?)null,
+                                liveDate));
                         }
                     }
                 }
             }
 
-            return result.OrderBy(_ => _.LiveDate).ThenByDescending(_ => _.ScheduledByQueue);
+            return result;
         }
     }
 }

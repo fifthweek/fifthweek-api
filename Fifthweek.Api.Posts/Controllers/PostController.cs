@@ -6,6 +6,7 @@
     using System.Threading.Tasks;
     using System.Web.Http;
 
+    using Fifthweek.Api.Channels.Shared;
     using Fifthweek.Api.Collections.Shared;
     using Fifthweek.Api.Core;
     using Fifthweek.Api.Identity.Shared.Membership;
@@ -24,7 +25,7 @@
         private readonly ICommandHandler<RescheduleForTimeCommand> rescheduleForTime;
         private readonly ICommandHandler<RescheduleWithQueueCommand> rescheduleWithQueue;
         private readonly IQueryHandler<GetCreatorBacklogQuery, IReadOnlyList<GetCreatorBacklogQueryResult>> getCreatorBacklog;
-        private readonly IQueryHandler<GetCreatorNewsfeedQuery, IReadOnlyList<GetCreatorNewsfeedQueryResult>> getCreatorNewsfeed;
+        private readonly IQueryHandler<GetNewsfeedQuery, GetNewsfeedQueryResult> getNewsfeed;
         private readonly IRequesterContext requesterContext;
 
         public async Task<IEnumerable<GetCreatorBacklogQueryResult>> GetCreatorBacklog(string creatorId)
@@ -45,7 +46,48 @@
             var creatorIdObject = new UserId(creatorId.DecodeGuid());
             var requester = this.requesterContext.GetRequester();
 
-            return await this.getCreatorNewsfeed.HandleAsync(new GetCreatorNewsfeedQuery(requester, creatorIdObject, newsfeedPagination.StartIndex, newsfeedPagination.Count));
+            var result = await this.getNewsfeed.HandleAsync(new GetNewsfeedQuery(
+                requester, creatorIdObject, null, null, null, false, newsfeedPagination.StartIndex, newsfeedPagination.Count));
+
+            return result.Posts.Select(v => new GetCreatorNewsfeedQueryResult(
+                v.PostId,
+                v.ChannelId,
+                v.CollectionId,
+                v.Comment,
+                v.File,
+                v.FileSource,
+                v.Image,
+                v.ImageSource,
+                v.LiveDate)).ToList();
+        }
+
+        public async Task<GetNewsfeedQueryResult> GetNewsfeed(NewsfeedFilter filterData)
+        {
+            filterData.AssertUrlParameterProvided("filter");
+            var filter = filterData.Parse();
+
+            UserId creatorId = null;
+            if (!string.IsNullOrWhiteSpace(filterData.CreatorId))
+            {
+                creatorId = new UserId(filterData.CreatorId.DecodeGuid());
+            }
+
+            IReadOnlyList<ChannelId> channelIds = null;
+            if (filter.ChannelIds != null && filter.ChannelIds.Count > 0)
+            {
+                channelIds = filter.ChannelIds.Select(v => new ChannelId(v.DecodeGuid())).ToList();
+            }
+
+            IReadOnlyList<CollectionId> collectionIds = null;
+            if (filter.CollectionIds != null && filter.CollectionIds.Count > 0)
+            {
+                collectionIds = filter.CollectionIds.Select(v => new CollectionId(v.DecodeGuid())).ToList();
+            }
+
+            var requester = this.requesterContext.GetRequester();
+
+            return await this.getNewsfeed.HandleAsync(new GetNewsfeedQuery(
+                requester, creatorId, channelIds, collectionIds, filter.Origin, filter.SearchForwards, filter.StartIndex, filter.Count));
         }
 
         public Task DeletePost(string postId)

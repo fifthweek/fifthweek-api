@@ -23,5 +23,7 @@
         Task PostToLive(string postId);
 
         Task PutLiveDate(string postId, DateTime newLiveDate);
+
+        Task<GetNewsfeedQueryResult> GetNewsfeed(NewsfeedFilter filterData);
     }
 }

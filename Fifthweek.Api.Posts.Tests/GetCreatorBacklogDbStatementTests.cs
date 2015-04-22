@@ -117,7 +117,7 @@
         }
 
         [TestMethod]
-        public async Task ItShouldOrderPostsByLiveDateDescending_ThenByQueueMechanism()
+        public async Task ItShouldOrderPostsByLiveDateDescending_ThenByCreationDate()
         {
             await this.DatabaseTestAsync(async testDatabase =>
             {
@@ -132,6 +132,7 @@
                     // Required fields. Set to a value that is equal across all elements.
                     _.PostId = new PostId(Guid.Empty);
                     _.ChannelId = new ChannelId(Guid.Empty);
+                    _.ScheduledByQueue = false;
 
                     // Non required fields.
                     _.Comment = null;
@@ -255,7 +256,7 @@
                             backlogPost.Comment == null ? null : backlogPost.Comment.Value,
                             backlogPost.ScheduledByQueue,
                             backlogPost.LiveDate,
-                            Now));
+                            backlogPost.CreationDate));
                     }
                 }
 
@@ -331,6 +332,8 @@
                         var collectionId = collectionIndex == 0 ? null : new CollectionId(Guid.NewGuid());
                         for (var i = 0; i < Posts; i++)
                         {
+                            var creationDate = new SqlDateTime(liveDate.AddMinutes(i)).Value;
+
                             result.Add(
                             new BacklogPost(
                                 new PostId(Guid.NewGuid()),
@@ -348,13 +351,14 @@
                                 i % 3 == 2 ? FileExtension : null,
                                 i % 3 == 2 ? FileSize : (long?)null,
                                 i % 3 == 2 ? FileWidth : (int?)null,
-                                i % 3 == 2 ? FileHeight : (int?)null));
+                                i % 3 == 2 ? FileHeight : (int?)null,
+                                creationDate));
                         }
                     }
                 }
             }
 
-            return result.OrderBy(_ => _.LiveDate).ThenByDescending(_ => _.ScheduledByQueue);
+            return result.OrderBy(_ => _.LiveDate).ThenBy(_ => _.CreationDate);
         }
     }
 }

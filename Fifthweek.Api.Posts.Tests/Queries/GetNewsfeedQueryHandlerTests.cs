@@ -24,10 +24,15 @@
     using Moq;
 
     [TestClass]
-    public class GetCreatorNewsfeedQueryHandlerTests : PersistenceTestsBase
+    public class GetNewsfeedQueryHandlerTests : PersistenceTestsBase
     {
         private static readonly UserId UserId = new UserId(Guid.NewGuid());
+        private static readonly UserId CreatorId = new UserId(Guid.NewGuid());
         private static readonly Requester Requester = Requester.Authenticated(UserId);
+        private static readonly List<ChannelId> ChannelIds = new List<ChannelId> { new ChannelId(Guid.NewGuid()) };
+        private static readonly List<CollectionId> CollectionIds = new List<CollectionId> { new CollectionId(Guid.NewGuid()) };
+        private static readonly DateTime? Origin = DateTime.UtcNow;
+        private static readonly bool SearchForwards = true;
         private static readonly NonNegativeInt StartIndex = NonNegativeInt.Parse(10);
         private static readonly PositiveInt Count = PositiveInt.Parse(5);
         private static readonly Comment Comment = new Comment("Hey guys!");
@@ -38,14 +43,14 @@
         private static readonly int FileWidth = 800;
         private static readonly int FileHeight = 600;
         private static readonly string ContentType = "ContentType";
-        private static readonly IReadOnlyList<NewsfeedPost> SortedNewsfeedPosts = GetSortedNewsfeedPosts().ToList();
+        private static readonly IReadOnlyList<NewsfeedPost> NewsfeedPosts = GetNewsfeedPosts().ToList();
 
         private Mock<IRequesterSecurity> requesterSecurity;
-        private Mock<IGetCreatorNewsfeedDbStatement> getCreatorNewsfeedDbStatement;
+        private Mock<IGetNewsfeedDbStatement> getNewsfeedDbStatement;
         private Mock<IFileInformationAggregator> fileInformationAggregator;
         private Mock<IMimeTypeMap> mimeTypeMap;
 
-        private GetCreatorNewsfeedQueryHandler target;
+        private GetNewsfeedQueryHandler target;
 
         [TestInitialize]
         public void Initialize()
@@ -53,15 +58,15 @@
             DapperTypeHandlerRegistration.Register(FifthweekAssembliesResolver.Assemblies);
 
             this.requesterSecurity = new Mock<IRequesterSecurity>();
-            this.getCreatorNewsfeedDbStatement = new Mock<IGetCreatorNewsfeedDbStatement>(MockBehavior.Strict);
+            this.getNewsfeedDbStatement = new Mock<IGetNewsfeedDbStatement>(MockBehavior.Strict);
             this.fileInformationAggregator = new Mock<IFileInformationAggregator>();
             this.mimeTypeMap = new Mock<IMimeTypeMap>();
 
             this.mimeTypeMap.Setup(v => v.GetMimeType(FileExtension)).Returns(ContentType);
-            
-            this.target = new GetCreatorNewsfeedQueryHandler(
+
+            this.target = new GetNewsfeedQueryHandler(
                 this.requesterSecurity.Object, 
-                this.getCreatorNewsfeedDbStatement.Object,
+                this.getNewsfeedDbStatement.Object,
                 this.fileInformationAggregator.Object,
                 this.mimeTypeMap.Object);
         }
@@ -77,52 +82,35 @@
         [ExpectedException(typeof(UnauthorizedException))]
         public async Task ItShouldRequireAuthenticatedUser()
         {
-            this.requesterSecurity.Setup(_ => _.AuthenticateAsAsync(Requester.Unauthenticated, UserId)).Throws<UnauthorizedException>();
+            this.requesterSecurity.Setup(_ => _.AuthenticateAsync(Requester.Unauthenticated)).Throws<UnauthorizedException>();
 
-            await this.target.HandleAsync(new GetCreatorNewsfeedQuery(Requester.Unauthenticated, UserId, StartIndex, Count));
-        }
-
-        [TestMethod]
-        [ExpectedException(typeof(UnauthorizedException))]
-        public async Task ItShouldRequireAuthenticatedUserToMatchRequestedUser()
-        {
-            var otherUserId = new UserId(Guid.NewGuid());
-
-            this.requesterSecurity.Setup(_ => _.AuthenticateAsAsync(Requester, otherUserId)).Throws<UnauthorizedException>();
-
-            await this.target.HandleAsync(new GetCreatorNewsfeedQuery(Requester, otherUserId, StartIndex, Count));
-        }
-
-        [TestMethod]
-        [ExpectedException(typeof(UnauthorizedException))]
-        public async Task ItShouldRequireUserToBeCreator()
-        {
-            this.requesterSecurity.Setup(_ => _.AssertInRoleAsync(Requester, FifthweekRole.Creator)).Throws<UnauthorizedException>();
-
-            await this.target.HandleAsync(new GetCreatorNewsfeedQuery(Requester, UserId, StartIndex, Count));
+            await this.target.HandleAsync(new GetNewsfeedQuery(Requester.Unauthenticated, CreatorId, ChannelIds, CollectionIds, Origin, SearchForwards, StartIndex, Count));
         }
 
         [TestMethod]
         [ExpectedException(typeof(DivideByZeroException))]
         public async Task ItShouldPropogateExceptionsFromGetCreatorBacklogDbStatement()
         {
-            this.getCreatorNewsfeedDbStatement.Setup(v => v.ExecuteAsync(UserId, It.IsAny<DateTime>(), StartIndex, Count)).ThrowsAsync(new DivideByZeroException());
-            await this.target.HandleAsync(new GetCreatorNewsfeedQuery(Requester, UserId, StartIndex, Count));
+            this.requesterSecurity.Setup(_ => _.AuthenticateAsync(Requester)).ReturnsAsync(UserId);
+            this.getNewsfeedDbStatement.Setup(v => v.ExecuteAsync(UserId, CreatorId, ChannelIds, CollectionIds, It.IsAny<DateTime>(), Origin.Value, SearchForwards, StartIndex, Count)).ThrowsAsync(new DivideByZeroException());
+            await this.target.HandleAsync(new GetNewsfeedQuery(Requester, CreatorId, ChannelIds, CollectionIds, Origin, SearchForwards, StartIndex, Count));
         }
 
         [TestMethod]
         public async Task ItShouldReturnPosts()
         {
-            this.getCreatorNewsfeedDbStatement.Setup(v => v.ExecuteAsync(UserId, It.IsAny<DateTime>(), StartIndex, Count))
-                .ReturnsAsync(SortedNewsfeedPosts);
+            this.requesterSecurity.Setup(_ => _.AuthenticateAsync(Requester)).ReturnsAsync(UserId);
 
-            this.fileInformationAggregator.Setup(v => v.GetFileInformationAsync(UserId, It.IsAny<FileId>(), It.IsAny<string>()))
+            this.getNewsfeedDbStatement.Setup(v => v.ExecuteAsync(UserId, CreatorId, ChannelIds, CollectionIds, It.IsAny<DateTime>(), Origin.Value, SearchForwards, StartIndex, Count))
+                .ReturnsAsync(NewsfeedPosts);
+
+            this.fileInformationAggregator.Setup(v => v.GetFileInformationAsync(CreatorId, It.IsAny<FileId>(), It.IsAny<string>()))
                 .Returns<UserId, FileId, string>((u, f, p) => Task.FromResult(new FileInformation(f, string.Empty)));
-            
-            var result = await this.target.HandleAsync(new GetCreatorNewsfeedQuery(Requester, UserId, StartIndex, Count));
 
-            Assert.AreEqual(SortedNewsfeedPosts.Count, result.Count);
-            foreach (var item in result.Zip(SortedNewsfeedPosts, (a, b) => new { Output = a, Input = b }))
+            var result = await this.target.HandleAsync(new GetNewsfeedQuery(Requester, CreatorId, ChannelIds, CollectionIds, Origin, SearchForwards, StartIndex, Count));
+
+            Assert.AreEqual(NewsfeedPosts.Count, result.Posts.Count);
+            foreach (var item in result.Posts.Zip(NewsfeedPosts, (a, b) => new { Output = a, Input = b }))
             {
                 if (item.Input.FileId != null)
                 {
@@ -150,7 +138,31 @@
             }
         }
 
-        private static IEnumerable<NewsfeedPost> GetSortedNewsfeedPosts()
+        [TestMethod]
+        public async Task WhenOriginIsNullItShouldPassInTheCurrentDate()
+        {
+            this.requesterSecurity.Setup(_ => _.AuthenticateAsync(Requester)).ReturnsAsync(UserId);
+
+            DateTime nowDate = DateTime.MinValue;
+            DateTime originDate = DateTime.MaxValue;
+            this.getNewsfeedDbStatement.Setup(v => v.ExecuteAsync(UserId, CreatorId, ChannelIds, CollectionIds, It.IsAny<DateTime>(), It.IsAny<DateTime>(), SearchForwards, StartIndex, Count))
+                .Callback<UserId, UserId, IReadOnlyList<ChannelId>, IReadOnlyList<CollectionId>, DateTime, DateTime, bool, NonNegativeInt, PositiveInt>(
+                (a, b, c, d, now, origin, e, f, g) => 
+                {
+                    nowDate = now;
+                    originDate = origin;
+                })
+                .ReturnsAsync(NewsfeedPosts);
+
+            this.fileInformationAggregator.Setup(v => v.GetFileInformationAsync(CreatorId, It.IsAny<FileId>(), It.IsAny<string>()))
+                .Returns<UserId, FileId, string>((u, f, p) => Task.FromResult(new FileInformation(f, string.Empty)));
+
+            await this.target.HandleAsync(new GetNewsfeedQuery(Requester, CreatorId, ChannelIds, CollectionIds, null, SearchForwards, StartIndex, Count));
+
+            Assert.AreEqual(nowDate, originDate);
+        }
+
+        private static IEnumerable<NewsfeedPost> GetNewsfeedPosts()
         {
             // 1 in 3 chance of coincidental ordering being correct, yielding a false positive when implementation fails to order explicitly.
             const int ChannelCount = 3;
@@ -172,6 +184,7 @@
 
                         result.Add(
                         new NewsfeedPost(
+                            CreatorId,
                             new PostId(Guid.NewGuid()),
                             channelId,
                             collectionId,
@@ -186,12 +199,13 @@
                             i % 3 == 2 ? FileExtension : null,
                             i % 3 == 2 ? FileSize : (long?)null,
                             i % 3 == 2 ? FileWidth : (int?)null,
-                            i % 3 == 2 ? FileHeight : (int?)null));
+                            i % 3 == 2 ? FileHeight : (int?)null,
+                            liveDate));
                     }
                 }
             }
 
-            return result.OrderByDescending(_ => _.LiveDate);
+            return result;
         }
     }
 }

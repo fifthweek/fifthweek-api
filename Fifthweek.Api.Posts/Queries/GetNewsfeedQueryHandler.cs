@@ -16,36 +16,39 @@
     using Fifthweek.Shared;
 
     [AutoConstructor]
-    public partial class GetCreatorNewsfeedQueryHandler : IQueryHandler<GetCreatorNewsfeedQuery, IReadOnlyList<GetCreatorNewsfeedQueryResult>>
+    public partial class GetNewsfeedQueryHandler : IQueryHandler<GetNewsfeedQuery, GetNewsfeedQueryResult>
     {
         private readonly IRequesterSecurity requesterSecurity;
-        private readonly IGetCreatorNewsfeedDbStatement getCreatorNewsfeedDbStatement;
+        private readonly IGetNewsfeedDbStatement getNewsfeedDbStatement;
         private readonly IFileInformationAggregator fileInformationAggregator;
         private readonly IMimeTypeMap mimeTypeMap;
 
-        public async Task<IReadOnlyList<GetCreatorNewsfeedQueryResult>> HandleAsync(GetCreatorNewsfeedQuery query)
+        public async Task<GetNewsfeedQueryResult> HandleAsync(GetNewsfeedQuery query)
         {
             query.AssertNotNull("query");
 
-            // In future, this query will need to allow users who are subscribed to this creator too. This will require a 
-            // IsAuthenticatedAs || IsSubscribedTo authorization.
-            await this.requesterSecurity.AuthenticateAsAsync(query.Requester, query.RequestedUserId);
-            await this.requesterSecurity.AssertInRoleAsync(query.Requester, FifthweekRole.Creator);
+            var requestingUserId = await this.requesterSecurity.AuthenticateAsync(query.Requester);
 
-            var posts = await this.getCreatorNewsfeedDbStatement.ExecuteAsync(
-              query.RequestedUserId,
-              DateTime.UtcNow,
-              query.StartIndex,
-              query.Count);
+            var now = DateTime.UtcNow;
+            var posts = await this.getNewsfeedDbStatement.ExecuteAsync(
+                requestingUserId,
+                query.CreatorId,
+                query.ChannelIds,
+                query.CollectionIds,
+                now,
+                query.Origin ?? now,
+                query.SearchForwards,
+                query.StartIndex,
+                query.Count);
 
-            var result = new List<GetCreatorNewsfeedQueryResult>();
+            var results = new List<GetNewsfeedQueryResult.Post>();
             foreach (var post in posts)
             {
                 FileInformation file = null;
                 if (post.FileId != null)
                 {
                     file = await this.fileInformationAggregator.GetFileInformationAsync(
-                        query.RequestedUserId,
+                        post.CreatorId,
                         post.FileId,
                         FilePurposes.PostFile);
                 }
@@ -54,7 +57,7 @@
                 if (post.ImageId != null)
                 {
                     image = await this.fileInformationAggregator.GetFileInformationAsync(
-                       query.RequestedUserId,
+                       post.CreatorId,
                        post.ImageId,
                        FilePurposes.PostImage);
                 }
@@ -65,7 +68,8 @@
                     imageRenderSize = new RenderSize(post.ImageRenderWidth.Value, post.ImageRenderHeight.Value);
                 }
 
-                var completePost = new GetCreatorNewsfeedQueryResult(
+                var completePost = new GetNewsfeedQueryResult.Post(
+                    post.CreatorId,
                     post.PostId,
                     post.ChannelId,
                     post.CollectionId,
@@ -76,10 +80,10 @@
                     image == null ? null : new FileSourceInformation(post.ImageName, post.ImageExtension, this.mimeTypeMap.GetMimeType(post.ImageExtension), post.ImageSize ?? 0, imageRenderSize),
                     post.LiveDate);
 
-                result.Add(completePost);
+                results.Add(completePost);
             }
 
-            return result;
+            return new GetNewsfeedQueryResult(results);
         }
     }
 }

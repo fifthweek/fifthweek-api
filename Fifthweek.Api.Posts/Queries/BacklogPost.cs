@@ -54,5 +54,7 @@
 
         [Optional]
         public int? ImageRenderHeight { get; private set; }
+
+        public DateTime CreationDate { get; private set; }
     }
 }

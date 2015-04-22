@@ -5,12 +5,15 @@
     using Fifthweek.Api.Channels.Shared;
     using Fifthweek.Api.Collections.Shared;
     using Fifthweek.Api.FileManagement.Shared;
+    using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.Api.Posts.Shared;
     using Fifthweek.CodeGeneration;
 
     [AutoConstructor, AutoEqualityMembers, AutoCopy]
     public partial class NewsfeedPost
     {
+        public UserId CreatorId { get; private set; }
+
         public PostId PostId { get; private set; }
 
         public ChannelId ChannelId { get; private set; }
@@ -52,5 +55,7 @@
 
         [Optional]
         public int? ImageRenderHeight { get; private set; }
+
+        public DateTime CreationDate { get; private set; }
     }
 }
