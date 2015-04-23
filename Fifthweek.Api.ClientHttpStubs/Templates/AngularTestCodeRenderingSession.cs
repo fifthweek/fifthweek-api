@@ -4,6 +4,7 @@ namespace Fifthweek.Api.ClientHttpStubs.Templates
     using System.Linq;
 
     using Fifthweek.CodeGeneration;
+    using Fifthweek.Shared;
 
     using Humanizer;
 
@@ -78,9 +79,31 @@ namespace Fifthweek.Api.ClientHttpStubs.Templates
             this.output.WriteLine(string.Format("it('should {0}', function() {{", method.Name.Humanize(LetterCasing.LowerCase)));
             this.output.PushIndent(Tab);
 
-            for (var i = 0; i < parameterNames.Length; i++)
+            for (var i = 0; i < method.UrlParameters.Count; i++)
             {
-                this.output.WriteLine(string.Format("var {0} = 'value{1}';", parameterNames[i], i));
+                var parameter = method.UrlParameters[i];
+                if (parameter.Type.IsPrimitiveEx())
+                {
+                    this.output.WriteLine(string.Format("var {0} = 'value{1}';", parameterNames[i], i));
+                }
+                else
+                {
+                    this.output.WriteLine(string.Format("var {0} = {{", parameterNames[i]));
+
+                    var flattenedComplexType = parameter.Type.GetProperties().Where(_ => _.PropertyType.IsPrimitiveEx() && _.CanWrite);
+                    int propertyIndex = 0;
+                    foreach (var property in flattenedComplexType)
+                    {
+                        this.output.WriteLine(string.Format("  {0}: 'value{1}-{2}',", property.Name.Camelize(), i, propertyIndex++));
+                    }
+
+                    this.output.WriteLine("};");
+                }
+            }
+
+            if (method.BodyParameter != null)
+            {
+                this.output.WriteLine(string.Format("var {0} = 'value{1}';", method.BodyParameter.Name, "-body"));
             }
 
             this.output.WriteLine(string.Empty);

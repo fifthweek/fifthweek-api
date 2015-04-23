@@ -1,6 +1,7 @@
 ﻿namespace Fifthweek.Api.ClientHttpStubs
 {
     using System;
+    using System.Collections.Generic;
 
     using Fifthweek.CodeGeneration;
 

@@ -2,6 +2,10 @@
 {
     using System.Linq;
 
+    using Fifthweek.Shared;
+
+    using Humanizer;
+
     public static class AngularUtility
     {
         public static string GetRouteBuilder(MethodElement method)
@@ -38,18 +42,34 @@
                 if (route.EndsWith("'"))
                 {
                     route = route.Substring(0, route.Length - 1);
-                    route += "?";
+                    route += "?'";
                 }
                 else
                 {
-                    route += " + '?";
+                    route += " + '?'";
                 }
 
-                var querystring = queryParameters.Select(_ => string.Format("{0}=' + encodeURIComponent({0}) + '", _.Name));
-                route += string.Join("&", querystring);
-
-                // Trim trailing " + '"
-                route = route.Substring(0, route.Length - 4);
+                foreach (var parameter in queryParameters)
+                {
+                    if (parameter.Type.IsPrimitiveEx())
+                    {
+                        route += string.Format(
+                            " + ({0} === undefined ? '' : '{0}=' + encodeURIComponent({0}) + '&')",
+                            parameter.Name);
+                    }
+                    else
+                    {
+                        // Flatten complex types used as URL parameters.
+                        var flattenedComplexType = parameter.Type.GetProperties().Where(_ => _.PropertyType.IsPrimitiveEx() && _.CanWrite);
+                        foreach (var property in flattenedComplexType)
+                        {
+                            route += string.Format(
+                                " + ({0} === undefined ? '' : '{1}=' + encodeURIComponent({0}) + '&')",
+                                parameter.Name + "." + property.Name.Camelize(),
+                                property.Name.Camelize());
+                        }
+                    }
+                }
             }
 
             return route;

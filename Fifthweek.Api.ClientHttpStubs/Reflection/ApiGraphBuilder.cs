@@ -39,19 +39,7 @@
                     {
                         if (parameter.GetCustomAttribute<FromUriAttribute>() != null || RouteUtility.GetPlaceholders(parameter.Name).Any(fullRoute.Contains))
                         {
-                            if (parameter.ParameterType.IsPrimitiveEx())
-                            {
-                                urlParameters.Add(new ParameterElement(parameter.Name, parameter.ParameterType, !parameter.HasDefaultValue));
-                            }
-                            else
-                            {
-                                // Flatten complex types used as URL parameters.
-                                var flattenedComplexType = parameter.ParameterType.GetProperties().Where(_ => _.PropertyType.IsPrimitiveEx() && _.CanWrite);
-                                foreach (var property in flattenedComplexType)
-                                {
-                                    urlParameters.Add(new ParameterElement(property.Name.Camelize(), property.PropertyType, !parameter.HasDefaultValue));    
-                                }
-                            }
+                            urlParameters.Add(new ParameterElement(parameter.Name, parameter.ParameterType, !parameter.HasDefaultValue));
                         }
                         else if (bodyParameter == null)
                         {
