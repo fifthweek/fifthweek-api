@@ -584,6 +584,7 @@
                         new NewsfeedPost(
                             CreatorId,
                             new PostId(Guid.NewGuid()),
+                            BlogId,
                             channelId,
                             collectionId,
                             i % 2 == 0 ? Comment : null,

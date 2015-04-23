@@ -71,6 +71,7 @@
                 var completePost = new GetNewsfeedQueryResult.Post(
                     post.CreatorId,
                     post.PostId,
+                    post.BlogId,
                     post.ChannelId,
                     post.CollectionId,
                     post.Comment,

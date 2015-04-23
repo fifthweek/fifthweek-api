@@ -7,6 +7,7 @@
     using System.Threading.Tasks;
 
     using Fifthweek.Api.AssemblyResolution;
+    using Fifthweek.Api.Blogs.Shared;
     using Fifthweek.Api.Channels.Shared;
     using Fifthweek.Api.Collections.Shared;
     using Fifthweek.Api.Core;
@@ -28,6 +29,7 @@
     {
         private static readonly UserId UserId = new UserId(Guid.NewGuid());
         private static readonly UserId CreatorId = new UserId(Guid.NewGuid());
+        private static readonly BlogId BlogId = new BlogId(Guid.NewGuid());
         private static readonly Requester Requester = Requester.Authenticated(UserId);
         private static readonly List<ChannelId> ChannelIds = new List<ChannelId> { new ChannelId(Guid.NewGuid()) };
         private static readonly List<CollectionId> CollectionIds = new List<CollectionId> { new CollectionId(Guid.NewGuid()) };
@@ -186,6 +188,7 @@
                         new NewsfeedPost(
                             CreatorId,
                             new PostId(Guid.NewGuid()),
+                            BlogId,
                             channelId,
                             collectionId,
                             i % 2 == 0 ? Comment : null,

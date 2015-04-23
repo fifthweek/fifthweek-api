@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Linq;
 
-//// Generated on 22/04/2015 12:03:58 (UTC)
-//// Mapped solution in 11.19s
+//// Generated on 23/04/2015 12:12:11 (UTC)
+//// Mapped solution in 10.15s
 
 
 namespace Fifthweek.Api.Posts.Commands
@@ -1317,12 +1317,14 @@ namespace Fifthweek.Api.Posts.Queries
     using Fifthweek.Api.Persistence;
     using Fifthweek.Api.Persistence.Identity;
     using Fifthweek.Shared;
+    using Fifthweek.Api.Blogs.Shared;
 
     public partial class NewsfeedPost 
     {
         public NewsfeedPost(
             Fifthweek.Api.Identity.Shared.Membership.UserId creatorId,
             Fifthweek.Api.Posts.Shared.PostId postId,
+            Fifthweek.Api.Blogs.Shared.BlogId blogId,
             Fifthweek.Api.Channels.Shared.ChannelId channelId,
             Fifthweek.Api.Collections.Shared.CollectionId collectionId,
             Fifthweek.Api.Posts.Shared.Comment comment,
@@ -1349,6 +1351,11 @@ namespace Fifthweek.Api.Posts.Queries
                 throw new ArgumentNullException("postId");
             }
 
+            if (blogId == null)
+            {
+                throw new ArgumentNullException("blogId");
+            }
+
             if (channelId == null)
             {
                 throw new ArgumentNullException("channelId");
@@ -1366,6 +1373,7 @@ namespace Fifthweek.Api.Posts.Queries
 
             this.CreatorId = creatorId;
             this.PostId = postId;
+            this.BlogId = blogId;
             this.ChannelId = channelId;
             this.CollectionId = collectionId;
             this.Comment = comment;
@@ -2837,6 +2845,7 @@ namespace Fifthweek.Api.Posts.Queries
     using Fifthweek.Api.Persistence;
     using Fifthweek.Api.Persistence.Identity;
     using Fifthweek.Shared;
+    using Fifthweek.Api.Blogs.Shared;
 
     public partial class GetNewsfeedQueryResult 
     {
@@ -2869,6 +2878,7 @@ namespace Fifthweek.Api.Posts.Queries
     using Fifthweek.Api.Persistence;
     using Fifthweek.Api.Persistence.Identity;
     using Fifthweek.Shared;
+    using Fifthweek.Api.Blogs.Shared;
 
     public partial class GetNewsfeedQueryResult
     {
@@ -2877,6 +2887,7 @@ namespace Fifthweek.Api.Posts.Queries
             public Post(
                 Fifthweek.Api.Identity.Shared.Membership.UserId creatorId,
                 Fifthweek.Api.Posts.Shared.PostId postId,
+                Fifthweek.Api.Blogs.Shared.BlogId blogId,
                 Fifthweek.Api.Channels.Shared.ChannelId channelId,
                 Fifthweek.Api.Collections.Shared.CollectionId collectionId,
                 Fifthweek.Api.Posts.Shared.Comment comment,
@@ -2896,6 +2907,11 @@ namespace Fifthweek.Api.Posts.Queries
                     throw new ArgumentNullException("postId");
                 }
 
+                if (blogId == null)
+                {
+                    throw new ArgumentNullException("blogId");
+                }
+
                 if (channelId == null)
                 {
                     throw new ArgumentNullException("channelId");
@@ -2908,6 +2924,7 @@ namespace Fifthweek.Api.Posts.Queries
 
                 this.CreatorId = creatorId;
                 this.PostId = postId;
+                this.BlogId = blogId;
                 this.ChannelId = channelId;
                 this.CollectionId = collectionId;
                 this.Comment = comment;
@@ -3830,12 +3847,13 @@ namespace Fifthweek.Api.Posts.Queries
     using Fifthweek.Api.Persistence;
     using Fifthweek.Api.Persistence.Identity;
     using Fifthweek.Shared;
+    using Fifthweek.Api.Blogs.Shared;
 
     public partial class NewsfeedPost 
     {
         public override string ToString()
         {
-            return string.Format("NewsfeedPost({0}, {1}, {2}, {3}, {4}, {5}, {6}, {7}, \"{8}\", \"{9}\", {10}, \"{11}\", \"{12}\", {13}, {14}, {15}, {16})", this.CreatorId == null ? "null" : this.CreatorId.ToString(), this.PostId == null ? "null" : this.PostId.ToString(), this.ChannelId == null ? "null" : this.ChannelId.ToString(), this.CollectionId == null ? "null" : this.CollectionId.ToString(), this.Comment == null ? "null" : this.Comment.ToString(), this.FileId == null ? "null" : this.FileId.ToString(), this.ImageId == null ? "null" : this.ImageId.ToString(), this.LiveDate == null ? "null" : this.LiveDate.ToString(), this.FileName == null ? "null" : this.FileName.ToString(), this.FileExtension == null ? "null" : this.FileExtension.ToString(), this.FileSize == null ? "null" : this.FileSize.ToString(), this.ImageName == null ? "null" : this.ImageName.ToString(), this.ImageExtension == null ? "null" : this.ImageExtension.ToString(), this.ImageSize == null ? "null" : this.ImageSize.ToString(), this.ImageRenderWidth == null ? "null" : this.ImageRenderWidth.ToString(), this.ImageRenderHeight == null ? "null" : this.ImageRenderHeight.ToString(), this.CreationDate == null ? "null" : this.CreationDate.ToString());
+            return string.Format("NewsfeedPost({0}, {1}, {2}, {3}, {4}, {5}, {6}, {7}, {8}, \"{9}\", \"{10}\", {11}, \"{12}\", \"{13}\", {14}, {15}, {16}, {17})", this.CreatorId == null ? "null" : this.CreatorId.ToString(), this.PostId == null ? "null" : this.PostId.ToString(), this.BlogId == null ? "null" : this.BlogId.ToString(), this.ChannelId == null ? "null" : this.ChannelId.ToString(), this.CollectionId == null ? "null" : this.CollectionId.ToString(), this.Comment == null ? "null" : this.Comment.ToString(), this.FileId == null ? "null" : this.FileId.ToString(), this.ImageId == null ? "null" : this.ImageId.ToString(), this.LiveDate == null ? "null" : this.LiveDate.ToString(), this.FileName == null ? "null" : this.FileName.ToString(), this.FileExtension == null ? "null" : this.FileExtension.ToString(), this.FileSize == null ? "null" : this.FileSize.ToString(), this.ImageName == null ? "null" : this.ImageName.ToString(), this.ImageExtension == null ? "null" : this.ImageExtension.ToString(), this.ImageSize == null ? "null" : this.ImageSize.ToString(), this.ImageRenderWidth == null ? "null" : this.ImageRenderWidth.ToString(), this.ImageRenderHeight == null ? "null" : this.ImageRenderHeight.ToString(), this.CreationDate == null ? "null" : this.CreationDate.ToString());
         }
         
         public override bool Equals(object obj)
@@ -3865,6 +3883,7 @@ namespace Fifthweek.Api.Posts.Queries
                 int hashCode = 0;
                 hashCode = (hashCode * 397) ^ (this.CreatorId != null ? this.CreatorId.GetHashCode() : 0);
                 hashCode = (hashCode * 397) ^ (this.PostId != null ? this.PostId.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.BlogId != null ? this.BlogId.GetHashCode() : 0);
                 hashCode = (hashCode * 397) ^ (this.ChannelId != null ? this.ChannelId.GetHashCode() : 0);
                 hashCode = (hashCode * 397) ^ (this.CollectionId != null ? this.CollectionId.GetHashCode() : 0);
                 hashCode = (hashCode * 397) ^ (this.Comment != null ? this.Comment.GetHashCode() : 0);
@@ -3892,6 +3911,11 @@ namespace Fifthweek.Api.Posts.Queries
             }
         
             if (!object.Equals(this.PostId, other.PostId))
+            {
+                return false;
+            }
+        
+            if (!object.Equals(this.BlogId, other.BlogId))
             {
                 return false;
             }
@@ -5323,6 +5347,7 @@ namespace Fifthweek.Api.Posts.Queries
     using Fifthweek.Api.Persistence;
     using Fifthweek.Api.Persistence.Identity;
     using Fifthweek.Shared;
+    using Fifthweek.Api.Blogs.Shared;
 
     public partial class GetNewsfeedQueryResult 
     {
@@ -5404,6 +5429,7 @@ namespace Fifthweek.Api.Posts.Queries
     using Fifthweek.Api.Persistence;
     using Fifthweek.Api.Persistence.Identity;
     using Fifthweek.Shared;
+    using Fifthweek.Api.Blogs.Shared;
 
     public partial class GetNewsfeedQueryResult
     {
@@ -5411,7 +5437,7 @@ namespace Fifthweek.Api.Posts.Queries
         {
             public override string ToString()
             {
-                return string.Format("Post({0}, {1}, {2}, {3}, {4}, {5}, {6}, {7}, {8}, {9})", this.CreatorId == null ? "null" : this.CreatorId.ToString(), this.PostId == null ? "null" : this.PostId.ToString(), this.ChannelId == null ? "null" : this.ChannelId.ToString(), this.CollectionId == null ? "null" : this.CollectionId.ToString(), this.Comment == null ? "null" : this.Comment.ToString(), this.File == null ? "null" : this.File.ToString(), this.FileSource == null ? "null" : this.FileSource.ToString(), this.Image == null ? "null" : this.Image.ToString(), this.ImageSource == null ? "null" : this.ImageSource.ToString(), this.LiveDate == null ? "null" : this.LiveDate.ToString());
+                return string.Format("Post({0}, {1}, {2}, {3}, {4}, {5}, {6}, {7}, {8}, {9}, {10})", this.CreatorId == null ? "null" : this.CreatorId.ToString(), this.PostId == null ? "null" : this.PostId.ToString(), this.BlogId == null ? "null" : this.BlogId.ToString(), this.ChannelId == null ? "null" : this.ChannelId.ToString(), this.CollectionId == null ? "null" : this.CollectionId.ToString(), this.Comment == null ? "null" : this.Comment.ToString(), this.File == null ? "null" : this.File.ToString(), this.FileSource == null ? "null" : this.FileSource.ToString(), this.Image == null ? "null" : this.Image.ToString(), this.ImageSource == null ? "null" : this.ImageSource.ToString(), this.LiveDate == null ? "null" : this.LiveDate.ToString());
             }
             
             public override bool Equals(object obj)
@@ -5441,6 +5467,7 @@ namespace Fifthweek.Api.Posts.Queries
                     int hashCode = 0;
                     hashCode = (hashCode * 397) ^ (this.CreatorId != null ? this.CreatorId.GetHashCode() : 0);
                     hashCode = (hashCode * 397) ^ (this.PostId != null ? this.PostId.GetHashCode() : 0);
+                    hashCode = (hashCode * 397) ^ (this.BlogId != null ? this.BlogId.GetHashCode() : 0);
                     hashCode = (hashCode * 397) ^ (this.ChannelId != null ? this.ChannelId.GetHashCode() : 0);
                     hashCode = (hashCode * 397) ^ (this.CollectionId != null ? this.CollectionId.GetHashCode() : 0);
                     hashCode = (hashCode * 397) ^ (this.Comment != null ? this.Comment.GetHashCode() : 0);
@@ -5461,6 +5488,11 @@ namespace Fifthweek.Api.Posts.Queries
                 }
             
                 if (!object.Equals(this.PostId, other.PostId))
+                {
+                    return false;
+                }
+            
+                if (!object.Equals(this.BlogId, other.BlogId))
                 {
                     return false;
                 }
@@ -5825,6 +5857,7 @@ namespace Fifthweek.Api.Posts.Queries
     using Fifthweek.Api.Persistence;
     using Fifthweek.Api.Persistence.Identity;
     using Fifthweek.Shared;
+    using Fifthweek.Api.Blogs.Shared;
 
     public partial class NewsfeedPost 
     {
@@ -5833,6 +5866,7 @@ namespace Fifthweek.Api.Posts.Queries
             var builder = new Builder();
             builder.CreatorId = this.CreatorId;
             builder.PostId = this.PostId;
+            builder.BlogId = this.BlogId;
             builder.ChannelId = this.ChannelId;
             builder.CollectionId = this.CollectionId;
             builder.Comment = this.Comment;
@@ -5862,6 +5896,7 @@ namespace Fifthweek.Api.Posts.Queries
         {
             public Fifthweek.Api.Identity.Shared.Membership.UserId CreatorId { get; set; }
             public Fifthweek.Api.Posts.Shared.PostId PostId { get; set; }
+            public Fifthweek.Api.Blogs.Shared.BlogId BlogId { get; set; }
             public Fifthweek.Api.Channels.Shared.ChannelId ChannelId { get; set; }
             public Fifthweek.Api.Collections.Shared.CollectionId CollectionId { get; set; }
             public Fifthweek.Api.Posts.Shared.Comment Comment { get; set; }
@@ -5883,6 +5918,7 @@ namespace Fifthweek.Api.Posts.Queries
                 return new NewsfeedPost(
                     this.CreatorId, 
                     this.PostId, 
+                    this.BlogId, 
                     this.ChannelId, 
                     this.CollectionId, 
                     this.Comment, 

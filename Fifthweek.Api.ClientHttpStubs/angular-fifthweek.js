@@ -370,6 +370,7 @@ angular.module('webApp').factory('postsStub',
     //     {
     //       creatorId: 'Base64Guid',
     //       postId: 'Base64Guid',
+    //       blogId: 'Base64Guid',
     //       channelId: 'Base64Guid',
     //       collectionId: 'Base64Guid', /* optional */
     //       comment: '', /* optional */

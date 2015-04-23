@@ -2,6 +2,7 @@
 {
     using System;
 
+    using Fifthweek.Api.Blogs.Shared;
     using Fifthweek.Api.Channels.Shared;
     using Fifthweek.Api.Collections.Shared;
     using Fifthweek.Api.FileManagement.Shared;
@@ -15,6 +16,8 @@
         public UserId CreatorId { get; private set; }
 
         public PostId PostId { get; private set; }
+
+        public BlogId BlogId { get; private set; }
 
         public ChannelId ChannelId { get; private set; }
 

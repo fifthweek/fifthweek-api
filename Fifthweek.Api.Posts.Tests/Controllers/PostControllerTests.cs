@@ -5,6 +5,7 @@
     using System.Linq;
     using System.Threading.Tasks;
 
+    using Fifthweek.Api.Blogs.Shared;
     using Fifthweek.Api.Channels.Shared;
     using Fifthweek.Api.Collections.Shared;
     using Fifthweek.Api.Core;
@@ -25,6 +26,7 @@
         private static readonly UserId UserId = new UserId(Guid.NewGuid());
         private static readonly Requester Requester = Requester.Authenticated(UserId);
         private static readonly PostId PostId = new PostId(Guid.NewGuid());
+        private static readonly BlogId BlogId = new BlogId(Guid.NewGuid());
         private static readonly ChannelId ChannelId = new ChannelId(Guid.NewGuid());
         private static readonly CollectionId CollectionId = new CollectionId(Guid.NewGuid());
         private static readonly DateTime? Origin = DateTime.UtcNow;
@@ -89,7 +91,7 @@
             var requestData = new CreatorNewsfeedPaginationData { Count = 5, StartIndex = 10 };
 
             var now = DateTime.UtcNow;
-            var queryResult = new GetNewsfeedQueryResult(new[] { new GetNewsfeedQueryResult.Post(UserId, PostId, ChannelId, CollectionId, new Comment(string.Empty), null, null, null, null, now) });
+            var queryResult = new GetNewsfeedQueryResult(new[] { new GetNewsfeedQueryResult.Post(UserId, PostId, BlogId, ChannelId, CollectionId, new Comment(string.Empty), null, null, null, null, now) });
             var expectedResult = new[] { new GetCreatorNewsfeedQueryResult(PostId, ChannelId, CollectionId, new Comment(string.Empty), null, null, null, null, now) };
 
             this.requesterContext.Setup(_ => _.GetRequester()).Returns(Requester);
@@ -129,7 +131,7 @@
                 StartIndex = 10 
             };
 
-            var queryResult = new GetNewsfeedQueryResult(new[] { new GetNewsfeedQueryResult.Post(UserId, PostId, ChannelId, CollectionId, new Comment(string.Empty), null, null, null, null, DateTime.UtcNow) });
+            var queryResult = new GetNewsfeedQueryResult(new[] { new GetNewsfeedQueryResult.Post(UserId, PostId, BlogId, ChannelId, CollectionId, new Comment(string.Empty), null, null, null, null, DateTime.UtcNow) });
 
             this.requesterContext.Setup(_ => _.GetRequester()).Returns(Requester);
             this.getNewsfeed.Setup(_ => _.HandleAsync(query)).ReturnsAsync(queryResult);
