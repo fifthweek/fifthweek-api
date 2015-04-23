@@ -72,7 +72,7 @@ describe('channel stub', function() {
   });
 
   it('should post channel', function() {
-    var newChannelData = 'value0';
+    var newChannelData = 'value-body';
 
     var responseData = 'response data';
     $httpBackend.expectPOST(fifthweekConstants.apiBaseUri + 'channels', newChannelData).respond(200, responseData);
@@ -88,7 +88,7 @@ describe('channel stub', function() {
 
   it('should put channel', function() {
     var channelId = 'value0';
-    var channelData = 'value1';
+    var channelData = 'value-body';
 
     var responseData = 'response data';
     $httpBackend.expectPUT(fifthweekConstants.apiBaseUri + 'channels/' + encodeURIComponent(channelId), channelData).respond(200, responseData);
@@ -141,7 +141,7 @@ describe('collection stub', function() {
   });
 
   it('should post collection', function() {
-    var newCollectionData = 'value0';
+    var newCollectionData = 'value-body';
 
     var responseData = 'response data';
     $httpBackend.expectPOST(fifthweekConstants.apiBaseUri + 'collections', newCollectionData).respond(200, responseData);
@@ -157,7 +157,7 @@ describe('collection stub', function() {
 
   it('should put collection', function() {
     var collectionId = 'value0';
-    var collectionData = 'value1';
+    var collectionData = 'value-body';
 
     var responseData = 'response data';
     $httpBackend.expectPUT(fifthweekConstants.apiBaseUri + 'collections/' + encodeURIComponent(collectionId), collectionData).respond(200, responseData);
@@ -279,7 +279,7 @@ describe('account settings stub', function() {
 
   it('should put', function() {
     var userId = 'value0';
-    var updatedAccountSettingsData = 'value1';
+    var updatedAccountSettingsData = 'value-body';
 
     var responseData = 'response data';
     $httpBackend.expectPUT(fifthweekConstants.apiBaseUri + 'accountSettings/' + encodeURIComponent(userId), updatedAccountSettingsData).respond(200, responseData);
@@ -317,7 +317,7 @@ describe('membership stub', function() {
   });
 
   it('should post registration', function() {
-    var registrationData = 'value0';
+    var registrationData = 'value-body';
 
     var responseData = 'response data';
     $httpBackend.expectPOST(fifthweekConstants.apiBaseUri + 'membership/registrations', registrationData).respond(200, responseData);
@@ -347,7 +347,7 @@ describe('membership stub', function() {
   });
 
   it('should post password reset request', function() {
-    var passwordResetRequestData = 'value0';
+    var passwordResetRequestData = 'value-body';
 
     var responseData = 'response data';
     $httpBackend.expectPOST(fifthweekConstants.apiBaseUri + 'membership/passwordResetRequests', passwordResetRequestData).respond(200, responseData);
@@ -362,7 +362,7 @@ describe('membership stub', function() {
   });
 
   it('should post password reset confirmation', function() {
-    var passwordResetConfirmationData = 'value0';
+    var passwordResetConfirmationData = 'value-body';
 
     var responseData = 'response data';
     $httpBackend.expectPOST(fifthweekConstants.apiBaseUri + 'membership/passwordResetConfirmations', passwordResetConfirmationData).respond(200, responseData);
@@ -381,7 +381,7 @@ describe('membership stub', function() {
     var token = 'value1';
 
     var responseData = 'response data';
-    $httpBackend.expectGET(fifthweekConstants.apiBaseUri + 'membership/passwordResetTokens/' + encodeURIComponent(userId) + '?token=' + encodeURIComponent(token)).respond(200, responseData);
+    $httpBackend.expectGET(fifthweekConstants.apiBaseUri + 'membership/passwordResetTokens/' + encodeURIComponent(userId) + '?' + (token === undefined ? '' : 'token=' + encodeURIComponent(token) + '&')).respond(200, responseData);
 
     var result = null;
     target.getPasswordResetTokenValidity(userId, token).then(function(response) { result = response.data; });
@@ -416,7 +416,7 @@ describe('log stub', function() {
   });
 
   it('should post', function() {
-    var logMessage = 'value0';
+    var logMessage = 'value-body';
 
     var responseData = 'response data';
     $httpBackend.expectPOST(fifthweekConstants.apiBaseUri + 'log', logMessage).respond(200, responseData);
@@ -470,14 +470,16 @@ describe('posts stub', function() {
 
   it('should get creator newsfeed', function() {
     var creatorId = 'value0';
-    var startIndex = 'value1';
-    var count = 'value2';
+    var newsfeedPaginationData = {
+      startIndex: 'value1-0',
+      count: 'value1-1',
+    };
 
     var responseData = 'response data';
-    $httpBackend.expectGET(fifthweekConstants.apiBaseUri + 'posts/creatorNewsfeed/' + encodeURIComponent(creatorId) + '?startIndex=' + encodeURIComponent(startIndex) + '&count=' + encodeURIComponent(count)).respond(200, responseData);
+    $httpBackend.expectGET(fifthweekConstants.apiBaseUri + 'posts/creatorNewsfeed/' + encodeURIComponent(creatorId) + '?' + (newsfeedPaginationData.startIndex === undefined ? '' : 'startIndex=' + encodeURIComponent(newsfeedPaginationData.startIndex) + '&') + (newsfeedPaginationData.count === undefined ? '' : 'count=' + encodeURIComponent(newsfeedPaginationData.count) + '&')).respond(200, responseData);
 
     var result = null;
-    target.getCreatorNewsfeed(creatorId, startIndex, count).then(function(response) { result = response.data; });
+    target.getCreatorNewsfeed(creatorId, newsfeedPaginationData).then(function(response) { result = response.data; });
 
     $httpBackend.flush();
     $rootScope.$apply();
@@ -486,10 +488,16 @@ describe('posts stub', function() {
   });
 
   it('should get newsfeed', function() {
-    var filter = 'value0';
+    var filter = {
+      creatorId: 'value0-0',
+      origin: 'value0-1',
+      searchForwards: 'value0-2',
+      startIndex: 'value0-3',
+      count: 'value0-4',
+    };
 
     var responseData = 'response data';
-    $httpBackend.expectGET(fifthweekConstants.apiBaseUri + 'posts/newsfeed', filter).respond(200, responseData);
+    $httpBackend.expectGET(fifthweekConstants.apiBaseUri + 'posts/newsfeed?' + (filter.creatorId === undefined ? '' : 'creatorId=' + encodeURIComponent(filter.creatorId) + '&') + (filter.origin === undefined ? '' : 'origin=' + encodeURIComponent(filter.origin) + '&') + (filter.searchForwards === undefined ? '' : 'searchForwards=' + encodeURIComponent(filter.searchForwards) + '&') + (filter.startIndex === undefined ? '' : 'startIndex=' + encodeURIComponent(filter.startIndex) + '&') + (filter.count === undefined ? '' : 'count=' + encodeURIComponent(filter.count) + '&')).respond(200, responseData);
 
     var result = null;
     target.getNewsfeed(filter).then(function(response) { result = response.data; });
@@ -517,7 +525,7 @@ describe('posts stub', function() {
 
   it('should post new queue order', function() {
     var collectionId = 'value0';
-    var newQueueOrder = 'value1';
+    var newQueueOrder = 'value-body';
 
     var responseData = 'response data';
     $httpBackend.expectPOST(fifthweekConstants.apiBaseUri + 'posts/queues/' + encodeURIComponent(collectionId), newQueueOrder).respond(200, responseData);
@@ -532,7 +540,7 @@ describe('posts stub', function() {
   });
 
   it('should post to queue', function() {
-    var postId = 'value0';
+    var postId = 'value-body';
 
     var responseData = 'response data';
     $httpBackend.expectPOST(fifthweekConstants.apiBaseUri + 'posts/queued', JSON.stringify(postId)).respond(200, responseData);
@@ -547,7 +555,7 @@ describe('posts stub', function() {
   });
 
   it('should post to live', function() {
-    var postId = 'value0';
+    var postId = 'value-body';
 
     var responseData = 'response data';
     $httpBackend.expectPOST(fifthweekConstants.apiBaseUri + 'posts/live', JSON.stringify(postId)).respond(200, responseData);
@@ -563,7 +571,7 @@ describe('posts stub', function() {
 
   it('should put live date', function() {
     var postId = 'value0';
-    var newLiveDate = 'value1';
+    var newLiveDate = 'value-body';
 
     var responseData = 'response data';
     $httpBackend.expectPUT(fifthweekConstants.apiBaseUri + 'posts/' + encodeURIComponent(postId) + '/liveDate', newLiveDate).respond(200, responseData);
@@ -578,7 +586,7 @@ describe('posts stub', function() {
   });
 
   it('should post note', function() {
-    var noteData = 'value0';
+    var noteData = 'value-body';
 
     var responseData = 'response data';
     $httpBackend.expectPOST(fifthweekConstants.apiBaseUri + 'posts/notes', noteData).respond(200, responseData);
@@ -594,7 +602,7 @@ describe('posts stub', function() {
 
   it('should put note', function() {
     var postId = 'value0';
-    var noteData = 'value1';
+    var noteData = 'value-body';
 
     var responseData = 'response data';
     $httpBackend.expectPUT(fifthweekConstants.apiBaseUri + 'posts/notes/' + encodeURIComponent(postId), noteData).respond(200, responseData);
@@ -609,7 +617,7 @@ describe('posts stub', function() {
   });
 
   it('should post image', function() {
-    var imageData = 'value0';
+    var imageData = 'value-body';
 
     var responseData = 'response data';
     $httpBackend.expectPOST(fifthweekConstants.apiBaseUri + 'posts/images', imageData).respond(200, responseData);
@@ -625,7 +633,7 @@ describe('posts stub', function() {
 
   it('should put image', function() {
     var postId = 'value0';
-    var imageData = 'value1';
+    var imageData = 'value-body';
 
     var responseData = 'response data';
     $httpBackend.expectPUT(fifthweekConstants.apiBaseUri + 'posts/images/' + encodeURIComponent(postId), imageData).respond(200, responseData);
@@ -640,7 +648,7 @@ describe('posts stub', function() {
   });
 
   it('should post file', function() {
-    var fileData = 'value0';
+    var fileData = 'value-body';
 
     var responseData = 'response data';
     $httpBackend.expectPOST(fifthweekConstants.apiBaseUri + 'posts/files', fileData).respond(200, responseData);
@@ -656,7 +664,7 @@ describe('posts stub', function() {
 
   it('should put file', function() {
     var postId = 'value0';
-    var fileData = 'value1';
+    var fileData = 'value-body';
 
     var responseData = 'response data';
     $httpBackend.expectPUT(fifthweekConstants.apiBaseUri + 'posts/files/' + encodeURIComponent(postId), fileData).respond(200, responseData);
@@ -695,7 +703,7 @@ describe('blog access stub', function() {
 
   it('should put free access list', function() {
     var blogId = 'value0';
-    var data = 'value1';
+    var data = 'value-body';
 
     var responseData = 'response data';
     $httpBackend.expectPUT(fifthweekConstants.apiBaseUri + 'blogAccess/freeAccessList/' + encodeURIComponent(blogId), data).respond(200, responseData);
@@ -749,7 +757,7 @@ describe('subscription stub', function() {
 
   it('should put blog subscriptions', function() {
     var blogId = 'value0';
-    var subscriptionData = 'value1';
+    var subscriptionData = 'value-body';
 
     var responseData = 'response data';
     $httpBackend.expectPUT(fifthweekConstants.apiBaseUri + 'subscriptions/blogs/' + encodeURIComponent(blogId), subscriptionData).respond(200, responseData);
@@ -780,7 +788,7 @@ describe('subscription stub', function() {
 
   it('should put channel subscription', function() {
     var channelId = 'value0';
-    var subscriptionData = 'value1';
+    var subscriptionData = 'value-body';
 
     var responseData = 'response data';
     $httpBackend.expectPUT(fifthweekConstants.apiBaseUri + 'subscriptions/channels/' + encodeURIComponent(channelId), subscriptionData).respond(200, responseData);
@@ -818,7 +826,7 @@ describe('blog stub', function() {
   });
 
   it('should post blog', function() {
-    var blogData = 'value0';
+    var blogData = 'value-body';
 
     var responseData = 'response data';
     $httpBackend.expectPOST(fifthweekConstants.apiBaseUri + 'blogs', blogData).respond(200, responseData);
@@ -834,7 +842,7 @@ describe('blog stub', function() {
 
   it('should put blog', function() {
     var blogId = 'value0';
-    var blogData = 'value1';
+    var blogData = 'value-body';
 
     var responseData = 'response data';
     $httpBackend.expectPUT(fifthweekConstants.apiBaseUri + 'blogs/' + encodeURIComponent(blogId), blogData).respond(200, responseData);
@@ -939,7 +947,7 @@ describe('file upload stub', function() {
   });
 
   it('should post upload request', function() {
-    var data = 'value0';
+    var data = 'value-body';
 
     var responseData = 'response data';
     $httpBackend.expectPOST(fifthweekConstants.apiBaseUri + 'files/uploadRequests', data).respond(200, responseData);

@@ -226,7 +226,7 @@ angular.module('webApp').factory('membershipStub',
     // userId = 'Base64Guid'
     // token = ''
     service.getPasswordResetTokenValidity = function(userId, token) {
-      return $http.get(apiBaseUri + 'membership/passwordResetTokens/' + encodeURIComponent(userId) + '?token=' + encodeURIComponent(token)).catch(function(response) {
+      return $http.get(apiBaseUri + 'membership/passwordResetTokens/' + encodeURIComponent(userId) + '?' + (token === undefined ? '' : 'token=' + encodeURIComponent(token) + '&')).catch(function(response) {
         return $q.reject(utilities.getHttpError(response));
       });
     };
@@ -307,8 +307,10 @@ angular.module('webApp').factory('postsStub',
     };
 
     // creatorId = 'Base64Guid'
-    // startIndex = 0
-    // count = 0
+    // newsfeedPaginationData = {
+    //   startIndex: 0,
+    //   count: 0
+    // }
     // result = [
     //   {
     //     postId: 'Base64Guid',
@@ -346,8 +348,8 @@ angular.module('webApp').factory('postsStub',
     //     liveDate: '2015-12-25T14:45:05Z'
     //   }
     // ]
-    service.getCreatorNewsfeed = function(creatorId, startIndex, count) {
-      return $http.get(apiBaseUri + 'posts/creatorNewsfeed/' + encodeURIComponent(creatorId) + '?startIndex=' + encodeURIComponent(startIndex) + '&count=' + encodeURIComponent(count)).catch(function(response) {
+    service.getCreatorNewsfeed = function(creatorId, newsfeedPaginationData) {
+      return $http.get(apiBaseUri + 'posts/creatorNewsfeed/' + encodeURIComponent(creatorId) + '?' + (newsfeedPaginationData.startIndex === undefined ? '' : 'startIndex=' + encodeURIComponent(newsfeedPaginationData.startIndex) + '&') + (newsfeedPaginationData.count === undefined ? '' : 'count=' + encodeURIComponent(newsfeedPaginationData.count) + '&')).catch(function(response) {
         return $q.reject(utilities.getHttpError(response));
       });
     };
@@ -407,7 +409,7 @@ angular.module('webApp').factory('postsStub',
     //   ]
     // }
     service.getNewsfeed = function(filter) {
-      return $http.get(apiBaseUri + 'posts/newsfeed', filter).catch(function(response) {
+      return $http.get(apiBaseUri + 'posts/newsfeed?' + (filter.creatorId === undefined ? '' : 'creatorId=' + encodeURIComponent(filter.creatorId) + '&') + (filter.origin === undefined ? '' : 'origin=' + encodeURIComponent(filter.origin) + '&') + (filter.searchForwards === undefined ? '' : 'searchForwards=' + encodeURIComponent(filter.searchForwards) + '&') + (filter.startIndex === undefined ? '' : 'startIndex=' + encodeURIComponent(filter.startIndex) + '&') + (filter.count === undefined ? '' : 'count=' + encodeURIComponent(filter.count) + '&')).catch(function(response) {
         return $q.reject(utilities.getHttpError(response));
       });
     };
@@ -897,7 +899,7 @@ angular.module('webApp').factory('userStateStub',
     //         blogId: 'Base64Guid',
     //         name: '',
     //         creatorId: 'Base64Guid',
-    //         creatorUsername: '',
+    //         username: '',
     //         profileImage: { /* optional */
     //           fileId: 'Base64Guid',
     //           containerName: ''
@@ -1023,7 +1025,7 @@ angular.module('webApp').factory('userStateStub',
     //         blogId: 'Base64Guid',
     //         name: '',
     //         creatorId: 'Base64Guid',
-    //         creatorUsername: '',
+    //         username: '',
     //         profileImage: { /* optional */
     //           fileId: 'Base64Guid',
     //           containerName: ''
