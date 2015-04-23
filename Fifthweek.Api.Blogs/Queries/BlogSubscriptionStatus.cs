@@ -16,7 +16,7 @@ namespace Fifthweek.Api.Blogs.Queries
 
         public UserId CreatorId { get; private set; }
 
-        public Username CreatorUsername { get; private set; }
+        public Username Username { get; private set; }
 
         [Optional]
         public FileInformation ProfileImage { get; private set; }

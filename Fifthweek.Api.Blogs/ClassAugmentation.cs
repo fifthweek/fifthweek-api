@@ -1392,7 +1392,7 @@ namespace Fifthweek.Api.Blogs.Queries
             Fifthweek.Api.Blogs.Shared.BlogId blogId,
             System.String name,
             Fifthweek.Api.Identity.Shared.Membership.UserId creatorId,
-            Fifthweek.Api.Identity.Shared.Membership.Username creatorUsername,
+            Fifthweek.Api.Identity.Shared.Membership.Username username,
             Fifthweek.Api.FileManagement.Shared.FileInformation profileImage,
             System.Boolean freeAccess,
             System.Collections.Generic.IReadOnlyList<Fifthweek.Api.Blogs.Queries.ChannelSubscriptionStatus> channels)
@@ -1412,9 +1412,9 @@ namespace Fifthweek.Api.Blogs.Queries
                 throw new ArgumentNullException("creatorId");
             }
 
-            if (creatorUsername == null)
+            if (username == null)
             {
-                throw new ArgumentNullException("creatorUsername");
+                throw new ArgumentNullException("username");
             }
 
             if (freeAccess == null)
@@ -1430,7 +1430,7 @@ namespace Fifthweek.Api.Blogs.Queries
             this.BlogId = blogId;
             this.Name = name;
             this.CreatorId = creatorId;
-            this.CreatorUsername = creatorUsername;
+            this.Username = username;
             this.ProfileImage = profileImage;
             this.FreeAccess = freeAccess;
             this.Channels = channels;
@@ -3822,7 +3822,7 @@ namespace Fifthweek.Api.Blogs.Queries
     {
         public override string ToString()
         {
-            return string.Format("BlogSubscriptionStatus({0}, \"{1}\", {2}, {3}, {4}, {5}, {6})", this.BlogId == null ? "null" : this.BlogId.ToString(), this.Name == null ? "null" : this.Name.ToString(), this.CreatorId == null ? "null" : this.CreatorId.ToString(), this.CreatorUsername == null ? "null" : this.CreatorUsername.ToString(), this.ProfileImage == null ? "null" : this.ProfileImage.ToString(), this.FreeAccess == null ? "null" : this.FreeAccess.ToString(), this.Channels == null ? "null" : this.Channels.ToString());
+            return string.Format("BlogSubscriptionStatus({0}, \"{1}\", {2}, {3}, {4}, {5}, {6})", this.BlogId == null ? "null" : this.BlogId.ToString(), this.Name == null ? "null" : this.Name.ToString(), this.CreatorId == null ? "null" : this.CreatorId.ToString(), this.Username == null ? "null" : this.Username.ToString(), this.ProfileImage == null ? "null" : this.ProfileImage.ToString(), this.FreeAccess == null ? "null" : this.FreeAccess.ToString(), this.Channels == null ? "null" : this.Channels.ToString());
         }
         
         public override bool Equals(object obj)
@@ -3853,7 +3853,7 @@ namespace Fifthweek.Api.Blogs.Queries
                 hashCode = (hashCode * 397) ^ (this.BlogId != null ? this.BlogId.GetHashCode() : 0);
                 hashCode = (hashCode * 397) ^ (this.Name != null ? this.Name.GetHashCode() : 0);
                 hashCode = (hashCode * 397) ^ (this.CreatorId != null ? this.CreatorId.GetHashCode() : 0);
-                hashCode = (hashCode * 397) ^ (this.CreatorUsername != null ? this.CreatorUsername.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.Username != null ? this.Username.GetHashCode() : 0);
                 hashCode = (hashCode * 397) ^ (this.ProfileImage != null ? this.ProfileImage.GetHashCode() : 0);
                 hashCode = (hashCode * 397) ^ (this.FreeAccess != null ? this.FreeAccess.GetHashCode() : 0);
                 hashCode = (hashCode * 397) ^ (this.Channels != null 
@@ -3886,7 +3886,7 @@ namespace Fifthweek.Api.Blogs.Queries
                 return false;
             }
         
-            if (!object.Equals(this.CreatorUsername, other.CreatorUsername))
+            if (!object.Equals(this.Username, other.Username))
             {
                 return false;
             }
