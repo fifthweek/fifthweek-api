@@ -30,7 +30,7 @@
         }
 
         [Route("newsfeed")]
-        public Task<GetNewsfeedQueryResult> GetNewsfeed([FromBody]NewsfeedFilter filter)
+        public Task<GetNewsfeedQueryResult> GetNewsfeed([FromUri]NewsfeedFilter filter)
         {
             return this.postController.GetNewsfeed(filter);
         }
