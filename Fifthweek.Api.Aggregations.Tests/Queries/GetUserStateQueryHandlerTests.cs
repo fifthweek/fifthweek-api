@@ -132,10 +132,10 @@
             Assert.IsNotNull(result);
             Assert.AreEqual(UserAccessSignatures, result.AccessSignatures);
             Assert.AreEqual(UserSubscriptions, result.Subscriptions);
+            Assert.AreEqual(accountSettings, result.AccountSettings);
 
             Assert.IsNull(result.CreatorStatus);
             Assert.IsNull(result.CreatedChannelsAndCollections);
-            Assert.IsNull(result.AccountSettings);
             Assert.IsNull(result.Blog);
         }
 

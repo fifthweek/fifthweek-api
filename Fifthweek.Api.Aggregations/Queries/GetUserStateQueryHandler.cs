@@ -41,16 +41,20 @@
             if (query.RequestedUserId != null)
             {
                 await this.requesterSecurity.AuthenticateAsAsync(query.Requester, query.RequestedUserId);
+                
+                bool isCreator = await this.requesterSecurity.IsInRoleAsync(query.Requester, FifthweekRole.Creator);
+
+                Task<CreatorStatus> creatorStatusTask = null;
+                if (isCreator)
+                {
+                    creatorStatusTask = this.getCreatorStatus.HandleAsync(new GetCreatorStatusQuery(query.Requester, query.RequestedUserId));
+                }
 
                 var blogSubscriptionsTask = this.getBlogSubscriptions.HandleAsync(new GetUserSubscriptionsQuery(query.Requester));
                 var accountSettingsTask = this.getAccountSettings.HandleAsync(new GetAccountSettingsQuery(query.Requester, query.RequestedUserId));
 
-                bool isCreator = await this.requesterSecurity.IsInRoleAsync(query.Requester, FifthweekRole.Creator);
-               
                 if (isCreator)
                 {
-                    var creatorStatusTask = this.getCreatorStatus.HandleAsync(new GetCreatorStatusQuery(query.Requester, query.RequestedUserId));
-
                     creatorStatus = await creatorStatusTask;
 
                     var blogChannelsAndCollectionsTask = Task.FromResult<GetBlogChannelsAndCollectionsResult>(null);
@@ -59,7 +63,6 @@
                         blogChannelsAndCollectionsTask = this.getBlogChannelsAndCollections.HandleAsync(new GetBlogChannelsAndCollectionsQuery(creatorStatus.BlogId));
                     }
 
-                    accountSettings = await accountSettingsTask;
                     var blogChannelsAndCollections = await blogChannelsAndCollectionsTask;
                     if (blogChannelsAndCollections != null)
                     {
@@ -70,6 +73,7 @@
                     }
                 }
 
+                accountSettings = await accountSettingsTask;
                 userSubscriptions = await blogSubscriptionsTask;
             }
 
