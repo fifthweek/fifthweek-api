@@ -26,9 +26,10 @@
             @"SELECT guest.{3}, u.{4}, u.{5}, channel.{11} AS ChannelId
             FROM {0} guest
             LEFT OUTER JOIN {1} u ON guest.{3} = u.{6}
-            LEFT OUTER JOIN {7} subscription ON u.{4} = subscription.{8}
-            LEFT OUTER JOIN {10} channel ON subscription.{9} = channel.{11}
-            WHERE guest.{2}=@BlogId AND (channel.{12} IS NULL OR channel.{12} = @BlogId)",
+            LEFT OUTER JOIN 
+                ({7} subscription INNER JOIN {10} channel ON subscription.{9} = channel.{11} AND channel.{12}=@BlogId) 
+                ON u.{4} = subscription.{8}
+            WHERE guest.{2}=@BlogId",
             FreeAccessUser.Table,
             FifthweekUser.Table,
             FreeAccessUser.Fields.BlogId,
