@@ -118,7 +118,6 @@
     <Compile Include="Commands\InitiateFileUploadCommandHandlerTests.cs" />
     <Compile Include="Commands\CompleteFileUploadCommandHandlerTests.cs" />
     <Compile Include="Controllers\FileUploadControllerTests.cs" />
-    <Compile Include="Controllers\GetUserAccessSignaturesControllerTests.cs" />
     <Compile Include="FileInformationAggregatorTests.cs" />
     <Compile Include="FileProcessorTests.cs" />
     <Compile Include="FilePurposeTasksTests.cs" />

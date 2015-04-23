@@ -698,69 +698,6 @@ angular.module('webApp').factory('blogStub',
     return service;
   });
 
-angular.module('webApp').factory('userAccessSignaturesStub',
-  function($http, $q, fifthweekConstants, utilities) {
-    'use strict';
-
-    var apiBaseUri = fifthweekConstants.apiBaseUri;
-    var service = {};
-
-    // result = {
-    //   timeToLiveSeconds: 0,
-    //   publicSignature: {
-    //     containerName: '',
-    //     uri: '',
-    //     signature: '',
-    //     expiry: '2015-12-25T14:45:05Z'
-    //   },
-    //   privateSignatures: [
-    //     {
-    //       creatorId: 'Base64Guid',
-    //       information: {
-    //         containerName: '',
-    //         uri: '',
-    //         signature: '',
-    //         expiry: '2015-12-25T14:45:05Z'
-    //       }
-    //     }
-    //   ]
-    // }
-    service.getForVisitor = function() {
-      return $http.get(apiBaseUri + 'userAccessSignatures').catch(function(response) {
-        return $q.reject(utilities.getHttpError(response));
-      });
-    };
-
-    // userId = 'Base64Guid'
-    // result = {
-    //   timeToLiveSeconds: 0,
-    //   publicSignature: {
-    //     containerName: '',
-    //     uri: '',
-    //     signature: '',
-    //     expiry: '2015-12-25T14:45:05Z'
-    //   },
-    //   privateSignatures: [
-    //     {
-    //       creatorId: 'Base64Guid',
-    //       information: {
-    //         containerName: '',
-    //         uri: '',
-    //         signature: '',
-    //         expiry: '2015-12-25T14:45:05Z'
-    //       }
-    //     }
-    //   ]
-    // }
-    service.getForUser = function(userId) {
-      return $http.get(apiBaseUri + 'userAccessSignatures/' + encodeURIComponent(userId)).catch(function(response) {
-        return $q.reject(utilities.getHttpError(response));
-      });
-    };
-
-    return service;
-  });
-
 angular.module('webApp').factory('fileUploadStub',
   function($http, $q, fifthweekConstants, utilities) {
     'use strict';

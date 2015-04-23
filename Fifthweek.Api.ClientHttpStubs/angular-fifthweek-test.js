@@ -872,58 +872,6 @@ describe('blog stub', function() {
   });
 });
 
-describe('user access signatures stub', function() {
-  'use strict';
-
-  var fifthweekConstants;
-  var $httpBackend;
-  var $rootScope;
-  var target;
-
-  beforeEach(module('webApp', 'stateMock'));
-
-  beforeEach(inject(function($injector) {
-    fifthweekConstants = $injector.get('fifthweekConstants');
-    $httpBackend = $injector.get('$httpBackend');
-    $rootScope = $injector.get('$rootScope');
-    target = $injector.get('userAccessSignaturesStub');
-  }));
-
-  afterEach(function() {
-    $httpBackend.verifyNoOutstandingExpectation();
-    $httpBackend.verifyNoOutstandingRequest();
-  });
-
-  it('should get for visitor', function() {
-
-    var responseData = 'response data';
-    $httpBackend.expectGET(fifthweekConstants.apiBaseUri + 'userAccessSignatures').respond(200, responseData);
-
-    var result = null;
-    target.getForVisitor().then(function(response) { result = response.data; });
-
-    $httpBackend.flush();
-    $rootScope.$apply();
-
-    expect(result).toBe(responseData);
-  });
-
-  it('should get for user', function() {
-    var userId = 'value0';
-
-    var responseData = 'response data';
-    $httpBackend.expectGET(fifthweekConstants.apiBaseUri + 'userAccessSignatures/' + encodeURIComponent(userId)).respond(200, responseData);
-
-    var result = null;
-    target.getForUser(userId).then(function(response) { result = response.data; });
-
-    $httpBackend.flush();
-    $rootScope.$apply();
-
-    expect(result).toBe(responseData);
-  });
-});
-
 describe('file upload stub', function() {
   'use strict';
 

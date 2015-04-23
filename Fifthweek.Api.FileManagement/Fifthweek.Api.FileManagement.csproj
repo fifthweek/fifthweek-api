@@ -101,7 +101,6 @@
   <ItemGroup>
     <Compile Include="AddNewFileDbStatement.cs" />
     <Compile Include="Constants.cs" />
-    <Compile Include="Controllers\UserAccessSignaturesController.cs" />
     <Compile Include="FileInformationAggregator.cs" />
     <Compile Include="FileProcessor.cs" />
     <Compile Include="FilePurposeTasks.cs" />
