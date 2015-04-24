@@ -1,6 +1,7 @@
 ﻿namespace Fifthweek.Api.FileManagement.Tests.Queries
 {
     using System;
+    using System.Collections.Generic;
     using System.Threading.Tasks;
 
     using Fifthweek.Api.Azure;
@@ -19,6 +20,7 @@
     {
         private static readonly UserId UserId = new UserId(Guid.NewGuid());
         private static readonly Requester Requester = Requester.Authenticated(UserId);
+        private static readonly List<UserId> CreatorIds = new List<UserId> { new UserId(Guid.NewGuid()), new UserId(Guid.NewGuid()) };
         
         private GetUserAccessSignaturesQueryHandler target;
 
@@ -52,14 +54,14 @@
         [ExpectedException(typeof(UnauthorizedException))]
         public async Task WhenUnauthenticatedAndRequestingForUserId_ItShouldThrowUnauthorizedException()
         {
-            await this.target.HandleAsync(new GetUserAccessSignaturesQuery(Requester.Unauthenticated, UserId));
+            await this.target.HandleAsync(new GetUserAccessSignaturesQuery(Requester.Unauthenticated, UserId, CreatorIds));
         }
 
         [TestMethod]
         [ExpectedException(typeof(UnauthorizedException))]
         public async Task WhenRequestingForNonAuthenticatedUserId_ItShouldThrowUnauthorizedException()
         {
-            await this.target.HandleAsync(new GetUserAccessSignaturesQuery(Requester, new UserId(Guid.NewGuid())));
+            await this.target.HandleAsync(new GetUserAccessSignaturesQuery(Requester, new UserId(Guid.NewGuid()), CreatorIds));
         }
 
         [TestMethod]
@@ -70,7 +72,7 @@
             this.blobService.Setup(v => v.GetBlobContainerSharedAccessInformationForReadingAsync(FileManagement.Constants.PublicFileBlobContainerName, It.IsAny<DateTime>()))
                 .ReturnsAsync(filesInformation);
 
-            var result = await this.target.HandleAsync(new GetUserAccessSignaturesQuery(Requester.Unauthenticated, null));
+            var result = await this.target.HandleAsync(new GetUserAccessSignaturesQuery(Requester.Unauthenticated, null, CreatorIds));
 
             Assert.IsNotNull(result);
             Assert.IsNotNull(result.PublicSignature);
@@ -90,23 +92,37 @@
                 .ReturnsAsync(publicFilesInformation);
 
             var userContainerName = "containerName";
+            var creatorContainerName1 = "containerName1";
+            var creatorContainerName2 = "containerName2";
             this.blobLocationGenerator.Setup(v => v.GetBlobContainerName(UserId)).Returns(userContainerName);
+            this.blobLocationGenerator.Setup(v => v.GetBlobContainerName(CreatorIds[0])).Returns(creatorContainerName1);
+            this.blobLocationGenerator.Setup(v => v.GetBlobContainerName(CreatorIds[1])).Returns(creatorContainerName2);
 
             var userInformation = new BlobContainerSharedAccessInformation(userContainerName, "useruri", "usersig", expectedPrivateExpiry);
+            var creatorInformation1 = new BlobContainerSharedAccessInformation(creatorContainerName1, "useruri1", "usersig1", expectedPrivateExpiry);
+            var creatorInformation2 = new BlobContainerSharedAccessInformation(creatorContainerName2, "useruri2", "usersig2", expectedPrivateExpiry);
 
             this.blobService.Setup(v => v.GetBlobContainerSharedAccessInformationForReadingAsync(userContainerName, expectedPrivateExpiry))
                 .ReturnsAsync(userInformation);
+            this.blobService.Setup(v => v.GetBlobContainerSharedAccessInformationForReadingAsync(creatorContainerName1, expectedPrivateExpiry))
+                .ReturnsAsync(creatorInformation1);
+            this.blobService.Setup(v => v.GetBlobContainerSharedAccessInformationForReadingAsync(creatorContainerName2, expectedPrivateExpiry))
+                .ReturnsAsync(creatorInformation2);
 
-            var result = await this.target.HandleAsync(new GetUserAccessSignaturesQuery(Requester, UserId));
+            var result = await this.target.HandleAsync(new GetUserAccessSignaturesQuery(Requester, UserId, CreatorIds));
 
             Assert.IsNotNull(result);
             Assert.IsNotNull(result.PublicSignature);
             Assert.AreEqual(publicFilesInformation, result.PublicSignature);
 
-            Assert.AreEqual(1, result.PrivateSignatures.Count);
+            Assert.AreEqual(3, result.PrivateSignatures.Count);
 
             Assert.AreEqual(UserId, result.PrivateSignatures[0].CreatorId);
             Assert.AreEqual(userInformation, result.PrivateSignatures[0].Information);
+            Assert.AreEqual(CreatorIds[0], result.PrivateSignatures[1].CreatorId);
+            Assert.AreEqual(creatorInformation1, result.PrivateSignatures[1].Information);
+            Assert.AreEqual(CreatorIds[1], result.PrivateSignatures[2].CreatorId);
+            Assert.AreEqual(creatorInformation2, result.PrivateSignatures[2].Information);
         }
 
         [TestMethod]

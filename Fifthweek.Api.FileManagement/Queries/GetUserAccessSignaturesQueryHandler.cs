@@ -47,8 +47,20 @@
 
                 privateSignatures.Add(requesterInformation);
 
-                // TODO: Get subscribed creator access inforamtion.
                 var subscribedCreatorsInformation = new List<UserAccessSignatures.PrivateAccessSignature>();
+                if (query.SubscribedUserIds != null)
+                {
+                    foreach (var creatorId in query.SubscribedUserIds)
+                    {
+                        var creatorContainerName = this.blobLocationGenerator.GetBlobContainerName(creatorId);
+
+                        var creatorResult = await this.blobService.GetBlobContainerSharedAccessInformationForReadingAsync(
+                            creatorContainerName, expiry.Private);
+
+                        var creatorInformation = new UserAccessSignatures.PrivateAccessSignature(creatorId, creatorResult);
+                        subscribedCreatorsInformation.Add(creatorInformation);
+                    }
+                }
 
                 privateSignatures.AddRange(subscribedCreatorsInformation);
             }

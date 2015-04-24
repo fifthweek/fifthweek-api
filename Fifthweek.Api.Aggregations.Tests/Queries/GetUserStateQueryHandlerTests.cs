@@ -45,7 +45,11 @@
                     });
 
         private static readonly GetUserSubscriptionsResult UserSubscriptions =
-            new GetUserSubscriptionsResult(new List<BlogSubscriptionStatus>());
+            new GetUserSubscriptionsResult(new List<BlogSubscriptionStatus>
+                {
+                    new BlogSubscriptionStatus(new BlogId(Guid.NewGuid()), "name", new UserId(Guid.NewGuid()), new Username("username"), null, false, new List<ChannelSubscriptionStatus>()),
+                    new BlogSubscriptionStatus(new BlogId(Guid.NewGuid()), "name2", new UserId(Guid.NewGuid()), new Username("username2"), null, false, new List<ChannelSubscriptionStatus>())
+                });
 
         private GetUserStateQueryHandler target;
 
@@ -99,7 +103,7 @@
             // Should not be called.
             this.requesterSecurity = new Mock<IRequesterSecurity>(MockBehavior.Strict);
 
-            this.getUserAccessSignatures.Setup(v => v.HandleAsync(new GetUserAccessSignaturesQuery(Requester.Unauthenticated, null)))
+            this.getUserAccessSignatures.Setup(v => v.HandleAsync(new GetUserAccessSignaturesQuery(Requester.Unauthenticated, null, null)))
                 .ReturnsAsync(UserAccessSignatures);
 
             var result = await this.target.HandleAsync(new GetUserStateQuery(Requester.Unauthenticated, null));
@@ -120,7 +124,7 @@
 
             var accountSettings = new GetAccountSettingsResult(new Username("username"), new Email("a@b.com"), null);
 
-            this.getUserAccessSignatures.Setup(v => v.HandleAsync(new GetUserAccessSignaturesQuery(Requester, UserId)))
+            this.getUserAccessSignatures.Setup(v => v.HandleAsync(new GetUserAccessSignaturesQuery(Requester, UserId, new List<UserId> { UserSubscriptions.Blogs[0].CreatorId, UserSubscriptions.Blogs[1].CreatorId })))
                 .ReturnsAsync(UserAccessSignatures);
             this.getAccountSettings.Setup(v => v.HandleAsync(new GetAccountSettingsQuery(Requester, UserId)))
                 .ReturnsAsync(accountSettings);
@@ -151,7 +155,7 @@
             var blogChannelsAndCollections = new GetBlogChannelsAndCollectionsResult(
                 new BlogWithFileInformation(new BlogId(Guid.NewGuid()), new BlogName("My Subscription"), new BlogName("My Subscription"), new Tagline("Tagline is great"), new Introduction("Once upon a time there was an intro."), DateTime.UtcNow, null, null, null, new List<ChannelResult>()));
 
-            this.getUserAccessSignatures.Setup(v => v.HandleAsync(new GetUserAccessSignaturesQuery(Requester, UserId)))
+            this.getUserAccessSignatures.Setup(v => v.HandleAsync(new GetUserAccessSignaturesQuery(Requester, UserId, new List<UserId> { UserSubscriptions.Blogs[0].CreatorId, UserSubscriptions.Blogs[1].CreatorId })))
                 .ReturnsAsync(UserAccessSignatures);
             this.getBlogSubscriptions.Setup(v => v.HandleAsync(new GetUserSubscriptionsQuery(Requester)))
                 .ReturnsAsync(UserSubscriptions);
@@ -173,7 +177,7 @@
         }
 
         [TestMethod]
-        public async Task WhenCalledAsACreatorWithNoSubscription_ItShouldReturnUserStateWithoutSubscription()
+        public async Task WhenCalledAsACreatorWithNoBlog_ItShouldReturnUserStateWithoutABlog()
         {
             this.requesterSecurity.SetupFor(Requester);
 
@@ -182,7 +186,7 @@
             var creatorStatus = new CreatorStatus(null, true);
             var accountSettings = new GetAccountSettingsResult(new Username("username"), new Email("a@b.com"), null);
 
-            this.getUserAccessSignatures.Setup(v => v.HandleAsync(new GetUserAccessSignaturesQuery(Requester, UserId)))
+            this.getUserAccessSignatures.Setup(v => v.HandleAsync(new GetUserAccessSignaturesQuery(Requester, UserId, new List<UserId> { UserSubscriptions.Blogs[0].CreatorId, UserSubscriptions.Blogs[1].CreatorId })))
                 .ReturnsAsync(UserAccessSignatures);
             this.getBlogSubscriptions.Setup(v => v.HandleAsync(new GetUserSubscriptionsQuery(Requester)))
                 .ReturnsAsync(UserSubscriptions);

@@ -1,5 +1,7 @@
 ﻿namespace Fifthweek.Api.FileManagement.Queries
 {
+    using System.Collections.Generic;
+
     using Fifthweek.Api.Core;
     using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.CodeGeneration;
@@ -11,5 +13,8 @@
 
         [Optional]
         public UserId RequestedUserId { get; private set; }
+
+        [Optional]
+        public IReadOnlyList<UserId> SubscribedUserIds { get; private set; }
     }
 }

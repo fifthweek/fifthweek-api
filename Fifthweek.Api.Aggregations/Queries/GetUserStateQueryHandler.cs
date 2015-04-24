@@ -1,5 +1,6 @@
 ﻿namespace Fifthweek.Api.Aggregations.Queries
 {
+    using System.Linq;
     using System.Threading.Tasks;
 
     using Fifthweek.Api.Blogs;
@@ -29,8 +30,6 @@
         public async Task<UserState> HandleAsync(GetUserStateQuery query)
         {
             query.AssertNotNull("query");
-
-            var userAccessSignatures = await this.getUserAccessSignatures.HandleAsync(new GetUserAccessSignaturesQuery(query.Requester, query.RequestedUserId));
 
             GetUserSubscriptionsResult userSubscriptions = null;
             CreatorStatus creatorStatus = null;
@@ -76,6 +75,9 @@
                 accountSettings = await accountSettingsTask;
                 userSubscriptions = await blogSubscriptionsTask;
             }
+
+            var subscribedUserIds = userSubscriptions == null ? null : userSubscriptions.Blogs.Select(v => v.CreatorId).Distinct().ToList();
+            var userAccessSignatures = await this.getUserAccessSignatures.HandleAsync(new GetUserAccessSignaturesQuery(query.Requester, query.RequestedUserId, subscribedUserIds));
 
             return new UserState(
                 userAccessSignatures, 
