@@ -8,7 +8,7 @@
     public partial class NewBlogData
     {
         [Parsed(typeof(ValidBlogName))]
-        public string BlogName { get; set; }
+        public string Name { get; set; }
 
         [Parsed(typeof(ValidTagline))]
         public string Tagline { get; set; }

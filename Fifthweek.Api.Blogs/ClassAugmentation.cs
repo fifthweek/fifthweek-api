@@ -4758,7 +4758,7 @@ namespace Fifthweek.Api.Blogs.Controllers
     {
         public override string ToString()
         {
-            return string.Format("NewBlogData(\"{0}\", \"{1}\", {2})", this.BlogName == null ? "null" : this.BlogName.ToString(), this.Tagline == null ? "null" : this.Tagline.ToString(), this.BasePrice == null ? "null" : this.BasePrice.ToString());
+            return string.Format("NewBlogData(\"{0}\", \"{1}\", {2})", this.Name == null ? "null" : this.Name.ToString(), this.Tagline == null ? "null" : this.Tagline.ToString(), this.BasePrice == null ? "null" : this.BasePrice.ToString());
         }
         
         public override bool Equals(object obj)
@@ -4786,7 +4786,7 @@ namespace Fifthweek.Api.Blogs.Controllers
             unchecked
             {
                 int hashCode = 0;
-                hashCode = (hashCode * 397) ^ (this.BlogName != null ? this.BlogName.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.Name != null ? this.Name.GetHashCode() : 0);
                 hashCode = (hashCode * 397) ^ (this.Tagline != null ? this.Tagline.GetHashCode() : 0);
                 hashCode = (hashCode * 397) ^ (this.BasePrice != null ? this.BasePrice.GetHashCode() : 0);
                 return hashCode;
@@ -4795,7 +4795,7 @@ namespace Fifthweek.Api.Blogs.Controllers
         
         protected bool Equals(NewBlogData other)
         {
-            if (!object.Equals(this.BlogName, other.BlogName))
+            if (!object.Equals(this.Name, other.Name))
             {
                 return false;
             }
@@ -4835,7 +4835,7 @@ namespace Fifthweek.Api.Blogs.Controllers
     {
         public override string ToString()
         {
-            return string.Format("UpdatedBlogData(\"{0}\", \"{1}\", \"{2}\", {3}, \"{4}\", \"{5}\")", this.BlogName == null ? "null" : this.BlogName.ToString(), this.Tagline == null ? "null" : this.Tagline.ToString(), this.Introduction == null ? "null" : this.Introduction.ToString(), this.HeaderImageFileId == null ? "null" : this.HeaderImageFileId.ToString(), this.Video == null ? "null" : this.Video.ToString(), this.Description == null ? "null" : this.Description.ToString());
+            return string.Format("UpdatedBlogData(\"{0}\", \"{1}\", \"{2}\", {3}, \"{4}\", \"{5}\")", this.Name == null ? "null" : this.Name.ToString(), this.Tagline == null ? "null" : this.Tagline.ToString(), this.Introduction == null ? "null" : this.Introduction.ToString(), this.HeaderImageFileId == null ? "null" : this.HeaderImageFileId.ToString(), this.Video == null ? "null" : this.Video.ToString(), this.Description == null ? "null" : this.Description.ToString());
         }
         
         public override bool Equals(object obj)
@@ -4863,7 +4863,7 @@ namespace Fifthweek.Api.Blogs.Controllers
             unchecked
             {
                 int hashCode = 0;
-                hashCode = (hashCode * 397) ^ (this.BlogName != null ? this.BlogName.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.Name != null ? this.Name.GetHashCode() : 0);
                 hashCode = (hashCode * 397) ^ (this.Tagline != null ? this.Tagline.GetHashCode() : 0);
                 hashCode = (hashCode * 397) ^ (this.Introduction != null ? this.Introduction.GetHashCode() : 0);
                 hashCode = (hashCode * 397) ^ (this.HeaderImageFileId != null ? this.HeaderImageFileId.GetHashCode() : 0);
@@ -4875,7 +4875,7 @@ namespace Fifthweek.Api.Blogs.Controllers
         
         protected bool Equals(UpdatedBlogData other)
         {
-            if (!object.Equals(this.BlogName, other.BlogName))
+            if (!object.Equals(this.Name, other.Name))
             {
                 return false;
             }
@@ -5266,10 +5266,10 @@ namespace Fifthweek.Api.Blogs.Controllers
             var modelStateDictionary = new System.Web.Http.ModelBinding.ModelStateDictionary();
         
             ValidBlogName parsed0 = null;
-            if (!ValidBlogName.IsEmpty(target.BlogName))
+            if (!ValidBlogName.IsEmpty(target.Name))
             {
                 System.Collections.Generic.IReadOnlyCollection<string> parsed0Errors;
-                if (!ValidBlogName.TryParse(target.BlogName, out parsed0, out parsed0Errors))
+                if (!ValidBlogName.TryParse(target.Name, out parsed0, out parsed0Errors))
                 {
                     var modelState = new System.Web.Http.ModelBinding.ModelState();
                     foreach (var errorMessage in parsed0Errors)
@@ -5407,10 +5407,10 @@ namespace Fifthweek.Api.Blogs.Controllers
             var modelStateDictionary = new System.Web.Http.ModelBinding.ModelStateDictionary();
         
             ValidBlogName parsed0 = null;
-            if (!ValidBlogName.IsEmpty(target.BlogName))
+            if (!ValidBlogName.IsEmpty(target.Name))
             {
                 System.Collections.Generic.IReadOnlyCollection<string> parsed0Errors;
-                if (!ValidBlogName.TryParse(target.BlogName, out parsed0, out parsed0Errors))
+                if (!ValidBlogName.TryParse(target.Name, out parsed0, out parsed0Errors))
                 {
                     var modelState = new System.Web.Http.ModelBinding.ModelState();
                     foreach (var errorMessage in parsed0Errors)

@@ -130,7 +130,7 @@
         {
             return new NewBlogData
             {
-                BlogName = "Captain Phil",
+                Name = "Captain Phil",
                 Tagline = "Web Comics And More",
                 BasePrice = 50
             };
@@ -144,7 +144,7 @@
             return new CreateBlogCommand(
                 Requester.Authenticated(userId),
                 blogId,
-                ValidBlogName.Parse(data.BlogName),
+                ValidBlogName.Parse(data.Name),
                 ValidTagline.Parse(data.Tagline),
                 ValidChannelPriceInUsCentsPerWeek.Parse(data.BasePrice));
         }
@@ -153,7 +153,7 @@
         {
             return new UpdatedBlogData
             {
-                BlogName = "Captain Phil",
+                Name = "Captain Phil",
                 Tagline = "Web Comics And More",
                 Introduction = "Blog introduction",
                 HeaderImageFileId = HeaderImageFileId,
@@ -170,7 +170,7 @@
             return new UpdateBlogCommand(
                 Requester.Authenticated(userId),
                 blogId,
-                ValidBlogName.Parse(data.BlogName),
+                ValidBlogName.Parse(data.Name),
                 ValidTagline.Parse(data.Tagline),
                 ValidIntroduction.Parse(data.Introduction),
                 ValidBlogDescription.Parse(data.Description),

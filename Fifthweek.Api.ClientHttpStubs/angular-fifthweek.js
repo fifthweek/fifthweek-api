@@ -622,7 +622,7 @@ angular.module('webApp').factory('blogStub',
     var service = {};
 
     // blogData = {
-    //   blogName: '',
+    //   name: '',
     //   tagline: '',
     //   basePrice: 0
     // }
@@ -635,7 +635,7 @@ angular.module('webApp').factory('blogStub',
 
     // blogId = 'Base64Guid'
     // blogData = {
-    //   blogName: '',
+    //   name: '',
     //   tagline: '',
     //   introduction: '',
     //   headerImageFileId: 'Base64Guid', /* optional */
