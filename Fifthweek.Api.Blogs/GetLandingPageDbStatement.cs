@@ -86,7 +86,7 @@
             
             if (blog == null)
             {
-                throw new InvalidOperationException("The blog couldn't be found for user " + username + ".");
+                return null;
             }
 
             var blogResult = GetBlogChannelsAndCollectionsDbStatement.GetBlogDbResult(blog);
