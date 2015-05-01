@@ -8,7 +8,7 @@
 
     public class ReservedUsernameService : IReservedUsernameService
     {
-        private readonly HashSet<string> reservedUsernames = new HashSet<string> { "static", "bower_components", "is", "features", "terms", "privacy", "pricing", "about", "help", "support", "sign-in", "register", "user", "creator" };
+        private readonly HashSet<string> reservedUsernames = new HashSet<string> { "static", "bower_components", "is", "features", "terms", "privacy", "pricing", "about", "help", "getting-started", "support", "sign-in", "register", "user", "creator" };
 
         public bool IsReserved(ValidUsername username)
         {
