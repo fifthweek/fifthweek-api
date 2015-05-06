@@ -27,11 +27,11 @@ namespace Fifthweek.WebJobs.Shared
         }
 
         // This is used for reporting errors, as we can't rely on AutoFac being in a good state.
-        public static IReportingService NewDefaultReportingService()
+        public static IErrorReportingService NewDefaultReportingService()
         {
             return System.Diagnostics.Debugger.IsAttached
-               ? (IReportingService)new AggregateReportingService(new TraceReportingService())
-               : (IReportingService)new AggregateReportingService(new TraceReportingService(), new EmailReportingService(NewDefaultSendEmailService()), new SlackReportingService());
+               ? (IErrorReportingService)new AggregateReportingService(new TraceReportingService())
+               : (IErrorReportingService)new AggregateReportingService(new TraceReportingService(), new EmailReportingService(NewDefaultSendEmailService()), new SlackReportingService());
         }
     }
 }

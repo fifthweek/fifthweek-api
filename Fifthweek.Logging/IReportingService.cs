@@ -1,10 +1,6 @@
 namespace Fifthweek.Logging
 {
-    using System;
-    using System.Threading.Tasks;
-
-    public interface IReportingService
+    public interface IReportingService : IErrorReportingService, IActivityReportingService
     {
-        Task ReportErrorAsync(Exception exception, string identifier, Developer developer);
     }
 }

@@ -39,7 +39,7 @@
             }
 
             var content = new SlackContent(
-                sb.ToString().Replace("\r", string.Empty),
+                Sanitize(sb.ToString()),
                 developer == null ? null : "@" + developer.SlackName);
             
             var response = await client.PostAsync(uri, content, new JsonMediaTypeFormatter());
@@ -49,6 +49,34 @@
                 var responseContent = await response.Content.ReadAsStringAsync();
                 throw new Exception("Failed to post to slack. Status Code " + response.StatusCode + ", Message: " + responseContent);
             }
+        }
+
+        public async Task ReportActivityAsync(string activity, Developer developer)
+        {
+            if (developer != null && string.IsNullOrWhiteSpace(developer.SlackName))
+            {
+                return;
+            }
+
+            var client = new HttpClient();
+            var uri = "https://hooks.slack.com/services/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";
+
+            var content = new SlackContent(
+                Sanitize(activity),
+                developer == null ? null : "@" + developer.SlackName);
+            
+            var response = await client.PostAsync(uri, content, new JsonMediaTypeFormatter());
+
+            if (!response.IsSuccessStatusCode)
+            {
+                var responseContent = await response.Content.ReadAsStringAsync();
+                throw new Exception("Failed to post to slack. Status Code " + response.StatusCode + ", Message: " + responseContent);
+            }
+        }
+
+        private static string Sanitize(string message)
+        {
+            return message.Replace("\r", string.Empty);
         }
 
         private static string TruncateError(string errorString)

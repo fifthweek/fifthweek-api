@@ -102,6 +102,7 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
+    <Compile Include="Membership\Commands\RegisterInterestCommandHandlerTests.cs" />
     <Compile Include="Membership\Commands\RegisterUserCommandHandlerTests.cs" />
     <Compile Include="Membership\Commands\ConfirmPasswordResetCommandHandlerTests.cs" />
     <Compile Include="Membership\Commands\RequestPasswordResetCommandHandlerTests.cs" />

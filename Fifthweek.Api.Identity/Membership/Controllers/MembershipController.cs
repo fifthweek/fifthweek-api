@@ -17,6 +17,7 @@
         private readonly ICommandHandler<RegisterUserCommand> registerUser;
         private readonly ICommandHandler<RequestPasswordResetCommand> requestPasswordReset;
         private readonly ICommandHandler<ConfirmPasswordResetCommand> confirmPasswordReset;
+        private readonly ICommandHandler<RegisterInterestCommand> registerInterest;
         private readonly IQueryHandler<IsUsernameAvailableQuery, bool> isUsernameAvailable;
         private readonly IQueryHandler<IsPasswordResetTokenValidQuery, bool> isPasswordResetTokenValid;
         private readonly IGuidCreator guidCreator;
@@ -115,6 +116,22 @@
             }
 
             return this.NotFound();
+        }
+
+        // POST membership/registeredInterest
+        [AllowAnonymous]
+        [Route("registeredInterest")]
+        public async Task<IHttpActionResult> PostRegisteredInterestAsync(RegisterInterestData registerInterestData)
+        {
+            registerInterestData.AssertBodyProvided("registerInterestData");
+            var data = registerInterestData.Parse();
+
+            var command = new RegisterInterestCommand(
+                data.Name,
+                data.Email);
+
+            await this.registerInterest.HandleAsync(command);
+            return this.Ok();
         }
     }
 }

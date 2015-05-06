@@ -23,10 +23,22 @@
                 return Task.FromResult(true);
             }
 
+            var message = t.ToString();
+            var subject = t.Message.Replace("\r", string.Empty).Replace("\n", string.Empty);
+            subject = subject.Substring(0,  Math.Min(subject.Length, 70));
+
             return this.sendEmailService.SendEmailAsync(
                 developer == null ? ErrorEmailAddress : developer.FifthweekEmail,
-                "An error occurred: " + identifier,
-                t.ToString());
+                "Error: " + subject,
+                message + Environment.NewLine + Environment.NewLine + identifier);
+        }
+
+        public Task ReportActivityAsync(string activity, Developer developer)
+        {
+            return this.sendEmailService.SendEmailAsync(
+                developer == null ? ErrorEmailAddress : developer.FifthweekEmail,
+                "Activity: " + activity,
+                activity);
         }
     }
 }

@@ -4,6 +4,7 @@
 
     using Fifthweek.Api.Core;
     using Fifthweek.CodeGeneration;
+    using Fifthweek.Logging;
 
     [AutoConstructor]
     public partial class ExceptionHandler : IExceptionHandler
@@ -13,6 +14,11 @@
         public void ReportExceptionAsync(Exception exception)
         {
             var developerName = ExceptionHandlerUtilities.GetDeveloperName(this.requestContext.Request);
+            ExceptionHandlerUtilities.ReportExceptionAsync(exception, developerName);
+        }
+
+        public void ReportExceptionAsync(Exception exception, string developerName)
+        {
             ExceptionHandlerUtilities.ReportExceptionAsync(exception, developerName);
         }
     }

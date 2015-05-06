@@ -55,8 +55,10 @@
 
             builder.RegisterInstance(HardwiredDependencies.NewDefaultDeveloperRepository()).As<IDeveloperRepository>();
             builder.RegisterInstance(HardwiredDependencies.NewDefaultSendEmailService()).As<ISendEmailService>();
-            builder.RegisterInstance(HardwiredDependencies.NewDefaultReportingService()).As<IReportingService>();
-
+            builder.RegisterInstance(HardwiredDependencies.NewErrorReportingService()).As<IErrorReportingService>();
+            builder.RegisterInstance(HardwiredDependencies.NewActivityReportingService()).As<IActivityReportingService>();
+            builder.RegisterType<FifthweekActivityReporter>().As<IFifthweekActivityReporter>();
+            
             builder.RegisterType<HttpClient>();
 
             // Uncoment this to log Autofac requests to trace output.

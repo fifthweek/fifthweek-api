@@ -91,6 +91,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="IFifthweekActivityReporter.cs" />
     <Compile Include="ApiException.cs" />
     <Compile Include="AutofacRegistration.cs" />
     <Compile Include="ClassAugmentation.cs">

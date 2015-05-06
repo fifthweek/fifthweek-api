@@ -32,7 +32,7 @@
                 var developer = await HardwiredDependencies.NewDefaultDeveloperRepository().TryGetByGitNameAsync(developerName);
                 identifier = exception.GetExceptionIdentifier();
 
-                await HardwiredDependencies.NewDefaultReportingService().ReportErrorAsync(exception, identifier, developer);
+                await HardwiredDependencies.NewErrorReportingService().ReportErrorAsync(exception, identifier, developer);
             }
             catch (Exception t)
             {
@@ -86,7 +86,7 @@
                 var developer = await HardwiredDependencies.NewDefaultDeveloperRepository().TryGetByGitNameAsync(developerName);
                 identifier = exception.GetExceptionIdentifier();
 
-                await HardwiredDependencies.NewDefaultReportingService().ReportErrorAsync(exception, identifier, developer);
+                await HardwiredDependencies.NewErrorReportingService().ReportErrorAsync(exception, identifier, developer);
                 context.SetError("internal_error", "Something went wrong: " + identifier);
             }
             catch (Exception t)
@@ -143,7 +143,7 @@
             // I don't want to use Autofac here as it may be the dependency resolution
             // causing the error.
             var developer = await HardwiredDependencies.NewDefaultDeveloperRepository().TryGetByGitNameAsync(developerName);
-            await HardwiredDependencies.NewDefaultReportingService().ReportErrorAsync(exception, exceptionIdentifier, developer);
+            await HardwiredDependencies.NewErrorReportingService().ReportErrorAsync(exception, exceptionIdentifier, developer);
         }
     }
 }

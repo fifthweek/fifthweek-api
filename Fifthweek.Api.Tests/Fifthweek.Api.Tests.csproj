@@ -119,6 +119,7 @@
   <ItemGroup>
     <Compile Include="AutofacConfigTests.cs" />
     <Compile Include="ControllerConfigurationTests.cs" />
+    <Compile Include="FifthweekActivityReporterTests.cs" />
     <Compile Include="InterceptExpiredBearerTokensAttributeTests.cs" />
     <Compile Include="TestCommandHandlerWithNoDecorator.cs" />
     <Compile Include="TestCommandWithDefaultDecorators.cs" />
@@ -176,6 +177,10 @@
     <ProjectReference Include="..\Fifthweek.Api\Fifthweek.Api.csproj">
       <Project>{f90dc407-dc1e-4ef6-bbec-b5598810660a}</Project>
       <Name>Fifthweek.Api</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Fifthweek.Logging\Fifthweek.Logging.csproj">
+      <Project>{6CB9EAC7-E00A-4DAC-B6A4-D14C4503C6CD}</Project>
+      <Name>Fifthweek.Logging</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup />

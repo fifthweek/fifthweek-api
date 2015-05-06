@@ -8,7 +8,7 @@
 
     public class WebJobLogger : ILogger
     {
-        private static readonly IReportingService ReportingService = HardwiredDependencies.NewDefaultReportingService();
+        private static readonly IErrorReportingService ReportingService = HardwiredDependencies.NewDefaultReportingService();
 
         private readonly string id = Guid.NewGuid().ToString().Substring(0, 8);
 

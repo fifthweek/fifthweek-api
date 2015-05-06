@@ -6,5 +6,7 @@
     {
         void ReportExceptionAsync(
             Exception exception);
+
+        void ReportExceptionAsync(Exception exception, string developerName);
     }
 }

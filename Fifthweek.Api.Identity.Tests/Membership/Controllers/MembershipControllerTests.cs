@@ -28,6 +28,7 @@
         private Mock<ICommandHandler<ConfirmPasswordResetCommand>> confirmPasswordReset;
         private Mock<IQueryHandler<IsUsernameAvailableQuery, bool>> isUsernameAvailable;
         private Mock<IQueryHandler<IsPasswordResetTokenValidQuery, bool>> isPasswordResetTokenValid;
+        private Mock<ICommandHandler<RegisterInterestCommand>> registerInterest;
         private Mock<IGuidCreator> guidCreator;
         private MembershipController controller;
 
@@ -39,6 +40,7 @@
             this.confirmPasswordReset = new Mock<ICommandHandler<ConfirmPasswordResetCommand>>();
             this.isUsernameAvailable = new Mock<IQueryHandler<IsUsernameAvailableQuery, bool>>();
             this.isPasswordResetTokenValid = new Mock<IQueryHandler<IsPasswordResetTokenValidQuery, bool>>();
+            this.registerInterest = new Mock<ICommandHandler<RegisterInterestCommand>>();
             this.guidCreator = new Mock<IGuidCreator>();
             this.guidCreator.Setup(v => v.CreateSqlSequential()).Returns(Guid.Empty);
 
@@ -46,6 +48,7 @@
                 this.registerUser.Object,
                 this.requestPasswordReset.Object,
                 this.confirmPasswordReset.Object,
+                this.registerInterest.Object,
                 this.isUsernameAvailable.Object,
                 this.isPasswordResetTokenValid.Object,
                 this.guidCreator.Object);
@@ -144,6 +147,22 @@
             Assert.IsInstanceOfType(result, typeof(NotFoundResult));
         }
 
+        [TestMethod]
+        public async Task WhenPostingRegisteredInterest_ItShouldIssueRegisterInterestCommand()
+        {
+            var registration = NewRegisteredInterestData();
+            var command = new RegisterInterestCommand(
+                registration.Name,
+                ValidEmail.Parse(registration.Email));
+
+            this.registerInterest.Setup(v => v.HandleAsync(command)).Returns(Task.FromResult(0));
+
+            var result = await this.controller.PostRegisteredInterestAsync(registration);
+
+            Assert.IsInstanceOfType(result, typeof(OkResult));
+            this.registerInterest.Verify(v => v.HandleAsync(command));
+        }
+
         public static PasswordResetConfirmationData NewPasswordResetConfirmationData()
         {
             return new PasswordResetConfirmationData
@@ -171,6 +190,15 @@
                 Email = "test@test.com",
                 Username = "test_username",
                 Password = "TestPassword"
+            };
+        }
+
+        public static RegisterInterestData NewRegisteredInterestData()
+        {
+            return new RegisterInterestData
+            {
+                Name = "phil",
+                Email = "test@test.com"
             };
         }
     }

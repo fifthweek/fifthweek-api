@@ -33,5 +33,26 @@
                 throw new AggregateException("Failed to delegate errors to all reporting services.", errors);
             }
         }
+
+        public async Task ReportActivityAsync(string activity, Developer developer)
+        {
+            var errors = new List<Exception>();
+            foreach (var s in this.delegateServices)
+            {
+                try
+                {
+                    await s.ReportActivityAsync(activity, developer);
+                }
+                catch (Exception t)
+                {
+                    errors.Add(t);
+                }
+            }
+
+            if (errors.Count != 0)
+            {
+                throw new AggregateException("Failed to delegate activity to all reporting services.", errors);
+            }
+        }
     }
 }

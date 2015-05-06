@@ -101,9 +101,12 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>ClassAugmentation.tt</DependentUpon>
     </Compile>
+    <Compile Include="Membership\Commands\RegisterInterestCommand.cs" />
+    <Compile Include="Membership\Commands\RegisterInterestCommandHandler.cs" />
     <Compile Include="Membership\Commands\UpdateAccountSettingsCommand.cs" />
     <Compile Include="Membership\Commands\UpdateAccountSettingsCommandHandler.cs" />
     <Compile Include="Membership\Controllers\AccountSettingsController.cs" />
+    <Compile Include="Membership\Controllers\RegisterInterestData.cs" />
     <Compile Include="Membership\Controllers\UpdatedAccountSettings.cs" />
     <Compile Include="Membership\GetAccountSettingsDbStatement.cs" />
     <Compile Include="Membership\GetAccountSettingsResult.cs" />

@@ -18,5 +18,16 @@
             Trace.TraceError(t.ToString());
             return Task.FromResult(false);
         }
+
+        public Task ReportActivityAsync(string activity, Developer developer)
+        {
+            if (developer != null)
+            {
+                Trace.TraceInformation("Developer: " + developer.GitName);
+            }
+
+            Trace.TraceInformation(activity);
+            return Task.FromResult(false);
+        }
     }
 }
