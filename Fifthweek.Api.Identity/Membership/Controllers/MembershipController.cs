@@ -18,6 +18,7 @@
         private readonly ICommandHandler<RequestPasswordResetCommand> requestPasswordReset;
         private readonly ICommandHandler<ConfirmPasswordResetCommand> confirmPasswordReset;
         private readonly ICommandHandler<RegisterInterestCommand> registerInterest;
+        private readonly ICommandHandler<SendIdentifiedUserInformationCommand> sendIdentifiedUserInformation;
         private readonly IQueryHandler<IsUsernameAvailableQuery, bool> isUsernameAvailable;
         private readonly IQueryHandler<IsPasswordResetTokenValidQuery, bool> isPasswordResetTokenValid;
         private readonly IGuidCreator guidCreator;
@@ -131,6 +132,28 @@
                 data.Email);
 
             await this.registerInterest.HandleAsync(command);
+            return this.Ok();
+        }
+
+        // POST membership/identifiedUsers
+        [AllowAnonymous]
+        [Route("identifiedUsers")]
+        public async Task<IHttpActionResult> PostIdentifiedUserAsync(IdentifiedUserData identifiedUserData)
+        {
+            identifiedUserData.AssertBodyProvided("identifiedUserData");
+
+            if (string.IsNullOrWhiteSpace(identifiedUserData.Email))
+            {
+                throw new BadRequestException("Email must be provided when identifying user");
+            }
+
+            var command = new SendIdentifiedUserInformationCommand(
+                identifiedUserData.IsUpdate,
+                new Email(identifiedUserData.Email),
+                string.IsNullOrWhiteSpace(identifiedUserData.Name) ? null : identifiedUserData.Name,
+                string.IsNullOrWhiteSpace(identifiedUserData.Username) ? null : new Username(identifiedUserData.Username));
+
+            await this.sendIdentifiedUserInformation.HandleAsync(command);
             return this.Ok();
         }
     }

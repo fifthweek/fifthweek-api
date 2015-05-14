@@ -29,6 +29,7 @@
         private Mock<IQueryHandler<IsUsernameAvailableQuery, bool>> isUsernameAvailable;
         private Mock<IQueryHandler<IsPasswordResetTokenValidQuery, bool>> isPasswordResetTokenValid;
         private Mock<ICommandHandler<RegisterInterestCommand>> registerInterest;
+        private Mock<ICommandHandler<SendIdentifiedUserInformationCommand>> sendIdentifiedUserInformation;
         private Mock<IGuidCreator> guidCreator;
         private MembershipController controller;
 
@@ -41,6 +42,7 @@
             this.isUsernameAvailable = new Mock<IQueryHandler<IsUsernameAvailableQuery, bool>>();
             this.isPasswordResetTokenValid = new Mock<IQueryHandler<IsPasswordResetTokenValidQuery, bool>>();
             this.registerInterest = new Mock<ICommandHandler<RegisterInterestCommand>>();
+            this.sendIdentifiedUserInformation = new Mock<ICommandHandler<SendIdentifiedUserInformationCommand>>();
             this.guidCreator = new Mock<IGuidCreator>();
             this.guidCreator.Setup(v => v.CreateSqlSequential()).Returns(Guid.Empty);
 
@@ -49,6 +51,7 @@
                 this.requestPasswordReset.Object,
                 this.confirmPasswordReset.Object,
                 this.registerInterest.Object,
+                this.sendIdentifiedUserInformation.Object,
                 this.isUsernameAvailable.Object,
                 this.isPasswordResetTokenValid.Object,
                 this.guidCreator.Object);
@@ -163,6 +166,59 @@
             this.registerInterest.Verify(v => v.HandleAsync(command));
         }
 
+        [TestMethod]
+        [ExpectedException(typeof(BadRequestException))]
+        public async Task WhenPostingIdentifiedUserWithoutData_ItShouldThrowAnException()
+        {
+            await this.controller.PostIdentifiedUserAsync(null);
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(BadRequestException))]
+        public async Task WhenPostingIdentifiedUserWithoutEmail_ItShouldThrowAnException()
+        {
+            var data = NewIdentifiedUserData();
+            data.Email = string.Empty;
+            await this.controller.PostIdentifiedUserAsync(data);
+        }
+
+        [TestMethod]
+        public async Task WhenPostingIdentifiedUser_ItShouldIssueSendIdentifiedUserInformationCommand()
+        {
+            var data = NewIdentifiedUserData();
+            var command = new SendIdentifiedUserInformationCommand(
+                data.IsUpdate,
+                new Email(data.Email),
+                data.Name,
+                new Username(data.Username));
+
+            this.sendIdentifiedUserInformation.Setup(v => v.HandleAsync(command)).Returns(Task.FromResult(0));
+
+            var result = await this.controller.PostIdentifiedUserAsync(data);
+
+            Assert.IsInstanceOfType(result, typeof(OkResult));
+            this.sendIdentifiedUserInformation.Verify(v => v.HandleAsync(command));
+        }
+
+        [TestMethod]
+        public async Task WhenPostingIdentifiedUserEmail_ItShouldIssueSendIdentifiedUserInformationCommand()
+        {
+            var data = NewIdentifiedUserData();
+            data = new IdentifiedUserData { Email = data.Email };
+            var command = new SendIdentifiedUserInformationCommand(
+                data.IsUpdate,
+                new Email(data.Email),
+                null,
+                null);
+
+            this.sendIdentifiedUserInformation.Setup(v => v.HandleAsync(command)).Returns(Task.FromResult(0));
+
+            var result = await this.controller.PostIdentifiedUserAsync(data);
+
+            Assert.IsInstanceOfType(result, typeof(OkResult));
+            this.sendIdentifiedUserInformation.Verify(v => v.HandleAsync(command));
+        }
+
         public static PasswordResetConfirmationData NewPasswordResetConfirmationData()
         {
             return new PasswordResetConfirmationData
@@ -198,6 +254,17 @@
             return new RegisterInterestData
             {
                 Name = "phil",
+                Email = "test@test.com"
+            };
+        }
+
+        public static IdentifiedUserData NewIdentifiedUserData()
+        {
+            return new IdentifiedUserData
+            {
+                IsUpdate = true,
+                Name = "phil",
+                Username = "philthecat",
                 Email = "test@test.com"
             };
         }

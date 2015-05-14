@@ -106,6 +106,7 @@
     <Compile Include="Membership\Commands\RegisterUserCommandHandlerTests.cs" />
     <Compile Include="Membership\Commands\ConfirmPasswordResetCommandHandlerTests.cs" />
     <Compile Include="Membership\Commands\RequestPasswordResetCommandHandlerTests.cs" />
+    <Compile Include="Membership\Commands\SendIdentifiedUserInformationCommandHandlerTests.cs" />
     <Compile Include="Membership\Commands\UpdateAccountSettingsCommandHandlerTests.cs" />
     <Compile Include="Membership\Controllers\AccountSettingsControllerTests.cs" />
     <Compile Include="Membership\Controllers\MembershipControllerTests.cs" />

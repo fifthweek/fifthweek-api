@@ -8,11 +8,11 @@
     using Fifthweek.CodeGeneration;
     using Fifthweek.Shared;
 
+    using Constants = Fifthweek.Api.Core.Constants;
+
     [AutoConstructor]
     public partial class EndToEndTestSendEmailServiceDecorator : ISendEmailService
     {
-        private const string TestDomain = "@testing.fifthweek.com";
-
         private readonly ISendEmailService baseService;
         private readonly ISetLatestMessageDbStatement setLatestMessage;
 
@@ -23,7 +23,7 @@
             message.AssertNotNull("message");
 
             MailboxName mailboxName;
-            if (to.EndsWith(TestDomain) && MailboxName.TryParse(to.Split('@').FirstOrDefault(), out mailboxName))
+            if (to.EndsWith(Constants.TestDomain) && MailboxName.TryParse(to.Split('@').FirstOrDefault(), out mailboxName))
             {
                 return this.setLatestMessage.ExecuteAsync(mailboxName, subject, message);
             }

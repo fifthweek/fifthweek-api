@@ -19,6 +19,11 @@
 
             try
             {
+                if (command.Email.Value.EndsWith(Core.Constants.TestDomain))
+                {
+                    return;
+                }
+
                 await this.activityReporter.ReportActivityAsync(
                         string.Format("Registered Interest: {0}, {1}", command.Name, command.Email.Value));
             }

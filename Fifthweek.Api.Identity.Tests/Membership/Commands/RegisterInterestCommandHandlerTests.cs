@@ -40,6 +40,13 @@
         }
 
         [TestMethod]
+        public async Task WhenEmailIsFromTestDomain_ItShouldNotReport()
+        {
+            await this.target.HandleAsync(new RegisterInterestCommand(Name, ValidEmail.Parse("something" + Constants.TestDomain)));
+            // Test verification handled by strict behaviour.
+        }
+
+        [TestMethod]
         public async Task WhenReportingSucceeds_ItShouldCompleteSuccessfully()
         {
             this.activityReporter.Setup(v => v.ReportActivityAsync(Activity))
