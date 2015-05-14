@@ -391,6 +391,36 @@ describe('membership stub', function() {
 
     expect(result).toBe(responseData);
   });
+
+  it('should post registered interest', function() {
+    var registerInterestData = 'value-body';
+
+    var responseData = 'response data';
+    $httpBackend.expectPOST(fifthweekConstants.apiBaseUri + 'membership/registeredInterest', registerInterestData).respond(200, responseData);
+
+    var result = null;
+    target.postRegisteredInterest(registerInterestData).then(function(response) { result = response.data; });
+
+    $httpBackend.flush();
+    $rootScope.$apply();
+
+    expect(result).toBe(responseData);
+  });
+
+  it('should post identified user', function() {
+    var identifiedUserData = 'value-body';
+
+    var responseData = 'response data';
+    $httpBackend.expectPOST(fifthweekConstants.apiBaseUri + 'membership/identifiedUsers', identifiedUserData).respond(200, responseData);
+
+    var result = null;
+    target.postIdentifiedUser(identifiedUserData).then(function(response) { result = response.data; });
+
+    $httpBackend.flush();
+    $rootScope.$apply();
+
+    expect(result).toBe(responseData);
+  });
 });
 
 describe('log stub', function() {
