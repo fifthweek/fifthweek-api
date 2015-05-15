@@ -272,6 +272,10 @@
     <Compile Include="Migrations\201504221340483_ReplacePostIndexOnLiveDateWithIndexOnLiveDateAndCreationDate.Designer.cs">
       <DependentUpon>201504221340483_ReplacePostIndexOnLiveDateWithIndexOnLiveDateAndCreationDate.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201505151520343_RemoveUnusedIndexOnPostsAndReplaceWithDtaRecommendedIndex.cs" />
+    <Compile Include="Migrations\201505151520343_RemoveUnusedIndexOnPostsAndReplaceWithDtaRecommendedIndex.Designer.cs">
+      <DependentUpon>201505151520343_RemoveUnusedIndexOnPostsAndReplaceWithDtaRecommendedIndex.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Post.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -423,6 +427,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201504221340483_ReplacePostIndexOnLiveDateWithIndexOnLiveDateAndCreationDate.resx">
       <DependentUpon>201504221340483_ReplacePostIndexOnLiveDateWithIndexOnLiveDateAndCreationDate.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201505151520343_RemoveUnusedIndexOnPostsAndReplaceWithDtaRecommendedIndex.resx">
+      <DependentUpon>201505151520343_RemoveUnusedIndexOnPostsAndReplaceWithDtaRecommendedIndex.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>

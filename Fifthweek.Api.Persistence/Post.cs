@@ -6,6 +6,10 @@
 
     using Fifthweek.CodeGeneration;
 
+    /// <summary>
+    /// NOTE: The Posts table has a manually defined index with included columns.
+    /// See migration 201505151520343_RemoveUnusedIndexOnPostsAndReplaceWithDtaRecommendedIndex.
+    /// </summary>
     [AutoConstructor, AutoEqualityMembers, AutoSql, AutoCopy(RequiresBuilder = false)]
     public partial class Post
     {
@@ -56,11 +60,9 @@
         public bool ScheduledByQueue { get; set; }
 
         [Required]
-        [Index("IX_LiveDateAndCreationDate", 1)]
         public DateTime LiveDate { get; set; }
 
         [Required]
-        [Index("IX_LiveDateAndCreationDate", 2)]
         public DateTime CreationDate { get; set; }
     }
 }
