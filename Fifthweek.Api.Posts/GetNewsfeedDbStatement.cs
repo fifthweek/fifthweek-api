@@ -77,13 +77,14 @@
             (
                 SELECT sub.{3} 
                 FROM {2} sub 
+                INNER JOIN {13} subChannel ON sub.{3} = subChannel.{0}
                 WHERE 
                     sub.{4} = @RequestorId 
                     AND 
                     (
-                        sub.{5} >= channel.{6}
+                        sub.{5} >= subChannel.{6}
                         OR
-                        blog.{1} IN
+                        subChannel.{1} IN
                         (
                             SELECT fau.{8} 
                             FROM {7} fau
@@ -93,7 +94,7 @@
                     )
             )",
             Channel.Fields.Id,
-            Blog.Fields.Id,
+            Channel.Fields.BlogId,
             ChannelSubscription.Table,
             ChannelSubscription.Fields.ChannelId,
             ChannelSubscription.Fields.UserId,
@@ -104,7 +105,8 @@
             FreeAccessUser.Fields.Email,
             FifthweekUser.Table,
             FifthweekUser.Fields.Email,
-            FifthweekUser.Fields.Id);
+            FifthweekUser.Fields.Id,
+            Channel.Table);
 
         private static readonly string SqlEndBackwardsWithOrigin = string.Format(
             @"
