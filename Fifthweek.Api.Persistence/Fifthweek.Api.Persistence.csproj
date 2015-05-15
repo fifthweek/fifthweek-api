@@ -276,6 +276,10 @@
     <Compile Include="Migrations\201505151520343_RemoveUnusedIndexOnPostsAndReplaceWithDtaRecommendedIndex.Designer.cs">
       <DependentUpon>201505151520343_RemoveUnusedIndexOnPostsAndReplaceWithDtaRecommendedIndex.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201505151716181_AddDtaRecommendedIndexForGetUserSubscriptions.cs" />
+    <Compile Include="Migrations\201505151716181_AddDtaRecommendedIndexForGetUserSubscriptions.Designer.cs">
+      <DependentUpon>201505151716181_AddDtaRecommendedIndexForGetUserSubscriptions.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Post.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -430,6 +434,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201505151520343_RemoveUnusedIndexOnPostsAndReplaceWithDtaRecommendedIndex.resx">
       <DependentUpon>201505151520343_RemoveUnusedIndexOnPostsAndReplaceWithDtaRecommendedIndex.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201505151716181_AddDtaRecommendedIndexForGetUserSubscriptions.resx">
+      <DependentUpon>201505151716181_AddDtaRecommendedIndexForGetUserSubscriptions.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
