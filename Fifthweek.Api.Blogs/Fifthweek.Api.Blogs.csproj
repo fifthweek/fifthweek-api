@@ -141,9 +141,6 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>ClassAugmentation.tt</DependentUpon>
     </Compile>
-    <Compile Include="Commands\PromoteNewUserToCreatorCommand.cs" />
-    <Compile Include="Commands\PromoteNewUserToCreatorCommandInitiator.cs" />
-    <Compile Include="Commands\PromoteNewUserToCreatorCommandHandler.cs" />
     <Compile Include="Commands\CreateBlogCommand.cs" />
     <Compile Include="Commands\CreateBlogCommandHandler.cs" />
     <Compile Include="Commands\UpdateBlogCommand.cs" />

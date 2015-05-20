@@ -25,7 +25,7 @@
             using (var connection = this.connectionFactory.CreateConnection())
             {
                 var result = (await connection.QueryAsync<GetAccountSettingsDapperResult>(
-                         @"SELECT UserName, Email, ProfileImageFileId FROM dbo.AspNetUsers WHERE Id=@UserId",
+                         @"SELECT Name, UserName, Email, ProfileImageFileId FROM dbo.AspNetUsers WHERE Id=@UserId",
                          new { UserId = userId.Value })).SingleOrDefault();
 
                 if (result == null)
@@ -36,6 +36,7 @@
                 }
 
                 return new GetAccountSettingsDbResult(
+                    result.Name == null ? null : new CreatorName(result.Name),
                     new Username(result.UserName),
                     new Email(result.Email), 
                     result.ProfileImageFileId == null ? null : new FileId(result.ProfileImageFileId.Value));
@@ -44,6 +45,8 @@
 
         private class GetAccountSettingsDapperResult
         {
+            public string Name { get; set; }
+
             public string UserName { get; set; }
 
             public string Email { get; set; }
@@ -56,6 +59,9 @@
     [AutoEqualityMembers]
     public partial class GetAccountSettingsDbResult
     {
+        [Optional]
+        public CreatorName Name { get; private set; }
+
         public Username Username { get; private set; }
 
         public Email Email { get; private set; }

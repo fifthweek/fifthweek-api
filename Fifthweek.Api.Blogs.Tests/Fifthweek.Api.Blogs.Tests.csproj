@@ -99,7 +99,6 @@
     <Compile Include="Commands\AcceptChannelSubscriptionPriceChangeCommandHandlerTests.cs" />
     <Compile Include="Commands\UnsubscribeFromChannelCommandHandlerTests.cs" />
     <Compile Include="Commands\UpdateBlogCommandHandlerTests.cs" />
-    <Compile Include="Commands\PromoteNewUserToCreatorCommandHandlerTests.cs" />
     <Compile Include="Commands\CreateBlogCommandHandlerTests.cs" />
     <Compile Include="Commands\UpdateBlogSubscriptionsCommandHandlerTests.cs" />
     <Compile Include="Commands\UpdateFreeAccessUsersCommandHandlerTests.cs" />

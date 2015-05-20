@@ -36,7 +36,9 @@
                 registration.ExampleWork,
                 registration.Email,
                 registration.Username,
-                registration.Password);
+                registration.Password,
+                registration.CreatorName != null,
+                registration.CreatorName);
 
             await this.registerUser.HandleAsync(command);
             return this.Ok();

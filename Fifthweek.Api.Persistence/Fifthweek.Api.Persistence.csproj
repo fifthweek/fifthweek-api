@@ -284,6 +284,10 @@
     <Compile Include="Migrations\201505151743507_AddDtaRecommendedIndexForGetLandingPage.Designer.cs">
       <DependentUpon>201505151743507_AddDtaRecommendedIndexForGetLandingPage.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201505191255032_AddNameToAspNetUsers.cs" />
+    <Compile Include="Migrations\201505191255032_AddNameToAspNetUsers.Designer.cs">
+      <DependentUpon>201505191255032_AddNameToAspNetUsers.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Post.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -444,6 +448,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201505151743507_AddDtaRecommendedIndexForGetLandingPage.resx">
       <DependentUpon>201505151743507_AddDtaRecommendedIndexForGetLandingPage.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201505191255032_AddNameToAspNetUsers.resx">
+      <DependentUpon>201505191255032_AddNameToAspNetUsers.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>

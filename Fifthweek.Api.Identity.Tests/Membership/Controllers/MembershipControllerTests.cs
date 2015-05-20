@@ -23,6 +23,7 @@
         private const string Token = "Password Token";
         private static readonly UserId UserId = new UserId(Guid.NewGuid());
         private static readonly ValidUsername Username = ValidUsername.Parse(UsernameValue);
+        private static readonly ValidCreatorName CreatorName = ValidCreatorName.Parse("creator name");
         private Mock<ICommandHandler<RegisterUserCommand>> registerUser;
         private Mock<ICommandHandler<RequestPasswordResetCommand>> requestPasswordReset;
         private Mock<ICommandHandler<ConfirmPasswordResetCommand>> confirmPasswordReset;
@@ -56,7 +57,32 @@
                 this.isPasswordResetTokenValid.Object,
                 this.guidCreator.Object);
         }
-        
+
+        [TestMethod]
+        public async Task WhenPostingUserRegistration_ItShouldIssueRegisterUserCommand()
+        {
+            var registration = NewRegistrationData();
+            registration.CreatorName = null;
+
+            var command = new RegisterUserCommand(
+                UserId,
+                registration.ExampleWork,
+                ValidEmail.Parse(registration.Email),
+                ValidUsername.Parse(registration.Username),
+                ValidPassword.Parse(registration.Password),
+                false,
+                null);
+
+            this.guidCreator.Setup(_ => _.CreateSqlSequential()).Returns(UserId.Value);
+            this.registerUser.Setup(v => v.HandleAsync(command)).Returns(Task.FromResult(0));
+
+            var result = await this.controller.PostRegistrationAsync(registration);
+
+            Assert.IsInstanceOfType(result, typeof(OkResult));
+            this.registerUser.Verify(v => v.HandleAsync(command));
+            this.guidCreator.Verify(v => v.CreateSqlSequential());
+        }
+
         [TestMethod]
         public async Task WhenPostingRegistrations_ItShouldIssueRegisterUserCommand()
         {
@@ -66,7 +92,9 @@
                 registration.ExampleWork,
                 ValidEmail.Parse(registration.Email),
                 ValidUsername.Parse(registration.Username),
-                ValidPassword.Parse(registration.Password));
+                ValidPassword.Parse(registration.Password),
+                true,
+                CreatorName);
 
             this.guidCreator.Setup(_ => _.CreateSqlSequential()).Returns(UserId.Value);
             this.registerUser.Setup(v => v.HandleAsync(command)).Returns(Task.FromResult(0));
@@ -245,7 +273,8 @@
                 ExampleWork = "TestExampleWork",
                 Email = "test@test.com",
                 Username = "test_username",
-                Password = "TestPassword"
+                Password = "TestPassword",
+                CreatorName = CreatorName.Value,
             };
         }
 

@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Linq;
 
-//// Generated on 13/04/2015 16:53:29 (UTC)
-//// Mapped solution in 8.34s
+//// Generated on 19/05/2015 13:01:14 (UTC)
+//// Mapped solution in 20.18s
 
 
 namespace Fifthweek.Api.Persistence
@@ -1547,7 +1547,7 @@ namespace Fifthweek.Api.Persistence.Identity
     {
         public override string ToString()
         {
-            return string.Format("FifthweekUser(\"{0}\", {1}, {2}, {3}, {4}, \"{5}\", {6}, {7}, {8}, {9}, {10}, \"{11}\", \"{12}\", {13}, \"{14}\", {15}, \"{16}\")", this.ExampleWork == null ? "null" : this.ExampleWork.ToString(), this.RegistrationDate == null ? "null" : this.RegistrationDate.ToString(), this.LastSignInDate == null ? "null" : this.LastSignInDate.ToString(), this.LastAccessTokenDate == null ? "null" : this.LastAccessTokenDate.ToString(), this.ProfileImageFileId == null ? "null" : this.ProfileImageFileId.ToString(), this.Email == null ? "null" : this.Email.ToString(), this.Id == null ? "null" : this.Id.ToString(), this.AccessFailedCount == null ? "null" : this.AccessFailedCount.ToString(), this.EmailConfirmed == null ? "null" : this.EmailConfirmed.ToString(), this.LockoutEnabled == null ? "null" : this.LockoutEnabled.ToString(), this.LockoutEndDateUtc == null ? "null" : this.LockoutEndDateUtc.ToString(), this.PasswordHash == null ? "null" : this.PasswordHash.ToString(), this.PhoneNumber == null ? "null" : this.PhoneNumber.ToString(), this.PhoneNumberConfirmed == null ? "null" : this.PhoneNumberConfirmed.ToString(), this.SecurityStamp == null ? "null" : this.SecurityStamp.ToString(), this.TwoFactorEnabled == null ? "null" : this.TwoFactorEnabled.ToString(), this.UserName == null ? "null" : this.UserName.ToString());
+            return string.Format("FifthweekUser(\"{0}\", {1}, {2}, {3}, {4}, \"{5}\", \"{6}\", {7}, {8}, {9}, {10}, {11}, \"{12}\", \"{13}\", {14}, \"{15}\", {16}, \"{17}\")", this.ExampleWork == null ? "null" : this.ExampleWork.ToString(), this.RegistrationDate == null ? "null" : this.RegistrationDate.ToString(), this.LastSignInDate == null ? "null" : this.LastSignInDate.ToString(), this.LastAccessTokenDate == null ? "null" : this.LastAccessTokenDate.ToString(), this.ProfileImageFileId == null ? "null" : this.ProfileImageFileId.ToString(), this.Email == null ? "null" : this.Email.ToString(), this.Name == null ? "null" : this.Name.ToString(), this.Id == null ? "null" : this.Id.ToString(), this.AccessFailedCount == null ? "null" : this.AccessFailedCount.ToString(), this.EmailConfirmed == null ? "null" : this.EmailConfirmed.ToString(), this.LockoutEnabled == null ? "null" : this.LockoutEnabled.ToString(), this.LockoutEndDateUtc == null ? "null" : this.LockoutEndDateUtc.ToString(), this.PasswordHash == null ? "null" : this.PasswordHash.ToString(), this.PhoneNumber == null ? "null" : this.PhoneNumber.ToString(), this.PhoneNumberConfirmed == null ? "null" : this.PhoneNumberConfirmed.ToString(), this.SecurityStamp == null ? "null" : this.SecurityStamp.ToString(), this.TwoFactorEnabled == null ? "null" : this.TwoFactorEnabled.ToString(), this.UserName == null ? "null" : this.UserName.ToString());
         }
         
         public override bool Equals(object obj)
@@ -1581,6 +1581,7 @@ namespace Fifthweek.Api.Persistence.Identity
                 hashCode = (hashCode * 397) ^ (this.LastAccessTokenDate != null ? this.LastAccessTokenDate.GetHashCode() : 0);
                 hashCode = (hashCode * 397) ^ (this.ProfileImageFileId != null ? this.ProfileImageFileId.GetHashCode() : 0);
                 hashCode = (hashCode * 397) ^ (this.Email != null ? this.Email.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.Name != null ? this.Name.GetHashCode() : 0);
                 hashCode = (hashCode * 397) ^ (this.Id != null ? this.Id.GetHashCode() : 0);
                 hashCode = (hashCode * 397) ^ (this.AccessFailedCount != null ? this.AccessFailedCount.GetHashCode() : 0);
                 hashCode = (hashCode * 397) ^ (this.EmailConfirmed != null ? this.EmailConfirmed.GetHashCode() : 0);
@@ -1624,6 +1625,11 @@ namespace Fifthweek.Api.Persistence.Identity
             }
         
             if (!object.Equals(this.Email, other.Email))
+            {
+                return false;
+            }
+        
+            if (!object.Equals(this.Name, other.Name))
             {
                 return false;
             }
@@ -6387,17 +6393,18 @@ namespace Fifthweek.Api.Persistence.Identity
             LastAccessTokenDate = 8, 
             ProfileImageFileId = 16, 
             Email = 32, 
-            Id = 64, 
-            AccessFailedCount = 128, 
-            EmailConfirmed = 256, 
-            LockoutEnabled = 512, 
-            LockoutEndDateUtc = 1024, 
-            PasswordHash = 2048, 
-            PhoneNumber = 4096, 
-            PhoneNumberConfirmed = 8192, 
-            SecurityStamp = 16384, 
-            TwoFactorEnabled = 32768, 
-            UserName = 65536
+            Name = 64, 
+            Id = 128, 
+            AccessFailedCount = 256, 
+            EmailConfirmed = 512, 
+            LockoutEnabled = 1024, 
+            LockoutEndDateUtc = 2048, 
+            PasswordHash = 4096, 
+            PhoneNumber = 8192, 
+            PhoneNumberConfirmed = 16384, 
+            SecurityStamp = 32768, 
+            TwoFactorEnabled = 65536, 
+            UserName = 131072
         }
     }
 
@@ -6414,7 +6421,7 @@ namespace Fifthweek.Api.Persistence.Identity
                 InsertStatement(idempotent), 
                 entities.Select(entity => new 
                 {
-                    entity.ExampleWork, entity.RegistrationDate, entity.LastSignInDate, entity.LastAccessTokenDate, entity.ProfileImageFileId, entity.Email, entity.Id, entity.AccessFailedCount, entity.EmailConfirmed, entity.LockoutEnabled, entity.LockoutEndDateUtc, entity.PasswordHash, entity.PhoneNumber, entity.PhoneNumberConfirmed, entity.SecurityStamp, entity.TwoFactorEnabled, entity.UserName
+                    entity.ExampleWork, entity.RegistrationDate, entity.LastSignInDate, entity.LastAccessTokenDate, entity.ProfileImageFileId, entity.Email, entity.Name, entity.Id, entity.AccessFailedCount, entity.EmailConfirmed, entity.LockoutEnabled, entity.LockoutEndDateUtc, entity.PasswordHash, entity.PhoneNumber, entity.PhoneNumberConfirmed, entity.SecurityStamp, entity.TwoFactorEnabled, entity.UserName
                 }).ToArray(),
                 transaction);
         }
@@ -6430,7 +6437,7 @@ namespace Fifthweek.Api.Persistence.Identity
                 InsertStatement(idempotent), 
                 new 
                 {
-                    entity.ExampleWork, entity.RegistrationDate, entity.LastSignInDate, entity.LastAccessTokenDate, entity.ProfileImageFileId, entity.Email, entity.Id, entity.AccessFailedCount, entity.EmailConfirmed, entity.LockoutEnabled, entity.LockoutEndDateUtc, entity.PasswordHash, entity.PhoneNumber, entity.PhoneNumberConfirmed, entity.SecurityStamp, entity.TwoFactorEnabled, entity.UserName
+                    entity.ExampleWork, entity.RegistrationDate, entity.LastSignInDate, entity.LastAccessTokenDate, entity.ProfileImageFileId, entity.Email, entity.Name, entity.Id, entity.AccessFailedCount, entity.EmailConfirmed, entity.LockoutEnabled, entity.LockoutEndDateUtc, entity.PasswordHash, entity.PhoneNumber, entity.PhoneNumberConfirmed, entity.SecurityStamp, entity.TwoFactorEnabled, entity.UserName
                 },
                 transaction);
         }
@@ -6475,7 +6482,7 @@ namespace Fifthweek.Api.Persistence.Identity
             var entity = parameters.Entity;
             var parameterObject = parameters.ExcludedFromInput != null
                 ? AllExceptSpecifiedParameters(entity, parameters.ExcludedFromInput.Value)
-                : new Dapper.DynamicParameters(new { entity.ExampleWork, entity.RegistrationDate, entity.LastSignInDate, entity.LastAccessTokenDate, entity.ProfileImageFileId, entity.Email, entity.Id, entity.AccessFailedCount, entity.EmailConfirmed, entity.LockoutEnabled, entity.LockoutEndDateUtc, entity.PasswordHash, entity.PhoneNumber, entity.PhoneNumberConfirmed, entity.SecurityStamp, entity.TwoFactorEnabled, entity.UserName });
+                : new Dapper.DynamicParameters(new { entity.ExampleWork, entity.RegistrationDate, entity.LastSignInDate, entity.LastAccessTokenDate, entity.ProfileImageFileId, entity.Email, entity.Name, entity.Id, entity.AccessFailedCount, entity.EmailConfirmed, entity.LockoutEnabled, entity.LockoutEndDateUtc, entity.PasswordHash, entity.PhoneNumber, entity.PhoneNumberConfirmed, entity.SecurityStamp, entity.TwoFactorEnabled, entity.UserName });
         
             if (parameters.AdditionalParameters != null)
             {
@@ -6499,7 +6506,7 @@ namespace Fifthweek.Api.Persistence.Identity
                 UpsertStatement(FifthweekUser.Fields.Empty, fields), 
                 new 
                 {
-                    entity.ExampleWork, entity.RegistrationDate, entity.LastSignInDate, entity.LastAccessTokenDate, entity.ProfileImageFileId, entity.Email, entity.Id, entity.AccessFailedCount, entity.EmailConfirmed, entity.LockoutEnabled, entity.LockoutEndDateUtc, entity.PasswordHash, entity.PhoneNumber, entity.PhoneNumberConfirmed, entity.SecurityStamp, entity.TwoFactorEnabled, entity.UserName
+                    entity.ExampleWork, entity.RegistrationDate, entity.LastSignInDate, entity.LastAccessTokenDate, entity.ProfileImageFileId, entity.Email, entity.Name, entity.Id, entity.AccessFailedCount, entity.EmailConfirmed, entity.LockoutEnabled, entity.LockoutEndDateUtc, entity.PasswordHash, entity.PhoneNumber, entity.PhoneNumberConfirmed, entity.SecurityStamp, entity.TwoFactorEnabled, entity.UserName
                 },
                 transaction);
         }
@@ -6516,7 +6523,7 @@ namespace Fifthweek.Api.Persistence.Identity
                 UpsertStatement(mergeOnFields, updateFields), 
                 new 
                 {
-                    entity.ExampleWork, entity.RegistrationDate, entity.LastSignInDate, entity.LastAccessTokenDate, entity.ProfileImageFileId, entity.Email, entity.Id, entity.AccessFailedCount, entity.EmailConfirmed, entity.LockoutEnabled, entity.LockoutEndDateUtc, entity.PasswordHash, entity.PhoneNumber, entity.PhoneNumberConfirmed, entity.SecurityStamp, entity.TwoFactorEnabled, entity.UserName
+                    entity.ExampleWork, entity.RegistrationDate, entity.LastSignInDate, entity.LastAccessTokenDate, entity.ProfileImageFileId, entity.Email, entity.Name, entity.Id, entity.AccessFailedCount, entity.EmailConfirmed, entity.LockoutEnabled, entity.LockoutEndDateUtc, entity.PasswordHash, entity.PhoneNumber, entity.PhoneNumberConfirmed, entity.SecurityStamp, entity.TwoFactorEnabled, entity.UserName
                 },
                 transaction);
         }
@@ -6587,7 +6594,7 @@ namespace Fifthweek.Api.Persistence.Identity
         
         public static string InsertStatement(bool idempotent = true)
         {
-            const string insert = "INSERT INTO AspNetUsers(ExampleWork, RegistrationDate, LastSignInDate, LastAccessTokenDate, ProfileImageFileId, Email, Id, AccessFailedCount, EmailConfirmed, LockoutEnabled, LockoutEndDateUtc, PasswordHash, PhoneNumber, PhoneNumberConfirmed, SecurityStamp, TwoFactorEnabled, UserName) VALUES(@ExampleWork, @RegistrationDate, @LastSignInDate, @LastAccessTokenDate, @ProfileImageFileId, @Email, @Id, @AccessFailedCount, @EmailConfirmed, @LockoutEnabled, @LockoutEndDateUtc, @PasswordHash, @PhoneNumber, @PhoneNumberConfirmed, @SecurityStamp, @TwoFactorEnabled, @UserName)";
+            const string insert = "INSERT INTO AspNetUsers(ExampleWork, RegistrationDate, LastSignInDate, LastAccessTokenDate, ProfileImageFileId, Email, Name, Id, AccessFailedCount, EmailConfirmed, LockoutEnabled, LockoutEndDateUtc, PasswordHash, PhoneNumber, PhoneNumberConfirmed, SecurityStamp, TwoFactorEnabled, UserName) VALUES(@ExampleWork, @RegistrationDate, @LastSignInDate, @LastAccessTokenDate, @ProfileImageFileId, @Email, @Name, @Id, @AccessFailedCount, @EmailConfirmed, @LockoutEnabled, @LockoutEndDateUtc, @PasswordHash, @PhoneNumber, @PhoneNumberConfirmed, @SecurityStamp, @TwoFactorEnabled, @UserName)";
             return idempotent ? SqlStatementTemplates.IdempotentInsert(insert) : insert;
         }
         
@@ -6598,7 +6605,7 @@ namespace Fifthweek.Api.Persistence.Identity
             var sql = new System.Text.StringBuilder();
             sql.Append(
                 @"MERGE AspNetUsers WITH (HOLDLOCK) as Target
-                USING (VALUES (@ExampleWork, @RegistrationDate, @LastSignInDate, @LastAccessTokenDate, @ProfileImageFileId, @Email, @Id, @AccessFailedCount, @EmailConfirmed, @LockoutEnabled, @LockoutEndDateUtc, @PasswordHash, @PhoneNumber, @PhoneNumberConfirmed, @SecurityStamp, @TwoFactorEnabled, @UserName)) AS Source (ExampleWork, RegistrationDate, LastSignInDate, LastAccessTokenDate, ProfileImageFileId, Email, Id, AccessFailedCount, EmailConfirmed, LockoutEnabled, LockoutEndDateUtc, PasswordHash, PhoneNumber, PhoneNumberConfirmed, SecurityStamp, TwoFactorEnabled, UserName)
+                USING (VALUES (@ExampleWork, @RegistrationDate, @LastSignInDate, @LastAccessTokenDate, @ProfileImageFileId, @Email, @Name, @Id, @AccessFailedCount, @EmailConfirmed, @LockoutEnabled, @LockoutEndDateUtc, @PasswordHash, @PhoneNumber, @PhoneNumberConfirmed, @SecurityStamp, @TwoFactorEnabled, @UserName)) AS Source (ExampleWork, RegistrationDate, LastSignInDate, LastAccessTokenDate, ProfileImageFileId, Email, Name, Id, AccessFailedCount, EmailConfirmed, LockoutEnabled, LockoutEndDateUtc, PasswordHash, PhoneNumber, PhoneNumberConfirmed, SecurityStamp, TwoFactorEnabled, UserName)
                 ON    (");
                 
             if (mergeOnFields == FifthweekUser.Fields.Empty)
@@ -6617,8 +6624,8 @@ namespace Fifthweek.Api.Persistence.Identity
             sql.AppendUpdateParameters(GetFieldNames(updateFields));
             sql.Append(
                 @" WHEN NOT MATCHED THEN
-                    INSERT  (ExampleWork, RegistrationDate, LastSignInDate, LastAccessTokenDate, ProfileImageFileId, Email, Id, AccessFailedCount, EmailConfirmed, LockoutEnabled, LockoutEndDateUtc, PasswordHash, PhoneNumber, PhoneNumberConfirmed, SecurityStamp, TwoFactorEnabled, UserName)
-                    VALUES  (Source.ExampleWork, Source.RegistrationDate, Source.LastSignInDate, Source.LastAccessTokenDate, Source.ProfileImageFileId, Source.Email, Source.Id, Source.AccessFailedCount, Source.EmailConfirmed, Source.LockoutEnabled, Source.LockoutEndDateUtc, Source.PasswordHash, Source.PhoneNumber, Source.PhoneNumberConfirmed, Source.SecurityStamp, Source.TwoFactorEnabled, Source.UserName);");
+                    INSERT  (ExampleWork, RegistrationDate, LastSignInDate, LastAccessTokenDate, ProfileImageFileId, Email, Name, Id, AccessFailedCount, EmailConfirmed, LockoutEnabled, LockoutEndDateUtc, PasswordHash, PhoneNumber, PhoneNumberConfirmed, SecurityStamp, TwoFactorEnabled, UserName)
+                    VALUES  (Source.ExampleWork, Source.RegistrationDate, Source.LastSignInDate, Source.LastAccessTokenDate, Source.ProfileImageFileId, Source.Email, Source.Name, Source.Id, Source.AccessFailedCount, Source.EmailConfirmed, Source.LockoutEnabled, Source.LockoutEndDateUtc, Source.PasswordHash, Source.PhoneNumber, Source.PhoneNumberConfirmed, Source.SecurityStamp, Source.TwoFactorEnabled, Source.UserName);");
             return sql.ToString();
         }
         
@@ -6662,6 +6669,11 @@ namespace Fifthweek.Api.Persistence.Identity
             if (fields.HasFlag(FifthweekUser.Fields.Email))
             {
                 fieldNames.Add("Email");
+            }
+        
+            if (fields.HasFlag(FifthweekUser.Fields.Name))
+            {
+                fieldNames.Add("Name");
             }
         
             if (autoIncludePrimaryKeys)
@@ -6760,6 +6772,11 @@ namespace Fifthweek.Api.Persistence.Identity
                 parameters.Add("Email", entity.Email);
             }
         
+            if (fields.HasFlag(FifthweekUser.Fields.Name) && (excludedFields == null || !excludedFields.Value.HasFlag(FifthweekUser.Fields.Name)))
+            {
+                parameters.Add("Name", entity.Name);
+            }
+        
             parameters.Add("Id", entity.Id);
             if (fields.HasFlag(FifthweekUser.Fields.AccessFailedCount) && (excludedFields == null || !excludedFields.Value.HasFlag(FifthweekUser.Fields.AccessFailedCount)))
             {
@@ -6849,6 +6866,11 @@ namespace Fifthweek.Api.Persistence.Identity
             if (!fields.HasFlag(FifthweekUser.Fields.Email))
             {
                 parameters.Add("Email", entity.Email);
+            }
+        
+            if (!fields.HasFlag(FifthweekUser.Fields.Name))
+            {
+                parameters.Add("Name", entity.Name);
             }
         
             parameters.Add("Id", entity.Id);

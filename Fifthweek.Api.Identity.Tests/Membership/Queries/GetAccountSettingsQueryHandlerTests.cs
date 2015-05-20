@@ -20,6 +20,7 @@
     [TestClass]
     public class GetAccountSettingsQueryHandlerTests
     {
+        private static readonly CreatorName Name = new CreatorName("name");
         private static readonly Username Username = new Username("username");
         private static readonly UserId UserId = new UserId(Guid.NewGuid());
         private static readonly Requester Requester = Requester.Authenticated(UserId);
@@ -71,7 +72,7 @@
         public async Task WhenCalled_ItShouldCallTheAccountRepository()
         {
             this.getAccountSettings.Setup(v => v.ExecuteAsync(UserId))
-                .ReturnsAsync(new GetAccountSettingsDbResult(Username, Email, null))
+                .ReturnsAsync(new GetAccountSettingsDbResult(Name, Username, Email, null))
                 .Verifiable();
 
             var result = await this.target.HandleAsync(new GetAccountSettingsQuery(Requester, UserId));
@@ -79,6 +80,7 @@
             this.getAccountSettings.Verify();
 
             Assert.IsNotNull(result);
+            Assert.AreEqual(Name, result.Name);
             Assert.AreEqual(Username, result.Username);
             Assert.AreEqual(Email, result.Email);
             Assert.AreEqual(null, result.ProfileImage);
@@ -90,7 +92,7 @@
             const string ContainerName = "containerName";
 
             this.getAccountSettings.Setup(v => v.ExecuteAsync(UserId))
-                .ReturnsAsync(new GetAccountSettingsDbResult(Username, Email, FileId));
+                .ReturnsAsync(new GetAccountSettingsDbResult(Name, Username, Email, FileId));
 
             this.fileInformationAggregator.Setup(v => v.GetFileInformationAsync(UserId, FileId, FilePurposes.ProfileImage))
                 .ReturnsAsync(new FileInformation(FileId, ContainerName));
@@ -98,6 +100,7 @@
             var result = await this.target.HandleAsync(new GetAccountSettingsQuery(Requester, UserId));
 
             Assert.IsNotNull(result);
+            Assert.AreEqual(Name, result.Name);
             Assert.AreEqual(Username, result.Username);
             Assert.AreEqual(Email, result.Email);
             Assert.IsNotNull(result.ProfileImage);

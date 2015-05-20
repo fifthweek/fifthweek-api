@@ -52,6 +52,7 @@
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
     </Compile>
+    <Compile Include="Membership\CreatorName.cs" />
     <Compile Include="Membership\Email.cs" />
     <Compile Include="Membership\Events\UserRegisteredEvent.cs" />
     <Compile Include="Membership\IRequesterContext.cs" />
@@ -60,6 +61,7 @@
     <Compile Include="Membership\Requester.cs" />
     <Compile Include="Membership\UserId.cs" />
     <Compile Include="Membership\Username.cs" />
+    <Compile Include="Membership\ValidCreatorName.cs" />
     <Compile Include="Membership\ValidEmail.cs" />
     <Compile Include="Membership\ValidPassword.cs" />
     <Compile Include="Membership\ValidUsername.cs" />

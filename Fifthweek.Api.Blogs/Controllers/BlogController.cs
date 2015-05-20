@@ -32,7 +32,7 @@
             await this.createBlog.HandleAsync(new CreateBlogCommand(
                 requester,
                 newBlogId,
-                blog.BlogName,
+                blog.Name,
                 blog.Tagline,
                 blog.BasePrice));
 
@@ -52,7 +52,7 @@
             await this.updateBlog.HandleAsync(new UpdateBlogCommand(
                 requester,
                 blogIdObject,
-                blog.BlogName,
+                blog.Name,
                 blog.Tagline,
                 blog.Introduction,
                 blog.Description,

@@ -23,6 +23,8 @@
 
         private readonly IQueryHandler<GetAccountSettingsQuery, GetAccountSettingsResult> getAccountSettings;
 
+        private readonly ICommandHandler<UpdateCreatorAccountSettingsCommand> updateCreatorAccountSettings;
+
         [Route("{userId}")]
         public async Task<GetAccountSettingsResult> Get(string userId)
         {
@@ -45,8 +47,8 @@
             var updatedAccountSettings = updatedAccountSettingsData.Parse();
             var requester = this.requesterContext.GetRequester();
             var requestedUserId = new UserId(userId.DecodeGuid());
-            
-            var newProfileImageId 
+
+            var newProfileImageId
                 = updatedAccountSettingsData.NewProfileImageId == null
                 ? null
                 : new FileId(updatedAccountSettingsData.NewProfileImageId.DecodeGuid());
@@ -61,6 +63,21 @@
                 newProfileImageId);
 
             await this.updateAccountSettings.HandleAsync(command);
+        }
+
+        [Route("{userId}/creatorInformation")]
+        public async Task PutCreatorInformation(string userId, [FromBody]CreatorInformation creatorInformation)
+        {
+            userId.AssertUrlParameterProvided("userId");
+            creatorInformation.AssertBodyProvided("creatorInformation");
+
+            var parsedCreatorInformation = creatorInformation.Parse();
+            var requester = this.requesterContext.GetRequester();
+            var requestedUserId = new UserId(userId.DecodeGuid());
+
+            var command = new UpdateCreatorAccountSettingsCommand(requester, requestedUserId, parsedCreatorInformation.Name);
+
+            await this.updateCreatorAccountSettings.HandleAsync(command);
         }
     }
 }

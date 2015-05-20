@@ -50,6 +50,10 @@ namespace Fifthweek.Api.Persistence.Identity
             }
         }
 
+        [Optional]
+        [MaxLength(25)] // See: ValidBlogName.MaxLength - default blog name is creator's name.
+        public string Name { get; set; }
+
         // Inherit IdentityUser and override members to provide a little extra safety in case a base member ever got renamed.
         private class LiftedMembers : IdentityUser<Guid, FifthweekUserLogin, FifthweekUserRole, FifthweekUserClaim>
         {

@@ -1,10 +1,7 @@
-﻿using Fifthweek.Api.Core;
-
-namespace Fifthweek.Api.Identity.Membership.Commands
+﻿namespace Fifthweek.Api.Identity.Membership.Commands
 {
     using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.CodeGeneration;
-    using Fifthweek.Shared;
 
     [AutoEqualityMembers, AutoConstructor]
     public partial class RegisterUserCommand
@@ -19,5 +16,10 @@ namespace Fifthweek.Api.Identity.Membership.Commands
         public ValidUsername Username { get; private set; }
 
         public ValidPassword Password { get; private set; }
+
+        public bool RegiserAsCreator { get; private set; }
+
+        [Optional]
+        public ValidCreatorName CreatorName { get; private set; }
     }
 }

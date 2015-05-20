@@ -122,7 +122,7 @@
         {
             this.requesterSecurity.SetupFor(Requester);
 
-            var accountSettings = new GetAccountSettingsResult(new Username("username"), new Email("a@b.com"), null);
+            var accountSettings = new GetAccountSettingsResult(new CreatorName("name"), new Username("username"), new Email("a@b.com"), null);
 
             this.getUserAccessSignatures.Setup(v => v.HandleAsync(new GetUserAccessSignaturesQuery(Requester, UserId, new List<UserId> { UserSubscriptions.Blogs[0].CreatorId, UserSubscriptions.Blogs[1].CreatorId })))
                 .ReturnsAsync(UserAccessSignatures);
@@ -151,7 +151,7 @@
             this.requesterSecurity.Setup(v => v.IsInRoleAsync(Requester, FifthweekRole.Creator)).ReturnsAsync(true);
 
             var creatorStatus = new CreatorStatus(new BlogId(Guid.NewGuid()), true);
-            var accountSettings = new GetAccountSettingsResult(new Username("username"), new Email("a@b.com"), null);
+            var accountSettings = new GetAccountSettingsResult(new CreatorName("name"), new Username("username"), new Email("a@b.com"), null);
             var blogChannelsAndCollections = new GetBlogChannelsAndCollectionsResult(
                 new BlogWithFileInformation(new BlogId(Guid.NewGuid()), new BlogName("My Subscription"), new BlogName("My Subscription"), new Tagline("Tagline is great"), new Introduction("Once upon a time there was an intro."), DateTime.UtcNow, null, null, null, new List<ChannelResult>()));
 
@@ -184,7 +184,7 @@
             this.requesterSecurity.Setup(v => v.IsInRoleAsync(Requester, FifthweekRole.Creator)).ReturnsAsync(true);
 
             var creatorStatus = new CreatorStatus(null, true);
-            var accountSettings = new GetAccountSettingsResult(new Username("username"), new Email("a@b.com"), null);
+            var accountSettings = new GetAccountSettingsResult(new CreatorName("name"), new Username("username"), new Email("a@b.com"), null);
 
             this.getUserAccessSignatures.Setup(v => v.HandleAsync(new GetUserAccessSignaturesQuery(Requester, UserId, new List<UserId> { UserSubscriptions.Blogs[0].CreatorId, UserSubscriptions.Blogs[1].CreatorId })))
                 .ReturnsAsync(UserAccessSignatures);

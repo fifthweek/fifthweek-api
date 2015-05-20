@@ -1,25 +1,16 @@
 ﻿using System;
 using System.Linq;
 
-//// Generated on 14/05/2015 14:35:04 (UTC)
-//// Mapped solution in 29.24s
+//// Generated on 19/05/2015 17:27:06 (UTC)
+//// Mapped solution in 6.27s
 
 
 namespace Fifthweek.Api.Identity.Membership.Commands
 {
-    using System;
-    using System.Linq;
     using Fifthweek.Api.Core;
     using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.CodeGeneration;
     using Fifthweek.Shared;
-    using System.Threading.Tasks;
-    using Fifthweek.Api.Identity.Shared.Membership.Events;
-    using System.Web;
-    using Fifthweek.Api.Persistence;
-    using Fifthweek.Api.Persistence.Identity;
-    using Fifthweek.Api.FileManagement.Shared;
-    using System.Text;
 
     public partial class ConfirmPasswordResetCommand 
     {
@@ -51,19 +42,63 @@ namespace Fifthweek.Api.Identity.Membership.Commands
 }
 namespace Fifthweek.Api.Identity.Membership.Commands
 {
-    using System;
-    using System.Linq;
-    using Fifthweek.Api.Core;
     using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.CodeGeneration;
-    using Fifthweek.Shared;
+
+    public partial class RegisterInterestCommand 
+    {
+        public RegisterInterestCommand(
+            System.String name,
+            Fifthweek.Api.Identity.Shared.Membership.ValidEmail email)
+        {
+            if (name == null)
+            {
+                throw new ArgumentNullException("name");
+            }
+
+            if (email == null)
+            {
+                throw new ArgumentNullException("email");
+            }
+
+            this.Name = name;
+            this.Email = email;
+        }
+    }
+}
+namespace Fifthweek.Api.Identity.Membership.Commands
+{
+    using System;
     using System.Threading.Tasks;
-    using Fifthweek.Api.Identity.Shared.Membership.Events;
-    using System.Web;
-    using Fifthweek.Api.Persistence;
-    using Fifthweek.Api.Persistence.Identity;
-    using Fifthweek.Api.FileManagement.Shared;
-    using System.Text;
+    using Fifthweek.Api.Core;
+    using Fifthweek.CodeGeneration;
+    using Fifthweek.Shared;
+
+    public partial class RegisterInterestCommandHandler 
+    {
+        public RegisterInterestCommandHandler(
+            Fifthweek.Api.Core.IFifthweekActivityReporter activityReporter,
+            Fifthweek.Api.Core.IExceptionHandler exceptionHandler)
+        {
+            if (activityReporter == null)
+            {
+                throw new ArgumentNullException("activityReporter");
+            }
+
+            if (exceptionHandler == null)
+            {
+                throw new ArgumentNullException("exceptionHandler");
+            }
+
+            this.activityReporter = activityReporter;
+            this.exceptionHandler = exceptionHandler;
+        }
+    }
+}
+namespace Fifthweek.Api.Identity.Membership.Commands
+{
+    using Fifthweek.Api.Identity.Shared.Membership;
+    using Fifthweek.CodeGeneration;
 
     public partial class RegisterUserCommand 
     {
@@ -72,7 +107,9 @@ namespace Fifthweek.Api.Identity.Membership.Commands
             System.String exampleWork,
             Fifthweek.Api.Identity.Shared.Membership.ValidEmail email,
             Fifthweek.Api.Identity.Shared.Membership.ValidUsername username,
-            Fifthweek.Api.Identity.Shared.Membership.ValidPassword password)
+            Fifthweek.Api.Identity.Shared.Membership.ValidPassword password,
+            System.Boolean regiserAsCreator,
+            Fifthweek.Api.Identity.Shared.Membership.ValidCreatorName creatorName)
         {
             if (userId == null)
             {
@@ -94,42 +131,38 @@ namespace Fifthweek.Api.Identity.Membership.Commands
                 throw new ArgumentNullException("password");
             }
 
+            if (regiserAsCreator == null)
+            {
+                throw new ArgumentNullException("regiserAsCreator");
+            }
+
             this.UserId = userId;
             this.ExampleWork = exampleWork;
             this.Email = email;
             this.Username = username;
             this.Password = password;
+            this.RegiserAsCreator = regiserAsCreator;
+            this.CreatorName = creatorName;
         }
     }
 }
 namespace Fifthweek.Api.Identity.Membership.Commands
 {
     using System;
-    using System.Linq;
-    using Fifthweek.Api.Core;
-    using Fifthweek.Api.Identity.Shared.Membership;
-    using Fifthweek.CodeGeneration;
-    using Fifthweek.Shared;
     using System.Threading.Tasks;
+    using Fifthweek.Api.Core;
     using Fifthweek.Api.Identity.Shared.Membership.Events;
-    using System.Web;
     using Fifthweek.Api.Persistence;
     using Fifthweek.Api.Persistence.Identity;
-    using Fifthweek.Api.FileManagement.Shared;
-    using System.Text;
+    using Fifthweek.CodeGeneration;
 
     public partial class RegisterUserCommandHandler 
     {
         public RegisterUserCommandHandler(
-            Fifthweek.Api.Core.IEventHandler<Fifthweek.Api.Identity.Shared.Membership.Events.UserRegisteredEvent> userRegistered,
             Fifthweek.Api.Identity.Membership.IRegisterUserDbStatement registerUser,
-            Fifthweek.Api.Identity.Membership.IReservedUsernameService reservedUsernames)
+            Fifthweek.Api.Identity.Membership.IReservedUsernameService reservedUsernames,
+            Fifthweek.Api.Persistence.IUserManager userManager)
         {
-            if (userRegistered == null)
-            {
-                throw new ArgumentNullException("userRegistered");
-            }
-
             if (registerUser == null)
             {
                 throw new ArgumentNullException("registerUser");
@@ -140,27 +173,23 @@ namespace Fifthweek.Api.Identity.Membership.Commands
                 throw new ArgumentNullException("reservedUsernames");
             }
 
-            this.userRegistered = userRegistered;
+            if (userManager == null)
+            {
+                throw new ArgumentNullException("userManager");
+            }
+
             this.registerUser = registerUser;
             this.reservedUsernames = reservedUsernames;
+            this.userManager = userManager;
         }
     }
 }
 namespace Fifthweek.Api.Identity.Membership.Commands
 {
-    using System;
-    using System.Linq;
     using Fifthweek.Api.Core;
     using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.CodeGeneration;
     using Fifthweek.Shared;
-    using System.Threading.Tasks;
-    using Fifthweek.Api.Identity.Shared.Membership.Events;
-    using System.Web;
-    using Fifthweek.Api.Persistence;
-    using Fifthweek.Api.Persistence.Identity;
-    using Fifthweek.Api.FileManagement.Shared;
-    using System.Text;
 
     public partial class RequestPasswordResetCommand 
     {
@@ -175,19 +204,13 @@ namespace Fifthweek.Api.Identity.Membership.Commands
 }
 namespace Fifthweek.Api.Identity.Membership.Commands
 {
-    using System;
-    using System.Linq;
-    using Fifthweek.Api.Core;
-    using Fifthweek.Api.Identity.Shared.Membership;
-    using Fifthweek.CodeGeneration;
-    using Fifthweek.Shared;
     using System.Threading.Tasks;
-    using Fifthweek.Api.Identity.Shared.Membership.Events;
     using System.Web;
+    using Fifthweek.Api.Core;
     using Fifthweek.Api.Persistence;
     using Fifthweek.Api.Persistence.Identity;
-    using Fifthweek.Api.FileManagement.Shared;
-    using System.Text;
+    using Fifthweek.CodeGeneration;
+    using Fifthweek.Shared;
 
     public partial class RequestPasswordResetCommandHandler 
     {
@@ -212,19 +235,69 @@ namespace Fifthweek.Api.Identity.Membership.Commands
 }
 namespace Fifthweek.Api.Identity.Membership.Commands
 {
-    using System;
-    using System.Linq;
-    using Fifthweek.Api.Core;
     using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.CodeGeneration;
-    using Fifthweek.Shared;
-    using System.Threading.Tasks;
-    using Fifthweek.Api.Identity.Shared.Membership.Events;
-    using System.Web;
-    using Fifthweek.Api.Persistence;
-    using Fifthweek.Api.Persistence.Identity;
-    using Fifthweek.Api.FileManagement.Shared;
+
+    public partial class SendIdentifiedUserInformationCommand 
+    {
+        public SendIdentifiedUserInformationCommand(
+            System.Boolean isUpdate,
+            Fifthweek.Api.Identity.Shared.Membership.Email email,
+            System.String name,
+            Fifthweek.Api.Identity.Shared.Membership.Username username)
+        {
+            if (isUpdate == null)
+            {
+                throw new ArgumentNullException("isUpdate");
+            }
+
+            if (email == null)
+            {
+                throw new ArgumentNullException("email");
+            }
+
+            this.IsUpdate = isUpdate;
+            this.Email = email;
+            this.Name = name;
+            this.Username = username;
+        }
+    }
+}
+namespace Fifthweek.Api.Identity.Membership.Commands
+{
+    using System;
     using System.Text;
+    using System.Threading.Tasks;
+    using Fifthweek.Api.Core;
+    using Fifthweek.CodeGeneration;
+    using Fifthweek.Shared;
+
+    public partial class SendIdentifiedUserInformationCommandHandler 
+    {
+        public SendIdentifiedUserInformationCommandHandler(
+            Fifthweek.Api.Core.IFifthweekActivityReporter activityReporter,
+            Fifthweek.Api.Core.IExceptionHandler exceptionHandler)
+        {
+            if (activityReporter == null)
+            {
+                throw new ArgumentNullException("activityReporter");
+            }
+
+            if (exceptionHandler == null)
+            {
+                throw new ArgumentNullException("exceptionHandler");
+            }
+
+            this.activityReporter = activityReporter;
+            this.exceptionHandler = exceptionHandler;
+        }
+    }
+}
+namespace Fifthweek.Api.Identity.Membership.Commands
+{
+    using Fifthweek.Api.FileManagement.Shared;
+    using Fifthweek.Api.Identity.Shared.Membership;
+    using Fifthweek.CodeGeneration;
 
     public partial class UpdateAccountSettingsCommand 
     {
@@ -274,19 +347,12 @@ namespace Fifthweek.Api.Identity.Membership.Commands
 }
 namespace Fifthweek.Api.Identity.Membership.Commands
 {
-    using System;
-    using System.Linq;
+    using System.Threading.Tasks;
     using Fifthweek.Api.Core;
+    using Fifthweek.Api.FileManagement.Shared;
     using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.CodeGeneration;
     using Fifthweek.Shared;
-    using System.Threading.Tasks;
-    using Fifthweek.Api.Identity.Shared.Membership.Events;
-    using System.Web;
-    using Fifthweek.Api.Persistence;
-    using Fifthweek.Api.Persistence.Identity;
-    using Fifthweek.Api.FileManagement.Shared;
-    using System.Text;
 
     public partial class UpdateAccountSettingsCommandHandler 
     {
@@ -323,10 +389,82 @@ namespace Fifthweek.Api.Identity.Membership.Commands
         }
     }
 }
+namespace Fifthweek.Api.Identity.Membership.Commands
+{
+    using Fifthweek.Api.Blogs.Shared;
+    using Fifthweek.Api.Identity.Shared.Membership;
+    using Fifthweek.CodeGeneration;
+
+    public partial class UpdateCreatorAccountSettingsCommand 
+    {
+        public UpdateCreatorAccountSettingsCommand(
+            Fifthweek.Api.Identity.Shared.Membership.Requester requester,
+            Fifthweek.Api.Identity.Shared.Membership.UserId requestedUserId,
+            Fifthweek.Api.Identity.Shared.Membership.ValidCreatorName name)
+        {
+            if (requester == null)
+            {
+                throw new ArgumentNullException("requester");
+            }
+
+            if (requestedUserId == null)
+            {
+                throw new ArgumentNullException("requestedUserId");
+            }
+
+            if (name == null)
+            {
+                throw new ArgumentNullException("name");
+            }
+
+            this.Requester = requester;
+            this.RequestedUserId = requestedUserId;
+            this.Name = name;
+        }
+    }
+}
+namespace Fifthweek.Api.Identity.Membership.Commands
+{
+    using System;
+    using System.Threading.Tasks;
+    using Fifthweek.Api.Core;
+    using Fifthweek.Api.Identity.Shared.Membership;
+    using Fifthweek.Api.Persistence;
+    using Fifthweek.Api.Persistence.Identity;
+    using Fifthweek.CodeGeneration;
+    using Fifthweek.Shared;
+
+    public partial class UpdateCreatorAccountSettingsCommandHandler 
+    {
+        public UpdateCreatorAccountSettingsCommandHandler(
+            Fifthweek.Api.Identity.Shared.Membership.IRequesterSecurity requesterSecurity,
+            Fifthweek.Api.Persistence.IUserManager userManager,
+            Fifthweek.Api.Persistence.IFifthweekDbConnectionFactory connectionFactory)
+        {
+            if (requesterSecurity == null)
+            {
+                throw new ArgumentNullException("requesterSecurity");
+            }
+
+            if (userManager == null)
+            {
+                throw new ArgumentNullException("userManager");
+            }
+
+            if (connectionFactory == null)
+            {
+                throw new ArgumentNullException("connectionFactory");
+            }
+
+            this.requesterSecurity = requesterSecurity;
+            this.userManager = userManager;
+            this.connectionFactory = connectionFactory;
+        }
+    }
+}
 namespace Fifthweek.Api.Identity.Membership.Controllers
 {
     using System;
-    using System.Linq;
     using System.Threading.Tasks;
     using System.Web.Http;
     using Fifthweek.Api.Identity.Membership.Commands;
@@ -335,9 +473,6 @@ namespace Fifthweek.Api.Identity.Membership.Controllers
     using Fifthweek.Api.FileManagement.Shared;
     using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.CodeGeneration;
-    using System.Web.Http.Description;
-    using System.ComponentModel.DataAnnotations;
-    using Fifthweek.Shared;
 
     public partial class AccountSettingsController 
     {
@@ -345,7 +480,8 @@ namespace Fifthweek.Api.Identity.Membership.Controllers
             Fifthweek.Api.Core.IGuidCreator guidCreator,
             Fifthweek.Api.Identity.Shared.Membership.IRequesterContext requesterContext,
             Fifthweek.Api.Core.ICommandHandler<Fifthweek.Api.Identity.Membership.Commands.UpdateAccountSettingsCommand> updateAccountSettings,
-            Fifthweek.Api.Core.IQueryHandler<Fifthweek.Api.Identity.Membership.Queries.GetAccountSettingsQuery,Fifthweek.Api.Identity.Membership.GetAccountSettingsResult> getAccountSettings)
+            Fifthweek.Api.Core.IQueryHandler<Fifthweek.Api.Identity.Membership.Queries.GetAccountSettingsQuery,Fifthweek.Api.Identity.Membership.GetAccountSettingsResult> getAccountSettings,
+            Fifthweek.Api.Core.ICommandHandler<Fifthweek.Api.Identity.Membership.Commands.UpdateCreatorAccountSettingsCommand> updateCreatorAccountSettings)
         {
             if (guidCreator == null)
             {
@@ -367,28 +503,30 @@ namespace Fifthweek.Api.Identity.Membership.Controllers
                 throw new ArgumentNullException("getAccountSettings");
             }
 
+            if (updateCreatorAccountSettings == null)
+            {
+                throw new ArgumentNullException("updateCreatorAccountSettings");
+            }
+
             this.guidCreator = guidCreator;
             this.requesterContext = requesterContext;
             this.updateAccountSettings = updateAccountSettings;
             this.getAccountSettings = getAccountSettings;
+            this.updateCreatorAccountSettings = updateCreatorAccountSettings;
         }
     }
 }
 namespace Fifthweek.Api.Identity.Membership.Controllers
 {
     using System;
-    using System.Linq;
     using System.Threading.Tasks;
     using System.Web.Http;
+    using System.Web.Http.Description;
+    using Fifthweek.Api.Core;
     using Fifthweek.Api.Identity.Membership.Commands;
     using Fifthweek.Api.Identity.Membership.Queries;
-    using Fifthweek.Api.Core;
-    using Fifthweek.Api.FileManagement.Shared;
     using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.CodeGeneration;
-    using System.Web.Http.Description;
-    using System.ComponentModel.DataAnnotations;
-    using Fifthweek.Shared;
 
     public partial class MembershipController 
     {
@@ -464,13 +602,6 @@ namespace Fifthweek.Api.Identity.Membership
     using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.Api.Persistence;
     using Fifthweek.CodeGeneration;
-    using Fifthweek.Api.Azure;
-    using System.Data.SqlTypes;
-    using Fifthweek.Api.Persistence.Identity;
-    using System.Security.Claims;
-    using System.ServiceModel.Channels;
-    using System.Web;
-    using System.Text;
     using Fifthweek.Shared;
 
     public partial class GetAccountSettingsDbStatement 
@@ -498,18 +629,12 @@ namespace Fifthweek.Api.Identity.Membership
     using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.Api.Persistence;
     using Fifthweek.CodeGeneration;
-    using Fifthweek.Api.Azure;
-    using System.Data.SqlTypes;
-    using Fifthweek.Api.Persistence.Identity;
-    using System.Security.Claims;
-    using System.ServiceModel.Channels;
-    using System.Web;
-    using System.Text;
     using Fifthweek.Shared;
 
     public partial class GetAccountSettingsDbResult 
     {
         public GetAccountSettingsDbResult(
+            Fifthweek.Api.Identity.Shared.Membership.CreatorName name,
             Fifthweek.Api.Identity.Shared.Membership.Username username,
             Fifthweek.Api.Identity.Shared.Membership.Email email,
             Fifthweek.Api.FileManagement.Shared.FileId profileImageFileId)
@@ -524,6 +649,7 @@ namespace Fifthweek.Api.Identity.Membership
                 throw new ArgumentNullException("email");
             }
 
+            this.Name = name;
             this.Username = username;
             this.Email = email;
             this.ProfileImageFileId = profileImageFileId;
@@ -532,27 +658,15 @@ namespace Fifthweek.Api.Identity.Membership
 }
 namespace Fifthweek.Api.Identity.Membership
 {
-    using System;
-    using System.Linq;
-    using System.Threading.Tasks;
-    using Dapper;
-    using Fifthweek.Api.Core;
+    using Fifthweek.Api.Azure;
     using Fifthweek.Api.FileManagement.Shared;
     using Fifthweek.Api.Identity.Shared.Membership;
-    using Fifthweek.Api.Persistence;
     using Fifthweek.CodeGeneration;
-    using Fifthweek.Api.Azure;
-    using System.Data.SqlTypes;
-    using Fifthweek.Api.Persistence.Identity;
-    using System.Security.Claims;
-    using System.ServiceModel.Channels;
-    using System.Web;
-    using System.Text;
-    using Fifthweek.Shared;
 
     public partial class GetAccountSettingsResult 
     {
         public GetAccountSettingsResult(
+            Fifthweek.Api.Identity.Shared.Membership.CreatorName name,
             Fifthweek.Api.Identity.Shared.Membership.Username username,
             Fifthweek.Api.Identity.Shared.Membership.Email email,
             Fifthweek.Api.FileManagement.Shared.FileInformation profileImage)
@@ -567,6 +681,7 @@ namespace Fifthweek.Api.Identity.Membership
                 throw new ArgumentNullException("email");
             }
 
+            this.Name = name;
             this.Username = username;
             this.Email = email;
             this.ProfileImage = profileImage;
@@ -575,17 +690,9 @@ namespace Fifthweek.Api.Identity.Membership
 }
 namespace Fifthweek.Api.Identity.Membership.Queries
 {
-    using System;
-    using System.Linq;
     using Fifthweek.Api.Core;
     using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.CodeGeneration;
-    using System.Threading.Tasks;
-    using Fifthweek.Api.Azure;
-    using Fifthweek.Api.FileManagement.Shared;
-    using Fifthweek.Shared;
-    using Fifthweek.Api.Persistence;
-    using Fifthweek.Api.Persistence.Identity;
 
     public partial class GetAccountSettingsQuery 
     {
@@ -610,17 +717,13 @@ namespace Fifthweek.Api.Identity.Membership.Queries
 }
 namespace Fifthweek.Api.Identity.Membership.Queries
 {
-    using System;
-    using System.Linq;
-    using Fifthweek.Api.Core;
-    using Fifthweek.Api.Identity.Shared.Membership;
-    using Fifthweek.CodeGeneration;
     using System.Threading.Tasks;
     using Fifthweek.Api.Azure;
+    using Fifthweek.Api.Core;
     using Fifthweek.Api.FileManagement.Shared;
+    using Fifthweek.Api.Identity.Shared.Membership;
+    using Fifthweek.CodeGeneration;
     using Fifthweek.Shared;
-    using Fifthweek.Api.Persistence;
-    using Fifthweek.Api.Persistence.Identity;
 
     public partial class GetAccountSettingsQueryHandler 
     {
@@ -652,17 +755,10 @@ namespace Fifthweek.Api.Identity.Membership.Queries
 }
 namespace Fifthweek.Api.Identity.Membership.Queries
 {
-    using System;
-    using System.Linq;
     using Fifthweek.Api.Core;
     using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.CodeGeneration;
-    using System.Threading.Tasks;
-    using Fifthweek.Api.Azure;
-    using Fifthweek.Api.FileManagement.Shared;
     using Fifthweek.Shared;
-    using Fifthweek.Api.Persistence;
-    using Fifthweek.Api.Persistence.Identity;
 
     public partial class IsPasswordResetTokenValidQuery 
     {
@@ -687,17 +783,10 @@ namespace Fifthweek.Api.Identity.Membership.Queries
 }
 namespace Fifthweek.Api.Identity.Membership.Queries
 {
-    using System;
-    using System.Linq;
     using Fifthweek.Api.Core;
     using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.CodeGeneration;
-    using System.Threading.Tasks;
-    using Fifthweek.Api.Azure;
-    using Fifthweek.Api.FileManagement.Shared;
     using Fifthweek.Shared;
-    using Fifthweek.Api.Persistence;
-    using Fifthweek.Api.Persistence.Identity;
 
     public partial class IsUsernameAvailableQuery 
     {
@@ -713,24 +802,46 @@ namespace Fifthweek.Api.Identity.Membership.Queries
         }
     }
 }
+namespace Fifthweek.Api.Identity.Membership.Queries
+{
+    using System;
+    using System.Threading.Tasks;
+    using Fifthweek.Api.Core;
+    using Fifthweek.Api.Persistence;
+    using Fifthweek.Api.Persistence.Identity;
+    using Fifthweek.CodeGeneration;
+
+    public partial class IsUsernameAvailableQueryHandler 
+    {
+        public IsUsernameAvailableQueryHandler(
+            Fifthweek.Api.Persistence.IUserManager userManager,
+            Fifthweek.Api.Identity.Membership.IReservedUsernameService reservedUsernames)
+        {
+            if (userManager == null)
+            {
+                throw new ArgumentNullException("userManager");
+            }
+
+            if (reservedUsernames == null)
+            {
+                throw new ArgumentNullException("reservedUsernames");
+            }
+
+            this.userManager = userManager;
+            this.reservedUsernames = reservedUsernames;
+        }
+    }
+}
 namespace Fifthweek.Api.Identity.Membership
 {
     using System;
-    using System.Linq;
+    using System.Data.SqlTypes;
     using System.Threading.Tasks;
-    using Dapper;
     using Fifthweek.Api.Core;
-    using Fifthweek.Api.FileManagement.Shared;
     using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.Api.Persistence;
-    using Fifthweek.CodeGeneration;
-    using Fifthweek.Api.Azure;
-    using System.Data.SqlTypes;
     using Fifthweek.Api.Persistence.Identity;
-    using System.Security.Claims;
-    using System.ServiceModel.Channels;
-    using System.Web;
-    using System.Text;
+    using Fifthweek.CodeGeneration;
     using Fifthweek.Shared;
 
     public partial class RegisterUserDbStatement 
@@ -758,21 +869,12 @@ namespace Fifthweek.Api.Identity.Membership
 {
     using System;
     using System.Linq;
-    using System.Threading.Tasks;
-    using Dapper;
-    using Fifthweek.Api.Core;
-    using Fifthweek.Api.FileManagement.Shared;
-    using Fifthweek.Api.Identity.Shared.Membership;
-    using Fifthweek.Api.Persistence;
-    using Fifthweek.CodeGeneration;
-    using Fifthweek.Api.Azure;
-    using System.Data.SqlTypes;
-    using Fifthweek.Api.Persistence.Identity;
     using System.Security.Claims;
     using System.ServiceModel.Channels;
     using System.Web;
-    using System.Text;
-    using Fifthweek.Shared;
+    using Fifthweek.Api.Core;
+    using Fifthweek.Api.Identity.Shared.Membership;
+    using Fifthweek.CodeGeneration;
 
     public partial class RequesterContext 
     {
@@ -792,6 +894,7 @@ namespace Fifthweek.Api.Identity.Membership
 {
     using System;
     using System.Linq;
+    using System.Text;
     using System.Threading.Tasks;
     using Dapper;
     using Fifthweek.Api.Core;
@@ -799,13 +902,6 @@ namespace Fifthweek.Api.Identity.Membership
     using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.Api.Persistence;
     using Fifthweek.CodeGeneration;
-    using Fifthweek.Api.Azure;
-    using System.Data.SqlTypes;
-    using Fifthweek.Api.Persistence.Identity;
-    using System.Security.Claims;
-    using System.ServiceModel.Channels;
-    using System.Web;
-    using System.Text;
     using Fifthweek.Shared;
 
     public partial class UpdateAccountSettingsDbStatement
@@ -829,6 +925,7 @@ namespace Fifthweek.Api.Identity.Membership
 {
     using System;
     using System.Linq;
+    using System.Text;
     using System.Threading.Tasks;
     using Dapper;
     using Fifthweek.Api.Core;
@@ -836,13 +933,6 @@ namespace Fifthweek.Api.Identity.Membership
     using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.Api.Persistence;
     using Fifthweek.CodeGeneration;
-    using Fifthweek.Api.Azure;
-    using System.Data.SqlTypes;
-    using Fifthweek.Api.Persistence.Identity;
-    using System.Security.Claims;
-    using System.ServiceModel.Channels;
-    using System.Web;
-    using System.Text;
     using Fifthweek.Shared;
 
     public partial class UpdateAccountSettingsDbStatement 
@@ -868,29 +958,9 @@ namespace Fifthweek.Api.Identity.Membership
 }
 namespace Fifthweek.Api.Identity.OAuth
 {
-    using System;
-    using System.Linq;
     using Fifthweek.Api.Core;
     using Fifthweek.CodeGeneration;
     using Fifthweek.Shared;
-    using Fifthweek.Api.Identity.Membership;
-    using System.Collections.Generic;
-    using System.Security.Claims;
-    using System.Text.RegularExpressions;
-    using System.Threading.Tasks;
-    using Fifthweek.Api.Identity.Membership.Commands;
-    using Fifthweek.Api.Identity.Membership.Queries;
-    using Fifthweek.Api.Identity.OAuth.Commands;
-    using Fifthweek.Api.Identity.OAuth.Queries;
-    using Fifthweek.Api.Identity.Shared.Membership;
-    using Fifthweek.Api.Persistence;
-    using Fifthweek.Api.Persistence.Identity;
-    using Microsoft.Owin.Security;
-    using Microsoft.Owin.Security.OAuth;
-    using System.Diagnostics;
-    using Microsoft.Owin.Security.Infrastructure;
-    using Dapper;
-    using Microsoft.AspNet.Identity;
 
     public partial class Client 
     {
@@ -957,29 +1027,9 @@ namespace Fifthweek.Api.Identity.OAuth
 }
 namespace Fifthweek.Api.Identity.OAuth
 {
-    using System;
-    using System.Linq;
     using Fifthweek.Api.Core;
     using Fifthweek.CodeGeneration;
     using Fifthweek.Shared;
-    using Fifthweek.Api.Identity.Membership;
-    using System.Collections.Generic;
-    using System.Security.Claims;
-    using System.Text.RegularExpressions;
-    using System.Threading.Tasks;
-    using Fifthweek.Api.Identity.Membership.Commands;
-    using Fifthweek.Api.Identity.Membership.Queries;
-    using Fifthweek.Api.Identity.OAuth.Commands;
-    using Fifthweek.Api.Identity.OAuth.Queries;
-    using Fifthweek.Api.Identity.Shared.Membership;
-    using Fifthweek.Api.Persistence;
-    using Fifthweek.Api.Persistence.Identity;
-    using Microsoft.Owin.Security;
-    using Microsoft.Owin.Security.OAuth;
-    using System.Diagnostics;
-    using Microsoft.Owin.Security.Infrastructure;
-    using Dapper;
-    using Microsoft.AspNet.Identity;
 
     public partial class ClientId 
     {
@@ -997,14 +1047,12 @@ namespace Fifthweek.Api.Identity.OAuth
 }
 namespace Fifthweek.Api.Identity.OAuth.Commands
 {
-    using System;
-    using System.Linq;
     using Fifthweek.Api.Core;
+    using System;
     using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.Api.Persistence;
     using Fifthweek.CodeGeneration;
     using Fifthweek.Shared;
-    using System.Threading.Tasks;
 
     public partial class CreateRefreshTokenCommand 
     {
@@ -1058,13 +1106,11 @@ namespace Fifthweek.Api.Identity.OAuth.Commands
 namespace Fifthweek.Api.Identity.OAuth.Commands
 {
     using System;
-    using System.Linq;
+    using System.Threading.Tasks;
     using Fifthweek.Api.Core;
-    using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.Api.Persistence;
     using Fifthweek.CodeGeneration;
     using Fifthweek.Shared;
-    using System.Threading.Tasks;
 
     public partial class CreateRefreshTokenCommandHandler 
     {
@@ -1082,14 +1128,9 @@ namespace Fifthweek.Api.Identity.OAuth.Commands
 }
 namespace Fifthweek.Api.Identity.OAuth.Commands
 {
-    using System;
-    using System.Linq;
     using Fifthweek.Api.Core;
-    using Fifthweek.Api.Identity.Shared.Membership;
-    using Fifthweek.Api.Persistence;
     using Fifthweek.CodeGeneration;
     using Fifthweek.Shared;
-    using System.Threading.Tasks;
 
     public partial class RemoveRefreshTokenCommand 
     {
@@ -1107,14 +1148,10 @@ namespace Fifthweek.Api.Identity.OAuth.Commands
 }
 namespace Fifthweek.Api.Identity.OAuth.Commands
 {
-    using System;
-    using System.Linq;
+    using System.Threading.Tasks;
     using Fifthweek.Api.Core;
-    using Fifthweek.Api.Identity.Shared.Membership;
-    using Fifthweek.Api.Persistence;
     using Fifthweek.CodeGeneration;
     using Fifthweek.Shared;
-    using System.Threading.Tasks;
 
     public partial class RemoveRefreshTokenCommandHandler 
     {
@@ -1133,13 +1170,8 @@ namespace Fifthweek.Api.Identity.OAuth.Commands
 namespace Fifthweek.Api.Identity.OAuth.Commands
 {
     using System;
-    using System.Linq;
-    using Fifthweek.Api.Core;
     using Fifthweek.Api.Identity.Shared.Membership;
-    using Fifthweek.Api.Persistence;
     using Fifthweek.CodeGeneration;
-    using Fifthweek.Shared;
-    using System.Threading.Tasks;
 
     public partial class UpdateLastAccessTokenDateCommand 
     {
@@ -1171,16 +1203,14 @@ namespace Fifthweek.Api.Identity.OAuth.Commands
 }
 namespace Fifthweek.Api.Identity.OAuth
 {
-    using System;
-    using System.Linq;
-    using Fifthweek.Api.Core;
-    using Fifthweek.CodeGeneration;
-    using Fifthweek.Shared;
     using Fifthweek.Api.Identity.Membership;
+    using System;
     using System.Collections.Generic;
+    using System.Linq;
     using System.Security.Claims;
     using System.Text.RegularExpressions;
     using System.Threading.Tasks;
+    using Fifthweek.Api.Core;
     using Fifthweek.Api.Identity.Membership.Commands;
     using Fifthweek.Api.Identity.Membership.Queries;
     using Fifthweek.Api.Identity.OAuth.Commands;
@@ -1188,12 +1218,10 @@ namespace Fifthweek.Api.Identity.OAuth
     using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.Api.Persistence;
     using Fifthweek.Api.Persistence.Identity;
+    using Fifthweek.CodeGeneration;
+    using Fifthweek.Shared;
     using Microsoft.Owin.Security;
     using Microsoft.Owin.Security.OAuth;
-    using System.Diagnostics;
-    using Microsoft.Owin.Security.Infrastructure;
-    using Dapper;
-    using Microsoft.AspNet.Identity;
 
     public partial class FifthweekAuthorizationServerHandler 
     {
@@ -1232,29 +1260,18 @@ namespace Fifthweek.Api.Identity.OAuth
 }
 namespace Fifthweek.Api.Identity.OAuth
 {
-    using System;
-    using System.Linq;
-    using Fifthweek.Api.Core;
-    using Fifthweek.CodeGeneration;
-    using Fifthweek.Shared;
     using Fifthweek.Api.Identity.Membership;
-    using System.Collections.Generic;
-    using System.Security.Claims;
-    using System.Text.RegularExpressions;
+    using System;
+    using System.Diagnostics;
     using System.Threading.Tasks;
-    using Fifthweek.Api.Identity.Membership.Commands;
-    using Fifthweek.Api.Identity.Membership.Queries;
+    using Fifthweek.Api.Core;
     using Fifthweek.Api.Identity.OAuth.Commands;
     using Fifthweek.Api.Identity.OAuth.Queries;
     using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.Api.Persistence;
-    using Fifthweek.Api.Persistence.Identity;
-    using Microsoft.Owin.Security;
-    using Microsoft.Owin.Security.OAuth;
-    using System.Diagnostics;
+    using Fifthweek.CodeGeneration;
+    using Fifthweek.Shared;
     using Microsoft.Owin.Security.Infrastructure;
-    using Dapper;
-    using Microsoft.AspNet.Identity;
 
     public partial class FifthweekRefreshTokenHandler 
     {
@@ -1288,26 +1305,14 @@ namespace Fifthweek.Api.Identity.OAuth
 {
     using System;
     using System.Linq;
-    using Fifthweek.Api.Core;
-    using Fifthweek.CodeGeneration;
-    using Fifthweek.Shared;
-    using Fifthweek.Api.Identity.Membership;
-    using System.Collections.Generic;
-    using System.Security.Claims;
-    using System.Text.RegularExpressions;
     using System.Threading.Tasks;
-    using Fifthweek.Api.Identity.Membership.Commands;
-    using Fifthweek.Api.Identity.Membership.Queries;
-    using Fifthweek.Api.Identity.OAuth.Commands;
-    using Fifthweek.Api.Identity.OAuth.Queries;
+    using Dapper;
+    using Fifthweek.Api.Core;
     using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.Api.Persistence;
     using Fifthweek.Api.Persistence.Identity;
-    using Microsoft.Owin.Security;
-    using Microsoft.Owin.Security.OAuth;
-    using System.Diagnostics;
-    using Microsoft.Owin.Security.Infrastructure;
-    using Dapper;
+    using Fifthweek.CodeGeneration;
+    using Fifthweek.Shared;
     using Microsoft.AspNet.Identity;
 
     public partial class GetUserAndRolesFromCredentialsDbStatement 
@@ -1335,27 +1340,14 @@ namespace Fifthweek.Api.Identity.OAuth
 {
     using System;
     using System.Linq;
-    using Fifthweek.Api.Core;
-    using Fifthweek.CodeGeneration;
-    using Fifthweek.Shared;
-    using Fifthweek.Api.Identity.Membership;
-    using System.Collections.Generic;
-    using System.Security.Claims;
-    using System.Text.RegularExpressions;
     using System.Threading.Tasks;
-    using Fifthweek.Api.Identity.Membership.Commands;
-    using Fifthweek.Api.Identity.Membership.Queries;
-    using Fifthweek.Api.Identity.OAuth.Commands;
-    using Fifthweek.Api.Identity.OAuth.Queries;
+    using Dapper;
+    using Fifthweek.Api.Core;
     using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.Api.Persistence;
     using Fifthweek.Api.Persistence.Identity;
-    using Microsoft.Owin.Security;
-    using Microsoft.Owin.Security.OAuth;
-    using System.Diagnostics;
-    using Microsoft.Owin.Security.Infrastructure;
-    using Dapper;
-    using Microsoft.AspNet.Identity;
+    using Fifthweek.CodeGeneration;
+    using Fifthweek.Shared;
 
     public partial class GetUserAndRolesFromUserIdDbStatement 
     {
@@ -1373,29 +1365,9 @@ namespace Fifthweek.Api.Identity.OAuth
 }
 namespace Fifthweek.Api.Identity.OAuth
 {
-    using System;
-    using System.Linq;
     using Fifthweek.Api.Core;
     using Fifthweek.CodeGeneration;
     using Fifthweek.Shared;
-    using Fifthweek.Api.Identity.Membership;
-    using System.Collections.Generic;
-    using System.Security.Claims;
-    using System.Text.RegularExpressions;
-    using System.Threading.Tasks;
-    using Fifthweek.Api.Identity.Membership.Commands;
-    using Fifthweek.Api.Identity.Membership.Queries;
-    using Fifthweek.Api.Identity.OAuth.Commands;
-    using Fifthweek.Api.Identity.OAuth.Queries;
-    using Fifthweek.Api.Identity.Shared.Membership;
-    using Fifthweek.Api.Persistence;
-    using Fifthweek.Api.Persistence.Identity;
-    using Microsoft.Owin.Security;
-    using Microsoft.Owin.Security.OAuth;
-    using System.Diagnostics;
-    using Microsoft.Owin.Security.Infrastructure;
-    using Dapper;
-    using Microsoft.AspNet.Identity;
 
     public partial class HashedRefreshTokenId 
     {
@@ -1413,17 +1385,10 @@ namespace Fifthweek.Api.Identity.OAuth
 }
 namespace Fifthweek.Api.Identity.OAuth.Queries
 {
-    using System;
-    using System.Linq;
     using Fifthweek.Api.Core;
     using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.Api.Persistence.Identity;
     using Fifthweek.CodeGeneration;
-    using System.Collections.Generic;
-    using System.Security.Claims;
-    using System.Threading.Tasks;
-    using Fifthweek.Api.Persistence;
-    using Fifthweek.Shared;
 
     public partial class GetUserClaimsIdentityQuery 
     {
@@ -1448,15 +1413,14 @@ namespace Fifthweek.Api.Identity.OAuth.Queries
 namespace Fifthweek.Api.Identity.OAuth.Queries
 {
     using System;
-    using System.Linq;
-    using Fifthweek.Api.Core;
-    using Fifthweek.Api.Identity.Shared.Membership;
-    using Fifthweek.Api.Persistence.Identity;
-    using Fifthweek.CodeGeneration;
     using System.Collections.Generic;
     using System.Security.Claims;
     using System.Threading.Tasks;
+    using Fifthweek.Api.Core;
+    using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.Api.Persistence;
+    using Fifthweek.Api.Persistence.Identity;
+    using Fifthweek.CodeGeneration;
     using Fifthweek.Shared;
 
     public partial class GetUserClaimsIdentityQueryHandler 
@@ -1482,16 +1446,8 @@ namespace Fifthweek.Api.Identity.OAuth.Queries
 }
 namespace Fifthweek.Api.Identity.OAuth.Queries
 {
-    using System;
-    using System.Linq;
     using Fifthweek.Api.Core;
-    using Fifthweek.Api.Identity.Shared.Membership;
-    using Fifthweek.Api.Persistence.Identity;
     using Fifthweek.CodeGeneration;
-    using System.Collections.Generic;
-    using System.Security.Claims;
-    using System.Threading.Tasks;
-    using Fifthweek.Api.Persistence;
     using Fifthweek.Shared;
 
     public partial class GetValidatedClientQuery 
@@ -1512,16 +1468,9 @@ namespace Fifthweek.Api.Identity.OAuth.Queries
 }
 namespace Fifthweek.Api.Identity.OAuth.Queries
 {
-    using System;
-    using System.Linq;
     using Fifthweek.Api.Core;
-    using Fifthweek.Api.Identity.Shared.Membership;
-    using Fifthweek.Api.Persistence.Identity;
-    using Fifthweek.CodeGeneration;
-    using System.Collections.Generic;
-    using System.Security.Claims;
-    using System.Threading.Tasks;
     using Fifthweek.Api.Persistence;
+    using Fifthweek.CodeGeneration;
     using Fifthweek.Shared;
 
     public partial class TryGetRefreshTokenQuery 
@@ -1540,16 +1489,10 @@ namespace Fifthweek.Api.Identity.OAuth.Queries
 }
 namespace Fifthweek.Api.Identity.OAuth.Queries
 {
-    using System;
-    using System.Linq;
-    using Fifthweek.Api.Core;
-    using Fifthweek.Api.Identity.Shared.Membership;
-    using Fifthweek.Api.Persistence.Identity;
-    using Fifthweek.CodeGeneration;
-    using System.Collections.Generic;
-    using System.Security.Claims;
     using System.Threading.Tasks;
+    using Fifthweek.Api.Core;
     using Fifthweek.Api.Persistence;
+    using Fifthweek.CodeGeneration;
     using Fifthweek.Shared;
 
     public partial class TryGetRefreshTokenQueryHandler 
@@ -1568,17 +1511,9 @@ namespace Fifthweek.Api.Identity.OAuth.Queries
 }
 namespace Fifthweek.Api.Identity.OAuth.Queries
 {
-    using System;
-    using System.Linq;
-    using Fifthweek.Api.Core;
-    using Fifthweek.Api.Identity.Shared.Membership;
-    using Fifthweek.Api.Persistence.Identity;
-    using Fifthweek.CodeGeneration;
-    using System.Collections.Generic;
     using System.Security.Claims;
-    using System.Threading.Tasks;
-    using Fifthweek.Api.Persistence;
-    using Fifthweek.Shared;
+    using Fifthweek.Api.Identity.Shared.Membership;
+    using Fifthweek.CodeGeneration;
 
     public partial class UserClaimsIdentity 
     {
@@ -1611,28 +1546,9 @@ namespace Fifthweek.Api.Identity.OAuth.Queries
 namespace Fifthweek.Api.Identity.OAuth
 {
     using System;
-    using System.Linq;
     using Fifthweek.Api.Core;
     using Fifthweek.CodeGeneration;
     using Fifthweek.Shared;
-    using Fifthweek.Api.Identity.Membership;
-    using System.Collections.Generic;
-    using System.Security.Claims;
-    using System.Text.RegularExpressions;
-    using System.Threading.Tasks;
-    using Fifthweek.Api.Identity.Membership.Commands;
-    using Fifthweek.Api.Identity.Membership.Queries;
-    using Fifthweek.Api.Identity.OAuth.Commands;
-    using Fifthweek.Api.Identity.OAuth.Queries;
-    using Fifthweek.Api.Identity.Shared.Membership;
-    using Fifthweek.Api.Persistence;
-    using Fifthweek.Api.Persistence.Identity;
-    using Microsoft.Owin.Security;
-    using Microsoft.Owin.Security.OAuth;
-    using System.Diagnostics;
-    using Microsoft.Owin.Security.Infrastructure;
-    using Dapper;
-    using Microsoft.AspNet.Identity;
 
     public partial class RefreshTokenId 
     {
@@ -1650,29 +1566,12 @@ namespace Fifthweek.Api.Identity.OAuth
 }
 namespace Fifthweek.Api.Identity.OAuth
 {
-    using System;
-    using System.Linq;
+    using System.Threading.Tasks;
+    using Dapper;
     using Fifthweek.Api.Core;
+    using Fifthweek.Api.Persistence;
     using Fifthweek.CodeGeneration;
     using Fifthweek.Shared;
-    using Fifthweek.Api.Identity.Membership;
-    using System.Collections.Generic;
-    using System.Security.Claims;
-    using System.Text.RegularExpressions;
-    using System.Threading.Tasks;
-    using Fifthweek.Api.Identity.Membership.Commands;
-    using Fifthweek.Api.Identity.Membership.Queries;
-    using Fifthweek.Api.Identity.OAuth.Commands;
-    using Fifthweek.Api.Identity.OAuth.Queries;
-    using Fifthweek.Api.Identity.Shared.Membership;
-    using Fifthweek.Api.Persistence;
-    using Fifthweek.Api.Persistence.Identity;
-    using Microsoft.Owin.Security;
-    using Microsoft.Owin.Security.OAuth;
-    using System.Diagnostics;
-    using Microsoft.Owin.Security.Infrastructure;
-    using Dapper;
-    using Microsoft.AspNet.Identity;
 
     public partial class RemoveRefreshTokenDbStatement 
     {
@@ -1690,29 +1589,13 @@ namespace Fifthweek.Api.Identity.OAuth
 }
 namespace Fifthweek.Api.Identity.OAuth
 {
-    using System;
     using System.Linq;
+    using System.Threading.Tasks;
+    using Dapper;
     using Fifthweek.Api.Core;
+    using Fifthweek.Api.Persistence;
     using Fifthweek.CodeGeneration;
     using Fifthweek.Shared;
-    using Fifthweek.Api.Identity.Membership;
-    using System.Collections.Generic;
-    using System.Security.Claims;
-    using System.Text.RegularExpressions;
-    using System.Threading.Tasks;
-    using Fifthweek.Api.Identity.Membership.Commands;
-    using Fifthweek.Api.Identity.Membership.Queries;
-    using Fifthweek.Api.Identity.OAuth.Commands;
-    using Fifthweek.Api.Identity.OAuth.Queries;
-    using Fifthweek.Api.Identity.Shared.Membership;
-    using Fifthweek.Api.Persistence;
-    using Fifthweek.Api.Persistence.Identity;
-    using Microsoft.Owin.Security;
-    using Microsoft.Owin.Security.OAuth;
-    using System.Diagnostics;
-    using Microsoft.Owin.Security.Infrastructure;
-    using Dapper;
-    using Microsoft.AspNet.Identity;
 
     public partial class TryGetRefreshTokenDbStatement 
     {
@@ -1731,28 +1614,15 @@ namespace Fifthweek.Api.Identity.OAuth
 namespace Fifthweek.Api.Identity.OAuth
 {
     using System;
-    using System.Linq;
-    using Fifthweek.Api.Core;
-    using Fifthweek.CodeGeneration;
-    using Fifthweek.Shared;
-    using Fifthweek.Api.Identity.Membership;
-    using System.Collections.Generic;
-    using System.Security.Claims;
-    using System.Text.RegularExpressions;
     using System.Threading.Tasks;
-    using Fifthweek.Api.Identity.Membership.Commands;
-    using Fifthweek.Api.Identity.Membership.Queries;
-    using Fifthweek.Api.Identity.OAuth.Commands;
-    using Fifthweek.Api.Identity.OAuth.Queries;
+    using Dapper;
+    using Fifthweek.Api.Core;
+    using Fifthweek.Api.Identity.Membership;
     using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.Api.Persistence;
     using Fifthweek.Api.Persistence.Identity;
-    using Microsoft.Owin.Security;
-    using Microsoft.Owin.Security.OAuth;
-    using System.Diagnostics;
-    using Microsoft.Owin.Security.Infrastructure;
-    using Dapper;
-    using Microsoft.AspNet.Identity;
+    using Fifthweek.CodeGeneration;
+    using Fifthweek.Shared;
 
     public partial class UpdateUserTimeStampsDbStatement 
     {
@@ -1770,29 +1640,12 @@ namespace Fifthweek.Api.Identity.OAuth
 }
 namespace Fifthweek.Api.Identity.OAuth
 {
-    using System;
-    using System.Linq;
+    using System.Threading.Tasks;
+    using Dapper;
     using Fifthweek.Api.Core;
+    using Fifthweek.Api.Persistence;
     using Fifthweek.CodeGeneration;
     using Fifthweek.Shared;
-    using Fifthweek.Api.Identity.Membership;
-    using System.Collections.Generic;
-    using System.Security.Claims;
-    using System.Text.RegularExpressions;
-    using System.Threading.Tasks;
-    using Fifthweek.Api.Identity.Membership.Commands;
-    using Fifthweek.Api.Identity.Membership.Queries;
-    using Fifthweek.Api.Identity.OAuth.Commands;
-    using Fifthweek.Api.Identity.OAuth.Queries;
-    using Fifthweek.Api.Identity.Shared.Membership;
-    using Fifthweek.Api.Persistence;
-    using Fifthweek.Api.Persistence.Identity;
-    using Microsoft.Owin.Security;
-    using Microsoft.Owin.Security.OAuth;
-    using System.Diagnostics;
-    using Microsoft.Owin.Security.Infrastructure;
-    using Dapper;
-    using Microsoft.AspNet.Identity;
 
     public partial class UpsertRefreshTokenDbStatement 
     {
@@ -1810,29 +1663,9 @@ namespace Fifthweek.Api.Identity.OAuth
 }
 namespace Fifthweek.Api.Identity.OAuth
 {
-    using System;
-    using System.Linq;
-    using Fifthweek.Api.Core;
-    using Fifthweek.CodeGeneration;
-    using Fifthweek.Shared;
-    using Fifthweek.Api.Identity.Membership;
     using System.Collections.Generic;
-    using System.Security.Claims;
-    using System.Text.RegularExpressions;
-    using System.Threading.Tasks;
-    using Fifthweek.Api.Identity.Membership.Commands;
-    using Fifthweek.Api.Identity.Membership.Queries;
-    using Fifthweek.Api.Identity.OAuth.Commands;
-    using Fifthweek.Api.Identity.OAuth.Queries;
     using Fifthweek.Api.Identity.Shared.Membership;
-    using Fifthweek.Api.Persistence;
-    using Fifthweek.Api.Persistence.Identity;
-    using Microsoft.Owin.Security;
-    using Microsoft.Owin.Security.OAuth;
-    using System.Diagnostics;
-    using Microsoft.Owin.Security.Infrastructure;
-    using Dapper;
-    using Microsoft.AspNet.Identity;
+    using Fifthweek.CodeGeneration;
 
     public partial class UserIdAndRoles 
     {
@@ -1857,29 +1690,9 @@ namespace Fifthweek.Api.Identity.OAuth
 }
 namespace Fifthweek.Api.Identity.OAuth
 {
-    using System;
-    using System.Linq;
-    using Fifthweek.Api.Core;
-    using Fifthweek.CodeGeneration;
-    using Fifthweek.Shared;
-    using Fifthweek.Api.Identity.Membership;
     using System.Collections.Generic;
-    using System.Security.Claims;
-    using System.Text.RegularExpressions;
-    using System.Threading.Tasks;
-    using Fifthweek.Api.Identity.Membership.Commands;
-    using Fifthweek.Api.Identity.Membership.Queries;
-    using Fifthweek.Api.Identity.OAuth.Commands;
-    using Fifthweek.Api.Identity.OAuth.Queries;
     using Fifthweek.Api.Identity.Shared.Membership;
-    using Fifthweek.Api.Persistence;
-    using Fifthweek.Api.Persistence.Identity;
-    using Microsoft.Owin.Security;
-    using Microsoft.Owin.Security.OAuth;
-    using System.Diagnostics;
-    using Microsoft.Owin.Security.Infrastructure;
-    using Dapper;
-    using Microsoft.AspNet.Identity;
+    using Fifthweek.CodeGeneration;
 
     public partial class UsernameAndRoles 
     {
@@ -1902,209 +1715,13 @@ namespace Fifthweek.Api.Identity.OAuth
         }
     }
 }
-namespace Fifthweek.Api.Identity.Membership.Queries
-{
-    using System;
-    using System.Linq;
-    using Fifthweek.Api.Core;
-    using Fifthweek.Api.Identity.Shared.Membership;
-    using Fifthweek.CodeGeneration;
-    using System.Threading.Tasks;
-    using Fifthweek.Api.Azure;
-    using Fifthweek.Api.FileManagement.Shared;
-    using Fifthweek.Shared;
-    using Fifthweek.Api.Persistence;
-    using Fifthweek.Api.Persistence.Identity;
-
-    public partial class IsUsernameAvailableQueryHandler 
-    {
-        public IsUsernameAvailableQueryHandler(
-            Fifthweek.Api.Persistence.IUserManager userManager,
-            Fifthweek.Api.Identity.Membership.IReservedUsernameService reservedUsernames)
-        {
-            if (userManager == null)
-            {
-                throw new ArgumentNullException("userManager");
-            }
-
-            if (reservedUsernames == null)
-            {
-                throw new ArgumentNullException("reservedUsernames");
-            }
-
-            this.userManager = userManager;
-            this.reservedUsernames = reservedUsernames;
-        }
-    }
-}
-namespace Fifthweek.Api.Identity.Membership.Commands
-{
-    using System;
-    using System.Linq;
-    using Fifthweek.Api.Core;
-    using Fifthweek.Api.Identity.Shared.Membership;
-    using Fifthweek.CodeGeneration;
-    using Fifthweek.Shared;
-    using System.Threading.Tasks;
-    using Fifthweek.Api.Identity.Shared.Membership.Events;
-    using System.Web;
-    using Fifthweek.Api.Persistence;
-    using Fifthweek.Api.Persistence.Identity;
-    using Fifthweek.Api.FileManagement.Shared;
-    using System.Text;
-
-    public partial class RegisterInterestCommand 
-    {
-        public RegisterInterestCommand(
-            System.String name,
-            Fifthweek.Api.Identity.Shared.Membership.ValidEmail email)
-        {
-            if (name == null)
-            {
-                throw new ArgumentNullException("name");
-            }
-
-            if (email == null)
-            {
-                throw new ArgumentNullException("email");
-            }
-
-            this.Name = name;
-            this.Email = email;
-        }
-    }
-}
-namespace Fifthweek.Api.Identity.Membership.Commands
-{
-    using System;
-    using System.Linq;
-    using Fifthweek.Api.Core;
-    using Fifthweek.Api.Identity.Shared.Membership;
-    using Fifthweek.CodeGeneration;
-    using Fifthweek.Shared;
-    using System.Threading.Tasks;
-    using Fifthweek.Api.Identity.Shared.Membership.Events;
-    using System.Web;
-    using Fifthweek.Api.Persistence;
-    using Fifthweek.Api.Persistence.Identity;
-    using Fifthweek.Api.FileManagement.Shared;
-    using System.Text;
-
-    public partial class RegisterInterestCommandHandler 
-    {
-        public RegisterInterestCommandHandler(
-            Fifthweek.Api.Core.IFifthweekActivityReporter activityReporter,
-            Fifthweek.Api.Core.IExceptionHandler exceptionHandler)
-        {
-            if (activityReporter == null)
-            {
-                throw new ArgumentNullException("activityReporter");
-            }
-
-            if (exceptionHandler == null)
-            {
-                throw new ArgumentNullException("exceptionHandler");
-            }
-
-            this.activityReporter = activityReporter;
-            this.exceptionHandler = exceptionHandler;
-        }
-    }
-}
-namespace Fifthweek.Api.Identity.Membership.Commands
-{
-    using System;
-    using System.Linq;
-    using Fifthweek.Api.Core;
-    using Fifthweek.Api.Identity.Shared.Membership;
-    using Fifthweek.CodeGeneration;
-    using Fifthweek.Shared;
-    using System.Threading.Tasks;
-    using Fifthweek.Api.Identity.Shared.Membership.Events;
-    using System.Web;
-    using Fifthweek.Api.Persistence;
-    using Fifthweek.Api.Persistence.Identity;
-    using Fifthweek.Api.FileManagement.Shared;
-    using System.Text;
-
-    public partial class SendIdentifiedUserInformationCommand 
-    {
-        public SendIdentifiedUserInformationCommand(
-            System.Boolean isUpdate,
-            Fifthweek.Api.Identity.Shared.Membership.Email email,
-            System.String name,
-            Fifthweek.Api.Identity.Shared.Membership.Username username)
-        {
-            if (isUpdate == null)
-            {
-                throw new ArgumentNullException("isUpdate");
-            }
-
-            if (email == null)
-            {
-                throw new ArgumentNullException("email");
-            }
-
-            this.IsUpdate = isUpdate;
-            this.Email = email;
-            this.Name = name;
-            this.Username = username;
-        }
-    }
-}
-namespace Fifthweek.Api.Identity.Membership.Commands
-{
-    using System;
-    using System.Linq;
-    using Fifthweek.Api.Core;
-    using Fifthweek.Api.Identity.Shared.Membership;
-    using Fifthweek.CodeGeneration;
-    using Fifthweek.Shared;
-    using System.Threading.Tasks;
-    using Fifthweek.Api.Identity.Shared.Membership.Events;
-    using System.Web;
-    using Fifthweek.Api.Persistence;
-    using Fifthweek.Api.Persistence.Identity;
-    using Fifthweek.Api.FileManagement.Shared;
-    using System.Text;
-
-    public partial class SendIdentifiedUserInformationCommandHandler 
-    {
-        public SendIdentifiedUserInformationCommandHandler(
-            Fifthweek.Api.Core.IFifthweekActivityReporter activityReporter,
-            Fifthweek.Api.Core.IExceptionHandler exceptionHandler)
-        {
-            if (activityReporter == null)
-            {
-                throw new ArgumentNullException("activityReporter");
-            }
-
-            if (exceptionHandler == null)
-            {
-                throw new ArgumentNullException("exceptionHandler");
-            }
-
-            this.activityReporter = activityReporter;
-            this.exceptionHandler = exceptionHandler;
-        }
-    }
-}
 
 namespace Fifthweek.Api.Identity.Membership.Commands
 {
-    using System;
-    using System.Linq;
     using Fifthweek.Api.Core;
     using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.CodeGeneration;
     using Fifthweek.Shared;
-    using System.Threading.Tasks;
-    using Fifthweek.Api.Identity.Shared.Membership.Events;
-    using System.Web;
-    using Fifthweek.Api.Persistence;
-    using Fifthweek.Api.Persistence.Identity;
-    using Fifthweek.Api.FileManagement.Shared;
-    using System.Text;
 
     public partial class ConfirmPasswordResetCommand 
     {
@@ -2168,25 +1785,73 @@ namespace Fifthweek.Api.Identity.Membership.Commands
 }
 namespace Fifthweek.Api.Identity.Membership.Commands
 {
-    using System;
-    using System.Linq;
-    using Fifthweek.Api.Core;
     using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.CodeGeneration;
-    using Fifthweek.Shared;
-    using System.Threading.Tasks;
-    using Fifthweek.Api.Identity.Shared.Membership.Events;
-    using System.Web;
-    using Fifthweek.Api.Persistence;
-    using Fifthweek.Api.Persistence.Identity;
-    using Fifthweek.Api.FileManagement.Shared;
-    using System.Text;
+
+    public partial class RegisterInterestCommand 
+    {
+        public override string ToString()
+        {
+            return string.Format("RegisterInterestCommand(\"{0}\", {1})", this.Name == null ? "null" : this.Name.ToString(), this.Email == null ? "null" : this.Email.ToString());
+        }
+        
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj))
+            {
+                return false;
+            }
+        
+            if (ReferenceEquals(this, obj))
+            {
+                return true;
+            }
+        
+            if (obj.GetType() != this.GetType())
+            {
+                return false;
+            }
+        
+            return this.Equals((RegisterInterestCommand)obj);
+        }
+        
+        public override int GetHashCode()
+        {
+            unchecked
+            {
+                int hashCode = 0;
+                hashCode = (hashCode * 397) ^ (this.Name != null ? this.Name.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.Email != null ? this.Email.GetHashCode() : 0);
+                return hashCode;
+            }
+        }
+        
+        protected bool Equals(RegisterInterestCommand other)
+        {
+            if (!object.Equals(this.Name, other.Name))
+            {
+                return false;
+            }
+        
+            if (!object.Equals(this.Email, other.Email))
+            {
+                return false;
+            }
+        
+            return true;
+        }
+    }
+}
+namespace Fifthweek.Api.Identity.Membership.Commands
+{
+    using Fifthweek.Api.Identity.Shared.Membership;
+    using Fifthweek.CodeGeneration;
 
     public partial class RegisterUserCommand 
     {
         public override string ToString()
         {
-            return string.Format("RegisterUserCommand({0}, \"{1}\", {2}, {3}, {4})", this.UserId == null ? "null" : this.UserId.ToString(), this.ExampleWork == null ? "null" : this.ExampleWork.ToString(), this.Email == null ? "null" : this.Email.ToString(), this.Username == null ? "null" : this.Username.ToString(), this.Password == null ? "null" : this.Password.ToString());
+            return string.Format("RegisterUserCommand({0}, \"{1}\", {2}, {3}, {4}, {5}, {6})", this.UserId == null ? "null" : this.UserId.ToString(), this.ExampleWork == null ? "null" : this.ExampleWork.ToString(), this.Email == null ? "null" : this.Email.ToString(), this.Username == null ? "null" : this.Username.ToString(), this.Password == null ? "null" : this.Password.ToString(), this.RegiserAsCreator == null ? "null" : this.RegiserAsCreator.ToString(), this.CreatorName == null ? "null" : this.CreatorName.ToString());
         }
         
         public override bool Equals(object obj)
@@ -2219,6 +1884,8 @@ namespace Fifthweek.Api.Identity.Membership.Commands
                 hashCode = (hashCode * 397) ^ (this.Email != null ? this.Email.GetHashCode() : 0);
                 hashCode = (hashCode * 397) ^ (this.Username != null ? this.Username.GetHashCode() : 0);
                 hashCode = (hashCode * 397) ^ (this.Password != null ? this.Password.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.RegiserAsCreator != null ? this.RegiserAsCreator.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.CreatorName != null ? this.CreatorName.GetHashCode() : 0);
                 return hashCode;
             }
         }
@@ -2250,25 +1917,26 @@ namespace Fifthweek.Api.Identity.Membership.Commands
                 return false;
             }
         
+            if (!object.Equals(this.RegiserAsCreator, other.RegiserAsCreator))
+            {
+                return false;
+            }
+        
+            if (!object.Equals(this.CreatorName, other.CreatorName))
+            {
+                return false;
+            }
+        
             return true;
         }
     }
 }
 namespace Fifthweek.Api.Identity.Membership.Commands
 {
-    using System;
-    using System.Linq;
     using Fifthweek.Api.Core;
     using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.CodeGeneration;
     using Fifthweek.Shared;
-    using System.Threading.Tasks;
-    using Fifthweek.Api.Identity.Shared.Membership.Events;
-    using System.Web;
-    using Fifthweek.Api.Persistence;
-    using Fifthweek.Api.Persistence.Identity;
-    using Fifthweek.Api.FileManagement.Shared;
-    using System.Text;
 
     public partial class RequestPasswordResetCommand 
     {
@@ -2326,19 +1994,80 @@ namespace Fifthweek.Api.Identity.Membership.Commands
 }
 namespace Fifthweek.Api.Identity.Membership.Commands
 {
-    using System;
-    using System.Linq;
-    using Fifthweek.Api.Core;
     using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.CodeGeneration;
-    using Fifthweek.Shared;
-    using System.Threading.Tasks;
-    using Fifthweek.Api.Identity.Shared.Membership.Events;
-    using System.Web;
-    using Fifthweek.Api.Persistence;
-    using Fifthweek.Api.Persistence.Identity;
+
+    public partial class SendIdentifiedUserInformationCommand 
+    {
+        public override string ToString()
+        {
+            return string.Format("SendIdentifiedUserInformationCommand({0}, {1}, \"{2}\", {3})", this.IsUpdate == null ? "null" : this.IsUpdate.ToString(), this.Email == null ? "null" : this.Email.ToString(), this.Name == null ? "null" : this.Name.ToString(), this.Username == null ? "null" : this.Username.ToString());
+        }
+        
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj))
+            {
+                return false;
+            }
+        
+            if (ReferenceEquals(this, obj))
+            {
+                return true;
+            }
+        
+            if (obj.GetType() != this.GetType())
+            {
+                return false;
+            }
+        
+            return this.Equals((SendIdentifiedUserInformationCommand)obj);
+        }
+        
+        public override int GetHashCode()
+        {
+            unchecked
+            {
+                int hashCode = 0;
+                hashCode = (hashCode * 397) ^ (this.IsUpdate != null ? this.IsUpdate.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.Email != null ? this.Email.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.Name != null ? this.Name.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.Username != null ? this.Username.GetHashCode() : 0);
+                return hashCode;
+            }
+        }
+        
+        protected bool Equals(SendIdentifiedUserInformationCommand other)
+        {
+            if (!object.Equals(this.IsUpdate, other.IsUpdate))
+            {
+                return false;
+            }
+        
+            if (!object.Equals(this.Email, other.Email))
+            {
+                return false;
+            }
+        
+            if (!object.Equals(this.Name, other.Name))
+            {
+                return false;
+            }
+        
+            if (!object.Equals(this.Username, other.Username))
+            {
+                return false;
+            }
+        
+            return true;
+        }
+    }
+}
+namespace Fifthweek.Api.Identity.Membership.Commands
+{
     using Fifthweek.Api.FileManagement.Shared;
-    using System.Text;
+    using Fifthweek.Api.Identity.Shared.Membership;
+    using Fifthweek.CodeGeneration;
 
     public partial class UpdateAccountSettingsCommand 
     {
@@ -2424,6 +2153,530 @@ namespace Fifthweek.Api.Identity.Membership.Commands
         }
     }
 }
+namespace Fifthweek.Api.Identity.Membership.Commands
+{
+    using Fifthweek.Api.Blogs.Shared;
+    using Fifthweek.Api.Identity.Shared.Membership;
+    using Fifthweek.CodeGeneration;
+
+    public partial class UpdateCreatorAccountSettingsCommand 
+    {
+        public override string ToString()
+        {
+            return string.Format("UpdateCreatorAccountSettingsCommand({0}, {1}, {2})", this.Requester == null ? "null" : this.Requester.ToString(), this.RequestedUserId == null ? "null" : this.RequestedUserId.ToString(), this.Name == null ? "null" : this.Name.ToString());
+        }
+        
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj))
+            {
+                return false;
+            }
+        
+            if (ReferenceEquals(this, obj))
+            {
+                return true;
+            }
+        
+            if (obj.GetType() != this.GetType())
+            {
+                return false;
+            }
+        
+            return this.Equals((UpdateCreatorAccountSettingsCommand)obj);
+        }
+        
+        public override int GetHashCode()
+        {
+            unchecked
+            {
+                int hashCode = 0;
+                hashCode = (hashCode * 397) ^ (this.Requester != null ? this.Requester.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.RequestedUserId != null ? this.RequestedUserId.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.Name != null ? this.Name.GetHashCode() : 0);
+                return hashCode;
+            }
+        }
+        
+        protected bool Equals(UpdateCreatorAccountSettingsCommand other)
+        {
+            if (!object.Equals(this.Requester, other.Requester))
+            {
+                return false;
+            }
+        
+            if (!object.Equals(this.RequestedUserId, other.RequestedUserId))
+            {
+                return false;
+            }
+        
+            if (!object.Equals(this.Name, other.Name))
+            {
+                return false;
+            }
+        
+            return true;
+        }
+    }
+}
+namespace Fifthweek.Api.Identity.Membership.Controllers
+{
+    using Fifthweek.Api.Blogs.Shared;
+    using Fifthweek.Api.Identity.Shared.Membership;
+    using Fifthweek.CodeGeneration;
+
+    public partial class CreatorInformation 
+    {
+        public override string ToString()
+        {
+            return string.Format("CreatorInformation(\"{0}\")", this.Name == null ? "null" : this.Name.ToString());
+        }
+        
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj))
+            {
+                return false;
+            }
+        
+            if (ReferenceEquals(this, obj))
+            {
+                return true;
+            }
+        
+            if (obj.GetType() != this.GetType())
+            {
+                return false;
+            }
+        
+            return this.Equals((CreatorInformation)obj);
+        }
+        
+        public override int GetHashCode()
+        {
+            unchecked
+            {
+                int hashCode = 0;
+                hashCode = (hashCode * 397) ^ (this.Name != null ? this.Name.GetHashCode() : 0);
+                return hashCode;
+            }
+        }
+        
+        protected bool Equals(CreatorInformation other)
+        {
+            if (!object.Equals(this.Name, other.Name))
+            {
+                return false;
+            }
+        
+            return true;
+        }
+    }
+}
+namespace Fifthweek.Api.Identity.Membership.Controllers
+{
+    using Fifthweek.CodeGeneration;
+
+    public partial class IdentifiedUserData 
+    {
+        public override string ToString()
+        {
+            return string.Format("IdentifiedUserData({0}, \"{1}\", \"{2}\", \"{3}\")", this.IsUpdate == null ? "null" : this.IsUpdate.ToString(), this.Name == null ? "null" : this.Name.ToString(), this.Username == null ? "null" : this.Username.ToString(), this.Email == null ? "null" : this.Email.ToString());
+        }
+        
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj))
+            {
+                return false;
+            }
+        
+            if (ReferenceEquals(this, obj))
+            {
+                return true;
+            }
+        
+            if (obj.GetType() != this.GetType())
+            {
+                return false;
+            }
+        
+            return this.Equals((IdentifiedUserData)obj);
+        }
+        
+        public override int GetHashCode()
+        {
+            unchecked
+            {
+                int hashCode = 0;
+                hashCode = (hashCode * 397) ^ (this.IsUpdate != null ? this.IsUpdate.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.Name != null ? this.Name.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.Username != null ? this.Username.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.Email != null ? this.Email.GetHashCode() : 0);
+                return hashCode;
+            }
+        }
+        
+        protected bool Equals(IdentifiedUserData other)
+        {
+            if (!object.Equals(this.IsUpdate, other.IsUpdate))
+            {
+                return false;
+            }
+        
+            if (!object.Equals(this.Name, other.Name))
+            {
+                return false;
+            }
+        
+            if (!object.Equals(this.Username, other.Username))
+            {
+                return false;
+            }
+        
+            if (!object.Equals(this.Email, other.Email))
+            {
+                return false;
+            }
+        
+            return true;
+        }
+    }
+}
+namespace Fifthweek.Api.Identity.Membership.Controllers
+{
+    using System.ComponentModel.DataAnnotations;
+    using Fifthweek.Api.Identity.Shared.Membership;
+    using Fifthweek.CodeGeneration;
+
+    public partial class PasswordResetConfirmationData 
+    {
+        public override string ToString()
+        {
+            return string.Format("PasswordResetConfirmationData({0}, \"{1}\", \"{2}\")", this.UserId == null ? "null" : this.UserId.ToString(), this.NewPassword == null ? "null" : this.NewPassword.ToString(), this.Token == null ? "null" : this.Token.ToString());
+        }
+        
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj))
+            {
+                return false;
+            }
+        
+            if (ReferenceEquals(this, obj))
+            {
+                return true;
+            }
+        
+            if (obj.GetType() != this.GetType())
+            {
+                return false;
+            }
+        
+            return this.Equals((PasswordResetConfirmationData)obj);
+        }
+        
+        public override int GetHashCode()
+        {
+            unchecked
+            {
+                int hashCode = 0;
+                hashCode = (hashCode * 397) ^ (this.UserId != null ? this.UserId.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.NewPassword != null ? this.NewPassword.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.Token != null ? this.Token.GetHashCode() : 0);
+                return hashCode;
+            }
+        }
+        
+        protected bool Equals(PasswordResetConfirmationData other)
+        {
+            if (!object.Equals(this.UserId, other.UserId))
+            {
+                return false;
+            }
+        
+            if (!object.Equals(this.NewPassword, other.NewPassword))
+            {
+                return false;
+            }
+        
+            if (!object.Equals(this.Token, other.Token))
+            {
+                return false;
+            }
+        
+            return true;
+        }
+    }
+}
+namespace Fifthweek.Api.Identity.Membership.Controllers
+{
+    using Fifthweek.Api.Core;
+    using Fifthweek.Api.Identity.Shared.Membership;
+    using Fifthweek.CodeGeneration;
+    using Fifthweek.Shared;
+
+    public partial class PasswordResetRequestData 
+    {
+        public override string ToString()
+        {
+            return string.Format("PasswordResetRequestData(\"{0}\", \"{1}\")", this.Email == null ? "null" : this.Email.ToString(), this.Username == null ? "null" : this.Username.ToString());
+        }
+        
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj))
+            {
+                return false;
+            }
+        
+            if (ReferenceEquals(this, obj))
+            {
+                return true;
+            }
+        
+            if (obj.GetType() != this.GetType())
+            {
+                return false;
+            }
+        
+            return this.Equals((PasswordResetRequestData)obj);
+        }
+        
+        public override int GetHashCode()
+        {
+            unchecked
+            {
+                int hashCode = 0;
+                hashCode = (hashCode * 397) ^ (this.Email != null ? this.Email.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.Username != null ? this.Username.GetHashCode() : 0);
+                return hashCode;
+            }
+        }
+        
+        protected bool Equals(PasswordResetRequestData other)
+        {
+            if (!object.Equals(this.Email, other.Email))
+            {
+                return false;
+            }
+        
+            if (!object.Equals(this.Username, other.Username))
+            {
+                return false;
+            }
+        
+            return true;
+        }
+    }
+}
+namespace Fifthweek.Api.Identity.Membership.Controllers
+{
+    using Fifthweek.Api.Identity.Shared.Membership;
+    using Fifthweek.CodeGeneration;
+
+    public partial class RegisterInterestData 
+    {
+        public override string ToString()
+        {
+            return string.Format("RegisterInterestData(\"{0}\", \"{1}\")", this.Name == null ? "null" : this.Name.ToString(), this.Email == null ? "null" : this.Email.ToString());
+        }
+        
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj))
+            {
+                return false;
+            }
+        
+            if (ReferenceEquals(this, obj))
+            {
+                return true;
+            }
+        
+            if (obj.GetType() != this.GetType())
+            {
+                return false;
+            }
+        
+            return this.Equals((RegisterInterestData)obj);
+        }
+        
+        public override int GetHashCode()
+        {
+            unchecked
+            {
+                int hashCode = 0;
+                hashCode = (hashCode * 397) ^ (this.Name != null ? this.Name.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.Email != null ? this.Email.GetHashCode() : 0);
+                return hashCode;
+            }
+        }
+        
+        protected bool Equals(RegisterInterestData other)
+        {
+            if (!object.Equals(this.Name, other.Name))
+            {
+                return false;
+            }
+        
+            if (!object.Equals(this.Email, other.Email))
+            {
+                return false;
+            }
+        
+            return true;
+        }
+    }
+}
+namespace Fifthweek.Api.Identity.Membership.Controllers
+{
+    using Fifthweek.Api.Identity.Shared.Membership;
+    using Fifthweek.CodeGeneration;
+
+    public partial class RegistrationData 
+    {
+        public override string ToString()
+        {
+            return string.Format("RegistrationData(\"{0}\", \"{1}\", \"{2}\", \"{3}\", \"{4}\")", this.ExampleWork == null ? "null" : this.ExampleWork.ToString(), this.Email == null ? "null" : this.Email.ToString(), this.Username == null ? "null" : this.Username.ToString(), this.Password == null ? "null" : this.Password.ToString(), this.CreatorName == null ? "null" : this.CreatorName.ToString());
+        }
+        
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj))
+            {
+                return false;
+            }
+        
+            if (ReferenceEquals(this, obj))
+            {
+                return true;
+            }
+        
+            if (obj.GetType() != this.GetType())
+            {
+                return false;
+            }
+        
+            return this.Equals((RegistrationData)obj);
+        }
+        
+        public override int GetHashCode()
+        {
+            unchecked
+            {
+                int hashCode = 0;
+                hashCode = (hashCode * 397) ^ (this.ExampleWork != null ? this.ExampleWork.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.Email != null ? this.Email.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.Username != null ? this.Username.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.Password != null ? this.Password.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.CreatorName != null ? this.CreatorName.GetHashCode() : 0);
+                return hashCode;
+            }
+        }
+        
+        protected bool Equals(RegistrationData other)
+        {
+            if (!object.Equals(this.ExampleWork, other.ExampleWork))
+            {
+                return false;
+            }
+        
+            if (!object.Equals(this.Email, other.Email))
+            {
+                return false;
+            }
+        
+            if (!object.Equals(this.Username, other.Username))
+            {
+                return false;
+            }
+        
+            if (!object.Equals(this.Password, other.Password))
+            {
+                return false;
+            }
+        
+            if (!object.Equals(this.CreatorName, other.CreatorName))
+            {
+                return false;
+            }
+        
+            return true;
+        }
+    }
+}
+namespace Fifthweek.Api.Identity.Membership.Controllers
+{
+    using Fifthweek.Api.Identity.Shared.Membership;
+    using Fifthweek.CodeGeneration;
+
+    public partial class UpdatedAccountSettings 
+    {
+        public override string ToString()
+        {
+            return string.Format("UpdatedAccountSettings(\"{0}\", \"{1}\", \"{2}\", \"{3}\")", this.NewUsername == null ? "null" : this.NewUsername.ToString(), this.NewEmail == null ? "null" : this.NewEmail.ToString(), this.NewPassword == null ? "null" : this.NewPassword.ToString(), this.NewProfileImageId == null ? "null" : this.NewProfileImageId.ToString());
+        }
+        
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj))
+            {
+                return false;
+            }
+        
+            if (ReferenceEquals(this, obj))
+            {
+                return true;
+            }
+        
+            if (obj.GetType() != this.GetType())
+            {
+                return false;
+            }
+        
+            return this.Equals((UpdatedAccountSettings)obj);
+        }
+        
+        public override int GetHashCode()
+        {
+            unchecked
+            {
+                int hashCode = 0;
+                hashCode = (hashCode * 397) ^ (this.NewUsername != null ? this.NewUsername.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.NewEmail != null ? this.NewEmail.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.NewPassword != null ? this.NewPassword.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.NewProfileImageId != null ? this.NewProfileImageId.GetHashCode() : 0);
+                return hashCode;
+            }
+        }
+        
+        protected bool Equals(UpdatedAccountSettings other)
+        {
+            if (!object.Equals(this.NewUsername, other.NewUsername))
+            {
+                return false;
+            }
+        
+            if (!object.Equals(this.NewEmail, other.NewEmail))
+            {
+                return false;
+            }
+        
+            if (!object.Equals(this.NewPassword, other.NewPassword))
+            {
+                return false;
+            }
+        
+            if (!object.Equals(this.NewProfileImageId, other.NewProfileImageId))
+            {
+                return false;
+            }
+        
+            return true;
+        }
+    }
+}
 namespace Fifthweek.Api.Identity.Membership
 {
     using System;
@@ -2435,20 +2688,13 @@ namespace Fifthweek.Api.Identity.Membership
     using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.Api.Persistence;
     using Fifthweek.CodeGeneration;
-    using Fifthweek.Api.Azure;
-    using System.Data.SqlTypes;
-    using Fifthweek.Api.Persistence.Identity;
-    using System.Security.Claims;
-    using System.ServiceModel.Channels;
-    using System.Web;
-    using System.Text;
     using Fifthweek.Shared;
 
     public partial class GetAccountSettingsDbResult 
     {
         public override string ToString()
         {
-            return string.Format("GetAccountSettingsDbResult({0}, {1}, {2})", this.Username == null ? "null" : this.Username.ToString(), this.Email == null ? "null" : this.Email.ToString(), this.ProfileImageFileId == null ? "null" : this.ProfileImageFileId.ToString());
+            return string.Format("GetAccountSettingsDbResult({0}, {1}, {2}, {3})", this.Name == null ? "null" : this.Name.ToString(), this.Username == null ? "null" : this.Username.ToString(), this.Email == null ? "null" : this.Email.ToString(), this.ProfileImageFileId == null ? "null" : this.ProfileImageFileId.ToString());
         }
         
         public override bool Equals(object obj)
@@ -2476,6 +2722,7 @@ namespace Fifthweek.Api.Identity.Membership
             unchecked
             {
                 int hashCode = 0;
+                hashCode = (hashCode * 397) ^ (this.Name != null ? this.Name.GetHashCode() : 0);
                 hashCode = (hashCode * 397) ^ (this.Username != null ? this.Username.GetHashCode() : 0);
                 hashCode = (hashCode * 397) ^ (this.Email != null ? this.Email.GetHashCode() : 0);
                 hashCode = (hashCode * 397) ^ (this.ProfileImageFileId != null ? this.ProfileImageFileId.GetHashCode() : 0);
@@ -2485,6 +2732,11 @@ namespace Fifthweek.Api.Identity.Membership
         
         protected bool Equals(GetAccountSettingsDbResult other)
         {
+            if (!object.Equals(this.Name, other.Name))
+            {
+                return false;
+            }
+        
             if (!object.Equals(this.Username, other.Username))
             {
                 return false;
@@ -2506,29 +2758,16 @@ namespace Fifthweek.Api.Identity.Membership
 }
 namespace Fifthweek.Api.Identity.Membership
 {
-    using System;
-    using System.Linq;
-    using System.Threading.Tasks;
-    using Dapper;
-    using Fifthweek.Api.Core;
+    using Fifthweek.Api.Azure;
     using Fifthweek.Api.FileManagement.Shared;
     using Fifthweek.Api.Identity.Shared.Membership;
-    using Fifthweek.Api.Persistence;
     using Fifthweek.CodeGeneration;
-    using Fifthweek.Api.Azure;
-    using System.Data.SqlTypes;
-    using Fifthweek.Api.Persistence.Identity;
-    using System.Security.Claims;
-    using System.ServiceModel.Channels;
-    using System.Web;
-    using System.Text;
-    using Fifthweek.Shared;
 
     public partial class GetAccountSettingsResult 
     {
         public override string ToString()
         {
-            return string.Format("GetAccountSettingsResult({0}, {1}, {2})", this.Username == null ? "null" : this.Username.ToString(), this.Email == null ? "null" : this.Email.ToString(), this.ProfileImage == null ? "null" : this.ProfileImage.ToString());
+            return string.Format("GetAccountSettingsResult({0}, {1}, {2}, {3})", this.Name == null ? "null" : this.Name.ToString(), this.Username == null ? "null" : this.Username.ToString(), this.Email == null ? "null" : this.Email.ToString(), this.ProfileImage == null ? "null" : this.ProfileImage.ToString());
         }
         
         public override bool Equals(object obj)
@@ -2556,6 +2795,7 @@ namespace Fifthweek.Api.Identity.Membership
             unchecked
             {
                 int hashCode = 0;
+                hashCode = (hashCode * 397) ^ (this.Name != null ? this.Name.GetHashCode() : 0);
                 hashCode = (hashCode * 397) ^ (this.Username != null ? this.Username.GetHashCode() : 0);
                 hashCode = (hashCode * 397) ^ (this.Email != null ? this.Email.GetHashCode() : 0);
                 hashCode = (hashCode * 397) ^ (this.ProfileImage != null ? this.ProfileImage.GetHashCode() : 0);
@@ -2565,6 +2805,11 @@ namespace Fifthweek.Api.Identity.Membership
         
         protected bool Equals(GetAccountSettingsResult other)
         {
+            if (!object.Equals(this.Name, other.Name))
+            {
+                return false;
+            }
+        
             if (!object.Equals(this.Username, other.Username))
             {
                 return false;
@@ -2586,17 +2831,9 @@ namespace Fifthweek.Api.Identity.Membership
 }
 namespace Fifthweek.Api.Identity.Membership.Queries
 {
-    using System;
-    using System.Linq;
     using Fifthweek.Api.Core;
     using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.CodeGeneration;
-    using System.Threading.Tasks;
-    using Fifthweek.Api.Azure;
-    using Fifthweek.Api.FileManagement.Shared;
-    using Fifthweek.Shared;
-    using Fifthweek.Api.Persistence;
-    using Fifthweek.Api.Persistence.Identity;
 
     public partial class GetAccountSettingsQuery 
     {
@@ -2654,17 +2891,10 @@ namespace Fifthweek.Api.Identity.Membership.Queries
 }
 namespace Fifthweek.Api.Identity.Membership.Queries
 {
-    using System;
-    using System.Linq;
     using Fifthweek.Api.Core;
     using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.CodeGeneration;
-    using System.Threading.Tasks;
-    using Fifthweek.Api.Azure;
-    using Fifthweek.Api.FileManagement.Shared;
     using Fifthweek.Shared;
-    using Fifthweek.Api.Persistence;
-    using Fifthweek.Api.Persistence.Identity;
 
     public partial class IsPasswordResetTokenValidQuery 
     {
@@ -2722,17 +2952,10 @@ namespace Fifthweek.Api.Identity.Membership.Queries
 }
 namespace Fifthweek.Api.Identity.Membership.Queries
 {
-    using System;
-    using System.Linq;
     using Fifthweek.Api.Core;
     using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.CodeGeneration;
-    using System.Threading.Tasks;
-    using Fifthweek.Api.Azure;
-    using Fifthweek.Api.FileManagement.Shared;
     using Fifthweek.Shared;
-    using Fifthweek.Api.Persistence;
-    using Fifthweek.Api.Persistence.Identity;
 
     public partial class IsUsernameAvailableQuery 
     {
@@ -2786,6 +3009,7 @@ namespace Fifthweek.Api.Identity.Membership
 {
     using System;
     using System.Linq;
+    using System.Text;
     using System.Threading.Tasks;
     using Dapper;
     using Fifthweek.Api.Core;
@@ -2793,13 +3017,6 @@ namespace Fifthweek.Api.Identity.Membership
     using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.Api.Persistence;
     using Fifthweek.CodeGeneration;
-    using Fifthweek.Api.Azure;
-    using System.Data.SqlTypes;
-    using Fifthweek.Api.Persistence.Identity;
-    using System.Security.Claims;
-    using System.ServiceModel.Channels;
-    using System.Web;
-    using System.Text;
     using Fifthweek.Shared;
 
     public partial class UpdateAccountSettingsDbStatement
@@ -2855,29 +3072,9 @@ namespace Fifthweek.Api.Identity.Membership
 }
 namespace Fifthweek.Api.Identity.OAuth
 {
-    using System;
-    using System.Linq;
     using Fifthweek.Api.Core;
     using Fifthweek.CodeGeneration;
     using Fifthweek.Shared;
-    using Fifthweek.Api.Identity.Membership;
-    using System.Collections.Generic;
-    using System.Security.Claims;
-    using System.Text.RegularExpressions;
-    using System.Threading.Tasks;
-    using Fifthweek.Api.Identity.Membership.Commands;
-    using Fifthweek.Api.Identity.Membership.Queries;
-    using Fifthweek.Api.Identity.OAuth.Commands;
-    using Fifthweek.Api.Identity.OAuth.Queries;
-    using Fifthweek.Api.Identity.Shared.Membership;
-    using Fifthweek.Api.Persistence;
-    using Fifthweek.Api.Persistence.Identity;
-    using Microsoft.Owin.Security;
-    using Microsoft.Owin.Security.OAuth;
-    using System.Diagnostics;
-    using Microsoft.Owin.Security.Infrastructure;
-    using Dapper;
-    using Microsoft.AspNet.Identity;
 
     public partial class Client 
     {
@@ -2971,29 +3168,9 @@ namespace Fifthweek.Api.Identity.OAuth
 }
 namespace Fifthweek.Api.Identity.OAuth
 {
-    using System;
-    using System.Linq;
     using Fifthweek.Api.Core;
     using Fifthweek.CodeGeneration;
     using Fifthweek.Shared;
-    using Fifthweek.Api.Identity.Membership;
-    using System.Collections.Generic;
-    using System.Security.Claims;
-    using System.Text.RegularExpressions;
-    using System.Threading.Tasks;
-    using Fifthweek.Api.Identity.Membership.Commands;
-    using Fifthweek.Api.Identity.Membership.Queries;
-    using Fifthweek.Api.Identity.OAuth.Commands;
-    using Fifthweek.Api.Identity.OAuth.Queries;
-    using Fifthweek.Api.Identity.Shared.Membership;
-    using Fifthweek.Api.Persistence;
-    using Fifthweek.Api.Persistence.Identity;
-    using Microsoft.Owin.Security;
-    using Microsoft.Owin.Security.OAuth;
-    using System.Diagnostics;
-    using Microsoft.Owin.Security.Infrastructure;
-    using Dapper;
-    using Microsoft.AspNet.Identity;
 
     public partial class ClientId 
     {
@@ -3045,14 +3222,12 @@ namespace Fifthweek.Api.Identity.OAuth
 }
 namespace Fifthweek.Api.Identity.OAuth.Commands
 {
-    using System;
-    using System.Linq;
     using Fifthweek.Api.Core;
+    using System;
     using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.Api.Persistence;
     using Fifthweek.CodeGeneration;
     using Fifthweek.Shared;
-    using System.Threading.Tasks;
 
     public partial class CreateRefreshTokenCommand 
     {
@@ -3134,14 +3309,9 @@ namespace Fifthweek.Api.Identity.OAuth.Commands
 }
 namespace Fifthweek.Api.Identity.OAuth.Commands
 {
-    using System;
-    using System.Linq;
     using Fifthweek.Api.Core;
-    using Fifthweek.Api.Identity.Shared.Membership;
-    using Fifthweek.Api.Persistence;
     using Fifthweek.CodeGeneration;
     using Fifthweek.Shared;
-    using System.Threading.Tasks;
 
     public partial class RemoveRefreshTokenCommand 
     {
@@ -3194,13 +3364,8 @@ namespace Fifthweek.Api.Identity.OAuth.Commands
 namespace Fifthweek.Api.Identity.OAuth.Commands
 {
     using System;
-    using System.Linq;
-    using Fifthweek.Api.Core;
     using Fifthweek.Api.Identity.Shared.Membership;
-    using Fifthweek.Api.Persistence;
     using Fifthweek.CodeGeneration;
-    using Fifthweek.Shared;
-    using System.Threading.Tasks;
 
     public partial class UpdateLastAccessTokenDateCommand 
     {
@@ -3264,29 +3429,9 @@ namespace Fifthweek.Api.Identity.OAuth.Commands
 }
 namespace Fifthweek.Api.Identity.OAuth
 {
-    using System;
-    using System.Linq;
     using Fifthweek.Api.Core;
     using Fifthweek.CodeGeneration;
     using Fifthweek.Shared;
-    using Fifthweek.Api.Identity.Membership;
-    using System.Collections.Generic;
-    using System.Security.Claims;
-    using System.Text.RegularExpressions;
-    using System.Threading.Tasks;
-    using Fifthweek.Api.Identity.Membership.Commands;
-    using Fifthweek.Api.Identity.Membership.Queries;
-    using Fifthweek.Api.Identity.OAuth.Commands;
-    using Fifthweek.Api.Identity.OAuth.Queries;
-    using Fifthweek.Api.Identity.Shared.Membership;
-    using Fifthweek.Api.Persistence;
-    using Fifthweek.Api.Persistence.Identity;
-    using Microsoft.Owin.Security;
-    using Microsoft.Owin.Security.OAuth;
-    using System.Diagnostics;
-    using Microsoft.Owin.Security.Infrastructure;
-    using Dapper;
-    using Microsoft.AspNet.Identity;
 
     public partial class HashedRefreshTokenId 
     {
@@ -3338,17 +3483,10 @@ namespace Fifthweek.Api.Identity.OAuth
 }
 namespace Fifthweek.Api.Identity.OAuth.Queries
 {
-    using System;
-    using System.Linq;
     using Fifthweek.Api.Core;
     using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.Api.Persistence.Identity;
     using Fifthweek.CodeGeneration;
-    using System.Collections.Generic;
-    using System.Security.Claims;
-    using System.Threading.Tasks;
-    using Fifthweek.Api.Persistence;
-    using Fifthweek.Shared;
 
     public partial class GetUserClaimsIdentityQuery 
     {
@@ -3418,16 +3556,8 @@ namespace Fifthweek.Api.Identity.OAuth.Queries
 }
 namespace Fifthweek.Api.Identity.OAuth.Queries
 {
-    using System;
-    using System.Linq;
     using Fifthweek.Api.Core;
-    using Fifthweek.Api.Identity.Shared.Membership;
-    using Fifthweek.Api.Persistence.Identity;
     using Fifthweek.CodeGeneration;
-    using System.Collections.Generic;
-    using System.Security.Claims;
-    using System.Threading.Tasks;
-    using Fifthweek.Api.Persistence;
     using Fifthweek.Shared;
 
     public partial class GetValidatedClientQuery 
@@ -3486,16 +3616,9 @@ namespace Fifthweek.Api.Identity.OAuth.Queries
 }
 namespace Fifthweek.Api.Identity.OAuth.Queries
 {
-    using System;
-    using System.Linq;
     using Fifthweek.Api.Core;
-    using Fifthweek.Api.Identity.Shared.Membership;
-    using Fifthweek.Api.Persistence.Identity;
-    using Fifthweek.CodeGeneration;
-    using System.Collections.Generic;
-    using System.Security.Claims;
-    using System.Threading.Tasks;
     using Fifthweek.Api.Persistence;
+    using Fifthweek.CodeGeneration;
     using Fifthweek.Shared;
 
     public partial class TryGetRefreshTokenQuery 
@@ -3548,17 +3671,9 @@ namespace Fifthweek.Api.Identity.OAuth.Queries
 }
 namespace Fifthweek.Api.Identity.OAuth.Queries
 {
-    using System;
-    using System.Linq;
-    using Fifthweek.Api.Core;
-    using Fifthweek.Api.Identity.Shared.Membership;
-    using Fifthweek.Api.Persistence.Identity;
-    using Fifthweek.CodeGeneration;
-    using System.Collections.Generic;
     using System.Security.Claims;
-    using System.Threading.Tasks;
-    using Fifthweek.Api.Persistence;
-    using Fifthweek.Shared;
+    using Fifthweek.Api.Identity.Shared.Membership;
+    using Fifthweek.CodeGeneration;
 
     public partial class UserClaimsIdentity 
     {
@@ -3623,28 +3738,9 @@ namespace Fifthweek.Api.Identity.OAuth.Queries
 namespace Fifthweek.Api.Identity.OAuth
 {
     using System;
-    using System.Linq;
     using Fifthweek.Api.Core;
     using Fifthweek.CodeGeneration;
     using Fifthweek.Shared;
-    using Fifthweek.Api.Identity.Membership;
-    using System.Collections.Generic;
-    using System.Security.Claims;
-    using System.Text.RegularExpressions;
-    using System.Threading.Tasks;
-    using Fifthweek.Api.Identity.Membership.Commands;
-    using Fifthweek.Api.Identity.Membership.Queries;
-    using Fifthweek.Api.Identity.OAuth.Commands;
-    using Fifthweek.Api.Identity.OAuth.Queries;
-    using Fifthweek.Api.Identity.Shared.Membership;
-    using Fifthweek.Api.Persistence;
-    using Fifthweek.Api.Persistence.Identity;
-    using Microsoft.Owin.Security;
-    using Microsoft.Owin.Security.OAuth;
-    using System.Diagnostics;
-    using Microsoft.Owin.Security.Infrastructure;
-    using Dapper;
-    using Microsoft.AspNet.Identity;
 
     public partial class RefreshTokenId 
     {
@@ -3696,29 +3792,9 @@ namespace Fifthweek.Api.Identity.OAuth
 }
 namespace Fifthweek.Api.Identity.OAuth
 {
-    using System;
-    using System.Linq;
-    using Fifthweek.Api.Core;
-    using Fifthweek.CodeGeneration;
-    using Fifthweek.Shared;
-    using Fifthweek.Api.Identity.Membership;
     using System.Collections.Generic;
-    using System.Security.Claims;
-    using System.Text.RegularExpressions;
-    using System.Threading.Tasks;
-    using Fifthweek.Api.Identity.Membership.Commands;
-    using Fifthweek.Api.Identity.Membership.Queries;
-    using Fifthweek.Api.Identity.OAuth.Commands;
-    using Fifthweek.Api.Identity.OAuth.Queries;
     using Fifthweek.Api.Identity.Shared.Membership;
-    using Fifthweek.Api.Persistence;
-    using Fifthweek.Api.Persistence.Identity;
-    using Microsoft.Owin.Security;
-    using Microsoft.Owin.Security.OAuth;
-    using System.Diagnostics;
-    using Microsoft.Owin.Security.Infrastructure;
-    using Dapper;
-    using Microsoft.AspNet.Identity;
+    using Fifthweek.CodeGeneration;
 
     public partial class UserIdAndRoles 
     {
@@ -3791,29 +3867,9 @@ namespace Fifthweek.Api.Identity.OAuth
 }
 namespace Fifthweek.Api.Identity.OAuth
 {
-    using System;
-    using System.Linq;
-    using Fifthweek.Api.Core;
-    using Fifthweek.CodeGeneration;
-    using Fifthweek.Shared;
-    using Fifthweek.Api.Identity.Membership;
     using System.Collections.Generic;
-    using System.Security.Claims;
-    using System.Text.RegularExpressions;
-    using System.Threading.Tasks;
-    using Fifthweek.Api.Identity.Membership.Commands;
-    using Fifthweek.Api.Identity.Membership.Queries;
-    using Fifthweek.Api.Identity.OAuth.Commands;
-    using Fifthweek.Api.Identity.OAuth.Queries;
     using Fifthweek.Api.Identity.Shared.Membership;
-    using Fifthweek.Api.Persistence;
-    using Fifthweek.Api.Persistence.Identity;
-    using Microsoft.Owin.Security;
-    using Microsoft.Owin.Security.OAuth;
-    using System.Diagnostics;
-    using Microsoft.Owin.Security.Infrastructure;
-    using Dapper;
-    using Microsoft.AspNet.Identity;
+    using Fifthweek.CodeGeneration;
 
     public partial class UsernameAndRoles 
     {
@@ -3884,635 +3940,74 @@ namespace Fifthweek.Api.Identity.OAuth
         }
     }
 }
-namespace Fifthweek.Api.Identity.Membership.Commands
+namespace Fifthweek.Api.Identity.Membership.Controllers
 {
-    using System;
-    using System.Linq;
-    using Fifthweek.Api.Core;
+    using Fifthweek.Api.Blogs.Shared;
     using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.CodeGeneration;
-    using Fifthweek.Shared;
-    using System.Threading.Tasks;
-    using Fifthweek.Api.Identity.Shared.Membership.Events;
-    using System.Web;
-    using Fifthweek.Api.Persistence;
-    using Fifthweek.Api.Persistence.Identity;
-    using Fifthweek.Api.FileManagement.Shared;
-    using System.Text;
 
-    public partial class RegisterInterestCommand 
+    public partial class CreatorInformation 
     {
-        public override string ToString()
+        public class Parsed
         {
-            return string.Format("RegisterInterestCommand(\"{0}\", {1})", this.Name == null ? "null" : this.Name.ToString(), this.Email == null ? "null" : this.Email.ToString());
-        }
-        
-        public override bool Equals(object obj)
-        {
-            if (ReferenceEquals(null, obj))
+            public Parsed(
+                ValidCreatorName name)
             {
-                return false;
+                if (name == null)
+                {
+                    throw new ArgumentNullException("name");
+                }
+
+                this.Name = name;
             }
         
-            if (ReferenceEquals(this, obj))
-            {
-                return true;
-            }
-        
-            if (obj.GetType() != this.GetType())
-            {
-                return false;
-            }
-        
-            return this.Equals((RegisterInterestCommand)obj);
-        }
-        
-        public override int GetHashCode()
-        {
-            unchecked
-            {
-                int hashCode = 0;
-                hashCode = (hashCode * 397) ^ (this.Name != null ? this.Name.GetHashCode() : 0);
-                hashCode = (hashCode * 397) ^ (this.Email != null ? this.Email.GetHashCode() : 0);
-                return hashCode;
-            }
-        }
-        
-        protected bool Equals(RegisterInterestCommand other)
-        {
-            if (!object.Equals(this.Name, other.Name))
-            {
-                return false;
-            }
-        
-            if (!object.Equals(this.Email, other.Email))
-            {
-                return false;
-            }
-        
-            return true;
+            public ValidCreatorName Name { get; private set; }
         }
     }
-}
-namespace Fifthweek.Api.Identity.Membership.Commands
-{
-    using System;
-    using System.Linq;
-    using Fifthweek.Api.Core;
-    using Fifthweek.Api.Identity.Shared.Membership;
-    using Fifthweek.CodeGeneration;
-    using Fifthweek.Shared;
-    using System.Threading.Tasks;
-    using Fifthweek.Api.Identity.Shared.Membership.Events;
-    using System.Web;
-    using Fifthweek.Api.Persistence;
-    using Fifthweek.Api.Persistence.Identity;
-    using Fifthweek.Api.FileManagement.Shared;
-    using System.Text;
 
-    public partial class SendIdentifiedUserInformationCommand 
+    public static partial class CreatorInformationExtensions
     {
-        public override string ToString()
+        public static CreatorInformation.Parsed Parse(this CreatorInformation target)
         {
-            return string.Format("SendIdentifiedUserInformationCommand({0}, {1}, \"{2}\", {3})", this.IsUpdate == null ? "null" : this.IsUpdate.ToString(), this.Email == null ? "null" : this.Email.ToString(), this.Name == null ? "null" : this.Name.ToString(), this.Username == null ? "null" : this.Username.ToString());
-        }
+            var modelStateDictionary = new System.Web.Http.ModelBinding.ModelStateDictionary();
         
-        public override bool Equals(object obj)
-        {
-            if (ReferenceEquals(null, obj))
+            ValidCreatorName parsed0 = null;
+            if (!ValidCreatorName.IsEmpty(target.Name))
             {
-                return false;
+                System.Collections.Generic.IReadOnlyCollection<string> parsed0Errors;
+                if (!ValidCreatorName.TryParse(target.Name, out parsed0, out parsed0Errors))
+                {
+                    var modelState = new System.Web.Http.ModelBinding.ModelState();
+                    foreach (var errorMessage in parsed0Errors)
+                    {
+                        modelState.Errors.Add(errorMessage);
+                    }
+
+                    modelStateDictionary.Add("Name", modelState);
+                }
+            }
+            else
+            {
+                var modelState = new System.Web.Http.ModelBinding.ModelState();
+                modelState.Errors.Add("Value required");
+                modelStateDictionary.Add("Name", modelState);
+            }
+
+            if (!modelStateDictionary.IsValid)
+            {
+                throw new Fifthweek.Api.Core.ModelValidationException(modelStateDictionary);
             }
         
-            if (ReferenceEquals(this, obj))
-            {
-                return true;
-            }
-        
-            if (obj.GetType() != this.GetType())
-            {
-                return false;
-            }
-        
-            return this.Equals((SendIdentifiedUserInformationCommand)obj);
-        }
-        
-        public override int GetHashCode()
-        {
-            unchecked
-            {
-                int hashCode = 0;
-                hashCode = (hashCode * 397) ^ (this.IsUpdate != null ? this.IsUpdate.GetHashCode() : 0);
-                hashCode = (hashCode * 397) ^ (this.Email != null ? this.Email.GetHashCode() : 0);
-                hashCode = (hashCode * 397) ^ (this.Name != null ? this.Name.GetHashCode() : 0);
-                hashCode = (hashCode * 397) ^ (this.Username != null ? this.Username.GetHashCode() : 0);
-                return hashCode;
-            }
-        }
-        
-        protected bool Equals(SendIdentifiedUserInformationCommand other)
-        {
-            if (!object.Equals(this.IsUpdate, other.IsUpdate))
-            {
-                return false;
-            }
-        
-            if (!object.Equals(this.Email, other.Email))
-            {
-                return false;
-            }
-        
-            if (!object.Equals(this.Name, other.Name))
-            {
-                return false;
-            }
-        
-            if (!object.Equals(this.Username, other.Username))
-            {
-                return false;
-            }
-        
-            return true;
-        }
+            return new CreatorInformation.Parsed(
+                parsed0);
+        }    
     }
 }
 namespace Fifthweek.Api.Identity.Membership.Controllers
 {
-    using System;
-    using System.Linq;
-    using System.Threading.Tasks;
-    using System.Web.Http;
-    using Fifthweek.Api.Identity.Membership.Commands;
-    using Fifthweek.Api.Identity.Membership.Queries;
-    using Fifthweek.Api.Core;
-    using Fifthweek.Api.FileManagement.Shared;
+    using System.ComponentModel.DataAnnotations;
     using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.CodeGeneration;
-    using System.Web.Http.Description;
-    using System.ComponentModel.DataAnnotations;
-    using Fifthweek.Shared;
-
-    public partial class PasswordResetConfirmationData 
-    {
-        public override string ToString()
-        {
-            return string.Format("PasswordResetConfirmationData({0}, \"{1}\", \"{2}\")", this.UserId == null ? "null" : this.UserId.ToString(), this.NewPassword == null ? "null" : this.NewPassword.ToString(), this.Token == null ? "null" : this.Token.ToString());
-        }
-        
-        public override bool Equals(object obj)
-        {
-            if (ReferenceEquals(null, obj))
-            {
-                return false;
-            }
-        
-            if (ReferenceEquals(this, obj))
-            {
-                return true;
-            }
-        
-            if (obj.GetType() != this.GetType())
-            {
-                return false;
-            }
-        
-            return this.Equals((PasswordResetConfirmationData)obj);
-        }
-        
-        public override int GetHashCode()
-        {
-            unchecked
-            {
-                int hashCode = 0;
-                hashCode = (hashCode * 397) ^ (this.UserId != null ? this.UserId.GetHashCode() : 0);
-                hashCode = (hashCode * 397) ^ (this.NewPassword != null ? this.NewPassword.GetHashCode() : 0);
-                hashCode = (hashCode * 397) ^ (this.Token != null ? this.Token.GetHashCode() : 0);
-                return hashCode;
-            }
-        }
-        
-        protected bool Equals(PasswordResetConfirmationData other)
-        {
-            if (!object.Equals(this.UserId, other.UserId))
-            {
-                return false;
-            }
-        
-            if (!object.Equals(this.NewPassword, other.NewPassword))
-            {
-                return false;
-            }
-        
-            if (!object.Equals(this.Token, other.Token))
-            {
-                return false;
-            }
-        
-            return true;
-        }
-    }
-}
-namespace Fifthweek.Api.Identity.Membership.Controllers
-{
-    using System;
-    using System.Linq;
-    using System.Threading.Tasks;
-    using System.Web.Http;
-    using Fifthweek.Api.Identity.Membership.Commands;
-    using Fifthweek.Api.Identity.Membership.Queries;
-    using Fifthweek.Api.Core;
-    using Fifthweek.Api.FileManagement.Shared;
-    using Fifthweek.Api.Identity.Shared.Membership;
-    using Fifthweek.CodeGeneration;
-    using System.Web.Http.Description;
-    using System.ComponentModel.DataAnnotations;
-    using Fifthweek.Shared;
-
-    public partial class PasswordResetRequestData 
-    {
-        public override string ToString()
-        {
-            return string.Format("PasswordResetRequestData(\"{0}\", \"{1}\")", this.Email == null ? "null" : this.Email.ToString(), this.Username == null ? "null" : this.Username.ToString());
-        }
-        
-        public override bool Equals(object obj)
-        {
-            if (ReferenceEquals(null, obj))
-            {
-                return false;
-            }
-        
-            if (ReferenceEquals(this, obj))
-            {
-                return true;
-            }
-        
-            if (obj.GetType() != this.GetType())
-            {
-                return false;
-            }
-        
-            return this.Equals((PasswordResetRequestData)obj);
-        }
-        
-        public override int GetHashCode()
-        {
-            unchecked
-            {
-                int hashCode = 0;
-                hashCode = (hashCode * 397) ^ (this.Email != null ? this.Email.GetHashCode() : 0);
-                hashCode = (hashCode * 397) ^ (this.Username != null ? this.Username.GetHashCode() : 0);
-                return hashCode;
-            }
-        }
-        
-        protected bool Equals(PasswordResetRequestData other)
-        {
-            if (!object.Equals(this.Email, other.Email))
-            {
-                return false;
-            }
-        
-            if (!object.Equals(this.Username, other.Username))
-            {
-                return false;
-            }
-        
-            return true;
-        }
-    }
-}
-namespace Fifthweek.Api.Identity.Membership.Controllers
-{
-    using System;
-    using System.Linq;
-    using System.Threading.Tasks;
-    using System.Web.Http;
-    using Fifthweek.Api.Identity.Membership.Commands;
-    using Fifthweek.Api.Identity.Membership.Queries;
-    using Fifthweek.Api.Core;
-    using Fifthweek.Api.FileManagement.Shared;
-    using Fifthweek.Api.Identity.Shared.Membership;
-    using Fifthweek.CodeGeneration;
-    using System.Web.Http.Description;
-    using System.ComponentModel.DataAnnotations;
-    using Fifthweek.Shared;
-
-    public partial class RegistrationData 
-    {
-        public override string ToString()
-        {
-            return string.Format("RegistrationData(\"{0}\", \"{1}\", \"{2}\", \"{3}\")", this.ExampleWork == null ? "null" : this.ExampleWork.ToString(), this.Email == null ? "null" : this.Email.ToString(), this.Username == null ? "null" : this.Username.ToString(), this.Password == null ? "null" : this.Password.ToString());
-        }
-        
-        public override bool Equals(object obj)
-        {
-            if (ReferenceEquals(null, obj))
-            {
-                return false;
-            }
-        
-            if (ReferenceEquals(this, obj))
-            {
-                return true;
-            }
-        
-            if (obj.GetType() != this.GetType())
-            {
-                return false;
-            }
-        
-            return this.Equals((RegistrationData)obj);
-        }
-        
-        public override int GetHashCode()
-        {
-            unchecked
-            {
-                int hashCode = 0;
-                hashCode = (hashCode * 397) ^ (this.ExampleWork != null ? this.ExampleWork.GetHashCode() : 0);
-                hashCode = (hashCode * 397) ^ (this.Email != null ? this.Email.GetHashCode() : 0);
-                hashCode = (hashCode * 397) ^ (this.Username != null ? this.Username.GetHashCode() : 0);
-                hashCode = (hashCode * 397) ^ (this.Password != null ? this.Password.GetHashCode() : 0);
-                return hashCode;
-            }
-        }
-        
-        protected bool Equals(RegistrationData other)
-        {
-            if (!object.Equals(this.ExampleWork, other.ExampleWork))
-            {
-                return false;
-            }
-        
-            if (!object.Equals(this.Email, other.Email))
-            {
-                return false;
-            }
-        
-            if (!object.Equals(this.Username, other.Username))
-            {
-                return false;
-            }
-        
-            if (!object.Equals(this.Password, other.Password))
-            {
-                return false;
-            }
-        
-            return true;
-        }
-    }
-}
-namespace Fifthweek.Api.Identity.Membership.Controllers
-{
-    using System;
-    using System.Linq;
-    using System.Threading.Tasks;
-    using System.Web.Http;
-    using Fifthweek.Api.Identity.Membership.Commands;
-    using Fifthweek.Api.Identity.Membership.Queries;
-    using Fifthweek.Api.Core;
-    using Fifthweek.Api.FileManagement.Shared;
-    using Fifthweek.Api.Identity.Shared.Membership;
-    using Fifthweek.CodeGeneration;
-    using System.Web.Http.Description;
-    using System.ComponentModel.DataAnnotations;
-    using Fifthweek.Shared;
-
-    public partial class UpdatedAccountSettings 
-    {
-        public override string ToString()
-        {
-            return string.Format("UpdatedAccountSettings(\"{0}\", \"{1}\", \"{2}\", \"{3}\")", this.NewUsername == null ? "null" : this.NewUsername.ToString(), this.NewEmail == null ? "null" : this.NewEmail.ToString(), this.NewPassword == null ? "null" : this.NewPassword.ToString(), this.NewProfileImageId == null ? "null" : this.NewProfileImageId.ToString());
-        }
-        
-        public override bool Equals(object obj)
-        {
-            if (ReferenceEquals(null, obj))
-            {
-                return false;
-            }
-        
-            if (ReferenceEquals(this, obj))
-            {
-                return true;
-            }
-        
-            if (obj.GetType() != this.GetType())
-            {
-                return false;
-            }
-        
-            return this.Equals((UpdatedAccountSettings)obj);
-        }
-        
-        public override int GetHashCode()
-        {
-            unchecked
-            {
-                int hashCode = 0;
-                hashCode = (hashCode * 397) ^ (this.NewUsername != null ? this.NewUsername.GetHashCode() : 0);
-                hashCode = (hashCode * 397) ^ (this.NewEmail != null ? this.NewEmail.GetHashCode() : 0);
-                hashCode = (hashCode * 397) ^ (this.NewPassword != null ? this.NewPassword.GetHashCode() : 0);
-                hashCode = (hashCode * 397) ^ (this.NewProfileImageId != null ? this.NewProfileImageId.GetHashCode() : 0);
-                return hashCode;
-            }
-        }
-        
-        protected bool Equals(UpdatedAccountSettings other)
-        {
-            if (!object.Equals(this.NewUsername, other.NewUsername))
-            {
-                return false;
-            }
-        
-            if (!object.Equals(this.NewEmail, other.NewEmail))
-            {
-                return false;
-            }
-        
-            if (!object.Equals(this.NewPassword, other.NewPassword))
-            {
-                return false;
-            }
-        
-            if (!object.Equals(this.NewProfileImageId, other.NewProfileImageId))
-            {
-                return false;
-            }
-        
-            return true;
-        }
-    }
-}
-namespace Fifthweek.Api.Identity.Membership.Controllers
-{
-    using System;
-    using System.Linq;
-    using System.Threading.Tasks;
-    using System.Web.Http;
-    using Fifthweek.Api.Identity.Membership.Commands;
-    using Fifthweek.Api.Identity.Membership.Queries;
-    using Fifthweek.Api.Core;
-    using Fifthweek.Api.FileManagement.Shared;
-    using Fifthweek.Api.Identity.Shared.Membership;
-    using Fifthweek.CodeGeneration;
-    using System.Web.Http.Description;
-    using System.ComponentModel.DataAnnotations;
-    using Fifthweek.Shared;
-
-    public partial class RegisterInterestData 
-    {
-        public override string ToString()
-        {
-            return string.Format("RegisterInterestData(\"{0}\", \"{1}\")", this.Name == null ? "null" : this.Name.ToString(), this.Email == null ? "null" : this.Email.ToString());
-        }
-        
-        public override bool Equals(object obj)
-        {
-            if (ReferenceEquals(null, obj))
-            {
-                return false;
-            }
-        
-            if (ReferenceEquals(this, obj))
-            {
-                return true;
-            }
-        
-            if (obj.GetType() != this.GetType())
-            {
-                return false;
-            }
-        
-            return this.Equals((RegisterInterestData)obj);
-        }
-        
-        public override int GetHashCode()
-        {
-            unchecked
-            {
-                int hashCode = 0;
-                hashCode = (hashCode * 397) ^ (this.Name != null ? this.Name.GetHashCode() : 0);
-                hashCode = (hashCode * 397) ^ (this.Email != null ? this.Email.GetHashCode() : 0);
-                return hashCode;
-            }
-        }
-        
-        protected bool Equals(RegisterInterestData other)
-        {
-            if (!object.Equals(this.Name, other.Name))
-            {
-                return false;
-            }
-        
-            if (!object.Equals(this.Email, other.Email))
-            {
-                return false;
-            }
-        
-            return true;
-        }
-    }
-}
-namespace Fifthweek.Api.Identity.Membership.Controllers
-{
-    using System;
-    using System.Linq;
-    using System.Threading.Tasks;
-    using System.Web.Http;
-    using Fifthweek.Api.Identity.Membership.Commands;
-    using Fifthweek.Api.Identity.Membership.Queries;
-    using Fifthweek.Api.Core;
-    using Fifthweek.Api.FileManagement.Shared;
-    using Fifthweek.Api.Identity.Shared.Membership;
-    using Fifthweek.CodeGeneration;
-    using System.Web.Http.Description;
-    using System.ComponentModel.DataAnnotations;
-    using Fifthweek.Shared;
-
-    public partial class IdentifiedUserData 
-    {
-        public override string ToString()
-        {
-            return string.Format("IdentifiedUserData({0}, \"{1}\", \"{2}\", \"{3}\")", this.IsUpdate == null ? "null" : this.IsUpdate.ToString(), this.Name == null ? "null" : this.Name.ToString(), this.Username == null ? "null" : this.Username.ToString(), this.Email == null ? "null" : this.Email.ToString());
-        }
-        
-        public override bool Equals(object obj)
-        {
-            if (ReferenceEquals(null, obj))
-            {
-                return false;
-            }
-        
-            if (ReferenceEquals(this, obj))
-            {
-                return true;
-            }
-        
-            if (obj.GetType() != this.GetType())
-            {
-                return false;
-            }
-        
-            return this.Equals((IdentifiedUserData)obj);
-        }
-        
-        public override int GetHashCode()
-        {
-            unchecked
-            {
-                int hashCode = 0;
-                hashCode = (hashCode * 397) ^ (this.IsUpdate != null ? this.IsUpdate.GetHashCode() : 0);
-                hashCode = (hashCode * 397) ^ (this.Name != null ? this.Name.GetHashCode() : 0);
-                hashCode = (hashCode * 397) ^ (this.Username != null ? this.Username.GetHashCode() : 0);
-                hashCode = (hashCode * 397) ^ (this.Email != null ? this.Email.GetHashCode() : 0);
-                return hashCode;
-            }
-        }
-        
-        protected bool Equals(IdentifiedUserData other)
-        {
-            if (!object.Equals(this.IsUpdate, other.IsUpdate))
-            {
-                return false;
-            }
-        
-            if (!object.Equals(this.Name, other.Name))
-            {
-                return false;
-            }
-        
-            if (!object.Equals(this.Username, other.Username))
-            {
-                return false;
-            }
-        
-            if (!object.Equals(this.Email, other.Email))
-            {
-                return false;
-            }
-        
-            return true;
-        }
-    }
-}
-namespace Fifthweek.Api.Identity.Membership.Controllers
-{
-    using System;
-    using System.Linq;
-    using System.Threading.Tasks;
-    using System.Web.Http;
-    using Fifthweek.Api.Identity.Membership.Commands;
-    using Fifthweek.Api.Identity.Membership.Queries;
-    using Fifthweek.Api.Core;
-    using Fifthweek.Api.FileManagement.Shared;
-    using Fifthweek.Api.Identity.Shared.Membership;
-    using Fifthweek.CodeGeneration;
-    using System.Web.Http.Description;
-    using System.ComponentModel.DataAnnotations;
-    using Fifthweek.Shared;
 
     public partial class PasswordResetConfirmationData 
     {
@@ -4593,18 +4088,9 @@ namespace Fifthweek.Api.Identity.Membership.Controllers
 }
 namespace Fifthweek.Api.Identity.Membership.Controllers
 {
-    using System;
-    using System.Linq;
-    using System.Threading.Tasks;
-    using System.Web.Http;
-    using Fifthweek.Api.Identity.Membership.Commands;
-    using Fifthweek.Api.Identity.Membership.Queries;
     using Fifthweek.Api.Core;
-    using Fifthweek.Api.FileManagement.Shared;
     using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.CodeGeneration;
-    using System.Web.Http.Description;
-    using System.ComponentModel.DataAnnotations;
     using Fifthweek.Shared;
 
     public partial class PasswordResetRequestData 
@@ -4676,19 +4162,80 @@ namespace Fifthweek.Api.Identity.Membership.Controllers
 }
 namespace Fifthweek.Api.Identity.Membership.Controllers
 {
-    using System;
-    using System.Linq;
-    using System.Threading.Tasks;
-    using System.Web.Http;
-    using Fifthweek.Api.Identity.Membership.Commands;
-    using Fifthweek.Api.Identity.Membership.Queries;
-    using Fifthweek.Api.Core;
-    using Fifthweek.Api.FileManagement.Shared;
     using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.CodeGeneration;
-    using System.Web.Http.Description;
-    using System.ComponentModel.DataAnnotations;
-    using Fifthweek.Shared;
+
+    public partial class RegisterInterestData 
+    {
+        public class Parsed
+        {
+            public Parsed(
+                System.String name,
+                ValidEmail email)
+            {
+                if (name == null)
+                {
+                    throw new ArgumentNullException("name");
+                }
+
+                if (email == null)
+                {
+                    throw new ArgumentNullException("email");
+                }
+
+                this.Name = name;
+                this.Email = email;
+            }
+        
+            public System.String Name { get; private set; }
+        
+            public ValidEmail Email { get; private set; }
+        }
+    }
+
+    public static partial class RegisterInterestDataExtensions
+    {
+        public static RegisterInterestData.Parsed Parse(this RegisterInterestData target)
+        {
+            var modelStateDictionary = new System.Web.Http.ModelBinding.ModelStateDictionary();
+        
+            ValidEmail parsed0 = null;
+            if (!ValidEmail.IsEmpty(target.Email))
+            {
+                System.Collections.Generic.IReadOnlyCollection<string> parsed0Errors;
+                if (!ValidEmail.TryParse(target.Email, out parsed0, out parsed0Errors))
+                {
+                    var modelState = new System.Web.Http.ModelBinding.ModelState();
+                    foreach (var errorMessage in parsed0Errors)
+                    {
+                        modelState.Errors.Add(errorMessage);
+                    }
+
+                    modelStateDictionary.Add("Email", modelState);
+                }
+            }
+            else
+            {
+                var modelState = new System.Web.Http.ModelBinding.ModelState();
+                modelState.Errors.Add("Value required");
+                modelStateDictionary.Add("Email", modelState);
+            }
+
+            if (!modelStateDictionary.IsValid)
+            {
+                throw new Fifthweek.Api.Core.ModelValidationException(modelStateDictionary);
+            }
+        
+            return new RegisterInterestData.Parsed(
+                target.Name,
+                parsed0);
+        }    
+    }
+}
+namespace Fifthweek.Api.Identity.Membership.Controllers
+{
+    using Fifthweek.Api.Identity.Shared.Membership;
+    using Fifthweek.CodeGeneration;
 
     public partial class RegistrationData 
     {
@@ -4698,7 +4245,8 @@ namespace Fifthweek.Api.Identity.Membership.Controllers
                 System.String exampleWork,
                 ValidEmail email,
                 ValidUsername username,
-                ValidPassword password)
+                ValidPassword password,
+                ValidCreatorName creatorName)
             {
                 if (email == null)
                 {
@@ -4719,6 +4267,7 @@ namespace Fifthweek.Api.Identity.Membership.Controllers
                 this.Email = email;
                 this.Username = username;
                 this.Password = password;
+                this.CreatorName = creatorName;
             }
         
             public System.String ExampleWork { get; private set; }
@@ -4728,6 +4277,8 @@ namespace Fifthweek.Api.Identity.Membership.Controllers
             public ValidUsername Username { get; private set; }
         
             public ValidPassword Password { get; private set; }
+        
+            public ValidCreatorName CreatorName { get; private set; }
         }
     }
 
@@ -4803,6 +4354,22 @@ namespace Fifthweek.Api.Identity.Membership.Controllers
                 modelStateDictionary.Add("Password", modelState);
             }
 
+            ValidCreatorName parsed3 = null;
+            if (!ValidCreatorName.IsEmpty(target.CreatorName))
+            {
+                System.Collections.Generic.IReadOnlyCollection<string> parsed3Errors;
+                if (!ValidCreatorName.TryParse(target.CreatorName, out parsed3, out parsed3Errors))
+                {
+                    var modelState = new System.Web.Http.ModelBinding.ModelState();
+                    foreach (var errorMessage in parsed3Errors)
+                    {
+                        modelState.Errors.Add(errorMessage);
+                    }
+
+                    modelStateDictionary.Add("CreatorName", modelState);
+                }
+            }
+
             if (!modelStateDictionary.IsValid)
             {
                 throw new Fifthweek.Api.Core.ModelValidationException(modelStateDictionary);
@@ -4812,25 +4379,15 @@ namespace Fifthweek.Api.Identity.Membership.Controllers
                 target.ExampleWork,
                 parsed0,
                 parsed1,
-                parsed2);
+                parsed2,
+                parsed3);
         }    
     }
 }
 namespace Fifthweek.Api.Identity.Membership.Controllers
 {
-    using System;
-    using System.Linq;
-    using System.Threading.Tasks;
-    using System.Web.Http;
-    using Fifthweek.Api.Identity.Membership.Commands;
-    using Fifthweek.Api.Identity.Membership.Queries;
-    using Fifthweek.Api.Core;
-    using Fifthweek.Api.FileManagement.Shared;
     using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.CodeGeneration;
-    using System.Web.Http.Description;
-    using System.ComponentModel.DataAnnotations;
-    using Fifthweek.Shared;
 
     public partial class UpdatedAccountSettings 
     {
@@ -4944,89 +4501,6 @@ namespace Fifthweek.Api.Identity.Membership.Controllers
                 parsed1,
                 parsed2,
                 target.NewProfileImageId);
-        }    
-    }
-}
-namespace Fifthweek.Api.Identity.Membership.Controllers
-{
-    using System;
-    using System.Linq;
-    using System.Threading.Tasks;
-    using System.Web.Http;
-    using Fifthweek.Api.Identity.Membership.Commands;
-    using Fifthweek.Api.Identity.Membership.Queries;
-    using Fifthweek.Api.Core;
-    using Fifthweek.Api.FileManagement.Shared;
-    using Fifthweek.Api.Identity.Shared.Membership;
-    using Fifthweek.CodeGeneration;
-    using System.Web.Http.Description;
-    using System.ComponentModel.DataAnnotations;
-    using Fifthweek.Shared;
-
-    public partial class RegisterInterestData 
-    {
-        public class Parsed
-        {
-            public Parsed(
-                System.String name,
-                ValidEmail email)
-            {
-                if (name == null)
-                {
-                    throw new ArgumentNullException("name");
-                }
-
-                if (email == null)
-                {
-                    throw new ArgumentNullException("email");
-                }
-
-                this.Name = name;
-                this.Email = email;
-            }
-        
-            public System.String Name { get; private set; }
-        
-            public ValidEmail Email { get; private set; }
-        }
-    }
-
-    public static partial class RegisterInterestDataExtensions
-    {
-        public static RegisterInterestData.Parsed Parse(this RegisterInterestData target)
-        {
-            var modelStateDictionary = new System.Web.Http.ModelBinding.ModelStateDictionary();
-        
-            ValidEmail parsed0 = null;
-            if (!ValidEmail.IsEmpty(target.Email))
-            {
-                System.Collections.Generic.IReadOnlyCollection<string> parsed0Errors;
-                if (!ValidEmail.TryParse(target.Email, out parsed0, out parsed0Errors))
-                {
-                    var modelState = new System.Web.Http.ModelBinding.ModelState();
-                    foreach (var errorMessage in parsed0Errors)
-                    {
-                        modelState.Errors.Add(errorMessage);
-                    }
-
-                    modelStateDictionary.Add("Email", modelState);
-                }
-            }
-            else
-            {
-                var modelState = new System.Web.Http.ModelBinding.ModelState();
-                modelState.Errors.Add("Value required");
-                modelStateDictionary.Add("Email", modelState);
-            }
-
-            if (!modelStateDictionary.IsValid)
-            {
-                throw new Fifthweek.Api.Core.ModelValidationException(modelStateDictionary);
-            }
-        
-            return new RegisterInterestData.Parsed(
-                target.Name,
-                parsed0);
         }    
     }
 }

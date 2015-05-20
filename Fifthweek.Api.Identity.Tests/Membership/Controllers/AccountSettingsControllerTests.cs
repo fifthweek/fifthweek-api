@@ -3,6 +3,7 @@
     using System;
     using System.Threading.Tasks;
 
+    using Fifthweek.Api.Blogs.Shared;
     using Fifthweek.Api.Identity.Membership.Commands;
     using Fifthweek.Api.Identity.Membership.Controllers;
     using Fifthweek.Api.Identity.Membership.Queries;
@@ -26,6 +27,7 @@
         private static readonly ValidUsername Username = ValidUsername.Parse("username");
         private static readonly ValidPassword Password = ValidPassword.Parse("passw0rd");
         private static readonly FileId FileId = new FileId(Guid.NewGuid());
+        private static readonly ValidCreatorName Name = ValidCreatorName.Parse("name");
         private static readonly string ContainerName = "containerName";
         private static readonly string BlobName = "blobName";
         private static readonly string FileUri = "uri";
@@ -35,6 +37,7 @@
         private Mock<IRequesterContext> requesterContext;
         private Mock<ICommandHandler<UpdateAccountSettingsCommand>> updateAccountSettings;
         private Mock<IQueryHandler<GetAccountSettingsQuery, GetAccountSettingsResult>> getAccountSettings;
+        private Mock<ICommandHandler<UpdateCreatorAccountSettingsCommand>> promoteUserToCreator;
         private AccountSettingsController target;
 
         [TestInitialize]
@@ -44,6 +47,7 @@
             this.requesterContext = new Mock<IRequesterContext>();
             this.updateAccountSettings = new Mock<ICommandHandler<UpdateAccountSettingsCommand>>();
             this.getAccountSettings = new Mock<IQueryHandler<GetAccountSettingsQuery, GetAccountSettingsResult>>();
+            this.promoteUserToCreator = new Mock<ICommandHandler<UpdateCreatorAccountSettingsCommand>>();
 
             this.guidCreator.Setup(v => v.Create()).Returns(SecurityGuid);
             this.requesterContext.Setup(v => v.GetRequester()).Returns(Requester);
@@ -52,7 +56,8 @@
                 this.guidCreator.Object,
                 this.requesterContext.Object,
                 this.updateAccountSettings.Object,
-                this.getAccountSettings.Object);
+                this.getAccountSettings.Object,
+                this.promoteUserToCreator.Object);
         }
 
         [TestMethod]
@@ -74,7 +79,7 @@
         {
             var query = new GetAccountSettingsQuery(Requester, RequestedUserId);
             this.getAccountSettings.Setup(v => v.HandleAsync(query))
-                .ReturnsAsync(new GetAccountSettingsResult(Username, Email, FileInformation))
+                .ReturnsAsync(new GetAccountSettingsResult(Name, Username, Email, FileInformation))
                 .Verifiable();
 
             var result = await this.target.Get(RequestedUserId.Value.EncodeGuid());
@@ -92,7 +97,7 @@
         {
             var query = new GetAccountSettingsQuery(Requester, RequestedUserId);
             this.getAccountSettings.Setup(v => v.HandleAsync(query))
-                .ReturnsAsync(new GetAccountSettingsResult(Username, Email, null))
+                .ReturnsAsync(new GetAccountSettingsResult(Name, Username, Email, null))
                 .Verifiable();
 
             var result = await this.target.Get(RequestedUserId.Value.EncodeGuid());
@@ -182,6 +187,38 @@
             };
 
             await this.target.Put(RequestedUserId.Value.EncodeGuid(), updatedAccountSettings);
+
+            this.updateAccountSettings.Verify();
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(BadRequestException))]
+        public async Task WhenPutCreatorInformationIsCalledWithNullUserId_ItShouldThrowAnException()
+        {
+            await this.target.PutCreatorInformation(null, new CreatorInformation());
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(BadRequestException))]
+        public async Task WhenPutCreatorInformationIsCalledWithNullCreatorInformation_ItShouldThrowAnException()
+        {
+            await this.target.PutCreatorInformation(RequestedUserId.Value.EncodeGuid(), null);
+        }
+
+        [TestMethod]
+        public async Task WhenPutCreatorInformationIsCalled_ItShouldCallTheCommandHandler()
+        {
+            var command = new UpdateCreatorAccountSettingsCommand(Requester, RequestedUserId, Name);
+            this.promoteUserToCreator.Setup(v => v.HandleAsync(command))
+                .Returns(Task.FromResult(0))
+                .Verifiable();
+
+            var updatedAccountSettings = new CreatorInformation
+            {
+                Name = Name.Value,
+            };
+
+            await this.target.PutCreatorInformation(RequestedUserId.Value.EncodeGuid(), updatedAccountSettings);
 
             this.updateAccountSettings.Verify();
         }

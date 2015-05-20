@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Linq;
 
-//// Generated on 22/04/2015 17:54:14 (UTC)
-//// Mapped solution in 15.77s
+//// Generated on 19/05/2015 13:06:18 (UTC)
+//// Mapped solution in 7.24s
 
 
 namespace Fifthweek.Api.Blogs
@@ -292,102 +292,6 @@ namespace Fifthweek.Api.Blogs.Commands
             this.blogSecurity = blogSecurity;
             this.requesterSecurity = requesterSecurity;
             this.connectionFactory = connectionFactory;
-        }
-    }
-}
-namespace Fifthweek.Api.Blogs.Commands
-{
-    using System;
-    using System.Linq;
-    using Fifthweek.Api.Blogs.Shared;
-    using Fifthweek.Api.Channels.Shared;
-    using Fifthweek.Api.Identity.Shared.Membership;
-    using Fifthweek.CodeGeneration;
-    using System.Threading.Tasks;
-    using System.Transactions;
-    using Fifthweek.Api.Core;
-    using Fifthweek.Api.Persistence;
-    using Fifthweek.Shared;
-    using Fifthweek.Api.Persistence.Identity;
-    using Fifthweek.Api.Identity.Shared.Membership.Events;
-    using Fifthweek.Api.FileManagement.Shared;
-    using System.Collections.Generic;
-
-    public partial class PromoteNewUserToCreatorCommand 
-    {
-        public PromoteNewUserToCreatorCommand(
-            Fifthweek.Api.Identity.Shared.Membership.UserId newUserId)
-        {
-            if (newUserId == null)
-            {
-                throw new ArgumentNullException("newUserId");
-            }
-
-            this.NewUserId = newUserId;
-        }
-    }
-}
-namespace Fifthweek.Api.Blogs.Commands
-{
-    using System;
-    using System.Linq;
-    using Fifthweek.Api.Blogs.Shared;
-    using Fifthweek.Api.Channels.Shared;
-    using Fifthweek.Api.Identity.Shared.Membership;
-    using Fifthweek.CodeGeneration;
-    using System.Threading.Tasks;
-    using System.Transactions;
-    using Fifthweek.Api.Core;
-    using Fifthweek.Api.Persistence;
-    using Fifthweek.Shared;
-    using Fifthweek.Api.Persistence.Identity;
-    using Fifthweek.Api.Identity.Shared.Membership.Events;
-    using Fifthweek.Api.FileManagement.Shared;
-    using System.Collections.Generic;
-
-    public partial class PromoteNewUserToCreatorCommandHandler 
-    {
-        public PromoteNewUserToCreatorCommandHandler(
-            Fifthweek.Api.Persistence.IUserManager userManager)
-        {
-            if (userManager == null)
-            {
-                throw new ArgumentNullException("userManager");
-            }
-
-            this.userManager = userManager;
-        }
-    }
-}
-namespace Fifthweek.Api.Blogs.Commands
-{
-    using System;
-    using System.Linq;
-    using Fifthweek.Api.Blogs.Shared;
-    using Fifthweek.Api.Channels.Shared;
-    using Fifthweek.Api.Identity.Shared.Membership;
-    using Fifthweek.CodeGeneration;
-    using System.Threading.Tasks;
-    using System.Transactions;
-    using Fifthweek.Api.Core;
-    using Fifthweek.Api.Persistence;
-    using Fifthweek.Shared;
-    using Fifthweek.Api.Persistence.Identity;
-    using Fifthweek.Api.Identity.Shared.Membership.Events;
-    using Fifthweek.Api.FileManagement.Shared;
-    using System.Collections.Generic;
-
-    public partial class PromoteNewUserToCreatorCommandInitiator 
-    {
-        public PromoteNewUserToCreatorCommandInitiator(
-            Fifthweek.Api.Core.ICommandHandler<Fifthweek.Api.Blogs.Commands.PromoteNewUserToCreatorCommand> promoteNewUserToCreator)
-        {
-            if (promoteNewUserToCreator == null)
-            {
-                throw new ArgumentNullException("promoteNewUserToCreator");
-            }
-
-            this.promoteNewUserToCreator = promoteNewUserToCreator;
         }
     }
 }
@@ -2704,72 +2608,6 @@ namespace Fifthweek.Api.Blogs.Commands
             }
         
             if (!object.Equals(this.BasePrice, other.BasePrice))
-            {
-                return false;
-            }
-        
-            return true;
-        }
-    }
-}
-namespace Fifthweek.Api.Blogs.Commands
-{
-    using System;
-    using System.Linq;
-    using Fifthweek.Api.Blogs.Shared;
-    using Fifthweek.Api.Channels.Shared;
-    using Fifthweek.Api.Identity.Shared.Membership;
-    using Fifthweek.CodeGeneration;
-    using System.Threading.Tasks;
-    using System.Transactions;
-    using Fifthweek.Api.Core;
-    using Fifthweek.Api.Persistence;
-    using Fifthweek.Shared;
-    using Fifthweek.Api.Persistence.Identity;
-    using Fifthweek.Api.Identity.Shared.Membership.Events;
-    using Fifthweek.Api.FileManagement.Shared;
-    using System.Collections.Generic;
-
-    public partial class PromoteNewUserToCreatorCommand 
-    {
-        public override string ToString()
-        {
-            return string.Format("PromoteNewUserToCreatorCommand({0})", this.NewUserId == null ? "null" : this.NewUserId.ToString());
-        }
-        
-        public override bool Equals(object obj)
-        {
-            if (ReferenceEquals(null, obj))
-            {
-                return false;
-            }
-        
-            if (ReferenceEquals(this, obj))
-            {
-                return true;
-            }
-        
-            if (obj.GetType() != this.GetType())
-            {
-                return false;
-            }
-        
-            return this.Equals((PromoteNewUserToCreatorCommand)obj);
-        }
-        
-        public override int GetHashCode()
-        {
-            unchecked
-            {
-                int hashCode = 0;
-                hashCode = (hashCode * 397) ^ (this.NewUserId != null ? this.NewUserId.GetHashCode() : 0);
-                return hashCode;
-            }
-        }
-        
-        protected bool Equals(PromoteNewUserToCreatorCommand other)
-        {
-            if (!object.Equals(this.NewUserId, other.NewUserId))
             {
                 return false;
             }
@@ -5227,13 +5065,13 @@ namespace Fifthweek.Api.Blogs.Controllers
         public class Parsed
         {
             public Parsed(
-                ValidBlogName blogName,
+                ValidBlogName name,
                 ValidTagline tagline,
                 ValidChannelPriceInUsCentsPerWeek basePrice)
             {
-                if (blogName == null)
+                if (name == null)
                 {
-                    throw new ArgumentNullException("blogName");
+                    throw new ArgumentNullException("name");
                 }
 
                 if (tagline == null)
@@ -5246,12 +5084,12 @@ namespace Fifthweek.Api.Blogs.Controllers
                     throw new ArgumentNullException("basePrice");
                 }
 
-                this.BlogName = blogName;
+                this.Name = name;
                 this.Tagline = tagline;
                 this.BasePrice = basePrice;
             }
         
-            public ValidBlogName BlogName { get; private set; }
+            public ValidBlogName Name { get; private set; }
         
             public ValidTagline Tagline { get; private set; }
         
@@ -5277,14 +5115,14 @@ namespace Fifthweek.Api.Blogs.Controllers
                         modelState.Errors.Add(errorMessage);
                     }
 
-                    modelStateDictionary.Add("BlogName", modelState);
+                    modelStateDictionary.Add("Name", modelState);
                 }
             }
             else
             {
                 var modelState = new System.Web.Http.ModelBinding.ModelState();
                 modelState.Errors.Add("Value required");
-                modelStateDictionary.Add("BlogName", modelState);
+                modelStateDictionary.Add("Name", modelState);
             }
 
             ValidTagline parsed1 = null;
@@ -5356,16 +5194,16 @@ namespace Fifthweek.Api.Blogs.Controllers
         public class Parsed
         {
             public Parsed(
-                ValidBlogName blogName,
+                ValidBlogName name,
                 ValidTagline tagline,
                 ValidIntroduction introduction,
                 Fifthweek.Api.FileManagement.Shared.FileId headerImageFileId,
                 ValidExternalVideoUrl video,
                 ValidBlogDescription description)
             {
-                if (blogName == null)
+                if (name == null)
                 {
-                    throw new ArgumentNullException("blogName");
+                    throw new ArgumentNullException("name");
                 }
 
                 if (tagline == null)
@@ -5378,7 +5216,7 @@ namespace Fifthweek.Api.Blogs.Controllers
                     throw new ArgumentNullException("introduction");
                 }
 
-                this.BlogName = blogName;
+                this.Name = name;
                 this.Tagline = tagline;
                 this.Introduction = introduction;
                 this.HeaderImageFileId = headerImageFileId;
@@ -5386,7 +5224,7 @@ namespace Fifthweek.Api.Blogs.Controllers
                 this.Description = description;
             }
         
-            public ValidBlogName BlogName { get; private set; }
+            public ValidBlogName Name { get; private set; }
         
             public ValidTagline Tagline { get; private set; }
         
@@ -5418,14 +5256,14 @@ namespace Fifthweek.Api.Blogs.Controllers
                         modelState.Errors.Add(errorMessage);
                     }
 
-                    modelStateDictionary.Add("BlogName", modelState);
+                    modelStateDictionary.Add("Name", modelState);
                 }
             }
             else
             {
                 var modelState = new System.Web.Http.ModelBinding.ModelState();
                 modelState.Errors.Add("Value required");
-                modelStateDictionary.Add("BlogName", modelState);
+                modelStateDictionary.Add("Name", modelState);
             }
 
             ValidTagline parsed1 = null;

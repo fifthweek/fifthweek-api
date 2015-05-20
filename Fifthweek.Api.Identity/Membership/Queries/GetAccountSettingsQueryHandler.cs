@@ -26,7 +26,7 @@
 
             if (result.ProfileImageFileId == null)
             {
-                return new GetAccountSettingsResult(result.Username, result.Email, null);
+                return new GetAccountSettingsResult(result.Name, result.Username, result.Email, null);
             }
 
             var fileInformation = await this.fileInformationAggregator.GetFileInformationAsync(
@@ -34,7 +34,7 @@
                 result.ProfileImageFileId,
                 FilePurposes.ProfileImage);
 
-            return new GetAccountSettingsResult(result.Username, result.Email, fileInformation);
+            return new GetAccountSettingsResult(result.Name, result.Username, result.Email, fileInformation);
         }
     }
 }

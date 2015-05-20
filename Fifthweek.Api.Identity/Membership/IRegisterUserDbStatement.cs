@@ -12,6 +12,7 @@ namespace Fifthweek.Api.Identity.Membership
             Username username,
             Email email,
             string exampleWork,
+            CreatorName name,
             Password password,
             DateTime timeStamp);
     }
