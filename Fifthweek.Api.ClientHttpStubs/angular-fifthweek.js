@@ -147,6 +147,7 @@ angular.module('webApp').factory('accountSettingsStub',
 
     // userId = 'Base64Guid'
     // result = {
+    //   name: '', /* optional */
     //   username: '',
     //   email: '',
     //   profileImage: { /* optional */
@@ -169,6 +170,16 @@ angular.module('webApp').factory('accountSettingsStub',
     // }
     service.put = function(userId, updatedAccountSettingsData) {
       return $http.put(apiBaseUri + 'accountSettings/' + encodeURIComponent(userId), updatedAccountSettingsData).catch(function(response) {
+        return $q.reject(utilities.getHttpError(response));
+      });
+    };
+
+    // userId = 'Base64Guid'
+    // creatorInformation = {
+    //   name: ''
+    // }
+    service.putCreatorInformation = function(userId, creatorInformation) {
+      return $http.put(apiBaseUri + 'accountSettings/' + encodeURIComponent(userId) + '/creatorInformation', creatorInformation).catch(function(response) {
         return $q.reject(utilities.getHttpError(response));
       });
     };
@@ -242,6 +253,7 @@ angular.module('webApp').factory('membershipStub',
     };
 
     // identifiedUserData = {
+    //   isUpdate: false,
     //   name: '',
     //   username: '',
     //   email: ''
@@ -811,6 +823,7 @@ angular.module('webApp').factory('userStateStub',
     //     ]
     //   },
     //   accountSettings: { /* optional */
+    //     name: '', /* optional */
     //     username: '',
     //     email: '',
     //     profileImage: { /* optional */
@@ -937,6 +950,7 @@ angular.module('webApp').factory('userStateStub',
     //     ]
     //   },
     //   accountSettings: { /* optional */
+    //     name: '', /* optional */
     //     username: '',
     //     email: '',
     //     profileImage: { /* optional */

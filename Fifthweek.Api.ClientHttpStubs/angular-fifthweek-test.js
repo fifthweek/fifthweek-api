@@ -292,6 +292,22 @@ describe('account settings stub', function() {
 
     expect(result).toBe(responseData);
   });
+
+  it('should put creator information', function() {
+    var userId = 'value0';
+    var creatorInformation = 'value-body';
+
+    var responseData = 'response data';
+    $httpBackend.expectPUT(fifthweekConstants.apiBaseUri + 'accountSettings/' + encodeURIComponent(userId) + '/creatorInformation', creatorInformation).respond(200, responseData);
+
+    var result = null;
+    target.putCreatorInformation(userId, creatorInformation).then(function(response) { result = response.data; });
+
+    $httpBackend.flush();
+    $rootScope.$apply();
+
+    expect(result).toBe(responseData);
+  });
 });
 
 describe('membership stub', function() {
