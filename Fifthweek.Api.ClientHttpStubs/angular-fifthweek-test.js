@@ -536,14 +536,16 @@ describe('posts stub', function() {
   it('should get newsfeed', function() {
     var filter = {
       creatorId: 'value0-0',
-      origin: 'value0-1',
-      searchForwards: 'value0-2',
-      startIndex: 'value0-3',
-      count: 'value0-4',
+      channelId: 'value0-1',
+      collectionId: 'value0-2',
+      origin: 'value0-3',
+      searchForwards: 'value0-4',
+      startIndex: 'value0-5',
+      count: 'value0-6',
     };
 
     var responseData = 'response data';
-    $httpBackend.expectGET(fifthweekConstants.apiBaseUri + 'posts/newsfeed?' + (filter.creatorId === undefined ? '' : 'creatorId=' + encodeURIComponent(filter.creatorId) + '&') + (filter.origin === undefined ? '' : 'origin=' + encodeURIComponent(filter.origin) + '&') + (filter.searchForwards === undefined ? '' : 'searchForwards=' + encodeURIComponent(filter.searchForwards) + '&') + (filter.startIndex === undefined ? '' : 'startIndex=' + encodeURIComponent(filter.startIndex) + '&') + (filter.count === undefined ? '' : 'count=' + encodeURIComponent(filter.count) + '&')).respond(200, responseData);
+    $httpBackend.expectGET(fifthweekConstants.apiBaseUri + 'posts/newsfeed?' + (filter.creatorId === undefined ? '' : 'creatorId=' + encodeURIComponent(filter.creatorId) + '&') + (filter.channelId === undefined ? '' : 'channelId=' + encodeURIComponent(filter.channelId) + '&') + (filter.collectionId === undefined ? '' : 'collectionId=' + encodeURIComponent(filter.collectionId) + '&') + (filter.origin === undefined ? '' : 'origin=' + encodeURIComponent(filter.origin) + '&') + (filter.searchForwards === undefined ? '' : 'searchForwards=' + encodeURIComponent(filter.searchForwards) + '&') + (filter.startIndex === undefined ? '' : 'startIndex=' + encodeURIComponent(filter.startIndex) + '&') + (filter.count === undefined ? '' : 'count=' + encodeURIComponent(filter.count) + '&')).respond(200, responseData);
 
     var result = null;
     target.getNewsfeed(filter).then(function(response) { result = response.data; });
