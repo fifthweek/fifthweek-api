@@ -123,8 +123,8 @@
             var requestData = new NewsfeedFilter 
             { 
                 CreatorId = UserId.Value.EncodeGuid(), 
-                ChannelIds = new List<string> { ChannelId.Value.EncodeGuid() },
-                CollectionIds = new List<string> { CollectionId.Value.EncodeGuid() },
+                ChannelId = ChannelId.Value.EncodeGuid(),
+                CollectionId = CollectionId.Value.EncodeGuid(),
                 Origin = Origin,
                 SearchForwards = SearchForwards,
                 Count = 5, 

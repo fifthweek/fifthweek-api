@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Linq;
 
-//// Generated on 23/04/2015 12:12:11 (UTC)
-//// Mapped solution in 10.15s
+//// Generated on 22/05/2015 10:43:29 (UTC)
+//// Mapped solution in 8.66s
 
 
 namespace Fifthweek.Api.Posts.Commands
@@ -1141,6 +1141,7 @@ namespace Fifthweek.Api.Posts.Queries
     using Fifthweek.Api.Persistence;
     using Fifthweek.Api.Persistence.Identity;
     using Fifthweek.Shared;
+    using Fifthweek.Api.Blogs.Shared;
 
     public partial class BacklogPost 
     {
@@ -1225,6 +1226,7 @@ namespace Fifthweek.Api.Posts.Queries
     using Fifthweek.Api.Persistence;
     using Fifthweek.Api.Persistence.Identity;
     using Fifthweek.Shared;
+    using Fifthweek.Api.Blogs.Shared;
 
     public partial class GetCreatorBacklogQuery 
     {
@@ -1264,6 +1266,7 @@ namespace Fifthweek.Api.Posts.Queries
     using Fifthweek.Api.Persistence;
     using Fifthweek.Api.Persistence.Identity;
     using Fifthweek.Shared;
+    using Fifthweek.Api.Blogs.Shared;
 
     public partial class GetCreatorBacklogQueryHandler 
     {
@@ -2514,6 +2517,7 @@ namespace Fifthweek.Api.Posts.Queries
     using Fifthweek.Api.Persistence;
     using Fifthweek.Api.Persistence.Identity;
     using Fifthweek.Shared;
+    using Fifthweek.Api.Blogs.Shared;
 
     public partial class GetCreatorBacklogQueryResult 
     {
@@ -2579,6 +2583,7 @@ namespace Fifthweek.Api.Posts.Queries
     using Fifthweek.Api.Persistence;
     using Fifthweek.Api.Persistence.Identity;
     using Fifthweek.Shared;
+    using Fifthweek.Api.Blogs.Shared;
 
     public partial class GetCreatorNewsfeedQueryResult 
     {
@@ -2637,6 +2642,7 @@ namespace Fifthweek.Api.Posts.Queries
     using Fifthweek.Api.Persistence;
     using Fifthweek.Api.Persistence.Identity;
     using Fifthweek.Shared;
+    using Fifthweek.Api.Blogs.Shared;
 
     public partial class FileSourceInformation 
     {
@@ -2692,6 +2698,7 @@ namespace Fifthweek.Api.Posts.Queries
     using Fifthweek.Api.Persistence;
     using Fifthweek.Api.Persistence.Identity;
     using Fifthweek.Shared;
+    using Fifthweek.Api.Blogs.Shared;
 
     public partial class RenderSize 
     {
@@ -2731,6 +2738,7 @@ namespace Fifthweek.Api.Posts.Queries
     using Fifthweek.Api.Persistence;
     using Fifthweek.Api.Persistence.Identity;
     using Fifthweek.Shared;
+    using Fifthweek.Api.Blogs.Shared;
 
     public partial class GetNewsfeedQuery 
     {
@@ -2792,6 +2800,7 @@ namespace Fifthweek.Api.Posts.Queries
     using Fifthweek.Api.Persistence;
     using Fifthweek.Api.Persistence.Identity;
     using Fifthweek.Shared;
+    using Fifthweek.Api.Blogs.Shared;
 
     public partial class GetNewsfeedQueryHandler 
     {
@@ -3613,6 +3622,7 @@ namespace Fifthweek.Api.Posts.Queries
     using Fifthweek.Api.Persistence;
     using Fifthweek.Api.Persistence.Identity;
     using Fifthweek.Shared;
+    using Fifthweek.Api.Blogs.Shared;
 
     public partial class BacklogPost 
     {
@@ -3775,6 +3785,7 @@ namespace Fifthweek.Api.Posts.Queries
     using Fifthweek.Api.Persistence;
     using Fifthweek.Api.Persistence.Identity;
     using Fifthweek.Shared;
+    using Fifthweek.Api.Blogs.Shared;
 
     public partial class GetCreatorBacklogQuery 
     {
@@ -4813,6 +4824,7 @@ namespace Fifthweek.Api.Posts.Queries
     using Fifthweek.Api.Persistence;
     using Fifthweek.Api.Persistence.Identity;
     using Fifthweek.Shared;
+    using Fifthweek.Api.Blogs.Shared;
 
     public partial class GetCreatorBacklogQueryResult 
     {
@@ -4933,6 +4945,7 @@ namespace Fifthweek.Api.Posts.Queries
     using Fifthweek.Api.Persistence;
     using Fifthweek.Api.Persistence.Identity;
     using Fifthweek.Shared;
+    using Fifthweek.Api.Blogs.Shared;
 
     public partial class GetCreatorNewsfeedQueryResult 
     {
@@ -5047,6 +5060,7 @@ namespace Fifthweek.Api.Posts.Queries
     using Fifthweek.Api.Persistence;
     using Fifthweek.Api.Persistence.Identity;
     using Fifthweek.Shared;
+    using Fifthweek.Api.Blogs.Shared;
 
     public partial class FileSourceInformation 
     {
@@ -5137,6 +5151,7 @@ namespace Fifthweek.Api.Posts.Queries
     using Fifthweek.Api.Persistence;
     using Fifthweek.Api.Persistence.Identity;
     using Fifthweek.Shared;
+    using Fifthweek.Api.Blogs.Shared;
 
     public partial class RenderSize 
     {
@@ -5209,6 +5224,7 @@ namespace Fifthweek.Api.Posts.Queries
     using Fifthweek.Api.Persistence;
     using Fifthweek.Api.Persistence.Identity;
     using Fifthweek.Shared;
+    using Fifthweek.Api.Blogs.Shared;
 
     public partial class GetNewsfeedQuery 
     {
@@ -5636,7 +5652,7 @@ namespace Fifthweek.Api.Posts.Controllers
     {
         public override string ToString()
         {
-            return string.Format("NewsfeedFilter(\"{0}\", {1}, {2}, {3}, {4}, {5}, {6})", this.CreatorId == null ? "null" : this.CreatorId.ToString(), this.ChannelIds == null ? "null" : this.ChannelIds.ToString(), this.CollectionIds == null ? "null" : this.CollectionIds.ToString(), this.Origin == null ? "null" : this.Origin.ToString(), this.SearchForwards == null ? "null" : this.SearchForwards.ToString(), this.StartIndex == null ? "null" : this.StartIndex.ToString(), this.Count == null ? "null" : this.Count.ToString());
+            return string.Format("NewsfeedFilter(\"{0}\", \"{1}\", \"{2}\", {3}, {4}, {5}, {6})", this.CreatorId == null ? "null" : this.CreatorId.ToString(), this.ChannelId == null ? "null" : this.ChannelId.ToString(), this.CollectionId == null ? "null" : this.CollectionId.ToString(), this.Origin == null ? "null" : this.Origin.ToString(), this.SearchForwards == null ? "null" : this.SearchForwards.ToString(), this.StartIndex == null ? "null" : this.StartIndex.ToString(), this.Count == null ? "null" : this.Count.ToString());
         }
         
         public override bool Equals(object obj)
@@ -5665,24 +5681,8 @@ namespace Fifthweek.Api.Posts.Controllers
             {
                 int hashCode = 0;
                 hashCode = (hashCode * 397) ^ (this.CreatorId != null ? this.CreatorId.GetHashCode() : 0);
-                hashCode = (hashCode * 397) ^ (this.ChannelIds != null 
-        			? this.ChannelIds.Aggregate(0, (previous, current) => 
-        				{ 
-        				    unchecked
-        				    {
-        				        return (previous * 397) ^ (current != null ? current.GetHashCode() : 0);
-        				    }
-        				})
-        			: 0);
-                hashCode = (hashCode * 397) ^ (this.CollectionIds != null 
-        			? this.CollectionIds.Aggregate(0, (previous, current) => 
-        				{ 
-        				    unchecked
-        				    {
-        				        return (previous * 397) ^ (current != null ? current.GetHashCode() : 0);
-        				    }
-        				})
-        			: 0);
+                hashCode = (hashCode * 397) ^ (this.ChannelId != null ? this.ChannelId.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.CollectionId != null ? this.CollectionId.GetHashCode() : 0);
                 hashCode = (hashCode * 397) ^ (this.Origin != null ? this.Origin.GetHashCode() : 0);
                 hashCode = (hashCode * 397) ^ (this.SearchForwards != null ? this.SearchForwards.GetHashCode() : 0);
                 hashCode = (hashCode * 397) ^ (this.StartIndex != null ? this.StartIndex.GetHashCode() : 0);
@@ -5698,26 +5698,12 @@ namespace Fifthweek.Api.Posts.Controllers
                 return false;
             }
         
-            if (this.ChannelIds != null && other.ChannelIds != null)
-            {
-                if (!this.ChannelIds.SequenceEqual(other.ChannelIds))
-                {
-                    return false;    
-                }
-            }
-            else if (this.ChannelIds != null || other.ChannelIds != null)
+            if (!object.Equals(this.ChannelId, other.ChannelId))
             {
                 return false;
             }
         
-            if (this.CollectionIds != null && other.CollectionIds != null)
-            {
-                if (!this.CollectionIds.SequenceEqual(other.CollectionIds))
-                {
-                    return false;    
-                }
-            }
-            else if (this.CollectionIds != null || other.CollectionIds != null)
+            if (!object.Equals(this.CollectionId, other.CollectionId))
             {
                 return false;
             }
@@ -5763,6 +5749,7 @@ namespace Fifthweek.Api.Posts.Queries
     using Fifthweek.Api.Persistence;
     using Fifthweek.Api.Persistence.Identity;
     using Fifthweek.Shared;
+    using Fifthweek.Api.Blogs.Shared;
 
     public partial class BacklogPost 
     {
@@ -6572,8 +6559,8 @@ namespace Fifthweek.Api.Posts.Controllers
         {
             public Parsed(
                 System.String creatorId,
-                System.Collections.Generic.List<System.String> channelIds,
-                System.Collections.Generic.List<System.String> collectionIds,
+                System.String channelId,
+                System.String collectionId,
                 System.Nullable<System.DateTime> origin,
                 System.Boolean searchForwards,
                 NonNegativeInt startIndex,
@@ -6595,8 +6582,8 @@ namespace Fifthweek.Api.Posts.Controllers
                 }
 
                 this.CreatorId = creatorId;
-                this.ChannelIds = channelIds;
-                this.CollectionIds = collectionIds;
+                this.ChannelId = channelId;
+                this.CollectionId = collectionId;
                 this.Origin = origin;
                 this.SearchForwards = searchForwards;
                 this.StartIndex = startIndex;
@@ -6605,9 +6592,9 @@ namespace Fifthweek.Api.Posts.Controllers
         
             public System.String CreatorId { get; private set; }
         
-            public System.Collections.Generic.List<System.String> ChannelIds { get; private set; }
+            public System.String ChannelId { get; private set; }
         
-            public System.Collections.Generic.List<System.String> CollectionIds { get; private set; }
+            public System.String CollectionId { get; private set; }
         
             public System.Nullable<System.DateTime> Origin { get; private set; }
         
@@ -6658,8 +6645,8 @@ namespace Fifthweek.Api.Posts.Controllers
         
             return new NewsfeedFilter.Parsed(
                 target.CreatorId,
-                target.ChannelIds,
-                target.CollectionIds,
+                target.ChannelId,
+                target.CollectionId,
                 target.Origin,
                 target.SearchForwards,
                 parsed0,

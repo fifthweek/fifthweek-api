@@ -15,10 +15,10 @@
         public string CreatorId { get; set; }
 
         [Optional]
-        public List<string> ChannelIds { get; set; }
+        public string ChannelId { get; set; }
 
         [Optional]
-        public List<string> CollectionIds { get; set; }
+        public string CollectionId { get; set; }
 
         [Optional]
         public DateTime? Origin { get; set; }

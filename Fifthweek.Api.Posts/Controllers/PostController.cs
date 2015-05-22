@@ -73,15 +73,15 @@
             }
 
             IReadOnlyList<ChannelId> channelIds = null;
-            if (filter.ChannelIds != null && filter.ChannelIds.Count > 0)
+            if (!string.IsNullOrWhiteSpace(filterData.ChannelId))
             {
-                channelIds = filter.ChannelIds.Select(v => new ChannelId(v.DecodeGuid())).ToList();
+                channelIds = new List<ChannelId> { new ChannelId(filterData.ChannelId.DecodeGuid()) };
             }
 
             IReadOnlyList<CollectionId> collectionIds = null;
-            if (filter.CollectionIds != null && filter.CollectionIds.Count > 0)
+            if (!string.IsNullOrWhiteSpace(filterData.CollectionId))
             {
-                collectionIds = filter.CollectionIds.Select(v => new CollectionId(v.DecodeGuid())).ToList();
+                collectionIds = new List<CollectionId> { new CollectionId(filterData.CollectionId.DecodeGuid()) };
             }
 
             var requester = this.requesterContext.GetRequester();
