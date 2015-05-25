@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Linq;
 
-//// Generated on 19/05/2015 13:06:18 (UTC)
-//// Mapped solution in 7.24s
+//// Generated on 25/05/2015 11:01:54 (UTC)
+//// Mapped solution in 11.69s
 
 
 namespace Fifthweek.Api.Blogs
@@ -1368,6 +1368,7 @@ namespace Fifthweek.Api.Blogs.Queries
             System.Boolean isDefault,
             System.DateTime priceLastSetDate,
             System.DateTime subscriptionStartDate,
+            System.Boolean isVisibleToNonSubscribers,
             System.Collections.Generic.IReadOnlyList<Fifthweek.Api.Blogs.Queries.CollectionSubscriptionStatus> collections)
         {
             if (channelId == null)
@@ -1405,6 +1406,11 @@ namespace Fifthweek.Api.Blogs.Queries
                 throw new ArgumentNullException("subscriptionStartDate");
             }
 
+            if (isVisibleToNonSubscribers == null)
+            {
+                throw new ArgumentNullException("isVisibleToNonSubscribers");
+            }
+
             if (collections == null)
             {
                 throw new ArgumentNullException("collections");
@@ -1417,6 +1423,7 @@ namespace Fifthweek.Api.Blogs.Queries
             this.IsDefault = isDefault;
             this.PriceLastSetDate = priceLastSetDate;
             this.SubscriptionStartDate = subscriptionStartDate;
+            this.IsVisibleToNonSubscribers = isVisibleToNonSubscribers;
             this.Collections = collections;
         }
     }
@@ -3776,7 +3783,7 @@ namespace Fifthweek.Api.Blogs.Queries
     {
         public override string ToString()
         {
-            return string.Format("ChannelSubscriptionStatus({0}, \"{1}\", {2}, {3}, {4}, {5}, {6}, {7})", this.ChannelId == null ? "null" : this.ChannelId.ToString(), this.Name == null ? "null" : this.Name.ToString(), this.AcceptedPrice == null ? "null" : this.AcceptedPrice.ToString(), this.PriceInUsCentsPerWeek == null ? "null" : this.PriceInUsCentsPerWeek.ToString(), this.IsDefault == null ? "null" : this.IsDefault.ToString(), this.PriceLastSetDate == null ? "null" : this.PriceLastSetDate.ToString(), this.SubscriptionStartDate == null ? "null" : this.SubscriptionStartDate.ToString(), this.Collections == null ? "null" : this.Collections.ToString());
+            return string.Format("ChannelSubscriptionStatus({0}, \"{1}\", {2}, {3}, {4}, {5}, {6}, {7}, {8})", this.ChannelId == null ? "null" : this.ChannelId.ToString(), this.Name == null ? "null" : this.Name.ToString(), this.AcceptedPrice == null ? "null" : this.AcceptedPrice.ToString(), this.PriceInUsCentsPerWeek == null ? "null" : this.PriceInUsCentsPerWeek.ToString(), this.IsDefault == null ? "null" : this.IsDefault.ToString(), this.PriceLastSetDate == null ? "null" : this.PriceLastSetDate.ToString(), this.SubscriptionStartDate == null ? "null" : this.SubscriptionStartDate.ToString(), this.IsVisibleToNonSubscribers == null ? "null" : this.IsVisibleToNonSubscribers.ToString(), this.Collections == null ? "null" : this.Collections.ToString());
         }
         
         public override bool Equals(object obj)
@@ -3811,6 +3818,7 @@ namespace Fifthweek.Api.Blogs.Queries
                 hashCode = (hashCode * 397) ^ (this.IsDefault != null ? this.IsDefault.GetHashCode() : 0);
                 hashCode = (hashCode * 397) ^ (this.PriceLastSetDate != null ? this.PriceLastSetDate.GetHashCode() : 0);
                 hashCode = (hashCode * 397) ^ (this.SubscriptionStartDate != null ? this.SubscriptionStartDate.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.IsVisibleToNonSubscribers != null ? this.IsVisibleToNonSubscribers.GetHashCode() : 0);
                 hashCode = (hashCode * 397) ^ (this.Collections != null 
         			? this.Collections.Aggregate(0, (previous, current) => 
         				{ 
@@ -3857,6 +3865,11 @@ namespace Fifthweek.Api.Blogs.Queries
             }
         
             if (!object.Equals(this.SubscriptionStartDate, other.SubscriptionStartDate))
+            {
+                return false;
+            }
+        
+            if (!object.Equals(this.IsVisibleToNonSubscribers, other.IsVisibleToNonSubscribers))
             {
                 return false;
             }

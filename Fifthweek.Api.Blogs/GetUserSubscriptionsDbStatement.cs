@@ -32,6 +32,7 @@
                 channel.{13} AS ChannelName,
                 channel.{14} AS CurrentPrice,
                 channel.{15} AS PriceLastSetDate,
+                channel.{19} AS IsVisibleToNonSubscribers,
                 subscription.{16} AS AcceptedPrice,
                 subscription.{17} AS SubscriptionStartDate
                 FROM {0} blog
@@ -58,7 +59,8 @@
             Channel.Fields.PriceLastSetDate,
             ChannelSubscription.Fields.AcceptedPriceInUsCentsPerWeek,
             ChannelSubscription.Fields.SubscriptionStartDate,
-            FifthweekUser.Fields.ProfileImageFileId);
+            FifthweekUser.Fields.ProfileImageFileId,
+            Channel.Fields.IsVisibleToNonSubscribers);
 
         private static readonly string FreeAccessQuery = string.Format(
             @"SELECT 
@@ -177,6 +179,7 @@
                     item.ChannelId == item.BlogId,
                     item.PriceLastSetDate,
                     item.SubscriptionStartDate,
+                    item.IsVisibleToNonSubscribers,
                     collections);
 
                 ((List<ChannelSubscriptionStatus>)blog.Channels).Add(channel);
@@ -208,6 +211,8 @@
             public DateTime PriceLastSetDate { get; set; }
 
             public DateTime SubscriptionStartDate { get; set; }
+
+            public bool IsVisibleToNonSubscribers { get; set; }
         }
 
         public class PartialCollection
