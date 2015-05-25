@@ -882,6 +882,7 @@ angular.module('webApp').factory('userStateStub',
     //             isDefault: false,
     //             priceLastSetDate: '2015-12-25T14:45:05Z',
     //             subscriptionStartDate: '2015-12-25T14:45:05Z',
+    //             isVisibleToNonSubscribers: false,
     //             collections: [
     //               {
     //                 collectionId: 'Base64Guid',
@@ -1009,6 +1010,7 @@ angular.module('webApp').factory('userStateStub',
     //             isDefault: false,
     //             priceLastSetDate: '2015-12-25T14:45:05Z',
     //             subscriptionStartDate: '2015-12-25T14:45:05Z',
+    //             isVisibleToNonSubscribers: false,
     //             collections: [
     //               {
     //                 collectionId: 'Base64Guid',
