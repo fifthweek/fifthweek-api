@@ -6,6 +6,7 @@
     using System.Text;
     using System.Web;
 
+    using Fifthweek.Api.Channels.Shared;
     using Fifthweek.Api.Core;
     using Fifthweek.Api.FileManagement.Shared;
     using Fifthweek.Api.Identity.Shared.Membership;
@@ -20,9 +21,9 @@
         
         private readonly FileId fileId2 = new FileId(Guid.NewGuid());
 
-        private readonly UserId userId = new UserId(Guid.NewGuid());
+        private readonly ChannelId channelId = new ChannelId(Guid.NewGuid());
 
-        private readonly UserId userId2 = new UserId(Guid.NewGuid());
+        private readonly ChannelId channelId2 = new ChannelId(Guid.NewGuid());
 
         private readonly FilePurpose validPublicPurpose = FilePurposes.GetAll().First(v => v.IsPublic);
         private readonly FilePurpose validPrivatePurpose = FilePurposes.GetAll().First(v => !v.IsPublic);
@@ -39,27 +40,27 @@
         [ExpectedException(typeof(ArgumentNullException))]
         public void WhenCalledWithNullPublicPurpose_ItShouldThrowAnException()
         {
-            this.target.GetBlobLocation(this.userId, this.fileId, null);
+            this.target.GetBlobLocation(this.channelId, this.fileId, null);
         }
 
         [TestMethod]
         [ExpectedException(typeof(ArgumentNullException))]
         public void WhenCalledWithNullFileIdAndPublicPurpose_ItShouldThrowAnException()
         {
-            this.target.GetBlobLocation(this.userId, null, this.validPublicPurpose.Name);
+            this.target.GetBlobLocation(this.channelId, null, this.validPublicPurpose.Name);
         }
 
         [TestMethod]
         [ExpectedException(typeof(ArgumentNullException))]
         public void WhenCalledWithNullFileIdAndPrivatePurpose_ItShouldThrowAnException()
         {
-            this.target.GetBlobLocation(this.userId, null, this.validPrivatePurpose.Name);
+            this.target.GetBlobLocation(this.channelId, null, this.validPrivatePurpose.Name);
         }
 
         [TestMethod]
         public void WhenCalledWithNullUserIdAndPublicPurpose_ItShouldNotThrowAnException()
         {
-            this.target.GetBlobLocation(this.userId, this.fileId, this.validPublicPurpose.Name);
+            this.target.GetBlobLocation(this.channelId, this.fileId, this.validPublicPurpose.Name);
         }
 
         [TestMethod]
@@ -73,7 +74,7 @@
         [ExpectedException(typeof(BadRequestException))]
         public void WhenCalledWithUnknownPurpose_ItShouldThrowAnException()
         {
-            this.target.GetBlobLocation(this.userId, this.fileId, "Unknown_Purpose");
+            this.target.GetBlobLocation(this.channelId, this.fileId, "Unknown_Purpose");
         }
 
         [TestMethod]
@@ -92,7 +93,7 @@
 
         private void ItShouldGenerateAUrlFriendlyName(string purpose)
         {
-            var result = this.target.GetBlobLocation(this.userId, this.fileId, purpose);
+            var result = this.target.GetBlobLocation(this.channelId, this.fileId, purpose);
 
             var encodedContainerName = HttpUtility.UrlEncode(result.ContainerName);
             var encodedBlobName = HttpUtility.UrlEncode(result.BlobName);
@@ -105,29 +106,29 @@
         {
             if (!isPublic)
             {
-                var result = this.target.GetBlobLocation(this.userId, this.fileId, purpose);
-                Assert.AreEqual(this.userId.Value.ToString("N"), result.ContainerName);
+                var result = this.target.GetBlobLocation(this.channelId, this.fileId, purpose);
+                Assert.AreEqual(this.channelId.Value.ToString("N"), result.ContainerName);
             }
         }
 
         private void ItShouldGenerateEncodeStyleBlobNames(string purpose)
         {
-            var result = this.target.GetBlobLocation(this.userId, this.fileId, purpose);
+            var result = this.target.GetBlobLocation(this.channelId, this.fileId, purpose);
             Assert.AreEqual(this.fileId.Value.EncodeGuid(), result.BlobName);
         }
 
         private void ItShouldGenerateTheSameOutputGivenTheSameInputs(string purpose)
         {
-            var result = this.target.GetBlobLocation(this.userId, this.fileId, purpose);
-            var result2 = this.target.GetBlobLocation(this.userId, this.fileId, purpose);
+            var result = this.target.GetBlobLocation(this.channelId, this.fileId, purpose);
+            var result2 = this.target.GetBlobLocation(this.channelId, this.fileId, purpose);
             Assert.AreEqual(result2, result);
         }
 
         private void ItShouldGenerateDifferentOutputsGivenDifferentInputs(string purpose, bool isPublic)
         {
-            var result = this.target.GetBlobLocation(this.userId, this.fileId, purpose);
-            var result2 = this.target.GetBlobLocation(this.userId, this.fileId2, purpose);
-            var result3 = this.target.GetBlobLocation(this.userId2, this.fileId, purpose);
+            var result = this.target.GetBlobLocation(this.channelId, this.fileId, purpose);
+            var result2 = this.target.GetBlobLocation(this.channelId, this.fileId2, purpose);
+            var result3 = this.target.GetBlobLocation(this.channelId2, this.fileId, purpose);
             
             Assert.AreNotEqual(result2, result);
 
@@ -143,7 +144,7 @@
 
         private void ItShouldGeneratePublicAndPrivateUrlsCorrectly(string purpose, bool isPublic)
         {
-            var result = this.target.GetBlobLocation(this.userId, this.fileId, purpose);
+            var result = this.target.GetBlobLocation(this.channelId, this.fileId, purpose);
 
             if (isPublic)
             {

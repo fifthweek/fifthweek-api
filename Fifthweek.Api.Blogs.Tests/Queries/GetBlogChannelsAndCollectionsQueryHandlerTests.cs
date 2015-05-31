@@ -104,7 +104,7 @@
 
             var fileInformation = new FileInformation(HeaderFileId, "container");
             this.fileInformationAggregator.Setup(
-                v => v.GetFileInformationAsync(CreatorId, HeaderFileId, FilePurposes.ProfileHeaderImage))
+                v => v.GetFileInformationAsync(null, HeaderFileId, FilePurposes.ProfileHeaderImage))
                 .ReturnsAsync(fileInformation);
 
             var result = await this.target.HandleAsync(new GetBlogChannelsAndCollectionsQuery(BlogId));

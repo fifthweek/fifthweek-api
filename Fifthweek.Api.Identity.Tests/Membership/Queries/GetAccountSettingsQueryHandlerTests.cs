@@ -94,7 +94,7 @@
             this.getAccountSettings.Setup(v => v.ExecuteAsync(UserId))
                 .ReturnsAsync(new GetAccountSettingsDbResult(Name, Username, Email, FileId));
 
-            this.fileInformationAggregator.Setup(v => v.GetFileInformationAsync(UserId, FileId, FilePurposes.ProfileImage))
+            this.fileInformationAggregator.Setup(v => v.GetFileInformationAsync(null, FileId, FilePurposes.ProfileImage))
                 .ReturnsAsync(new FileInformation(FileId, ContainerName));
 
             var result = await this.target.HandleAsync(new GetAccountSettingsQuery(Requester, UserId));

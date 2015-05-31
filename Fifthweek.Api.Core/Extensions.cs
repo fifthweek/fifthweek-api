@@ -2,6 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Linq;
     using System.Web;
     using System.Web.Http.Dependencies;
 
@@ -51,6 +52,16 @@
             {
                 throw new BadRequestException("The value '" + argumentName + "' must be provided in the request URL.");
             }
+        }
+
+        public static IEnumerable<T> EmptyIfNull<T>(this IEnumerable<T> value)
+        {
+            if (value == null)
+            {
+                return Enumerable.Empty<T>();
+            }
+
+            return value;
         }
     }
 }

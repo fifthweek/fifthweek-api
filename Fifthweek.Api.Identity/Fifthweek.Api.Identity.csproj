@@ -198,6 +198,10 @@
       <Project>{b2d572a4-86c5-4f16-ab6a-ce87a63e08dd}</Project>
       <Name>Fifthweek.Api.Blogs.Shared</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Fifthweek.Api.Channels.Shared\Fifthweek.Api.Channels.Shared.csproj">
+      <Project>{DF1BB4E7-5315-4E5C-BA73-6DFA4D9E7564}</Project>
+      <Name>Fifthweek.Api.Channels.Shared</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Fifthweek.Api.Core\Fifthweek.Api.Core.csproj">
       <Project>{bd52863e-063d-45a5-9ca8-7541804d1313}</Project>
       <Name>Fifthweek.Api.Core</Name>

@@ -3,6 +3,7 @@
     using System.Collections.Generic;
 
     using Fifthweek.Api.Azure;
+    using Fifthweek.Api.Channels.Shared;
     using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.CodeGeneration;
 
@@ -18,7 +19,7 @@
         [AutoConstructor]
         public partial class PrivateAccessSignature
         {
-            public UserId CreatorId { get; private set; }
+            public ChannelId ChannelId { get; private set; }
 
             public BlobContainerSharedAccessInformation Information { get; private set; }
         }

@@ -122,12 +122,12 @@
 
             var headerFileInformation = new FileInformation(HeaderFileId, "container");
             this.fileInformationAggregator.Setup(
-                v => v.GetFileInformationAsync(CreatorId, HeaderFileId, FilePurposes.ProfileHeaderImage))
+                v => v.GetFileInformationAsync(null, HeaderFileId, FilePurposes.ProfileHeaderImage))
                 .ReturnsAsync(headerFileInformation);
 
             var profileFileInformation = new FileInformation(ProfileImageFileId, "container");
             this.fileInformationAggregator.Setup(
-                v => v.GetFileInformationAsync(CreatorId, ProfileImageFileId, FilePurposes.ProfileImage))
+                v => v.GetFileInformationAsync(null, ProfileImageFileId, FilePurposes.ProfileImage))
                 .ReturnsAsync(profileFileInformation);
 
             var result = await this.target.HandleAsync(new GetLandingPageQuery(Username));

@@ -32,7 +32,7 @@
                 if (item.ProfileImageFileId != null)
                 {
                     profileImage = await this.fileInformationAggregator.GetFileInformationAsync(
-                    item.CreatorId,
+                    null,
                     item.ProfileImageFileId,
                     FilePurposes.ProfileImage);
                 }

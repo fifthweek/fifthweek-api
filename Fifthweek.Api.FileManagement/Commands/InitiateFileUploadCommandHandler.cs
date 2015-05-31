@@ -4,6 +4,7 @@
     using System.Threading.Tasks;
 
     using Fifthweek.Api.Azure;
+    using Fifthweek.Api.Channels.Shared;
     using Fifthweek.Api.Core;
     using Fifthweek.Api.FileManagement.Shared;
     using Fifthweek.Api.Identity.Shared.Membership;
@@ -14,6 +15,7 @@
     public partial class InitiateFileUploadCommandHandler : ICommandHandler<InitiateFileUploadCommand>
     {
         private readonly IRequesterSecurity requesterSecurity;
+        private readonly IChannelSecurity channelSecurity;
         private readonly IBlobService blobService;
         private readonly IBlobLocationGenerator blobLocationGenerator;
         private readonly IAddNewFileDbStatement addNewFile;
@@ -23,8 +25,12 @@
             command.AssertNotNull("command");
 
             var authenticatedUserId = await this.requesterSecurity.AuthenticateAsync(command.Requester);
+            if (command.ChannelId != null)
+            {
+                await this.channelSecurity.AssertWriteAllowedAsync(authenticatedUserId, command.ChannelId);
+            }
 
-            var blobLocation = this.blobLocationGenerator.GetBlobLocation(authenticatedUserId, command.FileId, command.Purpose);
+            var blobLocation = this.blobLocationGenerator.GetBlobLocation(command.ChannelId, command.FileId, command.Purpose);
 
             if (blobLocation.ContainerName != FileManagement.Constants.PublicFileBlobContainerName)
             {

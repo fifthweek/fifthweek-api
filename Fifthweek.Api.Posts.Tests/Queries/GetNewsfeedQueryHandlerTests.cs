@@ -106,8 +106,8 @@
             this.getNewsfeedDbStatement.Setup(v => v.ExecuteAsync(UserId, CreatorId, ChannelIds, CollectionIds, It.IsAny<DateTime>(), Origin.Value, SearchForwards, StartIndex, Count))
                 .ReturnsAsync(NewsfeedPosts);
 
-            this.fileInformationAggregator.Setup(v => v.GetFileInformationAsync(CreatorId, It.IsAny<FileId>(), It.IsAny<string>()))
-                .Returns<UserId, FileId, string>((u, f, p) => Task.FromResult(new FileInformation(f, string.Empty)));
+            this.fileInformationAggregator.Setup(v => v.GetFileInformationAsync(It.IsAny<ChannelId>(), It.IsAny<FileId>(), It.IsAny<string>()))
+                .Returns<ChannelId, FileId, string>((c, f, p) => Task.FromResult(new FileInformation(f, c.ToString())));
 
             var result = await this.target.HandleAsync(new GetNewsfeedQuery(Requester, CreatorId, ChannelIds, CollectionIds, Origin, SearchForwards, StartIndex, Count));
 
@@ -117,6 +117,7 @@
                 if (item.Input.FileId != null)
                 {
                     Assert.AreEqual(item.Input.FileId, item.Output.File.FileId);
+                    Assert.AreEqual(item.Input.ChannelId.ToString(), item.Output.File.ContainerName);
                     Assert.AreEqual(item.Input.FileName, item.Output.FileSource.FileName);
                     Assert.AreEqual(item.Input.FileExtension, item.Output.FileSource.FileExtension);
                     Assert.AreEqual(item.Input.FileSize, item.Output.FileSource.Size);
@@ -126,6 +127,7 @@
                 if (item.Input.ImageId != null)
                 {
                     Assert.AreEqual(item.Input.ImageId, item.Output.Image.FileId);
+                    Assert.AreEqual(item.Input.ChannelId.ToString(), item.Output.Image.ContainerName);
                     Assert.AreEqual(item.Input.ImageName, item.Output.ImageSource.FileName);
                     Assert.AreEqual(item.Input.ImageExtension, item.Output.ImageSource.FileExtension);
                     Assert.AreEqual(item.Input.ImageSize, item.Output.ImageSource.Size);
@@ -156,8 +158,8 @@
                 })
                 .ReturnsAsync(NewsfeedPosts);
 
-            this.fileInformationAggregator.Setup(v => v.GetFileInformationAsync(CreatorId, It.IsAny<FileId>(), It.IsAny<string>()))
-                .Returns<UserId, FileId, string>((u, f, p) => Task.FromResult(new FileInformation(f, string.Empty)));
+            this.fileInformationAggregator.Setup(v => v.GetFileInformationAsync(It.IsAny<ChannelId>(), It.IsAny<FileId>(), It.IsAny<string>()))
+                .Returns<ChannelId, FileId, string>((c, f, p) => Task.FromResult(new FileInformation(f, c.ToString())));
 
             await this.target.HandleAsync(new GetNewsfeedQuery(Requester, CreatorId, ChannelIds, CollectionIds, null, SearchForwards, StartIndex, Count));
 

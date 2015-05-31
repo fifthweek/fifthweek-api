@@ -5,6 +5,7 @@
     using System.Threading.Tasks;
 
     using Fifthweek.Api.Azure;
+    using Fifthweek.Api.Channels.Shared;
     using Fifthweek.Api.Core;
     using Fifthweek.Api.FileManagement.Queries;
     using Fifthweek.Api.FileManagement.Shared;
@@ -20,7 +21,8 @@
     {
         private static readonly UserId UserId = new UserId(Guid.NewGuid());
         private static readonly Requester Requester = Requester.Authenticated(UserId);
-        private static readonly List<UserId> CreatorIds = new List<UserId> { new UserId(Guid.NewGuid()), new UserId(Guid.NewGuid()) };
+        private static readonly List<ChannelId> CreatorChannelIds = new List<ChannelId> { new ChannelId(Guid.NewGuid()), new ChannelId(Guid.NewGuid()) };
+        private static readonly List<ChannelId> SubscribedChannelIds = new List<ChannelId> { new ChannelId(Guid.NewGuid()), new ChannelId(Guid.NewGuid()) };
         
         private GetUserAccessSignaturesQueryHandler target;
 
@@ -54,14 +56,14 @@
         [ExpectedException(typeof(UnauthorizedException))]
         public async Task WhenUnauthenticatedAndRequestingForUserId_ItShouldThrowUnauthorizedException()
         {
-            await this.target.HandleAsync(new GetUserAccessSignaturesQuery(Requester.Unauthenticated, UserId, CreatorIds));
+            await this.target.HandleAsync(new GetUserAccessSignaturesQuery(Requester.Unauthenticated, UserId, CreatorChannelIds, SubscribedChannelIds));
         }
 
         [TestMethod]
         [ExpectedException(typeof(UnauthorizedException))]
         public async Task WhenRequestingForNonAuthenticatedUserId_ItShouldThrowUnauthorizedException()
         {
-            await this.target.HandleAsync(new GetUserAccessSignaturesQuery(Requester, new UserId(Guid.NewGuid()), CreatorIds));
+            await this.target.HandleAsync(new GetUserAccessSignaturesQuery(Requester, new UserId(Guid.NewGuid()),CreatorChannelIds, SubscribedChannelIds));
         }
 
         [TestMethod]
@@ -72,7 +74,7 @@
             this.blobService.Setup(v => v.GetBlobContainerSharedAccessInformationForReadingAsync(FileManagement.Constants.PublicFileBlobContainerName, It.IsAny<DateTime>()))
                 .ReturnsAsync(filesInformation);
 
-            var result = await this.target.HandleAsync(new GetUserAccessSignaturesQuery(Requester.Unauthenticated, null, CreatorIds));
+            var result = await this.target.HandleAsync(new GetUserAccessSignaturesQuery(Requester.Unauthenticated, null, CreatorChannelIds, SubscribedChannelIds));
 
             Assert.IsNotNull(result);
             Assert.IsNotNull(result.PublicSignature);
@@ -91,38 +93,45 @@
             this.blobService.Setup(v => v.GetBlobContainerSharedAccessInformationForReadingAsync(FileManagement.Constants.PublicFileBlobContainerName, expectedPublicExpiry))
                 .ReturnsAsync(publicFilesInformation);
 
-            var userContainerName = "containerName";
+            var userContainerName1 = "creatorContainerName1";
+            var userContainerName2 = "creatorContainerName2";
             var creatorContainerName1 = "containerName1";
             var creatorContainerName2 = "containerName2";
-            this.blobLocationGenerator.Setup(v => v.GetBlobContainerName(UserId)).Returns(userContainerName);
-            this.blobLocationGenerator.Setup(v => v.GetBlobContainerName(CreatorIds[0])).Returns(creatorContainerName1);
-            this.blobLocationGenerator.Setup(v => v.GetBlobContainerName(CreatorIds[1])).Returns(creatorContainerName2);
+            this.blobLocationGenerator.Setup(v => v.GetBlobContainerName(CreatorChannelIds[0])).Returns(userContainerName1);
+            this.blobLocationGenerator.Setup(v => v.GetBlobContainerName(CreatorChannelIds[1])).Returns(userContainerName2);
+            this.blobLocationGenerator.Setup(v => v.GetBlobContainerName(SubscribedChannelIds[0])).Returns(creatorContainerName1);
+            this.blobLocationGenerator.Setup(v => v.GetBlobContainerName(SubscribedChannelIds[1])).Returns(creatorContainerName2);
 
-            var userInformation = new BlobContainerSharedAccessInformation(userContainerName, "useruri", "usersig", expectedPrivateExpiry);
+            var userInformation1 = new BlobContainerSharedAccessInformation(userContainerName1, "useruri", "usersig", expectedPrivateExpiry);
+            var userInformation2 = new BlobContainerSharedAccessInformation(userContainerName2, "useruri", "usersig", expectedPrivateExpiry);
             var creatorInformation1 = new BlobContainerSharedAccessInformation(creatorContainerName1, "useruri1", "usersig1", expectedPrivateExpiry);
             var creatorInformation2 = new BlobContainerSharedAccessInformation(creatorContainerName2, "useruri2", "usersig2", expectedPrivateExpiry);
 
-            this.blobService.Setup(v => v.GetBlobContainerSharedAccessInformationForReadingAsync(userContainerName, expectedPrivateExpiry))
-                .ReturnsAsync(userInformation);
+            this.blobService.Setup(v => v.GetBlobContainerSharedAccessInformationForReadingAsync(userContainerName1, expectedPrivateExpiry))
+                .ReturnsAsync(userInformation1);
+            this.blobService.Setup(v => v.GetBlobContainerSharedAccessInformationForReadingAsync(userContainerName2, expectedPrivateExpiry))
+                .ReturnsAsync(userInformation2);
             this.blobService.Setup(v => v.GetBlobContainerSharedAccessInformationForReadingAsync(creatorContainerName1, expectedPrivateExpiry))
                 .ReturnsAsync(creatorInformation1);
             this.blobService.Setup(v => v.GetBlobContainerSharedAccessInformationForReadingAsync(creatorContainerName2, expectedPrivateExpiry))
                 .ReturnsAsync(creatorInformation2);
 
-            var result = await this.target.HandleAsync(new GetUserAccessSignaturesQuery(Requester, UserId, CreatorIds));
+            var result = await this.target.HandleAsync(new GetUserAccessSignaturesQuery(Requester, UserId, CreatorChannelIds, SubscribedChannelIds));
 
             Assert.IsNotNull(result);
             Assert.IsNotNull(result.PublicSignature);
             Assert.AreEqual(publicFilesInformation, result.PublicSignature);
 
-            Assert.AreEqual(3, result.PrivateSignatures.Count);
+            Assert.AreEqual(4, result.PrivateSignatures.Count);
 
-            Assert.AreEqual(UserId, result.PrivateSignatures[0].CreatorId);
-            Assert.AreEqual(userInformation, result.PrivateSignatures[0].Information);
-            Assert.AreEqual(CreatorIds[0], result.PrivateSignatures[1].CreatorId);
-            Assert.AreEqual(creatorInformation1, result.PrivateSignatures[1].Information);
-            Assert.AreEqual(CreatorIds[1], result.PrivateSignatures[2].CreatorId);
-            Assert.AreEqual(creatorInformation2, result.PrivateSignatures[2].Information);
+            Assert.AreEqual(CreatorChannelIds[0], result.PrivateSignatures[0].ChannelId);
+            Assert.AreEqual(userInformation1, result.PrivateSignatures[0].Information);
+            Assert.AreEqual(CreatorChannelIds[1], result.PrivateSignatures[1].ChannelId);
+            Assert.AreEqual(userInformation2, result.PrivateSignatures[1].Information);
+            Assert.AreEqual(SubscribedChannelIds[0], result.PrivateSignatures[2].ChannelId);
+            Assert.AreEqual(creatorInformation1, result.PrivateSignatures[2].Information);
+            Assert.AreEqual(SubscribedChannelIds[1], result.PrivateSignatures[3].ChannelId);
+            Assert.AreEqual(creatorInformation2, result.PrivateSignatures[3].Information);
         }
 
         [TestMethod]

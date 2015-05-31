@@ -26,7 +26,7 @@
             if (blog.HeaderImageFileId != null)
             {
                 headerFileInformation = await this.fileInformationAggregator.GetFileInformationAsync(
-                        blog.CreatorId,
+                        null,
                         blog.HeaderImageFileId,
                         FilePurposes.ProfileHeaderImage);
             }

@@ -102,6 +102,10 @@
       <Project>{5db142b7-3152-447e-8816-33a90ba9ef76}</Project>
       <Name>Fifthweek.Api.Blogs</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Fifthweek.Api.Channels.Shared\Fifthweek.Api.Channels.Shared.csproj">
+      <Project>{DF1BB4E7-5315-4E5C-BA73-6DFA4D9E7564}</Project>
+      <Name>Fifthweek.Api.Channels.Shared</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Fifthweek.Api.Collections\Fifthweek.Api.Collections.csproj">
       <Project>{92FF5E2B-F153-433F-92F6-DD580D9E09B8}</Project>
       <Name>Fifthweek.Api.Collections</Name>

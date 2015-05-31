@@ -1,10 +1,12 @@
 ﻿namespace Fifthweek.Api.Aggregations.Queries
 {
+    using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
 
     using Fifthweek.Api.Blogs;
     using Fifthweek.Api.Blogs.Queries;
+    using Fifthweek.Api.Channels.Shared;
     using Fifthweek.Api.Collections.Queries;
     using Fifthweek.Api.Core;
     using Fifthweek.Api.FileManagement.Queries;
@@ -76,8 +78,19 @@
                 userSubscriptions = await blogSubscriptionsTask;
             }
 
-            var subscribedUserIds = userSubscriptions == null ? null : userSubscriptions.Blogs.Select(v => v.CreatorId).Distinct().ToList();
-            var userAccessSignatures = await this.getUserAccessSignatures.HandleAsync(new GetUserAccessSignaturesQuery(query.Requester, query.RequestedUserId, subscribedUserIds));
+            List<ChannelId> creatorChannelIds = null;
+            if (blog != null)
+            {
+                creatorChannelIds = blog.Channels.Select(v => v.ChannelId).Distinct().ToList();
+            }
+
+            List<ChannelId> subscribedChannelIds = null;
+            if (userSubscriptions != null)
+            {
+                subscribedChannelIds = userSubscriptions.Blogs.SelectMany(v => v.Channels).Select(v => v.ChannelId).Distinct().ToList();
+            }
+
+            var userAccessSignatures = await this.getUserAccessSignatures.HandleAsync(new GetUserAccessSignaturesQuery(query.Requester, query.RequestedUserId, creatorChannelIds, subscribedChannelIds));
 
             return new UserState(
                 userAccessSignatures, 

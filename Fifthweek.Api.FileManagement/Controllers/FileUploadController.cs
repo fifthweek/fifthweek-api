@@ -5,6 +5,7 @@
     using System.Web.Http.Description;
 
     using Fifthweek.Api.Azure;
+    using Fifthweek.Api.Channels.Shared;
     using Fifthweek.Api.Core;
     using Fifthweek.Api.FileManagement.Commands;
     using Fifthweek.Api.FileManagement.Queries;
@@ -34,23 +35,26 @@
             data.FilePath.AssertBodyProvided("filePath");
             data.Purpose.AssertBodyProvided("purpose");
 
+            var channelId = data.ChannelId == null ? null : new ChannelId(data.ChannelId.DecodeGuid());
             var fileId = new FileId(this.guidCreator.CreateSqlSequential());
             var requester = this.requesterContext.GetRequester();
 
-            await this.initiateFileUpload.HandleAsync(new InitiateFileUploadCommand(requester, fileId, data.FilePath, data.Purpose));
-            var accessInformation = await this.generateWritableBlobUri.HandleAsync(new GenerateWritableBlobUriQuery(requester, fileId, data.Purpose));
+            await this.initiateFileUpload.HandleAsync(new InitiateFileUploadCommand(requester, channelId, fileId, data.FilePath, data.Purpose));
+            var accessInformation = await this.generateWritableBlobUri.HandleAsync(new GenerateWritableBlobUriQuery(requester, channelId, fileId, data.Purpose));
 
             return new GrantedUpload(fileId, accessInformation);
         }
 
-        [Route("uploadCompleteNotifications/{fileId}")]
-        public async Task PostUploadCompleteNotificationAsync(string fileId)
+        [Route("uploadCompleteNotifications")]
+        public async Task PostUploadCompleteNotificationAsync(UploadCompleteNotification data)
         {
-            fileId.AssertBodyProvided("fileId");
+            data.AssertBodyProvided("data");
+            data.FileId.AssertBodyProvided("fileId");
 
-            var parsedFileId = new FileId(fileId.DecodeGuid());
+            var channelId = data.ChannelId == null ? null : new ChannelId(data.ChannelId.DecodeGuid());
+            var fileId = new FileId(data.FileId.DecodeGuid());
             var requester = this.requesterContext.GetRequester();
-            await this.completeFileUpload.HandleAsync(new CompleteFileUploadCommand(requester, parsedFileId));
+            await this.completeFileUpload.HandleAsync(new CompleteFileUploadCommand(requester, channelId, fileId));
         }
     }
 }

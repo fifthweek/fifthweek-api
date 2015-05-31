@@ -113,8 +113,8 @@
             this.getCreatorBacklogDbStatement.Setup(v => v.ExecuteAsync(UserId, It.IsAny<DateTime>()))
                 .ReturnsAsync(BacklogPosts);
 
-            this.fileInformationAggregator.Setup(v => v.GetFileInformationAsync(UserId, It.IsAny<FileId>(), It.IsAny<string>()))
-                .Returns<UserId, FileId, string>((u, f, p) => Task.FromResult(new FileInformation(f, string.Empty)));
+            this.fileInformationAggregator.Setup(v => v.GetFileInformationAsync(It.IsAny<ChannelId>(), It.IsAny<FileId>(), It.IsAny<string>()))
+                .Returns<ChannelId, FileId, string>((c, f, p) => Task.FromResult(new FileInformation(f, c.ToString())));
 
             var result = await this.target.HandleAsync(new GetCreatorBacklogQuery(Requester, UserId));
 
@@ -124,6 +124,7 @@
                 if (item.Input.FileId != null)
                 {
                     Assert.AreEqual(item.Input.FileId, item.Output.File.FileId);
+                    Assert.AreEqual(item.Input.ChannelId.ToString(), item.Output.File.ContainerName);
                     Assert.AreEqual(item.Input.FileName, item.Output.FileSource.FileName);
                     Assert.AreEqual(item.Input.FileExtension, item.Output.FileSource.FileExtension);
                     Assert.AreEqual(item.Input.FileSize, item.Output.FileSource.Size);
@@ -133,6 +134,7 @@
                 if (item.Input.ImageId != null)
                 {
                     Assert.AreEqual(item.Input.ImageId, item.Output.Image.FileId);
+                    Assert.AreEqual(item.Input.ChannelId.ToString(), item.Output.Image.ContainerName);
                     Assert.AreEqual(item.Input.ImageName, item.Output.ImageSource.FileName);
                     Assert.AreEqual(item.Input.ImageExtension, item.Output.ImageSource.FileExtension);
                     Assert.AreEqual(item.Input.ImageSize, item.Output.ImageSource.Size);

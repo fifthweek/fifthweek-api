@@ -39,7 +39,7 @@
                 if (post.FileId != null)
                 {
                     file = await this.fileInformationAggregator.GetFileInformationAsync(
-                        query.RequestedUserId,
+                        post.ChannelId,
                         post.FileId,
                         FilePurposes.PostFile);
                 }
@@ -48,7 +48,7 @@
                 if (post.ImageId != null)
                 {
                     image = await this.fileInformationAggregator.GetFileInformationAsync(
-                       query.RequestedUserId,
+                       post.ChannelId,
                        post.ImageId,
                        FilePurposes.PostImage);
                 }

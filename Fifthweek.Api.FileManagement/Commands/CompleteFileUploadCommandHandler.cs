@@ -4,6 +4,7 @@
     using System.Threading.Tasks;
 
     using Fifthweek.Api.Azure;
+    using Fifthweek.Api.Channels.Shared;
     using Fifthweek.Api.Core;
     using Fifthweek.Api.FileManagement.Shared;
     using Fifthweek.Api.Identity.Shared.Membership;
@@ -20,19 +21,24 @@
         private readonly IBlobLocationGenerator blobLocationGenerator;
         private readonly IRequesterSecurity requesterSecurity;
         private readonly IFileProcessor fileProcessor;
+        private readonly IChannelSecurity channelSecurity;
         
         public async Task HandleAsync(CompleteFileUploadCommand command)
         {
             command.AssertNotNull("command");
 
             UserId userId = await this.requesterSecurity.AuthenticateAsync(command.Requester);
+            if (command.ChannelId != null)
+            {
+                await this.channelSecurity.AssertWriteAllowedAsync(userId, command.ChannelId);
+            }
 
             var file = await this.getFileWaitingForUpload.ExecuteAsync(command.FileId);
             await this.requesterSecurity.AuthenticateAsAsync(command.Requester, file.UserId);
 
             var mimeType = this.mimeTypeMap.GetMimeType(file.FileExtension);
 
-            var blobLocation = this.blobLocationGenerator.GetBlobLocation(userId, command.FileId, file.Purpose);
+            var blobLocation = this.blobLocationGenerator.GetBlobLocation(command.ChannelId, command.FileId, file.Purpose);
 
             var timeSpan = this.GetExpiryTimeSpan(blobLocation);
 

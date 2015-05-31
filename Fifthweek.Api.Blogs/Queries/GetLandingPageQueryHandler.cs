@@ -31,7 +31,7 @@
             if (blog.HeaderImageFileId != null)
             {
                 headerFileInformation = await this.fileInformationAggregator.GetFileInformationAsync(
-                        blog.CreatorId,
+                        null,
                         blog.HeaderImageFileId,
                         FilePurposes.ProfileHeaderImage);
             }
@@ -40,7 +40,7 @@
             if (queryResult.ProfileImageFileId != null)
             {
                 profileImageFileInformation = await this.fileInformationAggregator.GetFileInformationAsync(
-                        queryResult.UserId,
+                        null,
                         queryResult.ProfileImageFileId,
                         FilePurposes.ProfileImage);
             }

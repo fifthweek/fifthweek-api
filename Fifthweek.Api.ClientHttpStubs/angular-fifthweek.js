@@ -736,6 +736,7 @@ angular.module('webApp').factory('fileUploadStub',
     var service = {};
 
     // data = {
+    //   channelId: 'Base64Guid', /* optional */
     //   filePath: '',
     //   purpose: ''
     // }
@@ -755,9 +756,12 @@ angular.module('webApp').factory('fileUploadStub',
       });
     };
 
-    // fileId = 'Base64Guid'
-    service.postUploadCompleteNotification = function(fileId) {
-      return $http.post(apiBaseUri + 'files/uploadCompleteNotifications/' + encodeURIComponent(fileId)).catch(function(response) {
+    // data = {
+    //   channelId: 'Base64Guid', /* optional */
+    //   fileId: 'Base64Guid'
+    // }
+    service.postUploadCompleteNotification = function(data) {
+      return $http.post(apiBaseUri + 'files/uploadCompleteNotifications', data).catch(function(response) {
         return $q.reject(utilities.getHttpError(response));
       });
     };
@@ -784,7 +788,7 @@ angular.module('webApp').factory('userStateStub',
     //     },
     //     privateSignatures: [
     //       {
-    //         creatorId: 'Base64Guid',
+    //         channelId: 'Base64Guid',
     //         information: {
     //           containerName: '',
     //           uri: '',
@@ -912,7 +916,7 @@ angular.module('webApp').factory('userStateStub',
     //     },
     //     privateSignatures: [
     //       {
-    //         creatorId: 'Base64Guid',
+    //         channelId: 'Base64Guid',
     //         information: {
     //           containerName: '',
     //           uri: '',

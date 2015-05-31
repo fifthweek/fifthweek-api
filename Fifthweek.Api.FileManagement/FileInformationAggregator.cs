@@ -3,6 +3,7 @@
     using System.Threading.Tasks;
 
     using Fifthweek.Api.Azure;
+    using Fifthweek.Api.Channels.Shared;
     using Fifthweek.Api.Core;
     using Fifthweek.Api.FileManagement.Shared;
     using Fifthweek.Api.Identity.Shared.Membership;
@@ -15,13 +16,13 @@
         ////private readonly IBlobService blobService;
         private readonly IBlobLocationGenerator blobLocationGenerator;
 
-        public async Task<FileInformation> GetFileInformationAsync(UserId fileOwnerId, FileId fileId, string filePurpose)
+        public async Task<FileInformation> GetFileInformationAsync(ChannelId channelId, FileId fileId, string filePurpose)
         {
             fileId.AssertNotNull("fileId");
             filePurpose.AssertNotNull("filePurpose");
 
             var blobLocation = this.blobLocationGenerator.GetBlobLocation(
-                fileOwnerId,
+                channelId,
                 fileId,
                 filePurpose);
 

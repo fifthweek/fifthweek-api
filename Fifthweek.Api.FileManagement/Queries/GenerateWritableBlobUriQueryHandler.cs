@@ -4,6 +4,7 @@
     using System.Threading.Tasks;
 
     using Fifthweek.Api.Azure;
+    using Fifthweek.Api.Channels.Shared;
     using Fifthweek.Api.Core;
     using Fifthweek.Api.FileManagement.Shared;
     using Fifthweek.Api.Identity.Shared.Membership;
@@ -17,6 +18,7 @@
         private readonly IBlobLocationGenerator blobLocationGenerator;
         private readonly IFileSecurity fileSecurity;
         private readonly IRequesterSecurity requesterSecurity;
+        private readonly IChannelSecurity channelSecurity;
 
         public async Task<BlobSharedAccessInformation> HandleAsync(GenerateWritableBlobUriQuery query)
         {
@@ -26,7 +28,12 @@
 
             await this.fileSecurity.AssertReferenceAllowedAsync(userId, query.FileId);
 
-            var blobLocation = this.blobLocationGenerator.GetBlobLocation(userId, query.FileId, query.Purpose);
+            if (query.ChannelId != null)
+            {
+                await this.channelSecurity.AssertWriteAllowedAsync(userId, query.ChannelId);
+            }
+
+            var blobLocation = this.blobLocationGenerator.GetBlobLocation(query.ChannelId, query.FileId, query.Purpose);
             var expiry = DateTime.UtcNow.Add(FileManagement.Constants.WriteSignatureTimeSpan);
             return await this.blobService.GetBlobSharedAccessInformationForWritingAsync(blobLocation.ContainerName, blobLocation.BlobName, expiry);
         }

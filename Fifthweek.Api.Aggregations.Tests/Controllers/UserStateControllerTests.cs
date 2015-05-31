@@ -7,6 +7,7 @@
     using Fifthweek.Api.Aggregations.Controllers;
     using Fifthweek.Api.Aggregations.Queries;
     using Fifthweek.Api.Azure;
+    using Fifthweek.Api.Channels.Shared;
     using Fifthweek.Api.Core;
     using Fifthweek.Api.FileManagement.Queries;
     using Fifthweek.Api.Identity.Shared.Membership;
@@ -30,7 +31,7 @@
                     {
                         new UserAccessSignatures.
                             PrivateAccessSignature(
-                            new UserId(Guid.NewGuid()),
+                            new ChannelId(Guid.NewGuid()),
                             new BlobContainerSharedAccessInformation(
                             "containerName2",
                             "uri2",

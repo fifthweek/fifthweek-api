@@ -958,13 +958,13 @@ describe('file upload stub', function() {
   });
 
   it('should post upload complete notification', function() {
-    var fileId = 'value0';
+    var data = 'value-body';
 
     var responseData = 'response data';
-    $httpBackend.expectPOST(fifthweekConstants.apiBaseUri + 'files/uploadCompleteNotifications/' + encodeURIComponent(fileId)).respond(200, responseData);
+    $httpBackend.expectPOST(fifthweekConstants.apiBaseUri + 'files/uploadCompleteNotifications', data).respond(200, responseData);
 
     var result = null;
-    target.postUploadCompleteNotification(fileId).then(function(response) { result = response.data; });
+    target.postUploadCompleteNotification(data).then(function(response) { result = response.data; });
 
     $httpBackend.flush();
     $rootScope.$apply();

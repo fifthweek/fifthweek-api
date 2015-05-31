@@ -1,5 +1,6 @@
 ﻿namespace Fifthweek.Api.FileManagement
 {
+    using Fifthweek.Api.Channels.Shared;
     using Fifthweek.Api.Core;
     using Fifthweek.Api.FileManagement.Shared;
     using Fifthweek.Api.Identity.Shared.Membership;
@@ -7,7 +8,7 @@
 
     public class BlobLocationGenerator : IBlobLocationGenerator
     {
-        public BlobLocation GetBlobLocation(UserId userId, FileId fileId, string filePurpose)
+        public BlobLocation GetBlobLocation(ChannelId channelId, FileId fileId, string filePurpose)
         {
             fileId.AssertNotNull("fileId");
             filePurpose.AssertNotNull("filePurpose");
@@ -24,14 +25,14 @@
                 return new BlobLocation(Constants.PublicFileBlobContainerName, fileId.Value.EncodeGuid());
             }
 
-            userId.AssertNotNull("userId");
-            return new BlobLocation(this.GetBlobContainerName(userId), fileId.Value.EncodeGuid());
+            channelId.AssertNotNull("channelId");
+            return new BlobLocation(this.GetBlobContainerName(channelId), fileId.Value.EncodeGuid());
         }
 
-        public string GetBlobContainerName(UserId userId)
+        public string GetBlobContainerName(ChannelId channelId)
         {
             // https://msdn.microsoft.com/en-us/library/azure/dd135715.aspx
-            return userId.Value.ToString("N");
+            return channelId.Value.ToString("N");
         }
     }
 }

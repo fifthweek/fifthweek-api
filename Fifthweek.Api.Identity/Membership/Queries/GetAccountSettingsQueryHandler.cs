@@ -30,7 +30,7 @@
             }
 
             var fileInformation = await this.fileInformationAggregator.GetFileInformationAsync(
-                query.RequestedUserId,
+                null,
                 result.ProfileImageFileId,
                 FilePurposes.ProfileImage);
 

@@ -2,6 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Linq;
     using System.Threading.Tasks;
 
     using Fifthweek.Api.Azure;
@@ -37,32 +38,13 @@
             var privateSignatures = new List<UserAccessSignatures.PrivateAccessSignature>();
             if (query.RequestedUserId != null)
             {
-                // Get requester's access information for their own files.
-                var requesterContainerName = this.blobLocationGenerator.GetBlobContainerName(query.RequestedUserId);
-
-                var requesterResult = await this.blobService.GetBlobContainerSharedAccessInformationForReadingAsync(
-                    requesterContainerName, expiry.Private);
-
-                var requesterInformation = new UserAccessSignatures.PrivateAccessSignature(query.RequestedUserId, requesterResult);
-
-                privateSignatures.Add(requesterInformation);
-
-                var subscribedCreatorsInformation = new List<UserAccessSignatures.PrivateAccessSignature>();
-                if (query.SubscribedUserIds != null)
+                foreach (var channelId in query.CreatorChannelIds.EmptyIfNull().Concat(query.SubscribedChannelIds.EmptyIfNull()))
                 {
-                    foreach (var creatorId in query.SubscribedUserIds)
-                    {
-                        var creatorContainerName = this.blobLocationGenerator.GetBlobContainerName(creatorId);
-
-                        var creatorResult = await this.blobService.GetBlobContainerSharedAccessInformationForReadingAsync(
-                            creatorContainerName, expiry.Private);
-
-                        var creatorInformation = new UserAccessSignatures.PrivateAccessSignature(creatorId, creatorResult);
-                        subscribedCreatorsInformation.Add(creatorInformation);
-                    }
+                    var containerName = this.blobLocationGenerator.GetBlobContainerName(channelId);
+                    var result = await this.blobService.GetBlobContainerSharedAccessInformationForReadingAsync(containerName, expiry.Private);
+                    var creatorInformation = new UserAccessSignatures.PrivateAccessSignature(channelId, result);
+                    privateSignatures.Add(creatorInformation);
                 }
-
-                privateSignatures.AddRange(subscribedCreatorsInformation);
             }
 
             // Doing a ceiling here means that the client may wait a fraction longer

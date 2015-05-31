@@ -4,6 +4,7 @@
     using System.Threading.Tasks;
 
     using Fifthweek.Api.Azure;
+    using Fifthweek.Api.Channels.Shared;
     using Fifthweek.Api.Core;
     using Fifthweek.Api.FileManagement.Commands;
     using Fifthweek.Api.FileManagement.Controllers;
@@ -20,6 +21,7 @@
     {
         private static readonly Guid GeneratedSqlGuid = Guid.NewGuid();
         private static readonly UserId UserId = new UserId(Guid.NewGuid());
+        private static readonly ChannelId ChannelId = new ChannelId(Guid.NewGuid());
         private static readonly Requester Requester = Requester.Authenticated(UserId);
         private static readonly FileId FileId = new FileId(GeneratedSqlGuid);
         
@@ -78,14 +80,14 @@
 
             this.requesterContext.Setup(v => v.GetRequester()).Returns(Requester);
 
-            this.initiateFileUpload.Setup(v => v.HandleAsync(new InitiateFileUploadCommand(Requester, FileId, FilePath, Purpose)))
+            this.initiateFileUpload.Setup(v => v.HandleAsync(new InitiateFileUploadCommand(Requester, ChannelId, FileId, FilePath, Purpose)))
                 .Returns(Task.FromResult(0));
 
             var accessInformation = new BlobSharedAccessInformation("containerName", "blobName", "uri", "sig", DateTime.UtcNow);
-            this.generateWritableBlobUri.Setup(v => v.HandleAsync(new GenerateWritableBlobUriQuery(Requester, FileId, Purpose)))
+            this.generateWritableBlobUri.Setup(v => v.HandleAsync(new GenerateWritableBlobUriQuery(Requester, ChannelId, FileId, Purpose)))
                 .ReturnsAsync(accessInformation);
 
-            var response = await this.target.PostUploadRequestAsync(new UploadRequest(FilePath, Purpose));
+            var response = await this.target.PostUploadRequestAsync(new UploadRequest(ChannelId.Value.EncodeGuid(), FilePath, Purpose));
 
             Assert.AreEqual(new GrantedUpload(FileId, accessInformation), response);
         }
@@ -101,9 +103,9 @@
         public async Task WhenAnUploadCompleteNotificationIsPosted_ItShouldCompleteTheFileUpload()
         {
             this.requesterContext.Setup(v => v.GetRequester()).Returns(Requester).Verifiable();
-            this.completeFileUpload.Setup(v => v.HandleAsync(new CompleteFileUploadCommand(Requester, FileId))).Returns(Task.FromResult(0)).Verifiable();
+            this.completeFileUpload.Setup(v => v.HandleAsync(new CompleteFileUploadCommand(Requester, ChannelId, FileId))).Returns(Task.FromResult(0)).Verifiable();
 
-            await this.target.PostUploadCompleteNotificationAsync(GeneratedSqlGuid.EncodeGuid());
+            await this.target.PostUploadCompleteNotificationAsync(new UploadCompleteNotification(ChannelId.Value.EncodeGuid(), GeneratedSqlGuid.EncodeGuid()));
 
             this.requesterContext.Verify();
             this.completeFileUpload.Verify();

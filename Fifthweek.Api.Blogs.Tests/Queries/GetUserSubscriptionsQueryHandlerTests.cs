@@ -89,7 +89,7 @@
         private void SetupDbStatement()
         {
             this.fileInformationAggregator
-                .Setup(v => v.GetFileInformationAsync(DatabaseResult[0].CreatorId, DatabaseResult[0].ProfileImageFileId, FilePurposes.ProfileImage))
+                .Setup(v => v.GetFileInformationAsync(null, DatabaseResult[0].ProfileImageFileId, FilePurposes.ProfileImage))
                 .ReturnsAsync(Result.Blogs[0].ProfileImage);
 
             this.getUserSubscriptions.Setup(v => v.ExecuteAsync(UserId)).ReturnsAsync(DatabaseResult).Verifiable();

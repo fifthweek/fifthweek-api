@@ -4,6 +4,7 @@
     using System.Threading.Tasks;
 
     using Fifthweek.Api.Azure;
+    using Fifthweek.Api.Channels.Shared;
     using Fifthweek.Api.FileManagement.Shared;
     using Fifthweek.Api.Identity.Shared.Membership;
 
@@ -14,7 +15,7 @@
     [TestClass]
     public class FileInformationAggregatorTests
     {
-        private static readonly UserId UserId = new UserId(Guid.NewGuid());
+        private static readonly ChannelId ChannelId = new ChannelId(Guid.NewGuid());
         private static readonly FileId FileId = new FileId(Guid.NewGuid());
         private static readonly string FilePurpose = "filePurpose";
 
@@ -33,14 +34,14 @@
         [ExpectedException(typeof(ArgumentNullException))]
         public async Task WhenCalledWithNullFileId_ItShouldThrowAnException()
         {
-            await this.target.GetFileInformationAsync(UserId, null, FilePurpose);
+            await this.target.GetFileInformationAsync(ChannelId, null, FilePurpose);
         }
 
         [TestMethod]
         [ExpectedException(typeof(ArgumentNullException))]
         public async Task WhenCalledWithNullPurpose_ItShouldThrowAnException()
         {
-            await this.target.GetFileInformationAsync(UserId, FileId, null);
+            await this.target.GetFileInformationAsync(ChannelId, FileId, null);
         }
 
         [TestMethod]
@@ -49,10 +50,10 @@
             const string ContainerName = "containerName";
             const string BlobName = "blobName";
 
-            this.blobLocationGenerator.Setup(v => v.GetBlobLocation(UserId, FileId, FilePurpose))
+            this.blobLocationGenerator.Setup(v => v.GetBlobLocation(ChannelId, FileId, FilePurpose))
                 .Returns(new BlobLocation(ContainerName, BlobName));
 
-            var result = await this.target.GetFileInformationAsync(UserId, FileId, FilePurpose);
+            var result = await this.target.GetFileInformationAsync(ChannelId, FileId, FilePurpose);
 
             Assert.IsNotNull(result);
             Assert.AreEqual(FileId, result.FileId);
