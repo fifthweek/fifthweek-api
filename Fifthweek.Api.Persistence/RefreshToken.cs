@@ -22,7 +22,7 @@
         [Index("IX_UsernameAndClientId", 1)]
         public string Username { get; set; }
 
-        [MaxLength(256)]
+        [MaxLength(64)]
         [Required]
         [Index("IX_UsernameAndClientId", 2)]
         public string ClientId { get; set; }

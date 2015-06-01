@@ -288,6 +288,10 @@
     <Compile Include="Migrations\201505191255032_AddNameToAspNetUsers.Designer.cs">
       <DependentUpon>201505191255032_AddNameToAspNetUsers.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201506011009192_ReduceLengthOfRefreshTokenClientIdToFixIndexSize.cs" />
+    <Compile Include="Migrations\201506011009192_ReduceLengthOfRefreshTokenClientIdToFixIndexSize.Designer.cs">
+      <DependentUpon>201506011009192_ReduceLengthOfRefreshTokenClientIdToFixIndexSize.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Post.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -451,6 +455,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201505191255032_AddNameToAspNetUsers.resx">
       <DependentUpon>201505191255032_AddNameToAspNetUsers.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201506011009192_ReduceLengthOfRefreshTokenClientIdToFixIndexSize.resx">
+      <DependentUpon>201506011009192_ReduceLengthOfRefreshTokenClientIdToFixIndexSize.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
