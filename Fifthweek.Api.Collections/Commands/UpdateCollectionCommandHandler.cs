@@ -16,7 +16,6 @@
     {
         private readonly IRequesterSecurity requesterSecurity;
         private readonly ICollectionSecurity collectionSecurity;
-        private readonly IChannelSecurity channelSecurity;
         private readonly IUpdateCollectionFieldsDbStatement updateCollectionFields;
         private readonly IUpdateWeeklyReleaseScheduleDbStatement updateWeeklyReleaseSchedule;
 
@@ -26,7 +25,6 @@
 
             var userId = await this.requesterSecurity.AuthenticateAsync(command.Requester);
             await this.collectionSecurity.AssertWriteAllowedAsync(userId, command.CollectionId);
-            await this.channelSecurity.AssertWriteAllowedAsync(userId, command.ChannelId);
 
             // We do not wrap the following two operations in a transaction. It does not cause a breaking inconsistency if only 
             // the collection fields are updated without the new weekly release times. The user will notice the inconsistency
@@ -34,7 +32,6 @@
             await this.updateCollectionFields.ExecuteAsync(new Collection(command.CollectionId.Value)
             {
                 Name = command.Name.Value,
-                ChannelId = command.ChannelId.Value
             });
 
             await this.updateWeeklyReleaseSchedule.ExecuteAsync(command.CollectionId, command.WeeklyReleaseSchedule, DateTime.UtcNow);

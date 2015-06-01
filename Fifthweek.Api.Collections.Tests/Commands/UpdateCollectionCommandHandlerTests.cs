@@ -27,16 +27,14 @@
         private static readonly HourOfWeek NewReleaseB = HourOfWeek.Parse(27);
         private static readonly HourOfWeek NewReleaseC = HourOfWeek.Parse(92);
         private static readonly WeeklyReleaseSchedule WeeklyReleaseSchedule = WeeklyReleaseSchedule.Parse(new[] { NewReleaseA, NewReleaseB, NewReleaseC });
-        private static readonly UpdateCollectionCommand Command = new UpdateCollectionCommand(Requester, CollectionId, ChannelId, Name, WeeklyReleaseSchedule);
+        private static readonly UpdateCollectionCommand Command = new UpdateCollectionCommand(Requester, CollectionId, Name, WeeklyReleaseSchedule);
         private static readonly Collection Collection = new Collection(CollectionId.Value)
         {
-            ChannelId = ChannelId.Value,
             Name = Name.Value
         };
 
         private Mock<IRequesterSecurity> requesterSecurity;
         private Mock<ICollectionSecurity> collectionSecurity;
-        private Mock<IChannelSecurity> channelSecurity;
         private Mock<IUpdateCollectionFieldsDbStatement> updateCollectionFields;
         private Mock<IUpdateWeeklyReleaseScheduleDbStatement> updateWeeklyReleaseSchedule;
         private UpdateCollectionCommandHandler target;
@@ -47,7 +45,6 @@
             this.requesterSecurity = new Mock<IRequesterSecurity>();
             this.requesterSecurity.SetupFor(Requester);
             this.collectionSecurity = new Mock<ICollectionSecurity>();
-            this.channelSecurity = new Mock<IChannelSecurity>();
 
             // Give potentially side-effective components strict mock behaviour.
             this.updateCollectionFields = new Mock<IUpdateCollectionFieldsDbStatement>(MockBehavior.Strict);
@@ -56,7 +53,6 @@
             this.target = new UpdateCollectionCommandHandler(
                 this.requesterSecurity.Object, 
                 this.collectionSecurity.Object, 
-                this.channelSecurity.Object,
                 this.updateCollectionFields.Object,
                 this.updateWeeklyReleaseSchedule.Object);
         }
@@ -72,7 +68,7 @@
         [ExpectedException(typeof(UnauthorizedException))]
         public async Task ItShouldRequireUserIsAuthenticated()
         {
-            await this.target.HandleAsync(new UpdateCollectionCommand(Requester.Unauthenticated, CollectionId, ChannelId, Name, WeeklyReleaseSchedule));
+            await this.target.HandleAsync(new UpdateCollectionCommand(Requester.Unauthenticated, CollectionId, Name, WeeklyReleaseSchedule));
         }
 
         [TestMethod]
@@ -80,15 +76,6 @@
         public async Task ItShouldRequireUserHasWriteAccessToCollection()
         {
             this.collectionSecurity.Setup(_ => _.AssertWriteAllowedAsync(UserId, CollectionId)).Throws<UnauthorizedException>();
-
-            await this.target.HandleAsync(Command);
-        }
-
-        [TestMethod]
-        [ExpectedException(typeof(UnauthorizedException))]
-        public async Task ItShouldRequireUserHasWriteAccessToChannel()
-        {
-            this.channelSecurity.Setup(_ => _.AssertWriteAllowedAsync(UserId, ChannelId)).Throws<UnauthorizedException>();
 
             await this.target.HandleAsync(Command);
         }

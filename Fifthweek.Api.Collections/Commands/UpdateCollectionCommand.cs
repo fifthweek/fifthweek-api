@@ -12,8 +12,6 @@
 
         public CollectionId CollectionId { get; private set; }
 
-        public ChannelId ChannelId { get; private set; }
-
         public ValidCollectionName Name { get; private set; }
 
         public WeeklyReleaseSchedule WeeklyReleaseSchedule { get; private set; } 

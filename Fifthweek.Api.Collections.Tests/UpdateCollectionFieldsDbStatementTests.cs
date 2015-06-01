@@ -20,7 +20,6 @@
         private static readonly ValidCollectionName Name = ValidCollectionName.Parse("Bat puns");
         private static readonly Collection Collection = new Collection(CollectionId.Value)
         {
-            ChannelId = ChannelId.Value,
             Name = Name.Value
         };
 
@@ -78,6 +77,7 @@
                         {
                             expectedCollection.QueueExclusiveLowerBound = actual.QueueExclusiveLowerBound;
                             expectedCollection.CreationDate = actual.CreationDate;
+                            expectedCollection.ChannelId = actual.ChannelId;
                             return expectedCollection;
                         }
                     }
@@ -97,21 +97,15 @@
                 subscription.CreatorId = creator.Id;
 
                 var orignalChannel = ChannelTests.UniqueEntity(random);
-                orignalChannel.Id = Guid.NewGuid();
+                orignalChannel.Id = ChannelId.Value;
                 orignalChannel.Blog = subscription;
                 orignalChannel.BlogId = subscription.Id;
-
-                var newChannel = ChannelTests.UniqueEntity(random);
-                newChannel.Id = ChannelId.Value;
-                newChannel.Blog = subscription;
-                newChannel.BlogId = subscription.Id;
 
                 var collection = CollectionTests.UniqueEntity(random);
                 collection.Id = CollectionId.Value;
                 collection.Channel = orignalChannel;
                 collection.ChannelId = orignalChannel.Id;
 
-                databaseContext.Channels.Add(newChannel);
                 databaseContext.Collections.Add(collection);
                 await databaseContext.SaveChangesAsync();
             }

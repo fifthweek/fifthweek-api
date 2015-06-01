@@ -13,8 +13,6 @@
         {
         }
 
-        public ChannelId ChannelId { get; set; }
-
         [Parsed(typeof(ValidCollectionName))]
         public string Name { get; set; }
 

@@ -20,7 +20,7 @@ namespace Fifthweek.Api.Collections
             {
                 await connection.UpdateAsync(
                     collection,
-                    Collection.Fields.Name | Collection.Fields.ChannelId);
+                    Collection.Fields.Name);
             }
         }
     }

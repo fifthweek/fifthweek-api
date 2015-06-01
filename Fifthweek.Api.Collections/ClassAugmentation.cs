@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Linq;
 
-//// Generated on 14/04/2015 11:29:06 (UTC)
-//// Mapped solution in 8.3s
+//// Generated on 01/06/2015 09:44:24 (UTC)
+//// Mapped solution in 6.36s
 
 
 namespace Fifthweek.Api.Collections
@@ -195,7 +195,6 @@ namespace Fifthweek.Api.Collections.Commands
         public UpdateCollectionCommand(
             Fifthweek.Api.Identity.Shared.Membership.Requester requester,
             Fifthweek.Api.Collections.Shared.CollectionId collectionId,
-            Fifthweek.Api.Channels.Shared.ChannelId channelId,
             Fifthweek.Api.Collections.Shared.ValidCollectionName name,
             Fifthweek.Api.Collections.Shared.WeeklyReleaseSchedule weeklyReleaseSchedule)
         {
@@ -207,11 +206,6 @@ namespace Fifthweek.Api.Collections.Commands
             if (collectionId == null)
             {
                 throw new ArgumentNullException("collectionId");
-            }
-
-            if (channelId == null)
-            {
-                throw new ArgumentNullException("channelId");
             }
 
             if (name == null)
@@ -226,7 +220,6 @@ namespace Fifthweek.Api.Collections.Commands
 
             this.Requester = requester;
             this.CollectionId = collectionId;
-            this.ChannelId = channelId;
             this.Name = name;
             this.WeeklyReleaseSchedule = weeklyReleaseSchedule;
         }
@@ -363,15 +356,9 @@ namespace Fifthweek.Api.Collections.Controllers
     public partial class UpdatedCollectionData 
     {
         public UpdatedCollectionData(
-            Fifthweek.Api.Channels.Shared.ChannelId channelId,
             System.String name,
             System.Collections.Generic.List<System.Int32> weeklyReleaseSchedule)
         {
-            if (channelId == null)
-            {
-                throw new ArgumentNullException("channelId");
-            }
-
             if (name == null)
             {
                 throw new ArgumentNullException("name");
@@ -382,7 +369,6 @@ namespace Fifthweek.Api.Collections.Controllers
                 throw new ArgumentNullException("weeklyReleaseSchedule");
             }
 
-            this.ChannelId = channelId;
             this.Name = name;
             this.WeeklyReleaseSchedule = weeklyReleaseSchedule;
         }
@@ -595,7 +581,6 @@ namespace Fifthweek.Api.Collections.Commands
         public UpdateCollectionCommandHandler(
             Fifthweek.Api.Identity.Shared.Membership.IRequesterSecurity requesterSecurity,
             Fifthweek.Api.Collections.Shared.ICollectionSecurity collectionSecurity,
-            Fifthweek.Api.Channels.Shared.IChannelSecurity channelSecurity,
             Fifthweek.Api.Collections.IUpdateCollectionFieldsDbStatement updateCollectionFields,
             Fifthweek.Api.Collections.IUpdateWeeklyReleaseScheduleDbStatement updateWeeklyReleaseSchedule)
         {
@@ -607,11 +592,6 @@ namespace Fifthweek.Api.Collections.Commands
             if (collectionSecurity == null)
             {
                 throw new ArgumentNullException("collectionSecurity");
-            }
-
-            if (channelSecurity == null)
-            {
-                throw new ArgumentNullException("channelSecurity");
             }
 
             if (updateCollectionFields == null)
@@ -626,7 +606,6 @@ namespace Fifthweek.Api.Collections.Commands
 
             this.requesterSecurity = requesterSecurity;
             this.collectionSecurity = collectionSecurity;
-            this.channelSecurity = channelSecurity;
             this.updateCollectionFields = updateCollectionFields;
             this.updateWeeklyReleaseSchedule = updateWeeklyReleaseSchedule;
         }
@@ -1155,7 +1134,7 @@ namespace Fifthweek.Api.Collections.Commands
     {
         public override string ToString()
         {
-            return string.Format("UpdateCollectionCommand({0}, {1}, {2}, {3}, {4})", this.Requester == null ? "null" : this.Requester.ToString(), this.CollectionId == null ? "null" : this.CollectionId.ToString(), this.ChannelId == null ? "null" : this.ChannelId.ToString(), this.Name == null ? "null" : this.Name.ToString(), this.WeeklyReleaseSchedule == null ? "null" : this.WeeklyReleaseSchedule.ToString());
+            return string.Format("UpdateCollectionCommand({0}, {1}, {2}, {3})", this.Requester == null ? "null" : this.Requester.ToString(), this.CollectionId == null ? "null" : this.CollectionId.ToString(), this.Name == null ? "null" : this.Name.ToString(), this.WeeklyReleaseSchedule == null ? "null" : this.WeeklyReleaseSchedule.ToString());
         }
         
         public override bool Equals(object obj)
@@ -1185,7 +1164,6 @@ namespace Fifthweek.Api.Collections.Commands
                 int hashCode = 0;
                 hashCode = (hashCode * 397) ^ (this.Requester != null ? this.Requester.GetHashCode() : 0);
                 hashCode = (hashCode * 397) ^ (this.CollectionId != null ? this.CollectionId.GetHashCode() : 0);
-                hashCode = (hashCode * 397) ^ (this.ChannelId != null ? this.ChannelId.GetHashCode() : 0);
                 hashCode = (hashCode * 397) ^ (this.Name != null ? this.Name.GetHashCode() : 0);
                 hashCode = (hashCode * 397) ^ (this.WeeklyReleaseSchedule != null ? this.WeeklyReleaseSchedule.GetHashCode() : 0);
                 return hashCode;
@@ -1200,11 +1178,6 @@ namespace Fifthweek.Api.Collections.Commands
             }
         
             if (!object.Equals(this.CollectionId, other.CollectionId))
-            {
-                return false;
-            }
-        
-            if (!object.Equals(this.ChannelId, other.ChannelId))
             {
                 return false;
             }
@@ -1315,7 +1288,7 @@ namespace Fifthweek.Api.Collections.Controllers
     {
         public override string ToString()
         {
-            return string.Format("UpdatedCollectionData({0}, \"{1}\", {2})", this.ChannelId == null ? "null" : this.ChannelId.ToString(), this.Name == null ? "null" : this.Name.ToString(), this.WeeklyReleaseSchedule == null ? "null" : this.WeeklyReleaseSchedule.ToString());
+            return string.Format("UpdatedCollectionData(\"{0}\", {1})", this.Name == null ? "null" : this.Name.ToString(), this.WeeklyReleaseSchedule == null ? "null" : this.WeeklyReleaseSchedule.ToString());
         }
         
         public override bool Equals(object obj)
@@ -1343,7 +1316,6 @@ namespace Fifthweek.Api.Collections.Controllers
             unchecked
             {
                 int hashCode = 0;
-                hashCode = (hashCode * 397) ^ (this.ChannelId != null ? this.ChannelId.GetHashCode() : 0);
                 hashCode = (hashCode * 397) ^ (this.Name != null ? this.Name.GetHashCode() : 0);
                 hashCode = (hashCode * 397) ^ (this.WeeklyReleaseSchedule != null 
         			? this.WeeklyReleaseSchedule.Aggregate(0, (previous, current) => 
@@ -1360,11 +1332,6 @@ namespace Fifthweek.Api.Collections.Controllers
         
         protected bool Equals(UpdatedCollectionData other)
         {
-            if (!object.Equals(this.ChannelId, other.ChannelId))
-            {
-                return false;
-            }
-        
             if (!object.Equals(this.Name, other.Name))
             {
                 return false;
@@ -1701,15 +1668,9 @@ namespace Fifthweek.Api.Collections.Controllers
         public class Parsed
         {
             public Parsed(
-                Fifthweek.Api.Channels.Shared.ChannelId channelId,
                 ValidCollectionName name,
                 WeeklyReleaseSchedule weeklyReleaseSchedule)
             {
-                if (channelId == null)
-                {
-                    throw new ArgumentNullException("channelId");
-                }
-
                 if (name == null)
                 {
                     throw new ArgumentNullException("name");
@@ -1720,12 +1681,9 @@ namespace Fifthweek.Api.Collections.Controllers
                     throw new ArgumentNullException("weeklyReleaseSchedule");
                 }
 
-                this.ChannelId = channelId;
                 this.Name = name;
                 this.WeeklyReleaseSchedule = weeklyReleaseSchedule;
             }
-        
-            public Fifthweek.Api.Channels.Shared.ChannelId ChannelId { get; private set; }
         
             public ValidCollectionName Name { get; private set; }
         
@@ -1815,7 +1773,6 @@ namespace Fifthweek.Api.Collections.Controllers
             }
         
             return new UpdatedCollectionData.Parsed(
-                target.ChannelId,
                 parsed0,
                 parsed1);
         }    

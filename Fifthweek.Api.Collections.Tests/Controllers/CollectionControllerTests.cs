@@ -87,8 +87,8 @@
         [TestMethod]
         public async Task WhenPuttingCollection_ItShouldIssueUpdateCollectionCommand()
         {
-            var data = new UpdatedCollectionData(ChannelId, CollectionName.Value, WeeklyReleaseSchedule.Value.Select(_ => _.Value).ToList());
-            var command = new UpdateCollectionCommand(Requester, CollectionId, ChannelId, CollectionName, WeeklyReleaseSchedule);
+            var data = new UpdatedCollectionData(CollectionName.Value, WeeklyReleaseSchedule.Value.Select(_ => _.Value).ToList());
+            var command = new UpdateCollectionCommand(Requester, CollectionId, CollectionName, WeeklyReleaseSchedule);
 
             this.requesterContext.Setup(v => v.GetRequester()).Returns(Requester);
             this.updateCollection.Setup(v => v.HandleAsync(command)).Returns(Task.FromResult(0)).Verifiable();

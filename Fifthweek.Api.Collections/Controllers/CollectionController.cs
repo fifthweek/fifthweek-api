@@ -62,7 +62,6 @@
                 new UpdateCollectionCommand(
                     requester,
                     collectionIdObject,
-                    collection.ChannelId,
                     collection.Name,
                     collection.WeeklyReleaseSchedule));
 
