@@ -39,7 +39,7 @@ namespace Fifthweek.Api.Collections
 
             // Transaction required on the following, as database must always contain at least one weekly release time per 
             // collection. The absence of weekly release times would cause a breaking inconsistency.
-            using (var transaction = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled))
+            using (var transaction = TransactionScopeBuilder.CreateAsync())
             {
                 using (var connection = this.connectionFactory.CreateConnection())
                 {

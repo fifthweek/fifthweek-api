@@ -22,7 +22,7 @@
             now.AssertUtc("now");
 
             // Transaction required on the following, as we don't want user to see a queue that does not match the collection's release times.
-            using (var transaction = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled))
+            using (var transaction = TransactionScopeBuilder.CreateAsync())
             {
                 await this.replaceWeeklyReleaseTimes.ExecuteAsync(collectionId, weeklyReleaseSchedule);
                 await this.defragmentQueue.ExecuteAsync(collectionId, weeklyReleaseSchedule, now);

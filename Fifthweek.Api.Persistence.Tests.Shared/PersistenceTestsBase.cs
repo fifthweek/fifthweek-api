@@ -6,6 +6,7 @@
     using System.Transactions;
 
     using Fifthweek.CodeGeneration;
+    using Fifthweek.Shared;
 
     public abstract partial class PersistenceTestsBase
     {
@@ -15,7 +16,7 @@
             var databaseSnapshot = new TestDatabaseSnapshot(database);
             var databaseContext = new TestDatabaseContext(database, databaseSnapshot);
             
-            using (new TransactionScope(TransactionScopeAsyncFlowOption.Enabled))
+            using (TransactionScopeBuilder.CreateAsync())
             {
                 var sideEffects = await databaseTest(databaseContext);
                 await databaseSnapshot.AssertSideEffectsAsync(sideEffects);

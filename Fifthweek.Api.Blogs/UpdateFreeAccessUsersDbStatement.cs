@@ -48,7 +48,7 @@
                 }
                 else
                 {
-                    using (var transaction = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled))
+                    using (var transaction = TransactionScopeBuilder.CreateAsync())
                     {
                         await connection.ExecuteAsync(
                             DeleteQuery, 

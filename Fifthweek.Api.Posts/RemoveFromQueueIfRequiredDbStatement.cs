@@ -32,7 +32,7 @@
             {
                 var weeklyReleaseSchedule = await this.getWeeklyReleaseSchedule.ExecuteAsync(queuedCollectionId);
 
-                using (var transaction = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled))
+                using (var transaction = TransactionScopeBuilder.CreateAsync())
                 {
                     await potentialRemovalOperation();
                     await this.defragmentQueue.ExecuteAsync(queuedCollectionId, weeklyReleaseSchedule, now);
