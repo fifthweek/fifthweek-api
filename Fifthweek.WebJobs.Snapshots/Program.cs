@@ -10,14 +10,51 @@ namespace Fifthweek.WebJobs.Snapshots
     using System.IO;
     using System.Threading;
 
+    using Fifthweek.Api.Persistence;
     using Fifthweek.Azure;
+    using Fifthweek.Payments;
+    using Fifthweek.Payments.Services;
     using Fifthweek.WebJobs.Shared;
 
     using Microsoft.Azure.WebJobs;
+    using Microsoft.WindowsAzure.Storage;
+    using Microsoft.WindowsAzure.Storage.Blob;
 
-    class Program
+    public class Program
     {
         private const string ErrorIdentifier = "Snapshots WebJob";
+
+        private static readonly ISnapshotProcessor SnapshotProcessor = new SnapshotProcessor(
+            new FifthweekDbConnectionFactory());
+
+        public static Task CreateThumbnailSetAsync(
+            [QueueTrigger(Constants.RequestSnapshotQueueName)] CreateSnapshotMessage message,
+            CloudStorageAccount cloudStorageAccount,
+            TextWriter webJobsLogger,
+            int dequeueCount,
+            CancellationToken cancellationToken)
+        {
+            return SnapshotProcessor.CreateThumbnailSetAsync(
+                message,
+                new FifthweekCloudStorageAccount(cloudStorageAccount),
+                CreateLogger(webJobsLogger),
+                cancellationToken);
+        }
+
+        public static Task ProcessPoisonMessage(
+            [QueueTrigger(Constants.RequestSnapshotQueueName + "-poison")] CreateSnapshotMessage message,
+            CloudStorageAccount cloudStorageAccount,
+            TextWriter webJobsLogger,
+            int dequeueCount,
+            CancellationToken cancellationToken)
+        {
+            return SnapshotProcessor.CreatePoisonThumbnailSetAsync(
+                message,
+                new FifthweekCloudStorageAccount(cloudStorageAccount),
+                CreateLogger(webJobsLogger),
+                cancellationToken);
+        }
+
 
         public static void Main(string[] args)
         {

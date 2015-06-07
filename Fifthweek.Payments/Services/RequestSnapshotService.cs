@@ -10,8 +10,6 @@
     [AutoConstructor]
     public partial class RequestSnapshotService : IRequestSnapshotService
     {
-        public const string RequestSnapshotQueueName = "snapshot-requests";
-        
         public static readonly TimeSpan SnapshotDelay = TimeSpan.FromSeconds(30);
 
         private readonly IQueueService queueService;
@@ -19,7 +17,7 @@
         public Task ExecuteAsync(UserId userId, SnapshotType snapshotType)
         {
             return this.queueService.AddMessageToQueueAsync(
-                RequestSnapshotQueueName,
+                Constants.RequestSnapshotQueueName,
                 new CreateSnapshotMessage(userId, snapshotType),
                 null,
                 SnapshotDelay);

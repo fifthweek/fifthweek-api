@@ -50,6 +50,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>ClassAugmentation.tt</DependentUpon>
     </Compile>
+    <Compile Include="Constants.cs" />
     <Compile Include="CostPeriod.cs" />
     <Compile Include="CreatorChannelSnapshot.cs" />
     <Compile Include="CreatorGuestListSnapshot.cs" />
