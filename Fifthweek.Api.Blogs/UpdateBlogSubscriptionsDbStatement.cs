@@ -13,6 +13,7 @@
     using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.Api.Persistence;
     using Fifthweek.CodeGeneration;
+    using Fifthweek.Payments.Services;
     using Fifthweek.Shared;
 
     [AutoConstructor]
@@ -39,6 +40,7 @@
             ChannelSubscription.Fields.UserId);
 
         private readonly IFifthweekDbConnectionFactory connectionFactory;
+        private readonly IRequestSnapshotService requestSnapshot;
 
         public async Task ExecuteAsync(UserId userId, BlogId blogId, IReadOnlyList<AcceptedChannelSubscription> channels, DateTime now)
         {
@@ -50,36 +52,43 @@
                 channels = new List<AcceptedChannelSubscription>();
             }
 
-            using (var connection = this.connectionFactory.CreateConnection())
+            using (var transaction = TransactionScopeBuilder.CreateAsync())
             {
-                await connection.ExecuteAsync(
-                    DeleteStatement, 
-                    new 
-                    {
-                        BlogId = blogId.Value,
-                        SubscriberId = userId.Value,
-                        KeepChannelIds = channels.Select(v => v.ChannelId.Value).ToList()
-                    });
-
-                foreach (var item in channels)
+                using (var connection = this.connectionFactory.CreateConnection())
                 {
-                    var channelSubscription = new ChannelSubscription(
-                        item.ChannelId.Value,
-                        null,
-                        userId.Value,
-                        null,
-                        item.AcceptedPrice.Value,
-                        now,
-                        now);
+                    await connection.ExecuteAsync(
+                        DeleteStatement, 
+                        new 
+                        {
+                            BlogId = blogId.Value,
+                            SubscriberId = userId.Value,
+                            KeepChannelIds = channels.Select(v => v.ChannelId.Value).ToList()
+                        });
 
-                    const ChannelSubscription.Fields UpdateFields 
-                        = ChannelSubscription.Fields.AcceptedPriceInUsCentsPerWeek
-                        | ChannelSubscription.Fields.PriceLastAcceptedDate;
+                    foreach (var item in channels)
+                    {
+                        var channelSubscription = new ChannelSubscription(
+                            item.ChannelId.Value,
+                            null,
+                            userId.Value,
+                            null,
+                            item.AcceptedPrice.Value,
+                            now,
+                            now);
 
-                    await connection.UpsertAsync(
-                        channelSubscription,
-                        UpdateFields);
+                        const ChannelSubscription.Fields UpdateFields 
+                            = ChannelSubscription.Fields.AcceptedPriceInUsCentsPerWeek
+                            | ChannelSubscription.Fields.PriceLastAcceptedDate;
+
+                        await connection.UpsertAsync(
+                            channelSubscription,
+                            UpdateFields);
+                    }
                 }
+
+                await this.requestSnapshot.ExecuteAsync(userId, SnapshotType.SubscriberChannels);
+
+                transaction.Complete();
             }
         }
     }

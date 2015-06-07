@@ -11,6 +11,9 @@
     using Fifthweek.Api.Identity.Tests.Shared.Membership;
     using Fifthweek.Api.Persistence;
     using Fifthweek.Api.Persistence.Tests.Shared;
+    using Fifthweek.Payments.Services;
+    using Fifthweek.Payments.Tests.Shared;
+    using Fifthweek.Tests.Shared;
 
     using Microsoft.VisualStudio.TestTools.UnitTesting;
 
@@ -32,6 +35,7 @@
         private Mock<IRequesterSecurity> requesterSecurity;
         private Mock<IBlogSecurity> subscriptionSecurity;
         private Mock<IFifthweekDbConnectionFactory> connectionFactory;
+        private MockRequestSnapshotService requestSnapshot;
         private CreateChannelCommandHandler target;
 
         [TestInitialize]
@@ -40,6 +44,7 @@
             this.requesterSecurity = new Mock<IRequesterSecurity>();
             this.requesterSecurity.SetupFor(Requester);
             this.subscriptionSecurity = new Mock<IBlogSecurity>();
+            this.requestSnapshot = new MockRequestSnapshotService();
 
             // Give potentially side-effective components strict mock behaviour.
             this.connectionFactory = new Mock<IFifthweekDbConnectionFactory>(MockBehavior.Strict);
@@ -49,7 +54,7 @@
 
         public void InitializeTarget(IFifthweekDbConnectionFactory connectionFactory)
         {
-            this.target = new CreateChannelCommandHandler(this.requesterSecurity.Object, this.subscriptionSecurity.Object, connectionFactory);
+            this.target = new CreateChannelCommandHandler(this.requesterSecurity.Object, this.subscriptionSecurity.Object, connectionFactory, this.requestSnapshot);
         }
 
         [TestMethod]
@@ -126,6 +131,67 @@
                         }
                     }
                 };
+            });
+        }
+
+        [TestMethod]
+        public async Task ItShouldRequestSnapshotAfterUpdate()
+        {
+            await this.DatabaseTestAsync(async testDatabase =>
+            {
+                var trackingDatabase = new TrackingConnectionFactory(testDatabase);
+                this.InitializeTarget(trackingDatabase);
+                await this.CreateEntitiesAsync(testDatabase);
+                await testDatabase.TakeSnapshotAsync();
+
+                this.requestSnapshot.VerifyConnectionDisposed(trackingDatabase);
+
+                await this.target.HandleAsync(Command);
+
+                this.requestSnapshot.VerifyCalledWith(UserId, SnapshotType.CreatorChannels);
+
+                var expectedChannel = new Channel(
+                    ChannelId.Value,
+                    BlogId.Value,
+                    null,
+                    Name.Value,
+                    Description.Value,
+                    Price.Value,
+                    IsVisibleToNonSubscribers,
+                    default(DateTime),
+                    default(DateTime));
+
+                return new ExpectedSideEffects
+                {
+                    Insert = new WildcardEntity<Channel>(expectedChannel)
+                    {
+                        Expected = actual =>
+                        {
+                            expectedChannel.CreationDate = actual.CreationDate;
+                            expectedChannel.PriceLastSetDate = actual.PriceLastSetDate;
+                            Assert.AreEqual(actual.CreationDate, actual.PriceLastSetDate);
+                            return expectedChannel;
+                        }
+                    }
+                };
+            });
+        }
+
+        [TestMethod]
+        public async Task ItShouldAbortUpdateIfSnapshotFails()
+        {
+            await this.DatabaseTestAsync(async testDatabase =>
+            {
+                this.InitializeTarget(testDatabase);
+                await this.CreateEntitiesAsync(testDatabase);
+                await testDatabase.TakeSnapshotAsync();
+
+                this.requestSnapshot.ThrowException();
+
+                await ExpectedException.AssertExceptionAsync<SnapshotException>(
+                    () => this.target.HandleAsync(Command));
+
+                return ExpectedSideEffects.TransactionAborted;
             });
         }
 

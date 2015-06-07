@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Linq;
 
-//// Generated on 25/05/2015 11:01:54 (UTC)
-//// Mapped solution in 11.69s
+//// Generated on 05/06/2015 14:49:32 (UTC)
+//// Mapped solution in 6.52s
 
 
 namespace Fifthweek.Api.Blogs
@@ -18,6 +18,7 @@ namespace Fifthweek.Api.Blogs
     using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.Api.Persistence;
     using Fifthweek.CodeGeneration;
+    using Fifthweek.Payments.Services;
     using Fifthweek.Shared;
     using Fifthweek.Api.Core;
     using Fifthweek.Api.Persistence.Identity;
@@ -29,14 +30,21 @@ namespace Fifthweek.Api.Blogs
     public partial class AcceptChannelSubscriptionPriceChangeDbStatement 
     {
         public AcceptChannelSubscriptionPriceChangeDbStatement(
-            Fifthweek.Api.Persistence.IFifthweekDbConnectionFactory connectionFactory)
+            Fifthweek.Api.Persistence.IFifthweekDbConnectionFactory connectionFactory,
+            Fifthweek.Payments.Services.IRequestSnapshotService requestSnapshot)
         {
             if (connectionFactory == null)
             {
                 throw new ArgumentNullException("connectionFactory");
             }
 
+            if (requestSnapshot == null)
+            {
+                throw new ArgumentNullException("requestSnapshot");
+            }
+
             this.connectionFactory = connectionFactory;
+            this.requestSnapshot = requestSnapshot;
         }
     }
 }
@@ -206,6 +214,7 @@ namespace Fifthweek.Api.Blogs.Commands
     using Fifthweek.Api.Identity.Shared.Membership.Events;
     using Fifthweek.Api.FileManagement.Shared;
     using System.Collections.Generic;
+    using Fifthweek.Payments.Services;
 
     public partial class CreateBlogCommand 
     {
@@ -266,6 +275,7 @@ namespace Fifthweek.Api.Blogs.Commands
     using Fifthweek.Api.Identity.Shared.Membership.Events;
     using Fifthweek.Api.FileManagement.Shared;
     using System.Collections.Generic;
+    using Fifthweek.Payments.Services;
 
     public partial class CreateBlogCommandHandler 
     {
@@ -312,6 +322,7 @@ namespace Fifthweek.Api.Blogs.Commands
     using Fifthweek.Api.Identity.Shared.Membership.Events;
     using Fifthweek.Api.FileManagement.Shared;
     using System.Collections.Generic;
+    using Fifthweek.Payments.Services;
 
     public partial class UpdateBlogCommand 
     {
@@ -378,6 +389,7 @@ namespace Fifthweek.Api.Blogs.Commands
     using Fifthweek.Api.Identity.Shared.Membership.Events;
     using Fifthweek.Api.FileManagement.Shared;
     using System.Collections.Generic;
+    using Fifthweek.Payments.Services;
 
     public partial class UpdateBlogCommandHandler 
     {
@@ -823,18 +835,26 @@ namespace Fifthweek.Api.Blogs
     using System.Transactions;
     using Fifthweek.Api.Blogs.Queries;
     using Fifthweek.Api.Collections.Shared;
+    using Fifthweek.Payments.Services;
 
     public partial class UpdateFreeAccessUsersDbStatement 
     {
         public UpdateFreeAccessUsersDbStatement(
-            Fifthweek.Api.Persistence.IFifthweekDbConnectionFactory connectionFactory)
+            Fifthweek.Api.Persistence.IFifthweekDbConnectionFactory connectionFactory,
+            Fifthweek.Payments.Services.IRequestSnapshotService requestSnapshot)
         {
             if (connectionFactory == null)
             {
                 throw new ArgumentNullException("connectionFactory");
             }
 
+            if (requestSnapshot == null)
+            {
+                throw new ArgumentNullException("requestSnapshot");
+            }
+
             this.connectionFactory = connectionFactory;
+            this.requestSnapshot = requestSnapshot;
         }
     }
 }
@@ -855,6 +875,7 @@ namespace Fifthweek.Api.Blogs.Commands
     using Fifthweek.Api.Identity.Shared.Membership.Events;
     using Fifthweek.Api.FileManagement.Shared;
     using System.Collections.Generic;
+    using Fifthweek.Payments.Services;
 
     public partial class UpdateFreeAccessUsersCommandHandler 
     {
@@ -901,6 +922,7 @@ namespace Fifthweek.Api.Blogs.Commands
     using Fifthweek.Api.Identity.Shared.Membership.Events;
     using Fifthweek.Api.FileManagement.Shared;
     using System.Collections.Generic;
+    using Fifthweek.Payments.Services;
 
     public partial class UpdateFreeAccessUsersCommand 
     {
@@ -1937,6 +1959,7 @@ namespace Fifthweek.Api.Blogs.Commands
     using Fifthweek.Api.Identity.Shared.Membership.Events;
     using Fifthweek.Api.FileManagement.Shared;
     using System.Collections.Generic;
+    using Fifthweek.Payments.Services;
 
     public partial class AcceptedChannelSubscription 
     {
@@ -1976,6 +1999,7 @@ namespace Fifthweek.Api.Blogs.Commands
     using Fifthweek.Api.Identity.Shared.Membership.Events;
     using Fifthweek.Api.FileManagement.Shared;
     using System.Collections.Generic;
+    using Fifthweek.Payments.Services;
 
     public partial class UpdateBlogSubscriptionsCommand 
     {
@@ -2025,18 +2049,26 @@ namespace Fifthweek.Api.Blogs
     using System.Transactions;
     using Fifthweek.Api.Blogs.Queries;
     using Fifthweek.Api.Collections.Shared;
+    using Fifthweek.Payments.Services;
 
     public partial class UpdateBlogSubscriptionsDbStatement 
     {
         public UpdateBlogSubscriptionsDbStatement(
-            Fifthweek.Api.Persistence.IFifthweekDbConnectionFactory connectionFactory)
+            Fifthweek.Api.Persistence.IFifthweekDbConnectionFactory connectionFactory,
+            Fifthweek.Payments.Services.IRequestSnapshotService requestSnapshot)
         {
             if (connectionFactory == null)
             {
                 throw new ArgumentNullException("connectionFactory");
             }
 
+            if (requestSnapshot == null)
+            {
+                throw new ArgumentNullException("requestSnapshot");
+            }
+
             this.connectionFactory = connectionFactory;
+            this.requestSnapshot = requestSnapshot;
         }
     }
 }
@@ -2060,18 +2092,26 @@ namespace Fifthweek.Api.Blogs
     using System.Transactions;
     using Fifthweek.Api.Blogs.Queries;
     using Fifthweek.Api.Collections.Shared;
+    using Fifthweek.Payments.Services;
 
     public partial class UnsubscribeFromChannelDbStatement 
     {
         public UnsubscribeFromChannelDbStatement(
-            Fifthweek.Api.Persistence.IFifthweekDbConnectionFactory connectionFactory)
+            Fifthweek.Api.Persistence.IFifthweekDbConnectionFactory connectionFactory,
+            Fifthweek.Payments.Services.IRequestSnapshotService requestSnapshot)
         {
             if (connectionFactory == null)
             {
                 throw new ArgumentNullException("connectionFactory");
             }
 
+            if (requestSnapshot == null)
+            {
+                throw new ArgumentNullException("requestSnapshot");
+            }
+
             this.connectionFactory = connectionFactory;
+            this.requestSnapshot = requestSnapshot;
         }
     }
 }
@@ -2092,6 +2132,7 @@ namespace Fifthweek.Api.Blogs.Commands
     using Fifthweek.Api.Identity.Shared.Membership.Events;
     using Fifthweek.Api.FileManagement.Shared;
     using System.Collections.Generic;
+    using Fifthweek.Payments.Services;
 
     public partial class AcceptChannelSubscriptionPriceChangeCommandHandler 
     {
@@ -2131,6 +2172,7 @@ namespace Fifthweek.Api.Blogs.Commands
     using Fifthweek.Api.Identity.Shared.Membership.Events;
     using Fifthweek.Api.FileManagement.Shared;
     using System.Collections.Generic;
+    using Fifthweek.Payments.Services;
 
     public partial class UnsubscribeFromChannelCommandHandler 
     {
@@ -2170,6 +2212,7 @@ namespace Fifthweek.Api.Blogs.Commands
     using Fifthweek.Api.Identity.Shared.Membership.Events;
     using Fifthweek.Api.FileManagement.Shared;
     using System.Collections.Generic;
+    using Fifthweek.Payments.Services;
 
     public partial class UpdateBlogSubscriptionsCommandHandler 
     {
@@ -2261,6 +2304,7 @@ namespace Fifthweek.Api.Blogs.Commands
     using Fifthweek.Api.Identity.Shared.Membership.Events;
     using Fifthweek.Api.FileManagement.Shared;
     using System.Collections.Generic;
+    using Fifthweek.Payments.Services;
 
     public partial class UnsubscribeFromChannelCommand 
     {
@@ -2300,6 +2344,7 @@ namespace Fifthweek.Api.Blogs.Commands
     using Fifthweek.Api.Identity.Shared.Membership.Events;
     using Fifthweek.Api.FileManagement.Shared;
     using System.Collections.Generic;
+    using Fifthweek.Payments.Services;
 
     public partial class AcceptChannelSubscriptionPriceChangeCommand 
     {
@@ -2550,6 +2595,7 @@ namespace Fifthweek.Api.Blogs.Commands
     using Fifthweek.Api.Identity.Shared.Membership.Events;
     using Fifthweek.Api.FileManagement.Shared;
     using System.Collections.Generic;
+    using Fifthweek.Payments.Services;
 
     public partial class CreateBlogCommand 
     {
@@ -2640,6 +2686,7 @@ namespace Fifthweek.Api.Blogs.Commands
     using Fifthweek.Api.Identity.Shared.Membership.Events;
     using Fifthweek.Api.FileManagement.Shared;
     using System.Collections.Generic;
+    using Fifthweek.Payments.Services;
 
     public partial class UpdateBlogCommand 
     {
@@ -3229,6 +3276,7 @@ namespace Fifthweek.Api.Blogs.Commands
     using Fifthweek.Api.Identity.Shared.Membership.Events;
     using Fifthweek.Api.FileManagement.Shared;
     using System.Collections.Generic;
+    using Fifthweek.Payments.Services;
 
     public partial class UpdateFreeAccessUsersCommand 
     {
@@ -4219,6 +4267,7 @@ namespace Fifthweek.Api.Blogs.Commands
     using Fifthweek.Api.Identity.Shared.Membership.Events;
     using Fifthweek.Api.FileManagement.Shared;
     using System.Collections.Generic;
+    using Fifthweek.Payments.Services;
 
     public partial class AcceptedChannelSubscription 
     {
@@ -4291,6 +4340,7 @@ namespace Fifthweek.Api.Blogs.Commands
     using Fifthweek.Api.Identity.Shared.Membership.Events;
     using Fifthweek.Api.FileManagement.Shared;
     using System.Collections.Generic;
+    using Fifthweek.Payments.Services;
 
     public partial class UpdateBlogSubscriptionsCommand 
     {
@@ -4384,6 +4434,7 @@ namespace Fifthweek.Api.Blogs.Commands
     using Fifthweek.Api.Identity.Shared.Membership.Events;
     using Fifthweek.Api.FileManagement.Shared;
     using System.Collections.Generic;
+    using Fifthweek.Payments.Services;
 
     public partial class UnsubscribeFromChannelCommand 
     {
@@ -4456,6 +4507,7 @@ namespace Fifthweek.Api.Blogs.Commands
     using Fifthweek.Api.Identity.Shared.Membership.Events;
     using Fifthweek.Api.FileManagement.Shared;
     using System.Collections.Generic;
+    using Fifthweek.Payments.Services;
 
     public partial class AcceptChannelSubscriptionPriceChangeCommand 
     {

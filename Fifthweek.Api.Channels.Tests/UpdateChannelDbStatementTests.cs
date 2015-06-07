@@ -1,6 +1,7 @@
 ﻿namespace Fifthweek.Api.Channels.Tests
 {
     using System;
+    using System.Collections.Generic;
     using System.Data.SqlTypes;
     using System.Threading.Tasks;
 
@@ -11,6 +12,9 @@
     using Fifthweek.Api.Identity.Tests.Shared.Membership;
     using Fifthweek.Api.Persistence;
     using Fifthweek.Api.Persistence.Tests.Shared;
+    using Fifthweek.Payments.Services;
+    using Fifthweek.Payments.Tests.Shared;
+    using Fifthweek.Tests.Shared;
 
     using Microsoft.VisualStudio.TestTools.UnitTesting;
 
@@ -28,6 +32,7 @@
         private static readonly DateTime Now = new SqlDateTime(DateTime.UtcNow).Value;
 
         private Mock<IFifthweekDbConnectionFactory> connectionFactory;
+        private MockRequestSnapshotService requestSnapshot;
         private UpdateChannelDbStatement target;
 
         [TestInitialize]
@@ -35,13 +40,13 @@
         {
             // Give potentially side-effective components strict mock behaviour.
             this.connectionFactory = new Mock<IFifthweekDbConnectionFactory>(MockBehavior.Strict);
-
+            this.requestSnapshot = new MockRequestSnapshotService();
             this.InitializeTarget(this.connectionFactory.Object);
         }
 
         public void InitializeTarget(IFifthweekDbConnectionFactory connectionFactory)
         {
-            this.target = new UpdateChannelDbStatement(connectionFactory);
+            this.target = new UpdateChannelDbStatement(connectionFactory, this.requestSnapshot);
         }
 
         [TestMethod]
@@ -50,11 +55,12 @@
             await this.DatabaseTestAsync(async testDatabase =>
             {
                 this.InitializeTarget(testDatabase);
+
                 await this.CreateChannelAsync(testDatabase);
-                await this.target.ExecuteAsync(ChannelId, Name, Description, Price, IsVisibleToNonSubscribers, Now);
+                await this.target.ExecuteAsync(UserId, ChannelId, Name, Description, Price, IsVisibleToNonSubscribers, Now);
                 await testDatabase.TakeSnapshotAsync();
 
-                await this.target.ExecuteAsync(ChannelId, Name, Description, Price, IsVisibleToNonSubscribers, Now);
+                await this.target.ExecuteAsync(UserId, ChannelId, Name, Description, Price, IsVisibleToNonSubscribers, Now);
 
                 return ExpectedSideEffects.None;
             });
@@ -69,7 +75,7 @@
                 var channel = await this.CreateChannelAsync(testDatabase);
                 await testDatabase.TakeSnapshotAsync();
 
-                await this.target.ExecuteAsync(ChannelId, Name, Description, Price, IsVisibleToNonSubscribers, Now);
+                await this.target.ExecuteAsync(UserId, ChannelId, Name, Description, Price, IsVisibleToNonSubscribers, Now);
 
                 var expectedChannel = new Channel(ChannelId.Value)
                 {
@@ -90,6 +96,59 @@
         }
 
         [TestMethod]
+        public async Task ItShouldRequestSnapshotAfterUpdate()
+        {
+            await this.DatabaseTestAsync(async testDatabase =>
+            {
+                var trackingDatabase = new TrackingConnectionFactory(testDatabase);
+                this.InitializeTarget(trackingDatabase);
+                var channel = await this.CreateChannelAsync(testDatabase);
+                await testDatabase.TakeSnapshotAsync();
+
+                this.requestSnapshot.VerifyConnectionDisposed(trackingDatabase);
+
+                await this.target.ExecuteAsync(UserId, ChannelId, Name, Description, Price, IsVisibleToNonSubscribers, Now);
+
+                this.requestSnapshot.VerifyCalledWith(UserId, SnapshotType.CreatorChannels);
+
+                var expectedChannel = new Channel(ChannelId.Value)
+                {
+                    IsVisibleToNonSubscribers = IsVisibleToNonSubscribers,
+                    Name = Name.Value,
+                    Description = Description.Value,
+                    PriceInUsCentsPerWeek = Price.Value,
+                    PriceLastSetDate = Now,
+                    BlogId = channel.BlogId,
+                    CreationDate = channel.CreationDate
+                };
+
+                return new ExpectedSideEffects
+                {
+                    Update = expectedChannel
+                };
+            });
+        }
+
+        [TestMethod]
+        public async Task ItShouldAbortUpdateIfSnapshotFails()
+        {
+            await this.DatabaseTestAsync(async testDatabase =>
+            {
+                var trackingDatabase = new TrackingConnectionFactory(testDatabase);
+                this.InitializeTarget(trackingDatabase);
+                await this.CreateChannelAsync(testDatabase);
+                await testDatabase.TakeSnapshotAsync();
+
+                this.requestSnapshot.ThrowException();
+
+                await ExpectedException.AssertExceptionAsync<SnapshotException>(
+                    () => this.target.ExecuteAsync(UserId, ChannelId, Name, Description, Price, IsVisibleToNonSubscribers, Now));
+
+                return ExpectedSideEffects.TransactionAborted;
+            });
+        }
+
+        [TestMethod]
         public async Task ItShouldNotAllowDefaultChannelToBeHidden()
         {
             await this.DatabaseTestAsync(async testDatabase =>
@@ -98,7 +157,7 @@
                 var channel = await this.CreateChannelAsync(testDatabase, createAsDefaultChannel: true);
                 await testDatabase.TakeSnapshotAsync();
 
-                await this.target.ExecuteAsync(ChannelId, Name, Description, Price, false, Now);
+                await this.target.ExecuteAsync(UserId, ChannelId, Name, Description, Price, false, Now);
 
                 var expectedChannel = new Channel(ChannelId.Value)
                 {
@@ -128,6 +187,7 @@
                 await testDatabase.TakeSnapshotAsync();
 
                 await this.target.ExecuteAsync(
+                    UserId, 
                     ChannelId, 
                     Name, 
                     Description, 

@@ -7,6 +7,7 @@
     using Fifthweek.Api.FileManagement.Shared;
     using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.CodeGeneration;
+    using Fifthweek.Payments.Services;
     using Fifthweek.Shared;
 
     [AutoConstructor]
@@ -24,7 +25,8 @@
             var userId = await this.requesterSecurity.AuthenticateAsync(command.Requester);
             await this.collectionSecurity.AssertWriteAllowedAsync(userId, command.ChannelId);
 
-            await this.deleteChannel.ExecuteAsync(command.ChannelId);
+            await this.deleteChannel.ExecuteAsync(userId, command.ChannelId);
+
             await this.scheduleGarbageCollection.ExecuteAsync();
         }
     }

@@ -13,12 +13,14 @@
     using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.Api.Persistence;
     using Fifthweek.CodeGeneration;
+    using Fifthweek.Payments.Services;
     using Fifthweek.Shared;
 
     [AutoConstructor]
     public partial class AcceptChannelSubscriptionPriceChangeDbStatement : IAcceptChannelSubscriptionPriceChangeDbStatement
     {
         private readonly IFifthweekDbConnectionFactory connectionFactory;
+        private readonly IRequestSnapshotService requestSnapshot;
 
         public async Task ExecuteAsync(
             UserId userId, 
@@ -30,24 +32,31 @@
             channelId.AssertNotNull("channelId");
             acceptedPrice.AssertNotNull("acceptedPrice");
 
-            using (var connection = this.connectionFactory.CreateConnection())
+            using (var transaction = TransactionScopeBuilder.CreateAsync())
             {
-                var channelSubscription = new ChannelSubscription(
-                    channelId.Value,
-                    null,
-                    userId.Value,
-                    null,
-                    acceptedPrice.Value,
-                    now,
-                    now);
+                using (var connection = this.connectionFactory.CreateConnection())
+                {
+                    var channelSubscription = new ChannelSubscription(
+                        channelId.Value,
+                        null,
+                        userId.Value,
+                        null,
+                        acceptedPrice.Value,
+                        now,
+                        now);
 
-                const ChannelSubscription.Fields UpdateFields
-                    = ChannelSubscription.Fields.AcceptedPriceInUsCentsPerWeek
-                    | ChannelSubscription.Fields.PriceLastAcceptedDate;
+                    const ChannelSubscription.Fields UpdateFields
+                        = ChannelSubscription.Fields.AcceptedPriceInUsCentsPerWeek
+                        | ChannelSubscription.Fields.PriceLastAcceptedDate;
 
-                await connection.UpdateAsync(
-                    channelSubscription,
-                    UpdateFields);
+                    await connection.UpdateAsync(
+                        channelSubscription,
+                        UpdateFields);
+                }
+
+                await this.requestSnapshot.ExecuteAsync(userId, SnapshotType.SubscriberChannels);
+
+                transaction.Complete();
             }
         }
     }

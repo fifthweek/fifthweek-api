@@ -13,6 +13,9 @@
     using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.Api.Persistence;
     using Fifthweek.Api.Persistence.Tests.Shared;
+    using Fifthweek.Payments.Services;
+    using Fifthweek.Payments.Tests.Shared;
+    using Fifthweek.Tests.Shared;
 
     using Microsoft.VisualStudio.TestTools.UnitTesting;
 
@@ -61,12 +64,14 @@
 
         private readonly Random random = new Random();
 
+        private MockRequestSnapshotService requestSnapshot;
         private UpdateBlogSubscriptionsDbStatement target;
 
         [TestInitialize]
         public void TestInitialize()
         {
-            this.target = new UpdateBlogSubscriptionsDbStatement(new Mock<IFifthweekDbConnectionFactory>(MockBehavior.Strict).Object);
+            this.requestSnapshot = new MockRequestSnapshotService();
+            this.target = new UpdateBlogSubscriptionsDbStatement(new Mock<IFifthweekDbConnectionFactory>(MockBehavior.Strict).Object, this.requestSnapshot);
         }
 
         [TestMethod]
@@ -88,7 +93,7 @@
         {
             await this.DatabaseTestAsync(async testDatabase =>
             {
-                this.target = new UpdateBlogSubscriptionsDbStatement(testDatabase);
+                this.target = new UpdateBlogSubscriptionsDbStatement(testDatabase, this.requestSnapshot);
 
                 await this.CreateDataAsync(testDatabase);
 
@@ -105,7 +110,7 @@
         {
             await this.DatabaseTestAsync(async testDatabase =>
             {
-                this.target = new UpdateBlogSubscriptionsDbStatement(testDatabase);
+                this.target = new UpdateBlogSubscriptionsDbStatement(testDatabase, this.requestSnapshot);
 
                 await this.CreateDataAsync(testDatabase);
                 await testDatabase.TakeSnapshotAsync();
@@ -128,11 +133,62 @@
         }
 
         [TestMethod]
+        public async Task ItShouldRequestSnapshotAfterUpdate()
+        {
+            await this.DatabaseTestAsync(async testDatabase =>
+            {
+                var trackingDatabase = new TrackingConnectionFactory(testDatabase);
+                this.target = new UpdateBlogSubscriptionsDbStatement(trackingDatabase, this.requestSnapshot);
+
+                await this.CreateDataAsync(testDatabase);
+                await testDatabase.TakeSnapshotAsync();
+
+                this.requestSnapshot.VerifyConnectionDisposed(trackingDatabase);
+
+                await this.target.ExecuteAsync(UserId, Blog3Id, AcceptedBlog3Subscriptions1, Now);
+
+                this.requestSnapshot.VerifyCalledWith(UserId, SnapshotType.SubscriberChannels);
+
+                var expectedResults =
+                    AcceptedBlog3Subscriptions1.Select(
+                        v => new ChannelSubscription(
+                            v.ChannelId.Value,
+                            null,
+                            UserId.Value,
+                            null,
+                            v.AcceptedPrice.Value,
+                            Now,
+                            SubscriptionStartDate)).ToList();
+
+                return new ExpectedSideEffects { Updates = expectedResults };
+            });
+        }
+
+        [TestMethod]
+        public async Task ItShouldNotUpdateIfSnapshotFails()
+        {
+            await this.DatabaseTestAsync(async testDatabase =>
+            {
+                this.target = new UpdateBlogSubscriptionsDbStatement(testDatabase, this.requestSnapshot);
+
+                await this.CreateDataAsync(testDatabase);
+                await testDatabase.TakeSnapshotAsync();
+
+                this.requestSnapshot.ThrowException();
+
+                await ExpectedException.AssertExceptionAsync<SnapshotException>(
+                    () => this.target.ExecuteAsync(UserId, Blog3Id, AcceptedBlog3Subscriptions1, Now));
+
+                return ExpectedSideEffects.TransactionAborted;
+            });
+        }
+
+        [TestMethod]
         public async Task WhenTheSubscriptionHasChangedChanged_ItShouldUpdateTheSubscription()
         {
             await this.DatabaseTestAsync(async testDatabase =>
             {
-                this.target = new UpdateBlogSubscriptionsDbStatement(testDatabase);
+                this.target = new UpdateBlogSubscriptionsDbStatement(testDatabase, this.requestSnapshot);
 
                 await this.CreateDataAsync(testDatabase);
                 await testDatabase.TakeSnapshotAsync();

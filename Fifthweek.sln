@@ -166,6 +166,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fifthweek.Payments", "Fifth
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fifthweek.Payments.Tests", "Fifthweek.Payments.Tests\Fifthweek.Payments.Tests.csproj", "{261BBA3A-829A-41B0-9B70-6A2D22E8C03F}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fifthweek.WebJobs.Snapshots", "Fifthweek.WebJobs.Snapshots\Fifthweek.WebJobs.Snapshots.csproj", "{1EC1FA9F-E62E-4481-96E5-1A136CE4DFC0}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fifthweek.Payments.Tests.Shared", "Fifthweek.Payments.Tests.Shared\Fifthweek.Payments.Tests.Shared.csproj", "{0EB8296A-D442-479E-A193-90A7AAED8E75}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -404,6 +408,14 @@ Global
 		{261BBA3A-829A-41B0-9B70-6A2D22E8C03F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{261BBA3A-829A-41B0-9B70-6A2D22E8C03F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{261BBA3A-829A-41B0-9B70-6A2D22E8C03F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1EC1FA9F-E62E-4481-96E5-1A136CE4DFC0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1EC1FA9F-E62E-4481-96E5-1A136CE4DFC0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1EC1FA9F-E62E-4481-96E5-1A136CE4DFC0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1EC1FA9F-E62E-4481-96E5-1A136CE4DFC0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0EB8296A-D442-479E-A193-90A7AAED8E75}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0EB8296A-D442-479E-A193-90A7AAED8E75}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0EB8296A-D442-479E-A193-90A7AAED8E75}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0EB8296A-D442-479E-A193-90A7AAED8E75}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

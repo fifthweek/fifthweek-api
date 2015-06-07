@@ -3,9 +3,10 @@
     using System.Threading.Tasks;
 
     using Fifthweek.Api.Channels.Shared;
+    using Fifthweek.Api.Identity.Shared.Membership;
 
     public interface IDeleteChannelDbStatement
     {
-        Task ExecuteAsync(ChannelId channelId); 
+        Task ExecuteAsync(UserId userId, ChannelId channelId); 
     }
 }

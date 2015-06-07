@@ -140,6 +140,14 @@
       <Project>{493FC9F2-6A6B-46C0-9BC9-83F8A3B60F9E}</Project>
       <Name>Fifthweek.Api.Posts.Shared</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Fifthweek.Payments.Tests.Shared\Fifthweek.Payments.Tests.Shared.csproj">
+      <Project>{0eb8296a-d442-479e-a193-90a7aaed8e75}</Project>
+      <Name>Fifthweek.Payments.Tests.Shared</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Fifthweek.Payments\Fifthweek.Payments.csproj">
+      <Project>{9C64B84A-264B-44BC-8D47-BCC52B88E0AC}</Project>
+      <Name>Fifthweek.Payments</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Fifthweek.Tests.Shared\Fifthweek.Tests.Shared.csproj">
       <Project>{85691D93-9C0C-498B-8341-1990BC8E24B2}</Project>
       <Name>Fifthweek.Tests.Shared</Name>

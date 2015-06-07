@@ -6,8 +6,10 @@
 
     using Fifthweek.Api.Channels.Shared;
     using Fifthweek.Api.Core;
+    using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.Api.Persistence;
     using Fifthweek.CodeGeneration;
+    using Fifthweek.Payments.Services;
     using Fifthweek.Shared;
 
     [AutoConstructor]
@@ -31,18 +33,27 @@
             Post.Fields.ChannelId);
 
         private readonly IFifthweekDbConnectionFactory connectionFactory;
+        private readonly IRequestSnapshotService requestSnapshot;
 
-        public async Task ExecuteAsync(ChannelId channelId)
+        public async Task ExecuteAsync(UserId userId, ChannelId channelId)
         {
+            userId.AssertNotNull("userId");
             channelId.AssertNotNull("channelId");
             var channelIdParameter = new
             {
                 ChannelId = channelId.Value
             };
 
-            using (var connection = this.connectionFactory.CreateConnection())
+            using (var transaction = TransactionScopeBuilder.CreateAsync())
             {
-                await connection.ExecuteAsync(DeleteSql, channelIdParameter);
+                using (var connection = this.connectionFactory.CreateConnection())
+                {
+                    await connection.ExecuteAsync(DeleteSql, channelIdParameter);
+                }
+
+                await this.requestSnapshot.ExecuteAsync(userId, SnapshotType.CreatorChannels);
+
+                transaction.Complete();
             }
         }
     }

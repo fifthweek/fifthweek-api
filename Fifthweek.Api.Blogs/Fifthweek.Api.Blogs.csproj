@@ -90,7 +90,6 @@
     <Compile Include="Commands\AcceptedChannelSubscription.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Commands\SetSubscribedChannelsCommand.cs" />
     <Compile Include="Commands\UnsubscribeFromChannelCommand.cs" />
     <Compile Include="Commands\UnsubscribeFromChannelCommandHandler.cs" />
     <Compile Include="Commands\UpdateBlogSubscriptionsCommand.cs">
@@ -194,6 +193,10 @@
     <ProjectReference Include="..\Fifthweek.CodeGeneration\Fifthweek.CodeGeneration.csproj">
       <Project>{770f450e-2166-4269-bec1-df59aa16b1e8}</Project>
       <Name>Fifthweek.CodeGeneration</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Fifthweek.Payments\Fifthweek.Payments.csproj">
+      <Project>{9C64B84A-264B-44BC-8D47-BCC52B88E0AC}</Project>
+      <Name>Fifthweek.Payments</Name>
     </ProjectReference>
     <ProjectReference Include="..\Fifthweek.Shared\Fifthweek.Shared.csproj">
       <Project>{6d12ffbb-38e9-4722-a690-0f0338538ebc}</Project>

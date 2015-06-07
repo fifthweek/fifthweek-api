@@ -8,8 +8,10 @@
     using Dapper;
 
     using Fifthweek.Api.Channels.Shared;
+    using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.Api.Persistence;
     using Fifthweek.CodeGeneration;
+    using Fifthweek.Payments.Services;
     using Fifthweek.Shared;
 
     [AutoConstructor]
@@ -55,8 +57,10 @@
             Channel.Fields.BlogId);
 
         private readonly IFifthweekDbConnectionFactory connectionFactory;
+        private readonly IRequestSnapshotService requestSnapshot;
 
         public async Task ExecuteAsync(
+            UserId userId,
             ChannelId channelId,
             ValidChannelName name,
             ValidChannelDescription description,
@@ -64,19 +68,26 @@
             bool isVisibleToNonSubscribers, 
             DateTime now)
         {
-            using (var connection = this.connectionFactory.CreateConnection())
+            using (var transaction = TransactionScopeBuilder.CreateAsync())
             {
-                await connection.ExecuteAsync(
-                    UpdateStatement,
-                    new 
-                    {
-                        Id = channelId.Value,
-                        IsVisibleToNonSubscribers = isVisibleToNonSubscribers,
-                        Name = name.Value,
-                        PriceInUsCentsPerWeek = price.Value,
-                        Description = description.Value,
-                        PriceLastSetDate = now
-                    });
+                using (var connection = this.connectionFactory.CreateConnection())
+                {
+                    await connection.ExecuteAsync(
+                        UpdateStatement,
+                        new 
+                        {
+                            Id = channelId.Value,
+                            IsVisibleToNonSubscribers = isVisibleToNonSubscribers,
+                            Name = name.Value,
+                            PriceInUsCentsPerWeek = price.Value,
+                            Description = description.Value,
+                            PriceLastSetDate = now
+                        });
+                }
+
+                await this.requestSnapshot.ExecuteAsync(userId, SnapshotType.CreatorChannels);
+
+                transaction.Complete();
             }
         }
     }

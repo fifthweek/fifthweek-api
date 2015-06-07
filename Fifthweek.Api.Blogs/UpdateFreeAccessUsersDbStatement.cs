@@ -11,6 +11,7 @@
     using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.Api.Persistence;
     using Fifthweek.CodeGeneration;
+    using Fifthweek.Payments.Services;
     using Fifthweek.Shared;
 
     [AutoConstructor]
@@ -28,9 +29,11 @@
             FreeAccessUser.Fields.Email);
 
         private readonly IFifthweekDbConnectionFactory connectionFactory;
+        private readonly IRequestSnapshotService requestSnapshot;
 
-        public async Task ExecuteAsync(BlogId blogId, IReadOnlyList<ValidEmail> emails)
+        public async Task ExecuteAsync(UserId userId, BlogId blogId, IReadOnlyList<ValidEmail> emails)
         {
+            userId.AssertNotNull("userId");
             blogId.AssertNotNull("blogId");
 
             if (emails == null)
@@ -38,17 +41,17 @@
                 emails = new List<ValidEmail>();
             }
 
-            using (var connection = this.connectionFactory.CreateConnection())
+            using (var transaction = TransactionScopeBuilder.CreateAsync())
             {
-                if (emails.Count == 0)
+                using (var connection = this.connectionFactory.CreateConnection())
                 {
-                    await connection.ExecuteAsync(
-                        DeleteQuery, 
-                        new { BlogId = blogId.Value });
-                }
-                else
-                {
-                    using (var transaction = TransactionScopeBuilder.CreateAsync())
+                    if (emails.Count == 0)
+                    {
+                        await connection.ExecuteAsync(
+                            DeleteQuery, 
+                            new { BlogId = blogId.Value });
+                    }
+                    else
                     {
                         await connection.ExecuteAsync(
                             DeleteQuery, 
@@ -57,10 +60,12 @@
                         await connection.ExecuteAsync(
                             AddQuery,
                             emails.Select(v => new { BlogId = blogId.Value, Email = v.Value }).ToList());
-
-                        transaction.Complete();
                     }
                 }
+
+                await this.requestSnapshot.ExecuteAsync(userId, SnapshotType.CreatorGuestList);
+
+                transaction.Complete();
             }
         }
     }

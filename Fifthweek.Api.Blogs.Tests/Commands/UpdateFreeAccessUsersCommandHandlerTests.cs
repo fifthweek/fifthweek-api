@@ -55,7 +55,7 @@
 
         private void SetupDbStatement()
         {
-            this.updateFreeAccessUsers.Setup(v => v.ExecuteAsync(Command.BlogId, UniqueEmailAddresses))
+            this.updateFreeAccessUsers.Setup(v => v.ExecuteAsync(UserId, Command.BlogId, UniqueEmailAddresses))
                 .Returns(Task.FromResult(0))
                 .Verifiable();
         }

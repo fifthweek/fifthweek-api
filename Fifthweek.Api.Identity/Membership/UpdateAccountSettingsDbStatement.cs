@@ -12,14 +12,15 @@
     using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.Api.Persistence;
     using Fifthweek.CodeGeneration;
+    using Fifthweek.Payments.Services;
     using Fifthweek.Shared;
 
     [AutoConstructor]
     public partial class UpdateAccountSettingsDbStatement : IUpdateAccountSettingsDbStatement
     {
         private readonly IFifthweekDbConnectionFactory connectionFactory;
-
         private readonly IUserManager userManager;
+        private readonly IRequestSnapshotService requestSnapshot;
 
         public async Task<UpdateAccountSettingsResult> ExecuteAsync(
             UserId userId,
@@ -72,22 +73,30 @@
 
             query.Append(@"select @emailConfirmed");
 
-            using (var connection = this.connectionFactory.CreateConnection())
+            bool emailConfirmed;
+            using (var transaction = TransactionScopeBuilder.CreateAsync())
             {
-                var emailConfirmed = await connection.ExecuteScalarAsync<bool>(
-                    query.ToString(),
-                    new
-                    {
-                        UserId = userId.Value,
-                        Username = newUsername.Value,
-                        Email = newEmail.Value,
-                        PasswordHash = passwordHash,
-                        SecurityStamp = newSecurityStamp,
-                        ProfileImageFileId = newProfileImageFileId == null ? (Guid?)null : newProfileImageFileId.Value
-                    });
+                using (var connection = this.connectionFactory.CreateConnection())
+                {
+                    emailConfirmed = await connection.ExecuteScalarAsync<bool>(
+                        query.ToString(),
+                        new
+                        {
+                            UserId = userId.Value,
+                            Username = newUsername.Value,
+                            Email = newEmail.Value,
+                            PasswordHash = passwordHash,
+                            SecurityStamp = newSecurityStamp,
+                            ProfileImageFileId = newProfileImageFileId == null ? (Guid?)null : newProfileImageFileId.Value
+                        });
+                }
 
-                return new UpdateAccountSettingsResult(emailConfirmed);
+                await this.requestSnapshot.ExecuteAsync(userId, SnapshotType.SubscriberChannels);
+
+                transaction.Complete();
             }
+
+            return new UpdateAccountSettingsResult(emailConfirmed);
         }
 
         [AutoConstructor, AutoEqualityMembers]

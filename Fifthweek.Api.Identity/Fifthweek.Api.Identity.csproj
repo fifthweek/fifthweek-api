@@ -77,6 +77,7 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\Microsoft.AspNet.WebApi.Client.5.2.2\lib\net45\System.Net.Http.Formatting.dll</HintPath>
     </Reference>
+    <Reference Include="System.Transactions" />
     <Reference Include="System.Web" />
     <Reference Include="System.Web.Http, Version=5.2.2.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -221,6 +222,10 @@
     <ProjectReference Include="..\Fifthweek.CodeGeneration\Fifthweek.CodeGeneration.csproj">
       <Project>{770f450e-2166-4269-bec1-df59aa16b1e8}</Project>
       <Name>Fifthweek.CodeGeneration</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Fifthweek.Payments\Fifthweek.Payments.csproj">
+      <Project>{9C64B84A-264B-44BC-8D47-BCC52B88E0AC}</Project>
+      <Name>Fifthweek.Payments</Name>
     </ProjectReference>
     <ProjectReference Include="..\Fifthweek.Shared\Fifthweek.Shared.csproj">
       <Project>{6d12ffbb-38e9-4722-a690-0f0338538ebc}</Project>

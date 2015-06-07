@@ -128,6 +128,10 @@
       <Project>{5f5df240-536a-41b6-bfec-4f89940eb053}</Project>
       <Name>Fifthweek.Api.SendGrid</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Fifthweek.Payments\Fifthweek.Payments.csproj">
+      <Project>{9c64b84a-264b-44bc-8d47-bcc52b88e0ac}</Project>
+      <Name>Fifthweek.Payments</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Fifthweek.Shared\Fifthweek.Shared.csproj">
       <Project>{6d12ffbb-38e9-4722-a690-0f0338538ebc}</Project>
       <Name>Fifthweek.Shared</Name>

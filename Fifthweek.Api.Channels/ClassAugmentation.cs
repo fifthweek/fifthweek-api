@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Linq;
 
-//// Generated on 11/04/2015 08:47:48 (UTC)
-//// Mapped solution in 7.25s
+//// Generated on 05/06/2015 14:49:14 (UTC)
+//// Mapped solution in 6.08s
 
 
 namespace Fifthweek.Api.Channels
@@ -76,6 +76,7 @@ namespace Fifthweek.Api.Channels.Commands
     using Fifthweek.Api.FileManagement.Shared;
     using System.Data.Entity;
     using Fifthweek.Shared;
+    using Fifthweek.Payments.Services;
 
     public partial class CreateChannelCommand 
     {
@@ -148,13 +149,15 @@ namespace Fifthweek.Api.Channels.Commands
     using Fifthweek.Api.FileManagement.Shared;
     using System.Data.Entity;
     using Fifthweek.Shared;
+    using Fifthweek.Payments.Services;
 
     public partial class CreateChannelCommandHandler 
     {
         public CreateChannelCommandHandler(
             Fifthweek.Api.Identity.Shared.Membership.IRequesterSecurity requesterSecurity,
             Fifthweek.Api.Blogs.Shared.IBlogSecurity blogSecurity,
-            Fifthweek.Api.Persistence.IFifthweekDbConnectionFactory connectionFactory)
+            Fifthweek.Api.Persistence.IFifthweekDbConnectionFactory connectionFactory,
+            Fifthweek.Payments.Services.IRequestSnapshotService requestSnapshot)
         {
             if (requesterSecurity == null)
             {
@@ -171,9 +174,15 @@ namespace Fifthweek.Api.Channels.Commands
                 throw new ArgumentNullException("connectionFactory");
             }
 
+            if (requestSnapshot == null)
+            {
+                throw new ArgumentNullException("requestSnapshot");
+            }
+
             this.requesterSecurity = requesterSecurity;
             this.blogSecurity = blogSecurity;
             this.connectionFactory = connectionFactory;
+            this.requestSnapshot = requestSnapshot;
         }
     }
 }
@@ -192,6 +201,7 @@ namespace Fifthweek.Api.Channels.Commands
     using Fifthweek.Api.FileManagement.Shared;
     using System.Data.Entity;
     using Fifthweek.Shared;
+    using Fifthweek.Payments.Services;
 
     public partial class UpdateChannelCommand 
     {
@@ -257,6 +267,7 @@ namespace Fifthweek.Api.Channels.Commands
     using Fifthweek.Api.FileManagement.Shared;
     using System.Data.Entity;
     using Fifthweek.Shared;
+    using Fifthweek.Payments.Services;
 
     public partial class UpdateChannelCommandHandler 
     {
@@ -459,6 +470,7 @@ namespace Fifthweek.Api.Channels.Commands
     using Fifthweek.Api.FileManagement.Shared;
     using System.Data.Entity;
     using Fifthweek.Shared;
+    using Fifthweek.Payments.Services;
 
     public partial class DeleteChannelCommand 
     {
@@ -496,6 +508,7 @@ namespace Fifthweek.Api.Channels.Commands
     using Fifthweek.Api.FileManagement.Shared;
     using System.Data.Entity;
     using Fifthweek.Shared;
+    using Fifthweek.Payments.Services;
 
     public partial class DeleteChannelCommandHandler 
     {
@@ -545,18 +558,26 @@ namespace Fifthweek.Api.Channels
     using Fifthweek.Shared;
     using Fifthweek.Api.Channels.Shared;
     using System.Data.Entity;
+    using Fifthweek.Payments.Services;
 
     public partial class DeleteChannelDbStatement 
     {
         public DeleteChannelDbStatement(
-            Fifthweek.Api.Persistence.IFifthweekDbConnectionFactory connectionFactory)
+            Fifthweek.Api.Persistence.IFifthweekDbConnectionFactory connectionFactory,
+            Fifthweek.Payments.Services.IRequestSnapshotService requestSnapshot)
         {
             if (connectionFactory == null)
             {
                 throw new ArgumentNullException("connectionFactory");
             }
 
+            if (requestSnapshot == null)
+            {
+                throw new ArgumentNullException("requestSnapshot");
+            }
+
             this.connectionFactory = connectionFactory;
+            this.requestSnapshot = requestSnapshot;
         }
     }
 }
@@ -573,18 +594,26 @@ namespace Fifthweek.Api.Channels
     using Fifthweek.Shared;
     using Fifthweek.Api.Channels.Shared;
     using System.Data.Entity;
+    using Fifthweek.Payments.Services;
 
     public partial class UpdateChannelDbStatement 
     {
         public UpdateChannelDbStatement(
-            Fifthweek.Api.Persistence.IFifthweekDbConnectionFactory connectionFactory)
+            Fifthweek.Api.Persistence.IFifthweekDbConnectionFactory connectionFactory,
+            Fifthweek.Payments.Services.IRequestSnapshotService requestSnapshot)
         {
             if (connectionFactory == null)
             {
                 throw new ArgumentNullException("connectionFactory");
             }
 
+            if (requestSnapshot == null)
+            {
+                throw new ArgumentNullException("requestSnapshot");
+            }
+
             this.connectionFactory = connectionFactory;
+            this.requestSnapshot = requestSnapshot;
         }
     }
 }
@@ -604,6 +633,7 @@ namespace Fifthweek.Api.Channels.Commands
     using Fifthweek.Api.FileManagement.Shared;
     using System.Data.Entity;
     using Fifthweek.Shared;
+    using Fifthweek.Payments.Services;
 
     public partial class CreateChannelCommand 
     {
@@ -704,6 +734,7 @@ namespace Fifthweek.Api.Channels.Commands
     using Fifthweek.Api.FileManagement.Shared;
     using System.Data.Entity;
     using Fifthweek.Shared;
+    using Fifthweek.Payments.Services;
 
     public partial class UpdateChannelCommand 
     {
@@ -962,6 +993,7 @@ namespace Fifthweek.Api.Channels.Commands
     using Fifthweek.Api.FileManagement.Shared;
     using System.Data.Entity;
     using Fifthweek.Shared;
+    using Fifthweek.Payments.Services;
 
     public partial class DeleteChannelCommand 
     {

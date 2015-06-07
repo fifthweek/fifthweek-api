@@ -72,6 +72,7 @@
         public async Task ItShouldCallTheUpdateChannelDbStatement()
         {
             this.updateChannelDbStatement.Setup(v => v.ExecuteAsync(
+                UserId,
                 ChannelId,
                 Name,
                 Description,

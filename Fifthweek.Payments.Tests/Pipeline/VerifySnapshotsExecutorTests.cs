@@ -217,7 +217,7 @@
                     CreatorSnapshot.Default(Now.AddSeconds(1), CreatorId1),
                     SubscriberSnapshot.Default(Now.AddSeconds(1), SubscriberId1),
                     new SubscriberSnapshot(Now.AddSeconds(2), SubscriberId1, "email", new List<SubscriberChannelSnapshot> { new SubscriberChannelSnapshot(Guid.NewGuid(), 100, Now) }),
-                    CreatorGuestListSnapshot.Default(DateTime.Now.AddDays(2), CreatorId1),
+                    CreatorGuestListSnapshot.Default(DateTime.UtcNow.AddDays(2), CreatorId1),
                 });
         }
 
@@ -237,7 +237,7 @@
                     CreatorSnapshot.Default(Now.AddSeconds(1), CreatorId1),
                     SubscriberSnapshot.Default(Now.AddSeconds(1), SubscriberId1),
                     new SubscriberSnapshot(Now.AddSeconds(2), SubscriberId1, "email", new List<SubscriberChannelSnapshot> { new SubscriberChannelSnapshot(Guid.NewGuid(), 100, DateTime.Now) }),
-                    CreatorGuestListSnapshot.Default(DateTime.Now.AddDays(2), CreatorId1),
+                    CreatorGuestListSnapshot.Default(DateTime.UtcNow.AddDays(2), CreatorId1),
                 });
         }
     }

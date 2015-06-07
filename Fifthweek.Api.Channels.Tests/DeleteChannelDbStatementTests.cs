@@ -14,6 +14,9 @@
     using Fifthweek.Api.Persistence;
     using Fifthweek.Api.Persistence.Tests.Shared;
     using Fifthweek.Api.Posts.Shared;
+    using Fifthweek.Payments.Services;
+    using Fifthweek.Payments.Tests.Shared;
+    using Fifthweek.Tests.Shared;
 
     using Microsoft.VisualStudio.TestTools.UnitTesting;
 
@@ -29,6 +32,7 @@
         private static readonly FileId FileId = new FileId(Guid.NewGuid());
 
         private Mock<IFifthweekDbConnectionFactory> connectionFactory;
+        private MockRequestSnapshotService requestSnapshot;
         private DeleteChannelDbStatement target;
 
         [TestInitialize]
@@ -36,20 +40,27 @@
         {
             // Give potentially side-effective components strict mock behaviour.
             this.connectionFactory = new Mock<IFifthweekDbConnectionFactory>(MockBehavior.Strict);
-
+            this.requestSnapshot = new MockRequestSnapshotService();
             this.InitializeTarget(this.connectionFactory.Object);
         }
 
         public void InitializeTarget(IFifthweekDbConnectionFactory connectionFactory)
         {
-            this.target = new DeleteChannelDbStatement(connectionFactory);
+            this.target = new DeleteChannelDbStatement(connectionFactory, this.requestSnapshot);
         }
 
         [TestMethod]
         [ExpectedException(typeof(ArgumentNullException))]
         public async Task ItShouldRequireChannelId()
         {
-            await this.target.ExecuteAsync(null);
+            await this.target.ExecuteAsync(UserId, null);
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentNullException))]
+        public async Task ItShouldRequireUserId()
+        {
+            await this.target.ExecuteAsync(null, ChannelId);
         }
 
         [TestMethod]
@@ -59,10 +70,10 @@
             {
                 this.InitializeTarget(testDatabase);
                 await this.CreateEntitiesAsync(testDatabase);
-                await this.target.ExecuteAsync(ChannelId);
+                await this.target.ExecuteAsync(UserId, ChannelId);
                 await testDatabase.TakeSnapshotAsync();
 
-                await this.target.ExecuteAsync(ChannelId);
+                await this.target.ExecuteAsync(UserId, ChannelId);
 
                 return ExpectedSideEffects.None;
             });
@@ -78,12 +89,55 @@
                 var expectedDeletions = await this.GetExpectedDeletionsAsync(testDatabase);
                 await testDatabase.TakeSnapshotAsync();
 
-                await this.target.ExecuteAsync(ChannelId);
+                await this.target.ExecuteAsync(UserId, ChannelId);
 
                 return new ExpectedSideEffects
                 {
                     Deletes = expectedDeletions,
                 };
+            });
+        }
+
+        [TestMethod]
+        public async Task ItShouldRequestSnapshotAfterUpdate()
+        {
+            await this.DatabaseTestAsync(async testDatabase =>
+            {
+                var trackingDatabase = new TrackingConnectionFactory(testDatabase);
+                this.InitializeTarget(trackingDatabase);
+                await this.CreateEntitiesAsync(testDatabase);
+                var expectedDeletions = await this.GetExpectedDeletionsAsync(testDatabase);
+                await testDatabase.TakeSnapshotAsync();
+
+                this.requestSnapshot.VerifyConnectionDisposed(trackingDatabase);
+
+                await this.target.ExecuteAsync(UserId, ChannelId);
+
+                this.requestSnapshot.VerifyCalledWith(UserId, SnapshotType.CreatorChannels);
+
+                return new ExpectedSideEffects
+                {
+                    Deletes = expectedDeletions,
+                };
+            });
+        }
+
+        [TestMethod]
+        public async Task ItShouldAbortUpdateIfSnapshotFails()
+        {
+            await this.DatabaseTestAsync(async testDatabase =>
+            {
+                this.InitializeTarget(testDatabase);
+                await this.CreateEntitiesAsync(testDatabase);
+                var expectedDeletions = await this.GetExpectedDeletionsAsync(testDatabase);
+                await testDatabase.TakeSnapshotAsync();
+
+                this.requestSnapshot.ThrowException();
+
+                await ExpectedException.AssertExceptionAsync<SnapshotException>(
+                    () => this.target.ExecuteAsync(UserId, ChannelId));
+
+                return ExpectedSideEffects.TransactionAborted;
             });
         }
 

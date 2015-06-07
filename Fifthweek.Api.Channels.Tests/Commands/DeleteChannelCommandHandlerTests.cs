@@ -9,6 +9,7 @@
     using Fifthweek.Api.FileManagement.Shared;
     using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.Api.Identity.Tests.Shared.Membership;
+    using Fifthweek.Payments.Services;
 
     using Microsoft.VisualStudio.TestTools.UnitTesting;
 
@@ -73,7 +74,7 @@
         [TestMethod]
         public async Task ItShouldDeleteChannel()
         {
-            this.deleteChannel.Setup(_ => _.ExecuteAsync(ChannelId)).Returns(Task.FromResult(0)).Verifiable();
+            this.deleteChannel.Setup(_ => _.ExecuteAsync(UserId, ChannelId)).Returns(Task.FromResult(0)).Verifiable();
             this.scheduleGarbageCollection.Setup(_ => _.ExecuteAsync()).Returns(Task.FromResult(0));
 
             await this.target.HandleAsync(Command);
@@ -84,7 +85,7 @@
         [TestMethod]
         public async Task ItShouldIssueGarbageChannel()
         {
-            this.deleteChannel.Setup(_ => _.ExecuteAsync(ChannelId)).Returns(Task.FromResult(0));
+            this.deleteChannel.Setup(_ => _.ExecuteAsync(UserId, ChannelId)).Returns(Task.FromResult(0));
             this.scheduleGarbageCollection.Setup(_ => _.ExecuteAsync()).Returns(Task.FromResult(0)).Verifiable();
 
             await this.target.HandleAsync(Command);

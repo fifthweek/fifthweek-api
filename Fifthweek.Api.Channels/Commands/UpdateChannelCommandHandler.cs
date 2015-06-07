@@ -10,6 +10,7 @@
     using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.Api.Persistence;
     using Fifthweek.CodeGeneration;
+    using Fifthweek.Payments.Services;
     using Fifthweek.Shared;
 
     [AutoConstructor]
@@ -27,6 +28,7 @@
             await this.channelSecurity.AssertWriteAllowedAsync(userId, command.ChannelId);
 
             await this.updateChannel.ExecuteAsync(
+                userId,
                 command.ChannelId,
                 command.Name,
                 command.Description,

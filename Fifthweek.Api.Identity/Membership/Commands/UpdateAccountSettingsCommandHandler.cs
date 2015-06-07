@@ -6,6 +6,7 @@
     using Fifthweek.Api.FileManagement.Shared;
     using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.CodeGeneration;
+    using Fifthweek.Payments.Services;
     using Fifthweek.Shared;
 
     [AutoConstructor]
@@ -30,12 +31,12 @@
             }
 
             var result = await this.updateAccountSettings.ExecuteAsync(
-                    command.RequestedUserId,
-                    command.NewUsername,
-                    command.NewEmail,
-                    command.NewPassword,
-                    command.NewProfileImageId,
-                    command.NewSecurityStamp);
+                        command.RequestedUserId,
+                        command.NewUsername,
+                        command.NewEmail,
+                        command.NewPassword,
+                        command.NewProfileImageId,
+                        command.NewSecurityStamp);
 
             if (!result.EmailConfirmed)
             {

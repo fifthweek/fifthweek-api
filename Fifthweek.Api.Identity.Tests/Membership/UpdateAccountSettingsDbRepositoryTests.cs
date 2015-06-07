@@ -10,6 +10,7 @@ namespace Fifthweek.Api.Identity.Membership.Tests
     using Fifthweek.Api.Persistence;
     using Fifthweek.Api.Persistence.Identity;
     using Fifthweek.Api.Persistence.Tests.Shared;
+    using Fifthweek.Payments.Tests.Shared;
     using Fifthweek.Tests.Shared;
 
     using Microsoft.AspNet.Identity;
@@ -31,6 +32,7 @@ namespace Fifthweek.Api.Identity.Membership.Tests
         private UpdateAccountSettingsDbStatement target;
         private Mock<IUserManager> userManager;
         private Mock<IPasswordHasher> passwordHasher;
+        private MockRequestSnapshotService requestSnapshot;
 
         [TestInitialize]
         public void Initialize()
@@ -38,9 +40,10 @@ namespace Fifthweek.Api.Identity.Membership.Tests
             this.passwordHasher = new Mock<IPasswordHasher>();
             this.userManager = new Mock<IUserManager>();
             this.userManager.Setup(v => v.PasswordHasher).Returns(this.passwordHasher.Object);
+            this.requestSnapshot = new MockRequestSnapshotService();
 
             // Required for non-database tests.
-            this.target = new UpdateAccountSettingsDbStatement(new Mock<IFifthweekDbConnectionFactory>(MockBehavior.Strict).Object, this.userManager.Object);
+            this.target = new UpdateAccountSettingsDbStatement(new Mock<IFifthweekDbConnectionFactory>(MockBehavior.Strict).Object, this.userManager.Object, this.requestSnapshot);
         }
 
         [TestMethod]
@@ -48,7 +51,7 @@ namespace Fifthweek.Api.Identity.Membership.Tests
         {
             await this.DatabaseTestAsync(async testDatabase =>
             {
-                this.target = new UpdateAccountSettingsDbStatement(testDatabase, this.userManager.Object);
+                this.target = new UpdateAccountSettingsDbStatement(testDatabase, this.userManager.Object, this.requestSnapshot);
                 await this.CreateUserAsync(testDatabase);
                 await testDatabase.TakeSnapshotAsync();
 
@@ -81,11 +84,88 @@ namespace Fifthweek.Api.Identity.Membership.Tests
         }
 
         [TestMethod]
+        public async Task WhenUpdateAccountSettingsCalled_ItShouldRequestSnapshotAfterUpdate()
+        {
+            await this.DatabaseTestAsync(async testDatabase =>
+            {
+                var trackingDatabase = new TrackingConnectionFactory(testDatabase);
+                this.target = new UpdateAccountSettingsDbStatement(trackingDatabase, this.userManager.Object, this.requestSnapshot);
+                await this.CreateUserAsync(testDatabase);
+                await testDatabase.TakeSnapshotAsync();
+
+                var hashedNewPassword = this.newPassword.Value + "1";
+                this.passwordHasher.Setup(v => v.HashPassword(this.newPassword.Value)).Returns(hashedNewPassword);
+
+                var expectedUser = await this.GetUserAsync(testDatabase);
+                expectedUser.UserName = this.newUsername.Value;
+                expectedUser.Email = this.newEmail.Value;
+                expectedUser.EmailConfirmed = false;
+                expectedUser.PasswordHash = hashedNewPassword;
+                expectedUser.ProfileImageFileId = this.newFileId.Value;
+                expectedUser.SecurityStamp = this.securityStamp;
+
+                this.requestSnapshot.VerifyConnectionDisposed(trackingDatabase);
+
+                var result = await this.target.ExecuteAsync(
+                    this.userId,
+                    this.newUsername,
+                    this.newEmail,
+                    this.newPassword,
+                    this.newFileId,
+                    this.securityStamp);
+
+                this.requestSnapshot.VerifyCalledWith(this.userId, Payments.Services.SnapshotType.SubscriberChannels);
+
+                Assert.AreEqual(false, result.EmailConfirmed);
+
+                return new ExpectedSideEffects
+                {
+                    Update = expectedUser
+                };
+            });
+        }
+
+        [TestMethod]
+        public async Task WhenUpdateAccountSettingsCalled_ItShouldAbortUpdateIfSnapshotFails()
+        {
+            await this.DatabaseTestAsync(async testDatabase =>
+            {
+                this.target = new UpdateAccountSettingsDbStatement(testDatabase, this.userManager.Object, this.requestSnapshot);
+                await this.CreateUserAsync(testDatabase);
+                await testDatabase.TakeSnapshotAsync();
+
+                var hashedNewPassword = this.newPassword.Value + "1";
+                this.passwordHasher.Setup(v => v.HashPassword(this.newPassword.Value)).Returns(hashedNewPassword);
+
+                var expectedUser = await this.GetUserAsync(testDatabase);
+                expectedUser.UserName = this.newUsername.Value;
+                expectedUser.Email = this.newEmail.Value;
+                expectedUser.EmailConfirmed = false;
+                expectedUser.PasswordHash = hashedNewPassword;
+                expectedUser.ProfileImageFileId = this.newFileId.Value;
+                expectedUser.SecurityStamp = this.securityStamp;
+
+                this.requestSnapshot.ThrowException();
+
+                await ExpectedException.AssertExceptionAsync<SnapshotException>(
+                    () => this.target.ExecuteAsync(
+                    this.userId,
+                    this.newUsername,
+                    this.newEmail,
+                    this.newPassword,
+                    this.newFileId,
+                    this.securityStamp));
+
+                return ExpectedSideEffects.TransactionAborted;
+            });
+        }
+
+        [TestMethod]
         public async Task WhenUpdateAccountSettingsCalledTwice_ItShouldBeIdempotent()
         {
             await this.DatabaseTestAsync(async testDatabase =>
             {
-                this.target = new UpdateAccountSettingsDbStatement(testDatabase, this.userManager.Object);
+                this.target = new UpdateAccountSettingsDbStatement(testDatabase, this.userManager.Object, this.requestSnapshot);
                 await this.CreateUserAsync(testDatabase);
 
                 var hashedNewPassword = this.newPassword.Value + "1";
@@ -120,7 +200,7 @@ namespace Fifthweek.Api.Identity.Membership.Tests
         {
             await this.DatabaseTestAsync(async testDatabase =>
             {
-                this.target = new UpdateAccountSettingsDbStatement(testDatabase, this.userManager.Object);
+                this.target = new UpdateAccountSettingsDbStatement(testDatabase, this.userManager.Object, this.requestSnapshot);
                 await this.CreateUserAsync(testDatabase, false);
                 await testDatabase.TakeSnapshotAsync();
 
@@ -157,7 +237,7 @@ namespace Fifthweek.Api.Identity.Membership.Tests
         {
             await this.DatabaseTestAsync(async testDatabase =>
                 {
-                    this.target = new UpdateAccountSettingsDbStatement(testDatabase, this.userManager.Object);
+                    this.target = new UpdateAccountSettingsDbStatement(testDatabase, this.userManager.Object, this.requestSnapshot);
                     await this.CreateUserAsync(testDatabase);
                     await testDatabase.TakeSnapshotAsync();
 
@@ -190,7 +270,7 @@ namespace Fifthweek.Api.Identity.Membership.Tests
         {
             await this.DatabaseTestAsync(async testDatabase =>
             {
-                this.target = new UpdateAccountSettingsDbStatement(testDatabase, this.userManager.Object);
+                this.target = new UpdateAccountSettingsDbStatement(testDatabase, this.userManager.Object, this.requestSnapshot);
                 await this.CreateUserAsync(testDatabase);
                 await testDatabase.TakeSnapshotAsync();
 
@@ -221,7 +301,7 @@ namespace Fifthweek.Api.Identity.Membership.Tests
         {
             await this.DatabaseTestAsync(async testDatabase =>
             {
-                this.target = new UpdateAccountSettingsDbStatement(testDatabase, this.userManager.Object);
+                this.target = new UpdateAccountSettingsDbStatement(testDatabase, this.userManager.Object, this.requestSnapshot);
                 await this.CreateUserAsync(testDatabase, false);
                 await testDatabase.TakeSnapshotAsync();
 
@@ -252,7 +332,7 @@ namespace Fifthweek.Api.Identity.Membership.Tests
         {
             await this.DatabaseTestAsync(async testDatabase =>
                 {
-                    this.target = new UpdateAccountSettingsDbStatement(testDatabase, this.userManager.Object);
+                    this.target = new UpdateAccountSettingsDbStatement(testDatabase, this.userManager.Object, this.requestSnapshot);
                     await this.CreateUserAsync(testDatabase);
                     await testDatabase.TakeSnapshotAsync();
 

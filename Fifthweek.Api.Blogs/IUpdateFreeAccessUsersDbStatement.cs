@@ -8,6 +8,6 @@
 
     public interface IUpdateFreeAccessUsersDbStatement
     {
-        Task ExecuteAsync(BlogId blogId, IReadOnlyList<ValidEmail> emails);
+        Task ExecuteAsync(UserId userId, BlogId blogId, IReadOnlyList<ValidEmail> emails);
     }
 }

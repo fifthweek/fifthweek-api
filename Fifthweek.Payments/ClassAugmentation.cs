@@ -1,14 +1,19 @@
 ﻿using System;
 using System.Linq;
 
-//// Generated on 03/06/2015 16:39:25 (UTC)
-//// Mapped solution in 10.66s
+//// Generated on 05/06/2015 12:22:37 (UTC)
+//// Mapped solution in 13.41s
 
 
 namespace Fifthweek.Payments
 {
     using System;
     using Fifthweek.CodeGeneration;
+    using System.Linq;
+    using System.Collections.Generic;
+    using System.Text;
+    using System.Threading.Tasks;
+    using Fifthweek.Payments.Pipeline;
 
     public partial class AggregateCostSummary 
     {
@@ -27,7 +32,12 @@ namespace Fifthweek.Payments
 namespace Fifthweek.Payments
 {
     using System;
+    using System.Linq;
     using Fifthweek.CodeGeneration;
+    using System.Collections.Generic;
+    using System.Text;
+    using System.Threading.Tasks;
+    using Fifthweek.Payments.Pipeline;
 
     public partial class CostPeriod 
     {
@@ -60,7 +70,12 @@ namespace Fifthweek.Payments
 namespace Fifthweek.Payments
 {
     using System;
+    using System.Linq;
     using Fifthweek.CodeGeneration;
+    using System.Collections.Generic;
+    using System.Text;
+    using System.Threading.Tasks;
+    using Fifthweek.Payments.Pipeline;
 
     public partial class CreatorChannelSnapshot 
     {
@@ -86,8 +101,12 @@ namespace Fifthweek.Payments
 namespace Fifthweek.Payments
 {
     using System;
-    using System.Collections.Generic;
+    using System.Linq;
     using Fifthweek.CodeGeneration;
+    using System.Collections.Generic;
+    using System.Text;
+    using System.Threading.Tasks;
+    using Fifthweek.Payments.Pipeline;
 
     public partial class CreatorGuestListSnapshot 
     {
@@ -120,8 +139,12 @@ namespace Fifthweek.Payments
 namespace Fifthweek.Payments
 {
     using System;
-    using System.Collections.Generic;
+    using System.Linq;
     using Fifthweek.CodeGeneration;
+    using System.Collections.Generic;
+    using System.Text;
+    using System.Threading.Tasks;
+    using Fifthweek.Payments.Pipeline;
 
     public partial class CreatorSnapshot 
     {
@@ -154,7 +177,12 @@ namespace Fifthweek.Payments
 namespace Fifthweek.Payments
 {
     using System;
+    using System.Linq;
     using Fifthweek.CodeGeneration;
+    using System.Collections.Generic;
+    using System.Text;
+    using System.Threading.Tasks;
+    using Fifthweek.Payments.Pipeline;
 
     public partial class MergedSnapshot 
     {
@@ -194,9 +222,11 @@ namespace Fifthweek.Payments
 namespace Fifthweek.Payments
 {
     using System;
+    using System.Linq;
+    using Fifthweek.CodeGeneration;
+    using System.Collections.Generic;
     using System.Text;
     using System.Threading.Tasks;
-    using Fifthweek.CodeGeneration;
     using Fifthweek.Payments.Pipeline;
 
     public partial class PaymentProcessor 
@@ -265,8 +295,8 @@ namespace Fifthweek.Payments
 namespace Fifthweek.Payments.Pipeline
 {
     using System;
-    using System.Collections.Generic;
     using System.Linq;
+    using System.Collections.Generic;
     using Fifthweek.CodeGeneration;
 
     public partial class CalculateCostPeriodsExecutor 
@@ -286,7 +316,12 @@ namespace Fifthweek.Payments.Pipeline
 namespace Fifthweek.Payments
 {
     using System;
+    using System.Linq;
     using Fifthweek.CodeGeneration;
+    using System.Collections.Generic;
+    using System.Text;
+    using System.Threading.Tasks;
+    using Fifthweek.Payments.Pipeline;
 
     public partial class SubscriberChannelSnapshot 
     {
@@ -319,8 +354,12 @@ namespace Fifthweek.Payments
 namespace Fifthweek.Payments
 {
     using System;
-    using System.Collections.Generic;
+    using System.Linq;
     using Fifthweek.CodeGeneration;
+    using System.Collections.Generic;
+    using System.Text;
+    using System.Threading.Tasks;
+    using Fifthweek.Payments.Pipeline;
 
     public partial class SubscriberSnapshot 
     {
@@ -352,11 +391,68 @@ namespace Fifthweek.Payments
         }
     }
 }
+namespace Fifthweek.Payments.Services
+{
+    using System;
+    using System.Linq;
+    using System.Threading.Tasks;
+    using Fifthweek.Api.Azure;
+    using Fifthweek.CodeGeneration;
+    using Fifthweek.Api.Identity.Shared.Membership;
+
+    public partial class CreateSnapshotMessage 
+    {
+        public CreateSnapshotMessage(
+            Fifthweek.Api.Identity.Shared.Membership.UserId userId,
+            Fifthweek.Payments.Services.SnapshotType snapshotType)
+        {
+            if (userId == null)
+            {
+                throw new ArgumentNullException("userId");
+            }
+
+            if (snapshotType == null)
+            {
+                throw new ArgumentNullException("snapshotType");
+            }
+
+            this.UserId = userId;
+            this.SnapshotType = snapshotType;
+        }
+    }
+}
+namespace Fifthweek.Payments.Services
+{
+    using System;
+    using System.Threading.Tasks;
+    using Fifthweek.Api.Azure;
+    using Fifthweek.Api.Identity.Shared.Membership;
+    using Fifthweek.CodeGeneration;
+
+    public partial class RequestSnapshotService 
+    {
+        public RequestSnapshotService(
+            Fifthweek.Api.Azure.IQueueService queueService)
+        {
+            if (queueService == null)
+            {
+                throw new ArgumentNullException("queueService");
+            }
+
+            this.queueService = queueService;
+        }
+    }
+}
 
 namespace Fifthweek.Payments
 {
     using System;
     using Fifthweek.CodeGeneration;
+    using System.Linq;
+    using System.Collections.Generic;
+    using System.Text;
+    using System.Threading.Tasks;
+    using Fifthweek.Payments.Pipeline;
 
     public partial class AggregateCostSummary 
     {
@@ -409,7 +505,12 @@ namespace Fifthweek.Payments
 namespace Fifthweek.Payments
 {
     using System;
+    using System.Linq;
     using Fifthweek.CodeGeneration;
+    using System.Collections.Generic;
+    using System.Text;
+    using System.Threading.Tasks;
+    using Fifthweek.Payments.Pipeline;
 
     public partial class CostPeriod 
     {
@@ -474,7 +575,12 @@ namespace Fifthweek.Payments
 namespace Fifthweek.Payments
 {
     using System;
+    using System.Linq;
     using Fifthweek.CodeGeneration;
+    using System.Collections.Generic;
+    using System.Text;
+    using System.Threading.Tasks;
+    using Fifthweek.Payments.Pipeline;
 
     public partial class CreatorChannelSnapshot 
     {
@@ -533,8 +639,12 @@ namespace Fifthweek.Payments
 namespace Fifthweek.Payments
 {
     using System;
-    using System.Collections.Generic;
+    using System.Linq;
     using Fifthweek.CodeGeneration;
+    using System.Collections.Generic;
+    using System.Text;
+    using System.Threading.Tasks;
+    using Fifthweek.Payments.Pipeline;
 
     public partial class CreatorGuestListSnapshot 
     {
@@ -614,8 +724,12 @@ namespace Fifthweek.Payments
 namespace Fifthweek.Payments
 {
     using System;
-    using System.Collections.Generic;
+    using System.Linq;
     using Fifthweek.CodeGeneration;
+    using System.Collections.Generic;
+    using System.Text;
+    using System.Threading.Tasks;
+    using Fifthweek.Payments.Pipeline;
 
     public partial class CreatorSnapshot 
     {
@@ -695,7 +809,12 @@ namespace Fifthweek.Payments
 namespace Fifthweek.Payments
 {
     using System;
+    using System.Linq;
     using Fifthweek.CodeGeneration;
+    using System.Collections.Generic;
+    using System.Text;
+    using System.Threading.Tasks;
+    using Fifthweek.Payments.Pipeline;
 
     public partial class MergedSnapshot 
     {
@@ -766,7 +885,12 @@ namespace Fifthweek.Payments
 namespace Fifthweek.Payments
 {
     using System;
+    using System.Linq;
     using Fifthweek.CodeGeneration;
+    using System.Collections.Generic;
+    using System.Text;
+    using System.Threading.Tasks;
+    using Fifthweek.Payments.Pipeline;
 
     public partial class SubscriberChannelSnapshot 
     {
@@ -831,8 +955,12 @@ namespace Fifthweek.Payments
 namespace Fifthweek.Payments
 {
     using System;
-    using System.Collections.Generic;
+    using System.Linq;
     using Fifthweek.CodeGeneration;
+    using System.Collections.Generic;
+    using System.Text;
+    using System.Threading.Tasks;
+    using Fifthweek.Payments.Pipeline;
 
     public partial class SubscriberSnapshot 
     {
@@ -907,6 +1035,69 @@ namespace Fifthweek.Payments
                 }
             }
             else if (this.SubscribedChannels != null || other.SubscribedChannels != null)
+            {
+                return false;
+            }
+        
+            return true;
+        }
+    }
+}
+namespace Fifthweek.Payments.Services
+{
+    using System;
+    using System.Linq;
+    using System.Threading.Tasks;
+    using Fifthweek.Api.Azure;
+    using Fifthweek.CodeGeneration;
+    using Fifthweek.Api.Identity.Shared.Membership;
+
+    public partial class CreateSnapshotMessage 
+    {
+        public override string ToString()
+        {
+            return string.Format("CreateSnapshotMessage({0}, {1})", this.UserId == null ? "null" : this.UserId.ToString(), this.SnapshotType == null ? "null" : this.SnapshotType.ToString());
+        }
+        
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj))
+            {
+                return false;
+            }
+        
+            if (ReferenceEquals(this, obj))
+            {
+                return true;
+            }
+        
+            if (obj.GetType() != this.GetType())
+            {
+                return false;
+            }
+        
+            return this.Equals((CreateSnapshotMessage)obj);
+        }
+        
+        public override int GetHashCode()
+        {
+            unchecked
+            {
+                int hashCode = 0;
+                hashCode = (hashCode * 397) ^ (this.UserId != null ? this.UserId.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.SnapshotType != null ? this.SnapshotType.GetHashCode() : 0);
+                return hashCode;
+            }
+        }
+        
+        protected bool Equals(CreateSnapshotMessage other)
+        {
+            if (!object.Equals(this.UserId, other.UserId))
+            {
+                return false;
+            }
+        
+            if (!object.Equals(this.SnapshotType, other.SnapshotType))
             {
                 return false;
             }

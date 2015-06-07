@@ -7,6 +7,8 @@
     {
         public static readonly ExpectedSideEffects None = new ExpectedSideEffects();
 
+        public static readonly ExpectedSideEffects TransactionAborted = new ExpectedSideEffects();
+
         public IReadOnlyList<IIdentityEquatable> Inserts { get; set; }
         
         public IReadOnlyList<IIdentityEquatable> Updates { get; set; }

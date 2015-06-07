@@ -12,6 +12,9 @@
     using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.Api.Persistence;
     using Fifthweek.Api.Persistence.Tests.Shared;
+    using Fifthweek.Payments.Services;
+    using Fifthweek.Payments.Tests.Shared;
+    using Fifthweek.Tests.Shared;
 
     using Microsoft.VisualStudio.TestTools.UnitTesting;
 
@@ -41,12 +44,14 @@
 
         private readonly Random random = new Random();
 
+        private MockRequestSnapshotService requestSnapshot;
         private AcceptChannelSubscriptionPriceChangeDbStatement target;
 
         [TestInitialize]
         public void TestInitialize()
         {
-            this.target = new AcceptChannelSubscriptionPriceChangeDbStatement(new Mock<IFifthweekDbConnectionFactory>(MockBehavior.Strict).Object);
+            this.requestSnapshot = new MockRequestSnapshotService();
+            this.target = new AcceptChannelSubscriptionPriceChangeDbStatement(new Mock<IFifthweekDbConnectionFactory>(MockBehavior.Strict).Object, this.requestSnapshot);
         }
 
         [TestMethod]
@@ -75,7 +80,7 @@
         {
             await this.DatabaseTestAsync(async testDatabase =>
             {
-                this.target = new AcceptChannelSubscriptionPriceChangeDbStatement(testDatabase);
+                this.target = new AcceptChannelSubscriptionPriceChangeDbStatement(testDatabase, this.requestSnapshot);
 
                 await this.CreateDataAsync(testDatabase);
 
@@ -92,7 +97,7 @@
         {
             await this.DatabaseTestAsync(async testDatabase =>
             {
-                this.target = new AcceptChannelSubscriptionPriceChangeDbStatement(testDatabase);
+                this.target = new AcceptChannelSubscriptionPriceChangeDbStatement(testDatabase, this.requestSnapshot);
 
                 await this.CreateDataAsync(testDatabase);
                 await testDatabase.TakeSnapshotAsync();
@@ -113,11 +118,60 @@
         }
 
         [TestMethod]
+        public async Task ItShouldRequestSnapshotAfterUpdate()
+        {
+            await this.DatabaseTestAsync(async testDatabase =>
+            {
+                var trackingDatabase = new TrackingConnectionFactory(testDatabase);
+                this.target = new AcceptChannelSubscriptionPriceChangeDbStatement(trackingDatabase, this.requestSnapshot);
+
+                await this.CreateDataAsync(testDatabase);
+                await testDatabase.TakeSnapshotAsync();
+
+                this.requestSnapshot.VerifyConnectionDisposed(trackingDatabase);
+
+                await this.target.ExecuteAsync(UserId, Subscriptions[0].ChannelId, NewAcceptedPrice, Now);
+
+                this.requestSnapshot.VerifyCalledWith(UserId, SnapshotType.SubscriberChannels);
+
+                var update = new ChannelSubscription(
+                            Subscriptions[0].ChannelId.Value,
+                            null,
+                            UserId.Value,
+                            null,
+                            NewAcceptedPrice.Value,
+                            Now,
+                            SubscriptionStartDate);
+
+                return new ExpectedSideEffects { Update = update };
+            });
+        }
+
+        [TestMethod]
+        public async Task ItShouldNotUpdateIfSnapshotFails()
+        {
+            await this.DatabaseTestAsync(async testDatabase =>
+            {
+                this.target = new AcceptChannelSubscriptionPriceChangeDbStatement(testDatabase, this.requestSnapshot);
+
+                await this.CreateDataAsync(testDatabase);
+                await testDatabase.TakeSnapshotAsync();
+
+                this.requestSnapshot.ThrowException();
+
+                await ExpectedException.AssertExceptionAsync<SnapshotException>(
+                    () => this.target.ExecuteAsync(UserId, Subscriptions[0].ChannelId, NewAcceptedPrice, Now));
+
+                return ExpectedSideEffects.TransactionAborted;
+            });
+        }
+
+        [TestMethod]
         public async Task WhenTheChannelDoesNotExist_ItShouldDoNothing()
         {
             await this.DatabaseTestAsync(async testDatabase =>
             {
-                this.target = new AcceptChannelSubscriptionPriceChangeDbStatement(testDatabase);
+                this.target = new AcceptChannelSubscriptionPriceChangeDbStatement(testDatabase, this.requestSnapshot);
 
                 await this.CreateDataAsync(testDatabase);
                 await testDatabase.TakeSnapshotAsync();
@@ -133,7 +187,7 @@
         {
             await this.DatabaseTestAsync(async testDatabase =>
             {
-                this.target = new AcceptChannelSubscriptionPriceChangeDbStatement(testDatabase);
+                this.target = new AcceptChannelSubscriptionPriceChangeDbStatement(testDatabase, this.requestSnapshot);
 
                 await this.CreateDataAsync(testDatabase);
                 await testDatabase.TakeSnapshotAsync();

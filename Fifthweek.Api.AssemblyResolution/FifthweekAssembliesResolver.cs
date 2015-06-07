@@ -31,7 +31,8 @@
             typeof(Azure.AutofacRegistration).Assembly,
             typeof(FileManagement.AutofacRegistration).Assembly,
             typeof(FileManagement.Shared.FileId).Assembly,
-            typeof(Aggregations.AutofacRegistration).Assembly
+            typeof(Aggregations.AutofacRegistration).Assembly,
+            typeof(Payments.AutofacRegistration).Assembly
         }
         .Distinct().ToList().AsReadOnly();
 

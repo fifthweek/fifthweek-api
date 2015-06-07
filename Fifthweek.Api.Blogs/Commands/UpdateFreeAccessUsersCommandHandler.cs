@@ -8,6 +8,7 @@
     using Fifthweek.Api.Core;
     using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.CodeGeneration;
+    using Fifthweek.Payments.Services;
     using Fifthweek.Shared;
 
     [AutoConstructor]
@@ -31,7 +32,7 @@
                 emailAddresses.Add(item);
             }
 
-            await this.updateFreeAccessUsers.ExecuteAsync(command.BlogId, emailAddresses.ToList());
+            await this.updateFreeAccessUsers.ExecuteAsync(authenticatedUserId, command.BlogId, emailAddresses.ToList());
         }
     }
 }

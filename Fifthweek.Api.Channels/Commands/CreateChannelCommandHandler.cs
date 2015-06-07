@@ -8,6 +8,7 @@
     using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.Api.Persistence;
     using Fifthweek.CodeGeneration;
+    using Fifthweek.Payments.Services;
     using Fifthweek.Shared;
 
     [AutoConstructor]
@@ -16,6 +17,7 @@
         private readonly IRequesterSecurity requesterSecurity;
         private readonly IBlogSecurity blogSecurity;
         private readonly IFifthweekDbConnectionFactory connectionFactory;
+        private readonly IRequestSnapshotService requestSnapshot;
 
         public async Task HandleAsync(CreateChannelCommand command)
         {
@@ -24,10 +26,10 @@
             var userId = await this.requesterSecurity.AuthenticateAsync(command.Requester);
             await this.blogSecurity.AssertWriteAllowedAsync(userId, command.BlogId);
 
-            await this.CreateChannelAsync(command);
+            await this.CreateChannelAsync(userId, command);
         }
 
-        private async Task CreateChannelAsync(CreateChannelCommand command)
+        private async Task CreateChannelAsync(UserId userId, CreateChannelCommand command)
         {
             var now = DateTime.UtcNow;
             var channel = new Channel(
@@ -41,9 +43,17 @@
                 now,
                 now);
 
-            using (var connection = this.connectionFactory.CreateConnection())
+
+            using (var transaction = TransactionScopeBuilder.CreateAsync())
             {
-                await connection.InsertAsync(channel);
+                using (var connection = this.connectionFactory.CreateConnection())
+                {
+                    await connection.InsertAsync(channel);
+                }
+
+                await this.requestSnapshot.ExecuteAsync(userId, SnapshotType.CreatorChannels);
+
+                transaction.Complete();
             }
         }
     }

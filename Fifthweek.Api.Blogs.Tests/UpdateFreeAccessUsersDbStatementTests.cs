@@ -12,6 +12,8 @@
     using Fifthweek.Api.Persistence;
     using Fifthweek.Api.Persistence.Tests.Shared;
     using Fifthweek.CodeGeneration;
+    using Fifthweek.Payments.Tests.Shared;
+    using Fifthweek.Tests.Shared;
 
     using Microsoft.VisualStudio.TestTools.UnitTesting;
 
@@ -27,20 +29,22 @@
             new FreeAccessUser { BlogId = BlogId.Value, Email = "two@test.com" },
             new FreeAccessUser { BlogId = BlogId.Value, Email = "three@test.com" },
         };
-        
+
+        private MockRequestSnapshotService requestSnapshot;
         private UpdateFreeAccessUsersDbStatement target;
 
         [TestInitialize]
         public void TestInitialize()
         {
-            this.target = new UpdateFreeAccessUsersDbStatement(new Mock<IFifthweekDbConnectionFactory>(MockBehavior.Strict).Object);
+            this.requestSnapshot = new MockRequestSnapshotService();
+            this.target = new UpdateFreeAccessUsersDbStatement(new Mock<IFifthweekDbConnectionFactory>(MockBehavior.Strict).Object, this.requestSnapshot);
         }
 
         [TestMethod]
         [ExpectedException(typeof(ArgumentNullException))]
         public async Task WhenBlogIdIsNull_ItShouldThrowAnException()
         {
-            await this.target.ExecuteAsync(null, new List<ValidEmail>());
+            await this.target.ExecuteAsync(CreatorId, null, new List<ValidEmail>());
         }
 
         [TestMethod]
@@ -48,12 +52,12 @@
         {
             await this.DatabaseTestAsync(async testDatabase =>
             {
-                this.target = new UpdateFreeAccessUsersDbStatement(testDatabase);
+                this.target = new UpdateFreeAccessUsersDbStatement(testDatabase, this.requestSnapshot);
 
                 await this.CreateDataAsync(testDatabase, true);
                 await testDatabase.TakeSnapshotAsync();
 
-                await this.target.ExecuteAsync(BlogId, null);
+                await this.target.ExecuteAsync(CreatorId, BlogId, null);
 
                 return new ExpectedSideEffects
                 {
@@ -68,16 +72,64 @@
         }
 
         [TestMethod]
-        public async Task WhenNewEmailListIsEmpty_ItShouldDeleteAllEmailsForBlog()
+        public async Task ItShouldRequestSnapshotAfterUpdate()
         {
             await this.DatabaseTestAsync(async testDatabase =>
             {
-                this.target = new UpdateFreeAccessUsersDbStatement(testDatabase);
+                var trackingDatabase = new TrackingConnectionFactory(testDatabase);
+                this.target = new UpdateFreeAccessUsersDbStatement(trackingDatabase, this.requestSnapshot);
 
                 await this.CreateDataAsync(testDatabase, true);
                 await testDatabase.TakeSnapshotAsync();
 
-                await this.target.ExecuteAsync(BlogId, new List<ValidEmail>());
+                this.requestSnapshot.VerifyConnectionDisposed(trackingDatabase);
+
+                await this.target.ExecuteAsync(CreatorId, BlogId, null);
+
+                this.requestSnapshot.VerifyCalledWith(CreatorId, Payments.Services.SnapshotType.CreatorGuestList);
+
+                return new ExpectedSideEffects
+                {
+                    Deletes = new List<FreeAccessUser>
+                    {
+                        new FreeAccessUser { BlogId = BlogId.Value, Email = "one@test.com" },
+                        new FreeAccessUser { BlogId = BlogId.Value, Email = "two@test.com" },
+                        new FreeAccessUser { BlogId = BlogId.Value, Email = "three@test.com" },
+                    },
+                };
+            });
+        }
+
+        [TestMethod]
+        public async Task ItShouldNotUpdateIfSnapshotFails()
+        {
+            await this.DatabaseTestAsync(async testDatabase =>
+            {
+                this.target = new UpdateFreeAccessUsersDbStatement(testDatabase, this.requestSnapshot);
+
+                await this.CreateDataAsync(testDatabase, true);
+                await testDatabase.TakeSnapshotAsync();
+
+                this.requestSnapshot.ThrowException();
+
+                await ExpectedException.AssertExceptionAsync<SnapshotException>(
+                    () => this.target.ExecuteAsync(CreatorId, BlogId, null));
+
+                return ExpectedSideEffects.TransactionAborted;
+            });
+        }
+
+        [TestMethod]
+        public async Task WhenNewEmailListIsEmpty_ItShouldDeleteAllEmailsForBlog()
+        {
+            await this.DatabaseTestAsync(async testDatabase =>
+            {
+                this.target = new UpdateFreeAccessUsersDbStatement(testDatabase, this.requestSnapshot);
+
+                await this.CreateDataAsync(testDatabase, true);
+                await testDatabase.TakeSnapshotAsync();
+
+                await this.target.ExecuteAsync(CreatorId, BlogId, new List<ValidEmail>());
 
                 return new ExpectedSideEffects
                 {
@@ -96,12 +148,12 @@
         {
             await this.DatabaseTestAsync(async testDatabase =>
             {
-                this.target = new UpdateFreeAccessUsersDbStatement(testDatabase);
+                this.target = new UpdateFreeAccessUsersDbStatement(testDatabase, this.requestSnapshot);
 
                 await this.CreateDataAsync(testDatabase, false);
                 await testDatabase.TakeSnapshotAsync();
 
-                await this.target.ExecuteAsync(BlogId, new List<ValidEmail>());
+                await this.target.ExecuteAsync(CreatorId, BlogId, new List<ValidEmail>());
 
                 return ExpectedSideEffects.None;
             });
@@ -112,12 +164,13 @@
         {
             await this.DatabaseTestAsync(async testDatabase =>
             {
-                this.target = new UpdateFreeAccessUsersDbStatement(testDatabase);
+                this.target = new UpdateFreeAccessUsersDbStatement(testDatabase, this.requestSnapshot);
 
                 await this.CreateDataAsync(testDatabase, true);
                 await testDatabase.TakeSnapshotAsync();
 
                 await this.target.ExecuteAsync(
+                    CreatorId, 
                     BlogId,
                     new List<ValidEmail>
                     { 
@@ -140,12 +193,13 @@
         {
             await this.DatabaseTestAsync(async testDatabase =>
             {
-                this.target = new UpdateFreeAccessUsersDbStatement(testDatabase);
+                this.target = new UpdateFreeAccessUsersDbStatement(testDatabase, this.requestSnapshot);
                 
                 await this.CreateDataAsync(testDatabase, true);
                 await testDatabase.TakeSnapshotAsync();
 
                 await this.target.ExecuteAsync(
+                    CreatorId, 
                     BlogId,
                     new List<ValidEmail>
                     { 
@@ -174,12 +228,13 @@
         {
             await this.DatabaseTestAsync(async testDatabase =>
             {
-                this.target = new UpdateFreeAccessUsersDbStatement(testDatabase);
+                this.target = new UpdateFreeAccessUsersDbStatement(testDatabase, this.requestSnapshot);
 
                 await this.CreateDataAsync(testDatabase, true);
                 await testDatabase.TakeSnapshotAsync();
 
                 await this.target.ExecuteAsync(
+                    CreatorId, 
                     BlogId,
                     new List<ValidEmail>
                     { 
@@ -197,12 +252,13 @@
         {
             await this.DatabaseTestAsync(async testDatabase =>
             {
-                this.target = new UpdateFreeAccessUsersDbStatement(testDatabase);
+                this.target = new UpdateFreeAccessUsersDbStatement(testDatabase, this.requestSnapshot);
 
                 await this.CreateDataAsync(testDatabase, true);
                 await testDatabase.TakeSnapshotAsync();
 
                 await this.target.ExecuteAsync(
+                    CreatorId, 
                     BlogId,
                     new List<ValidEmail>
                     { 
@@ -220,12 +276,13 @@
         {
             await this.DatabaseTestAsync(async testDatabase =>
             {
-                this.target = new UpdateFreeAccessUsersDbStatement(testDatabase);
+                this.target = new UpdateFreeAccessUsersDbStatement(testDatabase, this.requestSnapshot);
 
                 await this.CreateDataAsync(testDatabase, true);
                 await testDatabase.TakeSnapshotAsync();
 
                 await this.target.ExecuteAsync(
+                    CreatorId, 
                     BlogId,
                     new List<ValidEmail>
                     { 
@@ -255,12 +312,13 @@
         {
             await this.DatabaseTestAsync(async testDatabase =>
             {
-                this.target = new UpdateFreeAccessUsersDbStatement(testDatabase);
+                this.target = new UpdateFreeAccessUsersDbStatement(testDatabase, this.requestSnapshot);
 
                 await this.CreateDataAsync(testDatabase, true);
                 await testDatabase.TakeSnapshotAsync();
 
                 await this.target.ExecuteAsync(
+                    CreatorId, 
                     BlogId,
                     new List<ValidEmail>
                     { 
@@ -290,12 +348,13 @@
         {
             await this.DatabaseTestAsync(async testDatabase =>
             {
-                this.target = new UpdateFreeAccessUsersDbStatement(testDatabase);
+                this.target = new UpdateFreeAccessUsersDbStatement(testDatabase, this.requestSnapshot);
 
                 await this.CreateDataAsync(testDatabase, false);
                 await testDatabase.TakeSnapshotAsync();
 
                 await this.target.ExecuteAsync(
+                    CreatorId, 
                     BlogId,
                     new List<ValidEmail>
                     { 
@@ -319,11 +378,12 @@
         {
             await this.DatabaseTestAsync(async testDatabase =>
             {
-                this.target = new UpdateFreeAccessUsersDbStatement(testDatabase);
+                this.target = new UpdateFreeAccessUsersDbStatement(testDatabase, this.requestSnapshot);
 
                 await this.CreateDataAsync(testDatabase, true);
 
                 await this.target.ExecuteAsync(
+                    CreatorId, 
                     BlogId,
                     new List<ValidEmail>
                     { 
@@ -335,6 +395,7 @@
                 await testDatabase.TakeSnapshotAsync();
 
                 await this.target.ExecuteAsync(
+                    CreatorId, 
                     BlogId,
                     new List<ValidEmail>
                     { 
