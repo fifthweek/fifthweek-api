@@ -5,5 +5,6 @@
         CreatorChannels,
         CreatorGuestList,
         SubscriberChannels,
+        Subscriber
     }
 }

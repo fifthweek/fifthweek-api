@@ -91,7 +91,7 @@
                         });
                 }
 
-                await this.requestSnapshot.ExecuteAsync(userId, SnapshotType.SubscriberChannels);
+                await this.requestSnapshot.ExecuteAsync(userId, SnapshotType.Subscriber);
 
                 transaction.Complete();
             }

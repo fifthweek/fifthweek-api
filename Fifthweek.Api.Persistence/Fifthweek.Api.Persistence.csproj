@@ -297,7 +297,7 @@
     <Compile Include="Snapshots\CreatorChannelSnapshotItem.cs" />
     <Compile Include="Snapshots\CreatorGuestListSnapshot.cs" />
     <Compile Include="Snapshots\CreatorGuestListSnapshotItem.cs" />
-    <Compile Include="Snapshots\CreatorSnapshot.cs" />
+    <Compile Include="Snapshots\SubscriberSnapshot.cs" />
     <Compile Include="Snapshots\SubscriberChannelSnapshotItem.cs" />
     <Compile Include="Snapshots\SubscriberChannelSnapshot.cs" />
     <Compile Include="Post.cs" />

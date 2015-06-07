@@ -6,13 +6,13 @@
     using Fifthweek.CodeGeneration;
 
     [AutoConstructor, AutoEqualityMembers, AutoSql]
-    public class CreatorSnapshot
+    public class SubscriberSnapshot
     {
         [Required, Key]
         public DateTime Timestamp { get; set; }
 
         [Required, Key] // Not a foreign key.
-        public Guid CreatorId { get; set; }
+        public Guid SubscriberId { get; set; }
 
         [Required]
         public string Email { get; set; }

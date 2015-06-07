@@ -114,7 +114,7 @@ namespace Fifthweek.Api.Identity.Membership.Tests
                     this.newFileId,
                     this.securityStamp);
 
-                this.requestSnapshot.VerifyCalledWith(this.userId, Payments.Services.SnapshotType.SubscriberChannels);
+                this.requestSnapshot.VerifyCalledWith(this.userId, Payments.Services.SnapshotType.Subscriber);
 
                 Assert.AreEqual(false, result.EmailConfirmed);
 

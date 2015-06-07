@@ -15,6 +15,6 @@
         public DateTime Timestamp { get; set; }
 
         [Required] // Not a foreign key.
-        public Guid CreatorId { get; set; } 
+        public Guid SubscriberId { get; set; } 
     }
 }
