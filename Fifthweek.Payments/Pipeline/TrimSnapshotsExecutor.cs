@@ -39,8 +39,9 @@ namespace Fifthweek.Payments.Pipeline
                     var result = snapshots.Skip(i).ToList();
                     result[0] = new MergedSnapshot(
                         startTimeInclusive,
-                        snapshot.Creator,
+                        snapshot.CreatorChannels,
                         snapshot.CreatorGuestList,
+                        snapshot.SubscriberChannels,
                         snapshot.Subscriber);
 
                     return result;

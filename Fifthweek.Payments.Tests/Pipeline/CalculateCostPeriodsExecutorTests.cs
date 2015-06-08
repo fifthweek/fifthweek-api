@@ -38,16 +38,18 @@
         [TestMethod]
         public void WhenOneSnapshot_ItShouldReturnCostPeriod()
         {
-            var defaultCreatorSnapshot = CreatorSnapshot.Default(Now, CreatorId1);
+            var defaultCreatorChannelsSnapshot = CreatorChannelSnapshot.Default(Now, CreatorId1);
             var defaultCreatorGuestListSnapshot = CreatorGuestListSnapshot.Default(Now, CreatorId1);
+            var defaultSubscriberChannelsSnapshot = SubscriberChannelSnapshot.Default(Now, SubscriberId1);
             var defaultSubscriberSnapshot = SubscriberSnapshot.Default(Now, SubscriberId1);
 
             var mergedSnapshots = new List<MergedSnapshot> 
             {
                 new MergedSnapshot(
                     Now.AddHours(5),
-                    defaultCreatorSnapshot,
+                    defaultCreatorChannelsSnapshot,
                     defaultCreatorGuestListSnapshot,
+                    defaultSubscriberChannelsSnapshot,
                     defaultSubscriberSnapshot),
             };
 
@@ -69,55 +71,64 @@
         {
             var snapshots = new List<ISnapshot> 
             {
-                new CreatorSnapshot(Now.AddHours(1), CreatorId1, new List<CreatorChannelSnapshot> { new CreatorChannelSnapshot(Guid.NewGuid(), 100) }),
+                new CreatorChannelSnapshot(Now.AddHours(1), CreatorId1, new List<CreatorChannelSnapshotItem> { new CreatorChannelSnapshotItem(Guid.NewGuid(), 100) }),
                 new CreatorGuestListSnapshot(Now.AddHours(2), CreatorId1, new List<string> { "a", "b" }),
-                new SubscriberSnapshot(Now.AddHours(3), SubscriberId1, "email", new List<SubscriberChannelSnapshot> { new SubscriberChannelSnapshot(Guid.NewGuid(), 100, Now) }),
+                new SubscriberChannelSnapshot(Now.AddHours(3), SubscriberId1, new List<SubscriberChannelSnapshotItem> { new SubscriberChannelSnapshotItem(Guid.NewGuid(), 100, Now) }),
                 new CreatorGuestListSnapshot(Now.AddHours(4), CreatorId1, new List<string> { "a", "b" }),
-                new CreatorSnapshot(Now.AddHours(5), CreatorId1, new List<CreatorChannelSnapshot> { new CreatorChannelSnapshot(Guid.NewGuid(), 100) }),
-                new SubscriberSnapshot(Now.AddHours(5), SubscriberId1, "email", new List<SubscriberChannelSnapshot> { new SubscriberChannelSnapshot(Guid.NewGuid(), 100, Now) }),
-                new SubscriberSnapshot(Now.AddHours(6), SubscriberId1, "email", new List<SubscriberChannelSnapshot> { new SubscriberChannelSnapshot(Guid.NewGuid(), 100, Now) })
+                new CreatorChannelSnapshot(Now.AddHours(5), CreatorId1, new List<CreatorChannelSnapshotItem> { new CreatorChannelSnapshotItem(Guid.NewGuid(), 100) }),
+                new SubscriberChannelSnapshot(Now.AddHours(5), SubscriberId1, new List<SubscriberChannelSnapshotItem> { new SubscriberChannelSnapshotItem(Guid.NewGuid(), 100, Now) }),
+                new SubscriberSnapshot(Now.AddHours(6), SubscriberId1, "email"),
+                new SubscriberChannelSnapshot(Now.AddHours(6), SubscriberId1, new List<SubscriberChannelSnapshotItem> { new SubscriberChannelSnapshotItem(Guid.NewGuid(), 100, Now) })
             };
 
-            var defaultCreatorSnapshot = CreatorSnapshot.Default(Now, CreatorId1);
+            var defaultCreatorChannelSnapshot = CreatorChannelSnapshot.Default(Now, CreatorId1);
             var defaultCreatorGuestListSnapshot = CreatorGuestListSnapshot.Default(Now, CreatorId1);
+            var defaultSubscriberChannelSnapshot = SubscriberChannelSnapshot.Default(Now, SubscriberId1);
             var defaultSubscriberSnapshot = SubscriberSnapshot.Default(Now, SubscriberId1);
 
             var mergedSnapshots = new List<MergedSnapshot> 
             {
                 new MergedSnapshot(
                     Now,
-                    defaultCreatorSnapshot,
+                    defaultCreatorChannelSnapshot,
                     defaultCreatorGuestListSnapshot,
+                    defaultSubscriberChannelSnapshot,
                     defaultSubscriberSnapshot),
                 new MergedSnapshot(
                     Now.AddHours(1),
-                    (CreatorSnapshot)snapshots[0],
+                    (CreatorChannelSnapshot)snapshots[0],
                     defaultCreatorGuestListSnapshot,
+                    defaultSubscriberChannelSnapshot,
                     defaultSubscriberSnapshot),
                 new MergedSnapshot(
                     Now.AddHours(2),
-                    (CreatorSnapshot)snapshots[0],
+                    (CreatorChannelSnapshot)snapshots[0],
                     (CreatorGuestListSnapshot)snapshots[1],
+                    defaultSubscriberChannelSnapshot,
                     defaultSubscriberSnapshot),
                 new MergedSnapshot(
                     Now.AddHours(3),
-                    (CreatorSnapshot)snapshots[0],
+                    (CreatorChannelSnapshot)snapshots[0],
                     (CreatorGuestListSnapshot)snapshots[1],
-                    (SubscriberSnapshot)snapshots[2]),
+                    (SubscriberChannelSnapshot)snapshots[2],
+                    defaultSubscriberSnapshot),
                 new MergedSnapshot(
                     Now.AddHours(4),
-                    (CreatorSnapshot)snapshots[0],
+                    (CreatorChannelSnapshot)snapshots[0],
                     (CreatorGuestListSnapshot)snapshots[3],
-                    (SubscriberSnapshot)snapshots[2]),
+                    (SubscriberChannelSnapshot)snapshots[2],
+                    defaultSubscriberSnapshot),
                 new MergedSnapshot(
                     Now.AddHours(5),
-                    (CreatorSnapshot)snapshots[4],
+                    (CreatorChannelSnapshot)snapshots[4],
                     (CreatorGuestListSnapshot)snapshots[3],
-                    (SubscriberSnapshot)snapshots[5]),
+                    (SubscriberChannelSnapshot)snapshots[5],
+                    defaultSubscriberSnapshot),
                 new MergedSnapshot(
                     Now.AddHours(6),
-                    (CreatorSnapshot)snapshots[4],
+                    (CreatorChannelSnapshot)snapshots[4],
                     (CreatorGuestListSnapshot)snapshots[3],
+                    (SubscriberChannelSnapshot)snapshots[7],
                     (SubscriberSnapshot)snapshots[6]),
             };
 

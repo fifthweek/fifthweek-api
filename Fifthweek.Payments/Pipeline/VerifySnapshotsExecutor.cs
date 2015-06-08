@@ -25,12 +25,12 @@
                     throw new InvalidOperationException("Timestamps must be UTC.");
                 }
 
-                var creatorSnapshot = snapshot as CreatorSnapshot;
-                if (creatorSnapshot != null)
+                var creatorChannelSnapshot = snapshot as CreatorChannelSnapshot;
+                if (creatorChannelSnapshot != null)
                 {
-                    if (creatorSnapshot.CreatorId != creatorId)
+                    if (creatorChannelSnapshot.CreatorId != creatorId)
                     {
-                        throw new InvalidOperationException("Unexpected creator id: " + creatorSnapshot.CreatorId);
+                        throw new InvalidOperationException("Unexpected creator id: " + creatorChannelSnapshot.CreatorId);
                     }
                 }
                 else
@@ -46,22 +46,33 @@
                     }
                     else
                     {
-                        var subscriberSnapshot = snapshot as SubscriberSnapshot;
-                        if (subscriberSnapshot != null)
+                        var subscriberChannelSnapshot = snapshot as SubscriberChannelSnapshot;
+                        if (subscriberChannelSnapshot != null)
                         {
-                            if (subscriberSnapshot.SubscribedChannels.Any(v => v.SubscriptionStartDate.Kind != DateTimeKind.Utc))
+                            if (subscriberChannelSnapshot.SubscribedChannels.Any(v => v.SubscriptionStartDate.Kind != DateTimeKind.Utc))
                             {
                                 throw new InvalidOperationException("Subscription start dates must be UTC.");
                             }
 
-                            if (subscriberSnapshot.SubscriberId != subscriberId)
+                            if (subscriberChannelSnapshot.SubscriberId != subscriberId)
                             {
-                                throw new InvalidOperationException("Unexpected subscriber id: " + subscriberSnapshot.SubscriberId);
+                                throw new InvalidOperationException("Unexpected subscriber id: " + subscriberChannelSnapshot.SubscriberId);
                             }
                         }
                         else
                         {
-                            throw new InvalidOperationException("Unknown snapshot type: " + snapshot.GetType().Name);
+                            var subscriberSnapshot = snapshot as SubscriberSnapshot;
+                            if (subscriberSnapshot != null)
+                            {
+                                if (subscriberSnapshot.SubscriberId != subscriberId)
+                                {
+                                    throw new InvalidOperationException("Unexpected subscriber id: " + subscriberSnapshot.SubscriberId);
+                                }
+                            }
+                            else
+                            {
+                                throw new InvalidOperationException("Unknown snapshot type: " + snapshot.GetType().Name);
+                            }
                         }
                     }
                 }

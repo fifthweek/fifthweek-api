@@ -3,6 +3,8 @@
     using System;
     using System.Collections.Generic;
 
+    using Fifthweek.Payments.Pipeline;
+
     using Microsoft.VisualStudio.TestTools.UnitTesting;
 
     [TestClass]
@@ -19,12 +21,12 @@
 
         private static readonly CreatorGuestListSnapshot EmptyGuestList = CreatorGuestListSnapshot.Default(Now, CreatorId1);
 
-        private SnapshotCostCalculator target;
+        private CalculateSnapshotCostExecutor target;
 
         [TestInitialize]
         public void Initialize()
         {
-            this.target = new SnapshotCostCalculator();
+            this.target = new CalculateSnapshotCostExecutor();
         }
 
         [TestMethod]
@@ -32,16 +34,19 @@
         {
             var result = this.target.Execute(
                 new MergedSnapshot(
-                    new CreatorSnapshot(
+                    new CreatorChannelSnapshot(
                         Now,
                         CreatorId1,
-                        new List<CreatorChannelSnapshot> { new CreatorChannelSnapshot(ChannelId1, 100) }),
+                        new List<CreatorChannelSnapshotItem> { new CreatorChannelSnapshotItem(ChannelId1, 100) }),
                     EmptyGuestList,
+                    new SubscriberChannelSnapshot(
+                        Now,
+                        SubscriberId1,
+                        new List<SubscriberChannelSnapshotItem>()),
                     new SubscriberSnapshot(
                         Now,
                         SubscriberId1,
-                        null,
-                        new List<SubscriberChannelSnapshot>())));
+                        null)));
 
             Assert.AreEqual(0, result);
         }
@@ -51,19 +56,22 @@
         {
             var result = this.target.Execute(
                 new MergedSnapshot(
-                    new CreatorSnapshot(
+                    new CreatorChannelSnapshot(
                         Now,
                         CreatorId1,
-                        new List<CreatorChannelSnapshot> { new CreatorChannelSnapshot(ChannelId1, 100) }),
+                        new List<CreatorChannelSnapshotItem> { new CreatorChannelSnapshotItem(ChannelId1, 100) }),
                     new CreatorGuestListSnapshot(
                         Now,
                         Guid.NewGuid(),
                         new List<string> { "a@a.com", "b@b.com" }),
+                    new SubscriberChannelSnapshot(
+                        Now,
+                        SubscriberId1,
+                        new List<SubscriberChannelSnapshotItem> { new SubscriberChannelSnapshotItem(ChannelId1, 100, Now) }),
                     new SubscriberSnapshot(
                         Now,
                         SubscriberId1,
-                        "b@b.com",
-                        new List<SubscriberChannelSnapshot> { new SubscriberChannelSnapshot(ChannelId1, 100, Now) })));
+                        "b@b.com")));
 
             Assert.AreEqual(0, result);
         }
@@ -73,19 +81,22 @@
         {
             var result = this.target.Execute(
                 new MergedSnapshot(
-                    new CreatorSnapshot(
+                    new CreatorChannelSnapshot(
                         Now,
                         CreatorId1,
-                        new List<CreatorChannelSnapshot> { new CreatorChannelSnapshot(ChannelId1, 100) }),
+                        new List<CreatorChannelSnapshotItem> { new CreatorChannelSnapshotItem(ChannelId1, 100) }),
                     new CreatorGuestListSnapshot(
                         Now,
                         Guid.NewGuid(),
                         new List<string> { "aa@a.com", "bb@b.com" }),
+                    new SubscriberChannelSnapshot(
+                        Now,
+                        SubscriberId1,
+                        new List<SubscriberChannelSnapshotItem> { new SubscriberChannelSnapshotItem(ChannelId1, 100, Now) }),
                     new SubscriberSnapshot(
                         Now,
                         SubscriberId1,
-                        "b@b.com",
-                        new List<SubscriberChannelSnapshot> { new SubscriberChannelSnapshot(ChannelId1, 100, Now) })));
+                        "b@b.com")));
 
             Assert.AreEqual(100, result);
         }
@@ -95,16 +106,19 @@
         {
             var result = this.target.Execute(
                 new MergedSnapshot(
-                    new CreatorSnapshot(
+                    new CreatorChannelSnapshot(
                         Now,
                         CreatorId1,
-                        new List<CreatorChannelSnapshot> { new CreatorChannelSnapshot(ChannelId1, 100) }),
+                        new List<CreatorChannelSnapshotItem> { new CreatorChannelSnapshotItem(ChannelId1, 100) }),
                     EmptyGuestList,
+                    new SubscriberChannelSnapshot(
+                        Now,
+                        SubscriberId1,
+                        new List<SubscriberChannelSnapshotItem> { new SubscriberChannelSnapshotItem(ChannelId1, 100, Now) }),
                     new SubscriberSnapshot(
                         Now,
                         SubscriberId1,
-                        null,
-                        new List<SubscriberChannelSnapshot> { new SubscriberChannelSnapshot(ChannelId1, 100, Now) })));
+                        null)));
 
             Assert.AreEqual(100, result);
         }
@@ -114,25 +128,28 @@
         {
             var result = this.target.Execute(
                 new MergedSnapshot(
-                    new CreatorSnapshot(
+                    new CreatorChannelSnapshot(
                         Now,
                         CreatorId1,
-                        new List<CreatorChannelSnapshot> 
+                        new List<CreatorChannelSnapshotItem> 
                         { 
-                            new CreatorChannelSnapshot(ChannelId1, 100),
-                            new CreatorChannelSnapshot(ChannelId2, 50),
-                            new CreatorChannelSnapshot(ChannelId3, 10) 
+                            new CreatorChannelSnapshotItem(ChannelId1, 100),
+                            new CreatorChannelSnapshotItem(ChannelId2, 50),
+                            new CreatorChannelSnapshotItem(ChannelId3, 10) 
                         }),
                     EmptyGuestList,
+                    new SubscriberChannelSnapshot(
+                        Now,
+                        SubscriberId1,
+                        new List<SubscriberChannelSnapshotItem> 
+                        { 
+                            new SubscriberChannelSnapshotItem(ChannelId1, 100, Now),
+                            new SubscriberChannelSnapshotItem(ChannelId3, 10, Now) 
+                        }),
                     new SubscriberSnapshot(
                         Now,
                         SubscriberId1,
-                        null,
-                        new List<SubscriberChannelSnapshot> 
-                        { 
-                            new SubscriberChannelSnapshot(ChannelId1, 100, Now),
-                            new SubscriberChannelSnapshot(ChannelId3, 10, Now) 
-                        })));
+                        null)));
 
             Assert.AreEqual(110, result);
         }
@@ -142,25 +159,28 @@
         {
             var result = this.target.Execute(
                 new MergedSnapshot(
-                    new CreatorSnapshot(
+                    new CreatorChannelSnapshot(
                         Now,
                         CreatorId1,
-                        new List<CreatorChannelSnapshot> 
+                        new List<CreatorChannelSnapshotItem> 
                         { 
-                            new CreatorChannelSnapshot(ChannelId1, 100),
-                            new CreatorChannelSnapshot(ChannelId2, 50),
-                            new CreatorChannelSnapshot(ChannelId3, 10) 
+                            new CreatorChannelSnapshotItem(ChannelId1, 100),
+                            new CreatorChannelSnapshotItem(ChannelId2, 50),
+                            new CreatorChannelSnapshotItem(ChannelId3, 10) 
                         }),
                     EmptyGuestList,
+                    new SubscriberChannelSnapshot(
+                        Now,
+                        SubscriberId1,
+                        new List<SubscriberChannelSnapshotItem> 
+                        { 
+                            new SubscriberChannelSnapshotItem(ChannelId1, 200, Now),
+                            new SubscriberChannelSnapshotItem(ChannelId3, 20, Now) 
+                        }),
                     new SubscriberSnapshot(
                         Now,
                         SubscriberId1,
-                        null,
-                        new List<SubscriberChannelSnapshot> 
-                        { 
-                            new SubscriberChannelSnapshot(ChannelId1, 200, Now),
-                            new SubscriberChannelSnapshot(ChannelId3, 20, Now) 
-                        })));
+                        null)));
 
             Assert.AreEqual(110, result);
         }
@@ -170,25 +190,28 @@
         {
             var result = this.target.Execute(
                 new MergedSnapshot(
-                    new CreatorSnapshot(
+                    new CreatorChannelSnapshot(
                         Now,
                         CreatorId1,
-                        new List<CreatorChannelSnapshot> 
+                        new List<CreatorChannelSnapshotItem> 
                         { 
-                            new CreatorChannelSnapshot(ChannelId1, 100),
-                            new CreatorChannelSnapshot(ChannelId2, 50),
-                            new CreatorChannelSnapshot(ChannelId3, 10) 
+                            new CreatorChannelSnapshotItem(ChannelId1, 100),
+                            new CreatorChannelSnapshotItem(ChannelId2, 50),
+                            new CreatorChannelSnapshotItem(ChannelId3, 10) 
                         }),
                     EmptyGuestList,
+                    new SubscriberChannelSnapshot(
+                        Now,
+                        SubscriberId1,
+                        new List<SubscriberChannelSnapshotItem> 
+                        { 
+                            new SubscriberChannelSnapshotItem(ChannelId1, 100, Now),
+                            new SubscriberChannelSnapshotItem(ChannelId3, 9, Now) 
+                        }),
                     new SubscriberSnapshot(
                         Now,
                         SubscriberId1,
-                        null,
-                        new List<SubscriberChannelSnapshot> 
-                        { 
-                            new SubscriberChannelSnapshot(ChannelId1, 100, Now),
-                            new SubscriberChannelSnapshot(ChannelId3, 9, Now) 
-                        })));
+                        null)));
 
             Assert.AreEqual(100, result);
         }
@@ -198,28 +221,31 @@
         {
             var result = this.target.Execute(
                 new MergedSnapshot(
-                    new CreatorSnapshot(
+                    new CreatorChannelSnapshot(
                         Now,
                         CreatorId1,
-                        new List<CreatorChannelSnapshot> 
+                        new List<CreatorChannelSnapshotItem> 
                         { 
-                            new CreatorChannelSnapshot(ChannelId1, 100),
-                            new CreatorChannelSnapshot(ChannelId2, 50),
-                            new CreatorChannelSnapshot(ChannelId3, 10) 
+                            new CreatorChannelSnapshotItem(ChannelId1, 100),
+                            new CreatorChannelSnapshotItem(ChannelId2, 50),
+                            new CreatorChannelSnapshotItem(ChannelId3, 10) 
                         }),
                     EmptyGuestList,
+                    new SubscriberChannelSnapshot(
+                        Now,
+                        SubscriberId1,
+                        new List<SubscriberChannelSnapshotItem> 
+                        { 
+                            new SubscriberChannelSnapshotItem(Guid.NewGuid(), 1000, Now),
+                            new SubscriberChannelSnapshotItem(ChannelId1, 100, Now),
+                            new SubscriberChannelSnapshotItem(Guid.NewGuid(), 1000, Now),
+                            new SubscriberChannelSnapshotItem(ChannelId2, 50, Now),
+                            new SubscriberChannelSnapshotItem(Guid.NewGuid(), 1000, Now) 
+                        }),
                     new SubscriberSnapshot(
                         Now,
                         SubscriberId1,
-                        null,
-                        new List<SubscriberChannelSnapshot> 
-                        { 
-                            new SubscriberChannelSnapshot(Guid.NewGuid(), 1000, Now),
-                            new SubscriberChannelSnapshot(ChannelId1, 100, Now),
-                            new SubscriberChannelSnapshot(Guid.NewGuid(), 1000, Now),
-                            new SubscriberChannelSnapshot(ChannelId2, 50, Now),
-                            new SubscriberChannelSnapshot(Guid.NewGuid(), 1000, Now) 
-                        })));
+                        null)));
 
             Assert.AreEqual(150, result);
         }

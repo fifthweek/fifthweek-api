@@ -22,7 +22,7 @@ namespace Fifthweek.Payments.Pipeline
             {
                 var snapshot = snapshots[i];
 
-                foreach (var subscription in snapshot.Subscriber.SubscribedChannels)
+                foreach (var subscription in snapshot.SubscriberChannels.SubscribedChannels)
                 {
                     var billingWeekEndDateExclusive =
                         this.CalculateBillingWeekEndDateExclusive(
@@ -52,7 +52,7 @@ namespace Fifthweek.Payments.Pipeline
                 foreach (var activeSubscription in activeSubscriptions.Values.ToList())
                 {
                     var activeChannelId = activeSubscription.Subscription.ChannelId;
-                    if (snapshot.Subscriber.SubscribedChannels.All(v => v.ChannelId != activeChannelId))
+                    if (snapshot.SubscriberChannels.SubscribedChannels.All(v => v.ChannelId != activeChannelId))
                     {
                         // The subscriber has unsubscribed from this channel.
                         var billingWeekFinalSnapshotTime = this.GetBillingWeekFinalSnapshotTime(activeSubscription.BillingWeekEndDateExclusive);
@@ -64,7 +64,7 @@ namespace Fifthweek.Payments.Pipeline
                         }
                         else if (snapshot.Timestamp < billingWeekFinalSnapshotTime)
                         {
-                            if (snapshot.Creator.CreatorChannels.All(v => v.ChannelId != activeChannelId))
+                            if (snapshot.CreatorChannels.CreatorChannels.All(v => v.ChannelId != activeChannelId))
                             {
                                 // We are within the billing week, but the channel is no longer published.
                                 // So we stop billing at this point.
@@ -76,13 +76,13 @@ namespace Fifthweek.Payments.Pipeline
                                 // We must extend their subscription to this snapshot.
                                 var newSnapshot = new MergedSnapshot(
                                     snapshot.Timestamp,
-                                    snapshot.Creator,
+                                    snapshot.CreatorChannels,
                                     snapshot.CreatorGuestList,
-                                    new SubscriberSnapshot(
-                                        snapshot.Subscriber.Timestamp,
-                                        snapshot.Subscriber.SubscriberId,
-                                        snapshot.Subscriber.Email,
-                                        snapshot.Subscriber.SubscribedChannels.Concat(new[] { activeSubscription.Subscription }).ToList()));
+                                    new SubscriberChannelSnapshot(
+                                        snapshot.SubscriberChannels.Timestamp,
+                                        snapshot.SubscriberChannels.SubscriberId,
+                                        snapshot.SubscriberChannels.SubscribedChannels.Concat(new[] { activeSubscription.Subscription }).ToList()),
+                                    snapshot.Subscriber);
 
                                 snapshots[i] = newSnapshot;
 
@@ -94,8 +94,9 @@ namespace Fifthweek.Payments.Pipeline
                                     // Either way, we need to insert a snapshot to end the biling at the correct time.
                                     var endSnapshot = new MergedSnapshot(
                                         billingWeekFinalSnapshotTime,
-                                        snapshot.Creator,
+                                        snapshot.CreatorChannels,
                                         snapshot.CreatorGuestList,
+                                        snapshot.SubscriberChannels,
                                         snapshot.Subscriber);
 
                                     snapshots.Insert(i + 1, endSnapshot);
@@ -132,13 +133,13 @@ namespace Fifthweek.Payments.Pipeline
 
         private class ActiveSubscription
         {
-            public ActiveSubscription(DateTime billingWeekEndDateExclusive, SubscriberChannelSnapshot subscription)
+            public ActiveSubscription(DateTime billingWeekEndDateExclusive, SubscriberChannelSnapshotItem subscription)
             {
                 this.BillingWeekEndDateExclusive = billingWeekEndDateExclusive;
                 this.Subscription = subscription;
             }
 
-            public SubscriberChannelSnapshot Subscription { get; private set; }
+            public SubscriberChannelSnapshotItem Subscription { get; private set; }
 
             public DateTime BillingWeekEndDateExclusive { get; set; }
         }

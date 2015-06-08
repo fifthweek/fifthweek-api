@@ -462,29 +462,30 @@
 
             private static MergedSnapshot CreateSnapshot(DateTime timestamp, bool channelExists, bool isSubscribed, DateTime? innerTimestamp = null)
             {
-                var creatorChannels = new List<CreatorChannelSnapshot> { new CreatorChannelSnapshot(ChannelId2, 100) };
+                var creatorChannels = new List<CreatorChannelSnapshotItem> { new CreatorChannelSnapshotItem(ChannelId2, 100) };
                 if (channelExists)
                 {
-                    creatorChannels.Add(new CreatorChannelSnapshot(ChannelId1, 100));
+                    creatorChannels.Add(new CreatorChannelSnapshotItem(ChannelId1, 100));
                 }
 
-                var subscriberChannels = new List<SubscriberChannelSnapshot> { new SubscriberChannelSnapshot(ChannelId2, 100, SubscriptionStartDate) };
+                var subscriberChannels = new List<SubscriberChannelSnapshotItem> { new SubscriberChannelSnapshotItem(ChannelId2, 100, SubscriptionStartDate) };
                 if (isSubscribed)
                 {
-                    subscriberChannels.Add(new SubscriberChannelSnapshot(ChannelId1, 100, SubscriptionStartDate));
+                    subscriberChannels.Add(new SubscriberChannelSnapshotItem(ChannelId1, 100, SubscriptionStartDate));
                 }
 
                 return new MergedSnapshot(
                     timestamp,
-                    new CreatorSnapshot(innerTimestamp ?? timestamp, CreatorId1, creatorChannels),
+                    new CreatorChannelSnapshot(innerTimestamp ?? timestamp, CreatorId1, creatorChannels),
                     CreatorGuestListSnapshot.Default(innerTimestamp ?? timestamp, CreatorId1),
-                    new SubscriberSnapshot(innerTimestamp ?? timestamp, SubscriberId1, null, subscriberChannels));
+                    new SubscriberChannelSnapshot(innerTimestamp ?? timestamp, SubscriberId1, subscriberChannels),
+                    SubscriberSnapshot.Default(innerTimestamp ?? timestamp, SubscriberId1));
             }
 
             private static MergedSnapshot CreateSnapshot(DateTime timestamp, bool channel1Subscribed, bool channel2Subscribed, BillingWeekEndTimeType endTimeType, DateTime? innerTimestamp = null)
             {
-                var creatorChannels = new List<CreatorChannelSnapshot> { new CreatorChannelSnapshot(ChannelId1, 100), new CreatorChannelSnapshot(ChannelId2, 100) };
-                var subscriberChannels = new List<SubscriberChannelSnapshot>();
+                var creatorChannels = new List<CreatorChannelSnapshotItem> { new CreatorChannelSnapshotItem(ChannelId1, 100), new CreatorChannelSnapshotItem(ChannelId2, 100) };
+                var subscriberChannels = new List<SubscriberChannelSnapshotItem>();
 
                 var channel1StartDate = SubscriptionStartDate;
                 var channel2StartDate = SubscriptionStartDate;
@@ -500,19 +501,20 @@
 
                 if (channel1Subscribed)
                 {
-                    subscriberChannels.Add(new SubscriberChannelSnapshot(ChannelId1, 100, channel1StartDate));
+                    subscriberChannels.Add(new SubscriberChannelSnapshotItem(ChannelId1, 100, channel1StartDate));
                 }
 
                 if (channel2Subscribed)
                 {
-                    subscriberChannels.Add(new SubscriberChannelSnapshot(ChannelId2, 100, channel2StartDate));
+                    subscriberChannels.Add(new SubscriberChannelSnapshotItem(ChannelId2, 100, channel2StartDate));
                 }
 
                 return new MergedSnapshot(
                     timestamp,
-                    new CreatorSnapshot(innerTimestamp ?? timestamp, CreatorId1, creatorChannels),
+                    new CreatorChannelSnapshot(innerTimestamp ?? timestamp, CreatorId1, creatorChannels),
                     CreatorGuestListSnapshot.Default(innerTimestamp ?? timestamp, CreatorId1),
-                    new SubscriberSnapshot(innerTimestamp ?? timestamp, SubscriberId1, null, subscriberChannels));
+                    new SubscriberChannelSnapshot(innerTimestamp ?? timestamp, SubscriberId1, subscriberChannels),
+                    SubscriberSnapshot.Default(innerTimestamp ?? timestamp, SubscriberId1));
             }
 
             private enum BillingWeekEndTimeType

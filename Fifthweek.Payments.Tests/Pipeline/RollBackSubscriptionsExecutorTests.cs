@@ -25,8 +25,9 @@
             var input = new List<MergedSnapshot> 
             {
                 new MergedSnapshot(
-                    CreatorSnapshot.Default(now, Guid.NewGuid()),
+                    CreatorChannelSnapshot.Default(now, Guid.NewGuid()),
                     CreatorGuestListSnapshot.Default(now, Guid.NewGuid()),
+                    SubscriberChannelSnapshot.Default(now, Guid.NewGuid()),
                     SubscriberSnapshot.Default(now, Guid.NewGuid())),
             };
 

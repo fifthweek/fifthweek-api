@@ -52,7 +52,7 @@
     </Compile>
     <Compile Include="Constants.cs" />
     <Compile Include="CostPeriod.cs" />
-    <Compile Include="CreatorChannelSnapshot.cs" />
+    <Compile Include="CreatorChannelSnapshotItem.cs" />
     <Compile Include="CreatorGuestListSnapshot.cs" />
     <Compile Include="Pipeline\AggregateCostPeriodsExecutor.cs" />
     <Compile Include="Pipeline\CalculateCostPeriodsExecutor.cs" />
@@ -74,13 +74,22 @@
     <Compile Include="ISnapshot.cs" />
     <Compile Include="MergedSnapshot.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Services\CreateCreatorChannelSnapshotDbStatement.cs" />
+    <Compile Include="Services\CreateCreatorGuestListSnapshotDbStatement.cs" />
     <Compile Include="Services\CreateSnapshotMessage.cs" />
+    <Compile Include="Services\CreateSubscriberChannelSnapshotDbStatement.cs" />
+    <Compile Include="Services\CreateSubscriberSnapshotDbStatement.cs" />
+    <Compile Include="Services\ICreateCreatorChannelSnapshotDbStatement.cs" />
+    <Compile Include="Services\ICreateCreatorGuestListSnapshotDbStatement.cs" />
+    <Compile Include="Services\ICreateSubscriberChannelSnapshotDbStatement.cs" />
+    <Compile Include="Services\ICreateSubscriberSnapshotDbStatement.cs" />
     <Compile Include="Services\IRequestSnapshotService.cs" />
     <Compile Include="Services\RequestSnapshotService.cs" />
     <Compile Include="Services\SnapshotType.cs" />
-    <Compile Include="SnapshotCostCalculator.cs" />
+    <Compile Include="Pipeline\CalculateSnapshotCostExecutor.cs" />
     <Compile Include="PaymentProcessor.cs" />
-    <Compile Include="CreatorSnapshot.cs" />
+    <Compile Include="CreatorChannelSnapshot.cs" />
+    <Compile Include="SubscriberChannelSnapshotItem.cs" />
     <Compile Include="SubscriberChannelSnapshot.cs" />
     <Compile Include="SubscriberSnapshot.cs" />
   </ItemGroup>
@@ -103,6 +112,10 @@
     <ProjectReference Include="..\Fifthweek.Api.Identity.Shared\Fifthweek.Api.Identity.Shared.csproj">
       <Project>{1B07E9CC-1B0E-49D7-96D6-0F8C58A7C0CA}</Project>
       <Name>Fifthweek.Api.Identity.Shared</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Fifthweek.Api.Persistence\Fifthweek.Api.Persistence.csproj">
+      <Project>{9C18BEE3-FAB5-4A00-8A94-A1FAEA370175}</Project>
+      <Name>Fifthweek.Api.Persistence</Name>
     </ProjectReference>
     <ProjectReference Include="..\Fifthweek.CodeGeneration\Fifthweek.CodeGeneration.csproj">
       <Project>{770F450E-2166-4269-BEC1-DF59AA16B1E8}</Project>

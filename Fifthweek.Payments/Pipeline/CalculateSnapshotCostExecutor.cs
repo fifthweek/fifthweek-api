@@ -1,14 +1,14 @@
-namespace Fifthweek.Payments
+namespace Fifthweek.Payments.Pipeline
 {
     using System.Linq;
 
     using Fifthweek.Payments.Pipeline;
 
-    public class SnapshotCostCalculator : ICalculateSnapshotCostExecutor
+    public class CalculateSnapshotCostExecutor : ICalculateSnapshotCostExecutor
     {
         public int Execute(MergedSnapshot snapshot)
         {
-            if (snapshot.Subscriber.SubscribedChannels.Count == 0)
+            if (snapshot.SubscriberChannels.SubscribedChannels.Count == 0)
             {
                 return 0;
             }
@@ -19,8 +19,8 @@ namespace Fifthweek.Payments
             }
 
             var creatorSubscriptions 
-                = from s in snapshot.Subscriber.SubscribedChannels
-                  let c = snapshot.Creator.CreatorChannels.FirstOrDefault(v => v.ChannelId == s.ChannelId)
+                = from s in snapshot.SubscriberChannels.SubscribedChannels
+                  let c = snapshot.CreatorChannels.CreatorChannels.FirstOrDefault(v => v.ChannelId == s.ChannelId)
                   where c != null
                   select new
                   {

@@ -1,7 +1,6 @@
 namespace Fifthweek.Payments
 {
     using System;
-    using System.Collections.Generic;
 
     using Fifthweek.CodeGeneration;
 
@@ -14,12 +13,10 @@ namespace Fifthweek.Payments
 
         [Optional]
         public string Email { get; private set; }
-
-        public IReadOnlyList<SubscriberChannelSnapshot> SubscribedChannels { get; private set; }
         
         public static SubscriberSnapshot Default(DateTime timestamp, Guid subscriberId)
         {
-            return new SubscriberSnapshot(timestamp, subscriberId, null, new List<SubscriberChannelSnapshot>());
+            return new SubscriberSnapshot(timestamp, subscriberId, null);
         }
     }
 }

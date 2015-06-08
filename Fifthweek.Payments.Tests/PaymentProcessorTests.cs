@@ -53,7 +53,7 @@
         [TestMethod]
         public void ItShouldCallServicesInOrder()
         {
-            var snapshots = new List<ISnapshot> { CreatorSnapshot.Default(Now, Guid.NewGuid()) };
+            var snapshots = new List<ISnapshot> { CreatorChannelSnapshot.Default(Now, Guid.NewGuid()) };
             this.loadSnapshots.Setup(v => v.Execute(SubscriberId1, CreatorId1, StartTimeInclusive, EndTimeExclusive))
                 .Returns(snapshots);
 
@@ -89,8 +89,9 @@
             return new List<MergedSnapshot>
             {
                 new MergedSnapshot(
-                    CreatorSnapshot.Default(Now, Guid.NewGuid()),
+                    CreatorChannelSnapshot.Default(Now, Guid.NewGuid()),
                     CreatorGuestListSnapshot.Default(Now, Guid.NewGuid()),
+                    SubscriberChannelSnapshot.Default(Now, Guid.NewGuid()),
                     SubscriberSnapshot.Default(Now, Guid.NewGuid()))
             };
         }

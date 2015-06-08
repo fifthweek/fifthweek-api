@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Linq;
 
-//// Generated on 05/06/2015 12:22:37 (UTC)
-//// Mapped solution in 13.41s
+//// Generated on 07/06/2015 18:07:42 (UTC)
+//// Mapped solution in 9.01s
 
 
 namespace Fifthweek.Payments
@@ -77,9 +77,9 @@ namespace Fifthweek.Payments
     using System.Threading.Tasks;
     using Fifthweek.Payments.Pipeline;
 
-    public partial class CreatorChannelSnapshot 
+    public partial class CreatorChannelSnapshotItem 
     {
-        public CreatorChannelSnapshot(
+        public CreatorChannelSnapshotItem(
             System.Guid channelId,
             System.Int32 price)
         {
@@ -146,12 +146,12 @@ namespace Fifthweek.Payments
     using System.Threading.Tasks;
     using Fifthweek.Payments.Pipeline;
 
-    public partial class CreatorSnapshot 
+    public partial class CreatorChannelSnapshot 
     {
-        public CreatorSnapshot(
+        public CreatorChannelSnapshot(
             System.DateTime timestamp,
             System.Guid creatorId,
-            System.Collections.Generic.IReadOnlyList<Fifthweek.Payments.CreatorChannelSnapshot> creatorChannels)
+            System.Collections.Generic.IReadOnlyList<Fifthweek.Payments.CreatorChannelSnapshotItem> creatorChannels)
         {
             if (timestamp == null)
             {
@@ -188,8 +188,9 @@ namespace Fifthweek.Payments
     {
         public MergedSnapshot(
             System.DateTime timestamp,
-            Fifthweek.Payments.CreatorSnapshot creator,
+            Fifthweek.Payments.CreatorChannelSnapshot creatorChannels,
             Fifthweek.Payments.CreatorGuestListSnapshot creatorGuestList,
+            Fifthweek.Payments.SubscriberChannelSnapshot subscriberChannels,
             Fifthweek.Payments.SubscriberSnapshot subscriber)
         {
             if (timestamp == null)
@@ -197,14 +198,19 @@ namespace Fifthweek.Payments
                 throw new ArgumentNullException("timestamp");
             }
 
-            if (creator == null)
+            if (creatorChannels == null)
             {
-                throw new ArgumentNullException("creator");
+                throw new ArgumentNullException("creatorChannels");
             }
 
             if (creatorGuestList == null)
             {
                 throw new ArgumentNullException("creatorGuestList");
+            }
+
+            if (subscriberChannels == null)
+            {
+                throw new ArgumentNullException("subscriberChannels");
             }
 
             if (subscriber == null)
@@ -213,8 +219,9 @@ namespace Fifthweek.Payments
             }
 
             this.Timestamp = timestamp;
-            this.Creator = creator;
+            this.CreatorChannels = creatorChannels;
             this.CreatorGuestList = creatorGuestList;
+            this.SubscriberChannels = subscriberChannels;
             this.Subscriber = subscriber;
         }
     }
@@ -323,9 +330,9 @@ namespace Fifthweek.Payments
     using System.Threading.Tasks;
     using Fifthweek.Payments.Pipeline;
 
-    public partial class SubscriberChannelSnapshot 
+    public partial class SubscriberChannelSnapshotItem 
     {
-        public SubscriberChannelSnapshot(
+        public SubscriberChannelSnapshotItem(
             System.Guid channelId,
             System.Int32 acceptedPrice,
             System.DateTime subscriptionStartDate)
@@ -361,13 +368,12 @@ namespace Fifthweek.Payments
     using System.Threading.Tasks;
     using Fifthweek.Payments.Pipeline;
 
-    public partial class SubscriberSnapshot 
+    public partial class SubscriberChannelSnapshot 
     {
-        public SubscriberSnapshot(
+        public SubscriberChannelSnapshot(
             System.DateTime timestamp,
             System.Guid subscriberId,
-            System.String email,
-            System.Collections.Generic.IReadOnlyList<Fifthweek.Payments.SubscriberChannelSnapshot> subscribedChannels)
+            System.Collections.Generic.IReadOnlyList<Fifthweek.Payments.SubscriberChannelSnapshotItem> subscribedChannels)
         {
             if (timestamp == null)
             {
@@ -386,7 +392,6 @@ namespace Fifthweek.Payments
 
             this.Timestamp = timestamp;
             this.SubscriberId = subscriberId;
-            this.Email = email;
             this.SubscribedChannels = subscribedChannels;
         }
     }
@@ -399,6 +404,7 @@ namespace Fifthweek.Payments.Services
     using Fifthweek.Api.Azure;
     using Fifthweek.CodeGeneration;
     using Fifthweek.Api.Identity.Shared.Membership;
+    using Fifthweek.Api.Persistence;
 
     public partial class CreateSnapshotMessage 
     {
@@ -424,10 +430,12 @@ namespace Fifthweek.Payments.Services
 namespace Fifthweek.Payments.Services
 {
     using System;
+    using System.Linq;
     using System.Threading.Tasks;
     using Fifthweek.Api.Azure;
-    using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.CodeGeneration;
+    using Fifthweek.Api.Identity.Shared.Membership;
+    using Fifthweek.Api.Persistence;
 
     public partial class RequestSnapshotService 
     {
@@ -440,6 +448,135 @@ namespace Fifthweek.Payments.Services
             }
 
             this.queueService = queueService;
+        }
+    }
+}
+namespace Fifthweek.Payments.Services
+{
+    using System;
+    using System.Linq;
+    using System.Threading.Tasks;
+    using Fifthweek.Api.Azure;
+    using Fifthweek.CodeGeneration;
+    using Fifthweek.Api.Identity.Shared.Membership;
+    using Fifthweek.Api.Persistence;
+
+    public partial class CreateCreatorChannelSnapshotDbStatement 
+    {
+        public CreateCreatorChannelSnapshotDbStatement(
+            Fifthweek.Api.Persistence.IFifthweekDbConnectionFactory connectionFactory)
+        {
+            if (connectionFactory == null)
+            {
+                throw new ArgumentNullException("connectionFactory");
+            }
+
+            this.connectionFactory = connectionFactory;
+        }
+    }
+}
+namespace Fifthweek.Payments.Services
+{
+    using System;
+    using System.Linq;
+    using System.Threading.Tasks;
+    using Fifthweek.Api.Azure;
+    using Fifthweek.CodeGeneration;
+    using Fifthweek.Api.Identity.Shared.Membership;
+    using Fifthweek.Api.Persistence;
+
+    public partial class CreateCreatorGuestListSnapshotDbStatement 
+    {
+        public CreateCreatorGuestListSnapshotDbStatement(
+            Fifthweek.Api.Persistence.IFifthweekDbConnectionFactory connectionFactory)
+        {
+            if (connectionFactory == null)
+            {
+                throw new ArgumentNullException("connectionFactory");
+            }
+
+            this.connectionFactory = connectionFactory;
+        }
+    }
+}
+namespace Fifthweek.Payments.Services
+{
+    using System;
+    using System.Linq;
+    using System.Threading.Tasks;
+    using Fifthweek.Api.Azure;
+    using Fifthweek.CodeGeneration;
+    using Fifthweek.Api.Identity.Shared.Membership;
+    using Fifthweek.Api.Persistence;
+
+    public partial class CreateSubscriberChannelSnapshotDbStatement 
+    {
+        public CreateSubscriberChannelSnapshotDbStatement(
+            Fifthweek.Api.Persistence.IFifthweekDbConnectionFactory connectionFactory)
+        {
+            if (connectionFactory == null)
+            {
+                throw new ArgumentNullException("connectionFactory");
+            }
+
+            this.connectionFactory = connectionFactory;
+        }
+    }
+}
+namespace Fifthweek.Payments.Services
+{
+    using System;
+    using System.Linq;
+    using System.Threading.Tasks;
+    using Fifthweek.Api.Azure;
+    using Fifthweek.CodeGeneration;
+    using Fifthweek.Api.Identity.Shared.Membership;
+    using Fifthweek.Api.Persistence;
+
+    public partial class CreateSubscriberSnapshotDbStatement 
+    {
+        public CreateSubscriberSnapshotDbStatement(
+            Fifthweek.Api.Persistence.IFifthweekDbConnectionFactory connectionFactory)
+        {
+            if (connectionFactory == null)
+            {
+                throw new ArgumentNullException("connectionFactory");
+            }
+
+            this.connectionFactory = connectionFactory;
+        }
+    }
+}
+namespace Fifthweek.Payments
+{
+    using System;
+    using System.Linq;
+    using Fifthweek.CodeGeneration;
+    using System.Collections.Generic;
+    using System.Text;
+    using System.Threading.Tasks;
+    using Fifthweek.Payments.Pipeline;
+
+    public partial class SubscriberSnapshot 
+    {
+        public SubscriberSnapshot(
+            System.DateTime timestamp,
+            System.Guid subscriberId,
+            System.String email)
+        {
+            if (timestamp == null)
+            {
+                throw new ArgumentNullException("timestamp");
+            }
+
+            if (subscriberId == null)
+            {
+                throw new ArgumentNullException("subscriberId");
+            }
+
+            this.Timestamp = timestamp;
+            this.SubscriberId = subscriberId;
+            this.Email = email;
         }
     }
 }
@@ -582,11 +719,11 @@ namespace Fifthweek.Payments
     using System.Threading.Tasks;
     using Fifthweek.Payments.Pipeline;
 
-    public partial class CreatorChannelSnapshot 
+    public partial class CreatorChannelSnapshotItem 
     {
         public override string ToString()
         {
-            return string.Format("CreatorChannelSnapshot({0}, {1})", this.ChannelId == null ? "null" : this.ChannelId.ToString(), this.Price == null ? "null" : this.Price.ToString());
+            return string.Format("CreatorChannelSnapshotItem({0}, {1})", this.ChannelId == null ? "null" : this.ChannelId.ToString(), this.Price == null ? "null" : this.Price.ToString());
         }
         
         public override bool Equals(object obj)
@@ -606,7 +743,7 @@ namespace Fifthweek.Payments
                 return false;
             }
         
-            return this.Equals((CreatorChannelSnapshot)obj);
+            return this.Equals((CreatorChannelSnapshotItem)obj);
         }
         
         public override int GetHashCode()
@@ -620,7 +757,7 @@ namespace Fifthweek.Payments
             }
         }
         
-        protected bool Equals(CreatorChannelSnapshot other)
+        protected bool Equals(CreatorChannelSnapshotItem other)
         {
             if (!object.Equals(this.ChannelId, other.ChannelId))
             {
@@ -731,11 +868,11 @@ namespace Fifthweek.Payments
     using System.Threading.Tasks;
     using Fifthweek.Payments.Pipeline;
 
-    public partial class CreatorSnapshot 
+    public partial class CreatorChannelSnapshot 
     {
         public override string ToString()
         {
-            return string.Format("CreatorSnapshot({0}, {1}, {2})", this.Timestamp == null ? "null" : this.Timestamp.ToString(), this.CreatorId == null ? "null" : this.CreatorId.ToString(), this.CreatorChannels == null ? "null" : this.CreatorChannels.ToString());
+            return string.Format("CreatorChannelSnapshot({0}, {1}, {2})", this.Timestamp == null ? "null" : this.Timestamp.ToString(), this.CreatorId == null ? "null" : this.CreatorId.ToString(), this.CreatorChannels == null ? "null" : this.CreatorChannels.ToString());
         }
         
         public override bool Equals(object obj)
@@ -755,7 +892,7 @@ namespace Fifthweek.Payments
                 return false;
             }
         
-            return this.Equals((CreatorSnapshot)obj);
+            return this.Equals((CreatorChannelSnapshot)obj);
         }
         
         public override int GetHashCode()
@@ -778,7 +915,7 @@ namespace Fifthweek.Payments
             }
         }
         
-        protected bool Equals(CreatorSnapshot other)
+        protected bool Equals(CreatorChannelSnapshot other)
         {
             if (!object.Equals(this.Timestamp, other.Timestamp))
             {
@@ -820,7 +957,7 @@ namespace Fifthweek.Payments
     {
         public override string ToString()
         {
-            return string.Format("MergedSnapshot({0}, {1}, {2}, {3})", this.Timestamp == null ? "null" : this.Timestamp.ToString(), this.Creator == null ? "null" : this.Creator.ToString(), this.CreatorGuestList == null ? "null" : this.CreatorGuestList.ToString(), this.Subscriber == null ? "null" : this.Subscriber.ToString());
+            return string.Format("MergedSnapshot({0}, {1}, {2}, {3}, {4})", this.Timestamp == null ? "null" : this.Timestamp.ToString(), this.CreatorChannels == null ? "null" : this.CreatorChannels.ToString(), this.CreatorGuestList == null ? "null" : this.CreatorGuestList.ToString(), this.SubscriberChannels == null ? "null" : this.SubscriberChannels.ToString(), this.Subscriber == null ? "null" : this.Subscriber.ToString());
         }
         
         public override bool Equals(object obj)
@@ -849,8 +986,9 @@ namespace Fifthweek.Payments
             {
                 int hashCode = 0;
                 hashCode = (hashCode * 397) ^ (this.Timestamp != null ? this.Timestamp.GetHashCode() : 0);
-                hashCode = (hashCode * 397) ^ (this.Creator != null ? this.Creator.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.CreatorChannels != null ? this.CreatorChannels.GetHashCode() : 0);
                 hashCode = (hashCode * 397) ^ (this.CreatorGuestList != null ? this.CreatorGuestList.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.SubscriberChannels != null ? this.SubscriberChannels.GetHashCode() : 0);
                 hashCode = (hashCode * 397) ^ (this.Subscriber != null ? this.Subscriber.GetHashCode() : 0);
                 return hashCode;
             }
@@ -863,12 +1001,17 @@ namespace Fifthweek.Payments
                 return false;
             }
         
-            if (!object.Equals(this.Creator, other.Creator))
+            if (!object.Equals(this.CreatorChannels, other.CreatorChannels))
             {
                 return false;
             }
         
             if (!object.Equals(this.CreatorGuestList, other.CreatorGuestList))
+            {
+                return false;
+            }
+        
+            if (!object.Equals(this.SubscriberChannels, other.SubscriberChannels))
             {
                 return false;
             }
@@ -892,11 +1035,11 @@ namespace Fifthweek.Payments
     using System.Threading.Tasks;
     using Fifthweek.Payments.Pipeline;
 
-    public partial class SubscriberChannelSnapshot 
+    public partial class SubscriberChannelSnapshotItem 
     {
         public override string ToString()
         {
-            return string.Format("SubscriberChannelSnapshot({0}, {1}, {2})", this.ChannelId == null ? "null" : this.ChannelId.ToString(), this.AcceptedPrice == null ? "null" : this.AcceptedPrice.ToString(), this.SubscriptionStartDate == null ? "null" : this.SubscriptionStartDate.ToString());
+            return string.Format("SubscriberChannelSnapshotItem({0}, {1}, {2})", this.ChannelId == null ? "null" : this.ChannelId.ToString(), this.AcceptedPrice == null ? "null" : this.AcceptedPrice.ToString(), this.SubscriptionStartDate == null ? "null" : this.SubscriptionStartDate.ToString());
         }
         
         public override bool Equals(object obj)
@@ -916,7 +1059,7 @@ namespace Fifthweek.Payments
                 return false;
             }
         
-            return this.Equals((SubscriberChannelSnapshot)obj);
+            return this.Equals((SubscriberChannelSnapshotItem)obj);
         }
         
         public override int GetHashCode()
@@ -931,7 +1074,7 @@ namespace Fifthweek.Payments
             }
         }
         
-        protected bool Equals(SubscriberChannelSnapshot other)
+        protected bool Equals(SubscriberChannelSnapshotItem other)
         {
             if (!object.Equals(this.ChannelId, other.ChannelId))
             {
@@ -962,11 +1105,11 @@ namespace Fifthweek.Payments
     using System.Threading.Tasks;
     using Fifthweek.Payments.Pipeline;
 
-    public partial class SubscriberSnapshot 
+    public partial class SubscriberChannelSnapshot 
     {
         public override string ToString()
         {
-            return string.Format("SubscriberSnapshot({0}, {1}, \"{2}\", {3})", this.Timestamp == null ? "null" : this.Timestamp.ToString(), this.SubscriberId == null ? "null" : this.SubscriberId.ToString(), this.Email == null ? "null" : this.Email.ToString(), this.SubscribedChannels == null ? "null" : this.SubscribedChannels.ToString());
+            return string.Format("SubscriberChannelSnapshot({0}, {1}, {2})", this.Timestamp == null ? "null" : this.Timestamp.ToString(), this.SubscriberId == null ? "null" : this.SubscriberId.ToString(), this.SubscribedChannels == null ? "null" : this.SubscribedChannels.ToString());
         }
         
         public override bool Equals(object obj)
@@ -986,7 +1129,7 @@ namespace Fifthweek.Payments
                 return false;
             }
         
-            return this.Equals((SubscriberSnapshot)obj);
+            return this.Equals((SubscriberChannelSnapshot)obj);
         }
         
         public override int GetHashCode()
@@ -996,7 +1139,6 @@ namespace Fifthweek.Payments
                 int hashCode = 0;
                 hashCode = (hashCode * 397) ^ (this.Timestamp != null ? this.Timestamp.GetHashCode() : 0);
                 hashCode = (hashCode * 397) ^ (this.SubscriberId != null ? this.SubscriberId.GetHashCode() : 0);
-                hashCode = (hashCode * 397) ^ (this.Email != null ? this.Email.GetHashCode() : 0);
                 hashCode = (hashCode * 397) ^ (this.SubscribedChannels != null 
         			? this.SubscribedChannels.Aggregate(0, (previous, current) => 
         				{ 
@@ -1010,7 +1152,7 @@ namespace Fifthweek.Payments
             }
         }
         
-        protected bool Equals(SubscriberSnapshot other)
+        protected bool Equals(SubscriberChannelSnapshot other)
         {
             if (!object.Equals(this.Timestamp, other.Timestamp))
             {
@@ -1018,11 +1160,6 @@ namespace Fifthweek.Payments
             }
         
             if (!object.Equals(this.SubscriberId, other.SubscriberId))
-            {
-                return false;
-            }
-        
-            if (!object.Equals(this.Email, other.Email))
             {
                 return false;
             }
@@ -1051,6 +1188,7 @@ namespace Fifthweek.Payments.Services
     using Fifthweek.Api.Azure;
     using Fifthweek.CodeGeneration;
     using Fifthweek.Api.Identity.Shared.Membership;
+    using Fifthweek.Api.Persistence;
 
     public partial class CreateSnapshotMessage 
     {
@@ -1098,6 +1236,76 @@ namespace Fifthweek.Payments.Services
             }
         
             if (!object.Equals(this.SnapshotType, other.SnapshotType))
+            {
+                return false;
+            }
+        
+            return true;
+        }
+    }
+}
+namespace Fifthweek.Payments
+{
+    using System;
+    using System.Linq;
+    using Fifthweek.CodeGeneration;
+    using System.Collections.Generic;
+    using System.Text;
+    using System.Threading.Tasks;
+    using Fifthweek.Payments.Pipeline;
+
+    public partial class SubscriberSnapshot 
+    {
+        public override string ToString()
+        {
+            return string.Format("SubscriberSnapshot({0}, {1}, \"{2}\")", this.Timestamp == null ? "null" : this.Timestamp.ToString(), this.SubscriberId == null ? "null" : this.SubscriberId.ToString(), this.Email == null ? "null" : this.Email.ToString());
+        }
+        
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj))
+            {
+                return false;
+            }
+        
+            if (ReferenceEquals(this, obj))
+            {
+                return true;
+            }
+        
+            if (obj.GetType() != this.GetType())
+            {
+                return false;
+            }
+        
+            return this.Equals((SubscriberSnapshot)obj);
+        }
+        
+        public override int GetHashCode()
+        {
+            unchecked
+            {
+                int hashCode = 0;
+                hashCode = (hashCode * 397) ^ (this.Timestamp != null ? this.Timestamp.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.SubscriberId != null ? this.SubscriberId.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.Email != null ? this.Email.GetHashCode() : 0);
+                return hashCode;
+            }
+        }
+        
+        protected bool Equals(SubscriberSnapshot other)
+        {
+            if (!object.Equals(this.Timestamp, other.Timestamp))
+            {
+                return false;
+            }
+        
+            if (!object.Equals(this.SubscriberId, other.SubscriberId))
+            {
+                return false;
+            }
+        
+            if (!object.Equals(this.Email, other.Email))
             {
                 return false;
             }
