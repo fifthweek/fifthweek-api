@@ -9,14 +9,14 @@
 
     public interface ISnapshotProcessor
     {
-        Task CreateThumbnailSetAsync(
+        Task CreateSnapshotAsync(
             CreateSnapshotMessage message,
             ICloudStorageAccount cloudStorageAccount,
             ILogger logger,
             CancellationToken cancellationToken);
 
-        Task CreatePoisonThumbnailSetAsync(
-            CreateSnapshotMessage message,
+        Task HandlePoisonMessageAsync(
+            string message,
             ICloudStorageAccount cloudStorageAccount,
             ILogger logger,
             CancellationToken cancellationToken);

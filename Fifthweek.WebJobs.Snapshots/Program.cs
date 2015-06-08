@@ -25,7 +25,10 @@ namespace Fifthweek.WebJobs.Snapshots
         private const string ErrorIdentifier = "Snapshots WebJob";
 
         private static readonly ISnapshotProcessor SnapshotProcessor = new SnapshotProcessor(
-            new FifthweekDbConnectionFactory());
+            new CreateSubscriberSnapshotDbStatement(new FifthweekDbConnectionFactory()),
+            new CreateSubscriberChannelSnapshotDbStatement(new FifthweekDbConnectionFactory()),
+            new CreateCreatorChannelSnapshotDbStatement(new FifthweekDbConnectionFactory()),
+            new CreateCreatorGuestListSnapshotDbStatement(new FifthweekDbConnectionFactory()));
 
         public static Task CreateThumbnailSetAsync(
             [QueueTrigger(Constants.RequestSnapshotQueueName)] CreateSnapshotMessage message,
@@ -34,7 +37,7 @@ namespace Fifthweek.WebJobs.Snapshots
             int dequeueCount,
             CancellationToken cancellationToken)
         {
-            return SnapshotProcessor.CreateThumbnailSetAsync(
+            return SnapshotProcessor.CreateSnapshotAsync(
                 message,
                 new FifthweekCloudStorageAccount(cloudStorageAccount),
                 CreateLogger(webJobsLogger),
@@ -42,13 +45,13 @@ namespace Fifthweek.WebJobs.Snapshots
         }
 
         public static Task ProcessPoisonMessage(
-            [QueueTrigger(Constants.RequestSnapshotQueueName + "-poison")] CreateSnapshotMessage message,
+            [QueueTrigger(Constants.RequestSnapshotQueueName + "-poison")] string message,
             CloudStorageAccount cloudStorageAccount,
             TextWriter webJobsLogger,
             int dequeueCount,
             CancellationToken cancellationToken)
         {
-            return SnapshotProcessor.CreatePoisonThumbnailSetAsync(
+            return SnapshotProcessor.HandlePoisonMessageAsync(
                 message,
                 new FifthweekCloudStorageAccount(cloudStorageAccount),
                 CreateLogger(webJobsLogger),
