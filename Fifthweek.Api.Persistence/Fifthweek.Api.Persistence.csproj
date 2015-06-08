@@ -292,6 +292,10 @@
     <Compile Include="Migrations\201506011009192_ReduceLengthOfRefreshTokenClientIdToFixIndexSize.Designer.cs">
       <DependentUpon>201506011009192_ReduceLengthOfRefreshTokenClientIdToFixIndexSize.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201506071620443_CreateSnapshotTables.cs" />
+    <Compile Include="Migrations\201506071620443_CreateSnapshotTables.Designer.cs">
+      <DependentUpon>201506071620443_CreateSnapshotTables.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Snapshots\CreatorChannelSnapshot.cs" />
     <Compile Include="Snapshots\CreatorChannelSnapshotItem.cs" />
@@ -466,10 +470,14 @@
     <EmbeddedResource Include="Migrations\201506011009192_ReduceLengthOfRefreshTokenClientIdToFixIndexSize.resx">
       <DependentUpon>201506011009192_ReduceLengthOfRefreshTokenClientIdToFixIndexSize.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201506071620443_CreateSnapshotTables.resx">
+      <DependentUpon>201506071620443_CreateSnapshotTables.cs</DependentUpon>
+    </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
     <Content Include="Migrations\201501032034425_ChangeIdentityPrimaryKeysToGuid.sql" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

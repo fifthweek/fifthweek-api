@@ -2,19 +2,24 @@
 {
     using System;
     using System.ComponentModel.DataAnnotations;
+    using System.ComponentModel.DataAnnotations.Schema;
 
     using Fifthweek.CodeGeneration;
 
     [AutoConstructor, AutoEqualityMembers, AutoSql]
-    public class CreatorChannelSnapshotItem
+    public partial class CreatorChannelSnapshotItem
     {
-        [Required, Key]
+        public CreatorChannelSnapshotItem()
+        {
+        }
+
+        [Required, Key, Column(Order = 0)]
         public Guid CreatorChannelSnapshotId { get; set; }
 
         [Required, Optional, NonEquatable]
         public CreatorChannelSnapshot CreatorChannelSnapshot { get; set; }
 
-        [Required, Key]
+        [Required, Key, Column(Order = 1)]
         public Guid ChannelId { get; set; }
 
         [Required]

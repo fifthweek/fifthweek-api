@@ -4,6 +4,7 @@ namespace Fifthweek.Api.Persistence
     using System.Data.Entity;
 
     using Fifthweek.Api.Persistence.Identity;
+    using Fifthweek.Api.Persistence.Snapshots;
 
     using Microsoft.AspNet.Identity.EntityFramework;
 
@@ -38,6 +39,20 @@ namespace Fifthweek.Api.Persistence
         public IDbSet<FreeAccessUser> FreeAccessUsers { get; set; }
 
         public IDbSet<ChannelSubscription> ChannelSubscriptions { get; set; }
+
+        public IDbSet<SubscriberSnapshot> SubscriberSnapshots { get; set; }
+
+        public IDbSet<SubscriberChannelSnapshot> SubscriberChannelSnapshots { get; set; }
+
+        public IDbSet<SubscriberChannelSnapshotItem> SubscriberChannelSnapshotItems { get; set; }
+
+        public IDbSet<CreatorChannelSnapshot> CreatorChannelSnapshots { get; set; }
+
+        public IDbSet<CreatorChannelSnapshotItem> CreatorChannelSnapshotItems { get; set; }
+
+        public IDbSet<CreatorGuestListSnapshot> CreatorGuestListSnapshots { get; set; }
+
+        public IDbSet<CreatorGuestListSnapshotItem> CreatorGuestListSnapshotItems { get; set; }
 
         public static FifthweekDbContext Create()
         {

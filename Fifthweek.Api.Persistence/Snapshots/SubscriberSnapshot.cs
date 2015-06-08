@@ -2,16 +2,21 @@
 {
     using System;
     using System.ComponentModel.DataAnnotations;
+    using System.ComponentModel.DataAnnotations.Schema;
 
     using Fifthweek.CodeGeneration;
 
     [AutoConstructor, AutoEqualityMembers, AutoSql]
-    public class SubscriberSnapshot
+    public partial class SubscriberSnapshot
     {
-        [Required, Key]
+        public SubscriberSnapshot()
+        {
+        }
+
+        [Required, Key, Column(Order = 0)]
         public DateTime Timestamp { get; set; }
 
-        [Required, Key] // Not a foreign key.
+        [Required, Key, Column(Order = 1)] // Not a foreign key.
         public Guid SubscriberId { get; set; }
 
         [Required]

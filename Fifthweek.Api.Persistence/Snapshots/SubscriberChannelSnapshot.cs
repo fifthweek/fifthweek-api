@@ -6,8 +6,12 @@
     using Fifthweek.CodeGeneration;
 
     [AutoConstructor, AutoEqualityMembers, AutoSql]
-    public class SubscriberChannelSnapshot
+    public partial class SubscriberChannelSnapshot
     {
+        public SubscriberChannelSnapshot()
+        {
+        }
+
         [Required, Key]
         public Guid Id { get; set; }
 
