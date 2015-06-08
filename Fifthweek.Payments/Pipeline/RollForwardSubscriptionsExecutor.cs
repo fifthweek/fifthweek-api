@@ -77,8 +77,8 @@ namespace Fifthweek.Payments.Pipeline
                                 var newSnapshot = new MergedSnapshot(
                                     snapshot.Timestamp,
                                     snapshot.CreatorChannels,
-                                    snapshot.CreatorGuestList,
-                                    new SubscriberChannelSnapshot(
+                                    snapshot.CreatorFreeAccessUsers,
+                                    new SubscriberChannelsSnapshot(
                                         snapshot.SubscriberChannels.Timestamp,
                                         snapshot.SubscriberChannels.SubscriberId,
                                         snapshot.SubscriberChannels.SubscribedChannels.Concat(new[] { activeSubscription.Subscription }).ToList()),
@@ -95,7 +95,7 @@ namespace Fifthweek.Payments.Pipeline
                                     var endSnapshot = new MergedSnapshot(
                                         billingWeekFinalSnapshotTime,
                                         snapshot.CreatorChannels,
-                                        snapshot.CreatorGuestList,
+                                        snapshot.CreatorFreeAccessUsers,
                                         snapshot.SubscriberChannels,
                                         snapshot.Subscriber);
 
@@ -133,13 +133,13 @@ namespace Fifthweek.Payments.Pipeline
 
         private class ActiveSubscription
         {
-            public ActiveSubscription(DateTime billingWeekEndDateExclusive, SubscriberChannelSnapshotItem subscription)
+            public ActiveSubscription(DateTime billingWeekEndDateExclusive, SubscriberChannelsSnapshotItem subscription)
             {
                 this.BillingWeekEndDateExclusive = billingWeekEndDateExclusive;
                 this.Subscription = subscription;
             }
 
-            public SubscriberChannelSnapshotItem Subscription { get; private set; }
+            public SubscriberChannelsSnapshotItem Subscription { get; private set; }
 
             public DateTime BillingWeekEndDateExclusive { get; set; }
         }

@@ -250,7 +250,7 @@ namespace Fifthweek.Api.Collections.Controllers
             Fifthweek.Api.Core.ICommandHandler<Fifthweek.Api.Collections.Commands.DeleteCollectionCommand> deleteCollection,
             Fifthweek.Api.Core.IQueryHandler<Fifthweek.Api.Collections.Queries.GetLiveDateOfNewQueuedPostQuery,System.DateTime> getLiveDateOfNewQueuedPost,
             Fifthweek.Api.Identity.Shared.Membership.IRequesterContext requesterContext,
-            Fifthweek.Api.Core.IGuidCreator guidCreator,
+            IGuidCreator guidCreator,
             Fifthweek.Shared.IRandom random)
         {
             if (createCollection == null)

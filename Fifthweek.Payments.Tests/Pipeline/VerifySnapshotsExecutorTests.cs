@@ -34,12 +34,12 @@
                 CreatorId1,
                 new List<ISnapshot> 
                 {
-                    CreatorChannelSnapshot.Default(Now, CreatorId1),
-                    CreatorChannelSnapshot.Default(Now, CreatorId1),
-                    CreatorChannelSnapshot.Default(Now.AddSeconds(1), CreatorId1),
-                    SubscriberChannelSnapshot.Default(Now.AddSeconds(1), SubscriberId1),
-                    SubscriberChannelSnapshot.Default(Now.AddSeconds(2), SubscriberId1),
-                    CreatorGuestListSnapshot.Default(Now.AddSeconds(2), CreatorId1),
+                    CreatorChannelsSnapshot.Default(Now, CreatorId1),
+                    CreatorChannelsSnapshot.Default(Now, CreatorId1),
+                    CreatorChannelsSnapshot.Default(Now.AddSeconds(1), CreatorId1),
+                    SubscriberChannelsSnapshot.Default(Now.AddSeconds(1), SubscriberId1),
+                    SubscriberChannelsSnapshot.Default(Now.AddSeconds(2), SubscriberId1),
+                    CreatorFreeAccessUsersSnapshot.Default(Now.AddSeconds(2), CreatorId1),
                     SubscriberSnapshot.Default(Now.AddSeconds(2), SubscriberId1),
                 });
         }
@@ -55,12 +55,12 @@
                 CreatorId1,
                 new List<ISnapshot> 
                 {
-                    CreatorChannelSnapshot.Default(Now, CreatorId1),
-                    CreatorChannelSnapshot.Default(Now, CreatorId1),
-                    CreatorChannelSnapshot.Default(Now.AddSeconds(1), CreatorId1),
-                    SubscriberChannelSnapshot.Default(Now.AddSeconds(2), SubscriberId1),
-                    SubscriberChannelSnapshot.Default(Now.AddSeconds(1), SubscriberId1),
-                    CreatorGuestListSnapshot.Default(Now.AddSeconds(2), CreatorId1),
+                    CreatorChannelsSnapshot.Default(Now, CreatorId1),
+                    CreatorChannelsSnapshot.Default(Now, CreatorId1),
+                    CreatorChannelsSnapshot.Default(Now.AddSeconds(1), CreatorId1),
+                    SubscriberChannelsSnapshot.Default(Now.AddSeconds(2), SubscriberId1),
+                    SubscriberChannelsSnapshot.Default(Now.AddSeconds(1), SubscriberId1),
+                    CreatorFreeAccessUsersSnapshot.Default(Now.AddSeconds(2), CreatorId1),
                     SubscriberSnapshot.Default(Now.AddSeconds(2), SubscriberId1),
                 });
         }
@@ -76,12 +76,12 @@
                 CreatorId1,
                 new List<ISnapshot> 
                 {
-                    CreatorChannelSnapshot.Default(Now, CreatorId1),
-                    CreatorChannelSnapshot.Default(Now, Guid.NewGuid()),
-                    CreatorChannelSnapshot.Default(Now.AddSeconds(1), CreatorId1),
-                    SubscriberChannelSnapshot.Default(Now.AddSeconds(1), SubscriberId1),
-                    SubscriberChannelSnapshot.Default(Now.AddSeconds(2), SubscriberId1),
-                    CreatorGuestListSnapshot.Default(Now.AddSeconds(2), CreatorId1),
+                    CreatorChannelsSnapshot.Default(Now, CreatorId1),
+                    CreatorChannelsSnapshot.Default(Now, Guid.NewGuid()),
+                    CreatorChannelsSnapshot.Default(Now.AddSeconds(1), CreatorId1),
+                    SubscriberChannelsSnapshot.Default(Now.AddSeconds(1), SubscriberId1),
+                    SubscriberChannelsSnapshot.Default(Now.AddSeconds(2), SubscriberId1),
+                    CreatorFreeAccessUsersSnapshot.Default(Now.AddSeconds(2), CreatorId1),
                     SubscriberSnapshot.Default(Now.AddSeconds(2), SubscriberId1),
                 });
         }
@@ -97,12 +97,12 @@
                 CreatorId1,
                 new List<ISnapshot> 
                 {
-                    CreatorChannelSnapshot.Default(Now, CreatorId1),
-                    CreatorChannelSnapshot.Default(Now, CreatorId1),
-                    CreatorChannelSnapshot.Default(Now.AddSeconds(1), CreatorId1),
-                    SubscriberChannelSnapshot.Default(Now.AddSeconds(1), SubscriberId1),
-                    SubscriberChannelSnapshot.Default(Now.AddSeconds(2), SubscriberId1),
-                    CreatorGuestListSnapshot.Default(Now.AddSeconds(2), Guid.NewGuid()),
+                    CreatorChannelsSnapshot.Default(Now, CreatorId1),
+                    CreatorChannelsSnapshot.Default(Now, CreatorId1),
+                    CreatorChannelsSnapshot.Default(Now.AddSeconds(1), CreatorId1),
+                    SubscriberChannelsSnapshot.Default(Now.AddSeconds(1), SubscriberId1),
+                    SubscriberChannelsSnapshot.Default(Now.AddSeconds(2), SubscriberId1),
+                    CreatorFreeAccessUsersSnapshot.Default(Now.AddSeconds(2), Guid.NewGuid()),
                     SubscriberSnapshot.Default(Now.AddSeconds(2), SubscriberId1),
                 });
         }
@@ -118,12 +118,12 @@
                 CreatorId1,
                 new List<ISnapshot> 
                 {
-                    CreatorChannelSnapshot.Default(Now, CreatorId1),
-                    CreatorChannelSnapshot.Default(Now, CreatorId1),
-                    CreatorChannelSnapshot.Default(Now.AddSeconds(1), CreatorId1),
-                    SubscriberChannelSnapshot.Default(Now.AddSeconds(1), Guid.NewGuid()),
-                    SubscriberChannelSnapshot.Default(Now.AddSeconds(2), SubscriberId1),
-                    CreatorGuestListSnapshot.Default(Now.AddSeconds(2), CreatorId1),
+                    CreatorChannelsSnapshot.Default(Now, CreatorId1),
+                    CreatorChannelsSnapshot.Default(Now, CreatorId1),
+                    CreatorChannelsSnapshot.Default(Now.AddSeconds(1), CreatorId1),
+                    SubscriberChannelsSnapshot.Default(Now.AddSeconds(1), Guid.NewGuid()),
+                    SubscriberChannelsSnapshot.Default(Now.AddSeconds(2), SubscriberId1),
+                    CreatorFreeAccessUsersSnapshot.Default(Now.AddSeconds(2), CreatorId1),
                     SubscriberSnapshot.Default(Now.AddSeconds(2), SubscriberId1),
                 });
         }
@@ -139,12 +139,12 @@
                 CreatorId1,
                 new List<ISnapshot> 
                 {
-                    CreatorChannelSnapshot.Default(Now, CreatorId1),
-                    CreatorChannelSnapshot.Default(Now, CreatorId1),
-                    CreatorChannelSnapshot.Default(Now.AddSeconds(1), CreatorId1),
-                    SubscriberChannelSnapshot.Default(Now.AddSeconds(1), SubscriberId1),
-                    SubscriberChannelSnapshot.Default(Now.AddSeconds(2), SubscriberId1),
-                    CreatorGuestListSnapshot.Default(Now.AddSeconds(2), CreatorId1),
+                    CreatorChannelsSnapshot.Default(Now, CreatorId1),
+                    CreatorChannelsSnapshot.Default(Now, CreatorId1),
+                    CreatorChannelsSnapshot.Default(Now.AddSeconds(1), CreatorId1),
+                    SubscriberChannelsSnapshot.Default(Now.AddSeconds(1), SubscriberId1),
+                    SubscriberChannelsSnapshot.Default(Now.AddSeconds(2), SubscriberId1),
+                    CreatorFreeAccessUsersSnapshot.Default(Now.AddSeconds(2), CreatorId1),
                     SubscriberSnapshot.Default(Now.AddSeconds(2), Guid.NewGuid()),
                 });
         }
@@ -159,12 +159,12 @@
                 CreatorId1,
                 new List<ISnapshot> 
                 {
-                    CreatorChannelSnapshot.Default(Now, CreatorId1),
-                    CreatorChannelSnapshot.Default(Now, CreatorId1),
-                    CreatorChannelSnapshot.Default(Now.AddSeconds(1), CreatorId1),
-                    SubscriberChannelSnapshot.Default(Now.AddSeconds(1), SubscriberId1),
-                    SubscriberChannelSnapshot.Default(Now.AddSeconds(2), SubscriberId1),
-                    CreatorGuestListSnapshot.Default(Now.AddSeconds(2), CreatorId1),
+                    CreatorChannelsSnapshot.Default(Now, CreatorId1),
+                    CreatorChannelsSnapshot.Default(Now, CreatorId1),
+                    CreatorChannelsSnapshot.Default(Now.AddSeconds(1), CreatorId1),
+                    SubscriberChannelsSnapshot.Default(Now.AddSeconds(1), SubscriberId1),
+                    SubscriberChannelsSnapshot.Default(Now.AddSeconds(2), SubscriberId1),
+                    CreatorFreeAccessUsersSnapshot.Default(Now.AddSeconds(2), CreatorId1),
                     SubscriberSnapshot.Default(EndTimeExclusive.AddTicks(-1), SubscriberId1),
                 });
         }
@@ -180,12 +180,12 @@
                 CreatorId1,
                 new List<ISnapshot> 
                 {
-                    CreatorChannelSnapshot.Default(Now, CreatorId1),
-                    CreatorChannelSnapshot.Default(Now, CreatorId1),
-                    CreatorChannelSnapshot.Default(Now.AddSeconds(1), CreatorId1),
-                    SubscriberChannelSnapshot.Default(Now.AddSeconds(1), SubscriberId1),
-                    SubscriberChannelSnapshot.Default(Now.AddSeconds(2), SubscriberId1),
-                    CreatorGuestListSnapshot.Default(Now.AddSeconds(2), CreatorId1),
+                    CreatorChannelsSnapshot.Default(Now, CreatorId1),
+                    CreatorChannelsSnapshot.Default(Now, CreatorId1),
+                    CreatorChannelsSnapshot.Default(Now.AddSeconds(1), CreatorId1),
+                    SubscriberChannelsSnapshot.Default(Now.AddSeconds(1), SubscriberId1),
+                    SubscriberChannelsSnapshot.Default(Now.AddSeconds(2), SubscriberId1),
+                    CreatorFreeAccessUsersSnapshot.Default(Now.AddSeconds(2), CreatorId1),
                     SubscriberSnapshot.Default(EndTimeExclusive, SubscriberId1),
                 });
         }
@@ -201,12 +201,12 @@
                 CreatorId1,
                 new List<ISnapshot> 
                 {
-                    CreatorChannelSnapshot.Default(Now, CreatorId1),
-                    CreatorChannelSnapshot.Default(Now, CreatorId1),
-                    CreatorChannelSnapshot.Default(Now.AddSeconds(1), CreatorId1),
-                    SubscriberChannelSnapshot.Default(Now.AddSeconds(1), SubscriberId1),
-                    SubscriberChannelSnapshot.Default(Now.AddSeconds(2), SubscriberId1),
-                    CreatorGuestListSnapshot.Default(Now.AddSeconds(2), CreatorId1),
+                    CreatorChannelsSnapshot.Default(Now, CreatorId1),
+                    CreatorChannelsSnapshot.Default(Now, CreatorId1),
+                    CreatorChannelsSnapshot.Default(Now.AddSeconds(1), CreatorId1),
+                    SubscriberChannelsSnapshot.Default(Now.AddSeconds(1), SubscriberId1),
+                    SubscriberChannelsSnapshot.Default(Now.AddSeconds(2), SubscriberId1),
+                    CreatorFreeAccessUsersSnapshot.Default(Now.AddSeconds(2), CreatorId1),
                     SubscriberSnapshot.Default(EndTimeExclusive.AddTicks(1), SubscriberId1),
                 });
         }
@@ -222,12 +222,12 @@
                 CreatorId1,
                 new List<ISnapshot> 
                 {
-                    CreatorChannelSnapshot.Default(Now, CreatorId1),
-                    CreatorChannelSnapshot.Default(Now, CreatorId1),
-                    CreatorChannelSnapshot.Default(Now.AddSeconds(1), CreatorId1),
-                    SubscriberChannelSnapshot.Default(Now.AddSeconds(1), SubscriberId1),
-                    SubscriberChannelSnapshot.Default(Now.AddSeconds(2), SubscriberId1),
-                    CreatorGuestListSnapshot.Default(Now.AddSeconds(2), CreatorId1),
+                    CreatorChannelsSnapshot.Default(Now, CreatorId1),
+                    CreatorChannelsSnapshot.Default(Now, CreatorId1),
+                    CreatorChannelsSnapshot.Default(Now.AddSeconds(1), CreatorId1),
+                    SubscriberChannelsSnapshot.Default(Now.AddSeconds(1), SubscriberId1),
+                    SubscriberChannelsSnapshot.Default(Now.AddSeconds(2), SubscriberId1),
+                    CreatorFreeAccessUsersSnapshot.Default(Now.AddSeconds(2), CreatorId1),
                     SubscriberSnapshot.Default(DateTime.Now.AddSeconds(2), SubscriberId1),
                 });
         }
@@ -242,12 +242,12 @@
                 CreatorId1,
                 new List<ISnapshot> 
                 {
-                    CreatorChannelSnapshot.Default(Now, CreatorId1),
-                    CreatorChannelSnapshot.Default(Now, CreatorId1),
-                    CreatorChannelSnapshot.Default(Now.AddSeconds(1), CreatorId1),
-                    SubscriberChannelSnapshot.Default(Now.AddSeconds(1), SubscriberId1),
-                    new SubscriberChannelSnapshot(Now.AddSeconds(2), SubscriberId1, new List<SubscriberChannelSnapshotItem> { new SubscriberChannelSnapshotItem(Guid.NewGuid(), 100, Now) }),
-                    CreatorGuestListSnapshot.Default(Now.AddSeconds(2), CreatorId1),
+                    CreatorChannelsSnapshot.Default(Now, CreatorId1),
+                    CreatorChannelsSnapshot.Default(Now, CreatorId1),
+                    CreatorChannelsSnapshot.Default(Now.AddSeconds(1), CreatorId1),
+                    SubscriberChannelsSnapshot.Default(Now.AddSeconds(1), SubscriberId1),
+                    new SubscriberChannelsSnapshot(Now.AddSeconds(2), SubscriberId1, new List<SubscriberChannelsSnapshotItem> { new SubscriberChannelsSnapshotItem(Guid.NewGuid(), 100, Now) }),
+                    CreatorFreeAccessUsersSnapshot.Default(Now.AddSeconds(2), CreatorId1),
                     SubscriberSnapshot.Default(Now.AddSeconds(2), SubscriberId1),
                 });
         }
@@ -263,12 +263,12 @@
                 CreatorId1,
                 new List<ISnapshot> 
                 {
-                    CreatorChannelSnapshot.Default(Now, CreatorId1),
-                    CreatorChannelSnapshot.Default(Now, CreatorId1),
-                    CreatorChannelSnapshot.Default(Now.AddSeconds(1), CreatorId1),
-                    SubscriberChannelSnapshot.Default(Now.AddSeconds(1), SubscriberId1),
-                    new SubscriberChannelSnapshot(Now.AddSeconds(2), SubscriberId1, new List<SubscriberChannelSnapshotItem> { new SubscriberChannelSnapshotItem(Guid.NewGuid(), 100, DateTime.Now) }),
-                    CreatorGuestListSnapshot.Default(Now.AddSeconds(2), CreatorId1),
+                    CreatorChannelsSnapshot.Default(Now, CreatorId1),
+                    CreatorChannelsSnapshot.Default(Now, CreatorId1),
+                    CreatorChannelsSnapshot.Default(Now.AddSeconds(1), CreatorId1),
+                    SubscriberChannelsSnapshot.Default(Now.AddSeconds(1), SubscriberId1),
+                    new SubscriberChannelsSnapshot(Now.AddSeconds(2), SubscriberId1, new List<SubscriberChannelsSnapshotItem> { new SubscriberChannelsSnapshotItem(Guid.NewGuid(), 100, DateTime.Now) }),
+                    CreatorFreeAccessUsersSnapshot.Default(Now.AddSeconds(2), CreatorId1),
                     SubscriberSnapshot.Default(Now.AddSeconds(2), SubscriberId1),
                 });
         }

@@ -13,7 +13,8 @@ namespace Fifthweek.WebJobs.Snapshots
     using Fifthweek.Api.Persistence;
     using Fifthweek.Azure;
     using Fifthweek.Payments;
-    using Fifthweek.Payments.Services;
+    using Fifthweek.Payments.SnapshotCreation;
+    using Fifthweek.Shared;
     using Fifthweek.WebJobs.Shared;
 
     using Microsoft.Azure.WebJobs;
@@ -25,13 +26,13 @@ namespace Fifthweek.WebJobs.Snapshots
         private const string ErrorIdentifier = "Snapshots WebJob";
 
         private static readonly ISnapshotProcessor SnapshotProcessor = new SnapshotProcessor(
-            new CreateSubscriberSnapshotDbStatement(new FifthweekDbConnectionFactory()),
-            new CreateSubscriberChannelSnapshotDbStatement(new FifthweekDbConnectionFactory()),
-            new CreateCreatorChannelSnapshotDbStatement(new FifthweekDbConnectionFactory()),
-            new CreateCreatorGuestListSnapshotDbStatement(new FifthweekDbConnectionFactory()));
+            new CreateSubscriberSnapshotDbStatement(new SnapshotTimestampCreator(), new FifthweekDbConnectionFactory()),
+            new CreateSubscriberChannelsSnapshotDbStatement(new GuidCreator(), new SnapshotTimestampCreator(), new FifthweekDbConnectionFactory()),
+            new CreateCreatorChannelsSnapshotDbStatement(new GuidCreator(), new SnapshotTimestampCreator(), new FifthweekDbConnectionFactory()),
+            new CreateCreatorFreeAccessUsersSnapshotDbStatement(new GuidCreator(), new SnapshotTimestampCreator(), new FifthweekDbConnectionFactory()));
 
         public static Task CreateThumbnailSetAsync(
-            [QueueTrigger(Constants.RequestSnapshotQueueName)] CreateSnapshotMessage message,
+            [QueueTrigger(Payments.Shared.Constants.RequestSnapshotQueueName)] CreateSnapshotMessage message,
             CloudStorageAccount cloudStorageAccount,
             TextWriter webJobsLogger,
             int dequeueCount,
@@ -45,7 +46,7 @@ namespace Fifthweek.WebJobs.Snapshots
         }
 
         public static Task ProcessPoisonMessage(
-            [QueueTrigger(Constants.RequestSnapshotQueueName + "-poison")] string message,
+            [QueueTrigger(Payments.Shared.Constants.RequestSnapshotQueueName + "-poison")] string message,
             CloudStorageAccount cloudStorageAccount,
             TextWriter webJobsLogger,
             int dequeueCount,
@@ -57,7 +58,6 @@ namespace Fifthweek.WebJobs.Snapshots
                 CreateLogger(webJobsLogger),
                 cancellationToken);
         }
-
 
         public static void Main(string[] args)
         {

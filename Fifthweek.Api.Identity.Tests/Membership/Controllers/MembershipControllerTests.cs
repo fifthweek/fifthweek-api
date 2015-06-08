@@ -11,6 +11,7 @@
     using Fifthweek.Api.Identity.Membership.Queries;
     using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.Api.Identity.Tests.Membership.Commands;
+    using Fifthweek.Shared;
 
     using Microsoft.VisualStudio.TestTools.UnitTesting;
 

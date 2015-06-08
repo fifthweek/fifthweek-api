@@ -626,7 +626,7 @@ namespace Fifthweek.Api.Posts.Controllers
             Fifthweek.Api.Core.ICommandHandler<Fifthweek.Api.Posts.Commands.PostFileCommand> postFile,
             Fifthweek.Api.Core.ICommandHandler<Fifthweek.Api.Posts.Commands.ReviseFileCommand> reviseFile,
             Fifthweek.Api.Identity.Shared.Membership.IRequesterContext requesterContext,
-            Fifthweek.Api.Core.IGuidCreator guidCreator)
+            IGuidCreator guidCreator)
         {
             if (postFile == null)
             {
@@ -679,7 +679,7 @@ namespace Fifthweek.Api.Posts.Controllers
             Fifthweek.Api.Core.ICommandHandler<Fifthweek.Api.Posts.Commands.PostImageCommand> postImage,
             Fifthweek.Api.Core.ICommandHandler<Fifthweek.Api.Posts.Commands.ReviseImageCommand> reviseImage,
             Fifthweek.Api.Identity.Shared.Membership.IRequesterContext requesterContext,
-            Fifthweek.Api.Core.IGuidCreator guidCreator)
+            IGuidCreator guidCreator)
         {
             if (postImage == null)
             {
@@ -732,7 +732,7 @@ namespace Fifthweek.Api.Posts.Controllers
             Fifthweek.Api.Core.ICommandHandler<Fifthweek.Api.Posts.Commands.PostNoteCommand> postNote,
             Fifthweek.Api.Core.ICommandHandler<Fifthweek.Api.Posts.Commands.ReviseNoteCommand> reviseNote,
             Fifthweek.Api.Identity.Shared.Membership.IRequesterContext requesterContext,
-            Fifthweek.Api.Core.IGuidCreator guidCreator)
+            IGuidCreator guidCreator)
         {
             if (postNote == null)
             {

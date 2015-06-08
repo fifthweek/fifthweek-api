@@ -170,6 +170,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fifthweek.WebJobs.Snapshots
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fifthweek.Payments.Tests.Shared", "Fifthweek.Payments.Tests.Shared\Fifthweek.Payments.Tests.Shared.csproj", "{0EB8296A-D442-479E-A193-90A7AAED8E75}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fifthweek.Payments.SnapshotCreation", "Fifthweek.Payments.SnapshotCreation\Fifthweek.Payments.SnapshotCreation.csproj", "{81BCF480-639C-42C6-ADCF-2E5C97DEE750}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fifthweek.Payments.Shared", "Fifthweek.Payments.Shared\Fifthweek.Payments.Shared.csproj", "{8EF964CC-55F2-40BB-A0CE-F92F23AC8D90}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -416,6 +420,14 @@ Global
 		{0EB8296A-D442-479E-A193-90A7AAED8E75}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0EB8296A-D442-479E-A193-90A7AAED8E75}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0EB8296A-D442-479E-A193-90A7AAED8E75}.Release|Any CPU.Build.0 = Release|Any CPU
+		{81BCF480-639C-42C6-ADCF-2E5C97DEE750}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{81BCF480-639C-42C6-ADCF-2E5C97DEE750}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{81BCF480-639C-42C6-ADCF-2E5C97DEE750}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{81BCF480-639C-42C6-ADCF-2E5C97DEE750}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8EF964CC-55F2-40BB-A0CE-F92F23AC8D90}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8EF964CC-55F2-40BB-A0CE-F92F23AC8D90}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8EF964CC-55F2-40BB-A0CE-F92F23AC8D90}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8EF964CC-55F2-40BB-A0CE-F92F23AC8D90}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

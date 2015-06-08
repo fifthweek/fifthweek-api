@@ -11,7 +11,7 @@
     using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.Api.Persistence;
     using Fifthweek.CodeGeneration;
-    using Fifthweek.Payments.Services;
+    using Fifthweek.Payments.SnapshotCreation;
     using Fifthweek.Shared;
 
     [AutoConstructor]
@@ -63,7 +63,7 @@
                     }
                 }
 
-                await this.requestSnapshot.ExecuteAsync(userId, SnapshotType.CreatorGuestList);
+                await this.requestSnapshot.ExecuteAsync(userId, SnapshotType.CreatorFreeAccessUsers);
 
                 transaction.Complete();
             }

@@ -19,7 +19,7 @@
         private static readonly Guid ChannelId2 = Guid.NewGuid();
         private static readonly Guid ChannelId3 = Guid.NewGuid();
 
-        private static readonly CreatorGuestListSnapshot EmptyGuestList = CreatorGuestListSnapshot.Default(Now, CreatorId1);
+        private static readonly CreatorFreeAccessUsersSnapshot EmptyGuestList = CreatorFreeAccessUsersSnapshot.Default(Now, CreatorId1);
 
         private CalculateSnapshotCostExecutor target;
 
@@ -34,15 +34,15 @@
         {
             var result = this.target.Execute(
                 new MergedSnapshot(
-                    new CreatorChannelSnapshot(
+                    new CreatorChannelsSnapshot(
                         Now,
                         CreatorId1,
-                        new List<CreatorChannelSnapshotItem> { new CreatorChannelSnapshotItem(ChannelId1, 100) }),
+                        new List<CreatorChannelsSnapshotItem> { new CreatorChannelsSnapshotItem(ChannelId1, 100) }),
                     EmptyGuestList,
-                    new SubscriberChannelSnapshot(
+                    new SubscriberChannelsSnapshot(
                         Now,
                         SubscriberId1,
-                        new List<SubscriberChannelSnapshotItem>()),
+                        new List<SubscriberChannelsSnapshotItem>()),
                     new SubscriberSnapshot(
                         Now,
                         SubscriberId1,
@@ -56,18 +56,18 @@
         {
             var result = this.target.Execute(
                 new MergedSnapshot(
-                    new CreatorChannelSnapshot(
+                    new CreatorChannelsSnapshot(
                         Now,
                         CreatorId1,
-                        new List<CreatorChannelSnapshotItem> { new CreatorChannelSnapshotItem(ChannelId1, 100) }),
-                    new CreatorGuestListSnapshot(
+                        new List<CreatorChannelsSnapshotItem> { new CreatorChannelsSnapshotItem(ChannelId1, 100) }),
+                    new CreatorFreeAccessUsersSnapshot(
                         Now,
                         Guid.NewGuid(),
                         new List<string> { "a@a.com", "b@b.com" }),
-                    new SubscriberChannelSnapshot(
+                    new SubscriberChannelsSnapshot(
                         Now,
                         SubscriberId1,
-                        new List<SubscriberChannelSnapshotItem> { new SubscriberChannelSnapshotItem(ChannelId1, 100, Now) }),
+                        new List<SubscriberChannelsSnapshotItem> { new SubscriberChannelsSnapshotItem(ChannelId1, 100, Now) }),
                     new SubscriberSnapshot(
                         Now,
                         SubscriberId1,
@@ -81,18 +81,18 @@
         {
             var result = this.target.Execute(
                 new MergedSnapshot(
-                    new CreatorChannelSnapshot(
+                    new CreatorChannelsSnapshot(
                         Now,
                         CreatorId1,
-                        new List<CreatorChannelSnapshotItem> { new CreatorChannelSnapshotItem(ChannelId1, 100) }),
-                    new CreatorGuestListSnapshot(
+                        new List<CreatorChannelsSnapshotItem> { new CreatorChannelsSnapshotItem(ChannelId1, 100) }),
+                    new CreatorFreeAccessUsersSnapshot(
                         Now,
                         Guid.NewGuid(),
                         new List<string> { "aa@a.com", "bb@b.com" }),
-                    new SubscriberChannelSnapshot(
+                    new SubscriberChannelsSnapshot(
                         Now,
                         SubscriberId1,
-                        new List<SubscriberChannelSnapshotItem> { new SubscriberChannelSnapshotItem(ChannelId1, 100, Now) }),
+                        new List<SubscriberChannelsSnapshotItem> { new SubscriberChannelsSnapshotItem(ChannelId1, 100, Now) }),
                     new SubscriberSnapshot(
                         Now,
                         SubscriberId1,
@@ -106,15 +106,15 @@
         {
             var result = this.target.Execute(
                 new MergedSnapshot(
-                    new CreatorChannelSnapshot(
+                    new CreatorChannelsSnapshot(
                         Now,
                         CreatorId1,
-                        new List<CreatorChannelSnapshotItem> { new CreatorChannelSnapshotItem(ChannelId1, 100) }),
+                        new List<CreatorChannelsSnapshotItem> { new CreatorChannelsSnapshotItem(ChannelId1, 100) }),
                     EmptyGuestList,
-                    new SubscriberChannelSnapshot(
+                    new SubscriberChannelsSnapshot(
                         Now,
                         SubscriberId1,
-                        new List<SubscriberChannelSnapshotItem> { new SubscriberChannelSnapshotItem(ChannelId1, 100, Now) }),
+                        new List<SubscriberChannelsSnapshotItem> { new SubscriberChannelsSnapshotItem(ChannelId1, 100, Now) }),
                     new SubscriberSnapshot(
                         Now,
                         SubscriberId1,
@@ -128,23 +128,23 @@
         {
             var result = this.target.Execute(
                 new MergedSnapshot(
-                    new CreatorChannelSnapshot(
+                    new CreatorChannelsSnapshot(
                         Now,
                         CreatorId1,
-                        new List<CreatorChannelSnapshotItem> 
+                        new List<CreatorChannelsSnapshotItem> 
                         { 
-                            new CreatorChannelSnapshotItem(ChannelId1, 100),
-                            new CreatorChannelSnapshotItem(ChannelId2, 50),
-                            new CreatorChannelSnapshotItem(ChannelId3, 10) 
+                            new CreatorChannelsSnapshotItem(ChannelId1, 100),
+                            new CreatorChannelsSnapshotItem(ChannelId2, 50),
+                            new CreatorChannelsSnapshotItem(ChannelId3, 10) 
                         }),
                     EmptyGuestList,
-                    new SubscriberChannelSnapshot(
+                    new SubscriberChannelsSnapshot(
                         Now,
                         SubscriberId1,
-                        new List<SubscriberChannelSnapshotItem> 
+                        new List<SubscriberChannelsSnapshotItem> 
                         { 
-                            new SubscriberChannelSnapshotItem(ChannelId1, 100, Now),
-                            new SubscriberChannelSnapshotItem(ChannelId3, 10, Now) 
+                            new SubscriberChannelsSnapshotItem(ChannelId1, 100, Now),
+                            new SubscriberChannelsSnapshotItem(ChannelId3, 10, Now) 
                         }),
                     new SubscriberSnapshot(
                         Now,
@@ -159,23 +159,23 @@
         {
             var result = this.target.Execute(
                 new MergedSnapshot(
-                    new CreatorChannelSnapshot(
+                    new CreatorChannelsSnapshot(
                         Now,
                         CreatorId1,
-                        new List<CreatorChannelSnapshotItem> 
+                        new List<CreatorChannelsSnapshotItem> 
                         { 
-                            new CreatorChannelSnapshotItem(ChannelId1, 100),
-                            new CreatorChannelSnapshotItem(ChannelId2, 50),
-                            new CreatorChannelSnapshotItem(ChannelId3, 10) 
+                            new CreatorChannelsSnapshotItem(ChannelId1, 100),
+                            new CreatorChannelsSnapshotItem(ChannelId2, 50),
+                            new CreatorChannelsSnapshotItem(ChannelId3, 10) 
                         }),
                     EmptyGuestList,
-                    new SubscriberChannelSnapshot(
+                    new SubscriberChannelsSnapshot(
                         Now,
                         SubscriberId1,
-                        new List<SubscriberChannelSnapshotItem> 
+                        new List<SubscriberChannelsSnapshotItem> 
                         { 
-                            new SubscriberChannelSnapshotItem(ChannelId1, 200, Now),
-                            new SubscriberChannelSnapshotItem(ChannelId3, 20, Now) 
+                            new SubscriberChannelsSnapshotItem(ChannelId1, 200, Now),
+                            new SubscriberChannelsSnapshotItem(ChannelId3, 20, Now) 
                         }),
                     new SubscriberSnapshot(
                         Now,
@@ -190,23 +190,23 @@
         {
             var result = this.target.Execute(
                 new MergedSnapshot(
-                    new CreatorChannelSnapshot(
+                    new CreatorChannelsSnapshot(
                         Now,
                         CreatorId1,
-                        new List<CreatorChannelSnapshotItem> 
+                        new List<CreatorChannelsSnapshotItem> 
                         { 
-                            new CreatorChannelSnapshotItem(ChannelId1, 100),
-                            new CreatorChannelSnapshotItem(ChannelId2, 50),
-                            new CreatorChannelSnapshotItem(ChannelId3, 10) 
+                            new CreatorChannelsSnapshotItem(ChannelId1, 100),
+                            new CreatorChannelsSnapshotItem(ChannelId2, 50),
+                            new CreatorChannelsSnapshotItem(ChannelId3, 10) 
                         }),
                     EmptyGuestList,
-                    new SubscriberChannelSnapshot(
+                    new SubscriberChannelsSnapshot(
                         Now,
                         SubscriberId1,
-                        new List<SubscriberChannelSnapshotItem> 
+                        new List<SubscriberChannelsSnapshotItem> 
                         { 
-                            new SubscriberChannelSnapshotItem(ChannelId1, 100, Now),
-                            new SubscriberChannelSnapshotItem(ChannelId3, 9, Now) 
+                            new SubscriberChannelsSnapshotItem(ChannelId1, 100, Now),
+                            new SubscriberChannelsSnapshotItem(ChannelId3, 9, Now) 
                         }),
                     new SubscriberSnapshot(
                         Now,
@@ -221,26 +221,26 @@
         {
             var result = this.target.Execute(
                 new MergedSnapshot(
-                    new CreatorChannelSnapshot(
+                    new CreatorChannelsSnapshot(
                         Now,
                         CreatorId1,
-                        new List<CreatorChannelSnapshotItem> 
+                        new List<CreatorChannelsSnapshotItem> 
                         { 
-                            new CreatorChannelSnapshotItem(ChannelId1, 100),
-                            new CreatorChannelSnapshotItem(ChannelId2, 50),
-                            new CreatorChannelSnapshotItem(ChannelId3, 10) 
+                            new CreatorChannelsSnapshotItem(ChannelId1, 100),
+                            new CreatorChannelsSnapshotItem(ChannelId2, 50),
+                            new CreatorChannelsSnapshotItem(ChannelId3, 10) 
                         }),
                     EmptyGuestList,
-                    new SubscriberChannelSnapshot(
+                    new SubscriberChannelsSnapshot(
                         Now,
                         SubscriberId1,
-                        new List<SubscriberChannelSnapshotItem> 
+                        new List<SubscriberChannelsSnapshotItem> 
                         { 
-                            new SubscriberChannelSnapshotItem(Guid.NewGuid(), 1000, Now),
-                            new SubscriberChannelSnapshotItem(ChannelId1, 100, Now),
-                            new SubscriberChannelSnapshotItem(Guid.NewGuid(), 1000, Now),
-                            new SubscriberChannelSnapshotItem(ChannelId2, 50, Now),
-                            new SubscriberChannelSnapshotItem(Guid.NewGuid(), 1000, Now) 
+                            new SubscriberChannelsSnapshotItem(Guid.NewGuid(), 1000, Now),
+                            new SubscriberChannelsSnapshotItem(ChannelId1, 100, Now),
+                            new SubscriberChannelsSnapshotItem(Guid.NewGuid(), 1000, Now),
+                            new SubscriberChannelsSnapshotItem(ChannelId2, 50, Now),
+                            new SubscriberChannelsSnapshotItem(Guid.NewGuid(), 1000, Now) 
                         }),
                     new SubscriberSnapshot(
                         Now,

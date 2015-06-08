@@ -57,8 +57,10 @@
     <Compile Include="FilePurpose.cs" />
     <Compile Include="FilePurposes.cs" />
     <Compile Include="ApplicationRandom.cs" />
+    <Compile Include="GuidCreator.cs" />
     <Compile Include="HtmlLinter.cs" />
     <Compile Include="IAutofacRegistration.cs" />
+    <Compile Include="IGuidCreator.cs" />
     <Compile Include="IHtmlLinter.cs" />
     <Compile Include="IMimeTypeMap.cs" />
     <Compile Include="IRandom.cs" />

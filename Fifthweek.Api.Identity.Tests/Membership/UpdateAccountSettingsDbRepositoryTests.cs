@@ -10,6 +10,7 @@ namespace Fifthweek.Api.Identity.Membership.Tests
     using Fifthweek.Api.Persistence;
     using Fifthweek.Api.Persistence.Identity;
     using Fifthweek.Api.Persistence.Tests.Shared;
+    using Fifthweek.Payments.SnapshotCreation;
     using Fifthweek.Payments.Tests.Shared;
     using Fifthweek.Tests.Shared;
 
@@ -114,7 +115,7 @@ namespace Fifthweek.Api.Identity.Membership.Tests
                     this.newFileId,
                     this.securityStamp);
 
-                this.requestSnapshot.VerifyCalledWith(this.userId, Payments.Services.SnapshotType.Subscriber);
+                this.requestSnapshot.VerifyCalledWith(this.userId, SnapshotType.Subscriber);
 
                 Assert.AreEqual(false, result.EmailConfirmed);
 

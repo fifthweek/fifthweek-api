@@ -42,17 +42,17 @@ namespace Fifthweek.Api.Persistence
 
         public IDbSet<SubscriberSnapshot> SubscriberSnapshots { get; set; }
 
-        public IDbSet<SubscriberChannelSnapshot> SubscriberChannelSnapshots { get; set; }
+        public IDbSet<SubscriberChannelsSnapshot> SubscriberChannelsSnapshots { get; set; }
 
-        public IDbSet<SubscriberChannelSnapshotItem> SubscriberChannelSnapshotItems { get; set; }
+        public IDbSet<SubscriberChannelsSnapshotItem> SubscriberChannelsSnapshotItems { get; set; }
 
-        public IDbSet<CreatorChannelSnapshot> CreatorChannelSnapshots { get; set; }
+        public IDbSet<CreatorChannelsSnapshot> CreatorChannelsSnapshots { get; set; }
 
-        public IDbSet<CreatorChannelSnapshotItem> CreatorChannelSnapshotItems { get; set; }
+        public IDbSet<CreatorChannelsSnapshotItem> CreatorChannelsSnapshotItems { get; set; }
 
-        public IDbSet<CreatorGuestListSnapshot> CreatorGuestListSnapshots { get; set; }
+        public IDbSet<CreatorFreeAccessUsersSnapshot> CreatorFreeAccessUsersSnapshots { get; set; }
 
-        public IDbSet<CreatorGuestListSnapshotItem> CreatorGuestListSnapshotItems { get; set; }
+        public IDbSet<CreatorFreeAccessUsersSnapshotItem> CreatorFreeAccessUsersSnapshotItems { get; set; }
 
         public static FifthweekDbContext Create()
         {

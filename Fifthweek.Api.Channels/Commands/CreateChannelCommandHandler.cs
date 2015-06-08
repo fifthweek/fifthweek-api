@@ -8,7 +8,7 @@
     using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.Api.Persistence;
     using Fifthweek.CodeGeneration;
-    using Fifthweek.Payments.Services;
+    using Fifthweek.Payments.SnapshotCreation;
     using Fifthweek.Shared;
 
     [AutoConstructor]

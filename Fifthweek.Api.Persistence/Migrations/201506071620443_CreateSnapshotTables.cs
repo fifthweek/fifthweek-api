@@ -8,19 +8,19 @@ namespace Fifthweek.Api.Persistence.Migrations
         public override void Up()
         {
             CreateTable(
-                "dbo.CreatorChannelSnapshotItems",
+                "dbo.CreatorChannelsSnapshotItems",
                 c => new
                     {
-                        CreatorChannelSnapshotId = c.Guid(nullable: false),
+                        CreatorChannelsSnapshotId = c.Guid(nullable: false),
                         ChannelId = c.Guid(nullable: false),
                         PriceInUsCentsPerWeek = c.Int(nullable: false),
                     })
-                .PrimaryKey(t => new { t.CreatorChannelSnapshotId, t.ChannelId })
-                .ForeignKey("dbo.CreatorChannelSnapshots", t => t.CreatorChannelSnapshotId, cascadeDelete: true)
-                .Index(t => t.CreatorChannelSnapshotId);
+                .PrimaryKey(t => new { t.CreatorChannelsSnapshotId, t.ChannelId })
+                .ForeignKey("dbo.CreatorChannelsSnapshots", t => t.CreatorChannelsSnapshotId, cascadeDelete: true)
+                .Index(t => t.CreatorChannelsSnapshotId);
             
             CreateTable(
-                "dbo.CreatorChannelSnapshots",
+                "dbo.CreatorChannelsSnapshots",
                 c => new
                     {
                         Id = c.Guid(nullable: false),
@@ -30,18 +30,18 @@ namespace Fifthweek.Api.Persistence.Migrations
                 .PrimaryKey(t => t.Id);
             
             CreateTable(
-                "dbo.CreatorGuestListSnapshotItems",
+                "dbo.CreatorFreeAccessUsersSnapshotItems",
                 c => new
                     {
-                        CreatorGuestListSnapshotId = c.Guid(nullable: false),
+                        CreatorFreeAccessUsersSnapshotId = c.Guid(nullable: false),
                         Email = c.String(nullable: false, maxLength: 256),
                     })
-                .PrimaryKey(t => new { t.CreatorGuestListSnapshotId, t.Email })
-                .ForeignKey("dbo.CreatorGuestListSnapshots", t => t.CreatorGuestListSnapshotId, cascadeDelete: true)
-                .Index(t => t.CreatorGuestListSnapshotId);
+                .PrimaryKey(t => new { t.CreatorFreeAccessUsersSnapshotId, t.Email })
+                .ForeignKey("dbo.CreatorFreeAccessUsersSnapshots", t => t.CreatorFreeAccessUsersSnapshotId, cascadeDelete: true)
+                .Index(t => t.CreatorFreeAccessUsersSnapshotId);
             
             CreateTable(
-                "dbo.CreatorGuestListSnapshots",
+                "dbo.CreatorFreeAccessUsersSnapshots",
                 c => new
                     {
                         Id = c.Guid(nullable: false),
@@ -51,20 +51,20 @@ namespace Fifthweek.Api.Persistence.Migrations
                 .PrimaryKey(t => t.Id);
             
             CreateTable(
-                "dbo.SubscriberChannelSnapshotItems",
+                "dbo.SubscriberChannelsSnapshotItems",
                 c => new
                     {
-                        SubscriberChannelSnapshotId = c.Guid(nullable: false),
+                        SubscriberChannelsSnapshotId = c.Guid(nullable: false),
                         ChannelId = c.Guid(nullable: false),
-                        AcceptedPrice = c.Int(nullable: false),
+                        AcceptedPriceInUsCentsPerWeek = c.Int(nullable: false),
                         SubscriptionStartDate = c.DateTime(nullable: false),
                     })
-                .PrimaryKey(t => new { t.SubscriberChannelSnapshotId, t.ChannelId })
-                .ForeignKey("dbo.SubscriberChannelSnapshots", t => t.SubscriberChannelSnapshotId, cascadeDelete: true)
-                .Index(t => t.SubscriberChannelSnapshotId);
+                .PrimaryKey(t => new { t.SubscriberChannelsSnapshotId, t.ChannelId })
+                .ForeignKey("dbo.SubscriberChannelsSnapshots", t => t.SubscriberChannelsSnapshotId, cascadeDelete: true)
+                .Index(t => t.SubscriberChannelsSnapshotId);
             
             CreateTable(
-                "dbo.SubscriberChannelSnapshots",
+                "dbo.SubscriberChannelsSnapshots",
                 c => new
                     {
                         Id = c.Guid(nullable: false),
@@ -87,19 +87,19 @@ namespace Fifthweek.Api.Persistence.Migrations
         
         public override void Down()
         {
-            DropForeignKey("dbo.SubscriberChannelSnapshotItems", "SubscriberChannelSnapshotId", "dbo.SubscriberChannelSnapshots");
-            DropForeignKey("dbo.CreatorGuestListSnapshotItems", "CreatorGuestListSnapshotId", "dbo.CreatorGuestListSnapshots");
-            DropForeignKey("dbo.CreatorChannelSnapshotItems", "CreatorChannelSnapshotId", "dbo.CreatorChannelSnapshots");
-            DropIndex("dbo.SubscriberChannelSnapshotItems", new[] { "SubscriberChannelSnapshotId" });
-            DropIndex("dbo.CreatorGuestListSnapshotItems", new[] { "CreatorGuestListSnapshotId" });
-            DropIndex("dbo.CreatorChannelSnapshotItems", new[] { "CreatorChannelSnapshotId" });
+            DropForeignKey("dbo.SubscriberChannelsSnapshotItems", "SubscriberChannelsSnapshotId", "dbo.SubscriberChannelsSnapshots");
+            DropForeignKey("dbo.CreatorFreeAccessUsersSnapshotItems", "CreatorFreeAccessUsersSnapshotId", "dbo.CreatorFreeAccessUsersSnapshots");
+            DropForeignKey("dbo.CreatorChannelsSnapshotItems", "CreatorChannelsSnapshotId", "dbo.CreatorChannelsSnapshots");
+            DropIndex("dbo.SubscriberChannelsSnapshotItems", new[] { "SubscriberChannelsSnapshotId" });
+            DropIndex("dbo.CreatorFreeAccessUsersSnapshotItems", new[] { "CreatorFreeAccessUsersSnapshotId" });
+            DropIndex("dbo.CreatorChannelsSnapshotItems", new[] { "CreatorChannelsSnapshotId" });
             DropTable("dbo.SubscriberSnapshots");
-            DropTable("dbo.SubscriberChannelSnapshots");
-            DropTable("dbo.SubscriberChannelSnapshotItems");
-            DropTable("dbo.CreatorGuestListSnapshots");
-            DropTable("dbo.CreatorGuestListSnapshotItems");
-            DropTable("dbo.CreatorChannelSnapshots");
-            DropTable("dbo.CreatorChannelSnapshotItems");
+            DropTable("dbo.SubscriberChannelsSnapshots");
+            DropTable("dbo.SubscriberChannelsSnapshotItems");
+            DropTable("dbo.CreatorFreeAccessUsersSnapshots");
+            DropTable("dbo.CreatorFreeAccessUsersSnapshotItems");
+            DropTable("dbo.CreatorChannelsSnapshots");
+            DropTable("dbo.CreatorChannelsSnapshotItems");
         }
     }
 }

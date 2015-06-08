@@ -2,6 +2,8 @@
 {
     using System;
 
+    using Fifthweek.Shared;
+
     using Microsoft.VisualStudio.TestTools.UnitTesting;
 
     [TestClass]

@@ -109,9 +109,21 @@
       <Project>{770F450E-2166-4269-BEC1-DF59AA16B1E8}</Project>
       <Name>Fifthweek.CodeGeneration</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Fifthweek.Payments.Shared\Fifthweek.Payments.Shared.csproj">
+      <Project>{8ef964cc-55f2-40bb-a0ce-f92f23ac8d90}</Project>
+      <Name>Fifthweek.Payments.Shared</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Fifthweek.Payments.SnapshotCreation\Fifthweek.Payments.SnapshotCreation.csproj">
+      <Project>{81bcf480-639c-42c6-adcf-2e5c97dee750}</Project>
+      <Name>Fifthweek.Payments.SnapshotCreation</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Fifthweek.Payments\Fifthweek.Payments.csproj">
       <Project>{9c64b84a-264b-44bc-8d47-bcc52b88e0ac}</Project>
       <Name>Fifthweek.Payments</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Fifthweek.Shared\Fifthweek.Shared.csproj">
+      <Project>{6D12FFBB-38E9-4722-A690-0F0338538EBC}</Project>
+      <Name>Fifthweek.Shared</Name>
     </ProjectReference>
     <ProjectReference Include="..\Fifthweek.WebJobs.Shared\Fifthweek.WebJobs.Shared.csproj">
       <Project>{efbacd48-98a1-4fa3-9bea-e13414141484}</Project>

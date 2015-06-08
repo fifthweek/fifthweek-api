@@ -13,41 +13,41 @@ namespace Fifthweek.WebJobs.Snapshots
     using Fifthweek.Api.Persistence;
     using Fifthweek.Azure;
     using Fifthweek.CodeGeneration;
-    using Fifthweek.Payments.Services;
+    using Fifthweek.Payments.SnapshotCreation;
     using Fifthweek.WebJobs.Shared;
 
     public partial class SnapshotProcessor 
     {
         public SnapshotProcessor(
-            Fifthweek.Payments.Services.ICreateSubscriberSnapshotDbStatement createSubscriberSnapshot,
-            Fifthweek.Payments.Services.ICreateSubscriberChannelSnapshotDbStatement createSubscriberChannelSnapshot,
-            Fifthweek.Payments.Services.ICreateCreatorChannelSnapshotDbStatement createCreatorChannelSnapshot,
-            Fifthweek.Payments.Services.ICreateCreatorGuestListSnapshotDbStatement createCreatorGuestListSnapshot)
+            ICreateSubscriberSnapshotDbStatement createSubscriberSnapshot,
+            ICreateSubscriberChannelsSnapshotDbStatement createSubscriberChannelsSnapshot,
+            ICreateCreatorChannelsSnapshotDbStatement createCreatorChannelsSnapshot,
+            ICreateCreatorFreeAccessUsersSnapshotDbStatement createCreatorFreeAccessUsersSnapshot)
         {
             if (createSubscriberSnapshot == null)
             {
                 throw new ArgumentNullException("createSubscriberSnapshot");
             }
 
-            if (createSubscriberChannelSnapshot == null)
+            if (createSubscriberChannelsSnapshot == null)
             {
-                throw new ArgumentNullException("createSubscriberChannelSnapshot");
+                throw new ArgumentNullException("createSubscriberChannelsSnapshot");
             }
 
-            if (createCreatorChannelSnapshot == null)
+            if (createCreatorChannelsSnapshot == null)
             {
-                throw new ArgumentNullException("createCreatorChannelSnapshot");
+                throw new ArgumentNullException("createCreatorChannelsSnapshot");
             }
 
-            if (createCreatorGuestListSnapshot == null)
+            if (createCreatorFreeAccessUsersSnapshot == null)
             {
-                throw new ArgumentNullException("createCreatorGuestListSnapshot");
+                throw new ArgumentNullException("createCreatorFreeAccessUsersSnapshot");
             }
 
             this.createSubscriberSnapshot = createSubscriberSnapshot;
-            this.createSubscriberChannelSnapshot = createSubscriberChannelSnapshot;
-            this.createCreatorChannelSnapshot = createCreatorChannelSnapshot;
-            this.createCreatorGuestListSnapshot = createCreatorGuestListSnapshot;
+            this.createSubscriberChannelsSnapshot = createSubscriberChannelsSnapshot;
+            this.createCreatorChannelsSnapshot = createCreatorChannelsSnapshot;
+            this.createCreatorFreeAccessUsersSnapshot = createCreatorFreeAccessUsersSnapshot;
         }
     }
 }

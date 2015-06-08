@@ -297,13 +297,13 @@
       <DependentUpon>201506071620443_CreateSnapshotTables.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
-    <Compile Include="Snapshots\CreatorChannelSnapshot.cs" />
-    <Compile Include="Snapshots\CreatorChannelSnapshotItem.cs" />
-    <Compile Include="Snapshots\CreatorGuestListSnapshot.cs" />
-    <Compile Include="Snapshots\CreatorGuestListSnapshotItem.cs" />
+    <Compile Include="Snapshots\CreatorChannelsSnapshot.cs" />
+    <Compile Include="Snapshots\CreatorChannelsSnapshotItem.cs" />
+    <Compile Include="Snapshots\CreatorFreeAccessUsersSnapshot.cs" />
+    <Compile Include="Snapshots\CreatorFreeAccessUsersSnapshotItem.cs" />
     <Compile Include="Snapshots\SubscriberSnapshot.cs" />
-    <Compile Include="Snapshots\SubscriberChannelSnapshotItem.cs" />
-    <Compile Include="Snapshots\SubscriberChannelSnapshot.cs" />
+    <Compile Include="Snapshots\SubscriberChannelsSnapshotItem.cs" />
+    <Compile Include="Snapshots\SubscriberChannelsSnapshot.cs" />
     <Compile Include="Post.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RefreshToken.cs" />

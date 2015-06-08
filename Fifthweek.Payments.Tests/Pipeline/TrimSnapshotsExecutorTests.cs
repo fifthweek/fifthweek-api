@@ -60,7 +60,7 @@
 
             var expectedOutput = new[] 
             {
-                new MergedSnapshot(Now, input[1].CreatorChannels, input[1].CreatorGuestList, input[1].SubscriberChannels, input[1].Subscriber),
+                new MergedSnapshot(Now, input[1].CreatorChannels, input[1].CreatorFreeAccessUsers, input[1].SubscriberChannels, input[1].Subscriber),
                 input[2]
             };
 
@@ -76,7 +76,7 @@
 
             var expectedOutput = new[] 
             {
-                new MergedSnapshot(Now, input[0].CreatorChannels, input[0].CreatorGuestList, input[0].SubscriberChannels, input[0].Subscriber)
+                new MergedSnapshot(Now, input[0].CreatorChannels, input[0].CreatorFreeAccessUsers, input[0].SubscriberChannels, input[0].Subscriber)
             };
 
             var result = this.Execute(Now, input);
@@ -99,9 +99,9 @@
         {
             return new MergedSnapshot(
                 timestamp,
-                CreatorChannelSnapshot.Default(Now, Guid.NewGuid()),
-                CreatorGuestListSnapshot.Default(Now, Guid.NewGuid()),
-                SubscriberChannelSnapshot.Default(Now, Guid.NewGuid()),
+                CreatorChannelsSnapshot.Default(Now, Guid.NewGuid()),
+                CreatorFreeAccessUsersSnapshot.Default(Now, Guid.NewGuid()),
+                SubscriberChannelsSnapshot.Default(Now, Guid.NewGuid()),
                 SubscriberSnapshot.Default(Now, Guid.NewGuid()));
         }
 

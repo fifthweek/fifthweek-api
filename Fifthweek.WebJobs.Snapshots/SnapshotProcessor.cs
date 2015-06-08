@@ -7,16 +7,18 @@
     using Fifthweek.Api.Persistence;
     using Fifthweek.Azure;
     using Fifthweek.CodeGeneration;
-    using Fifthweek.Payments.Services;
+    using Fifthweek.Payments.SnapshotCreation;
     using Fifthweek.WebJobs.Shared;
+
+    using CreateSnapshotMessage = Fifthweek.Payments.SnapshotCreation.CreateSnapshotMessage;
 
     [AutoConstructor]
     public partial class SnapshotProcessor : ISnapshotProcessor
     {
         private readonly ICreateSubscriberSnapshotDbStatement createSubscriberSnapshot;
-        private readonly ICreateSubscriberChannelSnapshotDbStatement createSubscriberChannelSnapshot;
-        private readonly ICreateCreatorChannelSnapshotDbStatement createCreatorChannelSnapshot;
-        private readonly ICreateCreatorGuestListSnapshotDbStatement createCreatorGuestListSnapshot;
+        private readonly ICreateSubscriberChannelsSnapshotDbStatement createSubscriberChannelsSnapshot;
+        private readonly ICreateCreatorChannelsSnapshotDbStatement createCreatorChannelsSnapshot;
+        private readonly ICreateCreatorFreeAccessUsersSnapshotDbStatement createCreatorFreeAccessUsersSnapshot;
 
         public Task CreateSnapshotAsync(
             CreateSnapshotMessage message,
@@ -32,13 +34,13 @@
                         return this.createSubscriberSnapshot.ExecuteAsync(message.UserId);
 
                     case SnapshotType.SubscriberChannels:
-                        return this.createSubscriberChannelSnapshot.ExecuteAsync(message.UserId);
+                        return this.createSubscriberChannelsSnapshot.ExecuteAsync(message.UserId);
 
                     case SnapshotType.CreatorChannels:
-                        return this.createCreatorChannelSnapshot.ExecuteAsync(message.UserId);
+                        return this.createCreatorChannelsSnapshot.ExecuteAsync(message.UserId);
 
-                    case SnapshotType.CreatorGuestList:
-                        return this.createCreatorGuestListSnapshot.ExecuteAsync(message.UserId);
+                    case SnapshotType.CreatorFreeAccessUsers:
+                        return this.createCreatorFreeAccessUsersSnapshot.ExecuteAsync(message.UserId);
                 }
 
                 return Task.FromResult(0);
@@ -49,7 +51,6 @@
                 throw;
             }
         }
-
 
         public Task HandlePoisonMessageAsync(
             string message,

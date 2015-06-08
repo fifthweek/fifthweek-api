@@ -9,13 +9,13 @@ namespace Fifthweek.Payments
     public partial class MergedSnapshot
     {
         public MergedSnapshot(
-            CreatorChannelSnapshot creatorChannels, 
-            CreatorGuestListSnapshot creatorGuestList, 
-            SubscriberChannelSnapshot subscriberChannels,
+            CreatorChannelsSnapshot creatorChannels, 
+            CreatorFreeAccessUsersSnapshot creatorFreeAccessUsers, 
+            SubscriberChannelsSnapshot subscriberChannels,
             SubscriberSnapshot subscriber)
         {
             this.CreatorChannels = creatorChannels;
-            this.CreatorGuestList = creatorGuestList;
+            this.CreatorFreeAccessUsers = creatorFreeAccessUsers;
             this.SubscriberChannels = subscriberChannels;
             this.Subscriber = subscriber;
             this.Timestamp = this.GetMaximumTimestamp();
@@ -23,11 +23,11 @@ namespace Fifthweek.Payments
 
         public DateTime Timestamp { get; private set; }
 
-        public CreatorChannelSnapshot CreatorChannels { get; private set; }
+        public CreatorChannelsSnapshot CreatorChannels { get; private set; }
 
-        public CreatorGuestListSnapshot CreatorGuestList { get; private set; }
+        public CreatorFreeAccessUsersSnapshot CreatorFreeAccessUsers { get; private set; }
 
-        public SubscriberChannelSnapshot SubscriberChannels { get; private set; }
+        public SubscriberChannelsSnapshot SubscriberChannels { get; private set; }
 
         public SubscriberSnapshot Subscriber { get; private set; }
 
@@ -36,7 +36,7 @@ namespace Fifthweek.Payments
             var timestamps = new[] 
             { 
                 this.CreatorChannels.Timestamp, 
-                this.CreatorGuestList.Timestamp,
+                this.CreatorFreeAccessUsers.Timestamp,
                 this.SubscriberChannels.Timestamp,
                 this.Subscriber.Timestamp,
             };

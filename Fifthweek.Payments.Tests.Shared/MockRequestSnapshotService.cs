@@ -3,7 +3,7 @@ namespace Fifthweek.Payments.Tests.Shared
     using System.Threading.Tasks;
 
     using Fifthweek.Api.Identity.Shared.Membership;
-    using Fifthweek.Payments.Services;
+    using Fifthweek.Payments.SnapshotCreation;
 
     using Microsoft.VisualStudio.TestTools.UnitTesting;
 

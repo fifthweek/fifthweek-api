@@ -25,7 +25,7 @@
                     throw new InvalidOperationException("Timestamps must be UTC.");
                 }
 
-                var creatorChannelSnapshot = snapshot as CreatorChannelSnapshot;
+                var creatorChannelSnapshot = snapshot as CreatorChannelsSnapshot;
                 if (creatorChannelSnapshot != null)
                 {
                     if (creatorChannelSnapshot.CreatorId != creatorId)
@@ -35,18 +35,18 @@
                 }
                 else
                 {
-                    var creatorGuestListSnapshot = snapshot as CreatorGuestListSnapshot;
-                    if (creatorGuestListSnapshot != null)
+                    var creatorFreeAccessUsersSnapshot = snapshot as CreatorFreeAccessUsersSnapshot;
+                    if (creatorFreeAccessUsersSnapshot != null)
                     {
-                        if (creatorGuestListSnapshot.CreatorId != creatorId)
+                        if (creatorFreeAccessUsersSnapshot.CreatorId != creatorId)
                         {
                             throw new InvalidOperationException(
-                                "Unexpected creator id: " + creatorGuestListSnapshot.CreatorId);
+                                "Unexpected creator id: " + creatorFreeAccessUsersSnapshot.CreatorId);
                         }
                     }
                     else
                     {
-                        var subscriberChannelSnapshot = snapshot as SubscriberChannelSnapshot;
+                        var subscriberChannelSnapshot = snapshot as SubscriberChannelsSnapshot;
                         if (subscriberChannelSnapshot != null)
                         {
                             if (subscriberChannelSnapshot.SubscribedChannels.Any(v => v.SubscriptionStartDate.Kind != DateTimeKind.Utc))

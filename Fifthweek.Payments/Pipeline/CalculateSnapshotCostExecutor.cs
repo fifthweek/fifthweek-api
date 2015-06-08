@@ -13,7 +13,7 @@ namespace Fifthweek.Payments.Pipeline
                 return 0;
             }
 
-            if (snapshot.Subscriber.Email != null && snapshot.CreatorGuestList.GuestListEmails.Contains(snapshot.Subscriber.Email))
+            if (snapshot.Subscriber.Email != null && snapshot.CreatorFreeAccessUsers.FreeAccessUserEmails.Contains(snapshot.Subscriber.Email))
             {
                 return 0;
             }

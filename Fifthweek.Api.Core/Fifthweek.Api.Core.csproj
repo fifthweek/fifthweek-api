@@ -114,7 +114,6 @@
     <Compile Include="IQuery.cs" />
     <Compile Include="IQueryHandler.cs" />
     <Compile Include="IRequestContext.cs" />
-    <Compile Include="IGuidCreator.cs" />
     <Compile Include="ITraceService.cs" />
     <Compile Include="ModelValidationException.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -125,7 +124,6 @@
     <Compile Include="RetryOnTransientErrorCommandHandlerDecorator.cs" />
     <Compile Include="RetryOnTransientErrorDecoratorBase.cs" />
     <Compile Include="RetryOnTransientErrorQueryHandlerDecorator.cs" />
-    <Compile Include="GuidCreator.cs" />
     <Compile Include="TraceService.cs" />
     <Compile Include="UnauthenticatedException.cs" />
     <Compile Include="UnauthorizedException.cs" />

@@ -262,7 +262,7 @@ namespace Fifthweek.Api.FileManagement.Controllers
     public partial class FileUploadController 
     {
         public FileUploadController(
-            Fifthweek.Api.Core.IGuidCreator guidCreator,
+            IGuidCreator guidCreator,
             Fifthweek.Api.Core.ICommandHandler<Fifthweek.Api.FileManagement.Commands.InitiateFileUploadCommand> initiateFileUpload,
             Fifthweek.Api.Core.IQueryHandler<Fifthweek.Api.FileManagement.Queries.GenerateWritableBlobUriQuery,Fifthweek.Api.Azure.BlobSharedAccessInformation> generateWritableBlobUri,
             Fifthweek.Api.Core.ICommandHandler<Fifthweek.Api.FileManagement.Commands.CompleteFileUploadCommand> completeFileUpload,

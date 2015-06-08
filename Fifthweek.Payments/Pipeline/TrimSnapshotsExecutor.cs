@@ -40,7 +40,7 @@ namespace Fifthweek.Payments.Pipeline
                     result[0] = new MergedSnapshot(
                         startTimeInclusive,
                         snapshot.CreatorChannels,
-                        snapshot.CreatorGuestList,
+                        snapshot.CreatorFreeAccessUsers,
                         snapshot.SubscriberChannels,
                         snapshot.Subscriber);
 

@@ -4,8 +4,9 @@
     using System.Threading.Tasks;
 
     using Fifthweek.Azure;
-    using Fifthweek.Payments.Services;
     using Fifthweek.WebJobs.Shared;
+
+    using CreateSnapshotMessage = Fifthweek.Payments.SnapshotCreation.CreateSnapshotMessage;
 
     public interface ISnapshotProcessor
     {

@@ -193,6 +193,10 @@
       <Project>{9C18BEE3-FAB5-4A00-8A94-A1FAEA370175}</Project>
       <Name>Fifthweek.Api.Persistence</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Fifthweek.Payments.SnapshotCreation\Fifthweek.Payments.SnapshotCreation.csproj">
+      <Project>{81bcf480-639c-42c6-adcf-2e5c97dee750}</Project>
+      <Name>Fifthweek.Payments.SnapshotCreation</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Fifthweek.Payments.Tests.Shared\Fifthweek.Payments.Tests.Shared.csproj">
       <Project>{0EB8296A-D442-479E-A193-90A7AAED8E75}</Project>
       <Name>Fifthweek.Payments.Tests.Shared</Name>

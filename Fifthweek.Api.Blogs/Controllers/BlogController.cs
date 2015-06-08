@@ -10,6 +10,7 @@
     using Fifthweek.Api.Core;
     using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.CodeGeneration;
+    using Fifthweek.Shared;
 
     [RoutePrefix("blogs"), AutoConstructor]
     public partial class BlogController : ApiController

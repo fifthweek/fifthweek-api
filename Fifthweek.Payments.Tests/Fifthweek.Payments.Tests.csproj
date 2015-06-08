@@ -67,6 +67,10 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Fifthweek.Payments.SnapshotCreation\Fifthweek.Payments.SnapshotCreation.csproj">
+      <Project>{81bcf480-639c-42c6-adcf-2e5c97dee750}</Project>
+      <Name>Fifthweek.Payments.SnapshotCreation</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Fifthweek.Payments\Fifthweek.Payments.csproj">
       <Project>{9C64B84A-264B-44BC-8D47-BCC52B88E0AC}</Project>
       <Name>Fifthweek.Payments</Name>

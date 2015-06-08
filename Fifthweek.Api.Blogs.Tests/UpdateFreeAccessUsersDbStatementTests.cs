@@ -12,6 +12,7 @@
     using Fifthweek.Api.Persistence;
     using Fifthweek.Api.Persistence.Tests.Shared;
     using Fifthweek.CodeGeneration;
+    using Fifthweek.Payments.SnapshotCreation;
     using Fifthweek.Payments.Tests.Shared;
     using Fifthweek.Tests.Shared;
 
@@ -86,7 +87,7 @@
 
                 await this.target.ExecuteAsync(CreatorId, BlogId, null);
 
-                this.requestSnapshot.VerifyCalledWith(CreatorId, Payments.Services.SnapshotType.CreatorGuestList);
+                this.requestSnapshot.VerifyCalledWith(CreatorId, SnapshotType.CreatorFreeAccessUsers);
 
                 return new ExpectedSideEffects
                 {
