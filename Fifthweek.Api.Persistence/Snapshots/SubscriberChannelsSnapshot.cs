@@ -2,6 +2,7 @@
 {
     using System;
     using System.ComponentModel.DataAnnotations;
+    using System.ComponentModel.DataAnnotations.Schema;
 
     using Fifthweek.CodeGeneration;
 
@@ -15,10 +16,10 @@
         [Required, Key]
         public Guid Id { get; set; }
 
-        [Required]
+        [Required, Index("SubscriberIdAndTimestamp", Order = 1)]
         public DateTime Timestamp { get; set; }
 
-        [Required] // Not a foreign key.
+        [Required, Index("SubscriberIdAndTimestamp", Order = 0)] // Not a foreign key.
         public Guid SubscriberId { get; set; } 
     }
 }

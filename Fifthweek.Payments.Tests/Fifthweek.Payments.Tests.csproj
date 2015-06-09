@@ -63,10 +63,18 @@
     <Compile Include="Pipeline\RollForwardSubscriptionsExecutorTests.cs" />
     <Compile Include="Pipeline\TrimSnapshotsExecutorTests.cs" />
     <Compile Include="Pipeline\VerifySnapshotsExecutorTests.cs" />
-    <Compile Include="PaymentProcessorTests.cs" />
+    <Compile Include="SubscriberPaymentPipelineTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Fifthweek.Api.Channels.Shared\Fifthweek.Api.Channels.Shared.csproj">
+      <Project>{DF1BB4E7-5315-4E5C-BA73-6DFA4D9E7564}</Project>
+      <Name>Fifthweek.Api.Channels.Shared</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Fifthweek.Api.Identity.Shared\Fifthweek.Api.Identity.Shared.csproj">
+      <Project>{1B07E9CC-1B0E-49D7-96D6-0F8C58A7C0CA}</Project>
+      <Name>Fifthweek.Api.Identity.Shared</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Fifthweek.Payments.SnapshotCreation\Fifthweek.Payments.SnapshotCreation.csproj">
       <Project>{81bcf480-639c-42c6-adcf-2e5c97dee750}</Project>
       <Name>Fifthweek.Payments.SnapshotCreation</Name>

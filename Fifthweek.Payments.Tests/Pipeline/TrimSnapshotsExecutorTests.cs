@@ -4,7 +4,9 @@
     using System.Collections.Generic;
     using System.Linq;
 
+    using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.Payments.Pipeline;
+    using Fifthweek.Payments.Snapshots;
 
     using Microsoft.VisualStudio.TestTools.UnitTesting;
 
@@ -99,10 +101,10 @@
         {
             return new MergedSnapshot(
                 timestamp,
-                CreatorChannelsSnapshot.Default(Now, Guid.NewGuid()),
-                CreatorFreeAccessUsersSnapshot.Default(Now, Guid.NewGuid()),
-                SubscriberChannelsSnapshot.Default(Now, Guid.NewGuid()),
-                SubscriberSnapshot.Default(Now, Guid.NewGuid()));
+                CreatorChannelsSnapshot.Default(Now, new UserId(Guid.NewGuid())),
+                CreatorFreeAccessUsersSnapshot.Default(Now, new UserId(Guid.NewGuid())),
+                SubscriberChannelsSnapshot.Default(Now, new UserId(Guid.NewGuid())),
+                SubscriberSnapshot.Default(Now, new UserId(Guid.NewGuid())));
         }
 
         private IReadOnlyList<MergedSnapshot> Execute(DateTime startTimeInclusive, IEnumerable<MergedSnapshot> snapshots)

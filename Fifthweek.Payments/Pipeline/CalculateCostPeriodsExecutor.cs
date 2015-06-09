@@ -5,6 +5,7 @@ namespace Fifthweek.Payments.Pipeline
     using System.Linq;
 
     using Fifthweek.CodeGeneration;
+    using Fifthweek.Payments.Snapshots;
 
     [AutoConstructor]
     public partial class CalculateCostPeriodsExecutor : ICalculateCostPeriodsExecutor

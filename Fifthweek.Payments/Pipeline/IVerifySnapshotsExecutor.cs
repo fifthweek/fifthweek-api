@@ -3,13 +3,16 @@
     using System;
     using System.Collections.Generic;
 
+    using Fifthweek.Api.Identity.Shared.Membership;
+    using Fifthweek.Payments.Snapshots;
+
     public interface IVerifySnapshotsExecutor
     {
         void Execute(
             DateTime startTimeInclusive,
-            DateTime endTimeExclusive, 
-            Guid subscriberId,
-            Guid creatorId, 
+            DateTime endTimeExclusive,
+            UserId subscriberId,
+            UserId creatorId, 
             IReadOnlyList<ISnapshot> snapshots);
     }
 }

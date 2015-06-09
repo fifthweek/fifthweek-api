@@ -4,7 +4,10 @@
     using System.Collections.Generic;
     using System.Linq;
 
+    using Fifthweek.Api.Channels.Shared;
+    using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.Payments.Pipeline;
+    using Fifthweek.Payments.Snapshots;
 
     using Microsoft.VisualStudio.TestTools.UnitTesting;
 
@@ -16,11 +19,11 @@
         private static readonly DateTime SubscriptionStartDate = Now.AddDays(-2);
         private static readonly DateTime SubscriptionFinalDate = SubscriptionStartDate.AddDays(7).AddTicks(-1);
 
-        private static readonly Guid CreatorId1 = Guid.NewGuid();
-        private static readonly Guid SubscriberId1 = Guid.NewGuid();
+        private static readonly UserId CreatorId1 = new UserId(Guid.NewGuid());
+        private static readonly UserId SubscriberId1 = new UserId(Guid.NewGuid());
 
-        private static readonly Guid ChannelId1 = Guid.NewGuid();
-        private static readonly Guid ChannelId2 = Guid.NewGuid();
+        private static readonly ChannelId ChannelId1 = new ChannelId(Guid.NewGuid());
+        private static readonly ChannelId ChannelId2 = new ChannelId(Guid.NewGuid());
 
         protected RollForwardSubscriptionsExecutor target;
 

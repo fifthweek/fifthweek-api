@@ -3,22 +3,24 @@
     using System;
     using System.Collections.Generic;
 
+    using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.Payments.Pipeline;
+    using Fifthweek.Payments.Services;
+    using Fifthweek.Payments.Snapshots;
 
     using Microsoft.VisualStudio.TestTools.UnitTesting;
 
     using Moq;
 
     [TestClass]
-    public class PaymentProcessorTests
+    public class SubscriberPaymentPipelineTests
     {
         private static readonly DateTime Now = DateTime.UtcNow;
         private static readonly DateTime StartTimeInclusive = Now;
         private static readonly DateTime EndTimeExclusive = Now.AddDays(10);
-        private static readonly Guid CreatorId1 = Guid.NewGuid();
-        private static readonly Guid SubscriberId1 = Guid.NewGuid();
+        private static readonly UserId CreatorId1 = new UserId(Guid.NewGuid());
+        private static readonly UserId SubscriberId1 = new UserId(Guid.NewGuid());
 
-        private Mock<ILoadSnapshotsExecutor> loadSnapshots;
         private Mock<IVerifySnapshotsExecutor> verifySnapshots;
         private Mock<IMergeSnapshotsExecutor> mergeSnapshots;
         private Mock<IRollBackSubscriptionsExecutor> rollBackSubscriptions;
@@ -26,12 +28,11 @@
         private Mock<ITrimSnapshotsExecutor> trimSnapshots;
         private Mock<ICalculateCostPeriodsExecutor> calculateCostPeriods;
         private Mock<IAggregateCostPeriodsExecutor> aggregateCostPeriods;
-        private PaymentProcessor target;
+        private SubscriberPaymentPipeline target;
 
         [TestInitialize]
         public void Initialize()
         {
-            this.loadSnapshots = new Mock<ILoadSnapshotsExecutor>(MockBehavior.Strict);
             this.verifySnapshots = new Mock<IVerifySnapshotsExecutor>(MockBehavior.Strict);
             this.mergeSnapshots = new Mock<IMergeSnapshotsExecutor>(MockBehavior.Strict);
             this.rollBackSubscriptions = new Mock<IRollBackSubscriptionsExecutor>(MockBehavior.Strict);
@@ -39,8 +40,7 @@
             this.trimSnapshots = new Mock<ITrimSnapshotsExecutor>(MockBehavior.Strict);
             this.calculateCostPeriods = new Mock<ICalculateCostPeriodsExecutor>(MockBehavior.Strict);
             this.aggregateCostPeriods = new Mock<IAggregateCostPeriodsExecutor>(MockBehavior.Strict);
-            this.target = new PaymentProcessor(
-                this.loadSnapshots.Object,
+            this.target = new SubscriberPaymentPipeline(
                 this.verifySnapshots.Object,
                 this.mergeSnapshots.Object,
                 this.rollBackSubscriptions.Object,
@@ -53,9 +53,7 @@
         [TestMethod]
         public void ItShouldCallServicesInOrder()
         {
-            var snapshots = new List<ISnapshot> { CreatorChannelsSnapshot.Default(Now, Guid.NewGuid()) };
-            this.loadSnapshots.Setup(v => v.Execute(SubscriberId1, CreatorId1, StartTimeInclusive, EndTimeExclusive))
-                .Returns(snapshots);
+            var snapshots = new List<ISnapshot> { CreatorChannelsSnapshot.Default(Now, new UserId(Guid.NewGuid())) };
 
             this.verifySnapshots.Setup(v => v.Execute(StartTimeInclusive, EndTimeExclusive, SubscriberId1, CreatorId1, snapshots));
 
@@ -79,7 +77,7 @@
             var aggregateCost = new AggregateCostSummary(201);
             this.aggregateCostPeriods.Setup(v => v.Execute(costPeriods)).Returns(aggregateCost);
 
-            var result = this.target.CalculatePayment(SubscriberId1, CreatorId1, StartTimeInclusive, EndTimeExclusive);
+            var result = this.target.CalculatePayment(snapshots, SubscriberId1, CreatorId1, StartTimeInclusive, EndTimeExclusive);
 
             Assert.AreEqual(aggregateCost, result);
         }
@@ -89,10 +87,10 @@
             return new List<MergedSnapshot>
             {
                 new MergedSnapshot(
-                    CreatorChannelsSnapshot.Default(Now, Guid.NewGuid()),
-                    CreatorFreeAccessUsersSnapshot.Default(Now, Guid.NewGuid()),
-                    SubscriberChannelsSnapshot.Default(Now, Guid.NewGuid()),
-                    SubscriberSnapshot.Default(Now, Guid.NewGuid()))
+                    CreatorChannelsSnapshot.Default(Now, new UserId(Guid.NewGuid())),
+                    CreatorFreeAccessUsersSnapshot.Default(Now, new UserId(Guid.NewGuid())),
+                    SubscriberChannelsSnapshot.Default(Now, new UserId(Guid.NewGuid())),
+                    SubscriberSnapshot.Default(Now, new UserId(Guid.NewGuid())))
             };
         }
     }

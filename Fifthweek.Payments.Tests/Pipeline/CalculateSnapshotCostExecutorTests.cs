@@ -3,7 +3,10 @@
     using System;
     using System.Collections.Generic;
 
+    using Fifthweek.Api.Channels.Shared;
+    using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.Payments.Pipeline;
+    using Fifthweek.Payments.Snapshots;
 
     using Microsoft.VisualStudio.TestTools.UnitTesting;
 
@@ -12,12 +15,12 @@
     {
         private static readonly DateTime Now = DateTime.UtcNow;
 
-        private static readonly Guid CreatorId1 = Guid.NewGuid();
-        private static readonly Guid SubscriberId1 = Guid.NewGuid();
+        private static readonly UserId CreatorId1 = new UserId(Guid.NewGuid());
+        private static readonly UserId SubscriberId1 = new UserId(Guid.NewGuid());
         
-        private static readonly Guid ChannelId1 = Guid.NewGuid();
-        private static readonly Guid ChannelId2 = Guid.NewGuid();
-        private static readonly Guid ChannelId3 = Guid.NewGuid();
+        private static readonly ChannelId ChannelId1 = new ChannelId(Guid.NewGuid());
+        private static readonly ChannelId ChannelId2 = new ChannelId(Guid.NewGuid());
+        private static readonly ChannelId ChannelId3 = new ChannelId(Guid.NewGuid());
 
         private static readonly CreatorFreeAccessUsersSnapshot EmptyGuestList = CreatorFreeAccessUsersSnapshot.Default(Now, CreatorId1);
 
@@ -62,7 +65,7 @@
                         new List<CreatorChannelsSnapshotItem> { new CreatorChannelsSnapshotItem(ChannelId1, 100) }),
                     new CreatorFreeAccessUsersSnapshot(
                         Now,
-                        Guid.NewGuid(),
+                        new UserId(Guid.NewGuid()),
                         new List<string> { "a@a.com", "b@b.com" }),
                     new SubscriberChannelsSnapshot(
                         Now,
@@ -87,7 +90,7 @@
                         new List<CreatorChannelsSnapshotItem> { new CreatorChannelsSnapshotItem(ChannelId1, 100) }),
                     new CreatorFreeAccessUsersSnapshot(
                         Now,
-                        Guid.NewGuid(),
+                        new UserId(Guid.NewGuid()),
                         new List<string> { "aa@a.com", "bb@b.com" }),
                     new SubscriberChannelsSnapshot(
                         Now,
@@ -236,11 +239,11 @@
                         SubscriberId1,
                         new List<SubscriberChannelsSnapshotItem> 
                         { 
-                            new SubscriberChannelsSnapshotItem(Guid.NewGuid(), 1000, Now),
+                            new SubscriberChannelsSnapshotItem(new ChannelId(Guid.NewGuid()), 1000, Now),
                             new SubscriberChannelsSnapshotItem(ChannelId1, 100, Now),
-                            new SubscriberChannelsSnapshotItem(Guid.NewGuid(), 1000, Now),
+                            new SubscriberChannelsSnapshotItem(new ChannelId(Guid.NewGuid()), 1000, Now),
                             new SubscriberChannelsSnapshotItem(ChannelId2, 50, Now),
-                            new SubscriberChannelsSnapshotItem(Guid.NewGuid(), 1000, Now) 
+                            new SubscriberChannelsSnapshotItem(new ChannelId(Guid.NewGuid()), 1000, Now) 
                         }),
                     new SubscriberSnapshot(
                         Now,

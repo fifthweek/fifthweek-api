@@ -4,11 +4,14 @@ namespace Fifthweek.Payments.Pipeline
     using System.Collections.Generic;
     using System.Linq;
 
+    using Fifthweek.Api.Identity.Shared.Membership;
+    using Fifthweek.Payments.Snapshots;
+
     public class MergeSnapshotsExecutor : IMergeSnapshotsExecutor
     {
         public IReadOnlyList<MergedSnapshot> Execute(
-            Guid subscriberId,
-            Guid creatorId,
+            UserId subscriberId,
+            UserId creatorId,
             DateTime startTimeInclusive,
             IReadOnlyList<ISnapshot> snapshots)
         {

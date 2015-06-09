@@ -13,10 +13,10 @@
         {
         }
 
-        [Required, Key, Column(Order = 0)]
+        [Required, Key, Column(Order = 1)]
         public DateTime Timestamp { get; set; }
 
-        [Required, Key, Column(Order = 1)] // Not a foreign key.
+        [Required, Key, Column(Order = 0)] // Not a foreign key.
         public Guid SubscriberId { get; set; }
 
         [Required]

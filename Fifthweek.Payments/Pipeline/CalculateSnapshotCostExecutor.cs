@@ -3,6 +3,7 @@ namespace Fifthweek.Payments.Pipeline
     using System.Linq;
 
     using Fifthweek.Payments.Pipeline;
+    using Fifthweek.Payments.Snapshots;
 
     public class CalculateSnapshotCostExecutor : ICalculateSnapshotCostExecutor
     {
@@ -20,7 +21,7 @@ namespace Fifthweek.Payments.Pipeline
 
             var creatorSubscriptions 
                 = from s in snapshot.SubscriberChannels.SubscribedChannels
-                  let c = snapshot.CreatorChannels.CreatorChannels.FirstOrDefault(v => v.ChannelId == s.ChannelId)
+                  let c = snapshot.CreatorChannels.CreatorChannels.FirstOrDefault(v => v.ChannelId.Equals(s.ChannelId))
                   where c != null
                   select new
                   {

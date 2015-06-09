@@ -4,13 +4,16 @@
     using System.Collections.Generic;
     using System.Linq;
 
+    using Fifthweek.Api.Identity.Shared.Membership;
+    using Fifthweek.Payments.Snapshots;
+
     public class VerifySnapshotsExecutor : IVerifySnapshotsExecutor
     {
         public void Execute(
             DateTime startTimeInclusive,
             DateTime endTimeExclusive,
-            Guid subscriberId, 
-            Guid creatorId, 
+            UserId subscriberId,
+            UserId creatorId, 
             IReadOnlyList<ISnapshot> snapshots)
         {
             foreach (var snapshot in snapshots)
@@ -28,7 +31,7 @@
                 var creatorChannelSnapshot = snapshot as CreatorChannelsSnapshot;
                 if (creatorChannelSnapshot != null)
                 {
-                    if (creatorChannelSnapshot.CreatorId != creatorId)
+                    if (!creatorChannelSnapshot.CreatorId.Equals(creatorId))
                     {
                         throw new InvalidOperationException("Unexpected creator id: " + creatorChannelSnapshot.CreatorId);
                     }
@@ -38,7 +41,7 @@
                     var creatorFreeAccessUsersSnapshot = snapshot as CreatorFreeAccessUsersSnapshot;
                     if (creatorFreeAccessUsersSnapshot != null)
                     {
-                        if (creatorFreeAccessUsersSnapshot.CreatorId != creatorId)
+                        if (!creatorFreeAccessUsersSnapshot.CreatorId.Equals(creatorId))
                         {
                             throw new InvalidOperationException(
                                 "Unexpected creator id: " + creatorFreeAccessUsersSnapshot.CreatorId);
@@ -54,7 +57,7 @@
                                 throw new InvalidOperationException("Subscription start dates must be UTC.");
                             }
 
-                            if (subscriberChannelSnapshot.SubscriberId != subscriberId)
+                            if (!subscriberChannelSnapshot.SubscriberId.Equals(subscriberId))
                             {
                                 throw new InvalidOperationException("Unexpected subscriber id: " + subscriberChannelSnapshot.SubscriberId);
                             }
@@ -64,7 +67,7 @@
                             var subscriberSnapshot = snapshot as SubscriberSnapshot;
                             if (subscriberSnapshot != null)
                             {
-                                if (subscriberSnapshot.SubscriberId != subscriberId)
+                                if (!subscriberSnapshot.SubscriberId.Equals(subscriberId))
                                 {
                                     throw new InvalidOperationException("Unexpected subscriber id: " + subscriberSnapshot.SubscriberId);
                                 }

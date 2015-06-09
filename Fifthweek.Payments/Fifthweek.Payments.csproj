@@ -34,6 +34,10 @@
     <Reference Include="Autofac">
       <HintPath>..\packages\Autofac.3.5.2\lib\net40\Autofac.dll</HintPath>
     </Reference>
+    <Reference Include="Dapper, Version=1.38.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Dapper.1.38\lib\net45\Dapper.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -52,34 +56,49 @@
     </Compile>
     <Compile Include="Constants.cs" />
     <Compile Include="CostPeriod.cs" />
-    <Compile Include="CreatorChannelsSnapshotItem.cs" />
-    <Compile Include="CreatorFreeAccessUsersSnapshot.cs" />
     <Compile Include="Pipeline\AggregateCostPeriodsExecutor.cs" />
     <Compile Include="Pipeline\CalculateCostPeriodsExecutor.cs" />
     <Compile Include="Pipeline\IAggregateCostPeriodsExecutor.cs" />
     <Compile Include="Pipeline\ICalculateCostPeriodsExecutor.cs" />
     <Compile Include="Pipeline\ICalculateSnapshotCostExecutor.cs" />
-    <Compile Include="Pipeline\ILoadSnapshotsExecutor.cs" />
     <Compile Include="Pipeline\IMergeSnapshotsExecutor.cs" />
     <Compile Include="Pipeline\IRollBackSubscriptionsExecutor.cs" />
     <Compile Include="Pipeline\IRollForwardSubscriptionsExecutor.cs" />
     <Compile Include="Pipeline\ITrimSnapshotsExecutor.cs" />
     <Compile Include="Pipeline\IVerifySnapshotsExecutor.cs" />
-    <Compile Include="Pipeline\LoadSnapshotsExecutor.cs" />
     <Compile Include="Pipeline\MergeSnapshotsExecutor.cs" />
     <Compile Include="Pipeline\RollBackSubscriptionsExecutor.cs" />
     <Compile Include="Pipeline\RollForwardSubscriptionsExecutor.cs" />
     <Compile Include="Pipeline\TrimSnapshotsExecutor.cs" />
     <Compile Include="Pipeline\VerifySnapshotsExecutor.cs" />
-    <Compile Include="ISnapshot.cs" />
-    <Compile Include="MergedSnapshot.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Pipeline\CalculateSnapshotCostExecutor.cs" />
-    <Compile Include="PaymentProcessor.cs" />
-    <Compile Include="CreatorChannelsSnapshot.cs" />
-    <Compile Include="SubscriberChannelsSnapshotItem.cs" />
-    <Compile Include="SubscriberChannelsSnapshot.cs" />
-    <Compile Include="SubscriberSnapshot.cs" />
+    <Compile Include="Services\CreatorPost.cs" />
+    <Compile Include="Services\GetAllCreatorsDbStatement.cs" />
+    <Compile Include="Services\GetAllSubscribedUsersDbStatement.cs" />
+    <Compile Include="Services\GetCreatorChannelsSnapshotsDbStatement.cs" />
+    <Compile Include="Services\GetCreatorFreeAccessUsersSnapshotsDbStatement.cs" />
+    <Compile Include="Services\GetCreatorPostsDbStatement.cs" />
+    <Compile Include="Services\GetSubscriberChannelsSnapshotsDbStatement.cs" />
+    <Compile Include="Services\GetSubscriberSnapshotsDbStatement.cs" />
+    <Compile Include="Services\IGetAllCreatorsDbStatement.cs" />
+    <Compile Include="Services\IGetAllSubscribedUsersDbStatement.cs" />
+    <Compile Include="Services\IGetCreatorChannelsSnapshotsDbStatement.cs" />
+    <Compile Include="Services\IGetCreatorFreeAccessUsersSnapshotsDbStatement.cs" />
+    <Compile Include="Services\IGetCreatorPostsDbStatement.cs" />
+    <Compile Include="Services\IGetSubscriberChannelsSnapshotsDbStatement.cs" />
+    <Compile Include="Services\IGetSubscriberSnapshotsDbStatement.cs" />
+    <Compile Include="Services\ISubscriberPaymentPipeline.cs" />
+    <Compile Include="Services\PaymentProcessor.cs" />
+    <Compile Include="Services\SubscriberPaymentPipeline.cs" />
+    <Compile Include="Snapshots\CreatorChannelsSnapshot.cs" />
+    <Compile Include="Snapshots\CreatorChannelsSnapshotItem.cs" />
+    <Compile Include="Snapshots\CreatorFreeAccessUsersSnapshot.cs" />
+    <Compile Include="Snapshots\ISnapshot.cs" />
+    <Compile Include="Snapshots\MergedSnapshot.cs" />
+    <Compile Include="Snapshots\SubscriberChannelsSnapshot.cs" />
+    <Compile Include="Snapshots\SubscriberChannelsSnapshotItem.cs" />
+    <Compile Include="Snapshots\SubscriberSnapshot.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
@@ -96,6 +115,10 @@
     <ProjectReference Include="..\Fifthweek.Api.Azure\Fifthweek.Api.Azure.csproj">
       <Project>{ABC43617-3AAA-4B7A-B4DC-D10E023F1846}</Project>
       <Name>Fifthweek.Api.Azure</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Fifthweek.Api.Channels.Shared\Fifthweek.Api.Channels.Shared.csproj">
+      <Project>{DF1BB4E7-5315-4E5C-BA73-6DFA4D9E7564}</Project>
+      <Name>Fifthweek.Api.Channels.Shared</Name>
     </ProjectReference>
     <ProjectReference Include="..\Fifthweek.Api.Identity.Shared\Fifthweek.Api.Identity.Shared.csproj">
       <Project>{1B07E9CC-1B0E-49D7-96D6-0F8C58A7C0CA}</Project>

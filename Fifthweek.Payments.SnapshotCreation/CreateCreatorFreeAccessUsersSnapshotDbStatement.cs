@@ -14,10 +14,6 @@ namespace Fifthweek.Payments.SnapshotCreation
     [AutoConstructor]
     public partial class CreateCreatorFreeAccessUsersSnapshotDbStatement : ICreateCreatorFreeAccessUsersSnapshotDbStatement
     {
-        private readonly IGuidCreator guidCreator;
-        private readonly ISnapshotTimestampCreator timestampCreator;
-        private readonly IFifthweekDbConnectionFactory connectionFactory;
-
         private static readonly string Sql = string.Format(
             @"INSERT INTO {0} VALUES (@RecordId, @Timestamp, @CreatorId)
               INSERT INTO {1} SELECT @RecordId, {2} FROM {3} WHERE {4} IN (SELECT {5}.{6} FROM {7} INNER JOIN {5} ON {7}.{8} = {5}.{9} WHERE {7}.{8}=@CreatorId)",
@@ -32,15 +28,19 @@ namespace Fifthweek.Payments.SnapshotCreation
             FifthweekUser.Fields.Id,
             Blog.Fields.CreatorId);
 
-        public async Task ExecuteAsync(UserId subscriberId)
+        private readonly IGuidCreator guidCreator;
+        private readonly ISnapshotTimestampCreator timestampCreator;
+        private readonly IFifthweekDbConnectionFactory connectionFactory;
+
+        public async Task ExecuteAsync(UserId creatorId)
         {
-            subscriberId.AssertNotNull("subscriberId");
+            creatorId.AssertNotNull("creatorId");
             var timestamp = this.timestampCreator.Create();
             var recordId = this.guidCreator.CreateSqlSequential();
 
             using (var connection = this.connectionFactory.CreateConnection())
             {
-                await connection.ExecuteAsync(Sql, new { RecordId = recordId, Timestamp = timestamp, SubscriberId = subscriberId });
+                await connection.ExecuteAsync(Sql, new { RecordId = recordId, Timestamp = timestamp, CreatorId = creatorId });
             }
         }
     }

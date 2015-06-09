@@ -1,16 +1,17 @@
-﻿using System;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Fifthweek.Payments
+﻿namespace Fifthweek.Payments.Services
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Threading.Tasks;
+
+    using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.CodeGeneration;
     using Fifthweek.Payments.Pipeline;
+    using Fifthweek.Payments.Snapshots;
 
     [AutoConstructor]
-    public partial class PaymentProcessor
+    public partial class SubscriberPaymentPipeline : ISubscriberPaymentPipeline
     {
-        private readonly ILoadSnapshotsExecutor loadSnapshots;
         private readonly IVerifySnapshotsExecutor verifySnapshots;
         private readonly IMergeSnapshotsExecutor mergeSnapshots;
         private readonly IRollBackSubscriptionsExecutor rollBackSubscriptions;
@@ -20,12 +21,12 @@ namespace Fifthweek.Payments
         private readonly IAggregateCostPeriodsExecutor aggregateCostPeriods;
 
         public AggregateCostSummary CalculatePayment(
-            Guid subscriberId,
-            Guid creatorId,
+            IReadOnlyList<ISnapshot> snapshots,
+            UserId subscriberId,
+            UserId creatorId,
             DateTime startTimeInclusive,
             DateTime endTimeExclusive)
         {
-            var snapshots = this.loadSnapshots.Execute(subscriberId, creatorId, startTimeInclusive, endTimeExclusive);
             this.verifySnapshots.Execute(startTimeInclusive, endTimeExclusive, subscriberId, creatorId, snapshots);
             var mergedSnapshots = this.mergeSnapshots.Execute(subscriberId, creatorId, startTimeInclusive, snapshots);
             var rolledBackSnapshots = this.rollBackSubscriptions.Execute(mergedSnapshots);

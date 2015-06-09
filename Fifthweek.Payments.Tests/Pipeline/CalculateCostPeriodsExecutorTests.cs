@@ -4,7 +4,10 @@
     using System.Collections.Generic;
     using System.Linq;
 
+    using Fifthweek.Api.Channels.Shared;
+    using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.Payments.Pipeline;
+    using Fifthweek.Payments.Snapshots;
 
     using Microsoft.VisualStudio.TestTools.UnitTesting;
 
@@ -15,8 +18,8 @@
     {
         private static readonly DateTime Now = DateTime.UtcNow;
 
-        private static readonly Guid CreatorId1 = Guid.NewGuid();
-        private static readonly Guid SubscriberId1 = Guid.NewGuid();
+        private static readonly UserId CreatorId1 = new UserId(Guid.NewGuid());
+        private static readonly UserId SubscriberId1 = new UserId(Guid.NewGuid());
 
         private Mock<ICalculateSnapshotCostExecutor> costCalculator;
         private CalculateCostPeriodsExecutor target;
@@ -71,14 +74,14 @@
         {
             var snapshots = new List<ISnapshot> 
             {
-                new CreatorChannelsSnapshot(Now.AddHours(1), CreatorId1, new List<CreatorChannelsSnapshotItem> { new CreatorChannelsSnapshotItem(Guid.NewGuid(), 100) }),
+                new CreatorChannelsSnapshot(Now.AddHours(1), CreatorId1, new List<CreatorChannelsSnapshotItem> { new CreatorChannelsSnapshotItem(new ChannelId(Guid.NewGuid()), 100) }),
                 new CreatorFreeAccessUsersSnapshot(Now.AddHours(2), CreatorId1, new List<string> { "a", "b" }),
-                new SubscriberChannelsSnapshot(Now.AddHours(3), SubscriberId1, new List<SubscriberChannelsSnapshotItem> { new SubscriberChannelsSnapshotItem(Guid.NewGuid(), 100, Now) }),
+                new SubscriberChannelsSnapshot(Now.AddHours(3), SubscriberId1, new List<SubscriberChannelsSnapshotItem> { new SubscriberChannelsSnapshotItem(new ChannelId(Guid.NewGuid()), 100, Now) }),
                 new CreatorFreeAccessUsersSnapshot(Now.AddHours(4), CreatorId1, new List<string> { "a", "b" }),
-                new CreatorChannelsSnapshot(Now.AddHours(5), CreatorId1, new List<CreatorChannelsSnapshotItem> { new CreatorChannelsSnapshotItem(Guid.NewGuid(), 100) }),
-                new SubscriberChannelsSnapshot(Now.AddHours(5), SubscriberId1, new List<SubscriberChannelsSnapshotItem> { new SubscriberChannelsSnapshotItem(Guid.NewGuid(), 100, Now) }),
+                new CreatorChannelsSnapshot(Now.AddHours(5), CreatorId1, new List<CreatorChannelsSnapshotItem> { new CreatorChannelsSnapshotItem(new ChannelId(Guid.NewGuid()), 100) }),
+                new SubscriberChannelsSnapshot(Now.AddHours(5), SubscriberId1, new List<SubscriberChannelsSnapshotItem> { new SubscriberChannelsSnapshotItem(new ChannelId(Guid.NewGuid()), 100, Now) }),
                 new SubscriberSnapshot(Now.AddHours(6), SubscriberId1, "email"),
-                new SubscriberChannelsSnapshot(Now.AddHours(6), SubscriberId1, new List<SubscriberChannelsSnapshotItem> { new SubscriberChannelsSnapshotItem(Guid.NewGuid(), 100, Now) })
+                new SubscriberChannelsSnapshot(Now.AddHours(6), SubscriberId1, new List<SubscriberChannelsSnapshotItem> { new SubscriberChannelsSnapshotItem(new ChannelId(Guid.NewGuid()), 100, Now) })
             };
 
             var defaultCreatorChannelSnapshot = CreatorChannelsSnapshot.Default(Now, CreatorId1);

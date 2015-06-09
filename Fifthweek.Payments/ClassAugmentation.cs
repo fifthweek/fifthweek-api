@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Linq;
 
-//// Generated on 08/06/2015 16:15:50 (UTC)
-//// Mapped solution in 17.32s
+//// Generated on 09/06/2015 12:03:38 (UTC)
+//// Mapped solution in 8.63s
 
 
 namespace Fifthweek.Payments
@@ -67,179 +67,312 @@ namespace Fifthweek.Payments
         }
     }
 }
-namespace Fifthweek.Payments
+namespace Fifthweek.Payments.Pipeline
 {
     using System;
     using System.Linq;
-    using Fifthweek.CodeGeneration;
     using System.Collections.Generic;
-    using System.Text;
-    using System.Threading.Tasks;
-    using Fifthweek.Payments.Pipeline;
+    using Fifthweek.CodeGeneration;
+    using Fifthweek.Payments.Snapshots;
 
-    public partial class CreatorChannelsSnapshot 
+    public partial class CalculateCostPeriodsExecutor 
     {
-        public CreatorChannelsSnapshot(
-            System.DateTime timestamp,
-            System.Guid creatorId,
-            System.Collections.Generic.IReadOnlyList<Fifthweek.Payments.CreatorChannelsSnapshotItem> creatorChannels)
+        public CalculateCostPeriodsExecutor(
+            Fifthweek.Payments.Pipeline.ICalculateSnapshotCostExecutor costCalculator)
         {
-            if (timestamp == null)
+            if (costCalculator == null)
             {
-                throw new ArgumentNullException("timestamp");
+                throw new ArgumentNullException("costCalculator");
             }
 
-            if (creatorId == null)
-            {
-                throw new ArgumentNullException("creatorId");
-            }
-
-            if (creatorChannels == null)
-            {
-                throw new ArgumentNullException("creatorChannels");
-            }
-
-            this.Timestamp = timestamp;
-            this.CreatorId = creatorId;
-            this.CreatorChannels = creatorChannels;
+            this.costCalculator = costCalculator;
         }
     }
 }
-namespace Fifthweek.Payments
+namespace Fifthweek.Payments.Services
 {
     using System;
     using System.Linq;
-    using Fifthweek.CodeGeneration;
-    using System.Collections.Generic;
-    using System.Text;
     using System.Threading.Tasks;
+    using Fifthweek.Api.Persistence;
+    using Fifthweek.CodeGeneration;
     using Fifthweek.Payments.Pipeline;
+    using System.Collections.Generic;
+    using Dapper;
+    using Fifthweek.Api.Identity.Shared.Membership;
+    using Fifthweek.Api.Persistence.Snapshots;
+    using Fifthweek.Api.Channels.Shared;
 
-    public partial class CreatorChannelsSnapshotItem 
+    public partial class GetAllCreatorsDbStatement 
     {
-        public CreatorChannelsSnapshotItem(
-            System.Guid channelId,
-            System.Int32 price)
+        public GetAllCreatorsDbStatement(
+            Fifthweek.Api.Persistence.IFifthweekDbConnectionFactory connectionFactory)
         {
-            if (channelId == null)
+            if (connectionFactory == null)
             {
-                throw new ArgumentNullException("channelId");
+                throw new ArgumentNullException("connectionFactory");
             }
 
-            if (price == null)
-            {
-                throw new ArgumentNullException("price");
-            }
-
-            this.ChannelId = channelId;
-            this.Price = price;
+            this.connectionFactory = connectionFactory;
         }
     }
 }
-namespace Fifthweek.Payments
+namespace Fifthweek.Payments.Services
 {
     using System;
     using System.Linq;
-    using Fifthweek.CodeGeneration;
-    using System.Collections.Generic;
-    using System.Text;
     using System.Threading.Tasks;
+    using Fifthweek.Api.Persistence;
+    using Fifthweek.CodeGeneration;
     using Fifthweek.Payments.Pipeline;
+    using System.Collections.Generic;
+    using Dapper;
+    using Fifthweek.Api.Identity.Shared.Membership;
+    using Fifthweek.Api.Persistence.Snapshots;
+    using Fifthweek.Api.Channels.Shared;
 
-    public partial class CreatorFreeAccessUsersSnapshot 
+    public partial class GetAllSubscribedUsersDbStatement 
     {
-        public CreatorFreeAccessUsersSnapshot(
-            System.DateTime timestamp,
-            System.Guid creatorId,
-            System.Collections.Generic.IReadOnlyList<System.String> freeAccessUserEmails)
+        public GetAllSubscribedUsersDbStatement(
+            Fifthweek.Api.Persistence.IFifthweekDbConnectionFactory connectionFactory)
         {
-            if (timestamp == null)
+            if (connectionFactory == null)
             {
-                throw new ArgumentNullException("timestamp");
+                throw new ArgumentNullException("connectionFactory");
             }
 
-            if (creatorId == null)
-            {
-                throw new ArgumentNullException("creatorId");
-            }
-
-            if (freeAccessUserEmails == null)
-            {
-                throw new ArgumentNullException("freeAccessUserEmails");
-            }
-
-            this.Timestamp = timestamp;
-            this.CreatorId = creatorId;
-            this.FreeAccessUserEmails = freeAccessUserEmails;
+            this.connectionFactory = connectionFactory;
         }
     }
 }
-namespace Fifthweek.Payments
+namespace Fifthweek.Payments.Services
 {
     using System;
     using System.Linq;
-    using Fifthweek.CodeGeneration;
-    using System.Collections.Generic;
-    using System.Text;
     using System.Threading.Tasks;
+    using Fifthweek.Api.Persistence;
+    using Fifthweek.CodeGeneration;
     using Fifthweek.Payments.Pipeline;
+    using System.Collections.Generic;
+    using Dapper;
+    using Fifthweek.Api.Identity.Shared.Membership;
+    using Fifthweek.Api.Persistence.Snapshots;
+    using Fifthweek.Api.Channels.Shared;
 
-    public partial class MergedSnapshot 
+    public partial class GetCreatorChannelsSnapshotsDbStatement 
     {
-        public MergedSnapshot(
-            System.DateTime timestamp,
-            Fifthweek.Payments.CreatorChannelsSnapshot creatorChannels,
-            Fifthweek.Payments.CreatorFreeAccessUsersSnapshot creatorFreeAccessUsers,
-            Fifthweek.Payments.SubscriberChannelsSnapshot subscriberChannels,
-            Fifthweek.Payments.SubscriberSnapshot subscriber)
+        public GetCreatorChannelsSnapshotsDbStatement(
+            Fifthweek.Api.Persistence.IFifthweekDbConnectionFactory connectionFactory)
         {
-            if (timestamp == null)
+            if (connectionFactory == null)
             {
-                throw new ArgumentNullException("timestamp");
+                throw new ArgumentNullException("connectionFactory");
             }
 
-            if (creatorChannels == null)
-            {
-                throw new ArgumentNullException("creatorChannels");
-            }
-
-            if (creatorFreeAccessUsers == null)
-            {
-                throw new ArgumentNullException("creatorFreeAccessUsers");
-            }
-
-            if (subscriberChannels == null)
-            {
-                throw new ArgumentNullException("subscriberChannels");
-            }
-
-            if (subscriber == null)
-            {
-                throw new ArgumentNullException("subscriber");
-            }
-
-            this.Timestamp = timestamp;
-            this.CreatorChannels = creatorChannels;
-            this.CreatorFreeAccessUsers = creatorFreeAccessUsers;
-            this.SubscriberChannels = subscriberChannels;
-            this.Subscriber = subscriber;
+            this.connectionFactory = connectionFactory;
         }
     }
 }
-namespace Fifthweek.Payments
+namespace Fifthweek.Payments.Services
 {
     using System;
     using System.Linq;
-    using Fifthweek.CodeGeneration;
-    using System.Collections.Generic;
-    using System.Text;
     using System.Threading.Tasks;
+    using Fifthweek.Api.Persistence;
+    using Fifthweek.CodeGeneration;
     using Fifthweek.Payments.Pipeline;
+    using System.Collections.Generic;
+    using Dapper;
+    using Fifthweek.Api.Identity.Shared.Membership;
+    using Fifthweek.Api.Persistence.Snapshots;
+    using Fifthweek.Api.Channels.Shared;
+
+    public partial class GetCreatorFreeAccessUsersSnapshotsDbStatement 
+    {
+        public GetCreatorFreeAccessUsersSnapshotsDbStatement(
+            Fifthweek.Api.Persistence.IFifthweekDbConnectionFactory connectionFactory)
+        {
+            if (connectionFactory == null)
+            {
+                throw new ArgumentNullException("connectionFactory");
+            }
+
+            this.connectionFactory = connectionFactory;
+        }
+    }
+}
+namespace Fifthweek.Payments.Services
+{
+    using System;
+    using System.Linq;
+    using System.Threading.Tasks;
+    using Fifthweek.Api.Persistence;
+    using Fifthweek.CodeGeneration;
+    using Fifthweek.Payments.Pipeline;
+    using System.Collections.Generic;
+    using Dapper;
+    using Fifthweek.Api.Identity.Shared.Membership;
+    using Fifthweek.Api.Persistence.Snapshots;
+    using Fifthweek.Api.Channels.Shared;
+
+    public partial class GetCreatorPostsDbStatement 
+    {
+        public GetCreatorPostsDbStatement(
+            Fifthweek.Api.Persistence.IFifthweekDbConnectionFactory connectionFactory)
+        {
+            if (connectionFactory == null)
+            {
+                throw new ArgumentNullException("connectionFactory");
+            }
+
+            this.connectionFactory = connectionFactory;
+        }
+    }
+}
+namespace Fifthweek.Payments.Services
+{
+    using System;
+    using System.Linq;
+    using System.Threading.Tasks;
+    using Fifthweek.Api.Persistence;
+    using Fifthweek.CodeGeneration;
+    using Fifthweek.Payments.Pipeline;
+    using System.Collections.Generic;
+    using Dapper;
+    using Fifthweek.Api.Identity.Shared.Membership;
+    using Fifthweek.Api.Persistence.Snapshots;
+    using Fifthweek.Api.Channels.Shared;
+
+    public partial class GetSubscriberChannelsSnapshotsDbStatement 
+    {
+        public GetSubscriberChannelsSnapshotsDbStatement(
+            Fifthweek.Api.Persistence.IFifthweekDbConnectionFactory connectionFactory)
+        {
+            if (connectionFactory == null)
+            {
+                throw new ArgumentNullException("connectionFactory");
+            }
+
+            this.connectionFactory = connectionFactory;
+        }
+    }
+}
+namespace Fifthweek.Payments.Services
+{
+    using System;
+    using System.Linq;
+    using System.Threading.Tasks;
+    using Fifthweek.Api.Persistence;
+    using Fifthweek.CodeGeneration;
+    using Fifthweek.Payments.Pipeline;
+    using System.Collections.Generic;
+    using Dapper;
+    using Fifthweek.Api.Identity.Shared.Membership;
+    using Fifthweek.Api.Persistence.Snapshots;
+    using Fifthweek.Api.Channels.Shared;
+
+    public partial class GetSubscriberSnapshotsDbStatement 
+    {
+        public GetSubscriberSnapshotsDbStatement(
+            Fifthweek.Api.Persistence.IFifthweekDbConnectionFactory connectionFactory)
+        {
+            if (connectionFactory == null)
+            {
+                throw new ArgumentNullException("connectionFactory");
+            }
+
+            this.connectionFactory = connectionFactory;
+        }
+    }
+}
+namespace Fifthweek.Payments.Services
+{
+    using System;
+    using System.Linq;
+    using System.Threading.Tasks;
+    using Fifthweek.Api.Persistence;
+    using Fifthweek.CodeGeneration;
+    using Fifthweek.Payments.Pipeline;
+    using System.Collections.Generic;
+    using Dapper;
+    using Fifthweek.Api.Identity.Shared.Membership;
+    using Fifthweek.Api.Persistence.Snapshots;
+    using Fifthweek.Api.Channels.Shared;
 
     public partial class PaymentProcessor 
     {
         public PaymentProcessor(
-            Fifthweek.Payments.Pipeline.ILoadSnapshotsExecutor loadSnapshots,
+            Fifthweek.Payments.Services.IGetAllCreatorsDbStatement getAllCreatorsDbStatement,
+            Fifthweek.Payments.Services.IGetAllSubscribedUsersDbStatement getAllSubscribedUsersDbStatement,
+            Fifthweek.Payments.Services.IGetCreatorChannelsSnapshotsDbStatement getCreatorChannelsSnapshotsDbStatement,
+            Fifthweek.Payments.Services.IGetCreatorFreeAccessUsersSnapshotsDbStatement getCreatorFreeAccessUsersSnapshotsDbStatement,
+            Fifthweek.Payments.Services.IGetCreatorPostsDbStatement getCreatorPostsDbStatement,
+            Fifthweek.Payments.Services.IGetSubscriberChannelsSnapshotsDbStatement getSubscriberChannelsSnapshotsDbStatement,
+            Fifthweek.Payments.Services.IGetSubscriberSnapshotsDbStatement getSubscriberSnapshotsDbStatement)
+        {
+            if (getAllCreatorsDbStatement == null)
+            {
+                throw new ArgumentNullException("getAllCreatorsDbStatement");
+            }
+
+            if (getAllSubscribedUsersDbStatement == null)
+            {
+                throw new ArgumentNullException("getAllSubscribedUsersDbStatement");
+            }
+
+            if (getCreatorChannelsSnapshotsDbStatement == null)
+            {
+                throw new ArgumentNullException("getCreatorChannelsSnapshotsDbStatement");
+            }
+
+            if (getCreatorFreeAccessUsersSnapshotsDbStatement == null)
+            {
+                throw new ArgumentNullException("getCreatorFreeAccessUsersSnapshotsDbStatement");
+            }
+
+            if (getCreatorPostsDbStatement == null)
+            {
+                throw new ArgumentNullException("getCreatorPostsDbStatement");
+            }
+
+            if (getSubscriberChannelsSnapshotsDbStatement == null)
+            {
+                throw new ArgumentNullException("getSubscriberChannelsSnapshotsDbStatement");
+            }
+
+            if (getSubscriberSnapshotsDbStatement == null)
+            {
+                throw new ArgumentNullException("getSubscriberSnapshotsDbStatement");
+            }
+
+            this.getAllCreatorsDbStatement = getAllCreatorsDbStatement;
+            this.getAllSubscribedUsersDbStatement = getAllSubscribedUsersDbStatement;
+            this.getCreatorChannelsSnapshotsDbStatement = getCreatorChannelsSnapshotsDbStatement;
+            this.getCreatorFreeAccessUsersSnapshotsDbStatement = getCreatorFreeAccessUsersSnapshotsDbStatement;
+            this.getCreatorPostsDbStatement = getCreatorPostsDbStatement;
+            this.getSubscriberChannelsSnapshotsDbStatement = getSubscriberChannelsSnapshotsDbStatement;
+            this.getSubscriberSnapshotsDbStatement = getSubscriberSnapshotsDbStatement;
+        }
+    }
+}
+namespace Fifthweek.Payments.Services
+{
+    using System;
+    using System.Linq;
+    using System.Threading.Tasks;
+    using Fifthweek.Api.Persistence;
+    using Fifthweek.CodeGeneration;
+    using Fifthweek.Payments.Pipeline;
+    using System.Collections.Generic;
+    using Dapper;
+    using Fifthweek.Api.Identity.Shared.Membership;
+    using Fifthweek.Api.Persistence.Snapshots;
+    using Fifthweek.Api.Channels.Shared;
+    using Fifthweek.Payments.Snapshots;
+
+    public partial class SubscriberPaymentPipeline 
+    {
+        public SubscriberPaymentPipeline(
             Fifthweek.Payments.Pipeline.IVerifySnapshotsExecutor verifySnapshots,
             Fifthweek.Payments.Pipeline.IMergeSnapshotsExecutor mergeSnapshots,
             Fifthweek.Payments.Pipeline.IRollBackSubscriptionsExecutor rollBackSubscriptions,
@@ -248,11 +381,6 @@ namespace Fifthweek.Payments
             Fifthweek.Payments.Pipeline.ICalculateCostPeriodsExecutor calculateCostPeriods,
             Fifthweek.Payments.Pipeline.IAggregateCostPeriodsExecutor aggregateCostPeriods)
         {
-            if (loadSnapshots == null)
-            {
-                throw new ArgumentNullException("loadSnapshots");
-            }
-
             if (verifySnapshots == null)
             {
                 throw new ArgumentNullException("verifySnapshots");
@@ -288,7 +416,6 @@ namespace Fifthweek.Payments
                 throw new ArgumentNullException("aggregateCostPeriods");
             }
 
-            this.loadSnapshots = loadSnapshots;
             this.verifySnapshots = verifySnapshots;
             this.mergeSnapshots = mergeSnapshots;
             this.rollBackSubscriptions = rollBackSubscriptions;
@@ -299,43 +426,176 @@ namespace Fifthweek.Payments
         }
     }
 }
-namespace Fifthweek.Payments.Pipeline
+namespace Fifthweek.Payments.Snapshots
 {
     using System;
     using System.Linq;
     using System.Collections.Generic;
     using Fifthweek.CodeGeneration;
+    using Fifthweek.Api.Identity.Shared.Membership;
+    using Fifthweek.Api.Channels.Shared;
 
-    public partial class CalculateCostPeriodsExecutor 
+    public partial class CreatorChannelsSnapshot 
     {
-        public CalculateCostPeriodsExecutor(
-            Fifthweek.Payments.Pipeline.ICalculateSnapshotCostExecutor costCalculator)
+        public CreatorChannelsSnapshot(
+            System.DateTime timestamp,
+            Fifthweek.Api.Identity.Shared.Membership.UserId creatorId,
+            System.Collections.Generic.IReadOnlyList<Fifthweek.Payments.Snapshots.CreatorChannelsSnapshotItem> creatorChannels)
         {
-            if (costCalculator == null)
+            if (timestamp == null)
             {
-                throw new ArgumentNullException("costCalculator");
+                throw new ArgumentNullException("timestamp");
             }
 
-            this.costCalculator = costCalculator;
+            if (creatorId == null)
+            {
+                throw new ArgumentNullException("creatorId");
+            }
+
+            if (creatorChannels == null)
+            {
+                throw new ArgumentNullException("creatorChannels");
+            }
+
+            this.Timestamp = timestamp;
+            this.CreatorId = creatorId;
+            this.CreatorChannels = creatorChannels;
         }
     }
 }
-namespace Fifthweek.Payments
+namespace Fifthweek.Payments.Snapshots
 {
     using System;
     using System.Linq;
-    using Fifthweek.CodeGeneration;
     using System.Collections.Generic;
-    using System.Text;
-    using System.Threading.Tasks;
-    using Fifthweek.Payments.Pipeline;
+    using Fifthweek.CodeGeneration;
+    using Fifthweek.Api.Identity.Shared.Membership;
+    using Fifthweek.Api.Channels.Shared;
+
+    public partial class CreatorChannelsSnapshotItem 
+    {
+        public CreatorChannelsSnapshotItem(
+            Fifthweek.Api.Channels.Shared.ChannelId channelId,
+            System.Int32 price)
+        {
+            if (channelId == null)
+            {
+                throw new ArgumentNullException("channelId");
+            }
+
+            if (price == null)
+            {
+                throw new ArgumentNullException("price");
+            }
+
+            this.ChannelId = channelId;
+            this.Price = price;
+        }
+    }
+}
+namespace Fifthweek.Payments.Snapshots
+{
+    using System;
+    using System.Linq;
+    using System.Collections.Generic;
+    using Fifthweek.CodeGeneration;
+    using Fifthweek.Api.Identity.Shared.Membership;
+    using Fifthweek.Api.Channels.Shared;
+
+    public partial class CreatorFreeAccessUsersSnapshot 
+    {
+        public CreatorFreeAccessUsersSnapshot(
+            System.DateTime timestamp,
+            Fifthweek.Api.Identity.Shared.Membership.UserId creatorId,
+            System.Collections.Generic.IReadOnlyList<System.String> freeAccessUserEmails)
+        {
+            if (timestamp == null)
+            {
+                throw new ArgumentNullException("timestamp");
+            }
+
+            if (creatorId == null)
+            {
+                throw new ArgumentNullException("creatorId");
+            }
+
+            if (freeAccessUserEmails == null)
+            {
+                throw new ArgumentNullException("freeAccessUserEmails");
+            }
+
+            this.Timestamp = timestamp;
+            this.CreatorId = creatorId;
+            this.FreeAccessUserEmails = freeAccessUserEmails;
+        }
+    }
+}
+namespace Fifthweek.Payments.Snapshots
+{
+    using System;
+    using System.Linq;
+    using System.Collections.Generic;
+    using Fifthweek.CodeGeneration;
+    using Fifthweek.Api.Identity.Shared.Membership;
+    using Fifthweek.Api.Channels.Shared;
+
+    public partial class MergedSnapshot 
+    {
+        public MergedSnapshot(
+            System.DateTime timestamp,
+            Fifthweek.Payments.Snapshots.CreatorChannelsSnapshot creatorChannels,
+            Fifthweek.Payments.Snapshots.CreatorFreeAccessUsersSnapshot creatorFreeAccessUsers,
+            Fifthweek.Payments.Snapshots.SubscriberChannelsSnapshot subscriberChannels,
+            Fifthweek.Payments.Snapshots.SubscriberSnapshot subscriber)
+        {
+            if (timestamp == null)
+            {
+                throw new ArgumentNullException("timestamp");
+            }
+
+            if (creatorChannels == null)
+            {
+                throw new ArgumentNullException("creatorChannels");
+            }
+
+            if (creatorFreeAccessUsers == null)
+            {
+                throw new ArgumentNullException("creatorFreeAccessUsers");
+            }
+
+            if (subscriberChannels == null)
+            {
+                throw new ArgumentNullException("subscriberChannels");
+            }
+
+            if (subscriber == null)
+            {
+                throw new ArgumentNullException("subscriber");
+            }
+
+            this.Timestamp = timestamp;
+            this.CreatorChannels = creatorChannels;
+            this.CreatorFreeAccessUsers = creatorFreeAccessUsers;
+            this.SubscriberChannels = subscriberChannels;
+            this.Subscriber = subscriber;
+        }
+    }
+}
+namespace Fifthweek.Payments.Snapshots
+{
+    using System;
+    using System.Linq;
+    using System.Collections.Generic;
+    using Fifthweek.CodeGeneration;
+    using Fifthweek.Api.Identity.Shared.Membership;
+    using Fifthweek.Api.Channels.Shared;
 
     public partial class SubscriberChannelsSnapshot 
     {
         public SubscriberChannelsSnapshot(
             System.DateTime timestamp,
-            System.Guid subscriberId,
-            System.Collections.Generic.IReadOnlyList<Fifthweek.Payments.SubscriberChannelsSnapshotItem> subscribedChannels)
+            Fifthweek.Api.Identity.Shared.Membership.UserId subscriberId,
+            System.Collections.Generic.IReadOnlyList<Fifthweek.Payments.Snapshots.SubscriberChannelsSnapshotItem> subscribedChannels)
         {
             if (timestamp == null)
             {
@@ -358,20 +618,19 @@ namespace Fifthweek.Payments
         }
     }
 }
-namespace Fifthweek.Payments
+namespace Fifthweek.Payments.Snapshots
 {
     using System;
     using System.Linq;
-    using Fifthweek.CodeGeneration;
     using System.Collections.Generic;
-    using System.Text;
-    using System.Threading.Tasks;
-    using Fifthweek.Payments.Pipeline;
+    using Fifthweek.CodeGeneration;
+    using Fifthweek.Api.Identity.Shared.Membership;
+    using Fifthweek.Api.Channels.Shared;
 
     public partial class SubscriberChannelsSnapshotItem 
     {
         public SubscriberChannelsSnapshotItem(
-            System.Guid channelId,
+            Fifthweek.Api.Channels.Shared.ChannelId channelId,
             System.Int32 acceptedPrice,
             System.DateTime subscriptionStartDate)
         {
@@ -396,21 +655,20 @@ namespace Fifthweek.Payments
         }
     }
 }
-namespace Fifthweek.Payments
+namespace Fifthweek.Payments.Snapshots
 {
     using System;
     using System.Linq;
-    using Fifthweek.CodeGeneration;
     using System.Collections.Generic;
-    using System.Text;
-    using System.Threading.Tasks;
-    using Fifthweek.Payments.Pipeline;
+    using Fifthweek.CodeGeneration;
+    using Fifthweek.Api.Identity.Shared.Membership;
+    using Fifthweek.Api.Channels.Shared;
 
     public partial class SubscriberSnapshot 
     {
         public SubscriberSnapshot(
             System.DateTime timestamp,
-            System.Guid subscriberId,
+            Fifthweek.Api.Identity.Shared.Membership.UserId subscriberId,
             System.String email)
         {
             if (timestamp == null)
@@ -426,6 +684,41 @@ namespace Fifthweek.Payments
             this.Timestamp = timestamp;
             this.SubscriberId = subscriberId;
             this.Email = email;
+        }
+    }
+}
+namespace Fifthweek.Payments.Services
+{
+    using System;
+    using System.Linq;
+    using System.Threading.Tasks;
+    using Fifthweek.Api.Persistence;
+    using Fifthweek.CodeGeneration;
+    using Fifthweek.Payments.Pipeline;
+    using System.Collections.Generic;
+    using Dapper;
+    using Fifthweek.Api.Identity.Shared.Membership;
+    using Fifthweek.Api.Persistence.Snapshots;
+    using Fifthweek.Api.Channels.Shared;
+
+    public partial class CreatorPost 
+    {
+        public CreatorPost(
+            Fifthweek.Api.Channels.Shared.ChannelId channelId,
+            System.DateTime liveDate)
+        {
+            if (channelId == null)
+            {
+                throw new ArgumentNullException("channelId");
+            }
+
+            if (liveDate == null)
+            {
+                throw new ArgumentNullException("liveDate");
+            }
+
+            this.ChannelId = channelId;
+            this.LiveDate = liveDate;
         }
     }
 }
@@ -558,15 +851,14 @@ namespace Fifthweek.Payments
         }
     }
 }
-namespace Fifthweek.Payments
+namespace Fifthweek.Payments.Snapshots
 {
     using System;
     using System.Linq;
-    using Fifthweek.CodeGeneration;
     using System.Collections.Generic;
-    using System.Text;
-    using System.Threading.Tasks;
-    using Fifthweek.Payments.Pipeline;
+    using Fifthweek.CodeGeneration;
+    using Fifthweek.Api.Identity.Shared.Membership;
+    using Fifthweek.Api.Channels.Shared;
 
     public partial class CreatorChannelsSnapshot 
     {
@@ -643,15 +935,14 @@ namespace Fifthweek.Payments
         }
     }
 }
-namespace Fifthweek.Payments
+namespace Fifthweek.Payments.Snapshots
 {
     using System;
     using System.Linq;
-    using Fifthweek.CodeGeneration;
     using System.Collections.Generic;
-    using System.Text;
-    using System.Threading.Tasks;
-    using Fifthweek.Payments.Pipeline;
+    using Fifthweek.CodeGeneration;
+    using Fifthweek.Api.Identity.Shared.Membership;
+    using Fifthweek.Api.Channels.Shared;
 
     public partial class CreatorChannelsSnapshotItem 
     {
@@ -707,15 +998,14 @@ namespace Fifthweek.Payments
         }
     }
 }
-namespace Fifthweek.Payments
+namespace Fifthweek.Payments.Snapshots
 {
     using System;
     using System.Linq;
-    using Fifthweek.CodeGeneration;
     using System.Collections.Generic;
-    using System.Text;
-    using System.Threading.Tasks;
-    using Fifthweek.Payments.Pipeline;
+    using Fifthweek.CodeGeneration;
+    using Fifthweek.Api.Identity.Shared.Membership;
+    using Fifthweek.Api.Channels.Shared;
 
     public partial class CreatorFreeAccessUsersSnapshot 
     {
@@ -792,15 +1082,14 @@ namespace Fifthweek.Payments
         }
     }
 }
-namespace Fifthweek.Payments
+namespace Fifthweek.Payments.Snapshots
 {
     using System;
     using System.Linq;
-    using Fifthweek.CodeGeneration;
     using System.Collections.Generic;
-    using System.Text;
-    using System.Threading.Tasks;
-    using Fifthweek.Payments.Pipeline;
+    using Fifthweek.CodeGeneration;
+    using Fifthweek.Api.Identity.Shared.Membership;
+    using Fifthweek.Api.Channels.Shared;
 
     public partial class MergedSnapshot 
     {
@@ -874,15 +1163,14 @@ namespace Fifthweek.Payments
         }
     }
 }
-namespace Fifthweek.Payments
+namespace Fifthweek.Payments.Snapshots
 {
     using System;
     using System.Linq;
-    using Fifthweek.CodeGeneration;
     using System.Collections.Generic;
-    using System.Text;
-    using System.Threading.Tasks;
-    using Fifthweek.Payments.Pipeline;
+    using Fifthweek.CodeGeneration;
+    using Fifthweek.Api.Identity.Shared.Membership;
+    using Fifthweek.Api.Channels.Shared;
 
     public partial class SubscriberChannelsSnapshot 
     {
@@ -959,15 +1247,14 @@ namespace Fifthweek.Payments
         }
     }
 }
-namespace Fifthweek.Payments
+namespace Fifthweek.Payments.Snapshots
 {
     using System;
     using System.Linq;
-    using Fifthweek.CodeGeneration;
     using System.Collections.Generic;
-    using System.Text;
-    using System.Threading.Tasks;
-    using Fifthweek.Payments.Pipeline;
+    using Fifthweek.CodeGeneration;
+    using Fifthweek.Api.Identity.Shared.Membership;
+    using Fifthweek.Api.Channels.Shared;
 
     public partial class SubscriberChannelsSnapshotItem 
     {
@@ -1029,15 +1316,14 @@ namespace Fifthweek.Payments
         }
     }
 }
-namespace Fifthweek.Payments
+namespace Fifthweek.Payments.Snapshots
 {
     using System;
     using System.Linq;
-    using Fifthweek.CodeGeneration;
     using System.Collections.Generic;
-    using System.Text;
-    using System.Threading.Tasks;
-    using Fifthweek.Payments.Pipeline;
+    using Fifthweek.CodeGeneration;
+    using Fifthweek.Api.Identity.Shared.Membership;
+    using Fifthweek.Api.Channels.Shared;
 
     public partial class SubscriberSnapshot 
     {
@@ -1091,6 +1377,74 @@ namespace Fifthweek.Payments
             }
         
             if (!object.Equals(this.Email, other.Email))
+            {
+                return false;
+            }
+        
+            return true;
+        }
+    }
+}
+namespace Fifthweek.Payments.Services
+{
+    using System;
+    using System.Linq;
+    using System.Threading.Tasks;
+    using Fifthweek.Api.Persistence;
+    using Fifthweek.CodeGeneration;
+    using Fifthweek.Payments.Pipeline;
+    using System.Collections.Generic;
+    using Dapper;
+    using Fifthweek.Api.Identity.Shared.Membership;
+    using Fifthweek.Api.Persistence.Snapshots;
+    using Fifthweek.Api.Channels.Shared;
+
+    public partial class CreatorPost 
+    {
+        public override string ToString()
+        {
+            return string.Format("CreatorPost({0}, {1})", this.ChannelId == null ? "null" : this.ChannelId.ToString(), this.LiveDate == null ? "null" : this.LiveDate.ToString());
+        }
+        
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj))
+            {
+                return false;
+            }
+        
+            if (ReferenceEquals(this, obj))
+            {
+                return true;
+            }
+        
+            if (obj.GetType() != this.GetType())
+            {
+                return false;
+            }
+        
+            return this.Equals((CreatorPost)obj);
+        }
+        
+        public override int GetHashCode()
+        {
+            unchecked
+            {
+                int hashCode = 0;
+                hashCode = (hashCode * 397) ^ (this.ChannelId != null ? this.ChannelId.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.LiveDate != null ? this.LiveDate.GetHashCode() : 0);
+                return hashCode;
+            }
+        }
+        
+        protected bool Equals(CreatorPost other)
+        {
+            if (!object.Equals(this.ChannelId, other.ChannelId))
+            {
+                return false;
+            }
+        
+            if (!object.Equals(this.LiveDate, other.LiveDate))
             {
                 return false;
             }

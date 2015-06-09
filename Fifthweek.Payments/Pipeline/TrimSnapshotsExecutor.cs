@@ -4,6 +4,8 @@ namespace Fifthweek.Payments.Pipeline
     using System.Collections.Generic;
     using System.Linq;
 
+    using Fifthweek.Payments.Snapshots;
+
     public class TrimSnapshotsExecutor : ITrimSnapshotsExecutor
     {
         public IReadOnlyList<MergedSnapshot> Execute(

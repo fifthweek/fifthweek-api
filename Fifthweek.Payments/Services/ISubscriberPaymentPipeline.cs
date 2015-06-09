@@ -1,4 +1,4 @@
-namespace Fifthweek.Payments.Pipeline
+﻿namespace Fifthweek.Payments.Services
 {
     using System;
     using System.Collections.Generic;
@@ -6,12 +6,13 @@ namespace Fifthweek.Payments.Pipeline
     using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.Payments.Snapshots;
 
-    public interface IMergeSnapshotsExecutor
+    public interface ISubscriberPaymentPipeline
     {
-        IReadOnlyList<MergedSnapshot> Execute(
+        AggregateCostSummary CalculatePayment(
+            IReadOnlyList<ISnapshot> snapshots,
             UserId subscriberId,
             UserId creatorId,
             DateTime startTimeInclusive,
-            IReadOnlyList<ISnapshot> snapshots);
+            DateTime endTimeExclusive);
     }
 }

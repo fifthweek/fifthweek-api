@@ -3,7 +3,9 @@
     using System;
     using System.Collections.Generic;
 
+    using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.Payments.Pipeline;
+    using Fifthweek.Payments.Snapshots;
 
     using Microsoft.VisualStudio.TestTools.UnitTesting;
 
@@ -25,10 +27,10 @@
             var input = new List<MergedSnapshot> 
             {
                 new MergedSnapshot(
-                    CreatorChannelsSnapshot.Default(now, Guid.NewGuid()),
-                    CreatorFreeAccessUsersSnapshot.Default(now, Guid.NewGuid()),
-                    SubscriberChannelsSnapshot.Default(now, Guid.NewGuid()),
-                    SubscriberSnapshot.Default(now, Guid.NewGuid())),
+                    CreatorChannelsSnapshot.Default(now, new UserId(Guid.NewGuid())),
+                    CreatorFreeAccessUsersSnapshot.Default(now, new UserId(Guid.NewGuid())),
+                    SubscriberChannelsSnapshot.Default(now, new UserId(Guid.NewGuid())),
+                    SubscriberSnapshot.Default(now, new UserId(Guid.NewGuid()))),
             };
 
             Assert.AreSame(input, this.target.Execute(input));

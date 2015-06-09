@@ -27,7 +27,8 @@ namespace Fifthweek.Api.Persistence.Migrations
                         Timestamp = c.DateTime(nullable: false),
                         CreatorId = c.Guid(nullable: false),
                     })
-                .PrimaryKey(t => t.Id);
+                .PrimaryKey(t => t.Id)
+                .Index(t => new { t.CreatorId, t.Timestamp }, name: "CreatorIdAndTimestamp");
             
             CreateTable(
                 "dbo.CreatorFreeAccessUsersSnapshotItems",
@@ -48,7 +49,8 @@ namespace Fifthweek.Api.Persistence.Migrations
                         Timestamp = c.DateTime(nullable: false),
                         CreatorId = c.Guid(nullable: false),
                     })
-                .PrimaryKey(t => t.Id);
+                .PrimaryKey(t => t.Id)
+                .Index(t => new { t.CreatorId, t.Timestamp }, name: "CreatorIdAndTimestamp");
             
             CreateTable(
                 "dbo.SubscriberChannelsSnapshotItems",
@@ -71,17 +73,18 @@ namespace Fifthweek.Api.Persistence.Migrations
                         Timestamp = c.DateTime(nullable: false),
                         SubscriberId = c.Guid(nullable: false),
                     })
-                .PrimaryKey(t => t.Id);
+                .PrimaryKey(t => t.Id)
+                .Index(t => new { t.SubscriberId, t.Timestamp }, name: "SubscriberIdAndTimestamp");
             
             CreateTable(
                 "dbo.SubscriberSnapshots",
                 c => new
                     {
-                        Timestamp = c.DateTime(nullable: false),
                         SubscriberId = c.Guid(nullable: false),
+                        Timestamp = c.DateTime(nullable: false),
                         Email = c.String(nullable: false),
                     })
-                .PrimaryKey(t => new { t.Timestamp, t.SubscriberId });
+                .PrimaryKey(t => new { t.SubscriberId, t.Timestamp });
             
         }
         
@@ -90,8 +93,11 @@ namespace Fifthweek.Api.Persistence.Migrations
             DropForeignKey("dbo.SubscriberChannelsSnapshotItems", "SubscriberChannelsSnapshotId", "dbo.SubscriberChannelsSnapshots");
             DropForeignKey("dbo.CreatorFreeAccessUsersSnapshotItems", "CreatorFreeAccessUsersSnapshotId", "dbo.CreatorFreeAccessUsersSnapshots");
             DropForeignKey("dbo.CreatorChannelsSnapshotItems", "CreatorChannelsSnapshotId", "dbo.CreatorChannelsSnapshots");
+            DropIndex("dbo.SubscriberChannelsSnapshots", "SubscriberIdAndTimestamp");
             DropIndex("dbo.SubscriberChannelsSnapshotItems", new[] { "SubscriberChannelsSnapshotId" });
+            DropIndex("dbo.CreatorFreeAccessUsersSnapshots", "CreatorIdAndTimestamp");
             DropIndex("dbo.CreatorFreeAccessUsersSnapshotItems", new[] { "CreatorFreeAccessUsersSnapshotId" });
+            DropIndex("dbo.CreatorChannelsSnapshots", "CreatorIdAndTimestamp");
             DropIndex("dbo.CreatorChannelsSnapshotItems", new[] { "CreatorChannelsSnapshotId" });
             DropTable("dbo.SubscriberSnapshots");
             DropTable("dbo.SubscriberChannelsSnapshots");

@@ -1,4 +1,4 @@
-namespace Fifthweek.Payments
+namespace Fifthweek.Payments.Snapshots
 {
     using System;
 

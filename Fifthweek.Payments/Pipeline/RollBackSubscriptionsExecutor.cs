@@ -2,6 +2,8 @@
 {
     using System.Collections.Generic;
 
+    using Fifthweek.Payments.Snapshots;
+
     public class RollBackSubscriptionsExecutor : IRollBackSubscriptionsExecutor
     {
         public IReadOnlyList<MergedSnapshot> Execute(IReadOnlyList<MergedSnapshot> snapshots)

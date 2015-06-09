@@ -4,6 +4,10 @@ namespace Fifthweek.Payments.Pipeline
     using System.Collections.Generic;
     using System.Linq;
 
+    using Fifthweek.Api.Channels.Shared;
+    using Fifthweek.Api.Identity.Shared.Membership;
+    using Fifthweek.Payments.Snapshots;
+
     public class RollForwardSubscriptionsExecutor : IRollForwardSubscriptionsExecutor
     {
         /// <summary>
@@ -16,7 +20,7 @@ namespace Fifthweek.Payments.Pipeline
             IReadOnlyList<MergedSnapshot> inputSnapshots)
         {
             var snapshots = inputSnapshots.ToList();
-            var activeSubscriptions = new Dictionary<Guid, ActiveSubscription>();
+            var activeSubscriptions = new Dictionary<ChannelId, ActiveSubscription>();
 
             for (int i = 0; i < snapshots.Count; i++)
             {
@@ -52,7 +56,7 @@ namespace Fifthweek.Payments.Pipeline
                 foreach (var activeSubscription in activeSubscriptions.Values.ToList())
                 {
                     var activeChannelId = activeSubscription.Subscription.ChannelId;
-                    if (snapshot.SubscriberChannels.SubscribedChannels.All(v => v.ChannelId != activeChannelId))
+                    if (snapshot.SubscriberChannels.SubscribedChannels.All(v => !v.ChannelId.Equals(activeChannelId)))
                     {
                         // The subscriber has unsubscribed from this channel.
                         var billingWeekFinalSnapshotTime = this.GetBillingWeekFinalSnapshotTime(activeSubscription.BillingWeekEndDateExclusive);
@@ -64,7 +68,7 @@ namespace Fifthweek.Payments.Pipeline
                         }
                         else if (snapshot.Timestamp < billingWeekFinalSnapshotTime)
                         {
-                            if (snapshot.CreatorChannels.CreatorChannels.All(v => v.ChannelId != activeChannelId))
+                            if (snapshot.CreatorChannels.CreatorChannels.All(v => !v.ChannelId.Equals(activeChannelId)))
                             {
                                 // We are within the billing week, but the channel is no longer published.
                                 // So we stop billing at this point.

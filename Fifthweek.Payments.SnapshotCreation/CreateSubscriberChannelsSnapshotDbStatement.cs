@@ -13,10 +13,6 @@ namespace Fifthweek.Payments.SnapshotCreation
     [AutoConstructor]
     public partial class CreateSubscriberChannelsSnapshotDbStatement : ICreateSubscriberChannelsSnapshotDbStatement
     {
-        private readonly IGuidCreator guidCreator;
-        private readonly ISnapshotTimestampCreator timestampCreator;
-        private readonly IFifthweekDbConnectionFactory connectionFactory;
-
         private static readonly string Sql = string.Format(
             @"INSERT INTO {0} VALUES (@RecordId, @Timestamp, @SubscriberId)
               INSERT INTO {1} SELECT @RecordId, {2}, {3}, {4} FROM {5} WHERE {6}=@SubscriberId",
@@ -27,6 +23,10 @@ namespace Fifthweek.Payments.SnapshotCreation
             ChannelSubscription.Fields.SubscriptionStartDate,
             ChannelSubscription.Table,
             ChannelSubscription.Fields.UserId);
+
+        private readonly IGuidCreator guidCreator;
+        private readonly ISnapshotTimestampCreator timestampCreator;
+        private readonly IFifthweekDbConnectionFactory connectionFactory;
 
         public async Task ExecuteAsync(UserId subscriberId)
         {
