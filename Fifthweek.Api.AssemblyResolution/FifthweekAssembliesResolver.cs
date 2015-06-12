@@ -32,7 +32,8 @@
             typeof(FileManagement.AutofacRegistration).Assembly,
             typeof(FileManagement.Shared.FileId).Assembly,
             typeof(Aggregations.AutofacRegistration).Assembly,
-            typeof(Payments.AutofacRegistration).Assembly
+            typeof(Payments.AutofacRegistration).Assembly,
+            typeof(Payments.SnapshotCreation.AutofacRegistration).Assembly
         }
         .Distinct().ToList().AsReadOnly();
 
