@@ -18,6 +18,7 @@ build_script:
   - msbuild.exe "%APPVEYOR_BUILD_FOLDER%\Fifthweek.sln" /t:Build /p:Configuration=Release
   - xcopy /e /h "%APPVEYOR_BUILD_FOLDER%\Fifthweek.WebJobs.Thumbnails\bin\Release" "%WEBJOBS_DEPLOYMENT_TEMP%\thumbnails\"
   - xcopy /e /h "%APPVEYOR_BUILD_FOLDER%\Fifthweek.WebJobs.GarbageCollection\bin\Release" "%WEBJOBS_DEPLOYMENT_TEMP%\garbage-collection\"
+  - xcopy /e /h "%APPVEYOR_BUILD_FOLDER%\Fifthweek.WebJobs.Snapshots\bin\Release" "%WEBJOBS_DEPLOYMENT_TEMP%\snapshots\"
   - msbuild.exe "%APPVEYOR_BUILD_FOLDER%\Fifthweek.Api\Fifthweek.Api.csproj" /nologo /verbosity:m /t:Build /t:pipelinePreDeployCopyAllFilesToOneFolder /p:_PackageTempDir="%API_DEPLOYMENT_TEMP%";AutoParameterizationWebConfigConnectionStrings=false;Configuration=Release /p:SolutionDir="%APPVEYOR_BUILD_FOLDER%\.\\"
 notifications:
   - provider: Slack

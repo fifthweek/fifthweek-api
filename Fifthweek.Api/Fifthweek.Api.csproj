@@ -304,6 +304,10 @@
       <Project>{6cb9eac7-e00a-4dac-b6a4-d14c4503c6cd}</Project>
       <Name>Fifthweek.Logging</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Fifthweek.Payments.Shared\Fifthweek.Payments.Shared.csproj">
+      <Project>{8ef964cc-55f2-40bb-a0ce-f92f23ac8d90}</Project>
+      <Name>Fifthweek.Payments.Shared</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Fifthweek.Shared\Fifthweek.Shared.csproj">
       <Project>{6D12FFBB-38E9-4722-A690-0F0338538EBC}</Project>
       <Name>Fifthweek.Shared</Name>

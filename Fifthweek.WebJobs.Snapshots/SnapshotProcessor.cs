@@ -10,8 +10,6 @@
     using Fifthweek.Payments.SnapshotCreation;
     using Fifthweek.WebJobs.Shared;
 
-    using CreateSnapshotMessage = Fifthweek.Payments.SnapshotCreation.CreateSnapshotMessage;
-
     [AutoConstructor]
     public partial class SnapshotProcessor : ISnapshotProcessor
     {
@@ -22,7 +20,6 @@
 
         public Task CreateSnapshotAsync(
             CreateSnapshotMessage message,
-            ICloudStorageAccount cloudStorageAccount,
             ILogger logger,
             CancellationToken cancellationToken)
         {
@@ -43,7 +40,7 @@
                         return this.createCreatorFreeAccessUsersSnapshot.ExecuteAsync(message.UserId);
                 }
 
-                return Task.FromResult(0);
+                throw new InvalidOperationException("Unknown snapshot type: " + message.SnapshotType);
             }
             catch (Exception t)
             {
@@ -54,7 +51,6 @@
 
         public Task HandlePoisonMessageAsync(
             string message,
-            ICloudStorageAccount cloudStorageAccount,
             ILogger logger,
             CancellationToken cancellationToken)
         {

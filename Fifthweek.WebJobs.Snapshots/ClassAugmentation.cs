@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Linq;
 
-//// Generated on 07/06/2015 17:39:56 (UTC)
-//// Mapped solution in 18.88s
+//// Generated on 12/06/2015 12:35:42 (UTC)
+//// Mapped solution in 10.39s
 
 
 namespace Fifthweek.WebJobs.Snapshots
@@ -19,10 +19,10 @@ namespace Fifthweek.WebJobs.Snapshots
     public partial class SnapshotProcessor 
     {
         public SnapshotProcessor(
-            ICreateSubscriberSnapshotDbStatement createSubscriberSnapshot,
-            ICreateSubscriberChannelsSnapshotDbStatement createSubscriberChannelsSnapshot,
-            ICreateCreatorChannelsSnapshotDbStatement createCreatorChannelsSnapshot,
-            ICreateCreatorFreeAccessUsersSnapshotDbStatement createCreatorFreeAccessUsersSnapshot)
+            Fifthweek.Payments.SnapshotCreation.ICreateSubscriberSnapshotDbStatement createSubscriberSnapshot,
+            Fifthweek.Payments.SnapshotCreation.ICreateSubscriberChannelsSnapshotDbStatement createSubscriberChannelsSnapshot,
+            Fifthweek.Payments.SnapshotCreation.ICreateCreatorChannelsSnapshotDbStatement createCreatorChannelsSnapshot,
+            Fifthweek.Payments.SnapshotCreation.ICreateCreatorFreeAccessUsersSnapshotDbStatement createCreatorFreeAccessUsersSnapshot)
         {
             if (createSubscriberSnapshot == null)
             {

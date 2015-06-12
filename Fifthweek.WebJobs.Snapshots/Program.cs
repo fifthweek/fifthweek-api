@@ -31,30 +31,26 @@ namespace Fifthweek.WebJobs.Snapshots
             new CreateCreatorChannelsSnapshotDbStatement(new GuidCreator(), new SnapshotTimestampCreator(), new FifthweekDbConnectionFactory()),
             new CreateCreatorFreeAccessUsersSnapshotDbStatement(new GuidCreator(), new SnapshotTimestampCreator(), new FifthweekDbConnectionFactory()));
 
-        public static Task CreateThumbnailSetAsync(
+        public static Task CreateSnapshotAsync(
             [QueueTrigger(Payments.Shared.Constants.RequestSnapshotQueueName)] CreateSnapshotMessage message,
-            CloudStorageAccount cloudStorageAccount,
             TextWriter webJobsLogger,
             int dequeueCount,
             CancellationToken cancellationToken)
         {
             return SnapshotProcessor.CreateSnapshotAsync(
                 message,
-                new FifthweekCloudStorageAccount(cloudStorageAccount),
                 CreateLogger(webJobsLogger),
                 cancellationToken);
         }
 
         public static Task ProcessPoisonMessage(
             [QueueTrigger(Payments.Shared.Constants.RequestSnapshotQueueName + "-poison")] string message,
-            CloudStorageAccount cloudStorageAccount,
             TextWriter webJobsLogger,
             int dequeueCount,
             CancellationToken cancellationToken)
         {
             return SnapshotProcessor.HandlePoisonMessageAsync(
                 message,
-                new FifthweekCloudStorageAccount(cloudStorageAccount),
                 CreateLogger(webJobsLogger),
                 cancellationToken);
         }
