@@ -16,7 +16,12 @@
     public partial class CreateSubscriberSnapshotDbStatement : ICreateSubscriberSnapshotDbStatement
     {
         private static readonly string Sql = string.Format(
-            @"INSERT INTO {0} SELECT @Timestamp, @SubscriberId, {1} from {2} WHERE {3}=@SubscriberId",
+            @"INSERT INTO {0} 
+                SELECT t.SubscriberId, t.Timestamp, u.{1}
+                FROM 
+                    (SELECT @Timestamp AS Timestamp, @SubscriberId AS SubscriberId) AS t
+                    LEFT JOIN {2} AS u
+                    ON u.{3} = t.SubscriberId",
             SubscriberSnapshot.Table,
             FifthweekUser.Fields.Email,
             FifthweekUser.Table,
@@ -32,7 +37,7 @@
 
             using (var connection = this.connectionFactory.CreateConnection())
             {
-                await connection.ExecuteAsync(Sql, new { Timestamp = timestamp, SubscriberId = subscriberId });
+                await connection.ExecuteAsync(Sql, new { Timestamp = timestamp, SubscriberId = subscriberId.Value });
             }
         }
     }

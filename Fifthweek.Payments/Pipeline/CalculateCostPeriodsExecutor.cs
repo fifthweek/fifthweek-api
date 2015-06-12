@@ -5,6 +5,7 @@ namespace Fifthweek.Payments.Pipeline
     using System.Linq;
 
     using Fifthweek.CodeGeneration;
+    using Fifthweek.Payments.Services;
     using Fifthweek.Payments.Snapshots;
 
     [AutoConstructor]
@@ -12,7 +13,11 @@ namespace Fifthweek.Payments.Pipeline
     {
         private readonly ICalculateSnapshotCostExecutor costCalculator;
 
-        public IReadOnlyList<CostPeriod> Execute(DateTime startTimeInclusive, DateTime endTimeExclusive, IReadOnlyList<MergedSnapshot> snapshots)
+        public IReadOnlyList<CostPeriod> Execute(
+            DateTime startTimeInclusive, 
+            DateTime endTimeExclusive, 
+            IReadOnlyList<MergedSnapshot> snapshots,
+            IReadOnlyList<CreatorPost> creatorPosts)
         {
             var result = new List<CostPeriod>();
             MergedSnapshot lastSnapshot = null;
@@ -20,7 +25,7 @@ namespace Fifthweek.Payments.Pipeline
             {
                 if (lastSnapshot != null)
                 {
-                    var cost = this.costCalculator.Execute(lastSnapshot);
+                    var cost = this.costCalculator.Execute(lastSnapshot, creatorPosts);
 
                     if (snapshot == null)
                     {

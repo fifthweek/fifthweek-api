@@ -8,6 +8,7 @@
     using System.Threading.Tasks;
 
     using Fifthweek.Api.Persistence.Identity;
+    using Fifthweek.Api.Persistence.Snapshots;
 
     using Microsoft.VisualStudio.TestTools.UnitTesting;
 
@@ -19,6 +20,8 @@
     /// </summary>
     public class TestDatabaseSeed
     {
+        public const int CreatorChannelSnapshots = 1;
+
         private const int EndToEndTestEmails = 10;
         private const int Users = 10;
         private const int Creators = 5;
@@ -47,6 +50,13 @@
         private readonly List<RefreshToken> refreshTokens = new List<RefreshToken>();
         private readonly List<FreeAccessUser> freeAccessUsers = new List<FreeAccessUser>();
         private readonly List<ChannelSubscription> subscriptions = new List<ChannelSubscription>();
+        private readonly List<CreatorChannelsSnapshot> creatorChannelsSnapshots = new List<CreatorChannelsSnapshot>();
+        private readonly List<CreatorChannelsSnapshotItem> creatorChannelsSnapshotItems = new List<CreatorChannelsSnapshotItem>();
+        private readonly List<CreatorFreeAccessUsersSnapshot> creatorFreeAccessUsersSnapshots = new List<CreatorFreeAccessUsersSnapshot>();
+        private readonly List<CreatorFreeAccessUsersSnapshotItem> creatorFreeAccessUsersSnapshotItems = new List<CreatorFreeAccessUsersSnapshotItem>();
+        private readonly List<SubscriberChannelsSnapshot> subscriberChannelsSnapshots = new List<SubscriberChannelsSnapshot>();
+        private readonly List<SubscriberChannelsSnapshotItem> subscriberChannelsSnapshotItems = new List<SubscriberChannelsSnapshotItem>();
+        private readonly List<SubscriberSnapshot> subscriberSnapshots = new List<SubscriberSnapshot>();
 
         public TestDatabaseSeed(Func<IFifthweekDbContext> databaseContextFactory)
         {
@@ -78,6 +88,7 @@
             var stopwatch = Stopwatch.StartNew();
             this.CreateEndToEndTestEmails();
             this.CreateUsers();
+            this.CreateSnapshots();
             Trace.WriteLine(string.Format("Generated in-memory entities in {0}s", Math.Round(stopwatch.Elapsed.TotalSeconds, 2)));
 
             stopwatch = Stopwatch.StartNew();
@@ -119,12 +130,34 @@
                     await connection.InsertAsync(this.refreshTokens, false);
                     await connection.InsertAsync(this.freeAccessUsers, false);
                     await connection.InsertAsync(this.subscriptions, false);
+                    await connection.InsertAsync(this.creatorChannelsSnapshots, false);
+                    await connection.InsertAsync(this.creatorChannelsSnapshotItems, false);
+                    await connection.InsertAsync(this.creatorFreeAccessUsersSnapshots, false);
+                    await connection.InsertAsync(this.creatorFreeAccessUsersSnapshotItems, false);
+                    await connection.InsertAsync(this.subscriberChannelsSnapshots, false);
+                    await connection.InsertAsync(this.subscriberChannelsSnapshotItems, false);
+                    await connection.InsertAsync(this.subscriberSnapshots, false);
                 }
                 finally
                 {
                     connection.Close();
                 }
             }
+        }
+
+        private void CreateSnapshots()
+        {
+            for (int i = 0; i < CreatorChannelSnapshots; i++)
+            {
+                this.creatorChannelsSnapshots.Add(new CreatorChannelsSnapshot(Guid.NewGuid(), DateTime.UtcNow, Guid.NewGuid()));
+                this.creatorChannelsSnapshotItems.Add(new CreatorChannelsSnapshotItem(this.creatorChannelsSnapshots.Last().Id, null, Guid.NewGuid(), 100));
+            }
+
+            this.creatorFreeAccessUsersSnapshots.Add(new CreatorFreeAccessUsersSnapshot(Guid.NewGuid(), DateTime.UtcNow, Guid.NewGuid()));
+            this.creatorFreeAccessUsersSnapshotItems.Add(new CreatorFreeAccessUsersSnapshotItem(this.creatorFreeAccessUsersSnapshots[0].Id, null, "email"));
+            this.subscriberChannelsSnapshots.Add(new SubscriberChannelsSnapshot(Guid.NewGuid(), DateTime.UtcNow, Guid.NewGuid()));
+            this.subscriberChannelsSnapshotItems.Add(new SubscriberChannelsSnapshotItem(this.subscriberChannelsSnapshots[0].Id, null, Guid.NewGuid(), 100, DateTime.UtcNow));
+            this.subscriberSnapshots.Add(new SubscriberSnapshot(DateTime.UtcNow, Guid.NewGuid(), "email"));
         }
 
         private void CreateEndToEndTestEmails()

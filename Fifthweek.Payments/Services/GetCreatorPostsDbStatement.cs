@@ -17,8 +17,9 @@
     {
         private static readonly string Sql = string.Format(
             @"SELECT {0}, {1} FROM {2} 
-              WHERE {0} in @Channels AND {1} >= StartTimestampInclusive AND {1} < EndTimestampExclusive
-              AND {3} < {1}",
+              WHERE {0} in @Channels AND {1} >= @StartTimestampInclusive AND {1} < @EndTimestampExclusive
+              AND {3} < {1}
+              ORDER BY {1}",
             Post.Fields.ChannelId,
             Post.Fields.LiveDate,
             Post.Table,
@@ -26,7 +27,7 @@
 
         private readonly IFifthweekDbConnectionFactory connectionFactory;
 
-        public async Task<IReadOnlyList<CreatorPost>> ExecuteAsync(UserId creatorId, DateTime startTimestampInclusive, DateTime endTimestampExclusive)
+        public async Task<IReadOnlyList<CreatorPost>> ExecuteAsync(IReadOnlyList<ChannelId> channelIds, DateTime startTimestampInclusive, DateTime endTimestampExclusive)
         {
             using (var connection = this.connectionFactory.CreateConnection())
             {
@@ -34,12 +35,15 @@
                     Sql,
                     new
                     {
-                        CreatorId = creatorId.Value,
+                        Channels = channelIds.Select(v => v.Value),
                         StartTimestampInclusive = startTimestampInclusive,
                         EndTimestampExclusive = endTimestampExclusive
                     });
 
-                return databaseResult.Select(v => new CreatorPost(new ChannelId(v.ChannelId), v.LiveDate)).ToList();
+                return databaseResult.Select(
+                    v => new CreatorPost(
+                        new ChannelId(v.ChannelId), 
+                        DateTime.SpecifyKind(v.LiveDate, DateTimeKind.Utc))).ToList();
             }
         }
 

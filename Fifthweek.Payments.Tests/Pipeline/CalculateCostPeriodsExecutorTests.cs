@@ -7,6 +7,7 @@
     using Fifthweek.Api.Channels.Shared;
     using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.Payments.Pipeline;
+    using Fifthweek.Payments.Services;
     using Fifthweek.Payments.Snapshots;
 
     using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -21,6 +22,11 @@
         private static readonly UserId CreatorId1 = new UserId(Guid.NewGuid());
         private static readonly UserId SubscriberId1 = new UserId(Guid.NewGuid());
 
+        private static readonly List<CreatorPost> creatorPosts = new List<CreatorPost>
+        {
+            new CreatorPost(new ChannelId(Guid.NewGuid()), Now.AddDays(1)),
+        };
+
         private Mock<ICalculateSnapshotCostExecutor> costCalculator;
         private CalculateCostPeriodsExecutor target;
 
@@ -34,7 +40,7 @@
         [TestMethod]
         public void WhenNoSnapshots_ItShouldReturnEmptyList()
         {
-            var result = this.target.Execute(Now, Now.AddDays(7), new List<MergedSnapshot>());
+            var result = this.target.Execute(Now, Now.AddDays(7), new List<MergedSnapshot>(), creatorPosts);
             CollectionAssert.AreEqual(new List<CostPeriod>(), result.ToList());
         }
 
@@ -56,15 +62,15 @@
                     defaultSubscriberSnapshot),
             };
 
-            this.costCalculator.Setup(v => v.Execute(It.IsAny<MergedSnapshot>()))
-                .Returns<MergedSnapshot>(s => (int)Math.Round((s.Timestamp - Now).TotalHours + 10));
+            this.costCalculator.Setup(v => v.Execute(It.IsAny<MergedSnapshot>(), creatorPosts))
+                .Returns<MergedSnapshot, IReadOnlyList<CreatorPost>>((s, p) => (int)Math.Round((s.Timestamp - Now).TotalHours + 10));
 
             var expectedOutput = new List<CostPeriod> 
             {
                 new CostPeriod(Now.AddHours(5), Now.AddHours(10), 15),
             };
 
-            var result = this.target.Execute(Now, Now.AddHours(10), mergedSnapshots);
+            var result = this.target.Execute(Now, Now.AddHours(10), mergedSnapshots, creatorPosts);
 
             CollectionAssert.AreEqual(expectedOutput, result.ToList());
         }
@@ -135,8 +141,8 @@
                     (SubscriberSnapshot)snapshots[6]),
             };
 
-            this.costCalculator.Setup(v => v.Execute(It.IsAny<MergedSnapshot>()))
-                .Returns<MergedSnapshot>(s => (int)Math.Round((s.Timestamp - Now).TotalHours + 10));
+            this.costCalculator.Setup(v => v.Execute(It.IsAny<MergedSnapshot>(), creatorPosts))
+                .Returns<MergedSnapshot, IReadOnlyList<CreatorPost>>((s, p) => (int)Math.Round((s.Timestamp - Now).TotalHours + 10));
 
             var expectedOutput = new List<CostPeriod> 
             {
@@ -149,7 +155,7 @@
                 new CostPeriod(Now.AddHours(6), Now.AddHours(10), 16),
             };
 
-            var result = this.target.Execute(Now, Now.AddHours(10), mergedSnapshots);
+            var result = this.target.Execute(Now, Now.AddHours(10), mergedSnapshots, creatorPosts);
 
             CollectionAssert.AreEqual(expectedOutput, result.ToList());
         }

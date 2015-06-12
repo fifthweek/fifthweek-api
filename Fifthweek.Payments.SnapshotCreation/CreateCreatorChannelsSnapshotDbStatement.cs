@@ -41,7 +41,7 @@ namespace Fifthweek.Payments.SnapshotCreation
 
             using (var connection = this.connectionFactory.CreateConnection())
             {
-                await connection.ExecuteAsync(Sql, new { RecordId = recordId, Timestamp = timestamp, CreatorId = creatorId });
+                await connection.ExecuteAsync(Sql, new { RecordId = recordId, Timestamp = timestamp, CreatorId = creatorId.Value });
             }
         }
     }

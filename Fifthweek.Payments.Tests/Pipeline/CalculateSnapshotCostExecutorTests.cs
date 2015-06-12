@@ -6,6 +6,7 @@
     using Fifthweek.Api.Channels.Shared;
     using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.Payments.Pipeline;
+    using Fifthweek.Payments.Services;
     using Fifthweek.Payments.Snapshots;
 
     using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -23,6 +24,12 @@
         private static readonly ChannelId ChannelId3 = new ChannelId(Guid.NewGuid());
 
         private static readonly CreatorFreeAccessUsersSnapshot EmptyGuestList = CreatorFreeAccessUsersSnapshot.Default(Now, CreatorId1);
+        private static readonly List<CreatorPost> validCreatorPosts = new List<CreatorPost>
+        {
+            new CreatorPost(ChannelId1, Now.AddDays(1)),
+            new CreatorPost(ChannelId2, Now.AddDays(1)),
+            new CreatorPost(ChannelId3, Now.AddDays(1)),
+        };
 
         private CalculateSnapshotCostExecutor target;
 
@@ -49,7 +56,8 @@
                     new SubscriberSnapshot(
                         Now,
                         SubscriberId1,
-                        null)));
+                        null)),
+                validCreatorPosts);
 
             Assert.AreEqual(0, result);
         }
@@ -74,7 +82,8 @@
                     new SubscriberSnapshot(
                         Now,
                         SubscriberId1,
-                        "b@b.com")));
+                        "b@b.com")),
+                validCreatorPosts);
 
             Assert.AreEqual(0, result);
         }
@@ -99,7 +108,8 @@
                     new SubscriberSnapshot(
                         Now,
                         SubscriberId1,
-                        "b@b.com")));
+                        "b@b.com")),
+                validCreatorPosts);
 
             Assert.AreEqual(100, result);
         }
@@ -121,7 +131,91 @@
                     new SubscriberSnapshot(
                         Now,
                         SubscriberId1,
-                        null)));
+                        null)),
+                validCreatorPosts);
+
+            Assert.AreEqual(100, result);
+        }
+
+        [TestMethod]
+        public void WhenSubscribedToChannel_AndCreatorDidNotPostToChannelInBillingWeek_ItShouldReturnCorrectCost()
+        {
+            var result = this.target.Execute(
+                new MergedSnapshot(
+                    new CreatorChannelsSnapshot(
+                        Now,
+                        CreatorId1,
+                        new List<CreatorChannelsSnapshotItem> { new CreatorChannelsSnapshotItem(ChannelId1, 100) }),
+                    EmptyGuestList,
+                    new SubscriberChannelsSnapshot(
+                        Now,
+                        SubscriberId1,
+                        new List<SubscriberChannelsSnapshotItem> { new SubscriberChannelsSnapshotItem(ChannelId1, 100, Now) }),
+                    new SubscriberSnapshot(
+                        Now,
+                        SubscriberId1,
+                        null)),
+                new List<CreatorPost>
+                {
+                    new CreatorPost(ChannelId1, Now.AddTicks(-1)),
+                    new CreatorPost(ChannelId1, Now.AddDays(7)),
+                });
+
+            Assert.AreEqual(0, result);
+        }
+
+        [TestMethod]
+        public void WhenSubscribedToChannel_AndCreatorDidPostToChannelInBillingWeek_ItShouldReturnCorrectCost1()
+        {
+            var result = this.target.Execute(
+                new MergedSnapshot(
+                    new CreatorChannelsSnapshot(
+                        Now,
+                        CreatorId1,
+                        new List<CreatorChannelsSnapshotItem> { new CreatorChannelsSnapshotItem(ChannelId1, 100) }),
+                    EmptyGuestList,
+                    new SubscriberChannelsSnapshot(
+                        Now,
+                        SubscriberId1,
+                        new List<SubscriberChannelsSnapshotItem> { new SubscriberChannelsSnapshotItem(ChannelId1, 100, Now) }),
+                    new SubscriberSnapshot(
+                        Now,
+                        SubscriberId1,
+                        null)),
+                new List<CreatorPost>
+                {
+                    new CreatorPost(ChannelId1, Now.AddTicks(-1)),
+                    new CreatorPost(ChannelId1, Now),
+                    new CreatorPost(ChannelId1, Now.AddDays(7)),
+                });
+
+            Assert.AreEqual(100, result);
+        }
+
+        [TestMethod]
+        public void WhenSubscribedToChannel_AndCreatorDidPostToChannelInBillingWeek_ItShouldReturnCorrectCost2()
+        {
+            var result = this.target.Execute(
+                new MergedSnapshot(
+                    new CreatorChannelsSnapshot(
+                        Now,
+                        CreatorId1,
+                        new List<CreatorChannelsSnapshotItem> { new CreatorChannelsSnapshotItem(ChannelId1, 100) }),
+                    EmptyGuestList,
+                    new SubscriberChannelsSnapshot(
+                        Now,
+                        SubscriberId1,
+                        new List<SubscriberChannelsSnapshotItem> { new SubscriberChannelsSnapshotItem(ChannelId1, 100, Now) }),
+                    new SubscriberSnapshot(
+                        Now,
+                        SubscriberId1,
+                        null)),
+                new List<CreatorPost>
+                {
+                    new CreatorPost(ChannelId1, Now.AddTicks(-1)),
+                    new CreatorPost(ChannelId1, Now.AddDays(7).AddTicks(-1)),
+                    new CreatorPost(ChannelId1, Now.AddDays(7)),
+                });
 
             Assert.AreEqual(100, result);
         }
@@ -152,7 +246,8 @@
                     new SubscriberSnapshot(
                         Now,
                         SubscriberId1,
-                        null)));
+                        null)),
+                validCreatorPosts);
 
             Assert.AreEqual(110, result);
         }
@@ -183,7 +278,8 @@
                     new SubscriberSnapshot(
                         Now,
                         SubscriberId1,
-                        null)));
+                        null)),
+                validCreatorPosts);
 
             Assert.AreEqual(110, result);
         }
@@ -214,7 +310,8 @@
                     new SubscriberSnapshot(
                         Now,
                         SubscriberId1,
-                        null)));
+                        null)),
+                validCreatorPosts);
 
             Assert.AreEqual(100, result);
         }
@@ -248,7 +345,8 @@
                     new SubscriberSnapshot(
                         Now,
                         SubscriberId1,
-                        null)));
+                        null)),
+                validCreatorPosts);
 
             Assert.AreEqual(150, result);
         }

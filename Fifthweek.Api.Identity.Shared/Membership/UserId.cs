@@ -8,5 +8,10 @@
     public partial class UserId
     {
         public Guid Value { get; private set; }
+
+        public static UserId Random()
+        {
+            return new UserId(Guid.NewGuid());
+        }
     }
 }

@@ -54,7 +54,9 @@
                     });
 
                 return databaseResult
-                    .Select(v => new Snapshots.SubscriberSnapshot(v.Timestamp, new UserId(v.SubscriberId), v.Email))
+                    .Select(v => new Snapshots.SubscriberSnapshot(
+                        DateTime.SpecifyKind(v.Timestamp, DateTimeKind.Utc), 
+                        new UserId(v.SubscriberId), v.Email))
                     .ToList();
             }
         }

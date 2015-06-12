@@ -21,14 +21,16 @@
             };
         }
 
-        public static Task CreateTestUserAsync(this IFifthweekDbContext databaseContext, Guid newUserId)
+        public static async Task<FifthweekUser> CreateTestUserAsync(this IFifthweekDbContext databaseContext, Guid newUserId)
         {
             var random = new Random();
             var creator = UserTests.UniqueEntity(random);
             creator.Id = newUserId;
 
             databaseContext.Users.Add(creator);
-            return databaseContext.SaveChangesAsync();
+            await databaseContext.SaveChangesAsync();
+
+            return creator;
         }
     }
 }

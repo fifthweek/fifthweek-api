@@ -34,8 +34,8 @@
                     continue;
                 }
 
-                var subscribedUserIds = await this.getAllSubscribedUsersDbStatement.ExecuteAsync(allChannelIds);
-                if (subscribedUserIds.Count == 0)
+                var subscriberIds = await this.getAllSubscribedUsersDbStatement.ExecuteAsync(allChannelIds);
+                if (subscriberIds.Count == 0)
                 {
                     continue;
                 }
@@ -45,9 +45,9 @@
                 // Add a week as we need to know if there were any posts before the subscriber's
                 // billing week end date, which may be up to a week after the requested end time.
                 var postsEndTimeExclusive = endTimeExclusive.AddDays(7);
-                var posts = await this.getCreatorPostsDbStatement.ExecuteAsync(creatorId, startTimeInclusive, postsEndTimeExclusive);
+                var posts = await this.getCreatorPostsDbStatement.ExecuteAsync(allChannelIds, startTimeInclusive, postsEndTimeExclusive);
 
-                foreach (var subscriberId in subscribedUserIds)
+                foreach (var subscriberId in subscriberIds)
                 {
                     var subscriberChannelsSnapshots = await this.getSubscriberChannelsSnapshotsDbStatement.ExecuteAsync(subscriberId, startTimeInclusive, endTimeExclusive);
                     var subscriberSnapshots = await this.getSubscriberSnapshotsDbStatement.ExecuteAsync(subscriberId, startTimeInclusive, endTimeExclusive);
@@ -63,6 +63,7 @@
                     // Process user.
                     var cost = this.subscriberPaymentPipeline.CalculatePayment(
                         orderedSnapshots,
+                        posts,
                         subscriberId,
                         creatorId,
                         startTimeInclusive,

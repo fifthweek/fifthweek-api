@@ -70,7 +70,7 @@
                                                item.PriceInUsCentsPerWeek.Value)).ToList();
 
                     snapshots.Add(new Snapshots.CreatorChannelsSnapshot(
-                        firstItem.Timestamp,
+                        DateTime.SpecifyKind(firstItem.Timestamp, DateTimeKind.Utc),
                         new UserId(firstItem.CreatorId),
                         creatorChannels));
                 }

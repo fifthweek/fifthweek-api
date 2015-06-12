@@ -8,5 +8,10 @@
     public partial class ChannelId
     {
         public Guid Value { get; private set; }
+
+        public static ChannelId Random()
+        {
+            return new ChannelId(Guid.NewGuid());
+        }
     }
 }

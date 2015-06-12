@@ -10,6 +10,7 @@
     {
         AggregateCostSummary CalculatePayment(
             IReadOnlyList<ISnapshot> snapshots,
+            IReadOnlyList<CreatorPost> creatorPosts,
             UserId subscriberId,
             UserId creatorId,
             DateTime startTimeInclusive,

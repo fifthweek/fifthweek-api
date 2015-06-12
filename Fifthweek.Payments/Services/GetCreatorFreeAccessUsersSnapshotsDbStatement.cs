@@ -69,7 +69,7 @@
                            select item.Email).ToList();
 
                     snapshots.Add(new Snapshots.CreatorFreeAccessUsersSnapshot(
-                        firstItem.Timestamp,
+                        DateTime.SpecifyKind(firstItem.Timestamp, DateTimeKind.Utc),
                         new UserId(firstItem.CreatorId),
                         creatorFreeAccessUsers));
                 }

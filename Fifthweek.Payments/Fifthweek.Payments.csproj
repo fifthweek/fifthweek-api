@@ -54,10 +54,12 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>ClassAugmentation.tt</DependentUpon>
     </Compile>
-    <Compile Include="Constants.cs" />
-    <Compile Include="CostPeriod.cs" />
+    <Compile Include="Pipeline\AddSnapshotsForBillingEndDatesExecutor.cs" />
     <Compile Include="Pipeline\AggregateCostPeriodsExecutor.cs" />
+    <Compile Include="Pipeline\BillingWeekUtilities.cs" />
     <Compile Include="Pipeline\CalculateCostPeriodsExecutor.cs" />
+    <Compile Include="Pipeline\CostPeriod.cs" />
+    <Compile Include="Pipeline\IAddSnapshotsForBillingEndDatesExecutor.cs" />
     <Compile Include="Pipeline\IAggregateCostPeriodsExecutor.cs" />
     <Compile Include="Pipeline\ICalculateCostPeriodsExecutor.cs" />
     <Compile Include="Pipeline\ICalculateSnapshotCostExecutor.cs" />

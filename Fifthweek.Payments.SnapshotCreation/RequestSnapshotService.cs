@@ -6,7 +6,7 @@
     using Fifthweek.Api.Azure;
     using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.CodeGeneration;
-    using Fifthweek.Payments.Shared;
+    using Fifthweek.Shared;
 
     [AutoConstructor]
     public partial class RequestSnapshotService : IRequestSnapshotService
@@ -17,8 +17,10 @@
 
         public Task ExecuteAsync(UserId userId, SnapshotType snapshotType)
         {
+            userId.AssertNotNull("userId");
+
             return this.queueService.AddMessageToQueueAsync(
-                Constants.RequestSnapshotQueueName,
+                Shared.Constants.RequestSnapshotQueueName,
                 new CreateSnapshotMessage(userId, snapshotType),
                 null,
                 SnapshotDelay);

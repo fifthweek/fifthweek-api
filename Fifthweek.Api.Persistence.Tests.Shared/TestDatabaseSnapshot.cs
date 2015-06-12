@@ -39,6 +39,13 @@
             this.tables.Add(this.Load(databaseContext => databaseContext.RefreshTokens));
             this.tables.Add(this.Load(databaseContext => databaseContext.FreeAccessUsers));
             this.tables.Add(this.Load(databaseContext => databaseContext.ChannelSubscriptions));
+            this.tables.Add(this.Load(databaseContext => databaseContext.CreatorChannelsSnapshots));
+            this.tables.Add(this.Load(databaseContext => databaseContext.CreatorChannelsSnapshotItems));
+            this.tables.Add(this.Load(databaseContext => databaseContext.CreatorFreeAccessUsersSnapshots));
+            this.tables.Add(this.Load(databaseContext => databaseContext.CreatorFreeAccessUsersSnapshotItems));
+            this.tables.Add(this.Load(databaseContext => databaseContext.SubscriberChannelsSnapshots));
+            this.tables.Add(this.Load(databaseContext => databaseContext.SubscriberChannelsSnapshotItems));
+            this.tables.Add(this.Load(databaseContext => databaseContext.SubscriberSnapshots));
 
             Trace.WriteLine(string.Format("Snapshot taken in {0}s", Math.Round(stopwatch.Elapsed.TotalSeconds, 2)));
         }

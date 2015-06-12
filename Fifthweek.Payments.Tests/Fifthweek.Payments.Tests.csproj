@@ -36,10 +36,28 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\EntityFramework.6.1.0\lib\net45\EntityFramework.dll</HintPath>
+    </Reference>
+    <Reference Include="EntityFramework.SqlServer">
+      <HintPath>..\packages\EntityFramework.6.1.0\lib\net45\EntityFramework.SqlServer.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.AspNet.Identity.Core, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Microsoft.AspNet.Identity.Core.2.1.0\lib\net45\Microsoft.AspNet.Identity.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.AspNet.Identity.EntityFramework, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Microsoft.AspNet.Identity.EntityFramework.2.1.0\lib\net45\Microsoft.AspNet.Identity.EntityFramework.dll</HintPath>
+    </Reference>
     <Reference Include="Moq">
       <HintPath>..\packages\Moq.4.2.1409.1722\lib\net40\Moq.dll</HintPath>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
   </ItemGroup>
   <Choose>
     <When Condition="('$(VisualStudioVersion)' == '10.0' or '$(VisualStudioVersion)' == '') and '$(TargetFrameworkVersion)' == 'v3.5'">
@@ -54,7 +72,9 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
+    <Compile Include="Pipeline\AddSnapshotsForBillingEndDatesExecutorTests.cs" />
     <Compile Include="Pipeline\AggregateCostPeriodsExecutorTests.cs" />
+    <Compile Include="Pipeline\BillingWeekUtilitiesTests.cs" />
     <Compile Include="Pipeline\CalculateCostPeriodsExecutorTests.cs" />
     <Compile Include="Pipeline\CalculateSnapshotCostExecutorTests.cs" />
     <Compile Include="Pipeline\LoadSnapshotsExecutorTests.cs" />
@@ -63,10 +83,33 @@
     <Compile Include="Pipeline\RollForwardSubscriptionsExecutorTests.cs" />
     <Compile Include="Pipeline\TrimSnapshotsExecutorTests.cs" />
     <Compile Include="Pipeline\VerifySnapshotsExecutorTests.cs" />
-    <Compile Include="SubscriberPaymentPipelineTests.cs" />
+    <Compile Include="Services\GetAllCreatorsDbStatementTests.cs" />
+    <Compile Include="Services\GetAllSubscribedUsersDbStatementTests.cs" />
+    <Compile Include="Services\GetCreatorChannelsSnapshotsDbStatementTests.cs" />
+    <Compile Include="Services\GetCreatorFreeAccessUsersSnapshotsDbStatementTests.cs" />
+    <Compile Include="Services\GetCreatorPostsDbStatementTests.cs" />
+    <Compile Include="Services\GetSubscriberChannelsSnapshotsDbStatementTests.cs" />
+    <Compile Include="Services\GetSubscriberSnapshotsDbStatementTests.cs" />
+    <Compile Include="Services\PaymentProcessorTests.cs" />
+    <Compile Include="SnapshotCreation\CreateCreatorChannelsSnapshotDbStatementTests.cs" />
+    <Compile Include="SnapshotCreation\CreateCreatorFreeAccessUsersSnapshotDbStatementTests.cs" />
+    <Compile Include="SnapshotCreation\CreateSubscriberChannelsSnapshotDbStatementTests.cs" />
+    <Compile Include="SnapshotCreation\CreateSubscriberSnapshotDbStatementTests.cs" />
+    <Compile Include="SnapshotCreation\RequestSnapshotServiceTests.cs" />
+    <Compile Include="SnapshotCreation\SnapshotTimestampCreatorTests.cs" />
+    <Compile Include="Snapshots\MergedSnapshotTests.cs" />
+    <Compile Include="Services\SubscriberPaymentPipelineTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Fifthweek.Api.Azure\Fifthweek.Api.Azure.csproj">
+      <Project>{ABC43617-3AAA-4B7A-B4DC-D10E023F1846}</Project>
+      <Name>Fifthweek.Api.Azure</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Fifthweek.Api.Blogs.Shared\Fifthweek.Api.Blogs.Shared.csproj">
+      <Project>{B2D572A4-86C5-4F16-AB6A-CE87A63E08DD}</Project>
+      <Name>Fifthweek.Api.Blogs.Shared</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Fifthweek.Api.Channels.Shared\Fifthweek.Api.Channels.Shared.csproj">
       <Project>{DF1BB4E7-5315-4E5C-BA73-6DFA4D9E7564}</Project>
       <Name>Fifthweek.Api.Channels.Shared</Name>
@@ -75,6 +118,22 @@
       <Project>{1B07E9CC-1B0E-49D7-96D6-0F8C58A7C0CA}</Project>
       <Name>Fifthweek.Api.Identity.Shared</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Fifthweek.Api.Persistence.Tests.Shared\Fifthweek.Api.Persistence.Tests.Shared.csproj">
+      <Project>{ECDE2C4E-7DD8-4210-8E09-D5762C88B3CB}</Project>
+      <Name>Fifthweek.Api.Persistence.Tests.Shared</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Fifthweek.Api.Persistence\Fifthweek.Api.Persistence.csproj">
+      <Project>{9C18BEE3-FAB5-4A00-8A94-A1FAEA370175}</Project>
+      <Name>Fifthweek.Api.Persistence</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Fifthweek.Api.Posts.Shared\Fifthweek.Api.Posts.Shared.csproj">
+      <Project>{493FC9F2-6A6B-46C0-9BC9-83F8A3B60F9E}</Project>
+      <Name>Fifthweek.Api.Posts.Shared</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Fifthweek.Payments.Shared\Fifthweek.Payments.Shared.csproj">
+      <Project>{8ef964cc-55f2-40bb-a0ce-f92f23ac8d90}</Project>
+      <Name>Fifthweek.Payments.Shared</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Fifthweek.Payments.SnapshotCreation\Fifthweek.Payments.SnapshotCreation.csproj">
       <Project>{81bcf480-639c-42c6-adcf-2e5c97dee750}</Project>
       <Name>Fifthweek.Payments.SnapshotCreation</Name>
@@ -82,6 +141,10 @@
     <ProjectReference Include="..\Fifthweek.Payments\Fifthweek.Payments.csproj">
       <Project>{9C64B84A-264B-44BC-8D47-BCC52B88E0AC}</Project>
       <Name>Fifthweek.Payments</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Fifthweek.Shared\Fifthweek.Shared.csproj">
+      <Project>{6D12FFBB-38E9-4722-A690-0F0338538EBC}</Project>
+      <Name>Fifthweek.Shared</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

@@ -18,6 +18,7 @@
             builder.RegisterType<RollForwardSubscriptionsExecutor>().As<IRollForwardSubscriptionsExecutor>();
             builder.RegisterType<TrimSnapshotsExecutor>().As<ITrimSnapshotsExecutor>();
             builder.RegisterType<VerifySnapshotsExecutor>().As<IVerifySnapshotsExecutor>();
+            builder.RegisterType<AddSnapshotsForBillingEndDatesExecutor>().As<IAddSnapshotsForBillingEndDatesExecutor>();
 
             builder.RegisterType<GetAllCreatorsDbStatement>().As<IGetAllCreatorsDbStatement>();
             builder.RegisterType<GetAllSubscribedUsersDbStatement>().As<IGetAllSubscribedUsersDbStatement>();

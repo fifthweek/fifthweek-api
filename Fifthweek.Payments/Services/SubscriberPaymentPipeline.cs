@@ -17,11 +17,13 @@
         private readonly IRollBackSubscriptionsExecutor rollBackSubscriptions;
         private readonly IRollForwardSubscriptionsExecutor rollForwardSubscriptions;
         private readonly ITrimSnapshotsExecutor trimSnapshots;
+        private readonly IAddSnapshotsForBillingEndDatesExecutor addSnapshotsForBillingEndDates;
         private readonly ICalculateCostPeriodsExecutor calculateCostPeriods;
         private readonly IAggregateCostPeriodsExecutor aggregateCostPeriods;
 
         public AggregateCostSummary CalculatePayment(
             IReadOnlyList<ISnapshot> snapshots,
+            IReadOnlyList<CreatorPost> creatorPosts,
             UserId subscriberId,
             UserId creatorId,
             DateTime startTimeInclusive,
@@ -32,7 +34,8 @@
             var rolledBackSnapshots = this.rollBackSubscriptions.Execute(mergedSnapshots);
             var rolledForwardSnapshots = this.rollForwardSubscriptions.Execute(endTimeExclusive, rolledBackSnapshots);
             var trimmedSnapshots = this.trimSnapshots.Execute(startTimeInclusive, rolledForwardSnapshots);
-            var costPeriods = this.calculateCostPeriods.Execute(startTimeInclusive, endTimeExclusive, trimmedSnapshots);
+            var snapshotsWithBilling = this.addSnapshotsForBillingEndDates.Execute(trimmedSnapshots);
+            var costPeriods = this.calculateCostPeriods.Execute(startTimeInclusive, endTimeExclusive, snapshotsWithBilling, creatorPosts);
             var aggregateCost = this.aggregateCostPeriods.Execute(costPeriods);
             return aggregateCost;
         }

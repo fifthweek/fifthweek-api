@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Linq;
 
-//// Generated on 08/06/2015 15:22:15 (UTC)
-//// Mapped solution in 15.37s
+//// Generated on 12/06/2015 11:03:07 (UTC)
+//// Mapped solution in 10.57s
 
 
 namespace Fifthweek.Api.Persistence
@@ -787,11 +787,6 @@ namespace Fifthweek.Api.Persistence.Snapshots
             if (subscriberId == null)
             {
                 throw new ArgumentNullException("subscriberId");
-            }
-
-            if (email == null)
-            {
-                throw new ArgumentNullException("email");
             }
 
             this.Timestamp = timestamp;

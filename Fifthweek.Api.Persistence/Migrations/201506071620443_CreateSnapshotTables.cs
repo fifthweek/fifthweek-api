@@ -82,7 +82,7 @@ namespace Fifthweek.Api.Persistence.Migrations
                     {
                         SubscriberId = c.Guid(nullable: false),
                         Timestamp = c.DateTime(nullable: false),
-                        Email = c.String(nullable: false),
+                        Email = c.String(),
                     })
                 .PrimaryKey(t => new { t.SubscriberId, t.Timestamp });
             

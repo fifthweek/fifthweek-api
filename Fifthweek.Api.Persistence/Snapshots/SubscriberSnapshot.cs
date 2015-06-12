@@ -19,7 +19,7 @@
         [Required, Key, Column(Order = 0)] // Not a foreign key.
         public Guid SubscriberId { get; set; }
 
-        [Required]
+        [Optional]
         public string Email { get; set; }
     }
 }

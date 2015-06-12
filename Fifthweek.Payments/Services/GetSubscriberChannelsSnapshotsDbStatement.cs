@@ -70,10 +70,10 @@
                                               select new Snapshots.SubscriberChannelsSnapshotItem(
                                                 new ChannelId(item.ChannelId.Value),
                                                 item.AcceptedPriceInUsCentsPerWeek.Value,
-                                                item.SubscriptionStartDate.Value)).ToList();
+                                                DateTime.SpecifyKind(item.SubscriptionStartDate.Value, DateTimeKind.Utc))).ToList();
 
                     snapshots.Add(new Snapshots.SubscriberChannelsSnapshot(
-                        firstItem.Timestamp,
+                        DateTime.SpecifyKind(firstItem.Timestamp, DateTimeKind.Utc),
                         new UserId(firstItem.SubscriberId),
                         subscriberChannels));
                 }

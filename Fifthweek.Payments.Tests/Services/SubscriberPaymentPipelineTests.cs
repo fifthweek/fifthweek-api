@@ -1,4 +1,4 @@
-﻿namespace Fifthweek.Payments.Tests
+﻿namespace Fifthweek.Payments.Tests.Services
 {
     using System;
     using System.Collections.Generic;
@@ -28,6 +28,7 @@
         private Mock<ITrimSnapshotsExecutor> trimSnapshots;
         private Mock<ICalculateCostPeriodsExecutor> calculateCostPeriods;
         private Mock<IAggregateCostPeriodsExecutor> aggregateCostPeriods;
+        private Mock<IAddSnapshotsForBillingEndDatesExecutor> addSnapshotsForBillingEndDates;
         private SubscriberPaymentPipeline target;
 
         [TestInitialize]
@@ -40,12 +41,14 @@
             this.trimSnapshots = new Mock<ITrimSnapshotsExecutor>(MockBehavior.Strict);
             this.calculateCostPeriods = new Mock<ICalculateCostPeriodsExecutor>(MockBehavior.Strict);
             this.aggregateCostPeriods = new Mock<IAggregateCostPeriodsExecutor>(MockBehavior.Strict);
+            this.addSnapshotsForBillingEndDates = new Mock<IAddSnapshotsForBillingEndDatesExecutor>(MockBehavior.Strict);
             this.target = new SubscriberPaymentPipeline(
                 this.verifySnapshots.Object,
                 this.mergeSnapshots.Object,
                 this.rollBackSubscriptions.Object,
                 this.rollForwardSubscriptions.Object,
                 this.trimSnapshots.Object,
+                this.addSnapshotsForBillingEndDates.Object,
                 this.calculateCostPeriods.Object,
                 this.aggregateCostPeriods.Object);
         }
@@ -54,6 +57,7 @@
         public void ItShouldCallServicesInOrder()
         {
             var snapshots = new List<ISnapshot> { CreatorChannelsSnapshot.Default(Now, new UserId(Guid.NewGuid())) };
+            var creatorPosts = new List<CreatorPost> { new CreatorPost(new Api.Channels.Shared.ChannelId(Guid.NewGuid()), Now) };
 
             this.verifySnapshots.Setup(v => v.Execute(StartTimeInclusive, EndTimeExclusive, SubscriberId1, CreatorId1, snapshots));
 
@@ -70,14 +74,17 @@
             var trimmedSnapshots = CreateMergedSnapshotResult();
             this.trimSnapshots.Setup(v => v.Execute(StartTimeInclusive, rolledForwardSnapshots)).Returns(trimmedSnapshots);
 
+            var snapshotsWithBillingDates = CreateMergedSnapshotResult();
+            this.addSnapshotsForBillingEndDates.Setup(v => v.Execute(trimmedSnapshots)).Returns(snapshotsWithBillingDates);
+
             var costPeriods = new List<CostPeriod> { new CostPeriod(StartTimeInclusive, EndTimeExclusive, 101) };
-            this.calculateCostPeriods.Setup(v => v.Execute(StartTimeInclusive, EndTimeExclusive, trimmedSnapshots))
+            this.calculateCostPeriods.Setup(v => v.Execute(StartTimeInclusive, EndTimeExclusive, snapshotsWithBillingDates, creatorPosts))
                 .Returns(costPeriods);
 
             var aggregateCost = new AggregateCostSummary(201);
             this.aggregateCostPeriods.Setup(v => v.Execute(costPeriods)).Returns(aggregateCost);
 
-            var result = this.target.CalculatePayment(snapshots, SubscriberId1, CreatorId1, StartTimeInclusive, EndTimeExclusive);
+            var result = this.target.CalculatePayment(snapshots, creatorPosts, SubscriberId1, CreatorId1, StartTimeInclusive, EndTimeExclusive);
 
             Assert.AreEqual(aggregateCost, result);
         }

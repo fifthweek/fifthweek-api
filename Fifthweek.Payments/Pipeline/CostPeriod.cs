@@ -1,4 +1,4 @@
-namespace Fifthweek.Payments
+namespace Fifthweek.Payments.Pipeline
 {
     using System;
 

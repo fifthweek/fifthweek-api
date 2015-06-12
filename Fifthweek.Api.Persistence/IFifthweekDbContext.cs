@@ -6,6 +6,7 @@
     using System.Threading.Tasks;
 
     using Fifthweek.Api.Persistence.Identity;
+    using Fifthweek.Api.Persistence.Snapshots;
 
     public interface IFifthweekDbContext : IDisposable
     {
@@ -34,6 +35,20 @@
         IDbSet<FreeAccessUser> FreeAccessUsers { get; set; }
 
         IDbSet<ChannelSubscription> ChannelSubscriptions { get; set; }
+
+        IDbSet<SubscriberSnapshot> SubscriberSnapshots { get; set; }
+
+        IDbSet<SubscriberChannelsSnapshot> SubscriberChannelsSnapshots { get; set; }
+
+        IDbSet<SubscriberChannelsSnapshotItem> SubscriberChannelsSnapshotItems { get; set; }
+
+        IDbSet<CreatorChannelsSnapshot> CreatorChannelsSnapshots { get; set; }
+
+        IDbSet<CreatorChannelsSnapshotItem> CreatorChannelsSnapshotItems { get; set; }
+
+        IDbSet<CreatorFreeAccessUsersSnapshot> CreatorFreeAccessUsersSnapshots { get; set; }
+
+        IDbSet<CreatorFreeAccessUsersSnapshotItem> CreatorFreeAccessUsersSnapshotItems { get; set; }
 
         Task<int> SaveChangesAsync();
 
