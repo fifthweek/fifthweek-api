@@ -9,6 +9,7 @@
     using Fifthweek.Api.Persistence;
     using Fifthweek.Api.Persistence.Identity;
     using Fifthweek.CodeGeneration;
+    using Fifthweek.Payments.SnapshotCreation;
     using Fifthweek.Shared;
 
     [AutoConstructor]
@@ -35,6 +36,7 @@
         private readonly IUserManager userManager;
 
         private readonly IFifthweekDbConnectionFactory connectionFactory;
+        private readonly IRequestSnapshotService requestSnapshot;
 
         public async Task ExecuteAsync(
             UserId userId, 
@@ -75,15 +77,22 @@
                 }
             };
 
-            using (var connection = this.connectionFactory.CreateConnection())
+            using (var transaction = TransactionScopeBuilder.CreateAsync())
             {
-                var result = await connection.InsertAsync(parameters);
-
-                switch (result)
+                using (var connection = this.connectionFactory.CreateConnection())
                 {
-                    case 0: throw new RecoverableException("The username '" + username.Value + "' is already taken.");
-                    case 1: throw new RecoverableException("The email address '" + email.Value + "' is already taken.");
+                    var result = await connection.InsertAsync(parameters);
+
+                    switch (result)
+                    {
+                        case 0: throw new RecoverableException("The username '" + username.Value + "' is already taken.");
+                        case 1: throw new RecoverableException("The email address '" + email.Value + "' is already taken.");
+                    }
                 }
+
+                await this.requestSnapshot.ExecuteAsync(userId, SnapshotType.Subscriber);
+
+                transaction.Complete();
             }
         }
     }

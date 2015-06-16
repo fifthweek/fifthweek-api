@@ -11,6 +11,8 @@
     using Fifthweek.Api.Persistence;
     using Fifthweek.Api.Persistence.Identity;
     using Fifthweek.Api.Persistence.Tests.Shared;
+    using Fifthweek.Payments.SnapshotCreation;
+    using Fifthweek.Payments.Tests.Shared;
     using Fifthweek.Tests.Shared;
 
     using Microsoft.AspNet.Identity;
@@ -35,6 +37,7 @@
         private Mock<IUserManager> userManager;
         private Mock<IFifthweekDbConnectionFactory> connectionFactory;
         private Mock<IPasswordHasher> passwordHasher;
+        private MockRequestSnapshotService requestSnapshot;
         private RegisterUserDbStatement target;
 
         [TestInitialize]
@@ -43,11 +46,12 @@
             this.userManager = new Mock<IUserManager>();
             this.passwordHasher = new Mock<IPasswordHasher>();
             this.userManager.Setup(v => v.PasswordHasher).Returns(this.passwordHasher.Object);
+            this.requestSnapshot = new MockRequestSnapshotService();
 
             // Give potentially side-effecting components strict mock behaviour.
             this.connectionFactory = new Mock<IFifthweekDbConnectionFactory>(MockBehavior.Strict);
 
-            this.target = new RegisterUserDbStatement(this.userManager.Object, this.connectionFactory.Object);
+            this.target = new RegisterUserDbStatement(this.userManager.Object, this.connectionFactory.Object, this.requestSnapshot);
         }
 
         [TestMethod]
@@ -111,7 +115,7 @@
         {
             await this.DatabaseTestAsync(async testDatabase =>
             {
-                this.target = new RegisterUserDbStatement(this.userManager.Object, testDatabase);
+                this.target = new RegisterUserDbStatement(this.userManager.Object, testDatabase, this.requestSnapshot);
 
                 var hashedPassword = RegistrationData.Password + "1";
                 this.passwordHasher.Setup(v => v.HashPassword(RegistrationData.Password.Value)).Returns(hashedPassword);
@@ -155,11 +159,92 @@
         }
 
         [TestMethod]
+        public async Task WhenRegisteringANewUser_ItShouldRequestSnapshotAfterUpdate()
+        {
+            await this.DatabaseTestAsync(async testDatabase =>
+            {
+                var trackingDatabase = new TrackingConnectionFactory(testDatabase);
+                this.target = new RegisterUserDbStatement(this.userManager.Object, trackingDatabase, this.requestSnapshot);
+
+                var hashedPassword = RegistrationData.Password + "1";
+                this.passwordHasher.Setup(v => v.HashPassword(RegistrationData.Password.Value)).Returns(hashedPassword);
+
+                await testDatabase.TakeSnapshotAsync();
+
+                this.requestSnapshot.VerifyConnectionDisposed(trackingDatabase);
+
+                await this.target.ExecuteAsync(
+                    UserId,
+                    RegistrationData.Username,
+                    RegistrationData.Email,
+                    RegistrationData.ExampleWork,
+                    RegistrationData.CreatorName,
+                    RegistrationData.Password,
+                    TimeStamp);
+
+                this.requestSnapshot.VerifyCalledWith(UserId, SnapshotType.Subscriber);
+
+                var expectedUser = new FifthweekUser
+                {
+                    Id = UserId.Value,
+                    UserName = RegistrationData.Username.Value,
+                    Email = RegistrationData.Email.Value,
+                    ExampleWork = RegistrationData.ExampleWork,
+                    Name = RegistrationData.CreatorName.Value,
+                    RegistrationDate = TimeStamp,
+                    LastSignInDate = SqlDateTime.MinValue.Value,
+                    LastAccessTokenDate = SqlDateTime.MinValue.Value,
+                    PasswordHash = hashedPassword,
+                };
+
+                return new ExpectedSideEffects
+                {
+                    Insert = new WildcardEntity<FifthweekUser>(expectedUser)
+                    {
+                        Expected = actual =>
+                        {
+                            expectedUser.SecurityStamp = actual.SecurityStamp;
+                            return expectedUser;
+                        }
+                    }
+                };
+            });
+        }
+
+        [TestMethod]
+        public async Task WhenRegisteringANewUser_ItShouldAbortUpdateIfSnapshotFails()
+        {
+            await this.DatabaseTestAsync(async testDatabase =>
+            {
+                this.target = new RegisterUserDbStatement(this.userManager.Object, testDatabase, this.requestSnapshot);
+
+                var hashedPassword = RegistrationData.Password + "1";
+                this.passwordHasher.Setup(v => v.HashPassword(RegistrationData.Password.Value)).Returns(hashedPassword);
+
+                await testDatabase.TakeSnapshotAsync();
+
+                this.requestSnapshot.ThrowException();
+
+                await ExpectedException.AssertExceptionAsync<SnapshotException>(
+                    () => this.target.ExecuteAsync(
+                        UserId,
+                        RegistrationData.Username,
+                        RegistrationData.Email,
+                        RegistrationData.ExampleWork,
+                        RegistrationData.CreatorName,
+                        RegistrationData.Password,
+                        TimeStamp));
+
+                return ExpectedSideEffects.TransactionAborted;
+            });
+        }
+
+        [TestMethod]
         public async Task WhenRegisteringANewUserWithNoExampleWork_ItShouldAddTheUserToTheDatabase()
         {
             await this.DatabaseTestAsync(async testDatabase =>
             {
-                this.target = new RegisterUserDbStatement(this.userManager.Object, testDatabase);
+                this.target = new RegisterUserDbStatement(this.userManager.Object, testDatabase, this.requestSnapshot);
 
                 var hashedPassword = RegistrationData.Password + "1";
                 this.passwordHasher.Setup(v => v.HashPassword(RegistrationData.Password.Value)).Returns(hashedPassword);
@@ -207,7 +292,7 @@
         {
             await this.DatabaseTestAsync(async testDatabase =>
             {
-                this.target = new RegisterUserDbStatement(this.userManager.Object, testDatabase);
+                this.target = new RegisterUserDbStatement(this.userManager.Object, testDatabase, this.requestSnapshot);
 
                 var hashedPassword = RegistrationData.Password + "1";
                 this.passwordHasher.Setup(v => v.HashPassword(RegistrationData.Password.Value)).Returns(hashedPassword);
@@ -255,7 +340,7 @@
         {
             await this.DatabaseTestAsync(async testDatabase =>
             {
-                this.target = new RegisterUserDbStatement(this.userManager.Object, testDatabase);
+                this.target = new RegisterUserDbStatement(this.userManager.Object, testDatabase, this.requestSnapshot);
 
                 var hashedPassword = RegistrationData.Password + "1";
                 this.passwordHasher.Setup(v => v.HashPassword(RegistrationData.Password.Value)).Returns(hashedPassword);
@@ -289,7 +374,7 @@
         {
             await this.DatabaseTestAsync(async testDatabase =>
             {
-                this.target = new RegisterUserDbStatement(this.userManager.Object, testDatabase);
+                this.target = new RegisterUserDbStatement(this.userManager.Object, testDatabase, this.requestSnapshot);
 
                 var hashedPassword = RegistrationData.Password + "1";
                 this.passwordHasher.Setup(v => v.HashPassword(RegistrationData.Password.Value)).Returns(hashedPassword);
@@ -313,7 +398,7 @@
                 Assert.IsNotNull(exception);
                 Assert.IsTrue(exception.Message.Contains("email"));
 
-                return ExpectedSideEffects.None;
+                return ExpectedSideEffects.TransactionAborted;
             });
         }
 
@@ -322,7 +407,7 @@
         {
             await this.DatabaseTestAsync(async testDatabase =>
             {
-                this.target = new RegisterUserDbStatement(this.userManager.Object, testDatabase);
+                this.target = new RegisterUserDbStatement(this.userManager.Object, testDatabase, this.requestSnapshot);
 
                 var hashedPassword = RegistrationData.Password + "1";
                 this.passwordHasher.Setup(v => v.HashPassword(RegistrationData.Password.Value)).Returns(hashedPassword);
@@ -346,7 +431,7 @@
                 Assert.IsNotNull(exception);
                 Assert.IsTrue(exception.Message.Contains("username"));
 
-                return ExpectedSideEffects.None;
+                return ExpectedSideEffects.TransactionAborted;
             });
         }
 
