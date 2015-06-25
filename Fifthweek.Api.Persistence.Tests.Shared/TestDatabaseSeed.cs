@@ -8,6 +8,7 @@
     using System.Threading.Tasks;
 
     using Fifthweek.Api.Persistence.Identity;
+    using Fifthweek.Api.Persistence.Payments;
     using Fifthweek.Api.Persistence.Snapshots;
 
     using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -21,6 +22,7 @@
     public class TestDatabaseSeed
     {
         public const int CreatorChannelSnapshots = 1;
+        public const int SubscriberChannelSnapshots = 1;
 
         private const int EndToEndTestEmails = 10;
         private const int Users = 10;
@@ -57,6 +59,11 @@
         private readonly List<SubscriberChannelsSnapshot> subscriberChannelsSnapshots = new List<SubscriberChannelsSnapshot>();
         private readonly List<SubscriberChannelsSnapshotItem> subscriberChannelsSnapshotItems = new List<SubscriberChannelsSnapshotItem>();
         private readonly List<SubscriberSnapshot> subscriberSnapshots = new List<SubscriberSnapshot>();
+
+        private readonly List<AppendOnlyLedgerRecord> appendOnlyLedgerRecord = new List<AppendOnlyLedgerRecord>();
+        private readonly List<CalculatedAccountBalance> calculatedAccountBalance = new List<CalculatedAccountBalance>();
+        private readonly List<CreatorPercentageOverride> creatorPercentageOverride = new List<CreatorPercentageOverride>();
+        private readonly List<UncommittedSubscriptionPayment> uncommittedSubscriptionPayment = new List<UncommittedSubscriptionPayment>();
 
         public TestDatabaseSeed(Func<IFifthweekDbContext> databaseContextFactory)
         {
@@ -137,6 +144,10 @@
                     await connection.InsertAsync(this.subscriberChannelsSnapshots, false);
                     await connection.InsertAsync(this.subscriberChannelsSnapshotItems, false);
                     await connection.InsertAsync(this.subscriberSnapshots, false);
+                    await connection.InsertAsync(this.appendOnlyLedgerRecord, false);
+                    await connection.InsertAsync(this.calculatedAccountBalance, false);
+                    await connection.InsertAsync(this.creatorPercentageOverride, false);
+                    await connection.InsertAsync(this.uncommittedSubscriptionPayment, false);
                 }
                 finally
                 {
@@ -155,9 +166,19 @@
 
             this.creatorFreeAccessUsersSnapshots.Add(new CreatorFreeAccessUsersSnapshot(Guid.NewGuid(), DateTime.UtcNow, Guid.NewGuid()));
             this.creatorFreeAccessUsersSnapshotItems.Add(new CreatorFreeAccessUsersSnapshotItem(this.creatorFreeAccessUsersSnapshots[0].Id, null, "email"));
-            this.subscriberChannelsSnapshots.Add(new SubscriberChannelsSnapshot(Guid.NewGuid(), DateTime.UtcNow, Guid.NewGuid()));
-            this.subscriberChannelsSnapshotItems.Add(new SubscriberChannelsSnapshotItem(this.subscriberChannelsSnapshots[0].Id, null, Guid.NewGuid(), 100, DateTime.UtcNow));
+            
+            for (int i = 0; i < SubscriberChannelSnapshots; i++)
+            {
+                this.subscriberChannelsSnapshots.Add(new SubscriberChannelsSnapshot(Guid.NewGuid(), DateTime.UtcNow, Guid.NewGuid()));
+                this.subscriberChannelsSnapshotItems.Add(new SubscriberChannelsSnapshotItem(this.subscriberChannelsSnapshots[0].Id, null, Guid.NewGuid(), 100, DateTime.UtcNow));
+            }
+
             this.subscriberSnapshots.Add(new SubscriberSnapshot(DateTime.UtcNow, Guid.NewGuid(), "email"));
+        }
+
+        private void CreatePaymentInformation()
+        {
+
         }
 
         private void CreateEndToEndTestEmails()
@@ -199,7 +220,129 @@
                 }
 
                 this.CreateRefreshTokens(user);
+
+                if (i > 0)
+                {
+                    this.CreatePaymentInformation(user, this.users[i - 1].Id, i);
+                }
             }
+
+            // Create some records for deleted users.
+            this.CreateAppendOnlyLedgerRecord(Guid.NewGuid(), Guid.NewGuid());
+            this.CreateAppendOnlyLedgerRecord(Guid.NewGuid(), Guid.NewGuid());
+            this.uncommittedSubscriptionPayment.Add(new UncommittedSubscriptionPayment(Guid.NewGuid(), Guid.NewGuid(), DateTime.Now.AddMinutes(-30), DateTime.Now, 10m, Guid.NewGuid()));
+            this.uncommittedSubscriptionPayment.Add(new UncommittedSubscriptionPayment(Guid.NewGuid(), Guid.NewGuid(), DateTime.Now.AddMinutes(-30), DateTime.Now, 10m, Guid.NewGuid()));
+        }
+
+        private void CreatePaymentInformation(FifthweekUser user, Guid previousUserId, int userIndex)
+        {
+            this.CreateAppendOnlyLedgerRecord(user.Id, previousUserId);
+
+            // Add credit.
+            var transactionReference2 = Guid.NewGuid();
+            this.appendOnlyLedgerRecord.Add(
+                new AppendOnlyLedgerRecord(
+                    Guid.NewGuid(),
+                    user.Id,
+                    null,
+                    DateTime.UtcNow,
+                    -1200,
+                    LedgerAccountType.Stripe,
+                    transactionReference2,
+                    Guid.NewGuid(),
+                    "comment",
+                    "stripe",
+                    "taxamo"));
+
+            this.appendOnlyLedgerRecord.Add(
+                new AppendOnlyLedgerRecord(
+                    Guid.NewGuid(),
+                    user.Id,
+                    null,
+                    DateTime.UtcNow,
+                    1000,
+                    LedgerAccountType.Fifthweek,
+                    transactionReference2,
+                    Guid.NewGuid(), 
+                    "comment",
+                    "stripe",
+                    "taxamo"));
+
+            this.appendOnlyLedgerRecord.Add(
+                new AppendOnlyLedgerRecord(
+                    Guid.NewGuid(),
+                    user.Id,
+                    null,
+                    DateTime.UtcNow,
+                    200,
+                    LedgerAccountType.SalesTax,
+                    transactionReference2,
+                    Guid.NewGuid(), 
+                    "comment",
+                    "stripe", 
+                    "taxamo"));
+
+            this.calculatedAccountBalance.Add(new CalculatedAccountBalance(user.Id, LedgerAccountType.Fifthweek, DateTime.UtcNow.AddDays(-1), 1000));
+            this.calculatedAccountBalance.Add(new CalculatedAccountBalance(user.Id, LedgerAccountType.Stripe, DateTime.UtcNow.AddDays(-1), -1100));
+            this.calculatedAccountBalance.Add(new CalculatedAccountBalance(user.Id, LedgerAccountType.SalesTax, DateTime.UtcNow.AddDays(-1), 100));
+
+            if (userIndex % 3 == 0)
+            {
+                this.creatorPercentageOverride.Add(
+                    new CreatorPercentageOverride(
+                        user.Id,
+                        0.8m,
+                        userIndex % 2 == 0 ? (DateTime?)null : DateTime.UtcNow.AddDays(userIndex - (Users / 2))));
+            }
+
+            this.uncommittedSubscriptionPayment.Add(
+                new UncommittedSubscriptionPayment(user.Id, previousUserId, DateTime.Now.AddMinutes(-30), DateTime.Now, 10m, Guid.NewGuid()));
+        }
+
+        private void CreateAppendOnlyLedgerRecord(Guid subscriberId, Guid creatorId)
+        {
+            // Payment to another creator.
+            var transactionReference = Guid.NewGuid();
+            this.appendOnlyLedgerRecord.Add(
+                new AppendOnlyLedgerRecord(
+                    Guid.NewGuid(),
+                    subscriberId,
+                    creatorId,
+                    DateTime.UtcNow,
+                    -100,
+                    LedgerAccountType.Fifthweek,
+                    transactionReference,
+                    Guid.NewGuid(), "comment", "stripe", "taxamo"));
+            this.appendOnlyLedgerRecord.Add(
+                new AppendOnlyLedgerRecord(
+                    Guid.NewGuid(),
+                    Guid.Empty,
+                    creatorId,
+                    DateTime.UtcNow,
+                    100,
+                    LedgerAccountType.Fifthweek,
+                    transactionReference,
+                    Guid.NewGuid(), "comment", "stripe", "taxamo"));
+            this.appendOnlyLedgerRecord.Add(
+                new AppendOnlyLedgerRecord(
+                    Guid.NewGuid(),
+                    Guid.Empty,
+                    creatorId,
+                    DateTime.UtcNow,
+                    -70,
+                    LedgerAccountType.Fifthweek,
+                    transactionReference,
+                    Guid.NewGuid(), "comment", "stripe", "taxamo"));
+            this.appendOnlyLedgerRecord.Add(
+                new AppendOnlyLedgerRecord(
+                    Guid.NewGuid(),
+                    creatorId,
+                    creatorId,
+                    DateTime.UtcNow,
+                    70,
+                    LedgerAccountType.Fifthweek,
+                    transactionReference,
+                    Guid.NewGuid(), "comment", "stripe", "taxamo"));
         }
 
         private void CreateSubscriptions(List<Guid> channelIds, FifthweekUser user)

@@ -6,6 +6,7 @@
     using System.Diagnostics;
     using System.Linq;
     using System.Threading.Tasks;
+    using System.Transactions;
 
     using Microsoft.VisualStudio.TestTools.UnitTesting;
 
@@ -46,6 +47,10 @@
             this.tables.Add(this.Load(databaseContext => databaseContext.SubscriberChannelsSnapshots));
             this.tables.Add(this.Load(databaseContext => databaseContext.SubscriberChannelsSnapshotItems));
             this.tables.Add(this.Load(databaseContext => databaseContext.SubscriberSnapshots));
+            this.tables.Add(this.Load(databaseContext => databaseContext.AppendOnlyLedgerRecords));
+            this.tables.Add(this.Load(databaseContext => databaseContext.UncommittedSubscriptionPayments));
+            this.tables.Add(this.Load(databaseContext => databaseContext.CalculatedAccountBalances));
+            this.tables.Add(this.Load(databaseContext => databaseContext.CreatorPercentageOverrides));
 
             Trace.WriteLine(string.Format("Snapshot taken in {0}s", Math.Round(stopwatch.Elapsed.TotalSeconds, 2)));
         }
@@ -58,6 +63,17 @@
             }
 
             var stopwatch = Stopwatch.StartNew();
+
+            if (object.ReferenceEquals(sideEffects, ExpectedSideEffects.TransactionAborted))
+            {
+                if (Transaction.Current.TransactionInformation.Status != TransactionStatus.Aborted)
+                {
+                    Assert.Fail("Transaction was not aborted.");
+                }
+
+                // We can't check anything else if the transaction is aborted.
+                return;
+            }
 
             using (var databaseContext = this.testDatabase.CreateContext())
             {

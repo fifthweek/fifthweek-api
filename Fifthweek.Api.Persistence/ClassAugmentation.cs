@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Linq;
 
-//// Generated on 12/06/2015 11:03:07 (UTC)
-//// Mapped solution in 10.57s
+//// Generated on 24/06/2015 12:21:19 (UTC)
+//// Mapped solution in 15.75s
 
 
 namespace Fifthweek.Api.Persistence
@@ -824,6 +824,213 @@ namespace Fifthweek.Api.Persistence
             this.CollectionId = collectionId;
             this.Collection = collection;
             this.HourOfWeek = hourOfWeek;
+        }
+    }
+}
+namespace Fifthweek.Api.Persistence.Payments
+{
+    using System;
+    using System.Linq;
+    using System.ComponentModel.DataAnnotations;
+    using System.ComponentModel.DataAnnotations.Schema;
+    using Fifthweek.CodeGeneration;
+    using Fifthweek.Api.Persistence.Identity;
+
+    public partial class AppendOnlyLedgerRecord 
+    {
+        public AppendOnlyLedgerRecord(
+            System.Guid id,
+            System.Guid accountOwnerId,
+            System.Nullable<System.Guid> counterpartyId,
+            System.DateTime timestamp,
+            System.Decimal amount,
+            Fifthweek.Api.Persistence.Payments.LedgerAccountType accountType,
+            System.Guid transactionReference,
+            System.Guid inputDataReference,
+            System.String comment,
+            System.String stripeReference,
+            System.String taxamoReference)
+        {
+            if (id == null)
+            {
+                throw new ArgumentNullException("id");
+            }
+
+            if (accountOwnerId == null)
+            {
+                throw new ArgumentNullException("accountOwnerId");
+            }
+
+            if (timestamp == null)
+            {
+                throw new ArgumentNullException("timestamp");
+            }
+
+            if (amount == null)
+            {
+                throw new ArgumentNullException("amount");
+            }
+
+            if (accountType == null)
+            {
+                throw new ArgumentNullException("accountType");
+            }
+
+            if (transactionReference == null)
+            {
+                throw new ArgumentNullException("transactionReference");
+            }
+
+            if (inputDataReference == null)
+            {
+                throw new ArgumentNullException("inputDataReference");
+            }
+
+            this.Id = id;
+            this.AccountOwnerId = accountOwnerId;
+            this.CounterpartyId = counterpartyId;
+            this.Timestamp = timestamp;
+            this.Amount = amount;
+            this.AccountType = accountType;
+            this.TransactionReference = transactionReference;
+            this.InputDataReference = inputDataReference;
+            this.Comment = comment;
+            this.StripeReference = stripeReference;
+            this.TaxamoReference = taxamoReference;
+        }
+    }
+}
+namespace Fifthweek.Api.Persistence.Payments
+{
+    using System;
+    using System.Linq;
+    using System.ComponentModel.DataAnnotations;
+    using System.ComponentModel.DataAnnotations.Schema;
+    using Fifthweek.CodeGeneration;
+    using Fifthweek.Api.Persistence.Identity;
+
+    public partial class CalculatedAccountBalance 
+    {
+        public CalculatedAccountBalance(
+            System.Guid userId,
+            Fifthweek.Api.Persistence.Payments.LedgerAccountType accountType,
+            System.DateTime timestamp,
+            System.Decimal amount)
+        {
+            if (userId == null)
+            {
+                throw new ArgumentNullException("userId");
+            }
+
+            if (accountType == null)
+            {
+                throw new ArgumentNullException("accountType");
+            }
+
+            if (timestamp == null)
+            {
+                throw new ArgumentNullException("timestamp");
+            }
+
+            if (amount == null)
+            {
+                throw new ArgumentNullException("amount");
+            }
+
+            this.UserId = userId;
+            this.AccountType = accountType;
+            this.Timestamp = timestamp;
+            this.Amount = amount;
+        }
+    }
+}
+namespace Fifthweek.Api.Persistence.Payments
+{
+    using System;
+    using System.Linq;
+    using System.ComponentModel.DataAnnotations;
+    using System.ComponentModel.DataAnnotations.Schema;
+    using Fifthweek.CodeGeneration;
+    using Fifthweek.Api.Persistence.Identity;
+
+    public partial class UncommittedSubscriptionPayment 
+    {
+        public UncommittedSubscriptionPayment(
+            System.Guid subscriberId,
+            System.Guid creatorId,
+            System.DateTime startTimestampInclusive,
+            System.DateTime endTimestampExclusive,
+            System.Decimal amount,
+            System.Guid inputDataReference)
+        {
+            if (subscriberId == null)
+            {
+                throw new ArgumentNullException("subscriberId");
+            }
+
+            if (creatorId == null)
+            {
+                throw new ArgumentNullException("creatorId");
+            }
+
+            if (startTimestampInclusive == null)
+            {
+                throw new ArgumentNullException("startTimestampInclusive");
+            }
+
+            if (endTimestampExclusive == null)
+            {
+                throw new ArgumentNullException("endTimestampExclusive");
+            }
+
+            if (amount == null)
+            {
+                throw new ArgumentNullException("amount");
+            }
+
+            if (inputDataReference == null)
+            {
+                throw new ArgumentNullException("inputDataReference");
+            }
+
+            this.SubscriberId = subscriberId;
+            this.CreatorId = creatorId;
+            this.StartTimestampInclusive = startTimestampInclusive;
+            this.EndTimestampExclusive = endTimestampExclusive;
+            this.Amount = amount;
+            this.InputDataReference = inputDataReference;
+        }
+    }
+}
+namespace Fifthweek.Api.Persistence.Payments
+{
+    using System;
+    using System.Linq;
+    using System.ComponentModel.DataAnnotations;
+    using System.ComponentModel.DataAnnotations.Schema;
+    using Fifthweek.CodeGeneration;
+    using Fifthweek.Api.Persistence.Identity;
+
+    public partial class CreatorPercentageOverride 
+    {
+        public CreatorPercentageOverride(
+            System.Guid userId,
+            System.Decimal percentage,
+            System.Nullable<System.DateTime> expiryDate)
+        {
+            if (userId == null)
+            {
+                throw new ArgumentNullException("userId");
+            }
+
+            if (percentage == null)
+            {
+                throw new ArgumentNullException("percentage");
+            }
+
+            this.UserId = userId;
+            this.Percentage = percentage;
+            this.ExpiryDate = expiryDate;
         }
     }
 }
@@ -2190,6 +2397,354 @@ namespace Fifthweek.Api.Persistence
             }
         
             if (!object.Equals(this.HourOfWeek, other.HourOfWeek))
+            {
+                return false;
+            }
+        
+            return true;
+        }
+    }
+}
+namespace Fifthweek.Api.Persistence.Payments
+{
+    using System;
+    using System.Linq;
+    using System.ComponentModel.DataAnnotations;
+    using System.ComponentModel.DataAnnotations.Schema;
+    using Fifthweek.CodeGeneration;
+    using Fifthweek.Api.Persistence.Identity;
+
+    public partial class AppendOnlyLedgerRecord 
+    {
+        public override string ToString()
+        {
+            return string.Format("AppendOnlyLedgerRecord({0}, {1}, {2}, {3}, {4}, {5}, {6}, {7}, \"{8}\", \"{9}\", \"{10}\")", this.Id == null ? "null" : this.Id.ToString(), this.AccountOwnerId == null ? "null" : this.AccountOwnerId.ToString(), this.CounterpartyId == null ? "null" : this.CounterpartyId.ToString(), this.Timestamp == null ? "null" : this.Timestamp.ToString(), this.Amount == null ? "null" : this.Amount.ToString(), this.AccountType == null ? "null" : this.AccountType.ToString(), this.TransactionReference == null ? "null" : this.TransactionReference.ToString(), this.InputDataReference == null ? "null" : this.InputDataReference.ToString(), this.Comment == null ? "null" : this.Comment.ToString(), this.StripeReference == null ? "null" : this.StripeReference.ToString(), this.TaxamoReference == null ? "null" : this.TaxamoReference.ToString());
+        }
+        
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj))
+            {
+                return false;
+            }
+        
+            if (ReferenceEquals(this, obj))
+            {
+                return true;
+            }
+        
+            if (obj.GetType() != this.GetType())
+            {
+                return false;
+            }
+        
+            return this.Equals((AppendOnlyLedgerRecord)obj);
+        }
+        
+        public override int GetHashCode()
+        {
+            unchecked
+            {
+                int hashCode = 0;
+                hashCode = (hashCode * 397) ^ (this.Id != null ? this.Id.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.AccountOwnerId != null ? this.AccountOwnerId.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.CounterpartyId != null ? this.CounterpartyId.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.Timestamp != null ? this.Timestamp.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.Amount != null ? this.Amount.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.AccountType != null ? this.AccountType.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.TransactionReference != null ? this.TransactionReference.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.InputDataReference != null ? this.InputDataReference.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.Comment != null ? this.Comment.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.StripeReference != null ? this.StripeReference.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.TaxamoReference != null ? this.TaxamoReference.GetHashCode() : 0);
+                return hashCode;
+            }
+        }
+        
+        protected bool Equals(AppendOnlyLedgerRecord other)
+        {
+            if (!object.Equals(this.Id, other.Id))
+            {
+                return false;
+            }
+        
+            if (!object.Equals(this.AccountOwnerId, other.AccountOwnerId))
+            {
+                return false;
+            }
+        
+            if (!object.Equals(this.CounterpartyId, other.CounterpartyId))
+            {
+                return false;
+            }
+        
+            if (!object.Equals(this.Timestamp, other.Timestamp))
+            {
+                return false;
+            }
+        
+            if (!object.Equals(this.Amount, other.Amount))
+            {
+                return false;
+            }
+        
+            if (!object.Equals(this.AccountType, other.AccountType))
+            {
+                return false;
+            }
+        
+            if (!object.Equals(this.TransactionReference, other.TransactionReference))
+            {
+                return false;
+            }
+        
+            if (!object.Equals(this.InputDataReference, other.InputDataReference))
+            {
+                return false;
+            }
+        
+            if (!object.Equals(this.Comment, other.Comment))
+            {
+                return false;
+            }
+        
+            if (!object.Equals(this.StripeReference, other.StripeReference))
+            {
+                return false;
+            }
+        
+            if (!object.Equals(this.TaxamoReference, other.TaxamoReference))
+            {
+                return false;
+            }
+        
+            return true;
+        }
+    }
+}
+namespace Fifthweek.Api.Persistence.Payments
+{
+    using System;
+    using System.Linq;
+    using System.ComponentModel.DataAnnotations;
+    using System.ComponentModel.DataAnnotations.Schema;
+    using Fifthweek.CodeGeneration;
+    using Fifthweek.Api.Persistence.Identity;
+
+    public partial class CalculatedAccountBalance 
+    {
+        public override string ToString()
+        {
+            return string.Format("CalculatedAccountBalance({0}, {1}, {2}, {3})", this.UserId == null ? "null" : this.UserId.ToString(), this.AccountType == null ? "null" : this.AccountType.ToString(), this.Timestamp == null ? "null" : this.Timestamp.ToString(), this.Amount == null ? "null" : this.Amount.ToString());
+        }
+        
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj))
+            {
+                return false;
+            }
+        
+            if (ReferenceEquals(this, obj))
+            {
+                return true;
+            }
+        
+            if (obj.GetType() != this.GetType())
+            {
+                return false;
+            }
+        
+            return this.Equals((CalculatedAccountBalance)obj);
+        }
+        
+        public override int GetHashCode()
+        {
+            unchecked
+            {
+                int hashCode = 0;
+                hashCode = (hashCode * 397) ^ (this.UserId != null ? this.UserId.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.AccountType != null ? this.AccountType.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.Timestamp != null ? this.Timestamp.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.Amount != null ? this.Amount.GetHashCode() : 0);
+                return hashCode;
+            }
+        }
+        
+        protected bool Equals(CalculatedAccountBalance other)
+        {
+            if (!object.Equals(this.UserId, other.UserId))
+            {
+                return false;
+            }
+        
+            if (!object.Equals(this.AccountType, other.AccountType))
+            {
+                return false;
+            }
+        
+            if (!object.Equals(this.Timestamp, other.Timestamp))
+            {
+                return false;
+            }
+        
+            if (!object.Equals(this.Amount, other.Amount))
+            {
+                return false;
+            }
+        
+            return true;
+        }
+    }
+}
+namespace Fifthweek.Api.Persistence.Payments
+{
+    using System;
+    using System.Linq;
+    using System.ComponentModel.DataAnnotations;
+    using System.ComponentModel.DataAnnotations.Schema;
+    using Fifthweek.CodeGeneration;
+    using Fifthweek.Api.Persistence.Identity;
+
+    public partial class UncommittedSubscriptionPayment 
+    {
+        public override string ToString()
+        {
+            return string.Format("UncommittedSubscriptionPayment({0}, {1}, {2}, {3}, {4}, {5})", this.SubscriberId == null ? "null" : this.SubscriberId.ToString(), this.CreatorId == null ? "null" : this.CreatorId.ToString(), this.StartTimestampInclusive == null ? "null" : this.StartTimestampInclusive.ToString(), this.EndTimestampExclusive == null ? "null" : this.EndTimestampExclusive.ToString(), this.Amount == null ? "null" : this.Amount.ToString(), this.InputDataReference == null ? "null" : this.InputDataReference.ToString());
+        }
+        
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj))
+            {
+                return false;
+            }
+        
+            if (ReferenceEquals(this, obj))
+            {
+                return true;
+            }
+        
+            if (obj.GetType() != this.GetType())
+            {
+                return false;
+            }
+        
+            return this.Equals((UncommittedSubscriptionPayment)obj);
+        }
+        
+        public override int GetHashCode()
+        {
+            unchecked
+            {
+                int hashCode = 0;
+                hashCode = (hashCode * 397) ^ (this.SubscriberId != null ? this.SubscriberId.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.CreatorId != null ? this.CreatorId.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.StartTimestampInclusive != null ? this.StartTimestampInclusive.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.EndTimestampExclusive != null ? this.EndTimestampExclusive.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.Amount != null ? this.Amount.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.InputDataReference != null ? this.InputDataReference.GetHashCode() : 0);
+                return hashCode;
+            }
+        }
+        
+        protected bool Equals(UncommittedSubscriptionPayment other)
+        {
+            if (!object.Equals(this.SubscriberId, other.SubscriberId))
+            {
+                return false;
+            }
+        
+            if (!object.Equals(this.CreatorId, other.CreatorId))
+            {
+                return false;
+            }
+        
+            if (!object.Equals(this.StartTimestampInclusive, other.StartTimestampInclusive))
+            {
+                return false;
+            }
+        
+            if (!object.Equals(this.EndTimestampExclusive, other.EndTimestampExclusive))
+            {
+                return false;
+            }
+        
+            if (!object.Equals(this.Amount, other.Amount))
+            {
+                return false;
+            }
+        
+            if (!object.Equals(this.InputDataReference, other.InputDataReference))
+            {
+                return false;
+            }
+        
+            return true;
+        }
+    }
+}
+namespace Fifthweek.Api.Persistence.Payments
+{
+    using System;
+    using System.Linq;
+    using System.ComponentModel.DataAnnotations;
+    using System.ComponentModel.DataAnnotations.Schema;
+    using Fifthweek.CodeGeneration;
+    using Fifthweek.Api.Persistence.Identity;
+
+    public partial class CreatorPercentageOverride 
+    {
+        public override string ToString()
+        {
+            return string.Format("CreatorPercentageOverride({0}, {1}, {2})", this.UserId == null ? "null" : this.UserId.ToString(), this.Percentage == null ? "null" : this.Percentage.ToString(), this.ExpiryDate == null ? "null" : this.ExpiryDate.ToString());
+        }
+        
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj))
+            {
+                return false;
+            }
+        
+            if (ReferenceEquals(this, obj))
+            {
+                return true;
+            }
+        
+            if (obj.GetType() != this.GetType())
+            {
+                return false;
+            }
+        
+            return this.Equals((CreatorPercentageOverride)obj);
+        }
+        
+        public override int GetHashCode()
+        {
+            unchecked
+            {
+                int hashCode = 0;
+                hashCode = (hashCode * 397) ^ (this.UserId != null ? this.UserId.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.Percentage != null ? this.Percentage.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.ExpiryDate != null ? this.ExpiryDate.GetHashCode() : 0);
+                return hashCode;
+            }
+        }
+        
+        protected bool Equals(CreatorPercentageOverride other)
+        {
+            if (!object.Equals(this.UserId, other.UserId))
+            {
+                return false;
+            }
+        
+            if (!object.Equals(this.Percentage, other.Percentage))
+            {
+                return false;
+            }
+        
+            if (!object.Equals(this.ExpiryDate, other.ExpiryDate))
             {
                 return false;
             }
@@ -9236,6 +9791,1650 @@ namespace Fifthweek.Api.Persistence
             // Assume we never want to exclude primary key field(s) from our input.
             parameters.Add("CollectionId", entity.CollectionId);
             parameters.Add("HourOfWeek", entity.HourOfWeek);
+            return parameters;
+        }
+        
+    }
+}
+namespace Fifthweek.Api.Persistence.Payments
+{
+    using System;
+    using System.Linq;
+    using System.ComponentModel.DataAnnotations;
+    using System.ComponentModel.DataAnnotations.Schema;
+    using Fifthweek.CodeGeneration;
+    using Fifthweek.Api.Persistence.Identity;
+
+    public partial class AppendOnlyLedgerRecord  : IIdentityEquatable
+    {
+        public const string Table = "AppendOnlyLedgerRecords";
+        
+        public AppendOnlyLedgerRecord(
+            System.Guid id)
+        {
+            if (id == null)
+            {
+                throw new ArgumentNullException("id");
+            }
+
+            this.Id = id;
+        }
+        
+        public bool IdentityEquals(object other)
+        {
+            if (ReferenceEquals(null, other))
+            {
+                return false;
+            }
+        
+            if (ReferenceEquals(this, other))
+            {
+                return true;
+            }
+        
+            if (other.GetType() != this.GetType())
+            {
+                return false;
+            }
+        
+            return this.IdentityEquals((AppendOnlyLedgerRecord)other);
+        }
+        
+        protected bool IdentityEquals(AppendOnlyLedgerRecord other)
+        {
+            if (!object.Equals(this.Id, other.Id))
+            {
+                return false;
+            }
+        
+            return true;
+        }
+        
+        [Flags]
+        public enum Fields
+        {
+            Empty = 0,
+            Id = 1, 
+            AccountOwnerId = 2, 
+            CounterpartyId = 4, 
+            Timestamp = 8, 
+            Amount = 16, 
+            AccountType = 32, 
+            TransactionReference = 64, 
+            InputDataReference = 128, 
+            Comment = 256, 
+            StripeReference = 512, 
+            TaxamoReference = 1024
+        }
+    }
+
+    public static partial class AppendOnlyLedgerRecordExtensions
+    {
+        public static System.Threading.Tasks.Task InsertAsync(
+            this System.Data.Common.DbConnection connection, 
+            System.Collections.Generic.IEnumerable<AppendOnlyLedgerRecord> entities, 
+            bool idempotent = true, 
+            System.Data.IDbTransaction transaction = null)
+        {
+            return Dapper.SqlMapper.ExecuteAsync(
+                connection, 
+                InsertStatement(idempotent), 
+                entities.Select(entity => new 
+                {
+                    entity.Id, entity.AccountOwnerId, entity.CounterpartyId, entity.Timestamp, entity.Amount, entity.AccountType, entity.TransactionReference, entity.InputDataReference, entity.Comment, entity.StripeReference, entity.TaxamoReference
+                }).ToArray(),
+                transaction);
+        }
+        
+        public static System.Threading.Tasks.Task InsertAsync(
+            this System.Data.Common.DbConnection connection, 
+            AppendOnlyLedgerRecord entity,
+            bool idempotent = true, 
+            System.Data.IDbTransaction transaction = null)
+        {
+            return Dapper.SqlMapper.ExecuteAsync(
+                connection, 
+                InsertStatement(idempotent), 
+                new 
+                {
+                    entity.Id, entity.AccountOwnerId, entity.CounterpartyId, entity.Timestamp, entity.Amount, entity.AccountType, entity.TransactionReference, entity.InputDataReference, entity.Comment, entity.StripeReference, entity.TaxamoReference
+                },
+                transaction);
+        }
+        
+        public static System.Threading.Tasks.Task<int> InsertAsync(
+            this System.Data.Common.DbConnection connection,
+            SqlGenerationParameters<AppendOnlyLedgerRecord, AppendOnlyLedgerRecord.Fields> parameters)
+        {
+            var sql = new System.Text.StringBuilder();
+        
+            if (parameters.Declarations != null)
+            {
+                sql.AppendLine(parameters.Declarations);
+            }
+            
+            int currentIndex = 0;
+            if (parameters.Conditions != null)
+            {
+                foreach (var condition in parameters.Conditions)
+                {
+                    sql.Append("IF ");
+                    sql.AppendLine(condition); // Remember to use `WITH (UPDLOCK, HOLDLOCK)` in your conditions! See: http://samsaffron.com/blog/archive/2007/04/04/14.aspx
+                    sql.AppendLine("BEGIN");
+                    ++currentIndex;
+                }
+            }
+        
+            sql.AppendLine(InsertStatement(parameters.IdempotentInsert));
+        
+            if (parameters.Conditions != null)
+            {
+                sql.AppendLine("SELECT -1 AS FailedConditionIndex"); // Indicates all conditions passed and operation was attempted.
+                    
+                foreach (var condition in parameters.Conditions)
+                {
+                    sql.AppendLine("END");
+                    sql.AppendLine("ELSE");
+                    sql.Append("SELECT ").Append(--currentIndex).AppendLine(" AS FailedConditionIndex");
+                }
+            }
+        
+            var entity = parameters.Entity;
+            var parameterObject = parameters.ExcludedFromInput != null
+                ? AllExceptSpecifiedParameters(entity, parameters.ExcludedFromInput.Value)
+                : new Dapper.DynamicParameters(new { entity.Id, entity.AccountOwnerId, entity.CounterpartyId, entity.Timestamp, entity.Amount, entity.AccountType, entity.TransactionReference, entity.InputDataReference, entity.Comment, entity.StripeReference, entity.TaxamoReference });
+        
+            if (parameters.AdditionalParameters != null)
+            {
+                parameterObject.AddDynamicParams(parameters.AdditionalParameters);
+            }
+        
+            return Dapper.SqlMapper.ExecuteScalarAsync<int>(
+                connection,
+                sql.ToString(),
+                parameterObject);
+        }
+        
+        public static System.Threading.Tasks.Task UpsertAsync(
+            this System.Data.Common.DbConnection connection, 
+            AppendOnlyLedgerRecord entity, 
+            AppendOnlyLedgerRecord.Fields fields,
+            System.Data.IDbTransaction transaction = null)
+        {
+            return Dapper.SqlMapper.ExecuteAsync(
+                connection, 
+                UpsertStatement(AppendOnlyLedgerRecord.Fields.Empty, fields), 
+                new 
+                {
+                    entity.Id, entity.AccountOwnerId, entity.CounterpartyId, entity.Timestamp, entity.Amount, entity.AccountType, entity.TransactionReference, entity.InputDataReference, entity.Comment, entity.StripeReference, entity.TaxamoReference
+                },
+                transaction);
+        }
+        
+        public static System.Threading.Tasks.Task UpsertAsync(
+            this System.Data.Common.DbConnection connection, 
+            AppendOnlyLedgerRecord entity, 
+            AppendOnlyLedgerRecord.Fields mergeOnFields,
+            AppendOnlyLedgerRecord.Fields updateFields,
+            System.Data.IDbTransaction transaction = null)
+        {
+            return Dapper.SqlMapper.ExecuteAsync(
+                connection, 
+                UpsertStatement(mergeOnFields, updateFields), 
+                new 
+                {
+                    entity.Id, entity.AccountOwnerId, entity.CounterpartyId, entity.Timestamp, entity.Amount, entity.AccountType, entity.TransactionReference, entity.InputDataReference, entity.Comment, entity.StripeReference, entity.TaxamoReference
+                },
+                transaction);
+        }
+        
+        public static System.Threading.Tasks.Task UpdateAsync(
+            this System.Data.Common.DbConnection connection, 
+            AppendOnlyLedgerRecord entity, 
+            AppendOnlyLedgerRecord.Fields fields,
+            System.Data.IDbTransaction transaction = null)
+        {
+            return Dapper.SqlMapper.ExecuteAsync(connection, UpdateStatement(fields), OnlySpecifiedParameters(entity, fields), transaction);
+        }
+        
+        public static System.Threading.Tasks.Task<int> UpdateAsync(
+            this System.Data.Common.DbConnection connection,
+            SqlGenerationParameters<AppendOnlyLedgerRecord, AppendOnlyLedgerRecord.Fields> parameters)
+        {
+            if (parameters.UpdateMask == null)
+            {
+                throw new ArgumentException("Must contain update mask", "parameters");
+            }
+        
+            var sql = new System.Text.StringBuilder();
+        
+            if (parameters.Declarations != null)
+            {
+                sql.AppendLine(parameters.Declarations);
+            }
+            
+            int currentIndex = 0;
+            if (parameters.Conditions != null)
+            {
+                foreach (var condition in parameters.Conditions)
+                {
+                    sql.Append("IF ");
+                    sql.AppendLine(condition); // Remember to use `WITH (UPDLOCK, HOLDLOCK)` in your conditions! See: http://samsaffron.com/blog/archive/2007/04/04/14.aspx
+                    sql.AppendLine("BEGIN");
+                    ++currentIndex;
+                }
+            }
+        
+            sql.AppendLine(UpdateStatement(parameters.UpdateMask.Value));
+        
+            if (parameters.Conditions != null)
+            {
+                sql.AppendLine("SELECT -1 AS FailedConditionIndex"); // Indicates all conditions passed and operation was attempted.
+                    
+                foreach (var condition in parameters.Conditions)
+                {
+                    sql.AppendLine("END");
+                    sql.AppendLine("ELSE");
+                    sql.Append("SELECT ").Append(--currentIndex).AppendLine(" AS FailedConditionIndex");
+                }
+            }
+        
+            var parameterObject = OnlySpecifiedParameters(parameters.Entity, parameters.UpdateMask.Value, parameters.ExcludedFromInput);
+        
+            if (parameters.AdditionalParameters != null)
+            {
+                parameterObject.AddDynamicParams(parameters.AdditionalParameters);
+            }
+        
+            return Dapper.SqlMapper.ExecuteScalarAsync<int>(
+                connection,
+                sql.ToString(),
+                parameterObject);
+        }
+        
+        public static string InsertStatement(bool idempotent = true)
+        {
+            const string insert = "INSERT INTO AppendOnlyLedgerRecords(Id, AccountOwnerId, CounterpartyId, Timestamp, Amount, AccountType, TransactionReference, InputDataReference, Comment, StripeReference, TaxamoReference) VALUES(@Id, @AccountOwnerId, @CounterpartyId, @Timestamp, @Amount, @AccountType, @TransactionReference, @InputDataReference, @Comment, @StripeReference, @TaxamoReference)";
+            return idempotent ? SqlStatementTemplates.IdempotentInsert(insert) : insert;
+        }
+        
+        public static string UpsertStatement(AppendOnlyLedgerRecord.Fields mergeOnFields, AppendOnlyLedgerRecord.Fields updateFields)
+        {
+            // HOLDLOCK ensures operation is concurrent by not releasing the U lock on the row after determining
+            // it does not exist. See: http://weblogs.sqlteam.com/dang/archive/2009/01/31/UPSERT-Race-Condition-With-MERGE.aspx
+            var sql = new System.Text.StringBuilder();
+            sql.Append(
+                @"MERGE AppendOnlyLedgerRecords WITH (HOLDLOCK) as Target
+                USING (VALUES (@Id, @AccountOwnerId, @CounterpartyId, @Timestamp, @Amount, @AccountType, @TransactionReference, @InputDataReference, @Comment, @StripeReference, @TaxamoReference)) AS Source (Id, AccountOwnerId, CounterpartyId, Timestamp, Amount, AccountType, TransactionReference, InputDataReference, Comment, StripeReference, TaxamoReference)
+                ON    (");
+                
+            if (mergeOnFields == AppendOnlyLedgerRecord.Fields.Empty)
+            {
+                sql.Append(@"Target.Id = Source.Id");
+            }
+            else
+            {
+                sql.AppendMergeOnParameters(GetFieldNames(mergeOnFields, false));
+            }
+                
+            sql.Append(@")
+                WHEN MATCHED THEN
+                    UPDATE
+                    SET        ");
+            sql.AppendUpdateParameters(GetFieldNames(updateFields));
+            sql.Append(
+                @" WHEN NOT MATCHED THEN
+                    INSERT  (Id, AccountOwnerId, CounterpartyId, Timestamp, Amount, AccountType, TransactionReference, InputDataReference, Comment, StripeReference, TaxamoReference)
+                    VALUES  (Source.Id, Source.AccountOwnerId, Source.CounterpartyId, Source.Timestamp, Source.Amount, Source.AccountType, Source.TransactionReference, Source.InputDataReference, Source.Comment, Source.StripeReference, Source.TaxamoReference);");
+            return sql.ToString();
+        }
+        
+        public static string UpdateStatement(AppendOnlyLedgerRecord.Fields fields)
+        {
+            var sql = new System.Text.StringBuilder();
+            sql.Append("UPDATE AppendOnlyLedgerRecords SET ");
+            sql.AppendUpdateParameters(GetFieldNames(fields));
+            sql.Append(" WHERE Id = @Id");
+            return sql.ToString();
+        }
+        
+        private static System.Collections.Generic.IReadOnlyList<string> GetFieldNames(AppendOnlyLedgerRecord.Fields fields, bool autoIncludePrimaryKeys = true)
+        {
+            var fieldNames = new System.Collections.Generic.List<string>();
+            if (autoIncludePrimaryKeys)
+            {
+                fieldNames.Add("Id");
+            }
+        
+            if (fields.HasFlag(AppendOnlyLedgerRecord.Fields.AccountOwnerId))
+            {
+                fieldNames.Add("AccountOwnerId");
+            }
+        
+            if (fields.HasFlag(AppendOnlyLedgerRecord.Fields.CounterpartyId))
+            {
+                fieldNames.Add("CounterpartyId");
+            }
+        
+            if (fields.HasFlag(AppendOnlyLedgerRecord.Fields.Timestamp))
+            {
+                fieldNames.Add("Timestamp");
+            }
+        
+            if (fields.HasFlag(AppendOnlyLedgerRecord.Fields.Amount))
+            {
+                fieldNames.Add("Amount");
+            }
+        
+            if (fields.HasFlag(AppendOnlyLedgerRecord.Fields.AccountType))
+            {
+                fieldNames.Add("AccountType");
+            }
+        
+            if (fields.HasFlag(AppendOnlyLedgerRecord.Fields.TransactionReference))
+            {
+                fieldNames.Add("TransactionReference");
+            }
+        
+            if (fields.HasFlag(AppendOnlyLedgerRecord.Fields.InputDataReference))
+            {
+                fieldNames.Add("InputDataReference");
+            }
+        
+            if (fields.HasFlag(AppendOnlyLedgerRecord.Fields.Comment))
+            {
+                fieldNames.Add("Comment");
+            }
+        
+            if (fields.HasFlag(AppendOnlyLedgerRecord.Fields.StripeReference))
+            {
+                fieldNames.Add("StripeReference");
+            }
+        
+            if (fields.HasFlag(AppendOnlyLedgerRecord.Fields.TaxamoReference))
+            {
+                fieldNames.Add("TaxamoReference");
+            }
+        
+            return fieldNames;
+        }
+        
+        private static Dapper.DynamicParameters OnlySpecifiedParameters(
+            AppendOnlyLedgerRecord entity, 
+            AppendOnlyLedgerRecord.Fields fields,
+            AppendOnlyLedgerRecord.Fields? excludedFields = null)
+        {
+            var parameters = new Dapper.DynamicParameters();
+        
+            // Assume we never want to exclude primary key field(s) from our input.
+            parameters.Add("Id", entity.Id);
+            if (fields.HasFlag(AppendOnlyLedgerRecord.Fields.AccountOwnerId) && (excludedFields == null || !excludedFields.Value.HasFlag(AppendOnlyLedgerRecord.Fields.AccountOwnerId)))
+            {
+                parameters.Add("AccountOwnerId", entity.AccountOwnerId);
+            }
+        
+            if (fields.HasFlag(AppendOnlyLedgerRecord.Fields.CounterpartyId) && (excludedFields == null || !excludedFields.Value.HasFlag(AppendOnlyLedgerRecord.Fields.CounterpartyId)))
+            {
+                parameters.Add("CounterpartyId", entity.CounterpartyId);
+            }
+        
+            if (fields.HasFlag(AppendOnlyLedgerRecord.Fields.Timestamp) && (excludedFields == null || !excludedFields.Value.HasFlag(AppendOnlyLedgerRecord.Fields.Timestamp)))
+            {
+                parameters.Add("Timestamp", entity.Timestamp);
+            }
+        
+            if (fields.HasFlag(AppendOnlyLedgerRecord.Fields.Amount) && (excludedFields == null || !excludedFields.Value.HasFlag(AppendOnlyLedgerRecord.Fields.Amount)))
+            {
+                parameters.Add("Amount", entity.Amount);
+            }
+        
+            if (fields.HasFlag(AppendOnlyLedgerRecord.Fields.AccountType) && (excludedFields == null || !excludedFields.Value.HasFlag(AppendOnlyLedgerRecord.Fields.AccountType)))
+            {
+                parameters.Add("AccountType", entity.AccountType);
+            }
+        
+            if (fields.HasFlag(AppendOnlyLedgerRecord.Fields.TransactionReference) && (excludedFields == null || !excludedFields.Value.HasFlag(AppendOnlyLedgerRecord.Fields.TransactionReference)))
+            {
+                parameters.Add("TransactionReference", entity.TransactionReference);
+            }
+        
+            if (fields.HasFlag(AppendOnlyLedgerRecord.Fields.InputDataReference) && (excludedFields == null || !excludedFields.Value.HasFlag(AppendOnlyLedgerRecord.Fields.InputDataReference)))
+            {
+                parameters.Add("InputDataReference", entity.InputDataReference);
+            }
+        
+            if (fields.HasFlag(AppendOnlyLedgerRecord.Fields.Comment) && (excludedFields == null || !excludedFields.Value.HasFlag(AppendOnlyLedgerRecord.Fields.Comment)))
+            {
+                parameters.Add("Comment", entity.Comment);
+            }
+        
+            if (fields.HasFlag(AppendOnlyLedgerRecord.Fields.StripeReference) && (excludedFields == null || !excludedFields.Value.HasFlag(AppendOnlyLedgerRecord.Fields.StripeReference)))
+            {
+                parameters.Add("StripeReference", entity.StripeReference);
+            }
+        
+            if (fields.HasFlag(AppendOnlyLedgerRecord.Fields.TaxamoReference) && (excludedFields == null || !excludedFields.Value.HasFlag(AppendOnlyLedgerRecord.Fields.TaxamoReference)))
+            {
+                parameters.Add("TaxamoReference", entity.TaxamoReference);
+            }
+        
+            return parameters;
+        }
+        
+        private static Dapper.DynamicParameters AllExceptSpecifiedParameters(
+            AppendOnlyLedgerRecord entity, 
+            AppendOnlyLedgerRecord.Fields fields)
+        {
+            var parameters = new Dapper.DynamicParameters();
+        
+            // Assume we never want to exclude primary key field(s) from our input.
+            parameters.Add("Id", entity.Id);
+            if (!fields.HasFlag(AppendOnlyLedgerRecord.Fields.AccountOwnerId))
+            {
+                parameters.Add("AccountOwnerId", entity.AccountOwnerId);
+            }
+        
+            if (!fields.HasFlag(AppendOnlyLedgerRecord.Fields.CounterpartyId))
+            {
+                parameters.Add("CounterpartyId", entity.CounterpartyId);
+            }
+        
+            if (!fields.HasFlag(AppendOnlyLedgerRecord.Fields.Timestamp))
+            {
+                parameters.Add("Timestamp", entity.Timestamp);
+            }
+        
+            if (!fields.HasFlag(AppendOnlyLedgerRecord.Fields.Amount))
+            {
+                parameters.Add("Amount", entity.Amount);
+            }
+        
+            if (!fields.HasFlag(AppendOnlyLedgerRecord.Fields.AccountType))
+            {
+                parameters.Add("AccountType", entity.AccountType);
+            }
+        
+            if (!fields.HasFlag(AppendOnlyLedgerRecord.Fields.TransactionReference))
+            {
+                parameters.Add("TransactionReference", entity.TransactionReference);
+            }
+        
+            if (!fields.HasFlag(AppendOnlyLedgerRecord.Fields.InputDataReference))
+            {
+                parameters.Add("InputDataReference", entity.InputDataReference);
+            }
+        
+            if (!fields.HasFlag(AppendOnlyLedgerRecord.Fields.Comment))
+            {
+                parameters.Add("Comment", entity.Comment);
+            }
+        
+            if (!fields.HasFlag(AppendOnlyLedgerRecord.Fields.StripeReference))
+            {
+                parameters.Add("StripeReference", entity.StripeReference);
+            }
+        
+            if (!fields.HasFlag(AppendOnlyLedgerRecord.Fields.TaxamoReference))
+            {
+                parameters.Add("TaxamoReference", entity.TaxamoReference);
+            }
+        
+            return parameters;
+        }
+        
+    }
+}
+namespace Fifthweek.Api.Persistence.Payments
+{
+    using System;
+    using System.Linq;
+    using System.ComponentModel.DataAnnotations;
+    using System.ComponentModel.DataAnnotations.Schema;
+    using Fifthweek.CodeGeneration;
+    using Fifthweek.Api.Persistence.Identity;
+
+    public partial class CalculatedAccountBalance  : IIdentityEquatable
+    {
+        public const string Table = "CalculatedAccountBalances";
+        
+        public CalculatedAccountBalance(
+            System.Guid userId,
+            Fifthweek.Api.Persistence.Payments.LedgerAccountType accountType,
+            System.DateTime timestamp)
+        {
+            if (userId == null)
+            {
+                throw new ArgumentNullException("userId");
+            }
+
+            if (accountType == null)
+            {
+                throw new ArgumentNullException("accountType");
+            }
+
+            if (timestamp == null)
+            {
+                throw new ArgumentNullException("timestamp");
+            }
+
+            this.UserId = userId;
+            this.AccountType = accountType;
+            this.Timestamp = timestamp;
+        }
+        
+        public bool IdentityEquals(object other)
+        {
+            if (ReferenceEquals(null, other))
+            {
+                return false;
+            }
+        
+            if (ReferenceEquals(this, other))
+            {
+                return true;
+            }
+        
+            if (other.GetType() != this.GetType())
+            {
+                return false;
+            }
+        
+            return this.IdentityEquals((CalculatedAccountBalance)other);
+        }
+        
+        protected bool IdentityEquals(CalculatedAccountBalance other)
+        {
+            if (!object.Equals(this.UserId, other.UserId))
+            {
+                return false;
+            }
+        
+            if (!object.Equals(this.AccountType, other.AccountType))
+            {
+                return false;
+            }
+        
+            if (!object.Equals(this.Timestamp, other.Timestamp))
+            {
+                return false;
+            }
+        
+            return true;
+        }
+        
+        [Flags]
+        public enum Fields
+        {
+            Empty = 0,
+            UserId = 1, 
+            AccountType = 2, 
+            Timestamp = 4, 
+            Amount = 8
+        }
+    }
+
+    public static partial class CalculatedAccountBalanceExtensions
+    {
+        public static System.Threading.Tasks.Task InsertAsync(
+            this System.Data.Common.DbConnection connection, 
+            System.Collections.Generic.IEnumerable<CalculatedAccountBalance> entities, 
+            bool idempotent = true, 
+            System.Data.IDbTransaction transaction = null)
+        {
+            return Dapper.SqlMapper.ExecuteAsync(
+                connection, 
+                InsertStatement(idempotent), 
+                entities.Select(entity => new 
+                {
+                    entity.UserId, entity.AccountType, entity.Timestamp, entity.Amount
+                }).ToArray(),
+                transaction);
+        }
+        
+        public static System.Threading.Tasks.Task InsertAsync(
+            this System.Data.Common.DbConnection connection, 
+            CalculatedAccountBalance entity,
+            bool idempotent = true, 
+            System.Data.IDbTransaction transaction = null)
+        {
+            return Dapper.SqlMapper.ExecuteAsync(
+                connection, 
+                InsertStatement(idempotent), 
+                new 
+                {
+                    entity.UserId, entity.AccountType, entity.Timestamp, entity.Amount
+                },
+                transaction);
+        }
+        
+        public static System.Threading.Tasks.Task<int> InsertAsync(
+            this System.Data.Common.DbConnection connection,
+            SqlGenerationParameters<CalculatedAccountBalance, CalculatedAccountBalance.Fields> parameters)
+        {
+            var sql = new System.Text.StringBuilder();
+        
+            if (parameters.Declarations != null)
+            {
+                sql.AppendLine(parameters.Declarations);
+            }
+            
+            int currentIndex = 0;
+            if (parameters.Conditions != null)
+            {
+                foreach (var condition in parameters.Conditions)
+                {
+                    sql.Append("IF ");
+                    sql.AppendLine(condition); // Remember to use `WITH (UPDLOCK, HOLDLOCK)` in your conditions! See: http://samsaffron.com/blog/archive/2007/04/04/14.aspx
+                    sql.AppendLine("BEGIN");
+                    ++currentIndex;
+                }
+            }
+        
+            sql.AppendLine(InsertStatement(parameters.IdempotentInsert));
+        
+            if (parameters.Conditions != null)
+            {
+                sql.AppendLine("SELECT -1 AS FailedConditionIndex"); // Indicates all conditions passed and operation was attempted.
+                    
+                foreach (var condition in parameters.Conditions)
+                {
+                    sql.AppendLine("END");
+                    sql.AppendLine("ELSE");
+                    sql.Append("SELECT ").Append(--currentIndex).AppendLine(" AS FailedConditionIndex");
+                }
+            }
+        
+            var entity = parameters.Entity;
+            var parameterObject = parameters.ExcludedFromInput != null
+                ? AllExceptSpecifiedParameters(entity, parameters.ExcludedFromInput.Value)
+                : new Dapper.DynamicParameters(new { entity.UserId, entity.AccountType, entity.Timestamp, entity.Amount });
+        
+            if (parameters.AdditionalParameters != null)
+            {
+                parameterObject.AddDynamicParams(parameters.AdditionalParameters);
+            }
+        
+            return Dapper.SqlMapper.ExecuteScalarAsync<int>(
+                connection,
+                sql.ToString(),
+                parameterObject);
+        }
+        
+        public static System.Threading.Tasks.Task UpsertAsync(
+            this System.Data.Common.DbConnection connection, 
+            CalculatedAccountBalance entity, 
+            CalculatedAccountBalance.Fields fields,
+            System.Data.IDbTransaction transaction = null)
+        {
+            return Dapper.SqlMapper.ExecuteAsync(
+                connection, 
+                UpsertStatement(CalculatedAccountBalance.Fields.Empty, fields), 
+                new 
+                {
+                    entity.UserId, entity.AccountType, entity.Timestamp, entity.Amount
+                },
+                transaction);
+        }
+        
+        public static System.Threading.Tasks.Task UpsertAsync(
+            this System.Data.Common.DbConnection connection, 
+            CalculatedAccountBalance entity, 
+            CalculatedAccountBalance.Fields mergeOnFields,
+            CalculatedAccountBalance.Fields updateFields,
+            System.Data.IDbTransaction transaction = null)
+        {
+            return Dapper.SqlMapper.ExecuteAsync(
+                connection, 
+                UpsertStatement(mergeOnFields, updateFields), 
+                new 
+                {
+                    entity.UserId, entity.AccountType, entity.Timestamp, entity.Amount
+                },
+                transaction);
+        }
+        
+        public static System.Threading.Tasks.Task UpdateAsync(
+            this System.Data.Common.DbConnection connection, 
+            CalculatedAccountBalance entity, 
+            CalculatedAccountBalance.Fields fields,
+            System.Data.IDbTransaction transaction = null)
+        {
+            return Dapper.SqlMapper.ExecuteAsync(connection, UpdateStatement(fields), OnlySpecifiedParameters(entity, fields), transaction);
+        }
+        
+        public static System.Threading.Tasks.Task<int> UpdateAsync(
+            this System.Data.Common.DbConnection connection,
+            SqlGenerationParameters<CalculatedAccountBalance, CalculatedAccountBalance.Fields> parameters)
+        {
+            if (parameters.UpdateMask == null)
+            {
+                throw new ArgumentException("Must contain update mask", "parameters");
+            }
+        
+            var sql = new System.Text.StringBuilder();
+        
+            if (parameters.Declarations != null)
+            {
+                sql.AppendLine(parameters.Declarations);
+            }
+            
+            int currentIndex = 0;
+            if (parameters.Conditions != null)
+            {
+                foreach (var condition in parameters.Conditions)
+                {
+                    sql.Append("IF ");
+                    sql.AppendLine(condition); // Remember to use `WITH (UPDLOCK, HOLDLOCK)` in your conditions! See: http://samsaffron.com/blog/archive/2007/04/04/14.aspx
+                    sql.AppendLine("BEGIN");
+                    ++currentIndex;
+                }
+            }
+        
+            sql.AppendLine(UpdateStatement(parameters.UpdateMask.Value));
+        
+            if (parameters.Conditions != null)
+            {
+                sql.AppendLine("SELECT -1 AS FailedConditionIndex"); // Indicates all conditions passed and operation was attempted.
+                    
+                foreach (var condition in parameters.Conditions)
+                {
+                    sql.AppendLine("END");
+                    sql.AppendLine("ELSE");
+                    sql.Append("SELECT ").Append(--currentIndex).AppendLine(" AS FailedConditionIndex");
+                }
+            }
+        
+            var parameterObject = OnlySpecifiedParameters(parameters.Entity, parameters.UpdateMask.Value, parameters.ExcludedFromInput);
+        
+            if (parameters.AdditionalParameters != null)
+            {
+                parameterObject.AddDynamicParams(parameters.AdditionalParameters);
+            }
+        
+            return Dapper.SqlMapper.ExecuteScalarAsync<int>(
+                connection,
+                sql.ToString(),
+                parameterObject);
+        }
+        
+        public static string InsertStatement(bool idempotent = true)
+        {
+            const string insert = "INSERT INTO CalculatedAccountBalances(UserId, AccountType, Timestamp, Amount) VALUES(@UserId, @AccountType, @Timestamp, @Amount)";
+            return idempotent ? SqlStatementTemplates.IdempotentInsert(insert) : insert;
+        }
+        
+        public static string UpsertStatement(CalculatedAccountBalance.Fields mergeOnFields, CalculatedAccountBalance.Fields updateFields)
+        {
+            // HOLDLOCK ensures operation is concurrent by not releasing the U lock on the row after determining
+            // it does not exist. See: http://weblogs.sqlteam.com/dang/archive/2009/01/31/UPSERT-Race-Condition-With-MERGE.aspx
+            var sql = new System.Text.StringBuilder();
+            sql.Append(
+                @"MERGE CalculatedAccountBalances WITH (HOLDLOCK) as Target
+                USING (VALUES (@UserId, @AccountType, @Timestamp, @Amount)) AS Source (UserId, AccountType, Timestamp, Amount)
+                ON    (");
+                
+            if (mergeOnFields == CalculatedAccountBalance.Fields.Empty)
+            {
+                sql.Append(@"Target.UserId = Source.UserId AND Target.AccountType = Source.AccountType AND Target.Timestamp = Source.Timestamp");
+            }
+            else
+            {
+                sql.AppendMergeOnParameters(GetFieldNames(mergeOnFields, false));
+            }
+                
+            sql.Append(@")
+                WHEN MATCHED THEN
+                    UPDATE
+                    SET        ");
+            sql.AppendUpdateParameters(GetFieldNames(updateFields));
+            sql.Append(
+                @" WHEN NOT MATCHED THEN
+                    INSERT  (UserId, AccountType, Timestamp, Amount)
+                    VALUES  (Source.UserId, Source.AccountType, Source.Timestamp, Source.Amount);");
+            return sql.ToString();
+        }
+        
+        public static string UpdateStatement(CalculatedAccountBalance.Fields fields)
+        {
+            var sql = new System.Text.StringBuilder();
+            sql.Append("UPDATE CalculatedAccountBalances SET ");
+            sql.AppendUpdateParameters(GetFieldNames(fields));
+            sql.Append(" WHERE UserId = @UserId AND AccountType = @AccountType AND Timestamp = @Timestamp");
+            return sql.ToString();
+        }
+        
+        private static System.Collections.Generic.IReadOnlyList<string> GetFieldNames(CalculatedAccountBalance.Fields fields, bool autoIncludePrimaryKeys = true)
+        {
+            var fieldNames = new System.Collections.Generic.List<string>();
+            if (autoIncludePrimaryKeys)
+            {
+                fieldNames.Add("UserId");
+            }
+        
+            if (autoIncludePrimaryKeys)
+            {
+                fieldNames.Add("AccountType");
+            }
+        
+            if (autoIncludePrimaryKeys)
+            {
+                fieldNames.Add("Timestamp");
+            }
+        
+            if (fields.HasFlag(CalculatedAccountBalance.Fields.Amount))
+            {
+                fieldNames.Add("Amount");
+            }
+        
+            return fieldNames;
+        }
+        
+        private static Dapper.DynamicParameters OnlySpecifiedParameters(
+            CalculatedAccountBalance entity, 
+            CalculatedAccountBalance.Fields fields,
+            CalculatedAccountBalance.Fields? excludedFields = null)
+        {
+            var parameters = new Dapper.DynamicParameters();
+        
+            // Assume we never want to exclude primary key field(s) from our input.
+            parameters.Add("UserId", entity.UserId);
+            parameters.Add("AccountType", entity.AccountType);
+            parameters.Add("Timestamp", entity.Timestamp);
+            if (fields.HasFlag(CalculatedAccountBalance.Fields.Amount) && (excludedFields == null || !excludedFields.Value.HasFlag(CalculatedAccountBalance.Fields.Amount)))
+            {
+                parameters.Add("Amount", entity.Amount);
+            }
+        
+            return parameters;
+        }
+        
+        private static Dapper.DynamicParameters AllExceptSpecifiedParameters(
+            CalculatedAccountBalance entity, 
+            CalculatedAccountBalance.Fields fields)
+        {
+            var parameters = new Dapper.DynamicParameters();
+        
+            // Assume we never want to exclude primary key field(s) from our input.
+            parameters.Add("UserId", entity.UserId);
+            parameters.Add("AccountType", entity.AccountType);
+            parameters.Add("Timestamp", entity.Timestamp);
+            if (!fields.HasFlag(CalculatedAccountBalance.Fields.Amount))
+            {
+                parameters.Add("Amount", entity.Amount);
+            }
+        
+            return parameters;
+        }
+        
+    }
+}
+namespace Fifthweek.Api.Persistence.Payments
+{
+    using System;
+    using System.Linq;
+    using System.ComponentModel.DataAnnotations;
+    using System.ComponentModel.DataAnnotations.Schema;
+    using Fifthweek.CodeGeneration;
+    using Fifthweek.Api.Persistence.Identity;
+
+    public partial class UncommittedSubscriptionPayment  : IIdentityEquatable
+    {
+        public const string Table = "UncommittedSubscriptionPayments";
+        
+        public UncommittedSubscriptionPayment(
+            System.Guid subscriberId,
+            System.Guid creatorId)
+        {
+            if (subscriberId == null)
+            {
+                throw new ArgumentNullException("subscriberId");
+            }
+
+            if (creatorId == null)
+            {
+                throw new ArgumentNullException("creatorId");
+            }
+
+            this.SubscriberId = subscriberId;
+            this.CreatorId = creatorId;
+        }
+        
+        public bool IdentityEquals(object other)
+        {
+            if (ReferenceEquals(null, other))
+            {
+                return false;
+            }
+        
+            if (ReferenceEquals(this, other))
+            {
+                return true;
+            }
+        
+            if (other.GetType() != this.GetType())
+            {
+                return false;
+            }
+        
+            return this.IdentityEquals((UncommittedSubscriptionPayment)other);
+        }
+        
+        protected bool IdentityEquals(UncommittedSubscriptionPayment other)
+        {
+            if (!object.Equals(this.SubscriberId, other.SubscriberId))
+            {
+                return false;
+            }
+        
+            if (!object.Equals(this.CreatorId, other.CreatorId))
+            {
+                return false;
+            }
+        
+            return true;
+        }
+        
+        [Flags]
+        public enum Fields
+        {
+            Empty = 0,
+            SubscriberId = 1, 
+            CreatorId = 2, 
+            StartTimestampInclusive = 4, 
+            EndTimestampExclusive = 8, 
+            Amount = 16, 
+            InputDataReference = 32
+        }
+    }
+
+    public static partial class UncommittedSubscriptionPaymentExtensions
+    {
+        public static System.Threading.Tasks.Task InsertAsync(
+            this System.Data.Common.DbConnection connection, 
+            System.Collections.Generic.IEnumerable<UncommittedSubscriptionPayment> entities, 
+            bool idempotent = true, 
+            System.Data.IDbTransaction transaction = null)
+        {
+            return Dapper.SqlMapper.ExecuteAsync(
+                connection, 
+                InsertStatement(idempotent), 
+                entities.Select(entity => new 
+                {
+                    entity.SubscriberId, entity.CreatorId, entity.StartTimestampInclusive, entity.EndTimestampExclusive, entity.Amount, entity.InputDataReference
+                }).ToArray(),
+                transaction);
+        }
+        
+        public static System.Threading.Tasks.Task InsertAsync(
+            this System.Data.Common.DbConnection connection, 
+            UncommittedSubscriptionPayment entity,
+            bool idempotent = true, 
+            System.Data.IDbTransaction transaction = null)
+        {
+            return Dapper.SqlMapper.ExecuteAsync(
+                connection, 
+                InsertStatement(idempotent), 
+                new 
+                {
+                    entity.SubscriberId, entity.CreatorId, entity.StartTimestampInclusive, entity.EndTimestampExclusive, entity.Amount, entity.InputDataReference
+                },
+                transaction);
+        }
+        
+        public static System.Threading.Tasks.Task<int> InsertAsync(
+            this System.Data.Common.DbConnection connection,
+            SqlGenerationParameters<UncommittedSubscriptionPayment, UncommittedSubscriptionPayment.Fields> parameters)
+        {
+            var sql = new System.Text.StringBuilder();
+        
+            if (parameters.Declarations != null)
+            {
+                sql.AppendLine(parameters.Declarations);
+            }
+            
+            int currentIndex = 0;
+            if (parameters.Conditions != null)
+            {
+                foreach (var condition in parameters.Conditions)
+                {
+                    sql.Append("IF ");
+                    sql.AppendLine(condition); // Remember to use `WITH (UPDLOCK, HOLDLOCK)` in your conditions! See: http://samsaffron.com/blog/archive/2007/04/04/14.aspx
+                    sql.AppendLine("BEGIN");
+                    ++currentIndex;
+                }
+            }
+        
+            sql.AppendLine(InsertStatement(parameters.IdempotentInsert));
+        
+            if (parameters.Conditions != null)
+            {
+                sql.AppendLine("SELECT -1 AS FailedConditionIndex"); // Indicates all conditions passed and operation was attempted.
+                    
+                foreach (var condition in parameters.Conditions)
+                {
+                    sql.AppendLine("END");
+                    sql.AppendLine("ELSE");
+                    sql.Append("SELECT ").Append(--currentIndex).AppendLine(" AS FailedConditionIndex");
+                }
+            }
+        
+            var entity = parameters.Entity;
+            var parameterObject = parameters.ExcludedFromInput != null
+                ? AllExceptSpecifiedParameters(entity, parameters.ExcludedFromInput.Value)
+                : new Dapper.DynamicParameters(new { entity.SubscriberId, entity.CreatorId, entity.StartTimestampInclusive, entity.EndTimestampExclusive, entity.Amount, entity.InputDataReference });
+        
+            if (parameters.AdditionalParameters != null)
+            {
+                parameterObject.AddDynamicParams(parameters.AdditionalParameters);
+            }
+        
+            return Dapper.SqlMapper.ExecuteScalarAsync<int>(
+                connection,
+                sql.ToString(),
+                parameterObject);
+        }
+        
+        public static System.Threading.Tasks.Task UpsertAsync(
+            this System.Data.Common.DbConnection connection, 
+            UncommittedSubscriptionPayment entity, 
+            UncommittedSubscriptionPayment.Fields fields,
+            System.Data.IDbTransaction transaction = null)
+        {
+            return Dapper.SqlMapper.ExecuteAsync(
+                connection, 
+                UpsertStatement(UncommittedSubscriptionPayment.Fields.Empty, fields), 
+                new 
+                {
+                    entity.SubscriberId, entity.CreatorId, entity.StartTimestampInclusive, entity.EndTimestampExclusive, entity.Amount, entity.InputDataReference
+                },
+                transaction);
+        }
+        
+        public static System.Threading.Tasks.Task UpsertAsync(
+            this System.Data.Common.DbConnection connection, 
+            UncommittedSubscriptionPayment entity, 
+            UncommittedSubscriptionPayment.Fields mergeOnFields,
+            UncommittedSubscriptionPayment.Fields updateFields,
+            System.Data.IDbTransaction transaction = null)
+        {
+            return Dapper.SqlMapper.ExecuteAsync(
+                connection, 
+                UpsertStatement(mergeOnFields, updateFields), 
+                new 
+                {
+                    entity.SubscriberId, entity.CreatorId, entity.StartTimestampInclusive, entity.EndTimestampExclusive, entity.Amount, entity.InputDataReference
+                },
+                transaction);
+        }
+        
+        public static System.Threading.Tasks.Task UpdateAsync(
+            this System.Data.Common.DbConnection connection, 
+            UncommittedSubscriptionPayment entity, 
+            UncommittedSubscriptionPayment.Fields fields,
+            System.Data.IDbTransaction transaction = null)
+        {
+            return Dapper.SqlMapper.ExecuteAsync(connection, UpdateStatement(fields), OnlySpecifiedParameters(entity, fields), transaction);
+        }
+        
+        public static System.Threading.Tasks.Task<int> UpdateAsync(
+            this System.Data.Common.DbConnection connection,
+            SqlGenerationParameters<UncommittedSubscriptionPayment, UncommittedSubscriptionPayment.Fields> parameters)
+        {
+            if (parameters.UpdateMask == null)
+            {
+                throw new ArgumentException("Must contain update mask", "parameters");
+            }
+        
+            var sql = new System.Text.StringBuilder();
+        
+            if (parameters.Declarations != null)
+            {
+                sql.AppendLine(parameters.Declarations);
+            }
+            
+            int currentIndex = 0;
+            if (parameters.Conditions != null)
+            {
+                foreach (var condition in parameters.Conditions)
+                {
+                    sql.Append("IF ");
+                    sql.AppendLine(condition); // Remember to use `WITH (UPDLOCK, HOLDLOCK)` in your conditions! See: http://samsaffron.com/blog/archive/2007/04/04/14.aspx
+                    sql.AppendLine("BEGIN");
+                    ++currentIndex;
+                }
+            }
+        
+            sql.AppendLine(UpdateStatement(parameters.UpdateMask.Value));
+        
+            if (parameters.Conditions != null)
+            {
+                sql.AppendLine("SELECT -1 AS FailedConditionIndex"); // Indicates all conditions passed and operation was attempted.
+                    
+                foreach (var condition in parameters.Conditions)
+                {
+                    sql.AppendLine("END");
+                    sql.AppendLine("ELSE");
+                    sql.Append("SELECT ").Append(--currentIndex).AppendLine(" AS FailedConditionIndex");
+                }
+            }
+        
+            var parameterObject = OnlySpecifiedParameters(parameters.Entity, parameters.UpdateMask.Value, parameters.ExcludedFromInput);
+        
+            if (parameters.AdditionalParameters != null)
+            {
+                parameterObject.AddDynamicParams(parameters.AdditionalParameters);
+            }
+        
+            return Dapper.SqlMapper.ExecuteScalarAsync<int>(
+                connection,
+                sql.ToString(),
+                parameterObject);
+        }
+        
+        public static string InsertStatement(bool idempotent = true)
+        {
+            const string insert = "INSERT INTO UncommittedSubscriptionPayments(SubscriberId, CreatorId, StartTimestampInclusive, EndTimestampExclusive, Amount, InputDataReference) VALUES(@SubscriberId, @CreatorId, @StartTimestampInclusive, @EndTimestampExclusive, @Amount, @InputDataReference)";
+            return idempotent ? SqlStatementTemplates.IdempotentInsert(insert) : insert;
+        }
+        
+        public static string UpsertStatement(UncommittedSubscriptionPayment.Fields mergeOnFields, UncommittedSubscriptionPayment.Fields updateFields)
+        {
+            // HOLDLOCK ensures operation is concurrent by not releasing the U lock on the row after determining
+            // it does not exist. See: http://weblogs.sqlteam.com/dang/archive/2009/01/31/UPSERT-Race-Condition-With-MERGE.aspx
+            var sql = new System.Text.StringBuilder();
+            sql.Append(
+                @"MERGE UncommittedSubscriptionPayments WITH (HOLDLOCK) as Target
+                USING (VALUES (@SubscriberId, @CreatorId, @StartTimestampInclusive, @EndTimestampExclusive, @Amount, @InputDataReference)) AS Source (SubscriberId, CreatorId, StartTimestampInclusive, EndTimestampExclusive, Amount, InputDataReference)
+                ON    (");
+                
+            if (mergeOnFields == UncommittedSubscriptionPayment.Fields.Empty)
+            {
+                sql.Append(@"Target.SubscriberId = Source.SubscriberId AND Target.CreatorId = Source.CreatorId");
+            }
+            else
+            {
+                sql.AppendMergeOnParameters(GetFieldNames(mergeOnFields, false));
+            }
+                
+            sql.Append(@")
+                WHEN MATCHED THEN
+                    UPDATE
+                    SET        ");
+            sql.AppendUpdateParameters(GetFieldNames(updateFields));
+            sql.Append(
+                @" WHEN NOT MATCHED THEN
+                    INSERT  (SubscriberId, CreatorId, StartTimestampInclusive, EndTimestampExclusive, Amount, InputDataReference)
+                    VALUES  (Source.SubscriberId, Source.CreatorId, Source.StartTimestampInclusive, Source.EndTimestampExclusive, Source.Amount, Source.InputDataReference);");
+            return sql.ToString();
+        }
+        
+        public static string UpdateStatement(UncommittedSubscriptionPayment.Fields fields)
+        {
+            var sql = new System.Text.StringBuilder();
+            sql.Append("UPDATE UncommittedSubscriptionPayments SET ");
+            sql.AppendUpdateParameters(GetFieldNames(fields));
+            sql.Append(" WHERE SubscriberId = @SubscriberId AND CreatorId = @CreatorId");
+            return sql.ToString();
+        }
+        
+        private static System.Collections.Generic.IReadOnlyList<string> GetFieldNames(UncommittedSubscriptionPayment.Fields fields, bool autoIncludePrimaryKeys = true)
+        {
+            var fieldNames = new System.Collections.Generic.List<string>();
+            if (autoIncludePrimaryKeys)
+            {
+                fieldNames.Add("SubscriberId");
+            }
+        
+            if (autoIncludePrimaryKeys)
+            {
+                fieldNames.Add("CreatorId");
+            }
+        
+            if (fields.HasFlag(UncommittedSubscriptionPayment.Fields.StartTimestampInclusive))
+            {
+                fieldNames.Add("StartTimestampInclusive");
+            }
+        
+            if (fields.HasFlag(UncommittedSubscriptionPayment.Fields.EndTimestampExclusive))
+            {
+                fieldNames.Add("EndTimestampExclusive");
+            }
+        
+            if (fields.HasFlag(UncommittedSubscriptionPayment.Fields.Amount))
+            {
+                fieldNames.Add("Amount");
+            }
+        
+            if (fields.HasFlag(UncommittedSubscriptionPayment.Fields.InputDataReference))
+            {
+                fieldNames.Add("InputDataReference");
+            }
+        
+            return fieldNames;
+        }
+        
+        private static Dapper.DynamicParameters OnlySpecifiedParameters(
+            UncommittedSubscriptionPayment entity, 
+            UncommittedSubscriptionPayment.Fields fields,
+            UncommittedSubscriptionPayment.Fields? excludedFields = null)
+        {
+            var parameters = new Dapper.DynamicParameters();
+        
+            // Assume we never want to exclude primary key field(s) from our input.
+            parameters.Add("SubscriberId", entity.SubscriberId);
+            parameters.Add("CreatorId", entity.CreatorId);
+            if (fields.HasFlag(UncommittedSubscriptionPayment.Fields.StartTimestampInclusive) && (excludedFields == null || !excludedFields.Value.HasFlag(UncommittedSubscriptionPayment.Fields.StartTimestampInclusive)))
+            {
+                parameters.Add("StartTimestampInclusive", entity.StartTimestampInclusive);
+            }
+        
+            if (fields.HasFlag(UncommittedSubscriptionPayment.Fields.EndTimestampExclusive) && (excludedFields == null || !excludedFields.Value.HasFlag(UncommittedSubscriptionPayment.Fields.EndTimestampExclusive)))
+            {
+                parameters.Add("EndTimestampExclusive", entity.EndTimestampExclusive);
+            }
+        
+            if (fields.HasFlag(UncommittedSubscriptionPayment.Fields.Amount) && (excludedFields == null || !excludedFields.Value.HasFlag(UncommittedSubscriptionPayment.Fields.Amount)))
+            {
+                parameters.Add("Amount", entity.Amount);
+            }
+        
+            if (fields.HasFlag(UncommittedSubscriptionPayment.Fields.InputDataReference) && (excludedFields == null || !excludedFields.Value.HasFlag(UncommittedSubscriptionPayment.Fields.InputDataReference)))
+            {
+                parameters.Add("InputDataReference", entity.InputDataReference);
+            }
+        
+            return parameters;
+        }
+        
+        private static Dapper.DynamicParameters AllExceptSpecifiedParameters(
+            UncommittedSubscriptionPayment entity, 
+            UncommittedSubscriptionPayment.Fields fields)
+        {
+            var parameters = new Dapper.DynamicParameters();
+        
+            // Assume we never want to exclude primary key field(s) from our input.
+            parameters.Add("SubscriberId", entity.SubscriberId);
+            parameters.Add("CreatorId", entity.CreatorId);
+            if (!fields.HasFlag(UncommittedSubscriptionPayment.Fields.StartTimestampInclusive))
+            {
+                parameters.Add("StartTimestampInclusive", entity.StartTimestampInclusive);
+            }
+        
+            if (!fields.HasFlag(UncommittedSubscriptionPayment.Fields.EndTimestampExclusive))
+            {
+                parameters.Add("EndTimestampExclusive", entity.EndTimestampExclusive);
+            }
+        
+            if (!fields.HasFlag(UncommittedSubscriptionPayment.Fields.Amount))
+            {
+                parameters.Add("Amount", entity.Amount);
+            }
+        
+            if (!fields.HasFlag(UncommittedSubscriptionPayment.Fields.InputDataReference))
+            {
+                parameters.Add("InputDataReference", entity.InputDataReference);
+            }
+        
+            return parameters;
+        }
+        
+    }
+}
+namespace Fifthweek.Api.Persistence.Payments
+{
+    using System;
+    using System.Linq;
+    using System.ComponentModel.DataAnnotations;
+    using System.ComponentModel.DataAnnotations.Schema;
+    using Fifthweek.CodeGeneration;
+    using Fifthweek.Api.Persistence.Identity;
+
+    public partial class CreatorPercentageOverride  : IIdentityEquatable
+    {
+        public const string Table = "CreatorPercentageOverrides";
+        
+        public CreatorPercentageOverride(
+            System.Guid userId)
+        {
+            if (userId == null)
+            {
+                throw new ArgumentNullException("userId");
+            }
+
+            this.UserId = userId;
+        }
+        
+        public bool IdentityEquals(object other)
+        {
+            if (ReferenceEquals(null, other))
+            {
+                return false;
+            }
+        
+            if (ReferenceEquals(this, other))
+            {
+                return true;
+            }
+        
+            if (other.GetType() != this.GetType())
+            {
+                return false;
+            }
+        
+            return this.IdentityEquals((CreatorPercentageOverride)other);
+        }
+        
+        protected bool IdentityEquals(CreatorPercentageOverride other)
+        {
+            if (!object.Equals(this.UserId, other.UserId))
+            {
+                return false;
+            }
+        
+            return true;
+        }
+        
+        [Flags]
+        public enum Fields
+        {
+            Empty = 0,
+            UserId = 1, 
+            Percentage = 2, 
+            ExpiryDate = 4
+        }
+    }
+
+    public static partial class CreatorPercentageOverrideExtensions
+    {
+        public static System.Threading.Tasks.Task InsertAsync(
+            this System.Data.Common.DbConnection connection, 
+            System.Collections.Generic.IEnumerable<CreatorPercentageOverride> entities, 
+            bool idempotent = true, 
+            System.Data.IDbTransaction transaction = null)
+        {
+            return Dapper.SqlMapper.ExecuteAsync(
+                connection, 
+                InsertStatement(idempotent), 
+                entities.Select(entity => new 
+                {
+                    entity.UserId, entity.Percentage, entity.ExpiryDate
+                }).ToArray(),
+                transaction);
+        }
+        
+        public static System.Threading.Tasks.Task InsertAsync(
+            this System.Data.Common.DbConnection connection, 
+            CreatorPercentageOverride entity,
+            bool idempotent = true, 
+            System.Data.IDbTransaction transaction = null)
+        {
+            return Dapper.SqlMapper.ExecuteAsync(
+                connection, 
+                InsertStatement(idempotent), 
+                new 
+                {
+                    entity.UserId, entity.Percentage, entity.ExpiryDate
+                },
+                transaction);
+        }
+        
+        public static System.Threading.Tasks.Task<int> InsertAsync(
+            this System.Data.Common.DbConnection connection,
+            SqlGenerationParameters<CreatorPercentageOverride, CreatorPercentageOverride.Fields> parameters)
+        {
+            var sql = new System.Text.StringBuilder();
+        
+            if (parameters.Declarations != null)
+            {
+                sql.AppendLine(parameters.Declarations);
+            }
+            
+            int currentIndex = 0;
+            if (parameters.Conditions != null)
+            {
+                foreach (var condition in parameters.Conditions)
+                {
+                    sql.Append("IF ");
+                    sql.AppendLine(condition); // Remember to use `WITH (UPDLOCK, HOLDLOCK)` in your conditions! See: http://samsaffron.com/blog/archive/2007/04/04/14.aspx
+                    sql.AppendLine("BEGIN");
+                    ++currentIndex;
+                }
+            }
+        
+            sql.AppendLine(InsertStatement(parameters.IdempotentInsert));
+        
+            if (parameters.Conditions != null)
+            {
+                sql.AppendLine("SELECT -1 AS FailedConditionIndex"); // Indicates all conditions passed and operation was attempted.
+                    
+                foreach (var condition in parameters.Conditions)
+                {
+                    sql.AppendLine("END");
+                    sql.AppendLine("ELSE");
+                    sql.Append("SELECT ").Append(--currentIndex).AppendLine(" AS FailedConditionIndex");
+                }
+            }
+        
+            var entity = parameters.Entity;
+            var parameterObject = parameters.ExcludedFromInput != null
+                ? AllExceptSpecifiedParameters(entity, parameters.ExcludedFromInput.Value)
+                : new Dapper.DynamicParameters(new { entity.UserId, entity.Percentage, entity.ExpiryDate });
+        
+            if (parameters.AdditionalParameters != null)
+            {
+                parameterObject.AddDynamicParams(parameters.AdditionalParameters);
+            }
+        
+            return Dapper.SqlMapper.ExecuteScalarAsync<int>(
+                connection,
+                sql.ToString(),
+                parameterObject);
+        }
+        
+        public static System.Threading.Tasks.Task UpsertAsync(
+            this System.Data.Common.DbConnection connection, 
+            CreatorPercentageOverride entity, 
+            CreatorPercentageOverride.Fields fields,
+            System.Data.IDbTransaction transaction = null)
+        {
+            return Dapper.SqlMapper.ExecuteAsync(
+                connection, 
+                UpsertStatement(CreatorPercentageOverride.Fields.Empty, fields), 
+                new 
+                {
+                    entity.UserId, entity.Percentage, entity.ExpiryDate
+                },
+                transaction);
+        }
+        
+        public static System.Threading.Tasks.Task UpsertAsync(
+            this System.Data.Common.DbConnection connection, 
+            CreatorPercentageOverride entity, 
+            CreatorPercentageOverride.Fields mergeOnFields,
+            CreatorPercentageOverride.Fields updateFields,
+            System.Data.IDbTransaction transaction = null)
+        {
+            return Dapper.SqlMapper.ExecuteAsync(
+                connection, 
+                UpsertStatement(mergeOnFields, updateFields), 
+                new 
+                {
+                    entity.UserId, entity.Percentage, entity.ExpiryDate
+                },
+                transaction);
+        }
+        
+        public static System.Threading.Tasks.Task UpdateAsync(
+            this System.Data.Common.DbConnection connection, 
+            CreatorPercentageOverride entity, 
+            CreatorPercentageOverride.Fields fields,
+            System.Data.IDbTransaction transaction = null)
+        {
+            return Dapper.SqlMapper.ExecuteAsync(connection, UpdateStatement(fields), OnlySpecifiedParameters(entity, fields), transaction);
+        }
+        
+        public static System.Threading.Tasks.Task<int> UpdateAsync(
+            this System.Data.Common.DbConnection connection,
+            SqlGenerationParameters<CreatorPercentageOverride, CreatorPercentageOverride.Fields> parameters)
+        {
+            if (parameters.UpdateMask == null)
+            {
+                throw new ArgumentException("Must contain update mask", "parameters");
+            }
+        
+            var sql = new System.Text.StringBuilder();
+        
+            if (parameters.Declarations != null)
+            {
+                sql.AppendLine(parameters.Declarations);
+            }
+            
+            int currentIndex = 0;
+            if (parameters.Conditions != null)
+            {
+                foreach (var condition in parameters.Conditions)
+                {
+                    sql.Append("IF ");
+                    sql.AppendLine(condition); // Remember to use `WITH (UPDLOCK, HOLDLOCK)` in your conditions! See: http://samsaffron.com/blog/archive/2007/04/04/14.aspx
+                    sql.AppendLine("BEGIN");
+                    ++currentIndex;
+                }
+            }
+        
+            sql.AppendLine(UpdateStatement(parameters.UpdateMask.Value));
+        
+            if (parameters.Conditions != null)
+            {
+                sql.AppendLine("SELECT -1 AS FailedConditionIndex"); // Indicates all conditions passed and operation was attempted.
+                    
+                foreach (var condition in parameters.Conditions)
+                {
+                    sql.AppendLine("END");
+                    sql.AppendLine("ELSE");
+                    sql.Append("SELECT ").Append(--currentIndex).AppendLine(" AS FailedConditionIndex");
+                }
+            }
+        
+            var parameterObject = OnlySpecifiedParameters(parameters.Entity, parameters.UpdateMask.Value, parameters.ExcludedFromInput);
+        
+            if (parameters.AdditionalParameters != null)
+            {
+                parameterObject.AddDynamicParams(parameters.AdditionalParameters);
+            }
+        
+            return Dapper.SqlMapper.ExecuteScalarAsync<int>(
+                connection,
+                sql.ToString(),
+                parameterObject);
+        }
+        
+        public static string InsertStatement(bool idempotent = true)
+        {
+            const string insert = "INSERT INTO CreatorPercentageOverrides(UserId, Percentage, ExpiryDate) VALUES(@UserId, @Percentage, @ExpiryDate)";
+            return idempotent ? SqlStatementTemplates.IdempotentInsert(insert) : insert;
+        }
+        
+        public static string UpsertStatement(CreatorPercentageOverride.Fields mergeOnFields, CreatorPercentageOverride.Fields updateFields)
+        {
+            // HOLDLOCK ensures operation is concurrent by not releasing the U lock on the row after determining
+            // it does not exist. See: http://weblogs.sqlteam.com/dang/archive/2009/01/31/UPSERT-Race-Condition-With-MERGE.aspx
+            var sql = new System.Text.StringBuilder();
+            sql.Append(
+                @"MERGE CreatorPercentageOverrides WITH (HOLDLOCK) as Target
+                USING (VALUES (@UserId, @Percentage, @ExpiryDate)) AS Source (UserId, Percentage, ExpiryDate)
+                ON    (");
+                
+            if (mergeOnFields == CreatorPercentageOverride.Fields.Empty)
+            {
+                sql.Append(@"Target.UserId = Source.UserId");
+            }
+            else
+            {
+                sql.AppendMergeOnParameters(GetFieldNames(mergeOnFields, false));
+            }
+                
+            sql.Append(@")
+                WHEN MATCHED THEN
+                    UPDATE
+                    SET        ");
+            sql.AppendUpdateParameters(GetFieldNames(updateFields));
+            sql.Append(
+                @" WHEN NOT MATCHED THEN
+                    INSERT  (UserId, Percentage, ExpiryDate)
+                    VALUES  (Source.UserId, Source.Percentage, Source.ExpiryDate);");
+            return sql.ToString();
+        }
+        
+        public static string UpdateStatement(CreatorPercentageOverride.Fields fields)
+        {
+            var sql = new System.Text.StringBuilder();
+            sql.Append("UPDATE CreatorPercentageOverrides SET ");
+            sql.AppendUpdateParameters(GetFieldNames(fields));
+            sql.Append(" WHERE UserId = @UserId");
+            return sql.ToString();
+        }
+        
+        private static System.Collections.Generic.IReadOnlyList<string> GetFieldNames(CreatorPercentageOverride.Fields fields, bool autoIncludePrimaryKeys = true)
+        {
+            var fieldNames = new System.Collections.Generic.List<string>();
+            if (autoIncludePrimaryKeys)
+            {
+                fieldNames.Add("UserId");
+            }
+        
+            if (fields.HasFlag(CreatorPercentageOverride.Fields.Percentage))
+            {
+                fieldNames.Add("Percentage");
+            }
+        
+            if (fields.HasFlag(CreatorPercentageOverride.Fields.ExpiryDate))
+            {
+                fieldNames.Add("ExpiryDate");
+            }
+        
+            return fieldNames;
+        }
+        
+        private static Dapper.DynamicParameters OnlySpecifiedParameters(
+            CreatorPercentageOverride entity, 
+            CreatorPercentageOverride.Fields fields,
+            CreatorPercentageOverride.Fields? excludedFields = null)
+        {
+            var parameters = new Dapper.DynamicParameters();
+        
+            // Assume we never want to exclude primary key field(s) from our input.
+            parameters.Add("UserId", entity.UserId);
+            if (fields.HasFlag(CreatorPercentageOverride.Fields.Percentage) && (excludedFields == null || !excludedFields.Value.HasFlag(CreatorPercentageOverride.Fields.Percentage)))
+            {
+                parameters.Add("Percentage", entity.Percentage);
+            }
+        
+            if (fields.HasFlag(CreatorPercentageOverride.Fields.ExpiryDate) && (excludedFields == null || !excludedFields.Value.HasFlag(CreatorPercentageOverride.Fields.ExpiryDate)))
+            {
+                parameters.Add("ExpiryDate", entity.ExpiryDate);
+            }
+        
+            return parameters;
+        }
+        
+        private static Dapper.DynamicParameters AllExceptSpecifiedParameters(
+            CreatorPercentageOverride entity, 
+            CreatorPercentageOverride.Fields fields)
+        {
+            var parameters = new Dapper.DynamicParameters();
+        
+            // Assume we never want to exclude primary key field(s) from our input.
+            parameters.Add("UserId", entity.UserId);
+            if (!fields.HasFlag(CreatorPercentageOverride.Fields.Percentage))
+            {
+                parameters.Add("Percentage", entity.Percentage);
+            }
+        
+            if (!fields.HasFlag(CreatorPercentageOverride.Fields.ExpiryDate))
+            {
+                parameters.Add("ExpiryDate", entity.ExpiryDate);
+            }
+        
             return parameters;
         }
         

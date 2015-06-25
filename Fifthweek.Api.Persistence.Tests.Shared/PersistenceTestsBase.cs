@@ -19,17 +19,7 @@
             using (TransactionScopeBuilder.CreateAsync())
             {
                 var sideEffects = await databaseTest(databaseContext);
-
-                if (Transaction.Current.TransactionInformation.Status == TransactionStatus.Aborted
-                    && object.ReferenceEquals(sideEffects, ExpectedSideEffects.TransactionAborted))
-                {
-                    // The transaction was aborted, which means we can't test anything except that is
-                    // the intension of the test.
-                }
-                else
-                {
-                    await databaseSnapshot.AssertSideEffectsAsync(sideEffects);
-                }
+                await databaseSnapshot.AssertSideEffectsAsync(sideEffects);
             }
         }
 

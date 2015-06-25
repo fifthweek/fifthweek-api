@@ -1,0 +1,29 @@
+﻿Handling snapshot ordering.
+
+Microsoft suggest that clock drift on different Azure roles should be handled
+within code for up to a few seconds drift:
+
+http://feedback.azure.com/forums/169386-cloud-services-web-and-worker-role/suggestions/2389184-windows-time-service-ntp-should-synchronize-more
+
+We do not currently have a system in place to correctly handle distributed event ordering (e.g. a
+vector clock). Therefore snapshots have been chosen as a simpler way to get accurate cost information
+while avoiding out-of-order issues.
+
+Let's say two roles, A and B have drifted clocks such that t=0s for B is t=2s for A.
+
+If A modifies the database and takes a snapshot and then one second later B does the same,
+then if the timestamp for snapshot A is 2s the timestamp for snapshot B will be 1s, even though
+snapshot A represents an earlier state of the database.
+
+However, if snapshots are always taken N seconds after the event that triggered them, and N is greater than
+the maximum clock drift, the snapshot ordering problem is eliminated.
+
+Let's say N=3 in the above example.  Now if event A happens when it's clock says t=2, and event B happens
+one second later when B's clock says t=1, snapshot A will be timestamped t=2+3=5, and snapshot B will be timestamped
+t=1+3=4.  While the snapshots are still out of order, the only consequence is a slight loss of resolution as the snapshots
+will represent the same data - we would not have captured the database state between events A and B.  
+
+Should another even C occur between snapshots A and B, then the out-of-order snapshots may temporarily cause the state to
+be incorrect, but this will be corrected once snapshot C has occured.
+
+When processing subscription costs, these compromises can be tolerated.

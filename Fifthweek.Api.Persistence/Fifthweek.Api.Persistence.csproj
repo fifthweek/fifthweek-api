@@ -296,7 +296,16 @@
     <Compile Include="Migrations\201506071620443_CreateSnapshotTables.Designer.cs">
       <DependentUpon>201506071620443_CreateSnapshotTables.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201506181434369_CreatePaymentTables.cs" />
+    <Compile Include="Migrations\201506181434369_CreatePaymentTables.Designer.cs">
+      <DependentUpon>201506181434369_CreatePaymentTables.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
+    <Compile Include="Payments\AppendOnlyLedgerRecord.cs" />
+    <Compile Include="Payments\CalculatedAccountBalance.cs" />
+    <Compile Include="Payments\CreatorPercentageOverride.cs" />
+    <Compile Include="Payments\LedgerAccountType.cs" />
+    <Compile Include="Payments\UncommittedSubscriptionPayment.cs" />
     <Compile Include="Snapshots\CreatorChannelsSnapshot.cs" />
     <Compile Include="Snapshots\CreatorChannelsSnapshotItem.cs" />
     <Compile Include="Snapshots\CreatorFreeAccessUsersSnapshot.cs" />
@@ -473,9 +482,13 @@
     <EmbeddedResource Include="Migrations\201506071620443_CreateSnapshotTables.resx">
       <DependentUpon>201506071620443_CreateSnapshotTables.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201506181434369_CreatePaymentTables.resx">
+      <DependentUpon>201506181434369_CreatePaymentTables.cs</DependentUpon>
+    </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
     <Content Include="Migrations\201501032034425_ChangeIdentityPrimaryKeysToGuid.sql" />
+    <Content Include="Snapshots\SnapshotOrdering.txt" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

@@ -6,6 +6,7 @@
     using System.Threading.Tasks;
 
     using Fifthweek.Api.Persistence.Identity;
+    using Fifthweek.Api.Persistence.Payments;
     using Fifthweek.Api.Persistence.Snapshots;
 
     public interface IFifthweekDbContext : IDisposable
@@ -49,6 +50,14 @@
         IDbSet<CreatorFreeAccessUsersSnapshot> CreatorFreeAccessUsersSnapshots { get; set; }
 
         IDbSet<CreatorFreeAccessUsersSnapshotItem> CreatorFreeAccessUsersSnapshotItems { get; set; }
+
+        IDbSet<AppendOnlyLedgerRecord> AppendOnlyLedgerRecords { get; set; }
+
+        IDbSet<UncommittedSubscriptionPayment> UncommittedSubscriptionPayments { get; set; }
+
+        IDbSet<CalculatedAccountBalance> CalculatedAccountBalances { get; set; }
+
+        IDbSet<CreatorPercentageOverride> CreatorPercentageOverrides { get; set; }
 
         Task<int> SaveChangesAsync();
 
