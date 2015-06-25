@@ -5,5 +5,7 @@
     public class Constants
     {
         public static readonly MailAddress FifthweekEmailAddress = new MailAddress("hello@fifthweek.com", "Fifthweek");
+
+        public const string AzureLeaseObjectsContainerName = "lease-objects";
     }
 }

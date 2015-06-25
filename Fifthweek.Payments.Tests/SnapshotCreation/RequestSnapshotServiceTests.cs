@@ -5,6 +5,7 @@
 
     using Fifthweek.Api.Azure;
     using Fifthweek.Api.Identity.Shared.Membership;
+    using Fifthweek.Azure;
     using Fifthweek.Payments.SnapshotCreation;
 
     using Microsoft.VisualStudio.TestTools.UnitTesting;

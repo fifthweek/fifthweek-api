@@ -5,9 +5,10 @@ namespace Fifthweek.Payments.Services
     using System.Threading.Tasks;
 
     using Fifthweek.Api.Identity.Shared.Membership;
+    using Fifthweek.Payments.Shared;
 
     public interface IProcessPaymentsForSubscriber
     {
-        Task ExecuteAsync(UserId subscriberId, DateTime endTimeExclusive, List<PaymentProcessingException> errors);
+        Task ExecuteAsync(UserId subscriberId, DateTime endTimeExclusive, IKeepAliveHandler keepAliveHandler, List<PaymentProcessingException> errors);
     }
 }

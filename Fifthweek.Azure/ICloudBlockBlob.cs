@@ -6,6 +6,7 @@ namespace Fifthweek.Azure
     using System.Threading;
     using System.Threading.Tasks;
 
+    using Microsoft.WindowsAzure.Storage;
     using Microsoft.WindowsAzure.Storage.Blob;
 
     public interface ICloudBlockBlob
@@ -37,5 +38,11 @@ namespace Fifthweek.Azure
         Task SetMetadataAsync();
 
         Task UploadTextAsync(string content);
+
+        Task<string> AcquireLeaseAsync(TimeSpan? leaseTime, string proposedLeaseId, CancellationToken cancellationToken);
+
+        Task RenewLeaseAsync(AccessCondition accessCondition, CancellationToken cancellationToken);
+
+        Task ReleaseLeaseAsync(AccessCondition accessCondition, CancellationToken cancellationToken);
     }
 }

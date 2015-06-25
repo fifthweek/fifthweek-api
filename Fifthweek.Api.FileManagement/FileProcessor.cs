@@ -4,6 +4,7 @@
 
     using Fifthweek.Api.Azure;
     using Fifthweek.Api.FileManagement.Shared;
+    using Fifthweek.Azure;
     using Fifthweek.CodeGeneration;
 
     [AutoConstructor]

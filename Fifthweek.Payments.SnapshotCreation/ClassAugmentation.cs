@@ -213,6 +213,7 @@ namespace Fifthweek.Payments.SnapshotCreation
     using System.Threading.Tasks;
     using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.Api.Persistence;
+    using Fifthweek.Azure;
     using Fifthweek.CodeGeneration;
     using Fifthweek.Api.Azure;
     using Dapper;
@@ -224,7 +225,7 @@ namespace Fifthweek.Payments.SnapshotCreation
     public partial class RequestSnapshotService 
     {
         public RequestSnapshotService(
-            Fifthweek.Api.Azure.IQueueService queueService)
+            IQueueService queueService)
         {
             if (queueService == null)
             {

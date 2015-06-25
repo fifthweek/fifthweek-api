@@ -6,6 +6,7 @@ namespace Fifthweek.Azure
     using System.Threading;
     using System.Threading.Tasks;
 
+    using Microsoft.WindowsAzure.Storage;
     using Microsoft.WindowsAzure.Storage.Blob;
 
     public class FifthweekCloudBlockBlob : ICloudBlockBlob
@@ -94,6 +95,21 @@ namespace Fifthweek.Azure
         public Task UploadTextAsync(string content)
         {
             return this.blob.UploadTextAsync(content);
+        }
+
+        public Task<string> AcquireLeaseAsync(TimeSpan? leaseTime, string proposedLeaseId, CancellationToken cancellationToken)
+        {
+            return this.blob.AcquireLeaseAsync(leaseTime, proposedLeaseId, cancellationToken);
+        }
+
+        public Task RenewLeaseAsync(AccessCondition accessCondition, CancellationToken cancellationToken)
+        {
+            return this.blob.RenewLeaseAsync(accessCondition, cancellationToken);
+        }
+
+        public Task ReleaseLeaseAsync(AccessCondition accessCondition, CancellationToken cancellationToken)
+        {
+            return this.blob.ReleaseLeaseAsync(accessCondition, cancellationToken);
         }
     }
 }

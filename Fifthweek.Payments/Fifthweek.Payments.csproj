@@ -156,6 +156,7 @@
     <Compile Include="Services\IProcessPaymentProcessingData.cs" />
     <Compile Include="Services\IProcessPaymentsBetweenSubscriberAndCreator.cs" />
     <Compile Include="Services\IProcessPaymentsForSubscriber.cs" />
+    <Compile Include="Services\IRequestProcessPaymentsService.cs" />
     <Compile Include="Services\ISubscriberPaymentPipeline.cs" />
     <Compile Include="Services\IUpdateAccountBalancesDbStatement.cs" />
     <Compile Include="Services\PaymentProcessingData.cs" />
@@ -170,6 +171,7 @@
     <Compile Include="Services\ProcessPaymentProcessingData.cs" />
     <Compile Include="Services\ProcessPaymentsBetweenSubscriberAndCreator.cs" />
     <Compile Include="Services\ProcessPaymentsForSubscriber.cs" />
+    <Compile Include="Services\RequestProcessPaymentsService.cs" />
     <Compile Include="Services\SubscriberPaymentPipeline.cs" />
     <Compile Include="Services\UpdateAccountBalancesDbStatement.cs" />
     <Compile Include="Snapshots\CalculatedAccountBalanceSnapshot.cs" />

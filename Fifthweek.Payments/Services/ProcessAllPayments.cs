@@ -5,6 +5,7 @@
     using System.Threading.Tasks;
 
     using Fifthweek.CodeGeneration;
+    using Fifthweek.Payments.Shared;
     using Fifthweek.Shared;
 
     [AutoConstructor]
@@ -15,8 +16,9 @@
         private readonly IProcessPaymentsForSubscriber processPaymentsForSubscriber;
         private readonly IUpdateAccountBalancesDbStatement updateAccountBalances;
 
-        public async Task ExecuteAsync(List<PaymentProcessingException> errors)
+        public async Task ExecuteAsync(IKeepAliveHandler keepAliveHandler, List<PaymentProcessingException> errors)
         {
+            keepAliveHandler.AssertNotNull("keepAliveHandler");
             errors.AssertNotNull("errors");
 
             var subscriberIds = await this.getAllSubscribers.ExecuteAsync();
@@ -29,7 +31,7 @@
             {
                 try
                 {
-                    await this.processPaymentsForSubscriber.ExecuteAsync(subscriberId, endTimeExclusive, errors);
+                    await this.processPaymentsForSubscriber.ExecuteAsync(subscriberId, endTimeExclusive, keepAliveHandler, errors);
                 }
                 catch (Exception t)
                 {

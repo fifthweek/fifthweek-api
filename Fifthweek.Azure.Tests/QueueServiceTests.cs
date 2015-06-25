@@ -1,9 +1,7 @@
-﻿namespace Fifthweek.Api.Azure.Tests
+﻿namespace Fifthweek.Azure.Tests
 {
     using System;
     using System.Threading.Tasks;
-
-    using Fifthweek.Azure;
 
     using Microsoft.VisualStudio.TestTools.UnitTesting;
     using Microsoft.WindowsAzure.Storage.Queue;
@@ -57,8 +55,8 @@
 
             Assert.IsNotNull(message);
             var messageContent = JsonConvert.DeserializeObject<TestMessage>(message.AsString);
-            Assert.AreEqual(this.testMessage.One, messageContent.One);
-            Assert.AreEqual(this.testMessage.Two, messageContent.Two);
+            Assert.AreEqual<int>(this.testMessage.One, messageContent.One);
+            Assert.AreEqual<string>(this.testMessage.Two, messageContent.Two);
         }
 
         [TestMethod]
@@ -101,8 +99,8 @@
 
             Assert.IsNotNull(message);
             var messageContent = JsonConvert.DeserializeObject<TestMessage>(message.AsString);
-            Assert.AreEqual(this.testMessage.One, messageContent.One);
-            Assert.AreEqual(this.testMessage.Two, messageContent.Two);
+            Assert.AreEqual<int>(this.testMessage.One, messageContent.One);
+            Assert.AreEqual<string>(this.testMessage.Two, messageContent.Two);
         }
 
         [TestMethod]
@@ -127,8 +125,8 @@
 
             Assert.IsNotNull(message);
             var messageContent = JsonConvert.DeserializeObject<TestMessage>(message.AsString);
-            Assert.AreEqual(this.testMessage.One, messageContent.One);
-            Assert.AreEqual(this.testMessage.Two, messageContent.Two);
+            Assert.AreEqual<int>(this.testMessage.One, messageContent.One);
+            Assert.AreEqual<string>(this.testMessage.Two, messageContent.Two);
         }
 
         [TestMethod]

@@ -7,6 +7,7 @@
 
     using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.Payments.Services;
+    using Fifthweek.Payments.Shared;
 
     using Microsoft.VisualStudio.TestTools.UnitTesting;
 
@@ -32,6 +33,7 @@
         private Mock<IGetCreatorsAndFirstSubscribedDatesDbStatement> getCreatorsAndFirstSubscribedDates;
         private Mock<IProcessPaymentsBetweenSubscriberAndCreator> processPaymentsBetweenSubscriberAndCreator;
         private Mock<IGetLatestCommittedLedgerDateDbStatement> getLatestCommittedLedgerDate;
+        private Mock<IKeepAliveHandler> keepAliveHandler;
 
         private ProcessPaymentsForSubscriber target;
 
@@ -41,6 +43,9 @@
             this.getCreatorsAndFirstSubscribedDates = new Mock<IGetCreatorsAndFirstSubscribedDatesDbStatement>(MockBehavior.Strict);
             this.processPaymentsBetweenSubscriberAndCreator = new Mock<IProcessPaymentsBetweenSubscriberAndCreator>(MockBehavior.Strict);
             this.getLatestCommittedLedgerDate = new Mock<IGetLatestCommittedLedgerDateDbStatement>(MockBehavior.Strict);
+            this.keepAliveHandler = new Mock<IKeepAliveHandler>();
+
+            this.keepAliveHandler.Setup(v => v.KeepAliveAsync()).Returns(Task.FromResult(0)).Verifiable();
 
             this.target = new ProcessPaymentsForSubscriber(
                 this.getCreatorsAndFirstSubscribedDates.Object,
@@ -52,14 +57,21 @@
         [ExpectedException(typeof(ArgumentNullException))]
         public async Task WhenSubscriberIdIsNull_ItShouldThrowAnException()
         {
-            await this.target.ExecuteAsync(null, EndTimeExclusive, new List<PaymentProcessingException>());
+            await this.target.ExecuteAsync(null, EndTimeExclusive, this.keepAliveHandler.Object, new List<PaymentProcessingException>());
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentNullException))]
+        public async Task WhenKeepALiveHandlerIsNull_ItShouldThrowAnException()
+        {
+            await this.target.ExecuteAsync(SubscriberId, EndTimeExclusive, null, new List<PaymentProcessingException>());
         }
 
         [TestMethod]
         [ExpectedException(typeof(ArgumentNullException))]
         public async Task WhenErrorsIsNull_ItShouldThrowAnException()
         {
-            await this.target.ExecuteAsync(SubscriberId, EndTimeExclusive, null);
+            await this.target.ExecuteAsync(SubscriberId, EndTimeExclusive, this.keepAliveHandler.Object, null);
         }
 
         [TestMethod]
@@ -85,11 +97,13 @@
                 .Returns(Task.FromResult(0)).Verifiable();
 
             var errors = new List<PaymentProcessingException>();
-            await this.target.ExecuteAsync(SubscriberId, EndTimeExclusive, errors);
+            await this.target.ExecuteAsync(SubscriberId, EndTimeExclusive, this.keepAliveHandler.Object, errors);
 
             Assert.AreEqual(0, errors.Count);
 
             this.processPaymentsBetweenSubscriberAndCreator.Verify();
+
+            this.keepAliveHandler.Verify(v => v.KeepAliveAsync(), Times.Once);
         }
 
         [TestMethod]
@@ -115,11 +129,13 @@
                 .Returns(Task.FromResult(0)).Verifiable();
 
             var errors = new List<PaymentProcessingException>();
-            await this.target.ExecuteAsync(SubscriberId, EndTimeExclusive, errors);
+            await this.target.ExecuteAsync(SubscriberId, EndTimeExclusive, this.keepAliveHandler.Object, errors);
 
             Assert.AreEqual(0, errors.Count);
 
             this.processPaymentsBetweenSubscriberAndCreator.Verify();
+
+            this.keepAliveHandler.Verify(v => v.KeepAliveAsync(), Times.Once);
         }
 
         [TestMethod]
@@ -149,7 +165,7 @@
                 .Returns(Task.FromResult(0)).Verifiable();
 
             var errors = new List<PaymentProcessingException>();
-            await this.target.ExecuteAsync(SubscriberId, EndTimeExclusive, errors);
+            await this.target.ExecuteAsync(SubscriberId, EndTimeExclusive, this.keepAliveHandler.Object, errors);
 
             Assert.AreEqual(1, errors.Count);
             Assert.AreEqual(CreatorId1, errors[0].CreatorId);
@@ -157,6 +173,8 @@
             Assert.AreSame(exception, errors[0].InnerException);
 
             this.processPaymentsBetweenSubscriberAndCreator.Verify();
+
+            this.keepAliveHandler.Verify(v => v.KeepAliveAsync(), Times.Exactly(2));
         }
 
         [TestMethod]
@@ -187,11 +205,13 @@
                 .Returns(Task.FromResult(0)).Verifiable();
 
             var errors = new List<PaymentProcessingException>();
-            await this.target.ExecuteAsync(SubscriberId, EndTimeExclusive, errors);
+            await this.target.ExecuteAsync(SubscriberId, EndTimeExclusive, this.keepAliveHandler.Object, errors);
 
             Assert.AreEqual(0, errors.Count);
 
             this.processPaymentsBetweenSubscriberAndCreator.Verify();
+
+            this.keepAliveHandler.Verify(v => v.KeepAliveAsync(), Times.Exactly(2));
         }
     }
 }

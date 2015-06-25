@@ -6,6 +6,7 @@
     using Fifthweek.Api.Azure;
     using Fifthweek.Api.FileManagement.FileTasks;
     using Fifthweek.Api.FileManagement.Shared;
+    using Fifthweek.Azure;
     using Fifthweek.WebJobs.Thumbnails.Shared;
 
     using Microsoft.VisualStudio.TestTools.UnitTesting;

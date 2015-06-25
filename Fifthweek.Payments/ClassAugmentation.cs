@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Linq;
 
-//// Generated on 24/06/2015 17:49:39 (UTC)
-//// Mapped solution in 11.96s
+//// Generated on 25/06/2015 13:14:45 (UTC)
+//// Mapped solution in 12.14s
 
 
 namespace Fifthweek.Payments
@@ -317,6 +317,7 @@ namespace Fifthweek.Payments.Services
     using Fifthweek.Azure;
     using Newtonsoft.Json;
     using Fifthweek.Api.Persistence.Identity;
+    using Fifthweek.Payments.Shared;
 
     public partial class ProcessAllPayments 
     {
@@ -1096,6 +1097,7 @@ namespace Fifthweek.Payments.Services
     using Fifthweek.Azure;
     using Newtonsoft.Json;
     using Fifthweek.Api.Persistence.Identity;
+    using Fifthweek.Payments.Shared;
 
     public partial class ProcessPaymentsForSubscriber 
     {
@@ -1796,6 +1798,29 @@ namespace Fifthweek.Payments.Snapshots
             this.UserId = userId;
             this.AccountType = accountType;
             this.Amount = amount;
+        }
+    }
+}
+namespace Fifthweek.Payments.Services
+{
+    using System;
+    using System.Threading.Tasks;
+    using Fifthweek.Api.Azure;
+    using Fifthweek.Azure;
+    using Fifthweek.CodeGeneration;
+    using Fifthweek.Payments.Shared;
+
+    public partial class RequestProcessPaymentsService 
+    {
+        public RequestProcessPaymentsService(
+            IQueueService queueService)
+        {
+            if (queueService == null)
+            {
+                throw new ArgumentNullException("queueService");
+            }
+
+            this.queueService = queueService;
         }
     }
 }

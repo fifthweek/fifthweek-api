@@ -6,6 +6,7 @@ namespace Fifthweek.Payments.Services
 
     using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.CodeGeneration;
+    using Fifthweek.Payments.Shared;
     using Fifthweek.Shared;
 
     [AutoConstructor]
@@ -17,8 +18,9 @@ namespace Fifthweek.Payments.Services
         private readonly IProcessPaymentsBetweenSubscriberAndCreator processPaymentsBetweenSubscriberAndCreator;
         private readonly IGetLatestCommittedLedgerDateDbStatement getLatestCommittedLedgerDate;
 
-        public async Task ExecuteAsync(UserId subscriberId, DateTime endTimeExclusive, List<PaymentProcessingException> errors)
+        public async Task ExecuteAsync(UserId subscriberId, DateTime endTimeExclusive, IKeepAliveHandler keepAliveHandler, List<PaymentProcessingException> errors)
         {
+            keepAliveHandler.AssertNotNull("keepAliveHandler");
             subscriberId.AssertNotNull("subscriberId");
             errors.AssertNotNull("errors");
 
@@ -28,6 +30,8 @@ namespace Fifthweek.Payments.Services
             {
                 try
                 {
+                    await keepAliveHandler.KeepAliveAsync();
+
                     var latestCommittedLedgerDate = await this.getLatestCommittedLedgerDate.ExecuteAsync(subscriberId, creator.CreatorId);
 
                     var startTimeInclusive = latestCommittedLedgerDate ?? this.GetPaymentProcessingStartDate(creator.FirstSubscribedDate);

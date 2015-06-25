@@ -5,6 +5,7 @@ namespace Fifthweek.Api.FileManagement
 
     using Fifthweek.Api.Azure;
     using Fifthweek.Api.FileManagement.Shared;
+    using Fifthweek.Azure;
     using Fifthweek.CodeGeneration;
     using Fifthweek.WebJobs.GarbageCollection.Shared;
 

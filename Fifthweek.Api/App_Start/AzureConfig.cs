@@ -40,8 +40,10 @@
                 await CreateQueueIfNotExists(cloudQueueClient, WebJobs.Thumbnails.Shared.Constants.ThumbnailsQueueName);
                 await CreateQueueIfNotExists(cloudQueueClient, WebJobs.GarbageCollection.Shared.Constants.GarbageCollectionQueueName);
                 await CreateQueueIfNotExists(cloudQueueClient, Payments.Shared.Constants.RequestSnapshotQueueName);
+                await CreateQueueIfNotExists(cloudQueueClient, Payments.Shared.Constants.RequestProcessPaymentsQueueName);
 
                 var cloudBlobClient = storageAccount.CreateCloudBlobClient();
+                await CreateBlobContainerIfNotExists(cloudBlobClient, Shared.Constants.AzureLeaseObjectsContainerName);
                 await CreateBlobContainerIfNotExists(cloudBlobClient, FileManagement.Constants.PublicFileBlobContainerName);
             }
             catch (Exception t)

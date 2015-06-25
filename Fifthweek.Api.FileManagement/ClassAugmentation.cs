@@ -417,6 +417,7 @@ namespace Fifthweek.Api.FileManagement
     using Fifthweek.Api.Core;
     using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.Api.Persistence;
+    using Fifthweek.Azure;
     using Fifthweek.CodeGeneration;
     using Fifthweek.Shared;
     using Dapper;
@@ -429,7 +430,7 @@ namespace Fifthweek.Api.FileManagement
     {
         public FileProcessor(
             Fifthweek.Api.FileManagement.IFilePurposeTasks filePurposeTasks,
-            Fifthweek.Api.Azure.IQueueService queueService)
+            IQueueService queueService)
         {
             if (filePurposeTasks == null)
             {
@@ -858,6 +859,7 @@ namespace Fifthweek.Api.FileManagement
     using Fifthweek.Api.Core;
     using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.Api.Persistence;
+    using Fifthweek.Azure;
     using Fifthweek.CodeGeneration;
     using Fifthweek.Shared;
     using Dapper;
@@ -869,7 +871,7 @@ namespace Fifthweek.Api.FileManagement
     public partial class ScheduleGarbageCollectionStatement 
     {
         public ScheduleGarbageCollectionStatement(
-            Fifthweek.Api.Azure.IQueueService queueService)
+            IQueueService queueService)
         {
             if (queueService == null)
             {

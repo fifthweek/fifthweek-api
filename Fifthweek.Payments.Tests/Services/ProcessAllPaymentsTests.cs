@@ -6,6 +6,7 @@
 
     using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.Payments.Services;
+    using Fifthweek.Payments.Shared;
     using Fifthweek.Shared;
 
     using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -26,6 +27,7 @@
         private Mock<IGetAllSubscribersDbStatement> getAllSubscribers;
         private Mock<IProcessPaymentsForSubscriber> processPaymentsForSubscriber;
         private Mock<IUpdateAccountBalancesDbStatement> updateAccountBalances;
+        private Mock<IKeepAliveHandler> keepAliveHandler;
 
         private ProcessAllPayments target;
 
@@ -36,6 +38,7 @@
             this.getAllSubscribers = new Mock<IGetAllSubscribersDbStatement>(MockBehavior.Strict);
             this.processPaymentsForSubscriber = new Mock<IProcessPaymentsForSubscriber>(MockBehavior.Strict);
             this.updateAccountBalances = new Mock<IUpdateAccountBalancesDbStatement>(MockBehavior.Strict);
+            this.keepAliveHandler = new Mock<IKeepAliveHandler>(MockBehavior.Strict);
 
             this.timestampCreator.Setup(v => v.Now()).Returns(Now);
 
@@ -50,7 +53,14 @@
         [ExpectedException(typeof(ArgumentNullException))]
         public async Task WhenErrorsIsNull_ItShouldThrowAnException()
         {
-            await this.target.ExecuteAsync(null);
+            await this.target.ExecuteAsync(this.keepAliveHandler.Object, null);
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentNullException))]
+        public async Task WhenKeepALiveHandlerIsNull_ItShouldThrowAnException()
+        {
+            await this.target.ExecuteAsync(null, new List<PaymentProcessingException>());
         }
 
         [TestMethod]
@@ -60,14 +70,14 @@
 
             this.getAllSubscribers.Setup(v => v.ExecuteAsync()).ReturnsAsync(SubscriberIds).Verifiable();
 
-            this.processPaymentsForSubscriber.Setup(v => v.ExecuteAsync(SubscriberIds[0], Now, errors))
+            this.processPaymentsForSubscriber.Setup(v => v.ExecuteAsync(SubscriberIds[0], Now, this.keepAliveHandler.Object, errors))
                 .Returns(Task.FromResult(0)).Verifiable();
-            this.processPaymentsForSubscriber.Setup(v => v.ExecuteAsync(SubscriberIds[1], Now, errors))
+            this.processPaymentsForSubscriber.Setup(v => v.ExecuteAsync(SubscriberIds[1], Now, this.keepAliveHandler.Object, errors))
                 .Returns(Task.FromResult(0)).Verifiable();
 
             this.updateAccountBalances.Setup(v => v.ExecuteAsync(null, Now)).Returns(Task.FromResult(0)).Verifiable();
 
-            await this.target.ExecuteAsync(errors);
+            await this.target.ExecuteAsync(this.keepAliveHandler.Object, errors);
 
             this.getAllSubscribers.Verify();
             this.processPaymentsForSubscriber.Verify();
@@ -82,14 +92,14 @@
             this.getAllSubscribers.Setup(v => v.ExecuteAsync()).ReturnsAsync(SubscriberIds).Verifiable();
 
             var exception = new DivideByZeroException();
-            this.processPaymentsForSubscriber.Setup(v => v.ExecuteAsync(SubscriberIds[0], Now, errors))
+            this.processPaymentsForSubscriber.Setup(v => v.ExecuteAsync(SubscriberIds[0], Now, this.keepAliveHandler.Object, errors))
                 .Throws(exception).Verifiable();
-            this.processPaymentsForSubscriber.Setup(v => v.ExecuteAsync(SubscriberIds[1], Now, errors))
+            this.processPaymentsForSubscriber.Setup(v => v.ExecuteAsync(SubscriberIds[1], Now, this.keepAliveHandler.Object, errors))
                 .Returns(Task.FromResult(0)).Verifiable();
 
             this.updateAccountBalances.Setup(v => v.ExecuteAsync(null, Now)).Returns(Task.FromResult(0)).Verifiable();
 
-            await this.target.ExecuteAsync(errors);
+            await this.target.ExecuteAsync(this.keepAliveHandler.Object, errors);
 
             this.getAllSubscribers.Verify();
             this.processPaymentsForSubscriber.Verify();

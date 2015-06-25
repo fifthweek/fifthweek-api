@@ -10,6 +10,7 @@
     using Fifthweek.Api.FileManagement;
     using Fifthweek.Api.FileManagement.FileTasks;
     using Fifthweek.Api.FileManagement.Shared;
+    using Fifthweek.Azure;
     using Fifthweek.Tests.Shared;
 
     using Microsoft.VisualStudio.TestTools.UnitTesting;

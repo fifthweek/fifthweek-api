@@ -106,7 +106,6 @@
     <Compile Include="Services\GetSubscriberChannelsSnapshotsDbStatementTests.cs" />
     <Compile Include="Services\GetSubscriberSnapshotsDbStatementTests.cs" />
     <Compile Include="Services\PaymentProcessingDataTests.cs" />
-    <Compile Include="Services\PaymentProcessorTests.cs" />
     <Compile Include="Services\PersistCommittedAndUncommittedRecordsDbStatementTests.cs" />
     <Compile Include="Services\PersistPaymentProcessingDataStatementTests.cs" />
     <Compile Include="Services\PersistPaymentProcessingResultsTests.cs" />
@@ -114,6 +113,7 @@
     <Compile Include="Services\ProcessPaymentProcessingDataTests.cs" />
     <Compile Include="Services\ProcessPaymentsBetweenSubscriberAndCreatorTests.cs" />
     <Compile Include="Services\ProcessPaymentsForSubscriberTests.cs" />
+    <Compile Include="Services\RequestProcessPaymentsServiceTests.cs" />
     <Compile Include="Services\UpdateAccountBalancesDbStatementTests.cs" />
     <Compile Include="SnapshotCreation\CreateCreatorChannelsSnapshotDbStatementTests.cs" />
     <Compile Include="SnapshotCreation\CreateCreatorFreeAccessUsersSnapshotDbStatementTests.cs" />
