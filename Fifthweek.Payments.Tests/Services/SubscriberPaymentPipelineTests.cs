@@ -94,10 +94,11 @@
             return new List<MergedSnapshot>
             {
                 new MergedSnapshot(
-                    CreatorChannelsSnapshot.Default(Now, new UserId(Guid.NewGuid())),
-                    CreatorFreeAccessUsersSnapshot.Default(Now, new UserId(Guid.NewGuid())),
-                    SubscriberChannelsSnapshot.Default(Now, new UserId(Guid.NewGuid())),
-                    SubscriberSnapshot.Default(Now, new UserId(Guid.NewGuid())))
+                    CreatorChannelsSnapshot.Default(Now, UserId.Random()),
+                    CreatorFreeAccessUsersSnapshot.Default(Now, UserId.Random()),
+                    SubscriberChannelsSnapshot.Default(Now, UserId.Random()),
+                    SubscriberSnapshot.Default(Now, UserId.Random()),
+                    CalculatedAccountBalanceSnapshot.DefaultFifthweekAccount(Now, UserId.Random()))
             };
         }
     }

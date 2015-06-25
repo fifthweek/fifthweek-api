@@ -51,6 +51,7 @@
             var defaultCreatorGuestListSnapshot = CreatorFreeAccessUsersSnapshot.Default(Now, CreatorId1);
             var defaultSubscriberChannelsSnapshot = SubscriberChannelsSnapshot.Default(Now, SubscriberId1);
             var defaultSubscriberSnapshot = SubscriberSnapshot.Default(Now, SubscriberId1);
+            var defaultCalculatedAccountBalanceSnapshot = CalculatedAccountBalanceSnapshot.DefaultFifthweekAccount(Now, UserId.Random());
 
             var mergedSnapshots = new List<MergedSnapshot> 
             {
@@ -59,7 +60,8 @@
                     defaultCreatorChannelsSnapshot,
                     defaultCreatorGuestListSnapshot,
                     defaultSubscriberChannelsSnapshot,
-                    defaultSubscriberSnapshot),
+                    defaultSubscriberSnapshot,
+                    defaultCalculatedAccountBalanceSnapshot),
             };
 
             this.costCalculator.Setup(v => v.Execute(It.IsAny<MergedSnapshot>(), creatorPosts))
@@ -94,6 +96,7 @@
             var defaultCreatorGuestListSnapshot = CreatorFreeAccessUsersSnapshot.Default(Now, CreatorId1);
             var defaultSubscriberChannelSnapshot = SubscriberChannelsSnapshot.Default(Now, SubscriberId1);
             var defaultSubscriberSnapshot = SubscriberSnapshot.Default(Now, SubscriberId1);
+            var defaultCalculatedAccountBalanceSnapshot = CalculatedAccountBalanceSnapshot.DefaultFifthweekAccount(Now, UserId.Random());
 
             var mergedSnapshots = new List<MergedSnapshot> 
             {
@@ -102,43 +105,50 @@
                     defaultCreatorChannelSnapshot,
                     defaultCreatorGuestListSnapshot,
                     defaultSubscriberChannelSnapshot,
-                    defaultSubscriberSnapshot),
+                    defaultSubscriberSnapshot,
+                    defaultCalculatedAccountBalanceSnapshot),
                 new MergedSnapshot(
                     Now.AddHours(1),
                     (CreatorChannelsSnapshot)snapshots[0],
                     defaultCreatorGuestListSnapshot,
                     defaultSubscriberChannelSnapshot,
-                    defaultSubscriberSnapshot),
+                    defaultSubscriberSnapshot,
+                    defaultCalculatedAccountBalanceSnapshot),
                 new MergedSnapshot(
                     Now.AddHours(2),
                     (CreatorChannelsSnapshot)snapshots[0],
                     (CreatorFreeAccessUsersSnapshot)snapshots[1],
                     defaultSubscriberChannelSnapshot,
-                    defaultSubscriberSnapshot),
+                    defaultSubscriberSnapshot,
+                    defaultCalculatedAccountBalanceSnapshot),
                 new MergedSnapshot(
                     Now.AddHours(3),
                     (CreatorChannelsSnapshot)snapshots[0],
                     (CreatorFreeAccessUsersSnapshot)snapshots[1],
                     (SubscriberChannelsSnapshot)snapshots[2],
-                    defaultSubscriberSnapshot),
+                    defaultSubscriberSnapshot,
+                    defaultCalculatedAccountBalanceSnapshot),
                 new MergedSnapshot(
                     Now.AddHours(4),
                     (CreatorChannelsSnapshot)snapshots[0],
                     (CreatorFreeAccessUsersSnapshot)snapshots[3],
                     (SubscriberChannelsSnapshot)snapshots[2],
-                    defaultSubscriberSnapshot),
+                    defaultSubscriberSnapshot,
+                    defaultCalculatedAccountBalanceSnapshot),
                 new MergedSnapshot(
                     Now.AddHours(5),
                     (CreatorChannelsSnapshot)snapshots[4],
                     (CreatorFreeAccessUsersSnapshot)snapshots[3],
                     (SubscriberChannelsSnapshot)snapshots[5],
-                    defaultSubscriberSnapshot),
+                    defaultSubscriberSnapshot,
+                    defaultCalculatedAccountBalanceSnapshot),
                 new MergedSnapshot(
                     Now.AddHours(6),
                     (CreatorChannelsSnapshot)snapshots[4],
                     (CreatorFreeAccessUsersSnapshot)snapshots[3],
                     (SubscriberChannelsSnapshot)snapshots[7],
-                    (SubscriberSnapshot)snapshots[6]),
+                    (SubscriberSnapshot)snapshots[6],
+                    defaultCalculatedAccountBalanceSnapshot),
             };
 
             this.costCalculator.Setup(v => v.Execute(It.IsAny<MergedSnapshot>(), creatorPosts))

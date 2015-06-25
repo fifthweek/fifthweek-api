@@ -53,7 +53,8 @@
                     CreatorChannelsSnapshot.Default(Now, UserId.Random()),
                     CreatorFreeAccessUsersSnapshot.Default(Now, UserId.Random()),
                     this.subscriberChannels,
-                    SubscriberSnapshot.Default(Now, UserId.Random()))
+                    SubscriberSnapshot.Default(Now, UserId.Random()),
+                    CalculatedAccountBalanceSnapshot.DefaultFifthweekAccount(Now, UserId.Random()))
             };
 
             var output = this.target.Execute(input);
@@ -71,7 +72,8 @@
                     CreatorChannelsSnapshot.Default(Now, UserId.Random()),
                     CreatorFreeAccessUsersSnapshot.Default(Now, UserId.Random()),
                     this.subscriberChannels,
-                    SubscriberSnapshot.Default(Now, UserId.Random()))
+                    SubscriberSnapshot.Default(Now, UserId.Random()),
+                    CalculatedAccountBalanceSnapshot.DefaultFifthweekAccount(Now, UserId.Random()))
             };
 
             var output = this.target.Execute(input);
@@ -89,13 +91,15 @@
                     CreatorChannelsSnapshot.Default(Now, UserId.Random()),
                     CreatorFreeAccessUsersSnapshot.Default(Now, UserId.Random()),
                     this.subscriberChannels,
-                    SubscriberSnapshot.Default(Now, UserId.Random())),
+                    SubscriberSnapshot.Default(Now, UserId.Random()),
+                    CalculatedAccountBalanceSnapshot.DefaultFifthweekAccount(Now, UserId.Random())),
                 new MergedSnapshot(
                     Now.AddDays(1),
                     CreatorChannelsSnapshot.Default(Now, UserId.Random()),
                     CreatorFreeAccessUsersSnapshot.Default(Now, UserId.Random()),
                     SubscriberChannelsSnapshot.Default(Now, UserId.Random()),
-                    SubscriberSnapshot.Default(Now, UserId.Random()))
+                    SubscriberSnapshot.Default(Now, UserId.Random()),
+                    CalculatedAccountBalanceSnapshot.DefaultFifthweekAccount(Now, UserId.Random()))
             };
 
             var output = this.target.Execute(input);
@@ -113,13 +117,15 @@
                     CreatorChannelsSnapshot.Default(Now, UserId.Random()),
                     CreatorFreeAccessUsersSnapshot.Default(Now, UserId.Random()),
                     this.subscriberChannels,
-                    SubscriberSnapshot.Default(Now, UserId.Random())),
+                    SubscriberSnapshot.Default(Now, UserId.Random()),
+                    CalculatedAccountBalanceSnapshot.DefaultFifthweekAccount(Now, UserId.Random())),
                 new MergedSnapshot(
                     Now.AddDays(7),
                     CreatorChannelsSnapshot.Default(Now, UserId.Random()),
                     CreatorFreeAccessUsersSnapshot.Default(Now, UserId.Random()),
                     SubscriberChannelsSnapshot.Default(Now, UserId.Random()),
-                    SubscriberSnapshot.Default(Now, UserId.Random()))
+                    SubscriberSnapshot.Default(Now, UserId.Random()),
+                    CalculatedAccountBalanceSnapshot.DefaultFifthweekAccount(Now, UserId.Random()))
             };
 
             var output = this.target.Execute(input);
@@ -137,13 +143,15 @@
                     CreatorChannelsSnapshot.Default(Now, UserId.Random()),
                     CreatorFreeAccessUsersSnapshot.Default(Now, UserId.Random()),
                     this.subscriberChannels,
-                    SubscriberSnapshot.Default(Now, UserId.Random())),
+                    SubscriberSnapshot.Default(Now, UserId.Random()),
+                    CalculatedAccountBalanceSnapshot.DefaultFifthweekAccount(Now, UserId.Random())),
                 new MergedSnapshot(
                     Now.AddDays(5),
                     CreatorChannelsSnapshot.Default(Now, UserId.Random()),
                     CreatorFreeAccessUsersSnapshot.Default(Now, UserId.Random()),
                     SubscriberChannelsSnapshot.Default(Now, UserId.Random()),
-                    SubscriberSnapshot.Default(Now, UserId.Random()))
+                    SubscriberSnapshot.Default(Now, UserId.Random()),
+                    CalculatedAccountBalanceSnapshot.DefaultFifthweekAccount(Now, UserId.Random()))
             };
 
             var output = this.target.Execute(input);
@@ -161,13 +169,15 @@
                     CreatorChannelsSnapshot.Default(Now, UserId.Random()),
                     CreatorFreeAccessUsersSnapshot.Default(Now, UserId.Random()),
                     this.subscriberChannels,
-                    SubscriberSnapshot.Default(Now, UserId.Random())),
+                    SubscriberSnapshot.Default(Now, UserId.Random()),
+                    CalculatedAccountBalanceSnapshot.DefaultFifthweekAccount(Now, UserId.Random())),
                 new MergedSnapshot(
                     Now.AddDays(8),
                     CreatorChannelsSnapshot.Default(Now, UserId.Random()),
                     CreatorFreeAccessUsersSnapshot.Default(Now, UserId.Random()),
                     SubscriberChannelsSnapshot.Default(Now, UserId.Random()),
-                    SubscriberSnapshot.Default(Now, UserId.Random()))
+                    SubscriberSnapshot.Default(Now, UserId.Random()),
+                    CalculatedAccountBalanceSnapshot.DefaultFifthweekAccount(Now, UserId.Random()))
             };
 
             var expected = new List<MergedSnapshot>
@@ -178,7 +188,8 @@
                     input[0].CreatorChannels,
                     input[0].CreatorFreeAccessUsers,
                     input[0].SubscriberChannels,
-                    input[0].Subscriber),
+                    input[0].Subscriber,
+                    input[0].CalculatedAccountBalance),
                 input[1],
             };
 
@@ -197,13 +208,15 @@
                     CreatorChannelsSnapshot.Default(Now, UserId.Random()),
                     CreatorFreeAccessUsersSnapshot.Default(Now, UserId.Random()),
                     this.subscriberChannels,
-                    SubscriberSnapshot.Default(Now, UserId.Random())),
+                    SubscriberSnapshot.Default(Now, UserId.Random()),
+                    CalculatedAccountBalanceSnapshot.DefaultFifthweekAccount(Now, UserId.Random())),
                 new MergedSnapshot(
                     Now.AddDays(10),
                     CreatorChannelsSnapshot.Default(Now, UserId.Random()),
                     CreatorFreeAccessUsersSnapshot.Default(Now, UserId.Random()),
                     this.subscriberChannels2,
-                    SubscriberSnapshot.Default(Now, UserId.Random()))
+                    SubscriberSnapshot.Default(Now, UserId.Random()),
+                    CalculatedAccountBalanceSnapshot.DefaultFifthweekAccount(Now, UserId.Random()))
             };
 
             var expected = new List<MergedSnapshot>
@@ -214,13 +227,15 @@
                     input[0].CreatorChannels,
                     input[0].CreatorFreeAccessUsers,
                     input[0].SubscriberChannels,
-                    input[0].Subscriber),
+                    input[0].Subscriber,
+                    input[0].CalculatedAccountBalance),
                 new MergedSnapshot(
                     Now.AddDays(7).AddDays(2),
                     input[0].CreatorChannels,
                     input[0].CreatorFreeAccessUsers,
                     input[0].SubscriberChannels,
-                    input[0].Subscriber),
+                    input[0].Subscriber,
+                    input[0].CalculatedAccountBalance),
                 input[1],
             };
 
@@ -239,13 +254,15 @@
                     CreatorChannelsSnapshot.Default(Now, UserId.Random()),
                     CreatorFreeAccessUsersSnapshot.Default(Now, UserId.Random()),
                     this.subscriberChannels,
-                    SubscriberSnapshot.Default(Now, UserId.Random())),
+                    SubscriberSnapshot.Default(Now, UserId.Random()),
+                    CalculatedAccountBalanceSnapshot.DefaultFifthweekAccount(Now, UserId.Random())),
                 new MergedSnapshot(
                     Now.AddDays(21),
                     CreatorChannelsSnapshot.Default(Now, UserId.Random()),
                     CreatorFreeAccessUsersSnapshot.Default(Now, UserId.Random()),
                     SubscriberChannelsSnapshot.Default(Now, UserId.Random()),
-                    SubscriberSnapshot.Default(Now, UserId.Random()))
+                    SubscriberSnapshot.Default(Now, UserId.Random()),
+                    CalculatedAccountBalanceSnapshot.DefaultFifthweekAccount(Now, UserId.Random()))
             };
 
             var expected = new List<MergedSnapshot>
@@ -256,13 +273,15 @@
                     input[0].CreatorChannels,
                     input[0].CreatorFreeAccessUsers,
                     input[0].SubscriberChannels,
-                    input[0].Subscriber),
+                    input[0].Subscriber,
+                    input[0].CalculatedAccountBalance),
                 new MergedSnapshot(
                     Now.AddDays(14),
                     input[0].CreatorChannels,
                     input[0].CreatorFreeAccessUsers,
                     input[0].SubscriberChannels,
-                    input[0].Subscriber),
+                    input[0].Subscriber,
+                    input[0].CalculatedAccountBalance),
                 input[1],
             };
 
@@ -281,37 +300,43 @@
                     CreatorChannelsSnapshot.Default(Now, UserId.Random()),
                     CreatorFreeAccessUsersSnapshot.Default(Now, UserId.Random()),
                     this.subscriberChannels,
-                    SubscriberSnapshot.Default(Now, UserId.Random())),
+                    SubscriberSnapshot.Default(Now, UserId.Random()),
+                    CalculatedAccountBalanceSnapshot.DefaultFifthweekAccount(Now, UserId.Random())),
                 new MergedSnapshot(
                     Now.AddDays(4),
                     CreatorChannelsSnapshot.Default(Now, UserId.Random()),
                     CreatorFreeAccessUsersSnapshot.Default(Now, UserId.Random()),
                     SubscriberChannelsSnapshot.Default(Now, UserId.Random()),
-                    SubscriberSnapshot.Default(Now, UserId.Random())),
+                    SubscriberSnapshot.Default(Now, UserId.Random()),
+                    CalculatedAccountBalanceSnapshot.DefaultFifthweekAccount(Now, UserId.Random())),
                 new MergedSnapshot(
                     Now.AddDays(9),
                     CreatorChannelsSnapshot.Default(Now, UserId.Random()),
                     CreatorFreeAccessUsersSnapshot.Default(Now, UserId.Random()),
                     SubscriberChannelsSnapshot.Default(Now, UserId.Random()),
-                    SubscriberSnapshot.Default(Now, UserId.Random())),
+                    SubscriberSnapshot.Default(Now, UserId.Random()),
+                    CalculatedAccountBalanceSnapshot.DefaultFifthweekAccount(Now, UserId.Random())),
                 new MergedSnapshot(
                     Now.AddDays(14),
                     CreatorChannelsSnapshot.Default(Now, UserId.Random()),
                     CreatorFreeAccessUsersSnapshot.Default(Now, UserId.Random()),
                     SubscriberChannelsSnapshot.Default(Now, UserId.Random()),
-                    SubscriberSnapshot.Default(Now, UserId.Random())),
+                    SubscriberSnapshot.Default(Now, UserId.Random()),
+                    CalculatedAccountBalanceSnapshot.DefaultFifthweekAccount(Now, UserId.Random())),
                 new MergedSnapshot(
                     Now.AddDays(19),
                     CreatorChannelsSnapshot.Default(Now, UserId.Random()),
                     CreatorFreeAccessUsersSnapshot.Default(Now, UserId.Random()),
                     SubscriberChannelsSnapshot.Default(Now, UserId.Random()),
-                    SubscriberSnapshot.Default(Now, UserId.Random())),
+                    SubscriberSnapshot.Default(Now, UserId.Random()),
+                    CalculatedAccountBalanceSnapshot.DefaultFifthweekAccount(Now, UserId.Random())),
                 new MergedSnapshot(
                     Now.AddDays(25),
                     CreatorChannelsSnapshot.Default(Now, UserId.Random()),
                     CreatorFreeAccessUsersSnapshot.Default(Now, UserId.Random()),
                     SubscriberChannelsSnapshot.Default(Now, UserId.Random()),
-                    SubscriberSnapshot.Default(Now, UserId.Random()))
+                    SubscriberSnapshot.Default(Now, UserId.Random()),
+                    CalculatedAccountBalanceSnapshot.DefaultFifthweekAccount(Now, UserId.Random()))
             };
 
             var expected = new List<MergedSnapshot>
@@ -323,7 +348,8 @@
                     input[1].CreatorChannels,
                     input[1].CreatorFreeAccessUsers,
                     input[1].SubscriberChannels,
-                    input[1].Subscriber),
+                    input[1].Subscriber,
+                    input[1].CalculatedAccountBalance),
                 input[2],
                 input[3],
                 input[4],
@@ -332,7 +358,8 @@
                     input[4].CreatorChannels,
                     input[4].CreatorFreeAccessUsers,
                     input[4].SubscriberChannels,
-                    input[4].Subscriber),
+                    input[4].Subscriber,
+                    input[4].CalculatedAccountBalance),
                 input[5],
             };
 
@@ -351,37 +378,43 @@
                     CreatorChannelsSnapshot.Default(Now, UserId.Random()),
                     CreatorFreeAccessUsersSnapshot.Default(Now, UserId.Random()),
                     this.subscriberChannels,
-                    SubscriberSnapshot.Default(Now, UserId.Random())),
+                    SubscriberSnapshot.Default(Now, UserId.Random()),
+                    CalculatedAccountBalanceSnapshot.DefaultFifthweekAccount(Now, UserId.Random())),
                 new MergedSnapshot(
                     Now.AddDays(4),
                     CreatorChannelsSnapshot.Default(Now, UserId.Random()),
                     CreatorFreeAccessUsersSnapshot.Default(Now, UserId.Random()),
                     SubscriberChannelsSnapshot.Default(Now, UserId.Random()),
-                    SubscriberSnapshot.Default(Now, UserId.Random())),
+                    SubscriberSnapshot.Default(Now, UserId.Random()),
+                    CalculatedAccountBalanceSnapshot.DefaultFifthweekAccount(Now, UserId.Random())),
                 new MergedSnapshot(
                     Now.AddDays(9),
                     CreatorChannelsSnapshot.Default(Now, UserId.Random()),
                     CreatorFreeAccessUsersSnapshot.Default(Now, UserId.Random()),
                     this.subscriberChannels2,
-                    SubscriberSnapshot.Default(Now, UserId.Random())),
+                    SubscriberSnapshot.Default(Now, UserId.Random()),
+                    CalculatedAccountBalanceSnapshot.DefaultFifthweekAccount(Now, UserId.Random())),
                 new MergedSnapshot(
                     Now.AddDays(14),
                     CreatorChannelsSnapshot.Default(Now, UserId.Random()),
                     CreatorFreeAccessUsersSnapshot.Default(Now, UserId.Random()),
                     SubscriberChannelsSnapshot.Default(Now, UserId.Random()),
-                    SubscriberSnapshot.Default(Now, UserId.Random())),
+                    SubscriberSnapshot.Default(Now, UserId.Random()),
+                    CalculatedAccountBalanceSnapshot.DefaultFifthweekAccount(Now, UserId.Random())),
                 new MergedSnapshot(
                     Now.AddDays(19),
                     CreatorChannelsSnapshot.Default(Now, UserId.Random()),
                     CreatorFreeAccessUsersSnapshot.Default(Now, UserId.Random()),
                     SubscriberChannelsSnapshot.Default(Now, UserId.Random()),
-                    SubscriberSnapshot.Default(Now, UserId.Random())),
+                    SubscriberSnapshot.Default(Now, UserId.Random()),
+                    CalculatedAccountBalanceSnapshot.DefaultFifthweekAccount(Now, UserId.Random())),
                 new MergedSnapshot(
                     Now.AddDays(25),
                     CreatorChannelsSnapshot.Default(Now, UserId.Random()),
                     CreatorFreeAccessUsersSnapshot.Default(Now, UserId.Random()),
                     SubscriberChannelsSnapshot.Default(Now, UserId.Random()),
-                    SubscriberSnapshot.Default(Now, UserId.Random()))
+                    SubscriberSnapshot.Default(Now, UserId.Random()),
+                    CalculatedAccountBalanceSnapshot.DefaultFifthweekAccount(Now, UserId.Random()))
             };
 
             var expected = new List<MergedSnapshot>
@@ -392,14 +425,16 @@
                     input[0].CreatorChannels,
                     input[0].CreatorFreeAccessUsers,
                     input[0].SubscriberChannels,
-                    input[0].Subscriber),
+                    input[0].Subscriber,
+                    input[0].CalculatedAccountBalance),
                 input[1],
                 new MergedSnapshot(
                     Now.AddDays(7),
                     input[1].CreatorChannels,
                     input[1].CreatorFreeAccessUsers,
                     input[1].SubscriberChannels,
-                    input[1].Subscriber),
+                    input[1].Subscriber,
+                    input[1].CalculatedAccountBalance),
                 input[2],
                 input[3],
                 new MergedSnapshot(
@@ -407,20 +442,23 @@
                     input[3].CreatorChannels,
                     input[3].CreatorFreeAccessUsers,
                     input[3].SubscriberChannels,
-                    input[3].Subscriber),
+                    input[3].Subscriber,
+                    input[3].CalculatedAccountBalance),
                 input[4],
                 new MergedSnapshot(
                     Now.AddDays(21),
                     input[4].CreatorChannels,
                     input[4].CreatorFreeAccessUsers,
                     input[4].SubscriberChannels,
-                    input[4].Subscriber),
+                    input[4].Subscriber,
+                    input[4].CalculatedAccountBalance),
                 new MergedSnapshot(
                     Now.AddDays(23),
                     input[4].CreatorChannels,
                     input[4].CreatorFreeAccessUsers,
                     input[4].SubscriberChannels,
-                    input[4].Subscriber),
+                    input[4].Subscriber,
+                    input[4].CalculatedAccountBalance),
                 input[5],
             };
 

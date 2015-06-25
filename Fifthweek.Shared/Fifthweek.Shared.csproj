@@ -65,12 +65,14 @@
     <Compile Include="IMimeTypeMap.cs" />
     <Compile Include="IRandom.cs" />
     <Compile Include="ISendEmailService.cs" />
+    <Compile Include="ITimestampCreator.cs" />
     <Compile Include="MimeTypeMap.cs" />
     <Compile Include="NonNegativeInt.cs" />
     <Compile Include="OptimisticConcurrencyException.cs" />
     <Compile Include="PositiveInt.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ReflectionExtensions.cs" />
+    <Compile Include="TimestampCreator.cs" />
     <Compile Include="TransactionScopeBuilder.cs" />
   </ItemGroup>
   <ItemGroup>

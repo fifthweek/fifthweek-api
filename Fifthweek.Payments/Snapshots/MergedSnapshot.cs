@@ -12,12 +12,14 @@ namespace Fifthweek.Payments.Snapshots
             CreatorChannelsSnapshot creatorChannels, 
             CreatorFreeAccessUsersSnapshot creatorFreeAccessUsers, 
             SubscriberChannelsSnapshot subscriberChannels,
-            SubscriberSnapshot subscriber)
+            SubscriberSnapshot subscriber,
+            CalculatedAccountBalanceSnapshot calculatedAccountBalance)
         {
             this.CreatorChannels = creatorChannels;
             this.CreatorFreeAccessUsers = creatorFreeAccessUsers;
             this.SubscriberChannels = subscriberChannels;
             this.Subscriber = subscriber;
+            this.CalculatedAccountBalance = calculatedAccountBalance;
             this.Timestamp = this.GetMaximumTimestamp();
         }
 
@@ -31,6 +33,8 @@ namespace Fifthweek.Payments.Snapshots
 
         public SubscriberSnapshot Subscriber { get; private set; }
 
+        public CalculatedAccountBalanceSnapshot CalculatedAccountBalance { get; private set; }
+
         private DateTime GetMaximumTimestamp()
         {
             var timestamps = new[] 
@@ -39,6 +43,7 @@ namespace Fifthweek.Payments.Snapshots
                 this.CreatorFreeAccessUsers.Timestamp,
                 this.SubscriberChannels.Timestamp,
                 this.Subscriber.Timestamp,
+                this.CalculatedAccountBalance.Timestamp,
             };
 
             return timestamps.Max();

@@ -5,6 +5,7 @@ namespace Fifthweek.Payments.Pipeline
     using System.Linq;
 
     using Fifthweek.Api.Identity.Shared.Membership;
+    using Fifthweek.Api.Persistence.Payments;
     using Fifthweek.Payments.Snapshots;
 
     public class MergeSnapshotsExecutor : IMergeSnapshotsExecutor
@@ -31,12 +32,13 @@ namespace Fifthweek.Payments.Pipeline
             var creatorFreeAccessUsers = CreatorFreeAccessUsersSnapshot.Default(initialTimestamp, creatorId);
             var subscriberChannels = SubscriberChannelsSnapshot.Default(initialTimestamp, subscriberId);
             var subscriber = SubscriberSnapshot.Default(initialTimestamp, subscriberId);
+            var calculatedAccountBalance = CalculatedAccountBalanceSnapshot.Default(initialTimestamp, subscriberId, LedgerAccountType.Fifthweek);
 
             var mergedSnapshots = new List<MergedSnapshot>();
 
             if (firstTimestamp > initialTimestamp)
             {
-                mergedSnapshots.Add(new MergedSnapshot(creatorChannels, creatorFreeAccessUsers, subscriberChannels, subscriber));
+                mergedSnapshots.Add(new MergedSnapshot(creatorChannels, creatorFreeAccessUsers, subscriberChannels, subscriber, calculatedAccountBalance));
             }
 
             foreach (var snapshot in snapshots)
@@ -44,14 +46,15 @@ namespace Fifthweek.Payments.Pipeline
                 var assigned = this.TryAssign(snapshot, ref creatorChannels)
                                 || this.TryAssign(snapshot, ref creatorFreeAccessUsers)
                                 || this.TryAssign(snapshot, ref subscriberChannels)
-                                || this.TryAssign(snapshot, ref subscriber);
+                                || this.TryAssign(snapshot, ref subscriber)
+                                || this.TryAssign(snapshot, ref calculatedAccountBalance);
 
                 if (!assigned)
                 {
                     throw new InvalidOperationException("Unknown snapshot type: " + snapshot.GetType().Name);
                 }
 
-                var newMergedSnapshot = new MergedSnapshot(creatorChannels, creatorFreeAccessUsers, subscriberChannels, subscriber);
+                var newMergedSnapshot = new MergedSnapshot(creatorChannels, creatorFreeAccessUsers, subscriberChannels, subscriber, calculatedAccountBalance);
 
                 if (mergedSnapshots.Count > 0 && mergedSnapshots.Last().Timestamp == snapshot.Timestamp)
                 {

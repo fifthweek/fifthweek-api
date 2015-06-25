@@ -62,7 +62,7 @@
 
             var expectedOutput = new[] 
             {
-                new MergedSnapshot(Now, input[1].CreatorChannels, input[1].CreatorFreeAccessUsers, input[1].SubscriberChannels, input[1].Subscriber),
+                new MergedSnapshot(Now, input[1].CreatorChannels, input[1].CreatorFreeAccessUsers, input[1].SubscriberChannels, input[1].Subscriber, input[1].CalculatedAccountBalance),
                 input[2]
             };
 
@@ -78,7 +78,7 @@
 
             var expectedOutput = new[] 
             {
-                new MergedSnapshot(Now, input[0].CreatorChannels, input[0].CreatorFreeAccessUsers, input[0].SubscriberChannels, input[0].Subscriber)
+                new MergedSnapshot(Now, input[0].CreatorChannels, input[0].CreatorFreeAccessUsers, input[0].SubscriberChannels, input[0].Subscriber, input[0].CalculatedAccountBalance)
             };
 
             var result = this.Execute(Now, input);
@@ -101,10 +101,11 @@
         {
             return new MergedSnapshot(
                 timestamp,
-                CreatorChannelsSnapshot.Default(Now, new UserId(Guid.NewGuid())),
-                CreatorFreeAccessUsersSnapshot.Default(Now, new UserId(Guid.NewGuid())),
-                SubscriberChannelsSnapshot.Default(Now, new UserId(Guid.NewGuid())),
-                SubscriberSnapshot.Default(Now, new UserId(Guid.NewGuid())));
+                CreatorChannelsSnapshot.Default(Now, UserId.Random()),
+                CreatorFreeAccessUsersSnapshot.Default(Now, UserId.Random()),
+                SubscriberChannelsSnapshot.Default(Now, UserId.Random()),
+                SubscriberSnapshot.Default(Now, UserId.Random()),
+                CalculatedAccountBalanceSnapshot.DefaultFifthweekAccount(Now, UserId.Random()));
         }
 
         private IReadOnlyList<MergedSnapshot> Execute(DateTime startTimeInclusive, IEnumerable<MergedSnapshot> snapshots)

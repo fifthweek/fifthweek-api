@@ -44,7 +44,8 @@ namespace Fifthweek.Payments.Pipeline
                         snapshot.CreatorChannels,
                         snapshot.CreatorFreeAccessUsers,
                         snapshot.SubscriberChannels,
-                        snapshot.Subscriber);
+                        snapshot.Subscriber,
+                        snapshot.CalculatedAccountBalance);
 
                     return result;
                 }

@@ -9,6 +9,8 @@
             builder.RegisterType<MimeTypeMap>().As<IMimeTypeMap>();
             builder.RegisterType<HtmlLinter>().As<IHtmlLinter>();
             builder.RegisterType<ApplicationRandom>().As<IRandom>();
+            builder.RegisterType<GuidCreator>().As<IGuidCreator>();
+            builder.RegisterType<TimestampCreator>().As<ITimestampCreator>();
         }
     }
 }

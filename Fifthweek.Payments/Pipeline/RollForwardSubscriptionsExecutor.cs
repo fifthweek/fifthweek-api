@@ -86,7 +86,8 @@ namespace Fifthweek.Payments.Pipeline
                                         snapshot.SubscriberChannels.Timestamp,
                                         snapshot.SubscriberChannels.SubscriberId,
                                         snapshot.SubscriberChannels.SubscribedChannels.Concat(new[] { activeSubscription.Subscription }).ToList()),
-                                    snapshot.Subscriber);
+                                    snapshot.Subscriber,
+                                    snapshot.CalculatedAccountBalance);
 
                                 snapshots[i] = newSnapshot;
 
@@ -101,7 +102,8 @@ namespace Fifthweek.Payments.Pipeline
                                         snapshot.CreatorChannels,
                                         snapshot.CreatorFreeAccessUsers,
                                         snapshot.SubscriberChannels,
-                                        snapshot.Subscriber);
+                                        snapshot.Subscriber,
+                                        snapshot.CalculatedAccountBalance);
 
                                     snapshots.Insert(i + 1, endSnapshot);
                                 }

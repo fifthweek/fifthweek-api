@@ -5,6 +5,7 @@
 
     using Fifthweek.Api.Channels.Shared;
     using Fifthweek.Api.Identity.Shared.Membership;
+    using Fifthweek.Api.Persistence.Payments;
     using Fifthweek.Payments.Pipeline;
     using Fifthweek.Payments.Services;
     using Fifthweek.Payments.Snapshots;
@@ -56,7 +57,8 @@
                     new SubscriberSnapshot(
                         Now,
                         SubscriberId1,
-                        null)),
+                        null),
+                    new CalculatedAccountBalanceSnapshot(Now, SubscriberId1, LedgerAccountType.Fifthweek, 10)),
                 validCreatorPosts);
 
             Assert.AreEqual(0, result);
@@ -82,7 +84,8 @@
                     new SubscriberSnapshot(
                         Now,
                         SubscriberId1,
-                        "b@b.com")),
+                        "b@b.com"),
+                    new CalculatedAccountBalanceSnapshot(Now, SubscriberId1, LedgerAccountType.Fifthweek, 10)),
                 validCreatorPosts);
 
             Assert.AreEqual(0, result);
@@ -108,10 +111,65 @@
                     new SubscriberSnapshot(
                         Now,
                         SubscriberId1,
-                        "b@b.com")),
+                        "b@b.com"),
+                    new CalculatedAccountBalanceSnapshot(Now, SubscriberId1, LedgerAccountType.Fifthweek, 10)),
                 validCreatorPosts);
 
             Assert.AreEqual(100, result);
+        }
+
+        [TestMethod]
+        public void WhenAccountBalanceIsZero_ItShouldReturnZero()
+        {
+            var result = this.target.Execute(
+                new MergedSnapshot(
+                    new CreatorChannelsSnapshot(
+                        Now,
+                        CreatorId1,
+                        new List<CreatorChannelsSnapshotItem> { new CreatorChannelsSnapshotItem(ChannelId1, 100) }),
+                    new CreatorFreeAccessUsersSnapshot(
+                        Now,
+                        new UserId(Guid.NewGuid()),
+                        new List<string> { "aa@a.com", "bb@b.com" }),
+                    new SubscriberChannelsSnapshot(
+                        Now,
+                        SubscriberId1,
+                        new List<SubscriberChannelsSnapshotItem> { new SubscriberChannelsSnapshotItem(ChannelId1, 100, Now) }),
+                    new SubscriberSnapshot(
+                        Now,
+                        SubscriberId1,
+                        "b@b.com"),
+                    new CalculatedAccountBalanceSnapshot(Now, SubscriberId1, LedgerAccountType.Fifthweek, 0)),
+                validCreatorPosts);
+
+            Assert.AreEqual(0, result);
+        }
+
+        [TestMethod]
+        public void WhenAccountBalanceIsLessThanZero_ItShouldReturnZero()
+        {
+            var result = this.target.Execute(
+                new MergedSnapshot(
+                    new CreatorChannelsSnapshot(
+                        Now,
+                        CreatorId1,
+                        new List<CreatorChannelsSnapshotItem> { new CreatorChannelsSnapshotItem(ChannelId1, 100) }),
+                    new CreatorFreeAccessUsersSnapshot(
+                        Now,
+                        new UserId(Guid.NewGuid()),
+                        new List<string> { "aa@a.com", "bb@b.com" }),
+                    new SubscriberChannelsSnapshot(
+                        Now,
+                        SubscriberId1,
+                        new List<SubscriberChannelsSnapshotItem> { new SubscriberChannelsSnapshotItem(ChannelId1, 100, Now) }),
+                    new SubscriberSnapshot(
+                        Now,
+                        SubscriberId1,
+                        "b@b.com"),
+                    new CalculatedAccountBalanceSnapshot(Now, SubscriberId1, LedgerAccountType.Fifthweek, -5)),
+                validCreatorPosts);
+
+            Assert.AreEqual(0, result);
         }
 
         [TestMethod]
@@ -131,7 +189,8 @@
                     new SubscriberSnapshot(
                         Now,
                         SubscriberId1,
-                        null)),
+                        null),
+                    new CalculatedAccountBalanceSnapshot(Now, SubscriberId1, LedgerAccountType.Fifthweek, 10)),
                 validCreatorPosts);
 
             Assert.AreEqual(100, result);
@@ -154,7 +213,8 @@
                     new SubscriberSnapshot(
                         Now,
                         SubscriberId1,
-                        null)),
+                        null),
+                    new CalculatedAccountBalanceSnapshot(Now, SubscriberId1, LedgerAccountType.Fifthweek, 10)),
                 new List<CreatorPost>
                 {
                     new CreatorPost(ChannelId1, Now.AddTicks(-1)),
@@ -181,7 +241,8 @@
                     new SubscriberSnapshot(
                         Now,
                         SubscriberId1,
-                        null)),
+                        null),
+                    new CalculatedAccountBalanceSnapshot(Now, SubscriberId1, LedgerAccountType.Fifthweek, 10)),
                 new List<CreatorPost>
                 {
                     new CreatorPost(ChannelId1, Now.AddTicks(-1)),
@@ -209,7 +270,8 @@
                     new SubscriberSnapshot(
                         Now,
                         SubscriberId1,
-                        null)),
+                        null),
+                    new CalculatedAccountBalanceSnapshot(Now, SubscriberId1, LedgerAccountType.Fifthweek, 10)),
                 new List<CreatorPost>
                 {
                     new CreatorPost(ChannelId1, Now.AddTicks(-1)),
@@ -246,7 +308,8 @@
                     new SubscriberSnapshot(
                         Now,
                         SubscriberId1,
-                        null)),
+                        null),
+                    new CalculatedAccountBalanceSnapshot(Now, SubscriberId1, LedgerAccountType.Fifthweek, 10)),
                 validCreatorPosts);
 
             Assert.AreEqual(110, result);
@@ -278,7 +341,8 @@
                     new SubscriberSnapshot(
                         Now,
                         SubscriberId1,
-                        null)),
+                        null),
+                    new CalculatedAccountBalanceSnapshot(Now, SubscriberId1, LedgerAccountType.Fifthweek, 10)),
                 validCreatorPosts);
 
             Assert.AreEqual(110, result);
@@ -310,7 +374,8 @@
                     new SubscriberSnapshot(
                         Now,
                         SubscriberId1,
-                        null)),
+                        null),
+                    new CalculatedAccountBalanceSnapshot(Now, SubscriberId1, LedgerAccountType.Fifthweek, 10)),
                 validCreatorPosts);
 
             Assert.AreEqual(100, result);
@@ -345,7 +410,8 @@
                     new SubscriberSnapshot(
                         Now,
                         SubscriberId1,
-                        null)),
+                        null),
+                    new CalculatedAccountBalanceSnapshot(Now, SubscriberId1, LedgerAccountType.Fifthweek, 10)),
                 validCreatorPosts);
 
             Assert.AreEqual(150, result);

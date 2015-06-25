@@ -90,5 +90,10 @@ namespace Fifthweek.Azure
         {
             return this.blob.OpenWriteAsync(cancellationToken);
         }
+
+        public Task UploadTextAsync(string content)
+        {
+            return this.blob.UploadTextAsync(content);
+        }
     }
 }

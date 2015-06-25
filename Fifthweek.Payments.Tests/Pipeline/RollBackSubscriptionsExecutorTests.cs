@@ -27,10 +27,11 @@
             var input = new List<MergedSnapshot> 
             {
                 new MergedSnapshot(
-                    CreatorChannelsSnapshot.Default(now, new UserId(Guid.NewGuid())),
-                    CreatorFreeAccessUsersSnapshot.Default(now, new UserId(Guid.NewGuid())),
-                    SubscriberChannelsSnapshot.Default(now, new UserId(Guid.NewGuid())),
-                    SubscriberSnapshot.Default(now, new UserId(Guid.NewGuid()))),
+                    CreatorChannelsSnapshot.Default(now, UserId.Random()),
+                    CreatorFreeAccessUsersSnapshot.Default(now, UserId.Random()),
+                    SubscriberChannelsSnapshot.Default(now, UserId.Random()),
+                    SubscriberSnapshot.Default(now, UserId.Random()),
+                    CalculatedAccountBalanceSnapshot.DefaultFifthweekAccount(now, UserId.Random())),
             };
 
             Assert.AreSame(input, this.target.Execute(input));

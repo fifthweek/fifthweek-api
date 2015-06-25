@@ -36,6 +36,10 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Dapper, Version=1.38.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Dapper.1.38\lib\net45\Dapper.dll</HintPath>
+    </Reference>
     <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\EntityFramework.6.1.0\lib\net45\EntityFramework.dll</HintPath>
@@ -51,8 +55,13 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\Microsoft.AspNet.Identity.EntityFramework.2.1.0\lib\net45\Microsoft.AspNet.Identity.EntityFramework.dll</HintPath>
     </Reference>
+    <Reference Include="Microsoft.CSharp" />
     <Reference Include="Moq">
       <HintPath>..\packages\Moq.4.2.1409.1722\lib\net40\Moq.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json, Version=6.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Newtonsoft.Json.6.0.4\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
@@ -85,12 +94,27 @@
     <Compile Include="Pipeline\VerifySnapshotsExecutorTests.cs" />
     <Compile Include="Services\GetAllCreatorsDbStatementTests.cs" />
     <Compile Include="Services\GetAllSubscribedUsersDbStatementTests.cs" />
+    <Compile Include="Services\GetCalculatedAccountBalancesDbStatementTests.cs" />
+    <Compile Include="Services\GetCreatorPercentageOverrideDbStatementTests.cs" />
+    <Compile Include="Services\GetCreatorsAndFirstSubscribedDatesDbStatementTests.cs" />
+    <Compile Include="Services\GetAllSubscribersDbStatementTests.cs" />
     <Compile Include="Services\GetCreatorChannelsSnapshotsDbStatementTests.cs" />
     <Compile Include="Services\GetCreatorFreeAccessUsersSnapshotsDbStatementTests.cs" />
     <Compile Include="Services\GetCreatorPostsDbStatementTests.cs" />
+    <Compile Include="Services\GetLatestCommittedLedgerDateDbStatementTests.cs" />
+    <Compile Include="Services\GetPaymentProcessingDataTests.cs" />
     <Compile Include="Services\GetSubscriberChannelsSnapshotsDbStatementTests.cs" />
     <Compile Include="Services\GetSubscriberSnapshotsDbStatementTests.cs" />
+    <Compile Include="Services\PaymentProcessingDataTests.cs" />
     <Compile Include="Services\PaymentProcessorTests.cs" />
+    <Compile Include="Services\PersistCommittedAndUncommittedRecordsDbStatementTests.cs" />
+    <Compile Include="Services\PersistPaymentProcessingDataStatementTests.cs" />
+    <Compile Include="Services\PersistPaymentProcessingResultsTests.cs" />
+    <Compile Include="Services\ProcessAllPaymentsTests.cs" />
+    <Compile Include="Services\ProcessPaymentProcessingDataTests.cs" />
+    <Compile Include="Services\ProcessPaymentsBetweenSubscriberAndCreatorTests.cs" />
+    <Compile Include="Services\ProcessPaymentsForSubscriberTests.cs" />
+    <Compile Include="Services\UpdateAccountBalancesDbStatementTests.cs" />
     <Compile Include="SnapshotCreation\CreateCreatorChannelsSnapshotDbStatementTests.cs" />
     <Compile Include="SnapshotCreation\CreateCreatorFreeAccessUsersSnapshotDbStatementTests.cs" />
     <Compile Include="SnapshotCreation\CreateSubscriberChannelsSnapshotDbStatementTests.cs" />
@@ -129,6 +153,10 @@
     <ProjectReference Include="..\Fifthweek.Api.Posts.Shared\Fifthweek.Api.Posts.Shared.csproj">
       <Project>{493FC9F2-6A6B-46C0-9BC9-83F8A3B60F9E}</Project>
       <Name>Fifthweek.Api.Posts.Shared</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Fifthweek.Azure\Fifthweek.Azure.csproj">
+      <Project>{890CD4C4-993F-482D-BBB5-A50767ACE55B}</Project>
+      <Name>Fifthweek.Azure</Name>
     </ProjectReference>
     <ProjectReference Include="..\Fifthweek.Payments.Shared\Fifthweek.Payments.Shared.csproj">
       <Project>{8ef964cc-55f2-40bb-a0ce-f92f23ac8d90}</Project>

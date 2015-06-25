@@ -13,16 +13,26 @@ namespace Fifthweek.Payments.Pipeline
     {
         public int Execute(MergedSnapshot snapshot, IReadOnlyList<CreatorPost> creatorPosts)
         {
+            // No subscribed channels.
             if (snapshot.SubscriberChannels.SubscribedChannels.Count == 0)
             {
                 return 0;
             }
 
-            if (snapshot.Subscriber.Email != null && snapshot.CreatorFreeAccessUsers.FreeAccessUserEmails.Contains(snapshot.Subscriber.Email))
+            // On creator guestlist.
+            if (snapshot.Subscriber.Email != null 
+                && snapshot.CreatorFreeAccessUsers.FreeAccessUserEmails.Contains(snapshot.Subscriber.Email))
             {
                 return 0;
             }
 
+            // No money in account.
+            if (snapshot.CalculatedAccountBalance.Amount <= 0)
+            {
+                return 0;
+            }
+
+            // Get all subscribed channels...
             var creatorSubscriptions 
                 = from s in snapshot.SubscriberChannels.SubscribedChannels
                   let c = snapshot.CreatorChannels.CreatorChannels.FirstOrDefault(v => v.ChannelId.Equals(s.ChannelId))
@@ -33,14 +43,17 @@ namespace Fifthweek.Payments.Pipeline
                       Channel = c
                   };
 
+            // ...where creator has posted in the subscriber's channel billing week...
             var subscriptionsWithPosts = creatorSubscriptions.Where(
                     v => this.CreatorPostedInBillingWeek(
                         v.Subscription.SubscriptionStartDate,
                         v.Subscription.ChannelId,
                         creatorPosts));
 
+            // ...and the current price has been accepted...
             var acceptedSubscriptions = subscriptionsWithPosts.Where(v => v.Subscription.AcceptedPrice >= v.Channel.Price);
 
+            // ...calculate the total price.
             var totalCost = acceptedSubscriptions.Aggregate(0, (a, s) => a + s.Channel.Price);
 
             return totalCost;

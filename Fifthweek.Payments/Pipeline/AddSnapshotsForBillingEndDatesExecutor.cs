@@ -63,7 +63,8 @@
                                 source.CreatorChannels,
                                 source.CreatorFreeAccessUsers,
                                 source.SubscriberChannels,
-                                source.Subscriber));
+                                source.Subscriber,
+                                source.CalculatedAccountBalance));
                         ++index;
                         break;
                     }

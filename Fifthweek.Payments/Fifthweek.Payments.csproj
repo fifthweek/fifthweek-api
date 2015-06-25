@@ -38,8 +38,52 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\Dapper.1.38\lib\net45\Dapper.dll</HintPath>
     </Reference>
+    <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\EntityFramework.6.1.0\lib\net45\EntityFramework.dll</HintPath>
+    </Reference>
+    <Reference Include="EntityFramework.SqlServer">
+      <HintPath>..\packages\EntityFramework.6.1.0\lib\net45\EntityFramework.SqlServer.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.AspNet.Identity.Core, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Microsoft.AspNet.Identity.Core.2.1.0\lib\net45\Microsoft.AspNet.Identity.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.AspNet.Identity.EntityFramework, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Microsoft.AspNet.Identity.EntityFramework.2.1.0\lib\net45\Microsoft.AspNet.Identity.EntityFramework.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Data.Edm, Version=5.6.2.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Microsoft.Data.Edm.5.6.2\lib\net40\Microsoft.Data.Edm.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Data.OData, Version=5.6.2.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Microsoft.Data.OData.5.6.2\lib\net40\Microsoft.Data.OData.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Data.Services.Client, Version=5.6.2.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Microsoft.Data.Services.Client.5.6.2\lib\net40\Microsoft.Data.Services.Client.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.WindowsAzure.Configuration">
+      <HintPath>..\packages\Microsoft.WindowsAzure.ConfigurationManager.1.8.0.0\lib\net35-full\Microsoft.WindowsAzure.Configuration.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.WindowsAzure.Storage, Version=4.3.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\WindowsAzure.Storage.4.3.0\lib\net40\Microsoft.WindowsAzure.Storage.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json, Version=6.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Newtonsoft.Json.6.0.4\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Spatial, Version=5.6.2.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\System.Spatial.5.6.2\lib\net40\System.Spatial.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Transactions" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -54,6 +98,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>ClassAugmentation.tt</DependentUpon>
     </Compile>
+    <Compile Include="Constants.cs" />
     <Compile Include="Pipeline\AddSnapshotsForBillingEndDatesExecutor.cs" />
     <Compile Include="Pipeline\AggregateCostPeriodsExecutor.cs" />
     <Compile Include="Pipeline\BillingWeekUtilities.cs" />
@@ -75,24 +120,59 @@
     <Compile Include="Pipeline\VerifySnapshotsExecutor.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Pipeline\CalculateSnapshotCostExecutor.cs" />
+    <Compile Include="Services\CreatorIdAndFirstSubscribedDate.cs" />
+    <Compile Include="Services\CreatorPercentageOverrideData.cs" />
     <Compile Include="Services\CreatorPost.cs" />
     <Compile Include="Services\GetAllCreatorsDbStatement.cs" />
     <Compile Include="Services\GetAllSubscribedUsersDbStatement.cs" />
+    <Compile Include="Services\GetCalculatedAccountBalancesDbStatement.cs" />
+    <Compile Include="Services\GetCreatorPercentageOverrideDbStatement.cs" />
+    <Compile Include="Services\GetCreatorsAndFirstSubscribedDatesDbStatement.cs" />
+    <Compile Include="Services\GetAllSubscribersDbStatement.cs" />
     <Compile Include="Services\GetCreatorChannelsSnapshotsDbStatement.cs" />
     <Compile Include="Services\GetCreatorFreeAccessUsersSnapshotsDbStatement.cs" />
     <Compile Include="Services\GetCreatorPostsDbStatement.cs" />
+    <Compile Include="Services\GetLatestCommittedLedgerDateDbStatement.cs" />
+    <Compile Include="Services\GetPaymentProcessingData.cs" />
     <Compile Include="Services\GetSubscriberChannelsSnapshotsDbStatement.cs" />
     <Compile Include="Services\GetSubscriberSnapshotsDbStatement.cs" />
     <Compile Include="Services\IGetAllCreatorsDbStatement.cs" />
     <Compile Include="Services\IGetAllSubscribedUsersDbStatement.cs" />
+    <Compile Include="Services\IGetCalculatedAccountBalancesDbStatement.cs" />
+    <Compile Include="Services\IGetCreatorPercentageOverrideDbStatement.cs" />
+    <Compile Include="Services\IGetCreatorsAndFirstSubscribedDatesDbStatement.cs" />
+    <Compile Include="Services\IGetAllSubscribersDbStatement.cs" />
     <Compile Include="Services\IGetCreatorChannelsSnapshotsDbStatement.cs" />
     <Compile Include="Services\IGetCreatorFreeAccessUsersSnapshotsDbStatement.cs" />
     <Compile Include="Services\IGetCreatorPostsDbStatement.cs" />
+    <Compile Include="Services\IGetLatestCommittedLedgerDateDbStatement.cs" />
+    <Compile Include="Services\IGetPaymentProcessingData.cs" />
     <Compile Include="Services\IGetSubscriberChannelsSnapshotsDbStatement.cs" />
     <Compile Include="Services\IGetSubscriberSnapshotsDbStatement.cs" />
+    <Compile Include="Services\IPersistCommittedAndUncommittedRecordsDbStatement.cs" />
+    <Compile Include="Services\IPersistPaymentProcessingDataStatement.cs" />
+    <Compile Include="Services\IPersistPaymentProcessingResults.cs" />
+    <Compile Include="Services\IProcessAllPayments.cs" />
+    <Compile Include="Services\IProcessPaymentProcessingData.cs" />
+    <Compile Include="Services\IProcessPaymentsBetweenSubscriberAndCreator.cs" />
+    <Compile Include="Services\IProcessPaymentsForSubscriber.cs" />
     <Compile Include="Services\ISubscriberPaymentPipeline.cs" />
-    <Compile Include="Services\PaymentProcessor.cs" />
+    <Compile Include="Services\IUpdateAccountBalancesDbStatement.cs" />
+    <Compile Include="Services\PaymentProcessingData.cs" />
+    <Compile Include="Services\PaymentProcessingException.cs" />
+    <Compile Include="Services\PaymentProcessingResult.cs" />
+    <Compile Include="Services\PaymentProcessingResults.cs" />
+    <Compile Include="Services\PersistCommittedAndUncommittedRecordsDbStatement.cs" />
+    <Compile Include="Services\PersistedPaymentProcessingData.cs" />
+    <Compile Include="Services\PersistPaymentProcessingDataStatement.cs" />
+    <Compile Include="Services\PersistPaymentProcessingResults.cs" />
+    <Compile Include="Services\ProcessAllPayments.cs" />
+    <Compile Include="Services\ProcessPaymentProcessingData.cs" />
+    <Compile Include="Services\ProcessPaymentsBetweenSubscriberAndCreator.cs" />
+    <Compile Include="Services\ProcessPaymentsForSubscriber.cs" />
     <Compile Include="Services\SubscriberPaymentPipeline.cs" />
+    <Compile Include="Services\UpdateAccountBalancesDbStatement.cs" />
+    <Compile Include="Snapshots\CalculatedAccountBalanceSnapshot.cs" />
     <Compile Include="Snapshots\CreatorChannelsSnapshot.cs" />
     <Compile Include="Snapshots\CreatorChannelsSnapshotItem.cs" />
     <Compile Include="Snapshots\CreatorFreeAccessUsersSnapshot.cs" />
@@ -129,6 +209,10 @@
     <ProjectReference Include="..\Fifthweek.Api.Persistence\Fifthweek.Api.Persistence.csproj">
       <Project>{9C18BEE3-FAB5-4A00-8A94-A1FAEA370175}</Project>
       <Name>Fifthweek.Api.Persistence</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Fifthweek.Azure\Fifthweek.Azure.csproj">
+      <Project>{890CD4C4-993F-482D-BBB5-A50767ACE55B}</Project>
+      <Name>Fifthweek.Azure</Name>
     </ProjectReference>
     <ProjectReference Include="..\Fifthweek.CodeGeneration\Fifthweek.CodeGeneration.csproj">
       <Project>{770F450E-2166-4269-BEC1-DF59AA16B1E8}</Project>

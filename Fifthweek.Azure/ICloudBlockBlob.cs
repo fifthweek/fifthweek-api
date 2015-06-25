@@ -35,5 +35,7 @@ namespace Fifthweek.Azure
         Task<Stream> OpenReadAsync(CancellationToken cancellationToken);
 
         Task SetMetadataAsync();
+
+        Task UploadTextAsync(string content);
     }
 }
