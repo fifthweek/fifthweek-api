@@ -33,8 +33,8 @@ namespace Fifthweek.Payments.Tests.Services
             this.queueService.Setup(
                 v =>
                 v.AddMessageToQueueAsync(
-                    Constants.RequestSnapshotQueueName,
-                    new ProcessPaymentsMessage(),
+                    Constants.RequestProcessPaymentsQueueName,
+                    ProcessPaymentsMessage.Default,
                     null,
                     RequestProcessPaymentsService.ProcessingDelay)).Returns(Task.FromResult(0));
 
@@ -48,8 +48,8 @@ namespace Fifthweek.Payments.Tests.Services
             this.queueService.Setup(
                 v =>
                 v.AddMessageToQueueAsync(
-                    Constants.RequestSnapshotQueueName,
-                    new ProcessPaymentsMessage(),
+                    Constants.RequestProcessPaymentsQueueName,
+                    ProcessPaymentsMessage.Default,
                     null,
                     RequestProcessPaymentsService.ProcessingDelay)).Throws(new DivideByZeroException());
 

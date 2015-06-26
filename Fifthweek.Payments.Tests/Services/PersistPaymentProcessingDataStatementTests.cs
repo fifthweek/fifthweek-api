@@ -9,6 +9,7 @@
     using Fifthweek.Api.Persistence.Payments;
     using Fifthweek.Azure;
     using Fifthweek.Payments.Services;
+    using Fifthweek.Payments.Shared;
     using Fifthweek.Payments.Snapshots;
 
     using Microsoft.VisualStudio.TestTools.UnitTesting;

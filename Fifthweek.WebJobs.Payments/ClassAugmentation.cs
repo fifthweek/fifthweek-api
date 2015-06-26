@@ -1,27 +1,112 @@
 ﻿using System;
 using System.Linq;
 
-//// Generated on 25/06/2015 13:32:25 (UTC)
-//// Mapped solution in 13.1s
+//// Generated on 25/06/2015 17:45:43 (UTC)
+//// Mapped solution in 7.67s
 
 
 namespace Fifthweek.WebJobs.Payments
 {
     using System;
     using System.Linq;
-    using System.Collections.Generic;
+    using System.Net;
     using System.Threading;
     using System.Threading.Tasks;
+    using Fifthweek.Azure;
     using Fifthweek.CodeGeneration;
-    using Fifthweek.Payments.Services;
     using Fifthweek.Payments.Shared;
     using Fifthweek.Shared;
     using Fifthweek.WebJobs.Shared;
-    using Fifthweek.Azure;
     using Microsoft.WindowsAzure.Storage;
-    using Microsoft.WindowsAzure.Storage.Blob;
-    using System.Net;
+    using System.Collections.Generic;
     using System.Runtime.ExceptionServices;
+    using Fifthweek.Payments.Services;
+    using Microsoft.WindowsAzure.Storage.Blob;
+
+    public partial class PaymentProcessingLease 
+    {
+        public PaymentProcessingLease(
+            Fifthweek.Shared.ITimestampCreator timestampCreator,
+            Fifthweek.Azure.ICloudStorageAccount cloudStorageAccount,
+            System.Threading.CancellationToken cancellationToken)
+        {
+            if (timestampCreator == null)
+            {
+                throw new ArgumentNullException("timestampCreator");
+            }
+
+            if (cloudStorageAccount == null)
+            {
+                throw new ArgumentNullException("cloudStorageAccount");
+            }
+
+            if (cancellationToken == null)
+            {
+                throw new ArgumentNullException("cancellationToken");
+            }
+
+            this.timestampCreator = timestampCreator;
+            this.cloudStorageAccount = cloudStorageAccount;
+            this.cancellationToken = cancellationToken;
+        }
+    }
+}
+namespace Fifthweek.WebJobs.Payments
+{
+    using System;
+    using System.Linq;
+    using System.Net;
+    using System.Threading;
+    using System.Threading.Tasks;
+    using Fifthweek.Azure;
+    using Fifthweek.CodeGeneration;
+    using Fifthweek.Payments.Shared;
+    using Fifthweek.Shared;
+    using Fifthweek.WebJobs.Shared;
+    using Microsoft.WindowsAzure.Storage;
+    using System.Collections.Generic;
+    using System.Runtime.ExceptionServices;
+    using Fifthweek.Payments.Services;
+    using Microsoft.WindowsAzure.Storage.Blob;
+
+    public partial class PaymentProcessingLeaseFactory 
+    {
+        public PaymentProcessingLeaseFactory(
+            Fifthweek.Shared.ITimestampCreator timestampCreator,
+            Fifthweek.Azure.ICloudStorageAccount cloudStorageAccount)
+        {
+            if (timestampCreator == null)
+            {
+                throw new ArgumentNullException("timestampCreator");
+            }
+
+            if (cloudStorageAccount == null)
+            {
+                throw new ArgumentNullException("cloudStorageAccount");
+            }
+
+            this.timestampCreator = timestampCreator;
+            this.cloudStorageAccount = cloudStorageAccount;
+        }
+    }
+}
+namespace Fifthweek.WebJobs.Payments
+{
+    using System;
+    using System.Linq;
+    using System.Net;
+    using System.Threading;
+    using System.Threading.Tasks;
+    using Fifthweek.Azure;
+    using Fifthweek.CodeGeneration;
+    using Fifthweek.Payments.Shared;
+    using Fifthweek.Shared;
+    using Fifthweek.WebJobs.Shared;
+    using Microsoft.WindowsAzure.Storage;
+    using System.Collections.Generic;
+    using System.Runtime.ExceptionServices;
+    using Fifthweek.Payments.Services;
+    using Microsoft.WindowsAzure.Storage.Blob;
 
     public partial class PaymentProcessor 
     {
@@ -48,75 +133,6 @@ namespace Fifthweek.WebJobs.Payments
             this.processAllPayments = processAllPayments;
             this.paymentProcessingLeaseFactory = paymentProcessingLeaseFactory;
             this.requestProcessPayments = requestProcessPayments;
-        }
-    }
-}
-namespace Fifthweek.WebJobs.Payments
-{
-    using System;
-    using System.Linq;
-    using System.Collections.Generic;
-    using System.Threading;
-    using System.Threading.Tasks;
-    using Fifthweek.CodeGeneration;
-    using Fifthweek.Payments.Services;
-    using Fifthweek.Payments.Shared;
-    using Fifthweek.Shared;
-    using Fifthweek.WebJobs.Shared;
-    using Fifthweek.Azure;
-    using Microsoft.WindowsAzure.Storage;
-    using Microsoft.WindowsAzure.Storage.Blob;
-    using System.Net;
-
-    public partial class PaymentProcessingLease 
-    {
-        public PaymentProcessingLease(
-            Fifthweek.Azure.ICloudStorageAccount cloudStorageAccount,
-            System.Threading.CancellationToken cancellationToken)
-        {
-            if (cloudStorageAccount == null)
-            {
-                throw new ArgumentNullException("cloudStorageAccount");
-            }
-
-            if (cancellationToken == null)
-            {
-                throw new ArgumentNullException("cancellationToken");
-            }
-
-            this.cloudStorageAccount = cloudStorageAccount;
-            this.cancellationToken = cancellationToken;
-        }
-    }
-}
-namespace Fifthweek.WebJobs.Payments
-{
-    using System;
-    using System.Linq;
-    using System.Collections.Generic;
-    using System.Threading;
-    using System.Threading.Tasks;
-    using Fifthweek.CodeGeneration;
-    using Fifthweek.Payments.Services;
-    using Fifthweek.Payments.Shared;
-    using Fifthweek.Shared;
-    using Fifthweek.WebJobs.Shared;
-    using Fifthweek.Azure;
-    using Microsoft.WindowsAzure.Storage;
-    using Microsoft.WindowsAzure.Storage.Blob;
-    using System.Net;
-
-    public partial class PaymentProcessingLeaseFactory 
-    {
-        public PaymentProcessingLeaseFactory(
-            Fifthweek.Azure.ICloudStorageAccount cloudStorageAccount)
-        {
-            if (cloudStorageAccount == null)
-            {
-                throw new ArgumentNullException("cloudStorageAccount");
-            }
-
-            this.cloudStorageAccount = cloudStorageAccount;
         }
     }
 }

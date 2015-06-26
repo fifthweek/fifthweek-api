@@ -65,7 +65,7 @@
                             
                             new CalculatedAccountBalance(SubscriberId2.Value, LedgerAccountType.Stripe, Now, -60m),
                             new CalculatedAccountBalance(SubscriberId2.Value, LedgerAccountType.SalesTax, Now, 10m),
-                            new CalculatedAccountBalance(SubscriberId2.Value, LedgerAccountType.Fifthweek, Now, 10m),
+                            new CalculatedAccountBalance(SubscriberId2.Value, LedgerAccountType.Fifthweek, Now, 5m),
 
                             new CalculatedAccountBalance(SubscriberId3.Value, LedgerAccountType.Stripe, Now, -12m),
                             new CalculatedAccountBalance(SubscriberId3.Value, LedgerAccountType.SalesTax, Now, 2m),
@@ -104,7 +104,7 @@
                     {
                         new CalculatedAccountBalance(SubscriberId2.Value, LedgerAccountType.Stripe, Now, -60m),
                         new CalculatedAccountBalance(SubscriberId2.Value, LedgerAccountType.SalesTax, Now, 10m),
-                        new CalculatedAccountBalance(SubscriberId2.Value, LedgerAccountType.Fifthweek, Now, 10m),
+                        new CalculatedAccountBalance(SubscriberId2.Value, LedgerAccountType.Fifthweek, Now, 5m),
                     }
                 };
             });
@@ -173,7 +173,7 @@
                 PayCreator(databaseContext, random, SubscriberId2, CreatorId2, 40m);
                 PayCreator(databaseContext, random, CreatorId1, CreatorId2, 10m);
 
-                // TODO: add uncommitted records.
+                PayCreatorUncommitted(databaseContext, random, SubscriberId2, CreatorId2, 5m);
 
                 await databaseContext.SaveChangesAsync();
             }
@@ -190,6 +190,17 @@
             AddAppendOnlyLedgerRecord(databaseContext, random, null, destinationUserId, amount, LedgerAccountType.Fifthweek);
             AddAppendOnlyLedgerRecord(databaseContext, random, null, destinationUserId, -0.7m * amount, LedgerAccountType.Fifthweek);
             AddAppendOnlyLedgerRecord(databaseContext, random, destinationUserId, destinationUserId, 0.7m * amount, LedgerAccountType.Fifthweek);
+        }
+
+
+        private static void PayCreatorUncommitted(
+            FifthweekDbContext databaseContext,
+            Random random,
+            UserId sourceUserId,
+            UserId destinationUserId,
+            decimal amount)
+        {
+            AddUncommittedRecord(databaseContext, random, sourceUserId, destinationUserId, amount);
         }
 
         private static void AddCredit(FifthweekDbContext databaseContext, Random random, UserId userId, decimal amount)
@@ -214,6 +225,24 @@
                     null,
                     null,
                     null));
+        }
+
+        private static void AddUncommittedRecord(
+            FifthweekDbContext databaseContext,
+            Random random,
+            UserId subscriberId,
+            UserId creatorId,
+            decimal amount)
+        {
+            databaseContext.UncommittedSubscriptionPayments.Add(
+                new UncommittedSubscriptionPayment(
+                    subscriberId.Value,
+                    creatorId.Value,
+                    Now.AddDays(random.Next(-100, 100)),
+                    Now.AddDays(random.Next(-100, 100)),
+                    amount,
+                    Guid.NewGuid()));
+
         }
 
         private static FifthweekUser CreateUser(FifthweekDbContext databaseContext, Random random, UserId userId)

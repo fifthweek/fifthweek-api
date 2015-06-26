@@ -15,6 +15,15 @@ namespace Fifthweek.Payments.Services
     [AutoConstructor]
     public partial class UpdateAccountBalancesDbStatement : IUpdateAccountBalancesDbStatement
     {
+        /// <summary>
+        /// Note we calculate account balances pesimistically... we deduct uncommitted
+        /// payments from subscribers accounts, but we don't add them to creators accounts.
+        /// This means that users will generally be pleasantly surprised if the uncommitted
+        /// estimates are wrong, rather than finding they had less money than expected.
+        /// To include estimated income for creators, we could add this to the SQL:
+        ///     UNION ALL
+        ///     SELECT {6} AS userId, {9} AS accountType, {7} AS delta FROM {4}
+        /// </summary>
         private static readonly string SqlStart = string.Format(
             @"INSERT INTO {0} 
                 SELECT u.userId, u.accountType, @Timestamp, SUM(u.delta)
@@ -22,8 +31,6 @@ namespace Fifthweek.Payments.Services
                     SELECT {3} AS userId, {8} AS accountType, {1} AS delta FROM {2}
                     UNION ALL
                     SELECT {5} AS userId, {9} AS accountType, -1*{7} AS delta FROM {4}
-                    UNION ALL
-                    SELECT {6} AS userId, {9} AS accountType, {7} AS delta FROM {4}
                 ) u
                 ",
             CalculatedAccountBalance.Table,

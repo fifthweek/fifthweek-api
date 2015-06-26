@@ -6,6 +6,12 @@
 
     using Microsoft.Azure.WebJobs;
 
+    /// <summary>
+    /// Delete from UncommittedSubscriptionPayment where amount=0.
+    /// Delete from CalculatedAccountBalance where single item with amount=0.
+    /// Delete all file blobs associated with testing.fifthweek.com accounts.
+    /// Delete all accounts associated with testing.fifthweek.com accounts.
+    /// </summary>
     public class Program
     {
         public static void Main(string[] args)

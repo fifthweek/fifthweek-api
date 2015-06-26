@@ -57,7 +57,7 @@ namespace Fifthweek.WebJobs.Payments
                             new PersistCommittedAndUncommittedRecordsDbStatement(new FifthweekDbConnectionFactory()))),
                     new GetLatestCommittedLedgerDateDbStatement(new FifthweekDbConnectionFactory())),
                 new UpdateAccountBalancesDbStatement(new FifthweekDbConnectionFactory())),
-            new PaymentProcessingLeaseFactory(new FifthweekCloudStorageAccount()),
+            new PaymentProcessingLeaseFactory(new TimestampCreator(), new FifthweekCloudStorageAccount()),
             new RequestProcessPaymentsService(new QueueService(new FifthweekCloudStorageAccount())));
 
         public static Task CreateSnapshotAsync(

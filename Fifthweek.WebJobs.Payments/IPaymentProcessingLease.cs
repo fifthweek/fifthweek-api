@@ -1,5 +1,6 @@
 namespace Fifthweek.WebJobs.Payments
 {
+    using System;
     using System.Threading.Tasks;
 
     using Fifthweek.Payments.Shared;
@@ -15,5 +16,7 @@ namespace Fifthweek.WebJobs.Payments
         Task RenewLeaseAsync();
 
         Task ReleaseLeaseAsync();
+
+        Task UpdateTimestampsAsync();
     }
 }

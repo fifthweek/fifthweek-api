@@ -4,6 +4,9 @@ namespace Fifthweek.Payments.Services
     using System.Linq;
     using System.Threading.Tasks;
 
+    using Dapper;
+
+    using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.Api.Persistence;
     using Fifthweek.Api.Persistence.Payments;
     using Fifthweek.CodeGeneration;
@@ -14,8 +17,14 @@ namespace Fifthweek.Payments.Services
     {
         private readonly IFifthweekDbConnectionFactory connectionFactory;
 
-        public async Task ExecuteAsync(IReadOnlyList<AppendOnlyLedgerRecord> ledgerRecords, UncommittedSubscriptionPayment uncommittedRecord)
+        public async Task ExecuteAsync(
+            UserId subscriberId,
+            UserId creatorId,
+            IReadOnlyList<AppendOnlyLedgerRecord> ledgerRecords, 
+            UncommittedSubscriptionPayment uncommittedRecord)
         {
+            subscriberId.AssertNotNull("subscriberId");
+            creatorId.AssertNotNull("creatorId");
             ledgerRecords.AssertNotNull("ledgerRecords");
 
             using (var transaction = TransactionScopeBuilder.CreateAsync())
@@ -33,8 +42,23 @@ namespace Fifthweek.Payments.Services
                                                 | UncommittedSubscriptionPayment.Fields.EndTimestampExclusive
                                                 | UncommittedSubscriptionPayment.Fields.Amount
                                                 | UncommittedSubscriptionPayment.Fields.InputDataReference;
-                    
+
                         await connection.UpsertAsync(uncommittedRecord, uncommittedFields);
+                    }
+                    else
+                    {
+                        // Remove the existing uncommitted record.
+                        await connection.ExecuteAsync(
+                            string.Format(
+                                @"DELETE FROM {0} WHERE {1}=@SubscriberId AND {2}=@CreatorId",
+                                UncommittedSubscriptionPayment.Table,
+                                UncommittedSubscriptionPayment.Fields.SubscriberId,
+                                UncommittedSubscriptionPayment.Fields.CreatorId),
+                            new 
+                            {
+                                SubscriberId = subscriberId.Value,
+                                CreatorId = creatorId.Value
+                            });
                     }
                 }
 

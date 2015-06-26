@@ -44,5 +44,7 @@ namespace Fifthweek.Azure
         Task RenewLeaseAsync(AccessCondition accessCondition, CancellationToken cancellationToken);
 
         Task ReleaseLeaseAsync(AccessCondition accessCondition, CancellationToken cancellationToken);
+
+        Task SetMetadataAsync(AccessCondition accessCondition, BlobRequestOptions blobRequestOptions, OperationContext operationContext, CancellationToken cancellationToken);
     }
 }

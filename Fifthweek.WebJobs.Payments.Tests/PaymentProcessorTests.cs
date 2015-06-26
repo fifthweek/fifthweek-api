@@ -57,6 +57,7 @@
                 .Returns(Task.FromResult(0)).Verifiable();
 
             this.requestProcessPayments.Setup(v => v.ExecuteAsync()).Returns(Task.FromResult(0)).Verifiable();
+            this.paymentProcessingLease.Setup(v => v.UpdateTimestampsAsync()).Returns(Task.FromResult(0)).Verifiable();
             this.paymentProcessingLease.Setup(v => v.ReleaseLeaseAsync()).Returns(Task.FromResult(0)).Verifiable();
 
             await this.target.ProcessPaymentsAsync(new ProcessPaymentsMessage(), this.logger.Object, CancellationToken);
@@ -85,6 +86,7 @@
                     .Returns(Task.FromResult(0)).Verifiable();
 
             this.requestProcessPayments.Setup(v => v.ExecuteAsync()).Returns(Task.FromResult(0)).Verifiable();
+            this.paymentProcessingLease.Setup(v => v.UpdateTimestampsAsync()).Returns(Task.FromResult(0)).Verifiable();
             this.paymentProcessingLease.Setup(v => v.ReleaseLeaseAsync()).Returns(Task.FromResult(0)).Verifiable();
 
             this.logger.Setup(v => v.Error(error1)).Verifiable();
@@ -118,6 +120,7 @@
         {
             this.paymentProcessingLease.Setup(v => v.TryAcquireLeaseAsync()).ReturnsAsync(true).Verifiable();
             this.paymentProcessingLease.Setup(v => v.GetIsAcquired()).Returns(true);
+            this.paymentProcessingLease.Setup(v => v.UpdateTimestampsAsync()).Returns(Task.FromResult(0)).Verifiable();
             this.paymentProcessingLease.Setup(v => v.ReleaseLeaseAsync()).Returns(Task.FromResult(0)).Verifiable();
 
             var exception = new DivideByZeroException();

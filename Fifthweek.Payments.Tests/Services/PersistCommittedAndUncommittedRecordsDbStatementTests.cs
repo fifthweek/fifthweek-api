@@ -77,9 +77,23 @@
 
         [TestMethod]
         [ExpectedException(typeof(ArgumentNullException))]
+        public async Task WhenSubscriberIdIsNull_ItShouldThrowAnException()
+        {
+            await this.target.ExecuteAsync(null, CreatorId, LedgerRecords, UncommittedRecord);
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentNullException))]
+        public async Task WhenCreatorIdIsNull_ItShouldThrowAnException()
+        {
+            await this.target.ExecuteAsync(SubscriberId, null, LedgerRecords, UncommittedRecord);
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentNullException))]
         public async Task WhenLedgerRecordsIsNull_ItShouldThrowAnException()
         {
-            await this.target.ExecuteAsync(null, UncommittedRecord);
+            await this.target.ExecuteAsync(SubscriberId, CreatorId, null, UncommittedRecord);
         }
 
         [TestMethod]
@@ -91,7 +105,7 @@
                 
                 await testDatabase.TakeSnapshotAsync();
 
-                await this.target.ExecuteAsync(LedgerRecords, UncommittedRecord);
+                await this.target.ExecuteAsync(SubscriberId, CreatorId, LedgerRecords, UncommittedRecord);
 
                 var sideEffects = new List<IIdentityEquatable>();
                 sideEffects.AddRange(LedgerRecords);
@@ -112,6 +126,8 @@
                 this.target = new PersistCommittedAndUncommittedRecordsDbStatement(testDatabase);
 
                 await this.target.ExecuteAsync(
+                    SubscriberId,
+                    CreatorId,
                     LedgerRecords.Select(v => new AppendOnlyLedgerRecord(
                         Guid.NewGuid(),
                         v.AccountOwnerId,
@@ -122,7 +138,7 @@
                         Guid.NewGuid(),
                         Guid.NewGuid(),
                         null,
-                        null, 
+                        null,
                         null)).ToList(),
                     new UncommittedSubscriptionPayment(
                         UncommittedRecord.SubscriberId,
@@ -134,7 +150,7 @@
 
                 await testDatabase.TakeSnapshotAsync();
 
-                await this.target.ExecuteAsync(LedgerRecords, UncommittedRecord);
+                await this.target.ExecuteAsync(SubscriberId, CreatorId, LedgerRecords, UncommittedRecord);
 
                 var sideEffects = new List<IIdentityEquatable>();
                 sideEffects.AddRange(LedgerRecords);
@@ -149,6 +165,46 @@
         }
 
         [TestMethod]
+        public async Task ItShouldDeleteExistingUncommittedEntryIfUncommittedEntryNotSupplied()
+        {
+            await this.DatabaseTestAsync(async testDatabase =>
+            {
+                this.target = new PersistCommittedAndUncommittedRecordsDbStatement(testDatabase);
+
+                await this.target.ExecuteAsync(
+                    SubscriberId,
+                    CreatorId,
+                    LedgerRecords.Select(v => new AppendOnlyLedgerRecord(
+                        Guid.NewGuid(),
+                        v.AccountOwnerId,
+                        v.CounterpartyId,
+                        Now.AddDays(-1),
+                        v.Amount,
+                        v.AccountType,
+                        Guid.NewGuid(),
+                        Guid.NewGuid(),
+                        null,
+                        null,
+                        null)).ToList(),
+                    UncommittedRecord);
+
+                await testDatabase.TakeSnapshotAsync();
+
+                await this.target.ExecuteAsync(SubscriberId, CreatorId, LedgerRecords, null);
+
+                var sideEffects = new List<IIdentityEquatable>();
+                sideEffects.AddRange(LedgerRecords);
+                sideEffects.Add(UncommittedRecord);
+
+                return new ExpectedSideEffects
+                {
+                    Inserts = LedgerRecords,
+                    Delete = UncommittedRecord
+                };
+            });
+        }
+
+        [TestMethod]
         public async Task ItShouldNotAllowDuplicateLedgerEntries()
         {
             await this.DatabaseTestAsync(async testDatabase =>
@@ -156,6 +212,8 @@
                 this.target = new PersistCommittedAndUncommittedRecordsDbStatement(testDatabase);
 
                 await this.target.ExecuteAsync(
+                    SubscriberId, 
+                    CreatorId, 
                     LedgerRecords.Select(v => new AppendOnlyLedgerRecord(
                         Guid.NewGuid(),
                         v.AccountOwnerId,
@@ -175,7 +233,7 @@
                 Exception expectedException = null;
                 try
                 {
-                    await this.target.ExecuteAsync(LedgerRecords, UncommittedRecord);
+                    await this.target.ExecuteAsync(SubscriberId, CreatorId, LedgerRecords, UncommittedRecord);
                 }
                 catch (SqlException t)
                 {

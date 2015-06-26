@@ -54,6 +54,12 @@
                 new PaymentProcessingResult(
                     StartTimeInclusive.AddDays(2), 
                     StartTimeInclusive.AddDays(3), 
+                    new AggregateCostSummary(0), 
+                    null, 
+                    true),
+                new PaymentProcessingResult(
+                    StartTimeInclusive.AddDays(3), 
+                    StartTimeInclusive.AddDays(4), 
                     new AggregateCostSummary(3), 
                     null, 
                     false),
@@ -119,6 +125,7 @@
             var dataId = this.CreateGuid(0, 0);
             var transactionId1 = this.CreateGuid(0, 1);
             var transactionId2 = this.CreateGuid(0, 2);
+            var transactionId3 = this.CreateGuid(0, 3);
 
             this.persistPaymentProcessingData.Setup(
                 v => v.ExecuteAsync(new PersistedPaymentProcessingData(dataId, Data, Results)))
@@ -126,9 +133,9 @@
 
             IReadOnlyList<AppendOnlyLedgerRecord> actualCommittedRecords = null;
             UncommittedSubscriptionPayment actualUncommittedRecord = null;
-            this.persistCommittedAndUncommittedRecords.Setup(v => v.ExecuteAsync(It.IsAny<IReadOnlyList<AppendOnlyLedgerRecord>>(), It.IsAny<UncommittedSubscriptionPayment>()))
-                .Callback<IReadOnlyList<AppendOnlyLedgerRecord>, UncommittedSubscriptionPayment>(
-                    (a, b) =>
+            this.persistCommittedAndUncommittedRecords.Setup(v => v.ExecuteAsync(SubscriberId, CreatorId, It.IsAny<IReadOnlyList<AppendOnlyLedgerRecord>>(), It.IsAny<UncommittedSubscriptionPayment>()))
+                .Callback<UserId, UserId, IReadOnlyList<AppendOnlyLedgerRecord>, UncommittedSubscriptionPayment>(
+                    (s, c, a, b) =>
                     {
                         actualCommittedRecords = a;
                         actualUncommittedRecord = b;
@@ -148,6 +155,7 @@
                     new AppendOnlyLedgerRecord(this.CreateGuid(1, 5), Guid.Empty, CreatorId.Value, StartTimeInclusive.AddDays(2), 2m, LedgerAccountType.Fifthweek, transactionId2, dataId, null, null, null), 
                     new AppendOnlyLedgerRecord(this.CreateGuid(1, 6), Guid.Empty, CreatorId.Value, StartTimeInclusive.AddDays(2), -1.4m, LedgerAccountType.Fifthweek, transactionId2, dataId, null, null, null), 
                     new AppendOnlyLedgerRecord(this.CreateGuid(1, 7), CreatorId.Value, CreatorId.Value, StartTimeInclusive.AddDays(2), 1.4m, LedgerAccountType.Fifthweek, transactionId2, dataId, null, null, null), 
+                    new AppendOnlyLedgerRecord(this.CreateGuid(1, 8), SubscriberId.Value, CreatorId.Value, StartTimeInclusive.AddDays(3), 0m, LedgerAccountType.Fifthweek, transactionId3, dataId, null, null, null), 
                 },
                 actualCommittedRecords.ToList());
 
@@ -155,8 +163,8 @@
                 new UncommittedSubscriptionPayment(
                     SubscriberId.Value,
                     CreatorId.Value,
-                    StartTimeInclusive.AddDays(2),
                     StartTimeInclusive.AddDays(3),
+                    StartTimeInclusive.AddDays(4),
                     3,
                     dataId),
                 actualUncommittedRecord);
@@ -173,6 +181,7 @@
             var dataId = this.CreateGuid(0, 0);
             var transactionId1 = this.CreateGuid(0, 1);
             var transactionId2 = this.CreateGuid(0, 2);
+            var transactionId3 = this.CreateGuid(0, 3);
 
             var resultItems = new List<PaymentProcessingResult>(Results.Items);
             resultItems.Remove(resultItems.Last());
@@ -184,9 +193,9 @@
 
             IReadOnlyList<AppendOnlyLedgerRecord> actualCommittedRecords = null;
             UncommittedSubscriptionPayment actualUncommittedRecord = null;
-            this.persistCommittedAndUncommittedRecords.Setup(v => v.ExecuteAsync(It.IsAny<IReadOnlyList<AppendOnlyLedgerRecord>>(), It.IsAny<UncommittedSubscriptionPayment>()))
-                .Callback<IReadOnlyList<AppendOnlyLedgerRecord>, UncommittedSubscriptionPayment>(
-                    (a, b) =>
+            this.persistCommittedAndUncommittedRecords.Setup(v => v.ExecuteAsync(SubscriberId, CreatorId, It.IsAny<IReadOnlyList<AppendOnlyLedgerRecord>>(), It.IsAny<UncommittedSubscriptionPayment>()))
+                .Callback<UserId, UserId, IReadOnlyList<AppendOnlyLedgerRecord>, UncommittedSubscriptionPayment>(
+                    (s, c, a, b) =>
                     {
                         actualCommittedRecords = a;
                         actualUncommittedRecord = b;
@@ -206,6 +215,65 @@
                     new AppendOnlyLedgerRecord(this.CreateGuid(1, 5), Guid.Empty, CreatorId.Value, StartTimeInclusive.AddDays(2), 2m, LedgerAccountType.Fifthweek, transactionId2, dataId, null, null, null), 
                     new AppendOnlyLedgerRecord(this.CreateGuid(1, 6), Guid.Empty, CreatorId.Value, StartTimeInclusive.AddDays(2), -1.4m, LedgerAccountType.Fifthweek, transactionId2, dataId, null, null, null), 
                     new AppendOnlyLedgerRecord(this.CreateGuid(1, 7), CreatorId.Value, CreatorId.Value, StartTimeInclusive.AddDays(2), 1.4m, LedgerAccountType.Fifthweek, transactionId2, dataId, null, null, null), 
+                    new AppendOnlyLedgerRecord(this.CreateGuid(1, 8), SubscriberId.Value, CreatorId.Value, StartTimeInclusive.AddDays(3), 0m, LedgerAccountType.Fifthweek, transactionId3, dataId, null, null, null), 
+                },
+                actualCommittedRecords.ToList());
+
+            Assert.IsNull(actualUncommittedRecord);
+        }
+
+        [TestMethod]
+        public async Task WhenUncommittedRecordHasZeroAmount_ItShouldPersistTheData()
+        {
+            byte guidIndex = 0;
+            byte sequentialGuidIndex = 0;
+            this.guidCreator.Setup(v => v.Create()).Returns(() => this.CreateGuid(0, guidIndex++));
+            this.guidCreator.Setup(v => v.CreateSqlSequential()).Returns(() => this.CreateGuid(1, sequentialGuidIndex++));
+
+            var dataId = this.CreateGuid(0, 0);
+            var transactionId1 = this.CreateGuid(0, 1);
+            var transactionId2 = this.CreateGuid(0, 2);
+            var transactionId3 = this.CreateGuid(0, 3);
+
+            var resultItems = new List<PaymentProcessingResult>(Results.Items);
+            var uncommitted = resultItems.Last();
+            resultItems[resultItems.Count - 1] = new PaymentProcessingResult(
+                uncommitted.StartTimeInclusive,
+                uncommitted.EndTimeExclusive,
+                new AggregateCostSummary(0),
+                uncommitted.CreatorPercentageOverride,
+                false);
+            var results = new PaymentProcessingResults(resultItems);
+
+            this.persistPaymentProcessingData.Setup(
+                v => v.ExecuteAsync(new PersistedPaymentProcessingData(dataId, Data, results)))
+                .Returns(Task.FromResult(0));
+
+            IReadOnlyList<AppendOnlyLedgerRecord> actualCommittedRecords = null;
+            UncommittedSubscriptionPayment actualUncommittedRecord = null;
+            this.persistCommittedAndUncommittedRecords.Setup(v => v.ExecuteAsync(SubscriberId, CreatorId, It.IsAny<IReadOnlyList<AppendOnlyLedgerRecord>>(), It.IsAny<UncommittedSubscriptionPayment>()))
+                .Callback<UserId, UserId, IReadOnlyList<AppendOnlyLedgerRecord>, UncommittedSubscriptionPayment>(
+                    (s, c, a, b) =>
+                    {
+                        actualCommittedRecords = a;
+                        actualUncommittedRecord = b;
+                    })
+                    .Returns(Task.FromResult(0));
+
+            await this.target.ExecuteAsync(Data, results);
+
+            CollectionAssert.AreEqual(
+                new List<AppendOnlyLedgerRecord>
+                {
+                    new AppendOnlyLedgerRecord(this.CreateGuid(1, 0), SubscriberId.Value, CreatorId.Value, StartTimeInclusive.AddDays(1), -1m, LedgerAccountType.Fifthweek, transactionId1, dataId, null, null, null), 
+                    new AppendOnlyLedgerRecord(this.CreateGuid(1, 1), Guid.Empty, CreatorId.Value, StartTimeInclusive.AddDays(1), 1m, LedgerAccountType.Fifthweek, transactionId1, dataId, null, null, null), 
+                    new AppendOnlyLedgerRecord(this.CreateGuid(1, 2), Guid.Empty, CreatorId.Value, StartTimeInclusive.AddDays(1), -0.9m, LedgerAccountType.Fifthweek, transactionId1, dataId, null, null, null), 
+                    new AppendOnlyLedgerRecord(this.CreateGuid(1, 3), CreatorId.Value, CreatorId.Value, StartTimeInclusive.AddDays(1), 0.9m, LedgerAccountType.Fifthweek, transactionId1, dataId, null, null, null), 
+                    new AppendOnlyLedgerRecord(this.CreateGuid(1, 4), SubscriberId.Value, CreatorId.Value, StartTimeInclusive.AddDays(2), -2m, LedgerAccountType.Fifthweek, transactionId2, dataId, null, null, null), 
+                    new AppendOnlyLedgerRecord(this.CreateGuid(1, 5), Guid.Empty, CreatorId.Value, StartTimeInclusive.AddDays(2), 2m, LedgerAccountType.Fifthweek, transactionId2, dataId, null, null, null), 
+                    new AppendOnlyLedgerRecord(this.CreateGuid(1, 6), Guid.Empty, CreatorId.Value, StartTimeInclusive.AddDays(2), -1.4m, LedgerAccountType.Fifthweek, transactionId2, dataId, null, null, null), 
+                    new AppendOnlyLedgerRecord(this.CreateGuid(1, 7), CreatorId.Value, CreatorId.Value, StartTimeInclusive.AddDays(2), 1.4m, LedgerAccountType.Fifthweek, transactionId2, dataId, null, null, null), 
+                    new AppendOnlyLedgerRecord(this.CreateGuid(1, 8), SubscriberId.Value, CreatorId.Value, StartTimeInclusive.AddDays(3), 0m, LedgerAccountType.Fifthweek, transactionId3, dataId, null, null, null), 
                 },
                 actualCommittedRecords.ToList());
 
@@ -225,6 +293,7 @@
             var resultItems = new List<PaymentProcessingResult>(Results.Items);
             resultItems.Remove(resultItems.First());
             resultItems.Remove(resultItems.First());
+            resultItems.Remove(resultItems.First());
             var results = new PaymentProcessingResults(resultItems);
 
             this.persistPaymentProcessingData.Setup(
@@ -233,9 +302,9 @@
 
             IReadOnlyList<AppendOnlyLedgerRecord> actualCommittedRecords = null;
             UncommittedSubscriptionPayment actualUncommittedRecord = null;
-            this.persistCommittedAndUncommittedRecords.Setup(v => v.ExecuteAsync(It.IsAny<IReadOnlyList<AppendOnlyLedgerRecord>>(), It.IsAny<UncommittedSubscriptionPayment>()))
-                .Callback<IReadOnlyList<AppendOnlyLedgerRecord>, UncommittedSubscriptionPayment>(
-                    (a, b) =>
+            this.persistCommittedAndUncommittedRecords.Setup(v => v.ExecuteAsync(SubscriberId, CreatorId, It.IsAny<IReadOnlyList<AppendOnlyLedgerRecord>>(), It.IsAny<UncommittedSubscriptionPayment>()))
+                .Callback<UserId, UserId, IReadOnlyList<AppendOnlyLedgerRecord>, UncommittedSubscriptionPayment>(
+                    (s, c, a, b) =>
                     {
                         actualCommittedRecords = a;
                         actualUncommittedRecord = b;
@@ -252,8 +321,8 @@
                 new UncommittedSubscriptionPayment(
                     SubscriberId.Value,
                     CreatorId.Value,
-                    StartTimeInclusive.AddDays(2),
                     StartTimeInclusive.AddDays(3),
+                    StartTimeInclusive.AddDays(4),
                     3,
                     dataId),
                 actualUncommittedRecord);

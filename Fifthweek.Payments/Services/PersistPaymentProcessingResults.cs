@@ -33,6 +33,26 @@ namespace Fifthweek.Payments.Services
             {
                 var transactionId = this.guidCreator.Create();
 
+                if (result.SubscriptionCost.Cost == 0)
+                {
+                    // A single zero record, so we know when to start processing from
+                    // next time.
+                    committedRecords.Add(new AppendOnlyLedgerRecord(
+                     this.guidCreator.CreateSqlSequential(),
+                     data.SubscriberId.Value,
+                     data.CreatorId.Value,
+                     result.EndTimeExclusive,
+                     0,
+                     LedgerAccountType.Fifthweek,
+                     transactionId,
+                     dataId,
+                     null,
+                     null,
+                     null));
+                    
+                    continue;
+                }
+
                 committedRecords.Add(new AppendOnlyLedgerRecord(
                     this.guidCreator.CreateSqlSequential(),
                     data.SubscriberId.Value,
@@ -93,7 +113,7 @@ namespace Fifthweek.Payments.Services
             }
 
             UncommittedSubscriptionPayment uncommittedRecord = null;
-            if (uncommittedResult != null)
+            if (uncommittedResult != null && uncommittedResult.SubscriptionCost.Cost != 0)
             {
                 uncommittedRecord = new UncommittedSubscriptionPayment(
                     data.SubscriberId.Value,
@@ -104,8 +124,11 @@ namespace Fifthweek.Payments.Services
                     dataId);
             }
 
-            await this.persistPaymentProcessingData.ExecuteAsync(new PersistedPaymentProcessingData(dataId, data, results));
-            await this.persistCommittedAndUncommittedRecords.ExecuteAsync(committedRecords, uncommittedRecord);
+            if (committedRecords.Count > 0 || uncommittedResult != null)
+            {
+                await this.persistPaymentProcessingData.ExecuteAsync(new PersistedPaymentProcessingData(dataId, data, results));
+                await this.persistCommittedAndUncommittedRecords.ExecuteAsync(data.SubscriberId, data.CreatorId, committedRecords, uncommittedRecord);
+            }
         }
     }
 }

@@ -19,7 +19,7 @@
         {
             return this.queueService.AddMessageToQueueAsync(
                 Constants.RequestProcessPaymentsQueueName,
-                new ProcessPaymentsMessage(),
+                ProcessPaymentsMessage.Default,
                 null,
                 ProcessingDelay);
         }

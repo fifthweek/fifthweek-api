@@ -58,6 +58,7 @@
 
             if (lease.GetIsAcquired())
             {
+                await lease.UpdateTimestampsAsync();
                 await lease.ReleaseLeaseAsync();
             }
 

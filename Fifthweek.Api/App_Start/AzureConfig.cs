@@ -43,7 +43,8 @@
                 await CreateQueueIfNotExists(cloudQueueClient, Payments.Shared.Constants.RequestProcessPaymentsQueueName);
 
                 var cloudBlobClient = storageAccount.CreateCloudBlobClient();
-                await CreateBlobContainerIfNotExists(cloudBlobClient, Shared.Constants.AzureLeaseObjectsContainerName);
+                await CreateBlobContainerIfNotExists(cloudBlobClient, Payments.Shared.Constants.PaymentProcessingDataContainerName);
+                await CreateBlobIfNotExists(cloudBlobClient, Shared.Constants.AzureLeaseObjectsContainerName, Payments.Shared.Constants.ProcessPaymentsLeaseObjectName);
                 await CreateBlobContainerIfNotExists(cloudBlobClient, FileManagement.Constants.PublicFileBlobContainerName);
             }
             catch (Exception t)
@@ -62,6 +63,14 @@
         {
             var container = cloudBlobClient.GetContainerReference(containerName);
             await container.CreateIfNotExistsAsync();
+        }
+
+        private static async Task CreateBlobIfNotExists(ICloudBlobClient cloudBlobClient, string containerName, string blobName)
+        {
+            var container = cloudBlobClient.GetContainerReference(containerName);
+            await container.CreateIfNotExistsAsync();
+            var blob = container.GetBlockBlobReference(blobName);
+            await blob.UploadTextAsync(string.Empty);
         }
 
         private static async Task ConfigureCors(ICloudStorageAccount storageAccount)

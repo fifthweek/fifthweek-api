@@ -8,18 +8,26 @@ namespace Fifthweek.WebJobs.Payments
     using Fifthweek.Azure;
     using Fifthweek.CodeGeneration;
     using Fifthweek.Payments.Shared;
+    using Fifthweek.Shared;
     using Fifthweek.WebJobs.Shared;
 
     using Microsoft.WindowsAzure.Storage;
+    using Microsoft.WindowsAzure.Storage.Blob;
+    using Microsoft.WindowsAzure.Storage.Shared.Protocol;
 
     [AutoConstructor]
     public partial class PaymentProcessingLease : IKeepAliveHandler, IPaymentProcessingLease
     {
+        private readonly ITimestampCreator timestampCreator;
         private readonly ICloudStorageAccount cloudStorageAccount;
         private readonly CancellationToken cancellationToken;
 
         private string leaseId;
         private ICloudBlockBlob blob;
+
+        private DateTime acquiredTimestamp;
+
+        private int renewCount = 0;
 
         public bool GetIsAcquired()
         {
@@ -33,9 +41,9 @@ namespace Fifthweek.WebJobs.Payments
                 await this.AcquireLeaseAsync();
                 return true;
             }
-            catch (WebException t)
+            catch (StorageException t)
             {
-                if ((t.Response == null) || ((HttpWebResponse)t.Response).StatusCode != HttpStatusCode.Conflict)
+                if (t.RequestInformation.HttpStatusCode != (int)HttpStatusCode.Conflict)
                 {
                     throw;
                 }
@@ -53,14 +61,26 @@ namespace Fifthweek.WebJobs.Payments
 
             var blobClient = this.cloudStorageAccount.CreateCloudBlobClient();
             var leaseContainer = blobClient.GetContainerReference(Fifthweek.Shared.Constants.AzureLeaseObjectsContainerName);
-            this.blob = leaseContainer.GetBlockBlobReference(Constants.ProcessPaymentsLeaseObjectName);
+            this.blob = leaseContainer.GetBlockBlobReference(Fifthweek.Payments.Shared.Constants.ProcessPaymentsLeaseObjectName);
 
             this.leaseId = await this.blob.AcquireLeaseAsync(TimeSpan.FromMinutes(1), null, this.cancellationToken);
+            this.acquiredTimestamp = this.timestampCreator.Now();
         }
 
         public Task RenewLeaseAsync()
         {
+            ++this.renewCount;
             return this.blob.RenewLeaseAsync(new AccessCondition { LeaseId = this.leaseId }, this.cancellationToken);
+        }
+
+        public async Task UpdateTimestampsAsync()
+        {
+            var now = this.timestampCreator.Now();
+            await this.blob.FetchAttributesAsync(this.cancellationToken);
+            this.blob.Metadata[Fifthweek.Payments.Shared.Constants.LastProcessPaymentsStartTimestampMetadataKey] = this.acquiredTimestamp.ToString("s", System.Globalization.CultureInfo.InvariantCulture);
+            this.blob.Metadata[Fifthweek.Payments.Shared.Constants.LastProcessPaymentsEndTimestampMetadataKey] = now.ToString("s", System.Globalization.CultureInfo.InvariantCulture);
+            this.blob.Metadata[Fifthweek.Payments.Shared.Constants.LastProcessPaymentsRenewCountMetadataKey] = this.renewCount.ToString(System.Globalization.CultureInfo.InvariantCulture);
+            await this.blob.SetMetadataAsync(new AccessCondition { LeaseId = this.leaseId }, null, null, this.cancellationToken);
         }
 
         public async Task ReleaseLeaseAsync()
