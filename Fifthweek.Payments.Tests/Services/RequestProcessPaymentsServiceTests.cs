@@ -36,7 +36,7 @@ namespace Fifthweek.Payments.Tests.Services
                     Constants.RequestProcessPaymentsQueueName,
                     ProcessPaymentsMessage.Default,
                     null,
-                    RequestProcessPaymentsService.ProcessingDelay)).Returns(Task.FromResult(0));
+                    Constants.PaymentProcessingDefaultMessageDelay)).Returns(Task.FromResult(0));
 
             await this.target.ExecuteAsync();
         }
@@ -51,9 +51,38 @@ namespace Fifthweek.Payments.Tests.Services
                     Constants.RequestProcessPaymentsQueueName,
                     ProcessPaymentsMessage.Default,
                     null,
-                    RequestProcessPaymentsService.ProcessingDelay)).Throws(new DivideByZeroException());
+                    Constants.PaymentProcessingDefaultMessageDelay)).Throws(new DivideByZeroException());
 
             await this.target.ExecuteAsync();
+        }
+
+        [TestMethod]
+        public async Task WhenCalledImmdediately_ItShouldCallQueueServiceWithNoDelay()
+        {
+            this.queueService.Setup(
+                v =>
+                v.AddMessageToQueueAsync(
+                    Constants.RequestProcessPaymentsQueueName,
+                    ProcessPaymentsMessage.Default,
+                    null,
+                    TimeSpan.Zero)).Returns(Task.FromResult(0));
+
+            await this.target.ExecuteImmediatelyAsync();
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(DivideByZeroException))]
+        public async Task WhenQueueCalledImmediatelyAndServiceFails_ItShouldThrowAnException()
+        {
+            this.queueService.Setup(
+                v =>
+                v.AddMessageToQueueAsync(
+                    Constants.RequestProcessPaymentsQueueName,
+                    ProcessPaymentsMessage.Default,
+                    null,
+                    TimeSpan.Zero)).Throws(new DivideByZeroException());
+
+            await this.target.ExecuteImmediatelyAsync();
         }
     }
 }

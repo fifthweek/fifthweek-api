@@ -1,6 +1,7 @@
 namespace Fifthweek.WebJobs.Payments
 {
     using System;
+    using System.Globalization;
     using System.Net;
     using System.Threading;
     using System.Threading.Tasks;
@@ -73,13 +74,27 @@ namespace Fifthweek.WebJobs.Payments
             return this.blob.RenewLeaseAsync(new AccessCondition { LeaseId = this.leaseId }, this.cancellationToken);
         }
 
+        public async Task<TimeSpan> GetTimeSinceLastLeaseAsync()
+        {
+            await this.blob.FetchAttributesAsync(this.cancellationToken);
+
+            string endTimeString;
+            if (!this.blob.Metadata.TryGetValue(Fifthweek.Payments.Shared.Constants.LastProcessPaymentsEndTimestampMetadataKey, out endTimeString))
+            {
+                return TimeSpan.MaxValue;
+            }
+
+            var endTime = endTimeString.FromIso8601String();
+            return this.acquiredTimestamp - endTime;
+        }
+
         public async Task UpdateTimestampsAsync()
         {
             var now = this.timestampCreator.Now();
             await this.blob.FetchAttributesAsync(this.cancellationToken);
-            this.blob.Metadata[Fifthweek.Payments.Shared.Constants.LastProcessPaymentsStartTimestampMetadataKey] = this.acquiredTimestamp.ToString("s", System.Globalization.CultureInfo.InvariantCulture);
-            this.blob.Metadata[Fifthweek.Payments.Shared.Constants.LastProcessPaymentsEndTimestampMetadataKey] = now.ToString("s", System.Globalization.CultureInfo.InvariantCulture);
-            this.blob.Metadata[Fifthweek.Payments.Shared.Constants.LastProcessPaymentsRenewCountMetadataKey] = this.renewCount.ToString(System.Globalization.CultureInfo.InvariantCulture);
+            this.blob.Metadata[Fifthweek.Payments.Shared.Constants.LastProcessPaymentsStartTimestampMetadataKey] = this.acquiredTimestamp.ToIso8601String();
+            this.blob.Metadata[Fifthweek.Payments.Shared.Constants.LastProcessPaymentsEndTimestampMetadataKey] = now.ToIso8601String();
+            this.blob.Metadata[Fifthweek.Payments.Shared.Constants.LastProcessPaymentsRenewCountMetadataKey] = this.renewCount.ToString(CultureInfo.InvariantCulture);
             await this.blob.SetMetadataAsync(new AccessCondition { LeaseId = this.leaseId }, null, null, this.cancellationToken);
         }
 

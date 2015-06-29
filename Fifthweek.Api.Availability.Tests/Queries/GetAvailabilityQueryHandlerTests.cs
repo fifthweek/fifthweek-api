@@ -23,23 +23,20 @@
     {
         private readonly GetAvailabilityQuery query = new GetAvailabilityQuery();
 
-        private Mock<ICountUsersDbStatement> countUsersDbStatement;
-        private Mock<IExceptionHandler> exceptionHandler;
-        private Mock<ITransientErrorDetectionStrategy> transientErrorDetectionStrategy;
+        private Mock<ITestSqlAzureAvailabilityStatement> testSqlAzureAvailability;
+        private Mock<ITestPaymentsAvailabilityStatement> testPaymentsAvailability;
         
         private GetAvailabilityQueryHandler target;
 
         [TestInitialize]
         public void TestInitialize()
         {
-            this.countUsersDbStatement = new Mock<ICountUsersDbStatement>();
-            this.exceptionHandler = new Mock<IExceptionHandler>(MockBehavior.Strict);
-            this.transientErrorDetectionStrategy = new Mock<ITransientErrorDetectionStrategy>(MockBehavior.Strict);
+            this.testSqlAzureAvailability = new Mock<ITestSqlAzureAvailabilityStatement>(MockBehavior.Strict);
+            this.testPaymentsAvailability = new Mock<ITestPaymentsAvailabilityStatement>(MockBehavior.Strict);
 
             this.target = new GetAvailabilityQueryHandler(
-                this.exceptionHandler.Object,
-                this.transientErrorDetectionStrategy.Object,
-                this.countUsersDbStatement.Object);
+                this.testSqlAzureAvailability.Object,
+                this.testPaymentsAvailability.Object);
         }
 
         [TestMethod]
@@ -50,58 +47,51 @@
         }
 
         [TestMethod]
-        public async Task WhenDatabaseIsAvailable_ItShouldReturnAHealthyStatus()
+        public async Task WhenAllServicesAreAvailable_ItShouldReturnAHealthyStatus()
         {
-            this.countUsersDbStatement.Setup(v => v.ExecuteAsync()).ReturnsAsync(2);
+            this.testSqlAzureAvailability.Setup(v => v.ExecuteAsync()).ReturnsAsync(true);
+            this.testPaymentsAvailability.Setup(v => v.ExecuteAsync()).ReturnsAsync(true);
 
             var result = await this.target.HandleAsync(this.query);
 
             Assert.IsNotNull(result);
             Assert.IsTrue(result.Api);
             Assert.IsTrue(result.Database);
+            Assert.IsTrue(result.Payments);
+
+            Assert.IsTrue(result.IsOk());
         }
 
         [TestMethod]
-        public async Task WhenDatabaseIsNotAvailable_ItShouldReturnAnUnhealthyStatusAndReportTheError()
+        public async Task WhenSqlAzureUnavailable_ItShouldReturnUnhealthyStatus()
         {
-            var exception = new Exception("Bad");
-            this.countUsersDbStatement.Setup(v => v.ExecuteAsync()).Throws(exception);
-
-            this.transientErrorDetectionStrategy.Setup(v => v.IsTransient(exception)).Returns(false);
-
-            this.exceptionHandler.Setup(v => v.ReportExceptionAsync(exception)).Verifiable();
+            this.testSqlAzureAvailability.Setup(v => v.ExecuteAsync()).ReturnsAsync(false);
+            this.testPaymentsAvailability.Setup(v => v.ExecuteAsync()).ReturnsAsync(true);
 
             var result = await this.target.HandleAsync(this.query);
 
             Assert.IsNotNull(result);
             Assert.IsTrue(result.Api);
             Assert.IsFalse(result.Database);
+            Assert.IsTrue(result.Payments);
 
-            this.exceptionHandler.Verify();
+            Assert.IsFalse(result.IsOk());
         }
 
         [TestMethod]
-        public async Task WhenDatabaseIsNotAvailableWithTransientError_ItShouldReturnAnUnhealthyStatusAndReportTheTransientError()
+        public async Task WhenPaymentsUnavailable_ItShouldReturnUnhealthyStatus()
         {
-            var exception = new Exception("Bad");
-            this.countUsersDbStatement.Setup(v => v.ExecuteAsync()).Throws(exception);
-
-            this.transientErrorDetectionStrategy.Setup(v => v.IsTransient(exception)).Returns(true);
-
-            Exception reportedException = null;
-            this.exceptionHandler
-                .Setup(v => v.ReportExceptionAsync(It.IsAny<Exception>()))
-                .Callback<Exception>(v => reportedException = v);
+            this.testSqlAzureAvailability.Setup(v => v.ExecuteAsync()).ReturnsAsync(true);
+            this.testPaymentsAvailability.Setup(v => v.ExecuteAsync()).ReturnsAsync(false);
 
             var result = await this.target.HandleAsync(this.query);
 
             Assert.IsNotNull(result);
             Assert.IsTrue(result.Api);
-            Assert.IsFalse(result.Database);
+            Assert.IsTrue(result.Database);
+            Assert.IsFalse(result.Payments);
 
-            Assert.IsNotNull(reportedException);
-            Assert.IsInstanceOfType(reportedException, typeof(GetAvailabilityQueryHandler.TransientErrorException));
-            Assert.AreSame(exception, reportedException.InnerException);
+            Assert.IsFalse(result.IsOk());
         }
     }
 }

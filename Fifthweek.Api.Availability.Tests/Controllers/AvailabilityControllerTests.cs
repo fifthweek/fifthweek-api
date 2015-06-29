@@ -33,7 +33,7 @@
         public async Task WhenAvailibilityIsOk_ResponseShouldBeOk()
         {
             this.getAvailability.Setup(v => v.HandleAsync(It.IsAny<GetAvailabilityQuery>()))
-                .ReturnsAsync(new AvailabilityResult(true, true));
+                .ReturnsAsync(new AvailabilityResult(true, true, true));
 
             var result = await this.controller.Get();
 
@@ -47,7 +47,7 @@
         public async Task WhenAvailibilityIsNotOk_ResponseShouldBeServiceUnavailable()
         {
             this.getAvailability.Setup(v => v.HandleAsync(It.IsAny<GetAvailabilityQuery>()))
-                .ReturnsAsync(new AvailabilityResult(true, false));
+                .ReturnsAsync(new AvailabilityResult(true, false, true));
 
             var result = await this.controller.Get();
 

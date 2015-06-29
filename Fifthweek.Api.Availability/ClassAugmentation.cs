@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Linq;
 
-//// Generated on 11/02/2015 17:39:35 (UTC)
-//// Mapped solution in 5.36s
+//// Generated on 26/06/2015 16:45:35 (UTC)
+//// Mapped solution in 15.92s
 
 
 namespace Fifthweek.Api.Availability.Controllers
@@ -43,32 +43,26 @@ namespace Fifthweek.Api.Availability.Queries
     using Fifthweek.Api.Persistence;
     using Fifthweek.CodeGeneration;
     using Microsoft.Practices.EnterpriseLibrary.TransientFaultHandling;
+    using Fifthweek.Shared;
 
     public partial class GetAvailabilityQueryHandler 
     {
         public GetAvailabilityQueryHandler(
-            Fifthweek.Api.Core.IExceptionHandler exceptionHandler,
-            Microsoft.Practices.EnterpriseLibrary.TransientFaultHandling.ITransientErrorDetectionStrategy transientErrorDetectionStrategy,
-            Fifthweek.Api.Availability.ICountUsersDbStatement countUsersDbStatement)
+            Fifthweek.Api.Availability.ITestSqlAzureAvailabilityStatement testSqlAzureAvailability,
+            Fifthweek.Api.Availability.ITestPaymentsAvailabilityStatement testPaymentsAvailability)
         {
-            if (exceptionHandler == null)
+            if (testSqlAzureAvailability == null)
             {
-                throw new ArgumentNullException("exceptionHandler");
+                throw new ArgumentNullException("testSqlAzureAvailability");
             }
 
-            if (transientErrorDetectionStrategy == null)
+            if (testPaymentsAvailability == null)
             {
-                throw new ArgumentNullException("transientErrorDetectionStrategy");
+                throw new ArgumentNullException("testPaymentsAvailability");
             }
 
-            if (countUsersDbStatement == null)
-            {
-                throw new ArgumentNullException("countUsersDbStatement");
-            }
-
-            this.exceptionHandler = exceptionHandler;
-            this.transientErrorDetectionStrategy = transientErrorDetectionStrategy;
-            this.countUsersDbStatement = countUsersDbStatement;
+            this.testSqlAzureAvailability = testSqlAzureAvailability;
+            this.testPaymentsAvailability = testPaymentsAvailability;
         }
     }
 }
@@ -93,6 +87,98 @@ namespace Fifthweek.Api.Availability
             }
 
             this.connectionFactory = connectionFactory;
+        }
+    }
+}
+namespace Fifthweek.Api.Availability
+{
+    using System;
+    using System.Globalization;
+    using System.Threading.Tasks;
+    using Fifthweek.Api.Availability.Queries;
+    using Fifthweek.Api.Core;
+    using Fifthweek.Azure;
+    using Fifthweek.CodeGeneration;
+    using Fifthweek.Payments.Shared;
+    using Fifthweek.Shared;
+    using Microsoft.Practices.EnterpriseLibrary.TransientFaultHandling;
+
+    public partial class TestPaymentsAvailabilityStatement 
+    {
+        public TestPaymentsAvailabilityStatement(
+            Fifthweek.Api.Core.IExceptionHandler exceptionHandler,
+            Microsoft.Practices.EnterpriseLibrary.TransientFaultHandling.ITransientErrorDetectionStrategy transientErrorDetectionStrategy,
+            Fifthweek.Azure.ICloudStorageAccount cloudStorageAccount,
+            Fifthweek.Shared.ITimestampCreator timestampCreator,
+            Fifthweek.Payments.Shared.IRequestProcessPaymentsService requestProcessPayments)
+        {
+            if (exceptionHandler == null)
+            {
+                throw new ArgumentNullException("exceptionHandler");
+            }
+
+            if (transientErrorDetectionStrategy == null)
+            {
+                throw new ArgumentNullException("transientErrorDetectionStrategy");
+            }
+
+            if (cloudStorageAccount == null)
+            {
+                throw new ArgumentNullException("cloudStorageAccount");
+            }
+
+            if (timestampCreator == null)
+            {
+                throw new ArgumentNullException("timestampCreator");
+            }
+
+            if (requestProcessPayments == null)
+            {
+                throw new ArgumentNullException("requestProcessPayments");
+            }
+
+            this.exceptionHandler = exceptionHandler;
+            this.transientErrorDetectionStrategy = transientErrorDetectionStrategy;
+            this.cloudStorageAccount = cloudStorageAccount;
+            this.timestampCreator = timestampCreator;
+            this.requestProcessPayments = requestProcessPayments;
+        }
+    }
+}
+namespace Fifthweek.Api.Availability
+{
+    using System;
+    using System.Threading.Tasks;
+    using Fifthweek.Api.Availability.Queries;
+    using Fifthweek.Api.Core;
+    using Fifthweek.CodeGeneration;
+    using Microsoft.Practices.EnterpriseLibrary.TransientFaultHandling;
+
+    public partial class TestSqlAzureAvailabilityStatement 
+    {
+        public TestSqlAzureAvailabilityStatement(
+            Fifthweek.Api.Core.IExceptionHandler exceptionHandler,
+            Microsoft.Practices.EnterpriseLibrary.TransientFaultHandling.ITransientErrorDetectionStrategy transientErrorDetectionStrategy,
+            Fifthweek.Api.Availability.ICountUsersDbStatement countUsersDbStatement)
+        {
+            if (exceptionHandler == null)
+            {
+                throw new ArgumentNullException("exceptionHandler");
+            }
+
+            if (transientErrorDetectionStrategy == null)
+            {
+                throw new ArgumentNullException("transientErrorDetectionStrategy");
+            }
+
+            if (countUsersDbStatement == null)
+            {
+                throw new ArgumentNullException("countUsersDbStatement");
+            }
+
+            this.exceptionHandler = exceptionHandler;
+            this.transientErrorDetectionStrategy = transientErrorDetectionStrategy;
+            this.countUsersDbStatement = countUsersDbStatement;
         }
     }
 }

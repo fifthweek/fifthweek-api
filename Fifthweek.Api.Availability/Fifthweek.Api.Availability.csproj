@@ -91,9 +91,14 @@
     <Compile Include="Controllers\AvailabilityController.cs" />
     <Compile Include="CountUsersDbStatement.cs" />
     <Compile Include="ICountUsersDbStatement.cs" />
+    <Compile Include="ITestPaymentsAvailabilityStatement.cs" />
+    <Compile Include="ITestSqlAzureAvailabilityStatement.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Queries\GetAvailabilityQuery.cs" />
     <Compile Include="Queries\GetAvailabilityQueryHandler.cs" />
+    <Compile Include="Queries\TransientErrorException.cs" />
+    <Compile Include="TestPaymentsAvailabilityStatement.cs" />
+    <Compile Include="TestSqlAzureAvailabilityStatement.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Fifthweek.Api.Core\Fifthweek.Api.Core.csproj">
@@ -104,9 +109,17 @@
       <Project>{9c18bee3-fab5-4a00-8a94-a1faea370175}</Project>
       <Name>Fifthweek.Api.Persistence</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Fifthweek.Azure\Fifthweek.Azure.csproj">
+      <Project>{890CD4C4-993F-482D-BBB5-A50767ACE55B}</Project>
+      <Name>Fifthweek.Azure</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Fifthweek.CodeGeneration\Fifthweek.CodeGeneration.csproj">
       <Project>{770F450E-2166-4269-BEC1-DF59AA16B1E8}</Project>
       <Name>Fifthweek.CodeGeneration</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Fifthweek.Payments.Shared\Fifthweek.Payments.Shared.csproj">
+      <Project>{8ef964cc-55f2-40bb-a0ce-f92f23ac8d90}</Project>
+      <Name>Fifthweek.Payments.Shared</Name>
     </ProjectReference>
     <ProjectReference Include="..\Fifthweek.Shared\Fifthweek.Shared.csproj">
       <Project>{6D12FFBB-38E9-4722-A690-0F0338538EBC}</Project>

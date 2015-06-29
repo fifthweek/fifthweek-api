@@ -51,6 +51,7 @@
         public async Task WhenSuccessfullyAcquiresLease_ItShouldProcessPayments()
         {
             this.paymentProcessingLease.Setup(v => v.TryAcquireLeaseAsync()).ReturnsAsync(true).Verifiable();
+            this.paymentProcessingLease.Setup(v => v.GetTimeSinceLastLeaseAsync()).ReturnsAsync(TimeSpan.MaxValue).Verifiable();
             this.paymentProcessingLease.Setup(v => v.GetIsAcquired()).Returns(true);
 
             this.processAllPayments.Setup(v => v.ExecuteAsync(this.paymentProcessingLease.Object, It.Is<List<PaymentProcessingException>>(l => l.Count == 0)))
@@ -71,6 +72,7 @@
         public async Task WhenSuccessfullyAcquiresLease_AndProcessingCausesErrors_ItShouldLogErrors()
         {
             this.paymentProcessingLease.Setup(v => v.TryAcquireLeaseAsync()).ReturnsAsync(true).Verifiable();
+            this.paymentProcessingLease.Setup(v => v.GetTimeSinceLastLeaseAsync()).ReturnsAsync(TimeSpan.MaxValue).Verifiable();
             this.paymentProcessingLease.Setup(v => v.GetIsAcquired()).Returns(true);
 
             var error1 = new PaymentProcessingException(new DivideByZeroException(), UserId.Random(), UserId.Random());
@@ -116,9 +118,26 @@
         }
 
         [TestMethod]
+        public async Task WhenRecentlyAcquiredPreviousLease_ItShouldWarnAndExit()
+        {
+            this.paymentProcessingLease.Setup(v => v.TryAcquireLeaseAsync()).ReturnsAsync(true).Verifiable();
+            this.paymentProcessingLease.Setup(v => v.GetTimeSinceLastLeaseAsync()).ReturnsAsync(PaymentProcessor.MinimumTimeBetweenPaymentProcessing).Verifiable();
+            this.paymentProcessingLease.Setup(v => v.ReleaseLeaseAsync()).Returns(Task.FromResult(0)).Verifiable();
+            this.paymentProcessingLease.Setup(v => v.GetIsAcquired()).Returns(false);
+
+            this.logger.Setup(v => v.Warn("Skipping processing payments as last processed {0}s ago.", (int)PaymentProcessor.MinimumTimeBetweenPaymentProcessing.TotalSeconds)).Verifiable();
+
+            await this.target.ProcessPaymentsAsync(new ProcessPaymentsMessage(), this.logger.Object, CancellationToken);
+
+            this.paymentProcessingLease.Verify();
+            this.logger.Verify();
+        }
+
+        [TestMethod]
         public async Task WhenErrorOccurs_ItShouldReleaseLeaseAndRethrow()
         {
             this.paymentProcessingLease.Setup(v => v.TryAcquireLeaseAsync()).ReturnsAsync(true).Verifiable();
+            this.paymentProcessingLease.Setup(v => v.GetTimeSinceLastLeaseAsync()).ReturnsAsync(TimeSpan.MaxValue).Verifiable();
             this.paymentProcessingLease.Setup(v => v.GetIsAcquired()).Returns(true);
             this.paymentProcessingLease.Setup(v => v.UpdateTimestampsAsync()).Returns(Task.FromResult(0)).Verifiable();
             this.paymentProcessingLease.Setup(v => v.ReleaseLeaseAsync()).Returns(Task.FromResult(0)).Verifiable();

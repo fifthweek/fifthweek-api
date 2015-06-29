@@ -5,6 +5,7 @@
     using System.Threading.Tasks;
 
     using Fifthweek.Logging;
+    using Fifthweek.Shared;
 
     public class WebJobLogger : ILogger
     {
@@ -61,14 +62,6 @@
         private string GetNowString()
         {
             return DateTime.UtcNow.ToString("yyyy/MM/dd HH:mm:ss.fff");
-        }
-
-        private class WarningException : Exception
-        {
-            public WarningException(string message)
-                : base(message)
-            {
-            }
         }
     }
 }

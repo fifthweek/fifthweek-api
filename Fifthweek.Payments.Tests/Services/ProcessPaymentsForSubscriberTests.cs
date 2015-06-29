@@ -8,6 +8,7 @@
     using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.Payments.Services;
     using Fifthweek.Payments.Shared;
+    using Fifthweek.Shared;
 
     using Microsoft.VisualStudio.TestTools.UnitTesting;
 
@@ -21,10 +22,11 @@
         private static readonly UserId CreatorId2 = UserId.Random();
 
         private static readonly DateTime Now = DateTime.UtcNow;
-        private static readonly DateTime FirstSubscribedDate1 = DateTime.Parse("2015-05-2T18:24:18Z", CultureInfo.InvariantCulture, DateTimeStyles.AdjustToUniversal);
-        private static readonly DateTime FirstSubscribedDate2 = DateTime.Parse("2015-04-27T18:24:18Z", CultureInfo.InvariantCulture, DateTimeStyles.AdjustToUniversal);
-        private static readonly DateTime StartDateCalculatedFromFirstSubscribedDate1 = DateTime.Parse("2015-04-27T00:00:00Z", CultureInfo.InvariantCulture, DateTimeStyles.AdjustToUniversal);
-        private static readonly DateTime StartDateCalculatedFromFirstSubscribedDate2 = DateTime.Parse("2015-04-27T00:00:00Z", CultureInfo.InvariantCulture, DateTimeStyles.AdjustToUniversal);
+
+        private static readonly DateTime FirstSubscribedDate1 = "2015-05-02T18:24:18Z".FromIso8601String();
+        private static readonly DateTime FirstSubscribedDate2 = "2015-04-27T18:24:18Z".FromIso8601String();
+        private static readonly DateTime StartDateCalculatedFromFirstSubscribedDate1 = "2015-04-27T00:00:00Z".FromIso8601String();
+        private static readonly DateTime StartDateCalculatedFromFirstSubscribedDate2 = "2015-04-27T00:00:00Z".FromIso8601String();
         private static readonly DateTime LastCommittedLedgerDate1 = Now.AddDays(-1);
 
         private static readonly DateTime StartTimeInclusive = Now;

@@ -17,6 +17,9 @@
     [AutoConstructor]
     public partial class PaymentProcessor : IPaymentProcessor
     {
+        public static readonly TimeSpan MinimumTimeBetweenPaymentProcessing =
+            Fifthweek.Payments.Shared.Constants.PaymentProcessingDefaultMessageDelay.Subtract(TimeSpan.FromMinutes(5));
+
         private readonly IProcessAllPayments processAllPayments;
         private readonly IPaymentProcessingLeaseFactory paymentProcessingLeaseFactory;
         private readonly IRequestProcessPaymentsService requestProcessPayments;
@@ -32,18 +35,28 @@
             {
                 if (await lease.TryAcquireLeaseAsync())
                 {
-                    var errors = new List<PaymentProcessingException>();
-                    await this.processAllPayments.ExecuteAsync(lease, errors);
+                    var timeSinceLastLease = await lease.GetTimeSinceLastLeaseAsync();
 
-                    if (errors.Count > 0)
+                    if (timeSinceLastLease > MinimumTimeBetweenPaymentProcessing)
                     {
-                        foreach (var error in errors)
-                        {
-                            logger.Error(error);
-                        }
-                    }
+                        var errors = new List<PaymentProcessingException>();
+                        await this.processAllPayments.ExecuteAsync(lease, errors);
 
-                    await this.requestProcessPayments.ExecuteAsync();
+                        if (errors.Count > 0)
+                        {
+                            foreach (var error in errors)
+                            {
+                                logger.Error(error);
+                            }
+                        }
+
+                        await this.requestProcessPayments.ExecuteAsync();
+                    }
+                    else
+                    {
+                        logger.Warn("Skipping processing payments as last processed {0}s ago.", (int)timeSinceLastLease.TotalSeconds);
+                        await lease.ReleaseLeaseAsync();
+                    }
                 }
                 else
                 {

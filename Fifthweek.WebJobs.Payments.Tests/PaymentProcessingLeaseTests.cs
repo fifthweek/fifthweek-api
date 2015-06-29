@@ -201,6 +201,53 @@
         }
 
         [TestClass]
+        public class GetTimeSinceLastLeaseAsync : PaymentProcessingLeaseTests
+        {
+            [TestInitialize]
+            public override void Initialize()
+            {
+                base.Initialize();
+            }
+
+            [TestMethod]
+            public async Task WhenNoAttributes_ItShouldReturnMaxTimeSpan()
+            {
+                this.SetupAquireMocks();
+                await this.target.AcquireLeaseAsync();
+
+                this.blob.Setup(v => v.FetchAttributesAsync(this.cancellationToken)).Returns(Task.FromResult(0)).Verifiable();
+
+                var metadata = new Dictionary<string, string>();
+                this.blob.SetupGet(v => v.Metadata).Returns(metadata);
+
+                var result = await this.target.GetTimeSinceLastLeaseAsync();
+
+                this.blob.Verify();
+
+                Assert.AreEqual(TimeSpan.MaxValue, result);
+            }
+
+            [TestMethod]
+            public async Task WhenAttributes_ItShouldReturnTimeSinceLastLeaseEndTime()
+            {
+                this.SetupAquireMocks();
+                await this.target.AcquireLeaseAsync();
+
+                this.blob.Setup(v => v.FetchAttributesAsync(this.cancellationToken)).Returns(Task.FromResult(0)).Verifiable();
+
+                var metadata = new Dictionary<string, string>();
+                metadata.Add(Constants.LastProcessPaymentsEndTimestampMetadataKey, Now.AddMinutes(-12).ToIso8601String());
+                this.blob.SetupGet(v => v.Metadata).Returns(metadata);
+
+                var result = await this.target.GetTimeSinceLastLeaseAsync();
+
+                this.blob.Verify();
+
+                Assert.AreEqual(TimeSpan.FromMinutes(12), result);
+            }
+        }
+
+        [TestClass]
         public class UpdateTimestampsAsync : PaymentProcessingLeaseTests
         {
             [TestInitialize]
@@ -233,9 +280,9 @@
 
                 this.blob.Verify();
 
-                Assert.AreEqual(Now.ToString("s", System.Globalization.CultureInfo.InvariantCulture), metadata[Constants.LastProcessPaymentsStartTimestampMetadataKey]);
-                Assert.AreEqual(end.ToString("s", System.Globalization.CultureInfo.InvariantCulture), metadata[Constants.LastProcessPaymentsEndTimestampMetadataKey]);
-                Assert.AreEqual(3.ToString(System.Globalization.CultureInfo.InvariantCulture), metadata[Constants.LastProcessPaymentsRenewCountMetadataKey]);
+                Assert.AreEqual(Now, metadata[Constants.LastProcessPaymentsStartTimestampMetadataKey].FromIso8601String());
+                Assert.AreEqual(end, metadata[Constants.LastProcessPaymentsEndTimestampMetadataKey].FromIso8601String());
+                Assert.AreEqual(3, int.Parse(metadata[Constants.LastProcessPaymentsRenewCountMetadataKey]));
             }
         }
     }

@@ -113,7 +113,7 @@ namespace Fifthweek.WebJobs.Payments
         public PaymentProcessor(
             Fifthweek.Payments.Services.IProcessAllPayments processAllPayments,
             Fifthweek.WebJobs.Payments.IPaymentProcessingLeaseFactory paymentProcessingLeaseFactory,
-            Fifthweek.Payments.Services.IRequestProcessPaymentsService requestProcessPayments)
+            IRequestProcessPaymentsService requestProcessPayments)
         {
             if (processAllPayments == null)
             {

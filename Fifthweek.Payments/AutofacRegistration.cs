@@ -4,6 +4,7 @@
 
     using Fifthweek.Payments.Pipeline;
     using Fifthweek.Payments.Services;
+    using Fifthweek.Payments.Shared;
     using Fifthweek.Shared;
 
     public class AutofacRegistration : IAutofacRegistration

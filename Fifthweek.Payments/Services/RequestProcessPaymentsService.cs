@@ -11,8 +11,6 @@
     [AutoConstructor]
     public partial class RequestProcessPaymentsService : IRequestProcessPaymentsService
     {
-        public static readonly TimeSpan ProcessingDelay = TimeSpan.FromSeconds(30);
-
         private readonly IQueueService queueService;
 
         public Task ExecuteAsync()
@@ -21,7 +19,16 @@
                 Constants.RequestProcessPaymentsQueueName,
                 ProcessPaymentsMessage.Default,
                 null,
-                ProcessingDelay);
+                Constants.PaymentProcessingDefaultMessageDelay);
+        }
+
+        public Task ExecuteImmediatelyAsync()
+        {
+            return this.queueService.AddMessageToQueueAsync(
+                Constants.RequestProcessPaymentsQueueName,
+                ProcessPaymentsMessage.Default,
+                null,
+                TimeSpan.Zero);
         }
     }
 }

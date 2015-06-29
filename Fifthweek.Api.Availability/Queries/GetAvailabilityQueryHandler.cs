@@ -1,6 +1,5 @@
 ﻿namespace Fifthweek.Api.Availability.Queries
 {
-    using System;
     using System.ComponentModel;
     using System.Data.Entity;
     using System.Threading.Tasks;
@@ -15,52 +14,18 @@
     [AutoConstructor]
     public partial class GetAvailabilityQueryHandler : IQueryHandler<GetAvailabilityQuery, AvailabilityResult>
     {
-        private readonly IExceptionHandler exceptionHandler;
+        private readonly ITestSqlAzureAvailabilityStatement testSqlAzureAvailability;
 
-        private readonly ITransientErrorDetectionStrategy transientErrorDetectionStrategy;
-
-        private readonly ICountUsersDbStatement countUsersDbStatement;
+        private readonly ITestPaymentsAvailabilityStatement testPaymentsAvailability;
 
         public async Task<AvailabilityResult> HandleAsync(GetAvailabilityQuery query)
         {
             query.AssertNotNull("query");
 
-            var database = await this.TestSqlAzureAvailability();
+            var database = await this.testSqlAzureAvailability.ExecuteAsync();
+            var payments = await this.testPaymentsAvailability.ExecuteAsync();
 
-            return new AvailabilityResult(true, database);
-        }
-
-        private async Task<bool> TestSqlAzureAvailability()
-        {
-            bool database = false;
-            try
-            {
-                // A simple test that the database is available.
-                await this.countUsersDbStatement.ExecuteAsync();
-                database = true;
-            }
-            catch (Exception t)
-            {
-                if (this.transientErrorDetectionStrategy.IsTransient(t))
-                {
-                    this.exceptionHandler.ReportExceptionAsync(
-                        new TransientErrorException("A transient error occurred while checking SQL Azure availability.", t));
-                }
-                else
-                {
-                    this.exceptionHandler.ReportExceptionAsync(t);
-                }
-            }
-
-            return database;
-        }
-
-        public class TransientErrorException : Exception
-        {
-            public TransientErrorException(string message, Exception exception)
-                : base(message, exception)
-            {
-            }
+            return new AvailabilityResult(true, database, payments);
         }
     }
 }

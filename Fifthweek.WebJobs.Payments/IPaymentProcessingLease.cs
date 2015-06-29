@@ -18,5 +18,7 @@ namespace Fifthweek.WebJobs.Payments
         Task ReleaseLeaseAsync();
 
         Task UpdateTimestampsAsync();
+
+        Task<TimeSpan> GetTimeSinceLastLeaseAsync();
     }
 }

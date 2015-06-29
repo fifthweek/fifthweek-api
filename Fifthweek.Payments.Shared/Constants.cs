@@ -16,5 +16,7 @@ namespace Fifthweek.Payments.Shared
         public const string LastProcessPaymentsRenewCountMetadataKey = "lastProcessPaymentsRenewCount";
 
         public const string PaymentProcessingDataContainerName = "payment-processing-data";
+
+        public static readonly TimeSpan PaymentProcessingDefaultMessageDelay = TimeSpan.FromMinutes(30);
     }
 }

@@ -9,6 +9,7 @@
         public void Register(ContainerBuilder builder)
         {
             builder.RegisterType<CountUsersDbStatement>().As<ICountUsersDbStatement>();
+            builder.RegisterType<TestSqlAzureAvailabilityStatement>().As<ITestSqlAzureAvailabilityStatement>();
         }
     }
 }
