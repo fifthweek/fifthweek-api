@@ -60,7 +60,7 @@ namespace Fifthweek.WebJobs.Payments
             new PaymentProcessingLeaseFactory(new TimestampCreator(), new FifthweekCloudStorageAccount()),
             new RequestProcessPaymentsService(new QueueService(new FifthweekCloudStorageAccount())));
 
-        public static Task CreateSnapshotAsync(
+        public static Task ProcessPaymentsAsync(
             [QueueTrigger(Constants.RequestProcessPaymentsQueueName)] ProcessPaymentsMessage message,
             TextWriter webJobsLogger,
             int dequeueCount,
