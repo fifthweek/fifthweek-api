@@ -15,6 +15,7 @@
     using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.Api.Persistence;
     using Fifthweek.Api.Persistence.Identity;
+    using Fifthweek.Api.Persistence.Payments;
     using Fifthweek.Api.Persistence.Tests.Shared;
     using Fifthweek.Api.Posts.Queries;
     using Fifthweek.Api.Posts.Shared;
@@ -36,6 +37,8 @@
         private static readonly UserId SubscribedLowPriceUserId = new UserId(Guid.NewGuid());
         private static readonly UserId SubscribedHighPriceUserId = new UserId(Guid.NewGuid());
         private static readonly UserId SubscribedUserId = new UserId(Guid.NewGuid());
+        private static readonly UserId SubscribedUserIdNoBalance = new UserId(Guid.NewGuid());
+        private static readonly UserId SubscribedUserIdZeroBalance = new UserId(Guid.NewGuid());
         private static readonly UserId GuestListUserId = new UserId(Guid.NewGuid());
         private static readonly UserId CreatorId = new UserId(Guid.NewGuid());
         private static readonly List<ChannelId> ChannelIds;
@@ -333,6 +336,14 @@
             await parameterizedTest(
                 GuestListUserId, CreatorId, null, null, Now, false, noPaginationStart, noPaginationCount, SortedLiveNewsfeedPosts.Where(v => !v.ChannelId.Equals(ChannelIds[2])).ToList());
 
+            // Subscribed with no balance.
+            await parameterizedTest(
+                SubscribedUserIdNoBalance, CreatorId, null, null, Now, false, noPaginationStart, noPaginationCount, new NewsfeedPost[0]);
+
+            // Subscribed with zero balance.
+            await parameterizedTest(
+                SubscribedUserIdZeroBalance, CreatorId, null, null, Now, false, noPaginationStart, noPaginationCount, new NewsfeedPost[0]);
+
             // Filter by channel for creator.
             await parameterizedTest(
                 CreatorId, CreatorId, new[] { ChannelIds[0] }, null, Now, false, noPaginationStart, noPaginationCount, SortedLiveNewsfeedPosts.Where(v => v.ChannelId.Equals(ChannelIds[0])).ToList());
@@ -410,9 +421,12 @@
                 await this.CreateUserAsync(databaseContext, SubscribedUserId);
                 await this.CreateUserAsync(databaseContext, SubscribedLowPriceUserId);
                 await this.CreateUserAsync(databaseContext, SubscribedHighPriceUserId);
+                await this.CreateUserAsync(databaseContext, SubscribedUserIdNoBalance);
+                await this.CreateUserAsync(databaseContext, SubscribedUserIdZeroBalance);
                 await this.CreateUserAsync(databaseContext, GuestListUserId);
 
                 var channelSubscriptions = new List<ChannelSubscription>();
+                var calculatedAccountBalances = new List<CalculatedAccountBalance>();
                 var freeAccessUsers = new List<FreeAccessUser>();
                 
                 var channels = new Dictionary<ChannelId, List<CollectionId>>();
@@ -427,10 +441,26 @@
                 {
                     channelSubscriptions.Add(new ChannelSubscription(ChannelIds[0].Value, null, SubscribedUserId.Value, null, ChannelPrice, Now, Now));
                     channelSubscriptions.Add(new ChannelSubscription(ChannelIds[1].Value, null, SubscribedUserId.Value, null, ChannelPrice, Now, Now));
+                    calculatedAccountBalances.Add(new CalculatedAccountBalance(SubscribedUserId.Value, LedgerAccountType.Fifthweek, Now, 10));
+                    calculatedAccountBalances.Add(new CalculatedAccountBalance(SubscribedUserId.Value, LedgerAccountType.Fifthweek, Now.AddDays(-1), 0));
+
+                    channelSubscriptions.Add(new ChannelSubscription(ChannelIds[0].Value, null, SubscribedUserIdNoBalance.Value, null, ChannelPrice, Now, Now));
+                    channelSubscriptions.Add(new ChannelSubscription(ChannelIds[1].Value, null, SubscribedUserIdNoBalance.Value, null, ChannelPrice, Now, Now));
+
+                    // The query should round down to zero for account balance.
+                    channelSubscriptions.Add(new ChannelSubscription(ChannelIds[0].Value, null, SubscribedUserIdZeroBalance.Value, null, ChannelPrice, Now, Now));
+                    channelSubscriptions.Add(new ChannelSubscription(ChannelIds[1].Value, null, SubscribedUserIdZeroBalance.Value, null, ChannelPrice, Now, Now));
+                    calculatedAccountBalances.Add(new CalculatedAccountBalance(SubscribedUserIdZeroBalance.Value, LedgerAccountType.Fifthweek, Now.AddDays(-1), 10));
+                    calculatedAccountBalances.Add(new CalculatedAccountBalance(SubscribedUserIdZeroBalance.Value, LedgerAccountType.Fifthweek, Now, 0.8m));
+                    
                     channelSubscriptions.Add(new ChannelSubscription(ChannelIds[0].Value, null, SubscribedLowPriceUserId.Value, null, ChannelPrice / 2, Now, Now));
                     channelSubscriptions.Add(new ChannelSubscription(ChannelIds[1].Value, null, SubscribedLowPriceUserId.Value, null, ChannelPrice / 2, Now, Now));
+                    calculatedAccountBalances.Add(new CalculatedAccountBalance(SubscribedLowPriceUserId.Value, LedgerAccountType.Fifthweek, Now, 10));
+                    
                     channelSubscriptions.Add(new ChannelSubscription(ChannelIds[0].Value, null, SubscribedHighPriceUserId.Value, null, ChannelPrice * 2, Now, Now));
                     channelSubscriptions.Add(new ChannelSubscription(ChannelIds[1].Value, null, SubscribedHighPriceUserId.Value, null, ChannelPrice * 2, Now, Now));
+                    calculatedAccountBalances.Add(new CalculatedAccountBalance(SubscribedHighPriceUserId.Value, LedgerAccountType.Fifthweek, Now, 10));
+                    
                     channelSubscriptions.Add(new ChannelSubscription(ChannelIds[0].Value, null, GuestListUserId.Value, null, 0, Now, Now));
                     channelSubscriptions.Add(new ChannelSubscription(ChannelIds[1].Value, null, GuestListUserId.Value, null, 0, Now, Now));
 
@@ -538,6 +568,7 @@
                 await databaseContext.Database.Connection.InsertAsync(imageEntities);
                 await databaseContext.Database.Connection.InsertAsync(postEntities);
                 await databaseContext.Database.Connection.InsertAsync(channelSubscriptions);
+                await databaseContext.Database.Connection.InsertAsync(calculatedAccountBalances);
                 await databaseContext.Database.Connection.InsertAsync(freeAccessUsers);
             }
         }

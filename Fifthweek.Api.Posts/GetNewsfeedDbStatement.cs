@@ -14,6 +14,7 @@
     using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.Api.Persistence;
     using Fifthweek.Api.Persistence.Identity;
+    using Fifthweek.Api.Persistence.Payments;
     using Fifthweek.Api.Posts.Queries;
     using Fifthweek.CodeGeneration;
     using Fifthweek.Shared;
@@ -21,8 +22,14 @@
     [AutoConstructor]
     public partial class GetNewsfeedDbStatement : IGetNewsfeedDbStatement
     {
-        private static readonly string SqlStart = string.Format(
-            @"SELECT    blog.{12} AS BlogId, blog.{13} AS CreatorId, post.{1} AS PostId, {2}, {4}, {5}, {6}, {7}, {3}, post.{21}, [file].{16} as FileName, [file].{17} as FileExtension, [file].{18} as FileSize, image.{16} as ImageName, image.{17} as ImageExtension, image.{18} as ImageSize, image.{19} as ImageRenderWidth, image.{20} as ImageRenderHeight
+
+
+        private static readonly string DeclareAccountBalance = string.Format(
+            @"DECLARE @AccountBalance int = ({0});",
+            CalculatedAccountBalance.GetQuery("RequestorId"));
+
+        private static readonly string SqlStart = string.Format(@"
+            SELECT    blog.{12} AS BlogId, blog.{13} AS CreatorId, post.{1} AS PostId, {2}, {4}, {5}, {6}, {7}, {3}, post.{21}, [file].{16} as FileName, [file].{17} as FileExtension, [file].{18} as FileSize, image.{16} as ImageName, image.{17} as ImageExtension, image.{18} as ImageSize, image.{19} as ImageRenderWidth, image.{20} as ImageRenderHeight
             FROM        {0} post
             INNER JOIN  {8} channel
                 ON      post.{2} = channel.{9}
@@ -82,7 +89,7 @@
                     sub.{4} = @RequestorId 
                     AND 
                     (
-                        sub.{5} >= subChannel.{6}
+                        (@AccountBalance > 0 AND sub.{5} >= subChannel.{6})
                         OR
                         subChannel.{1} IN
                         (
@@ -162,6 +169,7 @@
             using (var connection = this.connectionFactory.CreateConnection())
             {
                 var query = new StringBuilder();
+                query.Append(DeclareAccountBalance);
                 query.Append(SqlStart);
 
                 if (requestedChannelIds != null && requestedChannelIds.Count > 0)

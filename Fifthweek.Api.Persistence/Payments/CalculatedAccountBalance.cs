@@ -28,5 +28,20 @@
 
         [Required]
         public decimal Amount { get; set; }
+
+        public static string GetQuery(string userIdParameterName)
+        {
+            return string.Format(
+                @"SELECT TOP 1 ISNULL({0}, 0) FROM {2} 
+                        WHERE {3}=@{6} AND {4}={5}
+                        ORDER BY {1} DESC",
+            CalculatedAccountBalance.Fields.Amount,
+            CalculatedAccountBalance.Fields.Timestamp,
+            CalculatedAccountBalance.Table,
+            CalculatedAccountBalance.Fields.UserId,
+            CalculatedAccountBalance.Fields.AccountType,
+            (int)LedgerAccountType.Fifthweek,
+            userIdParameterName);
+        }
     }
 }
