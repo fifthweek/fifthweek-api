@@ -29,13 +29,15 @@
         [Required]
         public decimal Amount { get; set; }
 
-        public static string GetQuery(string userIdParameterName)
+        public static string GetUserAccountBalanceQuery(string userIdParameterName, params CalculatedAccountBalance.Fields[] columns)
         {
+            var columnsString = string.Join(",", columns);
+
             return string.Format(
-                @"SELECT TOP 1 ISNULL({0}, 0) FROM {2} 
+                @"SELECT TOP 1 {0} FROM {2} 
                         WHERE {3}=@{6} AND {4}={5}
                         ORDER BY {1} DESC",
-            CalculatedAccountBalance.Fields.Amount,
+            columnsString,
             CalculatedAccountBalance.Fields.Timestamp,
             CalculatedAccountBalance.Table,
             CalculatedAccountBalance.Fields.UserId,

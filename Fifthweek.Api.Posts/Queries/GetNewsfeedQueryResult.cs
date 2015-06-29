@@ -16,6 +16,8 @@
     {
         public IReadOnlyList<Post> Posts { get; private set; }
 
+        public int AccountBalance { get; private set; }
+
         [AutoConstructor, AutoEqualityMembers]
         public partial class Post
         {

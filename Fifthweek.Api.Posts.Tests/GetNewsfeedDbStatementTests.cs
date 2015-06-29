@@ -126,11 +126,11 @@
                 await this.CreateEntitiesAsync(testDatabase, createLivePosts: true, createFuturePosts: true);
                 await testDatabase.TakeSnapshotAsync();
 
-                await this.ParameterizedTestAsync(async (userId, creatorId, channelIds, collectionIds, origin, searchForwards, startIndex, count, expectedPosts) =>
+                await this.ParameterizedTestAsync(async (userId, creatorId, channelIds, collectionIds, origin, searchForwards, startIndex, count, expectedPosts, expectedAccountBalance) =>
                 {
                     var result = await this.target.ExecuteAsync(userId, creatorId, channelIds, collectionIds, Now, origin, searchForwards, startIndex, count);
 
-                    foreach (var newsfeedPost in result)
+                    foreach (var newsfeedPost in result.Posts)
                     {
                         Assert.IsTrue(newsfeedPost.LiveDate <= Now);
                     }
@@ -149,11 +149,30 @@
                 await this.CreateEntitiesAsync(testDatabase, createLivePosts: true, createFuturePosts: true);
                 await testDatabase.TakeSnapshotAsync();
 
-                await this.ParameterizedTestAsync(async (userId, creatorId, channelIds, collectionIds, origin, searchForwards, startIndex, count, expectedPosts) =>
+                await this.ParameterizedTestAsync(async (userId, creatorId, channelIds, collectionIds, origin, searchForwards, startIndex, count, expectedPosts, expectedAccountBalance) =>
                 {
                     var result = await this.target.ExecuteAsync(userId, creatorId, channelIds, collectionIds, Now, origin, searchForwards, startIndex, count);
 
-                    CollectionAssert.AreEquivalent(expectedPosts.ToList(), result.ToList());
+                    CollectionAssert.AreEquivalent(expectedPosts.ToList(), result.Posts.ToList());
+                });
+
+                return ExpectedSideEffects.None;
+            });
+        }
+
+        [TestMethod]
+        public async Task ItShouldReturnExpectedAccountBalances()
+        {
+            await this.DatabaseTestAsync(async testDatabase =>
+            {
+                this.target = new GetNewsfeedDbStatement(testDatabase);
+                await this.CreateEntitiesAsync(testDatabase, createLivePosts: true, createFuturePosts: true);
+                await testDatabase.TakeSnapshotAsync();
+
+                await this.ParameterizedTestAsync(async (userId, creatorId, channelIds, collectionIds, origin, searchForwards, startIndex, count, expectedPosts, expectedAccountBalance) =>
+                {
+                    var result = await this.target.ExecuteAsync(userId, creatorId, channelIds, collectionIds, Now, origin, searchForwards, startIndex, count);
+                    Assert.AreEqual(expectedAccountBalance, result.AccountBalance);
                 });
 
                 return ExpectedSideEffects.None;
@@ -169,11 +188,11 @@
                 await this.CreateEntitiesAsync(testDatabase, createLivePosts: true, createFuturePosts: true);
                 await testDatabase.TakeSnapshotAsync();
 
-                await this.ParameterizedTestAsync(async (userId, creatorId, channelIds, collectionIds, origin, searchForwards, startIndex, count, expectedPosts) =>
+                await this.ParameterizedTestAsync(async (userId, creatorId, channelIds, collectionIds, origin, searchForwards, startIndex, count, expectedPosts, expectedAccountBalance) =>
                 {
                     var result = await this.target.ExecuteAsync(userId, creatorId, channelIds, collectionIds, Now, origin, searchForwards, startIndex, count);
 
-                    foreach (var item in result)
+                    foreach (var item in result.Posts)
                     {
                         Assert.AreEqual(DateTimeKind.Utc, item.LiveDate.Kind);
                         Assert.AreEqual(DateTimeKind.Utc, item.CreationDate.Kind);
@@ -193,7 +212,7 @@
                 await this.CreateEntitiesAsync(testDatabase, createLivePosts: true, createFuturePosts: true);
                 await testDatabase.TakeSnapshotAsync();
 
-                await this.ParameterizedTestAsync(async (userId, creatorId, channelIds, collectionIds, origin, searchForwards, startIndex, count, expectedPosts) =>
+                await this.ParameterizedTestAsync(async (userId, creatorId, channelIds, collectionIds, origin, searchForwards, startIndex, count, expectedPosts, expectedAccountBalance) =>
                 {
                     var result = await this.target.ExecuteAsync(userId, creatorId, channelIds, collectionIds, Now, origin, searchForwards, startIndex, count);
 
@@ -220,7 +239,7 @@
                     });
 
                     var expectedOrder = expectedPosts.Select(removeSortInsensitiveValues).ToList();
-                    var actualOrder = result.Select(removeSortInsensitiveValues).ToList();
+                    var actualOrder = result.Posts.Select(removeSortInsensitiveValues).ToList();
 
                     CollectionAssert.AreEqual(expectedOrder, actualOrder);
                 });
@@ -238,10 +257,10 @@
                 await this.CreateEntitiesAsync(testDatabase, createLivePosts: false, createFuturePosts: false);
                 await testDatabase.TakeSnapshotAsync();
 
-                await this.ParameterizedTestAsync(async (userId, creatorId, channelIds, collectionIds, origin, searchForwards, startIndex, count, expectedPosts) =>
+                await this.ParameterizedTestAsync(async (userId, creatorId, channelIds, collectionIds, origin, searchForwards, startIndex, count, expectedPosts, expectedAccountBalance) =>
                 {
                     var result = await this.target.ExecuteAsync(userId, creatorId, channelIds, collectionIds, Now, origin, searchForwards, startIndex, count);
-                    Assert.AreEqual(result.Count, 0);
+                    Assert.AreEqual(result.Posts.Count, 0);
                 });
 
                 return ExpectedSideEffects.None;
@@ -257,10 +276,10 @@
                 await this.CreateEntitiesAsync(testDatabase, createLivePosts: false, createFuturePosts: true);
                 await testDatabase.TakeSnapshotAsync();
 
-                await this.ParameterizedTestAsync(async (userId, creatorId, channelIds, collectionIds, origin, searchForwards, startIndex, count, expectedPosts) =>
+                await this.ParameterizedTestAsync(async (userId, creatorId, channelIds, collectionIds, origin, searchForwards, startIndex, count, expectedPosts, expectedAccountBalance) =>
                 {
                     var result = await this.target.ExecuteAsync(userId, creatorId, channelIds, collectionIds, Now, origin, searchForwards, startIndex, count);
-                    Assert.AreEqual(result.Count, 0);
+                    Assert.AreEqual(result.Posts.Count, 0);
                 });
 
                 return ExpectedSideEffects.None;
@@ -276,7 +295,8 @@
                  bool,
                  NonNegativeInt,
                  PositiveInt,
-                 IReadOnlyList<NewsfeedPost>, 
+                 IReadOnlyList<NewsfeedPost>,
+                 int,
                  Task> parameterizedTest)
         {
             var totalLivePosts = SortedLiveNewsfeedPosts.Count;
@@ -286,131 +306,131 @@
 
             // No pagination.
             await parameterizedTest(
-                CreatorId, CreatorId, null, null, Now, false, noPaginationStart, noPaginationCount, SortedLiveNewsfeedPosts);
+                CreatorId, CreatorId, null, null, Now, false, noPaginationStart, noPaginationCount, SortedLiveNewsfeedPosts, 0);
 
             // Paginate from start.
             await parameterizedTest(
-                CreatorId, CreatorId, null, null, Now, false, NonNegativeInt.Parse(0), PositiveInt.Parse(10), SortedLiveNewsfeedPosts.Take(10).ToList());
+                CreatorId, CreatorId, null, null, Now, false, NonNegativeInt.Parse(0), PositiveInt.Parse(10), SortedLiveNewsfeedPosts.Take(10).ToList(), 0);
 
             // Paginate from middle with different page size and page index.
             await parameterizedTest(
-                CreatorId, CreatorId, null, null, Now, false, NonNegativeInt.Parse(5), PositiveInt.Parse(10), SortedLiveNewsfeedPosts.Skip(5).Take(10).ToList());
+                CreatorId, CreatorId, null, null, Now, false, NonNegativeInt.Parse(5), PositiveInt.Parse(10), SortedLiveNewsfeedPosts.Skip(5).Take(10).ToList(), 0);
 
             // Paginate from middle with same page size and page index.
             await parameterizedTest(
-                CreatorId, CreatorId, null, null, Now, false, NonNegativeInt.Parse(10), PositiveInt.Parse(10), SortedLiveNewsfeedPosts.Skip(10).Take(10).ToList());
+                CreatorId, CreatorId, null, null, Now, false, NonNegativeInt.Parse(10), PositiveInt.Parse(10), SortedLiveNewsfeedPosts.Skip(10).Take(10).ToList(), 0);
 
             // Paginate from near end, requesting up to last post.
             await parameterizedTest(
-                CreatorId, CreatorId, null, null, Now, false, NonNegativeInt.Parse(totalLivePosts - 10), PositiveInt.Parse(10), SortedLiveNewsfeedPosts.Skip(totalLivePosts - 10).Take(10).ToList());
+                CreatorId, CreatorId, null, null, Now, false, NonNegativeInt.Parse(totalLivePosts - 10), PositiveInt.Parse(10), SortedLiveNewsfeedPosts.Skip(totalLivePosts - 10).Take(10).ToList(), 0);
 
             // Paginate from near end, requesting beyond last post.
             await parameterizedTest(
-                CreatorId, CreatorId, null, null, Now, false, NonNegativeInt.Parse(totalLivePosts - 5), PositiveInt.Parse(10), SortedLiveNewsfeedPosts.Skip(totalLivePosts - 5).Take(10).ToList());
+                CreatorId, CreatorId, null, null, Now, false, NonNegativeInt.Parse(totalLivePosts - 5), PositiveInt.Parse(10), SortedLiveNewsfeedPosts.Skip(totalLivePosts - 5).Take(10).ToList(), 0);
 
             // Paginate from end, requesting beyond last post.
             await parameterizedTest(
-                CreatorId, CreatorId, null, null, Now, false, NonNegativeInt.Parse(totalLivePosts), PositiveInt.Parse(1), new NewsfeedPost[0]);
+                CreatorId, CreatorId, null, null, Now, false, NonNegativeInt.Parse(totalLivePosts), PositiveInt.Parse(1), new NewsfeedPost[0], 0);
 
             // Paginate from beyond end, requesting beyond last post.
             await parameterizedTest(
-                CreatorId, CreatorId, null, null, Now, false, NonNegativeInt.Parse(totalLivePosts + 1), PositiveInt.Parse(1), new NewsfeedPost[0]);
+                CreatorId, CreatorId, null, null, Now, false, NonNegativeInt.Parse(totalLivePosts + 1), PositiveInt.Parse(1), new NewsfeedPost[0], 0);
 
             // Unsubscribed.
             await parameterizedTest(
-                UnsubscribedUserId, CreatorId, null, null, Now, false, noPaginationStart, noPaginationCount, new NewsfeedPost[0]);
+                UnsubscribedUserId, CreatorId, null, null, Now, false, noPaginationStart, noPaginationCount, new NewsfeedPost[0], 0);
 
             // Subscribed at correct price.
             await parameterizedTest(
-                SubscribedUserId, CreatorId, null, null, Now, false, noPaginationStart, noPaginationCount, SortedLiveNewsfeedPosts.Where(v => !v.ChannelId.Equals(ChannelIds[2])).ToList());
+                SubscribedUserId, CreatorId, null, null, Now, false, noPaginationStart, noPaginationCount, SortedLiveNewsfeedPosts.Where(v => !v.ChannelId.Equals(ChannelIds[2])).ToList(), 10);
 
             // Subscribed at low price.
             await parameterizedTest(
-                SubscribedLowPriceUserId, CreatorId, null, null, Now, false, noPaginationStart, noPaginationCount, new NewsfeedPost[0]);
+                SubscribedLowPriceUserId, CreatorId, null, null, Now, false, noPaginationStart, noPaginationCount, new NewsfeedPost[0], 10);
 
             // Subscribed at high price.
             await parameterizedTest(
-                SubscribedHighPriceUserId, CreatorId, null, null, Now, false, noPaginationStart, noPaginationCount, SortedLiveNewsfeedPosts.Where(v => !v.ChannelId.Equals(ChannelIds[2])).ToList());
+                SubscribedHighPriceUserId, CreatorId, null, null, Now, false, noPaginationStart, noPaginationCount, SortedLiveNewsfeedPosts.Where(v => !v.ChannelId.Equals(ChannelIds[2])).ToList(), 10);
 
             // Subscribed at zero, but on free access list.
             await parameterizedTest(
-                GuestListUserId, CreatorId, null, null, Now, false, noPaginationStart, noPaginationCount, SortedLiveNewsfeedPosts.Where(v => !v.ChannelId.Equals(ChannelIds[2])).ToList());
+                GuestListUserId, CreatorId, null, null, Now, false, noPaginationStart, noPaginationCount, SortedLiveNewsfeedPosts.Where(v => !v.ChannelId.Equals(ChannelIds[2])).ToList(), 0);
 
             // Subscribed with no balance.
             await parameterizedTest(
-                SubscribedUserIdNoBalance, CreatorId, null, null, Now, false, noPaginationStart, noPaginationCount, new NewsfeedPost[0]);
+                SubscribedUserIdNoBalance, CreatorId, null, null, Now, false, noPaginationStart, noPaginationCount, new NewsfeedPost[0], 0);
 
             // Subscribed with zero balance.
             await parameterizedTest(
-                SubscribedUserIdZeroBalance, CreatorId, null, null, Now, false, noPaginationStart, noPaginationCount, new NewsfeedPost[0]);
+                SubscribedUserIdZeroBalance, CreatorId, null, null, Now, false, noPaginationStart, noPaginationCount, new NewsfeedPost[0], 0);
 
             // Filter by channel for creator.
             await parameterizedTest(
-                CreatorId, CreatorId, new[] { ChannelIds[0] }, null, Now, false, noPaginationStart, noPaginationCount, SortedLiveNewsfeedPosts.Where(v => v.ChannelId.Equals(ChannelIds[0])).ToList());
+                CreatorId, CreatorId, new[] { ChannelIds[0] }, null, Now, false, noPaginationStart, noPaginationCount, SortedLiveNewsfeedPosts.Where(v => v.ChannelId.Equals(ChannelIds[0])).ToList(), 0);
 
             // Filter by channel.
             await parameterizedTest(
-                SubscribedUserId, null, new[] { ChannelIds[0] }, null, Now, false, noPaginationStart, noPaginationCount, SortedLiveNewsfeedPosts.Where(v => v.ChannelId.Equals(ChannelIds[0])).ToList());
+                SubscribedUserId, null, new[] { ChannelIds[0] }, null, Now, false, noPaginationStart, noPaginationCount, SortedLiveNewsfeedPosts.Where(v => v.ChannelId.Equals(ChannelIds[0])).ToList(), 10);
 
             // Filter by channel 2.
             await parameterizedTest(
-                SubscribedUserId, null, new[] { ChannelIds[1] }, null, Now, false, noPaginationStart, noPaginationCount, SortedLiveNewsfeedPosts.Where(v => v.ChannelId.Equals(ChannelIds[1])).ToList());
+                SubscribedUserId, null, new[] { ChannelIds[1] }, null, Now, false, noPaginationStart, noPaginationCount, SortedLiveNewsfeedPosts.Where(v => v.ChannelId.Equals(ChannelIds[1])).ToList(), 10);
 
             // Filter by unsubscribed channel 3.
             await parameterizedTest(
-                SubscribedUserId, null, new[] { ChannelIds[2] }, null, Now, false, noPaginationStart, noPaginationCount, new NewsfeedPost[0]);
+                SubscribedUserId, null, new[] { ChannelIds[2] }, null, Now, false, noPaginationStart, noPaginationCount, new NewsfeedPost[0], 10);
 
             // Filter by valid channel and creator combination.
             await parameterizedTest(
-                SubscribedUserId, CreatorId, new[] { ChannelIds[0] }, null, Now, false, noPaginationStart, noPaginationCount, SortedLiveNewsfeedPosts.Where(v => v.ChannelId.Equals(ChannelIds[0])).ToList());
+                SubscribedUserId, CreatorId, new[] { ChannelIds[0] }, null, Now, false, noPaginationStart, noPaginationCount, SortedLiveNewsfeedPosts.Where(v => v.ChannelId.Equals(ChannelIds[0])).ToList(), 10);
 
             // Filter by invalid channel and creator combination.
             await parameterizedTest(
-                SubscribedUserId, GuestListUserId, new[] { ChannelIds[0] }, null, Now, false, noPaginationStart, noPaginationCount, new NewsfeedPost[0]);
+                SubscribedUserId, GuestListUserId, new[] { ChannelIds[0] }, null, Now, false, noPaginationStart, noPaginationCount, new NewsfeedPost[0], 10);
 
             // Filter by collection for creator.
             await parameterizedTest(
-                CreatorId, CreatorId, null, new[] { CollectionIds[0][1] }, Now, false, noPaginationStart, noPaginationCount, SortedLiveNewsfeedPosts.Where(v => CollectionIds[0][1].Equals(v.CollectionId)).ToList());
+                CreatorId, CreatorId, null, new[] { CollectionIds[0][1] }, Now, false, noPaginationStart, noPaginationCount, SortedLiveNewsfeedPosts.Where(v => CollectionIds[0][1].Equals(v.CollectionId)).ToList(), 0);
 
             // Filter by collection.
             await parameterizedTest(
-                SubscribedUserId, null, null, new[] { CollectionIds[0][1] }, Now, false, noPaginationStart, noPaginationCount, SortedLiveNewsfeedPosts.Where(v => CollectionIds[0][1].Equals(v.CollectionId)).ToList());
+                SubscribedUserId, null, null, new[] { CollectionIds[0][1] }, Now, false, noPaginationStart, noPaginationCount, SortedLiveNewsfeedPosts.Where(v => CollectionIds[0][1].Equals(v.CollectionId)).ToList(), 10);
 
             // Filter by valid collection and creator combination.
             await parameterizedTest(
-                SubscribedUserId, CreatorId, null, new[] { CollectionIds[0][1] }, Now, false, noPaginationStart, noPaginationCount, SortedLiveNewsfeedPosts.Where(v => CollectionIds[0][1].Equals(v.CollectionId)).ToList());
+                SubscribedUserId, CreatorId, null, new[] { CollectionIds[0][1] }, Now, false, noPaginationStart, noPaginationCount, SortedLiveNewsfeedPosts.Where(v => CollectionIds[0][1].Equals(v.CollectionId)).ToList(), 10);
 
             // Filter by invalid collection and creator combination.
             await parameterizedTest(
-                SubscribedUserId, GuestListUserId, null, new[] { CollectionIds[0][1] }, Now, false, noPaginationStart, noPaginationCount, new NewsfeedPost[0]);
+                SubscribedUserId, GuestListUserId, null, new[] { CollectionIds[0][1] }, Now, false, noPaginationStart, noPaginationCount, new NewsfeedPost[0], 10);
 
             // Filter by valid channel and collection combination.
             await parameterizedTest(
-                SubscribedUserId, null, new[] { ChannelIds[0] }, new[] { CollectionIds[0][1] }, Now, false, noPaginationStart, noPaginationCount, SortedLiveNewsfeedPosts.Where(v => CollectionIds[0][1].Equals(v.CollectionId)).ToList());
+                SubscribedUserId, null, new[] { ChannelIds[0] }, new[] { CollectionIds[0][1] }, Now, false, noPaginationStart, noPaginationCount, SortedLiveNewsfeedPosts.Where(v => CollectionIds[0][1].Equals(v.CollectionId)).ToList(), 10);
 
             // Filter by invalid channel and collection combination.
             await parameterizedTest(
-                SubscribedUserId, null, new[] { ChannelIds[1] }, new[] { CollectionIds[0][1] }, Now, false, noPaginationStart, noPaginationCount, new NewsfeedPost[0]);
+                SubscribedUserId, null, new[] { ChannelIds[1] }, new[] { CollectionIds[0][1] }, Now, false, noPaginationStart, noPaginationCount, new NewsfeedPost[0], 10);
 
             // Filter by valid creator, channel and collection combination.
             await parameterizedTest(
-                SubscribedUserId, CreatorId, new[] { ChannelIds[0] }, new[] { CollectionIds[0][1] }, Now, false, noPaginationStart, noPaginationCount, SortedLiveNewsfeedPosts.Where(v => CollectionIds[0][1].Equals(v.CollectionId)).ToList());
+                SubscribedUserId, CreatorId, new[] { ChannelIds[0] }, new[] { CollectionIds[0][1] }, Now, false, noPaginationStart, noPaginationCount, SortedLiveNewsfeedPosts.Where(v => CollectionIds[0][1].Equals(v.CollectionId)).ToList(), 10);
 
             // Filter by invalid creator, channel and collection combination.
             await parameterizedTest(
-                SubscribedUserId, GuestListUserId, new[] { ChannelIds[0] }, new[] { CollectionIds[0][1] }, Now, false, noPaginationStart, noPaginationCount, new NewsfeedPost[0]);
+                SubscribedUserId, GuestListUserId, new[] { ChannelIds[0] }, new[] { CollectionIds[0][1] }, Now, false, noPaginationStart, noPaginationCount, new NewsfeedPost[0], 10);
 
             // Search forwards from now.
             await parameterizedTest(
-                CreatorId, CreatorId, null, null, Now, true, noPaginationStart, noPaginationCount, new NewsfeedPost[0]);
+                CreatorId, CreatorId, null, null, Now, true, noPaginationStart, noPaginationCount, new NewsfeedPost[0], 0);
 
             // Search forwards from beginning.
             await parameterizedTest(
-                CreatorId, CreatorId, null, null, SqlDateTime.MinValue.Value, true, noPaginationStart, noPaginationCount, SortedLiveNewsfeedPosts.Reverse().ToList());
+                CreatorId, CreatorId, null, null, SqlDateTime.MinValue.Value, true, noPaginationStart, noPaginationCount, SortedLiveNewsfeedPosts.Reverse().ToList(), 0);
 
             // Paginate forwards from middle with different page size and page index.
             await parameterizedTest(
-                CreatorId, CreatorId, null, null, SqlDateTime.MinValue.Value, true, NonNegativeInt.Parse(5), PositiveInt.Parse(10), SortedLiveNewsfeedPosts.Reverse().Skip(5).Take(10).ToList());
+                CreatorId, CreatorId, null, null, SqlDateTime.MinValue.Value, true, NonNegativeInt.Parse(5), PositiveInt.Parse(10), SortedLiveNewsfeedPosts.Reverse().Skip(5).Take(10).ToList(), 0);
         }
 
         private async Task CreateEntitiesAsync(TestDatabaseContext testDatabase, bool createLivePosts, bool createFuturePosts)

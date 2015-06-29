@@ -22,11 +22,12 @@
     [AutoConstructor]
     public partial class GetNewsfeedDbStatement : IGetNewsfeedDbStatement
     {
-
-
         private static readonly string DeclareAccountBalance = string.Format(
-            @"DECLARE @AccountBalance int = ({0});",
-            CalculatedAccountBalance.GetQuery("RequestorId"));
+            @"DECLARE @AccountBalance int = (SELECT COALESCE(({0}), 0));",
+            CalculatedAccountBalance.GetUserAccountBalanceQuery("RequestorId", CalculatedAccountBalance.Fields.Amount));
+
+        private static readonly string SelectAccountBalance = @"
+            SELECT @AccountBalance;";
 
         private static readonly string SqlStart = string.Format(@"
             SELECT    blog.{12} AS BlogId, blog.{13} AS CreatorId, post.{1} AS PostId, {2}, {4}, {5}, {6}, {7}, {3}, post.{21}, [file].{16} as FileName, [file].{17} as FileExtension, [file].{18} as FileSize, image.{16} as ImageName, image.{17} as ImageExtension, image.{18} as ImageSize, image.{19} as ImageRenderWidth, image.{20} as ImageRenderHeight
@@ -137,9 +138,11 @@
             Post.Fields.LiveDate,
             Post.Fields.CreationDate);
 
+        private static readonly string SqlEnd = ";";
+
         private readonly IFifthweekDbConnectionFactory connectionFactory;
 
-        public async Task<IReadOnlyList<NewsfeedPost>> ExecuteAsync(
+        public async Task<GetNewsfeedDbResult> ExecuteAsync(
             UserId requestorId,
             UserId creatorId,
             IReadOnlyList<ChannelId> requestedChannelIds,
@@ -206,14 +209,22 @@
                     query.Append(SqlEndBackwards);
                 }
 
-                var entities = (await connection.QueryAsync<NewsfeedPost.Builder>(query.ToString(), parameters)).ToList();
-                foreach (var entity in entities)
-                {
-                    entity.LiveDate = DateTime.SpecifyKind(entity.LiveDate, DateTimeKind.Utc);
-                    entity.CreationDate = DateTime.SpecifyKind(entity.CreationDate, DateTimeKind.Utc);
-                }
+                query.Append(SqlEnd);
+                query.Append(SelectAccountBalance);
 
-                return entities.Select(_ => _.Build()).ToList();
+                using (var multi = await connection.QueryMultipleAsync(query.ToString(), parameters))
+                {
+                    var entities = (await multi.ReadAsync<NewsfeedPost.Builder>()).ToList();
+                    foreach (var entity in entities)
+                    {
+                        entity.LiveDate = DateTime.SpecifyKind(entity.LiveDate, DateTimeKind.Utc);
+                        entity.CreationDate = DateTime.SpecifyKind(entity.CreationDate, DateTimeKind.Utc);
+                    }
+
+                    var accountBalance = (await multi.ReadAsync<int>()).Single();
+
+                    return new GetNewsfeedDbResult(entities.Select(_ => _.Build()).ToList(), accountBalance);
+                }
             }
         }
     }

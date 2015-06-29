@@ -30,7 +30,7 @@
             var requestingUserId = await this.requesterSecurity.AuthenticateAsync(query.Requester);
 
             var now = DateTime.UtcNow;
-            var posts = await this.getNewsfeedDbStatement.ExecuteAsync(
+            var postsResult = await this.getNewsfeedDbStatement.ExecuteAsync(
                 requestingUserId,
                 query.CreatorId,
                 query.ChannelIds,
@@ -40,6 +40,8 @@
                 query.SearchForwards,
                 query.StartIndex,
                 query.Count);
+
+            var posts = postsResult.Posts;
 
             var results = new List<GetNewsfeedQueryResult.Post>();
             foreach (var post in posts)
@@ -84,7 +86,7 @@
                 results.Add(completePost);
             }
 
-            return new GetNewsfeedQueryResult(results);
+            return new GetNewsfeedQueryResult(results, postsResult.AccountBalance);
         }
     }
 }

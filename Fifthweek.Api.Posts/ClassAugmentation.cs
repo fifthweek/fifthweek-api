@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Linq;
 
-//// Generated on 22/05/2015 10:43:29 (UTC)
-//// Mapped solution in 8.66s
+//// Generated on 29/06/2015 17:11:07 (UTC)
+//// Mapped solution in 11.07s
 
 
 namespace Fifthweek.Api.Posts.Commands
@@ -626,7 +626,7 @@ namespace Fifthweek.Api.Posts.Controllers
             Fifthweek.Api.Core.ICommandHandler<Fifthweek.Api.Posts.Commands.PostFileCommand> postFile,
             Fifthweek.Api.Core.ICommandHandler<Fifthweek.Api.Posts.Commands.ReviseFileCommand> reviseFile,
             Fifthweek.Api.Identity.Shared.Membership.IRequesterContext requesterContext,
-            IGuidCreator guidCreator)
+            Fifthweek.Shared.IGuidCreator guidCreator)
         {
             if (postFile == null)
             {
@@ -679,7 +679,7 @@ namespace Fifthweek.Api.Posts.Controllers
             Fifthweek.Api.Core.ICommandHandler<Fifthweek.Api.Posts.Commands.PostImageCommand> postImage,
             Fifthweek.Api.Core.ICommandHandler<Fifthweek.Api.Posts.Commands.ReviseImageCommand> reviseImage,
             Fifthweek.Api.Identity.Shared.Membership.IRequesterContext requesterContext,
-            IGuidCreator guidCreator)
+            Fifthweek.Shared.IGuidCreator guidCreator)
         {
             if (postImage == null)
             {
@@ -732,7 +732,7 @@ namespace Fifthweek.Api.Posts.Controllers
             Fifthweek.Api.Core.ICommandHandler<Fifthweek.Api.Posts.Commands.PostNoteCommand> postNote,
             Fifthweek.Api.Core.ICommandHandler<Fifthweek.Api.Posts.Commands.ReviseNoteCommand> reviseNote,
             Fifthweek.Api.Identity.Shared.Membership.IRequesterContext requesterContext,
-            IGuidCreator guidCreator)
+            Fifthweek.Shared.IGuidCreator guidCreator)
         {
             if (postNote == null)
             {
@@ -903,6 +903,7 @@ namespace Fifthweek.Api.Posts
     using Fifthweek.Api.Posts.Queries;
     using System.Text;
     using Fifthweek.Api.Persistence.Identity;
+    using Fifthweek.Api.Persistence.Payments;
 
     public partial class DeletePostDbStatement 
     {
@@ -940,6 +941,7 @@ namespace Fifthweek.Api.Posts
     using Fifthweek.Api.Posts.Queries;
     using System.Text;
     using Fifthweek.Api.Persistence.Identity;
+    using Fifthweek.Api.Persistence.Payments;
 
     public partial class PostFileTypeChecks 
     {
@@ -984,6 +986,7 @@ namespace Fifthweek.Api.Posts
     using Fifthweek.Api.Posts.Queries;
     using System.Text;
     using Fifthweek.Api.Persistence.Identity;
+    using Fifthweek.Api.Persistence.Payments;
 
     public partial class PostOwnership 
     {
@@ -1021,6 +1024,7 @@ namespace Fifthweek.Api.Posts
     using Fifthweek.Api.Posts.Queries;
     using System.Text;
     using Fifthweek.Api.Persistence.Identity;
+    using Fifthweek.Api.Persistence.Payments;
 
     public partial class PostSecurity 
     {
@@ -1058,6 +1062,7 @@ namespace Fifthweek.Api.Posts
     using Fifthweek.Api.Posts.Queries;
     using System.Text;
     using Fifthweek.Api.Persistence.Identity;
+    using Fifthweek.Api.Persistence.Payments;
 
     public partial class PostToCollectionDbStatement 
     {
@@ -1095,6 +1100,7 @@ namespace Fifthweek.Api.Posts
     using Fifthweek.Api.Posts.Queries;
     using System.Text;
     using Fifthweek.Api.Persistence.Identity;
+    using Fifthweek.Api.Persistence.Payments;
 
     public partial class PostToCollectionDbSubStatements 
     {
@@ -1778,6 +1784,7 @@ namespace Fifthweek.Api.Posts
     using Fifthweek.Api.Posts.Queries;
     using System.Text;
     using Fifthweek.Api.Persistence.Identity;
+    using Fifthweek.Api.Persistence.Payments;
 
     public partial class PostNoteDbStatement 
     {
@@ -1930,6 +1937,7 @@ namespace Fifthweek.Api.Posts
     using Fifthweek.Api.Posts.Queries;
     using System.Text;
     using Fifthweek.Api.Persistence.Identity;
+    using Fifthweek.Api.Persistence.Payments;
 
     public partial class TryGetQueuedPostCollectionDbStatement 
     {
@@ -2061,6 +2069,7 @@ namespace Fifthweek.Api.Posts
     using Fifthweek.Api.Posts.Queries;
     using System.Text;
     using Fifthweek.Api.Persistence.Identity;
+    using Fifthweek.Api.Persistence.Payments;
 
     public partial class SetPostLiveDateDbStatement 
     {
@@ -2105,6 +2114,7 @@ namespace Fifthweek.Api.Posts
     using Fifthweek.Api.Posts.Queries;
     using System.Text;
     using Fifthweek.Api.Persistence.Identity;
+    using Fifthweek.Api.Persistence.Payments;
 
     public partial class RemoveFromQueueIfRequiredDbStatement 
     {
@@ -2351,6 +2361,7 @@ namespace Fifthweek.Api.Posts
     using Fifthweek.Api.Posts.Queries;
     using System.Text;
     using Fifthweek.Api.Persistence.Identity;
+    using Fifthweek.Api.Persistence.Payments;
 
     public partial class MovePostToQueueDbStatement 
     {
@@ -2395,6 +2406,7 @@ namespace Fifthweek.Api.Posts
     using Fifthweek.Api.Posts.Queries;
     using System.Text;
     using Fifthweek.Api.Persistence.Identity;
+    using Fifthweek.Api.Persistence.Payments;
 
     public partial class TryGetUnqueuedPostCollectionDbStatement 
     {
@@ -2485,6 +2497,7 @@ namespace Fifthweek.Api.Posts
     using Fifthweek.Api.Posts.Queries;
     using System.Text;
     using Fifthweek.Api.Persistence.Identity;
+    using Fifthweek.Api.Persistence.Payments;
 
     public partial class GetCreatorBacklogDbStatement 
     {
@@ -2859,14 +2872,21 @@ namespace Fifthweek.Api.Posts.Queries
     public partial class GetNewsfeedQueryResult 
     {
         public GetNewsfeedQueryResult(
-            System.Collections.Generic.IReadOnlyList<Fifthweek.Api.Posts.Queries.GetNewsfeedQueryResult.Post> posts)
+            System.Collections.Generic.IReadOnlyList<Fifthweek.Api.Posts.Queries.GetNewsfeedQueryResult.Post> posts,
+            System.Int32 accountBalance)
         {
             if (posts == null)
             {
                 throw new ArgumentNullException("posts");
             }
 
+            if (accountBalance == null)
+            {
+                throw new ArgumentNullException("accountBalance");
+            }
+
             this.Posts = posts;
+            this.AccountBalance = accountBalance;
         }
     }
 }
@@ -2968,6 +2988,7 @@ namespace Fifthweek.Api.Posts
     using Fifthweek.Api.Posts.Queries;
     using System.Text;
     using Fifthweek.Api.Persistence.Identity;
+    using Fifthweek.Api.Persistence.Payments;
 
     public partial class GetNewsfeedDbStatement 
     {
@@ -2980,6 +3001,51 @@ namespace Fifthweek.Api.Posts
             }
 
             this.connectionFactory = connectionFactory;
+        }
+    }
+}
+namespace Fifthweek.Api.Posts
+{
+    using System;
+    using System.Linq;
+    using System.Threading.Tasks;
+    using Dapper;
+    using Fifthweek.Api.Persistence;
+    using Fifthweek.CodeGeneration;
+    using Fifthweek.Api.Core;
+    using Fifthweek.Api.FileManagement;
+    using Fifthweek.Api.FileManagement.Shared;
+    using Fifthweek.Shared;
+    using Fifthweek.Api.Identity.Shared.Membership;
+    using Fifthweek.Api.Posts.Shared;
+    using Fifthweek.Api.Collections.Shared;
+    using Fifthweek.Api.Collections;
+    using Fifthweek.Api.Channels.Shared;
+    using System.Transactions;
+    using System.Collections.Generic;
+    using Fifthweek.Api.Posts.Queries;
+    using System.Text;
+    using Fifthweek.Api.Persistence.Identity;
+    using Fifthweek.Api.Persistence.Payments;
+
+    public partial class GetNewsfeedDbResult 
+    {
+        public GetNewsfeedDbResult(
+            System.Collections.Generic.IReadOnlyList<Fifthweek.Api.Posts.Queries.NewsfeedPost> posts,
+            System.Int32 accountBalance)
+        {
+            if (posts == null)
+            {
+                throw new ArgumentNullException("posts");
+            }
+
+            if (accountBalance == null)
+            {
+                throw new ArgumentNullException("accountBalance");
+            }
+
+            this.Posts = posts;
+            this.AccountBalance = accountBalance;
         }
     }
 }
@@ -5369,7 +5435,7 @@ namespace Fifthweek.Api.Posts.Queries
     {
         public override string ToString()
         {
-            return string.Format("GetNewsfeedQueryResult({0})", this.Posts == null ? "null" : this.Posts.ToString());
+            return string.Format("GetNewsfeedQueryResult({0}, {1})", this.Posts == null ? "null" : this.Posts.ToString(), this.AccountBalance == null ? "null" : this.AccountBalance.ToString());
         }
         
         public override bool Equals(object obj)
@@ -5406,6 +5472,7 @@ namespace Fifthweek.Api.Posts.Queries
         				    }
         				})
         			: 0);
+                hashCode = (hashCode * 397) ^ (this.AccountBalance != null ? this.AccountBalance.GetHashCode() : 0);
                 return hashCode;
             }
         }
@@ -5420,6 +5487,11 @@ namespace Fifthweek.Api.Posts.Queries
                 }
             }
             else if (this.Posts != null || other.Posts != null)
+            {
+                return false;
+            }
+        
+            if (!object.Equals(this.AccountBalance, other.AccountBalance))
             {
                 return false;
             }
@@ -5555,6 +5627,99 @@ namespace Fifthweek.Api.Posts.Queries
             
                 return true;
             }
+        }
+    }
+}
+namespace Fifthweek.Api.Posts
+{
+    using System;
+    using System.Linq;
+    using System.Threading.Tasks;
+    using Dapper;
+    using Fifthweek.Api.Persistence;
+    using Fifthweek.CodeGeneration;
+    using Fifthweek.Api.Core;
+    using Fifthweek.Api.FileManagement;
+    using Fifthweek.Api.FileManagement.Shared;
+    using Fifthweek.Shared;
+    using Fifthweek.Api.Identity.Shared.Membership;
+    using Fifthweek.Api.Posts.Shared;
+    using Fifthweek.Api.Collections.Shared;
+    using Fifthweek.Api.Collections;
+    using Fifthweek.Api.Channels.Shared;
+    using System.Transactions;
+    using System.Collections.Generic;
+    using Fifthweek.Api.Posts.Queries;
+    using System.Text;
+    using Fifthweek.Api.Persistence.Identity;
+    using Fifthweek.Api.Persistence.Payments;
+
+    public partial class GetNewsfeedDbResult 
+    {
+        public override string ToString()
+        {
+            return string.Format("GetNewsfeedDbResult({0}, {1})", this.Posts == null ? "null" : this.Posts.ToString(), this.AccountBalance == null ? "null" : this.AccountBalance.ToString());
+        }
+        
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj))
+            {
+                return false;
+            }
+        
+            if (ReferenceEquals(this, obj))
+            {
+                return true;
+            }
+        
+            if (obj.GetType() != this.GetType())
+            {
+                return false;
+            }
+        
+            return this.Equals((GetNewsfeedDbResult)obj);
+        }
+        
+        public override int GetHashCode()
+        {
+            unchecked
+            {
+                int hashCode = 0;
+                hashCode = (hashCode * 397) ^ (this.Posts != null 
+        			? this.Posts.Aggregate(0, (previous, current) => 
+        				{ 
+        				    unchecked
+        				    {
+        				        return (previous * 397) ^ (current != null ? current.GetHashCode() : 0);
+        				    }
+        				})
+        			: 0);
+                hashCode = (hashCode * 397) ^ (this.AccountBalance != null ? this.AccountBalance.GetHashCode() : 0);
+                return hashCode;
+            }
+        }
+        
+        protected bool Equals(GetNewsfeedDbResult other)
+        {
+            if (this.Posts != null && other.Posts != null)
+            {
+                if (!this.Posts.SequenceEqual(other.Posts))
+                {
+                    return false;    
+                }
+            }
+            else if (this.Posts != null || other.Posts != null)
+            {
+                return false;
+            }
+        
+            if (!object.Equals(this.AccountBalance, other.AccountBalance))
+            {
+                return false;
+            }
+        
+            return true;
         }
     }
 }

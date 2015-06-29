@@ -99,6 +99,7 @@
     <Compile Include="Controllers\RevisedFileData.cs" />
     <Compile Include="Controllers\RevisedImageData.cs" />
     <Compile Include="GetCreatorBacklogDbStatement.cs" />
+    <Compile Include="GetNewsfeedDbResult.cs" />
     <Compile Include="GetNewsfeedDbStatement.cs" />
     <Compile Include="IGetCreatorBacklogDbStatement.cs" />
     <Compile Include="IGetNewsfeedDbStatement.cs" />

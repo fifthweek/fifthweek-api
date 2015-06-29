@@ -104,13 +104,14 @@
             this.requesterSecurity.Setup(_ => _.AuthenticateAsync(Requester)).ReturnsAsync(UserId);
 
             this.getNewsfeedDbStatement.Setup(v => v.ExecuteAsync(UserId, CreatorId, ChannelIds, CollectionIds, It.IsAny<DateTime>(), Origin.Value, SearchForwards, StartIndex, Count))
-                .ReturnsAsync(NewsfeedPosts);
+                .ReturnsAsync(new GetNewsfeedDbResult(NewsfeedPosts, 10));
 
             this.fileInformationAggregator.Setup(v => v.GetFileInformationAsync(It.IsAny<ChannelId>(), It.IsAny<FileId>(), It.IsAny<string>()))
                 .Returns<ChannelId, FileId, string>((c, f, p) => Task.FromResult(new FileInformation(f, c.ToString())));
 
             var result = await this.target.HandleAsync(new GetNewsfeedQuery(Requester, CreatorId, ChannelIds, CollectionIds, Origin, SearchForwards, StartIndex, Count));
 
+            Assert.AreEqual(10, result.AccountBalance);
             Assert.AreEqual(NewsfeedPosts.Count, result.Posts.Count);
             foreach (var item in result.Posts.Zip(NewsfeedPosts, (a, b) => new { Output = a, Input = b }))
             {
@@ -156,7 +157,7 @@
                     nowDate = now;
                     originDate = origin;
                 })
-                .ReturnsAsync(NewsfeedPosts);
+                .ReturnsAsync(new GetNewsfeedDbResult(NewsfeedPosts, 10));
 
             this.fileInformationAggregator.Setup(v => v.GetFileInformationAsync(It.IsAny<ChannelId>(), It.IsAny<FileId>(), It.IsAny<string>()))
                 .Returns<ChannelId, FileId, string>((c, f, p) => Task.FromResult(new FileInformation(f, c.ToString())));

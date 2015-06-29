@@ -32,7 +32,7 @@
             FifthweekUser.Table,
             FifthweekUser.Fields.Id,
             CalculatedAccountBalance.Fields.UserId,
-            CalculatedAccountBalance.GetQuery("UserId"));
+            CalculatedAccountBalance.GetUserAccountBalanceQuery("UserId", CalculatedAccountBalance.Fields.Amount, CalculatedAccountBalance.Fields.UserId));
 
         private readonly IFifthweekDbConnectionFactory connectionFactory;
 
@@ -89,6 +89,6 @@
         [Optional]
         public FileId ProfileImageFileId { get; private set; }
 
-        public decimal Balance { get; set; }
+        public decimal AccountBalance { get; set; }
     }
 }

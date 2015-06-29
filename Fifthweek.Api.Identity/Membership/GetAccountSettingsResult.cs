@@ -19,6 +19,6 @@
         [Optional]
         public FileInformation ProfileImage { get; private set; }
 
-        public int BalanceInUsCentsPerWeek { get; set; }
+        public int AccountBalance { get; set; }
     }
 }
