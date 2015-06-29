@@ -72,18 +72,16 @@
         public async Task WhenCalled_ItShouldCallTheAccountRepository()
         {
             this.getAccountSettings.Setup(v => v.ExecuteAsync(UserId))
-                .ReturnsAsync(new GetAccountSettingsDbResult(Name, Username, Email, null))
+                .ReturnsAsync(new GetAccountSettingsDbResult(Name, Username, Email, null, 10))
                 .Verifiable();
 
             var result = await this.target.HandleAsync(new GetAccountSettingsQuery(Requester, UserId));
 
             this.getAccountSettings.Verify();
 
-            Assert.IsNotNull(result);
-            Assert.AreEqual(Name, result.Name);
-            Assert.AreEqual(Username, result.Username);
-            Assert.AreEqual(Email, result.Email);
-            Assert.AreEqual(null, result.ProfileImage);
+            var expectedResult = new GetAccountSettingsResult(Name, Username, Email, null, 10);
+
+            Assert.AreEqual(expectedResult, result);
         }
 
         [TestMethod]
@@ -92,20 +90,21 @@
             const string ContainerName = "containerName";
 
             this.getAccountSettings.Setup(v => v.ExecuteAsync(UserId))
-                .ReturnsAsync(new GetAccountSettingsDbResult(Name, Username, Email, FileId));
+                .ReturnsAsync(new GetAccountSettingsDbResult(Name, Username, Email, FileId, 10));
 
             this.fileInformationAggregator.Setup(v => v.GetFileInformationAsync(null, FileId, FilePurposes.ProfileImage))
                 .ReturnsAsync(new FileInformation(FileId, ContainerName));
 
             var result = await this.target.HandleAsync(new GetAccountSettingsQuery(Requester, UserId));
 
-            Assert.IsNotNull(result);
-            Assert.AreEqual(Name, result.Name);
-            Assert.AreEqual(Username, result.Username);
-            Assert.AreEqual(Email, result.Email);
-            Assert.IsNotNull(result.ProfileImage);
-            Assert.AreEqual(FileId, result.ProfileImage.FileId);
-            Assert.AreEqual(ContainerName, result.ProfileImage.ContainerName);
+            var expectedResult = new GetAccountSettingsResult(
+                Name, 
+                Username, 
+                Email, 
+                new FileInformation(FileId, ContainerName), 
+                10);
+
+            Assert.AreEqual(expectedResult, result);
         }
     }
 }

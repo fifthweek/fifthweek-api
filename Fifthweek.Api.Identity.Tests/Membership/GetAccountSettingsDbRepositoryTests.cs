@@ -9,6 +9,7 @@
     using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.Api.Persistence;
     using Fifthweek.Api.Persistence.Identity;
+    using Fifthweek.Api.Persistence.Payments;
     using Fifthweek.Api.Persistence.Tests.Shared;
     using Fifthweek.Tests.Shared;
 
@@ -19,15 +20,14 @@
     [TestClass]
     public class GetAccountSettingsDbRepositoryTests : PersistenceTestsBase
     {
-        private readonly CreatorName name = new CreatorName("name");
-        private readonly Username username = new Username("username");
-        private readonly Username username2 = new Username("username2");
-        private readonly UserId userId = new UserId(Guid.NewGuid());
-        private readonly UserId userId2 = new UserId(Guid.NewGuid());
-        private readonly FileId fileId = new FileId(Guid.NewGuid());
-        private readonly Email email = new Email("accountrepositorytests@testing.fifthweek.com");
-        private readonly Email email2 = new Email("accountrepositorytests2@testing.fifthweek.com");
-        private readonly FileId newFileId = new FileId(Guid.NewGuid());
+        private static readonly DateTime Now = DateTime.UtcNow;
+
+        private static readonly CreatorName Name = new CreatorName("name");
+        private static readonly Username Username = new Username("username");
+        private static readonly UserId UserId = new UserId(Guid.NewGuid());
+        private static readonly FileId FileId = new FileId(Guid.NewGuid());
+        private static readonly Email Email = new Email("accountrepositorytests@testing.fifthweek.com");
+
         private GetAccountSettingsDbStatement target;
 
         [TestInitialize]
@@ -43,16 +43,28 @@
             await this.DatabaseTestAsync(async testDatabase =>
             {
                 this.target = new GetAccountSettingsDbStatement(testDatabase);
-                await this.CreateFileAsync(testDatabase);
+                await this.CreateFileAsync(
+                    testDatabase,
+                    UserId,
+                    Name,
+                    Username,
+                    Email,
+                    FileId,
+                    0);
+
                 await testDatabase.TakeSnapshotAsync();
 
-                var result = await this.target.ExecuteAsync(this.userId);
+                var result = await this.target.ExecuteAsync(UserId);
 
-                Assert.AreEqual(result.Name, this.name);
-                Assert.AreEqual(result.Username, this.username);
-                Assert.AreEqual(result.Email, this.email);
-                Assert.AreEqual(result.ProfileImageFileId, this.fileId);
+                var expectedResult = new GetAccountSettingsDbResult(
+                    Name,
+                    Username,
+                    Email,
+                    FileId,
+                    0);
 
+                Assert.AreEqual(expectedResult, result);
+                
                 return ExpectedSideEffects.None;
             });
         }
@@ -63,15 +75,91 @@
             await this.DatabaseTestAsync(async testDatabase =>
             {
                 this.target = new GetAccountSettingsDbStatement(testDatabase);
-                await this.CreateFileAsync(testDatabase);
+                await this.CreateFileAsync(
+                    testDatabase,
+                    UserId,
+                    Name,
+                    Username,
+                    Email,
+                    null,
+                    0);
+
                 await testDatabase.TakeSnapshotAsync();
 
-                var result = await this.target.ExecuteAsync(this.userId2);
+                var result = await this.target.ExecuteAsync(UserId);
 
-                Assert.IsNull(result.Name);
-                Assert.AreEqual(this.username2, result.Username);
-                Assert.AreEqual(this.email2, result.Email);
-                Assert.AreEqual(null, result.ProfileImageFileId);
+                var expectedResult = new GetAccountSettingsDbResult(
+                    Name,
+                    Username,
+                    Email,
+                    null,
+                    0);
+
+                Assert.AreEqual(expectedResult, result);
+
+                return ExpectedSideEffects.None;
+            });
+        }
+
+        [TestMethod]
+        public async Task WhenGetAccountSettingsCalledAndNoNameExists_ItShouldGetAccountSettingsFromTheDatabase()
+        {
+            await this.DatabaseTestAsync(async testDatabase =>
+            {
+                this.target = new GetAccountSettingsDbStatement(testDatabase);
+                await this.CreateFileAsync(
+                    testDatabase,
+                    UserId,
+                    null,
+                    Username,
+                    Email,
+                    FileId,
+                    0);
+
+                await testDatabase.TakeSnapshotAsync();
+
+                var result = await this.target.ExecuteAsync(UserId);
+
+                var expectedResult = new GetAccountSettingsDbResult(
+                    null,
+                    Username,
+                    Email,
+                    FileId,
+                    0);
+
+                Assert.AreEqual(expectedResult, result);
+
+                return ExpectedSideEffects.None;
+            });
+        }
+
+        [TestMethod]
+        public async Task WhenGetAccountSettingsCalledAndCalculatedAccountBalanceExists_ItShouldGetAccountSettingsFromTheDatabase()
+        {
+            await this.DatabaseTestAsync(async testDatabase =>
+            {
+                this.target = new GetAccountSettingsDbStatement(testDatabase);
+                await this.CreateFileAsync(
+                    testDatabase,
+                    UserId,
+                    Name,
+                    Username,
+                    Email,
+                    FileId,
+                    5);
+
+                await testDatabase.TakeSnapshotAsync();
+
+                var result = await this.target.ExecuteAsync(UserId);
+
+                var expectedResult = new GetAccountSettingsDbResult(
+                    Name,
+                    Username,
+                    Email,
+                    FileId,
+                    100);
+
+                Assert.AreEqual(expectedResult, result);
 
                 return ExpectedSideEffects.None;
             });
@@ -83,7 +171,15 @@
             await this.DatabaseTestAsync(async testDatabase =>
             {
                 this.target = new GetAccountSettingsDbStatement(testDatabase);
-                await this.CreateFileAsync(testDatabase);
+                await this.CreateFileAsync(
+                    testDatabase,
+                    UserId,
+                    Name,
+                    Username,
+                    Email,
+                    FileId,
+                    0);
+
                 await testDatabase.TakeSnapshotAsync();
 
                 Func<Task> badMethodCall = () => this.target.ExecuteAsync(new UserId(Guid.NewGuid()));
@@ -102,46 +198,69 @@
             await badMethodCall.AssertExceptionAsync<ArgumentNullException>();
         }
 
-        private async Task CreateFileAsync(TestDatabaseContext testDatabase)
+        private async Task CreateFileAsync(TestDatabaseContext testDatabase, UserId userId, CreatorName name, Username username, Email email, FileId fileId, int accountBalanceCount)
         {
             var random = new Random();
             var user = UserTests.UniqueEntity(random);
-            user.Id = this.userId.Value;
-            user.Email = this.email.Value;
-            user.UserName = this.username.Value;
-            user.Name = this.name.Value;
+            user.Id = userId.Value;
+            user.Email = email.Value;
+            user.UserName = username.Value;
 
-            var user2 = UserTests.UniqueEntity(random);
-            user2.Id = this.userId2.Value;
-            user2.Email = this.email2.Value;
-            user2.UserName = this.username2.Value;
+            if (name != null)
+            {
+                user.Name = name.Value;
+            }
 
             using (var databaseContext = testDatabase.CreateContext())
             {
                 databaseContext.Users.Add(user);
-                databaseContext.Users.Add(user2);
                 await databaseContext.SaveChangesAsync();
             }
 
-            var profileImageFile = FileTests.UniqueEntity(random);
-            profileImageFile.Id = this.fileId.Value;
-            profileImageFile.User = user;
-            profileImageFile.UserId = user.Id;
-
-            var otherFile = FileTests.UniqueEntity(random);
-            otherFile.Id = this.newFileId.Value;
-            otherFile.User = user;
-            otherFile.UserId = user.Id;
-
-            using (var databaseContext = testDatabase.CreateContext())
+            if (fileId != null)
             {
-                await databaseContext.Database.Connection.InsertAsync(profileImageFile);
-                await databaseContext.Database.Connection.InsertAsync(otherFile);
+                var profileImageFile = FileTests.UniqueEntity(random);
+                profileImageFile.Id = fileId.Value;
+                profileImageFile.User = user;
+                profileImageFile.UserId = user.Id;
 
-                user.ProfileImageFile = profileImageFile;
-                user.ProfileImageFileId = profileImageFile.Id;
+                using (var connection = testDatabase.CreateConnection())
+                {
+                    await connection.InsertAsync(profileImageFile);
 
-                await databaseContext.Database.Connection.UpdateAsync(user, FifthweekUser.Fields.ProfileImageFileId);
+                    user.ProfileImageFile = profileImageFile;
+                    user.ProfileImageFileId = profileImageFile.Id;
+
+                    await connection.UpdateAsync(user, FifthweekUser.Fields.ProfileImageFileId);
+
+                }
+            }
+
+            using (var connection = testDatabase.CreateConnection())
+            {
+                await connection.InsertAsync(
+                    new CalculatedAccountBalance(
+                        user.Id,
+                        LedgerAccountType.Stripe,
+                        Now,
+                        -120));
+
+                await connection.InsertAsync(
+                    new CalculatedAccountBalance(
+                        user.Id,
+                        LedgerAccountType.SalesTax,
+                        Now,
+                        20));
+
+                for (int i = 0; i < accountBalanceCount; i++)
+                {
+                    await connection.InsertAsync(
+                        new CalculatedAccountBalance(
+                            user.Id,
+                            LedgerAccountType.Fifthweek,
+                            Now.AddHours(-1 - i),
+                            100 + i));
+                }
             }
         }
     }

@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Linq;
 
-//// Generated on 16/06/2015 08:55:24 (UTC)
-//// Mapped solution in 14.6s
+//// Generated on 29/06/2015 14:44:11 (UTC)
+//// Mapped solution in 10.35s
 
 
 namespace Fifthweek.Api.Identity.Membership.Commands
@@ -744,6 +744,7 @@ namespace Fifthweek.Api.Identity.Membership
     using System.Web;
     using System.Text;
     using Fifthweek.Payments.SnapshotCreation;
+    using Fifthweek.Api.Persistence.Payments;
 
     public partial class GetAccountSettingsDbStatement 
     {
@@ -779,6 +780,7 @@ namespace Fifthweek.Api.Identity.Membership
     using System.Web;
     using System.Text;
     using Fifthweek.Payments.SnapshotCreation;
+    using Fifthweek.Api.Persistence.Payments;
 
     public partial class GetAccountSettingsDbResult 
     {
@@ -786,7 +788,8 @@ namespace Fifthweek.Api.Identity.Membership
             Fifthweek.Api.Identity.Shared.Membership.CreatorName name,
             Fifthweek.Api.Identity.Shared.Membership.Username username,
             Fifthweek.Api.Identity.Shared.Membership.Email email,
-            Fifthweek.Api.FileManagement.Shared.FileId profileImageFileId)
+            Fifthweek.Api.FileManagement.Shared.FileId profileImageFileId,
+            System.Decimal balance)
         {
             if (username == null)
             {
@@ -798,10 +801,16 @@ namespace Fifthweek.Api.Identity.Membership
                 throw new ArgumentNullException("email");
             }
 
+            if (balance == null)
+            {
+                throw new ArgumentNullException("balance");
+            }
+
             this.Name = name;
             this.Username = username;
             this.Email = email;
             this.ProfileImageFileId = profileImageFileId;
+            this.Balance = balance;
         }
     }
 }
@@ -825,6 +834,7 @@ namespace Fifthweek.Api.Identity.Membership
     using System.Web;
     using System.Text;
     using Fifthweek.Payments.SnapshotCreation;
+    using Fifthweek.Api.Persistence.Payments;
 
     public partial class GetAccountSettingsResult 
     {
@@ -832,7 +842,8 @@ namespace Fifthweek.Api.Identity.Membership
             Fifthweek.Api.Identity.Shared.Membership.CreatorName name,
             Fifthweek.Api.Identity.Shared.Membership.Username username,
             Fifthweek.Api.Identity.Shared.Membership.Email email,
-            Fifthweek.Api.FileManagement.Shared.FileInformation profileImage)
+            Fifthweek.Api.FileManagement.Shared.FileInformation profileImage,
+            System.Int32 balanceInUsCentsPerWeek)
         {
             if (username == null)
             {
@@ -844,10 +855,16 @@ namespace Fifthweek.Api.Identity.Membership
                 throw new ArgumentNullException("email");
             }
 
+            if (balanceInUsCentsPerWeek == null)
+            {
+                throw new ArgumentNullException("balanceInUsCentsPerWeek");
+            }
+
             this.Name = name;
             this.Username = username;
             this.Email = email;
             this.ProfileImage = profileImage;
+            this.BalanceInUsCentsPerWeek = balanceInUsCentsPerWeek;
         }
     }
 }
@@ -1046,6 +1063,7 @@ namespace Fifthweek.Api.Identity.Membership
     using System.Web;
     using System.Text;
     using Fifthweek.Payments.SnapshotCreation;
+    using Fifthweek.Api.Persistence.Payments;
 
     public partial class RegisterUserDbStatement 
     {
@@ -1095,6 +1113,7 @@ namespace Fifthweek.Api.Identity.Membership
     using System.Web;
     using System.Text;
     using Fifthweek.Payments.SnapshotCreation;
+    using Fifthweek.Api.Persistence.Payments;
 
     public partial class RequesterContext 
     {
@@ -1130,6 +1149,7 @@ namespace Fifthweek.Api.Identity.Membership
     using System.Web;
     using System.Text;
     using Fifthweek.Payments.SnapshotCreation;
+    using Fifthweek.Api.Persistence.Payments;
 
     public partial class UpdateAccountSettingsDbStatement
     {
@@ -1168,6 +1188,7 @@ namespace Fifthweek.Api.Identity.Membership
     using System.Web;
     using System.Text;
     using Fifthweek.Payments.SnapshotCreation;
+    using Fifthweek.Api.Persistence.Payments;
 
     public partial class UpdateAccountSettingsDbStatement 
     {
@@ -2835,12 +2856,13 @@ namespace Fifthweek.Api.Identity.Membership
     using System.Web;
     using System.Text;
     using Fifthweek.Payments.SnapshotCreation;
+    using Fifthweek.Api.Persistence.Payments;
 
     public partial class GetAccountSettingsDbResult 
     {
         public override string ToString()
         {
-            return string.Format("GetAccountSettingsDbResult({0}, {1}, {2}, {3})", this.Name == null ? "null" : this.Name.ToString(), this.Username == null ? "null" : this.Username.ToString(), this.Email == null ? "null" : this.Email.ToString(), this.ProfileImageFileId == null ? "null" : this.ProfileImageFileId.ToString());
+            return string.Format("GetAccountSettingsDbResult({0}, {1}, {2}, {3}, {4})", this.Name == null ? "null" : this.Name.ToString(), this.Username == null ? "null" : this.Username.ToString(), this.Email == null ? "null" : this.Email.ToString(), this.ProfileImageFileId == null ? "null" : this.ProfileImageFileId.ToString(), this.Balance == null ? "null" : this.Balance.ToString());
         }
         
         public override bool Equals(object obj)
@@ -2872,6 +2894,7 @@ namespace Fifthweek.Api.Identity.Membership
                 hashCode = (hashCode * 397) ^ (this.Username != null ? this.Username.GetHashCode() : 0);
                 hashCode = (hashCode * 397) ^ (this.Email != null ? this.Email.GetHashCode() : 0);
                 hashCode = (hashCode * 397) ^ (this.ProfileImageFileId != null ? this.ProfileImageFileId.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.Balance != null ? this.Balance.GetHashCode() : 0);
                 return hashCode;
             }
         }
@@ -2894,6 +2917,11 @@ namespace Fifthweek.Api.Identity.Membership
             }
         
             if (!object.Equals(this.ProfileImageFileId, other.ProfileImageFileId))
+            {
+                return false;
+            }
+        
+            if (!object.Equals(this.Balance, other.Balance))
             {
                 return false;
             }
@@ -2922,12 +2950,13 @@ namespace Fifthweek.Api.Identity.Membership
     using System.Web;
     using System.Text;
     using Fifthweek.Payments.SnapshotCreation;
+    using Fifthweek.Api.Persistence.Payments;
 
     public partial class GetAccountSettingsResult 
     {
         public override string ToString()
         {
-            return string.Format("GetAccountSettingsResult({0}, {1}, {2}, {3})", this.Name == null ? "null" : this.Name.ToString(), this.Username == null ? "null" : this.Username.ToString(), this.Email == null ? "null" : this.Email.ToString(), this.ProfileImage == null ? "null" : this.ProfileImage.ToString());
+            return string.Format("GetAccountSettingsResult({0}, {1}, {2}, {3}, {4})", this.Name == null ? "null" : this.Name.ToString(), this.Username == null ? "null" : this.Username.ToString(), this.Email == null ? "null" : this.Email.ToString(), this.ProfileImage == null ? "null" : this.ProfileImage.ToString(), this.BalanceInUsCentsPerWeek == null ? "null" : this.BalanceInUsCentsPerWeek.ToString());
         }
         
         public override bool Equals(object obj)
@@ -2959,6 +2988,7 @@ namespace Fifthweek.Api.Identity.Membership
                 hashCode = (hashCode * 397) ^ (this.Username != null ? this.Username.GetHashCode() : 0);
                 hashCode = (hashCode * 397) ^ (this.Email != null ? this.Email.GetHashCode() : 0);
                 hashCode = (hashCode * 397) ^ (this.ProfileImage != null ? this.ProfileImage.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.BalanceInUsCentsPerWeek != null ? this.BalanceInUsCentsPerWeek.GetHashCode() : 0);
                 return hashCode;
             }
         }
@@ -2981,6 +3011,11 @@ namespace Fifthweek.Api.Identity.Membership
             }
         
             if (!object.Equals(this.ProfileImage, other.ProfileImage))
+            {
+                return false;
+            }
+        
+            if (!object.Equals(this.BalanceInUsCentsPerWeek, other.BalanceInUsCentsPerWeek))
             {
                 return false;
             }
@@ -3207,6 +3242,7 @@ namespace Fifthweek.Api.Identity.Membership
     using System.Web;
     using System.Text;
     using Fifthweek.Payments.SnapshotCreation;
+    using Fifthweek.Api.Persistence.Payments;
 
     public partial class UpdateAccountSettingsDbStatement
     {

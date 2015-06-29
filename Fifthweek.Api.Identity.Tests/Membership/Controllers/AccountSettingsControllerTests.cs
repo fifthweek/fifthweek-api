@@ -79,36 +79,36 @@
         public async Task WhenGetIsCalled_ItShouldCallTheQueryHandler()
         {
             var query = new GetAccountSettingsQuery(Requester, RequestedUserId);
+
+            var expectedResult = new GetAccountSettingsResult(Name, Username, Email, FileInformation, 10);
+
             this.getAccountSettings.Setup(v => v.HandleAsync(query))
-                .ReturnsAsync(new GetAccountSettingsResult(Name, Username, Email, FileInformation))
+                .ReturnsAsync(expectedResult)
                 .Verifiable();
 
             var result = await this.target.Get(RequestedUserId.Value.EncodeGuid());
 
             this.getAccountSettings.Verify();
 
-            Assert.IsNotNull(result);
-            Assert.AreEqual(Username, result.Username);
-            Assert.AreEqual(Email, result.Email);
-            Assert.AreEqual(FileInformation, result.ProfileImage);
+            Assert.AreEqual(expectedResult, result);
         }
 
         [TestMethod]
         public async Task WhenGetIsCalledAndNoProfileImageExists_ItShouldNotReturnAnyFileInformation()
         {
             var query = new GetAccountSettingsQuery(Requester, RequestedUserId);
+
+            var expectedResult = new GetAccountSettingsResult(Name, Username, Email, null, 10);
+            
             this.getAccountSettings.Setup(v => v.HandleAsync(query))
-                .ReturnsAsync(new GetAccountSettingsResult(Name, Username, Email, null))
+                .ReturnsAsync(expectedResult)
                 .Verifiable();
 
             var result = await this.target.Get(RequestedUserId.Value.EncodeGuid());
 
             this.getAccountSettings.Verify();
 
-            Assert.IsNotNull(result);
-            Assert.AreEqual(Username, result.Username);
-            Assert.AreEqual(Email, result.Email);
-            Assert.IsNull(result.ProfileImage);
+            Assert.AreEqual(expectedResult, result);
         }
 
         [TestMethod]
