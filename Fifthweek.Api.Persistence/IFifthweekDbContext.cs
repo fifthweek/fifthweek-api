@@ -59,6 +59,8 @@
 
         IDbSet<CreatorPercentageOverride> CreatorPercentageOverrides { get; set; }
 
+        IDbSet<UserPaymentOrigin> UserPaymentOrigins { get; set; }
+
         Task<int> SaveChangesAsync();
 
         Task<int> SaveChangesAsync(CancellationToken cancellationToken);

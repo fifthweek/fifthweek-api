@@ -66,7 +66,7 @@
     </Reference>
     <Reference Include="Newtonsoft.Json, Version=6.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Newtonsoft.Json.6.0.4\lib\net45\Newtonsoft.Json.dll</HintPath>
+      <HintPath>..\packages\Newtonsoft.Json.6.0.6\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="Owin">
       <HintPath>..\packages\Owin.1.0\lib\net40\Owin.dll</HintPath>
@@ -300,12 +300,17 @@
     <Compile Include="Migrations\201506181434369_CreatePaymentTables.Designer.cs">
       <DependentUpon>201506181434369_CreatePaymentTables.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201506301508103_CreatePaymentInformationTable.cs" />
+    <Compile Include="Migrations\201506301508103_CreatePaymentInformationTable.Designer.cs">
+      <DependentUpon>201506301508103_CreatePaymentInformationTable.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Payments\AppendOnlyLedgerRecord.cs" />
     <Compile Include="Payments\CalculatedAccountBalance.cs" />
     <Compile Include="Payments\CreatorPercentageOverride.cs" />
     <Compile Include="Payments\LedgerAccountType.cs" />
     <Compile Include="Payments\UncommittedSubscriptionPayment.cs" />
+    <Compile Include="Payments\UserPaymentOrigin.cs" />
     <Compile Include="Snapshots\CreatorChannelsSnapshot.cs" />
     <Compile Include="Snapshots\CreatorChannelsSnapshotItem.cs" />
     <Compile Include="Snapshots\CreatorFreeAccessUsersSnapshot.cs" />
@@ -484,6 +489,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201506181434369_CreatePaymentTables.resx">
       <DependentUpon>201506181434369_CreatePaymentTables.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201506301508103_CreatePaymentInformationTable.resx">
+      <DependentUpon>201506301508103_CreatePaymentInformationTable.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>

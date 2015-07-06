@@ -46,19 +46,19 @@
         [Required, Index("UniqueKey", Order = 4, IsUnique = true)]
         public LedgerAccountType AccountType { get; set; }
 
-        [Required]
+        [Required, Index]
         public Guid TransactionReference { get; set; }
 
-        [Required]
-        public Guid InputDataReference { get; set; }
+        [Optional]
+        public Guid? InputDataReference { get; set; }
 
         [Optional]
         public string Comment { get; set; }
 
         [Optional]
-        public string StripeReference { get; set; }
+        public string StripeChargeId { get; set; }
 
         [Optional]
-        public string TaxamoReference { get; set; }
+        public string TaxamoTransactionKey { get; set; }
     }
 }

@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Linq;
 
-//// Generated on 24/06/2015 12:21:19 (UTC)
-//// Mapped solution in 15.75s
+//// Generated on 03/07/2015 17:28:43 (UTC)
+//// Mapped solution in 20.01s
 
 
 namespace Fifthweek.Api.Persistence
@@ -846,10 +846,10 @@ namespace Fifthweek.Api.Persistence.Payments
             System.Decimal amount,
             Fifthweek.Api.Persistence.Payments.LedgerAccountType accountType,
             System.Guid transactionReference,
-            System.Guid inputDataReference,
+            System.Nullable<System.Guid> inputDataReference,
             System.String comment,
-            System.String stripeReference,
-            System.String taxamoReference)
+            System.String stripeChargeId,
+            System.String taxamoTransactionKey)
         {
             if (id == null)
             {
@@ -881,11 +881,6 @@ namespace Fifthweek.Api.Persistence.Payments
                 throw new ArgumentNullException("transactionReference");
             }
 
-            if (inputDataReference == null)
-            {
-                throw new ArgumentNullException("inputDataReference");
-            }
-
             this.Id = id;
             this.AccountOwnerId = accountOwnerId;
             this.CounterpartyId = counterpartyId;
@@ -895,8 +890,8 @@ namespace Fifthweek.Api.Persistence.Payments
             this.TransactionReference = transactionReference;
             this.InputDataReference = inputDataReference;
             this.Comment = comment;
-            this.StripeReference = stripeReference;
-            this.TaxamoReference = taxamoReference;
+            this.StripeChargeId = stripeChargeId;
+            this.TaxamoTransactionKey = taxamoTransactionKey;
         }
     }
 }
@@ -1031,6 +1026,41 @@ namespace Fifthweek.Api.Persistence.Payments
             this.UserId = userId;
             this.Percentage = percentage;
             this.ExpiryDate = expiryDate;
+        }
+    }
+}
+namespace Fifthweek.Api.Persistence.Payments
+{
+    using System;
+    using System.Linq;
+    using System.ComponentModel.DataAnnotations;
+    using System.ComponentModel.DataAnnotations.Schema;
+    using Fifthweek.CodeGeneration;
+    using Fifthweek.Api.Persistence.Identity;
+
+    public partial class UserPaymentOrigin 
+    {
+        public UserPaymentOrigin(
+            System.Guid userId,
+            Fifthweek.Api.Persistence.Identity.FifthweekUser user,
+            System.String stripeCustomerId,
+            System.String billingCountryCode,
+            System.String creditCardPrefix,
+            System.String ipAddress,
+            System.String originalTaxamoTransactionKey)
+        {
+            if (userId == null)
+            {
+                throw new ArgumentNullException("userId");
+            }
+
+            this.UserId = userId;
+            this.User = user;
+            this.StripeCustomerId = stripeCustomerId;
+            this.BillingCountryCode = billingCountryCode;
+            this.CreditCardPrefix = creditCardPrefix;
+            this.IpAddress = ipAddress;
+            this.OriginalTaxamoTransactionKey = originalTaxamoTransactionKey;
         }
     }
 }
@@ -2418,7 +2448,7 @@ namespace Fifthweek.Api.Persistence.Payments
     {
         public override string ToString()
         {
-            return string.Format("AppendOnlyLedgerRecord({0}, {1}, {2}, {3}, {4}, {5}, {6}, {7}, \"{8}\", \"{9}\", \"{10}\")", this.Id == null ? "null" : this.Id.ToString(), this.AccountOwnerId == null ? "null" : this.AccountOwnerId.ToString(), this.CounterpartyId == null ? "null" : this.CounterpartyId.ToString(), this.Timestamp == null ? "null" : this.Timestamp.ToString(), this.Amount == null ? "null" : this.Amount.ToString(), this.AccountType == null ? "null" : this.AccountType.ToString(), this.TransactionReference == null ? "null" : this.TransactionReference.ToString(), this.InputDataReference == null ? "null" : this.InputDataReference.ToString(), this.Comment == null ? "null" : this.Comment.ToString(), this.StripeReference == null ? "null" : this.StripeReference.ToString(), this.TaxamoReference == null ? "null" : this.TaxamoReference.ToString());
+            return string.Format("AppendOnlyLedgerRecord({0}, {1}, {2}, {3}, {4}, {5}, {6}, {7}, \"{8}\", \"{9}\", \"{10}\")", this.Id == null ? "null" : this.Id.ToString(), this.AccountOwnerId == null ? "null" : this.AccountOwnerId.ToString(), this.CounterpartyId == null ? "null" : this.CounterpartyId.ToString(), this.Timestamp == null ? "null" : this.Timestamp.ToString(), this.Amount == null ? "null" : this.Amount.ToString(), this.AccountType == null ? "null" : this.AccountType.ToString(), this.TransactionReference == null ? "null" : this.TransactionReference.ToString(), this.InputDataReference == null ? "null" : this.InputDataReference.ToString(), this.Comment == null ? "null" : this.Comment.ToString(), this.StripeChargeId == null ? "null" : this.StripeChargeId.ToString(), this.TaxamoTransactionKey == null ? "null" : this.TaxamoTransactionKey.ToString());
         }
         
         public override bool Equals(object obj)
@@ -2455,8 +2485,8 @@ namespace Fifthweek.Api.Persistence.Payments
                 hashCode = (hashCode * 397) ^ (this.TransactionReference != null ? this.TransactionReference.GetHashCode() : 0);
                 hashCode = (hashCode * 397) ^ (this.InputDataReference != null ? this.InputDataReference.GetHashCode() : 0);
                 hashCode = (hashCode * 397) ^ (this.Comment != null ? this.Comment.GetHashCode() : 0);
-                hashCode = (hashCode * 397) ^ (this.StripeReference != null ? this.StripeReference.GetHashCode() : 0);
-                hashCode = (hashCode * 397) ^ (this.TaxamoReference != null ? this.TaxamoReference.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.StripeChargeId != null ? this.StripeChargeId.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.TaxamoTransactionKey != null ? this.TaxamoTransactionKey.GetHashCode() : 0);
                 return hashCode;
             }
         }
@@ -2508,12 +2538,12 @@ namespace Fifthweek.Api.Persistence.Payments
                 return false;
             }
         
-            if (!object.Equals(this.StripeReference, other.StripeReference))
+            if (!object.Equals(this.StripeChargeId, other.StripeChargeId))
             {
                 return false;
             }
         
-            if (!object.Equals(this.TaxamoReference, other.TaxamoReference))
+            if (!object.Equals(this.TaxamoTransactionKey, other.TaxamoTransactionKey))
             {
                 return false;
             }
@@ -2745,6 +2775,93 @@ namespace Fifthweek.Api.Persistence.Payments
             }
         
             if (!object.Equals(this.ExpiryDate, other.ExpiryDate))
+            {
+                return false;
+            }
+        
+            return true;
+        }
+    }
+}
+namespace Fifthweek.Api.Persistence.Payments
+{
+    using System;
+    using System.Linq;
+    using System.ComponentModel.DataAnnotations;
+    using System.ComponentModel.DataAnnotations.Schema;
+    using Fifthweek.CodeGeneration;
+    using Fifthweek.Api.Persistence.Identity;
+
+    public partial class UserPaymentOrigin 
+    {
+        public override string ToString()
+        {
+            return string.Format("UserPaymentOrigin({0}, \"{1}\", \"{2}\", \"{3}\", \"{4}\", \"{5}\")", this.UserId == null ? "null" : this.UserId.ToString(), this.StripeCustomerId == null ? "null" : this.StripeCustomerId.ToString(), this.BillingCountryCode == null ? "null" : this.BillingCountryCode.ToString(), this.CreditCardPrefix == null ? "null" : this.CreditCardPrefix.ToString(), this.IpAddress == null ? "null" : this.IpAddress.ToString(), this.OriginalTaxamoTransactionKey == null ? "null" : this.OriginalTaxamoTransactionKey.ToString());
+        }
+        
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj))
+            {
+                return false;
+            }
+        
+            if (ReferenceEquals(this, obj))
+            {
+                return true;
+            }
+        
+            if (obj.GetType() != this.GetType())
+            {
+                return false;
+            }
+        
+            return this.Equals((UserPaymentOrigin)obj);
+        }
+        
+        public override int GetHashCode()
+        {
+            unchecked
+            {
+                int hashCode = 0;
+                hashCode = (hashCode * 397) ^ (this.UserId != null ? this.UserId.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.StripeCustomerId != null ? this.StripeCustomerId.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.BillingCountryCode != null ? this.BillingCountryCode.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.CreditCardPrefix != null ? this.CreditCardPrefix.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.IpAddress != null ? this.IpAddress.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.OriginalTaxamoTransactionKey != null ? this.OriginalTaxamoTransactionKey.GetHashCode() : 0);
+                return hashCode;
+            }
+        }
+        
+        protected bool Equals(UserPaymentOrigin other)
+        {
+            if (!object.Equals(this.UserId, other.UserId))
+            {
+                return false;
+            }
+        
+            if (!object.Equals(this.StripeCustomerId, other.StripeCustomerId))
+            {
+                return false;
+            }
+        
+            if (!object.Equals(this.BillingCountryCode, other.BillingCountryCode))
+            {
+                return false;
+            }
+        
+            if (!object.Equals(this.CreditCardPrefix, other.CreditCardPrefix))
+            {
+                return false;
+            }
+        
+            if (!object.Equals(this.IpAddress, other.IpAddress))
+            {
+                return false;
+            }
+        
+            if (!object.Equals(this.OriginalTaxamoTransactionKey, other.OriginalTaxamoTransactionKey))
             {
                 return false;
             }
@@ -9863,8 +9980,8 @@ namespace Fifthweek.Api.Persistence.Payments
             TransactionReference = 64, 
             InputDataReference = 128, 
             Comment = 256, 
-            StripeReference = 512, 
-            TaxamoReference = 1024
+            StripeChargeId = 512, 
+            TaxamoTransactionKey = 1024
         }
     }
 
@@ -9881,7 +9998,7 @@ namespace Fifthweek.Api.Persistence.Payments
                 InsertStatement(idempotent), 
                 entities.Select(entity => new 
                 {
-                    entity.Id, entity.AccountOwnerId, entity.CounterpartyId, entity.Timestamp, entity.Amount, entity.AccountType, entity.TransactionReference, entity.InputDataReference, entity.Comment, entity.StripeReference, entity.TaxamoReference
+                    entity.Id, entity.AccountOwnerId, entity.CounterpartyId, entity.Timestamp, entity.Amount, entity.AccountType, entity.TransactionReference, entity.InputDataReference, entity.Comment, entity.StripeChargeId, entity.TaxamoTransactionKey
                 }).ToArray(),
                 transaction);
         }
@@ -9897,7 +10014,7 @@ namespace Fifthweek.Api.Persistence.Payments
                 InsertStatement(idempotent), 
                 new 
                 {
-                    entity.Id, entity.AccountOwnerId, entity.CounterpartyId, entity.Timestamp, entity.Amount, entity.AccountType, entity.TransactionReference, entity.InputDataReference, entity.Comment, entity.StripeReference, entity.TaxamoReference
+                    entity.Id, entity.AccountOwnerId, entity.CounterpartyId, entity.Timestamp, entity.Amount, entity.AccountType, entity.TransactionReference, entity.InputDataReference, entity.Comment, entity.StripeChargeId, entity.TaxamoTransactionKey
                 },
                 transaction);
         }
@@ -9942,7 +10059,7 @@ namespace Fifthweek.Api.Persistence.Payments
             var entity = parameters.Entity;
             var parameterObject = parameters.ExcludedFromInput != null
                 ? AllExceptSpecifiedParameters(entity, parameters.ExcludedFromInput.Value)
-                : new Dapper.DynamicParameters(new { entity.Id, entity.AccountOwnerId, entity.CounterpartyId, entity.Timestamp, entity.Amount, entity.AccountType, entity.TransactionReference, entity.InputDataReference, entity.Comment, entity.StripeReference, entity.TaxamoReference });
+                : new Dapper.DynamicParameters(new { entity.Id, entity.AccountOwnerId, entity.CounterpartyId, entity.Timestamp, entity.Amount, entity.AccountType, entity.TransactionReference, entity.InputDataReference, entity.Comment, entity.StripeChargeId, entity.TaxamoTransactionKey });
         
             if (parameters.AdditionalParameters != null)
             {
@@ -9966,7 +10083,7 @@ namespace Fifthweek.Api.Persistence.Payments
                 UpsertStatement(AppendOnlyLedgerRecord.Fields.Empty, fields), 
                 new 
                 {
-                    entity.Id, entity.AccountOwnerId, entity.CounterpartyId, entity.Timestamp, entity.Amount, entity.AccountType, entity.TransactionReference, entity.InputDataReference, entity.Comment, entity.StripeReference, entity.TaxamoReference
+                    entity.Id, entity.AccountOwnerId, entity.CounterpartyId, entity.Timestamp, entity.Amount, entity.AccountType, entity.TransactionReference, entity.InputDataReference, entity.Comment, entity.StripeChargeId, entity.TaxamoTransactionKey
                 },
                 transaction);
         }
@@ -9983,7 +10100,7 @@ namespace Fifthweek.Api.Persistence.Payments
                 UpsertStatement(mergeOnFields, updateFields), 
                 new 
                 {
-                    entity.Id, entity.AccountOwnerId, entity.CounterpartyId, entity.Timestamp, entity.Amount, entity.AccountType, entity.TransactionReference, entity.InputDataReference, entity.Comment, entity.StripeReference, entity.TaxamoReference
+                    entity.Id, entity.AccountOwnerId, entity.CounterpartyId, entity.Timestamp, entity.Amount, entity.AccountType, entity.TransactionReference, entity.InputDataReference, entity.Comment, entity.StripeChargeId, entity.TaxamoTransactionKey
                 },
                 transaction);
         }
@@ -10054,7 +10171,7 @@ namespace Fifthweek.Api.Persistence.Payments
         
         public static string InsertStatement(bool idempotent = true)
         {
-            const string insert = "INSERT INTO AppendOnlyLedgerRecords(Id, AccountOwnerId, CounterpartyId, Timestamp, Amount, AccountType, TransactionReference, InputDataReference, Comment, StripeReference, TaxamoReference) VALUES(@Id, @AccountOwnerId, @CounterpartyId, @Timestamp, @Amount, @AccountType, @TransactionReference, @InputDataReference, @Comment, @StripeReference, @TaxamoReference)";
+            const string insert = "INSERT INTO AppendOnlyLedgerRecords(Id, AccountOwnerId, CounterpartyId, Timestamp, Amount, AccountType, TransactionReference, InputDataReference, Comment, StripeChargeId, TaxamoTransactionKey) VALUES(@Id, @AccountOwnerId, @CounterpartyId, @Timestamp, @Amount, @AccountType, @TransactionReference, @InputDataReference, @Comment, @StripeChargeId, @TaxamoTransactionKey)";
             return idempotent ? SqlStatementTemplates.IdempotentInsert(insert) : insert;
         }
         
@@ -10065,7 +10182,7 @@ namespace Fifthweek.Api.Persistence.Payments
             var sql = new System.Text.StringBuilder();
             sql.Append(
                 @"MERGE AppendOnlyLedgerRecords WITH (HOLDLOCK) as Target
-                USING (VALUES (@Id, @AccountOwnerId, @CounterpartyId, @Timestamp, @Amount, @AccountType, @TransactionReference, @InputDataReference, @Comment, @StripeReference, @TaxamoReference)) AS Source (Id, AccountOwnerId, CounterpartyId, Timestamp, Amount, AccountType, TransactionReference, InputDataReference, Comment, StripeReference, TaxamoReference)
+                USING (VALUES (@Id, @AccountOwnerId, @CounterpartyId, @Timestamp, @Amount, @AccountType, @TransactionReference, @InputDataReference, @Comment, @StripeChargeId, @TaxamoTransactionKey)) AS Source (Id, AccountOwnerId, CounterpartyId, Timestamp, Amount, AccountType, TransactionReference, InputDataReference, Comment, StripeChargeId, TaxamoTransactionKey)
                 ON    (");
                 
             if (mergeOnFields == AppendOnlyLedgerRecord.Fields.Empty)
@@ -10084,8 +10201,8 @@ namespace Fifthweek.Api.Persistence.Payments
             sql.AppendUpdateParameters(GetFieldNames(updateFields));
             sql.Append(
                 @" WHEN NOT MATCHED THEN
-                    INSERT  (Id, AccountOwnerId, CounterpartyId, Timestamp, Amount, AccountType, TransactionReference, InputDataReference, Comment, StripeReference, TaxamoReference)
-                    VALUES  (Source.Id, Source.AccountOwnerId, Source.CounterpartyId, Source.Timestamp, Source.Amount, Source.AccountType, Source.TransactionReference, Source.InputDataReference, Source.Comment, Source.StripeReference, Source.TaxamoReference);");
+                    INSERT  (Id, AccountOwnerId, CounterpartyId, Timestamp, Amount, AccountType, TransactionReference, InputDataReference, Comment, StripeChargeId, TaxamoTransactionKey)
+                    VALUES  (Source.Id, Source.AccountOwnerId, Source.CounterpartyId, Source.Timestamp, Source.Amount, Source.AccountType, Source.TransactionReference, Source.InputDataReference, Source.Comment, Source.StripeChargeId, Source.TaxamoTransactionKey);");
             return sql.ToString();
         }
         
@@ -10146,14 +10263,14 @@ namespace Fifthweek.Api.Persistence.Payments
                 fieldNames.Add("Comment");
             }
         
-            if (fields.HasFlag(AppendOnlyLedgerRecord.Fields.StripeReference))
+            if (fields.HasFlag(AppendOnlyLedgerRecord.Fields.StripeChargeId))
             {
-                fieldNames.Add("StripeReference");
+                fieldNames.Add("StripeChargeId");
             }
         
-            if (fields.HasFlag(AppendOnlyLedgerRecord.Fields.TaxamoReference))
+            if (fields.HasFlag(AppendOnlyLedgerRecord.Fields.TaxamoTransactionKey))
             {
-                fieldNames.Add("TaxamoReference");
+                fieldNames.Add("TaxamoTransactionKey");
             }
         
             return fieldNames;
@@ -10208,14 +10325,14 @@ namespace Fifthweek.Api.Persistence.Payments
                 parameters.Add("Comment", entity.Comment);
             }
         
-            if (fields.HasFlag(AppendOnlyLedgerRecord.Fields.StripeReference) && (excludedFields == null || !excludedFields.Value.HasFlag(AppendOnlyLedgerRecord.Fields.StripeReference)))
+            if (fields.HasFlag(AppendOnlyLedgerRecord.Fields.StripeChargeId) && (excludedFields == null || !excludedFields.Value.HasFlag(AppendOnlyLedgerRecord.Fields.StripeChargeId)))
             {
-                parameters.Add("StripeReference", entity.StripeReference);
+                parameters.Add("StripeChargeId", entity.StripeChargeId);
             }
         
-            if (fields.HasFlag(AppendOnlyLedgerRecord.Fields.TaxamoReference) && (excludedFields == null || !excludedFields.Value.HasFlag(AppendOnlyLedgerRecord.Fields.TaxamoReference)))
+            if (fields.HasFlag(AppendOnlyLedgerRecord.Fields.TaxamoTransactionKey) && (excludedFields == null || !excludedFields.Value.HasFlag(AppendOnlyLedgerRecord.Fields.TaxamoTransactionKey)))
             {
-                parameters.Add("TaxamoReference", entity.TaxamoReference);
+                parameters.Add("TaxamoTransactionKey", entity.TaxamoTransactionKey);
             }
         
             return parameters;
@@ -10269,14 +10386,14 @@ namespace Fifthweek.Api.Persistence.Payments
                 parameters.Add("Comment", entity.Comment);
             }
         
-            if (!fields.HasFlag(AppendOnlyLedgerRecord.Fields.StripeReference))
+            if (!fields.HasFlag(AppendOnlyLedgerRecord.Fields.StripeChargeId))
             {
-                parameters.Add("StripeReference", entity.StripeReference);
+                parameters.Add("StripeChargeId", entity.StripeChargeId);
             }
         
-            if (!fields.HasFlag(AppendOnlyLedgerRecord.Fields.TaxamoReference))
+            if (!fields.HasFlag(AppendOnlyLedgerRecord.Fields.TaxamoTransactionKey))
             {
-                parameters.Add("TaxamoReference", entity.TaxamoReference);
+                parameters.Add("TaxamoTransactionKey", entity.TaxamoTransactionKey);
             }
         
             return parameters;
@@ -11433,6 +11550,414 @@ namespace Fifthweek.Api.Persistence.Payments
             if (!fields.HasFlag(CreatorPercentageOverride.Fields.ExpiryDate))
             {
                 parameters.Add("ExpiryDate", entity.ExpiryDate);
+            }
+        
+            return parameters;
+        }
+        
+    }
+}
+namespace Fifthweek.Api.Persistence.Payments
+{
+    using System;
+    using System.Linq;
+    using System.ComponentModel.DataAnnotations;
+    using System.ComponentModel.DataAnnotations.Schema;
+    using Fifthweek.CodeGeneration;
+    using Fifthweek.Api.Persistence.Identity;
+
+    public partial class UserPaymentOrigin  : IIdentityEquatable
+    {
+        public const string Table = "UserPaymentOrigins";
+        
+        public UserPaymentOrigin(
+            System.Guid userId)
+        {
+            if (userId == null)
+            {
+                throw new ArgumentNullException("userId");
+            }
+
+            this.UserId = userId;
+        }
+        
+        public bool IdentityEquals(object other)
+        {
+            if (ReferenceEquals(null, other))
+            {
+                return false;
+            }
+        
+            if (ReferenceEquals(this, other))
+            {
+                return true;
+            }
+        
+            if (other.GetType() != this.GetType())
+            {
+                return false;
+            }
+        
+            return this.IdentityEquals((UserPaymentOrigin)other);
+        }
+        
+        protected bool IdentityEquals(UserPaymentOrigin other)
+        {
+            if (!object.Equals(this.UserId, other.UserId))
+            {
+                return false;
+            }
+        
+            return true;
+        }
+        
+        [Flags]
+        public enum Fields
+        {
+            Empty = 0,
+            UserId = 1, 
+            StripeCustomerId = 2, 
+            BillingCountryCode = 4, 
+            CreditCardPrefix = 8, 
+            IpAddress = 16, 
+            OriginalTaxamoTransactionKey = 32
+        }
+    }
+
+    public static partial class UserPaymentOriginExtensions
+    {
+        public static System.Threading.Tasks.Task InsertAsync(
+            this System.Data.Common.DbConnection connection, 
+            System.Collections.Generic.IEnumerable<UserPaymentOrigin> entities, 
+            bool idempotent = true, 
+            System.Data.IDbTransaction transaction = null)
+        {
+            return Dapper.SqlMapper.ExecuteAsync(
+                connection, 
+                InsertStatement(idempotent), 
+                entities.Select(entity => new 
+                {
+                    entity.UserId, entity.StripeCustomerId, entity.BillingCountryCode, entity.CreditCardPrefix, entity.IpAddress, entity.OriginalTaxamoTransactionKey
+                }).ToArray(),
+                transaction);
+        }
+        
+        public static System.Threading.Tasks.Task InsertAsync(
+            this System.Data.Common.DbConnection connection, 
+            UserPaymentOrigin entity,
+            bool idempotent = true, 
+            System.Data.IDbTransaction transaction = null)
+        {
+            return Dapper.SqlMapper.ExecuteAsync(
+                connection, 
+                InsertStatement(idempotent), 
+                new 
+                {
+                    entity.UserId, entity.StripeCustomerId, entity.BillingCountryCode, entity.CreditCardPrefix, entity.IpAddress, entity.OriginalTaxamoTransactionKey
+                },
+                transaction);
+        }
+        
+        public static System.Threading.Tasks.Task<int> InsertAsync(
+            this System.Data.Common.DbConnection connection,
+            SqlGenerationParameters<UserPaymentOrigin, UserPaymentOrigin.Fields> parameters)
+        {
+            var sql = new System.Text.StringBuilder();
+        
+            if (parameters.Declarations != null)
+            {
+                sql.AppendLine(parameters.Declarations);
+            }
+            
+            int currentIndex = 0;
+            if (parameters.Conditions != null)
+            {
+                foreach (var condition in parameters.Conditions)
+                {
+                    sql.Append("IF ");
+                    sql.AppendLine(condition); // Remember to use `WITH (UPDLOCK, HOLDLOCK)` in your conditions! See: http://samsaffron.com/blog/archive/2007/04/04/14.aspx
+                    sql.AppendLine("BEGIN");
+                    ++currentIndex;
+                }
+            }
+        
+            sql.AppendLine(InsertStatement(parameters.IdempotentInsert));
+        
+            if (parameters.Conditions != null)
+            {
+                sql.AppendLine("SELECT -1 AS FailedConditionIndex"); // Indicates all conditions passed and operation was attempted.
+                    
+                foreach (var condition in parameters.Conditions)
+                {
+                    sql.AppendLine("END");
+                    sql.AppendLine("ELSE");
+                    sql.Append("SELECT ").Append(--currentIndex).AppendLine(" AS FailedConditionIndex");
+                }
+            }
+        
+            var entity = parameters.Entity;
+            var parameterObject = parameters.ExcludedFromInput != null
+                ? AllExceptSpecifiedParameters(entity, parameters.ExcludedFromInput.Value)
+                : new Dapper.DynamicParameters(new { entity.UserId, entity.StripeCustomerId, entity.BillingCountryCode, entity.CreditCardPrefix, entity.IpAddress, entity.OriginalTaxamoTransactionKey });
+        
+            if (parameters.AdditionalParameters != null)
+            {
+                parameterObject.AddDynamicParams(parameters.AdditionalParameters);
+            }
+        
+            return Dapper.SqlMapper.ExecuteScalarAsync<int>(
+                connection,
+                sql.ToString(),
+                parameterObject);
+        }
+        
+        public static System.Threading.Tasks.Task UpsertAsync(
+            this System.Data.Common.DbConnection connection, 
+            UserPaymentOrigin entity, 
+            UserPaymentOrigin.Fields fields,
+            System.Data.IDbTransaction transaction = null)
+        {
+            return Dapper.SqlMapper.ExecuteAsync(
+                connection, 
+                UpsertStatement(UserPaymentOrigin.Fields.Empty, fields), 
+                new 
+                {
+                    entity.UserId, entity.StripeCustomerId, entity.BillingCountryCode, entity.CreditCardPrefix, entity.IpAddress, entity.OriginalTaxamoTransactionKey
+                },
+                transaction);
+        }
+        
+        public static System.Threading.Tasks.Task UpsertAsync(
+            this System.Data.Common.DbConnection connection, 
+            UserPaymentOrigin entity, 
+            UserPaymentOrigin.Fields mergeOnFields,
+            UserPaymentOrigin.Fields updateFields,
+            System.Data.IDbTransaction transaction = null)
+        {
+            return Dapper.SqlMapper.ExecuteAsync(
+                connection, 
+                UpsertStatement(mergeOnFields, updateFields), 
+                new 
+                {
+                    entity.UserId, entity.StripeCustomerId, entity.BillingCountryCode, entity.CreditCardPrefix, entity.IpAddress, entity.OriginalTaxamoTransactionKey
+                },
+                transaction);
+        }
+        
+        public static System.Threading.Tasks.Task UpdateAsync(
+            this System.Data.Common.DbConnection connection, 
+            UserPaymentOrigin entity, 
+            UserPaymentOrigin.Fields fields,
+            System.Data.IDbTransaction transaction = null)
+        {
+            return Dapper.SqlMapper.ExecuteAsync(connection, UpdateStatement(fields), OnlySpecifiedParameters(entity, fields), transaction);
+        }
+        
+        public static System.Threading.Tasks.Task<int> UpdateAsync(
+            this System.Data.Common.DbConnection connection,
+            SqlGenerationParameters<UserPaymentOrigin, UserPaymentOrigin.Fields> parameters)
+        {
+            if (parameters.UpdateMask == null)
+            {
+                throw new ArgumentException("Must contain update mask", "parameters");
+            }
+        
+            var sql = new System.Text.StringBuilder();
+        
+            if (parameters.Declarations != null)
+            {
+                sql.AppendLine(parameters.Declarations);
+            }
+            
+            int currentIndex = 0;
+            if (parameters.Conditions != null)
+            {
+                foreach (var condition in parameters.Conditions)
+                {
+                    sql.Append("IF ");
+                    sql.AppendLine(condition); // Remember to use `WITH (UPDLOCK, HOLDLOCK)` in your conditions! See: http://samsaffron.com/blog/archive/2007/04/04/14.aspx
+                    sql.AppendLine("BEGIN");
+                    ++currentIndex;
+                }
+            }
+        
+            sql.AppendLine(UpdateStatement(parameters.UpdateMask.Value));
+        
+            if (parameters.Conditions != null)
+            {
+                sql.AppendLine("SELECT -1 AS FailedConditionIndex"); // Indicates all conditions passed and operation was attempted.
+                    
+                foreach (var condition in parameters.Conditions)
+                {
+                    sql.AppendLine("END");
+                    sql.AppendLine("ELSE");
+                    sql.Append("SELECT ").Append(--currentIndex).AppendLine(" AS FailedConditionIndex");
+                }
+            }
+        
+            var parameterObject = OnlySpecifiedParameters(parameters.Entity, parameters.UpdateMask.Value, parameters.ExcludedFromInput);
+        
+            if (parameters.AdditionalParameters != null)
+            {
+                parameterObject.AddDynamicParams(parameters.AdditionalParameters);
+            }
+        
+            return Dapper.SqlMapper.ExecuteScalarAsync<int>(
+                connection,
+                sql.ToString(),
+                parameterObject);
+        }
+        
+        public static string InsertStatement(bool idempotent = true)
+        {
+            const string insert = "INSERT INTO UserPaymentOrigins(UserId, StripeCustomerId, BillingCountryCode, CreditCardPrefix, IpAddress, OriginalTaxamoTransactionKey) VALUES(@UserId, @StripeCustomerId, @BillingCountryCode, @CreditCardPrefix, @IpAddress, @OriginalTaxamoTransactionKey)";
+            return idempotent ? SqlStatementTemplates.IdempotentInsert(insert) : insert;
+        }
+        
+        public static string UpsertStatement(UserPaymentOrigin.Fields mergeOnFields, UserPaymentOrigin.Fields updateFields)
+        {
+            // HOLDLOCK ensures operation is concurrent by not releasing the U lock on the row after determining
+            // it does not exist. See: http://weblogs.sqlteam.com/dang/archive/2009/01/31/UPSERT-Race-Condition-With-MERGE.aspx
+            var sql = new System.Text.StringBuilder();
+            sql.Append(
+                @"MERGE UserPaymentOrigins WITH (HOLDLOCK) as Target
+                USING (VALUES (@UserId, @StripeCustomerId, @BillingCountryCode, @CreditCardPrefix, @IpAddress, @OriginalTaxamoTransactionKey)) AS Source (UserId, StripeCustomerId, BillingCountryCode, CreditCardPrefix, IpAddress, OriginalTaxamoTransactionKey)
+                ON    (");
+                
+            if (mergeOnFields == UserPaymentOrigin.Fields.Empty)
+            {
+                sql.Append(@"Target.UserId = Source.UserId");
+            }
+            else
+            {
+                sql.AppendMergeOnParameters(GetFieldNames(mergeOnFields, false));
+            }
+                
+            sql.Append(@")
+                WHEN MATCHED THEN
+                    UPDATE
+                    SET        ");
+            sql.AppendUpdateParameters(GetFieldNames(updateFields));
+            sql.Append(
+                @" WHEN NOT MATCHED THEN
+                    INSERT  (UserId, StripeCustomerId, BillingCountryCode, CreditCardPrefix, IpAddress, OriginalTaxamoTransactionKey)
+                    VALUES  (Source.UserId, Source.StripeCustomerId, Source.BillingCountryCode, Source.CreditCardPrefix, Source.IpAddress, Source.OriginalTaxamoTransactionKey);");
+            return sql.ToString();
+        }
+        
+        public static string UpdateStatement(UserPaymentOrigin.Fields fields)
+        {
+            var sql = new System.Text.StringBuilder();
+            sql.Append("UPDATE UserPaymentOrigins SET ");
+            sql.AppendUpdateParameters(GetFieldNames(fields));
+            sql.Append(" WHERE UserId = @UserId");
+            return sql.ToString();
+        }
+        
+        private static System.Collections.Generic.IReadOnlyList<string> GetFieldNames(UserPaymentOrigin.Fields fields, bool autoIncludePrimaryKeys = true)
+        {
+            var fieldNames = new System.Collections.Generic.List<string>();
+            if (autoIncludePrimaryKeys)
+            {
+                fieldNames.Add("UserId");
+            }
+        
+            if (fields.HasFlag(UserPaymentOrigin.Fields.StripeCustomerId))
+            {
+                fieldNames.Add("StripeCustomerId");
+            }
+        
+            if (fields.HasFlag(UserPaymentOrigin.Fields.BillingCountryCode))
+            {
+                fieldNames.Add("BillingCountryCode");
+            }
+        
+            if (fields.HasFlag(UserPaymentOrigin.Fields.CreditCardPrefix))
+            {
+                fieldNames.Add("CreditCardPrefix");
+            }
+        
+            if (fields.HasFlag(UserPaymentOrigin.Fields.IpAddress))
+            {
+                fieldNames.Add("IpAddress");
+            }
+        
+            if (fields.HasFlag(UserPaymentOrigin.Fields.OriginalTaxamoTransactionKey))
+            {
+                fieldNames.Add("OriginalTaxamoTransactionKey");
+            }
+        
+            return fieldNames;
+        }
+        
+        private static Dapper.DynamicParameters OnlySpecifiedParameters(
+            UserPaymentOrigin entity, 
+            UserPaymentOrigin.Fields fields,
+            UserPaymentOrigin.Fields? excludedFields = null)
+        {
+            var parameters = new Dapper.DynamicParameters();
+        
+            // Assume we never want to exclude primary key field(s) from our input.
+            parameters.Add("UserId", entity.UserId);
+            if (fields.HasFlag(UserPaymentOrigin.Fields.StripeCustomerId) && (excludedFields == null || !excludedFields.Value.HasFlag(UserPaymentOrigin.Fields.StripeCustomerId)))
+            {
+                parameters.Add("StripeCustomerId", entity.StripeCustomerId);
+            }
+        
+            if (fields.HasFlag(UserPaymentOrigin.Fields.BillingCountryCode) && (excludedFields == null || !excludedFields.Value.HasFlag(UserPaymentOrigin.Fields.BillingCountryCode)))
+            {
+                parameters.Add("BillingCountryCode", entity.BillingCountryCode);
+            }
+        
+            if (fields.HasFlag(UserPaymentOrigin.Fields.CreditCardPrefix) && (excludedFields == null || !excludedFields.Value.HasFlag(UserPaymentOrigin.Fields.CreditCardPrefix)))
+            {
+                parameters.Add("CreditCardPrefix", entity.CreditCardPrefix);
+            }
+        
+            if (fields.HasFlag(UserPaymentOrigin.Fields.IpAddress) && (excludedFields == null || !excludedFields.Value.HasFlag(UserPaymentOrigin.Fields.IpAddress)))
+            {
+                parameters.Add("IpAddress", entity.IpAddress);
+            }
+        
+            if (fields.HasFlag(UserPaymentOrigin.Fields.OriginalTaxamoTransactionKey) && (excludedFields == null || !excludedFields.Value.HasFlag(UserPaymentOrigin.Fields.OriginalTaxamoTransactionKey)))
+            {
+                parameters.Add("OriginalTaxamoTransactionKey", entity.OriginalTaxamoTransactionKey);
+            }
+        
+            return parameters;
+        }
+        
+        private static Dapper.DynamicParameters AllExceptSpecifiedParameters(
+            UserPaymentOrigin entity, 
+            UserPaymentOrigin.Fields fields)
+        {
+            var parameters = new Dapper.DynamicParameters();
+        
+            // Assume we never want to exclude primary key field(s) from our input.
+            parameters.Add("UserId", entity.UserId);
+            if (!fields.HasFlag(UserPaymentOrigin.Fields.StripeCustomerId))
+            {
+                parameters.Add("StripeCustomerId", entity.StripeCustomerId);
+            }
+        
+            if (!fields.HasFlag(UserPaymentOrigin.Fields.BillingCountryCode))
+            {
+                parameters.Add("BillingCountryCode", entity.BillingCountryCode);
+            }
+        
+            if (!fields.HasFlag(UserPaymentOrigin.Fields.CreditCardPrefix))
+            {
+                parameters.Add("CreditCardPrefix", entity.CreditCardPrefix);
+            }
+        
+            if (!fields.HasFlag(UserPaymentOrigin.Fields.IpAddress))
+            {
+                parameters.Add("IpAddress", entity.IpAddress);
+            }
+        
+            if (!fields.HasFlag(UserPaymentOrigin.Fields.OriginalTaxamoTransactionKey))
+            {
+                parameters.Add("OriginalTaxamoTransactionKey", entity.OriginalTaxamoTransactionKey);
             }
         
             return parameters;
