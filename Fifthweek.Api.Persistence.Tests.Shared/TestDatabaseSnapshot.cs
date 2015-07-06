@@ -51,6 +51,7 @@
             this.tables.Add(this.Load(databaseContext => databaseContext.UncommittedSubscriptionPayments));
             this.tables.Add(this.Load(databaseContext => databaseContext.CalculatedAccountBalances));
             this.tables.Add(this.Load(databaseContext => databaseContext.CreatorPercentageOverrides));
+            this.tables.Add(this.Load(databaseContext => databaseContext.UserPaymentOrigins));
 
             Trace.WriteLine(string.Format("Snapshot taken in {0}s", Math.Round(stopwatch.Elapsed.TotalSeconds, 2)));
         }

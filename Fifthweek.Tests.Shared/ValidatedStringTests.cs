@@ -4,6 +4,14 @@
 
     public abstract class ValidatedStringTests<T> : ValidatedPrimitiveTests<T, string>
     {
+        protected virtual char AppendCharacter
+        {
+            get
+            {
+                return 'x';
+            }
+        }
+
         protected virtual bool AppendPadding
         {
             get
@@ -14,7 +22,7 @@
 
         public void AssertMinLength(int minLength, bool whitespaceSensitive = true)
         {
-            var minString = new string('x', minLength);
+            var minString = new string(this.AppendCharacter, minLength);
             var tooSmallString = minString.Remove(0, 1);
 
             this.GoodValue(minString);
@@ -38,11 +46,11 @@
         public void AssertMaxLength(int maxLength, bool whitespaceSensitive = true)
         {
             // Build the max length string from a valid string.
-            var padding = new string('x', maxLength - this.ValueA.Length);
+            var padding = new string(this.AppendCharacter, maxLength - this.ValueA.Length);
             var maxString = this.AppendPadding ? this.ValueA + padding : padding + this.ValueA;
             
             this.GoodValue(maxString);
-            this.BadValue("x" + maxString);
+            this.BadValue(this.AppendCharacter + maxString);
 
             // Test whitespace sensitivity.
             if (whitespaceSensitive)
@@ -61,25 +69,23 @@
 
         public void AssertPunctuationAllowed()
         {
-            this.AssertCharacter('!', isGood: true);
-            this.AssertCharacter('?', isGood: true);
-            this.AssertCharacter(',', isGood: true);
-            this.AssertCharacter('.', isGood: true);
-            this.AssertCharacter(':', isGood: true);
-            this.AssertCharacter(';', isGood: true);
-            this.AssertCharacter('-', isGood: true);
-            this.AssertCharacter('\'', isGood: true);
+            this.AssertPunctuation(true);
         }
 
-        public void AssertTabsNotAllowed()
+        public void AssertPunctuationNotAllowed()
         {
-            this.AssertCharacter('\t', isGood: false);
+            this.AssertPunctuation(false);
         }
 
-        public void AssertNewLinesNotAllowed()
+        public void AssertTabsNotAllowed(bool whitespaceSensitive = true)
         {
-            this.AssertCharacter('\r', isGood: false);
-            this.AssertCharacter('\n', isGood: false);
+            this.AssertCharacter('\t', isGood: false, whitespaceSensitive: whitespaceSensitive);
+        }
+
+        public void AssertNewLinesNotAllowed(bool whitespaceSensitive = true)
+        {
+            this.AssertCharacter('\r', isGood: false, whitespaceSensitive: whitespaceSensitive);
+            this.AssertCharacter('\n', isGood: false, whitespaceSensitive: whitespaceSensitive);
         }
 
         public void AssertNewLinesAllowed()
@@ -88,12 +94,12 @@
             this.AssertCharacter('\n', isGood: true);
         }
 
-        public void AssertCharacter(char character, bool isGood)
+        public void AssertCharacter(char character, bool isGood, bool whitespaceSensitive = true)
         {
-            this.AssertCharacters(new string(new[] { character }), isGood);    
+            this.AssertCharacters(new string(new[] { character }), isGood, whitespaceSensitive);    
         }
-        
-        public void AssertCharacters(string characters, bool areGood)
+
+        public void AssertCharacters(string characters, bool areGood, bool whitespaceSensitive = true)
         {
             if (characters.Length >= this.ValueA.Length)
             {
@@ -108,16 +114,36 @@
 
             if (areGood)
             {
-                this.GoodValue(start);
+                if (whitespaceSensitive)
+                {
+                    this.GoodValue(start);
+                    this.GoodValue(end);
+                }
+
                 this.GoodValue(middle);
-                this.GoodValue(end);
             }
             else
             {
-                this.BadValue(start);
+                if (whitespaceSensitive)
+                {
+                    this.BadValue(start);
+                    this.BadValue(end);
+                }
+                
                 this.BadValue(middle);
-                this.BadValue(end); 
             }
+        }
+
+        private void AssertPunctuation(bool isGood)
+        {
+            this.AssertCharacter('!', isGood: isGood);
+            this.AssertCharacter('?', isGood: isGood);
+            this.AssertCharacter(',', isGood: isGood);
+            this.AssertCharacter('.', isGood: isGood);
+            this.AssertCharacter(':', isGood: isGood);
+            this.AssertCharacter(';', isGood: isGood);
+            this.AssertCharacter('-', isGood: isGood);
+            this.AssertCharacter('\'', isGood: isGood);
         }
     }
 }

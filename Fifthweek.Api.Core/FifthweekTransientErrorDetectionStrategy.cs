@@ -58,8 +58,8 @@ namespace Fifthweek.Api.Core
                 {
                     switch (error.Number)
                     {
-                        case RetryOnTransientErrorDecoratorBase.SqlTimeoutErrorCode:
-                        case RetryOnTransientErrorDecoratorBase.SqlDeadlockErrorCode:
+                        case FifthweekRetryOnTransientErrorHandler.SqlTimeoutErrorCode:
+                        case FifthweekRetryOnTransientErrorHandler.SqlDeadlockErrorCode:
                             isTransient = true;
                             break;
                     }

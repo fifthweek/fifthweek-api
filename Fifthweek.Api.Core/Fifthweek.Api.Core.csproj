@@ -60,7 +60,7 @@
     </Reference>
     <Reference Include="Newtonsoft.Json, Version=6.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Newtonsoft.Json.6.0.4\lib\net45\Newtonsoft.Json.dll</HintPath>
+      <HintPath>..\packages\Newtonsoft.Json.6.0.6\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="Owin">
       <HintPath>..\packages\Owin.1.0\lib\net40\Owin.dll</HintPath>
@@ -110,6 +110,7 @@
     <Compile Include="Extensions.cs" />
     <Compile Include="ICommandHandler.cs" />
     <Compile Include="IExceptionHandler.cs" />
+    <Compile Include="IFifthweekRetryOnTransientErrorHandler.cs" />
     <Compile Include="IOwinExceptionHandler.cs" />
     <Compile Include="IQuery.cs" />
     <Compile Include="IQueryHandler.cs" />
@@ -122,7 +123,7 @@
     <Compile Include="RetriesOccuredException.cs" />
     <Compile Include="RetryLimitExceededException.cs" />
     <Compile Include="RetryOnTransientErrorCommandHandlerDecorator.cs" />
-    <Compile Include="RetryOnTransientErrorDecoratorBase.cs" />
+    <Compile Include="FifthweekRetryOnTransientErrorHandler.cs" />
     <Compile Include="RetryOnTransientErrorQueryHandlerDecorator.cs" />
     <Compile Include="TraceService.cs" />
     <Compile Include="UnauthenticatedException.cs" />

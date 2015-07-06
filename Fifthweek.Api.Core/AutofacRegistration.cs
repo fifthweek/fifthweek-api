@@ -12,6 +12,7 @@
         {
             builder.RegisterType<TraceService>().As<ITraceService>();
             builder.RegisterType<FifthweekTransientErrorDetectionStrategy>().As<ITransientErrorDetectionStrategy>();
+            builder.RegisterType<FifthweekRetryOnTransientErrorHandler>().As<IFifthweekRetryOnTransientErrorHandler>();
             builder.RegisterType<RequestContext>().As<IRequestContext>().InstancePerRequest();
         }
     }

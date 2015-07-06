@@ -3,22 +3,26 @@
     using System;
     using System.Threading.Tasks;
 
-    using Microsoft.Practices.EnterpriseLibrary.TransientFaultHandling;
-
-    public class RetryOnTransientErrorCommandHandlerDecorator<TCommand> : RetryOnTransientErrorDecoratorBase,
-                                                                     ICommandHandler<TCommand>
+    public class RetryOnTransientErrorCommandHandlerDecorator<TCommand> : ICommandHandler<TCommand>
     {
+        private readonly IFifthweekRetryOnTransientErrorHandler fifthweekRetryOnTransientErrorHandler;
+
         private readonly ICommandHandler<TCommand> decorated;
 
-        public RetryOnTransientErrorCommandHandlerDecorator(IExceptionHandler exceptionHandler, ITransientErrorDetectionStrategy transientErrorDetectionStrategy, ICommandHandler<TCommand> decorated)
-            : this(exceptionHandler, transientErrorDetectionStrategy, decorated, RetryOnTransientErrorDecoratorBase.MaxRetryCount, RetryOnTransientErrorDecoratorBase.MaxDelay)
-        {
-        }
-
-        public RetryOnTransientErrorCommandHandlerDecorator(IExceptionHandler exceptionHandler, ITransientErrorDetectionStrategy transientErrorDetectionStrategy, ICommandHandler<TCommand> decorated, int maxRetryCount, TimeSpan maxDelay)
-            : base(exceptionHandler,transientErrorDetectionStrategy, typeof(TCommand).Name, maxRetryCount, maxDelay)
+        public RetryOnTransientErrorCommandHandlerDecorator(IFifthweekRetryOnTransientErrorHandler fifthweekRetryOnTransientErrorHandler, ICommandHandler<TCommand> decorated)
         {
             this.decorated = decorated;
+            this.fifthweekRetryOnTransientErrorHandler = fifthweekRetryOnTransientErrorHandler;
+            this.fifthweekRetryOnTransientErrorHandler.TaskName = typeof(TCommand).Name;
+        }
+
+        public RetryOnTransientErrorCommandHandlerDecorator(IFifthweekRetryOnTransientErrorHandler fifthweekRetryOnTransientErrorHandler, ICommandHandler<TCommand> decorated, int maxRetryCount, TimeSpan maxDelay)
+        {
+            this.decorated = decorated;
+            this.fifthweekRetryOnTransientErrorHandler = fifthweekRetryOnTransientErrorHandler;
+            this.fifthweekRetryOnTransientErrorHandler.TaskName = typeof(TCommand).Name;
+            this.fifthweekRetryOnTransientErrorHandler.MaxRetryCount = maxRetryCount;
+            this.fifthweekRetryOnTransientErrorHandler.MaxDelay = maxDelay;
         }
 
         internal ICommandHandler<TCommand> Decorated
@@ -31,13 +35,7 @@
 
         public Task HandleAsync(TCommand command)
         {
-            return this.HandleAsync(() => this.CallDecorated(command));
-        }
-
-        private async Task<bool> CallDecorated(TCommand command)
-        {
-            await this.decorated.HandleAsync(command);
-            return true;
+            return this.fifthweekRetryOnTransientErrorHandler.HandleAsync(() => this.decorated.HandleAsync(command));
         }
     }
 }

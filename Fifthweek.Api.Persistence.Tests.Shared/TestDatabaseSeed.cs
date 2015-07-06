@@ -64,6 +64,7 @@
         private readonly List<CalculatedAccountBalance> calculatedAccountBalance = new List<CalculatedAccountBalance>();
         private readonly List<CreatorPercentageOverride> creatorPercentageOverride = new List<CreatorPercentageOverride>();
         private readonly List<UncommittedSubscriptionPayment> uncommittedSubscriptionPayment = new List<UncommittedSubscriptionPayment>();
+        private readonly List<UserPaymentOrigin> userPaymentOrigins = new List<UserPaymentOrigin>();
 
         public TestDatabaseSeed(Func<IFifthweekDbContext> databaseContextFactory)
         {
@@ -148,6 +149,7 @@
                     await connection.InsertAsync(this.calculatedAccountBalance, false);
                     await connection.InsertAsync(this.creatorPercentageOverride, false);
                     await connection.InsertAsync(this.uncommittedSubscriptionPayment, false);
+                    await connection.InsertAsync(this.userPaymentOrigins, false);
                 }
                 finally
                 {
@@ -224,6 +226,19 @@
                 if (i > 0)
                 {
                     this.CreatePaymentInformation(user, this.users[i - 1].Id, i);
+                }
+
+                if (i % 2 == 0)
+                {
+                    this.userPaymentOrigins.Add(
+                        new UserPaymentOrigin(
+                            user.Id,
+                            user,
+                            Guid.NewGuid().ToString(),
+                            "USA",
+                            "123243",
+                            "1.2.3.4",
+                            Guid.NewGuid().ToString()));
                 }
             }
 

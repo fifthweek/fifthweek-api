@@ -3,22 +3,27 @@ namespace Fifthweek.Api.Core
     using System;
     using System.Threading.Tasks;
 
-    using Microsoft.Practices.EnterpriseLibrary.TransientFaultHandling;
-
-    public class RetryOnTransientErrorQueryHandlerDecorator<TQuery, TResult> : RetryOnTransientErrorDecoratorBase, IQueryHandler<TQuery, TResult>
+    public class RetryOnTransientErrorQueryHandlerDecorator<TQuery, TResult> : IQueryHandler<TQuery, TResult>
         where TQuery : IQuery<TResult>
     {
+        private readonly IFifthweekRetryOnTransientErrorHandler fifthweekRetryOnTransientErrorHandler;
+
         private readonly IQueryHandler<TQuery, TResult> decorated;
 
-        public RetryOnTransientErrorQueryHandlerDecorator(IExceptionHandler exceptionHandler, ITransientErrorDetectionStrategy transientErrorDetectionStrategy, IQueryHandler<TQuery, TResult> decorated)
-            : this(exceptionHandler, transientErrorDetectionStrategy, decorated, RetryOnTransientErrorDecoratorBase.MaxRetryCount, RetryOnTransientErrorDecoratorBase.MaxDelay)
-        {
-        }
-
-        public RetryOnTransientErrorQueryHandlerDecorator(IExceptionHandler exceptionHandler, ITransientErrorDetectionStrategy transientErrorDetectionStrategy, IQueryHandler<TQuery, TResult> decorated, int maxRetryCount, TimeSpan maxDelay)
-            : base(exceptionHandler, transientErrorDetectionStrategy, typeof(TQuery).Name, maxRetryCount, maxDelay)
+        public RetryOnTransientErrorQueryHandlerDecorator(IFifthweekRetryOnTransientErrorHandler fifthweekRetryOnTransientErrorHandler, IQueryHandler<TQuery, TResult> decorated)
         {
             this.decorated = decorated;
+            this.fifthweekRetryOnTransientErrorHandler = fifthweekRetryOnTransientErrorHandler;
+            this.fifthweekRetryOnTransientErrorHandler.TaskName = typeof(TQuery).Name;
+        }
+
+        public RetryOnTransientErrorQueryHandlerDecorator(IFifthweekRetryOnTransientErrorHandler fifthweekRetryOnTransientErrorHandler, IQueryHandler<TQuery, TResult> decorated, int maxRetryCount, TimeSpan maxDelay)
+        {
+            this.decorated = decorated;
+            this.fifthweekRetryOnTransientErrorHandler = fifthweekRetryOnTransientErrorHandler;
+            this.fifthweekRetryOnTransientErrorHandler.TaskName = typeof(TQuery).Name;
+            this.fifthweekRetryOnTransientErrorHandler.MaxRetryCount = maxRetryCount;
+            this.fifthweekRetryOnTransientErrorHandler.MaxDelay = maxDelay;
         }
 
         internal IQueryHandler<TQuery, TResult> Decorated
@@ -31,7 +36,7 @@ namespace Fifthweek.Api.Core
 
         public Task<TResult> HandleAsync(TQuery query)
         {
-            return this.HandleAsync(() => this.decorated.HandleAsync(query));
+            return this.fifthweekRetryOnTransientErrorHandler.HandleAsync(() => this.decorated.HandleAsync(query));
         }
     }
 }

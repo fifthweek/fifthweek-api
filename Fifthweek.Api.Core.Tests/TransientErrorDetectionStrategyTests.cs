@@ -29,14 +29,14 @@
         [TestMethod]
         public async Task ItShouldRetryOnSqlDeadlock()
         {
-            Assert.IsTrue(this.target.IsTransient(SqlExceptionMocker.MakeSqlException(RetryOnTransientErrorDecoratorBase.SqlDeadlockErrorCode)));
+            Assert.IsTrue(this.target.IsTransient(SqlExceptionMocker.MakeSqlException(FifthweekRetryOnTransientErrorHandler.SqlDeadlockErrorCode)));
         }
 
         [TestMethod]
         public async Task ItShouldRetryOnSqlTimeout()
         {
             Assert.IsTrue(this.target.IsTransient(SqlExceptionMocker.MakeSqlException(
-                            RetryOnTransientErrorDecoratorBase.SqlTimeoutErrorCode)));
+                            FifthweekRetryOnTransientErrorHandler.SqlTimeoutErrorCode)));
         }
 
         [TestMethod]
@@ -91,7 +91,7 @@
                             new DivideByZeroException(
                                 "blah",
                                 SqlExceptionMocker.MakeSqlException(
-                                    RetryOnTransientErrorDecoratorBase.SqlTimeoutErrorCode)))));
+                                    FifthweekRetryOnTransientErrorHandler.SqlTimeoutErrorCode)))));
         }
 
         [TestMethod]
@@ -109,7 +109,7 @@
                                     new ExternalErrorException("blah"),
                                     new Exception(
                                         "blah",
-                                        SqlExceptionMocker.MakeSqlException(RetryOnTransientErrorDecoratorBase.SqlTimeoutErrorCode)),
+                                        SqlExceptionMocker.MakeSqlException(FifthweekRetryOnTransientErrorHandler.SqlTimeoutErrorCode)),
                                     new EntryPointNotFoundException("blah"))))));
         }
 
