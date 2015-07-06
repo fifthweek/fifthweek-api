@@ -9,6 +9,7 @@ namespace Fifthweek.Payments.Services
 
     using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.Api.Persistence;
+    using Fifthweek.Api.Persistence.Identity;
     using Fifthweek.Api.Persistence.Snapshots;
     using Fifthweek.CodeGeneration;
 
@@ -16,9 +17,14 @@ namespace Fifthweek.Payments.Services
     public partial class GetAllSubscribersDbStatement : IGetAllSubscribersDbStatement
     {
         private static readonly string Sql = string.Format(
-            @"SELECT DISTINCT {1} FROM {0}",
+            @"SELECT DISTINCT u.{1} FROM {0} u
+             WHERE u.{1} NOT IN (SELECT r.{3} FROM {2} r WHERE r.{4}='{5}')",
             SubscriberChannelsSnapshot.Table,
-            SubscriberChannelsSnapshot.Fields.SubscriberId);
+            SubscriberChannelsSnapshot.Fields.SubscriberId,
+            FifthweekUserRole.Table,
+            FifthweekUserRole.Fields.UserId,
+            FifthweekUserRole.Fields.RoleId,
+            FifthweekRole.TestUserId.ToString());
 
         private readonly IFifthweekDbConnectionFactory connectionFactory;
 

@@ -123,8 +123,6 @@
     <Compile Include="Services\CreatorIdAndFirstSubscribedDate.cs" />
     <Compile Include="Services\CreatorPercentageOverrideData.cs" />
     <Compile Include="Services\CreatorPost.cs" />
-    <Compile Include="Services\GetAllCreatorsDbStatement.cs" />
-    <Compile Include="Services\GetAllSubscribedUsersDbStatement.cs" />
     <Compile Include="Services\GetCalculatedAccountBalancesDbStatement.cs" />
     <Compile Include="Services\GetCreatorPercentageOverrideDbStatement.cs" />
     <Compile Include="Services\GetCreatorsAndFirstSubscribedDatesDbStatement.cs" />
@@ -136,8 +134,6 @@
     <Compile Include="Services\GetPaymentProcessingData.cs" />
     <Compile Include="Services\GetSubscriberChannelsSnapshotsDbStatement.cs" />
     <Compile Include="Services\GetSubscriberSnapshotsDbStatement.cs" />
-    <Compile Include="Services\IGetAllCreatorsDbStatement.cs" />
-    <Compile Include="Services\IGetAllSubscribedUsersDbStatement.cs" />
     <Compile Include="Services\IGetCalculatedAccountBalancesDbStatement.cs" />
     <Compile Include="Services\IGetCreatorPercentageOverrideDbStatement.cs" />
     <Compile Include="Services\IGetCreatorsAndFirstSubscribedDatesDbStatement.cs" />

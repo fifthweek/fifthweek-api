@@ -8,8 +8,6 @@ namespace Fifthweek.Payments.Services
 
     using Newtonsoft.Json;
 
-    using Constants = Fifthweek.Payments.Shared.Constants;
-
     [AutoConstructor]
     public partial class PersistPaymentProcessingDataStatement : IPersistPaymentProcessingDataStatement
     {
@@ -20,7 +18,7 @@ namespace Fifthweek.Payments.Services
             data.AssertNotNull("data");
 
             var client = this.cloudStorageAccount.CreateCloudBlobClient();
-            var container = client.GetContainerReference(Constants.PaymentProcessingDataContainerName);
+            var container = client.GetContainerReference(Fifthweek.Payments.Shared.Constants.PaymentProcessingDataContainerName);
             var blob = container.GetBlockBlobReference(data.Id.ToString());
             var jsonData = JsonConvert.SerializeObject(data);
             await blob.UploadTextAsync(jsonData);

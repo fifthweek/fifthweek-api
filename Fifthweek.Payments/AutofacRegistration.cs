@@ -21,9 +21,7 @@
             builder.RegisterType<VerifySnapshotsExecutor>().As<IVerifySnapshotsExecutor>();
             builder.RegisterType<AddSnapshotsForBillingEndDatesExecutor>().As<IAddSnapshotsForBillingEndDatesExecutor>();
 
-            builder.RegisterType<GetAllCreatorsDbStatement>().As<IGetAllCreatorsDbStatement>();
             builder.RegisterType<GetAllSubscribersDbStatement>().As<IGetAllSubscribersDbStatement>();
-            builder.RegisterType<GetAllSubscribedUsersDbStatement>().As<IGetAllSubscribedUsersDbStatement>();
             builder.RegisterType<GetCreatorsAndFirstSubscribedDatesDbStatement>().As<IGetCreatorsAndFirstSubscribedDatesDbStatement>();
             builder.RegisterType<GetCreatorChannelsSnapshotsDbStatement>().As<IGetCreatorChannelsSnapshotsDbStatement>();
             builder.RegisterType<GetCreatorFreeAccessUsersSnapshotsDbStatement>().As<IGetCreatorFreeAccessUsersSnapshotsDbStatement>();

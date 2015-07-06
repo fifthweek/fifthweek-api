@@ -92,8 +92,6 @@
     <Compile Include="Pipeline\RollForwardSubscriptionsExecutorTests.cs" />
     <Compile Include="Pipeline\TrimSnapshotsExecutorTests.cs" />
     <Compile Include="Pipeline\VerifySnapshotsExecutorTests.cs" />
-    <Compile Include="Services\GetAllCreatorsDbStatementTests.cs" />
-    <Compile Include="Services\GetAllSubscribedUsersDbStatementTests.cs" />
     <Compile Include="Services\GetCalculatedAccountBalancesDbStatementTests.cs" />
     <Compile Include="Services\GetCreatorPercentageOverrideDbStatementTests.cs" />
     <Compile Include="Services\GetCreatorsAndFirstSubscribedDatesDbStatementTests.cs" />
