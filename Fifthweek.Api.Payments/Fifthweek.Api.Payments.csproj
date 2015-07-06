@@ -89,7 +89,7 @@
     <Compile Include="Commands\FailedToApplyCreditException.cs" />
     <Compile Include="Commands\ICommitCreditToDatabase.cs" />
     <Compile Include="Commands\IInitializeCreditRequest.cs" />
-    <Compile Include="Commands\InitializeApplyCreditRequestResult.cs" />
+    <Compile Include="Commands\InitializeCreditRequestResult.cs" />
     <Compile Include="Commands\InitializeCreditRequest.cs" />
     <Compile Include="Commands\IPerformCreditRequest.cs" />
     <Compile Include="Commands\PerformCreditRequest.cs" />

@@ -23,13 +23,30 @@
         private static readonly UserId UserId = new UserId(Guid.NewGuid());
         private static readonly RegistrationData.Parsed NonCreatorRegistrationData = new RegistrationData
         {
-            Email = "test@testing.fifthweek.com",
+            Email = "test@blahtesting.fifthweek.com",
             ExampleWork = "testing.fifthweek.com",
             Password = "TestPassword",
             Username = "test_username"
         }.Parse();
 
         private static readonly RegistrationData.Parsed CreatorRegistrationData = new RegistrationData
+        {
+            Email = "test@blahtesting.fifthweek.com",
+            ExampleWork = "testing.fifthweek.com",
+            Password = "TestPassword",
+            Username = "test_username",
+            CreatorName = "creator name"
+        }.Parse();
+
+        private static readonly RegistrationData.Parsed NonCreatorTestUserRegistrationData = new RegistrationData
+        {
+            Email = "test@testing.fifthweek.com",
+            ExampleWork = "testing.fifthweek.com",
+            Password = "TestPassword",
+            Username = "test_username"
+        }.Parse();
+
+        private static readonly RegistrationData.Parsed CreatorTestUserRegistrationData = new RegistrationData
         {
             Email = "test@testing.fifthweek.com",
             ExampleWork = "testing.fifthweek.com",
@@ -53,6 +70,24 @@
             NonCreatorRegistrationData.Email,
             NonCreatorRegistrationData.Username,
             NonCreatorRegistrationData.Password,
+            false,
+            null);
+
+        private static readonly RegisterUserCommand CreatorTestUserCommand = new RegisterUserCommand(
+            UserId,
+            CreatorTestUserRegistrationData.ExampleWork,
+            CreatorTestUserRegistrationData.Email,
+            CreatorTestUserRegistrationData.Username,
+            CreatorTestUserRegistrationData.Password,
+            true,
+            CreatorTestUserRegistrationData.CreatorName);
+
+        private static readonly RegisterUserCommand NonCreatorTestUserCommand = new RegisterUserCommand(
+            UserId,
+            NonCreatorTestUserRegistrationData.ExampleWork,
+            NonCreatorTestUserRegistrationData.Email,
+            NonCreatorTestUserRegistrationData.Username,
+            NonCreatorTestUserRegistrationData.Password,
             false,
             null);
 
@@ -109,6 +144,50 @@
             this.reservedUsernames.Verify();
             this.registerUser.Verify();
             this.userManager.Verify();
+        }
+
+        [TestMethod]
+        public async Task WhenTestUserRegistrationRequested_ItShouldCallTheRegisterUserDbStatement_AndAddToTestRole()
+        {
+            this.reservedUsernames.Setup(v => v.AssertNotReserved(NonCreatorCommand.Username)).Verifiable();
+
+            this.registerUser.Setup(v => v.ExecuteAsync(UserId, NonCreatorTestUserRegistrationData.Username, NonCreatorTestUserRegistrationData.Email, NonCreatorTestUserRegistrationData.ExampleWork, null, NonCreatorTestUserRegistrationData.Password, It.IsAny<DateTime>()))
+                .Returns(Task.FromResult(0)).Verifiable();
+
+            this.userManager.Setup(v => v.AddToRoleAsync(UserId.Value, FifthweekRole.Test)).ReturnsAsync(new IdentityResult()).Verifiable();
+
+            await this.target.HandleAsync(NonCreatorTestUserCommand);
+
+            this.reservedUsernames.Verify();
+            this.registerUser.Verify();
+            this.userManager.Verify();
+        }
+
+        [TestMethod]
+        public async Task WhenTestCreatorRegistrationRequested_ItShouldCallTheRegisterUserDbStatement_AndAddToTestRole()
+        {
+            this.reservedUsernames.Setup(v => v.AssertNotReserved(CreatorCommand.Username)).Verifiable();
+
+            this.registerUser.Setup(v => v.ExecuteAsync(UserId, CreatorTestUserRegistrationData.Username, CreatorTestUserRegistrationData.Email, CreatorTestUserRegistrationData.ExampleWork, CreatorTestUserRegistrationData.CreatorName, CreatorTestUserRegistrationData.Password, It.IsAny<DateTime>()))
+                .Returns(Task.FromResult(0)).Verifiable();
+
+            this.userManager.Setup(v => v.AddToRoleAsync(UserId.Value, FifthweekRole.Creator)).ReturnsAsync(new IdentityResult()).Verifiable();
+            this.userManager.Setup(v => v.AddToRoleAsync(UserId.Value, FifthweekRole.Test)).ReturnsAsync(new IdentityResult()).Verifiable();
+
+            await this.target.HandleAsync(CreatorTestUserCommand);
+
+            this.reservedUsernames.Verify();
+            this.registerUser.Verify();
+            this.userManager.Verify();
+        }
+
+        [TestMethod]
+        public void RegisterAsTestUserShouldReturnTrueForTestUsers()
+        {
+            Assert.IsFalse(this.target.RegisterAsTestUser(new Email("phil@cat.com")));
+            Assert.IsFalse(this.target.RegisterAsTestUser(new Email("phil@fifthweek.com")));
+            Assert.IsFalse(this.target.RegisterAsTestUser(new Email("phil@test.fifthweek.com")));
+            Assert.IsTrue(this.target.RegisterAsTestUser(new Email("phil@testing.fifthweek.com")));
         }
     }
 }

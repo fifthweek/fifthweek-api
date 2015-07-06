@@ -67,7 +67,7 @@
 
             var result = await this.target.HandleAsync(Command);
 
-            Assert.AreEqual(new InitializeApplyCreditRequestResult(TaxamoTransaction, Origin), result);
+            Assert.AreEqual(new InitializeCreditRequestResult(TaxamoTransaction, Origin), result);
         }
 
         [TestMethod]

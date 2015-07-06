@@ -4,6 +4,6 @@ namespace Fifthweek.Api.Payments.Commands
 
     public interface IInitializeCreditRequest
     {
-        Task<InitializeApplyCreditRequestResult> HandleAsync(ApplyCreditRequestCommand command);
+        Task<InitializeCreditRequestResult> HandleAsync(ApplyCreditRequestCommand command);
     }
 }

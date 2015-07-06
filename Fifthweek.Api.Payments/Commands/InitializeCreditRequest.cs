@@ -14,7 +14,7 @@ namespace Fifthweek.Api.Payments.Commands
         private readonly IDeleteTaxamoTransaction deleteTaxamoTransaction;
         private readonly ICreateTaxamoTransaction createTaxamoTransaction;
         
-        public async Task<InitializeApplyCreditRequestResult> HandleAsync(ApplyCreditRequestCommand command)
+        public async Task<InitializeCreditRequestResult> HandleAsync(ApplyCreditRequestCommand command)
         {
             command.AssertNotNull("command");
 
@@ -35,7 +35,7 @@ namespace Fifthweek.Api.Payments.Commands
                 throw new BadRequestException("The expected total amount did not match the calculated total amount.");
             }
 
-            return new InitializeApplyCreditRequestResult(taxamoTransaction, origin);
+            return new InitializeCreditRequestResult(taxamoTransaction, origin);
         }
     }
 }

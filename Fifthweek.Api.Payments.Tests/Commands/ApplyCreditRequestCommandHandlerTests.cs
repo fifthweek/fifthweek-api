@@ -25,7 +25,7 @@
         private static readonly ApplyCreditRequestCommand Command = new ApplyCreditRequestCommand(
             Requester, UserId, PositiveInt.Parse(10), PositiveInt.Parse(12));
 
-        private static readonly InitializeApplyCreditRequestResult InitializeResult = new InitializeApplyCreditRequestResult(
+        private static readonly InitializeCreditRequestResult InitializeResult = new InitializeCreditRequestResult(
             new TaxamoTransactionResult("key", new AmountInUsCents(10), new AmountInUsCents(20), new AmountInUsCents(30), 0.2m, "VAT", "GB", "England"),
             new UserPaymentOriginResult("stripeCustomerId", "GB", "12345", "1.1.1.1", "ttk"));
 
@@ -96,7 +96,7 @@
         {
             var tasks = new List<Func<Task>>();
 
-            this.retryOnTransientFailure.Setup(v => v.HandleAsync(It.IsAny<Func<Task<InitializeApplyCreditRequestResult>>>()))
+            this.retryOnTransientFailure.Setup(v => v.HandleAsync(It.IsAny<Func<Task<InitializeCreditRequestResult>>>()))
                 .Callback<Func<Task>>(tasks.Add)
                 .ReturnsAsync(InitializeResult);
 
@@ -144,7 +144,7 @@
         {
             var tasks = new List<Func<Task>>();
 
-            this.retryOnTransientFailure.Setup(v => v.HandleAsync(It.IsAny<Func<Task<InitializeApplyCreditRequestResult>>>()))
+            this.retryOnTransientFailure.Setup(v => v.HandleAsync(It.IsAny<Func<Task<InitializeCreditRequestResult>>>()))
                 .Callback<Func<Task>>(tasks.Add)
                 .ThrowsAsync(new DivideByZeroException());
 
@@ -159,7 +159,7 @@
         {
             var tasks = new List<Func<Task>>();
 
-            this.retryOnTransientFailure.Setup(v => v.HandleAsync(It.IsAny<Func<Task<InitializeApplyCreditRequestResult>>>()))
+            this.retryOnTransientFailure.Setup(v => v.HandleAsync(It.IsAny<Func<Task<InitializeCreditRequestResult>>>()))
                 .Callback<Func<Task>>(tasks.Add)
                 .ReturnsAsync(InitializeResult);
 
@@ -178,7 +178,7 @@
         {
             var tasks = new List<Func<Task>>();
 
-            this.retryOnTransientFailure.Setup(v => v.HandleAsync(It.IsAny<Func<Task<InitializeApplyCreditRequestResult>>>()))
+            this.retryOnTransientFailure.Setup(v => v.HandleAsync(It.IsAny<Func<Task<InitializeCreditRequestResult>>>()))
                 .Callback<Func<Task>>(tasks.Add)
                 .ReturnsAsync(InitializeResult);
 
@@ -219,7 +219,7 @@
         {
             var tasks = new List<Func<Task>>();
 
-            this.retryOnTransientFailure.Setup(v => v.HandleAsync(It.IsAny<Func<Task<InitializeApplyCreditRequestResult>>>()))
+            this.retryOnTransientFailure.Setup(v => v.HandleAsync(It.IsAny<Func<Task<InitializeCreditRequestResult>>>()))
                 .Callback<Func<Task>>(tasks.Add)
                 .ReturnsAsync(InitializeResult);
 

@@ -26,6 +26,7 @@ namespace Fifthweek.Api.Persistence.Migrations
             this.EnsureRoleExists(context, FifthweekRole.Administrator, FifthweekRole.AdministratorId);
             this.EnsureRoleExists(context, FifthweekRole.Creator, FifthweekRole.CreatorId);
             this.EnsureRoleExists(context, FifthweekRole.PreRelease, FifthweekRole.PreReleaseId);
+            this.EnsureRoleExists(context, FifthweekRole.Test, FifthweekRole.TestId);
         }
 
         private void EnsureRoleExists(FifthweekDbContext context, string roleName, Guid roleId)
@@ -43,7 +44,7 @@ namespace Fifthweek.Api.Persistence.Migrations
         private void AssignRolesToTeam(FifthweekDbContext context)
         {
             var administrators = new[] { "lawrence", "james" };
-            var developers = new[] { "lawrence", "ttbarnes", "james" };
+            var developers = new[] { "lawrence", "james" };
             var allUsernames = administrators.Concat(developers).Distinct();
 
             foreach (var username in allUsernames)

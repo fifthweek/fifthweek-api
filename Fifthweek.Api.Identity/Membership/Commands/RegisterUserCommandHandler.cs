@@ -4,6 +4,7 @@
     using System.Threading.Tasks;
 
     using Fifthweek.Api.Core;
+    using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.Api.Identity.Shared.Membership.Events;
     using Fifthweek.Api.Persistence;
     using Fifthweek.Api.Persistence.Identity;
@@ -38,6 +39,16 @@
             {
                 await this.userManager.AddToRoleAsync(command.UserId.Value, FifthweekRole.Creator);
             }
+
+            if (this.RegisterAsTestUser(command.Email))
+            {
+                await this.userManager.AddToRoleAsync(command.UserId.Value, FifthweekRole.Test);
+            }
+        }
+
+        internal bool RegisterAsTestUser(Email email)
+        {
+            return email.Value.EndsWith(Constants.TestDomain);
         }
     }
 }

@@ -159,9 +159,9 @@ namespace Fifthweek.Api.Payments.Commands
     using Fifthweek.Api.Payments.Stripe;
     using Fifthweek.Payments.Services;
 
-    public partial class InitializeApplyCreditRequestResult 
+    public partial class InitializeCreditRequestResult 
     {
-        public InitializeApplyCreditRequestResult(
+        public InitializeCreditRequestResult(
             Fifthweek.Api.Payments.Taxamo.TaxamoTransactionResult taxamoTransaction,
             Fifthweek.Api.Payments.UserPaymentOriginResult origin)
         {
@@ -1074,7 +1074,7 @@ namespace Fifthweek.Api.Payments.Commands
     using Fifthweek.Api.Payments.Stripe;
     using Fifthweek.Payments.Services;
 
-    public partial class InitializeApplyCreditRequestResult 
+    public partial class InitializeCreditRequestResult 
     {
         public override string ToString()
         {
@@ -1098,7 +1098,7 @@ namespace Fifthweek.Api.Payments.Commands
                 return false;
             }
         
-            return this.Equals((InitializeApplyCreditRequestResult)obj);
+            return this.Equals((InitializeCreditRequestResult)obj);
         }
         
         public override int GetHashCode()
@@ -1112,7 +1112,7 @@ namespace Fifthweek.Api.Payments.Commands
             }
         }
         
-        protected bool Equals(InitializeApplyCreditRequestResult other)
+        protected bool Equals(InitializeCreditRequestResult other)
         {
             if (!object.Equals(this.TaxamoTransaction, other.TaxamoTransaction))
             {

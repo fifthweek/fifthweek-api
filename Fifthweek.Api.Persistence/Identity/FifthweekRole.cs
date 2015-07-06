@@ -19,6 +19,9 @@ namespace Fifthweek.Api.Persistence.Identity
         public static readonly string Creator = "creator";
         public static readonly Guid CreatorId = Guid.Parse("{1B753E28-6522-4373-BEB6-ABE5C1C166C0}");
 
+        public static readonly string Test = "test";
+        public static readonly Guid TestId = Guid.Parse("{1E68420E-6388-4A41-B4EF-459A27811D31}");
+
         public FifthweekRole()
         {
         }

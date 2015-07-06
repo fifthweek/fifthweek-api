@@ -4,7 +4,7 @@ namespace Fifthweek.Api.Payments.Commands
     using Fifthweek.CodeGeneration;
 
     [AutoConstructor, AutoEqualityMembers]
-    public partial class InitializeApplyCreditRequestResult
+    public partial class InitializeCreditRequestResult
     {
         public TaxamoTransactionResult TaxamoTransaction { get; private set; }
 
