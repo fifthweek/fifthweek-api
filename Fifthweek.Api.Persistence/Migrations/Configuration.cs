@@ -26,7 +26,7 @@ namespace Fifthweek.Api.Persistence.Migrations
             this.EnsureRoleExists(context, FifthweekRole.Administrator, FifthweekRole.AdministratorId);
             this.EnsureRoleExists(context, FifthweekRole.Creator, FifthweekRole.CreatorId);
             this.EnsureRoleExists(context, FifthweekRole.PreRelease, FifthweekRole.PreReleaseId);
-            this.EnsureRoleExists(context, FifthweekRole.Test, FifthweekRole.TestId);
+            this.EnsureRoleExists(context, FifthweekRole.TestUser, FifthweekRole.TestUserId);
         }
 
         private void EnsureRoleExists(FifthweekDbContext context, string roleName, Guid roleId)

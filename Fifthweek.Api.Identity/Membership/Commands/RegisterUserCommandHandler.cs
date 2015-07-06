@@ -42,7 +42,7 @@
 
             if (this.RegisterAsTestUser(command.Email))
             {
-                await this.userManager.AddToRoleAsync(command.UserId.Value, FifthweekRole.Test);
+                await this.userManager.AddToRoleAsync(command.UserId.Value, FifthweekRole.TestUser);
             }
         }
 

@@ -154,7 +154,7 @@
             this.registerUser.Setup(v => v.ExecuteAsync(UserId, NonCreatorTestUserRegistrationData.Username, NonCreatorTestUserRegistrationData.Email, NonCreatorTestUserRegistrationData.ExampleWork, null, NonCreatorTestUserRegistrationData.Password, It.IsAny<DateTime>()))
                 .Returns(Task.FromResult(0)).Verifiable();
 
-            this.userManager.Setup(v => v.AddToRoleAsync(UserId.Value, FifthweekRole.Test)).ReturnsAsync(new IdentityResult()).Verifiable();
+            this.userManager.Setup(v => v.AddToRoleAsync(UserId.Value, FifthweekRole.TestUser)).ReturnsAsync(new IdentityResult()).Verifiable();
 
             await this.target.HandleAsync(NonCreatorTestUserCommand);
 
@@ -172,7 +172,7 @@
                 .Returns(Task.FromResult(0)).Verifiable();
 
             this.userManager.Setup(v => v.AddToRoleAsync(UserId.Value, FifthweekRole.Creator)).ReturnsAsync(new IdentityResult()).Verifiable();
-            this.userManager.Setup(v => v.AddToRoleAsync(UserId.Value, FifthweekRole.Test)).ReturnsAsync(new IdentityResult()).Verifiable();
+            this.userManager.Setup(v => v.AddToRoleAsync(UserId.Value, FifthweekRole.TestUser)).ReturnsAsync(new IdentityResult()).Verifiable();
 
             await this.target.HandleAsync(CreatorTestUserCommand);
 
