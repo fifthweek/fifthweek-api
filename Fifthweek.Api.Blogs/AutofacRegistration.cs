@@ -19,6 +19,7 @@
             builder.RegisterType<AcceptChannelSubscriptionPriceChangeDbStatement>().As<IAcceptChannelSubscriptionPriceChangeDbStatement>();
             builder.RegisterType<UnsubscribeFromChannelDbStatement>().As<IUnsubscribeFromChannelDbStatement>();
             builder.RegisterType<UpdateBlogSubscriptionsDbStatement>().As<IUpdateBlogSubscriptionsDbStatement>();
+            builder.RegisterType<GetIsTestUserBlogDbStatement>().As<IGetIsTestUserBlogDbStatement>();
         }
     }
 }

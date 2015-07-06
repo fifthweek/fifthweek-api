@@ -10,6 +10,7 @@
     using Fifthweek.Api.Core;
     using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.Api.Identity.Tests.Shared.Membership;
+    using Fifthweek.Api.Persistence.Identity;
 
     using Microsoft.VisualStudio.TestTools.UnitTesting;
 
@@ -31,6 +32,7 @@
 
         private Mock<IRequesterSecurity> requesterSecurity;
         private Mock<IUpdateBlogSubscriptionsDbStatement> updateBlogSubscriptions;
+        private Mock<IGetIsTestUserBlogDbStatement> isTestUserBlog;
 
         private UpdateBlogSubscriptionsCommandHandler target;
 
@@ -40,10 +42,12 @@
             this.requesterSecurity = new Mock<IRequesterSecurity>();
             this.requesterSecurity.SetupFor(Command.Requester);
             this.updateBlogSubscriptions = new Mock<IUpdateBlogSubscriptionsDbStatement>(MockBehavior.Strict);
+            this.isTestUserBlog = new Mock<IGetIsTestUserBlogDbStatement>(MockBehavior.Strict);
 
             this.target = new UpdateBlogSubscriptionsCommandHandler(
                 this.requesterSecurity.Object,
-                this.updateBlogSubscriptions.Object);
+                this.updateBlogSubscriptions.Object,
+                this.isTestUserBlog.Object);
         }
 
         private void SetupDbStatement()
@@ -82,6 +86,32 @@
             this.SetupDbStatement();
             await this.target.HandleAsync(Command);
             this.updateBlogSubscriptions.Verify();
+        }
+
+        [TestMethod]
+        public async Task WhenTestUser_AndBlogBelongsToTestUser_ItShouldUpdateBlogSubscriptions()
+        {
+            this.requesterSecurity.Setup(v => v.IsInRoleAsync(Command.Requester, FifthweekRole.TestUser))
+                .ReturnsAsync(true);
+
+            this.isTestUserBlog.Setup(v => v.ExecuteAsync(Command.BlogId)).ReturnsAsync(true).Verifiable();
+
+            this.SetupDbStatement();
+            await this.target.HandleAsync(Command);
+            this.updateBlogSubscriptions.Verify();
+            this.isTestUserBlog.Verify();
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(UnauthorizedException))]
+        public async Task WhenTestUser_AndBlogBelongsToStandardUser_ItShouldThrowAnException()
+        {
+            this.requesterSecurity.Setup(v => v.IsInRoleAsync(Command.Requester, FifthweekRole.TestUser))
+                .ReturnsAsync(true);
+
+            this.isTestUserBlog.Setup(v => v.ExecuteAsync(Command.BlogId)).ReturnsAsync(false).Verifiable();
+
+            await this.target.HandleAsync(Command);
         }
     }
 }

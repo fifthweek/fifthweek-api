@@ -114,6 +114,8 @@
     <Compile Include="IGetLandingPageDbStatement.cs" />
     <Compile Include="IGetUserSubscriptionsDbStatement.cs" />
     <Compile Include="IGetFreeAccessUsersDbStatement.cs" />
+    <Compile Include="IGetIsTestUserBlogDbStatement.cs" />
+    <Compile Include="GetIsTestUserBlogDbStatement.cs" />
     <Compile Include="IUnsubscribeFromChannelDbStatement.cs" />
     <Compile Include="IUpdateBlogSubscriptionsDbStatement.cs" />
     <Compile Include="IUpdateFreeAccessUsersDbStatement.cs" />

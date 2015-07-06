@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Linq;
 
-//// Generated on 08/06/2015 13:31:57 (UTC)
-//// Mapped solution in 47s
+//// Generated on 06/07/2015 18:16:15 (UTC)
+//// Mapped solution in 12.3s
 
 
 namespace Fifthweek.Api.Blogs
@@ -20,6 +20,12 @@ namespace Fifthweek.Api.Blogs
     using Fifthweek.CodeGeneration;
     using Fifthweek.Payments.SnapshotCreation;
     using Fifthweek.Shared;
+    using Fifthweek.Api.Core;
+    using Fifthweek.Api.Persistence.Identity;
+    using Fifthweek.Api.Blogs.Queries;
+    using Fifthweek.Api.FileManagement.Shared;
+    using Fifthweek.Api.Collections.Shared;
+    using System.Transactions;
 
     public partial class AcceptChannelSubscriptionPriceChangeDbStatement 
     {
@@ -50,6 +56,19 @@ namespace Fifthweek.Api.Blogs
     using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.Api.Persistence;
     using Fifthweek.CodeGeneration;
+    using System.Linq;
+    using System.Collections.Generic;
+    using Fifthweek.Api.Blogs.Commands;
+    using Fifthweek.Api.Blogs.Shared;
+    using Fifthweek.Api.Channels.Shared;
+    using Fifthweek.Payments.SnapshotCreation;
+    using Fifthweek.Shared;
+    using Fifthweek.Api.Core;
+    using Fifthweek.Api.Persistence.Identity;
+    using Fifthweek.Api.Blogs.Queries;
+    using Fifthweek.Api.FileManagement.Shared;
+    using Fifthweek.Api.Collections.Shared;
+    using System.Transactions;
 
     public partial class BlogOwnership 
     {
@@ -74,6 +93,18 @@ namespace Fifthweek.Api.Blogs
     using Fifthweek.Api.Persistence.Identity;
     using Fifthweek.CodeGeneration;
     using Fifthweek.Shared;
+    using System;
+    using System.Linq;
+    using System.Collections.Generic;
+    using Dapper;
+    using Fifthweek.Api.Blogs.Commands;
+    using Fifthweek.Api.Channels.Shared;
+    using Fifthweek.Api.Persistence;
+    using Fifthweek.Payments.SnapshotCreation;
+    using Fifthweek.Api.Blogs.Queries;
+    using Fifthweek.Api.FileManagement.Shared;
+    using Fifthweek.Api.Collections.Shared;
+    using System.Transactions;
 
     public partial class BlogSecurity 
     {
@@ -104,6 +135,19 @@ namespace Fifthweek.Api.Blogs
     using Fifthweek.Api.FileManagement.Shared;
     using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.CodeGeneration;
+    using System;
+    using System.Linq;
+    using System.Threading.Tasks;
+    using Dapper;
+    using Fifthweek.Api.Blogs.Commands;
+    using Fifthweek.Api.Channels.Shared;
+    using Fifthweek.Api.Persistence;
+    using Fifthweek.Payments.SnapshotCreation;
+    using Fifthweek.Shared;
+    using Fifthweek.Api.Core;
+    using Fifthweek.Api.Persistence.Identity;
+    using Fifthweek.Api.Collections.Shared;
+    using System.Transactions;
 
     public partial class BlogSubscriptionDbResult 
     {
@@ -158,9 +202,19 @@ namespace Fifthweek.Api.Blogs
 }
 namespace Fifthweek.Api.Blogs.Commands
 {
+    using System;
+    using System.Linq;
     using Fifthweek.Api.Channels.Shared;
     using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.CodeGeneration;
+    using System.Threading.Tasks;
+    using Fifthweek.Api.Core;
+    using Fifthweek.Shared;
+    using Fifthweek.Api.Blogs.Shared;
+    using System.Transactions;
+    using Fifthweek.Api.Persistence;
+    using Fifthweek.Api.FileManagement.Shared;
+    using System.Collections.Generic;
 
     public partial class AcceptChannelSubscriptionPriceChangeCommand 
     {
@@ -193,11 +247,18 @@ namespace Fifthweek.Api.Blogs.Commands
 namespace Fifthweek.Api.Blogs.Commands
 {
     using System;
-    using System.Threading.Tasks;
-    using Fifthweek.Api.Core;
+    using System.Linq;
+    using Fifthweek.Api.Channels.Shared;
     using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.CodeGeneration;
+    using System.Threading.Tasks;
+    using Fifthweek.Api.Core;
     using Fifthweek.Shared;
+    using Fifthweek.Api.Blogs.Shared;
+    using System.Transactions;
+    using Fifthweek.Api.Persistence;
+    using Fifthweek.Api.FileManagement.Shared;
+    using System.Collections.Generic;
 
     public partial class AcceptChannelSubscriptionPriceChangeCommandHandler 
     {
@@ -222,8 +283,19 @@ namespace Fifthweek.Api.Blogs.Commands
 }
 namespace Fifthweek.Api.Blogs.Commands
 {
+    using System;
+    using System.Linq;
     using Fifthweek.Api.Channels.Shared;
+    using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.CodeGeneration;
+    using System.Threading.Tasks;
+    using Fifthweek.Api.Core;
+    using Fifthweek.Shared;
+    using Fifthweek.Api.Blogs.Shared;
+    using System.Transactions;
+    using Fifthweek.Api.Persistence;
+    using Fifthweek.Api.FileManagement.Shared;
+    using System.Collections.Generic;
 
     public partial class AcceptedChannelSubscription 
     {
@@ -248,10 +320,19 @@ namespace Fifthweek.Api.Blogs.Commands
 }
 namespace Fifthweek.Api.Blogs.Commands
 {
-    using Fifthweek.Api.Blogs.Shared;
+    using System;
+    using System.Linq;
     using Fifthweek.Api.Channels.Shared;
     using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.CodeGeneration;
+    using System.Threading.Tasks;
+    using Fifthweek.Api.Core;
+    using Fifthweek.Shared;
+    using Fifthweek.Api.Blogs.Shared;
+    using System.Transactions;
+    using Fifthweek.Api.Persistence;
+    using Fifthweek.Api.FileManagement.Shared;
+    using System.Collections.Generic;
 
     public partial class CreateBlogCommand 
     {
@@ -298,15 +379,18 @@ namespace Fifthweek.Api.Blogs.Commands
 namespace Fifthweek.Api.Blogs.Commands
 {
     using System;
-    using System.Threading.Tasks;
-    using System.Transactions;
-    using Fifthweek.Api.Blogs.Shared;
+    using System.Linq;
     using Fifthweek.Api.Channels.Shared;
-    using Fifthweek.Api.Core;
     using Fifthweek.Api.Identity.Shared.Membership;
-    using Fifthweek.Api.Persistence;
     using Fifthweek.CodeGeneration;
+    using System.Threading.Tasks;
+    using Fifthweek.Api.Core;
     using Fifthweek.Shared;
+    using Fifthweek.Api.Blogs.Shared;
+    using System.Transactions;
+    using Fifthweek.Api.Persistence;
+    using Fifthweek.Api.FileManagement.Shared;
+    using System.Collections.Generic;
 
     public partial class CreateBlogCommandHandler 
     {
@@ -338,9 +422,19 @@ namespace Fifthweek.Api.Blogs.Commands
 }
 namespace Fifthweek.Api.Blogs.Commands
 {
+    using System;
+    using System.Linq;
     using Fifthweek.Api.Channels.Shared;
     using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.CodeGeneration;
+    using System.Threading.Tasks;
+    using Fifthweek.Api.Core;
+    using Fifthweek.Shared;
+    using Fifthweek.Api.Blogs.Shared;
+    using System.Transactions;
+    using Fifthweek.Api.Persistence;
+    using Fifthweek.Api.FileManagement.Shared;
+    using System.Collections.Generic;
 
     public partial class UnsubscribeFromChannelCommand 
     {
@@ -366,11 +460,18 @@ namespace Fifthweek.Api.Blogs.Commands
 namespace Fifthweek.Api.Blogs.Commands
 {
     using System;
-    using System.Threading.Tasks;
-    using Fifthweek.Api.Core;
+    using System.Linq;
+    using Fifthweek.Api.Channels.Shared;
     using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.CodeGeneration;
+    using System.Threading.Tasks;
+    using Fifthweek.Api.Core;
     using Fifthweek.Shared;
+    using Fifthweek.Api.Blogs.Shared;
+    using System.Transactions;
+    using Fifthweek.Api.Persistence;
+    using Fifthweek.Api.FileManagement.Shared;
+    using System.Collections.Generic;
 
     public partial class UnsubscribeFromChannelCommandHandler 
     {
@@ -395,10 +496,19 @@ namespace Fifthweek.Api.Blogs.Commands
 }
 namespace Fifthweek.Api.Blogs.Commands
 {
-    using Fifthweek.Api.Blogs.Shared;
-    using Fifthweek.Api.FileManagement.Shared;
+    using System;
+    using System.Linq;
+    using Fifthweek.Api.Channels.Shared;
     using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.CodeGeneration;
+    using System.Threading.Tasks;
+    using Fifthweek.Api.Core;
+    using Fifthweek.Shared;
+    using Fifthweek.Api.Blogs.Shared;
+    using System.Transactions;
+    using Fifthweek.Api.Persistence;
+    using Fifthweek.Api.FileManagement.Shared;
+    using System.Collections.Generic;
 
     public partial class UpdateBlogCommand 
     {
@@ -451,14 +561,18 @@ namespace Fifthweek.Api.Blogs.Commands
 namespace Fifthweek.Api.Blogs.Commands
 {
     using System;
-    using System.Threading.Tasks;
-    using Fifthweek.Api.Blogs.Shared;
-    using Fifthweek.Api.Core;
-    using Fifthweek.Api.FileManagement.Shared;
+    using System.Linq;
+    using Fifthweek.Api.Channels.Shared;
     using Fifthweek.Api.Identity.Shared.Membership;
-    using Fifthweek.Api.Persistence;
     using Fifthweek.CodeGeneration;
+    using System.Threading.Tasks;
+    using Fifthweek.Api.Core;
     using Fifthweek.Shared;
+    using Fifthweek.Api.Blogs.Shared;
+    using System.Transactions;
+    using Fifthweek.Api.Persistence;
+    using Fifthweek.Api.FileManagement.Shared;
+    using System.Collections.Generic;
 
     public partial class UpdateBlogCommandHandler 
     {
@@ -497,10 +611,19 @@ namespace Fifthweek.Api.Blogs.Commands
 }
 namespace Fifthweek.Api.Blogs.Commands
 {
-    using System.Collections.Generic;
-    using Fifthweek.Api.Blogs.Shared;
+    using System;
+    using System.Linq;
+    using Fifthweek.Api.Channels.Shared;
     using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.CodeGeneration;
+    using System.Threading.Tasks;
+    using Fifthweek.Api.Core;
+    using Fifthweek.Shared;
+    using Fifthweek.Api.Blogs.Shared;
+    using System.Transactions;
+    using Fifthweek.Api.Persistence;
+    using Fifthweek.Api.FileManagement.Shared;
+    using System.Collections.Generic;
 
     public partial class UpdateBlogSubscriptionsCommand 
     {
@@ -533,17 +656,26 @@ namespace Fifthweek.Api.Blogs.Commands
 namespace Fifthweek.Api.Blogs.Commands
 {
     using System;
-    using System.Threading.Tasks;
-    using Fifthweek.Api.Core;
+    using System.Linq;
+    using Fifthweek.Api.Channels.Shared;
     using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.CodeGeneration;
+    using System.Threading.Tasks;
+    using Fifthweek.Api.Core;
     using Fifthweek.Shared;
+    using Fifthweek.Api.Blogs.Shared;
+    using System.Transactions;
+    using Fifthweek.Api.Persistence;
+    using Fifthweek.Api.FileManagement.Shared;
+    using System.Collections.Generic;
+    using Fifthweek.Api.Persistence.Identity;
 
     public partial class UpdateBlogSubscriptionsCommandHandler 
     {
         public UpdateBlogSubscriptionsCommandHandler(
             Fifthweek.Api.Identity.Shared.Membership.IRequesterSecurity requesterSecurity,
-            Fifthweek.Api.Blogs.IUpdateBlogSubscriptionsDbStatement updateBlogSubscriptions)
+            Fifthweek.Api.Blogs.IUpdateBlogSubscriptionsDbStatement updateBlogSubscriptions,
+            Fifthweek.Api.Blogs.IGetIsTestUserBlogDbStatement getIsTestUserBlog)
         {
             if (requesterSecurity == null)
             {
@@ -555,17 +687,32 @@ namespace Fifthweek.Api.Blogs.Commands
                 throw new ArgumentNullException("updateBlogSubscriptions");
             }
 
+            if (getIsTestUserBlog == null)
+            {
+                throw new ArgumentNullException("getIsTestUserBlog");
+            }
+
             this.requesterSecurity = requesterSecurity;
             this.updateBlogSubscriptions = updateBlogSubscriptions;
+            this.getIsTestUserBlog = getIsTestUserBlog;
         }
     }
 }
 namespace Fifthweek.Api.Blogs.Commands
 {
-    using System.Collections.Generic;
-    using Fifthweek.Api.Blogs.Shared;
+    using System;
+    using System.Linq;
+    using Fifthweek.Api.Channels.Shared;
     using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.CodeGeneration;
+    using System.Threading.Tasks;
+    using Fifthweek.Api.Core;
+    using Fifthweek.Shared;
+    using Fifthweek.Api.Blogs.Shared;
+    using System.Transactions;
+    using Fifthweek.Api.Persistence;
+    using Fifthweek.Api.FileManagement.Shared;
+    using System.Collections.Generic;
 
     public partial class UpdateFreeAccessUsersCommand 
     {
@@ -597,14 +744,19 @@ namespace Fifthweek.Api.Blogs.Commands
 }
 namespace Fifthweek.Api.Blogs.Commands
 {
-    using System.Collections.Generic;
+    using System;
     using System.Linq;
-    using System.Threading.Tasks;
-    using Fifthweek.Api.Blogs.Shared;
-    using Fifthweek.Api.Core;
+    using Fifthweek.Api.Channels.Shared;
     using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.CodeGeneration;
+    using System.Threading.Tasks;
+    using Fifthweek.Api.Core;
     using Fifthweek.Shared;
+    using Fifthweek.Api.Blogs.Shared;
+    using System.Transactions;
+    using Fifthweek.Api.Persistence;
+    using Fifthweek.Api.FileManagement.Shared;
+    using System.Collections.Generic;
 
     public partial class UpdateFreeAccessUsersCommandHandler 
     {
@@ -636,8 +788,9 @@ namespace Fifthweek.Api.Blogs.Commands
 }
 namespace Fifthweek.Api.Blogs.Controllers
 {
-    using System.Collections.Generic;
+    using System;
     using System.Linq;
+    using System.Collections.Generic;
     using System.Threading.Tasks;
     using System.Web.Http;
     using Fifthweek.Api.Blogs.Commands;
@@ -646,6 +799,10 @@ namespace Fifthweek.Api.Blogs.Controllers
     using Fifthweek.Api.Core;
     using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.CodeGeneration;
+    using System.Net;
+    using Fifthweek.Shared;
+    using Fifthweek.Api.Channels.Shared;
+    using Fifthweek.Api.FileManagement.Shared;
 
     public partial class BlogAccessController 
     {
@@ -677,7 +834,9 @@ namespace Fifthweek.Api.Blogs.Controllers
 }
 namespace Fifthweek.Api.Blogs.Controllers
 {
-    using System.Net;
+    using System;
+    using System.Linq;
+    using System.Collections.Generic;
     using System.Threading.Tasks;
     using System.Web.Http;
     using Fifthweek.Api.Blogs.Commands;
@@ -686,7 +845,10 @@ namespace Fifthweek.Api.Blogs.Controllers
     using Fifthweek.Api.Core;
     using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.CodeGeneration;
+    using System.Net;
     using Fifthweek.Shared;
+    using Fifthweek.Api.Channels.Shared;
+    using Fifthweek.Api.FileManagement.Shared;
 
     public partial class BlogController 
     {
@@ -695,7 +857,7 @@ namespace Fifthweek.Api.Blogs.Controllers
             Fifthweek.Api.Core.ICommandHandler<Fifthweek.Api.Blogs.Commands.UpdateBlogCommand> updateBlog,
             Fifthweek.Api.Core.IQueryHandler<Fifthweek.Api.Blogs.Queries.GetLandingPageQuery,Fifthweek.Api.Blogs.Queries.GetLandingPageResult> getLandingPage,
             Fifthweek.Api.Identity.Shared.Membership.IRequesterContext requesterContext,
-            IGuidCreator guidCreator)
+            Fifthweek.Shared.IGuidCreator guidCreator)
         {
             if (createBlog == null)
             {
@@ -732,9 +894,21 @@ namespace Fifthweek.Api.Blogs.Controllers
 }
 namespace Fifthweek.Api.Blogs.Controllers
 {
+    using System;
+    using System.Linq;
     using System.Collections.Generic;
+    using System.Threading.Tasks;
+    using System.Web.Http;
+    using Fifthweek.Api.Blogs.Commands;
+    using Fifthweek.Api.Blogs.Queries;
+    using Fifthweek.Api.Blogs.Shared;
+    using Fifthweek.Api.Core;
     using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.CodeGeneration;
+    using System.Net;
+    using Fifthweek.Shared;
+    using Fifthweek.Api.Channels.Shared;
+    using Fifthweek.Api.FileManagement.Shared;
 
     public partial class PutFreeAccessUsersResult 
     {
@@ -752,15 +926,21 @@ namespace Fifthweek.Api.Blogs.Controllers
 }
 namespace Fifthweek.Api.Blogs.Controllers
 {
+    using System;
     using System.Linq;
+    using System.Collections.Generic;
     using System.Threading.Tasks;
     using System.Web.Http;
     using Fifthweek.Api.Blogs.Commands;
+    using Fifthweek.Api.Blogs.Queries;
     using Fifthweek.Api.Blogs.Shared;
-    using Fifthweek.Api.Channels.Shared;
     using Fifthweek.Api.Core;
     using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.CodeGeneration;
+    using System.Net;
+    using Fifthweek.Shared;
+    using Fifthweek.Api.Channels.Shared;
+    using Fifthweek.Api.FileManagement.Shared;
 
     public partial class SubscriptionController 
     {
@@ -799,7 +979,25 @@ namespace Fifthweek.Api.Blogs.Controllers
 }
 namespace Fifthweek.Api.Blogs
 {
+    using System;
+    using System.Linq;
+    using System.Collections.Generic;
+    using System.Threading.Tasks;
+    using Dapper;
+    using Fifthweek.Api.Blogs.Commands;
+    using Fifthweek.Api.Blogs.Shared;
+    using Fifthweek.Api.Channels.Shared;
+    using Fifthweek.Api.Identity.Shared.Membership;
+    using Fifthweek.Api.Persistence;
     using Fifthweek.CodeGeneration;
+    using Fifthweek.Payments.SnapshotCreation;
+    using Fifthweek.Shared;
+    using Fifthweek.Api.Core;
+    using Fifthweek.Api.Persistence.Identity;
+    using Fifthweek.Api.Blogs.Queries;
+    using Fifthweek.Api.FileManagement.Shared;
+    using Fifthweek.Api.Collections.Shared;
+    using System.Transactions;
 
     public partial class CreatorStatus 
     {
@@ -820,19 +1018,24 @@ namespace Fifthweek.Api.Blogs
 namespace Fifthweek.Api.Blogs
 {
     using System;
-    using System.Collections.Generic;
     using System.Linq;
+    using System.Collections.Generic;
     using System.Threading.Tasks;
     using Dapper;
-    using Fifthweek.Api.Blogs.Queries;
+    using Fifthweek.Api.Blogs.Commands;
     using Fifthweek.Api.Blogs.Shared;
     using Fifthweek.Api.Channels.Shared;
-    using Fifthweek.Api.Collections.Shared;
-    using Fifthweek.Api.FileManagement.Shared;
     using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.Api.Persistence;
     using Fifthweek.CodeGeneration;
+    using Fifthweek.Payments.SnapshotCreation;
     using Fifthweek.Shared;
+    using Fifthweek.Api.Core;
+    using Fifthweek.Api.Persistence.Identity;
+    using Fifthweek.Api.Blogs.Queries;
+    using Fifthweek.Api.FileManagement.Shared;
+    using Fifthweek.Api.Collections.Shared;
+    using System.Transactions;
 
     public partial class GetBlogChannelsAndCollectionsDbStatement
     {
@@ -861,19 +1064,60 @@ namespace Fifthweek.Api.Blogs
 namespace Fifthweek.Api.Blogs
 {
     using System;
-    using System.Collections.Generic;
     using System.Linq;
+    using System.Collections.Generic;
     using System.Threading.Tasks;
     using Dapper;
-    using Fifthweek.Api.Blogs.Queries;
+    using Fifthweek.Api.Blogs.Commands;
     using Fifthweek.Api.Blogs.Shared;
     using Fifthweek.Api.Channels.Shared;
-    using Fifthweek.Api.Collections.Shared;
-    using Fifthweek.Api.FileManagement.Shared;
     using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.Api.Persistence;
     using Fifthweek.CodeGeneration;
+    using Fifthweek.Payments.SnapshotCreation;
     using Fifthweek.Shared;
+    using Fifthweek.Api.Core;
+    using Fifthweek.Api.Persistence.Identity;
+    using Fifthweek.Api.Blogs.Queries;
+    using Fifthweek.Api.FileManagement.Shared;
+    using Fifthweek.Api.Collections.Shared;
+    using System.Transactions;
+
+    public partial class GetBlogChannelsAndCollectionsDbStatement 
+    {
+        public GetBlogChannelsAndCollectionsDbStatement(
+            Fifthweek.Api.Persistence.IFifthweekDbConnectionFactory connectionFactory)
+        {
+            if (connectionFactory == null)
+            {
+                throw new ArgumentNullException("connectionFactory");
+            }
+
+            this.connectionFactory = connectionFactory;
+        }
+    }
+}
+namespace Fifthweek.Api.Blogs
+{
+    using System;
+    using System.Linq;
+    using System.Collections.Generic;
+    using System.Threading.Tasks;
+    using Dapper;
+    using Fifthweek.Api.Blogs.Commands;
+    using Fifthweek.Api.Blogs.Shared;
+    using Fifthweek.Api.Channels.Shared;
+    using Fifthweek.Api.Identity.Shared.Membership;
+    using Fifthweek.Api.Persistence;
+    using Fifthweek.CodeGeneration;
+    using Fifthweek.Payments.SnapshotCreation;
+    using Fifthweek.Shared;
+    using Fifthweek.Api.Core;
+    using Fifthweek.Api.Persistence.Identity;
+    using Fifthweek.Api.Blogs.Queries;
+    using Fifthweek.Api.FileManagement.Shared;
+    using Fifthweek.Api.Collections.Shared;
+    using System.Transactions;
 
     public partial class GetBlogChannelsAndCollectionsDbStatement
     {
@@ -936,50 +1180,24 @@ namespace Fifthweek.Api.Blogs
 namespace Fifthweek.Api.Blogs
 {
     using System;
-    using System.Collections.Generic;
     using System.Linq;
+    using System.Collections.Generic;
     using System.Threading.Tasks;
     using Dapper;
-    using Fifthweek.Api.Blogs.Queries;
+    using Fifthweek.Api.Blogs.Commands;
     using Fifthweek.Api.Blogs.Shared;
     using Fifthweek.Api.Channels.Shared;
-    using Fifthweek.Api.Collections.Shared;
-    using Fifthweek.Api.FileManagement.Shared;
     using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.Api.Persistence;
     using Fifthweek.CodeGeneration;
+    using Fifthweek.Payments.SnapshotCreation;
     using Fifthweek.Shared;
-
-    public partial class GetBlogChannelsAndCollectionsDbStatement 
-    {
-        public GetBlogChannelsAndCollectionsDbStatement(
-            Fifthweek.Api.Persistence.IFifthweekDbConnectionFactory connectionFactory)
-        {
-            if (connectionFactory == null)
-            {
-                throw new ArgumentNullException("connectionFactory");
-            }
-
-            this.connectionFactory = connectionFactory;
-        }
-    }
-}
-namespace Fifthweek.Api.Blogs
-{
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Threading.Tasks;
-    using System.Transactions;
-    using Dapper;
-    using Fifthweek.Api.Blogs.Queries;
-    using Fifthweek.Api.Blogs.Shared;
-    using Fifthweek.Api.Channels.Shared;
-    using Fifthweek.Api.Identity.Shared.Membership;
-    using Fifthweek.Api.Persistence;
+    using Fifthweek.Api.Core;
     using Fifthweek.Api.Persistence.Identity;
-    using Fifthweek.CodeGeneration;
-    using Fifthweek.Shared;
+    using Fifthweek.Api.Blogs.Queries;
+    using Fifthweek.Api.FileManagement.Shared;
+    using Fifthweek.Api.Collections.Shared;
+    using System.Transactions;
 
     public partial class GetFreeAccessUsersDbStatement 
     {
@@ -998,19 +1216,24 @@ namespace Fifthweek.Api.Blogs
 namespace Fifthweek.Api.Blogs
 {
     using System;
-    using System.Collections.Generic;
     using System.Linq;
+    using System.Collections.Generic;
     using System.Threading.Tasks;
     using Dapper;
-    using Fifthweek.Api.Blogs.Queries;
+    using Fifthweek.Api.Blogs.Commands;
     using Fifthweek.Api.Blogs.Shared;
     using Fifthweek.Api.Channels.Shared;
-    using Fifthweek.Api.FileManagement.Shared;
     using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.Api.Persistence;
-    using Fifthweek.Api.Persistence.Identity;
     using Fifthweek.CodeGeneration;
+    using Fifthweek.Payments.SnapshotCreation;
     using Fifthweek.Shared;
+    using Fifthweek.Api.Core;
+    using Fifthweek.Api.Persistence.Identity;
+    using Fifthweek.Api.Blogs.Queries;
+    using Fifthweek.Api.FileManagement.Shared;
+    using Fifthweek.Api.Collections.Shared;
+    using System.Transactions;
 
     public partial class GetLandingPageDbStatement
     {
@@ -1048,19 +1271,24 @@ namespace Fifthweek.Api.Blogs
 namespace Fifthweek.Api.Blogs
 {
     using System;
-    using System.Collections.Generic;
     using System.Linq;
+    using System.Collections.Generic;
     using System.Threading.Tasks;
     using Dapper;
-    using Fifthweek.Api.Blogs.Queries;
+    using Fifthweek.Api.Blogs.Commands;
     using Fifthweek.Api.Blogs.Shared;
     using Fifthweek.Api.Channels.Shared;
-    using Fifthweek.Api.FileManagement.Shared;
     using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.Api.Persistence;
-    using Fifthweek.Api.Persistence.Identity;
     using Fifthweek.CodeGeneration;
+    using Fifthweek.Payments.SnapshotCreation;
     using Fifthweek.Shared;
+    using Fifthweek.Api.Core;
+    using Fifthweek.Api.Persistence.Identity;
+    using Fifthweek.Api.Blogs.Queries;
+    using Fifthweek.Api.FileManagement.Shared;
+    using Fifthweek.Api.Collections.Shared;
+    using System.Transactions;
 
     public partial class GetLandingPageDbStatement 
     {
@@ -1079,20 +1307,24 @@ namespace Fifthweek.Api.Blogs
 namespace Fifthweek.Api.Blogs
 {
     using System;
-    using System.Collections.Generic;
     using System.Linq;
+    using System.Collections.Generic;
     using System.Threading.Tasks;
     using Dapper;
-    using Fifthweek.Api.Blogs.Queries;
+    using Fifthweek.Api.Blogs.Commands;
     using Fifthweek.Api.Blogs.Shared;
     using Fifthweek.Api.Channels.Shared;
-    using Fifthweek.Api.Collections.Shared;
-    using Fifthweek.Api.FileManagement.Shared;
     using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.Api.Persistence;
-    using Fifthweek.Api.Persistence.Identity;
     using Fifthweek.CodeGeneration;
+    using Fifthweek.Payments.SnapshotCreation;
     using Fifthweek.Shared;
+    using Fifthweek.Api.Core;
+    using Fifthweek.Api.Persistence.Identity;
+    using Fifthweek.Api.Blogs.Queries;
+    using Fifthweek.Api.FileManagement.Shared;
+    using Fifthweek.Api.Collections.Shared;
+    using System.Transactions;
 
     public partial class GetUserSubscriptionsDbStatement 
     {
@@ -1110,11 +1342,20 @@ namespace Fifthweek.Api.Blogs
 }
 namespace Fifthweek.Api.Blogs.Queries
 {
+    using System;
+    using System.Linq;
     using System.Collections.Generic;
     using Fifthweek.Api.Blogs.Shared;
     using Fifthweek.Api.FileManagement.Shared;
     using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.CodeGeneration;
+    using Fifthweek.Api.Channels.Shared;
+    using Fifthweek.Api.Collections.Shared;
+    using Fifthweek.Api.Core;
+    using System.Threading.Tasks;
+    using Fifthweek.Shared;
+    using Dapper;
+    using Fifthweek.Api.Persistence;
 
     public partial class BlogSubscriptionStatus 
     {
@@ -1170,11 +1411,19 @@ namespace Fifthweek.Api.Blogs.Queries
 namespace Fifthweek.Api.Blogs.Queries
 {
     using System;
+    using System.Linq;
     using System.Collections.Generic;
     using Fifthweek.Api.Blogs.Shared;
     using Fifthweek.Api.FileManagement.Shared;
     using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.CodeGeneration;
+    using Fifthweek.Api.Channels.Shared;
+    using Fifthweek.Api.Collections.Shared;
+    using Fifthweek.Api.Core;
+    using System.Threading.Tasks;
+    using Fifthweek.Shared;
+    using Dapper;
+    using Fifthweek.Api.Persistence;
 
     public partial class BlogWithFileInformation 
     {
@@ -1240,9 +1489,20 @@ namespace Fifthweek.Api.Blogs.Queries
 }
 namespace Fifthweek.Api.Blogs.Queries
 {
+    using System;
+    using System.Linq;
     using System.Collections.Generic;
-    using Fifthweek.Api.Channels.Shared;
+    using Fifthweek.Api.Blogs.Shared;
+    using Fifthweek.Api.FileManagement.Shared;
+    using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.CodeGeneration;
+    using Fifthweek.Api.Channels.Shared;
+    using Fifthweek.Api.Collections.Shared;
+    using Fifthweek.Api.Core;
+    using System.Threading.Tasks;
+    using Fifthweek.Shared;
+    using Dapper;
+    using Fifthweek.Api.Persistence;
 
     public partial class ChannelResult 
     {
@@ -1303,10 +1563,19 @@ namespace Fifthweek.Api.Blogs.Queries
 namespace Fifthweek.Api.Blogs.Queries
 {
     using System;
+    using System.Linq;
     using System.Collections.Generic;
+    using Fifthweek.Api.Blogs.Shared;
+    using Fifthweek.Api.FileManagement.Shared;
+    using Fifthweek.Api.Identity.Shared.Membership;
+    using Fifthweek.CodeGeneration;
     using Fifthweek.Api.Channels.Shared;
     using Fifthweek.Api.Collections.Shared;
-    using Fifthweek.CodeGeneration;
+    using Fifthweek.Api.Core;
+    using System.Threading.Tasks;
+    using Fifthweek.Shared;
+    using Dapper;
+    using Fifthweek.Api.Persistence;
 
     public partial class ChannelsAndCollections 
     {
@@ -1325,9 +1594,19 @@ namespace Fifthweek.Api.Blogs.Queries
 namespace Fifthweek.Api.Blogs.Queries
 {
     using System;
+    using System.Linq;
     using System.Collections.Generic;
-    using Fifthweek.Api.Channels.Shared;
+    using Fifthweek.Api.Blogs.Shared;
+    using Fifthweek.Api.FileManagement.Shared;
+    using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.CodeGeneration;
+    using Fifthweek.Api.Channels.Shared;
+    using Fifthweek.Api.Collections.Shared;
+    using Fifthweek.Api.Core;
+    using System.Threading.Tasks;
+    using Fifthweek.Shared;
+    using Dapper;
+    using Fifthweek.Api.Persistence;
 
     public partial class ChannelSubscriptionStatus 
     {
@@ -1401,9 +1680,20 @@ namespace Fifthweek.Api.Blogs.Queries
 }
 namespace Fifthweek.Api.Blogs.Queries
 {
+    using System;
+    using System.Linq;
     using System.Collections.Generic;
-    using Fifthweek.Api.Collections.Shared;
+    using Fifthweek.Api.Blogs.Shared;
+    using Fifthweek.Api.FileManagement.Shared;
+    using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.CodeGeneration;
+    using Fifthweek.Api.Channels.Shared;
+    using Fifthweek.Api.Collections.Shared;
+    using Fifthweek.Api.Core;
+    using System.Threading.Tasks;
+    using Fifthweek.Shared;
+    using Dapper;
+    using Fifthweek.Api.Persistence;
 
     public partial class CollectionResult 
     {
@@ -1435,8 +1725,20 @@ namespace Fifthweek.Api.Blogs.Queries
 }
 namespace Fifthweek.Api.Blogs.Queries
 {
-    using Fifthweek.Api.Collections.Shared;
+    using System;
+    using System.Linq;
+    using System.Collections.Generic;
+    using Fifthweek.Api.Blogs.Shared;
+    using Fifthweek.Api.FileManagement.Shared;
+    using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.CodeGeneration;
+    using Fifthweek.Api.Channels.Shared;
+    using Fifthweek.Api.Collections.Shared;
+    using Fifthweek.Api.Core;
+    using System.Threading.Tasks;
+    using Fifthweek.Shared;
+    using Dapper;
+    using Fifthweek.Api.Persistence;
 
     public partial class CollectionSubscriptionStatus 
     {
@@ -1461,9 +1763,20 @@ namespace Fifthweek.Api.Blogs.Queries
 }
 namespace Fifthweek.Api.Blogs.Queries
 {
+    using System;
+    using System.Linq;
+    using System.Collections.Generic;
     using Fifthweek.Api.Blogs.Shared;
-    using Fifthweek.Api.Core;
+    using Fifthweek.Api.FileManagement.Shared;
+    using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.CodeGeneration;
+    using Fifthweek.Api.Channels.Shared;
+    using Fifthweek.Api.Collections.Shared;
+    using Fifthweek.Api.Core;
+    using System.Threading.Tasks;
+    using Fifthweek.Shared;
+    using Dapper;
+    using Fifthweek.Api.Persistence;
 
     public partial class GetBlogChannelsAndCollectionsQuery 
     {
@@ -1481,11 +1794,20 @@ namespace Fifthweek.Api.Blogs.Queries
 }
 namespace Fifthweek.Api.Blogs.Queries
 {
-    using System.Threading.Tasks;
-    using Fifthweek.Api.Core;
+    using System;
+    using System.Linq;
+    using System.Collections.Generic;
+    using Fifthweek.Api.Blogs.Shared;
     using Fifthweek.Api.FileManagement.Shared;
+    using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.CodeGeneration;
+    using Fifthweek.Api.Channels.Shared;
+    using Fifthweek.Api.Collections.Shared;
+    using Fifthweek.Api.Core;
+    using System.Threading.Tasks;
     using Fifthweek.Shared;
+    using Dapper;
+    using Fifthweek.Api.Persistence;
 
     public partial class GetBlogChannelsAndCollectionsQueryHandler 
     {
@@ -1510,7 +1832,20 @@ namespace Fifthweek.Api.Blogs.Queries
 }
 namespace Fifthweek.Api.Blogs.Queries
 {
+    using System;
+    using System.Linq;
+    using System.Collections.Generic;
+    using Fifthweek.Api.Blogs.Shared;
+    using Fifthweek.Api.FileManagement.Shared;
+    using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.CodeGeneration;
+    using Fifthweek.Api.Channels.Shared;
+    using Fifthweek.Api.Collections.Shared;
+    using Fifthweek.Api.Core;
+    using System.Threading.Tasks;
+    using Fifthweek.Shared;
+    using Dapper;
+    using Fifthweek.Api.Persistence;
 
     public partial class GetBlogChannelsAndCollectionsResult 
     {
@@ -1528,9 +1863,20 @@ namespace Fifthweek.Api.Blogs.Queries
 }
 namespace Fifthweek.Api.Blogs.Queries
 {
-    using Fifthweek.Api.Core;
+    using System;
+    using System.Linq;
+    using System.Collections.Generic;
+    using Fifthweek.Api.Blogs.Shared;
+    using Fifthweek.Api.FileManagement.Shared;
     using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.CodeGeneration;
+    using Fifthweek.Api.Channels.Shared;
+    using Fifthweek.Api.Collections.Shared;
+    using Fifthweek.Api.Core;
+    using System.Threading.Tasks;
+    using Fifthweek.Shared;
+    using Dapper;
+    using Fifthweek.Api.Persistence;
 
     public partial class GetCreatorStatusQuery 
     {
@@ -1557,14 +1903,18 @@ namespace Fifthweek.Api.Blogs.Queries
 {
     using System;
     using System.Linq;
-    using System.Threading.Tasks;
-    using Dapper;
+    using System.Collections.Generic;
     using Fifthweek.Api.Blogs.Shared;
-    using Fifthweek.Api.Core;
+    using Fifthweek.Api.FileManagement.Shared;
     using Fifthweek.Api.Identity.Shared.Membership;
-    using Fifthweek.Api.Persistence;
     using Fifthweek.CodeGeneration;
+    using Fifthweek.Api.Channels.Shared;
+    using Fifthweek.Api.Collections.Shared;
+    using Fifthweek.Api.Core;
+    using System.Threading.Tasks;
     using Fifthweek.Shared;
+    using Dapper;
+    using Fifthweek.Api.Persistence;
 
     public partial class GetCreatorStatusQueryHandler 
     {
@@ -1589,10 +1939,20 @@ namespace Fifthweek.Api.Blogs.Queries
 }
 namespace Fifthweek.Api.Blogs.Queries
 {
+    using System;
+    using System.Linq;
+    using System.Collections.Generic;
     using Fifthweek.Api.Blogs.Shared;
-    using Fifthweek.Api.Core;
+    using Fifthweek.Api.FileManagement.Shared;
     using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.CodeGeneration;
+    using Fifthweek.Api.Channels.Shared;
+    using Fifthweek.Api.Collections.Shared;
+    using Fifthweek.Api.Core;
+    using System.Threading.Tasks;
+    using Fifthweek.Shared;
+    using Dapper;
+    using Fifthweek.Api.Persistence;
 
     public partial class GetFreeAccessUsersQuery 
     {
@@ -1617,13 +1977,20 @@ namespace Fifthweek.Api.Blogs.Queries
 }
 namespace Fifthweek.Api.Blogs.Queries
 {
+    using System;
     using System.Linq;
-    using System.Threading.Tasks;
+    using System.Collections.Generic;
     using Fifthweek.Api.Blogs.Shared;
-    using Fifthweek.Api.Core;
+    using Fifthweek.Api.FileManagement.Shared;
     using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.CodeGeneration;
+    using Fifthweek.Api.Channels.Shared;
+    using Fifthweek.Api.Collections.Shared;
+    using Fifthweek.Api.Core;
+    using System.Threading.Tasks;
     using Fifthweek.Shared;
+    using Dapper;
+    using Fifthweek.Api.Persistence;
 
     public partial class GetFreeAccessUsersQueryHandler 
     {
@@ -1655,10 +2022,20 @@ namespace Fifthweek.Api.Blogs.Queries
 }
 namespace Fifthweek.Api.Blogs.Queries
 {
+    using System;
+    using System.Linq;
     using System.Collections.Generic;
-    using Fifthweek.Api.Channels.Shared;
+    using Fifthweek.Api.Blogs.Shared;
+    using Fifthweek.Api.FileManagement.Shared;
     using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.CodeGeneration;
+    using Fifthweek.Api.Channels.Shared;
+    using Fifthweek.Api.Collections.Shared;
+    using Fifthweek.Api.Core;
+    using System.Threading.Tasks;
+    using Fifthweek.Shared;
+    using Dapper;
+    using Fifthweek.Api.Persistence;
 
     public partial class GetFreeAccessUsersResult
     {
@@ -1690,10 +2067,20 @@ namespace Fifthweek.Api.Blogs.Queries
 }
 namespace Fifthweek.Api.Blogs.Queries
 {
+    using System;
+    using System.Linq;
     using System.Collections.Generic;
-    using Fifthweek.Api.Channels.Shared;
+    using Fifthweek.Api.Blogs.Shared;
+    using Fifthweek.Api.FileManagement.Shared;
     using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.CodeGeneration;
+    using Fifthweek.Api.Channels.Shared;
+    using Fifthweek.Api.Collections.Shared;
+    using Fifthweek.Api.Core;
+    using System.Threading.Tasks;
+    using Fifthweek.Shared;
+    using Dapper;
+    using Fifthweek.Api.Persistence;
 
     public partial class GetFreeAccessUsersResult 
     {
@@ -1711,9 +2098,20 @@ namespace Fifthweek.Api.Blogs.Queries
 }
 namespace Fifthweek.Api.Blogs.Queries
 {
-    using Fifthweek.Api.Core;
+    using System;
+    using System.Linq;
+    using System.Collections.Generic;
+    using Fifthweek.Api.Blogs.Shared;
+    using Fifthweek.Api.FileManagement.Shared;
     using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.CodeGeneration;
+    using Fifthweek.Api.Channels.Shared;
+    using Fifthweek.Api.Collections.Shared;
+    using Fifthweek.Api.Core;
+    using System.Threading.Tasks;
+    using Fifthweek.Shared;
+    using Dapper;
+    using Fifthweek.Api.Persistence;
 
     public partial class GetLandingPageQuery 
     {
@@ -1731,11 +2129,20 @@ namespace Fifthweek.Api.Blogs.Queries
 }
 namespace Fifthweek.Api.Blogs.Queries
 {
-    using System.Threading.Tasks;
-    using Fifthweek.Api.Core;
+    using System;
+    using System.Linq;
+    using System.Collections.Generic;
+    using Fifthweek.Api.Blogs.Shared;
     using Fifthweek.Api.FileManagement.Shared;
+    using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.CodeGeneration;
+    using Fifthweek.Api.Channels.Shared;
+    using Fifthweek.Api.Collections.Shared;
+    using Fifthweek.Api.Core;
+    using System.Threading.Tasks;
     using Fifthweek.Shared;
+    using Dapper;
+    using Fifthweek.Api.Persistence;
 
     public partial class GetLandingPageQueryHandler 
     {
@@ -1760,10 +2167,20 @@ namespace Fifthweek.Api.Blogs.Queries
 }
 namespace Fifthweek.Api.Blogs.Queries
 {
+    using System;
+    using System.Linq;
     using System.Collections.Generic;
+    using Fifthweek.Api.Blogs.Shared;
     using Fifthweek.Api.FileManagement.Shared;
     using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.CodeGeneration;
+    using Fifthweek.Api.Channels.Shared;
+    using Fifthweek.Api.Collections.Shared;
+    using Fifthweek.Api.Core;
+    using System.Threading.Tasks;
+    using Fifthweek.Shared;
+    using Dapper;
+    using Fifthweek.Api.Persistence;
 
     public partial class GetLandingPageResult 
     {
@@ -1790,10 +2207,20 @@ namespace Fifthweek.Api.Blogs.Queries
 }
 namespace Fifthweek.Api.Blogs.Queries
 {
+    using System;
+    using System.Linq;
+    using System.Collections.Generic;
     using Fifthweek.Api.Blogs.Shared;
-    using Fifthweek.Api.Core;
+    using Fifthweek.Api.FileManagement.Shared;
     using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.CodeGeneration;
+    using Fifthweek.Api.Channels.Shared;
+    using Fifthweek.Api.Collections.Shared;
+    using Fifthweek.Api.Core;
+    using System.Threading.Tasks;
+    using Fifthweek.Shared;
+    using Dapper;
+    using Fifthweek.Api.Persistence;
 
     public partial class GetUserSubscriptionsQuery 
     {
@@ -1811,14 +2238,20 @@ namespace Fifthweek.Api.Blogs.Queries
 }
 namespace Fifthweek.Api.Blogs.Queries
 {
+    using System;
+    using System.Linq;
     using System.Collections.Generic;
-    using System.Threading.Tasks;
     using Fifthweek.Api.Blogs.Shared;
-    using Fifthweek.Api.Core;
     using Fifthweek.Api.FileManagement.Shared;
     using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.CodeGeneration;
+    using Fifthweek.Api.Channels.Shared;
+    using Fifthweek.Api.Collections.Shared;
+    using Fifthweek.Api.Core;
+    using System.Threading.Tasks;
     using Fifthweek.Shared;
+    using Dapper;
+    using Fifthweek.Api.Persistence;
 
     public partial class GetUserSubscriptionsQueryHandler 
     {
@@ -1850,8 +2283,20 @@ namespace Fifthweek.Api.Blogs.Queries
 }
 namespace Fifthweek.Api.Blogs.Queries
 {
+    using System;
+    using System.Linq;
     using System.Collections.Generic;
+    using Fifthweek.Api.Blogs.Shared;
+    using Fifthweek.Api.FileManagement.Shared;
+    using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.CodeGeneration;
+    using Fifthweek.Api.Channels.Shared;
+    using Fifthweek.Api.Collections.Shared;
+    using Fifthweek.Api.Core;
+    using System.Threading.Tasks;
+    using Fifthweek.Shared;
+    using Dapper;
+    using Fifthweek.Api.Persistence;
 
     public partial class GetUserSubscriptionsResult 
     {
@@ -1870,14 +2315,24 @@ namespace Fifthweek.Api.Blogs.Queries
 namespace Fifthweek.Api.Blogs
 {
     using System;
+    using System.Linq;
+    using System.Collections.Generic;
     using System.Threading.Tasks;
     using Dapper;
+    using Fifthweek.Api.Blogs.Commands;
+    using Fifthweek.Api.Blogs.Shared;
     using Fifthweek.Api.Channels.Shared;
     using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.Api.Persistence;
     using Fifthweek.CodeGeneration;
     using Fifthweek.Payments.SnapshotCreation;
     using Fifthweek.Shared;
+    using Fifthweek.Api.Core;
+    using Fifthweek.Api.Persistence.Identity;
+    using Fifthweek.Api.Blogs.Queries;
+    using Fifthweek.Api.FileManagement.Shared;
+    using Fifthweek.Api.Collections.Shared;
+    using System.Transactions;
 
     public partial class UnsubscribeFromChannelDbStatement 
     {
@@ -1903,18 +2358,24 @@ namespace Fifthweek.Api.Blogs
 namespace Fifthweek.Api.Blogs
 {
     using System;
-    using System.Collections.Generic;
     using System.Linq;
+    using System.Collections.Generic;
     using System.Threading.Tasks;
-    using System.Transactions;
     using Dapper;
     using Fifthweek.Api.Blogs.Commands;
     using Fifthweek.Api.Blogs.Shared;
+    using Fifthweek.Api.Channels.Shared;
     using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.Api.Persistence;
     using Fifthweek.CodeGeneration;
     using Fifthweek.Payments.SnapshotCreation;
     using Fifthweek.Shared;
+    using Fifthweek.Api.Core;
+    using Fifthweek.Api.Persistence.Identity;
+    using Fifthweek.Api.Blogs.Queries;
+    using Fifthweek.Api.FileManagement.Shared;
+    using Fifthweek.Api.Collections.Shared;
+    using System.Transactions;
 
     public partial class UpdateBlogSubscriptionsDbStatement 
     {
@@ -1939,17 +2400,25 @@ namespace Fifthweek.Api.Blogs
 }
 namespace Fifthweek.Api.Blogs
 {
-    using System.Collections.Generic;
+    using System;
     using System.Linq;
+    using System.Collections.Generic;
     using System.Threading.Tasks;
-    using System.Transactions;
     using Dapper;
+    using Fifthweek.Api.Blogs.Commands;
     using Fifthweek.Api.Blogs.Shared;
+    using Fifthweek.Api.Channels.Shared;
     using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.Api.Persistence;
     using Fifthweek.CodeGeneration;
     using Fifthweek.Payments.SnapshotCreation;
     using Fifthweek.Shared;
+    using Fifthweek.Api.Core;
+    using Fifthweek.Api.Persistence.Identity;
+    using Fifthweek.Api.Blogs.Queries;
+    using Fifthweek.Api.FileManagement.Shared;
+    using Fifthweek.Api.Collections.Shared;
+    using System.Transactions;
 
     public partial class UpdateFreeAccessUsersDbStatement 
     {
@@ -1972,6 +2441,29 @@ namespace Fifthweek.Api.Blogs
         }
     }
 }
+namespace Fifthweek.Api.Blogs
+{
+    using System.Threading.Tasks;
+    using Dapper;
+    using Fifthweek.Api.Blogs.Shared;
+    using Fifthweek.Api.Persistence;
+    using Fifthweek.Api.Persistence.Identity;
+    using Fifthweek.CodeGeneration;
+
+    public partial class GetIsTestUserBlogDbStatement 
+    {
+        public GetIsTestUserBlogDbStatement(
+            Fifthweek.Api.Persistence.IFifthweekDbConnectionFactory connectionFactory)
+        {
+            if (connectionFactory == null)
+            {
+                throw new ArgumentNullException("connectionFactory");
+            }
+
+            this.connectionFactory = connectionFactory;
+        }
+    }
+}
 
 namespace Fifthweek.Api.Blogs
 {
@@ -1981,6 +2473,19 @@ namespace Fifthweek.Api.Blogs
     using Fifthweek.Api.FileManagement.Shared;
     using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.CodeGeneration;
+    using System;
+    using System.Linq;
+    using System.Threading.Tasks;
+    using Dapper;
+    using Fifthweek.Api.Blogs.Commands;
+    using Fifthweek.Api.Channels.Shared;
+    using Fifthweek.Api.Persistence;
+    using Fifthweek.Payments.SnapshotCreation;
+    using Fifthweek.Shared;
+    using Fifthweek.Api.Core;
+    using Fifthweek.Api.Persistence.Identity;
+    using Fifthweek.Api.Collections.Shared;
+    using System.Transactions;
 
     public partial class BlogSubscriptionDbResult 
     {
@@ -2083,9 +2588,19 @@ namespace Fifthweek.Api.Blogs
 }
 namespace Fifthweek.Api.Blogs.Commands
 {
+    using System;
+    using System.Linq;
     using Fifthweek.Api.Channels.Shared;
     using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.CodeGeneration;
+    using System.Threading.Tasks;
+    using Fifthweek.Api.Core;
+    using Fifthweek.Shared;
+    using Fifthweek.Api.Blogs.Shared;
+    using System.Transactions;
+    using Fifthweek.Api.Persistence;
+    using Fifthweek.Api.FileManagement.Shared;
+    using System.Collections.Generic;
 
     public partial class AcceptChannelSubscriptionPriceChangeCommand 
     {
@@ -2149,8 +2664,19 @@ namespace Fifthweek.Api.Blogs.Commands
 }
 namespace Fifthweek.Api.Blogs.Commands
 {
+    using System;
+    using System.Linq;
     using Fifthweek.Api.Channels.Shared;
+    using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.CodeGeneration;
+    using System.Threading.Tasks;
+    using Fifthweek.Api.Core;
+    using Fifthweek.Shared;
+    using Fifthweek.Api.Blogs.Shared;
+    using System.Transactions;
+    using Fifthweek.Api.Persistence;
+    using Fifthweek.Api.FileManagement.Shared;
+    using System.Collections.Generic;
 
     public partial class AcceptedChannelSubscription 
     {
@@ -2208,10 +2734,19 @@ namespace Fifthweek.Api.Blogs.Commands
 }
 namespace Fifthweek.Api.Blogs.Commands
 {
-    using Fifthweek.Api.Blogs.Shared;
+    using System;
+    using System.Linq;
     using Fifthweek.Api.Channels.Shared;
     using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.CodeGeneration;
+    using System.Threading.Tasks;
+    using Fifthweek.Api.Core;
+    using Fifthweek.Shared;
+    using Fifthweek.Api.Blogs.Shared;
+    using System.Transactions;
+    using Fifthweek.Api.Persistence;
+    using Fifthweek.Api.FileManagement.Shared;
+    using System.Collections.Generic;
 
     public partial class CreateBlogCommand 
     {
@@ -2287,9 +2822,19 @@ namespace Fifthweek.Api.Blogs.Commands
 }
 namespace Fifthweek.Api.Blogs.Commands
 {
+    using System;
+    using System.Linq;
     using Fifthweek.Api.Channels.Shared;
     using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.CodeGeneration;
+    using System.Threading.Tasks;
+    using Fifthweek.Api.Core;
+    using Fifthweek.Shared;
+    using Fifthweek.Api.Blogs.Shared;
+    using System.Transactions;
+    using Fifthweek.Api.Persistence;
+    using Fifthweek.Api.FileManagement.Shared;
+    using System.Collections.Generic;
 
     public partial class UnsubscribeFromChannelCommand 
     {
@@ -2347,10 +2892,19 @@ namespace Fifthweek.Api.Blogs.Commands
 }
 namespace Fifthweek.Api.Blogs.Commands
 {
-    using Fifthweek.Api.Blogs.Shared;
-    using Fifthweek.Api.FileManagement.Shared;
+    using System;
+    using System.Linq;
+    using Fifthweek.Api.Channels.Shared;
     using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.CodeGeneration;
+    using System.Threading.Tasks;
+    using Fifthweek.Api.Core;
+    using Fifthweek.Shared;
+    using Fifthweek.Api.Blogs.Shared;
+    using System.Transactions;
+    using Fifthweek.Api.Persistence;
+    using Fifthweek.Api.FileManagement.Shared;
+    using System.Collections.Generic;
 
     public partial class UpdateBlogCommand 
     {
@@ -2444,10 +2998,19 @@ namespace Fifthweek.Api.Blogs.Commands
 }
 namespace Fifthweek.Api.Blogs.Commands
 {
-    using System.Collections.Generic;
-    using Fifthweek.Api.Blogs.Shared;
+    using System;
+    using System.Linq;
+    using Fifthweek.Api.Channels.Shared;
     using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.CodeGeneration;
+    using System.Threading.Tasks;
+    using Fifthweek.Api.Core;
+    using Fifthweek.Shared;
+    using Fifthweek.Api.Blogs.Shared;
+    using System.Transactions;
+    using Fifthweek.Api.Persistence;
+    using Fifthweek.Api.FileManagement.Shared;
+    using System.Collections.Generic;
 
     public partial class UpdateBlogSubscriptionsCommand 
     {
@@ -2526,10 +3089,19 @@ namespace Fifthweek.Api.Blogs.Commands
 }
 namespace Fifthweek.Api.Blogs.Commands
 {
-    using System.Collections.Generic;
-    using Fifthweek.Api.Blogs.Shared;
+    using System;
+    using System.Linq;
+    using Fifthweek.Api.Channels.Shared;
     using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.CodeGeneration;
+    using System.Threading.Tasks;
+    using Fifthweek.Api.Core;
+    using Fifthweek.Shared;
+    using Fifthweek.Api.Blogs.Shared;
+    using System.Transactions;
+    using Fifthweek.Api.Persistence;
+    using Fifthweek.Api.FileManagement.Shared;
+    using System.Collections.Generic;
 
     public partial class UpdateFreeAccessUsersCommand 
     {
@@ -2608,255 +3180,21 @@ namespace Fifthweek.Api.Blogs.Commands
 }
 namespace Fifthweek.Api.Blogs.Controllers
 {
-    using Fifthweek.Api.Channels.Shared;
-    using Fifthweek.CodeGeneration;
-
-    public partial class ChannelSubscriptionDataWithChannelId 
-    {
-        public override string ToString()
-        {
-            return string.Format("ChannelSubscriptionDataWithChannelId(\"{0}\", {1})", this.ChannelId == null ? "null" : this.ChannelId.ToString(), this.AcceptedPrice == null ? "null" : this.AcceptedPrice.ToString());
-        }
-        
-        public override bool Equals(object obj)
-        {
-            if (ReferenceEquals(null, obj))
-            {
-                return false;
-            }
-        
-            if (ReferenceEquals(this, obj))
-            {
-                return true;
-            }
-        
-            if (obj.GetType() != this.GetType())
-            {
-                return false;
-            }
-        
-            return this.Equals((ChannelSubscriptionDataWithChannelId)obj);
-        }
-        
-        public override int GetHashCode()
-        {
-            unchecked
-            {
-                int hashCode = 0;
-                hashCode = (hashCode * 397) ^ (this.ChannelId != null ? this.ChannelId.GetHashCode() : 0);
-                hashCode = (hashCode * 397) ^ (this.AcceptedPrice != null ? this.AcceptedPrice.GetHashCode() : 0);
-                return hashCode;
-            }
-        }
-        
-        protected bool Equals(ChannelSubscriptionDataWithChannelId other)
-        {
-            if (!object.Equals(this.ChannelId, other.ChannelId))
-            {
-                return false;
-            }
-        
-            if (!object.Equals(this.AcceptedPrice, other.AcceptedPrice))
-            {
-                return false;
-            }
-        
-            return true;
-        }
-    }
-}
-namespace Fifthweek.Api.Blogs.Controllers
-{
-    using Fifthweek.Api.Channels.Shared;
-    using Fifthweek.CodeGeneration;
-
-    public partial class ChannelSubscriptionDataWithoutChannelId 
-    {
-        public override string ToString()
-        {
-            return string.Format("ChannelSubscriptionDataWithoutChannelId({0})", this.AcceptedPrice == null ? "null" : this.AcceptedPrice.ToString());
-        }
-        
-        public override bool Equals(object obj)
-        {
-            if (ReferenceEquals(null, obj))
-            {
-                return false;
-            }
-        
-            if (ReferenceEquals(this, obj))
-            {
-                return true;
-            }
-        
-            if (obj.GetType() != this.GetType())
-            {
-                return false;
-            }
-        
-            return this.Equals((ChannelSubscriptionDataWithoutChannelId)obj);
-        }
-        
-        public override int GetHashCode()
-        {
-            unchecked
-            {
-                int hashCode = 0;
-                hashCode = (hashCode * 397) ^ (this.AcceptedPrice != null ? this.AcceptedPrice.GetHashCode() : 0);
-                return hashCode;
-            }
-        }
-        
-        protected bool Equals(ChannelSubscriptionDataWithoutChannelId other)
-        {
-            if (!object.Equals(this.AcceptedPrice, other.AcceptedPrice))
-            {
-                return false;
-            }
-        
-            return true;
-        }
-    }
-}
-namespace Fifthweek.Api.Blogs.Controllers
-{
+    using System;
+    using System.Linq;
     using System.Collections.Generic;
-    using Fifthweek.CodeGeneration;
-
-    public partial class FreeAccessUsersData 
-    {
-        public override string ToString()
-        {
-            return string.Format("FreeAccessUsersData({0})", this.Emails == null ? "null" : this.Emails.ToString());
-        }
-        
-        public override bool Equals(object obj)
-        {
-            if (ReferenceEquals(null, obj))
-            {
-                return false;
-            }
-        
-            if (ReferenceEquals(this, obj))
-            {
-                return true;
-            }
-        
-            if (obj.GetType() != this.GetType())
-            {
-                return false;
-            }
-        
-            return this.Equals((FreeAccessUsersData)obj);
-        }
-        
-        public override int GetHashCode()
-        {
-            unchecked
-            {
-                int hashCode = 0;
-                hashCode = (hashCode * 397) ^ (this.Emails != null 
-        			? this.Emails.Aggregate(0, (previous, current) => 
-        				{ 
-        				    unchecked
-        				    {
-        				        return (previous * 397) ^ (current != null ? current.GetHashCode() : 0);
-        				    }
-        				})
-        			: 0);
-                return hashCode;
-            }
-        }
-        
-        protected bool Equals(FreeAccessUsersData other)
-        {
-            if (this.Emails != null && other.Emails != null)
-            {
-                if (!this.Emails.SequenceEqual(other.Emails))
-                {
-                    return false;    
-                }
-            }
-            else if (this.Emails != null || other.Emails != null)
-            {
-                return false;
-            }
-        
-            return true;
-        }
-    }
-}
-namespace Fifthweek.Api.Blogs.Controllers
-{
+    using System.Threading.Tasks;
+    using System.Web.Http;
+    using Fifthweek.Api.Blogs.Commands;
+    using Fifthweek.Api.Blogs.Queries;
     using Fifthweek.Api.Blogs.Shared;
-    using Fifthweek.Api.Channels.Shared;
-    using Fifthweek.CodeGeneration;
-
-    public partial class NewBlogData 
-    {
-        public override string ToString()
-        {
-            return string.Format("NewBlogData(\"{0}\", \"{1}\", {2})", this.Name == null ? "null" : this.Name.ToString(), this.Tagline == null ? "null" : this.Tagline.ToString(), this.BasePrice == null ? "null" : this.BasePrice.ToString());
-        }
-        
-        public override bool Equals(object obj)
-        {
-            if (ReferenceEquals(null, obj))
-            {
-                return false;
-            }
-        
-            if (ReferenceEquals(this, obj))
-            {
-                return true;
-            }
-        
-            if (obj.GetType() != this.GetType())
-            {
-                return false;
-            }
-        
-            return this.Equals((NewBlogData)obj);
-        }
-        
-        public override int GetHashCode()
-        {
-            unchecked
-            {
-                int hashCode = 0;
-                hashCode = (hashCode * 397) ^ (this.Name != null ? this.Name.GetHashCode() : 0);
-                hashCode = (hashCode * 397) ^ (this.Tagline != null ? this.Tagline.GetHashCode() : 0);
-                hashCode = (hashCode * 397) ^ (this.BasePrice != null ? this.BasePrice.GetHashCode() : 0);
-                return hashCode;
-            }
-        }
-        
-        protected bool Equals(NewBlogData other)
-        {
-            if (!object.Equals(this.Name, other.Name))
-            {
-                return false;
-            }
-        
-            if (!object.Equals(this.Tagline, other.Tagline))
-            {
-                return false;
-            }
-        
-            if (!object.Equals(this.BasePrice, other.BasePrice))
-            {
-                return false;
-            }
-        
-            return true;
-        }
-    }
-}
-namespace Fifthweek.Api.Blogs.Controllers
-{
-    using System.Collections.Generic;
+    using Fifthweek.Api.Core;
     using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.CodeGeneration;
+    using System.Net;
+    using Fifthweek.Shared;
+    using Fifthweek.Api.Channels.Shared;
+    using Fifthweek.Api.FileManagement.Shared;
 
     public partial class PutFreeAccessUsersResult 
     {
@@ -2921,161 +3259,27 @@ namespace Fifthweek.Api.Blogs.Controllers
         }
     }
 }
-namespace Fifthweek.Api.Blogs.Controllers
-{
-    using Fifthweek.Api.Blogs.Shared;
-    using Fifthweek.Api.FileManagement.Shared;
-    using Fifthweek.CodeGeneration;
-
-    public partial class UpdatedBlogData 
-    {
-        public override string ToString()
-        {
-            return string.Format("UpdatedBlogData(\"{0}\", \"{1}\", \"{2}\", {3}, \"{4}\", \"{5}\")", this.Name == null ? "null" : this.Name.ToString(), this.Tagline == null ? "null" : this.Tagline.ToString(), this.Introduction == null ? "null" : this.Introduction.ToString(), this.HeaderImageFileId == null ? "null" : this.HeaderImageFileId.ToString(), this.Video == null ? "null" : this.Video.ToString(), this.Description == null ? "null" : this.Description.ToString());
-        }
-        
-        public override bool Equals(object obj)
-        {
-            if (ReferenceEquals(null, obj))
-            {
-                return false;
-            }
-        
-            if (ReferenceEquals(this, obj))
-            {
-                return true;
-            }
-        
-            if (obj.GetType() != this.GetType())
-            {
-                return false;
-            }
-        
-            return this.Equals((UpdatedBlogData)obj);
-        }
-        
-        public override int GetHashCode()
-        {
-            unchecked
-            {
-                int hashCode = 0;
-                hashCode = (hashCode * 397) ^ (this.Name != null ? this.Name.GetHashCode() : 0);
-                hashCode = (hashCode * 397) ^ (this.Tagline != null ? this.Tagline.GetHashCode() : 0);
-                hashCode = (hashCode * 397) ^ (this.Introduction != null ? this.Introduction.GetHashCode() : 0);
-                hashCode = (hashCode * 397) ^ (this.HeaderImageFileId != null ? this.HeaderImageFileId.GetHashCode() : 0);
-                hashCode = (hashCode * 397) ^ (this.Video != null ? this.Video.GetHashCode() : 0);
-                hashCode = (hashCode * 397) ^ (this.Description != null ? this.Description.GetHashCode() : 0);
-                return hashCode;
-            }
-        }
-        
-        protected bool Equals(UpdatedBlogData other)
-        {
-            if (!object.Equals(this.Name, other.Name))
-            {
-                return false;
-            }
-        
-            if (!object.Equals(this.Tagline, other.Tagline))
-            {
-                return false;
-            }
-        
-            if (!object.Equals(this.Introduction, other.Introduction))
-            {
-                return false;
-            }
-        
-            if (!object.Equals(this.HeaderImageFileId, other.HeaderImageFileId))
-            {
-                return false;
-            }
-        
-            if (!object.Equals(this.Video, other.Video))
-            {
-                return false;
-            }
-        
-            if (!object.Equals(this.Description, other.Description))
-            {
-                return false;
-            }
-        
-            return true;
-        }
-    }
-}
-namespace Fifthweek.Api.Blogs.Controllers
-{
-    using System.Collections.Generic;
-    using Fifthweek.CodeGeneration;
-
-    public partial class UpdatedBlogSubscriptionData 
-    {
-        public override string ToString()
-        {
-            return string.Format("UpdatedBlogSubscriptionData({0})", this.Subscriptions == null ? "null" : this.Subscriptions.ToString());
-        }
-        
-        public override bool Equals(object obj)
-        {
-            if (ReferenceEquals(null, obj))
-            {
-                return false;
-            }
-        
-            if (ReferenceEquals(this, obj))
-            {
-                return true;
-            }
-        
-            if (obj.GetType() != this.GetType())
-            {
-                return false;
-            }
-        
-            return this.Equals((UpdatedBlogSubscriptionData)obj);
-        }
-        
-        public override int GetHashCode()
-        {
-            unchecked
-            {
-                int hashCode = 0;
-                hashCode = (hashCode * 397) ^ (this.Subscriptions != null 
-        			? this.Subscriptions.Aggregate(0, (previous, current) => 
-        				{ 
-        				    unchecked
-        				    {
-        				        return (previous * 397) ^ (current != null ? current.GetHashCode() : 0);
-        				    }
-        				})
-        			: 0);
-                return hashCode;
-            }
-        }
-        
-        protected bool Equals(UpdatedBlogSubscriptionData other)
-        {
-            if (this.Subscriptions != null && other.Subscriptions != null)
-            {
-                if (!this.Subscriptions.SequenceEqual(other.Subscriptions))
-                {
-                    return false;    
-                }
-            }
-            else if (this.Subscriptions != null || other.Subscriptions != null)
-            {
-                return false;
-            }
-        
-            return true;
-        }
-    }
-}
 namespace Fifthweek.Api.Blogs
 {
+    using System;
+    using System.Linq;
+    using System.Collections.Generic;
+    using System.Threading.Tasks;
+    using Dapper;
+    using Fifthweek.Api.Blogs.Commands;
+    using Fifthweek.Api.Blogs.Shared;
+    using Fifthweek.Api.Channels.Shared;
+    using Fifthweek.Api.Identity.Shared.Membership;
+    using Fifthweek.Api.Persistence;
     using Fifthweek.CodeGeneration;
+    using Fifthweek.Payments.SnapshotCreation;
+    using Fifthweek.Shared;
+    using Fifthweek.Api.Core;
+    using Fifthweek.Api.Persistence.Identity;
+    using Fifthweek.Api.Blogs.Queries;
+    using Fifthweek.Api.FileManagement.Shared;
+    using Fifthweek.Api.Collections.Shared;
+    using System.Transactions;
 
     public partial class CreatorStatus 
     {
@@ -3134,19 +3338,24 @@ namespace Fifthweek.Api.Blogs
 namespace Fifthweek.Api.Blogs
 {
     using System;
-    using System.Collections.Generic;
     using System.Linq;
+    using System.Collections.Generic;
     using System.Threading.Tasks;
     using Dapper;
-    using Fifthweek.Api.Blogs.Queries;
+    using Fifthweek.Api.Blogs.Commands;
     using Fifthweek.Api.Blogs.Shared;
     using Fifthweek.Api.Channels.Shared;
-    using Fifthweek.Api.FileManagement.Shared;
     using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.Api.Persistence;
-    using Fifthweek.Api.Persistence.Identity;
     using Fifthweek.CodeGeneration;
+    using Fifthweek.Payments.SnapshotCreation;
     using Fifthweek.Shared;
+    using Fifthweek.Api.Core;
+    using Fifthweek.Api.Persistence.Identity;
+    using Fifthweek.Api.Blogs.Queries;
+    using Fifthweek.Api.FileManagement.Shared;
+    using Fifthweek.Api.Collections.Shared;
+    using System.Transactions;
 
     public partial class GetLandingPageDbStatement
     {
@@ -3234,11 +3443,20 @@ namespace Fifthweek.Api.Blogs
 }
 namespace Fifthweek.Api.Blogs.Queries
 {
+    using System;
+    using System.Linq;
     using System.Collections.Generic;
     using Fifthweek.Api.Blogs.Shared;
     using Fifthweek.Api.FileManagement.Shared;
     using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.CodeGeneration;
+    using Fifthweek.Api.Channels.Shared;
+    using Fifthweek.Api.Collections.Shared;
+    using Fifthweek.Api.Core;
+    using System.Threading.Tasks;
+    using Fifthweek.Shared;
+    using Dapper;
+    using Fifthweek.Api.Persistence;
 
     public partial class BlogSubscriptionStatus 
     {
@@ -3342,11 +3560,19 @@ namespace Fifthweek.Api.Blogs.Queries
 namespace Fifthweek.Api.Blogs.Queries
 {
     using System;
+    using System.Linq;
     using System.Collections.Generic;
     using Fifthweek.Api.Blogs.Shared;
     using Fifthweek.Api.FileManagement.Shared;
     using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.CodeGeneration;
+    using Fifthweek.Api.Channels.Shared;
+    using Fifthweek.Api.Collections.Shared;
+    using Fifthweek.Api.Core;
+    using System.Threading.Tasks;
+    using Fifthweek.Shared;
+    using Dapper;
+    using Fifthweek.Api.Persistence;
 
     public partial class BlogWithFileInformation 
     {
@@ -3468,9 +3694,19 @@ namespace Fifthweek.Api.Blogs.Queries
 namespace Fifthweek.Api.Blogs.Queries
 {
     using System;
+    using System.Linq;
     using System.Collections.Generic;
-    using Fifthweek.Api.Channels.Shared;
+    using Fifthweek.Api.Blogs.Shared;
+    using Fifthweek.Api.FileManagement.Shared;
+    using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.CodeGeneration;
+    using Fifthweek.Api.Channels.Shared;
+    using Fifthweek.Api.Collections.Shared;
+    using Fifthweek.Api.Core;
+    using System.Threading.Tasks;
+    using Fifthweek.Shared;
+    using Dapper;
+    using Fifthweek.Api.Persistence;
 
     public partial class ChannelSubscriptionStatus 
     {
@@ -3585,8 +3821,20 @@ namespace Fifthweek.Api.Blogs.Queries
 }
 namespace Fifthweek.Api.Blogs.Queries
 {
-    using Fifthweek.Api.Collections.Shared;
+    using System;
+    using System.Linq;
+    using System.Collections.Generic;
+    using Fifthweek.Api.Blogs.Shared;
+    using Fifthweek.Api.FileManagement.Shared;
+    using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.CodeGeneration;
+    using Fifthweek.Api.Channels.Shared;
+    using Fifthweek.Api.Collections.Shared;
+    using Fifthweek.Api.Core;
+    using System.Threading.Tasks;
+    using Fifthweek.Shared;
+    using Dapper;
+    using Fifthweek.Api.Persistence;
 
     public partial class CollectionSubscriptionStatus 
     {
@@ -3644,9 +3892,20 @@ namespace Fifthweek.Api.Blogs.Queries
 }
 namespace Fifthweek.Api.Blogs.Queries
 {
+    using System;
+    using System.Linq;
+    using System.Collections.Generic;
     using Fifthweek.Api.Blogs.Shared;
-    using Fifthweek.Api.Core;
+    using Fifthweek.Api.FileManagement.Shared;
+    using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.CodeGeneration;
+    using Fifthweek.Api.Channels.Shared;
+    using Fifthweek.Api.Collections.Shared;
+    using Fifthweek.Api.Core;
+    using System.Threading.Tasks;
+    using Fifthweek.Shared;
+    using Dapper;
+    using Fifthweek.Api.Persistence;
 
     public partial class GetBlogChannelsAndCollectionsQuery 
     {
@@ -3698,7 +3957,20 @@ namespace Fifthweek.Api.Blogs.Queries
 }
 namespace Fifthweek.Api.Blogs.Queries
 {
+    using System;
+    using System.Linq;
+    using System.Collections.Generic;
+    using Fifthweek.Api.Blogs.Shared;
+    using Fifthweek.Api.FileManagement.Shared;
+    using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.CodeGeneration;
+    using Fifthweek.Api.Channels.Shared;
+    using Fifthweek.Api.Collections.Shared;
+    using Fifthweek.Api.Core;
+    using System.Threading.Tasks;
+    using Fifthweek.Shared;
+    using Dapper;
+    using Fifthweek.Api.Persistence;
 
     public partial class GetBlogChannelsAndCollectionsResult 
     {
@@ -3750,9 +4022,20 @@ namespace Fifthweek.Api.Blogs.Queries
 }
 namespace Fifthweek.Api.Blogs.Queries
 {
-    using Fifthweek.Api.Core;
+    using System;
+    using System.Linq;
+    using System.Collections.Generic;
+    using Fifthweek.Api.Blogs.Shared;
+    using Fifthweek.Api.FileManagement.Shared;
     using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.CodeGeneration;
+    using Fifthweek.Api.Channels.Shared;
+    using Fifthweek.Api.Collections.Shared;
+    using Fifthweek.Api.Core;
+    using System.Threading.Tasks;
+    using Fifthweek.Shared;
+    using Dapper;
+    using Fifthweek.Api.Persistence;
 
     public partial class GetCreatorStatusQuery 
     {
@@ -3810,10 +4093,20 @@ namespace Fifthweek.Api.Blogs.Queries
 }
 namespace Fifthweek.Api.Blogs.Queries
 {
+    using System;
+    using System.Linq;
+    using System.Collections.Generic;
     using Fifthweek.Api.Blogs.Shared;
-    using Fifthweek.Api.Core;
+    using Fifthweek.Api.FileManagement.Shared;
     using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.CodeGeneration;
+    using Fifthweek.Api.Channels.Shared;
+    using Fifthweek.Api.Collections.Shared;
+    using Fifthweek.Api.Core;
+    using System.Threading.Tasks;
+    using Fifthweek.Shared;
+    using Dapper;
+    using Fifthweek.Api.Persistence;
 
     public partial class GetFreeAccessUsersQuery 
     {
@@ -3871,10 +4164,20 @@ namespace Fifthweek.Api.Blogs.Queries
 }
 namespace Fifthweek.Api.Blogs.Queries
 {
+    using System;
+    using System.Linq;
     using System.Collections.Generic;
-    using Fifthweek.Api.Channels.Shared;
+    using Fifthweek.Api.Blogs.Shared;
+    using Fifthweek.Api.FileManagement.Shared;
     using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.CodeGeneration;
+    using Fifthweek.Api.Channels.Shared;
+    using Fifthweek.Api.Collections.Shared;
+    using Fifthweek.Api.Core;
+    using System.Threading.Tasks;
+    using Fifthweek.Shared;
+    using Dapper;
+    using Fifthweek.Api.Persistence;
 
     public partial class GetFreeAccessUsersResult
     {
@@ -3962,10 +4265,20 @@ namespace Fifthweek.Api.Blogs.Queries
 }
 namespace Fifthweek.Api.Blogs.Queries
 {
+    using System;
+    using System.Linq;
     using System.Collections.Generic;
-    using Fifthweek.Api.Channels.Shared;
+    using Fifthweek.Api.Blogs.Shared;
+    using Fifthweek.Api.FileManagement.Shared;
     using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.CodeGeneration;
+    using Fifthweek.Api.Channels.Shared;
+    using Fifthweek.Api.Collections.Shared;
+    using Fifthweek.Api.Core;
+    using System.Threading.Tasks;
+    using Fifthweek.Shared;
+    using Dapper;
+    using Fifthweek.Api.Persistence;
 
     public partial class GetFreeAccessUsersResult 
     {
@@ -4032,9 +4345,20 @@ namespace Fifthweek.Api.Blogs.Queries
 }
 namespace Fifthweek.Api.Blogs.Queries
 {
-    using Fifthweek.Api.Core;
+    using System;
+    using System.Linq;
+    using System.Collections.Generic;
+    using Fifthweek.Api.Blogs.Shared;
+    using Fifthweek.Api.FileManagement.Shared;
     using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.CodeGeneration;
+    using Fifthweek.Api.Channels.Shared;
+    using Fifthweek.Api.Collections.Shared;
+    using Fifthweek.Api.Core;
+    using System.Threading.Tasks;
+    using Fifthweek.Shared;
+    using Dapper;
+    using Fifthweek.Api.Persistence;
 
     public partial class GetLandingPageQuery 
     {
@@ -4086,10 +4410,20 @@ namespace Fifthweek.Api.Blogs.Queries
 }
 namespace Fifthweek.Api.Blogs.Queries
 {
+    using System;
+    using System.Linq;
     using System.Collections.Generic;
+    using Fifthweek.Api.Blogs.Shared;
     using Fifthweek.Api.FileManagement.Shared;
     using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.CodeGeneration;
+    using Fifthweek.Api.Channels.Shared;
+    using Fifthweek.Api.Collections.Shared;
+    using Fifthweek.Api.Core;
+    using System.Threading.Tasks;
+    using Fifthweek.Shared;
+    using Dapper;
+    using Fifthweek.Api.Persistence;
 
     public partial class GetLandingPageResult 
     {
@@ -4153,10 +4487,20 @@ namespace Fifthweek.Api.Blogs.Queries
 }
 namespace Fifthweek.Api.Blogs.Queries
 {
+    using System;
+    using System.Linq;
+    using System.Collections.Generic;
     using Fifthweek.Api.Blogs.Shared;
-    using Fifthweek.Api.Core;
+    using Fifthweek.Api.FileManagement.Shared;
     using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.CodeGeneration;
+    using Fifthweek.Api.Channels.Shared;
+    using Fifthweek.Api.Collections.Shared;
+    using Fifthweek.Api.Core;
+    using System.Threading.Tasks;
+    using Fifthweek.Shared;
+    using Dapper;
+    using Fifthweek.Api.Persistence;
 
     public partial class GetUserSubscriptionsQuery 
     {
@@ -4208,8 +4552,20 @@ namespace Fifthweek.Api.Blogs.Queries
 }
 namespace Fifthweek.Api.Blogs.Queries
 {
+    using System;
+    using System.Linq;
     using System.Collections.Generic;
+    using Fifthweek.Api.Blogs.Shared;
+    using Fifthweek.Api.FileManagement.Shared;
+    using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.CodeGeneration;
+    using Fifthweek.Api.Channels.Shared;
+    using Fifthweek.Api.Collections.Shared;
+    using Fifthweek.Api.Core;
+    using System.Threading.Tasks;
+    using Fifthweek.Shared;
+    using Dapper;
+    using Fifthweek.Api.Persistence;
 
     public partial class GetUserSubscriptionsResult 
     {
@@ -4276,8 +4632,495 @@ namespace Fifthweek.Api.Blogs.Queries
 }
 namespace Fifthweek.Api.Blogs.Controllers
 {
-    using Fifthweek.Api.Channels.Shared;
+    using System;
+    using System.Linq;
+    using System.Collections.Generic;
+    using System.Threading.Tasks;
+    using System.Web.Http;
+    using Fifthweek.Api.Blogs.Commands;
+    using Fifthweek.Api.Blogs.Queries;
+    using Fifthweek.Api.Blogs.Shared;
+    using Fifthweek.Api.Core;
+    using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.CodeGeneration;
+    using System.Net;
+    using Fifthweek.Shared;
+    using Fifthweek.Api.Channels.Shared;
+    using Fifthweek.Api.FileManagement.Shared;
+
+    public partial class ChannelSubscriptionDataWithChannelId 
+    {
+        public override string ToString()
+        {
+            return string.Format("ChannelSubscriptionDataWithChannelId(\"{0}\", {1})", this.ChannelId == null ? "null" : this.ChannelId.ToString(), this.AcceptedPrice == null ? "null" : this.AcceptedPrice.ToString());
+        }
+        
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj))
+            {
+                return false;
+            }
+        
+            if (ReferenceEquals(this, obj))
+            {
+                return true;
+            }
+        
+            if (obj.GetType() != this.GetType())
+            {
+                return false;
+            }
+        
+            return this.Equals((ChannelSubscriptionDataWithChannelId)obj);
+        }
+        
+        public override int GetHashCode()
+        {
+            unchecked
+            {
+                int hashCode = 0;
+                hashCode = (hashCode * 397) ^ (this.ChannelId != null ? this.ChannelId.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.AcceptedPrice != null ? this.AcceptedPrice.GetHashCode() : 0);
+                return hashCode;
+            }
+        }
+        
+        protected bool Equals(ChannelSubscriptionDataWithChannelId other)
+        {
+            if (!object.Equals(this.ChannelId, other.ChannelId))
+            {
+                return false;
+            }
+        
+            if (!object.Equals(this.AcceptedPrice, other.AcceptedPrice))
+            {
+                return false;
+            }
+        
+            return true;
+        }
+    }
+}
+namespace Fifthweek.Api.Blogs.Controllers
+{
+    using System;
+    using System.Linq;
+    using System.Collections.Generic;
+    using System.Threading.Tasks;
+    using System.Web.Http;
+    using Fifthweek.Api.Blogs.Commands;
+    using Fifthweek.Api.Blogs.Queries;
+    using Fifthweek.Api.Blogs.Shared;
+    using Fifthweek.Api.Core;
+    using Fifthweek.Api.Identity.Shared.Membership;
+    using Fifthweek.CodeGeneration;
+    using System.Net;
+    using Fifthweek.Shared;
+    using Fifthweek.Api.Channels.Shared;
+    using Fifthweek.Api.FileManagement.Shared;
+
+    public partial class ChannelSubscriptionDataWithoutChannelId 
+    {
+        public override string ToString()
+        {
+            return string.Format("ChannelSubscriptionDataWithoutChannelId({0})", this.AcceptedPrice == null ? "null" : this.AcceptedPrice.ToString());
+        }
+        
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj))
+            {
+                return false;
+            }
+        
+            if (ReferenceEquals(this, obj))
+            {
+                return true;
+            }
+        
+            if (obj.GetType() != this.GetType())
+            {
+                return false;
+            }
+        
+            return this.Equals((ChannelSubscriptionDataWithoutChannelId)obj);
+        }
+        
+        public override int GetHashCode()
+        {
+            unchecked
+            {
+                int hashCode = 0;
+                hashCode = (hashCode * 397) ^ (this.AcceptedPrice != null ? this.AcceptedPrice.GetHashCode() : 0);
+                return hashCode;
+            }
+        }
+        
+        protected bool Equals(ChannelSubscriptionDataWithoutChannelId other)
+        {
+            if (!object.Equals(this.AcceptedPrice, other.AcceptedPrice))
+            {
+                return false;
+            }
+        
+            return true;
+        }
+    }
+}
+namespace Fifthweek.Api.Blogs.Controllers
+{
+    using System;
+    using System.Linq;
+    using System.Collections.Generic;
+    using System.Threading.Tasks;
+    using System.Web.Http;
+    using Fifthweek.Api.Blogs.Commands;
+    using Fifthweek.Api.Blogs.Queries;
+    using Fifthweek.Api.Blogs.Shared;
+    using Fifthweek.Api.Core;
+    using Fifthweek.Api.Identity.Shared.Membership;
+    using Fifthweek.CodeGeneration;
+    using System.Net;
+    using Fifthweek.Shared;
+    using Fifthweek.Api.Channels.Shared;
+    using Fifthweek.Api.FileManagement.Shared;
+
+    public partial class FreeAccessUsersData 
+    {
+        public override string ToString()
+        {
+            return string.Format("FreeAccessUsersData({0})", this.Emails == null ? "null" : this.Emails.ToString());
+        }
+        
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj))
+            {
+                return false;
+            }
+        
+            if (ReferenceEquals(this, obj))
+            {
+                return true;
+            }
+        
+            if (obj.GetType() != this.GetType())
+            {
+                return false;
+            }
+        
+            return this.Equals((FreeAccessUsersData)obj);
+        }
+        
+        public override int GetHashCode()
+        {
+            unchecked
+            {
+                int hashCode = 0;
+                hashCode = (hashCode * 397) ^ (this.Emails != null 
+        			? this.Emails.Aggregate(0, (previous, current) => 
+        				{ 
+        				    unchecked
+        				    {
+        				        return (previous * 397) ^ (current != null ? current.GetHashCode() : 0);
+        				    }
+        				})
+        			: 0);
+                return hashCode;
+            }
+        }
+        
+        protected bool Equals(FreeAccessUsersData other)
+        {
+            if (this.Emails != null && other.Emails != null)
+            {
+                if (!this.Emails.SequenceEqual(other.Emails))
+                {
+                    return false;    
+                }
+            }
+            else if (this.Emails != null || other.Emails != null)
+            {
+                return false;
+            }
+        
+            return true;
+        }
+    }
+}
+namespace Fifthweek.Api.Blogs.Controllers
+{
+    using System;
+    using System.Linq;
+    using System.Collections.Generic;
+    using System.Threading.Tasks;
+    using System.Web.Http;
+    using Fifthweek.Api.Blogs.Commands;
+    using Fifthweek.Api.Blogs.Queries;
+    using Fifthweek.Api.Blogs.Shared;
+    using Fifthweek.Api.Core;
+    using Fifthweek.Api.Identity.Shared.Membership;
+    using Fifthweek.CodeGeneration;
+    using System.Net;
+    using Fifthweek.Shared;
+    using Fifthweek.Api.Channels.Shared;
+    using Fifthweek.Api.FileManagement.Shared;
+
+    public partial class NewBlogData 
+    {
+        public override string ToString()
+        {
+            return string.Format("NewBlogData(\"{0}\", \"{1}\", {2})", this.Name == null ? "null" : this.Name.ToString(), this.Tagline == null ? "null" : this.Tagline.ToString(), this.BasePrice == null ? "null" : this.BasePrice.ToString());
+        }
+        
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj))
+            {
+                return false;
+            }
+        
+            if (ReferenceEquals(this, obj))
+            {
+                return true;
+            }
+        
+            if (obj.GetType() != this.GetType())
+            {
+                return false;
+            }
+        
+            return this.Equals((NewBlogData)obj);
+        }
+        
+        public override int GetHashCode()
+        {
+            unchecked
+            {
+                int hashCode = 0;
+                hashCode = (hashCode * 397) ^ (this.Name != null ? this.Name.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.Tagline != null ? this.Tagline.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.BasePrice != null ? this.BasePrice.GetHashCode() : 0);
+                return hashCode;
+            }
+        }
+        
+        protected bool Equals(NewBlogData other)
+        {
+            if (!object.Equals(this.Name, other.Name))
+            {
+                return false;
+            }
+        
+            if (!object.Equals(this.Tagline, other.Tagline))
+            {
+                return false;
+            }
+        
+            if (!object.Equals(this.BasePrice, other.BasePrice))
+            {
+                return false;
+            }
+        
+            return true;
+        }
+    }
+}
+namespace Fifthweek.Api.Blogs.Controllers
+{
+    using System;
+    using System.Linq;
+    using System.Collections.Generic;
+    using System.Threading.Tasks;
+    using System.Web.Http;
+    using Fifthweek.Api.Blogs.Commands;
+    using Fifthweek.Api.Blogs.Queries;
+    using Fifthweek.Api.Blogs.Shared;
+    using Fifthweek.Api.Core;
+    using Fifthweek.Api.Identity.Shared.Membership;
+    using Fifthweek.CodeGeneration;
+    using System.Net;
+    using Fifthweek.Shared;
+    using Fifthweek.Api.Channels.Shared;
+    using Fifthweek.Api.FileManagement.Shared;
+
+    public partial class UpdatedBlogData 
+    {
+        public override string ToString()
+        {
+            return string.Format("UpdatedBlogData(\"{0}\", \"{1}\", \"{2}\", {3}, \"{4}\", \"{5}\")", this.Name == null ? "null" : this.Name.ToString(), this.Tagline == null ? "null" : this.Tagline.ToString(), this.Introduction == null ? "null" : this.Introduction.ToString(), this.HeaderImageFileId == null ? "null" : this.HeaderImageFileId.ToString(), this.Video == null ? "null" : this.Video.ToString(), this.Description == null ? "null" : this.Description.ToString());
+        }
+        
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj))
+            {
+                return false;
+            }
+        
+            if (ReferenceEquals(this, obj))
+            {
+                return true;
+            }
+        
+            if (obj.GetType() != this.GetType())
+            {
+                return false;
+            }
+        
+            return this.Equals((UpdatedBlogData)obj);
+        }
+        
+        public override int GetHashCode()
+        {
+            unchecked
+            {
+                int hashCode = 0;
+                hashCode = (hashCode * 397) ^ (this.Name != null ? this.Name.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.Tagline != null ? this.Tagline.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.Introduction != null ? this.Introduction.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.HeaderImageFileId != null ? this.HeaderImageFileId.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.Video != null ? this.Video.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.Description != null ? this.Description.GetHashCode() : 0);
+                return hashCode;
+            }
+        }
+        
+        protected bool Equals(UpdatedBlogData other)
+        {
+            if (!object.Equals(this.Name, other.Name))
+            {
+                return false;
+            }
+        
+            if (!object.Equals(this.Tagline, other.Tagline))
+            {
+                return false;
+            }
+        
+            if (!object.Equals(this.Introduction, other.Introduction))
+            {
+                return false;
+            }
+        
+            if (!object.Equals(this.HeaderImageFileId, other.HeaderImageFileId))
+            {
+                return false;
+            }
+        
+            if (!object.Equals(this.Video, other.Video))
+            {
+                return false;
+            }
+        
+            if (!object.Equals(this.Description, other.Description))
+            {
+                return false;
+            }
+        
+            return true;
+        }
+    }
+}
+namespace Fifthweek.Api.Blogs.Controllers
+{
+    using System;
+    using System.Linq;
+    using System.Collections.Generic;
+    using System.Threading.Tasks;
+    using System.Web.Http;
+    using Fifthweek.Api.Blogs.Commands;
+    using Fifthweek.Api.Blogs.Queries;
+    using Fifthweek.Api.Blogs.Shared;
+    using Fifthweek.Api.Core;
+    using Fifthweek.Api.Identity.Shared.Membership;
+    using Fifthweek.CodeGeneration;
+    using System.Net;
+    using Fifthweek.Shared;
+    using Fifthweek.Api.Channels.Shared;
+    using Fifthweek.Api.FileManagement.Shared;
+
+    public partial class UpdatedBlogSubscriptionData 
+    {
+        public override string ToString()
+        {
+            return string.Format("UpdatedBlogSubscriptionData({0})", this.Subscriptions == null ? "null" : this.Subscriptions.ToString());
+        }
+        
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj))
+            {
+                return false;
+            }
+        
+            if (ReferenceEquals(this, obj))
+            {
+                return true;
+            }
+        
+            if (obj.GetType() != this.GetType())
+            {
+                return false;
+            }
+        
+            return this.Equals((UpdatedBlogSubscriptionData)obj);
+        }
+        
+        public override int GetHashCode()
+        {
+            unchecked
+            {
+                int hashCode = 0;
+                hashCode = (hashCode * 397) ^ (this.Subscriptions != null 
+        			? this.Subscriptions.Aggregate(0, (previous, current) => 
+        				{ 
+        				    unchecked
+        				    {
+        				        return (previous * 397) ^ (current != null ? current.GetHashCode() : 0);
+        				    }
+        				})
+        			: 0);
+                return hashCode;
+            }
+        }
+        
+        protected bool Equals(UpdatedBlogSubscriptionData other)
+        {
+            if (this.Subscriptions != null && other.Subscriptions != null)
+            {
+                if (!this.Subscriptions.SequenceEqual(other.Subscriptions))
+                {
+                    return false;    
+                }
+            }
+            else if (this.Subscriptions != null || other.Subscriptions != null)
+            {
+                return false;
+            }
+        
+            return true;
+        }
+    }
+}
+namespace Fifthweek.Api.Blogs.Controllers
+{
+    using System;
+    using System.Linq;
+    using System.Collections.Generic;
+    using System.Threading.Tasks;
+    using System.Web.Http;
+    using Fifthweek.Api.Blogs.Commands;
+    using Fifthweek.Api.Blogs.Queries;
+    using Fifthweek.Api.Blogs.Shared;
+    using Fifthweek.Api.Core;
+    using Fifthweek.Api.Identity.Shared.Membership;
+    using Fifthweek.CodeGeneration;
+    using System.Net;
+    using Fifthweek.Shared;
+    using Fifthweek.Api.Channels.Shared;
+    using Fifthweek.Api.FileManagement.Shared;
 
     public partial class ChannelSubscriptionDataWithChannelId 
     {
@@ -4339,8 +5182,21 @@ namespace Fifthweek.Api.Blogs.Controllers
 }
 namespace Fifthweek.Api.Blogs.Controllers
 {
-    using Fifthweek.Api.Channels.Shared;
+    using System;
+    using System.Linq;
+    using System.Collections.Generic;
+    using System.Threading.Tasks;
+    using System.Web.Http;
+    using Fifthweek.Api.Blogs.Commands;
+    using Fifthweek.Api.Blogs.Queries;
+    using Fifthweek.Api.Blogs.Shared;
+    using Fifthweek.Api.Core;
+    using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.CodeGeneration;
+    using System.Net;
+    using Fifthweek.Shared;
+    using Fifthweek.Api.Channels.Shared;
+    using Fifthweek.Api.FileManagement.Shared;
 
     public partial class ChannelSubscriptionDataWithoutChannelId 
     {
@@ -4392,9 +5248,21 @@ namespace Fifthweek.Api.Blogs.Controllers
 }
 namespace Fifthweek.Api.Blogs.Controllers
 {
+    using System;
+    using System.Linq;
+    using System.Collections.Generic;
+    using System.Threading.Tasks;
+    using System.Web.Http;
+    using Fifthweek.Api.Blogs.Commands;
+    using Fifthweek.Api.Blogs.Queries;
     using Fifthweek.Api.Blogs.Shared;
-    using Fifthweek.Api.Channels.Shared;
+    using Fifthweek.Api.Core;
+    using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.CodeGeneration;
+    using System.Net;
+    using Fifthweek.Shared;
+    using Fifthweek.Api.Channels.Shared;
+    using Fifthweek.Api.FileManagement.Shared;
 
     public partial class NewBlogData 
     {
@@ -4510,9 +5378,21 @@ namespace Fifthweek.Api.Blogs.Controllers
 }
 namespace Fifthweek.Api.Blogs.Controllers
 {
+    using System;
+    using System.Linq;
+    using System.Collections.Generic;
+    using System.Threading.Tasks;
+    using System.Web.Http;
+    using Fifthweek.Api.Blogs.Commands;
+    using Fifthweek.Api.Blogs.Queries;
     using Fifthweek.Api.Blogs.Shared;
-    using Fifthweek.Api.FileManagement.Shared;
+    using Fifthweek.Api.Core;
+    using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.CodeGeneration;
+    using System.Net;
+    using Fifthweek.Shared;
+    using Fifthweek.Api.Channels.Shared;
+    using Fifthweek.Api.FileManagement.Shared;
 
     public partial class UpdatedBlogData 
     {
