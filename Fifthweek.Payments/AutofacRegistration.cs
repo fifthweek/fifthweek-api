@@ -33,6 +33,7 @@
             builder.RegisterType<GetCreatorPercentageOverrideDbStatement>().As<IGetCreatorPercentageOverrideDbStatement>();
             builder.RegisterType<GetCalculatedAccountBalancesDbStatement>().As<IGetCalculatedAccountBalancesDbStatement>();
             builder.RegisterType<RequestProcessPaymentsService>().As<IRequestProcessPaymentsService>();
+            builder.RegisterType<UpdateAccountBalancesDbStatement>().As<IUpdateAccountBalancesDbStatement>();
         }
     }
 }

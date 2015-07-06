@@ -20,7 +20,7 @@
         private readonly ICommandHandler<UpdatePaymentOriginCommand> updatePaymentsOrigin;
         private readonly ICommandHandler<ApplyCreditRequestCommand> applyCreditRequest;
 
-        [Route("origins")]
+        [Route("origins/{userId}")]
         public Task PutPaymentOriginAsync(string userId, [FromBody]PaymentOriginData data)
         {
             userId.AssertUrlParameterProvided("userId");
@@ -39,7 +39,7 @@
                 parsedData.IpAddress));
         }
 
-        [Route("creditRequests")]
+        [Route("creditRequests/{userId}")]
         public Task PostCreditRequestAsync(string userId, [FromBody]CreditRequestData data)
         {
             userId.AssertUrlParameterProvided("userId");
@@ -56,7 +56,7 @@
                 parsedData.ExpectedTotalAmount));
         }
 
-        [Route("creditRequestSummaries")]
+        [Route("creditRequestSummaries/{userId}")]
         public Task<CreditRequestSummary> GetCreditRequestSummaryAsync(string userId, [FromUri]int amount)
         {
             userId.AssertUrlParameterProvided("userId");

@@ -112,6 +112,10 @@
       <Project>{22d85c74-3001-4930-95d7-8f2526452dd6}</Project>
       <Name>Fifthweek.Api.Logging</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Fifthweek.Api.Payments\Fifthweek.Api.Payments.csproj">
+      <Project>{b93626ed-9237-4647-ac00-d8f952827040}</Project>
+      <Name>Fifthweek.Api.Payments</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Fifthweek.Api.Persistence\Fifthweek.Api.Persistence.csproj">
       <Project>{9c18bee3-fab5-4a00-8a94-a1faea370175}</Project>
       <Name>Fifthweek.Api.Persistence</Name>

@@ -13,6 +13,7 @@
         {
             builder.RegisterType<GetUserPaymentOriginDbStatement>().As<IGetUserPaymentOriginDbStatement>();
             builder.RegisterType<SetUserPaymentOriginDbStatement>().As<ISetUserPaymentOriginDbStatement>();
+            builder.RegisterType<SetUserPaymentOriginOriginalTaxamoTransactionKeyDbStatement>().As<ISetUserPaymentOriginOriginalTaxamoTransactionKeyDbStatement >();
             builder.RegisterType<CreateStripeCustomer>().As<ICreateStripeCustomer>();
             builder.RegisterType<UpdateStripeCustomerCreditCard>().As<IUpdateStripeCustomerCreditCard>();
             builder.RegisterType<PerformStripeCharge>().As<IPerformStripeCharge>();
