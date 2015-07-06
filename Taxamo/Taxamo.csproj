@@ -1,0 +1,155 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{0A7ECB89-B0BB-458C-8244-08B59850668E}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Taxamo</RootNamespace>
+    <AssemblyName>Taxamo</AssemblyName>
+    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Newtonsoft.Json, Version=6.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Newtonsoft.Json.6.0.6\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="RestSharp">
+      <HintPath>..\packages\RestSharp.105.1.0\lib\net452\RestSharp.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Api\ApivdictionariesApi.cs" />
+    <Compile Include="Api\ApivgeoipApi.cs" />
+    <Compile Include="Api\ApivsettlementApi.cs" />
+    <Compile Include="Api\ApivstatsApi.cs" />
+    <Compile Include="Api\ApivtaxApi.cs" />
+    <Compile Include="Api\ApivtransactionsApi.cs" />
+    <Compile Include="Api\ApivtransactionskeyinvoiceApi.cs" />
+    <Compile Include="Api\ApivtransactionskeypaymentsApi.cs" />
+    <Compile Include="Api\ApivtransactionskeyrefundsApi.cs" />
+    <Compile Include="Api\ApivverificationApi.cs" />
+    <Compile Include="Client\ApiClient.cs" />
+    <Compile Include="Client\ApiException.cs" />
+    <Compile Include="Client\Configuration.cs" />
+    <Compile Include="Model\AdditionalCurrencies.cs" />
+    <Compile Include="Model\AdditionalCurrency.cs" />
+    <Compile Include="Model\ByCountry.cs" />
+    <Compile Include="Model\ByStatus.cs" />
+    <Compile Include="Model\ByTaxationType.cs" />
+    <Compile Include="Model\C.cs" />
+    <Compile Include="Model\CalculateSimpleTaxIn.cs" />
+    <Compile Include="Model\CalculateSimpleTaxOut.cs" />
+    <Compile Include="Model\CalculateTaxIn.cs" />
+    <Compile Include="Model\CalculateTaxLocationIn.cs" />
+    <Compile Include="Model\CalculateTaxLocationOut.cs" />
+    <Compile Include="Model\CalculateTaxOut.cs" />
+    <Compile Include="Model\CancelTransactionOut.cs" />
+    <Compile Include="Model\CapturePaymentOut.cs" />
+    <Compile Include="Model\ConfirmTransactionIn.cs" />
+    <Compile Include="Model\ConfirmTransactionOut.cs" />
+    <Compile Include="Model\Countries.cs" />
+    <Compile Include="Model\Country.cs" />
+    <Compile Include="Model\CountrySchema.cs" />
+    <Compile Include="Model\CreatePaymentIn.cs" />
+    <Compile Include="Model\CreatePaymentOut.cs" />
+    <Compile Include="Model\CreateRefundIn.cs" />
+    <Compile Include="Model\CreateRefundOut.cs" />
+    <Compile Include="Model\CreateSMSTokenIn.cs" />
+    <Compile Include="Model\CreateSMSTokenOut.cs" />
+    <Compile Include="Model\CreateTransactionIn.cs" />
+    <Compile Include="Model\CreateTransactionOut.cs" />
+    <Compile Include="Model\CurrencySchema.cs" />
+    <Compile Include="Model\CustomFields.cs" />
+    <Compile Include="Model\EmailInvoiceIn.cs" />
+    <Compile Include="Model\EmailInvoiceOut.cs" />
+    <Compile Include="Model\Evidence.cs" />
+    <Compile Include="Model\EvidenceSchema.cs" />
+    <Compile Include="Model\GetCountriesDictIn.cs" />
+    <Compile Include="Model\GetCountriesDictOut.cs" />
+    <Compile Include="Model\GetCurrenciesDictOut.cs" />
+    <Compile Include="Model\GetDailySettlementStatsIn.cs" />
+    <Compile Include="Model\GetDailySettlementStatsOut.cs" />
+    <Compile Include="Model\GetProductTypesDictOut.cs" />
+    <Compile Include="Model\GetRefundsIn.cs" />
+    <Compile Include="Model\GetRefundsOut.cs" />
+    <Compile Include="Model\GetSettlementIn.cs" />
+    <Compile Include="Model\GetSettlementOut.cs" />
+    <Compile Include="Model\GetSettlementStatsByCountryIn.cs" />
+    <Compile Include="Model\GetSettlementStatsByCountryOut.cs" />
+    <Compile Include="Model\GetSettlementStatsByTaxationTypeIn.cs" />
+    <Compile Include="Model\GetSettlementStatsByTaxationTypeOut.cs" />
+    <Compile Include="Model\GetSettlementSummaryIn.cs" />
+    <Compile Include="Model\GetSettlementSummaryOut.cs" />
+    <Compile Include="Model\GetTransactionOut.cs" />
+    <Compile Include="Model\GetTransactionsStatsIn.cs" />
+    <Compile Include="Model\GetTransactionsStatsOut.cs" />
+    <Compile Include="Model\InputTransaction.cs" />
+    <Compile Include="Model\InputTransactionLine.cs" />
+    <Compile Include="Model\InputTransactionUpdate.cs" />
+    <Compile Include="Model\InvoiceAddress.cs" />
+    <Compile Include="Model\ListPaymentsIn.cs" />
+    <Compile Include="Model\ListPaymentsOut.cs" />
+    <Compile Include="Model\ListTransactionsIn.cs" />
+    <Compile Include="Model\ListTransactionsOut.cs" />
+    <Compile Include="Model\LocateGivenIPOut.cs" />
+    <Compile Include="Model\LocateMyIPOut.cs" />
+    <Compile Include="Model\N.cs" />
+    <Compile Include="Model\Payments.cs" />
+    <Compile Include="Model\ProductTypeSchema.cs" />
+    <Compile Include="Model\Report.cs" />
+    <Compile Include="Model\SettlementDailyStatsSchema.cs" />
+    <Compile Include="Model\Summary.cs" />
+    <Compile Include="Model\Transaction.cs" />
+    <Compile Include="Model\TransactionLines.cs" />
+    <Compile Include="Model\Transactions.cs" />
+    <Compile Include="Model\UnconfirmTransactionIn.cs" />
+    <Compile Include="Model\UnconfirmTransactionOut.cs" />
+    <Compile Include="Model\UpdateTransactionIn.cs" />
+    <Compile Include="Model\UpdateTransactionOut.cs" />
+    <Compile Include="Model\ValidateTaxNumberIn.cs" />
+    <Compile Include="Model\ValidateTaxNumberOut.cs" />
+    <Compile Include="Model\VerifySMSTokenOut.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>
