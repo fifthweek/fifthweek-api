@@ -8,7 +8,8 @@
     using Fifthweek.Api.Identity.Tests.Shared.Membership;
     using Fifthweek.Api.Payments.Controllers;
     using Fifthweek.Api.Payments.Queries;
-    using Fifthweek.Api.Payments.Taxamo;
+    using Fifthweek.Payments.Services.Credit;
+    using Fifthweek.Payments.Services.Credit.Taxamo;
     using Fifthweek.Shared;
 
     using Microsoft.VisualStudio.TestTools.UnitTesting;

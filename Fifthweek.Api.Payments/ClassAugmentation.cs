@@ -1,38 +1,10 @@
 ﻿using System;
 using System.Linq;
 
-//// Generated on 06/07/2015 19:10:28 (UTC)
-//// Mapped solution in 12.67s
+//// Generated on 07/07/2015 11:51:12 (UTC)
+//// Mapped solution in 24.25s
 
 
-namespace Fifthweek.Api.Payments
-{
-    using Fifthweek.CodeGeneration;
-    using System;
-    using System.Linq;
-    using System.Threading.Tasks;
-    using Dapper;
-    using Fifthweek.Api.Identity.Shared.Membership;
-    using Fifthweek.Api.Persistence;
-    using Fifthweek.Api.Persistence.Payments;
-    using Fifthweek.Shared;
-    using System.Collections.Generic;
-    using System.Net;
-
-    public partial class AmountInUsCents 
-    {
-        public AmountInUsCents(
-            System.Int32 value)
-        {
-            if (value == null)
-            {
-                throw new ArgumentNullException("value");
-            }
-
-            this.Value = value;
-        }
-    }
-}
 namespace Fifthweek.Api.Payments.Commands
 {
     using System;
@@ -42,11 +14,11 @@ namespace Fifthweek.Api.Payments.Commands
     using Fifthweek.Shared;
     using System.Threading.Tasks;
     using Fifthweek.Api.Core;
-    using Fifthweek.Api.Payments.Taxamo;
     using Newtonsoft.Json;
-    using Fifthweek.Api.Payments.Stripe;
     using Fifthweek.Payments.Services;
     using Fifthweek.Api.Persistence.Identity;
+    using Fifthweek.Payments.Services.Credit;
+    using Fifthweek.Payments.Services.Credit.Stripe;
 
     public partial class ApplyCreditRequestCommand 
     {
@@ -92,21 +64,18 @@ namespace Fifthweek.Api.Payments.Commands
     using Fifthweek.Shared;
     using System.Threading.Tasks;
     using Fifthweek.Api.Core;
-    using Fifthweek.Api.Payments.Taxamo;
     using Newtonsoft.Json;
-    using Fifthweek.Api.Payments.Stripe;
     using Fifthweek.Payments.Services;
     using Fifthweek.Api.Persistence.Identity;
+    using Fifthweek.Payments.Services.Credit;
+    using Fifthweek.Payments.Services.Credit.Stripe;
 
     public partial class ApplyCreditRequestCommandHandler 
     {
         public ApplyCreditRequestCommandHandler(
             Fifthweek.Api.Identity.Shared.Membership.IRequesterSecurity requesterSecurity,
-            Fifthweek.Api.Payments.Commands.IInitializeCreditRequest initializeCreditRequest,
-            Fifthweek.Api.Payments.Commands.IPerformCreditRequest performCreditRequest,
-            Fifthweek.Api.Payments.Commands.ICommitCreditToDatabase commitCreditToDatabase,
-            Fifthweek.Api.Core.IFifthweekRetryOnTransientErrorHandler retryOnTransientFailure,
-            Fifthweek.Api.Payments.Taxamo.ICommitTaxamoTransaction commitTaxamoTransaction,
+            Fifthweek.Shared.IFifthweekRetryOnTransientErrorHandler retryOnTransientFailure,
+            Fifthweek.Payments.Services.Credit.IApplyStandardUserCredit applyStandardUserCredit,
             Fifthweek.Api.Payments.Commands.ICommitTestUserCreditToDatabase commitTestUserCreditToDatabase)
         {
             if (requesterSecurity == null)
@@ -114,29 +83,14 @@ namespace Fifthweek.Api.Payments.Commands
                 throw new ArgumentNullException("requesterSecurity");
             }
 
-            if (initializeCreditRequest == null)
-            {
-                throw new ArgumentNullException("initializeCreditRequest");
-            }
-
-            if (performCreditRequest == null)
-            {
-                throw new ArgumentNullException("performCreditRequest");
-            }
-
-            if (commitCreditToDatabase == null)
-            {
-                throw new ArgumentNullException("commitCreditToDatabase");
-            }
-
             if (retryOnTransientFailure == null)
             {
                 throw new ArgumentNullException("retryOnTransientFailure");
             }
 
-            if (commitTaxamoTransaction == null)
+            if (applyStandardUserCredit == null)
             {
-                throw new ArgumentNullException("commitTaxamoTransaction");
+                throw new ArgumentNullException("applyStandardUserCredit");
             }
 
             if (commitTestUserCreditToDatabase == null)
@@ -145,11 +99,8 @@ namespace Fifthweek.Api.Payments.Commands
             }
 
             this.requesterSecurity = requesterSecurity;
-            this.initializeCreditRequest = initializeCreditRequest;
-            this.performCreditRequest = performCreditRequest;
-            this.commitCreditToDatabase = commitCreditToDatabase;
             this.retryOnTransientFailure = retryOnTransientFailure;
-            this.commitTaxamoTransaction = commitTaxamoTransaction;
+            this.applyStandardUserCredit = applyStandardUserCredit;
             this.commitTestUserCreditToDatabase = commitTestUserCreditToDatabase;
         }
     }
@@ -163,90 +114,11 @@ namespace Fifthweek.Api.Payments.Commands
     using Fifthweek.Shared;
     using System.Threading.Tasks;
     using Fifthweek.Api.Core;
-    using Fifthweek.Api.Payments.Taxamo;
     using Newtonsoft.Json;
-    using Fifthweek.Api.Payments.Stripe;
     using Fifthweek.Payments.Services;
     using Fifthweek.Api.Persistence.Identity;
-
-    public partial class InitializeCreditRequestResult 
-    {
-        public InitializeCreditRequestResult(
-            Fifthweek.Api.Payments.Taxamo.TaxamoTransactionResult taxamoTransaction,
-            Fifthweek.Api.Payments.UserPaymentOriginResult origin)
-        {
-            if (taxamoTransaction == null)
-            {
-                throw new ArgumentNullException("taxamoTransaction");
-            }
-
-            if (origin == null)
-            {
-                throw new ArgumentNullException("origin");
-            }
-
-            this.TaxamoTransaction = taxamoTransaction;
-            this.Origin = origin;
-        }
-    }
-}
-namespace Fifthweek.Api.Payments.Commands
-{
-    using System;
-    using System.Linq;
-    using Fifthweek.Api.Identity.Shared.Membership;
-    using Fifthweek.CodeGeneration;
-    using Fifthweek.Shared;
-    using System.Threading.Tasks;
-    using Fifthweek.Api.Core;
-    using Fifthweek.Api.Payments.Taxamo;
-    using Newtonsoft.Json;
-    using Fifthweek.Api.Payments.Stripe;
-    using Fifthweek.Payments.Services;
-    using Fifthweek.Api.Persistence.Identity;
-
-    public partial class StripeTransactionResult 
-    {
-        public StripeTransactionResult(
-            System.DateTime timestamp,
-            System.Guid transactionReference,
-            System.String stripeChargeId)
-        {
-            if (timestamp == null)
-            {
-                throw new ArgumentNullException("timestamp");
-            }
-
-            if (transactionReference == null)
-            {
-                throw new ArgumentNullException("transactionReference");
-            }
-
-            if (stripeChargeId == null)
-            {
-                throw new ArgumentNullException("stripeChargeId");
-            }
-
-            this.Timestamp = timestamp;
-            this.TransactionReference = transactionReference;
-            this.StripeChargeId = stripeChargeId;
-        }
-    }
-}
-namespace Fifthweek.Api.Payments.Commands
-{
-    using System;
-    using System.Linq;
-    using Fifthweek.Api.Identity.Shared.Membership;
-    using Fifthweek.CodeGeneration;
-    using Fifthweek.Shared;
-    using System.Threading.Tasks;
-    using Fifthweek.Api.Core;
-    using Fifthweek.Api.Payments.Taxamo;
-    using Newtonsoft.Json;
-    using Fifthweek.Api.Payments.Stripe;
-    using Fifthweek.Payments.Services;
-    using Fifthweek.Api.Persistence.Identity;
+    using Fifthweek.Payments.Services.Credit;
+    using Fifthweek.Payments.Services.Credit.Stripe;
 
     public partial class UpdatePaymentOriginCommand 
     {
@@ -286,20 +158,20 @@ namespace Fifthweek.Api.Payments.Commands
     using Fifthweek.Shared;
     using System.Threading.Tasks;
     using Fifthweek.Api.Core;
-    using Fifthweek.Api.Payments.Taxamo;
     using Newtonsoft.Json;
-    using Fifthweek.Api.Payments.Stripe;
     using Fifthweek.Payments.Services;
     using Fifthweek.Api.Persistence.Identity;
+    using Fifthweek.Payments.Services.Credit;
+    using Fifthweek.Payments.Services.Credit.Stripe;
 
     public partial class UpdatePaymentOriginCommandHandler 
     {
         public UpdatePaymentOriginCommandHandler(
             Fifthweek.Api.Identity.Shared.Membership.IRequesterSecurity requesterSecurity,
             Fifthweek.Api.Payments.ISetUserPaymentOriginDbStatement setUserPaymentOrigin,
-            Fifthweek.Api.Payments.IGetUserPaymentOriginDbStatement getUserPaymentOrigin,
-            Fifthweek.Api.Payments.Stripe.ICreateStripeCustomer createStripeCustomer,
-            Fifthweek.Api.Payments.Stripe.IUpdateStripeCustomerCreditCard updateStripeCustomerCreditCard)
+            Fifthweek.Payments.Services.Credit.IGetUserPaymentOriginDbStatement getUserPaymentOrigin,
+            Fifthweek.Payments.Services.Credit.Stripe.ICreateStripeCustomer createStripeCustomer,
+            Fifthweek.Payments.Services.Credit.Stripe.IUpdateStripeCustomerCreditCard updateStripeCustomerCreditCard)
         {
             if (requesterSecurity == null)
             {
@@ -513,34 +385,6 @@ namespace Fifthweek.Api.Payments.Controllers
         }
     }
 }
-namespace Fifthweek.Api.Payments
-{
-    using System;
-    using System.Linq;
-    using Fifthweek.CodeGeneration;
-    using System.Threading.Tasks;
-    using Dapper;
-    using Fifthweek.Api.Identity.Shared.Membership;
-    using Fifthweek.Api.Persistence;
-    using Fifthweek.Api.Persistence.Payments;
-    using Fifthweek.Shared;
-    using System.Collections.Generic;
-    using System.Net;
-
-    public partial class GetUserPaymentOriginDbStatement 
-    {
-        public GetUserPaymentOriginDbStatement(
-            Fifthweek.Api.Persistence.IFifthweekDbConnectionFactory connectionFactory)
-        {
-            if (connectionFactory == null)
-            {
-                throw new ArgumentNullException("connectionFactory");
-            }
-
-            this.connectionFactory = connectionFactory;
-        }
-    }
-}
 namespace Fifthweek.Api.Payments.Queries
 {
     using System;
@@ -551,7 +395,8 @@ namespace Fifthweek.Api.Payments.Queries
     using Fifthweek.CodeGeneration;
     using Fifthweek.Shared;
     using System.Threading.Tasks;
-    using Fifthweek.Api.Payments.Taxamo;
+    using Fifthweek.Payments.Services.Credit;
+    using Fifthweek.Payments.Services.Credit.Taxamo;
 
     public partial class GetCreditRequestSummaryQuery 
     {
@@ -591,14 +436,15 @@ namespace Fifthweek.Api.Payments.Queries
     using Fifthweek.CodeGeneration;
     using Fifthweek.Shared;
     using System.Threading.Tasks;
-    using Fifthweek.Api.Payments.Taxamo;
+    using Fifthweek.Payments.Services.Credit;
+    using Fifthweek.Payments.Services.Credit.Taxamo;
 
     public partial class GetCreditRequestSummaryQueryHandler 
     {
         public GetCreditRequestSummaryQueryHandler(
             Fifthweek.Api.Identity.Shared.Membership.IRequesterSecurity requesterSecurity,
-            Fifthweek.Api.Payments.IGetUserPaymentOriginDbStatement getUserPaymentOrigin,
-            Fifthweek.Api.Payments.Taxamo.IGetTaxInformation getTaxInformation)
+            Fifthweek.Payments.Services.Credit.IGetUserPaymentOriginDbStatement getUserPaymentOrigin,
+            Fifthweek.Payments.Services.Credit.Taxamo.IGetTaxInformation getTaxInformation)
         {
             if (requesterSecurity == null)
             {
@@ -649,129 +495,6 @@ namespace Fifthweek.Api.Payments
         }
     }
 }
-namespace Fifthweek.Api.Payments
-{
-    using System;
-    using System.Linq;
-    using Fifthweek.CodeGeneration;
-    using System.Threading.Tasks;
-    using Dapper;
-    using Fifthweek.Api.Identity.Shared.Membership;
-    using Fifthweek.Api.Persistence;
-    using Fifthweek.Api.Persistence.Payments;
-    using Fifthweek.Shared;
-    using System.Collections.Generic;
-    using System.Net;
-
-    public partial class SetUserPaymentOriginOriginalTaxamoTransactionKeyDbStatement 
-    {
-        public SetUserPaymentOriginOriginalTaxamoTransactionKeyDbStatement(
-            Fifthweek.Api.Persistence.IFifthweekDbConnectionFactory connectionFactory)
-        {
-            if (connectionFactory == null)
-            {
-                throw new ArgumentNullException("connectionFactory");
-            }
-
-            this.connectionFactory = connectionFactory;
-        }
-    }
-}
-namespace Fifthweek.Api.Payments.Taxamo
-{
-    using System;
-    using System.Linq;
-    using Fifthweek.CodeGeneration;
-
-    public partial class TaxamoTransactionResult 
-    {
-        public TaxamoTransactionResult(
-            System.String key,
-            Fifthweek.Api.Payments.AmountInUsCents amount,
-            Fifthweek.Api.Payments.AmountInUsCents totalAmount,
-            Fifthweek.Api.Payments.AmountInUsCents taxAmount,
-            System.Decimal taxRate,
-            System.String taxName,
-            System.String taxEntityName,
-            System.String countryName)
-        {
-            if (amount == null)
-            {
-                throw new ArgumentNullException("amount");
-            }
-
-            if (totalAmount == null)
-            {
-                throw new ArgumentNullException("totalAmount");
-            }
-
-            if (taxAmount == null)
-            {
-                throw new ArgumentNullException("taxAmount");
-            }
-
-            if (taxRate == null)
-            {
-                throw new ArgumentNullException("taxRate");
-            }
-
-            if (taxName == null)
-            {
-                throw new ArgumentNullException("taxName");
-            }
-
-            if (taxEntityName == null)
-            {
-                throw new ArgumentNullException("taxEntityName");
-            }
-
-            if (countryName == null)
-            {
-                throw new ArgumentNullException("countryName");
-            }
-
-            this.Key = key;
-            this.Amount = amount;
-            this.TotalAmount = totalAmount;
-            this.TaxAmount = taxAmount;
-            this.TaxRate = taxRate;
-            this.TaxName = taxName;
-            this.TaxEntityName = taxEntityName;
-            this.CountryName = countryName;
-        }
-    }
-}
-namespace Fifthweek.Api.Payments
-{
-    using System;
-    using System.Linq;
-    using Fifthweek.CodeGeneration;
-    using System.Threading.Tasks;
-    using Dapper;
-    using Fifthweek.Api.Identity.Shared.Membership;
-    using Fifthweek.Api.Persistence;
-    using Fifthweek.Api.Persistence.Payments;
-    using Fifthweek.Shared;
-    using System.Collections.Generic;
-    using System.Net;
-
-    public partial class UserPaymentOriginResult 
-    {
-        public UserPaymentOriginResult(
-            System.String stripeCustomerId,
-            System.String billingCountryCode,
-            System.String creditCardPrefix,
-            System.String ipAddress,
-            System.String originalTaxamoTransactionKey)
-        {
-            this.StripeCustomerId = stripeCustomerId;
-            this.BillingCountryCode = billingCountryCode;
-            this.CreditCardPrefix = creditCardPrefix;
-            this.IpAddress = ipAddress;
-            this.OriginalTaxamoTransactionKey = originalTaxamoTransactionKey;
-        }
-    }
-}
 namespace Fifthweek.Api.Payments.Commands
 {
     using System;
@@ -781,175 +504,11 @@ namespace Fifthweek.Api.Payments.Commands
     using Fifthweek.Shared;
     using System.Threading.Tasks;
     using Fifthweek.Api.Core;
-    using Fifthweek.Api.Payments.Taxamo;
     using Newtonsoft.Json;
-    using Fifthweek.Api.Payments.Stripe;
     using Fifthweek.Payments.Services;
     using Fifthweek.Api.Persistence.Identity;
-
-    public partial class CommitCreditToDatabase 
-    {
-        public CommitCreditToDatabase(
-            Fifthweek.Payments.Services.IUpdateAccountBalancesDbStatement updateAccountBalances,
-            Fifthweek.Api.Payments.ISetUserPaymentOriginOriginalTaxamoTransactionKeyDbStatement setUserPaymentOriginOriginalTaxamoTransactionKey,
-            Fifthweek.Api.Payments.ISaveCustomerCreditToLedgerDbStatement saveCustomerCreditToLedger)
-        {
-            if (updateAccountBalances == null)
-            {
-                throw new ArgumentNullException("updateAccountBalances");
-            }
-
-            if (setUserPaymentOriginOriginalTaxamoTransactionKey == null)
-            {
-                throw new ArgumentNullException("setUserPaymentOriginOriginalTaxamoTransactionKey");
-            }
-
-            if (saveCustomerCreditToLedger == null)
-            {
-                throw new ArgumentNullException("saveCustomerCreditToLedger");
-            }
-
-            this.updateAccountBalances = updateAccountBalances;
-            this.setUserPaymentOriginOriginalTaxamoTransactionKey = setUserPaymentOriginOriginalTaxamoTransactionKey;
-            this.saveCustomerCreditToLedger = saveCustomerCreditToLedger;
-        }
-    }
-}
-namespace Fifthweek.Api.Payments.Commands
-{
-    using System;
-    using System.Linq;
-    using Fifthweek.Api.Identity.Shared.Membership;
-    using Fifthweek.CodeGeneration;
-    using Fifthweek.Shared;
-    using System.Threading.Tasks;
-    using Fifthweek.Api.Core;
-    using Fifthweek.Api.Payments.Taxamo;
-    using Newtonsoft.Json;
-    using Fifthweek.Api.Payments.Stripe;
-    using Fifthweek.Payments.Services;
-    using Fifthweek.Api.Persistence.Identity;
-
-    public partial class InitializeCreditRequest 
-    {
-        public InitializeCreditRequest(
-            Fifthweek.Api.Payments.IGetUserPaymentOriginDbStatement getUserPaymentOrigin,
-            Fifthweek.Api.Payments.Taxamo.IDeleteTaxamoTransaction deleteTaxamoTransaction,
-            Fifthweek.Api.Payments.Taxamo.ICreateTaxamoTransaction createTaxamoTransaction)
-        {
-            if (getUserPaymentOrigin == null)
-            {
-                throw new ArgumentNullException("getUserPaymentOrigin");
-            }
-
-            if (deleteTaxamoTransaction == null)
-            {
-                throw new ArgumentNullException("deleteTaxamoTransaction");
-            }
-
-            if (createTaxamoTransaction == null)
-            {
-                throw new ArgumentNullException("createTaxamoTransaction");
-            }
-
-            this.getUserPaymentOrigin = getUserPaymentOrigin;
-            this.deleteTaxamoTransaction = deleteTaxamoTransaction;
-            this.createTaxamoTransaction = createTaxamoTransaction;
-        }
-    }
-}
-namespace Fifthweek.Api.Payments.Commands
-{
-    using System;
-    using System.Linq;
-    using Fifthweek.Api.Identity.Shared.Membership;
-    using Fifthweek.CodeGeneration;
-    using Fifthweek.Shared;
-    using System.Threading.Tasks;
-    using Fifthweek.Api.Core;
-    using Fifthweek.Api.Payments.Taxamo;
-    using Newtonsoft.Json;
-    using Fifthweek.Api.Payments.Stripe;
-    using Fifthweek.Payments.Services;
-    using Fifthweek.Api.Persistence.Identity;
-
-    public partial class PerformCreditRequest 
-    {
-        public PerformCreditRequest(
-            Fifthweek.Shared.ITimestampCreator timestampCreator,
-            Fifthweek.Api.Payments.Stripe.IPerformStripeCharge performStripeCharge,
-            Fifthweek.Shared.IGuidCreator guidCreator)
-        {
-            if (timestampCreator == null)
-            {
-                throw new ArgumentNullException("timestampCreator");
-            }
-
-            if (performStripeCharge == null)
-            {
-                throw new ArgumentNullException("performStripeCharge");
-            }
-
-            if (guidCreator == null)
-            {
-                throw new ArgumentNullException("guidCreator");
-            }
-
-            this.timestampCreator = timestampCreator;
-            this.performStripeCharge = performStripeCharge;
-            this.guidCreator = guidCreator;
-        }
-    }
-}
-namespace Fifthweek.Api.Payments
-{
-    using System;
-    using System.Linq;
-    using Fifthweek.CodeGeneration;
-    using System.Threading.Tasks;
-    using Dapper;
-    using Fifthweek.Api.Identity.Shared.Membership;
-    using Fifthweek.Api.Persistence;
-    using Fifthweek.Api.Persistence.Payments;
-    using Fifthweek.Shared;
-    using System.Collections.Generic;
-    using System.Net;
-
-    public partial class SaveCustomerCreditToLedgerDbStatement 
-    {
-        public SaveCustomerCreditToLedgerDbStatement(
-            Fifthweek.Shared.IGuidCreator guidCreator,
-            Fifthweek.Api.Persistence.IFifthweekDbConnectionFactory connectionFactory)
-        {
-            if (guidCreator == null)
-            {
-                throw new ArgumentNullException("guidCreator");
-            }
-
-            if (connectionFactory == null)
-            {
-                throw new ArgumentNullException("connectionFactory");
-            }
-
-            this.guidCreator = guidCreator;
-            this.connectionFactory = connectionFactory;
-        }
-    }
-}
-namespace Fifthweek.Api.Payments.Commands
-{
-    using System;
-    using System.Linq;
-    using Fifthweek.Api.Identity.Shared.Membership;
-    using Fifthweek.CodeGeneration;
-    using Fifthweek.Shared;
-    using System.Threading.Tasks;
-    using Fifthweek.Api.Core;
-    using Fifthweek.Api.Payments.Taxamo;
-    using Newtonsoft.Json;
-    using Fifthweek.Api.Payments.Stripe;
-    using Fifthweek.Payments.Services;
-    using Fifthweek.Api.Persistence.Identity;
+    using Fifthweek.Payments.Services.Credit;
+    using Fifthweek.Payments.Services.Credit.Stripe;
 
     public partial class CommitTestUserCreditToDatabase 
     {
@@ -1001,68 +560,6 @@ namespace Fifthweek.Api.Payments
     }
 }
 
-namespace Fifthweek.Api.Payments
-{
-    using Fifthweek.CodeGeneration;
-    using System;
-    using System.Linq;
-    using System.Threading.Tasks;
-    using Dapper;
-    using Fifthweek.Api.Identity.Shared.Membership;
-    using Fifthweek.Api.Persistence;
-    using Fifthweek.Api.Persistence.Payments;
-    using Fifthweek.Shared;
-    using System.Collections.Generic;
-    using System.Net;
-
-    public partial class AmountInUsCents 
-    {
-        public override string ToString()
-        {
-            return string.Format("AmountInUsCents({0})", this.Value == null ? "null" : this.Value.ToString());
-        }
-        
-        public override bool Equals(object obj)
-        {
-            if (ReferenceEquals(null, obj))
-            {
-                return false;
-            }
-        
-            if (ReferenceEquals(this, obj))
-            {
-                return true;
-            }
-        
-            if (obj.GetType() != this.GetType())
-            {
-                return false;
-            }
-        
-            return this.Equals((AmountInUsCents)obj);
-        }
-        
-        public override int GetHashCode()
-        {
-            unchecked
-            {
-                int hashCode = 0;
-                hashCode = (hashCode * 397) ^ (this.Value != null ? this.Value.GetHashCode() : 0);
-                return hashCode;
-            }
-        }
-        
-        protected bool Equals(AmountInUsCents other)
-        {
-            if (!object.Equals(this.Value, other.Value))
-            {
-                return false;
-            }
-        
-            return true;
-        }
-    }
-}
 namespace Fifthweek.Api.Payments.Commands
 {
     using System;
@@ -1072,11 +569,11 @@ namespace Fifthweek.Api.Payments.Commands
     using Fifthweek.Shared;
     using System.Threading.Tasks;
     using Fifthweek.Api.Core;
-    using Fifthweek.Api.Payments.Taxamo;
     using Newtonsoft.Json;
-    using Fifthweek.Api.Payments.Stripe;
     using Fifthweek.Payments.Services;
     using Fifthweek.Api.Persistence.Identity;
+    using Fifthweek.Payments.Services.Credit;
+    using Fifthweek.Payments.Services.Credit.Stripe;
 
     public partial class ApplyCreditRequestCommand 
     {
@@ -1153,155 +650,11 @@ namespace Fifthweek.Api.Payments.Commands
     using Fifthweek.Shared;
     using System.Threading.Tasks;
     using Fifthweek.Api.Core;
-    using Fifthweek.Api.Payments.Taxamo;
     using Newtonsoft.Json;
-    using Fifthweek.Api.Payments.Stripe;
     using Fifthweek.Payments.Services;
     using Fifthweek.Api.Persistence.Identity;
-
-    public partial class InitializeCreditRequestResult 
-    {
-        public override string ToString()
-        {
-            return string.Format("InitializeCreditRequestResult({0}, {1})", this.TaxamoTransaction == null ? "null" : this.TaxamoTransaction.ToString(), this.Origin == null ? "null" : this.Origin.ToString());
-        }
-        
-        public override bool Equals(object obj)
-        {
-            if (ReferenceEquals(null, obj))
-            {
-                return false;
-            }
-        
-            if (ReferenceEquals(this, obj))
-            {
-                return true;
-            }
-        
-            if (obj.GetType() != this.GetType())
-            {
-                return false;
-            }
-        
-            return this.Equals((InitializeCreditRequestResult)obj);
-        }
-        
-        public override int GetHashCode()
-        {
-            unchecked
-            {
-                int hashCode = 0;
-                hashCode = (hashCode * 397) ^ (this.TaxamoTransaction != null ? this.TaxamoTransaction.GetHashCode() : 0);
-                hashCode = (hashCode * 397) ^ (this.Origin != null ? this.Origin.GetHashCode() : 0);
-                return hashCode;
-            }
-        }
-        
-        protected bool Equals(InitializeCreditRequestResult other)
-        {
-            if (!object.Equals(this.TaxamoTransaction, other.TaxamoTransaction))
-            {
-                return false;
-            }
-        
-            if (!object.Equals(this.Origin, other.Origin))
-            {
-                return false;
-            }
-        
-            return true;
-        }
-    }
-}
-namespace Fifthweek.Api.Payments.Commands
-{
-    using System;
-    using System.Linq;
-    using Fifthweek.Api.Identity.Shared.Membership;
-    using Fifthweek.CodeGeneration;
-    using Fifthweek.Shared;
-    using System.Threading.Tasks;
-    using Fifthweek.Api.Core;
-    using Fifthweek.Api.Payments.Taxamo;
-    using Newtonsoft.Json;
-    using Fifthweek.Api.Payments.Stripe;
-    using Fifthweek.Payments.Services;
-    using Fifthweek.Api.Persistence.Identity;
-
-    public partial class StripeTransactionResult 
-    {
-        public override string ToString()
-        {
-            return string.Format("StripeTransactionResult({0}, {1}, \"{2}\")", this.Timestamp == null ? "null" : this.Timestamp.ToString(), this.TransactionReference == null ? "null" : this.TransactionReference.ToString(), this.StripeChargeId == null ? "null" : this.StripeChargeId.ToString());
-        }
-        
-        public override bool Equals(object obj)
-        {
-            if (ReferenceEquals(null, obj))
-            {
-                return false;
-            }
-        
-            if (ReferenceEquals(this, obj))
-            {
-                return true;
-            }
-        
-            if (obj.GetType() != this.GetType())
-            {
-                return false;
-            }
-        
-            return this.Equals((StripeTransactionResult)obj);
-        }
-        
-        public override int GetHashCode()
-        {
-            unchecked
-            {
-                int hashCode = 0;
-                hashCode = (hashCode * 397) ^ (this.Timestamp != null ? this.Timestamp.GetHashCode() : 0);
-                hashCode = (hashCode * 397) ^ (this.TransactionReference != null ? this.TransactionReference.GetHashCode() : 0);
-                hashCode = (hashCode * 397) ^ (this.StripeChargeId != null ? this.StripeChargeId.GetHashCode() : 0);
-                return hashCode;
-            }
-        }
-        
-        protected bool Equals(StripeTransactionResult other)
-        {
-            if (!object.Equals(this.Timestamp, other.Timestamp))
-            {
-                return false;
-            }
-        
-            if (!object.Equals(this.TransactionReference, other.TransactionReference))
-            {
-                return false;
-            }
-        
-            if (!object.Equals(this.StripeChargeId, other.StripeChargeId))
-            {
-                return false;
-            }
-        
-            return true;
-        }
-    }
-}
-namespace Fifthweek.Api.Payments.Commands
-{
-    using System;
-    using System.Linq;
-    using Fifthweek.Api.Identity.Shared.Membership;
-    using Fifthweek.CodeGeneration;
-    using Fifthweek.Shared;
-    using System.Threading.Tasks;
-    using Fifthweek.Api.Core;
-    using Fifthweek.Api.Payments.Taxamo;
-    using Newtonsoft.Json;
-    using Fifthweek.Api.Payments.Stripe;
-    using Fifthweek.Payments.Services;
-    using Fifthweek.Api.Persistence.Identity;
+    using Fifthweek.Payments.Services.Credit;
+    using Fifthweek.Payments.Services.Credit.Stripe;
 
     public partial class UpdatePaymentOriginCommand 
     {
@@ -1634,7 +987,8 @@ namespace Fifthweek.Api.Payments.Queries
     using Fifthweek.CodeGeneration;
     using Fifthweek.Shared;
     using System.Threading.Tasks;
-    using Fifthweek.Api.Payments.Taxamo;
+    using Fifthweek.Payments.Services.Credit;
+    using Fifthweek.Payments.Services.Credit.Taxamo;
 
     public partial class GetCreditRequestSummaryQuery 
     {
@@ -1688,188 +1042,6 @@ namespace Fifthweek.Api.Payments.Queries
             }
         
             if (!object.Equals(this.Amount, other.Amount))
-            {
-                return false;
-            }
-        
-            return true;
-        }
-    }
-}
-namespace Fifthweek.Api.Payments.Taxamo
-{
-    using System;
-    using System.Linq;
-    using Fifthweek.CodeGeneration;
-
-    public partial class TaxamoTransactionResult 
-    {
-        public override string ToString()
-        {
-            return string.Format("TaxamoTransactionResult(\"{0}\", {1}, {2}, {3}, {4}, \"{5}\", \"{6}\", \"{7}\")", this.Key == null ? "null" : this.Key.ToString(), this.Amount == null ? "null" : this.Amount.ToString(), this.TotalAmount == null ? "null" : this.TotalAmount.ToString(), this.TaxAmount == null ? "null" : this.TaxAmount.ToString(), this.TaxRate == null ? "null" : this.TaxRate.ToString(), this.TaxName == null ? "null" : this.TaxName.ToString(), this.TaxEntityName == null ? "null" : this.TaxEntityName.ToString(), this.CountryName == null ? "null" : this.CountryName.ToString());
-        }
-        
-        public override bool Equals(object obj)
-        {
-            if (ReferenceEquals(null, obj))
-            {
-                return false;
-            }
-        
-            if (ReferenceEquals(this, obj))
-            {
-                return true;
-            }
-        
-            if (obj.GetType() != this.GetType())
-            {
-                return false;
-            }
-        
-            return this.Equals((TaxamoTransactionResult)obj);
-        }
-        
-        public override int GetHashCode()
-        {
-            unchecked
-            {
-                int hashCode = 0;
-                hashCode = (hashCode * 397) ^ (this.Key != null ? this.Key.GetHashCode() : 0);
-                hashCode = (hashCode * 397) ^ (this.Amount != null ? this.Amount.GetHashCode() : 0);
-                hashCode = (hashCode * 397) ^ (this.TotalAmount != null ? this.TotalAmount.GetHashCode() : 0);
-                hashCode = (hashCode * 397) ^ (this.TaxAmount != null ? this.TaxAmount.GetHashCode() : 0);
-                hashCode = (hashCode * 397) ^ (this.TaxRate != null ? this.TaxRate.GetHashCode() : 0);
-                hashCode = (hashCode * 397) ^ (this.TaxName != null ? this.TaxName.GetHashCode() : 0);
-                hashCode = (hashCode * 397) ^ (this.TaxEntityName != null ? this.TaxEntityName.GetHashCode() : 0);
-                hashCode = (hashCode * 397) ^ (this.CountryName != null ? this.CountryName.GetHashCode() : 0);
-                return hashCode;
-            }
-        }
-        
-        protected bool Equals(TaxamoTransactionResult other)
-        {
-            if (!object.Equals(this.Key, other.Key))
-            {
-                return false;
-            }
-        
-            if (!object.Equals(this.Amount, other.Amount))
-            {
-                return false;
-            }
-        
-            if (!object.Equals(this.TotalAmount, other.TotalAmount))
-            {
-                return false;
-            }
-        
-            if (!object.Equals(this.TaxAmount, other.TaxAmount))
-            {
-                return false;
-            }
-        
-            if (!object.Equals(this.TaxRate, other.TaxRate))
-            {
-                return false;
-            }
-        
-            if (!object.Equals(this.TaxName, other.TaxName))
-            {
-                return false;
-            }
-        
-            if (!object.Equals(this.TaxEntityName, other.TaxEntityName))
-            {
-                return false;
-            }
-        
-            if (!object.Equals(this.CountryName, other.CountryName))
-            {
-                return false;
-            }
-        
-            return true;
-        }
-    }
-}
-namespace Fifthweek.Api.Payments
-{
-    using System;
-    using System.Linq;
-    using Fifthweek.CodeGeneration;
-    using System.Threading.Tasks;
-    using Dapper;
-    using Fifthweek.Api.Identity.Shared.Membership;
-    using Fifthweek.Api.Persistence;
-    using Fifthweek.Api.Persistence.Payments;
-    using Fifthweek.Shared;
-    using System.Collections.Generic;
-    using System.Net;
-
-    public partial class UserPaymentOriginResult 
-    {
-        public override string ToString()
-        {
-            return string.Format("UserPaymentOriginResult(\"{0}\", \"{1}\", \"{2}\", \"{3}\", \"{4}\")", this.StripeCustomerId == null ? "null" : this.StripeCustomerId.ToString(), this.BillingCountryCode == null ? "null" : this.BillingCountryCode.ToString(), this.CreditCardPrefix == null ? "null" : this.CreditCardPrefix.ToString(), this.IpAddress == null ? "null" : this.IpAddress.ToString(), this.OriginalTaxamoTransactionKey == null ? "null" : this.OriginalTaxamoTransactionKey.ToString());
-        }
-        
-        public override bool Equals(object obj)
-        {
-            if (ReferenceEquals(null, obj))
-            {
-                return false;
-            }
-        
-            if (ReferenceEquals(this, obj))
-            {
-                return true;
-            }
-        
-            if (obj.GetType() != this.GetType())
-            {
-                return false;
-            }
-        
-            return this.Equals((UserPaymentOriginResult)obj);
-        }
-        
-        public override int GetHashCode()
-        {
-            unchecked
-            {
-                int hashCode = 0;
-                hashCode = (hashCode * 397) ^ (this.StripeCustomerId != null ? this.StripeCustomerId.GetHashCode() : 0);
-                hashCode = (hashCode * 397) ^ (this.BillingCountryCode != null ? this.BillingCountryCode.GetHashCode() : 0);
-                hashCode = (hashCode * 397) ^ (this.CreditCardPrefix != null ? this.CreditCardPrefix.GetHashCode() : 0);
-                hashCode = (hashCode * 397) ^ (this.IpAddress != null ? this.IpAddress.GetHashCode() : 0);
-                hashCode = (hashCode * 397) ^ (this.OriginalTaxamoTransactionKey != null ? this.OriginalTaxamoTransactionKey.GetHashCode() : 0);
-                return hashCode;
-            }
-        }
-        
-        protected bool Equals(UserPaymentOriginResult other)
-        {
-            if (!object.Equals(this.StripeCustomerId, other.StripeCustomerId))
-            {
-                return false;
-            }
-        
-            if (!object.Equals(this.BillingCountryCode, other.BillingCountryCode))
-            {
-                return false;
-            }
-        
-            if (!object.Equals(this.CreditCardPrefix, other.CreditCardPrefix))
-            {
-                return false;
-            }
-        
-            if (!object.Equals(this.IpAddress, other.IpAddress))
-            {
-                return false;
-            }
-        
-            if (!object.Equals(this.OriginalTaxamoTransactionKey, other.OriginalTaxamoTransactionKey))
             {
                 return false;
             }

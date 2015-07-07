@@ -6,6 +6,8 @@
     using System.Web;
     using System.Web.Http.Dependencies;
 
+    using Fifthweek.Shared;
+
     public static class Extensions
     {
         public static TResult GetService<TResult>(this IDependencyResolver resolver)

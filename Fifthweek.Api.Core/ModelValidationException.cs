@@ -4,6 +4,8 @@ using System.Web.Http.ModelBinding;
 
 namespace Fifthweek.Api.Core
 {
+    using Fifthweek.Shared;
+
     public class ModelValidationException : RecoverableException
     {
         public ModelValidationException(ModelStateDictionary modelState)

@@ -5,6 +5,7 @@
 
     using Fifthweek.Api.Availability.Queries;
     using Fifthweek.Api.Core;
+    using Fifthweek.Shared;
 
     using Microsoft.Practices.EnterpriseLibrary.TransientFaultHandling;
     using Microsoft.VisualStudio.TestTools.UnitTesting;

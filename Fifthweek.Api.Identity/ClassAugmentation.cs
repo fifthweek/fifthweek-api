@@ -109,7 +109,7 @@ namespace Fifthweek.Api.Identity.Membership.Commands
     {
         public RegisterInterestCommandHandler(
             Fifthweek.Api.Core.IFifthweekActivityReporter activityReporter,
-            Fifthweek.Api.Core.IExceptionHandler exceptionHandler)
+            IExceptionHandler exceptionHandler)
         {
             if (activityReporter == null)
             {
@@ -363,7 +363,7 @@ namespace Fifthweek.Api.Identity.Membership.Commands
     {
         public SendIdentifiedUserInformationCommandHandler(
             Fifthweek.Api.Core.IFifthweekActivityReporter activityReporter,
-            Fifthweek.Api.Core.IExceptionHandler exceptionHandler)
+            IExceptionHandler exceptionHandler)
         {
             if (activityReporter == null)
             {

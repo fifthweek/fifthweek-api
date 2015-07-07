@@ -3,6 +3,8 @@ namespace Fifthweek.Api.Core
     using System;
     using System.Threading.Tasks;
 
+    using Fifthweek.Shared;
+
     public class RetryOnTransientErrorQueryHandlerDecorator<TQuery, TResult> : IQueryHandler<TQuery, TResult>
         where TQuery : IQuery<TResult>
     {

@@ -105,12 +105,9 @@
     <Compile Include="DetailedRecoverableException.cs" />
     <Compile Include="GuidJsonConverter.cs" />
     <Compile Include="IEventHandler.cs" />
-    <Compile Include="BadRequestException.cs" />
     <Compile Include="Constants.cs" />
     <Compile Include="Extensions.cs" />
     <Compile Include="ICommandHandler.cs" />
-    <Compile Include="IExceptionHandler.cs" />
-    <Compile Include="IFifthweekRetryOnTransientErrorHandler.cs" />
     <Compile Include="IOwinExceptionHandler.cs" />
     <Compile Include="IQuery.cs" />
     <Compile Include="IQueryHandler.cs" />
@@ -118,12 +115,8 @@
     <Compile Include="ITraceService.cs" />
     <Compile Include="ModelValidationException.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="RecoverableException.cs" />
     <Compile Include="RequestContext.cs" />
-    <Compile Include="RetriesOccuredException.cs" />
-    <Compile Include="RetryLimitExceededException.cs" />
     <Compile Include="RetryOnTransientErrorCommandHandlerDecorator.cs" />
-    <Compile Include="FifthweekRetryOnTransientErrorHandler.cs" />
     <Compile Include="RetryOnTransientErrorQueryHandlerDecorator.cs" />
     <Compile Include="TraceService.cs" />
     <Compile Include="UnauthenticatedException.cs" />

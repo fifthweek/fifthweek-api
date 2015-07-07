@@ -87,26 +87,13 @@
   </Choose>
   <ItemGroup>
     <Compile Include="Commands\ApplyCreditRequestCommandHandlerTests.cs" />
-    <Compile Include="Commands\CommitCreditToDatabaseTests.cs" />
     <Compile Include="Commands\CommitTestUserCreditToDatabaseTests.cs" />
-    <Compile Include="Commands\InitializeCreditRequestTests.cs" />
-    <Compile Include="Commands\PerformCreditRequestTests.cs" />
     <Compile Include="Commands\UpdatePaymentOriginCommandHandlerTests.cs" />
     <Compile Include="Controllers\PaymentsControllerTests.cs" />
-    <Compile Include="GetUserPaymentOriginDbStatementTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Queries\GetCreditRequestSummaryQueryHandlerTests.cs" />
-    <Compile Include="SaveCustomerCreditToLedgerDbStatementTests.cs" />
     <Compile Include="SetTestUserAccountBalanceDbStatementTests.cs" />
     <Compile Include="SetUserPaymentOriginDbStatementTests.cs" />
-    <Compile Include="SetUserPaymentOriginOriginalTaxamoTransactionKeyDbStatementTests.cs" />
-    <Compile Include="Stripe\CreateStripeCustomerTests.cs" />
-    <Compile Include="Stripe\PerformStripeChargeTests.cs" />
-    <Compile Include="Stripe\UpdateStripeCustomerCreditCardTests.cs" />
-    <Compile Include="Taxamo\CommitTaxamoTransactionTests.cs" />
-    <Compile Include="Taxamo\CreateTaxamoTransactionTests.cs" />
-    <Compile Include="Taxamo\DeleteTaxamoTransactionTests.cs" />
-    <Compile Include="Taxamo\GetTaxInformationTests.cs" />
     <Compile Include="ValidCountryCodeTests.cs" />
     <Compile Include="ValidCreditCardPrefixTests.cs" />
     <Compile Include="ValidIpAddressTests.cs" />

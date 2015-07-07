@@ -6,6 +6,7 @@
     using Fifthweek.Api.Availability.Queries;
     using Fifthweek.Api.Core;
     using Fifthweek.CodeGeneration;
+    using Fifthweek.Shared;
 
     using Microsoft.Practices.EnterpriseLibrary.TransientFaultHandling;
 

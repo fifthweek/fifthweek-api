@@ -4,8 +4,9 @@
 
     using Fifthweek.Api.Core;
     using Fifthweek.Api.Identity.Shared.Membership;
-    using Fifthweek.Api.Payments.Stripe;
     using Fifthweek.CodeGeneration;
+    using Fifthweek.Payments.Services.Credit;
+    using Fifthweek.Payments.Services.Credit.Stripe;
     using Fifthweek.Shared;
 
     [AutoConstructor]
@@ -31,12 +32,12 @@
             if (stripeCustomerId != null)
             {
                 // If exists, update customer in stripe.
-                await this.updateStripeCustomerCreditCard.ExecuteAsync(stripeCustomerId, command.StripeToken);
+                await this.updateStripeCustomerCreditCard.ExecuteAsync(stripeCustomerId, command.StripeToken.Value);
             }
             else
             {
                 // If not exists, create customer in stripe.
-                stripeCustomerId = await this.createStripeCustomer.ExecuteAsync(command.UserId, command.StripeToken);
+                stripeCustomerId = await this.createStripeCustomer.ExecuteAsync(command.UserId, command.StripeToken.Value);
             }
 
             // Update origin.

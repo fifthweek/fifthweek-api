@@ -5,8 +5,9 @@
     using Fifthweek.Api.Core;
     using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.Api.Payments.Controllers;
-    using Fifthweek.Api.Payments.Taxamo;
     using Fifthweek.CodeGeneration;
+    using Fifthweek.Payments.Services.Credit;
+    using Fifthweek.Payments.Services.Credit.Taxamo;
     using Fifthweek.Shared;
 
     [AutoConstructor]

@@ -38,6 +38,8 @@ namespace Fifthweek.Api
     using System.Threading.Tasks;
     using Fifthweek.Api.Core;
     using Fifthweek.CodeGeneration;
+    using Fifthweek.Shared;
+
     using Microsoft.Owin.Security.OAuth;
     using Fifthweek.Logging;
 
@@ -47,7 +49,7 @@ namespace Fifthweek.Api
             Fifthweek.Logging.IActivityReportingService activityReporter,
             Fifthweek.Api.Core.IRequestContext requestContext,
             Fifthweek.Logging.IDeveloperRepository developerRepository,
-            Fifthweek.Api.Core.IExceptionHandler exceptionHandler)
+            IExceptionHandler exceptionHandler)
         {
             if (activityReporter == null)
             {

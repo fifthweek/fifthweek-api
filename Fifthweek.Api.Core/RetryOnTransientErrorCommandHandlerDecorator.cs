@@ -3,6 +3,8 @@
     using System;
     using System.Threading.Tasks;
 
+    using Fifthweek.Shared;
+
     public class RetryOnTransientErrorCommandHandlerDecorator<TCommand> : ICommandHandler<TCommand>
     {
         private readonly IFifthweekRetryOnTransientErrorHandler fifthweekRetryOnTransientErrorHandler;

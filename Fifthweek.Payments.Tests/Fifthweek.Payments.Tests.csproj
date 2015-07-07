@@ -92,6 +92,20 @@
     <Compile Include="Pipeline\RollForwardSubscriptionsExecutorTests.cs" />
     <Compile Include="Pipeline\TrimSnapshotsExecutorTests.cs" />
     <Compile Include="Pipeline\VerifySnapshotsExecutorTests.cs" />
+    <Compile Include="Services\Credit\ApplyStandardUserCreditTests.cs" />
+    <Compile Include="Services\Credit\CommitCreditToDatabaseTests.cs" />
+    <Compile Include="Services\Credit\GetUserPaymentOriginDbStatementTests.cs" />
+    <Compile Include="Services\Credit\InitializeCreditRequestTests.cs" />
+    <Compile Include="Services\Credit\PerformCreditRequestTests.cs" />
+    <Compile Include="Services\Credit\SaveCustomerCreditToLedgerDbStatementTests.cs" />
+    <Compile Include="Services\Credit\SetUserPaymentOriginOriginalTaxamoTransactionKeyDbStatementTests.cs" />
+    <Compile Include="Services\Credit\Stripe\CreateStripeCustomerTests.cs" />
+    <Compile Include="Services\Credit\Stripe\PerformStripeChargeTests.cs" />
+    <Compile Include="Services\Credit\Stripe\UpdateStripeCustomerCreditCardTests.cs" />
+    <Compile Include="Services\Credit\Taxamo\CommitTaxamoTransactionTests.cs" />
+    <Compile Include="Services\Credit\Taxamo\CreateTaxamoTransactionTests.cs" />
+    <Compile Include="Services\Credit\Taxamo\DeleteTaxamoTransactionTests.cs" />
+    <Compile Include="Services\Credit\Taxamo\GetTaxInformationTests.cs" />
     <Compile Include="Services\GetCalculatedAccountBalancesDbStatementTests.cs" />
     <Compile Include="Services\GetCreatorPercentageOverrideDbStatementTests.cs" />
     <Compile Include="Services\GetCreatorsAndFirstSubscribedDatesDbStatementTests.cs" />
@@ -171,6 +185,10 @@
     <ProjectReference Include="..\Fifthweek.Shared\Fifthweek.Shared.csproj">
       <Project>{6D12FFBB-38E9-4722-A690-0F0338538EBC}</Project>
       <Name>Fifthweek.Shared</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Fifthweek.Tests.Shared\Fifthweek.Tests.Shared.csproj">
+      <Project>{85691D93-9C0C-498B-8341-1990BC8E24B2}</Project>
+      <Name>Fifthweek.Tests.Shared</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

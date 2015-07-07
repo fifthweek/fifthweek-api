@@ -7,7 +7,8 @@
     using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.Api.Identity.Tests.Shared.Membership;
     using Fifthweek.Api.Payments.Commands;
-    using Fifthweek.Api.Payments.Stripe;
+    using Fifthweek.Payments.Services.Credit;
+    using Fifthweek.Payments.Services.Credit.Stripe;
     using Fifthweek.Shared;
 
     using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -86,7 +87,7 @@
         {
             this.getUserPaymentOrigin.Setup(v => v.ExecuteAsync(UserId)).ReturnsAsync(OriginWithCustomer);
 
-            this.updateStripeCustomerCreditCard.Setup(v => v.ExecuteAsync(OriginWithCustomer.StripeCustomerId, StripeToken))
+            this.updateStripeCustomerCreditCard.Setup(v => v.ExecuteAsync(OriginWithCustomer.StripeCustomerId, StripeToken.Value))
                 .Returns(Task.FromResult(0))
                 .Verifiable();
 
@@ -107,7 +108,7 @@
             this.getUserPaymentOrigin.Setup(v => v.ExecuteAsync(UserId)).ReturnsAsync(OriginWithoutCustomer);
 
             var stripeCustomerId = Guid.NewGuid().ToString();
-            this.createStripeCustomer.Setup(v => v.ExecuteAsync(UserId, StripeToken))
+            this.createStripeCustomer.Setup(v => v.ExecuteAsync(UserId, StripeToken.Value))
                 .Returns(Task.FromResult(stripeCustomerId));
 
             this.setUserPaymentOrigin.Setup(v => v.ExecuteAsync(

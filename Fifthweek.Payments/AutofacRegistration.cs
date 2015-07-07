@@ -4,6 +4,9 @@
 
     using Fifthweek.Payments.Pipeline;
     using Fifthweek.Payments.Services;
+    using Fifthweek.Payments.Services.Credit;
+    using Fifthweek.Payments.Services.Credit.Stripe;
+    using Fifthweek.Payments.Services.Credit.Taxamo;
     using Fifthweek.Payments.Shared;
     using Fifthweek.Shared;
 
@@ -32,6 +35,21 @@
             builder.RegisterType<GetCalculatedAccountBalancesDbStatement>().As<IGetCalculatedAccountBalancesDbStatement>();
             builder.RegisterType<RequestProcessPaymentsService>().As<IRequestProcessPaymentsService>();
             builder.RegisterType<UpdateAccountBalancesDbStatement>().As<IUpdateAccountBalancesDbStatement>();
+
+            builder.RegisterType<GetUserPaymentOriginDbStatement>().As<IGetUserPaymentOriginDbStatement>();
+            builder.RegisterType<SetUserPaymentOriginOriginalTaxamoTransactionKeyDbStatement>().As<ISetUserPaymentOriginOriginalTaxamoTransactionKeyDbStatement>();
+            builder.RegisterType<CreateStripeCustomer>().As<ICreateStripeCustomer>();
+            builder.RegisterType<UpdateStripeCustomerCreditCard>().As<IUpdateStripeCustomerCreditCard>();
+            builder.RegisterType<PerformStripeCharge>().As<IPerformStripeCharge>();
+            builder.RegisterType<SaveCustomerCreditToLedgerDbStatement>().As<ISaveCustomerCreditToLedgerDbStatement>();
+            builder.RegisterType<GetTaxInformation>().As<IGetTaxInformation>();
+            builder.RegisterType<CreateTaxamoTransaction>().As<ICreateTaxamoTransaction>();
+            builder.RegisterType<DeleteTaxamoTransaction>().As<IDeleteTaxamoTransaction>();
+            builder.RegisterType<CommitTaxamoTransaction>().As<ICommitTaxamoTransaction>();
+            builder.RegisterType<PerformCreditRequest>().As<IPerformCreditRequest>();
+            builder.RegisterType<CommitCreditToDatabase>().As<ICommitCreditToDatabase>();
+            builder.RegisterType<InitializeCreditRequest>().As<IInitializeCreditRequest>();
+            builder.RegisterType<ApplyStandardUserCredit>().As<IApplyStandardUserCredit>();
         }
     }
 }

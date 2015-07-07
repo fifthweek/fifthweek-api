@@ -76,7 +76,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AmountInUsCents.cs" />
     <Compile Include="AutofacRegistration.cs" />
     <Compile Include="ClassAugmentation.cs">
       <DependentUpon>ClassAugmentation.tt</DependentUpon>
@@ -85,52 +84,21 @@
     </Compile>
     <Compile Include="Commands\ApplyCreditRequestCommand.cs" />
     <Compile Include="Commands\ApplyCreditRequestCommandHandler.cs" />
-    <Compile Include="Commands\CommitCreditToDatabase.cs" />
     <Compile Include="Commands\CommitTestUserCreditToDatabase.cs" />
-    <Compile Include="Commands\FailedToApplyCreditException.cs" />
-    <Compile Include="Commands\ICommitCreditToDatabase.cs" />
     <Compile Include="Commands\ICommitTestUserCreditToDatabase.cs" />
-    <Compile Include="Commands\IInitializeCreditRequest.cs" />
-    <Compile Include="Commands\InitializeCreditRequestResult.cs" />
-    <Compile Include="Commands\InitializeCreditRequest.cs" />
-    <Compile Include="Commands\IPerformCreditRequest.cs" />
-    <Compile Include="Commands\PerformCreditRequest.cs" />
-    <Compile Include="Commands\StripeTransactionResult.cs" />
     <Compile Include="Commands\UpdatePaymentOriginCommand.cs" />
     <Compile Include="Commands\UpdatePaymentOriginCommandHandler.cs" />
     <Compile Include="Controllers\CreditRequestData.cs" />
     <Compile Include="Controllers\CreditRequestSummary.cs" />
     <Compile Include="Controllers\PaymentOriginData.cs" />
     <Compile Include="Controllers\PaymentsController.cs" />
-    <Compile Include="GetUserPaymentOriginDbStatement.cs" />
-    <Compile Include="IGetUserPaymentOriginDbStatement.cs" />
-    <Compile Include="ISaveCustomerCreditToLedgerDbStatement.cs" />
     <Compile Include="ISetTestUserAccountBalanceDbStatement.cs" />
     <Compile Include="ISetUserPaymentOriginDbStatement.cs" />
-    <Compile Include="ISetUserPaymentOriginOriginalTaxamoTransactionKeyDbStatement.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Queries\GetCreditRequestSummaryQuery.cs" />
     <Compile Include="Queries\GetCreditRequestSummaryQueryHandler.cs" />
-    <Compile Include="SaveCustomerCreditToLedgerDbStatement.cs" />
     <Compile Include="SetTestUserAccountBalanceDbStatement.cs" />
     <Compile Include="SetUserPaymentOriginDbStatement.cs" />
-    <Compile Include="SetUserPaymentOriginOriginalTaxamoTransactionKeyDbStatement.cs" />
-    <Compile Include="Stripe\CreateStripeCustomer.cs" />
-    <Compile Include="Stripe\ICreateStripeCustomer.cs" />
-    <Compile Include="Stripe\IPerformStripeCharge.cs" />
-    <Compile Include="Stripe\IUpdateStripeCustomerCreditCard.cs" />
-    <Compile Include="Stripe\PerformStripeCharge.cs" />
-    <Compile Include="Stripe\UpdateStripeCustomerCreditCard.cs" />
-    <Compile Include="Taxamo\CommitTaxamoTransaction.cs" />
-    <Compile Include="Taxamo\CreateTaxamoTransaction.cs" />
-    <Compile Include="Taxamo\DeleteTaxamoTransaction.cs" />
-    <Compile Include="Taxamo\GetTaxInformation.cs" />
-    <Compile Include="Taxamo\ICommitTaxamoTransaction.cs" />
-    <Compile Include="Taxamo\ICreateTaxamoTransaction.cs" />
-    <Compile Include="Taxamo\IDeleteTaxamoTransaction.cs" />
-    <Compile Include="Taxamo\IGetTaxInformation.cs" />
-    <Compile Include="Taxamo\TaxamoTransactionResult.cs" />
-    <Compile Include="UserPaymentOriginResult.cs" />
     <Compile Include="ValidCountryCode.cs" />
     <Compile Include="ValidCreditCardPrefix.cs" />
     <Compile Include="ValidIpAddress.cs" />

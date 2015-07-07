@@ -7,6 +7,7 @@ namespace Fifthweek.Api.Identity.Membership.Commands
 
     using Fifthweek.Api.Core;
     using Fifthweek.Api.Persistence;
+    using Fifthweek.Shared;
 
     public class ConfirmPasswordResetCommandHandler : ICommandHandler<ConfirmPasswordResetCommand>
     {

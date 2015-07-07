@@ -13,6 +13,7 @@
 
     using Fifthweek.Api.Core;
     using Fifthweek.Api.Logging;
+    using Fifthweek.Shared;
 
     using Microsoft.Owin;
     using Microsoft.Owin.Security.OAuth;

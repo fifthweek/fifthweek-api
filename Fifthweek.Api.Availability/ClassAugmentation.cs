@@ -106,7 +106,7 @@ namespace Fifthweek.Api.Availability
     public partial class TestPaymentsAvailabilityStatement 
     {
         public TestPaymentsAvailabilityStatement(
-            Fifthweek.Api.Core.IExceptionHandler exceptionHandler,
+            IExceptionHandler exceptionHandler,
             Microsoft.Practices.EnterpriseLibrary.TransientFaultHandling.ITransientErrorDetectionStrategy transientErrorDetectionStrategy,
             Fifthweek.Azure.ICloudStorageAccount cloudStorageAccount,
             Fifthweek.Shared.ITimestampCreator timestampCreator,
@@ -152,12 +152,14 @@ namespace Fifthweek.Api.Availability
     using Fifthweek.Api.Availability.Queries;
     using Fifthweek.Api.Core;
     using Fifthweek.CodeGeneration;
+    using Fifthweek.Shared;
+
     using Microsoft.Practices.EnterpriseLibrary.TransientFaultHandling;
 
     public partial class TestSqlAzureAvailabilityStatement 
     {
         public TestSqlAzureAvailabilityStatement(
-            Fifthweek.Api.Core.IExceptionHandler exceptionHandler,
+            IExceptionHandler exceptionHandler,
             Microsoft.Practices.EnterpriseLibrary.TransientFaultHandling.ITransientErrorDetectionStrategy transientErrorDetectionStrategy,
             Fifthweek.Api.Availability.ICountUsersDbStatement countUsersDbStatement)
         {

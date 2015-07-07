@@ -8,6 +8,7 @@
     using Fifthweek.Api.EndToEndTestMailboxes.Controllers;
     using Fifthweek.Api.EndToEndTestMailboxes.Queries;
     using Fifthweek.Api.EndToEndTestMailboxes.Shared;
+    using Fifthweek.Shared;
 
     using Microsoft.VisualStudio.TestTools.UnitTesting;
 

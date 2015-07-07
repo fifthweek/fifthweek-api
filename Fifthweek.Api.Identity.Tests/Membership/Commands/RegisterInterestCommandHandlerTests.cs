@@ -6,10 +6,13 @@
     using Fifthweek.Api.Core;
     using Fifthweek.Api.Identity.Membership.Commands;
     using Fifthweek.Api.Identity.Shared.Membership;
+    using Fifthweek.Shared;
 
     using Microsoft.VisualStudio.TestTools.UnitTesting;
 
     using Moq;
+
+    using Constants = Fifthweek.Api.Core.Constants;
 
     [TestClass]
     public class RegisterInterestCommandHandlerTests

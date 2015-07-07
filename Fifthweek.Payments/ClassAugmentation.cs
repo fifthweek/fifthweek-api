@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Linq;
 
-//// Generated on 06/07/2015 17:37:30 (UTC)
-//// Mapped solution in 13.66s
+//// Generated on 07/07/2015 11:58:54 (UTC)
+//// Mapped solution in 17.96s
 
 
 namespace Fifthweek.Payments
@@ -152,6 +152,408 @@ namespace Fifthweek.Payments.Services
 
             this.ChannelId = channelId;
             this.LiveDate = liveDate;
+        }
+    }
+}
+namespace Fifthweek.Payments.Services.Credit
+{
+    using Fifthweek.CodeGeneration;
+
+    public partial class AmountInUsCents 
+    {
+        public AmountInUsCents(
+            System.Int32 value)
+        {
+            if (value == null)
+            {
+                throw new ArgumentNullException("value");
+            }
+
+            this.Value = value;
+        }
+    }
+}
+namespace Fifthweek.Payments.Services.Credit
+{
+    using System;
+    using System.Threading.Tasks;
+    using Fifthweek.Api.Identity.Shared.Membership;
+    using Fifthweek.CodeGeneration;
+    using Fifthweek.Payments.Services.Credit.Taxamo;
+    using Fifthweek.Shared;
+    using Newtonsoft.Json;
+
+    public partial class ApplyStandardUserCredit 
+    {
+        public ApplyStandardUserCredit(
+            Fifthweek.Payments.Services.Credit.IInitializeCreditRequest initializeCreditRequest,
+            Fifthweek.Payments.Services.Credit.IPerformCreditRequest performCreditRequest,
+            Fifthweek.Payments.Services.Credit.ICommitCreditToDatabase commitCreditToDatabase,
+            Fifthweek.Shared.IFifthweekRetryOnTransientErrorHandler retryOnTransientFailure,
+            Fifthweek.Payments.Services.Credit.Taxamo.ICommitTaxamoTransaction commitTaxamoTransaction)
+        {
+            if (initializeCreditRequest == null)
+            {
+                throw new ArgumentNullException("initializeCreditRequest");
+            }
+
+            if (performCreditRequest == null)
+            {
+                throw new ArgumentNullException("performCreditRequest");
+            }
+
+            if (commitCreditToDatabase == null)
+            {
+                throw new ArgumentNullException("commitCreditToDatabase");
+            }
+
+            if (retryOnTransientFailure == null)
+            {
+                throw new ArgumentNullException("retryOnTransientFailure");
+            }
+
+            if (commitTaxamoTransaction == null)
+            {
+                throw new ArgumentNullException("commitTaxamoTransaction");
+            }
+
+            this.initializeCreditRequest = initializeCreditRequest;
+            this.performCreditRequest = performCreditRequest;
+            this.commitCreditToDatabase = commitCreditToDatabase;
+            this.retryOnTransientFailure = retryOnTransientFailure;
+            this.commitTaxamoTransaction = commitTaxamoTransaction;
+        }
+    }
+}
+namespace Fifthweek.Payments.Services.Credit
+{
+    using System.Threading.Tasks;
+    using Fifthweek.Api.Identity.Shared.Membership;
+    using Fifthweek.CodeGeneration;
+    using Fifthweek.Payments.Services;
+    using Fifthweek.Payments.Services.Credit.Taxamo;
+    using Fifthweek.Shared;
+
+    public partial class CommitCreditToDatabase 
+    {
+        public CommitCreditToDatabase(
+            Fifthweek.Payments.Services.IUpdateAccountBalancesDbStatement updateAccountBalances,
+            Fifthweek.Payments.Services.Credit.ISetUserPaymentOriginOriginalTaxamoTransactionKeyDbStatement setUserPaymentOriginOriginalTaxamoTransactionKey,
+            Fifthweek.Payments.Services.Credit.ISaveCustomerCreditToLedgerDbStatement saveCustomerCreditToLedger)
+        {
+            if (updateAccountBalances == null)
+            {
+                throw new ArgumentNullException("updateAccountBalances");
+            }
+
+            if (setUserPaymentOriginOriginalTaxamoTransactionKey == null)
+            {
+                throw new ArgumentNullException("setUserPaymentOriginOriginalTaxamoTransactionKey");
+            }
+
+            if (saveCustomerCreditToLedger == null)
+            {
+                throw new ArgumentNullException("saveCustomerCreditToLedger");
+            }
+
+            this.updateAccountBalances = updateAccountBalances;
+            this.setUserPaymentOriginOriginalTaxamoTransactionKey = setUserPaymentOriginOriginalTaxamoTransactionKey;
+            this.saveCustomerCreditToLedger = saveCustomerCreditToLedger;
+        }
+    }
+}
+namespace Fifthweek.Payments.Services.Credit
+{
+    using System.Linq;
+    using System.Threading.Tasks;
+    using Dapper;
+    using Fifthweek.Api.Identity.Shared.Membership;
+    using Fifthweek.Api.Persistence;
+    using Fifthweek.Api.Persistence.Payments;
+    using Fifthweek.CodeGeneration;
+    using Fifthweek.Shared;
+
+    public partial class GetUserPaymentOriginDbStatement 
+    {
+        public GetUserPaymentOriginDbStatement(
+            Fifthweek.Api.Persistence.IFifthweekDbConnectionFactory connectionFactory)
+        {
+            if (connectionFactory == null)
+            {
+                throw new ArgumentNullException("connectionFactory");
+            }
+
+            this.connectionFactory = connectionFactory;
+        }
+    }
+}
+namespace Fifthweek.Payments.Services.Credit
+{
+    using System.Threading.Tasks;
+    using Fifthweek.Api.Identity.Shared.Membership;
+    using Fifthweek.CodeGeneration;
+    using Fifthweek.Payments.Services.Credit.Taxamo;
+    using Fifthweek.Shared;
+
+    public partial class InitializeCreditRequest 
+    {
+        public InitializeCreditRequest(
+            Fifthweek.Payments.Services.Credit.IGetUserPaymentOriginDbStatement getUserPaymentOrigin,
+            Fifthweek.Payments.Services.Credit.Taxamo.IDeleteTaxamoTransaction deleteTaxamoTransaction,
+            Fifthweek.Payments.Services.Credit.Taxamo.ICreateTaxamoTransaction createTaxamoTransaction)
+        {
+            if (getUserPaymentOrigin == null)
+            {
+                throw new ArgumentNullException("getUserPaymentOrigin");
+            }
+
+            if (deleteTaxamoTransaction == null)
+            {
+                throw new ArgumentNullException("deleteTaxamoTransaction");
+            }
+
+            if (createTaxamoTransaction == null)
+            {
+                throw new ArgumentNullException("createTaxamoTransaction");
+            }
+
+            this.getUserPaymentOrigin = getUserPaymentOrigin;
+            this.deleteTaxamoTransaction = deleteTaxamoTransaction;
+            this.createTaxamoTransaction = createTaxamoTransaction;
+        }
+    }
+}
+namespace Fifthweek.Payments.Services.Credit
+{
+    using Fifthweek.CodeGeneration;
+    using Fifthweek.Payments.Services.Credit.Taxamo;
+
+    public partial class InitializeCreditRequestResult 
+    {
+        public InitializeCreditRequestResult(
+            Fifthweek.Payments.Services.Credit.Taxamo.TaxamoTransactionResult taxamoTransaction,
+            Fifthweek.Payments.Services.Credit.UserPaymentOriginResult origin)
+        {
+            if (taxamoTransaction == null)
+            {
+                throw new ArgumentNullException("taxamoTransaction");
+            }
+
+            if (origin == null)
+            {
+                throw new ArgumentNullException("origin");
+            }
+
+            this.TaxamoTransaction = taxamoTransaction;
+            this.Origin = origin;
+        }
+    }
+}
+namespace Fifthweek.Payments.Services.Credit
+{
+    using System.Threading.Tasks;
+    using Fifthweek.Api.Identity.Shared.Membership;
+    using Fifthweek.CodeGeneration;
+    using Fifthweek.Payments.Services.Credit.Stripe;
+    using Fifthweek.Payments.Services.Credit.Taxamo;
+    using Fifthweek.Shared;
+
+    public partial class PerformCreditRequest 
+    {
+        public PerformCreditRequest(
+            Fifthweek.Shared.ITimestampCreator timestampCreator,
+            Fifthweek.Payments.Services.Credit.Stripe.IPerformStripeCharge performStripeCharge,
+            Fifthweek.Shared.IGuidCreator guidCreator)
+        {
+            if (timestampCreator == null)
+            {
+                throw new ArgumentNullException("timestampCreator");
+            }
+
+            if (performStripeCharge == null)
+            {
+                throw new ArgumentNullException("performStripeCharge");
+            }
+
+            if (guidCreator == null)
+            {
+                throw new ArgumentNullException("guidCreator");
+            }
+
+            this.timestampCreator = timestampCreator;
+            this.performStripeCharge = performStripeCharge;
+            this.guidCreator = guidCreator;
+        }
+    }
+}
+namespace Fifthweek.Payments.Services.Credit
+{
+    using System;
+    using System.Collections.Generic;
+    using System.Threading.Tasks;
+    using Fifthweek.Api.Identity.Shared.Membership;
+    using Fifthweek.Api.Persistence;
+    using Fifthweek.Api.Persistence.Payments;
+    using Fifthweek.CodeGeneration;
+    using Fifthweek.Shared;
+
+    public partial class SaveCustomerCreditToLedgerDbStatement 
+    {
+        public SaveCustomerCreditToLedgerDbStatement(
+            Fifthweek.Shared.IGuidCreator guidCreator,
+            Fifthweek.Api.Persistence.IFifthweekDbConnectionFactory connectionFactory)
+        {
+            if (guidCreator == null)
+            {
+                throw new ArgumentNullException("guidCreator");
+            }
+
+            if (connectionFactory == null)
+            {
+                throw new ArgumentNullException("connectionFactory");
+            }
+
+            this.guidCreator = guidCreator;
+            this.connectionFactory = connectionFactory;
+        }
+    }
+}
+namespace Fifthweek.Payments.Services.Credit
+{
+    using System.Threading.Tasks;
+    using Fifthweek.Api.Identity.Shared.Membership;
+    using Fifthweek.Api.Persistence;
+    using Fifthweek.Api.Persistence.Payments;
+    using Fifthweek.CodeGeneration;
+    using Fifthweek.Shared;
+
+    public partial class SetUserPaymentOriginOriginalTaxamoTransactionKeyDbStatement 
+    {
+        public SetUserPaymentOriginOriginalTaxamoTransactionKeyDbStatement(
+            Fifthweek.Api.Persistence.IFifthweekDbConnectionFactory connectionFactory)
+        {
+            if (connectionFactory == null)
+            {
+                throw new ArgumentNullException("connectionFactory");
+            }
+
+            this.connectionFactory = connectionFactory;
+        }
+    }
+}
+namespace Fifthweek.Payments.Services.Credit
+{
+    using System;
+    using Fifthweek.CodeGeneration;
+
+    public partial class StripeTransactionResult 
+    {
+        public StripeTransactionResult(
+            System.DateTime timestamp,
+            System.Guid transactionReference,
+            System.String stripeChargeId)
+        {
+            if (timestamp == null)
+            {
+                throw new ArgumentNullException("timestamp");
+            }
+
+            if (transactionReference == null)
+            {
+                throw new ArgumentNullException("transactionReference");
+            }
+
+            if (stripeChargeId == null)
+            {
+                throw new ArgumentNullException("stripeChargeId");
+            }
+
+            this.Timestamp = timestamp;
+            this.TransactionReference = transactionReference;
+            this.StripeChargeId = stripeChargeId;
+        }
+    }
+}
+namespace Fifthweek.Payments.Services.Credit.Taxamo
+{
+    using Fifthweek.CodeGeneration;
+
+    public partial class TaxamoTransactionResult 
+    {
+        public TaxamoTransactionResult(
+            System.String key,
+            Fifthweek.Payments.Services.Credit.AmountInUsCents amount,
+            Fifthweek.Payments.Services.Credit.AmountInUsCents totalAmount,
+            Fifthweek.Payments.Services.Credit.AmountInUsCents taxAmount,
+            System.Decimal taxRate,
+            System.String taxName,
+            System.String taxEntityName,
+            System.String countryName)
+        {
+            if (amount == null)
+            {
+                throw new ArgumentNullException("amount");
+            }
+
+            if (totalAmount == null)
+            {
+                throw new ArgumentNullException("totalAmount");
+            }
+
+            if (taxAmount == null)
+            {
+                throw new ArgumentNullException("taxAmount");
+            }
+
+            if (taxRate == null)
+            {
+                throw new ArgumentNullException("taxRate");
+            }
+
+            if (taxName == null)
+            {
+                throw new ArgumentNullException("taxName");
+            }
+
+            if (taxEntityName == null)
+            {
+                throw new ArgumentNullException("taxEntityName");
+            }
+
+            if (countryName == null)
+            {
+                throw new ArgumentNullException("countryName");
+            }
+
+            this.Key = key;
+            this.Amount = amount;
+            this.TotalAmount = totalAmount;
+            this.TaxAmount = taxAmount;
+            this.TaxRate = taxRate;
+            this.TaxName = taxName;
+            this.TaxEntityName = taxEntityName;
+            this.CountryName = countryName;
+        }
+    }
+}
+namespace Fifthweek.Payments.Services.Credit
+{
+    using Fifthweek.CodeGeneration;
+
+    public partial class UserPaymentOriginResult 
+    {
+        public UserPaymentOriginResult(
+            System.String stripeCustomerId,
+            System.String billingCountryCode,
+            System.String creditCardPrefix,
+            System.String ipAddress,
+            System.String originalTaxamoTransactionKey)
+        {
+            this.StripeCustomerId = stripeCustomerId;
+            this.BillingCountryCode = billingCountryCode;
+            this.CreditCardPrefix = creditCardPrefix;
+            this.IpAddress = ipAddress;
+            this.OriginalTaxamoTransactionKey = originalTaxamoTransactionKey;
         }
     }
 }
@@ -1702,6 +2104,352 @@ namespace Fifthweek.Payments.Services
             }
         
             if (!object.Equals(this.LiveDate, other.LiveDate))
+            {
+                return false;
+            }
+        
+            return true;
+        }
+    }
+}
+namespace Fifthweek.Payments.Services.Credit
+{
+    using Fifthweek.CodeGeneration;
+
+    public partial class AmountInUsCents 
+    {
+        public override string ToString()
+        {
+            return string.Format("AmountInUsCents({0})", this.Value == null ? "null" : this.Value.ToString());
+        }
+        
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj))
+            {
+                return false;
+            }
+        
+            if (ReferenceEquals(this, obj))
+            {
+                return true;
+            }
+        
+            if (obj.GetType() != this.GetType())
+            {
+                return false;
+            }
+        
+            return this.Equals((AmountInUsCents)obj);
+        }
+        
+        public override int GetHashCode()
+        {
+            unchecked
+            {
+                int hashCode = 0;
+                hashCode = (hashCode * 397) ^ (this.Value != null ? this.Value.GetHashCode() : 0);
+                return hashCode;
+            }
+        }
+        
+        protected bool Equals(AmountInUsCents other)
+        {
+            if (!object.Equals(this.Value, other.Value))
+            {
+                return false;
+            }
+        
+            return true;
+        }
+    }
+}
+namespace Fifthweek.Payments.Services.Credit
+{
+    using Fifthweek.CodeGeneration;
+    using Fifthweek.Payments.Services.Credit.Taxamo;
+
+    public partial class InitializeCreditRequestResult 
+    {
+        public override string ToString()
+        {
+            return string.Format("InitializeCreditRequestResult({0}, {1})", this.TaxamoTransaction == null ? "null" : this.TaxamoTransaction.ToString(), this.Origin == null ? "null" : this.Origin.ToString());
+        }
+        
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj))
+            {
+                return false;
+            }
+        
+            if (ReferenceEquals(this, obj))
+            {
+                return true;
+            }
+        
+            if (obj.GetType() != this.GetType())
+            {
+                return false;
+            }
+        
+            return this.Equals((InitializeCreditRequestResult)obj);
+        }
+        
+        public override int GetHashCode()
+        {
+            unchecked
+            {
+                int hashCode = 0;
+                hashCode = (hashCode * 397) ^ (this.TaxamoTransaction != null ? this.TaxamoTransaction.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.Origin != null ? this.Origin.GetHashCode() : 0);
+                return hashCode;
+            }
+        }
+        
+        protected bool Equals(InitializeCreditRequestResult other)
+        {
+            if (!object.Equals(this.TaxamoTransaction, other.TaxamoTransaction))
+            {
+                return false;
+            }
+        
+            if (!object.Equals(this.Origin, other.Origin))
+            {
+                return false;
+            }
+        
+            return true;
+        }
+    }
+}
+namespace Fifthweek.Payments.Services.Credit
+{
+    using System;
+    using Fifthweek.CodeGeneration;
+
+    public partial class StripeTransactionResult 
+    {
+        public override string ToString()
+        {
+            return string.Format("StripeTransactionResult({0}, {1}, \"{2}\")", this.Timestamp == null ? "null" : this.Timestamp.ToString(), this.TransactionReference == null ? "null" : this.TransactionReference.ToString(), this.StripeChargeId == null ? "null" : this.StripeChargeId.ToString());
+        }
+        
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj))
+            {
+                return false;
+            }
+        
+            if (ReferenceEquals(this, obj))
+            {
+                return true;
+            }
+        
+            if (obj.GetType() != this.GetType())
+            {
+                return false;
+            }
+        
+            return this.Equals((StripeTransactionResult)obj);
+        }
+        
+        public override int GetHashCode()
+        {
+            unchecked
+            {
+                int hashCode = 0;
+                hashCode = (hashCode * 397) ^ (this.Timestamp != null ? this.Timestamp.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.TransactionReference != null ? this.TransactionReference.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.StripeChargeId != null ? this.StripeChargeId.GetHashCode() : 0);
+                return hashCode;
+            }
+        }
+        
+        protected bool Equals(StripeTransactionResult other)
+        {
+            if (!object.Equals(this.Timestamp, other.Timestamp))
+            {
+                return false;
+            }
+        
+            if (!object.Equals(this.TransactionReference, other.TransactionReference))
+            {
+                return false;
+            }
+        
+            if (!object.Equals(this.StripeChargeId, other.StripeChargeId))
+            {
+                return false;
+            }
+        
+            return true;
+        }
+    }
+}
+namespace Fifthweek.Payments.Services.Credit.Taxamo
+{
+    using Fifthweek.CodeGeneration;
+
+    public partial class TaxamoTransactionResult 
+    {
+        public override string ToString()
+        {
+            return string.Format("TaxamoTransactionResult(\"{0}\", {1}, {2}, {3}, {4}, \"{5}\", \"{6}\", \"{7}\")", this.Key == null ? "null" : this.Key.ToString(), this.Amount == null ? "null" : this.Amount.ToString(), this.TotalAmount == null ? "null" : this.TotalAmount.ToString(), this.TaxAmount == null ? "null" : this.TaxAmount.ToString(), this.TaxRate == null ? "null" : this.TaxRate.ToString(), this.TaxName == null ? "null" : this.TaxName.ToString(), this.TaxEntityName == null ? "null" : this.TaxEntityName.ToString(), this.CountryName == null ? "null" : this.CountryName.ToString());
+        }
+        
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj))
+            {
+                return false;
+            }
+        
+            if (ReferenceEquals(this, obj))
+            {
+                return true;
+            }
+        
+            if (obj.GetType() != this.GetType())
+            {
+                return false;
+            }
+        
+            return this.Equals((TaxamoTransactionResult)obj);
+        }
+        
+        public override int GetHashCode()
+        {
+            unchecked
+            {
+                int hashCode = 0;
+                hashCode = (hashCode * 397) ^ (this.Key != null ? this.Key.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.Amount != null ? this.Amount.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.TotalAmount != null ? this.TotalAmount.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.TaxAmount != null ? this.TaxAmount.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.TaxRate != null ? this.TaxRate.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.TaxName != null ? this.TaxName.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.TaxEntityName != null ? this.TaxEntityName.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.CountryName != null ? this.CountryName.GetHashCode() : 0);
+                return hashCode;
+            }
+        }
+        
+        protected bool Equals(TaxamoTransactionResult other)
+        {
+            if (!object.Equals(this.Key, other.Key))
+            {
+                return false;
+            }
+        
+            if (!object.Equals(this.Amount, other.Amount))
+            {
+                return false;
+            }
+        
+            if (!object.Equals(this.TotalAmount, other.TotalAmount))
+            {
+                return false;
+            }
+        
+            if (!object.Equals(this.TaxAmount, other.TaxAmount))
+            {
+                return false;
+            }
+        
+            if (!object.Equals(this.TaxRate, other.TaxRate))
+            {
+                return false;
+            }
+        
+            if (!object.Equals(this.TaxName, other.TaxName))
+            {
+                return false;
+            }
+        
+            if (!object.Equals(this.TaxEntityName, other.TaxEntityName))
+            {
+                return false;
+            }
+        
+            if (!object.Equals(this.CountryName, other.CountryName))
+            {
+                return false;
+            }
+        
+            return true;
+        }
+    }
+}
+namespace Fifthweek.Payments.Services.Credit
+{
+    using Fifthweek.CodeGeneration;
+
+    public partial class UserPaymentOriginResult 
+    {
+        public override string ToString()
+        {
+            return string.Format("UserPaymentOriginResult(\"{0}\", \"{1}\", \"{2}\", \"{3}\", \"{4}\")", this.StripeCustomerId == null ? "null" : this.StripeCustomerId.ToString(), this.BillingCountryCode == null ? "null" : this.BillingCountryCode.ToString(), this.CreditCardPrefix == null ? "null" : this.CreditCardPrefix.ToString(), this.IpAddress == null ? "null" : this.IpAddress.ToString(), this.OriginalTaxamoTransactionKey == null ? "null" : this.OriginalTaxamoTransactionKey.ToString());
+        }
+        
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj))
+            {
+                return false;
+            }
+        
+            if (ReferenceEquals(this, obj))
+            {
+                return true;
+            }
+        
+            if (obj.GetType() != this.GetType())
+            {
+                return false;
+            }
+        
+            return this.Equals((UserPaymentOriginResult)obj);
+        }
+        
+        public override int GetHashCode()
+        {
+            unchecked
+            {
+                int hashCode = 0;
+                hashCode = (hashCode * 397) ^ (this.StripeCustomerId != null ? this.StripeCustomerId.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.BillingCountryCode != null ? this.BillingCountryCode.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.CreditCardPrefix != null ? this.CreditCardPrefix.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.IpAddress != null ? this.IpAddress.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.OriginalTaxamoTransactionKey != null ? this.OriginalTaxamoTransactionKey.GetHashCode() : 0);
+                return hashCode;
+            }
+        }
+        
+        protected bool Equals(UserPaymentOriginResult other)
+        {
+            if (!object.Equals(this.StripeCustomerId, other.StripeCustomerId))
+            {
+                return false;
+            }
+        
+            if (!object.Equals(this.BillingCountryCode, other.BillingCountryCode))
+            {
+                return false;
+            }
+        
+            if (!object.Equals(this.CreditCardPrefix, other.CreditCardPrefix))
+            {
+                return false;
+            }
+        
+            if (!object.Equals(this.IpAddress, other.IpAddress))
+            {
+                return false;
+            }
+        
+            if (!object.Equals(this.OriginalTaxamoTransactionKey, other.OriginalTaxamoTransactionKey))
             {
                 return false;
             }

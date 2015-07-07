@@ -79,6 +79,10 @@
       <Project>{22d85c74-3001-4930-95d7-8f2526452dd6}</Project>
       <Name>Fifthweek.Api.Logging</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Fifthweek.Shared\Fifthweek.Shared.csproj">
+      <Project>{6d12ffbb-38e9-4722-a690-0f0338538ebc}</Project>
+      <Name>Fifthweek.Shared</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

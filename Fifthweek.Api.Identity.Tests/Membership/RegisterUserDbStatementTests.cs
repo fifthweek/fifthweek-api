@@ -13,6 +13,7 @@
     using Fifthweek.Api.Persistence.Tests.Shared;
     using Fifthweek.Payments.SnapshotCreation;
     using Fifthweek.Payments.Tests.Shared;
+    using Fifthweek.Shared;
     using Fifthweek.Tests.Shared;
 
     using Microsoft.AspNet.Identity;

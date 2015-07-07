@@ -5,6 +5,7 @@
     using Fifthweek.Api.Core;
     using Fifthweek.CodeGeneration;
     using Fifthweek.Logging;
+    using Fifthweek.Shared;
 
     [AutoConstructor]
     public partial class ExceptionHandler : IExceptionHandler

@@ -8,12 +8,14 @@
     using System.IO;
     using System.Threading.Tasks;
 
+    using Fifthweek.Shared;
+
     using Microsoft.Practices.EnterpriseLibrary.TransientFaultHandling;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
 
     using Moq;
 
-    using RetryLimitExceededException = Fifthweek.Api.Core.RetryLimitExceededException;
+    using RetryLimitExceededException = Fifthweek.Shared.RetryLimitExceededException;
 
     [TestClass]
     public class FifthweekRetryOnTransientErrorHandlerTests

@@ -2,6 +2,8 @@
 {
     using System;
 
+    using Fifthweek.Shared;
+
     public class DetailedRecoverableException : RecoverableException
     {
         private readonly string detailedMessage;

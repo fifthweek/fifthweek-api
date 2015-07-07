@@ -5,7 +5,6 @@
 
     using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.Api.Payments.Commands;
-    using Fifthweek.Api.Payments.Taxamo;
     using Fifthweek.Payments.Services;
     using Fifthweek.Shared;
 
