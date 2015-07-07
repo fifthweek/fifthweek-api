@@ -86,8 +86,10 @@
     <Compile Include="Commands\ApplyCreditRequestCommand.cs" />
     <Compile Include="Commands\ApplyCreditRequestCommandHandler.cs" />
     <Compile Include="Commands\CommitCreditToDatabase.cs" />
+    <Compile Include="Commands\CommitTestUserCreditToDatabase.cs" />
     <Compile Include="Commands\FailedToApplyCreditException.cs" />
     <Compile Include="Commands\ICommitCreditToDatabase.cs" />
+    <Compile Include="Commands\ICommitTestUserCreditToDatabase.cs" />
     <Compile Include="Commands\IInitializeCreditRequest.cs" />
     <Compile Include="Commands\InitializeCreditRequestResult.cs" />
     <Compile Include="Commands\InitializeCreditRequest.cs" />
@@ -103,12 +105,14 @@
     <Compile Include="GetUserPaymentOriginDbStatement.cs" />
     <Compile Include="IGetUserPaymentOriginDbStatement.cs" />
     <Compile Include="ISaveCustomerCreditToLedgerDbStatement.cs" />
+    <Compile Include="ISetTestUserAccountBalanceDbStatement.cs" />
     <Compile Include="ISetUserPaymentOriginDbStatement.cs" />
     <Compile Include="ISetUserPaymentOriginOriginalTaxamoTransactionKeyDbStatement.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Queries\GetCreditRequestSummaryQuery.cs" />
     <Compile Include="Queries\GetCreditRequestSummaryQueryHandler.cs" />
     <Compile Include="SaveCustomerCreditToLedgerDbStatement.cs" />
+    <Compile Include="SetTestUserAccountBalanceDbStatement.cs" />
     <Compile Include="SetUserPaymentOriginDbStatement.cs" />
     <Compile Include="SetUserPaymentOriginOriginalTaxamoTransactionKeyDbStatement.cs" />
     <Compile Include="Stripe\CreateStripeCustomer.cs" />

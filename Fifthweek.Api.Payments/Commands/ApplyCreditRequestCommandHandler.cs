@@ -6,6 +6,7 @@
     using Fifthweek.Api.Core;
     using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.Api.Payments.Taxamo;
+    using Fifthweek.Api.Persistence.Identity;
     using Fifthweek.CodeGeneration;
     using Fifthweek.Shared;
 
@@ -22,10 +23,26 @@
         private readonly IFifthweekRetryOnTransientErrorHandler retryOnTransientFailure;
         private readonly ICommitTaxamoTransaction commitTaxamoTransaction;
 
+        private readonly ICommitTestUserCreditToDatabase commitTestUserCreditToDatabase;
+
         public async Task HandleAsync(ApplyCreditRequestCommand command)
         {
             command.AssertNotNull("command");
             await this.requesterSecurity.AuthenticateAsAsync(command.Requester, command.UserId);
+
+            var isTestUser = await this.requesterSecurity.IsInRoleAsync(command.Requester, FifthweekRole.TestUser);
+            if (isTestUser)
+            {
+                // For a test user we just update their account balance directly, 
+                // as we don't want the credit to affect the Fifthweek accounts
+                // or VAT related accounts.
+                await this.retryOnTransientFailure.HandleAsync(() =>
+                    this.commitTestUserCreditToDatabase.HandleAsync(
+                        command.UserId,
+                        command.Amount));
+
+                return;
+            }
 
             // We split this up into three phases that have individual retry handlers.
             // The first phase can be retried without issue if there are transient failures.

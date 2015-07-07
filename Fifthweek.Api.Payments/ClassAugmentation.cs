@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Linq;
 
-//// Generated on 03/07/2015 17:19:50 (UTC)
-//// Mapped solution in 20.18s
+//// Generated on 06/07/2015 19:10:28 (UTC)
+//// Mapped solution in 12.67s
 
 
 namespace Fifthweek.Api.Payments
@@ -46,6 +46,7 @@ namespace Fifthweek.Api.Payments.Commands
     using Newtonsoft.Json;
     using Fifthweek.Api.Payments.Stripe;
     using Fifthweek.Payments.Services;
+    using Fifthweek.Api.Persistence.Identity;
 
     public partial class ApplyCreditRequestCommand 
     {
@@ -95,6 +96,7 @@ namespace Fifthweek.Api.Payments.Commands
     using Newtonsoft.Json;
     using Fifthweek.Api.Payments.Stripe;
     using Fifthweek.Payments.Services;
+    using Fifthweek.Api.Persistence.Identity;
 
     public partial class ApplyCreditRequestCommandHandler 
     {
@@ -104,7 +106,8 @@ namespace Fifthweek.Api.Payments.Commands
             Fifthweek.Api.Payments.Commands.IPerformCreditRequest performCreditRequest,
             Fifthweek.Api.Payments.Commands.ICommitCreditToDatabase commitCreditToDatabase,
             Fifthweek.Api.Core.IFifthweekRetryOnTransientErrorHandler retryOnTransientFailure,
-            Fifthweek.Api.Payments.Taxamo.ICommitTaxamoTransaction commitTaxamoTransaction)
+            Fifthweek.Api.Payments.Taxamo.ICommitTaxamoTransaction commitTaxamoTransaction,
+            Fifthweek.Api.Payments.Commands.ICommitTestUserCreditToDatabase commitTestUserCreditToDatabase)
         {
             if (requesterSecurity == null)
             {
@@ -136,12 +139,18 @@ namespace Fifthweek.Api.Payments.Commands
                 throw new ArgumentNullException("commitTaxamoTransaction");
             }
 
+            if (commitTestUserCreditToDatabase == null)
+            {
+                throw new ArgumentNullException("commitTestUserCreditToDatabase");
+            }
+
             this.requesterSecurity = requesterSecurity;
             this.initializeCreditRequest = initializeCreditRequest;
             this.performCreditRequest = performCreditRequest;
             this.commitCreditToDatabase = commitCreditToDatabase;
             this.retryOnTransientFailure = retryOnTransientFailure;
             this.commitTaxamoTransaction = commitTaxamoTransaction;
+            this.commitTestUserCreditToDatabase = commitTestUserCreditToDatabase;
         }
     }
 }
@@ -158,6 +167,7 @@ namespace Fifthweek.Api.Payments.Commands
     using Newtonsoft.Json;
     using Fifthweek.Api.Payments.Stripe;
     using Fifthweek.Payments.Services;
+    using Fifthweek.Api.Persistence.Identity;
 
     public partial class InitializeCreditRequestResult 
     {
@@ -193,6 +203,7 @@ namespace Fifthweek.Api.Payments.Commands
     using Newtonsoft.Json;
     using Fifthweek.Api.Payments.Stripe;
     using Fifthweek.Payments.Services;
+    using Fifthweek.Api.Persistence.Identity;
 
     public partial class StripeTransactionResult 
     {
@@ -235,6 +246,7 @@ namespace Fifthweek.Api.Payments.Commands
     using Newtonsoft.Json;
     using Fifthweek.Api.Payments.Stripe;
     using Fifthweek.Payments.Services;
+    using Fifthweek.Api.Persistence.Identity;
 
     public partial class UpdatePaymentOriginCommand 
     {
@@ -278,6 +290,7 @@ namespace Fifthweek.Api.Payments.Commands
     using Newtonsoft.Json;
     using Fifthweek.Api.Payments.Stripe;
     using Fifthweek.Payments.Services;
+    using Fifthweek.Api.Persistence.Identity;
 
     public partial class UpdatePaymentOriginCommandHandler 
     {
@@ -772,6 +785,7 @@ namespace Fifthweek.Api.Payments.Commands
     using Newtonsoft.Json;
     using Fifthweek.Api.Payments.Stripe;
     using Fifthweek.Payments.Services;
+    using Fifthweek.Api.Persistence.Identity;
 
     public partial class CommitCreditToDatabase 
     {
@@ -814,6 +828,7 @@ namespace Fifthweek.Api.Payments.Commands
     using Newtonsoft.Json;
     using Fifthweek.Api.Payments.Stripe;
     using Fifthweek.Payments.Services;
+    using Fifthweek.Api.Persistence.Identity;
 
     public partial class InitializeCreditRequest 
     {
@@ -856,6 +871,7 @@ namespace Fifthweek.Api.Payments.Commands
     using Newtonsoft.Json;
     using Fifthweek.Api.Payments.Stripe;
     using Fifthweek.Payments.Services;
+    using Fifthweek.Api.Persistence.Identity;
 
     public partial class PerformCreditRequest 
     {
@@ -888,13 +904,16 @@ namespace Fifthweek.Api.Payments.Commands
 namespace Fifthweek.Api.Payments
 {
     using System;
-    using System.Collections.Generic;
+    using System.Linq;
+    using Fifthweek.CodeGeneration;
     using System.Threading.Tasks;
+    using Dapper;
     using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.Api.Persistence;
     using Fifthweek.Api.Persistence.Payments;
-    using Fifthweek.CodeGeneration;
     using Fifthweek.Shared;
+    using System.Collections.Generic;
+    using System.Net;
 
     public partial class SaveCustomerCreditToLedgerDbStatement 
     {
@@ -913,6 +932,70 @@ namespace Fifthweek.Api.Payments
             }
 
             this.guidCreator = guidCreator;
+            this.connectionFactory = connectionFactory;
+        }
+    }
+}
+namespace Fifthweek.Api.Payments.Commands
+{
+    using System;
+    using System.Linq;
+    using Fifthweek.Api.Identity.Shared.Membership;
+    using Fifthweek.CodeGeneration;
+    using Fifthweek.Shared;
+    using System.Threading.Tasks;
+    using Fifthweek.Api.Core;
+    using Fifthweek.Api.Payments.Taxamo;
+    using Newtonsoft.Json;
+    using Fifthweek.Api.Payments.Stripe;
+    using Fifthweek.Payments.Services;
+    using Fifthweek.Api.Persistence.Identity;
+
+    public partial class CommitTestUserCreditToDatabase 
+    {
+        public CommitTestUserCreditToDatabase(
+            Fifthweek.Shared.ITimestampCreator timestampCreator,
+            Fifthweek.Api.Payments.ISetTestUserAccountBalanceDbStatement setTestUserAccountBalance)
+        {
+            if (timestampCreator == null)
+            {
+                throw new ArgumentNullException("timestampCreator");
+            }
+
+            if (setTestUserAccountBalance == null)
+            {
+                throw new ArgumentNullException("setTestUserAccountBalance");
+            }
+
+            this.timestampCreator = timestampCreator;
+            this.setTestUserAccountBalance = setTestUserAccountBalance;
+        }
+    }
+}
+namespace Fifthweek.Api.Payments
+{
+    using System;
+    using System.Linq;
+    using Fifthweek.CodeGeneration;
+    using System.Threading.Tasks;
+    using Dapper;
+    using Fifthweek.Api.Identity.Shared.Membership;
+    using Fifthweek.Api.Persistence;
+    using Fifthweek.Api.Persistence.Payments;
+    using Fifthweek.Shared;
+    using System.Collections.Generic;
+    using System.Net;
+
+    public partial class SetTestUserAccountBalanceDbStatement 
+    {
+        public SetTestUserAccountBalanceDbStatement(
+            Fifthweek.Api.Persistence.IFifthweekDbConnectionFactory connectionFactory)
+        {
+            if (connectionFactory == null)
+            {
+                throw new ArgumentNullException("connectionFactory");
+            }
+
             this.connectionFactory = connectionFactory;
         }
     }
@@ -993,6 +1076,7 @@ namespace Fifthweek.Api.Payments.Commands
     using Newtonsoft.Json;
     using Fifthweek.Api.Payments.Stripe;
     using Fifthweek.Payments.Services;
+    using Fifthweek.Api.Persistence.Identity;
 
     public partial class ApplyCreditRequestCommand 
     {
@@ -1073,12 +1157,13 @@ namespace Fifthweek.Api.Payments.Commands
     using Newtonsoft.Json;
     using Fifthweek.Api.Payments.Stripe;
     using Fifthweek.Payments.Services;
+    using Fifthweek.Api.Persistence.Identity;
 
     public partial class InitializeCreditRequestResult 
     {
         public override string ToString()
         {
-            return string.Format("InitializeApplyCreditRequestResult({0}, {1})", this.TaxamoTransaction == null ? "null" : this.TaxamoTransaction.ToString(), this.Origin == null ? "null" : this.Origin.ToString());
+            return string.Format("InitializeCreditRequestResult({0}, {1})", this.TaxamoTransaction == null ? "null" : this.TaxamoTransaction.ToString(), this.Origin == null ? "null" : this.Origin.ToString());
         }
         
         public override bool Equals(object obj)
@@ -1141,6 +1226,7 @@ namespace Fifthweek.Api.Payments.Commands
     using Newtonsoft.Json;
     using Fifthweek.Api.Payments.Stripe;
     using Fifthweek.Payments.Services;
+    using Fifthweek.Api.Persistence.Identity;
 
     public partial class StripeTransactionResult 
     {
@@ -1215,6 +1301,7 @@ namespace Fifthweek.Api.Payments.Commands
     using Newtonsoft.Json;
     using Fifthweek.Api.Payments.Stripe;
     using Fifthweek.Payments.Services;
+    using Fifthweek.Api.Persistence.Identity;
 
     public partial class UpdatePaymentOriginCommand 
     {

@@ -9,6 +9,7 @@
     using Fifthweek.Api.Identity.Tests.Shared.Membership;
     using Fifthweek.Api.Payments.Commands;
     using Fifthweek.Api.Payments.Taxamo;
+    using Fifthweek.Api.Persistence.Identity;
     using Fifthweek.Shared;
     using Fifthweek.Tests.Shared;
 
@@ -38,6 +39,7 @@
         private Mock<ICommitCreditToDatabase> commitCreditToDatabase;
         private Mock<IFifthweekRetryOnTransientErrorHandler> retryOnTransientFailure;
         private Mock<ICommitTaxamoTransaction> commitTaxamoTransaction;
+        private Mock<ICommitTestUserCreditToDatabase> commitTestUserCreditToDatabase;
 
         private ApplyCreditRequestCommandHandler target;
 
@@ -50,6 +52,7 @@
             this.commitCreditToDatabase = new Mock<ICommitCreditToDatabase>(MockBehavior.Strict);
             this.retryOnTransientFailure = new Mock<IFifthweekRetryOnTransientErrorHandler>(MockBehavior.Strict);
             this.commitTaxamoTransaction = new Mock<ICommitTaxamoTransaction>(MockBehavior.Strict);
+            this.commitTestUserCreditToDatabase = new Mock<ICommitTestUserCreditToDatabase>(MockBehavior.Strict);
 
             this.requesterSecurity.SetupFor(Requester);
 
@@ -59,7 +62,8 @@
                 this.performCreditRequest.Object,
                 this.commitCreditToDatabase.Object,
                 this.retryOnTransientFailure.Object,
-                this.commitTaxamoTransaction.Object);
+                this.commitTaxamoTransaction.Object,
+                this.commitTestUserCreditToDatabase.Object);
         }
 
         [TestMethod]
@@ -96,17 +100,7 @@
         {
             var tasks = new List<Func<Task>>();
 
-            this.retryOnTransientFailure.Setup(v => v.HandleAsync(It.IsAny<Func<Task<InitializeCreditRequestResult>>>()))
-                .Callback<Func<Task>>(tasks.Add)
-                .ReturnsAsync(InitializeResult);
-
-            this.retryOnTransientFailure.Setup(v => v.HandleAsync(It.IsAny<Func<Task<StripeTransactionResult>>>()))
-                .Callback<Func<Task>>(tasks.Add)
-                .ReturnsAsync(StripeTransactionResult);
-
-            this.retryOnTransientFailure.Setup(v => v.HandleAsync(It.IsAny<Func<Task>>()))
-                .Callback<Func<Task>>(tasks.Add)
-                .Returns(Task.FromResult(0));
+            this.SetupRetryOnTransientFailureTasks(tasks);
 
             await this.target.HandleAsync(Command);
 
@@ -137,6 +131,28 @@
                 .Verifiable();
             await tasks[3]();
             this.commitTaxamoTransaction.Verify();
+        }
+
+        [TestMethod]
+        public async Task WhenUserIsTestUser_ItShouldCallCommitTestUserCreditToDatabaseWithTransientErrorHandler()
+        {
+            var tasks = new List<Func<Task>>();
+
+            this.requesterSecurity.Setup(v => v.IsInRoleAsync(Requester, FifthweekRole.TestUser)).ReturnsAsync(true);
+
+            this.SetupRetryOnTransientFailureTasks(tasks);
+
+            await this.target.HandleAsync(Command);
+
+            Assert.AreEqual(1, tasks.Count);
+
+            this.commitTestUserCreditToDatabase.Setup(v => v.HandleAsync(
+                UserId,
+                Command.Amount))
+                .Returns(Task.FromResult(0))
+                .Verifiable();
+            await tasks[0]();
+            this.commitTestUserCreditToDatabase.Verify();
         }
 
         [TestMethod]
@@ -253,6 +269,21 @@
                 && exception.Message.Contains(StripeTransactionResult.TransactionReference.ToString())
                 && exception.Message.Contains(InitializeResult.TaxamoTransaction.Key)
                 && exception.Message.Contains(UserId.Value.ToString()));
+        }
+
+        private void SetupRetryOnTransientFailureTasks(List<Func<Task>> tasks)
+        {
+            this.retryOnTransientFailure.Setup(v => v.HandleAsync(It.IsAny<Func<Task<InitializeCreditRequestResult>>>()))
+                .Callback<Func<Task>>(tasks.Add)
+                .ReturnsAsync(InitializeResult);
+
+            this.retryOnTransientFailure.Setup(v => v.HandleAsync(It.IsAny<Func<Task<StripeTransactionResult>>>()))
+                .Callback<Func<Task>>(tasks.Add)
+                .ReturnsAsync(StripeTransactionResult);
+
+            this.retryOnTransientFailure.Setup(v => v.HandleAsync(It.IsAny<Func<Task>>()))
+                .Callback<Func<Task>>(tasks.Add)
+                .Returns(Task.FromResult(0));
         }
     }
 }
