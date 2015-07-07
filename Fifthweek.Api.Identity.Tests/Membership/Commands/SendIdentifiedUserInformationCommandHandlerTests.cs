@@ -44,7 +44,14 @@
         [TestMethod]
         public async Task WhenEmailIsFromTestDomain_ItShouldNotReport()
         {
-            await this.target.HandleAsync(new SendIdentifiedUserInformationCommand(false, ValidEmail.Parse("something" + Constants.TestDomain), Name, Username));
+            await this.target.HandleAsync(new SendIdentifiedUserInformationCommand(false, ValidEmail.Parse("something" + Constants.TestEmailDomain), Name, Username));
+            // Test verification handled by strict behaviour.
+        }
+
+        [TestMethod]
+        public async Task WhenEmailIsFromFifthweekDomain_ItShouldNotReport()
+        {
+            await this.target.HandleAsync(new SendIdentifiedUserInformationCommand(false, ValidEmail.Parse("something" + Constants.FifthweekEmailDomain), Name, Username));
             // Test verification handled by strict behaviour.
         }
         

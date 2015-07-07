@@ -42,7 +42,7 @@
         [TestMethod]
         public async Task WhenEmailIsFromTestDomain_ItShouldNotReport()
         {
-            await this.target.HandleAsync(new RegisterInterestCommand(Name, ValidEmail.Parse("something" + Constants.TestDomain)));
+            await this.target.HandleAsync(new RegisterInterestCommand(Name, ValidEmail.Parse("something" + Constants.TestEmailDomain)));
             // Test verification handled by strict behaviour.
         }
 

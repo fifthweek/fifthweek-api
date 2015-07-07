@@ -23,7 +23,7 @@
             message.AssertNotNull("message");
 
             MailboxName mailboxName;
-            if (to.EndsWith(Constants.TestDomain) && MailboxName.TryParse(to.Split('@').FirstOrDefault(), out mailboxName))
+            if (to.EndsWith(Constants.TestEmailDomain) && MailboxName.TryParse(to.Split('@').FirstOrDefault(), out mailboxName))
             {
                 return this.setLatestMessage.ExecuteAsync(mailboxName, subject, message);
             }

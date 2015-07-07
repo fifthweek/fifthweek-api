@@ -20,7 +20,8 @@
 
             try
             {
-                if (command.Email.Value.EndsWith(Core.Constants.TestDomain))
+                if (command.Email.Value.EndsWith(Core.Constants.TestEmailDomain)
+                    || command.Email.Value.EndsWith(Core.Constants.FifthweekEmailDomain))
                 {
                     return;
                 }

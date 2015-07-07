@@ -10,7 +10,8 @@
 
         public const string DefaultAllowedOrigin = "*";
 
-        public const string TestDomain = "@testing.fifthweek.com";
+        public const string TestEmailDomain = "@testing.fifthweek.com";
+        public const string FifthweekEmailDomain = "@fifthweek.com";
 
         public const string AllowedOriginHeaderKey = "access-control-allow-origin";
 

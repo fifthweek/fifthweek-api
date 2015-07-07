@@ -48,7 +48,7 @@
 
         internal bool RegisterAsTestUser(Email email)
         {
-            return email.Value.EndsWith(Constants.TestDomain);
+            return email.Value.EndsWith(Constants.TestEmailDomain);
         }
     }
 }
