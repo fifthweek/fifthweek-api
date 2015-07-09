@@ -163,24 +163,24 @@
             [ExpectedException(typeof(BadRequestException))]
             public async Task WhenUserIdIsNull_ItShouldThrowAnException()
             {
-                await this.target.GetCreditRequestSummaryAsync(null, 10);
+                await this.target.GetCreditRequestSummaryAsync(null);
             }
 
             [TestMethod]
             [ExpectedException(typeof(BadRequestException))]
             public async Task WhenUserIdIsWhitespace_ItShouldThrowAnException()
             {
-                await this.target.GetCreditRequestSummaryAsync(" ", 10);
+                await this.target.GetCreditRequestSummaryAsync(" ");
             }
 
             [TestMethod]
             public async Task ItShouldGetCreditRequestSummery()
             {
                 this.getCreditRequestSummary.Setup(
-                    v => v.HandleAsync(new GetCreditRequestSummaryQuery(Requester, UserId, Amount)))
+                    v => v.HandleAsync(new GetCreditRequestSummaryQuery(Requester, UserId)))
                     .ReturnsAsync(CreditRequestSummary);
 
-                var result = await this.target.GetCreditRequestSummaryAsync(UserId.Value.EncodeGuid(), 10);
+                var result = await this.target.GetCreditRequestSummaryAsync(UserId.Value.EncodeGuid());
 
                 Assert.AreEqual(CreditRequestSummary, result);
             }

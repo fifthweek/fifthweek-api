@@ -1,4 +1,4 @@
-﻿namespace Fifthweek.Api.Core.Tests
+﻿namespace Fifthweek.Shared.Tests
 {
     using System.Data.SqlClient;
     using System.Linq;

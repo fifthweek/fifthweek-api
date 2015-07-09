@@ -23,13 +23,15 @@
         private static readonly string CreditCardPrefix = "162534";
         private static readonly string IpAddress = "1.1.1.1";
         private static readonly string OriginalTaxamoTransactionKey = "originalTaxamoTransactionKey";
+        private static readonly BillingStatus BillingStatus = BillingStatus.Retry1;
 
         private static readonly UserPaymentOriginResult Origin = new UserPaymentOriginResult(
             StripeCustomerId,
             BillingCountryCode,
             CreditCardPrefix,
             IpAddress,
-            OriginalTaxamoTransactionKey);
+            OriginalTaxamoTransactionKey,
+            BillingStatus);
 
         private GetUserPaymentOriginDbStatement target;
 
@@ -93,7 +95,8 @@
                 BillingCountryCode,
                 CreditCardPrefix,
                 IpAddress,
-                OriginalTaxamoTransactionKey);
+                OriginalTaxamoTransactionKey,
+                BillingStatus);
 
             using (var databaseContext = testDatabase.CreateContext())
             {

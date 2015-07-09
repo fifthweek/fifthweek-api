@@ -85,12 +85,9 @@
     <Compile Include="ExtensionsTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RequestContextTests.cs" />
-    <Compile Include="FifthweekRetryOnTransientErrorHandlerTests.cs" />
     <Compile Include="GuidCreatorTests.cs" />
-    <Compile Include="SqlExceptionMocker.cs" />
     <Compile Include="TestCommand.cs" />
     <Compile Include="TestQuery.cs" />
-    <Compile Include="TransientErrorDetectionStrategyTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Fifthweek.Api.Core\Fifthweek.Api.Core.csproj">

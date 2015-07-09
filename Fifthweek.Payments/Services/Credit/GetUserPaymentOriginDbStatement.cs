@@ -46,7 +46,8 @@
                     result.BillingCountryCode,
                     result.CreditCardPrefix,
                     result.IpAddress,
-                    result.OriginalTaxamoTransactionKey);
+                    result.OriginalTaxamoTransactionKey,
+                    result.BillingStatus);
             }
         }
     }

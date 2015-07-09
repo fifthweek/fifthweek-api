@@ -1,5 +1,6 @@
 ﻿namespace Fifthweek.Payments.Services.Credit
 {
+    using System;
     using System.Threading.Tasks;
 
     using Fifthweek.Api.Identity.Shared.Membership;
@@ -36,6 +37,14 @@
                 taxamoTransaction.Key);
 
             return new StripeTransactionResult(timestamp, transactionReference, stripeChargeId);
+        }
+    }
+
+    public class CreditCardFailedException : Exception
+    {
+        public CreditCardFailedException(Exception exception)
+            : base("Failed to charge credit card.", exception)
+        {
         }
     }
 }

@@ -45,6 +45,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DataDirectory.cs" />
+    <Compile Include="ExceptionHandler.cs" />
     <Compile Include="HardwiredDependencies.cs" />
     <Compile Include="ILogger.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

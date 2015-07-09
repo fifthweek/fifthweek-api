@@ -71,7 +71,11 @@
 
             if (lease.GetIsAcquired())
             {
-                await lease.UpdateTimestampsAsync();
+                if (exceptionDispatchInfo == null)
+                {
+                    await lease.UpdateTimestampsAsync();
+                }
+
                 await lease.ReleaseLeaseAsync();
             }
 

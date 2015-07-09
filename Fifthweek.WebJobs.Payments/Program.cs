@@ -13,6 +13,9 @@ namespace Fifthweek.WebJobs.Payments
     using Fifthweek.Azure;
     using Fifthweek.Payments.Pipeline;
     using Fifthweek.Payments.Services;
+    using Fifthweek.Payments.Services.Credit;
+    using Fifthweek.Payments.Services.Credit.Stripe;
+    using Fifthweek.Payments.Services.Credit.Taxamo;
     using Fifthweek.Payments.Shared;
     using Fifthweek.Shared;
     using Fifthweek.WebJobs.Shared;
@@ -56,7 +59,30 @@ namespace Fifthweek.WebJobs.Payments
                             new PersistPaymentProcessingDataStatement(new FifthweekCloudStorageAccount()),
                             new PersistCommittedAndUncommittedRecordsDbStatement(new FifthweekDbConnectionFactory()))),
                     new GetLatestCommittedLedgerDateDbStatement(new FifthweekDbConnectionFactory())),
-                new UpdateAccountBalancesDbStatement(new FifthweekDbConnectionFactory())),
+                new UpdateAccountBalancesDbStatement(new FifthweekDbConnectionFactory()),
+                new TopUpUserAccountsWithCredit(
+                    new GetUsersRequiringBillingRetryDbStatement(new FifthweekDbConnectionFactory()),
+                    new ApplyStandardUserCredit(
+                        new InitializeCreditRequest(
+                            new GetUserPaymentOriginDbStatement(new FifthweekDbConnectionFactory()),
+                            new DeleteTaxamoTransaction(),
+                            new CreateTaxamoTransaction()),
+                        new PerformCreditRequest(
+                            new TimestampCreator(),
+                            new PerformStripeCharge(),
+                            new GuidCreator()),
+                        new CommitCreditToDatabase(
+                            new UpdateAccountBalancesDbStatement(new FifthweekDbConnectionFactory()),
+                            new SetUserPaymentOriginOriginalTaxamoTransactionKeyDbStatement(new FifthweekDbConnectionFactory()),
+                            new SaveCustomerCreditToLedgerDbStatement(new GuidCreator(), new FifthweekDbConnectionFactory()),
+                            new ClearBillingStatusDbStatement(new FifthweekDbConnectionFactory())),
+                        new FifthweekRetryOnTransientErrorHandler(
+                            new ExceptionHandler(ErrorIdentifier),
+                            new FifthweekTransientErrorDetectionStrategy()),
+                        new CommitTaxamoTransaction()),
+                    new GetUserWeeklySubscriptionsCost(new FifthweekDbConnectionFactory()),
+                    new IncrementBillingStatusDbStatement(new FifthweekDbConnectionFactory()),
+                    new GetUserPaymentOriginDbStatement(new FifthweekDbConnectionFactory()))),
             new PaymentProcessingLeaseFactory(new TimestampCreator(), new FifthweekCloudStorageAccount()),
             new RequestProcessPaymentsService(new QueueService(new FifthweekCloudStorageAccount())));
 

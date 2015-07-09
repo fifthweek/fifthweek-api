@@ -1,6 +1,7 @@
 ﻿namespace Fifthweek.Shared
 {
     using System;
+    using System.Data.Entity.Core;
     using System.Diagnostics;
     using System.Threading;
     using System.Threading.Tasks;

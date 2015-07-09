@@ -7,6 +7,7 @@
     using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.Api.Identity.Tests.Shared.Membership;
     using Fifthweek.Api.Payments.Commands;
+    using Fifthweek.Api.Persistence.Payments;
     using Fifthweek.Payments.Services.Credit;
     using Fifthweek.Payments.Services.Credit.Stripe;
     using Fifthweek.Shared;
@@ -29,8 +30,8 @@
         private static readonly UpdatePaymentOriginCommand Command = new UpdatePaymentOriginCommand(
             Requester, UserId, StripeToken, CountryCode, CreditCardPrefix, IpAddress);
 
-        private static readonly UserPaymentOriginResult OriginWithCustomer = new UserPaymentOriginResult("stripeCustomerId", "GB", "12345", "1.1.1.1", "ttk");
-        private static readonly UserPaymentOriginResult OriginWithoutCustomer = new UserPaymentOriginResult(null, "GB", "12345", "1.1.1.1", "ttk");
+        private static readonly UserPaymentOriginResult OriginWithCustomer = new UserPaymentOriginResult("stripeCustomerId", "GB", "12345", "1.1.1.1", "ttk", BillingStatus.Retry1);
+        private static readonly UserPaymentOriginResult OriginWithoutCustomer = new UserPaymentOriginResult(null, "GB", "12345", "1.1.1.1", "ttk", BillingStatus.Retry1);
 
         private Mock<IRequesterSecurity> requesterSecurity;
         private Mock<ISetUserPaymentOriginDbStatement> setUserPaymentOrigin;

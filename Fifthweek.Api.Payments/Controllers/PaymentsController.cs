@@ -57,19 +57,16 @@
         }
 
         [Route("creditRequestSummaries/{userId}")]
-        public Task<CreditRequestSummary> GetCreditRequestSummaryAsync(string userId, [FromUri]int amount)
+        public Task<CreditRequestSummary> GetCreditRequestSummaryAsync(string userId)
         {
             userId.AssertUrlParameterProvided("userId");
-            amount.AssertUrlParameterProvided("amount");
 
-            var parsedAmount = PositiveInt.Parse(amount);
             var userIdObject = new UserId(userId.DecodeGuid());
             var requester = this.requesterContext.GetRequester();
 
             return this.getCreditRequestSummary.HandleAsync(new GetCreditRequestSummaryQuery(
                 requester, 
-                userIdObject,
-                parsedAmount));
+                userIdObject));
         }
     }
 }

@@ -1,5 +1,6 @@
 ﻿namespace Fifthweek.Api.Payments.Commands
 {
+    using System.Runtime.ExceptionServices;
     using System.Threading.Tasks;
 
     using Fifthweek.Api.Core;
@@ -17,6 +18,7 @@
         private readonly IFifthweekRetryOnTransientErrorHandler retryOnTransientFailure;
         private readonly IApplyStandardUserCredit applyStandardUserCredit;
         private readonly ICommitTestUserCreditToDatabase commitTestUserCreditToDatabase;
+        private readonly IFailBillingStatusDbStatement failBillingStatus;
 
         public async Task HandleAsync(ApplyCreditRequestCommand command)
         {
@@ -37,7 +39,24 @@
                 return;
             }
 
-            await this.applyStandardUserCredit.ExecuteAsync(command.UserId, command.Amount, command.ExpectedTotalAmount);
+            ExceptionDispatchInfo exceptionDispatchInfo = null;
+            try
+            {
+                await this.applyStandardUserCredit.ExecuteAsync(
+                    command.UserId,
+                    command.Amount,
+                    command.ExpectedTotalAmount);
+            }
+            catch (CreditCardFailedException t)
+            {
+                exceptionDispatchInfo = ExceptionDispatchInfo.Capture(t);
+            }
+    
+            if (exceptionDispatchInfo != null)
+            {
+                await this.retryOnTransientFailure.HandleAsync(() => this.failBillingStatus.ExecuteAsync(command.UserId));
+                exceptionDispatchInfo.Throw();
+            }
         }
     }
 }

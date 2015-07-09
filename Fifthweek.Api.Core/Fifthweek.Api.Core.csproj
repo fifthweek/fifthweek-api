@@ -99,7 +99,6 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>ClassAugmentation.tt</DependentUpon>
     </Compile>
-    <Compile Include="FifthweekTransientErrorDetectionStrategy.cs" />
     <Compile Include="DecoratorAttribute.cs" />
     <Compile Include="AggregateEventHandler.cs" />
     <Compile Include="DetailedRecoverableException.cs" />

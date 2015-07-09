@@ -11,6 +11,7 @@
     using Fifthweek.Api.FileManagement.Shared;
     using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.Api.Identity.Tests.Shared.Membership;
+    using Fifthweek.Api.Persistence.Payments;
     using Fifthweek.Shared;
 
     using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -26,6 +27,9 @@
         private static readonly Requester Requester = Requester.Authenticated(UserId);
         private static readonly FileId FileId = new FileId(Guid.NewGuid());
         private static readonly ValidEmail Email = ValidEmail.Parse("test@testing.fifthweek.com");
+        private static readonly int AccountBalance = 10;
+        private static readonly BillingStatus BillingStatus = BillingStatus.Retry2;
+        private static readonly bool HasCreditCardDetails = true;
 
         private GetAccountSettingsQueryHandler target;
         private Mock<IGetAccountSettingsDbStatement> getAccountSettings;
@@ -72,14 +76,14 @@
         public async Task WhenCalled_ItShouldCallTheAccountRepository()
         {
             this.getAccountSettings.Setup(v => v.ExecuteAsync(UserId))
-                .ReturnsAsync(new GetAccountSettingsDbResult(Name, Username, Email, null, 10))
+                .ReturnsAsync(new GetAccountSettingsDbResult(Name, Username, Email, null, AccountBalance, BillingStatus, HasCreditCardDetails))
                 .Verifiable();
 
             var result = await this.target.HandleAsync(new GetAccountSettingsQuery(Requester, UserId));
 
             this.getAccountSettings.Verify();
 
-            var expectedResult = new GetAccountSettingsResult(Name, Username, Email, null, 10);
+            var expectedResult = new GetAccountSettingsResult(Name, Username, Email, null, AccountBalance, BillingStatus, HasCreditCardDetails);
 
             Assert.AreEqual(expectedResult, result);
         }
@@ -90,7 +94,7 @@
             const string ContainerName = "containerName";
 
             this.getAccountSettings.Setup(v => v.ExecuteAsync(UserId))
-                .ReturnsAsync(new GetAccountSettingsDbResult(Name, Username, Email, FileId, 10));
+                .ReturnsAsync(new GetAccountSettingsDbResult(Name, Username, Email, FileId, AccountBalance, BillingStatus, HasCreditCardDetails));
 
             this.fileInformationAggregator.Setup(v => v.GetFileInformationAsync(null, FileId, FilePurposes.ProfileImage))
                 .ReturnsAsync(new FileInformation(FileId, ContainerName));
@@ -102,7 +106,9 @@
                 Username, 
                 Email, 
                 new FileInformation(FileId, ContainerName), 
-                10);
+                AccountBalance, 
+                BillingStatus, 
+                HasCreditCardDetails);
 
             Assert.AreEqual(expectedResult, result);
         }

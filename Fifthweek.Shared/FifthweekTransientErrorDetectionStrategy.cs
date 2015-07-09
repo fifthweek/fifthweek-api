@@ -1,4 +1,4 @@
-namespace Fifthweek.Api.Core
+namespace Fifthweek.Shared
 {
     using System;
     using System.Collections.Generic;
@@ -7,8 +7,6 @@ namespace Fifthweek.Api.Core
     using System.Data.SqlClient;
 
     using Microsoft.Practices.EnterpriseLibrary.TransientFaultHandling;
-
-    using Fifthweek.Shared;
 
     public class FifthweekTransientErrorDetectionStrategy : ITransientErrorDetectionStrategy
     {

@@ -1,19 +1,14 @@
-﻿namespace Fifthweek.Api.Core.Tests
+﻿namespace Fifthweek.Shared.Tests
 {
     using System;
     using System.ComponentModel;
     using System.Data.Entity.Core;
-    using System.Data.SqlClient;
     using System.IO;
     using System.Threading.Tasks;
 
-    using Fifthweek.Shared;
-
     using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-    using Moq;
-
-    using OptimisticConcurrencyException = System.Data.Entity.Core.OptimisticConcurrencyException;
+    using OptimisticConcurrencyException = Fifthweek.Shared.OptimisticConcurrencyException;
 
     [TestClass]
     public class TransientErrorDetectionStrategyTests

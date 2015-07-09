@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Linq;
 
-//// Generated on 03/07/2015 17:28:43 (UTC)
-//// Mapped solution in 20.01s
+//// Generated on 07/07/2015 15:33:07 (UTC)
+//// Mapped solution in 15s
 
 
 namespace Fifthweek.Api.Persistence
@@ -1047,11 +1047,17 @@ namespace Fifthweek.Api.Persistence.Payments
             System.String billingCountryCode,
             System.String creditCardPrefix,
             System.String ipAddress,
-            System.String originalTaxamoTransactionKey)
+            System.String originalTaxamoTransactionKey,
+            Fifthweek.Api.Persistence.Payments.BillingStatus billingStatus)
         {
             if (userId == null)
             {
                 throw new ArgumentNullException("userId");
+            }
+
+            if (billingStatus == null)
+            {
+                throw new ArgumentNullException("billingStatus");
             }
 
             this.UserId = userId;
@@ -1061,6 +1067,7 @@ namespace Fifthweek.Api.Persistence.Payments
             this.CreditCardPrefix = creditCardPrefix;
             this.IpAddress = ipAddress;
             this.OriginalTaxamoTransactionKey = originalTaxamoTransactionKey;
+            this.BillingStatus = billingStatus;
         }
     }
 }
@@ -2796,7 +2803,7 @@ namespace Fifthweek.Api.Persistence.Payments
     {
         public override string ToString()
         {
-            return string.Format("UserPaymentOrigin({0}, \"{1}\", \"{2}\", \"{3}\", \"{4}\", \"{5}\")", this.UserId == null ? "null" : this.UserId.ToString(), this.StripeCustomerId == null ? "null" : this.StripeCustomerId.ToString(), this.BillingCountryCode == null ? "null" : this.BillingCountryCode.ToString(), this.CreditCardPrefix == null ? "null" : this.CreditCardPrefix.ToString(), this.IpAddress == null ? "null" : this.IpAddress.ToString(), this.OriginalTaxamoTransactionKey == null ? "null" : this.OriginalTaxamoTransactionKey.ToString());
+            return string.Format("UserPaymentOrigin({0}, \"{1}\", \"{2}\", \"{3}\", \"{4}\", \"{5}\", {6})", this.UserId == null ? "null" : this.UserId.ToString(), this.StripeCustomerId == null ? "null" : this.StripeCustomerId.ToString(), this.BillingCountryCode == null ? "null" : this.BillingCountryCode.ToString(), this.CreditCardPrefix == null ? "null" : this.CreditCardPrefix.ToString(), this.IpAddress == null ? "null" : this.IpAddress.ToString(), this.OriginalTaxamoTransactionKey == null ? "null" : this.OriginalTaxamoTransactionKey.ToString(), this.BillingStatus == null ? "null" : this.BillingStatus.ToString());
         }
         
         public override bool Equals(object obj)
@@ -2830,6 +2837,7 @@ namespace Fifthweek.Api.Persistence.Payments
                 hashCode = (hashCode * 397) ^ (this.CreditCardPrefix != null ? this.CreditCardPrefix.GetHashCode() : 0);
                 hashCode = (hashCode * 397) ^ (this.IpAddress != null ? this.IpAddress.GetHashCode() : 0);
                 hashCode = (hashCode * 397) ^ (this.OriginalTaxamoTransactionKey != null ? this.OriginalTaxamoTransactionKey.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.BillingStatus != null ? this.BillingStatus.GetHashCode() : 0);
                 return hashCode;
             }
         }
@@ -2862,6 +2870,11 @@ namespace Fifthweek.Api.Persistence.Payments
             }
         
             if (!object.Equals(this.OriginalTaxamoTransactionKey, other.OriginalTaxamoTransactionKey))
+            {
+                return false;
+            }
+        
+            if (!object.Equals(this.BillingStatus, other.BillingStatus))
             {
                 return false;
             }
@@ -11620,7 +11633,8 @@ namespace Fifthweek.Api.Persistence.Payments
             BillingCountryCode = 4, 
             CreditCardPrefix = 8, 
             IpAddress = 16, 
-            OriginalTaxamoTransactionKey = 32
+            OriginalTaxamoTransactionKey = 32, 
+            BillingStatus = 64
         }
     }
 
@@ -11637,7 +11651,7 @@ namespace Fifthweek.Api.Persistence.Payments
                 InsertStatement(idempotent), 
                 entities.Select(entity => new 
                 {
-                    entity.UserId, entity.StripeCustomerId, entity.BillingCountryCode, entity.CreditCardPrefix, entity.IpAddress, entity.OriginalTaxamoTransactionKey
+                    entity.UserId, entity.StripeCustomerId, entity.BillingCountryCode, entity.CreditCardPrefix, entity.IpAddress, entity.OriginalTaxamoTransactionKey, entity.BillingStatus
                 }).ToArray(),
                 transaction);
         }
@@ -11653,7 +11667,7 @@ namespace Fifthweek.Api.Persistence.Payments
                 InsertStatement(idempotent), 
                 new 
                 {
-                    entity.UserId, entity.StripeCustomerId, entity.BillingCountryCode, entity.CreditCardPrefix, entity.IpAddress, entity.OriginalTaxamoTransactionKey
+                    entity.UserId, entity.StripeCustomerId, entity.BillingCountryCode, entity.CreditCardPrefix, entity.IpAddress, entity.OriginalTaxamoTransactionKey, entity.BillingStatus
                 },
                 transaction);
         }
@@ -11698,7 +11712,7 @@ namespace Fifthweek.Api.Persistence.Payments
             var entity = parameters.Entity;
             var parameterObject = parameters.ExcludedFromInput != null
                 ? AllExceptSpecifiedParameters(entity, parameters.ExcludedFromInput.Value)
-                : new Dapper.DynamicParameters(new { entity.UserId, entity.StripeCustomerId, entity.BillingCountryCode, entity.CreditCardPrefix, entity.IpAddress, entity.OriginalTaxamoTransactionKey });
+                : new Dapper.DynamicParameters(new { entity.UserId, entity.StripeCustomerId, entity.BillingCountryCode, entity.CreditCardPrefix, entity.IpAddress, entity.OriginalTaxamoTransactionKey, entity.BillingStatus });
         
             if (parameters.AdditionalParameters != null)
             {
@@ -11722,7 +11736,7 @@ namespace Fifthweek.Api.Persistence.Payments
                 UpsertStatement(UserPaymentOrigin.Fields.Empty, fields), 
                 new 
                 {
-                    entity.UserId, entity.StripeCustomerId, entity.BillingCountryCode, entity.CreditCardPrefix, entity.IpAddress, entity.OriginalTaxamoTransactionKey
+                    entity.UserId, entity.StripeCustomerId, entity.BillingCountryCode, entity.CreditCardPrefix, entity.IpAddress, entity.OriginalTaxamoTransactionKey, entity.BillingStatus
                 },
                 transaction);
         }
@@ -11739,7 +11753,7 @@ namespace Fifthweek.Api.Persistence.Payments
                 UpsertStatement(mergeOnFields, updateFields), 
                 new 
                 {
-                    entity.UserId, entity.StripeCustomerId, entity.BillingCountryCode, entity.CreditCardPrefix, entity.IpAddress, entity.OriginalTaxamoTransactionKey
+                    entity.UserId, entity.StripeCustomerId, entity.BillingCountryCode, entity.CreditCardPrefix, entity.IpAddress, entity.OriginalTaxamoTransactionKey, entity.BillingStatus
                 },
                 transaction);
         }
@@ -11810,7 +11824,7 @@ namespace Fifthweek.Api.Persistence.Payments
         
         public static string InsertStatement(bool idempotent = true)
         {
-            const string insert = "INSERT INTO UserPaymentOrigins(UserId, StripeCustomerId, BillingCountryCode, CreditCardPrefix, IpAddress, OriginalTaxamoTransactionKey) VALUES(@UserId, @StripeCustomerId, @BillingCountryCode, @CreditCardPrefix, @IpAddress, @OriginalTaxamoTransactionKey)";
+            const string insert = "INSERT INTO UserPaymentOrigins(UserId, StripeCustomerId, BillingCountryCode, CreditCardPrefix, IpAddress, OriginalTaxamoTransactionKey, BillingStatus) VALUES(@UserId, @StripeCustomerId, @BillingCountryCode, @CreditCardPrefix, @IpAddress, @OriginalTaxamoTransactionKey, @BillingStatus)";
             return idempotent ? SqlStatementTemplates.IdempotentInsert(insert) : insert;
         }
         
@@ -11821,7 +11835,7 @@ namespace Fifthweek.Api.Persistence.Payments
             var sql = new System.Text.StringBuilder();
             sql.Append(
                 @"MERGE UserPaymentOrigins WITH (HOLDLOCK) as Target
-                USING (VALUES (@UserId, @StripeCustomerId, @BillingCountryCode, @CreditCardPrefix, @IpAddress, @OriginalTaxamoTransactionKey)) AS Source (UserId, StripeCustomerId, BillingCountryCode, CreditCardPrefix, IpAddress, OriginalTaxamoTransactionKey)
+                USING (VALUES (@UserId, @StripeCustomerId, @BillingCountryCode, @CreditCardPrefix, @IpAddress, @OriginalTaxamoTransactionKey, @BillingStatus)) AS Source (UserId, StripeCustomerId, BillingCountryCode, CreditCardPrefix, IpAddress, OriginalTaxamoTransactionKey, BillingStatus)
                 ON    (");
                 
             if (mergeOnFields == UserPaymentOrigin.Fields.Empty)
@@ -11840,8 +11854,8 @@ namespace Fifthweek.Api.Persistence.Payments
             sql.AppendUpdateParameters(GetFieldNames(updateFields));
             sql.Append(
                 @" WHEN NOT MATCHED THEN
-                    INSERT  (UserId, StripeCustomerId, BillingCountryCode, CreditCardPrefix, IpAddress, OriginalTaxamoTransactionKey)
-                    VALUES  (Source.UserId, Source.StripeCustomerId, Source.BillingCountryCode, Source.CreditCardPrefix, Source.IpAddress, Source.OriginalTaxamoTransactionKey);");
+                    INSERT  (UserId, StripeCustomerId, BillingCountryCode, CreditCardPrefix, IpAddress, OriginalTaxamoTransactionKey, BillingStatus)
+                    VALUES  (Source.UserId, Source.StripeCustomerId, Source.BillingCountryCode, Source.CreditCardPrefix, Source.IpAddress, Source.OriginalTaxamoTransactionKey, Source.BillingStatus);");
             return sql.ToString();
         }
         
@@ -11887,6 +11901,11 @@ namespace Fifthweek.Api.Persistence.Payments
                 fieldNames.Add("OriginalTaxamoTransactionKey");
             }
         
+            if (fields.HasFlag(UserPaymentOrigin.Fields.BillingStatus))
+            {
+                fieldNames.Add("BillingStatus");
+            }
+        
             return fieldNames;
         }
         
@@ -11924,6 +11943,11 @@ namespace Fifthweek.Api.Persistence.Payments
                 parameters.Add("OriginalTaxamoTransactionKey", entity.OriginalTaxamoTransactionKey);
             }
         
+            if (fields.HasFlag(UserPaymentOrigin.Fields.BillingStatus) && (excludedFields == null || !excludedFields.Value.HasFlag(UserPaymentOrigin.Fields.BillingStatus)))
+            {
+                parameters.Add("BillingStatus", entity.BillingStatus);
+            }
+        
             return parameters;
         }
         
@@ -11958,6 +11982,11 @@ namespace Fifthweek.Api.Persistence.Payments
             if (!fields.HasFlag(UserPaymentOrigin.Fields.OriginalTaxamoTransactionKey))
             {
                 parameters.Add("OriginalTaxamoTransactionKey", entity.OriginalTaxamoTransactionKey);
+            }
+        
+            if (!fields.HasFlag(UserPaymentOrigin.Fields.BillingStatus))
+            {
+                parameters.Add("BillingStatus", entity.BillingStatus);
             }
         
             return parameters;

@@ -12,7 +12,5 @@
         public Requester Requester { get; private set; }
 
         public UserId UserId { get; private set; }
-
-        public PositiveInt Amount { get; private set; }
     }
 }

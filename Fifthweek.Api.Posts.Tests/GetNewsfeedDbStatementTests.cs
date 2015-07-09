@@ -39,6 +39,7 @@
         private static readonly UserId SubscribedUserId = new UserId(Guid.NewGuid());
         private static readonly UserId SubscribedUserIdNoBalance = new UserId(Guid.NewGuid());
         private static readonly UserId SubscribedUserIdZeroBalance = new UserId(Guid.NewGuid());
+        private static readonly UserId SubscribedUserIdZeroBalanceBillingInProgress = new UserId(Guid.NewGuid());
         private static readonly UserId GuestListUserId = new UserId(Guid.NewGuid());
         private static readonly UserId CreatorId = new UserId(Guid.NewGuid());
         private static readonly List<ChannelId> ChannelIds;
@@ -364,6 +365,10 @@
             await parameterizedTest(
                 SubscribedUserIdZeroBalance, CreatorId, null, null, Now, false, noPaginationStart, noPaginationCount, new NewsfeedPost[0], 0);
 
+            // Subscribed with zero balance but retrying billing.
+            await parameterizedTest(
+                SubscribedUserIdZeroBalanceBillingInProgress, CreatorId, null, null, Now, false, noPaginationStart, noPaginationCount, SortedLiveNewsfeedPosts.Where(v => !v.ChannelId.Equals(ChannelIds[2])).ToList(), 0);
+
             // Filter by channel for creator.
             await parameterizedTest(
                 CreatorId, CreatorId, new[] { ChannelIds[0] }, null, Now, false, noPaginationStart, noPaginationCount, SortedLiveNewsfeedPosts.Where(v => v.ChannelId.Equals(ChannelIds[0])).ToList(), 0);
@@ -443,6 +448,7 @@
                 await this.CreateUserAsync(databaseContext, SubscribedHighPriceUserId);
                 await this.CreateUserAsync(databaseContext, SubscribedUserIdNoBalance);
                 await this.CreateUserAsync(databaseContext, SubscribedUserIdZeroBalance);
+                await this.CreateUserAsync(databaseContext, SubscribedUserIdZeroBalanceBillingInProgress);
                 await this.CreateUserAsync(databaseContext, GuestListUserId);
 
                 var channelSubscriptions = new List<ChannelSubscription>();
@@ -455,6 +461,7 @@
                 var channelEntities = new List<Channel>();
                 var collectionEntities = new List<Collection>();
                 var postEntities = new List<Post>();
+                var origins = new List<UserPaymentOrigin>();
 
 
                 if (createLivePosts || createFuturePosts)
@@ -466,13 +473,20 @@
 
                     channelSubscriptions.Add(new ChannelSubscription(ChannelIds[0].Value, null, SubscribedUserIdNoBalance.Value, null, ChannelPrice, Now, Now));
                     channelSubscriptions.Add(new ChannelSubscription(ChannelIds[1].Value, null, SubscribedUserIdNoBalance.Value, null, ChannelPrice, Now, Now));
+                    origins.Add(new UserPaymentOrigin(SubscribedUserIdNoBalance.Value, null, null, null, null, null, null, BillingStatus.Failed));
 
                     // The query should round down to zero for account balance.
                     channelSubscriptions.Add(new ChannelSubscription(ChannelIds[0].Value, null, SubscribedUserIdZeroBalance.Value, null, ChannelPrice, Now, Now));
                     channelSubscriptions.Add(new ChannelSubscription(ChannelIds[1].Value, null, SubscribedUserIdZeroBalance.Value, null, ChannelPrice, Now, Now));
                     calculatedAccountBalances.Add(new CalculatedAccountBalance(SubscribedUserIdZeroBalance.Value, LedgerAccountType.Fifthweek, Now.AddDays(-1), 10));
                     calculatedAccountBalances.Add(new CalculatedAccountBalance(SubscribedUserIdZeroBalance.Value, LedgerAccountType.Fifthweek, Now, 0.8m));
-                    
+
+                    channelSubscriptions.Add(new ChannelSubscription(ChannelIds[0].Value, null, SubscribedUserIdZeroBalanceBillingInProgress.Value, null, ChannelPrice, Now, Now));
+                    channelSubscriptions.Add(new ChannelSubscription(ChannelIds[1].Value, null, SubscribedUserIdZeroBalanceBillingInProgress.Value, null, ChannelPrice, Now, Now));
+                    calculatedAccountBalances.Add(new CalculatedAccountBalance(SubscribedUserIdZeroBalanceBillingInProgress.Value, LedgerAccountType.Fifthweek, Now.AddDays(-1), 10));
+                    calculatedAccountBalances.Add(new CalculatedAccountBalance(SubscribedUserIdZeroBalanceBillingInProgress.Value, LedgerAccountType.Fifthweek, Now, 0.8m));
+                    origins.Add(new UserPaymentOrigin(SubscribedUserIdZeroBalanceBillingInProgress.Value, null, null, null, null, null, null, BillingStatus.Retry1));
+
                     channelSubscriptions.Add(new ChannelSubscription(ChannelIds[0].Value, null, SubscribedLowPriceUserId.Value, null, ChannelPrice / 2, Now, Now));
                     channelSubscriptions.Add(new ChannelSubscription(ChannelIds[1].Value, null, SubscribedLowPriceUserId.Value, null, ChannelPrice / 2, Now, Now));
                     calculatedAccountBalances.Add(new CalculatedAccountBalance(SubscribedLowPriceUserId.Value, LedgerAccountType.Fifthweek, Now, 10));
@@ -590,6 +604,7 @@
                 await databaseContext.Database.Connection.InsertAsync(channelSubscriptions);
                 await databaseContext.Database.Connection.InsertAsync(calculatedAccountBalances);
                 await databaseContext.Database.Connection.InsertAsync(freeAccessUsers);
+                await databaseContext.Database.Connection.InsertAsync(origins);
             }
         }
 

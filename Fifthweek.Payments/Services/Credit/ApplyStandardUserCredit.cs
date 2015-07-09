@@ -1,6 +1,7 @@
 namespace Fifthweek.Payments.Services.Credit
 {
     using System;
+    using System.Runtime.ExceptionServices;
     using System.Threading.Tasks;
 
     using Fifthweek.Api.Identity.Shared.Membership;
@@ -32,7 +33,10 @@ namespace Fifthweek.Payments.Services.Credit
             // This phase could be put at the end of the first phase, but it runs the risk of someone inserting
             // a statement afterwards that causes a transient failure, so for safety it has been isolated.
             var stripeTransactionResult = await this.retryOnTransientFailure.HandleAsync(
-                () => this.performCreditRequest.HandleAsync(userId, initializeResult.TaxamoTransaction, initializeResult.Origin));
+                () => this.performCreditRequest.HandleAsync(
+                    userId,
+                    initializeResult.TaxamoTransaction,
+                    initializeResult.Origin));
 
             try
             {

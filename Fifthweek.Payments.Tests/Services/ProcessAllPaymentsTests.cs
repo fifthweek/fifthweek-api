@@ -5,7 +5,9 @@
     using System.Threading.Tasks;
 
     using Fifthweek.Api.Identity.Shared.Membership;
+    using Fifthweek.Api.Persistence.Payments;
     using Fifthweek.Payments.Services;
+    using Fifthweek.Payments.Services.Credit;
     using Fifthweek.Payments.Shared;
     using Fifthweek.Shared;
 
@@ -28,6 +30,7 @@
         private Mock<IProcessPaymentsForSubscriber> processPaymentsForSubscriber;
         private Mock<IUpdateAccountBalancesDbStatement> updateAccountBalances;
         private Mock<IKeepAliveHandler> keepAliveHandler;
+        private Mock<ITopUpUserAccountsWithCredit> topUpUserAccountsWithCredit;
 
         private ProcessAllPayments target;
 
@@ -39,6 +42,7 @@
             this.processPaymentsForSubscriber = new Mock<IProcessPaymentsForSubscriber>(MockBehavior.Strict);
             this.updateAccountBalances = new Mock<IUpdateAccountBalancesDbStatement>(MockBehavior.Strict);
             this.keepAliveHandler = new Mock<IKeepAliveHandler>(MockBehavior.Strict);
+            this.topUpUserAccountsWithCredit = new Mock<ITopUpUserAccountsWithCredit>(MockBehavior.Strict);
 
             this.timestampCreator.Setup(v => v.Now()).Returns(Now);
 
@@ -46,7 +50,8 @@
                 this.timestampCreator.Object,
                 this.getAllSubscribers.Object,
                 this.processPaymentsForSubscriber.Object,
-                this.updateAccountBalances.Object);
+                this.updateAccountBalances.Object,
+                this.topUpUserAccountsWithCredit.Object);
         }
 
         [TestMethod]
@@ -75,13 +80,50 @@
             this.processPaymentsForSubscriber.Setup(v => v.ExecuteAsync(SubscriberIds[1], Now, this.keepAliveHandler.Object, errors))
                 .Returns(Task.FromResult(0)).Verifiable();
 
-            this.updateAccountBalances.Setup(v => v.ExecuteAsync(null, Now)).Returns(Task.FromResult(0)).Verifiable();
+            var updatedAcountBalances = new List<CalculatedAccountBalanceResult>
+            {
+                new CalculatedAccountBalanceResult(Now, UserId.Random(), LedgerAccountType.Fifthweek, 100)
+            };
+            this.updateAccountBalances.Setup(v => v.ExecuteAsync(null, Now)).ReturnsAsync(updatedAcountBalances).Verifiable();
+
+            this.topUpUserAccountsWithCredit.Setup(v => v.ExecuteAsync(updatedAcountBalances, errors))
+                .ReturnsAsync(false).Verifiable();
 
             await this.target.ExecuteAsync(this.keepAliveHandler.Object, errors);
 
             this.getAllSubscribers.Verify();
             this.processPaymentsForSubscriber.Verify();
-            this.updateAccountBalances.Verify();
+            this.updateAccountBalances.Verify(v => v.ExecuteAsync(null, Now), Times.Exactly(1));
+            this.topUpUserAccountsWithCredit.Verify();
+        }
+
+        [TestMethod]
+        public async Task WhenTopUpUserAccountsWithCreditReturnsTrue_ItShouldRecalculateBalances()
+        {
+            var errors = new List<PaymentProcessingException>();
+
+            this.getAllSubscribers.Setup(v => v.ExecuteAsync()).ReturnsAsync(SubscriberIds).Verifiable();
+
+            this.processPaymentsForSubscriber.Setup(v => v.ExecuteAsync(SubscriberIds[0], Now, this.keepAliveHandler.Object, errors))
+                .Returns(Task.FromResult(0)).Verifiable();
+            this.processPaymentsForSubscriber.Setup(v => v.ExecuteAsync(SubscriberIds[1], Now, this.keepAliveHandler.Object, errors))
+                .Returns(Task.FromResult(0)).Verifiable();
+
+            var updatedAcountBalances = new List<CalculatedAccountBalanceResult>
+            {
+                new CalculatedAccountBalanceResult(Now, UserId.Random(), LedgerAccountType.Fifthweek, 100)
+            };
+            this.updateAccountBalances.Setup(v => v.ExecuteAsync(null, Now)).ReturnsAsync(updatedAcountBalances).Verifiable();
+
+            this.topUpUserAccountsWithCredit.Setup(v => v.ExecuteAsync(updatedAcountBalances, errors))
+                .ReturnsAsync(true).Verifiable();
+
+            await this.target.ExecuteAsync(this.keepAliveHandler.Object, errors);
+
+            this.getAllSubscribers.Verify();
+            this.processPaymentsForSubscriber.Verify();
+            this.updateAccountBalances.Verify(v => v.ExecuteAsync(null, Now), Times.Exactly(2));
+            this.topUpUserAccountsWithCredit.Verify();
         }
 
         [TestMethod]
@@ -97,7 +139,14 @@
             this.processPaymentsForSubscriber.Setup(v => v.ExecuteAsync(SubscriberIds[1], Now, this.keepAliveHandler.Object, errors))
                 .Returns(Task.FromResult(0)).Verifiable();
 
-            this.updateAccountBalances.Setup(v => v.ExecuteAsync(null, Now)).Returns(Task.FromResult(0)).Verifiable();
+            var updatedAcountBalances = new List<CalculatedAccountBalanceResult>
+            {
+                new CalculatedAccountBalanceResult(Now, UserId.Random(), LedgerAccountType.Fifthweek, 100)
+            };
+            this.updateAccountBalances.Setup(v => v.ExecuteAsync(null, Now)).ReturnsAsync(updatedAcountBalances).Verifiable();
+
+            this.topUpUserAccountsWithCredit.Setup(v => v.ExecuteAsync(updatedAcountBalances, errors))
+                .ReturnsAsync(false).Verifiable();
 
             await this.target.ExecuteAsync(this.keepAliveHandler.Object, errors);
 

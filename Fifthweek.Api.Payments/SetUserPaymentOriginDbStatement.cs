@@ -31,7 +31,8 @@
                 billingCountryCode == null ? null : billingCountryCode.Value,
                 creditCardPrefix == null ? null : creditCardPrefix.Value,
                 ipAddress == null ? null : ipAddress.Value,
-                null);
+                null,
+                default(BillingStatus));
 
             using (var connection = this.connectionFactory.CreateConnection())
             {

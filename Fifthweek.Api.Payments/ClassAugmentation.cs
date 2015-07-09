@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Linq;
 
-//// Generated on 07/07/2015 11:51:12 (UTC)
-//// Mapped solution in 24.25s
+//// Generated on 07/07/2015 17:38:31 (UTC)
+//// Mapped solution in 16.99s
 
 
 namespace Fifthweek.Api.Payments.Commands
@@ -402,8 +402,7 @@ namespace Fifthweek.Api.Payments.Queries
     {
         public GetCreditRequestSummaryQuery(
             Fifthweek.Api.Identity.Shared.Membership.Requester requester,
-            Fifthweek.Api.Identity.Shared.Membership.UserId userId,
-            Fifthweek.Shared.PositiveInt amount)
+            Fifthweek.Api.Identity.Shared.Membership.UserId userId)
         {
             if (requester == null)
             {
@@ -415,14 +414,8 @@ namespace Fifthweek.Api.Payments.Queries
                 throw new ArgumentNullException("userId");
             }
 
-            if (amount == null)
-            {
-                throw new ArgumentNullException("amount");
-            }
-
             this.Requester = requester;
             this.UserId = userId;
-            this.Amount = amount;
         }
     }
 }
@@ -444,7 +437,8 @@ namespace Fifthweek.Api.Payments.Queries
         public GetCreditRequestSummaryQueryHandler(
             Fifthweek.Api.Identity.Shared.Membership.IRequesterSecurity requesterSecurity,
             Fifthweek.Payments.Services.Credit.IGetUserPaymentOriginDbStatement getUserPaymentOrigin,
-            Fifthweek.Payments.Services.Credit.Taxamo.IGetTaxInformation getTaxInformation)
+            Fifthweek.Payments.Services.Credit.Taxamo.IGetTaxInformation getTaxInformation,
+            Fifthweek.Payments.Services.Credit.IGetUserWeeklySubscriptionsCost getUserWeeklySubscriptionsCost)
         {
             if (requesterSecurity == null)
             {
@@ -461,9 +455,15 @@ namespace Fifthweek.Api.Payments.Queries
                 throw new ArgumentNullException("getTaxInformation");
             }
 
+            if (getUserWeeklySubscriptionsCost == null)
+            {
+                throw new ArgumentNullException("getUserWeeklySubscriptionsCost");
+            }
+
             this.requesterSecurity = requesterSecurity;
             this.getUserPaymentOrigin = getUserPaymentOrigin;
             this.getTaxInformation = getTaxInformation;
+            this.getUserWeeklySubscriptionsCost = getUserWeeklySubscriptionsCost;
         }
     }
 }
@@ -994,7 +994,7 @@ namespace Fifthweek.Api.Payments.Queries
     {
         public override string ToString()
         {
-            return string.Format("GetCreditRequestSummaryQuery({0}, {1}, {2})", this.Requester == null ? "null" : this.Requester.ToString(), this.UserId == null ? "null" : this.UserId.ToString(), this.Amount == null ? "null" : this.Amount.ToString());
+            return string.Format("GetCreditRequestSummaryQuery({0}, {1})", this.Requester == null ? "null" : this.Requester.ToString(), this.UserId == null ? "null" : this.UserId.ToString());
         }
         
         public override bool Equals(object obj)
@@ -1024,7 +1024,6 @@ namespace Fifthweek.Api.Payments.Queries
                 int hashCode = 0;
                 hashCode = (hashCode * 397) ^ (this.Requester != null ? this.Requester.GetHashCode() : 0);
                 hashCode = (hashCode * 397) ^ (this.UserId != null ? this.UserId.GetHashCode() : 0);
-                hashCode = (hashCode * 397) ^ (this.Amount != null ? this.Amount.GetHashCode() : 0);
                 return hashCode;
             }
         }
@@ -1037,11 +1036,6 @@ namespace Fifthweek.Api.Payments.Queries
             }
         
             if (!object.Equals(this.UserId, other.UserId))
-            {
-                return false;
-            }
-        
-            if (!object.Equals(this.Amount, other.Amount))
             {
                 return false;
             }

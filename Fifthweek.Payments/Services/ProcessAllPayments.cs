@@ -5,6 +5,7 @@
     using System.Threading.Tasks;
 
     using Fifthweek.CodeGeneration;
+    using Fifthweek.Payments.Services.Credit;
     using Fifthweek.Payments.Shared;
     using Fifthweek.Shared;
 
@@ -15,6 +16,7 @@
         private readonly IGetAllSubscribersDbStatement getAllSubscribers;
         private readonly IProcessPaymentsForSubscriber processPaymentsForSubscriber;
         private readonly IUpdateAccountBalancesDbStatement updateAccountBalances;
+        private readonly ITopUpUserAccountsWithCredit topUpUserAccountsWithCredit;
 
         public async Task ExecuteAsync(IKeepAliveHandler keepAliveHandler, List<PaymentProcessingException> errors)
         {
@@ -39,7 +41,14 @@
                 }
             }
 
-            await this.updateAccountBalances.ExecuteAsync(null, endTimeExclusive);
+            var updatedBalances = await this.updateAccountBalances.ExecuteAsync(null, endTimeExclusive);
+
+            bool recalculateBalances = await this.topUpUserAccountsWithCredit.ExecuteAsync(updatedBalances, errors);
+
+            if (recalculateBalances)
+            {
+                await this.updateAccountBalances.ExecuteAsync(null, endTimeExclusive);
+            }
         }
     }
 }

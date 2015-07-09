@@ -16,6 +16,7 @@
         private readonly IRequesterSecurity requesterSecurity;
         private readonly IGetUserPaymentOriginDbStatement getUserPaymentOrigin;
         private readonly IGetTaxInformation getTaxInformation;
+        private readonly IGetUserWeeklySubscriptionsCost getUserWeeklySubscriptionsCost;
         
         public async Task<CreditRequestSummary> HandleAsync(GetCreditRequestSummaryQuery query)
         {
@@ -23,9 +24,16 @@
 
             await this.requesterSecurity.AuthenticateAsAsync(query.Requester, query.UserId);
 
+            var amountToCharge = await this.getUserWeeklySubscriptionsCost.ExecuteAsync(query.UserId);
+
             var origin = await this.getUserPaymentOrigin.ExecuteAsync(query.UserId);
 
-            var taxInformation = await this.getTaxInformation.ExecuteAsync(query.Amount, origin.BillingCountryCode, origin.CreditCardPrefix, origin.IpAddress, origin.OriginalTaxamoTransactionKey);
+            var taxInformation = await this.getTaxInformation.ExecuteAsync(
+                PositiveInt.Parse(amountToCharge), 
+                origin.BillingCountryCode, 
+                origin.CreditCardPrefix, 
+                origin.IpAddress, 
+                origin.OriginalTaxamoTransactionKey);
 
             return new CreditRequestSummary(
                 taxInformation.Amount.Value,

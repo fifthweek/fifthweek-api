@@ -24,6 +24,11 @@ namespace Fifthweek.Payments.Services.Credit
 
             var origin = await this.getUserPaymentOrigin.ExecuteAsync(userId);
 
+            if (origin.StripeCustomerId == null)
+            {
+                throw new CreditCardDetailsDoNotExistException();
+            }
+
             // Create taxamo transaction.
             var taxamoTransaction = await this.createTaxamoTransaction.ExecuteAsync(
                     amount,

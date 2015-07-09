@@ -1,14 +1,8 @@
-﻿namespace Fifthweek.Api.Core.Tests
+﻿namespace Fifthweek.Shared.Tests
 {
     using System;
-    using System.ComponentModel;
-    using System.Data.Entity.Core;
-    using System.Data.SqlClient;
     using System.Diagnostics;
-    using System.IO;
     using System.Threading.Tasks;
-
-    using Fifthweek.Shared;
 
     using Microsoft.Practices.EnterpriseLibrary.TransientFaultHandling;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -22,8 +16,6 @@
     {
         private Mock<IExceptionHandler> exceptionHandler;
 
-        private Mock<ICommandHandler<TestCommand>> command;
-
         private Mock<ITransientErrorDetectionStrategy> transientErrorDetectionStrategy;
 
         private FifthweekRetryOnTransientErrorHandler target;
@@ -33,7 +25,7 @@
         {
             this.exceptionHandler = new Mock<IExceptionHandler>();
             this.exceptionHandler.Setup(v => v.ReportExceptionAsync(It.IsAny<Exception>()))
-                .Callback<Exception>(v => Trace.WriteLine(v));
+                .Callback<Exception>(v => Trace.WriteLine((object)v));
 
             this.transientErrorDetectionStrategy = new Mock<ITransientErrorDetectionStrategy>();
             this.transientErrorDetectionStrategy.Setup(v => v.IsTransient(It.IsAny<Exception>())).Returns(true);

@@ -10,6 +10,7 @@
     using Fifthweek.Api.Core;
     using Fifthweek.Api.FileManagement.Shared;
     using Fifthweek.Api.Identity.Shared.Membership;
+    using Fifthweek.Api.Persistence.Payments;
     using Fifthweek.Shared;
 
     using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -33,6 +34,9 @@
         private static readonly string BlobName = "blobName";
         private static readonly string FileUri = "uri";
         private static readonly FileInformation FileInformation = new FileInformation(FileId, ContainerName);
+        private static readonly int AccountBalance = 10;
+        private static readonly BillingStatus BillingStatus = BillingStatus.Retry2;
+        private static readonly bool HasCreditCardDetails = true;
 
         private Mock<IGuidCreator> guidCreator;
         private Mock<IRequesterContext> requesterContext;
@@ -80,7 +84,7 @@
         {
             var query = new GetAccountSettingsQuery(Requester, RequestedUserId);
 
-            var expectedResult = new GetAccountSettingsResult(Name, Username, Email, FileInformation, 10);
+            var expectedResult = new GetAccountSettingsResult(Name, Username, Email, FileInformation, AccountBalance, BillingStatus, HasCreditCardDetails);
 
             this.getAccountSettings.Setup(v => v.HandleAsync(query))
                 .ReturnsAsync(expectedResult)
@@ -98,7 +102,7 @@
         {
             var query = new GetAccountSettingsQuery(Requester, RequestedUserId);
 
-            var expectedResult = new GetAccountSettingsResult(Name, Username, Email, null, 10);
+            var expectedResult = new GetAccountSettingsResult(Name, Username, Email, null, AccountBalance, BillingStatus, HasCreditCardDetails);
             
             this.getAccountSettings.Setup(v => v.HandleAsync(query))
                 .ReturnsAsync(expectedResult)

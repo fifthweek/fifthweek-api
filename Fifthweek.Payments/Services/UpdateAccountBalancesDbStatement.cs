@@ -1,6 +1,8 @@
 namespace Fifthweek.Payments.Services
 {
     using System;
+    using System.Collections.Generic;
+    using System.Linq;
     using System.Threading.Tasks;
 
     using Dapper;
@@ -26,6 +28,7 @@ namespace Fifthweek.Payments.Services
         /// </summary>
         private static readonly string SqlStart = string.Format(
             @"INSERT INTO {0} 
+                OUTPUT INSERTED.*
                 SELECT u.userId, u.accountType, @Timestamp, SUM(u.delta)
                 FROM (
                     SELECT {3} AS userId, {8} AS accountType, {1} AS delta FROM {2}
@@ -62,7 +65,7 @@ namespace Fifthweek.Payments.Services
 
         private readonly IFifthweekDbConnectionFactory connectionFactory;
 
-        public async Task ExecuteAsync(UserId userId, DateTime timestamp)
+        public async Task<IReadOnlyList<CalculatedAccountBalanceResult>> ExecuteAsync(UserId userId, DateTime timestamp)
         {
             var sql = userId == null
                           ? string.Concat(SqlStart, SqlEnd)
@@ -70,13 +73,19 @@ namespace Fifthweek.Payments.Services
 
             using (var connection = this.connectionFactory.CreateConnection())
             {
-                await connection.ExecuteAsync(
+                var result = await connection.QueryAsync<CalculatedAccountBalance>(
                     sql,
                     new
                     {
                         UserId = userId == null ? Guid.Empty : userId.Value,
                         Timestamp = timestamp
                     });
+
+                return result.Select(v => new CalculatedAccountBalanceResult(
+                    DateTime.SpecifyKind(v.Timestamp, DateTimeKind.Utc),
+                    new UserId(v.UserId),
+                    v.AccountType,
+                    v.Amount)).ToList();
             }
         }
     }

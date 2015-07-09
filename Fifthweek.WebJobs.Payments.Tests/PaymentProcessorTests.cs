@@ -139,7 +139,6 @@
             this.paymentProcessingLease.Setup(v => v.TryAcquireLeaseAsync()).ReturnsAsync(true).Verifiable();
             this.paymentProcessingLease.Setup(v => v.GetTimeSinceLastLeaseAsync()).ReturnsAsync(TimeSpan.MaxValue).Verifiable();
             this.paymentProcessingLease.Setup(v => v.GetIsAcquired()).Returns(true);
-            this.paymentProcessingLease.Setup(v => v.UpdateTimestampsAsync()).Returns(Task.FromResult(0)).Verifiable();
             this.paymentProcessingLease.Setup(v => v.ReleaseLeaseAsync()).Returns(Task.FromResult(0)).Verifiable();
 
             var exception = new DivideByZeroException();

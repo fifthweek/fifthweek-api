@@ -238,7 +238,8 @@
                             "USA",
                             "123243",
                             "1.2.3.4",
-                            Guid.NewGuid().ToString()));
+                            Guid.NewGuid().ToString(),
+                            (BillingStatus)Random.Next(0, 1 + (int)BillingStatus.Failed)));
                 }
             }
 

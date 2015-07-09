@@ -34,5 +34,8 @@
 
         [Optional, MaxLength(255)] // Arbitrarily taken as same length of stripe IDs.
         public string OriginalTaxamoTransactionKey { get; set; }
+
+        [Index]
+        public BillingStatus BillingStatus { get; set; }
     }
 }

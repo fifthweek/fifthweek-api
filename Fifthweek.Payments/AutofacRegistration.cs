@@ -35,6 +35,7 @@
             builder.RegisterType<GetCalculatedAccountBalancesDbStatement>().As<IGetCalculatedAccountBalancesDbStatement>();
             builder.RegisterType<RequestProcessPaymentsService>().As<IRequestProcessPaymentsService>();
             builder.RegisterType<UpdateAccountBalancesDbStatement>().As<IUpdateAccountBalancesDbStatement>();
+            builder.RegisterType<TopUpUserAccountsWithCredit>().As<ITopUpUserAccountsWithCredit>();
 
             builder.RegisterType<GetUserPaymentOriginDbStatement>().As<IGetUserPaymentOriginDbStatement>();
             builder.RegisterType<SetUserPaymentOriginOriginalTaxamoTransactionKeyDbStatement>().As<ISetUserPaymentOriginOriginalTaxamoTransactionKeyDbStatement>();
@@ -50,6 +51,7 @@
             builder.RegisterType<CommitCreditToDatabase>().As<ICommitCreditToDatabase>();
             builder.RegisterType<InitializeCreditRequest>().As<IInitializeCreditRequest>();
             builder.RegisterType<ApplyStandardUserCredit>().As<IApplyStandardUserCredit>();
+            builder.RegisterType<GetUsersRequiringBillingRetryDbStatement>().As<IGetUsersRequiringBillingRetryDbStatement>();
         }
     }
 }

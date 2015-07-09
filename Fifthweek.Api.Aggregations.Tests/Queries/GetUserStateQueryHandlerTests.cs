@@ -18,6 +18,7 @@
     using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.Api.Identity.Tests.Shared.Membership;
     using Fifthweek.Api.Persistence.Identity;
+    using Fifthweek.Api.Persistence.Payments;
 
     using Microsoft.VisualStudio.TestTools.UnitTesting;
 
@@ -123,7 +124,7 @@
         {
             this.requesterSecurity.SetupFor(Requester);
 
-            var accountSettings = new GetAccountSettingsResult(new CreatorName("name"), new Username("username"), new Email("a@b.com"), null, 10);
+            var accountSettings = new GetAccountSettingsResult(new CreatorName("name"), new Username("username"), new Email("a@b.com"), null, 10, BillingStatus.Retry1, true);
 
             this.getUserAccessSignatures.Setup(v => v.HandleAsync(new GetUserAccessSignaturesQuery(Requester, UserId, null, new List<ChannelId> { UserSubscriptions.Blogs[0].Channels[0].ChannelId, UserSubscriptions.Blogs[1].Channels[0].ChannelId })))
                 .ReturnsAsync(UserAccessSignatures);
@@ -152,7 +153,7 @@
             this.requesterSecurity.Setup(v => v.IsInRoleAsync(Requester, FifthweekRole.Creator)).ReturnsAsync(true);
 
             var creatorStatus = new CreatorStatus(new BlogId(Guid.NewGuid()), true);
-            var accountSettings = new GetAccountSettingsResult(new CreatorName("name"), new Username("username"), new Email("a@b.com"), null, 10);
+            var accountSettings = new GetAccountSettingsResult(new CreatorName("name"), new Username("username"), new Email("a@b.com"), null, 10, BillingStatus.Retry1, true);
             var blogChannelsAndCollections = new GetBlogChannelsAndCollectionsResult(
                 new BlogWithFileInformation(new BlogId(Guid.NewGuid()), new BlogName("My Subscription"), new BlogName("My Subscription"), new Tagline("Tagline is great"), new Introduction("Once upon a time there was an intro."), DateTime.UtcNow, null, null, null,
                     new List<ChannelResult> { new ChannelResult(new ChannelId(Guid.NewGuid()), "name", "description", 10, true, true, new List<CollectionResult>()) }));
@@ -186,7 +187,7 @@
             this.requesterSecurity.Setup(v => v.IsInRoleAsync(Requester, FifthweekRole.Creator)).ReturnsAsync(true);
 
             var creatorStatus = new CreatorStatus(null, true);
-            var accountSettings = new GetAccountSettingsResult(new CreatorName("name"), new Username("username"), new Email("a@b.com"), null, 10);
+            var accountSettings = new GetAccountSettingsResult(new CreatorName("name"), new Username("username"), new Email("a@b.com"), null, 10, BillingStatus.Retry1, true);
 
             this.getUserAccessSignatures.Setup(v => v.HandleAsync(new GetUserAccessSignaturesQuery(Requester, UserId, null, new List<ChannelId> { UserSubscriptions.Blogs[0].Channels[0].ChannelId, UserSubscriptions.Blogs[1].Channels[0].ChannelId })))
                 .ReturnsAsync(UserAccessSignatures);

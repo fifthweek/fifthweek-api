@@ -1,5 +1,6 @@
 ﻿namespace Fifthweek.Payments.Services.Credit
 {
+    using Fifthweek.Api.Persistence.Payments;
     using Fifthweek.CodeGeneration;
 
     [AutoConstructor, AutoEqualityMembers]
@@ -25,5 +26,8 @@
 
         [Optional]
         public string OriginalTaxamoTransactionKey { get; private set; }
+
+        [Optional]
+        public BillingStatus BillingStatus { get; private set; }
     }
 }

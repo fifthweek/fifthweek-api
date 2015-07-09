@@ -5,6 +5,7 @@ namespace Fifthweek.Payments.Tests.Services.Credit
     using System.Threading.Tasks;
 
     using Fifthweek.Api.Identity.Shared.Membership;
+    using Fifthweek.Api.Persistence.Payments;
     using Fifthweek.Payments.Services.Credit;
     using Fifthweek.Payments.Services.Credit.Taxamo;
     using Fifthweek.Shared;
@@ -24,7 +25,7 @@ namespace Fifthweek.Payments.Tests.Services.Credit
 
         private static readonly InitializeCreditRequestResult InitializeResult = new InitializeCreditRequestResult(
             new TaxamoTransactionResult("key", new AmountInUsCents(10), new AmountInUsCents(20), new AmountInUsCents(30), 0.2m, "VAT", "GB", "England"),
-            new UserPaymentOriginResult("stripeCustomerId", "GB", "12345", "1.1.1.1", "ttk"));
+            new UserPaymentOriginResult("stripeCustomerId", "GB", "12345", "1.1.1.1", "ttk", BillingStatus.Retry1));
 
         private static readonly StripeTransactionResult StripeTransactionResult =
             new StripeTransactionResult(DateTime.UtcNow, Guid.NewGuid(), "stripeChargeId");

@@ -14,6 +14,7 @@ namespace Fifthweek.Payments.Services.Credit
         private readonly IUpdateAccountBalancesDbStatement updateAccountBalances;
         private readonly ISetUserPaymentOriginOriginalTaxamoTransactionKeyDbStatement setUserPaymentOriginOriginalTaxamoTransactionKey;
         private readonly ISaveCustomerCreditToLedgerDbStatement saveCustomerCreditToLedger;
+        private readonly IClearBillingStatusDbStatement clearBillingStatus;
 
         public async Task HandleAsync(
             UserId userId, 
@@ -35,6 +36,9 @@ namespace Fifthweek.Payments.Services.Credit
                 stripeTransaction.TransactionReference,
                 stripeTransaction.StripeChargeId,
                 taxamoTransaction.Key);
+
+            // Clear the billing status, in case it a previous billing attempt failed.
+            await this.clearBillingStatus.ExecuteAsync(userId);
 
             // Store original taxamo transaction key if not already stored.
             if (origin.OriginalTaxamoTransactionKey == null)

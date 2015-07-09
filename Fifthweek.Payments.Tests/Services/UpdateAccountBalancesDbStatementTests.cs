@@ -3,6 +3,7 @@
     using System;
     using System.Collections.Generic;
     using System.Data.SqlTypes;
+    using System.Linq;
     using System.Threading.Tasks;
 
     using Dapper;
@@ -53,32 +54,37 @@
 
                 var existingFifthweekBalance = await GetExistingFifthweekBalance(testDatabase);
 
-                await this.target.ExecuteAsync(null, Now);
+                var inserts = new List<CalculatedAccountBalance>
+                {
+                    new CalculatedAccountBalance(SubscriberId1.Value, LedgerAccountType.Stripe, Now, -120m),
+                    new CalculatedAccountBalance(SubscriberId1.Value, LedgerAccountType.SalesTax, Now, 20m),
+                    new CalculatedAccountBalance(SubscriberId1.Value, LedgerAccountType.Fifthweek, Now, 70m),
+                            
+                    new CalculatedAccountBalance(SubscriberId2.Value, LedgerAccountType.Stripe, Now, -60m),
+                    new CalculatedAccountBalance(SubscriberId2.Value, LedgerAccountType.SalesTax, Now, 10m),
+                    new CalculatedAccountBalance(SubscriberId2.Value, LedgerAccountType.Fifthweek, Now, 5m),
+
+                    new CalculatedAccountBalance(SubscriberId3.Value, LedgerAccountType.Stripe, Now, -12m),
+                    new CalculatedAccountBalance(SubscriberId3.Value, LedgerAccountType.SalesTax, Now, 2m),
+                    new CalculatedAccountBalance(SubscriberId3.Value, LedgerAccountType.Fifthweek, Now, 10m),
+
+                    new CalculatedAccountBalance(CreatorId1.Value, LedgerAccountType.Stripe, Now, -6.6m),
+                    new CalculatedAccountBalance(CreatorId1.Value, LedgerAccountType.SalesTax, Now, 1.1m),
+                    new CalculatedAccountBalance(CreatorId1.Value, LedgerAccountType.Fifthweek, Now, 2.5m),
+
+                    new CalculatedAccountBalance(CreatorId2.Value, LedgerAccountType.Fifthweek, Now, 49m),
+                 
+                    new CalculatedAccountBalance(Guid.Empty, LedgerAccountType.Fifthweek, Now, existingFifthweekBalance + 24m),
+                };
+                var expected = ToExpectedResult(inserts);
+                
+                var result = await this.target.ExecuteAsync(null, Now);
+
+                CollectionAssert.AreEquivalent(expected, result.ToList());
 
                 return new ExpectedSideEffects
                 {
-                    Inserts = new List<IIdentityEquatable>
-                        {
-                            new CalculatedAccountBalance(SubscriberId1.Value, LedgerAccountType.Stripe, Now, -120m),
-                            new CalculatedAccountBalance(SubscriberId1.Value, LedgerAccountType.SalesTax, Now, 20m),
-                            new CalculatedAccountBalance(SubscriberId1.Value, LedgerAccountType.Fifthweek, Now, 70m),
-                            
-                            new CalculatedAccountBalance(SubscriberId2.Value, LedgerAccountType.Stripe, Now, -60m),
-                            new CalculatedAccountBalance(SubscriberId2.Value, LedgerAccountType.SalesTax, Now, 10m),
-                            new CalculatedAccountBalance(SubscriberId2.Value, LedgerAccountType.Fifthweek, Now, 5m),
-
-                            new CalculatedAccountBalance(SubscriberId3.Value, LedgerAccountType.Stripe, Now, -12m),
-                            new CalculatedAccountBalance(SubscriberId3.Value, LedgerAccountType.SalesTax, Now, 2m),
-                            new CalculatedAccountBalance(SubscriberId3.Value, LedgerAccountType.Fifthweek, Now, 10m),
-
-                            new CalculatedAccountBalance(CreatorId1.Value, LedgerAccountType.Stripe, Now, -6.6m),
-                            new CalculatedAccountBalance(CreatorId1.Value, LedgerAccountType.SalesTax, Now, 1.1m),
-                            new CalculatedAccountBalance(CreatorId1.Value, LedgerAccountType.Fifthweek, Now, 2.5m),
-
-                            new CalculatedAccountBalance(CreatorId2.Value, LedgerAccountType.Fifthweek, Now, 49m),
-                 
-                            new CalculatedAccountBalance(Guid.Empty, LedgerAccountType.Fifthweek, Now, existingFifthweekBalance + 24m),
-                        }
+                    Inserts = inserts
                 };
             });
         }
@@ -96,16 +102,20 @@
                 await this.CreateDataAsync(testDatabase);
                 await testDatabase.TakeSnapshotAsync();
 
-                await this.target.ExecuteAsync(SubscriberId2, Now);
+                var inserts = new List<CalculatedAccountBalance>
+                {
+                    new CalculatedAccountBalance(SubscriberId2.Value, LedgerAccountType.Stripe, Now, -60m),
+                    new CalculatedAccountBalance(SubscriberId2.Value, LedgerAccountType.SalesTax, Now, 10m),
+                    new CalculatedAccountBalance(SubscriberId2.Value, LedgerAccountType.Fifthweek, Now, 5m),
+                };
+                var expected = ToExpectedResult(inserts);
 
+                var result = await this.target.ExecuteAsync(SubscriberId2, Now);
+
+                CollectionAssert.AreEquivalent(expected, result.ToList());
                 return new ExpectedSideEffects
                 {
-                    Inserts = new List<IIdentityEquatable>
-                    {
-                        new CalculatedAccountBalance(SubscriberId2.Value, LedgerAccountType.Stripe, Now, -60m),
-                        new CalculatedAccountBalance(SubscriberId2.Value, LedgerAccountType.SalesTax, Now, 10m),
-                        new CalculatedAccountBalance(SubscriberId2.Value, LedgerAccountType.Fifthweek, Now, 5m),
-                    }
+                    Inserts = inserts
                 };
             });
         }
@@ -122,8 +132,9 @@
 
                 await testDatabase.TakeSnapshotAsync();
 
-                await this.target.ExecuteAsync(null, Now);
+                var result = await this.target.ExecuteAsync(null, Now);
 
+                Assert.AreEqual(0, result.Count);
                 return ExpectedSideEffects.None;
             });
         }
@@ -251,6 +262,15 @@
             user.Id = userId.Value;
             databaseContext.Users.Add(user);
             return user;
+        }
+
+        private static List<CalculatedAccountBalanceResult> ToExpectedResult(IEnumerable<CalculatedAccountBalance> inserts)
+        {
+            return inserts.Select(v => new CalculatedAccountBalanceResult(
+                v.Timestamp,
+                new UserId(v.UserId),
+                v.AccountType,
+                v.Amount)).ToList();
         }
     }
 }

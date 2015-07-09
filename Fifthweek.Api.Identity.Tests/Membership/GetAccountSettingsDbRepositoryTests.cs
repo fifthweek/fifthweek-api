@@ -43,14 +43,16 @@
             await this.DatabaseTestAsync(async testDatabase =>
             {
                 this.target = new GetAccountSettingsDbStatement(testDatabase);
-                await this.CreateFileAsync(
+                await this.CreateDataAsync(
                     testDatabase,
                     UserId,
                     Name,
                     Username,
                     Email,
                     FileId,
-                    0);
+                    0,
+                    false,
+                    false);
 
                 await testDatabase.TakeSnapshotAsync();
 
@@ -61,7 +63,9 @@
                     Username,
                     Email,
                     FileId,
-                    0);
+                    0,
+                    BillingStatus.None,
+                    false);
 
                 Assert.AreEqual(expectedResult, result);
                 
@@ -75,14 +79,16 @@
             await this.DatabaseTestAsync(async testDatabase =>
             {
                 this.target = new GetAccountSettingsDbStatement(testDatabase);
-                await this.CreateFileAsync(
+                await this.CreateDataAsync(
                     testDatabase,
                     UserId,
                     Name,
                     Username,
                     Email,
                     null,
-                    0);
+                    0,
+                    false,
+                    false);
 
                 await testDatabase.TakeSnapshotAsync();
 
@@ -93,7 +99,9 @@
                     Username,
                     Email,
                     null,
-                    0);
+                    0,
+                    BillingStatus.None,
+                    false);
 
                 Assert.AreEqual(expectedResult, result);
 
@@ -107,14 +115,16 @@
             await this.DatabaseTestAsync(async testDatabase =>
             {
                 this.target = new GetAccountSettingsDbStatement(testDatabase);
-                await this.CreateFileAsync(
+                await this.CreateDataAsync(
                     testDatabase,
                     UserId,
                     null,
                     Username,
                     Email,
                     FileId,
-                    0);
+                    0,
+                    false,
+                    false);
 
                 await testDatabase.TakeSnapshotAsync();
 
@@ -125,7 +135,9 @@
                     Username,
                     Email,
                     FileId,
-                    0);
+                    0,
+                    BillingStatus.None,
+                    false);
 
                 Assert.AreEqual(expectedResult, result);
 
@@ -139,14 +151,16 @@
             await this.DatabaseTestAsync(async testDatabase =>
             {
                 this.target = new GetAccountSettingsDbStatement(testDatabase);
-                await this.CreateFileAsync(
+                await this.CreateDataAsync(
                     testDatabase,
                     UserId,
                     Name,
                     Username,
                     Email,
                     FileId,
-                    5);
+                    5,
+                    false,
+                    false);
 
                 await testDatabase.TakeSnapshotAsync();
 
@@ -157,7 +171,81 @@
                     Username,
                     Email,
                     FileId,
-                    100);
+                    100,
+                    BillingStatus.None,
+                    false);
+
+                Assert.AreEqual(expectedResult, result);
+
+                return ExpectedSideEffects.None;
+            });
+        }
+
+        [TestMethod]
+        public async Task WhenGetAccountSettingsCalledAndOriginExists_ItShouldGetAccountSettingsFromTheDatabase()
+        {
+            await this.DatabaseTestAsync(async testDatabase =>
+            {
+                this.target = new GetAccountSettingsDbStatement(testDatabase);
+                await this.CreateDataAsync(
+                    testDatabase,
+                    UserId,
+                    Name,
+                    Username,
+                    Email,
+                    FileId,
+                    0,
+                    true,
+                    false);
+
+                await testDatabase.TakeSnapshotAsync();
+
+                var result = await this.target.ExecuteAsync(UserId);
+
+                var expectedResult = new GetAccountSettingsDbResult(
+                    Name,
+                    Username,
+                    Email,
+                    FileId,
+                    0,
+                    BillingStatus.Retry2,
+                    false);
+
+                Assert.AreEqual(expectedResult, result);
+
+                return ExpectedSideEffects.None;
+            });
+        }
+
+        [TestMethod]
+        public async Task WhenGetAccountSettingsCalledAndCreditCardExists_ItShouldGetAccountSettingsFromTheDatabase()
+        {
+            await this.DatabaseTestAsync(async testDatabase =>
+            {
+                this.target = new GetAccountSettingsDbStatement(testDatabase);
+                await this.CreateDataAsync(
+                    testDatabase,
+                    UserId,
+                    Name,
+                    Username,
+                    Email,
+                    FileId,
+                    0,
+                    true,
+                    true);
+
+                await testDatabase.TakeSnapshotAsync();
+
+                var result = await this.target.ExecuteAsync(UserId);
+
+                var expectedResult = new GetAccountSettingsDbResult(
+                    Name,
+                    Username,
+                    Email,
+                    FileId,
+                    0,
+                    BillingStatus.Retry2,
+                    true);
 
                 Assert.AreEqual(expectedResult, result);
 
@@ -171,14 +259,16 @@
             await this.DatabaseTestAsync(async testDatabase =>
             {
                 this.target = new GetAccountSettingsDbStatement(testDatabase);
-                await this.CreateFileAsync(
+                await this.CreateDataAsync(
                     testDatabase,
                     UserId,
                     Name,
                     Username,
                     Email,
                     FileId,
-                    0);
+                    0,
+                    false,
+                    false);
 
                 await testDatabase.TakeSnapshotAsync();
 
@@ -198,7 +288,16 @@
             await badMethodCall.AssertExceptionAsync<ArgumentNullException>();
         }
 
-        private async Task CreateFileAsync(TestDatabaseContext testDatabase, UserId userId, CreatorName name, Username username, Email email, FileId fileId, int accountBalanceCount)
+        private async Task CreateDataAsync(
+            TestDatabaseContext testDatabase, 
+            UserId userId, 
+            CreatorName name, 
+            Username username, 
+            Email email, 
+            FileId fileId, 
+            int accountBalanceCount,
+            bool createOrigin,
+            bool populateCreditCard)
         {
             var random = new Random();
             var user = UserTests.UniqueEntity(random);
@@ -232,7 +331,6 @@
                     user.ProfileImageFileId = profileImageFile.Id;
 
                     await connection.UpdateAsync(user, FifthweekUser.Fields.ProfileImageFileId);
-
                 }
             }
 
@@ -260,6 +358,20 @@
                             LedgerAccountType.Fifthweek,
                             Now.AddHours(-1 - i),
                             100 + i));
+                }
+
+                if (createOrigin)
+                {
+                    await connection.InsertAsync(
+                        new UserPaymentOrigin(
+                            user.Id,
+                            null,
+                            populateCreditCard ? "blah" : null,
+                            null,
+                            null,
+                            null,
+                            null,
+                            BillingStatus.Retry2));
                 }
             }
         }

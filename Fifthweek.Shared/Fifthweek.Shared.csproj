@@ -34,6 +34,12 @@
     <Reference Include="Autofac">
       <HintPath>..\packages\Autofac.3.5.2\lib\net40\Autofac.dll</HintPath>
     </Reference>
+    <Reference Include="EntityFramework">
+      <HintPath>..\packages\EntityFramework.6.1.0\lib\net45\EntityFramework.dll</HintPath>
+    </Reference>
+    <Reference Include="EntityFramework.SqlServer">
+      <HintPath>..\packages\EntityFramework.6.1.0\lib\net45\EntityFramework.SqlServer.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.Practices.EnterpriseLibrary.TransientFaultHandling">
       <HintPath>..\packages\EnterpriseLibrary.TransientFaultHandling.6.0.1304.0\lib\portable-net45+win+wp8\Microsoft.Practices.EnterpriseLibrary.TransientFaultHandling.dll</HintPath>
     </Reference>
@@ -44,6 +50,7 @@
       <HintPath>..\packages\EnterpriseLibrary.TransientFaultHandling.WindowsAzure.Storage.6.0.1304.1\lib\NET45\Microsoft.Practices.EnterpriseLibrary.TransientFaultHandling.WindowsAzure.Storage.dll</HintPath>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Core" />
     <Reference Include="System.Transactions" />
     <Reference Include="System.Xml.Linq" />
@@ -66,6 +73,7 @@
     <Compile Include="Extensions.cs" />
     <Compile Include="ExternalErrorException.cs" />
     <Compile Include="FifthweekRetryOnTransientErrorHandler.cs" />
+    <Compile Include="FifthweekTransientErrorDetectionStrategy.cs" />
     <Compile Include="FilePurpose.cs" />
     <Compile Include="FilePurposes.cs" />
     <Compile Include="ApplicationRandom.cs" />
@@ -94,6 +102,7 @@
     <Compile Include="WarningException.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="App.config" />
     <None Include="ClassAugmentation.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>ClassAugmentation.cs</LastGenOutput>

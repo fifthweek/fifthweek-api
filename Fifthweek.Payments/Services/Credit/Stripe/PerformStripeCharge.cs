@@ -12,6 +12,7 @@
         public async Task<string> ExecuteAsync(string stripeCustomerId, AmountInUsCents amount, UserId userId, Guid transactionReference, string taxamoTransactionKey)
         {
             throw new NotImplementedException();
+            //throw new CreditCardFailedException();
         }
     }
 }
