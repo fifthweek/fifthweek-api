@@ -1025,3 +1025,73 @@ describe('user state stub', function() {
   });
 });
 
+describe('payments stub', function() {
+  'use strict';
+
+  var fifthweekConstants;
+  var $httpBackend;
+  var $rootScope;
+  var target;
+
+  beforeEach(module('webApp', 'stateMock'));
+
+  beforeEach(inject(function($injector) {
+    fifthweekConstants = $injector.get('fifthweekConstants');
+    $httpBackend = $injector.get('$httpBackend');
+    $rootScope = $injector.get('$rootScope');
+    target = $injector.get('paymentsStub');
+  }));
+
+  afterEach(function() {
+    $httpBackend.verifyNoOutstandingExpectation();
+    $httpBackend.verifyNoOutstandingRequest();
+  });
+
+  it('should put payment origin', function() {
+    var userId = 'value0';
+    var data = 'value-body';
+
+    var responseData = 'response data';
+    $httpBackend.expectPUT(fifthweekConstants.apiBaseUri + 'payment/origins/' + encodeURIComponent(userId), data).respond(200, responseData);
+
+    var result = null;
+    target.putPaymentOrigin(userId, data).then(function(response) { result = response.data; });
+
+    $httpBackend.flush();
+    $rootScope.$apply();
+
+    expect(result).toBe(responseData);
+  });
+
+  it('should post credit request', function() {
+    var userId = 'value0';
+    var data = 'value-body';
+
+    var responseData = 'response data';
+    $httpBackend.expectPOST(fifthweekConstants.apiBaseUri + 'payment/creditRequests/' + encodeURIComponent(userId), data).respond(200, responseData);
+
+    var result = null;
+    target.postCreditRequest(userId, data).then(function(response) { result = response.data; });
+
+    $httpBackend.flush();
+    $rootScope.$apply();
+
+    expect(result).toBe(responseData);
+  });
+
+  it('should get credit request summary', function() {
+    var userId = 'value0';
+
+    var responseData = 'response data';
+    $httpBackend.expectGET(fifthweekConstants.apiBaseUri + 'payment/creditRequestSummaries/' + encodeURIComponent(userId)).respond(200, responseData);
+
+    var result = null;
+    target.getCreditRequestSummary(userId).then(function(response) { result = response.data; });
+
+    $httpBackend.flush();
+    $rootScope.$apply();
+
+    expect(result).toBe(responseData);
+  });
+});
+

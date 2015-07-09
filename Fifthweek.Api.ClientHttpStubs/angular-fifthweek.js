@@ -7,7 +7,8 @@
 
     // result = {
     //   database: false,
-    //   api: false
+    //   api: false,
+    //   payments: false
     // }
     service.get = function() {
       return $http.get(apiBaseUri + 'availability').catch(function(response) {
@@ -91,7 +92,6 @@ angular.module('webApp').factory('collectionStub',
 
     // collectionId = 'Base64Guid'
     // collectionData = {
-    //   channelId: 'Base64Guid',
     //   name: '',
     //   weeklyReleaseSchedule: [
     //     0
@@ -153,7 +153,10 @@ angular.module('webApp').factory('accountSettingsStub',
     //   profileImage: { /* optional */
     //     fileId: 'Base64Guid',
     //     containerName: ''
-    //   }
+    //   },
+    //   accountBalance: 0,
+    //   billingStatus: 'billingstatus',
+    //   hasCreditCardDetails: false
     // }
     service.get = function(userId) {
       return $http.get(apiBaseUri + 'accountSettings/' + encodeURIComponent(userId)).catch(function(response) {
@@ -436,7 +439,8 @@ angular.module('webApp').factory('postsStub',
     //       },
     //       liveDate: '2015-12-25T14:45:05Z'
     //     }
-    //   ]
+    //   ],
+    //   accountBalance: 0
     // }
     service.getNewsfeed = function(filter) {
       return $http.get(apiBaseUri + 'posts/newsfeed?' + (filter.creatorId === undefined ? '' : 'creatorId=' + encodeURIComponent(filter.creatorId) + '&') + (filter.channelId === undefined ? '' : 'channelId=' + encodeURIComponent(filter.channelId) + '&') + (filter.collectionId === undefined ? '' : 'collectionId=' + encodeURIComponent(filter.collectionId) + '&') + (filter.origin === undefined ? '' : 'origin=' + encodeURIComponent(filter.origin) + '&') + (filter.searchForwards === undefined ? '' : 'searchForwards=' + encodeURIComponent(filter.searchForwards) + '&') + (filter.startIndex === undefined ? '' : 'startIndex=' + encodeURIComponent(filter.startIndex) + '&') + (filter.count === undefined ? '' : 'count=' + encodeURIComponent(filter.count) + '&')).catch(function(response) {
@@ -830,7 +834,10 @@ angular.module('webApp').factory('userStateStub',
     //     profileImage: { /* optional */
     //       fileId: 'Base64Guid',
     //       containerName: ''
-    //     }
+    //     },
+    //     accountBalance: 0,
+    //     billingStatus: 'billingstatus',
+    //     hasCreditCardDetails: false
     //   },
     //   blog: { /* optional */
     //     blogId: 'Base64Guid',
@@ -958,7 +965,10 @@ angular.module('webApp').factory('userStateStub',
     //     profileImage: { /* optional */
     //       fileId: 'Base64Guid',
     //       containerName: ''
-    //     }
+    //     },
+    //     accountBalance: 0,
+    //     billingStatus: 'billingstatus',
+    //     hasCreditCardDetails: false
     //   },
     //   blog: { /* optional */
     //     blogId: 'Base64Guid',
@@ -1029,6 +1039,56 @@ angular.module('webApp').factory('userStateStub',
     // }
     service.getVisitorState = function() {
       return $http.get(apiBaseUri + 'userState').catch(function(response) {
+        return $q.reject(utilities.getHttpError(response));
+      });
+    };
+
+    return service;
+  });
+
+angular.module('webApp').factory('paymentsStub',
+  function($http, $q, fifthweekConstants, utilities) {
+    'use strict';
+
+    var apiBaseUri = fifthweekConstants.apiBaseUri;
+    var service = {};
+
+    // userId = 'Base64Guid'
+    // data = {
+    //   stripeToken: '', /* optional */
+    //   billingCountryCode: '', /* optional */
+    //   creditCardPrefix: '', /* optional */
+    //   ipAddress: '' /* optional */
+    // }
+    service.putPaymentOrigin = function(userId, data) {
+      return $http.put(apiBaseUri + 'payment/origins/' + encodeURIComponent(userId), data).catch(function(response) {
+        return $q.reject(utilities.getHttpError(response));
+      });
+    };
+
+    // userId = 'Base64Guid'
+    // data = {
+    //   amount: 0,
+    //   expectedTotalAmount: 0
+    // }
+    service.postCreditRequest = function(userId, data) {
+      return $http.post(apiBaseUri + 'payment/creditRequests/' + encodeURIComponent(userId), data).catch(function(response) {
+        return $q.reject(utilities.getHttpError(response));
+      });
+    };
+
+    // userId = 'Base64Guid'
+    // result = {
+    //   amount: 0,
+    //   totalAmount: 0,
+    //   taxAmount: 0,
+    //   taxRate: 0.0,
+    //   taxName: '',
+    //   taxEntityName: '',
+    //   countryName: ''
+    // }
+    service.getCreditRequestSummary = function(userId) {
+      return $http.get(apiBaseUri + 'payment/creditRequestSummaries/' + encodeURIComponent(userId)).catch(function(response) {
         return $q.reject(utilities.getHttpError(response));
       });
     };
