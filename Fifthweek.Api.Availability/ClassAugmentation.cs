@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Linq;
 
-//// Generated on 26/06/2015 16:45:35 (UTC)
-//// Mapped solution in 15.92s
+//// Generated on 09/07/2015 10:21:49 (UTC)
+//// Mapped solution in 53.54s
 
 
 namespace Fifthweek.Api.Availability.Controllers
@@ -75,6 +75,13 @@ namespace Fifthweek.Api.Availability
     using Fifthweek.Api.Persistence;
     using Fifthweek.Api.Persistence.Identity;
     using Fifthweek.CodeGeneration;
+    using System.Globalization;
+    using Fifthweek.Api.Availability.Queries;
+    using Fifthweek.Api.Core;
+    using Fifthweek.Azure;
+    using Fifthweek.Payments.Shared;
+    using Fifthweek.Shared;
+    using Microsoft.Practices.EnterpriseLibrary.TransientFaultHandling;
 
     public partial class CountUsersDbStatement 
     {
@@ -93,12 +100,16 @@ namespace Fifthweek.Api.Availability
 namespace Fifthweek.Api.Availability
 {
     using System;
-    using System.Globalization;
+    using System.Linq;
     using System.Threading.Tasks;
+    using Dapper;
+    using Fifthweek.Api.Persistence;
+    using Fifthweek.Api.Persistence.Identity;
+    using Fifthweek.CodeGeneration;
+    using System.Globalization;
     using Fifthweek.Api.Availability.Queries;
     using Fifthweek.Api.Core;
     using Fifthweek.Azure;
-    using Fifthweek.CodeGeneration;
     using Fifthweek.Payments.Shared;
     using Fifthweek.Shared;
     using Microsoft.Practices.EnterpriseLibrary.TransientFaultHandling;
@@ -106,11 +117,12 @@ namespace Fifthweek.Api.Availability
     public partial class TestPaymentsAvailabilityStatement 
     {
         public TestPaymentsAvailabilityStatement(
-            IExceptionHandler exceptionHandler,
+            Fifthweek.Shared.IExceptionHandler exceptionHandler,
             Microsoft.Practices.EnterpriseLibrary.TransientFaultHandling.ITransientErrorDetectionStrategy transientErrorDetectionStrategy,
             Fifthweek.Azure.ICloudStorageAccount cloudStorageAccount,
             Fifthweek.Shared.ITimestampCreator timestampCreator,
-            Fifthweek.Payments.Shared.IRequestProcessPaymentsService requestProcessPayments)
+            Fifthweek.Payments.Shared.IRequestProcessPaymentsService requestProcessPayments,
+            Fifthweek.Api.Availability.ILastPaymentsRestartTimeContainer lastPaymentsRestartTimeContainer)
         {
             if (exceptionHandler == null)
             {
@@ -137,29 +149,41 @@ namespace Fifthweek.Api.Availability
                 throw new ArgumentNullException("requestProcessPayments");
             }
 
+            if (lastPaymentsRestartTimeContainer == null)
+            {
+                throw new ArgumentNullException("lastPaymentsRestartTimeContainer");
+            }
+
             this.exceptionHandler = exceptionHandler;
             this.transientErrorDetectionStrategy = transientErrorDetectionStrategy;
             this.cloudStorageAccount = cloudStorageAccount;
             this.timestampCreator = timestampCreator;
             this.requestProcessPayments = requestProcessPayments;
+            this.lastPaymentsRestartTimeContainer = lastPaymentsRestartTimeContainer;
         }
     }
 }
 namespace Fifthweek.Api.Availability
 {
     using System;
+    using System.Linq;
     using System.Threading.Tasks;
+    using Dapper;
+    using Fifthweek.Api.Persistence;
+    using Fifthweek.Api.Persistence.Identity;
+    using Fifthweek.CodeGeneration;
+    using System.Globalization;
     using Fifthweek.Api.Availability.Queries;
     using Fifthweek.Api.Core;
-    using Fifthweek.CodeGeneration;
+    using Fifthweek.Azure;
+    using Fifthweek.Payments.Shared;
     using Fifthweek.Shared;
-
     using Microsoft.Practices.EnterpriseLibrary.TransientFaultHandling;
 
     public partial class TestSqlAzureAvailabilityStatement 
     {
         public TestSqlAzureAvailabilityStatement(
-            IExceptionHandler exceptionHandler,
+            Fifthweek.Shared.IExceptionHandler exceptionHandler,
             Microsoft.Practices.EnterpriseLibrary.TransientFaultHandling.ITransientErrorDetectionStrategy transientErrorDetectionStrategy,
             Fifthweek.Api.Availability.ICountUsersDbStatement countUsersDbStatement)
         {

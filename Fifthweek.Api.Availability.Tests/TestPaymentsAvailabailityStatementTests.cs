@@ -44,7 +44,8 @@
                 this.transientErrorDetectionStrategy.Object,
                 this.cloudStorageAccount.Object,
                 this.timestampCreator.Object,
-                this.requestProcessPayments.Object);
+                this.requestProcessPayments.Object,
+                new LastPaymentsRestartTimeContainer());
         }
 
         [TestMethod]

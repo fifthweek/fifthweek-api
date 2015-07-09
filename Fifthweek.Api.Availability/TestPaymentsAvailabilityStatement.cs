@@ -25,8 +25,7 @@
         private readonly ICloudStorageAccount cloudStorageAccount;
         private readonly ITimestampCreator timestampCreator;
         private readonly IRequestProcessPaymentsService requestProcessPayments;
-
-        private DateTime lastRestartTime = DateTime.MinValue;
+        private readonly ILastPaymentsRestartTimeContainer lastPaymentsRestartTimeContainer;
 
         public async Task<bool> ExecuteAsync()
         {
@@ -98,11 +97,13 @@
 
         private async Task AttemptPaymentProcessingRestartIfRequired(DateTime now, string warningMessage)
         {
-            if ((now - this.lastRestartTime) >= RepeatRestartAttemptTimeSpan)
+            var localLastRestartTime = this.lastPaymentsRestartTimeContainer.LastRestartTime;
+            if ((now - localLastRestartTime) >= RepeatRestartAttemptTimeSpan)
             {
+                this.lastPaymentsRestartTimeContainer.LastRestartTime = now;
+
                 // Enqueue process payments message to try and re-start the service.
                 await this.requestProcessPayments.ExecuteImmediatelyAsync();
-                this.lastRestartTime = now;
                 this.exceptionHandler.ReportExceptionAsync(new WarningException(warningMessage));
             }
         }
