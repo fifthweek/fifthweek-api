@@ -24,6 +24,14 @@
 
         public BillingStatus BillingStatus { get; private set; }
 
+        public bool IsRetryingBilling
+        {
+            get
+            {
+                return this.BillingStatus > BillingStatus.None && this.BillingStatus < BillingStatus.Failed;
+            }
+        }
+
         public bool HasCreditCardDetails { get; private set; }
     }
 }
