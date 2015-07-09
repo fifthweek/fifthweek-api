@@ -51,7 +51,7 @@
             builder.RegisterType<CommitCreditToDatabase>().As<ICommitCreditToDatabase>();
             builder.RegisterType<InitializeCreditRequest>().As<IInitializeCreditRequest>();
             builder.RegisterType<ApplyStandardUserCredit>().As<IApplyStandardUserCredit>();
-            builder.RegisterType<GetUsersRequiringBillingRetryDbStatement>().As<IGetUsersRequiringBillingRetryDbStatement>();
+            builder.RegisterType<GetUsersRequiringPaymentRetryDbStatement>().As<IGetUsersRequiringPaymentRetryDbStatement>();
         }
     }
 }

@@ -28,7 +28,7 @@
                 null,
                 null,
                 originalTaxamoTransactionKey,
-                default(BillingStatus));
+                default(PaymentStatus));
 
             using (var connection = this.connectionFactory.CreateConnection())
             {

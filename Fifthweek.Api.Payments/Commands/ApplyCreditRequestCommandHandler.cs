@@ -18,7 +18,7 @@
         private readonly IFifthweekRetryOnTransientErrorHandler retryOnTransientFailure;
         private readonly IApplyStandardUserCredit applyStandardUserCredit;
         private readonly ICommitTestUserCreditToDatabase commitTestUserCreditToDatabase;
-        private readonly IFailBillingStatusDbStatement failBillingStatus;
+        private readonly IFailPaymentStatusDbStatement failPaymentStatus;
 
         public async Task HandleAsync(ApplyCreditRequestCommand command)
         {
@@ -54,7 +54,7 @@
     
             if (exceptionDispatchInfo != null)
             {
-                await this.retryOnTransientFailure.HandleAsync(() => this.failBillingStatus.ExecuteAsync(command.UserId));
+                await this.retryOnTransientFailure.HandleAsync(() => this.failPaymentStatus.ExecuteAsync(command.UserId));
                 exceptionDispatchInfo.Throw();
             }
         }

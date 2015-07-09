@@ -14,7 +14,7 @@
         public ValidStripeToken StripeToken { get; private set; }
 
         [Optional]
-        public ValidCountryCode BillingCountryCode { get; private set; }
+        public ValidCountryCode CountryCode { get; private set; }
 
         [Optional]
         public ValidCreditCardPrefix CreditCardPrefix { get; private set; }

@@ -13,7 +13,7 @@ namespace Fifthweek.Api.Payments.Controllers
         public string StripeToken { get; set; }
 
         [Optional, Parsed(typeof(ValidCountryCode))]
-        public string BillingCountryCode { get; set; }
+        public string CountryCode { get; set; }
 
         [Optional, Parsed(typeof(ValidCreditCardPrefix))]
         public string CreditCardPrefix { get; set; }

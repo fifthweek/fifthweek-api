@@ -43,11 +43,11 @@
 
                 return new UserPaymentOriginResult(
                     result.StripeCustomerId,
-                    result.BillingCountryCode,
+                    result.CountryCode,
                     result.CreditCardPrefix,
                     result.IpAddress,
                     result.OriginalTaxamoTransactionKey,
-                    result.BillingStatus);
+                    result.PaymentStatus);
             }
         }
     }

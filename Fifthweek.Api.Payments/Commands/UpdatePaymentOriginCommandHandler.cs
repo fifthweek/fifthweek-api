@@ -44,7 +44,7 @@
             await this.setUserPaymentOrigin.ExecuteAsync(
                 command.UserId,
                 stripeCustomerId,
-                command.BillingCountryCode,
+                command.CountryCode,
                 command.CreditCardPrefix,
                 command.IpAddress);
         }

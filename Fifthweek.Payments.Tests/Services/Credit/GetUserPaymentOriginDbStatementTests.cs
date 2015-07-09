@@ -19,19 +19,19 @@
         private static readonly UserId UserId = UserId.Random();
 
         private static readonly string StripeCustomerId = "stripeCustomerId";
-        private static readonly string BillingCountryCode = "USA";
+        private static readonly string CountryCode = "USA";
         private static readonly string CreditCardPrefix = "162534";
         private static readonly string IpAddress = "1.1.1.1";
         private static readonly string OriginalTaxamoTransactionKey = "originalTaxamoTransactionKey";
-        private static readonly BillingStatus BillingStatus = BillingStatus.Retry1;
+        private static readonly PaymentStatus PaymentStatus = PaymentStatus.Retry1;
 
         private static readonly UserPaymentOriginResult Origin = new UserPaymentOriginResult(
             StripeCustomerId,
-            BillingCountryCode,
+            CountryCode,
             CreditCardPrefix,
             IpAddress,
             OriginalTaxamoTransactionKey,
-            BillingStatus);
+            PaymentStatus);
 
         private GetUserPaymentOriginDbStatement target;
 
@@ -92,11 +92,11 @@
                 UserId.Value,
                 user,
                 StripeCustomerId,
-                BillingCountryCode,
+                CountryCode,
                 CreditCardPrefix,
                 IpAddress,
                 OriginalTaxamoTransactionKey,
-                BillingStatus);
+                PaymentStatus);
 
             using (var databaseContext = testDatabase.CreateContext())
             {

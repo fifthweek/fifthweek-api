@@ -30,8 +30,8 @@
         private static readonly UpdatePaymentOriginCommand Command = new UpdatePaymentOriginCommand(
             Requester, UserId, StripeToken, CountryCode, CreditCardPrefix, IpAddress);
 
-        private static readonly UserPaymentOriginResult OriginWithCustomer = new UserPaymentOriginResult("stripeCustomerId", "GB", "12345", "1.1.1.1", "ttk", BillingStatus.Retry1);
-        private static readonly UserPaymentOriginResult OriginWithoutCustomer = new UserPaymentOriginResult(null, "GB", "12345", "1.1.1.1", "ttk", BillingStatus.Retry1);
+        private static readonly UserPaymentOriginResult OriginWithCustomer = new UserPaymentOriginResult("stripeCustomerId", "GB", "12345", "1.1.1.1", "ttk", PaymentStatus.Retry1);
+        private static readonly UserPaymentOriginResult OriginWithoutCustomer = new UserPaymentOriginResult(null, "GB", "12345", "1.1.1.1", "ttk", PaymentStatus.Retry1);
 
         private Mock<IRequesterSecurity> requesterSecurity;
         private Mock<ISetUserPaymentOriginDbStatement> setUserPaymentOrigin;

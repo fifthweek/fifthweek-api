@@ -13,15 +13,15 @@ namespace Fifthweek.Payments.Services.Credit
     using Fifthweek.CodeGeneration;
 
     [AutoConstructor]
-    public partial class GetUsersRequiringBillingRetryDbStatement : IGetUsersRequiringBillingRetryDbStatement
+    public partial class GetUsersRequiringPaymentRetryDbStatement : IGetUsersRequiringPaymentRetryDbStatement
     {
         private static readonly string Sql = string.Format(
             "SELECT {1} FROM {0} WHERE {2}>{3} AND {2}<{4} AND {5} IS NOT NULL",
             UserPaymentOrigin.Table,
             UserPaymentOrigin.Fields.UserId,
-            UserPaymentOrigin.Fields.BillingStatus,
-            (int)BillingStatus.None,
-            (int)BillingStatus.Failed,
+            UserPaymentOrigin.Fields.PaymentStatus,
+            (int)PaymentStatus.None,
+            (int)PaymentStatus.Failed,
             UserPaymentOrigin.Fields.StripeCustomerId);
 
         private readonly IFifthweekDbConnectionFactory connectionFactory;

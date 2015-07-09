@@ -61,7 +61,7 @@ namespace Fifthweek.WebJobs.Payments
                     new GetLatestCommittedLedgerDateDbStatement(new FifthweekDbConnectionFactory())),
                 new UpdateAccountBalancesDbStatement(new FifthweekDbConnectionFactory()),
                 new TopUpUserAccountsWithCredit(
-                    new GetUsersRequiringBillingRetryDbStatement(new FifthweekDbConnectionFactory()),
+                    new GetUsersRequiringPaymentRetryDbStatement(new FifthweekDbConnectionFactory()),
                     new ApplyStandardUserCredit(
                         new InitializeCreditRequest(
                             new GetUserPaymentOriginDbStatement(new FifthweekDbConnectionFactory()),
@@ -75,13 +75,13 @@ namespace Fifthweek.WebJobs.Payments
                             new UpdateAccountBalancesDbStatement(new FifthweekDbConnectionFactory()),
                             new SetUserPaymentOriginOriginalTaxamoTransactionKeyDbStatement(new FifthweekDbConnectionFactory()),
                             new SaveCustomerCreditToLedgerDbStatement(new GuidCreator(), new FifthweekDbConnectionFactory()),
-                            new ClearBillingStatusDbStatement(new FifthweekDbConnectionFactory())),
+                            new ClearPaymentStatusDbStatement(new FifthweekDbConnectionFactory())),
                         new FifthweekRetryOnTransientErrorHandler(
                             new ExceptionHandler(ErrorIdentifier),
                             new FifthweekTransientErrorDetectionStrategy()),
                         new CommitTaxamoTransaction()),
                     new GetUserWeeklySubscriptionsCost(new FifthweekDbConnectionFactory()),
-                    new IncrementBillingStatusDbStatement(new FifthweekDbConnectionFactory()),
+                    new IncrementPaymentStatusDbStatement(new FifthweekDbConnectionFactory()),
                     new GetUserPaymentOriginDbStatement(new FifthweekDbConnectionFactory()))),
             new PaymentProcessingLeaseFactory(new TimestampCreator(), new FifthweekCloudStorageAccount()),
             new RequestProcessPaymentsService(new QueueService(new FifthweekCloudStorageAccount())));

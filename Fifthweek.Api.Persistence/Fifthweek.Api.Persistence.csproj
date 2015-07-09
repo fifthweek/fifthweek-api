@@ -308,9 +308,13 @@
     <Compile Include="Migrations\201507081413091_AddBillingStatus.Designer.cs">
       <DependentUpon>201507081413091_AddBillingStatus.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201507091724218_RefactorPaymentColumnNames.cs" />
+    <Compile Include="Migrations\201507091724218_RefactorPaymentColumnNames.Designer.cs">
+      <DependentUpon>201507091724218_RefactorPaymentColumnNames.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Payments\AppendOnlyLedgerRecord.cs" />
-    <Compile Include="Payments\BillingStatus.cs" />
+    <Compile Include="Payments\PaymentStatus.cs" />
     <Compile Include="Payments\CalculatedAccountBalance.cs" />
     <Compile Include="Payments\CreatorPercentageOverride.cs" />
     <Compile Include="Payments\LedgerAccountType.cs" />
@@ -500,6 +504,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201507081413091_AddBillingStatus.resx">
       <DependentUpon>201507081413091_AddBillingStatus.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201507091724218_RefactorPaymentColumnNames.resx">
+      <DependentUpon>201507091724218_RefactorPaymentColumnNames.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>

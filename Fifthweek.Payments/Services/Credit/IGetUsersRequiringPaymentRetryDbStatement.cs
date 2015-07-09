@@ -5,7 +5,7 @@ namespace Fifthweek.Payments.Services.Credit
 
     using Fifthweek.Api.Identity.Shared.Membership;
 
-    public interface IGetUsersRequiringBillingRetryDbStatement
+    public interface IGetUsersRequiringPaymentRetryDbStatement
     {
         Task<IReadOnlyList<UserId>> ExecuteAsync();
     }

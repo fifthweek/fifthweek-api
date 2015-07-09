@@ -14,7 +14,7 @@
     using Moq;
 
     [TestClass]
-    public class FailBillingStatusDbStatementTests : PersistenceTestsBase
+    public class FailPaymentStatusDbStatementTests : PersistenceTestsBase
     {
         private static readonly UserId UserId = UserId.Random();
 
@@ -23,14 +23,14 @@
         private static readonly string CountryCode = "GB";
         private static readonly string CreditCardPrefix = "123456";
         private static readonly string IpAddress = "1.1.1.1";
-        private static readonly BillingStatus BillingStatus = BillingStatus.Retry1;
+        private static readonly PaymentStatus PaymentStatus = PaymentStatus.Retry1;
 
-        private FailBillingStatusDbStatement target;
+        private FailPaymentStatusDbStatement target;
 
         [TestInitialize]
         public void Initialize()
         {
-            this.target = new FailBillingStatusDbStatement(new Mock<FifthweekDbConnectionFactory>(MockBehavior.Strict).Object);
+            this.target = new FailPaymentStatusDbStatement(new Mock<FifthweekDbConnectionFactory>(MockBehavior.Strict).Object);
         }
 
         [TestMethod]
@@ -45,7 +45,7 @@
         {
             await this.DatabaseTestAsync(async testDatabase =>
             {
-                this.target = new FailBillingStatusDbStatement(testDatabase);
+                this.target = new FailPaymentStatusDbStatement(testDatabase);
                 await this.CreateDataAsync(UserId, testDatabase, true);
                 await testDatabase.TakeSnapshotAsync();
 
@@ -61,7 +61,7 @@
                         CreditCardPrefix,
                         IpAddress,
                         TaxamoTransactionKey,
-                        BillingStatus.Failed)
+                        PaymentStatus.Failed)
                 };
             });
         }
@@ -71,7 +71,7 @@
         {
             await this.DatabaseTestAsync(async testDatabase =>
             {
-                this.target = new FailBillingStatusDbStatement(testDatabase);
+                this.target = new FailPaymentStatusDbStatement(testDatabase);
                 await this.CreateDataAsync(UserId, testDatabase, false);
                 await testDatabase.TakeSnapshotAsync();
 
@@ -87,7 +87,7 @@
                         null,
                         null,
                         null,
-                        BillingStatus.Failed)
+                        PaymentStatus.Failed)
                 };
             });
         }
@@ -109,7 +109,7 @@
                     CreditCardPrefix,
                     IpAddress,
                     TaxamoTransactionKey,
-                    BillingStatus);
+                    PaymentStatus);
             }
 
             using (var databaseContext = testDatabase.CreateContext())

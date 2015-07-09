@@ -24,7 +24,7 @@
         public string StripeCustomerId { get; set; }
 
         [Optional, MaxLength(3)] // See: https://en.wikipedia.org/wiki/ISO_3166
-        public string BillingCountryCode { get; set; }
+        public string CountryCode { get; set; }
 
         [Optional, MaxLength(6)] // See: https://www.taxamo.com/doc/taxamojs/storing_transactions/
         public string CreditCardPrefix { get; set; }
@@ -36,6 +36,6 @@
         public string OriginalTaxamoTransactionKey { get; set; }
 
         [Index]
-        public BillingStatus BillingStatus { get; set; }
+        public PaymentStatus PaymentStatus { get; set; }
     }
 }

@@ -11,7 +11,7 @@ namespace Fifthweek.Payments.Services.Credit
     using Fifthweek.Shared;
 
     [AutoConstructor]
-    public partial class FailBillingStatusDbStatement : IFailBillingStatusDbStatement
+    public partial class ClearPaymentStatusDbStatement : IClearPaymentStatusDbStatement
     {
         private readonly IFifthweekDbConnectionFactory connectionFactory;
 
@@ -25,9 +25,9 @@ namespace Fifthweek.Payments.Services.Credit
                     new UserPaymentOrigin
                     {
                         UserId = userId.Value,
-                        BillingStatus = BillingStatus.Failed,
+                        PaymentStatus = PaymentStatus.None,
                     },
-                    UserPaymentOrigin.Fields.BillingStatus);
+                    UserPaymentOrigin.Fields.PaymentStatus);
             }
         }
     }

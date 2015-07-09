@@ -30,7 +30,7 @@
 
             var taxInformation = await this.getTaxInformation.ExecuteAsync(
                 PositiveInt.Parse(amountToCharge), 
-                origin.BillingCountryCode, 
+                origin.CountryCode, 
                 origin.CreditCardPrefix, 
                 origin.IpAddress, 
                 origin.OriginalTaxamoTransactionKey);

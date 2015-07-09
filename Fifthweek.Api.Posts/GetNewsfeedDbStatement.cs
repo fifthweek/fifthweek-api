@@ -29,14 +29,14 @@
         private static readonly string SelectAccountBalance = @"
             SELECT @AccountBalance;";
 
-        private static readonly string DeclareBillingStatus = string.Format(@"
-            DECLARE @BillingStatus int = (SELECT TOP 1 {0} FROM {1} WHERE {2}=@RequestorId);
-            DECLARE @IsRetryingBilling bit = CASE WHEN @BillingStatus>{3} AND @BillingStatus<{4} THEN 'True' ELSE 'False' END;",
-            UserPaymentOrigin.Fields.BillingStatus,
+        private static readonly string DeclarePaymentStatus = string.Format(@"
+            DECLARE @PaymentStatus int = (SELECT TOP 1 {0} FROM {1} WHERE {2}=@RequestorId);
+            DECLARE @IsRetryingPayment bit = CASE WHEN @PaymentStatus>{3} AND @PaymentStatus<{4} THEN 'True' ELSE 'False' END;",
+            UserPaymentOrigin.Fields.PaymentStatus,
             UserPaymentOrigin.Table,
             UserPaymentOrigin.Fields.UserId,
-            (int)BillingStatus.None,
-            (int)BillingStatus.Failed);
+            (int)PaymentStatus.None,
+            (int)PaymentStatus.Failed);
 
         private static readonly string SqlStart = string.Format(@"
             SELECT    blog.{12} AS BlogId, blog.{13} AS CreatorId, post.{1} AS PostId, {2}, {4}, {5}, {6}, {7}, {3}, post.{21}, [file].{16} as FileName, [file].{17} as FileExtension, [file].{18} as FileSize, image.{16} as ImageName, image.{17} as ImageExtension, image.{18} as ImageSize, image.{19} as ImageRenderWidth, image.{20} as ImageRenderHeight
@@ -99,7 +99,7 @@
                     sub.{4} = @RequestorId 
                     AND 
                     (
-                        ((@AccountBalance > 0 OR @IsRetryingBilling = 1) AND sub.{5} >= subChannel.{6})
+                        ((@AccountBalance > 0 OR @IsRetryingPayment = 1) AND sub.{5} >= subChannel.{6})
                         OR
                         subChannel.{1} IN
                         (
@@ -185,7 +185,7 @@
 
                 if (!requestorId.Equals(creatorId))
                 {
-                    query.Append(DeclareBillingStatus);
+                    query.Append(DeclarePaymentStatus);
                 }
 
                 query.Append(SqlStart);

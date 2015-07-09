@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Linq;
 
-//// Generated on 08/07/2015 12:07:34 (UTC)
-//// Mapped solution in 20.05s
+//// Generated on 09/07/2015 17:12:54 (UTC)
+//// Mapped solution in 19.02s
 
 
 namespace Fifthweek.Payments
@@ -334,7 +334,7 @@ namespace Fifthweek.Payments.Services.Credit
             Fifthweek.Payments.Services.IUpdateAccountBalancesDbStatement updateAccountBalances,
             Fifthweek.Payments.Services.Credit.ISetUserPaymentOriginOriginalTaxamoTransactionKeyDbStatement setUserPaymentOriginOriginalTaxamoTransactionKey,
             Fifthweek.Payments.Services.Credit.ISaveCustomerCreditToLedgerDbStatement saveCustomerCreditToLedger,
-            Fifthweek.Payments.Services.Credit.IClearBillingStatusDbStatement clearBillingStatus)
+            Fifthweek.Payments.Services.Credit.IClearPaymentStatusDbStatement clearPaymentStatus)
         {
             if (updateAccountBalances == null)
             {
@@ -351,15 +351,15 @@ namespace Fifthweek.Payments.Services.Credit
                 throw new ArgumentNullException("saveCustomerCreditToLedger");
             }
 
-            if (clearBillingStatus == null)
+            if (clearPaymentStatus == null)
             {
-                throw new ArgumentNullException("clearBillingStatus");
+                throw new ArgumentNullException("clearPaymentStatus");
             }
 
             this.updateAccountBalances = updateAccountBalances;
             this.setUserPaymentOriginOriginalTaxamoTransactionKey = setUserPaymentOriginOriginalTaxamoTransactionKey;
             this.saveCustomerCreditToLedger = saveCustomerCreditToLedger;
-            this.clearBillingStatus = clearBillingStatus;
+            this.clearPaymentStatus = clearPaymentStatus;
         }
     }
 }
@@ -737,18 +737,18 @@ namespace Fifthweek.Payments.Services.Credit
     {
         public UserPaymentOriginResult(
             System.String stripeCustomerId,
-            System.String billingCountryCode,
+            System.String countryCode,
             System.String creditCardPrefix,
             System.String ipAddress,
             System.String originalTaxamoTransactionKey,
-            Fifthweek.Api.Persistence.Payments.BillingStatus billingStatus)
+            Fifthweek.Api.Persistence.Payments.PaymentStatus paymentStatus)
         {
             this.StripeCustomerId = stripeCustomerId;
-            this.BillingCountryCode = billingCountryCode;
+            this.CountryCode = countryCode;
             this.CreditCardPrefix = creditCardPrefix;
             this.IpAddress = ipAddress;
             this.OriginalTaxamoTransactionKey = originalTaxamoTransactionKey;
-            this.BillingStatus = billingStatus;
+            this.PaymentStatus = paymentStatus;
         }
     }
 }
@@ -2472,15 +2472,15 @@ namespace Fifthweek.Payments.Services.Credit
     public partial class TopUpUserAccountsWithCredit 
     {
         public TopUpUserAccountsWithCredit(
-            Fifthweek.Payments.Services.Credit.IGetUsersRequiringBillingRetryDbStatement getUsersRequiringBillingRetry,
+            Fifthweek.Payments.Services.Credit.IGetUsersRequiringPaymentRetryDbStatement getUsersRequiringPaymentRetry,
             Fifthweek.Payments.Services.Credit.IApplyStandardUserCredit applyStandardUserCredit,
             Fifthweek.Payments.Services.Credit.IGetUserWeeklySubscriptionsCost getUserWeeklySubscriptionsCost,
-            Fifthweek.Payments.Services.Credit.IIncrementBillingStatusDbStatement incrementBillingStatus,
+            Fifthweek.Payments.Services.Credit.IIncrementPaymentStatusDbStatement incrementPaymentStatus,
             Fifthweek.Payments.Services.Credit.IGetUserPaymentOriginDbStatement getUserPaymentOrigin)
         {
-            if (getUsersRequiringBillingRetry == null)
+            if (getUsersRequiringPaymentRetry == null)
             {
-                throw new ArgumentNullException("getUsersRequiringBillingRetry");
+                throw new ArgumentNullException("getUsersRequiringPaymentRetry");
             }
 
             if (applyStandardUserCredit == null)
@@ -2493,9 +2493,9 @@ namespace Fifthweek.Payments.Services.Credit
                 throw new ArgumentNullException("getUserWeeklySubscriptionsCost");
             }
 
-            if (incrementBillingStatus == null)
+            if (incrementPaymentStatus == null)
             {
-                throw new ArgumentNullException("incrementBillingStatus");
+                throw new ArgumentNullException("incrementPaymentStatus");
             }
 
             if (getUserPaymentOrigin == null)
@@ -2503,10 +2503,10 @@ namespace Fifthweek.Payments.Services.Credit
                 throw new ArgumentNullException("getUserPaymentOrigin");
             }
 
-            this.getUsersRequiringBillingRetry = getUsersRequiringBillingRetry;
+            this.getUsersRequiringPaymentRetry = getUsersRequiringPaymentRetry;
             this.applyStandardUserCredit = applyStandardUserCredit;
             this.getUserWeeklySubscriptionsCost = getUserWeeklySubscriptionsCost;
-            this.incrementBillingStatus = incrementBillingStatus;
+            this.incrementPaymentStatus = incrementPaymentStatus;
             this.getUserPaymentOrigin = getUserPaymentOrigin;
         }
     }
@@ -2530,9 +2530,9 @@ namespace Fifthweek.Payments.Services.Credit
     using Fifthweek.Payments.Services.Credit;
     using System.Runtime.ExceptionServices;
 
-    public partial class GetUsersRequiringBillingRetryDbStatement 
+    public partial class GetUsersRequiringPaymentRetryDbStatement 
     {
-        public GetUsersRequiringBillingRetryDbStatement(
+        public GetUsersRequiringPaymentRetryDbStatement(
             Fifthweek.Api.Persistence.IFifthweekDbConnectionFactory connectionFactory)
         {
             if (connectionFactory == null)
@@ -2563,9 +2563,9 @@ namespace Fifthweek.Payments.Services.Credit
     using Fifthweek.Payments.Services.Credit;
     using System.Runtime.ExceptionServices;
 
-    public partial class ClearBillingStatusDbStatement 
+    public partial class ClearPaymentStatusDbStatement 
     {
-        public ClearBillingStatusDbStatement(
+        public ClearPaymentStatusDbStatement(
             Fifthweek.Api.Persistence.IFifthweekDbConnectionFactory connectionFactory)
         {
             if (connectionFactory == null)
@@ -2596,9 +2596,9 @@ namespace Fifthweek.Payments.Services.Credit
     using Fifthweek.Payments.Services.Credit;
     using System.Runtime.ExceptionServices;
 
-    public partial class FailBillingStatusDbStatement 
+    public partial class FailPaymentStatusDbStatement 
     {
-        public FailBillingStatusDbStatement(
+        public FailPaymentStatusDbStatement(
             Fifthweek.Api.Persistence.IFifthweekDbConnectionFactory connectionFactory)
         {
             if (connectionFactory == null)
@@ -2662,9 +2662,9 @@ namespace Fifthweek.Payments.Services.Credit
     using Fifthweek.Payments.Services.Credit;
     using System.Runtime.ExceptionServices;
 
-    public partial class IncrementBillingStatusDbStatement 
+    public partial class IncrementPaymentStatusDbStatement 
     {
-        public IncrementBillingStatusDbStatement(
+        public IncrementPaymentStatusDbStatement(
             Fifthweek.Api.Persistence.IFifthweekDbConnectionFactory connectionFactory)
         {
             if (connectionFactory == null)
@@ -3372,7 +3372,7 @@ namespace Fifthweek.Payments.Services.Credit
     {
         public override string ToString()
         {
-            return string.Format("UserPaymentOriginResult(\"{0}\", \"{1}\", \"{2}\", \"{3}\", \"{4}\", {5})", this.StripeCustomerId == null ? "null" : this.StripeCustomerId.ToString(), this.BillingCountryCode == null ? "null" : this.BillingCountryCode.ToString(), this.CreditCardPrefix == null ? "null" : this.CreditCardPrefix.ToString(), this.IpAddress == null ? "null" : this.IpAddress.ToString(), this.OriginalTaxamoTransactionKey == null ? "null" : this.OriginalTaxamoTransactionKey.ToString(), this.BillingStatus == null ? "null" : this.BillingStatus.ToString());
+            return string.Format("UserPaymentOriginResult(\"{0}\", \"{1}\", \"{2}\", \"{3}\", \"{4}\", {5})", this.StripeCustomerId == null ? "null" : this.StripeCustomerId.ToString(), this.CountryCode == null ? "null" : this.CountryCode.ToString(), this.CreditCardPrefix == null ? "null" : this.CreditCardPrefix.ToString(), this.IpAddress == null ? "null" : this.IpAddress.ToString(), this.OriginalTaxamoTransactionKey == null ? "null" : this.OriginalTaxamoTransactionKey.ToString(), this.PaymentStatus == null ? "null" : this.PaymentStatus.ToString());
         }
         
         public override bool Equals(object obj)
@@ -3401,11 +3401,11 @@ namespace Fifthweek.Payments.Services.Credit
             {
                 int hashCode = 0;
                 hashCode = (hashCode * 397) ^ (this.StripeCustomerId != null ? this.StripeCustomerId.GetHashCode() : 0);
-                hashCode = (hashCode * 397) ^ (this.BillingCountryCode != null ? this.BillingCountryCode.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.CountryCode != null ? this.CountryCode.GetHashCode() : 0);
                 hashCode = (hashCode * 397) ^ (this.CreditCardPrefix != null ? this.CreditCardPrefix.GetHashCode() : 0);
                 hashCode = (hashCode * 397) ^ (this.IpAddress != null ? this.IpAddress.GetHashCode() : 0);
                 hashCode = (hashCode * 397) ^ (this.OriginalTaxamoTransactionKey != null ? this.OriginalTaxamoTransactionKey.GetHashCode() : 0);
-                hashCode = (hashCode * 397) ^ (this.BillingStatus != null ? this.BillingStatus.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.PaymentStatus != null ? this.PaymentStatus.GetHashCode() : 0);
                 return hashCode;
             }
         }
@@ -3417,7 +3417,7 @@ namespace Fifthweek.Payments.Services.Credit
                 return false;
             }
         
-            if (!object.Equals(this.BillingCountryCode, other.BillingCountryCode))
+            if (!object.Equals(this.CountryCode, other.CountryCode))
             {
                 return false;
             }
@@ -3437,7 +3437,7 @@ namespace Fifthweek.Payments.Services.Credit
                 return false;
             }
         
-            if (!object.Equals(this.BillingStatus, other.BillingStatus))
+            if (!object.Equals(this.PaymentStatus, other.PaymentStatus))
             {
                 return false;
             }

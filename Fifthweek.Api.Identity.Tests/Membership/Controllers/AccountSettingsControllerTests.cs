@@ -35,7 +35,7 @@
         private static readonly string FileUri = "uri";
         private static readonly FileInformation FileInformation = new FileInformation(FileId, ContainerName);
         private static readonly int AccountBalance = 10;
-        private static readonly BillingStatus BillingStatus = BillingStatus.Retry2;
+        private static readonly PaymentStatus PaymentStatus = PaymentStatus.Retry2;
         private static readonly bool HasCreditCardDetails = true;
 
         private Mock<IGuidCreator> guidCreator;
@@ -84,7 +84,7 @@
         {
             var query = new GetAccountSettingsQuery(Requester, RequestedUserId);
 
-            var expectedResult = new GetAccountSettingsResult(Name, Username, Email, FileInformation, AccountBalance, BillingStatus, HasCreditCardDetails);
+            var expectedResult = new GetAccountSettingsResult(Name, Username, Email, FileInformation, AccountBalance, PaymentStatus, HasCreditCardDetails);
 
             this.getAccountSettings.Setup(v => v.HandleAsync(query))
                 .ReturnsAsync(expectedResult)
@@ -102,7 +102,7 @@
         {
             var query = new GetAccountSettingsQuery(Requester, RequestedUserId);
 
-            var expectedResult = new GetAccountSettingsResult(Name, Username, Email, null, AccountBalance, BillingStatus, HasCreditCardDetails);
+            var expectedResult = new GetAccountSettingsResult(Name, Username, Email, null, AccountBalance, PaymentStatus, HasCreditCardDetails);
             
             this.getAccountSettings.Setup(v => v.HandleAsync(query))
                 .ReturnsAsync(expectedResult)

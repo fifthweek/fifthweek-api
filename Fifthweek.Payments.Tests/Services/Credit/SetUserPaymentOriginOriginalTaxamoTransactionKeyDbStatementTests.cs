@@ -23,7 +23,7 @@
         private static readonly string CountryCode = "GB";
         private static readonly string CreditCardPrefix = "123456";
         private static readonly string IpAddress = "1.1.1.1";
-        private static readonly BillingStatus BillingStatus = BillingStatus.Retry1;
+        private static readonly PaymentStatus PaymentStatus = PaymentStatus.Retry1;
 
         private SetUserPaymentOriginOriginalTaxamoTransactionKeyDbStatement target;
 
@@ -74,7 +74,7 @@
                         null,
                         null,
                         NewTaxamoTransactionKey,
-                        default(BillingStatus))
+                        default(PaymentStatus))
                 };
             });
         }
@@ -102,7 +102,7 @@
                         CreditCardPrefix,
                         IpAddress,
                         NewTaxamoTransactionKey,
-                        BillingStatus)
+                        PaymentStatus)
                 };
             });
         }
@@ -124,7 +124,7 @@
                     CreditCardPrefix,
                     IpAddress,
                     "anotherKey",
-                    BillingStatus);
+                    PaymentStatus);
             }
 
             using (var databaseContext = testDatabase.CreateContext())

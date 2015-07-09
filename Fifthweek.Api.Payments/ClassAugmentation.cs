@@ -126,7 +126,7 @@ namespace Fifthweek.Api.Payments.Commands
             Fifthweek.Api.Identity.Shared.Membership.Requester requester,
             Fifthweek.Api.Identity.Shared.Membership.UserId userId,
             Fifthweek.Api.Payments.ValidStripeToken stripeToken,
-            Fifthweek.Api.Payments.ValidCountryCode billingCountryCode,
+            Fifthweek.Api.Payments.ValidCountryCode countryCode,
             Fifthweek.Api.Payments.ValidCreditCardPrefix creditCardPrefix,
             Fifthweek.Api.Payments.ValidIpAddress ipAddress)
         {
@@ -143,7 +143,7 @@ namespace Fifthweek.Api.Payments.Commands
             this.Requester = requester;
             this.UserId = userId;
             this.StripeToken = stripeToken;
-            this.BillingCountryCode = billingCountryCode;
+            this.CountryCode = countryCode;
             this.CreditCardPrefix = creditCardPrefix;
             this.IpAddress = ipAddress;
         }
@@ -326,12 +326,12 @@ namespace Fifthweek.Api.Payments.Controllers
     {
         public PaymentOriginData(
             System.String stripeToken,
-            System.String billingCountryCode,
+            System.String countryCode,
             System.String creditCardPrefix,
             System.String ipAddress)
         {
             this.StripeToken = stripeToken;
-            this.BillingCountryCode = billingCountryCode;
+            this.CountryCode = countryCode;
             this.CreditCardPrefix = creditCardPrefix;
             this.IpAddress = ipAddress;
         }
@@ -660,7 +660,7 @@ namespace Fifthweek.Api.Payments.Commands
     {
         public override string ToString()
         {
-            return string.Format("UpdatePaymentOriginCommand({0}, {1}, {2}, {3}, {4}, {5})", this.Requester == null ? "null" : this.Requester.ToString(), this.UserId == null ? "null" : this.UserId.ToString(), this.StripeToken == null ? "null" : this.StripeToken.ToString(), this.BillingCountryCode == null ? "null" : this.BillingCountryCode.ToString(), this.CreditCardPrefix == null ? "null" : this.CreditCardPrefix.ToString(), this.IpAddress == null ? "null" : this.IpAddress.ToString());
+            return string.Format("UpdatePaymentOriginCommand({0}, {1}, {2}, {3}, {4}, {5})", this.Requester == null ? "null" : this.Requester.ToString(), this.UserId == null ? "null" : this.UserId.ToString(), this.StripeToken == null ? "null" : this.StripeToken.ToString(), this.CountryCode == null ? "null" : this.CountryCode.ToString(), this.CreditCardPrefix == null ? "null" : this.CreditCardPrefix.ToString(), this.IpAddress == null ? "null" : this.IpAddress.ToString());
         }
         
         public override bool Equals(object obj)
@@ -691,7 +691,7 @@ namespace Fifthweek.Api.Payments.Commands
                 hashCode = (hashCode * 397) ^ (this.Requester != null ? this.Requester.GetHashCode() : 0);
                 hashCode = (hashCode * 397) ^ (this.UserId != null ? this.UserId.GetHashCode() : 0);
                 hashCode = (hashCode * 397) ^ (this.StripeToken != null ? this.StripeToken.GetHashCode() : 0);
-                hashCode = (hashCode * 397) ^ (this.BillingCountryCode != null ? this.BillingCountryCode.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.CountryCode != null ? this.CountryCode.GetHashCode() : 0);
                 hashCode = (hashCode * 397) ^ (this.CreditCardPrefix != null ? this.CreditCardPrefix.GetHashCode() : 0);
                 hashCode = (hashCode * 397) ^ (this.IpAddress != null ? this.IpAddress.GetHashCode() : 0);
                 return hashCode;
@@ -715,7 +715,7 @@ namespace Fifthweek.Api.Payments.Commands
                 return false;
             }
         
-            if (!object.Equals(this.BillingCountryCode, other.BillingCountryCode))
+            if (!object.Equals(this.CountryCode, other.CountryCode))
             {
                 return false;
             }
@@ -915,7 +915,7 @@ namespace Fifthweek.Api.Payments.Controllers
     {
         public override string ToString()
         {
-            return string.Format("PaymentOriginData(\"{0}\", \"{1}\", \"{2}\", \"{3}\")", this.StripeToken == null ? "null" : this.StripeToken.ToString(), this.BillingCountryCode == null ? "null" : this.BillingCountryCode.ToString(), this.CreditCardPrefix == null ? "null" : this.CreditCardPrefix.ToString(), this.IpAddress == null ? "null" : this.IpAddress.ToString());
+            return string.Format("PaymentOriginData(\"{0}\", \"{1}\", \"{2}\", \"{3}\")", this.StripeToken == null ? "null" : this.StripeToken.ToString(), this.CountryCode == null ? "null" : this.CountryCode.ToString(), this.CreditCardPrefix == null ? "null" : this.CreditCardPrefix.ToString(), this.IpAddress == null ? "null" : this.IpAddress.ToString());
         }
         
         public override bool Equals(object obj)
@@ -944,7 +944,7 @@ namespace Fifthweek.Api.Payments.Controllers
             {
                 int hashCode = 0;
                 hashCode = (hashCode * 397) ^ (this.StripeToken != null ? this.StripeToken.GetHashCode() : 0);
-                hashCode = (hashCode * 397) ^ (this.BillingCountryCode != null ? this.BillingCountryCode.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.CountryCode != null ? this.CountryCode.GetHashCode() : 0);
                 hashCode = (hashCode * 397) ^ (this.CreditCardPrefix != null ? this.CreditCardPrefix.GetHashCode() : 0);
                 hashCode = (hashCode * 397) ^ (this.IpAddress != null ? this.IpAddress.GetHashCode() : 0);
                 return hashCode;
@@ -958,7 +958,7 @@ namespace Fifthweek.Api.Payments.Controllers
                 return false;
             }
         
-            if (!object.Equals(this.BillingCountryCode, other.BillingCountryCode))
+            if (!object.Equals(this.CountryCode, other.CountryCode))
             {
                 return false;
             }
@@ -1438,10 +1438,10 @@ namespace Fifthweek.Api.Payments.Controllers
             }
 
             ValidCountryCode parsed1 = null;
-            if (!ValidCountryCode.IsEmpty(target.BillingCountryCode))
+            if (!ValidCountryCode.IsEmpty(target.CountryCode))
             {
                 System.Collections.Generic.IReadOnlyCollection<string> parsed1Errors;
-                if (!ValidCountryCode.TryParse(target.BillingCountryCode, out parsed1, out parsed1Errors))
+                if (!ValidCountryCode.TryParse(target.CountryCode, out parsed1, out parsed1Errors))
                 {
                     var modelState = new System.Web.Http.ModelBinding.ModelState();
                     foreach (var errorMessage in parsed1Errors)

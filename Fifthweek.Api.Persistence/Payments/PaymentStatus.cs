@@ -1,6 +1,6 @@
 ﻿namespace Fifthweek.Api.Persistence.Payments
 {
-    public enum BillingStatus
+    public enum PaymentStatus
     {
         None = 0,
         Retry1 = 1,

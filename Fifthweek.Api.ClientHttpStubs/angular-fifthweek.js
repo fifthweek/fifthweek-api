@@ -155,8 +155,8 @@ angular.module('webApp').factory('accountSettingsStub',
     //     containerName: ''
     //   },
     //   accountBalance: 0,
-    //   billingStatus: 'billingstatus',
-    //   hasCreditCardDetails: false
+    //   paymentStatus: 'paymentstatus',
+    //   hasPaymentInformation: false
     // }
     service.get = function(userId) {
       return $http.get(apiBaseUri + 'accountSettings/' + encodeURIComponent(userId)).catch(function(response) {
@@ -836,8 +836,8 @@ angular.module('webApp').factory('userStateStub',
     //       containerName: ''
     //     },
     //     accountBalance: 0,
-    //     billingStatus: 'billingstatus',
-    //     hasCreditCardDetails: false
+    //     paymentStatus: 'paymentstatus',
+    //     hasPaymentInformation: false
     //   },
     //   blog: { /* optional */
     //     blogId: 'Base64Guid',
@@ -967,8 +967,8 @@ angular.module('webApp').factory('userStateStub',
     //       containerName: ''
     //     },
     //     accountBalance: 0,
-    //     billingStatus: 'billingstatus',
-    //     hasCreditCardDetails: false
+    //     paymentStatus: 'paymentstatus',
+    //     hasPaymentInformation: false
     //   },
     //   blog: { /* optional */
     //     blogId: 'Base64Guid',
@@ -1056,7 +1056,7 @@ angular.module('webApp').factory('paymentsStub',
     // userId = 'Base64Guid'
     // data = {
     //   stripeToken: '', /* optional */
-    //   billingCountryCode: '', /* optional */
+    //   countryCode: '', /* optional */
     //   creditCardPrefix: '', /* optional */
     //   ipAddress: '' /* optional */
     // }

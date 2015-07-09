@@ -21,7 +21,7 @@
         private static readonly ValidCountryCode CountryCode = ValidCountryCode.Parse("GB");
         private static readonly ValidCreditCardPrefix CreditCardPrefix = ValidCreditCardPrefix.Parse("123456");
         private static readonly ValidIpAddress IpAddress = ValidIpAddress.Parse("1.1.1.1");
-        private static readonly BillingStatus BillingStatus = BillingStatus.Retry1;
+        private static readonly PaymentStatus PaymentStatus = PaymentStatus.Retry1;
 
         private SetUserPaymentOriginDbStatement target;
 
@@ -69,7 +69,7 @@
                         null,
                         null,
                         null,
-                        default(BillingStatus))
+                        default(PaymentStatus))
                 };
             });
         }
@@ -100,7 +100,7 @@
                         null,
                         null,
                         null,
-                        BillingStatus)
+                        PaymentStatus)
                 };
             });
         }
@@ -131,7 +131,7 @@
                         CreditCardPrefix.Value,
                         IpAddress.Value,
                         null,
-                        default(BillingStatus))
+                        default(PaymentStatus))
                 };
             });
         }
@@ -162,7 +162,7 @@
                         CreditCardPrefix.Value,
                         IpAddress.Value,
                         null,
-                        BillingStatus)
+                        PaymentStatus)
                 };
             });
         }
@@ -184,7 +184,7 @@
                     "999999",
                     "9.9.9.999",
                     "anotherKey",
-                    BillingStatus);
+                    PaymentStatus);
             }
 
             using (var databaseContext = testDatabase.CreateContext())

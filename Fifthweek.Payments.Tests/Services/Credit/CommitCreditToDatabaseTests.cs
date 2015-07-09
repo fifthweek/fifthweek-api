@@ -21,7 +21,7 @@
 
         private static readonly InitializeCreditRequestResult InitializeResult = new InitializeCreditRequestResult(
             new TaxamoTransactionResult("key", new AmountInUsCents(10), new AmountInUsCents(20), new AmountInUsCents(30), 0.2m, "VAT", "GB", "England"),
-            new UserPaymentOriginResult("stripeCustomerId", "GB", "12345", "1.1.1.1", "ttk", BillingStatus.Retry1));
+            new UserPaymentOriginResult("stripeCustomerId", "GB", "12345", "1.1.1.1", "ttk", PaymentStatus.Retry1));
 
         private static readonly StripeTransactionResult StripeTransaction =
             new StripeTransactionResult(DateTime.UtcNow, Guid.NewGuid(), "stripeChargeId");
@@ -29,7 +29,7 @@
         private Mock<IUpdateAccountBalancesDbStatement> updateAccountBalances;
         private Mock<ISetUserPaymentOriginOriginalTaxamoTransactionKeyDbStatement> setUserPaymentOriginOriginalTaxamoTransactionKey;
         private Mock<ISaveCustomerCreditToLedgerDbStatement> saveCustomerCreditToLedger;
-        private Mock<IClearBillingStatusDbStatement> clearBillingStatus;
+        private Mock<IClearPaymentStatusDbStatement> clearPaymentStatus;
 
         private CommitCreditToDatabase target;
 
@@ -39,13 +39,13 @@
             this.updateAccountBalances = new Mock<IUpdateAccountBalancesDbStatement>(MockBehavior.Strict);
             this.setUserPaymentOriginOriginalTaxamoTransactionKey = new Mock<ISetUserPaymentOriginOriginalTaxamoTransactionKeyDbStatement>(MockBehavior.Strict);
             this.saveCustomerCreditToLedger = new Mock<ISaveCustomerCreditToLedgerDbStatement>(MockBehavior.Strict);
-            this.clearBillingStatus = new Mock<IClearBillingStatusDbStatement>(MockBehavior.Strict);
+            this.clearPaymentStatus = new Mock<IClearPaymentStatusDbStatement>(MockBehavior.Strict);
 
             this.target = new CommitCreditToDatabase(
                 this.updateAccountBalances.Object,
                 this.setUserPaymentOriginOriginalTaxamoTransactionKey.Object,
                 this.saveCustomerCreditToLedger.Object,
-                this.clearBillingStatus.Object);
+                this.clearPaymentStatus.Object);
         }
 
         [TestMethod]
@@ -106,7 +106,7 @@
                 .Returns(Task.FromResult(0))
                 .Verifiable();
 
-            this.clearBillingStatus.Setup(v => v.ExecuteAsync(UserId)).Returns(Task.FromResult(0));
+            this.clearPaymentStatus.Setup(v => v.ExecuteAsync(UserId)).Returns(Task.FromResult(0));
 
             this.updateAccountBalances.Setup(v => v.ExecuteAsync(UserId, StripeTransaction.Timestamp))
                 .ReturnsAsync(new List<CalculatedAccountBalanceResult>())
@@ -136,7 +136,7 @@
                 .Returns(Task.FromResult(0))
                 .Verifiable();
 
-            this.clearBillingStatus.Setup(v => v.ExecuteAsync(UserId)).Returns(Task.FromResult(0));
+            this.clearPaymentStatus.Setup(v => v.ExecuteAsync(UserId)).Returns(Task.FromResult(0));
 
             this.setUserPaymentOriginOriginalTaxamoTransactionKey.Setup(v => v.ExecuteAsync(
                 UserId, 
@@ -153,11 +153,11 @@
                 InitializeResult.TaxamoTransaction,
                 new UserPaymentOriginResult(
                     InitializeResult.Origin.StripeCustomerId,
-                    InitializeResult.Origin.BillingCountryCode,
+                    InitializeResult.Origin.CountryCode,
                     InitializeResult.Origin.CreditCardPrefix,
                     InitializeResult.Origin.IpAddress,
                     null,
-                    InitializeResult.Origin.BillingStatus),
+                    InitializeResult.Origin.PaymentStatus),
                 StripeTransaction);
 
             this.saveCustomerCreditToLedger.Verify();

@@ -93,13 +93,13 @@
     <Compile Include="Pipeline\TrimSnapshotsExecutorTests.cs" />
     <Compile Include="Pipeline\VerifySnapshotsExecutorTests.cs" />
     <Compile Include="Services\Credit\ApplyStandardUserCreditTests.cs" />
-    <Compile Include="Services\Credit\ClearBillingStatusDbStatementTests.cs" />
+    <Compile Include="Services\Credit\ClearPaymentStatusDbStatementTests.cs" />
     <Compile Include="Services\Credit\CommitCreditToDatabaseTests.cs" />
-    <Compile Include="Services\Credit\FailBillingStatusDbStatementTests.cs" />
+    <Compile Include="Services\Credit\FailPaymentStatusDbStatementTests.cs" />
     <Compile Include="Services\Credit\GetUserPaymentOriginDbStatementTests.cs" />
-    <Compile Include="Services\Credit\GetUsersRequiringBillingRetryDbStatementTests.cs" />
+    <Compile Include="Services\Credit\GetUsersRequiringPaymentRetryDbStatementTests.cs" />
     <Compile Include="Services\Credit\GetUserWeeklySubscriptionsCostTests.cs" />
-    <Compile Include="Services\Credit\IncrementBillingStatusDbStatementTests.cs" />
+    <Compile Include="Services\Credit\IncrementPaymentStatusDbStatementTests.cs" />
     <Compile Include="Services\Credit\InitializeCreditRequestTests.cs" />
     <Compile Include="Services\Credit\PerformCreditRequestTests.cs" />
     <Compile Include="Services\Credit\SaveCustomerCreditToLedgerDbStatementTests.cs" />

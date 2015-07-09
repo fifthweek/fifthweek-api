@@ -64,7 +64,7 @@
                     Email,
                     FileId,
                     0,
-                    BillingStatus.None,
+                    PaymentStatus.None,
                     false);
 
                 Assert.AreEqual(expectedResult, result);
@@ -100,7 +100,7 @@
                     Email,
                     null,
                     0,
-                    BillingStatus.None,
+                    PaymentStatus.None,
                     false);
 
                 Assert.AreEqual(expectedResult, result);
@@ -136,7 +136,7 @@
                     Email,
                     FileId,
                     0,
-                    BillingStatus.None,
+                    PaymentStatus.None,
                     false);
 
                 Assert.AreEqual(expectedResult, result);
@@ -172,7 +172,7 @@
                     Email,
                     FileId,
                     100,
-                    BillingStatus.None,
+                    PaymentStatus.None,
                     false);
 
                 Assert.AreEqual(expectedResult, result);
@@ -208,7 +208,7 @@
                     Email,
                     FileId,
                     0,
-                    BillingStatus.Retry2,
+                    PaymentStatus.Retry2,
                     false);
 
                 Assert.AreEqual(expectedResult, result);
@@ -244,7 +244,7 @@
                     Email,
                     FileId,
                     0,
-                    BillingStatus.Retry2,
+                    PaymentStatus.Retry2,
                     true);
 
                 Assert.AreEqual(expectedResult, result);
@@ -371,7 +371,7 @@
                             null,
                             null,
                             null,
-                            BillingStatus.Retry2));
+                            PaymentStatus.Retry2));
                 }
             }
         }

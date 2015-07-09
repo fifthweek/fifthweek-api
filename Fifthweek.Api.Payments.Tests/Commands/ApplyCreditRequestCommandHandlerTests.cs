@@ -30,7 +30,7 @@
 
         private static readonly InitializeCreditRequestResult InitializeResult = new InitializeCreditRequestResult(
             new TaxamoTransactionResult("key", new AmountInUsCents(10), new AmountInUsCents(20), new AmountInUsCents(30), 0.2m, "VAT", "GB", "England"),
-            new UserPaymentOriginResult("stripeCustomerId", "GB", "12345", "1.1.1.1", "ttk", BillingStatus.Retry1));
+            new UserPaymentOriginResult("stripeCustomerId", "GB", "12345", "1.1.1.1", "ttk", PaymentStatus.Retry1));
 
         private static readonly StripeTransactionResult StripeTransactionResult =
             new StripeTransactionResult(DateTime.UtcNow, Guid.NewGuid(), "stripeChargeId");

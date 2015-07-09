@@ -22,16 +22,16 @@
 
         public int AccountBalance { get; set; }
 
-        public BillingStatus BillingStatus { get; private set; }
+        public PaymentStatus PaymentStatus { get; private set; }
 
-        public bool IsRetryingBilling
+        public bool IsRetryingPayment
         {
             get
             {
-                return this.BillingStatus > BillingStatus.None && this.BillingStatus < BillingStatus.Failed;
+                return this.PaymentStatus > PaymentStatus.None && this.PaymentStatus < PaymentStatus.Failed;
             }
         }
 
-        public bool HasCreditCardDetails { get; private set; }
+        public bool HasPaymentInformation { get; private set; }
     }
 }

@@ -239,7 +239,7 @@
                             "123243",
                             "1.2.3.4",
                             Guid.NewGuid().ToString(),
-                            (BillingStatus)Random.Next(0, 1 + (int)BillingStatus.Failed)));
+                            (PaymentStatus)Random.Next(0, 1 + (int)PaymentStatus.Failed)));
                 }
             }
 

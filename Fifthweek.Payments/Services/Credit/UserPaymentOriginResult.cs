@@ -16,7 +16,7 @@
         public string StripeCustomerId { get; private set; }
 
         [Optional]
-        public string BillingCountryCode { get; private set; }
+        public string CountryCode { get; private set; }
 
         [Optional]
         public string CreditCardPrefix { get; private set; }
@@ -28,6 +28,6 @@
         public string OriginalTaxamoTransactionKey { get; private set; }
 
         [Optional]
-        public BillingStatus BillingStatus { get; private set; }
+        public PaymentStatus PaymentStatus { get; private set; }
     }
 }

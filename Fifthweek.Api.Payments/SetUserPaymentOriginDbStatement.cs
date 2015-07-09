@@ -32,11 +32,11 @@
                 creditCardPrefix == null ? null : creditCardPrefix.Value,
                 ipAddress == null ? null : ipAddress.Value,
                 null,
-                default(BillingStatus));
+                default(PaymentStatus));
 
             using (var connection = this.connectionFactory.CreateConnection())
             {
-                await connection.UpsertAsync(origin, UserPaymentOrigin.Fields.StripeCustomerId | UserPaymentOrigin.Fields.BillingCountryCode | UserPaymentOrigin.Fields.CreditCardPrefix | UserPaymentOrigin.Fields.IpAddress | UserPaymentOrigin.Fields.OriginalTaxamoTransactionKey);
+                await connection.UpsertAsync(origin, UserPaymentOrigin.Fields.StripeCustomerId | UserPaymentOrigin.Fields.CountryCode | UserPaymentOrigin.Fields.CreditCardPrefix | UserPaymentOrigin.Fields.IpAddress | UserPaymentOrigin.Fields.OriginalTaxamoTransactionKey);
             }
         }
     }

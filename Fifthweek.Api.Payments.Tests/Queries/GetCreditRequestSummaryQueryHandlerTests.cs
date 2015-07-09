@@ -28,7 +28,7 @@
             UserId);
 
         private static readonly TaxamoTransactionResult TaxamoTransaction = new TaxamoTransactionResult("key", new AmountInUsCents(10), new AmountInUsCents(12), new AmountInUsCents(2), 0.2m, "VAT", "GB", "England");
-        private static readonly UserPaymentOriginResult Origin = new UserPaymentOriginResult("stripeCustomerId", "GB", "12345", "1.1.1.1", "ttk", BillingStatus.Retry1);
+        private static readonly UserPaymentOriginResult Origin = new UserPaymentOriginResult("stripeCustomerId", "GB", "12345", "1.1.1.1", "ttk", PaymentStatus.Retry1);
 
         private Mock<IRequesterSecurity> requesterSecurity;
         private Mock<IGetUserPaymentOriginDbStatement> getUserPaymentOrigin;
@@ -85,7 +85,7 @@
 
             this.getUserWeeklySubscriptionCost.Setup(v => v.ExecuteAsync(UserId)).ReturnsAsync(99);
 
-            this.getTaxInformation.Setup(v => v.ExecuteAsync(PositiveInt.Parse(99), Origin.BillingCountryCode, Origin.CreditCardPrefix, Origin.IpAddress, Origin.OriginalTaxamoTransactionKey))
+            this.getTaxInformation.Setup(v => v.ExecuteAsync(PositiveInt.Parse(99), Origin.CountryCode, Origin.CreditCardPrefix, Origin.IpAddress, Origin.OriginalTaxamoTransactionKey))
                 .ReturnsAsync(TaxamoTransaction);
 
             var result = await this.target.HandleAsync(Query);

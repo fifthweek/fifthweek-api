@@ -13,13 +13,13 @@ namespace Fifthweek.Payments.Services.Credit
     [AutoConstructor]
     public partial class TopUpUserAccountsWithCredit : ITopUpUserAccountsWithCredit
     {
-        public const decimal MinimumAccountBalanceBeforeBilling = 20m;
-        public const int MinimumChargeWhenBilling = 500;
+        public const decimal MinimumAccountBalanceBeforeCharge = 20m;
+        public const int MinimumPaymentAmount = 500;
 
-        private readonly IGetUsersRequiringBillingRetryDbStatement getUsersRequiringBillingRetry;
+        private readonly IGetUsersRequiringPaymentRetryDbStatement getUsersRequiringPaymentRetry;
         private readonly IApplyStandardUserCredit applyStandardUserCredit;
         private readonly IGetUserWeeklySubscriptionsCost getUserWeeklySubscriptionsCost;
-        private readonly IIncrementBillingStatusDbStatement incrementBillingStatus;
+        private readonly IIncrementPaymentStatusDbStatement incrementPaymentStatus;
         private readonly IGetUserPaymentOriginDbStatement getUserPaymentOrigin;
 
         public async Task<bool> ExecuteAsync(
@@ -29,15 +29,15 @@ namespace Fifthweek.Payments.Services.Credit
             updatedAccountBalances.AssertNotNull("updatedAccountBalances");
             errors.AssertNotNull("errors");
 
-            var userIdsToRetry = await this.getUsersRequiringBillingRetry.ExecuteAsync();
+            var userIdsToRetry = await this.getUsersRequiringPaymentRetry.ExecuteAsync();
             var newUserIds = updatedAccountBalances
                 .Where(v => v.AccountType == LedgerAccountType.Fifthweek
-                        && v.Amount < MinimumAccountBalanceBeforeBilling)
+                        && v.Amount < MinimumAccountBalanceBeforeCharge)
                 .Select(v => v.UserId);
             var allUserIds = userIdsToRetry.Concat(newUserIds).Distinct().ToList();
 
             // Increment all billing status immediately so the user maintains access to his newsfeed.
-            await this.incrementBillingStatus.ExecuteAsync(allUserIds);
+            await this.incrementPaymentStatus.ExecuteAsync(allUserIds);
 
             bool recalculateBalances = false;
             foreach (var userId in allUserIds)
@@ -53,10 +53,10 @@ namespace Fifthweek.Payments.Services.Credit
                         continue;
                     }
 
-                    amountToCharge = Math.Max(MinimumChargeWhenBilling, amountToCharge);
+                    amountToCharge = Math.Max(MinimumPaymentAmount, amountToCharge);
 
                     var origin = await this.getUserPaymentOrigin.ExecuteAsync(userId);
-                    if (origin.StripeCustomerId == null || origin.BillingStatus == BillingStatus.None)
+                    if (origin.StripeCustomerId == null || origin.PaymentStatus == PaymentStatus.None)
                     {
                         // If the user doesn't have a stripe customer ID then they haven't given us
                         // credit card details and we can't bill them.

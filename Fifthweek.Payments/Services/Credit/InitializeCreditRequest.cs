@@ -32,7 +32,7 @@ namespace Fifthweek.Payments.Services.Credit
             // Create taxamo transaction.
             var taxamoTransaction = await this.createTaxamoTransaction.ExecuteAsync(
                     amount,
-                    origin.BillingCountryCode,
+                    origin.CountryCode,
                     origin.CreditCardPrefix,
                     origin.IpAddress,
                     origin.OriginalTaxamoTransactionKey);

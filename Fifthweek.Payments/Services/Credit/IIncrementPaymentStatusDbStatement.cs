@@ -5,7 +5,7 @@ namespace Fifthweek.Payments.Services.Credit
 
     using Fifthweek.Api.Identity.Shared.Membership;
 
-    public interface IIncrementBillingStatusDbStatement
+    public interface IIncrementPaymentStatusDbStatement
     {
         Task ExecuteAsync(IReadOnlyList<UserId> userIds);
     }
