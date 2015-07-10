@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Linq;
 
-//// Generated on 07/07/2015 17:38:31 (UTC)
-//// Mapped solution in 16.99s
+//// Generated on 10/07/2015 09:01:01 (UTC)
+//// Mapped solution in 44.62s
 
 
 namespace Fifthweek.Api.Payments.Commands
@@ -69,6 +69,7 @@ namespace Fifthweek.Api.Payments.Commands
     using Fifthweek.Api.Persistence.Identity;
     using Fifthweek.Payments.Services.Credit;
     using Fifthweek.Payments.Services.Credit.Stripe;
+    using System.Runtime.ExceptionServices;
 
     public partial class ApplyCreditRequestCommandHandler 
     {
@@ -76,7 +77,8 @@ namespace Fifthweek.Api.Payments.Commands
             Fifthweek.Api.Identity.Shared.Membership.IRequesterSecurity requesterSecurity,
             Fifthweek.Shared.IFifthweekRetryOnTransientErrorHandler retryOnTransientFailure,
             Fifthweek.Payments.Services.Credit.IApplyStandardUserCredit applyStandardUserCredit,
-            Fifthweek.Api.Payments.Commands.ICommitTestUserCreditToDatabase commitTestUserCreditToDatabase)
+            Fifthweek.Api.Payments.Commands.ICommitTestUserCreditToDatabase commitTestUserCreditToDatabase,
+            Fifthweek.Payments.Services.Credit.IFailPaymentStatusDbStatement failPaymentStatus)
         {
             if (requesterSecurity == null)
             {
@@ -98,10 +100,16 @@ namespace Fifthweek.Api.Payments.Commands
                 throw new ArgumentNullException("commitTestUserCreditToDatabase");
             }
 
+            if (failPaymentStatus == null)
+            {
+                throw new ArgumentNullException("failPaymentStatus");
+            }
+
             this.requesterSecurity = requesterSecurity;
             this.retryOnTransientFailure = retryOnTransientFailure;
             this.applyStandardUserCredit = applyStandardUserCredit;
             this.commitTestUserCreditToDatabase = commitTestUserCreditToDatabase;
+            this.failPaymentStatus = failPaymentStatus;
         }
     }
 }
@@ -1395,19 +1403,19 @@ namespace Fifthweek.Api.Payments.Controllers
         {
             public Parsed(
                 ValidStripeToken stripeToken,
-                ValidCountryCode billingCountryCode,
+                ValidCountryCode countryCode,
                 ValidCreditCardPrefix creditCardPrefix,
                 ValidIpAddress ipAddress)
             {
                 this.StripeToken = stripeToken;
-                this.BillingCountryCode = billingCountryCode;
+                this.CountryCode = countryCode;
                 this.CreditCardPrefix = creditCardPrefix;
                 this.IpAddress = ipAddress;
             }
         
             public ValidStripeToken StripeToken { get; private set; }
         
-            public ValidCountryCode BillingCountryCode { get; private set; }
+            public ValidCountryCode CountryCode { get; private set; }
         
             public ValidCreditCardPrefix CreditCardPrefix { get; private set; }
         
@@ -1449,7 +1457,7 @@ namespace Fifthweek.Api.Payments.Controllers
                         modelState.Errors.Add(errorMessage);
                     }
 
-                    modelStateDictionary.Add("BillingCountryCode", modelState);
+                    modelStateDictionary.Add("CountryCode", modelState);
                 }
             }
 

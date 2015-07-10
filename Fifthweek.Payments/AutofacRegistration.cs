@@ -52,6 +52,10 @@
             builder.RegisterType<InitializeCreditRequest>().As<IInitializeCreditRequest>();
             builder.RegisterType<ApplyStandardUserCredit>().As<IApplyStandardUserCredit>();
             builder.RegisterType<GetUsersRequiringPaymentRetryDbStatement>().As<IGetUsersRequiringPaymentRetryDbStatement>();
+            builder.RegisterType<GetUserWeeklySubscriptionsCost>().As<IGetUserWeeklySubscriptionsCost>();
+            builder.RegisterType<ClearPaymentStatusDbStatement>().As<IClearPaymentStatusDbStatement>();
+            builder.RegisterType<FailPaymentStatusDbStatement>().As<IFailPaymentStatusDbStatement>();
+            builder.RegisterType<IncrementPaymentStatusDbStatement>().As<IIncrementPaymentStatusDbStatement>();
         }
     }
 }

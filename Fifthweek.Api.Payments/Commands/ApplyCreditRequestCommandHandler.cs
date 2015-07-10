@@ -25,6 +25,11 @@
             command.AssertNotNull("command");
             await this.requesterSecurity.AuthenticateAsAsync(command.Requester, command.UserId);
 
+            if (command.Amount.Value < TopUpUserAccountsWithCredit.MinimumPaymentAmount)
+            {
+                throw new BadRequestException("You cannot credit your account with less than the minimum payment.");
+            }
+
             var isTestUser = await this.requesterSecurity.IsInRoleAsync(command.Requester, FifthweekRole.TestUser);
             if (isTestUser)
             {

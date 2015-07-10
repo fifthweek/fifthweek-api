@@ -26,7 +26,7 @@
         private static readonly Requester Requester = Requester.Authenticated(UserId);
 
         private static readonly ApplyCreditRequestCommand Command = new ApplyCreditRequestCommand(
-            Requester, UserId, PositiveInt.Parse(10), PositiveInt.Parse(12));
+            Requester, UserId, PositiveInt.Parse(TopUpUserAccountsWithCredit.MinimumPaymentAmount), PositiveInt.Parse(TopUpUserAccountsWithCredit.MinimumPaymentAmount + 100));
 
         private static readonly InitializeCreditRequestResult InitializeResult = new InitializeCreditRequestResult(
             new TaxamoTransactionResult("key", new AmountInUsCents(10), new AmountInUsCents(20), new AmountInUsCents(30), 0.2m, "VAT", "GB", "England"),
@@ -39,6 +39,7 @@
         private Mock<IFifthweekRetryOnTransientErrorHandler> retryOnTransientFailure;
         private Mock<IApplyStandardUserCredit> applyStandardUserCredit;
         private Mock<ICommitTestUserCreditToDatabase> commitTestUserCreditToDatabase;
+        private Mock<IFailPaymentStatusDbStatement> failPaymentStatus;
 
         private ApplyCreditRequestCommandHandler target;
 
@@ -49,6 +50,7 @@
             this.retryOnTransientFailure = new Mock<IFifthweekRetryOnTransientErrorHandler>(MockBehavior.Strict);
             this.applyStandardUserCredit = new Mock<IApplyStandardUserCredit>(MockBehavior.Strict);
             this.commitTestUserCreditToDatabase = new Mock<ICommitTestUserCreditToDatabase>(MockBehavior.Strict);
+            this.failPaymentStatus = new Mock<IFailPaymentStatusDbStatement>(MockBehavior.Strict);
 
             this.requesterSecurity.SetupFor(Requester);
 
@@ -56,7 +58,8 @@
                 this.requesterSecurity.Object,
                 this.retryOnTransientFailure.Object,
                 this.applyStandardUserCredit.Object,
-                this.commitTestUserCreditToDatabase.Object);
+                this.commitTestUserCreditToDatabase.Object,
+                this.failPaymentStatus.Object);
         }
 
         [TestMethod]
@@ -73,8 +76,8 @@
             await this.target.HandleAsync(new ApplyCreditRequestCommand(
                 Requester,
                 UserId.Random(),
-                PositiveInt.Parse(3),
-                PositiveInt.Parse(5)));
+                Command.Amount,
+                Command.ExpectedTotalAmount));
         }
 
         [TestMethod]
@@ -84,8 +87,19 @@
             await this.target.HandleAsync(new ApplyCreditRequestCommand(
                 Requester.Unauthenticated,
                 UserId,
-                PositiveInt.Parse(3),
-                PositiveInt.Parse(5)));
+                Command.Amount,
+                Command.ExpectedTotalAmount));
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(BadRequestException))]
+        public async Task WhenAmountIsLessThanMinimumPaymentAmount_ItShouldThrowAnException()
+        {
+            await this.target.HandleAsync(new ApplyCreditRequestCommand(
+                Requester,
+                UserId,
+                PositiveInt.Parse(TopUpUserAccountsWithCredit.MinimumPaymentAmount - 1),
+                Command.ExpectedTotalAmount));
         }
 
         [TestMethod]
@@ -98,6 +112,49 @@
             await this.target.HandleAsync(Command);
 
             this.applyStandardUserCredit.Verify();
+        }
+
+        [TestMethod]
+        public async Task WhenCreditCardFailedExceptionOccurs_ItShouldSetPaymentStatusToFailed()
+        {
+            var tasks = new List<Func<Task>>();
+
+            this.applyStandardUserCredit.Setup(v => v.ExecuteAsync(Command.UserId, Command.Amount, Command.ExpectedTotalAmount))
+                .Throws(new CreditCardFailedException(new DivideByZeroException()));
+
+            this.retryOnTransientFailure.Setup(v => v.HandleAsync(It.IsAny<Func<Task>>()))
+                .Callback<Func<Task>>(tasks.Add)
+                .Returns(Task.FromResult(0));
+
+            await ExpectedException.AssertExceptionAsync<CreditCardFailedException>(
+                () => this.target.HandleAsync(Command));
+
+            Assert.AreEqual(1, tasks.Count);
+
+            this.failPaymentStatus.Setup(v => v.ExecuteAsync(UserId))
+                .Returns(Task.FromResult(0))
+                .Verifiable();
+
+            await tasks[0]();
+            this.failPaymentStatus.Verify();
+        }
+
+        [TestMethod]
+        public async Task WhenExceptionOccurs_ItShouldPropagate()
+        {
+            var tasks = new List<Func<Task>>();
+
+            this.applyStandardUserCredit.Setup(v => v.ExecuteAsync(Command.UserId, Command.Amount, Command.ExpectedTotalAmount))
+                .Throws(new DivideByZeroException());
+
+            this.retryOnTransientFailure.Setup(v => v.HandleAsync(It.IsAny<Func<Task>>()))
+                .Callback<Func<Task>>(tasks.Add)
+                .Returns(Task.FromResult(0));
+
+            await ExpectedException.AssertExceptionAsync<DivideByZeroException>(
+                () => this.target.HandleAsync(Command));
+
+            Assert.AreEqual(0, tasks.Count);
         }
 
         [TestMethod]

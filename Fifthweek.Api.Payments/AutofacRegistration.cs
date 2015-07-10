@@ -13,6 +13,8 @@
         public void Register(ContainerBuilder builder)
         {
             builder.RegisterType<SetUserPaymentOriginDbStatement>().As<ISetUserPaymentOriginDbStatement>();
+            builder.RegisterType<CommitTestUserCreditToDatabase>().As<ICommitTestUserCreditToDatabase>();
+            builder.RegisterType<SetTestUserAccountBalanceDbStatement>().As<ISetTestUserAccountBalanceDbStatement>();
         }
     }
 }

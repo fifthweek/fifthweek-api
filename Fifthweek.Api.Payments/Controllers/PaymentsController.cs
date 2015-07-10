@@ -34,7 +34,7 @@
                 requester, 
                 userIdObject, 
                 parsedData.StripeToken,
-                parsedData.BillingCountryCode,
+                parsedData.CountryCode,
                 parsedData.CreditCardPrefix,
                 parsedData.IpAddress));
         }
