@@ -83,9 +83,33 @@
         {
             this.getUserPaymentOrigin.Setup(v => v.ExecuteAsync(UserId)).ReturnsAsync(Origin);
 
-            this.getUserWeeklySubscriptionCost.Setup(v => v.ExecuteAsync(UserId)).ReturnsAsync(99);
+            this.getUserWeeklySubscriptionCost.Setup(v => v.ExecuteAsync(UserId)).ReturnsAsync(TopUpUserAccountsWithCredit.MinimumPaymentAmount + 1);
 
-            this.getTaxInformation.Setup(v => v.ExecuteAsync(PositiveInt.Parse(99), Origin.CountryCode, Origin.CreditCardPrefix, Origin.IpAddress, Origin.OriginalTaxamoTransactionKey))
+            this.getTaxInformation.Setup(v => v.ExecuteAsync(PositiveInt.Parse(TopUpUserAccountsWithCredit.MinimumPaymentAmount + 1), Origin.CountryCode, Origin.CreditCardPrefix, Origin.IpAddress, Origin.OriginalTaxamoTransactionKey))
+                .ReturnsAsync(TaxamoTransaction);
+
+            var result = await this.target.HandleAsync(Query);
+
+            Assert.AreEqual(
+                new CreditRequestSummary(
+                    TaxamoTransaction.Amount.Value,
+                    TaxamoTransaction.TotalAmount.Value,
+                    TaxamoTransaction.TaxAmount.Value,
+                    TaxamoTransaction.TaxRate,
+                    TaxamoTransaction.TaxName,
+                    TaxamoTransaction.TaxEntityName,
+                    TaxamoTransaction.CountryName),
+                result);
+        }
+
+        [TestMethod]
+        public async Task WhenSubscriptionCstIsLessThanMinimumCharge_ItShouldReturnTaxInformationSummaryForMinimumCharge()
+        {
+            this.getUserPaymentOrigin.Setup(v => v.ExecuteAsync(UserId)).ReturnsAsync(Origin);
+
+            this.getUserWeeklySubscriptionCost.Setup(v => v.ExecuteAsync(UserId)).ReturnsAsync(TopUpUserAccountsWithCredit.MinimumPaymentAmount - 1);
+
+            this.getTaxInformation.Setup(v => v.ExecuteAsync(PositiveInt.Parse(TopUpUserAccountsWithCredit.MinimumPaymentAmount), Origin.CountryCode, Origin.CreditCardPrefix, Origin.IpAddress, Origin.OriginalTaxamoTransactionKey))
                 .ReturnsAsync(TaxamoTransaction);
 
             var result = await this.target.HandleAsync(Query);

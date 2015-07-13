@@ -1,5 +1,6 @@
 ﻿namespace Fifthweek.Api.Payments.Queries
 {
+    using System;
     using System.Threading.Tasks;
 
     using Fifthweek.Api.Core;
@@ -25,6 +26,7 @@
             await this.requesterSecurity.AuthenticateAsAsync(query.Requester, query.UserId);
 
             var amountToCharge = await this.getUserWeeklySubscriptionsCost.ExecuteAsync(query.UserId);
+            amountToCharge = Math.Max(TopUpUserAccountsWithCredit.MinimumPaymentAmount, amountToCharge);
 
             var origin = await this.getUserPaymentOrigin.ExecuteAsync(query.UserId);
 
