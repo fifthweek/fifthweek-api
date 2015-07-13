@@ -17,6 +17,7 @@ namespace Fifthweek.WebJobs.Payments
     using Fifthweek.Payments.Services.Credit.Stripe;
     using Fifthweek.Payments.Services.Credit.Taxamo;
     using Fifthweek.Payments.Shared;
+    using Fifthweek.Payments.Stripe;
     using Fifthweek.Shared;
     using Fifthweek.WebJobs.Shared;
 
@@ -69,7 +70,7 @@ namespace Fifthweek.WebJobs.Payments
                             new CreateTaxamoTransaction()),
                         new PerformCreditRequest(
                             new TimestampCreator(),
-                            new PerformStripeCharge(),
+                            new PerformStripeCharge(new StripeApiKeyRepository(), new StripeService()),
                             new GuidCreator()),
                         new CommitCreditToDatabase(
                             new UpdateAccountBalancesDbStatement(new FifthweekDbConnectionFactory()),

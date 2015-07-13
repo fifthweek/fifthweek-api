@@ -1,12 +1,12 @@
 ﻿namespace Fifthweek.Payments.Services.Credit
 {
-    using System;
     using System.Threading.Tasks;
 
     using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.CodeGeneration;
     using Fifthweek.Payments.Services.Credit.Stripe;
     using Fifthweek.Payments.Services.Credit.Taxamo;
+    using Fifthweek.Payments.Stripe;
     using Fifthweek.Shared;
 
     [AutoConstructor]
@@ -19,7 +19,8 @@
         public async Task<StripeTransactionResult> HandleAsync(
             UserId userId,
             TaxamoTransactionResult taxamoTransaction,
-            UserPaymentOriginResult origin)
+            UserPaymentOriginResult origin,
+            UserType userType)
         {
             userId.AssertNotNull("userId");
             taxamoTransaction.AssertNotNull("taxamoTransaction");
@@ -34,17 +35,10 @@
                 taxamoTransaction.TotalAmount,
                 userId,
                 transactionReference,
-                taxamoTransaction.Key);
+                taxamoTransaction.Key,
+                userType);
 
             return new StripeTransactionResult(timestamp, transactionReference, stripeChargeId);
-        }
-    }
-
-    public class CreditCardFailedException : Exception
-    {
-        public CreditCardFailedException(Exception exception)
-            : base("Failed to charge credit card.", exception)
-        {
         }
     }
 }

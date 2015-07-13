@@ -8,6 +8,7 @@
     using Fifthweek.Payments.Services.Credit;
     using Fifthweek.Payments.Services.Credit.Stripe;
     using Fifthweek.Payments.Services.Credit.Taxamo;
+    using Fifthweek.Payments.Stripe;
     using Fifthweek.Shared;
 
     using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -49,21 +50,21 @@
         [ExpectedException(typeof(ArgumentNullException))]
         public async Task WhenUserIdIsNull_ItShouldThrowAnException()
         {
-            await this.target.HandleAsync(null, TaxamoTransaction, Origin);
+            await this.target.HandleAsync(null, TaxamoTransaction, Origin, default(UserType));
         }
 
         [TestMethod]
         [ExpectedException(typeof(ArgumentNullException))]
         public async Task WhenTaxamoTransactionIsNull_ItShouldThrowAnException()
         {
-            await this.target.HandleAsync(UserId, null, Origin);
+            await this.target.HandleAsync(UserId, null, Origin, default(UserType));
         }
 
         [TestMethod]
         [ExpectedException(typeof(ArgumentNullException))]
         public async Task WhenOriginIsNull_ItShouldThrowAnException()
         {
-            await this.target.HandleAsync(UserId, TaxamoTransaction, null);
+            await this.target.HandleAsync(UserId, TaxamoTransaction, null, default(UserType));
         }
 
         [TestMethod]
@@ -77,10 +78,31 @@
                 TaxamoTransaction.TotalAmount,
                 UserId,
                 TransactionReference,
-                TaxamoTransaction.Key))
+                TaxamoTransaction.Key,
+                UserType.TestUser))
                 .ReturnsAsync(StripeChargeId);
 
-            var result = await this.target.HandleAsync(UserId, TaxamoTransaction, Origin);
+            var result = await this.target.HandleAsync(UserId, TaxamoTransaction, Origin, UserType.TestUser);
+
+            Assert.AreEqual(new StripeTransactionResult(Now, TransactionReference, StripeChargeId), result);
+        }
+
+        [TestMethod]
+        public async Task ItShouldPerformAStripeCharge2()
+        {
+            this.timestampCreator.Setup(v => v.Now()).Returns(Now);
+            this.guidCreator.Setup(v => v.CreateSqlSequential()).Returns(TransactionReference);
+
+            this.performStripeCharge.Setup(v => v.ExecuteAsync(
+                Origin.StripeCustomerId,
+                TaxamoTransaction.TotalAmount,
+                UserId,
+                TransactionReference,
+                TaxamoTransaction.Key,
+                UserType.StandardUser))
+                .ReturnsAsync(StripeChargeId);
+
+            var result = await this.target.HandleAsync(UserId, TaxamoTransaction, Origin, UserType.StandardUser);
 
             Assert.AreEqual(new StripeTransactionResult(Now, TransactionReference, StripeChargeId), result);
         }

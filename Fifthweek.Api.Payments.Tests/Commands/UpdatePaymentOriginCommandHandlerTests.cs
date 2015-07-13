@@ -7,7 +7,9 @@
     using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.Api.Identity.Tests.Shared.Membership;
     using Fifthweek.Api.Payments.Commands;
+    using Fifthweek.Api.Persistence.Identity;
     using Fifthweek.Api.Persistence.Payments;
+    using Fifthweek.Payments;
     using Fifthweek.Payments.Services.Credit;
     using Fifthweek.Payments.Services.Credit.Stripe;
     using Fifthweek.Shared;
@@ -87,8 +89,32 @@
         public async Task WhenStripeCustomerIdAlreadyExists_ItShouldUpdateTheCustomer()
         {
             this.getUserPaymentOrigin.Setup(v => v.ExecuteAsync(UserId)).ReturnsAsync(OriginWithCustomer);
+            this.requesterSecurity.Setup(v => v.IsInRoleAsync(Requester, FifthweekRole.TestUser)).ReturnsAsync(false);
 
-            this.updateStripeCustomerCreditCard.Setup(v => v.ExecuteAsync(OriginWithCustomer.StripeCustomerId, StripeToken.Value))
+            this.updateStripeCustomerCreditCard.Setup(
+                v => v.ExecuteAsync(UserId, OriginWithCustomer.StripeCustomerId, StripeToken.Value, UserType.StandardUser))
+                .Returns(Task.FromResult(0))
+                .Verifiable();
+
+            this.setUserPaymentOrigin.Setup(v => v.ExecuteAsync(
+                UserId, OriginWithCustomer.StripeCustomerId, CountryCode, CreditCardPrefix, IpAddress))
+                .Returns(Task.FromResult(0))
+                .Verifiable();
+
+            await this.target.HandleAsync(Command);
+
+            this.updateStripeCustomerCreditCard.Verify();
+            this.setUserPaymentOrigin.Verify();
+        }
+
+        [TestMethod]
+        public async Task WhenStripeCustomerIdAlreadyExists_AndUserIsTestUser_ItShouldUpdateTheCustomer()
+        {
+            this.getUserPaymentOrigin.Setup(v => v.ExecuteAsync(UserId)).ReturnsAsync(OriginWithCustomer);
+            this.requesterSecurity.Setup(v => v.IsInRoleAsync(Requester, FifthweekRole.TestUser)).ReturnsAsync(true);
+
+            this.updateStripeCustomerCreditCard.Setup(
+                v => v.ExecuteAsync(UserId, OriginWithCustomer.StripeCustomerId, StripeToken.Value, UserType.TestUser))
                 .Returns(Task.FromResult(0))
                 .Verifiable();
 
@@ -107,9 +133,30 @@
         public async Task WhenStripeCustomerIdDoesNotAlreadyExist_ItShouldCreateTheCustomer()
         {
             this.getUserPaymentOrigin.Setup(v => v.ExecuteAsync(UserId)).ReturnsAsync(OriginWithoutCustomer);
+            this.requesterSecurity.Setup(v => v.IsInRoleAsync(Requester, FifthweekRole.TestUser)).ReturnsAsync(false);
 
             var stripeCustomerId = Guid.NewGuid().ToString();
-            this.createStripeCustomer.Setup(v => v.ExecuteAsync(UserId, StripeToken.Value))
+            this.createStripeCustomer.Setup(v => v.ExecuteAsync(UserId, StripeToken.Value, UserType.StandardUser))
+                .Returns(Task.FromResult(stripeCustomerId));
+
+            this.setUserPaymentOrigin.Setup(v => v.ExecuteAsync(
+                UserId, stripeCustomerId, CountryCode, CreditCardPrefix, IpAddress))
+                .Returns(Task.FromResult(0))
+                .Verifiable();
+
+            await this.target.HandleAsync(Command);
+
+            this.setUserPaymentOrigin.Verify();
+        }
+
+        [TestMethod]
+        public async Task WhenStripeCustomerIdDoesNotAlreadyExist_AndUserIsTestUser_ItShouldCreateTheCustomer()
+        {
+            this.getUserPaymentOrigin.Setup(v => v.ExecuteAsync(UserId)).ReturnsAsync(OriginWithoutCustomer);
+            this.requesterSecurity.Setup(v => v.IsInRoleAsync(Requester, FifthweekRole.TestUser)).ReturnsAsync(true);
+
+            var stripeCustomerId = Guid.NewGuid().ToString();
+            this.createStripeCustomer.Setup(v => v.ExecuteAsync(UserId, StripeToken.Value, UserType.TestUser))
                 .Returns(Task.FromResult(stripeCustomerId));
 
             this.setUserPaymentOrigin.Setup(v => v.ExecuteAsync(

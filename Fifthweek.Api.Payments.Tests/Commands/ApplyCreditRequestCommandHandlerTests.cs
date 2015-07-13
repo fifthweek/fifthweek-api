@@ -120,13 +120,13 @@
             var tasks = new List<Func<Task>>();
 
             this.applyStandardUserCredit.Setup(v => v.ExecuteAsync(Command.UserId, Command.Amount, Command.ExpectedTotalAmount))
-                .Throws(new CreditCardFailedException(new DivideByZeroException()));
+                .Throws(new StripeChargeFailedException(new DivideByZeroException()));
 
             this.retryOnTransientFailure.Setup(v => v.HandleAsync(It.IsAny<Func<Task>>()))
                 .Callback<Func<Task>>(tasks.Add)
                 .Returns(Task.FromResult(0));
 
-            await ExpectedException.AssertExceptionAsync<CreditCardFailedException>(
+            await ExpectedException.AssertExceptionAsync<StripeChargeFailedException>(
                 () => this.target.HandleAsync(Command));
 
             Assert.AreEqual(1, tasks.Count);

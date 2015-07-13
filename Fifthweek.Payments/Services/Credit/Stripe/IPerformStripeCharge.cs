@@ -4,9 +4,16 @@
     using System.Threading.Tasks;
 
     using Fifthweek.Api.Identity.Shared.Membership;
+    using Fifthweek.Payments.Stripe;
 
     public interface IPerformStripeCharge
     {
-        Task<string> ExecuteAsync(string stripeCustomerId, AmountInUsCents amount, UserId userId, Guid transactionReference, string taxamoTransactionKey);
+        Task<string> ExecuteAsync(
+            string stripeCustomerId, 
+            AmountInUsCents amount, 
+            UserId userId, 
+            Guid transactionReference,
+            string taxamoTransactionKey, 
+            UserType userType);
     }
 }

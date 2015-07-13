@@ -52,7 +52,7 @@
                     command.Amount,
                     command.ExpectedTotalAmount);
             }
-            catch (CreditCardFailedException t)
+            catch (StripeChargeFailedException t)
             {
                 exceptionDispatchInfo = ExceptionDispatchInfo.Capture(t);
             }

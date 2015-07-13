@@ -76,6 +76,9 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\Newtonsoft.Json.6.0.6\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
+    <Reference Include="Stripe.net">
+      <HintPath>..\packages\Stripe.net.4.0.1\lib\net40\Stripe.net.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Core" />
@@ -120,6 +123,7 @@
     <Compile Include="Pipeline\VerifySnapshotsExecutor.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Pipeline\CalculateSnapshotCostExecutor.cs" />
+    <Compile Include="Services\Credit\StripeChargeFailedException.cs" />
     <Compile Include="Services\Credit\TopUpUserAccountsWithCredit.cs" />
     <Compile Include="Services\CalculatedAccountBalanceResult.cs" />
     <Compile Include="Services\CreatorIdAndFirstSubscribedDate.cs" />
@@ -226,6 +230,12 @@
     <Compile Include="Snapshots\SubscriberChannelsSnapshot.cs" />
     <Compile Include="Snapshots\SubscriberChannelsSnapshotItem.cs" />
     <Compile Include="Snapshots\SubscriberSnapshot.cs" />
+    <Compile Include="Stripe\IStripeApiKeyRepository.cs" />
+    <Compile Include="Stripe\IStripeService.cs" />
+    <Compile Include="Stripe\StripeApiKeyRepository.cs" />
+    <Compile Include="Stripe\StripeConfiguration.cs" />
+    <Compile Include="Stripe\StripeService.cs" />
+    <Compile Include="UserType.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />

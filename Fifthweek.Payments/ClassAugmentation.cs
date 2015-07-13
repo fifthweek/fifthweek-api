@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Linq;
 
-//// Generated on 09/07/2015 17:12:54 (UTC)
-//// Mapped solution in 19.02s
+//// Generated on 13/07/2015 16:38:17 (UTC)
+//// Mapped solution in 19.24s
 
 
 namespace Fifthweek.Payments
@@ -2673,6 +2673,95 @@ namespace Fifthweek.Payments.Services.Credit
             }
 
             this.connectionFactory = connectionFactory;
+        }
+    }
+}
+namespace Fifthweek.Payments.Services.Credit.Stripe
+{
+    using System;
+    using System.Threading.Tasks;
+    using Fifthweek.Api.Identity.Shared.Membership;
+    using Fifthweek.CodeGeneration;
+    using Fifthweek.Payments.Stripe;
+    using global::Stripe;
+
+    public partial class CreateStripeCustomer 
+    {
+        public CreateStripeCustomer(
+            Fifthweek.Payments.Stripe.IStripeApiKeyRepository apiKeyRepository,
+            Fifthweek.Payments.Stripe.IStripeService stripeService)
+        {
+            if (apiKeyRepository == null)
+            {
+                throw new ArgumentNullException("apiKeyRepository");
+            }
+
+            if (stripeService == null)
+            {
+                throw new ArgumentNullException("stripeService");
+            }
+
+            this.apiKeyRepository = apiKeyRepository;
+            this.stripeService = stripeService;
+        }
+    }
+}
+namespace Fifthweek.Payments.Services.Credit.Stripe
+{
+    using System;
+    using System.Threading.Tasks;
+    using Fifthweek.Api.Identity.Shared.Membership;
+    using Fifthweek.CodeGeneration;
+    using Fifthweek.Payments.Stripe;
+    using global::Stripe;
+
+    public partial class PerformStripeCharge 
+    {
+        public PerformStripeCharge(
+            Fifthweek.Payments.Stripe.IStripeApiKeyRepository apiKeyRepository,
+            Fifthweek.Payments.Stripe.IStripeService stripeService)
+        {
+            if (apiKeyRepository == null)
+            {
+                throw new ArgumentNullException("apiKeyRepository");
+            }
+
+            if (stripeService == null)
+            {
+                throw new ArgumentNullException("stripeService");
+            }
+
+            this.apiKeyRepository = apiKeyRepository;
+            this.stripeService = stripeService;
+        }
+    }
+}
+namespace Fifthweek.Payments.Services.Credit.Stripe
+{
+    using System.Threading.Tasks;
+    using Fifthweek.Api.Identity.Shared.Membership;
+    using Fifthweek.CodeGeneration;
+    using Fifthweek.Payments.Stripe;
+    using global::Stripe;
+
+    public partial class UpdateStripeCustomerCreditCard 
+    {
+        public UpdateStripeCustomerCreditCard(
+            Fifthweek.Payments.Stripe.IStripeApiKeyRepository apiKeyRepository,
+            Fifthweek.Payments.Stripe.IStripeService stripeService)
+        {
+            if (apiKeyRepository == null)
+            {
+                throw new ArgumentNullException("apiKeyRepository");
+            }
+
+            if (stripeService == null)
+            {
+                throw new ArgumentNullException("stripeService");
+            }
+
+            this.apiKeyRepository = apiKeyRepository;
+            this.stripeService = stripeService;
         }
     }
 }

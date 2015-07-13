@@ -8,6 +8,7 @@
     using Fifthweek.Payments.Services.Credit.Stripe;
     using Fifthweek.Payments.Services.Credit.Taxamo;
     using Fifthweek.Payments.Shared;
+    using Fifthweek.Payments.Stripe;
     using Fifthweek.Shared;
 
     public class AutofacRegistration : IAutofacRegistration
@@ -56,6 +57,9 @@
             builder.RegisterType<ClearPaymentStatusDbStatement>().As<IClearPaymentStatusDbStatement>();
             builder.RegisterType<FailPaymentStatusDbStatement>().As<IFailPaymentStatusDbStatement>();
             builder.RegisterType<IncrementPaymentStatusDbStatement>().As<IIncrementPaymentStatusDbStatement>();
+
+            builder.RegisterType<StripeApiKeyRepository>().As<IStripeApiKeyRepository>();
+            builder.RegisterType<StripeService>().As<IStripeService>();
         }
     }
 }

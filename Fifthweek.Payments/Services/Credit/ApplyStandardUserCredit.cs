@@ -7,6 +7,7 @@ namespace Fifthweek.Payments.Services.Credit
     using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.CodeGeneration;
     using Fifthweek.Payments.Services.Credit.Taxamo;
+    using Fifthweek.Payments.Stripe;
     using Fifthweek.Shared;
 
     using Newtonsoft.Json;
@@ -36,7 +37,8 @@ namespace Fifthweek.Payments.Services.Credit
                 () => this.performCreditRequest.HandleAsync(
                     userId,
                     initializeResult.TaxamoTransaction,
-                    initializeResult.Origin));
+                    initializeResult.Origin,
+                    UserType.StandardUser));
 
             try
             {

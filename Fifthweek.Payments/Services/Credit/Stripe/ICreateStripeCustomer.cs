@@ -3,9 +3,10 @@
     using System.Threading.Tasks;
 
     using Fifthweek.Api.Identity.Shared.Membership;
+    using Fifthweek.Payments.Stripe;
 
     public interface ICreateStripeCustomer
     {
-        Task<string> ExecuteAsync(UserId userId, string token);
+        Task<string> ExecuteAsync(UserId userId, string tokenId, UserType userType);
     }
 }

@@ -85,7 +85,7 @@ namespace Fifthweek.Payments.Tests.Services.Credit
             await tasks[0]();
             this.initializeCreditRequest.Verify();
 
-            this.performCreditRequest.Setup(v => v.HandleAsync(UserId, InitializeResult.TaxamoTransaction, InitializeResult.Origin))
+            this.performCreditRequest.Setup(v => v.HandleAsync(UserId, InitializeResult.TaxamoTransaction, InitializeResult.Origin, UserType.StandardUser))
                 .ReturnsAsync(StripeTransactionResult).Verifiable();
             await tasks[1]();
             this.performCreditRequest.Verify();
@@ -123,7 +123,7 @@ namespace Fifthweek.Payments.Tests.Services.Credit
             await tasks[0]();
             this.initializeCreditRequest.Verify();
 
-            this.performCreditRequest.Setup(v => v.HandleAsync(UserId, InitializeResult.TaxamoTransaction, InitializeResult.Origin))
+            this.performCreditRequest.Setup(v => v.HandleAsync(UserId, InitializeResult.TaxamoTransaction, InitializeResult.Origin, UserType.StandardUser))
                 .ReturnsAsync(StripeTransactionResult).Verifiable();
             await tasks[1]();
             this.performCreditRequest.Verify();
