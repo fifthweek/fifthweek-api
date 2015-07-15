@@ -80,10 +80,11 @@ namespace Fifthweek.Api.ClientHttpStubs.Templates
 
             this.output.Write("return $http.");
             this.output.Write(method.HttpMethod.ToString().ToLower());
-            this.output.Write("(apiBaseUri + ");
+            this.output.Write("(utilities.fixUri(apiBaseUri + ");
 
             this.output.Write(AngularUtility.GetRouteBuilder(method));
 
+            this.output.Write(")");
             if (method.BodyParameter != null)
             {
                 this.output.Write(", ");
