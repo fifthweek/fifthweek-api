@@ -12,7 +12,7 @@ namespace Taxamo.Model {
     
     /* Tax amount */
     [DataMember(Name="value", EmitDefaultValue=false)]
-    public double? Value { get; set; }
+    public decimal? Value { get; set; }
 
     
     /* Country name */

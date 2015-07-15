@@ -2,6 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Linq;
 
     public static class Extensions
     {
@@ -35,6 +36,11 @@
             {
                 throw new ArgumentOutOfRangeException(argumentName, "Must be non-negative");
             }
+        }
+
+        public static IEnumerable<T> EmptyIfNull<T>(this IEnumerable<T> input)
+        {
+            return input ?? Enumerable.Empty<T>();
         }
     }
 }

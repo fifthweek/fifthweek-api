@@ -1,19 +1,19 @@
-﻿namespace Fifthweek.Payments.Stripe
+﻿namespace Fifthweek.Payments.Taxamo
 {
     using System;
 
-    public static class StripeConfiguration
+    public static class TaxamoConfiguration
     {
-        public const string StripeLiveApiKeyEnvironmentVariable = "StripeLiveApiKey";
-        public const string StripeTestApiKeyEnvironmentVariable = "StripeTestApiKey";
+        public const string TaxamoLiveApiKeyEnvironmentVariable = "TaxamoLiveApiKey";
+        public const string TaxamoTestApiKeyEnvironmentVariable = "TaxamoTestApiKey";
 
         public static string GetTestApiKey()
         {
-            var apiKey = TryGetApiKey(StripeTestApiKeyEnvironmentVariable);
+            var apiKey = TryGetApiKey(TaxamoTestApiKeyEnvironmentVariable);
 
             if (apiKey == null)
             {
-                throw new Exception("Environment variable '" + StripeTestApiKeyEnvironmentVariable + "' not set.");
+                throw new Exception("Environment variable '" + TaxamoTestApiKeyEnvironmentVariable + "' not set.");
             }
 
             return apiKey;
@@ -21,11 +21,11 @@
 
         public static string GetLiveApiKey()
         {
-            var apiKey = TryGetApiKey(StripeLiveApiKeyEnvironmentVariable);
+            var apiKey = TryGetApiKey(TaxamoLiveApiKeyEnvironmentVariable);
 
             if (apiKey == null)
             {
-                throw new Exception("Environment variable '" + StripeLiveApiKeyEnvironmentVariable + "' not set. This should be set to the test key on the developer machine.");
+                throw new Exception("Environment variable '" + TaxamoLiveApiKeyEnvironmentVariable + "' not set. This should be set to the test key on the developer machine.");
             }
 
             return apiKey;

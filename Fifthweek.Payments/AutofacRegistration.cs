@@ -9,6 +9,7 @@
     using Fifthweek.Payments.Services.Credit.Taxamo;
     using Fifthweek.Payments.Shared;
     using Fifthweek.Payments.Stripe;
+    using Fifthweek.Payments.Taxamo;
     using Fifthweek.Shared;
 
     public class AutofacRegistration : IAutofacRegistration
@@ -60,6 +61,10 @@
 
             builder.RegisterType<StripeApiKeyRepository>().As<IStripeApiKeyRepository>();
             builder.RegisterType<StripeService>().As<IStripeService>();
+
+            builder.RegisterType<TaxamoApiKeyRepository>().As<ITaxamoApiKeyRepository>();
+            builder.RegisterType<TaxamoService>().As<ITaxamoService>();
+
         }
     }
 }

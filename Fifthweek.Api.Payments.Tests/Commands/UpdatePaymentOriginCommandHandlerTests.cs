@@ -31,6 +31,8 @@
 
         private static readonly UpdatePaymentOriginCommand Command = new UpdatePaymentOriginCommand(
             Requester, UserId, StripeToken, CountryCode, CreditCardPrefix, IpAddress);
+        private static readonly UpdatePaymentOriginCommand CommandWithoutStripeToken = new UpdatePaymentOriginCommand(
+            Requester, UserId, null, CountryCode, CreditCardPrefix, IpAddress);
 
         private static readonly UserPaymentOriginResult OriginWithCustomer = new UserPaymentOriginResult("stripeCustomerId", "GB", "12345", "1.1.1.1", "ttk", PaymentStatus.Retry1);
         private static readonly UserPaymentOriginResult OriginWithoutCustomer = new UserPaymentOriginResult(null, "GB", "12345", "1.1.1.1", "ttk", PaymentStatus.Retry1);
@@ -83,6 +85,23 @@
         {
             await this.target.HandleAsync(new UpdatePaymentOriginCommand(
                 Requester.Unauthenticated, UserId, StripeToken, CountryCode, CreditCardPrefix, IpAddress));
+        }
+
+        [TestMethod]
+        public async Task WhenStripeTokenNotSupplied_ItShouldUpdateTheCustomer()
+        {
+            this.getUserPaymentOrigin.Setup(v => v.ExecuteAsync(UserId)).ReturnsAsync(OriginWithCustomer);
+            this.requesterSecurity.Setup(v => v.IsInRoleAsync(Requester, FifthweekRole.TestUser)).ReturnsAsync(false);
+
+            this.setUserPaymentOrigin.Setup(v => v.ExecuteAsync(
+                UserId, OriginWithCustomer.StripeCustomerId, CountryCode, CreditCardPrefix, IpAddress))
+                .Returns(Task.FromResult(0))
+                .Verifiable();
+
+            await this.target.HandleAsync(CommandWithoutStripeToken);
+
+            this.updateStripeCustomerCreditCard.Verify();
+            this.setUserPaymentOrigin.Verify();
         }
 
         [TestMethod]

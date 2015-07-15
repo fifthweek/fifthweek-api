@@ -8,6 +8,8 @@
     using Fifthweek.Api.Payments.Commands;
     using Fifthweek.Api.Payments.Controllers;
     using Fifthweek.Api.Payments.Queries;
+    using Fifthweek.Payments.Services.Credit;
+    using Fifthweek.Payments.Services.Credit.Taxamo;
     using Fifthweek.Shared;
 
     using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -30,7 +32,7 @@
         public virtual void Initialize()
         {
             this.requesterContext = new Mock<IRequesterContext>(MockBehavior.Strict);
-            this.getCreditRequestSummary = new Mock<IQueryHandler<GetCreditRequestSummaryQuery,CreditRequestSummary>>(MockBehavior.Strict);
+            this.getCreditRequestSummary = new Mock<IQueryHandler<GetCreditRequestSummaryQuery, CreditRequestSummary>>(MockBehavior.Strict);
             this.updatePaymentsOrigin = new Mock<ICommandHandler<UpdatePaymentOriginCommand>>(MockBehavior.Strict);
             this.applyCreditRequest = new Mock<ICommandHandler<ApplyCreditRequestCommand>>(MockBehavior.Strict);
 
@@ -150,8 +152,20 @@
         {
             private static readonly PositiveInt Amount = PositiveInt.Parse(10);
 
-            private static readonly CreditRequestSummary CreditRequestSummary = new Payments.Controllers.CreditRequestSummary(
-                10, 12, 2, 0.2m, "VAT", "GB", "UK");
+            private static readonly PaymentLocationData PaymentLocationData = new PaymentLocationData("GB", "123456", "1.1.1.1");
+
+            private static readonly CreditRequestSummary CreditRequestSummary = 
+                new CreditRequestSummary(
+                    5, 
+                    new TaxamoCalculationResult(
+                        new AmountInUsCents(10),
+                        new AmountInUsCents(12), 
+                        new AmountInUsCents(2),
+                        0.2m,
+                        "VAT", 
+                        "GB",
+                        "UK",
+                        null));
 
             [TestInitialize]
             public override void Initialize()
@@ -163,24 +177,36 @@
             [ExpectedException(typeof(BadRequestException))]
             public async Task WhenUserIdIsNull_ItShouldThrowAnException()
             {
-                await this.target.GetCreditRequestSummaryAsync(null);
+                await this.target.GetCreditRequestSummaryAsync(null, PaymentLocationData.CountryCode, PaymentLocationData.CreditCardPrefix, PaymentLocationData.IpAddress);
             }
 
             [TestMethod]
             [ExpectedException(typeof(BadRequestException))]
             public async Task WhenUserIdIsWhitespace_ItShouldThrowAnException()
             {
-                await this.target.GetCreditRequestSummaryAsync(" ");
+                await this.target.GetCreditRequestSummaryAsync(" ", PaymentLocationData.CountryCode, PaymentLocationData.CreditCardPrefix, PaymentLocationData.IpAddress);
             }
 
             [TestMethod]
-            public async Task ItShouldGetCreditRequestSummery()
+            public async Task WhenLocationDataIsNull_ItShouldGetCreditRequestSummery()
             {
                 this.getCreditRequestSummary.Setup(
-                    v => v.HandleAsync(new GetCreditRequestSummaryQuery(Requester, UserId)))
+                    v => v.HandleAsync(new GetCreditRequestSummaryQuery(Requester, UserId, null)))
                     .ReturnsAsync(CreditRequestSummary);
 
-                var result = await this.target.GetCreditRequestSummaryAsync(UserId.Value.EncodeGuid());
+                var result = await this.target.GetCreditRequestSummaryAsync(UserId.Value.EncodeGuid(), null, null, null);
+
+                Assert.AreEqual(CreditRequestSummary, result);
+            }
+
+            [TestMethod]
+            public async Task WhenLocationDataIsProvided_ItShouldGetCreditRequestSummery()
+            {
+                this.getCreditRequestSummary.Setup(
+                    v => v.HandleAsync(new GetCreditRequestSummaryQuery(Requester, UserId, new GetCreditRequestSummaryQuery.LocationData(PaymentLocationData.Parse().CountryCode, PaymentLocationData.Parse().CreditCardPrefix, PaymentLocationData.Parse().IpAddress))))
+                    .ReturnsAsync(CreditRequestSummary);
+
+                var result = await this.target.GetCreditRequestSummaryAsync(UserId.Value.EncodeGuid(), PaymentLocationData.CountryCode, PaymentLocationData.CreditCardPrefix, PaymentLocationData.IpAddress);
 
                 Assert.AreEqual(CreditRequestSummary, result);
             }

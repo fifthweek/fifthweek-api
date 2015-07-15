@@ -7,11 +7,12 @@
     public interface IGetTaxInformation
     {
         //https://www.taxamo.com/apidocs/api/v1/tax/docs.html#POSTcalculate
-        Task<TaxamoTransactionResult> ExecuteAsync(
+        Task<TaxamoCalculationResult> ExecuteAsync(
             PositiveInt amount,
             string billingCountryCode,
             string creditCardPrefix,
             string ipAddress,
-            string originalTaxamoTransactionKey);
+            string originalTaxamoTransactionKey,
+            UserType userType);
     }
 }

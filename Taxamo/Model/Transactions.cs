@@ -18,7 +18,7 @@ namespace Taxamo.Model {
     
     /* How much tax has been deducted. */
     [DataMember(Name="deducted_tax_amount", EmitDefaultValue=false)]
-    public double? DeductedTaxAmount { get; set; }
+    public decimal? DeductedTaxAmount { get; set; }
 
     
     /* Buyer's credit card prefix. */
@@ -133,7 +133,7 @@ namespace Taxamo.Model {
     
     /* Amount of transaction without tax. */
     [DataMember(Name="amount", EmitDefaultValue=false)]
-    public double? Amount { get; set; }
+    public decimal? Amount { get; set; }
 
     
     /* IP address of the buyer in dotted decimal (IPv4) or text format (IPv6). */
@@ -163,7 +163,7 @@ namespace Taxamo.Model {
     
     /* Tax amount of transaction. */
     [DataMember(Name="tax_amount", EmitDefaultValue=false)]
-    public double? TaxAmount { get; set; }
+    public decimal? TaxAmount { get; set; }
 
     
     /* Additional currency information - can be used to receive additional information about invoice in another currency. */
@@ -178,7 +178,7 @@ namespace Taxamo.Model {
     
     /* Total amount of transaction. */
     [DataMember(Name="total_amount", EmitDefaultValue=false)]
-    public double? TotalAmount { get; set; }
+    public decimal? TotalAmount { get; set; }
 
     
     /* To which entity is the tax due. */
@@ -193,7 +193,7 @@ namespace Taxamo.Model {
     
     /* Refunded tax amount. */
     [DataMember(Name="refunded_tax_amount", EmitDefaultValue=false)]
-    public double? RefundedTaxAmount { get; set; }
+    public decimal? RefundedTaxAmount { get; set; }
 
     
     /* Is the transaction created manually - using private token. In manual mode, it is the merchant who calculates tax country and validates evidence. If you need API to do that when accessing the API with private token, just skip the 'manual' flag or use false value there and provide customer's ip address through buyer_ip field. Manual mode is also used when using original_transaction_key field. */
@@ -228,7 +228,7 @@ namespace Taxamo.Model {
     
     /* Total amount refunde (including tax). */
     [DataMember(Name="refunded_total_amount", EmitDefaultValue=false)]
-    public double? RefundedTotalAmount { get; set; }
+    public decimal? RefundedTotalAmount { get; set; }
 
     
 

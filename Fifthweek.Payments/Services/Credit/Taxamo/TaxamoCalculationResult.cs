@@ -1,13 +1,12 @@
-﻿namespace Fifthweek.Payments.Services.Credit.Taxamo
+namespace Fifthweek.Payments.Services.Credit.Taxamo
 {
+    using System.Collections.Generic;
+
     using Fifthweek.CodeGeneration;
 
     [AutoConstructor, AutoEqualityMembers]
-    public partial class TaxamoTransactionResult
+    public partial class TaxamoCalculationResult
     {
-        [Optional]
-        public string Key { get; private set; }
-
         public AmountInUsCents Amount { get; private set; }
 
         public AmountInUsCents TotalAmount { get; private set; }
@@ -23,6 +22,18 @@
         [Optional]
         public string TaxEntityName { get; private set; }
 
+        [Optional]
         public string CountryName { get; private set; }
+
+        [Optional]
+        public IReadOnlyList<PossibleCountry> PossibleCountries { get; private set; }
+
+        [AutoConstructor, AutoEqualityMembers]
+        public partial class PossibleCountry
+        {
+            public string Name { get; private set; }
+
+            public string CountryCode { get; private set; }
+        }
     }
 }

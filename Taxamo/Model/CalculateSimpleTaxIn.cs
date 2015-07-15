@@ -27,12 +27,12 @@ namespace Taxamo.Model {
     
     /* Unit price. */
     [DataMember(Name="unit_price", EmitDefaultValue=false)]
-    public double? UnitPrice { get; set; }
+    public decimal? UnitPrice { get; set; }
 
     
     /* Quantity Defaults to 1. */
     [DataMember(Name="quantity", EmitDefaultValue=false)]
-    public double? Quantity { get; set; }
+    public decimal? Quantity { get; set; }
 
     
     /*  Buyer's tax number - EU VAT number for example. If using EU VAT number, it is possible to provide country code in it (e.g. IE1234567X) or simply use billing_country_code field for that. In the first case, if billing_country_code value was provided, it will be overwritten with country code value extracted from VAT number - but only if the VAT has been verified properly. */
@@ -52,7 +52,7 @@ namespace Taxamo.Model {
     
     /* Amount. Required if total amount is not provided. */
     [DataMember(Name="amount", EmitDefaultValue=false)]
-    public double? Amount { get; set; }
+    public decimal? Amount { get; set; }
 
     
     /* Billing two letter ISO country code. */
@@ -62,7 +62,7 @@ namespace Taxamo.Model {
     
     /* Total amount. Required if amount is not provided. */
     [DataMember(Name="total_amount", EmitDefaultValue=false)]
-    public double? TotalAmount { get; set; }
+    public decimal? TotalAmount { get; set; }
 
     
     /* If the transaction is in a country supported by Taxamo, but the tax is not calculated due to merchant settings or EU B2B transaction for example. */

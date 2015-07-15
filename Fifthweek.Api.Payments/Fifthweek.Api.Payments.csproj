@@ -90,8 +90,10 @@
     <Compile Include="Commands\UpdatePaymentOriginCommandHandler.cs" />
     <Compile Include="Controllers\CreditRequestData.cs" />
     <Compile Include="Controllers\CreditRequestSummary.cs" />
+    <Compile Include="Controllers\PaymentLocationData.cs" />
     <Compile Include="Controllers\PaymentOriginData.cs" />
     <Compile Include="Controllers\PaymentsController.cs" />
+    <Compile Include="Extensions.cs" />
     <Compile Include="ISetTestUserAccountBalanceDbStatement.cs" />
     <Compile Include="ISetUserPaymentOriginDbStatement.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

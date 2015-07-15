@@ -18,33 +18,41 @@
         private readonly IGetUserPaymentOriginDbStatement getUserPaymentOrigin;
         private readonly IGetTaxInformation getTaxInformation;
         private readonly IGetUserWeeklySubscriptionsCost getUserWeeklySubscriptionsCost;
-        
+
         public async Task<CreditRequestSummary> HandleAsync(GetCreditRequestSummaryQuery query)
         {
             query.AssertNotNull("query");
 
             await this.requesterSecurity.AuthenticateAsAsync(query.Requester, query.UserId);
+            var userType = await this.requesterSecurity.GetUserTypeAsync(query.Requester);
 
-            var amountToCharge = await this.getUserWeeklySubscriptionsCost.ExecuteAsync(query.UserId);
-            amountToCharge = Math.Max(TopUpUserAccountsWithCredit.MinimumPaymentAmount, amountToCharge);
+            var subscriptionsAmount = await this.getUserWeeklySubscriptionsCost.ExecuteAsync(query.UserId);
+            var amountToCharge = Math.Max(TopUpUserAccountsWithCredit.MinimumPaymentAmount, subscriptionsAmount);
 
-            var origin = await this.getUserPaymentOrigin.ExecuteAsync(query.UserId);
+            UserPaymentOriginResult origin;
+            if (query.LocationDataOverride == null)
+            {
+                origin = await this.getUserPaymentOrigin.ExecuteAsync(query.UserId);
+            }
+            else
+            {
+                origin = new UserPaymentOriginResult(
+                    query.LocationDataOverride.CountryCode == null ? null : query.LocationDataOverride.CountryCode.Value,
+                    query.LocationDataOverride.CreditCardPrefix == null ? null : query.LocationDataOverride.CreditCardPrefix.Value,
+                    query.LocationDataOverride.IpAddress == null ? null : query.LocationDataOverride.IpAddress.Value);
+            }
 
             var taxInformation = await this.getTaxInformation.ExecuteAsync(
                 PositiveInt.Parse(amountToCharge), 
                 origin.CountryCode, 
                 origin.CreditCardPrefix, 
                 origin.IpAddress, 
-                origin.OriginalTaxamoTransactionKey);
+                origin.OriginalTaxamoTransactionKey,
+                userType);
 
             return new CreditRequestSummary(
-                taxInformation.Amount.Value,
-                taxInformation.TotalAmount.Value,
-                taxInformation.TaxAmount.Value,
-                taxInformation.TaxRate,
-                taxInformation.TaxName,
-                taxInformation.TaxEntityName,
-                taxInformation.CountryName);
+                subscriptionsAmount,
+                taxInformation);
         }
     }
 }

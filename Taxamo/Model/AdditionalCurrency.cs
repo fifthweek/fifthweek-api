@@ -17,22 +17,22 @@ namespace Taxamo.Model {
     
     /* Amount (w/o TAX) in designated currency. */
     [DataMember(Name="amount", EmitDefaultValue=false)]
-    public double? Amount { get; set; }
+    public decimal? Amount { get; set; }
 
     
     /* Tax amount in designated currency. */
     [DataMember(Name="tax_amount", EmitDefaultValue=false)]
-    public double? TaxAmount { get; set; }
+    public decimal? TaxAmount { get; set; }
 
     
     /* Foreign exchange rate used in calculation */
     [DataMember(Name="fx_rate", EmitDefaultValue=false)]
-    public double? FxRate { get; set; }
+    public decimal? FxRate { get; set; }
 
     
     /* Total amount in designated currency. */
     [DataMember(Name="total_amount", EmitDefaultValue=false)]
-    public double? TotalAmount { get; set; }
+    public decimal? TotalAmount { get; set; }
 
     
 

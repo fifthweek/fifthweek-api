@@ -17,7 +17,7 @@ namespace Taxamo.Model {
     
     /* Tax amount due in this quarter. */
     [DataMember(Name="tax_amount", EmitDefaultValue=false)]
-    public double? TaxAmount { get; set; }
+    public decimal? TaxAmount { get; set; }
 
     
     /* In which currency code the settlement was calculated. */

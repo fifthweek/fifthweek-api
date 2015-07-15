@@ -12,7 +12,7 @@ namespace Taxamo.Model {
     
     /* Amount that has been paid. Use negative value to register refunds. */
     [DataMember(Name="amount", EmitDefaultValue=false)]
-    public double? Amount { get; set; }
+    public decimal? Amount { get; set; }
 
     
     /* When the payment was received in yyyy-MM-dd HH:mm:ss (24 hour format, UTC+0 timezone). */

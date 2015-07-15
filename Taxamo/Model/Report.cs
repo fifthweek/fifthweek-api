@@ -12,12 +12,12 @@ namespace Taxamo.Model {
     
     /* Tax rate */
     [DataMember(Name="tax_rate", EmitDefaultValue=false)]
-    public double? TaxRate { get; set; }
+    public decimal? TaxRate { get; set; }
 
     
     /* Amount w/o tax */
     [DataMember(Name="amount", EmitDefaultValue=false)]
-    public double? Amount { get; set; }
+    public decimal? Amount { get; set; }
 
     
     /* Country name */
@@ -32,7 +32,7 @@ namespace Taxamo.Model {
     
     /* Tax amount */
     [DataMember(Name="tax_amount", EmitDefaultValue=false)]
-    public double? TaxAmount { get; set; }
+    public decimal? TaxAmount { get; set; }
 
     
     /* If true, this line should not be entered into MOSS and is provided for informative purposes only. For example because the country is the same as MOSS registration country and merchant country. */

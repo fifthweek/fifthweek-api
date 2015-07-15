@@ -17,7 +17,7 @@
         public const string UserIdMetadataKey = "user-id";
         public const string TransactionReferenceMetadataKey = "transaction-reference";
         public const string TaxamoTransactionKeyMetadataKey = "taxamo-transaction-key";
-        public const string Currency = "USD";
+        public const string Currency = PaymentConstants.Usd;
 
         //https://stripe.com/docs/tutorials/charges
         private readonly IStripeApiKeyRepository apiKeyRepository;

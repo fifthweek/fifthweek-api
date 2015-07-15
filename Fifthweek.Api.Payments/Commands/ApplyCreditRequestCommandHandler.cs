@@ -7,6 +7,7 @@
     using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.Api.Persistence.Identity;
     using Fifthweek.CodeGeneration;
+    using Fifthweek.Payments;
     using Fifthweek.Payments.Services.Credit;
     using Fifthweek.Shared;
 
@@ -30,8 +31,8 @@
                 throw new BadRequestException("You cannot credit your account with less than the minimum payment.");
             }
 
-            var isTestUser = await this.requesterSecurity.IsInRoleAsync(command.Requester, FifthweekRole.TestUser);
-            if (isTestUser)
+            var userType = await this.requesterSecurity.GetUserTypeAsync(command.Requester);
+            if (userType == UserType.TestUser)
             {
                 // For a test user we just update their account balance directly, 
                 // as we don't want the credit to affect the Fifthweek accounts

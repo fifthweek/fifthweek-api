@@ -12,22 +12,22 @@ namespace Taxamo.Model {
     
     /* Total amount, including tax, that was refunded in this call. */
     [DataMember(Name="total_amount", EmitDefaultValue=false)]
-    public double? TotalAmount { get; set; }
+    public decimal? TotalAmount { get; set; }
 
     
     /* Calculated tax amount, that was refunded in this call. */
     [DataMember(Name="tax_amount", EmitDefaultValue=false)]
-    public double? TaxAmount { get; set; }
+    public decimal? TaxAmount { get; set; }
 
     
     /* Total amount, including tax, that was refunded for this line. */
     [DataMember(Name="refunded_total_amount", EmitDefaultValue=false)]
-    public double? RefundedTotalAmount { get; set; }
+    public decimal? RefundedTotalAmount { get; set; }
 
     
     /* Total tax amount, that was refunded for this line. */
     [DataMember(Name="refunded_tax_amount", EmitDefaultValue=false)]
-    public double? RefundedTaxAmount { get; set; }
+    public decimal? RefundedTaxAmount { get; set; }
 
     
 

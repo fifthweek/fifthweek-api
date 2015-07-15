@@ -8,7 +8,9 @@
     using Fifthweek.Api.Identity.Tests.Shared.Membership;
     using Fifthweek.Api.Payments.Controllers;
     using Fifthweek.Api.Payments.Queries;
+    using Fifthweek.Api.Persistence.Identity;
     using Fifthweek.Api.Persistence.Payments;
+    using Fifthweek.Payments;
     using Fifthweek.Payments.Services.Credit;
     using Fifthweek.Payments.Services.Credit.Taxamo;
     using Fifthweek.Shared;
@@ -25,9 +27,19 @@
 
         private static readonly GetCreditRequestSummaryQuery Query = new GetCreditRequestSummaryQuery(
             Requester,
-            UserId);
+            UserId,
+            null);
 
-        private static readonly TaxamoTransactionResult TaxamoTransaction = new TaxamoTransactionResult("key", new AmountInUsCents(10), new AmountInUsCents(12), new AmountInUsCents(2), 0.2m, "VAT", "GB", "England");
+        private static readonly GetCreditRequestSummaryQuery QueryWithOverride =
+            new GetCreditRequestSummaryQuery(
+                Requester,
+                UserId,
+            new GetCreditRequestSummaryQuery.LocationData(
+                ValidCountryCode.Parse("GB"),
+                ValidCreditCardPrefix.Parse("987654"), 
+                ValidIpAddress.Parse("2.2.2.2")));
+
+        private static readonly TaxamoCalculationResult TaxamoTransaction = new TaxamoCalculationResult(new AmountInUsCents(10), new AmountInUsCents(12), new AmountInUsCents(2), 0.2m, "VAT", "GB", "England", null);
         private static readonly UserPaymentOriginResult Origin = new UserPaymentOriginResult("stripeCustomerId", "GB", "12345", "1.1.1.1", "ttk", PaymentStatus.Retry1);
 
         private Mock<IRequesterSecurity> requesterSecurity;
@@ -67,7 +79,7 @@
         public async Task WhenUserIsNotAuthorized_ItShouldThrowAnException()
         {
             await this.target.HandleAsync(new GetCreditRequestSummaryQuery(
-                Requester, UserId.Random()));
+                Requester, UserId.Random(), null));
         }
 
         [TestMethod]
@@ -75,30 +87,58 @@
         public async Task WhenUserIsNotAuthenticated_ItShouldThrowAnException()
         {
             await this.target.HandleAsync(new GetCreditRequestSummaryQuery(
-                Requester.Unauthenticated, UserId));
+                Requester.Unauthenticated, UserId, null));
         }
 
         [TestMethod]
-        public async Task ItShouldReturnTaxInformationSummary()
+        public async Task WhenStandardUser_ItShouldReturnTaxInformationSummary()
         {
             this.getUserPaymentOrigin.Setup(v => v.ExecuteAsync(UserId)).ReturnsAsync(Origin);
 
+            this.requesterSecurity.Setup(v => v.IsInRoleAsync(Requester, FifthweekRole.TestUser)).ReturnsAsync(false);
+
             this.getUserWeeklySubscriptionCost.Setup(v => v.ExecuteAsync(UserId)).ReturnsAsync(TopUpUserAccountsWithCredit.MinimumPaymentAmount + 1);
 
-            this.getTaxInformation.Setup(v => v.ExecuteAsync(PositiveInt.Parse(TopUpUserAccountsWithCredit.MinimumPaymentAmount + 1), Origin.CountryCode, Origin.CreditCardPrefix, Origin.IpAddress, Origin.OriginalTaxamoTransactionKey))
+            this.getTaxInformation
+                .Setup(v => v.ExecuteAsync(
+                    PositiveInt.Parse(TopUpUserAccountsWithCredit.MinimumPaymentAmount + 1),
+                    Origin.CountryCode,
+                    Origin.CreditCardPrefix,
+                    Origin.IpAddress,
+                    Origin.OriginalTaxamoTransactionKey,
+                    UserType.StandardUser))
                 .ReturnsAsync(TaxamoTransaction);
 
             var result = await this.target.HandleAsync(Query);
 
             Assert.AreEqual(
-                new CreditRequestSummary(
-                    TaxamoTransaction.Amount.Value,
-                    TaxamoTransaction.TotalAmount.Value,
-                    TaxamoTransaction.TaxAmount.Value,
-                    TaxamoTransaction.TaxRate,
-                    TaxamoTransaction.TaxName,
-                    TaxamoTransaction.TaxEntityName,
-                    TaxamoTransaction.CountryName),
+                new CreditRequestSummary(TopUpUserAccountsWithCredit.MinimumPaymentAmount + 1, TaxamoTransaction),
+                result);
+        }
+
+        [TestMethod]
+        public async Task WhenTestUser_ItShouldReturnTaxInformationSummary()
+        {
+            this.getUserPaymentOrigin.Setup(v => v.ExecuteAsync(UserId)).ReturnsAsync(Origin);
+
+            this.requesterSecurity.Setup(v => v.IsInRoleAsync(Requester, FifthweekRole.TestUser)).ReturnsAsync(true);
+
+            this.getUserWeeklySubscriptionCost.Setup(v => v.ExecuteAsync(UserId)).ReturnsAsync(TopUpUserAccountsWithCredit.MinimumPaymentAmount + 1);
+
+            this.getTaxInformation
+                .Setup(v => v.ExecuteAsync(
+                    PositiveInt.Parse(TopUpUserAccountsWithCredit.MinimumPaymentAmount + 1),
+                    Origin.CountryCode,
+                    Origin.CreditCardPrefix,
+                    Origin.IpAddress,
+                    Origin.OriginalTaxamoTransactionKey,
+                    UserType.TestUser))
+                .ReturnsAsync(TaxamoTransaction);
+
+            var result = await this.target.HandleAsync(Query);
+
+            Assert.AreEqual(
+                new CreditRequestSummary(TopUpUserAccountsWithCredit.MinimumPaymentAmount + 1, TaxamoTransaction),
                 result);
         }
 
@@ -106,23 +146,48 @@
         public async Task WhenSubscriptionCstIsLessThanMinimumCharge_ItShouldReturnTaxInformationSummaryForMinimumCharge()
         {
             this.getUserPaymentOrigin.Setup(v => v.ExecuteAsync(UserId)).ReturnsAsync(Origin);
+            this.requesterSecurity.Setup(v => v.IsInRoleAsync(Requester, FifthweekRole.TestUser)).ReturnsAsync(false);
 
             this.getUserWeeklySubscriptionCost.Setup(v => v.ExecuteAsync(UserId)).ReturnsAsync(TopUpUserAccountsWithCredit.MinimumPaymentAmount - 1);
 
-            this.getTaxInformation.Setup(v => v.ExecuteAsync(PositiveInt.Parse(TopUpUserAccountsWithCredit.MinimumPaymentAmount), Origin.CountryCode, Origin.CreditCardPrefix, Origin.IpAddress, Origin.OriginalTaxamoTransactionKey))
+            this.getTaxInformation
+                .Setup(v => v.ExecuteAsync(
+                    PositiveInt.Parse(TopUpUserAccountsWithCredit.MinimumPaymentAmount),
+                    Origin.CountryCode, 
+                    Origin.CreditCardPrefix,
+                    Origin.IpAddress,
+                    Origin.OriginalTaxamoTransactionKey,
+                    UserType.StandardUser))
                 .ReturnsAsync(TaxamoTransaction);
 
             var result = await this.target.HandleAsync(Query);
 
             Assert.AreEqual(
-                new CreditRequestSummary(
-                    TaxamoTransaction.Amount.Value,
-                    TaxamoTransaction.TotalAmount.Value,
-                    TaxamoTransaction.TaxAmount.Value,
-                    TaxamoTransaction.TaxRate,
-                    TaxamoTransaction.TaxName,
-                    TaxamoTransaction.TaxEntityName,
-                    TaxamoTransaction.CountryName),
+                new CreditRequestSummary(TopUpUserAccountsWithCredit.MinimumPaymentAmount, TaxamoTransaction),
+                result);
+        }
+
+        [TestMethod]
+        public async Task WhenLocationDataSupplied_ItShouldNotRequestOrigin()
+        {
+            this.requesterSecurity.Setup(v => v.IsInRoleAsync(Requester, FifthweekRole.TestUser)).ReturnsAsync(false);
+
+            this.getUserWeeklySubscriptionCost.Setup(v => v.ExecuteAsync(UserId)).ReturnsAsync(TopUpUserAccountsWithCredit.MinimumPaymentAmount + 1);
+
+            this.getTaxInformation
+                .Setup(v => v.ExecuteAsync(
+                    PositiveInt.Parse(TopUpUserAccountsWithCredit.MinimumPaymentAmount + 1),
+                    null,
+                    QueryWithOverride.LocationDataOverride.CreditCardPrefix.Value,
+                    QueryWithOverride.LocationDataOverride.IpAddress.Value,
+                    null,
+                    UserType.StandardUser))
+                .ReturnsAsync(TaxamoTransaction);
+
+            var result = await this.target.HandleAsync(QueryWithOverride);
+
+            Assert.AreEqual(
+                new CreditRequestSummary(TopUpUserAccountsWithCredit.MinimumPaymentAmount + 1, TaxamoTransaction),
                 result);
         }
     }

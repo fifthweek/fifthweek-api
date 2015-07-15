@@ -17,7 +17,8 @@ namespace Taxamo.Client {
     /// Initializes a new instance of the <see cref="ApiClient"/> class.
     /// </summary>
     /// <param name="basePath">The base path.</param>
-    public ApiClient(String basePath="https://api.taxamo.com/") {
+    public ApiClient(string apiKey, String basePath="https://api.taxamo.com/") {
+        this.ApiKey = apiKey;
       this.basePath = basePath;
       this.restClient = new RestClient(this.basePath);
     }
@@ -28,7 +29,9 @@ namespace Taxamo.Client {
     /// <value>The base path.</value> 
     public string basePath { get; set; }
 
-    /// <summary>
+        public string ApiKey { get; private set; }
+
+        /// <summary>
     /// Gets or sets the RestClient
     /// </summary>
     /// <value>The RestClient.</value> 
@@ -50,7 +53,7 @@ namespace Taxamo.Client {
 
       var request = new RestRequest(Path, Method);
 
-      this.UpdateParamsForAuth(QueryParams, HeaderParams, AuthSettings);
+        HeaderParams["Token"] = this.ApiKey;
 
       // add default header, if any
       foreach(KeyValuePair<string, string> defaultHeader in this.defaultHeaderMap)
@@ -159,49 +162,6 @@ namespace Taxamo.Client {
       }
     }
 
-    /// <summary>
-    /// Get the API key with prefix
-    /// </summary>
-    /// <param name="obj"> Object 
-    /// <returns>API key with prefix</returns>
-    public string GetApiKeyWithPrefix (string apiKey)
-    {
-      var apiKeyValue = "";
-      Configuration.apiKey.TryGetValue (apiKey, out apiKeyValue);
-      var apiKeyPrefix = "";
-      if (Configuration.apiKeyPrefix.TryGetValue (apiKey, out apiKeyPrefix)) {
-        return apiKeyPrefix + " " + apiKeyValue;
-      } else {
-        return apiKeyValue;
-      }
-    }
-
-    /// <summary>
-    /// Update parameters based on authentication
-    /// </summary>
-    /// <param name="QueryParams">Query parameters</param>
-    /// <param name="HeaderParams">Header parameters</param>
-    /// <param name="AuthSettings">Authentication settings</param>
-    public void UpdateParamsForAuth(Dictionary<String, String> QueryParams, Dictionary<String, String> HeaderParams, string[] AuthSettings) {
-      if (AuthSettings == null || AuthSettings.Length == 0)
-        return;
-  
-      foreach (string auth in AuthSettings) {
-        // determine which one to use
-        switch(auth) {
-          
-          case "apiKey":
-            HeaderParams["Token"] = this.GetApiKeyWithPrefix("Token");
-            
-            break;
-          
-          default:
-            //TODO show warning about security definition not found
-          break;
-        }
-      }
-
-    }
 
     /// <summary>
     /// Encode string in base64 format 

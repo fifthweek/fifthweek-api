@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Linq;
 
-//// Generated on 10/07/2015 09:01:01 (UTC)
-//// Mapped solution in 44.62s
+//// Generated on 15/07/2015 17:04:36 (UTC)
+//// Mapped solution in 44.53s
 
 
 namespace Fifthweek.Api.Payments.Commands
@@ -19,6 +19,9 @@ namespace Fifthweek.Api.Payments.Commands
     using Fifthweek.Api.Persistence.Identity;
     using Fifthweek.Payments.Services.Credit;
     using Fifthweek.Payments.Services.Credit.Stripe;
+    using System.Runtime.ExceptionServices;
+    using Fifthweek.Payments;
+    using Fifthweek.Payments.Stripe;
 
     public partial class ApplyCreditRequestCommand 
     {
@@ -70,6 +73,8 @@ namespace Fifthweek.Api.Payments.Commands
     using Fifthweek.Payments.Services.Credit;
     using Fifthweek.Payments.Services.Credit.Stripe;
     using System.Runtime.ExceptionServices;
+    using Fifthweek.Payments;
+    using Fifthweek.Payments.Stripe;
 
     public partial class ApplyCreditRequestCommandHandler 
     {
@@ -127,6 +132,9 @@ namespace Fifthweek.Api.Payments.Commands
     using Fifthweek.Api.Persistence.Identity;
     using Fifthweek.Payments.Services.Credit;
     using Fifthweek.Payments.Services.Credit.Stripe;
+    using System.Runtime.ExceptionServices;
+    using Fifthweek.Payments;
+    using Fifthweek.Payments.Stripe;
 
     public partial class UpdatePaymentOriginCommand 
     {
@@ -171,6 +179,9 @@ namespace Fifthweek.Api.Payments.Commands
     using Fifthweek.Api.Persistence.Identity;
     using Fifthweek.Payments.Services.Credit;
     using Fifthweek.Payments.Services.Credit.Stripe;
+    using System.Runtime.ExceptionServices;
+    using Fifthweek.Payments;
+    using Fifthweek.Payments.Stripe;
 
     public partial class UpdatePaymentOriginCommandHandler 
     {
@@ -226,6 +237,7 @@ namespace Fifthweek.Api.Payments.Controllers
     using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.Api.Payments.Commands;
     using Fifthweek.Api.Payments.Queries;
+    using Fifthweek.Payments.Services.Credit.Taxamo;
 
     public partial class CreditRequestData 
     {
@@ -260,60 +272,26 @@ namespace Fifthweek.Api.Payments.Controllers
     using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.Api.Payments.Commands;
     using Fifthweek.Api.Payments.Queries;
+    using Fifthweek.Payments.Services.Credit.Taxamo;
 
     public partial class CreditRequestSummary 
     {
         public CreditRequestSummary(
-            System.Int32 amount,
-            System.Int32 totalAmount,
-            System.Int32 taxAmount,
-            System.Decimal taxRate,
-            System.String taxName,
-            System.String taxEntityName,
-            System.String countryName)
+            System.Int32 subscriptionsAmount,
+            Fifthweek.Payments.Services.Credit.Taxamo.TaxamoCalculationResult calculation)
         {
-            if (amount == null)
+            if (subscriptionsAmount == null)
             {
-                throw new ArgumentNullException("amount");
+                throw new ArgumentNullException("subscriptionsAmount");
             }
 
-            if (totalAmount == null)
+            if (calculation == null)
             {
-                throw new ArgumentNullException("totalAmount");
+                throw new ArgumentNullException("calculation");
             }
 
-            if (taxAmount == null)
-            {
-                throw new ArgumentNullException("taxAmount");
-            }
-
-            if (taxRate == null)
-            {
-                throw new ArgumentNullException("taxRate");
-            }
-
-            if (taxName == null)
-            {
-                throw new ArgumentNullException("taxName");
-            }
-
-            if (taxEntityName == null)
-            {
-                throw new ArgumentNullException("taxEntityName");
-            }
-
-            if (countryName == null)
-            {
-                throw new ArgumentNullException("countryName");
-            }
-
-            this.Amount = amount;
-            this.TotalAmount = totalAmount;
-            this.TaxAmount = taxAmount;
-            this.TaxRate = taxRate;
-            this.TaxName = taxName;
-            this.TaxEntityName = taxEntityName;
-            this.CountryName = countryName;
+            this.SubscriptionsAmount = subscriptionsAmount;
+            this.Calculation = calculation;
         }
     }
 }
@@ -329,6 +307,7 @@ namespace Fifthweek.Api.Payments.Controllers
     using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.Api.Payments.Commands;
     using Fifthweek.Api.Payments.Queries;
+    using Fifthweek.Payments.Services.Credit.Taxamo;
 
     public partial class PaymentOriginData 
     {
@@ -357,6 +336,7 @@ namespace Fifthweek.Api.Payments.Controllers
     using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.Api.Payments.Commands;
     using Fifthweek.Api.Payments.Queries;
+    using Fifthweek.Payments.Services.Credit.Taxamo;
 
     public partial class PaymentsController 
     {
@@ -410,7 +390,8 @@ namespace Fifthweek.Api.Payments.Queries
     {
         public GetCreditRequestSummaryQuery(
             Fifthweek.Api.Identity.Shared.Membership.Requester requester,
-            Fifthweek.Api.Identity.Shared.Membership.UserId userId)
+            Fifthweek.Api.Identity.Shared.Membership.UserId userId,
+            Fifthweek.Api.Payments.Queries.GetCreditRequestSummaryQuery.LocationData locationDataOverride)
         {
             if (requester == null)
             {
@@ -422,8 +403,14 @@ namespace Fifthweek.Api.Payments.Queries
                 throw new ArgumentNullException("userId");
             }
 
+            if (locationDataOverride == null)
+            {
+                throw new ArgumentNullException("locationDataOverride");
+            }
+
             this.Requester = requester;
             this.UserId = userId;
+            this.LocationDataOverride = locationDataOverride;
         }
     }
 }
@@ -517,6 +504,9 @@ namespace Fifthweek.Api.Payments.Commands
     using Fifthweek.Api.Persistence.Identity;
     using Fifthweek.Payments.Services.Credit;
     using Fifthweek.Payments.Services.Credit.Stripe;
+    using System.Runtime.ExceptionServices;
+    using Fifthweek.Payments;
+    using Fifthweek.Payments.Stripe;
 
     public partial class CommitTestUserCreditToDatabase 
     {
@@ -567,6 +557,62 @@ namespace Fifthweek.Api.Payments
         }
     }
 }
+namespace Fifthweek.Api.Payments.Controllers
+{
+    using System;
+    using System.Linq;
+    using Fifthweek.CodeGeneration;
+    using Fifthweek.Shared;
+    using System.Threading.Tasks;
+    using System.Web.Http;
+    using Fifthweek.Api.Core;
+    using Fifthweek.Api.Identity.Shared.Membership;
+    using Fifthweek.Api.Payments.Commands;
+    using Fifthweek.Api.Payments.Queries;
+    using Fifthweek.Payments.Services.Credit.Taxamo;
+
+    public partial class PaymentLocationData 
+    {
+        public PaymentLocationData(
+            System.String countryCode,
+            System.String creditCardPrefix,
+            System.String ipAddress)
+        {
+            this.CountryCode = countryCode;
+            this.CreditCardPrefix = creditCardPrefix;
+            this.IpAddress = ipAddress;
+        }
+    }
+}
+namespace Fifthweek.Api.Payments.Queries
+{
+    using System;
+    using System.Linq;
+    using Fifthweek.Api.Core;
+    using Fifthweek.Api.Identity.Shared.Membership;
+    using Fifthweek.Api.Payments.Controllers;
+    using Fifthweek.CodeGeneration;
+    using Fifthweek.Shared;
+    using System.Threading.Tasks;
+    using Fifthweek.Payments.Services.Credit;
+    using Fifthweek.Payments.Services.Credit.Taxamo;
+
+    public partial class GetCreditRequestSummaryQuery
+    {
+        public partial class LocationData 
+        {
+            public LocationData(
+                Fifthweek.Api.Payments.ValidCountryCode countryCode,
+                Fifthweek.Api.Payments.ValidCreditCardPrefix creditCardPrefix,
+                Fifthweek.Api.Payments.ValidIpAddress ipAddress)
+            {
+                this.CountryCode = countryCode;
+                this.CreditCardPrefix = creditCardPrefix;
+                this.IpAddress = ipAddress;
+            }
+        }
+    }
+}
 
 namespace Fifthweek.Api.Payments.Commands
 {
@@ -582,6 +628,9 @@ namespace Fifthweek.Api.Payments.Commands
     using Fifthweek.Api.Persistence.Identity;
     using Fifthweek.Payments.Services.Credit;
     using Fifthweek.Payments.Services.Credit.Stripe;
+    using System.Runtime.ExceptionServices;
+    using Fifthweek.Payments;
+    using Fifthweek.Payments.Stripe;
 
     public partial class ApplyCreditRequestCommand 
     {
@@ -663,6 +712,9 @@ namespace Fifthweek.Api.Payments.Commands
     using Fifthweek.Api.Persistence.Identity;
     using Fifthweek.Payments.Services.Credit;
     using Fifthweek.Payments.Services.Credit.Stripe;
+    using System.Runtime.ExceptionServices;
+    using Fifthweek.Payments;
+    using Fifthweek.Payments.Stripe;
 
     public partial class UpdatePaymentOriginCommand 
     {
@@ -754,6 +806,7 @@ namespace Fifthweek.Api.Payments.Controllers
     using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.Api.Payments.Commands;
     using Fifthweek.Api.Payments.Queries;
+    using Fifthweek.Payments.Services.Credit.Taxamo;
 
     public partial class CreditRequestData 
     {
@@ -821,12 +874,13 @@ namespace Fifthweek.Api.Payments.Controllers
     using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.Api.Payments.Commands;
     using Fifthweek.Api.Payments.Queries;
+    using Fifthweek.Payments.Services.Credit.Taxamo;
 
     public partial class CreditRequestSummary 
     {
         public override string ToString()
         {
-            return string.Format("CreditRequestSummary({0}, {1}, {2}, {3}, \"{4}\", \"{5}\", \"{6}\")", this.Amount == null ? "null" : this.Amount.ToString(), this.TotalAmount == null ? "null" : this.TotalAmount.ToString(), this.TaxAmount == null ? "null" : this.TaxAmount.ToString(), this.TaxRate == null ? "null" : this.TaxRate.ToString(), this.TaxName == null ? "null" : this.TaxName.ToString(), this.TaxEntityName == null ? "null" : this.TaxEntityName.ToString(), this.CountryName == null ? "null" : this.CountryName.ToString());
+            return string.Format("CreditRequestSummary({0}, {1})", this.SubscriptionsAmount == null ? "null" : this.SubscriptionsAmount.ToString(), this.Calculation == null ? "null" : this.Calculation.ToString());
         }
         
         public override bool Equals(object obj)
@@ -854,50 +908,20 @@ namespace Fifthweek.Api.Payments.Controllers
             unchecked
             {
                 int hashCode = 0;
-                hashCode = (hashCode * 397) ^ (this.Amount != null ? this.Amount.GetHashCode() : 0);
-                hashCode = (hashCode * 397) ^ (this.TotalAmount != null ? this.TotalAmount.GetHashCode() : 0);
-                hashCode = (hashCode * 397) ^ (this.TaxAmount != null ? this.TaxAmount.GetHashCode() : 0);
-                hashCode = (hashCode * 397) ^ (this.TaxRate != null ? this.TaxRate.GetHashCode() : 0);
-                hashCode = (hashCode * 397) ^ (this.TaxName != null ? this.TaxName.GetHashCode() : 0);
-                hashCode = (hashCode * 397) ^ (this.TaxEntityName != null ? this.TaxEntityName.GetHashCode() : 0);
-                hashCode = (hashCode * 397) ^ (this.CountryName != null ? this.CountryName.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.SubscriptionsAmount != null ? this.SubscriptionsAmount.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.Calculation != null ? this.Calculation.GetHashCode() : 0);
                 return hashCode;
             }
         }
         
         protected bool Equals(CreditRequestSummary other)
         {
-            if (!object.Equals(this.Amount, other.Amount))
+            if (!object.Equals(this.SubscriptionsAmount, other.SubscriptionsAmount))
             {
                 return false;
             }
         
-            if (!object.Equals(this.TotalAmount, other.TotalAmount))
-            {
-                return false;
-            }
-        
-            if (!object.Equals(this.TaxAmount, other.TaxAmount))
-            {
-                return false;
-            }
-        
-            if (!object.Equals(this.TaxRate, other.TaxRate))
-            {
-                return false;
-            }
-        
-            if (!object.Equals(this.TaxName, other.TaxName))
-            {
-                return false;
-            }
-        
-            if (!object.Equals(this.TaxEntityName, other.TaxEntityName))
-            {
-                return false;
-            }
-        
-            if (!object.Equals(this.CountryName, other.CountryName))
+            if (!object.Equals(this.Calculation, other.Calculation))
             {
                 return false;
             }
@@ -918,6 +942,7 @@ namespace Fifthweek.Api.Payments.Controllers
     using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.Api.Payments.Commands;
     using Fifthweek.Api.Payments.Queries;
+    using Fifthweek.Payments.Services.Credit.Taxamo;
 
     public partial class PaymentOriginData 
     {
@@ -1002,7 +1027,7 @@ namespace Fifthweek.Api.Payments.Queries
     {
         public override string ToString()
         {
-            return string.Format("GetCreditRequestSummaryQuery({0}, {1})", this.Requester == null ? "null" : this.Requester.ToString(), this.UserId == null ? "null" : this.UserId.ToString());
+            return string.Format("GetCreditRequestSummaryQuery({0}, {1}, {2})", this.Requester == null ? "null" : this.Requester.ToString(), this.UserId == null ? "null" : this.UserId.ToString(), this.LocationDataOverride == null ? "null" : this.LocationDataOverride.ToString());
         }
         
         public override bool Equals(object obj)
@@ -1032,6 +1057,7 @@ namespace Fifthweek.Api.Payments.Queries
                 int hashCode = 0;
                 hashCode = (hashCode * 397) ^ (this.Requester != null ? this.Requester.GetHashCode() : 0);
                 hashCode = (hashCode * 397) ^ (this.UserId != null ? this.UserId.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.LocationDataOverride != null ? this.LocationDataOverride.GetHashCode() : 0);
                 return hashCode;
             }
         }
@@ -1048,7 +1074,162 @@ namespace Fifthweek.Api.Payments.Queries
                 return false;
             }
         
+            if (!object.Equals(this.LocationDataOverride, other.LocationDataOverride))
+            {
+                return false;
+            }
+        
             return true;
+        }
+    }
+}
+namespace Fifthweek.Api.Payments.Controllers
+{
+    using System;
+    using System.Linq;
+    using Fifthweek.CodeGeneration;
+    using Fifthweek.Shared;
+    using System.Threading.Tasks;
+    using System.Web.Http;
+    using Fifthweek.Api.Core;
+    using Fifthweek.Api.Identity.Shared.Membership;
+    using Fifthweek.Api.Payments.Commands;
+    using Fifthweek.Api.Payments.Queries;
+    using Fifthweek.Payments.Services.Credit.Taxamo;
+
+    public partial class PaymentLocationData 
+    {
+        public override string ToString()
+        {
+            return string.Format("PaymentLocationData(\"{0}\", \"{1}\", \"{2}\")", this.CountryCode == null ? "null" : this.CountryCode.ToString(), this.CreditCardPrefix == null ? "null" : this.CreditCardPrefix.ToString(), this.IpAddress == null ? "null" : this.IpAddress.ToString());
+        }
+        
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj))
+            {
+                return false;
+            }
+        
+            if (ReferenceEquals(this, obj))
+            {
+                return true;
+            }
+        
+            if (obj.GetType() != this.GetType())
+            {
+                return false;
+            }
+        
+            return this.Equals((PaymentLocationData)obj);
+        }
+        
+        public override int GetHashCode()
+        {
+            unchecked
+            {
+                int hashCode = 0;
+                hashCode = (hashCode * 397) ^ (this.CountryCode != null ? this.CountryCode.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.CreditCardPrefix != null ? this.CreditCardPrefix.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.IpAddress != null ? this.IpAddress.GetHashCode() : 0);
+                return hashCode;
+            }
+        }
+        
+        protected bool Equals(PaymentLocationData other)
+        {
+            if (!object.Equals(this.CountryCode, other.CountryCode))
+            {
+                return false;
+            }
+        
+            if (!object.Equals(this.CreditCardPrefix, other.CreditCardPrefix))
+            {
+                return false;
+            }
+        
+            if (!object.Equals(this.IpAddress, other.IpAddress))
+            {
+                return false;
+            }
+        
+            return true;
+        }
+    }
+}
+namespace Fifthweek.Api.Payments.Queries
+{
+    using System;
+    using System.Linq;
+    using Fifthweek.Api.Core;
+    using Fifthweek.Api.Identity.Shared.Membership;
+    using Fifthweek.Api.Payments.Controllers;
+    using Fifthweek.CodeGeneration;
+    using Fifthweek.Shared;
+    using System.Threading.Tasks;
+    using Fifthweek.Payments.Services.Credit;
+    using Fifthweek.Payments.Services.Credit.Taxamo;
+
+    public partial class GetCreditRequestSummaryQuery
+    {
+        public partial class LocationData 
+        {
+            public override string ToString()
+            {
+                return string.Format("LocationData({0}, {1}, {2})", this.CountryCode == null ? "null" : this.CountryCode.ToString(), this.CreditCardPrefix == null ? "null" : this.CreditCardPrefix.ToString(), this.IpAddress == null ? "null" : this.IpAddress.ToString());
+            }
+            
+            public override bool Equals(object obj)
+            {
+                if (ReferenceEquals(null, obj))
+                {
+                    return false;
+                }
+            
+                if (ReferenceEquals(this, obj))
+                {
+                    return true;
+                }
+            
+                if (obj.GetType() != this.GetType())
+                {
+                    return false;
+                }
+            
+                return this.Equals((LocationData)obj);
+            }
+            
+            public override int GetHashCode()
+            {
+                unchecked
+                {
+                    int hashCode = 0;
+                    hashCode = (hashCode * 397) ^ (this.CountryCode != null ? this.CountryCode.GetHashCode() : 0);
+                    hashCode = (hashCode * 397) ^ (this.CreditCardPrefix != null ? this.CreditCardPrefix.GetHashCode() : 0);
+                    hashCode = (hashCode * 397) ^ (this.IpAddress != null ? this.IpAddress.GetHashCode() : 0);
+                    return hashCode;
+                }
+            }
+            
+            protected bool Equals(LocationData other)
+            {
+                if (!object.Equals(this.CountryCode, other.CountryCode))
+                {
+                    return false;
+                }
+            
+                if (!object.Equals(this.CreditCardPrefix, other.CreditCardPrefix))
+                {
+                    return false;
+                }
+            
+                if (!object.Equals(this.IpAddress, other.IpAddress))
+                {
+                    return false;
+                }
+            
+                return true;
+            }
         }
     }
 }
@@ -1312,6 +1493,7 @@ namespace Fifthweek.Api.Payments.Controllers
     using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.Api.Payments.Commands;
     using Fifthweek.Api.Payments.Queries;
+    using Fifthweek.Payments.Services.Credit.Taxamo;
 
     public partial class CreditRequestData 
     {
@@ -1396,6 +1578,7 @@ namespace Fifthweek.Api.Payments.Controllers
     using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.Api.Payments.Commands;
     using Fifthweek.Api.Payments.Queries;
+    using Fifthweek.Payments.Services.Credit.Taxamo;
 
     public partial class PaymentOriginData 
     {
@@ -1503,6 +1686,108 @@ namespace Fifthweek.Api.Payments.Controllers
                 parsed1,
                 parsed2,
                 parsed3);
+        }    
+    }
+}
+namespace Fifthweek.Api.Payments.Controllers
+{
+    using System;
+    using System.Linq;
+    using Fifthweek.CodeGeneration;
+    using Fifthweek.Shared;
+    using System.Threading.Tasks;
+    using System.Web.Http;
+    using Fifthweek.Api.Core;
+    using Fifthweek.Api.Identity.Shared.Membership;
+    using Fifthweek.Api.Payments.Commands;
+    using Fifthweek.Api.Payments.Queries;
+    using Fifthweek.Payments.Services.Credit.Taxamo;
+
+    public partial class PaymentLocationData 
+    {
+        public class Parsed
+        {
+            public Parsed(
+                ValidCountryCode countryCode,
+                ValidCreditCardPrefix creditCardPrefix,
+                ValidIpAddress ipAddress)
+            {
+                this.CountryCode = countryCode;
+                this.CreditCardPrefix = creditCardPrefix;
+                this.IpAddress = ipAddress;
+            }
+        
+            public ValidCountryCode CountryCode { get; private set; }
+        
+            public ValidCreditCardPrefix CreditCardPrefix { get; private set; }
+        
+            public ValidIpAddress IpAddress { get; private set; }
+        }
+    }
+
+    public static partial class PaymentLocationDataExtensions
+    {
+        public static PaymentLocationData.Parsed Parse(this PaymentLocationData target)
+        {
+            var modelStateDictionary = new System.Web.Http.ModelBinding.ModelStateDictionary();
+        
+            ValidCountryCode parsed0 = null;
+            if (!ValidCountryCode.IsEmpty(target.CountryCode))
+            {
+                System.Collections.Generic.IReadOnlyCollection<string> parsed0Errors;
+                if (!ValidCountryCode.TryParse(target.CountryCode, out parsed0, out parsed0Errors))
+                {
+                    var modelState = new System.Web.Http.ModelBinding.ModelState();
+                    foreach (var errorMessage in parsed0Errors)
+                    {
+                        modelState.Errors.Add(errorMessage);
+                    }
+
+                    modelStateDictionary.Add("CountryCode", modelState);
+                }
+            }
+
+            ValidCreditCardPrefix parsed1 = null;
+            if (!ValidCreditCardPrefix.IsEmpty(target.CreditCardPrefix))
+            {
+                System.Collections.Generic.IReadOnlyCollection<string> parsed1Errors;
+                if (!ValidCreditCardPrefix.TryParse(target.CreditCardPrefix, out parsed1, out parsed1Errors))
+                {
+                    var modelState = new System.Web.Http.ModelBinding.ModelState();
+                    foreach (var errorMessage in parsed1Errors)
+                    {
+                        modelState.Errors.Add(errorMessage);
+                    }
+
+                    modelStateDictionary.Add("CreditCardPrefix", modelState);
+                }
+            }
+
+            ValidIpAddress parsed2 = null;
+            if (!ValidIpAddress.IsEmpty(target.IpAddress))
+            {
+                System.Collections.Generic.IReadOnlyCollection<string> parsed2Errors;
+                if (!ValidIpAddress.TryParse(target.IpAddress, out parsed2, out parsed2Errors))
+                {
+                    var modelState = new System.Web.Http.ModelBinding.ModelState();
+                    foreach (var errorMessage in parsed2Errors)
+                    {
+                        modelState.Errors.Add(errorMessage);
+                    }
+
+                    modelStateDictionary.Add("IpAddress", modelState);
+                }
+            }
+
+            if (!modelStateDictionary.IsValid)
+            {
+                throw new Fifthweek.Api.Core.ModelValidationException(modelStateDictionary);
+            }
+        
+            return new PaymentLocationData.Parsed(
+                parsed0,
+                parsed1,
+                parsed2);
         }    
     }
 }

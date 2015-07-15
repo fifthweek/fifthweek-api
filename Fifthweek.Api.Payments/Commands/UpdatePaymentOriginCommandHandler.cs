@@ -28,22 +28,24 @@
 
             await this.requesterSecurity.AuthenticateAsAsync(command.Requester, command.UserId);
 
-            var isTestUser = await this.requesterSecurity.IsInRoleAsync(command.Requester, FifthweekRole.TestUser);
-            var stripeMode = isTestUser ? UserType.TestUser : UserType.StandardUser;
+            var userType = await this.requesterSecurity.GetUserTypeAsync(command.Requester);
 
             var origin = await this.getUserPaymentOrigin.ExecuteAsync(command.UserId);
 
             var stripeCustomerId = origin == null ? null : origin.StripeCustomerId;
-            
-            if (stripeCustomerId != null)
+
+            if (command.StripeToken != null)
             {
-                // If exists, update customer in stripe.
-                await this.updateStripeCustomerCreditCard.ExecuteAsync(command.UserId, stripeCustomerId, command.StripeToken.Value, stripeMode);
-            }
-            else
-            {
-                // If not exists, create customer in stripe.
-                stripeCustomerId = await this.createStripeCustomer.ExecuteAsync(command.UserId, command.StripeToken.Value, stripeMode);
+                if (stripeCustomerId != null)
+                {
+                    // If exists, update customer in stripe.
+                    await this.updateStripeCustomerCreditCard.ExecuteAsync(command.UserId, stripeCustomerId, command.StripeToken.Value, userType);
+                }
+                else
+                {
+                    // If not exists, create customer in stripe.
+                    stripeCustomerId = await this.createStripeCustomer.ExecuteAsync(command.UserId, command.StripeToken.Value, userType);
+                }
             }
 
             // Update origin.

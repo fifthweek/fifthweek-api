@@ -22,12 +22,12 @@ namespace Taxamo.Model {
     
     /* Amount (without tax) to be refunded. Either amount or total amount is required. */
     [DataMember(Name="amount", EmitDefaultValue=false)]
-    public double? Amount { get; set; }
+    public decimal? Amount { get; set; }
 
     
     /* Total amount, including tax, to be refunded. Either amount or total amount is required. */
     [DataMember(Name="total_amount", EmitDefaultValue=false)]
-    public double? TotalAmount { get; set; }
+    public decimal? TotalAmount { get; set; }
 
     
 

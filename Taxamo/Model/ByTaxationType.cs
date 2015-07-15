@@ -12,17 +12,17 @@ namespace Taxamo.Model {
     
     /* Number of taxed transactions. */
     [DataMember(Name="taxed_count", EmitDefaultValue=false)]
-    public double? TaxedCount { get; set; }
+    public decimal? TaxedCount { get; set; }
 
     
     /* Number of tax deducted transactions. */
     [DataMember(Name="deducted_count", EmitDefaultValue=false)]
-    public double? DeductedCount { get; set; }
+    public decimal? DeductedCount { get; set; }
 
     
     /* Total number of transactions */
     [DataMember(Name="transactions_count", EmitDefaultValue=false)]
-    public double? TransactionsCount { get; set; }
+    public decimal? TransactionsCount { get; set; }
 
     
     /* Total EU B2B transaction count. */

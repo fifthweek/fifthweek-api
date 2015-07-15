@@ -8,6 +8,7 @@
     using Fifthweek.Api.Payments.Commands;
     using Fifthweek.Api.Payments.Queries;
     using Fifthweek.CodeGeneration;
+    using Fifthweek.Payments.Services.Credit.Taxamo;
     using Fifthweek.Shared;
 
     [AutoConstructor]
@@ -57,16 +58,29 @@
         }
 
         [Route("creditRequestSummaries/{userId}")]
-        public Task<CreditRequestSummary> GetCreditRequestSummaryAsync(string userId)
+        public Task<CreditRequestSummary> GetCreditRequestSummaryAsync(
+            string userId,
+            [FromUri]string countryCode = null,
+            [FromUri]string creditCardPrefix = null,
+            [FromUri]string ipAddress = null)
         {
             userId.AssertUrlParameterProvided("userId");
+
+            var parsedData = creditCardPrefix == null && ipAddress == null && countryCode == null 
+                ? null 
+                : new PaymentLocationData(countryCode, creditCardPrefix, ipAddress).Parse();
+
+            var locationData = parsedData == null 
+                ? null
+                : new GetCreditRequestSummaryQuery.LocationData(parsedData.CountryCode, parsedData.CreditCardPrefix, parsedData.IpAddress);
 
             var userIdObject = new UserId(userId.DecodeGuid());
             var requester = this.requesterContext.GetRequester();
 
             return this.getCreditRequestSummary.HandleAsync(new GetCreditRequestSummaryQuery(
                 requester, 
-                userIdObject));
+                userIdObject,
+                locationData));
         }
     }
 }

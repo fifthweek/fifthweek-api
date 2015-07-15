@@ -17,7 +17,7 @@ namespace Taxamo.Model {
     
     /* Transaction count. */
     [DataMember(Name="value", EmitDefaultValue=false)]
-    public double? Value { get; set; }
+    public decimal? Value { get; set; }
 
     
     /* Transaction status (C or N). */

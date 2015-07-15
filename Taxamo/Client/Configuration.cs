@@ -11,7 +11,7 @@ namespace Taxamo.Client {
     /// Gets or sets the API client. This is the default API client for making HTTP calls.
     /// </summary>
     /// <value>The API client.</value>
-    public static ApiClient apiClient = new ApiClient();
+    public static ApiClient apiClient = null;
 
     /// <summary>
     /// Gets or sets the username (HTTP basic authentication)

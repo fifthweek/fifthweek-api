@@ -18,7 +18,7 @@ namespace Taxamo.Model {
     
     /* Deducted tax amount, calculated by taxmo. */
     [DataMember(Name="deducted_tax_amount", EmitDefaultValue=false)]
-    public double? DeductedTaxAmount { get; set; }
+    public decimal? DeductedTaxAmount { get; set; }
 
     
     /* Date of supply in yyyy-MM-dd format. */
@@ -28,12 +28,12 @@ namespace Taxamo.Model {
     
     /* Generated id. */
     [DataMember(Name="id", EmitDefaultValue=false)]
-    public double? Id { get; set; }
+    public decimal? Id { get; set; }
 
     
     /* Unit price. */
     [DataMember(Name="unit_price", EmitDefaultValue=false)]
-    public double? UnitPrice { get; set; }
+    public decimal? UnitPrice { get; set; }
 
     
     /* Unit of measure. */
@@ -43,7 +43,7 @@ namespace Taxamo.Model {
     
     /* Quantity Defaults to 1. */
     [DataMember(Name="quantity", EmitDefaultValue=false)]
-    public double? Quantity { get; set; }
+    public decimal? Quantity { get; set; }
 
     
     /* Custom fields, stored as key-value pairs. This property is not processed and used mostly with Taxamo-built helpers. */
@@ -68,7 +68,7 @@ namespace Taxamo.Model {
     
     /* Amount. Required if total amount is not provided. */
     [DataMember(Name="amount", EmitDefaultValue=false)]
-    public double? Amount { get; set; }
+    public decimal? Amount { get; set; }
 
     
     /* Custom id, provided by ecommerce software. */
@@ -83,12 +83,12 @@ namespace Taxamo.Model {
     
     /* Tax amount, calculated by taxamo. */
     [DataMember(Name="tax_amount", EmitDefaultValue=false)]
-    public double? TaxAmount { get; set; }
+    public decimal? TaxAmount { get; set; }
 
     
     /* Tax rate, calculated by taxamo. Must be provided when informative field is true. */
     [DataMember(Name="tax_rate", EmitDefaultValue=false)]
-    public double? TaxRate { get; set; }
+    public decimal? TaxRate { get; set; }
 
     
     /* Additional currency information - can be used to receive additional information about invoice in another currency. */
@@ -98,12 +98,12 @@ namespace Taxamo.Model {
     
     /* Total amount. Required if amount is not provided. */
     [DataMember(Name="total_amount", EmitDefaultValue=false)]
-    public double? TotalAmount { get; set; }
+    public decimal? TotalAmount { get; set; }
 
     
     /* Refunded tax amount, calculated by taxmo. */
     [DataMember(Name="refunded_tax_amount", EmitDefaultValue=false)]
-    public double? RefundedTaxAmount { get; set; }
+    public decimal? RefundedTaxAmount { get; set; }
 
     
     /* Line contents description. */
@@ -113,7 +113,7 @@ namespace Taxamo.Model {
     
     /* Refunded total amount, calculated by taxmo. */
     [DataMember(Name="refunded_total_amount", EmitDefaultValue=false)]
-    public double? RefundedTotalAmount { get; set; }
+    public decimal? RefundedTotalAmount { get; set; }
 
     
 

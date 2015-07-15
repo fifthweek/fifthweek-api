@@ -12,6 +12,13 @@
         {
         }
 
+        public UserPaymentOriginResult(string countryCode, string creditCardPrefix, string ipAddress)
+        {
+            this.CountryCode = countryCode;
+            this.CreditCardPrefix = creditCardPrefix;
+            this.IpAddress = ipAddress;
+        }
+
         [Optional]
         public string StripeCustomerId { get; private set; }
 
