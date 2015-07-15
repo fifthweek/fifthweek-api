@@ -1081,12 +1081,15 @@ describe('payments stub', function() {
 
   it('should get credit request summary', function() {
     var userId = 'value0';
+    var countryCode = 'value1';
+    var creditCardPrefix = 'value2';
+    var ipAddress = 'value3';
 
     var responseData = 'response data';
-    $httpBackend.expectGET(fifthweekConstants.apiBaseUri + 'payment/creditRequestSummaries/' + encodeURIComponent(userId)).respond(200, responseData);
+    $httpBackend.expectGET(fifthweekConstants.apiBaseUri + 'payment/creditRequestSummaries/' + encodeURIComponent(userId) + '?' + (countryCode === undefined ? '' : 'countryCode=' + encodeURIComponent(countryCode) + '&') + (creditCardPrefix === undefined ? '' : 'creditCardPrefix=' + encodeURIComponent(creditCardPrefix) + '&') + (ipAddress === undefined ? '' : 'ipAddress=' + encodeURIComponent(ipAddress) + '&')).respond(200, responseData);
 
     var result = null;
-    target.getCreditRequestSummary(userId).then(function(response) { result = response.data; });
+    target.getCreditRequestSummary(userId, countryCode, creditCardPrefix, ipAddress).then(function(response) { result = response.data; });
 
     $httpBackend.flush();
     $rootScope.$apply();

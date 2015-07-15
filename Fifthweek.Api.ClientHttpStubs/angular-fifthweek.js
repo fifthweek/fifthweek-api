@@ -11,13 +11,13 @@
     //   payments: false
     // }
     service.get = function() {
-      return $http.get(apiBaseUri + 'availability').catch(function(response) {
+      return $http.get(utilities.fixUri(apiBaseUri + 'availability')).catch(function(response) {
         return $q.reject(utilities.getHttpError(response));
       });
     };
 
     service.head = function() {
-      return $http.get(apiBaseUri + 'availability').catch(function(response) {
+      return $http.get(utilities.fixUri(apiBaseUri + 'availability')).catch(function(response) {
         return $q.reject(utilities.getHttpError(response));
       });
     };
@@ -41,7 +41,7 @@ angular.module('webApp').factory('channelStub',
     // }
     // result = 'Base64Guid'
     service.postChannel = function(newChannelData) {
-      return $http.post(apiBaseUri + 'channels', newChannelData).catch(function(response) {
+      return $http.post(utilities.fixUri(apiBaseUri + 'channels'), newChannelData).catch(function(response) {
         return $q.reject(utilities.getHttpError(response));
       });
     };
@@ -54,14 +54,14 @@ angular.module('webApp').factory('channelStub',
     //   isVisibleToNonSubscribers: false
     // }
     service.putChannel = function(channelId, channelData) {
-      return $http.put(apiBaseUri + 'channels/' + encodeURIComponent(channelId), channelData).catch(function(response) {
+      return $http.put(utilities.fixUri(apiBaseUri + 'channels/' + encodeURIComponent(channelId)), channelData).catch(function(response) {
         return $q.reject(utilities.getHttpError(response));
       });
     };
 
     // channelId = 'Base64Guid'
     service.deleteChannel = function(channelId) {
-      return $http.delete(apiBaseUri + 'channels/' + encodeURIComponent(channelId)).catch(function(response) {
+      return $http.delete(utilities.fixUri(apiBaseUri + 'channels/' + encodeURIComponent(channelId))).catch(function(response) {
         return $q.reject(utilities.getHttpError(response));
       });
     };
@@ -85,7 +85,7 @@ angular.module('webApp').factory('collectionStub',
     //   defaultWeeklyReleaseTime: 0
     // }
     service.postCollection = function(newCollectionData) {
-      return $http.post(apiBaseUri + 'collections', newCollectionData).catch(function(response) {
+      return $http.post(utilities.fixUri(apiBaseUri + 'collections'), newCollectionData).catch(function(response) {
         return $q.reject(utilities.getHttpError(response));
       });
     };
@@ -98,14 +98,14 @@ angular.module('webApp').factory('collectionStub',
     //   ]
     // }
     service.putCollection = function(collectionId, collectionData) {
-      return $http.put(apiBaseUri + 'collections/' + encodeURIComponent(collectionId), collectionData).catch(function(response) {
+      return $http.put(utilities.fixUri(apiBaseUri + 'collections/' + encodeURIComponent(collectionId)), collectionData).catch(function(response) {
         return $q.reject(utilities.getHttpError(response));
       });
     };
 
     // collectionId = 'Base64Guid'
     service.deleteCollection = function(collectionId) {
-      return $http.delete(apiBaseUri + 'collections/' + encodeURIComponent(collectionId)).catch(function(response) {
+      return $http.delete(utilities.fixUri(apiBaseUri + 'collections/' + encodeURIComponent(collectionId))).catch(function(response) {
         return $q.reject(utilities.getHttpError(response));
       });
     };
@@ -113,7 +113,7 @@ angular.module('webApp').factory('collectionStub',
     // collectionId = 'Base64Guid'
     // result = '2015-12-25T14:45:05Z'
     service.getLiveDateOfNewQueuedPost = function(collectionId) {
-      return $http.get(apiBaseUri + 'collections/' + encodeURIComponent(collectionId) + '/newQueuedPostLiveDate').catch(function(response) {
+      return $http.get(utilities.fixUri(apiBaseUri + 'collections/' + encodeURIComponent(collectionId) + '/newQueuedPostLiveDate')).catch(function(response) {
         return $q.reject(utilities.getHttpError(response));
       });
     };
@@ -130,7 +130,7 @@ angular.module('webApp').factory('endToEndTestInboxStub',
 
     // mailboxName = ''
     service.getLatestMessageAndClearMailbox = function(mailboxName) {
-      return $http.get(apiBaseUri + 'testMailboxes/' + encodeURIComponent(mailboxName)).catch(function(response) {
+      return $http.get(utilities.fixUri(apiBaseUri + 'testMailboxes/' + encodeURIComponent(mailboxName))).catch(function(response) {
         return $q.reject(utilities.getHttpError(response));
       });
     };
@@ -159,7 +159,7 @@ angular.module('webApp').factory('accountSettingsStub',
     //   hasPaymentInformation: false
     // }
     service.get = function(userId) {
-      return $http.get(apiBaseUri + 'accountSettings/' + encodeURIComponent(userId)).catch(function(response) {
+      return $http.get(utilities.fixUri(apiBaseUri + 'accountSettings/' + encodeURIComponent(userId))).catch(function(response) {
         return $q.reject(utilities.getHttpError(response));
       });
     };
@@ -172,7 +172,7 @@ angular.module('webApp').factory('accountSettingsStub',
     //   newProfileImageId: 'Base64Guid' /* optional */
     // }
     service.put = function(userId, updatedAccountSettingsData) {
-      return $http.put(apiBaseUri + 'accountSettings/' + encodeURIComponent(userId), updatedAccountSettingsData).catch(function(response) {
+      return $http.put(utilities.fixUri(apiBaseUri + 'accountSettings/' + encodeURIComponent(userId)), updatedAccountSettingsData).catch(function(response) {
         return $q.reject(utilities.getHttpError(response));
       });
     };
@@ -182,7 +182,7 @@ angular.module('webApp').factory('accountSettingsStub',
     //   name: ''
     // }
     service.putCreatorInformation = function(userId, creatorInformation) {
-      return $http.put(apiBaseUri + 'accountSettings/' + encodeURIComponent(userId) + '/creatorInformation', creatorInformation).catch(function(response) {
+      return $http.put(utilities.fixUri(apiBaseUri + 'accountSettings/' + encodeURIComponent(userId) + '/creatorInformation'), creatorInformation).catch(function(response) {
         return $q.reject(utilities.getHttpError(response));
       });
     };
@@ -205,14 +205,14 @@ angular.module('webApp').factory('membershipStub',
     //   creatorName: '' /* optional */
     // }
     service.postRegistration = function(registrationData) {
-      return $http.post(apiBaseUri + 'membership/registrations', registrationData).catch(function(response) {
+      return $http.post(utilities.fixUri(apiBaseUri + 'membership/registrations'), registrationData).catch(function(response) {
         return $q.reject(utilities.getHttpError(response));
       });
     };
 
     // username = ''
     service.getUsernameAvailability = function(username) {
-      return $http.get(apiBaseUri + 'membership/availableUsernames/' + encodeURIComponent(username)).catch(function(response) {
+      return $http.get(utilities.fixUri(apiBaseUri + 'membership/availableUsernames/' + encodeURIComponent(username))).catch(function(response) {
         return $q.reject(utilities.getHttpError(response));
       });
     };
@@ -222,7 +222,7 @@ angular.module('webApp').factory('membershipStub',
     //   username: '' /* optional */
     // }
     service.postPasswordResetRequest = function(passwordResetRequestData) {
-      return $http.post(apiBaseUri + 'membership/passwordResetRequests', passwordResetRequestData).catch(function(response) {
+      return $http.post(utilities.fixUri(apiBaseUri + 'membership/passwordResetRequests'), passwordResetRequestData).catch(function(response) {
         return $q.reject(utilities.getHttpError(response));
       });
     };
@@ -233,7 +233,7 @@ angular.module('webApp').factory('membershipStub',
     //   token: ''
     // }
     service.postPasswordResetConfirmation = function(passwordResetConfirmationData) {
-      return $http.post(apiBaseUri + 'membership/passwordResetConfirmations', passwordResetConfirmationData).catch(function(response) {
+      return $http.post(utilities.fixUri(apiBaseUri + 'membership/passwordResetConfirmations'), passwordResetConfirmationData).catch(function(response) {
         return $q.reject(utilities.getHttpError(response));
       });
     };
@@ -241,7 +241,7 @@ angular.module('webApp').factory('membershipStub',
     // userId = 'Base64Guid'
     // token = ''
     service.getPasswordResetTokenValidity = function(userId, token) {
-      return $http.get(apiBaseUri + 'membership/passwordResetTokens/' + encodeURIComponent(userId) + '?' + (token === undefined ? '' : 'token=' + encodeURIComponent(token) + '&')).catch(function(response) {
+      return $http.get(utilities.fixUri(apiBaseUri + 'membership/passwordResetTokens/' + encodeURIComponent(userId) + '?' + (token === undefined ? '' : 'token=' + encodeURIComponent(token) + '&'))).catch(function(response) {
         return $q.reject(utilities.getHttpError(response));
       });
     };
@@ -251,7 +251,7 @@ angular.module('webApp').factory('membershipStub',
     //   email: ''
     // }
     service.postRegisteredInterest = function(registerInterestData) {
-      return $http.post(apiBaseUri + 'membership/registeredInterest', registerInterestData).catch(function(response) {
+      return $http.post(utilities.fixUri(apiBaseUri + 'membership/registeredInterest'), registerInterestData).catch(function(response) {
         return $q.reject(utilities.getHttpError(response));
       });
     };
@@ -263,7 +263,7 @@ angular.module('webApp').factory('membershipStub',
     //   email: ''
     // }
     service.postIdentifiedUser = function(identifiedUserData) {
-      return $http.post(apiBaseUri + 'membership/identifiedUsers', identifiedUserData).catch(function(response) {
+      return $http.post(utilities.fixUri(apiBaseUri + 'membership/identifiedUsers'), identifiedUserData).catch(function(response) {
         return $q.reject(utilities.getHttpError(response));
       });
     };
@@ -283,7 +283,7 @@ angular.module('webApp').factory('logStub',
     //   payload: { arbitrary: 'json' }
     // }
     service.post = function(logMessage) {
-      return $http.post(apiBaseUri + 'log', logMessage).catch(function(response) {
+      return $http.post(utilities.fixUri(apiBaseUri + 'log'), logMessage).catch(function(response) {
         return $q.reject(utilities.getHttpError(response));
       });
     };
@@ -338,7 +338,7 @@ angular.module('webApp').factory('postsStub',
     //   }
     // ]
     service.getCreatorBacklog = function(creatorId) {
-      return $http.get(apiBaseUri + 'posts/creatorBacklog/' + encodeURIComponent(creatorId)).catch(function(response) {
+      return $http.get(utilities.fixUri(apiBaseUri + 'posts/creatorBacklog/' + encodeURIComponent(creatorId))).catch(function(response) {
         return $q.reject(utilities.getHttpError(response));
       });
     };
@@ -386,7 +386,7 @@ angular.module('webApp').factory('postsStub',
     //   }
     // ]
     service.getCreatorNewsfeed = function(creatorId, newsfeedPaginationData) {
-      return $http.get(apiBaseUri + 'posts/creatorNewsfeed/' + encodeURIComponent(creatorId) + '?' + (newsfeedPaginationData.startIndex === undefined ? '' : 'startIndex=' + encodeURIComponent(newsfeedPaginationData.startIndex) + '&') + (newsfeedPaginationData.count === undefined ? '' : 'count=' + encodeURIComponent(newsfeedPaginationData.count) + '&')).catch(function(response) {
+      return $http.get(utilities.fixUri(apiBaseUri + 'posts/creatorNewsfeed/' + encodeURIComponent(creatorId) + '?' + (newsfeedPaginationData.startIndex === undefined ? '' : 'startIndex=' + encodeURIComponent(newsfeedPaginationData.startIndex) + '&') + (newsfeedPaginationData.count === undefined ? '' : 'count=' + encodeURIComponent(newsfeedPaginationData.count) + '&'))).catch(function(response) {
         return $q.reject(utilities.getHttpError(response));
       });
     };
@@ -443,14 +443,14 @@ angular.module('webApp').factory('postsStub',
     //   accountBalance: 0
     // }
     service.getNewsfeed = function(filter) {
-      return $http.get(apiBaseUri + 'posts/newsfeed?' + (filter.creatorId === undefined ? '' : 'creatorId=' + encodeURIComponent(filter.creatorId) + '&') + (filter.channelId === undefined ? '' : 'channelId=' + encodeURIComponent(filter.channelId) + '&') + (filter.collectionId === undefined ? '' : 'collectionId=' + encodeURIComponent(filter.collectionId) + '&') + (filter.origin === undefined ? '' : 'origin=' + encodeURIComponent(filter.origin) + '&') + (filter.searchForwards === undefined ? '' : 'searchForwards=' + encodeURIComponent(filter.searchForwards) + '&') + (filter.startIndex === undefined ? '' : 'startIndex=' + encodeURIComponent(filter.startIndex) + '&') + (filter.count === undefined ? '' : 'count=' + encodeURIComponent(filter.count) + '&')).catch(function(response) {
+      return $http.get(utilities.fixUri(apiBaseUri + 'posts/newsfeed?' + (filter.creatorId === undefined ? '' : 'creatorId=' + encodeURIComponent(filter.creatorId) + '&') + (filter.channelId === undefined ? '' : 'channelId=' + encodeURIComponent(filter.channelId) + '&') + (filter.collectionId === undefined ? '' : 'collectionId=' + encodeURIComponent(filter.collectionId) + '&') + (filter.origin === undefined ? '' : 'origin=' + encodeURIComponent(filter.origin) + '&') + (filter.searchForwards === undefined ? '' : 'searchForwards=' + encodeURIComponent(filter.searchForwards) + '&') + (filter.startIndex === undefined ? '' : 'startIndex=' + encodeURIComponent(filter.startIndex) + '&') + (filter.count === undefined ? '' : 'count=' + encodeURIComponent(filter.count) + '&'))).catch(function(response) {
         return $q.reject(utilities.getHttpError(response));
       });
     };
 
     // postId = 'Base64Guid'
     service.deletePost = function(postId) {
-      return $http.delete(apiBaseUri + 'posts/' + encodeURIComponent(postId)).catch(function(response) {
+      return $http.delete(utilities.fixUri(apiBaseUri + 'posts/' + encodeURIComponent(postId))).catch(function(response) {
         return $q.reject(utilities.getHttpError(response));
       });
     };
@@ -460,21 +460,21 @@ angular.module('webApp').factory('postsStub',
     //   'Base64Guid'
     // ]
     service.postNewQueueOrder = function(collectionId, newQueueOrder) {
-      return $http.post(apiBaseUri + 'posts/queues/' + encodeURIComponent(collectionId), newQueueOrder).catch(function(response) {
+      return $http.post(utilities.fixUri(apiBaseUri + 'posts/queues/' + encodeURIComponent(collectionId)), newQueueOrder).catch(function(response) {
         return $q.reject(utilities.getHttpError(response));
       });
     };
 
     // postId = 'Base64Guid'
     service.postToQueue = function(postId) {
-      return $http.post(apiBaseUri + 'posts/queued', JSON.stringify(postId)).catch(function(response) {
+      return $http.post(utilities.fixUri(apiBaseUri + 'posts/queued'), JSON.stringify(postId)).catch(function(response) {
         return $q.reject(utilities.getHttpError(response));
       });
     };
 
     // postId = 'Base64Guid'
     service.postToLive = function(postId) {
-      return $http.post(apiBaseUri + 'posts/live', JSON.stringify(postId)).catch(function(response) {
+      return $http.post(utilities.fixUri(apiBaseUri + 'posts/live'), JSON.stringify(postId)).catch(function(response) {
         return $q.reject(utilities.getHttpError(response));
       });
     };
@@ -482,7 +482,7 @@ angular.module('webApp').factory('postsStub',
     // postId = 'Base64Guid'
     // newLiveDate = '2015-12-25T14:45:05Z'
     service.putLiveDate = function(postId, newLiveDate) {
-      return $http.put(apiBaseUri + 'posts/' + encodeURIComponent(postId) + '/liveDate', newLiveDate).catch(function(response) {
+      return $http.put(utilities.fixUri(apiBaseUri + 'posts/' + encodeURIComponent(postId) + '/liveDate'), newLiveDate).catch(function(response) {
         return $q.reject(utilities.getHttpError(response));
       });
     };
@@ -493,7 +493,7 @@ angular.module('webApp').factory('postsStub',
     //   scheduledPostTime: '2015-12-25T14:45:05Z' /* optional */
     // }
     service.postNote = function(noteData) {
-      return $http.post(apiBaseUri + 'posts/notes', noteData).catch(function(response) {
+      return $http.post(utilities.fixUri(apiBaseUri + 'posts/notes'), noteData).catch(function(response) {
         return $q.reject(utilities.getHttpError(response));
       });
     };
@@ -504,7 +504,7 @@ angular.module('webApp').factory('postsStub',
     //   note: ''
     // }
     service.putNote = function(postId, noteData) {
-      return $http.put(apiBaseUri + 'posts/notes/' + encodeURIComponent(postId), noteData).catch(function(response) {
+      return $http.put(utilities.fixUri(apiBaseUri + 'posts/notes/' + encodeURIComponent(postId)), noteData).catch(function(response) {
         return $q.reject(utilities.getHttpError(response));
       });
     };
@@ -517,7 +517,7 @@ angular.module('webApp').factory('postsStub',
     //   isQueued: false
     // }
     service.postImage = function(imageData) {
-      return $http.post(apiBaseUri + 'posts/images', imageData).catch(function(response) {
+      return $http.post(utilities.fixUri(apiBaseUri + 'posts/images'), imageData).catch(function(response) {
         return $q.reject(utilities.getHttpError(response));
       });
     };
@@ -528,7 +528,7 @@ angular.module('webApp').factory('postsStub',
     //   comment: '' /* optional */
     // }
     service.putImage = function(postId, imageData) {
-      return $http.put(apiBaseUri + 'posts/images/' + encodeURIComponent(postId), imageData).catch(function(response) {
+      return $http.put(utilities.fixUri(apiBaseUri + 'posts/images/' + encodeURIComponent(postId)), imageData).catch(function(response) {
         return $q.reject(utilities.getHttpError(response));
       });
     };
@@ -541,7 +541,7 @@ angular.module('webApp').factory('postsStub',
     //   isQueued: false
     // }
     service.postFile = function(fileData) {
-      return $http.post(apiBaseUri + 'posts/files', fileData).catch(function(response) {
+      return $http.post(utilities.fixUri(apiBaseUri + 'posts/files'), fileData).catch(function(response) {
         return $q.reject(utilities.getHttpError(response));
       });
     };
@@ -552,7 +552,7 @@ angular.module('webApp').factory('postsStub',
     //   comment: '' /* optional */
     // }
     service.putFile = function(postId, fileData) {
-      return $http.put(apiBaseUri + 'posts/files/' + encodeURIComponent(postId), fileData).catch(function(response) {
+      return $http.put(utilities.fixUri(apiBaseUri + 'posts/files/' + encodeURIComponent(postId)), fileData).catch(function(response) {
         return $q.reject(utilities.getHttpError(response));
       });
     };
@@ -579,7 +579,7 @@ angular.module('webApp').factory('blogAccessStub',
     //   ]
     // }
     service.putFreeAccessList = function(blogId, data) {
-      return $http.put(apiBaseUri + 'blogAccess/freeAccessList/' + encodeURIComponent(blogId), data).catch(function(response) {
+      return $http.put(utilities.fixUri(apiBaseUri + 'blogAccess/freeAccessList/' + encodeURIComponent(blogId)), data).catch(function(response) {
         return $q.reject(utilities.getHttpError(response));
       });
     };
@@ -598,7 +598,7 @@ angular.module('webApp').factory('blogAccessStub',
     //   ]
     // }
     service.getFreeAccessList = function(blogId) {
-      return $http.get(apiBaseUri + 'blogAccess/freeAccessList/' + encodeURIComponent(blogId)).catch(function(response) {
+      return $http.get(utilities.fixUri(apiBaseUri + 'blogAccess/freeAccessList/' + encodeURIComponent(blogId))).catch(function(response) {
         return $q.reject(utilities.getHttpError(response));
       });
     };
@@ -623,14 +623,14 @@ angular.module('webApp').factory('subscriptionStub',
     //   ]
     // }
     service.putBlogSubscriptions = function(blogId, subscriptionData) {
-      return $http.put(apiBaseUri + 'subscriptions/blogs/' + encodeURIComponent(blogId), subscriptionData).catch(function(response) {
+      return $http.put(utilities.fixUri(apiBaseUri + 'subscriptions/blogs/' + encodeURIComponent(blogId)), subscriptionData).catch(function(response) {
         return $q.reject(utilities.getHttpError(response));
       });
     };
 
     // channelId = 'Base64Guid'
     service.deleteChannelSubscription = function(channelId) {
-      return $http.delete(apiBaseUri + 'subscriptions/channels/' + encodeURIComponent(channelId)).catch(function(response) {
+      return $http.delete(utilities.fixUri(apiBaseUri + 'subscriptions/channels/' + encodeURIComponent(channelId))).catch(function(response) {
         return $q.reject(utilities.getHttpError(response));
       });
     };
@@ -640,7 +640,7 @@ angular.module('webApp').factory('subscriptionStub',
     //   acceptedPrice: 0
     // }
     service.putChannelSubscription = function(channelId, subscriptionData) {
-      return $http.put(apiBaseUri + 'subscriptions/channels/' + encodeURIComponent(channelId), subscriptionData).catch(function(response) {
+      return $http.put(utilities.fixUri(apiBaseUri + 'subscriptions/channels/' + encodeURIComponent(channelId)), subscriptionData).catch(function(response) {
         return $q.reject(utilities.getHttpError(response));
       });
     };
@@ -662,7 +662,7 @@ angular.module('webApp').factory('blogStub',
     // }
     // result = 'Base64Guid'
     service.postBlog = function(blogData) {
-      return $http.post(apiBaseUri + 'blogs', blogData).catch(function(response) {
+      return $http.post(utilities.fixUri(apiBaseUri + 'blogs'), blogData).catch(function(response) {
         return $q.reject(utilities.getHttpError(response));
       });
     };
@@ -677,7 +677,7 @@ angular.module('webApp').factory('blogStub',
     //   description: '' /* optional */
     // }
     service.putBlog = function(blogId, blogData) {
-      return $http.put(apiBaseUri + 'blogs/' + encodeURIComponent(blogId), blogData).catch(function(response) {
+      return $http.put(utilities.fixUri(apiBaseUri + 'blogs/' + encodeURIComponent(blogId)), blogData).catch(function(response) {
         return $q.reject(utilities.getHttpError(response));
       });
     };
@@ -724,7 +724,7 @@ angular.module('webApp').factory('blogStub',
     //   }
     // }
     service.getLandingPage = function(username) {
-      return $http.get(apiBaseUri + 'blogs/landingPages/' + encodeURIComponent(username)).catch(function(response) {
+      return $http.get(utilities.fixUri(apiBaseUri + 'blogs/landingPages/' + encodeURIComponent(username))).catch(function(response) {
         return $q.reject(utilities.getHttpError(response));
       });
     };
@@ -755,7 +755,7 @@ angular.module('webApp').factory('fileUploadStub',
     //   }
     // }
     service.postUploadRequest = function(data) {
-      return $http.post(apiBaseUri + 'files/uploadRequests', data).catch(function(response) {
+      return $http.post(utilities.fixUri(apiBaseUri + 'files/uploadRequests'), data).catch(function(response) {
         return $q.reject(utilities.getHttpError(response));
       });
     };
@@ -765,7 +765,7 @@ angular.module('webApp').factory('fileUploadStub',
     //   fileId: 'Base64Guid'
     // }
     service.postUploadCompleteNotification = function(data) {
-      return $http.post(apiBaseUri + 'files/uploadCompleteNotifications', data).catch(function(response) {
+      return $http.post(utilities.fixUri(apiBaseUri + 'files/uploadCompleteNotifications'), data).catch(function(response) {
         return $q.reject(utilities.getHttpError(response));
       });
     };
@@ -907,7 +907,7 @@ angular.module('webApp').factory('userStateStub',
     //   }
     // }
     service.getUserState = function(userId) {
-      return $http.get(apiBaseUri + 'userState/' + encodeURIComponent(userId)).catch(function(response) {
+      return $http.get(utilities.fixUri(apiBaseUri + 'userState/' + encodeURIComponent(userId))).catch(function(response) {
         return $q.reject(utilities.getHttpError(response));
       });
     };
@@ -1038,7 +1038,7 @@ angular.module('webApp').factory('userStateStub',
     //   }
     // }
     service.getVisitorState = function() {
-      return $http.get(apiBaseUri + 'userState').catch(function(response) {
+      return $http.get(utilities.fixUri(apiBaseUri + 'userState')).catch(function(response) {
         return $q.reject(utilities.getHttpError(response));
       });
     };
@@ -1061,7 +1061,7 @@ angular.module('webApp').factory('paymentsStub',
     //   ipAddress: '' /* optional */
     // }
     service.putPaymentOrigin = function(userId, data) {
-      return $http.put(apiBaseUri + 'payment/origins/' + encodeURIComponent(userId), data).catch(function(response) {
+      return $http.put(utilities.fixUri(apiBaseUri + 'payment/origins/' + encodeURIComponent(userId)), data).catch(function(response) {
         return $q.reject(utilities.getHttpError(response));
       });
     };
@@ -1072,23 +1072,35 @@ angular.module('webApp').factory('paymentsStub',
     //   expectedTotalAmount: 0
     // }
     service.postCreditRequest = function(userId, data) {
-      return $http.post(apiBaseUri + 'payment/creditRequests/' + encodeURIComponent(userId), data).catch(function(response) {
+      return $http.post(utilities.fixUri(apiBaseUri + 'payment/creditRequests/' + encodeURIComponent(userId)), data).catch(function(response) {
         return $q.reject(utilities.getHttpError(response));
       });
     };
 
     // userId = 'Base64Guid'
+    // countryCode = '' /* optional */
+    // creditCardPrefix = '' /* optional */
+    // ipAddress = '' /* optional */
     // result = {
-    //   amount: 0,
-    //   totalAmount: 0,
-    //   taxAmount: 0,
-    //   taxRate: 0.0,
-    //   taxName: '',
-    //   taxEntityName: '',
-    //   countryName: ''
+    //   subscriptionsAmount: 0,
+    //   calculation: {
+    //     amount: 0,
+    //     totalAmount: 0,
+    //     taxAmount: 0,
+    //     taxRate: 0.0, /* optional */
+    //     taxName: '', /* optional */
+    //     taxEntityName: '', /* optional */
+    //     countryName: '', /* optional */
+    //     possibleCountries: [ /* optional */
+    //       {
+    //         name: '',
+    //         countryCode: ''
+    //       }
+    //     ]
+    //   }
     // }
-    service.getCreditRequestSummary = function(userId) {
-      return $http.get(apiBaseUri + 'payment/creditRequestSummaries/' + encodeURIComponent(userId)).catch(function(response) {
+    service.getCreditRequestSummary = function(userId, countryCode, creditCardPrefix, ipAddress) {
+      return $http.get(utilities.fixUri(apiBaseUri + 'payment/creditRequestSummaries/' + encodeURIComponent(userId) + '?' + (countryCode === undefined ? '' : 'countryCode=' + encodeURIComponent(countryCode) + '&') + (creditCardPrefix === undefined ? '' : 'creditCardPrefix=' + encodeURIComponent(creditCardPrefix) + '&') + (ipAddress === undefined ? '' : 'ipAddress=' + encodeURIComponent(ipAddress) + '&'))).catch(function(response) {
         return $q.reject(utilities.getHttpError(response));
       });
     };
