@@ -38,6 +38,8 @@ namespace Fifthweek.Api.ClientHttpStubs.Templates
             this.output.WriteLine("var $httpBackend;");
             this.output.WriteLine("var $rootScope;");
             this.output.WriteLine("var target;");
+            this.output.WriteLine("var utilities;");
+            
             this.output.WriteLine(string.Empty);
 
             this.output.WriteLine("beforeEach(module('webApp', 'stateMock'));");
@@ -48,6 +50,7 @@ namespace Fifthweek.Api.ClientHttpStubs.Templates
             this.output.WriteLine("fifthweekConstants = $injector.get('fifthweekConstants');");
             this.output.WriteLine("$httpBackend = $injector.get('$httpBackend');");
             this.output.WriteLine("$rootScope = $injector.get('$rootScope');");
+            this.output.WriteLine("utilities = $injector.get('utilities');");
             this.output.WriteLine(string.Format("target = $injector.get('{0}Stub');", controller.Name.Camelize()));
             this.output.PopIndent();
             this.output.WriteLine("}));");
@@ -110,7 +113,7 @@ namespace Fifthweek.Api.ClientHttpStubs.Templates
             this.output.WriteLine("var responseData = 'response data';");
             this.output.Write("$httpBackend.expect");
             this.output.Write(method.HttpMethod.ToString().ToUpper());
-            this.output.Write("(fifthweekConstants.apiBaseUri + ");
+            this.output.Write("(utilities.fixUri(fifthweekConstants.apiBaseUri + ");
 
             this.output.Write(AngularUtility.GetRouteBuilder(method));
 
@@ -130,7 +133,7 @@ namespace Fifthweek.Api.ClientHttpStubs.Templates
                 }
             }
 
-            this.output.WriteLine(").respond(200, responseData);");
+            this.output.WriteLine(")).respond(200, responseData);");
             this.output.WriteLine(string.Empty);
 
             var actualParameters = string.Join(", ", parameterNames);
