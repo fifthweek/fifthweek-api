@@ -17,7 +17,7 @@ namespace Fifthweek.Payments.Services.Credit
         public const int MinimumPaymentAmount = 500;
 
         private readonly IGetUsersRequiringPaymentRetryDbStatement getUsersRequiringPaymentRetry;
-        private readonly IApplyStandardUserCredit applyStandardUserCredit;
+        private readonly IApplyUserCredit applyUserCredit;
         private readonly IGetUserWeeklySubscriptionsCost getUserWeeklySubscriptionsCost;
         private readonly IIncrementPaymentStatusDbStatement incrementPaymentStatus;
         private readonly IGetUserPaymentOriginDbStatement getUserPaymentOrigin;
@@ -66,7 +66,7 @@ namespace Fifthweek.Payments.Services.Credit
                     }
 
                     // And apply the charge.
-                    await this.applyStandardUserCredit.ExecuteAsync(userId, PositiveInt.Parse(amountToCharge), null);
+                    await this.applyUserCredit.ExecuteAsync(userId, PositiveInt.Parse(amountToCharge), null, UserType.StandardUser);
                     recalculateBalances = true;
                 }
                 catch (Exception t)

@@ -13,15 +13,16 @@ namespace Fifthweek.Payments.Services.Credit
     using Newtonsoft.Json;
 
     [AutoConstructor]
-    public partial class ApplyStandardUserCredit : IApplyStandardUserCredit
+    public partial class ApplyUserCredit : IApplyUserCredit
     {
         private readonly IInitializeCreditRequest initializeCreditRequest;
         private readonly IPerformCreditRequest performCreditRequest;
         private readonly ICommitCreditToDatabase commitCreditToDatabase;
+        private readonly ICommitTestUserCreditToDatabase commitTestUserCreditToDatabase;
         private readonly IFifthweekRetryOnTransientErrorHandler retryOnTransientFailure;
         private readonly ICommitTaxamoTransaction commitTaxamoTransaction;
 
-        public async Task ExecuteAsync(UserId userId, PositiveInt amount, PositiveInt expectedTotalAmount)
+        public async Task ExecuteAsync(UserId userId, PositiveInt amount, PositiveInt expectedTotalAmount, UserType userType)
         {
             userId.AssertNotNull("userId");
             amount.AssertNotNull("amount");
@@ -29,7 +30,7 @@ namespace Fifthweek.Payments.Services.Credit
             // We split this up into three phases that have individual retry handlers.
             // The first phase can be retried without issue if there are transient failures.
             var initializeResult = await this.retryOnTransientFailure.HandleAsync(
-                () => this.initializeCreditRequest.HandleAsync(userId, amount, expectedTotalAmount));
+                () => this.initializeCreditRequest.HandleAsync(userId, amount, expectedTotalAmount, userType));
 
             // This phase could be put at the end of the first phase, but it runs the risk of someone inserting
             // a statement afterwards that causes a transient failure, so for safety it has been isolated.
@@ -38,21 +39,35 @@ namespace Fifthweek.Payments.Services.Credit
                     userId,
                     initializeResult.TaxamoTransaction,
                     initializeResult.Origin,
-                    UserType.StandardUser));
+                    userType));
 
             try
             {
-                // Finally we commit to the local database...
-                var commitToDatabaseTask = this.retryOnTransientFailure.HandleAsync(
-                    () => this.commitCreditToDatabase.HandleAsync(
-                        userId,
-                        initializeResult.TaxamoTransaction,
-                        initializeResult.Origin,
-                        stripeTransactionResult));
+                Task commitToDatabaseTask;
+                if (userType == UserType.StandardUser)
+                {
+                    // Finally we commit to the local database...
+                    commitToDatabaseTask = this.retryOnTransientFailure.HandleAsync(
+                        () => this.commitCreditToDatabase.HandleAsync(
+                            userId,
+                            initializeResult.TaxamoTransaction,
+                            initializeResult.Origin,
+                            stripeTransactionResult));
+                }
+                else
+                {
+                    commitToDatabaseTask = this.retryOnTransientFailure.HandleAsync(
+                       () => this.commitTestUserCreditToDatabase.HandleAsync(
+                           userId,
+                           amount));
+                }
 
                 // ... and commit taxamo transaction.
                 var commitToTaxamoTask = this.retryOnTransientFailure.HandleAsync(
-                    () => this.commitTaxamoTransaction.ExecuteAsync(initializeResult.TaxamoTransaction.Key));
+                    () => this.commitTaxamoTransaction.ExecuteAsync(
+                        initializeResult.TaxamoTransaction,
+                        stripeTransactionResult,
+                        userType));
 
                 // We run the two committing tasks in parallel as even if one fails we would like the other to try and succeed.
                 await Task.WhenAll(commitToDatabaseTask, commitToTaxamoTask);

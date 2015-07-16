@@ -17,8 +17,7 @@
     {
         private readonly IRequesterSecurity requesterSecurity;
         private readonly IFifthweekRetryOnTransientErrorHandler retryOnTransientFailure;
-        private readonly IApplyStandardUserCredit applyStandardUserCredit;
-        private readonly ICommitTestUserCreditToDatabase commitTestUserCreditToDatabase;
+        private readonly IApplyUserCredit applyUserCredit;
         private readonly IFailPaymentStatusDbStatement failPaymentStatus;
 
         public async Task HandleAsync(ApplyCreditRequestCommand command)
@@ -32,26 +31,15 @@
             }
 
             var userType = await this.requesterSecurity.GetUserTypeAsync(command.Requester);
-            if (userType == UserType.TestUser)
-            {
-                // For a test user we just update their account balance directly, 
-                // as we don't want the credit to affect the Fifthweek accounts
-                // or VAT related accounts.
-                await this.retryOnTransientFailure.HandleAsync(() =>
-                    this.commitTestUserCreditToDatabase.HandleAsync(
-                        command.UserId,
-                        command.Amount));
-
-                return;
-            }
 
             ExceptionDispatchInfo exceptionDispatchInfo = null;
             try
             {
-                await this.applyStandardUserCredit.ExecuteAsync(
+                await this.applyUserCredit.ExecuteAsync(
                     command.UserId,
                     command.Amount,
-                    command.ExpectedTotalAmount);
+                    command.ExpectedTotalAmount,
+                    userType);
             }
             catch (StripeChargeFailedException t)
             {

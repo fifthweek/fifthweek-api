@@ -10,6 +10,7 @@
     using Fifthweek.Api.Payments.Commands;
     using Fifthweek.Api.Persistence.Identity;
     using Fifthweek.Api.Persistence.Payments;
+    using Fifthweek.Payments;
     using Fifthweek.Payments.Services.Credit;
     using Fifthweek.Payments.Services.Credit.Taxamo;
     using Fifthweek.Shared;
@@ -37,8 +38,7 @@
 
         private Mock<IRequesterSecurity> requesterSecurity;
         private Mock<IFifthweekRetryOnTransientErrorHandler> retryOnTransientFailure;
-        private Mock<IApplyStandardUserCredit> applyStandardUserCredit;
-        private Mock<ICommitTestUserCreditToDatabase> commitTestUserCreditToDatabase;
+        private Mock<IApplyUserCredit> applyUserCredit;
         private Mock<IFailPaymentStatusDbStatement> failPaymentStatus;
 
         private ApplyCreditRequestCommandHandler target;
@@ -48,8 +48,7 @@
         {
             this.requesterSecurity = new Mock<IRequesterSecurity>();
             this.retryOnTransientFailure = new Mock<IFifthweekRetryOnTransientErrorHandler>(MockBehavior.Strict);
-            this.applyStandardUserCredit = new Mock<IApplyStandardUserCredit>(MockBehavior.Strict);
-            this.commitTestUserCreditToDatabase = new Mock<ICommitTestUserCreditToDatabase>(MockBehavior.Strict);
+            this.applyUserCredit = new Mock<IApplyUserCredit>(MockBehavior.Strict);
             this.failPaymentStatus = new Mock<IFailPaymentStatusDbStatement>(MockBehavior.Strict);
 
             this.requesterSecurity.SetupFor(Requester);
@@ -57,8 +56,7 @@
             this.target = new ApplyCreditRequestCommandHandler(
                 this.requesterSecurity.Object,
                 this.retryOnTransientFailure.Object,
-                this.applyStandardUserCredit.Object,
-                this.commitTestUserCreditToDatabase.Object,
+                this.applyUserCredit.Object,
                 this.failPaymentStatus.Object);
         }
 
@@ -105,13 +103,13 @@
         [TestMethod]
         public async Task ItShouldCallApplyStandardUserCredit()
         {
-            this.applyStandardUserCredit.Setup(v => v.ExecuteAsync(Command.UserId, Command.Amount, Command.ExpectedTotalAmount))
+            this.applyUserCredit.Setup(v => v.ExecuteAsync(Command.UserId, Command.Amount, Command.ExpectedTotalAmount, UserType.StandardUser))
                 .Returns(Task.FromResult(0))
                 .Verifiable();
 
             await this.target.HandleAsync(Command);
 
-            this.applyStandardUserCredit.Verify();
+            this.applyUserCredit.Verify();
         }
 
         [TestMethod]
@@ -119,7 +117,7 @@
         {
             var tasks = new List<Func<Task>>();
 
-            this.applyStandardUserCredit.Setup(v => v.ExecuteAsync(Command.UserId, Command.Amount, Command.ExpectedTotalAmount))
+            this.applyUserCredit.Setup(v => v.ExecuteAsync(Command.UserId, Command.Amount, Command.ExpectedTotalAmount, UserType.StandardUser))
                 .Throws(new StripeChargeFailedException(new DivideByZeroException()));
 
             this.retryOnTransientFailure.Setup(v => v.HandleAsync(It.IsAny<Func<Task>>()))
@@ -144,7 +142,7 @@
         {
             var tasks = new List<Func<Task>>();
 
-            this.applyStandardUserCredit.Setup(v => v.ExecuteAsync(Command.UserId, Command.Amount, Command.ExpectedTotalAmount))
+            this.applyUserCredit.Setup(v => v.ExecuteAsync(Command.UserId, Command.Amount, Command.ExpectedTotalAmount, UserType.StandardUser))
                 .Throws(new DivideByZeroException());
 
             this.retryOnTransientFailure.Setup(v => v.HandleAsync(It.IsAny<Func<Task>>()))
@@ -158,28 +156,17 @@
         }
 
         [TestMethod]
-        public async Task WhenUserIsTestUser_ItShouldCallCommitTestUserCreditToDatabaseWithTransientErrorHandler()
+        public async Task WhenUserIsTestUser_ItShouldCallApplyUserCreditAsTestUser()
         {
-            var tasks = new List<Func<Task>>();
-
             this.requesterSecurity.Setup(v => v.IsInRoleAsync(Requester, FifthweekRole.TestUser)).ReturnsAsync(true);
 
-            this.retryOnTransientFailure.Setup(v => v.HandleAsync(It.IsAny<Func<Task>>()))
-                .Callback<Func<Task>>(tasks.Add)
-                .Returns(Task.FromResult(0));
-
-            await this.target.HandleAsync(Command);
-
-            Assert.AreEqual(1, tasks.Count);
-
-            this.commitTestUserCreditToDatabase.Setup(v => v.HandleAsync(
-                UserId,
-                Command.Amount))
+            this.applyUserCredit.Setup(v => v.ExecuteAsync(Command.UserId, Command.Amount, Command.ExpectedTotalAmount, UserType.TestUser))
                 .Returns(Task.FromResult(0))
                 .Verifiable();
 
-            await tasks[0]();
-            this.commitTestUserCreditToDatabase.Verify();
+            await this.target.HandleAsync(Command);
+
+            this.applyUserCredit.Verify();
         }
     }
 }

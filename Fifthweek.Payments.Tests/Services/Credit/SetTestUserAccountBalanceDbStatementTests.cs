@@ -1,4 +1,4 @@
-﻿namespace Fifthweek.Api.Payments.Tests
+﻿namespace Fifthweek.Payments.Tests.Services.Credit
 {
     using System;
     using System.Data.SqlTypes;
@@ -8,6 +8,7 @@
     using Fifthweek.Api.Persistence;
     using Fifthweek.Api.Persistence.Payments;
     using Fifthweek.Api.Persistence.Tests.Shared;
+    using Fifthweek.Payments.Services.Credit;
     using Fifthweek.Shared;
 
     using Microsoft.VisualStudio.TestTools.UnitTesting;

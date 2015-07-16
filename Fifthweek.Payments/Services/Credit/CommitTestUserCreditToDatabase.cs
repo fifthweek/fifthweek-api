@@ -1,11 +1,9 @@
-﻿namespace Fifthweek.Api.Payments.Commands
+﻿namespace Fifthweek.Payments.Services.Credit
 {
-    using System;
     using System.Threading.Tasks;
 
     using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.CodeGeneration;
-    using Fifthweek.Payments.Services;
     using Fifthweek.Shared;
 
     [AutoConstructor]

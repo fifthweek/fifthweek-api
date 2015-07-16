@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Linq;
 
-//// Generated on 15/07/2015 14:18:58 (UTC)
-//// Mapped solution in 34.16s
+//// Generated on 16/07/2015 10:54:49 (UTC)
+//// Mapped solution in 14.51s
 
 namespace Fifthweek.Payments.Services.Credit
 {
@@ -332,12 +332,13 @@ namespace Fifthweek.Payments.Services.Credit
     using System.Runtime.ExceptionServices;
     using Fifthweek.Payments.Stripe;
 
-    public partial class ApplyStandardUserCredit 
+    public partial class ApplyUserCredit 
     {
-        public ApplyStandardUserCredit(
+        public ApplyUserCredit(
             Fifthweek.Payments.Services.Credit.IInitializeCreditRequest initializeCreditRequest,
             Fifthweek.Payments.Services.Credit.IPerformCreditRequest performCreditRequest,
             Fifthweek.Payments.Services.Credit.ICommitCreditToDatabase commitCreditToDatabase,
+            Fifthweek.Payments.Services.Credit.ICommitTestUserCreditToDatabase commitTestUserCreditToDatabase,
             Fifthweek.Shared.IFifthweekRetryOnTransientErrorHandler retryOnTransientFailure,
             Fifthweek.Payments.Services.Credit.Taxamo.ICommitTaxamoTransaction commitTaxamoTransaction)
         {
@@ -356,6 +357,11 @@ namespace Fifthweek.Payments.Services.Credit
                 throw new ArgumentNullException("commitCreditToDatabase");
             }
 
+            if (commitTestUserCreditToDatabase == null)
+            {
+                throw new ArgumentNullException("commitTestUserCreditToDatabase");
+            }
+
             if (retryOnTransientFailure == null)
             {
                 throw new ArgumentNullException("retryOnTransientFailure");
@@ -369,6 +375,7 @@ namespace Fifthweek.Payments.Services.Credit
             this.initializeCreditRequest = initializeCreditRequest;
             this.performCreditRequest = performCreditRequest;
             this.commitCreditToDatabase = commitCreditToDatabase;
+            this.commitTestUserCreditToDatabase = commitTestUserCreditToDatabase;
             this.retryOnTransientFailure = retryOnTransientFailure;
             this.commitTaxamoTransaction = commitTaxamoTransaction;
         }
@@ -2540,7 +2547,7 @@ namespace Fifthweek.Payments.Services.Credit
     {
         public TopUpUserAccountsWithCredit(
             Fifthweek.Payments.Services.Credit.IGetUsersRequiringPaymentRetryDbStatement getUsersRequiringPaymentRetry,
-            Fifthweek.Payments.Services.Credit.IApplyStandardUserCredit applyStandardUserCredit,
+            Fifthweek.Payments.Services.Credit.IApplyUserCredit applyUserCredit,
             Fifthweek.Payments.Services.Credit.IGetUserWeeklySubscriptionsCost getUserWeeklySubscriptionsCost,
             Fifthweek.Payments.Services.Credit.IIncrementPaymentStatusDbStatement incrementPaymentStatus,
             Fifthweek.Payments.Services.Credit.IGetUserPaymentOriginDbStatement getUserPaymentOrigin)
@@ -2550,9 +2557,9 @@ namespace Fifthweek.Payments.Services.Credit
                 throw new ArgumentNullException("getUsersRequiringPaymentRetry");
             }
 
-            if (applyStandardUserCredit == null)
+            if (applyUserCredit == null)
             {
-                throw new ArgumentNullException("applyStandardUserCredit");
+                throw new ArgumentNullException("applyUserCredit");
             }
 
             if (getUserWeeklySubscriptionsCost == null)
@@ -2571,7 +2578,7 @@ namespace Fifthweek.Payments.Services.Credit
             }
 
             this.getUsersRequiringPaymentRetry = getUsersRequiringPaymentRetry;
-            this.applyStandardUserCredit = applyStandardUserCredit;
+            this.applyUserCredit = applyUserCredit;
             this.getUserWeeklySubscriptionsCost = getUserWeeklySubscriptionsCost;
             this.incrementPaymentStatus = incrementPaymentStatus;
             this.getUserPaymentOrigin = getUserPaymentOrigin;
@@ -2934,8 +2941,16 @@ namespace Fifthweek.Payments.Services.Credit.Taxamo
 }
 namespace Fifthweek.Payments.Services.Credit.Taxamo
 {
-    using System.Collections.Generic;
+    using System;
+    using System.Linq;
     using Fifthweek.CodeGeneration;
+    using System.Threading.Tasks;
+    using Fifthweek.Payments.Taxamo;
+    using Fifthweek.Shared;
+    using global::Taxamo.Api;
+    using global::Taxamo.Client;
+    using global::Taxamo.Model;
+    using System.Collections.Generic;
 
     public partial class TaxamoCalculationResult
     {
@@ -2958,6 +2973,172 @@ namespace Fifthweek.Payments.Services.Credit.Taxamo
                 this.Name = name;
                 this.CountryCode = countryCode;
             }
+        }
+    }
+}
+namespace Fifthweek.Payments.Services.Credit
+{
+    using System;
+    using System.Linq;
+    using Fifthweek.CodeGeneration;
+    using System.Threading.Tasks;
+    using Fifthweek.Api.Identity.Shared.Membership;
+    using Fifthweek.Payments.Services.Credit.Taxamo;
+    using Fifthweek.Shared;
+    using Newtonsoft.Json;
+    using Fifthweek.Payments.Services;
+    using Dapper;
+    using Fifthweek.Api.Persistence;
+    using Fifthweek.Api.Persistence.Payments;
+    using Fifthweek.Payments.Services.Credit.Stripe;
+    using System.Collections.Generic;
+    using Fifthweek.Payments.Services.Credit;
+    using System.Runtime.ExceptionServices;
+    using Fifthweek.Payments.Stripe;
+
+    public partial class CommitTestUserCreditToDatabase 
+    {
+        public CommitTestUserCreditToDatabase(
+            Fifthweek.Shared.ITimestampCreator timestampCreator,
+            Fifthweek.Payments.Services.Credit.ISetTestUserAccountBalanceDbStatement setTestUserAccountBalance)
+        {
+            if (timestampCreator == null)
+            {
+                throw new ArgumentNullException("timestampCreator");
+            }
+
+            if (setTestUserAccountBalance == null)
+            {
+                throw new ArgumentNullException("setTestUserAccountBalance");
+            }
+
+            this.timestampCreator = timestampCreator;
+            this.setTestUserAccountBalance = setTestUserAccountBalance;
+        }
+    }
+}
+namespace Fifthweek.Payments.Services.Credit
+{
+    using System;
+    using System.Linq;
+    using Fifthweek.CodeGeneration;
+    using System.Threading.Tasks;
+    using Fifthweek.Api.Identity.Shared.Membership;
+    using Fifthweek.Payments.Services.Credit.Taxamo;
+    using Fifthweek.Shared;
+    using Newtonsoft.Json;
+    using Fifthweek.Payments.Services;
+    using Dapper;
+    using Fifthweek.Api.Persistence;
+    using Fifthweek.Api.Persistence.Payments;
+    using Fifthweek.Payments.Services.Credit.Stripe;
+    using System.Collections.Generic;
+    using Fifthweek.Payments.Services.Credit;
+    using System.Runtime.ExceptionServices;
+    using Fifthweek.Payments.Stripe;
+
+    public partial class SetTestUserAccountBalanceDbStatement 
+    {
+        public SetTestUserAccountBalanceDbStatement(
+            Fifthweek.Api.Persistence.IFifthweekDbConnectionFactory connectionFactory)
+        {
+            if (connectionFactory == null)
+            {
+                throw new ArgumentNullException("connectionFactory");
+            }
+
+            this.connectionFactory = connectionFactory;
+        }
+    }
+}
+namespace Fifthweek.Payments.Services.Credit.Taxamo
+{
+    using System;
+    using System.Linq;
+    using Fifthweek.CodeGeneration;
+    using System.Threading.Tasks;
+    using Fifthweek.Payments.Taxamo;
+    using Fifthweek.Shared;
+    using global::Taxamo.Api;
+    using global::Taxamo.Client;
+    using global::Taxamo.Model;
+    using System.Collections.Generic;
+
+    public partial class CreateTaxamoTransaction 
+    {
+        public CreateTaxamoTransaction(
+            Fifthweek.Payments.Taxamo.ITaxamoApiKeyRepository taxamoApiKeyRepository,
+            Fifthweek.Payments.Taxamo.ITaxamoService taxamoService)
+        {
+            if (taxamoApiKeyRepository == null)
+            {
+                throw new ArgumentNullException("taxamoApiKeyRepository");
+            }
+
+            if (taxamoService == null)
+            {
+                throw new ArgumentNullException("taxamoService");
+            }
+
+            this.taxamoApiKeyRepository = taxamoApiKeyRepository;
+            this.taxamoService = taxamoService;
+        }
+    }
+}
+namespace Fifthweek.Payments.Services.Credit.Taxamo
+{
+    using System;
+    using System.Threading.Tasks;
+    using Fifthweek.CodeGeneration;
+    using Fifthweek.Payments.Taxamo;
+    using Fifthweek.Shared;
+    using global::Taxamo.Model;
+
+    public partial class CommitTaxamoTransaction 
+    {
+        public CommitTaxamoTransaction(
+            Fifthweek.Payments.Taxamo.ITaxamoApiKeyRepository taxamoApiKeyRepository,
+            Fifthweek.Payments.Taxamo.ITaxamoService taxamoService)
+        {
+            if (taxamoApiKeyRepository == null)
+            {
+                throw new ArgumentNullException("taxamoApiKeyRepository");
+            }
+
+            if (taxamoService == null)
+            {
+                throw new ArgumentNullException("taxamoService");
+            }
+
+            this.taxamoApiKeyRepository = taxamoApiKeyRepository;
+            this.taxamoService = taxamoService;
+        }
+    }
+}
+namespace Fifthweek.Payments.Services.Credit.Taxamo
+{
+    using System.Threading.Tasks;
+    using Fifthweek.CodeGeneration;
+    using Fifthweek.Payments.Taxamo;
+
+    public partial class DeleteTaxamoTransaction 
+    {
+        public DeleteTaxamoTransaction(
+            Fifthweek.Payments.Taxamo.ITaxamoApiKeyRepository taxamoApiKeyRepository,
+            Fifthweek.Payments.Taxamo.ITaxamoService taxamoService)
+        {
+            if (taxamoApiKeyRepository == null)
+            {
+                throw new ArgumentNullException("taxamoApiKeyRepository");
+            }
+
+            if (taxamoService == null)
+            {
+                throw new ArgumentNullException("taxamoService");
+            }
+
+            this.taxamoApiKeyRepository = taxamoApiKeyRepository;
+            this.taxamoService = taxamoService;
         }
     }
 }
@@ -5064,8 +5245,16 @@ namespace Fifthweek.Payments.Services.Credit.Taxamo
 }
 namespace Fifthweek.Payments.Services.Credit.Taxamo
 {
-    using System.Collections.Generic;
+    using System;
+    using System.Linq;
     using Fifthweek.CodeGeneration;
+    using System.Threading.Tasks;
+    using Fifthweek.Payments.Taxamo;
+    using Fifthweek.Shared;
+    using global::Taxamo.Api;
+    using global::Taxamo.Client;
+    using global::Taxamo.Model;
+    using System.Collections.Generic;
 
     public partial class TaxamoCalculationResult
     {

@@ -14,6 +14,7 @@
 
         public UserId UserId { get; private set; }
 
+        [Optional]
         public LocationData LocationDataOverride { get; private set; }
 
         [AutoConstructor, AutoEqualityMembers]

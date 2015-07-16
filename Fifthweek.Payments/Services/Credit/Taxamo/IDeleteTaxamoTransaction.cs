@@ -4,6 +4,6 @@
 
     public interface IDeleteTaxamoTransaction
     {
-        Task ExecuteAsync(string transactionKey);
+        Task ExecuteAsync(string transactionKey, UserType userType);
     }
 }

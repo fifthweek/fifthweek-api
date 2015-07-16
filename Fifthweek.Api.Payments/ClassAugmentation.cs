@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Linq;
 
-//// Generated on 15/07/2015 17:04:36 (UTC)
-//// Mapped solution in 44.53s
+//// Generated on 16/07/2015 11:22:43 (UTC)
+//// Mapped solution in 16.11s
 
 
 namespace Fifthweek.Api.Payments.Commands
@@ -81,8 +81,7 @@ namespace Fifthweek.Api.Payments.Commands
         public ApplyCreditRequestCommandHandler(
             Fifthweek.Api.Identity.Shared.Membership.IRequesterSecurity requesterSecurity,
             Fifthweek.Shared.IFifthweekRetryOnTransientErrorHandler retryOnTransientFailure,
-            Fifthweek.Payments.Services.Credit.IApplyStandardUserCredit applyStandardUserCredit,
-            Fifthweek.Api.Payments.Commands.ICommitTestUserCreditToDatabase commitTestUserCreditToDatabase,
+            Fifthweek.Payments.Services.Credit.IApplyUserCredit applyUserCredit,
             Fifthweek.Payments.Services.Credit.IFailPaymentStatusDbStatement failPaymentStatus)
         {
             if (requesterSecurity == null)
@@ -95,14 +94,9 @@ namespace Fifthweek.Api.Payments.Commands
                 throw new ArgumentNullException("retryOnTransientFailure");
             }
 
-            if (applyStandardUserCredit == null)
+            if (applyUserCredit == null)
             {
-                throw new ArgumentNullException("applyStandardUserCredit");
-            }
-
-            if (commitTestUserCreditToDatabase == null)
-            {
-                throw new ArgumentNullException("commitTestUserCreditToDatabase");
+                throw new ArgumentNullException("applyUserCredit");
             }
 
             if (failPaymentStatus == null)
@@ -112,8 +106,7 @@ namespace Fifthweek.Api.Payments.Commands
 
             this.requesterSecurity = requesterSecurity;
             this.retryOnTransientFailure = retryOnTransientFailure;
-            this.applyStandardUserCredit = applyStandardUserCredit;
-            this.commitTestUserCreditToDatabase = commitTestUserCreditToDatabase;
+            this.applyUserCredit = applyUserCredit;
             this.failPaymentStatus = failPaymentStatus;
         }
     }
@@ -403,11 +396,6 @@ namespace Fifthweek.Api.Payments.Queries
                 throw new ArgumentNullException("userId");
             }
 
-            if (locationDataOverride == null)
-            {
-                throw new ArgumentNullException("locationDataOverride");
-            }
-
             this.Requester = requester;
             this.UserId = userId;
             this.LocationDataOverride = locationDataOverride;
@@ -479,73 +467,6 @@ namespace Fifthweek.Api.Payments
     public partial class SetUserPaymentOriginDbStatement 
     {
         public SetUserPaymentOriginDbStatement(
-            Fifthweek.Api.Persistence.IFifthweekDbConnectionFactory connectionFactory)
-        {
-            if (connectionFactory == null)
-            {
-                throw new ArgumentNullException("connectionFactory");
-            }
-
-            this.connectionFactory = connectionFactory;
-        }
-    }
-}
-namespace Fifthweek.Api.Payments.Commands
-{
-    using System;
-    using System.Linq;
-    using Fifthweek.Api.Identity.Shared.Membership;
-    using Fifthweek.CodeGeneration;
-    using Fifthweek.Shared;
-    using System.Threading.Tasks;
-    using Fifthweek.Api.Core;
-    using Newtonsoft.Json;
-    using Fifthweek.Payments.Services;
-    using Fifthweek.Api.Persistence.Identity;
-    using Fifthweek.Payments.Services.Credit;
-    using Fifthweek.Payments.Services.Credit.Stripe;
-    using System.Runtime.ExceptionServices;
-    using Fifthweek.Payments;
-    using Fifthweek.Payments.Stripe;
-
-    public partial class CommitTestUserCreditToDatabase 
-    {
-        public CommitTestUserCreditToDatabase(
-            Fifthweek.Shared.ITimestampCreator timestampCreator,
-            Fifthweek.Api.Payments.ISetTestUserAccountBalanceDbStatement setTestUserAccountBalance)
-        {
-            if (timestampCreator == null)
-            {
-                throw new ArgumentNullException("timestampCreator");
-            }
-
-            if (setTestUserAccountBalance == null)
-            {
-                throw new ArgumentNullException("setTestUserAccountBalance");
-            }
-
-            this.timestampCreator = timestampCreator;
-            this.setTestUserAccountBalance = setTestUserAccountBalance;
-        }
-    }
-}
-namespace Fifthweek.Api.Payments
-{
-    using System;
-    using System.Linq;
-    using Fifthweek.CodeGeneration;
-    using System.Threading.Tasks;
-    using Dapper;
-    using Fifthweek.Api.Identity.Shared.Membership;
-    using Fifthweek.Api.Persistence;
-    using Fifthweek.Api.Persistence.Payments;
-    using Fifthweek.Shared;
-    using System.Collections.Generic;
-    using System.Net;
-
-    public partial class SetTestUserAccountBalanceDbStatement 
-    {
-        public SetTestUserAccountBalanceDbStatement(
             Fifthweek.Api.Persistence.IFifthweekDbConnectionFactory connectionFactory)
         {
             if (connectionFactory == null)

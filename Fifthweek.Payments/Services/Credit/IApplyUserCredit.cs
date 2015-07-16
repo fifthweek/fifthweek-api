@@ -5,8 +5,8 @@ namespace Fifthweek.Payments.Services.Credit
     using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.Shared;
 
-    public interface IApplyStandardUserCredit
+    public interface IApplyUserCredit
     {
-        Task ExecuteAsync(UserId userId, PositiveInt amount, PositiveInt expectedTotalAmount);
+        Task ExecuteAsync(UserId userId, PositiveInt amount, PositiveInt expectedTotalAmount, UserType userType);
     }
 }

@@ -11,6 +11,7 @@
             string billingCountryCode,
             string creditCardPrefix,
             string ipAddress,
-            string originalTaxamoTransactionKey);
+            string originalTaxamoTransactionKey,
+            UserType userType);
     }
 }

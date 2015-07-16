@@ -98,6 +98,7 @@
     <Compile Include="Services\Credit\ApplyStandardUserCreditTests.cs" />
     <Compile Include="Services\Credit\ClearPaymentStatusDbStatementTests.cs" />
     <Compile Include="Services\Credit\CommitCreditToDatabaseTests.cs" />
+    <Compile Include="Services\Credit\CommitTestUserCreditToDatabaseTests.cs" />
     <Compile Include="Services\Credit\FailPaymentStatusDbStatementTests.cs" />
     <Compile Include="Services\Credit\GetUserPaymentOriginDbStatementTests.cs" />
     <Compile Include="Services\Credit\GetUsersRequiringPaymentRetryDbStatementTests.cs" />
@@ -106,6 +107,7 @@
     <Compile Include="Services\Credit\InitializeCreditRequestTests.cs" />
     <Compile Include="Services\Credit\PerformCreditRequestTests.cs" />
     <Compile Include="Services\Credit\SaveCustomerCreditToLedgerDbStatementTests.cs" />
+    <Compile Include="Services\Credit\SetTestUserAccountBalanceDbStatementTests.cs" />
     <Compile Include="Services\Credit\SetUserPaymentOriginOriginalTaxamoTransactionKeyDbStatementTests.cs" />
     <Compile Include="Services\Credit\Stripe\CreateStripeCustomerTests.cs" />
     <Compile Include="Services\Credit\Stripe\PerformStripeChargeTests.cs" />
@@ -198,6 +200,10 @@
     <ProjectReference Include="..\Fifthweek.Tests.Shared\Fifthweek.Tests.Shared.csproj">
       <Project>{85691D93-9C0C-498B-8341-1990BC8E24B2}</Project>
       <Name>Fifthweek.Tests.Shared</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Taxamo\Taxamo.csproj">
+      <Project>{0A7ECB89-B0BB-458C-8244-08B59850668E}</Project>
+      <Name>Taxamo</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

@@ -10,6 +10,7 @@ namespace Fifthweek.Payments.Services.Credit
         Task<InitializeCreditRequestResult> HandleAsync(
             UserId userId,
             PositiveInt amount,
-            PositiveInt expectedTotalAmount);
+            PositiveInt expectedTotalAmount,
+            UserType userType);
     }
 }

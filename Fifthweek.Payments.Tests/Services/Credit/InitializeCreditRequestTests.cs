@@ -48,14 +48,14 @@
         [ExpectedException(typeof(ArgumentNullException))]
         public async Task WhenCommandIsNull_ItShouldThrowAnException()
         {
-            await this.target.HandleAsync(null, Amount, ExpectedTotalAmount);
+            await this.target.HandleAsync(null, Amount, ExpectedTotalAmount, default(UserType));
         }
 
         [TestMethod]
         [ExpectedException(typeof(ArgumentNullException))]
         public async Task WhenAmountIsNull_ItShouldThrowAnException()
         {
-            await this.target.HandleAsync(UserId, null, ExpectedTotalAmount);
+            await this.target.HandleAsync(UserId, null, ExpectedTotalAmount, default(UserType));
         }
 
         [TestMethod]
@@ -68,10 +68,30 @@
                 Origin.CountryCode,
                 Origin.CreditCardPrefix,
                 Origin.IpAddress,
-                Origin.OriginalTaxamoTransactionKey))
+                Origin.OriginalTaxamoTransactionKey,
+                UserType.StandardUser))
                 .ReturnsAsync(TaxamoTransaction);
 
-            var result = await this.target.HandleAsync(UserId, Amount, ExpectedTotalAmount);
+            var result = await this.target.HandleAsync(UserId, Amount, ExpectedTotalAmount, UserType.StandardUser);
+
+            Assert.AreEqual(new InitializeCreditRequestResult(TaxamoTransaction, Origin), result);
+        }
+
+        [TestMethod]
+        public async Task WhenUserTypeIsTestUser_ItShouldLoadOriginAndCreateTaxamoTransaction()
+        {
+            this.getUserPaymentOrigin.Setup(v => v.ExecuteAsync(UserId)).ReturnsAsync(Origin);
+
+            this.createTaxamoTransaction.Setup(v => v.ExecuteAsync(
+                Amount,
+                Origin.CountryCode,
+                Origin.CreditCardPrefix,
+                Origin.IpAddress,
+                Origin.OriginalTaxamoTransactionKey,
+                UserType.TestUser))
+                .ReturnsAsync(TaxamoTransaction);
+
+            var result = await this.target.HandleAsync(UserId, Amount, ExpectedTotalAmount, UserType.TestUser);
 
             Assert.AreEqual(new InitializeCreditRequestResult(TaxamoTransaction, Origin), result);
         }
@@ -86,10 +106,11 @@
                 Origin.CountryCode,
                 Origin.CreditCardPrefix,
                 Origin.IpAddress,
-                Origin.OriginalTaxamoTransactionKey))
+                Origin.OriginalTaxamoTransactionKey,
+                UserType.StandardUser))
                 .ReturnsAsync(TaxamoTransaction);
 
-            var result = await this.target.HandleAsync(UserId, Amount, null);
+            var result = await this.target.HandleAsync(UserId, Amount, null, UserType.StandardUser);
 
             Assert.AreEqual(new InitializeCreditRequestResult(TaxamoTransaction, Origin), result);
         }
@@ -104,10 +125,11 @@
                 Origin.CountryCode,
                 Origin.CreditCardPrefix,
                 Origin.IpAddress,
-                Origin.OriginalTaxamoTransactionKey))
+                Origin.OriginalTaxamoTransactionKey,
+                UserType.StandardUser))
                 .ReturnsAsync(TaxamoTransaction);
 
-            this.deleteTaxamoTransaction.Setup(v => v.ExecuteAsync(TaxamoTransaction.Key))
+            this.deleteTaxamoTransaction.Setup(v => v.ExecuteAsync(TaxamoTransaction.Key, UserType.StandardUser))
                 .Returns(Task.FromResult(0))
                 .Verifiable();
 
@@ -115,7 +137,36 @@
                 () => this.target.HandleAsync(
                         UserId,
                         PositiveInt.Parse(10),
-                        PositiveInt.Parse(11)));
+                        PositiveInt.Parse(11),
+                        UserType.StandardUser));
+
+            this.deleteTaxamoTransaction.Verify();
+        }
+
+        [TestMethod]
+        public async Task WhenTaxamoAmountDoesNotEqualExpectedAmount_AndUserTypeIsTestUser_ItShouldCancelTransactionAndAbort()
+        {
+            this.getUserPaymentOrigin.Setup(v => v.ExecuteAsync(UserId)).ReturnsAsync(Origin);
+
+            this.createTaxamoTransaction.Setup(v => v.ExecuteAsync(
+                Amount,
+                Origin.CountryCode,
+                Origin.CreditCardPrefix,
+                Origin.IpAddress,
+                Origin.OriginalTaxamoTransactionKey,
+                UserType.TestUser))
+                .ReturnsAsync(TaxamoTransaction);
+
+            this.deleteTaxamoTransaction.Setup(v => v.ExecuteAsync(TaxamoTransaction.Key, UserType.TestUser))
+                .Returns(Task.FromResult(0))
+                .Verifiable();
+
+            await ExpectedException.AssertExceptionAsync<BadRequestException>(
+                () => this.target.HandleAsync(
+                        UserId,
+                        PositiveInt.Parse(10),
+                        PositiveInt.Parse(11),
+                        UserType.TestUser));
 
             this.deleteTaxamoTransaction.Verify();
         }

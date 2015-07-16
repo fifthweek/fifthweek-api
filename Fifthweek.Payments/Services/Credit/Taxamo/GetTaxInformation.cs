@@ -15,8 +15,6 @@
     [AutoConstructor]
     public partial class GetTaxInformation : IGetTaxInformation
     {
-        private const string CustomId = "Subscriptions";
-
         private readonly ITaxamoApiKeyRepository taxamoApiKeyRepository;
         private readonly ITaxamoService taxamoService;
 
@@ -28,6 +26,8 @@
             string originalTaxamoTransactionKey,
             UserType userType)
         {
+            amount.AssertNotNull("amount");
+
             var apiKey = this.taxamoApiKeyRepository.GetApiKey(userType);
 
             var input = new CalculateTaxIn 
@@ -39,7 +39,7 @@
                     {
                         new InputTransactionLine
                         {
-                            CustomId = CustomId,
+                            CustomId = CreateTaxamoTransaction.CustomId,
                             Amount = new AmountInUsCents(amount.Value).ToUsDollars()
                         }
                     },
@@ -47,7 +47,7 @@
                     BuyerIp = ipAddress,
                     BillingCountryCode = billingCountryCode,
                     OriginalTransactionKey = originalTaxamoTransactionKey
-                } 
+                }
             };
 
             var result = await this.taxamoService.CalculateTaxAsync(input, apiKey);

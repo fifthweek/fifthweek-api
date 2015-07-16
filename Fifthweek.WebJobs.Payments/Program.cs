@@ -18,6 +18,7 @@ namespace Fifthweek.WebJobs.Payments
     using Fifthweek.Payments.Services.Credit.Taxamo;
     using Fifthweek.Payments.Shared;
     using Fifthweek.Payments.Stripe;
+    using Fifthweek.Payments.Taxamo;
     using Fifthweek.Shared;
     using Fifthweek.WebJobs.Shared;
 
@@ -63,11 +64,11 @@ namespace Fifthweek.WebJobs.Payments
                 new UpdateAccountBalancesDbStatement(new FifthweekDbConnectionFactory()),
                 new TopUpUserAccountsWithCredit(
                     new GetUsersRequiringPaymentRetryDbStatement(new FifthweekDbConnectionFactory()),
-                    new ApplyStandardUserCredit(
+                    new ApplyUserCredit(
                         new InitializeCreditRequest(
                             new GetUserPaymentOriginDbStatement(new FifthweekDbConnectionFactory()),
-                            new DeleteTaxamoTransaction(),
-                            new CreateTaxamoTransaction()),
+                            new DeleteTaxamoTransaction(new TaxamoApiKeyRepository(), new TaxamoService()),
+                            new CreateTaxamoTransaction(new TaxamoApiKeyRepository(), new TaxamoService())),
                         new PerformCreditRequest(
                             new TimestampCreator(),
                             new PerformStripeCharge(new StripeApiKeyRepository(), new StripeService()),
@@ -77,10 +78,13 @@ namespace Fifthweek.WebJobs.Payments
                             new SetUserPaymentOriginOriginalTaxamoTransactionKeyDbStatement(new FifthweekDbConnectionFactory()),
                             new SaveCustomerCreditToLedgerDbStatement(new GuidCreator(), new FifthweekDbConnectionFactory()),
                             new ClearPaymentStatusDbStatement(new FifthweekDbConnectionFactory())),
+                        new CommitTestUserCreditToDatabase(
+                            new TimestampCreator(),
+                            new SetTestUserAccountBalanceDbStatement(new FifthweekDbConnectionFactory())),
                         new FifthweekRetryOnTransientErrorHandler(
                             new ExceptionHandler(ErrorIdentifier),
                             new FifthweekTransientErrorDetectionStrategy()),
-                        new CommitTaxamoTransaction()),
+                        new CommitTaxamoTransaction(new TaxamoApiKeyRepository(), new TaxamoService())),
                     new GetUserWeeklySubscriptionsCost(new FifthweekDbConnectionFactory()),
                     new IncrementPaymentStatusDbStatement(new FifthweekDbConnectionFactory()),
                     new GetUserPaymentOriginDbStatement(new FifthweekDbConnectionFactory()))),

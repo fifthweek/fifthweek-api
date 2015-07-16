@@ -52,7 +52,7 @@
             builder.RegisterType<PerformCreditRequest>().As<IPerformCreditRequest>();
             builder.RegisterType<CommitCreditToDatabase>().As<ICommitCreditToDatabase>();
             builder.RegisterType<InitializeCreditRequest>().As<IInitializeCreditRequest>();
-            builder.RegisterType<ApplyStandardUserCredit>().As<IApplyStandardUserCredit>();
+            builder.RegisterType<ApplyUserCredit>().As<IApplyUserCredit>();
             builder.RegisterType<GetUsersRequiringPaymentRetryDbStatement>().As<IGetUsersRequiringPaymentRetryDbStatement>();
             builder.RegisterType<GetUserWeeklySubscriptionsCost>().As<IGetUserWeeklySubscriptionsCost>();
             builder.RegisterType<ClearPaymentStatusDbStatement>().As<IClearPaymentStatusDbStatement>();

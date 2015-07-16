@@ -163,7 +163,7 @@
             var result = await this.target.HandleAsync(Query);
 
             Assert.AreEqual(
-                new CreditRequestSummary(TopUpUserAccountsWithCredit.MinimumPaymentAmount, TaxamoTransaction),
+                new CreditRequestSummary(TopUpUserAccountsWithCredit.MinimumPaymentAmount - 1, TaxamoTransaction),
                 result);
         }
 
@@ -177,7 +177,7 @@
             this.getTaxInformation
                 .Setup(v => v.ExecuteAsync(
                     PositiveInt.Parse(TopUpUserAccountsWithCredit.MinimumPaymentAmount + 1),
-                    null,
+                    QueryWithOverride.LocationDataOverride.CountryCode.Value,
                     QueryWithOverride.LocationDataOverride.CreditCardPrefix.Value,
                     QueryWithOverride.LocationDataOverride.IpAddress.Value,
                     null,

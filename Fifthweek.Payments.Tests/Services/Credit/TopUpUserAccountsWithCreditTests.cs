@@ -19,7 +19,7 @@
     public class TopUpUserAccountsWithCreditTests
     {
         private Mock<IGetUsersRequiringPaymentRetryDbStatement> getUsersRequiringPaymentRetry;
-        private Mock<IApplyStandardUserCredit> applyStandardUserCredit;
+        private Mock<IApplyUserCredit> applyUserCredit;
         private Mock<IGetUserWeeklySubscriptionsCost> getUserWeeklySubscriptionsCost;
         private Mock<IIncrementPaymentStatusDbStatement> incrementPaymentStatus;
         private Mock<IGetUserPaymentOriginDbStatement> getUserPaymentOrigin;
@@ -30,14 +30,14 @@
         public void Initialize()
         {
             this.getUsersRequiringPaymentRetry = new Mock<IGetUsersRequiringPaymentRetryDbStatement>(MockBehavior.Strict);
-            this.applyStandardUserCredit = new Mock<IApplyStandardUserCredit>(MockBehavior.Strict);
+            this.applyUserCredit = new Mock<IApplyUserCredit>(MockBehavior.Strict);
             this.getUserWeeklySubscriptionsCost = new Mock<IGetUserWeeklySubscriptionsCost>(MockBehavior.Strict);
             this.incrementPaymentStatus = new Mock<IIncrementPaymentStatusDbStatement>(MockBehavior.Strict);
             this.getUserPaymentOrigin = new Mock<IGetUserPaymentOriginDbStatement>(MockBehavior.Strict);
 
             this.target = new TopUpUserAccountsWithCredit(
                 this.getUsersRequiringPaymentRetry.Object,
-                this.applyStandardUserCredit.Object,
+                this.applyUserCredit.Object,
                 this.getUserWeeklySubscriptionsCost.Object,
                 this.incrementPaymentStatus.Object,
                 this.getUserPaymentOrigin.Object);
@@ -96,18 +96,18 @@
             this.getUserPaymentOrigin.Setup(v => v.ExecuteAsync(userId5))
                 .ReturnsAsync(new UserPaymentOriginResult("customer5", null, null, null, null, PaymentStatus.None));
 
-            this.applyStandardUserCredit.Setup(v => v.ExecuteAsync(userId1, PositiveInt.Parse(TopUpUserAccountsWithCredit.MinimumPaymentAmount), null))
+            this.applyUserCredit.Setup(v => v.ExecuteAsync(userId1, PositiveInt.Parse(TopUpUserAccountsWithCredit.MinimumPaymentAmount), null, UserType.StandardUser))
                 .Returns(Task.FromResult(0))
                 .Verifiable();
 
-            this.applyStandardUserCredit.Setup(v => v.ExecuteAsync(userId2, PositiveInt.Parse(TopUpUserAccountsWithCredit.MinimumPaymentAmount + 1), null))
+            this.applyUserCredit.Setup(v => v.ExecuteAsync(userId2, PositiveInt.Parse(TopUpUserAccountsWithCredit.MinimumPaymentAmount + 1), null, UserType.StandardUser))
                 .Returns(Task.FromResult(0))
                 .Verifiable();
 
             var result = await this.target.ExecuteAsync(input, new List<PaymentProcessingException>());
 
             this.incrementPaymentStatus.Verify();
-            this.applyStandardUserCredit.Verify();
+            this.applyUserCredit.Verify();
 
             Assert.IsTrue(result);
         }

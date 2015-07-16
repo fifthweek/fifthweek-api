@@ -17,7 +17,8 @@ namespace Fifthweek.Payments.Services.Credit
         public async Task<InitializeCreditRequestResult> HandleAsync(
             UserId userId,
             PositiveInt amount,
-            PositiveInt expectedTotalAmount)
+            PositiveInt expectedTotalAmount,
+            UserType userType)
         {
             userId.AssertNotNull("userId");
             amount.AssertNotNull("amount");
@@ -35,12 +36,13 @@ namespace Fifthweek.Payments.Services.Credit
                     origin.CountryCode,
                     origin.CreditCardPrefix,
                     origin.IpAddress,
-                    origin.OriginalTaxamoTransactionKey);
+                    origin.OriginalTaxamoTransactionKey,
+                    userType);
 
             // Verify expected amount matches data returned from taxamo.
             if (expectedTotalAmount != null && taxamoTransaction.TotalAmount.Value != expectedTotalAmount.Value)
             {
-                await this.deleteTaxamoTransaction.ExecuteAsync(taxamoTransaction.Key);
+                await this.deleteTaxamoTransaction.ExecuteAsync(taxamoTransaction.Key, userType);
                 throw new BadRequestException("The expected total amount did not match the calculated total amount.");
             }
 

@@ -87,12 +87,10 @@
   </Choose>
   <ItemGroup>
     <Compile Include="Commands\ApplyCreditRequestCommandHandlerTests.cs" />
-    <Compile Include="Commands\CommitTestUserCreditToDatabaseTests.cs" />
     <Compile Include="Commands\UpdatePaymentOriginCommandHandlerTests.cs" />
     <Compile Include="Controllers\PaymentsControllerTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Queries\GetCreditRequestSummaryQueryHandlerTests.cs" />
-    <Compile Include="SetTestUserAccountBalanceDbStatementTests.cs" />
     <Compile Include="SetUserPaymentOriginDbStatementTests.cs" />
     <Compile Include="ValidCountryCodeTests.cs" />
     <Compile Include="ValidCreditCardPrefixTests.cs" />

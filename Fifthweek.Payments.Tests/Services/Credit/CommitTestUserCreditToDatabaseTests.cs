@@ -1,11 +1,10 @@
-﻿namespace Fifthweek.Api.Payments.Tests.Commands
+﻿namespace Fifthweek.Payments.Tests.Services.Credit
 {
     using System;
     using System.Threading.Tasks;
 
     using Fifthweek.Api.Identity.Shared.Membership;
-    using Fifthweek.Api.Payments.Commands;
-    using Fifthweek.Payments.Services;
+    using Fifthweek.Payments.Services.Credit;
     using Fifthweek.Shared;
 
     using Microsoft.VisualStudio.TestTools.UnitTesting;

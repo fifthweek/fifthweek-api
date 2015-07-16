@@ -1,4 +1,4 @@
-﻿namespace Fifthweek.Api.Payments.Commands
+﻿namespace Fifthweek.Payments.Services.Credit
 {
     using System.Threading.Tasks;
 
