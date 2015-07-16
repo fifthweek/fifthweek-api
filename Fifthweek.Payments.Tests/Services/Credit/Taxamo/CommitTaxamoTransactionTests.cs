@@ -64,8 +64,8 @@
 
             var expectedInput = new CreatePaymentIn
             {
-                Amount = TaxamoTransactionResult.Amount.ToUsDollars(),
-                PaymentTimestamp = StripeTransactionResult.Timestamp.ToIso8601String(),
+                Amount = TaxamoTransactionResult.TotalAmount.ToUsDollars(),
+                PaymentTimestamp = CommitTaxamoTransaction.ToTaxamoDateTimeString(StripeTransactionResult.Timestamp),
                 PaymentInformation = string.Format(
                     "Reference:{0}, StripeChargeId:{1}",
                     StripeTransactionResult.TransactionReference,
@@ -91,8 +91,8 @@
 
             var expectedInput = new CreatePaymentIn
             {
-                Amount = TaxamoTransactionResult.Amount.ToUsDollars(),
-                PaymentTimestamp = StripeTransactionResult.Timestamp.ToIso8601String(),
+                Amount = TaxamoTransactionResult.TotalAmount.ToUsDollars(),
+                PaymentTimestamp = CommitTaxamoTransaction.ToTaxamoDateTimeString(StripeTransactionResult.Timestamp),
                 PaymentInformation = string.Format(
                     "Reference:{0}, StripeChargeId:{1}",
                     StripeTransactionResult.TransactionReference,

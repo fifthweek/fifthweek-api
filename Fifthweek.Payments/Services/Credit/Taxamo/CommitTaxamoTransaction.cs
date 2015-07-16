@@ -26,8 +26,8 @@
             var apiKey = this.taxamoApiKeyRepository.GetApiKey(userType);
             var input = new CreatePaymentIn 
             {
-                Amount = taxamoTransactionResult.Amount.ToUsDollars(),
-                PaymentTimestamp = stripeTransactionResult.Timestamp.ToIso8601String(),
+                Amount = taxamoTransactionResult.TotalAmount.ToUsDollars(),
+                PaymentTimestamp = ToTaxamoDateTimeString(stripeTransactionResult.Timestamp),
                 PaymentInformation = string.Format(
                     "Reference:{0}, StripeChargeId:{1}", 
                     stripeTransactionResult.TransactionReference, 
@@ -35,6 +35,16 @@
             };
 
             await this.taxamoService.CreatePaymentAsync(taxamoTransactionResult.Key, input, apiKey);
+        }
+
+        internal static string ToTaxamoDateTimeString(DateTime input)
+        {
+            if (input.Kind != DateTimeKind.Utc)
+            {
+                throw new InvalidOperationException("Non-UTC time passed to ToTaxamoDateTimeString");
+            }
+
+            return input.ToString("yyyy-MM-ddTHH:mm:ss.fffZ");
         }
     }
 }
