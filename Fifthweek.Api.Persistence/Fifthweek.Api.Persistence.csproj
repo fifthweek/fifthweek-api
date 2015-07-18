@@ -312,8 +312,13 @@
     <Compile Include="Migrations\201507091724218_RefactorPaymentColumnNames.Designer.cs">
       <DependentUpon>201507091724218_RefactorPaymentColumnNames.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201507180923219_CreateTransactionTypeColumnAndSplitCreditAndRevenue.cs" />
+    <Compile Include="Migrations\201507180923219_CreateTransactionTypeColumnAndSplitCreditAndRevenue.Designer.cs">
+      <DependentUpon>201507180923219_CreateTransactionTypeColumnAndSplitCreditAndRevenue.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Payments\AppendOnlyLedgerRecord.cs" />
+    <Compile Include="Payments\LedgerTransactionType.cs" />
     <Compile Include="Payments\PaymentStatus.cs" />
     <Compile Include="Payments\CalculatedAccountBalance.cs" />
     <Compile Include="Payments\CreatorPercentageOverride.cs" />
@@ -507,6 +512,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201507091724218_RefactorPaymentColumnNames.resx">
       <DependentUpon>201507091724218_RefactorPaymentColumnNames.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201507180923219_CreateTransactionTypeColumnAndSplitCreditAndRevenue.resx">
+      <DependentUpon>201507180923219_CreateTransactionTypeColumnAndSplitCreditAndRevenue.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>

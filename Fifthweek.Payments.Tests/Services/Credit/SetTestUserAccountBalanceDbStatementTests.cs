@@ -67,7 +67,7 @@
                 {
                     Insert = new CalculatedAccountBalance(
                         UserId.Value,
-                        LedgerAccountType.Fifthweek,
+                        LedgerAccountType.FifthweekCredit,
                         Timestamp,
                         Amount.Value)
                 };

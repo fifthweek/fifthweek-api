@@ -67,10 +67,10 @@
             var userId5 = UserId.Random();
             var input = new List<CalculatedAccountBalanceResult>
             { 
-                new CalculatedAccountBalanceResult(DateTime.UtcNow, UserId.Random(), LedgerAccountType.Fifthweek, TopUpUserAccountsWithCredit.MinimumAccountBalanceBeforeCharge),
+                new CalculatedAccountBalanceResult(DateTime.UtcNow, UserId.Random(), LedgerAccountType.FifthweekCredit, TopUpUserAccountsWithCredit.MinimumAccountBalanceBeforeCharge),
                 new CalculatedAccountBalanceResult(DateTime.UtcNow, UserId.Random(), LedgerAccountType.Stripe, 0),
-                new CalculatedAccountBalanceResult(DateTime.UtcNow, userId1, LedgerAccountType.Fifthweek, TopUpUserAccountsWithCredit.MinimumAccountBalanceBeforeCharge - 1),
-                new CalculatedAccountBalanceResult(DateTime.UtcNow, userId2, LedgerAccountType.Fifthweek, -1m),
+                new CalculatedAccountBalanceResult(DateTime.UtcNow, userId1, LedgerAccountType.FifthweekCredit, TopUpUserAccountsWithCredit.MinimumAccountBalanceBeforeCharge - 1),
+                new CalculatedAccountBalanceResult(DateTime.UtcNow, userId2, LedgerAccountType.FifthweekCredit, -1m),
             };
 
             var usersRequiringRetry = new List<UserId> { userId3, userId4, userId5 };
@@ -122,10 +122,10 @@
             var userId5 = UserId.Random();
             var input = new List<CalculatedAccountBalanceResult>
             { 
-                new CalculatedAccountBalanceResult(DateTime.UtcNow, UserId.Random(), LedgerAccountType.Fifthweek, TopUpUserAccountsWithCredit.MinimumAccountBalanceBeforeCharge),
+                new CalculatedAccountBalanceResult(DateTime.UtcNow, UserId.Random(), LedgerAccountType.FifthweekCredit, TopUpUserAccountsWithCredit.MinimumAccountBalanceBeforeCharge),
                 new CalculatedAccountBalanceResult(DateTime.UtcNow, UserId.Random(), LedgerAccountType.Stripe, 0),
-                new CalculatedAccountBalanceResult(DateTime.UtcNow, userId1, LedgerAccountType.Fifthweek, TopUpUserAccountsWithCredit.MinimumAccountBalanceBeforeCharge - 1),
-                new CalculatedAccountBalanceResult(DateTime.UtcNow, userId2, LedgerAccountType.Fifthweek, -1m),
+                new CalculatedAccountBalanceResult(DateTime.UtcNow, userId1, LedgerAccountType.FifthweekCredit, TopUpUserAccountsWithCredit.MinimumAccountBalanceBeforeCharge - 1),
+                new CalculatedAccountBalanceResult(DateTime.UtcNow, userId2, LedgerAccountType.FifthweekCredit, -1m),
             };
 
             var usersRequiringRetry = new List<UserId> { userId3, userId4, userId5 };

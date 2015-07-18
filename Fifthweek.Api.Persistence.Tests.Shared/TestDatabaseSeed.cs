@@ -264,6 +264,7 @@
                     DateTime.UtcNow,
                     -1200,
                     LedgerAccountType.Stripe,
+                    LedgerTransactionType.CreditAddition,
                     transactionReference2,
                     Guid.NewGuid(),
                     "comment",
@@ -277,9 +278,10 @@
                     null,
                     DateTime.UtcNow,
                     1000,
-                    LedgerAccountType.Fifthweek,
+                    LedgerAccountType.FifthweekCredit,
+                    LedgerTransactionType.CreditAddition,
                     transactionReference2,
-                    Guid.NewGuid(), 
+                    Guid.NewGuid(),
                     "comment",
                     "stripe",
                     "taxamo"));
@@ -292,15 +294,17 @@
                     DateTime.UtcNow,
                     200,
                     LedgerAccountType.SalesTax,
+                    LedgerTransactionType.CreditAddition,
                     transactionReference2,
                     Guid.NewGuid(), 
                     "comment",
                     "stripe", 
                     "taxamo"));
 
-            this.calculatedAccountBalance.Add(new CalculatedAccountBalance(user.Id, LedgerAccountType.Fifthweek, DateTime.UtcNow.AddDays(-1), 1000));
+            this.calculatedAccountBalance.Add(new CalculatedAccountBalance(user.Id, LedgerAccountType.FifthweekCredit, DateTime.UtcNow.AddDays(-1), 1000));
             this.calculatedAccountBalance.Add(new CalculatedAccountBalance(user.Id, LedgerAccountType.Stripe, DateTime.UtcNow.AddDays(-1), -1100));
             this.calculatedAccountBalance.Add(new CalculatedAccountBalance(user.Id, LedgerAccountType.SalesTax, DateTime.UtcNow.AddDays(-1), 100));
+            this.calculatedAccountBalance.Add(new CalculatedAccountBalance(user.Id, LedgerAccountType.FifthweekRevenue, DateTime.UtcNow.AddDays(-1), 10000));
 
             if (userIndex % 3 == 0)
             {
@@ -326,7 +330,8 @@
                     creatorId,
                     DateTime.UtcNow,
                     -100,
-                    LedgerAccountType.Fifthweek,
+                    LedgerAccountType.FifthweekCredit,
+                    LedgerTransactionType.SubscriptionPayment,
                     transactionReference,
                     Guid.NewGuid(), "comment", "stripe", "taxamo"));
             this.appendOnlyLedgerRecord.Add(
@@ -336,7 +341,8 @@
                     creatorId,
                     DateTime.UtcNow,
                     100,
-                    LedgerAccountType.Fifthweek,
+                    LedgerAccountType.FifthweekRevenue,
+                    LedgerTransactionType.SubscriptionPayment,
                     transactionReference,
                     Guid.NewGuid(), "comment", "stripe", "taxamo"));
             this.appendOnlyLedgerRecord.Add(
@@ -346,7 +352,8 @@
                     creatorId,
                     DateTime.UtcNow,
                     -70,
-                    LedgerAccountType.Fifthweek,
+                    LedgerAccountType.FifthweekRevenue,
+                    LedgerTransactionType.SubscriptionPayment,
                     transactionReference,
                     Guid.NewGuid(), "comment", "stripe", "taxamo"));
             this.appendOnlyLedgerRecord.Add(
@@ -356,7 +363,8 @@
                     creatorId,
                     DateTime.UtcNow,
                     70,
-                    LedgerAccountType.Fifthweek,
+                    LedgerAccountType.FifthweekRevenue,
+                    LedgerTransactionType.SubscriptionPayment,
                     transactionReference,
                     Guid.NewGuid(), "comment", "stripe", "taxamo"));
         }

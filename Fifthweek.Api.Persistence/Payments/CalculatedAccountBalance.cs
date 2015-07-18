@@ -42,7 +42,7 @@
             CalculatedAccountBalance.Table,
             CalculatedAccountBalance.Fields.UserId,
             CalculatedAccountBalance.Fields.AccountType,
-            (int)LedgerAccountType.Fifthweek,
+            (int)LedgerAccountType.FifthweekCredit,
             userIdParameterName);
         }
     }

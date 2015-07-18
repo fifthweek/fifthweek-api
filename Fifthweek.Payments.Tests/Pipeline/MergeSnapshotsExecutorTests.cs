@@ -45,7 +45,7 @@
                 CreatorFreeAccessUsersSnapshot.Default(Now, CreatorId1),
                 SubscriberChannelsSnapshot.Default(Now, SubscriberId1),
                 SubscriberSnapshot.Default(Now, SubscriberId1),
-                CalculatedAccountBalanceSnapshot.Default(Now, SubscriberId1, LedgerAccountType.Fifthweek));
+                CalculatedAccountBalanceSnapshot.Default(Now, SubscriberId1, LedgerAccountType.FifthweekCredit));
 
             var result = this.target.Execute(SubscriberId1, CreatorId1, Now, new List<ISnapshot> { creatorChannelSnapshot });
 
@@ -62,7 +62,7 @@
                 creatorGuestListSnapshot,
                 SubscriberChannelsSnapshot.Default(Now, SubscriberId1),
                 SubscriberSnapshot.Default(Now, SubscriberId1),
-                CalculatedAccountBalanceSnapshot.Default(Now, SubscriberId1, LedgerAccountType.Fifthweek));
+                CalculatedAccountBalanceSnapshot.Default(Now, SubscriberId1, LedgerAccountType.FifthweekCredit));
 
             var result = this.target.Execute(SubscriberId1, CreatorId1, Now, new List<ISnapshot> { creatorGuestListSnapshot });
 
@@ -80,7 +80,7 @@
                 CreatorFreeAccessUsersSnapshot.Default(Now, CreatorId1),
                 subscriberChannelSnapshot,
                 SubscriberSnapshot.Default(Now, SubscriberId1),
-                CalculatedAccountBalanceSnapshot.Default(Now, SubscriberId1, LedgerAccountType.Fifthweek));
+                CalculatedAccountBalanceSnapshot.Default(Now, SubscriberId1, LedgerAccountType.FifthweekCredit));
 
             var result = this.target.Execute(SubscriberId1, CreatorId1, Now, new List<ISnapshot> { subscriberChannelSnapshot });
 
@@ -98,7 +98,7 @@
                 CreatorFreeAccessUsersSnapshot.Default(Now, CreatorId1),
                 SubscriberChannelsSnapshot.Default(Now, SubscriberId1),
                 subscriberSnapshot,
-                CalculatedAccountBalanceSnapshot.Default(Now, SubscriberId1, LedgerAccountType.Fifthweek));
+                CalculatedAccountBalanceSnapshot.Default(Now, SubscriberId1, LedgerAccountType.FifthweekCredit));
 
             var result = this.target.Execute(SubscriberId1, CreatorId1, Now, new List<ISnapshot> { subscriberSnapshot });
 
@@ -108,7 +108,7 @@
         [TestMethod]
         public void WhenOnlyCalculatedAccountBalanceSnapshot_ShouldReturnMergedSnapshot()
         {
-            var calculatedAccountBalanceSnapshot = new CalculatedAccountBalanceSnapshot(Now, SubscriberId1, LedgerAccountType.Fifthweek, 10);
+            var calculatedAccountBalanceSnapshot = new CalculatedAccountBalanceSnapshot(Now, SubscriberId1, LedgerAccountType.FifthweekCredit, 10);
 
             var expectedResult = new MergedSnapshot(
                 Now,
@@ -135,14 +135,14 @@
                     CreatorFreeAccessUsersSnapshot.Default(Now, CreatorId1),
                     SubscriberChannelsSnapshot.Default(Now, SubscriberId1),
                     SubscriberSnapshot.Default(Now, SubscriberId1),
-                    CalculatedAccountBalanceSnapshot.Default(Now, SubscriberId1, LedgerAccountType.Fifthweek)),
+                    CalculatedAccountBalanceSnapshot.Default(Now, SubscriberId1, LedgerAccountType.FifthweekCredit)),
                 new MergedSnapshot(
                     Now.AddDays(1),
                     creatorSnapshot,
                     CreatorFreeAccessUsersSnapshot.Default(Now, CreatorId1),
                     SubscriberChannelsSnapshot.Default(Now, SubscriberId1),
                     SubscriberSnapshot.Default(Now, SubscriberId1),
-                    CalculatedAccountBalanceSnapshot.Default(Now, SubscriberId1, LedgerAccountType.Fifthweek)),
+                    CalculatedAccountBalanceSnapshot.Default(Now, SubscriberId1, LedgerAccountType.FifthweekCredit)),
             };
 
             var result = this.target.Execute(SubscriberId1, CreatorId1, Now, new List<ISnapshot> { creatorSnapshot });
@@ -162,7 +162,7 @@
                     CreatorFreeAccessUsersSnapshot.Default(Now.AddDays(-1), CreatorId1),
                     SubscriberChannelsSnapshot.Default(Now.AddDays(-1), SubscriberId1),
                     SubscriberSnapshot.Default(Now.AddDays(-1), SubscriberId1),
-                    CalculatedAccountBalanceSnapshot.Default(Now.AddDays(-1), SubscriberId1, LedgerAccountType.Fifthweek)),
+                    CalculatedAccountBalanceSnapshot.Default(Now.AddDays(-1), SubscriberId1, LedgerAccountType.FifthweekCredit)),
             };
 
             var result = this.target.Execute(SubscriberId1, CreatorId1, Now, new List<ISnapshot> { creatorSnapshot });
@@ -177,7 +177,7 @@
             var creatorGuestListSnapshot = new CreatorFreeAccessUsersSnapshot(Now, CreatorId1, new List<string> { "a", "b" });
             var subscriberChannelSnapshot = new SubscriberChannelsSnapshot(Now, SubscriberId1, new List<SubscriberChannelsSnapshotItem> { new SubscriberChannelsSnapshotItem(new ChannelId(Guid.NewGuid()), 100, Now) });
             var subscriberSnapshot = new SubscriberSnapshot(Now, SubscriberId1, "email");
-            var calculatedAccountBalanceSnapshot = new CalculatedAccountBalanceSnapshot(Now, SubscriberId1, LedgerAccountType.Fifthweek, 10);
+            var calculatedAccountBalanceSnapshot = new CalculatedAccountBalanceSnapshot(Now, SubscriberId1, LedgerAccountType.FifthweekCredit, 10);
 
             var expectedResult = new List<MergedSnapshot> 
             {
@@ -219,14 +219,14 @@
                 new SubscriberChannelsSnapshot(Now.AddHours(5), SubscriberId1, new List<SubscriberChannelsSnapshotItem> { new SubscriberChannelsSnapshotItem(new ChannelId(Guid.NewGuid()), 100, Now) }),
                 new SubscriberChannelsSnapshot(Now.AddHours(6), SubscriberId1, new List<SubscriberChannelsSnapshotItem> { new SubscriberChannelsSnapshotItem(new ChannelId(Guid.NewGuid()), 100, Now) }),
                 new SubscriberSnapshot(Now.AddHours(7), SubscriberId1, "email"),
-                new CalculatedAccountBalanceSnapshot(Now.AddHours(8), SubscriberId1, LedgerAccountType.Fifthweek, 10)
+                new CalculatedAccountBalanceSnapshot(Now.AddHours(8), SubscriberId1, LedgerAccountType.FifthweekCredit, 10)
             };
 
             var defaultCreatorChannelSnapshot = CreatorChannelsSnapshot.Default(Now, CreatorId1);
             var defaultCreatorGuestListSnapshot = CreatorFreeAccessUsersSnapshot.Default(Now, CreatorId1);
             var defaultSubscriberChannelSnapshot = SubscriberChannelsSnapshot.Default(Now, SubscriberId1);
             var defaultSubscriberSnapshot = SubscriberSnapshot.Default(Now, SubscriberId1);
-            var defaultCalculatedAccountBalanceSnapshot = CalculatedAccountBalanceSnapshot.Default(Now, SubscriberId1, LedgerAccountType.Fifthweek);
+            var defaultCalculatedAccountBalanceSnapshot = CalculatedAccountBalanceSnapshot.Default(Now, SubscriberId1, LedgerAccountType.FifthweekCredit);
 
             var expectedResult = new List<MergedSnapshot> 
             {

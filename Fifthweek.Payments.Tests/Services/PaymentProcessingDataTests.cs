@@ -77,7 +77,7 @@
                     new CalculatedAccountBalanceSnapshot(
                         Now.AddDays(9),
                         UserId.Random(),
-                        LedgerAccountType.Fifthweek,
+                        LedgerAccountType.FifthweekCredit,
                         10.1m),
                 },
                 new List<CreatorChannelsSnapshot>

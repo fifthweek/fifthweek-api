@@ -44,7 +44,7 @@
                 var userIds = await this.CreateDataAsync(testDatabase);
                 await testDatabase.TakeSnapshotAsync();
 
-                var result = await this.target.ExecuteAsync(SubscriberId1, LedgerAccountType.Fifthweek, Now, Now.AddDays(Days));
+                var result = await this.target.ExecuteAsync(SubscriberId1, LedgerAccountType.FifthweekCredit, Now, Now.AddDays(Days));
 
                 Assert.AreEqual(Days, result.Count);
 
@@ -53,7 +53,7 @@
                 for (int i = 0; i < result.Count; i++)
                 {
                     Assert.AreEqual(SubscriberId1, result[i].UserId);
-                    Assert.AreEqual(LedgerAccountType.Fifthweek, result[i].AccountType);
+                    Assert.AreEqual(LedgerAccountType.FifthweekCredit, result[i].AccountType);
                     Assert.AreEqual(Now.AddDays(i), result[i].Timestamp);
                     Assert.IsTrue(result[i].Timestamp.Kind == DateTimeKind.Utc);
                     Assert.AreEqual(i, result[i].Amount);
@@ -135,7 +135,7 @@
 
                 // Three fewer results at the end, and two fewer at the beginning as we select first 
                 // result in front of timestamp.
-                var result = await this.target.ExecuteAsync(SubscriberId2, LedgerAccountType.Fifthweek, Now.AddHours(18).AddDays(2), Now.AddDays(Days - 3));
+                var result = await this.target.ExecuteAsync(SubscriberId2, LedgerAccountType.FifthweekCredit, Now.AddHours(18).AddDays(2), Now.AddDays(Days - 3));
 
                 Assert.AreEqual(Days - 5, result.Count);
 
@@ -144,7 +144,7 @@
                 for (int i = 0; i < result.Count; i++)
                 {
                     Assert.AreEqual(SubscriberId2, result[i].UserId);
-                    Assert.AreEqual(LedgerAccountType.Fifthweek, result[i].AccountType);
+                    Assert.AreEqual(LedgerAccountType.FifthweekCredit, result[i].AccountType);
                     Assert.AreEqual(Now.AddDays(i + 2).AddHours(12), result[i].Timestamp);
                     Assert.IsTrue(result[i].Timestamp.Kind == DateTimeKind.Utc);
                     Assert.AreEqual(i + 2 + 0.5m, result[i].Amount);
@@ -162,10 +162,10 @@
 
                 for (int i = 0; i < Days; i++)
                 {
-                    snapshots.Add(new CalculatedAccountBalance(SubscriberId1.Value, LedgerAccountType.Fifthweek, Now.AddDays(i), i));
+                    snapshots.Add(new CalculatedAccountBalance(SubscriberId1.Value, LedgerAccountType.FifthweekCredit, Now.AddDays(i), i));
                     snapshots.Add(new CalculatedAccountBalance(SubscriberId1.Value, LedgerAccountType.Stripe, Now.AddDays(i), i + 0.25m));
 
-                    snapshots.Add(new CalculatedAccountBalance(SubscriberId2.Value, LedgerAccountType.Fifthweek, Now.AddDays(i).AddHours(12), i + 0.5m));
+                    snapshots.Add(new CalculatedAccountBalance(SubscriberId2.Value, LedgerAccountType.FifthweekCredit, Now.AddDays(i).AddHours(12), i + 0.5m));
                     snapshots.Add(new CalculatedAccountBalance(SubscriberId2.Value, LedgerAccountType.Stripe, Now.AddDays(i).AddHours(12), i + 0.75m));
                 }
 

@@ -58,23 +58,24 @@
                 {
                     new CalculatedAccountBalance(SubscriberId1.Value, LedgerAccountType.Stripe, Now, -120m),
                     new CalculatedAccountBalance(SubscriberId1.Value, LedgerAccountType.SalesTax, Now, 20m),
-                    new CalculatedAccountBalance(SubscriberId1.Value, LedgerAccountType.Fifthweek, Now, 70m),
+                    new CalculatedAccountBalance(SubscriberId1.Value, LedgerAccountType.FifthweekCredit, Now, 70m),
                             
                     new CalculatedAccountBalance(SubscriberId2.Value, LedgerAccountType.Stripe, Now, -60m),
                     new CalculatedAccountBalance(SubscriberId2.Value, LedgerAccountType.SalesTax, Now, 10m),
-                    new CalculatedAccountBalance(SubscriberId2.Value, LedgerAccountType.Fifthweek, Now, 5m),
+                    new CalculatedAccountBalance(SubscriberId2.Value, LedgerAccountType.FifthweekCredit, Now, 5m),
 
                     new CalculatedAccountBalance(SubscriberId3.Value, LedgerAccountType.Stripe, Now, -12m),
                     new CalculatedAccountBalance(SubscriberId3.Value, LedgerAccountType.SalesTax, Now, 2m),
-                    new CalculatedAccountBalance(SubscriberId3.Value, LedgerAccountType.Fifthweek, Now, 10m),
+                    new CalculatedAccountBalance(SubscriberId3.Value, LedgerAccountType.FifthweekCredit, Now, 10m),
 
                     new CalculatedAccountBalance(CreatorId1.Value, LedgerAccountType.Stripe, Now, -6.6m),
                     new CalculatedAccountBalance(CreatorId1.Value, LedgerAccountType.SalesTax, Now, 1.1m),
-                    new CalculatedAccountBalance(CreatorId1.Value, LedgerAccountType.Fifthweek, Now, 2.5m),
+                    new CalculatedAccountBalance(CreatorId1.Value, LedgerAccountType.FifthweekCredit, Now, -4.5m),
+                    new CalculatedAccountBalance(CreatorId1.Value, LedgerAccountType.FifthweekRevenue, Now, 7m),
 
-                    new CalculatedAccountBalance(CreatorId2.Value, LedgerAccountType.Fifthweek, Now, 49m),
+                    new CalculatedAccountBalance(CreatorId2.Value, LedgerAccountType.FifthweekRevenue, Now, 49m),
                  
-                    new CalculatedAccountBalance(Guid.Empty, LedgerAccountType.Fifthweek, Now, existingFifthweekBalance + 24m),
+                    new CalculatedAccountBalance(Guid.Empty, LedgerAccountType.FifthweekRevenue, Now, existingFifthweekBalance + 24m),
                 };
                 var expected = ToExpectedResult(inserts);
                 
@@ -106,7 +107,7 @@
                 {
                     new CalculatedAccountBalance(SubscriberId2.Value, LedgerAccountType.Stripe, Now, -60m),
                     new CalculatedAccountBalance(SubscriberId2.Value, LedgerAccountType.SalesTax, Now, 10m),
-                    new CalculatedAccountBalance(SubscriberId2.Value, LedgerAccountType.Fifthweek, Now, 5m),
+                    new CalculatedAccountBalance(SubscriberId2.Value, LedgerAccountType.FifthweekCredit, Now, 5m),
                 };
                 var expected = ToExpectedResult(inserts);
 
@@ -155,7 +156,7 @@
                             CalculatedAccountBalance.Fields.AccountType,
                             CalculatedAccountBalance.Fields.Timestamp,
                             Guid.Empty.ToString(),
-                            (int)LedgerAccountType.Fifthweek));
+                            (int)LedgerAccountType.FifthweekRevenue));
             }
             return existingFifthweekBalance;
         }
@@ -197,10 +198,10 @@
             UserId destinationUserId,
             decimal amount)
         {
-            AddAppendOnlyLedgerRecord(databaseContext, random, sourceUserId, destinationUserId, -amount, LedgerAccountType.Fifthweek);
-            AddAppendOnlyLedgerRecord(databaseContext, random, null, destinationUserId, amount, LedgerAccountType.Fifthweek);
-            AddAppendOnlyLedgerRecord(databaseContext, random, null, destinationUserId, -0.7m * amount, LedgerAccountType.Fifthweek);
-            AddAppendOnlyLedgerRecord(databaseContext, random, destinationUserId, destinationUserId, 0.7m * amount, LedgerAccountType.Fifthweek);
+            AddAppendOnlyLedgerRecord(databaseContext, random, sourceUserId, destinationUserId, -amount, LedgerAccountType.FifthweekCredit, LedgerTransactionType.SubscriptionPayment);
+            AddAppendOnlyLedgerRecord(databaseContext, random, null, destinationUserId, amount, LedgerAccountType.FifthweekRevenue, LedgerTransactionType.SubscriptionPayment);
+            AddAppendOnlyLedgerRecord(databaseContext, random, null, destinationUserId, -0.7m * amount, LedgerAccountType.FifthweekRevenue, LedgerTransactionType.SubscriptionPayment);
+            AddAppendOnlyLedgerRecord(databaseContext, random, destinationUserId, destinationUserId, 0.7m * amount, LedgerAccountType.FifthweekRevenue, LedgerTransactionType.SubscriptionPayment);
         }
 
 
@@ -216,12 +217,12 @@
 
         private static void AddCredit(FifthweekDbContext databaseContext, Random random, UserId userId, decimal amount)
         {
-            AddAppendOnlyLedgerRecord(databaseContext, random, userId, null, -1.2m * amount, LedgerAccountType.Stripe);
-            AddAppendOnlyLedgerRecord(databaseContext, random, userId, null, amount, LedgerAccountType.Fifthweek);
-            AddAppendOnlyLedgerRecord(databaseContext, random, userId, null, (1.2m * amount) - amount, LedgerAccountType.SalesTax);
+            AddAppendOnlyLedgerRecord(databaseContext, random, userId, null, -1.2m * amount, LedgerAccountType.Stripe, LedgerTransactionType.CreditAddition);
+            AddAppendOnlyLedgerRecord(databaseContext, random, userId, null, amount, LedgerAccountType.FifthweekCredit, LedgerTransactionType.CreditAddition);
+            AddAppendOnlyLedgerRecord(databaseContext, random, userId, null, (1.2m * amount) - amount, LedgerAccountType.SalesTax, LedgerTransactionType.CreditAddition);
         }
 
-        private static void AddAppendOnlyLedgerRecord(FifthweekDbContext databaseContext, Random random, UserId accountOwnerId, UserId counterpartyId, decimal amount, LedgerAccountType ledgerAccountType)
+        private static void AddAppendOnlyLedgerRecord(FifthweekDbContext databaseContext, Random random, UserId accountOwnerId, UserId counterpartyId, decimal amount, LedgerAccountType ledgerAccountType, LedgerTransactionType transactionType)
         {
             databaseContext.AppendOnlyLedgerRecords.Add(
                 new AppendOnlyLedgerRecord(
@@ -231,6 +232,7 @@
                     Now.AddDays(random.Next(-100, 100)),
                     amount,
                     ledgerAccountType,
+                    transactionType,
                     Guid.NewGuid(),
                     Guid.NewGuid(),
                     null,

@@ -31,7 +31,7 @@ namespace Fifthweek.Payments.Services.Credit
 
             var userIdsToRetry = await this.getUsersRequiringPaymentRetry.ExecuteAsync();
             var newUserIds = updatedAccountBalances
-                .Where(v => v.AccountType == LedgerAccountType.Fifthweek
+                .Where(v => v.AccountType == LedgerAccountType.FifthweekCredit
                         && v.Amount < MinimumAccountBalanceBeforeCharge)
                 .Select(v => v.UserId);
             var allUserIds = userIdsToRetry.Concat(newUserIds).Distinct().ToList();

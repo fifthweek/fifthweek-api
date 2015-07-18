@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Linq;
 
-//// Generated on 09/07/2015 17:01:56 (UTC)
-//// Mapped solution in 14.29s
+//// Generated on 18/07/2015 08:50:12 (UTC)
+//// Mapped solution in 13.94s
 
 
 namespace Fifthweek.Api.Persistence
@@ -845,6 +845,7 @@ namespace Fifthweek.Api.Persistence.Payments
             System.DateTime timestamp,
             System.Decimal amount,
             Fifthweek.Api.Persistence.Payments.LedgerAccountType accountType,
+            Fifthweek.Api.Persistence.Payments.LedgerTransactionType transactionType,
             System.Guid transactionReference,
             System.Nullable<System.Guid> inputDataReference,
             System.String comment,
@@ -876,6 +877,11 @@ namespace Fifthweek.Api.Persistence.Payments
                 throw new ArgumentNullException("accountType");
             }
 
+            if (transactionType == null)
+            {
+                throw new ArgumentNullException("transactionType");
+            }
+
             if (transactionReference == null)
             {
                 throw new ArgumentNullException("transactionReference");
@@ -887,6 +893,7 @@ namespace Fifthweek.Api.Persistence.Payments
             this.Timestamp = timestamp;
             this.Amount = amount;
             this.AccountType = accountType;
+            this.TransactionType = transactionType;
             this.TransactionReference = transactionReference;
             this.InputDataReference = inputDataReference;
             this.Comment = comment;
@@ -2455,7 +2462,7 @@ namespace Fifthweek.Api.Persistence.Payments
     {
         public override string ToString()
         {
-            return string.Format("AppendOnlyLedgerRecord({0}, {1}, {2}, {3}, {4}, {5}, {6}, {7}, \"{8}\", \"{9}\", \"{10}\")", this.Id == null ? "null" : this.Id.ToString(), this.AccountOwnerId == null ? "null" : this.AccountOwnerId.ToString(), this.CounterpartyId == null ? "null" : this.CounterpartyId.ToString(), this.Timestamp == null ? "null" : this.Timestamp.ToString(), this.Amount == null ? "null" : this.Amount.ToString(), this.AccountType == null ? "null" : this.AccountType.ToString(), this.TransactionReference == null ? "null" : this.TransactionReference.ToString(), this.InputDataReference == null ? "null" : this.InputDataReference.ToString(), this.Comment == null ? "null" : this.Comment.ToString(), this.StripeChargeId == null ? "null" : this.StripeChargeId.ToString(), this.TaxamoTransactionKey == null ? "null" : this.TaxamoTransactionKey.ToString());
+            return string.Format("AppendOnlyLedgerRecord({0}, {1}, {2}, {3}, {4}, {5}, {6}, {7}, {8}, \"{9}\", \"{10}\", \"{11}\")", this.Id == null ? "null" : this.Id.ToString(), this.AccountOwnerId == null ? "null" : this.AccountOwnerId.ToString(), this.CounterpartyId == null ? "null" : this.CounterpartyId.ToString(), this.Timestamp == null ? "null" : this.Timestamp.ToString(), this.Amount == null ? "null" : this.Amount.ToString(), this.AccountType == null ? "null" : this.AccountType.ToString(), this.TransactionType == null ? "null" : this.TransactionType.ToString(), this.TransactionReference == null ? "null" : this.TransactionReference.ToString(), this.InputDataReference == null ? "null" : this.InputDataReference.ToString(), this.Comment == null ? "null" : this.Comment.ToString(), this.StripeChargeId == null ? "null" : this.StripeChargeId.ToString(), this.TaxamoTransactionKey == null ? "null" : this.TaxamoTransactionKey.ToString());
         }
         
         public override bool Equals(object obj)
@@ -2489,6 +2496,7 @@ namespace Fifthweek.Api.Persistence.Payments
                 hashCode = (hashCode * 397) ^ (this.Timestamp != null ? this.Timestamp.GetHashCode() : 0);
                 hashCode = (hashCode * 397) ^ (this.Amount != null ? this.Amount.GetHashCode() : 0);
                 hashCode = (hashCode * 397) ^ (this.AccountType != null ? this.AccountType.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.TransactionType != null ? this.TransactionType.GetHashCode() : 0);
                 hashCode = (hashCode * 397) ^ (this.TransactionReference != null ? this.TransactionReference.GetHashCode() : 0);
                 hashCode = (hashCode * 397) ^ (this.InputDataReference != null ? this.InputDataReference.GetHashCode() : 0);
                 hashCode = (hashCode * 397) ^ (this.Comment != null ? this.Comment.GetHashCode() : 0);
@@ -2526,6 +2534,11 @@ namespace Fifthweek.Api.Persistence.Payments
             }
         
             if (!object.Equals(this.AccountType, other.AccountType))
+            {
+                return false;
+            }
+        
+            if (!object.Equals(this.TransactionType, other.TransactionType))
             {
                 return false;
             }
@@ -9990,11 +10003,12 @@ namespace Fifthweek.Api.Persistence.Payments
             Timestamp = 8, 
             Amount = 16, 
             AccountType = 32, 
-            TransactionReference = 64, 
-            InputDataReference = 128, 
-            Comment = 256, 
-            StripeChargeId = 512, 
-            TaxamoTransactionKey = 1024
+            TransactionType = 64, 
+            TransactionReference = 128, 
+            InputDataReference = 256, 
+            Comment = 512, 
+            StripeChargeId = 1024, 
+            TaxamoTransactionKey = 2048
         }
     }
 
@@ -10011,7 +10025,7 @@ namespace Fifthweek.Api.Persistence.Payments
                 InsertStatement(idempotent), 
                 entities.Select(entity => new 
                 {
-                    entity.Id, entity.AccountOwnerId, entity.CounterpartyId, entity.Timestamp, entity.Amount, entity.AccountType, entity.TransactionReference, entity.InputDataReference, entity.Comment, entity.StripeChargeId, entity.TaxamoTransactionKey
+                    entity.Id, entity.AccountOwnerId, entity.CounterpartyId, entity.Timestamp, entity.Amount, entity.AccountType, entity.TransactionType, entity.TransactionReference, entity.InputDataReference, entity.Comment, entity.StripeChargeId, entity.TaxamoTransactionKey
                 }).ToArray(),
                 transaction);
         }
@@ -10027,7 +10041,7 @@ namespace Fifthweek.Api.Persistence.Payments
                 InsertStatement(idempotent), 
                 new 
                 {
-                    entity.Id, entity.AccountOwnerId, entity.CounterpartyId, entity.Timestamp, entity.Amount, entity.AccountType, entity.TransactionReference, entity.InputDataReference, entity.Comment, entity.StripeChargeId, entity.TaxamoTransactionKey
+                    entity.Id, entity.AccountOwnerId, entity.CounterpartyId, entity.Timestamp, entity.Amount, entity.AccountType, entity.TransactionType, entity.TransactionReference, entity.InputDataReference, entity.Comment, entity.StripeChargeId, entity.TaxamoTransactionKey
                 },
                 transaction);
         }
@@ -10072,7 +10086,7 @@ namespace Fifthweek.Api.Persistence.Payments
             var entity = parameters.Entity;
             var parameterObject = parameters.ExcludedFromInput != null
                 ? AllExceptSpecifiedParameters(entity, parameters.ExcludedFromInput.Value)
-                : new Dapper.DynamicParameters(new { entity.Id, entity.AccountOwnerId, entity.CounterpartyId, entity.Timestamp, entity.Amount, entity.AccountType, entity.TransactionReference, entity.InputDataReference, entity.Comment, entity.StripeChargeId, entity.TaxamoTransactionKey });
+                : new Dapper.DynamicParameters(new { entity.Id, entity.AccountOwnerId, entity.CounterpartyId, entity.Timestamp, entity.Amount, entity.AccountType, entity.TransactionType, entity.TransactionReference, entity.InputDataReference, entity.Comment, entity.StripeChargeId, entity.TaxamoTransactionKey });
         
             if (parameters.AdditionalParameters != null)
             {
@@ -10096,7 +10110,7 @@ namespace Fifthweek.Api.Persistence.Payments
                 UpsertStatement(AppendOnlyLedgerRecord.Fields.Empty, fields), 
                 new 
                 {
-                    entity.Id, entity.AccountOwnerId, entity.CounterpartyId, entity.Timestamp, entity.Amount, entity.AccountType, entity.TransactionReference, entity.InputDataReference, entity.Comment, entity.StripeChargeId, entity.TaxamoTransactionKey
+                    entity.Id, entity.AccountOwnerId, entity.CounterpartyId, entity.Timestamp, entity.Amount, entity.AccountType, entity.TransactionType, entity.TransactionReference, entity.InputDataReference, entity.Comment, entity.StripeChargeId, entity.TaxamoTransactionKey
                 },
                 transaction);
         }
@@ -10113,7 +10127,7 @@ namespace Fifthweek.Api.Persistence.Payments
                 UpsertStatement(mergeOnFields, updateFields), 
                 new 
                 {
-                    entity.Id, entity.AccountOwnerId, entity.CounterpartyId, entity.Timestamp, entity.Amount, entity.AccountType, entity.TransactionReference, entity.InputDataReference, entity.Comment, entity.StripeChargeId, entity.TaxamoTransactionKey
+                    entity.Id, entity.AccountOwnerId, entity.CounterpartyId, entity.Timestamp, entity.Amount, entity.AccountType, entity.TransactionType, entity.TransactionReference, entity.InputDataReference, entity.Comment, entity.StripeChargeId, entity.TaxamoTransactionKey
                 },
                 transaction);
         }
@@ -10184,7 +10198,7 @@ namespace Fifthweek.Api.Persistence.Payments
         
         public static string InsertStatement(bool idempotent = true)
         {
-            const string insert = "INSERT INTO AppendOnlyLedgerRecords(Id, AccountOwnerId, CounterpartyId, Timestamp, Amount, AccountType, TransactionReference, InputDataReference, Comment, StripeChargeId, TaxamoTransactionKey) VALUES(@Id, @AccountOwnerId, @CounterpartyId, @Timestamp, @Amount, @AccountType, @TransactionReference, @InputDataReference, @Comment, @StripeChargeId, @TaxamoTransactionKey)";
+            const string insert = "INSERT INTO AppendOnlyLedgerRecords(Id, AccountOwnerId, CounterpartyId, Timestamp, Amount, AccountType, TransactionType, TransactionReference, InputDataReference, Comment, StripeChargeId, TaxamoTransactionKey) VALUES(@Id, @AccountOwnerId, @CounterpartyId, @Timestamp, @Amount, @AccountType, @TransactionType, @TransactionReference, @InputDataReference, @Comment, @StripeChargeId, @TaxamoTransactionKey)";
             return idempotent ? SqlStatementTemplates.IdempotentInsert(insert) : insert;
         }
         
@@ -10195,7 +10209,7 @@ namespace Fifthweek.Api.Persistence.Payments
             var sql = new System.Text.StringBuilder();
             sql.Append(
                 @"MERGE AppendOnlyLedgerRecords WITH (HOLDLOCK) as Target
-                USING (VALUES (@Id, @AccountOwnerId, @CounterpartyId, @Timestamp, @Amount, @AccountType, @TransactionReference, @InputDataReference, @Comment, @StripeChargeId, @TaxamoTransactionKey)) AS Source (Id, AccountOwnerId, CounterpartyId, Timestamp, Amount, AccountType, TransactionReference, InputDataReference, Comment, StripeChargeId, TaxamoTransactionKey)
+                USING (VALUES (@Id, @AccountOwnerId, @CounterpartyId, @Timestamp, @Amount, @AccountType, @TransactionType, @TransactionReference, @InputDataReference, @Comment, @StripeChargeId, @TaxamoTransactionKey)) AS Source (Id, AccountOwnerId, CounterpartyId, Timestamp, Amount, AccountType, TransactionType, TransactionReference, InputDataReference, Comment, StripeChargeId, TaxamoTransactionKey)
                 ON    (");
                 
             if (mergeOnFields == AppendOnlyLedgerRecord.Fields.Empty)
@@ -10214,8 +10228,8 @@ namespace Fifthweek.Api.Persistence.Payments
             sql.AppendUpdateParameters(GetFieldNames(updateFields));
             sql.Append(
                 @" WHEN NOT MATCHED THEN
-                    INSERT  (Id, AccountOwnerId, CounterpartyId, Timestamp, Amount, AccountType, TransactionReference, InputDataReference, Comment, StripeChargeId, TaxamoTransactionKey)
-                    VALUES  (Source.Id, Source.AccountOwnerId, Source.CounterpartyId, Source.Timestamp, Source.Amount, Source.AccountType, Source.TransactionReference, Source.InputDataReference, Source.Comment, Source.StripeChargeId, Source.TaxamoTransactionKey);");
+                    INSERT  (Id, AccountOwnerId, CounterpartyId, Timestamp, Amount, AccountType, TransactionType, TransactionReference, InputDataReference, Comment, StripeChargeId, TaxamoTransactionKey)
+                    VALUES  (Source.Id, Source.AccountOwnerId, Source.CounterpartyId, Source.Timestamp, Source.Amount, Source.AccountType, Source.TransactionType, Source.TransactionReference, Source.InputDataReference, Source.Comment, Source.StripeChargeId, Source.TaxamoTransactionKey);");
             return sql.ToString();
         }
         
@@ -10259,6 +10273,11 @@ namespace Fifthweek.Api.Persistence.Payments
             if (fields.HasFlag(AppendOnlyLedgerRecord.Fields.AccountType))
             {
                 fieldNames.Add("AccountType");
+            }
+        
+            if (fields.HasFlag(AppendOnlyLedgerRecord.Fields.TransactionType))
+            {
+                fieldNames.Add("TransactionType");
             }
         
             if (fields.HasFlag(AppendOnlyLedgerRecord.Fields.TransactionReference))
@@ -10323,6 +10342,11 @@ namespace Fifthweek.Api.Persistence.Payments
                 parameters.Add("AccountType", entity.AccountType);
             }
         
+            if (fields.HasFlag(AppendOnlyLedgerRecord.Fields.TransactionType) && (excludedFields == null || !excludedFields.Value.HasFlag(AppendOnlyLedgerRecord.Fields.TransactionType)))
+            {
+                parameters.Add("TransactionType", entity.TransactionType);
+            }
+        
             if (fields.HasFlag(AppendOnlyLedgerRecord.Fields.TransactionReference) && (excludedFields == null || !excludedFields.Value.HasFlag(AppendOnlyLedgerRecord.Fields.TransactionReference)))
             {
                 parameters.Add("TransactionReference", entity.TransactionReference);
@@ -10382,6 +10406,11 @@ namespace Fifthweek.Api.Persistence.Payments
             if (!fields.HasFlag(AppendOnlyLedgerRecord.Fields.AccountType))
             {
                 parameters.Add("AccountType", entity.AccountType);
+            }
+        
+            if (!fields.HasFlag(AppendOnlyLedgerRecord.Fields.TransactionType))
+            {
+                parameters.Add("TransactionType", entity.TransactionType);
             }
         
             if (!fields.HasFlag(AppendOnlyLedgerRecord.Fields.TransactionReference))

@@ -45,7 +45,7 @@ namespace Fifthweek.Payments.Services
             UncommittedSubscriptionPayment.Fields.CreatorId,
             UncommittedSubscriptionPayment.Fields.Amount,
             AppendOnlyLedgerRecord.Fields.AccountType,
-            (int)LedgerAccountType.Fifthweek);
+            (int)LedgerAccountType.FifthweekCredit);
 
         private static readonly string SqlUserIdFilter = string.Format(@"
                 WHERE userId=@UserId");

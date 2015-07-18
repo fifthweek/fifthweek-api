@@ -468,8 +468,8 @@
                 {
                     channelSubscriptions.Add(new ChannelSubscription(ChannelIds[0].Value, null, SubscribedUserId.Value, null, ChannelPrice, Now, Now));
                     channelSubscriptions.Add(new ChannelSubscription(ChannelIds[1].Value, null, SubscribedUserId.Value, null, ChannelPrice, Now, Now));
-                    calculatedAccountBalances.Add(new CalculatedAccountBalance(SubscribedUserId.Value, LedgerAccountType.Fifthweek, Now, 10));
-                    calculatedAccountBalances.Add(new CalculatedAccountBalance(SubscribedUserId.Value, LedgerAccountType.Fifthweek, Now.AddDays(-1), 0));
+                    calculatedAccountBalances.Add(new CalculatedAccountBalance(SubscribedUserId.Value, LedgerAccountType.FifthweekCredit, Now, 10));
+                    calculatedAccountBalances.Add(new CalculatedAccountBalance(SubscribedUserId.Value, LedgerAccountType.FifthweekCredit, Now.AddDays(-1), 0));
 
                     channelSubscriptions.Add(new ChannelSubscription(ChannelIds[0].Value, null, SubscribedUserIdNoBalance.Value, null, ChannelPrice, Now, Now));
                     channelSubscriptions.Add(new ChannelSubscription(ChannelIds[1].Value, null, SubscribedUserIdNoBalance.Value, null, ChannelPrice, Now, Now));
@@ -478,22 +478,22 @@
                     // The query should round down to zero for account balance.
                     channelSubscriptions.Add(new ChannelSubscription(ChannelIds[0].Value, null, SubscribedUserIdZeroBalance.Value, null, ChannelPrice, Now, Now));
                     channelSubscriptions.Add(new ChannelSubscription(ChannelIds[1].Value, null, SubscribedUserIdZeroBalance.Value, null, ChannelPrice, Now, Now));
-                    calculatedAccountBalances.Add(new CalculatedAccountBalance(SubscribedUserIdZeroBalance.Value, LedgerAccountType.Fifthweek, Now.AddDays(-1), 10));
-                    calculatedAccountBalances.Add(new CalculatedAccountBalance(SubscribedUserIdZeroBalance.Value, LedgerAccountType.Fifthweek, Now, 0.8m));
+                    calculatedAccountBalances.Add(new CalculatedAccountBalance(SubscribedUserIdZeroBalance.Value, LedgerAccountType.FifthweekCredit, Now.AddDays(-1), 10));
+                    calculatedAccountBalances.Add(new CalculatedAccountBalance(SubscribedUserIdZeroBalance.Value, LedgerAccountType.FifthweekCredit, Now, 0.8m));
 
                     channelSubscriptions.Add(new ChannelSubscription(ChannelIds[0].Value, null, SubscribedUserIdZeroBalancePaymentInProgress.Value, null, ChannelPrice, Now, Now));
                     channelSubscriptions.Add(new ChannelSubscription(ChannelIds[1].Value, null, SubscribedUserIdZeroBalancePaymentInProgress.Value, null, ChannelPrice, Now, Now));
-                    calculatedAccountBalances.Add(new CalculatedAccountBalance(SubscribedUserIdZeroBalancePaymentInProgress.Value, LedgerAccountType.Fifthweek, Now.AddDays(-1), 10));
-                    calculatedAccountBalances.Add(new CalculatedAccountBalance(SubscribedUserIdZeroBalancePaymentInProgress.Value, LedgerAccountType.Fifthweek, Now, 0.8m));
+                    calculatedAccountBalances.Add(new CalculatedAccountBalance(SubscribedUserIdZeroBalancePaymentInProgress.Value, LedgerAccountType.FifthweekCredit, Now.AddDays(-1), 10));
+                    calculatedAccountBalances.Add(new CalculatedAccountBalance(SubscribedUserIdZeroBalancePaymentInProgress.Value, LedgerAccountType.FifthweekCredit, Now, 0.8m));
                     origins.Add(new UserPaymentOrigin(SubscribedUserIdZeroBalancePaymentInProgress.Value, null, null, null, null, null, null, PaymentStatus.Retry1));
 
                     channelSubscriptions.Add(new ChannelSubscription(ChannelIds[0].Value, null, SubscribedLowPriceUserId.Value, null, ChannelPrice / 2, Now, Now));
                     channelSubscriptions.Add(new ChannelSubscription(ChannelIds[1].Value, null, SubscribedLowPriceUserId.Value, null, ChannelPrice / 2, Now, Now));
-                    calculatedAccountBalances.Add(new CalculatedAccountBalance(SubscribedLowPriceUserId.Value, LedgerAccountType.Fifthweek, Now, 10));
+                    calculatedAccountBalances.Add(new CalculatedAccountBalance(SubscribedLowPriceUserId.Value, LedgerAccountType.FifthweekCredit, Now, 10));
                     
                     channelSubscriptions.Add(new ChannelSubscription(ChannelIds[0].Value, null, SubscribedHighPriceUserId.Value, null, ChannelPrice * 2, Now, Now));
                     channelSubscriptions.Add(new ChannelSubscription(ChannelIds[1].Value, null, SubscribedHighPriceUserId.Value, null, ChannelPrice * 2, Now, Now));
-                    calculatedAccountBalances.Add(new CalculatedAccountBalance(SubscribedHighPriceUserId.Value, LedgerAccountType.Fifthweek, Now, 10));
+                    calculatedAccountBalances.Add(new CalculatedAccountBalance(SubscribedHighPriceUserId.Value, LedgerAccountType.FifthweekCredit, Now, 10));
                     
                     channelSubscriptions.Add(new ChannelSubscription(ChannelIds[0].Value, null, GuestListUserId.Value, null, 0, Now, Now));
                     channelSubscriptions.Add(new ChannelSubscription(ChannelIds[1].Value, null, GuestListUserId.Value, null, 0, Now, Now));

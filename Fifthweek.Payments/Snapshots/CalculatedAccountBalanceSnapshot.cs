@@ -17,9 +17,9 @@
 
         public decimal Amount { get; private set; }
 
-        public static CalculatedAccountBalanceSnapshot DefaultFifthweekAccount(DateTime timestamp, UserId userId)
+        public static CalculatedAccountBalanceSnapshot DefaultFifthweekCreditAccount(DateTime timestamp, UserId userId)
         {
-            return new CalculatedAccountBalanceSnapshot(timestamp, userId, LedgerAccountType.Fifthweek, 0);
+            return new CalculatedAccountBalanceSnapshot(timestamp, userId, LedgerAccountType.FifthweekCredit, 0);
         }
 
         public static CalculatedAccountBalanceSnapshot Default(DateTime timestamp, UserId userId, LedgerAccountType accountType)

@@ -52,7 +52,7 @@ namespace Fifthweek.Payments.Services
                 updateCache = true;
                 subscriberChannelsSnapshots = await this.getSubscriberChannelsSnapshots.ExecuteAsync(subscriberId, startTimeInclusive, endTimeExclusive);
                 subscriberSnapshots = await this.getSubscriberSnapshots.ExecuteAsync(subscriberId, startTimeInclusive, endTimeExclusive);
-                calculatedAccountBalances = await this.getCalculatedAccountBalances.ExecuteAsync(subscriberId, LedgerAccountType.Fifthweek, startTimeInclusive, endTimeExclusive);
+                calculatedAccountBalances = await this.getCalculatedAccountBalances.ExecuteAsync(subscriberId, LedgerAccountType.FifthweekCredit, startTimeInclusive, endTimeExclusive);
             }
 
             if (this.cachedData != null

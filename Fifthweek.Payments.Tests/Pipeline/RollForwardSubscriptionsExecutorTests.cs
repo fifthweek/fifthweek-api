@@ -475,7 +475,7 @@
                 CreatorFreeAccessUsersSnapshot.Default(innerTimestamp ?? timestamp, CreatorId1),
                 new SubscriberChannelsSnapshot(innerTimestamp ?? timestamp, SubscriberId1, subscriberChannels),
                 SubscriberSnapshot.Default(innerTimestamp ?? timestamp, SubscriberId1),
-                CalculatedAccountBalanceSnapshot.DefaultFifthweekAccount(innerTimestamp ?? timestamp, SubscriberId1));
+                CalculatedAccountBalanceSnapshot.DefaultFifthweekCreditAccount(innerTimestamp ?? timestamp, SubscriberId1));
         }
 
         private static MergedSnapshot CreateSnapshot(DateTime timestamp, bool channel1Subscribed, bool channel2Subscribed, BillingWeekEndTimeType endTimeType, DateTime? innerTimestamp = null)
@@ -511,7 +511,7 @@
                 CreatorFreeAccessUsersSnapshot.Default(innerTimestamp ?? timestamp, CreatorId1),
                 new SubscriberChannelsSnapshot(innerTimestamp ?? timestamp, SubscriberId1, subscriberChannels),
                 SubscriberSnapshot.Default(innerTimestamp ?? timestamp, SubscriberId1),
-                CalculatedAccountBalanceSnapshot.DefaultFifthweekAccount(innerTimestamp ?? timestamp, SubscriberId1));
+                CalculatedAccountBalanceSnapshot.DefaultFifthweekCreditAccount(innerTimestamp ?? timestamp, SubscriberId1));
         }
 
         private enum BillingWeekEndTimeType

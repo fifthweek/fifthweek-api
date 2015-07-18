@@ -32,7 +32,7 @@ namespace Fifthweek.Payments.Pipeline
             var creatorFreeAccessUsers = CreatorFreeAccessUsersSnapshot.Default(initialTimestamp, creatorId);
             var subscriberChannels = SubscriberChannelsSnapshot.Default(initialTimestamp, subscriberId);
             var subscriber = SubscriberSnapshot.Default(initialTimestamp, subscriberId);
-            var calculatedAccountBalance = CalculatedAccountBalanceSnapshot.Default(initialTimestamp, subscriberId, LedgerAccountType.Fifthweek);
+            var calculatedAccountBalance = CalculatedAccountBalanceSnapshot.Default(initialTimestamp, subscriberId, LedgerAccountType.FifthweekCredit);
 
             var mergedSnapshots = new List<MergedSnapshot>();
 

@@ -296,7 +296,7 @@
                 this.getSubscriberSnapshots.Setup(v => v.ExecuteAsync(subscriberId, startTime, endTime))
                     .ReturnsAsync(SubscriberSnapshots);
 
-                this.getCalculatedAccountBalances.Setup(v => v.ExecuteAsync(subscriberId, LedgerAccountType.Fifthweek, startTime, endTime))
+                this.getCalculatedAccountBalances.Setup(v => v.ExecuteAsync(subscriberId, LedgerAccountType.FifthweekCredit, startTime, endTime))
                     .ReturnsAsync(CalculatedAccountBalanceSnapshots);
             }
 
@@ -347,7 +347,7 @@
         {
             this.getSubscriberChannelsSnapshots.Verify(v => v.ExecuteAsync(subscriberId, startTime, endTime), times);
             this.getSubscriberSnapshots.Verify(v => v.ExecuteAsync(subscriberId, startTime, endTime), times);
-            this.getCalculatedAccountBalances.Verify(v => v.ExecuteAsync(subscriberId, LedgerAccountType.Fifthweek, startTime, endTime), times);
+            this.getCalculatedAccountBalances.Verify(v => v.ExecuteAsync(subscriberId, LedgerAccountType.FifthweekCredit, startTime, endTime), times);
         }
 
         private void VerifyCreatorMocks(UserId creatorId, DateTime startTime, DateTime endTime, Times times, bool withChannels = true)

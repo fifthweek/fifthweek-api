@@ -31,7 +31,7 @@
                     CreatorFreeAccessUsersSnapshot.Default(now, UserId.Random()),
                     SubscriberChannelsSnapshot.Default(now, UserId.Random()),
                     SubscriberSnapshot.Default(now, UserId.Random()),
-                    CalculatedAccountBalanceSnapshot.DefaultFifthweekAccount(now, UserId.Random())),
+                    CalculatedAccountBalanceSnapshot.DefaultFifthweekCreditAccount(now, UserId.Random())),
             };
 
             Assert.AreSame(input, this.target.Execute(input));

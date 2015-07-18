@@ -68,7 +68,7 @@
                     },
                     new List<CalculatedAccountBalanceSnapshot>
                     {
-                        new CalculatedAccountBalanceSnapshot(DateTime.UtcNow, UserId.Random(), LedgerAccountType.Fifthweek, 10),
+                        new CalculatedAccountBalanceSnapshot(DateTime.UtcNow, UserId.Random(), LedgerAccountType.FifthweekCredit, 10),
                     },
                     new List<CreatorChannelsSnapshot>
                     {

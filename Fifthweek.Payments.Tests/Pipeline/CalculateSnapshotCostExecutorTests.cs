@@ -58,7 +58,7 @@
                         Now,
                         SubscriberId1,
                         null),
-                    new CalculatedAccountBalanceSnapshot(Now, SubscriberId1, LedgerAccountType.Fifthweek, 10)),
+                    new CalculatedAccountBalanceSnapshot(Now, SubscriberId1, LedgerAccountType.FifthweekCredit, 10)),
                 validCreatorPosts);
 
             Assert.AreEqual(0, result);
@@ -85,7 +85,7 @@
                         Now,
                         SubscriberId1,
                         "b@b.com"),
-                    new CalculatedAccountBalanceSnapshot(Now, SubscriberId1, LedgerAccountType.Fifthweek, 10)),
+                    new CalculatedAccountBalanceSnapshot(Now, SubscriberId1, LedgerAccountType.FifthweekCredit, 10)),
                 validCreatorPosts);
 
             Assert.AreEqual(0, result);
@@ -112,7 +112,7 @@
                         Now,
                         SubscriberId1,
                         "b@b.com"),
-                    new CalculatedAccountBalanceSnapshot(Now, SubscriberId1, LedgerAccountType.Fifthweek, 10)),
+                    new CalculatedAccountBalanceSnapshot(Now, SubscriberId1, LedgerAccountType.FifthweekCredit, 10)),
                 validCreatorPosts);
 
             Assert.AreEqual(100, result);
@@ -139,7 +139,7 @@
                         Now,
                         SubscriberId1,
                         "b@b.com"),
-                    new CalculatedAccountBalanceSnapshot(Now, SubscriberId1, LedgerAccountType.Fifthweek, 0)),
+                    new CalculatedAccountBalanceSnapshot(Now, SubscriberId1, LedgerAccountType.FifthweekCredit, 0)),
                 validCreatorPosts);
 
             Assert.AreEqual(0, result);
@@ -166,7 +166,7 @@
                         Now,
                         SubscriberId1,
                         "b@b.com"),
-                    new CalculatedAccountBalanceSnapshot(Now, SubscriberId1, LedgerAccountType.Fifthweek, -5)),
+                    new CalculatedAccountBalanceSnapshot(Now, SubscriberId1, LedgerAccountType.FifthweekCredit, -5)),
                 validCreatorPosts);
 
             Assert.AreEqual(0, result);
@@ -190,7 +190,7 @@
                         Now,
                         SubscriberId1,
                         null),
-                    new CalculatedAccountBalanceSnapshot(Now, SubscriberId1, LedgerAccountType.Fifthweek, 10)),
+                    new CalculatedAccountBalanceSnapshot(Now, SubscriberId1, LedgerAccountType.FifthweekCredit, 10)),
                 validCreatorPosts);
 
             Assert.AreEqual(100, result);
@@ -214,7 +214,7 @@
                         Now,
                         SubscriberId1,
                         null),
-                    new CalculatedAccountBalanceSnapshot(Now, SubscriberId1, LedgerAccountType.Fifthweek, 10)),
+                    new CalculatedAccountBalanceSnapshot(Now, SubscriberId1, LedgerAccountType.FifthweekCredit, 10)),
                 new List<CreatorPost>
                 {
                     new CreatorPost(ChannelId1, Now.AddTicks(-1)),
@@ -242,7 +242,7 @@
                         Now,
                         SubscriberId1,
                         null),
-                    new CalculatedAccountBalanceSnapshot(Now, SubscriberId1, LedgerAccountType.Fifthweek, 10)),
+                    new CalculatedAccountBalanceSnapshot(Now, SubscriberId1, LedgerAccountType.FifthweekCredit, 10)),
                 new List<CreatorPost>
                 {
                     new CreatorPost(ChannelId1, Now.AddTicks(-1)),
@@ -271,7 +271,7 @@
                         Now,
                         SubscriberId1,
                         null),
-                    new CalculatedAccountBalanceSnapshot(Now, SubscriberId1, LedgerAccountType.Fifthweek, 10)),
+                    new CalculatedAccountBalanceSnapshot(Now, SubscriberId1, LedgerAccountType.FifthweekCredit, 10)),
                 new List<CreatorPost>
                 {
                     new CreatorPost(ChannelId1, Now.AddTicks(-1)),
@@ -309,7 +309,7 @@
                         Now,
                         SubscriberId1,
                         null),
-                    new CalculatedAccountBalanceSnapshot(Now, SubscriberId1, LedgerAccountType.Fifthweek, 10)),
+                    new CalculatedAccountBalanceSnapshot(Now, SubscriberId1, LedgerAccountType.FifthweekCredit, 10)),
                 validCreatorPosts);
 
             Assert.AreEqual(110, result);
@@ -342,7 +342,7 @@
                         Now,
                         SubscriberId1,
                         null),
-                    new CalculatedAccountBalanceSnapshot(Now, SubscriberId1, LedgerAccountType.Fifthweek, 10)),
+                    new CalculatedAccountBalanceSnapshot(Now, SubscriberId1, LedgerAccountType.FifthweekCredit, 10)),
                 validCreatorPosts);
 
             Assert.AreEqual(110, result);
@@ -375,7 +375,7 @@
                         Now,
                         SubscriberId1,
                         null),
-                    new CalculatedAccountBalanceSnapshot(Now, SubscriberId1, LedgerAccountType.Fifthweek, 10)),
+                    new CalculatedAccountBalanceSnapshot(Now, SubscriberId1, LedgerAccountType.FifthweekCredit, 10)),
                 validCreatorPosts);
 
             Assert.AreEqual(100, result);
@@ -411,7 +411,7 @@
                         Now,
                         SubscriberId1,
                         null),
-                    new CalculatedAccountBalanceSnapshot(Now, SubscriberId1, LedgerAccountType.Fifthweek, 10)),
+                    new CalculatedAccountBalanceSnapshot(Now, SubscriberId1, LedgerAccountType.FifthweekCredit, 10)),
                 validCreatorPosts);
 
             Assert.AreEqual(150, result);

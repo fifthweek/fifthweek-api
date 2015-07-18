@@ -51,7 +51,7 @@
             var defaultCreatorGuestListSnapshot = CreatorFreeAccessUsersSnapshot.Default(Now, CreatorId1);
             var defaultSubscriberChannelsSnapshot = SubscriberChannelsSnapshot.Default(Now, SubscriberId1);
             var defaultSubscriberSnapshot = SubscriberSnapshot.Default(Now, SubscriberId1);
-            var defaultCalculatedAccountBalanceSnapshot = CalculatedAccountBalanceSnapshot.DefaultFifthweekAccount(Now, UserId.Random());
+            var defaultCalculatedAccountBalanceSnapshot = CalculatedAccountBalanceSnapshot.DefaultFifthweekCreditAccount(Now, UserId.Random());
 
             var mergedSnapshots = new List<MergedSnapshot> 
             {
@@ -96,7 +96,7 @@
             var defaultCreatorGuestListSnapshot = CreatorFreeAccessUsersSnapshot.Default(Now, CreatorId1);
             var defaultSubscriberChannelSnapshot = SubscriberChannelsSnapshot.Default(Now, SubscriberId1);
             var defaultSubscriberSnapshot = SubscriberSnapshot.Default(Now, SubscriberId1);
-            var defaultCalculatedAccountBalanceSnapshot = CalculatedAccountBalanceSnapshot.DefaultFifthweekAccount(Now, UserId.Random());
+            var defaultCalculatedAccountBalanceSnapshot = CalculatedAccountBalanceSnapshot.DefaultFifthweekCreditAccount(Now, UserId.Random());
 
             var mergedSnapshots = new List<MergedSnapshot> 
             {

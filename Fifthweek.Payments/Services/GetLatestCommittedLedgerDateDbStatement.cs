@@ -18,12 +18,14 @@
     {
         private static readonly string Sql = string.Format(
             @"SELECT TOP 1 {0} FROM {1}
-                WHERE {2}=@SubscriberId AND {3}=@CreatorId
+                WHERE {2}=@SubscriberId AND {3}=@CreatorId AND {4}={5}
                 ORDER BY {0} DESC",
             AppendOnlyLedgerRecord.Fields.Timestamp,
             AppendOnlyLedgerRecord.Table,
             AppendOnlyLedgerRecord.Fields.AccountOwnerId,
-            AppendOnlyLedgerRecord.Fields.CounterpartyId);
+            AppendOnlyLedgerRecord.Fields.CounterpartyId,
+            AppendOnlyLedgerRecord.Fields.TransactionType,
+            (int)LedgerTransactionType.SubscriptionPayment);
 
         private readonly IFifthweekDbConnectionFactory connectionFactory;
 

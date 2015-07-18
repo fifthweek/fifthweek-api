@@ -22,7 +22,7 @@
             CalculatedAccountBalance.Fields.Timestamp,
             CalculatedAccountBalance.Fields.Amount,
             CalculatedAccountBalance.Fields.AccountType,
-            (int)LedgerAccountType.Fifthweek);
+            (int)LedgerAccountType.FifthweekCredit);
 
         private readonly IFifthweekDbConnectionFactory connectionFactory;
 

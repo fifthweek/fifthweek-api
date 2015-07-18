@@ -78,9 +78,13 @@
                     CreatorId.Value,
                     Now,
                     10,
-                    LedgerAccountType.Fifthweek,
+                    LedgerAccountType.FifthweekCredit,
+                    LedgerTransactionType.SubscriptionPayment,
                     Guid.NewGuid(),
-                    Guid.NewGuid(), null, null, null);
+                    Guid.NewGuid(),
+                    null,
+                    null,
+                    null);
 
                 var ledgerEntry2 = new AppendOnlyLedgerRecord(
                     Guid.NewGuid(),
@@ -88,9 +92,13 @@
                     CreatorId.Value,
                     Now.AddDays(1),
                     10,
-                    LedgerAccountType.Fifthweek,
+                    LedgerAccountType.FifthweekCredit,
+                    LedgerTransactionType.SubscriptionPayment,
                     Guid.NewGuid(),
-                    Guid.NewGuid(), null, null, null);
+                    Guid.NewGuid(), 
+                    null,
+                    null, 
+                    null);
 
                 await connection.InsertAsync(ledgerEntry, false);
                 await connection.InsertAsync(ledgerEntry2, false);

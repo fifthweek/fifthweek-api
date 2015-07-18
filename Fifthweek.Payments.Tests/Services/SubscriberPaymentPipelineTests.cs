@@ -98,7 +98,7 @@
                     CreatorFreeAccessUsersSnapshot.Default(Now, UserId.Random()),
                     SubscriberChannelsSnapshot.Default(Now, UserId.Random()),
                     SubscriberSnapshot.Default(Now, UserId.Random()),
-                    CalculatedAccountBalanceSnapshot.DefaultFifthweekAccount(Now, UserId.Random()))
+                    CalculatedAccountBalanceSnapshot.DefaultFifthweekCreditAccount(Now, UserId.Random()))
             };
         }
     }

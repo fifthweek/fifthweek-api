@@ -2,8 +2,9 @@ namespace Fifthweek.Api.Persistence.Payments
 {
     public enum LedgerAccountType
     {
-        Fifthweek,
-        SalesTax,
-        Stripe,
+        FifthweekCredit = 0,
+        SalesTax = 1,
+        Stripe = 2,
+        FifthweekRevenue = 3,
     }
 }

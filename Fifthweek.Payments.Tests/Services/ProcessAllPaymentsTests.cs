@@ -82,7 +82,7 @@
 
             var updatedAcountBalances = new List<CalculatedAccountBalanceResult>
             {
-                new CalculatedAccountBalanceResult(Now, UserId.Random(), LedgerAccountType.Fifthweek, 100)
+                new CalculatedAccountBalanceResult(Now, UserId.Random(), LedgerAccountType.FifthweekCredit, 100)
             };
             this.updateAccountBalances.Setup(v => v.ExecuteAsync(null, Now)).ReturnsAsync(updatedAcountBalances).Verifiable();
 
@@ -111,7 +111,7 @@
 
             var updatedAcountBalances = new List<CalculatedAccountBalanceResult>
             {
-                new CalculatedAccountBalanceResult(Now, UserId.Random(), LedgerAccountType.Fifthweek, 100)
+                new CalculatedAccountBalanceResult(Now, UserId.Random(), LedgerAccountType.FifthweekCredit, 100)
             };
             this.updateAccountBalances.Setup(v => v.ExecuteAsync(null, Now)).ReturnsAsync(updatedAcountBalances).Verifiable();
 
@@ -141,7 +141,7 @@
 
             var updatedAcountBalances = new List<CalculatedAccountBalanceResult>
             {
-                new CalculatedAccountBalanceResult(Now, UserId.Random(), LedgerAccountType.Fifthweek, 100)
+                new CalculatedAccountBalanceResult(Now, UserId.Random(), LedgerAccountType.FifthweekCredit, 100)
             };
             this.updateAccountBalances.Setup(v => v.ExecuteAsync(null, Now)).ReturnsAsync(updatedAcountBalances).Verifiable();
 

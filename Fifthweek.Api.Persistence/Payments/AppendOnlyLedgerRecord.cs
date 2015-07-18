@@ -37,14 +37,17 @@
         [Optional, Index("UniqueKey", Order = 1, IsUnique = true)]
         public Guid? CounterpartyId { get; set; }
 
-        [Required, Index("UniqueKey", Order = 2, IsUnique = true), Index("TimestampAndAccountOwner", Order = 0)]
+        [Required, Index("UniqueKey", Order = 3, IsUnique = true), Index("TimestampAndAccountOwner", Order = 0)]
         public DateTime Timestamp { get; set; }
 
-        [Required, Index("UniqueKey", Order = 3, IsUnique = true)]
+        [Required, Index("UniqueKey", Order = 4, IsUnique = true)]
         public decimal Amount { get; set; }
 
-        [Required, Index("UniqueKey", Order = 4, IsUnique = true)]
+        [Required, Index("UniqueKey", Order = 5, IsUnique = true)]
         public LedgerAccountType AccountType { get; set; }
+
+        [Required, Index("UniqueKey", Order = 2, IsUnique = true)]
+        public LedgerTransactionType TransactionType { get; set; }
 
         [Required, Index]
         public Guid TransactionReference { get; set; }

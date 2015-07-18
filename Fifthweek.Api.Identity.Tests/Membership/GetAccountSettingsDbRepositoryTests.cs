@@ -350,12 +350,19 @@
                         Now,
                         20));
 
+                await connection.InsertAsync(
+                    new CalculatedAccountBalance(
+                        user.Id,
+                        LedgerAccountType.FifthweekRevenue,
+                        Now,
+                        200));
+
                 for (int i = 0; i < accountBalanceCount; i++)
                 {
                     await connection.InsertAsync(
                         new CalculatedAccountBalance(
                             user.Id,
-                            LedgerAccountType.Fifthweek,
+                            LedgerAccountType.FifthweekCredit,
                             Now.AddHours(-1 - i),
                             100 + i));
                 }
