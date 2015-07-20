@@ -16,6 +16,6 @@ namespace Fifthweek.Payments.Services
         [Optional]
         public CreatorPercentageOverrideData CreatorPercentageOverride { get; private set; }
 
-        public bool IsComitted { get; private set; }
+        public bool IsCommitted { get; private set; }
     }
 }

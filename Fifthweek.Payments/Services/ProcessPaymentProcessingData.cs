@@ -24,6 +24,8 @@ namespace Fifthweek.Payments.Services
             IReadOnlyList<ISnapshot> orderedSnapshots = data.GetOrderedSnapshots();
             IReadOnlyList<CreatorPost> posts = data.CreatorPosts;
 
+            var committedAccountBalance = data.CommittedAccountBalance;
+
             var currentStartTimeInclusive = startTimeInclusive;
             var currentEndTimeExclusive = startTimeInclusive.AddDays(7);
 
@@ -38,6 +40,13 @@ namespace Fifthweek.Payments.Services
                     creatorId,
                     currentStartTimeInclusive,
                     currentEndTimeExclusive);
+
+                if (cost.Cost > committedAccountBalance.Amount)
+                {
+                    cost = new AggregateCostSummary(committedAccountBalance.Amount);
+                }
+
+                committedAccountBalance = committedAccountBalance.Subtract(cost.Cost);
 
                 var creatorPercentageOverride = this.GetCreatorPercentageOverride(
                     data.CreatorPercentageOverride,
@@ -70,7 +79,7 @@ namespace Fifthweek.Payments.Services
                 result.Add(new PaymentProcessingResult(currentStartTimeInclusive, endTimeExclusive, cost, creatorPercentageOverride, false));
             }
 
-            return Task.FromResult(new PaymentProcessingResults(result));
+            return Task.FromResult(new PaymentProcessingResults(committedAccountBalance, result));
         }
 
         private CreatorPercentageOverrideData GetCreatorPercentageOverride(

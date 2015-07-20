@@ -18,6 +18,8 @@
         private static readonly UserId SubscriberId = UserId.Random();
         private static readonly UserId CreatorId = UserId.Random();
 
+        private static readonly CommittedAccountBalance CommittedAccountBalance = new CommittedAccountBalance(100m);
+
         private static readonly DateTime StartTimeInclusive = DateTime.UtcNow;
         private static readonly DateTime EndTimeExclusive = StartTimeInclusive.AddDays(7);
 
@@ -26,6 +28,7 @@
             CreatorId,
             StartTimeInclusive,
             EndTimeExclusive,
+            CommittedAccountBalance,
             new List<SubscriberChannelsSnapshot>(),
             new List<SubscriberSnapshot>(),
             new List<CalculatedAccountBalanceSnapshot>(),
@@ -35,7 +38,7 @@
             new CreatorPercentageOverrideData(0.9m, DateTime.UtcNow));
        
         private static readonly PaymentProcessingResults Results =
-            new PaymentProcessingResults(new List<PaymentProcessingResult>());
+            new PaymentProcessingResults(new CommittedAccountBalance(90m), new List<PaymentProcessingResult>());
 
         private Mock<IGetPaymentProcessingData> getPaymentProcessingData;
         private Mock<IProcessPaymentProcessingData> processPaymentProcessingData;
@@ -60,20 +63,27 @@
         [ExpectedException(typeof(ArgumentNullException))]
         public async Task WhenSubscriberIdIsNull_ItShouldThrowAnException()
         {
-            await this.target.ExecuteAsync(null, CreatorId, StartTimeInclusive, EndTimeExclusive);
+            await this.target.ExecuteAsync(null, CreatorId, StartTimeInclusive, EndTimeExclusive, CommittedAccountBalance);
         }
 
         [TestMethod]
         [ExpectedException(typeof(ArgumentNullException))]
         public async Task WhenCreatorIdIsNull_ItShouldThrowAnException()
         {
-            await this.target.ExecuteAsync(SubscriberId, null, StartTimeInclusive, EndTimeExclusive);
+            await this.target.ExecuteAsync(SubscriberId, null, StartTimeInclusive, EndTimeExclusive, CommittedAccountBalance);
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentNullException))]
+        public async Task WhenCommittedAccountBalanceIsNull_ItShouldThrowAnException()
+        {
+            await this.target.ExecuteAsync(SubscriberId, CreatorId, StartTimeInclusive, EndTimeExclusive, null);
         }
 
         [TestMethod]
         public async Task ItShouldProcessPayments()
         {
-            this.getPaymentProcessingData.Setup(v => v.ExecuteAsync(SubscriberId, CreatorId, StartTimeInclusive, EndTimeExclusive))
+            this.getPaymentProcessingData.Setup(v => v.ExecuteAsync(SubscriberId, CreatorId, StartTimeInclusive, EndTimeExclusive, CommittedAccountBalance))
                 .ReturnsAsync(Data);
 
             this.processPaymentProcessingData.Setup(v => v.ExecuteAsync(Data)).ReturnsAsync(Results);
@@ -82,9 +92,11 @@
                 .Returns(Task.FromResult(0))
                 .Verifiable();
 
-            await this.target.ExecuteAsync(SubscriberId, CreatorId, StartTimeInclusive, EndTimeExclusive);
+            var result = await this.target.ExecuteAsync(SubscriberId, CreatorId, StartTimeInclusive, EndTimeExclusive, CommittedAccountBalance);
 
             this.persistPaymentProcessingResults.Verify();
+
+            Assert.AreEqual(Results.CommittedAccountBalance, result);
         }
     }
 }

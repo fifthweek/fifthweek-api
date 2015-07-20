@@ -124,6 +124,7 @@
     <Compile Include="Pipeline\VerifySnapshotsExecutor.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Pipeline\CalculateSnapshotCostExecutor.cs" />
+    <Compile Include="Services\CommittedAccountBalance.cs" />
     <Compile Include="Services\Credit\CommitTestUserCreditToDatabase.cs" />
     <Compile Include="Services\Credit\ICommitTestUserCreditToDatabase.cs" />
     <Compile Include="Services\Credit\ISetTestUserAccountBalanceDbStatement.cs" />
@@ -181,6 +182,7 @@
     <Compile Include="Services\Credit\Taxamo\TaxamoTransactionResult.cs" />
     <Compile Include="Services\Credit\UserPaymentOriginResult.cs" />
     <Compile Include="Services\GetCalculatedAccountBalancesDbStatement.cs" />
+    <Compile Include="Services\GetCommittedAccountBalanceDbStatement.cs" />
     <Compile Include="Services\GetCreatorPercentageOverrideDbStatement.cs" />
     <Compile Include="Services\GetCreatorsAndFirstSubscribedDatesDbStatement.cs" />
     <Compile Include="Services\GetAllSubscribersDbStatement.cs" />
@@ -193,6 +195,7 @@
     <Compile Include="Services\GetSubscriberSnapshotsDbStatement.cs" />
     <Compile Include="Services\Credit\ITopUpUserAccountsWithCredit.cs" />
     <Compile Include="Services\IGetCalculatedAccountBalancesDbStatement.cs" />
+    <Compile Include="Services\IGetCommittedAccountBalanceDbStatement.cs" />
     <Compile Include="Services\IGetCreatorPercentageOverrideDbStatement.cs" />
     <Compile Include="Services\IGetCreatorsAndFirstSubscribedDatesDbStatement.cs" />
     <Compile Include="Services\IGetAllSubscribersDbStatement.cs" />

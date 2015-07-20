@@ -38,7 +38,8 @@
             builder.RegisterType<RequestProcessPaymentsService>().As<IRequestProcessPaymentsService>();
             builder.RegisterType<UpdateAccountBalancesDbStatement>().As<IUpdateAccountBalancesDbStatement>();
             builder.RegisterType<TopUpUserAccountsWithCredit>().As<ITopUpUserAccountsWithCredit>();
-
+            builder.RegisterType<GetCommittedAccountBalanceDbStatement>().As<IGetCommittedAccountBalanceDbStatement>();
+            
             builder.RegisterType<GetUserPaymentOriginDbStatement>().As<IGetUserPaymentOriginDbStatement>();
             builder.RegisterType<SetUserPaymentOriginOriginalTaxamoTransactionKeyDbStatement>().As<ISetUserPaymentOriginOriginalTaxamoTransactionKeyDbStatement>();
             builder.RegisterType<CreateStripeCustomer>().As<ICreateStripeCustomer>();
@@ -64,7 +65,6 @@
 
             builder.RegisterType<TaxamoApiKeyRepository>().As<ITaxamoApiKeyRepository>();
             builder.RegisterType<TaxamoService>().As<ITaxamoService>();
-
         }
     }
 }

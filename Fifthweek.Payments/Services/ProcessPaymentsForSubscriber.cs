@@ -15,6 +15,7 @@ namespace Fifthweek.Payments.Services
         public static readonly TimeSpan MinimumProcessingPeriod = TimeSpan.FromSeconds(5);
 
         private readonly IGetCreatorsAndFirstSubscribedDatesDbStatement getCreatorsAndFirstSubscribedDates;
+        private readonly IGetCommittedAccountBalanceDbStatement getCommittedAccountBalanceDbStatement;
         private readonly IProcessPaymentsBetweenSubscriberAndCreator processPaymentsBetweenSubscriberAndCreator;
         private readonly IGetLatestCommittedLedgerDateDbStatement getLatestCommittedLedgerDate;
 
@@ -25,6 +26,16 @@ namespace Fifthweek.Payments.Services
             errors.AssertNotNull("errors");
 
             var creators = await this.getCreatorsAndFirstSubscribedDates.ExecuteAsync(subscriberId);
+
+            var committedAccountBalanceValue = await this.getCommittedAccountBalanceDbStatement.ExecuteAsync(subscriberId);
+
+            if (committedAccountBalanceValue < 0)
+            {
+                errors.Add(new PaymentProcessingException(string.Format("Committed account balance was {0} for user {1}.", committedAccountBalanceValue, subscriberId), subscriberId, null));
+                committedAccountBalanceValue = 0m;
+            }
+
+            var committedAccountBalance = new CommittedAccountBalance(committedAccountBalanceValue);
 
             foreach (var creator in creators)
             {
@@ -41,11 +52,12 @@ namespace Fifthweek.Payments.Services
                         continue;
                     }
 
-                    await this.processPaymentsBetweenSubscriberAndCreator.ExecuteAsync(
+                    committedAccountBalance = await this.processPaymentsBetweenSubscriberAndCreator.ExecuteAsync(
                         subscriberId,
                         creator.CreatorId,
                         startTimeInclusive,
-                        endTimeExclusive);
+                        endTimeExclusive,
+                        committedAccountBalance);
                 }
                 catch (Exception t)
                 {

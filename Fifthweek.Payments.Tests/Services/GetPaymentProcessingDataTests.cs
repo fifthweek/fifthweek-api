@@ -30,6 +30,8 @@
         private static readonly DateTime StartTimeInclusive = DateTime.UtcNow;
         private static readonly DateTime EndTimeExclusive = StartTimeInclusive.AddDays(7);
 
+        private static readonly CommittedAccountBalance CommittedAccountBalance = new CommittedAccountBalance(100m);
+
         private static readonly List<SubscriberChannelsSnapshot> SubscriberChannelsSnapshots = new List<SubscriberChannelsSnapshot>();
         private static readonly List<SubscriberSnapshot> SubscriberSnapshots = new List<SubscriberSnapshot>();
         private static readonly List<CalculatedAccountBalanceSnapshot> CalculatedAccountBalanceSnapshots = new List<CalculatedAccountBalanceSnapshot>();
@@ -94,14 +96,21 @@
         [ExpectedException(typeof(ArgumentNullException))]
         public async Task WhenSubscriberIdIsNull_ItShouldThrowAnException()
         {
-            await this.target.ExecuteAsync(null, CreatorId, StartTimeInclusive, EndTimeExclusive);
+            await this.target.ExecuteAsync(null, CreatorId, StartTimeInclusive, EndTimeExclusive, CommittedAccountBalance);
         }
 
         [TestMethod]
         [ExpectedException(typeof(ArgumentNullException))]
         public async Task WhenCreatorIdIsNull_ItShouldThrowAnException()
         {
-            await this.target.ExecuteAsync(SubscriberId, null, StartTimeInclusive, EndTimeExclusive);
+            await this.target.ExecuteAsync(SubscriberId, null, StartTimeInclusive, EndTimeExclusive, CommittedAccountBalance);
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentNullException))]
+        public async Task WhenCommittedAccountBalanceIsNull_ItShouldThrowAnException()
+        {
+            await this.target.ExecuteAsync(SubscriberId, CreatorId, StartTimeInclusive, EndTimeExclusive, null);
         }
 
         [TestMethod]
@@ -109,7 +118,7 @@
         {
             this.SetupMocks(SubscriberId, CreatorId, StartTimeInclusive, EndTimeExclusive);
 
-            var result = await this.target.ExecuteAsync(SubscriberId, CreatorId, StartTimeInclusive, EndTimeExclusive);
+            var result = await this.target.ExecuteAsync(SubscriberId, CreatorId, StartTimeInclusive, EndTimeExclusive, CommittedAccountBalance);
 
             this.VerifySubscriberMocks(SubscriberId, StartTimeInclusive, EndTimeExclusive, Times.Once());
             this.VerifyCreatorMocks(CreatorId, StartTimeInclusive, EndTimeExclusive, Times.Once());
@@ -122,7 +131,7 @@
         {
             this.SetupMocks(SubscriberId, CreatorId, StartTimeInclusive, EndTimeExclusive, false);
 
-            var result = await this.target.ExecuteAsync(SubscriberId, CreatorId, StartTimeInclusive, EndTimeExclusive);
+            var result = await this.target.ExecuteAsync(SubscriberId, CreatorId, StartTimeInclusive, EndTimeExclusive, CommittedAccountBalance);
 
             this.VerifySubscriberMocks(SubscriberId, StartTimeInclusive, EndTimeExclusive, Times.Once());
             this.VerifyCreatorMocks(CreatorId, StartTimeInclusive, EndTimeExclusive, Times.Once(), false);
@@ -134,13 +143,13 @@
         public async Task WhenCalledWithDifferentCreatorAndSubscriber_ItShouldRequestAllData()
         {
             this.SetupMocks(PreviousSubscriberId, PreviousCreatorId, StartTimeInclusive, EndTimeExclusive, false);
-            await this.target.ExecuteAsync(PreviousSubscriberId, PreviousCreatorId, StartTimeInclusive, EndTimeExclusive);
+            await this.target.ExecuteAsync(PreviousSubscriberId, PreviousCreatorId, StartTimeInclusive, EndTimeExclusive, CommittedAccountBalance);
 
             this.VerifySubscriberMocks(PreviousSubscriberId, StartTimeInclusive, EndTimeExclusive, Times.Once());
             this.VerifyCreatorMocks(PreviousCreatorId, StartTimeInclusive, EndTimeExclusive, Times.Once(), false);
 
             this.SetupMocks(SubscriberId, CreatorId, StartTimeInclusive, EndTimeExclusive);
-            var result = await this.target.ExecuteAsync(SubscriberId, CreatorId, StartTimeInclusive, EndTimeExclusive);
+            var result = await this.target.ExecuteAsync(SubscriberId, CreatorId, StartTimeInclusive, EndTimeExclusive, CommittedAccountBalance);
 
             this.VerifySubscriberMocks(PreviousSubscriberId, StartTimeInclusive, EndTimeExclusive, Times.Once());
             this.VerifyCreatorMocks(PreviousCreatorId, StartTimeInclusive, EndTimeExclusive, Times.Once(), false);
@@ -155,13 +164,13 @@
         public async Task WhenCalledWithDifferentCreator_ItShouldRequestNewCreatorData()
         {
             this.SetupMocks(PreviousSubscriberId, PreviousCreatorId, StartTimeInclusive, EndTimeExclusive, false);
-            await this.target.ExecuteAsync(PreviousSubscriberId, PreviousCreatorId, StartTimeInclusive, EndTimeExclusive);
+            await this.target.ExecuteAsync(PreviousSubscriberId, PreviousCreatorId, StartTimeInclusive, EndTimeExclusive, CommittedAccountBalance);
 
             this.VerifySubscriberMocks(PreviousSubscriberId, StartTimeInclusive, EndTimeExclusive, Times.Once());
             this.VerifyCreatorMocks(PreviousCreatorId, StartTimeInclusive, EndTimeExclusive, Times.Once(), false);
 
             this.SetupMocks(null, CreatorId, StartTimeInclusive, EndTimeExclusive);
-            var result = await this.target.ExecuteAsync(PreviousSubscriberId, CreatorId, StartTimeInclusive, EndTimeExclusive);
+            var result = await this.target.ExecuteAsync(PreviousSubscriberId, CreatorId, StartTimeInclusive, EndTimeExclusive, CommittedAccountBalance);
 
             this.VerifySubscriberMocks(PreviousSubscriberId, StartTimeInclusive, EndTimeExclusive, Times.Once());
             this.VerifyCreatorMocks(PreviousCreatorId, StartTimeInclusive, EndTimeExclusive, Times.Once(), false);
@@ -176,13 +185,13 @@
         public async Task WhenCalledWithDifferentSubscriber_ItShouldRequestNewSubscriberData()
         {
             this.SetupMocks(PreviousSubscriberId, PreviousCreatorId, StartTimeInclusive, EndTimeExclusive, false);
-            await this.target.ExecuteAsync(PreviousSubscriberId, PreviousCreatorId, StartTimeInclusive, EndTimeExclusive);
+            await this.target.ExecuteAsync(PreviousSubscriberId, PreviousCreatorId, StartTimeInclusive, EndTimeExclusive, CommittedAccountBalance);
 
             this.VerifySubscriberMocks(PreviousSubscriberId, StartTimeInclusive, EndTimeExclusive, Times.Once());
             this.VerifyCreatorMocks(PreviousCreatorId, StartTimeInclusive, EndTimeExclusive, Times.Once(), false);
 
             this.SetupMocks(SubscriberId, null, StartTimeInclusive, EndTimeExclusive);
-            var result = await this.target.ExecuteAsync(SubscriberId, PreviousCreatorId, StartTimeInclusive, EndTimeExclusive);
+            var result = await this.target.ExecuteAsync(SubscriberId, PreviousCreatorId, StartTimeInclusive, EndTimeExclusive, CommittedAccountBalance);
 
             this.VerifySubscriberMocks(PreviousSubscriberId, StartTimeInclusive, EndTimeExclusive, Times.Once());
             this.VerifyCreatorMocks(PreviousCreatorId, StartTimeInclusive, EndTimeExclusive, Times.Once(), false);
@@ -197,12 +206,12 @@
         public async Task WhenCalledWithSubsetOfTime_ItShouldReturnCachedData()
         {
             this.SetupMocks(SubscriberId, CreatorId, StartTimeInclusive, EndTimeExclusive);
-            await this.target.ExecuteAsync(SubscriberId, CreatorId, StartTimeInclusive, EndTimeExclusive);
+            await this.target.ExecuteAsync(SubscriberId, CreatorId, StartTimeInclusive, EndTimeExclusive, CommittedAccountBalance);
 
             this.VerifySubscriberMocks(SubscriberId, StartTimeInclusive, EndTimeExclusive, Times.Once());
             this.VerifyCreatorMocks(CreatorId, StartTimeInclusive, EndTimeExclusive, Times.Once());
 
-            var result = await this.target.ExecuteAsync(SubscriberId, CreatorId, StartTimeInclusive.AddDays(1), EndTimeExclusive.AddDays(-1));
+            var result = await this.target.ExecuteAsync(SubscriberId, CreatorId, StartTimeInclusive.AddDays(1), EndTimeExclusive.AddDays(-1), CommittedAccountBalance);
 
             this.VerifySubscriberMocks(SubscriberId, StartTimeInclusive, EndTimeExclusive, Times.Once());
             this.VerifyCreatorMocks(CreatorId, StartTimeInclusive, EndTimeExclusive, Times.Once());
@@ -214,17 +223,17 @@
         public async Task WhenCalledWithSubsetOfTime_ItShouldCacheOriginalData()
         {
             this.SetupMocks(SubscriberId, CreatorId, StartTimeInclusive, EndTimeExclusive);
-            await this.target.ExecuteAsync(SubscriberId, CreatorId, StartTimeInclusive, EndTimeExclusive);
+            await this.target.ExecuteAsync(SubscriberId, CreatorId, StartTimeInclusive, EndTimeExclusive, CommittedAccountBalance);
 
             this.VerifySubscriberMocks(SubscriberId, StartTimeInclusive, EndTimeExclusive, Times.Once());
             this.VerifyCreatorMocks(CreatorId, StartTimeInclusive, EndTimeExclusive, Times.Once());
 
-            await this.target.ExecuteAsync(SubscriberId, CreatorId, StartTimeInclusive.AddDays(1), EndTimeExclusive.AddDays(-1));
+            await this.target.ExecuteAsync(SubscriberId, CreatorId, StartTimeInclusive.AddDays(1), EndTimeExclusive.AddDays(-1), CommittedAccountBalance);
 
             this.VerifySubscriberMocks(SubscriberId, StartTimeInclusive, EndTimeExclusive, Times.Once());
             this.VerifyCreatorMocks(CreatorId, StartTimeInclusive, EndTimeExclusive, Times.Once());
 
-            await this.target.ExecuteAsync(SubscriberId, CreatorId, StartTimeInclusive, EndTimeExclusive);
+            await this.target.ExecuteAsync(SubscriberId, CreatorId, StartTimeInclusive, EndTimeExclusive, CommittedAccountBalance);
 
             this.VerifySubscriberMocks(SubscriberId, StartTimeInclusive, EndTimeExclusive, Times.Once());
             this.VerifyCreatorMocks(CreatorId, StartTimeInclusive, EndTimeExclusive, Times.Once());
@@ -234,13 +243,13 @@
         public async Task WhenCalledWithSupersetOfTime_ItShouldRequestAllData()
         {
             this.SetupMocks(SubscriberId, CreatorId, StartTimeInclusive, EndTimeExclusive);
-            await this.target.ExecuteAsync(SubscriberId, CreatorId, StartTimeInclusive, EndTimeExclusive);
+            await this.target.ExecuteAsync(SubscriberId, CreatorId, StartTimeInclusive, EndTimeExclusive, CommittedAccountBalance);
 
             this.VerifySubscriberMocks(SubscriberId, StartTimeInclusive, EndTimeExclusive, Times.Once());
             this.VerifyCreatorMocks(CreatorId, StartTimeInclusive, EndTimeExclusive, Times.Once());
 
             this.SetupMocks(SubscriberId, CreatorId, StartTimeInclusive.AddDays(-1), EndTimeExclusive);
-            var result = await this.target.ExecuteAsync(SubscriberId, CreatorId, StartTimeInclusive.AddDays(-1), EndTimeExclusive);
+            var result = await this.target.ExecuteAsync(SubscriberId, CreatorId, StartTimeInclusive.AddDays(-1), EndTimeExclusive, CommittedAccountBalance);
 
             this.VerifySubscriberMocks(SubscriberId, StartTimeInclusive, EndTimeExclusive, Times.Once());
             this.VerifyCreatorMocks(CreatorId, StartTimeInclusive, EndTimeExclusive, Times.Once());
@@ -255,13 +264,13 @@
         public async Task ItShouldCacheLastDataIfNewDataFetched()
         {
             this.SetupMocks(PreviousSubscriberId, PreviousCreatorId, StartTimeInclusive, EndTimeExclusive, false);
-            await this.target.ExecuteAsync(PreviousSubscriberId, PreviousCreatorId, StartTimeInclusive, EndTimeExclusive);
+            await this.target.ExecuteAsync(PreviousSubscriberId, PreviousCreatorId, StartTimeInclusive, EndTimeExclusive, CommittedAccountBalance);
 
             this.VerifySubscriberMocks(PreviousSubscriberId, StartTimeInclusive, EndTimeExclusive, Times.Once());
             this.VerifyCreatorMocks(PreviousCreatorId, StartTimeInclusive, EndTimeExclusive, Times.Once(), false);
 
             this.SetupMocks(SubscriberId, CreatorId, StartTimeInclusive, EndTimeExclusive);
-            await this.target.ExecuteAsync(SubscriberId, CreatorId, StartTimeInclusive, EndTimeExclusive);
+            await this.target.ExecuteAsync(SubscriberId, CreatorId, StartTimeInclusive, EndTimeExclusive, CommittedAccountBalance);
 
             this.VerifySubscriberMocks(PreviousSubscriberId, StartTimeInclusive, EndTimeExclusive, Times.Once());
             this.VerifyCreatorMocks(PreviousCreatorId, StartTimeInclusive, EndTimeExclusive, Times.Once(), false);
@@ -269,7 +278,7 @@
             this.VerifySubscriberMocks(SubscriberId, StartTimeInclusive, EndTimeExclusive, Times.Once());
             this.VerifyCreatorMocks(CreatorId, StartTimeInclusive, EndTimeExclusive, Times.Once());
 
-            await this.target.ExecuteAsync(SubscriberId, CreatorId, StartTimeInclusive, EndTimeExclusive);
+            await this.target.ExecuteAsync(SubscriberId, CreatorId, StartTimeInclusive, EndTimeExclusive, CommittedAccountBalance);
 
             this.VerifySubscriberMocks(PreviousSubscriberId, StartTimeInclusive, EndTimeExclusive, Times.Once());
             this.VerifyCreatorMocks(PreviousCreatorId, StartTimeInclusive, EndTimeExclusive, Times.Once(), false);
@@ -277,7 +286,7 @@
             this.VerifySubscriberMocks(SubscriberId, StartTimeInclusive, EndTimeExclusive, Times.Once());
             this.VerifyCreatorMocks(CreatorId, StartTimeInclusive, EndTimeExclusive, Times.Once());
 
-            await this.target.ExecuteAsync(PreviousSubscriberId, PreviousCreatorId, StartTimeInclusive, EndTimeExclusive);
+            await this.target.ExecuteAsync(PreviousSubscriberId, PreviousCreatorId, StartTimeInclusive, EndTimeExclusive, CommittedAccountBalance);
 
             this.VerifySubscriberMocks(PreviousSubscriberId, StartTimeInclusive, EndTimeExclusive, Times.Exactly(2));
             this.VerifyCreatorMocks(PreviousCreatorId, StartTimeInclusive, EndTimeExclusive, Times.Exactly(2), false);
@@ -330,7 +339,8 @@
                     subscriberId,
                     creatorId,
                     startTime,
-                    endTime,
+                    endTime, 
+                    CommittedAccountBalance,
                     SubscriberChannelsSnapshots,
                     SubscriberSnapshots,
                     CalculatedAccountBalanceSnapshots,

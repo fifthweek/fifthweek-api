@@ -36,6 +36,7 @@ namespace Fifthweek.WebJobs.Payments
                 new GetAllSubscribersDbStatement(new FifthweekDbConnectionFactory()),
                 new ProcessPaymentsForSubscriber(
                     new GetCreatorsAndFirstSubscribedDatesDbStatement(new FifthweekDbConnectionFactory()),
+                    new GetCommittedAccountBalanceDbStatement(new FifthweekDbConnectionFactory()),
                     new ProcessPaymentsBetweenSubscriberAndCreator(
                         new GetPaymentProcessingData(
                             new GetCreatorChannelsSnapshotsDbStatement(new FifthweekDbConnectionFactory()),

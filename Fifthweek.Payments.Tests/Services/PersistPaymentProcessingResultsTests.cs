@@ -28,6 +28,7 @@
             CreatorId,
             StartTimeInclusive,
             EndTimeExclusive,
+            new CommittedAccountBalance(100m),
             new List<SubscriberChannelsSnapshot>(),
             new List<SubscriberSnapshot>(),
             new List<CalculatedAccountBalanceSnapshot>(),
@@ -37,33 +38,35 @@
             new CreatorPercentageOverrideData(0.9m, DateTime.UtcNow));
 
         private static readonly PaymentProcessingResults Results =
-            new PaymentProcessingResults(new List<PaymentProcessingResult> 
-            {
-                new PaymentProcessingResult(
-                    StartTimeInclusive, 
-                    StartTimeInclusive.AddDays(1), 
-                    new AggregateCostSummary(1), 
-                    Data.CreatorPercentageOverride, 
-                    true),
-                new PaymentProcessingResult(
-                    StartTimeInclusive.AddDays(1), 
-                    StartTimeInclusive.AddDays(2), 
-                    new AggregateCostSummary(2), 
-                    null, 
-                    true),
-                new PaymentProcessingResult(
-                    StartTimeInclusive.AddDays(2), 
-                    StartTimeInclusive.AddDays(3), 
-                    new AggregateCostSummary(0), 
-                    null, 
-                    true),
-                new PaymentProcessingResult(
-                    StartTimeInclusive.AddDays(3), 
-                    StartTimeInclusive.AddDays(4), 
-                    new AggregateCostSummary(3), 
-                    null, 
-                    false),
-            });
+            new PaymentProcessingResults(
+                new CommittedAccountBalance(90m),
+                new List<PaymentProcessingResult> 
+                {
+                    new PaymentProcessingResult(
+                        StartTimeInclusive, 
+                        StartTimeInclusive.AddDays(1), 
+                        new AggregateCostSummary(1), 
+                        Data.CreatorPercentageOverride, 
+                        true),
+                    new PaymentProcessingResult(
+                        StartTimeInclusive.AddDays(1), 
+                        StartTimeInclusive.AddDays(2), 
+                        new AggregateCostSummary(2), 
+                        null, 
+                        true),
+                    new PaymentProcessingResult(
+                        StartTimeInclusive.AddDays(2), 
+                        StartTimeInclusive.AddDays(3), 
+                        new AggregateCostSummary(0), 
+                        null, 
+                        true),
+                    new PaymentProcessingResult(
+                        StartTimeInclusive.AddDays(3), 
+                        StartTimeInclusive.AddDays(4), 
+                        new AggregateCostSummary(3), 
+                        null, 
+                        false),
+                });
 
         private Mock<IGuidCreator> guidCreator;
         private Mock<IPersistPaymentProcessingDataStatement> persistPaymentProcessingData;
@@ -104,7 +107,7 @@
         {
             var resultItems = new List<PaymentProcessingResult>(Results.Items);
             resultItems.Add(resultItems.Last());
-            var results = new PaymentProcessingResults(resultItems);
+            var results = new PaymentProcessingResults(Results.CommittedAccountBalance, resultItems);
 
             await this.target.ExecuteAsync(Data, results);
         }
@@ -185,7 +188,7 @@
 
             var resultItems = new List<PaymentProcessingResult>(Results.Items);
             resultItems.Remove(resultItems.Last());
-            var results = new PaymentProcessingResults(resultItems);
+            var results = new PaymentProcessingResults(Results.CommittedAccountBalance, resultItems);
 
             this.persistPaymentProcessingData.Setup(
                 v => v.ExecuteAsync(new PersistedPaymentProcessingData(dataId, Data, results)))
@@ -243,7 +246,7 @@
                 new AggregateCostSummary(0),
                 uncommitted.CreatorPercentageOverride,
                 false);
-            var results = new PaymentProcessingResults(resultItems);
+            var results = new PaymentProcessingResults(Results.CommittedAccountBalance, resultItems);
 
             this.persistPaymentProcessingData.Setup(
                 v => v.ExecuteAsync(new PersistedPaymentProcessingData(dataId, Data, results)))
@@ -294,7 +297,7 @@
             resultItems.Remove(resultItems.First());
             resultItems.Remove(resultItems.First());
             resultItems.Remove(resultItems.First());
-            var results = new PaymentProcessingResults(resultItems);
+            var results = new PaymentProcessingResults(Results.CommittedAccountBalance, resultItems);
 
             this.persistPaymentProcessingData.Setup(
                 v => v.ExecuteAsync(new PersistedPaymentProcessingData(dataId, Data, results)))

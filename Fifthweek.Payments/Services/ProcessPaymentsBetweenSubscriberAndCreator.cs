@@ -13,21 +13,25 @@ namespace Fifthweek.Payments.Services
         private readonly IGetPaymentProcessingData getPaymentProcessingData;
         private readonly IProcessPaymentProcessingData processPaymentProcessingData;
         private readonly IPersistPaymentProcessingResults persistPaymentProcessingResults;
-        
-        public async Task ExecuteAsync(UserId subscriberId, UserId creatorId, DateTime startTimeInclusive, DateTime endTimeExclusive)
+
+        public async Task<CommittedAccountBalance> ExecuteAsync(UserId subscriberId, UserId creatorId, DateTime startTimeInclusive, DateTime endTimeExclusive, CommittedAccountBalance committedAccountBalance)
         {
             subscriberId.AssertNotNull("subscriberId");
             creatorId.AssertNotNull("creatorId");
+            committedAccountBalance.AssertNotNull("committedAccountBalance");
 
             var paymentProcessingData = await this.getPaymentProcessingData.ExecuteAsync(
                 subscriberId,
                 creatorId,
                 startTimeInclusive,
-                endTimeExclusive);
+                endTimeExclusive,
+                committedAccountBalance);
 
             var results = await this.processPaymentProcessingData.ExecuteAsync(paymentProcessingData);
 
             await this.persistPaymentProcessingResults.ExecuteAsync(paymentProcessingData, results);
+
+            return results.CommittedAccountBalance;
         }
     }
 }

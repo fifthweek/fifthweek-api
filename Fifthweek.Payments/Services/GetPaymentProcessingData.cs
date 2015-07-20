@@ -24,10 +24,11 @@ namespace Fifthweek.Payments.Services
 
         private CachedData cachedData;
 
-        public async Task<PaymentProcessingData> ExecuteAsync(UserId subscriberId, UserId creatorId, DateTime startTimeInclusive, DateTime endTimeExclusive)
+        public async Task<PaymentProcessingData> ExecuteAsync(UserId subscriberId, UserId creatorId, DateTime startTimeInclusive, DateTime endTimeExclusive, CommittedAccountBalance committedAccountBalance)
         {
             subscriberId.AssertNotNull("subscriberId");
             creatorId.AssertNotNull("creatorId");
+            committedAccountBalance.AssertNotNull("committedAccountBalance");
 
             IReadOnlyList<SubscriberChannelsSnapshot> subscriberChannelsSnapshots;
             IReadOnlyList<SubscriberSnapshot> subscriberSnapshots;
@@ -95,6 +96,7 @@ namespace Fifthweek.Payments.Services
                 creatorId, 
                 startTimeInclusive,
                 endTimeExclusive,
+                committedAccountBalance,
                 subscriberChannelsSnapshots,
                 subscriberSnapshots,
                 calculatedAccountBalances,

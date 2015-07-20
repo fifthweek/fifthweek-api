@@ -7,6 +7,6 @@ namespace Fifthweek.Payments.Services
 
     public interface IProcessPaymentsBetweenSubscriberAndCreator
     {
-        Task ExecuteAsync(UserId subscriberId, UserId creatorId, DateTime startTimeInclusive, DateTime endTimeExclusive);
+        Task<CommittedAccountBalance> ExecuteAsync(UserId subscriberId, UserId creatorId, DateTime startTimeInclusive, DateTime endTimeExclusive, CommittedAccountBalance committedAccountBalance);
     }
 }

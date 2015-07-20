@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Linq;
 
-//// Generated on 16/07/2015 10:54:49 (UTC)
-//// Mapped solution in 14.51s
+//// Generated on 20/07/2015 12:35:15 (UTC)
+//// Mapped solution in 12.29s
 
 namespace Fifthweek.Payments.Services.Credit
 {
@@ -1422,6 +1422,7 @@ namespace Fifthweek.Payments.Services
             Fifthweek.Api.Identity.Shared.Membership.UserId creatorId,
             System.DateTime startTimeInclusive,
             System.DateTime endTimeExclusive,
+            Fifthweek.Payments.Services.CommittedAccountBalance committedAccountBalance,
             System.Collections.Generic.IReadOnlyList<Fifthweek.Payments.Snapshots.SubscriberChannelsSnapshot> subscriberChannelsSnapshots,
             System.Collections.Generic.IReadOnlyList<Fifthweek.Payments.Snapshots.SubscriberSnapshot> subscriberSnapshots,
             System.Collections.Generic.IReadOnlyList<Fifthweek.Payments.Snapshots.CalculatedAccountBalanceSnapshot> calculatedAccountBalanceSnapshots,
@@ -1448,6 +1449,11 @@ namespace Fifthweek.Payments.Services
             if (endTimeExclusive == null)
             {
                 throw new ArgumentNullException("endTimeExclusive");
+            }
+
+            if (committedAccountBalance == null)
+            {
+                throw new ArgumentNullException("committedAccountBalance");
             }
 
             if (subscriberChannelsSnapshots == null)
@@ -1484,6 +1490,7 @@ namespace Fifthweek.Payments.Services
             this.CreatorId = creatorId;
             this.StartTimeInclusive = startTimeInclusive;
             this.EndTimeExclusive = endTimeExclusive;
+            this.CommittedAccountBalance = committedAccountBalance;
             this.SubscriberChannelsSnapshots = subscriberChannelsSnapshots;
             this.SubscriberSnapshots = subscriberSnapshots;
             this.CalculatedAccountBalanceSnapshots = calculatedAccountBalanceSnapshots;
@@ -1525,7 +1532,7 @@ namespace Fifthweek.Payments.Services
             System.DateTime endTimeExclusive,
             Fifthweek.Payments.AggregateCostSummary subscriptionCost,
             Fifthweek.Payments.Services.CreatorPercentageOverrideData creatorPercentageOverride,
-            System.Boolean isComitted)
+            System.Boolean isCommitted)
         {
             if (startTimeInclusive == null)
             {
@@ -1542,16 +1549,16 @@ namespace Fifthweek.Payments.Services
                 throw new ArgumentNullException("subscriptionCost");
             }
 
-            if (isComitted == null)
+            if (isCommitted == null)
             {
-                throw new ArgumentNullException("isComitted");
+                throw new ArgumentNullException("isCommitted");
             }
 
             this.StartTimeInclusive = startTimeInclusive;
             this.EndTimeExclusive = endTimeExclusive;
             this.SubscriptionCost = subscriptionCost;
             this.CreatorPercentageOverride = creatorPercentageOverride;
-            this.IsComitted = isComitted;
+            this.IsCommitted = isCommitted;
         }
     }
 }
@@ -1582,13 +1589,20 @@ namespace Fifthweek.Payments.Services
     public partial class PaymentProcessingResults 
     {
         public PaymentProcessingResults(
+            Fifthweek.Payments.Services.CommittedAccountBalance committedAccountBalance,
             System.Collections.Generic.IReadOnlyList<Fifthweek.Payments.Services.PaymentProcessingResult> items)
         {
+            if (committedAccountBalance == null)
+            {
+                throw new ArgumentNullException("committedAccountBalance");
+            }
+
             if (items == null)
             {
                 throw new ArgumentNullException("items");
             }
 
+            this.CommittedAccountBalance = committedAccountBalance;
             this.Items = items;
         }
     }
@@ -1957,12 +1971,18 @@ namespace Fifthweek.Payments.Services
     {
         public ProcessPaymentsForSubscriber(
             Fifthweek.Payments.Services.IGetCreatorsAndFirstSubscribedDatesDbStatement getCreatorsAndFirstSubscribedDates,
+            Fifthweek.Payments.Services.IGetCommittedAccountBalanceDbStatement getCommittedAccountBalanceDbStatement,
             Fifthweek.Payments.Services.IProcessPaymentsBetweenSubscriberAndCreator processPaymentsBetweenSubscriberAndCreator,
             Fifthweek.Payments.Services.IGetLatestCommittedLedgerDateDbStatement getLatestCommittedLedgerDate)
         {
             if (getCreatorsAndFirstSubscribedDates == null)
             {
                 throw new ArgumentNullException("getCreatorsAndFirstSubscribedDates");
+            }
+
+            if (getCommittedAccountBalanceDbStatement == null)
+            {
+                throw new ArgumentNullException("getCommittedAccountBalanceDbStatement");
             }
 
             if (processPaymentsBetweenSubscriberAndCreator == null)
@@ -1976,6 +1996,7 @@ namespace Fifthweek.Payments.Services
             }
 
             this.getCreatorsAndFirstSubscribedDates = getCreatorsAndFirstSubscribedDates;
+            this.getCommittedAccountBalanceDbStatement = getCommittedAccountBalanceDbStatement;
             this.processPaymentsBetweenSubscriberAndCreator = processPaymentsBetweenSubscriberAndCreator;
             this.getLatestCommittedLedgerDate = getLatestCommittedLedgerDate;
         }
@@ -3088,11 +3109,15 @@ namespace Fifthweek.Payments.Services.Credit.Taxamo
 namespace Fifthweek.Payments.Services.Credit.Taxamo
 {
     using System;
-    using System.Threading.Tasks;
+    using System.Linq;
     using Fifthweek.CodeGeneration;
+    using System.Threading.Tasks;
     using Fifthweek.Payments.Taxamo;
     using Fifthweek.Shared;
+    using global::Taxamo.Api;
+    using global::Taxamo.Client;
     using global::Taxamo.Model;
+    using System.Collections.Generic;
 
     public partial class CommitTaxamoTransaction 
     {
@@ -3117,9 +3142,16 @@ namespace Fifthweek.Payments.Services.Credit.Taxamo
 }
 namespace Fifthweek.Payments.Services.Credit.Taxamo
 {
-    using System.Threading.Tasks;
+    using System;
+    using System.Linq;
     using Fifthweek.CodeGeneration;
+    using System.Threading.Tasks;
     using Fifthweek.Payments.Taxamo;
+    using Fifthweek.Shared;
+    using global::Taxamo.Api;
+    using global::Taxamo.Client;
+    using global::Taxamo.Model;
+    using System.Collections.Generic;
 
     public partial class DeleteTaxamoTransaction 
     {
@@ -3139,6 +3171,44 @@ namespace Fifthweek.Payments.Services.Credit.Taxamo
 
             this.taxamoApiKeyRepository = taxamoApiKeyRepository;
             this.taxamoService = taxamoService;
+        }
+    }
+}
+namespace Fifthweek.Payments.Services
+{
+    using System;
+    using System.Linq;
+    using Fifthweek.Api.Identity.Shared.Membership;
+    using Fifthweek.CodeGeneration;
+    using Fifthweek.Api.Channels.Shared;
+    using System.Collections.Generic;
+    using System.Threading.Tasks;
+    using Dapper;
+    using Fifthweek.Api.Persistence;
+    using Fifthweek.Api.Persistence.Identity;
+    using Fifthweek.Api.Persistence.Snapshots;
+    using Fifthweek.Api.Persistence.Payments;
+    using Fifthweek.Payments.Snapshots;
+    using Fifthweek.Shared;
+    using System.Threading;
+    using Fifthweek.Azure;
+    using Newtonsoft.Json;
+    using Fifthweek.Payments.Shared;
+    using Fifthweek.Api.Azure;
+    using Fifthweek.Payments.Pipeline;
+    using Fifthweek.Payments.Services.Credit;
+
+    public partial class GetCommittedAccountBalanceDbStatement 
+    {
+        public GetCommittedAccountBalanceDbStatement(
+            Fifthweek.Api.Persistence.IFifthweekDbConnectionFactory connectionFactory)
+        {
+            if (connectionFactory == null)
+            {
+                throw new ArgumentNullException("connectionFactory");
+            }
+
+            this.connectionFactory = connectionFactory;
         }
     }
 }
@@ -3951,7 +4021,7 @@ namespace Fifthweek.Payments.Services
     {
         public override string ToString()
         {
-            return string.Format("PaymentProcessingData({0}, {1}, {2}, {3}, {4}, {5}, {6}, {7}, {8}, {9}, {10})", this.SubscriberId == null ? "null" : this.SubscriberId.ToString(), this.CreatorId == null ? "null" : this.CreatorId.ToString(), this.StartTimeInclusive == null ? "null" : this.StartTimeInclusive.ToString(), this.EndTimeExclusive == null ? "null" : this.EndTimeExclusive.ToString(), this.SubscriberChannelsSnapshots == null ? "null" : this.SubscriberChannelsSnapshots.ToString(), this.SubscriberSnapshots == null ? "null" : this.SubscriberSnapshots.ToString(), this.CalculatedAccountBalanceSnapshots == null ? "null" : this.CalculatedAccountBalanceSnapshots.ToString(), this.CreatorChannelsSnapshots == null ? "null" : this.CreatorChannelsSnapshots.ToString(), this.CreatorFreeAccessUsersSnapshots == null ? "null" : this.CreatorFreeAccessUsersSnapshots.ToString(), this.CreatorPosts == null ? "null" : this.CreatorPosts.ToString(), this.CreatorPercentageOverride == null ? "null" : this.CreatorPercentageOverride.ToString());
+            return string.Format("PaymentProcessingData({0}, {1}, {2}, {3}, {4}, {5}, {6}, {7}, {8}, {9}, {10}, {11})", this.SubscriberId == null ? "null" : this.SubscriberId.ToString(), this.CreatorId == null ? "null" : this.CreatorId.ToString(), this.StartTimeInclusive == null ? "null" : this.StartTimeInclusive.ToString(), this.EndTimeExclusive == null ? "null" : this.EndTimeExclusive.ToString(), this.CommittedAccountBalance == null ? "null" : this.CommittedAccountBalance.ToString(), this.SubscriberChannelsSnapshots == null ? "null" : this.SubscriberChannelsSnapshots.ToString(), this.SubscriberSnapshots == null ? "null" : this.SubscriberSnapshots.ToString(), this.CalculatedAccountBalanceSnapshots == null ? "null" : this.CalculatedAccountBalanceSnapshots.ToString(), this.CreatorChannelsSnapshots == null ? "null" : this.CreatorChannelsSnapshots.ToString(), this.CreatorFreeAccessUsersSnapshots == null ? "null" : this.CreatorFreeAccessUsersSnapshots.ToString(), this.CreatorPosts == null ? "null" : this.CreatorPosts.ToString(), this.CreatorPercentageOverride == null ? "null" : this.CreatorPercentageOverride.ToString());
         }
         
         public override bool Equals(object obj)
@@ -3983,6 +4053,7 @@ namespace Fifthweek.Payments.Services
                 hashCode = (hashCode * 397) ^ (this.CreatorId != null ? this.CreatorId.GetHashCode() : 0);
                 hashCode = (hashCode * 397) ^ (this.StartTimeInclusive != null ? this.StartTimeInclusive.GetHashCode() : 0);
                 hashCode = (hashCode * 397) ^ (this.EndTimeExclusive != null ? this.EndTimeExclusive.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.CommittedAccountBalance != null ? this.CommittedAccountBalance.GetHashCode() : 0);
                 hashCode = (hashCode * 397) ^ (this.SubscriberChannelsSnapshots != null 
         			? this.SubscriberChannelsSnapshots.Aggregate(0, (previous, current) => 
         				{ 
@@ -4060,6 +4131,11 @@ namespace Fifthweek.Payments.Services
             }
         
             if (!object.Equals(this.EndTimeExclusive, other.EndTimeExclusive))
+            {
+                return false;
+            }
+        
+            if (!object.Equals(this.CommittedAccountBalance, other.CommittedAccountBalance))
             {
                 return false;
             }
@@ -4173,7 +4249,7 @@ namespace Fifthweek.Payments.Services
     {
         public override string ToString()
         {
-            return string.Format("PaymentProcessingResult({0}, {1}, {2}, {3}, {4})", this.StartTimeInclusive == null ? "null" : this.StartTimeInclusive.ToString(), this.EndTimeExclusive == null ? "null" : this.EndTimeExclusive.ToString(), this.SubscriptionCost == null ? "null" : this.SubscriptionCost.ToString(), this.CreatorPercentageOverride == null ? "null" : this.CreatorPercentageOverride.ToString(), this.IsComitted == null ? "null" : this.IsComitted.ToString());
+            return string.Format("PaymentProcessingResult({0}, {1}, {2}, {3}, {4})", this.StartTimeInclusive == null ? "null" : this.StartTimeInclusive.ToString(), this.EndTimeExclusive == null ? "null" : this.EndTimeExclusive.ToString(), this.SubscriptionCost == null ? "null" : this.SubscriptionCost.ToString(), this.CreatorPercentageOverride == null ? "null" : this.CreatorPercentageOverride.ToString(), this.IsCommitted == null ? "null" : this.IsCommitted.ToString());
         }
         
         public override bool Equals(object obj)
@@ -4205,7 +4281,7 @@ namespace Fifthweek.Payments.Services
                 hashCode = (hashCode * 397) ^ (this.EndTimeExclusive != null ? this.EndTimeExclusive.GetHashCode() : 0);
                 hashCode = (hashCode * 397) ^ (this.SubscriptionCost != null ? this.SubscriptionCost.GetHashCode() : 0);
                 hashCode = (hashCode * 397) ^ (this.CreatorPercentageOverride != null ? this.CreatorPercentageOverride.GetHashCode() : 0);
-                hashCode = (hashCode * 397) ^ (this.IsComitted != null ? this.IsComitted.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.IsCommitted != null ? this.IsCommitted.GetHashCode() : 0);
                 return hashCode;
             }
         }
@@ -4232,7 +4308,7 @@ namespace Fifthweek.Payments.Services
                 return false;
             }
         
-            if (!object.Equals(this.IsComitted, other.IsComitted))
+            if (!object.Equals(this.IsCommitted, other.IsCommitted))
             {
                 return false;
             }
@@ -4269,7 +4345,7 @@ namespace Fifthweek.Payments.Services
     {
         public override string ToString()
         {
-            return string.Format("PaymentProcessingResults({0})", this.Items == null ? "null" : this.Items.ToString());
+            return string.Format("PaymentProcessingResults({0}, {1})", this.CommittedAccountBalance == null ? "null" : this.CommittedAccountBalance.ToString(), this.Items == null ? "null" : this.Items.ToString());
         }
         
         public override bool Equals(object obj)
@@ -4297,6 +4373,7 @@ namespace Fifthweek.Payments.Services
             unchecked
             {
                 int hashCode = 0;
+                hashCode = (hashCode * 397) ^ (this.CommittedAccountBalance != null ? this.CommittedAccountBalance.GetHashCode() : 0);
                 hashCode = (hashCode * 397) ^ (this.Items != null 
         			? this.Items.Aggregate(0, (previous, current) => 
         				{ 
@@ -4312,6 +4389,11 @@ namespace Fifthweek.Payments.Services
         
         protected bool Equals(PaymentProcessingResults other)
         {
+            if (!object.Equals(this.CommittedAccountBalance, other.CommittedAccountBalance))
+            {
+                return false;
+            }
+        
             if (this.Items != null && other.Items != null)
             {
                 if (!this.Items.SequenceEqual(other.Items))
@@ -5310,6 +5392,78 @@ namespace Fifthweek.Payments.Services.Credit.Taxamo
             
                 return true;
             }
+        }
+    }
+}
+namespace Fifthweek.Payments.Services
+{
+    using System;
+    using System.Linq;
+    using Fifthweek.Api.Identity.Shared.Membership;
+    using Fifthweek.CodeGeneration;
+    using Fifthweek.Api.Channels.Shared;
+    using System.Collections.Generic;
+    using System.Threading.Tasks;
+    using Dapper;
+    using Fifthweek.Api.Persistence;
+    using Fifthweek.Api.Persistence.Identity;
+    using Fifthweek.Api.Persistence.Snapshots;
+    using Fifthweek.Api.Persistence.Payments;
+    using Fifthweek.Payments.Snapshots;
+    using Fifthweek.Shared;
+    using System.Threading;
+    using Fifthweek.Azure;
+    using Newtonsoft.Json;
+    using Fifthweek.Payments.Shared;
+    using Fifthweek.Api.Azure;
+    using Fifthweek.Payments.Pipeline;
+    using Fifthweek.Payments.Services.Credit;
+
+    public partial class CommittedAccountBalance 
+    {
+        public override string ToString()
+        {
+            return string.Format("CommittedAccountBalance({0})", this.Amount == null ? "null" : this.Amount.ToString());
+        }
+        
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj))
+            {
+                return false;
+            }
+        
+            if (ReferenceEquals(this, obj))
+            {
+                return true;
+            }
+        
+            if (obj.GetType() != this.GetType())
+            {
+                return false;
+            }
+        
+            return this.Equals((CommittedAccountBalance)obj);
+        }
+        
+        public override int GetHashCode()
+        {
+            unchecked
+            {
+                int hashCode = 0;
+                hashCode = (hashCode * 397) ^ (this.Amount != null ? this.Amount.GetHashCode() : 0);
+                return hashCode;
+            }
+        }
+        
+        protected bool Equals(CommittedAccountBalance other)
+        {
+            if (!object.Equals(this.Amount, other.Amount))
+            {
+                return false;
+            }
+        
+            return true;
         }
     }
 }

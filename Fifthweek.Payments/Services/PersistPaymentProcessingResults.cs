@@ -23,8 +23,8 @@ namespace Fifthweek.Payments.Services
             data.AssertNotNull("data");
             results.AssertNotNull("results");
 
-            var committedResults = results.Items.Where(v => v.IsComitted).ToList();
-            var uncommittedResult = results.Items.SingleOrDefault(v => !v.IsComitted);
+            var committedResults = results.Items.Where(v => v.IsCommitted).ToList();
+            var uncommittedResult = results.Items.SingleOrDefault(v => !v.IsCommitted);
 
             var dataId = this.guidCreator.Create();
 

@@ -22,6 +22,9 @@
 
         private static readonly DateTime StartTimeInclusive = DateTime.UtcNow;
 
+        private static readonly CommittedAccountBalance InitialCommittedAccountBalance =
+            new CommittedAccountBalance(100m);
+
         private Mock<ISubscriberPaymentPipeline> subscriberPaymentPipeline;
 
         private ProcessPaymentProcessingData target;
@@ -46,18 +49,20 @@
         {
             var data = this.CreateData(StartTimeInclusive, StartTimeInclusive.AddDays(7).AddTicks(-1));
 
+            var cost = new AggregateCostSummary(10);
             this.subscriberPaymentPipeline.Setup(v => v.CalculatePayment(
                 data.GetOrderedSnapshots(),
                 null,
                 SubscriberId,
                 CreatorId,
                 data.StartTimeInclusive,
-                data.EndTimeExclusive)).Returns(new AggregateCostSummary(10));
+                data.EndTimeExclusive)).Returns(cost);
 
             var result = await this.target.ExecuteAsync(data);
 
             Assert.AreEqual(
                 new PaymentProcessingResults(
+                    InitialCommittedAccountBalance,
                     new List<PaymentProcessingResult>
                     {
                         new PaymentProcessingResult(
@@ -82,18 +87,20 @@
                 StartTimeInclusive.AddDays(7).AddTicks(-1),
                 creatorPercentageOverride);
 
+            var cost = new AggregateCostSummary(10);
             this.subscriberPaymentPipeline.Setup(v => v.CalculatePayment(
                 data.GetOrderedSnapshots(),
                 null,
                 SubscriberId,
                 CreatorId,
                 data.StartTimeInclusive,
-                data.EndTimeExclusive)).Returns(new AggregateCostSummary(10));
+                data.EndTimeExclusive)).Returns(cost);
 
             var result = await this.target.ExecuteAsync(data);
 
             Assert.AreEqual(
                 new PaymentProcessingResults(
+                    InitialCommittedAccountBalance,
                     new List<PaymentProcessingResult>
                     {
                         new PaymentProcessingResult(
@@ -118,18 +125,20 @@
                 StartTimeInclusive.AddDays(7).AddTicks(-1),
                 creatorPercentageOverride);
 
+            var cost = new AggregateCostSummary(10);
             this.subscriberPaymentPipeline.Setup(v => v.CalculatePayment(
                 data.GetOrderedSnapshots(),
                 null,
                 SubscriberId,
                 CreatorId,
                 data.StartTimeInclusive,
-                data.EndTimeExclusive)).Returns(new AggregateCostSummary(10));
+                data.EndTimeExclusive)).Returns(cost);
 
             var result = await this.target.ExecuteAsync(data);
 
             Assert.AreEqual(
                 new PaymentProcessingResults(
+                    InitialCommittedAccountBalance,
                     new List<PaymentProcessingResult>
                     {
                         new PaymentProcessingResult(
@@ -154,18 +163,20 @@
                 StartTimeInclusive.AddDays(7).AddTicks(-1),
                 creatorPercentageOverride);
 
+            var cost = new AggregateCostSummary(10);
             this.subscriberPaymentPipeline.Setup(v => v.CalculatePayment(
                 data.GetOrderedSnapshots(),
                 null,
                 SubscriberId,
                 CreatorId,
                 data.StartTimeInclusive,
-                data.EndTimeExclusive)).Returns(new AggregateCostSummary(10));
+                data.EndTimeExclusive)).Returns(cost);
 
             var result = await this.target.ExecuteAsync(data);
 
             Assert.AreEqual(
                 new PaymentProcessingResults(
+                    InitialCommittedAccountBalance,
                     new List<PaymentProcessingResult>
                     {
                         new PaymentProcessingResult(
@@ -183,18 +194,20 @@
         {
             var data = this.CreateData(StartTimeInclusive, StartTimeInclusive.AddDays(7));
 
+            var cost = new AggregateCostSummary(10);
             this.subscriberPaymentPipeline.Setup(v => v.CalculatePayment(
                 data.GetOrderedSnapshots(),
                 data.CreatorPosts,
                 SubscriberId,
                 CreatorId,
                 data.StartTimeInclusive,
-                data.EndTimeExclusive)).Returns(new AggregateCostSummary(10));
+                data.EndTimeExclusive)).Returns(cost);
 
             var result = await this.target.ExecuteAsync(data);
 
             Assert.AreEqual(
                 new PaymentProcessingResults(
+                    InitialCommittedAccountBalance.Subtract(cost.Cost),
                     new List<PaymentProcessingResult>
                     {
                         new PaymentProcessingResult(
@@ -219,18 +232,20 @@
                 StartTimeInclusive.AddDays(7),
                 creatorPercentageOverride);
 
+            var cost = new AggregateCostSummary(10);
             this.subscriberPaymentPipeline.Setup(v => v.CalculatePayment(
                 data.GetOrderedSnapshots(),
                 data.CreatorPosts,
                 SubscriberId,
                 CreatorId,
                 data.StartTimeInclusive,
-                data.EndTimeExclusive)).Returns(new AggregateCostSummary(10));
+                data.EndTimeExclusive)).Returns(cost);
 
             var result = await this.target.ExecuteAsync(data);
 
             Assert.AreEqual(
                 new PaymentProcessingResults(
+                    InitialCommittedAccountBalance.Subtract(cost.Cost),
                     new List<PaymentProcessingResult>
                     {
                         new PaymentProcessingResult(
@@ -255,18 +270,20 @@
                 StartTimeInclusive.AddDays(7),
                 creatorPercentageOverride);
 
+            var cost = new AggregateCostSummary(10);
             this.subscriberPaymentPipeline.Setup(v => v.CalculatePayment(
                 data.GetOrderedSnapshots(),
                 data.CreatorPosts,
                 SubscriberId,
                 CreatorId,
                 data.StartTimeInclusive,
-                data.EndTimeExclusive)).Returns(new AggregateCostSummary(10));
+                data.EndTimeExclusive)).Returns(cost);
 
             var result = await this.target.ExecuteAsync(data);
 
             Assert.AreEqual(
                 new PaymentProcessingResults(
+                    InitialCommittedAccountBalance.Subtract(cost.Cost),
                     new List<PaymentProcessingResult>
                     {
                         new PaymentProcessingResult(
@@ -291,18 +308,20 @@
                 StartTimeInclusive.AddDays(7),
                 creatorPercentageOverride);
 
+            var cost = new AggregateCostSummary(10);
             this.subscriberPaymentPipeline.Setup(v => v.CalculatePayment(
                 data.GetOrderedSnapshots(),
                 data.CreatorPosts,
                 SubscriberId,
                 CreatorId,
                 data.StartTimeInclusive,
-                data.EndTimeExclusive)).Returns(new AggregateCostSummary(10));
+                data.EndTimeExclusive)).Returns(cost);
 
             var result = await this.target.ExecuteAsync(data);
 
             Assert.AreEqual(
                 new PaymentProcessingResults(
+                    InitialCommittedAccountBalance.Subtract(cost.Cost),
                     new List<PaymentProcessingResult>
                     {
                         new PaymentProcessingResult(
@@ -323,38 +342,42 @@
                 StartTimeInclusive.AddDays(9));
 
             var data = this.CreateData(
-                StartTimeInclusive, 
+                StartTimeInclusive,
                 StartTimeInclusive.AddDays(16),
                 creatorPercentageOverride);
 
+            var cost1 = new AggregateCostSummary(10);
             this.subscriberPaymentPipeline.Setup(v => v.CalculatePayment(
                 data.GetOrderedSnapshots(),
                 data.CreatorPosts,
                 SubscriberId,
                 CreatorId,
                 data.StartTimeInclusive,
-                data.StartTimeInclusive.AddDays(7))).Returns(new AggregateCostSummary(10));
+                data.StartTimeInclusive.AddDays(7))).Returns(cost1);
 
+            var cost2 = new AggregateCostSummary(20);
             this.subscriberPaymentPipeline.Setup(v => v.CalculatePayment(
                 data.GetOrderedSnapshots(),
                 data.CreatorPosts,
                 SubscriberId,
                 CreatorId,
                 data.StartTimeInclusive.AddDays(7),
-                data.StartTimeInclusive.AddDays(14))).Returns(new AggregateCostSummary(20));
+                data.StartTimeInclusive.AddDays(14))).Returns(cost2);
 
+            var cost3 = new AggregateCostSummary(30);
             this.subscriberPaymentPipeline.Setup(v => v.CalculatePayment(
                 data.GetOrderedSnapshots(),
                 null,
                 SubscriberId,
                 CreatorId,
                 data.StartTimeInclusive.AddDays(14),
-                data.EndTimeExclusive)).Returns(new AggregateCostSummary(30));
+                data.EndTimeExclusive)).Returns(cost3);
 
             var result = await this.target.ExecuteAsync(data);
 
             Assert.AreEqual(
                 new PaymentProcessingResults(
+                    InitialCommittedAccountBalance.Subtract(cost1.Cost + cost2.Cost),
                     new List<PaymentProcessingResult>
                     {
                         new PaymentProcessingResult(
@@ -379,6 +402,74 @@
                     result);
         }
 
+        [TestMethod]
+        public async Task WhenDataRepresentsMultipleWeeks_AndExceedsCommittedCredit_ItShouldReturnAdjustedResults()
+        {
+            var creatorPercentageOverride = new CreatorPercentageOverrideData(
+                0.9m,
+                StartTimeInclusive.AddDays(9));
+
+            var data = this.CreateData(
+                StartTimeInclusive,
+                StartTimeInclusive.AddDays(16),
+                creatorPercentageOverride);
+
+            var cost1 = new AggregateCostSummary(60);
+            this.subscriberPaymentPipeline.Setup(v => v.CalculatePayment(
+                data.GetOrderedSnapshots(),
+                data.CreatorPosts,
+                SubscriberId,
+                CreatorId,
+                data.StartTimeInclusive,
+                data.StartTimeInclusive.AddDays(7))).Returns(cost1);
+
+            var cost2 = new AggregateCostSummary(60);
+            this.subscriberPaymentPipeline.Setup(v => v.CalculatePayment(
+                data.GetOrderedSnapshots(),
+                data.CreatorPosts,
+                SubscriberId,
+                CreatorId,
+                data.StartTimeInclusive.AddDays(7),
+                data.StartTimeInclusive.AddDays(14))).Returns(cost2);
+
+            var cost3 = new AggregateCostSummary(60);
+            this.subscriberPaymentPipeline.Setup(v => v.CalculatePayment(
+                data.GetOrderedSnapshots(),
+                null,
+                SubscriberId,
+                CreatorId,
+                data.StartTimeInclusive.AddDays(14),
+                data.EndTimeExclusive)).Returns(cost3);
+
+            var result = await this.target.ExecuteAsync(data);
+
+            Assert.AreEqual(
+                new PaymentProcessingResults(
+                    new CommittedAccountBalance(0),
+                    new List<PaymentProcessingResult>
+                    {
+                        new PaymentProcessingResult(
+                            data.StartTimeInclusive,
+                            data.StartTimeInclusive.AddDays(7),
+                            new AggregateCostSummary(60),
+                            creatorPercentageOverride,
+                            true),
+                        new PaymentProcessingResult(
+                            data.StartTimeInclusive.AddDays(7),
+                            data.StartTimeInclusive.AddDays(14),
+                            new AggregateCostSummary(40),
+                            null,
+                            true),
+                        new PaymentProcessingResult(
+                            data.StartTimeInclusive.AddDays(14),
+                            data.EndTimeExclusive,
+                            new AggregateCostSummary(60),
+                            null,
+                            false),
+                    }),
+                    result);
+        }
+
         private PaymentProcessingData CreateData(DateTime startTimeInclusive, DateTime endTimeExclusive, CreatorPercentageOverrideData creatorPercentageOverride = null)
         {
             return new PaymentProcessingData(
@@ -386,6 +477,7 @@
                 CreatorId,
                 startTimeInclusive,
                 endTimeExclusive,
+                InitialCommittedAccountBalance,
                 new List<SubscriberChannelsSnapshot> 
                 {
                     new SubscriberChannelsSnapshot(

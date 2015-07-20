@@ -7,6 +7,8 @@ namespace Fifthweek.Payments.Services
     [AutoConstructor, AutoEqualityMembers]
     public partial class PaymentProcessingResults
     {
+        public CommittedAccountBalance CommittedAccountBalance { get; private set; }
+
         public IReadOnlyList<PaymentProcessingResult> Items { get; private set; }
     }
 }

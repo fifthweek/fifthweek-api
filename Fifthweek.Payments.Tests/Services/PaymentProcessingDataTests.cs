@@ -56,6 +56,7 @@
                 CreatorId,
                 Now,
                 Now.AddMonths(1),
+                new CommittedAccountBalance(100m),
                 new List<SubscriberChannelsSnapshot> 
                 {
                     new SubscriberChannelsSnapshot(

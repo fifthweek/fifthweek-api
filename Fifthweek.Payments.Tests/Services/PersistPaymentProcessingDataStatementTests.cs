@@ -50,6 +50,7 @@
                     UserId.Random(),
                     DateTime.UtcNow,
                     DateTime.UtcNow,
+                    new CommittedAccountBalance(100m),
                     new List<SubscriberChannelsSnapshot> 
                     {
                         new SubscriberChannelsSnapshot(
@@ -95,6 +96,7 @@
                     },
                     new CreatorPercentageOverrideData(0.3m, DateTime.UtcNow)),
                 new PaymentProcessingResults(
+                    new CommittedAccountBalance(80m),
                     new List<PaymentProcessingResult>
                     {
                         new PaymentProcessingResult(DateTime.UtcNow, DateTime.UtcNow.AddDays(1), new AggregateCostSummary(24), null, true),

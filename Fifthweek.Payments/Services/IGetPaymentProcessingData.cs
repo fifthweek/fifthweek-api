@@ -7,6 +7,6 @@ namespace Fifthweek.Payments.Services
 
     public interface IGetPaymentProcessingData
     {
-        Task<PaymentProcessingData> ExecuteAsync(UserId subscriberId, UserId creatorId, DateTime startTimeInclusive, DateTime endTimeExclusive);
+        Task<PaymentProcessingData> ExecuteAsync(UserId subscriberId, UserId creatorId, DateTime startTimeInclusive, DateTime endTimeExclusive, CommittedAccountBalance committedAccountBalance);
     }
 }

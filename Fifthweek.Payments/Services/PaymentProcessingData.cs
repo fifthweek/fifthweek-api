@@ -22,6 +22,8 @@ namespace Fifthweek.Payments.Services
 
         public DateTime EndTimeExclusive { get; private set; }
 
+        public CommittedAccountBalance CommittedAccountBalance { get; private set; }
+
         public IReadOnlyList<SubscriberChannelsSnapshot> SubscriberChannelsSnapshots { get; private set; }
 
         public IReadOnlyList<SubscriberSnapshot> SubscriberSnapshots { get; private set; }

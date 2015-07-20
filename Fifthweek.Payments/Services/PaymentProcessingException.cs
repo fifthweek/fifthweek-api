@@ -13,6 +13,13 @@ namespace Fifthweek.Payments.Services
             this.CreatorId = creatorId;
         }
 
+        public PaymentProcessingException(string message, UserId subscriberId, UserId creatorId)
+            : base(message)
+        {
+            this.SubscriberId = subscriberId;
+            this.CreatorId = creatorId;
+        }
+
         public UserId SubscriberId { get; private set; }
 
         public UserId CreatorId { get; private set; }
