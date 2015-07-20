@@ -26,6 +26,7 @@
         private Mock<IQueryHandler<GetCreditRequestSummaryQuery, CreditRequestSummary>> getCreditRequestSummary;
         private Mock<ICommandHandler<UpdatePaymentOriginCommand>> updatePaymentsOrigin;
         private Mock<ICommandHandler<ApplyCreditRequestCommand>> applyCreditRequest;
+        private Mock<ICommandHandler<DeletePaymentInformationCommand>> deletePaymentInformation;
 
         private PaymentsController target;
 
@@ -35,6 +36,7 @@
             this.getCreditRequestSummary = new Mock<IQueryHandler<GetCreditRequestSummaryQuery, CreditRequestSummary>>(MockBehavior.Strict);
             this.updatePaymentsOrigin = new Mock<ICommandHandler<UpdatePaymentOriginCommand>>(MockBehavior.Strict);
             this.applyCreditRequest = new Mock<ICommandHandler<ApplyCreditRequestCommand>>(MockBehavior.Strict);
+            this.deletePaymentInformation = new Mock<ICommandHandler<DeletePaymentInformationCommand>>(MockBehavior.Strict);
 
             this.requesterContext.Setup(v => v.GetRequester()).Returns(Requester);
 
@@ -42,7 +44,8 @@
                 this.requesterContext.Object,
                 this.getCreditRequestSummary.Object,
                 this.updatePaymentsOrigin.Object,
-                this.applyCreditRequest.Object);
+                this.applyCreditRequest.Object,
+                this.deletePaymentInformation.Object);
         }
 
         [TestClass]
@@ -209,6 +212,43 @@
                 var result = await this.target.GetCreditRequestSummaryAsync(UserId.Value.EncodeGuid(), PaymentLocationData.CountryCode, PaymentLocationData.CreditCardPrefix, PaymentLocationData.IpAddress);
 
                 Assert.AreEqual(CreditRequestSummary, result);
+            }
+        }
+
+        [TestClass]
+        public class DeletePaymentInformationAsync : PaymentsControllerTests
+        {
+            [TestInitialize]
+            public override void Initialize()
+            {
+                base.Initialize();
+            }
+
+            [TestMethod]
+            [ExpectedException(typeof(BadRequestException))]
+            public async Task WhenUserIdIsNull_ItShouldThrowAnException()
+            {
+                await this.target.DeletePaymentInformationAsync(null);
+            }
+
+            [TestMethod]
+            [ExpectedException(typeof(BadRequestException))]
+            public async Task WhenUserIdIsWhitespace_ItShouldThrowAnException()
+            {
+                await this.target.DeletePaymentInformationAsync(" ");
+            }
+
+            [TestMethod]
+            public async Task ItShouldCallUpdatePaymentsOrigin()
+            {
+                this.deletePaymentInformation.Setup(v => v.HandleAsync(
+                    new DeletePaymentInformationCommand(Requester, UserId)))
+                    .Returns(Task.FromResult(0))
+                    .Verifiable();
+
+                await this.target.DeletePaymentInformationAsync(UserId.Value.EncodeGuid());
+
+                this.updatePaymentsOrigin.Verify();
             }
         }
     }

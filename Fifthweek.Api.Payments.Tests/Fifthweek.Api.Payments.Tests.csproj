@@ -87,8 +87,10 @@
   </Choose>
   <ItemGroup>
     <Compile Include="Commands\ApplyCreditRequestCommandHandlerTests.cs" />
+    <Compile Include="Commands\DeletePaymentInformationCommandHandlerTests.cs" />
     <Compile Include="Commands\UpdatePaymentOriginCommandHandlerTests.cs" />
     <Compile Include="Controllers\PaymentsControllerTests.cs" />
+    <Compile Include="DeleteUserPaymentInformationDbStatementTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Queries\GetCreditRequestSummaryQueryHandlerTests.cs" />
     <Compile Include="SetUserPaymentOriginDbStatementTests.cs" />

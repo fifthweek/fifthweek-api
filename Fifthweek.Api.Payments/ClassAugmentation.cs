@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Linq;
 
-//// Generated on 16/07/2015 11:22:43 (UTC)
-//// Mapped solution in 16.11s
+//// Generated on 20/07/2015 15:34:01 (UTC)
+//// Mapped solution in 10.43s
 
 
 namespace Fifthweek.Api.Payments.Commands
@@ -337,7 +337,8 @@ namespace Fifthweek.Api.Payments.Controllers
             Fifthweek.Api.Identity.Shared.Membership.IRequesterContext requesterContext,
             Fifthweek.Api.Core.IQueryHandler<Fifthweek.Api.Payments.Queries.GetCreditRequestSummaryQuery,Fifthweek.Api.Payments.Controllers.CreditRequestSummary> getCreditRequestSummary,
             Fifthweek.Api.Core.ICommandHandler<Fifthweek.Api.Payments.Commands.UpdatePaymentOriginCommand> updatePaymentsOrigin,
-            Fifthweek.Api.Core.ICommandHandler<Fifthweek.Api.Payments.Commands.ApplyCreditRequestCommand> applyCreditRequest)
+            Fifthweek.Api.Core.ICommandHandler<Fifthweek.Api.Payments.Commands.ApplyCreditRequestCommand> applyCreditRequest,
+            Fifthweek.Api.Core.ICommandHandler<Fifthweek.Api.Payments.Commands.DeletePaymentInformationCommand> deletePaymentInformation)
         {
             if (requesterContext == null)
             {
@@ -359,10 +360,16 @@ namespace Fifthweek.Api.Payments.Controllers
                 throw new ArgumentNullException("applyCreditRequest");
             }
 
+            if (deletePaymentInformation == null)
+            {
+                throw new ArgumentNullException("deletePaymentInformation");
+            }
+
             this.requesterContext = requesterContext;
             this.getCreditRequestSummary = getCreditRequestSummary;
             this.updatePaymentsOrigin = updatePaymentsOrigin;
             this.applyCreditRequest = applyCreditRequest;
+            this.deletePaymentInformation = deletePaymentInformation;
         }
     }
 }
@@ -531,6 +538,107 @@ namespace Fifthweek.Api.Payments.Queries
                 this.CreditCardPrefix = creditCardPrefix;
                 this.IpAddress = ipAddress;
             }
+        }
+    }
+}
+namespace Fifthweek.Api.Payments.Commands
+{
+    using System;
+    using System.Linq;
+    using Fifthweek.Api.Identity.Shared.Membership;
+    using Fifthweek.CodeGeneration;
+    using Fifthweek.Shared;
+    using System.Threading.Tasks;
+    using Fifthweek.Api.Core;
+    using Newtonsoft.Json;
+    using Fifthweek.Payments.Services;
+    using Fifthweek.Api.Persistence.Identity;
+    using Fifthweek.Payments.Services.Credit;
+    using Fifthweek.Payments.Services.Credit.Stripe;
+    using System.Runtime.ExceptionServices;
+    using Fifthweek.Payments;
+    using Fifthweek.Payments.Stripe;
+
+    public partial class DeletePaymentInformationCommand 
+    {
+        public DeletePaymentInformationCommand(
+            Fifthweek.Api.Identity.Shared.Membership.Requester requester,
+            Fifthweek.Api.Identity.Shared.Membership.UserId userId)
+        {
+            if (requester == null)
+            {
+                throw new ArgumentNullException("requester");
+            }
+
+            if (userId == null)
+            {
+                throw new ArgumentNullException("userId");
+            }
+
+            this.Requester = requester;
+            this.UserId = userId;
+        }
+    }
+}
+namespace Fifthweek.Api.Payments.Commands
+{
+    using System;
+    using System.Linq;
+    using Fifthweek.Api.Identity.Shared.Membership;
+    using Fifthweek.CodeGeneration;
+    using Fifthweek.Shared;
+    using System.Threading.Tasks;
+    using Fifthweek.Api.Core;
+    using Newtonsoft.Json;
+    using Fifthweek.Payments.Services;
+    using Fifthweek.Api.Persistence.Identity;
+    using Fifthweek.Payments.Services.Credit;
+    using Fifthweek.Payments.Services.Credit.Stripe;
+    using System.Runtime.ExceptionServices;
+    using Fifthweek.Payments;
+    using Fifthweek.Payments.Stripe;
+
+    public partial class DeletePaymentInformationCommandHandler 
+    {
+        public DeletePaymentInformationCommandHandler(
+            Fifthweek.Api.Identity.Shared.Membership.IRequesterSecurity requesterSecurity,
+            Fifthweek.Api.Payments.IDeleteUserPaymentInformationDbStatement deleteUserPaymentInformation)
+        {
+            if (requesterSecurity == null)
+            {
+                throw new ArgumentNullException("requesterSecurity");
+            }
+
+            if (deleteUserPaymentInformation == null)
+            {
+                throw new ArgumentNullException("deleteUserPaymentInformation");
+            }
+
+            this.requesterSecurity = requesterSecurity;
+            this.deleteUserPaymentInformation = deleteUserPaymentInformation;
+        }
+    }
+}
+namespace Fifthweek.Api.Payments
+{
+    using System.Threading.Tasks;
+    using Fifthweek.Api.Identity.Shared.Membership;
+    using Fifthweek.Api.Persistence;
+    using Fifthweek.Api.Persistence.Payments;
+    using Fifthweek.CodeGeneration;
+    using Fifthweek.Shared;
+
+    public partial class DeleteUserPaymentInformationDbStatement 
+    {
+        public DeleteUserPaymentInformationDbStatement(
+            Fifthweek.Api.Persistence.IFifthweekDbConnectionFactory connectionFactory)
+        {
+            if (connectionFactory == null)
+            {
+                throw new ArgumentNullException("connectionFactory");
+            }
+
+            this.connectionFactory = connectionFactory;
         }
     }
 }
@@ -1151,6 +1259,78 @@ namespace Fifthweek.Api.Payments.Queries
             
                 return true;
             }
+        }
+    }
+}
+namespace Fifthweek.Api.Payments.Commands
+{
+    using System;
+    using System.Linq;
+    using Fifthweek.Api.Identity.Shared.Membership;
+    using Fifthweek.CodeGeneration;
+    using Fifthweek.Shared;
+    using System.Threading.Tasks;
+    using Fifthweek.Api.Core;
+    using Newtonsoft.Json;
+    using Fifthweek.Payments.Services;
+    using Fifthweek.Api.Persistence.Identity;
+    using Fifthweek.Payments.Services.Credit;
+    using Fifthweek.Payments.Services.Credit.Stripe;
+    using System.Runtime.ExceptionServices;
+    using Fifthweek.Payments;
+    using Fifthweek.Payments.Stripe;
+
+    public partial class DeletePaymentInformationCommand 
+    {
+        public override string ToString()
+        {
+            return string.Format("DeletePaymentInformationCommand({0}, {1})", this.Requester == null ? "null" : this.Requester.ToString(), this.UserId == null ? "null" : this.UserId.ToString());
+        }
+        
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj))
+            {
+                return false;
+            }
+        
+            if (ReferenceEquals(this, obj))
+            {
+                return true;
+            }
+        
+            if (obj.GetType() != this.GetType())
+            {
+                return false;
+            }
+        
+            return this.Equals((DeletePaymentInformationCommand)obj);
+        }
+        
+        public override int GetHashCode()
+        {
+            unchecked
+            {
+                int hashCode = 0;
+                hashCode = (hashCode * 397) ^ (this.Requester != null ? this.Requester.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.UserId != null ? this.UserId.GetHashCode() : 0);
+                return hashCode;
+            }
+        }
+        
+        protected bool Equals(DeletePaymentInformationCommand other)
+        {
+            if (!object.Equals(this.Requester, other.Requester))
+            {
+                return false;
+            }
+        
+            if (!object.Equals(this.UserId, other.UserId))
+            {
+                return false;
+            }
+        
+            return true;
         }
     }
 }

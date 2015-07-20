@@ -84,6 +84,8 @@
     </Compile>
     <Compile Include="Commands\ApplyCreditRequestCommand.cs" />
     <Compile Include="Commands\ApplyCreditRequestCommandHandler.cs" />
+    <Compile Include="Commands\DeletePaymentInformationCommand.cs" />
+    <Compile Include="Commands\DeletePaymentInformationCommandHandler.cs" />
     <Compile Include="Commands\UpdatePaymentOriginCommand.cs" />
     <Compile Include="Commands\UpdatePaymentOriginCommandHandler.cs" />
     <Compile Include="Controllers\CreditRequestData.cs" />
@@ -91,7 +93,9 @@
     <Compile Include="Controllers\PaymentLocationData.cs" />
     <Compile Include="Controllers\PaymentOriginData.cs" />
     <Compile Include="Controllers\PaymentsController.cs" />
+    <Compile Include="DeleteUserPaymentInformationDbStatement.cs" />
     <Compile Include="Extensions.cs" />
+    <Compile Include="IDeleteUserPaymentInformationDbStatement.cs" />
     <Compile Include="ISetUserPaymentOriginDbStatement.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Queries\GetCreditRequestSummaryQuery.cs" />

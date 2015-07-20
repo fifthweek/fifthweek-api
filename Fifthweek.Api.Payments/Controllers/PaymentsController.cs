@@ -20,6 +20,7 @@
         private readonly IQueryHandler<GetCreditRequestSummaryQuery, CreditRequestSummary> getCreditRequestSummary;
         private readonly ICommandHandler<UpdatePaymentOriginCommand> updatePaymentsOrigin;
         private readonly ICommandHandler<ApplyCreditRequestCommand> applyCreditRequest;
+        private readonly ICommandHandler<DeletePaymentInformationCommand> deletePaymentInformation;
 
         [Route("origins/{userId}")]
         public Task PutPaymentOriginAsync(string userId, [FromBody]PaymentOriginData data)
@@ -81,6 +82,17 @@
                 requester, 
                 userIdObject,
                 locationData));
+        }
+
+        [Route("paymentInformation/{userId}")]
+        public Task DeletePaymentInformationAsync(string userId)
+        {
+            userId.AssertUrlParameterProvided("userId");
+
+            var userIdObject = new UserId(userId.DecodeGuid());
+            var requester = this.requesterContext.GetRequester();
+
+            return this.deletePaymentInformation.HandleAsync(new DeletePaymentInformationCommand(requester, userIdObject));
         }
     }
 }

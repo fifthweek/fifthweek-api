@@ -8,15 +8,14 @@
     using Fifthweek.Payments.Services.Credit.Taxamo;
     using Fifthweek.Shared;
 
-    using CommitTestUserCreditToDatabase = Fifthweek.Payments.Services.Credit.CommitTestUserCreditToDatabase;
-
     public class AutofacRegistration : IAutofacRegistration
     {
         public void Register(ContainerBuilder builder)
         {
             builder.RegisterType<SetUserPaymentOriginDbStatement>().As<ISetUserPaymentOriginDbStatement>();
             builder.RegisterType<CommitTestUserCreditToDatabase>().As<ICommitTestUserCreditToDatabase>();
-            builder.RegisterType<Fifthweek.Payments.Services.Credit.SetTestUserAccountBalanceDbStatement>().As<ISetTestUserAccountBalanceDbStatement>();
+            builder.RegisterType<SetTestUserAccountBalanceDbStatement>().As<ISetTestUserAccountBalanceDbStatement>();
+            builder.RegisterType<DeleteUserPaymentInformationDbStatement>().As<IDeleteUserPaymentInformationDbStatement>();
         }
     }
 }
