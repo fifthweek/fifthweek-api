@@ -1105,6 +1105,13 @@ angular.module('webApp').factory('paymentsStub',
       });
     };
 
+    // userId = 'Base64Guid'
+    service.deletePaymentInformation = function(userId) {
+      return $http.delete(utilities.fixUri(apiBaseUri + 'payment/paymentInformation/' + encodeURIComponent(userId))).catch(function(response) {
+        return $q.reject(utilities.getHttpError(response));
+      });
+    };
+
     return service;
   });
 

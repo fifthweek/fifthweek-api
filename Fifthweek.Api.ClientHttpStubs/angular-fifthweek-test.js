@@ -1124,5 +1124,20 @@ describe('payments stub', function() {
 
     expect(result).toBe(responseData);
   });
+
+  it('should delete payment information', function() {
+    var userId = 'value0';
+
+    var responseData = 'response data';
+    $httpBackend.expectDELETE(utilities.fixUri(fifthweekConstants.apiBaseUri + 'payment/paymentInformation/' + encodeURIComponent(userId))).respond(200, responseData);
+
+    var result = null;
+    target.deletePaymentInformation(userId).then(function(response) { result = response.data; });
+
+    $httpBackend.flush();
+    $rootScope.$apply();
+
+    expect(result).toBe(responseData);
+  });
 });
 
