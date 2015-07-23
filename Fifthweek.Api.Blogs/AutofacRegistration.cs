@@ -20,6 +20,7 @@
             builder.RegisterType<UnsubscribeFromChannelDbStatement>().As<IUnsubscribeFromChannelDbStatement>();
             builder.RegisterType<UpdateBlogSubscriptionsDbStatement>().As<IUpdateBlogSubscriptionsDbStatement>();
             builder.RegisterType<GetIsTestUserBlogDbStatement>().As<IGetIsTestUserBlogDbStatement>();
+            builder.RegisterType<GetBlogSubscriberInformationDbStatement>().As<IGetBlogSubscriberInformationDbStatement>();
         }
     }
 }

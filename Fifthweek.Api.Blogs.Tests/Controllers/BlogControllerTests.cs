@@ -34,6 +34,7 @@
         private Mock<ICommandHandler<CreateBlogCommand>> createBlog;
         private Mock<ICommandHandler<UpdateBlogCommand>> updateBlog;
         private Mock<IQueryHandler<GetLandingPageQuery, GetLandingPageResult>> getLandingPage;
+        private Mock<IQueryHandler<GetBlogSubscriberInformationQuery, BlogSubscriberInformation>> getBlogSubscriberInformation;
         private Mock<IRequesterContext> requesterContext;
         private Mock<IGuidCreator> guidCreator;
         private BlogController target;
@@ -41,15 +42,17 @@
         [TestInitialize]
         public void Initialize()
         {
-            this.createBlog = new Mock<ICommandHandler<CreateBlogCommand>>();
-            this.updateBlog = new Mock<ICommandHandler<UpdateBlogCommand>>();
-            this.getLandingPage = new Mock<IQueryHandler<GetLandingPageQuery, GetLandingPageResult>>();
+            this.createBlog = new Mock<ICommandHandler<CreateBlogCommand>>(MockBehavior.Strict);
+            this.updateBlog = new Mock<ICommandHandler<UpdateBlogCommand>>(MockBehavior.Strict);
+            this.getLandingPage = new Mock<IQueryHandler<GetLandingPageQuery, GetLandingPageResult>>(MockBehavior.Strict);
+            this.getBlogSubscriberInformation = new Mock<IQueryHandler<GetBlogSubscriberInformationQuery,BlogSubscriberInformation>>(MockBehavior.Strict);
             this.requesterContext = new Mock<IRequesterContext>();
             this.guidCreator = new Mock<IGuidCreator>();
             this.target = new BlogController(
                 this.createBlog.Object,
                 this.updateBlog.Object,
                 this.getLandingPage.Object,
+                this.getBlogSubscriberInformation.Object,
                 this.requesterContext.Object,
                 this.guidCreator.Object);
         }
@@ -107,6 +110,21 @@
 
             Assert.AreEqual(HttpStatusCode.NotFound, exception.Response.StatusCode);
             this.getLandingPage.Verify();
+        }
+
+        [TestMethod]
+        public async Task WhenGettingBlogSubscriberInformation_ItShouldIssueGetBlogSubscriberInformationQuery()
+        {
+            this.requesterContext.Setup(v => v.GetRequester()).Returns(Requester);
+
+            var expectedResult = new BlogSubscriberInformation(new List<BlogSubscriberInformation.Subscriber>());
+            this.getBlogSubscriberInformation.Setup(v => v.HandleAsync(new GetBlogSubscriberInformationQuery(Requester, BlogId)))
+                .Returns(Task.FromResult(expectedResult)).Verifiable();
+
+            var result = await this.target.GetSubscriberInformation(BlogId.Value.EncodeGuid());
+
+            Assert.AreEqual(expectedResult, result);
+            this.getBlogSubscriberInformation.Verify();
         }
 
         public static GetLandingPageResult NewGetLandingPageResult()

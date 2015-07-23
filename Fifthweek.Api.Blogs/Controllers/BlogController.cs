@@ -18,6 +18,7 @@
         private readonly ICommandHandler<CreateBlogCommand> createBlog;
         private readonly ICommandHandler<UpdateBlogCommand> updateBlog;
         private readonly IQueryHandler<GetLandingPageQuery, GetLandingPageResult> getLandingPage;
+        private readonly IQueryHandler<GetBlogSubscriberInformationQuery, BlogSubscriberInformation> getBlogSubscriberInformation;
         private readonly IRequesterContext requesterContext;
         private readonly IGuidCreator guidCreator;
 
@@ -76,6 +77,17 @@
             }
 
             return result;
+        }
+
+        [Route("subscribers/{blogId}")]
+        public async Task<BlogSubscriberInformation> GetSubscriberInformation(string blogId)
+        {
+            blogId.AssertUrlParameterProvided("blogId");
+        
+            var requester = this.requesterContext.GetRequester();
+            var blogIdObject = new BlogId(blogId.DecodeGuid());
+
+            return await this.getBlogSubscriberInformation.HandleAsync(new GetBlogSubscriberInformationQuery(requester, blogIdObject));
         }
     }
 }

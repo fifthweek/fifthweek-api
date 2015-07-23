@@ -22,7 +22,7 @@
         private static readonly UserId UserId = new UserId(Guid.NewGuid());
 
         private static readonly GetUserSubscriptionsQuery Query =
-            new GetUserSubscriptionsQuery(Requester.Authenticated(UserId));
+            new GetUserSubscriptionsQuery(Requester.Authenticated(UserId), UserId);
 
         private static readonly IReadOnlyList<BlogSubscriptionDbResult> DatabaseResult =
             new List<BlogSubscriptionDbResult>
@@ -104,9 +104,16 @@
 
         [TestMethod]
         [ExpectedException(typeof(UnauthorizedException))]
-        public async Task WhenUserIsUnautorized_ItShouldThrowAnException()
+        public async Task WhenUserIsUnauthenticated_ItShouldThrowAnException()
         {
-            await this.target.HandleAsync(new GetUserSubscriptionsQuery(Requester.Unauthenticated));
+            await this.target.HandleAsync(new GetUserSubscriptionsQuery(Requester.Unauthenticated, UserId));
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(UnauthorizedException))]
+        public async Task WhenUserIsUnauthorized_ItShouldThrowAnException()
+        {
+            await this.target.HandleAsync(new GetUserSubscriptionsQuery(Query.Requester, UserId.Random()));
         }
 
         [TestMethod]

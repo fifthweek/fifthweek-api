@@ -106,11 +106,13 @@
     <Compile Include="Controllers\BlogControllerTests.cs" />
     <Compile Include="Controllers\SubscriptionControllerTests.cs" />
     <Compile Include="GetBlogChannelsAndCollectionsDbStatementTests.cs" />
+    <Compile Include="GetBlogSubscriberInformationDbStatementTests.cs" />
     <Compile Include="GetIsTestUserBlogDbStatementTests.cs" />
     <Compile Include="GetLandingPageDbStatementTests.cs" />
     <Compile Include="GetUserSubscriptionsDbStatementTests.cs" />
     <Compile Include="GetFreeAccessUsersDbStatementTests.cs" />
     <Compile Include="Queries\GetBlogChannelsAndCollectionsQueryHandlerTests.cs" />
+    <Compile Include="Queries\GetBlogSubscriberInformationQueryHandlerTests.cs" />
     <Compile Include="Queries\GetLandingPageQueryHandlerTests.cs" />
     <Compile Include="Queries\GetUserSubscriptionsQueryHandlerTests.cs" />
     <Compile Include="Queries\GetFreeAccessUsersQueryHandlerTests.cs" />

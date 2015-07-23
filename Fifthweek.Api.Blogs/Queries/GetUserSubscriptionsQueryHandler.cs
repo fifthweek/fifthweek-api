@@ -21,8 +21,8 @@
         {
             query.AssertNotNull("query");
 
-            var authenticatedUserId = await this.requesterSecurity.AuthenticateAsync(query.Requester);
-            var subscriptions = await this.getUserSubscriptions.ExecuteAsync(authenticatedUserId);
+            await this.requesterSecurity.AuthenticateAsAsync(query.Requester, query.RequestedUserId);
+            var subscriptions = await this.getUserSubscriptions.ExecuteAsync(query.RequestedUserId);
 
             var results = new List<BlogSubscriptionStatus>();
             foreach (var item in subscriptions)

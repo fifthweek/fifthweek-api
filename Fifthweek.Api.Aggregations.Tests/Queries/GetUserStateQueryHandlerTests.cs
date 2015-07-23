@@ -130,7 +130,7 @@
                 .ReturnsAsync(UserAccessSignatures);
             this.getAccountSettings.Setup(v => v.HandleAsync(new GetAccountSettingsQuery(Requester, UserId)))
                 .ReturnsAsync(accountSettings);
-            this.getBlogSubscriptions.Setup(v => v.HandleAsync(new GetUserSubscriptionsQuery(Requester)))
+            this.getBlogSubscriptions.Setup(v => v.HandleAsync(new GetUserSubscriptionsQuery(Requester, UserId)))
                 .ReturnsAsync(UserSubscriptions);
 
             var result = await this.target.HandleAsync(new GetUserStateQuery(Requester, UserId));
@@ -160,7 +160,7 @@
 
             this.getUserAccessSignatures.Setup(v => v.HandleAsync(new GetUserAccessSignaturesQuery(Requester, UserId, new List<ChannelId> { blogChannelsAndCollections.Blog.Channels[0].ChannelId }, new List<ChannelId> { UserSubscriptions.Blogs[0].Channels[0].ChannelId, UserSubscriptions.Blogs[1].Channels[0].ChannelId })))
                 .ReturnsAsync(UserAccessSignatures);
-            this.getBlogSubscriptions.Setup(v => v.HandleAsync(new GetUserSubscriptionsQuery(Requester)))
+            this.getBlogSubscriptions.Setup(v => v.HandleAsync(new GetUserSubscriptionsQuery(Requester, UserId)))
                 .ReturnsAsync(UserSubscriptions);
             this.getCreatorStatus.Setup(v => v.HandleAsync(new GetCreatorStatusQuery(Requester, UserId)))
                 .ReturnsAsync(creatorStatus);
@@ -191,7 +191,7 @@
 
             this.getUserAccessSignatures.Setup(v => v.HandleAsync(new GetUserAccessSignaturesQuery(Requester, UserId, null, new List<ChannelId> { UserSubscriptions.Blogs[0].Channels[0].ChannelId, UserSubscriptions.Blogs[1].Channels[0].ChannelId })))
                 .ReturnsAsync(UserAccessSignatures);
-            this.getBlogSubscriptions.Setup(v => v.HandleAsync(new GetUserSubscriptionsQuery(Requester)))
+            this.getBlogSubscriptions.Setup(v => v.HandleAsync(new GetUserSubscriptionsQuery(Requester, UserId)))
                 .ReturnsAsync(UserSubscriptions);
             this.getCreatorStatus.Setup(v => v.HandleAsync(new GetCreatorStatusQuery(Requester, UserId)))
                 .ReturnsAsync(creatorStatus);

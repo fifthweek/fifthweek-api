@@ -107,10 +107,12 @@
     <Compile Include="Controllers\PutFreeAccessUsersResult.cs" />
     <Compile Include="Controllers\SubscriptionController.cs" />
     <Compile Include="Controllers\UpdatedBlogSubscriptionData.cs" />
+    <Compile Include="GetBlogSubscriberInformationDbStatement.cs" />
     <Compile Include="GetLandingPageDbStatement.cs" />
     <Compile Include="GetUserSubscriptionsDbStatement.cs" />
     <Compile Include="GetFreeAccessUsersDbStatement.cs" />
     <Compile Include="IAcceptChannelSubscriptionPriceChangeDbStatement.cs" />
+    <Compile Include="IGetBlogSubscriberInformationDbStatement.cs" />
     <Compile Include="IGetLandingPageDbStatement.cs" />
     <Compile Include="IGetUserSubscriptionsDbStatement.cs" />
     <Compile Include="IGetFreeAccessUsersDbStatement.cs" />
@@ -119,6 +121,7 @@
     <Compile Include="IUnsubscribeFromChannelDbStatement.cs" />
     <Compile Include="IUpdateBlogSubscriptionsDbStatement.cs" />
     <Compile Include="IUpdateFreeAccessUsersDbStatement.cs" />
+    <Compile Include="Queries\BlogSubscriberInformation.cs" />
     <Compile Include="Queries\BlogSubscriptionStatus.cs" />
     <Compile Include="Queries\ChannelResult.cs" />
     <Compile Include="Queries\ChannelsAndCollections.cs" />
@@ -126,6 +129,8 @@
     <Compile Include="Queries\CollectionResult.cs" />
     <Compile Include="Queries\CollectionSubscriptionStatus.cs" />
     <Compile Include="Queries\GetBlogChannelsAndCollectionsResult.cs" />
+    <Compile Include="Queries\GetBlogSubscriberInformationQuery.cs" />
+    <Compile Include="Queries\GetBlogSubscriberInformationQueryHandler.cs" />
     <Compile Include="Queries\GetLandingPageQuery.cs" />
     <Compile Include="Queries\GetLandingPageQueryHandler.cs" />
     <Compile Include="Queries\GetLandingPageResult.cs" />
