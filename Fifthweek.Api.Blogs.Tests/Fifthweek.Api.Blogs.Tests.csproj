@@ -107,6 +107,7 @@
     <Compile Include="Controllers\SubscriptionControllerTests.cs" />
     <Compile Include="GetBlogChannelsAndCollectionsDbStatementTests.cs" />
     <Compile Include="GetBlogSubscriberInformationDbStatementTests.cs" />
+    <Compile Include="GetCreatorRevenueDbStatementTests.cs" />
     <Compile Include="GetIsTestUserBlogDbStatementTests.cs" />
     <Compile Include="GetLandingPageDbStatementTests.cs" />
     <Compile Include="GetUserSubscriptionsDbStatementTests.cs" />

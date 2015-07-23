@@ -11,6 +11,8 @@
     [AutoConstructor, AutoEqualityMembers]
     public partial class BlogSubscriberInformation
     {
+        public int TotalRevenue { get; private set; }
+
         public IReadOnlyList<Subscriber> Subscribers { get; private set; }
 
         [AutoConstructor, AutoEqualityMembers]

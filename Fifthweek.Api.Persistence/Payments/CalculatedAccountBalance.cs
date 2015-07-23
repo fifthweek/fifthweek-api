@@ -31,6 +31,11 @@
 
         public static string GetUserAccountBalanceQuery(string userIdParameterName, params CalculatedAccountBalance.Fields[] columns)
         {
+            return GetUserAccountBalanceQuery(userIdParameterName, LedgerAccountType.FifthweekCredit, columns);
+        }
+
+        public static string GetUserAccountBalanceQuery(string userIdParameterName, LedgerAccountType accountType, params CalculatedAccountBalance.Fields[] columns)
+        {
             var columnsString = string.Join(",", columns);
 
             return string.Format(
@@ -42,7 +47,7 @@
             CalculatedAccountBalance.Table,
             CalculatedAccountBalance.Fields.UserId,
             CalculatedAccountBalance.Fields.AccountType,
-            (int)LedgerAccountType.FifthweekCredit,
+            (int)accountType,
             userIdParameterName);
         }
     }

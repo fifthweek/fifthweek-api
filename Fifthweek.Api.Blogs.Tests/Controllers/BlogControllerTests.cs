@@ -117,7 +117,7 @@
         {
             this.requesterContext.Setup(v => v.GetRequester()).Returns(Requester);
 
-            var expectedResult = new BlogSubscriberInformation(new List<BlogSubscriberInformation.Subscriber>());
+            var expectedResult = new BlogSubscriberInformation(10, new List<BlogSubscriberInformation.Subscriber>());
             this.getBlogSubscriberInformation.Setup(v => v.HandleAsync(new GetBlogSubscriberInformationQuery(Requester, BlogId)))
                 .Returns(Task.FromResult(expectedResult)).Verifiable();
 

@@ -33,6 +33,7 @@
         private Mock<IBlogSecurity> blogSecurity;
         private Mock<IFileInformationAggregator> fileInformationAggregator;
         private Mock<IGetBlogSubscriberInformationDbStatement> getBlogSubscriberInformation;
+        private Mock<IGetCreatorRevenueDbStatement> getCreatorRevenue;
 
         private GetBlogSubscriberInformationQueryHandler target;
 
@@ -45,12 +46,14 @@
             this.blogSecurity = new Mock<IBlogSecurity>(MockBehavior.Strict);
             this.fileInformationAggregator = new Mock<IFileInformationAggregator>(MockBehavior.Strict);
             this.getBlogSubscriberInformation = new Mock<IGetBlogSubscriberInformationDbStatement>(MockBehavior.Strict);
+            this.getCreatorRevenue = new Mock<IGetCreatorRevenueDbStatement>(MockBehavior.Strict);
 
             this.target = new GetBlogSubscriberInformationQueryHandler(
                 this.requesterSecurity.Object,
                 this.blogSecurity.Object,
                 this.fileInformationAggregator.Object,
-                this.getBlogSubscriberInformation.Object);
+                this.getBlogSubscriberInformation.Object,
+                this.getCreatorRevenue.Object);
         }
 
         [TestMethod]
@@ -83,12 +86,16 @@
         {
             this.blogSecurity.Setup(v => v.AssertWriteAllowedAsync(UserId, BlogId)).Returns(Task.FromResult(0));
 
+            this.getCreatorRevenue.Setup(v => v.ExecuteAsync(UserId))
+                .ReturnsAsync(new GetCreatorRevenueDbStatement.GetCreatorRevenueDbStatementResult(10));
+
             this.getBlogSubscriberInformation.Setup(v => v.ExecuteAsync(BlogId)).ReturnsAsync(
                 new GetBlogSubscriberInformationDbStatement.GetBlogSubscriberInformationDbStatementResult(
                     new List<GetBlogSubscriberInformationDbStatement.GetBlogSubscriberInformationDbStatementResult.Subscriber>()));
 
             var result = await this.target.HandleAsync(Query);
 
+            Assert.AreEqual(10, result.TotalRevenue);
             Assert.AreEqual(0, result.Subscribers.Count);
         }
 
@@ -96,6 +103,9 @@
         public async Task WhenSubscribers_ItShouldReturnSubscribersWithFileInformation()
         {
             this.blogSecurity.Setup(v => v.AssertWriteAllowedAsync(UserId, BlogId)).Returns(Task.FromResult(0));
+
+            this.getCreatorRevenue.Setup(v => v.ExecuteAsync(UserId))
+                .ReturnsAsync(new GetCreatorRevenueDbStatement.GetCreatorRevenueDbStatementResult(10));
 
             var subscriber1 = new GetBlogSubscriberInformationDbStatement.GetBlogSubscriberInformationDbStatementResult.Subscriber(
                 new Username(Guid.NewGuid().ToString()),
@@ -142,6 +152,7 @@
 
             var result = await this.target.HandleAsync(Query);
 
+            Assert.AreEqual(10, result.TotalRevenue);
             CollectionAssert.AreEqual(
                 new List<BlogSubscriberInformation.Subscriber>
                 {

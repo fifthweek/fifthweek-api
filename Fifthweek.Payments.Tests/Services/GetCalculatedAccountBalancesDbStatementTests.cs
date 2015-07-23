@@ -29,7 +29,7 @@
         private GetCalculatedAccountBalancesDbStatement target;
 
         [TestInitialize]
-        public void Test()
+        public void Initialize()
         {
             this.target = new GetCalculatedAccountBalancesDbStatement(new Mock<IFifthweekDbConnectionFactory>(MockBehavior.Strict).Object);
         }

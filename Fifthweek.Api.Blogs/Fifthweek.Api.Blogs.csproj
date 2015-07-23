@@ -108,11 +108,13 @@
     <Compile Include="Controllers\SubscriptionController.cs" />
     <Compile Include="Controllers\UpdatedBlogSubscriptionData.cs" />
     <Compile Include="GetBlogSubscriberInformationDbStatement.cs" />
+    <Compile Include="GetCreatorRevenueDbStatement.cs" />
     <Compile Include="GetLandingPageDbStatement.cs" />
     <Compile Include="GetUserSubscriptionsDbStatement.cs" />
     <Compile Include="GetFreeAccessUsersDbStatement.cs" />
     <Compile Include="IAcceptChannelSubscriptionPriceChangeDbStatement.cs" />
     <Compile Include="IGetBlogSubscriberInformationDbStatement.cs" />
+    <Compile Include="IGetCreatorRevenueDbStatement.cs" />
     <Compile Include="IGetLandingPageDbStatement.cs" />
     <Compile Include="IGetUserSubscriptionsDbStatement.cs" />
     <Compile Include="IGetFreeAccessUsersDbStatement.cs" />
@@ -202,12 +204,8 @@
       <Name>Fifthweek.CodeGeneration</Name>
     </ProjectReference>
     <ProjectReference Include="..\Fifthweek.Payments.SnapshotCreation\Fifthweek.Payments.SnapshotCreation.csproj">
-      <Project>{81bcf480-639c-42c6-adcf-2e5c97dee750}</Project>
+      <Project>{81BCF480-639C-42C6-ADCF-2E5C97DEE750}</Project>
       <Name>Fifthweek.Payments.SnapshotCreation</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Fifthweek.Payments\Fifthweek.Payments.csproj">
-      <Project>{9C64B84A-264B-44BC-8D47-BCC52B88E0AC}</Project>
-      <Name>Fifthweek.Payments</Name>
     </ProjectReference>
     <ProjectReference Include="..\Fifthweek.Shared\Fifthweek.Shared.csproj">
       <Project>{6d12ffbb-38e9-4722-a690-0f0338538ebc}</Project>

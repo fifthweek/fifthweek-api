@@ -18,6 +18,7 @@
         private readonly IBlogSecurity blogSecurity;
         private readonly IFileInformationAggregator fileInformationAggregator;
         private readonly IGetBlogSubscriberInformationDbStatement getBlogSubscriberInformation;
+        private readonly IGetCreatorRevenueDbStatement getCreatorRevenue;
 
         public async Task<BlogSubscriberInformation> HandleAsync(GetBlogSubscriberInformationQuery query)
         {
@@ -26,7 +27,9 @@
             var userId = await this.requesterSecurity.AuthenticateAsync(query.Requester);
             await this.blogSecurity.AssertWriteAllowedAsync(userId, query.BlogId);
 
-            var databaseResult = await this.getBlogSubscriberInformation.ExecuteAsync(query.BlogId);
+            var databaseResultTask = this.getBlogSubscriberInformation.ExecuteAsync(query.BlogId);
+            var revenue = await this.getCreatorRevenue.ExecuteAsync(userId);
+            var databaseResult = await databaseResultTask;
 
             var subscribers = new List<BlogSubscriberInformation.Subscriber>(); 
             foreach (var user in databaseResult.Subscribers.GroupBy(v => v.UserId))
@@ -53,7 +56,7 @@
                         channels));
             }
 
-            return new BlogSubscriberInformation(subscribers);
+            return new BlogSubscriberInformation(revenue.TotalRevenue, subscribers);
         }
     }
 }
