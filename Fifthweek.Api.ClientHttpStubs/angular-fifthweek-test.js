@@ -940,6 +940,21 @@ describe('blog stub', function() {
 
     expect(result).toBe(responseData);
   });
+
+  it('should get subscriber information', function() {
+    var blogId = 'value0';
+
+    var responseData = 'response data';
+    $httpBackend.expectGET(utilities.fixUri(fifthweekConstants.apiBaseUri + 'blogs/subscribers/' + encodeURIComponent(blogId))).respond(200, responseData);
+
+    var result = null;
+    target.getSubscriberInformation(blogId).then(function(response) { result = response.data; });
+
+    $httpBackend.flush();
+    $rootScope.$apply();
+
+    expect(result).toBe(responseData);
+  });
 });
 
 describe('file upload stub', function() {

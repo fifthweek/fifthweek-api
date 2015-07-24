@@ -729,6 +729,34 @@ angular.module('webApp').factory('blogStub',
       });
     };
 
+    // blogId = 'Base64Guid'
+    // result = {
+    //   totalRevenue: 0,
+    //   subscribers: [
+    //     {
+    //       username: '',
+    //       userId: 'Base64Guid',
+    //       profileImage: {
+    //         fileId: 'Base64Guid',
+    //         containerName: ''
+    //       },
+    //       freeAccessEmail: '', /* optional */
+    //       channels: [
+    //         {
+    //           channelId: 'Base64Guid',
+    //           subscriptionStartDate: '2015-12-25T14:45:05Z',
+    //           acceptedPriceInUsCentsPerWeek: 0
+    //         }
+    //       ]
+    //     }
+    //   ]
+    // }
+    service.getSubscriberInformation = function(blogId) {
+      return $http.get(utilities.fixUri(apiBaseUri + 'blogs/subscribers/' + encodeURIComponent(blogId))).catch(function(response) {
+        return $q.reject(utilities.getHttpError(response));
+      });
+    };
+
     return service;
   });
 
