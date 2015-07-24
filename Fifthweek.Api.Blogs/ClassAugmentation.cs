@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Linq;
 
-//// Generated on 23/07/2015 17:45:51 (UTC)
-//// Mapped solution in 12.75s
+//// Generated on 24/07/2015 09:43:43 (UTC)
+//// Mapped solution in 16.93s
 
 
 namespace Fifthweek.Api.Blogs
@@ -32,7 +32,7 @@ namespace Fifthweek.Api.Blogs
     {
         public AcceptChannelSubscriptionPriceChangeDbStatement(
             Fifthweek.Api.Persistence.IFifthweekDbConnectionFactory connectionFactory,
-            IRequestSnapshotService requestSnapshot)
+            Fifthweek.Payments.SnapshotCreation.IRequestSnapshotService requestSnapshot)
         {
             if (connectionFactory == null)
             {
@@ -2377,7 +2377,7 @@ namespace Fifthweek.Api.Blogs
     {
         public UnsubscribeFromChannelDbStatement(
             Fifthweek.Api.Persistence.IFifthweekDbConnectionFactory connectionFactory,
-            IRequestSnapshotService requestSnapshot)
+            Fifthweek.Payments.SnapshotCreation.IRequestSnapshotService requestSnapshot)
         {
             if (connectionFactory == null)
             {
@@ -2421,7 +2421,7 @@ namespace Fifthweek.Api.Blogs
     {
         public UpdateBlogSubscriptionsDbStatement(
             Fifthweek.Api.Persistence.IFifthweekDbConnectionFactory connectionFactory,
-            IRequestSnapshotService requestSnapshot)
+            Fifthweek.Payments.SnapshotCreation.IRequestSnapshotService requestSnapshot)
         {
             if (connectionFactory == null)
             {
@@ -2465,7 +2465,7 @@ namespace Fifthweek.Api.Blogs
     {
         public UpdateFreeAccessUsersDbStatement(
             Fifthweek.Api.Persistence.IFifthweekDbConnectionFactory connectionFactory,
-            IRequestSnapshotService requestSnapshot)
+            Fifthweek.Payments.SnapshotCreation.IRequestSnapshotService requestSnapshot)
         {
             if (connectionFactory == null)
             {
@@ -2804,11 +2804,6 @@ namespace Fifthweek.Api.Blogs.Queries
                 if (userId == null)
                 {
                     throw new ArgumentNullException("userId");
-                }
-
-                if (profileImage == null)
-                {
-                    throw new ArgumentNullException("profileImage");
                 }
 
                 if (channels == null)

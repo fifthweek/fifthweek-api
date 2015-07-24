@@ -134,13 +134,23 @@
                 30,
                 new Email("a@b.com"));
 
+            var subscriber4 = new GetBlogSubscriberInformationDbStatement.GetBlogSubscriberInformationDbStatementResult.Subscriber(
+                new Username(Guid.NewGuid().ToString()),
+                UserId.Random(),
+                null,
+                ChannelId.Random(),
+                DateTime.UtcNow.AddDays(-4),
+                40,
+                null);
+
             this.getBlogSubscriberInformation.Setup(v => v.ExecuteAsync(Query.BlogId)).ReturnsAsync(
                 new GetBlogSubscriberInformationDbStatement.GetBlogSubscriberInformationDbStatementResult(
                     new List<GetBlogSubscriberInformationDbStatement.GetBlogSubscriberInformationDbStatementResult.Subscriber>
                     {
                         subscriber1,
                         subscriber2,
-                        subscriber3
+                        subscriber3,
+                        subscriber4
                     }));
 
             var fileInformation1 = new FileInformation(subscriber1.ProfileImageFileId, "container1");
@@ -183,6 +193,18 @@
                                 subscriber2.ChannelId,
                                 subscriber2.SubscriptionStartDate,
                                 subscriber2.AcceptedPriceInUsCentsPerWeek),
+                        }),
+                    new BlogSubscriberInformation.Subscriber(
+                        subscriber4.Username,
+                        subscriber4.UserId,
+                        null,
+                        subscriber4.FreeAccessEmail,
+                        new List<BlogSubscriberInformation.SubscriberChannel>
+                        {
+                            new BlogSubscriberInformation.SubscriberChannel(
+                                subscriber4.ChannelId,
+                                subscriber4.SubscriptionStartDate,
+                                subscriber4.AcceptedPriceInUsCentsPerWeek),
                         }),
                 },
                 result.Subscribers.ToList());

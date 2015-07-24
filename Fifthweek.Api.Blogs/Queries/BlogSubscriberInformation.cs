@@ -22,6 +22,7 @@
 
             public UserId UserId { get; set; }
 
+            [Optional]
             public FileInformation ProfileImage { get; set; }
 
             [Optional]

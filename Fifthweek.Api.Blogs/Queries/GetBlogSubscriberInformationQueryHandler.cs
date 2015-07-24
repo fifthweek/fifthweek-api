@@ -35,7 +35,11 @@
             foreach (var user in databaseResult.Subscribers.GroupBy(v => v.UserId))
             {
                 var first = user.First();
-                var fileInformation = await this.fileInformationAggregator.GetFileInformationAsync(null, first.ProfileImageFileId, FilePurposes.ProfileImage);
+                FileInformation fileInformation = null;
+                if (first.ProfileImageFileId != null)
+                {
+                    fileInformation = await this.fileInformationAggregator.GetFileInformationAsync(null, first.ProfileImageFileId, FilePurposes.ProfileImage);
+                }
 
                 var channels = new List<BlogSubscriberInformation.SubscriberChannel>();
                 foreach (var item in user)
