@@ -14,7 +14,7 @@
 
         public string Description { get; private set; }
 
-        public int PriceInUsCentsPerWeek { get; private set; }
+        public int Price { get; private set; }
 
         public bool IsDefault { get; private set; }
 

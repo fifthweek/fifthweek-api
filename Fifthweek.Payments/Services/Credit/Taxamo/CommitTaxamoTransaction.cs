@@ -26,7 +26,7 @@
             var apiKey = this.taxamoApiKeyRepository.GetApiKey(userType);
             var input = new CreatePaymentIn 
             {
-                Amount = taxamoTransactionResult.TotalAmount.ToUsDollars(),
+                Amount = taxamoTransactionResult.TotalAmount.ToMajorDenomination(),
                 PaymentTimestamp = ToTaxamoDateTimeString(stripeTransactionResult.Timestamp),
                 PaymentInformation = string.Format(
                     "Reference:{0}, StripeChargeId:{1}", 

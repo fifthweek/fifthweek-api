@@ -32,8 +32,8 @@
         private static readonly DateTime Now = new SqlDateTime(DateTime.UtcNow).Value;
         private static readonly DateTime PriceLastAcceptedDate = new SqlDateTime(DateTime.UtcNow.AddDays(-8)).Value;
         private static readonly DateTime SubscriptionStartDate = new SqlDateTime(DateTime.UtcNow.AddDays(-10)).Value;
-        private static readonly ValidAcceptedChannelPriceInUsCentsPerWeek ChannelPrice = ValidAcceptedChannelPriceInUsCentsPerWeek.Parse(10);
-        private static readonly ValidAcceptedChannelPriceInUsCentsPerWeek NewAcceptedPrice = ValidAcceptedChannelPriceInUsCentsPerWeek.Parse(15);
+        private static readonly ValidAcceptedChannelPrice ChannelPrice = ValidAcceptedChannelPrice.Parse(10);
+        private static readonly ValidAcceptedChannelPrice NewAcceptedPrice = ValidAcceptedChannelPrice.Parse(15);
 
         private static readonly List<AcceptedChannelSubscription> Subscriptions =
             new List<AcceptedChannelSubscription> 

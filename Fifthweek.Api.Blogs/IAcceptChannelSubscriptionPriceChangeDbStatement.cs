@@ -11,7 +11,7 @@ namespace Fifthweek.Api.Blogs
         Task ExecuteAsync(
             UserId userId, 
             ChannelId channelId,
-            ValidAcceptedChannelPriceInUsCentsPerWeek acceptedPrice,
+            ValidAcceptedChannelPrice acceptedPrice,
             DateTime now);
     }
 }

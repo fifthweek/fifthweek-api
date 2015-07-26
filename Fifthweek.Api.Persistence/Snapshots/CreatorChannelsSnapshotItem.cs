@@ -23,6 +23,6 @@
         public Guid ChannelId { get; set; }
 
         [Required]
-        public int PriceInUsCentsPerWeek { get; set; }
+        public int Price { get; set; }
     }
 }

@@ -19,7 +19,7 @@ namespace Fifthweek.Payments.SnapshotCreation
             SubscriberChannelsSnapshot.Table,
             SubscriberChannelsSnapshotItem.Table,
             ChannelSubscription.Fields.ChannelId,
-            ChannelSubscription.Fields.AcceptedPriceInUsCentsPerWeek,
+            ChannelSubscription.Fields.AcceptedPrice,
             ChannelSubscription.Fields.SubscriptionStartDate,
             ChannelSubscription.Table,
             ChannelSubscription.Fields.UserId);

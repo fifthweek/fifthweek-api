@@ -25,7 +25,7 @@
         public async Task ExecuteAsync(
             UserId userId, 
             ChannelId channelId,
-            ValidAcceptedChannelPriceInUsCentsPerWeek acceptedPrice,
+            ValidAcceptedChannelPrice acceptedPrice,
             DateTime now)
         {
             userId.AssertNotNull("userId");
@@ -46,7 +46,7 @@
                         now);
 
                     const ChannelSubscription.Fields UpdateFields
-                        = ChannelSubscription.Fields.AcceptedPriceInUsCentsPerWeek
+                        = ChannelSubscription.Fields.AcceptedPrice
                         | ChannelSubscription.Fields.PriceLastAcceptedDate;
 
                     await connection.UpdateAsync(

@@ -136,7 +136,7 @@
     <Compile Include="Services\CreatorIdAndFirstSubscribedDate.cs" />
     <Compile Include="Services\CreatorPercentageOverrideData.cs" />
     <Compile Include="Services\CreatorPost.cs" />
-    <Compile Include="Services\Credit\AmountInUsCents.cs" />
+    <Compile Include="Services\Credit\AmountInMinorDenomination.cs" />
     <Compile Include="Services\Credit\ApplyUserCredit.cs" />
     <Compile Include="Services\Credit\ClearPaymentStatusDbStatement.cs" />
     <Compile Include="Services\Credit\CommitCreditToDatabase.cs" />

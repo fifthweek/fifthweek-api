@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Linq;
 
-//// Generated on 15/04/2015 15:16:52 (UTC)
-//// Mapped solution in 10.26s
+//// Generated on 26/07/2015 11:53:52 (UTC)
+//// Mapped solution in 11.98s
 
 namespace Fifthweek.Api.Channels.Shared
 {
@@ -250,14 +250,16 @@ namespace Fifthweek.Api.Channels.Shared
 namespace Fifthweek.Api.Channels.Shared
 {
     using System;
-    using System.Collections.Generic;
+    using System.Linq;
     using Fifthweek.CodeGeneration;
+    using System.Collections.Generic;
+    using System.Diagnostics.CodeAnalysis;
 
-    public partial class ValidAcceptedChannelPriceInUsCentsPerWeek 
+    public partial class ValidAcceptedChannelPrice 
     {
         public override string ToString()
         {
-            return string.Format("ValidAcceptedChannelPriceInUsCentsPerWeek({0})", this.Value == null ? "null" : this.Value.ToString());
+            return string.Format("ValidAcceptedChannelPrice({0})", this.Value == null ? "null" : this.Value.ToString());
         }
         
         public override bool Equals(object obj)
@@ -277,7 +279,7 @@ namespace Fifthweek.Api.Channels.Shared
                 return false;
             }
         
-            return this.Equals((ValidAcceptedChannelPriceInUsCentsPerWeek)obj);
+            return this.Equals((ValidAcceptedChannelPrice)obj);
         }
         
         public override int GetHashCode()
@@ -290,7 +292,7 @@ namespace Fifthweek.Api.Channels.Shared
             }
         }
         
-        protected bool Equals(ValidAcceptedChannelPriceInUsCentsPerWeek other)
+        protected bool Equals(ValidAcceptedChannelPrice other)
         {
             if (!object.Equals(this.Value, other.Value))
             {
@@ -304,14 +306,16 @@ namespace Fifthweek.Api.Channels.Shared
 namespace Fifthweek.Api.Channels.Shared
 {
     using System;
-    using System.Collections.Generic;
+    using System.Linq;
     using Fifthweek.CodeGeneration;
+    using System.Collections.Generic;
+    using System.Diagnostics.CodeAnalysis;
 
-    public partial class ValidChannelPriceInUsCentsPerWeek 
+    public partial class ValidChannelPrice 
     {
         public override string ToString()
         {
-            return string.Format("ValidChannelPriceInUsCentsPerWeek({0})", this.Value == null ? "null" : this.Value.ToString());
+            return string.Format("ValidChannelPrice({0})", this.Value == null ? "null" : this.Value.ToString());
         }
         
         public override bool Equals(object obj)
@@ -331,7 +335,7 @@ namespace Fifthweek.Api.Channels.Shared
                 return false;
             }
         
-            return this.Equals((ValidChannelPriceInUsCentsPerWeek)obj);
+            return this.Equals((ValidChannelPrice)obj);
         }
         
         public override int GetHashCode()
@@ -344,7 +348,7 @@ namespace Fifthweek.Api.Channels.Shared
             }
         }
         
-        protected bool Equals(ValidChannelPriceInUsCentsPerWeek other)
+        protected bool Equals(ValidChannelPrice other)
         {
             if (!object.Equals(this.Value, other.Value))
             {

@@ -77,7 +77,7 @@
                         new InputTransactionLine
                         {
                             CustomId = CreateTaxamoTransaction.CustomId,
-                            Amount = new AmountInUsCents(Amount.Value).ToUsDollars()
+                            Amount = new AmountInMinorDenomination(Amount.Value).ToMajorDenomination()
                         }
                     },
                     BuyerCreditCardPrefix = CreditCardPrefix,
@@ -112,9 +112,9 @@
             Assert.AreEqual(
                 new TaxamoTransactionResult(
                     NewTaxamoTransactionKey,
-                    new AmountInUsCents(10),
-                    new AmountInUsCents(12),
-                    new AmountInUsCents(2),
+                    new AmountInMinorDenomination(10),
+                    new AmountInMinorDenomination(12),
+                    new AmountInMinorDenomination(2),
                     20m,
                     "VAT",
                     "England",

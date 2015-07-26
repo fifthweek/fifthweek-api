@@ -77,7 +77,7 @@
                             now);
 
                         const ChannelSubscription.Fields UpdateFields 
-                            = ChannelSubscription.Fields.AcceptedPriceInUsCentsPerWeek
+                            = ChannelSubscription.Fields.AcceptedPrice
                             | ChannelSubscription.Fields.PriceLastAcceptedDate;
 
                         await connection.UpsertAsync(

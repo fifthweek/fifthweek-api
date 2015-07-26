@@ -27,7 +27,7 @@
                 new BlogId(Guid.NewGuid()),
                 new List<AcceptedChannelSubscription>
                 {
-                    new AcceptedChannelSubscription(new ChannelId(Guid.NewGuid()), ValidAcceptedChannelPriceInUsCentsPerWeek.Parse(10)),
+                    new AcceptedChannelSubscription(new ChannelId(Guid.NewGuid()), ValidAcceptedChannelPrice.Parse(10)),
                 });
 
         private Mock<IRequesterSecurity> requesterSecurity;

@@ -25,7 +25,7 @@
         private static readonly BlogId BlogId = new BlogId(Guid.NewGuid());
         private static readonly ValidBlogName BlogName = ValidBlogName.Parse("Lawrence");
         private static readonly ValidTagline Tagline = ValidTagline.Parse("Web Comics and More");
-        private static readonly ValidChannelPriceInUsCentsPerWeek BasePrice = ValidChannelPriceInUsCentsPerWeek.Parse(10);
+        private static readonly ValidChannelPrice BasePrice = ValidChannelPrice.Parse(10);
         private static readonly CreateBlogCommand Command = new CreateBlogCommand(Requester, BlogId, BlogName, Tagline, BasePrice);
         private Mock<IBlogSecurity> blogSecurity;
         private Mock<IRequesterSecurity> requesterSecurity;

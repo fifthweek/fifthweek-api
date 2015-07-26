@@ -64,10 +64,10 @@
                     var firstItem = group.First();
 
                     var creatorChannels = (from item in @group 
-                                           where item.ChannelId != null && item.PriceInUsCentsPerWeek != null 
+                                           where item.ChannelId != null && item.Price != null 
                                            select new Snapshots.CreatorChannelsSnapshotItem(
                                                new ChannelId(item.ChannelId.Value), 
-                                               item.PriceInUsCentsPerWeek.Value)).ToList();
+                                               item.Price.Value)).ToList();
 
                     snapshots.Add(new Snapshots.CreatorChannelsSnapshot(
                         DateTime.SpecifyKind(firstItem.Timestamp, DateTimeKind.Utc),
@@ -89,7 +89,7 @@
 
             public Guid? ChannelId { get; set; }
 
-            public int? PriceInUsCentsPerWeek { get; set; }
+            public int? Price { get; set; }
         }
     }
 }

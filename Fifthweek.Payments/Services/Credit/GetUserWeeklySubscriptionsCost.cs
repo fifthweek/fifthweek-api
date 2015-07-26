@@ -14,7 +14,7 @@ namespace Fifthweek.Payments.Services.Credit
     {
         private static readonly string Sql = string.Format(
             "SELECT SUM({0}) FROM {1} WHERE {2}=@UserId",
-            ChannelSubscription.Fields.AcceptedPriceInUsCentsPerWeek,
+            ChannelSubscription.Fields.AcceptedPrice,
             ChannelSubscription.Table,
             ChannelSubscription.Fields.UserId);
 

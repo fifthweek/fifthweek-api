@@ -3,8 +3,8 @@ namespace Fifthweek.Api.Channels.Shared
     using System;
     using System.Collections.Generic;
 
-    public abstract class ValidChannelPriceInUsCentsPerWeekBase<T>
-        where T : ValidChannelPriceInUsCentsPerWeekBase<T>
+    public abstract class ValidChannelPriceBase<T>
+        where T : ValidChannelPriceBase<T>
     {
         public abstract int Value { get; protected set; }
 

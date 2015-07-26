@@ -55,9 +55,9 @@
             Blog.Fields.Name,
             FifthweekUser.Fields.UserName,
             Channel.Fields.Name,
-            Channel.Fields.PriceInUsCentsPerWeek,
+            Channel.Fields.Price,
             Channel.Fields.PriceLastSetDate,
-            ChannelSubscription.Fields.AcceptedPriceInUsCentsPerWeek,
+            ChannelSubscription.Fields.AcceptedPrice,
             ChannelSubscription.Fields.SubscriptionStartDate,
             FifthweekUser.Fields.ProfileImageFileId,
             Channel.Fields.IsVisibleToNonSubscribers);

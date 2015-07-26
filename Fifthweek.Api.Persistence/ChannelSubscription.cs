@@ -27,7 +27,7 @@
         public FifthweekUser User { get; set; }
 
         [Required]
-        public int AcceptedPriceInUsCentsPerWeek { get; set; }
+        public int AcceptedPrice { get; set; }
 
         [Required]
         public DateTime PriceLastAcceptedDate { get; set; }

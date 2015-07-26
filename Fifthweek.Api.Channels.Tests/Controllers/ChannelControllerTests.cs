@@ -26,7 +26,7 @@
         private static readonly BlogId BlogId = new BlogId(Guid.NewGuid());
         private static readonly ValidChannelName ChannelName = ValidChannelName.Parse("Premium");
         private static readonly ValidChannelDescription ChannelDescription = ValidChannelDescription.Parse("Premium");
-        private static readonly ValidChannelPriceInUsCentsPerWeek Price = ValidChannelPriceInUsCentsPerWeek.Parse(10);
+        private static readonly ValidChannelPrice Price = ValidChannelPrice.Parse(10);
 
         private Mock<ICommandHandler<CreateChannelCommand>> createChannel;
         private Mock<ICommandHandler<UpdateChannelCommand>> updateChannel;

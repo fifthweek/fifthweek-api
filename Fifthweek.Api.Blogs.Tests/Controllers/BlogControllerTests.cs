@@ -165,7 +165,7 @@
                 blogId,
                 ValidBlogName.Parse(data.Name),
                 ValidTagline.Parse(data.Tagline),
-                ValidChannelPriceInUsCentsPerWeek.Parse(data.BasePrice));
+                ValidChannelPrice.Parse(data.BasePrice));
         }
 
         public static UpdatedBlogData NewUpdatedBlogData()

@@ -24,7 +24,7 @@
         private static readonly UserId UserId = UserId.Random();
         private static readonly Requester Requester = Requester.Authenticated(UserId);
 
-        private static readonly TaxamoTransactionResult TaxamoTransaction = new TaxamoTransactionResult("key", new AmountInUsCents(10), new AmountInUsCents(12), new AmountInUsCents(2), 0.2m, "VAT", "GB", "England");
+        private static readonly TaxamoTransactionResult TaxamoTransaction = new TaxamoTransactionResult("key", new AmountInMinorDenomination(10), new AmountInMinorDenomination(12), new AmountInMinorDenomination(2), 0.2m, "VAT", "GB", "England");
         private static readonly UserPaymentOriginResult Origin = new UserPaymentOriginResult("stripeCustomerId", PaymentOriginKeyType.Stripe, "GB", "12345", "1.1.1.1", "ttk", PaymentStatus.Retry1);
 
         private Mock<ITimestampCreator> timestampCreator;

@@ -21,9 +21,9 @@
     {
         private static readonly UserId UserId = UserId.Random();
         private static readonly DateTime Timestamp = new SqlDateTime(DateTime.UtcNow).Value;
-        private static readonly AmountInUsCents TotalAmount = new AmountInUsCents(12);
-        private static readonly AmountInUsCents CreditAmount = new AmountInUsCents(10);
-        private static readonly AmountInUsCents TaxAmount = new AmountInUsCents(2);
+        private static readonly AmountInMinorDenomination TotalAmount = new AmountInMinorDenomination(12);
+        private static readonly AmountInMinorDenomination CreditAmount = new AmountInMinorDenomination(10);
+        private static readonly AmountInMinorDenomination TaxAmount = new AmountInMinorDenomination(2);
         private static readonly Guid TransactionReference = Guid.NewGuid();
         private static readonly string StripeChargeId = "stripeChargeId";
         private static readonly string TaxamoTransactionKey = "taxamoTransactionKey";
@@ -119,7 +119,7 @@
             await this.target.ExecuteAsync(
                 UserId,
                 Timestamp,
-                new AmountInUsCents(CreditAmount.Value - 1),
+                new AmountInMinorDenomination(CreditAmount.Value - 1),
                 CreditAmount,
                 TransactionReference,
                 StripeChargeId,

@@ -32,7 +32,7 @@ namespace Fifthweek.Api.Persistence.Tests.Shared
 
             if (acceptedPrice != null)
             {
-                item.AcceptedPriceInUsCentsPerWeek = acceptedPrice.Value;
+                item.AcceptedPrice = acceptedPrice.Value;
             }
 
             return databaseContext.Database.Connection.InsertAsync(item);

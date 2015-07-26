@@ -65,11 +65,11 @@
 
                     var subscriberChannels = (from item in @group
                                               where item.ChannelId != null
-                                                && item.AcceptedPriceInUsCentsPerWeek != null
+                                                && item.AcceptedPrice != null
                                                 && item.SubscriptionStartDate != null
                                               select new Snapshots.SubscriberChannelsSnapshotItem(
                                                 new ChannelId(item.ChannelId.Value),
-                                                item.AcceptedPriceInUsCentsPerWeek.Value,
+                                                item.AcceptedPrice.Value,
                                                 DateTime.SpecifyKind(item.SubscriptionStartDate.Value, DateTimeKind.Utc))).ToList();
 
                     snapshots.Add(new Snapshots.SubscriberChannelsSnapshot(
@@ -92,7 +92,7 @@
 
             public Guid? ChannelId { get; set; }
 
-            public int? AcceptedPriceInUsCentsPerWeek { get; set; }
+            public int? AcceptedPrice { get; set; }
 
             public DateTime? SubscriptionStartDate { get; set; }
         }

@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Linq;
 
-//// Generated on 26/07/2015 09:33:07 (UTC)
-//// Mapped solution in 7.93s
+//// Generated on 26/07/2015 11:59:01 (UTC)
+//// Mapped solution in 11.86s
 
 namespace Fifthweek.Payments.Services.Credit
 {
@@ -25,44 +25,44 @@ namespace Fifthweek.Payments.Services.Credit
     using Fifthweek.Payments.Stripe;
 
     [Newtonsoft.Json.JsonConverter(typeof(JsonConverter))]
-    public partial class AmountInUsCents 
+    public partial class AmountInMinorDenomination 
     {
         public class JsonConverter : Newtonsoft.Json.JsonConverter
         {
             public override void WriteJson(Newtonsoft.Json.JsonWriter writer, object value, Newtonsoft.Json.JsonSerializer serializer)
             {
-                var valueType = (AmountInUsCents)value;
+                var valueType = (AmountInMinorDenomination)value;
                 serializer.Serialize(writer, valueType.Value);
             }
         
             public override object ReadJson(Newtonsoft.Json.JsonReader reader, Type objectType, object existingValue, Newtonsoft.Json.JsonSerializer serializer)
             {
-                if (objectType != typeof(AmountInUsCents))
+                if (objectType != typeof(AmountInMinorDenomination))
                 {
-                    throw new ArgumentException("Expected to deserialize JSON for type " + typeof(AmountInUsCents).Name, "objectType");
+                    throw new ArgumentException("Expected to deserialize JSON for type " + typeof(AmountInMinorDenomination).Name, "objectType");
                 }
         
                 var value = serializer.Deserialize<System.Int32>(reader);
-                return new AmountInUsCents(value);
+                return new AmountInMinorDenomination(value);
             }
         
             public override bool CanConvert(Type objectType)
             {
-                return objectType == typeof(AmountInUsCents);
+                return objectType == typeof(AmountInMinorDenomination);
             }
         }
         
-        public class DapperTypeHandler : Dapper.SqlMapper.TypeHandler<AmountInUsCents>, Fifthweek.Api.Persistence.IAutoRegisteredTypeHandler<AmountInUsCents>
+        public class DapperTypeHandler : Dapper.SqlMapper.TypeHandler<AmountInMinorDenomination>, Fifthweek.Api.Persistence.IAutoRegisteredTypeHandler<AmountInMinorDenomination>
         {
-            public override void SetValue(System.Data.IDbDataParameter parameter, AmountInUsCents value)
+            public override void SetValue(System.Data.IDbDataParameter parameter, AmountInMinorDenomination value)
             {
                 parameter.DbType = System.Data.DbType.Int32;
                 parameter.Value = value.Value;
             }
         
-            public override AmountInUsCents Parse(object value)
+            public override AmountInMinorDenomination Parse(object value)
             {
-                return new AmountInUsCents((System.Int32)value);
+                return new AmountInMinorDenomination((System.Int32)value);
             }
         }
     }
@@ -108,9 +108,9 @@ namespace Fifthweek.Payments.Services.Credit
     using System.Runtime.ExceptionServices;
     using Fifthweek.Payments.Stripe;
 
-    public partial class AmountInUsCents 
+    public partial class AmountInMinorDenomination 
     {
-        public AmountInUsCents(
+        public AmountInMinorDenomination(
             System.Int32 value)
         {
             if (value == null)
@@ -747,9 +747,9 @@ namespace Fifthweek.Payments.Services.Credit.Taxamo
     {
         public TaxamoTransactionResult(
             System.String key,
-            Fifthweek.Payments.Services.Credit.AmountInUsCents amount,
-            Fifthweek.Payments.Services.Credit.AmountInUsCents totalAmount,
-            Fifthweek.Payments.Services.Credit.AmountInUsCents taxAmount,
+            Fifthweek.Payments.Services.Credit.AmountInMinorDenomination amount,
+            Fifthweek.Payments.Services.Credit.AmountInMinorDenomination totalAmount,
+            Fifthweek.Payments.Services.Credit.AmountInMinorDenomination taxAmount,
             System.Nullable<System.Decimal> taxRate,
             System.String taxName,
             System.String taxEntityName,
@@ -2927,9 +2927,9 @@ namespace Fifthweek.Payments.Services.Credit.Taxamo
     public partial class TaxamoCalculationResult 
     {
         public TaxamoCalculationResult(
-            Fifthweek.Payments.Services.Credit.AmountInUsCents amount,
-            Fifthweek.Payments.Services.Credit.AmountInUsCents totalAmount,
-            Fifthweek.Payments.Services.Credit.AmountInUsCents taxAmount,
+            Fifthweek.Payments.Services.Credit.AmountInMinorDenomination amount,
+            Fifthweek.Payments.Services.Credit.AmountInMinorDenomination totalAmount,
+            Fifthweek.Payments.Services.Credit.AmountInMinorDenomination taxAmount,
             System.Nullable<System.Decimal> taxRate,
             System.String taxName,
             System.String taxEntityName,
@@ -3289,11 +3289,11 @@ namespace Fifthweek.Payments.Services.Credit
     using System.Runtime.ExceptionServices;
     using Fifthweek.Payments.Stripe;
 
-    public partial class AmountInUsCents 
+    public partial class AmountInMinorDenomination 
     {
         public override string ToString()
         {
-            return string.Format("AmountInUsCents({0})", this.Value == null ? "null" : this.Value.ToString());
+            return string.Format("AmountInMinorDenomination({0})", this.Value == null ? "null" : this.Value.ToString());
         }
         
         public override bool Equals(object obj)
@@ -3313,7 +3313,7 @@ namespace Fifthweek.Payments.Services.Credit
                 return false;
             }
         
-            return this.Equals((AmountInUsCents)obj);
+            return this.Equals((AmountInMinorDenomination)obj);
         }
         
         public override int GetHashCode()
@@ -3326,7 +3326,7 @@ namespace Fifthweek.Payments.Services.Credit
             }
         }
         
-        protected bool Equals(AmountInUsCents other)
+        protected bool Equals(AmountInMinorDenomination other)
         {
             if (!object.Equals(this.Value, other.Value))
             {

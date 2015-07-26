@@ -8,7 +8,7 @@
     {
         public string ChannelId { get; set; }
 
-        [Parsed(typeof(ValidAcceptedChannelPriceInUsCentsPerWeek))]
+        [Parsed(typeof(ValidAcceptedChannelPrice))]
         public int AcceptedPrice { get; set; }
     }
 }

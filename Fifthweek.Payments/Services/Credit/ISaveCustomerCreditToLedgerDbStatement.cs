@@ -7,6 +7,6 @@
 
     public interface ISaveCustomerCreditToLedgerDbStatement
     {
-        Task ExecuteAsync(UserId userId, DateTime timestamp, AmountInUsCents totalAmount, AmountInUsCents creditAmount, Guid transactionReference, string stripeChargeId, string taxamoTransactionKey);
+        Task ExecuteAsync(UserId userId, DateTime timestamp, AmountInMinorDenomination totalAmount, AmountInMinorDenomination creditAmount, Guid transactionReference, string stripeChargeId, string taxamoTransactionKey);
     }
 }

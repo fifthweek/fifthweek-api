@@ -28,7 +28,7 @@
         private static readonly ChannelId ChannelId = new ChannelId(Guid.NewGuid());
         private static readonly ValidChannelName Name = ValidChannelName.Parse("Bat puns");
         private static readonly ValidChannelDescription Description = ValidChannelDescription.Parse("Bat puns\nBadPuns");
-        private static readonly ValidChannelPriceInUsCentsPerWeek Price = ValidChannelPriceInUsCentsPerWeek.Parse(10);
+        private static readonly ValidChannelPrice Price = ValidChannelPrice.Parse(10);
         private static readonly DateTime Now = new SqlDateTime(DateTime.UtcNow).Value;
 
         private Mock<IFifthweekDbConnectionFactory> connectionFactory;
@@ -82,7 +82,7 @@
                     IsVisibleToNonSubscribers = IsVisibleToNonSubscribers,
                     Name = Name.Value,
                     Description = Description.Value,
-                    PriceInUsCentsPerWeek = Price.Value,
+                    Price = Price.Value,
                     PriceLastSetDate = Now,
                     BlogId = channel.BlogId,
                     CreationDate = channel.CreationDate
@@ -116,7 +116,7 @@
                     IsVisibleToNonSubscribers = IsVisibleToNonSubscribers,
                     Name = Name.Value,
                     Description = Description.Value,
-                    PriceInUsCentsPerWeek = Price.Value,
+                    Price = Price.Value,
                     PriceLastSetDate = Now,
                     BlogId = channel.BlogId,
                     CreationDate = channel.CreationDate
@@ -164,7 +164,7 @@
                     IsVisibleToNonSubscribers = true,
                     Name = Name.Value,
                     Description = Description.Value,
-                    PriceInUsCentsPerWeek = Price.Value,
+                    Price = Price.Value,
                     PriceLastSetDate = Now,
                     BlogId = channel.BlogId,
                     CreationDate = channel.CreationDate
@@ -191,7 +191,7 @@
                     ChannelId, 
                     Name, 
                     Description, 
-                    ValidChannelPriceInUsCentsPerWeek.Parse(channel.PriceInUsCentsPerWeek), 
+                    ValidChannelPrice.Parse(channel.Price), 
                     IsVisibleToNonSubscribers,
                     Now);
 
@@ -200,7 +200,7 @@
                     IsVisibleToNonSubscribers = IsVisibleToNonSubscribers,
                     Name = Name.Value,
                     Description = Description.Value,
-                    PriceInUsCentsPerWeek = channel.PriceInUsCentsPerWeek,
+                    Price = channel.Price,
                     PriceLastSetDate = channel.PriceLastSetDate,
                     BlogId = channel.BlogId,
                     CreationDate = channel.CreationDate,

@@ -8,6 +8,6 @@ namespace Fifthweek.Api.Blogs.Commands
     {
         public ChannelId ChannelId { get; private set; }
 
-        public ValidAcceptedChannelPriceInUsCentsPerWeek AcceptedPrice { get; private set; }
+        public ValidAcceptedChannelPrice AcceptedPrice { get; private set; }
     }
 }

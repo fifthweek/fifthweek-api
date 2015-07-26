@@ -20,7 +20,7 @@
     public class CommitTaxamoTransactionTests
     {
         private static readonly TaxamoTransactionResult TaxamoTransactionResult = new TaxamoTransactionResult(
-            "transactionKey", new AmountInUsCents(10), new AmountInUsCents(12), new AmountInUsCents(2), 20.0m, "vat", "UK", "UK");
+            "transactionKey", new AmountInMinorDenomination(10), new AmountInMinorDenomination(12), new AmountInMinorDenomination(2), 20.0m, "vat", "UK", "UK");
 
         private static readonly StripeTransactionResult StripeTransactionResult = new StripeTransactionResult(
             DateTime.UtcNow, Guid.NewGuid(), "chargeId");
@@ -64,7 +64,7 @@
 
             var expectedInput = new CreatePaymentIn
             {
-                Amount = TaxamoTransactionResult.TotalAmount.ToUsDollars(),
+                Amount = TaxamoTransactionResult.TotalAmount.ToMajorDenomination(),
                 PaymentTimestamp = CommitTaxamoTransaction.ToTaxamoDateTimeString(StripeTransactionResult.Timestamp),
                 PaymentInformation = string.Format(
                     "Reference:{0}, StripeChargeId:{1}",
@@ -91,7 +91,7 @@
 
             var expectedInput = new CreatePaymentIn
             {
-                Amount = TaxamoTransactionResult.TotalAmount.ToUsDollars(),
+                Amount = TaxamoTransactionResult.TotalAmount.ToMajorDenomination(),
                 PaymentTimestamp = CommitTaxamoTransaction.ToTaxamoDateTimeString(StripeTransactionResult.Timestamp),
                 PaymentInformation = string.Format(
                     "Reference:{0}, StripeChargeId:{1}",

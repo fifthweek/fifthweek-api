@@ -48,7 +48,7 @@
                         new BlogSubscriberInformation.SubscriberChannel(
                             item.ChannelId,
                             item.SubscriptionStartDate,
-                            item.AcceptedPriceInUsCentsPerWeek));
+                            item.AcceptedPrice));
                 }
 
                 subscribers.Add(

@@ -8,7 +8,7 @@
     using Microsoft.VisualStudio.TestTools.UnitTesting;
 
     [TestClass]
-    public class ValidChannelPriceInUsCentsPerWeekTests : ValidatedPrimitiveTests<ValidChannelPriceInUsCentsPerWeek, int>
+    public class ValidChannelPriceTests : ValidatedPrimitiveTests<ValidChannelPrice, int>
     {
         protected override int ValueA
         {
@@ -36,22 +36,22 @@
             this.BadValue(int.MinValue);
         }
 
-        protected override ValidChannelPriceInUsCentsPerWeek Parse(int value)
+        protected override ValidChannelPrice Parse(int value)
         {
-            return ValidChannelPriceInUsCentsPerWeek.Parse(value);
+            return ValidChannelPrice.Parse(value);
         }
 
-        protected override bool TryParse(int value, out ValidChannelPriceInUsCentsPerWeek parsedObject)
+        protected override bool TryParse(int value, out ValidChannelPrice parsedObject)
         {
-            return ValidChannelPriceInUsCentsPerWeek.TryParse(value, out parsedObject);
+            return ValidChannelPrice.TryParse(value, out parsedObject);
         }
 
-        protected override bool TryParse(int value, out ValidChannelPriceInUsCentsPerWeek parsedObject, out IReadOnlyCollection<string> errorMessages)
+        protected override bool TryParse(int value, out ValidChannelPrice parsedObject, out IReadOnlyCollection<string> errorMessages)
         {
-            return ValidChannelPriceInUsCentsPerWeek.TryParse(value, out parsedObject, out errorMessages);
+            return ValidChannelPrice.TryParse(value, out parsedObject, out errorMessages);
         }
 
-        protected override int GetValue(ValidChannelPriceInUsCentsPerWeek parsedObject)
+        protected override int GetValue(ValidChannelPrice parsedObject)
         {
             return parsedObject.Value;
         }

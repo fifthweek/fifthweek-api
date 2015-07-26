@@ -38,7 +38,7 @@
             FifthweekUser.Fields.Id,
             FifthweekUser.Fields.UserName,
             ChannelSubscription.Fields.SubscriptionStartDate,
-            ChannelSubscription.Fields.AcceptedPriceInUsCentsPerWeek,
+            ChannelSubscription.Fields.AcceptedPrice,
             FifthweekUser.Fields.ProfileImageFileId,
             FreeAccessUser.Table,
             FifthweekUser.Fields.Email,
@@ -68,7 +68,7 @@
                             v.ProfileImageFileId == null ? null : new FileId(v.ProfileImageFileId.Value),
                             new ChannelId(v.ChannelId),
                             DateTime.SpecifyKind(v.SubscriptionStartDate, DateTimeKind.Utc),
-                            v.AcceptedPriceInUsCentsPerWeek,
+                            v.AcceptedPrice,
                             v.Email == null ? null : new Email(v.Email))).ToList());
             }
         }
@@ -85,7 +85,7 @@
 
             public DateTime SubscriptionStartDate { get; set; }
 
-            public int AcceptedPriceInUsCentsPerWeek { get; set; }
+            public int AcceptedPrice { get; set; }
 
             public string Email { get; set; }
         }
@@ -109,7 +109,7 @@
 
                 public DateTime SubscriptionStartDate { get; private set; }
 
-                public int AcceptedPriceInUsCentsPerWeek { get; private set; }
+                public int AcceptedPrice { get; private set; }
 
                 [Optional]
                 public Email FreeAccessEmail { get; private set; }

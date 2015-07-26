@@ -40,7 +40,7 @@
                         new InputTransactionLine
                         {
                             CustomId = CustomId,
-                            Amount = new AmountInUsCents(amount.Value).ToUsDollars()
+                            Amount = new AmountInMinorDenomination(amount.Value).ToMajorDenomination()
                         }
                     },
                     BuyerCreditCardPrefix = creditCardPrefix,
@@ -54,9 +54,9 @@
 
             return new TaxamoTransactionResult(
                 result.Transaction.Key,
-                AmountInUsCents.FromAmountInUsDollars(result.Transaction.Amount.Value),
-                AmountInUsCents.FromAmountInUsDollars(result.Transaction.TotalAmount.Value),
-                AmountInUsCents.FromAmountInUsDollars(result.Transaction.TaxAmount.Value),
+                AmountInMinorDenomination.FromMajorDenomination(result.Transaction.Amount.Value),
+                AmountInMinorDenomination.FromMajorDenomination(result.Transaction.TotalAmount.Value),
+                AmountInMinorDenomination.FromMajorDenomination(result.Transaction.TaxAmount.Value),
                 result.Transaction.TransactionLines[0].TaxRate,
                 result.Transaction.TransactionLines[0].TaxName,
                 result.Transaction.TaxEntityName,

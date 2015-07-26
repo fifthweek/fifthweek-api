@@ -94,7 +94,7 @@
                 new ChannelId(v.Id),
                 v.Name,
                 v.Description,
-                v.PriceInUsCentsPerWeek,
+                v.Price,
                 v.Id == v.BlogId,
                 v.IsVisibleToNonSubscribers,
                 new List<CollectionResult>())).ToList();

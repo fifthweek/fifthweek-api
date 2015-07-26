@@ -98,7 +98,7 @@
                     new ChannelId(c.Id),
                     c.Name,
                     c.Description,
-                    c.PriceInUsCentsPerWeek,
+                    c.Price,
                     c.Id == c.BlogId,
                     c.IsVisibleToNonSubscribers,
                     (from col in collections

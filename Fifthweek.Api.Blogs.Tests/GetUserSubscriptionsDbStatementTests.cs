@@ -146,15 +146,15 @@
                 Assert.IsTrue(blog3Channel1.Name.Length > 0);
                 Assert.IsTrue(blog3Channel3.Name.Length > 0);
 
-                Assert.AreEqual(Blog2Channel1CurrentPrice, blog2Channel1.PriceInUsCentsPerWeek);
+                Assert.AreEqual(Blog2Channel1CurrentPrice, blog2Channel1.Price);
                 Assert.AreEqual(Blog2Channel1AcceptedPrice, blog2Channel1.AcceptedPrice);
                 Assert.AreEqual(true, blog2Channel1.IsVisibleToNonSubscribers);
 
-                Assert.AreEqual(Blog3Channel1CurrentPrice, blog3Channel1.PriceInUsCentsPerWeek);
+                Assert.AreEqual(Blog3Channel1CurrentPrice, blog3Channel1.Price);
                 Assert.AreEqual(Blog3Channel1AcceptedPrice, blog3Channel1.AcceptedPrice);
                 Assert.AreEqual(false, blog3Channel1.IsVisibleToNonSubscribers);
 
-                Assert.AreEqual(Blog3Channel3CurrentPrice, blog3Channel3.PriceInUsCentsPerWeek);
+                Assert.AreEqual(Blog3Channel3CurrentPrice, blog3Channel3.Price);
                 Assert.AreEqual(Blog3Channel3AcceptedPrice, blog3Channel3.AcceptedPrice);
                 Assert.AreEqual(true, blog3Channel3.IsVisibleToNonSubscribers);
 
@@ -191,13 +191,13 @@
                 blog2Channels = await databaseContext.CreateTestChannelsAsync(Creator2Id.Value, Blog2Id.Value, Blog2ChannelIds.Select(v => v.Value).ToArray());
                 blog3Channels = await databaseContext.CreateTestChannelsAsync(Creator3Id.Value, Blog3Id.Value, Blog3ChannelIds.Select(v => v.Value).ToArray());
 
-                blog2Channels[0].PriceInUsCentsPerWeek = Blog2Channel1CurrentPrice;
+                blog2Channels[0].Price = Blog2Channel1CurrentPrice;
                 blog2Channels[0].PriceLastSetDate = PriceLastSetDate;
                 blog2Channels[0].IsVisibleToNonSubscribers = true;
-                blog3Channels[0].PriceInUsCentsPerWeek = Blog3Channel1CurrentPrice;
+                blog3Channels[0].Price = Blog3Channel1CurrentPrice;
                 blog3Channels[0].PriceLastSetDate = PriceLastSetDate;
                 blog3Channels[0].IsVisibleToNonSubscribers = false;
-                blog3Channels[2].PriceInUsCentsPerWeek = Blog3Channel3CurrentPrice;
+                blog3Channels[2].Price = Blog3Channel3CurrentPrice;
                 blog3Channels[2].PriceLastSetDate = PriceLastSetDate;
                 blog3Channels[2].IsVisibleToNonSubscribers = true;
 

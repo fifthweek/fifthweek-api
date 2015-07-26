@@ -45,21 +45,21 @@
         private static readonly List<AcceptedChannelSubscription> AcceptedBlog1Subscriptions1 =
             new List<AcceptedChannelSubscription> 
             { 
-                new AcceptedChannelSubscription(Blog1ChannelIds[0], ValidAcceptedChannelPriceInUsCentsPerWeek.Parse(ChannelPrice)),
+                new AcceptedChannelSubscription(Blog1ChannelIds[0], ValidAcceptedChannelPrice.Parse(ChannelPrice)),
             };
 
         private static readonly List<AcceptedChannelSubscription> AcceptedBlog3Subscriptions1 =
             new List<AcceptedChannelSubscription> 
             { 
-                new AcceptedChannelSubscription(Blog3ChannelIds[0], ValidAcceptedChannelPriceInUsCentsPerWeek.Parse(ChannelPrice)),
-                new AcceptedChannelSubscription(Blog3ChannelIds[1], ValidAcceptedChannelPriceInUsCentsPerWeek.Parse(ChannelPrice)),
+                new AcceptedChannelSubscription(Blog3ChannelIds[0], ValidAcceptedChannelPrice.Parse(ChannelPrice)),
+                new AcceptedChannelSubscription(Blog3ChannelIds[1], ValidAcceptedChannelPrice.Parse(ChannelPrice)),
             };
 
         private static readonly List<AcceptedChannelSubscription> AcceptedBlog3Subscriptions2 =
             new List<AcceptedChannelSubscription> 
             { 
-                new AcceptedChannelSubscription(Blog3ChannelIds[0], ValidAcceptedChannelPriceInUsCentsPerWeek.Parse(ChannelPrice + 5)),
-                new AcceptedChannelSubscription(Blog3ChannelIds[2], ValidAcceptedChannelPriceInUsCentsPerWeek.Parse(ChannelPrice)),
+                new AcceptedChannelSubscription(Blog3ChannelIds[0], ValidAcceptedChannelPrice.Parse(ChannelPrice + 5)),
+                new AcceptedChannelSubscription(Blog3ChannelIds[2], ValidAcceptedChannelPrice.Parse(ChannelPrice)),
             };
 
         private readonly Random random = new Random();
@@ -283,12 +283,12 @@
                         Blog3Id.Value,
                         Blog3ChannelIds.Select(v => v.Value).ToArray());
 
-                blog2Channels[0].PriceInUsCentsPerWeek = ChannelPrice;
+                blog2Channels[0].Price = ChannelPrice;
                 blog2Channels[0].PriceLastSetDate = PriceLastSetDate;
 
-                blog3Channels[0].PriceInUsCentsPerWeek = ChannelPrice;
+                blog3Channels[0].Price = ChannelPrice;
                 blog3Channels[0].PriceLastSetDate = PriceLastSetDate;
-                blog3Channels[2].PriceInUsCentsPerWeek = ChannelPrice;
+                blog3Channels[2].Price = ChannelPrice;
                 blog3Channels[2].PriceLastSetDate = PriceLastSetDate;
 
                 await databaseContext.SaveChangesAsync();

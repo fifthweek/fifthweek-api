@@ -36,8 +36,8 @@
         private static readonly List<AcceptedChannelSubscription> Subscriptions =
             new List<AcceptedChannelSubscription> 
             { 
-                new AcceptedChannelSubscription(ChannelIds[0], ValidAcceptedChannelPriceInUsCentsPerWeek.Parse(ChannelPrice)),
-                new AcceptedChannelSubscription(ChannelIds[1], ValidAcceptedChannelPriceInUsCentsPerWeek.Parse(ChannelPrice)),
+                new AcceptedChannelSubscription(ChannelIds[0], ValidAcceptedChannelPrice.Parse(ChannelPrice)),
+                new AcceptedChannelSubscription(ChannelIds[1], ValidAcceptedChannelPrice.Parse(ChannelPrice)),
             };
 
         private readonly Random random = new Random();

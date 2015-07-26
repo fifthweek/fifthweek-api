@@ -19,8 +19,8 @@
         public async Task ExecuteAsync(
             UserId userId, 
             DateTime timestamp, 
-            AmountInUsCents totalAmount, 
-            AmountInUsCents creditAmount, 
+            AmountInMinorDenomination totalAmount, 
+            AmountInMinorDenomination creditAmount, 
             Guid transactionReference, 
             string stripeChargeId, 
             string taxamoTransactionKey)

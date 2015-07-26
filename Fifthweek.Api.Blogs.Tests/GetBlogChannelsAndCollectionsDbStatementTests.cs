@@ -35,7 +35,7 @@
         private static readonly string Description = "description";
         private static readonly bool IsVisibleToNonSubscribers = true;
         private static readonly string Name = "name";
-        private static readonly int PriceInUsCentsPerWeek = 10;
+        private static readonly int Price = 10;
         private static readonly string ExternalVideoUrl = "url";
         private static readonly string Introduction = "introduction";
         private static readonly string Tagline = "tagline";
@@ -89,7 +89,7 @@
                     Assert.AreEqual(Description, channel.Description);
                     Assert.AreEqual(IsVisibleToNonSubscribers, channel.IsVisibleToNonSubscribers);
                     Assert.AreEqual(Name, channel.Name);
-                    Assert.AreEqual(PriceInUsCentsPerWeek, channel.PriceInUsCentsPerWeek);
+                    Assert.AreEqual(Price, channel.Price);
                 }
 
                 Assert.AreEqual(0, channel1.Collections.Count);
@@ -276,7 +276,7 @@
             channel.Description = Description;
             channel.IsVisibleToNonSubscribers = IsVisibleToNonSubscribers;
             channel.Name = Name;
-            channel.PriceInUsCentsPerWeek = PriceInUsCentsPerWeek;
+            channel.Price = Price;
             channel.PriceLastSetDate = PriceLastSetDate;
         }
     }

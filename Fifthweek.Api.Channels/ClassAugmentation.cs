@@ -67,7 +67,7 @@ namespace Fifthweek.Api.Channels.Commands
             Fifthweek.Api.Blogs.Shared.BlogId blogId,
             Fifthweek.Api.Channels.Shared.ValidChannelName name,
             Fifthweek.Api.Channels.Shared.ValidChannelDescription description,
-            Fifthweek.Api.Channels.Shared.ValidChannelPriceInUsCentsPerWeek price,
+            Fifthweek.Api.Channels.Shared.ValidChannelPrice price,
             System.Boolean isVisibleToNonSubscribers)
         {
             if (requester == null)
@@ -247,7 +247,7 @@ namespace Fifthweek.Api.Channels.Commands
             Fifthweek.Api.Channels.Shared.ChannelId channelId,
             Fifthweek.Api.Channels.Shared.ValidChannelName name,
             Fifthweek.Api.Channels.Shared.ValidChannelDescription description,
-            Fifthweek.Api.Channels.Shared.ValidChannelPriceInUsCentsPerWeek price,
+            Fifthweek.Api.Channels.Shared.ValidChannelPrice price,
             System.Boolean isVisibleToNonSubscribers)
         {
             if (requester == null)
@@ -938,7 +938,7 @@ namespace Fifthweek.Api.Channels.Controllers
                 Fifthweek.Api.Blogs.Shared.BlogId blogId,
                 ValidChannelName name,
                 ValidChannelDescription description,
-                ValidChannelPriceInUsCentsPerWeek price,
+                ValidChannelPrice price,
                 System.Boolean isVisibleToNonSubscribers)
             {
                 if (blogId == null)
@@ -979,7 +979,7 @@ namespace Fifthweek.Api.Channels.Controllers
         
             public ValidChannelDescription Description { get; private set; }
         
-            public ValidChannelPriceInUsCentsPerWeek Price { get; private set; }
+            public ValidChannelPrice Price { get; private set; }
         
             public System.Boolean IsVisibleToNonSubscribers { get; private set; }
         }
@@ -1035,9 +1035,9 @@ namespace Fifthweek.Api.Channels.Controllers
                 modelStateDictionary.Add("Description", modelState);
             }
 
-            ValidChannelPriceInUsCentsPerWeek parsed2 = null;
+            ValidChannelPrice parsed2 = null;
             System.Collections.Generic.IReadOnlyCollection<string> parsed2Errors;
-            if (!ValidChannelPriceInUsCentsPerWeek.TryParse(target.Price, out parsed2, out parsed2Errors))
+            if (!ValidChannelPrice.TryParse(target.Price, out parsed2, out parsed2Errors))
             {
                 var modelState = new System.Web.Http.ModelBinding.ModelState();
                 foreach (var errorMessage in parsed2Errors)
@@ -1074,7 +1074,7 @@ namespace Fifthweek.Api.Channels.Controllers
             public Parsed(
                 ValidChannelName name,
                 ValidChannelDescription description,
-                ValidChannelPriceInUsCentsPerWeek price,
+                ValidChannelPrice price,
                 System.Boolean isVisibleToNonSubscribers)
             {
                 if (name == null)
@@ -1107,7 +1107,7 @@ namespace Fifthweek.Api.Channels.Controllers
         
             public ValidChannelDescription Description { get; private set; }
         
-            public ValidChannelPriceInUsCentsPerWeek Price { get; private set; }
+            public ValidChannelPrice Price { get; private set; }
         
             public System.Boolean IsVisibleToNonSubscribers { get; private set; }
         }
@@ -1163,9 +1163,9 @@ namespace Fifthweek.Api.Channels.Controllers
                 modelStateDictionary.Add("Description", modelState);
             }
 
-            ValidChannelPriceInUsCentsPerWeek parsed2 = null;
+            ValidChannelPrice parsed2 = null;
             System.Collections.Generic.IReadOnlyCollection<string> parsed2Errors;
-            if (!ValidChannelPriceInUsCentsPerWeek.TryParse(target.Price, out parsed2, out parsed2Errors))
+            if (!ValidChannelPrice.TryParse(target.Price, out parsed2, out parsed2Errors))
             {
                 var modelState = new System.Web.Http.ModelBinding.ModelState();
                 foreach (var errorMessage in parsed2Errors)

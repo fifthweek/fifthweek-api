@@ -22,7 +22,7 @@
             new AcceptChannelSubscriptionPriceChangeCommand(
                 Requester.Authenticated(UserId),
                 new ChannelId(Guid.NewGuid()),
-                ValidAcceptedChannelPriceInUsCentsPerWeek.Parse(10));
+                ValidAcceptedChannelPrice.Parse(10));
 
         private Mock<IRequesterSecurity> requesterSecurity;
         private Mock<IAcceptChannelSubscriptionPriceChangeDbStatement> acceptPriceChange;

@@ -20,7 +20,7 @@
         private static readonly UserId UserId = UserId.Random();
 
         private static readonly InitializeCreditRequestResult InitializeResult = new InitializeCreditRequestResult(
-            new TaxamoTransactionResult("key", new AmountInUsCents(10), new AmountInUsCents(20), new AmountInUsCents(30), 0.2m, "VAT", "GB", "England"),
+            new TaxamoTransactionResult("key", new AmountInMinorDenomination(10), new AmountInMinorDenomination(20), new AmountInMinorDenomination(30), 0.2m, "VAT", "GB", "England"),
             new UserPaymentOriginResult("stripeCustomerId",PaymentOriginKeyType.Stripe, "GB", "12345", "1.1.1.1", "ttk", PaymentStatus.Retry1));
 
         private static readonly StripeTransactionResult StripeTransaction =

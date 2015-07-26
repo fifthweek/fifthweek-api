@@ -23,7 +23,7 @@
         public Guid ChannelId { get; set; }
 
         [Required]
-        public int AcceptedPriceInUsCentsPerWeek { get; set; }
+        public int AcceptedPrice { get; set; }
 
         [Required]
         public DateTime SubscriptionStartDate { get; set; }

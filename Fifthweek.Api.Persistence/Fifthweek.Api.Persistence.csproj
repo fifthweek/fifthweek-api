@@ -320,6 +320,10 @@
     <Compile Include="Migrations\201507261031512_RenameStripeCustomerIdColumnToPaymentOriginKey.Designer.cs">
       <DependentUpon>201507261031512_RenameStripeCustomerIdColumnToPaymentOriginKey.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201507261552027_RemoveInUsCentsFromPropertyAndColumnNames.cs" />
+    <Compile Include="Migrations\201507261552027_RemoveInUsCentsFromPropertyAndColumnNames.Designer.cs">
+      <DependentUpon>201507261552027_RemoveInUsCentsFromPropertyAndColumnNames.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Payments\AppendOnlyLedgerRecord.cs" />
     <Compile Include="Payments\LedgerTransactionType.cs" />
@@ -523,6 +527,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201507261031512_RenameStripeCustomerIdColumnToPaymentOriginKey.resx">
       <DependentUpon>201507261031512_RenameStripeCustomerIdColumnToPaymentOriginKey.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201507261552027_RemoveInUsCentsFromPropertyAndColumnNames.resx">
+      <DependentUpon>201507261552027_RemoveInUsCentsFromPropertyAndColumnNames.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>

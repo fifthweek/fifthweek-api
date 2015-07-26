@@ -557,7 +557,7 @@
                     var channel = ChannelTests.UniqueEntity(Random);
                     channel.Id = channelId.Value;
                     channel.BlogId = BlogId.Value;
-                    channel.PriceInUsCentsPerWeek = ChannelPrice;
+                    channel.Price = ChannelPrice;
 
                     channelEntities.Add(channel);
 

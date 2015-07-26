@@ -161,9 +161,9 @@
                 new CreditRequestSummary(
                     5, 
                     new TaxamoCalculationResult(
-                        new AmountInUsCents(10),
-                        new AmountInUsCents(12), 
-                        new AmountInUsCents(2),
+                        new AmountInMinorDenomination(10),
+                        new AmountInMinorDenomination(12), 
+                        new AmountInMinorDenomination(2),
                         0.2m,
                         "VAT", 
                         "GB",

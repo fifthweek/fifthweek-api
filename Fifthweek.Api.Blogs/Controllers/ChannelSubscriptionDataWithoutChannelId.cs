@@ -6,7 +6,7 @@ namespace Fifthweek.Api.Blogs.Controllers
     [AutoEqualityMembers]
     public partial class ChannelSubscriptionDataWithoutChannelId
     {
-        [Parsed(typeof(ValidAcceptedChannelPriceInUsCentsPerWeek))]
+        [Parsed(typeof(ValidAcceptedChannelPrice))]
         public int AcceptedPrice { get; set; }
     }
 }

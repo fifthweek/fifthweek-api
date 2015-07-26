@@ -15,7 +15,7 @@
 
         public ValidChannelDescription Description { get; private set; }
 
-        public ValidChannelPriceInUsCentsPerWeek Price { get; private set; }
+        public ValidChannelPrice Price { get; private set; }
 
         public bool IsVisibleToNonSubscribers { get; private set; }
     }

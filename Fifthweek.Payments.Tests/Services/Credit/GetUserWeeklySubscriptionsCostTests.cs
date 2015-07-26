@@ -82,11 +82,11 @@
             {
                 foreach (var channel in channels)
                 {
-                    await connection.InsertAsync(new ChannelSubscription(channel.Id, null, SubscriberId.Value, null, channel.PriceInUsCentsPerWeek / 2, DateTime.UtcNow, DateTime.UtcNow));
+                    await connection.InsertAsync(new ChannelSubscription(channel.Id, null, SubscriberId.Value, null, channel.Price / 2, DateTime.UtcNow, DateTime.UtcNow));
                 }
             }
 
-            return channels.Sum(v => v.PriceInUsCentsPerWeek / 2);
+            return channels.Sum(v => v.Price / 2);
         }
     }
 }

@@ -10,7 +10,7 @@
     {
         Task<string> ExecuteAsync(
             string stripeCustomerId, 
-            AmountInUsCents amount, 
+            AmountInMinorDenomination amount, 
             UserId userId, 
             Guid transactionReference,
             string taxamoTransactionKey, 

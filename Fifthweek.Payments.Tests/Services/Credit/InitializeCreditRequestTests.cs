@@ -22,7 +22,7 @@
         private static readonly PositiveInt Amount = PositiveInt.Parse(10);
         private static readonly PositiveInt ExpectedTotalAmount = PositiveInt.Parse(12);
 
-        private static readonly TaxamoTransactionResult TaxamoTransaction = new TaxamoTransactionResult("key", new AmountInUsCents(10), new AmountInUsCents(12), new AmountInUsCents(2), 0.2m, "VAT", "GB", "England");
+        private static readonly TaxamoTransactionResult TaxamoTransaction = new TaxamoTransactionResult("key", new AmountInMinorDenomination(10), new AmountInMinorDenomination(12), new AmountInMinorDenomination(2), 0.2m, "VAT", "GB", "England");
         private static readonly UserPaymentOriginResult Origin = new UserPaymentOriginResult("stripeCustomerId", PaymentOriginKeyType.Stripe, "GB", "12345", "1.1.1.1", "ttk", PaymentStatus.Retry1);
 
         private Mock<IGetUserPaymentOriginDbStatement> getUserPaymentOrigin;

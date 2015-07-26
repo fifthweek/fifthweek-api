@@ -24,7 +24,7 @@
         private static readonly ChannelId ChannelId = new ChannelId(Guid.NewGuid());
         private static readonly ValidChannelName Name = ValidChannelName.Parse("Bat puns");
         private static readonly ValidChannelDescription Description = ValidChannelDescription.Parse("Bat puns\nBadPuns");
-        private static readonly ValidChannelPriceInUsCentsPerWeek Price = ValidChannelPriceInUsCentsPerWeek.Parse(10);
+        private static readonly ValidChannelPrice Price = ValidChannelPrice.Parse(10);
         private static readonly UpdateChannelCommand Command = new UpdateChannelCommand(Requester, ChannelId, Name, Description, Price, IsVisibleToNonSubscribers);
         
         private Mock<IRequesterSecurity> requesterSecurity;

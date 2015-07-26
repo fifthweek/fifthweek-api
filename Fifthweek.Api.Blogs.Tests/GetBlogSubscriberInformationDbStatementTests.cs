@@ -140,13 +140,13 @@
                 blog2Channels = await databaseContext.CreateTestChannelsAsync(Creator2Id.Value, Blog2Id.Value, Blog2ChannelIds.Select(v => v.Value).ToArray());
                 blog3Channels = await databaseContext.CreateTestChannelsAsync(Creator3Id.Value, Blog3Id.Value, Blog3ChannelIds.Select(v => v.Value).ToArray());
 
-                blog2Channels[0].PriceInUsCentsPerWeek = Blog2Channel1CurrentPrice;
+                blog2Channels[0].Price = Blog2Channel1CurrentPrice;
                 blog2Channels[0].PriceLastSetDate = PriceLastSetDate;
                 blog2Channels[0].IsVisibleToNonSubscribers = true;
-                blog3Channels[0].PriceInUsCentsPerWeek = Blog3Channel1CurrentPrice;
+                blog3Channels[0].Price = Blog3Channel1CurrentPrice;
                 blog3Channels[0].PriceLastSetDate = PriceLastSetDate;
                 blog3Channels[0].IsVisibleToNonSubscribers = false;
-                blog3Channels[2].PriceInUsCentsPerWeek = Blog3Channel3CurrentPrice;
+                blog3Channels[2].Price = Blog3Channel3CurrentPrice;
                 blog3Channels[2].PriceLastSetDate = PriceLastSetDate;
                 blog3Channels[2].IsVisibleToNonSubscribers = true;
 

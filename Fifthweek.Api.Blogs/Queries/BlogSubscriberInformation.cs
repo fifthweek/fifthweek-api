@@ -38,7 +38,7 @@
 
             public DateTime SubscriptionStartDate { get; set; }
 
-            public int AcceptedPriceInUsCentsPerWeek { get; set; }
+            public int AcceptedPrice { get; set; }
         }
     }
 }

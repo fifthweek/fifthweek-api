@@ -20,7 +20,7 @@ namespace Fifthweek.Payments.SnapshotCreation
             CreatorChannelsSnapshot.Table,
             CreatorChannelsSnapshotItem.Table,
             Channel.Fields.Id,
-            Channel.Fields.PriceInUsCentsPerWeek,
+            Channel.Fields.Price,
             Channel.Table,
             Channel.Fields.BlogId,
             Blog.Table,

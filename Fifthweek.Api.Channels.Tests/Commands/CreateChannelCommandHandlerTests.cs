@@ -29,7 +29,7 @@
         private static readonly BlogId BlogId = new BlogId(Guid.NewGuid());
         private static readonly ValidChannelName Name = ValidChannelName.Parse("Bat puns");
         private static readonly ValidChannelDescription Description = ValidChannelDescription.Parse("It's just a load of really, really bat puns! *bad");
-        private static readonly ValidChannelPriceInUsCentsPerWeek Price = ValidChannelPriceInUsCentsPerWeek.Parse(10);
+        private static readonly ValidChannelPrice Price = ValidChannelPrice.Parse(10);
         private static readonly CreateChannelCommand Command = new CreateChannelCommand(Requester, ChannelId, BlogId, Name, Description, Price, IsVisibleToNonSubscribers);
 
         private Mock<IRequesterSecurity> requesterSecurity;

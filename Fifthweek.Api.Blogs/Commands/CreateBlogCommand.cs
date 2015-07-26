@@ -16,6 +16,6 @@
 
         public ValidTagline Tagline { get; private set; }
 
-        public ValidChannelPriceInUsCentsPerWeek BasePrice { get; private set; }
+        public ValidChannelPrice BasePrice { get; private set; }
     }
 }

@@ -176,11 +176,11 @@
                             new BlogSubscriberInformation.SubscriberChannel(
                                 subscriber1.ChannelId,
                                 subscriber1.SubscriptionStartDate,
-                                subscriber1.AcceptedPriceInUsCentsPerWeek),
+                                subscriber1.AcceptedPrice),
                             new BlogSubscriberInformation.SubscriberChannel(
                                 subscriber3.ChannelId,
                                 subscriber3.SubscriptionStartDate,
-                                subscriber3.AcceptedPriceInUsCentsPerWeek),
+                                subscriber3.AcceptedPrice),
                         }),
                     new BlogSubscriberInformation.Subscriber(
                         subscriber2.Username,
@@ -192,7 +192,7 @@
                             new BlogSubscriberInformation.SubscriberChannel(
                                 subscriber2.ChannelId,
                                 subscriber2.SubscriptionStartDate,
-                                subscriber2.AcceptedPriceInUsCentsPerWeek),
+                                subscriber2.AcceptedPrice),
                         }),
                     new BlogSubscriberInformation.Subscriber(
                         subscriber4.Username,
@@ -204,7 +204,7 @@
                             new BlogSubscriberInformation.SubscriberChannel(
                                 subscriber4.ChannelId,
                                 subscriber4.SubscriptionStartDate,
-                                subscriber4.AcceptedPriceInUsCentsPerWeek),
+                                subscriber4.AcceptedPrice),
                         }),
                 },
                 result.Subscribers.ToList());

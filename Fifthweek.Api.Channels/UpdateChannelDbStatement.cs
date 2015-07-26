@@ -22,7 +22,7 @@
             UPDATE {0} 
             SET 
                 {1} = @Name, 
-                {2} = @PriceInUsCentsPerWeek,
+                {2} = @Price,
                 {3} = @Description,
                 {4} = 
                 (
@@ -39,7 +39,7 @@
                 (
                     CASE
                         WHEN 
-                            {2} != @PriceInUsCentsPerWeek
+                            {2} != @Price
                         THEN
                             @PriceLastSetDate
                         ELSE
@@ -49,7 +49,7 @@
                 WHERE {6}=@Id",
             Channel.Table,
             Channel.Fields.Name,
-            Channel.Fields.PriceInUsCentsPerWeek,
+            Channel.Fields.Price,
             Channel.Fields.Description,
             Channel.Fields.IsVisibleToNonSubscribers,
             Channel.Fields.PriceLastSetDate,
@@ -64,7 +64,7 @@
             ChannelId channelId,
             ValidChannelName name,
             ValidChannelDescription description,
-            ValidChannelPriceInUsCentsPerWeek price, 
+            ValidChannelPrice price, 
             bool isVisibleToNonSubscribers, 
             DateTime now)
         {
@@ -79,7 +79,7 @@
                             Id = channelId.Value,
                             IsVisibleToNonSubscribers = isVisibleToNonSubscribers,
                             Name = name.Value,
-                            PriceInUsCentsPerWeek = price.Value,
+                            Price = price.Value,
                             Description = description.Value,
                             PriceLastSetDate = now
                         });

@@ -16,7 +16,7 @@
         [Parsed(typeof(ValidChannelDescription))]
         public string Description { get; set; }
 
-        [Parsed(typeof(ValidChannelPriceInUsCentsPerWeek))]
+        [Parsed(typeof(ValidChannelPrice))]
         public int Price { get; set; }
 
         public bool IsVisibleToNonSubscribers { get; set; }

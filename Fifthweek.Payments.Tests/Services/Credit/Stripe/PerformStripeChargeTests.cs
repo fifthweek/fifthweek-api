@@ -23,7 +23,7 @@
     {
         private static readonly UserId UserId = UserId.Random();
         private static readonly string StripeCustomerId = "stripeCustomerId";
-        private static readonly AmountInUsCents Amount = new AmountInUsCents(100);
+        private static readonly AmountInMinorDenomination Amount = new AmountInMinorDenomination(100);
         private static readonly Guid TransactionReference = Guid.NewGuid();
         private static readonly string TaxamoTransactionKey = "ttk";
 

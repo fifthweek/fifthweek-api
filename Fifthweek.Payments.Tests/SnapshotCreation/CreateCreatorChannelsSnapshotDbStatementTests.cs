@@ -71,8 +71,8 @@
                 await this.target.ExecuteAsync(CreatorId);
 
                 var expectedCreatorChannelSnapshot = new CreatorChannelsSnapshot(SnapshotId, Now, CreatorId.Value);
-                var expectedCreatorChannelItem1 = new CreatorChannelsSnapshotItem(SnapshotId, null, ChannelId1.Value, channels[0].PriceInUsCentsPerWeek);
-                var expectedCreatorChannelItem2 = new CreatorChannelsSnapshotItem(SnapshotId, null, ChannelId2.Value, channels[1].PriceInUsCentsPerWeek);
+                var expectedCreatorChannelItem1 = new CreatorChannelsSnapshotItem(SnapshotId, null, ChannelId1.Value, channels[0].Price);
+                var expectedCreatorChannelItem2 = new CreatorChannelsSnapshotItem(SnapshotId, null, ChannelId2.Value, channels[1].Price);
 
                 return new ExpectedSideEffects
                 {

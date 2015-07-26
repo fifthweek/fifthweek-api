@@ -48,9 +48,9 @@
         {
             private static readonly BlogId BlogId = new BlogId(Guid.NewGuid());
             private static readonly ChannelId ChannelId1 = new ChannelId(Guid.NewGuid());
-            private static readonly ValidAcceptedChannelPriceInUsCentsPerWeek AcceptedPrice1 = ValidAcceptedChannelPriceInUsCentsPerWeek.Parse(10);
+            private static readonly ValidAcceptedChannelPrice AcceptedPrice1 = ValidAcceptedChannelPrice.Parse(10);
             private static readonly ChannelId ChannelId2 = new ChannelId(Guid.NewGuid());
-            private static readonly ValidAcceptedChannelPriceInUsCentsPerWeek AcceptedPrice2 = ValidAcceptedChannelPriceInUsCentsPerWeek.Parse(20);
+            private static readonly ValidAcceptedChannelPrice AcceptedPrice2 = ValidAcceptedChannelPrice.Parse(20);
 
             private static readonly UpdatedBlogSubscriptionData UpdatedBlogSubscriptionData
                 = new UpdatedBlogSubscriptionData
@@ -141,7 +141,7 @@
         public class PutChannelSubscription : SubscriptionControllerTests
         {
             private static readonly ChannelId ChannelId = new ChannelId(Guid.NewGuid());
-            private static readonly ValidAcceptedChannelPriceInUsCentsPerWeek AcceptedPrice = ValidAcceptedChannelPriceInUsCentsPerWeek.Parse(10);
+            private static readonly ValidAcceptedChannelPrice AcceptedPrice = ValidAcceptedChannelPrice.Parse(10);
 
             private static readonly ChannelSubscriptionDataWithoutChannelId UpdatedSubscriptionData = new ChannelSubscriptionDataWithoutChannelId
             {
