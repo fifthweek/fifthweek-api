@@ -21,6 +21,7 @@
                 userId.Value,
                 null,
                 null,
+                PaymentOriginKeyType.None,
                 null,
                 null,
                 null,
@@ -29,7 +30,9 @@
 
             using (var connection = this.connectionFactory.CreateConnection())
             {
-                await connection.UpsertAsync(origin, UserPaymentOrigin.Fields.StripeCustomerId);
+                await connection.UpsertAsync(
+                    origin, 
+                    UserPaymentOrigin.Fields.PaymentOriginKey | UserPaymentOrigin.Fields.PaymentOriginKeyType);
             }
         }
     }

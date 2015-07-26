@@ -16,12 +16,14 @@ namespace Fifthweek.Payments.Services.Credit
     public partial class IncrementPaymentStatusDbStatement : IIncrementPaymentStatusDbStatement
     {
         private static readonly string Sql = string.Format(
-            "UPDATE {0} SET {2}={2}+1 WHERE {1} IN @UserIds AND {2}<{3} AND {4} IS NOT NULL",
+            "UPDATE {0} SET {2}={2}+1 WHERE {1} IN @UserIds AND {2}<{3} AND {4} IS NOT NULL AND {5}<>{6}",
             UserPaymentOrigin.Table,
             UserPaymentOrigin.Fields.UserId,
             UserPaymentOrigin.Fields.PaymentStatus,
             (int)PaymentStatus.Failed,
-            UserPaymentOrigin.Fields.StripeCustomerId);
+            UserPaymentOrigin.Fields.PaymentOriginKey,
+            UserPaymentOrigin.Fields.PaymentOriginKeyType,
+            (int)PaymentOriginKeyType.None);
 
         private readonly IFifthweekDbConnectionFactory connectionFactory;
 

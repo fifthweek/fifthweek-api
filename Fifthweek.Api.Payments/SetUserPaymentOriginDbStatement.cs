@@ -15,7 +15,8 @@
 
         public async Task ExecuteAsync(
             UserId userId,
-            string stripeCustomerId,
+            string paymentOriginKey,
+            PaymentOriginKeyType paymentOriginKeyType,
             ValidCountryCode billingCountryCode,
             ValidCreditCardPrefix creditCardPrefix,
             ValidIpAddress ipAddress)
@@ -27,7 +28,8 @@
             var origin = new UserPaymentOrigin(
                 userId.Value,
                 null,
-                stripeCustomerId,
+                paymentOriginKey,
+                paymentOriginKeyType,
                 billingCountryCode == null ? null : billingCountryCode.Value,
                 creditCardPrefix == null ? null : creditCardPrefix.Value,
                 ipAddress == null ? null : ipAddress.Value,
@@ -36,7 +38,14 @@
 
             using (var connection = this.connectionFactory.CreateConnection())
             {
-                await connection.UpsertAsync(origin, UserPaymentOrigin.Fields.StripeCustomerId | UserPaymentOrigin.Fields.CountryCode | UserPaymentOrigin.Fields.CreditCardPrefix | UserPaymentOrigin.Fields.IpAddress | UserPaymentOrigin.Fields.OriginalTaxamoTransactionKey);
+                await connection.UpsertAsync(
+                    origin, 
+                    UserPaymentOrigin.Fields.PaymentOriginKey 
+                    | UserPaymentOrigin.Fields.PaymentOriginKeyType 
+                    | UserPaymentOrigin.Fields.CountryCode 
+                    | UserPaymentOrigin.Fields.CreditCardPrefix 
+                    | UserPaymentOrigin.Fields.IpAddress 
+                    | UserPaymentOrigin.Fields.OriginalTaxamoTransactionKey);
             }
         }
     }

@@ -34,8 +34,8 @@
         private static readonly UpdatePaymentOriginCommand CommandWithoutStripeToken = new UpdatePaymentOriginCommand(
             Requester, UserId, null, CountryCode, CreditCardPrefix, IpAddress);
 
-        private static readonly UserPaymentOriginResult OriginWithCustomer = new UserPaymentOriginResult("stripeCustomerId", "GB", "12345", "1.1.1.1", "ttk", PaymentStatus.Retry1);
-        private static readonly UserPaymentOriginResult OriginWithoutCustomer = new UserPaymentOriginResult(null, "GB", "12345", "1.1.1.1", "ttk", PaymentStatus.Retry1);
+        private static readonly UserPaymentOriginResult OriginWithCustomer = new UserPaymentOriginResult("stripeCustomerId", PaymentOriginKeyType.Stripe, "GB", "12345", "1.1.1.1", "ttk", PaymentStatus.Retry1);
+        private static readonly UserPaymentOriginResult OriginWithoutCustomer = new UserPaymentOriginResult(null, PaymentOriginKeyType.None, "GB", "12345", "1.1.1.1", "ttk", PaymentStatus.Retry1);
 
         private Mock<IRequesterSecurity> requesterSecurity;
         private Mock<ISetUserPaymentOriginDbStatement> setUserPaymentOrigin;
@@ -94,7 +94,24 @@
             this.requesterSecurity.Setup(v => v.IsInRoleAsync(Requester, FifthweekRole.TestUser)).ReturnsAsync(false);
 
             this.setUserPaymentOrigin.Setup(v => v.ExecuteAsync(
-                UserId, OriginWithCustomer.StripeCustomerId, CountryCode, CreditCardPrefix, IpAddress))
+                UserId, OriginWithCustomer.PaymentOriginKey, OriginWithCustomer.PaymentOriginKeyType, CountryCode, CreditCardPrefix, IpAddress))
+                .Returns(Task.FromResult(0))
+                .Verifiable();
+
+            await this.target.HandleAsync(CommandWithoutStripeToken);
+
+            this.updateStripeCustomerCreditCard.Verify();
+            this.setUserPaymentOrigin.Verify();
+        }
+
+        [TestMethod]
+        public async Task WhenStripeTokenNotSupplied_AndDoesNotAlreadyHavePaymentInformation_ItShouldUpdateTheCustomer()
+        {
+            this.getUserPaymentOrigin.Setup(v => v.ExecuteAsync(UserId)).ReturnsAsync(OriginWithoutCustomer);
+            this.requesterSecurity.Setup(v => v.IsInRoleAsync(Requester, FifthweekRole.TestUser)).ReturnsAsync(false);
+
+            this.setUserPaymentOrigin.Setup(v => v.ExecuteAsync(
+                UserId, null, PaymentOriginKeyType.None, CountryCode, CreditCardPrefix, IpAddress))
                 .Returns(Task.FromResult(0))
                 .Verifiable();
 
@@ -111,12 +128,12 @@
             this.requesterSecurity.Setup(v => v.IsInRoleAsync(Requester, FifthweekRole.TestUser)).ReturnsAsync(false);
 
             this.updateStripeCustomerCreditCard.Setup(
-                v => v.ExecuteAsync(UserId, OriginWithCustomer.StripeCustomerId, StripeToken.Value, UserType.StandardUser))
+                v => v.ExecuteAsync(UserId, OriginWithCustomer.PaymentOriginKey, StripeToken.Value, UserType.StandardUser))
                 .Returns(Task.FromResult(0))
                 .Verifiable();
 
             this.setUserPaymentOrigin.Setup(v => v.ExecuteAsync(
-                UserId, OriginWithCustomer.StripeCustomerId, CountryCode, CreditCardPrefix, IpAddress))
+                UserId, OriginWithCustomer.PaymentOriginKey, OriginWithCustomer.PaymentOriginKeyType, CountryCode, CreditCardPrefix, IpAddress))
                 .Returns(Task.FromResult(0))
                 .Verifiable();
 
@@ -133,12 +150,12 @@
             this.requesterSecurity.Setup(v => v.IsInRoleAsync(Requester, FifthweekRole.TestUser)).ReturnsAsync(true);
 
             this.updateStripeCustomerCreditCard.Setup(
-                v => v.ExecuteAsync(UserId, OriginWithCustomer.StripeCustomerId, StripeToken.Value, UserType.TestUser))
+                v => v.ExecuteAsync(UserId, OriginWithCustomer.PaymentOriginKey, StripeToken.Value, UserType.TestUser))
                 .Returns(Task.FromResult(0))
                 .Verifiable();
 
             this.setUserPaymentOrigin.Setup(v => v.ExecuteAsync(
-                UserId, OriginWithCustomer.StripeCustomerId, CountryCode, CreditCardPrefix, IpAddress))
+                UserId, OriginWithCustomer.PaymentOriginKey, OriginWithCustomer.PaymentOriginKeyType, CountryCode, CreditCardPrefix, IpAddress))
                 .Returns(Task.FromResult(0))
                 .Verifiable();
 
@@ -159,7 +176,7 @@
                 .Returns(Task.FromResult(stripeCustomerId));
 
             this.setUserPaymentOrigin.Setup(v => v.ExecuteAsync(
-                UserId, stripeCustomerId, CountryCode, CreditCardPrefix, IpAddress))
+                UserId, stripeCustomerId, PaymentOriginKeyType.Stripe, CountryCode, CreditCardPrefix, IpAddress))
                 .Returns(Task.FromResult(0))
                 .Verifiable();
 
@@ -179,7 +196,7 @@
                 .Returns(Task.FromResult(stripeCustomerId));
 
             this.setUserPaymentOrigin.Setup(v => v.ExecuteAsync(
-                UserId, stripeCustomerId, CountryCode, CreditCardPrefix, IpAddress))
+                UserId, stripeCustomerId, PaymentOriginKeyType.Stripe, CountryCode, CreditCardPrefix, IpAddress))
                 .Returns(Task.FromResult(0))
                 .Verifiable();
 

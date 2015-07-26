@@ -23,7 +23,7 @@
         private static readonly PositiveInt ExpectedTotalAmount = PositiveInt.Parse(12);
 
         private static readonly TaxamoTransactionResult TaxamoTransaction = new TaxamoTransactionResult("key", new AmountInUsCents(10), new AmountInUsCents(12), new AmountInUsCents(2), 0.2m, "VAT", "GB", "England");
-        private static readonly UserPaymentOriginResult Origin = new UserPaymentOriginResult("stripeCustomerId", "GB", "12345", "1.1.1.1", "ttk", PaymentStatus.Retry1);
+        private static readonly UserPaymentOriginResult Origin = new UserPaymentOriginResult("stripeCustomerId", PaymentOriginKeyType.Stripe, "GB", "12345", "1.1.1.1", "ttk", PaymentStatus.Retry1);
 
         private Mock<IGetUserPaymentOriginDbStatement> getUserPaymentOrigin;
         private Mock<IDeleteTaxamoTransaction> deleteTaxamoTransaction;
@@ -56,6 +56,40 @@
         public async Task WhenAmountIsNull_ItShouldThrowAnException()
         {
             await this.target.HandleAsync(UserId, null, ExpectedTotalAmount, default(UserType));
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(CreditCardDetailsDoNotExistException))]
+        public async Task WhenPaymentOriginKeyIsNull_ItShouldThrowAnException()
+        {
+            this.getUserPaymentOrigin.Setup(v => v.ExecuteAsync(UserId)).ReturnsAsync(
+                new UserPaymentOriginResult(
+                    null,
+                    PaymentOriginKeyType.Stripe,
+                    Origin.CountryCode,
+                    Origin.CreditCardPrefix,
+                    Origin.IpAddress,
+                    Origin.OriginalTaxamoTransactionKey,
+                    Origin.PaymentStatus));
+
+            await this.target.HandleAsync(UserId, Amount, ExpectedTotalAmount, UserType.StandardUser);
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(CreditCardDetailsDoNotExistException))]
+        public async Task WhenPaymentOriginKeyTypeIsNone_ItShouldThrowAnException()
+        {
+            this.getUserPaymentOrigin.Setup(v => v.ExecuteAsync(UserId)).ReturnsAsync(
+                new UserPaymentOriginResult(
+                    Origin.PaymentOriginKey,
+                    PaymentOriginKeyType.None,
+                    Origin.CountryCode,
+                    Origin.CreditCardPrefix,
+                    Origin.IpAddress,
+                    Origin.OriginalTaxamoTransactionKey,
+                    Origin.PaymentStatus));
+
+            await this.target.HandleAsync(UserId, Amount, ExpectedTotalAmount, UserType.StandardUser);
         }
 
         [TestMethod]

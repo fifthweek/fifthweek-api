@@ -17,7 +17,8 @@
     {
         private static readonly UserId UserId = UserId.Random();
 
-        private static readonly string StripeCustomerId = "stripeCustomerId";
+        private static readonly string PaymentOriginKey = "stripeCustomerId";
+        private static readonly PaymentOriginKeyType PaymentOriginKeyType = PaymentOriginKeyType.Stripe;
         private static readonly ValidCountryCode CountryCode = ValidCountryCode.Parse("GB");
         private static readonly ValidCreditCardPrefix CreditCardPrefix = ValidCreditCardPrefix.Parse("123456");
         private static readonly ValidIpAddress IpAddress = ValidIpAddress.Parse("1.1.1.1");
@@ -37,7 +38,8 @@
         {
             await this.target.ExecuteAsync(
                 null,
-                StripeCustomerId,
+                PaymentOriginKey,
+                PaymentOriginKeyType,
                 CountryCode,
                 CreditCardPrefix,
                 IpAddress);
@@ -55,6 +57,7 @@
                 await this.target.ExecuteAsync(
                     UserId,
                     null,
+                    PaymentOriginKeyType.None,
                     null,
                     null,
                     null);
@@ -65,6 +68,7 @@
                         UserId.Value,
                         null,
                         null,
+                        PaymentOriginKeyType.None,
                         null,
                         null,
                         null,
@@ -86,6 +90,7 @@
                 await this.target.ExecuteAsync(
                     UserId,
                     null,
+                    PaymentOriginKeyType.None,
                     null,
                     null,
                     null);
@@ -96,6 +101,7 @@
                         UserId.Value,
                         null,
                         null,
+                        PaymentOriginKeyType.None,
                         null,
                         null,
                         null,
@@ -116,7 +122,8 @@
 
                 await this.target.ExecuteAsync(
                     UserId,
-                    StripeCustomerId,
+                    PaymentOriginKey,
+                    PaymentOriginKeyType,
                     CountryCode,
                     CreditCardPrefix,
                     IpAddress);
@@ -126,7 +133,8 @@
                     Insert = new UserPaymentOrigin(
                         UserId.Value,
                         null,
-                        StripeCustomerId,
+                        PaymentOriginKey,
+                        PaymentOriginKeyType,
                         CountryCode.Value,
                         CreditCardPrefix.Value,
                         IpAddress.Value,
@@ -147,7 +155,8 @@
 
                 await this.target.ExecuteAsync(
                     UserId,
-                    StripeCustomerId,
+                    PaymentOriginKey,
+                    PaymentOriginKeyType,
                     CountryCode,
                     CreditCardPrefix,
                     IpAddress);
@@ -157,7 +166,8 @@
                     Update = new UserPaymentOrigin(
                         UserId.Value,
                         null,
-                        StripeCustomerId,
+                        PaymentOriginKey,
+                        PaymentOriginKeyType,
                         CountryCode.Value,
                         CreditCardPrefix.Value,
                         IpAddress.Value,
@@ -180,6 +190,7 @@
                     UserId.Value,
                     user,
                     "anotherStripeCustomerId",
+                    PaymentOriginKeyType.Stripe,
                     "USA",
                     "999999",
                     "9.9.9.999",

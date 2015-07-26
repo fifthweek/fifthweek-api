@@ -56,7 +56,9 @@ namespace Fifthweek.Payments.Services.Credit
                     amountToCharge = Math.Max(MinimumPaymentAmount, amountToCharge);
 
                     var origin = await this.getUserPaymentOrigin.ExecuteAsync(userId);
-                    if (origin.StripeCustomerId == null || origin.PaymentStatus == PaymentStatus.None)
+                    if (origin.PaymentOriginKey == null 
+                        || origin.PaymentOriginKeyType == PaymentOriginKeyType.None 
+                        || origin.PaymentStatus == PaymentStatus.None)
                     {
                         // If the user doesn't have a stripe customer ID then they haven't given us
                         // credit card details and we can't bill them.

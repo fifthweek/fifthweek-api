@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Linq;
 
-//// Generated on 20/07/2015 12:35:15 (UTC)
-//// Mapped solution in 12.29s
+//// Generated on 26/07/2015 09:33:07 (UTC)
+//// Mapped solution in 7.93s
 
 namespace Fifthweek.Payments.Services.Credit
 {
@@ -809,14 +809,16 @@ namespace Fifthweek.Payments.Services.Credit
     public partial class UserPaymentOriginResult 
     {
         public UserPaymentOriginResult(
-            System.String stripeCustomerId,
+            System.String paymentOriginKey,
+            Fifthweek.Api.Persistence.Payments.PaymentOriginKeyType paymentOriginKeyType,
             System.String countryCode,
             System.String creditCardPrefix,
             System.String ipAddress,
             System.String originalTaxamoTransactionKey,
             Fifthweek.Api.Persistence.Payments.PaymentStatus paymentStatus)
         {
-            this.StripeCustomerId = stripeCustomerId;
+            this.PaymentOriginKey = paymentOriginKey;
+            this.PaymentOriginKeyType = paymentOriginKeyType;
             this.CountryCode = countryCode;
             this.CreditCardPrefix = creditCardPrefix;
             this.IpAddress = ipAddress;
@@ -3919,7 +3921,7 @@ namespace Fifthweek.Payments.Services.Credit
     {
         public override string ToString()
         {
-            return string.Format("UserPaymentOriginResult(\"{0}\", \"{1}\", \"{2}\", \"{3}\", \"{4}\", {5})", this.StripeCustomerId == null ? "null" : this.StripeCustomerId.ToString(), this.CountryCode == null ? "null" : this.CountryCode.ToString(), this.CreditCardPrefix == null ? "null" : this.CreditCardPrefix.ToString(), this.IpAddress == null ? "null" : this.IpAddress.ToString(), this.OriginalTaxamoTransactionKey == null ? "null" : this.OriginalTaxamoTransactionKey.ToString(), this.PaymentStatus == null ? "null" : this.PaymentStatus.ToString());
+            return string.Format("UserPaymentOriginResult(\"{0}\", {1}, \"{2}\", \"{3}\", \"{4}\", \"{5}\", {6})", this.PaymentOriginKey == null ? "null" : this.PaymentOriginKey.ToString(), this.PaymentOriginKeyType == null ? "null" : this.PaymentOriginKeyType.ToString(), this.CountryCode == null ? "null" : this.CountryCode.ToString(), this.CreditCardPrefix == null ? "null" : this.CreditCardPrefix.ToString(), this.IpAddress == null ? "null" : this.IpAddress.ToString(), this.OriginalTaxamoTransactionKey == null ? "null" : this.OriginalTaxamoTransactionKey.ToString(), this.PaymentStatus == null ? "null" : this.PaymentStatus.ToString());
         }
         
         public override bool Equals(object obj)
@@ -3947,7 +3949,8 @@ namespace Fifthweek.Payments.Services.Credit
             unchecked
             {
                 int hashCode = 0;
-                hashCode = (hashCode * 397) ^ (this.StripeCustomerId != null ? this.StripeCustomerId.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.PaymentOriginKey != null ? this.PaymentOriginKey.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.PaymentOriginKeyType != null ? this.PaymentOriginKeyType.GetHashCode() : 0);
                 hashCode = (hashCode * 397) ^ (this.CountryCode != null ? this.CountryCode.GetHashCode() : 0);
                 hashCode = (hashCode * 397) ^ (this.CreditCardPrefix != null ? this.CreditCardPrefix.GetHashCode() : 0);
                 hashCode = (hashCode * 397) ^ (this.IpAddress != null ? this.IpAddress.GetHashCode() : 0);
@@ -3959,7 +3962,12 @@ namespace Fifthweek.Payments.Services.Credit
         
         protected bool Equals(UserPaymentOriginResult other)
         {
-            if (!object.Equals(this.StripeCustomerId, other.StripeCustomerId))
+            if (!object.Equals(this.PaymentOriginKey, other.PaymentOriginKey))
+            {
+                return false;
+            }
+        
+            if (!object.Equals(this.PaymentOriginKeyType, other.PaymentOriginKeyType))
             {
                 return false;
             }

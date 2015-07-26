@@ -21,7 +21,10 @@
         public FifthweekUser User { get; set; }
 
         [Optional, MaxLength(255)] // See: https://stripe.com/docs/upgrades#what-changes-does-stripe-consider-to-be-backwards-compatible
-        public string StripeCustomerId { get; set; }
+        public string PaymentOriginKey { get; set; }
+
+        [Optional]
+        public PaymentOriginKeyType PaymentOriginKeyType { get; set; }
 
         [Optional, MaxLength(3)] // See: https://en.wikipedia.org/wiki/ISO_3166
         public string CountryCode { get; set; }

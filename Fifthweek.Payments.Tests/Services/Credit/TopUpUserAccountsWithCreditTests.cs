@@ -88,13 +88,16 @@
             this.getUserWeeklySubscriptionsCost.Setup(v => v.ExecuteAsync(userId5)).ReturnsAsync(TopUpUserAccountsWithCredit.MinimumPaymentAmount * 2);
 
             this.getUserPaymentOrigin.Setup(v => v.ExecuteAsync(userId1))
-                .ReturnsAsync(new UserPaymentOriginResult("customer1", null, null, null, null, PaymentStatus.Retry1));
+                .ReturnsAsync(new UserPaymentOriginResult("customer1", PaymentOriginKeyType.Stripe, null, null, null, null, PaymentStatus.Retry1));
             this.getUserPaymentOrigin.Setup(v => v.ExecuteAsync(userId2))
-                .ReturnsAsync(new UserPaymentOriginResult("customer2", null, null, null, null, PaymentStatus.Retry1));
+                .ReturnsAsync(new UserPaymentOriginResult("customer2", PaymentOriginKeyType.Stripe, null, null, null, null, PaymentStatus.Retry1));
+            
+            // Test PaymentOriginKeyType with no key.
             this.getUserPaymentOrigin.Setup(v => v.ExecuteAsync(userId4))
-                .ReturnsAsync(new UserPaymentOriginResult(null, null, null, null, null, PaymentStatus.Retry1));
+                .ReturnsAsync(new UserPaymentOriginResult(null, PaymentOriginKeyType.Stripe, null, null, null, null, PaymentStatus.Retry1));
+
             this.getUserPaymentOrigin.Setup(v => v.ExecuteAsync(userId5))
-                .ReturnsAsync(new UserPaymentOriginResult("customer5", null, null, null, null, PaymentStatus.None));
+                .ReturnsAsync(new UserPaymentOriginResult("customer5", PaymentOriginKeyType.Stripe, null, null, null, null, PaymentStatus.None));
 
             this.applyUserCredit.Setup(v => v.ExecuteAsync(userId1, PositiveInt.Parse(TopUpUserAccountsWithCredit.MinimumPaymentAmount), null, UserType.StandardUser))
                 .Returns(Task.FromResult(0))
@@ -142,10 +145,12 @@
             this.getUserWeeklySubscriptionsCost.Setup(v => v.ExecuteAsync(userId4)).ReturnsAsync(TopUpUserAccountsWithCredit.MinimumPaymentAmount * 2);
             this.getUserWeeklySubscriptionsCost.Setup(v => v.ExecuteAsync(userId5)).ReturnsAsync(TopUpUserAccountsWithCredit.MinimumPaymentAmount * 2);
 
+            // Test PaymentOriginKey with no KeyType.
             this.getUserPaymentOrigin.Setup(v => v.ExecuteAsync(userId4))
-                .ReturnsAsync(new UserPaymentOriginResult(null, null, null, null, null, PaymentStatus.Retry1));
+                .ReturnsAsync(new UserPaymentOriginResult("customer4", PaymentOriginKeyType.None, null, null, null, null, PaymentStatus.Retry1));
+            
             this.getUserPaymentOrigin.Setup(v => v.ExecuteAsync(userId5))
-                .ReturnsAsync(new UserPaymentOriginResult("customer5", null, null, null, null, PaymentStatus.None));
+                .ReturnsAsync(new UserPaymentOriginResult("customer5", PaymentOriginKeyType.Stripe, null, null, null, null, PaymentStatus.None));
 
             var result = await this.target.ExecuteAsync(input, new List<PaymentProcessingException>());
 

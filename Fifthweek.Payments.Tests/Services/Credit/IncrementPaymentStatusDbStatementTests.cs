@@ -33,7 +33,8 @@
         };
 
         private static readonly string TaxamoTransactionKey = "taxamoTransactionKey";
-        private static readonly string StripeCustomerId = "stripeCustomerId";
+        private static readonly string PaymentOriginKey = "stripeCustomerId";
+        private static readonly PaymentOriginKeyType PaymentOriginKeyType = PaymentOriginKeyType.Stripe;
         private static readonly string CountryCode = "GB";
         private static readonly string CreditCardPrefix = "123456";
         private static readonly string IpAddress = "1.1.1.1";
@@ -71,7 +72,8 @@
                         new UserPaymentOrigin(
                             UserId2.Value,
                             null,
-                            StripeCustomerId,
+                            PaymentOriginKey,
+                            PaymentOriginKeyType,
                             CountryCode,
                             CreditCardPrefix,
                             IpAddress,
@@ -80,7 +82,8 @@
                         new UserPaymentOrigin(
                             UserId3.Value,
                             null,
-                            StripeCustomerId,
+                            PaymentOriginKey,
+                            PaymentOriginKeyType,
                             CountryCode,
                             CreditCardPrefix,
                             IpAddress,
@@ -126,7 +129,8 @@
                 await connection.InsertAsync(new UserPaymentOrigin(
                     UserId1.Value,
                     null,
-                    StripeCustomerId,
+                    PaymentOriginKey,
+                    PaymentOriginKeyType,
                     CountryCode,
                     CreditCardPrefix,
                     IpAddress,
@@ -137,7 +141,8 @@
                 await connection.InsertAsync(new UserPaymentOrigin(
                     UserId2.Value,
                     null,
-                    StripeCustomerId,
+                    PaymentOriginKey,
+                    PaymentOriginKeyType,
                     CountryCode,
                     CreditCardPrefix,
                     IpAddress,
@@ -148,7 +153,8 @@
                 await connection.InsertAsync(new UserPaymentOrigin(
                     UserId3.Value,
                     null,
-                    StripeCustomerId,
+                    PaymentOriginKey,
+                    PaymentOriginKeyType,
                     CountryCode,
                     CreditCardPrefix,
                     IpAddress,
@@ -159,18 +165,32 @@
                 await connection.InsertAsync(new UserPaymentOrigin(
                     UserId4.Value,
                     null,
-                    StripeCustomerId,
+                    PaymentOriginKey,
+                    PaymentOriginKeyType,
                     CountryCode,
                     CreditCardPrefix,
                     IpAddress,
                     TaxamoTransactionKey,
                     PaymentStatus.Failed));
 
-                // Should not be updated because it doesn't have a stripe customer id.
+                // Should not be updated because it doesn't have a payment origin key.
                 await connection.InsertAsync(new UserPaymentOrigin(
                     UserId5.Value,
                     null,
                     null,
+                    PaymentOriginKeyType.Stripe,
+                    CountryCode,
+                    CreditCardPrefix,
+                    IpAddress,
+                    TaxamoTransactionKey,
+                    PaymentStatus.None));
+
+                // Should not be updated because it doesn't have a payment origin key type.
+                await connection.InsertAsync(new UserPaymentOrigin(
+                    UserId5.Value,
+                    null,
+                    PaymentOriginKey,
+                    PaymentOriginKeyType.None,
                     CountryCode,
                     CreditCardPrefix,
                     IpAddress,

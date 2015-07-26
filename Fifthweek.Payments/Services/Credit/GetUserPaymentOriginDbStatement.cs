@@ -42,7 +42,8 @@
                 }
 
                 return new UserPaymentOriginResult(
-                    result.StripeCustomerId,
+                    result.PaymentOriginKey,
+                    result.PaymentOriginKeyType,
                     result.CountryCode,
                     result.CreditCardPrefix,
                     result.IpAddress,

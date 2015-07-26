@@ -369,16 +369,35 @@
 
                 if (createOrigin)
                 {
-                    await connection.InsertAsync(
-                        new UserPaymentOrigin(
-                            user.Id,
-                            null,
-                            populateCreditCard ? "blah" : null,
-                            null,
-                            null,
-                            null,
-                            null,
-                            PaymentStatus.Retry2));
+                    if (populateCreditCard)
+                    {
+                        await connection.InsertAsync(
+                            new UserPaymentOrigin(
+                                user.Id,
+                                null,
+                                "blah",
+                                PaymentOriginKeyType.Stripe,
+                                null,
+                                null,
+                                null,
+                                null,
+                                PaymentStatus.Retry2));
+                    }
+                    else
+                    {
+                        var populateKey = random.NextDouble() > 0.5;
+                        await connection.InsertAsync(
+                            new UserPaymentOrigin(
+                                user.Id,
+                                null,
+                                populateKey ? "blah" : null,
+                                populateKey ? PaymentOriginKeyType.None : PaymentOriginKeyType.Stripe,
+                                null,
+                                null,
+                                null,
+                                null,
+                                PaymentStatus.Retry2));
+                    }
                 }
             }
         }

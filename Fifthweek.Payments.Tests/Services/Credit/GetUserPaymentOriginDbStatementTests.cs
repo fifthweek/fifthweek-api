@@ -18,7 +18,8 @@
     {
         private static readonly UserId UserId = UserId.Random();
 
-        private static readonly string StripeCustomerId = "stripeCustomerId";
+        private static readonly string PaymentOriginType = "stripeCustomerId";
+        private static readonly PaymentOriginKeyType PaymentOriginKeyType = PaymentOriginKeyType.Stripe;
         private static readonly string CountryCode = "USA";
         private static readonly string CreditCardPrefix = "162534";
         private static readonly string IpAddress = "1.1.1.1";
@@ -26,7 +27,8 @@
         private static readonly PaymentStatus PaymentStatus = PaymentStatus.Retry1;
 
         private static readonly UserPaymentOriginResult Origin = new UserPaymentOriginResult(
-            StripeCustomerId,
+            PaymentOriginType,
+            PaymentOriginKeyType,
             CountryCode,
             CreditCardPrefix,
             IpAddress,
@@ -91,7 +93,8 @@
             var origin = new UserPaymentOrigin(
                 UserId.Value,
                 user,
-                StripeCustomerId,
+                PaymentOriginType,
+                PaymentOriginKeyType,
                 CountryCode,
                 CreditCardPrefix,
                 IpAddress,

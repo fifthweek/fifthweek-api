@@ -20,7 +20,7 @@
     {
         private static readonly string Sql = string.Format(
             @"SELECT u.{0}, u.{1}, u.{2}, u.{3}, cab.{4} as Balance, origin.{11},
-                    CASE WHEN origin.{10} IS NULL THEN 'False' ELSE 'True' END AS HasCreditCardDetails
+                    CASE WHEN origin.{10} IS NULL OR origin.{13}={14} THEN 'False' ELSE 'True' END AS HasCreditCardDetails
                 FROM {5} u
                 LEFT OUTER JOIN ({8}) cab 
                 ON u.{6} = cab.{7}
@@ -37,9 +37,11 @@
             CalculatedAccountBalance.Fields.UserId,
             CalculatedAccountBalance.GetUserAccountBalanceQuery("UserId", CalculatedAccountBalance.Fields.Amount, CalculatedAccountBalance.Fields.UserId),
             UserPaymentOrigin.Table,
-            UserPaymentOrigin.Fields.StripeCustomerId,
+            UserPaymentOrigin.Fields.PaymentOriginKey,
             UserPaymentOrigin.Fields.PaymentStatus,
-            UserPaymentOrigin.Fields.UserId);
+            UserPaymentOrigin.Fields.UserId,
+            UserPaymentOrigin.Fields.PaymentOriginKeyType,
+            (int)PaymentOriginKeyType.None);
 
         private readonly IFifthweekDbConnectionFactory connectionFactory;
 

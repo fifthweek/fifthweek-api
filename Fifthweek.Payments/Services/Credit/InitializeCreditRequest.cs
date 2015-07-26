@@ -3,6 +3,7 @@ namespace Fifthweek.Payments.Services.Credit
     using System.Threading.Tasks;
 
     using Fifthweek.Api.Identity.Shared.Membership;
+    using Fifthweek.Api.Persistence.Payments;
     using Fifthweek.CodeGeneration;
     using Fifthweek.Payments.Services.Credit.Taxamo;
     using Fifthweek.Shared;
@@ -25,7 +26,7 @@ namespace Fifthweek.Payments.Services.Credit
 
             var origin = await this.getUserPaymentOrigin.ExecuteAsync(userId);
 
-            if (origin.StripeCustomerId == null)
+            if (origin.PaymentOriginKey == null || origin.PaymentOriginKeyType == PaymentOriginKeyType.None)
             {
                 throw new CreditCardDetailsDoNotExistException();
             }

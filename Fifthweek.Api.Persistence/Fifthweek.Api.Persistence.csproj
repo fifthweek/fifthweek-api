@@ -316,9 +316,14 @@
     <Compile Include="Migrations\201507180923219_CreateTransactionTypeColumnAndSplitCreditAndRevenue.Designer.cs">
       <DependentUpon>201507180923219_CreateTransactionTypeColumnAndSplitCreditAndRevenue.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201507261031512_RenameStripeCustomerIdColumnToPaymentOriginKey.cs" />
+    <Compile Include="Migrations\201507261031512_RenameStripeCustomerIdColumnToPaymentOriginKey.Designer.cs">
+      <DependentUpon>201507261031512_RenameStripeCustomerIdColumnToPaymentOriginKey.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Payments\AppendOnlyLedgerRecord.cs" />
     <Compile Include="Payments\LedgerTransactionType.cs" />
+    <Compile Include="Payments\PaymentOriginKeyType.cs" />
     <Compile Include="Payments\PaymentStatus.cs" />
     <Compile Include="Payments\CalculatedAccountBalance.cs" />
     <Compile Include="Payments\CreatorPercentageOverride.cs" />
@@ -515,6 +520,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201507180923219_CreateTransactionTypeColumnAndSplitCreditAndRevenue.resx">
       <DependentUpon>201507180923219_CreateTransactionTypeColumnAndSplitCreditAndRevenue.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201507261031512_RenameStripeCustomerIdColumnToPaymentOriginKey.resx">
+      <DependentUpon>201507261031512_RenameStripeCustomerIdColumnToPaymentOriginKey.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>

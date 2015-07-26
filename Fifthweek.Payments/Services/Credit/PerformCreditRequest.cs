@@ -1,8 +1,10 @@
 ﻿namespace Fifthweek.Payments.Services.Credit
 {
+    using System;
     using System.Threading.Tasks;
 
     using Fifthweek.Api.Identity.Shared.Membership;
+    using Fifthweek.Api.Persistence.Payments;
     using Fifthweek.CodeGeneration;
     using Fifthweek.Payments.Services.Credit.Stripe;
     using Fifthweek.Payments.Services.Credit.Taxamo;
@@ -30,8 +32,13 @@
             var transactionReference = this.guidCreator.CreateSqlSequential();
 
             // Perform stripe transaction.
+            if (origin.PaymentOriginKeyType != PaymentOriginKeyType.Stripe)
+            {
+                throw new InvalidOperationException("Unexpected payment origin: " + origin.PaymentOriginKeyType);
+            }
+
             var stripeChargeId = await this.performStripeCharge.ExecuteAsync(
-                origin.StripeCustomerId,
+                origin.PaymentOriginKey,
                 taxamoTransaction.TotalAmount,
                 userId,
                 transactionReference,

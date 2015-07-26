@@ -235,6 +235,7 @@
                             user.Id,
                             user,
                             Guid.NewGuid().ToString(),
+                            (PaymentOriginKeyType)Random.Next(1, 1 + (int)PaymentOriginKeyType.Stripe),
                             "USA",
                             "123243",
                             "1.2.3.4",

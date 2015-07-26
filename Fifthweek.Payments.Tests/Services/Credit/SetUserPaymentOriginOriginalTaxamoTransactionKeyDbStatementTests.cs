@@ -19,7 +19,8 @@
         private static readonly UserId UserId = UserId.Random();
 
         private static readonly string NewTaxamoTransactionKey = "newTaxamoTransactionKey";
-        private static readonly string StripeCustomerId = "stripeCustomerId";
+        private static readonly string PaymentOriginKey = "stripeCustomerId";
+        private static readonly PaymentOriginKeyType PaymentOriginKeyType = PaymentOriginKeyType.Stripe;
         private static readonly string CountryCode = "GB";
         private static readonly string CreditCardPrefix = "123456";
         private static readonly string IpAddress = "1.1.1.1";
@@ -70,6 +71,7 @@
                         UserId.Value,
                         null,
                         null,
+                        default(PaymentOriginKeyType),
                         null,
                         null,
                         null,
@@ -97,7 +99,8 @@
                     Update = new UserPaymentOrigin(
                         UserId.Value,
                         null,
-                        StripeCustomerId,
+                        PaymentOriginKey,
+                        PaymentOriginKeyType,
                         CountryCode,
                         CreditCardPrefix,
                         IpAddress,
@@ -119,7 +122,8 @@
                 origin = new UserPaymentOrigin(
                     UserId.Value,
                     user,
-                    StripeCustomerId,
+                    PaymentOriginKey,
+                    PaymentOriginKeyType,
                     CountryCode,
                     CreditCardPrefix,
                     IpAddress,

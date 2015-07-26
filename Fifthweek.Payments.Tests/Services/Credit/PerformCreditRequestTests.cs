@@ -25,7 +25,7 @@
         private static readonly Requester Requester = Requester.Authenticated(UserId);
 
         private static readonly TaxamoTransactionResult TaxamoTransaction = new TaxamoTransactionResult("key", new AmountInUsCents(10), new AmountInUsCents(12), new AmountInUsCents(2), 0.2m, "VAT", "GB", "England");
-        private static readonly UserPaymentOriginResult Origin = new UserPaymentOriginResult("stripeCustomerId", "GB", "12345", "1.1.1.1", "ttk", PaymentStatus.Retry1);
+        private static readonly UserPaymentOriginResult Origin = new UserPaymentOriginResult("stripeCustomerId", PaymentOriginKeyType.Stripe, "GB", "12345", "1.1.1.1", "ttk", PaymentStatus.Retry1);
 
         private Mock<ITimestampCreator> timestampCreator;
         private Mock<IPerformStripeCharge> performStripeCharge;
@@ -74,7 +74,7 @@
             this.guidCreator.Setup(v => v.CreateSqlSequential()).Returns(TransactionReference);
 
             this.performStripeCharge.Setup(v => v.ExecuteAsync(
-                Origin.StripeCustomerId,
+                Origin.PaymentOriginKey,
                 TaxamoTransaction.TotalAmount,
                 UserId,
                 TransactionReference,
@@ -94,7 +94,7 @@
             this.guidCreator.Setup(v => v.CreateSqlSequential()).Returns(TransactionReference);
 
             this.performStripeCharge.Setup(v => v.ExecuteAsync(
-                Origin.StripeCustomerId,
+                Origin.PaymentOriginKey,
                 TaxamoTransaction.TotalAmount,
                 UserId,
                 TransactionReference,

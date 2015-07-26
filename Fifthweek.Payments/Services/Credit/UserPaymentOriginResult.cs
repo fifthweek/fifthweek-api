@@ -20,7 +20,10 @@
         }
 
         [Optional]
-        public string StripeCustomerId { get; private set; }
+        public string PaymentOriginKey { get; private set; }
+
+        [Optional]
+        public PaymentOriginKeyType PaymentOriginKeyType { get; private set; }
 
         [Optional]
         public string CountryCode { get; private set; }

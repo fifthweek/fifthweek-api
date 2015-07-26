@@ -473,7 +473,7 @@
 
                     channelSubscriptions.Add(new ChannelSubscription(ChannelIds[0].Value, null, SubscribedUserIdNoBalance.Value, null, ChannelPrice, Now, Now));
                     channelSubscriptions.Add(new ChannelSubscription(ChannelIds[1].Value, null, SubscribedUserIdNoBalance.Value, null, ChannelPrice, Now, Now));
-                    origins.Add(new UserPaymentOrigin(SubscribedUserIdNoBalance.Value, null, null, null, null, null, null, PaymentStatus.Failed));
+                    origins.Add(new UserPaymentOrigin(SubscribedUserIdNoBalance.Value, null, null, default(PaymentOriginKeyType), null, null, null, null, PaymentStatus.Failed));
 
                     // The query should round down to zero for account balance.
                     channelSubscriptions.Add(new ChannelSubscription(ChannelIds[0].Value, null, SubscribedUserIdZeroBalance.Value, null, ChannelPrice, Now, Now));
@@ -485,7 +485,7 @@
                     channelSubscriptions.Add(new ChannelSubscription(ChannelIds[1].Value, null, SubscribedUserIdZeroBalancePaymentInProgress.Value, null, ChannelPrice, Now, Now));
                     calculatedAccountBalances.Add(new CalculatedAccountBalance(SubscribedUserIdZeroBalancePaymentInProgress.Value, LedgerAccountType.FifthweekCredit, Now.AddDays(-1), 10));
                     calculatedAccountBalances.Add(new CalculatedAccountBalance(SubscribedUserIdZeroBalancePaymentInProgress.Value, LedgerAccountType.FifthweekCredit, Now, 0.8m));
-                    origins.Add(new UserPaymentOrigin(SubscribedUserIdZeroBalancePaymentInProgress.Value, null, null, null, null, null, null, PaymentStatus.Retry1));
+                    origins.Add(new UserPaymentOrigin(SubscribedUserIdZeroBalancePaymentInProgress.Value, null, null, default(PaymentOriginKeyType), null, null, null, null, PaymentStatus.Retry1));
 
                     channelSubscriptions.Add(new ChannelSubscription(ChannelIds[0].Value, null, SubscribedLowPriceUserId.Value, null, ChannelPrice / 2, Now, Now));
                     channelSubscriptions.Add(new ChannelSubscription(ChannelIds[1].Value, null, SubscribedLowPriceUserId.Value, null, ChannelPrice / 2, Now, Now));

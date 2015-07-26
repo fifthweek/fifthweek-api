@@ -5,6 +5,7 @@
     using Fifthweek.Api.Core;
     using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.Api.Persistence.Identity;
+    using Fifthweek.Api.Persistence.Payments;
     using Fifthweek.CodeGeneration;
     using Fifthweek.Payments;
     using Fifthweek.Payments.Services.Credit;
@@ -32,26 +33,31 @@
 
             var origin = await this.getUserPaymentOrigin.ExecuteAsync(command.UserId);
 
-            var stripeCustomerId = origin == null ? null : origin.StripeCustomerId;
+            var paymentOriginKey = origin == null ? null : origin.PaymentOriginKey;
+            var paymentOriginKeyType = origin == null ? PaymentOriginKeyType.None : origin.PaymentOriginKeyType;
 
             if (command.StripeToken != null)
             {
-                if (stripeCustomerId != null)
+                paymentOriginKeyType = PaymentOriginKeyType.Stripe;
+                if (paymentOriginKey != null && paymentOriginKeyType == PaymentOriginKeyType.Stripe)
                 {
                     // If exists, update customer in stripe.
-                    await this.updateStripeCustomerCreditCard.ExecuteAsync(command.UserId, stripeCustomerId, command.StripeToken.Value, userType);
+                    await this.updateStripeCustomerCreditCard.ExecuteAsync(
+                        command.UserId, paymentOriginKey, command.StripeToken.Value, userType);
                 }
                 else
                 {
                     // If not exists, create customer in stripe.
-                    stripeCustomerId = await this.createStripeCustomer.ExecuteAsync(command.UserId, command.StripeToken.Value, userType);
+                    paymentOriginKey = await this.createStripeCustomer.ExecuteAsync(
+                        command.UserId, command.StripeToken.Value, userType);
                 }
             }
 
             // Update origin.
             await this.setUserPaymentOrigin.ExecuteAsync(
                 command.UserId,
-                stripeCustomerId,
+                paymentOriginKey,
+                paymentOriginKeyType,
                 command.CountryCode,
                 command.CreditCardPrefix,
                 command.IpAddress);

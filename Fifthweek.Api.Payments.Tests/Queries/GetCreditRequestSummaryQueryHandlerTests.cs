@@ -40,7 +40,7 @@
                 ValidIpAddress.Parse("2.2.2.2")));
 
         private static readonly TaxamoCalculationResult TaxamoTransaction = new TaxamoCalculationResult(new AmountInUsCents(10), new AmountInUsCents(12), new AmountInUsCents(2), 0.2m, "VAT", "GB", "England", null);
-        private static readonly UserPaymentOriginResult Origin = new UserPaymentOriginResult("stripeCustomerId", "GB", "12345", "1.1.1.1", "ttk", PaymentStatus.Retry1);
+        private static readonly UserPaymentOriginResult Origin = new UserPaymentOriginResult("stripeCustomerId", PaymentOriginKeyType.Stripe, "GB", "12345", "1.1.1.1", "ttk", PaymentStatus.Retry1);
 
         private Mock<IRequesterSecurity> requesterSecurity;
         private Mock<IGetUserPaymentOriginDbStatement> getUserPaymentOrigin;
