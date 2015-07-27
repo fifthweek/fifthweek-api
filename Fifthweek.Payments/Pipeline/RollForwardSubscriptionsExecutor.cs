@@ -10,6 +10,8 @@ namespace Fifthweek.Payments.Pipeline
 
     public class RollForwardSubscriptionsExecutor : IRollForwardSubscriptionsExecutor
     {
+        private const int DaysInWeek = 7;
+
         /// <summary>
         /// This method "rolls forward" subscriptions, which means if the user unsubscribed we
         /// make sure the subscription is billed until the end of their billing period by extending
@@ -28,10 +30,10 @@ namespace Fifthweek.Payments.Pipeline
 
                 foreach (var subscription in snapshot.SubscriberChannels.SubscribedChannels)
                 {
-                    var billingWeekEndDateExclusive =
-                        BillingWeekUtilities.CalculateBillingWeekEndDateExclusive(
-                            subscription.SubscriptionStartDate,
-                            snapshot.Timestamp);
+                    var billingWeekEndDateExclusive = BillingWeekUtilities.CalculateBillingWeekEndDateExclusive(
+                        subscription.SubscriptionStartDate,
+                        snapshot.Timestamp);
+
                     ActiveSubscription activeSubscription;
                     if (activeSubscriptions.TryGetValue(subscription.ChannelId, out activeSubscription))
                     {
@@ -40,10 +42,13 @@ namespace Fifthweek.Payments.Pipeline
                         // If they restarted their subscription before the minumum end date of their
                         // previous subscription, then we do not reset the minimum end date yet.
                         // However if they exceed that billing week then the new subscription's billing week will be used.
-                        if (snapshot.Timestamp >= activeSubscription.BillingWeekEndDateExclusive)
+                        if (snapshot.Timestamp < activeSubscription.BillingWeekEndDateExclusive)
                         {
-                            activeSubscription.BillingWeekEndDateExclusive = billingWeekEndDateExclusive;
+                            billingWeekEndDateExclusive = activeSubscription.BillingWeekEndDateExclusive;
                         }
+
+                        activeSubscription = new ActiveSubscription(billingWeekEndDateExclusive, subscription);
+                        activeSubscriptions[subscription.ChannelId] = activeSubscription;
                     }
                     else
                     {
@@ -60,8 +65,14 @@ namespace Fifthweek.Payments.Pipeline
                     {
                         // The subscriber has unsubscribed from this channel.
                         var billingWeekFinalSnapshotTime = this.GetBillingWeekFinalSnapshotTime(activeSubscription.BillingWeekEndDateExclusive);
-                        
-                        if (snapshot.Timestamp == billingWeekFinalSnapshotTime)
+
+                        var subscriptionDuration = snapshot.Timestamp - activeSubscription.Subscription.SubscriptionStartDate;
+                        if (subscriptionDuration.TotalDays > DaysInWeek)
+                        {
+                            // We have exceeded the minimum subscripion period, so there is nothing to adjust.
+                            activeSubscriptions.Remove(activeSubscription.Subscription.ChannelId);
+                        }
+                        else if (snapshot.Timestamp == billingWeekFinalSnapshotTime)
                         {
                             // We are at the end of the billing week, so there is nothing to adjust.
                             activeSubscriptions.Remove(activeSubscription.Subscription.ChannelId);

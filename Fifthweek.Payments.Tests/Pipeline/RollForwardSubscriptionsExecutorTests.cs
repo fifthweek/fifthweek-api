@@ -45,17 +45,17 @@
         {
             var input = new List<MergedSnapshot> 
             {
-                CreateSnapshot(Now.AddDays(0), true, true),
-                CreateSnapshot(Now.AddDays(1), true, true),
-                CreateSnapshot(Now.AddDays(3), true, false),
+                CreateSnapshot(SubscriptionStartDate, Now.AddDays(0), true, true),
+                CreateSnapshot(SubscriptionStartDate, Now.AddDays(1), true, true),
+                CreateSnapshot(SubscriptionStartDate, Now.AddDays(3), true, false),
             };
 
             var expectedResult = new List<MergedSnapshot> 
             {
-                CreateSnapshot(Now.AddDays(0), true, true),
-                CreateSnapshot(Now.AddDays(1), true, true),
-                CreateSnapshot(Now.AddDays(3), true, true),
-                CreateSnapshot(SubscriptionFinalDate, true, false, Now.AddDays(3)),
+                CreateSnapshot(SubscriptionStartDate, Now.AddDays(0), true, true),
+                CreateSnapshot(SubscriptionStartDate, Now.AddDays(1), true, true),
+                CreateSnapshot(SubscriptionStartDate, Now.AddDays(3), true, true),
+                CreateSnapshot(SubscriptionStartDate, SubscriptionFinalDate, true, false, Now.AddDays(3)),
             };
 
             var result = this.target.Execute(EndTimeExclusive, input);
@@ -68,21 +68,21 @@
         {
             var input = new List<MergedSnapshot> 
             {
-                CreateSnapshot(Now.AddDays(0), true, true),
-                CreateSnapshot(Now.AddDays(1), true, true),
-                CreateSnapshot(Now.AddDays(3), true, false),
-                CreateSnapshot(Now.AddDays(4), true, false),
-                CreateSnapshot(Now.AddDays(6), true, false),
+                CreateSnapshot(SubscriptionStartDate, Now.AddDays(0), true, true),
+                CreateSnapshot(SubscriptionStartDate, Now.AddDays(1), true, true),
+                CreateSnapshot(SubscriptionStartDate, Now.AddDays(3), true, false),
+                CreateSnapshot(SubscriptionStartDate, Now.AddDays(4), true, false),
+                CreateSnapshot(SubscriptionStartDate, Now.AddDays(6), true, false),
             };
 
             var expectedResult = new List<MergedSnapshot> 
             {
-                CreateSnapshot(Now.AddDays(0), true, true),
-                CreateSnapshot(Now.AddDays(1), true, true),
-                CreateSnapshot(Now.AddDays(3), true, true),
-                CreateSnapshot(Now.AddDays(4), true, true),
-                CreateSnapshot(SubscriptionFinalDate, true, false, Now.AddDays(4)),
-                CreateSnapshot(Now.AddDays(6), true, false),
+                CreateSnapshot(SubscriptionStartDate, Now.AddDays(0), true, true),
+                CreateSnapshot(SubscriptionStartDate, Now.AddDays(1), true, true),
+                CreateSnapshot(SubscriptionStartDate, Now.AddDays(3), true, true),
+                CreateSnapshot(SubscriptionStartDate, Now.AddDays(4), true, true),
+                CreateSnapshot(SubscriptionStartDate, SubscriptionFinalDate, true, false, Now.AddDays(4)),
+                CreateSnapshot(SubscriptionStartDate, Now.AddDays(6), true, false),
             };
 
             var result = this.target.Execute(EndTimeExclusive, input);
@@ -95,18 +95,18 @@
         {
             var input = new List<MergedSnapshot> 
             {
-                CreateSnapshot(Now.AddDays(0), true, true),
-                CreateSnapshot(Now.AddDays(1), true, true),
-                CreateSnapshot(Now.AddDays(3), true, false),
-                CreateSnapshot(SubscriptionFinalDate, true, false),
+                CreateSnapshot(SubscriptionStartDate, Now.AddDays(0), true, true),
+                CreateSnapshot(SubscriptionStartDate, Now.AddDays(1), true, true),
+                CreateSnapshot(SubscriptionStartDate, Now.AddDays(3), true, false),
+                CreateSnapshot(SubscriptionStartDate, SubscriptionFinalDate, true, false),
             };
 
             var expectedResult = new List<MergedSnapshot> 
             {
-                CreateSnapshot(Now.AddDays(0), true, true),
-                CreateSnapshot(Now.AddDays(1), true, true),
-                CreateSnapshot(Now.AddDays(3), true, true),
-                CreateSnapshot(SubscriptionFinalDate, true, false),
+                CreateSnapshot(SubscriptionStartDate, Now.AddDays(0), true, true),
+                CreateSnapshot(SubscriptionStartDate, Now.AddDays(1), true, true),
+                CreateSnapshot(SubscriptionStartDate, Now.AddDays(3), true, true),
+                CreateSnapshot(SubscriptionStartDate, SubscriptionFinalDate, true, false),
             };
 
             var result = this.target.Execute(EndTimeExclusive, input);
@@ -119,21 +119,21 @@
         {
             var input = new List<MergedSnapshot> 
             {
-                CreateSnapshot(Now.AddDays(0), true, true),
-                CreateSnapshot(Now.AddDays(1), true, true),
-                CreateSnapshot(Now.AddDays(3), true, false),
-                CreateSnapshot(Now.AddDays(3.5), true, false),
-                CreateSnapshot(Now.AddDays(4), true, false),
+                CreateSnapshot(SubscriptionStartDate, Now.AddDays(0), true, true),
+                CreateSnapshot(SubscriptionStartDate, Now.AddDays(1), true, true),
+                CreateSnapshot(SubscriptionStartDate, Now.AddDays(3), true, false),
+                CreateSnapshot(SubscriptionStartDate, Now.AddDays(3.5), true, false),
+                CreateSnapshot(SubscriptionStartDate, Now.AddDays(4), true, false),
             };
 
             var expectedResult = new List<MergedSnapshot> 
             {
-                CreateSnapshot(Now.AddDays(0), true, true),
-                CreateSnapshot(Now.AddDays(1), true, true),
-                CreateSnapshot(Now.AddDays(3), true, true),
-                CreateSnapshot(Now.AddDays(3.5), true, true),
-                CreateSnapshot(Now.AddDays(4), true, true),
-                CreateSnapshot(SubscriptionFinalDate, true, false, Now.AddDays(4)),
+                CreateSnapshot(SubscriptionStartDate, Now.AddDays(0), true, true),
+                CreateSnapshot(SubscriptionStartDate, Now.AddDays(1), true, true),
+                CreateSnapshot(SubscriptionStartDate, Now.AddDays(3), true, true),
+                CreateSnapshot(SubscriptionStartDate, Now.AddDays(3.5), true, true),
+                CreateSnapshot(SubscriptionStartDate, Now.AddDays(4), true, true),
+                CreateSnapshot(SubscriptionStartDate, SubscriptionFinalDate, true, false, Now.AddDays(4)),
             };
 
             var result = this.target.Execute(EndTimeExclusive, input);
@@ -146,16 +146,16 @@
         {
             var input = new List<MergedSnapshot> 
             {
-                CreateSnapshot(Now.AddDays(0), true, true),
-                CreateSnapshot(Now.AddDays(1), true, true),
-                CreateSnapshot(SubscriptionFinalDate, true, false),
+                CreateSnapshot(SubscriptionStartDate, Now.AddDays(0), true, true),
+                CreateSnapshot(SubscriptionStartDate, Now.AddDays(1), true, true),
+                CreateSnapshot(SubscriptionStartDate, SubscriptionFinalDate, true, false),
             };
 
             var expectedResult = new List<MergedSnapshot> 
             {
-                CreateSnapshot(Now.AddDays(0), true, true),
-                CreateSnapshot(Now.AddDays(1), true, true),
-                CreateSnapshot(SubscriptionFinalDate, true, false),
+                CreateSnapshot(SubscriptionStartDate, Now.AddDays(0), true, true),
+                CreateSnapshot(SubscriptionStartDate, Now.AddDays(1), true, true),
+                CreateSnapshot(SubscriptionStartDate, SubscriptionFinalDate, true, false),
             };
 
             var result = this.target.Execute(EndTimeExclusive, input);
@@ -168,18 +168,18 @@
         {
             var input = new List<MergedSnapshot> 
             {
-                CreateSnapshot(Now.AddDays(0), true, true),
-                CreateSnapshot(Now.AddDays(1), true, true),
-                CreateSnapshot(SubscriptionFinalDate, true, false),
-                CreateSnapshot(Now.AddDays(6), true, false),
+                CreateSnapshot(SubscriptionStartDate, Now.AddDays(0), true, true),
+                CreateSnapshot(SubscriptionStartDate, Now.AddDays(1), true, true),
+                CreateSnapshot(SubscriptionStartDate, SubscriptionFinalDate, true, false),
+                CreateSnapshot(SubscriptionStartDate, Now.AddDays(6), true, false),
             };
 
             var expectedResult = new List<MergedSnapshot> 
             {
-                CreateSnapshot(Now.AddDays(0), true, true),
-                CreateSnapshot(Now.AddDays(1), true, true),
-                CreateSnapshot(SubscriptionFinalDate, true, false),
-                CreateSnapshot(Now.AddDays(6), true, false),
+                CreateSnapshot(SubscriptionStartDate, Now.AddDays(0), true, true),
+                CreateSnapshot(SubscriptionStartDate, Now.AddDays(1), true, true),
+                CreateSnapshot(SubscriptionStartDate, SubscriptionFinalDate, true, false),
+                CreateSnapshot(SubscriptionStartDate, Now.AddDays(6), true, false),
             };
 
             var result = this.target.Execute(EndTimeExclusive, input);
@@ -192,16 +192,16 @@
         {
             var input = new List<MergedSnapshot> 
             {
-                CreateSnapshot(Now.AddDays(0), true, true),
-                CreateSnapshot(Now.AddDays(1), true, true),
-                CreateSnapshot(Now.AddDays(3), false, false),
+                CreateSnapshot(SubscriptionStartDate, Now.AddDays(0), true, true),
+                CreateSnapshot(SubscriptionStartDate, Now.AddDays(1), true, true),
+                CreateSnapshot(SubscriptionStartDate, Now.AddDays(3), false, false),
             };
 
             var expectedResult = new List<MergedSnapshot> 
             {
-                CreateSnapshot(Now.AddDays(0), true, true),
-                CreateSnapshot(Now.AddDays(1), true, true),
-                CreateSnapshot(Now.AddDays(3), false, false),
+                CreateSnapshot(SubscriptionStartDate, Now.AddDays(0), true, true),
+                CreateSnapshot(SubscriptionStartDate, Now.AddDays(1), true, true),
+                CreateSnapshot(SubscriptionStartDate, Now.AddDays(3), false, false),
             };
 
             var result = this.target.Execute(EndTimeExclusive, input);
@@ -214,20 +214,20 @@
         {
             var input = new List<MergedSnapshot> 
             {
-                CreateSnapshot(Now.AddDays(0), true, true),
-                CreateSnapshot(Now.AddDays(1), true, true),
-                CreateSnapshot(Now.AddDays(3), false, false),
-                CreateSnapshot(Now.AddDays(4), false, false),
-                CreateSnapshot(Now.AddDays(6), false, false),
+                CreateSnapshot(SubscriptionStartDate, Now.AddDays(0), true, true),
+                CreateSnapshot(SubscriptionStartDate, Now.AddDays(1), true, true),
+                CreateSnapshot(SubscriptionStartDate, Now.AddDays(3), false, false),
+                CreateSnapshot(SubscriptionStartDate, Now.AddDays(4), false, false),
+                CreateSnapshot(SubscriptionStartDate, Now.AddDays(6), false, false),
             };
 
             var expectedResult = new List<MergedSnapshot> 
             {
-                CreateSnapshot(Now.AddDays(0), true, true),
-                CreateSnapshot(Now.AddDays(1), true, true),
-                CreateSnapshot(Now.AddDays(3), false, false),
-                CreateSnapshot(Now.AddDays(4), false, false),
-                CreateSnapshot(Now.AddDays(6), false, false),
+                CreateSnapshot(SubscriptionStartDate, Now.AddDays(0), true, true),
+                CreateSnapshot(SubscriptionStartDate, Now.AddDays(1), true, true),
+                CreateSnapshot(SubscriptionStartDate, Now.AddDays(3), false, false),
+                CreateSnapshot(SubscriptionStartDate, Now.AddDays(4), false, false),
+                CreateSnapshot(SubscriptionStartDate, Now.AddDays(6), false, false),
             };
 
             var result = this.target.Execute(EndTimeExclusive, input);
@@ -240,20 +240,20 @@
         {
             var input = new List<MergedSnapshot> 
             {
-                CreateSnapshot(Now.AddDays(0), true, true),
-                CreateSnapshot(Now.AddDays(1), true, true),
-                CreateSnapshot(Now.AddDays(3), false, false),
-                CreateSnapshot(Now.AddDays(4), true, false),
-                CreateSnapshot(Now.AddDays(6), true, false),
+                CreateSnapshot(SubscriptionStartDate, Now.AddDays(0), true, true),
+                CreateSnapshot(SubscriptionStartDate, Now.AddDays(1), true, true),
+                CreateSnapshot(SubscriptionStartDate, Now.AddDays(3), false, false),
+                CreateSnapshot(SubscriptionStartDate, Now.AddDays(4), true, false),
+                CreateSnapshot(SubscriptionStartDate, Now.AddDays(6), true, false),
             };
 
             var expectedResult = new List<MergedSnapshot> 
             {
-                CreateSnapshot(Now.AddDays(0), true, true),
-                CreateSnapshot(Now.AddDays(1), true, true),
-                CreateSnapshot(Now.AddDays(3), false, false),
-                CreateSnapshot(Now.AddDays(4), true, false),
-                CreateSnapshot(Now.AddDays(6), true, false),
+                CreateSnapshot(SubscriptionStartDate, Now.AddDays(0), true, true),
+                CreateSnapshot(SubscriptionStartDate, Now.AddDays(1), true, true),
+                CreateSnapshot(SubscriptionStartDate, Now.AddDays(3), false, false),
+                CreateSnapshot(SubscriptionStartDate, Now.AddDays(4), true, false),
+                CreateSnapshot(SubscriptionStartDate, Now.AddDays(6), true, false),
             };
 
             var result = this.target.Execute(EndTimeExclusive, input);
@@ -266,20 +266,20 @@
         {
             var input = new List<MergedSnapshot> 
             {
-                CreateSnapshot(Now.AddDays(0), true, true),
-                CreateSnapshot(Now.AddDays(1), true, true),
-                CreateSnapshot(Now.AddDays(3), true, false),
-                CreateSnapshot(Now.AddDays(4), false, false),
-                CreateSnapshot(Now.AddDays(6), false, false),
+                CreateSnapshot(SubscriptionStartDate, Now.AddDays(0), true, true),
+                CreateSnapshot(SubscriptionStartDate, Now.AddDays(1), true, true),
+                CreateSnapshot(SubscriptionStartDate, Now.AddDays(3), true, false),
+                CreateSnapshot(SubscriptionStartDate, Now.AddDays(4), false, false),
+                CreateSnapshot(SubscriptionStartDate, Now.AddDays(6), false, false),
             };
 
             var expectedResult = new List<MergedSnapshot> 
             {
-                CreateSnapshot(Now.AddDays(0), true, true),
-                CreateSnapshot(Now.AddDays(1), true, true),
-                CreateSnapshot(Now.AddDays(3), true, true),
-                CreateSnapshot(Now.AddDays(4), false, false),
-                CreateSnapshot(Now.AddDays(6), false, false),
+                CreateSnapshot(SubscriptionStartDate, Now.AddDays(0), true, true),
+                CreateSnapshot(SubscriptionStartDate, Now.AddDays(1), true, true),
+                CreateSnapshot(SubscriptionStartDate, Now.AddDays(3), true, true),
+                CreateSnapshot(SubscriptionStartDate, Now.AddDays(4), false, false),
+                CreateSnapshot(SubscriptionStartDate, Now.AddDays(6), false, false),
             };
 
             var result = this.target.Execute(EndTimeExclusive, input);
@@ -292,21 +292,21 @@
         {
             var input = new List<MergedSnapshot> 
             {
-                CreateSnapshot(Now.AddDays(0), true, true),
-                CreateSnapshot(Now.AddDays(1), true, true),
-                CreateSnapshot(Now.AddDays(3), true, false),
-                CreateSnapshot(Now.AddDays(4), true, false),
-                CreateSnapshot(Now.AddDays(6), false, false),
+                CreateSnapshot(SubscriptionStartDate, Now.AddDays(0), true, true),
+                CreateSnapshot(SubscriptionStartDate, Now.AddDays(1), true, true),
+                CreateSnapshot(SubscriptionStartDate, Now.AddDays(3), true, false),
+                CreateSnapshot(SubscriptionStartDate, Now.AddDays(4), true, false),
+                CreateSnapshot(SubscriptionStartDate, Now.AddDays(6), false, false),
             };
 
             var expectedResult = new List<MergedSnapshot> 
             {
-                CreateSnapshot(Now.AddDays(0), true, true),
-                CreateSnapshot(Now.AddDays(1), true, true),
-                CreateSnapshot(Now.AddDays(3), true, true),
-                CreateSnapshot(Now.AddDays(4), true, true),
-                CreateSnapshot(SubscriptionFinalDate, true, false, Now.AddDays(4)),
-                CreateSnapshot(Now.AddDays(6), false, false),
+                CreateSnapshot(SubscriptionStartDate, Now.AddDays(0), true, true),
+                CreateSnapshot(SubscriptionStartDate, Now.AddDays(1), true, true),
+                CreateSnapshot(SubscriptionStartDate, Now.AddDays(3), true, true),
+                CreateSnapshot(SubscriptionStartDate, Now.AddDays(4), true, true),
+                CreateSnapshot(SubscriptionStartDate, SubscriptionFinalDate, true, false, Now.AddDays(4)),
+                CreateSnapshot(SubscriptionStartDate, Now.AddDays(6), false, false),
             };
 
             var result = this.target.Execute(EndTimeExclusive, input);
@@ -319,23 +319,23 @@
         {
             var input = new List<MergedSnapshot> 
             {
-                CreateSnapshot(Now.AddDays(0), true, true),
-                CreateSnapshot(Now.AddDays(1), true, true),
-                CreateSnapshot(Now.AddDays(3), true, false),
-                CreateSnapshot(Now.AddDays(3.5), true, true),
-                CreateSnapshot(Now.AddDays(4), true, false),
-                CreateSnapshot(Now.AddDays(6), true, false),
+                CreateSnapshot(SubscriptionStartDate, Now.AddDays(0), true, true),
+                CreateSnapshot(SubscriptionStartDate, Now.AddDays(1), true, true),
+                CreateSnapshot(SubscriptionStartDate, Now.AddDays(3), true, false),
+                CreateSnapshot(Now.AddDays(3.5), Now.AddDays(3.5), true, true),
+                CreateSnapshot(Now.AddDays(3.5), Now.AddDays(4), true, false),
+                CreateSnapshot(Now.AddDays(3.5), Now.AddDays(6), true, false),
             };
 
             var expectedResult = new List<MergedSnapshot> 
             {
-                CreateSnapshot(Now.AddDays(0), true, true),
-                CreateSnapshot(Now.AddDays(1), true, true),
-                CreateSnapshot(Now.AddDays(3), true, true),
-                CreateSnapshot(Now.AddDays(3.5), true, true),
-                CreateSnapshot(Now.AddDays(4), true, true),
-                CreateSnapshot(SubscriptionFinalDate, true, false, Now.AddDays(4)),
-                CreateSnapshot(Now.AddDays(6), true, false),
+                CreateSnapshot(SubscriptionStartDate, Now.AddDays(0), true, true),
+                CreateSnapshot(SubscriptionStartDate, Now.AddDays(1), true, true),
+                CreateSnapshot(SubscriptionStartDate, Now.AddDays(3), true, true),
+                CreateSnapshot(Now.AddDays(3.5), Now.AddDays(3.5), true, true),
+                CreateSnapshot(Now.AddDays(3.5), Now.AddDays(4), true, true),
+                CreateSnapshot(Now.AddDays(3.5), SubscriptionFinalDate, true, false, Now.AddDays(4)),
+                CreateSnapshot(Now.AddDays(3.5), Now.AddDays(6), true, false),
             };
 
             var result = this.target.Execute(EndTimeExclusive, input);
@@ -344,27 +344,55 @@
         }
 
         [TestMethod]
-        public void WhenSubscriptionEndsEarly_AndTheUserBrieflyReSubscribesAfterBillingEndDate_ItShouldBillForAnotherWeek()
+        public void WhenSubscriptionEndsEarly_AndTheUserBrieflyReSubscribesAfterBillingEndDate_ItShouldBillUntilEndOfNewBillingWeek()
         {
             var input = new List<MergedSnapshot> 
             {
-                CreateSnapshot(Now.AddDays(0), true, true),
-                CreateSnapshot(Now.AddDays(1), true, true),
-                CreateSnapshot(Now.AddDays(3), true, false),
-                CreateSnapshot(Now.AddDays(4), true, false),
-                CreateSnapshot(Now.AddDays(6), true, true),
-                CreateSnapshot(Now.AddDays(7), true, false),
+                CreateSnapshot(SubscriptionStartDate, Now.AddDays(0), true, true),
+                CreateSnapshot(SubscriptionStartDate, Now.AddDays(1), true, true),
+                CreateSnapshot(SubscriptionStartDate, Now.AddDays(3), true, false),
+                CreateSnapshot(SubscriptionStartDate, Now.AddDays(4), true, false),
+                CreateSnapshot(Now.AddDays(6), Now.AddDays(6), true, true),
+                CreateSnapshot(Now.AddDays(6), Now.AddDays(7), true, false),
             };
 
             var expectedResult = new List<MergedSnapshot> 
             {
-                CreateSnapshot(Now.AddDays(0), true, true),
-                CreateSnapshot(Now.AddDays(1), true, true),
-                CreateSnapshot(Now.AddDays(3), true, true),
-                CreateSnapshot(Now.AddDays(4), true, true),
-                CreateSnapshot(SubscriptionFinalDate, true, false, Now.AddDays(4)),
-                CreateSnapshot(Now.AddDays(6), true, true),
-                CreateSnapshot(Now.AddDays(7), true, true), // This takes us through to the end of the search period.
+                CreateSnapshot(SubscriptionStartDate, Now.AddDays(0), true, true),
+                CreateSnapshot(SubscriptionStartDate, Now.AddDays(1), true, true),
+                CreateSnapshot(SubscriptionStartDate, Now.AddDays(3), true, true),
+                CreateSnapshot(SubscriptionStartDate, Now.AddDays(4), true, true),
+                CreateSnapshot(SubscriptionStartDate, SubscriptionFinalDate, true, false, Now.AddDays(4)),
+                CreateSnapshot(Now.AddDays(6), Now.AddDays(6), true, true),
+                CreateSnapshot(Now.AddDays(6), Now.AddDays(7), true, true), // This takes us through to the end of the search period.
+            };
+
+            var result = this.target.Execute(EndTimeExclusive, input);
+
+            CollectionAssert.AreEqual(expectedResult, result.ToList());
+        }
+
+        [TestMethod]
+        public void WhenSubscriptionEndsInSecondWeek_ItShouldNotBillUntilEndOfBillingWeek()
+        {
+            var input = new List<MergedSnapshot> 
+            {
+                CreateSnapshot(SubscriptionStartDate, Now.AddDays(0), true, true),
+                CreateSnapshot(SubscriptionStartDate, Now.AddDays(1), true, true),
+                CreateSnapshot(SubscriptionStartDate, Now.AddDays(3), true, true),
+                CreateSnapshot(SubscriptionStartDate, Now.AddDays(4), true, true),
+                CreateSnapshot(SubscriptionStartDate, Now.AddDays(6), true, true),
+                CreateSnapshot(SubscriptionStartDate, Now.AddDays(7), true, false),
+            };
+
+            var expectedResult = new List<MergedSnapshot> 
+            {
+                CreateSnapshot(SubscriptionStartDate, Now.AddDays(0), true, true),
+                CreateSnapshot(SubscriptionStartDate, Now.AddDays(1), true, true),
+                CreateSnapshot(SubscriptionStartDate, Now.AddDays(3), true, true),
+                CreateSnapshot(SubscriptionStartDate, Now.AddDays(4), true, true),
+                CreateSnapshot(SubscriptionStartDate, Now.AddDays(6), true, true),
+                CreateSnapshot(SubscriptionStartDate, Now.AddDays(7), true, false),
             };
 
             var result = this.target.Execute(EndTimeExclusive, input);
@@ -377,21 +405,21 @@
         {
             var input = new List<MergedSnapshot> 
             {
-                CreateSnapshot(Now.AddDays(0), true, true, BillingWeekEndTimeType.Same),
-                CreateSnapshot(Now.AddDays(1), true, true, BillingWeekEndTimeType.Same),
-                CreateSnapshot(Now.AddDays(3), true, false, BillingWeekEndTimeType.Same),
-                CreateSnapshot(Now.AddDays(4), false, false, BillingWeekEndTimeType.Same),
-                CreateSnapshot(Now.AddDays(6), false, false, BillingWeekEndTimeType.Same),
+                CreateSnapshot(SubscriptionStartDate, Now.AddDays(0), true, true, BillingWeekEndTimeType.Same),
+                CreateSnapshot(SubscriptionStartDate, Now.AddDays(1), true, true, BillingWeekEndTimeType.Same),
+                CreateSnapshot(SubscriptionStartDate, Now.AddDays(3), true, false, BillingWeekEndTimeType.Same),
+                CreateSnapshot(SubscriptionStartDate, Now.AddDays(4), false, false, BillingWeekEndTimeType.Same),
+                CreateSnapshot(SubscriptionStartDate, Now.AddDays(6), false, false, BillingWeekEndTimeType.Same),
             };
 
             var expectedResult = new List<MergedSnapshot> 
             {
-                CreateSnapshot(Now.AddDays(0), true, true, BillingWeekEndTimeType.Same),
-                CreateSnapshot(Now.AddDays(1), true, true, BillingWeekEndTimeType.Same),
-                CreateSnapshot(Now.AddDays(3), true, true, BillingWeekEndTimeType.Same),
-                CreateSnapshot(Now.AddDays(4), true, true, BillingWeekEndTimeType.Same),
-                CreateSnapshot(SubscriptionFinalDate, false, false, BillingWeekEndTimeType.Same, Now.AddDays(4)),
-                CreateSnapshot(Now.AddDays(6), false, false, BillingWeekEndTimeType.Same),
+                CreateSnapshot(SubscriptionStartDate, Now.AddDays(0), true, true, BillingWeekEndTimeType.Same),
+                CreateSnapshot(SubscriptionStartDate, Now.AddDays(1), true, true, BillingWeekEndTimeType.Same),
+                CreateSnapshot(SubscriptionStartDate, Now.AddDays(3), true, true, BillingWeekEndTimeType.Same),
+                CreateSnapshot(SubscriptionStartDate, Now.AddDays(4), true, true, BillingWeekEndTimeType.Same),
+                CreateSnapshot(SubscriptionStartDate, SubscriptionFinalDate, false, false, BillingWeekEndTimeType.Same, Now.AddDays(4)),
+                CreateSnapshot(SubscriptionStartDate, Now.AddDays(6), false, false, BillingWeekEndTimeType.Same),
             };
 
             var result = this.target.Execute(EndTimeExclusive, input);
@@ -404,22 +432,22 @@
         {
             var input = new List<MergedSnapshot> 
             {
-                CreateSnapshot(Now.AddDays(0), true, true, BillingWeekEndTimeType.Channel1First),
-                CreateSnapshot(Now.AddDays(1), true, true, BillingWeekEndTimeType.Channel1First),
-                CreateSnapshot(Now.AddDays(3), true, false, BillingWeekEndTimeType.Channel1First),
-                CreateSnapshot(Now.AddDays(4), false, false, BillingWeekEndTimeType.Channel1First),
-                CreateSnapshot(Now.AddDays(6), false, false, BillingWeekEndTimeType.Channel1First),
+                CreateSnapshot(SubscriptionStartDate, Now.AddDays(0), true, true, BillingWeekEndTimeType.Channel1First),
+                CreateSnapshot(SubscriptionStartDate, Now.AddDays(1), true, true, BillingWeekEndTimeType.Channel1First),
+                CreateSnapshot(SubscriptionStartDate, Now.AddDays(3), true, false, BillingWeekEndTimeType.Channel1First),
+                CreateSnapshot(SubscriptionStartDate, Now.AddDays(4), false, false, BillingWeekEndTimeType.Channel1First),
+                CreateSnapshot(SubscriptionStartDate, Now.AddDays(6), false, false, BillingWeekEndTimeType.Channel1First),
             };
 
             var expectedResult = new List<MergedSnapshot> 
             {
-                CreateSnapshot(Now.AddDays(0), true, true, BillingWeekEndTimeType.Channel1First),
-                CreateSnapshot(Now.AddDays(1), true, true, BillingWeekEndTimeType.Channel1First),
-                CreateSnapshot(Now.AddDays(3), true, true, BillingWeekEndTimeType.Channel1First),
-                CreateSnapshot(Now.AddDays(4), true, true, BillingWeekEndTimeType.Channel1First),
-                CreateSnapshot(SubscriptionFinalDate, false, true, BillingWeekEndTimeType.Channel1First, Now.AddDays(4)),
-                CreateSnapshot(SubscriptionFinalDate.AddMinutes(10), false, false, BillingWeekEndTimeType.Channel1First, Now.AddDays(4)),
-                CreateSnapshot(Now.AddDays(6), false, false, BillingWeekEndTimeType.Channel1First),
+                CreateSnapshot(SubscriptionStartDate, Now.AddDays(0), true, true, BillingWeekEndTimeType.Channel1First),
+                CreateSnapshot(SubscriptionStartDate, Now.AddDays(1), true, true, BillingWeekEndTimeType.Channel1First),
+                CreateSnapshot(SubscriptionStartDate, Now.AddDays(3), true, true, BillingWeekEndTimeType.Channel1First),
+                CreateSnapshot(SubscriptionStartDate, Now.AddDays(4), true, true, BillingWeekEndTimeType.Channel1First),
+                CreateSnapshot(SubscriptionStartDate, SubscriptionFinalDate, false, true, BillingWeekEndTimeType.Channel1First, Now.AddDays(4)),
+                CreateSnapshot(SubscriptionStartDate, SubscriptionFinalDate.AddMinutes(10), false, false, BillingWeekEndTimeType.Channel1First, Now.AddDays(4)),
+                CreateSnapshot(SubscriptionStartDate, Now.AddDays(6), false, false, BillingWeekEndTimeType.Channel1First),
             };
 
             var result = this.target.Execute(EndTimeExclusive, input);
@@ -432,22 +460,22 @@
         {
             var input = new List<MergedSnapshot> 
             {
-                CreateSnapshot(Now.AddDays(0), true, true, BillingWeekEndTimeType.Channel2First),
-                CreateSnapshot(Now.AddDays(1), true, true, BillingWeekEndTimeType.Channel2First),
-                CreateSnapshot(Now.AddDays(3), true, false, BillingWeekEndTimeType.Channel2First),
-                CreateSnapshot(Now.AddDays(4), false, false, BillingWeekEndTimeType.Channel2First),
-                CreateSnapshot(Now.AddDays(6), false, false, BillingWeekEndTimeType.Channel2First),
+                CreateSnapshot(SubscriptionStartDate, Now.AddDays(0), true, true, BillingWeekEndTimeType.Channel2First),
+                CreateSnapshot(SubscriptionStartDate, Now.AddDays(1), true, true, BillingWeekEndTimeType.Channel2First),
+                CreateSnapshot(SubscriptionStartDate, Now.AddDays(3), true, false, BillingWeekEndTimeType.Channel2First),
+                CreateSnapshot(SubscriptionStartDate, Now.AddDays(4), false, false, BillingWeekEndTimeType.Channel2First),
+                CreateSnapshot(SubscriptionStartDate, Now.AddDays(6), false, false, BillingWeekEndTimeType.Channel2First),
             };
 
             var expectedResult = new List<MergedSnapshot> 
             {
-                CreateSnapshot(Now.AddDays(0), true, true, BillingWeekEndTimeType.Channel2First),
-                CreateSnapshot(Now.AddDays(1), true, true, BillingWeekEndTimeType.Channel2First),
-                CreateSnapshot(Now.AddDays(3), true, true, BillingWeekEndTimeType.Channel2First),
-                CreateSnapshot(Now.AddDays(4), true, true, BillingWeekEndTimeType.Channel2First),
-                CreateSnapshot(SubscriptionFinalDate, true, false, BillingWeekEndTimeType.Channel2First, Now.AddDays(4)),
-                CreateSnapshot(SubscriptionFinalDate.AddMinutes(10), false, false, BillingWeekEndTimeType.Channel2First, Now.AddDays(4)),
-                CreateSnapshot(Now.AddDays(6), false, false, BillingWeekEndTimeType.Channel2First),
+                CreateSnapshot(SubscriptionStartDate, Now.AddDays(0), true, true, BillingWeekEndTimeType.Channel2First),
+                CreateSnapshot(SubscriptionStartDate, Now.AddDays(1), true, true, BillingWeekEndTimeType.Channel2First),
+                CreateSnapshot(SubscriptionStartDate, Now.AddDays(3), true, true, BillingWeekEndTimeType.Channel2First),
+                CreateSnapshot(SubscriptionStartDate, Now.AddDays(4), true, true, BillingWeekEndTimeType.Channel2First),
+                CreateSnapshot(SubscriptionStartDate, SubscriptionFinalDate, true, false, BillingWeekEndTimeType.Channel2First, Now.AddDays(4)),
+                CreateSnapshot(SubscriptionStartDate, SubscriptionFinalDate.AddMinutes(10), false, false, BillingWeekEndTimeType.Channel2First, Now.AddDays(4)),
+                CreateSnapshot(SubscriptionStartDate, Now.AddDays(6), false, false, BillingWeekEndTimeType.Channel2First),
             };
 
             var result = this.target.Execute(EndTimeExclusive, input);
@@ -455,7 +483,7 @@
             CollectionAssert.AreEqual(expectedResult, result.ToList());
         }
 
-        private static MergedSnapshot CreateSnapshot(DateTime timestamp, bool channelExists, bool isSubscribed, DateTime? innerTimestamp = null)
+        private static MergedSnapshot CreateSnapshot(DateTime subscriptionStartDate, DateTime timestamp, bool channelExists, bool isSubscribed, DateTime? innerTimestamp = null)
         {
             var creatorChannels = new List<CreatorChannelsSnapshotItem> { new CreatorChannelsSnapshotItem(ChannelId2, 100) };
             if (channelExists)
@@ -463,10 +491,10 @@
                 creatorChannels.Add(new CreatorChannelsSnapshotItem(ChannelId1, 100));
             }
 
-            var subscriberChannels = new List<SubscriberChannelsSnapshotItem> { new SubscriberChannelsSnapshotItem(ChannelId2, 100, SubscriptionStartDate) };
+            var subscriberChannels = new List<SubscriberChannelsSnapshotItem> { new SubscriberChannelsSnapshotItem(ChannelId2, 100, subscriptionStartDate) };
             if (isSubscribed)
             {
-                subscriberChannels.Add(new SubscriberChannelsSnapshotItem(ChannelId1, 100, SubscriptionStartDate));
+                subscriberChannels.Add(new SubscriberChannelsSnapshotItem(ChannelId1, 100, subscriptionStartDate));
             }
 
             return new MergedSnapshot(
@@ -478,13 +506,13 @@
                 CalculatedAccountBalanceSnapshot.DefaultFifthweekCreditAccount(innerTimestamp ?? timestamp, SubscriberId1));
         }
 
-        private static MergedSnapshot CreateSnapshot(DateTime timestamp, bool channel1Subscribed, bool channel2Subscribed, BillingWeekEndTimeType endTimeType, DateTime? innerTimestamp = null)
+        private static MergedSnapshot CreateSnapshot(DateTime subscriptionStartDate, DateTime timestamp, bool channel1Subscribed, bool channel2Subscribed, BillingWeekEndTimeType endTimeType, DateTime? innerTimestamp = null)
         {
             var creatorChannels = new List<CreatorChannelsSnapshotItem> { new CreatorChannelsSnapshotItem(ChannelId1, 100), new CreatorChannelsSnapshotItem(ChannelId2, 100) };
             var subscriberChannels = new List<SubscriberChannelsSnapshotItem>();
 
-            var channel1StartDate = SubscriptionStartDate;
-            var channel2StartDate = SubscriptionStartDate;
+            var channel1StartDate = subscriptionStartDate;
+            var channel2StartDate = subscriptionStartDate;
 
             if (endTimeType == BillingWeekEndTimeType.Channel1First)
             {
