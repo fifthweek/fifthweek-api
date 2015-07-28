@@ -34,7 +34,8 @@
             typeof(Aggregations.AutofacRegistration).Assembly,
             typeof(Payments.AutofacRegistration).Assembly,
             typeof(Fifthweek.Payments.AutofacRegistration).Assembly,
-            typeof(Fifthweek.Payments.SnapshotCreation.AutofacRegistration).Assembly
+            typeof(Fifthweek.Payments.SnapshotCreation.AutofacRegistration).Assembly,
+            typeof(Fifthweek.Payments.Shared.TransactionReference).Assembly
         }
         .Distinct().ToList().AsReadOnly();
 

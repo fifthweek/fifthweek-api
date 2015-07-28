@@ -8,6 +8,7 @@ namespace Fifthweek.Payments.Services.Credit
     using Fifthweek.Api.Persistence.Payments;
     using Fifthweek.CodeGeneration;
     using Fifthweek.Payments.Services.Credit;
+    using Fifthweek.Payments.Shared;
     using Fifthweek.Shared;
 
     [AutoConstructor]
@@ -21,6 +22,8 @@ namespace Fifthweek.Payments.Services.Credit
         private readonly IGetUserWeeklySubscriptionsCost getUserWeeklySubscriptionsCost;
         private readonly IIncrementPaymentStatusDbStatement incrementPaymentStatus;
         private readonly IGetUserPaymentOriginDbStatement getUserPaymentOrigin;
+        private readonly ITimestampCreator timestampCreator;
+        private readonly IGuidCreator guidCreator;
 
         public async Task<bool> ExecuteAsync(
             IReadOnlyList<CalculatedAccountBalanceResult> updatedAccountBalances, 
@@ -67,8 +70,18 @@ namespace Fifthweek.Payments.Services.Credit
                         continue;
                     }
 
+                    var timestamp = this.timestampCreator.Now();
+                    var transactionReference = new TransactionReference(this.guidCreator.CreateSqlSequential());
+
                     // And apply the charge.
-                    await this.applyUserCredit.ExecuteAsync(userId, PositiveInt.Parse(amountToCharge), null, UserType.StandardUser);
+                    await this.applyUserCredit.ExecuteAsync(
+                        userId, 
+                        timestamp,
+                        transactionReference,
+                        PositiveInt.Parse(amountToCharge), 
+                        null, 
+                        UserType.StandardUser);
+
                     recalculateBalances = true;
                 }
                 catch (Exception t)

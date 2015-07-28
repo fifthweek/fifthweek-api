@@ -9,6 +9,7 @@
     using Fifthweek.Payments.Services;
     using Fifthweek.Payments.Services.Credit;
     using Fifthweek.Payments.Services.Credit.Taxamo;
+    using Fifthweek.Payments.Shared;
 
     using Microsoft.VisualStudio.TestTools.UnitTesting;
 
@@ -24,7 +25,7 @@
             new UserPaymentOriginResult("stripeCustomerId",PaymentOriginKeyType.Stripe, "GB", "12345", "1.1.1.1", "ttk", PaymentStatus.Retry1));
 
         private static readonly StripeTransactionResult StripeTransaction =
-            new StripeTransactionResult(DateTime.UtcNow, Guid.NewGuid(), "stripeChargeId");
+            new StripeTransactionResult(DateTime.UtcNow, TransactionReference.Random(), "stripeChargeId");
 
         private Mock<IUpdateAccountBalancesDbStatement> updateAccountBalances;
         private Mock<ISetUserPaymentOriginOriginalTaxamoTransactionKeyDbStatement> setUserPaymentOriginOriginalTaxamoTransactionKey;

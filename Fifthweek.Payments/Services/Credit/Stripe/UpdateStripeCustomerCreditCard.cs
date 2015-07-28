@@ -25,10 +25,10 @@
             var apiKey = this.apiKeyRepository.GetApiKey(userType);
 
             var cardCreateOptions = new StripeCardCreateOptions { Source = new StripeSourceOptions { TokenId = tokenId, } };
-            var card = await this.stripeService.CreateCard(customerId, cardCreateOptions, apiKey);
+            var card = await this.stripeService.CreateCardAsync(customerId, cardCreateOptions, apiKey);
             
             var customerUpdateOptions = new StripeCustomerUpdateOptions { DefaultSource = card.Id };
-            await this.stripeService.UpdateCustomer(customerId, customerUpdateOptions, apiKey);
+            await this.stripeService.UpdateCustomerAsync(customerId, customerUpdateOptions, apiKey);
         }
     }
 }

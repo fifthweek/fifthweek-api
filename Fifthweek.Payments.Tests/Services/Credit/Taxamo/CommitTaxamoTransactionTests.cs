@@ -5,6 +5,7 @@
 
     using Fifthweek.Payments.Services.Credit;
     using Fifthweek.Payments.Services.Credit.Taxamo;
+    using Fifthweek.Payments.Shared;
     using Fifthweek.Payments.Taxamo;
     using Fifthweek.Shared;
 
@@ -23,7 +24,7 @@
             "transactionKey", new AmountInMinorDenomination(10), new AmountInMinorDenomination(12), new AmountInMinorDenomination(2), 20.0m, "vat", "UK", "UK");
 
         private static readonly StripeTransactionResult StripeTransactionResult = new StripeTransactionResult(
-            DateTime.UtcNow, Guid.NewGuid(), "chargeId");
+            DateTime.UtcNow, TransactionReference.Random(), "chargeId");
 
         private static readonly string ApiKey = "apiKey";
 

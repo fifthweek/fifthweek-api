@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Linq;
 
-//// Generated on 20/07/2015 15:34:01 (UTC)
-//// Mapped solution in 10.43s
+//// Generated on 28/07/2015 18:51:04 (UTC)
+//// Mapped solution in 14.21s
 
 
 namespace Fifthweek.Api.Payments.Commands
@@ -22,12 +22,17 @@ namespace Fifthweek.Api.Payments.Commands
     using System.Runtime.ExceptionServices;
     using Fifthweek.Payments;
     using Fifthweek.Payments.Stripe;
+    using Fifthweek.Api.Persistence.Payments;
+    using Fifthweek.Payments.Services.Refunds;
+    using Fifthweek.Payments.Shared;
 
     public partial class ApplyCreditRequestCommand 
     {
         public ApplyCreditRequestCommand(
             Fifthweek.Api.Identity.Shared.Membership.Requester requester,
             Fifthweek.Api.Identity.Shared.Membership.UserId userId,
+            System.DateTime timestamp,
+            Fifthweek.Payments.Shared.TransactionReference transactionReference,
             Fifthweek.Shared.PositiveInt amount,
             Fifthweek.Shared.PositiveInt expectedTotalAmount)
         {
@@ -39,6 +44,16 @@ namespace Fifthweek.Api.Payments.Commands
             if (userId == null)
             {
                 throw new ArgumentNullException("userId");
+            }
+
+            if (timestamp == null)
+            {
+                throw new ArgumentNullException("timestamp");
+            }
+
+            if (transactionReference == null)
+            {
+                throw new ArgumentNullException("transactionReference");
             }
 
             if (amount == null)
@@ -53,6 +68,8 @@ namespace Fifthweek.Api.Payments.Commands
 
             this.Requester = requester;
             this.UserId = userId;
+            this.Timestamp = timestamp;
+            this.TransactionReference = transactionReference;
             this.Amount = amount;
             this.ExpectedTotalAmount = expectedTotalAmount;
         }
@@ -75,6 +92,9 @@ namespace Fifthweek.Api.Payments.Commands
     using System.Runtime.ExceptionServices;
     using Fifthweek.Payments;
     using Fifthweek.Payments.Stripe;
+    using Fifthweek.Api.Persistence.Payments;
+    using Fifthweek.Payments.Services.Refunds;
+    using Fifthweek.Payments.Shared;
 
     public partial class ApplyCreditRequestCommandHandler 
     {
@@ -128,6 +148,9 @@ namespace Fifthweek.Api.Payments.Commands
     using System.Runtime.ExceptionServices;
     using Fifthweek.Payments;
     using Fifthweek.Payments.Stripe;
+    using Fifthweek.Api.Persistence.Payments;
+    using Fifthweek.Payments.Services.Refunds;
+    using Fifthweek.Payments.Shared;
 
     public partial class UpdatePaymentOriginCommand 
     {
@@ -175,6 +198,9 @@ namespace Fifthweek.Api.Payments.Commands
     using System.Runtime.ExceptionServices;
     using Fifthweek.Payments;
     using Fifthweek.Payments.Stripe;
+    using Fifthweek.Api.Persistence.Payments;
+    using Fifthweek.Payments.Services.Refunds;
+    using Fifthweek.Payments.Shared;
 
     public partial class UpdatePaymentOriginCommandHandler 
     {
@@ -231,6 +257,8 @@ namespace Fifthweek.Api.Payments.Controllers
     using Fifthweek.Api.Payments.Commands;
     using Fifthweek.Api.Payments.Queries;
     using Fifthweek.Payments.Services.Credit.Taxamo;
+    using Fifthweek.Payments.Shared;
+    using Fifthweek.Payments.Services.Refunds;
 
     public partial class CreditRequestData 
     {
@@ -266,6 +294,8 @@ namespace Fifthweek.Api.Payments.Controllers
     using Fifthweek.Api.Payments.Commands;
     using Fifthweek.Api.Payments.Queries;
     using Fifthweek.Payments.Services.Credit.Taxamo;
+    using Fifthweek.Payments.Shared;
+    using Fifthweek.Payments.Services.Refunds;
 
     public partial class CreditRequestSummary 
     {
@@ -301,6 +331,8 @@ namespace Fifthweek.Api.Payments.Controllers
     using Fifthweek.Api.Payments.Commands;
     using Fifthweek.Api.Payments.Queries;
     using Fifthweek.Payments.Services.Credit.Taxamo;
+    using Fifthweek.Payments.Shared;
+    using Fifthweek.Payments.Services.Refunds;
 
     public partial class PaymentOriginData 
     {
@@ -330,6 +362,8 @@ namespace Fifthweek.Api.Payments.Controllers
     using Fifthweek.Api.Payments.Commands;
     using Fifthweek.Api.Payments.Queries;
     using Fifthweek.Payments.Services.Credit.Taxamo;
+    using Fifthweek.Payments.Shared;
+    using Fifthweek.Payments.Services.Refunds;
 
     public partial class PaymentsController 
     {
@@ -338,7 +372,11 @@ namespace Fifthweek.Api.Payments.Controllers
             Fifthweek.Api.Core.IQueryHandler<Fifthweek.Api.Payments.Queries.GetCreditRequestSummaryQuery,Fifthweek.Api.Payments.Controllers.CreditRequestSummary> getCreditRequestSummary,
             Fifthweek.Api.Core.ICommandHandler<Fifthweek.Api.Payments.Commands.UpdatePaymentOriginCommand> updatePaymentsOrigin,
             Fifthweek.Api.Core.ICommandHandler<Fifthweek.Api.Payments.Commands.ApplyCreditRequestCommand> applyCreditRequest,
-            Fifthweek.Api.Core.ICommandHandler<Fifthweek.Api.Payments.Commands.DeletePaymentInformationCommand> deletePaymentInformation)
+            Fifthweek.Api.Core.ICommandHandler<Fifthweek.Api.Payments.Commands.DeletePaymentInformationCommand> deletePaymentInformation,
+            Fifthweek.Api.Core.ICommandHandler<Fifthweek.Api.Payments.Commands.CreateCreditRefundCommand> createCreditRefund,
+            Fifthweek.Api.Core.ICommandHandler<Fifthweek.Api.Payments.Commands.CreateTransactionRefundCommand> createTransactionRefund,
+            Fifthweek.Shared.ITimestampCreator timestampCreator,
+            Fifthweek.Shared.IGuidCreator guidCreator)
         {
             if (requesterContext == null)
             {
@@ -365,11 +403,35 @@ namespace Fifthweek.Api.Payments.Controllers
                 throw new ArgumentNullException("deletePaymentInformation");
             }
 
+            if (createCreditRefund == null)
+            {
+                throw new ArgumentNullException("createCreditRefund");
+            }
+
+            if (createTransactionRefund == null)
+            {
+                throw new ArgumentNullException("createTransactionRefund");
+            }
+
+            if (timestampCreator == null)
+            {
+                throw new ArgumentNullException("timestampCreator");
+            }
+
+            if (guidCreator == null)
+            {
+                throw new ArgumentNullException("guidCreator");
+            }
+
             this.requesterContext = requesterContext;
             this.getCreditRequestSummary = getCreditRequestSummary;
             this.updatePaymentsOrigin = updatePaymentsOrigin;
             this.applyCreditRequest = applyCreditRequest;
             this.deletePaymentInformation = deletePaymentInformation;
+            this.createCreditRefund = createCreditRefund;
+            this.createTransactionRefund = createTransactionRefund;
+            this.timestampCreator = timestampCreator;
+            this.guidCreator = guidCreator;
         }
     }
 }
@@ -498,6 +560,8 @@ namespace Fifthweek.Api.Payments.Controllers
     using Fifthweek.Api.Payments.Commands;
     using Fifthweek.Api.Payments.Queries;
     using Fifthweek.Payments.Services.Credit.Taxamo;
+    using Fifthweek.Payments.Shared;
+    using Fifthweek.Payments.Services.Refunds;
 
     public partial class PaymentLocationData 
     {
@@ -558,6 +622,9 @@ namespace Fifthweek.Api.Payments.Commands
     using System.Runtime.ExceptionServices;
     using Fifthweek.Payments;
     using Fifthweek.Payments.Stripe;
+    using Fifthweek.Api.Persistence.Payments;
+    using Fifthweek.Payments.Services.Refunds;
+    using Fifthweek.Payments.Shared;
 
     public partial class DeletePaymentInformationCommand 
     {
@@ -597,6 +664,9 @@ namespace Fifthweek.Api.Payments.Commands
     using System.Runtime.ExceptionServices;
     using Fifthweek.Payments;
     using Fifthweek.Payments.Stripe;
+    using Fifthweek.Api.Persistence.Payments;
+    using Fifthweek.Payments.Services.Refunds;
+    using Fifthweek.Payments.Shared;
 
     public partial class DeletePaymentInformationCommandHandler 
     {
@@ -621,12 +691,17 @@ namespace Fifthweek.Api.Payments.Commands
 }
 namespace Fifthweek.Api.Payments
 {
+    using System;
+    using System.Linq;
+    using Fifthweek.CodeGeneration;
     using System.Threading.Tasks;
+    using Dapper;
     using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.Api.Persistence;
     using Fifthweek.Api.Persistence.Payments;
-    using Fifthweek.CodeGeneration;
     using Fifthweek.Shared;
+    using System.Collections.Generic;
+    using System.Net;
 
     public partial class DeleteUserPaymentInformationDbStatement 
     {
@@ -639,6 +714,304 @@ namespace Fifthweek.Api.Payments
             }
 
             this.connectionFactory = connectionFactory;
+        }
+    }
+}
+namespace Fifthweek.Api.Payments.Commands
+{
+    using System;
+    using System.Linq;
+    using Fifthweek.Api.Identity.Shared.Membership;
+    using Fifthweek.CodeGeneration;
+    using Fifthweek.Shared;
+    using System.Threading.Tasks;
+    using Fifthweek.Api.Core;
+    using Newtonsoft.Json;
+    using Fifthweek.Payments.Services;
+    using Fifthweek.Api.Persistence.Identity;
+    using Fifthweek.Payments.Services.Credit;
+    using Fifthweek.Payments.Services.Credit.Stripe;
+    using System.Runtime.ExceptionServices;
+    using Fifthweek.Payments;
+    using Fifthweek.Payments.Stripe;
+    using Fifthweek.Api.Persistence.Payments;
+    using Fifthweek.Payments.Services.Refunds;
+    using Fifthweek.Payments.Shared;
+
+    public partial class CreateTransactionRefundCommandHandler 
+    {
+        public CreateTransactionRefundCommandHandler(
+            Fifthweek.Api.Identity.Shared.Membership.IRequesterSecurity requesterSecurity,
+            Fifthweek.Payments.Services.Refunds.ICreateTransactionRefund createTransactionRefund,
+            Fifthweek.Payments.Services.IUpdateAccountBalancesDbStatement updateAccountBalances)
+        {
+            if (requesterSecurity == null)
+            {
+                throw new ArgumentNullException("requesterSecurity");
+            }
+
+            if (createTransactionRefund == null)
+            {
+                throw new ArgumentNullException("createTransactionRefund");
+            }
+
+            if (updateAccountBalances == null)
+            {
+                throw new ArgumentNullException("updateAccountBalances");
+            }
+
+            this.requesterSecurity = requesterSecurity;
+            this.createTransactionRefund = createTransactionRefund;
+            this.updateAccountBalances = updateAccountBalances;
+        }
+    }
+}
+namespace Fifthweek.Api.Payments.Commands
+{
+    using System;
+    using System.Linq;
+    using Fifthweek.Api.Identity.Shared.Membership;
+    using Fifthweek.CodeGeneration;
+    using Fifthweek.Shared;
+    using System.Threading.Tasks;
+    using Fifthweek.Api.Core;
+    using Newtonsoft.Json;
+    using Fifthweek.Payments.Services;
+    using Fifthweek.Api.Persistence.Identity;
+    using Fifthweek.Payments.Services.Credit;
+    using Fifthweek.Payments.Services.Credit.Stripe;
+    using System.Runtime.ExceptionServices;
+    using Fifthweek.Payments;
+    using Fifthweek.Payments.Stripe;
+    using Fifthweek.Api.Persistence.Payments;
+    using Fifthweek.Payments.Services.Refunds;
+    using Fifthweek.Payments.Shared;
+
+    public partial class CreateCreditRefundCommandHandler 
+    {
+        public CreateCreditRefundCommandHandler(
+            Fifthweek.Api.Identity.Shared.Membership.IRequesterSecurity requesterSecurity,
+            Fifthweek.Payments.Services.Refunds.ICreateCreditRefund createCreditRefund,
+            Fifthweek.Payments.Services.IUpdateAccountBalancesDbStatement updateAccountBalances)
+        {
+            if (requesterSecurity == null)
+            {
+                throw new ArgumentNullException("requesterSecurity");
+            }
+
+            if (createCreditRefund == null)
+            {
+                throw new ArgumentNullException("createCreditRefund");
+            }
+
+            if (updateAccountBalances == null)
+            {
+                throw new ArgumentNullException("updateAccountBalances");
+            }
+
+            this.requesterSecurity = requesterSecurity;
+            this.createCreditRefund = createCreditRefund;
+            this.updateAccountBalances = updateAccountBalances;
+        }
+    }
+}
+namespace Fifthweek.Api.Payments.Commands
+{
+    using System;
+    using System.Linq;
+    using Fifthweek.Api.Identity.Shared.Membership;
+    using Fifthweek.CodeGeneration;
+    using Fifthweek.Shared;
+    using System.Threading.Tasks;
+    using Fifthweek.Api.Core;
+    using Newtonsoft.Json;
+    using Fifthweek.Payments.Services;
+    using Fifthweek.Api.Persistence.Identity;
+    using Fifthweek.Payments.Services.Credit;
+    using Fifthweek.Payments.Services.Credit.Stripe;
+    using System.Runtime.ExceptionServices;
+    using Fifthweek.Payments;
+    using Fifthweek.Payments.Stripe;
+    using Fifthweek.Api.Persistence.Payments;
+    using Fifthweek.Payments.Services.Refunds;
+    using Fifthweek.Payments.Shared;
+
+    public partial class CreateCreditRefundCommand 
+    {
+        public CreateCreditRefundCommand(
+            Fifthweek.Api.Identity.Shared.Membership.Requester requester,
+            Fifthweek.Payments.Shared.TransactionReference transactionReference,
+            System.DateTime timestamp,
+            Fifthweek.Shared.PositiveInt refundCreditAmount,
+            Fifthweek.Payments.Services.Refunds.RefundCreditReason reason,
+            System.String comment)
+        {
+            if (requester == null)
+            {
+                throw new ArgumentNullException("requester");
+            }
+
+            if (transactionReference == null)
+            {
+                throw new ArgumentNullException("transactionReference");
+            }
+
+            if (timestamp == null)
+            {
+                throw new ArgumentNullException("timestamp");
+            }
+
+            if (refundCreditAmount == null)
+            {
+                throw new ArgumentNullException("refundCreditAmount");
+            }
+
+            if (reason == null)
+            {
+                throw new ArgumentNullException("reason");
+            }
+
+            if (comment == null)
+            {
+                throw new ArgumentNullException("comment");
+            }
+
+            this.Requester = requester;
+            this.TransactionReference = transactionReference;
+            this.Timestamp = timestamp;
+            this.RefundCreditAmount = refundCreditAmount;
+            this.Reason = reason;
+            this.Comment = comment;
+        }
+    }
+}
+namespace Fifthweek.Api.Payments.Commands
+{
+    using System;
+    using System.Linq;
+    using Fifthweek.Api.Identity.Shared.Membership;
+    using Fifthweek.CodeGeneration;
+    using Fifthweek.Shared;
+    using System.Threading.Tasks;
+    using Fifthweek.Api.Core;
+    using Newtonsoft.Json;
+    using Fifthweek.Payments.Services;
+    using Fifthweek.Api.Persistence.Identity;
+    using Fifthweek.Payments.Services.Credit;
+    using Fifthweek.Payments.Services.Credit.Stripe;
+    using System.Runtime.ExceptionServices;
+    using Fifthweek.Payments;
+    using Fifthweek.Payments.Stripe;
+    using Fifthweek.Api.Persistence.Payments;
+    using Fifthweek.Payments.Services.Refunds;
+    using Fifthweek.Payments.Shared;
+
+    public partial class CreateTransactionRefundCommand 
+    {
+        public CreateTransactionRefundCommand(
+            Fifthweek.Api.Identity.Shared.Membership.Requester requester,
+            Fifthweek.Payments.Shared.TransactionReference transactionReference,
+            System.DateTime timestamp,
+            System.String comment)
+        {
+            if (requester == null)
+            {
+                throw new ArgumentNullException("requester");
+            }
+
+            if (transactionReference == null)
+            {
+                throw new ArgumentNullException("transactionReference");
+            }
+
+            if (timestamp == null)
+            {
+                throw new ArgumentNullException("timestamp");
+            }
+
+            if (comment == null)
+            {
+                throw new ArgumentNullException("comment");
+            }
+
+            this.Requester = requester;
+            this.TransactionReference = transactionReference;
+            this.Timestamp = timestamp;
+            this.Comment = comment;
+        }
+    }
+}
+namespace Fifthweek.Api.Payments.Controllers
+{
+    using System;
+    using System.Linq;
+    using Fifthweek.CodeGeneration;
+    using Fifthweek.Shared;
+    using System.Threading.Tasks;
+    using System.Web.Http;
+    using Fifthweek.Api.Core;
+    using Fifthweek.Api.Identity.Shared.Membership;
+    using Fifthweek.Api.Payments.Commands;
+    using Fifthweek.Api.Payments.Queries;
+    using Fifthweek.Payments.Services.Credit.Taxamo;
+    using Fifthweek.Payments.Shared;
+    using Fifthweek.Payments.Services.Refunds;
+
+    public partial class TransactionRefundData 
+    {
+        public TransactionRefundData(
+            System.String comment)
+        {
+            if (comment == null)
+            {
+                throw new ArgumentNullException("comment");
+            }
+
+            this.Comment = comment;
+        }
+    }
+}
+namespace Fifthweek.Api.Payments.Controllers
+{
+    using System;
+    using System.Linq;
+    using Fifthweek.CodeGeneration;
+    using Fifthweek.Shared;
+    using System.Threading.Tasks;
+    using System.Web.Http;
+    using Fifthweek.Api.Core;
+    using Fifthweek.Api.Identity.Shared.Membership;
+    using Fifthweek.Api.Payments.Commands;
+    using Fifthweek.Api.Payments.Queries;
+    using Fifthweek.Payments.Services.Credit.Taxamo;
+    using Fifthweek.Payments.Shared;
+    using Fifthweek.Payments.Services.Refunds;
+
+    public partial class CreditRefundData 
+    {
+        public CreditRefundData(
+            System.Int32 refundCreditAmount,
+            Fifthweek.Payments.Services.Refunds.RefundCreditReason reason,
+            System.String comment)
+        {
+            if (refundCreditAmount == null)
+            {
+                throw new ArgumentNullException("refundCreditAmount");
+            }
+
+            if (reason == null)
+            {
+                throw new ArgumentNullException("reason");
+            }
+
+            if (comment == null)
+            {
+                throw new ArgumentNullException("comment");
+            }
+
+            this.RefundCreditAmount = refundCreditAmount;
+            this.Reason = reason;
+            this.Comment = comment;
         }
     }
 }
@@ -660,12 +1033,15 @@ namespace Fifthweek.Api.Payments.Commands
     using System.Runtime.ExceptionServices;
     using Fifthweek.Payments;
     using Fifthweek.Payments.Stripe;
+    using Fifthweek.Api.Persistence.Payments;
+    using Fifthweek.Payments.Services.Refunds;
+    using Fifthweek.Payments.Shared;
 
     public partial class ApplyCreditRequestCommand 
     {
         public override string ToString()
         {
-            return string.Format("ApplyCreditRequestCommand({0}, {1}, {2}, {3})", this.Requester == null ? "null" : this.Requester.ToString(), this.UserId == null ? "null" : this.UserId.ToString(), this.Amount == null ? "null" : this.Amount.ToString(), this.ExpectedTotalAmount == null ? "null" : this.ExpectedTotalAmount.ToString());
+            return string.Format("ApplyCreditRequestCommand({0}, {1}, {2}, {3}, {4}, {5})", this.Requester == null ? "null" : this.Requester.ToString(), this.UserId == null ? "null" : this.UserId.ToString(), this.Timestamp == null ? "null" : this.Timestamp.ToString(), this.TransactionReference == null ? "null" : this.TransactionReference.ToString(), this.Amount == null ? "null" : this.Amount.ToString(), this.ExpectedTotalAmount == null ? "null" : this.ExpectedTotalAmount.ToString());
         }
         
         public override bool Equals(object obj)
@@ -695,6 +1071,8 @@ namespace Fifthweek.Api.Payments.Commands
                 int hashCode = 0;
                 hashCode = (hashCode * 397) ^ (this.Requester != null ? this.Requester.GetHashCode() : 0);
                 hashCode = (hashCode * 397) ^ (this.UserId != null ? this.UserId.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.Timestamp != null ? this.Timestamp.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.TransactionReference != null ? this.TransactionReference.GetHashCode() : 0);
                 hashCode = (hashCode * 397) ^ (this.Amount != null ? this.Amount.GetHashCode() : 0);
                 hashCode = (hashCode * 397) ^ (this.ExpectedTotalAmount != null ? this.ExpectedTotalAmount.GetHashCode() : 0);
                 return hashCode;
@@ -709,6 +1087,16 @@ namespace Fifthweek.Api.Payments.Commands
             }
         
             if (!object.Equals(this.UserId, other.UserId))
+            {
+                return false;
+            }
+        
+            if (!object.Equals(this.Timestamp, other.Timestamp))
+            {
+                return false;
+            }
+        
+            if (!object.Equals(this.TransactionReference, other.TransactionReference))
             {
                 return false;
             }
@@ -744,6 +1132,9 @@ namespace Fifthweek.Api.Payments.Commands
     using System.Runtime.ExceptionServices;
     using Fifthweek.Payments;
     using Fifthweek.Payments.Stripe;
+    using Fifthweek.Api.Persistence.Payments;
+    using Fifthweek.Payments.Services.Refunds;
+    using Fifthweek.Payments.Shared;
 
     public partial class UpdatePaymentOriginCommand 
     {
@@ -836,6 +1227,8 @@ namespace Fifthweek.Api.Payments.Controllers
     using Fifthweek.Api.Payments.Commands;
     using Fifthweek.Api.Payments.Queries;
     using Fifthweek.Payments.Services.Credit.Taxamo;
+    using Fifthweek.Payments.Shared;
+    using Fifthweek.Payments.Services.Refunds;
 
     public partial class CreditRequestData 
     {
@@ -904,6 +1297,8 @@ namespace Fifthweek.Api.Payments.Controllers
     using Fifthweek.Api.Payments.Commands;
     using Fifthweek.Api.Payments.Queries;
     using Fifthweek.Payments.Services.Credit.Taxamo;
+    using Fifthweek.Payments.Shared;
+    using Fifthweek.Payments.Services.Refunds;
 
     public partial class CreditRequestSummary 
     {
@@ -972,6 +1367,8 @@ namespace Fifthweek.Api.Payments.Controllers
     using Fifthweek.Api.Payments.Commands;
     using Fifthweek.Api.Payments.Queries;
     using Fifthweek.Payments.Services.Credit.Taxamo;
+    using Fifthweek.Payments.Shared;
+    using Fifthweek.Payments.Services.Refunds;
 
     public partial class PaymentOriginData 
     {
@@ -1125,6 +1522,8 @@ namespace Fifthweek.Api.Payments.Controllers
     using Fifthweek.Api.Payments.Commands;
     using Fifthweek.Api.Payments.Queries;
     using Fifthweek.Payments.Services.Credit.Taxamo;
+    using Fifthweek.Payments.Shared;
+    using Fifthweek.Payments.Services.Refunds;
 
     public partial class PaymentLocationData 
     {
@@ -1279,6 +1678,9 @@ namespace Fifthweek.Api.Payments.Commands
     using System.Runtime.ExceptionServices;
     using Fifthweek.Payments;
     using Fifthweek.Payments.Stripe;
+    using Fifthweek.Api.Persistence.Payments;
+    using Fifthweek.Payments.Services.Refunds;
+    using Fifthweek.Payments.Shared;
 
     public partial class DeletePaymentInformationCommand 
     {
@@ -1326,6 +1728,332 @@ namespace Fifthweek.Api.Payments.Commands
             }
         
             if (!object.Equals(this.UserId, other.UserId))
+            {
+                return false;
+            }
+        
+            return true;
+        }
+    }
+}
+namespace Fifthweek.Api.Payments.Commands
+{
+    using System;
+    using System.Linq;
+    using Fifthweek.Api.Identity.Shared.Membership;
+    using Fifthweek.CodeGeneration;
+    using Fifthweek.Shared;
+    using System.Threading.Tasks;
+    using Fifthweek.Api.Core;
+    using Newtonsoft.Json;
+    using Fifthweek.Payments.Services;
+    using Fifthweek.Api.Persistence.Identity;
+    using Fifthweek.Payments.Services.Credit;
+    using Fifthweek.Payments.Services.Credit.Stripe;
+    using System.Runtime.ExceptionServices;
+    using Fifthweek.Payments;
+    using Fifthweek.Payments.Stripe;
+    using Fifthweek.Api.Persistence.Payments;
+    using Fifthweek.Payments.Services.Refunds;
+    using Fifthweek.Payments.Shared;
+
+    public partial class CreateCreditRefundCommand 
+    {
+        public override string ToString()
+        {
+            return string.Format("CreateCreditRefundCommand({0}, {1}, {2}, {3}, {4}, \"{5}\")", this.Requester == null ? "null" : this.Requester.ToString(), this.TransactionReference == null ? "null" : this.TransactionReference.ToString(), this.Timestamp == null ? "null" : this.Timestamp.ToString(), this.RefundCreditAmount == null ? "null" : this.RefundCreditAmount.ToString(), this.Reason == null ? "null" : this.Reason.ToString(), this.Comment == null ? "null" : this.Comment.ToString());
+        }
+        
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj))
+            {
+                return false;
+            }
+        
+            if (ReferenceEquals(this, obj))
+            {
+                return true;
+            }
+        
+            if (obj.GetType() != this.GetType())
+            {
+                return false;
+            }
+        
+            return this.Equals((CreateCreditRefundCommand)obj);
+        }
+        
+        public override int GetHashCode()
+        {
+            unchecked
+            {
+                int hashCode = 0;
+                hashCode = (hashCode * 397) ^ (this.Requester != null ? this.Requester.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.TransactionReference != null ? this.TransactionReference.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.Timestamp != null ? this.Timestamp.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.RefundCreditAmount != null ? this.RefundCreditAmount.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.Reason != null ? this.Reason.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.Comment != null ? this.Comment.GetHashCode() : 0);
+                return hashCode;
+            }
+        }
+        
+        protected bool Equals(CreateCreditRefundCommand other)
+        {
+            if (!object.Equals(this.Requester, other.Requester))
+            {
+                return false;
+            }
+        
+            if (!object.Equals(this.TransactionReference, other.TransactionReference))
+            {
+                return false;
+            }
+        
+            if (!object.Equals(this.Timestamp, other.Timestamp))
+            {
+                return false;
+            }
+        
+            if (!object.Equals(this.RefundCreditAmount, other.RefundCreditAmount))
+            {
+                return false;
+            }
+        
+            if (!object.Equals(this.Reason, other.Reason))
+            {
+                return false;
+            }
+        
+            if (!object.Equals(this.Comment, other.Comment))
+            {
+                return false;
+            }
+        
+            return true;
+        }
+    }
+}
+namespace Fifthweek.Api.Payments.Commands
+{
+    using System;
+    using System.Linq;
+    using Fifthweek.Api.Identity.Shared.Membership;
+    using Fifthweek.CodeGeneration;
+    using Fifthweek.Shared;
+    using System.Threading.Tasks;
+    using Fifthweek.Api.Core;
+    using Newtonsoft.Json;
+    using Fifthweek.Payments.Services;
+    using Fifthweek.Api.Persistence.Identity;
+    using Fifthweek.Payments.Services.Credit;
+    using Fifthweek.Payments.Services.Credit.Stripe;
+    using System.Runtime.ExceptionServices;
+    using Fifthweek.Payments;
+    using Fifthweek.Payments.Stripe;
+    using Fifthweek.Api.Persistence.Payments;
+    using Fifthweek.Payments.Services.Refunds;
+    using Fifthweek.Payments.Shared;
+
+    public partial class CreateTransactionRefundCommand 
+    {
+        public override string ToString()
+        {
+            return string.Format("CreateTransactionRefundCommand({0}, {1}, {2}, \"{3}\")", this.Requester == null ? "null" : this.Requester.ToString(), this.TransactionReference == null ? "null" : this.TransactionReference.ToString(), this.Timestamp == null ? "null" : this.Timestamp.ToString(), this.Comment == null ? "null" : this.Comment.ToString());
+        }
+        
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj))
+            {
+                return false;
+            }
+        
+            if (ReferenceEquals(this, obj))
+            {
+                return true;
+            }
+        
+            if (obj.GetType() != this.GetType())
+            {
+                return false;
+            }
+        
+            return this.Equals((CreateTransactionRefundCommand)obj);
+        }
+        
+        public override int GetHashCode()
+        {
+            unchecked
+            {
+                int hashCode = 0;
+                hashCode = (hashCode * 397) ^ (this.Requester != null ? this.Requester.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.TransactionReference != null ? this.TransactionReference.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.Timestamp != null ? this.Timestamp.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.Comment != null ? this.Comment.GetHashCode() : 0);
+                return hashCode;
+            }
+        }
+        
+        protected bool Equals(CreateTransactionRefundCommand other)
+        {
+            if (!object.Equals(this.Requester, other.Requester))
+            {
+                return false;
+            }
+        
+            if (!object.Equals(this.TransactionReference, other.TransactionReference))
+            {
+                return false;
+            }
+        
+            if (!object.Equals(this.Timestamp, other.Timestamp))
+            {
+                return false;
+            }
+        
+            if (!object.Equals(this.Comment, other.Comment))
+            {
+                return false;
+            }
+        
+            return true;
+        }
+    }
+}
+namespace Fifthweek.Api.Payments.Controllers
+{
+    using System;
+    using System.Linq;
+    using Fifthweek.CodeGeneration;
+    using Fifthweek.Shared;
+    using System.Threading.Tasks;
+    using System.Web.Http;
+    using Fifthweek.Api.Core;
+    using Fifthweek.Api.Identity.Shared.Membership;
+    using Fifthweek.Api.Payments.Commands;
+    using Fifthweek.Api.Payments.Queries;
+    using Fifthweek.Payments.Services.Credit.Taxamo;
+    using Fifthweek.Payments.Shared;
+    using Fifthweek.Payments.Services.Refunds;
+
+    public partial class TransactionRefundData 
+    {
+        public override string ToString()
+        {
+            return string.Format("TransactionRefundData(\"{0}\")", this.Comment == null ? "null" : this.Comment.ToString());
+        }
+        
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj))
+            {
+                return false;
+            }
+        
+            if (ReferenceEquals(this, obj))
+            {
+                return true;
+            }
+        
+            if (obj.GetType() != this.GetType())
+            {
+                return false;
+            }
+        
+            return this.Equals((TransactionRefundData)obj);
+        }
+        
+        public override int GetHashCode()
+        {
+            unchecked
+            {
+                int hashCode = 0;
+                hashCode = (hashCode * 397) ^ (this.Comment != null ? this.Comment.GetHashCode() : 0);
+                return hashCode;
+            }
+        }
+        
+        protected bool Equals(TransactionRefundData other)
+        {
+            if (!object.Equals(this.Comment, other.Comment))
+            {
+                return false;
+            }
+        
+            return true;
+        }
+    }
+}
+namespace Fifthweek.Api.Payments.Controllers
+{
+    using System;
+    using System.Linq;
+    using Fifthweek.CodeGeneration;
+    using Fifthweek.Shared;
+    using System.Threading.Tasks;
+    using System.Web.Http;
+    using Fifthweek.Api.Core;
+    using Fifthweek.Api.Identity.Shared.Membership;
+    using Fifthweek.Api.Payments.Commands;
+    using Fifthweek.Api.Payments.Queries;
+    using Fifthweek.Payments.Services.Credit.Taxamo;
+    using Fifthweek.Payments.Shared;
+    using Fifthweek.Payments.Services.Refunds;
+
+    public partial class CreditRefundData 
+    {
+        public override string ToString()
+        {
+            return string.Format("CreditRefundData({0}, {1}, \"{2}\")", this.RefundCreditAmount == null ? "null" : this.RefundCreditAmount.ToString(), this.Reason == null ? "null" : this.Reason.ToString(), this.Comment == null ? "null" : this.Comment.ToString());
+        }
+        
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj))
+            {
+                return false;
+            }
+        
+            if (ReferenceEquals(this, obj))
+            {
+                return true;
+            }
+        
+            if (obj.GetType() != this.GetType())
+            {
+                return false;
+            }
+        
+            return this.Equals((CreditRefundData)obj);
+        }
+        
+        public override int GetHashCode()
+        {
+            unchecked
+            {
+                int hashCode = 0;
+                hashCode = (hashCode * 397) ^ (this.RefundCreditAmount != null ? this.RefundCreditAmount.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.Reason != null ? this.Reason.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.Comment != null ? this.Comment.GetHashCode() : 0);
+                return hashCode;
+            }
+        }
+        
+        protected bool Equals(CreditRefundData other)
+        {
+            if (!object.Equals(this.RefundCreditAmount, other.RefundCreditAmount))
+            {
+                return false;
+            }
+        
+            if (!object.Equals(this.Reason, other.Reason))
+            {
+                return false;
+            }
+        
+            if (!object.Equals(this.Comment, other.Comment))
             {
                 return false;
             }
@@ -1595,6 +2323,8 @@ namespace Fifthweek.Api.Payments.Controllers
     using Fifthweek.Api.Payments.Commands;
     using Fifthweek.Api.Payments.Queries;
     using Fifthweek.Payments.Services.Credit.Taxamo;
+    using Fifthweek.Payments.Shared;
+    using Fifthweek.Payments.Services.Refunds;
 
     public partial class CreditRequestData 
     {
@@ -1680,6 +2410,8 @@ namespace Fifthweek.Api.Payments.Controllers
     using Fifthweek.Api.Payments.Commands;
     using Fifthweek.Api.Payments.Queries;
     using Fifthweek.Payments.Services.Credit.Taxamo;
+    using Fifthweek.Payments.Shared;
+    using Fifthweek.Payments.Services.Refunds;
 
     public partial class PaymentOriginData 
     {
@@ -1803,6 +2535,8 @@ namespace Fifthweek.Api.Payments.Controllers
     using Fifthweek.Api.Payments.Commands;
     using Fifthweek.Api.Payments.Queries;
     using Fifthweek.Payments.Services.Credit.Taxamo;
+    using Fifthweek.Payments.Shared;
+    using Fifthweek.Payments.Services.Refunds;
 
     public partial class PaymentLocationData 
     {
@@ -1889,6 +2623,90 @@ namespace Fifthweek.Api.Payments.Controllers
                 parsed0,
                 parsed1,
                 parsed2);
+        }    
+    }
+}
+namespace Fifthweek.Api.Payments.Controllers
+{
+    using System;
+    using System.Linq;
+    using Fifthweek.CodeGeneration;
+    using Fifthweek.Shared;
+    using System.Threading.Tasks;
+    using System.Web.Http;
+    using Fifthweek.Api.Core;
+    using Fifthweek.Api.Identity.Shared.Membership;
+    using Fifthweek.Api.Payments.Commands;
+    using Fifthweek.Api.Payments.Queries;
+    using Fifthweek.Payments.Services.Credit.Taxamo;
+    using Fifthweek.Payments.Shared;
+    using Fifthweek.Payments.Services.Refunds;
+
+    public partial class CreditRefundData 
+    {
+        public class Parsed
+        {
+            public Parsed(
+                PositiveInt refundCreditAmount,
+                Fifthweek.Payments.Services.Refunds.RefundCreditReason reason,
+                System.String comment)
+            {
+                if (refundCreditAmount == null)
+                {
+                    throw new ArgumentNullException("refundCreditAmount");
+                }
+
+                if (reason == null)
+                {
+                    throw new ArgumentNullException("reason");
+                }
+
+                if (comment == null)
+                {
+                    throw new ArgumentNullException("comment");
+                }
+
+                this.RefundCreditAmount = refundCreditAmount;
+                this.Reason = reason;
+                this.Comment = comment;
+            }
+        
+            public PositiveInt RefundCreditAmount { get; private set; }
+        
+            public Fifthweek.Payments.Services.Refunds.RefundCreditReason Reason { get; private set; }
+        
+            public System.String Comment { get; private set; }
+        }
+    }
+
+    public static partial class CreditRefundDataExtensions
+    {
+        public static CreditRefundData.Parsed Parse(this CreditRefundData target)
+        {
+            var modelStateDictionary = new System.Web.Http.ModelBinding.ModelStateDictionary();
+        
+            PositiveInt parsed0 = null;
+            System.Collections.Generic.IReadOnlyCollection<string> parsed0Errors;
+            if (!PositiveInt.TryParse(target.RefundCreditAmount, out parsed0, out parsed0Errors))
+            {
+                var modelState = new System.Web.Http.ModelBinding.ModelState();
+                foreach (var errorMessage in parsed0Errors)
+                {
+                    modelState.Errors.Add(errorMessage);
+                }
+
+                modelStateDictionary.Add("RefundCreditAmount", modelState);
+            }
+
+            if (!modelStateDictionary.IsValid)
+            {
+                throw new Fifthweek.Api.Core.ModelValidationException(modelStateDictionary);
+            }
+        
+            return new CreditRefundData.Parsed(
+                parsed0,
+                target.Reason,
+                target.Comment);
         }    
     }
 }

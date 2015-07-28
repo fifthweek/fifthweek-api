@@ -1,28 +1,13 @@
 ﻿using System;
 using System.Linq;
 
-//// Generated on 26/07/2015 11:59:01 (UTC)
-//// Mapped solution in 11.86s
+//// Generated on 28/07/2015 18:53:51 (UTC)
+//// Mapped solution in 12.49s
 
 namespace Fifthweek.Payments.Services.Credit
 {
-    using System;
-    using System.Linq;
     using Fifthweek.CodeGeneration;
-    using System.Threading.Tasks;
-    using Fifthweek.Api.Identity.Shared.Membership;
-    using Fifthweek.Payments.Services.Credit.Taxamo;
     using Fifthweek.Shared;
-    using Newtonsoft.Json;
-    using Fifthweek.Payments.Services;
-    using Dapper;
-    using Fifthweek.Api.Persistence;
-    using Fifthweek.Api.Persistence.Payments;
-    using Fifthweek.Payments.Services.Credit.Stripe;
-    using System.Collections.Generic;
-    using Fifthweek.Payments.Services.Credit;
-    using System.Runtime.ExceptionServices;
-    using Fifthweek.Payments.Stripe;
 
     [Newtonsoft.Json.JsonConverter(typeof(JsonConverter))]
     public partial class AmountInMinorDenomination 
@@ -72,7 +57,6 @@ namespace Fifthweek.Payments
 {
     using System;
     using Fifthweek.CodeGeneration;
-    using System.Linq;
 
     public partial class AggregateCostSummary 
     {
@@ -88,45 +72,11 @@ namespace Fifthweek.Payments
         }
     }
 }
-namespace Fifthweek.Payments.Services.Credit
-{
-    using System;
-    using System.Linq;
-    using Fifthweek.CodeGeneration;
-    using System.Threading.Tasks;
-    using Fifthweek.Api.Identity.Shared.Membership;
-    using Fifthweek.Payments.Services.Credit.Taxamo;
-    using Fifthweek.Shared;
-    using Newtonsoft.Json;
-    using Fifthweek.Payments.Services;
-    using Dapper;
-    using Fifthweek.Api.Persistence;
-    using Fifthweek.Api.Persistence.Payments;
-    using Fifthweek.Payments.Services.Credit.Stripe;
-    using System.Collections.Generic;
-    using Fifthweek.Payments.Services.Credit;
-    using System.Runtime.ExceptionServices;
-    using Fifthweek.Payments.Stripe;
-
-    public partial class AmountInMinorDenomination 
-    {
-        public AmountInMinorDenomination(
-            System.Int32 value)
-        {
-            if (value == null)
-            {
-                throw new ArgumentNullException("value");
-            }
-
-            this.Value = value;
-        }
-    }
-}
 namespace Fifthweek.Payments.Pipeline
 {
     using System;
-    using System.Linq;
     using System.Collections.Generic;
+    using System.Linq;
     using Fifthweek.CodeGeneration;
     using Fifthweek.Payments.Services;
     using Fifthweek.Payments.Snapshots;
@@ -148,11 +98,7 @@ namespace Fifthweek.Payments.Pipeline
 namespace Fifthweek.Payments.Pipeline
 {
     using System;
-    using System.Linq;
-    using System.Collections.Generic;
     using Fifthweek.CodeGeneration;
-    using Fifthweek.Payments.Services;
-    using Fifthweek.Payments.Snapshots;
 
     public partial class CostPeriod 
     {
@@ -185,26 +131,50 @@ namespace Fifthweek.Payments.Pipeline
 namespace Fifthweek.Payments.Services
 {
     using System;
-    using System.Linq;
+    using Fifthweek.Api.Identity.Shared.Membership;
+    using Fifthweek.Api.Persistence.Payments;
+    using Fifthweek.CodeGeneration;
+
+    public partial class CalculatedAccountBalanceResult 
+    {
+        public CalculatedAccountBalanceResult(
+            System.DateTime timestamp,
+            Fifthweek.Api.Identity.Shared.Membership.UserId userId,
+            Fifthweek.Api.Persistence.Payments.LedgerAccountType accountType,
+            System.Decimal amount)
+        {
+            if (timestamp == null)
+            {
+                throw new ArgumentNullException("timestamp");
+            }
+
+            if (userId == null)
+            {
+                throw new ArgumentNullException("userId");
+            }
+
+            if (accountType == null)
+            {
+                throw new ArgumentNullException("accountType");
+            }
+
+            if (amount == null)
+            {
+                throw new ArgumentNullException("amount");
+            }
+
+            this.Timestamp = timestamp;
+            this.UserId = userId;
+            this.AccountType = accountType;
+            this.Amount = amount;
+        }
+    }
+}
+namespace Fifthweek.Payments.Services
+{
+    using System;
     using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.CodeGeneration;
-    using Fifthweek.Api.Channels.Shared;
-    using System.Collections.Generic;
-    using System.Threading.Tasks;
-    using Dapper;
-    using Fifthweek.Api.Persistence;
-    using Fifthweek.Api.Persistence.Identity;
-    using Fifthweek.Api.Persistence.Snapshots;
-    using Fifthweek.Api.Persistence.Payments;
-    using Fifthweek.Payments.Snapshots;
-    using Fifthweek.Shared;
-    using System.Threading;
-    using Fifthweek.Azure;
-    using Newtonsoft.Json;
-    using Fifthweek.Payments.Shared;
-    using Fifthweek.Api.Azure;
-    using Fifthweek.Payments.Pipeline;
-    using Fifthweek.Payments.Services.Credit;
 
     public partial class CreatorIdAndFirstSubscribedDate 
     {
@@ -230,26 +200,7 @@ namespace Fifthweek.Payments.Services
 namespace Fifthweek.Payments.Services
 {
     using System;
-    using System.Linq;
-    using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.CodeGeneration;
-    using Fifthweek.Api.Channels.Shared;
-    using System.Collections.Generic;
-    using System.Threading.Tasks;
-    using Dapper;
-    using Fifthweek.Api.Persistence;
-    using Fifthweek.Api.Persistence.Identity;
-    using Fifthweek.Api.Persistence.Snapshots;
-    using Fifthweek.Api.Persistence.Payments;
-    using Fifthweek.Payments.Snapshots;
-    using Fifthweek.Shared;
-    using System.Threading;
-    using Fifthweek.Azure;
-    using Newtonsoft.Json;
-    using Fifthweek.Payments.Shared;
-    using Fifthweek.Api.Azure;
-    using Fifthweek.Payments.Pipeline;
-    using Fifthweek.Payments.Services.Credit;
 
     public partial class CreatorPercentageOverrideData 
     {
@@ -270,26 +221,8 @@ namespace Fifthweek.Payments.Services
 namespace Fifthweek.Payments.Services
 {
     using System;
-    using System.Linq;
-    using Fifthweek.Api.Identity.Shared.Membership;
-    using Fifthweek.CodeGeneration;
     using Fifthweek.Api.Channels.Shared;
-    using System.Collections.Generic;
-    using System.Threading.Tasks;
-    using Dapper;
-    using Fifthweek.Api.Persistence;
-    using Fifthweek.Api.Persistence.Identity;
-    using Fifthweek.Api.Persistence.Snapshots;
-    using Fifthweek.Api.Persistence.Payments;
-    using Fifthweek.Payments.Snapshots;
-    using Fifthweek.Shared;
-    using System.Threading;
-    using Fifthweek.Azure;
-    using Newtonsoft.Json;
-    using Fifthweek.Payments.Shared;
-    using Fifthweek.Api.Azure;
-    using Fifthweek.Payments.Pipeline;
-    using Fifthweek.Payments.Services.Credit;
+    using Fifthweek.CodeGeneration;
 
     public partial class CreatorPost 
     {
@@ -314,23 +247,35 @@ namespace Fifthweek.Payments.Services
 }
 namespace Fifthweek.Payments.Services.Credit
 {
-    using System;
-    using System.Linq;
     using Fifthweek.CodeGeneration;
+    using Fifthweek.Shared;
+
+    public partial class AmountInMinorDenomination 
+    {
+        public AmountInMinorDenomination(
+            System.Int32 value)
+        {
+            if (value == null)
+            {
+                throw new ArgumentNullException("value");
+            }
+
+            this.Value = value;
+        }
+    }
+}
+namespace Fifthweek.Payments.Services.Credit
+{
+    using System;
+    using System.Runtime.ExceptionServices;
     using System.Threading.Tasks;
     using Fifthweek.Api.Identity.Shared.Membership;
+    using Fifthweek.CodeGeneration;
     using Fifthweek.Payments.Services.Credit.Taxamo;
+    using Fifthweek.Payments.Shared;
+    using Fifthweek.Payments.Stripe;
     using Fifthweek.Shared;
     using Newtonsoft.Json;
-    using Fifthweek.Payments.Services;
-    using Dapper;
-    using Fifthweek.Api.Persistence;
-    using Fifthweek.Api.Persistence.Payments;
-    using Fifthweek.Payments.Services.Credit.Stripe;
-    using System.Collections.Generic;
-    using Fifthweek.Payments.Services.Credit;
-    using System.Runtime.ExceptionServices;
-    using Fifthweek.Payments.Stripe;
 
     public partial class ApplyUserCredit 
     {
@@ -383,23 +328,36 @@ namespace Fifthweek.Payments.Services.Credit
 }
 namespace Fifthweek.Payments.Services.Credit
 {
-    using System;
-    using System.Linq;
-    using Fifthweek.CodeGeneration;
     using System.Threading.Tasks;
-    using Fifthweek.Api.Identity.Shared.Membership;
-    using Fifthweek.Payments.Services.Credit.Taxamo;
-    using Fifthweek.Shared;
-    using Newtonsoft.Json;
-    using Fifthweek.Payments.Services;
     using Dapper;
+    using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.Api.Persistence;
     using Fifthweek.Api.Persistence.Payments;
-    using Fifthweek.Payments.Services.Credit.Stripe;
-    using System.Collections.Generic;
-    using Fifthweek.Payments.Services.Credit;
-    using System.Runtime.ExceptionServices;
-    using Fifthweek.Payments.Stripe;
+    using Fifthweek.CodeGeneration;
+    using Fifthweek.Shared;
+
+    public partial class ClearPaymentStatusDbStatement 
+    {
+        public ClearPaymentStatusDbStatement(
+            Fifthweek.Api.Persistence.IFifthweekDbConnectionFactory connectionFactory)
+        {
+            if (connectionFactory == null)
+            {
+                throw new ArgumentNullException("connectionFactory");
+            }
+
+            this.connectionFactory = connectionFactory;
+        }
+    }
+}
+namespace Fifthweek.Payments.Services.Credit
+{
+    using System.Threading.Tasks;
+    using Fifthweek.Api.Identity.Shared.Membership;
+    using Fifthweek.CodeGeneration;
+    using Fifthweek.Payments.Services;
+    using Fifthweek.Payments.Services.Credit.Taxamo;
+    using Fifthweek.Shared;
 
     public partial class CommitCreditToDatabase 
     {
@@ -438,23 +396,66 @@ namespace Fifthweek.Payments.Services.Credit
 }
 namespace Fifthweek.Payments.Services.Credit
 {
-    using System;
-    using System.Linq;
-    using Fifthweek.CodeGeneration;
     using System.Threading.Tasks;
     using Fifthweek.Api.Identity.Shared.Membership;
-    using Fifthweek.Payments.Services.Credit.Taxamo;
+    using Fifthweek.CodeGeneration;
     using Fifthweek.Shared;
-    using Newtonsoft.Json;
-    using Fifthweek.Payments.Services;
+
+    public partial class CommitTestUserCreditToDatabase 
+    {
+        public CommitTestUserCreditToDatabase(
+            Fifthweek.Shared.ITimestampCreator timestampCreator,
+            Fifthweek.Payments.Services.Credit.ISetTestUserAccountBalanceDbStatement setTestUserAccountBalance)
+        {
+            if (timestampCreator == null)
+            {
+                throw new ArgumentNullException("timestampCreator");
+            }
+
+            if (setTestUserAccountBalance == null)
+            {
+                throw new ArgumentNullException("setTestUserAccountBalance");
+            }
+
+            this.timestampCreator = timestampCreator;
+            this.setTestUserAccountBalance = setTestUserAccountBalance;
+        }
+    }
+}
+namespace Fifthweek.Payments.Services.Credit
+{
+    using System.Threading.Tasks;
     using Dapper;
+    using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.Api.Persistence;
     using Fifthweek.Api.Persistence.Payments;
-    using Fifthweek.Payments.Services.Credit.Stripe;
-    using System.Collections.Generic;
-    using Fifthweek.Payments.Services.Credit;
-    using System.Runtime.ExceptionServices;
-    using Fifthweek.Payments.Stripe;
+    using Fifthweek.CodeGeneration;
+    using Fifthweek.Shared;
+
+    public partial class FailPaymentStatusDbStatement 
+    {
+        public FailPaymentStatusDbStatement(
+            Fifthweek.Api.Persistence.IFifthweekDbConnectionFactory connectionFactory)
+        {
+            if (connectionFactory == null)
+            {
+                throw new ArgumentNullException("connectionFactory");
+            }
+
+            this.connectionFactory = connectionFactory;
+        }
+    }
+}
+namespace Fifthweek.Payments.Services.Credit
+{
+    using System.Linq;
+    using System.Threading.Tasks;
+    using Dapper;
+    using Fifthweek.Api.Identity.Shared.Membership;
+    using Fifthweek.Api.Persistence;
+    using Fifthweek.Api.Persistence.Payments;
+    using Fifthweek.CodeGeneration;
+    using Fifthweek.Shared;
 
     public partial class GetUserPaymentOriginDbStatement 
     {
@@ -473,22 +474,86 @@ namespace Fifthweek.Payments.Services.Credit
 namespace Fifthweek.Payments.Services.Credit
 {
     using System;
+    using System.Collections.Generic;
     using System.Linq;
-    using Fifthweek.CodeGeneration;
     using System.Threading.Tasks;
-    using Fifthweek.Api.Identity.Shared.Membership;
-    using Fifthweek.Payments.Services.Credit.Taxamo;
-    using Fifthweek.Shared;
-    using Newtonsoft.Json;
-    using Fifthweek.Payments.Services;
     using Dapper;
+    using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.Api.Persistence;
     using Fifthweek.Api.Persistence.Payments;
-    using Fifthweek.Payments.Services.Credit.Stripe;
+    using Fifthweek.CodeGeneration;
+
+    public partial class GetUsersRequiringPaymentRetryDbStatement 
+    {
+        public GetUsersRequiringPaymentRetryDbStatement(
+            Fifthweek.Api.Persistence.IFifthweekDbConnectionFactory connectionFactory)
+        {
+            if (connectionFactory == null)
+            {
+                throw new ArgumentNullException("connectionFactory");
+            }
+
+            this.connectionFactory = connectionFactory;
+        }
+    }
+}
+namespace Fifthweek.Payments.Services.Credit
+{
+    using System.Threading.Tasks;
+    using Dapper;
+    using Fifthweek.Api.Identity.Shared.Membership;
+    using Fifthweek.Api.Persistence;
+    using Fifthweek.CodeGeneration;
+    using Fifthweek.Shared;
+
+    public partial class GetUserWeeklySubscriptionsCost 
+    {
+        public GetUserWeeklySubscriptionsCost(
+            Fifthweek.Api.Persistence.IFifthweekDbConnectionFactory connectionFactory)
+        {
+            if (connectionFactory == null)
+            {
+                throw new ArgumentNullException("connectionFactory");
+            }
+
+            this.connectionFactory = connectionFactory;
+        }
+    }
+}
+namespace Fifthweek.Payments.Services.Credit
+{
     using System.Collections.Generic;
-    using Fifthweek.Payments.Services.Credit;
-    using System.Runtime.ExceptionServices;
-    using Fifthweek.Payments.Stripe;
+    using System.Linq;
+    using System.Threading.Tasks;
+    using Dapper;
+    using Fifthweek.Api.Identity.Shared.Membership;
+    using Fifthweek.Api.Persistence;
+    using Fifthweek.Api.Persistence.Payments;
+    using Fifthweek.CodeGeneration;
+    using Fifthweek.Shared;
+
+    public partial class IncrementPaymentStatusDbStatement 
+    {
+        public IncrementPaymentStatusDbStatement(
+            Fifthweek.Api.Persistence.IFifthweekDbConnectionFactory connectionFactory)
+        {
+            if (connectionFactory == null)
+            {
+                throw new ArgumentNullException("connectionFactory");
+            }
+
+            this.connectionFactory = connectionFactory;
+        }
+    }
+}
+namespace Fifthweek.Payments.Services.Credit
+{
+    using System.Threading.Tasks;
+    using Fifthweek.Api.Identity.Shared.Membership;
+    using Fifthweek.Api.Persistence.Payments;
+    using Fifthweek.CodeGeneration;
+    using Fifthweek.Payments.Services.Credit.Taxamo;
+    using Fifthweek.Shared;
 
     public partial class InitializeCreditRequest 
     {
@@ -520,23 +585,8 @@ namespace Fifthweek.Payments.Services.Credit
 }
 namespace Fifthweek.Payments.Services.Credit
 {
-    using System;
-    using System.Linq;
     using Fifthweek.CodeGeneration;
-    using System.Threading.Tasks;
-    using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.Payments.Services.Credit.Taxamo;
-    using Fifthweek.Shared;
-    using Newtonsoft.Json;
-    using Fifthweek.Payments.Services;
-    using Dapper;
-    using Fifthweek.Api.Persistence;
-    using Fifthweek.Api.Persistence.Payments;
-    using Fifthweek.Payments.Services.Credit.Stripe;
-    using System.Collections.Generic;
-    using Fifthweek.Payments.Services.Credit;
-    using System.Runtime.ExceptionServices;
-    using Fifthweek.Payments.Stripe;
 
     public partial class InitializeCreditRequestResult 
     {
@@ -562,70 +612,41 @@ namespace Fifthweek.Payments.Services.Credit
 namespace Fifthweek.Payments.Services.Credit
 {
     using System;
-    using System.Linq;
-    using Fifthweek.CodeGeneration;
     using System.Threading.Tasks;
     using Fifthweek.Api.Identity.Shared.Membership;
-    using Fifthweek.Payments.Services.Credit.Taxamo;
-    using Fifthweek.Shared;
-    using Newtonsoft.Json;
-    using Fifthweek.Payments.Services;
-    using Dapper;
-    using Fifthweek.Api.Persistence;
     using Fifthweek.Api.Persistence.Payments;
+    using Fifthweek.CodeGeneration;
     using Fifthweek.Payments.Services.Credit.Stripe;
-    using System.Collections.Generic;
-    using Fifthweek.Payments.Services.Credit;
-    using System.Runtime.ExceptionServices;
+    using Fifthweek.Payments.Services.Credit.Taxamo;
+    using Fifthweek.Payments.Shared;
     using Fifthweek.Payments.Stripe;
+    using Fifthweek.Shared;
 
     public partial class PerformCreditRequest 
     {
         public PerformCreditRequest(
-            Fifthweek.Shared.ITimestampCreator timestampCreator,
-            Fifthweek.Payments.Services.Credit.Stripe.IPerformStripeCharge performStripeCharge,
-            Fifthweek.Shared.IGuidCreator guidCreator)
+            Fifthweek.Payments.Services.Credit.Stripe.IPerformStripeCharge performStripeCharge)
         {
-            if (timestampCreator == null)
-            {
-                throw new ArgumentNullException("timestampCreator");
-            }
-
             if (performStripeCharge == null)
             {
                 throw new ArgumentNullException("performStripeCharge");
             }
 
-            if (guidCreator == null)
-            {
-                throw new ArgumentNullException("guidCreator");
-            }
-
-            this.timestampCreator = timestampCreator;
             this.performStripeCharge = performStripeCharge;
-            this.guidCreator = guidCreator;
         }
     }
 }
 namespace Fifthweek.Payments.Services.Credit
 {
     using System;
-    using System.Linq;
-    using Fifthweek.CodeGeneration;
+    using System.Collections.Generic;
     using System.Threading.Tasks;
     using Fifthweek.Api.Identity.Shared.Membership;
-    using Fifthweek.Payments.Services.Credit.Taxamo;
-    using Fifthweek.Shared;
-    using Newtonsoft.Json;
-    using Fifthweek.Payments.Services;
-    using Dapper;
     using Fifthweek.Api.Persistence;
     using Fifthweek.Api.Persistence.Payments;
-    using Fifthweek.Payments.Services.Credit.Stripe;
-    using System.Collections.Generic;
-    using Fifthweek.Payments.Services.Credit;
-    using System.Runtime.ExceptionServices;
-    using Fifthweek.Payments.Stripe;
+    using Fifthweek.CodeGeneration;
+    using Fifthweek.Payments.Shared;
+    using Fifthweek.Shared;
 
     public partial class SaveCustomerCreditToLedgerDbStatement 
     {
@@ -651,22 +672,36 @@ namespace Fifthweek.Payments.Services.Credit
 namespace Fifthweek.Payments.Services.Credit
 {
     using System;
-    using System.Linq;
-    using Fifthweek.CodeGeneration;
     using System.Threading.Tasks;
-    using Fifthweek.Api.Identity.Shared.Membership;
-    using Fifthweek.Payments.Services.Credit.Taxamo;
-    using Fifthweek.Shared;
-    using Newtonsoft.Json;
-    using Fifthweek.Payments.Services;
     using Dapper;
+    using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.Api.Persistence;
     using Fifthweek.Api.Persistence.Payments;
-    using Fifthweek.Payments.Services.Credit.Stripe;
-    using System.Collections.Generic;
-    using Fifthweek.Payments.Services.Credit;
-    using System.Runtime.ExceptionServices;
-    using Fifthweek.Payments.Stripe;
+    using Fifthweek.CodeGeneration;
+    using Fifthweek.Shared;
+
+    public partial class SetTestUserAccountBalanceDbStatement 
+    {
+        public SetTestUserAccountBalanceDbStatement(
+            Fifthweek.Api.Persistence.IFifthweekDbConnectionFactory connectionFactory)
+        {
+            if (connectionFactory == null)
+            {
+                throw new ArgumentNullException("connectionFactory");
+            }
+
+            this.connectionFactory = connectionFactory;
+        }
+    }
+}
+namespace Fifthweek.Payments.Services.Credit
+{
+    using System.Threading.Tasks;
+    using Fifthweek.Api.Identity.Shared.Membership;
+    using Fifthweek.Api.Persistence;
+    using Fifthweek.Api.Persistence.Payments;
+    using Fifthweek.CodeGeneration;
+    using Fifthweek.Shared;
 
     public partial class SetUserPaymentOriginOriginalTaxamoTransactionKeyDbStatement 
     {
@@ -682,31 +717,111 @@ namespace Fifthweek.Payments.Services.Credit
         }
     }
 }
+namespace Fifthweek.Payments.Services.Credit.Stripe
+{
+    using System;
+    using System.Threading.Tasks;
+    using Fifthweek.Api.Identity.Shared.Membership;
+    using Fifthweek.CodeGeneration;
+    using Fifthweek.Payments.Stripe;
+    using Fifthweek.Shared;
+    using global::Stripe;
+
+    public partial class CreateStripeCustomer 
+    {
+        public CreateStripeCustomer(
+            Fifthweek.Payments.Stripe.IStripeApiKeyRepository apiKeyRepository,
+            Fifthweek.Payments.Stripe.IStripeService stripeService)
+        {
+            if (apiKeyRepository == null)
+            {
+                throw new ArgumentNullException("apiKeyRepository");
+            }
+
+            if (stripeService == null)
+            {
+                throw new ArgumentNullException("stripeService");
+            }
+
+            this.apiKeyRepository = apiKeyRepository;
+            this.stripeService = stripeService;
+        }
+    }
+}
+namespace Fifthweek.Payments.Services.Credit.Stripe
+{
+    using System;
+    using System.Collections.Generic;
+    using System.Threading.Tasks;
+    using Fifthweek.Api.Identity.Shared.Membership;
+    using Fifthweek.CodeGeneration;
+    using Fifthweek.Payments.Shared;
+    using Fifthweek.Payments.Stripe;
+    using Fifthweek.Shared;
+    using global::Stripe;
+
+    public partial class PerformStripeCharge 
+    {
+        public PerformStripeCharge(
+            Fifthweek.Payments.Stripe.IStripeApiKeyRepository apiKeyRepository,
+            Fifthweek.Payments.Stripe.IStripeService stripeService)
+        {
+            if (apiKeyRepository == null)
+            {
+                throw new ArgumentNullException("apiKeyRepository");
+            }
+
+            if (stripeService == null)
+            {
+                throw new ArgumentNullException("stripeService");
+            }
+
+            this.apiKeyRepository = apiKeyRepository;
+            this.stripeService = stripeService;
+        }
+    }
+}
+namespace Fifthweek.Payments.Services.Credit.Stripe
+{
+    using System.Threading.Tasks;
+    using Fifthweek.Api.Identity.Shared.Membership;
+    using Fifthweek.CodeGeneration;
+    using Fifthweek.Payments.Stripe;
+    using Fifthweek.Shared;
+    using global::Stripe;
+
+    public partial class UpdateStripeCustomerCreditCard 
+    {
+        public UpdateStripeCustomerCreditCard(
+            Fifthweek.Payments.Stripe.IStripeApiKeyRepository apiKeyRepository,
+            Fifthweek.Payments.Stripe.IStripeService stripeService)
+        {
+            if (apiKeyRepository == null)
+            {
+                throw new ArgumentNullException("apiKeyRepository");
+            }
+
+            if (stripeService == null)
+            {
+                throw new ArgumentNullException("stripeService");
+            }
+
+            this.apiKeyRepository = apiKeyRepository;
+            this.stripeService = stripeService;
+        }
+    }
+}
 namespace Fifthweek.Payments.Services.Credit
 {
     using System;
-    using System.Linq;
     using Fifthweek.CodeGeneration;
-    using System.Threading.Tasks;
-    using Fifthweek.Api.Identity.Shared.Membership;
-    using Fifthweek.Payments.Services.Credit.Taxamo;
-    using Fifthweek.Shared;
-    using Newtonsoft.Json;
-    using Fifthweek.Payments.Services;
-    using Dapper;
-    using Fifthweek.Api.Persistence;
-    using Fifthweek.Api.Persistence.Payments;
-    using Fifthweek.Payments.Services.Credit.Stripe;
-    using System.Collections.Generic;
-    using Fifthweek.Payments.Services.Credit;
-    using System.Runtime.ExceptionServices;
-    using Fifthweek.Payments.Stripe;
+    using Fifthweek.Payments.Shared;
 
     public partial class StripeTransactionResult 
     {
         public StripeTransactionResult(
             System.DateTime timestamp,
-            System.Guid transactionReference,
+            Fifthweek.Payments.Shared.TransactionReference transactionReference,
             System.String stripeChargeId)
         {
             if (timestamp == null)
@@ -733,15 +848,200 @@ namespace Fifthweek.Payments.Services.Credit
 namespace Fifthweek.Payments.Services.Credit.Taxamo
 {
     using System;
-    using System.Linq;
-    using Fifthweek.CodeGeneration;
     using System.Threading.Tasks;
+    using Fifthweek.CodeGeneration;
+    using Fifthweek.Payments.Taxamo;
+    using Fifthweek.Shared;
+    using global::Taxamo.Model;
+
+    public partial class CommitTaxamoTransaction 
+    {
+        public CommitTaxamoTransaction(
+            Fifthweek.Payments.Taxamo.ITaxamoApiKeyRepository taxamoApiKeyRepository,
+            Fifthweek.Payments.Taxamo.ITaxamoService taxamoService)
+        {
+            if (taxamoApiKeyRepository == null)
+            {
+                throw new ArgumentNullException("taxamoApiKeyRepository");
+            }
+
+            if (taxamoService == null)
+            {
+                throw new ArgumentNullException("taxamoService");
+            }
+
+            this.taxamoApiKeyRepository = taxamoApiKeyRepository;
+            this.taxamoService = taxamoService;
+        }
+    }
+}
+namespace Fifthweek.Payments.Services.Credit.Taxamo
+{
+    using System;
+    using System.Collections.Generic;
+    using System.Threading.Tasks;
+    using Fifthweek.CodeGeneration;
+    using Fifthweek.Payments.Taxamo;
+    using Fifthweek.Shared;
+    using global::Taxamo.Model;
+
+    public partial class CreateTaxamoTransaction 
+    {
+        public CreateTaxamoTransaction(
+            Fifthweek.Payments.Taxamo.ITaxamoApiKeyRepository taxamoApiKeyRepository,
+            Fifthweek.Payments.Taxamo.ITaxamoService taxamoService)
+        {
+            if (taxamoApiKeyRepository == null)
+            {
+                throw new ArgumentNullException("taxamoApiKeyRepository");
+            }
+
+            if (taxamoService == null)
+            {
+                throw new ArgumentNullException("taxamoService");
+            }
+
+            this.taxamoApiKeyRepository = taxamoApiKeyRepository;
+            this.taxamoService = taxamoService;
+        }
+    }
+}
+namespace Fifthweek.Payments.Services.Credit.Taxamo
+{
+    using System.Threading.Tasks;
+    using Fifthweek.CodeGeneration;
+    using Fifthweek.Payments.Taxamo;
+    using Fifthweek.Shared;
+
+    public partial class DeleteTaxamoTransaction 
+    {
+        public DeleteTaxamoTransaction(
+            Fifthweek.Payments.Taxamo.ITaxamoApiKeyRepository taxamoApiKeyRepository,
+            Fifthweek.Payments.Taxamo.ITaxamoService taxamoService)
+        {
+            if (taxamoApiKeyRepository == null)
+            {
+                throw new ArgumentNullException("taxamoApiKeyRepository");
+            }
+
+            if (taxamoService == null)
+            {
+                throw new ArgumentNullException("taxamoService");
+            }
+
+            this.taxamoApiKeyRepository = taxamoApiKeyRepository;
+            this.taxamoService = taxamoService;
+        }
+    }
+}
+namespace Fifthweek.Payments.Services.Credit.Taxamo
+{
+    using System;
+    using System.Collections.Generic;
+    using System.Threading.Tasks;
+    using Fifthweek.CodeGeneration;
     using Fifthweek.Payments.Taxamo;
     using Fifthweek.Shared;
     using global::Taxamo.Api;
     using global::Taxamo.Client;
     using global::Taxamo.Model;
+
+    public partial class GetTaxInformation 
+    {
+        public GetTaxInformation(
+            Fifthweek.Payments.Taxamo.ITaxamoApiKeyRepository taxamoApiKeyRepository,
+            Fifthweek.Payments.Taxamo.ITaxamoService taxamoService)
+        {
+            if (taxamoApiKeyRepository == null)
+            {
+                throw new ArgumentNullException("taxamoApiKeyRepository");
+            }
+
+            if (taxamoService == null)
+            {
+                throw new ArgumentNullException("taxamoService");
+            }
+
+            this.taxamoApiKeyRepository = taxamoApiKeyRepository;
+            this.taxamoService = taxamoService;
+        }
+    }
+}
+namespace Fifthweek.Payments.Services.Credit.Taxamo
+{
     using System.Collections.Generic;
+    using Fifthweek.CodeGeneration;
+
+    public partial class TaxamoCalculationResult
+    {
+        public partial class PossibleCountry 
+        {
+            public PossibleCountry(
+                System.String name,
+                System.String countryCode)
+            {
+                if (name == null)
+                {
+                    throw new ArgumentNullException("name");
+                }
+
+                if (countryCode == null)
+                {
+                    throw new ArgumentNullException("countryCode");
+                }
+
+                this.Name = name;
+                this.CountryCode = countryCode;
+            }
+        }
+    }
+}
+namespace Fifthweek.Payments.Services.Credit.Taxamo
+{
+    using System.Collections.Generic;
+    using Fifthweek.CodeGeneration;
+
+    public partial class TaxamoCalculationResult 
+    {
+        public TaxamoCalculationResult(
+            Fifthweek.Payments.Services.Credit.AmountInMinorDenomination amount,
+            Fifthweek.Payments.Services.Credit.AmountInMinorDenomination totalAmount,
+            Fifthweek.Payments.Services.Credit.AmountInMinorDenomination taxAmount,
+            System.Nullable<System.Decimal> taxRate,
+            System.String taxName,
+            System.String taxEntityName,
+            System.String countryName,
+            System.Collections.Generic.IReadOnlyList<Fifthweek.Payments.Services.Credit.Taxamo.TaxamoCalculationResult.PossibleCountry> possibleCountries)
+        {
+            if (amount == null)
+            {
+                throw new ArgumentNullException("amount");
+            }
+
+            if (totalAmount == null)
+            {
+                throw new ArgumentNullException("totalAmount");
+            }
+
+            if (taxAmount == null)
+            {
+                throw new ArgumentNullException("taxAmount");
+            }
+
+            this.Amount = amount;
+            this.TotalAmount = totalAmount;
+            this.TaxAmount = taxAmount;
+            this.TaxRate = taxRate;
+            this.TaxName = taxName;
+            this.TaxEntityName = taxEntityName;
+            this.CountryName = countryName;
+            this.PossibleCountries = possibleCountries;
+        }
+    }
+}
+namespace Fifthweek.Payments.Services.Credit.Taxamo
+{
+    using Fifthweek.CodeGeneration;
 
     public partial class TaxamoTransactionResult 
     {
@@ -789,22 +1089,75 @@ namespace Fifthweek.Payments.Services.Credit.Taxamo
 namespace Fifthweek.Payments.Services.Credit
 {
     using System;
-    using System.Linq;
-    using Fifthweek.CodeGeneration;
-    using System.Threading.Tasks;
-    using Fifthweek.Api.Identity.Shared.Membership;
-    using Fifthweek.Payments.Services.Credit.Taxamo;
-    using Fifthweek.Shared;
-    using Newtonsoft.Json;
-    using Fifthweek.Payments.Services;
-    using Dapper;
-    using Fifthweek.Api.Persistence;
-    using Fifthweek.Api.Persistence.Payments;
-    using Fifthweek.Payments.Services.Credit.Stripe;
     using System.Collections.Generic;
+    using System.Linq;
+    using System.Threading.Tasks;
+    using Fifthweek.Api.Persistence.Payments;
+    using Fifthweek.CodeGeneration;
     using Fifthweek.Payments.Services.Credit;
-    using System.Runtime.ExceptionServices;
-    using Fifthweek.Payments.Stripe;
+    using Fifthweek.Payments.Shared;
+    using Fifthweek.Shared;
+
+    public partial class TopUpUserAccountsWithCredit 
+    {
+        public TopUpUserAccountsWithCredit(
+            Fifthweek.Payments.Services.Credit.IGetUsersRequiringPaymentRetryDbStatement getUsersRequiringPaymentRetry,
+            Fifthweek.Payments.Services.Credit.IApplyUserCredit applyUserCredit,
+            Fifthweek.Payments.Services.Credit.IGetUserWeeklySubscriptionsCost getUserWeeklySubscriptionsCost,
+            Fifthweek.Payments.Services.Credit.IIncrementPaymentStatusDbStatement incrementPaymentStatus,
+            Fifthweek.Payments.Services.Credit.IGetUserPaymentOriginDbStatement getUserPaymentOrigin,
+            Fifthweek.Shared.ITimestampCreator timestampCreator,
+            Fifthweek.Shared.IGuidCreator guidCreator)
+        {
+            if (getUsersRequiringPaymentRetry == null)
+            {
+                throw new ArgumentNullException("getUsersRequiringPaymentRetry");
+            }
+
+            if (applyUserCredit == null)
+            {
+                throw new ArgumentNullException("applyUserCredit");
+            }
+
+            if (getUserWeeklySubscriptionsCost == null)
+            {
+                throw new ArgumentNullException("getUserWeeklySubscriptionsCost");
+            }
+
+            if (incrementPaymentStatus == null)
+            {
+                throw new ArgumentNullException("incrementPaymentStatus");
+            }
+
+            if (getUserPaymentOrigin == null)
+            {
+                throw new ArgumentNullException("getUserPaymentOrigin");
+            }
+
+            if (timestampCreator == null)
+            {
+                throw new ArgumentNullException("timestampCreator");
+            }
+
+            if (guidCreator == null)
+            {
+                throw new ArgumentNullException("guidCreator");
+            }
+
+            this.getUsersRequiringPaymentRetry = getUsersRequiringPaymentRetry;
+            this.applyUserCredit = applyUserCredit;
+            this.getUserWeeklySubscriptionsCost = getUserWeeklySubscriptionsCost;
+            this.incrementPaymentStatus = incrementPaymentStatus;
+            this.getUserPaymentOrigin = getUserPaymentOrigin;
+            this.timestampCreator = timestampCreator;
+            this.guidCreator = guidCreator;
+        }
+    }
+}
+namespace Fifthweek.Payments.Services.Credit
+{
+    using Fifthweek.Api.Persistence.Payments;
+    using Fifthweek.CodeGeneration;
 
     public partial class UserPaymentOriginResult 
     {
@@ -830,26 +1183,15 @@ namespace Fifthweek.Payments.Services.Credit
 namespace Fifthweek.Payments.Services
 {
     using System;
-    using System.Linq;
-    using Fifthweek.Api.Identity.Shared.Membership;
-    using Fifthweek.CodeGeneration;
-    using Fifthweek.Api.Channels.Shared;
     using System.Collections.Generic;
+    using System.Linq;
     using System.Threading.Tasks;
     using Dapper;
+    using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.Api.Persistence;
     using Fifthweek.Api.Persistence.Identity;
     using Fifthweek.Api.Persistence.Snapshots;
-    using Fifthweek.Api.Persistence.Payments;
-    using Fifthweek.Payments.Snapshots;
-    using Fifthweek.Shared;
-    using System.Threading;
-    using Fifthweek.Azure;
-    using Newtonsoft.Json;
-    using Fifthweek.Payments.Shared;
-    using Fifthweek.Api.Azure;
-    using Fifthweek.Payments.Pipeline;
-    using Fifthweek.Payments.Services.Credit;
+    using Fifthweek.CodeGeneration;
 
     public partial class GetAllSubscribersDbStatement 
     {
@@ -868,26 +1210,15 @@ namespace Fifthweek.Payments.Services
 namespace Fifthweek.Payments.Services
 {
     using System;
-    using System.Linq;
-    using Fifthweek.Api.Identity.Shared.Membership;
-    using Fifthweek.CodeGeneration;
-    using Fifthweek.Api.Channels.Shared;
     using System.Collections.Generic;
+    using System.Linq;
     using System.Threading.Tasks;
     using Dapper;
+    using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.Api.Persistence;
-    using Fifthweek.Api.Persistence.Identity;
-    using Fifthweek.Api.Persistence.Snapshots;
     using Fifthweek.Api.Persistence.Payments;
-    using Fifthweek.Payments.Snapshots;
-    using Fifthweek.Shared;
-    using System.Threading;
-    using Fifthweek.Azure;
-    using Newtonsoft.Json;
-    using Fifthweek.Payments.Shared;
-    using Fifthweek.Api.Azure;
-    using Fifthweek.Payments.Pipeline;
-    using Fifthweek.Payments.Services.Credit;
+    using Fifthweek.Api.Persistence.Snapshots;
+    using Fifthweek.CodeGeneration;
 
     public partial class GetCalculatedAccountBalancesDbStatement 
     {
@@ -906,26 +1237,42 @@ namespace Fifthweek.Payments.Services
 namespace Fifthweek.Payments.Services
 {
     using System;
-    using System.Linq;
-    using Fifthweek.Api.Identity.Shared.Membership;
-    using Fifthweek.CodeGeneration;
-    using Fifthweek.Api.Channels.Shared;
     using System.Collections.Generic;
+    using System.Linq;
     using System.Threading.Tasks;
     using Dapper;
+    using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.Api.Persistence;
-    using Fifthweek.Api.Persistence.Identity;
-    using Fifthweek.Api.Persistence.Snapshots;
     using Fifthweek.Api.Persistence.Payments;
-    using Fifthweek.Payments.Snapshots;
+    using Fifthweek.CodeGeneration;
     using Fifthweek.Shared;
-    using System.Threading;
-    using Fifthweek.Azure;
-    using Newtonsoft.Json;
-    using Fifthweek.Payments.Shared;
-    using Fifthweek.Api.Azure;
-    using Fifthweek.Payments.Pipeline;
-    using Fifthweek.Payments.Services.Credit;
+
+    public partial class GetCommittedAccountBalanceDbStatement 
+    {
+        public GetCommittedAccountBalanceDbStatement(
+            Fifthweek.Api.Persistence.IFifthweekDbConnectionFactory connectionFactory)
+        {
+            if (connectionFactory == null)
+            {
+                throw new ArgumentNullException("connectionFactory");
+            }
+
+            this.connectionFactory = connectionFactory;
+        }
+    }
+}
+namespace Fifthweek.Payments.Services
+{
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Threading.Tasks;
+    using Dapper;
+    using Fifthweek.Api.Channels.Shared;
+    using Fifthweek.Api.Identity.Shared.Membership;
+    using Fifthweek.Api.Persistence;
+    using Fifthweek.Api.Persistence.Snapshots;
+    using Fifthweek.CodeGeneration;
 
     public partial class GetCreatorChannelsSnapshotsDbStatement 
     {
@@ -944,26 +1291,15 @@ namespace Fifthweek.Payments.Services
 namespace Fifthweek.Payments.Services
 {
     using System;
-    using System.Linq;
-    using Fifthweek.Api.Identity.Shared.Membership;
-    using Fifthweek.CodeGeneration;
-    using Fifthweek.Api.Channels.Shared;
     using System.Collections.Generic;
+    using System.Linq;
     using System.Threading.Tasks;
     using Dapper;
+    using Fifthweek.Api.Channels.Shared;
+    using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.Api.Persistence;
-    using Fifthweek.Api.Persistence.Identity;
     using Fifthweek.Api.Persistence.Snapshots;
-    using Fifthweek.Api.Persistence.Payments;
-    using Fifthweek.Payments.Snapshots;
-    using Fifthweek.Shared;
-    using System.Threading;
-    using Fifthweek.Azure;
-    using Newtonsoft.Json;
-    using Fifthweek.Payments.Shared;
-    using Fifthweek.Api.Azure;
-    using Fifthweek.Payments.Pipeline;
-    using Fifthweek.Payments.Services.Credit;
+    using Fifthweek.CodeGeneration;
 
     public partial class GetCreatorFreeAccessUsersSnapshotsDbStatement 
     {
@@ -982,26 +1318,15 @@ namespace Fifthweek.Payments.Services
 namespace Fifthweek.Payments.Services
 {
     using System;
-    using System.Linq;
-    using Fifthweek.Api.Identity.Shared.Membership;
-    using Fifthweek.CodeGeneration;
-    using Fifthweek.Api.Channels.Shared;
     using System.Collections.Generic;
+    using System.Linq;
     using System.Threading.Tasks;
     using Dapper;
+    using Fifthweek.Api.Channels.Shared;
+    using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.Api.Persistence;
-    using Fifthweek.Api.Persistence.Identity;
-    using Fifthweek.Api.Persistence.Snapshots;
     using Fifthweek.Api.Persistence.Payments;
-    using Fifthweek.Payments.Snapshots;
-    using Fifthweek.Shared;
-    using System.Threading;
-    using Fifthweek.Azure;
-    using Newtonsoft.Json;
-    using Fifthweek.Payments.Shared;
-    using Fifthweek.Api.Azure;
-    using Fifthweek.Payments.Pipeline;
-    using Fifthweek.Payments.Services.Credit;
+    using Fifthweek.CodeGeneration;
 
     public partial class GetCreatorPercentageOverrideDbStatement 
     {
@@ -1020,26 +1345,14 @@ namespace Fifthweek.Payments.Services
 namespace Fifthweek.Payments.Services
 {
     using System;
-    using System.Linq;
-    using Fifthweek.Api.Identity.Shared.Membership;
-    using Fifthweek.CodeGeneration;
-    using Fifthweek.Api.Channels.Shared;
     using System.Collections.Generic;
+    using System.Linq;
     using System.Threading.Tasks;
     using Dapper;
+    using Fifthweek.Api.Channels.Shared;
+    using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.Api.Persistence;
-    using Fifthweek.Api.Persistence.Identity;
-    using Fifthweek.Api.Persistence.Snapshots;
-    using Fifthweek.Api.Persistence.Payments;
-    using Fifthweek.Payments.Snapshots;
-    using Fifthweek.Shared;
-    using System.Threading;
-    using Fifthweek.Azure;
-    using Newtonsoft.Json;
-    using Fifthweek.Payments.Shared;
-    using Fifthweek.Api.Azure;
-    using Fifthweek.Payments.Pipeline;
-    using Fifthweek.Payments.Services.Credit;
+    using Fifthweek.CodeGeneration;
 
     public partial class GetCreatorPostsDbStatement 
     {
@@ -1058,26 +1371,15 @@ namespace Fifthweek.Payments.Services
 namespace Fifthweek.Payments.Services
 {
     using System;
-    using System.Linq;
-    using Fifthweek.Api.Identity.Shared.Membership;
-    using Fifthweek.CodeGeneration;
-    using Fifthweek.Api.Channels.Shared;
     using System.Collections.Generic;
+    using System.Linq;
     using System.Threading.Tasks;
     using Dapper;
+    using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.Api.Persistence;
     using Fifthweek.Api.Persistence.Identity;
     using Fifthweek.Api.Persistence.Snapshots;
-    using Fifthweek.Api.Persistence.Payments;
-    using Fifthweek.Payments.Snapshots;
-    using Fifthweek.Shared;
-    using System.Threading;
-    using Fifthweek.Azure;
-    using Newtonsoft.Json;
-    using Fifthweek.Payments.Shared;
-    using Fifthweek.Api.Azure;
-    using Fifthweek.Payments.Pipeline;
-    using Fifthweek.Payments.Services.Credit;
+    using Fifthweek.CodeGeneration;
 
     public partial class GetCreatorsAndFirstSubscribedDatesDbStatement 
     {
@@ -1096,26 +1398,15 @@ namespace Fifthweek.Payments.Services
 namespace Fifthweek.Payments.Services
 {
     using System;
-    using System.Linq;
-    using Fifthweek.Api.Identity.Shared.Membership;
-    using Fifthweek.CodeGeneration;
-    using Fifthweek.Api.Channels.Shared;
     using System.Collections.Generic;
+    using System.Linq;
     using System.Threading.Tasks;
     using Dapper;
+    using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.Api.Persistence;
-    using Fifthweek.Api.Persistence.Identity;
-    using Fifthweek.Api.Persistence.Snapshots;
     using Fifthweek.Api.Persistence.Payments;
-    using Fifthweek.Payments.Snapshots;
-    using Fifthweek.Shared;
-    using System.Threading;
-    using Fifthweek.Azure;
-    using Newtonsoft.Json;
-    using Fifthweek.Payments.Shared;
-    using Fifthweek.Api.Azure;
-    using Fifthweek.Payments.Pipeline;
-    using Fifthweek.Payments.Services.Credit;
+    using Fifthweek.Api.Persistence.Snapshots;
+    using Fifthweek.CodeGeneration;
 
     public partial class GetLatestCommittedLedgerDateDbStatement 
     {
@@ -1134,26 +1425,14 @@ namespace Fifthweek.Payments.Services
 namespace Fifthweek.Payments.Services
 {
     using System;
-    using System.Linq;
-    using Fifthweek.Api.Identity.Shared.Membership;
-    using Fifthweek.CodeGeneration;
-    using Fifthweek.Api.Channels.Shared;
     using System.Collections.Generic;
+    using System.Linq;
     using System.Threading.Tasks;
-    using Dapper;
-    using Fifthweek.Api.Persistence;
-    using Fifthweek.Api.Persistence.Identity;
-    using Fifthweek.Api.Persistence.Snapshots;
+    using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.Api.Persistence.Payments;
+    using Fifthweek.CodeGeneration;
     using Fifthweek.Payments.Snapshots;
     using Fifthweek.Shared;
-    using System.Threading;
-    using Fifthweek.Azure;
-    using Newtonsoft.Json;
-    using Fifthweek.Payments.Shared;
-    using Fifthweek.Api.Azure;
-    using Fifthweek.Payments.Pipeline;
-    using Fifthweek.Payments.Services.Credit;
 
     public partial class GetPaymentProcessingData
     {
@@ -1240,26 +1519,14 @@ namespace Fifthweek.Payments.Services
 namespace Fifthweek.Payments.Services
 {
     using System;
-    using System.Linq;
-    using Fifthweek.Api.Identity.Shared.Membership;
-    using Fifthweek.CodeGeneration;
-    using Fifthweek.Api.Channels.Shared;
     using System.Collections.Generic;
+    using System.Linq;
     using System.Threading.Tasks;
-    using Dapper;
-    using Fifthweek.Api.Persistence;
-    using Fifthweek.Api.Persistence.Identity;
-    using Fifthweek.Api.Persistence.Snapshots;
+    using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.Api.Persistence.Payments;
+    using Fifthweek.CodeGeneration;
     using Fifthweek.Payments.Snapshots;
     using Fifthweek.Shared;
-    using System.Threading;
-    using Fifthweek.Azure;
-    using Newtonsoft.Json;
-    using Fifthweek.Payments.Shared;
-    using Fifthweek.Api.Azure;
-    using Fifthweek.Payments.Pipeline;
-    using Fifthweek.Payments.Services.Credit;
 
     public partial class GetPaymentProcessingData 
     {
@@ -1320,26 +1587,15 @@ namespace Fifthweek.Payments.Services
 namespace Fifthweek.Payments.Services
 {
     using System;
-    using System.Linq;
-    using Fifthweek.Api.Identity.Shared.Membership;
-    using Fifthweek.CodeGeneration;
-    using Fifthweek.Api.Channels.Shared;
     using System.Collections.Generic;
+    using System.Linq;
     using System.Threading.Tasks;
     using Dapper;
+    using Fifthweek.Api.Channels.Shared;
+    using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.Api.Persistence;
-    using Fifthweek.Api.Persistence.Identity;
     using Fifthweek.Api.Persistence.Snapshots;
-    using Fifthweek.Api.Persistence.Payments;
-    using Fifthweek.Payments.Snapshots;
-    using Fifthweek.Shared;
-    using System.Threading;
-    using Fifthweek.Azure;
-    using Newtonsoft.Json;
-    using Fifthweek.Payments.Shared;
-    using Fifthweek.Api.Azure;
-    using Fifthweek.Payments.Pipeline;
-    using Fifthweek.Payments.Services.Credit;
+    using Fifthweek.CodeGeneration;
 
     public partial class GetSubscriberChannelsSnapshotsDbStatement 
     {
@@ -1358,26 +1614,15 @@ namespace Fifthweek.Payments.Services
 namespace Fifthweek.Payments.Services
 {
     using System;
-    using System.Linq;
-    using Fifthweek.Api.Identity.Shared.Membership;
-    using Fifthweek.CodeGeneration;
-    using Fifthweek.Api.Channels.Shared;
     using System.Collections.Generic;
+    using System.Linq;
     using System.Threading.Tasks;
     using Dapper;
+    using Fifthweek.Api.Channels.Shared;
+    using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.Api.Persistence;
-    using Fifthweek.Api.Persistence.Identity;
     using Fifthweek.Api.Persistence.Snapshots;
-    using Fifthweek.Api.Persistence.Payments;
-    using Fifthweek.Payments.Snapshots;
-    using Fifthweek.Shared;
-    using System.Threading;
-    using Fifthweek.Azure;
-    using Newtonsoft.Json;
-    using Fifthweek.Payments.Shared;
-    using Fifthweek.Api.Azure;
-    using Fifthweek.Payments.Pipeline;
-    using Fifthweek.Payments.Services.Credit;
+    using Fifthweek.CodeGeneration;
 
     public partial class GetSubscriberSnapshotsDbStatement 
     {
@@ -1396,26 +1641,12 @@ namespace Fifthweek.Payments.Services
 namespace Fifthweek.Payments.Services
 {
     using System;
+    using System.Collections.Generic;
     using System.Linq;
+    using System.Threading;
     using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.CodeGeneration;
-    using Fifthweek.Api.Channels.Shared;
-    using System.Collections.Generic;
-    using System.Threading.Tasks;
-    using Dapper;
-    using Fifthweek.Api.Persistence;
-    using Fifthweek.Api.Persistence.Identity;
-    using Fifthweek.Api.Persistence.Snapshots;
-    using Fifthweek.Api.Persistence.Payments;
     using Fifthweek.Payments.Snapshots;
-    using Fifthweek.Shared;
-    using System.Threading;
-    using Fifthweek.Azure;
-    using Newtonsoft.Json;
-    using Fifthweek.Payments.Shared;
-    using Fifthweek.Api.Azure;
-    using Fifthweek.Payments.Pipeline;
-    using Fifthweek.Payments.Services.Credit;
 
     public partial class PaymentProcessingData 
     {
@@ -1506,26 +1737,7 @@ namespace Fifthweek.Payments.Services
 namespace Fifthweek.Payments.Services
 {
     using System;
-    using System.Linq;
-    using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.CodeGeneration;
-    using Fifthweek.Api.Channels.Shared;
-    using System.Collections.Generic;
-    using System.Threading.Tasks;
-    using Dapper;
-    using Fifthweek.Api.Persistence;
-    using Fifthweek.Api.Persistence.Identity;
-    using Fifthweek.Api.Persistence.Snapshots;
-    using Fifthweek.Api.Persistence.Payments;
-    using Fifthweek.Payments.Snapshots;
-    using Fifthweek.Shared;
-    using System.Threading;
-    using Fifthweek.Azure;
-    using Newtonsoft.Json;
-    using Fifthweek.Payments.Shared;
-    using Fifthweek.Api.Azure;
-    using Fifthweek.Payments.Pipeline;
-    using Fifthweek.Payments.Services.Credit;
 
     public partial class PaymentProcessingResult 
     {
@@ -1566,27 +1778,8 @@ namespace Fifthweek.Payments.Services
 }
 namespace Fifthweek.Payments.Services
 {
-    using System;
-    using System.Linq;
-    using Fifthweek.Api.Identity.Shared.Membership;
-    using Fifthweek.CodeGeneration;
-    using Fifthweek.Api.Channels.Shared;
     using System.Collections.Generic;
-    using System.Threading.Tasks;
-    using Dapper;
-    using Fifthweek.Api.Persistence;
-    using Fifthweek.Api.Persistence.Identity;
-    using Fifthweek.Api.Persistence.Snapshots;
-    using Fifthweek.Api.Persistence.Payments;
-    using Fifthweek.Payments.Snapshots;
-    using Fifthweek.Shared;
-    using System.Threading;
-    using Fifthweek.Azure;
-    using Newtonsoft.Json;
-    using Fifthweek.Payments.Shared;
-    using Fifthweek.Api.Azure;
-    using Fifthweek.Payments.Pipeline;
-    using Fifthweek.Payments.Services.Credit;
+    using Fifthweek.CodeGeneration;
 
     public partial class PaymentProcessingResults 
     {
@@ -1611,27 +1804,15 @@ namespace Fifthweek.Payments.Services
 }
 namespace Fifthweek.Payments.Services
 {
-    using System;
-    using System.Linq;
-    using Fifthweek.Api.Identity.Shared.Membership;
-    using Fifthweek.CodeGeneration;
-    using Fifthweek.Api.Channels.Shared;
     using System.Collections.Generic;
+    using System.Linq;
     using System.Threading.Tasks;
     using Dapper;
+    using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.Api.Persistence;
-    using Fifthweek.Api.Persistence.Identity;
-    using Fifthweek.Api.Persistence.Snapshots;
     using Fifthweek.Api.Persistence.Payments;
-    using Fifthweek.Payments.Snapshots;
+    using Fifthweek.CodeGeneration;
     using Fifthweek.Shared;
-    using System.Threading;
-    using Fifthweek.Azure;
-    using Newtonsoft.Json;
-    using Fifthweek.Payments.Shared;
-    using Fifthweek.Api.Azure;
-    using Fifthweek.Payments.Pipeline;
-    using Fifthweek.Payments.Services.Credit;
 
     public partial class PersistCommittedAndUncommittedRecordsDbStatement 
     {
@@ -1650,26 +1831,7 @@ namespace Fifthweek.Payments.Services
 namespace Fifthweek.Payments.Services
 {
     using System;
-    using System.Linq;
-    using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.CodeGeneration;
-    using Fifthweek.Api.Channels.Shared;
-    using System.Collections.Generic;
-    using System.Threading.Tasks;
-    using Dapper;
-    using Fifthweek.Api.Persistence;
-    using Fifthweek.Api.Persistence.Identity;
-    using Fifthweek.Api.Persistence.Snapshots;
-    using Fifthweek.Api.Persistence.Payments;
-    using Fifthweek.Payments.Snapshots;
-    using Fifthweek.Shared;
-    using System.Threading;
-    using Fifthweek.Azure;
-    using Newtonsoft.Json;
-    using Fifthweek.Payments.Shared;
-    using Fifthweek.Api.Azure;
-    using Fifthweek.Payments.Pipeline;
-    using Fifthweek.Payments.Services.Credit;
 
     public partial class PersistedPaymentProcessingData 
     {
@@ -1701,27 +1863,11 @@ namespace Fifthweek.Payments.Services
 }
 namespace Fifthweek.Payments.Services
 {
-    using System;
-    using System.Linq;
-    using Fifthweek.Api.Identity.Shared.Membership;
-    using Fifthweek.CodeGeneration;
-    using Fifthweek.Api.Channels.Shared;
-    using System.Collections.Generic;
     using System.Threading.Tasks;
-    using Dapper;
-    using Fifthweek.Api.Persistence;
-    using Fifthweek.Api.Persistence.Identity;
-    using Fifthweek.Api.Persistence.Snapshots;
-    using Fifthweek.Api.Persistence.Payments;
-    using Fifthweek.Payments.Snapshots;
-    using Fifthweek.Shared;
-    using System.Threading;
     using Fifthweek.Azure;
+    using Fifthweek.CodeGeneration;
+    using Fifthweek.Shared;
     using Newtonsoft.Json;
-    using Fifthweek.Payments.Shared;
-    using Fifthweek.Api.Azure;
-    using Fifthweek.Payments.Pipeline;
-    using Fifthweek.Payments.Services.Credit;
 
     public partial class PersistPaymentProcessingDataStatement 
     {
@@ -1740,26 +1886,14 @@ namespace Fifthweek.Payments.Services
 namespace Fifthweek.Payments.Services
 {
     using System;
-    using System.Linq;
-    using Fifthweek.Api.Identity.Shared.Membership;
-    using Fifthweek.CodeGeneration;
-    using Fifthweek.Api.Channels.Shared;
     using System.Collections.Generic;
-    using System.Threading.Tasks;
-    using Dapper;
-    using Fifthweek.Api.Persistence;
-    using Fifthweek.Api.Persistence.Identity;
-    using Fifthweek.Api.Persistence.Snapshots;
-    using Fifthweek.Api.Persistence.Payments;
-    using Fifthweek.Payments.Snapshots;
-    using Fifthweek.Shared;
+    using System.Linq;
     using System.Threading;
-    using Fifthweek.Azure;
-    using Newtonsoft.Json;
-    using Fifthweek.Payments.Shared;
-    using Fifthweek.Api.Azure;
-    using Fifthweek.Payments.Pipeline;
-    using Fifthweek.Payments.Services.Credit;
+    using System.Threading.Tasks;
+    using Fifthweek.Api.Channels.Shared;
+    using Fifthweek.Api.Persistence.Payments;
+    using Fifthweek.CodeGeneration;
+    using Fifthweek.Shared;
 
     public partial class PersistPaymentProcessingResults 
     {
@@ -1792,26 +1926,12 @@ namespace Fifthweek.Payments.Services
 namespace Fifthweek.Payments.Services
 {
     using System;
-    using System.Linq;
-    using Fifthweek.Api.Identity.Shared.Membership;
-    using Fifthweek.CodeGeneration;
-    using Fifthweek.Api.Channels.Shared;
     using System.Collections.Generic;
     using System.Threading.Tasks;
-    using Dapper;
-    using Fifthweek.Api.Persistence;
-    using Fifthweek.Api.Persistence.Identity;
-    using Fifthweek.Api.Persistence.Snapshots;
-    using Fifthweek.Api.Persistence.Payments;
-    using Fifthweek.Payments.Snapshots;
-    using Fifthweek.Shared;
-    using System.Threading;
-    using Fifthweek.Azure;
-    using Newtonsoft.Json;
-    using Fifthweek.Payments.Shared;
-    using Fifthweek.Api.Azure;
-    using Fifthweek.Payments.Pipeline;
+    using Fifthweek.CodeGeneration;
     using Fifthweek.Payments.Services.Credit;
+    using Fifthweek.Payments.Shared;
+    using Fifthweek.Shared;
 
     public partial class ProcessAllPayments 
     {
@@ -1858,26 +1978,11 @@ namespace Fifthweek.Payments.Services
 namespace Fifthweek.Payments.Services
 {
     using System;
-    using System.Linq;
-    using Fifthweek.Api.Identity.Shared.Membership;
-    using Fifthweek.CodeGeneration;
-    using Fifthweek.Api.Channels.Shared;
     using System.Collections.Generic;
     using System.Threading.Tasks;
-    using Dapper;
-    using Fifthweek.Api.Persistence;
-    using Fifthweek.Api.Persistence.Identity;
-    using Fifthweek.Api.Persistence.Snapshots;
-    using Fifthweek.Api.Persistence.Payments;
+    using Fifthweek.CodeGeneration;
     using Fifthweek.Payments.Snapshots;
     using Fifthweek.Shared;
-    using System.Threading;
-    using Fifthweek.Azure;
-    using Newtonsoft.Json;
-    using Fifthweek.Payments.Shared;
-    using Fifthweek.Api.Azure;
-    using Fifthweek.Payments.Pipeline;
-    using Fifthweek.Payments.Services.Credit;
 
     public partial class ProcessPaymentProcessingData 
     {
@@ -1896,26 +2001,10 @@ namespace Fifthweek.Payments.Services
 namespace Fifthweek.Payments.Services
 {
     using System;
-    using System.Linq;
+    using System.Threading.Tasks;
     using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.CodeGeneration;
-    using Fifthweek.Api.Channels.Shared;
-    using System.Collections.Generic;
-    using System.Threading.Tasks;
-    using Dapper;
-    using Fifthweek.Api.Persistence;
-    using Fifthweek.Api.Persistence.Identity;
-    using Fifthweek.Api.Persistence.Snapshots;
-    using Fifthweek.Api.Persistence.Payments;
-    using Fifthweek.Payments.Snapshots;
     using Fifthweek.Shared;
-    using System.Threading;
-    using Fifthweek.Azure;
-    using Newtonsoft.Json;
-    using Fifthweek.Payments.Shared;
-    using Fifthweek.Api.Azure;
-    using Fifthweek.Payments.Pipeline;
-    using Fifthweek.Payments.Services.Credit;
 
     public partial class ProcessPaymentsBetweenSubscriberAndCreator 
     {
@@ -1948,26 +2037,12 @@ namespace Fifthweek.Payments.Services
 namespace Fifthweek.Payments.Services
 {
     using System;
-    using System.Linq;
-    using Fifthweek.Api.Identity.Shared.Membership;
-    using Fifthweek.CodeGeneration;
-    using Fifthweek.Api.Channels.Shared;
     using System.Collections.Generic;
     using System.Threading.Tasks;
-    using Dapper;
-    using Fifthweek.Api.Persistence;
-    using Fifthweek.Api.Persistence.Identity;
-    using Fifthweek.Api.Persistence.Snapshots;
-    using Fifthweek.Api.Persistence.Payments;
-    using Fifthweek.Payments.Snapshots;
-    using Fifthweek.Shared;
-    using System.Threading;
-    using Fifthweek.Azure;
-    using Newtonsoft.Json;
+    using Fifthweek.Api.Identity.Shared.Membership;
+    using Fifthweek.CodeGeneration;
     using Fifthweek.Payments.Shared;
-    using Fifthweek.Api.Azure;
-    using Fifthweek.Payments.Pipeline;
-    using Fifthweek.Payments.Services.Credit;
+    using Fifthweek.Shared;
 
     public partial class ProcessPaymentsForSubscriber 
     {
@@ -2004,29 +2079,404 @@ namespace Fifthweek.Payments.Services
         }
     }
 }
-namespace Fifthweek.Payments.Services
+namespace Fifthweek.Payments.Services.Refunds
+{
+    using System;
+    using System.Threading.Tasks;
+    using Fifthweek.Api.Identity.Shared.Membership;
+    using Fifthweek.CodeGeneration;
+    using Fifthweek.Payments.Services.Refunds.Stripe;
+    using Fifthweek.Payments.Services.Refunds.Taxamo;
+    using Fifthweek.Payments.Shared;
+    using Fifthweek.Shared;
+    using Newtonsoft.Json;
+
+    public partial class CreateCreditRefund 
+    {
+        public CreateCreditRefund(
+            Fifthweek.Shared.IFifthweekRetryOnTransientErrorHandler retryOnTransientFailure,
+            Fifthweek.Payments.Services.Refunds.IGetCreditTransactionDbStatement getCreditTransaction,
+            Fifthweek.Payments.Services.Refunds.Taxamo.ICreateTaxamoRefund createTaxamoRefund,
+            Fifthweek.Payments.Services.Refunds.Stripe.ICreateStripeRefund createStripeRefund,
+            Fifthweek.Payments.Services.Refunds.ICreateCreditRefundDbStatement createCreditRefundDbStatement)
+        {
+            if (retryOnTransientFailure == null)
+            {
+                throw new ArgumentNullException("retryOnTransientFailure");
+            }
+
+            if (getCreditTransaction == null)
+            {
+                throw new ArgumentNullException("getCreditTransaction");
+            }
+
+            if (createTaxamoRefund == null)
+            {
+                throw new ArgumentNullException("createTaxamoRefund");
+            }
+
+            if (createStripeRefund == null)
+            {
+                throw new ArgumentNullException("createStripeRefund");
+            }
+
+            if (createCreditRefundDbStatement == null)
+            {
+                throw new ArgumentNullException("createCreditRefundDbStatement");
+            }
+
+            this.retryOnTransientFailure = retryOnTransientFailure;
+            this.getCreditTransaction = getCreditTransaction;
+            this.createTaxamoRefund = createTaxamoRefund;
+            this.createStripeRefund = createStripeRefund;
+            this.createCreditRefundDbStatement = createCreditRefundDbStatement;
+        }
+    }
+}
+namespace Fifthweek.Payments.Services.Refunds
+{
+    using System;
+    using System.Collections.Generic;
+    using System.Threading.Tasks;
+    using Fifthweek.Api.Identity.Shared.Membership;
+    using Fifthweek.Api.Persistence;
+    using Fifthweek.Api.Persistence.Payments;
+    using Fifthweek.CodeGeneration;
+    using Fifthweek.Payments.Shared;
+    using Fifthweek.Shared;
+
+    public partial class CreateCreditRefundDbStatement 
+    {
+        public CreateCreditRefundDbStatement(
+            Fifthweek.Shared.IGuidCreator guidCreator,
+            Fifthweek.Api.Persistence.IFifthweekDbConnectionFactory connectionFactory)
+        {
+            if (guidCreator == null)
+            {
+                throw new ArgumentNullException("guidCreator");
+            }
+
+            if (connectionFactory == null)
+            {
+                throw new ArgumentNullException("connectionFactory");
+            }
+
+            this.guidCreator = guidCreator;
+            this.connectionFactory = connectionFactory;
+        }
+    }
+}
+namespace Fifthweek.Payments.Services.Refunds
+{
+    using System;
+    using System.Threading.Tasks;
+    using Fifthweek.Api.Identity.Shared.Membership;
+    using Fifthweek.Api.Persistence.Payments;
+    using Fifthweek.CodeGeneration;
+    using Fifthweek.Payments.Shared;
+    using Fifthweek.Shared;
+
+    public partial class CreateTransactionRefund
+    {
+        public partial class CreateTransactionRefundResult 
+        {
+            public CreateTransactionRefundResult(
+                Fifthweek.Api.Identity.Shared.Membership.UserId subscriberId,
+                Fifthweek.Api.Identity.Shared.Membership.UserId creatorId)
+            {
+                if (subscriberId == null)
+                {
+                    throw new ArgumentNullException("subscriberId");
+                }
+
+                if (creatorId == null)
+                {
+                    throw new ArgumentNullException("creatorId");
+                }
+
+                this.SubscriberId = subscriberId;
+                this.CreatorId = creatorId;
+            }
+        }
+    }
+}
+namespace Fifthweek.Payments.Services.Refunds
+{
+    using System;
+    using System.Threading.Tasks;
+    using Fifthweek.Api.Identity.Shared.Membership;
+    using Fifthweek.Api.Persistence.Payments;
+    using Fifthweek.CodeGeneration;
+    using Fifthweek.Payments.Shared;
+    using Fifthweek.Shared;
+
+    public partial class CreateTransactionRefund 
+    {
+        public CreateTransactionRefund(
+            Fifthweek.Shared.IGuidCreator guidCreator,
+            Fifthweek.Payments.Services.Refunds.IGetRecordsForTransactionDbStatement getRecordsForTransaction,
+            Fifthweek.Payments.Services.Refunds.IPersistCommittedRecordsDbStatement persistCommittedRecords)
+        {
+            if (guidCreator == null)
+            {
+                throw new ArgumentNullException("guidCreator");
+            }
+
+            if (getRecordsForTransaction == null)
+            {
+                throw new ArgumentNullException("getRecordsForTransaction");
+            }
+
+            if (persistCommittedRecords == null)
+            {
+                throw new ArgumentNullException("persistCommittedRecords");
+            }
+
+            this.guidCreator = guidCreator;
+            this.getRecordsForTransaction = getRecordsForTransaction;
+            this.persistCommittedRecords = persistCommittedRecords;
+        }
+    }
+}
+namespace Fifthweek.Payments.Services.Refunds
 {
     using System;
     using System.Linq;
+    using System.Threading.Tasks;
+    using Dapper;
     using Fifthweek.Api.Identity.Shared.Membership;
+    using Fifthweek.Api.Persistence;
+    using Fifthweek.Api.Persistence.Payments;
     using Fifthweek.CodeGeneration;
-    using Fifthweek.Api.Channels.Shared;
+    using Fifthweek.Payments.Shared;
+    using Fifthweek.Shared;
+
+    public partial class GetCreditTransactionDbStatement
+    {
+        public partial class GetCreditTransactionResult 
+        {
+            public GetCreditTransactionResult(
+                Fifthweek.Api.Identity.Shared.Membership.UserId userId,
+                System.String stripeChargeId,
+                System.String taxamoTransactionKey,
+                System.Decimal totalCreditAmount,
+                System.Decimal creditAmountAvailableForRefund)
+            {
+                if (userId == null)
+                {
+                    throw new ArgumentNullException("userId");
+                }
+
+                if (stripeChargeId == null)
+                {
+                    throw new ArgumentNullException("stripeChargeId");
+                }
+
+                if (taxamoTransactionKey == null)
+                {
+                    throw new ArgumentNullException("taxamoTransactionKey");
+                }
+
+                if (totalCreditAmount == null)
+                {
+                    throw new ArgumentNullException("totalCreditAmount");
+                }
+
+                if (creditAmountAvailableForRefund == null)
+                {
+                    throw new ArgumentNullException("creditAmountAvailableForRefund");
+                }
+
+                this.UserId = userId;
+                this.StripeChargeId = stripeChargeId;
+                this.TaxamoTransactionKey = taxamoTransactionKey;
+                this.TotalCreditAmount = totalCreditAmount;
+                this.CreditAmountAvailableForRefund = creditAmountAvailableForRefund;
+            }
+        }
+    }
+}
+namespace Fifthweek.Payments.Services.Refunds
+{
+    using System;
+    using System.Linq;
+    using System.Threading.Tasks;
+    using Dapper;
+    using Fifthweek.Api.Identity.Shared.Membership;
+    using Fifthweek.Api.Persistence;
+    using Fifthweek.Api.Persistence.Payments;
+    using Fifthweek.CodeGeneration;
+    using Fifthweek.Payments.Shared;
+    using Fifthweek.Shared;
+
+    public partial class GetCreditTransactionDbStatement 
+    {
+        public GetCreditTransactionDbStatement(
+            Fifthweek.Payments.Services.Refunds.IGetRecordsForTransactionDbStatement getRecordsForTransaction)
+        {
+            if (getRecordsForTransaction == null)
+            {
+                throw new ArgumentNullException("getRecordsForTransaction");
+            }
+
+            this.getRecordsForTransaction = getRecordsForTransaction;
+        }
+    }
+}
+namespace Fifthweek.Payments.Services.Refunds
+{
     using System.Collections.Generic;
+    using System.Linq;
     using System.Threading.Tasks;
     using Dapper;
     using Fifthweek.Api.Persistence;
-    using Fifthweek.Api.Persistence.Identity;
-    using Fifthweek.Api.Persistence.Snapshots;
     using Fifthweek.Api.Persistence.Payments;
-    using Fifthweek.Payments.Snapshots;
-    using Fifthweek.Shared;
-    using System.Threading;
-    using Fifthweek.Azure;
-    using Newtonsoft.Json;
+    using Fifthweek.CodeGeneration;
     using Fifthweek.Payments.Shared;
-    using Fifthweek.Api.Azure;
-    using Fifthweek.Payments.Pipeline;
+
+    public partial class GetRecordsForTransactionDbStatement 
+    {
+        public GetRecordsForTransactionDbStatement(
+            Fifthweek.Api.Persistence.IFifthweekDbConnectionFactory connectionFactory)
+        {
+            if (connectionFactory == null)
+            {
+                throw new ArgumentNullException("connectionFactory");
+            }
+
+            this.connectionFactory = connectionFactory;
+        }
+    }
+}
+namespace Fifthweek.Payments.Services.Refunds
+{
+    using System.Collections.Generic;
+    using System.Threading.Tasks;
+    using Fifthweek.Api.Persistence;
+    using Fifthweek.Api.Persistence.Payments;
+    using Fifthweek.CodeGeneration;
+
+    public partial class PersistCommittedRecordsDbStatement 
+    {
+        public PersistCommittedRecordsDbStatement(
+            Fifthweek.Api.Persistence.IFifthweekDbConnectionFactory connectionFactory)
+        {
+            if (connectionFactory == null)
+            {
+                throw new ArgumentNullException("connectionFactory");
+            }
+
+            this.connectionFactory = connectionFactory;
+        }
+    }
+}
+namespace Fifthweek.Payments.Services.Refunds.Stripe
+{
+    using System;
+    using System.Collections.Generic;
+    using System.Threading.Tasks;
+    using Fifthweek.Api.Identity.Shared.Membership;
+    using Fifthweek.CodeGeneration;
+    using Fifthweek.Payments.Stripe;
+    using Fifthweek.Shared;
+    using global::Stripe;
+
+    public partial class CreateStripeRefund 
+    {
+        public CreateStripeRefund(
+            Fifthweek.Payments.Stripe.IStripeApiKeyRepository apiKeyRepository,
+            Fifthweek.Payments.Stripe.IStripeService stripeService)
+        {
+            if (apiKeyRepository == null)
+            {
+                throw new ArgumentNullException("apiKeyRepository");
+            }
+
+            if (stripeService == null)
+            {
+                throw new ArgumentNullException("stripeService");
+            }
+
+            this.apiKeyRepository = apiKeyRepository;
+            this.stripeService = stripeService;
+        }
+    }
+}
+namespace Fifthweek.Payments.Services.Refunds.Taxamo
+{
+    using System.Collections.Generic;
+    using System.Threading.Tasks;
+    using Fifthweek.CodeGeneration;
     using Fifthweek.Payments.Services.Credit;
+    using Fifthweek.Payments.Services.Credit.Taxamo;
+    using Fifthweek.Payments.Taxamo;
+    using Fifthweek.Shared;
+    using global::Taxamo.Model;
+
+    public partial class CreateTaxamoRefund
+    {
+        public partial class TaxamoRefundResult 
+        {
+            public TaxamoRefundResult(
+                Fifthweek.Shared.PositiveInt totalRefundAmount,
+                Fifthweek.Shared.NonNegativeInt taxRefundAmount)
+            {
+                if (totalRefundAmount == null)
+                {
+                    throw new ArgumentNullException("totalRefundAmount");
+                }
+
+                if (taxRefundAmount == null)
+                {
+                    throw new ArgumentNullException("taxRefundAmount");
+                }
+
+                this.TotalRefundAmount = totalRefundAmount;
+                this.TaxRefundAmount = taxRefundAmount;
+            }
+        }
+    }
+}
+namespace Fifthweek.Payments.Services.Refunds.Taxamo
+{
+    using System.Collections.Generic;
+    using System.Threading.Tasks;
+    using Fifthweek.CodeGeneration;
+    using Fifthweek.Payments.Services.Credit;
+    using Fifthweek.Payments.Services.Credit.Taxamo;
+    using Fifthweek.Payments.Taxamo;
+    using Fifthweek.Shared;
+    using global::Taxamo.Model;
+
+    public partial class CreateTaxamoRefund 
+    {
+        public CreateTaxamoRefund(
+            Fifthweek.Payments.Taxamo.ITaxamoApiKeyRepository taxamoApiKeyRepository,
+            Fifthweek.Payments.Taxamo.ITaxamoService taxamoService)
+        {
+            if (taxamoApiKeyRepository == null)
+            {
+                throw new ArgumentNullException("taxamoApiKeyRepository");
+            }
+
+            if (taxamoService == null)
+            {
+                throw new ArgumentNullException("taxamoService");
+            }
+
+            this.taxamoApiKeyRepository = taxamoApiKeyRepository;
+            this.taxamoService = taxamoService;
+        }
+    }
+}
+namespace Fifthweek.Payments.Services
+{
+    using System;
+    using System.Threading.Tasks;
+    using Fifthweek.Api.Azure;
+    using Fifthweek.Azure;
+    using Fifthweek.CodeGeneration;
+    using Fifthweek.Payments.Shared;
 
     public partial class RequestProcessPaymentsService 
     {
@@ -2045,26 +2495,12 @@ namespace Fifthweek.Payments.Services
 namespace Fifthweek.Payments.Services
 {
     using System;
-    using System.Linq;
-    using Fifthweek.Api.Identity.Shared.Membership;
-    using Fifthweek.CodeGeneration;
-    using Fifthweek.Api.Channels.Shared;
     using System.Collections.Generic;
     using System.Threading.Tasks;
-    using Dapper;
-    using Fifthweek.Api.Persistence;
-    using Fifthweek.Api.Persistence.Identity;
-    using Fifthweek.Api.Persistence.Snapshots;
-    using Fifthweek.Api.Persistence.Payments;
-    using Fifthweek.Payments.Snapshots;
-    using Fifthweek.Shared;
-    using System.Threading;
-    using Fifthweek.Azure;
-    using Newtonsoft.Json;
-    using Fifthweek.Payments.Shared;
-    using Fifthweek.Api.Azure;
+    using Fifthweek.Api.Identity.Shared.Membership;
+    using Fifthweek.CodeGeneration;
     using Fifthweek.Payments.Pipeline;
-    using Fifthweek.Payments.Services.Credit;
+    using Fifthweek.Payments.Snapshots;
 
     public partial class SubscriberPaymentPipeline 
     {
@@ -2132,26 +2568,16 @@ namespace Fifthweek.Payments.Services
 namespace Fifthweek.Payments.Services
 {
     using System;
-    using System.Linq;
-    using Fifthweek.Api.Identity.Shared.Membership;
-    using Fifthweek.CodeGeneration;
-    using Fifthweek.Api.Channels.Shared;
     using System.Collections.Generic;
+    using System.Linq;
     using System.Threading.Tasks;
     using Dapper;
+    using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.Api.Persistence;
     using Fifthweek.Api.Persistence.Identity;
-    using Fifthweek.Api.Persistence.Snapshots;
     using Fifthweek.Api.Persistence.Payments;
-    using Fifthweek.Payments.Snapshots;
+    using Fifthweek.CodeGeneration;
     using Fifthweek.Shared;
-    using System.Threading;
-    using Fifthweek.Azure;
-    using Newtonsoft.Json;
-    using Fifthweek.Payments.Shared;
-    using Fifthweek.Api.Azure;
-    using Fifthweek.Payments.Pipeline;
-    using Fifthweek.Payments.Services.Credit;
 
     public partial class UpdateAccountBalancesDbStatement 
     {
@@ -2170,12 +2596,9 @@ namespace Fifthweek.Payments.Services
 namespace Fifthweek.Payments.Snapshots
 {
     using System;
-    using System.Linq;
     using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.Api.Persistence.Payments;
     using Fifthweek.CodeGeneration;
-    using System.Collections.Generic;
-    using Fifthweek.Api.Channels.Shared;
 
     public partial class CalculatedAccountBalanceSnapshot 
     {
@@ -2215,12 +2638,9 @@ namespace Fifthweek.Payments.Snapshots
 namespace Fifthweek.Payments.Snapshots
 {
     using System;
-    using System.Linq;
-    using Fifthweek.Api.Identity.Shared.Membership;
-    using Fifthweek.Api.Persistence.Payments;
-    using Fifthweek.CodeGeneration;
     using System.Collections.Generic;
-    using Fifthweek.Api.Channels.Shared;
+    using Fifthweek.Api.Identity.Shared.Membership;
+    using Fifthweek.CodeGeneration;
 
     public partial class CreatorChannelsSnapshot 
     {
@@ -2253,12 +2673,8 @@ namespace Fifthweek.Payments.Snapshots
 namespace Fifthweek.Payments.Snapshots
 {
     using System;
-    using System.Linq;
-    using Fifthweek.Api.Identity.Shared.Membership;
-    using Fifthweek.Api.Persistence.Payments;
-    using Fifthweek.CodeGeneration;
-    using System.Collections.Generic;
     using Fifthweek.Api.Channels.Shared;
+    using Fifthweek.CodeGeneration;
 
     public partial class CreatorChannelsSnapshotItem 
     {
@@ -2284,12 +2700,9 @@ namespace Fifthweek.Payments.Snapshots
 namespace Fifthweek.Payments.Snapshots
 {
     using System;
-    using System.Linq;
-    using Fifthweek.Api.Identity.Shared.Membership;
-    using Fifthweek.Api.Persistence.Payments;
-    using Fifthweek.CodeGeneration;
     using System.Collections.Generic;
-    using Fifthweek.Api.Channels.Shared;
+    using Fifthweek.Api.Identity.Shared.Membership;
+    using Fifthweek.CodeGeneration;
 
     public partial class CreatorFreeAccessUsersSnapshot 
     {
@@ -2323,11 +2736,7 @@ namespace Fifthweek.Payments.Snapshots
 {
     using System;
     using System.Linq;
-    using Fifthweek.Api.Identity.Shared.Membership;
-    using Fifthweek.Api.Persistence.Payments;
     using Fifthweek.CodeGeneration;
-    using System.Collections.Generic;
-    using Fifthweek.Api.Channels.Shared;
 
     public partial class MergedSnapshot 
     {
@@ -2381,12 +2790,9 @@ namespace Fifthweek.Payments.Snapshots
 namespace Fifthweek.Payments.Snapshots
 {
     using System;
-    using System.Linq;
-    using Fifthweek.Api.Identity.Shared.Membership;
-    using Fifthweek.Api.Persistence.Payments;
-    using Fifthweek.CodeGeneration;
     using System.Collections.Generic;
-    using Fifthweek.Api.Channels.Shared;
+    using Fifthweek.Api.Identity.Shared.Membership;
+    using Fifthweek.CodeGeneration;
 
     public partial class SubscriberChannelsSnapshot 
     {
@@ -2419,12 +2825,8 @@ namespace Fifthweek.Payments.Snapshots
 namespace Fifthweek.Payments.Snapshots
 {
     using System;
-    using System.Linq;
-    using Fifthweek.Api.Identity.Shared.Membership;
-    using Fifthweek.Api.Persistence.Payments;
-    using Fifthweek.CodeGeneration;
-    using System.Collections.Generic;
     using Fifthweek.Api.Channels.Shared;
+    using Fifthweek.CodeGeneration;
 
     public partial class SubscriberChannelsSnapshotItem 
     {
@@ -2457,12 +2859,8 @@ namespace Fifthweek.Payments.Snapshots
 namespace Fifthweek.Payments.Snapshots
 {
     using System;
-    using System.Linq;
     using Fifthweek.Api.Identity.Shared.Membership;
-    using Fifthweek.Api.Persistence.Payments;
     using Fifthweek.CodeGeneration;
-    using System.Collections.Generic;
-    using Fifthweek.Api.Channels.Shared;
 
     public partial class SubscriberSnapshot 
     {
@@ -2487,739 +2885,11 @@ namespace Fifthweek.Payments.Snapshots
         }
     }
 }
-namespace Fifthweek.Payments.Services
-{
-    using System;
-    using System.Linq;
-    using Fifthweek.Api.Identity.Shared.Membership;
-    using Fifthweek.CodeGeneration;
-    using Fifthweek.Api.Channels.Shared;
-    using System.Collections.Generic;
-    using System.Threading.Tasks;
-    using Dapper;
-    using Fifthweek.Api.Persistence;
-    using Fifthweek.Api.Persistence.Identity;
-    using Fifthweek.Api.Persistence.Snapshots;
-    using Fifthweek.Api.Persistence.Payments;
-    using Fifthweek.Payments.Snapshots;
-    using Fifthweek.Shared;
-    using System.Threading;
-    using Fifthweek.Azure;
-    using Newtonsoft.Json;
-    using Fifthweek.Payments.Shared;
-    using Fifthweek.Api.Azure;
-    using Fifthweek.Payments.Pipeline;
-    using Fifthweek.Payments.Services.Credit;
-
-    public partial class CalculatedAccountBalanceResult 
-    {
-        public CalculatedAccountBalanceResult(
-            System.DateTime timestamp,
-            Fifthweek.Api.Identity.Shared.Membership.UserId userId,
-            Fifthweek.Api.Persistence.Payments.LedgerAccountType accountType,
-            System.Decimal amount)
-        {
-            if (timestamp == null)
-            {
-                throw new ArgumentNullException("timestamp");
-            }
-
-            if (userId == null)
-            {
-                throw new ArgumentNullException("userId");
-            }
-
-            if (accountType == null)
-            {
-                throw new ArgumentNullException("accountType");
-            }
-
-            if (amount == null)
-            {
-                throw new ArgumentNullException("amount");
-            }
-
-            this.Timestamp = timestamp;
-            this.UserId = userId;
-            this.AccountType = accountType;
-            this.Amount = amount;
-        }
-    }
-}
-namespace Fifthweek.Payments.Services.Credit
-{
-    using System;
-    using System.Linq;
-    using Fifthweek.CodeGeneration;
-    using System.Threading.Tasks;
-    using Fifthweek.Api.Identity.Shared.Membership;
-    using Fifthweek.Payments.Services.Credit.Taxamo;
-    using Fifthweek.Shared;
-    using Newtonsoft.Json;
-    using Fifthweek.Payments.Services;
-    using Dapper;
-    using Fifthweek.Api.Persistence;
-    using Fifthweek.Api.Persistence.Payments;
-    using Fifthweek.Payments.Services.Credit.Stripe;
-    using System.Collections.Generic;
-    using Fifthweek.Payments.Services.Credit;
-    using System.Runtime.ExceptionServices;
-    using Fifthweek.Payments.Stripe;
-
-    public partial class TopUpUserAccountsWithCredit 
-    {
-        public TopUpUserAccountsWithCredit(
-            Fifthweek.Payments.Services.Credit.IGetUsersRequiringPaymentRetryDbStatement getUsersRequiringPaymentRetry,
-            Fifthweek.Payments.Services.Credit.IApplyUserCredit applyUserCredit,
-            Fifthweek.Payments.Services.Credit.IGetUserWeeklySubscriptionsCost getUserWeeklySubscriptionsCost,
-            Fifthweek.Payments.Services.Credit.IIncrementPaymentStatusDbStatement incrementPaymentStatus,
-            Fifthweek.Payments.Services.Credit.IGetUserPaymentOriginDbStatement getUserPaymentOrigin)
-        {
-            if (getUsersRequiringPaymentRetry == null)
-            {
-                throw new ArgumentNullException("getUsersRequiringPaymentRetry");
-            }
-
-            if (applyUserCredit == null)
-            {
-                throw new ArgumentNullException("applyUserCredit");
-            }
-
-            if (getUserWeeklySubscriptionsCost == null)
-            {
-                throw new ArgumentNullException("getUserWeeklySubscriptionsCost");
-            }
-
-            if (incrementPaymentStatus == null)
-            {
-                throw new ArgumentNullException("incrementPaymentStatus");
-            }
-
-            if (getUserPaymentOrigin == null)
-            {
-                throw new ArgumentNullException("getUserPaymentOrigin");
-            }
-
-            this.getUsersRequiringPaymentRetry = getUsersRequiringPaymentRetry;
-            this.applyUserCredit = applyUserCredit;
-            this.getUserWeeklySubscriptionsCost = getUserWeeklySubscriptionsCost;
-            this.incrementPaymentStatus = incrementPaymentStatus;
-            this.getUserPaymentOrigin = getUserPaymentOrigin;
-        }
-    }
-}
-namespace Fifthweek.Payments.Services.Credit
-{
-    using System;
-    using System.Linq;
-    using Fifthweek.CodeGeneration;
-    using System.Threading.Tasks;
-    using Fifthweek.Api.Identity.Shared.Membership;
-    using Fifthweek.Payments.Services.Credit.Taxamo;
-    using Fifthweek.Shared;
-    using Newtonsoft.Json;
-    using Fifthweek.Payments.Services;
-    using Dapper;
-    using Fifthweek.Api.Persistence;
-    using Fifthweek.Api.Persistence.Payments;
-    using Fifthweek.Payments.Services.Credit.Stripe;
-    using System.Collections.Generic;
-    using Fifthweek.Payments.Services.Credit;
-    using System.Runtime.ExceptionServices;
-    using Fifthweek.Payments.Stripe;
-
-    public partial class GetUsersRequiringPaymentRetryDbStatement 
-    {
-        public GetUsersRequiringPaymentRetryDbStatement(
-            Fifthweek.Api.Persistence.IFifthweekDbConnectionFactory connectionFactory)
-        {
-            if (connectionFactory == null)
-            {
-                throw new ArgumentNullException("connectionFactory");
-            }
-
-            this.connectionFactory = connectionFactory;
-        }
-    }
-}
-namespace Fifthweek.Payments.Services.Credit
-{
-    using System;
-    using System.Linq;
-    using Fifthweek.CodeGeneration;
-    using System.Threading.Tasks;
-    using Fifthweek.Api.Identity.Shared.Membership;
-    using Fifthweek.Payments.Services.Credit.Taxamo;
-    using Fifthweek.Shared;
-    using Newtonsoft.Json;
-    using Fifthweek.Payments.Services;
-    using Dapper;
-    using Fifthweek.Api.Persistence;
-    using Fifthweek.Api.Persistence.Payments;
-    using Fifthweek.Payments.Services.Credit.Stripe;
-    using System.Collections.Generic;
-    using Fifthweek.Payments.Services.Credit;
-    using System.Runtime.ExceptionServices;
-    using Fifthweek.Payments.Stripe;
-
-    public partial class ClearPaymentStatusDbStatement 
-    {
-        public ClearPaymentStatusDbStatement(
-            Fifthweek.Api.Persistence.IFifthweekDbConnectionFactory connectionFactory)
-        {
-            if (connectionFactory == null)
-            {
-                throw new ArgumentNullException("connectionFactory");
-            }
-
-            this.connectionFactory = connectionFactory;
-        }
-    }
-}
-namespace Fifthweek.Payments.Services.Credit
-{
-    using System;
-    using System.Linq;
-    using Fifthweek.CodeGeneration;
-    using System.Threading.Tasks;
-    using Fifthweek.Api.Identity.Shared.Membership;
-    using Fifthweek.Payments.Services.Credit.Taxamo;
-    using Fifthweek.Shared;
-    using Newtonsoft.Json;
-    using Fifthweek.Payments.Services;
-    using Dapper;
-    using Fifthweek.Api.Persistence;
-    using Fifthweek.Api.Persistence.Payments;
-    using Fifthweek.Payments.Services.Credit.Stripe;
-    using System.Collections.Generic;
-    using Fifthweek.Payments.Services.Credit;
-    using System.Runtime.ExceptionServices;
-    using Fifthweek.Payments.Stripe;
-
-    public partial class FailPaymentStatusDbStatement 
-    {
-        public FailPaymentStatusDbStatement(
-            Fifthweek.Api.Persistence.IFifthweekDbConnectionFactory connectionFactory)
-        {
-            if (connectionFactory == null)
-            {
-                throw new ArgumentNullException("connectionFactory");
-            }
-
-            this.connectionFactory = connectionFactory;
-        }
-    }
-}
-namespace Fifthweek.Payments.Services.Credit
-{
-    using System;
-    using System.Linq;
-    using Fifthweek.CodeGeneration;
-    using System.Threading.Tasks;
-    using Fifthweek.Api.Identity.Shared.Membership;
-    using Fifthweek.Payments.Services.Credit.Taxamo;
-    using Fifthweek.Shared;
-    using Newtonsoft.Json;
-    using Fifthweek.Payments.Services;
-    using Dapper;
-    using Fifthweek.Api.Persistence;
-    using Fifthweek.Api.Persistence.Payments;
-    using Fifthweek.Payments.Services.Credit.Stripe;
-    using System.Collections.Generic;
-    using Fifthweek.Payments.Services.Credit;
-    using System.Runtime.ExceptionServices;
-    using Fifthweek.Payments.Stripe;
-
-    public partial class GetUserWeeklySubscriptionsCost 
-    {
-        public GetUserWeeklySubscriptionsCost(
-            Fifthweek.Api.Persistence.IFifthweekDbConnectionFactory connectionFactory)
-        {
-            if (connectionFactory == null)
-            {
-                throw new ArgumentNullException("connectionFactory");
-            }
-
-            this.connectionFactory = connectionFactory;
-        }
-    }
-}
-namespace Fifthweek.Payments.Services.Credit
-{
-    using System;
-    using System.Linq;
-    using Fifthweek.CodeGeneration;
-    using System.Threading.Tasks;
-    using Fifthweek.Api.Identity.Shared.Membership;
-    using Fifthweek.Payments.Services.Credit.Taxamo;
-    using Fifthweek.Shared;
-    using Newtonsoft.Json;
-    using Fifthweek.Payments.Services;
-    using Dapper;
-    using Fifthweek.Api.Persistence;
-    using Fifthweek.Api.Persistence.Payments;
-    using Fifthweek.Payments.Services.Credit.Stripe;
-    using System.Collections.Generic;
-    using Fifthweek.Payments.Services.Credit;
-    using System.Runtime.ExceptionServices;
-    using Fifthweek.Payments.Stripe;
-
-    public partial class IncrementPaymentStatusDbStatement 
-    {
-        public IncrementPaymentStatusDbStatement(
-            Fifthweek.Api.Persistence.IFifthweekDbConnectionFactory connectionFactory)
-        {
-            if (connectionFactory == null)
-            {
-                throw new ArgumentNullException("connectionFactory");
-            }
-
-            this.connectionFactory = connectionFactory;
-        }
-    }
-}
-namespace Fifthweek.Payments.Services.Credit.Stripe
-{
-    using System;
-    using System.Linq;
-    using System.Threading.Tasks;
-    using Fifthweek.Api.Identity.Shared.Membership;
-    using Fifthweek.CodeGeneration;
-    using Fifthweek.Payments.Stripe;
-    using global::Stripe;
-    using Fifthweek.Shared;
-    using System.Collections.Generic;
-
-    public partial class CreateStripeCustomer 
-    {
-        public CreateStripeCustomer(
-            Fifthweek.Payments.Stripe.IStripeApiKeyRepository apiKeyRepository,
-            Fifthweek.Payments.Stripe.IStripeService stripeService)
-        {
-            if (apiKeyRepository == null)
-            {
-                throw new ArgumentNullException("apiKeyRepository");
-            }
-
-            if (stripeService == null)
-            {
-                throw new ArgumentNullException("stripeService");
-            }
-
-            this.apiKeyRepository = apiKeyRepository;
-            this.stripeService = stripeService;
-        }
-    }
-}
-namespace Fifthweek.Payments.Services.Credit.Stripe
-{
-    using System;
-    using System.Linq;
-    using System.Threading.Tasks;
-    using Fifthweek.Api.Identity.Shared.Membership;
-    using Fifthweek.CodeGeneration;
-    using Fifthweek.Payments.Stripe;
-    using global::Stripe;
-    using Fifthweek.Shared;
-    using System.Collections.Generic;
-
-    public partial class PerformStripeCharge 
-    {
-        public PerformStripeCharge(
-            Fifthweek.Payments.Stripe.IStripeApiKeyRepository apiKeyRepository,
-            Fifthweek.Payments.Stripe.IStripeService stripeService)
-        {
-            if (apiKeyRepository == null)
-            {
-                throw new ArgumentNullException("apiKeyRepository");
-            }
-
-            if (stripeService == null)
-            {
-                throw new ArgumentNullException("stripeService");
-            }
-
-            this.apiKeyRepository = apiKeyRepository;
-            this.stripeService = stripeService;
-        }
-    }
-}
-namespace Fifthweek.Payments.Services.Credit.Stripe
-{
-    using System;
-    using System.Linq;
-    using System.Threading.Tasks;
-    using Fifthweek.Api.Identity.Shared.Membership;
-    using Fifthweek.CodeGeneration;
-    using Fifthweek.Payments.Stripe;
-    using global::Stripe;
-    using Fifthweek.Shared;
-    using System.Collections.Generic;
-
-    public partial class UpdateStripeCustomerCreditCard 
-    {
-        public UpdateStripeCustomerCreditCard(
-            Fifthweek.Payments.Stripe.IStripeApiKeyRepository apiKeyRepository,
-            Fifthweek.Payments.Stripe.IStripeService stripeService)
-        {
-            if (apiKeyRepository == null)
-            {
-                throw new ArgumentNullException("apiKeyRepository");
-            }
-
-            if (stripeService == null)
-            {
-                throw new ArgumentNullException("stripeService");
-            }
-
-            this.apiKeyRepository = apiKeyRepository;
-            this.stripeService = stripeService;
-        }
-    }
-}
-namespace Fifthweek.Payments.Services.Credit.Taxamo
-{
-    using System;
-    using System.Linq;
-    using Fifthweek.CodeGeneration;
-    using System.Threading.Tasks;
-    using Fifthweek.Payments.Taxamo;
-    using Fifthweek.Shared;
-    using global::Taxamo.Api;
-    using global::Taxamo.Client;
-    using global::Taxamo.Model;
-    using System.Collections.Generic;
-
-    public partial class GetTaxInformation 
-    {
-        public GetTaxInformation(
-            Fifthweek.Payments.Taxamo.ITaxamoApiKeyRepository taxamoApiKeyRepository,
-            Fifthweek.Payments.Taxamo.ITaxamoService taxamoService)
-        {
-            if (taxamoApiKeyRepository == null)
-            {
-                throw new ArgumentNullException("taxamoApiKeyRepository");
-            }
-
-            if (taxamoService == null)
-            {
-                throw new ArgumentNullException("taxamoService");
-            }
-
-            this.taxamoApiKeyRepository = taxamoApiKeyRepository;
-            this.taxamoService = taxamoService;
-        }
-    }
-}
-namespace Fifthweek.Payments.Services.Credit.Taxamo
-{
-    using System;
-    using System.Linq;
-    using Fifthweek.CodeGeneration;
-    using System.Threading.Tasks;
-    using Fifthweek.Payments.Taxamo;
-    using Fifthweek.Shared;
-    using global::Taxamo.Api;
-    using global::Taxamo.Client;
-    using global::Taxamo.Model;
-    using System.Collections.Generic;
-
-    public partial class TaxamoCalculationResult 
-    {
-        public TaxamoCalculationResult(
-            Fifthweek.Payments.Services.Credit.AmountInMinorDenomination amount,
-            Fifthweek.Payments.Services.Credit.AmountInMinorDenomination totalAmount,
-            Fifthweek.Payments.Services.Credit.AmountInMinorDenomination taxAmount,
-            System.Nullable<System.Decimal> taxRate,
-            System.String taxName,
-            System.String taxEntityName,
-            System.String countryName,
-            System.Collections.Generic.IReadOnlyList<Fifthweek.Payments.Services.Credit.Taxamo.TaxamoCalculationResult.PossibleCountry> possibleCountries)
-        {
-            if (amount == null)
-            {
-                throw new ArgumentNullException("amount");
-            }
-
-            if (totalAmount == null)
-            {
-                throw new ArgumentNullException("totalAmount");
-            }
-
-            if (taxAmount == null)
-            {
-                throw new ArgumentNullException("taxAmount");
-            }
-
-            this.Amount = amount;
-            this.TotalAmount = totalAmount;
-            this.TaxAmount = taxAmount;
-            this.TaxRate = taxRate;
-            this.TaxName = taxName;
-            this.TaxEntityName = taxEntityName;
-            this.CountryName = countryName;
-            this.PossibleCountries = possibleCountries;
-        }
-    }
-}
-namespace Fifthweek.Payments.Services.Credit.Taxamo
-{
-    using System;
-    using System.Linq;
-    using Fifthweek.CodeGeneration;
-    using System.Threading.Tasks;
-    using Fifthweek.Payments.Taxamo;
-    using Fifthweek.Shared;
-    using global::Taxamo.Api;
-    using global::Taxamo.Client;
-    using global::Taxamo.Model;
-    using System.Collections.Generic;
-
-    public partial class TaxamoCalculationResult
-    {
-        public partial class PossibleCountry 
-        {
-            public PossibleCountry(
-                System.String name,
-                System.String countryCode)
-            {
-                if (name == null)
-                {
-                    throw new ArgumentNullException("name");
-                }
-
-                if (countryCode == null)
-                {
-                    throw new ArgumentNullException("countryCode");
-                }
-
-                this.Name = name;
-                this.CountryCode = countryCode;
-            }
-        }
-    }
-}
-namespace Fifthweek.Payments.Services.Credit
-{
-    using System;
-    using System.Linq;
-    using Fifthweek.CodeGeneration;
-    using System.Threading.Tasks;
-    using Fifthweek.Api.Identity.Shared.Membership;
-    using Fifthweek.Payments.Services.Credit.Taxamo;
-    using Fifthweek.Shared;
-    using Newtonsoft.Json;
-    using Fifthweek.Payments.Services;
-    using Dapper;
-    using Fifthweek.Api.Persistence;
-    using Fifthweek.Api.Persistence.Payments;
-    using Fifthweek.Payments.Services.Credit.Stripe;
-    using System.Collections.Generic;
-    using Fifthweek.Payments.Services.Credit;
-    using System.Runtime.ExceptionServices;
-    using Fifthweek.Payments.Stripe;
-
-    public partial class CommitTestUserCreditToDatabase 
-    {
-        public CommitTestUserCreditToDatabase(
-            Fifthweek.Shared.ITimestampCreator timestampCreator,
-            Fifthweek.Payments.Services.Credit.ISetTestUserAccountBalanceDbStatement setTestUserAccountBalance)
-        {
-            if (timestampCreator == null)
-            {
-                throw new ArgumentNullException("timestampCreator");
-            }
-
-            if (setTestUserAccountBalance == null)
-            {
-                throw new ArgumentNullException("setTestUserAccountBalance");
-            }
-
-            this.timestampCreator = timestampCreator;
-            this.setTestUserAccountBalance = setTestUserAccountBalance;
-        }
-    }
-}
-namespace Fifthweek.Payments.Services.Credit
-{
-    using System;
-    using System.Linq;
-    using Fifthweek.CodeGeneration;
-    using System.Threading.Tasks;
-    using Fifthweek.Api.Identity.Shared.Membership;
-    using Fifthweek.Payments.Services.Credit.Taxamo;
-    using Fifthweek.Shared;
-    using Newtonsoft.Json;
-    using Fifthweek.Payments.Services;
-    using Dapper;
-    using Fifthweek.Api.Persistence;
-    using Fifthweek.Api.Persistence.Payments;
-    using Fifthweek.Payments.Services.Credit.Stripe;
-    using System.Collections.Generic;
-    using Fifthweek.Payments.Services.Credit;
-    using System.Runtime.ExceptionServices;
-    using Fifthweek.Payments.Stripe;
-
-    public partial class SetTestUserAccountBalanceDbStatement 
-    {
-        public SetTestUserAccountBalanceDbStatement(
-            Fifthweek.Api.Persistence.IFifthweekDbConnectionFactory connectionFactory)
-        {
-            if (connectionFactory == null)
-            {
-                throw new ArgumentNullException("connectionFactory");
-            }
-
-            this.connectionFactory = connectionFactory;
-        }
-    }
-}
-namespace Fifthweek.Payments.Services.Credit.Taxamo
-{
-    using System;
-    using System.Linq;
-    using Fifthweek.CodeGeneration;
-    using System.Threading.Tasks;
-    using Fifthweek.Payments.Taxamo;
-    using Fifthweek.Shared;
-    using global::Taxamo.Api;
-    using global::Taxamo.Client;
-    using global::Taxamo.Model;
-    using System.Collections.Generic;
-
-    public partial class CreateTaxamoTransaction 
-    {
-        public CreateTaxamoTransaction(
-            Fifthweek.Payments.Taxamo.ITaxamoApiKeyRepository taxamoApiKeyRepository,
-            Fifthweek.Payments.Taxamo.ITaxamoService taxamoService)
-        {
-            if (taxamoApiKeyRepository == null)
-            {
-                throw new ArgumentNullException("taxamoApiKeyRepository");
-            }
-
-            if (taxamoService == null)
-            {
-                throw new ArgumentNullException("taxamoService");
-            }
-
-            this.taxamoApiKeyRepository = taxamoApiKeyRepository;
-            this.taxamoService = taxamoService;
-        }
-    }
-}
-namespace Fifthweek.Payments.Services.Credit.Taxamo
-{
-    using System;
-    using System.Linq;
-    using Fifthweek.CodeGeneration;
-    using System.Threading.Tasks;
-    using Fifthweek.Payments.Taxamo;
-    using Fifthweek.Shared;
-    using global::Taxamo.Api;
-    using global::Taxamo.Client;
-    using global::Taxamo.Model;
-    using System.Collections.Generic;
-
-    public partial class CommitTaxamoTransaction 
-    {
-        public CommitTaxamoTransaction(
-            Fifthweek.Payments.Taxamo.ITaxamoApiKeyRepository taxamoApiKeyRepository,
-            Fifthweek.Payments.Taxamo.ITaxamoService taxamoService)
-        {
-            if (taxamoApiKeyRepository == null)
-            {
-                throw new ArgumentNullException("taxamoApiKeyRepository");
-            }
-
-            if (taxamoService == null)
-            {
-                throw new ArgumentNullException("taxamoService");
-            }
-
-            this.taxamoApiKeyRepository = taxamoApiKeyRepository;
-            this.taxamoService = taxamoService;
-        }
-    }
-}
-namespace Fifthweek.Payments.Services.Credit.Taxamo
-{
-    using System;
-    using System.Linq;
-    using Fifthweek.CodeGeneration;
-    using System.Threading.Tasks;
-    using Fifthweek.Payments.Taxamo;
-    using Fifthweek.Shared;
-    using global::Taxamo.Api;
-    using global::Taxamo.Client;
-    using global::Taxamo.Model;
-    using System.Collections.Generic;
-
-    public partial class DeleteTaxamoTransaction 
-    {
-        public DeleteTaxamoTransaction(
-            Fifthweek.Payments.Taxamo.ITaxamoApiKeyRepository taxamoApiKeyRepository,
-            Fifthweek.Payments.Taxamo.ITaxamoService taxamoService)
-        {
-            if (taxamoApiKeyRepository == null)
-            {
-                throw new ArgumentNullException("taxamoApiKeyRepository");
-            }
-
-            if (taxamoService == null)
-            {
-                throw new ArgumentNullException("taxamoService");
-            }
-
-            this.taxamoApiKeyRepository = taxamoApiKeyRepository;
-            this.taxamoService = taxamoService;
-        }
-    }
-}
-namespace Fifthweek.Payments.Services
-{
-    using System;
-    using System.Linq;
-    using Fifthweek.Api.Identity.Shared.Membership;
-    using Fifthweek.CodeGeneration;
-    using Fifthweek.Api.Channels.Shared;
-    using System.Collections.Generic;
-    using System.Threading.Tasks;
-    using Dapper;
-    using Fifthweek.Api.Persistence;
-    using Fifthweek.Api.Persistence.Identity;
-    using Fifthweek.Api.Persistence.Snapshots;
-    using Fifthweek.Api.Persistence.Payments;
-    using Fifthweek.Payments.Snapshots;
-    using Fifthweek.Shared;
-    using System.Threading;
-    using Fifthweek.Azure;
-    using Newtonsoft.Json;
-    using Fifthweek.Payments.Shared;
-    using Fifthweek.Api.Azure;
-    using Fifthweek.Payments.Pipeline;
-    using Fifthweek.Payments.Services.Credit;
-
-    public partial class GetCommittedAccountBalanceDbStatement 
-    {
-        public GetCommittedAccountBalanceDbStatement(
-            Fifthweek.Api.Persistence.IFifthweekDbConnectionFactory connectionFactory)
-        {
-            if (connectionFactory == null)
-            {
-                throw new ArgumentNullException("connectionFactory");
-            }
-
-            this.connectionFactory = connectionFactory;
-        }
-    }
-}
 
 namespace Fifthweek.Payments
 {
     using System;
     using Fifthweek.CodeGeneration;
-    using System.Linq;
 
     public partial class AggregateCostSummary 
     {
@@ -3269,82 +2939,10 @@ namespace Fifthweek.Payments
         }
     }
 }
-namespace Fifthweek.Payments.Services.Credit
-{
-    using System;
-    using System.Linq;
-    using Fifthweek.CodeGeneration;
-    using System.Threading.Tasks;
-    using Fifthweek.Api.Identity.Shared.Membership;
-    using Fifthweek.Payments.Services.Credit.Taxamo;
-    using Fifthweek.Shared;
-    using Newtonsoft.Json;
-    using Fifthweek.Payments.Services;
-    using Dapper;
-    using Fifthweek.Api.Persistence;
-    using Fifthweek.Api.Persistence.Payments;
-    using Fifthweek.Payments.Services.Credit.Stripe;
-    using System.Collections.Generic;
-    using Fifthweek.Payments.Services.Credit;
-    using System.Runtime.ExceptionServices;
-    using Fifthweek.Payments.Stripe;
-
-    public partial class AmountInMinorDenomination 
-    {
-        public override string ToString()
-        {
-            return string.Format("AmountInMinorDenomination({0})", this.Value == null ? "null" : this.Value.ToString());
-        }
-        
-        public override bool Equals(object obj)
-        {
-            if (ReferenceEquals(null, obj))
-            {
-                return false;
-            }
-        
-            if (ReferenceEquals(this, obj))
-            {
-                return true;
-            }
-        
-            if (obj.GetType() != this.GetType())
-            {
-                return false;
-            }
-        
-            return this.Equals((AmountInMinorDenomination)obj);
-        }
-        
-        public override int GetHashCode()
-        {
-            unchecked
-            {
-                int hashCode = 0;
-                hashCode = (hashCode * 397) ^ (this.Value != null ? this.Value.GetHashCode() : 0);
-                return hashCode;
-            }
-        }
-        
-        protected bool Equals(AmountInMinorDenomination other)
-        {
-            if (!object.Equals(this.Value, other.Value))
-            {
-                return false;
-            }
-        
-            return true;
-        }
-    }
-}
 namespace Fifthweek.Payments.Pipeline
 {
     using System;
-    using System.Linq;
-    using System.Collections.Generic;
     using Fifthweek.CodeGeneration;
-    using Fifthweek.Payments.Services;
-    using Fifthweek.Payments.Snapshots;
 
     public partial class CostPeriod 
     {
@@ -3409,26 +3007,134 @@ namespace Fifthweek.Payments.Pipeline
 namespace Fifthweek.Payments.Services
 {
     using System;
-    using System.Linq;
+    using Fifthweek.Api.Identity.Shared.Membership;
+    using Fifthweek.Api.Persistence.Payments;
+    using Fifthweek.CodeGeneration;
+
+    public partial class CalculatedAccountBalanceResult 
+    {
+        public override string ToString()
+        {
+            return string.Format("CalculatedAccountBalanceResult({0}, {1}, {2}, {3})", this.Timestamp == null ? "null" : this.Timestamp.ToString(), this.UserId == null ? "null" : this.UserId.ToString(), this.AccountType == null ? "null" : this.AccountType.ToString(), this.Amount == null ? "null" : this.Amount.ToString());
+        }
+        
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj))
+            {
+                return false;
+            }
+        
+            if (ReferenceEquals(this, obj))
+            {
+                return true;
+            }
+        
+            if (obj.GetType() != this.GetType())
+            {
+                return false;
+            }
+        
+            return this.Equals((CalculatedAccountBalanceResult)obj);
+        }
+        
+        public override int GetHashCode()
+        {
+            unchecked
+            {
+                int hashCode = 0;
+                hashCode = (hashCode * 397) ^ (this.Timestamp != null ? this.Timestamp.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.UserId != null ? this.UserId.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.AccountType != null ? this.AccountType.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.Amount != null ? this.Amount.GetHashCode() : 0);
+                return hashCode;
+            }
+        }
+        
+        protected bool Equals(CalculatedAccountBalanceResult other)
+        {
+            if (!object.Equals(this.Timestamp, other.Timestamp))
+            {
+                return false;
+            }
+        
+            if (!object.Equals(this.UserId, other.UserId))
+            {
+                return false;
+            }
+        
+            if (!object.Equals(this.AccountType, other.AccountType))
+            {
+                return false;
+            }
+        
+            if (!object.Equals(this.Amount, other.Amount))
+            {
+                return false;
+            }
+        
+            return true;
+        }
+    }
+}
+namespace Fifthweek.Payments.Services
+{
+    using System;
+    using Fifthweek.CodeGeneration;
+
+    public partial class CommittedAccountBalance 
+    {
+        public override string ToString()
+        {
+            return string.Format("CommittedAccountBalance({0})", this.Amount == null ? "null" : this.Amount.ToString());
+        }
+        
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj))
+            {
+                return false;
+            }
+        
+            if (ReferenceEquals(this, obj))
+            {
+                return true;
+            }
+        
+            if (obj.GetType() != this.GetType())
+            {
+                return false;
+            }
+        
+            return this.Equals((CommittedAccountBalance)obj);
+        }
+        
+        public override int GetHashCode()
+        {
+            unchecked
+            {
+                int hashCode = 0;
+                hashCode = (hashCode * 397) ^ (this.Amount != null ? this.Amount.GetHashCode() : 0);
+                return hashCode;
+            }
+        }
+        
+        protected bool Equals(CommittedAccountBalance other)
+        {
+            if (!object.Equals(this.Amount, other.Amount))
+            {
+                return false;
+            }
+        
+            return true;
+        }
+    }
+}
+namespace Fifthweek.Payments.Services
+{
+    using System;
     using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.CodeGeneration;
-    using Fifthweek.Api.Channels.Shared;
-    using System.Collections.Generic;
-    using System.Threading.Tasks;
-    using Dapper;
-    using Fifthweek.Api.Persistence;
-    using Fifthweek.Api.Persistence.Identity;
-    using Fifthweek.Api.Persistence.Snapshots;
-    using Fifthweek.Api.Persistence.Payments;
-    using Fifthweek.Payments.Snapshots;
-    using Fifthweek.Shared;
-    using System.Threading;
-    using Fifthweek.Azure;
-    using Newtonsoft.Json;
-    using Fifthweek.Payments.Shared;
-    using Fifthweek.Api.Azure;
-    using Fifthweek.Payments.Pipeline;
-    using Fifthweek.Payments.Services.Credit;
 
     public partial class CreatorIdAndFirstSubscribedDate 
     {
@@ -3487,26 +3193,7 @@ namespace Fifthweek.Payments.Services
 namespace Fifthweek.Payments.Services
 {
     using System;
-    using System.Linq;
-    using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.CodeGeneration;
-    using Fifthweek.Api.Channels.Shared;
-    using System.Collections.Generic;
-    using System.Threading.Tasks;
-    using Dapper;
-    using Fifthweek.Api.Persistence;
-    using Fifthweek.Api.Persistence.Identity;
-    using Fifthweek.Api.Persistence.Snapshots;
-    using Fifthweek.Api.Persistence.Payments;
-    using Fifthweek.Payments.Snapshots;
-    using Fifthweek.Shared;
-    using System.Threading;
-    using Fifthweek.Azure;
-    using Newtonsoft.Json;
-    using Fifthweek.Payments.Shared;
-    using Fifthweek.Api.Azure;
-    using Fifthweek.Payments.Pipeline;
-    using Fifthweek.Payments.Services.Credit;
 
     public partial class CreatorPercentageOverrideData 
     {
@@ -3565,26 +3252,8 @@ namespace Fifthweek.Payments.Services
 namespace Fifthweek.Payments.Services
 {
     using System;
-    using System.Linq;
-    using Fifthweek.Api.Identity.Shared.Membership;
-    using Fifthweek.CodeGeneration;
     using Fifthweek.Api.Channels.Shared;
-    using System.Collections.Generic;
-    using System.Threading.Tasks;
-    using Dapper;
-    using Fifthweek.Api.Persistence;
-    using Fifthweek.Api.Persistence.Identity;
-    using Fifthweek.Api.Persistence.Snapshots;
-    using Fifthweek.Api.Persistence.Payments;
-    using Fifthweek.Payments.Snapshots;
-    using Fifthweek.Shared;
-    using System.Threading;
-    using Fifthweek.Azure;
-    using Newtonsoft.Json;
-    using Fifthweek.Payments.Shared;
-    using Fifthweek.Api.Azure;
-    using Fifthweek.Payments.Pipeline;
-    using Fifthweek.Payments.Services.Credit;
+    using Fifthweek.CodeGeneration;
 
     public partial class CreatorPost 
     {
@@ -3642,23 +3311,61 @@ namespace Fifthweek.Payments.Services
 }
 namespace Fifthweek.Payments.Services.Credit
 {
-    using System;
-    using System.Linq;
     using Fifthweek.CodeGeneration;
-    using System.Threading.Tasks;
-    using Fifthweek.Api.Identity.Shared.Membership;
-    using Fifthweek.Payments.Services.Credit.Taxamo;
     using Fifthweek.Shared;
-    using Newtonsoft.Json;
-    using Fifthweek.Payments.Services;
-    using Dapper;
-    using Fifthweek.Api.Persistence;
-    using Fifthweek.Api.Persistence.Payments;
-    using Fifthweek.Payments.Services.Credit.Stripe;
-    using System.Collections.Generic;
-    using Fifthweek.Payments.Services.Credit;
-    using System.Runtime.ExceptionServices;
-    using Fifthweek.Payments.Stripe;
+
+    public partial class AmountInMinorDenomination 
+    {
+        public override string ToString()
+        {
+            return string.Format("AmountInMinorDenomination({0})", this.Value == null ? "null" : this.Value.ToString());
+        }
+        
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj))
+            {
+                return false;
+            }
+        
+            if (ReferenceEquals(this, obj))
+            {
+                return true;
+            }
+        
+            if (obj.GetType() != this.GetType())
+            {
+                return false;
+            }
+        
+            return this.Equals((AmountInMinorDenomination)obj);
+        }
+        
+        public override int GetHashCode()
+        {
+            unchecked
+            {
+                int hashCode = 0;
+                hashCode = (hashCode * 397) ^ (this.Value != null ? this.Value.GetHashCode() : 0);
+                return hashCode;
+            }
+        }
+        
+        protected bool Equals(AmountInMinorDenomination other)
+        {
+            if (!object.Equals(this.Value, other.Value))
+            {
+                return false;
+            }
+        
+            return true;
+        }
+    }
+}
+namespace Fifthweek.Payments.Services.Credit
+{
+    using Fifthweek.CodeGeneration;
+    using Fifthweek.Payments.Services.Credit.Taxamo;
 
     public partial class InitializeCreditRequestResult 
     {
@@ -3717,22 +3424,8 @@ namespace Fifthweek.Payments.Services.Credit
 namespace Fifthweek.Payments.Services.Credit
 {
     using System;
-    using System.Linq;
     using Fifthweek.CodeGeneration;
-    using System.Threading.Tasks;
-    using Fifthweek.Api.Identity.Shared.Membership;
-    using Fifthweek.Payments.Services.Credit.Taxamo;
-    using Fifthweek.Shared;
-    using Newtonsoft.Json;
-    using Fifthweek.Payments.Services;
-    using Dapper;
-    using Fifthweek.Api.Persistence;
-    using Fifthweek.Api.Persistence.Payments;
-    using Fifthweek.Payments.Services.Credit.Stripe;
-    using System.Collections.Generic;
-    using Fifthweek.Payments.Services.Credit;
-    using System.Runtime.ExceptionServices;
-    using Fifthweek.Payments.Stripe;
+    using Fifthweek.Payments.Shared;
 
     public partial class StripeTransactionResult 
     {
@@ -3796,16 +3489,179 @@ namespace Fifthweek.Payments.Services.Credit
 }
 namespace Fifthweek.Payments.Services.Credit.Taxamo
 {
-    using System;
-    using System.Linq;
-    using Fifthweek.CodeGeneration;
-    using System.Threading.Tasks;
-    using Fifthweek.Payments.Taxamo;
-    using Fifthweek.Shared;
-    using global::Taxamo.Api;
-    using global::Taxamo.Client;
-    using global::Taxamo.Model;
     using System.Collections.Generic;
+    using Fifthweek.CodeGeneration;
+
+    public partial class TaxamoCalculationResult
+    {
+        public partial class PossibleCountry 
+        {
+            public override string ToString()
+            {
+                return string.Format("PossibleCountry(\"{0}\", \"{1}\")", this.Name == null ? "null" : this.Name.ToString(), this.CountryCode == null ? "null" : this.CountryCode.ToString());
+            }
+            
+            public override bool Equals(object obj)
+            {
+                if (ReferenceEquals(null, obj))
+                {
+                    return false;
+                }
+            
+                if (ReferenceEquals(this, obj))
+                {
+                    return true;
+                }
+            
+                if (obj.GetType() != this.GetType())
+                {
+                    return false;
+                }
+            
+                return this.Equals((PossibleCountry)obj);
+            }
+            
+            public override int GetHashCode()
+            {
+                unchecked
+                {
+                    int hashCode = 0;
+                    hashCode = (hashCode * 397) ^ (this.Name != null ? this.Name.GetHashCode() : 0);
+                    hashCode = (hashCode * 397) ^ (this.CountryCode != null ? this.CountryCode.GetHashCode() : 0);
+                    return hashCode;
+                }
+            }
+            
+            protected bool Equals(PossibleCountry other)
+            {
+                if (!object.Equals(this.Name, other.Name))
+                {
+                    return false;
+                }
+            
+                if (!object.Equals(this.CountryCode, other.CountryCode))
+                {
+                    return false;
+                }
+            
+                return true;
+            }
+        }
+    }
+}
+namespace Fifthweek.Payments.Services.Credit.Taxamo
+{
+    using System.Collections.Generic;
+    using Fifthweek.CodeGeneration;
+
+    public partial class TaxamoCalculationResult 
+    {
+        public override string ToString()
+        {
+            return string.Format("TaxamoCalculationResult({0}, {1}, {2}, {3}, \"{4}\", \"{5}\", \"{6}\", {7})", this.Amount == null ? "null" : this.Amount.ToString(), this.TotalAmount == null ? "null" : this.TotalAmount.ToString(), this.TaxAmount == null ? "null" : this.TaxAmount.ToString(), this.TaxRate == null ? "null" : this.TaxRate.ToString(), this.TaxName == null ? "null" : this.TaxName.ToString(), this.TaxEntityName == null ? "null" : this.TaxEntityName.ToString(), this.CountryName == null ? "null" : this.CountryName.ToString(), this.PossibleCountries == null ? "null" : this.PossibleCountries.ToString());
+        }
+        
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj))
+            {
+                return false;
+            }
+        
+            if (ReferenceEquals(this, obj))
+            {
+                return true;
+            }
+        
+            if (obj.GetType() != this.GetType())
+            {
+                return false;
+            }
+        
+            return this.Equals((TaxamoCalculationResult)obj);
+        }
+        
+        public override int GetHashCode()
+        {
+            unchecked
+            {
+                int hashCode = 0;
+                hashCode = (hashCode * 397) ^ (this.Amount != null ? this.Amount.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.TotalAmount != null ? this.TotalAmount.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.TaxAmount != null ? this.TaxAmount.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.TaxRate != null ? this.TaxRate.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.TaxName != null ? this.TaxName.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.TaxEntityName != null ? this.TaxEntityName.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.CountryName != null ? this.CountryName.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.PossibleCountries != null 
+        			? this.PossibleCountries.Aggregate(0, (previous, current) => 
+        				{ 
+        				    unchecked
+        				    {
+        				        return (previous * 397) ^ (current != null ? current.GetHashCode() : 0);
+        				    }
+        				})
+        			: 0);
+                return hashCode;
+            }
+        }
+        
+        protected bool Equals(TaxamoCalculationResult other)
+        {
+            if (!object.Equals(this.Amount, other.Amount))
+            {
+                return false;
+            }
+        
+            if (!object.Equals(this.TotalAmount, other.TotalAmount))
+            {
+                return false;
+            }
+        
+            if (!object.Equals(this.TaxAmount, other.TaxAmount))
+            {
+                return false;
+            }
+        
+            if (!object.Equals(this.TaxRate, other.TaxRate))
+            {
+                return false;
+            }
+        
+            if (!object.Equals(this.TaxName, other.TaxName))
+            {
+                return false;
+            }
+        
+            if (!object.Equals(this.TaxEntityName, other.TaxEntityName))
+            {
+                return false;
+            }
+        
+            if (!object.Equals(this.CountryName, other.CountryName))
+            {
+                return false;
+            }
+        
+            if (this.PossibleCountries != null && other.PossibleCountries != null)
+            {
+                if (!this.PossibleCountries.SequenceEqual(other.PossibleCountries))
+                {
+                    return false;    
+                }
+            }
+            else if (this.PossibleCountries != null || other.PossibleCountries != null)
+            {
+                return false;
+            }
+        
+            return true;
+        }
+    }
+}
+namespace Fifthweek.Payments.Services.Credit.Taxamo
+{
+    using Fifthweek.CodeGeneration;
 
     public partial class TaxamoTransactionResult 
     {
@@ -3899,23 +3755,8 @@ namespace Fifthweek.Payments.Services.Credit.Taxamo
 }
 namespace Fifthweek.Payments.Services.Credit
 {
-    using System;
-    using System.Linq;
-    using Fifthweek.CodeGeneration;
-    using System.Threading.Tasks;
-    using Fifthweek.Api.Identity.Shared.Membership;
-    using Fifthweek.Payments.Services.Credit.Taxamo;
-    using Fifthweek.Shared;
-    using Newtonsoft.Json;
-    using Fifthweek.Payments.Services;
-    using Dapper;
-    using Fifthweek.Api.Persistence;
     using Fifthweek.Api.Persistence.Payments;
-    using Fifthweek.Payments.Services.Credit.Stripe;
-    using System.Collections.Generic;
-    using Fifthweek.Payments.Services.Credit;
-    using System.Runtime.ExceptionServices;
-    using Fifthweek.Payments.Stripe;
+    using Fifthweek.CodeGeneration;
 
     public partial class UserPaymentOriginResult 
     {
@@ -4004,26 +3845,12 @@ namespace Fifthweek.Payments.Services.Credit
 namespace Fifthweek.Payments.Services
 {
     using System;
+    using System.Collections.Generic;
     using System.Linq;
+    using System.Threading;
     using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.CodeGeneration;
-    using Fifthweek.Api.Channels.Shared;
-    using System.Collections.Generic;
-    using System.Threading.Tasks;
-    using Dapper;
-    using Fifthweek.Api.Persistence;
-    using Fifthweek.Api.Persistence.Identity;
-    using Fifthweek.Api.Persistence.Snapshots;
-    using Fifthweek.Api.Persistence.Payments;
     using Fifthweek.Payments.Snapshots;
-    using Fifthweek.Shared;
-    using System.Threading;
-    using Fifthweek.Azure;
-    using Newtonsoft.Json;
-    using Fifthweek.Payments.Shared;
-    using Fifthweek.Api.Azure;
-    using Fifthweek.Payments.Pipeline;
-    using Fifthweek.Payments.Services.Credit;
 
     public partial class PaymentProcessingData 
     {
@@ -4232,26 +4059,7 @@ namespace Fifthweek.Payments.Services
 namespace Fifthweek.Payments.Services
 {
     using System;
-    using System.Linq;
-    using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.CodeGeneration;
-    using Fifthweek.Api.Channels.Shared;
-    using System.Collections.Generic;
-    using System.Threading.Tasks;
-    using Dapper;
-    using Fifthweek.Api.Persistence;
-    using Fifthweek.Api.Persistence.Identity;
-    using Fifthweek.Api.Persistence.Snapshots;
-    using Fifthweek.Api.Persistence.Payments;
-    using Fifthweek.Payments.Snapshots;
-    using Fifthweek.Shared;
-    using System.Threading;
-    using Fifthweek.Azure;
-    using Newtonsoft.Json;
-    using Fifthweek.Payments.Shared;
-    using Fifthweek.Api.Azure;
-    using Fifthweek.Payments.Pipeline;
-    using Fifthweek.Payments.Services.Credit;
 
     public partial class PaymentProcessingResult 
     {
@@ -4327,27 +4135,8 @@ namespace Fifthweek.Payments.Services
 }
 namespace Fifthweek.Payments.Services
 {
-    using System;
-    using System.Linq;
-    using Fifthweek.Api.Identity.Shared.Membership;
-    using Fifthweek.CodeGeneration;
-    using Fifthweek.Api.Channels.Shared;
     using System.Collections.Generic;
-    using System.Threading.Tasks;
-    using Dapper;
-    using Fifthweek.Api.Persistence;
-    using Fifthweek.Api.Persistence.Identity;
-    using Fifthweek.Api.Persistence.Snapshots;
-    using Fifthweek.Api.Persistence.Payments;
-    using Fifthweek.Payments.Snapshots;
-    using Fifthweek.Shared;
-    using System.Threading;
-    using Fifthweek.Azure;
-    using Newtonsoft.Json;
-    using Fifthweek.Payments.Shared;
-    using Fifthweek.Api.Azure;
-    using Fifthweek.Payments.Pipeline;
-    using Fifthweek.Payments.Services.Credit;
+    using Fifthweek.CodeGeneration;
 
     public partial class PaymentProcessingResults 
     {
@@ -4421,26 +4210,7 @@ namespace Fifthweek.Payments.Services
 namespace Fifthweek.Payments.Services
 {
     using System;
-    using System.Linq;
-    using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.CodeGeneration;
-    using Fifthweek.Api.Channels.Shared;
-    using System.Collections.Generic;
-    using System.Threading.Tasks;
-    using Dapper;
-    using Fifthweek.Api.Persistence;
-    using Fifthweek.Api.Persistence.Identity;
-    using Fifthweek.Api.Persistence.Snapshots;
-    using Fifthweek.Api.Persistence.Payments;
-    using Fifthweek.Payments.Snapshots;
-    using Fifthweek.Shared;
-    using System.Threading;
-    using Fifthweek.Azure;
-    using Newtonsoft.Json;
-    using Fifthweek.Payments.Shared;
-    using Fifthweek.Api.Azure;
-    using Fifthweek.Payments.Pipeline;
-    using Fifthweek.Payments.Services.Credit;
 
     public partial class PersistedPaymentProcessingData 
     {
@@ -4502,15 +4272,235 @@ namespace Fifthweek.Payments.Services
         }
     }
 }
-namespace Fifthweek.Payments.Snapshots
+namespace Fifthweek.Payments.Services.Refunds
 {
     using System;
-    using System.Linq;
+    using System.Threading.Tasks;
     using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.Api.Persistence.Payments;
     using Fifthweek.CodeGeneration;
+    using Fifthweek.Payments.Shared;
+    using Fifthweek.Shared;
+
+    public partial class CreateTransactionRefund
+    {
+        public partial class CreateTransactionRefundResult 
+        {
+            public override string ToString()
+            {
+                return string.Format("CreateTransactionRefundResult({0}, {1})", this.SubscriberId == null ? "null" : this.SubscriberId.ToString(), this.CreatorId == null ? "null" : this.CreatorId.ToString());
+            }
+            
+            public override bool Equals(object obj)
+            {
+                if (ReferenceEquals(null, obj))
+                {
+                    return false;
+                }
+            
+                if (ReferenceEquals(this, obj))
+                {
+                    return true;
+                }
+            
+                if (obj.GetType() != this.GetType())
+                {
+                    return false;
+                }
+            
+                return this.Equals((CreateTransactionRefundResult)obj);
+            }
+            
+            public override int GetHashCode()
+            {
+                unchecked
+                {
+                    int hashCode = 0;
+                    hashCode = (hashCode * 397) ^ (this.SubscriberId != null ? this.SubscriberId.GetHashCode() : 0);
+                    hashCode = (hashCode * 397) ^ (this.CreatorId != null ? this.CreatorId.GetHashCode() : 0);
+                    return hashCode;
+                }
+            }
+            
+            protected bool Equals(CreateTransactionRefundResult other)
+            {
+                if (!object.Equals(this.SubscriberId, other.SubscriberId))
+                {
+                    return false;
+                }
+            
+                if (!object.Equals(this.CreatorId, other.CreatorId))
+                {
+                    return false;
+                }
+            
+                return true;
+            }
+        }
+    }
+}
+namespace Fifthweek.Payments.Services.Refunds
+{
+    using System;
+    using System.Linq;
+    using System.Threading.Tasks;
+    using Dapper;
+    using Fifthweek.Api.Identity.Shared.Membership;
+    using Fifthweek.Api.Persistence;
+    using Fifthweek.Api.Persistence.Payments;
+    using Fifthweek.CodeGeneration;
+    using Fifthweek.Payments.Shared;
+    using Fifthweek.Shared;
+
+    public partial class GetCreditTransactionDbStatement
+    {
+        public partial class GetCreditTransactionResult 
+        {
+            public override string ToString()
+            {
+                return string.Format("GetCreditTransactionResult({0}, \"{1}\", \"{2}\", {3}, {4})", this.UserId == null ? "null" : this.UserId.ToString(), this.StripeChargeId == null ? "null" : this.StripeChargeId.ToString(), this.TaxamoTransactionKey == null ? "null" : this.TaxamoTransactionKey.ToString(), this.TotalCreditAmount == null ? "null" : this.TotalCreditAmount.ToString(), this.CreditAmountAvailableForRefund == null ? "null" : this.CreditAmountAvailableForRefund.ToString());
+            }
+            
+            public override bool Equals(object obj)
+            {
+                if (ReferenceEquals(null, obj))
+                {
+                    return false;
+                }
+            
+                if (ReferenceEquals(this, obj))
+                {
+                    return true;
+                }
+            
+                if (obj.GetType() != this.GetType())
+                {
+                    return false;
+                }
+            
+                return this.Equals((GetCreditTransactionResult)obj);
+            }
+            
+            public override int GetHashCode()
+            {
+                unchecked
+                {
+                    int hashCode = 0;
+                    hashCode = (hashCode * 397) ^ (this.UserId != null ? this.UserId.GetHashCode() : 0);
+                    hashCode = (hashCode * 397) ^ (this.StripeChargeId != null ? this.StripeChargeId.GetHashCode() : 0);
+                    hashCode = (hashCode * 397) ^ (this.TaxamoTransactionKey != null ? this.TaxamoTransactionKey.GetHashCode() : 0);
+                    hashCode = (hashCode * 397) ^ (this.TotalCreditAmount != null ? this.TotalCreditAmount.GetHashCode() : 0);
+                    hashCode = (hashCode * 397) ^ (this.CreditAmountAvailableForRefund != null ? this.CreditAmountAvailableForRefund.GetHashCode() : 0);
+                    return hashCode;
+                }
+            }
+            
+            protected bool Equals(GetCreditTransactionResult other)
+            {
+                if (!object.Equals(this.UserId, other.UserId))
+                {
+                    return false;
+                }
+            
+                if (!object.Equals(this.StripeChargeId, other.StripeChargeId))
+                {
+                    return false;
+                }
+            
+                if (!object.Equals(this.TaxamoTransactionKey, other.TaxamoTransactionKey))
+                {
+                    return false;
+                }
+            
+                if (!object.Equals(this.TotalCreditAmount, other.TotalCreditAmount))
+                {
+                    return false;
+                }
+            
+                if (!object.Equals(this.CreditAmountAvailableForRefund, other.CreditAmountAvailableForRefund))
+                {
+                    return false;
+                }
+            
+                return true;
+            }
+        }
+    }
+}
+namespace Fifthweek.Payments.Services.Refunds.Taxamo
+{
     using System.Collections.Generic;
-    using Fifthweek.Api.Channels.Shared;
+    using System.Threading.Tasks;
+    using Fifthweek.CodeGeneration;
+    using Fifthweek.Payments.Services.Credit;
+    using Fifthweek.Payments.Services.Credit.Taxamo;
+    using Fifthweek.Payments.Taxamo;
+    using Fifthweek.Shared;
+    using global::Taxamo.Model;
+
+    public partial class CreateTaxamoRefund
+    {
+        public partial class TaxamoRefundResult 
+        {
+            public override string ToString()
+            {
+                return string.Format("TaxamoRefundResult({0}, {1})", this.TotalRefundAmount == null ? "null" : this.TotalRefundAmount.ToString(), this.TaxRefundAmount == null ? "null" : this.TaxRefundAmount.ToString());
+            }
+            
+            public override bool Equals(object obj)
+            {
+                if (ReferenceEquals(null, obj))
+                {
+                    return false;
+                }
+            
+                if (ReferenceEquals(this, obj))
+                {
+                    return true;
+                }
+            
+                if (obj.GetType() != this.GetType())
+                {
+                    return false;
+                }
+            
+                return this.Equals((TaxamoRefundResult)obj);
+            }
+            
+            public override int GetHashCode()
+            {
+                unchecked
+                {
+                    int hashCode = 0;
+                    hashCode = (hashCode * 397) ^ (this.TotalRefundAmount != null ? this.TotalRefundAmount.GetHashCode() : 0);
+                    hashCode = (hashCode * 397) ^ (this.TaxRefundAmount != null ? this.TaxRefundAmount.GetHashCode() : 0);
+                    return hashCode;
+                }
+            }
+            
+            protected bool Equals(TaxamoRefundResult other)
+            {
+                if (!object.Equals(this.TotalRefundAmount, other.TotalRefundAmount))
+                {
+                    return false;
+                }
+            
+                if (!object.Equals(this.TaxRefundAmount, other.TaxRefundAmount))
+                {
+                    return false;
+                }
+            
+                return true;
+            }
+        }
+    }
+}
+namespace Fifthweek.Payments.Snapshots
+{
+    using System;
+    using Fifthweek.Api.Identity.Shared.Membership;
+    using Fifthweek.Api.Persistence.Payments;
+    using Fifthweek.CodeGeneration;
 
     public partial class CalculatedAccountBalanceSnapshot 
     {
@@ -4581,12 +4571,9 @@ namespace Fifthweek.Payments.Snapshots
 namespace Fifthweek.Payments.Snapshots
 {
     using System;
-    using System.Linq;
-    using Fifthweek.Api.Identity.Shared.Membership;
-    using Fifthweek.Api.Persistence.Payments;
-    using Fifthweek.CodeGeneration;
     using System.Collections.Generic;
-    using Fifthweek.Api.Channels.Shared;
+    using Fifthweek.Api.Identity.Shared.Membership;
+    using Fifthweek.CodeGeneration;
 
     public partial class CreatorChannelsSnapshot 
     {
@@ -4666,12 +4653,8 @@ namespace Fifthweek.Payments.Snapshots
 namespace Fifthweek.Payments.Snapshots
 {
     using System;
-    using System.Linq;
-    using Fifthweek.Api.Identity.Shared.Membership;
-    using Fifthweek.Api.Persistence.Payments;
-    using Fifthweek.CodeGeneration;
-    using System.Collections.Generic;
     using Fifthweek.Api.Channels.Shared;
+    using Fifthweek.CodeGeneration;
 
     public partial class CreatorChannelsSnapshotItem 
     {
@@ -4730,12 +4713,9 @@ namespace Fifthweek.Payments.Snapshots
 namespace Fifthweek.Payments.Snapshots
 {
     using System;
-    using System.Linq;
-    using Fifthweek.Api.Identity.Shared.Membership;
-    using Fifthweek.Api.Persistence.Payments;
-    using Fifthweek.CodeGeneration;
     using System.Collections.Generic;
-    using Fifthweek.Api.Channels.Shared;
+    using Fifthweek.Api.Identity.Shared.Membership;
+    using Fifthweek.CodeGeneration;
 
     public partial class CreatorFreeAccessUsersSnapshot 
     {
@@ -4816,11 +4796,7 @@ namespace Fifthweek.Payments.Snapshots
 {
     using System;
     using System.Linq;
-    using Fifthweek.Api.Identity.Shared.Membership;
-    using Fifthweek.Api.Persistence.Payments;
     using Fifthweek.CodeGeneration;
-    using System.Collections.Generic;
-    using Fifthweek.Api.Channels.Shared;
 
     public partial class MergedSnapshot 
     {
@@ -4903,12 +4879,9 @@ namespace Fifthweek.Payments.Snapshots
 namespace Fifthweek.Payments.Snapshots
 {
     using System;
-    using System.Linq;
-    using Fifthweek.Api.Identity.Shared.Membership;
-    using Fifthweek.Api.Persistence.Payments;
-    using Fifthweek.CodeGeneration;
     using System.Collections.Generic;
-    using Fifthweek.Api.Channels.Shared;
+    using Fifthweek.Api.Identity.Shared.Membership;
+    using Fifthweek.CodeGeneration;
 
     public partial class SubscriberChannelsSnapshot 
     {
@@ -4988,12 +4961,8 @@ namespace Fifthweek.Payments.Snapshots
 namespace Fifthweek.Payments.Snapshots
 {
     using System;
-    using System.Linq;
-    using Fifthweek.Api.Identity.Shared.Membership;
-    using Fifthweek.Api.Persistence.Payments;
-    using Fifthweek.CodeGeneration;
-    using System.Collections.Generic;
     using Fifthweek.Api.Channels.Shared;
+    using Fifthweek.CodeGeneration;
 
     public partial class SubscriberChannelsSnapshotItem 
     {
@@ -5058,12 +5027,8 @@ namespace Fifthweek.Payments.Snapshots
 namespace Fifthweek.Payments.Snapshots
 {
     using System;
-    using System.Linq;
     using Fifthweek.Api.Identity.Shared.Membership;
-    using Fifthweek.Api.Persistence.Payments;
     using Fifthweek.CodeGeneration;
-    using System.Collections.Generic;
-    using Fifthweek.Api.Channels.Shared;
 
     public partial class SubscriberSnapshot 
     {
@@ -5117,356 +5082,6 @@ namespace Fifthweek.Payments.Snapshots
             }
         
             if (!object.Equals(this.Email, other.Email))
-            {
-                return false;
-            }
-        
-            return true;
-        }
-    }
-}
-namespace Fifthweek.Payments.Services
-{
-    using System;
-    using System.Linq;
-    using Fifthweek.Api.Identity.Shared.Membership;
-    using Fifthweek.CodeGeneration;
-    using Fifthweek.Api.Channels.Shared;
-    using System.Collections.Generic;
-    using System.Threading.Tasks;
-    using Dapper;
-    using Fifthweek.Api.Persistence;
-    using Fifthweek.Api.Persistence.Identity;
-    using Fifthweek.Api.Persistence.Snapshots;
-    using Fifthweek.Api.Persistence.Payments;
-    using Fifthweek.Payments.Snapshots;
-    using Fifthweek.Shared;
-    using System.Threading;
-    using Fifthweek.Azure;
-    using Newtonsoft.Json;
-    using Fifthweek.Payments.Shared;
-    using Fifthweek.Api.Azure;
-    using Fifthweek.Payments.Pipeline;
-    using Fifthweek.Payments.Services.Credit;
-
-    public partial class CalculatedAccountBalanceResult 
-    {
-        public override string ToString()
-        {
-            return string.Format("CalculatedAccountBalanceResult({0}, {1}, {2}, {3})", this.Timestamp == null ? "null" : this.Timestamp.ToString(), this.UserId == null ? "null" : this.UserId.ToString(), this.AccountType == null ? "null" : this.AccountType.ToString(), this.Amount == null ? "null" : this.Amount.ToString());
-        }
-        
-        public override bool Equals(object obj)
-        {
-            if (ReferenceEquals(null, obj))
-            {
-                return false;
-            }
-        
-            if (ReferenceEquals(this, obj))
-            {
-                return true;
-            }
-        
-            if (obj.GetType() != this.GetType())
-            {
-                return false;
-            }
-        
-            return this.Equals((CalculatedAccountBalanceResult)obj);
-        }
-        
-        public override int GetHashCode()
-        {
-            unchecked
-            {
-                int hashCode = 0;
-                hashCode = (hashCode * 397) ^ (this.Timestamp != null ? this.Timestamp.GetHashCode() : 0);
-                hashCode = (hashCode * 397) ^ (this.UserId != null ? this.UserId.GetHashCode() : 0);
-                hashCode = (hashCode * 397) ^ (this.AccountType != null ? this.AccountType.GetHashCode() : 0);
-                hashCode = (hashCode * 397) ^ (this.Amount != null ? this.Amount.GetHashCode() : 0);
-                return hashCode;
-            }
-        }
-        
-        protected bool Equals(CalculatedAccountBalanceResult other)
-        {
-            if (!object.Equals(this.Timestamp, other.Timestamp))
-            {
-                return false;
-            }
-        
-            if (!object.Equals(this.UserId, other.UserId))
-            {
-                return false;
-            }
-        
-            if (!object.Equals(this.AccountType, other.AccountType))
-            {
-                return false;
-            }
-        
-            if (!object.Equals(this.Amount, other.Amount))
-            {
-                return false;
-            }
-        
-            return true;
-        }
-    }
-}
-namespace Fifthweek.Payments.Services.Credit.Taxamo
-{
-    using System;
-    using System.Linq;
-    using Fifthweek.CodeGeneration;
-    using System.Threading.Tasks;
-    using Fifthweek.Payments.Taxamo;
-    using Fifthweek.Shared;
-    using global::Taxamo.Api;
-    using global::Taxamo.Client;
-    using global::Taxamo.Model;
-    using System.Collections.Generic;
-
-    public partial class TaxamoCalculationResult 
-    {
-        public override string ToString()
-        {
-            return string.Format("TaxamoCalculationResult({0}, {1}, {2}, {3}, \"{4}\", \"{5}\", \"{6}\", {7})", this.Amount == null ? "null" : this.Amount.ToString(), this.TotalAmount == null ? "null" : this.TotalAmount.ToString(), this.TaxAmount == null ? "null" : this.TaxAmount.ToString(), this.TaxRate == null ? "null" : this.TaxRate.ToString(), this.TaxName == null ? "null" : this.TaxName.ToString(), this.TaxEntityName == null ? "null" : this.TaxEntityName.ToString(), this.CountryName == null ? "null" : this.CountryName.ToString(), this.PossibleCountries == null ? "null" : this.PossibleCountries.ToString());
-        }
-        
-        public override bool Equals(object obj)
-        {
-            if (ReferenceEquals(null, obj))
-            {
-                return false;
-            }
-        
-            if (ReferenceEquals(this, obj))
-            {
-                return true;
-            }
-        
-            if (obj.GetType() != this.GetType())
-            {
-                return false;
-            }
-        
-            return this.Equals((TaxamoCalculationResult)obj);
-        }
-        
-        public override int GetHashCode()
-        {
-            unchecked
-            {
-                int hashCode = 0;
-                hashCode = (hashCode * 397) ^ (this.Amount != null ? this.Amount.GetHashCode() : 0);
-                hashCode = (hashCode * 397) ^ (this.TotalAmount != null ? this.TotalAmount.GetHashCode() : 0);
-                hashCode = (hashCode * 397) ^ (this.TaxAmount != null ? this.TaxAmount.GetHashCode() : 0);
-                hashCode = (hashCode * 397) ^ (this.TaxRate != null ? this.TaxRate.GetHashCode() : 0);
-                hashCode = (hashCode * 397) ^ (this.TaxName != null ? this.TaxName.GetHashCode() : 0);
-                hashCode = (hashCode * 397) ^ (this.TaxEntityName != null ? this.TaxEntityName.GetHashCode() : 0);
-                hashCode = (hashCode * 397) ^ (this.CountryName != null ? this.CountryName.GetHashCode() : 0);
-                hashCode = (hashCode * 397) ^ (this.PossibleCountries != null 
-        			? this.PossibleCountries.Aggregate(0, (previous, current) => 
-        				{ 
-        				    unchecked
-        				    {
-        				        return (previous * 397) ^ (current != null ? current.GetHashCode() : 0);
-        				    }
-        				})
-        			: 0);
-                return hashCode;
-            }
-        }
-        
-        protected bool Equals(TaxamoCalculationResult other)
-        {
-            if (!object.Equals(this.Amount, other.Amount))
-            {
-                return false;
-            }
-        
-            if (!object.Equals(this.TotalAmount, other.TotalAmount))
-            {
-                return false;
-            }
-        
-            if (!object.Equals(this.TaxAmount, other.TaxAmount))
-            {
-                return false;
-            }
-        
-            if (!object.Equals(this.TaxRate, other.TaxRate))
-            {
-                return false;
-            }
-        
-            if (!object.Equals(this.TaxName, other.TaxName))
-            {
-                return false;
-            }
-        
-            if (!object.Equals(this.TaxEntityName, other.TaxEntityName))
-            {
-                return false;
-            }
-        
-            if (!object.Equals(this.CountryName, other.CountryName))
-            {
-                return false;
-            }
-        
-            if (this.PossibleCountries != null && other.PossibleCountries != null)
-            {
-                if (!this.PossibleCountries.SequenceEqual(other.PossibleCountries))
-                {
-                    return false;    
-                }
-            }
-            else if (this.PossibleCountries != null || other.PossibleCountries != null)
-            {
-                return false;
-            }
-        
-            return true;
-        }
-    }
-}
-namespace Fifthweek.Payments.Services.Credit.Taxamo
-{
-    using System;
-    using System.Linq;
-    using Fifthweek.CodeGeneration;
-    using System.Threading.Tasks;
-    using Fifthweek.Payments.Taxamo;
-    using Fifthweek.Shared;
-    using global::Taxamo.Api;
-    using global::Taxamo.Client;
-    using global::Taxamo.Model;
-    using System.Collections.Generic;
-
-    public partial class TaxamoCalculationResult
-    {
-        public partial class PossibleCountry 
-        {
-            public override string ToString()
-            {
-                return string.Format("PossibleCountry(\"{0}\", \"{1}\")", this.Name == null ? "null" : this.Name.ToString(), this.CountryCode == null ? "null" : this.CountryCode.ToString());
-            }
-            
-            public override bool Equals(object obj)
-            {
-                if (ReferenceEquals(null, obj))
-                {
-                    return false;
-                }
-            
-                if (ReferenceEquals(this, obj))
-                {
-                    return true;
-                }
-            
-                if (obj.GetType() != this.GetType())
-                {
-                    return false;
-                }
-            
-                return this.Equals((PossibleCountry)obj);
-            }
-            
-            public override int GetHashCode()
-            {
-                unchecked
-                {
-                    int hashCode = 0;
-                    hashCode = (hashCode * 397) ^ (this.Name != null ? this.Name.GetHashCode() : 0);
-                    hashCode = (hashCode * 397) ^ (this.CountryCode != null ? this.CountryCode.GetHashCode() : 0);
-                    return hashCode;
-                }
-            }
-            
-            protected bool Equals(PossibleCountry other)
-            {
-                if (!object.Equals(this.Name, other.Name))
-                {
-                    return false;
-                }
-            
-                if (!object.Equals(this.CountryCode, other.CountryCode))
-                {
-                    return false;
-                }
-            
-                return true;
-            }
-        }
-    }
-}
-namespace Fifthweek.Payments.Services
-{
-    using System;
-    using System.Linq;
-    using Fifthweek.Api.Identity.Shared.Membership;
-    using Fifthweek.CodeGeneration;
-    using Fifthweek.Api.Channels.Shared;
-    using System.Collections.Generic;
-    using System.Threading.Tasks;
-    using Dapper;
-    using Fifthweek.Api.Persistence;
-    using Fifthweek.Api.Persistence.Identity;
-    using Fifthweek.Api.Persistence.Snapshots;
-    using Fifthweek.Api.Persistence.Payments;
-    using Fifthweek.Payments.Snapshots;
-    using Fifthweek.Shared;
-    using System.Threading;
-    using Fifthweek.Azure;
-    using Newtonsoft.Json;
-    using Fifthweek.Payments.Shared;
-    using Fifthweek.Api.Azure;
-    using Fifthweek.Payments.Pipeline;
-    using Fifthweek.Payments.Services.Credit;
-
-    public partial class CommittedAccountBalance 
-    {
-        public override string ToString()
-        {
-            return string.Format("CommittedAccountBalance({0})", this.Amount == null ? "null" : this.Amount.ToString());
-        }
-        
-        public override bool Equals(object obj)
-        {
-            if (ReferenceEquals(null, obj))
-            {
-                return false;
-            }
-        
-            if (ReferenceEquals(this, obj))
-            {
-                return true;
-            }
-        
-            if (obj.GetType() != this.GetType())
-            {
-                return false;
-            }
-        
-            return this.Equals((CommittedAccountBalance)obj);
-        }
-        
-        public override int GetHashCode()
-        {
-            unchecked
-            {
-                int hashCode = 0;
-                hashCode = (hashCode * 397) ^ (this.Amount != null ? this.Amount.GetHashCode() : 0);
-                return hashCode;
-            }
-        }
-        
-        protected bool Equals(CommittedAccountBalance other)
-        {
-            if (!object.Equals(this.Amount, other.Amount))
             {
                 return false;
             }

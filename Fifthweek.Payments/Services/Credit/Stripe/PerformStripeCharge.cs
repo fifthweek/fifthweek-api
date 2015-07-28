@@ -6,6 +6,7 @@
 
     using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.CodeGeneration;
+    using Fifthweek.Payments.Shared;
     using Fifthweek.Payments.Stripe;
     using Fifthweek.Shared;
 
@@ -27,7 +28,7 @@
             string stripeCustomerId, 
             AmountInMinorDenomination amount,
             UserId userId,
-            Guid transactionReference,
+            TransactionReference transactionReference,
             string taxamoTransactionKey, 
             UserType userType)
         {
@@ -44,7 +45,7 @@
                 CustomerId = stripeCustomerId,
                 Metadata = new Dictionary<string, string>
                 {
-                    { TransactionReferenceMetadataKey, transactionReference.ToString() },
+                    { TransactionReferenceMetadataKey, transactionReference.Value.ToString() },
                     { TaxamoTransactionKeyMetadataKey, taxamoTransactionKey },
                     { UserIdMetadataKey, userId.ToString() },
                 }
@@ -52,7 +53,7 @@
 
             try
             {
-                var result = await this.stripeService.CreateCharge(options, apiKey);
+                var result = await this.stripeService.CreateChargeAsync(options, apiKey);
                 return result.Id;
             }
             catch (Exception t)

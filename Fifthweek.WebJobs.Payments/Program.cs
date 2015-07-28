@@ -71,9 +71,7 @@ namespace Fifthweek.WebJobs.Payments
                             new DeleteTaxamoTransaction(new TaxamoApiKeyRepository(), new TaxamoService()),
                             new CreateTaxamoTransaction(new TaxamoApiKeyRepository(), new TaxamoService())),
                         new PerformCreditRequest(
-                            new TimestampCreator(),
-                            new PerformStripeCharge(new StripeApiKeyRepository(), new StripeService()),
-                            new GuidCreator()),
+                            new PerformStripeCharge(new StripeApiKeyRepository(), new StripeService())),
                         new CommitCreditToDatabase(
                             new UpdateAccountBalancesDbStatement(new FifthweekDbConnectionFactory()),
                             new SetUserPaymentOriginOriginalTaxamoTransactionKeyDbStatement(new FifthweekDbConnectionFactory()),
@@ -88,7 +86,9 @@ namespace Fifthweek.WebJobs.Payments
                         new CommitTaxamoTransaction(new TaxamoApiKeyRepository(), new TaxamoService())),
                     new GetUserWeeklySubscriptionsCost(new FifthweekDbConnectionFactory()),
                     new IncrementPaymentStatusDbStatement(new FifthweekDbConnectionFactory()),
-                    new GetUserPaymentOriginDbStatement(new FifthweekDbConnectionFactory()))),
+                    new GetUserPaymentOriginDbStatement(new FifthweekDbConnectionFactory()),
+                    new TimestampCreator(),
+                    new GuidCreator())),
             new PaymentProcessingLeaseFactory(new TimestampCreator(), new FifthweekCloudStorageAccount()),
             new RequestProcessPaymentsService(new QueueService(new FifthweekCloudStorageAccount())));
 

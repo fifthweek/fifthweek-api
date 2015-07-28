@@ -227,6 +227,25 @@
     <Compile Include="Services\ProcessPaymentProcessingData.cs" />
     <Compile Include="Services\ProcessPaymentsBetweenSubscriberAndCreator.cs" />
     <Compile Include="Services\ProcessPaymentsForSubscriber.cs" />
+    <Compile Include="Services\Refunds\CreateCreditRefund.cs" />
+    <Compile Include="Services\Refunds\CreateCreditRefundDbStatement.cs" />
+    <Compile Include="Services\Refunds\CreateTransactionRefund.cs" />
+    <Compile Include="Services\Refunds\FailedToRefundCreditException.cs" />
+    <Compile Include="Services\Refunds\GetRecordsForTransactionDbStatement.cs" />
+    <Compile Include="Services\Refunds\ICreateCreditRefund.cs" />
+    <Compile Include="Services\Refunds\ICreateTransactionRefund.cs" />
+    <Compile Include="Services\Refunds\IGetRecordsForTransactionDbStatement.cs" />
+    <Compile Include="Services\Refunds\IPersistCommittedRecordsDbStatement.cs" />
+    <Compile Include="Services\Refunds\PersistCommittedRecordsDbStatement.cs" />
+    <Compile Include="Services\Refunds\Stripe\CreateStripeRefund.cs" />
+    <Compile Include="Services\Refunds\Taxamo\CreateTaxamoRefund.cs" />
+    <Compile Include="Services\Refunds\GetCreditTransactionDbStatement.cs" />
+    <Compile Include="Services\Refunds\ICreateCreditRefundDbStatement.cs" />
+    <Compile Include="Services\Refunds\Stripe\ICreateStripeRefund.cs" />
+    <Compile Include="Services\Refunds\Taxamo\ICreateTaxamoRefund.cs" />
+    <Compile Include="Services\Refunds\IGetCreditTransactionDbStatement.cs" />
+    <Compile Include="Services\Refunds\RefundCreditReason.cs" />
+    <Compile Include="Services\Refunds\GetSubscriberTransactionsDbStatement.cs" />
     <Compile Include="Services\RequestProcessPaymentsService.cs" />
     <Compile Include="Services\SubscriberPaymentPipeline.cs" />
     <Compile Include="Services\UpdateAccountBalancesDbStatement.cs" />
@@ -300,7 +319,9 @@
       <Name>Taxamo</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Services\Payouts\" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

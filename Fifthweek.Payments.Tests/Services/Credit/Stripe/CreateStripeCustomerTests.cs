@@ -70,7 +70,7 @@
             };
 
             var customer = new StripeCustomer { Id = CustomerId };
-            this.stripeService.Setup(v => v.CreateCustomer(
+            this.stripeService.Setup(v => v.CreateCustomerAsync(
                 It.Is<StripeCustomerCreateOptions>(
                     x => JsonConvert.SerializeObject(x, Formatting.None) == JsonConvert.SerializeObject(expectedOptions, Formatting.None)),
                 TestKey))
@@ -96,7 +96,7 @@
             };
 
             var customer = new StripeCustomer { Id = CustomerId };
-            this.stripeService.Setup(v => v.CreateCustomer(
+            this.stripeService.Setup(v => v.CreateCustomerAsync(
                 It.Is<StripeCustomerCreateOptions>(
                     x => JsonConvert.SerializeObject(x, Formatting.None) == JsonConvert.SerializeObject(expectedOptions, Formatting.None)),
                 LiveKey))

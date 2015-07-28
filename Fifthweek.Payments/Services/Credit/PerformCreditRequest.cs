@@ -8,28 +8,27 @@
     using Fifthweek.CodeGeneration;
     using Fifthweek.Payments.Services.Credit.Stripe;
     using Fifthweek.Payments.Services.Credit.Taxamo;
+    using Fifthweek.Payments.Shared;
     using Fifthweek.Payments.Stripe;
     using Fifthweek.Shared;
 
     [AutoConstructor]
     public partial class PerformCreditRequest : IPerformCreditRequest
     {
-        private readonly ITimestampCreator timestampCreator;
         private readonly IPerformStripeCharge performStripeCharge;
-        private readonly IGuidCreator guidCreator;
 
         public async Task<StripeTransactionResult> HandleAsync(
             UserId userId,
+            DateTime timestamp,
+            TransactionReference transactionReference,
             TaxamoTransactionResult taxamoTransaction,
             UserPaymentOriginResult origin,
             UserType userType)
         {
             userId.AssertNotNull("userId");
+            transactionReference.AssertNotNull("transactionReference");
             taxamoTransaction.AssertNotNull("taxamoTransaction");
             origin.AssertNotNull("origin");
-
-            var timestamp = this.timestampCreator.Now();
-            var transactionReference = this.guidCreator.CreateSqlSequential();
 
             // Perform stripe transaction.
             if (origin.PaymentOriginKeyType != PaymentOriginKeyType.Stripe)

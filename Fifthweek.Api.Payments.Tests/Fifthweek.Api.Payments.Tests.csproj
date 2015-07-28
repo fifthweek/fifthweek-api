@@ -87,6 +87,8 @@
   </Choose>
   <ItemGroup>
     <Compile Include="Commands\ApplyCreditRequestCommandHandlerTests.cs" />
+    <Compile Include="Commands\CreateCreditRefundCommandHandlerTests.cs" />
+    <Compile Include="Commands\CreateTransactionRefundCommandHandlerTests.cs" />
     <Compile Include="Commands\DeletePaymentInformationCommandHandlerTests.cs" />
     <Compile Include="Commands\UpdatePaymentOriginCommandHandlerTests.cs" />
     <Compile Include="Controllers\PaymentsControllerTests.cs" />
@@ -123,6 +125,10 @@
     <ProjectReference Include="..\Fifthweek.Api.Persistence\Fifthweek.Api.Persistence.csproj">
       <Project>{9C18BEE3-FAB5-4A00-8A94-A1FAEA370175}</Project>
       <Name>Fifthweek.Api.Persistence</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Fifthweek.Payments.Shared\Fifthweek.Payments.Shared.csproj">
+      <Project>{8EF964CC-55F2-40BB-A0CE-F92F23AC8D90}</Project>
+      <Name>Fifthweek.Payments.Shared</Name>
     </ProjectReference>
     <ProjectReference Include="..\Fifthweek.Payments\Fifthweek.Payments.csproj">
       <Project>{9C64B84A-264B-44BC-8D47-BCC52B88E0AC}</Project>

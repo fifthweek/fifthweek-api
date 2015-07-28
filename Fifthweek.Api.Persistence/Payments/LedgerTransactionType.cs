@@ -4,5 +4,7 @@ namespace Fifthweek.Api.Persistence.Payments
     {
         CreditAddition = 0,
         SubscriptionPayment = 1,
+        CreditRefund = 2,
+        SubscriptionRefund = 3,
     }
 }

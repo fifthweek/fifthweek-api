@@ -95,7 +95,7 @@
     <Compile Include="Pipeline\RollForwardSubscriptionsExecutorTests.cs" />
     <Compile Include="Pipeline\TrimSnapshotsExecutorTests.cs" />
     <Compile Include="Pipeline\VerifySnapshotsExecutorTests.cs" />
-    <Compile Include="Services\Credit\ApplyStandardUserCreditTests.cs" />
+    <Compile Include="Services\Credit\ApplyUserCreditTests.cs" />
     <Compile Include="Services\Credit\ClearPaymentStatusDbStatementTests.cs" />
     <Compile Include="Services\Credit\CommitCreditToDatabaseTests.cs" />
     <Compile Include="Services\Credit\CommitTestUserCreditToDatabaseTests.cs" />
@@ -136,6 +136,12 @@
     <Compile Include="Services\ProcessPaymentProcessingDataTests.cs" />
     <Compile Include="Services\ProcessPaymentsBetweenSubscriberAndCreatorTests.cs" />
     <Compile Include="Services\ProcessPaymentsForSubscriberTests.cs" />
+    <Compile Include="Services\Refunds\CreateCreditRefundDbStatementTests.cs" />
+    <Compile Include="Services\Refunds\CreateCreditRefundTests.cs" />
+    <Compile Include="Services\Refunds\CreateTransactionRefundDbStatementTests.cs" />
+    <Compile Include="Services\Refunds\GetCreditTransactionDbStatementTests.cs" />
+    <Compile Include="Services\Refunds\Stripe\CreateStripeRefundTests.cs" />
+    <Compile Include="Services\Refunds\Taxamo\CreateTaxamoRefundTests.cs" />
     <Compile Include="Services\RequestProcessPaymentsServiceTests.cs" />
     <Compile Include="Services\UpdateAccountBalancesDbStatementTests.cs" />
     <Compile Include="SnapshotCreation\CreateCreatorChannelsSnapshotDbStatementTests.cs" />
@@ -210,7 +216,9 @@
     <None Include="app.config" />
     <None Include="packages.config" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Services\Payouts\" />
+  </ItemGroup>
   <Choose>
     <When Condition="'$(VisualStudioVersion)' == '10.0' And '$(IsCodedUITest)' == 'True'">
       <ItemGroup>

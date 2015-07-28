@@ -34,7 +34,7 @@
                 }
             };
 
-            var customer = await this.stripeService.CreateCustomer(options, apiKey);
+            var customer = await this.stripeService.CreateCustomerAsync(options, apiKey);
 
             return customer.Id;
         }

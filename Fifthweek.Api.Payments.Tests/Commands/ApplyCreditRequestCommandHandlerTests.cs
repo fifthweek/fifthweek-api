@@ -13,6 +13,7 @@
     using Fifthweek.Payments;
     using Fifthweek.Payments.Services.Credit;
     using Fifthweek.Payments.Services.Credit.Taxamo;
+    using Fifthweek.Payments.Shared;
     using Fifthweek.Shared;
     using Fifthweek.Tests.Shared;
 
@@ -23,18 +24,20 @@
     [TestClass]
     public class ApplyCreditRequestCommandHandlerTests
     {
+        private static readonly DateTime Now = DateTime.UtcNow;
+        private static readonly TransactionReference TransactionReference = TransactionReference.Random();
         private static readonly UserId UserId = UserId.Random();
         private static readonly Requester Requester = Requester.Authenticated(UserId);
 
         private static readonly ApplyCreditRequestCommand Command = new ApplyCreditRequestCommand(
-            Requester, UserId, PositiveInt.Parse(TopUpUserAccountsWithCredit.MinimumPaymentAmount), PositiveInt.Parse(TopUpUserAccountsWithCredit.MinimumPaymentAmount + 100));
+            Requester, UserId, Now, TransactionReference, PositiveInt.Parse(TopUpUserAccountsWithCredit.MinimumPaymentAmount), PositiveInt.Parse(TopUpUserAccountsWithCredit.MinimumPaymentAmount + 100));
 
         private static readonly InitializeCreditRequestResult InitializeResult = new InitializeCreditRequestResult(
             new TaxamoTransactionResult("key", new AmountInMinorDenomination(10), new AmountInMinorDenomination(20), new AmountInMinorDenomination(30), 0.2m, "VAT", "GB", "England"),
             new UserPaymentOriginResult("stripeCustomerId", PaymentOriginKeyType.Stripe, "GB", "12345", "1.1.1.1", "ttk", PaymentStatus.Retry1));
 
         private static readonly StripeTransactionResult StripeTransactionResult =
-            new StripeTransactionResult(DateTime.UtcNow, Guid.NewGuid(), "stripeChargeId");
+            new StripeTransactionResult(DateTime.UtcNow, TransactionReference, "stripeChargeId");
 
         private Mock<IRequesterSecurity> requesterSecurity;
         private Mock<IFifthweekRetryOnTransientErrorHandler> retryOnTransientFailure;
@@ -74,6 +77,8 @@
             await this.target.HandleAsync(new ApplyCreditRequestCommand(
                 Requester,
                 UserId.Random(),
+                Now,
+                TransactionReference,
                 Command.Amount,
                 Command.ExpectedTotalAmount));
         }
@@ -85,6 +90,8 @@
             await this.target.HandleAsync(new ApplyCreditRequestCommand(
                 Requester.Unauthenticated,
                 UserId,
+                Now,
+                TransactionReference,
                 Command.Amount,
                 Command.ExpectedTotalAmount));
         }
@@ -96,6 +103,8 @@
             await this.target.HandleAsync(new ApplyCreditRequestCommand(
                 Requester,
                 UserId,
+                Now,
+                TransactionReference,
                 PositiveInt.Parse(TopUpUserAccountsWithCredit.MinimumPaymentAmount - 1),
                 Command.ExpectedTotalAmount));
         }
@@ -103,7 +112,7 @@
         [TestMethod]
         public async Task ItShouldCallApplyStandardUserCredit()
         {
-            this.applyUserCredit.Setup(v => v.ExecuteAsync(Command.UserId, Command.Amount, Command.ExpectedTotalAmount, UserType.StandardUser))
+            this.applyUserCredit.Setup(v => v.ExecuteAsync(Command.UserId, Now, TransactionReference, Command.Amount, Command.ExpectedTotalAmount, UserType.StandardUser))
                 .Returns(Task.FromResult(0))
                 .Verifiable();
 
@@ -117,7 +126,7 @@
         {
             var tasks = new List<Func<Task>>();
 
-            this.applyUserCredit.Setup(v => v.ExecuteAsync(Command.UserId, Command.Amount, Command.ExpectedTotalAmount, UserType.StandardUser))
+            this.applyUserCredit.Setup(v => v.ExecuteAsync(Command.UserId, Now, TransactionReference, Command.Amount, Command.ExpectedTotalAmount, UserType.StandardUser))
                 .Throws(new StripeChargeFailedException(new DivideByZeroException()));
 
             this.retryOnTransientFailure.Setup(v => v.HandleAsync(It.IsAny<Func<Task>>()))
@@ -142,7 +151,7 @@
         {
             var tasks = new List<Func<Task>>();
 
-            this.applyUserCredit.Setup(v => v.ExecuteAsync(Command.UserId, Command.Amount, Command.ExpectedTotalAmount, UserType.StandardUser))
+            this.applyUserCredit.Setup(v => v.ExecuteAsync(Command.UserId, Now, TransactionReference, Command.Amount, Command.ExpectedTotalAmount, UserType.StandardUser))
                 .Throws(new DivideByZeroException());
 
             this.retryOnTransientFailure.Setup(v => v.HandleAsync(It.IsAny<Func<Task>>()))
@@ -160,7 +169,7 @@
         {
             this.requesterSecurity.Setup(v => v.IsInRoleAsync(Requester, FifthweekRole.TestUser)).ReturnsAsync(true);
 
-            this.applyUserCredit.Setup(v => v.ExecuteAsync(Command.UserId, Command.Amount, Command.ExpectedTotalAmount, UserType.TestUser))
+            this.applyUserCredit.Setup(v => v.ExecuteAsync(Command.UserId, Now, TransactionReference, Command.Amount, Command.ExpectedTotalAmount, UserType.TestUser))
                 .Returns(Task.FromResult(0))
                 .Verifiable();
 

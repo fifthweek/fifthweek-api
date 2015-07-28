@@ -4,9 +4,10 @@
     using System.Threading.Tasks;
 
     using Fifthweek.Api.Identity.Shared.Membership;
+    using Fifthweek.Payments.Shared;
 
     public interface ISaveCustomerCreditToLedgerDbStatement
     {
-        Task ExecuteAsync(UserId userId, DateTime timestamp, AmountInMinorDenomination totalAmount, AmountInMinorDenomination creditAmount, Guid transactionReference, string stripeChargeId, string taxamoTransactionKey);
+        Task ExecuteAsync(UserId userId, DateTime timestamp, AmountInMinorDenomination totalAmount, AmountInMinorDenomination creditAmount, TransactionReference transactionReference, string stripeChargeId, string taxamoTransactionKey);
     }
 }

@@ -10,6 +10,7 @@
     using Fifthweek.Api.Persistence.Payments;
     using Fifthweek.Api.Persistence.Tests.Shared;
     using Fifthweek.Payments.Services.Credit;
+    using Fifthweek.Payments.Shared;
     using Fifthweek.Shared;
 
     using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -24,7 +25,7 @@
         private static readonly AmountInMinorDenomination TotalAmount = new AmountInMinorDenomination(12);
         private static readonly AmountInMinorDenomination CreditAmount = new AmountInMinorDenomination(10);
         private static readonly AmountInMinorDenomination TaxAmount = new AmountInMinorDenomination(2);
-        private static readonly Guid TransactionReference = Guid.NewGuid();
+        private static readonly TransactionReference TransactionReference = TransactionReference.Random();
         private static readonly string StripeChargeId = "stripeChargeId";
         private static readonly string TaxamoTransactionKey = "taxamoTransactionKey";
 
@@ -158,7 +159,7 @@
                             -CreditAmount.Value,
                             LedgerAccountType.Stripe,
                             LedgerTransactionType.CreditAddition,
-                            TransactionReference,
+                            TransactionReference.Value,
                             null,
                             null,
                             StripeChargeId,
@@ -171,7 +172,7 @@
                             CreditAmount.Value,
                             LedgerAccountType.FifthweekCredit,
                             LedgerTransactionType.CreditAddition,
-                            TransactionReference,
+                            TransactionReference.Value,
                             null,
                             null,
                             StripeChargeId,
@@ -213,7 +214,7 @@
                             -TotalAmount.Value,
                             LedgerAccountType.Stripe,
                             LedgerTransactionType.CreditAddition,
-                            TransactionReference,
+                            TransactionReference.Value,
                             null,
                             null,
                             StripeChargeId,
@@ -226,7 +227,7 @@
                             CreditAmount.Value,
                             LedgerAccountType.FifthweekCredit,
                             LedgerTransactionType.CreditAddition,
-                            TransactionReference,
+                            TransactionReference.Value,
                             null,
                             null,
                             StripeChargeId,
@@ -239,7 +240,7 @@
                             TaxAmount.Value,
                             LedgerAccountType.SalesTax,
                             LedgerTransactionType.CreditAddition,
-                            TransactionReference,
+                            TransactionReference.Value,
                             null,
                             null,
                             StripeChargeId,

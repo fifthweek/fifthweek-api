@@ -29,8 +29,8 @@
                 Amount = taxamoTransactionResult.TotalAmount.ToMajorDenomination(),
                 PaymentTimestamp = ToTaxamoDateTimeString(stripeTransactionResult.Timestamp),
                 PaymentInformation = string.Format(
-                    "Reference:{0}, StripeChargeId:{1}", 
-                    stripeTransactionResult.TransactionReference, 
+                    "Reference: {0}, StripeChargeId: {1}", 
+                    stripeTransactionResult.TransactionReference.Value, 
                     stripeTransactionResult.StripeChargeId),
             };
 

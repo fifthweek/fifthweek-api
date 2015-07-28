@@ -10,6 +10,8 @@
     using Fifthweek.Api.Payments.Queries;
     using Fifthweek.Payments.Services.Credit;
     using Fifthweek.Payments.Services.Credit.Taxamo;
+    using Fifthweek.Payments.Services.Refunds;
+    using Fifthweek.Payments.Shared;
     using Fifthweek.Shared;
 
     using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -27,6 +29,10 @@
         private Mock<ICommandHandler<UpdatePaymentOriginCommand>> updatePaymentsOrigin;
         private Mock<ICommandHandler<ApplyCreditRequestCommand>> applyCreditRequest;
         private Mock<ICommandHandler<DeletePaymentInformationCommand>> deletePaymentInformation;
+        private Mock<ICommandHandler<CreateCreditRefundCommand>> createCreditRefund;
+        private Mock<ICommandHandler<CreateTransactionRefundCommand>> createTransactionRefund;
+        private Mock<ITimestampCreator> timestampCreator;
+        private Mock<IGuidCreator> guidCreator;
 
         private PaymentsController target;
 
@@ -37,7 +43,11 @@
             this.updatePaymentsOrigin = new Mock<ICommandHandler<UpdatePaymentOriginCommand>>(MockBehavior.Strict);
             this.applyCreditRequest = new Mock<ICommandHandler<ApplyCreditRequestCommand>>(MockBehavior.Strict);
             this.deletePaymentInformation = new Mock<ICommandHandler<DeletePaymentInformationCommand>>(MockBehavior.Strict);
-
+            this.createCreditRefund = new Mock<ICommandHandler<CreateCreditRefundCommand>>(MockBehavior.Strict);
+            this.createTransactionRefund = new Mock<ICommandHandler<CreateTransactionRefundCommand>>(MockBehavior.Strict);
+            this.timestampCreator = new Mock<ITimestampCreator>(MockBehavior.Strict);
+            this.guidCreator = new Mock<IGuidCreator>(MockBehavior.Strict);
+            
             this.requesterContext.Setup(v => v.GetRequester()).Returns(Requester);
 
             this.target = new PaymentsController(
@@ -45,7 +55,11 @@
                 this.getCreditRequestSummary.Object,
                 this.updatePaymentsOrigin.Object,
                 this.applyCreditRequest.Object,
-                this.deletePaymentInformation.Object);
+                this.deletePaymentInformation.Object,
+                this.createCreditRefund.Object,
+                this.createTransactionRefund.Object,
+                this.timestampCreator.Object,
+                this.guidCreator.Object);
         }
 
         [TestClass]
@@ -105,6 +119,8 @@
         [TestClass]
         public class PostCreditRequestAsync : PaymentsControllerTests
         {
+            private static readonly DateTime Now = DateTime.UtcNow;
+            private static readonly TransactionReference TransactionReference = TransactionReference.Random();
             private static readonly PositiveInt Amount = PositiveInt.Parse(10);
             private static readonly PositiveInt ExpectedTotalAmount = PositiveInt.Parse(12);
             private static readonly CreditRequestData CreditRequestData = new CreditRequestData(Amount.Value, ExpectedTotalAmount.Value);
@@ -139,8 +155,12 @@
             [TestMethod]
             public async Task ItShouldCallApplyCreditRequest()
             {
+                this.timestampCreator.Setup(v => v.Now()).Returns(Now);
+
+                this.guidCreator.Setup(v => v.CreateSqlSequential()).Returns(TransactionReference.Value);
+
                 this.applyCreditRequest.Setup(
-                    v => v.HandleAsync(new ApplyCreditRequestCommand(Requester, UserId, Amount, ExpectedTotalAmount)))
+                    v => v.HandleAsync(new ApplyCreditRequestCommand(Requester, UserId, Now, TransactionReference, Amount, ExpectedTotalAmount)))
                     .Returns(Task.FromResult(0))
                     .Verifiable();
 
@@ -249,6 +269,108 @@
                 await this.target.DeletePaymentInformationAsync(UserId.Value.EncodeGuid());
 
                 this.updatePaymentsOrigin.Verify();
+            }
+        }
+
+        [TestClass]
+        public class PostTransactionRefundAsync : PaymentsControllerTests
+        {
+            private static readonly DateTime Now = DateTime.UtcNow;
+            private static readonly TransactionReference TransactionReference = TransactionReference.Random();
+            private static readonly TransactionRefundData Data = new TransactionRefundData("comment");
+
+            [TestInitialize]
+            public override void Initialize()
+            {
+                base.Initialize();
+            }
+
+            [TestMethod]
+            [ExpectedException(typeof(BadRequestException))]
+            public async Task WhenTransactionReferenceIsNull_ItShouldThrowAnException()
+            {
+                await this.target.PostTransactionRefundAsync(null, Data);
+            }
+
+            [TestMethod]
+            [ExpectedException(typeof(BadRequestException))]
+            public async Task WhenTransactionReferenceIsWhitespace_ItShouldThrowAnException()
+            {
+                await this.target.PostTransactionRefundAsync(" ", Data);
+            }
+
+            [TestMethod]
+            [ExpectedException(typeof(BadRequestException))]
+            public async Task WhenDataIsNull_ItShouldThrowAnException()
+            {
+                await this.target.PostTransactionRefundAsync(TransactionReference.Value.EncodeGuid(), null);
+            }
+
+
+            [TestMethod]
+            public async Task ItShouldCallCreateTransactionRefund()
+            {
+                this.timestampCreator.Setup(v => v.Now()).Returns(Now);
+
+                this.createTransactionRefund.Setup(v => v.HandleAsync(
+                    new CreateTransactionRefundCommand(Requester, TransactionReference, Now, Data.Comment)))
+                    .Returns(Task.FromResult(0))
+                    .Verifiable();
+
+                await this.target.PostTransactionRefundAsync(TransactionReference.Value.EncodeGuid(), Data);
+
+                this.createTransactionRefund.Verify();
+            }
+        }
+
+        [TestClass]
+        public class PostCreditRefundAsync : PaymentsControllerTests
+        {
+            private static readonly DateTime Now = DateTime.UtcNow;
+            private static readonly TransactionReference TransactionReference = TransactionReference.Random();
+            private static readonly CreditRefundData Data = new CreditRefundData(123, RefundCreditReason.Fraudulent, "comment");
+
+            [TestInitialize]
+            public override void Initialize()
+            {
+                base.Initialize();
+            }
+
+            [TestMethod]
+            [ExpectedException(typeof(BadRequestException))]
+            public async Task WhenTransactionReferenceIsNull_ItShouldThrowAnException()
+            {
+                await this.target.PostCreditRefundAsync(null, Data);
+            }
+
+            [TestMethod]
+            [ExpectedException(typeof(BadRequestException))]
+            public async Task WhenTransactionReferenceIsWhitespace_ItShouldThrowAnException()
+            {
+                await this.target.PostCreditRefundAsync(" ", Data);
+            }
+
+            [TestMethod]
+            [ExpectedException(typeof(BadRequestException))]
+            public async Task WhenDataIsNull_ItShouldThrowAnException()
+            {
+                await this.target.PostCreditRefundAsync(TransactionReference.Value.EncodeGuid(), null);
+            }
+
+
+            [TestMethod]
+            public async Task ItShouldCallCreateCreditRefund()
+            {
+                this.timestampCreator.Setup(v => v.Now()).Returns(Now);
+
+                this.createCreditRefund.Setup(v => v.HandleAsync(
+                    new CreateCreditRefundCommand(Requester, TransactionReference, Now, PositiveInt.Parse(Data.RefundCreditAmount), Data.Reason, Data.Comment)))
+                    .Returns(Task.FromResult(0))
+                    .Verifiable();
+
+                await this.target.PostCreditRefundAsync(TransactionReference.Value.EncodeGuid(), Data);
+
+                this.createCreditRefund.Verify();
             }
         }
     }

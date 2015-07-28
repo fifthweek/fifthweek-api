@@ -9,6 +9,7 @@
     using Fifthweek.Api.Persistence.Payments;
     using Fifthweek.Payments.Services;
     using Fifthweek.Payments.Services.Credit;
+    using Fifthweek.Payments.Shared;
     using Fifthweek.Shared;
 
     using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -18,11 +19,18 @@
     [TestClass]
     public class TopUpUserAccountsWithCreditTests
     {
+        private static readonly DateTime Now1 = DateTime.UtcNow;
+        private static readonly DateTime Now2 = Now1.AddSeconds(1);
+        private static readonly TransactionReference TransactionReference1 = TransactionReference.Random();
+        private static readonly TransactionReference TransactionReference2 = TransactionReference.Random();
+        
         private Mock<IGetUsersRequiringPaymentRetryDbStatement> getUsersRequiringPaymentRetry;
         private Mock<IApplyUserCredit> applyUserCredit;
         private Mock<IGetUserWeeklySubscriptionsCost> getUserWeeklySubscriptionsCost;
         private Mock<IIncrementPaymentStatusDbStatement> incrementPaymentStatus;
         private Mock<IGetUserPaymentOriginDbStatement> getUserPaymentOrigin;
+        private Mock<ITimestampCreator> timestampCreator;
+        private Mock<IGuidCreator> guidCreator;
 
         private TopUpUserAccountsWithCredit target;
 
@@ -34,13 +42,17 @@
             this.getUserWeeklySubscriptionsCost = new Mock<IGetUserWeeklySubscriptionsCost>(MockBehavior.Strict);
             this.incrementPaymentStatus = new Mock<IIncrementPaymentStatusDbStatement>(MockBehavior.Strict);
             this.getUserPaymentOrigin = new Mock<IGetUserPaymentOriginDbStatement>(MockBehavior.Strict);
+            this.timestampCreator = new Mock<ITimestampCreator>(MockBehavior.Strict);
+            this.guidCreator = new Mock<IGuidCreator>(MockBehavior.Strict);
 
             this.target = new TopUpUserAccountsWithCredit(
                 this.getUsersRequiringPaymentRetry.Object,
                 this.applyUserCredit.Object,
                 this.getUserWeeklySubscriptionsCost.Object,
                 this.incrementPaymentStatus.Object,
-                this.getUserPaymentOrigin.Object);
+                this.getUserPaymentOrigin.Object,
+                this.timestampCreator.Object,
+                this.guidCreator.Object);
         }
 
         [TestMethod]
@@ -60,6 +72,9 @@
         [TestMethod]
         public async Task ItShouldChargeAllNecessaryUsers()
         {
+            this.timestampCreator.SetupSequence(v => v.Now()).Returns(Now1).Returns(Now2);
+            this.guidCreator.SetupSequence(v => v.CreateSqlSequential()).Returns(TransactionReference1.Value).Returns(TransactionReference2.Value);
+
             var userId1 = UserId.Random();
             var userId2 = UserId.Random();
             var userId3 = UserId.Random();
@@ -99,11 +114,11 @@
             this.getUserPaymentOrigin.Setup(v => v.ExecuteAsync(userId5))
                 .ReturnsAsync(new UserPaymentOriginResult("customer5", PaymentOriginKeyType.Stripe, null, null, null, null, PaymentStatus.None));
 
-            this.applyUserCredit.Setup(v => v.ExecuteAsync(userId1, PositiveInt.Parse(TopUpUserAccountsWithCredit.MinimumPaymentAmount), null, UserType.StandardUser))
+            this.applyUserCredit.Setup(v => v.ExecuteAsync(userId1, Now1, TransactionReference1, PositiveInt.Parse(TopUpUserAccountsWithCredit.MinimumPaymentAmount), null, UserType.StandardUser))
                 .Returns(Task.FromResult(0))
                 .Verifiable();
 
-            this.applyUserCredit.Setup(v => v.ExecuteAsync(userId2, PositiveInt.Parse(TopUpUserAccountsWithCredit.MinimumPaymentAmount + 1), null, UserType.StandardUser))
+            this.applyUserCredit.Setup(v => v.ExecuteAsync(userId2, Now2, TransactionReference2, PositiveInt.Parse(TopUpUserAccountsWithCredit.MinimumPaymentAmount + 1), null, UserType.StandardUser))
                 .Returns(Task.FromResult(0))
                 .Verifiable();
 

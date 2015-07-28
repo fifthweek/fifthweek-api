@@ -8,6 +8,7 @@
     using Fifthweek.Api.Persistence;
     using Fifthweek.Api.Persistence.Payments;
     using Fifthweek.CodeGeneration;
+    using Fifthweek.Payments.Shared;
     using Fifthweek.Shared;
 
     [AutoConstructor]
@@ -20,8 +21,8 @@
             UserId userId, 
             DateTime timestamp, 
             AmountInMinorDenomination totalAmount, 
-            AmountInMinorDenomination creditAmount, 
-            Guid transactionReference, 
+            AmountInMinorDenomination creditAmount,
+            TransactionReference transactionReference, 
             string stripeChargeId, 
             string taxamoTransactionKey)
         {
@@ -49,7 +50,7 @@
                 -totalAmount.Value,
                 LedgerAccountType.Stripe,
                 LedgerTransactionType.CreditAddition,
-                transactionReference,
+                transactionReference.Value,
                 null,
                 null,
                 stripeChargeId,
@@ -63,7 +64,7 @@
                 creditAmount.Value,
                 LedgerAccountType.FifthweekCredit,
                 LedgerTransactionType.CreditAddition,
-                transactionReference,
+                transactionReference.Value,
                 null,
                 null,
                 stripeChargeId,
@@ -81,7 +82,7 @@
                     tax,
                     LedgerAccountType.SalesTax,
                     LedgerTransactionType.CreditAddition,
-                    transactionReference,
+                    transactionReference.Value,
                     null,
                     null,
                     stripeChargeId,

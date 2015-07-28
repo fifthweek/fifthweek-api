@@ -13,5 +13,7 @@
         Task<CreatePaymentOut> CreatePaymentAsync(string transactionKey, CreatePaymentIn input, string apiKey);
 
         Task<CancelTransactionOut> CancelTransactionAsync(string transactionKey, string apiKey);
+
+        Task<CreateRefundOut> CreateRefundAsync(string transactionKey, CreateRefundIn input, string apiKey);
     }
 }

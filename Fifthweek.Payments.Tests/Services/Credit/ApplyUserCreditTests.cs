@@ -8,6 +8,7 @@ namespace Fifthweek.Payments.Tests.Services.Credit
     using Fifthweek.Api.Persistence.Payments;
     using Fifthweek.Payments.Services.Credit;
     using Fifthweek.Payments.Services.Credit.Taxamo;
+    using Fifthweek.Payments.Shared;
     using Fifthweek.Shared;
     using Fifthweek.Tests.Shared;
 
@@ -16,8 +17,10 @@ namespace Fifthweek.Payments.Tests.Services.Credit
     using Moq;
 
     [TestClass]
-    public class ApplyStandardUserCreditTests
+    public class ApplyUserCreditTests
     {
+        private static readonly DateTime Now = DateTime.UtcNow;
+        private static readonly TransactionReference TransactionReference = TransactionReference.Random();
         private static readonly UserId UserId = UserId.Random();
         private static readonly Requester Requester = Requester.Authenticated(UserId);
         private static readonly PositiveInt Amount = PositiveInt.Parse(10);
@@ -28,7 +31,7 @@ namespace Fifthweek.Payments.Tests.Services.Credit
             new UserPaymentOriginResult("stripeCustomerId", PaymentOriginKeyType.Stripe, "GB", "12345", "1.1.1.1", "ttk", PaymentStatus.Retry1));
 
         private static readonly StripeTransactionResult StripeTransactionResult =
-            new StripeTransactionResult(DateTime.UtcNow, Guid.NewGuid(), "stripeChargeId");
+            new StripeTransactionResult(DateTime.UtcNow, TransactionReference.Random(), "stripeChargeId");
 
         private Mock<IInitializeCreditRequest> initializeCreditRequest;
         private Mock<IPerformCreditRequest> performCreditRequest;
@@ -62,14 +65,21 @@ namespace Fifthweek.Payments.Tests.Services.Credit
         [ExpectedException(typeof(ArgumentNullException))]
         public async Task WhenUserIdIsNull_ItShouldThrowAnException()
         {
-            await this.target.ExecuteAsync(null, Amount, ExpectedTotalAmount, default(UserType));
+            await this.target.ExecuteAsync(null, Now, TransactionReference, Amount, ExpectedTotalAmount, default(UserType));
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentNullException))]
+        public async Task WhenTransactionReferenceIsNull_ItShouldThrowAnException()
+        {
+            await this.target.ExecuteAsync(UserId, Now, null, Amount, ExpectedTotalAmount, default(UserType));
         }
 
         [TestMethod]
         [ExpectedException(typeof(ArgumentNullException))]
         public async Task WhenAmountIsNull_ItShouldThrowAnException()
         {
-            await this.target.ExecuteAsync(UserId, null, ExpectedTotalAmount, default(UserType));
+            await this.target.ExecuteAsync(UserId, Now, TransactionReference, null, ExpectedTotalAmount, default(UserType));
         }
 
         [TestMethod]
@@ -79,7 +89,7 @@ namespace Fifthweek.Payments.Tests.Services.Credit
 
             this.SetupRetryOnTransientFailureTasks(tasks);
 
-            await this.target.ExecuteAsync(UserId, Amount, ExpectedTotalAmount, UserType.StandardUser);
+            await this.target.ExecuteAsync(UserId, Now, TransactionReference, Amount, ExpectedTotalAmount, UserType.StandardUser);
 
             Assert.AreEqual(4, tasks.Count);
 
@@ -88,7 +98,7 @@ namespace Fifthweek.Payments.Tests.Services.Credit
             await tasks[0]();
             this.initializeCreditRequest.Verify();
 
-            this.performCreditRequest.Setup(v => v.HandleAsync(UserId, InitializeResult.TaxamoTransaction, InitializeResult.Origin, UserType.StandardUser))
+            this.performCreditRequest.Setup(v => v.HandleAsync(UserId, Now, TransactionReference, InitializeResult.TaxamoTransaction, InitializeResult.Origin, UserType.StandardUser))
                 .ReturnsAsync(StripeTransactionResult).Verifiable();
             await tasks[1]();
             this.performCreditRequest.Verify();
@@ -117,7 +127,7 @@ namespace Fifthweek.Payments.Tests.Services.Credit
 
             this.SetupRetryOnTransientFailureTasks(tasks);
 
-            await this.target.ExecuteAsync(UserId, Amount, ExpectedTotalAmount, UserType.TestUser);
+            await this.target.ExecuteAsync(UserId, Now, TransactionReference, Amount, ExpectedTotalAmount, UserType.TestUser);
 
             Assert.AreEqual(4, tasks.Count);
 
@@ -126,7 +136,7 @@ namespace Fifthweek.Payments.Tests.Services.Credit
             await tasks[0]();
             this.initializeCreditRequest.Verify();
 
-            this.performCreditRequest.Setup(v => v.HandleAsync(UserId, InitializeResult.TaxamoTransaction, InitializeResult.Origin, UserType.TestUser))
+            this.performCreditRequest.Setup(v => v.HandleAsync(UserId, Now, TransactionReference, InitializeResult.TaxamoTransaction, InitializeResult.Origin, UserType.TestUser))
                 .ReturnsAsync(StripeTransactionResult).Verifiable();
             await tasks[1]();
             this.performCreditRequest.Verify();
@@ -153,7 +163,7 @@ namespace Fifthweek.Payments.Tests.Services.Credit
 
             this.SetupRetryOnTransientFailureTasks(tasks);
 
-            await this.target.ExecuteAsync(UserId, Amount, null, UserType.StandardUser);
+            await this.target.ExecuteAsync(UserId, Now, TransactionReference, Amount, null, UserType.StandardUser);
 
             Assert.AreEqual(4, tasks.Count);
 
@@ -162,7 +172,7 @@ namespace Fifthweek.Payments.Tests.Services.Credit
             await tasks[0]();
             this.initializeCreditRequest.Verify();
 
-            this.performCreditRequest.Setup(v => v.HandleAsync(UserId, InitializeResult.TaxamoTransaction, InitializeResult.Origin, UserType.StandardUser))
+            this.performCreditRequest.Setup(v => v.HandleAsync(UserId, Now, TransactionReference, InitializeResult.TaxamoTransaction, InitializeResult.Origin, UserType.StandardUser))
                 .ReturnsAsync(StripeTransactionResult).Verifiable();
             await tasks[1]();
             this.performCreditRequest.Verify();
@@ -194,7 +204,7 @@ namespace Fifthweek.Payments.Tests.Services.Credit
                 .ThrowsAsync(new DivideByZeroException());
 
             await ExpectedException.AssertExceptionAsync<DivideByZeroException>(
-                () => this.target.ExecuteAsync(UserId, Amount, ExpectedTotalAmount, UserType.StandardUser));
+                () => this.target.ExecuteAsync(UserId, Now, TransactionReference, Amount, ExpectedTotalAmount, UserType.StandardUser));
 
             Assert.AreEqual(1, tasks.Count);
         }
@@ -213,7 +223,7 @@ namespace Fifthweek.Payments.Tests.Services.Credit
                 .ThrowsAsync(new DivideByZeroException());
 
             await ExpectedException.AssertExceptionAsync<DivideByZeroException>(
-                () => this.target.ExecuteAsync(UserId, Amount, ExpectedTotalAmount, UserType.StandardUser));
+                () => this.target.ExecuteAsync(UserId, Now, TransactionReference, Amount, ExpectedTotalAmount, UserType.StandardUser));
 
             Assert.AreEqual(2, tasks.Count);
         }
@@ -247,7 +257,7 @@ namespace Fifthweek.Payments.Tests.Services.Credit
                     });
 
             var exception = await ExpectedException.GetExceptionAsync<FailedToApplyCreditException>(
-                () => this.target.ExecuteAsync(UserId, Amount, ExpectedTotalAmount, UserType.StandardUser));
+                () => this.target.ExecuteAsync(UserId, Now, TransactionReference, Amount, ExpectedTotalAmount, UserType.StandardUser));
 
             Assert.AreEqual(4, tasks.Count);
 
@@ -288,7 +298,7 @@ namespace Fifthweek.Payments.Tests.Services.Credit
                     });
 
             var exception = await ExpectedException.GetExceptionAsync<FailedToApplyCreditException>(
-                () => this.target.ExecuteAsync(UserId, Amount, ExpectedTotalAmount, UserType.StandardUser));
+                () => this.target.ExecuteAsync(UserId, Now, TransactionReference, Amount, ExpectedTotalAmount, UserType.StandardUser));
 
             Assert.AreEqual(4, tasks.Count);
 

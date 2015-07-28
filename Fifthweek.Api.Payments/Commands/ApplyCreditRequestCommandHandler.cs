@@ -37,6 +37,8 @@
             {
                 await this.applyUserCredit.ExecuteAsync(
                     command.UserId,
+                    command.Timestamp,
+                    command.TransactionReference,
                     command.Amount,
                     command.ExpectedTotalAmount,
                     userType);

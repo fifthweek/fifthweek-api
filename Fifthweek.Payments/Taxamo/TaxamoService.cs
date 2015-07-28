@@ -31,5 +31,11 @@
             var transaction = new ApivtransactionsApi(new ApiClient(apiKey));
             return transaction.CancelTransactionAsync(transactionKey);
         }
+
+        public Task<CreateRefundOut> CreateRefundAsync(string transactionKey, CreateRefundIn input, string apiKey)
+        {
+            var refund = new ApivtransactionskeyrefundsApi(new ApiClient(apiKey));
+            return refund.CreateRefundAsync(transactionKey, input);
+        }
     }
 }

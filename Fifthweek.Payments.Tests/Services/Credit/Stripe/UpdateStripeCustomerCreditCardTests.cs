@@ -70,7 +70,7 @@
 
             var expectedCardCreateOptions = new StripeCardCreateOptions { Source = new StripeSourceOptions { TokenId = TokenId } };
             var card = new StripeCard { Id = CardId };
-            this.stripeService.Setup(v => v.CreateCard(
+            this.stripeService.Setup(v => v.CreateCardAsync(
                 CustomerId,
                 It.Is<StripeCardCreateOptions>(
                     x => JsonConvert.SerializeObject(x, Formatting.None) == JsonConvert.SerializeObject(expectedCardCreateOptions, Formatting.None)),
@@ -79,7 +79,7 @@
 
 
             var expectedCustomerUpdateOptions = new StripeCustomerUpdateOptions { DefaultSource = CardId };
-            this.stripeService.Setup(v => v.UpdateCustomer(
+            this.stripeService.Setup(v => v.UpdateCustomerAsync(
                 CustomerId,
                 It.Is<StripeCustomerUpdateOptions>(
                     x => JsonConvert.SerializeObject(x, Formatting.None) == JsonConvert.SerializeObject(expectedCustomerUpdateOptions, Formatting.None)),
@@ -99,7 +99,7 @@
 
             var expectedCardCreateOptions = new StripeCardCreateOptions { Source = new StripeSourceOptions { TokenId = TokenId } };
             var card = new StripeCard { Id = CardId };
-            this.stripeService.Setup(v => v.CreateCard(
+            this.stripeService.Setup(v => v.CreateCardAsync(
                 CustomerId,
                 It.Is<StripeCardCreateOptions>(
                     x => JsonConvert.SerializeObject(x, Formatting.None) == JsonConvert.SerializeObject(expectedCardCreateOptions, Formatting.None)),
@@ -107,7 +107,7 @@
                 .ReturnsAsync(card);
 
             var expectedCustomerUpdateOptions = new StripeCustomerUpdateOptions { DefaultSource = CardId };
-            this.stripeService.Setup(v => v.UpdateCustomer(
+            this.stripeService.Setup(v => v.UpdateCustomerAsync(
                 CustomerId,
                 It.Is<StripeCustomerUpdateOptions>(
                     x => JsonConvert.SerializeObject(x, Formatting.None) == JsonConvert.SerializeObject(expectedCustomerUpdateOptions, Formatting.None)),

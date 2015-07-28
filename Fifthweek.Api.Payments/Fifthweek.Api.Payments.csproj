@@ -84,15 +84,21 @@
     </Compile>
     <Compile Include="Commands\ApplyCreditRequestCommand.cs" />
     <Compile Include="Commands\ApplyCreditRequestCommandHandler.cs" />
+    <Compile Include="Commands\CreateCreditRefundCommand.cs" />
+    <Compile Include="Commands\CreateCreditRefundCommandHandler.cs" />
+    <Compile Include="Commands\CreateTransactionRefundCommand.cs" />
+    <Compile Include="Commands\CreateTransactionRefundCommandHandler.cs" />
     <Compile Include="Commands\DeletePaymentInformationCommand.cs" />
     <Compile Include="Commands\DeletePaymentInformationCommandHandler.cs" />
     <Compile Include="Commands\UpdatePaymentOriginCommand.cs" />
     <Compile Include="Commands\UpdatePaymentOriginCommandHandler.cs" />
+    <Compile Include="Controllers\CreditRefundData.cs" />
     <Compile Include="Controllers\CreditRequestData.cs" />
     <Compile Include="Controllers\CreditRequestSummary.cs" />
     <Compile Include="Controllers\PaymentLocationData.cs" />
     <Compile Include="Controllers\PaymentOriginData.cs" />
     <Compile Include="Controllers\PaymentsController.cs" />
+    <Compile Include="Controllers\TransactionRefundData.cs" />
     <Compile Include="DeleteUserPaymentInformationDbStatement.cs" />
     <Compile Include="Extensions.cs" />
     <Compile Include="IDeleteUserPaymentInformationDbStatement.cs" />
@@ -122,6 +128,10 @@
     <ProjectReference Include="..\Fifthweek.CodeGeneration\Fifthweek.CodeGeneration.csproj">
       <Project>{770F450E-2166-4269-BEC1-DF59AA16B1E8}</Project>
       <Name>Fifthweek.CodeGeneration</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Fifthweek.Payments.Shared\Fifthweek.Payments.Shared.csproj">
+      <Project>{8EF964CC-55F2-40BB-A0CE-F92F23AC8D90}</Project>
+      <Name>Fifthweek.Payments.Shared</Name>
     </ProjectReference>
     <ProjectReference Include="..\Fifthweek.Payments\Fifthweek.Payments.csproj">
       <Project>{9C64B84A-264B-44BC-8D47-BCC52B88E0AC}</Project>

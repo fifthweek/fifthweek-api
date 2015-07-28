@@ -7,6 +7,7 @@ namespace Fifthweek.Payments.Services.Credit
     using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.CodeGeneration;
     using Fifthweek.Payments.Services.Credit.Taxamo;
+    using Fifthweek.Payments.Shared;
     using Fifthweek.Payments.Stripe;
     using Fifthweek.Shared;
 
@@ -22,9 +23,16 @@ namespace Fifthweek.Payments.Services.Credit
         private readonly IFifthweekRetryOnTransientErrorHandler retryOnTransientFailure;
         private readonly ICommitTaxamoTransaction commitTaxamoTransaction;
 
-        public async Task ExecuteAsync(UserId userId, PositiveInt amount, PositiveInt expectedTotalAmount, UserType userType)
+        public async Task ExecuteAsync(
+            UserId userId,
+            DateTime timestamp,
+            TransactionReference transactionReference,
+            PositiveInt amount, 
+            PositiveInt expectedTotalAmount, 
+            UserType userType)
         {
             userId.AssertNotNull("userId");
+            transactionReference.AssertNotNull("transactionReference");
             amount.AssertNotNull("amount");
 
             // We split this up into three phases that have individual retry handlers.
@@ -37,6 +45,8 @@ namespace Fifthweek.Payments.Services.Credit
             var stripeTransactionResult = await this.retryOnTransientFailure.HandleAsync(
                 () => this.performCreditRequest.HandleAsync(
                     userId,
+                    timestamp,
+                    transactionReference,
                     initializeResult.TaxamoTransaction,
                     initializeResult.Origin,
                     userType));

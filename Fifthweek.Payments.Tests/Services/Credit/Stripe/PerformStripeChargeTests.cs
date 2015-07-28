@@ -7,6 +7,7 @@
     using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.Payments.Services.Credit;
     using Fifthweek.Payments.Services.Credit.Stripe;
+    using Fifthweek.Payments.Shared;
     using Fifthweek.Payments.Stripe;
     using Fifthweek.Tests.Shared;
 
@@ -24,7 +25,7 @@
         private static readonly UserId UserId = UserId.Random();
         private static readonly string StripeCustomerId = "stripeCustomerId";
         private static readonly AmountInMinorDenomination Amount = new AmountInMinorDenomination(100);
-        private static readonly Guid TransactionReference = Guid.NewGuid();
+        private static readonly TransactionReference TransactionReference = TransactionReference.Random();
         private static readonly string TaxamoTransactionKey = "ttk";
 
         private static readonly string TestKey = "testkey";
@@ -87,7 +88,7 @@
             };
 
             var charge = new StripeCharge { Id = ChargeId };
-            this.stripeService.Setup(v => v.CreateCharge(
+            this.stripeService.Setup(v => v.CreateChargeAsync(
                 It.Is<StripeChargeCreateOptions>(
                     x => JsonConvert.SerializeObject(x, Formatting.None) == JsonConvert.SerializeObject(expectedOptions, Formatting.None)),
                 TestKey))
@@ -117,7 +118,7 @@
             };
 
             var charge = new StripeCharge { Id = ChargeId };
-            this.stripeService.Setup(v => v.CreateCharge(
+            this.stripeService.Setup(v => v.CreateChargeAsync(
                 It.Is<StripeChargeCreateOptions>(
                     x => JsonConvert.SerializeObject(x, Formatting.None) == JsonConvert.SerializeObject(expectedOptions, Formatting.None)),
                 LiveKey))
@@ -155,7 +156,7 @@
                 }   
             };
 
-            this.stripeService.Setup(v => v.CreateCharge(
+            this.stripeService.Setup(v => v.CreateChargeAsync(
                 It.Is<StripeChargeCreateOptions>(
                     x => JsonConvert.SerializeObject(x, Formatting.None) == JsonConvert.SerializeObject(expectedOptions, Formatting.None)),
                 TestKey))
