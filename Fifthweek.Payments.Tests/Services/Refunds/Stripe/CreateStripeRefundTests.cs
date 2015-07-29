@@ -70,36 +70,18 @@
         [TestMethod]
         public async Task WhenStripeModeIsTest_ItShouldCreateACustomer()
         {
-            this.apiKeyRepository.Setup(v => v.GetApiKey(UserType.TestUser)).Returns(TestKey);
-
-            var expectedOptions = new StripeRefundCreateOptions
-            {
-                Amount = TotalRefundAmount.Value,
-                Reason = "requested_by_customer",
-                Metadata = new Dictionary<string, string>
-                {
-                    { CreateStripeRefund.EnactingUserIdMetadataKey, UserId.ToString() },
-                }
-            };
-
-            var stripeRefund = new StripeRefund { Id = CustomerId };
-            this.stripeService.Setup(v => v.RefundChargeAsync(
-                StripeChargeId,
-                It.Is<StripeRefundCreateOptions>(
-                    x => JsonConvert.SerializeObject(x, Formatting.None) == JsonConvert.SerializeObject(expectedOptions, Formatting.None)),
-                TestKey))
-                .ReturnsAsync(stripeRefund)
-                .Verifiable();
-
-            await this.target.ExecuteAsync(UserId, StripeChargeId, TotalRefundAmount, RefundCreditReason.RequestedByCustomer, UserType.TestUser);
-
-            this.stripeService.Verify();
+            await this.PerformTest(TestKey);
         }
 
         [TestMethod]
         public async Task WhenStripeModeIsLive_ItShouldCreateACustomer()
         {
-            this.apiKeyRepository.Setup(v => v.GetApiKey(UserType.StandardUser)).Returns(LiveKey);
+            await this.PerformTest(LiveKey);
+        }
+
+        private async Task PerformTest(string apiKey)
+        {
+            this.apiKeyRepository.Setup(v => v.GetApiKey(UserType.StandardUser)).Returns(apiKey);
 
             var expectedOptions = new StripeRefundCreateOptions
             {
@@ -116,7 +98,7 @@
                 StripeChargeId,
                 It.Is<StripeRefundCreateOptions>(
                     x => JsonConvert.SerializeObject(x, Formatting.None) == JsonConvert.SerializeObject(expectedOptions, Formatting.None)),
-                TestKey))
+                apiKey))
                 .ReturnsAsync(stripeRefund)
                 .Verifiable();
 

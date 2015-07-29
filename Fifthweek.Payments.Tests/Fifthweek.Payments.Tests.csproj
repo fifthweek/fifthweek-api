@@ -69,6 +69,7 @@
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Data" />
+    <Reference Include="System.Transactions" />
     <Reference Include="System.Xml" />
   </ItemGroup>
   <Choose>
@@ -136,10 +137,13 @@
     <Compile Include="Services\ProcessPaymentProcessingDataTests.cs" />
     <Compile Include="Services\ProcessPaymentsBetweenSubscriberAndCreatorTests.cs" />
     <Compile Include="Services\ProcessPaymentsForSubscriberTests.cs" />
-    <Compile Include="Services\Refunds\CreateCreditRefundDbStatementTests.cs" />
+    <Compile Include="Services\Refunds\PersistCreditRefundTests.cs" />
     <Compile Include="Services\Refunds\CreateCreditRefundTests.cs" />
-    <Compile Include="Services\Refunds\CreateTransactionRefundDbStatementTests.cs" />
-    <Compile Include="Services\Refunds\GetCreditTransactionDbStatementTests.cs" />
+    <Compile Include="Services\Refunds\CreateTransactionRefundTests.cs" />
+    <Compile Include="Services\Refunds\GetCreditTransactionInformationTests.cs" />
+    <Compile Include="Services\Refunds\GetRecordsForTransactionDbStatementTests.cs" />
+    <Compile Include="Services\Refunds\PersistCommittedRecordsDbStatementTests.cs" />
+    <Compile Include="Services\Refunds\RefundIntegrationTests.cs" />
     <Compile Include="Services\Refunds\Stripe\CreateStripeRefundTests.cs" />
     <Compile Include="Services\Refunds\Taxamo\CreateTaxamoRefundTests.cs" />
     <Compile Include="Services\RequestProcessPaymentsServiceTests.cs" />
@@ -163,6 +167,10 @@
       <Project>{B2D572A4-86C5-4F16-AB6A-CE87A63E08DD}</Project>
       <Name>Fifthweek.Api.Blogs.Shared</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Fifthweek.Api.Blogs\Fifthweek.Api.Blogs.csproj">
+      <Project>{5DB142B7-3152-447E-8816-33A90BA9EF76}</Project>
+      <Name>Fifthweek.Api.Blogs</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Fifthweek.Api.Channels.Shared\Fifthweek.Api.Channels.Shared.csproj">
       <Project>{DF1BB4E7-5315-4E5C-BA73-6DFA4D9E7564}</Project>
       <Name>Fifthweek.Api.Channels.Shared</Name>
@@ -170,6 +178,10 @@
     <ProjectReference Include="..\Fifthweek.Api.Identity.Shared\Fifthweek.Api.Identity.Shared.csproj">
       <Project>{1B07E9CC-1B0E-49D7-96D6-0F8C58A7C0CA}</Project>
       <Name>Fifthweek.Api.Identity.Shared</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Fifthweek.Api.Identity\Fifthweek.Api.Identity.csproj">
+      <Project>{6A2AF270-E4D4-4C4E-A88F-807F7B9A03B7}</Project>
+      <Name>Fifthweek.Api.Identity</Name>
     </ProjectReference>
     <ProjectReference Include="..\Fifthweek.Api.Persistence.Tests.Shared\Fifthweek.Api.Persistence.Tests.Shared.csproj">
       <Project>{ECDE2C4E-7DD8-4210-8E09-D5762C88B3CB}</Project>

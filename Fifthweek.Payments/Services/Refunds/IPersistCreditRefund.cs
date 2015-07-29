@@ -7,10 +7,10 @@ namespace Fifthweek.Payments.Services.Refunds
     using Fifthweek.Payments.Shared;
     using Fifthweek.Shared;
 
-    public interface ICreateCreditRefundDbStatement
+    public interface IPersistCreditRefund
     {
         Task ExecuteAsync(
-            UserId administratorId,
+            UserId enactingUserId,
             UserId userId,
             DateTime timestamp,
             PositiveInt totalAmount,

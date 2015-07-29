@@ -27,7 +27,7 @@
         private static readonly RefundCreditReason Reason = RefundCreditReason.Fraudulent;
         private static readonly string Comment = "comment";
 
-        private static readonly GetCreditTransactionDbStatement.GetCreditTransactionResult TransactionResult = new GetCreditTransactionDbStatement.GetCreditTransactionResult(
+        private static readonly GetCreditTransactionInformation.GetCreditTransactionResult TransactionResult = new GetCreditTransactionInformation.GetCreditTransactionResult(
             UserId,
             "stripeChargeId",
             "taxamoTransactionKey",
@@ -39,10 +39,10 @@
             NonNegativeInt.Parse(10));
 
         private Mock<IFifthweekRetryOnTransientErrorHandler> retryOnTransientFailure;
-        private Mock<IGetCreditTransactionDbStatement> getCreditTransaction;
+        private Mock<IGetCreditTransactionInformation> getCreditTransaction;
         private Mock<ICreateTaxamoRefund> createTaxamoRefund;
         private Mock<ICreateStripeRefund> createStripeRefund;
-        private Mock<ICreateCreditRefundDbStatement> createCreditRefundDbStatement;
+        private Mock<IPersistCreditRefund> createCreditRefundDbStatement;
 
         private CreateCreditRefund target;
 
@@ -50,10 +50,10 @@
         public void Initialize()
         {
             this.retryOnTransientFailure = new Mock<IFifthweekRetryOnTransientErrorHandler>(MockBehavior.Strict);
-            this.getCreditTransaction = new Mock<IGetCreditTransactionDbStatement>(MockBehavior.Strict);
+            this.getCreditTransaction = new Mock<IGetCreditTransactionInformation>(MockBehavior.Strict);
             this.createTaxamoRefund = new Mock<ICreateTaxamoRefund>(MockBehavior.Strict);
             this.createStripeRefund = new Mock<ICreateStripeRefund>(MockBehavior.Strict);
-            this.createCreditRefundDbStatement = new Mock<ICreateCreditRefundDbStatement>(MockBehavior.Strict);
+            this.createCreditRefundDbStatement = new Mock<IPersistCreditRefund>(MockBehavior.Strict);
 
             this.target = new CreateCreditRefund(
                 this.retryOnTransientFailure.Object,
@@ -136,7 +136,7 @@
         [TestMethod]
         public async Task WhenCreateStripeRefundFails_ItShouldWrapException()
         {
-            this.retryOnTransientFailure.Setup(v => v.HandleAsync(It.IsAny<Func<Task<GetCreditTransactionDbStatement.GetCreditTransactionResult>>>()))
+            this.retryOnTransientFailure.Setup(v => v.HandleAsync(It.IsAny<Func<Task<GetCreditTransactionInformation.GetCreditTransactionResult>>>()))
                 .ReturnsAsync(TransactionResult);
 
             this.retryOnTransientFailure.Setup(v => v.HandleAsync(It.IsAny<Func<Task<CreateTaxamoRefund.TaxamoRefundResult>>>()))
@@ -155,7 +155,7 @@
         [TestMethod]
         public async Task WhenCreateCreditRefundFails_ItShouldWrapException()
         {
-            this.retryOnTransientFailure.Setup(v => v.HandleAsync(It.IsAny<Func<Task<GetCreditTransactionDbStatement.GetCreditTransactionResult>>>()))
+            this.retryOnTransientFailure.Setup(v => v.HandleAsync(It.IsAny<Func<Task<GetCreditTransactionInformation.GetCreditTransactionResult>>>()))
                 .ReturnsAsync(TransactionResult);
 
             this.retryOnTransientFailure.Setup(v => v.HandleAsync(It.IsAny<Func<Task<CreateTaxamoRefund.TaxamoRefundResult>>>()))
@@ -173,7 +173,7 @@
         [TestMethod]
         public async Task WhenTransactionNotFound_ItShouldThrowException()
         {
-            this.retryOnTransientFailure.Setup(v => v.HandleAsync(It.IsAny<Func<Task<GetCreditTransactionDbStatement.GetCreditTransactionResult>>>()))
+            this.retryOnTransientFailure.Setup(v => v.HandleAsync(It.IsAny<Func<Task<GetCreditTransactionInformation.GetCreditTransactionResult>>>()))
                 .ReturnsAsync(null);
 
             await ExpectedException.AssertExceptionAsync<BadRequestException>(
@@ -183,8 +183,8 @@
         [TestMethod]
         public async Task WhenNotEnoughRemainingCredit_ItShouldThrowException()
         {
-            this.retryOnTransientFailure.Setup(v => v.HandleAsync(It.IsAny<Func<Task<GetCreditTransactionDbStatement.GetCreditTransactionResult>>>()))
-                .ReturnsAsync(new GetCreditTransactionDbStatement.GetCreditTransactionResult(
+            this.retryOnTransientFailure.Setup(v => v.HandleAsync(It.IsAny<Func<Task<GetCreditTransactionInformation.GetCreditTransactionResult>>>()))
+                .ReturnsAsync(new GetCreditTransactionInformation.GetCreditTransactionResult(
                     UserId.Random(),
                     "stripeChargeId",
                     "taxamoTransactionKey",
@@ -197,7 +197,7 @@
 
         private void SetupRetryOnTransientFailureTasks(List<Func<Task>> tasks)
         {
-            this.retryOnTransientFailure.Setup(v => v.HandleAsync(It.IsAny<Func<Task<GetCreditTransactionDbStatement.GetCreditTransactionResult>>>()))
+            this.retryOnTransientFailure.Setup(v => v.HandleAsync(It.IsAny<Func<Task<GetCreditTransactionInformation.GetCreditTransactionResult>>>()))
                 .Callback<Func<Task>>(tasks.Add)
                 .ReturnsAsync(TransactionResult);
 

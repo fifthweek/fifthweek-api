@@ -26,11 +26,10 @@
             transactionReference.AssertNotNull("transactionReference");
 
             var formattedComment = string.IsNullOrWhiteSpace(comment)
-                ? string.Format("Performed By {0}", enactingUserId)
-                : string.Format("Performed By {0} - {1}", enactingUserId, comment);
+                ? string.Format("Performed by {0}", enactingUserId)
+                : string.Format("Performed by {0} - {1}", enactingUserId, comment);
 
             var records = await this.getRecordsForTransaction.ExecuteAsync(transactionReference);
-
 
             if (records.Count == 0)
             {

@@ -20,81 +20,46 @@
     using Moq;
 
     [TestClass]
-    public class CreateTransactionRefundDbStatementTests : PersistenceTestsBase
+    public class GetRecordsForTransactionDbStatementTests : PersistenceTestsBase
     {
-/*        private static readonly DateTime Now = new SqlDateTime(DateTime.UtcNow).Value;
+        private static readonly DateTime Now = new SqlDateTime(DateTime.UtcNow).Value;
         private static readonly UserId SubscriberId = UserId.Random();
         private static readonly UserId CreatorId = UserId.Random();
 
-        private static readonly UserId EnactingUserId = UserId.Random();
-        private static readonly string Comment = "comment";
-
-        private Mock<IGuidCreator> guidCreator;
-
-        private CreateTransactionRefundDbStatement target;
+        private GetRecordsForTransactionDbStatement target;
 
         [TestInitialize]
         public void Initialize()
         {
-            this.guidCreator = new Mock<IGuidCreator>(MockBehavior.Strict);
-            this.target = new CreateTransactionRefundDbStatement(this.guidCreator.Object, new Mock<IFifthweekDbConnectionFactory>(MockBehavior.Strict).Object);
-        }
-
-        [TestMethod]
-        [ExpectedException(typeof(ArgumentNullException))]
-        public async Task WhenEnactingUserIdIsNull_ItShouldThrowAnException()
-        {
-            await this.target.ExecuteAsync(null, TransactionReference.Random(), Now, Comment);
+            this.target = new GetRecordsForTransactionDbStatement(new Mock<IFifthweekDbConnectionFactory>(MockBehavior.Strict).Object);
         }
 
         [TestMethod]
         [ExpectedException(typeof(ArgumentNullException))]
         public async Task WhenTransactionReferenceIsNull_ItShouldThrowAnException()
         {
-            await this.target.ExecuteAsync(EnactingUserId, null, Now, Comment);
+            await this.target.ExecuteAsync(null);
         }
 
         [TestMethod]
-        public async Task ItShouldReverseSpecifiedTransaction()
+        public async Task ItShouldReturnRecordsForTransaction()
         {
             await this.DatabaseTestAsync(async testDatabase =>
             {
-                this.target = new CreateTransactionRefundDbStatement(this.guidCreator.Object, testDatabase);
-
-                byte sequentialGuidIndex = 0;
-                this.guidCreator.Setup(v => v.CreateSqlSequential()).Returns(() => this.CreateGuid(0, sequentialGuidIndex++));
+                this.target = new GetRecordsForTransactionDbStatement(testDatabase);
 
                 var data = await this.CreateDataAsync(testDatabase);
                 await testDatabase.TakeSnapshotAsync();
 
                 var transactionReference = data.First().TransactionReference;
 
-                var expectedInserts = data.Select(
-                    v => new AppendOnlyLedgerRecord(
-                        CreateGuid(0, 0),
-                        SubscriberId.Value,
-                        CreatorId.Value,
-                        Now,
-                        -v.Amount,
-                        v.AccountType,
-                        LedgerTransactionType.SubscriptionRefund,
-                        transactionReference,
-                        v.InputDataReference,
-                        "Performed by " + EnactingUserId + " - comment",
-                        null,
-                        null)).ToList();
+                var result = await this.target.ExecuteAsync(new TransactionReference(transactionReference));
 
-                var result = await this.target.ExecuteAsync(EnactingUserId, new TransactionReference(transactionReference), Now, Comment);
+                CollectionAssert.AreEquivalent(
+                    data,
+                    result.ToList());
 
-                Assert.AreEqual(
-                    new CreateTransactionRefundDbStatement.CreateTransactionRefundResult(SubscriberId, CreatorId),
-                    result);
-
-                return new WildcardEntity
-                {
-                     
-                    Inserts = expectedInserts
-                };
+                return ExpectedSideEffects.None;
             });
         }
 
@@ -160,10 +125,5 @@
 
             return record;
         }
-
-        private Guid CreateGuid(byte a, byte b)
-        {
-            return new Guid(0, 0, 0, 0, 0, 0, 0, 0, 0, a, b);
-        }*/
     }
 }

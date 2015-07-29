@@ -49,7 +49,7 @@
                     Sql,
                     new
                     {
-                        UserId = userId.Value,
+                        UserId = userId == null ? Guid.Empty : userId.Value,
                         AccountType = accountType,
                         StartTimestampInclusive = startTimestampInclusive,
                         EndTimestampExclusive = endTimestampExclusive

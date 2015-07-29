@@ -14,12 +14,14 @@ namespace Fifthweek.Payments.Services.Refunds
     using Fifthweek.Shared;
 
     [AutoConstructor]
-    public partial class GetCreditTransactionDbStatement : IGetCreditTransactionDbStatement
+    public partial class GetCreditTransactionInformation : IGetCreditTransactionInformation
     {
         private readonly IGetRecordsForTransactionDbStatement getRecordsForTransaction;
 
         public async Task<GetCreditTransactionResult> ExecuteAsync(TransactionReference transactionReference)
         {
+            transactionReference.AssertNotNull("transactionReference");
+
             var records = await this.getRecordsForTransaction.ExecuteAsync(transactionReference);
 
             if (records.Count == 0)

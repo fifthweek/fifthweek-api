@@ -10,6 +10,7 @@
     using Fifthweek.Api.Persistence.Payments;
     using Fifthweek.CodeGeneration;
     using Fifthweek.Payments.Shared;
+    using Fifthweek.Shared;
 
     [AutoConstructor]
     public partial class GetRecordsForTransactionDbStatement : IGetRecordsForTransactionDbStatement
@@ -23,11 +24,13 @@
 
         public async Task<IReadOnlyList<AppendOnlyLedgerRecord>> ExecuteAsync(TransactionReference transactionReference)
         {
+            transactionReference.AssertNotNull("transactionReference");
+
             using (var connection = this.connectionFactory.CreateConnection())
             {
                 var records = (await connection.QueryAsync<AppendOnlyLedgerRecord>(
                     GetTransactionRowsSql,
-                    new { TransactionReference = transactionReference })).ToList();
+                    new { TransactionReference = transactionReference.Value })).ToList();
 
                 return records;
             }

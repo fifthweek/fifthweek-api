@@ -81,7 +81,7 @@
                 CustomerId = StripeCustomerId,
                 Metadata = new Dictionary<string, string>
                 {
-                    { PerformStripeCharge.TransactionReferenceMetadataKey, TransactionReference.ToString() },
+                    { PerformStripeCharge.TransactionReferenceMetadataKey, TransactionReference.Value.ToString() },
                     { PerformStripeCharge.TaxamoTransactionKeyMetadataKey, TaxamoTransactionKey },
                     { PerformStripeCharge.UserIdMetadataKey, UserId.ToString() },
                 }
@@ -111,7 +111,7 @@
                 CustomerId = StripeCustomerId,
                 Metadata = new Dictionary<string, string>
                 {
-                    { PerformStripeCharge.TransactionReferenceMetadataKey, TransactionReference.ToString() },
+                    { PerformStripeCharge.TransactionReferenceMetadataKey, TransactionReference.Value.ToString() },
                     { PerformStripeCharge.TaxamoTransactionKeyMetadataKey, TaxamoTransactionKey },
                     { PerformStripeCharge.UserIdMetadataKey, UserId.ToString() },
                 }   

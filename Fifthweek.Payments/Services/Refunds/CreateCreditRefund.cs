@@ -16,10 +16,10 @@ namespace Fifthweek.Payments.Services.Refunds
     public partial class CreateCreditRefund : ICreateCreditRefund
     {
         private readonly IFifthweekRetryOnTransientErrorHandler retryOnTransientFailure;
-        private readonly IGetCreditTransactionDbStatement getCreditTransaction;
+        private readonly IGetCreditTransactionInformation getCreditTransaction;
         private readonly ICreateTaxamoRefund createTaxamoRefund;
         private readonly ICreateStripeRefund createStripeRefund;
-        private readonly ICreateCreditRefundDbStatement createCreditRefundDbStatement;
+        private readonly IPersistCreditRefund persistCreditRefund;
 
         public async Task<UserId> ExecuteAsync(
             UserId enactingUserId, 
@@ -58,7 +58,7 @@ namespace Fifthweek.Payments.Services.Refunds
             {
                 // Call CreateCreditRefundDbStatement
                 await this.retryOnTransientFailure.HandleAsync(
-                    () => this.createCreditRefundDbStatement.ExecuteAsync(
+                    () => this.persistCreditRefund.ExecuteAsync(
                     enactingUserId,
                     userId,
                     timestamp,

@@ -68,8 +68,8 @@
                 Amount = TaxamoTransactionResult.TotalAmount.ToMajorDenomination(),
                 PaymentTimestamp = CommitTaxamoTransaction.ToTaxamoDateTimeString(StripeTransactionResult.Timestamp),
                 PaymentInformation = string.Format(
-                    "Reference:{0}, StripeChargeId:{1}",
-                    StripeTransactionResult.TransactionReference,
+                    "Reference: {0}, StripeChargeId: {1}",
+                    StripeTransactionResult.TransactionReference.Value,
                     StripeTransactionResult.StripeChargeId),
             };
 
@@ -95,8 +95,8 @@
                 Amount = TaxamoTransactionResult.TotalAmount.ToMajorDenomination(),
                 PaymentTimestamp = CommitTaxamoTransaction.ToTaxamoDateTimeString(StripeTransactionResult.Timestamp),
                 PaymentInformation = string.Format(
-                    "Reference:{0}, StripeChargeId:{1}",
-                    StripeTransactionResult.TransactionReference,
+                    "Reference: {0}, StripeChargeId: {1}",
+                    StripeTransactionResult.TransactionReference.Value,
                     StripeTransactionResult.StripeChargeId),
             };
 

@@ -264,7 +264,7 @@ namespace Fifthweek.Payments.Tests.Services.Credit
             Assert.IsNotNull(exception);
             Assert.IsTrue(
                 exception.Message.Contains(StripeTransactionResult.StripeChargeId)
-                && exception.Message.Contains(StripeTransactionResult.TransactionReference.ToString())
+                && exception.Message.Contains(StripeTransactionResult.TransactionReference.Value.ToString())
                 && exception.Message.Contains(InitializeResult.TaxamoTransaction.Key)
                 && exception.Message.Contains(UserId.Value.ToString()));
         }
@@ -305,7 +305,7 @@ namespace Fifthweek.Payments.Tests.Services.Credit
             Assert.IsNotNull(exception);
             Assert.IsTrue(
                 exception.Message.Contains(StripeTransactionResult.StripeChargeId)
-                && exception.Message.Contains(StripeTransactionResult.TransactionReference.ToString())
+                && exception.Message.Contains(StripeTransactionResult.TransactionReference.Value.ToString())
                 && exception.Message.Contains(InitializeResult.TaxamoTransaction.Key)
                 && exception.Message.Contains(UserId.Value.ToString()));
         }

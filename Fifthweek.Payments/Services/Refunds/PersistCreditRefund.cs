@@ -12,13 +12,13 @@ namespace Fifthweek.Payments.Services.Refunds
     using Fifthweek.Shared;
 
     [AutoConstructor]
-    public partial class CreateCreditRefundDbStatement : ICreateCreditRefundDbStatement
+    public partial class PersistCreditRefund : IPersistCreditRefund
     {
         private readonly IGuidCreator guidCreator;
-        private readonly IFifthweekDbConnectionFactory connectionFactory;
+        private readonly IPersistCommittedRecordsDbStatement persistCommittedRecords;
 
         public async Task ExecuteAsync(
-            UserId administratorId,
+            UserId enactingUserId,
             UserId userId,
             DateTime timestamp,
             PositiveInt totalAmount, 
@@ -28,10 +28,11 @@ namespace Fifthweek.Payments.Services.Refunds
             string taxamoTransactionKey,
             string comment)
         {
-            administratorId.AssertNotNull("administratorId");
+            enactingUserId.AssertNotNull("enactingUserId");
             userId.AssertNotNull("userId");
             totalAmount.AssertNotNull("totalAmount");
             creditAmount.AssertNotNull("creditAmount");
+            transactionReference.AssertNotNull("transactionReference");
             stripeChargeId.AssertNotNull("stripeChargeId");
             taxamoTransactionKey.AssertNotNull("taxamoTransactionKey");
             comment.AssertNotNull("comment");
@@ -44,7 +45,7 @@ namespace Fifthweek.Payments.Services.Refunds
                     creditAmount.Value));
             }
 
-            var formattedComment = string.Format("{0} (Performed By {1})", comment, administratorId);
+            var formattedComment = string.Format("{0} (Performed By {1})", comment, enactingUserId);
             
             var committedRecords = new List<AppendOnlyLedgerRecord>();
 
@@ -95,10 +96,7 @@ namespace Fifthweek.Payments.Services.Refunds
                     taxamoTransactionKey));
             }
 
-            using (var connection = this.connectionFactory.CreateConnection())
-            {
-                await connection.InsertAsync(committedRecords);
-            }
+            await this.persistCommittedRecords.ExecuteAsync(committedRecords);
         }
     }
 }
