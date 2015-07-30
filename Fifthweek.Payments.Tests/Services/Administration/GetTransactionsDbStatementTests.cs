@@ -47,7 +47,8 @@
             await this.DatabaseTestAsync(async testDatabase =>
             {
                 var data = await this.SetupTest(testDatabase);
-                await this.PerformTest(null, SqlDateTime.MinValue.Value, SqlDateTime.MaxValue.Value, data);
+                var result = await this.PerformTest(null, SqlDateTime.MinValue.Value, SqlDateTime.MaxValue.Value, data);
+                Assert.IsTrue(result.Records.Any(v => v.TransactionType == LedgerTransactionType.CreditRefund));
                 return ExpectedSideEffects.None;
             });
         }
@@ -58,7 +59,20 @@
             await this.DatabaseTestAsync(async testDatabase =>
             {
                 var data = await this.SetupTest(testDatabase);
-                await this.PerformTest(null, Now.AddDays(-15), Now, data);
+                var result = await this.PerformTest(null, Now.AddDays(-15), Now, data);
+                Assert.IsTrue(result.Records.Any(v => v.TransactionType == LedgerTransactionType.CreditRefund));
+                return ExpectedSideEffects.None;
+            });
+        }
+
+        [TestMethod]
+        public async Task WhenDateIsSpecified2_ItShouldReturnAllTransactionsInDate()
+        {
+            await this.DatabaseTestAsync(async testDatabase =>
+            {
+                var data = await this.SetupTest(testDatabase);
+                var result = await this.PerformTest(null, Now.AddDays(-40), Now.AddDays(-15), data);
+                Assert.IsTrue(result.Records.Any(v => v.TransactionType == LedgerTransactionType.CreditRefund));
                 return ExpectedSideEffects.None;
             });
         }
@@ -69,7 +83,8 @@
             await this.DatabaseTestAsync(async testDatabase =>
             {
                 var data = await this.SetupTest(testDatabase);
-                await this.PerformTest(SubscriberId1, Now.AddDays(-15), Now, data);
+                var result = await this.PerformTest(SubscriberId1, Now.AddDays(-15), Now, data);
+                Assert.IsTrue(result.Records.Any(v => v.TransactionType == LedgerTransactionType.CreditRefund));
                 return ExpectedSideEffects.None;
             });
         }
@@ -80,7 +95,8 @@
             await this.DatabaseTestAsync(async testDatabase =>
             {
                 var data = await this.SetupTest(testDatabase);
-                await this.PerformTest(SubscriberId1, Now.AddDays(-40), Now.AddDays(-15), data);
+                var result = await this.PerformTest(SubscriberId1, Now.AddDays(-40), Now.AddDays(-15), data);
+                Assert.IsTrue(result.Records.Any(v => v.TransactionType == LedgerTransactionType.CreditRefund));
                 return ExpectedSideEffects.None;
             });
         }
@@ -129,7 +145,7 @@
             return data;
         }
 
-        private async Task PerformTest(UserId userId, DateTime startDate, DateTime endDate, GetTransactionsResult data)
+        private async Task<GetTransactionsResult> PerformTest(UserId userId, DateTime startDate, DateTime endDate, GetTransactionsResult data)
         {
             var result = await this.target.ExecuteAsync(userId, startDate, endDate);
 
@@ -139,14 +155,14 @@
                     data.Records.Where(
                         v => userId.Equals(v.AccountOwnerId) || userId.Equals(v.CounterpartyId));
 
+                var recordsInRange = recordsInvolvingUser.Where(v => v.Timestamp >= startDate && v.Timestamp <= endDate);
+
                 var transactionsInvolvingUser =
-                    recordsInvolvingUser.Select(v => v.TransactionReference).Distinct().ToList();
+                    recordsInRange.Select(v => v.TransactionReference).Distinct().ToList();
 
                 var expectedRecords =
                     data.Records.Where(
-                        v =>
-                        v.Timestamp >= startDate && v.Timestamp < endDate
-                        && transactionsInvolvingUser.Contains(v.TransactionReference)).ToList();
+                        v => transactionsInvolvingUser.Contains(v.TransactionReference)).ToList();
 
                 CollectionAssert.AreEquivalent(
                     expectedRecords,
@@ -154,10 +170,21 @@
             }
             else
             {
+                var recordsInRange = data.Records.Where(v => v.Timestamp >= startDate && v.Timestamp <= endDate);
+
+                var transactions =
+                    recordsInRange.Select(v => v.TransactionReference).Distinct().ToList();
+
+                var expectedRecords =
+                    data.Records.Where(
+                        v => transactions.Contains(v.TransactionReference)).ToList();
+
                 CollectionAssert.AreEquivalent(
-                    data.Records.Where(v => v.Timestamp >= startDate && v.Timestamp < endDate).ToList(),
+                    expectedRecords,
                     result.Records.ToList());
             }
+
+            return result;
         }
 
         private static async Task ClearLedger(TestDatabaseContext testDatabase)
@@ -184,11 +211,13 @@
                 var records = new List<AppendOnlyLedgerRecord>();
 
                 // Add credit
-                records.AddRange(AddCredit(databaseContext, Now.AddDays(-30), SubscriberId1, 100));
+                var subscriber1Credit = AddCredit(databaseContext, Now.AddDays(-30), SubscriberId1, 100);
+                records.AddRange(subscriber1Credit);
                 records.AddRange(AddCredit(databaseContext, Now.AddDays(-30), SubscriberId2, 40));
                 records.AddRange(AddCredit(databaseContext, Now.AddDays(-30), SubscriberId2, 10));
                 records.AddRange(AddCredit(databaseContext, Now.AddDays(-10), SubscriberId3, 10));
                 records.AddRange(AddCredit(databaseContext, Now.AddDays(-10), CreatorId1, 5.5m));
+                records.AddRange(AddCredit(databaseContext, Now.AddDays(-10), SubscriberId1, -100, new TransactionReference(subscriber1Credit.First().TransactionReference)));
 
                 records.AddRange(PayCreator(databaseContext, Now.AddDays(-30), SubscriberId1, CreatorId1, 10m));
                 records.AddRange(PayCreator(databaseContext, Now.AddDays(-30), SubscriberId1, CreatorId2, 20m));
@@ -253,13 +282,18 @@
             AddUncommittedRecord(databaseContext, random, sourceUserId, destinationUserId, amount);
         }
 
-        private static List<AppendOnlyLedgerRecord> AddCredit(FifthweekDbContext databaseContext, DateTime timestamp, UserId userId, decimal amount)
+        private static List<AppendOnlyLedgerRecord> AddCredit(FifthweekDbContext databaseContext, DateTime timestamp, UserId userId, decimal amount, TransactionReference transactionReference = null)
         {
+            var transactionType = amount < 0 ? LedgerTransactionType.CreditRefund : LedgerTransactionType.CreditAddition;
             var result = new List<AppendOnlyLedgerRecord>();
-            var transactionReference = TransactionReference.Random();
-            result.Add(AddAppendOnlyLedgerRecord(databaseContext, timestamp, userId, null, -1.2m * amount, LedgerAccountType.Stripe, LedgerTransactionType.CreditAddition, transactionReference));
-            result.Add(AddAppendOnlyLedgerRecord(databaseContext, timestamp, userId, null, amount, LedgerAccountType.FifthweekCredit, LedgerTransactionType.CreditAddition, transactionReference));
-            result.Add(AddAppendOnlyLedgerRecord(databaseContext, timestamp, userId, null, (1.2m * amount) - amount, LedgerAccountType.SalesTax, LedgerTransactionType.CreditAddition, transactionReference));
+            if (transactionReference == null)
+            {
+                transactionReference = TransactionReference.Random();
+            }
+
+            result.Add(AddAppendOnlyLedgerRecord(databaseContext, timestamp, userId, null, -1.2m * amount, LedgerAccountType.Stripe, transactionType, transactionReference));
+            result.Add(AddAppendOnlyLedgerRecord(databaseContext, timestamp, userId, null, amount, LedgerAccountType.FifthweekCredit, transactionType, transactionReference));
+            result.Add(AddAppendOnlyLedgerRecord(databaseContext, timestamp, userId, null, (1.2m * amount) - amount, LedgerAccountType.SalesTax, transactionType, transactionReference));
             return result;
         }
 

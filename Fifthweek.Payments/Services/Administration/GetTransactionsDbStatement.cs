@@ -25,8 +25,7 @@
                 LEFT JOIN {3} u1 ON l.{1}=u1.{4}
                 LEFT JOIN {3} u2 ON l.{5}=u2.{4}
             WHERE 
-                l.{2}>=@StartTime AND l.{2}<@EndTime
-                AND (@UserId IS NULL OR l.{7} IN (SELECT {7} FROM {0} WHERE {2}>=@StartTime AND {2}<@EndTime AND {1}=@UserId))
+                l.{7} IN (SELECT {7} FROM {0} WHERE {2}>=@StartTime AND {2}<@EndTime AND (@UserId IS NULL OR {1}=@UserId))
             ORDER BY l.{2} DESC",
            AppendOnlyLedgerRecord.Table,
            AppendOnlyLedgerRecord.Fields.AccountOwnerId,

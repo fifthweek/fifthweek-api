@@ -9,6 +9,8 @@
     using Fifthweek.Payments.Services.Credit.Stripe;
     using Fifthweek.Payments.Services.Credit.Taxamo;
     using Fifthweek.Payments.Services.Refunds;
+    using Fifthweek.Payments.Services.Refunds.Stripe;
+    using Fifthweek.Payments.Services.Refunds.Taxamo;
     using Fifthweek.Payments.Shared;
     using Fifthweek.Payments.Stripe;
     using Fifthweek.Payments.Taxamo;
@@ -69,6 +71,8 @@
             builder.RegisterType<GetRecordsForTransactionDbStatement>().As<IGetRecordsForTransactionDbStatement>();
             builder.RegisterType<PersistCommittedRecordsDbStatement>().As<IPersistCommittedRecordsDbStatement>();
             builder.RegisterType<PersistCreditRefund>().As<IPersistCreditRefund>();
+            builder.RegisterType<CreateStripeRefund>().As<ICreateStripeRefund>();
+            builder.RegisterType<CreateTaxamoRefund>().As<ICreateTaxamoRefund>();
 
             builder.RegisterType<StripeApiKeyRepository>().As<IStripeApiKeyRepository>();
             builder.RegisterType<StripeService>().As<IStripeService>();
