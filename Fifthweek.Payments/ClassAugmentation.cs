@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Linq;
 
-//// Generated on 29/07/2015 11:16:19 (UTC)
-//// Mapped solution in 35.5s
+//// Generated on 29/07/2015 18:52:44 (UTC)
+//// Mapped solution in 14.09s
 
 namespace Fifthweek.Payments.Services.Credit
 {
@@ -3679,6 +3679,152 @@ namespace Fifthweek.Payments.Snapshots
         }
     }
 }
+namespace Fifthweek.Payments.Services.Administration
+{
+    using System;
+    using System.Linq;
+    using System.Collections.Generic;
+    using System.Threading.Tasks;
+    using Dapper;
+    using Fifthweek.Api.Identity.Shared.Membership;
+    using Fifthweek.Api.Persistence;
+    using Fifthweek.Api.Persistence.Identity;
+    using Fifthweek.Api.Persistence.Payments;
+    using Fifthweek.CodeGeneration;
+    using Fifthweek.Payments.Shared;
+    using Fifthweek.Shared;
+
+    public partial class GetTransactionsDbStatement 
+    {
+        public GetTransactionsDbStatement(
+            Fifthweek.Api.Persistence.IFifthweekDbConnectionFactory connectionFactory)
+        {
+            if (connectionFactory == null)
+            {
+                throw new ArgumentNullException("connectionFactory");
+            }
+
+            this.connectionFactory = connectionFactory;
+        }
+    }
+}
+namespace Fifthweek.Payments.Services.Administration
+{
+    using System;
+    using System.Linq;
+    using System.Collections.Generic;
+    using System.Threading.Tasks;
+    using Dapper;
+    using Fifthweek.Api.Identity.Shared.Membership;
+    using Fifthweek.Api.Persistence;
+    using Fifthweek.Api.Persistence.Identity;
+    using Fifthweek.Api.Persistence.Payments;
+    using Fifthweek.CodeGeneration;
+    using Fifthweek.Payments.Shared;
+    using Fifthweek.Shared;
+
+    public partial class GetTransactionsResult 
+    {
+        public GetTransactionsResult(
+            System.Collections.Generic.IReadOnlyList<Fifthweek.Payments.Services.Administration.GetTransactionsResult.Item> records)
+        {
+            if (records == null)
+            {
+                throw new ArgumentNullException("records");
+            }
+
+            this.Records = records;
+        }
+    }
+}
+namespace Fifthweek.Payments.Services.Administration
+{
+    using System;
+    using System.Linq;
+    using System.Collections.Generic;
+    using System.Threading.Tasks;
+    using Dapper;
+    using Fifthweek.Api.Identity.Shared.Membership;
+    using Fifthweek.Api.Persistence;
+    using Fifthweek.Api.Persistence.Identity;
+    using Fifthweek.Api.Persistence.Payments;
+    using Fifthweek.CodeGeneration;
+    using Fifthweek.Payments.Shared;
+    using Fifthweek.Shared;
+
+    public partial class GetTransactionsResult
+    {
+        public partial class Item 
+        {
+            public Item(
+                System.Guid id,
+                Fifthweek.Api.Identity.Shared.Membership.UserId accountOwnerId,
+                Fifthweek.Api.Identity.Shared.Membership.Username accountOwnerUsername,
+                Fifthweek.Api.Identity.Shared.Membership.UserId counterpartyId,
+                Fifthweek.Api.Identity.Shared.Membership.Username counterpartyUsername,
+                System.DateTime timestamp,
+                System.Decimal amount,
+                Fifthweek.Api.Persistence.Payments.LedgerAccountType accountType,
+                Fifthweek.Api.Persistence.Payments.LedgerTransactionType transactionType,
+                Fifthweek.Payments.Shared.TransactionReference transactionReference,
+                System.Nullable<System.Guid> inputDataReference,
+                System.String comment,
+                System.String stripeChargeId,
+                System.String taxamoTransactionKey)
+            {
+                if (id == null)
+                {
+                    throw new ArgumentNullException("id");
+                }
+
+                if (accountOwnerId == null)
+                {
+                    throw new ArgumentNullException("accountOwnerId");
+                }
+
+                if (timestamp == null)
+                {
+                    throw new ArgumentNullException("timestamp");
+                }
+
+                if (amount == null)
+                {
+                    throw new ArgumentNullException("amount");
+                }
+
+                if (accountType == null)
+                {
+                    throw new ArgumentNullException("accountType");
+                }
+
+                if (transactionType == null)
+                {
+                    throw new ArgumentNullException("transactionType");
+                }
+
+                if (transactionReference == null)
+                {
+                    throw new ArgumentNullException("transactionReference");
+                }
+
+                this.Id = id;
+                this.AccountOwnerId = accountOwnerId;
+                this.AccountOwnerUsername = accountOwnerUsername;
+                this.CounterpartyId = counterpartyId;
+                this.CounterpartyUsername = counterpartyUsername;
+                this.Timestamp = timestamp;
+                this.Amount = amount;
+                this.AccountType = accountType;
+                this.TransactionType = transactionType;
+                this.TransactionReference = transactionReference;
+                this.InputDataReference = inputDataReference;
+                this.Comment = comment;
+                this.StripeChargeId = stripeChargeId;
+                this.TaxamoTransactionKey = taxamoTransactionKey;
+            }
+        }
+    }
+}
 
 namespace Fifthweek.Payments
 {
@@ -6105,6 +6251,228 @@ namespace Fifthweek.Payments.Snapshots
             }
         
             return true;
+        }
+    }
+}
+namespace Fifthweek.Payments.Services.Administration
+{
+    using System;
+    using System.Linq;
+    using System.Collections.Generic;
+    using System.Threading.Tasks;
+    using Dapper;
+    using Fifthweek.Api.Identity.Shared.Membership;
+    using Fifthweek.Api.Persistence;
+    using Fifthweek.Api.Persistence.Identity;
+    using Fifthweek.Api.Persistence.Payments;
+    using Fifthweek.CodeGeneration;
+    using Fifthweek.Payments.Shared;
+    using Fifthweek.Shared;
+
+    public partial class GetTransactionsResult 
+    {
+        public override string ToString()
+        {
+            return string.Format("GetTransactionsResult({0})", this.Records == null ? "null" : this.Records.ToString());
+        }
+        
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj))
+            {
+                return false;
+            }
+        
+            if (ReferenceEquals(this, obj))
+            {
+                return true;
+            }
+        
+            if (obj.GetType() != this.GetType())
+            {
+                return false;
+            }
+        
+            return this.Equals((GetTransactionsResult)obj);
+        }
+        
+        public override int GetHashCode()
+        {
+            unchecked
+            {
+                int hashCode = 0;
+                hashCode = (hashCode * 397) ^ (this.Records != null 
+        			? this.Records.Aggregate(0, (previous, current) => 
+        				{ 
+        				    unchecked
+        				    {
+        				        return (previous * 397) ^ (current != null ? current.GetHashCode() : 0);
+        				    }
+        				})
+        			: 0);
+                return hashCode;
+            }
+        }
+        
+        protected bool Equals(GetTransactionsResult other)
+        {
+            if (this.Records != null && other.Records != null)
+            {
+                if (!this.Records.SequenceEqual(other.Records))
+                {
+                    return false;    
+                }
+            }
+            else if (this.Records != null || other.Records != null)
+            {
+                return false;
+            }
+        
+            return true;
+        }
+    }
+}
+namespace Fifthweek.Payments.Services.Administration
+{
+    using System;
+    using System.Linq;
+    using System.Collections.Generic;
+    using System.Threading.Tasks;
+    using Dapper;
+    using Fifthweek.Api.Identity.Shared.Membership;
+    using Fifthweek.Api.Persistence;
+    using Fifthweek.Api.Persistence.Identity;
+    using Fifthweek.Api.Persistence.Payments;
+    using Fifthweek.CodeGeneration;
+    using Fifthweek.Payments.Shared;
+    using Fifthweek.Shared;
+
+    public partial class GetTransactionsResult
+    {
+        public partial class Item 
+        {
+            public override string ToString()
+            {
+                return string.Format("Item({0}, {1}, {2}, {3}, {4}, {5}, {6}, {7}, {8}, {9}, {10}, \"{11}\", \"{12}\", \"{13}\")", this.Id == null ? "null" : this.Id.ToString(), this.AccountOwnerId == null ? "null" : this.AccountOwnerId.ToString(), this.AccountOwnerUsername == null ? "null" : this.AccountOwnerUsername.ToString(), this.CounterpartyId == null ? "null" : this.CounterpartyId.ToString(), this.CounterpartyUsername == null ? "null" : this.CounterpartyUsername.ToString(), this.Timestamp == null ? "null" : this.Timestamp.ToString(), this.Amount == null ? "null" : this.Amount.ToString(), this.AccountType == null ? "null" : this.AccountType.ToString(), this.TransactionType == null ? "null" : this.TransactionType.ToString(), this.TransactionReference == null ? "null" : this.TransactionReference.ToString(), this.InputDataReference == null ? "null" : this.InputDataReference.ToString(), this.Comment == null ? "null" : this.Comment.ToString(), this.StripeChargeId == null ? "null" : this.StripeChargeId.ToString(), this.TaxamoTransactionKey == null ? "null" : this.TaxamoTransactionKey.ToString());
+            }
+            
+            public override bool Equals(object obj)
+            {
+                if (ReferenceEquals(null, obj))
+                {
+                    return false;
+                }
+            
+                if (ReferenceEquals(this, obj))
+                {
+                    return true;
+                }
+            
+                if (obj.GetType() != this.GetType())
+                {
+                    return false;
+                }
+            
+                return this.Equals((Item)obj);
+            }
+            
+            public override int GetHashCode()
+            {
+                unchecked
+                {
+                    int hashCode = 0;
+                    hashCode = (hashCode * 397) ^ (this.Id != null ? this.Id.GetHashCode() : 0);
+                    hashCode = (hashCode * 397) ^ (this.AccountOwnerId != null ? this.AccountOwnerId.GetHashCode() : 0);
+                    hashCode = (hashCode * 397) ^ (this.AccountOwnerUsername != null ? this.AccountOwnerUsername.GetHashCode() : 0);
+                    hashCode = (hashCode * 397) ^ (this.CounterpartyId != null ? this.CounterpartyId.GetHashCode() : 0);
+                    hashCode = (hashCode * 397) ^ (this.CounterpartyUsername != null ? this.CounterpartyUsername.GetHashCode() : 0);
+                    hashCode = (hashCode * 397) ^ (this.Timestamp != null ? this.Timestamp.GetHashCode() : 0);
+                    hashCode = (hashCode * 397) ^ (this.Amount != null ? this.Amount.GetHashCode() : 0);
+                    hashCode = (hashCode * 397) ^ (this.AccountType != null ? this.AccountType.GetHashCode() : 0);
+                    hashCode = (hashCode * 397) ^ (this.TransactionType != null ? this.TransactionType.GetHashCode() : 0);
+                    hashCode = (hashCode * 397) ^ (this.TransactionReference != null ? this.TransactionReference.GetHashCode() : 0);
+                    hashCode = (hashCode * 397) ^ (this.InputDataReference != null ? this.InputDataReference.GetHashCode() : 0);
+                    hashCode = (hashCode * 397) ^ (this.Comment != null ? this.Comment.GetHashCode() : 0);
+                    hashCode = (hashCode * 397) ^ (this.StripeChargeId != null ? this.StripeChargeId.GetHashCode() : 0);
+                    hashCode = (hashCode * 397) ^ (this.TaxamoTransactionKey != null ? this.TaxamoTransactionKey.GetHashCode() : 0);
+                    return hashCode;
+                }
+            }
+            
+            protected bool Equals(Item other)
+            {
+                if (!object.Equals(this.Id, other.Id))
+                {
+                    return false;
+                }
+            
+                if (!object.Equals(this.AccountOwnerId, other.AccountOwnerId))
+                {
+                    return false;
+                }
+            
+                if (!object.Equals(this.AccountOwnerUsername, other.AccountOwnerUsername))
+                {
+                    return false;
+                }
+            
+                if (!object.Equals(this.CounterpartyId, other.CounterpartyId))
+                {
+                    return false;
+                }
+            
+                if (!object.Equals(this.CounterpartyUsername, other.CounterpartyUsername))
+                {
+                    return false;
+                }
+            
+                if (!object.Equals(this.Timestamp, other.Timestamp))
+                {
+                    return false;
+                }
+            
+                if (!object.Equals(this.Amount, other.Amount))
+                {
+                    return false;
+                }
+            
+                if (!object.Equals(this.AccountType, other.AccountType))
+                {
+                    return false;
+                }
+            
+                if (!object.Equals(this.TransactionType, other.TransactionType))
+                {
+                    return false;
+                }
+            
+                if (!object.Equals(this.TransactionReference, other.TransactionReference))
+                {
+                    return false;
+                }
+            
+                if (!object.Equals(this.InputDataReference, other.InputDataReference))
+                {
+                    return false;
+                }
+            
+                if (!object.Equals(this.Comment, other.Comment))
+                {
+                    return false;
+                }
+            
+                if (!object.Equals(this.StripeChargeId, other.StripeChargeId))
+                {
+                    return false;
+                }
+            
+                if (!object.Equals(this.TaxamoTransactionKey, other.TaxamoTransactionKey))
+                {
+                    return false;
+                }
+            
+                return true;
+            }
         }
     }
 }

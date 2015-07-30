@@ -96,6 +96,7 @@
     <Compile Include="Pipeline\RollForwardSubscriptionsExecutorTests.cs" />
     <Compile Include="Pipeline\TrimSnapshotsExecutorTests.cs" />
     <Compile Include="Pipeline\VerifySnapshotsExecutorTests.cs" />
+    <Compile Include="Services\Administration\GetTransactionsDbStatementTests.cs" />
     <Compile Include="Services\Credit\ApplyUserCreditTests.cs" />
     <Compile Include="Services\Credit\ClearPaymentStatusDbStatementTests.cs" />
     <Compile Include="Services\Credit\CommitCreditToDatabaseTests.cs" />

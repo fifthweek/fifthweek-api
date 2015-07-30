@@ -1,6 +1,7 @@
 ﻿namespace Fifthweek.Api.Payments.Tests.Controllers
 {
     using System;
+    using System.Collections.Generic;
     using System.Threading.Tasks;
 
     using Fifthweek.Api.Core;
@@ -8,6 +9,7 @@
     using Fifthweek.Api.Payments.Commands;
     using Fifthweek.Api.Payments.Controllers;
     using Fifthweek.Api.Payments.Queries;
+    using Fifthweek.Payments.Services.Administration;
     using Fifthweek.Payments.Services.Credit;
     using Fifthweek.Payments.Services.Credit.Taxamo;
     using Fifthweek.Payments.Services.Refunds;
@@ -31,6 +33,7 @@
         private Mock<ICommandHandler<DeletePaymentInformationCommand>> deletePaymentInformation;
         private Mock<ICommandHandler<CreateCreditRefundCommand>> createCreditRefund;
         private Mock<ICommandHandler<CreateTransactionRefundCommand>> createTransactionRefund;
+        private Mock<IQueryHandler<GetTransactionsQuery, GetTransactionsResult>> getTransactions;
         private Mock<ITimestampCreator> timestampCreator;
         private Mock<IGuidCreator> guidCreator;
 
@@ -45,6 +48,7 @@
             this.deletePaymentInformation = new Mock<ICommandHandler<DeletePaymentInformationCommand>>(MockBehavior.Strict);
             this.createCreditRefund = new Mock<ICommandHandler<CreateCreditRefundCommand>>(MockBehavior.Strict);
             this.createTransactionRefund = new Mock<ICommandHandler<CreateTransactionRefundCommand>>(MockBehavior.Strict);
+            this.getTransactions = new Mock<IQueryHandler<GetTransactionsQuery, GetTransactionsResult>>(MockBehavior.Strict);
             this.timestampCreator = new Mock<ITimestampCreator>(MockBehavior.Strict);
             this.guidCreator = new Mock<IGuidCreator>(MockBehavior.Strict);
             
@@ -58,6 +62,7 @@
                 this.deletePaymentInformation.Object,
                 this.createCreditRefund.Object,
                 this.createTransactionRefund.Object,
+                this.getTransactions.Object,
                 this.timestampCreator.Object,
                 this.guidCreator.Object);
         }
@@ -371,6 +376,46 @@
                 await this.target.PostCreditRefundAsync(TransactionReference.Value.EncodeGuid(), Data);
 
                 this.createCreditRefund.Verify();
+            }
+        }
+
+        [TestClass]
+        public class GetTransactionsAsync : PaymentsControllerTests
+        {
+            private static readonly UserId UserId = UserId.Random();
+            private static readonly DateTime StartTime = DateTime.UtcNow.AddDays(-5);
+            private static readonly DateTime EndTime = DateTime.UtcNow;
+            private static readonly GetTransactionsResult GetTransactionsResult =
+                new GetTransactionsResult(new List<GetTransactionsResult.Item>());
+
+            [TestInitialize]
+            public override void Initialize()
+            {
+                base.Initialize();
+            }
+
+            [TestMethod]
+            public async Task WhenDataIsNull_ItShouldGetTransactions()
+            {
+                this.getTransactions.Setup(
+                    v => v.HandleAsync(new GetTransactionsQuery(Requester, null, null, null)))
+                    .ReturnsAsync(GetTransactionsResult);
+
+                var result = await this.target.GetTransactionsAsync(null, null, null);
+
+                Assert.AreEqual(GetTransactionsResult, result);
+            }
+
+            [TestMethod]
+            public async Task WhenDataIsProvided_ItShouldGetTransactions()
+            {
+                this.getTransactions.Setup(
+                    v => v.HandleAsync(new GetTransactionsQuery(Requester, UserId, StartTime, EndTime)))
+                    .ReturnsAsync(GetTransactionsResult);
+
+                var result = await this.target.GetTransactionsAsync(UserId.Value.EncodeGuid(), StartTime, EndTime);
+
+                Assert.AreEqual(GetTransactionsResult, result);
             }
         }
     }

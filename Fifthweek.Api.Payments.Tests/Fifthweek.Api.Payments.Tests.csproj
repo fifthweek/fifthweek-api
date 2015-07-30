@@ -95,6 +95,7 @@
     <Compile Include="DeleteUserPaymentInformationDbStatementTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Queries\GetCreditRequestSummaryQueryHandlerTests.cs" />
+    <Compile Include="Queries\GetTransactionsQueryHandlerTests.cs" />
     <Compile Include="SetUserPaymentOriginDbStatementTests.cs" />
     <Compile Include="ValidCountryCodeTests.cs" />
     <Compile Include="ValidCreditCardPrefixTests.cs" />

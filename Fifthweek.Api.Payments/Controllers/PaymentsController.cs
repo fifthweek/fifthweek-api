@@ -1,5 +1,6 @@
 ﻿namespace Fifthweek.Api.Payments.Controllers
 {
+    using System;
     using System.Threading.Tasks;
     using System.Web.Http;
 
@@ -8,6 +9,7 @@
     using Fifthweek.Api.Payments.Commands;
     using Fifthweek.Api.Payments.Queries;
     using Fifthweek.CodeGeneration;
+    using Fifthweek.Payments.Services.Administration;
     using Fifthweek.Payments.Services.Credit.Taxamo;
     using Fifthweek.Payments.Shared;
     using Fifthweek.Shared;
@@ -24,6 +26,7 @@
         private readonly ICommandHandler<DeletePaymentInformationCommand> deletePaymentInformation;
         private readonly ICommandHandler<CreateCreditRefundCommand> createCreditRefund;
         private readonly ICommandHandler<CreateTransactionRefundCommand> createTransactionRefund;
+        private readonly IQueryHandler<GetTransactionsQuery, GetTransactionsResult> getTransactions;
         private readonly ITimestampCreator timestampCreator;
         private readonly IGuidCreator guidCreator;
 
@@ -140,6 +143,22 @@
                 parsedData.RefundCreditAmount,
                 parsedData.Reason,
                 parsedData.Comment));
+        }
+
+        [Route("transactions")]
+        public Task<GetTransactionsResult> GetTransactionsAsync(
+            [FromUri]string userId = null,
+            [FromUri]DateTime? startTimeInclusive = null,
+            [FromUri]DateTime? endTimeExclusive = null)
+        {
+            var userIdObject = string.IsNullOrWhiteSpace(userId) ? null : new UserId(userId.DecodeGuid());
+            var requester = this.requesterContext.GetRequester();
+
+            return this.getTransactions.HandleAsync(new GetTransactionsQuery(
+                requester,
+                userIdObject,
+                startTimeInclusive,
+                endTimeExclusive));
         }
     }
 }
