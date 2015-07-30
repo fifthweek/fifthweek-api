@@ -102,7 +102,7 @@
       <DependentUpon>ClassAugmentation.tt</DependentUpon>
     </Compile>
     <Compile Include="Constants.cs" />
-    <Compile Include="IGetTransactionsDbStatement.cs" />
+    <Compile Include="Services\Administration\IGetTransactionsDbStatement.cs" />
     <Compile Include="PaymentConstants.cs" />
     <Compile Include="Pipeline\AddSnapshotsForBillingEndDatesExecutor.cs" />
     <Compile Include="Pipeline\AggregateCostPeriodsExecutor.cs" />

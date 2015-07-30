@@ -4,9 +4,11 @@
 
     using Fifthweek.Payments.Pipeline;
     using Fifthweek.Payments.Services;
+    using Fifthweek.Payments.Services.Administration;
     using Fifthweek.Payments.Services.Credit;
     using Fifthweek.Payments.Services.Credit.Stripe;
     using Fifthweek.Payments.Services.Credit.Taxamo;
+    using Fifthweek.Payments.Services.Refunds;
     using Fifthweek.Payments.Shared;
     using Fifthweek.Payments.Stripe;
     using Fifthweek.Payments.Taxamo;
@@ -59,6 +61,14 @@
             builder.RegisterType<ClearPaymentStatusDbStatement>().As<IClearPaymentStatusDbStatement>();
             builder.RegisterType<FailPaymentStatusDbStatement>().As<IFailPaymentStatusDbStatement>();
             builder.RegisterType<IncrementPaymentStatusDbStatement>().As<IIncrementPaymentStatusDbStatement>();
+
+            builder.RegisterType<GetTransactionsDbStatement>().As<IGetTransactionsDbStatement>();
+            builder.RegisterType<CreateCreditRefund>().As<ICreateCreditRefund>();
+            builder.RegisterType<CreateTransactionRefund>().As<ICreateTransactionRefund>();
+            builder.RegisterType<GetCreditTransactionInformation>().As<IGetCreditTransactionInformation>();
+            builder.RegisterType<GetRecordsForTransactionDbStatement>().As<IGetRecordsForTransactionDbStatement>();
+            builder.RegisterType<PersistCommittedRecordsDbStatement>().As<IPersistCommittedRecordsDbStatement>();
+            builder.RegisterType<PersistCreditRefund>().As<IPersistCreditRefund>();
 
             builder.RegisterType<StripeApiKeyRepository>().As<IStripeApiKeyRepository>();
             builder.RegisterType<StripeService>().As<IStripeService>();
