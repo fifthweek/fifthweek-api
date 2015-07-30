@@ -1140,6 +1140,57 @@ angular.module('webApp').factory('paymentsStub',
       });
     };
 
+    // transactionReference = ''
+    // data = {
+    //   comment: ''
+    // }
+    service.postTransactionRefund = function(transactionReference, data) {
+      return $http.post(utilities.fixUri(apiBaseUri + 'payment/transactionRefunds/' + encodeURIComponent(transactionReference)), data).catch(function(response) {
+        return $q.reject(utilities.getHttpError(response));
+      });
+    };
+
+    // transactionReference = ''
+    // data = {
+    //   refundCreditAmount: 0,
+    //   reason: 'refundcreditreason',
+    //   comment: ''
+    // }
+    service.postCreditRefund = function(transactionReference, data) {
+      return $http.post(utilities.fixUri(apiBaseUri + 'payment/creditRefunds/' + encodeURIComponent(transactionReference)), data).catch(function(response) {
+        return $q.reject(utilities.getHttpError(response));
+      });
+    };
+
+    // userId = 'Base64Guid' /* optional */
+    // startTimeInclusive = '2015-12-25T14:45:05Z' /* optional */
+    // endTimeExclusive = '2015-12-25T14:45:05Z' /* optional */
+    // result = {
+    //   records: [
+    //     {
+    //       id: 'Base64Guid',
+    //       accountOwnerId: 'Base64Guid',
+    //       accountOwnerUsername: '', /* optional */
+    //       counterpartyId: 'Base64Guid', /* optional */
+    //       counterpartyUsername: '', /* optional */
+    //       timestamp: '2015-12-25T14:45:05Z',
+    //       amount: 0.0,
+    //       accountType: 'ledgeraccounttype',
+    //       transactionType: 'ledgertransactiontype',
+    //       transactionReference: 'Base64Guid',
+    //       inputDataReference: 'Base64Guid', /* optional */
+    //       comment: '', /* optional */
+    //       stripeChargeId: 'Base64Guid', /* optional */
+    //       taxamoTransactionKey: '' /* optional */
+    //     }
+    //   ]
+    // }
+    service.getTransactions = function(userId, startTimeInclusive, endTimeExclusive) {
+      return $http.get(utilities.fixUri(apiBaseUri + 'payment/transactions?' + (userId === undefined ? '' : 'userId=' + encodeURIComponent(userId) + '&') + (startTimeInclusive === undefined ? '' : 'startTimeInclusive=' + encodeURIComponent(startTimeInclusive) + '&') + (endTimeExclusive === undefined ? '' : 'endTimeExclusive=' + encodeURIComponent(endTimeExclusive) + '&'))).catch(function(response) {
+        return $q.reject(utilities.getHttpError(response));
+      });
+    };
+
     return service;
   });
 

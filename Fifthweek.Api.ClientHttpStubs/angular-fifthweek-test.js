@@ -1154,5 +1154,54 @@ describe('payments stub', function() {
 
     expect(result).toBe(responseData);
   });
+
+  it('should post transaction refund', function() {
+    var transactionReference = 'value0';
+    var data = 'value-body';
+
+    var responseData = 'response data';
+    $httpBackend.expectPOST(utilities.fixUri(fifthweekConstants.apiBaseUri + 'payment/transactionRefunds/' + encodeURIComponent(transactionReference), data)).respond(200, responseData);
+
+    var result = null;
+    target.postTransactionRefund(transactionReference, data).then(function(response) { result = response.data; });
+
+    $httpBackend.flush();
+    $rootScope.$apply();
+
+    expect(result).toBe(responseData);
+  });
+
+  it('should post credit refund', function() {
+    var transactionReference = 'value0';
+    var data = 'value-body';
+
+    var responseData = 'response data';
+    $httpBackend.expectPOST(utilities.fixUri(fifthweekConstants.apiBaseUri + 'payment/creditRefunds/' + encodeURIComponent(transactionReference), data)).respond(200, responseData);
+
+    var result = null;
+    target.postCreditRefund(transactionReference, data).then(function(response) { result = response.data; });
+
+    $httpBackend.flush();
+    $rootScope.$apply();
+
+    expect(result).toBe(responseData);
+  });
+
+  it('should get transactions', function() {
+    var userId = 'value0';
+    var startTimeInclusive = 'value1';
+    var endTimeExclusive = 'value2';
+
+    var responseData = 'response data';
+    $httpBackend.expectGET(utilities.fixUri(fifthweekConstants.apiBaseUri + 'payment/transactions?' + (userId === undefined ? '' : 'userId=' + encodeURIComponent(userId) + '&') + (startTimeInclusive === undefined ? '' : 'startTimeInclusive=' + encodeURIComponent(startTimeInclusive) + '&') + (endTimeExclusive === undefined ? '' : 'endTimeExclusive=' + encodeURIComponent(endTimeExclusive) + '&'))).respond(200, responseData);
+
+    var result = null;
+    target.getTransactions(userId, startTimeInclusive, endTimeExclusive).then(function(response) { result = response.data; });
+
+    $httpBackend.flush();
+    $rootScope.$apply();
+
+    expect(result).toBe(responseData);
+  });
 });
 
