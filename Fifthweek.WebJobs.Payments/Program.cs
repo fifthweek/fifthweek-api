@@ -63,11 +63,12 @@ namespace Fifthweek.WebJobs.Payments
                             new GetCreatorPercentageOverrideDbStatement(new FifthweekDbConnectionFactory())),
                         new ProcessPaymentProcessingData(
                             new SubscriberPaymentPipeline(
+                                new TrimSnapshotsAtEndExecutor(),
                                 new VerifySnapshotsExecutor(),
                                 new MergeSnapshotsExecutor(),
                                 new RollBackSubscriptionsExecutor(),
                                 new RollForwardSubscriptionsExecutor(),
-                                new TrimSnapshotsExecutor(),
+                                new TrimSnapshotsAtStartExecutor(),
                                 new AddSnapshotsForBillingEndDatesExecutor(),
                                 new CalculateCostPeriodsExecutor(
                                     new CalculateSnapshotCostExecutor()),

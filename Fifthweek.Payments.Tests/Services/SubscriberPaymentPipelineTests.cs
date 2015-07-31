@@ -21,11 +21,12 @@
         private static readonly UserId CreatorId1 = new UserId(Guid.NewGuid());
         private static readonly UserId SubscriberId1 = new UserId(Guid.NewGuid());
 
+        private Mock<ITrimSnapshotsAtEndExecutor> trimSnapshotsAtEnd;
         private Mock<IVerifySnapshotsExecutor> verifySnapshots;
         private Mock<IMergeSnapshotsExecutor> mergeSnapshots;
         private Mock<IRollBackSubscriptionsExecutor> rollBackSubscriptions;
         private Mock<IRollForwardSubscriptionsExecutor> rollForwardSubscriptions;
-        private Mock<ITrimSnapshotsExecutor> trimSnapshots;
+        private Mock<ITrimSnapshotsAtStartExecutor> trimSnapshotsAtStart;
         private Mock<ICalculateCostPeriodsExecutor> calculateCostPeriods;
         private Mock<IAggregateCostPeriodsExecutor> aggregateCostPeriods;
         private Mock<IAddSnapshotsForBillingEndDatesExecutor> addSnapshotsForBillingEndDates;
@@ -34,20 +35,22 @@
         [TestInitialize]
         public void Initialize()
         {
+            this.trimSnapshotsAtEnd = new Mock<ITrimSnapshotsAtEndExecutor>(MockBehavior.Strict);
             this.verifySnapshots = new Mock<IVerifySnapshotsExecutor>(MockBehavior.Strict);
             this.mergeSnapshots = new Mock<IMergeSnapshotsExecutor>(MockBehavior.Strict);
             this.rollBackSubscriptions = new Mock<IRollBackSubscriptionsExecutor>(MockBehavior.Strict);
             this.rollForwardSubscriptions = new Mock<IRollForwardSubscriptionsExecutor>(MockBehavior.Strict);
-            this.trimSnapshots = new Mock<ITrimSnapshotsExecutor>(MockBehavior.Strict);
+            this.trimSnapshotsAtStart = new Mock<ITrimSnapshotsAtStartExecutor>(MockBehavior.Strict);
             this.calculateCostPeriods = new Mock<ICalculateCostPeriodsExecutor>(MockBehavior.Strict);
             this.aggregateCostPeriods = new Mock<IAggregateCostPeriodsExecutor>(MockBehavior.Strict);
             this.addSnapshotsForBillingEndDates = new Mock<IAddSnapshotsForBillingEndDatesExecutor>(MockBehavior.Strict);
             this.target = new SubscriberPaymentPipeline(
+                this.trimSnapshotsAtEnd.Object,
                 this.verifySnapshots.Object,
                 this.mergeSnapshots.Object,
                 this.rollBackSubscriptions.Object,
                 this.rollForwardSubscriptions.Object,
-                this.trimSnapshots.Object,
+                this.trimSnapshotsAtStart.Object,
                 this.addSnapshotsForBillingEndDates.Object,
                 this.calculateCostPeriods.Object,
                 this.aggregateCostPeriods.Object);
@@ -59,10 +62,13 @@
             var snapshots = new List<ISnapshot> { CreatorChannelsSnapshot.Default(Now, new UserId(Guid.NewGuid())) };
             var creatorPosts = new List<CreatorPost> { new CreatorPost(new Api.Channels.Shared.ChannelId(Guid.NewGuid()), Now) };
 
-            this.verifySnapshots.Setup(v => v.Execute(StartTimeInclusive, EndTimeExclusive, SubscriberId1, CreatorId1, snapshots));
+            var trimmedAtEndSnapshots = new List<ISnapshot> { CreatorChannelsSnapshot.Default(Now, new UserId(Guid.NewGuid())) };
+            this.trimSnapshotsAtEnd.Setup(v => v.Execute(EndTimeExclusive, snapshots)).Returns(trimmedAtEndSnapshots);
+
+            this.verifySnapshots.Setup(v => v.Execute(StartTimeInclusive, EndTimeExclusive, SubscriberId1, CreatorId1, trimmedAtEndSnapshots));
 
             var mergedSnapshots = CreateMergedSnapshotResult();
-            this.mergeSnapshots.Setup(v => v.Execute(SubscriberId1, CreatorId1, StartTimeInclusive, snapshots))
+            this.mergeSnapshots.Setup(v => v.Execute(SubscriberId1, CreatorId1, StartTimeInclusive, trimmedAtEndSnapshots))
                 .Returns(mergedSnapshots);
 
             var rolledBackSnapshots = CreateMergedSnapshotResult();
@@ -71,11 +77,11 @@
             var rolledForwardSnapshots = CreateMergedSnapshotResult();
             this.rollForwardSubscriptions.Setup(v => v.Execute(EndTimeExclusive, rolledBackSnapshots)).Returns(rolledForwardSnapshots);
 
-            var trimmedSnapshots = CreateMergedSnapshotResult();
-            this.trimSnapshots.Setup(v => v.Execute(StartTimeInclusive, rolledForwardSnapshots)).Returns(trimmedSnapshots);
+            var trimmedAtStartSnapshots = CreateMergedSnapshotResult();
+            this.trimSnapshotsAtStart.Setup(v => v.Execute(StartTimeInclusive, rolledForwardSnapshots)).Returns(trimmedAtStartSnapshots);
 
             var snapshotsWithBillingDates = CreateMergedSnapshotResult();
-            this.addSnapshotsForBillingEndDates.Setup(v => v.Execute(trimmedSnapshots)).Returns(snapshotsWithBillingDates);
+            this.addSnapshotsForBillingEndDates.Setup(v => v.Execute(trimmedAtStartSnapshots)).Returns(snapshotsWithBillingDates);
 
             var costPeriods = new List<CostPeriod> { new CostPeriod(StartTimeInclusive, EndTimeExclusive, 101) };
             this.calculateCostPeriods.Setup(v => v.Execute(StartTimeInclusive, EndTimeExclusive, snapshotsWithBillingDates, creatorPosts))

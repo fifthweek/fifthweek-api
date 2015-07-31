@@ -12,11 +12,12 @@
     [AutoConstructor]
     public partial class SubscriberPaymentPipeline : ISubscriberPaymentPipeline
     {
+        private readonly ITrimSnapshotsAtEndExecutor trimSnapshotsAtEnd;
         private readonly IVerifySnapshotsExecutor verifySnapshots;
         private readonly IMergeSnapshotsExecutor mergeSnapshots;
         private readonly IRollBackSubscriptionsExecutor rollBackSubscriptions;
         private readonly IRollForwardSubscriptionsExecutor rollForwardSubscriptions;
-        private readonly ITrimSnapshotsExecutor trimSnapshots;
+        private readonly ITrimSnapshotsAtStartExecutor trimSnapshotsAtStart;
         private readonly IAddSnapshotsForBillingEndDatesExecutor addSnapshotsForBillingEndDates;
         private readonly ICalculateCostPeriodsExecutor calculateCostPeriods;
         private readonly IAggregateCostPeriodsExecutor aggregateCostPeriods;
@@ -29,11 +30,12 @@
             DateTime startTimeInclusive,
             DateTime endTimeExclusive)
         {
+            snapshots = this.trimSnapshotsAtEnd.Execute(endTimeExclusive, snapshots);
             this.verifySnapshots.Execute(startTimeInclusive, endTimeExclusive, subscriberId, creatorId, snapshots);
             var mergedSnapshots = this.mergeSnapshots.Execute(subscriberId, creatorId, startTimeInclusive, snapshots);
             var rolledBackSnapshots = this.rollBackSubscriptions.Execute(mergedSnapshots);
             var rolledForwardSnapshots = this.rollForwardSubscriptions.Execute(endTimeExclusive, rolledBackSnapshots);
-            var trimmedSnapshots = this.trimSnapshots.Execute(startTimeInclusive, rolledForwardSnapshots);
+            var trimmedSnapshots = this.trimSnapshotsAtStart.Execute(startTimeInclusive, rolledForwardSnapshots);
             var snapshotsWithBilling = this.addSnapshotsForBillingEndDates.Execute(trimmedSnapshots);
             var costPeriods = this.calculateCostPeriods.Execute(startTimeInclusive, endTimeExclusive, snapshotsWithBilling, creatorPosts);
             var aggregateCost = this.aggregateCostPeriods.Execute(costPeriods);

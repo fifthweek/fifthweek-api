@@ -5,7 +5,7 @@ namespace Fifthweek.Payments.Pipeline
 
     using Fifthweek.Payments.Snapshots;
 
-    public interface ITrimSnapshotsExecutor
+    public interface ITrimSnapshotsAtStartExecutor
     {
         IReadOnlyList<MergedSnapshot> Execute(
             DateTime startTimeInclusive,

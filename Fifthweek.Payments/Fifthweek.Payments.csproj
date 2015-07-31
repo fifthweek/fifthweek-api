@@ -102,6 +102,8 @@
       <DependentUpon>ClassAugmentation.tt</DependentUpon>
     </Compile>
     <Compile Include="Constants.cs" />
+    <Compile Include="Pipeline\ITrimSnapshotsAtEndExecutor.cs" />
+    <Compile Include="Pipeline\TrimSnapshotsAtEndExecutor.cs" />
     <Compile Include="Services\Administration\IGetTransactionsDbStatement.cs" />
     <Compile Include="PaymentConstants.cs" />
     <Compile Include="Pipeline\AddSnapshotsForBillingEndDatesExecutor.cs" />
@@ -116,12 +118,12 @@
     <Compile Include="Pipeline\IMergeSnapshotsExecutor.cs" />
     <Compile Include="Pipeline\IRollBackSubscriptionsExecutor.cs" />
     <Compile Include="Pipeline\IRollForwardSubscriptionsExecutor.cs" />
-    <Compile Include="Pipeline\ITrimSnapshotsExecutor.cs" />
+    <Compile Include="Pipeline\ITrimSnapshotsAtStartExecutor.cs" />
     <Compile Include="Pipeline\IVerifySnapshotsExecutor.cs" />
     <Compile Include="Pipeline\MergeSnapshotsExecutor.cs" />
     <Compile Include="Pipeline\RollBackSubscriptionsExecutor.cs" />
     <Compile Include="Pipeline\RollForwardSubscriptionsExecutor.cs" />
-    <Compile Include="Pipeline\TrimSnapshotsExecutor.cs" />
+    <Compile Include="Pipeline\TrimSnapshotsAtStartExecutor.cs" />
     <Compile Include="Pipeline\VerifySnapshotsExecutor.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Pipeline\CalculateSnapshotCostExecutor.cs" />

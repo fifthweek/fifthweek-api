@@ -11,16 +11,16 @@
     using Microsoft.VisualStudio.TestTools.UnitTesting;
 
     [TestClass]
-    public class TrimSnapshotsExecutorTests
+    public class TrimSnapshotsAtStartExecutorTests
     {
         private static readonly DateTime Now = DateTime.UtcNow;
 
-        private TrimSnapshotsExecutor target;
+        private TrimSnapshotsAtStartExecutor target;
 
         [TestInitialize]
         public void Initialize()
         {
-            this.target = new TrimSnapshotsExecutor();
+            this.target = new TrimSnapshotsAtStartExecutor();
         }
 
         [TestMethod]

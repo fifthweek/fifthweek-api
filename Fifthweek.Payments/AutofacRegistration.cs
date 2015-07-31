@@ -26,7 +26,7 @@
             builder.RegisterType<MergeSnapshotsExecutor>().As<IMergeSnapshotsExecutor>();
             builder.RegisterType<RollBackSubscriptionsExecutor>().As<IRollBackSubscriptionsExecutor>();
             builder.RegisterType<RollForwardSubscriptionsExecutor>().As<IRollForwardSubscriptionsExecutor>();
-            builder.RegisterType<TrimSnapshotsExecutor>().As<ITrimSnapshotsExecutor>();
+            builder.RegisterType<TrimSnapshotsAtStartExecutor>().As<ITrimSnapshotsAtStartExecutor>();
             builder.RegisterType<VerifySnapshotsExecutor>().As<IVerifySnapshotsExecutor>();
             builder.RegisterType<AddSnapshotsForBillingEndDatesExecutor>().As<IAddSnapshotsForBillingEndDatesExecutor>();
 

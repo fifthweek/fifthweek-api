@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Linq;
 
-//// Generated on 29/07/2015 18:52:44 (UTC)
-//// Mapped solution in 14.09s
+//// Generated on 31/07/2015 16:30:33 (UTC)
+//// Mapped solution in 19.75s
 
 namespace Fifthweek.Payments.Services.Credit
 {
@@ -3261,15 +3261,21 @@ namespace Fifthweek.Payments.Services
     public partial class SubscriberPaymentPipeline 
     {
         public SubscriberPaymentPipeline(
+            Fifthweek.Payments.Pipeline.ITrimSnapshotsAtEndExecutor trimSnapshotsAtEnd,
             Fifthweek.Payments.Pipeline.IVerifySnapshotsExecutor verifySnapshots,
             Fifthweek.Payments.Pipeline.IMergeSnapshotsExecutor mergeSnapshots,
             Fifthweek.Payments.Pipeline.IRollBackSubscriptionsExecutor rollBackSubscriptions,
             Fifthweek.Payments.Pipeline.IRollForwardSubscriptionsExecutor rollForwardSubscriptions,
-            Fifthweek.Payments.Pipeline.ITrimSnapshotsExecutor trimSnapshots,
+            Fifthweek.Payments.Pipeline.ITrimSnapshotsAtStartExecutor trimSnapshotsAtStart,
             Fifthweek.Payments.Pipeline.IAddSnapshotsForBillingEndDatesExecutor addSnapshotsForBillingEndDates,
             Fifthweek.Payments.Pipeline.ICalculateCostPeriodsExecutor calculateCostPeriods,
             Fifthweek.Payments.Pipeline.IAggregateCostPeriodsExecutor aggregateCostPeriods)
         {
+            if (trimSnapshotsAtEnd == null)
+            {
+                throw new ArgumentNullException("trimSnapshotsAtEnd");
+            }
+
             if (verifySnapshots == null)
             {
                 throw new ArgumentNullException("verifySnapshots");
@@ -3290,9 +3296,9 @@ namespace Fifthweek.Payments.Services
                 throw new ArgumentNullException("rollForwardSubscriptions");
             }
 
-            if (trimSnapshots == null)
+            if (trimSnapshotsAtStart == null)
             {
-                throw new ArgumentNullException("trimSnapshots");
+                throw new ArgumentNullException("trimSnapshotsAtStart");
             }
 
             if (addSnapshotsForBillingEndDates == null)
@@ -3310,11 +3316,12 @@ namespace Fifthweek.Payments.Services
                 throw new ArgumentNullException("aggregateCostPeriods");
             }
 
+            this.trimSnapshotsAtEnd = trimSnapshotsAtEnd;
             this.verifySnapshots = verifySnapshots;
             this.mergeSnapshots = mergeSnapshots;
             this.rollBackSubscriptions = rollBackSubscriptions;
             this.rollForwardSubscriptions = rollForwardSubscriptions;
-            this.trimSnapshots = trimSnapshots;
+            this.trimSnapshotsAtStart = trimSnapshotsAtStart;
             this.addSnapshotsForBillingEndDates = addSnapshotsForBillingEndDates;
             this.calculateCostPeriods = calculateCostPeriods;
             this.aggregateCostPeriods = aggregateCostPeriods;

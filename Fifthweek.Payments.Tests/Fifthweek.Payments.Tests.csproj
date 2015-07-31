@@ -94,7 +94,8 @@
     <Compile Include="Pipeline\MergeSnapshotsExecutorTests.cs" />
     <Compile Include="Pipeline\RollBackSubscriptionsExecutorTests.cs" />
     <Compile Include="Pipeline\RollForwardSubscriptionsExecutorTests.cs" />
-    <Compile Include="Pipeline\TrimSnapshotsExecutorTests.cs" />
+    <Compile Include="Pipeline\TrimSnapshotsAtEndExecutorTests.cs" />
+    <Compile Include="Pipeline\TrimSnapshotsAtStartExecutorTests.cs" />
     <Compile Include="Pipeline\VerifySnapshotsExecutorTests.cs" />
     <Compile Include="Services\Administration\GetTransactionsDbStatementTests.cs" />
     <Compile Include="Services\Credit\ApplyUserCreditTests.cs" />
