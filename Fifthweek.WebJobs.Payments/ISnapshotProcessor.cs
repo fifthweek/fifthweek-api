@@ -1,4 +1,4 @@
-﻿namespace Fifthweek.WebJobs.Snapshots
+﻿namespace Fifthweek.WebJobs.Payments
 {
     using System.Threading;
     using System.Threading.Tasks;

@@ -69,15 +69,21 @@
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
     </Compile>
+    <Compile Include="CreateAllSnapshotsProcessor.cs" />
     <Compile Include="CreateCreatorChannelsSnapshotDbStatement.cs" />
     <Compile Include="CreateCreatorFreeAccessUsersSnapshotDbStatement.cs" />
     <Compile Include="CreateSnapshotMessage.cs" />
+    <Compile Include="CreateSnapshotMultiplexer.cs" />
     <Compile Include="CreateSubscriberChannelsSnapshotDbStatement.cs" />
     <Compile Include="CreateSubscriberSnapshotDbStatement.cs" />
+    <Compile Include="GetAllStandardUsersDbStatement.cs" />
+    <Compile Include="ICreateAllSnapshotsProcessor.cs" />
     <Compile Include="ICreateCreatorChannelsSnapshotDbStatement.cs" />
     <Compile Include="ICreateCreatorFreeAccessUsersSnapshotDbStatement.cs" />
+    <Compile Include="ICreateSnapshotMultiplexer.cs" />
     <Compile Include="ICreateSubscriberChannelsSnapshotDbStatement.cs" />
     <Compile Include="ICreateSubscriberSnapshotDbStatement.cs" />
+    <Compile Include="IGetAllStandardUsersDbStatement.cs" />
     <Compile Include="IRequestSnapshotService.cs" />
     <Compile Include="ISnapshotTimestampCreator.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

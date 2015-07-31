@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Linq;
 
-//// Generated on 08/06/2015 17:11:49 (UTC)
-//// Mapped solution in 13.6s
+//// Generated on 31/07/2015 14:33:12 (UTC)
+//// Mapped solution in 16.45s
 
 
 namespace Fifthweek.Payments.SnapshotCreation
@@ -19,6 +19,7 @@ namespace Fifthweek.Payments.SnapshotCreation
     using Fifthweek.Api.Persistence.Snapshots;
     using Fifthweek.Shared;
     using Fifthweek.Payments.Shared;
+    using Fifthweek.Azure;
 
     public partial class CreateCreatorChannelsSnapshotDbStatement 
     {
@@ -62,6 +63,7 @@ namespace Fifthweek.Payments.SnapshotCreation
     using Fifthweek.Api.Persistence.Snapshots;
     using Fifthweek.Shared;
     using Fifthweek.Payments.Shared;
+    using Fifthweek.Azure;
 
     public partial class CreateCreatorFreeAccessUsersSnapshotDbStatement 
     {
@@ -105,6 +107,7 @@ namespace Fifthweek.Payments.SnapshotCreation
     using Fifthweek.Api.Persistence.Snapshots;
     using Fifthweek.Shared;
     using Fifthweek.Payments.Shared;
+    using Fifthweek.Azure;
 
     public partial class CreateSnapshotMessage 
     {
@@ -112,11 +115,6 @@ namespace Fifthweek.Payments.SnapshotCreation
             Fifthweek.Api.Identity.Shared.Membership.UserId userId,
             Fifthweek.Payments.SnapshotCreation.SnapshotType snapshotType)
         {
-            if (userId == null)
-            {
-                throw new ArgumentNullException("userId");
-            }
-
             if (snapshotType == null)
             {
                 throw new ArgumentNullException("snapshotType");
@@ -141,6 +139,7 @@ namespace Fifthweek.Payments.SnapshotCreation
     using Fifthweek.Api.Persistence.Snapshots;
     using Fifthweek.Shared;
     using Fifthweek.Payments.Shared;
+    using Fifthweek.Azure;
 
     public partial class CreateSubscriberChannelsSnapshotDbStatement 
     {
@@ -184,6 +183,7 @@ namespace Fifthweek.Payments.SnapshotCreation
     using Fifthweek.Api.Persistence.Snapshots;
     using Fifthweek.Shared;
     using Fifthweek.Payments.Shared;
+    using Fifthweek.Azure;
 
     public partial class CreateSubscriberSnapshotDbStatement 
     {
@@ -213,7 +213,6 @@ namespace Fifthweek.Payments.SnapshotCreation
     using System.Threading.Tasks;
     using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.Api.Persistence;
-    using Fifthweek.Azure;
     using Fifthweek.CodeGeneration;
     using Fifthweek.Api.Azure;
     using Dapper;
@@ -221,11 +220,12 @@ namespace Fifthweek.Payments.SnapshotCreation
     using Fifthweek.Api.Persistence.Snapshots;
     using Fifthweek.Shared;
     using Fifthweek.Payments.Shared;
+    using Fifthweek.Azure;
 
     public partial class RequestSnapshotService 
     {
         public RequestSnapshotService(
-            IQueueService queueService)
+            Fifthweek.Azure.IQueueService queueService)
         {
             if (queueService == null)
             {
@@ -233,6 +233,104 @@ namespace Fifthweek.Payments.SnapshotCreation
             }
 
             this.queueService = queueService;
+        }
+    }
+}
+namespace Fifthweek.WebJobs.Payments
+{
+    using System;
+    using System.Linq;
+    using System.Threading.Tasks;
+    using Fifthweek.CodeGeneration;
+    using Fifthweek.Payments.SnapshotCreation;
+
+    public partial class CreateAllSnapshotsProcessor 
+    {
+        public CreateAllSnapshotsProcessor(
+            Fifthweek.Payments.SnapshotCreation.IGetAllStandardUsersDbStatement getAllStandardUsers,
+            Fifthweek.Payments.SnapshotCreation.ICreateSnapshotMultiplexer createSnapshotMultiplexer)
+        {
+            if (getAllStandardUsers == null)
+            {
+                throw new ArgumentNullException("getAllStandardUsers");
+            }
+
+            if (createSnapshotMultiplexer == null)
+            {
+                throw new ArgumentNullException("createSnapshotMultiplexer");
+            }
+
+            this.getAllStandardUsers = getAllStandardUsers;
+            this.createSnapshotMultiplexer = createSnapshotMultiplexer;
+        }
+    }
+}
+namespace Fifthweek.Payments.SnapshotCreation
+{
+    using System;
+    using System.Threading.Tasks;
+    using Fifthweek.Api.Identity.Shared.Membership;
+    using Fifthweek.CodeGeneration;
+
+    public partial class CreateSnapshotMultiplexer 
+    {
+        public CreateSnapshotMultiplexer(
+            Fifthweek.Payments.SnapshotCreation.ICreateSubscriberSnapshotDbStatement createSubscriberSnapshot,
+            Fifthweek.Payments.SnapshotCreation.ICreateSubscriberChannelsSnapshotDbStatement createSubscriberChannelsSnapshot,
+            Fifthweek.Payments.SnapshotCreation.ICreateCreatorChannelsSnapshotDbStatement createCreatorChannelsSnapshot,
+            Fifthweek.Payments.SnapshotCreation.ICreateCreatorFreeAccessUsersSnapshotDbStatement createCreatorFreeAccessUsersSnapshot)
+        {
+            if (createSubscriberSnapshot == null)
+            {
+                throw new ArgumentNullException("createSubscriberSnapshot");
+            }
+
+            if (createSubscriberChannelsSnapshot == null)
+            {
+                throw new ArgumentNullException("createSubscriberChannelsSnapshot");
+            }
+
+            if (createCreatorChannelsSnapshot == null)
+            {
+                throw new ArgumentNullException("createCreatorChannelsSnapshot");
+            }
+
+            if (createCreatorFreeAccessUsersSnapshot == null)
+            {
+                throw new ArgumentNullException("createCreatorFreeAccessUsersSnapshot");
+            }
+
+            this.createSubscriberSnapshot = createSubscriberSnapshot;
+            this.createSubscriberChannelsSnapshot = createSubscriberChannelsSnapshot;
+            this.createCreatorChannelsSnapshot = createCreatorChannelsSnapshot;
+            this.createCreatorFreeAccessUsersSnapshot = createCreatorFreeAccessUsersSnapshot;
+        }
+    }
+}
+namespace Fifthweek.Payments.SnapshotCreation
+{
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Threading.Tasks;
+    using Dapper;
+    using Fifthweek.Api.Identity.Shared.Membership;
+    using Fifthweek.Api.Persistence;
+    using Fifthweek.Api.Persistence.Identity;
+    using Fifthweek.Api.Persistence.Snapshots;
+    using Fifthweek.CodeGeneration;
+
+    public partial class GetAllStandardUsersDbStatement 
+    {
+        public GetAllStandardUsersDbStatement(
+            Fifthweek.Api.Persistence.IFifthweekDbConnectionFactory connectionFactory)
+        {
+            if (connectionFactory == null)
+            {
+                throw new ArgumentNullException("connectionFactory");
+            }
+
+            this.connectionFactory = connectionFactory;
         }
     }
 }
@@ -251,6 +349,7 @@ namespace Fifthweek.Payments.SnapshotCreation
     using Fifthweek.Api.Persistence.Snapshots;
     using Fifthweek.Shared;
     using Fifthweek.Payments.Shared;
+    using Fifthweek.Azure;
 
     public partial class CreateSnapshotMessage 
     {

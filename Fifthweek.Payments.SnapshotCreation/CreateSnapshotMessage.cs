@@ -11,6 +11,7 @@ namespace Fifthweek.Payments.SnapshotCreation
         {
         }
 
+        [Optional]
         public UserId UserId { get; set; }
 
         public SnapshotType SnapshotType { get; set; }

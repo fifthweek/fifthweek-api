@@ -149,10 +149,13 @@
     <Compile Include="Services\Refunds\Taxamo\CreateTaxamoRefundTests.cs" />
     <Compile Include="Services\RequestProcessPaymentsServiceTests.cs" />
     <Compile Include="Services\UpdateAccountBalancesDbStatementTests.cs" />
+    <Compile Include="SnapshotCreation\CreateAllSnapshotsProcessorTests.cs" />
     <Compile Include="SnapshotCreation\CreateCreatorChannelsSnapshotDbStatementTests.cs" />
     <Compile Include="SnapshotCreation\CreateCreatorFreeAccessUsersSnapshotDbStatementTests.cs" />
+    <Compile Include="SnapshotCreation\CreateSnapshotMultiplexerTests.cs" />
     <Compile Include="SnapshotCreation\CreateSubscriberChannelsSnapshotDbStatementTests.cs" />
     <Compile Include="SnapshotCreation\CreateSubscriberSnapshotDbStatementTests.cs" />
+    <Compile Include="SnapshotCreation\GetAllStandardUsersDbStatementTests.cs" />
     <Compile Include="SnapshotCreation\RequestSnapshotServiceTests.cs" />
     <Compile Include="SnapshotCreation\SnapshotTimestampCreatorTests.cs" />
     <Compile Include="Snapshots\MergedSnapshotTests.cs" />

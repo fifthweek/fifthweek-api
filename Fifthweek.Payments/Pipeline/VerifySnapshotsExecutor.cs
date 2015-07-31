@@ -74,7 +74,20 @@
                             }
                             else
                             {
-                                throw new InvalidOperationException("Unknown snapshot type: " + snapshot.GetType().Name);
+                                var calculatedAccountBalanceSnapshot = snapshot as CalculatedAccountBalanceSnapshot;
+                                if (calculatedAccountBalanceSnapshot != null)
+                                {
+                                    if (!calculatedAccountBalanceSnapshot.UserId.Equals(subscriberId))
+                                    {
+                                        throw new InvalidOperationException(
+                                            "Unexpected subscriber id: " + calculatedAccountBalanceSnapshot.UserId);
+                                    }
+                                }
+                                else
+                                {
+                                    throw new InvalidOperationException(
+                                        "Unknown snapshot type: " + snapshot.GetType().Name);
+                                }
                             }
                         }
                     }

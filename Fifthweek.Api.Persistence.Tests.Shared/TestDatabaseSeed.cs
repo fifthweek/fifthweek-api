@@ -23,9 +23,9 @@
     {
         public const int CreatorChannelSnapshots = 1;
         public const int SubscriberChannelSnapshots = 1;
+        public const int Users = 10;
 
         private const int EndToEndTestEmails = 10;
-        private const int Users = 10;
         private const int Creators = 5;
         private const int BlogsPerCreator = 1; // That's all our interface supports for now!
         private const int ChannelsPerSubscription = 3;

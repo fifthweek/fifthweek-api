@@ -197,6 +197,30 @@
         }
 
         [TestMethod]
+        public void WhenSubscribedToChannel_AndNoCreatorPostInformation_ItShouldReturnCorrectCost()
+        {
+            var result = this.target.Execute(
+                new MergedSnapshot(
+                    new CreatorChannelsSnapshot(
+                        Now,
+                        CreatorId1,
+                        new List<CreatorChannelsSnapshotItem> { new CreatorChannelsSnapshotItem(ChannelId1, 100) }),
+                    EmptyGuestList,
+                    new SubscriberChannelsSnapshot(
+                        Now,
+                        SubscriberId1,
+                        new List<SubscriberChannelsSnapshotItem> { new SubscriberChannelsSnapshotItem(ChannelId1, 100, Now) }),
+                    new SubscriberSnapshot(
+                        Now,
+                        SubscriberId1,
+                        null),
+                    new CalculatedAccountBalanceSnapshot(Now, SubscriberId1, LedgerAccountType.FifthweekCredit, 10)),
+                null);
+
+            Assert.AreEqual(100, result);
+        }
+
+        [TestMethod]
         public void WhenSubscribedToChannel_AndCreatorDidNotPostToChannelInBillingWeek_ItShouldReturnCorrectCost()
         {
             var result = this.target.Execute(

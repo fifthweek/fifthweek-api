@@ -1,4 +1,4 @@
-﻿namespace Fifthweek.WebJobs.Snapshots.Tests
+﻿namespace Fifthweek.WebJobs.Payments.Tests
 {
     using System;
     using System.Threading;
@@ -21,31 +21,37 @@
         private static readonly CancellationToken CancellationToken = CancellationToken.None;
 
         private Mock<ILogger> logger;
-        private Mock<ICreateSubscriberSnapshotDbStatement> createSubscriberSnapshot;
-        private Mock<ICreateSubscriberChannelsSnapshotDbStatement> createSubscriberChannelsSnapshot;
-        private Mock<ICreateCreatorChannelsSnapshotDbStatement> createCreatorChannelsSnapshot;
-        private Mock<ICreateCreatorFreeAccessUsersSnapshotDbStatement> createCreatorFreeAccessUsersSnapshot;
+        private Mock<ICreateSnapshotMultiplexer> createSnapshotMultiplexer;
+        private Mock<ICreateAllSnapshotsProcessor> createAllSnapshots;
         private SnapshotProcessor target;
 
         [TestInitialize]
         public void Initialize()
         {
             this.logger = new Mock<ILogger>(MockBehavior.Strict);
-            this.createSubscriberSnapshot = new Mock<ICreateSubscriberSnapshotDbStatement>(MockBehavior.Strict);
-            this.createSubscriberChannelsSnapshot = new Mock<ICreateSubscriberChannelsSnapshotDbStatement>(MockBehavior.Strict);
-            this.createCreatorChannelsSnapshot = new Mock<ICreateCreatorChannelsSnapshotDbStatement>(MockBehavior.Strict);
-            this.createCreatorFreeAccessUsersSnapshot = new Mock<ICreateCreatorFreeAccessUsersSnapshotDbStatement>(MockBehavior.Strict);
+            this.createSnapshotMultiplexer = new Mock<ICreateSnapshotMultiplexer>(MockBehavior.Strict);
+            this.createAllSnapshots = new Mock<ICreateAllSnapshotsProcessor>(MockBehavior.Strict);
+            
             this.target = new SnapshotProcessor(
-                this.createSubscriberSnapshot.Object,
-                this.createSubscriberChannelsSnapshot.Object,
-                this.createCreatorChannelsSnapshot.Object,
-                this.createCreatorFreeAccessUsersSnapshot.Object);
+                this.createSnapshotMultiplexer.Object,
+                this.createAllSnapshots.Object);
+        }
+
+        [TestMethod]
+        public async Task WhenUserIdIsNull_ItShouldCreateAllSnapshots()
+        {
+            this.createAllSnapshots.Setup(v => v.ExecuteAsync()).Returns(Task.FromResult(0));
+
+            await this.target.CreateSnapshotAsync(
+                new CreateSnapshotMessage(null, default(SnapshotType)),
+                this.logger.Object,
+                CancellationToken);
         }
 
         [TestMethod]
         public async Task WhenSnapshotTypeIsSubscriber_ItShouldCreateSubscriberSnapshot()
         {
-            this.createSubscriberSnapshot.Setup(v => v.ExecuteAsync(UserId)).Returns(Task.FromResult(0));
+            this.createSnapshotMultiplexer.Setup(v => v.ExecuteAsync(UserId, SnapshotType.Subscriber)).Returns(Task.FromResult(0));
 
             await this.target.CreateSnapshotAsync(
                 new CreateSnapshotMessage(UserId, SnapshotType.Subscriber),
@@ -56,7 +62,7 @@
         [TestMethod]
         public async Task WhenSnapshotTypeIsSubscriberChannels_ItShouldCreateSubscriberChannelsSnapshot()
         {
-            this.createSubscriberChannelsSnapshot.Setup(v => v.ExecuteAsync(UserId)).Returns(Task.FromResult(0));
+            this.createSnapshotMultiplexer.Setup(v => v.ExecuteAsync(UserId, SnapshotType.SubscriberChannels)).Returns(Task.FromResult(0));
 
             await this.target.CreateSnapshotAsync(
                 new CreateSnapshotMessage(UserId, SnapshotType.SubscriberChannels),
@@ -67,7 +73,7 @@
         [TestMethod]
         public async Task WhenSnapshotTypeIsCreatorChannels_ItShouldCreateCreatorChannelsSnapshot()
         {
-            this.createCreatorChannelsSnapshot.Setup(v => v.ExecuteAsync(UserId)).Returns(Task.FromResult(0));
+            this.createSnapshotMultiplexer.Setup(v => v.ExecuteAsync(UserId, SnapshotType.CreatorChannels)).Returns(Task.FromResult(0));
 
             await this.target.CreateSnapshotAsync(
                 new CreateSnapshotMessage(UserId, SnapshotType.CreatorChannels),
@@ -78,7 +84,7 @@
         [TestMethod]
         public async Task WhenSnapshotTypeIsCreatorFreeAccessUsers_ItShouldCreateCreatorFreeAccessUsersSnapshot()
         {
-            this.createCreatorFreeAccessUsersSnapshot.Setup(v => v.ExecuteAsync(UserId)).Returns(Task.FromResult(0));
+            this.createSnapshotMultiplexer.Setup(v => v.ExecuteAsync(UserId, SnapshotType.CreatorFreeAccessUsers)).Returns(Task.FromResult(0));
 
             await this.target.CreateSnapshotAsync(
                 new CreateSnapshotMessage(UserId, SnapshotType.CreatorFreeAccessUsers),
@@ -90,7 +96,7 @@
         public async Task WhenErrorOccurs_ItShouldLogAndThrow()
         {
             var exception = new DivideByZeroException("message");
-            this.createCreatorFreeAccessUsersSnapshot.Setup(v => v.ExecuteAsync(UserId)).Throws(exception);
+            this.createSnapshotMultiplexer.Setup(v => v.ExecuteAsync(UserId, SnapshotType.CreatorFreeAccessUsers)).Throws(exception);
 
             this.logger.Setup(v => v.Error(exception));
 

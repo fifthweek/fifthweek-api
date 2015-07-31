@@ -44,7 +44,9 @@ namespace Fifthweek.Payments.Pipeline
                   };
 
             // ...where creator has posted in the subscriber's channel billing week...
-            var subscriptionsWithPosts = creatorSubscriptions.Where(
+            var subscriptionsWithPosts = creatorPosts == null
+                ? creatorSubscriptions
+                : creatorSubscriptions.Where(
                     v => this.CreatorPostedInBillingWeek(
                         v.Subscription.SubscriptionStartDate,
                         v.Subscription.ChannelId,

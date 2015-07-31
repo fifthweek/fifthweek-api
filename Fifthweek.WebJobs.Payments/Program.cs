@@ -17,6 +17,7 @@ namespace Fifthweek.WebJobs.Payments
     using Fifthweek.Payments.Services.Credit.Stripe;
     using Fifthweek.Payments.Services.Credit.Taxamo;
     using Fifthweek.Payments.Shared;
+    using Fifthweek.Payments.SnapshotCreation;
     using Fifthweek.Payments.Stripe;
     using Fifthweek.Payments.Taxamo;
     using Fifthweek.Shared;
@@ -29,6 +30,20 @@ namespace Fifthweek.WebJobs.Payments
     public class Program
     {
         private const string ErrorIdentifier = "Payments WebJob";
+
+        private static readonly ISnapshotProcessor SnapshotProcessor = new SnapshotProcessor(
+            new CreateSnapshotMultiplexer(
+                new CreateSubscriberSnapshotDbStatement(new SnapshotTimestampCreator(), new FifthweekDbConnectionFactory()),
+                new CreateSubscriberChannelsSnapshotDbStatement(new GuidCreator(), new SnapshotTimestampCreator(), new FifthweekDbConnectionFactory()),
+                new CreateCreatorChannelsSnapshotDbStatement(new GuidCreator(), new SnapshotTimestampCreator(), new FifthweekDbConnectionFactory()),
+                new CreateCreatorFreeAccessUsersSnapshotDbStatement(new GuidCreator(), new SnapshotTimestampCreator(), new FifthweekDbConnectionFactory())),
+            new CreateAllSnapshotsProcessor(
+                new GetAllStandardUsersDbStatement(new FifthweekDbConnectionFactory()),
+                new CreateSnapshotMultiplexer(
+                new CreateSubscriberSnapshotDbStatement(new SnapshotTimestampCreator(), new FifthweekDbConnectionFactory()),
+                new CreateSubscriberChannelsSnapshotDbStatement(new GuidCreator(), new SnapshotTimestampCreator(), new FifthweekDbConnectionFactory()),
+                new CreateCreatorChannelsSnapshotDbStatement(new GuidCreator(), new SnapshotTimestampCreator(), new FifthweekDbConnectionFactory()),
+                new CreateCreatorFreeAccessUsersSnapshotDbStatement(new GuidCreator(), new SnapshotTimestampCreator(), new FifthweekDbConnectionFactory()))));
 
         private static readonly IPaymentProcessor PaymentProcessor = new PaymentProcessor(
             new ProcessAllPayments(
@@ -104,7 +119,7 @@ namespace Fifthweek.WebJobs.Payments
                 cancellationToken);
         }
 
-        public static Task ProcessPoisonMessage(
+        public static Task ProcessPaymentsPoisonMessage(
             [QueueTrigger(Constants.RequestProcessPaymentsQueueName + "-poison")] string message,
             TextWriter webJobsLogger,
             int dequeueCount,
@@ -116,14 +131,38 @@ namespace Fifthweek.WebJobs.Payments
                 cancellationToken);
         }
 
+        public static Task CreateSnapshotAsync(
+            [QueueTrigger(Constants.RequestSnapshotQueueName)] CreateSnapshotMessage message,
+            TextWriter webJobsLogger,
+            int dequeueCount,
+            CancellationToken cancellationToken)
+        {
+            return SnapshotProcessor.CreateSnapshotAsync(
+                message,
+                CreateLogger(webJobsLogger),
+                cancellationToken);
+        }
+
+        public static Task ProcessSnapshotPoisonMessage(
+            [QueueTrigger(Constants.RequestSnapshotQueueName + "-poison")] string message,
+            TextWriter webJobsLogger,
+            int dequeueCount,
+            CancellationToken cancellationToken)
+        {
+            return SnapshotProcessor.HandlePoisonMessageAsync(
+                message,
+                CreateLogger(webJobsLogger),
+                cancellationToken);
+        }
+
         public static void Main(string[] args)
         {
             DataDirectory.ConfigureDataDirectory();
 
             var config = new JobHostConfiguration();
             config.DashboardConnectionString = config.StorageConnectionString = AzureConfiguration.GetStorageConnectionString();
-            config.Queues.BatchSize = 1;
-            config.Queues.MaxDequeueCount = 3;
+            config.Queues.BatchSize = 8;
+            config.Queues.MaxDequeueCount = 10;
             config.Queues.MaxPollingInterval = TimeSpan.FromSeconds(10);
             var host = new JobHost(config);
             host.RunAndBlock();
