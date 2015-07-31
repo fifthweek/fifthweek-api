@@ -4,9 +4,11 @@
     using System.Collections.Generic;
     using System.Linq;
     using System.Security.Claims;
+    using System.Threading.Tasks;
 
     using Fifthweek.Api.Core;
     using Fifthweek.Api.Identity.Shared.Membership;
+    using Fifthweek.Api.Persistence.Identity;
     using Fifthweek.CodeGeneration;
 
     [AutoConstructor]
@@ -15,8 +17,9 @@
         public const string ImpersonateHeaderKey = "impersonate-user";
 
         private readonly IRequestContext requestContext;
+        private readonly IImpersonateIfRequired impersonateIfRequired;
 
-        public Requester GetRequester()
+        public async Task<Requester> GetRequesterAsync()
         {
             var identity = this.TryGetIdentity();
             if (identity != null && identity.IsAuthenticated)
@@ -33,9 +36,16 @@
                 // This isn't currently used.
                 var username = identity.Name;
 
+                var requester = Requester.Authenticated(userId, null, roles);
+                
                 var impersonatedUserId = this.TryGetImpersonatedUserId();
+                if (impersonatedUserId != null)
+                {
+                    var impersonatedRequester = await this.impersonateIfRequired.ExecuteAsync(requester, impersonatedUserId);
+                    requester = impersonatedRequester ?? requester;
+                }
 
-                return Requester.Authenticated(userId, impersonatedUserId, roles);
+                return requester;
             }
 
             return Requester.Unauthenticated;

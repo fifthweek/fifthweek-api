@@ -12,5 +12,7 @@
         
         [Optional]
         public UserId RequestedUserId { get; private set; }
+
+        public bool Impersonate { get; private set; }
     }
 }

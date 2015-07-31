@@ -67,7 +67,7 @@
             var data = new NewCollectionData(ChannelId, CollectionName.Value);
             var command = new CreateCollectionCommand(Requester, CollectionId, ChannelId, CollectionName, initialWeeklyReleaseTime);
 
-            this.requesterContext.Setup(_ => _.GetRequester()).Returns(Requester);
+            this.requesterContext.Setup(_ => _.GetRequesterAsync()).ReturnsAsync(Requester);
             this.guidCreator.Setup(_ => _.CreateSqlSequential()).Returns(CollectionId.Value);
             this.createCollection.Setup(_ => _.HandleAsync(command)).Returns(Task.FromResult(0)).Verifiable();
 
@@ -90,7 +90,7 @@
             var data = new UpdatedCollectionData(CollectionName.Value, WeeklyReleaseSchedule.Value.Select(_ => _.Value).ToList());
             var command = new UpdateCollectionCommand(Requester, CollectionId, CollectionName, WeeklyReleaseSchedule);
 
-            this.requesterContext.Setup(v => v.GetRequester()).Returns(Requester);
+            this.requesterContext.Setup(_ => _.GetRequesterAsync()).ReturnsAsync(Requester);
             this.updateCollection.Setup(v => v.HandleAsync(command)).Returns(Task.FromResult(0)).Verifiable();
 
             var result = await this.target.PutCollectionAsync(CollectionId.Value.EncodeGuid(), data);
@@ -118,7 +118,7 @@
         {
             var command = new DeleteCollectionCommand(Requester, CollectionId);
 
-            this.requesterContext.Setup(v => v.GetRequester()).Returns(Requester);
+            this.requesterContext.Setup(_ => _.GetRequesterAsync()).ReturnsAsync(Requester);
             this.deleteCollection.Setup(v => v.HandleAsync(command)).Returns(Task.FromResult(0)).Verifiable();
 
             var result = await this.target.DeleteCollectionAsync(CollectionId.Value.EncodeGuid());
@@ -140,7 +140,7 @@
             var requester = Requester.Authenticated(UserId);
             var query = new GetLiveDateOfNewQueuedPostQuery(requester, CollectionId);
 
-            this.requesterContext.Setup(_ => _.GetRequester()).Returns(requester);
+            this.requesterContext.Setup(_ => _.GetRequesterAsync()).ReturnsAsync(requester);
             this.getLiveDateOfNewQueuedPost.Setup(_ => _.HandleAsync(query)).ReturnsAsync(NewQueuedPostLiveDate);
 
             var result = await this.target.GetLiveDateOfNewQueuedPost(CollectionId.Value.EncodeGuid());

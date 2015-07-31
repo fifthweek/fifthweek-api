@@ -23,7 +23,7 @@
             fileData.AssertBodyProvided("fileData");
             var file = fileData.Parse();
 
-            var requester = this.requesterContext.GetRequester();
+            var requester = await this.requesterContext.GetRequesterAsync();
             var newPostId = new PostId(this.guidCreator.CreateSqlSequential());
 
             await this.postFile.HandleAsync(new PostFileCommand(
@@ -43,7 +43,7 @@
             var file = fileData.Parse();
             var postIdObject = new PostId(postId.DecodeGuid());
 
-            var requester = this.requesterContext.GetRequester();
+            var requester = await this.requesterContext.GetRequesterAsync();
 
             await this.reviseFile.HandleAsync(new ReviseFileCommand(
                 requester,

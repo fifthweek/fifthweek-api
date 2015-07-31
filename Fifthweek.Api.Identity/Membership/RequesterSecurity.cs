@@ -20,18 +20,7 @@
             {
                 throw new UnauthenticatedException();
             }
-
-            if (requester.ImpersonatedUserId != null)
-            {
-                var isAdministrator = await this.IsInRoleAsync(requester, FifthweekRole.Administrator);
-                if (isAdministrator)
-                {
-                    return requester.ImpersonatedUserId;
-                }
-                 
-                throw new UnauthorizedException("Impersonation forbidden.");
-            }
-
+            
             return requester.UserId;
         }
 

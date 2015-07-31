@@ -17,12 +17,12 @@
         private readonly IRequesterContext requesterContext;
 
         [Route("{userId}")]
-        public async Task<UserState> GetUserState(string userId)
+        public async Task<UserState> GetUserState(string userId, [FromUri]bool impersonate = false)
         {
             var requestedUserId = new UserId(userId.DecodeGuid());
-            var requester = this.requesterContext.GetRequester();
+            var requester = await this.requesterContext.GetRequesterAsync();
 
-            var userState = await this.getUserState.HandleAsync(new GetUserStateQuery(requester, requestedUserId));
+            var userState = await this.getUserState.HandleAsync(new GetUserStateQuery(requester, requestedUserId, impersonate));
 
             return userState;
         }
@@ -30,9 +30,9 @@
         [Route("")]
         public async Task<UserState> GetVisitorState()
         {
-            var requester = this.requesterContext.GetRequester();
+            var requester = await this.requesterContext.GetRequesterAsync();
 
-            var userState = await this.getUserState.HandleAsync(new GetUserStateQuery(requester, null));
+            var userState = await this.getUserState.HandleAsync(new GetUserStateQuery(requester, null, false));
 
             return userState;
         }

@@ -40,7 +40,7 @@
                 this.acceptPriceChange.Object,
                 this.requesterContext.Object);
 
-            this.requesterContext.Setup(v => v.GetRequester()).Returns(Requester);
+            this.requesterContext.Setup(_ => _.GetRequesterAsync()).ReturnsAsync(Requester);
         }
 
         [TestClass]

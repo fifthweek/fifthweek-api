@@ -63,7 +63,7 @@
             var data = NewCreateBlogData();
             var command = NewCreateBlogCommand(UserId, BlogId, data);
 
-            this.requesterContext.Setup(v => v.GetRequester()).Returns(Requester);
+            this.requesterContext.Setup(_ => _.GetRequesterAsync()).ReturnsAsync(Requester);
             this.guidCreator.Setup(_ => _.CreateSqlSequential()).Returns(BlogId.Value);
             this.createBlog.Setup(v => v.HandleAsync(command)).Returns(Task.FromResult(0)).Verifiable();
 
@@ -79,7 +79,7 @@
             var data = NewUpdatedBlogData();
             var command = NewUpdateBlogCommand(UserId, BlogId, data);
 
-            this.requesterContext.Setup(v => v.GetRequester()).Returns(Requester);
+            this.requesterContext.Setup(_ => _.GetRequesterAsync()).ReturnsAsync(Requester);
             this.updateBlog.Setup(v => v.HandleAsync(command)).Returns(Task.FromResult(0)).Verifiable();
 
             var result = await this.target.PutBlog(BlogId.Value.EncodeGuid(), data);
@@ -115,7 +115,7 @@
         [TestMethod]
         public async Task WhenGettingBlogSubscriberInformation_ItShouldIssueGetBlogSubscriberInformationQuery()
         {
-            this.requesterContext.Setup(v => v.GetRequester()).Returns(Requester);
+            this.requesterContext.Setup(_ => _.GetRequesterAsync()).ReturnsAsync(Requester);
 
             var expectedResult = new BlogSubscriberInformation(10, new List<BlogSubscriberInformation.Subscriber>());
             this.getBlogSubscriberInformation.Setup(v => v.HandleAsync(new GetBlogSubscriberInformationQuery(Requester, BlogId)))

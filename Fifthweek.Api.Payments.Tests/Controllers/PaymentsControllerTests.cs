@@ -52,7 +52,7 @@
             this.timestampCreator = new Mock<ITimestampCreator>(MockBehavior.Strict);
             this.guidCreator = new Mock<IGuidCreator>(MockBehavior.Strict);
             
-            this.requesterContext.Setup(v => v.GetRequester()).Returns(Requester);
+            this.requesterContext.Setup(_ => _.GetRequesterAsync()).ReturnsAsync(Requester);
 
             this.target = new PaymentsController(
                 this.requesterContext.Object,

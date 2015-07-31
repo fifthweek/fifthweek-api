@@ -809,6 +809,7 @@ angular.module('webApp').factory('userStateStub',
     var service = {};
 
     // userId = 'Base64Guid'
+    // impersonate = false /* optional */
     // result = {
     //   accessSignatures: {
     //     timeToLiveSeconds: 0,
@@ -934,8 +935,8 @@ angular.module('webApp').factory('userStateStub',
     //     ]
     //   }
     // }
-    service.getUserState = function(userId) {
-      return $http.get(utilities.fixUri(apiBaseUri + 'userState/' + encodeURIComponent(userId))).catch(function(response) {
+    service.getUserState = function(userId, impersonate) {
+      return $http.get(utilities.fixUri(apiBaseUri + 'userState/' + encodeURIComponent(userId) + '?' + (impersonate === undefined ? '' : 'impersonate=' + encodeURIComponent(impersonate) + '&'))).catch(function(response) {
         return $q.reject(utilities.getHttpError(response));
       });
     };

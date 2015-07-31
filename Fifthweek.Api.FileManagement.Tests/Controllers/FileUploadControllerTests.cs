@@ -79,7 +79,7 @@
             const string FilePath = @"C:\test\myfile.jpeg";
             const string Purpose = "profile-picture";
 
-            this.requesterContext.Setup(v => v.GetRequester()).Returns(Requester);
+            this.requesterContext.Setup(_ => _.GetRequesterAsync()).ReturnsAsync(Requester);
 
             this.initiateFileUpload.Setup(v => v.HandleAsync(new InitiateFileUploadCommand(Requester, ChannelId, FileId, FilePath, Purpose)))
                 .Returns(Task.FromResult(0));
@@ -103,7 +103,7 @@
         [TestMethod]
         public async Task WhenAnUploadCompleteNotificationIsPosted_ItShouldCompleteTheFileUpload()
         {
-            this.requesterContext.Setup(v => v.GetRequester()).Returns(Requester).Verifiable();
+            this.requesterContext.Setup(_ => _.GetRequesterAsync()).ReturnsAsync(Requester).Verifiable();
             this.completeFileUpload.Setup(v => v.HandleAsync(new CompleteFileUploadCommand(Requester, ChannelId, FileId))).Returns(Task.FromResult(0)).Verifiable();
 
             await this.target.PostUploadCompleteNotificationAsync(new UploadCompleteNotification(ChannelId.Value.EncodeGuid(), GeneratedSqlGuid.EncodeGuid()));

@@ -32,7 +32,7 @@
         {
             creatorId.AssertUrlParameterProvided("creatorId");
             var creatorIdObject = new UserId(creatorId.DecodeGuid());
-            var requester = this.requesterContext.GetRequester();
+            var requester = await this.requesterContext.GetRequesterAsync();
 
             return await this.getCreatorBacklog.HandleAsync(new GetCreatorBacklogQuery(requester, creatorIdObject));
         }
@@ -44,7 +44,7 @@
             var newsfeedPagination = newsfeedPaginationData.Parse();
 
             var creatorIdObject = new UserId(creatorId.DecodeGuid());
-            var requester = this.requesterContext.GetRequester();
+            var requester = await this.requesterContext.GetRequesterAsync();
 
             var result = await this.getNewsfeed.HandleAsync(new GetNewsfeedQuery(
                 requester, creatorIdObject, null, null, null, false, newsfeedPagination.StartIndex, newsfeedPagination.Count));
@@ -84,19 +84,19 @@
                 collectionIds = new List<CollectionId> { new CollectionId(filterData.CollectionId.DecodeGuid()) };
             }
 
-            var requester = this.requesterContext.GetRequester();
+            var requester = await this.requesterContext.GetRequesterAsync();
 
             return await this.getNewsfeed.HandleAsync(new GetNewsfeedQuery(
                 requester, creatorId, channelIds, collectionIds, filter.Origin, filter.SearchForwards, filter.StartIndex, filter.Count));
         }
 
-        public Task DeletePost(string postId)
+        public async Task DeletePost(string postId)
         {
             postId.AssertUrlParameterProvided("postId");
             var parsedPostId = new PostId(postId.DecodeGuid());
-            var requester = this.requesterContext.GetRequester();
+            var requester = await this.requesterContext.GetRequesterAsync();
 
-            return this.deletePost.HandleAsync(new DeletePostCommand(parsedPostId, requester));
+            await this.deletePost.HandleAsync(new DeletePostCommand(parsedPostId, requester));
         }
 
         public async Task PostNewQueueOrder(string collectionId, IEnumerable<PostId> newQueueOrder)
@@ -105,39 +105,39 @@
             newQueueOrder.AssertBodyProvided("newQueueOrder");
 
             var collectionIdObject = new CollectionId(collectionId.DecodeGuid());
-            var requester = this.requesterContext.GetRequester();
+            var requester = await this.requesterContext.GetRequesterAsync();
 
             await this.reorderQueue.HandleAsync(new ReorderQueueCommand(requester, collectionIdObject, newQueueOrder.ToList()));
         }
 
-        public Task PostToQueue(string postId)
+        public async Task PostToQueue(string postId)
         {
             postId.AssertUrlParameterProvided("postId");
 
             var parsedPostId = new PostId(postId.DecodeGuid());
-            var requester = this.requesterContext.GetRequester();
+            var requester = await this.requesterContext.GetRequesterAsync();
 
-            return this.rescheduleWithQueue.HandleAsync(new RescheduleWithQueueCommand(requester, parsedPostId));
+            await this.rescheduleWithQueue.HandleAsync(new RescheduleWithQueueCommand(requester, parsedPostId));
         }
 
-        public Task PostToLive(string postId)
+        public async Task PostToLive(string postId)
         {
             postId.AssertBodyProvided("postId");
             var parsedPostId = new PostId(postId.DecodeGuid());
-            var requester = this.requesterContext.GetRequester();
+            var requester = await this.requesterContext.GetRequesterAsync();
 
-            return this.rescheduleForNow.HandleAsync(new RescheduleForNowCommand(requester, parsedPostId));
+            await this.rescheduleForNow.HandleAsync(new RescheduleForNowCommand(requester, parsedPostId));
         }
 
-        public Task PutLiveDate(string postId, DateTime newLiveDate)
+        public async Task PutLiveDate(string postId, DateTime newLiveDate)
         {
             postId.AssertUrlParameterProvided("postId");
             newLiveDate.AssertUtc("newLiveDate");
 
             var parsedPostId = new PostId(postId.DecodeGuid());
-            var requester = this.requesterContext.GetRequester();
+            var requester = await this.requesterContext.GetRequesterAsync();
 
-            return this.rescheduleForTime.HandleAsync(new RescheduleForTimeCommand(requester, parsedPostId, newLiveDate));
+            await this.rescheduleForTime.HandleAsync(new RescheduleForTimeCommand(requester, parsedPostId, newLiveDate));
         }
     }
 }

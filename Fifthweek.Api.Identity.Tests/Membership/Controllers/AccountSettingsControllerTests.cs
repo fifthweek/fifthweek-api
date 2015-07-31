@@ -55,7 +55,7 @@
             this.promoteUserToCreator = new Mock<ICommandHandler<UpdateCreatorAccountSettingsCommand>>();
 
             this.guidCreator.Setup(v => v.Create()).Returns(SecurityGuid);
-            this.requesterContext.Setup(v => v.GetRequester()).Returns(Requester);
+            this.requesterContext.Setup(_ => _.GetRequesterAsync()).ReturnsAsync(Requester);
 
             this.target = new AccountSettingsController(
                 this.guidCreator.Object,
@@ -153,7 +153,7 @@
         [TestMethod]
         public async Task WhenPutIsCalledWithNullPassword_ItShouldCallTheCommandHandler()
         {
-            this.requesterContext.Setup(v => v.GetRequester()).Returns(Requester);
+            this.requesterContext.Setup(_ => _.GetRequesterAsync()).ReturnsAsync(Requester);
 
             var command = new UpdateAccountSettingsCommand(Requester, RequestedUserId, Username, Email, SecurityToken, null, FileId);
             this.updateAccountSettings.Setup(v => v.HandleAsync(command))
@@ -176,7 +176,7 @@
         [TestMethod]
         public async Task WhenPutIsCalledWithNullProfileImageId_ItShouldCallTheCommandHandler()
         {
-            this.requesterContext.Setup(v => v.GetRequester()).Returns(Requester);
+            this.requesterContext.Setup(_ => _.GetRequesterAsync()).ReturnsAsync(Requester);
 
             var command = new UpdateAccountSettingsCommand(Requester, RequestedUserId, Username, Email, SecurityToken, Password, null);
             this.updateAccountSettings.Setup(v => v.HandleAsync(command))

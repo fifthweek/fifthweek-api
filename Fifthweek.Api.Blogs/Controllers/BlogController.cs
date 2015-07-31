@@ -28,7 +28,7 @@
             blogData.AssertBodyProvided("blogData");
             var blog = blogData.Parse();
 
-            var requester = this.requesterContext.GetRequester();
+            var requester = await this.requesterContext.GetRequesterAsync();
             var newBlogId = new BlogId(this.guidCreator.CreateSqlSequential());
 
             await this.createBlog.HandleAsync(new CreateBlogCommand(
@@ -48,7 +48,7 @@
             blogData.AssertBodyProvided("blogData");
             var blog = blogData.Parse();
 
-            var requester = this.requesterContext.GetRequester();
+            var requester = await this.requesterContext.GetRequesterAsync();
             var blogIdObject = new BlogId(blogId.DecodeGuid());
 
             await this.updateBlog.HandleAsync(new UpdateBlogCommand(
@@ -84,7 +84,7 @@
         {
             blogId.AssertUrlParameterProvided("blogId");
         
-            var requester = this.requesterContext.GetRequester();
+            var requester = await this.requesterContext.GetRequesterAsync();
             var blogIdObject = new BlogId(blogId.DecodeGuid());
 
             return await this.getBlogSubscriberInformation.HandleAsync(new GetBlogSubscriberInformationQuery(requester, blogIdObject));

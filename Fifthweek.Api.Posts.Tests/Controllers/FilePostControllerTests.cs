@@ -51,7 +51,7 @@
             var data = new NewFileData(CollectionId, FileId, null, null, true);
             var command = new PostFileCommand(Requester, PostId, CollectionId, FileId, null, null, true);
 
-            this.requesterContext.Setup(v => v.GetRequester()).Returns(Requester);
+            this.requesterContext.Setup(_ => _.GetRequesterAsync()).ReturnsAsync(Requester);
             this.guidCreator.Setup(_ => _.CreateSqlSequential()).Returns(PostId.Value);
             this.postFile.Setup(v => v.HandleAsync(command)).Returns(Task.FromResult(0)).Verifiable();
 
@@ -73,7 +73,7 @@
             var data = new RevisedFileData(FileId, null);
             var command = new ReviseFileCommand(Requester, PostId, FileId, null);
 
-            this.requesterContext.Setup(v => v.GetRequester()).Returns(Requester);
+            this.requesterContext.Setup(_ => _.GetRequesterAsync()).ReturnsAsync(Requester);
             this.guidCreator.Setup(_ => _.CreateSqlSequential()).Returns(PostId.Value);
             this.reviseFile.Setup(v => v.HandleAsync(command)).Returns(Task.FromResult(0)).Verifiable();
 

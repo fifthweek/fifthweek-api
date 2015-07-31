@@ -38,7 +38,7 @@
 
             var channelId = data.ChannelId == null ? null : new ChannelId(data.ChannelId.DecodeGuid());
             var fileId = new FileId(this.guidCreator.CreateSqlSequential());
-            var requester = this.requesterContext.GetRequester();
+            var requester = await this.requesterContext.GetRequesterAsync();
 
             await this.initiateFileUpload.HandleAsync(new InitiateFileUploadCommand(requester, channelId, fileId, data.FilePath, data.Purpose));
             var accessInformation = await this.generateWritableBlobUri.HandleAsync(new GenerateWritableBlobUriQuery(requester, channelId, fileId, data.Purpose));
@@ -54,7 +54,7 @@
 
             var channelId = data.ChannelId == null ? null : new ChannelId(data.ChannelId.DecodeGuid());
             var fileId = new FileId(data.FileId.DecodeGuid());
-            var requester = this.requesterContext.GetRequester();
+            var requester = await this.requesterContext.GetRequesterAsync();
             await this.completeFileUpload.HandleAsync(new CompleteFileUploadCommand(requester, channelId, fileId));
         }
     }

@@ -117,7 +117,11 @@
     <Compile Include="Membership\Controllers\UpdatedAccountSettings.cs" />
     <Compile Include="Membership\GetAccountSettingsDbStatement.cs" />
     <Compile Include="Membership\GetAccountSettingsResult.cs" />
+    <Compile Include="Membership\GetUserRolesDbStatement.cs" />
     <Compile Include="Membership\IGetAccountSettingsDbStatement.cs" />
+    <Compile Include="Membership\IGetUserRolesDbStatement.cs" />
+    <Compile Include="Membership\IImpersonateIfRequired.cs" />
+    <Compile Include="Membership\ImpersonateIfRequired.cs" />
     <Compile Include="Membership\IReservedUsernameService.cs" />
     <Compile Include="Membership\IUpdateAccountSettingsDbStatement.cs" />
     <Compile Include="Membership\Queries\GetAccountSettingsQuery.cs" />

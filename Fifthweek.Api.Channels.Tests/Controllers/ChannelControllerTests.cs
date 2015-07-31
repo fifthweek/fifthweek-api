@@ -52,7 +52,7 @@
             var data = new NewChannelData(BlogId, ChannelName.Value, ChannelDescription.Value, Price.Value, IsVisibleToNonSubscribers);
             var command = new CreateChannelCommand(Requester, ChannelId, BlogId, ChannelName, ChannelDescription, Price, IsVisibleToNonSubscribers);
 
-            this.requesterContext.Setup(_ => _.GetRequester()).Returns(Requester);
+            this.requesterContext.Setup(_ => _.GetRequesterAsync()).ReturnsAsync(Requester);
             this.guidCreator.Setup(_ => _.CreateSqlSequential()).Returns(ChannelId.Value);
             this.createChannel.Setup(_ => _.HandleAsync(command)).Returns(Task.FromResult(0)).Verifiable();
 
@@ -75,7 +75,7 @@
             var data = new UpdatedChannelData(ChannelName.Value, ChannelDescription.Value, Price.Value, true);
             var command = new UpdateChannelCommand(Requester, ChannelId, ChannelName, ChannelDescription, Price, true);
 
-            this.requesterContext.Setup(v => v.GetRequester()).Returns(Requester);
+            this.requesterContext.Setup(_ => _.GetRequesterAsync()).ReturnsAsync(Requester);
             this.updateChannel.Setup(v => v.HandleAsync(command)).Returns(Task.FromResult(0)).Verifiable();
 
             var result = await this.target.PutChannelAsync(ChannelId.Value.EncodeGuid(), data);
@@ -103,7 +103,7 @@
         {
             var command = new DeleteChannelCommand(Requester, ChannelId);
 
-            this.requesterContext.Setup(v => v.GetRequester()).Returns(Requester);
+            this.requesterContext.Setup(_ => _.GetRequesterAsync()).ReturnsAsync(Requester);
             this.deleteChannel.Setup(v => v.HandleAsync(command)).Returns(Task.FromResult(0)).Verifiable();
 
             var result = await this.target.DeleteChannelAsync(ChannelId.Value.EncodeGuid());

@@ -73,9 +73,9 @@
         {
             var userId = new UserId(Guid.NewGuid());
             var impersonatedUserId = new UserId(Guid.NewGuid());
-            var target = Requester.Authenticated(userId, impersonatedUserId);
-            Assert.AreEqual(userId, target.UserId);
-            Assert.AreEqual(impersonatedUserId, target.ImpersonatedUserId);
+            var target = Requester.Authenticated(impersonatedUserId, Requester.Authenticated(userId));
+            Assert.AreEqual(impersonatedUserId, target.UserId);
+            Assert.AreEqual(userId, target.ImpersonatingRequester.UserId);
         }
 
         protected override Requester NewInstanceOfObjectA()

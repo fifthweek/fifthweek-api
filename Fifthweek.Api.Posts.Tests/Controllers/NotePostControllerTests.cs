@@ -51,7 +51,7 @@
             var data = new NewNoteData(ChannelId, Note.Value, ScheduledDate);
             var command = new PostNoteCommand(Requester, PostId, ChannelId, Note, ScheduledDate);
 
-            this.requesterContext.Setup(v => v.GetRequester()).Returns(Requester);
+            this.requesterContext.Setup(_ => _.GetRequesterAsync()).ReturnsAsync(Requester);
             this.guidCreator.Setup(_ => _.CreateSqlSequential()).Returns(PostId.Value);
             this.postNote.Setup(v => v.HandleAsync(command)).Returns(Task.FromResult(0)).Verifiable();
 
@@ -73,7 +73,7 @@
             var data = new RevisedNoteData(ChannelId, Note.Value);
             var command = new ReviseNoteCommand(Requester, PostId, ChannelId, Note);
 
-            this.requesterContext.Setup(v => v.GetRequester()).Returns(Requester);
+            this.requesterContext.Setup(_ => _.GetRequesterAsync()).ReturnsAsync(Requester);
             this.guidCreator.Setup(_ => _.CreateSqlSequential()).Returns(PostId.Value);
             this.reviseNote.Setup(v => v.HandleAsync(command)).Returns(Task.FromResult(0)).Verifiable();
 

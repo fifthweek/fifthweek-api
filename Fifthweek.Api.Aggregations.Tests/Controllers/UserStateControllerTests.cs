@@ -56,9 +56,9 @@
         [TestMethod]
         public async Task WhenGettingUserState_ItShouldReturnResultFromUserStateQuery()
         {
-            this.requesterContext.Setup(v => v.GetRequester()).Returns(Requester);
-            
-            this.getUserState.Setup(v => v.HandleAsync(new GetUserStateQuery(Requester, UserId)))
+            this.requesterContext.Setup(_ => _.GetRequesterAsync()).ReturnsAsync(Requester);
+
+            this.getUserState.Setup(v => v.HandleAsync(new GetUserStateQuery(Requester, UserId, false)))
                 .ReturnsAsync(UserState);
 
             var result = await this.target.GetUserState(UserId.Value.EncodeGuid());
@@ -67,11 +67,24 @@
         }
 
         [TestMethod]
+        public async Task WhenGettingUserState_AndImpersonating_ItShouldReturnResultFromUserStateQuery()
+        {
+            this.requesterContext.Setup(_ => _.GetRequesterAsync()).ReturnsAsync(Requester);
+
+            this.getUserState.Setup(v => v.HandleAsync(new GetUserStateQuery(Requester, UserId, true)))
+                .ReturnsAsync(UserState);
+
+            var result = await this.target.GetUserState(UserId.Value.EncodeGuid(), true);
+
+            Assert.AreEqual(UserState, result);
+        }
+
+        [TestMethod]
         public async Task WhenGettingVisitorState_ItShouldReturnResultFromUserStateQuery()
         {
-            this.requesterContext.Setup(v => v.GetRequester()).Returns(Requester.Unauthenticated);
+            this.requesterContext.Setup(v => v.GetRequesterAsync()).ReturnsAsync(Requester.Unauthenticated);
 
-            this.getUserState.Setup(v => v.HandleAsync(new GetUserStateQuery(Requester.Unauthenticated, null)))
+            this.getUserState.Setup(v => v.HandleAsync(new GetUserStateQuery(Requester.Unauthenticated, null, false)))
                 .ReturnsAsync(UserState);
 
             var result = await this.target.GetVisitorState();

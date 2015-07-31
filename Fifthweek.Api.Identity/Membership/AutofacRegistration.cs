@@ -16,6 +16,9 @@
             builder.RegisterType<GetAccountSettingsDbStatement>().As<IGetAccountSettingsDbStatement>();
             builder.RegisterType<UpdateAccountSettingsDbStatement>().As<IUpdateAccountSettingsDbStatement>();
             builder.RegisterType<ReservedUsernameService>().As<IReservedUsernameService>();
+
+            builder.RegisterType<GetUserRolesDbStatement>().As<IGetUserRolesDbStatement>();
+            builder.RegisterType<ImpersonateIfRequired>().As<IImpersonateIfRequired>();
         }
     }
 }

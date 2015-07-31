@@ -50,7 +50,7 @@
                 }
             }
 
-            var requester = this.requesterContext.GetRequester();
+            var requester = await this.requesterContext.GetRequesterAsync();
             var blogIdObject = new BlogId(blogId.DecodeGuid());
 
             await this.updateFreeAccessUsers.HandleAsync(new UpdateFreeAccessUsersCommand(
@@ -66,7 +66,7 @@
         {
             blogId.AssertUrlParameterProvided("blogId");
 
-            var requester = this.requesterContext.GetRequester();
+            var requester = await this.requesterContext.GetRequesterAsync();
             var blogIdObject = new BlogId(blogId.DecodeGuid());
             return await this.getFreeAccessUsers.HandleAsync(new GetFreeAccessUsersQuery(requester, blogIdObject));
         }

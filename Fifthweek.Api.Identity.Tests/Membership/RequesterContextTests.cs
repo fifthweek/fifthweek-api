@@ -5,6 +5,7 @@
     using System.Net.Http;
     using System.Security.Claims;
     using System.Security.Principal;
+    using System.Threading.Tasks;
     using System.Web;
     using System.Web.Http.Controllers;
 
@@ -26,59 +27,62 @@
         private const string AuthenticationType = "bearer";
 
         private Mock<IRequestContext> requestContext;
+        private Mock<IImpersonateIfRequired> impersonateIfRequired;
         private RequesterContext requesterContext;
 
         [TestInitialize]
         public void TestInitialize()
         {
             this.requestContext = new Mock<IRequestContext>();
-            this.requesterContext = new RequesterContext(this.requestContext.Object);
+            this.impersonateIfRequired = new Mock<IImpersonateIfRequired>(MockBehavior.Strict);
+            this.requesterContext = new RequesterContext(this.requestContext.Object, this.impersonateIfRequired.Object);
         }
 
         [TestMethod]
         [ExpectedException(typeof(InvalidOperationException))]
-        public void WhenAuthenticatedButNoNameIdentifierClaimExists_GetRequesterShouldThrowAnException()
+        public async Task WhenAuthenticatedButNoNameIdentifierClaimExists_GetRequesterShouldThrowAnException()
         {
             this.SetupRequestContext(new Principal(AuthenticationType));
-            Assert.AreEqual(Requester.Unauthenticated, this.requesterContext.GetRequester());
+
+            Assert.AreEqual(Requester.Unauthenticated, await this.requesterContext.GetRequesterAsync());
         }
 
         [TestMethod]
-        public void WhenNoUser_RequesterShouldBeUnauthenticated()
+        public async Task WhenNoUser_RequesterShouldBeUnauthenticated()
         {
             this.SetupRequestContext(null);
-            Assert.AreEqual(Requester.Unauthenticated, this.requesterContext.GetRequester());
+            Assert.AreEqual(Requester.Unauthenticated, await this.requesterContext.GetRequesterAsync());
         }
 
         [TestMethod]
-        public void WhenNoIdentity_RequesterShouldBeUnauthenticated()
+        public async Task WhenNoIdentity_RequesterShouldBeUnauthenticated()
         {
             this.SetupRequestContext(new NullIdentityPrincipal());
-            Assert.AreEqual(Requester.Unauthenticated, this.requesterContext.GetRequester());
+            Assert.AreEqual(Requester.Unauthenticated, await this.requesterContext.GetRequesterAsync());
         }
 
         [TestMethod]
-        public void WhenNoAuthenticationType_RequesterShouldBeUnauthenticated()
+        public async Task WhenNoAuthenticationType_RequesterShouldBeUnauthenticated()
         {
             this.SetupRequestContext(new Principal(null));
-            Assert.AreEqual(Requester.Unauthenticated, this.requesterContext.GetRequester());
+            Assert.AreEqual(Requester.Unauthenticated, await this.requesterContext.GetRequesterAsync());
         }
 
         [TestMethod]
-        public void WhenUserIdClaimExists_RequesterShouldBeAuthenticated()
+        public async Task WhenUserIdClaimExists_RequesterShouldBeAuthenticated()
         {
             var principal = new Principal(AuthenticationType);
             principal.ClaimsIdentity.AddClaim(new Claim(ClaimTypes.NameIdentifier, UserId.Value.EncodeGuid()));
 
             this.SetupRequestContext(principal);
 
-            var result = this.requesterContext.GetRequester();
+            var result = await this.requesterContext.GetRequesterAsync();
 
             Assert.AreEqual(Requester.Authenticated(UserId), result);
         }
 
         [TestMethod]
-        public void WhenImpersonationInformationExists_RequesterShouldContainImpersonatedUserId()
+        public async Task WhenImpersonationInformationExists_RequesterShouldContainImpersonatedUserId()
         {
             var principal = new Principal(AuthenticationType);
             principal.ClaimsIdentity.AddClaim(new Claim(ClaimTypes.NameIdentifier, UserId.Value.EncodeGuid()));
@@ -87,26 +91,48 @@
             var impersonatedUserId = UserId.Random();
             this.SetupImpersonationHeader(impersonatedUserId);
 
-            var result = this.requesterContext.GetRequester();
+            var impersonatingRequester = Requester.Authenticated(impersonatedUserId, Requester.Authenticated(UserId));
+            this.impersonateIfRequired.Setup(v => v.ExecuteAsync(Requester.Authenticated(UserId), impersonatedUserId))
+                .ReturnsAsync(impersonatingRequester);
 
-            Assert.AreEqual(Requester.Authenticated(UserId, impersonatedUserId), result);
+            var result = await this.requesterContext.GetRequesterAsync();
+
+            Assert.AreEqual(impersonatingRequester, result);
         }
 
         [TestMethod]
-        public void WhenNotAuthenticatedButNameIdentifierClamExists_RequesterShouldBeUnauthenticated()
+        public async Task WhenImpersonationInformationExists_ButImpersonationNotRequired_ItShouldReturnUnimpersonatedRequester()
+        {
+            var principal = new Principal(AuthenticationType);
+            principal.ClaimsIdentity.AddClaim(new Claim(ClaimTypes.NameIdentifier, UserId.Value.EncodeGuid()));
+            this.SetupRequestContext(principal);
+
+            var impersonatedUserId = UserId.Random();
+            this.SetupImpersonationHeader(impersonatedUserId);
+
+            this.impersonateIfRequired.Setup(v => v.ExecuteAsync(Requester.Authenticated(UserId), impersonatedUserId))
+                .ReturnsAsync(null);
+
+            var result = await this.requesterContext.GetRequesterAsync();
+
+            Assert.AreEqual(Requester.Authenticated(UserId), result);
+        }
+
+        [TestMethod]
+        public async Task WhenNotAuthenticatedButNameIdentifierClamExists_RequesterShouldBeUnauthenticated()
         {
             var principal = new Principal(null);
             principal.ClaimsIdentity.AddClaim(new Claim(ClaimTypes.NameIdentifier, UserId.Value.EncodeGuid()));
 
             this.SetupRequestContext(principal);
 
-            var result = this.requesterContext.GetRequester();
+            var result = await this.requesterContext.GetRequesterAsync();
 
             Assert.AreEqual(Requester.Unauthenticated, result);
         }
 
         [TestMethod]
-        public void IsInRoleShouldReturnTrueIfTheAuthenticatedUserIsInRole()
+        public async Task IsInRoleShouldReturnTrueIfTheAuthenticatedUserIsInRole()
         {
             var principal = new Principal(AuthenticationType);
             principal.ClaimsIdentity.AddClaim(new Claim(ClaimTypes.NameIdentifier, UserId.Value.EncodeGuid()));
@@ -116,14 +142,14 @@
 
             this.SetupRequestContext(principal);
 
-            var result = this.requesterContext.GetRequester();
+            var result = await this.requesterContext.GetRequesterAsync();
 
             Assert.IsTrue(result.IsInRole("Two"));
             Assert.IsFalse(result.IsInRole("Four"));
         }
 
         [TestMethod]
-        public void IsInRoleShouldReturnFalseIfNotAuthenticated()
+        public async Task IsInRoleShouldReturnFalseIfNotAuthenticated()
         {
             var principal = new Principal(null);
             principal.ClaimsIdentity.AddClaim(new Claim(ClaimTypes.NameIdentifier, UserId.Value.EncodeGuid()));
@@ -133,7 +159,7 @@
 
             this.SetupRequestContext(principal);
 
-            var result = this.requesterContext.GetRequester();
+            var result = await this.requesterContext.GetRequesterAsync();
 
             Assert.IsFalse(result.IsInRole("Two"));
         }

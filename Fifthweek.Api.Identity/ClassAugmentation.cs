@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Linq;
 
-//// Generated on 08/07/2015 12:12:17 (UTC)
-//// Mapped solution in 25.5s
+//// Generated on 31/07/2015 18:15:16 (UTC)
+//// Mapped solution in 16.81s
 
 
 namespace Fifthweek.Api.Identity.Membership.Commands
@@ -1142,18 +1142,26 @@ namespace Fifthweek.Api.Identity.Membership
     using System.Text;
     using Fifthweek.Payments.SnapshotCreation;
     using Fifthweek.Api.Persistence.Payments;
+    using System.Collections.Generic;
 
     public partial class RequesterContext 
     {
         public RequesterContext(
-            Fifthweek.Api.Core.IRequestContext requestContext)
+            Fifthweek.Api.Core.IRequestContext requestContext,
+            Fifthweek.Api.Identity.Membership.IImpersonateIfRequired impersonateIfRequired)
         {
             if (requestContext == null)
             {
                 throw new ArgumentNullException("requestContext");
             }
 
+            if (impersonateIfRequired == null)
+            {
+                throw new ArgumentNullException("impersonateIfRequired");
+            }
+
             this.requestContext = requestContext;
+            this.impersonateIfRequired = impersonateIfRequired;
         }
     }
 }
@@ -2282,6 +2290,133 @@ namespace Fifthweek.Api.Identity.OAuth
         }
     }
 }
+namespace Fifthweek.Api.Identity.Membership
+{
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Threading.Tasks;
+    using Dapper;
+    using Fifthweek.Api.Identity.Shared.Membership;
+    using Fifthweek.Api.Persistence;
+    using Fifthweek.Api.Persistence.Identity;
+    using Fifthweek.CodeGeneration;
+    using Fifthweek.Shared;
+
+    public partial class GetUserRolesDbStatement
+    {
+        public partial class UserRoles
+        {
+            public partial class UserRole 
+            {
+                public UserRole(
+                    System.Guid id,
+                    System.String name)
+                {
+                    if (id == null)
+                    {
+                        throw new ArgumentNullException("id");
+                    }
+
+                    if (name == null)
+                    {
+                        throw new ArgumentNullException("name");
+                    }
+
+                    this.Id = id;
+                    this.Name = name;
+                }
+            }
+        }
+    }
+}
+namespace Fifthweek.Api.Identity.Membership
+{
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Threading.Tasks;
+    using Dapper;
+    using Fifthweek.Api.Identity.Shared.Membership;
+    using Fifthweek.Api.Persistence;
+    using Fifthweek.Api.Persistence.Identity;
+    using Fifthweek.CodeGeneration;
+    using Fifthweek.Shared;
+
+    public partial class GetUserRolesDbStatement
+    {
+        public partial class UserRoles 
+        {
+            public UserRoles(
+                System.Collections.Generic.IReadOnlyList<Fifthweek.Api.Identity.Membership.GetUserRolesDbStatement.UserRoles.UserRole> roles)
+            {
+                if (roles == null)
+                {
+                    throw new ArgumentNullException("roles");
+                }
+
+                this.Roles = roles;
+            }
+        }
+    }
+}
+namespace Fifthweek.Api.Identity.Membership
+{
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Threading.Tasks;
+    using Dapper;
+    using Fifthweek.Api.Identity.Shared.Membership;
+    using Fifthweek.Api.Persistence;
+    using Fifthweek.Api.Persistence.Identity;
+    using Fifthweek.CodeGeneration;
+    using Fifthweek.Shared;
+
+    public partial class GetUserRolesDbStatement 
+    {
+        public GetUserRolesDbStatement(
+            Fifthweek.Api.Persistence.IFifthweekDbConnectionFactory connectionFactory)
+        {
+            if (connectionFactory == null)
+            {
+                throw new ArgumentNullException("connectionFactory");
+            }
+
+            this.connectionFactory = connectionFactory;
+        }
+    }
+}
+namespace Fifthweek.Api.Identity.Membership
+{
+    using System.Linq;
+    using System.Threading.Tasks;
+    using Fifthweek.Api.Core;
+    using Fifthweek.Api.Identity.Shared.Membership;
+    using Fifthweek.Api.Persistence.Identity;
+    using Fifthweek.CodeGeneration;
+
+    public partial class ImpersonateIfRequired 
+    {
+        public ImpersonateIfRequired(
+            Fifthweek.Api.Identity.Shared.Membership.IRequesterSecurity requesterSecurity,
+            Fifthweek.Api.Identity.Membership.IGetUserRolesDbStatement getUserRoles)
+        {
+            if (requesterSecurity == null)
+            {
+                throw new ArgumentNullException("requesterSecurity");
+            }
+
+            if (getUserRoles == null)
+            {
+                throw new ArgumentNullException("getUserRoles");
+            }
+
+            this.requesterSecurity = requesterSecurity;
+            this.getUserRoles = getUserRoles;
+        }
+    }
+}
 
 namespace Fifthweek.Api.Identity.Membership.Commands
 {
@@ -2996,7 +3131,7 @@ namespace Fifthweek.Api.Identity.Membership
     {
         public override string ToString()
         {
-            return string.Format("GetAccountSettingsResult({0}, {1}, {2}, {3}, {4}, {5}, {6})", this.Name == null ? "null" : this.Name.ToString(), this.Username == null ? "null" : this.Username.ToString(), this.Email == null ? "null" : this.Email.ToString(), this.ProfileImage == null ? "null" : this.ProfileImage.ToString(), this.AccountBalance == null ? "null" : this.AccountBalance.ToString(), this.PaymentStatus == null ? "null" : this.PaymentStatus.ToString(), this.HasPaymentInformation == null ? "null" : this.HasPaymentInformation.ToString());
+            return string.Format("GetAccountSettingsResult({0}, {1}, {2}, {3}, {4}, {5}, {6}, {7})", this.Name == null ? "null" : this.Name.ToString(), this.Username == null ? "null" : this.Username.ToString(), this.Email == null ? "null" : this.Email.ToString(), this.ProfileImage == null ? "null" : this.ProfileImage.ToString(), this.AccountBalance == null ? "null" : this.AccountBalance.ToString(), this.PaymentStatus == null ? "null" : this.PaymentStatus.ToString(), this.IsRetryingPayment == null ? "null" : this.IsRetryingPayment.ToString(), this.HasPaymentInformation == null ? "null" : this.HasPaymentInformation.ToString());
         }
         
         public override bool Equals(object obj)
@@ -3030,6 +3165,7 @@ namespace Fifthweek.Api.Identity.Membership
                 hashCode = (hashCode * 397) ^ (this.ProfileImage != null ? this.ProfileImage.GetHashCode() : 0);
                 hashCode = (hashCode * 397) ^ (this.AccountBalance != null ? this.AccountBalance.GetHashCode() : 0);
                 hashCode = (hashCode * 397) ^ (this.PaymentStatus != null ? this.PaymentStatus.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.IsRetryingPayment != null ? this.IsRetryingPayment.GetHashCode() : 0);
                 hashCode = (hashCode * 397) ^ (this.HasPaymentInformation != null ? this.HasPaymentInformation.GetHashCode() : 0);
                 return hashCode;
             }
@@ -3063,6 +3199,11 @@ namespace Fifthweek.Api.Identity.Membership
             }
         
             if (!object.Equals(this.PaymentStatus, other.PaymentStatus))
+            {
+                return false;
+            }
+        
+            if (!object.Equals(this.IsRetryingPayment, other.IsRetryingPayment))
             {
                 return false;
             }
@@ -4914,6 +5055,158 @@ namespace Fifthweek.Api.Identity.Membership.Controllers
             }
         
             return true;
+        }
+    }
+}
+namespace Fifthweek.Api.Identity.Membership
+{
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Threading.Tasks;
+    using Dapper;
+    using Fifthweek.Api.Identity.Shared.Membership;
+    using Fifthweek.Api.Persistence;
+    using Fifthweek.Api.Persistence.Identity;
+    using Fifthweek.CodeGeneration;
+    using Fifthweek.Shared;
+
+    public partial class GetUserRolesDbStatement
+    {
+        public partial class UserRoles
+        {
+            public partial class UserRole 
+            {
+                public override string ToString()
+                {
+                    return string.Format("UserRole({0}, \"{1}\")", this.Id == null ? "null" : this.Id.ToString(), this.Name == null ? "null" : this.Name.ToString());
+                }
+                
+                public override bool Equals(object obj)
+                {
+                    if (ReferenceEquals(null, obj))
+                    {
+                        return false;
+                    }
+                
+                    if (ReferenceEquals(this, obj))
+                    {
+                        return true;
+                    }
+                
+                    if (obj.GetType() != this.GetType())
+                    {
+                        return false;
+                    }
+                
+                    return this.Equals((UserRole)obj);
+                }
+                
+                public override int GetHashCode()
+                {
+                    unchecked
+                    {
+                        int hashCode = 0;
+                        hashCode = (hashCode * 397) ^ (this.Id != null ? this.Id.GetHashCode() : 0);
+                        hashCode = (hashCode * 397) ^ (this.Name != null ? this.Name.GetHashCode() : 0);
+                        return hashCode;
+                    }
+                }
+                
+                protected bool Equals(UserRole other)
+                {
+                    if (!object.Equals(this.Id, other.Id))
+                    {
+                        return false;
+                    }
+                
+                    if (!object.Equals(this.Name, other.Name))
+                    {
+                        return false;
+                    }
+                
+                    return true;
+                }
+            }
+        }
+    }
+}
+namespace Fifthweek.Api.Identity.Membership
+{
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Threading.Tasks;
+    using Dapper;
+    using Fifthweek.Api.Identity.Shared.Membership;
+    using Fifthweek.Api.Persistence;
+    using Fifthweek.Api.Persistence.Identity;
+    using Fifthweek.CodeGeneration;
+    using Fifthweek.Shared;
+
+    public partial class GetUserRolesDbStatement
+    {
+        public partial class UserRoles 
+        {
+            public override string ToString()
+            {
+                return string.Format("UserRoles({0})", this.Roles == null ? "null" : this.Roles.ToString());
+            }
+            
+            public override bool Equals(object obj)
+            {
+                if (ReferenceEquals(null, obj))
+                {
+                    return false;
+                }
+            
+                if (ReferenceEquals(this, obj))
+                {
+                    return true;
+                }
+            
+                if (obj.GetType() != this.GetType())
+                {
+                    return false;
+                }
+            
+                return this.Equals((UserRoles)obj);
+            }
+            
+            public override int GetHashCode()
+            {
+                unchecked
+                {
+                    int hashCode = 0;
+                    hashCode = (hashCode * 397) ^ (this.Roles != null 
+            			? this.Roles.Aggregate(0, (previous, current) => 
+            				{ 
+            				    unchecked
+            				    {
+            				        return (previous * 397) ^ (current != null ? current.GetHashCode() : 0);
+            				    }
+            				})
+            			: 0);
+                    return hashCode;
+                }
+            }
+            
+            protected bool Equals(UserRoles other)
+            {
+                if (this.Roles != null && other.Roles != null)
+                {
+                    if (!this.Roles.SequenceEqual(other.Roles))
+                    {
+                        return false;    
+                    }
+                }
+                else if (this.Roles != null || other.Roles != null)
+                {
+                    return false;
+                }
+            
+                return true;
+            }
         }
     }
 }

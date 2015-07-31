@@ -1038,12 +1038,13 @@ describe('user state stub', function() {
 
   it('should get user state', function() {
     var userId = 'value0';
+    var impersonate = 'value1';
 
     var responseData = 'response data';
-    $httpBackend.expectGET(utilities.fixUri(fifthweekConstants.apiBaseUri + 'userState/' + encodeURIComponent(userId))).respond(200, responseData);
+    $httpBackend.expectGET(utilities.fixUri(fifthweekConstants.apiBaseUri + 'userState/' + encodeURIComponent(userId) + '?' + (impersonate === undefined ? '' : 'impersonate=' + encodeURIComponent(impersonate) + '&'))).respond(200, responseData);
 
     var result = null;
-    target.getUserState(userId).then(function(response) { result = response.data; });
+    target.getUserState(userId, impersonate).then(function(response) { result = response.data; });
 
     $httpBackend.flush();
     $rootScope.$apply();

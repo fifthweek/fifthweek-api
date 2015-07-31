@@ -25,7 +25,7 @@
             newChannelData.AssertBodyProvided("newChannel");
             var newChannel = newChannelData.Parse();
 
-            var requester = this.requesterContext.GetRequester();
+            var requester = await this.requesterContext.GetRequesterAsync();
             var newChannelId = new ChannelId(this.guidCreator.CreateSqlSequential());
 
             await this.createChannel.HandleAsync(
@@ -48,7 +48,7 @@
             channelData.AssertBodyProvided("channelData");
             var channel = channelData.Parse();
 
-            var requester = this.requesterContext.GetRequester();
+            var requester = await this.requesterContext.GetRequesterAsync();
             var channelIdObject = new ChannelId(channelId.DecodeGuid());
 
             await this.updateChannel.HandleAsync(
@@ -68,7 +68,7 @@
         {
             channelId.AssertUrlParameterProvided("channelId");
 
-            var requester = this.requesterContext.GetRequester();
+            var requester = await this.requesterContext.GetRequesterAsync();
             var channelIdObject = new ChannelId(channelId.DecodeGuid());
 
             await this.deleteChannel.HandleAsync(new DeleteChannelCommand(requester, channelIdObject));

@@ -61,6 +61,7 @@
         private Mock<IQueryHandler<GetAccountSettingsQuery, GetAccountSettingsResult>> getAccountSettings;
         private Mock<IQueryHandler<GetBlogChannelsAndCollectionsQuery, GetBlogChannelsAndCollectionsResult>> getBlogChannelsAndCollections;
         private Mock<IQueryHandler<GetUserSubscriptionsQuery, GetUserSubscriptionsResult>> getBlogSubscriptions;
+        private Mock<IImpersonateIfRequired> impersonateIfRequired;
 
         [TestInitialize]
         public void TestInitialize()
@@ -74,6 +75,7 @@
             this.getAccountSettings = new Mock<IQueryHandler<GetAccountSettingsQuery, GetAccountSettingsResult>>(MockBehavior.Strict);
             this.getBlogChannelsAndCollections = new Mock<IQueryHandler<GetBlogChannelsAndCollectionsQuery, GetBlogChannelsAndCollectionsResult>>(MockBehavior.Strict);
             this.getBlogSubscriptions = new Mock<IQueryHandler<GetUserSubscriptionsQuery, GetUserSubscriptionsResult>>(MockBehavior.Strict);
+            this.impersonateIfRequired = new Mock<IImpersonateIfRequired>(MockBehavior.Strict);
 
             this.target = new GetUserStateQueryHandler(
                 this.requesterSecurity.Object, 
@@ -81,7 +83,8 @@
                 this.getCreatorStatus.Object, 
                 this.getAccountSettings.Object,
                 this.getBlogChannelsAndCollections.Object,
-                this.getBlogSubscriptions.Object);
+                this.getBlogSubscriptions.Object,
+                this.impersonateIfRequired.Object);
         }
 
         [TestMethod]
@@ -96,7 +99,7 @@
         public async Task WhenCalled_ItShouldCheckTheAuthenticatedUserIsCorrect()
         {
             this.requesterSecurity.SetupFor(Requester);
-            await this.target.HandleAsync(new GetUserStateQuery(Requester, new UserId(Guid.NewGuid())));
+            await this.target.HandleAsync(new GetUserStateQuery(Requester, new UserId(Guid.NewGuid()), false));
         }
 
         [TestMethod]
@@ -108,7 +111,7 @@
             this.getUserAccessSignatures.Setup(v => v.HandleAsync(new GetUserAccessSignaturesQuery(Requester.Unauthenticated, null, null, null)))
                 .ReturnsAsync(UserAccessSignatures);
 
-            var result = await this.target.HandleAsync(new GetUserStateQuery(Requester.Unauthenticated, null));
+            var result = await this.target.HandleAsync(new GetUserStateQuery(Requester.Unauthenticated, null, false));
 
             Assert.IsNotNull(result);
             Assert.AreEqual(UserAccessSignatures, result.AccessSignatures);
@@ -133,7 +136,69 @@
             this.getBlogSubscriptions.Setup(v => v.HandleAsync(new GetUserSubscriptionsQuery(Requester, UserId)))
                 .ReturnsAsync(UserSubscriptions);
 
-            var result = await this.target.HandleAsync(new GetUserStateQuery(Requester, UserId));
+            var result = await this.target.HandleAsync(new GetUserStateQuery(Requester, UserId, false));
+
+            Assert.IsNotNull(result);
+            Assert.AreEqual(UserAccessSignatures, result.AccessSignatures);
+            Assert.AreEqual(UserSubscriptions, result.Subscriptions);
+            Assert.AreEqual(accountSettings, result.AccountSettings);
+
+            Assert.IsNull(result.CreatorStatus);
+            Assert.IsNull(result.CreatedChannelsAndCollections);
+            Assert.IsNull(result.Blog);
+        }
+
+        [TestMethod]
+        public async Task WhenCalledAsAUser_AndImpersonationRequested_ItShouldReturnRegisteredUserStateWithoutCreatorState()
+        {
+            this.requesterSecurity.SetupFor(Requester);
+
+            var accountSettings = new GetAccountSettingsResult(new CreatorName("name"), new Username("username"), new Email("a@b.com"), null, 10, PaymentStatus.Retry1, true);
+
+            this.getUserAccessSignatures.Setup(v => v.HandleAsync(new GetUserAccessSignaturesQuery(Requester, UserId, null, new List<ChannelId> { UserSubscriptions.Blogs[0].Channels[0].ChannelId, UserSubscriptions.Blogs[1].Channels[0].ChannelId })))
+                .ReturnsAsync(UserAccessSignatures);
+            this.getAccountSettings.Setup(v => v.HandleAsync(new GetAccountSettingsQuery(Requester, UserId)))
+                .ReturnsAsync(accountSettings);
+            this.getBlogSubscriptions.Setup(v => v.HandleAsync(new GetUserSubscriptionsQuery(Requester, UserId)))
+                .ReturnsAsync(UserSubscriptions);
+
+            var impersonatingUserId = UserId.Random();
+            var impersonatingRequester = Requester.Authenticated(impersonatingUserId);
+            this.impersonateIfRequired.Setup(v => v.ExecuteAsync(impersonatingRequester, UserId))
+                .ReturnsAsync(Requester);
+
+            var result = await this.target.HandleAsync(
+                new GetUserStateQuery(impersonatingRequester, UserId, true));
+
+            Assert.IsNotNull(result);
+            Assert.AreEqual(UserAccessSignatures, result.AccessSignatures);
+            Assert.AreEqual(UserSubscriptions, result.Subscriptions);
+            Assert.AreEqual(accountSettings, result.AccountSettings);
+
+            Assert.IsNull(result.CreatorStatus);
+            Assert.IsNull(result.CreatedChannelsAndCollections);
+            Assert.IsNull(result.Blog);
+        }
+
+        [TestMethod]
+        public async Task WhenCalledAsAUser_AndImpersonationRequestedButNotRequired_ItShouldReturnRegisteredUserStateWithoutCreatorState()
+        {
+            this.requesterSecurity.SetupFor(Requester);
+
+            var accountSettings = new GetAccountSettingsResult(new CreatorName("name"), new Username("username"), new Email("a@b.com"), null, 10, PaymentStatus.Retry1, true);
+
+            this.getUserAccessSignatures.Setup(v => v.HandleAsync(new GetUserAccessSignaturesQuery(Requester, UserId, null, new List<ChannelId> { UserSubscriptions.Blogs[0].Channels[0].ChannelId, UserSubscriptions.Blogs[1].Channels[0].ChannelId })))
+                .ReturnsAsync(UserAccessSignatures);
+            this.getAccountSettings.Setup(v => v.HandleAsync(new GetAccountSettingsQuery(Requester, UserId)))
+                .ReturnsAsync(accountSettings);
+            this.getBlogSubscriptions.Setup(v => v.HandleAsync(new GetUserSubscriptionsQuery(Requester, UserId)))
+                .ReturnsAsync(UserSubscriptions);
+
+            this.impersonateIfRequired.Setup(v => v.ExecuteAsync(Requester, UserId))
+                .ReturnsAsync(null);
+
+            var result = await this.target.HandleAsync(
+                new GetUserStateQuery(Requester, UserId, true));
 
             Assert.IsNotNull(result);
             Assert.AreEqual(UserAccessSignatures, result.AccessSignatures);
@@ -169,7 +234,7 @@
             this.getBlogChannelsAndCollections.Setup(v => v.HandleAsync(new GetBlogChannelsAndCollectionsQuery(creatorStatus.BlogId)))
                 .ReturnsAsync(blogChannelsAndCollections);
 
-            var result = await this.target.HandleAsync(new GetUserStateQuery(Requester, UserId));
+            var result = await this.target.HandleAsync(new GetUserStateQuery(Requester, UserId, false));
 
             Assert.IsNotNull(result);
             Assert.AreEqual(UserAccessSignatures, result.AccessSignatures);
@@ -198,7 +263,7 @@
             this.getAccountSettings.Setup(v => v.HandleAsync(new GetAccountSettingsQuery(Requester, UserId)))
                 .ReturnsAsync(accountSettings);
 
-            var result = await this.target.HandleAsync(new GetUserStateQuery(Requester, UserId));
+            var result = await this.target.HandleAsync(new GetUserStateQuery(Requester, UserId, false));
 
             Assert.IsNotNull(result);
             Assert.AreEqual(UserAccessSignatures, result.AccessSignatures);

@@ -14,14 +14,14 @@
 
         private readonly HashSet<string> roles;
 
-        private readonly UserId impersonatedUserId;
+        private readonly Requester impersonatingRequester;
 
-        private Requester(UserId userId, UserId impersonatedUserId, IEnumerable<string> roles)
+        private Requester(UserId userId, Requester impersonatingRequester, IEnumerable<string> roles)
         {
             userId.AssertNotNull("userId");
 
             this.userId = userId;
-            this.impersonatedUserId = impersonatedUserId;
+            this.impersonatingRequester = impersonatingRequester;
             this.roles = new HashSet<string>(roles ?? Enumerable.Empty<string>());
         }
 
@@ -38,11 +38,11 @@
             }
         }
 
-        internal UserId ImpersonatedUserId
+        internal Requester ImpersonatingRequester
         {
             get
             {
-                return this.impersonatedUserId;
+                return this.impersonatingRequester;
             }
         }
 
@@ -64,21 +64,21 @@
             return Authenticated(userId, null, roles);
         }
 
-        public static Requester Authenticated(UserId userId, UserId impersonatedUserId, params string[] roles)
+        public static Requester Authenticated(UserId userId, Requester impersonatingRequester, params string[] roles)
         {
-            return Authenticated(userId, impersonatedUserId, (IEnumerable<string>)roles);
+            return Authenticated(userId, impersonatingRequester, (IEnumerable<string>)roles);
         }
 
-        public static Requester Authenticated(UserId userId, UserId impersonatedUserId, IEnumerable<string> roles)
+        public static Requester Authenticated(UserId userId, Requester impersonatingRequester, IEnumerable<string> roles)
         {
-            return new Requester(userId, impersonatedUserId, roles);
+            return new Requester(userId, impersonatingRequester, roles);
         }
 
         public override string ToString()
         {
             return this.userId == null 
-                ? "Requester(Unauthenticated)" 
-                : string.Format("Requester({0}, {1}, [{2}])", this.userId, this.impersonatedUserId, string.Join(", ", this.roles));
+                ? "Requester(Unauthenticated)"
+                : string.Format("Requester({0}, {1}, [{2}])", this.userId, this.impersonatingRequester, string.Join(", ", this.roles));
         }
 
         public override bool Equals(object obj)
@@ -108,7 +108,7 @@
                 int hashCode = 0;
 
                 hashCode = (hashCode * 397) ^ (this.userId != null ? this.userId.GetHashCode() : 0);
-                hashCode = (hashCode * 397) ^ (this.impersonatedUserId != null ? this.impersonatedUserId.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.impersonatingRequester != null ? this.impersonatingRequester.GetHashCode() : 0);
                 
                 var sortedRoles = new List<string>(this.roles);
                 sortedRoles.Sort();
@@ -134,7 +134,7 @@
                 return false;
             }
 
-            if (!object.Equals(this.impersonatedUserId, other.impersonatedUserId))
+            if (!object.Equals(this.impersonatingRequester, other.impersonatingRequester))
             {
                 return false;
             }

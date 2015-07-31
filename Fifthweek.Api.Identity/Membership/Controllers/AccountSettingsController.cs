@@ -32,7 +32,7 @@
             userId.AssertUrlParameterProvided("userId");
 
             var requestedUserId = new UserId(userId.DecodeGuid());
-            var requester = this.requesterContext.GetRequester();
+            var requester = await this.requesterContext.GetRequesterAsync();
 
             var query = new GetAccountSettingsQuery(requester, requestedUserId);
             var result = await this.getAccountSettings.HandleAsync(query);
@@ -46,7 +46,7 @@
             updatedAccountSettingsData.AssertBodyProvided("updatedAccountSettings");
 
             var updatedAccountSettings = updatedAccountSettingsData.Parse();
-            var requester = this.requesterContext.GetRequester();
+            var requester = await this.requesterContext.GetRequesterAsync();
             var requestedUserId = new UserId(userId.DecodeGuid());
 
             var newProfileImageId
@@ -73,7 +73,7 @@
             creatorInformation.AssertBodyProvided("creatorInformation");
 
             var parsedCreatorInformation = creatorInformation.Parse();
-            var requester = this.requesterContext.GetRequester();
+            var requester = await this.requesterContext.GetRequesterAsync();
             var requestedUserId = new UserId(userId.DecodeGuid());
 
             var command = new UpdateCreatorAccountSettingsCommand(requester, requestedUserId, parsedCreatorInformation.Name);

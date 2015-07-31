@@ -28,6 +28,7 @@
         private readonly IQueryHandler<GetAccountSettingsQuery, GetAccountSettingsResult> getAccountSettings;
         private readonly IQueryHandler<GetBlogChannelsAndCollectionsQuery, GetBlogChannelsAndCollectionsResult> getBlogChannelsAndCollections;
         private readonly IQueryHandler<GetUserSubscriptionsQuery, GetUserSubscriptionsResult> getBlogSubscriptions;
+        private readonly IImpersonateIfRequired impersonateIfRequired;
 
         public async Task<UserState> HandleAsync(GetUserStateQuery query)
         {
@@ -41,6 +42,15 @@
             
             if (query.RequestedUserId != null)
             {
+                if (query.Impersonate)
+                {
+                    var impersonatingRequester = await this.impersonateIfRequired.ExecuteAsync(query.Requester, query.RequestedUserId);
+                    if (impersonatingRequester != null)
+                    {
+                        query = new GetUserStateQuery(impersonatingRequester, query.RequestedUserId, false);
+                    }
+                }
+
                 await this.requesterSecurity.AuthenticateAsAsync(query.Requester, query.RequestedUserId);
                 
                 bool isCreator = await this.requesterSecurity.IsInRoleAsync(query.Requester, FifthweekRole.Creator);

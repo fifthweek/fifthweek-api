@@ -30,7 +30,7 @@
             newCollectionData.AssertBodyProvided("newCollectionData");
             var newCollection = newCollectionData.Parse();
 
-            var requester = this.requesterContext.GetRequester();
+            var requester = await this.requesterContext.GetRequesterAsync();
             var newCollectionId = new CollectionId(this.guidCreator.CreateSqlSequential());
 
             // Spread default release dates so posts are not delivered on same date as standard.
@@ -55,7 +55,7 @@
             collectionData.AssertBodyProvided("collectionData");
             var collection = collectionData.Parse();
 
-            var requester = this.requesterContext.GetRequester();
+            var requester = await this.requesterContext.GetRequesterAsync();
             var collectionIdObject = new CollectionId(collectionId.DecodeGuid());
 
             await this.updateCollection.HandleAsync(
@@ -73,7 +73,7 @@
         {
             collectionId.AssertUrlParameterProvided("collectionId");
 
-            var requester = this.requesterContext.GetRequester();
+            var requester = await this.requesterContext.GetRequesterAsync();
             var collectionIdObject = new CollectionId(collectionId.DecodeGuid());
 
             await this.deleteCollection.HandleAsync(new DeleteCollectionCommand(requester, collectionIdObject));
@@ -87,7 +87,7 @@
         {
             collectionId.AssertUrlParameterProvided("collectionId");
 
-            var requester = this.requesterContext.GetRequester();
+            var requester = await this.requesterContext.GetRequesterAsync();
             var collectionIdObject = new CollectionId(collectionId.DecodeGuid());
 
             return await this.getLiveDateOfNewQueuedPost.HandleAsync(new GetLiveDateOfNewQueuedPostQuery(requester, collectionIdObject));

@@ -117,6 +117,8 @@
     <Compile Include="Membership\Controllers\AccountSettingsControllerTests.cs" />
     <Compile Include="Membership\Controllers\MembershipControllerTests.cs" />
     <Compile Include="Membership\GetAccountSettingsDbStatementTests.cs" />
+    <Compile Include="Membership\GetUserRolesDbStatementTests.cs" />
+    <Compile Include="Membership\ImpersonateIfRequiredTests.cs" />
     <Compile Include="Membership\Queries\GetAccountSettingsQueryHandlerTests.cs" />
     <Compile Include="Membership\RegisterUserDbStatementTests.cs" />
     <Compile Include="Membership\RequesterSecurityTests.cs" />

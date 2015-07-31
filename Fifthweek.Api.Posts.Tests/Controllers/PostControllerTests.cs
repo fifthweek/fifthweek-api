@@ -69,7 +69,7 @@
             var query = new GetCreatorBacklogQuery(Requester, UserId);
             var queryResult = new[] { new GetCreatorBacklogQueryResult(PostId, ChannelId, CollectionId, new Comment(""), null, null, null, null, false, DateTime.UtcNow) };
 
-            this.requesterContext.Setup(_ => _.GetRequester()).Returns(Requester);
+            this.requesterContext.Setup(_ => _.GetRequesterAsync()).ReturnsAsync(Requester);
             this.getCreatorBacklog.Setup(_ => _.HandleAsync(query)).ReturnsAsync(queryResult);
 
             var result = await this.target.GetCreatorBacklog(UserId.Value.EncodeGuid());
@@ -94,7 +94,7 @@
             var queryResult = new GetNewsfeedQueryResult(new[] { new GetNewsfeedQueryResult.Post(UserId, PostId, BlogId, ChannelId, CollectionId, new Comment(string.Empty), null, null, null, null, now) }, 10);
             var expectedResult = new[] { new GetCreatorNewsfeedQueryResult(PostId, ChannelId, CollectionId, new Comment(string.Empty), null, null, null, null, now) };
 
-            this.requesterContext.Setup(_ => _.GetRequester()).Returns(Requester);
+            this.requesterContext.Setup(_ => _.GetRequesterAsync()).ReturnsAsync(Requester);
             this.getNewsfeed.Setup(_ => _.HandleAsync(query)).ReturnsAsync(queryResult);
 
             var result = await this.target.GetCreatorNewsfeed(UserId.Value.EncodeGuid(), requestData);
@@ -133,7 +133,7 @@
 
             var queryResult = new GetNewsfeedQueryResult(new[] { new GetNewsfeedQueryResult.Post(UserId, PostId, BlogId, ChannelId, CollectionId, new Comment(string.Empty), null, null, null, null, DateTime.UtcNow) }, 10);
 
-            this.requesterContext.Setup(_ => _.GetRequester()).Returns(Requester);
+            this.requesterContext.Setup(_ => _.GetRequesterAsync()).ReturnsAsync(Requester);
             this.getNewsfeed.Setup(_ => _.HandleAsync(query)).ReturnsAsync(queryResult);
 
             var result = await this.target.GetNewsfeed(requestData);
@@ -151,7 +151,7 @@
         [TestMethod]
         public async Task WhenDeletingPost_ItShouldIssueDeletePostCommand()
         {
-            this.requesterContext.Setup(v => v.GetRequester()).Returns(Requester);
+            this.requesterContext.Setup(_ => _.GetRequesterAsync()).ReturnsAsync(Requester);
             this.deletePost.Setup(v => v.HandleAsync(new DeletePostCommand(PostId, Requester)))
                 .Returns(Task.FromResult(0))
                 .Verifiable();
@@ -173,7 +173,7 @@
         {
             var newQueueOrder = new[] { new PostId(Guid.NewGuid()) };
 
-            this.requesterContext.Setup(v => v.GetRequester()).Returns(Requester);
+            this.requesterContext.Setup(_ => _.GetRequesterAsync()).ReturnsAsync(Requester);
             this.reorderQueue.Setup(v => v.HandleAsync(new ReorderQueueCommand(Requester, CollectionId, newQueueOrder)))
                 .Returns(Task.FromResult(0))
                 .Verifiable();
@@ -200,7 +200,7 @@
         [TestMethod]
         public async Task WhenReschedulingWithQueue_ItShouldIssueRescheduleWithQueueCommand()
         {
-            this.requesterContext.Setup(v => v.GetRequester()).Returns(Requester);
+            this.requesterContext.Setup(_ => _.GetRequesterAsync()).ReturnsAsync(Requester);
             this.rescheduleWithQueue.Setup(_ => _.HandleAsync(new RescheduleWithQueueCommand(Requester, PostId)))
                 .Returns(Task.FromResult(0))
                 .Verifiable();
@@ -220,7 +220,7 @@
         [TestMethod]
         public async Task WhenReschedulingForNow_ItShouldIssueRescheduleForNowCommand()
         {
-            this.requesterContext.Setup(v => v.GetRequester()).Returns(Requester);
+            this.requesterContext.Setup(_ => _.GetRequesterAsync()).ReturnsAsync(Requester);
             this.rescheduleForNow.Setup(_ => _.HandleAsync(new RescheduleForNowCommand(Requester, PostId)))
                 .Returns(Task.FromResult(0))
                 .Verifiable();
@@ -242,7 +242,7 @@
         {
             var newLiveDate = DateTime.UtcNow;
 
-            this.requesterContext.Setup(v => v.GetRequester()).Returns(Requester);
+            this.requesterContext.Setup(_ => _.GetRequesterAsync()).ReturnsAsync(Requester);
             this.rescheduleForTime.Setup(_ => _.HandleAsync(new RescheduleForTimeCommand(Requester, PostId, newLiveDate)))
                 .Returns(Task.FromResult(0))
                 .Verifiable();

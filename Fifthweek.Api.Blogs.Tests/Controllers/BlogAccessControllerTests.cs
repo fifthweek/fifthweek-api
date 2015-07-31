@@ -35,7 +35,7 @@
             this.updateFreeAccessUsers = new Mock<ICommandHandler<UpdateFreeAccessUsersCommand>>();
             this.getFreeAccessUsers = new Mock<IQueryHandler<GetFreeAccessUsersQuery, GetFreeAccessUsersResult>>();
 
-            this.requesterContext.Setup(v => v.GetRequester()).Returns(Requester);
+            this.requesterContext.Setup(_ => _.GetRequesterAsync()).ReturnsAsync(Requester);
 
             this.target = new BlogAccessController(this.requesterContext.Object, this.updateFreeAccessUsers.Object, this.getFreeAccessUsers.Object);
         }

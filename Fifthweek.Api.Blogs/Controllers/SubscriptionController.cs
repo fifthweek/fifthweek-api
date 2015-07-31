@@ -29,7 +29,7 @@
                 .Select(v => v.Parse())
                 .Select(v => new AcceptedChannelSubscription(new ChannelId(v.ChannelId.DecodeGuid()), v.AcceptedPrice)).ToList();
 
-            var requester = this.requesterContext.GetRequester();
+            var requester = await this.requesterContext.GetRequesterAsync();
             var blogIdObject = new BlogId(blogId.DecodeGuid());
             
             await this.updateBlogSubscriptions.HandleAsync(new UpdateBlogSubscriptionsCommand(
@@ -43,7 +43,7 @@
         {
             channelId.AssertUrlParameterProvided("channelId");
 
-            var requester = this.requesterContext.GetRequester();
+            var requester = await this.requesterContext.GetRequesterAsync();
             var channelIdObject = new ChannelId(channelId.DecodeGuid());
             
             await this.unsubscribeFromChannel.HandleAsync(new UnsubscribeFromChannelCommand(
@@ -57,7 +57,7 @@
             channelId.AssertUrlParameterProvided("channelId");
             subscriptionData.AssertBodyProvided("subscriptionData");
 
-            var requester = this.requesterContext.GetRequester();
+            var requester = await this.requesterContext.GetRequesterAsync();
             var channelIdObject = new ChannelId(channelId.DecodeGuid());
 
             var parsedSubscriptionData = subscriptionData.Parse();

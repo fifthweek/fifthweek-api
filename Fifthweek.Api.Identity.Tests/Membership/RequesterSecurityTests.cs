@@ -50,17 +50,10 @@
         }
 
         [TestMethod]
-        public async Task WhenCallingAuthenticate_AndUsingImpersonation_AndAdministrator_ItShouldReturnImpersonatedId()
+        public async Task WhenCallingAuthenticate_AndUsingImpersonation_ItShouldReturnUserIdId()
         {
-            var userId = await this.target.AuthenticateAsync(Requester.Authenticated(UserId, ImpersonatedUserId, "role", FifthweekRole.Administrator, "role3"));
+            var userId = await this.target.AuthenticateAsync(Requester.Authenticated(ImpersonatedUserId, Requester.Authenticated(UserId, "role2"), "role"));
             Assert.AreEqual(ImpersonatedUserId, userId);
-        }
-
-        [TestMethod]
-        [ExpectedException(typeof(UnauthorizedException))]
-        public async Task WhenCallingAuthenticate_AndUsingImpersonation_AndNotAdministrator_ItShouldReturnIfAuthenticated()
-        {
-            await this.target.AuthenticateAsync(Requester.Authenticated(UserId, ImpersonatedUserId, "role", "role2", "role3"));
         }
 
         // AuthenticateAs
@@ -101,29 +94,20 @@
 
         [TestMethod]
         [ExpectedException(typeof(UnauthorizedException))]
-        public async Task WhenCallingAuthenticateAs_AndUsingImpersonation_AndAdministrator_ItShouldNotAuthenticateAsNonImpersonatedUserId()
+        public async Task WhenCallingAuthenticateAs_AndUsingImpersonation_ItShouldNotAuthenticateAsNonImpersonatedUserId()
         {
             await this.target.AuthenticateAsAsync(
-                Requester.Authenticated(UserId, ImpersonatedUserId, "role", FifthweekRole.Administrator, "role3"),
+                Requester.Authenticated(ImpersonatedUserId, Requester.Authenticated(UserId, "role2"), "role"),
                 UserId);
         }
 
         [TestMethod]
-        public async Task WhenCallingAuthenticateAs_AndUsingImpersonation_AndAdministrator_ItShouldAuthenticateAsImpersonatedUserId()
+        public async Task WhenCallingAuthenticateAs_AndUsingImpersonation_ItShouldAuthenticateAsImpersonatedUserId()
         {
             var userId = await this.target.AuthenticateAsAsync(
-                Requester.Authenticated(UserId, ImpersonatedUserId, "role", FifthweekRole.Administrator, "role3"),
+                Requester.Authenticated(ImpersonatedUserId, Requester.Authenticated(UserId, "role2"), "role"),
                 ImpersonatedUserId);
             Assert.AreEqual(ImpersonatedUserId, userId);
-        }
-
-        [TestMethod]
-        [ExpectedException(typeof(UnauthorizedException))]
-        public async Task WhenCallingAuthenticateAs_AndUsingImpersonation_AndNotAdministrator_ItShouldReturnWhenAuthenticatedAsTheSpecifiedUser()
-        {
-            await this.target.AuthenticateAsAsync(
-                Requester.Authenticated(UserId, ImpersonatedUserId, "role", "role2", "role3"),
-                ImpersonatedUserId);
         }
 
         // IsInRole
@@ -151,6 +135,22 @@
         public async Task WhenCallingIsInRole_ItShouldReturnTrueWhenInRole()
         {
             Assert.IsTrue(await this.target.IsInRoleAsync(Requester, "role2"));
+        }
+
+        [TestMethod]
+        public async Task WhenCallingIsInRole_AndUsingImpersonation_ItShouldReturnFalseWhenNotInRole()
+        {
+            Assert.IsFalse(await this.target.IsInRoleAsync(
+                Requester.Authenticated(ImpersonatedUserId, Requester.Authenticated(UserId, "role2"), "role"),
+                "role2"));
+        }
+
+        [TestMethod]
+        public async Task WhenCallingIsInRole_AndUsingImpersonation_ItShouldReturnTrueWhenInRole()
+        {
+            Assert.IsTrue(await this.target.IsInRoleAsync(
+                Requester.Authenticated(ImpersonatedUserId, Requester.Authenticated(UserId, "role2"), "role"),
+                "role"));
         }
 
         // AssertInRole

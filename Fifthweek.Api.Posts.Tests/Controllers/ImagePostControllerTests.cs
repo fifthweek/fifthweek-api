@@ -51,7 +51,7 @@
             var data = new NewImageData(CollectionId, FileId, null, null, true);
             var command = new PostImageCommand(Requester, PostId, CollectionId, FileId, null, null, true);
 
-            this.requesterContext.Setup(v => v.GetRequester()).Returns(Requester);
+            this.requesterContext.Setup(_ => _.GetRequesterAsync()).ReturnsAsync(Requester);
             this.guidCreator.Setup(_ => _.CreateSqlSequential()).Returns(PostId.Value);
             this.postImage.Setup(v => v.HandleAsync(command)).Returns(Task.FromResult(0)).Verifiable();
 
@@ -73,7 +73,7 @@
             var data = new RevisedImageData(FileId, null);
             var command = new ReviseImageCommand(Requester, PostId, FileId, null);
 
-            this.requesterContext.Setup(v => v.GetRequester()).Returns(Requester);
+            this.requesterContext.Setup(_ => _.GetRequesterAsync()).ReturnsAsync(Requester);
             this.guidCreator.Setup(_ => _.CreateSqlSequential()).Returns(PostId.Value);
             this.reviseImage.Setup(v => v.HandleAsync(command)).Returns(Task.FromResult(0)).Verifiable();
 
