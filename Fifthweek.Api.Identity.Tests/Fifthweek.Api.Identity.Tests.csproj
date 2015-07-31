@@ -145,7 +145,7 @@
     <Compile Include="OAuth\TryGetRefreshTokenDbStatementTests.cs" />
     <Compile Include="OAuth\UpdateUserTimeStampsDbStatementTests.cs" />
     <Compile Include="OAuth\UpsertRefreshTokenDbStatementTests.cs" />
-    <Compile Include="OAuth\RequesterContextTests.cs" />
+    <Compile Include="Membership\RequesterContextTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

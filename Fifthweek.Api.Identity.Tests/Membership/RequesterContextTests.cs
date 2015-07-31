@@ -1,4 +1,4 @@
-﻿namespace Fifthweek.Api.Identity.Tests.OAuth
+﻿namespace Fifthweek.Api.Identity.Tests.Membership
 {
     using System;
     using System.IO;
@@ -78,6 +78,21 @@
         }
 
         [TestMethod]
+        public void WhenImpersonationInformationExists_RequesterShouldContainImpersonatedUserId()
+        {
+            var principal = new Principal(AuthenticationType);
+            principal.ClaimsIdentity.AddClaim(new Claim(ClaimTypes.NameIdentifier, UserId.Value.EncodeGuid()));
+            this.SetupRequestContext(principal);
+
+            var impersonatedUserId = UserId.Random();
+            this.SetupImpersonationHeader(impersonatedUserId);
+
+            var result = this.requesterContext.GetRequester();
+
+            Assert.AreEqual(Requester.Authenticated(UserId, impersonatedUserId), result);
+        }
+
+        [TestMethod]
         public void WhenNotAuthenticatedButNameIdentifierClamExists_RequesterShouldBeUnauthenticated()
         {
             var principal = new Principal(null);
@@ -127,6 +142,13 @@
         {
             var context = new HttpRequestContext() { Principal = principle };
             this.requestContext.Setup(v => v.Context).Returns(context);
+        }
+
+        private void SetupImpersonationHeader(UserId userId)
+        {
+            var message = new HttpRequestMessage();
+            message.Headers.Add(RequesterContext.ImpersonateHeaderKey, userId.Value.EncodeGuid());
+            this.requestContext.Setup(v => v.Request).Returns(message);
         }
 
         private class Principal : IPrincipal

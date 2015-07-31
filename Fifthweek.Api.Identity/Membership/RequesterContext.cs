@@ -1,10 +1,9 @@
 ﻿namespace Fifthweek.Api.Identity.Membership
 {
     using System;
+    using System.Collections.Generic;
     using System.Linq;
     using System.Security.Claims;
-    using System.ServiceModel.Channels;
-    using System.Web;
 
     using Fifthweek.Api.Core;
     using Fifthweek.Api.Identity.Shared.Membership;
@@ -13,6 +12,8 @@
     [AutoConstructor]
     public partial class RequesterContext : IRequesterContext
     {
+        public const string ImpersonateHeaderKey = "impersonate-user";
+
         private readonly IRequestContext requestContext;
 
         public Requester GetRequester()
@@ -32,7 +33,9 @@
                 // This isn't currently used.
                 var username = identity.Name;
 
-                return Requester.Authenticated(userId, roles);
+                var impersonatedUserId = this.TryGetImpersonatedUserId();
+
+                return Requester.Authenticated(userId, impersonatedUserId, roles);
             }
 
             return Requester.Unauthenticated;
@@ -44,6 +47,24 @@
             if (user != null)
             {
                 return (ClaimsIdentity)user.Identity;
+            }
+
+            return null;
+        }
+
+        private UserId TryGetImpersonatedUserId()
+        {
+            IEnumerable<string> impersonateHeaderValues;
+            if (this.requestContext.Request != null
+                && this.requestContext.Request.Headers != null
+                && this.requestContext.Request.Headers.TryGetValues(ImpersonateHeaderKey, out impersonateHeaderValues))
+            {
+                var userIdString = impersonateHeaderValues.FirstOrDefault();
+                if (userIdString != null)
+                {
+                    var userId = new UserId(userIdString.DecodeGuid());
+                    return userId;
+                }
             }
 
             return null;

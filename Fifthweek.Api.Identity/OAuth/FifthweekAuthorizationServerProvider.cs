@@ -59,7 +59,7 @@
                     "Access-Control-Allow-Methods", "POST");
 
                 context.OwinContext.Response.Headers.AppendCommaSeparatedValues(
-                    "Access-Control-Allow-Headers", "accept", "authorization", "content-type", Core.Constants.DeveloperNameRequestHeaderKey);
+                    "Access-Control-Allow-Headers", "accept", "authorization", "content-type", Core.Constants.DeveloperNameRequestHeaderKey, Membership.RequesterContext.ImpersonateHeaderKey);
 
                 context.OwinContext.Response.Headers.AppendCommaSeparatedValues(
                     "Access-Control-Allow-Origin", Core.Constants.DefaultAllowedOrigin);

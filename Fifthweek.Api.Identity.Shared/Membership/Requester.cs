@@ -10,18 +10,18 @@
     {
         public static readonly Requester Unauthenticated = new Requester();
 
-        private readonly Shared.Membership.UserId userId;
+        private readonly UserId userId;
 
         private readonly HashSet<string> roles;
 
-        private Requester(Shared.Membership.UserId userId, IEnumerable<string> roles)
+        private readonly UserId impersonatedUserId;
+
+        private Requester(UserId userId, UserId impersonatedUserId, IEnumerable<string> roles)
         {
-            if (userId == null)
-            {
-                throw new ArgumentNullException("userId");
-            }
+            userId.AssertNotNull("userId");
 
             this.userId = userId;
+            this.impersonatedUserId = impersonatedUserId;
             this.roles = new HashSet<string>(roles ?? Enumerable.Empty<string>());
         }
 
@@ -30,11 +30,19 @@
             this.roles = new HashSet<string>();
         }
 
-        internal Shared.Membership.UserId UserId
+        internal UserId UserId
         {
             get
             {
                 return this.userId;
+            }
+        }
+
+        internal UserId ImpersonatedUserId
+        {
+            get
+            {
+                return this.impersonatedUserId;
             }
         }
 
@@ -46,27 +54,31 @@
             }
         }
 
-        public static Requester Authenticated(Shared.Membership.UserId userId, params string[] roles)
+        public static Requester Authenticated(UserId userId, params string[] roles)
         {
-            return Authenticated(userId, (IEnumerable<string>)roles);
+            return Authenticated(userId, null, (IEnumerable<string>)roles);
         }
 
-        public static Requester Authenticated(Shared.Membership.UserId userId, IEnumerable<string> roles)
+        public static Requester Authenticated(UserId userId, IEnumerable<string> roles)
         {
-            userId.AssertNotNull("userId");
-            if (userId == null)
-            {
-                throw new ArgumentNullException("userId");
-            }
+            return Authenticated(userId, null, roles);
+        }
 
-            return new Requester(userId, roles);
+        public static Requester Authenticated(UserId userId, UserId impersonatedUserId, params string[] roles)
+        {
+            return Authenticated(userId, impersonatedUserId, (IEnumerable<string>)roles);
+        }
+
+        public static Requester Authenticated(UserId userId, UserId impersonatedUserId, IEnumerable<string> roles)
+        {
+            return new Requester(userId, impersonatedUserId, roles);
         }
 
         public override string ToString()
         {
             return this.userId == null 
                 ? "Requester(Unauthenticated)" 
-                : string.Format("Requester({0}, [{1}])", this.userId, string.Join(", ", this.roles));
+                : string.Format("Requester({0}, {1}, [{2}])", this.userId, this.impersonatedUserId, string.Join(", ", this.roles));
         }
 
         public override bool Equals(object obj)
@@ -94,8 +106,9 @@
             unchecked
             {
                 int hashCode = 0;
-                
+
                 hashCode = (hashCode * 397) ^ (this.userId != null ? this.userId.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.impersonatedUserId != null ? this.impersonatedUserId.GetHashCode() : 0);
                 
                 var sortedRoles = new List<string>(this.roles);
                 sortedRoles.Sort();
@@ -117,6 +130,11 @@
         protected bool Equals(Requester other)
         {
             if (!object.Equals(this.userId, other.userId))
+            {
+                return false;
+            }
+
+            if (!object.Equals(this.impersonatedUserId, other.impersonatedUserId))
             {
                 return false;
             }

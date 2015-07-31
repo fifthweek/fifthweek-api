@@ -68,6 +68,16 @@
             target.IsInRole(null);
         }
 
+        [TestMethod]
+        public void WhenUsingImpersonation_ItShouldContainTheImpersonatedUserId()
+        {
+            var userId = new UserId(Guid.NewGuid());
+            var impersonatedUserId = new UserId(Guid.NewGuid());
+            var target = Requester.Authenticated(userId, impersonatedUserId);
+            Assert.AreEqual(userId, target.UserId);
+            Assert.AreEqual(impersonatedUserId, target.ImpersonatedUserId);
+        }
+
         protected override Requester NewInstanceOfObjectA()
         {
             return Requester.Authenticated(new UserId(Guid.Parse("{316343AD-9E14-4292-9BA2-3E2803AD4497}")), "role1", "role2");

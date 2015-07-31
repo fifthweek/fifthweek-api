@@ -7,11 +7,12 @@
 
     using Fifthweek.Api.Core;
     using Fifthweek.Api.Identity.Shared.Membership;
+    using Fifthweek.Api.Persistence.Identity;
     using Fifthweek.Shared;
 
     public class RequesterSecurity : IRequesterSecurity
     {
-        public Task<UserId> AuthenticateAsync(Requester requester)
+        public async Task<UserId> AuthenticateAsync(Requester requester)
         {
             requester.AssertNotNull("requester");
 
@@ -20,7 +21,18 @@
                 throw new UnauthenticatedException();
             }
 
-            return Task.FromResult(requester.UserId);
+            if (requester.ImpersonatedUserId != null)
+            {
+                var isAdministrator = await this.IsInRoleAsync(requester, FifthweekRole.Administrator);
+                if (isAdministrator)
+                {
+                    return requester.ImpersonatedUserId;
+                }
+                 
+                throw new UnauthorizedException("Impersonation forbidden.");
+            }
+
+            return requester.UserId;
         }
 
         public async Task<UserId> AuthenticateAsAsync(Requester requester, UserId userId)
@@ -28,14 +40,14 @@
             requester.AssertNotNull("requester");
             userId.AssertNotNull("userId");
 
-            await this.AuthenticateAsync(requester);
+            var authenticatedUserId = await this.AuthenticateAsync(requester);
 
-            if (!userId.Equals(requester.UserId))
+            if (!userId.Equals(authenticatedUserId))
             {
                 throw new UnauthorizedException("User '{0}' is could not be authenticated as '{1}'.", requester.UserId, userId);
             }
 
-            return requester.UserId;
+            return authenticatedUserId;
         }
 
         public Task<bool> IsInRoleAsync(Requester requester, string role)
