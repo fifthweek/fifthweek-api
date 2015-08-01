@@ -30,6 +30,7 @@ namespace Fifthweek.Payments.Services
 
         public async Task<IReadOnlyList<UserId>> ExecuteAsync()
         {
+            using (PaymentsPerformanceLogger.Instance.Log(typeof(GetAllSubscribersDbStatement)))
             using (var connection = this.connectionFactory.CreateConnection())
             {
                 var result = await connection.QueryAsync<Guid>(Sql);

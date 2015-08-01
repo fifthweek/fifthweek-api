@@ -27,6 +27,7 @@ namespace Fifthweek.Payments.Services
             creatorId.AssertNotNull("creatorId");
             ledgerRecords.AssertNotNull("ledgerRecords");
 
+            using (PaymentsPerformanceLogger.Instance.Log(typeof(PersistCommittedAndUncommittedRecordsDbStatement)))
             using (var transaction = TransactionScopeBuilder.CreateAsync())
             {
                 using (var connection = this.connectionFactory.CreateConnection())

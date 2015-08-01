@@ -27,7 +27,8 @@
         private readonly IFifthweekDbConnectionFactory connectionFactory;
 
         public async Task<CreatorPercentageOverrideData> ExecuteAsync(UserId userId, DateTime timestamp)
-        {   
+        {
+            using (PaymentsPerformanceLogger.Instance.Log(typeof(GetCreatorPercentageOverrideDbStatement)))
             using (var connection = this.connectionFactory.CreateConnection())
             {
                 var databaseResults = await connection.QueryAsync<DbResult>(

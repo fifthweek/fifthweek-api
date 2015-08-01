@@ -29,6 +29,7 @@
 
         public async Task<IReadOnlyList<CreatorPost>> ExecuteAsync(IReadOnlyList<ChannelId> channelIds, DateTime startTimestampInclusive, DateTime endTimestampExclusive)
         {
+            using (PaymentsPerformanceLogger.Instance.Log(typeof(GetCreatorPostsDbStatement)))
             using (var connection = this.connectionFactory.CreateConnection())
             {
                 var databaseResult = await connection.QueryAsync<DbResult>(

@@ -2,6 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Diagnostics;
     using System.Threading.Tasks;
 
     using Fifthweek.CodeGeneration;
@@ -81,34 +82,147 @@
         /// </summary>
         public async Task ExecuteAsync(IKeepAliveHandler keepAliveHandler, List<PaymentProcessingException> errors)
         {
-            keepAliveHandler.AssertNotNull("keepAliveHandler");
-            errors.AssertNotNull("errors");
-
-            var subscriberIds = await this.getAllSubscribers.ExecuteAsync();
-
-            // We use the same end time for all subscribers so that when we update
-            // all account balances at the end the timestamp is accurate.
-            var endTimeExclusive = this.timestampCreator.Now();
-
-            foreach (var subscriberId in subscriberIds)
+            PaymentsPerformanceLogger.Instance.Clear();
+            using (PaymentsPerformanceLogger.Instance.Log(typeof(ProcessAllPayments)))
             {
-                try
+                keepAliveHandler.AssertNotNull("keepAliveHandler");
+                errors.AssertNotNull("errors");
+
+                var subscriberIds = await this.getAllSubscribers.ExecuteAsync();
+
+                // We use the same end time for all subscribers so that when we update
+                // all account balances at the end the timestamp is accurate.
+                var endTimeExclusive = this.timestampCreator.Now();
+
+                foreach (var subscriberId in subscriberIds)
                 {
-                    await this.processPaymentsForSubscriber.ExecuteAsync(subscriberId, endTimeExclusive, keepAliveHandler, errors);
+                    using (PaymentsPerformanceLogger.Instance.Log("Subscriber"))
+                    {
+                        try
+                        {
+                            await this.processPaymentsForSubscriber.ExecuteAsync(
+                                subscriberId,
+                                endTimeExclusive,
+                                keepAliveHandler,
+                                errors);
+                        }
+                        catch (Exception t)
+                        {
+                            errors.Add(new PaymentProcessingException(t, subscriberId, null));
+                        }
+                    }
                 }
-                catch (Exception t)
+
+                using (PaymentsPerformanceLogger.Instance.Log("BalancesAndCredit"))
                 {
-                    errors.Add(new PaymentProcessingException(t, subscriberId, null));
+                    var updatedBalances = await this.updateAccountBalances.ExecuteAsync(null, endTimeExclusive);
+
+                    bool recalculateBalances =
+                        await this.topUpUserAccountsWithCredit.ExecuteAsync(updatedBalances, errors);
+
+                    if (recalculateBalances)
+                    {
+                        await this.updateAccountBalances.ExecuteAsync(null, endTimeExclusive);
+                    }
                 }
             }
 
-            var updatedBalances = await this.updateAccountBalances.ExecuteAsync(null, endTimeExclusive);
+            PaymentsPerformanceLogger.Instance.TraceResults();
+        }
+    }
 
-            bool recalculateBalances = await this.topUpUserAccountsWithCredit.ExecuteAsync(updatedBalances, errors);
+    public class PaymentsPerformanceLogger
+    {
+        public static readonly PaymentsPerformanceLogger Instance = new PaymentsPerformanceLogger();
 
-            if (recalculateBalances)
+        private readonly Dictionary<string, Item> items = new Dictionary<string, Item>();
+        
+        private PaymentsPerformanceLogger()
+        {
+        }
+
+        public void Clear()
+        {
+            this.items.Clear();
+        }
+
+        public IDisposable Log(Type type)
+        {
+            return this.Log(type.Name);
+        }
+
+        public IDisposable Log(string name)
+        {
+            return new ItemLogger(name, this.items);
+        }
+
+        public void TraceResults()
+        {
+            foreach (var item in this.items.Values)
             {
-                await this.updateAccountBalances.ExecuteAsync(null, endTimeExclusive);
+                item.TraceResult();
+            }
+        }
+
+        private class Item
+        {
+            private string name;
+
+            private TimeSpan cumulativeTime;
+
+            private int count;
+
+            public Item(string name)
+            {
+                this.name = name;
+            }
+
+            public void Add(TimeSpan time)
+            {
+                this.cumulativeTime += time;
+                ++this.count;
+            }
+
+            public void TraceResult()
+            {
+                var line = string.Format(
+                    "{0}: {2} calls, {1}ms",
+                    this.name,
+                    this.cumulativeTime.TotalMilliseconds,
+                    this.count);
+
+                Trace.TraceInformation(line);
+                Console.WriteLine(line);
+            }
+        }
+
+        private class ItemLogger : IDisposable
+        {
+            private readonly string name;
+
+            private readonly IDictionary<string, Item> items;
+
+            private readonly Stopwatch stopwatch;
+
+            public ItemLogger(string name, IDictionary<string, Item> items)
+            {
+                this.name = name;
+                this.items = items;
+                this.stopwatch = new Stopwatch();
+                this.stopwatch.Start();
+            }
+
+            public void Dispose()
+            {
+                this.stopwatch.Stop();
+                Item existingItem;
+                if (!this.items.TryGetValue(this.name, out existingItem))
+                {
+                    existingItem = new Item(this.name);
+                    this.items.Add(this.name, existingItem);
+                }
+
+                existingItem.Add(this.stopwatch.Elapsed);
             }
         }
     }

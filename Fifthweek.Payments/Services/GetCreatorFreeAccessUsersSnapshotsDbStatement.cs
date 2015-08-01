@@ -45,6 +45,7 @@
 
         public async Task<IReadOnlyList<Snapshots.CreatorFreeAccessUsersSnapshot>> ExecuteAsync(UserId creatorId, DateTime startTimestampInclusive, DateTime endTimestampExclusive)
         {
+            using (PaymentsPerformanceLogger.Instance.Log(typeof(GetCreatorFreeAccessUsersSnapshotsDbStatement)))
             using (var connection = this.connectionFactory.CreateConnection())
             {
                 var databaseResult = await connection.QueryAsync<DbResult>(

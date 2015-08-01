@@ -31,6 +31,7 @@
 
         public async Task<DateTime?> ExecuteAsync(UserId subscriberId, UserId creatorId)
         {
+            using (PaymentsPerformanceLogger.Instance.Log(typeof(GetLatestCommittedLedgerDateDbStatement)))
             using (var connection = this.connectionFactory.CreateConnection())
             {
                 var result = await connection.ExecuteScalarAsync<DateTime?>(

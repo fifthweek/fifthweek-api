@@ -43,6 +43,7 @@
 
         public async Task<IReadOnlyList<Snapshots.CalculatedAccountBalanceSnapshot>> ExecuteAsync(UserId userId, LedgerAccountType accountType, DateTime startTimestampInclusive, DateTime endTimestampExclusive)
         {
+            using (PaymentsPerformanceLogger.Instance.Log(typeof(GetCalculatedAccountBalancesDbStatement)))
             using (var connection = this.connectionFactory.CreateConnection())
             {
                 var databaseResult = await connection.QueryAsync<CalculatedAccountBalance>(

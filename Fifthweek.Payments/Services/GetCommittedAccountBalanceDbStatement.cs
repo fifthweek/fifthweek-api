@@ -32,6 +32,7 @@
         {
             userId.AssertNotNull("userId");
 
+            using (PaymentsPerformanceLogger.Instance.Log(typeof(GetCommittedAccountBalanceDbStatement)))
             using (var connection = this.connectionFactory.CreateConnection())
             {
                 var result = await connection.ExecuteScalarAsync<decimal>(

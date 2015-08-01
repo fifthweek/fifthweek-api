@@ -15,71 +15,74 @@ namespace Fifthweek.Payments.Services
 
         public Task<PaymentProcessingResults> ExecuteAsync(PaymentProcessingData data)
         {
-            data.AssertNotNull("data");
-
-            var subscriberId = data.SubscriberId;
-            var creatorId = data.CreatorId;
-            DateTime startTimeInclusive = data.StartTimeInclusive;
-            DateTime endTimeExclusive = data.EndTimeExclusive;
-            IReadOnlyList<ISnapshot> orderedSnapshots = data.GetOrderedSnapshots();
-            IReadOnlyList<CreatorPost> posts = data.CreatorPosts;
-
-            var committedAccountBalance = data.CommittedAccountBalance;
-
-            var currentStartTimeInclusive = startTimeInclusive;
-            var currentEndTimeExclusive = startTimeInclusive.AddDays(7);
-
-            var result = new List<PaymentProcessingResult>();
-            while (currentEndTimeExclusive <= endTimeExclusive)
+            using (PaymentsPerformanceLogger.Instance.Log(typeof(ProcessPaymentProcessingData)))
             {
-                // Calculate complete week.
-                var cost = this.subscriberPaymentPipeline.CalculatePayment(
-                    orderedSnapshots,
-                    posts,
-                    subscriberId,
-                    creatorId,
-                    currentStartTimeInclusive,
-                    currentEndTimeExclusive);
+                data.AssertNotNull("data");
 
-                if (cost.Cost > committedAccountBalance.Amount)
+                var subscriberId = data.SubscriberId;
+                var creatorId = data.CreatorId;
+                DateTime startTimeInclusive = data.StartTimeInclusive;
+                DateTime endTimeExclusive = data.EndTimeExclusive;
+                IReadOnlyList<ISnapshot> orderedSnapshots = data.GetOrderedSnapshots();
+                IReadOnlyList<CreatorPost> posts = data.CreatorPosts;
+
+                var committedAccountBalance = data.CommittedAccountBalance;
+
+                var currentStartTimeInclusive = startTimeInclusive;
+                var currentEndTimeExclusive = startTimeInclusive.AddDays(7);
+
+                var result = new List<PaymentProcessingResult>();
+                while (currentEndTimeExclusive <= endTimeExclusive)
                 {
-                    cost = new AggregateCostSummary(committedAccountBalance.Amount);
+                    // Calculate complete week.
+                    var cost = this.subscriberPaymentPipeline.CalculatePayment(
+                        orderedSnapshots,
+                        posts,
+                        subscriberId,
+                        creatorId,
+                        currentStartTimeInclusive,
+                        currentEndTimeExclusive);
+
+                    if (cost.Cost > committedAccountBalance.Amount)
+                    {
+                        cost = new AggregateCostSummary(committedAccountBalance.Amount);
+                    }
+
+                    committedAccountBalance = committedAccountBalance.Subtract(cost.Cost);
+
+                    var creatorPercentageOverride = this.GetCreatorPercentageOverride(
+                        data.CreatorPercentageOverride,
+                        currentEndTimeExclusive);
+
+                    result.Add(new PaymentProcessingResult(currentStartTimeInclusive, currentEndTimeExclusive, cost, creatorPercentageOverride, true));
+
+                    currentStartTimeInclusive = currentEndTimeExclusive;
+                    currentEndTimeExclusive = currentStartTimeInclusive.AddDays(7);
                 }
 
-                committedAccountBalance = committedAccountBalance.Subtract(cost.Cost);
+                if (currentStartTimeInclusive < endTimeExclusive)
+                {
+                    // Calculate partial week.
+                    // We don't calculate taking into account CreatorPosts, 
+                    // as until the week is over we can't be sure if the creator will post
+                    // and we assume they will until we know otherwise.
+                    var cost = this.subscriberPaymentPipeline.CalculatePayment(
+                        orderedSnapshots,
+                        null, 
+                        subscriberId,
+                        creatorId,
+                        currentStartTimeInclusive,
+                        endTimeExclusive);
 
-                var creatorPercentageOverride = this.GetCreatorPercentageOverride(
-                    data.CreatorPercentageOverride,
-                    currentEndTimeExclusive);
+                    var creatorPercentageOverride = this.GetCreatorPercentageOverride(
+                        data.CreatorPercentageOverride,
+                        endTimeExclusive);
 
-                result.Add(new PaymentProcessingResult(currentStartTimeInclusive, currentEndTimeExclusive, cost, creatorPercentageOverride, true));
+                    result.Add(new PaymentProcessingResult(currentStartTimeInclusive, endTimeExclusive, cost, creatorPercentageOverride, false));
+                }
 
-                currentStartTimeInclusive = currentEndTimeExclusive;
-                currentEndTimeExclusive = currentStartTimeInclusive.AddDays(7);
+                return Task.FromResult(new PaymentProcessingResults(committedAccountBalance, result));
             }
-
-            if (currentStartTimeInclusive < endTimeExclusive)
-            {
-                // Calculate partial week.
-                // We don't calculate taking into account CreatorPosts, 
-                // as until the week is over we can't be sure if the creator will post
-                // and we assume they will until we know otherwise.
-                var cost = this.subscriberPaymentPipeline.CalculatePayment(
-                    orderedSnapshots,
-                    null, 
-                    subscriberId,
-                    creatorId,
-                    currentStartTimeInclusive,
-                    endTimeExclusive);
-
-                var creatorPercentageOverride = this.GetCreatorPercentageOverride(
-                    data.CreatorPercentageOverride,
-                    endTimeExclusive);
-
-                result.Add(new PaymentProcessingResult(currentStartTimeInclusive, endTimeExclusive, cost, creatorPercentageOverride, false));
-            }
-
-            return Task.FromResult(new PaymentProcessingResults(committedAccountBalance, result));
         }
 
         private CreatorPercentageOverrideData GetCreatorPercentageOverride(

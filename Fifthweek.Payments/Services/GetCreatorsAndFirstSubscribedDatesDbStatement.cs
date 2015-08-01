@@ -47,6 +47,7 @@ namespace Fifthweek.Payments.Services
 
         public async Task<IReadOnlyList<CreatorIdAndFirstSubscribedDate>> ExecuteAsync(UserId subscriberId)
         {
+            using (PaymentsPerformanceLogger.Instance.Log(typeof(GetCreatorsAndFirstSubscribedDatesDbStatement)))
             using (var connection = this.connectionFactory.CreateConnection())
             {
                 var result = await connection.QueryAsync<DatabaseResult>(

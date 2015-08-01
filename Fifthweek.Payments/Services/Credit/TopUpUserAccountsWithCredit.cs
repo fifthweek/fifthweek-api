@@ -29,68 +29,71 @@ namespace Fifthweek.Payments.Services.Credit
             IReadOnlyList<CalculatedAccountBalanceResult> updatedAccountBalances, 
             List<PaymentProcessingException> errors)
         {
-            updatedAccountBalances.AssertNotNull("updatedAccountBalances");
-            errors.AssertNotNull("errors");
-
-            var userIdsToRetry = await this.getUsersRequiringPaymentRetry.ExecuteAsync();
-            var newUserIds = updatedAccountBalances
-                .Where(v => v.AccountType == LedgerAccountType.FifthweekCredit
-                        && v.Amount < MinimumAccountBalanceBeforeCharge)
-                .Select(v => v.UserId);
-            var allUserIds = userIdsToRetry.Concat(newUserIds).Distinct().ToList();
-
-            // Increment all billing status immediately so the user maintains access to his newsfeed.
-            await this.incrementPaymentStatus.ExecuteAsync(allUserIds);
-
-            bool recalculateBalances = false;
-            foreach (var userId in allUserIds)
+            using (PaymentsPerformanceLogger.Instance.Log(typeof(TopUpUserAccountsWithCredit)))
             {
-                try
+                updatedAccountBalances.AssertNotNull("updatedAccountBalances");
+                errors.AssertNotNull("errors");
+
+                var userIdsToRetry = await this.getUsersRequiringPaymentRetry.ExecuteAsync();
+                var newUserIds = updatedAccountBalances
+                    .Where(v => v.AccountType == LedgerAccountType.FifthweekCredit
+                            && v.Amount < MinimumAccountBalanceBeforeCharge)
+                    .Select(v => v.UserId);
+                var allUserIds = userIdsToRetry.Concat(newUserIds).Distinct().ToList();
+
+                // Increment all billing status immediately so the user maintains access to his newsfeed.
+                await this.incrementPaymentStatus.ExecuteAsync(allUserIds);
+
+                bool recalculateBalances = false;
+                foreach (var userId in allUserIds)
                 {
-                    // Work out what we should charge the user.
-                    var amountToCharge = await this.getUserWeeklySubscriptionsCost.ExecuteAsync(userId);
-
-                    if (amountToCharge == 0)
+                    try
                     {
-                        // No subscriptions, so no need to charge.
-                        continue;
+                        // Work out what we should charge the user.
+                        var amountToCharge = await this.getUserWeeklySubscriptionsCost.ExecuteAsync(userId);
+
+                        if (amountToCharge == 0)
+                        {
+                            // No subscriptions, so no need to charge.
+                            continue;
+                        }
+
+                        amountToCharge = Math.Max(MinimumPaymentAmount, amountToCharge);
+
+                        var origin = await this.getUserPaymentOrigin.ExecuteAsync(userId);
+                        if (origin.PaymentOriginKey == null 
+                            || origin.PaymentOriginKeyType == PaymentOriginKeyType.None 
+                            || origin.PaymentStatus == PaymentStatus.None)
+                        {
+                            // If the user doesn't have a stripe customer ID then they haven't given us
+                            // credit card details and we can't bill them.
+                            // If the user has manually topped up since we incremented the billing status,
+                            // it will have been set back to None and we don't need to top up again.
+                            continue;
+                        }
+
+                        var timestamp = this.timestampCreator.Now();
+                        var transactionReference = new TransactionReference(this.guidCreator.CreateSqlSequential());
+
+                        // And apply the charge.
+                        await this.applyUserCredit.ExecuteAsync(
+                            userId, 
+                            timestamp,
+                            transactionReference,
+                            PositiveInt.Parse(amountToCharge), 
+                            null, 
+                            UserType.StandardUser);
+
+                        recalculateBalances = true;
                     }
-
-                    amountToCharge = Math.Max(MinimumPaymentAmount, amountToCharge);
-
-                    var origin = await this.getUserPaymentOrigin.ExecuteAsync(userId);
-                    if (origin.PaymentOriginKey == null 
-                        || origin.PaymentOriginKeyType == PaymentOriginKeyType.None 
-                        || origin.PaymentStatus == PaymentStatus.None)
+                    catch (Exception t)
                     {
-                        // If the user doesn't have a stripe customer ID then they haven't given us
-                        // credit card details and we can't bill them.
-                        // If the user has manually topped up since we incremented the billing status,
-                        // it will have been set back to None and we don't need to top up again.
-                        continue;
+                        errors.Add(new PaymentProcessingException(t, userId, null));
                     }
-
-                    var timestamp = this.timestampCreator.Now();
-                    var transactionReference = new TransactionReference(this.guidCreator.CreateSqlSequential());
-
-                    // And apply the charge.
-                    await this.applyUserCredit.ExecuteAsync(
-                        userId, 
-                        timestamp,
-                        transactionReference,
-                        PositiveInt.Parse(amountToCharge), 
-                        null, 
-                        UserType.StandardUser);
-
-                    recalculateBalances = true;
                 }
-                catch (Exception t)
-                {
-                    errors.Add(new PaymentProcessingException(t, userId, null));
-                }
+
+                return recalculateBalances;
             }
-
-            return recalculateBalances;
         }
     }
 }

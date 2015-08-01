@@ -129,9 +129,13 @@ namespace Fifthweek.Payments.Services
                     dataId);
             }
 
-            if (committedRecords.Count > 0 || uncommittedResult != null)
+            if (committedRecords.Count > 0)
             {
                 await this.persistPaymentProcessingData.ExecuteAsync(new PersistedPaymentProcessingData(dataId, data, results));
+            }
+
+            if (committedRecords.Count > 0 || uncommittedResult != null)
+            {
                 await this.persistCommittedAndUncommittedRecords.ExecuteAsync(data.SubscriberId, data.CreatorId, committedRecords, uncommittedRecord);
             }
         }

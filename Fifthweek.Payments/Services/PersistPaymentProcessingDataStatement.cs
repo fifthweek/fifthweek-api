@@ -15,13 +15,16 @@ namespace Fifthweek.Payments.Services
 
         public async Task ExecuteAsync(PersistedPaymentProcessingData data)
         {
-            data.AssertNotNull("data");
+            using (PaymentsPerformanceLogger.Instance.Log(typeof(PersistPaymentProcessingDataStatement)))
+            {
+                data.AssertNotNull("data");
 
-            var client = this.cloudStorageAccount.CreateCloudBlobClient();
-            var container = client.GetContainerReference(Fifthweek.Payments.Shared.Constants.PaymentProcessingDataContainerName);
-            var blob = container.GetBlockBlobReference(data.Id.ToString());
-            var jsonData = JsonConvert.SerializeObject(data);
-            await blob.UploadTextAsync(jsonData);
+                var client = this.cloudStorageAccount.CreateCloudBlobClient();
+                var container = client.GetContainerReference(Fifthweek.Payments.Shared.Constants.PaymentProcessingDataContainerName);
+                var blob = container.GetBlockBlobReference(data.Id.ToString());
+                var jsonData = JsonConvert.SerializeObject(data);
+                await blob.UploadTextAsync(jsonData);
+            }
         }
     }
 }

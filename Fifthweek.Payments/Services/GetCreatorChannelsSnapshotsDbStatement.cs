@@ -45,6 +45,7 @@
 
         public async Task<IReadOnlyList<Snapshots.CreatorChannelsSnapshot>> ExecuteAsync(UserId creatorId, DateTime startTimestampInclusive, DateTime endTimestampExclusive)
         {
+            using (PaymentsPerformanceLogger.Instance.Log(typeof(GetCreatorChannelsSnapshotsDbStatement)))
             using (var connection = this.connectionFactory.CreateConnection())
             {
                 var databaseResult = await connection.QueryAsync<DbResult>(

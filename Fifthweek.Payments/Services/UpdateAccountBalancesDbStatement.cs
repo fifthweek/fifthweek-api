@@ -71,6 +71,7 @@ namespace Fifthweek.Payments.Services
                           ? string.Concat(SqlStart, SqlEnd)
                           : string.Concat(SqlStart, SqlUserIdFilter, SqlEnd);
 
+            using (PaymentsPerformanceLogger.Instance.Log(typeof(UpdateAccountBalancesDbStatement)))
             using (var connection = this.connectionFactory.CreateConnection())
             {
                 var result = await connection.QueryAsync<CalculatedAccountBalance>(
