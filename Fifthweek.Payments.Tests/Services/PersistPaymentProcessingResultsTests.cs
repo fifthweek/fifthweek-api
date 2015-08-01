@@ -284,7 +284,7 @@
         }
 
         [TestMethod]
-        public async Task WhenNoCommittedRecords_ItShouldPersistTheData()
+        public async Task WhenNoCommittedRecords_ItShouldPersistTheDataButNotSaveBlob()
         {
             byte guidIndex = 0;
             byte sequentialGuidIndex = 0;
@@ -298,10 +298,6 @@
             resultItems.Remove(resultItems.First());
             resultItems.Remove(resultItems.First());
             var results = new PaymentProcessingResults(Results.CommittedAccountBalance, resultItems);
-
-            this.persistPaymentProcessingData.Setup(
-                v => v.ExecuteAsync(new PersistedPaymentProcessingData(dataId, Data, results)))
-                .Returns(Task.FromResult(0));
 
             IReadOnlyList<AppendOnlyLedgerRecord> actualCommittedRecords = null;
             UncommittedSubscriptionPayment actualUncommittedRecord = null;
