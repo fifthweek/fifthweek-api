@@ -172,7 +172,7 @@
             for (int i = 0; i < SubscriberChannelSnapshots; i++)
             {
                 this.subscriberChannelsSnapshots.Add(new SubscriberChannelsSnapshot(Guid.NewGuid(), DateTime.UtcNow, Guid.NewGuid()));
-                this.subscriberChannelsSnapshotItems.Add(new SubscriberChannelsSnapshotItem(this.subscriberChannelsSnapshots[0].Id, null, Guid.NewGuid(), 100, DateTime.UtcNow));
+                this.subscriberChannelsSnapshotItems.Add(new SubscriberChannelsSnapshotItem(this.subscriberChannelsSnapshots[0].Id, null, Guid.NewGuid(), Guid.NewGuid(), 100, DateTime.UtcNow));
             }
 
             this.subscriberSnapshots.Add(new SubscriberSnapshot(DateTime.UtcNow, Guid.NewGuid(), "email"));

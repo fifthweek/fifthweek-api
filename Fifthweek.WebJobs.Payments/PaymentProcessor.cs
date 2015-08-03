@@ -38,15 +38,11 @@
                 {
                     var timeSinceLastLease = await lease.GetTimeSinceLastLeaseAsync();
 
-                    if (true || timeSinceLastLease > MinimumTimeBetweenPaymentProcessing)
+                    if (timeSinceLastLease > MinimumTimeBetweenPaymentProcessing)
                     {
                         var errors = new List<PaymentProcessingException>();
-                        var sw = new Stopwatch();
-                        sw.Start();
+                        
                         await this.processAllPayments.ExecuteAsync(lease, errors);
-                        sw.Stop();
-
-                        logger.Info("Processed in: " + sw.ElapsedMilliseconds + "ms");
 
                         if (errors.Count > 0)
                         {

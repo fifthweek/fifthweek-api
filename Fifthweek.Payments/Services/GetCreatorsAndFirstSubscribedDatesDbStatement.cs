@@ -17,21 +17,13 @@ namespace Fifthweek.Payments.Services
     public partial class GetCreatorsAndFirstSubscribedDatesDbStatement : IGetCreatorsAndFirstSubscribedDatesDbStatement
     {
         private static readonly string Sql = string.Format(
-            @"SELECT ccs.{0}, MIN(scs.{12}) AS FirstSubscribedDate
-                FROM {1} ccs 
-	            INNER JOIN {2} ccsi ON ccs.{3} = ccsi.{4}
-	            INNER JOIN {8} scsi ON ccsi.{5} = scsi.{6}
-	            INNER JOIN {7} scs ON scs.{9} = scsi.{10}
-	            WHERE scs.{11} = @SubscriberId
-                    AND ccs.{0} NOT IN (SELECT r.{14} FROM {13} r WHERE r.{15}='{16}')
-	            GROUP BY ccs.{0}",
-            CreatorChannelsSnapshot.Fields.CreatorId,
-            CreatorChannelsSnapshot.Table,
-            CreatorChannelsSnapshotItem.Table,
-            CreatorChannelsSnapshot.Fields.Id,
-            CreatorChannelsSnapshotItem.Fields.CreatorChannelsSnapshotId,
-            CreatorChannelsSnapshotItem.Fields.ChannelId,
-            SubscriberChannelsSnapshotItem.Fields.ChannelId,
+            @"SELECT scsi.{0}, MIN(scs.{6}) AS FirstSubscribedDate
+                FROM {1} scs
+	            INNER JOIN {2} scsi ON scs.{3} = scsi.{4}
+	            WHERE scs.{5} = @SubscriberId
+                    AND scsi.{0} NOT IN (SELECT r.{8} FROM {7} r WHERE r.{9}='{10}')
+	            GROUP BY scsi.{0}",
+            SubscriberChannelsSnapshotItem.Fields.CreatorId,
             SubscriberChannelsSnapshot.Table,
             SubscriberChannelsSnapshotItem.Table,
             SubscriberChannelsSnapshot.Fields.Id,

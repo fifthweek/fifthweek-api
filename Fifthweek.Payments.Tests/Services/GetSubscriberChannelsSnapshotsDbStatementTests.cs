@@ -171,12 +171,12 @@ namespace Fifthweek.Payments.Tests.Services
                 for (int i = 0; i < Days; i++)
                 {
                     creatorChannelsSnapshots.Add(new SubscriberChannelsSnapshot(Guid.NewGuid(), Now.AddDays(i), SubscriberId1.Value));
-                    creatorChannelsSnapshotItems.Add(new SubscriberChannelsSnapshotItem(creatorChannelsSnapshots.Last().Id, null, Guid.NewGuid(), 100 + i, Now));
-                    creatorChannelsSnapshotItems.Add(new SubscriberChannelsSnapshotItem(creatorChannelsSnapshots.Last().Id, null, Guid.NewGuid(), 100 + i, Now));
+                    creatorChannelsSnapshotItems.Add(new SubscriberChannelsSnapshotItem(creatorChannelsSnapshots.Last().Id, null, Guid.NewGuid(), Guid.NewGuid(), 100 + i, Now));
+                    creatorChannelsSnapshotItems.Add(new SubscriberChannelsSnapshotItem(creatorChannelsSnapshots.Last().Id, null, Guid.NewGuid(), Guid.NewGuid(), 100 + i, Now));
 
                     creatorChannelsSnapshots.Add(new SubscriberChannelsSnapshot(Guid.NewGuid(), Now.AddDays(i).AddHours(12), SubscriberId2.Value));
-                    creatorChannelsSnapshotItems.Add(new SubscriberChannelsSnapshotItem(creatorChannelsSnapshots.Last().Id, null, Guid.NewGuid(), 200 + i, Now));
-                    creatorChannelsSnapshotItems.Add(new SubscriberChannelsSnapshotItem(creatorChannelsSnapshots.Last().Id, null, Guid.NewGuid(), 200 + i, Now));
+                    creatorChannelsSnapshotItems.Add(new SubscriberChannelsSnapshotItem(creatorChannelsSnapshots.Last().Id, null, Guid.NewGuid(), Guid.NewGuid(), 200 + i, Now));
+                    creatorChannelsSnapshotItems.Add(new SubscriberChannelsSnapshotItem(creatorChannelsSnapshots.Last().Id, null, Guid.NewGuid(), Guid.NewGuid(), 200 + i, Now));
                 }
 
                 await connection.InsertAsync(creatorChannelsSnapshots, false);

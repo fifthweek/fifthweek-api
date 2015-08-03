@@ -91,14 +91,14 @@ namespace Fifthweek.Payments.Tests.Services
                     }
 
                     creatorChannelsSnapshots.Add(new SubscriberChannelsSnapshot(Guid.NewGuid(), DateTime.UtcNow, Guid.NewGuid()));
-                    creatorChannelsSnapshotItems.Add(new SubscriberChannelsSnapshotItem(creatorChannelsSnapshots.Last().Id, null, Guid.NewGuid(), 100, DateTime.UtcNow));
+                    creatorChannelsSnapshotItems.Add(new SubscriberChannelsSnapshotItem(creatorChannelsSnapshots.Last().Id, null, Guid.NewGuid(), Guid.NewGuid(), 100, DateTime.UtcNow));
                 }
 
                 for (int i = 0; i < creatorChannelsSnapshotCount - normalUserIds.Count; i++)
                 {
                     // Add some deleted users (not in AspNetUsers table).
                     creatorChannelsSnapshots.Add(new SubscriberChannelsSnapshot(Guid.NewGuid(), DateTime.UtcNow, Guid.NewGuid()));
-                    creatorChannelsSnapshotItems.Add(new SubscriberChannelsSnapshotItem(creatorChannelsSnapshots.Last().Id, null, Guid.NewGuid(), 100, DateTime.UtcNow));
+                    creatorChannelsSnapshotItems.Add(new SubscriberChannelsSnapshotItem(creatorChannelsSnapshots.Last().Id, null, Guid.NewGuid(), Guid.NewGuid(), 100, DateTime.UtcNow));
                 }
 
                 foreach (var userId in testUserIds)
@@ -112,7 +112,7 @@ namespace Fifthweek.Payments.Tests.Services
                     }
 
                     creatorChannelsSnapshots.Add(new SubscriberChannelsSnapshot(Guid.NewGuid(), DateTime.UtcNow, userId));
-                    creatorChannelsSnapshotItems.Add(new SubscriberChannelsSnapshotItem(creatorChannelsSnapshots.Last().Id, null, Guid.NewGuid(), 100, DateTime.UtcNow));
+                    creatorChannelsSnapshotItems.Add(new SubscriberChannelsSnapshotItem(creatorChannelsSnapshots.Last().Id, null, Guid.NewGuid(), Guid.NewGuid(), 100, DateTime.UtcNow));
                 }
 
                 await connection.InsertAsync(creatorChannelsSnapshots, false);

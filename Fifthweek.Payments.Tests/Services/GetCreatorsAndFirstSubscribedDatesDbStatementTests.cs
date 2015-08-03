@@ -103,15 +103,15 @@ namespace Fifthweek.Payments.Tests.Services
                 var userRoles = new List<FifthweekUserRole>();
 
                 subscriberChannelsSnapshots.Add(new SubscriberChannelsSnapshot(Guid.NewGuid(), Now, SubscriberId.Value));
-                subscriberChannelsSnapshotItems.Add(new SubscriberChannelsSnapshotItem(subscriberChannelsSnapshots.Last().Id, null, ChannelId1.Value, 100, Now));
-                subscriberChannelsSnapshotItems.Add(new SubscriberChannelsSnapshotItem(subscriberChannelsSnapshots.Last().Id, null, ChannelId2.Value, 100, Now));
+                subscriberChannelsSnapshotItems.Add(new SubscriberChannelsSnapshotItem(subscriberChannelsSnapshots.Last().Id, null, ChannelId1.Value, CreatorId1.Value, 100, Now));
+                subscriberChannelsSnapshotItems.Add(new SubscriberChannelsSnapshotItem(subscriberChannelsSnapshots.Last().Id, null, ChannelId2.Value, CreatorId1.Value, 100, Now));
 
                 subscriberChannelsSnapshots.Add(new SubscriberChannelsSnapshot(Guid.NewGuid(), Now.AddDays(-1), SubscriberId.Value));
-                subscriberChannelsSnapshotItems.Add(new SubscriberChannelsSnapshotItem(subscriberChannelsSnapshots.Last().Id, null, ChannelId1.Value, 100, Now));
+                subscriberChannelsSnapshotItems.Add(new SubscriberChannelsSnapshotItem(subscriberChannelsSnapshots.Last().Id, null, ChannelId1.Value, CreatorId1.Value, 100, Now));
 
                 subscriberChannelsSnapshots.Add(new SubscriberChannelsSnapshot(Guid.NewGuid(), Now.AddDays(1), SubscriberId.Value));
-                subscriberChannelsSnapshotItems.Add(new SubscriberChannelsSnapshotItem(subscriberChannelsSnapshots.Last().Id, null, ChannelId3.Value, 100, DateTime.UtcNow));
-                subscriberChannelsSnapshotItems.Add(new SubscriberChannelsSnapshotItem(subscriberChannelsSnapshots.Last().Id, null, TestUserChannelId.Value, 100, DateTime.UtcNow));
+                subscriberChannelsSnapshotItems.Add(new SubscriberChannelsSnapshotItem(subscriberChannelsSnapshots.Last().Id, null, ChannelId3.Value, CreatorId2.Value, 100, DateTime.UtcNow));
+                subscriberChannelsSnapshotItems.Add(new SubscriberChannelsSnapshotItem(subscriberChannelsSnapshots.Last().Id, null, TestUserChannelId.Value, TestUserId.Value, 100, DateTime.UtcNow));
 
                 await connection.InsertAsync(subscriberChannelsSnapshots, false);
                 await connection.InsertAsync(subscriberChannelsSnapshotItems, false);

@@ -23,6 +23,9 @@
         public Guid ChannelId { get; set; }
 
         [Required]
+        public Guid CreatorId { get; set; }
+
+        [Required]
         public int AcceptedPrice { get; set; }
 
         [Required]
