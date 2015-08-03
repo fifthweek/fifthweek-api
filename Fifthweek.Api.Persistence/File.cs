@@ -18,11 +18,16 @@
         [Required]
         public Guid Id { get; set; }
 
+        [Required]
+        public Guid UserId { get; set; }
+
         [Required, Optional, NonEquatable]
         [InverseProperty("Files")]
         public FifthweekUser User { get; set; }
 
-        public Guid UserId { get; set; }
+        // No Foreign key because if the user deletes a channel we need to keep the file row to enable garbage collection to find it.
+        [Optional]
+        public Guid? ChannelId { get; set; }
 
         [Required]
         public FileState State { get; set; }

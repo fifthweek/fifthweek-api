@@ -328,6 +328,10 @@
     <Compile Include="Migrations\201508030849036_AddCreatorIdToSubscriberChannelsSnapshots.Designer.cs">
       <DependentUpon>201508030849036_AddCreatorIdToSubscriberChannelsSnapshots.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201508031239587_AddChannelIdToFilesToEnableLocatingOrphanedFiles.cs" />
+    <Compile Include="Migrations\201508031239587_AddChannelIdToFilesToEnableLocatingOrphanedFiles.Designer.cs">
+      <DependentUpon>201508031239587_AddChannelIdToFilesToEnableLocatingOrphanedFiles.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Payments\AppendOnlyLedgerRecord.cs" />
     <Compile Include="Payments\LedgerTransactionType.cs" />
@@ -537,6 +541,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201508030849036_AddCreatorIdToSubscriberChannelsSnapshots.resx">
       <DependentUpon>201508030849036_AddCreatorIdToSubscriberChannelsSnapshots.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201508031239587_AddChannelIdToFilesToEnableLocatingOrphanedFiles.resx">
+      <DependentUpon>201508031239587_AddChannelIdToFilesToEnableLocatingOrphanedFiles.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
