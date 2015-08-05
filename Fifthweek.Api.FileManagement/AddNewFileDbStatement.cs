@@ -3,6 +3,7 @@
     using System;
     using System.Threading.Tasks;
 
+    using Fifthweek.Api.Channels.Shared;
     using Fifthweek.Api.Core;
     using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.Api.Persistence;
@@ -17,6 +18,7 @@
         public async Task ExecuteAsync(
             Shared.FileId fileId,
             UserId userId,
+            ChannelId channelId,
             string fileNameWithoutExtension,
             string fileExtension,
             string purpose,
@@ -30,8 +32,8 @@
 
             var file = new File(
                 fileId.Value,
-                null,
                 userId.Value,
+                channelId.Value,
                 FileState.WaitingForUpload,
                 timeStamp,
                 null,

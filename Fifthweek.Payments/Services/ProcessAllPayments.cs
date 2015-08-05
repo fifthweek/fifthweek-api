@@ -3,6 +3,7 @@
     using System;
     using System.Collections.Generic;
     using System.Diagnostics;
+    using System.Threading;
     using System.Threading.Tasks;
 
     using Fifthweek.CodeGeneration;
@@ -80,7 +81,7 @@
         ///     - Taxamo needs to be updated.
         ///     - Tax can also be refunded (moved from user's sales tax account to refund account).
         /// </summary>
-        public async Task ExecuteAsync(IKeepAliveHandler keepAliveHandler, List<PaymentProcessingException> errors)
+        public async Task ExecuteAsync(IKeepAliveHandler keepAliveHandler, List<PaymentProcessingException> errors, CancellationToken cancellationToken)
         {
             PaymentsPerformanceLogger.Instance.Clear();
             using (PaymentsPerformanceLogger.Instance.Log(typeof(ProcessAllPayments)))
@@ -96,6 +97,11 @@
 
                 foreach (var subscriberId in subscriberIds)
                 {
+                    if (cancellationToken.IsCancellationRequested)
+                    {
+                        break;
+                    }
+
                     using (PaymentsPerformanceLogger.Instance.Log("Subscriber"))
                     {
                         try
@@ -117,8 +123,8 @@
                 {
                     var updatedBalances = await this.updateAccountBalances.ExecuteAsync(null, endTimeExclusive);
 
-                    bool recalculateBalances =
-                        await this.topUpUserAccountsWithCredit.ExecuteAsync(updatedBalances, errors);
+                    bool recalculateBalances = await this.topUpUserAccountsWithCredit.ExecuteAsync(
+                        updatedBalances, errors, cancellationToken);
 
                     if (recalculateBalances)
                     {

@@ -364,6 +364,10 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Fifthweek.Api.Channels.Shared\Fifthweek.Api.Channels.Shared.csproj">
+      <Project>{DF1BB4E7-5315-4E5C-BA73-6DFA4D9E7564}</Project>
+      <Name>Fifthweek.Api.Channels.Shared</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Fifthweek.Api.FileManagement.Shared\Fifthweek.Api.FileManagement.Shared.csproj">
       <Project>{3CA706AF-5916-414E-9625-FB8FCBBD82F7}</Project>
       <Name>Fifthweek.Api.FileManagement.Shared</Name>

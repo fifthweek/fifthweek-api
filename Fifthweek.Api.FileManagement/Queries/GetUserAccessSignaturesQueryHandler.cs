@@ -12,6 +12,8 @@
     using Fifthweek.CodeGeneration;
     using Fifthweek.Shared;
 
+    using Constants = Fifthweek.Api.FileManagement.Shared.Constants;
+
     [AutoConstructor]
     public partial class GetUserAccessSignaturesQueryHandler : IQueryHandler<GetUserAccessSignaturesQuery, UserAccessSignatures>
     {
@@ -33,7 +35,7 @@
 
             // Get public files access information.
             var publicSignature = await this.blobService.GetBlobContainerSharedAccessInformationForReadingAsync(
-                FileManagement.Constants.PublicFileBlobContainerName, expiry.Public);
+                Constants.PublicFileBlobContainerName, expiry.Public);
 
             var privateSignatures = new List<UserAccessSignatures.PrivateAccessSignature>();
             if (query.RequestedUserId != null)
@@ -61,12 +63,12 @@
         {
             var baseTimeSpan 
                 = isPublic
-                ? FileManagement.Constants.PublicReadSignatureTimeSpan
-                : FileManagement.Constants.PrivateReadSignatureTimeSpan;
+                ? Constants.PublicReadSignatureTimeSpan
+                : Constants.PrivateReadSignatureTimeSpan;
 
             var expiry = this.RoundUp(now, baseTimeSpan);
 
-            if ((expiry - now) <= FileManagement.Constants.ReadSignatureMinimumExpiryTime)
+            if ((expiry - now) <= Constants.ReadSignatureMinimumExpiryTime)
             {
                 expiry = expiry.Add(baseTimeSpan);
             }

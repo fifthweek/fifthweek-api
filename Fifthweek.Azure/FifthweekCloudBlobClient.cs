@@ -28,5 +28,11 @@ namespace Fifthweek.Azure
         {
             return this.cloudBlobClient.SetServicePropertiesAsync(serviceProperties);
         }
+
+        public async Task<IContainerResultSegment> ListContainersSegmentedAsync(BlobContinuationToken continuationToken)
+        {
+            var resultSegment = await this.cloudBlobClient.ListContainersSegmentedAsync(continuationToken);
+            return new FifthweekContainerResultSegment(resultSegment);
+        }
     }
 }

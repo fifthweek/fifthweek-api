@@ -100,7 +100,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AddNewFileDbStatement.cs" />
-    <Compile Include="Constants.cs" />
     <Compile Include="Controllers\UploadCompleteNotification.cs" />
     <Compile Include="FileInformationAggregator.cs" />
     <Compile Include="FileProcessor.cs" />
@@ -119,7 +118,6 @@
     <Compile Include="Queries\UserAccessSignatures.cs" />
     <Compile Include="ScheduleGarbageCollectionStatement.cs" />
     <Compile Include="AutofacRegistration.cs" />
-    <Compile Include="BlobLocationGenerator.cs" />
     <Compile Include="ClassAugmentation.cs">
       <DependentUpon>ClassAugmentation.tt</DependentUpon>
       <SubType>Code</SubType>
@@ -183,6 +181,10 @@
     <ProjectReference Include="..\Fifthweek.CodeGeneration\Fifthweek.CodeGeneration.csproj">
       <Project>{770f450e-2166-4269-bec1-df59aa16b1e8}</Project>
       <Name>Fifthweek.CodeGeneration</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Fifthweek.GarbageCollection.Shared\Fifthweek.GarbageCollection.Shared.csproj">
+      <Project>{c7f00e5f-e984-4039-b53b-91e436a0ed43}</Project>
+      <Name>Fifthweek.GarbageCollection.Shared</Name>
     </ProjectReference>
     <ProjectReference Include="..\Fifthweek.Shared\Fifthweek.Shared.csproj">
       <Project>{6D12FFBB-38E9-4722-A690-0F0338538EBC}</Project>

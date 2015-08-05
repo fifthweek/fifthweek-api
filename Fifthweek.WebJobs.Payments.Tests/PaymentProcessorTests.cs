@@ -54,7 +54,7 @@
             this.paymentProcessingLease.Setup(v => v.GetTimeSinceLastLeaseAsync()).ReturnsAsync(TimeSpan.MaxValue).Verifiable();
             this.paymentProcessingLease.Setup(v => v.GetIsAcquired()).Returns(true);
 
-            this.processAllPayments.Setup(v => v.ExecuteAsync(this.paymentProcessingLease.Object, It.Is<List<PaymentProcessingException>>(l => l.Count == 0)))
+            this.processAllPayments.Setup(v => v.ExecuteAsync(this.paymentProcessingLease.Object, It.Is<List<PaymentProcessingException>>(l => l.Count == 0), CancellationToken))
                 .Returns(Task.FromResult(0)).Verifiable();
 
             this.requestProcessPayments.Setup(v => v.ExecuteAsync()).Returns(Task.FromResult(0)).Verifiable();
@@ -77,10 +77,10 @@
 
             var error1 = new PaymentProcessingException(new DivideByZeroException(), UserId.Random(), UserId.Random());
             var error2 = new PaymentProcessingException(new DivideByZeroException(), UserId.Random(), UserId.Random());
-            
-            this.processAllPayments.Setup(v => v.ExecuteAsync(this.paymentProcessingLease.Object, It.Is<List<PaymentProcessingException>>(l => l.Count == 0)))
-                .Callback<IKeepAliveHandler, List<PaymentProcessingException>>(
-                    (lease, errors) => 
+
+            this.processAllPayments.Setup(v => v.ExecuteAsync(this.paymentProcessingLease.Object, It.Is<List<PaymentProcessingException>>(l => l.Count == 0), CancellationToken))
+                .Callback<IKeepAliveHandler, List<PaymentProcessingException>, CancellationToken>(
+                    (lease, errors, ct) => 
                     {
                         errors.Add(error1);
                         errors.Add(error2);
@@ -142,7 +142,7 @@
             this.paymentProcessingLease.Setup(v => v.ReleaseLeaseAsync()).Returns(Task.FromResult(0)).Verifiable();
 
             var exception = new DivideByZeroException();
-            this.processAllPayments.Setup(v => v.ExecuteAsync(this.paymentProcessingLease.Object, It.Is<List<PaymentProcessingException>>(l => l.Count == 0)))
+            this.processAllPayments.Setup(v => v.ExecuteAsync(this.paymentProcessingLease.Object, It.Is<List<PaymentProcessingException>>(l => l.Count == 0), CancellationToken))
                 .Throws(exception);
 
             this.logger.Setup(v => v.Error(exception)).Verifiable();

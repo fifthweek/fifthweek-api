@@ -5,6 +5,7 @@
     using System.Threading;
     using System.Threading.Tasks;
 
+    using Fifthweek.Api.Channels.Shared;
     using Fifthweek.Api.FileManagement.Shared;
     using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.Api.Persistence;
@@ -26,6 +27,7 @@
         private const int RenderHeight = 800;
         private static readonly UserId UserId = new UserId(Guid.NewGuid());
         private static readonly FileId FileId = new FileId(Guid.NewGuid());
+        private static readonly ChannelId ChannelId = new ChannelId(Guid.NewGuid());
         private static readonly DateTime ProcessingStartedTimeStamp = new SqlDateTime(DateTime.UtcNow.AddSeconds(-10)).Value;
         private static readonly DateTime ProcessingCompleteTimeStamp = new SqlDateTime(DateTime.UtcNow).Value;
         private static readonly DateTime UploadStartedTimeStamp = new SqlDateTime(DateTime.UtcNow.AddSeconds(-180)).Value;
@@ -56,8 +58,8 @@
 
                 var expectedFile = new File(
                     FileId.Value,
-                    null,
                     UserId.Value,
+                    ChannelId.Value,
                     FileState.ProcessingComplete,
                     UploadStartedTimeStamp,
                     UploadCompleteTimeStamp,
@@ -120,8 +122,8 @@
         {
             var file = new File(
                 FileId.Value,
-                null,
                 UserId.Value,
+                ChannelId.Value,
                 FileState.UploadComplete,
                 UploadStartedTimeStamp,
                 UploadCompleteTimeStamp,

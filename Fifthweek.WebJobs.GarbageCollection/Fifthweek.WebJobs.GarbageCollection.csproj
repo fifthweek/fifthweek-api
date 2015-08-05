@@ -75,22 +75,63 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ClassAugmentation.cs">
+      <DependentUpon>ClassAugmentation.tt</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <Compile Include="GarbageCollectionProcessor.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
+    <None Include="ClassAugmentation.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>ClassAugmentation.cs</LastGenOutput>
+    </None>
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Fifthweek.Api.FileManagement.Shared\Fifthweek.Api.FileManagement.Shared.csproj">
+      <Project>{3CA706AF-5916-414E-9625-FB8FCBBD82F7}</Project>
+      <Name>Fifthweek.Api.FileManagement.Shared</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Fifthweek.Api.Persistence\Fifthweek.Api.Persistence.csproj">
+      <Project>{9C18BEE3-FAB5-4A00-8A94-A1FAEA370175}</Project>
+      <Name>Fifthweek.Api.Persistence</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Fifthweek.Azure\Fifthweek.Azure.csproj">
       <Project>{890CD4C4-993F-482D-BBB5-A50767ACE55B}</Project>
       <Name>Fifthweek.Azure</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Fifthweek.CodeGeneration\Fifthweek.CodeGeneration.csproj">
+      <Project>{770F450E-2166-4269-BEC1-DF59AA16B1E8}</Project>
+      <Name>Fifthweek.CodeGeneration</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Fifthweek.GarbageCollection.Shared\Fifthweek.GarbageCollection.Shared.csproj">
+      <Project>{c7f00e5f-e984-4039-b53b-91e436a0ed43}</Project>
+      <Name>Fifthweek.GarbageCollection.Shared</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Fifthweek.GarbageCollection\Fifthweek.GarbageCollection.csproj">
+      <Project>{4B4426CD-6378-4962-B04C-C842452505E7}</Project>
+      <Name>Fifthweek.GarbageCollection</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Fifthweek.Shared\Fifthweek.Shared.csproj">
+      <Project>{6D12FFBB-38E9-4722-A690-0F0338538EBC}</Project>
+      <Name>Fifthweek.Shared</Name>
     </ProjectReference>
     <ProjectReference Include="..\Fifthweek.WebJobs.GarbageCollection.Shared\Fifthweek.WebJobs.GarbageCollection.Shared.csproj">
       <Project>{6328c758-26d7-4fb4-a626-d8aad17435fd}</Project>
       <Name>Fifthweek.WebJobs.GarbageCollection.Shared</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Fifthweek.WebJobs.Shared\Fifthweek.WebJobs.Shared.csproj">
+      <Project>{EFBACD48-98A1-4FA3-9BEA-E13414141484}</Project>
+      <Name>Fifthweek.WebJobs.Shared</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

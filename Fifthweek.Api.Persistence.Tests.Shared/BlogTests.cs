@@ -1,6 +1,7 @@
 ﻿namespace Fifthweek.Api.Persistence.Tests.Shared
 {
     using System;
+    using System.Data.SqlTypes;
     using System.Threading.Tasks;
 
     public static class BlogTests
@@ -18,7 +19,7 @@
                 random.Next(1) == 1 ? null : "http://external/video" + random.Next(),
                 null,
                 null,
-                DateTime.UtcNow.AddDays(random.NextDouble() * -100));
+                new SqlDateTime(DateTime.UtcNow.AddDays(random.NextDouble() * -100)).Value);
         }
 
         public static Task CreateTestBlogAsync(this IFifthweekDbContext databaseContext, Guid newUserId, Guid newBlogId, Guid? headerImageFileId = null)
@@ -36,7 +37,6 @@
             {
                 var file = FileTests.UniqueEntity(random);
                 file.Id = headerImageFileId.Value;
-                file.User = creator;
                 file.UserId = creator.Id;
 
                 blog.HeaderImageFile = file;

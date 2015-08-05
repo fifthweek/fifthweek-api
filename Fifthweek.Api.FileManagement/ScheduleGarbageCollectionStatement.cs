@@ -17,10 +17,10 @@ namespace Fifthweek.Api.FileManagement
         public Task ExecuteAsync()
         {
             return this.queueService.AddMessageToQueueAsync(
-                WebJobs.GarbageCollection.Shared.Constants.GarbageCollectionQueueName, 
+                Fifthweek.GarbageCollection.Shared.Constants.GarbageCollectionQueueName, 
                 new RunGarbageCollectionMessage(), 
                 null,
-                WebJobs.GarbageCollection.Shared.Constants.GarbageCollectionMessageInitialVisibilityDelay);
+                Fifthweek.GarbageCollection.Shared.Constants.GarbageCollectionMessageInitialVisibilityDelay);
         }
     }
 }

@@ -2,6 +2,8 @@
 {
     using System;
 
+    using Fifthweek.Shared;
+
     using Newtonsoft.Json;
 
     public class GuidJsonConverter : JsonConverter

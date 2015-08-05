@@ -332,6 +332,14 @@
     <Compile Include="Migrations\201508031239587_AddChannelIdToFilesToEnableLocatingOrphanedFiles.Designer.cs">
       <DependentUpon>201508031239587_AddChannelIdToFilesToEnableLocatingOrphanedFiles.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201508031551118_AddIndexToFilesOnCreatedDateAndAddAllTestUsersToTestUserRole.cs" />
+    <Compile Include="Migrations\201508031551118_AddIndexToFilesOnCreatedDateAndAddAllTestUsersToTestUserRole.Designer.cs">
+      <DependentUpon>201508031551118_AddIndexToFilesOnCreatedDateAndAddAllTestUsersToTestUserRole.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201508041851244_RemoveForeignKeyFromFileToUserForGarbageCollection.cs" />
+    <Compile Include="Migrations\201508041851244_RemoveForeignKeyFromFileToUserForGarbageCollection.Designer.cs">
+      <DependentUpon>201508041851244_RemoveForeignKeyFromFileToUserForGarbageCollection.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Payments\AppendOnlyLedgerRecord.cs" />
     <Compile Include="Payments\LedgerTransactionType.cs" />
@@ -544,6 +552,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201508031239587_AddChannelIdToFilesToEnableLocatingOrphanedFiles.resx">
       <DependentUpon>201508031239587_AddChannelIdToFilesToEnableLocatingOrphanedFiles.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201508031551118_AddIndexToFilesOnCreatedDateAndAddAllTestUsersToTestUserRole.resx">
+      <DependentUpon>201508031551118_AddIndexToFilesOnCreatedDateAndAddAllTestUsersToTestUserRole.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201508041851244_RemoveForeignKeyFromFileToUserForGarbageCollection.resx">
+      <DependentUpon>201508041851244_RemoveForeignKeyFromFileToUserForGarbageCollection.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>

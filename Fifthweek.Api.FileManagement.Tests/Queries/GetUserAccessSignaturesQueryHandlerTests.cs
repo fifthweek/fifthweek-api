@@ -16,6 +16,8 @@
 
     using Moq;
 
+    using Constants = Fifthweek.Api.FileManagement.Shared.Constants;
+
     [TestClass]
     public class GetUserAccessSignaturesQueryHandlerTests
     {
@@ -71,7 +73,7 @@
         {
             var filesInformation = new BlobContainerSharedAccessInformation("files", "uri", "sig", DateTime.UtcNow);
 
-            this.blobService.Setup(v => v.GetBlobContainerSharedAccessInformationForReadingAsync(FileManagement.Constants.PublicFileBlobContainerName, It.IsAny<DateTime>()))
+            this.blobService.Setup(v => v.GetBlobContainerSharedAccessInformationForReadingAsync(Constants.PublicFileBlobContainerName, It.IsAny<DateTime>()))
                 .ReturnsAsync(filesInformation);
 
             var result = await this.target.HandleAsync(new GetUserAccessSignaturesQuery(Requester.Unauthenticated, null, CreatorChannelIds, SubscribedChannelIds));
@@ -90,7 +92,7 @@
             var expectedPrivateExpiry = this.target.GetNextExpiry(now, false);
             var publicFilesInformation = new BlobContainerSharedAccessInformation("files", "uri", "sig", expectedPublicExpiry);
 
-            this.blobService.Setup(v => v.GetBlobContainerSharedAccessInformationForReadingAsync(FileManagement.Constants.PublicFileBlobContainerName, expectedPublicExpiry))
+            this.blobService.Setup(v => v.GetBlobContainerSharedAccessInformationForReadingAsync(Constants.PublicFileBlobContainerName, expectedPublicExpiry))
                 .ReturnsAsync(publicFilesInformation);
 
             var userContainerName1 = "creatorContainerName1";

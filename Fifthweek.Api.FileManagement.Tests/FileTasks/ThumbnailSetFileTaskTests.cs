@@ -16,6 +16,8 @@
 
     using Newtonsoft.Json;
 
+    using Constants = Fifthweek.WebJobs.Thumbnails.Shared.Constants;
+
     [TestClass]
     public class ThumbnailSetFileTaskTests
     {

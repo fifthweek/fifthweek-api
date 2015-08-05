@@ -15,23 +15,6 @@
             return (TResult)resolver.GetService(typeof(TResult));
         }
 
-        public static string EncodeGuid(this Guid value)
-        {
-            return HttpServerUtility.UrlTokenEncode(value.ToByteArray());
-        }
-
-        public static Guid DecodeGuid(this string value)
-        {
-            var result = HttpServerUtility.UrlTokenDecode(value);
-
-            if (result == null || result.Length != 16)
-            {
-                throw new BadRequestException("Value does not represent an ID: " + value);
-            }
-
-            return new Guid(result);
-        }
-
         public static void AssertBodyProvided(this object value, string argumentName)
         {
             if (value == null)

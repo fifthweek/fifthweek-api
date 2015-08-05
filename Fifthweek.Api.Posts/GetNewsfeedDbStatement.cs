@@ -39,7 +39,7 @@
             (int)PaymentStatus.Failed);
 
         private static readonly string SqlStart = string.Format(@"
-            SELECT    blog.{12} AS BlogId, blog.{13} AS CreatorId, post.{1} AS PostId, {2}, {4}, {5}, {6}, {7}, {3}, post.{21}, [file].{16} as FileName, [file].{17} as FileExtension, [file].{18} as FileSize, image.{16} as ImageName, image.{17} as ImageExtension, image.{18} as ImageSize, image.{19} as ImageRenderWidth, image.{20} as ImageRenderHeight
+            SELECT    blog.{12} AS BlogId, blog.{13} AS CreatorId, post.{1} AS PostId, post.{2}, {4}, {5}, {6}, {7}, {3}, post.{21}, [file].{16} as FileName, [file].{17} as FileExtension, [file].{18} as FileSize, image.{16} as ImageName, image.{17} as ImageExtension, image.{18} as ImageSize, image.{19} as ImageRenderWidth, image.{20} as ImageRenderHeight
             FROM        {0} post
             INNER JOIN  {8} channel
                 ON      post.{2} = channel.{9}

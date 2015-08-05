@@ -18,7 +18,7 @@
     public partial class GetCreatorBacklogDbStatement : IGetCreatorBacklogDbStatement
     {
         private static readonly string Sql = string.Format(
-          @"SELECT    post.{1} AS PostId, {2}, {4}, {5}, {6}, {7}, {8}, {3}, post.{22}, [file].{17} as FileName, [file].{18} as FileExtension, [file].{19} as FileSize, image.{17} as ImageName, image.{18} as ImageExtension, image.{19} as ImageSize, image.{20} as ImageRenderWidth, image.{21} as ImageRenderHeight
+          @"SELECT    post.{1} AS PostId, post.{2}, {4}, {5}, {6}, {7}, {8}, {3}, post.{22}, [file].{17} as FileName, [file].{18} as FileExtension, [file].{19} as FileSize, image.{17} as ImageName, image.{18} as ImageExtension, image.{19} as ImageSize, image.{20} as ImageRenderWidth, image.{21} as ImageRenderHeight
             FROM        {0} post
             INNER JOIN  {9} channel
                 ON      post.{2} = channel.{10}

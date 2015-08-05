@@ -19,6 +19,7 @@
         // channel can cascade delete the collection first, causing a FK violation on posts
         // in that channel. Channel deletions don't cascade delete posts because of
         // multiple cascade paths.
+        // We don't delete files because we need garbage collection to take care of those.
         private static readonly string DeleteSql = string.Format(
             @"
             DELETE post FROM {4} post INNER JOIN {2} channel ON post.{5} = channel.{3}

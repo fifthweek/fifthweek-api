@@ -113,8 +113,7 @@
 
             var file = FileTests.UniqueEntity(random);
             file.Id = newFileId.Value;
-            file.User = user;
-            file.UserId = newFileId.Value;
+            file.UserId = newUserId.Value;
 
             using (var databaseContext = testDatabase.CreateContext())
             {

@@ -428,12 +428,10 @@ namespace Fifthweek.Api.Identity.Membership.Tests
 
             var profileImageFile = FileTests.UniqueEntity(random);
             profileImageFile.Id = this.fileId.Value;
-            profileImageFile.User = user;
             profileImageFile.UserId = user.Id;
 
             var otherFile = FileTests.UniqueEntity(random);
             otherFile.Id = this.newFileId.Value;
-            otherFile.User = user;
             otherFile.UserId = user.Id;
 
             using (var databaseContext = testDatabase.CreateContext())

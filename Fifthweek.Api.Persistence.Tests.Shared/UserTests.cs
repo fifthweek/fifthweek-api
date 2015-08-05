@@ -1,6 +1,7 @@
 ﻿namespace Fifthweek.Api.Persistence.Tests.Shared
 {
     using System;
+    using System.Data.SqlTypes;
     using System.Threading.Tasks;
 
     using Fifthweek.Api.Persistence.Identity;
@@ -14,10 +15,10 @@
                 Id = Guid.NewGuid(),
                 Email = string.Format("{0}@example.com", random.Next()),
                 UserName = string.Format("user_{0}", random.Next()),
-                LastAccessTokenDate = DateTime.UtcNow.AddDays(random.NextDouble() * -100),
-                LastSignInDate = DateTime.UtcNow.AddDays(random.NextDouble() * -100),
-                RegistrationDate = DateTime.UtcNow.AddDays(random.NextDouble() * -100),
-                LockoutEndDateUtc = DateTime.UtcNow.AddDays(random.NextDouble() * -100),
+                LastAccessTokenDate = new SqlDateTime(DateTime.UtcNow.AddDays(random.NextDouble() * -100)).Value,
+                LastSignInDate = new SqlDateTime(DateTime.UtcNow.AddDays(random.NextDouble() * -100)).Value,
+                RegistrationDate = new SqlDateTime(DateTime.UtcNow.AddDays(random.NextDouble() * -100)).Value,
+                LockoutEndDateUtc = new SqlDateTime(DateTime.UtcNow.AddDays(random.NextDouble() * -100)).Value,
             };
         }
 

@@ -11,6 +11,8 @@
     using Fifthweek.CodeGeneration;
     using Fifthweek.Shared;
 
+    using Constants = Fifthweek.Api.FileManagement.Shared.Constants;
+
     [AutoConstructor]
     public partial class GenerateWritableBlobUriQueryHandler : IQueryHandler<GenerateWritableBlobUriQuery, BlobSharedAccessInformation>
     {
@@ -34,7 +36,7 @@
             }
 
             var blobLocation = this.blobLocationGenerator.GetBlobLocation(query.ChannelId, query.FileId, query.Purpose);
-            var expiry = DateTime.UtcNow.Add(FileManagement.Constants.WriteSignatureTimeSpan);
+            var expiry = DateTime.UtcNow.Add(Constants.WriteSignatureTimeSpan);
             return await this.blobService.GetBlobSharedAccessInformationForWritingAsync(blobLocation.ContainerName, blobLocation.BlobName, expiry);
         }
     }

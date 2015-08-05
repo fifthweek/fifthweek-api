@@ -1,6 +1,7 @@
 ﻿namespace Fifthweek.Api.Persistence.Tests.Shared
 {
     using System;
+    using System.Data.SqlTypes;
     using System.Threading.Tasks;
 
     public static class PostTests
@@ -19,8 +20,8 @@
                 null,
                 "Note " + random.Next(),
                 false,
-                DateTime.UtcNow.AddDays((random.NextDouble() * -1000) + (random.NextDouble() * 1000)),
-                DateTime.UtcNow.AddDays(random.NextDouble() * -1000));
+                new SqlDateTime(DateTime.UtcNow.AddDays((random.NextDouble() * -1000) + (random.NextDouble() * 1000))).Value,
+                new SqlDateTime(DateTime.UtcNow.AddDays(random.NextDouble() * -1000)).Value);
         }
 
         public static Post UniqueFileOrImage(Random random)
@@ -40,8 +41,8 @@
                 null,
                 hasComment ? "Comment " + random.Next() : null,
                 isQueued,
-                DateTime.UtcNow.AddDays((random.NextDouble() * -1000) + (random.NextDouble() * 1000)),
-                DateTime.UtcNow.AddDays(random.NextDouble() * -1000));
+                new SqlDateTime(DateTime.UtcNow.AddDays((random.NextDouble() * -1000) + (random.NextDouble() * 1000))).Value,
+                new SqlDateTime(DateTime.UtcNow.AddDays(random.NextDouble() * -1000)).Value);
         }
 
         public static Task CreateTestNoteAsync(this IFifthweekDbContext databaseContext, Guid newUserId, Guid newPostId)

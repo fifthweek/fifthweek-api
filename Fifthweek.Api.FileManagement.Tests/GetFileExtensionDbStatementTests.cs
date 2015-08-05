@@ -60,7 +60,6 @@
 
             var file = FileTests.UniqueEntity(random);
             file.Id = newFileId.Value;
-            file.User = user;
             file.UserId = newFileId.Value;
             file.FileExtension = extension;
 

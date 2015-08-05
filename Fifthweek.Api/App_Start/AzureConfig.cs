@@ -10,6 +10,8 @@
 
     using Microsoft.WindowsAzure.Storage.Shared.Protocol;
 
+    using Constants = Fifthweek.Api.FileManagement.Shared.Constants;
+
     public class AzureConfig
     {
         public static void Register()
@@ -38,14 +40,14 @@
             {
                 var cloudQueueClient = storageAccount.CreateCloudQueueClient();
                 await CreateQueueIfNotExists(cloudQueueClient, WebJobs.Thumbnails.Shared.Constants.ThumbnailsQueueName);
-                await CreateQueueIfNotExists(cloudQueueClient, WebJobs.GarbageCollection.Shared.Constants.GarbageCollectionQueueName);
+                await CreateQueueIfNotExists(cloudQueueClient, Fifthweek.GarbageCollection.Shared.Constants.GarbageCollectionQueueName);
                 await CreateQueueIfNotExists(cloudQueueClient, Payments.Shared.Constants.RequestSnapshotQueueName);
                 await CreateQueueIfNotExists(cloudQueueClient, Payments.Shared.Constants.RequestProcessPaymentsQueueName);
 
                 var cloudBlobClient = storageAccount.CreateCloudBlobClient();
                 await CreateBlobContainerIfNotExists(cloudBlobClient, Payments.Shared.Constants.PaymentProcessingDataContainerName);
                 await CreateBlobIfNotExists(cloudBlobClient, Shared.Constants.AzureLeaseObjectsContainerName, Payments.Shared.Constants.ProcessPaymentsLeaseObjectName);
-                await CreateBlobContainerIfNotExists(cloudBlobClient, FileManagement.Constants.PublicFileBlobContainerName);
+                await CreateBlobContainerIfNotExists(cloudBlobClient, Constants.PublicFileBlobContainerName);
             }
             catch (Exception t)
             {

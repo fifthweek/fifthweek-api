@@ -3,6 +3,7 @@ namespace Fifthweek.Payments.Services.Credit
     using System;
     using System.Collections.Generic;
     using System.Linq;
+    using System.Threading;
     using System.Threading.Tasks;
 
     using Fifthweek.Api.Persistence.Payments;
@@ -27,7 +28,8 @@ namespace Fifthweek.Payments.Services.Credit
 
         public async Task<bool> ExecuteAsync(
             IReadOnlyList<CalculatedAccountBalanceResult> updatedAccountBalances, 
-            List<PaymentProcessingException> errors)
+            List<PaymentProcessingException> errors,
+            CancellationToken cancellationToken)
         {
             using (PaymentsPerformanceLogger.Instance.Log(typeof(TopUpUserAccountsWithCredit)))
             {
@@ -47,6 +49,11 @@ namespace Fifthweek.Payments.Services.Credit
                 bool recalculateBalances = false;
                 foreach (var userId in allUserIds)
                 {
+                    if (cancellationToken.IsCancellationRequested)
+                    {
+                        break;
+                    }
+
                     try
                     {
                         // Work out what we should charge the user.

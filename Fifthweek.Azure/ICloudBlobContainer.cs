@@ -14,5 +14,13 @@ namespace Fifthweek.Azure
         string GetSharedAccessSignature(SharedAccessBlobPolicy policy);
 
         Uri Uri { get; }
+
+        string Name { get; }
+
+        BlobContainerProperties Properties { get; }
+
+        ICloudBlobDirectory GetDirectoryReference(string relativeAddress);
+
+        Task DeleteAsync();
     }
 }

@@ -47,6 +47,11 @@ namespace Fifthweek.Azure
             return this.blob.ExistsAsync(cancellationToken);
         }
 
+        public Task<bool> ExistsAsync()
+        {
+            return this.blob.ExistsAsync();
+        }
+
         public string GetSharedAccessSignature(SharedAccessBlobPolicy policy)
         {
             return this.blob.GetSharedAccessSignature(policy);
@@ -115,6 +120,11 @@ namespace Fifthweek.Azure
         public Task ReleaseLeaseAsync(AccessCondition accessCondition, CancellationToken cancellationToken)
         {
             return this.blob.ReleaseLeaseAsync(accessCondition, cancellationToken);
+        }
+
+        public Task DeleteAsync()
+        {
+            return this.blob.DeleteAsync();
         }
     }
 }

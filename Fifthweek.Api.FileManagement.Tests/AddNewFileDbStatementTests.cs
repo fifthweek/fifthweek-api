@@ -4,6 +4,7 @@
     using System.Data.SqlTypes;
     using System.Threading.Tasks;
 
+    using Fifthweek.Api.Channels.Shared;
     using Fifthweek.Api.FileManagement.Shared;
     using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.Api.Persistence;
@@ -21,6 +22,7 @@
         private const string Purpose = "profile-picture";
         private static readonly UserId UserId = new UserId(Guid.NewGuid());
         private static readonly FileId FileId = new FileId(Guid.NewGuid());
+        private static readonly ChannelId ChannelId = new ChannelId(Guid.NewGuid());
         private static readonly DateTime TimeStamp = new SqlDateTime(DateTime.UtcNow).Value;
 
         private AddNewFileDbStatement target;
@@ -40,12 +42,12 @@
                 await this.CreateUserAsync(testDatabase);
                 await testDatabase.TakeSnapshotAsync();
 
-                await this.target.ExecuteAsync(FileId, UserId, FileNameWithoutExtension, FileExtension, Purpose, TimeStamp);
+                await this.target.ExecuteAsync(FileId, UserId, ChannelId, FileNameWithoutExtension, FileExtension, Purpose, TimeStamp);
 
                 var expectedFile = new File(
                     FileId.Value,
-                    null,
                     UserId.Value,
+                    ChannelId.Value,
                     FileState.WaitingForUpload,
                     TimeStamp,
                     null,
@@ -73,10 +75,10 @@
             {
                 this.target = new AddNewFileDbStatement(testDatabase);
                 await this.CreateUserAsync(testDatabase);
-                await this.target.ExecuteAsync(FileId, UserId, FileNameWithoutExtension, FileExtension, Purpose, TimeStamp);
+                await this.target.ExecuteAsync(FileId, UserId, ChannelId, FileNameWithoutExtension, FileExtension, Purpose, TimeStamp);
                 await testDatabase.TakeSnapshotAsync();
 
-                await target.ExecuteAsync(FileId, UserId, FileNameWithoutExtension, FileExtension, Purpose, TimeStamp);
+                await target.ExecuteAsync(FileId, UserId, ChannelId, FileNameWithoutExtension, FileExtension, Purpose, TimeStamp);
 
                 return ExpectedSideEffects.None;
             });
@@ -86,35 +88,35 @@
         [ExpectedException(typeof(ArgumentNullException))]
         public async Task WhenAddingANewFile_ItShouldRequireAFileId()
         {
-            await this.target.ExecuteAsync(null, UserId, FileNameWithoutExtension, FileExtension, Purpose, TimeStamp);
+            await this.target.ExecuteAsync(null, UserId, ChannelId, FileNameWithoutExtension, FileExtension, Purpose, TimeStamp);
         }
 
         [TestMethod]
         [ExpectedException(typeof(ArgumentNullException))]
         public async Task WhenAddingANewFile_ItShouldRequireAUserId()
         {
-            await this.target.ExecuteAsync(FileId, null, FileNameWithoutExtension, FileExtension, Purpose, TimeStamp);
+            await this.target.ExecuteAsync(FileId, null, ChannelId, FileNameWithoutExtension, FileExtension, Purpose, TimeStamp);
         }
 
         [TestMethod]
         [ExpectedException(typeof(ArgumentNullException))]
         public async Task WhenAddingANewFile_ItShouldRequireAFileNameWithoutExtension()
         {
-            await this.target.ExecuteAsync(FileId, UserId, null, FileExtension, Purpose, TimeStamp);
+            await this.target.ExecuteAsync(FileId, UserId, ChannelId, null, FileExtension, Purpose, TimeStamp);
         }
 
         [TestMethod]
         [ExpectedException(typeof(ArgumentNullException))]
         public async Task WhenAddingANewFile_ItShouldRequireAFileExtension()
         {
-            await this.target.ExecuteAsync(FileId, UserId, FileNameWithoutExtension, null, Purpose, TimeStamp);
+            await this.target.ExecuteAsync(FileId, UserId, ChannelId, FileNameWithoutExtension, null, Purpose, TimeStamp);
         }
 
         [TestMethod]
         [ExpectedException(typeof(ArgumentNullException))]
         public async Task WhenAddingANewFile_ItShouldRequireAPurpose()
         {
-            await this.target.ExecuteAsync(FileId, UserId, FileNameWithoutExtension, FileExtension, null, TimeStamp);
+            await this.target.ExecuteAsync(FileId, UserId, ChannelId, FileNameWithoutExtension, FileExtension, null, TimeStamp);
         }
 
         private async Task CreateUserAsync(TestDatabaseContext testDatabase)

@@ -5,6 +5,7 @@ namespace Fifthweek.Api.FileManagement.Tests
     using System.Threading;
     using System.Threading.Tasks;
 
+    using Fifthweek.Api.Channels.Shared;
     using Fifthweek.Api.FileManagement.Shared;
     using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.Api.Persistence;
@@ -22,6 +23,7 @@ namespace Fifthweek.Api.FileManagement.Tests
         private const string Purpose = "profile-picture";
         private static readonly UserId UserId = new UserId(Guid.NewGuid());
         private static readonly FileId FileId = new FileId(Guid.NewGuid());
+        private static readonly ChannelId ChannelId = new ChannelId(Guid.NewGuid());
         private static readonly DateTime TimeStamp = new SqlDateTime(DateTime.UtcNow).Value;
         private static readonly DateTime UploadStartedTimeStamp = new SqlDateTime(DateTime.UtcNow.AddSeconds(-180)).Value;
 
@@ -50,8 +52,8 @@ namespace Fifthweek.Api.FileManagement.Tests
 
                     var expectedFile = new File(
                         FileId.Value,
-                        null,
                         UserId.Value,
+                        ChannelId.Value,
                         FileState.UploadComplete,
                         UploadStartedTimeStamp,
                         TimeStamp,
@@ -124,8 +126,8 @@ namespace Fifthweek.Api.FileManagement.Tests
         {
             var file = new File(
                 FileId.Value,
-                null,
                 UserId.Value,
+                ChannelId.Value,
                 FileState.WaitingForUpload,
                 UploadStartedTimeStamp,
                 null,

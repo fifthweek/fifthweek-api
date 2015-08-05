@@ -14,6 +14,8 @@
 
     using Microsoft.VisualStudio.TestTools.UnitTesting;
 
+    using Constants = Fifthweek.Api.FileManagement.Shared.Constants;
+
     [TestClass]
     public class BlobNameCreatorTests
     {
@@ -148,11 +150,11 @@
 
             if (isPublic)
             {
-                Assert.AreEqual(FileManagement.Constants.PublicFileBlobContainerName, result.ContainerName);
+                Assert.AreEqual(Constants.PublicFileBlobContainerName, result.ContainerName);
             }
             else
             {
-                Assert.AreNotEqual(FileManagement.Constants.PublicFileBlobContainerName, result.ContainerName);
+                Assert.AreNotEqual(Constants.PublicFileBlobContainerName, result.ContainerName);
             }
         }
     }

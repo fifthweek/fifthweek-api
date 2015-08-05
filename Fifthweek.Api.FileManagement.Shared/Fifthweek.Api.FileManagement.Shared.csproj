@@ -48,11 +48,13 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BlobLocation.cs" />
+    <Compile Include="BlobLocationGenerator.cs" />
     <Compile Include="ClassAugmentation.cs">
       <DependentUpon>ClassAugmentation.tt</DependentUpon>
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
     </Compile>
+    <Compile Include="Constants.cs" />
     <Compile Include="FileId.cs" />
     <Compile Include="FileInformation.cs" />
     <Compile Include="IBlobLocationGenerator.cs" />
@@ -86,6 +88,10 @@
     <ProjectReference Include="..\Fifthweek.CodeGeneration\Fifthweek.CodeGeneration.csproj">
       <Project>{770F450E-2166-4269-BEC1-DF59AA16B1E8}</Project>
       <Name>Fifthweek.CodeGeneration</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Fifthweek.Shared\Fifthweek.Shared.csproj">
+      <Project>{6d12ffbb-38e9-4722-a690-0f0338538ebc}</Project>
+      <Name>Fifthweek.Shared</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

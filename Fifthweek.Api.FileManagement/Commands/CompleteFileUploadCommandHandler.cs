@@ -11,6 +11,8 @@
     using Fifthweek.CodeGeneration;
     using Fifthweek.Shared;
 
+    using Constants = Fifthweek.Api.FileManagement.Shared.Constants;
+
     [AutoConstructor]
     public partial class CompleteFileUploadCommandHandler : ICommandHandler<CompleteFileUploadCommand>
     {
@@ -55,15 +57,15 @@
             // We set the cache to the maximum time a SAS URL needs to be valid.
             var baseTimeSpan
                 = this.IsPublic(blobLocation.ContainerName)
-                ? FileManagement.Constants.PublicReadSignatureTimeSpan
-                : FileManagement.Constants.PrivateReadSignatureTimeSpan;
+                ? Constants.PublicReadSignatureTimeSpan
+                : Constants.PrivateReadSignatureTimeSpan;
 
-            return baseTimeSpan + FileManagement.Constants.ReadSignatureMinimumExpiryTime;
+            return baseTimeSpan + Constants.ReadSignatureMinimumExpiryTime;
         }
 
         private bool IsPublic(string containerName)
         {
-            return containerName == FileManagement.Constants.PublicFileBlobContainerName;
+            return containerName == Constants.PublicFileBlobContainerName;
         }
     }
 }

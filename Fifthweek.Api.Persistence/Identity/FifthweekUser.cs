@@ -33,9 +33,6 @@ namespace Fifthweek.Api.Persistence.Identity
 
         public Guid? ProfileImageFileId { get; set; }
 
-        [Optional, NonEquatable]
-        public ICollection<File> Files { get; set; }
-
         [Index(IsUnique = true)]
         public override string Email
         {

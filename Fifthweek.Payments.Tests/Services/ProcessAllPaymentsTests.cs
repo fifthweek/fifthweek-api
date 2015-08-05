@@ -2,6 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Threading;
     using System.Threading.Tasks;
 
     using Fifthweek.Api.Identity.Shared.Membership;
@@ -58,14 +59,14 @@
         [ExpectedException(typeof(ArgumentNullException))]
         public async Task WhenErrorsIsNull_ItShouldThrowAnException()
         {
-            await this.target.ExecuteAsync(this.keepAliveHandler.Object, null);
+            await this.target.ExecuteAsync(this.keepAliveHandler.Object, null, CancellationToken.None);
         }
 
         [TestMethod]
         [ExpectedException(typeof(ArgumentNullException))]
         public async Task WhenKeepALiveHandlerIsNull_ItShouldThrowAnException()
         {
-            await this.target.ExecuteAsync(null, new List<PaymentProcessingException>());
+            await this.target.ExecuteAsync(null, new List<PaymentProcessingException>(), CancellationToken.None);
         }
 
         [TestMethod]
@@ -86,10 +87,10 @@
             };
             this.updateAccountBalances.Setup(v => v.ExecuteAsync(null, Now)).ReturnsAsync(updatedAcountBalances).Verifiable();
 
-            this.topUpUserAccountsWithCredit.Setup(v => v.ExecuteAsync(updatedAcountBalances, errors))
+            this.topUpUserAccountsWithCredit.Setup(v => v.ExecuteAsync(updatedAcountBalances, errors, CancellationToken.None))
                 .ReturnsAsync(false).Verifiable();
 
-            await this.target.ExecuteAsync(this.keepAliveHandler.Object, errors);
+            await this.target.ExecuteAsync(this.keepAliveHandler.Object, errors, CancellationToken.None);
 
             this.getAllSubscribers.Verify();
             this.processPaymentsForSubscriber.Verify();
@@ -115,10 +116,10 @@
             };
             this.updateAccountBalances.Setup(v => v.ExecuteAsync(null, Now)).ReturnsAsync(updatedAcountBalances).Verifiable();
 
-            this.topUpUserAccountsWithCredit.Setup(v => v.ExecuteAsync(updatedAcountBalances, errors))
+            this.topUpUserAccountsWithCredit.Setup(v => v.ExecuteAsync(updatedAcountBalances, errors, CancellationToken.None))
                 .ReturnsAsync(true).Verifiable();
 
-            await this.target.ExecuteAsync(this.keepAliveHandler.Object, errors);
+            await this.target.ExecuteAsync(this.keepAliveHandler.Object, errors, CancellationToken.None);
 
             this.getAllSubscribers.Verify();
             this.processPaymentsForSubscriber.Verify();
@@ -145,10 +146,10 @@
             };
             this.updateAccountBalances.Setup(v => v.ExecuteAsync(null, Now)).ReturnsAsync(updatedAcountBalances).Verifiable();
 
-            this.topUpUserAccountsWithCredit.Setup(v => v.ExecuteAsync(updatedAcountBalances, errors))
+            this.topUpUserAccountsWithCredit.Setup(v => v.ExecuteAsync(updatedAcountBalances, errors, CancellationToken.None))
                 .ReturnsAsync(false).Verifiable();
 
-            await this.target.ExecuteAsync(this.keepAliveHandler.Object, errors);
+            await this.target.ExecuteAsync(this.keepAliveHandler.Object, errors, CancellationToken.None);
 
             this.getAllSubscribers.Verify();
             this.processPaymentsForSubscriber.Verify();
@@ -158,6 +159,37 @@
             Assert.IsNull(errors[0].CreatorId);
             Assert.AreEqual(SubscriberIds[0], errors[0].SubscriberId);
             Assert.AreSame(exception, errors[0].InnerException);
+        }
+
+        [TestMethod]
+        public async Task WhenCancelled_ItShouldStopProcessingSubscribers()
+        {
+            var errors = new List<PaymentProcessingException>();
+
+            this.getAllSubscribers.Setup(v => v.ExecuteAsync()).ReturnsAsync(SubscriberIds).Verifiable();
+
+            var cts = new CancellationTokenSource();
+
+            var exception = new DivideByZeroException();
+            this.processPaymentsForSubscriber.Setup(v => v.ExecuteAsync(SubscriberIds[0], Now, this.keepAliveHandler.Object, errors))
+                .Returns(Task.FromResult(0)).Callback<UserId, DateTime, IKeepAliveHandler, List<PaymentProcessingException>>((a,b,c,d) => cts.Cancel()).Verifiable();
+
+            var updatedAcountBalances = new List<CalculatedAccountBalanceResult>
+            {
+                new CalculatedAccountBalanceResult(Now, UserId.Random(), LedgerAccountType.FifthweekCredit, 100)
+            };
+            this.updateAccountBalances.Setup(v => v.ExecuteAsync(null, Now)).ReturnsAsync(updatedAcountBalances).Verifiable();
+
+            this.topUpUserAccountsWithCredit.Setup(v => v.ExecuteAsync(updatedAcountBalances, errors, cts.Token))
+                .ReturnsAsync(false).Verifiable();
+
+            await this.target.ExecuteAsync(this.keepAliveHandler.Object, errors, cts.Token);
+
+            this.getAllSubscribers.Verify();
+            this.processPaymentsForSubscriber.Verify();
+            this.updateAccountBalances.Verify();
+
+            Assert.AreEqual(0, errors.Count);
         }
     }
 }

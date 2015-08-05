@@ -10,6 +10,7 @@
     using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.Api.Persistence.Identity;
     using Fifthweek.CodeGeneration;
+    using Fifthweek.Shared;
 
     [AutoConstructor]
     public partial class RequesterContext : IRequesterContext

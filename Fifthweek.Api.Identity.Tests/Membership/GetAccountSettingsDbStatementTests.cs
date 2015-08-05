@@ -320,7 +320,6 @@
             {
                 var profileImageFile = FileTests.UniqueEntity(random);
                 profileImageFile.Id = fileId.Value;
-                profileImageFile.User = user;
                 profileImageFile.UserId = user.Id;
 
                 using (var connection = testDatabase.CreateConnection())

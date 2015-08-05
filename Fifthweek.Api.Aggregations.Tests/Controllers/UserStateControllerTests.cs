@@ -12,6 +12,7 @@
     using Fifthweek.Api.FileManagement.Queries;
     using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.Api.Persistence.Identity;
+    using Fifthweek.Shared;
 
     using Microsoft.VisualStudio.TestTools.UnitTesting;
 

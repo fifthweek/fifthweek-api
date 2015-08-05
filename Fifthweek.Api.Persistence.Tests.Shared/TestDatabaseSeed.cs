@@ -203,7 +203,6 @@
                 if (Random.Next(1) == 1)
                 {
                     var file = FileTests.UniqueEntity(Random);
-                    file.User = user;
                     file.UserId = user.Id;
                     user.ProfileImageFile = file;
                     user.ProfileImageFileId = file.Id;
@@ -417,7 +416,6 @@
                 if (blog.HeaderImageFile != null)
                 {
                     var file = blog.HeaderImageFile;
-                    file.User = creator;
                     file.UserId = creator.Id;
 
                     this.files.Add(file);
@@ -485,7 +483,6 @@
                 post.CollectionId = collection.Id;
 
                 var file = FileTests.UniqueEntity(Random);
-                file.User = collection.Channel.Blog.Creator;
                 file.UserId = collection.Channel.Blog.Creator.Id;
                 post.Image = file;
                 post.ImageId = file.Id;
@@ -503,7 +500,6 @@
                 post.CollectionId = collection.Id;
 
                 var file = FileTests.UniqueEntity(Random);
-                file.User = collection.Channel.Blog.Creator;
                 file.UserId = collection.Channel.Blog.Creator.Id;
                 post.File = file;
                 post.FileId = file.Id;

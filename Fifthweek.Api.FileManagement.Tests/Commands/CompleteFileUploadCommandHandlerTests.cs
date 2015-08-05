@@ -17,6 +17,8 @@
 
     using Moq;
 
+    using Constants = Fifthweek.Api.FileManagement.Shared.Constants;
+
     [TestClass]
     public class CompleteFileUploadCommandHandlerTests
     {
@@ -115,7 +117,7 @@
             this.blobNameCreator.Setup(v => v.GetBlobLocation(ChannelId, FileId, Purpose))
                 .Returns(new BlobLocation(ContainerName, BlobName));
 
-            this.blobService.Setup(v => v.GetBlobLengthAndSetPropertiesAsync(ContainerName, BlobName, MimeType, FileManagement.Constants.PrivateReadSignatureTimeSpan + FileManagement.Constants.ReadSignatureMinimumExpiryTime))
+            this.blobService.Setup(v => v.GetBlobLengthAndSetPropertiesAsync(ContainerName, BlobName, MimeType, Constants.PrivateReadSignatureTimeSpan + Constants.ReadSignatureMinimumExpiryTime))
                 .ReturnsAsync(BlobSize).Verifiable();
 
             this.setFileUploadComplete.Setup(v => v.ExecuteAsync(FileId, BlobSize, It.IsAny<DateTime>()))
@@ -144,7 +146,7 @@
             this.blobNameCreator.Setup(v => v.GetBlobLocation(null, FileId, Purpose))
                 .Returns(new BlobLocation(ContainerName, BlobName));
 
-            this.blobService.Setup(v => v.GetBlobLengthAndSetPropertiesAsync(ContainerName, BlobName, MimeType, FileManagement.Constants.PrivateReadSignatureTimeSpan + FileManagement.Constants.ReadSignatureMinimumExpiryTime))
+            this.blobService.Setup(v => v.GetBlobLengthAndSetPropertiesAsync(ContainerName, BlobName, MimeType, Constants.PrivateReadSignatureTimeSpan + Constants.ReadSignatureMinimumExpiryTime))
                 .ReturnsAsync(BlobSize).Verifiable();
 
             this.setFileUploadComplete.Setup(v => v.ExecuteAsync(FileId, BlobSize, It.IsAny<DateTime>()))

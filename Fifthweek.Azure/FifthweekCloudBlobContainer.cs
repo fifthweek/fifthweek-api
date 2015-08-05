@@ -22,6 +22,22 @@ namespace Fifthweek.Azure
             }
         }
 
+        public string Name
+        {
+            get
+            {
+                return this.container.Name;
+            }
+        }
+
+        public BlobContainerProperties Properties
+        {
+            get
+            {
+                return this.container.Properties;
+            }
+        }
+
         public Task<bool> CreateIfNotExistsAsync()
         {
             return this.container.CreateIfNotExistsAsync();
@@ -35,6 +51,16 @@ namespace Fifthweek.Azure
         public string GetSharedAccessSignature(SharedAccessBlobPolicy policy)
         {
             return this.container.GetSharedAccessSignature(policy);
+        }
+
+        public ICloudBlobDirectory GetDirectoryReference(string relativeAddress)
+        {
+            return new FifthweekCloudBlobDirectory(this.container.GetDirectoryReference(relativeAddress));
+        }
+
+        public Task DeleteAsync()
+        {
+            return this.container.DeleteAsync();
         }
     }
 }

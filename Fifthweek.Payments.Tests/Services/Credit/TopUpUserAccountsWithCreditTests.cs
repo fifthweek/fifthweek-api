@@ -3,6 +3,7 @@
     using System;
     using System.Collections.Generic;
     using System.Linq;
+    using System.Threading;
     using System.Threading.Tasks;
 
     using Fifthweek.Api.Identity.Shared.Membership;
@@ -59,14 +60,14 @@
         [ExpectedException(typeof(ArgumentNullException))]
         public async Task WhenUpdatedAccountBalancesIsNull_ItShouldThrowAnException()
         {
-            await this.target.ExecuteAsync(null, new List<PaymentProcessingException>());
+            await this.target.ExecuteAsync(null, new List<PaymentProcessingException>(), CancellationToken.None);
         }
 
         [TestMethod]
         [ExpectedException(typeof(ArgumentNullException))]
         public async Task WhenErrorsIsNull_ItShouldThrowAnException()
         {
-            await this.target.ExecuteAsync(new List<CalculatedAccountBalanceResult>(), null);
+            await this.target.ExecuteAsync(new List<CalculatedAccountBalanceResult>(), null, CancellationToken.None);
         }
 
         [TestMethod]
@@ -122,7 +123,7 @@
                 .Returns(Task.FromResult(0))
                 .Verifiable();
 
-            var result = await this.target.ExecuteAsync(input, new List<PaymentProcessingException>());
+            var result = await this.target.ExecuteAsync(input, new List<PaymentProcessingException>(), CancellationToken.None);
 
             this.incrementPaymentStatus.Verify();
             this.applyUserCredit.Verify();
@@ -167,11 +168,44 @@
             this.getUserPaymentOrigin.Setup(v => v.ExecuteAsync(userId5))
                 .ReturnsAsync(new UserPaymentOriginResult("customer5", PaymentOriginKeyType.Stripe, null, null, null, null, PaymentStatus.None));
 
-            var result = await this.target.ExecuteAsync(input, new List<PaymentProcessingException>());
+            var result = await this.target.ExecuteAsync(input, new List<PaymentProcessingException>(), CancellationToken.None);
 
             this.incrementPaymentStatus.Verify();
 
             Assert.IsFalse(result);
+        }
+
+        [TestMethod]
+        public async Task ItShouldStopProcessingUsersIfCancelled()
+        {
+            this.timestampCreator.SetupSequence(v => v.Now()).Returns(Now1).Returns(Now2);
+            this.guidCreator.SetupSequence(v => v.CreateSqlSequential()).Returns(TransactionReference1.Value).Returns(TransactionReference2.Value);
+
+            var userId1 = UserId.Random();
+            var userId2 = UserId.Random();
+            var userId3 = UserId.Random();
+            var userId4 = UserId.Random();
+            var userId5 = UserId.Random();
+            var input = new List<CalculatedAccountBalanceResult>
+            { 
+                new CalculatedAccountBalanceResult(DateTime.UtcNow, UserId.Random(), LedgerAccountType.FifthweekCredit, TopUpUserAccountsWithCredit.MinimumAccountBalanceBeforeCharge),
+                new CalculatedAccountBalanceResult(DateTime.UtcNow, UserId.Random(), LedgerAccountType.Stripe, 0),
+                new CalculatedAccountBalanceResult(DateTime.UtcNow, userId1, LedgerAccountType.FifthweekCredit, TopUpUserAccountsWithCredit.MinimumAccountBalanceBeforeCharge - 1),
+                new CalculatedAccountBalanceResult(DateTime.UtcNow, userId2, LedgerAccountType.FifthweekCredit, -1m),
+            };
+
+            var usersRequiringRetry = new List<UserId> { userId3, userId4, userId5 };
+            this.getUsersRequiringPaymentRetry.Setup(v => v.ExecuteAsync()).ReturnsAsync(usersRequiringRetry);
+
+            var usersRequiringCharge = new List<UserId> { userId1, userId2, userId3, userId4, userId5 };
+            this.incrementPaymentStatus.Setup(v => v.ExecuteAsync(It.IsAny<IReadOnlyList<UserId>>()))
+                .Callback<IReadOnlyList<UserId>>(v => CollectionAssert.AreEquivalent(usersRequiringCharge, v.ToList()))
+                .Returns(Task.FromResult(0)).Verifiable();
+
+            var cts = new CancellationTokenSource();
+            this.getUserWeeklySubscriptionsCost.Setup(v => v.ExecuteAsync(userId1)).ReturnsAsync(0).Callback<UserId>(a => cts.Cancel());
+
+            await this.target.ExecuteAsync(input, new List<PaymentProcessingException>(), cts.Token);
         }
     }
 }

@@ -28,10 +28,10 @@
         public async Task WhenSchedulingGarbageCollection_ItShouldPostToTheAzureQueue()
         {
             this.queueService.Setup(v => v.AddMessageToQueueAsync(
-                Constants.GarbageCollectionQueueName, 
+                Fifthweek.GarbageCollection.Shared.Constants.GarbageCollectionQueueName, 
                 It.IsAny<RunGarbageCollectionMessage>(),
                 null,
-                Constants.GarbageCollectionMessageInitialVisibilityDelay))
+                Fifthweek.GarbageCollection.Shared.Constants.GarbageCollectionMessageInitialVisibilityDelay))
                 .Returns(Task.FromResult(0))
                 .Verifiable();
 

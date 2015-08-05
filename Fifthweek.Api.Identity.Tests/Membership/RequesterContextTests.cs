@@ -13,6 +13,7 @@
     using Fifthweek.Api.Identity.Membership;
     using Fifthweek.Api.Identity.OAuth;
     using Fifthweek.Api.Identity.Shared.Membership;
+    using Fifthweek.Shared;
     using Fifthweek.Tests.Shared;
 
     using Microsoft.VisualStudio.TestTools.UnitTesting;

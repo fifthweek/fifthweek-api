@@ -231,7 +231,6 @@
 
             var profileImageFile = FileTests.UniqueEntity(this.random);
             profileImageFile.Id = Creator1ProfileImageFileId.Value;
-            profileImageFile.User = creator1;
             profileImageFile.UserId = creator1.Id;
 
             using (var databaseContext = testDatabase.CreateContext())

@@ -11,6 +11,8 @@
     using Fifthweek.CodeGeneration;
     using Fifthweek.Shared;
 
+    using Constants = Fifthweek.Api.FileManagement.Shared.Constants;
+
     [AutoConstructor]
     public partial class InitiateFileUploadCommandHandler : ICommandHandler<InitiateFileUploadCommand>
     {
@@ -32,7 +34,7 @@
 
             var blobLocation = this.blobLocationGenerator.GetBlobLocation(command.ChannelId, command.FileId, command.Purpose);
 
-            if (blobLocation.ContainerName != FileManagement.Constants.PublicFileBlobContainerName)
+            if (blobLocation.ContainerName != Constants.PublicFileBlobContainerName)
             {
                 await this.blobService.CreateBlobContainerAsync(blobLocation.ContainerName);
             }
@@ -61,6 +63,7 @@
             await this.addNewFile.ExecuteAsync(
                 command.FileId,
                 authenticatedUserId,
+                command.ChannelId,
                 fileNameWithoutExtension ?? string.Empty,
                 fileExtension ?? string.Empty,
                 command.Purpose ?? string.Empty,

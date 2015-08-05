@@ -42,7 +42,7 @@
                     {
                         var errors = new List<PaymentProcessingException>();
                         
-                        await this.processAllPayments.ExecuteAsync(lease, errors);
+                        await this.processAllPayments.ExecuteAsync(lease, errors, cancellationToken);
 
                         if (errors.Count > 0)
                         {

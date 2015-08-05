@@ -16,6 +16,8 @@
 
     using Moq;
 
+    using Constants = Fifthweek.Api.FileManagement.Shared.Constants;
+
     [TestClass]
     public class InitiateFileUploadCommandHandlerTests
     {
@@ -73,7 +75,7 @@
                 UserId,
                 @"C:\test\myfile.jpeg",
                 "purpose",
-                FileManagement.Constants.PublicFileBlobContainerName,
+                Constants.PublicFileBlobContainerName,
                 "myfile",
                 "jpeg",
                 "purpose");
@@ -88,7 +90,7 @@
                 UserId,
                 @"C:\test\myfile",
                 "purpose",
-                FileManagement.Constants.PublicFileBlobContainerName,
+                Constants.PublicFileBlobContainerName,
                 "myfile",
                 string.Empty,
                 "purpose");
@@ -103,7 +105,7 @@
                 UserId,
                 @"C:\test\.myfile",
                 "purpose",
-                FileManagement.Constants.PublicFileBlobContainerName,
+                Constants.PublicFileBlobContainerName,
                 "myfile",
                 string.Empty,
                 "purpose");
@@ -118,7 +120,7 @@
                 UserId,
                 @"hello",
                 "purpose",
-                FileManagement.Constants.PublicFileBlobContainerName,
+                Constants.PublicFileBlobContainerName,
                 "hello",
                 string.Empty,
                 "purpose");
@@ -133,7 +135,7 @@
                 UserId,
                 @"C:\test\myfile.isgreat.jpeg",
                 "purpose",
-                FileManagement.Constants.PublicFileBlobContainerName,
+                Constants.PublicFileBlobContainerName,
                 "myfile.isgreat",
                 "jpeg",
                 "purpose");
@@ -148,7 +150,7 @@
                 UserId,
                 @"C:\test\myfile.jpeg",
                 null,
-                FileManagement.Constants.PublicFileBlobContainerName,
+                Constants.PublicFileBlobContainerName,
                 "myfile",
                 "jpeg",
                 string.Empty);
@@ -163,7 +165,7 @@
                 UserId,
                 null,
                 "purpose",
-                FileManagement.Constants.PublicFileBlobContainerName,
+                Constants.PublicFileBlobContainerName,
                 string.Empty,
                 string.Empty,
                 "purpose");
@@ -178,7 +180,7 @@
                 UserId,
                 @"C:\test\myfile.jpeg",
                 "purpose",
-                FileManagement.Constants.PublicFileBlobContainerName,
+                Constants.PublicFileBlobContainerName,
                 "myfile",
                 "jpeg",
                 "purpose");
@@ -216,7 +218,7 @@
             this.blobNameCreator.Setup(v => v.GetBlobLocation(channelId, fileId, purpose))
                 .Returns(new BlobLocation(blobContainerName, string.Empty));
 
-            this.addNewFileDbStatement.Setup(v => v.ExecuteAsync(fileId, requester, expectedFileName, expectedExtension, expectedPurpose, It.IsAny<DateTime>()))
+            this.addNewFileDbStatement.Setup(v => v.ExecuteAsync(fileId, requester, channelId, expectedFileName, expectedExtension, expectedPurpose, It.IsAny<DateTime>()))
                 .Returns(Task.FromResult(0))
                 .Verifiable();
 

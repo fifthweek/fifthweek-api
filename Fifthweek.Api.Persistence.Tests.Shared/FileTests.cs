@@ -1,6 +1,7 @@
 ﻿namespace Fifthweek.Api.Persistence.Tests.Shared
 {
     using System;
+    using System.Data.SqlTypes;
     using System.Threading.Tasks;
 
     using Fifthweek.Api.Persistence;
@@ -11,13 +12,13 @@
         {
             return new File(
                 Guid.NewGuid(),
-                null,
+                default(Guid),
                 default(Guid),
                 (FileState)random.Next(0, 2),
-                DateTime.UtcNow.AddDays(random.NextDouble() * -100),
-                DateTime.UtcNow.AddDays(random.NextDouble() * -100),
-                DateTime.UtcNow.AddDays(random.NextDouble() * -100),
-                DateTime.UtcNow.AddDays(random.NextDouble() * -100),
+                new SqlDateTime(DateTime.UtcNow.AddDays(random.NextDouble() * -100)).Value,
+                new SqlDateTime(DateTime.UtcNow.AddDays(random.NextDouble() * -100)).Value,
+                new SqlDateTime(DateTime.UtcNow.AddDays(random.NextDouble() * -100)).Value,
+                new SqlDateTime(DateTime.UtcNow.AddDays(random.NextDouble() * -100)).Value,
                 random.Next(0,3),
                 "File Name " + random.Next(),
                 "ext" + random.Next(100),
@@ -27,7 +28,7 @@
                 random.Next(1, 1024));
         }
 
-        public static Task CreateTestFileWithExistingUserAsync(this IFifthweekDbContext databaseContext, Guid existingUserId, Guid newFileId)
+        public static async Task<File> CreateTestFileWithExistingUserAsync(this IFifthweekDbContext databaseContext, Guid existingUserId, Guid newFileId)
         {
             var random = new Random();
 
@@ -35,7 +36,9 @@
             file.Id = newFileId;
             file.UserId = existingUserId;
 
-            return databaseContext.Database.Connection.InsertAsync(file);
+            await databaseContext.Database.Connection.InsertAsync(file);
+            
+            return file;
         }
     }
 }

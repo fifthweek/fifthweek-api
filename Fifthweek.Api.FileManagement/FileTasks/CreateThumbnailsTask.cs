@@ -10,6 +10,8 @@
     using Fifthweek.CodeGeneration;
     using Fifthweek.WebJobs.Thumbnails.Shared;
 
+    using Constants = Fifthweek.WebJobs.Thumbnails.Shared.Constants;
+
     [AutoEqualityMembers]
     public partial class CreateThumbnailsTask : IFileTask
     {

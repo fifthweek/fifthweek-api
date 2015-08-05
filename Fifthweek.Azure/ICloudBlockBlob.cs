@@ -31,6 +31,8 @@ namespace Fifthweek.Azure
 
         Task<CloudBlobStream> OpenWriteAsync(CancellationToken cancellationToken);
 
+        Task<bool> ExistsAsync();
+
         Task<bool> ExistsAsync(CancellationToken cancellationToken);
 
         Task<Stream> OpenReadAsync(CancellationToken cancellationToken);
@@ -46,5 +48,7 @@ namespace Fifthweek.Azure
         Task ReleaseLeaseAsync(AccessCondition accessCondition, CancellationToken cancellationToken);
 
         Task SetMetadataAsync(AccessCondition accessCondition, BlobRequestOptions blobRequestOptions, OperationContext operationContext, CancellationToken cancellationToken);
+
+        Task DeleteAsync();
     }
 }

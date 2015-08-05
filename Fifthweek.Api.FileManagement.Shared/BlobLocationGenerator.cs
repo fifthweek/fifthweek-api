@@ -1,9 +1,6 @@
-﻿namespace Fifthweek.Api.FileManagement
+﻿namespace Fifthweek.Api.FileManagement.Shared
 {
     using Fifthweek.Api.Channels.Shared;
-    using Fifthweek.Api.Core;
-    using Fifthweek.Api.FileManagement.Shared;
-    using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.Shared;
 
     public class BlobLocationGenerator : IBlobLocationGenerator

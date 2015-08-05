@@ -3,6 +3,7 @@
     using System;
     using System.Collections.Generic;
     using System.Linq;
+    using System.Web;
 
     public static class Extensions
     {
@@ -41,6 +42,23 @@
         public static IEnumerable<T> EmptyIfNull<T>(this IEnumerable<T> input)
         {
             return input ?? Enumerable.Empty<T>();
+        }
+
+        public static string EncodeGuid(this Guid value)
+        {
+            return HttpServerUtility.UrlTokenEncode(value.ToByteArray());
+        }
+
+        public static Guid DecodeGuid(this string value)
+        {
+            var result = HttpServerUtility.UrlTokenDecode(value);
+
+            if (result == null || result.Length != 16)
+            {
+                throw new BadRequestException("Value does not represent an ID: " + value);
+            }
+
+            return new Guid(result);
         }
     }
 }

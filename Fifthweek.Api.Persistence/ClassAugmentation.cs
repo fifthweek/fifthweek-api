@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Linq;
 
-//// Generated on 03/08/2015 12:22:48 (UTC)
-//// Mapped solution in 15.37s
+//// Generated on 04/08/2015 18:38:48 (UTC)
+//// Mapped solution in 20.06s
 
 
 namespace Fifthweek.Api.Persistence
@@ -313,8 +313,7 @@ namespace Fifthweek.Api.Persistence
         public File(
             System.Guid id,
             System.Guid userId,
-            Fifthweek.Api.Persistence.Identity.FifthweekUser user,
-            System.Guid channelId,
+            System.Nullable<System.Guid> channelId,
             Fifthweek.Api.Persistence.FileState state,
             System.DateTime uploadStartedDate,
             System.Nullable<System.DateTime> uploadCompletedDate,
@@ -370,7 +369,6 @@ namespace Fifthweek.Api.Persistence
 
             this.Id = id;
             this.UserId = userId;
-            this.User = user;
             this.ChannelId = channelId;
             this.State = state;
             this.UploadStartedDate = uploadStartedDate;

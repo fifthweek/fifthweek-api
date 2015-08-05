@@ -1,6 +1,7 @@
 ﻿namespace Fifthweek.Api.Persistence.Tests.Shared
 {
     using System;
+    using System.Data.SqlTypes;
     using System.Threading.Tasks;
 
     public static class CollectionTests
@@ -12,8 +13,8 @@
                 default(Guid),
                 null,
                 "Collection " + random.Next(),
-                DateTime.UtcNow,
-                DateTime.UtcNow);
+                new SqlDateTime(DateTime.UtcNow).Value,
+                new SqlDateTime(DateTime.UtcNow).Value);
         }
 
         public static Collection UniqueEntityWithForeignEntities(
@@ -67,7 +68,6 @@
             collection.ChannelId = channel.Id;
 
             var file = FileTests.UniqueEntity(random);
-            file.User = creator;
             file.UserId = creator.Id;
 
             var post = PostTests.UniqueFileOrImage(random);

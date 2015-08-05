@@ -8,5 +8,10 @@
     public partial class BlogId
     {
         public Guid Value { get; private set; }
+
+        public static BlogId Random()
+        {
+            return new BlogId(Guid.NewGuid());
+        }
     }
 }
