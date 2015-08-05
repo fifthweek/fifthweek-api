@@ -1,5 +1,6 @@
 ﻿namespace Fifthweek.GarbageCollection
 {
+    using System.Collections.Generic;
     using System.Threading;
     using System.Threading.Tasks;
 
@@ -7,6 +8,8 @@
     using Fifthweek.Azure;
     using Fifthweek.CodeGeneration;
     using Fifthweek.Shared;
+
+    using Microsoft.WindowsAzure.Storage;
 
     [AutoConstructor]
     public partial class DeleteBlobsForFile : IDeleteBlobsForFile
@@ -17,6 +20,12 @@
         public async Task ExecuteAsync(OrphanedFileData file)
         {
             file.AssertNotNull("file");
+
+            var purpose = FilePurposes.TryGetFilePurpose(file.Purpose);
+            if (purpose.IsPublic == false && file.ChannelId == null)
+            {
+                return;
+            }
 
             var location = this.blobLocationGenerator.GetBlobLocation(file.ChannelId, file.FileId, file.Purpose);
 
@@ -31,7 +40,21 @@
 
             var blobDirectory = container.GetDirectoryReference(location.BlobName);
 
-            var childBlobs = await blobDirectory.ListCloudBlockBlobsAsync(true);
+            IReadOnlyList<ICloudBlockBlob> childBlobs;
+            try
+            {
+                childBlobs = await blobDirectory.ListCloudBlockBlobsAsync(true);
+            }
+            catch (StorageException t)
+            {
+                if (t.RequestInformation.HttpStatusCode != 404)
+                {
+                    throw;
+                }
+
+                return;
+            }
+
             foreach (var blob in childBlobs)
             {
                 await blob.DeleteAsync();

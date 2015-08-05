@@ -7,6 +7,7 @@
     using System.Linq;
     using System.Threading.Tasks;
 
+    using Fifthweek.Api.Channels.Shared;
     using Fifthweek.Api.FileManagement.Shared;
     using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.Api.Persistence;
@@ -43,7 +44,7 @@
 
                 await this.target.ExecuteAsync(EndDate);
 
-                Assert.AreEqual(30, expectedDeletions.Count);
+                Assert.AreEqual(36, expectedDeletions.Count);
                 return new ExpectedSideEffects
                 {
                     Deletes = expectedDeletions,
@@ -60,15 +61,18 @@
                 var expectedDeletions = new List<IIdentityEquatable>();
                 await this.AddUser(connection, random, UserId.Random(), IncludedDate, false);
                 expectedDeletions.AddRange(await this.AddUser(connection, random, TestUserId1, IncludedDate, true));
-                expectedDeletions.AddRange(await this.AddUser(connection, random, TestUserId2, IncludedDate, true));
-                await this.AddUser(connection, random, TestUserId3, EndDate, true);
+                var channelId = new ChannelId(expectedDeletions.OfType<Channel>().First().Id);
+                expectedDeletions.AddRange(await this.AddUser(connection, random, TestUserId2, IncludedDate, true, TestUserId1, channelId));
+                
+                var nonDeletedUserEntities = await this.AddUser(connection, random, TestUserId3, EndDate, true, TestUserId1, channelId);
+                expectedDeletions.AddRange(nonDeletedUserEntities.OfType<ChannelSubscription>());
 
                 // Files shouldn't be deleted.
                 return expectedDeletions.Where(v => !(v is File)).ToList();
             }
         }
 
-        private async Task<IEnumerable<IIdentityEquatable>> AddUser(DbConnection connection, Random random, UserId userId, DateTime registrationDate, bool isTestUser)
+        private async Task<IEnumerable<IIdentityEquatable>> AddUser(DbConnection connection, Random random, UserId userId, DateTime registrationDate, bool isTestUser, UserId subscriberId = null, ChannelId subscribedToId = null)
         {
             var users = new List<FifthweekUser>();
             var user = UserTests.UniqueEntity(random);
@@ -118,6 +122,18 @@
             posts.Add(post);
             await connection.InsertAsync(posts);
 
+            var channelSubscriptions = new List<ChannelSubscription>();
+            if (subscriberId != null)
+            {
+                channelSubscriptions.Add(new ChannelSubscription(channel.Id, null, subscriberId.Value, null, 100, Now, Now));
+                await connection.InsertAsync(channelSubscriptions);
+            }
+            if (subscribedToId != null)
+            {
+                channelSubscriptions.Add(new ChannelSubscription(subscribedToId.Value, null, userId.Value, null, 100, Now, Now));
+                await connection.InsertAsync(channelSubscriptions);
+            }
+
             var calculatedAccountBalances = new List<CalculatedAccountBalance>
             {
                 new CalculatedAccountBalance(user.Id, LedgerAccountType.FifthweekCredit, Now),
@@ -166,6 +182,12 @@
             };
             await connection.InsertAsync(creatorFreeAccessUsersSnapshotItems);
 
+            var userPaymentOrigins = new List<UserPaymentOrigin>
+            {
+                new UserPaymentOrigin(userId.Value, null, "paymentOriginKey", PaymentOriginKeyType.Stripe, null, null, null, null, PaymentStatus.None),
+            };
+            await connection.InsertAsync(userPaymentOrigins);
+
             return users.Cast<IIdentityEquatable>()
                 .Concat(userRoles)
                 .Concat(blogs)
@@ -173,6 +195,7 @@
                 .Concat(collections)
                 .Concat(files)
                 .Concat(posts)
+                .Concat(channelSubscriptions)
                 .Concat(calculatedAccountBalances)
                 .Concat(subscriberSnapshots)
                 .Concat(subscriberChannelSnapshots)
@@ -180,7 +203,8 @@
                 .Concat(creatorChannelSnapshots)
                 .Concat(creatorChannelSnapshotItems)
                 .Concat(creatorFreeAccessUsersSnapshots)
-                .Concat(creatorFreeAccessUsersSnapshotItems);
+                .Concat(creatorFreeAccessUsersSnapshotItems)
+                .Concat(userPaymentOrigins);
         }
     }
 }

@@ -340,6 +340,10 @@
     <Compile Include="Migrations\201508041851244_RemoveForeignKeyFromFileToUserForGarbageCollection.Designer.cs">
       <DependentUpon>201508041851244_RemoveForeignKeyFromFileToUserForGarbageCollection.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201508051708310_AddCascadeDeleteToUserPaymentOrigin.cs" />
+    <Compile Include="Migrations\201508051708310_AddCascadeDeleteToUserPaymentOrigin.Designer.cs">
+      <DependentUpon>201508051708310_AddCascadeDeleteToUserPaymentOrigin.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Payments\AppendOnlyLedgerRecord.cs" />
     <Compile Include="Payments\LedgerTransactionType.cs" />
@@ -558,6 +562,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201508041851244_RemoveForeignKeyFromFileToUserForGarbageCollection.resx">
       <DependentUpon>201508041851244_RemoveForeignKeyFromFileToUserForGarbageCollection.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201508051708310_AddCascadeDeleteToUserPaymentOrigin.resx">
+      <DependentUpon>201508051708310_AddCascadeDeleteToUserPaymentOrigin.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>

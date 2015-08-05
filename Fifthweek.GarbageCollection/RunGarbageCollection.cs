@@ -40,7 +40,7 @@
                 {
                     break;
                 }
-
+                Console.Write(".");
                 try
                 {
                     await this.deleteBlobsForFile.ExecuteAsync(file);

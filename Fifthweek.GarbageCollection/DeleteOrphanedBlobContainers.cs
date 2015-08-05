@@ -46,6 +46,7 @@
                     {
                         break;
                     }
+                    Console.Write(".");
 
                     Guid channelIdGuid;
                     if (!Guid.TryParse(container.Name, out channelIdGuid))

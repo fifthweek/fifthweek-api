@@ -31,6 +31,22 @@ namespace Fifthweek.GarbageCollection
             FifthweekUser.Table,
             FifthweekUser.Fields.Id.ToString());
 
+        private static readonly string DeleteIncommingSubscriptionsSql = string.Format(
+            @"DELETE cs 
+                FROM {0} cs 
+                INNER JOIN {1} c ON cs.{2}=c.{3}
+                INNER JOIN {4} b ON c.{5}=b.{6}
+                WHERE b.{7} IN {8};",
+            ChannelSubscription.Table,
+            Channel.Table,
+            ChannelSubscription.Fields.ChannelId,
+            Channel.Fields.Id,
+            Blog.Table,
+            Channel.Fields.BlogId,
+            Blog.Fields.Id,
+            Blog.Fields.CreatorId,
+            SelectIdsSql);
+
         private static readonly string CalculatedAccountBalancesSql = CreateDeleteSql(
             CalculatedAccountBalance.Table,
             CalculatedAccountBalance.Fields.UserId.ToString());
@@ -53,6 +69,7 @@ namespace Fifthweek.GarbageCollection
 
         private static readonly string Sql = string.Concat(
             TestUserAccountsSql,
+            DeleteIncommingSubscriptionsSql,
             CalculatedAccountBalancesSql,
             SubscriberSnapshotSql,
             SubscriberChannelsSnapshotSql,

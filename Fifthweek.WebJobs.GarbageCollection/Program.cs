@@ -60,6 +60,8 @@
 
         public static void Main(string[] args)
         {
+            DataDirectory.ConfigureDataDirectory();
+
             var config = new JobHostConfiguration();
             config.DashboardConnectionString = config.StorageConnectionString = AzureConfiguration.GetStorageConnectionString();
             config.Queues.BatchSize = 8;
