@@ -6,8 +6,10 @@
     using System.Threading.Tasks;
 
     using Fifthweek.Api.Identity.Shared.Membership;
+    using Fifthweek.Azure;
     using Fifthweek.Payments.Services;
     using Fifthweek.Payments.Shared;
+    using Fifthweek.Shared;
     using Fifthweek.Tests.Shared;
     using Fifthweek.WebJobs.Shared;
 
@@ -21,10 +23,10 @@
         private static readonly CancellationToken CancellationToken = new CancellationTokenSource().Token;
 
         private Mock<IProcessAllPayments> processAllPayments;
-        private Mock<IPaymentProcessingLeaseFactory> paymentProcessingLeaseFactory;
+        private Mock<IBlobLeaseFactory> paymentProcessingLeaseFactory;
         private Mock<IRequestProcessPaymentsService> requestProcessPayments;
 
-        private Mock<IPaymentProcessingLease> paymentProcessingLease;
+        private Mock<IBlobLease> paymentProcessingLease;
         private Mock<ILogger> logger;
 
         private PaymentProcessor target;
@@ -33,11 +35,11 @@
         public void Initialize()
         {
             this.processAllPayments = new Mock<IProcessAllPayments>(MockBehavior.Strict);
-            this.paymentProcessingLeaseFactory = new Mock<IPaymentProcessingLeaseFactory>(MockBehavior.Strict);
+            this.paymentProcessingLeaseFactory = new Mock<IBlobLeaseFactory>(MockBehavior.Strict);
             this.requestProcessPayments = new Mock<IRequestProcessPaymentsService>(MockBehavior.Strict);
 
-            this.paymentProcessingLease = new Mock<IPaymentProcessingLease>(MockBehavior.Strict);
-            this.paymentProcessingLeaseFactory.Setup(v => v.Create(CancellationToken)).Returns(this.paymentProcessingLease.Object);
+            this.paymentProcessingLease = new Mock<IBlobLease>(MockBehavior.Strict);
+            this.paymentProcessingLeaseFactory.Setup(v => v.Create(Fifthweek.Payments.Shared.Constants.ProcessPaymentsLeaseObjectName, CancellationToken)).Returns(this.paymentProcessingLease.Object);
 
             this.logger = new Mock<ILogger>(MockBehavior.Strict);
 
@@ -104,33 +106,30 @@
         }
 
         [TestMethod]
-        public async Task WhenFailsToAcquireLease_ItShouldWarnAndExit()
+        public async Task WhenFailsToAcquireLease_ItShouldEnqueueARetryAndExit()
         {
             this.paymentProcessingLease.Setup(v => v.TryAcquireLeaseAsync()).ReturnsAsync(false).Verifiable();
             this.paymentProcessingLease.Setup(v => v.GetIsAcquired()).Returns(false);
 
-            this.logger.Setup(v => v.Warn("Failed to acquire lease to process payments due to conflict.")).Verifiable();
+            this.requestProcessPayments.Setup(v => v.ExecuteRetryAsync()).Returns(Task.FromResult(0)).Verifiable();
 
             await this.target.ProcessPaymentsAsync(new ProcessPaymentsMessage(), this.logger.Object, CancellationToken);
 
             this.paymentProcessingLease.Verify();
-            this.logger.Verify();
+            this.requestProcessPayments.Verify();
         }
 
         [TestMethod]
-        public async Task WhenRecentlyAcquiredPreviousLease_ItShouldWarnAndExit()
+        public async Task WhenRecentlyAcquiredPreviousLease_ItShouldExit()
         {
             this.paymentProcessingLease.Setup(v => v.TryAcquireLeaseAsync()).ReturnsAsync(true).Verifiable();
             this.paymentProcessingLease.Setup(v => v.GetTimeSinceLastLeaseAsync()).ReturnsAsync(PaymentProcessor.MinimumTimeBetweenPaymentProcessing).Verifiable();
             this.paymentProcessingLease.Setup(v => v.ReleaseLeaseAsync()).Returns(Task.FromResult(0)).Verifiable();
             this.paymentProcessingLease.Setup(v => v.GetIsAcquired()).Returns(false);
 
-            this.logger.Setup(v => v.Warn("Skipping processing payments as last processed {0}s ago.", (int)PaymentProcessor.MinimumTimeBetweenPaymentProcessing.TotalSeconds)).Verifiable();
-
             await this.target.ProcessPaymentsAsync(new ProcessPaymentsMessage(), this.logger.Object, CancellationToken);
 
             this.paymentProcessingLease.Verify();
-            this.logger.Verify();
         }
 
         [TestMethod]

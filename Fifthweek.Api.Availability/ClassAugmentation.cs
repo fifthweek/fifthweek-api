@@ -120,7 +120,7 @@ namespace Fifthweek.Api.Availability
             Fifthweek.Shared.IExceptionHandler exceptionHandler,
             Microsoft.Practices.EnterpriseLibrary.TransientFaultHandling.ITransientErrorDetectionStrategy transientErrorDetectionStrategy,
             Fifthweek.Azure.ICloudStorageAccount cloudStorageAccount,
-            Fifthweek.Shared.ITimestampCreator timestampCreator,
+            ITimestampCreator timestampCreator,
             Fifthweek.Payments.Shared.IRequestProcessPaymentsService requestProcessPayments,
             Fifthweek.Api.Availability.ILastPaymentsRestartTimeContainer lastPaymentsRestartTimeContainer)
         {

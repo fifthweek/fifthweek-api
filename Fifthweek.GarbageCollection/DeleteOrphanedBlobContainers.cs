@@ -20,9 +20,10 @@
         private readonly IGetAllChannelIdsDbStatement getAllChannelIds;
         private readonly ICloudStorageAccount cloudStorageAccount;
 
-        public async Task ExecuteAsync(ILogger logger, DateTime endTimeExclusive, CancellationToken cancellationToken)
+        public async Task ExecuteAsync(ILogger logger, IKeepAliveHandler keepAliveHandler, DateTime endTimeExclusive, CancellationToken cancellationToken)
         {
             logger.AssertNotNull("logger");
+            keepAliveHandler.AssertNotNull("keepAliveHandler");
 
             var channelIds = await this.getAllChannelIds.ExecuteAsync();
 
@@ -42,11 +43,14 @@
                 var segment = await blobClient.ListContainersSegmentedAsync(token);
                 foreach (var container in segment.Results)
                 {
+                    Console.Write(".");
+                    
                     if (cancellationToken.IsCancellationRequested)
                     {
                         break;
                     }
-                    Console.Write(".");
+
+                    await keepAliveHandler.KeepAliveAsync();
 
                     Guid channelIdGuid;
                     if (!Guid.TryParse(container.Name, out channelIdGuid))

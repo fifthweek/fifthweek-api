@@ -318,6 +318,10 @@
       <Project>{6D12FFBB-38E9-4722-A690-0F0338538EBC}</Project>
       <Name>Fifthweek.Shared</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Fifthweek.WebJobs.Shared\Fifthweek.WebJobs.Shared.csproj">
+      <Project>{efbacd48-98a1-4fa3-9bea-e13414141484}</Project>
+      <Name>Fifthweek.WebJobs.Shared</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Taxamo\Taxamo.csproj">
       <Project>{0a7ecb89-b0bb-458c-8244-08b59850668e}</Project>
       <Name>Taxamo</Name>

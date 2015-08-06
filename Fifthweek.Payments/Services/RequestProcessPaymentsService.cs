@@ -16,16 +16,25 @@
         public Task ExecuteAsync()
         {
             return this.queueService.AddMessageToQueueAsync(
-                Constants.RequestProcessPaymentsQueueName,
+                Shared.Constants.RequestProcessPaymentsQueueName,
                 ProcessPaymentsMessage.Default,
                 null,
-                Constants.PaymentProcessingDefaultMessageDelay);
+                Shared.Constants.PaymentProcessingDefaultMessageDelay);
+        }
+
+        public Task ExecuteRetryAsync()
+        {
+            return this.queueService.AddMessageToQueueAsync(
+                Shared.Constants.RequestProcessPaymentsQueueName,
+                ProcessPaymentsMessage.Default,
+                null,
+                TimeSpan.FromMinutes(1));
         }
 
         public Task ExecuteImmediatelyAsync()
         {
             return this.queueService.AddMessageToQueueAsync(
-                Constants.RequestProcessPaymentsQueueName,
+                Shared.Constants.RequestProcessPaymentsQueueName,
                 ProcessPaymentsMessage.Default,
                 null,
                 TimeSpan.Zero);

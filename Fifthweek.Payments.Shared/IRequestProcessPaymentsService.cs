@@ -7,5 +7,7 @@
         Task ExecuteAsync();
 
         Task ExecuteImmediatelyAsync();
+
+        Task ExecuteRetryAsync();
     }
 }

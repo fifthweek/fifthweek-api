@@ -23,6 +23,7 @@
 
         private Mock<IGetAllChannelIdsDbStatement> getAllChannelIds;
         private Mock<ICloudStorageAccount> cloudStorageAccount;
+        private Mock<IKeepAliveHandler> keepAliveHandler;
 
         private DeleteOrphanedBlobContainers target;
 
@@ -31,6 +32,7 @@
         {
             this.getAllChannelIds = new Mock<IGetAllChannelIdsDbStatement>(MockBehavior.Strict);
             this.cloudStorageAccount = new Mock<ICloudStorageAccount>(MockBehavior.Strict);
+            this.keepAliveHandler = new Mock<IKeepAliveHandler>(MockBehavior.Strict);
 
             this.target = new DeleteOrphanedBlobContainers(
                 this.getAllChannelIds.Object,
@@ -41,7 +43,14 @@
         [ExpectedException(typeof(ArgumentNullException))]
         public async Task WhenLoggerIsNull_ItShouldThrowAnException()
         {
-            await this.target.ExecuteAsync(null, EndTimeExclusive, CancellationToken.None);
+            await this.target.ExecuteAsync(null, this.keepAliveHandler.Object, EndTimeExclusive, CancellationToken.None);
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentNullException))]
+        public async Task WhenKeepAliveHandlerIsNull_ItShouldThrowAnException()
+        {
+            await this.target.ExecuteAsync(new Mock<ILogger>().Object, null, EndTimeExclusive, CancellationToken.None);
         }
 
         [TestMethod]
@@ -106,9 +115,12 @@
 
             container5.Setup(v => v.DeleteAsync()).Returns(Task.FromResult(0)).Verifiable();
 
-            await this.target.ExecuteAsync(new Mock<ILogger>().Object, EndTimeExclusive, CancellationToken.None);
+            this.keepAliveHandler.Setup(v => v.KeepAliveAsync()).Returns(Task.FromResult(0));
+
+            await this.target.ExecuteAsync(new Mock<ILogger>().Object, this.keepAliveHandler.Object, EndTimeExclusive, CancellationToken.None);
 
             container5.Verify();
+            this.keepAliveHandler.Verify(v => v.KeepAliveAsync(), Times.Exactly(5));
         }
 
         [TestMethod]
@@ -145,7 +157,10 @@
 
             blobClient.Setup(v => v.ListContainersSegmentedAsync(null)).ReturnsAsync(segment1.Object);
 
-            await this.target.ExecuteAsync(new Mock<ILogger>().Object, EndTimeExclusive, cts.Token);
+            this.keepAliveHandler.Setup(v => v.KeepAliveAsync()).Returns(Task.FromResult(0));
+
+            await this.target.ExecuteAsync(new Mock<ILogger>().Object, this.keepAliveHandler.Object, EndTimeExclusive, cts.Token);
+            this.keepAliveHandler.Verify(v => v.KeepAliveAsync(), Times.Exactly(1));
         }
 
         private BlobContainerProperties GetBlobContainerProperties(DateTime? lastModified)

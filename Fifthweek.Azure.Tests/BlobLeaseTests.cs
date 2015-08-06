@@ -1,13 +1,11 @@
-﻿namespace Fifthweek.WebJobs.Payments.Tests
+﻿namespace Fifthweek.Azure.Tests
 {
     using System;
     using System.Collections.Generic;
-    using System.Globalization;
     using System.Net;
     using System.Threading;
     using System.Threading.Tasks;
 
-    using Fifthweek.Azure;
     using Fifthweek.Shared;
 
     using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -15,12 +13,11 @@
 
     using Moq;
 
-    using Constants = Fifthweek.Payments.Shared.Constants;
-
     [TestClass]
-    public class PaymentProcessingLeaseTests
+    public class BlobLeaseTests
     {
         public const string LeaseId = "lease-id";
+        public const string LeaseObjectName = "lease-object-name";
 
         private static readonly DateTime Now = DateTime.UtcNow;
 
@@ -29,7 +26,7 @@
         private Mock<ICloudStorageAccount> cloudStorageAccount;
         private Mock<ICloudBlockBlob> blob;
 
-        private PaymentProcessingLease target;
+        private BlobLease target;
 
         public virtual void Initialize()
         {
@@ -37,7 +34,7 @@
             this.cloudStorageAccount = new Mock<ICloudStorageAccount>(MockBehavior.Strict);
             this.timestampCreator = new Mock<ITimestampCreator>(MockBehavior.Strict);
 
-            this.target = new PaymentProcessingLease(this.timestampCreator.Object, this.cloudStorageAccount.Object, this.cancellationToken);
+            this.target = new BlobLease(this.timestampCreator.Object, this.cloudStorageAccount.Object, this.cancellationToken, LeaseObjectName);
         }
 
         protected void SetupAquireMocks()
@@ -46,11 +43,11 @@
             this.cloudStorageAccount.Setup(v => v.CreateCloudBlobClient()).Returns(blobClient.Object);
 
             var leaseContainer = new Mock<ICloudBlobContainer>();
-            blobClient.Setup(v => v.GetContainerReference(Fifthweek.Shared.Constants.AzureLeaseObjectsContainerName))
+            blobClient.Setup(v => v.GetContainerReference(Azure.Constants.AzureLeaseObjectsContainerName))
                 .Returns(leaseContainer.Object);
 
             this.blob = new Mock<ICloudBlockBlob>(MockBehavior.Strict);
-            leaseContainer.Setup(v => v.GetBlockBlobReference(Constants.ProcessPaymentsLeaseObjectName)).Returns(this.blob.Object);
+            leaseContainer.Setup(v => v.GetBlockBlobReference(LeaseObjectName)).Returns(this.blob.Object);
 
             this.blob.Setup(v => v.AcquireLeaseAsync(TimeSpan.FromMinutes(1), null, this.cancellationToken)).ReturnsAsync(LeaseId);
 
@@ -58,7 +55,7 @@
         }
 
         [TestClass]
-        public class TryAcquireLeaseAsync : PaymentProcessingLeaseTests
+        public class TryAcquireLeaseAsync : BlobLeaseTests
         {
             [TestInitialize]
             public override void Initialize()
@@ -100,7 +97,7 @@
         }
 
         [TestClass]
-        public class AcquireLeaseAsync : PaymentProcessingLeaseTests
+        public class AcquireLeaseAsync : BlobLeaseTests
         {
             [TestInitialize]
             public override void Initialize()
@@ -128,7 +125,7 @@
         }
 
         [TestClass]
-        public class RenewLeaseAsync : PaymentProcessingLeaseTests
+        public class RenewLeaseAsync : BlobLeaseTests
         {
             [TestInitialize]
             public override void Initialize()
@@ -137,7 +134,7 @@
             }
 
             [TestMethod]
-            public async Task ItShouldRenewTheLease()
+            public async Task ItShouldRenewTheLeaseWithRateLimiter()
             {
                 this.SetupAquireMocks();
                 await this.target.AcquireLeaseAsync();
@@ -146,13 +143,30 @@
                     .Returns(Task.FromResult(0)).Verifiable();
 
                 await this.target.RenewLeaseAsync();
+                this.blob.Verify(v => v.RenewLeaseAsync(It.IsAny<AccessCondition>(), this.cancellationToken), Times.Exactly(0));
+
+                this.timestampCreator.Setup(v => v.Now()).Returns(Now.AddSeconds(BlobLease.RenewRateLimitSeconds - 1));
+                await this.target.RenewLeaseAsync();
+                this.blob.Verify(v => v.RenewLeaseAsync(It.IsAny<AccessCondition>(), this.cancellationToken), Times.Exactly(0));
+
+                this.timestampCreator.Setup(v => v.Now()).Returns(Now.AddSeconds(BlobLease.RenewRateLimitSeconds));
+                await this.target.RenewLeaseAsync();
+                this.blob.Verify(v => v.RenewLeaseAsync(It.IsAny<AccessCondition>(), this.cancellationToken), Times.Exactly(1));
+
+                this.timestampCreator.Setup(v => v.Now()).Returns(Now.AddSeconds((BlobLease.RenewRateLimitSeconds * 2) - 1));
+                await this.target.RenewLeaseAsync();
+                this.blob.Verify(v => v.RenewLeaseAsync(It.IsAny<AccessCondition>(), this.cancellationToken), Times.Exactly(1));
+
+                this.timestampCreator.Setup(v => v.Now()).Returns(Now.AddSeconds(BlobLease.RenewRateLimitSeconds * 2));
+                await this.target.RenewLeaseAsync();
+                this.blob.Verify(v => v.RenewLeaseAsync(It.IsAny<AccessCondition>(), this.cancellationToken), Times.Exactly(2));
 
                 this.blob.Verify();
             }
         }
 
         [TestClass]
-        public class ReleaseLeaseAsync : PaymentProcessingLeaseTests
+        public class ReleaseLeaseAsync : BlobLeaseTests
         {
             [TestInitialize]
             public override void Initialize()
@@ -177,7 +191,7 @@
         }
 
         [TestClass]
-        public class KeepAliveAsync : PaymentProcessingLeaseTests
+        public class KeepAliveAsync : BlobLeaseTests
         {
             [TestInitialize]
             public override void Initialize()
@@ -186,7 +200,7 @@
             }
 
             [TestMethod]
-            public async Task ItShouldRenewTheLease()
+            public async Task ItShouldRenewTheLeaseWithRateLimiter()
             {
                 this.SetupAquireMocks();
                 await this.target.AcquireLeaseAsync();
@@ -195,13 +209,30 @@
                     .Returns(Task.FromResult(0)).Verifiable();
 
                 await this.target.KeepAliveAsync();
+                this.blob.Verify(v => v.RenewLeaseAsync(It.IsAny<AccessCondition>(), this.cancellationToken), Times.Exactly(0));
+
+                this.timestampCreator.Setup(v => v.Now()).Returns(Now.AddSeconds(BlobLease.RenewRateLimitSeconds - 1));
+                await this.target.KeepAliveAsync();
+                this.blob.Verify(v => v.RenewLeaseAsync(It.IsAny<AccessCondition>(), this.cancellationToken), Times.Exactly(0));
+
+                this.timestampCreator.Setup(v => v.Now()).Returns(Now.AddSeconds(BlobLease.RenewRateLimitSeconds));
+                await this.target.KeepAliveAsync();
+                this.blob.Verify(v => v.RenewLeaseAsync(It.IsAny<AccessCondition>(), this.cancellationToken), Times.Exactly(1));
+
+                this.timestampCreator.Setup(v => v.Now()).Returns(Now.AddSeconds((BlobLease.RenewRateLimitSeconds * 2) - 1));
+                await this.target.KeepAliveAsync();
+                this.blob.Verify(v => v.RenewLeaseAsync(It.IsAny<AccessCondition>(), this.cancellationToken), Times.Exactly(1));
+
+                this.timestampCreator.Setup(v => v.Now()).Returns(Now.AddSeconds(BlobLease.RenewRateLimitSeconds * 2));
+                await this.target.KeepAliveAsync();
+                this.blob.Verify(v => v.RenewLeaseAsync(It.IsAny<AccessCondition>(), this.cancellationToken), Times.Exactly(2));
 
                 this.blob.Verify();
             }
         }
 
         [TestClass]
-        public class GetTimeSinceLastLeaseAsync : PaymentProcessingLeaseTests
+        public class GetTimeSinceLastLeaseAsync : BlobLeaseTests
         {
             [TestInitialize]
             public override void Initialize()
@@ -236,7 +267,7 @@
                 this.blob.Setup(v => v.FetchAttributesAsync(this.cancellationToken)).Returns(Task.FromResult(0)).Verifiable();
 
                 var metadata = new Dictionary<string, string>();
-                metadata.Add(Constants.LastProcessPaymentsEndTimestampMetadataKey, Now.AddMinutes(-12).ToIso8601String());
+                metadata.Add(Azure.Constants.LeaseEndTimestampMetadataKey, Now.AddMinutes(-12).ToIso8601String());
                 this.blob.SetupGet(v => v.Metadata).Returns(metadata);
 
                 var result = await this.target.GetTimeSinceLastLeaseAsync();
@@ -248,7 +279,7 @@
         }
 
         [TestClass]
-        public class UpdateTimestampsAsync : PaymentProcessingLeaseTests
+        public class UpdateTimestampsAsync : BlobLeaseTests
         {
             [TestInitialize]
             public override void Initialize()
@@ -260,7 +291,6 @@
             public async Task ItShouldUpdateTheTimestamps()
             {
                 this.SetupAquireMocks();
-                this.blob.Setup(v => v.RenewLeaseAsync(It.IsAny<AccessCondition>(), this.cancellationToken)).Returns(Task.FromResult(0)).Verifiable();
                 await this.target.AcquireLeaseAsync();
                 await this.target.RenewLeaseAsync();
                 await this.target.KeepAliveAsync();
@@ -280,9 +310,9 @@
 
                 this.blob.Verify();
 
-                Assert.AreEqual(Now, metadata[Constants.LastProcessPaymentsStartTimestampMetadataKey].FromIso8601String());
-                Assert.AreEqual(end, metadata[Constants.LastProcessPaymentsEndTimestampMetadataKey].FromIso8601String());
-                Assert.AreEqual(3, int.Parse(metadata[Constants.LastProcessPaymentsRenewCountMetadataKey]));
+                Assert.AreEqual<DateTime>(Now, metadata[Azure.Constants.LeaseStartTimestampMetadataKey].FromIso8601String());
+                Assert.AreEqual<DateTime>(end, metadata[Azure.Constants.LeaseEndTimestampMetadataKey].FromIso8601String());
+                Assert.AreEqual(3, int.Parse(metadata[Azure.Constants.LeaseRenewCountMetadataKey]));
             }
         }
     }

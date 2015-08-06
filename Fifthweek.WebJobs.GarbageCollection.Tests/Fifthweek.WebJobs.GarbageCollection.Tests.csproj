@@ -36,6 +36,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Moq">
+      <HintPath>..\packages\Moq.4.2.1409.1722\lib\net40\Moq.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
   </ItemGroup>
   <Choose>
@@ -51,9 +54,22 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
+    <Compile Include="GarbageCollectionProcessorTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Fifthweek.Azure\Fifthweek.Azure.csproj">
+      <Project>{890CD4C4-993F-482D-BBB5-A50767ACE55B}</Project>
+      <Name>Fifthweek.Azure</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Fifthweek.GarbageCollection\Fifthweek.GarbageCollection.csproj">
+      <Project>{4B4426CD-6378-4962-B04C-C842452505E7}</Project>
+      <Name>Fifthweek.GarbageCollection</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Fifthweek.Tests.Shared\Fifthweek.Tests.Shared.csproj">
+      <Project>{85691D93-9C0C-498B-8341-1990BC8E24B2}</Project>
+      <Name>Fifthweek.Tests.Shared</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Fifthweek.WebJobs.GarbageCollection.Shared\Fifthweek.WebJobs.GarbageCollection.Shared.csproj">
       <Project>{6328c758-26d7-4fb4-a626-d8aad17435fd}</Project>
       <Name>Fifthweek.WebJobs.GarbageCollection.Shared</Name>
@@ -62,9 +78,14 @@
       <Project>{ed4bb87d-ac12-4bc8-b06a-6ca956ba6da8}</Project>
       <Name>Fifthweek.WebJobs.GarbageCollection</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Fifthweek.WebJobs.Shared\Fifthweek.WebJobs.Shared.csproj">
+      <Project>{EFBACD48-98A1-4FA3-9BEA-E13414141484}</Project>
+      <Name>Fifthweek.WebJobs.Shared</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
+    <None Include="packages.config" />
   </ItemGroup>
   <Choose>
     <When Condition="'$(VisualStudioVersion)' == '10.0' And '$(IsCodedUITest)' == 'True'">

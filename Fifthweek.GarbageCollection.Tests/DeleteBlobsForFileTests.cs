@@ -8,6 +8,7 @@
     using Fifthweek.Api.Channels.Shared;
     using Fifthweek.Api.FileManagement.Shared;
     using Fifthweek.Azure;
+    using Fifthweek.Shared;
 
     using Microsoft.VisualStudio.TestTools.UnitTesting;
 
@@ -17,7 +18,7 @@
     public class DeleteBlobsForFileTests
     {
         private static readonly BlobLocation Location = new BlobLocation("containerName", "blobName");
-        private static readonly OrphanedFileData File = new OrphanedFileData(FileId.Random(), ChannelId.Random(), "p");
+        private static readonly OrphanedFileData File = new OrphanedFileData(FileId.Random(), ChannelId.Random(), FilePurposes.PostImage);
 
         private Mock<IBlobLocationGenerator> blobLocationGenerator;
         private Mock<ICloudStorageAccount> cloudStorageAccount;

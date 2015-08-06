@@ -1,11 +1,11 @@
-namespace Fifthweek.WebJobs.Payments
+namespace Fifthweek.Azure
 {
     using System;
     using System.Threading.Tasks;
 
-    using Fifthweek.Payments.Shared;
+    using Fifthweek.Shared;
 
-    public interface IPaymentProcessingLease : IKeepAliveHandler
+    public interface IBlobLease : IKeepAliveHandler
     {
         bool GetIsAcquired();
 

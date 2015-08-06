@@ -7,6 +7,7 @@
 
     using Fifthweek.Api.Channels.Shared;
     using Fifthweek.Api.FileManagement.Shared;
+    using Fifthweek.Azure;
     using Fifthweek.Shared;
     using Fifthweek.WebJobs.Shared;
 
@@ -27,6 +28,7 @@
         private Mock<IDeleteFileDbStatement> deleteFileDbStatement;
         private Mock<IDeleteOrphanedBlobContainers> deleteOrphanedBlobContainers;
 
+        private Mock<IKeepAliveHandler> keepAliveHandler;
         private Mock<ILogger> logger;
 
         private RunGarbageCollection target;
@@ -41,6 +43,7 @@
             this.deleteFileDbStatement = new Mock<IDeleteFileDbStatement>(MockBehavior.Strict);
             this.deleteOrphanedBlobContainers = new Mock<IDeleteOrphanedBlobContainers>(MockBehavior.Strict);
 
+            this.keepAliveHandler = new Mock<IKeepAliveHandler>(MockBehavior.Strict);
             this.logger = new Mock<ILogger>();
 
             this.target = new RunGarbageCollection(
@@ -56,7 +59,14 @@
         [ExpectedException(typeof(ArgumentNullException))]
         public async Task WhenLoggerIsNull_ItShouldThrowAnException()
         {
-            await this.target.ExecuteAsync(null, CancellationToken.None);
+            await this.target.ExecuteAsync(null, this.keepAliveHandler.Object, CancellationToken.None);
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentNullException))]
+        public async Task WhenKeepAliveHandlerIsNull_ItShouldThrowAnException()
+        {
+            await this.target.ExecuteAsync(this.logger.Object, null, CancellationToken.None);
         }
 
         [TestMethod]
@@ -79,16 +89,19 @@
             this.deleteBlobsForFile.Setup(v => v.ExecuteAsync(files[1])).Returns(Task.FromResult(0)).Verifiable();
             this.deleteFileDbStatement.Setup(v => v.ExecuteAsync(files[1].FileId)).Returns(Task.FromResult(0)).Verifiable();
 
-            this.deleteOrphanedBlobContainers.Setup(v => v.ExecuteAsync(this.logger.Object, ExpectedEndTime, CancellationToken.None))
+            this.deleteOrphanedBlobContainers.Setup(v => v.ExecuteAsync(this.logger.Object, this.keepAliveHandler.Object, ExpectedEndTime, CancellationToken.None))
                 .Returns(Task.FromResult(0))
                 .Verifiable();
 
-            await this.target.ExecuteAsync(this.logger.Object, CancellationToken.None);
+            this.keepAliveHandler.Setup(v => v.KeepAliveAsync()).Returns(Task.FromResult(0));
+
+            await this.target.ExecuteAsync(this.logger.Object, this.keepAliveHandler.Object, CancellationToken.None);
 
             this.deleteTestUserAccounts.Verify();
             this.deleteBlobsForFile.Verify();
             this.deleteFileDbStatement.Verify();
             this.deleteOrphanedBlobContainers.Verify();
+            this.keepAliveHandler.Verify(v => v.KeepAliveAsync(), Times.Exactly(2));
         }
 
         [TestMethod]
@@ -111,17 +124,20 @@
             this.deleteBlobsForFile.Setup(v => v.ExecuteAsync(files[1])).Returns(Task.FromResult(0)).Verifiable();
             this.deleteFileDbStatement.Setup(v => v.ExecuteAsync(files[1].FileId)).Returns(Task.FromResult(0)).Verifiable();
 
-            this.deleteOrphanedBlobContainers.Setup(v => v.ExecuteAsync(this.logger.Object, ExpectedEndTime, CancellationToken.None))
+            this.deleteOrphanedBlobContainers.Setup(v => v.ExecuteAsync(this.logger.Object, this.keepAliveHandler.Object, ExpectedEndTime, CancellationToken.None))
                 .Returns(Task.FromResult(0))
                 .Verifiable();
 
-            await this.target.ExecuteAsync(this.logger.Object, CancellationToken.None);
+            this.keepAliveHandler.Setup(v => v.KeepAliveAsync()).Returns(Task.FromResult(0));
+
+            await this.target.ExecuteAsync(this.logger.Object, this.keepAliveHandler.Object, CancellationToken.None);
 
             this.deleteTestUserAccounts.Verify();
             this.deleteBlobsForFile.Verify();
             this.logger.Verify();
             this.deleteFileDbStatement.Verify();
             this.deleteOrphanedBlobContainers.Verify();
+            this.keepAliveHandler.Verify(v => v.KeepAliveAsync(), Times.Exactly(2));
         }
 
         [TestMethod]
@@ -143,7 +159,11 @@
             this.deleteBlobsForFile.Setup(v => v.ExecuteAsync(files[0])).Returns(Task.FromResult(0)).Callback<OrphanedFileData>(a => cts.Cancel());
             this.deleteFileDbStatement.Setup(v => v.ExecuteAsync(files[0].FileId)).Returns(Task.FromResult(0)).Verifiable();
 
-            await this.target.ExecuteAsync(this.logger.Object, cts.Token);
+            this.keepAliveHandler.Setup(v => v.KeepAliveAsync()).Returns(Task.FromResult(0));
+
+            await this.target.ExecuteAsync(this.logger.Object, this.keepAliveHandler.Object, cts.Token);
+
+            this.keepAliveHandler.Verify(v => v.KeepAliveAsync(), Times.Exactly(1));
         }
     }
 }

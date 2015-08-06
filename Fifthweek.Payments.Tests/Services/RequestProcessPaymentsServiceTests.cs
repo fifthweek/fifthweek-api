@@ -33,10 +33,10 @@ namespace Fifthweek.Payments.Tests.Services
             this.queueService.Setup(
                 v =>
                 v.AddMessageToQueueAsync(
-                    Constants.RequestProcessPaymentsQueueName,
+                    Shared.Constants.RequestProcessPaymentsQueueName,
                     ProcessPaymentsMessage.Default,
                     null,
-                    Constants.PaymentProcessingDefaultMessageDelay)).Returns(Task.FromResult(0));
+                    Shared.Constants.PaymentProcessingDefaultMessageDelay)).Returns(Task.FromResult(0));
 
             await this.target.ExecuteAsync();
         }
@@ -48,10 +48,10 @@ namespace Fifthweek.Payments.Tests.Services
             this.queueService.Setup(
                 v =>
                 v.AddMessageToQueueAsync(
-                    Constants.RequestProcessPaymentsQueueName,
+                    Shared.Constants.RequestProcessPaymentsQueueName,
                     ProcessPaymentsMessage.Default,
                     null,
-                    Constants.PaymentProcessingDefaultMessageDelay)).Throws(new DivideByZeroException());
+                    Shared.Constants.PaymentProcessingDefaultMessageDelay)).Throws(new DivideByZeroException());
 
             await this.target.ExecuteAsync();
         }
@@ -62,7 +62,7 @@ namespace Fifthweek.Payments.Tests.Services
             this.queueService.Setup(
                 v =>
                 v.AddMessageToQueueAsync(
-                    Constants.RequestProcessPaymentsQueueName,
+                    Shared.Constants.RequestProcessPaymentsQueueName,
                     ProcessPaymentsMessage.Default,
                     null,
                     TimeSpan.Zero)).Returns(Task.FromResult(0));
@@ -77,7 +77,7 @@ namespace Fifthweek.Payments.Tests.Services
             this.queueService.Setup(
                 v =>
                 v.AddMessageToQueueAsync(
-                    Constants.RequestProcessPaymentsQueueName,
+                    Shared.Constants.RequestProcessPaymentsQueueName,
                     ProcessPaymentsMessage.Default,
                     null,
                     TimeSpan.Zero)).Throws(new DivideByZeroException());

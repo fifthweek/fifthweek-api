@@ -5,6 +5,7 @@
     using System.Threading;
     using System.Threading.Tasks;
 
+    using Fifthweek.Azure;
     using Fifthweek.CodeGeneration;
     using Fifthweek.Shared;
     using Fifthweek.WebJobs.Shared;
@@ -19,9 +20,10 @@
         private readonly IDeleteFileDbStatement deleteFileDbStatement;
         private readonly IDeleteOrphanedBlobContainers deleteOrphanedBlobContainers;
 
-        public async Task ExecuteAsync(ILogger logger, CancellationToken cancellationToken)
+        public async Task ExecuteAsync(ILogger logger, IKeepAliveHandler keepAliveHandler, CancellationToken cancellationToken)
         {
             logger.AssertNotNull("logger");
+            keepAliveHandler.AssertNotNull("keepAliveHandler");
 
             var stopwatch = new Stopwatch();
             stopwatch.Start();
@@ -40,9 +42,11 @@
                 {
                     break;
                 }
+
                 Console.Write(".");
                 try
                 {
+                    await keepAliveHandler.KeepAliveAsync();
                     await this.deleteBlobsForFile.ExecuteAsync(file);
                     await this.deleteFileDbStatement.ExecuteAsync(file.FileId);
                 }
@@ -56,7 +60,7 @@
             if (!cancellationToken.IsCancellationRequested)
             {
                 logger.Info("Deleting orphaned blob containers");
-                await this.deleteOrphanedBlobContainers.ExecuteAsync(logger, endTimeExclusive, cancellationToken);
+                await this.deleteOrphanedBlobContainers.ExecuteAsync(logger, keepAliveHandler, endTimeExclusive, cancellationToken);
             }
 
             stopwatch.Stop();

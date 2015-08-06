@@ -4,5 +4,6 @@
 
     public class Constants
     {
+        public const string LeaseObjectName = "garbage-collection-lease-object";
     }
 }

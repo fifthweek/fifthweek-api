@@ -34,9 +34,35 @@
     <Reference Include="Microsoft.Azure.WebJobs">
       <HintPath>..\packages\Microsoft.Azure.WebJobs.Core.1.0.0\lib\net45\Microsoft.Azure.WebJobs.dll</HintPath>
     </Reference>
+    <Reference Include="Microsoft.Data.Edm, Version=5.6.2.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Microsoft.Data.Edm.5.6.2\lib\net40\Microsoft.Data.Edm.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Data.OData, Version=5.6.2.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Microsoft.Data.OData.5.6.2\lib\net40\Microsoft.Data.OData.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Data.Services.Client, Version=5.6.2.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Microsoft.Data.Services.Client.5.6.2\lib\net40\Microsoft.Data.Services.Client.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.WindowsAzure.Configuration">
+      <HintPath>..\packages\Microsoft.WindowsAzure.ConfigurationManager.1.8.0.0\lib\net35-full\Microsoft.WindowsAzure.Configuration.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.WindowsAzure.Storage">
+      <HintPath>..\packages\WindowsAzure.Storage.4.3.0\lib\net40\Microsoft.WindowsAzure.Storage.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json, Version=6.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Newtonsoft.Json.6.0.6\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Spatial, Version=5.6.2.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\System.Spatial.5.6.2\lib\net40\System.Spatial.dll</HintPath>
+    </Reference>
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -44,6 +70,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ClassAugmentation.cs">
+      <DependentUpon>ClassAugmentation.tt</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <Compile Include="Constants.cs" />
     <Compile Include="DataDirectory.cs" />
     <Compile Include="ExceptionHandler.cs" />
     <Compile Include="HardwiredDependencies.cs" />
@@ -52,12 +84,25 @@
     <Compile Include="WebJobLogger.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="app.config" />
+    <None Include="ClassAugmentation.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>ClassAugmentation.cs</LastGenOutput>
+    </None>
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Fifthweek.Api.SendGrid\Fifthweek.Api.SendGrid.csproj">
       <Project>{5f5df240-536a-41b6-bfec-4f89940eb053}</Project>
       <Name>Fifthweek.Api.SendGrid</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Fifthweek.Azure\Fifthweek.Azure.csproj">
+      <Project>{890CD4C4-993F-482D-BBB5-A50767ACE55B}</Project>
+      <Name>Fifthweek.Azure</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Fifthweek.CodeGeneration\Fifthweek.CodeGeneration.csproj">
+      <Project>{770F450E-2166-4269-BEC1-DF59AA16B1E8}</Project>
+      <Name>Fifthweek.CodeGeneration</Name>
     </ProjectReference>
     <ProjectReference Include="..\Fifthweek.Logging\Fifthweek.Logging.csproj">
       <Project>{6cb9eac7-e00a-4dac-b6a4-d14c4503c6cd}</Project>
@@ -67,6 +112,9 @@
       <Project>{6d12ffbb-38e9-4722-a690-0f0338538ebc}</Project>
       <Name>Fifthweek.Shared</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

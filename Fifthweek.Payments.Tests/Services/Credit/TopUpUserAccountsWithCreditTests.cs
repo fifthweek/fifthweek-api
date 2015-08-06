@@ -8,6 +8,7 @@
 
     using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.Api.Persistence.Payments;
+    using Fifthweek.Azure;
     using Fifthweek.Payments.Services;
     using Fifthweek.Payments.Services.Credit;
     using Fifthweek.Payments.Shared;

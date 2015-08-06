@@ -67,6 +67,14 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AzureConfiguration.cs" />
+    <Compile Include="BlobLease.cs" />
+    <Compile Include="BlobLeaseFactory.cs" />
+    <Compile Include="ClassAugmentation.cs">
+      <DependentUpon>ClassAugmentation.tt</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <Compile Include="Constants.cs" />
     <Compile Include="FifthweekBlobProperties.cs" />
     <Compile Include="FifthweekCloudBlobClient.cs" />
     <Compile Include="FifthweekCloudBlobContainer.cs" />
@@ -76,6 +84,8 @@
     <Compile Include="FifthweekCloudQueueClient.cs" />
     <Compile Include="FifthweekCloudStorageAccount.cs" />
     <Compile Include="FifthweekContainerResultSegment.cs" />
+    <Compile Include="IBlobLease.cs" />
+    <Compile Include="IBlobLeaseFactory.cs" />
     <Compile Include="IBlobProperties.cs" />
     <Compile Include="ICloudBlobClient.cs" />
     <Compile Include="ICloudBlobContainer.cs" />
@@ -85,19 +95,31 @@
     <Compile Include="ICloudStorageAccount.cs" />
     <Compile Include="ICloudBlobDirectory.cs" />
     <Compile Include="IContainerResultSegment.cs" />
+    <Compile Include="IKeepAliveHandler.cs" />
     <Compile Include="IQueueService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="QueueService.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
+    <None Include="ClassAugmentation.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>ClassAugmentation.cs</LastGenOutput>
+    </None>
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Fifthweek.CodeGeneration\Fifthweek.CodeGeneration.csproj">
+      <Project>{770F450E-2166-4269-BEC1-DF59AA16B1E8}</Project>
+      <Name>Fifthweek.CodeGeneration</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Fifthweek.Shared\Fifthweek.Shared.csproj">
       <Project>{6d12ffbb-38e9-4722-a690-0f0338538ebc}</Project>
       <Name>Fifthweek.Shared</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

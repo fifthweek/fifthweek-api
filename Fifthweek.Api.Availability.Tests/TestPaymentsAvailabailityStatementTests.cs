@@ -15,6 +15,8 @@
 
     using Moq;
 
+    using Constants = Fifthweek.Azure.Constants;
+
     [TestClass]
     public class TestPaymentsAvailabailityStatementTests
     {
@@ -238,7 +240,7 @@
             this.cloudStorageAccount.Setup(v => v.CreateCloudBlobClient()).Returns(blobClient.Object);
 
             var leaseContainer = new Mock<ICloudBlobContainer>();
-            blobClient.Setup(v => v.GetContainerReference(Fifthweek.Shared.Constants.AzureLeaseObjectsContainerName))
+            blobClient.Setup(v => v.GetContainerReference(Constants.AzureLeaseObjectsContainerName))
                 .Returns(leaseContainer.Object);
 
             var blob = new Mock<ICloudBlockBlob>();
@@ -255,18 +257,15 @@
             var metadata = new Dictionary<string, string>
             {
                 {
-                    Fifthweek.Payments.Shared.Constants
-                    .LastProcessPaymentsStartTimestampMetadataKey,
+                    Constants.LeaseStartTimestampMetadataKey,
                     startTime.ToIso8601String()
                 },
                 {
-                    Fifthweek.Payments.Shared.Constants
-                    .LastProcessPaymentsEndTimestampMetadataKey,
+                    Constants.LeaseEndTimestampMetadataKey,
                     endTime.ToIso8601String()
                 },
                 {
-                    Fifthweek.Payments.Shared.Constants
-                    .LastProcessPaymentsRenewCountMetadataKey,
+                    Constants.LeaseRenewCountMetadataKey,
                     renewCount.ToString(System.Globalization.CultureInfo.InvariantCulture)
                 },
             };

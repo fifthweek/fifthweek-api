@@ -82,8 +82,6 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
-    <Compile Include="PaymentProcessingLeaseFactoryTests.cs" />
-    <Compile Include="PaymentProcessingLeaseTests.cs" />
     <Compile Include="PaymentProcessorTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SnapshotProcessorTests.cs" />

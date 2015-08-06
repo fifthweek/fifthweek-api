@@ -226,6 +226,8 @@ namespace Fifthweek.GarbageCollection
     using System;
     using System.Diagnostics;
     using System.Threading.Tasks;
+
+    using Fifthweek.Azure;
     using Fifthweek.CodeGeneration;
     using Fifthweek.Shared;
     using Fifthweek.WebJobs.Shared;
@@ -233,7 +235,7 @@ namespace Fifthweek.GarbageCollection
     public partial class RunGarbageCollection 
     {
         public RunGarbageCollection(
-            Fifthweek.Shared.ITimestampCreator timestampCreator,
+            ITimestampCreator timestampCreator,
             Fifthweek.GarbageCollection.IDeleteTestUserAccountsDbStatement deleteTestUserAccounts,
             Fifthweek.GarbageCollection.IGetFilesEligibleForGarbageCollectionDbStatement getFilesEligibleForGarbageCollection,
             Fifthweek.GarbageCollection.IDeleteBlobsForFile deleteBlobsForFile,

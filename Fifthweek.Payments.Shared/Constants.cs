@@ -11,9 +11,6 @@ namespace Fifthweek.Payments.Shared
         public const string RequestSnapshotQueueName = "snapshot-requests";
         public const string RequestProcessPaymentsQueueName = "process-payments-requests";
         public const string ProcessPaymentsLeaseObjectName = "process-payments-lease-object";
-        public const string LastProcessPaymentsStartTimestampMetadataKey = "lastProcessPaymentsStartTimestamp";
-        public const string LastProcessPaymentsEndTimestampMetadataKey = "lastProcessPaymentsEndTimestamp";
-        public const string LastProcessPaymentsRenewCountMetadataKey = "lastProcessPaymentsRenewCount";
 
         public const string PaymentProcessingDataContainerName = "payment-processing-data";
 

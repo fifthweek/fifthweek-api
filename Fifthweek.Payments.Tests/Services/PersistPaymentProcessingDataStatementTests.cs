@@ -106,7 +106,7 @@
             var client = new Mock<ICloudBlobClient>();
             this.cloudStorageAccount.Setup(v => v.CreateCloudBlobClient()).Returns(client.Object);
             var container = new Mock<ICloudBlobContainer>();
-            client.Setup(v => v.GetContainerReference(Constants.PaymentProcessingDataContainerName)).Returns(container.Object);
+            client.Setup(v => v.GetContainerReference(Shared.Constants.PaymentProcessingDataContainerName)).Returns(container.Object);
             var blob = new Mock<ICloudBlockBlob>();
             container.Setup(v => v.GetBlockBlobReference(data.Id.ToString())).Returns(blob.Object);
 

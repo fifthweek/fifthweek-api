@@ -6,10 +6,12 @@
     using System.Threading;
     using System.Threading.Tasks;
 
+    using Fifthweek.Azure;
     using Fifthweek.CodeGeneration;
     using Fifthweek.Payments.Services.Credit;
     using Fifthweek.Payments.Shared;
     using Fifthweek.Shared;
+    using Fifthweek.WebJobs.Shared;
 
     [AutoConstructor]
     public partial class ProcessAllPayments : IProcessAllPayments

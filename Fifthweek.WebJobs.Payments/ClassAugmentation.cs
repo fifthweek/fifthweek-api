@@ -1,130 +1,32 @@
 ﻿using System;
 using System.Linq;
 
-//// Generated on 31/07/2015 14:33:34 (UTC)
-//// Mapped solution in 8.52s
+//// Generated on 06/08/2015 09:23:12 (UTC)
+//// Mapped solution in 9.16s
 
 
 namespace Fifthweek.WebJobs.Payments
 {
     using System;
-    using System.Linq;
-    using System.Net;
+    using System.Collections.Generic;
+    using System.Diagnostics;
+    using System.Runtime.ExceptionServices;
     using System.Threading;
     using System.Threading.Tasks;
+
     using Fifthweek.Azure;
     using Fifthweek.CodeGeneration;
+    using Fifthweek.Payments.Services;
     using Fifthweek.Payments.Shared;
     using Fifthweek.Shared;
     using Fifthweek.WebJobs.Shared;
-    using Microsoft.WindowsAzure.Storage;
-    using System.Collections.Generic;
-    using System.Runtime.ExceptionServices;
-    using Fifthweek.Payments.Services;
     using Microsoft.WindowsAzure.Storage.Blob;
-    using System.Globalization;
-    using Microsoft.WindowsAzure.Storage.Shared.Protocol;
-    using Fifthweek.Api.Persistence;
-    using Fifthweek.Payments.SnapshotCreation;
-
-    public partial class PaymentProcessingLease 
-    {
-        public PaymentProcessingLease(
-            Fifthweek.Shared.ITimestampCreator timestampCreator,
-            Fifthweek.Azure.ICloudStorageAccount cloudStorageAccount,
-            System.Threading.CancellationToken cancellationToken)
-        {
-            if (timestampCreator == null)
-            {
-                throw new ArgumentNullException("timestampCreator");
-            }
-
-            if (cloudStorageAccount == null)
-            {
-                throw new ArgumentNullException("cloudStorageAccount");
-            }
-
-            if (cancellationToken == null)
-            {
-                throw new ArgumentNullException("cancellationToken");
-            }
-
-            this.timestampCreator = timestampCreator;
-            this.cloudStorageAccount = cloudStorageAccount;
-            this.cancellationToken = cancellationToken;
-        }
-    }
-}
-namespace Fifthweek.WebJobs.Payments
-{
-    using System;
-    using System.Linq;
-    using System.Net;
-    using System.Threading;
-    using System.Threading.Tasks;
-    using Fifthweek.Azure;
-    using Fifthweek.CodeGeneration;
-    using Fifthweek.Payments.Shared;
-    using Fifthweek.Shared;
-    using Fifthweek.WebJobs.Shared;
-    using Microsoft.WindowsAzure.Storage;
-    using System.Collections.Generic;
-    using System.Runtime.ExceptionServices;
-    using Fifthweek.Payments.Services;
-    using Microsoft.WindowsAzure.Storage.Blob;
-    using System.Globalization;
-    using Microsoft.WindowsAzure.Storage.Shared.Protocol;
-    using Fifthweek.Api.Persistence;
-    using Fifthweek.Payments.SnapshotCreation;
-
-    public partial class PaymentProcessingLeaseFactory 
-    {
-        public PaymentProcessingLeaseFactory(
-            Fifthweek.Shared.ITimestampCreator timestampCreator,
-            Fifthweek.Azure.ICloudStorageAccount cloudStorageAccount)
-        {
-            if (timestampCreator == null)
-            {
-                throw new ArgumentNullException("timestampCreator");
-            }
-
-            if (cloudStorageAccount == null)
-            {
-                throw new ArgumentNullException("cloudStorageAccount");
-            }
-
-            this.timestampCreator = timestampCreator;
-            this.cloudStorageAccount = cloudStorageAccount;
-        }
-    }
-}
-namespace Fifthweek.WebJobs.Payments
-{
-    using System;
-    using System.Linq;
-    using System.Net;
-    using System.Threading;
-    using System.Threading.Tasks;
-    using Fifthweek.Azure;
-    using Fifthweek.CodeGeneration;
-    using Fifthweek.Payments.Shared;
-    using Fifthweek.Shared;
-    using Fifthweek.WebJobs.Shared;
-    using Microsoft.WindowsAzure.Storage;
-    using System.Collections.Generic;
-    using System.Runtime.ExceptionServices;
-    using Fifthweek.Payments.Services;
-    using Microsoft.WindowsAzure.Storage.Blob;
-    using System.Globalization;
-    using Microsoft.WindowsAzure.Storage.Shared.Protocol;
-    using Fifthweek.Api.Persistence;
-    using Fifthweek.Payments.SnapshotCreation;
 
     public partial class PaymentProcessor 
     {
         public PaymentProcessor(
             Fifthweek.Payments.Services.IProcessAllPayments processAllPayments,
-            Fifthweek.WebJobs.Payments.IPaymentProcessingLeaseFactory paymentProcessingLeaseFactory,
+            IBlobLeaseFactory blobLeaseFactory,
             Fifthweek.Payments.Shared.IRequestProcessPaymentsService requestProcessPayments)
         {
             if (processAllPayments == null)
@@ -132,9 +34,9 @@ namespace Fifthweek.WebJobs.Payments
                 throw new ArgumentNullException("processAllPayments");
             }
 
-            if (paymentProcessingLeaseFactory == null)
+            if (blobLeaseFactory == null)
             {
-                throw new ArgumentNullException("paymentProcessingLeaseFactory");
+                throw new ArgumentNullException("blobLeaseFactory");
             }
 
             if (requestProcessPayments == null)
@@ -143,7 +45,7 @@ namespace Fifthweek.WebJobs.Payments
             }
 
             this.processAllPayments = processAllPayments;
-            this.paymentProcessingLeaseFactory = paymentProcessingLeaseFactory;
+            this.blobLeaseFactory = blobLeaseFactory;
             this.requestProcessPayments = requestProcessPayments;
         }
     }
@@ -151,24 +53,13 @@ namespace Fifthweek.WebJobs.Payments
 namespace Fifthweek.WebJobs.Payments
 {
     using System;
-    using System.Linq;
-    using System.Net;
     using System.Threading;
     using System.Threading.Tasks;
+    using Fifthweek.Api.Persistence;
     using Fifthweek.Azure;
     using Fifthweek.CodeGeneration;
-    using Fifthweek.Payments.Shared;
-    using Fifthweek.Shared;
-    using Fifthweek.WebJobs.Shared;
-    using Microsoft.WindowsAzure.Storage;
-    using System.Collections.Generic;
-    using System.Runtime.ExceptionServices;
-    using Fifthweek.Payments.Services;
-    using Microsoft.WindowsAzure.Storage.Blob;
-    using System.Globalization;
-    using Microsoft.WindowsAzure.Storage.Shared.Protocol;
-    using Fifthweek.Api.Persistence;
     using Fifthweek.Payments.SnapshotCreation;
+    using Fifthweek.WebJobs.Shared;
 
     public partial class SnapshotProcessor 
     {

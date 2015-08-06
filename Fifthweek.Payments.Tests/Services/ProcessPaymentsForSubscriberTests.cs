@@ -6,9 +6,11 @@
     using System.Threading.Tasks;
 
     using Fifthweek.Api.Identity.Shared.Membership;
+    using Fifthweek.Azure;
     using Fifthweek.Payments.Services;
     using Fifthweek.Payments.Shared;
     using Fifthweek.Shared;
+    using Fifthweek.WebJobs.Shared;
 
     using Microsoft.VisualStudio.TestTools.UnitTesting;
 

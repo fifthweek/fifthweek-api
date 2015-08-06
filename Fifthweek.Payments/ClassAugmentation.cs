@@ -538,6 +538,8 @@ namespace Fifthweek.Payments.Services.Credit
 {
     using System;
     using System.Linq;
+
+    using Fifthweek.Azure;
     using Fifthweek.CodeGeneration;
     using Fifthweek.Shared;
     using System.Runtime.ExceptionServices;
@@ -558,7 +560,7 @@ namespace Fifthweek.Payments.Services.Credit
     public partial class CommitTestUserCreditToDatabase 
     {
         public CommitTestUserCreditToDatabase(
-            Fifthweek.Shared.ITimestampCreator timestampCreator,
+            ITimestampCreator timestampCreator,
             Fifthweek.Payments.Services.Credit.ISetTestUserAccountBalanceDbStatement setTestUserAccountBalance)
         {
             if (timestampCreator == null)
@@ -1424,6 +1426,8 @@ namespace Fifthweek.Payments.Services.Credit
 {
     using System;
     using System.Linq;
+
+    using Fifthweek.Azure;
     using Fifthweek.CodeGeneration;
     using Fifthweek.Shared;
     using System.Runtime.ExceptionServices;
@@ -1449,7 +1453,7 @@ namespace Fifthweek.Payments.Services.Credit
             Fifthweek.Payments.Services.Credit.IGetUserWeeklySubscriptionsCost getUserWeeklySubscriptionsCost,
             Fifthweek.Payments.Services.Credit.IIncrementPaymentStatusDbStatement incrementPaymentStatus,
             Fifthweek.Payments.Services.Credit.IGetUserPaymentOriginDbStatement getUserPaymentOrigin,
-            Fifthweek.Shared.ITimestampCreator timestampCreator,
+            ITimestampCreator timestampCreator,
             Fifthweek.Shared.IGuidCreator guidCreator)
         {
             if (getUsersRequiringPaymentRetry == null)
@@ -2566,7 +2570,7 @@ namespace Fifthweek.Payments.Services
     public partial class ProcessAllPayments 
     {
         public ProcessAllPayments(
-            Fifthweek.Shared.ITimestampCreator timestampCreator,
+            ITimestampCreator timestampCreator,
             Fifthweek.Payments.Services.IGetAllSubscribersDbStatement getAllSubscribers,
             Fifthweek.Payments.Services.IProcessPaymentsForSubscriber processPaymentsForSubscriber,
             Fifthweek.Payments.Services.IUpdateAccountBalancesDbStatement updateAccountBalances,

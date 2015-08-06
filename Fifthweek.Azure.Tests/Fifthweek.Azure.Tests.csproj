@@ -81,6 +81,8 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
+    <Compile Include="BlobLeaseFactoryTests.cs" />
+    <Compile Include="BlobLeaseTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="QueueServiceTests.cs" />
   </ItemGroup>
@@ -88,6 +90,10 @@
     <ProjectReference Include="..\Fifthweek.Azure\Fifthweek.Azure.csproj">
       <Project>{890cd4c4-993f-482d-bbb5-a50767ace55b}</Project>
       <Name>Fifthweek.Azure</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Fifthweek.Shared\Fifthweek.Shared.csproj">
+      <Project>{6D12FFBB-38E9-4722-A690-0F0338538EBC}</Project>
+      <Name>Fifthweek.Shared</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

@@ -5,9 +5,11 @@ namespace Fifthweek.Payments.Services
     using System.Threading.Tasks;
 
     using Fifthweek.Api.Identity.Shared.Membership;
+    using Fifthweek.Azure;
     using Fifthweek.CodeGeneration;
     using Fifthweek.Payments.Shared;
     using Fifthweek.Shared;
+    using Fifthweek.WebJobs.Shared;
 
     [AutoConstructor]
     public partial class ProcessPaymentsForSubscriber : IProcessPaymentsForSubscriber

@@ -7,6 +7,7 @@
     using System.Threading;
     using System.Threading.Tasks;
 
+    using Fifthweek.Azure;
     using Fifthweek.CodeGeneration;
     using Fifthweek.Payments.Services;
     using Fifthweek.Payments.Shared;
@@ -22,7 +23,7 @@
             Fifthweek.Payments.Shared.Constants.PaymentProcessingDefaultMessageDelay.Subtract(TimeSpan.FromMinutes(5));
 
         private readonly IProcessAllPayments processAllPayments;
-        private readonly IPaymentProcessingLeaseFactory paymentProcessingLeaseFactory;
+        private readonly IBlobLeaseFactory blobLeaseFactory;
         private readonly IRequestProcessPaymentsService requestProcessPayments;
 
         public async Task ProcessPaymentsAsync(
@@ -31,7 +32,7 @@
             CancellationToken cancellationToken)
         {
             ExceptionDispatchInfo exceptionDispatchInfo = null;
-            var lease = this.paymentProcessingLeaseFactory.Create(cancellationToken);
+            var lease = this.blobLeaseFactory.Create(Fifthweek.Payments.Shared.Constants.ProcessPaymentsLeaseObjectName, cancellationToken);
             try
             {
                 if (await lease.TryAcquireLeaseAsync())
@@ -41,7 +42,7 @@
                     if (timeSinceLastLease > MinimumTimeBetweenPaymentProcessing)
                     {
                         var errors = new List<PaymentProcessingException>();
-                        
+
                         await this.processAllPayments.ExecuteAsync(lease, errors, cancellationToken);
 
                         if (errors.Count > 0)
@@ -56,13 +57,12 @@
                     }
                     else
                     {
-                        logger.Warn("Skipping processing payments as last processed {0}s ago.", (int)timeSinceLastLease.TotalSeconds);
                         await lease.ReleaseLeaseAsync();
                     }
                 }
                 else
                 {
-                    logger.Warn("Failed to acquire lease to process payments due to conflict.");
+                    await this.requestProcessPayments.ExecuteRetryAsync();
                 }
             }
             catch (Exception t)

@@ -4,8 +4,10 @@
     using System.Threading;
     using System.Threading.Tasks;
 
+    using Fifthweek.Azure;
     using Fifthweek.CodeGeneration;
     using Fifthweek.GarbageCollection;
+    using Fifthweek.Shared;
     using Fifthweek.WebJobs.GarbageCollection.Shared;
     using Fifthweek.WebJobs.Shared;
 
@@ -13,15 +15,25 @@
     public partial class GarbageCollectionProcessor
     {
         private readonly IRunGarbageCollection runGarbageCollection;
+        private readonly IBlobLeaseFactory blobLeaseFactory;
 
         public async Task RunGarbageCollectionAsync(
             RunGarbageCollectionMessage message,
             ILogger logger,
             CancellationToken cancellationToken)
         {
+            message.AssertNotNull("message");
+            logger.AssertNotNull("logger");
+
+            var lease = this.blobLeaseFactory.Create(Shared.Constants.LeaseObjectName, cancellationToken);
             try
             {
-                await this.runGarbageCollection.ExecuteAsync(logger, cancellationToken);
+                if (await lease.TryAcquireLeaseAsync())
+                {
+                    await this.runGarbageCollection.ExecuteAsync(logger, lease, cancellationToken);
+                    await lease.UpdateTimestampsAsync();
+                    await lease.ReleaseLeaseAsync();
+                }
             }
             catch (Exception t)
             {

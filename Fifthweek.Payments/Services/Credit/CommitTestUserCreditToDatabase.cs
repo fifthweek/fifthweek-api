@@ -3,6 +3,7 @@
     using System.Threading.Tasks;
 
     using Fifthweek.Api.Identity.Shared.Membership;
+    using Fifthweek.Azure;
     using Fifthweek.CodeGeneration;
     using Fifthweek.Shared;
 

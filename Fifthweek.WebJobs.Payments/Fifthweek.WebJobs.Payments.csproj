@@ -83,12 +83,8 @@
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
     </Compile>
-    <Compile Include="IPaymentProcessingLease.cs" />
-    <Compile Include="IPaymentProcessingLeaseFactory.cs" />
     <Compile Include="IPaymentProcessor.cs" />
     <Compile Include="ISnapshotProcessor.cs" />
-    <Compile Include="PaymentProcessingLease.cs" />
-    <Compile Include="PaymentProcessingLeaseFactory.cs" />
     <Compile Include="PaymentProcessor.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

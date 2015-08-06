@@ -105,7 +105,7 @@ namespace Fifthweek.WebJobs.Payments
                     new GetUserPaymentOriginDbStatement(new FifthweekDbConnectionFactory()),
                     new TimestampCreator(),
                     new GuidCreator())),
-            new PaymentProcessingLeaseFactory(new TimestampCreator(), new FifthweekCloudStorageAccount()),
+            new BlobLeaseFactory(new TimestampCreator(), new FifthweekCloudStorageAccount()),
             new RequestProcessPaymentsService(new QueueService(new FifthweekCloudStorageAccount())));
 
         public static Task ProcessPaymentsAsync(

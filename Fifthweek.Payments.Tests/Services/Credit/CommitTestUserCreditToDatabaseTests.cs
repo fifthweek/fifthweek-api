@@ -4,6 +4,7 @@
     using System.Threading.Tasks;
 
     using Fifthweek.Api.Identity.Shared.Membership;
+    using Fifthweek.Azure;
     using Fifthweek.Payments.Services.Credit;
     using Fifthweek.Shared;
 

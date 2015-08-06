@@ -13,6 +13,8 @@
 
     using Microsoft.Practices.EnterpriseLibrary.TransientFaultHandling;
 
+    using Constants = Fifthweek.Azure.Constants;
+
     [AutoConstructor]
     public partial class TestPaymentsAvailabilityStatement : ITestPaymentsAvailabilityStatement
     {
@@ -35,19 +37,15 @@
                 var now = this.timestampCreator.Now();
 
                 var blobClient = this.cloudStorageAccount.CreateCloudBlobClient();
-                var leaseContainer = blobClient.GetContainerReference(Fifthweek.Shared.Constants.AzureLeaseObjectsContainerName);
+                var leaseContainer = blobClient.GetContainerReference(Constants.AzureLeaseObjectsContainerName);
                 var blob = leaseContainer.GetBlockBlobReference(Fifthweek.Payments.Shared.Constants.ProcessPaymentsLeaseObjectName);
                 await blob.FetchAttributesAsync();
 
-                var startTimestampKey = Fifthweek.Payments.Shared.Constants.LastProcessPaymentsStartTimestampMetadataKey;
-                var endTimestampKey = Fifthweek.Payments.Shared.Constants.LastProcessPaymentsEndTimestampMetadataKey;
-                var renewCountKey = Fifthweek.Payments.Shared.Constants.LastProcessPaymentsRenewCountMetadataKey;
-
                 string startTimestampString, endTimestampString, renewCountString;
 
-                if (blob.Metadata.TryGetValue(startTimestampKey, out startTimestampString)
-                    && blob.Metadata.TryGetValue(endTimestampKey, out endTimestampString)
-                    && blob.Metadata.TryGetValue(renewCountKey, out renewCountString))
+                if (blob.Metadata.TryGetValue(Constants.LeaseStartTimestampMetadataKey, out startTimestampString)
+                    && blob.Metadata.TryGetValue(Constants.LeaseEndTimestampMetadataKey, out endTimestampString)
+                    && blob.Metadata.TryGetValue(Constants.LeaseRenewCountMetadataKey, out renewCountString))
                 {
                     var startTime = startTimestampString.FromIso8601String();
                     var endTime = endTimestampString.FromIso8601String();

@@ -32,7 +32,10 @@
                     new DeleteFileDbStatement(new FifthweekDbConnectionFactory()),
                     new DeleteOrphanedBlobContainers(
                         new GetAllChannelIdsDbStatement(new FifthweekDbConnectionFactory()),
-                        new FifthweekCloudStorageAccount())));
+                        new FifthweekCloudStorageAccount())),
+                new BlobLeaseFactory(
+                    new TimestampCreator(),
+                    new FifthweekCloudStorageAccount()));
 
         public static Task RunGarbageCollectionAsync(
             [QueueTrigger(Constants.GarbageCollectionQueueName)] RunGarbageCollectionMessage message,

@@ -7,6 +7,7 @@ namespace Fifthweek.Payments.Services.Credit
     using System.Threading.Tasks;
 
     using Fifthweek.Api.Persistence.Payments;
+    using Fifthweek.Azure;
     using Fifthweek.CodeGeneration;
     using Fifthweek.Payments.Services.Credit;
     using Fifthweek.Payments.Shared;

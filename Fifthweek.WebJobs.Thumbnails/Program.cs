@@ -27,7 +27,7 @@
             new SetFileProcessingCompleteDbStatement(new FifthweekDbConnectionFactory()));
 
         public static Task CreateThumbnailSetAsync(
-            [QueueTrigger(Constants.ThumbnailsQueueName)] CreateThumbnailsMessage message,
+            [QueueTrigger(Shared.Constants.ThumbnailsQueueName)] CreateThumbnailsMessage message,
             [Blob("{ContainerName}/{InputBlobName}")] CloudBlockBlob input,
             CloudStorageAccount cloudStorageAccount,
             TextWriter webJobsLogger,
@@ -44,7 +44,7 @@
         }
 
         public static Task ProcessPoisonMessage(
-            [QueueTrigger(Constants.ThumbnailsQueueName + "-poison")] CreateThumbnailsMessage message,
+            [QueueTrigger(Shared.Constants.ThumbnailsQueueName + "-poison")] CreateThumbnailsMessage message,
             CloudStorageAccount cloudStorageAccount,
             TextWriter webJobsLogger,
             int dequeueCount,
