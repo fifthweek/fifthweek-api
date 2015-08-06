@@ -9,11 +9,11 @@
     public partial class BlobLeaseFactory : IBlobLeaseFactory
     {
         private readonly ITimestampCreator timestampCreator;
-        private readonly ICloudStorageAccount cloudStorageAccount;
+        private readonly IBlobLeaseHelper blobLeaseHelper;
 
         public IBlobLease Create(string leaseObjectName, CancellationToken cancellationToken)
         {
-            return new BlobLease(this.timestampCreator, this.cloudStorageAccount, cancellationToken, leaseObjectName);
+            return new BlobLease(this.timestampCreator, this.blobLeaseHelper, cancellationToken, leaseObjectName);
         }
     }
 }

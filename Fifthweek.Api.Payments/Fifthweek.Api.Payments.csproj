@@ -49,6 +49,25 @@
     <Reference Include="Microsoft.AspNet.Identity.EntityFramework">
       <HintPath>..\packages\Microsoft.AspNet.Identity.EntityFramework.2.1.0\lib\net45\Microsoft.AspNet.Identity.EntityFramework.dll</HintPath>
     </Reference>
+    <Reference Include="Microsoft.Data.Edm, Version=5.6.2.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Microsoft.Data.Edm.5.6.2\lib\net40\Microsoft.Data.Edm.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Data.OData, Version=5.6.2.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Microsoft.Data.OData.5.6.2\lib\net40\Microsoft.Data.OData.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Data.Services.Client, Version=5.6.2.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Microsoft.Data.Services.Client.5.6.2\lib\net40\Microsoft.Data.Services.Client.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.WindowsAzure.Configuration">
+      <HintPath>..\packages\Microsoft.WindowsAzure.ConfigurationManager.1.8.0.0\lib\net35-full\Microsoft.WindowsAzure.Configuration.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.WindowsAzure.Storage, Version=4.3.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\WindowsAzure.Storage.4.3.0\lib\net40\Microsoft.WindowsAzure.Storage.dll</HintPath>
+    </Reference>
     <Reference Include="Newtonsoft.Json, Version=6.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\Newtonsoft.Json.6.0.6\lib\net45\Newtonsoft.Json.dll</HintPath>
@@ -63,6 +82,10 @@
     <Reference Include="System.Net.Http.Formatting, Version=5.2.2.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\Microsoft.AspNet.WebApi.Client.5.2.2\lib\net45\System.Net.Http.Formatting.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Spatial, Version=5.6.2.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\System.Spatial.5.6.2\lib\net40\System.Spatial.dll</HintPath>
     </Reference>
     <Reference Include="System.Transactions" />
     <Reference Include="System.Web.Http, Version=5.2.2.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
@@ -84,12 +107,16 @@
     </Compile>
     <Compile Include="Commands\ApplyCreditRequestCommand.cs" />
     <Compile Include="Commands\ApplyCreditRequestCommandHandler.cs" />
+    <Compile Include="Commands\BlockPaymentProcessingCommand.cs" />
+    <Compile Include="Commands\BlockPaymentProcessingCommandHandler.cs" />
+    <Compile Include="Commands\BlockPaymentProcessingResult.cs" />
     <Compile Include="Commands\CreateCreditRefundCommand.cs" />
     <Compile Include="Commands\CreateCreditRefundCommandHandler.cs" />
     <Compile Include="Commands\CreateTransactionRefundCommand.cs" />
     <Compile Include="Commands\CreateTransactionRefundCommandHandler.cs" />
     <Compile Include="Commands\DeletePaymentInformationCommand.cs" />
     <Compile Include="Commands\DeletePaymentInformationCommandHandler.cs" />
+    <Compile Include="Commands\LeaseConflictException.cs" />
     <Compile Include="Commands\UpdatePaymentOriginCommand.cs" />
     <Compile Include="Commands\UpdatePaymentOriginCommandHandler.cs" />
     <Compile Include="Controllers\CreditRefundData.cs" />
@@ -126,6 +153,10 @@
     <ProjectReference Include="..\Fifthweek.Api.Persistence\Fifthweek.Api.Persistence.csproj">
       <Project>{9C18BEE3-FAB5-4A00-8A94-A1FAEA370175}</Project>
       <Name>Fifthweek.Api.Persistence</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Fifthweek.Azure\Fifthweek.Azure.csproj">
+      <Project>{890CD4C4-993F-482D-BBB5-A50767ACE55B}</Project>
+      <Name>Fifthweek.Azure</Name>
     </ProjectReference>
     <ProjectReference Include="..\Fifthweek.CodeGeneration\Fifthweek.CodeGeneration.csproj">
       <Project>{770F450E-2166-4269-BEC1-DF59AA16B1E8}</Project>

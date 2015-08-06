@@ -27,6 +27,7 @@
         private readonly ICommandHandler<CreateCreditRefundCommand> createCreditRefund;
         private readonly ICommandHandler<CreateTransactionRefundCommand> createTransactionRefund;
         private readonly IQueryHandler<GetTransactionsQuery, GetTransactionsResult> getTransactions;
+        private readonly ICommandHandler<BlockPaymentProcessingCommand> blockPaymentProcessing;
         private readonly ITimestampCreator timestampCreator;
         private readonly IGuidCreator guidCreator;
 
@@ -159,6 +160,34 @@
                 userIdObject,
                 startTimeInclusive,
                 endTimeExclusive));
+        }
+
+        [Route("lease")]
+        public async Task<BlockPaymentProcessingResult> GetPaymentProcessingLeaseAsync(
+            [FromUri]string leaseId = null)
+        {
+            var requester = await this.requesterContext.GetRequesterAsync();
+
+            string proposedLeaseId = null;
+            if (string.IsNullOrWhiteSpace(leaseId))
+            {
+                leaseId = null;
+                proposedLeaseId = this.guidCreator.Create().ToString();
+            }
+
+            var command = new BlockPaymentProcessingCommand(requester, leaseId, proposedLeaseId);
+
+            try
+            {
+                await this.blockPaymentProcessing.HandleAsync(command);
+                return new BlockPaymentProcessingResult(
+                    (int)BlockPaymentProcessingCommandHandler.LeaseLength.TotalSeconds,
+                    command.LeaseId ?? command.ProposedLeaseId);
+            }
+            catch (LeaseConflictException)
+            {
+                return null;
+            }
         }
     }
 }

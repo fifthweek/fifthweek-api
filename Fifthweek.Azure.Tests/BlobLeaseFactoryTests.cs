@@ -12,7 +12,7 @@
     public class BlobLeaseFactoryTests
     {
         private Mock<ITimestampCreator> timestampCreator;
-        private Mock<ICloudStorageAccount> cloudStorageAccount;
+        private Mock<IBlobLeaseHelper> blobLeaseHelper;
 
         private BlobLeaseFactory target;
 
@@ -20,8 +20,8 @@
         public void Initialize()
         {
             this.timestampCreator = new Mock<ITimestampCreator>();
-            this.cloudStorageAccount = new Mock<ICloudStorageAccount>();
-            this.target = new BlobLeaseFactory(this.timestampCreator.Object, this.cloudStorageAccount.Object);
+            this.blobLeaseHelper = new Mock<IBlobLeaseHelper>();
+            this.target = new BlobLeaseFactory(this.timestampCreator.Object, this.blobLeaseHelper.Object);
         }
 
         [TestMethod]

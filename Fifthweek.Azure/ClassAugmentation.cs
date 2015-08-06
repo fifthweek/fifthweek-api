@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Linq;
 
-//// Generated on 06/08/2015 09:41:51 (UTC)
-//// Mapped solution in 9.39s
+//// Generated on 06/08/2015 18:08:23 (UTC)
+//// Mapped solution in 16.24s
 
 
 namespace Fifthweek.Azure
@@ -21,7 +21,7 @@ namespace Fifthweek.Azure
     {
         public BlobLease(
             Fifthweek.Shared.ITimestampCreator timestampCreator,
-            Fifthweek.Azure.ICloudStorageAccount cloudStorageAccount,
+            Fifthweek.Azure.IBlobLeaseHelper blobLeaseHelper,
             System.Threading.CancellationToken cancellationToken,
             System.String leaseObjectName)
         {
@@ -30,9 +30,9 @@ namespace Fifthweek.Azure
                 throw new ArgumentNullException("timestampCreator");
             }
 
-            if (cloudStorageAccount == null)
+            if (blobLeaseHelper == null)
             {
-                throw new ArgumentNullException("cloudStorageAccount");
+                throw new ArgumentNullException("blobLeaseHelper");
             }
 
             if (cancellationToken == null)
@@ -46,7 +46,7 @@ namespace Fifthweek.Azure
             }
 
             this.timestampCreator = timestampCreator;
-            this.cloudStorageAccount = cloudStorageAccount;
+            this.blobLeaseHelper = blobLeaseHelper;
             this.cancellationToken = cancellationToken;
             this.leaseObjectName = leaseObjectName;
         }
@@ -68,19 +68,45 @@ namespace Fifthweek.Azure
     {
         public BlobLeaseFactory(
             Fifthweek.Shared.ITimestampCreator timestampCreator,
-            Fifthweek.Azure.ICloudStorageAccount cloudStorageAccount)
+            Fifthweek.Azure.IBlobLeaseHelper blobLeaseHelper)
         {
             if (timestampCreator == null)
             {
                 throw new ArgumentNullException("timestampCreator");
             }
 
+            if (blobLeaseHelper == null)
+            {
+                throw new ArgumentNullException("blobLeaseHelper");
+            }
+
+            this.timestampCreator = timestampCreator;
+            this.blobLeaseHelper = blobLeaseHelper;
+        }
+    }
+}
+namespace Fifthweek.Azure
+{
+    using System;
+    using System.Net;
+    using System.Threading.Tasks;
+    using Fifthweek.CodeGeneration;
+    using Microsoft.WindowsAzure.Storage;
+    using System.Linq;
+    using System.Globalization;
+    using System.Threading;
+    using Fifthweek.Shared;
+
+    public partial class BlobLeaseHelper 
+    {
+        public BlobLeaseHelper(
+            Fifthweek.Azure.ICloudStorageAccount cloudStorageAccount)
+        {
             if (cloudStorageAccount == null)
             {
                 throw new ArgumentNullException("cloudStorageAccount");
             }
 
-            this.timestampCreator = timestampCreator;
             this.cloudStorageAccount = cloudStorageAccount;
         }
     }

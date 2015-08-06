@@ -17,7 +17,7 @@ namespace Fifthweek.Azure
         public const int RenewRateLimitSeconds = 15;
 
         private readonly ITimestampCreator timestampCreator;
-        private readonly ICloudStorageAccount cloudStorageAccount;
+        private readonly IBlobLeaseHelper blobLeaseHelper;
         private readonly CancellationToken cancellationToken;
         private readonly string leaseObjectName;
 
@@ -41,9 +41,9 @@ namespace Fifthweek.Azure
                 await this.AcquireLeaseAsync();
                 return true;
             }
-            catch (StorageException t)
+            catch (Exception t)
             {
-                if (t.RequestInformation.HttpStatusCode != (int)HttpStatusCode.Conflict)
+                if (!this.blobLeaseHelper.IsLeaseConflictException(t))
                 {
                     throw;
                 }
@@ -59,9 +59,7 @@ namespace Fifthweek.Azure
                 throw new InvalidOperationException("The lease has already been acquired.");
             }
 
-            var blobClient = this.cloudStorageAccount.CreateCloudBlobClient();
-            var leaseContainer = blobClient.GetContainerReference(Constants.AzureLeaseObjectsContainerName);
-            this.blob = leaseContainer.GetBlockBlobReference(this.leaseObjectName);
+            this.blob = this.blobLeaseHelper.GetLeaseBlob(this.leaseObjectName);
 
             this.leaseId = await this.blob.AcquireLeaseAsync(TimeSpan.FromMinutes(1), null, this.cancellationToken);
             this.acquiredTimestamp = this.timestampCreator.Now();

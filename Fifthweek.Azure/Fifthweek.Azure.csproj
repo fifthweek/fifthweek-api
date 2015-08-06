@@ -69,6 +69,7 @@
     <Compile Include="AzureConfiguration.cs" />
     <Compile Include="BlobLease.cs" />
     <Compile Include="BlobLeaseFactory.cs" />
+    <Compile Include="BlobLeaseHelper.cs" />
     <Compile Include="ClassAugmentation.cs">
       <DependentUpon>ClassAugmentation.tt</DependentUpon>
       <AutoGen>True</AutoGen>
@@ -86,6 +87,7 @@
     <Compile Include="FifthweekContainerResultSegment.cs" />
     <Compile Include="IBlobLease.cs" />
     <Compile Include="IBlobLeaseFactory.cs" />
+    <Compile Include="IBlobLeaseHelper.cs" />
     <Compile Include="IBlobProperties.cs" />
     <Compile Include="ICloudBlobClient.cs" />
     <Compile Include="ICloudBlobContainer.cs" />

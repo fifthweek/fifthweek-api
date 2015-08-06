@@ -34,6 +34,7 @@
         private Mock<ICommandHandler<CreateCreditRefundCommand>> createCreditRefund;
         private Mock<ICommandHandler<CreateTransactionRefundCommand>> createTransactionRefund;
         private Mock<IQueryHandler<GetTransactionsQuery, GetTransactionsResult>> getTransactions;
+        private Mock<ICommandHandler<BlockPaymentProcessingCommand>> blockPaymentProcessing;
         private Mock<ITimestampCreator> timestampCreator;
         private Mock<IGuidCreator> guidCreator;
 
@@ -49,6 +50,7 @@
             this.createCreditRefund = new Mock<ICommandHandler<CreateCreditRefundCommand>>(MockBehavior.Strict);
             this.createTransactionRefund = new Mock<ICommandHandler<CreateTransactionRefundCommand>>(MockBehavior.Strict);
             this.getTransactions = new Mock<IQueryHandler<GetTransactionsQuery, GetTransactionsResult>>(MockBehavior.Strict);
+            this.blockPaymentProcessing = new Mock<ICommandHandler<BlockPaymentProcessingCommand>>(MockBehavior.Strict);
             this.timestampCreator = new Mock<ITimestampCreator>(MockBehavior.Strict);
             this.guidCreator = new Mock<IGuidCreator>(MockBehavior.Strict);
             
@@ -63,6 +65,7 @@
                 this.createCreditRefund.Object,
                 this.createTransactionRefund.Object,
                 this.getTransactions.Object,
+                this.blockPaymentProcessing.Object,
                 this.timestampCreator.Object,
                 this.guidCreator.Object);
         }
@@ -416,6 +419,77 @@
                 var result = await this.target.GetTransactionsAsync(UserId.Value.EncodeGuid(), StartTime, EndTime);
 
                 Assert.AreEqual(GetTransactionsResult, result);
+            }
+        }
+
+        [TestClass]
+        public class GetPaymentProcessingLeaseAsync : PaymentsControllerTests
+        {
+            private static readonly UserId UserId = UserId.Random();
+            private static readonly DateTime StartTime = DateTime.UtcNow.AddDays(-5);
+            private static readonly DateTime EndTime = DateTime.UtcNow;
+            private static readonly GetTransactionsResult GetTransactionsResult =
+                new GetTransactionsResult(new List<GetTransactionsResult.Item>());
+
+            [TestInitialize]
+            public override void Initialize()
+            {
+                base.Initialize();
+            }
+
+            [TestMethod]
+            public async Task WhenLeaseIdIsNull_ItShouldGetNewLease()
+            {
+                var leaseId = Guid.NewGuid();
+                this.guidCreator.Setup(v => v.Create()).Returns(leaseId);
+
+                this.blockPaymentProcessing.Setup(
+                    v => v.HandleAsync(new BlockPaymentProcessingCommand(Requester, null, leaseId.ToString())))
+                    .Returns(Task.FromResult(0)).Verifiable();
+
+                var result = await this.target.GetPaymentProcessingLeaseAsync(null);
+
+                this.blockPaymentProcessing.Verify();
+
+                Assert.AreEqual(
+                    new BlockPaymentProcessingResult(
+                        (int)BlockPaymentProcessingCommandHandler.LeaseLength.TotalSeconds,
+                        leaseId.ToString()),
+                    result);
+            }
+
+            [TestMethod]
+            public async Task WhenLeaseIdIsProvided_ItShouldRenewLease()
+            {
+                var leaseId = Guid.NewGuid();
+
+                this.blockPaymentProcessing.Setup(
+                    v => v.HandleAsync(new BlockPaymentProcessingCommand(Requester, leaseId.ToString(), null)))
+                    .Returns(Task.FromResult(0)).Verifiable();
+
+                var result = await this.target.GetPaymentProcessingLeaseAsync(leaseId.ToString());
+
+                this.blockPaymentProcessing.Verify();
+
+                Assert.AreEqual(
+                    new BlockPaymentProcessingResult(
+                        (int)BlockPaymentProcessingCommandHandler.LeaseLength.TotalSeconds,
+                        leaseId.ToString()),
+                    result);
+            }
+
+            [TestMethod]
+            public async Task WhenLeaseAcquisitionFails_ItShouldReturnNull()
+            {
+                var leaseId = Guid.NewGuid();
+
+                this.blockPaymentProcessing.Setup(
+                    v => v.HandleAsync(new BlockPaymentProcessingCommand(Requester, leaseId.ToString(), null)))
+                    .Throws(new LeaseConflictException(new Exception()));
+
+                var result = await this.target.GetPaymentProcessingLeaseAsync(leaseId.ToString());
+
+                Assert.IsNull(result);
             }
         }
     }

@@ -23,7 +23,7 @@
 
         private CancellationToken cancellationToken;
         private Mock<ITimestampCreator> timestampCreator;
-        private Mock<ICloudStorageAccount> cloudStorageAccount;
+        private Mock<IBlobLeaseHelper> blobLeaseHelper;
         private Mock<ICloudBlockBlob> blob;
 
         private BlobLease target;
@@ -31,23 +31,16 @@
         public virtual void Initialize()
         {
             this.cancellationToken = new CancellationTokenSource().Token;
-            this.cloudStorageAccount = new Mock<ICloudStorageAccount>(MockBehavior.Strict);
+            this.blobLeaseHelper = new Mock<IBlobLeaseHelper>(MockBehavior.Strict);
             this.timestampCreator = new Mock<ITimestampCreator>(MockBehavior.Strict);
 
-            this.target = new BlobLease(this.timestampCreator.Object, this.cloudStorageAccount.Object, this.cancellationToken, LeaseObjectName);
+            this.target = new BlobLease(this.timestampCreator.Object, this.blobLeaseHelper.Object, this.cancellationToken, LeaseObjectName);
         }
 
         protected void SetupAquireMocks()
         {
-            var blobClient = new Mock<ICloudBlobClient>();
-            this.cloudStorageAccount.Setup(v => v.CreateCloudBlobClient()).Returns(blobClient.Object);
-
-            var leaseContainer = new Mock<ICloudBlobContainer>();
-            blobClient.Setup(v => v.GetContainerReference(Azure.Constants.AzureLeaseObjectsContainerName))
-                .Returns(leaseContainer.Object);
-
             this.blob = new Mock<ICloudBlockBlob>(MockBehavior.Strict);
-            leaseContainer.Setup(v => v.GetBlockBlobReference(LeaseObjectName)).Returns(this.blob.Object);
+            this.blobLeaseHelper.Setup(v => v.GetLeaseBlob(LeaseObjectName)).Returns(this.blob.Object);
 
             this.blob.Setup(v => v.AcquireLeaseAsync(TimeSpan.FromMinutes(1), null, this.cancellationToken)).ReturnsAsync(LeaseId);
 
@@ -75,8 +68,12 @@
             public async Task IfAquisitionFailsWithConflict_ItShouldReturnFalse()
             {
                 this.SetupAquireMocks();
+
+                var exception = new DivideByZeroException();
                 this.blob.Setup(v => v.AcquireLeaseAsync(TimeSpan.FromMinutes(1), null, this.cancellationToken))
-                    .Throws(new StorageException(new RequestResult { HttpStatusCode = (int)HttpStatusCode.Conflict }, "Error", null));
+                    .Throws(exception);
+
+                this.blobLeaseHelper.Setup(v => v.IsLeaseConflictException(exception)).Returns(true);
 
                 var result = await this.target.TryAcquireLeaseAsync();
                 Assert.IsFalse(result);
@@ -87,10 +84,12 @@
             public async Task IfAquisitionFails_ItShouldThrowAnException()
             {
                 this.SetupAquireMocks();
-                var webResponse = new Mock<HttpWebResponse>();
-                webResponse.SetupGet(v => v.StatusCode).Returns(HttpStatusCode.Conflict);
+
+                var exception = new DivideByZeroException();
                 this.blob.Setup(v => v.AcquireLeaseAsync(TimeSpan.FromMinutes(1), null, this.cancellationToken))
-                    .Throws(new DivideByZeroException());
+                    .Throws(exception);
+
+                this.blobLeaseHelper.Setup(v => v.IsLeaseConflictException(exception)).Returns(false);
 
                 await this.target.TryAcquireLeaseAsync();
             }

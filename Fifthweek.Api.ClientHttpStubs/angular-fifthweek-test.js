@@ -1204,5 +1204,20 @@ describe('payments stub', function() {
 
     expect(result).toBe(responseData);
   });
+
+  it('should get payment processing lease', function() {
+    var leaseId = 'value0';
+
+    var responseData = 'response data';
+    $httpBackend.expectGET(utilities.fixUri(fifthweekConstants.apiBaseUri + 'payment/lease?' + (leaseId === undefined ? '' : 'leaseId=' + encodeURIComponent(leaseId) + '&'))).respond(200, responseData);
+
+    var result = null;
+    target.getPaymentProcessingLease(leaseId).then(function(response) { result = response.data; });
+
+    $httpBackend.flush();
+    $rootScope.$apply();
+
+    expect(result).toBe(responseData);
+  });
 });
 

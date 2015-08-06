@@ -1192,6 +1192,17 @@ angular.module('webApp').factory('paymentsStub',
       });
     };
 
+    // leaseId = 'Base64Guid'
+    // result = {
+    //   leaseLengthSeconds: 0,
+    //   leaseId: 'Base64Guid'
+    // }
+    service.getPaymentProcessingLease = function(leaseId) {
+      return $http.get(utilities.fixUri(apiBaseUri + 'payment/lease?' + (leaseId === undefined ? '' : 'leaseId=' + encodeURIComponent(leaseId) + '&'))).catch(function(response) {
+        return $q.reject(utilities.getHttpError(response));
+      });
+    };
+
     return service;
   });
 

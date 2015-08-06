@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Linq;
 
-//// Generated on 29/07/2015 17:40:16 (UTC)
-//// Mapped solution in 15.25s
+//// Generated on 06/08/2015 18:27:42 (UTC)
+//// Mapped solution in 16.01s
 
 
 namespace Fifthweek.Api.Payments.Commands
@@ -25,6 +25,9 @@ namespace Fifthweek.Api.Payments.Commands
     using Fifthweek.Api.Persistence.Payments;
     using Fifthweek.Payments.Services.Refunds;
     using Fifthweek.Payments.Shared;
+    using System.Threading;
+    using Fifthweek.Azure;
+    using Microsoft.WindowsAzure.Storage;
 
     public partial class ApplyCreditRequestCommand 
     {
@@ -95,6 +98,9 @@ namespace Fifthweek.Api.Payments.Commands
     using Fifthweek.Api.Persistence.Payments;
     using Fifthweek.Payments.Services.Refunds;
     using Fifthweek.Payments.Shared;
+    using System.Threading;
+    using Fifthweek.Azure;
+    using Microsoft.WindowsAzure.Storage;
 
     public partial class ApplyCreditRequestCommandHandler 
     {
@@ -151,6 +157,9 @@ namespace Fifthweek.Api.Payments.Commands
     using Fifthweek.Api.Persistence.Payments;
     using Fifthweek.Payments.Services.Refunds;
     using Fifthweek.Payments.Shared;
+    using System.Threading;
+    using Fifthweek.Azure;
+    using Microsoft.WindowsAzure.Storage;
 
     public partial class UpdatePaymentOriginCommand 
     {
@@ -201,6 +210,9 @@ namespace Fifthweek.Api.Payments.Commands
     using Fifthweek.Api.Persistence.Payments;
     using Fifthweek.Payments.Services.Refunds;
     using Fifthweek.Payments.Shared;
+    using System.Threading;
+    using Fifthweek.Azure;
+    using Microsoft.WindowsAzure.Storage;
 
     public partial class UpdatePaymentOriginCommandHandler 
     {
@@ -380,6 +392,7 @@ namespace Fifthweek.Api.Payments.Controllers
             Fifthweek.Api.Core.ICommandHandler<Fifthweek.Api.Payments.Commands.CreateCreditRefundCommand> createCreditRefund,
             Fifthweek.Api.Core.ICommandHandler<Fifthweek.Api.Payments.Commands.CreateTransactionRefundCommand> createTransactionRefund,
             Fifthweek.Api.Core.IQueryHandler<Fifthweek.Api.Payments.Queries.GetTransactionsQuery,Fifthweek.Payments.Services.Administration.GetTransactionsResult> getTransactions,
+            Fifthweek.Api.Core.ICommandHandler<Fifthweek.Api.Payments.Commands.BlockPaymentProcessingCommand> blockPaymentProcessing,
             Fifthweek.Shared.ITimestampCreator timestampCreator,
             Fifthweek.Shared.IGuidCreator guidCreator)
         {
@@ -423,6 +436,11 @@ namespace Fifthweek.Api.Payments.Controllers
                 throw new ArgumentNullException("getTransactions");
             }
 
+            if (blockPaymentProcessing == null)
+            {
+                throw new ArgumentNullException("blockPaymentProcessing");
+            }
+
             if (timestampCreator == null)
             {
                 throw new ArgumentNullException("timestampCreator");
@@ -441,6 +459,7 @@ namespace Fifthweek.Api.Payments.Controllers
             this.createCreditRefund = createCreditRefund;
             this.createTransactionRefund = createTransactionRefund;
             this.getTransactions = getTransactions;
+            this.blockPaymentProcessing = blockPaymentProcessing;
             this.timestampCreator = timestampCreator;
             this.guidCreator = guidCreator;
         }
@@ -459,6 +478,7 @@ namespace Fifthweek.Api.Payments.Queries
     using Fifthweek.Payments.Services.Credit;
     using Fifthweek.Payments.Services.Credit.Taxamo;
     using Fifthweek.Payments.Services.Administration;
+    using Fifthweek.Api.Persistence.Identity;
 
     public partial class GetCreditRequestSummaryQuery 
     {
@@ -496,6 +516,7 @@ namespace Fifthweek.Api.Payments.Queries
     using Fifthweek.Payments.Services.Credit;
     using Fifthweek.Payments.Services.Credit.Taxamo;
     using Fifthweek.Payments.Services.Administration;
+    using Fifthweek.Api.Persistence.Identity;
 
     public partial class GetCreditRequestSummaryQueryHandler 
     {
@@ -603,6 +624,7 @@ namespace Fifthweek.Api.Payments.Queries
     using Fifthweek.Payments.Services.Credit;
     using Fifthweek.Payments.Services.Credit.Taxamo;
     using Fifthweek.Payments.Services.Administration;
+    using Fifthweek.Api.Persistence.Identity;
 
     public partial class GetCreditRequestSummaryQuery
     {
@@ -640,6 +662,9 @@ namespace Fifthweek.Api.Payments.Commands
     using Fifthweek.Api.Persistence.Payments;
     using Fifthweek.Payments.Services.Refunds;
     using Fifthweek.Payments.Shared;
+    using System.Threading;
+    using Fifthweek.Azure;
+    using Microsoft.WindowsAzure.Storage;
 
     public partial class DeletePaymentInformationCommand 
     {
@@ -682,6 +707,9 @@ namespace Fifthweek.Api.Payments.Commands
     using Fifthweek.Api.Persistence.Payments;
     using Fifthweek.Payments.Services.Refunds;
     using Fifthweek.Payments.Shared;
+    using System.Threading;
+    using Fifthweek.Azure;
+    using Microsoft.WindowsAzure.Storage;
 
     public partial class DeletePaymentInformationCommandHandler 
     {
@@ -752,6 +780,9 @@ namespace Fifthweek.Api.Payments.Commands
     using Fifthweek.Api.Persistence.Payments;
     using Fifthweek.Payments.Services.Refunds;
     using Fifthweek.Payments.Shared;
+    using System.Threading;
+    using Fifthweek.Azure;
+    using Microsoft.WindowsAzure.Storage;
 
     public partial class CreateTransactionRefundCommandHandler 
     {
@@ -801,6 +832,9 @@ namespace Fifthweek.Api.Payments.Commands
     using Fifthweek.Api.Persistence.Payments;
     using Fifthweek.Payments.Services.Refunds;
     using Fifthweek.Payments.Shared;
+    using System.Threading;
+    using Fifthweek.Azure;
+    using Microsoft.WindowsAzure.Storage;
 
     public partial class CreateCreditRefundCommandHandler 
     {
@@ -850,6 +884,9 @@ namespace Fifthweek.Api.Payments.Commands
     using Fifthweek.Api.Persistence.Payments;
     using Fifthweek.Payments.Services.Refunds;
     using Fifthweek.Payments.Shared;
+    using System.Threading;
+    using Fifthweek.Azure;
+    using Microsoft.WindowsAzure.Storage;
 
     public partial class CreateCreditRefundCommand 
     {
@@ -920,6 +957,9 @@ namespace Fifthweek.Api.Payments.Commands
     using Fifthweek.Api.Persistence.Payments;
     using Fifthweek.Payments.Services.Refunds;
     using Fifthweek.Payments.Shared;
+    using System.Threading;
+    using Fifthweek.Azure;
+    using Microsoft.WindowsAzure.Storage;
 
     public partial class CreateTransactionRefundCommand 
     {
@@ -1045,6 +1085,7 @@ namespace Fifthweek.Api.Payments.Queries
     using Fifthweek.Payments.Services.Credit;
     using Fifthweek.Payments.Services.Credit.Taxamo;
     using Fifthweek.Payments.Services.Administration;
+    using Fifthweek.Api.Persistence.Identity;
 
     public partial class GetTransactionsQuery 
     {
@@ -1109,6 +1150,138 @@ namespace Fifthweek.Api.Payments.Queries
         }
     }
 }
+namespace Fifthweek.Api.Payments.Commands
+{
+    using System;
+    using System.Linq;
+    using Fifthweek.Api.Identity.Shared.Membership;
+    using Fifthweek.CodeGeneration;
+    using Fifthweek.Shared;
+    using System.Threading.Tasks;
+    using Fifthweek.Api.Core;
+    using Newtonsoft.Json;
+    using Fifthweek.Payments.Services;
+    using Fifthweek.Api.Persistence.Identity;
+    using Fifthweek.Payments.Services.Credit;
+    using Fifthweek.Payments.Services.Credit.Stripe;
+    using System.Runtime.ExceptionServices;
+    using Fifthweek.Payments;
+    using Fifthweek.Payments.Stripe;
+    using Fifthweek.Api.Persistence.Payments;
+    using Fifthweek.Payments.Services.Refunds;
+    using Fifthweek.Payments.Shared;
+    using System.Threading;
+    using Fifthweek.Azure;
+    using Microsoft.WindowsAzure.Storage;
+
+    public partial class BlockPaymentProcessingResult 
+    {
+        public BlockPaymentProcessingResult(
+            System.Int32 leaseLengthSeconds,
+            System.String leaseId)
+        {
+            if (leaseLengthSeconds == null)
+            {
+                throw new ArgumentNullException("leaseLengthSeconds");
+            }
+
+            if (leaseId == null)
+            {
+                throw new ArgumentNullException("leaseId");
+            }
+
+            this.LeaseLengthSeconds = leaseLengthSeconds;
+            this.LeaseId = leaseId;
+        }
+    }
+}
+namespace Fifthweek.Api.Payments.Commands
+{
+    using System;
+    using System.Linq;
+    using Fifthweek.Api.Identity.Shared.Membership;
+    using Fifthweek.CodeGeneration;
+    using Fifthweek.Shared;
+    using System.Threading.Tasks;
+    using Fifthweek.Api.Core;
+    using Newtonsoft.Json;
+    using Fifthweek.Payments.Services;
+    using Fifthweek.Api.Persistence.Identity;
+    using Fifthweek.Payments.Services.Credit;
+    using Fifthweek.Payments.Services.Credit.Stripe;
+    using System.Runtime.ExceptionServices;
+    using Fifthweek.Payments;
+    using Fifthweek.Payments.Stripe;
+    using Fifthweek.Api.Persistence.Payments;
+    using Fifthweek.Payments.Services.Refunds;
+    using Fifthweek.Payments.Shared;
+    using System.Threading;
+    using Fifthweek.Azure;
+    using Microsoft.WindowsAzure.Storage;
+
+    public partial class BlockPaymentProcessingCommand 
+    {
+        public BlockPaymentProcessingCommand(
+            Fifthweek.Api.Identity.Shared.Membership.Requester requester,
+            System.String leaseId,
+            System.String proposedLeaseId)
+        {
+            if (requester == null)
+            {
+                throw new ArgumentNullException("requester");
+            }
+
+            this.Requester = requester;
+            this.LeaseId = leaseId;
+            this.ProposedLeaseId = proposedLeaseId;
+        }
+    }
+}
+namespace Fifthweek.Api.Payments.Commands
+{
+    using System;
+    using System.Linq;
+    using Fifthweek.Api.Identity.Shared.Membership;
+    using Fifthweek.CodeGeneration;
+    using Fifthweek.Shared;
+    using System.Threading.Tasks;
+    using Fifthweek.Api.Core;
+    using Newtonsoft.Json;
+    using Fifthweek.Payments.Services;
+    using Fifthweek.Api.Persistence.Identity;
+    using Fifthweek.Payments.Services.Credit;
+    using Fifthweek.Payments.Services.Credit.Stripe;
+    using System.Runtime.ExceptionServices;
+    using Fifthweek.Payments;
+    using Fifthweek.Payments.Stripe;
+    using Fifthweek.Api.Persistence.Payments;
+    using Fifthweek.Payments.Services.Refunds;
+    using Fifthweek.Payments.Shared;
+    using System.Threading;
+    using Fifthweek.Azure;
+    using Microsoft.WindowsAzure.Storage;
+
+    public partial class BlockPaymentProcessingCommandHandler 
+    {
+        public BlockPaymentProcessingCommandHandler(
+            Fifthweek.Api.Identity.Shared.Membership.IRequesterSecurity requesterSecurity,
+            Fifthweek.Azure.IBlobLeaseHelper blobLeaseHelper)
+        {
+            if (requesterSecurity == null)
+            {
+                throw new ArgumentNullException("requesterSecurity");
+            }
+
+            if (blobLeaseHelper == null)
+            {
+                throw new ArgumentNullException("blobLeaseHelper");
+            }
+
+            this.requesterSecurity = requesterSecurity;
+            this.blobLeaseHelper = blobLeaseHelper;
+        }
+    }
+}
 
 namespace Fifthweek.Api.Payments.Commands
 {
@@ -1130,6 +1303,9 @@ namespace Fifthweek.Api.Payments.Commands
     using Fifthweek.Api.Persistence.Payments;
     using Fifthweek.Payments.Services.Refunds;
     using Fifthweek.Payments.Shared;
+    using System.Threading;
+    using Fifthweek.Azure;
+    using Microsoft.WindowsAzure.Storage;
 
     public partial class ApplyCreditRequestCommand 
     {
@@ -1229,6 +1405,9 @@ namespace Fifthweek.Api.Payments.Commands
     using Fifthweek.Api.Persistence.Payments;
     using Fifthweek.Payments.Services.Refunds;
     using Fifthweek.Payments.Shared;
+    using System.Threading;
+    using Fifthweek.Azure;
+    using Microsoft.WindowsAzure.Storage;
 
     public partial class UpdatePaymentOriginCommand 
     {
@@ -1546,6 +1725,7 @@ namespace Fifthweek.Api.Payments.Queries
     using Fifthweek.Payments.Services.Credit;
     using Fifthweek.Payments.Services.Credit.Taxamo;
     using Fifthweek.Payments.Services.Administration;
+    using Fifthweek.Api.Persistence.Identity;
 
     public partial class GetCreditRequestSummaryQuery 
     {
@@ -1697,6 +1877,7 @@ namespace Fifthweek.Api.Payments.Queries
     using Fifthweek.Payments.Services.Credit;
     using Fifthweek.Payments.Services.Credit.Taxamo;
     using Fifthweek.Payments.Services.Administration;
+    using Fifthweek.Api.Persistence.Identity;
 
     public partial class GetCreditRequestSummaryQuery
     {
@@ -1781,6 +1962,9 @@ namespace Fifthweek.Api.Payments.Commands
     using Fifthweek.Api.Persistence.Payments;
     using Fifthweek.Payments.Services.Refunds;
     using Fifthweek.Payments.Shared;
+    using System.Threading;
+    using Fifthweek.Azure;
+    using Microsoft.WindowsAzure.Storage;
 
     public partial class DeletePaymentInformationCommand 
     {
@@ -1856,6 +2040,9 @@ namespace Fifthweek.Api.Payments.Commands
     using Fifthweek.Api.Persistence.Payments;
     using Fifthweek.Payments.Services.Refunds;
     using Fifthweek.Payments.Shared;
+    using System.Threading;
+    using Fifthweek.Azure;
+    using Microsoft.WindowsAzure.Storage;
 
     public partial class CreateCreditRefundCommand 
     {
@@ -1955,6 +2142,9 @@ namespace Fifthweek.Api.Payments.Commands
     using Fifthweek.Api.Persistence.Payments;
     using Fifthweek.Payments.Services.Refunds;
     using Fifthweek.Payments.Shared;
+    using System.Threading;
+    using Fifthweek.Azure;
+    using Microsoft.WindowsAzure.Storage;
 
     public partial class CreateTransactionRefundCommand 
     {
@@ -2177,6 +2367,7 @@ namespace Fifthweek.Api.Payments.Queries
     using Fifthweek.Payments.Services.Credit;
     using Fifthweek.Payments.Services.Credit.Taxamo;
     using Fifthweek.Payments.Services.Administration;
+    using Fifthweek.Api.Persistence.Identity;
 
     public partial class GetTransactionsQuery 
     {
@@ -2236,6 +2427,168 @@ namespace Fifthweek.Api.Payments.Queries
             }
         
             if (!object.Equals(this.EndTimeExclusive, other.EndTimeExclusive))
+            {
+                return false;
+            }
+        
+            return true;
+        }
+    }
+}
+namespace Fifthweek.Api.Payments.Commands
+{
+    using System;
+    using System.Linq;
+    using Fifthweek.Api.Identity.Shared.Membership;
+    using Fifthweek.CodeGeneration;
+    using Fifthweek.Shared;
+    using System.Threading.Tasks;
+    using Fifthweek.Api.Core;
+    using Newtonsoft.Json;
+    using Fifthweek.Payments.Services;
+    using Fifthweek.Api.Persistence.Identity;
+    using Fifthweek.Payments.Services.Credit;
+    using Fifthweek.Payments.Services.Credit.Stripe;
+    using System.Runtime.ExceptionServices;
+    using Fifthweek.Payments;
+    using Fifthweek.Payments.Stripe;
+    using Fifthweek.Api.Persistence.Payments;
+    using Fifthweek.Payments.Services.Refunds;
+    using Fifthweek.Payments.Shared;
+    using System.Threading;
+    using Fifthweek.Azure;
+    using Microsoft.WindowsAzure.Storage;
+
+    public partial class BlockPaymentProcessingResult 
+    {
+        public override string ToString()
+        {
+            return string.Format("BlockPaymentProcessingResult({0}, \"{1}\")", this.LeaseLengthSeconds == null ? "null" : this.LeaseLengthSeconds.ToString(), this.LeaseId == null ? "null" : this.LeaseId.ToString());
+        }
+        
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj))
+            {
+                return false;
+            }
+        
+            if (ReferenceEquals(this, obj))
+            {
+                return true;
+            }
+        
+            if (obj.GetType() != this.GetType())
+            {
+                return false;
+            }
+        
+            return this.Equals((BlockPaymentProcessingResult)obj);
+        }
+        
+        public override int GetHashCode()
+        {
+            unchecked
+            {
+                int hashCode = 0;
+                hashCode = (hashCode * 397) ^ (this.LeaseLengthSeconds != null ? this.LeaseLengthSeconds.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.LeaseId != null ? this.LeaseId.GetHashCode() : 0);
+                return hashCode;
+            }
+        }
+        
+        protected bool Equals(BlockPaymentProcessingResult other)
+        {
+            if (!object.Equals(this.LeaseLengthSeconds, other.LeaseLengthSeconds))
+            {
+                return false;
+            }
+        
+            if (!object.Equals(this.LeaseId, other.LeaseId))
+            {
+                return false;
+            }
+        
+            return true;
+        }
+    }
+}
+namespace Fifthweek.Api.Payments.Commands
+{
+    using System;
+    using System.Linq;
+    using Fifthweek.Api.Identity.Shared.Membership;
+    using Fifthweek.CodeGeneration;
+    using Fifthweek.Shared;
+    using System.Threading.Tasks;
+    using Fifthweek.Api.Core;
+    using Newtonsoft.Json;
+    using Fifthweek.Payments.Services;
+    using Fifthweek.Api.Persistence.Identity;
+    using Fifthweek.Payments.Services.Credit;
+    using Fifthweek.Payments.Services.Credit.Stripe;
+    using System.Runtime.ExceptionServices;
+    using Fifthweek.Payments;
+    using Fifthweek.Payments.Stripe;
+    using Fifthweek.Api.Persistence.Payments;
+    using Fifthweek.Payments.Services.Refunds;
+    using Fifthweek.Payments.Shared;
+    using System.Threading;
+    using Fifthweek.Azure;
+    using Microsoft.WindowsAzure.Storage;
+
+    public partial class BlockPaymentProcessingCommand 
+    {
+        public override string ToString()
+        {
+            return string.Format("BlockPaymentProcessingCommand({0}, \"{1}\", \"{2}\")", this.Requester == null ? "null" : this.Requester.ToString(), this.LeaseId == null ? "null" : this.LeaseId.ToString(), this.ProposedLeaseId == null ? "null" : this.ProposedLeaseId.ToString());
+        }
+        
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj))
+            {
+                return false;
+            }
+        
+            if (ReferenceEquals(this, obj))
+            {
+                return true;
+            }
+        
+            if (obj.GetType() != this.GetType())
+            {
+                return false;
+            }
+        
+            return this.Equals((BlockPaymentProcessingCommand)obj);
+        }
+        
+        public override int GetHashCode()
+        {
+            unchecked
+            {
+                int hashCode = 0;
+                hashCode = (hashCode * 397) ^ (this.Requester != null ? this.Requester.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.LeaseId != null ? this.LeaseId.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.ProposedLeaseId != null ? this.ProposedLeaseId.GetHashCode() : 0);
+                return hashCode;
+            }
+        }
+        
+        protected bool Equals(BlockPaymentProcessingCommand other)
+        {
+            if (!object.Equals(this.Requester, other.Requester))
+            {
+                return false;
+            }
+        
+            if (!object.Equals(this.LeaseId, other.LeaseId))
+            {
+                return false;
+            }
+        
+            if (!object.Equals(this.ProposedLeaseId, other.ProposedLeaseId))
             {
                 return false;
             }

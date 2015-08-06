@@ -35,7 +35,7 @@
                         new FifthweekCloudStorageAccount())),
                 new BlobLeaseFactory(
                     new TimestampCreator(),
-                    new FifthweekCloudStorageAccount()));
+                    new BlobLeaseHelper(new FifthweekCloudStorageAccount())));
 
         public static Task RunGarbageCollectionAsync(
             [QueueTrigger(Constants.GarbageCollectionQueueName)] RunGarbageCollectionMessage message,

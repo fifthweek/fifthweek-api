@@ -13,6 +13,7 @@
             builder.RegisterType<QueueService>().As<IQueueService>();
             builder.RegisterType<FifthweekCloudStorageAccount>().As<ICloudStorageAccount>();
             builder.RegisterType<AzureConfiguration>().As<IAzureConfiguration>();
+            builder.RegisterType<BlobLeaseHelper>().As<IBlobLeaseHelper>();
         }
     }
 }
