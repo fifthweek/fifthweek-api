@@ -36,7 +36,7 @@
         [ExpectedException(typeof(ArgumentNullException))]
         public async Task WhenUserIdIsNull_ItShouldThrowAnException()
         {
-            await this.target.ExecuteAsync(null);
+            await this.target.ExecuteAsync(null, Now);
         }
 
         [TestMethod]
@@ -49,9 +49,14 @@
                 await this.CreateDataAsync(testDatabase);
                 await testDatabase.TakeSnapshotAsync();
 
-                var result = await this.target.ExecuteAsync(UserId1);
+                var result = await this.target.ExecuteAsync(UserId1, Now.AddDays(5));
 
-                Assert.AreEqual(new GetCreatorRevenueDbStatement.GetCreatorRevenueDbStatementResult(Days * 2), result);
+                Assert.AreEqual(
+                    new GetCreatorRevenueDbStatement.GetCreatorRevenueDbStatementResult(
+                        Days * 2,
+                        Days * 4,
+                        (Days * 2) - 5), 
+                        result);
 
                 return ExpectedSideEffects.None;
             });
@@ -67,9 +72,13 @@
                 await this.CreateDataAsync(testDatabase);
                 await testDatabase.TakeSnapshotAsync();
 
-                var result = await this.target.ExecuteAsync(UserId2);
+                var result = await this.target.ExecuteAsync(UserId2, Now.AddDays(5));
 
-                Assert.AreEqual(new GetCreatorRevenueDbStatement.GetCreatorRevenueDbStatementResult(Days * 3), result);
+                Assert.AreEqual(
+                    new GetCreatorRevenueDbStatement.GetCreatorRevenueDbStatementResult(
+                        Days * 3,
+                        Days * 5,
+                        (Days * 3) - 10), result);
 
                 return ExpectedSideEffects.None;
             });
@@ -85,9 +94,13 @@
                 await this.CreateDataAsync(testDatabase);
                 await testDatabase.TakeSnapshotAsync();
 
-                var result = await this.target.ExecuteAsync(UserId.Random());
+                var result = await this.target.ExecuteAsync(UserId.Random(), Now.AddDays(5));
 
-                Assert.AreEqual(new GetCreatorRevenueDbStatement.GetCreatorRevenueDbStatementResult(0), result);
+                Assert.AreEqual(new GetCreatorRevenueDbStatement.GetCreatorRevenueDbStatementResult(
+                    0,
+                    0,
+                    0), 
+                    result);
 
                 return ExpectedSideEffects.None;
             });
@@ -98,19 +111,51 @@
             using (var connection = testDatabase.CreateConnection())
             {
                 var snapshots = new List<CalculatedAccountBalance>();
+                var ledgerRecords = new List<AppendOnlyLedgerRecord>();
 
                 for (int i = 0; i < Days; i++)
                 {
                     snapshots.Add(new CalculatedAccountBalance(UserId1.Value, LedgerAccountType.FifthweekRevenue, Now.AddDays(i), (i + 1) * 2));
                     snapshots.Add(new CalculatedAccountBalance(UserId1.Value, LedgerAccountType.FifthweekCredit, Now.AddDays(i), i));
                     snapshots.Add(new CalculatedAccountBalance(UserId1.Value, LedgerAccountType.Stripe, Now.AddDays(i), i + 0.25m));
+                    snapshots.Add(new CalculatedAccountBalance(UserId1.Value, LedgerAccountType.ReleasedRevenue, Now.AddDays(i), (i + 1) * 4));
+                    ledgerRecords.Add(
+                        new AppendOnlyLedgerRecord(
+                            Guid.NewGuid(),
+                            UserId1.Value,
+                            null,
+                            Now.AddDays(i),
+                            1,
+                            LedgerAccountType.FifthweekRevenue,
+                            LedgerTransactionType.SubscriptionPayment,
+                            Guid.NewGuid(),
+                            null,
+                            null,
+                            null,
+                            null));
 
                     snapshots.Add(new CalculatedAccountBalance(UserId2.Value, LedgerAccountType.FifthweekRevenue, Now.AddDays(i), (i + 1) * 3));
                     snapshots.Add(new CalculatedAccountBalance(UserId2.Value, LedgerAccountType.FifthweekCredit, Now.AddDays(i).AddHours(12), i + 0.5m));
                     snapshots.Add(new CalculatedAccountBalance(UserId2.Value, LedgerAccountType.Stripe, Now.AddDays(i).AddHours(12), i + 0.75m));
+                    snapshots.Add(new CalculatedAccountBalance(UserId2.Value, LedgerAccountType.ReleasedRevenue, Now.AddDays(i), (i + 1) * 5));
+                    ledgerRecords.Add(
+                        new AppendOnlyLedgerRecord(
+                            Guid.NewGuid(),
+                            UserId2.Value,
+                            null,
+                            Now.AddDays(i),
+                            2,
+                            LedgerAccountType.FifthweekRevenue,
+                            LedgerTransactionType.SubscriptionPayment,
+                            Guid.NewGuid(),
+                            null,
+                            null,
+                            null,
+                            null));
                 }
 
                 await connection.InsertAsync(snapshots, false);
+                await connection.InsertAsync(ledgerRecords, false);
                 return snapshots.Select(v => new UserId(v.UserId)).ToList();
             }
         }

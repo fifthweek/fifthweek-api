@@ -30,6 +30,16 @@
             fileExtension.AssertNotNull("fileExtension");
             purpose.AssertNotNull("purpose");
 
+            if (fileNameWithoutExtension.Length > File.MaximumFileNameLength)
+            {
+                fileNameWithoutExtension = fileNameWithoutExtension.Substring(0, File.MaximumFileNameLength);
+            }
+
+            if (fileExtension.Length > File.MaximumFileExtensionLength)
+            {
+                fileExtension = fileExtension.Substring(0, File.MaximumFileExtensionLength);
+            }
+
             var file = new File(
                 fileId.Value,
                 userId.Value,

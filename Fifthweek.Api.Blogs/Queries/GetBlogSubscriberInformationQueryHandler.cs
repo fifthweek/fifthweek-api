@@ -14,11 +14,14 @@
     [AutoConstructor]
     public partial class GetBlogSubscriberInformationQueryHandler : IQueryHandler<GetBlogSubscriberInformationQuery, BlogSubscriberInformation>
     {
+        public const int ReleaseableRevenueDays = 28;
+
         private readonly IRequesterSecurity requesterSecurity;
         private readonly IBlogSecurity blogSecurity;
         private readonly IFileInformationAggregator fileInformationAggregator;
         private readonly IGetBlogSubscriberInformationDbStatement getBlogSubscriberInformation;
         private readonly IGetCreatorRevenueDbStatement getCreatorRevenue;
+        private readonly ITimestampCreator timestampCreator;
 
         public async Task<BlogSubscriberInformation> HandleAsync(GetBlogSubscriberInformationQuery query)
         {
@@ -27,8 +30,11 @@
             var userId = await this.requesterSecurity.AuthenticateAsync(query.Requester);
             await this.blogSecurity.AssertWriteAllowedAsync(userId, query.BlogId);
 
+            var now = this.timestampCreator.Now();
+            var releasableRevenueDate = now.AddDays(-ReleaseableRevenueDays);
+
             var databaseResultTask = this.getBlogSubscriberInformation.ExecuteAsync(query.BlogId);
-            var revenue = await this.getCreatorRevenue.ExecuteAsync(userId);
+            var revenue = await this.getCreatorRevenue.ExecuteAsync(userId, releasableRevenueDate);
             var databaseResult = await databaseResultTask;
 
             var subscribers = new List<BlogSubscriberInformation.Subscriber>(); 
@@ -60,7 +66,11 @@
                         channels));
             }
 
-            return new BlogSubscriberInformation(revenue.TotalRevenue, subscribers);
+            return new BlogSubscriberInformation(
+                revenue.UnreleasedRevenue,
+                revenue.ReleasedRevenue,
+                revenue.ReleasableRevenue, 
+                subscribers);
         }
     }
 }

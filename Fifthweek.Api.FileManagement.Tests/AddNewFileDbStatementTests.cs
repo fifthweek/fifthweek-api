@@ -18,7 +18,9 @@
     public class AddNewFileDbStatementTests : PersistenceTestsBase
     {
         private const string FileNameWithoutExtension = "myfile";
+        private const string LongFileNameWithoutExtension = "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa";
         private const string FileExtension = "jpeg";
+        private const string LongFileExtension = "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx";
         private const string Purpose = "profile-picture";
         private static readonly UserId UserId = new UserId(Guid.NewGuid());
         private static readonly FileId FileId = new FileId(Guid.NewGuid());
@@ -56,6 +58,41 @@
                     null,
                     FileNameWithoutExtension,
                     FileExtension,
+                    0,
+                    Purpose,
+                    null,
+                    null);
+
+                return new ExpectedSideEffects
+                {
+                    Insert = expectedFile
+                };
+            });
+        }
+
+        [TestMethod]
+        public async Task WhenAddingANewFileWithLongFilename_ItShouldTruncateAndUpdateTheDatabase()
+        {
+            await this.DatabaseTestAsync(async testDatabase =>
+            {
+                this.target = new AddNewFileDbStatement(testDatabase);
+                await this.CreateUserAsync(testDatabase);
+                await testDatabase.TakeSnapshotAsync();
+
+                await this.target.ExecuteAsync(FileId, UserId, ChannelId, LongFileNameWithoutExtension, LongFileExtension, Purpose, TimeStamp);
+
+                var expectedFile = new File(
+                    FileId.Value,
+                    UserId.Value,
+                    ChannelId.Value,
+                    FileState.WaitingForUpload,
+                    TimeStamp,
+                    null,
+                    null,
+                    null,
+                    null,
+                    LongFileNameWithoutExtension.Substring(0, File.MaximumFileNameLength),
+                    LongFileExtension.Substring(0, File.MaximumFileExtensionLength),
                     0,
                     Purpose,
                     null,

@@ -6,5 +6,6 @@ namespace Fifthweek.Api.Persistence.Payments
         SalesTax = 1,
         Stripe = 2,
         FifthweekRevenue = 3,
+        ReleasedRevenue = 4,
     }
 }

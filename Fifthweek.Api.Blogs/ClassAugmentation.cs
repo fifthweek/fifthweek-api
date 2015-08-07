@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Linq;
 
-//// Generated on 24/07/2015 09:43:43 (UTC)
-//// Mapped solution in 16.93s
+//// Generated on 07/08/2015 16:43:15 (UTC)
+//// Mapped solution in 19.31s
 
 
 namespace Fifthweek.Api.Blogs
@@ -2733,7 +2733,8 @@ namespace Fifthweek.Api.Blogs.Queries
             Fifthweek.Api.Blogs.Shared.IBlogSecurity blogSecurity,
             Fifthweek.Api.FileManagement.Shared.IFileInformationAggregator fileInformationAggregator,
             Fifthweek.Api.Blogs.IGetBlogSubscriberInformationDbStatement getBlogSubscriberInformation,
-            Fifthweek.Api.Blogs.IGetCreatorRevenueDbStatement getCreatorRevenue)
+            Fifthweek.Api.Blogs.IGetCreatorRevenueDbStatement getCreatorRevenue,
+            Fifthweek.Shared.ITimestampCreator timestampCreator)
         {
             if (requesterSecurity == null)
             {
@@ -2760,11 +2761,17 @@ namespace Fifthweek.Api.Blogs.Queries
                 throw new ArgumentNullException("getCreatorRevenue");
             }
 
+            if (timestampCreator == null)
+            {
+                throw new ArgumentNullException("timestampCreator");
+            }
+
             this.requesterSecurity = requesterSecurity;
             this.blogSecurity = blogSecurity;
             this.fileInformationAggregator = fileInformationAggregator;
             this.getBlogSubscriberInformation = getBlogSubscriberInformation;
             this.getCreatorRevenue = getCreatorRevenue;
+            this.timestampCreator = timestampCreator;
         }
     }
 }
@@ -2840,12 +2847,24 @@ namespace Fifthweek.Api.Blogs.Queries
     public partial class BlogSubscriberInformation 
     {
         public BlogSubscriberInformation(
-            System.Int32 totalRevenue,
+            System.Int32 unreleasedRevenue,
+            System.Int32 releasedRevenue,
+            System.Int32 releasableRevenue,
             System.Collections.Generic.IReadOnlyList<Fifthweek.Api.Blogs.Queries.BlogSubscriberInformation.Subscriber> subscribers)
         {
-            if (totalRevenue == null)
+            if (unreleasedRevenue == null)
             {
-                throw new ArgumentNullException("totalRevenue");
+                throw new ArgumentNullException("unreleasedRevenue");
+            }
+
+            if (releasedRevenue == null)
+            {
+                throw new ArgumentNullException("releasedRevenue");
+            }
+
+            if (releasableRevenue == null)
+            {
+                throw new ArgumentNullException("releasableRevenue");
             }
 
             if (subscribers == null)
@@ -2853,7 +2872,9 @@ namespace Fifthweek.Api.Blogs.Queries
                 throw new ArgumentNullException("subscribers");
             }
 
-            this.TotalRevenue = totalRevenue;
+            this.UnreleasedRevenue = unreleasedRevenue;
+            this.ReleasedRevenue = releasedRevenue;
+            this.ReleasableRevenue = releasableRevenue;
             this.Subscribers = subscribers;
         }
     }
@@ -2934,14 +2955,28 @@ namespace Fifthweek.Api.Blogs
         public partial class GetCreatorRevenueDbStatementResult 
         {
             public GetCreatorRevenueDbStatementResult(
-                System.Int32 totalRevenue)
+                System.Int32 unreleasedRevenue,
+                System.Int32 releasedRevenue,
+                System.Int32 releasableRevenue)
             {
-                if (totalRevenue == null)
+                if (unreleasedRevenue == null)
                 {
-                    throw new ArgumentNullException("totalRevenue");
+                    throw new ArgumentNullException("unreleasedRevenue");
                 }
 
-                this.TotalRevenue = totalRevenue;
+                if (releasedRevenue == null)
+                {
+                    throw new ArgumentNullException("releasedRevenue");
+                }
+
+                if (releasableRevenue == null)
+                {
+                    throw new ArgumentNullException("releasableRevenue");
+                }
+
+                this.UnreleasedRevenue = unreleasedRevenue;
+                this.ReleasedRevenue = releasedRevenue;
+                this.ReleasableRevenue = releasableRevenue;
             }
         }
     }
@@ -5566,7 +5601,7 @@ namespace Fifthweek.Api.Blogs.Queries
     {
         public override string ToString()
         {
-            return string.Format("BlogSubscriberInformation({0}, {1})", this.TotalRevenue == null ? "null" : this.TotalRevenue.ToString(), this.Subscribers == null ? "null" : this.Subscribers.ToString());
+            return string.Format("BlogSubscriberInformation({0}, {1}, {2}, {3})", this.UnreleasedRevenue == null ? "null" : this.UnreleasedRevenue.ToString(), this.ReleasedRevenue == null ? "null" : this.ReleasedRevenue.ToString(), this.ReleasableRevenue == null ? "null" : this.ReleasableRevenue.ToString(), this.Subscribers == null ? "null" : this.Subscribers.ToString());
         }
         
         public override bool Equals(object obj)
@@ -5594,7 +5629,9 @@ namespace Fifthweek.Api.Blogs.Queries
             unchecked
             {
                 int hashCode = 0;
-                hashCode = (hashCode * 397) ^ (this.TotalRevenue != null ? this.TotalRevenue.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.UnreleasedRevenue != null ? this.UnreleasedRevenue.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.ReleasedRevenue != null ? this.ReleasedRevenue.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.ReleasableRevenue != null ? this.ReleasableRevenue.GetHashCode() : 0);
                 hashCode = (hashCode * 397) ^ (this.Subscribers != null 
         			? this.Subscribers.Aggregate(0, (previous, current) => 
         				{ 
@@ -5610,7 +5647,17 @@ namespace Fifthweek.Api.Blogs.Queries
         
         protected bool Equals(BlogSubscriberInformation other)
         {
-            if (!object.Equals(this.TotalRevenue, other.TotalRevenue))
+            if (!object.Equals(this.UnreleasedRevenue, other.UnreleasedRevenue))
+            {
+                return false;
+            }
+        
+            if (!object.Equals(this.ReleasedRevenue, other.ReleasedRevenue))
+            {
+                return false;
+            }
+        
+            if (!object.Equals(this.ReleasableRevenue, other.ReleasableRevenue))
             {
                 return false;
             }
@@ -5740,7 +5787,7 @@ namespace Fifthweek.Api.Blogs
         {
             public override string ToString()
             {
-                return string.Format("GetCreatorRevenueDbStatementResult({0})", this.TotalRevenue == null ? "null" : this.TotalRevenue.ToString());
+                return string.Format("GetCreatorRevenueDbStatementResult({0}, {1}, {2})", this.UnreleasedRevenue == null ? "null" : this.UnreleasedRevenue.ToString(), this.ReleasedRevenue == null ? "null" : this.ReleasedRevenue.ToString(), this.ReleasableRevenue == null ? "null" : this.ReleasableRevenue.ToString());
             }
             
             public override bool Equals(object obj)
@@ -5768,14 +5815,26 @@ namespace Fifthweek.Api.Blogs
                 unchecked
                 {
                     int hashCode = 0;
-                    hashCode = (hashCode * 397) ^ (this.TotalRevenue != null ? this.TotalRevenue.GetHashCode() : 0);
+                    hashCode = (hashCode * 397) ^ (this.UnreleasedRevenue != null ? this.UnreleasedRevenue.GetHashCode() : 0);
+                    hashCode = (hashCode * 397) ^ (this.ReleasedRevenue != null ? this.ReleasedRevenue.GetHashCode() : 0);
+                    hashCode = (hashCode * 397) ^ (this.ReleasableRevenue != null ? this.ReleasableRevenue.GetHashCode() : 0);
                     return hashCode;
                 }
             }
             
             protected bool Equals(GetCreatorRevenueDbStatementResult other)
             {
-                if (!object.Equals(this.TotalRevenue, other.TotalRevenue))
+                if (!object.Equals(this.UnreleasedRevenue, other.UnreleasedRevenue))
+                {
+                    return false;
+                }
+            
+                if (!object.Equals(this.ReleasedRevenue, other.ReleasedRevenue))
+                {
+                    return false;
+                }
+            
+                if (!object.Equals(this.ReleasableRevenue, other.ReleasableRevenue))
                 {
                     return false;
                 }

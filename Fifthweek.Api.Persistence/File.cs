@@ -10,6 +10,12 @@
     [AutoConstructor, AutoEqualityMembers, AutoSql]
     public partial class File
     {
+        // This is the limit on some OSs. Again, somewhat arbitrary, but a safe limitation for us to enforce.
+        public const int MaximumFileNameLength = 255;
+
+        // Arbitrary but seems safe. Should really be enforcing this through the type system (ValidFileExension type).
+        public const int MaximumFileExtensionLength = 25;
+
         public File()
         {
         }
@@ -45,11 +51,11 @@
         public int? ProcessingAttempts { get; set; }
 
         [Required]
-        [MaxLength(255)] // This is the limit on some OSs. Again, somewhat arbitrary, but a safe limitation for us to enforce.
+        [MaxLength(MaximumFileNameLength)]
         public string FileNameWithoutExtension { get; set; }
         
         [Required]
-        [MaxLength(25)] // Arbitrary but seems safe. Should really be enforcing this through the type system (ValidFileExension type).
+        [MaxLength(MaximumFileExtensionLength)]
         public string FileExtension { get; set; }
 
         [Required]

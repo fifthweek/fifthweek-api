@@ -190,7 +190,7 @@
 
                 Assert.AreEqual(0, (await this.getAccountSettings.ExecuteAsync(CreatorId1)).AccountBalance);
                 Assert.AreEqual(350, await this.GetAccountBalance(CreatorId1, LedgerAccountType.FifthweekRevenue));
-                Assert.AreEqual(350, (await this.getCreatorRevenue.ExecuteAsync(CreatorId1)).TotalRevenue);
+                Assert.AreEqual(350, (await this.getCreatorRevenue.ExecuteAsync(CreatorId1, Now)).UnreleasedRevenue);
 
                 Assert.AreEqual(initialFifthweekRevenue + 150, await this.GetAccountBalance(null, LedgerAccountType.FifthweekRevenue));
 
@@ -207,7 +207,7 @@
 
                 Assert.AreEqual(0, (await this.getAccountSettings.ExecuteAsync(CreatorId1)).AccountBalance);
                 Assert.AreEqual(0, await this.GetAccountBalance(CreatorId1, LedgerAccountType.FifthweekRevenue));
-                Assert.AreEqual(0, (await this.getCreatorRevenue.ExecuteAsync(CreatorId1)).TotalRevenue);
+                Assert.AreEqual(0, (await this.getCreatorRevenue.ExecuteAsync(CreatorId1, Now)).UnreleasedRevenue);
 
                 Assert.AreEqual(initialFifthweekRevenue + 0, await this.GetAccountBalance(null, LedgerAccountType.FifthweekRevenue));
 

@@ -23,6 +23,8 @@
     {
         private static readonly BlogId BlogId = new BlogId(Guid.NewGuid());
         private static readonly UserId UserId = new UserId(Guid.NewGuid());
+        private static readonly DateTime Now = DateTime.UtcNow;
+        private static readonly DateTime ReleasableRevenueDate = Now.AddDays(-GetBlogSubscriberInformationQueryHandler.ReleaseableRevenueDays);
 
         private static readonly GetBlogSubscriberInformationQuery Query =
             new GetBlogSubscriberInformationQuery(
@@ -34,6 +36,7 @@
         private Mock<IFileInformationAggregator> fileInformationAggregator;
         private Mock<IGetBlogSubscriberInformationDbStatement> getBlogSubscriberInformation;
         private Mock<IGetCreatorRevenueDbStatement> getCreatorRevenue;
+        private Mock<ITimestampCreator> timestampCreator;
 
         private GetBlogSubscriberInformationQueryHandler target;
 
@@ -48,12 +51,16 @@
             this.getBlogSubscriberInformation = new Mock<IGetBlogSubscriberInformationDbStatement>(MockBehavior.Strict);
             this.getCreatorRevenue = new Mock<IGetCreatorRevenueDbStatement>(MockBehavior.Strict);
 
+            this.timestampCreator = new Mock<ITimestampCreator>(MockBehavior.Strict);
+            this.timestampCreator.Setup(v => v.Now()).Returns(Now);
+
             this.target = new GetBlogSubscriberInformationQueryHandler(
                 this.requesterSecurity.Object,
                 this.blogSecurity.Object,
                 this.fileInformationAggregator.Object,
                 this.getBlogSubscriberInformation.Object,
-                this.getCreatorRevenue.Object);
+                this.getCreatorRevenue.Object,
+                this.timestampCreator.Object);
         }
 
         [TestMethod]
@@ -86,8 +93,8 @@
         {
             this.blogSecurity.Setup(v => v.AssertWriteAllowedAsync(UserId, BlogId)).Returns(Task.FromResult(0));
 
-            this.getCreatorRevenue.Setup(v => v.ExecuteAsync(UserId))
-                .ReturnsAsync(new GetCreatorRevenueDbStatement.GetCreatorRevenueDbStatementResult(10));
+            this.getCreatorRevenue.Setup(v => v.ExecuteAsync(UserId, ReleasableRevenueDate))
+                .ReturnsAsync(new GetCreatorRevenueDbStatement.GetCreatorRevenueDbStatementResult(10, 20, 30));
 
             this.getBlogSubscriberInformation.Setup(v => v.ExecuteAsync(BlogId)).ReturnsAsync(
                 new GetBlogSubscriberInformationDbStatement.GetBlogSubscriberInformationDbStatementResult(
@@ -95,7 +102,9 @@
 
             var result = await this.target.HandleAsync(Query);
 
-            Assert.AreEqual(10, result.TotalRevenue);
+            Assert.AreEqual(10, result.UnreleasedRevenue);
+            Assert.AreEqual(20, result.ReleasedRevenue);
+            Assert.AreEqual(30, result.ReleasableRevenue);
             Assert.AreEqual(0, result.Subscribers.Count);
         }
 
@@ -104,8 +113,8 @@
         {
             this.blogSecurity.Setup(v => v.AssertWriteAllowedAsync(UserId, BlogId)).Returns(Task.FromResult(0));
 
-            this.getCreatorRevenue.Setup(v => v.ExecuteAsync(UserId))
-                .ReturnsAsync(new GetCreatorRevenueDbStatement.GetCreatorRevenueDbStatementResult(10));
+            this.getCreatorRevenue.Setup(v => v.ExecuteAsync(UserId, ReleasableRevenueDate))
+                .ReturnsAsync(new GetCreatorRevenueDbStatement.GetCreatorRevenueDbStatementResult(10, 20, 30));
 
             var subscriber1 = new GetBlogSubscriberInformationDbStatement.GetBlogSubscriberInformationDbStatementResult.Subscriber(
                 new Username(Guid.NewGuid().ToString()),
@@ -162,7 +171,9 @@
 
             var result = await this.target.HandleAsync(Query);
 
-            Assert.AreEqual(10, result.TotalRevenue);
+            Assert.AreEqual(10, result.UnreleasedRevenue);
+            Assert.AreEqual(20, result.ReleasedRevenue);
+            Assert.AreEqual(30, result.ReleasableRevenue);
             CollectionAssert.AreEqual(
                 new List<BlogSubscriberInformation.Subscriber>
                 {

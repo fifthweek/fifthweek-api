@@ -731,7 +731,9 @@ angular.module('webApp').factory('blogStub',
 
     // blogId = 'Base64Guid'
     // result = {
-    //   totalRevenue: 0,
+    //   unreleasedRevenue: 0,
+    //   releasedRevenue: 0,
+    //   releasableRevenue: 0,
     //   subscribers: [
     //     {
     //       username: '',
@@ -1192,7 +1194,7 @@ angular.module('webApp').factory('paymentsStub',
       });
     };
 
-    // leaseId = 'Base64Guid'
+    // leaseId = 'Base64Guid' /* optional */
     // result = {
     //   leaseLengthSeconds: 0,
     //   leaseId: 'Base64Guid'
