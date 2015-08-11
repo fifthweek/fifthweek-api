@@ -8,11 +8,11 @@ namespace Fifthweek.Api.Persistence.Migrations
         public override void Up()
         {
             CreateIndex("dbo.Files", "UploadStartedDate");
+            Sql(@"INSERT INTO AspNetRoles VALUES ('1E68420E-6388-4A41-B4EF-459A27811D31', 'test-user')");
             Sql(@"INSERT INTO AspNetUserRoles 
                     SELECT u.Id AS UserId, '1E68420E-6388-4A41-B4EF-459A27811D31' AS RoleId  
                     FROM AspNetUsers u 
-                        WHERE u.Email LIKE '%@testing.fifthweek.com' 
-                        AND NOT EXISTS (SELECT * FROM AspNetUserRoles ur WHERE ur.UserId=u.Id AND ur.RoleId='1E68420E-6388-4A41-B4EF-459A27811D31')");
+                        WHERE u.Email LIKE '%@testing.fifthweek.com'");
         }
         
         public override void Down()

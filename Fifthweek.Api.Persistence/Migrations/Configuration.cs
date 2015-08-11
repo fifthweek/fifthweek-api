@@ -13,6 +13,8 @@ namespace Fifthweek.Api.Persistence.Migrations
         {
             this.AutomaticMigrationsEnabled = false;
             this.ContextKey = "Fifthweek.Api.Repositories.FifthweekDbContext";
+
+            this.CommandTimeout = 60 * 10;
         }
 
         protected override void Seed(FifthweekDbContext context)
