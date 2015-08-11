@@ -4,7 +4,7 @@ branches:
     - master
 environment: 
   git_personal_access_token:
-    secure: 1adLwpqQ7ba9tvS5BSO2pCiPEbs95ywiv+k6fQWb5Rwl1YKhMhDrNuC/QPmyxaA6
+    secure: COQpohGSj/0Uc2caXZo7fj2k+jh89y7do9nKI2Vv4o8F9UpCbsE4bnYOs9WHuvqt
 before_build:
   - nuget restore
 after_test:
@@ -24,5 +24,5 @@ build_script:
 notifications:
   - provider: Slack
     auth_token:
-      secure: dNohNyk1tMZ49NhLGLccecFy+/1ha7FEQyO/IPjMjRvzuIcsTXTPSgk/x/d42YHb
+      secure: h27StHmx1nm8MKUXzX071+oMD2VgEtasC1a2MZF5NeOObTVYiAv8eZtybLxK+Fee
     channel: services
