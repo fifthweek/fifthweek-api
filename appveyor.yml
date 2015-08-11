@@ -4,7 +4,7 @@ branches:
     - master
 environment: 
   git_personal_access_token:
-    secure: COQpohGSj/0Uc2caXZo7fj2k+jh89y7do9nKI2Vv4o8F9UpCbsE4bnYOs9WHuvqt
+    secure: 1adLwpqQ7ba9tvS5BSO2pCiPEbs95ywiv+k6fQWb5Rwl1YKhMhDrNuC/QPmyxaA6
 before_build:
   - nuget restore
 after_test:
