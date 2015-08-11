@@ -57,21 +57,6 @@
                     }
                     else
                     {
-                        if (renewCount > 0)
-                        {
-                            // Test average time per subscriber.
-                            var averageTimePerSubscriber = TimeSpan.FromTicks((endTime - startTime).Ticks / renewCount);
-
-                            if (averageTimePerSubscriber >= ProcessingTimePerSubscriberWarningTimeSpan)
-                            {
-                                this.exceptionHandler.ReportExceptionAsync(
-                                    new WarningException(
-                                        string.Format(
-                                            "Payment processing took over {0}s per subscriber (average).",
-                                            (int)ProcessingTimePerSubscriberWarningTimeSpan.TotalSeconds)));
-                            }
-                        }
-
                         result = true;
                     }
                 }

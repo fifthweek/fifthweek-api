@@ -173,23 +173,6 @@
         }
 
         [TestMethod]
-        public async Task WhenOccurredRecently_AndAverageTimePerSubscriberTooLArge_ItShouldReportWarningAndReturnHealthyStatus()
-        {
-            var blob = this.SetupBlob();
-
-            SetupMetadata(Now.AddMinutes(-10), Now.AddMinutes(-5), 10, blob);
-
-            this.exceptionHandler.Setup(v => v.ReportExceptionAsync(It.IsAny<WarningException>())).Verifiable();
-
-            var result = await this.target.ExecuteAsync();
-
-            Assert.IsTrue(result);
-
-            blob.Verify();
-            this.exceptionHandler.Verify();
-        }
-
-        [TestMethod]
         public async Task WhenNonTransientErrorOccurs_ItShouldReturnAnUnhealthyStatusAndReportTheError()
         {
             var exception = new Exception("Bad");
