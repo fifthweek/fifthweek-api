@@ -52,7 +52,8 @@
             {
                 var items = await connection.QueryAsync<File>(
                     Sql,
-                    new { EndDateExclusive = endDateExclusive });
+                    new { EndDateExclusive = endDateExclusive },
+                    commandTimeout: 600);
 
                 return items.Select(v => new OrphanedFileData(
                     new FileId(v.Id),

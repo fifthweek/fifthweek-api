@@ -88,7 +88,8 @@ namespace Fifthweek.GarbageCollection
                     new 
                     {
                         EndTimeExclusive = endTimeExclusive
-                    });
+                    },
+                    commandTimeout: 600);
             }
         }
 
