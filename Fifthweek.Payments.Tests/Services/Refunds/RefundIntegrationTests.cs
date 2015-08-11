@@ -38,8 +38,8 @@
         public static readonly string TaxamoTransactionKey = "taxamoTransactionKey";
         public static readonly string Comment = "comment";
 
-        public static readonly UserId SubscriberId1 = new UserId(new Guid("00000000-0000-0000-0000-000000000001"));
-        public static readonly UserId CreatorId1 = new UserId(new Guid("00000000-0000-0000-0001-000000000001"));
+        public static readonly UserId SubscriberId1 = UserId.Random();
+        public static readonly UserId CreatorId1 = UserId.Random();
 
         private UpdateAccountBalancesDbStatement updateAccountBalances;
         private GetAccountSettingsDbStatement getAccountSettings;
