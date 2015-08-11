@@ -47,6 +47,7 @@
                 var cloudBlobClient = storageAccount.CreateCloudBlobClient();
                 await CreateBlobContainerIfNotExists(cloudBlobClient, Payments.Shared.Constants.PaymentProcessingDataContainerName);
                 await CreateBlobIfNotExists(cloudBlobClient, Fifthweek.Azure.Constants.AzureLeaseObjectsContainerName, Payments.Shared.Constants.ProcessPaymentsLeaseObjectName);
+                await CreateBlobIfNotExists(cloudBlobClient, Fifthweek.Azure.Constants.AzureLeaseObjectsContainerName, WebJobs.GarbageCollection.Shared.Constants.LeaseObjectName);
                 await CreateBlobContainerIfNotExists(cloudBlobClient, Constants.PublicFileBlobContainerName);
             }
             catch (Exception t)
