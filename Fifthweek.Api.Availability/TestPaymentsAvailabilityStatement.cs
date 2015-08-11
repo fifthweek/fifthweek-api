@@ -20,7 +20,7 @@
     {
         public static readonly TimeSpan PaymentsUnavailableTimeSpan = TimeSpan.FromTicks(Payments.Shared.Constants.PaymentProcessingDefaultMessageDelay.Ticks * 2);
         public static readonly TimeSpan RepeatRestartAttemptTimeSpan = TimeSpan.FromMinutes(30);
-        public static readonly TimeSpan ProcessingTimePerSubscriberWarningTimeSpan = TimeSpan.FromSeconds(10);
+        public static readonly TimeSpan ProcessingTimePerSubscriberWarningTimeSpan = TimeSpan.FromSeconds(1);
 
         private readonly IExceptionHandler exceptionHandler;
         private readonly ITransientErrorDetectionStrategy transientErrorDetectionStrategy;
@@ -57,15 +57,19 @@
                     }
                     else
                     {
-                        // Test average time per subscriber.
-                        var averageTimePerSubscriber = TimeSpan.FromTicks((endTime - startTime).Ticks / renewCount);
-
-                        if (averageTimePerSubscriber >= ProcessingTimePerSubscriberWarningTimeSpan)
+                        if (renewCount > 0)
                         {
-                            this.exceptionHandler.ReportExceptionAsync(
-                                new WarningException(string.Format(
-                                    "Payment processing took over {0}s per subscriber (average).",
-                                    (int)ProcessingTimePerSubscriberWarningTimeSpan.TotalSeconds)));
+                            // Test average time per subscriber.
+                            var averageTimePerSubscriber = TimeSpan.FromTicks((endTime - startTime).Ticks / renewCount);
+
+                            if (averageTimePerSubscriber >= ProcessingTimePerSubscriberWarningTimeSpan)
+                            {
+                                this.exceptionHandler.ReportExceptionAsync(
+                                    new WarningException(
+                                        string.Format(
+                                            "Payment processing took over {0}s per subscriber (average).",
+                                            (int)ProcessingTimePerSubscriberWarningTimeSpan.TotalSeconds)));
+                            }
                         }
 
                         result = true;

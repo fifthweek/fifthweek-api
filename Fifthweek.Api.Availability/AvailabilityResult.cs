@@ -17,7 +17,8 @@
 
         public bool IsOk()
         {
-            return this.Api && this.Database && this.Payments;
+            // Payments don't influence this.
+            return this.Api && this.Database;
         }
     }
 }

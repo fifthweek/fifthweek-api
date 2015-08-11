@@ -91,7 +91,7 @@
             Assert.IsTrue(result.Database);
             Assert.IsFalse(result.Payments);
 
-            Assert.IsFalse(result.IsOk());
+            Assert.IsTrue(result.IsOk());
         }
     }
 }

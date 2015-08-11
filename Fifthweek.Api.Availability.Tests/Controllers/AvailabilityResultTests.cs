@@ -13,7 +13,7 @@
         }
 
         [TestMethod]
-        public void WhenAnyContentIsFalse_IsOkShouldReturnFalse()
+        public void WhenCriticalContentIsFalse_IsOkShouldReturnFalse()
         {
             var item = new AvailabilityResult(false, true, true);
             Assert.IsFalse(item.IsOk());
@@ -22,7 +22,7 @@
             Assert.IsFalse(item.IsOk());
 
             item = new AvailabilityResult(true, true, false);
-            Assert.IsFalse(item.IsOk());
+            Assert.IsTrue(item.IsOk());
 
             item = new AvailabilityResult(false, false, false);
             Assert.IsFalse(item.IsOk());
