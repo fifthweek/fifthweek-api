@@ -4,6 +4,7 @@
     using System.Collections.Generic;
     using System.Data.SqlTypes;
     using System.Linq;
+    using System.Threading;
     using System.Threading.Tasks;
     using System.Transactions;
 
@@ -94,6 +95,7 @@
                     await databaseContext.SaveChangesAsync();
                 }
 
+                Pause();
                 await this.updateAccountBalances.ExecuteAsync(SubscriberId1, DateTime.UtcNow);
                 Assert.AreEqual(1000, (await this.getCreditTransactionInformation.ExecuteAsync(transactionReference)).CreditAmountAvailableForRefund);
                 Assert.AreEqual(1000, (await this.getAccountSettings.ExecuteAsync(SubscriberId1)).AccountBalance);
@@ -111,6 +113,7 @@
                     TaxamoTransactionKey,
                     Comment);
 
+                Pause();
                 await this.updateAccountBalances.ExecuteAsync(SubscriberId1, DateTime.UtcNow);
                 Assert.AreEqual(900, (await this.getCreditTransactionInformation.ExecuteAsync(transactionReference)).CreditAmountAvailableForRefund);
                 Assert.AreEqual(900, (await this.getAccountSettings.ExecuteAsync(SubscriberId1)).AccountBalance);
@@ -128,6 +131,7 @@
                     TaxamoTransactionKey,
                     Comment);
 
+                Pause();
                 await this.updateAccountBalances.ExecuteAsync(SubscriberId1, DateTime.UtcNow);
                 Assert.AreEqual(400, (await this.getCreditTransactionInformation.ExecuteAsync(transactionReference)).CreditAmountAvailableForRefund);
                 Assert.AreEqual(400, (await this.getAccountSettings.ExecuteAsync(SubscriberId1)).AccountBalance);
@@ -145,6 +149,7 @@
                     TaxamoTransactionKey,
                     Comment);
 
+                Pause();
                 await this.updateAccountBalances.ExecuteAsync(SubscriberId1, DateTime.UtcNow);
                 Assert.AreEqual(0, (await this.getCreditTransactionInformation.ExecuteAsync(transactionReference)).CreditAmountAvailableForRefund);
                 Assert.AreEqual(0, (await this.getAccountSettings.ExecuteAsync(SubscriberId1)).AccountBalance);
@@ -165,6 +170,7 @@
 
                 var random = new Random();
 
+                Pause();
                 await this.updateAccountBalances.ExecuteAsync(null, DateTime.UtcNow);
                 decimal initialFifthweekRevenue = await this.GetAccountBalance(null, LedgerAccountType.FifthweekRevenue);
 
@@ -182,6 +188,7 @@
                     await databaseContext.SaveChangesAsync();
                 }
 
+                Pause();
                 await this.updateAccountBalances.ExecuteAsync(null, DateTime.UtcNow);
                 Assert.AreEqual(1000, (await this.getCreditTransactionInformation.ExecuteAsync(creditTransactionReference)).CreditAmountAvailableForRefund);
                 Assert.AreEqual(0, (await this.getAccountSettings.ExecuteAsync(SubscriberId1)).AccountBalance);
@@ -199,6 +206,7 @@
                 Assert.AreEqual(CreatorId1, result.CreatorId);
                 Assert.AreEqual(SubscriberId1, result.SubscriberId);
 
+                Pause();
                 await this.updateAccountBalances.ExecuteAsync(null, DateTime.UtcNow);
                 Assert.AreEqual(1000, (await this.getCreditTransactionInformation.ExecuteAsync(creditTransactionReference)).CreditAmountAvailableForRefund);
                 Assert.AreEqual(500, (await this.getAccountSettings.ExecuteAsync(SubscriberId1)).AccountBalance);
@@ -243,6 +251,15 @@
                 new GetRecordsForTransactionDbStatement(testDatabase));
 
             this.getCalculatedAccountBalances = new GetCalculatedAccountBalancesDbStatement(testDatabase);
+        }
+
+        private static void Pause()
+        {
+            // This is a temporary fix to the issue that updating account balances should 
+            // use a merge rather than an insert to ensure a unique key violation doesn't
+            // occur if the unit tests run to fast.  The proper fix is deferred until it becomes
+            // an issue in production.
+            Thread.Sleep(1);
         }
 
         private static async Task<decimal> GetExistingFifthweekBalance(TestDatabaseContext testDatabase)
