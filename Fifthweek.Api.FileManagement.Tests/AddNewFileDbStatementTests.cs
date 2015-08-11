@@ -106,6 +106,41 @@
         }
 
         [TestMethod]
+        public async Task WhenAddingANewFileWithNoChannelId_ItShouldUpdateTheDatabase()
+        {
+            await this.DatabaseTestAsync(async testDatabase =>
+            {
+                this.target = new AddNewFileDbStatement(testDatabase);
+                await this.CreateUserAsync(testDatabase);
+                await testDatabase.TakeSnapshotAsync();
+
+                await this.target.ExecuteAsync(FileId, UserId, null, FileNameWithoutExtension, FileExtension, Purpose, TimeStamp);
+
+                var expectedFile = new File(
+                    FileId.Value,
+                    UserId.Value,
+                    null,
+                    FileState.WaitingForUpload,
+                    TimeStamp,
+                    null,
+                    null,
+                    null,
+                    null,
+                    FileNameWithoutExtension,
+                    FileExtension,
+                    0,
+                    Purpose,
+                    null,
+                    null);
+
+                return new ExpectedSideEffects
+                {
+                    Insert = expectedFile
+                };
+            });
+        }
+
+        [TestMethod]
         public async Task WhenAddingANewFileTwice_ItShouldHaveNoEffect()
         {
             await this.DatabaseTestAsync(async testDatabase =>

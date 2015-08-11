@@ -43,7 +43,7 @@
             var file = new File(
                 fileId.Value,
                 userId.Value,
-                channelId.Value,
+                channelId == null ? (Guid?)null : channelId.Value,
                 FileState.WaitingForUpload,
                 timeStamp,
                 null,
