@@ -1,6 +1,7 @@
 ﻿namespace Fifthweek.WebJobs.Payments
 {
     using System;
+    using System.Data.SqlClient;
     using System.Threading;
     using System.Threading.Tasks;
 
@@ -31,6 +32,18 @@
                 {
                     await this.createSnapshotMultiplexer.ExecuteAsync(message.UserId, message.SnapshotType);
                 }
+            }
+            catch (SqlException t)
+            {
+                // 2627 indicates a primary key violation, which means two snapshots
+                // occured at the same time. It will be automatically retried
+                // so no need to log this.
+                if (t.Number != 2627)
+                {
+                    logger.Error(t);
+                }
+
+                throw;
             }
             catch (Exception t)
             {
