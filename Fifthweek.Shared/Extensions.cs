@@ -51,11 +51,13 @@
 
         public static Guid DecodeGuid(this string value)
         {
+            value.AssertNotNull("value");
+
             var result = HttpServerUtility.UrlTokenDecode(value);
 
             if (result == null || result.Length != 16)
             {
-                throw new BadRequestException("Value does not represent an ID: " + value);
+                throw new BadRequestException("Value does not represent an ID: " + value + ", Result: " + result);
             }
 
             return new Guid(result);
