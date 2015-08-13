@@ -107,7 +107,7 @@
             container.Setup(v => v.GetBlockBlobReference(Location.BlobName))
                 .Returns(parentBlob.Object);
 
-            parentBlob.Setup(v => v.ExistsAsync())
+            parentBlob.Setup(v => v.DeleteAsync())
                 .Throws(new StorageException(new RequestResult { HttpStatusCode = 404 }, "Not found", null));
 
             var directory = new Mock<ICloudBlobDirectory>(MockBehavior.Strict);
