@@ -2,6 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Net;
     using System.Threading;
     using System.Threading.Tasks;
 
@@ -11,6 +12,7 @@
     using Fifthweek.Shared;
 
     using Microsoft.VisualStudio.TestTools.UnitTesting;
+    using Microsoft.WindowsAzure.Storage;
 
     using Moq;
 
@@ -61,7 +63,6 @@
             container.Setup(v => v.GetBlockBlobReference(Location.BlobName))
                 .Returns(parentBlob.Object);
 
-            parentBlob.Setup(v => v.ExistsAsync()).ReturnsAsync(true);
             parentBlob.Setup(v => v.DeleteAsync()).Returns(Task.FromResult(0)).Verifiable();
 
             var directory = new Mock<ICloudBlobDirectory>(MockBehavior.Strict);
@@ -106,7 +107,8 @@
             container.Setup(v => v.GetBlockBlobReference(Location.BlobName))
                 .Returns(parentBlob.Object);
 
-            parentBlob.Setup(v => v.ExistsAsync()).ReturnsAsync(false);
+            parentBlob.Setup(v => v.ExistsAsync())
+                .Throws(new StorageException(new RequestResult { HttpStatusCode = 404 }, "Not found", null));
 
             var directory = new Mock<ICloudBlobDirectory>(MockBehavior.Strict);
             container.Setup(v => v.GetDirectoryReference(Location.BlobName))

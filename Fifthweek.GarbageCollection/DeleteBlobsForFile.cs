@@ -33,9 +33,16 @@
             var container = blobClient.GetContainerReference(location.ContainerName);
             var parentBlob = container.GetBlockBlobReference(location.BlobName);
 
-            if (await parentBlob.ExistsAsync())
+            try
             {
                 await parentBlob.DeleteAsync();
+            }
+            catch (StorageException t)
+            {
+                if (t.RequestInformation.HttpStatusCode != 404)
+                {
+                    throw;
+                }
             }
 
             var blobDirectory = container.GetDirectoryReference(location.BlobName);
