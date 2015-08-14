@@ -73,7 +73,10 @@
             var container = cloudBlobClient.GetContainerReference(containerName);
             await container.CreateIfNotExistsAsync();
             var blob = container.GetBlockBlobReference(blobName);
-            await blob.UploadTextAsync(string.Empty);
+            if (await blob.ExistsAsync())
+            {
+                await blob.UploadTextAsync(string.Empty);
+            }
         }
 
         private static async Task ConfigureCors(ICloudStorageAccount storageAccount)
