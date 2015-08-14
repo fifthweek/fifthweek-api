@@ -11,6 +11,8 @@
     using Fifthweek.Api.Identity.Tests.Shared.Membership;
     using Fifthweek.Api.Persistence;
     using Fifthweek.Api.Persistence.Tests.Shared;
+    using Fifthweek.Payments.SnapshotCreation;
+    using Fifthweek.Payments.Tests.Shared;
     using Fifthweek.Tests.Shared;
 
     using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -29,12 +31,14 @@
         private static readonly CreateBlogCommand Command = new CreateBlogCommand(Requester, BlogId, BlogName, Tagline, BasePrice);
         private Mock<IBlogSecurity> blogSecurity;
         private Mock<IRequesterSecurity> requesterSecurity;
+        private MockRequestSnapshotService requestSnapshotService;
         private CreateBlogCommandHandler target;
 
         [TestInitialize]
         public void Initialize()
         {
             this.blogSecurity = new Mock<IBlogSecurity>();
+            this.requestSnapshotService = new MockRequestSnapshotService();
             this.requesterSecurity = new Mock<IRequesterSecurity>();
             this.requesterSecurity.SetupFor(Requester);
         }
@@ -46,7 +50,7 @@
             // Give side-effecting components strict mock behaviour.
             var connectionFactory = new Mock<IFifthweekDbConnectionFactory>(MockBehavior.Strict);
 
-            this.target = new CreateBlogCommandHandler(this.blogSecurity.Object, this.requesterSecurity.Object, connectionFactory.Object);
+            this.target = new CreateBlogCommandHandler(this.blogSecurity.Object, this.requesterSecurity.Object, connectionFactory.Object, this.requestSnapshotService);
 
             await this.target.HandleAsync(new CreateBlogCommand(Requester.Unauthenticated, BlogId, BlogName, Tagline, BasePrice));
         }
@@ -57,7 +61,7 @@
             await this.DatabaseTestAsync(async testDatabase =>
             {
                 this.blogSecurity.Setup(_ => _.AssertCreationAllowedAsync(Requester)).Throws<UnauthorizedException>();
-                this.target = new CreateBlogCommandHandler(this.blogSecurity.Object, this.requesterSecurity.Object, testDatabase);
+                this.target = new CreateBlogCommandHandler(this.blogSecurity.Object, this.requesterSecurity.Object, testDatabase, this.requestSnapshotService);
                 await testDatabase.TakeSnapshotAsync();
 
                 Func<Task> badMethodCall = () => this.target.HandleAsync(Command);
@@ -73,7 +77,7 @@
         {
             await this.DatabaseTestAsync(async testDatabase =>
             {
-                this.target = new CreateBlogCommandHandler(this.blogSecurity.Object, this.requesterSecurity.Object, testDatabase);
+                this.target = new CreateBlogCommandHandler(this.blogSecurity.Object, this.requesterSecurity.Object, testDatabase, this.requestSnapshotService);
                 await this.CreateUserAsync(UserId, testDatabase);
                 await this.target.HandleAsync(Command);
                 await testDatabase.TakeSnapshotAsync();
@@ -89,11 +93,7 @@
         {
             await this.DatabaseTestAsync(async testDatabase =>
             {
-                this.target = new CreateBlogCommandHandler(this.blogSecurity.Object, this.requesterSecurity.Object, testDatabase);
-                await this.CreateUserAsync(UserId, testDatabase);
-                await testDatabase.TakeSnapshotAsync();
-
-                await this.target.HandleAsync(Command);
+                await this.ExecuteSuccessfully(testDatabase);
 
                 var expectedBlog = new Blog(
                     BlogId.Value,
@@ -128,11 +128,7 @@
         {
             await this.DatabaseTestAsync(async testDatabase =>
             {
-                this.target = new CreateBlogCommandHandler(this.blogSecurity.Object, this.requesterSecurity.Object, testDatabase);
-                await this.CreateUserAsync(UserId, testDatabase);
-                await testDatabase.TakeSnapshotAsync();
-
-                await this.target.HandleAsync(Command);
+                await this.ExecuteSuccessfully(testDatabase);
 
                 var expectedChannel = new Channel(
                 BlogId.Value, // The default channel uses the blog ID.
@@ -160,6 +156,63 @@
                     ExcludedFromTest = entity => entity is Blog
                 };
             });
+        }
+
+        [TestMethod]
+        public async Task ItShouldRequestSnapshot()
+        {
+            await this.DatabaseTestAsync(async testDatabase =>
+            {
+                var trackingDatabase = new TrackingConnectionFactory(testDatabase);
+                await this.InitializeTarget(trackingDatabase);
+                await this.CreateUserAsync(UserId, testDatabase);
+                await testDatabase.TakeSnapshotAsync();
+
+                this.requestSnapshotService.VerifyConnectionDisposed(trackingDatabase);
+                
+                await this.target.HandleAsync(Command);
+
+                this.requestSnapshotService.VerifyCalledWith(UserId, SnapshotType.CreatorChannels);
+
+                return new ExpectedSideEffects
+                {
+                    ExcludedFromTest = entity => entity is Channel || entity is Blog
+                };
+            });
+        }
+
+        [TestMethod]
+        public async Task ItShouldAbortUpdateIfSnapshotFails()
+        {
+            await this.DatabaseTestAsync(async testDatabase =>
+            {
+                await this.ExecuteSuccessfully(testDatabase);
+
+                this.requestSnapshotService.ThrowException();
+
+                await ExpectedException.AssertExceptionAsync<SnapshotException>(
+                    () => this.target.HandleAsync(Command));
+
+                return ExpectedSideEffects.TransactionAborted;
+            });
+        }
+
+        private async Task ExecuteSuccessfully(TestDatabaseContext testDatabase)
+        {
+            await this.InitializeTarget(testDatabase);
+
+            await this.CreateUserAsync(UserId, testDatabase);
+            await testDatabase.TakeSnapshotAsync();
+            await this.target.HandleAsync(Command);
+        }
+
+        private async Task InitializeTarget(IFifthweekDbConnectionFactory testDatabase)
+        {
+            this.target = new CreateBlogCommandHandler(
+                this.blogSecurity.Object,
+                this.requesterSecurity.Object,
+                testDatabase,
+                this.requestSnapshotService);
         }
 
         private async Task CreateUserAsync(UserId newUserId, TestDatabaseContext testDatabase)

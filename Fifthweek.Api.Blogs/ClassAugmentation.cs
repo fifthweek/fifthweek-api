@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Linq;
 
-//// Generated on 07/08/2015 16:43:15 (UTC)
-//// Mapped solution in 19.31s
+//// Generated on 14/08/2015 11:50:39 (UTC)
+//// Mapped solution in 49.98s
 
 
 namespace Fifthweek.Api.Blogs
@@ -400,13 +400,15 @@ namespace Fifthweek.Api.Blogs.Commands
     using Fifthweek.Api.FileManagement.Shared;
     using System.Collections.Generic;
     using Fifthweek.Api.Persistence.Identity;
+    using Fifthweek.Payments.SnapshotCreation;
 
     public partial class CreateBlogCommandHandler 
     {
         public CreateBlogCommandHandler(
             Fifthweek.Api.Blogs.Shared.IBlogSecurity blogSecurity,
             Fifthweek.Api.Identity.Shared.Membership.IRequesterSecurity requesterSecurity,
-            Fifthweek.Api.Persistence.IFifthweekDbConnectionFactory connectionFactory)
+            Fifthweek.Api.Persistence.IFifthweekDbConnectionFactory connectionFactory,
+            Fifthweek.Payments.SnapshotCreation.IRequestSnapshotService requestSnapshot)
         {
             if (blogSecurity == null)
             {
@@ -423,9 +425,15 @@ namespace Fifthweek.Api.Blogs.Commands
                 throw new ArgumentNullException("connectionFactory");
             }
 
+            if (requestSnapshot == null)
+            {
+                throw new ArgumentNullException("requestSnapshot");
+            }
+
             this.blogSecurity = blogSecurity;
             this.requesterSecurity = requesterSecurity;
             this.connectionFactory = connectionFactory;
+            this.requestSnapshot = requestSnapshot;
         }
     }
 }

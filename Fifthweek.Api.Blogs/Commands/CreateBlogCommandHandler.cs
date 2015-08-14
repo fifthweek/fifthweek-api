@@ -10,6 +10,7 @@
     using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.Api.Persistence;
     using Fifthweek.CodeGeneration;
+    using Fifthweek.Payments.SnapshotCreation;
     using Fifthweek.Shared;
 
     [AutoConstructor]
@@ -27,6 +28,7 @@
         private readonly IBlogSecurity blogSecurity;
         private readonly IRequesterSecurity requesterSecurity;
         private readonly IFifthweekDbConnectionFactory connectionFactory;
+        private readonly IRequestSnapshotService requestSnapshot;
 
         public async Task HandleAsync(CreateBlogCommand command)
         {
@@ -75,6 +77,8 @@
                     await connection.InsertAsync(blog);
                     await connection.InsertAsync(channel);
                 }
+
+                await this.requestSnapshot.ExecuteAsync(authenticatedUserId, SnapshotType.CreatorChannels);
 
                 transaction.Complete();
             }
