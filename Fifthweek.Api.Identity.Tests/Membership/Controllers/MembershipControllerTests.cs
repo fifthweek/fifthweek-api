@@ -25,6 +25,7 @@
         private static readonly UserId UserId = new UserId(Guid.NewGuid());
         private static readonly ValidUsername Username = ValidUsername.Parse(UsernameValue);
         private static readonly ValidCreatorName CreatorName = ValidCreatorName.Parse("creator name");
+        private Mock<IRequesterContext> requesterContext;
         private Mock<ICommandHandler<RegisterUserCommand>> registerUser;
         private Mock<ICommandHandler<RequestPasswordResetCommand>> requestPasswordReset;
         private Mock<ICommandHandler<ConfirmPasswordResetCommand>> confirmPasswordReset;
@@ -38,6 +39,7 @@
         [TestInitialize]
         public void TestInitialize()
         {
+            this.requesterContext = new Mock<IRequesterContext>(MockBehavior.Strict);
             this.registerUser = new Mock<ICommandHandler<RegisterUserCommand>>();
             this.requestPasswordReset = new Mock<ICommandHandler<RequestPasswordResetCommand>>();
             this.confirmPasswordReset = new Mock<ICommandHandler<ConfirmPasswordResetCommand>>();
@@ -49,6 +51,7 @@
             this.guidCreator.Setup(v => v.CreateSqlSequential()).Returns(Guid.Empty);
 
             this.controller = new MembershipController(
+                this.requesterContext.Object,
                 this.registerUser.Object,
                 this.requestPasswordReset.Object,
                 this.confirmPasswordReset.Object,
@@ -214,8 +217,12 @@
         [TestMethod]
         public async Task WhenPostingIdentifiedUser_ItShouldIssueSendIdentifiedUserInformationCommand()
         {
+            var requester = Requester.Authenticated(UserId.Random());
+            this.requesterContext.Setup(v => v.GetRequesterAsync()).ReturnsAsync(requester);
+
             var data = NewIdentifiedUserData();
             var command = new SendIdentifiedUserInformationCommand(
+                requester,
                 data.IsUpdate,
                 new Email(data.Email),
                 data.Name,
@@ -232,9 +239,13 @@
         [TestMethod]
         public async Task WhenPostingIdentifiedUserEmail_ItShouldIssueSendIdentifiedUserInformationCommand()
         {
+            var requester = Requester.Authenticated(UserId.Random());
+            this.requesterContext.Setup(v => v.GetRequesterAsync()).ReturnsAsync(requester);
+
             var data = NewIdentifiedUserData();
             data = new IdentifiedUserData { Email = data.Email };
             var command = new SendIdentifiedUserInformationCommand(
+                requester,
                 data.IsUpdate,
                 new Email(data.Email),
                 null,

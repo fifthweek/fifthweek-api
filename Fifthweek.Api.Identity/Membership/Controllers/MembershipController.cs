@@ -15,6 +15,7 @@
     [RoutePrefix("membership"), AutoConstructor]
     public partial class MembershipController : ApiController
     {
+        private readonly IRequesterContext requesterContext;
         private readonly ICommandHandler<RegisterUserCommand> registerUser;
         private readonly ICommandHandler<RequestPasswordResetCommand> requestPasswordReset;
         private readonly ICommandHandler<ConfirmPasswordResetCommand> confirmPasswordReset;
@@ -150,7 +151,10 @@
                 throw new BadRequestException("Email must be provided when identifying user");
             }
 
+            var requester = await this.requesterContext.GetRequesterAsync();
+
             var command = new SendIdentifiedUserInformationCommand(
+                requester,
                 identifiedUserData.IsUpdate,
                 new Email(identifiedUserData.Email),
                 string.IsNullOrWhiteSpace(identifiedUserData.Name) ? null : identifiedUserData.Name,

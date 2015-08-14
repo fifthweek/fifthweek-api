@@ -30,6 +30,14 @@
             this.roles = new HashSet<string>();
         }
 
+        public bool IsImpersonated
+        {
+            get
+            {
+                return this.impersonatingRequester != null;
+            }
+        }
+
         internal UserId UserId
         {
             get

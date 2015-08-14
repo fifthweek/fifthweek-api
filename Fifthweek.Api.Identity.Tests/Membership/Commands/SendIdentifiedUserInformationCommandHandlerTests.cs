@@ -47,14 +47,21 @@
         [TestMethod]
         public async Task WhenEmailIsFromTestDomain_ItShouldNotReport()
         {
-            await this.target.HandleAsync(new SendIdentifiedUserInformationCommand(false, ValidEmail.Parse("something" + Constants.TestEmailDomain), Name, Username));
+            await this.target.HandleAsync(new SendIdentifiedUserInformationCommand(Requester.Unauthenticated, false, ValidEmail.Parse("something" + Constants.TestEmailDomain), Name, Username));
             // Test verification handled by strict behaviour.
         }
 
         [TestMethod]
         public async Task WhenEmailIsFromFifthweekDomain_ItShouldNotReport()
         {
-            await this.target.HandleAsync(new SendIdentifiedUserInformationCommand(false, ValidEmail.Parse("something" + Constants.FifthweekEmailDomain), Name, Username));
+            await this.target.HandleAsync(new SendIdentifiedUserInformationCommand(Requester.Unauthenticated, false, ValidEmail.Parse("something" + Constants.FifthweekEmailDomain), Name, Username));
+            // Test verification handled by strict behaviour.
+        }
+
+        [TestMethod]
+        public async Task WhenUserIsImpersonated_ItShouldNotReport()
+        {
+            await this.target.HandleAsync(new SendIdentifiedUserInformationCommand(Requester.Authenticated(UserId.Random(), Requester.Authenticated(UserId.Random())), false, Email, Name, Username));
             // Test verification handled by strict behaviour.
         }
         
@@ -65,7 +72,7 @@
                 .Returns(Task.FromResult(0))
                 .Verifiable();
 
-            await this.target.HandleAsync(new SendIdentifiedUserInformationCommand(false, Email, null, null));
+            await this.target.HandleAsync(new SendIdentifiedUserInformationCommand(Requester.Unauthenticated, false, Email, null, null));
 
             this.activityReporter.Verify();
         }
@@ -77,7 +84,7 @@
                 .Returns(Task.FromResult(0))
                 .Verifiable();
 
-            await this.target.HandleAsync(new SendIdentifiedUserInformationCommand(false, Email, Name, null));
+            await this.target.HandleAsync(new SendIdentifiedUserInformationCommand(Requester.Unauthenticated, false, Email, Name, null));
 
             this.activityReporter.Verify();
         }
@@ -89,7 +96,7 @@
                 .Returns(Task.FromResult(0))
                 .Verifiable();
 
-            await this.target.HandleAsync(new SendIdentifiedUserInformationCommand(false, Email, null, Username));
+            await this.target.HandleAsync(new SendIdentifiedUserInformationCommand(Requester.Unauthenticated, false, Email, null, Username));
 
             this.activityReporter.Verify();
         }
@@ -101,7 +108,7 @@
                 .Returns(Task.FromResult(0))
                 .Verifiable();
 
-            await this.target.HandleAsync(new SendIdentifiedUserInformationCommand(false, Email, Name, Username));
+            await this.target.HandleAsync(new SendIdentifiedUserInformationCommand(Requester.Unauthenticated, false, Email, Name, Username));
 
             this.activityReporter.Verify();
         }
@@ -113,7 +120,7 @@
                 .Returns(Task.FromResult(0))
                 .Verifiable();
 
-            await this.target.HandleAsync(new SendIdentifiedUserInformationCommand(true, Email, Name, Username));
+            await this.target.HandleAsync(new SendIdentifiedUserInformationCommand(Requester.Unauthenticated, true, Email, Name, Username));
 
             this.activityReporter.Verify();
         }
@@ -126,7 +133,7 @@
 
             this.exceptionHandler.Setup(v => v.ReportExceptionAsync(It.IsAny<Exception>())).Verifiable();
 
-            await this.target.HandleAsync(new SendIdentifiedUserInformationCommand(false, Email, null, null));
+            await this.target.HandleAsync(new SendIdentifiedUserInformationCommand(Requester.Unauthenticated, false, Email, null, null));
 
             this.exceptionHandler.Verify();
         }

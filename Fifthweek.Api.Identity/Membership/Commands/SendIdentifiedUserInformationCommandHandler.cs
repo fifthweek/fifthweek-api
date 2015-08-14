@@ -26,6 +26,11 @@
                     return;
                 }
 
+                if (command.Requester.IsImpersonated)
+                {
+                    return;
+                }
+
                 var sb = new StringBuilder();
 
                 if (command.IsUpdate)

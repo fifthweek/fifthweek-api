@@ -6,6 +6,8 @@
     [AutoConstructor, AutoEqualityMembers]
     public partial class SendIdentifiedUserInformationCommand
     {
+        public Requester Requester { get; private set; }
+
         public bool IsUpdate { get; private set; }
 
         public Email Email { get; private set; }

@@ -78,6 +78,23 @@
             Assert.AreEqual(userId, target.ImpersonatingRequester.UserId);
         }
 
+        [TestMethod]
+        public void WhenNotUsingImpersonation_ItShouldBeMarkedAsNotImpersonated()
+        {
+            var userId = new UserId(Guid.NewGuid());
+            var target = Requester.Authenticated(userId);
+            Assert.IsFalse(target.IsImpersonated);
+        }
+
+        [TestMethod]
+        public void WhenUsingImpersonation_ItShouldBeMarkedAsImpersonated()
+        {
+            var userId = new UserId(Guid.NewGuid());
+            var impersonatedUserId = new UserId(Guid.NewGuid());
+            var target = Requester.Authenticated(impersonatedUserId, Requester.Authenticated(userId));
+            Assert.IsTrue(target.IsImpersonated);
+        }
+
         protected override Requester NewInstanceOfObjectA()
         {
             return Requester.Authenticated(new UserId(Guid.Parse("{316343AD-9E14-4292-9BA2-3E2803AD4497}")), "role1", "role2");
