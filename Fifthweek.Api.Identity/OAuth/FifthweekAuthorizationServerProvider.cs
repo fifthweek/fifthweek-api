@@ -58,6 +58,7 @@
                 context.OwinContext.Response.Headers.AppendCommaSeparatedValues(
                     "Access-Control-Allow-Methods", "POST");
 
+                // Note: Also update Web.config
                 context.OwinContext.Response.Headers.AppendCommaSeparatedValues(
                     "Access-Control-Allow-Headers", "accept", "authorization", "content-type", Core.Constants.DeveloperNameRequestHeaderKey, Membership.RequesterContext.ImpersonateHeaderKey);
 
