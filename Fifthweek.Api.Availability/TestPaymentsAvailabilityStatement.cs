@@ -62,7 +62,7 @@
                 }
                 else
                 {
-                    await this.AttemptPaymentProcessingRestartIfRequired(now, "Failed to read all payments metadata. Attempting to start payment processing service.");
+                    await this.AttemptPaymentProcessingRestartIfRequired(now, null);
                 }
             }
             catch (Exception t)
@@ -91,7 +91,11 @@
 
                 // Enqueue process payments message to try and re-start the service.
                 await this.requestProcessPayments.ExecuteImmediatelyAsync();
-                this.exceptionHandler.ReportExceptionAsync(new WarningException(warningMessage));
+
+                if (warningMessage != null)
+                {
+                    this.exceptionHandler.ReportExceptionAsync(new WarningException(warningMessage));
+                }
             }
         }
     }

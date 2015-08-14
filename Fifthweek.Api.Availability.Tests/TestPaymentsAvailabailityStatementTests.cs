@@ -78,7 +78,6 @@
 
             blob.Verify();
             this.requestProcessPayments.Verify();
-            this.exceptionHandler.Verify();
         }
 
         [TestMethod]
@@ -98,7 +97,6 @@
 
             blob.Verify();
             this.requestProcessPayments.Verify(v => v.ExecuteImmediatelyAsync(), Times.Once);
-            this.exceptionHandler.Verify(v => v.ReportExceptionAsync(It.IsAny<WarningException>()), Times.Once);
         }
 
         [TestMethod]
@@ -118,7 +116,6 @@
 
             blob.Verify();
             this.requestProcessPayments.Verify(v => v.ExecuteImmediatelyAsync(), Times.Exactly(2));
-            this.exceptionHandler.Verify(v => v.ReportExceptionAsync(It.IsAny<WarningException>()), Times.Exactly(2));
         }
 
         [TestMethod]
