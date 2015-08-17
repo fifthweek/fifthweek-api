@@ -759,6 +759,26 @@ angular.module('webApp').factory('blogStub',
       });
     };
 
+    // result = {
+    //   creators: [
+    //     {
+    //       userId: 'Base64Guid',
+    //       unreleasedRevenue: 0,
+    //       releasedRevenue: 0,
+    //       releasableRevenue: 0,
+    //       username: '', /* optional */
+    //       name: '', /* optional */
+    //       email: '', /* optional */
+    //       emailConfirmed: false
+    //     }
+    //   ]
+    // }
+    service.getCreatorRevenues = function() {
+      return $http.get(utilities.fixUri(apiBaseUri + 'blogs/creatorRevenues')).catch(function(response) {
+        return $q.reject(utilities.getHttpError(response));
+      });
+    };
+
     return service;
   });
 

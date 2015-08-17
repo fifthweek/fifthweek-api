@@ -19,6 +19,7 @@
         private readonly ICommandHandler<UpdateBlogCommand> updateBlog;
         private readonly IQueryHandler<GetLandingPageQuery, GetLandingPageResult> getLandingPage;
         private readonly IQueryHandler<GetBlogSubscriberInformationQuery, BlogSubscriberInformation> getBlogSubscriberInformation;
+        private readonly IQueryHandler<GetAllCreatorRevenuesQuery, GetAllCreatorRevenuesResult> getAllCreatorRevenues;
         private readonly IRequesterContext requesterContext;
         private readonly IGuidCreator guidCreator;
 
@@ -83,11 +84,19 @@
         public async Task<BlogSubscriberInformation> GetSubscriberInformation(string blogId)
         {
             blogId.AssertUrlParameterProvided("blogId");
-        
+
             var requester = await this.requesterContext.GetRequesterAsync();
             var blogIdObject = new BlogId(blogId.DecodeGuid());
 
             return await this.getBlogSubscriberInformation.HandleAsync(new GetBlogSubscriberInformationQuery(requester, blogIdObject));
+        }
+
+        [Route("creatorRevenues")]
+        public async Task<GetAllCreatorRevenuesResult> GetCreatorRevenues()
+        {
+            var requester = await this.requesterContext.GetRequesterAsync();
+
+            return await this.getAllCreatorRevenues.HandleAsync(new GetAllCreatorRevenuesQuery(requester));
         }
     }
 }

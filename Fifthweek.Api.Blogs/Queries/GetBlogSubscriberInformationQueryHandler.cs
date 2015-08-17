@@ -14,7 +14,6 @@
     [AutoConstructor]
     public partial class GetBlogSubscriberInformationQueryHandler : IQueryHandler<GetBlogSubscriberInformationQuery, BlogSubscriberInformation>
     {
-        public const int ReleaseableRevenueDays = 28;
 
         private readonly IRequesterSecurity requesterSecurity;
         private readonly IBlogSecurity blogSecurity;
@@ -30,8 +29,7 @@
             var userId = await this.requesterSecurity.AuthenticateAsync(query.Requester);
             await this.blogSecurity.AssertWriteAllowedAsync(userId, query.BlogId);
 
-            var now = this.timestampCreator.Now();
-            var releasableRevenueDate = now.AddDays(-ReleaseableRevenueDays);
+            var releasableRevenueDate = this.timestampCreator.ReleasableRevenueDate();
 
             var databaseResultTask = this.getBlogSubscriberInformation.ExecuteAsync(query.BlogId);
             var revenue = await this.getCreatorRevenue.ExecuteAsync(userId, releasableRevenueDate);

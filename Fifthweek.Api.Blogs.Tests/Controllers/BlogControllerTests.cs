@@ -35,6 +35,7 @@
         private Mock<ICommandHandler<UpdateBlogCommand>> updateBlog;
         private Mock<IQueryHandler<GetLandingPageQuery, GetLandingPageResult>> getLandingPage;
         private Mock<IQueryHandler<GetBlogSubscriberInformationQuery, BlogSubscriberInformation>> getBlogSubscriberInformation;
+        private Mock<IQueryHandler<GetAllCreatorRevenuesQuery, GetAllCreatorRevenuesResult>> getAllCreatorRevenues;
         private Mock<IRequesterContext> requesterContext;
         private Mock<IGuidCreator> guidCreator;
         private BlogController target;
@@ -46,6 +47,7 @@
             this.updateBlog = new Mock<ICommandHandler<UpdateBlogCommand>>(MockBehavior.Strict);
             this.getLandingPage = new Mock<IQueryHandler<GetLandingPageQuery, GetLandingPageResult>>(MockBehavior.Strict);
             this.getBlogSubscriberInformation = new Mock<IQueryHandler<GetBlogSubscriberInformationQuery,BlogSubscriberInformation>>(MockBehavior.Strict);
+            this.getAllCreatorRevenues = new Mock<IQueryHandler<GetAllCreatorRevenuesQuery,GetAllCreatorRevenuesResult>>(MockBehavior.Strict);
             this.requesterContext = new Mock<IRequesterContext>();
             this.guidCreator = new Mock<IGuidCreator>();
             this.target = new BlogController(
@@ -53,6 +55,7 @@
                 this.updateBlog.Object,
                 this.getLandingPage.Object,
                 this.getBlogSubscriberInformation.Object,
+                this.getAllCreatorRevenues.Object,
                 this.requesterContext.Object,
                 this.guidCreator.Object);
         }
@@ -125,6 +128,21 @@
 
             Assert.AreEqual(expectedResult, result);
             this.getBlogSubscriberInformation.Verify();
+        }
+
+        [TestMethod]
+        public async Task WhenGettingCreatorRevenues_ItShouldIssueGetGetAllCreatorRevenuesQuery()
+        {
+            this.requesterContext.Setup(_ => _.GetRequesterAsync()).ReturnsAsync(Requester);
+
+            var expectedResult = new GetAllCreatorRevenuesResult(new List<GetAllCreatorRevenuesResult.Creator>());
+            this.getAllCreatorRevenues.Setup(v => v.HandleAsync(new GetAllCreatorRevenuesQuery(Requester)))
+                .Returns(Task.FromResult(expectedResult)).Verifiable();
+
+            var result = await this.target.GetCreatorRevenues();
+
+            Assert.AreEqual(expectedResult, result);
+            this.getAllCreatorRevenues.Verify();
         }
 
         public static GetLandingPageResult NewGetLandingPageResult()

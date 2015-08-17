@@ -955,6 +955,20 @@ describe('blog stub', function() {
 
     expect(result).toBe(responseData);
   });
+
+  it('should get creator revenues', function() {
+
+    var responseData = 'response data';
+    $httpBackend.expectGET(utilities.fixUri(fifthweekConstants.apiBaseUri + 'blogs/creatorRevenues')).respond(200, responseData);
+
+    var result = null;
+    target.getCreatorRevenues().then(function(response) { result = response.data; });
+
+    $httpBackend.flush();
+    $rootScope.$apply();
+
+    expect(result).toBe(responseData);
+  });
 });
 
 describe('file upload stub', function() {

@@ -24,7 +24,7 @@
         private static readonly BlogId BlogId = new BlogId(Guid.NewGuid());
         private static readonly UserId UserId = new UserId(Guid.NewGuid());
         private static readonly DateTime Now = DateTime.UtcNow;
-        private static readonly DateTime ReleasableRevenueDate = Now.AddDays(-GetBlogSubscriberInformationQueryHandler.ReleaseableRevenueDays);
+        private static readonly DateTime ReleasableRevenueDate = Now.AddDays(-BlogsConstants.ReleaseableRevenueDays);
 
         private static readonly GetBlogSubscriberInformationQuery Query =
             new GetBlogSubscriberInformationQuery(

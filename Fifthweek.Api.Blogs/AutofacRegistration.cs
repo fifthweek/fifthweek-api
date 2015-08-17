@@ -22,6 +22,7 @@
             builder.RegisterType<GetIsTestUserBlogDbStatement>().As<IGetIsTestUserBlogDbStatement>();
             builder.RegisterType<GetBlogSubscriberInformationDbStatement>().As<IGetBlogSubscriberInformationDbStatement>();
             builder.RegisterType<GetCreatorRevenueDbStatement>().As<IGetCreatorRevenueDbStatement>();
+            builder.RegisterType<GetAllCreatorRevenuesDbStatement>().As<IGetAllCreatorRevenuesDbStatement>();
         }
     }
 }
