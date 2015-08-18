@@ -24,7 +24,7 @@
     {
         public static readonly string Sql = string.Format(
             @"SELECT u.{8} AS Username, u.{7} AS UserId, u.{11}, cs.{2}, cs.{9}, cs.{10}, fau.{14}, origin.{18},
-                    CASE WHEN origin.{17} IS NULL OR origin.{20}={21} THEN 'False' ELSE 'True' END AS HasPaymentDetails
+                    CASE WHEN origin.{17} IS NULL OR origin.{20}={21} THEN 'False' ELSE 'True' END AS HasPaymentInformation
                 FROM {0} cs
                 INNER JOIN {1} c ON cs.{2}=c.{3}
                 INNER JOIN {5} u ON cs.{6}=u.{7}
@@ -81,7 +81,7 @@
                             v.AcceptedPrice,
                             v.Email == null ? null : new Email(v.Email),
                             v.PaymentStatus == null ? PaymentStatus.None : v.PaymentStatus.Value,
-                            v.HasPaymentDetails)).ToList());
+                            v.HasPaymentInformation)).ToList());
             }
         }
 
@@ -103,7 +103,7 @@
 
             public PaymentStatus? PaymentStatus { get; set; }
 
-            public bool HasPaymentDetails { get; set; }
+            public bool HasPaymentInformation { get; set; }
         }
 
         [AutoConstructor, AutoEqualityMembers]
@@ -132,7 +132,7 @@
 
                 public PaymentStatus PaymentStatus { get; private set; }
 
-                public bool HasPaymentDetails { get; private set; }
+                public bool HasPaymentInformation { get; private set; }
             }
         }
     }

@@ -35,7 +35,7 @@
 
             public PaymentStatus PaymentStatus { get; private set; }
 
-            public bool HasPaymentDetails { get; private set; }
+            public bool HasPaymentInformation { get; private set; }
 
             public IReadOnlyList<SubscriberChannel> Channels { get; private set; }
         }

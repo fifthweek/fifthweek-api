@@ -20,7 +20,7 @@
     {
         private static readonly string Sql = string.Format(
             @"SELECT u.{0}, u.{1}, u.{2}, u.{3}, cab.{4} as Balance, origin.{11},
-                    CASE WHEN origin.{10} IS NULL OR origin.{13}={14} THEN 'False' ELSE 'True' END AS HasPaymentDetails
+                    CASE WHEN origin.{10} IS NULL OR origin.{13}={14} THEN 'False' ELSE 'True' END AS HasPaymentInformation
                 FROM {5} u
                 LEFT OUTER JOIN ({8}) cab 
                 ON u.{6} = cab.{7}
@@ -69,7 +69,7 @@
                     result.ProfileImageFileId == null ? null : new FileId(result.ProfileImageFileId.Value),
                     result.Balance == null ? 0 : result.Balance.Value,
                     result.PaymentStatus == null ? PaymentStatus.None : result.PaymentStatus.Value,
-                    result.HasPaymentDetails);
+                    result.HasPaymentInformation);
             }
         }
 
@@ -87,7 +87,7 @@
 
             public PaymentStatus? PaymentStatus { get; set; }
 
-            public bool HasPaymentDetails { get; set; }
+            public bool HasPaymentInformation { get; set; }
         }
     }
 
@@ -108,6 +108,6 @@
 
         public PaymentStatus PaymentStatus { get; private set; }
 
-        public bool HasPaymentDetails { get; private set; }
+        public bool HasPaymentInformation { get; private set; }
     }
 }

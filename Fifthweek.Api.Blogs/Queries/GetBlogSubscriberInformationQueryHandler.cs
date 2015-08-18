@@ -62,7 +62,7 @@
                         fileInformation,
                         first.FreeAccessEmail,
                         first.PaymentStatus,
-                        first.HasPaymentDetails,
+                        first.HasPaymentInformation,
                         channels));
             }
 

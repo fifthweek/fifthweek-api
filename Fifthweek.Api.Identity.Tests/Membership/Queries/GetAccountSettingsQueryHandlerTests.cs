@@ -29,7 +29,7 @@
         private static readonly ValidEmail Email = ValidEmail.Parse("test@testing.fifthweek.com");
         private static readonly int AccountBalance = 10;
         private static readonly PaymentStatus PaymentStatus = PaymentStatus.Retry2;
-        private static readonly bool HasPaymentDetails = true;
+        private static readonly bool HasPaymentInformation = true;
 
         private GetAccountSettingsQueryHandler target;
         private Mock<IGetAccountSettingsDbStatement> getAccountSettings;
@@ -76,14 +76,14 @@
         public async Task WhenCalled_ItShouldCallTheAccountRepository()
         {
             this.getAccountSettings.Setup(v => v.ExecuteAsync(UserId))
-                .ReturnsAsync(new GetAccountSettingsDbResult(Name, Username, Email, null, AccountBalance, PaymentStatus, HasPaymentDetails))
+                .ReturnsAsync(new GetAccountSettingsDbResult(Name, Username, Email, null, AccountBalance, PaymentStatus, HasPaymentInformation))
                 .Verifiable();
 
             var result = await this.target.HandleAsync(new GetAccountSettingsQuery(Requester, UserId));
 
             this.getAccountSettings.Verify();
 
-            var expectedResult = new GetAccountSettingsResult(Name, Username, Email, null, AccountBalance, PaymentStatus, HasPaymentDetails);
+            var expectedResult = new GetAccountSettingsResult(Name, Username, Email, null, AccountBalance, PaymentStatus, HasPaymentInformation);
 
             Assert.AreEqual(expectedResult, result);
         }
@@ -94,7 +94,7 @@
             const string ContainerName = "containerName";
 
             this.getAccountSettings.Setup(v => v.ExecuteAsync(UserId))
-                .ReturnsAsync(new GetAccountSettingsDbResult(Name, Username, Email, FileId, AccountBalance, PaymentStatus, HasPaymentDetails));
+                .ReturnsAsync(new GetAccountSettingsDbResult(Name, Username, Email, FileId, AccountBalance, PaymentStatus, HasPaymentInformation));
 
             this.fileInformationAggregator.Setup(v => v.GetFileInformationAsync(null, FileId, FilePurposes.ProfileImage))
                 .ReturnsAsync(new FileInformation(FileId, ContainerName));
@@ -108,7 +108,7 @@
                 new FileInformation(FileId, ContainerName), 
                 AccountBalance, 
                 PaymentStatus, 
-                HasPaymentDetails);
+                HasPaymentInformation);
 
             Assert.AreEqual(expectedResult, result);
         }
