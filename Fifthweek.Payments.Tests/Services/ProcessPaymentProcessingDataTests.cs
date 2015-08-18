@@ -47,7 +47,7 @@
         [TestMethod]
         public async Task WhenDataRepresentsAPartialWeek_ItShouldReturnUncommittedResult()
         {
-            var data = this.CreateData(StartTimeInclusive, StartTimeInclusive.AddDays(7).AddTicks(-1));
+            var data = this.CreateData(StartTimeInclusive, StartTimeInclusive.AddDays(14).AddTicks(-1));
 
             var cost = new AggregateCostSummary(10);
             this.subscriberPaymentPipeline.Setup(v => v.CalculatePayment(
@@ -80,11 +80,11 @@
         {
             var creatorPercentageOverride = new CreatorPercentageOverrideData(
                 0.9m, 
-                StartTimeInclusive.AddDays(7).AddTicks(-1));
+                StartTimeInclusive.AddDays(14).AddTicks(-1));
 
             var data = this.CreateData(
                 StartTimeInclusive,
-                StartTimeInclusive.AddDays(7).AddTicks(-1),
+                StartTimeInclusive.AddDays(14).AddTicks(-1),
                 creatorPercentageOverride);
 
             var cost = new AggregateCostSummary(10);
@@ -122,7 +122,7 @@
 
             var data = this.CreateData(
                 StartTimeInclusive,
-                StartTimeInclusive.AddDays(7).AddTicks(-1),
+                StartTimeInclusive.AddDays(14).AddTicks(-1),
                 creatorPercentageOverride);
 
             var cost = new AggregateCostSummary(10);
@@ -156,11 +156,11 @@
         {
             var creatorPercentageOverride = new CreatorPercentageOverrideData(
                 0.9m,
-                StartTimeInclusive.AddDays(7).AddTicks(-2));
+                StartTimeInclusive.AddDays(14).AddTicks(-2));
 
             var data = this.CreateData(
                 StartTimeInclusive,
-                StartTimeInclusive.AddDays(7).AddTicks(-1),
+                StartTimeInclusive.AddDays(14).AddTicks(-1),
                 creatorPercentageOverride);
 
             var cost = new AggregateCostSummary(10);
@@ -190,76 +190,106 @@
         }
 
         [TestMethod]
-        public async Task WhenDataRepresentsExactlyOneWeek_ItShouldReturnCommittedResult()
+        public async Task WhenDataRepresentsExactlyTwoWeeks_ItShouldReturnCommittedAndUncommittedResult()
         {
-            var data = this.CreateData(StartTimeInclusive, StartTimeInclusive.AddDays(7));
+            var data = this.CreateData(StartTimeInclusive, StartTimeInclusive.AddDays(14));
 
-            var cost = new AggregateCostSummary(10);
+            var cost1 = new AggregateCostSummary(10);
             this.subscriberPaymentPipeline.Setup(v => v.CalculatePayment(
                 data.GetOrderedSnapshots(),
                 data.CreatorPosts,
                 SubscriberId,
                 CreatorId,
                 data.StartTimeInclusive,
-                data.EndTimeExclusive)).Returns(cost);
+                data.StartTimeInclusive.AddDays(7))).Returns(cost1);
+
+            var cost2 = new AggregateCostSummary(20);
+            this.subscriberPaymentPipeline.Setup(v => v.CalculatePayment(
+                data.GetOrderedSnapshots(),
+                null,
+                SubscriberId,
+                CreatorId,
+                data.StartTimeInclusive.AddDays(7),
+                data.EndTimeExclusive)).Returns(cost2);
 
             var result = await this.target.ExecuteAsync(data);
 
             Assert.AreEqual(
                 new PaymentProcessingResults(
-                    InitialCommittedAccountBalance.Subtract(cost.Cost),
+                    InitialCommittedAccountBalance.Subtract(cost1.Cost),
                     new List<PaymentProcessingResult>
                     {
                         new PaymentProcessingResult(
                             data.StartTimeInclusive,
-                            data.EndTimeExclusive,
-                            new AggregateCostSummary(10),
+                            data.StartTimeInclusive.AddDays(7),
+                            cost1,
                             null,
                             true),
+                        new PaymentProcessingResult(
+                            data.StartTimeInclusive.AddDays(7),
+                            data.EndTimeExclusive,
+                            cost2,
+                            null,
+                            false),
                     }),
                     result);
         }
 
         [TestMethod]
-        public async Task WhenExaclyOneWeekAndCreatorPercentageOverrideSpecifiedAndNotExpired_ItShouldIncludeInResults()
+        public async Task WhenExaclyTwoWeeksAndCreatorPercentageOverrideSpecifiedAndNotExpired_ItShouldIncludeInResults()
         {
             var creatorPercentageOverride = new CreatorPercentageOverrideData(
                 0.9m,
-                StartTimeInclusive.AddDays(7));
+                StartTimeInclusive.AddDays(14));
 
             var data = this.CreateData(
                 StartTimeInclusive,
-                StartTimeInclusive.AddDays(7),
+                StartTimeInclusive.AddDays(14),
                 creatorPercentageOverride);
 
-            var cost = new AggregateCostSummary(10);
+            var cost1 = new AggregateCostSummary(10);
             this.subscriberPaymentPipeline.Setup(v => v.CalculatePayment(
                 data.GetOrderedSnapshots(),
                 data.CreatorPosts,
                 SubscriberId,
                 CreatorId,
                 data.StartTimeInclusive,
-                data.EndTimeExclusive)).Returns(cost);
+                data.StartTimeInclusive.AddDays(7))).Returns(cost1);
+
+            var cost2 = new AggregateCostSummary(20);
+            this.subscriberPaymentPipeline.Setup(v => v.CalculatePayment(
+                data.GetOrderedSnapshots(),
+                null,
+                SubscriberId,
+                CreatorId,
+                data.StartTimeInclusive.AddDays(7),
+                data.EndTimeExclusive)).Returns(cost2);
 
             var result = await this.target.ExecuteAsync(data);
 
             Assert.AreEqual(
                 new PaymentProcessingResults(
-                    InitialCommittedAccountBalance.Subtract(cost.Cost),
+                    InitialCommittedAccountBalance.Subtract(cost1.Cost),
                     new List<PaymentProcessingResult>
                     {
                         new PaymentProcessingResult(
                             data.StartTimeInclusive,
-                            data.EndTimeExclusive,
-                            new AggregateCostSummary(10),
+                            data.StartTimeInclusive.AddDays(7),
+                            cost1,
                             creatorPercentageOverride,
                             true),
+                        new PaymentProcessingResult(
+                            data.StartTimeInclusive.AddDays(7),
+                            data.EndTimeExclusive,
+                            cost2,
+                            creatorPercentageOverride,
+                            false),
                     }),
                     result);
         }
 
         [TestMethod]
-        public async Task WhenExaclyOneWeekAndCreatorPercentageOverrideSpecifiedAndNoExpiry_ItShouldIncludeInResults()
+        public async Task WhenExaclyTwoWeeksAndCreatorPercentageOverrideSpecifiedAndNoExpiry_ItShouldIncludeInResults()
         {
             var creatorPercentageOverride = new CreatorPercentageOverrideData(
                 0.9m,
@@ -267,37 +297,105 @@
 
             var data = this.CreateData(
                 StartTimeInclusive,
-                StartTimeInclusive.AddDays(7),
+                StartTimeInclusive.AddDays(14),
                 creatorPercentageOverride);
 
-            var cost = new AggregateCostSummary(10);
+            var cost1 = new AggregateCostSummary(10);
             this.subscriberPaymentPipeline.Setup(v => v.CalculatePayment(
                 data.GetOrderedSnapshots(),
                 data.CreatorPosts,
                 SubscriberId,
                 CreatorId,
                 data.StartTimeInclusive,
-                data.EndTimeExclusive)).Returns(cost);
+                data.StartTimeInclusive.AddDays(7))).Returns(cost1);
+
+            var cost2 = new AggregateCostSummary(20);
+            this.subscriberPaymentPipeline.Setup(v => v.CalculatePayment(
+                data.GetOrderedSnapshots(),
+                null,
+                SubscriberId,
+                CreatorId,
+                data.StartTimeInclusive.AddDays(7),
+                data.EndTimeExclusive)).Returns(cost2);
 
             var result = await this.target.ExecuteAsync(data);
 
             Assert.AreEqual(
                 new PaymentProcessingResults(
-                    InitialCommittedAccountBalance.Subtract(cost.Cost),
+                    InitialCommittedAccountBalance.Subtract(cost1.Cost),
                     new List<PaymentProcessingResult>
                     {
                         new PaymentProcessingResult(
                             data.StartTimeInclusive,
-                            data.EndTimeExclusive,
-                            new AggregateCostSummary(10),
+                            data.StartTimeInclusive.AddDays(7),
+                            cost1,
                             creatorPercentageOverride,
                             true),
+                        new PaymentProcessingResult(
+                            data.StartTimeInclusive.AddDays(7),
+                            data.EndTimeExclusive,
+                            cost2,
+                            creatorPercentageOverride,
+                            false),
                     }),
                     result);
         }
 
         [TestMethod]
-        public async Task WhenExaclyOneWeekAndCreatorPercentageOverrideSpecifiedAndExpired_ItShouldNotIncludeInResults()
+        public async Task WhenExaclyTwoWeeksAndCreatorPercentageOverrideSpecifiedAndExpiredInUncommittedWeek_ItShouldNotIncludeInUncommittedResults()
+        {
+            var creatorPercentageOverride = new CreatorPercentageOverrideData(
+                0.9m,
+                StartTimeInclusive.AddDays(14).AddTicks(-1));
+
+            var data = this.CreateData(
+                StartTimeInclusive,
+                StartTimeInclusive.AddDays(14),
+                creatorPercentageOverride);
+
+            var cost1 = new AggregateCostSummary(10);
+            this.subscriberPaymentPipeline.Setup(v => v.CalculatePayment(
+                data.GetOrderedSnapshots(),
+                data.CreatorPosts,
+                SubscriberId,
+                CreatorId,
+                data.StartTimeInclusive,
+                data.StartTimeInclusive.AddDays(7))).Returns(cost1);
+
+            var cost2 = new AggregateCostSummary(20);
+            this.subscriberPaymentPipeline.Setup(v => v.CalculatePayment(
+                data.GetOrderedSnapshots(),
+                null,
+                SubscriberId,
+                CreatorId,
+                data.StartTimeInclusive.AddDays(7),
+                data.EndTimeExclusive)).Returns(cost2);
+
+            var result = await this.target.ExecuteAsync(data);
+
+            Assert.AreEqual(
+                new PaymentProcessingResults(
+                    InitialCommittedAccountBalance.Subtract(cost1.Cost),
+                    new List<PaymentProcessingResult>
+                    {
+                        new PaymentProcessingResult(
+                            data.StartTimeInclusive,
+                            data.StartTimeInclusive.AddDays(7),
+                            cost1,
+                            creatorPercentageOverride,
+                            true),
+                        new PaymentProcessingResult(
+                            data.StartTimeInclusive.AddDays(7),
+                            data.EndTimeExclusive,
+                            cost2,
+                            null,
+                            false),
+                    }),
+                    result);
+        }
+
+        [TestMethod]
+        public async Task WhenExaclyTwoWeeksAndCreatorPercentageOverrideSpecifiedAndExpiredInCommittedWeek_ItShouldNotIncludeInResults()
         {
             var creatorPercentageOverride = new CreatorPercentageOverrideData(
                 0.9m,
@@ -305,31 +403,46 @@
 
             var data = this.CreateData(
                 StartTimeInclusive,
-                StartTimeInclusive.AddDays(7),
+                StartTimeInclusive.AddDays(14),
                 creatorPercentageOverride);
 
-            var cost = new AggregateCostSummary(10);
+            var cost1 = new AggregateCostSummary(10);
             this.subscriberPaymentPipeline.Setup(v => v.CalculatePayment(
                 data.GetOrderedSnapshots(),
                 data.CreatorPosts,
                 SubscriberId,
                 CreatorId,
                 data.StartTimeInclusive,
-                data.EndTimeExclusive)).Returns(cost);
+                data.StartTimeInclusive.AddDays(7))).Returns(cost1);
+
+            var cost2 = new AggregateCostSummary(20);
+            this.subscriberPaymentPipeline.Setup(v => v.CalculatePayment(
+                data.GetOrderedSnapshots(),
+                null,
+                SubscriberId,
+                CreatorId,
+                data.StartTimeInclusive.AddDays(7),
+                data.EndTimeExclusive)).Returns(cost2);
 
             var result = await this.target.ExecuteAsync(data);
 
             Assert.AreEqual(
                 new PaymentProcessingResults(
-                    InitialCommittedAccountBalance.Subtract(cost.Cost),
+                    InitialCommittedAccountBalance.Subtract(cost1.Cost),
                     new List<PaymentProcessingResult>
                     {
                         new PaymentProcessingResult(
                             data.StartTimeInclusive,
-                            data.EndTimeExclusive,
-                            new AggregateCostSummary(10),
+                            data.StartTimeInclusive.AddDays(7),
+                            cost1,
                             null,
                             true),
+                        new PaymentProcessingResult(
+                            data.StartTimeInclusive.AddDays(7),
+                            data.EndTimeExclusive,
+                            cost2,
+                            null,
+                            false),
                     }),
                     result);
         }
@@ -343,7 +456,7 @@
 
             var data = this.CreateData(
                 StartTimeInclusive,
-                StartTimeInclusive.AddDays(16),
+                StartTimeInclusive.AddDays(23),
                 creatorPercentageOverride);
 
             var cost1 = new AggregateCostSummary(10);
@@ -411,7 +524,7 @@
 
             var data = this.CreateData(
                 StartTimeInclusive,
-                StartTimeInclusive.AddDays(16),
+                StartTimeInclusive.AddDays(23),
                 creatorPercentageOverride);
 
             var cost1 = new AggregateCostSummary(60);

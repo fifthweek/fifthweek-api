@@ -31,8 +31,13 @@ namespace Fifthweek.Payments.Services
                 var currentStartTimeInclusive = startTimeInclusive;
                 var currentEndTimeExclusive = startTimeInclusive.AddDays(7);
 
+                // This is the final time at which we can be totally sure if the creator
+                // has posted in the billing week, as the subscriber billing week most likely
+                // doesn't line up with the payment billing week.
+                var committedRecordsEndTimeExclusive = endTimeExclusive.AddDays(-7);
+
                 var result = new List<PaymentProcessingResult>();
-                while (currentEndTimeExclusive <= endTimeExclusive)
+                while (currentEndTimeExclusive <= committedRecordsEndTimeExclusive)
                 {
                     // Calculate complete week.
                     var cost = this.subscriberPaymentPipeline.CalculatePayment(
@@ -62,10 +67,10 @@ namespace Fifthweek.Payments.Services
 
                 if (currentStartTimeInclusive < endTimeExclusive)
                 {
-                    // Calculate partial week.
-                    // We don't calculate taking into account CreatorPosts, 
-                    // as until the week is over we can't be sure if the creator will post
-                    // and we assume they will until we know otherwise.
+                    // Calculate uncommitted period.
+                    // We calculate without taking into account CreatorPosts, 
+                    // as we assume they will post until we can be totally sure 
+                    // know otherwise.
                     var cost = this.subscriberPaymentPipeline.CalculatePayment(
                         orderedSnapshots,
                         null, 
