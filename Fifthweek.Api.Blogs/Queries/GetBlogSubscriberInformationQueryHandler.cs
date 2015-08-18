@@ -61,6 +61,8 @@
                         first.UserId,
                         fileInformation,
                         first.FreeAccessEmail,
+                        first.PaymentStatus,
+                        first.HasPaymentDetails,
                         channels));
             }
 

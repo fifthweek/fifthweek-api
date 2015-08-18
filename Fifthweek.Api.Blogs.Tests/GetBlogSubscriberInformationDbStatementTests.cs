@@ -13,6 +13,7 @@
     using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.Api.Persistence;
     using Fifthweek.Api.Persistence.Identity;
+    using Fifthweek.Api.Persistence.Payments;
     using Fifthweek.Api.Persistence.Tests.Shared;
 
     using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -112,15 +113,15 @@
                     new List<GetBlogSubscriberInformationDbStatement.GetBlogSubscriberInformationDbStatementResult.Subscriber>
                     {
                         new GetBlogSubscriberInformationDbStatement.GetBlogSubscriberInformationDbStatementResult.Subscriber(
-                            Username1, UserId1, ProfileImageFileId1, Blog1ChannelIds[0], SubscriptionStartDate, 10, UserEmail1),
+                            Username1, UserId1, ProfileImageFileId1, Blog1ChannelIds[0], SubscriptionStartDate, 10, UserEmail1, PaymentStatus.Retry2, true),
                         new GetBlogSubscriberInformationDbStatement.GetBlogSubscriberInformationDbStatementResult.Subscriber(
-                            Username1, UserId1, ProfileImageFileId1, Blog1ChannelIds[1], SubscriptionStartDate, 10, UserEmail1),
+                            Username1, UserId1, ProfileImageFileId1, Blog1ChannelIds[1], SubscriptionStartDate, 10, UserEmail1, PaymentStatus.Retry2, true),
                         new GetBlogSubscriberInformationDbStatement.GetBlogSubscriberInformationDbStatementResult.Subscriber(
-                            Username2, UserId2, null, Blog1ChannelIds[0], SubscriptionStartDate, 20, null),
+                            Username2, UserId2, null, Blog1ChannelIds[0], SubscriptionStartDate, 20, null, PaymentStatus.Failed, false),
                         new GetBlogSubscriberInformationDbStatement.GetBlogSubscriberInformationDbStatementResult.Subscriber(
-                            Username2, UserId2, null, Blog1ChannelIds[1], SubscriptionStartDate, 20, null),
+                            Username2, UserId2, null, Blog1ChannelIds[1], SubscriptionStartDate, 20, null, PaymentStatus.Failed, false),
                         new GetBlogSubscriberInformationDbStatement.GetBlogSubscriberInformationDbStatementResult.Subscriber(
-                            Username3, UserId3, null, Blog1ChannelIds[1], SubscriptionStartDate, 30, null),
+                            Username3, UserId3, null, Blog1ChannelIds[1], SubscriptionStartDate, 30, null, PaymentStatus.None, false),
                     }, 
                     result.Subscribers.ToList());
 
@@ -176,6 +177,31 @@
                 await connection.InsertAsync(new ChannelSubscription(blog1Channels[1].Id, null, UserId2.Value, null, 20, PriceLastAcceptedDate, SubscriptionStartDate));
 
                 await connection.InsertAsync(new ChannelSubscription(blog1Channels[1].Id, null, UserId3.Value, null, 30, PriceLastAcceptedDate, SubscriptionStartDate));
+
+
+                await connection.InsertAsync(
+                    new UserPaymentOrigin(
+                        UserId1.Value,
+                        null,
+                        "blah",
+                        PaymentOriginKeyType.Stripe,
+                        null,
+                        null,
+                        null,
+                        null,
+                        PaymentStatus.Retry2));
+                
+                await connection.InsertAsync(
+                    new UserPaymentOrigin(
+                        UserId2.Value,
+                        null,
+                        "blah",
+                        PaymentOriginKeyType.None,
+                        null,
+                        null,
+                        null,
+                        null,
+                        PaymentStatus.Failed));
             }
         }
 

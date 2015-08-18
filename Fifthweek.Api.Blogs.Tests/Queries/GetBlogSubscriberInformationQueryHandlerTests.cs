@@ -12,6 +12,7 @@
     using Fifthweek.Api.FileManagement.Shared;
     using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.Api.Identity.Tests.Shared.Membership;
+    using Fifthweek.Api.Persistence.Payments;
     using Fifthweek.Shared;
 
     using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -123,7 +124,9 @@
                 ChannelId.Random(),
                 DateTime.UtcNow.AddDays(-1),
                 10,
-                new Email("a@b.com"));
+                new Email("a@b.com"),
+                PaymentStatus.Retry2,
+                true);
 
             var subscriber2 = new GetBlogSubscriberInformationDbStatement.GetBlogSubscriberInformationDbStatementResult.Subscriber(
                 new Username(Guid.NewGuid().ToString()),
@@ -132,7 +135,9 @@
                 ChannelId.Random(),
                 DateTime.UtcNow.AddDays(-2),
                 20,
-                new Email("c@d.com"));
+                new Email("c@d.com"),
+                PaymentStatus.None,
+                false);
 
             var subscriber3 = new GetBlogSubscriberInformationDbStatement.GetBlogSubscriberInformationDbStatementResult.Subscriber(
                 subscriber1.Username,
@@ -141,7 +146,9 @@
                 ChannelId.Random(),
                 DateTime.UtcNow.AddDays(-3),
                 30,
-                new Email("a@b.com"));
+                new Email("a@b.com"),
+                PaymentStatus.Failed,
+                true);
 
             var subscriber4 = new GetBlogSubscriberInformationDbStatement.GetBlogSubscriberInformationDbStatementResult.Subscriber(
                 new Username(Guid.NewGuid().ToString()),
@@ -150,7 +157,9 @@
                 ChannelId.Random(),
                 DateTime.UtcNow.AddDays(-4),
                 40,
-                null);
+                null,
+                PaymentStatus.None,
+                true);
 
             this.getBlogSubscriberInformation.Setup(v => v.ExecuteAsync(Query.BlogId)).ReturnsAsync(
                 new GetBlogSubscriberInformationDbStatement.GetBlogSubscriberInformationDbStatementResult(
@@ -182,6 +191,8 @@
                         subscriber1.UserId,
                         fileInformation1,
                         subscriber1.FreeAccessEmail,
+                        PaymentStatus.Retry2,
+                        true,
                         new List<BlogSubscriberInformation.SubscriberChannel>
                         {
                             new BlogSubscriberInformation.SubscriberChannel(
@@ -198,6 +209,8 @@
                         subscriber2.UserId,
                         fileInformation2,
                         subscriber2.FreeAccessEmail,
+                        PaymentStatus.None,
+                        false,
                         new List<BlogSubscriberInformation.SubscriberChannel>
                         {
                             new BlogSubscriberInformation.SubscriberChannel(
@@ -210,6 +223,8 @@
                         subscriber4.UserId,
                         null,
                         subscriber4.FreeAccessEmail,
+                        PaymentStatus.None,
+                        true,
                         new List<BlogSubscriberInformation.SubscriberChannel>
                         {
                             new BlogSubscriberInformation.SubscriberChannel(

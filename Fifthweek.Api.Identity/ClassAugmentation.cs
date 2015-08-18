@@ -807,7 +807,7 @@ namespace Fifthweek.Api.Identity.Membership
             Fifthweek.Api.FileManagement.Shared.FileId profileImageFileId,
             System.Decimal accountBalance,
             Fifthweek.Api.Persistence.Payments.PaymentStatus paymentStatus,
-            System.Boolean hasCreditCardDetails)
+            System.Boolean hasPaymentDetails)
         {
             if (username == null)
             {
@@ -829,9 +829,9 @@ namespace Fifthweek.Api.Identity.Membership
                 throw new ArgumentNullException("paymentStatus");
             }
 
-            if (hasCreditCardDetails == null)
+            if (hasPaymentDetails == null)
             {
-                throw new ArgumentNullException("hasCreditCardDetails");
+                throw new ArgumentNullException("hasPaymentDetails");
             }
 
             this.Name = name;
@@ -840,7 +840,7 @@ namespace Fifthweek.Api.Identity.Membership
             this.ProfileImageFileId = profileImageFileId;
             this.AccountBalance = accountBalance;
             this.PaymentStatus = paymentStatus;
-            this.HasCreditCardDetails = hasCreditCardDetails;
+            this.HasPaymentDetails = hasPaymentDetails;
         }
     }
 }
@@ -3096,7 +3096,7 @@ namespace Fifthweek.Api.Identity.Membership
     {
         public override string ToString()
         {
-            return string.Format("GetAccountSettingsDbResult({0}, {1}, {2}, {3}, {4}, {5}, {6})", this.Name == null ? "null" : this.Name.ToString(), this.Username == null ? "null" : this.Username.ToString(), this.Email == null ? "null" : this.Email.ToString(), this.ProfileImageFileId == null ? "null" : this.ProfileImageFileId.ToString(), this.AccountBalance == null ? "null" : this.AccountBalance.ToString(), this.PaymentStatus == null ? "null" : this.PaymentStatus.ToString(), this.HasCreditCardDetails == null ? "null" : this.HasCreditCardDetails.ToString());
+            return string.Format("GetAccountSettingsDbResult({0}, {1}, {2}, {3}, {4}, {5}, {6})", this.Name == null ? "null" : this.Name.ToString(), this.Username == null ? "null" : this.Username.ToString(), this.Email == null ? "null" : this.Email.ToString(), this.ProfileImageFileId == null ? "null" : this.ProfileImageFileId.ToString(), this.AccountBalance == null ? "null" : this.AccountBalance.ToString(), this.PaymentStatus == null ? "null" : this.PaymentStatus.ToString(), this.HasPaymentDetails == null ? "null" : this.HasPaymentDetails.ToString());
         }
         
         public override bool Equals(object obj)
@@ -3130,7 +3130,7 @@ namespace Fifthweek.Api.Identity.Membership
                 hashCode = (hashCode * 397) ^ (this.ProfileImageFileId != null ? this.ProfileImageFileId.GetHashCode() : 0);
                 hashCode = (hashCode * 397) ^ (this.AccountBalance != null ? this.AccountBalance.GetHashCode() : 0);
                 hashCode = (hashCode * 397) ^ (this.PaymentStatus != null ? this.PaymentStatus.GetHashCode() : 0);
-                hashCode = (hashCode * 397) ^ (this.HasCreditCardDetails != null ? this.HasCreditCardDetails.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.HasPaymentDetails != null ? this.HasPaymentDetails.GetHashCode() : 0);
                 return hashCode;
             }
         }
@@ -3167,7 +3167,7 @@ namespace Fifthweek.Api.Identity.Membership
                 return false;
             }
         
-            if (!object.Equals(this.HasCreditCardDetails, other.HasCreditCardDetails))
+            if (!object.Equals(this.HasPaymentDetails, other.HasPaymentDetails))
             {
                 return false;
             }

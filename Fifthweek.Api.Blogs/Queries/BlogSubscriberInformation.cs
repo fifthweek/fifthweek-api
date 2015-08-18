@@ -6,6 +6,7 @@
     using Fifthweek.Api.Channels.Shared;
     using Fifthweek.Api.FileManagement.Shared;
     using Fifthweek.Api.Identity.Shared.Membership;
+    using Fifthweek.Api.Persistence.Payments;
     using Fifthweek.CodeGeneration;
 
     [AutoConstructor, AutoEqualityMembers]
@@ -22,27 +23,31 @@
         [AutoConstructor, AutoEqualityMembers]
         public partial class Subscriber
         {
-            public Username Username { get; set; }
+            public Username Username { get; private set; }
 
-            public UserId UserId { get; set; }
-
-            [Optional]
-            public FileInformation ProfileImage { get; set; }
+            public UserId UserId { get; private set; }
 
             [Optional]
-            public Email FreeAccessEmail { get; set; }
+            public FileInformation ProfileImage { get; private set; }
 
-            public IReadOnlyList<SubscriberChannel> Channels { get; set; }
+            [Optional]
+            public Email FreeAccessEmail { get; private set; }
+
+            public PaymentStatus PaymentStatus { get; private set; }
+
+            public bool HasPaymentDetails { get; private set; }
+
+            public IReadOnlyList<SubscriberChannel> Channels { get; private set; }
         }
 
         [AutoConstructor, AutoEqualityMembers]
         public partial class SubscriberChannel
         {
-            public ChannelId ChannelId { get; set; }
+            public ChannelId ChannelId { get; private set; }
 
-            public DateTime SubscriptionStartDate { get; set; }
+            public DateTime SubscriptionStartDate { get; private set; }
 
-            public int AcceptedPrice { get; set; }
+            public int AcceptedPrice { get; private set; }
         }
     }
 }

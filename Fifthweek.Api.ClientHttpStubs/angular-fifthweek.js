@@ -743,6 +743,8 @@ angular.module('webApp').factory('blogStub',
     //         containerName: ''
     //       },
     //       freeAccessEmail: '', /* optional */
+    //       paymentStatus: 'paymentstatus',
+    //       hasPaymentDetails: false,
     //       channels: [
     //         {
     //           channelId: 'Base64Guid',
