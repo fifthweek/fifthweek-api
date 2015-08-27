@@ -17,9 +17,6 @@ namespace Fifthweek.Api.Aggregations.Queries
 
         [Optional]
         public CreatorStatus CreatorStatus { get; private set; }
-        
-        [Optional]
-        public ChannelsAndCollections CreatedChannelsAndCollections { get; private set; }
 
         [Optional]
         public GetAccountSettingsResult AccountSettings { get; private set; }

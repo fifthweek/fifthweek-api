@@ -23,6 +23,7 @@
     {
         private static readonly UserId UserId = new UserId(Guid.NewGuid());
         private static readonly Requester Requester = Requester.Authenticated(UserId, FifthweekRole.Creator);
+        private static readonly DateTime Now = DateTime.UtcNow;
 
         private static readonly UserAccessSignatures UserAccessSignatures =
             new UserAccessSignatures(
@@ -40,18 +41,23 @@
                             DateTime.UtcNow)),
                     });
 
-        private static readonly UserState UserState = new UserState(UserAccessSignatures, null, null, null, null, null);
+        private static readonly UserState UserState = new UserState(UserAccessSignatures, null, null, null, null);
 
         private UserStateController target;
         private Mock<IQueryHandler<GetUserStateQuery, UserState>> getUserState;
         private Mock<IRequesterContext> requesterContext;
+        private Mock<ITimestampCreator> timestampCreator;
 
         [TestInitialize]
         public void TestInitialize()
         {
             this.getUserState = new Mock<IQueryHandler<GetUserStateQuery, UserState>>();
             this.requesterContext = new Mock<IRequesterContext>();
-            this.target = new UserStateController(this.getUserState.Object, this.requesterContext.Object);
+            this.timestampCreator = new Mock<ITimestampCreator>();
+
+            this.timestampCreator.Setup(v => v.Now()).Returns(Now);
+
+            this.target = new UserStateController(this.getUserState.Object, this.timestampCreator.Object, this.requesterContext.Object);
         }
 
         [TestMethod]
@@ -59,7 +65,7 @@
         {
             this.requesterContext.Setup(_ => _.GetRequesterAsync()).ReturnsAsync(Requester);
 
-            this.getUserState.Setup(v => v.HandleAsync(new GetUserStateQuery(Requester, UserId, false)))
+            this.getUserState.Setup(v => v.HandleAsync(new GetUserStateQuery(Requester, UserId, false, Now)))
                 .ReturnsAsync(UserState);
 
             var result = await this.target.GetUserState(UserId.Value.EncodeGuid());
@@ -72,7 +78,7 @@
         {
             this.requesterContext.Setup(_ => _.GetRequesterAsync()).ReturnsAsync(Requester);
 
-            this.getUserState.Setup(v => v.HandleAsync(new GetUserStateQuery(Requester, UserId, true)))
+            this.getUserState.Setup(v => v.HandleAsync(new GetUserStateQuery(Requester, UserId, true, Now)))
                 .ReturnsAsync(UserState);
 
             var result = await this.target.GetUserState(UserId.Value.EncodeGuid(), true);
@@ -85,7 +91,7 @@
         {
             this.requesterContext.Setup(v => v.GetRequesterAsync()).ReturnsAsync(Requester.Unauthenticated);
 
-            this.getUserState.Setup(v => v.HandleAsync(new GetUserStateQuery(Requester.Unauthenticated, null, false)))
+            this.getUserState.Setup(v => v.HandleAsync(new GetUserStateQuery(Requester.Unauthenticated, null, false, Now)))
                 .ReturnsAsync(UserState);
 
             var result = await this.target.GetVisitorState();

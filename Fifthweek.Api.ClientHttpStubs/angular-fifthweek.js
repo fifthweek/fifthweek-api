@@ -156,7 +156,9 @@ angular.module('webApp').factory('accountSettingsStub',
     //   },
     //   accountBalance: 0,
     //   paymentStatus: 'paymentstatus',
-    //   hasPaymentInformation: false
+    //   hasPaymentInformation: false,
+    //   creatorPercentage: 0.0,
+    //   creatorPercentageWeeksRemaining: 0 /* optional */
     // }
     service.get = function(userId) {
       return $http.get(utilities.fixUri(apiBaseUri + 'accountSettings/' + encodeURIComponent(userId))).catch(function(response) {
@@ -744,7 +746,7 @@ angular.module('webApp').factory('blogStub',
     //       },
     //       freeAccessEmail: '', /* optional */
     //       paymentStatus: 'paymentstatus',
-    //       hasPaymentDetails: false,
+    //       hasPaymentInformation: false,
     //       channels: [
     //         {
     //           channelId: 'Base64Guid',
@@ -859,27 +861,6 @@ angular.module('webApp').factory('userStateStub',
     //     blogId: 'Base64Guid', /* optional */
     //     mustWriteFirstPost: false
     //   },
-    //   createdChannelsAndCollections: { /* optional */
-    //     channels: [
-    //       {
-    //         channelId: 'Base64Guid',
-    //         name: '',
-    //         description: '',
-    //         price: 0,
-    //         isDefault: false,
-    //         isVisibleToNonSubscribers: false,
-    //         collections: [
-    //           {
-    //             collectionId: 'Base64Guid',
-    //             name: '',
-    //             weeklyReleaseSchedule: [
-    //               0
-    //             ]
-    //           }
-    //         ]
-    //       }
-    //     ]
-    //   },
     //   accountSettings: { /* optional */
     //     name: '', /* optional */
     //     username: '',
@@ -890,7 +871,9 @@ angular.module('webApp').factory('userStateStub',
     //     },
     //     accountBalance: 0,
     //     paymentStatus: 'paymentstatus',
-    //     hasPaymentInformation: false
+    //     hasPaymentInformation: false,
+    //     creatorPercentage: 0.0,
+    //     creatorPercentageWeeksRemaining: 0 /* optional */
     //   },
     //   blog: { /* optional */
     //     blogId: 'Base64Guid',
@@ -990,27 +973,6 @@ angular.module('webApp').factory('userStateStub',
     //     blogId: 'Base64Guid', /* optional */
     //     mustWriteFirstPost: false
     //   },
-    //   createdChannelsAndCollections: { /* optional */
-    //     channels: [
-    //       {
-    //         channelId: 'Base64Guid',
-    //         name: '',
-    //         description: '',
-    //         price: 0,
-    //         isDefault: false,
-    //         isVisibleToNonSubscribers: false,
-    //         collections: [
-    //           {
-    //             collectionId: 'Base64Guid',
-    //             name: '',
-    //             weeklyReleaseSchedule: [
-    //               0
-    //             ]
-    //           }
-    //         ]
-    //       }
-    //     ]
-    //   },
     //   accountSettings: { /* optional */
     //     name: '', /* optional */
     //     username: '',
@@ -1021,7 +983,9 @@ angular.module('webApp').factory('userStateStub',
     //     },
     //     accountBalance: 0,
     //     paymentStatus: 'paymentstatus',
-    //     hasPaymentInformation: false
+    //     hasPaymentInformation: false,
+    //     creatorPercentage: 0.0,
+    //     creatorPercentageWeeksRemaining: 0 /* optional */
     //   },
     //   blog: { /* optional */
     //     blogId: 'Base64Guid',

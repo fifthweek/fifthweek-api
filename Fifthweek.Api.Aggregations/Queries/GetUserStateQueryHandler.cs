@@ -36,7 +36,6 @@
 
             GetUserSubscriptionsResult userSubscriptions = null;
             CreatorStatus creatorStatus = null;
-            ChannelsAndCollections createdChannelsAndCollections = null;
             GetAccountSettingsResult accountSettings = null;
             BlogWithFileInformation blog = null;
             
@@ -47,7 +46,7 @@
                     var impersonatingRequester = await this.impersonateIfRequired.ExecuteAsync(query.Requester, query.RequestedUserId);
                     if (impersonatingRequester != null)
                     {
-                        query = new GetUserStateQuery(impersonatingRequester, query.RequestedUserId, false);
+                        query = new GetUserStateQuery(impersonatingRequester, query.RequestedUserId, false, query.Now);
                     }
                 }
 
@@ -62,7 +61,8 @@
                 }
 
                 var blogSubscriptionsTask = this.getBlogSubscriptions.HandleAsync(new GetUserSubscriptionsQuery(query.Requester, query.RequestedUserId));
-                var accountSettingsTask = this.getAccountSettings.HandleAsync(new GetAccountSettingsQuery(query.Requester, query.RequestedUserId));
+                var accountSettingsTask = this.getAccountSettings.HandleAsync(new GetAccountSettingsQuery(
+                    query.Requester, query.RequestedUserId, query.Now));
 
                 if (isCreator)
                 {
@@ -78,9 +78,6 @@
                     if (blogChannelsAndCollections != null)
                     {
                         blog = blogChannelsAndCollections.Blog;
-                        
-                        // Temporary for backwards compatibility with live site.
-                        createdChannelsAndCollections = new ChannelsAndCollections(blog.Channels);
                     }
                 }
 
@@ -105,7 +102,6 @@
             return new UserState(
                 userAccessSignatures, 
                 creatorStatus, 
-                createdChannelsAndCollections,
                 accountSettings,
                 blog,
                 userSubscriptions);

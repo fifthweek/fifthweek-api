@@ -223,6 +223,7 @@
     <Compile Include="Services\PaymentProcessingException.cs" />
     <Compile Include="Services\PaymentProcessingResult.cs" />
     <Compile Include="Services\PaymentProcessingResults.cs" />
+    <Compile Include="Services\PaymentProcessingUtilities.cs" />
     <Compile Include="Services\PersistCommittedAndUncommittedRecordsDbStatement.cs" />
     <Compile Include="Services\PersistedPaymentProcessingData.cs" />
     <Compile Include="Services\PersistPaymentProcessingDataStatement.cs" />

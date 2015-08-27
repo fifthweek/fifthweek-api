@@ -14,7 +14,7 @@
     public partial class UserStateController : ApiController
     {
         private readonly IQueryHandler<GetUserStateQuery, UserState> getUserState;
-
+        private readonly ITimestampCreator timestampCreator;
         private readonly IRequesterContext requesterContext;
 
         [Route("{userId}")]
@@ -23,7 +23,8 @@
             var requestedUserId = new UserId(userId.DecodeGuid());
             var requester = await this.requesterContext.GetRequesterAsync();
 
-            var userState = await this.getUserState.HandleAsync(new GetUserStateQuery(requester, requestedUserId, impersonate));
+            var now = this.timestampCreator.Now();
+            var userState = await this.getUserState.HandleAsync(new GetUserStateQuery(requester, requestedUserId, impersonate, now));
 
             return userState;
         }
@@ -33,7 +34,8 @@
         {
             var requester = await this.requesterContext.GetRequesterAsync();
 
-            var userState = await this.getUserState.HandleAsync(new GetUserStateQuery(requester, null, false));
+            var now = this.timestampCreator.Now();
+            var userState = await this.getUserState.HandleAsync(new GetUserStateQuery(requester, null, false, now));
 
             return userState;
         }

@@ -29,6 +29,7 @@
     {
         private static readonly UserId UserId = new UserId(Guid.NewGuid());
         private static readonly Requester Requester = Requester.Authenticated(UserId);
+        private static readonly DateTime Now = DateTime.UtcNow;
 
         private static readonly UserAccessSignatures UserAccessSignatures =
             new UserAccessSignatures(
@@ -99,7 +100,7 @@
         public async Task WhenCalled_ItShouldCheckTheAuthenticatedUserIsCorrect()
         {
             this.requesterSecurity.SetupFor(Requester);
-            await this.target.HandleAsync(new GetUserStateQuery(Requester, new UserId(Guid.NewGuid()), false));
+            await this.target.HandleAsync(new GetUserStateQuery(Requester, new UserId(Guid.NewGuid()), false, Now));
         }
 
         [TestMethod]
@@ -111,12 +112,11 @@
             this.getUserAccessSignatures.Setup(v => v.HandleAsync(new GetUserAccessSignaturesQuery(Requester.Unauthenticated, null, null, null)))
                 .ReturnsAsync(UserAccessSignatures);
 
-            var result = await this.target.HandleAsync(new GetUserStateQuery(Requester.Unauthenticated, null, false));
+            var result = await this.target.HandleAsync(new GetUserStateQuery(Requester.Unauthenticated, null, false, Now));
 
             Assert.IsNotNull(result);
             Assert.AreEqual(UserAccessSignatures, result.AccessSignatures);
             Assert.IsNull(result.CreatorStatus);
-            Assert.IsNull(result.CreatedChannelsAndCollections);
             Assert.IsNull(result.AccountSettings);
             Assert.IsNull(result.Blog);
             Assert.IsNull(result.Subscriptions);
@@ -127,16 +127,16 @@
         {
             this.requesterSecurity.SetupFor(Requester);
 
-            var accountSettings = new GetAccountSettingsResult(new CreatorName("name"), new Username("username"), new Email("a@b.com"), null, 10, PaymentStatus.Retry1, true);
+            var accountSettings = new GetAccountSettingsResult(new CreatorName("name"), new Username("username"), new Email("a@b.com"), null, 10, PaymentStatus.Retry1, true, 1m, null);
 
             this.getUserAccessSignatures.Setup(v => v.HandleAsync(new GetUserAccessSignaturesQuery(Requester, UserId, null, new List<ChannelId> { UserSubscriptions.Blogs[0].Channels[0].ChannelId, UserSubscriptions.Blogs[1].Channels[0].ChannelId })))
                 .ReturnsAsync(UserAccessSignatures);
-            this.getAccountSettings.Setup(v => v.HandleAsync(new GetAccountSettingsQuery(Requester, UserId)))
+            this.getAccountSettings.Setup(v => v.HandleAsync(new GetAccountSettingsQuery(Requester, UserId, Now)))
                 .ReturnsAsync(accountSettings);
             this.getBlogSubscriptions.Setup(v => v.HandleAsync(new GetUserSubscriptionsQuery(Requester, UserId)))
                 .ReturnsAsync(UserSubscriptions);
 
-            var result = await this.target.HandleAsync(new GetUserStateQuery(Requester, UserId, false));
+            var result = await this.target.HandleAsync(new GetUserStateQuery(Requester, UserId, false, Now));
 
             Assert.IsNotNull(result);
             Assert.AreEqual(UserAccessSignatures, result.AccessSignatures);
@@ -144,7 +144,6 @@
             Assert.AreEqual(accountSettings, result.AccountSettings);
 
             Assert.IsNull(result.CreatorStatus);
-            Assert.IsNull(result.CreatedChannelsAndCollections);
             Assert.IsNull(result.Blog);
         }
 
@@ -153,11 +152,11 @@
         {
             this.requesterSecurity.SetupFor(Requester);
 
-            var accountSettings = new GetAccountSettingsResult(new CreatorName("name"), new Username("username"), new Email("a@b.com"), null, 10, PaymentStatus.Retry1, true);
+            var accountSettings = new GetAccountSettingsResult(new CreatorName("name"), new Username("username"), new Email("a@b.com"), null, 10, PaymentStatus.Retry1, true, 1m, null);
 
             this.getUserAccessSignatures.Setup(v => v.HandleAsync(new GetUserAccessSignaturesQuery(Requester, UserId, null, new List<ChannelId> { UserSubscriptions.Blogs[0].Channels[0].ChannelId, UserSubscriptions.Blogs[1].Channels[0].ChannelId })))
                 .ReturnsAsync(UserAccessSignatures);
-            this.getAccountSettings.Setup(v => v.HandleAsync(new GetAccountSettingsQuery(Requester, UserId)))
+            this.getAccountSettings.Setup(v => v.HandleAsync(new GetAccountSettingsQuery(Requester, UserId, Now)))
                 .ReturnsAsync(accountSettings);
             this.getBlogSubscriptions.Setup(v => v.HandleAsync(new GetUserSubscriptionsQuery(Requester, UserId)))
                 .ReturnsAsync(UserSubscriptions);
@@ -168,7 +167,7 @@
                 .ReturnsAsync(Requester);
 
             var result = await this.target.HandleAsync(
-                new GetUserStateQuery(impersonatingRequester, UserId, true));
+                new GetUserStateQuery(impersonatingRequester, UserId, true, Now));
 
             Assert.IsNotNull(result);
             Assert.AreEqual(UserAccessSignatures, result.AccessSignatures);
@@ -176,7 +175,6 @@
             Assert.AreEqual(accountSettings, result.AccountSettings);
 
             Assert.IsNull(result.CreatorStatus);
-            Assert.IsNull(result.CreatedChannelsAndCollections);
             Assert.IsNull(result.Blog);
         }
 
@@ -185,11 +183,11 @@
         {
             this.requesterSecurity.SetupFor(Requester);
 
-            var accountSettings = new GetAccountSettingsResult(new CreatorName("name"), new Username("username"), new Email("a@b.com"), null, 10, PaymentStatus.Retry1, true);
+            var accountSettings = new GetAccountSettingsResult(new CreatorName("name"), new Username("username"), new Email("a@b.com"), null, 10, PaymentStatus.Retry1, true, 1m, null);
 
             this.getUserAccessSignatures.Setup(v => v.HandleAsync(new GetUserAccessSignaturesQuery(Requester, UserId, null, new List<ChannelId> { UserSubscriptions.Blogs[0].Channels[0].ChannelId, UserSubscriptions.Blogs[1].Channels[0].ChannelId })))
                 .ReturnsAsync(UserAccessSignatures);
-            this.getAccountSettings.Setup(v => v.HandleAsync(new GetAccountSettingsQuery(Requester, UserId)))
+            this.getAccountSettings.Setup(v => v.HandleAsync(new GetAccountSettingsQuery(Requester, UserId, Now)))
                 .ReturnsAsync(accountSettings);
             this.getBlogSubscriptions.Setup(v => v.HandleAsync(new GetUserSubscriptionsQuery(Requester, UserId)))
                 .ReturnsAsync(UserSubscriptions);
@@ -198,7 +196,7 @@
                 .ReturnsAsync(null);
 
             var result = await this.target.HandleAsync(
-                new GetUserStateQuery(Requester, UserId, true));
+                new GetUserStateQuery(Requester, UserId, true, Now));
 
             Assert.IsNotNull(result);
             Assert.AreEqual(UserAccessSignatures, result.AccessSignatures);
@@ -206,7 +204,6 @@
             Assert.AreEqual(accountSettings, result.AccountSettings);
 
             Assert.IsNull(result.CreatorStatus);
-            Assert.IsNull(result.CreatedChannelsAndCollections);
             Assert.IsNull(result.Blog);
         }
 
@@ -218,7 +215,7 @@
             this.requesterSecurity.Setup(v => v.IsInRoleAsync(Requester, FifthweekRole.Creator)).ReturnsAsync(true);
 
             var creatorStatus = new CreatorStatus(new BlogId(Guid.NewGuid()), true);
-            var accountSettings = new GetAccountSettingsResult(new CreatorName("name"), new Username("username"), new Email("a@b.com"), null, 10, PaymentStatus.Retry1, true);
+            var accountSettings = new GetAccountSettingsResult(new CreatorName("name"), new Username("username"), new Email("a@b.com"), null, 10, PaymentStatus.Retry1, true, 1m, null);
             var blogChannelsAndCollections = new GetBlogChannelsAndCollectionsResult(
                 new BlogWithFileInformation(new BlogId(Guid.NewGuid()), new BlogName("My Subscription"), new BlogName("My Subscription"), new Tagline("Tagline is great"), new Introduction("Once upon a time there was an intro."), DateTime.UtcNow, null, null, null,
                     new List<ChannelResult> { new ChannelResult(new ChannelId(Guid.NewGuid()), "name", "description", 10, true, true, new List<CollectionResult>()) }));
@@ -229,12 +226,12 @@
                 .ReturnsAsync(UserSubscriptions);
             this.getCreatorStatus.Setup(v => v.HandleAsync(new GetCreatorStatusQuery(Requester, UserId)))
                 .ReturnsAsync(creatorStatus);
-            this.getAccountSettings.Setup(v => v.HandleAsync(new GetAccountSettingsQuery(Requester, UserId)))
+            this.getAccountSettings.Setup(v => v.HandleAsync(new GetAccountSettingsQuery(Requester, UserId, Now)))
                 .ReturnsAsync(accountSettings);
             this.getBlogChannelsAndCollections.Setup(v => v.HandleAsync(new GetBlogChannelsAndCollectionsQuery(creatorStatus.BlogId)))
                 .ReturnsAsync(blogChannelsAndCollections);
 
-            var result = await this.target.HandleAsync(new GetUserStateQuery(Requester, UserId, false));
+            var result = await this.target.HandleAsync(new GetUserStateQuery(Requester, UserId, false, Now));
 
             Assert.IsNotNull(result);
             Assert.AreEqual(UserAccessSignatures, result.AccessSignatures);
@@ -252,7 +249,7 @@
             this.requesterSecurity.Setup(v => v.IsInRoleAsync(Requester, FifthweekRole.Creator)).ReturnsAsync(true);
 
             var creatorStatus = new CreatorStatus(null, true);
-            var accountSettings = new GetAccountSettingsResult(new CreatorName("name"), new Username("username"), new Email("a@b.com"), null, 10, PaymentStatus.Retry1, true);
+            var accountSettings = new GetAccountSettingsResult(new CreatorName("name"), new Username("username"), new Email("a@b.com"), null, 10, PaymentStatus.Retry1, true, 1m, null);
 
             this.getUserAccessSignatures.Setup(v => v.HandleAsync(new GetUserAccessSignaturesQuery(Requester, UserId, null, new List<ChannelId> { UserSubscriptions.Blogs[0].Channels[0].ChannelId, UserSubscriptions.Blogs[1].Channels[0].ChannelId })))
                 .ReturnsAsync(UserAccessSignatures);
@@ -260,10 +257,10 @@
                 .ReturnsAsync(UserSubscriptions);
             this.getCreatorStatus.Setup(v => v.HandleAsync(new GetCreatorStatusQuery(Requester, UserId)))
                 .ReturnsAsync(creatorStatus);
-            this.getAccountSettings.Setup(v => v.HandleAsync(new GetAccountSettingsQuery(Requester, UserId)))
+            this.getAccountSettings.Setup(v => v.HandleAsync(new GetAccountSettingsQuery(Requester, UserId, Now)))
                 .ReturnsAsync(accountSettings);
 
-            var result = await this.target.HandleAsync(new GetUserStateQuery(Requester, UserId, false));
+            var result = await this.target.HandleAsync(new GetUserStateQuery(Requester, UserId, false, Now));
 
             Assert.IsNotNull(result);
             Assert.AreEqual(UserAccessSignatures, result.AccessSignatures);

@@ -214,6 +214,10 @@
       <Project>{81BCF480-639C-42C6-ADCF-2E5C97DEE750}</Project>
       <Name>Fifthweek.Payments.SnapshotCreation</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Fifthweek.Payments\Fifthweek.Payments.csproj">
+      <Project>{9c64b84a-264b-44bc-8d47-bcc52b88e0ac}</Project>
+      <Name>Fifthweek.Payments</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Fifthweek.Shared\Fifthweek.Shared.csproj">
       <Project>{6d12ffbb-38e9-4722-a690-0f0338538ebc}</Project>
       <Name>Fifthweek.Shared</Name>

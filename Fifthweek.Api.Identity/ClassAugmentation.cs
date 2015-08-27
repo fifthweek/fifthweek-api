@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Linq;
 
-//// Generated on 14/08/2015 14:30:24 (UTC)
-//// Mapped solution in 18.6s
+//// Generated on 27/08/2015 14:59:51 (UTC)
+//// Mapped solution in 17.45s
 
 
 namespace Fifthweek.Api.Identity.Membership.Commands
@@ -613,6 +613,7 @@ namespace Fifthweek.Api.Identity.Membership.Controllers
     {
         public AccountSettingsController(
             Fifthweek.Shared.IGuidCreator guidCreator,
+            Fifthweek.Shared.ITimestampCreator timestampCreator,
             Fifthweek.Api.Identity.Shared.Membership.IRequesterContext requesterContext,
             Fifthweek.Api.Core.ICommandHandler<Fifthweek.Api.Identity.Membership.Commands.UpdateAccountSettingsCommand> updateAccountSettings,
             Fifthweek.Api.Core.IQueryHandler<Fifthweek.Api.Identity.Membership.Queries.GetAccountSettingsQuery,Fifthweek.Api.Identity.Membership.GetAccountSettingsResult> getAccountSettings,
@@ -621,6 +622,11 @@ namespace Fifthweek.Api.Identity.Membership.Controllers
             if (guidCreator == null)
             {
                 throw new ArgumentNullException("guidCreator");
+            }
+
+            if (timestampCreator == null)
+            {
+                throw new ArgumentNullException("timestampCreator");
             }
 
             if (requesterContext == null)
@@ -644,6 +650,7 @@ namespace Fifthweek.Api.Identity.Membership.Controllers
             }
 
             this.guidCreator = guidCreator;
+            this.timestampCreator = timestampCreator;
             this.requesterContext = requesterContext;
             this.updateAccountSettings = updateAccountSettings;
             this.getAccountSettings = getAccountSettings;
@@ -760,6 +767,7 @@ namespace Fifthweek.Api.Identity.Membership
     using Fifthweek.Payments.SnapshotCreation;
     using Fifthweek.Api.Persistence.Payments;
     using System.Collections.Generic;
+    using Fifthweek.Payments.Services;
 
     public partial class GetAccountSettingsDbStatement 
     {
@@ -797,6 +805,7 @@ namespace Fifthweek.Api.Identity.Membership
     using Fifthweek.Payments.SnapshotCreation;
     using Fifthweek.Api.Persistence.Payments;
     using System.Collections.Generic;
+    using Fifthweek.Payments.Services;
 
     public partial class GetAccountSettingsDbResult 
     {
@@ -807,7 +816,8 @@ namespace Fifthweek.Api.Identity.Membership
             Fifthweek.Api.FileManagement.Shared.FileId profileImageFileId,
             System.Decimal accountBalance,
             Fifthweek.Api.Persistence.Payments.PaymentStatus paymentStatus,
-            System.Boolean hasPaymentInformation)
+            System.Boolean hasPaymentInformation,
+            Fifthweek.Payments.Services.CreatorPercentageOverrideData creatorPercentageOverride)
         {
             if (username == null)
             {
@@ -841,6 +851,7 @@ namespace Fifthweek.Api.Identity.Membership
             this.AccountBalance = accountBalance;
             this.PaymentStatus = paymentStatus;
             this.HasPaymentInformation = hasPaymentInformation;
+            this.CreatorPercentageOverride = creatorPercentageOverride;
         }
     }
 }
@@ -866,6 +877,7 @@ namespace Fifthweek.Api.Identity.Membership
     using Fifthweek.Payments.SnapshotCreation;
     using Fifthweek.Api.Persistence.Payments;
     using System.Collections.Generic;
+    using Fifthweek.Payments.Services;
 
     public partial class GetAccountSettingsResult 
     {
@@ -876,7 +888,9 @@ namespace Fifthweek.Api.Identity.Membership
             Fifthweek.Api.FileManagement.Shared.FileInformation profileImage,
             System.Int32 accountBalance,
             Fifthweek.Api.Persistence.Payments.PaymentStatus paymentStatus,
-            System.Boolean hasPaymentInformation)
+            System.Boolean hasPaymentInformation,
+            System.Decimal creatorPercentage,
+            System.Nullable<System.Int32> creatorPercentageWeeksRemaining)
         {
             if (username == null)
             {
@@ -903,6 +917,11 @@ namespace Fifthweek.Api.Identity.Membership
                 throw new ArgumentNullException("hasPaymentInformation");
             }
 
+            if (creatorPercentage == null)
+            {
+                throw new ArgumentNullException("creatorPercentage");
+            }
+
             this.Name = name;
             this.Username = username;
             this.Email = email;
@@ -910,6 +929,8 @@ namespace Fifthweek.Api.Identity.Membership
             this.AccountBalance = accountBalance;
             this.PaymentStatus = paymentStatus;
             this.HasPaymentInformation = hasPaymentInformation;
+            this.CreatorPercentage = creatorPercentage;
+            this.CreatorPercentageWeeksRemaining = creatorPercentageWeeksRemaining;
         }
     }
 }
@@ -926,12 +947,14 @@ namespace Fifthweek.Api.Identity.Membership.Queries
     using Fifthweek.Shared;
     using Fifthweek.Api.Persistence;
     using Fifthweek.Api.Persistence.Identity;
+    using Fifthweek.Payments.Services;
 
     public partial class GetAccountSettingsQuery 
     {
         public GetAccountSettingsQuery(
             Fifthweek.Api.Identity.Shared.Membership.Requester requester,
-            Fifthweek.Api.Identity.Shared.Membership.UserId requestedUserId)
+            Fifthweek.Api.Identity.Shared.Membership.UserId requestedUserId,
+            System.DateTime now)
         {
             if (requester == null)
             {
@@ -943,8 +966,14 @@ namespace Fifthweek.Api.Identity.Membership.Queries
                 throw new ArgumentNullException("requestedUserId");
             }
 
+            if (now == null)
+            {
+                throw new ArgumentNullException("now");
+            }
+
             this.Requester = requester;
             this.RequestedUserId = requestedUserId;
+            this.Now = now;
         }
     }
 }
@@ -961,6 +990,7 @@ namespace Fifthweek.Api.Identity.Membership.Queries
     using Fifthweek.Shared;
     using Fifthweek.Api.Persistence;
     using Fifthweek.Api.Persistence.Identity;
+    using Fifthweek.Payments.Services;
 
     public partial class GetAccountSettingsQueryHandler 
     {
@@ -1003,6 +1033,7 @@ namespace Fifthweek.Api.Identity.Membership.Queries
     using Fifthweek.Shared;
     using Fifthweek.Api.Persistence;
     using Fifthweek.Api.Persistence.Identity;
+    using Fifthweek.Payments.Services;
 
     public partial class IsPasswordResetTokenValidQuery 
     {
@@ -1038,6 +1069,7 @@ namespace Fifthweek.Api.Identity.Membership.Queries
     using Fifthweek.Shared;
     using Fifthweek.Api.Persistence;
     using Fifthweek.Api.Persistence.Identity;
+    using Fifthweek.Payments.Services;
 
     public partial class IsUsernameAvailableQuery 
     {
@@ -1066,6 +1098,7 @@ namespace Fifthweek.Api.Identity.Membership.Queries
     using Fifthweek.Shared;
     using Fifthweek.Api.Persistence;
     using Fifthweek.Api.Persistence.Identity;
+    using Fifthweek.Payments.Services;
 
     public partial class IsUsernameAvailableQueryHandler 
     {
@@ -1110,6 +1143,7 @@ namespace Fifthweek.Api.Identity.Membership
     using Fifthweek.Payments.SnapshotCreation;
     using Fifthweek.Api.Persistence.Payments;
     using System.Collections.Generic;
+    using Fifthweek.Payments.Services;
 
     public partial class RegisterUserDbStatement 
     {
@@ -1161,6 +1195,7 @@ namespace Fifthweek.Api.Identity.Membership
     using Fifthweek.Payments.SnapshotCreation;
     using Fifthweek.Api.Persistence.Payments;
     using System.Collections.Generic;
+    using Fifthweek.Payments.Services;
 
     public partial class RequesterContext 
     {
@@ -1205,6 +1240,7 @@ namespace Fifthweek.Api.Identity.Membership
     using Fifthweek.Payments.SnapshotCreation;
     using Fifthweek.Api.Persistence.Payments;
     using System.Collections.Generic;
+    using Fifthweek.Payments.Services;
 
     public partial class UpdateAccountSettingsDbStatement
     {
@@ -1245,6 +1281,7 @@ namespace Fifthweek.Api.Identity.Membership
     using Fifthweek.Payments.SnapshotCreation;
     using Fifthweek.Api.Persistence.Payments;
     using System.Collections.Generic;
+    using Fifthweek.Payments.Services;
 
     public partial class UpdateAccountSettingsDbStatement 
     {
@@ -2332,6 +2369,7 @@ namespace Fifthweek.Api.Identity.Membership
     using Fifthweek.Payments.SnapshotCreation;
     using Fifthweek.Api.Persistence.Payments;
     using System.Collections.Generic;
+    using Fifthweek.Payments.Services;
 
     public partial class GetUserRolesDbStatement
     {
@@ -2382,6 +2420,7 @@ namespace Fifthweek.Api.Identity.Membership
     using Fifthweek.Payments.SnapshotCreation;
     using Fifthweek.Api.Persistence.Payments;
     using System.Collections.Generic;
+    using Fifthweek.Payments.Services;
 
     public partial class GetUserRolesDbStatement
     {
@@ -2422,6 +2461,7 @@ namespace Fifthweek.Api.Identity.Membership
     using Fifthweek.Payments.SnapshotCreation;
     using Fifthweek.Api.Persistence.Payments;
     using System.Collections.Generic;
+    using Fifthweek.Payments.Services;
 
     public partial class GetUserRolesDbStatement 
     {
@@ -2459,6 +2499,7 @@ namespace Fifthweek.Api.Identity.Membership
     using Fifthweek.Payments.SnapshotCreation;
     using Fifthweek.Api.Persistence.Payments;
     using System.Collections.Generic;
+    using Fifthweek.Payments.Services;
 
     public partial class ImpersonateIfRequired 
     {
@@ -3091,12 +3132,13 @@ namespace Fifthweek.Api.Identity.Membership
     using Fifthweek.Payments.SnapshotCreation;
     using Fifthweek.Api.Persistence.Payments;
     using System.Collections.Generic;
+    using Fifthweek.Payments.Services;
 
     public partial class GetAccountSettingsDbResult 
     {
         public override string ToString()
         {
-            return string.Format("GetAccountSettingsDbResult({0}, {1}, {2}, {3}, {4}, {5}, {6})", this.Name == null ? "null" : this.Name.ToString(), this.Username == null ? "null" : this.Username.ToString(), this.Email == null ? "null" : this.Email.ToString(), this.ProfileImageFileId == null ? "null" : this.ProfileImageFileId.ToString(), this.AccountBalance == null ? "null" : this.AccountBalance.ToString(), this.PaymentStatus == null ? "null" : this.PaymentStatus.ToString(), this.HasPaymentInformation == null ? "null" : this.HasPaymentInformation.ToString());
+            return string.Format("GetAccountSettingsDbResult({0}, {1}, {2}, {3}, {4}, {5}, {6}, {7})", this.Name == null ? "null" : this.Name.ToString(), this.Username == null ? "null" : this.Username.ToString(), this.Email == null ? "null" : this.Email.ToString(), this.ProfileImageFileId == null ? "null" : this.ProfileImageFileId.ToString(), this.AccountBalance == null ? "null" : this.AccountBalance.ToString(), this.PaymentStatus == null ? "null" : this.PaymentStatus.ToString(), this.HasPaymentInformation == null ? "null" : this.HasPaymentInformation.ToString(), this.CreatorPercentageOverride == null ? "null" : this.CreatorPercentageOverride.ToString());
         }
         
         public override bool Equals(object obj)
@@ -3131,6 +3173,7 @@ namespace Fifthweek.Api.Identity.Membership
                 hashCode = (hashCode * 397) ^ (this.AccountBalance != null ? this.AccountBalance.GetHashCode() : 0);
                 hashCode = (hashCode * 397) ^ (this.PaymentStatus != null ? this.PaymentStatus.GetHashCode() : 0);
                 hashCode = (hashCode * 397) ^ (this.HasPaymentInformation != null ? this.HasPaymentInformation.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.CreatorPercentageOverride != null ? this.CreatorPercentageOverride.GetHashCode() : 0);
                 return hashCode;
             }
         }
@@ -3172,6 +3215,11 @@ namespace Fifthweek.Api.Identity.Membership
                 return false;
             }
         
+            if (!object.Equals(this.CreatorPercentageOverride, other.CreatorPercentageOverride))
+            {
+                return false;
+            }
+        
             return true;
         }
     }
@@ -3198,12 +3246,13 @@ namespace Fifthweek.Api.Identity.Membership
     using Fifthweek.Payments.SnapshotCreation;
     using Fifthweek.Api.Persistence.Payments;
     using System.Collections.Generic;
+    using Fifthweek.Payments.Services;
 
     public partial class GetAccountSettingsResult 
     {
         public override string ToString()
         {
-            return string.Format("GetAccountSettingsResult({0}, {1}, {2}, {3}, {4}, {5}, {6})", this.Name == null ? "null" : this.Name.ToString(), this.Username == null ? "null" : this.Username.ToString(), this.Email == null ? "null" : this.Email.ToString(), this.ProfileImage == null ? "null" : this.ProfileImage.ToString(), this.AccountBalance == null ? "null" : this.AccountBalance.ToString(), this.PaymentStatus == null ? "null" : this.PaymentStatus.ToString(), this.HasPaymentInformation == null ? "null" : this.HasPaymentInformation.ToString());
+            return string.Format("GetAccountSettingsResult({0}, {1}, {2}, {3}, {4}, {5}, {6}, {7}, {8}, {9})", this.Name == null ? "null" : this.Name.ToString(), this.Username == null ? "null" : this.Username.ToString(), this.Email == null ? "null" : this.Email.ToString(), this.ProfileImage == null ? "null" : this.ProfileImage.ToString(), this.AccountBalance == null ? "null" : this.AccountBalance.ToString(), this.PaymentStatus == null ? "null" : this.PaymentStatus.ToString(), this.IsRetryingPayment == null ? "null" : this.IsRetryingPayment.ToString(), this.HasPaymentInformation == null ? "null" : this.HasPaymentInformation.ToString(), this.CreatorPercentage == null ? "null" : this.CreatorPercentage.ToString(), this.CreatorPercentageWeeksRemaining == null ? "null" : this.CreatorPercentageWeeksRemaining.ToString());
         }
         
         public override bool Equals(object obj)
@@ -3237,7 +3286,10 @@ namespace Fifthweek.Api.Identity.Membership
                 hashCode = (hashCode * 397) ^ (this.ProfileImage != null ? this.ProfileImage.GetHashCode() : 0);
                 hashCode = (hashCode * 397) ^ (this.AccountBalance != null ? this.AccountBalance.GetHashCode() : 0);
                 hashCode = (hashCode * 397) ^ (this.PaymentStatus != null ? this.PaymentStatus.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.IsRetryingPayment != null ? this.IsRetryingPayment.GetHashCode() : 0);
                 hashCode = (hashCode * 397) ^ (this.HasPaymentInformation != null ? this.HasPaymentInformation.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.CreatorPercentage != null ? this.CreatorPercentage.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.CreatorPercentageWeeksRemaining != null ? this.CreatorPercentageWeeksRemaining.GetHashCode() : 0);
                 return hashCode;
             }
         }
@@ -3274,7 +3326,22 @@ namespace Fifthweek.Api.Identity.Membership
                 return false;
             }
         
+            if (!object.Equals(this.IsRetryingPayment, other.IsRetryingPayment))
+            {
+                return false;
+            }
+        
             if (!object.Equals(this.HasPaymentInformation, other.HasPaymentInformation))
+            {
+                return false;
+            }
+        
+            if (!object.Equals(this.CreatorPercentage, other.CreatorPercentage))
+            {
+                return false;
+            }
+        
+            if (!object.Equals(this.CreatorPercentageWeeksRemaining, other.CreatorPercentageWeeksRemaining))
             {
                 return false;
             }
@@ -3296,12 +3363,13 @@ namespace Fifthweek.Api.Identity.Membership.Queries
     using Fifthweek.Shared;
     using Fifthweek.Api.Persistence;
     using Fifthweek.Api.Persistence.Identity;
+    using Fifthweek.Payments.Services;
 
     public partial class GetAccountSettingsQuery 
     {
         public override string ToString()
         {
-            return string.Format("GetAccountSettingsQuery({0}, {1})", this.Requester == null ? "null" : this.Requester.ToString(), this.RequestedUserId == null ? "null" : this.RequestedUserId.ToString());
+            return string.Format("GetAccountSettingsQuery({0}, {1}, {2})", this.Requester == null ? "null" : this.Requester.ToString(), this.RequestedUserId == null ? "null" : this.RequestedUserId.ToString(), this.Now == null ? "null" : this.Now.ToString());
         }
         
         public override bool Equals(object obj)
@@ -3331,6 +3399,7 @@ namespace Fifthweek.Api.Identity.Membership.Queries
                 int hashCode = 0;
                 hashCode = (hashCode * 397) ^ (this.Requester != null ? this.Requester.GetHashCode() : 0);
                 hashCode = (hashCode * 397) ^ (this.RequestedUserId != null ? this.RequestedUserId.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.Now != null ? this.Now.GetHashCode() : 0);
                 return hashCode;
             }
         }
@@ -3343,6 +3412,11 @@ namespace Fifthweek.Api.Identity.Membership.Queries
             }
         
             if (!object.Equals(this.RequestedUserId, other.RequestedUserId))
+            {
+                return false;
+            }
+        
+            if (!object.Equals(this.Now, other.Now))
             {
                 return false;
             }
@@ -3364,6 +3438,7 @@ namespace Fifthweek.Api.Identity.Membership.Queries
     using Fifthweek.Shared;
     using Fifthweek.Api.Persistence;
     using Fifthweek.Api.Persistence.Identity;
+    using Fifthweek.Payments.Services;
 
     public partial class IsPasswordResetTokenValidQuery 
     {
@@ -3432,6 +3507,7 @@ namespace Fifthweek.Api.Identity.Membership.Queries
     using Fifthweek.Shared;
     using Fifthweek.Api.Persistence;
     using Fifthweek.Api.Persistence.Identity;
+    using Fifthweek.Payments.Services;
 
     public partial class IsUsernameAvailableQuery 
     {
@@ -3503,6 +3579,7 @@ namespace Fifthweek.Api.Identity.Membership
     using Fifthweek.Payments.SnapshotCreation;
     using Fifthweek.Api.Persistence.Payments;
     using System.Collections.Generic;
+    using Fifthweek.Payments.Services;
 
     public partial class UpdateAccountSettingsDbStatement
     {
@@ -4608,6 +4685,7 @@ namespace Fifthweek.Api.Identity.Membership
     using Fifthweek.Payments.SnapshotCreation;
     using Fifthweek.Api.Persistence.Payments;
     using System.Collections.Generic;
+    using Fifthweek.Payments.Services;
 
     public partial class GetUserRolesDbStatement
     {
@@ -4691,6 +4769,7 @@ namespace Fifthweek.Api.Identity.Membership
     using Fifthweek.Payments.SnapshotCreation;
     using Fifthweek.Api.Persistence.Payments;
     using System.Collections.Generic;
+    using Fifthweek.Payments.Services;
 
     public partial class GetUserRolesDbStatement
     {

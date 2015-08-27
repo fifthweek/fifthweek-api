@@ -18,6 +18,8 @@
     {
         private readonly IGuidCreator guidCreator;
 
+        private readonly ITimestampCreator timestampCreator;
+
         private readonly IRequesterContext requesterContext;
 
         private readonly ICommandHandler<UpdateAccountSettingsCommand> updateAccountSettings;
@@ -34,7 +36,8 @@
             var requestedUserId = new UserId(userId.DecodeGuid());
             var requester = await this.requesterContext.GetRequesterAsync();
 
-            var query = new GetAccountSettingsQuery(requester, requestedUserId);
+            var now = this.timestampCreator.Now();
+            var query = new GetAccountSettingsQuery(requester, requestedUserId, now);
             var result = await this.getAccountSettings.HandleAsync(query);
             return result;
         }

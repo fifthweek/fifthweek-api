@@ -33,5 +33,10 @@
         }
 
         public bool HasPaymentInformation { get; private set; }
+
+        public decimal CreatorPercentage { get; private set; }
+
+        [Optional]
+        public int? CreatorPercentageWeeksRemaining { get; private set; }
     }
 }

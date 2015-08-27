@@ -55,7 +55,7 @@ namespace Fifthweek.Payments.Services
 
                     committedAccountBalance = committedAccountBalance.Subtract(cost.Cost);
 
-                    var creatorPercentageOverride = this.GetCreatorPercentageOverride(
+                    var creatorPercentageOverride = PaymentProcessingUtilities.GetCreatorPercentageOverride(
                         data.CreatorPercentageOverride,
                         currentEndTimeExclusive);
 
@@ -79,7 +79,7 @@ namespace Fifthweek.Payments.Services
                         currentStartTimeInclusive,
                         endTimeExclusive);
 
-                    var creatorPercentageOverride = this.GetCreatorPercentageOverride(
+                    var creatorPercentageOverride = PaymentProcessingUtilities.GetCreatorPercentageOverride(
                         data.CreatorPercentageOverride,
                         endTimeExclusive);
 
@@ -88,18 +88,6 @@ namespace Fifthweek.Payments.Services
 
                 return Task.FromResult(new PaymentProcessingResults(committedAccountBalance, result));
             }
-        }
-
-        private CreatorPercentageOverrideData GetCreatorPercentageOverride(
-            CreatorPercentageOverrideData data,
-            DateTime endTimeExclusive)
-        {
-            if (data == null || (data.ExpiryDate != null && data.ExpiryDate < endTimeExclusive))
-            {
-                return null;
-            }
-
-            return data;
         }
     }
 }

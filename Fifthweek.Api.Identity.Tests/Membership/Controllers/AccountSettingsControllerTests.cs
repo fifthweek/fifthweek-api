@@ -20,6 +20,7 @@
     [TestClass]
     public class AccountSettingsControllerTests
     {
+        private static readonly DateTime Now = DateTime.UtcNow;
         private static readonly Guid SecurityGuid = Guid.NewGuid();
         private static readonly string SecurityToken = SecurityGuid.ToString();
         private static readonly UserId UserId = new UserId(Guid.NewGuid());
@@ -39,6 +40,7 @@
         private static readonly bool HasPaymentInformation = true;
 
         private Mock<IGuidCreator> guidCreator;
+        private Mock<ITimestampCreator> timestampCreator;
         private Mock<IRequesterContext> requesterContext;
         private Mock<ICommandHandler<UpdateAccountSettingsCommand>> updateAccountSettings;
         private Mock<IQueryHandler<GetAccountSettingsQuery, GetAccountSettingsResult>> getAccountSettings;
@@ -49,6 +51,7 @@
         public void TestInitialize()
         {
             this.guidCreator = new Mock<IGuidCreator>();
+            this.timestampCreator = new Mock<ITimestampCreator>();
             this.requesterContext = new Mock<IRequesterContext>();
             this.updateAccountSettings = new Mock<ICommandHandler<UpdateAccountSettingsCommand>>();
             this.getAccountSettings = new Mock<IQueryHandler<GetAccountSettingsQuery, GetAccountSettingsResult>>();
@@ -57,8 +60,11 @@
             this.guidCreator.Setup(v => v.Create()).Returns(SecurityGuid);
             this.requesterContext.Setup(_ => _.GetRequesterAsync()).ReturnsAsync(Requester);
 
+            this.timestampCreator.Setup(v => v.Now()).Returns(Now);
+
             this.target = new AccountSettingsController(
                 this.guidCreator.Object,
+                this.timestampCreator.Object,
                 this.requesterContext.Object,
                 this.updateAccountSettings.Object,
                 this.getAccountSettings.Object,
@@ -82,9 +88,9 @@
         [TestMethod]
         public async Task WhenGetIsCalled_ItShouldCallTheQueryHandler()
         {
-            var query = new GetAccountSettingsQuery(Requester, RequestedUserId);
+            var query = new GetAccountSettingsQuery(Requester, RequestedUserId, Now);
 
-            var expectedResult = new GetAccountSettingsResult(Name, Username, Email, FileInformation, AccountBalance, PaymentStatus, HasPaymentInformation);
+            var expectedResult = new GetAccountSettingsResult(Name, Username, Email, FileInformation, AccountBalance, PaymentStatus, HasPaymentInformation, 1m, null);
 
             this.getAccountSettings.Setup(v => v.HandleAsync(query))
                 .ReturnsAsync(expectedResult)
@@ -100,9 +106,9 @@
         [TestMethod]
         public async Task WhenGetIsCalledAndNoProfileImageExists_ItShouldNotReturnAnyFileInformation()
         {
-            var query = new GetAccountSettingsQuery(Requester, RequestedUserId);
+            var query = new GetAccountSettingsQuery(Requester, RequestedUserId, Now);
 
-            var expectedResult = new GetAccountSettingsResult(Name, Username, Email, null, AccountBalance, PaymentStatus, HasPaymentInformation);
+            var expectedResult = new GetAccountSettingsResult(Name, Username, Email, null, AccountBalance, PaymentStatus, HasPaymentInformation, 1m, null);
             
             this.getAccountSettings.Setup(v => v.HandleAsync(query))
                 .ReturnsAsync(expectedResult)

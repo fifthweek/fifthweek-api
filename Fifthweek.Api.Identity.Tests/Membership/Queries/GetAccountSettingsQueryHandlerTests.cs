@@ -12,6 +12,7 @@
     using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.Api.Identity.Tests.Shared.Membership;
     using Fifthweek.Api.Persistence.Payments;
+    using Fifthweek.Payments.Services;
     using Fifthweek.Shared;
 
     using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -30,6 +31,7 @@
         private static readonly int AccountBalance = 10;
         private static readonly PaymentStatus PaymentStatus = PaymentStatus.Retry2;
         private static readonly bool HasPaymentInformation = true;
+        private static readonly DateTime Now = DateTime.UtcNow;
 
         private GetAccountSettingsQueryHandler target;
         private Mock<IGetAccountSettingsDbStatement> getAccountSettings;
@@ -52,7 +54,7 @@
         [ExpectedException(typeof(UnauthorizedException))]
         public async Task WhenUnauthenticated_ItShouldThrowUnauthorizedException()
         {
-            await this.target.HandleAsync(new GetAccountSettingsQuery(Requester.Unauthenticated, UserId));
+            await this.target.HandleAsync(new GetAccountSettingsQuery(Requester.Unauthenticated, UserId, Now));
         }
 
         [TestMethod]
@@ -62,7 +64,7 @@
             this.getAccountSettings.Setup(v => v.ExecuteAsync(UserId))
                 .Throws(new Exception("This should not be called"));
 
-            await this.target.HandleAsync(new GetAccountSettingsQuery(Requester, new UserId(Guid.NewGuid())));
+            await this.target.HandleAsync(new GetAccountSettingsQuery(Requester, new UserId(Guid.NewGuid()), Now));
         }
 
         [TestMethod]
@@ -76,14 +78,14 @@
         public async Task WhenCalled_ItShouldCallTheAccountRepository()
         {
             this.getAccountSettings.Setup(v => v.ExecuteAsync(UserId))
-                .ReturnsAsync(new GetAccountSettingsDbResult(Name, Username, Email, null, AccountBalance, PaymentStatus, HasPaymentInformation))
+                .ReturnsAsync(new GetAccountSettingsDbResult(Name, Username, Email, null, AccountBalance, PaymentStatus, HasPaymentInformation, null))
                 .Verifiable();
 
-            var result = await this.target.HandleAsync(new GetAccountSettingsQuery(Requester, UserId));
+            var result = await this.target.HandleAsync(new GetAccountSettingsQuery(Requester, UserId, Now));
 
             this.getAccountSettings.Verify();
 
-            var expectedResult = new GetAccountSettingsResult(Name, Username, Email, null, AccountBalance, PaymentStatus, HasPaymentInformation);
+            var expectedResult = new GetAccountSettingsResult(Name, Username, Email, null, AccountBalance, PaymentStatus, HasPaymentInformation, Payments.Constants.DefaultCreatorPercentage, null);
 
             Assert.AreEqual(expectedResult, result);
         }
@@ -94,12 +96,12 @@
             const string ContainerName = "containerName";
 
             this.getAccountSettings.Setup(v => v.ExecuteAsync(UserId))
-                .ReturnsAsync(new GetAccountSettingsDbResult(Name, Username, Email, FileId, AccountBalance, PaymentStatus, HasPaymentInformation));
+                .ReturnsAsync(new GetAccountSettingsDbResult(Name, Username, Email, FileId, AccountBalance, PaymentStatus, HasPaymentInformation, null));
 
             this.fileInformationAggregator.Setup(v => v.GetFileInformationAsync(null, FileId, FilePurposes.ProfileImage))
                 .ReturnsAsync(new FileInformation(FileId, ContainerName));
 
-            var result = await this.target.HandleAsync(new GetAccountSettingsQuery(Requester, UserId));
+            var result = await this.target.HandleAsync(new GetAccountSettingsQuery(Requester, UserId, Now));
 
             var expectedResult = new GetAccountSettingsResult(
                 Name, 
@@ -107,8 +109,154 @@
                 Email, 
                 new FileInformation(FileId, ContainerName), 
                 AccountBalance, 
-                PaymentStatus, 
-                HasPaymentInformation);
+                PaymentStatus,
+                HasPaymentInformation, 
+                Payments.Constants.DefaultCreatorPercentage, 
+                null);
+
+            Assert.AreEqual(expectedResult, result);
+        }
+
+        [TestMethod]
+        public async Task WhenCreatorPercentageIsSetWithNoExpiry_ItShouldReturnTheCreatorPercentage()
+        {
+            var creatorPercentageOverride = new CreatorPercentageOverrideData(0.9m, null);
+
+            this.getAccountSettings.Setup(v => v.ExecuteAsync(UserId))
+                .ReturnsAsync(new GetAccountSettingsDbResult(
+                    Name, Username, Email, null, AccountBalance, PaymentStatus, HasPaymentInformation, creatorPercentageOverride))
+                .Verifiable();
+
+            var result = await this.target.HandleAsync(new GetAccountSettingsQuery(Requester, UserId, Now));
+
+            this.getAccountSettings.Verify();
+
+            var expectedResult = new GetAccountSettingsResult(
+                Name, 
+                Username,
+                Email,
+                null,
+                AccountBalance,
+                PaymentStatus,
+                HasPaymentInformation,
+                creatorPercentageOverride.Percentage,
+                null);
+
+            Assert.AreEqual(expectedResult, result);
+        }
+
+        [TestMethod]
+        public async Task WhenCreatorPercentageIsSetWithNonExpiredExpiry_ItShouldReturnTheCreatorPercentageWithNumberOfWeeks1()
+        {
+            var paymentProcessingStartDateInclusive = PaymentProcessingUtilities.GetPaymentProcessingStartDate(Now);
+            var creatorPercentageOverride = new CreatorPercentageOverrideData(0.9m, paymentProcessingStartDateInclusive.AddDays(7));
+
+            this.getAccountSettings.Setup(v => v.ExecuteAsync(UserId))
+                .ReturnsAsync(new GetAccountSettingsDbResult(
+                    Name, Username, Email, null, AccountBalance, PaymentStatus, HasPaymentInformation, creatorPercentageOverride))
+                .Verifiable();
+
+            var result = await this.target.HandleAsync(new GetAccountSettingsQuery(Requester, UserId, Now));
+
+            this.getAccountSettings.Verify();
+
+            var expectedResult = new GetAccountSettingsResult(
+                Name,
+                Username,
+                Email,
+                null,
+                AccountBalance,
+                PaymentStatus,
+                HasPaymentInformation,
+                creatorPercentageOverride.Percentage,
+                0);
+
+            Assert.AreEqual(expectedResult, result);
+        }
+
+        [TestMethod]
+        public async Task WhenCreatorPercentageIsSetWithNonExpiredExpiry_ItShouldReturnTheCreatorPercentageWithNumberOfWeeks2()
+        {
+            var paymentProcessingStartDateInclusive = PaymentProcessingUtilities.GetPaymentProcessingStartDate(Now);
+            var creatorPercentageOverride = new CreatorPercentageOverrideData(0.9m, paymentProcessingStartDateInclusive.AddDays(14));
+
+            this.getAccountSettings.Setup(v => v.ExecuteAsync(UserId))
+                .ReturnsAsync(new GetAccountSettingsDbResult(
+                    Name, Username, Email, null, AccountBalance, PaymentStatus, HasPaymentInformation, creatorPercentageOverride))
+                .Verifiable();
+
+            var result = await this.target.HandleAsync(new GetAccountSettingsQuery(Requester, UserId, Now));
+
+            this.getAccountSettings.Verify();
+
+            var expectedResult = new GetAccountSettingsResult(
+                Name,
+                Username,
+                Email,
+                null,
+                AccountBalance,
+                PaymentStatus,
+                HasPaymentInformation,
+                creatorPercentageOverride.Percentage,
+                1);
+
+            Assert.AreEqual(expectedResult, result);
+        }
+
+        [TestMethod]
+        public async Task WhenCreatorPercentageIsSetWithNonExpiredExpiry_ItShouldReturnTheCreatorPercentageWithNumberOfWeeks3()
+        {
+            var paymentProcessingStartDateInclusive = PaymentProcessingUtilities.GetPaymentProcessingStartDate(Now);
+            var creatorPercentageOverride = new CreatorPercentageOverrideData(0.9m, paymentProcessingStartDateInclusive.AddDays(25));
+
+            this.getAccountSettings.Setup(v => v.ExecuteAsync(UserId))
+                .ReturnsAsync(new GetAccountSettingsDbResult(
+                    Name, Username, Email, null, AccountBalance, PaymentStatus, HasPaymentInformation, creatorPercentageOverride))
+                .Verifiable();
+
+            var result = await this.target.HandleAsync(new GetAccountSettingsQuery(Requester, UserId, Now));
+
+            this.getAccountSettings.Verify();
+
+            var expectedResult = new GetAccountSettingsResult(
+                Name,
+                Username, 
+                Email,
+                null,
+                AccountBalance,
+                PaymentStatus,
+                HasPaymentInformation, 
+                creatorPercentageOverride.Percentage,
+                2);
+
+            Assert.AreEqual(expectedResult, result);
+        }
+
+        [TestMethod]
+        public async Task WhenCreatorPercentageIsSetWithExpiredExpiry_ItShouldReturnTheCreatorPercentageWithNumberOfWeeks1()
+        {
+            var paymentProcessingStartDateInclusive = PaymentProcessingUtilities.GetPaymentProcessingStartDate(Now);
+            var creatorPercentageOverride = new CreatorPercentageOverrideData(0.9m, paymentProcessingStartDateInclusive.AddDays(7).AddTicks(-1));
+
+            this.getAccountSettings.Setup(v => v.ExecuteAsync(UserId))
+                .ReturnsAsync(new GetAccountSettingsDbResult(
+                    Name, Username, Email, null, AccountBalance, PaymentStatus, HasPaymentInformation, creatorPercentageOverride))
+                .Verifiable();
+
+            var result = await this.target.HandleAsync(new GetAccountSettingsQuery(Requester, UserId, Now));
+
+            this.getAccountSettings.Verify();
+
+            var expectedResult = new GetAccountSettingsResult(
+                Name, 
+                Username, 
+                Email, 
+                null,
+                AccountBalance,
+                PaymentStatus,
+                HasPaymentInformation, 
+                Payments.Constants.DefaultCreatorPercentage, 
+                null);
 
             Assert.AreEqual(expectedResult, result);
         }

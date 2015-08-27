@@ -1,6 +1,7 @@
 ﻿namespace Fifthweek.Api.Identity.Membership.Tests
 {
     using System;
+    using System.Data.SqlTypes;
     using System.Threading.Tasks;
 
     using Fifthweek.Api.Core;
@@ -11,6 +12,7 @@
     using Fifthweek.Api.Persistence.Identity;
     using Fifthweek.Api.Persistence.Payments;
     using Fifthweek.Api.Persistence.Tests.Shared;
+    using Fifthweek.Payments.Services;
     using Fifthweek.Tests.Shared;
 
     using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -27,6 +29,8 @@
         private static readonly UserId UserId = new UserId(Guid.NewGuid());
         private static readonly FileId FileId = new FileId(Guid.NewGuid());
         private static readonly Email Email = new Email("accountrepositorytests@testing.fifthweek.com");
+        private static readonly decimal PercentageOverride = 0.9m;
+        private static readonly DateTime Expiry = new SqlDateTime(DateTime.UtcNow).Value;
 
         private GetAccountSettingsDbStatement target;
 
@@ -52,6 +56,7 @@
                     FileId,
                     0,
                     false,
+                    false,
                     false);
 
                 await testDatabase.TakeSnapshotAsync();
@@ -65,7 +70,8 @@
                     FileId,
                     0,
                     PaymentStatus.None,
-                    false);
+                    false,
+                    null);
 
                 Assert.AreEqual(expectedResult, result);
                 
@@ -88,6 +94,7 @@
                     null,
                     0,
                     false,
+                    false,
                     false);
 
                 await testDatabase.TakeSnapshotAsync();
@@ -101,7 +108,8 @@
                     null,
                     0,
                     PaymentStatus.None,
-                    false);
+                    false,
+                    null);
 
                 Assert.AreEqual(expectedResult, result);
 
@@ -124,6 +132,7 @@
                     FileId,
                     0,
                     false,
+                    false,
                     false);
 
                 await testDatabase.TakeSnapshotAsync();
@@ -137,7 +146,8 @@
                     FileId,
                     0,
                     PaymentStatus.None,
-                    false);
+                    false,
+                    null);
 
                 Assert.AreEqual(expectedResult, result);
 
@@ -160,6 +170,7 @@
                     FileId,
                     5,
                     false,
+                    false,
                     false);
 
                 await testDatabase.TakeSnapshotAsync();
@@ -173,7 +184,8 @@
                     FileId,
                     100,
                     PaymentStatus.None,
-                    false);
+                    false,
+                    null);
 
                 Assert.AreEqual(expectedResult, result);
 
@@ -196,6 +208,7 @@
                     FileId,
                     0,
                     true,
+                    false,
                     false);
 
                 await testDatabase.TakeSnapshotAsync();
@@ -209,7 +222,8 @@
                     FileId,
                     0,
                     PaymentStatus.Retry2,
-                    false);
+                    false,
+                    null);
 
                 Assert.AreEqual(expectedResult, result);
 
@@ -232,7 +246,8 @@
                     FileId,
                     0,
                     true,
-                    true);
+                    true,
+                    false);
 
                 await testDatabase.TakeSnapshotAsync();
 
@@ -245,7 +260,8 @@
                     FileId,
                     0,
                     PaymentStatus.Retry2,
-                    true);
+                    true,
+                    null);
 
                 Assert.AreEqual(expectedResult, result);
 
@@ -268,6 +284,7 @@
                     FileId,
                     0,
                     false,
+                    false,
                     false);
 
                 await testDatabase.TakeSnapshotAsync();
@@ -288,6 +305,44 @@
             await badMethodCall.AssertExceptionAsync<ArgumentNullException>();
         }
 
+        [TestMethod]
+        public async Task WhenGetAccountSettingsCalledWithCreatorPercentageOverride_ItShouldGetAccountSettingsFromTheDatabase()
+        {
+            await this.DatabaseTestAsync(async testDatabase =>
+            {
+                this.target = new GetAccountSettingsDbStatement(testDatabase);
+                await this.CreateDataAsync(
+                    testDatabase,
+                    UserId,
+                    Name,
+                    Username,
+                    Email,
+                    FileId,
+                    0,
+                    false,
+                    false,
+                    true);
+
+                await testDatabase.TakeSnapshotAsync();
+
+                var result = await this.target.ExecuteAsync(UserId);
+
+                var expectedResult = new GetAccountSettingsDbResult(
+                    Name,
+                    Username,
+                    Email,
+                    FileId,
+                    0,
+                    PaymentStatus.None,
+                    false,
+                    new CreatorPercentageOverrideData(PercentageOverride, Expiry));
+
+                Assert.AreEqual(expectedResult, result);
+
+                return ExpectedSideEffects.None;
+            });
+        }
+
         private async Task CreateDataAsync(
             TestDatabaseContext testDatabase, 
             UserId userId, 
@@ -297,7 +352,8 @@
             FileId fileId, 
             int accountBalanceCount,
             bool createOrigin,
-            bool populateCreditCard)
+            bool populateCreditCard,
+            bool populateCreatorPercentageOverride)
         {
             var random = new Random();
             var user = UserTests.UniqueEntity(random);
@@ -397,6 +453,11 @@
                                 null,
                                 PaymentStatus.Retry2));
                     }
+                }
+
+                if (populateCreatorPercentageOverride)
+                {
+                    await connection.InsertAsync(new CreatorPercentageOverride(user.Id, PercentageOverride, Expiry));
                 }
             }
         }

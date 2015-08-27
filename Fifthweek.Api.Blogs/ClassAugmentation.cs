@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Linq;
 
-//// Generated on 18/08/2015 16:10:58 (UTC)
-//// Mapped solution in 11.28s
+//// Generated on 27/08/2015 13:44:50 (UTC)
+//// Mapped solution in 17.27s
 
 
 namespace Fifthweek.Api.Blogs
@@ -27,6 +27,7 @@ namespace Fifthweek.Api.Blogs
     using Fifthweek.Api.Collections.Shared;
     using System.Transactions;
     using Fifthweek.Api.Persistence.Payments;
+    using Fifthweek.Payments.Services;
 
     public partial class AcceptChannelSubscriptionPriceChangeDbStatement 
     {
@@ -71,6 +72,7 @@ namespace Fifthweek.Api.Blogs
     using Fifthweek.Api.Collections.Shared;
     using System.Transactions;
     using Fifthweek.Api.Persistence.Payments;
+    using Fifthweek.Payments.Services;
 
     public partial class BlogOwnership 
     {
@@ -108,6 +110,7 @@ namespace Fifthweek.Api.Blogs
     using Fifthweek.Api.Collections.Shared;
     using System.Transactions;
     using Fifthweek.Api.Persistence.Payments;
+    using Fifthweek.Payments.Services;
 
     public partial class BlogSecurity 
     {
@@ -152,6 +155,7 @@ namespace Fifthweek.Api.Blogs
     using Fifthweek.Api.Collections.Shared;
     using System.Transactions;
     using Fifthweek.Api.Persistence.Payments;
+    using Fifthweek.Payments.Services;
 
     public partial class BlogSubscriptionDbResult 
     {
@@ -1049,6 +1053,7 @@ namespace Fifthweek.Api.Blogs
     using Fifthweek.Api.Collections.Shared;
     using System.Transactions;
     using Fifthweek.Api.Persistence.Payments;
+    using Fifthweek.Payments.Services;
 
     public partial class CreatorStatus 
     {
@@ -1088,6 +1093,7 @@ namespace Fifthweek.Api.Blogs
     using Fifthweek.Api.Collections.Shared;
     using System.Transactions;
     using Fifthweek.Api.Persistence.Payments;
+    using Fifthweek.Payments.Services;
 
     public partial class GetBlogChannelsAndCollectionsDbStatement
     {
@@ -1135,6 +1141,7 @@ namespace Fifthweek.Api.Blogs
     using Fifthweek.Api.Collections.Shared;
     using System.Transactions;
     using Fifthweek.Api.Persistence.Payments;
+    using Fifthweek.Payments.Services;
 
     public partial class GetBlogChannelsAndCollectionsDbStatement 
     {
@@ -1172,6 +1179,7 @@ namespace Fifthweek.Api.Blogs
     using Fifthweek.Api.Collections.Shared;
     using System.Transactions;
     using Fifthweek.Api.Persistence.Payments;
+    using Fifthweek.Payments.Services;
 
     public partial class GetBlogChannelsAndCollectionsDbStatement
     {
@@ -1253,6 +1261,7 @@ namespace Fifthweek.Api.Blogs
     using Fifthweek.Api.Collections.Shared;
     using System.Transactions;
     using Fifthweek.Api.Persistence.Payments;
+    using Fifthweek.Payments.Services;
 
     public partial class GetFreeAccessUsersDbStatement 
     {
@@ -1290,6 +1299,7 @@ namespace Fifthweek.Api.Blogs
     using Fifthweek.Api.Collections.Shared;
     using System.Transactions;
     using Fifthweek.Api.Persistence.Payments;
+    using Fifthweek.Payments.Services;
 
     public partial class GetLandingPageDbStatement
     {
@@ -1346,6 +1356,7 @@ namespace Fifthweek.Api.Blogs
     using Fifthweek.Api.Collections.Shared;
     using System.Transactions;
     using Fifthweek.Api.Persistence.Payments;
+    using Fifthweek.Payments.Services;
 
     public partial class GetLandingPageDbStatement 
     {
@@ -1383,6 +1394,7 @@ namespace Fifthweek.Api.Blogs
     using Fifthweek.Api.Collections.Shared;
     using System.Transactions;
     using Fifthweek.Api.Persistence.Payments;
+    using Fifthweek.Payments.Services;
 
     public partial class GetUserSubscriptionsDbStatement 
     {
@@ -1416,6 +1428,7 @@ namespace Fifthweek.Api.Blogs.Queries
     using Fifthweek.Api.Persistence;
     using Fifthweek.Api.Persistence.Identity;
     using Fifthweek.Api.Persistence.Payments;
+    using Fifthweek.Payments.Services;
 
     public partial class BlogSubscriptionStatus 
     {
@@ -1486,6 +1499,7 @@ namespace Fifthweek.Api.Blogs.Queries
     using Fifthweek.Api.Persistence;
     using Fifthweek.Api.Persistence.Identity;
     using Fifthweek.Api.Persistence.Payments;
+    using Fifthweek.Payments.Services;
 
     public partial class BlogWithFileInformation 
     {
@@ -1567,6 +1581,7 @@ namespace Fifthweek.Api.Blogs.Queries
     using Fifthweek.Api.Persistence;
     using Fifthweek.Api.Persistence.Identity;
     using Fifthweek.Api.Persistence.Payments;
+    using Fifthweek.Payments.Services;
 
     public partial class ChannelResult 
     {
@@ -1642,6 +1657,7 @@ namespace Fifthweek.Api.Blogs.Queries
     using Fifthweek.Api.Persistence;
     using Fifthweek.Api.Persistence.Identity;
     using Fifthweek.Api.Persistence.Payments;
+    using Fifthweek.Payments.Services;
 
     public partial class ChannelsAndCollections 
     {
@@ -1675,6 +1691,7 @@ namespace Fifthweek.Api.Blogs.Queries
     using Fifthweek.Api.Persistence;
     using Fifthweek.Api.Persistence.Identity;
     using Fifthweek.Api.Persistence.Payments;
+    using Fifthweek.Payments.Services;
 
     public partial class ChannelSubscriptionStatus 
     {
@@ -1764,6 +1781,7 @@ namespace Fifthweek.Api.Blogs.Queries
     using Fifthweek.Api.Persistence;
     using Fifthweek.Api.Persistence.Identity;
     using Fifthweek.Api.Persistence.Payments;
+    using Fifthweek.Payments.Services;
 
     public partial class CollectionResult 
     {
@@ -1811,6 +1829,7 @@ namespace Fifthweek.Api.Blogs.Queries
     using Fifthweek.Api.Persistence;
     using Fifthweek.Api.Persistence.Identity;
     using Fifthweek.Api.Persistence.Payments;
+    using Fifthweek.Payments.Services;
 
     public partial class CollectionSubscriptionStatus 
     {
@@ -1851,6 +1870,7 @@ namespace Fifthweek.Api.Blogs.Queries
     using Fifthweek.Api.Persistence;
     using Fifthweek.Api.Persistence.Identity;
     using Fifthweek.Api.Persistence.Payments;
+    using Fifthweek.Payments.Services;
 
     public partial class GetBlogChannelsAndCollectionsQuery 
     {
@@ -1884,6 +1904,7 @@ namespace Fifthweek.Api.Blogs.Queries
     using Fifthweek.Api.Persistence;
     using Fifthweek.Api.Persistence.Identity;
     using Fifthweek.Api.Persistence.Payments;
+    using Fifthweek.Payments.Services;
 
     public partial class GetBlogChannelsAndCollectionsQueryHandler 
     {
@@ -1924,6 +1945,7 @@ namespace Fifthweek.Api.Blogs.Queries
     using Fifthweek.Api.Persistence;
     using Fifthweek.Api.Persistence.Identity;
     using Fifthweek.Api.Persistence.Payments;
+    using Fifthweek.Payments.Services;
 
     public partial class GetBlogChannelsAndCollectionsResult 
     {
@@ -1957,6 +1979,7 @@ namespace Fifthweek.Api.Blogs.Queries
     using Fifthweek.Api.Persistence;
     using Fifthweek.Api.Persistence.Identity;
     using Fifthweek.Api.Persistence.Payments;
+    using Fifthweek.Payments.Services;
 
     public partial class GetCreatorStatusQuery 
     {
@@ -1997,6 +2020,7 @@ namespace Fifthweek.Api.Blogs.Queries
     using Fifthweek.Api.Persistence;
     using Fifthweek.Api.Persistence.Identity;
     using Fifthweek.Api.Persistence.Payments;
+    using Fifthweek.Payments.Services;
 
     public partial class GetCreatorStatusQueryHandler 
     {
@@ -2037,6 +2061,7 @@ namespace Fifthweek.Api.Blogs.Queries
     using Fifthweek.Api.Persistence;
     using Fifthweek.Api.Persistence.Identity;
     using Fifthweek.Api.Persistence.Payments;
+    using Fifthweek.Payments.Services;
 
     public partial class GetFreeAccessUsersQuery 
     {
@@ -2077,6 +2102,7 @@ namespace Fifthweek.Api.Blogs.Queries
     using Fifthweek.Api.Persistence;
     using Fifthweek.Api.Persistence.Identity;
     using Fifthweek.Api.Persistence.Payments;
+    using Fifthweek.Payments.Services;
 
     public partial class GetFreeAccessUsersQueryHandler 
     {
@@ -2124,6 +2150,7 @@ namespace Fifthweek.Api.Blogs.Queries
     using Fifthweek.Api.Persistence;
     using Fifthweek.Api.Persistence.Identity;
     using Fifthweek.Api.Persistence.Payments;
+    using Fifthweek.Payments.Services;
 
     public partial class GetFreeAccessUsersResult
     {
@@ -2171,6 +2198,7 @@ namespace Fifthweek.Api.Blogs.Queries
     using Fifthweek.Api.Persistence;
     using Fifthweek.Api.Persistence.Identity;
     using Fifthweek.Api.Persistence.Payments;
+    using Fifthweek.Payments.Services;
 
     public partial class GetFreeAccessUsersResult 
     {
@@ -2204,6 +2232,7 @@ namespace Fifthweek.Api.Blogs.Queries
     using Fifthweek.Api.Persistence;
     using Fifthweek.Api.Persistence.Identity;
     using Fifthweek.Api.Persistence.Payments;
+    using Fifthweek.Payments.Services;
 
     public partial class GetLandingPageQuery 
     {
@@ -2237,6 +2266,7 @@ namespace Fifthweek.Api.Blogs.Queries
     using Fifthweek.Api.Persistence;
     using Fifthweek.Api.Persistence.Identity;
     using Fifthweek.Api.Persistence.Payments;
+    using Fifthweek.Payments.Services;
 
     public partial class GetLandingPageQueryHandler 
     {
@@ -2277,6 +2307,7 @@ namespace Fifthweek.Api.Blogs.Queries
     using Fifthweek.Api.Persistence;
     using Fifthweek.Api.Persistence.Identity;
     using Fifthweek.Api.Persistence.Payments;
+    using Fifthweek.Payments.Services;
 
     public partial class GetLandingPageResult 
     {
@@ -2319,6 +2350,7 @@ namespace Fifthweek.Api.Blogs.Queries
     using Fifthweek.Api.Persistence;
     using Fifthweek.Api.Persistence.Identity;
     using Fifthweek.Api.Persistence.Payments;
+    using Fifthweek.Payments.Services;
 
     public partial class GetUserSubscriptionsQuery 
     {
@@ -2359,6 +2391,7 @@ namespace Fifthweek.Api.Blogs.Queries
     using Fifthweek.Api.Persistence;
     using Fifthweek.Api.Persistence.Identity;
     using Fifthweek.Api.Persistence.Payments;
+    using Fifthweek.Payments.Services;
 
     public partial class GetUserSubscriptionsQueryHandler 
     {
@@ -2406,6 +2439,7 @@ namespace Fifthweek.Api.Blogs.Queries
     using Fifthweek.Api.Persistence;
     using Fifthweek.Api.Persistence.Identity;
     using Fifthweek.Api.Persistence.Payments;
+    using Fifthweek.Payments.Services;
 
     public partial class GetUserSubscriptionsResult 
     {
@@ -2443,6 +2477,7 @@ namespace Fifthweek.Api.Blogs
     using Fifthweek.Api.Collections.Shared;
     using System.Transactions;
     using Fifthweek.Api.Persistence.Payments;
+    using Fifthweek.Payments.Services;
 
     public partial class UnsubscribeFromChannelDbStatement 
     {
@@ -2487,6 +2522,7 @@ namespace Fifthweek.Api.Blogs
     using Fifthweek.Api.Collections.Shared;
     using System.Transactions;
     using Fifthweek.Api.Persistence.Payments;
+    using Fifthweek.Payments.Services;
 
     public partial class UpdateBlogSubscriptionsDbStatement 
     {
@@ -2531,6 +2567,7 @@ namespace Fifthweek.Api.Blogs
     using Fifthweek.Api.Collections.Shared;
     using System.Transactions;
     using Fifthweek.Api.Persistence.Payments;
+    using Fifthweek.Payments.Services;
 
     public partial class UpdateFreeAccessUsersDbStatement 
     {
@@ -2575,6 +2612,7 @@ namespace Fifthweek.Api.Blogs
     using Fifthweek.Api.Collections.Shared;
     using System.Transactions;
     using Fifthweek.Api.Persistence.Payments;
+    using Fifthweek.Payments.Services;
 
     public partial class GetIsTestUserBlogDbStatement 
     {
@@ -2608,6 +2646,7 @@ namespace Fifthweek.Api.Blogs.Queries
     using Fifthweek.Api.Persistence;
     using Fifthweek.Api.Persistence.Identity;
     using Fifthweek.Api.Persistence.Payments;
+    using Fifthweek.Payments.Services;
 
     public partial class GetBlogSubscriberInformationQuery 
     {
@@ -2652,6 +2691,7 @@ namespace Fifthweek.Api.Blogs
     using Fifthweek.Api.Collections.Shared;
     using System.Transactions;
     using Fifthweek.Api.Persistence.Payments;
+    using Fifthweek.Payments.Services;
 
     public partial class GetBlogSubscriberInformationDbStatement
     {
@@ -2741,6 +2781,7 @@ namespace Fifthweek.Api.Blogs
     using Fifthweek.Api.Collections.Shared;
     using System.Transactions;
     using Fifthweek.Api.Persistence.Payments;
+    using Fifthweek.Payments.Services;
 
     public partial class GetBlogSubscriberInformationDbStatement
     {
@@ -2781,6 +2822,7 @@ namespace Fifthweek.Api.Blogs
     using Fifthweek.Api.Collections.Shared;
     using System.Transactions;
     using Fifthweek.Api.Persistence.Payments;
+    using Fifthweek.Payments.Services;
 
     public partial class GetBlogSubscriberInformationDbStatement 
     {
@@ -2814,6 +2856,7 @@ namespace Fifthweek.Api.Blogs.Queries
     using Fifthweek.Api.Persistence;
     using Fifthweek.Api.Persistence.Identity;
     using Fifthweek.Api.Persistence.Payments;
+    using Fifthweek.Payments.Services;
 
     public partial class GetBlogSubscriberInformationQueryHandler 
     {
@@ -2882,6 +2925,7 @@ namespace Fifthweek.Api.Blogs.Queries
     using Fifthweek.Api.Persistence;
     using Fifthweek.Api.Persistence.Identity;
     using Fifthweek.Api.Persistence.Payments;
+    using Fifthweek.Payments.Services;
 
     public partial class BlogSubscriberInformation
     {
@@ -2950,6 +2994,7 @@ namespace Fifthweek.Api.Blogs.Queries
     using Fifthweek.Api.Persistence;
     using Fifthweek.Api.Persistence.Identity;
     using Fifthweek.Api.Persistence.Payments;
+    using Fifthweek.Payments.Services;
 
     public partial class BlogSubscriberInformation 
     {
@@ -3004,6 +3049,7 @@ namespace Fifthweek.Api.Blogs.Queries
     using Fifthweek.Api.Persistence;
     using Fifthweek.Api.Persistence.Identity;
     using Fifthweek.Api.Persistence.Payments;
+    using Fifthweek.Payments.Services;
 
     public partial class BlogSubscriberInformation
     {
@@ -3058,6 +3104,7 @@ namespace Fifthweek.Api.Blogs
     using Fifthweek.Api.Collections.Shared;
     using System.Transactions;
     using Fifthweek.Api.Persistence.Payments;
+    using Fifthweek.Payments.Services;
 
     public partial class GetCreatorRevenueDbStatement
     {
@@ -3112,6 +3159,7 @@ namespace Fifthweek.Api.Blogs
     using Fifthweek.Api.Collections.Shared;
     using System.Transactions;
     using Fifthweek.Api.Persistence.Payments;
+    using Fifthweek.Payments.Services;
 
     public partial class GetCreatorRevenueDbStatement 
     {
@@ -3149,6 +3197,7 @@ namespace Fifthweek.Api.Blogs
     using Fifthweek.Api.Collections.Shared;
     using System.Transactions;
     using Fifthweek.Api.Persistence.Payments;
+    using Fifthweek.Payments.Services;
 
     public partial class GetAllCreatorRevenuesDbStatement 
     {
@@ -3186,6 +3235,7 @@ namespace Fifthweek.Api.Blogs
     using Fifthweek.Api.Collections.Shared;
     using System.Transactions;
     using Fifthweek.Api.Persistence.Payments;
+    using Fifthweek.Payments.Services;
 
     public partial class GetAllCreatorRevenuesResult 
     {
@@ -3223,6 +3273,7 @@ namespace Fifthweek.Api.Blogs
     using Fifthweek.Api.Collections.Shared;
     using System.Transactions;
     using Fifthweek.Api.Persistence.Payments;
+    using Fifthweek.Payments.Services;
 
     public partial class GetAllCreatorRevenuesResult
     {
@@ -3293,6 +3344,7 @@ namespace Fifthweek.Api.Blogs.Queries
     using Fifthweek.Api.Persistence;
     using Fifthweek.Api.Persistence.Identity;
     using Fifthweek.Api.Persistence.Payments;
+    using Fifthweek.Payments.Services;
 
     public partial class GetAllCreatorRevenuesQueryHandler 
     {
@@ -3340,6 +3392,7 @@ namespace Fifthweek.Api.Blogs.Queries
     using Fifthweek.Api.Persistence;
     using Fifthweek.Api.Persistence.Identity;
     using Fifthweek.Api.Persistence.Payments;
+    using Fifthweek.Payments.Services;
 
     public partial class GetAllCreatorRevenuesQuery 
     {
@@ -3378,6 +3431,7 @@ namespace Fifthweek.Api.Blogs
     using Fifthweek.Api.Collections.Shared;
     using System.Transactions;
     using Fifthweek.Api.Persistence.Payments;
+    using Fifthweek.Payments.Services;
 
     public partial class BlogSubscriptionDbResult 
     {
@@ -4187,6 +4241,7 @@ namespace Fifthweek.Api.Blogs
     using Fifthweek.Api.Collections.Shared;
     using System.Transactions;
     using Fifthweek.Api.Persistence.Payments;
+    using Fifthweek.Payments.Services;
 
     public partial class CreatorStatus 
     {
@@ -4264,6 +4319,7 @@ namespace Fifthweek.Api.Blogs
     using Fifthweek.Api.Collections.Shared;
     using System.Transactions;
     using Fifthweek.Api.Persistence.Payments;
+    using Fifthweek.Payments.Services;
 
     public partial class GetLandingPageDbStatement
     {
@@ -4367,6 +4423,7 @@ namespace Fifthweek.Api.Blogs.Queries
     using Fifthweek.Api.Persistence;
     using Fifthweek.Api.Persistence.Identity;
     using Fifthweek.Api.Persistence.Payments;
+    using Fifthweek.Payments.Services;
 
     public partial class BlogSubscriptionStatus 
     {
@@ -4485,6 +4542,7 @@ namespace Fifthweek.Api.Blogs.Queries
     using Fifthweek.Api.Persistence;
     using Fifthweek.Api.Persistence.Identity;
     using Fifthweek.Api.Persistence.Payments;
+    using Fifthweek.Payments.Services;
 
     public partial class BlogWithFileInformation 
     {
@@ -4621,6 +4679,7 @@ namespace Fifthweek.Api.Blogs.Queries
     using Fifthweek.Api.Persistence;
     using Fifthweek.Api.Persistence.Identity;
     using Fifthweek.Api.Persistence.Payments;
+    using Fifthweek.Payments.Services;
 
     public partial class ChannelSubscriptionStatus 
     {
@@ -4751,6 +4810,7 @@ namespace Fifthweek.Api.Blogs.Queries
     using Fifthweek.Api.Persistence;
     using Fifthweek.Api.Persistence.Identity;
     using Fifthweek.Api.Persistence.Payments;
+    using Fifthweek.Payments.Services;
 
     public partial class CollectionSubscriptionStatus 
     {
@@ -4824,6 +4884,7 @@ namespace Fifthweek.Api.Blogs.Queries
     using Fifthweek.Api.Persistence;
     using Fifthweek.Api.Persistence.Identity;
     using Fifthweek.Api.Persistence.Payments;
+    using Fifthweek.Payments.Services;
 
     public partial class GetBlogChannelsAndCollectionsQuery 
     {
@@ -4891,6 +4952,7 @@ namespace Fifthweek.Api.Blogs.Queries
     using Fifthweek.Api.Persistence;
     using Fifthweek.Api.Persistence.Identity;
     using Fifthweek.Api.Persistence.Payments;
+    using Fifthweek.Payments.Services;
 
     public partial class GetBlogChannelsAndCollectionsResult 
     {
@@ -4958,6 +5020,7 @@ namespace Fifthweek.Api.Blogs.Queries
     using Fifthweek.Api.Persistence;
     using Fifthweek.Api.Persistence.Identity;
     using Fifthweek.Api.Persistence.Payments;
+    using Fifthweek.Payments.Services;
 
     public partial class GetCreatorStatusQuery 
     {
@@ -5031,6 +5094,7 @@ namespace Fifthweek.Api.Blogs.Queries
     using Fifthweek.Api.Persistence;
     using Fifthweek.Api.Persistence.Identity;
     using Fifthweek.Api.Persistence.Payments;
+    using Fifthweek.Payments.Services;
 
     public partial class GetFreeAccessUsersQuery 
     {
@@ -5104,6 +5168,7 @@ namespace Fifthweek.Api.Blogs.Queries
     using Fifthweek.Api.Persistence;
     using Fifthweek.Api.Persistence.Identity;
     using Fifthweek.Api.Persistence.Payments;
+    using Fifthweek.Payments.Services;
 
     public partial class GetFreeAccessUsersResult
     {
@@ -5207,6 +5272,7 @@ namespace Fifthweek.Api.Blogs.Queries
     using Fifthweek.Api.Persistence;
     using Fifthweek.Api.Persistence.Identity;
     using Fifthweek.Api.Persistence.Payments;
+    using Fifthweek.Payments.Services;
 
     public partial class GetFreeAccessUsersResult 
     {
@@ -5289,6 +5355,7 @@ namespace Fifthweek.Api.Blogs.Queries
     using Fifthweek.Api.Persistence;
     using Fifthweek.Api.Persistence.Identity;
     using Fifthweek.Api.Persistence.Payments;
+    using Fifthweek.Payments.Services;
 
     public partial class GetLandingPageQuery 
     {
@@ -5356,6 +5423,7 @@ namespace Fifthweek.Api.Blogs.Queries
     using Fifthweek.Api.Persistence;
     using Fifthweek.Api.Persistence.Identity;
     using Fifthweek.Api.Persistence.Payments;
+    using Fifthweek.Payments.Services;
 
     public partial class GetLandingPageResult 
     {
@@ -5435,6 +5503,7 @@ namespace Fifthweek.Api.Blogs.Queries
     using Fifthweek.Api.Persistence;
     using Fifthweek.Api.Persistence.Identity;
     using Fifthweek.Api.Persistence.Payments;
+    using Fifthweek.Payments.Services;
 
     public partial class GetUserSubscriptionsQuery 
     {
@@ -5508,6 +5577,7 @@ namespace Fifthweek.Api.Blogs.Queries
     using Fifthweek.Api.Persistence;
     using Fifthweek.Api.Persistence.Identity;
     using Fifthweek.Api.Persistence.Payments;
+    using Fifthweek.Payments.Services;
 
     public partial class GetUserSubscriptionsResult 
     {
@@ -5590,6 +5660,7 @@ namespace Fifthweek.Api.Blogs.Queries
     using Fifthweek.Api.Persistence;
     using Fifthweek.Api.Persistence.Identity;
     using Fifthweek.Api.Persistence.Payments;
+    using Fifthweek.Payments.Services;
 
     public partial class GetBlogSubscriberInformationQuery 
     {
@@ -5667,6 +5738,7 @@ namespace Fifthweek.Api.Blogs
     using Fifthweek.Api.Collections.Shared;
     using System.Transactions;
     using Fifthweek.Api.Persistence.Payments;
+    using Fifthweek.Payments.Services;
 
     public partial class GetBlogSubscriberInformationDbStatement
     {
@@ -5792,6 +5864,7 @@ namespace Fifthweek.Api.Blogs
     using Fifthweek.Api.Collections.Shared;
     using System.Transactions;
     using Fifthweek.Api.Persistence.Payments;
+    using Fifthweek.Payments.Services;
 
     public partial class GetBlogSubscriberInformationDbStatement
     {
@@ -5877,6 +5950,7 @@ namespace Fifthweek.Api.Blogs.Queries
     using Fifthweek.Api.Persistence;
     using Fifthweek.Api.Persistence.Identity;
     using Fifthweek.Api.Persistence.Payments;
+    using Fifthweek.Payments.Services;
 
     public partial class BlogSubscriberInformation
     {
@@ -5998,6 +6072,7 @@ namespace Fifthweek.Api.Blogs.Queries
     using Fifthweek.Api.Persistence;
     using Fifthweek.Api.Persistence.Identity;
     using Fifthweek.Api.Persistence.Payments;
+    using Fifthweek.Payments.Services;
 
     public partial class BlogSubscriberInformation 
     {
@@ -6098,6 +6173,7 @@ namespace Fifthweek.Api.Blogs.Queries
     using Fifthweek.Api.Persistence;
     using Fifthweek.Api.Persistence.Identity;
     using Fifthweek.Api.Persistence.Payments;
+    using Fifthweek.Payments.Services;
 
     public partial class BlogSubscriberInformation
     {
@@ -6184,6 +6260,7 @@ namespace Fifthweek.Api.Blogs
     using Fifthweek.Api.Collections.Shared;
     using System.Transactions;
     using Fifthweek.Api.Persistence.Payments;
+    using Fifthweek.Payments.Services;
 
     public partial class GetCreatorRevenueDbStatement
     {
@@ -6270,6 +6347,7 @@ namespace Fifthweek.Api.Blogs
     using Fifthweek.Api.Collections.Shared;
     using System.Transactions;
     using Fifthweek.Api.Persistence.Payments;
+    using Fifthweek.Payments.Services;
 
     public partial class GetAllCreatorRevenuesResult 
     {
@@ -6356,6 +6434,7 @@ namespace Fifthweek.Api.Blogs
     using Fifthweek.Api.Collections.Shared;
     using System.Transactions;
     using Fifthweek.Api.Persistence.Payments;
+    using Fifthweek.Payments.Services;
 
     public partial class GetAllCreatorRevenuesResult
     {
@@ -6468,6 +6547,7 @@ namespace Fifthweek.Api.Blogs.Queries
     using Fifthweek.Api.Persistence;
     using Fifthweek.Api.Persistence.Identity;
     using Fifthweek.Api.Persistence.Payments;
+    using Fifthweek.Payments.Services;
 
     public partial class GetAllCreatorRevenuesQuery 
     {
