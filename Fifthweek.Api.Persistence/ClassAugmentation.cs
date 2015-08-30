@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Linq;
 
-//// Generated on 04/08/2015 18:38:48 (UTC)
-//// Mapped solution in 20.06s
+//// Generated on 28/08/2015 15:05:52 (UTC)
+//// Mapped solution in 18.03s
 
 
 namespace Fifthweek.Api.Persistence
@@ -495,19 +495,8 @@ namespace Fifthweek.Api.Persistence
 
     public partial class RefreshToken 
     {
-        public RefreshToken(
-            System.String hashedId,
-            System.String username,
-            System.String clientId,
-            System.DateTime issuedDate,
-            System.DateTime expiresDate,
-            System.String protectedTicket)
+        public RefreshToken(string username, string clientId, string encryptedId, DateTime issuedDate, DateTime expiresDate, string protectedTicket)
         {
-            if (hashedId == null)
-            {
-                throw new ArgumentNullException("hashedId");
-            }
-
             if (username == null)
             {
                 throw new ArgumentNullException("username");
@@ -516,6 +505,11 @@ namespace Fifthweek.Api.Persistence
             if (clientId == null)
             {
                 throw new ArgumentNullException("clientId");
+            }
+
+            if (encryptedId == null)
+            {
+                throw new ArgumentNullException("encryptedId");
             }
 
             if (issuedDate == null)
@@ -533,9 +527,9 @@ namespace Fifthweek.Api.Persistence
                 throw new ArgumentNullException("protectedTicket");
             }
 
-            this.HashedId = hashedId;
             this.Username = username;
             this.ClientId = clientId;
+            this.EncryptedId = encryptedId;
             this.IssuedDate = issuedDate;
             this.ExpiresDate = expiresDate;
             this.ProtectedTicket = protectedTicket;
@@ -1851,7 +1845,7 @@ namespace Fifthweek.Api.Persistence
     {
         public override string ToString()
         {
-            return string.Format("RefreshToken(\"{0}\", \"{1}\", \"{2}\", {3}, {4}, \"{5}\")", this.HashedId == null ? "null" : this.HashedId.ToString(), this.Username == null ? "null" : this.Username.ToString(), this.ClientId == null ? "null" : this.ClientId.ToString(), this.IssuedDate == null ? "null" : this.IssuedDate.ToString(), this.ExpiresDate == null ? "null" : this.ExpiresDate.ToString(), this.ProtectedTicket == null ? "null" : this.ProtectedTicket.ToString());
+            return string.Format("RefreshToken(\"{0}\", \"{1}\", \"{2}\", {3}, {4}, \"{5}\")", this.Username == null ? "null" : this.Username.ToString(), this.ClientId == null ? "null" : this.ClientId.ToString(), this.EncryptedId == null ? "null" : this.EncryptedId.ToString(), this.IssuedDate == null ? "null" : this.IssuedDate.ToString(), this.ExpiresDate == null ? "null" : this.ExpiresDate.ToString(), this.ProtectedTicket == null ? "null" : this.ProtectedTicket.ToString());
         }
         
         public override bool Equals(object obj)
@@ -1879,9 +1873,9 @@ namespace Fifthweek.Api.Persistence
             unchecked
             {
                 int hashCode = 0;
-                hashCode = (hashCode * 397) ^ (this.HashedId != null ? this.HashedId.GetHashCode() : 0);
                 hashCode = (hashCode * 397) ^ (this.Username != null ? this.Username.GetHashCode() : 0);
                 hashCode = (hashCode * 397) ^ (this.ClientId != null ? this.ClientId.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.EncryptedId != null ? this.EncryptedId.GetHashCode() : 0);
                 hashCode = (hashCode * 397) ^ (this.IssuedDate != null ? this.IssuedDate.GetHashCode() : 0);
                 hashCode = (hashCode * 397) ^ (this.ExpiresDate != null ? this.ExpiresDate.GetHashCode() : 0);
                 hashCode = (hashCode * 397) ^ (this.ProtectedTicket != null ? this.ProtectedTicket.GetHashCode() : 0);
@@ -1891,17 +1885,17 @@ namespace Fifthweek.Api.Persistence
         
         protected bool Equals(RefreshToken other)
         {
-            if (!object.Equals(this.HashedId, other.HashedId))
-            {
-                return false;
-            }
-        
             if (!object.Equals(this.Username, other.Username))
             {
                 return false;
             }
         
             if (!object.Equals(this.ClientId, other.ClientId))
+            {
+                return false;
+            }
+        
+            if (!object.Equals(this.EncryptedId, other.EncryptedId))
             {
                 return false;
             }
@@ -6711,14 +6705,21 @@ namespace Fifthweek.Api.Persistence
         public const string Table = "RefreshTokens";
         
         public RefreshToken(
-            System.String hashedId)
+            System.String username,
+            System.String clientId)
         {
-            if (hashedId == null)
+            if (username == null)
             {
-                throw new ArgumentNullException("hashedId");
+                throw new ArgumentNullException("username");
             }
 
-            this.HashedId = hashedId;
+            if (clientId == null)
+            {
+                throw new ArgumentNullException("clientId");
+            }
+
+            this.Username = username;
+            this.ClientId = clientId;
         }
         
         public bool IdentityEquals(object other)
@@ -6743,7 +6744,12 @@ namespace Fifthweek.Api.Persistence
         
         protected bool IdentityEquals(RefreshToken other)
         {
-            if (!object.Equals(this.HashedId, other.HashedId))
+            if (!object.Equals(this.Username, other.Username))
+            {
+                return false;
+            }
+        
+            if (!object.Equals(this.ClientId, other.ClientId))
             {
                 return false;
             }
@@ -6755,9 +6761,9 @@ namespace Fifthweek.Api.Persistence
         public enum Fields
         {
             Empty = 0,
-            HashedId = 1, 
-            Username = 2, 
-            ClientId = 4, 
+            Username = 1, 
+            ClientId = 2, 
+            EncryptedId = 4, 
             IssuedDate = 8, 
             ExpiresDate = 16, 
             ProtectedTicket = 32
@@ -6777,7 +6783,7 @@ namespace Fifthweek.Api.Persistence
                 InsertStatement(idempotent), 
                 entities.Select(entity => new 
                 {
-                    entity.HashedId, entity.Username, entity.ClientId, entity.IssuedDate, entity.ExpiresDate, entity.ProtectedTicket
+                    entity.Username, entity.ClientId, entity.EncryptedId, entity.IssuedDate, entity.ExpiresDate, entity.ProtectedTicket
                 }).ToArray(),
                 transaction);
         }
@@ -6793,7 +6799,7 @@ namespace Fifthweek.Api.Persistence
                 InsertStatement(idempotent), 
                 new 
                 {
-                    entity.HashedId, entity.Username, entity.ClientId, entity.IssuedDate, entity.ExpiresDate, entity.ProtectedTicket
+                    entity.Username, entity.ClientId, entity.EncryptedId, entity.IssuedDate, entity.ExpiresDate, entity.ProtectedTicket
                 },
                 transaction);
         }
@@ -6838,7 +6844,7 @@ namespace Fifthweek.Api.Persistence
             var entity = parameters.Entity;
             var parameterObject = parameters.ExcludedFromInput != null
                 ? AllExceptSpecifiedParameters(entity, parameters.ExcludedFromInput.Value)
-                : new Dapper.DynamicParameters(new { entity.HashedId, entity.Username, entity.ClientId, entity.IssuedDate, entity.ExpiresDate, entity.ProtectedTicket });
+                : new Dapper.DynamicParameters(new { entity.Username, entity.ClientId, entity.EncryptedId, entity.IssuedDate, entity.ExpiresDate, entity.ProtectedTicket });
         
             if (parameters.AdditionalParameters != null)
             {
@@ -6862,7 +6868,7 @@ namespace Fifthweek.Api.Persistence
                 UpsertStatement(RefreshToken.Fields.Empty, fields), 
                 new 
                 {
-                    entity.HashedId, entity.Username, entity.ClientId, entity.IssuedDate, entity.ExpiresDate, entity.ProtectedTicket
+                    entity.Username, entity.ClientId, entity.EncryptedId, entity.IssuedDate, entity.ExpiresDate, entity.ProtectedTicket
                 },
                 transaction);
         }
@@ -6879,7 +6885,7 @@ namespace Fifthweek.Api.Persistence
                 UpsertStatement(mergeOnFields, updateFields), 
                 new 
                 {
-                    entity.HashedId, entity.Username, entity.ClientId, entity.IssuedDate, entity.ExpiresDate, entity.ProtectedTicket
+                    entity.Username, entity.ClientId, entity.EncryptedId, entity.IssuedDate, entity.ExpiresDate, entity.ProtectedTicket
                 },
                 transaction);
         }
@@ -6950,7 +6956,7 @@ namespace Fifthweek.Api.Persistence
         
         public static string InsertStatement(bool idempotent = true)
         {
-            const string insert = "INSERT INTO RefreshTokens(HashedId, Username, ClientId, IssuedDate, ExpiresDate, ProtectedTicket) VALUES(@HashedId, @Username, @ClientId, @IssuedDate, @ExpiresDate, @ProtectedTicket)";
+            const string insert = "INSERT INTO RefreshTokens(Username, ClientId, EncryptedId, IssuedDate, ExpiresDate, ProtectedTicket) VALUES(@Username, @ClientId, @EncryptedId, @IssuedDate, @ExpiresDate, @ProtectedTicket)";
             return idempotent ? SqlStatementTemplates.IdempotentInsert(insert) : insert;
         }
         
@@ -6961,12 +6967,12 @@ namespace Fifthweek.Api.Persistence
             var sql = new System.Text.StringBuilder();
             sql.Append(
                 @"MERGE RefreshTokens WITH (HOLDLOCK) as Target
-                USING (VALUES (@HashedId, @Username, @ClientId, @IssuedDate, @ExpiresDate, @ProtectedTicket)) AS Source (HashedId, Username, ClientId, IssuedDate, ExpiresDate, ProtectedTicket)
+                USING (VALUES (@Username, @ClientId, @EncryptedId, @IssuedDate, @ExpiresDate, @ProtectedTicket)) AS Source (Username, ClientId, EncryptedId, IssuedDate, ExpiresDate, ProtectedTicket)
                 ON    (");
                 
             if (mergeOnFields == RefreshToken.Fields.Empty)
             {
-                sql.Append(@"Target.HashedId = Source.HashedId");
+                sql.Append(@"Target.Username = Source.Username AND Target.ClientId = Source.ClientId");
             }
             else
             {
@@ -6980,8 +6986,8 @@ namespace Fifthweek.Api.Persistence
             sql.AppendUpdateParameters(GetFieldNames(updateFields));
             sql.Append(
                 @" WHEN NOT MATCHED THEN
-                    INSERT  (HashedId, Username, ClientId, IssuedDate, ExpiresDate, ProtectedTicket)
-                    VALUES  (Source.HashedId, Source.Username, Source.ClientId, Source.IssuedDate, Source.ExpiresDate, Source.ProtectedTicket);");
+                    INSERT  (Username, ClientId, EncryptedId, IssuedDate, ExpiresDate, ProtectedTicket)
+                    VALUES  (Source.Username, Source.ClientId, Source.EncryptedId, Source.IssuedDate, Source.ExpiresDate, Source.ProtectedTicket);");
             return sql.ToString();
         }
         
@@ -6990,7 +6996,7 @@ namespace Fifthweek.Api.Persistence
             var sql = new System.Text.StringBuilder();
             sql.Append("UPDATE RefreshTokens SET ");
             sql.AppendUpdateParameters(GetFieldNames(fields));
-            sql.Append(" WHERE HashedId = @HashedId");
+            sql.Append(" WHERE Username = @Username AND ClientId = @ClientId");
             return sql.ToString();
         }
         
@@ -6999,17 +7005,17 @@ namespace Fifthweek.Api.Persistence
             var fieldNames = new System.Collections.Generic.List<string>();
             if (autoIncludePrimaryKeys)
             {
-                fieldNames.Add("HashedId");
-            }
-        
-            if (fields.HasFlag(RefreshToken.Fields.Username))
-            {
                 fieldNames.Add("Username");
             }
         
-            if (fields.HasFlag(RefreshToken.Fields.ClientId))
+            if (autoIncludePrimaryKeys)
             {
                 fieldNames.Add("ClientId");
+            }
+        
+            if (fields.HasFlag(RefreshToken.Fields.EncryptedId))
+            {
+                fieldNames.Add("EncryptedId");
             }
         
             if (fields.HasFlag(RefreshToken.Fields.IssuedDate))
@@ -7038,15 +7044,11 @@ namespace Fifthweek.Api.Persistence
             var parameters = new Dapper.DynamicParameters();
         
             // Assume we never want to exclude primary key field(s) from our input.
-            parameters.Add("HashedId", entity.HashedId);
-            if (fields.HasFlag(RefreshToken.Fields.Username) && (excludedFields == null || !excludedFields.Value.HasFlag(RefreshToken.Fields.Username)))
+            parameters.Add("Username", entity.Username);
+            parameters.Add("ClientId", entity.ClientId);
+            if (fields.HasFlag(RefreshToken.Fields.EncryptedId) && (excludedFields == null || !excludedFields.Value.HasFlag(RefreshToken.Fields.EncryptedId)))
             {
-                parameters.Add("Username", entity.Username);
-            }
-        
-            if (fields.HasFlag(RefreshToken.Fields.ClientId) && (excludedFields == null || !excludedFields.Value.HasFlag(RefreshToken.Fields.ClientId)))
-            {
-                parameters.Add("ClientId", entity.ClientId);
+                parameters.Add("EncryptedId", entity.EncryptedId);
             }
         
             if (fields.HasFlag(RefreshToken.Fields.IssuedDate) && (excludedFields == null || !excludedFields.Value.HasFlag(RefreshToken.Fields.IssuedDate)))
@@ -7074,15 +7076,11 @@ namespace Fifthweek.Api.Persistence
             var parameters = new Dapper.DynamicParameters();
         
             // Assume we never want to exclude primary key field(s) from our input.
-            parameters.Add("HashedId", entity.HashedId);
-            if (!fields.HasFlag(RefreshToken.Fields.Username))
+            parameters.Add("Username", entity.Username);
+            parameters.Add("ClientId", entity.ClientId);
+            if (!fields.HasFlag(RefreshToken.Fields.EncryptedId))
             {
-                parameters.Add("Username", entity.Username);
-            }
-        
-            if (!fields.HasFlag(RefreshToken.Fields.ClientId))
-            {
-                parameters.Add("ClientId", entity.ClientId);
+                parameters.Add("EncryptedId", entity.EncryptedId);
             }
         
             if (!fields.HasFlag(RefreshToken.Fields.IssuedDate))

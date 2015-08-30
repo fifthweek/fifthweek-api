@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Linq;
 
-//// Generated on 27/08/2015 14:59:51 (UTC)
-//// Mapped solution in 17.45s
+//// Generated on 30/08/2015 10:04:51 (UTC)
+//// Mapped solution in 29.5s
 
 
 namespace Fifthweek.Api.Identity.Membership.Commands
@@ -1451,9 +1451,9 @@ namespace Fifthweek.Api.Identity.OAuth.Commands
     using Fifthweek.Shared;
     using System.Threading.Tasks;
 
-    public partial class CreateRefreshTokenCommand 
+    public partial class SetRefreshTokenCommand 
     {
-        public CreateRefreshTokenCommand(
+        public SetRefreshTokenCommand(
             Fifthweek.Api.Identity.OAuth.RefreshTokenId refreshTokenId,
             Fifthweek.Api.Identity.OAuth.ClientId clientId,
             Fifthweek.Api.Identity.Shared.Membership.Username username,
@@ -1511,67 +1511,24 @@ namespace Fifthweek.Api.Identity.OAuth.Commands
     using Fifthweek.Shared;
     using System.Threading.Tasks;
 
-    public partial class CreateRefreshTokenCommandHandler 
+    public partial class SetRefreshTokenCommandHandler 
     {
-        public CreateRefreshTokenCommandHandler(
+        public SetRefreshTokenCommandHandler(
+            Fifthweek.Api.Identity.OAuth.IRefreshTokenIdEncryptionService encryptionService,
             Fifthweek.Api.Identity.OAuth.IUpsertRefreshTokenDbStatement upsertRefreshToken)
         {
+            if (encryptionService == null)
+            {
+                throw new ArgumentNullException("encryptionService");
+            }
+
             if (upsertRefreshToken == null)
             {
                 throw new ArgumentNullException("upsertRefreshToken");
             }
 
+            this.encryptionService = encryptionService;
             this.upsertRefreshToken = upsertRefreshToken;
-        }
-    }
-}
-namespace Fifthweek.Api.Identity.OAuth.Commands
-{
-    using System;
-    using System.Linq;
-    using Fifthweek.Api.Core;
-    using Fifthweek.Api.Identity.Shared.Membership;
-    using Fifthweek.Api.Persistence;
-    using Fifthweek.CodeGeneration;
-    using Fifthweek.Shared;
-    using System.Threading.Tasks;
-
-    public partial class RemoveRefreshTokenCommand 
-    {
-        public RemoveRefreshTokenCommand(
-            Fifthweek.Api.Identity.OAuth.HashedRefreshTokenId hashedRefreshTokenId)
-        {
-            if (hashedRefreshTokenId == null)
-            {
-                throw new ArgumentNullException("hashedRefreshTokenId");
-            }
-
-            this.HashedRefreshTokenId = hashedRefreshTokenId;
-        }
-    }
-}
-namespace Fifthweek.Api.Identity.OAuth.Commands
-{
-    using System;
-    using System.Linq;
-    using Fifthweek.Api.Core;
-    using Fifthweek.Api.Identity.Shared.Membership;
-    using Fifthweek.Api.Persistence;
-    using Fifthweek.CodeGeneration;
-    using Fifthweek.Shared;
-    using System.Threading.Tasks;
-
-    public partial class RemoveRefreshTokenCommandHandler 
-    {
-        public RemoveRefreshTokenCommandHandler(
-            Fifthweek.Api.Identity.OAuth.IRemoveRefreshTokenDbStatement removeRefreshToken)
-        {
-            if (removeRefreshToken == null)
-            {
-                throw new ArgumentNullException("removeRefreshToken");
-            }
-
-            this.removeRefreshToken = removeRefreshToken;
         }
     }
 }
@@ -1704,18 +1661,15 @@ namespace Fifthweek.Api.Identity.OAuth
     public partial class FifthweekRefreshTokenHandler 
     {
         public FifthweekRefreshTokenHandler(
-            Fifthweek.Api.Core.ICommandHandler<Fifthweek.Api.Identity.OAuth.Commands.CreateRefreshTokenCommand> createRefreshToken,
-            Fifthweek.Api.Core.ICommandHandler<Fifthweek.Api.Identity.OAuth.Commands.RemoveRefreshTokenCommand> removeRefreshToken,
-            Fifthweek.Api.Core.IQueryHandler<Fifthweek.Api.Identity.OAuth.Queries.TryGetRefreshTokenQuery,Fifthweek.Api.Persistence.RefreshToken> tryGetRefreshToken)
+            Fifthweek.Api.Core.ICommandHandler<Fifthweek.Api.Identity.OAuth.Commands.SetRefreshTokenCommand> createRefreshToken,
+            Fifthweek.Api.Core.IQueryHandler<Fifthweek.Api.Identity.OAuth.Queries.TryGetRefreshTokenQuery,Fifthweek.Api.Persistence.RefreshToken> tryGetRefreshToken,
+            Fifthweek.Api.Core.IQueryHandler<Fifthweek.Api.Identity.OAuth.Queries.TryGetRefreshTokenByEncryptedIdQuery,Fifthweek.Api.Persistence.RefreshToken> tryGetRefreshTokenByEncryptedId,
+            Fifthweek.Api.Identity.OAuth.IRefreshTokenIdEncryptionService encryptionService,
+            Fifthweek.Shared.ITimestampCreator timestampCreator)
         {
             if (createRefreshToken == null)
             {
                 throw new ArgumentNullException("createRefreshToken");
-            }
-
-            if (removeRefreshToken == null)
-            {
-                throw new ArgumentNullException("removeRefreshToken");
             }
 
             if (tryGetRefreshToken == null)
@@ -1723,9 +1677,26 @@ namespace Fifthweek.Api.Identity.OAuth
                 throw new ArgumentNullException("tryGetRefreshToken");
             }
 
+            if (tryGetRefreshTokenByEncryptedId == null)
+            {
+                throw new ArgumentNullException("tryGetRefreshTokenByEncryptedId");
+            }
+
+            if (encryptionService == null)
+            {
+                throw new ArgumentNullException("encryptionService");
+            }
+
+            if (timestampCreator == null)
+            {
+                throw new ArgumentNullException("timestampCreator");
+            }
+
             this.createRefreshToken = createRefreshToken;
-            this.removeRefreshToken = removeRefreshToken;
             this.tryGetRefreshToken = tryGetRefreshToken;
+            this.tryGetRefreshTokenByEncryptedId = tryGetRefreshTokenByEncryptedId;
+            this.encryptionService = encryptionService;
+            this.timestampCreator = timestampCreator;
         }
     }
 }
@@ -1842,9 +1813,9 @@ namespace Fifthweek.Api.Identity.OAuth
     using Dapper;
     using Microsoft.AspNet.Identity;
 
-    public partial class HashedRefreshTokenId 
+    public partial class EncryptedRefreshTokenId 
     {
-        public HashedRefreshTokenId(
+        public EncryptedRefreshTokenId(
             System.String value)
         {
             if (value == null)
@@ -1972,14 +1943,21 @@ namespace Fifthweek.Api.Identity.OAuth.Queries
     public partial class TryGetRefreshTokenQuery 
     {
         public TryGetRefreshTokenQuery(
-            Fifthweek.Api.Identity.OAuth.HashedRefreshTokenId hashedRefreshTokenId)
+            Fifthweek.Api.Identity.OAuth.ClientId clientId,
+            Fifthweek.Api.Identity.Shared.Membership.Username username)
         {
-            if (hashedRefreshTokenId == null)
+            if (clientId == null)
             {
-                throw new ArgumentNullException("hashedRefreshTokenId");
+                throw new ArgumentNullException("clientId");
             }
 
-            this.HashedRefreshTokenId = hashedRefreshTokenId;
+            if (username == null)
+            {
+                throw new ArgumentNullException("username");
+            }
+
+            this.ClientId = clientId;
+            this.Username = username;
         }
     }
 }
@@ -2090,46 +2068,6 @@ namespace Fifthweek.Api.Identity.OAuth
             }
 
             this.Value = value;
-        }
-    }
-}
-namespace Fifthweek.Api.Identity.OAuth
-{
-    using System;
-    using System.Linq;
-    using Fifthweek.Api.Core;
-    using Fifthweek.CodeGeneration;
-    using Fifthweek.Shared;
-    using Fifthweek.Api.Identity.Membership;
-    using System.Collections.Generic;
-    using System.Security.Claims;
-    using System.Text.RegularExpressions;
-    using System.Threading.Tasks;
-    using Fifthweek.Api.Identity.Membership.Commands;
-    using Fifthweek.Api.Identity.Membership.Queries;
-    using Fifthweek.Api.Identity.OAuth.Commands;
-    using Fifthweek.Api.Identity.OAuth.Queries;
-    using Fifthweek.Api.Identity.Shared.Membership;
-    using Fifthweek.Api.Persistence;
-    using Fifthweek.Api.Persistence.Identity;
-    using Microsoft.Owin.Security;
-    using Microsoft.Owin.Security.OAuth;
-    using System.Diagnostics;
-    using Microsoft.Owin.Security.Infrastructure;
-    using Dapper;
-    using Microsoft.AspNet.Identity;
-
-    public partial class RemoveRefreshTokenDbStatement 
-    {
-        public RemoveRefreshTokenDbStatement(
-            Fifthweek.Api.Persistence.IFifthweekDbConnectionFactory connectionFactory)
-        {
-            if (connectionFactory == null)
-            {
-                throw new ArgumentNullException("connectionFactory");
-            }
-
-            this.connectionFactory = connectionFactory;
         }
     }
 }
@@ -2519,6 +2457,111 @@ namespace Fifthweek.Api.Identity.Membership
 
             this.requesterSecurity = requesterSecurity;
             this.getUserRoles = getUserRoles;
+        }
+    }
+}
+namespace Fifthweek.Api.Identity.OAuth
+{
+    using System;
+    using System.Linq;
+    using Fifthweek.Api.Core;
+    using Fifthweek.CodeGeneration;
+    using Fifthweek.Shared;
+    using Fifthweek.Api.Identity.Membership;
+    using System.Collections.Generic;
+    using System.Security.Claims;
+    using System.Text.RegularExpressions;
+    using System.Threading.Tasks;
+    using Fifthweek.Api.Identity.Membership.Commands;
+    using Fifthweek.Api.Identity.Membership.Queries;
+    using Fifthweek.Api.Identity.OAuth.Commands;
+    using Fifthweek.Api.Identity.OAuth.Queries;
+    using Fifthweek.Api.Identity.Shared.Membership;
+    using Fifthweek.Api.Persistence;
+    using Fifthweek.Api.Persistence.Identity;
+    using Microsoft.Owin.Security;
+    using Microsoft.Owin.Security.OAuth;
+    using System.Diagnostics;
+    using Microsoft.Owin.Security.Infrastructure;
+    using Dapper;
+    using Microsoft.AspNet.Identity;
+
+    public partial class RefreshTokenIdEncryptionService 
+    {
+        public RefreshTokenIdEncryptionService(
+            Fifthweek.Api.Identity.OAuth.IAesEncryptionService encryptionService)
+        {
+            if (encryptionService == null)
+            {
+                throw new ArgumentNullException("encryptionService");
+            }
+
+            this.encryptionService = encryptionService;
+        }
+    }
+}
+namespace Fifthweek.Api.Identity.OAuth.Queries
+{
+    using Fifthweek.Api.Core;
+    using Fifthweek.Api.Persistence;
+    using Fifthweek.CodeGeneration;
+
+    public partial class TryGetRefreshTokenByEncryptedIdQuery 
+    {
+        public TryGetRefreshTokenByEncryptedIdQuery(
+            Fifthweek.Api.Identity.OAuth.EncryptedRefreshTokenId encryptedId)
+        {
+            if (encryptedId == null)
+            {
+                throw new ArgumentNullException("encryptedId");
+            }
+
+            this.EncryptedId = encryptedId;
+        }
+    }
+}
+namespace Fifthweek.Api.Identity.OAuth.Queries
+{
+    using System.Threading.Tasks;
+    using Fifthweek.Api.Core;
+    using Fifthweek.Api.Persistence;
+    using Fifthweek.CodeGeneration;
+    using Fifthweek.Shared;
+
+    public partial class TryGetRefreshTokenByEncryptedIdQueryHandler 
+    {
+        public TryGetRefreshTokenByEncryptedIdQueryHandler(
+            Fifthweek.Api.Identity.OAuth.ITryGetRefreshTokenByEncryptedIdDbStatement tryGetRefreshToken)
+        {
+            if (tryGetRefreshToken == null)
+            {
+                throw new ArgumentNullException("tryGetRefreshToken");
+            }
+
+            this.tryGetRefreshToken = tryGetRefreshToken;
+        }
+    }
+}
+namespace Fifthweek.Api.Identity.OAuth
+{
+    using System.Linq;
+    using System.Threading.Tasks;
+    using Dapper;
+    using Fifthweek.Api.Persistence;
+    using Fifthweek.CodeGeneration;
+    using Fifthweek.Shared;
+
+    public partial class TryGetRefreshTokenByEncryptedIdDbStatement 
+    {
+        public TryGetRefreshTokenByEncryptedIdDbStatement(
+            Fifthweek.Api.Persistence.IFifthweekDbConnectionFactory connectionFactory)
+        {
+            if (connectionFactory == null)
+            {
+                throw new ArgumentNullException("connectionFactory");
+            }
+
+            this.connectionFactory = connectionFactory;
         }
     }
 }
@@ -3833,11 +3876,11 @@ namespace Fifthweek.Api.Identity.OAuth.Commands
     using Fifthweek.Shared;
     using System.Threading.Tasks;
 
-    public partial class CreateRefreshTokenCommand 
+    public partial class SetRefreshTokenCommand 
     {
         public override string ToString()
         {
-            return string.Format("CreateRefreshTokenCommand({0}, {1}, {2}, \"{3}\", {4}, {5})", this.RefreshTokenId == null ? "null" : this.RefreshTokenId.ToString(), this.ClientId == null ? "null" : this.ClientId.ToString(), this.Username == null ? "null" : this.Username.ToString(), this.ProtectedTicket == null ? "null" : this.ProtectedTicket.ToString(), this.IssuedDate == null ? "null" : this.IssuedDate.ToString(), this.ExpiresDate == null ? "null" : this.ExpiresDate.ToString());
+            return string.Format("SetRefreshTokenCommand({0}, {1}, {2}, \"{3}\", {4}, {5})", this.RefreshTokenId == null ? "null" : this.RefreshTokenId.ToString(), this.ClientId == null ? "null" : this.ClientId.ToString(), this.Username == null ? "null" : this.Username.ToString(), this.ProtectedTicket == null ? "null" : this.ProtectedTicket.ToString(), this.IssuedDate == null ? "null" : this.IssuedDate.ToString(), this.ExpiresDate == null ? "null" : this.ExpiresDate.ToString());
         }
         
         public override bool Equals(object obj)
@@ -3857,7 +3900,7 @@ namespace Fifthweek.Api.Identity.OAuth.Commands
                 return false;
             }
         
-            return this.Equals((CreateRefreshTokenCommand)obj);
+            return this.Equals((SetRefreshTokenCommand)obj);
         }
         
         public override int GetHashCode()
@@ -3875,7 +3918,7 @@ namespace Fifthweek.Api.Identity.OAuth.Commands
             }
         }
         
-        protected bool Equals(CreateRefreshTokenCommand other)
+        protected bool Equals(SetRefreshTokenCommand other)
         {
             if (!object.Equals(this.RefreshTokenId, other.RefreshTokenId))
             {
@@ -3903,65 +3946,6 @@ namespace Fifthweek.Api.Identity.OAuth.Commands
             }
         
             if (!object.Equals(this.ExpiresDate, other.ExpiresDate))
-            {
-                return false;
-            }
-        
-            return true;
-        }
-    }
-}
-namespace Fifthweek.Api.Identity.OAuth.Commands
-{
-    using System;
-    using System.Linq;
-    using Fifthweek.Api.Core;
-    using Fifthweek.Api.Identity.Shared.Membership;
-    using Fifthweek.Api.Persistence;
-    using Fifthweek.CodeGeneration;
-    using Fifthweek.Shared;
-    using System.Threading.Tasks;
-
-    public partial class RemoveRefreshTokenCommand 
-    {
-        public override string ToString()
-        {
-            return string.Format("RemoveRefreshTokenCommand({0})", this.HashedRefreshTokenId == null ? "null" : this.HashedRefreshTokenId.ToString());
-        }
-        
-        public override bool Equals(object obj)
-        {
-            if (ReferenceEquals(null, obj))
-            {
-                return false;
-            }
-        
-            if (ReferenceEquals(this, obj))
-            {
-                return true;
-            }
-        
-            if (obj.GetType() != this.GetType())
-            {
-                return false;
-            }
-        
-            return this.Equals((RemoveRefreshTokenCommand)obj);
-        }
-        
-        public override int GetHashCode()
-        {
-            unchecked
-            {
-                int hashCode = 0;
-                hashCode = (hashCode * 397) ^ (this.HashedRefreshTokenId != null ? this.HashedRefreshTokenId.GetHashCode() : 0);
-                return hashCode;
-            }
-        }
-        
-        protected bool Equals(RemoveRefreshTokenCommand other)
-        {
-            if (!object.Equals(this.HashedRefreshTokenId, other.HashedRefreshTokenId))
             {
                 return false;
             }
@@ -4067,11 +4051,11 @@ namespace Fifthweek.Api.Identity.OAuth
     using Dapper;
     using Microsoft.AspNet.Identity;
 
-    public partial class HashedRefreshTokenId 
+    public partial class EncryptedRefreshTokenId 
     {
         public override string ToString()
         {
-            return string.Format("HashedRefreshTokenId(\"{0}\")", this.Value == null ? "null" : this.Value.ToString());
+            return string.Format("EncryptedRefreshTokenId(\"{0}\")", this.Value == null ? "null" : this.Value.ToString());
         }
         
         public override bool Equals(object obj)
@@ -4091,7 +4075,7 @@ namespace Fifthweek.Api.Identity.OAuth
                 return false;
             }
         
-            return this.Equals((HashedRefreshTokenId)obj);
+            return this.Equals((EncryptedRefreshTokenId)obj);
         }
         
         public override int GetHashCode()
@@ -4104,7 +4088,7 @@ namespace Fifthweek.Api.Identity.OAuth
             }
         }
         
-        protected bool Equals(HashedRefreshTokenId other)
+        protected bool Equals(EncryptedRefreshTokenId other)
         {
             if (!object.Equals(this.Value, other.Value))
             {
@@ -4281,7 +4265,7 @@ namespace Fifthweek.Api.Identity.OAuth.Queries
     {
         public override string ToString()
         {
-            return string.Format("TryGetRefreshTokenQuery({0})", this.HashedRefreshTokenId == null ? "null" : this.HashedRefreshTokenId.ToString());
+            return string.Format("TryGetRefreshTokenQuery({0}, {1})", this.ClientId == null ? "null" : this.ClientId.ToString(), this.Username == null ? "null" : this.Username.ToString());
         }
         
         public override bool Equals(object obj)
@@ -4309,14 +4293,20 @@ namespace Fifthweek.Api.Identity.OAuth.Queries
             unchecked
             {
                 int hashCode = 0;
-                hashCode = (hashCode * 397) ^ (this.HashedRefreshTokenId != null ? this.HashedRefreshTokenId.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.ClientId != null ? this.ClientId.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.Username != null ? this.Username.GetHashCode() : 0);
                 return hashCode;
             }
         }
         
         protected bool Equals(TryGetRefreshTokenQuery other)
         {
-            if (!object.Equals(this.HashedRefreshTokenId, other.HashedRefreshTokenId))
+            if (!object.Equals(this.ClientId, other.ClientId))
+            {
+                return false;
+            }
+        
+            if (!object.Equals(this.Username, other.Username))
             {
                 return false;
             }
@@ -5368,6 +5358,60 @@ namespace Fifthweek.Api.Identity.Membership.Controllers
             }
         
             if (!object.Equals(this.NewProfileImageId, other.NewProfileImageId))
+            {
+                return false;
+            }
+        
+            return true;
+        }
+    }
+}
+namespace Fifthweek.Api.Identity.OAuth.Queries
+{
+    using Fifthweek.Api.Core;
+    using Fifthweek.Api.Persistence;
+    using Fifthweek.CodeGeneration;
+
+    public partial class TryGetRefreshTokenByEncryptedIdQuery 
+    {
+        public override string ToString()
+        {
+            return string.Format("TryGetRefreshTokenByEncryptedIdQuery({0})", this.EncryptedId == null ? "null" : this.EncryptedId.ToString());
+        }
+        
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj))
+            {
+                return false;
+            }
+        
+            if (ReferenceEquals(this, obj))
+            {
+                return true;
+            }
+        
+            if (obj.GetType() != this.GetType())
+            {
+                return false;
+            }
+        
+            return this.Equals((TryGetRefreshTokenByEncryptedIdQuery)obj);
+        }
+        
+        public override int GetHashCode()
+        {
+            unchecked
+            {
+                int hashCode = 0;
+                hashCode = (hashCode * 397) ^ (this.EncryptedId != null ? this.EncryptedId.GetHashCode() : 0);
+                return hashCode;
+            }
+        }
+        
+        protected bool Equals(TryGetRefreshTokenByEncryptedIdQuery other)
+        {
+            if (!object.Equals(this.EncryptedId, other.EncryptedId))
             {
                 return false;
             }

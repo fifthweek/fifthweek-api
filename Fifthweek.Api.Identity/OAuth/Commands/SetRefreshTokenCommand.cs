@@ -10,7 +10,7 @@ namespace Fifthweek.Api.Identity.OAuth.Commands
     using Fifthweek.Shared;
 
     [AutoEqualityMembers, AutoConstructor]
-    public partial class CreateRefreshTokenCommand
+    public partial class SetRefreshTokenCommand
     {
         public RefreshTokenId RefreshTokenId { get; private set; }
 

@@ -5,6 +5,7 @@
 
     using Fifthweek.Api.Identity.OAuth;
     using Fifthweek.Api.Identity.OAuth.Queries;
+    using Fifthweek.Api.Identity.Shared.Membership;
     using Fifthweek.Api.Persistence;
 
     using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -14,8 +15,9 @@
     [TestClass]
     public class TryGetRefreshTokenQueryHandlerTests
     {
-        private static readonly HashedRefreshTokenId HashedRefreshTokenId = new HashedRefreshTokenId("h");
-        private static readonly RefreshToken RefreshToken = new RefreshToken { HashedId = HashedRefreshTokenId.Value };
+        private static readonly ClientId ClientId = new ClientId("clientId");
+        private static readonly Username Username = new Username("username");
+        private static readonly RefreshToken RefreshToken = new RefreshToken { ClientId = ClientId.Value, Username = Username.Value };
 
         private TryGetRefreshTokenQueryHandler target;
         private Mock<ITryGetRefreshTokenDbStatement> tryGetRefreshTokenDbStatement;
@@ -37,10 +39,10 @@
         [TestMethod]
         public async Task WhenQueryIsValid_ItShouldReturnTheRefreshToken()
         {
-            this.tryGetRefreshTokenDbStatement.Setup(v => v.ExecuteAsync(HashedRefreshTokenId))
+            this.tryGetRefreshTokenDbStatement.Setup(v => v.ExecuteAsync(ClientId, Username))
                 .ReturnsAsync(RefreshToken);
 
-            var result = await this.target.HandleAsync(new TryGetRefreshTokenQuery(HashedRefreshTokenId));
+            var result = await this.target.HandleAsync(new TryGetRefreshTokenQuery(ClientId, Username));
 
             Assert.AreEqual(RefreshToken, result);
         }

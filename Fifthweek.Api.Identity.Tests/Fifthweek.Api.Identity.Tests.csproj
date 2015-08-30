@@ -132,9 +132,9 @@
     <Compile Include="Membership\EmailTests.cs" />
     <Compile Include="Membership\MockIdentityResult.cs" />
     <Compile Include="Membership\Queries\IsUsernameAvailableQueryHandlerTests.cs" />
+    <Compile Include="OAuth\AesEncryptionServiceTests.cs" />
     <Compile Include="OAuth\ClientRepositoryTests.cs" />
-    <Compile Include="OAuth\Commands\CreateRefreshTokenCommandHandlerTests.cs" />
-    <Compile Include="OAuth\Commands\RemoveRefreshTokenCommandHandlerTests.cs" />
+    <Compile Include="OAuth\Commands\SetRefreshTokenCommandHandlerTests.cs" />
     <Compile Include="OAuth\Commands\UpdateLastAccessTokenDateCommandHandlerTests.cs" />
     <Compile Include="OAuth\FifthweekAuthorizationServerHandlerTests.cs" />
     <Compile Include="OAuth\FifthweekRefreshTokenHandlerTests.cs" />
@@ -142,8 +142,10 @@
     <Compile Include="OAuth\GetUserAndRolesFromCredentialsDbStatementTests.cs" />
     <Compile Include="OAuth\Queries\GetUserClaimsIdentityQueryHandlerTests.cs" />
     <Compile Include="OAuth\Queries\GetValidatedClientQueryHandlerTests.cs" />
+    <Compile Include="OAuth\Queries\TryGetRefreshTokenByEncryptedIdQueryHandlerTests.cs" />
     <Compile Include="OAuth\Queries\TryGetRefreshTokenQueryHandlerTests.cs" />
-    <Compile Include="OAuth\RemoveRefreshTokenDbStatementTests.cs" />
+    <Compile Include="OAuth\RefreshTokenIdEncryptionServiceTests.cs" />
+    <Compile Include="OAuth\TryGetRefreshTokenByEncryptedIdDbStatementTests.cs" />
     <Compile Include="OAuth\TryGetRefreshTokenDbStatementTests.cs" />
     <Compile Include="OAuth\UpdateUserTimeStampsDbStatementTests.cs" />
     <Compile Include="OAuth\UpsertRefreshTokenDbStatementTests.cs" />

@@ -396,13 +396,11 @@
             for (int i = 0; i < RefreshTokensPerCreator; i++)
             {
                 this.refreshTokens.Add(
-                    new RefreshToken(
-                        "hash_" + user.Id + i,
-                        user.UserName,
+                    new RefreshToken(user.UserName,
                         "client_" + i,
+                        "hash_" + user.Id + i,
                         DateTime.UtcNow.AddSeconds(-100),
-                        DateTime.UtcNow,
-                        "protected_" + i));
+                        DateTime.UtcNow, "protected_" + i));
             }
         }
 

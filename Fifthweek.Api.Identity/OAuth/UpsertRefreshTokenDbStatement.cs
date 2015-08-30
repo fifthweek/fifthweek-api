@@ -22,9 +22,7 @@
             {
                 await connection.UpsertAsync(
                     refreshToken,
-                    RefreshToken.Fields.Username |
-                    RefreshToken.Fields.ClientId,
-                    RefreshToken.Fields.HashedId |
+                    RefreshToken.Fields.EncryptedId |
                     RefreshToken.Fields.ProtectedTicket |
                     RefreshToken.Fields.IssuedDate |
                     RefreshToken.Fields.ExpiresDate);

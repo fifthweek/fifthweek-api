@@ -16,7 +16,7 @@
         {
             query.AssertNotNull("query");
 
-            return this.tryGetRefreshToken.ExecuteAsync(query.HashedRefreshTokenId);
+            return this.tryGetRefreshToken.ExecuteAsync(query.ClientId, query.Username);
         }
     }
 }

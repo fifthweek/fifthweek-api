@@ -13,19 +13,18 @@
         {
         }
 
-        [MaxLength(128)]
-        [Key]
-        public string HashedId { get; set; }
-
         [MaxLength(256)]
         [Required]
-        [Index("IX_UsernameAndClientId", 1)]
+        [Key, Column(Order = 0)]
         public string Username { get; set; }
 
         [MaxLength(64)]
         [Required]
-        [Index("IX_UsernameAndClientId", 2)]
+        [Key, Column(Order = 1)]
         public string ClientId { get; set; }
+
+        [MaxLength(48), Index]
+        public string EncryptedId { get; set; }
 
         [Required]
         public DateTime IssuedDate { get; set; }

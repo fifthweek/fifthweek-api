@@ -9,23 +9,24 @@
     using Fifthweek.Shared;
 
     [AutoConstructor]
-    public partial class CreateRefreshTokenCommandHandler : ICommandHandler<CreateRefreshTokenCommand>
+    public partial class SetRefreshTokenCommandHandler : ICommandHandler<SetRefreshTokenCommand>
     {
+        private readonly IRefreshTokenIdEncryptionService encryptionService;
         private readonly IUpsertRefreshTokenDbStatement upsertRefreshToken;
 
-        public async Task HandleAsync(CreateRefreshTokenCommand command)
+        public async Task HandleAsync(SetRefreshTokenCommand command)
         {
             command.AssertNotNull("command");
 
-            // Hash the refresh token ID so if anyone access the database they won't
+            // Encrypt the refresh token ID so if anyone access the database they won't
             // have access to the real refresh tokens.
-            var hashedRefreshTokenId = HashedRefreshTokenId.FromRefreshTokenId(command.RefreshTokenId);
+            var encryptedRefreshTokenId = this.encryptionService.EncryptRefreshTokenId(command.RefreshTokenId);
             var token = new RefreshToken(
-                hashedRefreshTokenId.Value,
                 command.Username.Value,
                 command.ClientId.Value,
+                encryptedRefreshTokenId.Value,
                 command.IssuedDate,
-                command.ExpiresDate,
+                command.ExpiresDate, 
                 command.ProtectedTicket);
 
             await this.upsertRefreshToken.ExecuteAsync(token);

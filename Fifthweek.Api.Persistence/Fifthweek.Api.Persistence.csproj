@@ -344,6 +344,18 @@
     <Compile Include="Migrations\201508051708310_AddCascadeDeleteToUserPaymentOrigin.Designer.cs">
       <DependentUpon>201508051708310_AddCascadeDeleteToUserPaymentOrigin.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201508291823118_UpdateRefreshTokensToUseEncryptionInsteadOfHashes.cs" />
+    <Compile Include="Migrations\201508291823118_UpdateRefreshTokensToUseEncryptionInsteadOfHashes.Designer.cs">
+      <DependentUpon>201508291823118_UpdateRefreshTokensToUseEncryptionInsteadOfHashes.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201508291839261_UpdateRefreshTokensToUseEncryptionInsteadOfHashesPart2.cs" />
+    <Compile Include="Migrations\201508291839261_UpdateRefreshTokensToUseEncryptionInsteadOfHashesPart2.Designer.cs">
+      <DependentUpon>201508291839261_UpdateRefreshTokensToUseEncryptionInsteadOfHashesPart2.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201508301027155_AddIndexOnEncryptedRefreshTokenId.cs" />
+    <Compile Include="Migrations\201508301027155_AddIndexOnEncryptedRefreshTokenId.Designer.cs">
+      <DependentUpon>201508301027155_AddIndexOnEncryptedRefreshTokenId.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Payments\AppendOnlyLedgerRecord.cs" />
     <Compile Include="Payments\LedgerTransactionType.cs" />
@@ -565,6 +577,15 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201508051708310_AddCascadeDeleteToUserPaymentOrigin.resx">
       <DependentUpon>201508051708310_AddCascadeDeleteToUserPaymentOrigin.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201508291823118_UpdateRefreshTokensToUseEncryptionInsteadOfHashes.resx">
+      <DependentUpon>201508291823118_UpdateRefreshTokensToUseEncryptionInsteadOfHashes.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201508291839261_UpdateRefreshTokensToUseEncryptionInsteadOfHashesPart2.resx">
+      <DependentUpon>201508291839261_UpdateRefreshTokensToUseEncryptionInsteadOfHashesPart2.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201508301027155_AddIndexOnEncryptedRefreshTokenId.resx">
+      <DependentUpon>201508301027155_AddIndexOnEncryptedRefreshTokenId.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>

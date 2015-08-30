@@ -16,7 +16,7 @@
         public const string AllowedOriginHeaderKey = "access-control-allow-origin";
 
         public const string TokenAllowedOriginKey = "fifthweek:clientAllowedOrigin";
-
+        
         public const string TokenRefreshTokenLifeTimeKey = "fifthweek:clientRefreshTokenLifeTime";
 
         public const string TokenClientIdKey = "fifthweek:client_id";
@@ -24,6 +24,7 @@
         public static readonly string FifthweekWebsiteOriginRegex = GetWebsiteOriginRegex();
         public static readonly string FifthweekWebsiteOriginDefault = GetWebsiteOriginDefault();
         public static readonly string FifthweekWebsiteBaseUrl = GetWebsiteBaseUrl();
+        public static readonly string RefreshTokenEncryptionKey = GetRefreshTokenEncryptionKey();
 
         private static string GetWebsiteOriginDefault()
         {
@@ -38,6 +39,11 @@
         private static string GetWebsiteBaseUrl()
         {
             return ConfigurationManager.AppSettings["WEBSITE_BASE_URL"];
+        }
+
+        private static string GetRefreshTokenEncryptionKey()
+        {
+            return ConfigurationManager.AppSettings["REFRESH_TOKEN_ENCRYPTION_KEY"];
         }
     }
 }

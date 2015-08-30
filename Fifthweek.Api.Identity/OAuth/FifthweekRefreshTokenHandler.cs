@@ -19,15 +19,16 @@ namespace Fifthweek.Api.Identity.OAuth
     [AutoConstructor]
     public partial class FifthweekRefreshTokenHandler : IFifthweekRefreshTokenHandler
     {
-        private readonly ICommandHandler<CreateRefreshTokenCommand> createRefreshToken;
-        private readonly ICommandHandler<RemoveRefreshTokenCommand> removeRefreshToken;
+        private readonly ICommandHandler<SetRefreshTokenCommand> createRefreshToken;
         private readonly IQueryHandler<TryGetRefreshTokenQuery, RefreshToken> tryGetRefreshToken;
+        private readonly IQueryHandler<TryGetRefreshTokenByEncryptedIdQuery, RefreshToken> tryGetRefreshTokenByEncryptedId;
+        private readonly IRefreshTokenIdEncryptionService encryptionService;
+        private readonly ITimestampCreator timestampCreator;
 
         public async Task CreateAsync(AuthenticationTokenCreateContext context)
         {
             context.AssertNotNull("context");
 
-            var refreshTokenId = RefreshTokenId.Create();
             var clientId = new ClientId(context.Ticket.Properties.Dictionary[Core.Constants.TokenClientIdKey]);
             var username = new Username(context.Ticket.Identity.Name);
 
@@ -37,19 +38,36 @@ namespace Fifthweek.Api.Identity.OAuth
                 throw new InvalidOperationException("Refresh token lifetime not found.");
             }
 
-            var issuedDate = DateTime.UtcNow;
-            var expiresDate = issuedDate.AddMinutes(refreshTokenLifeTime);
+            var refreshToken = await this.tryGetRefreshToken.HandleAsync(
+                new TryGetRefreshTokenQuery(clientId, username));
 
-            context.Ticket.Properties.IssuedUtc = issuedDate;
-            context.Ticket.Properties.ExpiresUtc = expiresDate;
+            var now = this.timestampCreator.Now();
 
-            await this.createRefreshToken.HandleAsync(new CreateRefreshTokenCommand(
-                refreshTokenId,
-                clientId,
-                username,
-                context.SerializeTicket(),
-                issuedDate,
-                expiresDate));
+            RefreshTokenId refreshTokenId;
+            if (refreshToken != null && refreshToken.ExpiresDate > now)
+            {
+                refreshTokenId = this.encryptionService.DecryptRefreshTokenId(
+                    new EncryptedRefreshTokenId(refreshToken.EncryptedId));
+            }
+            else
+            {
+                refreshTokenId = RefreshTokenId.Create();
+
+                var issuedDate = now;
+                var expiresDate = issuedDate.AddMinutes(refreshTokenLifeTime);
+
+                context.Ticket.Properties.IssuedUtc = issuedDate;
+                context.Ticket.Properties.ExpiresUtc = expiresDate;
+
+                await this.createRefreshToken.HandleAsync(
+                    new SetRefreshTokenCommand(
+                        refreshTokenId,
+                        clientId,
+                        username,
+                        context.SerializeTicket(),
+                        issuedDate,
+                        expiresDate));
+            }
 
             context.SetToken(refreshTokenId.Value);
         }
@@ -67,22 +85,19 @@ namespace Fifthweek.Api.Identity.OAuth
 
             Helper.SetAccessControlAllowOrigin(context.OwinContext, allowedOrigin);
 
-            var hashedRefreshTokenId = HashedRefreshTokenId.FromRefreshToken(context.Token);
-            var refreshToken = await this.tryGetRefreshToken.HandleAsync(new TryGetRefreshTokenQuery(hashedRefreshTokenId));
+            var suppliedRefreshTokenId = context.Token;
+            var encryptedrefreshTokenId = this.encryptionService.EncryptRefreshTokenId(new RefreshTokenId(suppliedRefreshTokenId));
+
+            var refreshToken = await this.tryGetRefreshTokenByEncryptedId.HandleAsync(new TryGetRefreshTokenByEncryptedIdQuery(encryptedrefreshTokenId));
 
             if (refreshToken != null)
             {
                 // Get protectedTicket from refreshToken class
                 context.DeserializeTicket(refreshToken.ProtectedTicket);
-
-                // We can remove the current refresh token because a new one
-                // is created in the CreateAsync method when a new auth token
-                // is requested using the refresh token.
-                await this.removeRefreshToken.HandleAsync(new RemoveRefreshTokenCommand(hashedRefreshTokenId));
             }
             else
             {
-                Trace.TraceWarning("Refresh token not found: " + hashedRefreshTokenId);
+                Trace.TraceWarning("Refresh token not found: " + encryptedrefreshTokenId);
             }
         }
     }

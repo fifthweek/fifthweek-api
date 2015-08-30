@@ -4,6 +4,6 @@ namespace Fifthweek.Api.Identity.OAuth
 
     public interface IRemoveRefreshTokenDbStatement
     {
-        Task ExecuteAsync(HashedRefreshTokenId hashedTokenId);
+        Task ExecuteAsync(EncryptedRefreshTokenId encryptedTokenId);
     }
 }

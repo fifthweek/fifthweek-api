@@ -13,8 +13,8 @@
         {
             builder.RegisterType<UpdateUserTimeStampsDbStatement>().As<IUpdateUserTimeStampsDbStatement>();
             builder.RegisterType<UpsertRefreshTokenDbStatement>().As<IUpsertRefreshTokenDbStatement>();
-            builder.RegisterType<RemoveRefreshTokenDbStatement>().As<IRemoveRefreshTokenDbStatement>();
             builder.RegisterType<TryGetRefreshTokenDbStatement>().As<ITryGetRefreshTokenDbStatement>();
+            builder.RegisterType<TryGetRefreshTokenByEncryptedIdDbStatement>().As<ITryGetRefreshTokenByEncryptedIdDbStatement>();
             builder.RegisterType<UpdateUserTimeStampsDbStatement>().As<IUpdateUserTimeStampsDbStatement>();
             builder.RegisterType<GetUserAndRolesFromCredentialsDbStatement>().As<IGetUserAndRolesFromCredentialsDbStatement>();
             builder.RegisterType<GetUserAndRolesFromUserIdDbStatement>().As<IGetUserAndRolesFromUserIdDbStatement>();
@@ -23,6 +23,8 @@
             builder.RegisterType<FifthweekRefreshTokenProvider>();
             builder.RegisterType<FifthweekRefreshTokenHandler>().As<IFifthweekRefreshTokenHandler>();
             builder.RegisterType<ClientRepository>().As<IClientRepository>();
+            builder.RegisterType<AesEncryptionService>().As<IAesEncryptionService>();
+            builder.RegisterType<RefreshTokenIdEncryptionService>().As<IRefreshTokenIdEncryptionService>();
         }
     }
 }

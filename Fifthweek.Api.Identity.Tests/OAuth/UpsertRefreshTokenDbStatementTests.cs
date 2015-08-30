@@ -15,13 +15,11 @@
     [TestClass]
     public class UpsertRefreshTokenDbStatementTests : PersistenceTestsBase
     {
-        private static readonly RefreshToken RefreshToken = new RefreshToken(
-            "hashedId",
-            "username",
+        private static readonly RefreshToken RefreshToken = new RefreshToken("username",
             "clientId",
+            "hashedId",
             new SqlDateTime(DateTime.UtcNow.AddSeconds(-100)).Value,
-            new SqlDateTime(DateTime.UtcNow).Value,
-            "protectedTicket");
+            new SqlDateTime(DateTime.UtcNow).Value, "protectedTicket");
 
         private UpsertRefreshTokenDbStatement target;
         private Mock<IFifthweekDbConnectionFactory> connectionFactory;
@@ -118,13 +116,11 @@
             using (var context = testDatabase.CreateContext())
             {
                 await context.Database.Connection.InsertAsync(
-                    new RefreshToken(
-                        RefreshToken.HashedId,
-                        RefreshToken.Username,
+                    new RefreshToken(RefreshToken.Username,
                         RefreshToken.ClientId,
+                        RefreshToken.EncryptedId,
                         RefreshToken.IssuedDate.AddDays(-1),
-                        RefreshToken.ExpiresDate.AddDays(-1),
-                        RefreshToken.ProtectedTicket + "2"));
+                        RefreshToken.ExpiresDate.AddDays(-1), RefreshToken.ProtectedTicket + "2"));
             }
         }
     }
