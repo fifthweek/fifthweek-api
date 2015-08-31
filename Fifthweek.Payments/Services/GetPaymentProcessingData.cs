@@ -120,10 +120,11 @@ namespace Fifthweek.Payments.Services
                 return new List<CreatorPost>();
             }
 
-            // Add a week as we need to know if there were any posts before the subscriber's
-            // billing week end date, which may be up to a week after the requested end time.
+            // Expand by a week as we need to know if there were any posts within the subscriber's
+            // billing week, which may be up to a week before and after the requested end time.
+            var poststartTimeInclusive = startTimeInclusive.AddDays(-7);
             var postsEndTimeExclusive = endTimeExclusive.AddDays(7);
-            return await this.getCreatorPosts.ExecuteAsync(allChannelIds, startTimeInclusive, postsEndTimeExclusive);
+            return await this.getCreatorPosts.ExecuteAsync(allChannelIds, poststartTimeInclusive, postsEndTimeExclusive);
         }
 
         [AutoConstructor]

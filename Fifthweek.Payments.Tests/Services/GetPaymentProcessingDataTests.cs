@@ -323,7 +323,7 @@
                         v =>
                         v.ExecuteAsync(
                             new List<ChannelId> { ChannelId1, ChannelId2, ChannelId3 },
-                            startTime,
+                            startTime.AddDays(-7),
                             endTime.AddDays(7))).ReturnsAsync(CreatorPosts);
                 }
 
@@ -372,7 +372,7 @@
                     v =>
                     v.ExecuteAsync(
                         new List<ChannelId> { ChannelId1, ChannelId2, ChannelId3 },
-                        startTime,
+                        startTime.AddDays(-7),
                         endTime.AddDays(7)),
                     times);
             }
