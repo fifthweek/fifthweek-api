@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Linq;
 
-//// Generated on 03/09/2015 14:34:44 (UTC)
-//// Mapped solution in 22.29s
+//// Generated on 03/09/2015 17:31:20 (UTC)
+//// Mapped solution in 18.35s
 
 
 namespace Fifthweek.Api.Posts.Commands
@@ -1407,6 +1407,9 @@ namespace Fifthweek.Api.Posts.Queries
             System.Nullable<System.Int64> imageSize,
             System.Nullable<System.Int32> imageRenderWidth,
             System.Nullable<System.Int32> imageRenderHeight,
+            System.Int32 likesCount,
+            System.Int32 commentsCount,
+            System.Boolean hasLikedPost,
             System.DateTime creationDate)
         {
             if (creatorId == null)
@@ -1434,6 +1437,21 @@ namespace Fifthweek.Api.Posts.Queries
                 throw new ArgumentNullException("liveDate");
             }
 
+            if (likesCount == null)
+            {
+                throw new ArgumentNullException("likesCount");
+            }
+
+            if (commentsCount == null)
+            {
+                throw new ArgumentNullException("commentsCount");
+            }
+
+            if (hasLikedPost == null)
+            {
+                throw new ArgumentNullException("hasLikedPost");
+            }
+
             if (creationDate == null)
             {
                 throw new ArgumentNullException("creationDate");
@@ -1456,6 +1474,9 @@ namespace Fifthweek.Api.Posts.Queries
             this.ImageSize = imageSize;
             this.ImageRenderWidth = imageRenderWidth;
             this.ImageRenderHeight = imageRenderHeight;
+            this.LikesCount = likesCount;
+            this.CommentsCount = commentsCount;
+            this.HasLikedPost = hasLikedPost;
             this.CreationDate = creationDate;
         }
     }
@@ -2998,7 +3019,10 @@ namespace Fifthweek.Api.Posts.Queries
                 Fifthweek.Api.Posts.Queries.FileSourceInformation fileSource,
                 Fifthweek.Api.FileManagement.Shared.FileInformation image,
                 Fifthweek.Api.Posts.Queries.FileSourceInformation imageSource,
-                System.DateTime liveDate)
+                System.DateTime liveDate,
+                System.Int32 likesCount,
+                System.Int32 commentsCount,
+                System.Boolean hasLiked)
             {
                 if (creatorId == null)
                 {
@@ -3025,6 +3049,21 @@ namespace Fifthweek.Api.Posts.Queries
                     throw new ArgumentNullException("liveDate");
                 }
 
+                if (likesCount == null)
+                {
+                    throw new ArgumentNullException("likesCount");
+                }
+
+                if (commentsCount == null)
+                {
+                    throw new ArgumentNullException("commentsCount");
+                }
+
+                if (hasLiked == null)
+                {
+                    throw new ArgumentNullException("hasLiked");
+                }
+
                 this.CreatorId = creatorId;
                 this.PostId = postId;
                 this.BlogId = blogId;
@@ -3036,6 +3075,9 @@ namespace Fifthweek.Api.Posts.Queries
                 this.Image = image;
                 this.ImageSource = imageSource;
                 this.LiveDate = liveDate;
+                this.LikesCount = likesCount;
+                this.CommentsCount = commentsCount;
+                this.HasLiked = hasLiked;
             }
         }
     }
@@ -4716,7 +4758,7 @@ namespace Fifthweek.Api.Posts.Queries
     {
         public override string ToString()
         {
-            return string.Format("NewsfeedPost({0}, {1}, {2}, {3}, {4}, {5}, {6}, {7}, {8}, \"{9}\", \"{10}\", {11}, \"{12}\", \"{13}\", {14}, {15}, {16}, {17})", this.CreatorId == null ? "null" : this.CreatorId.ToString(), this.PostId == null ? "null" : this.PostId.ToString(), this.BlogId == null ? "null" : this.BlogId.ToString(), this.ChannelId == null ? "null" : this.ChannelId.ToString(), this.CollectionId == null ? "null" : this.CollectionId.ToString(), this.Comment == null ? "null" : this.Comment.ToString(), this.FileId == null ? "null" : this.FileId.ToString(), this.ImageId == null ? "null" : this.ImageId.ToString(), this.LiveDate == null ? "null" : this.LiveDate.ToString(), this.FileName == null ? "null" : this.FileName.ToString(), this.FileExtension == null ? "null" : this.FileExtension.ToString(), this.FileSize == null ? "null" : this.FileSize.ToString(), this.ImageName == null ? "null" : this.ImageName.ToString(), this.ImageExtension == null ? "null" : this.ImageExtension.ToString(), this.ImageSize == null ? "null" : this.ImageSize.ToString(), this.ImageRenderWidth == null ? "null" : this.ImageRenderWidth.ToString(), this.ImageRenderHeight == null ? "null" : this.ImageRenderHeight.ToString(), this.CreationDate == null ? "null" : this.CreationDate.ToString());
+            return string.Format("NewsfeedPost({0}, {1}, {2}, {3}, {4}, {5}, {6}, {7}, {8}, \"{9}\", \"{10}\", {11}, \"{12}\", \"{13}\", {14}, {15}, {16}, {17}, {18}, {19}, {20})", this.CreatorId == null ? "null" : this.CreatorId.ToString(), this.PostId == null ? "null" : this.PostId.ToString(), this.BlogId == null ? "null" : this.BlogId.ToString(), this.ChannelId == null ? "null" : this.ChannelId.ToString(), this.CollectionId == null ? "null" : this.CollectionId.ToString(), this.Comment == null ? "null" : this.Comment.ToString(), this.FileId == null ? "null" : this.FileId.ToString(), this.ImageId == null ? "null" : this.ImageId.ToString(), this.LiveDate == null ? "null" : this.LiveDate.ToString(), this.FileName == null ? "null" : this.FileName.ToString(), this.FileExtension == null ? "null" : this.FileExtension.ToString(), this.FileSize == null ? "null" : this.FileSize.ToString(), this.ImageName == null ? "null" : this.ImageName.ToString(), this.ImageExtension == null ? "null" : this.ImageExtension.ToString(), this.ImageSize == null ? "null" : this.ImageSize.ToString(), this.ImageRenderWidth == null ? "null" : this.ImageRenderWidth.ToString(), this.ImageRenderHeight == null ? "null" : this.ImageRenderHeight.ToString(), this.LikesCount == null ? "null" : this.LikesCount.ToString(), this.CommentsCount == null ? "null" : this.CommentsCount.ToString(), this.HasLikedPost == null ? "null" : this.HasLikedPost.ToString(), this.CreationDate == null ? "null" : this.CreationDate.ToString());
         }
         
         public override bool Equals(object obj)
@@ -4761,6 +4803,9 @@ namespace Fifthweek.Api.Posts.Queries
                 hashCode = (hashCode * 397) ^ (this.ImageSize != null ? this.ImageSize.GetHashCode() : 0);
                 hashCode = (hashCode * 397) ^ (this.ImageRenderWidth != null ? this.ImageRenderWidth.GetHashCode() : 0);
                 hashCode = (hashCode * 397) ^ (this.ImageRenderHeight != null ? this.ImageRenderHeight.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.LikesCount != null ? this.LikesCount.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.CommentsCount != null ? this.CommentsCount.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (this.HasLikedPost != null ? this.HasLikedPost.GetHashCode() : 0);
                 hashCode = (hashCode * 397) ^ (this.CreationDate != null ? this.CreationDate.GetHashCode() : 0);
                 return hashCode;
             }
@@ -4849,6 +4894,21 @@ namespace Fifthweek.Api.Posts.Queries
             }
         
             if (!object.Equals(this.ImageRenderHeight, other.ImageRenderHeight))
+            {
+                return false;
+            }
+        
+            if (!object.Equals(this.LikesCount, other.LikesCount))
+            {
+                return false;
+            }
+        
+            if (!object.Equals(this.CommentsCount, other.CommentsCount))
+            {
+                return false;
+            }
+        
+            if (!object.Equals(this.HasLikedPost, other.HasLikedPost))
             {
                 return false;
             }
@@ -6318,7 +6378,7 @@ namespace Fifthweek.Api.Posts.Queries
         {
             public override string ToString()
             {
-                return string.Format("Post({0}, {1}, {2}, {3}, {4}, {5}, {6}, {7}, {8}, {9}, {10})", this.CreatorId == null ? "null" : this.CreatorId.ToString(), this.PostId == null ? "null" : this.PostId.ToString(), this.BlogId == null ? "null" : this.BlogId.ToString(), this.ChannelId == null ? "null" : this.ChannelId.ToString(), this.CollectionId == null ? "null" : this.CollectionId.ToString(), this.Comment == null ? "null" : this.Comment.ToString(), this.File == null ? "null" : this.File.ToString(), this.FileSource == null ? "null" : this.FileSource.ToString(), this.Image == null ? "null" : this.Image.ToString(), this.ImageSource == null ? "null" : this.ImageSource.ToString(), this.LiveDate == null ? "null" : this.LiveDate.ToString());
+                return string.Format("Post({0}, {1}, {2}, {3}, {4}, {5}, {6}, {7}, {8}, {9}, {10}, {11}, {12}, {13})", this.CreatorId == null ? "null" : this.CreatorId.ToString(), this.PostId == null ? "null" : this.PostId.ToString(), this.BlogId == null ? "null" : this.BlogId.ToString(), this.ChannelId == null ? "null" : this.ChannelId.ToString(), this.CollectionId == null ? "null" : this.CollectionId.ToString(), this.Comment == null ? "null" : this.Comment.ToString(), this.File == null ? "null" : this.File.ToString(), this.FileSource == null ? "null" : this.FileSource.ToString(), this.Image == null ? "null" : this.Image.ToString(), this.ImageSource == null ? "null" : this.ImageSource.ToString(), this.LiveDate == null ? "null" : this.LiveDate.ToString(), this.LikesCount == null ? "null" : this.LikesCount.ToString(), this.CommentsCount == null ? "null" : this.CommentsCount.ToString(), this.HasLiked == null ? "null" : this.HasLiked.ToString());
             }
             
             public override bool Equals(object obj)
@@ -6357,6 +6417,9 @@ namespace Fifthweek.Api.Posts.Queries
                     hashCode = (hashCode * 397) ^ (this.Image != null ? this.Image.GetHashCode() : 0);
                     hashCode = (hashCode * 397) ^ (this.ImageSource != null ? this.ImageSource.GetHashCode() : 0);
                     hashCode = (hashCode * 397) ^ (this.LiveDate != null ? this.LiveDate.GetHashCode() : 0);
+                    hashCode = (hashCode * 397) ^ (this.LikesCount != null ? this.LikesCount.GetHashCode() : 0);
+                    hashCode = (hashCode * 397) ^ (this.CommentsCount != null ? this.CommentsCount.GetHashCode() : 0);
+                    hashCode = (hashCode * 397) ^ (this.HasLiked != null ? this.HasLiked.GetHashCode() : 0);
                     return hashCode;
                 }
             }
@@ -6414,6 +6477,21 @@ namespace Fifthweek.Api.Posts.Queries
                 }
             
                 if (!object.Equals(this.LiveDate, other.LiveDate))
+                {
+                    return false;
+                }
+            
+                if (!object.Equals(this.LikesCount, other.LikesCount))
+                {
+                    return false;
+                }
+            
+                if (!object.Equals(this.CommentsCount, other.CommentsCount))
+                {
+                    return false;
+                }
+            
+                if (!object.Equals(this.HasLiked, other.HasLiked))
                 {
                     return false;
                 }
@@ -7392,6 +7470,9 @@ namespace Fifthweek.Api.Posts.Queries
             builder.ImageSize = this.ImageSize;
             builder.ImageRenderWidth = this.ImageRenderWidth;
             builder.ImageRenderHeight = this.ImageRenderHeight;
+            builder.LikesCount = this.LikesCount;
+            builder.CommentsCount = this.CommentsCount;
+            builder.HasLikedPost = this.HasLikedPost;
             builder.CreationDate = this.CreationDate;
             return builder;
         }
@@ -7422,6 +7503,9 @@ namespace Fifthweek.Api.Posts.Queries
             public System.Nullable<System.Int64> ImageSize { get; set; }
             public System.Nullable<System.Int32> ImageRenderWidth { get; set; }
             public System.Nullable<System.Int32> ImageRenderHeight { get; set; }
+            public System.Int32 LikesCount { get; set; }
+            public System.Int32 CommentsCount { get; set; }
+            public System.Boolean HasLikedPost { get; set; }
             public System.DateTime CreationDate { get; set; }
         
             public NewsfeedPost Build()
@@ -7444,6 +7528,9 @@ namespace Fifthweek.Api.Posts.Queries
                     this.ImageSize, 
                     this.ImageRenderWidth, 
                     this.ImageRenderHeight, 
+                    this.LikesCount, 
+                    this.CommentsCount, 
+                    this.HasLikedPost, 
                     this.CreationDate);
             }
         }

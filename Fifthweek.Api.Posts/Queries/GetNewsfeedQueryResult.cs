@@ -48,6 +48,12 @@
             public FileSourceInformation ImageSource { get; private set; }
 
             public DateTime LiveDate { get; private set; }
+
+            public int LikesCount { get; private set; }
+
+            public int CommentsCount { get; private set; }
+
+            public bool HasLiked { get; private set; }
         }
     }
 }

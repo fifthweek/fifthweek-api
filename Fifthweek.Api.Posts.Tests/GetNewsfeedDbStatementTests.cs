@@ -44,6 +44,18 @@
         private static readonly UserId SubscribedUserIdZeroBalancePaymentInProgress = new UserId(Guid.NewGuid());
         private static readonly UserId GuestListUserId = new UserId(Guid.NewGuid());
         private static readonly UserId CreatorId = new UserId(Guid.NewGuid());
+        private static readonly List<UserId> UserIds = new List<UserId>
+        {
+            UnsubscribedUserId,
+            SubscribedLowPriceUserId,
+            SubscribedHighPriceUserId,
+            SubscribedUserId,
+            SubscribedUserIdNoBalance,
+            SubscribedUserIdZeroBalance,
+            SubscribedUserIdZeroBalancePaymentInProgress,
+            GuestListUserId,
+            CreatorId,
+        };
         private static readonly List<ChannelId> ChannelIds;
         private static readonly List<List<CollectionId>> CollectionIds;
         private static readonly NonNegativeInt StartIndex = NonNegativeInt.Parse(10);
@@ -307,6 +319,9 @@
             NonNegativeInt noPaginationStart = NonNegativeInt.Parse(0);
             PositiveInt noPaginationCount = PositiveInt.Parse(int.MaxValue);
 
+            var wrapper = new ParameterizedTestWrapper(parameterizedTest);
+            parameterizedTest = wrapper.Execute;
+
             // No pagination.
             await parameterizedTest(
                 CreatorId, CreatorId, null, null, Now, false, noPaginationStart, noPaginationCount, SortedLiveNewsfeedPosts, 0);
@@ -464,7 +479,8 @@
                 var collectionEntities = new List<Collection>();
                 var postEntities = new List<Post>();
                 var origins = new List<UserPaymentOrigin>();
-
+                var likes = new List<Like>();
+                var comments = new List<Persistence.Comment>();
 
                 if (createLivePosts || createFuturePosts)
                 {
@@ -501,7 +517,6 @@
                     channelSubscriptions.Add(new ChannelSubscription(ChannelIds[1].Value, null, GuestListUserId.Value, null, 0, Now, Now));
 
                     freeAccessUsers.Add(new FreeAccessUser(BlogId.Value, GuestListUserId.Value + "@test.com"));
-
 
                     foreach (var newsfeedPost in SortedNewsfeedPosts)
                     {
@@ -549,6 +564,30 @@
                             Random.Next(2) == 0,
                             newsfeedPost.LiveDate,
                             newsfeedPost.CreationDate));
+
+                        for (int i = 0; i < newsfeedPost.LikesCount; i++)
+                        {
+                            likes.Add(
+                                new Like(
+                                    newsfeedPost.PostId.Value,
+                                    null,
+                                    UserIds[i].Value,
+                                    null,
+                                    DateTime.UtcNow));
+                        }
+
+                        for (int i = 0; i < newsfeedPost.CommentsCount; i++)
+                        {
+                            comments.Add(
+                                new Persistence.Comment(
+                                    Guid.NewGuid(),
+                                    newsfeedPost.PostId.Value,
+                                    null,
+                                    UserIds[i].Value,
+                                    null,
+                                    "Comment " + this.random.Next(),
+                                    DateTime.UtcNow));
+                        }
                     }
                 }
 
@@ -607,6 +646,8 @@
                 await databaseContext.Database.Connection.InsertAsync(calculatedAccountBalances);
                 await databaseContext.Database.Connection.InsertAsync(freeAccessUsers);
                 await databaseContext.Database.Connection.InsertAsync(origins);
+                await databaseContext.Database.Connection.InsertAsync(likes);
+                await databaseContext.Database.Connection.InsertAsync(comments);
             }
         }
 
@@ -667,12 +708,87 @@
                             i % 3 == 2 ? FileSize : (long?)null,
                             i % 3 == 2 ? FileWidth : (int?)null,
                             i % 3 == 2 ? FileHeight : (int?)null,
+                            i % (UserIds.Count / 2),
+                            i % UserIds.Count,
+                            false,
                             creationDate));
                     }
                 }
             }
 
             return result.OrderByDescending(_ => _.LiveDate).ThenByDescending(_ => _.CreationDate);
+        }
+
+        private class ParameterizedTestWrapper
+        {
+            private readonly Func<UserId, UserId, IReadOnlyList<ChannelId>, IReadOnlyList<CollectionId>, DateTime, bool, NonNegativeInt, PositiveInt, IReadOnlyList<NewsfeedPost>, int, Task> parameterizedTest;
+
+            public ParameterizedTestWrapper(Func<UserId,
+                 UserId,
+                 IReadOnlyList<ChannelId>,
+                 IReadOnlyList<CollectionId>,
+                 DateTime,
+                 bool,
+                 NonNegativeInt,
+                 PositiveInt,
+                 IReadOnlyList<NewsfeedPost>,
+                 int,
+                 Task> parameterizedTest)
+            {
+                this.parameterizedTest = parameterizedTest;
+            }
+
+            public Task Execute(
+                UserId userId,
+                UserId creatorId,
+                IReadOnlyList<ChannelId> channelIds,
+                IReadOnlyList<CollectionId> collectionIds,
+                DateTime origin,
+                bool searchForwards,
+                NonNegativeInt startIndex,
+                PositiveInt count,
+                IReadOnlyList<NewsfeedPost> expectedPosts,
+                int expectedAccountBalance)
+            {
+                expectedPosts = this.GetPostsForUser(expectedPosts, userId);
+                return this.parameterizedTest(
+                    userId,
+                    creatorId,
+                    channelIds,
+                    collectionIds,
+                    origin,
+                    searchForwards,
+                    startIndex,
+                    count,
+                    expectedPosts,
+                    expectedAccountBalance);
+            }
+
+            private IReadOnlyList<NewsfeedPost> GetPostsForUser(IReadOnlyList<NewsfeedPost> posts, UserId userId)
+            {
+                return posts.Select(v => new NewsfeedPost(
+                    v.CreatorId,
+                    v.PostId,
+                    v.BlogId,
+                    v.ChannelId,
+                    v.CollectionId,
+                    v.Comment,
+                    v.FileId,
+                    v.ImageId,
+                    v.LiveDate,
+                    v.FileName,
+                    v.FileExtension,
+                    v.FileSize,
+                    v.ImageName,
+                    v.ImageExtension,
+                    v.ImageSize,
+                    v.ImageRenderWidth,
+                    v.ImageRenderHeight,
+                    v.LikesCount,
+                    v.CommentsCount,
+                    UserIds.IndexOf(userId) < v.LikesCount,
+                    v.CreationDate)).ToList();
+            }
         }
     }
 }

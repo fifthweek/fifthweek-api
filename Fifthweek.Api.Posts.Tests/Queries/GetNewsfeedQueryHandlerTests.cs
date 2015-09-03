@@ -207,7 +207,10 @@
                             i % 3 == 2 ? FileExtension : null,
                             i % 3 == 2 ? FileSize : (long?)null,
                             i % 3 == 2 ? FileWidth : (int?)null,
-                            i % 3 == 2 ? FileHeight : (int?)null,
+                            i % 3 == 2 ? FileHeight : (int?)null, 
+                            0,
+                            0, 
+                            false,
                             liveDate));
                     }
                 }

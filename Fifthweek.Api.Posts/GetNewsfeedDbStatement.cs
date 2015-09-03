@@ -39,16 +39,22 @@
             (int)PaymentStatus.Failed);
 
         private static readonly string SqlStart = string.Format(@"
-            SELECT    blog.{12} AS BlogId, blog.{13} AS CreatorId, post.{1} AS PostId, post.{2}, {4}, {5}, {6}, {7}, {3}, post.{21}, [file].{16} as FileName, [file].{17} as FileExtension, [file].{18} as FileSize, image.{16} as ImageName, image.{17} as ImageExtension, image.{18} as ImageSize, image.{19} as ImageRenderWidth, image.{20} as ImageRenderHeight
-            FROM        {0} post
-            INNER JOIN  {8} channel
-                ON      post.{2} = channel.{9}
-            INNER JOIN  {11} blog
-                ON      channel.{10} = blog.{12}
-            LEFT OUTER JOIN {14} [file]
-                ON      post.{6} = [file].{15}
-            LEFT OUTER JOIN {14} image
-                ON      post.{7} = image.{15}
+            SELECT blog.{12} AS BlogId, blog.{13} AS CreatorId, post.{1} AS PostId, 
+                   post.{2}, {4}, {5}, {6}, {7}, {3}, post.{21}, 
+                   [file].{16} as FileName, [file].{17} as FileExtension, [file].{18} as FileSize, 
+                   image.{16} as ImageName, image.{17} as ImageExtension, image.{18} as ImageSize, 
+                   image.{19} as ImageRenderWidth, image.{20} as ImageRenderHeight,
+                   COALESCE(likes.LikesCount, 0) AS LikesCount,
+                   COALESCE(comments.CommentsCount, 0) AS CommentsCount,
+                   CASE WHEN likedPosts.{22} IS NOT NULL THEN 1 ELSE 0 END AS HasLikedPost
+            FROM {0} post
+            INNER JOIN  {8} channel ON post.{2} = channel.{9}
+            INNER JOIN  {11} blog ON channel.{10} = blog.{12}
+            LEFT OUTER JOIN {14} [file] ON post.{6} = [file].{15}
+            LEFT OUTER JOIN {14} image ON post.{7} = image.{15}
+            LEFT OUTER JOIN (SELECT {22}, COUNT(*) AS LikesCount FROM {23} GROUP BY {22}) likes ON post.{1} = likes.{22}
+            LEFT OUTER JOIN (SELECT {24}, COUNT(*) AS CommentsCount FROM {25} GROUP BY {24}) comments ON post.{1} = comments.{24}
+            LEFT OUTER JOIN (SELECT {22} FROM {23} WHERE {26}=@RequestorId) likedPosts ON post.{1} = likedPosts.{22}
             WHERE       post.{3} <= @Now",
             Post.Table,
             Post.Fields.Id,
@@ -71,7 +77,12 @@
             File.Fields.BlobSizeBytes,
             File.Fields.RenderWidth,
             File.Fields.RenderHeight,
-            Post.Fields.CreationDate);
+            Post.Fields.CreationDate,
+            Like.Fields.PostId,
+            Like.Table,
+            Comment.Fields.PostId,
+            Comment.Table,
+            Like.Fields.UserId);
 
         private static readonly string CreatorFilter = string.Format(
             @"

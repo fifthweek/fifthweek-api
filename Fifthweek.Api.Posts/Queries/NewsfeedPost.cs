@@ -59,6 +59,12 @@
         [Optional]
         public int? ImageRenderHeight { get; private set; }
 
+        public int LikesCount { get; private set; }
+
+        public int CommentsCount { get; private set; }
+
+        public bool HasLikedPost { get; private set; }
+
         public DateTime CreationDate { get; private set; }
     }
 }
