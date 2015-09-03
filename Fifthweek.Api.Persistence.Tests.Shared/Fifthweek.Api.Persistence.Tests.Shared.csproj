@@ -71,6 +71,8 @@
   </Choose>
   <ItemGroup>
     <Compile Include="ChannelSubscriptionTests.cs" />
+    <Compile Include="CommentTests.cs" />
+    <Compile Include="LikeTests.cs" />
     <Compile Include="PostTests.cs" />
     <Compile Include="CollectionTests.cs" />
     <Compile Include="ClassAugmentation.cs">

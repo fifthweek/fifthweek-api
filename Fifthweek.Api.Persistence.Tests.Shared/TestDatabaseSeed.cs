@@ -59,12 +59,13 @@
         private readonly List<SubscriberChannelsSnapshot> subscriberChannelsSnapshots = new List<SubscriberChannelsSnapshot>();
         private readonly List<SubscriberChannelsSnapshotItem> subscriberChannelsSnapshotItems = new List<SubscriberChannelsSnapshotItem>();
         private readonly List<SubscriberSnapshot> subscriberSnapshots = new List<SubscriberSnapshot>();
-
         private readonly List<AppendOnlyLedgerRecord> appendOnlyLedgerRecord = new List<AppendOnlyLedgerRecord>();
         private readonly List<CalculatedAccountBalance> calculatedAccountBalance = new List<CalculatedAccountBalance>();
         private readonly List<CreatorPercentageOverride> creatorPercentageOverride = new List<CreatorPercentageOverride>();
         private readonly List<UncommittedSubscriptionPayment> uncommittedSubscriptionPayment = new List<UncommittedSubscriptionPayment>();
         private readonly List<UserPaymentOrigin> userPaymentOrigins = new List<UserPaymentOrigin>();
+        private readonly List<Comment> comments = new List<Comment>();
+        private readonly List<Like> likes = new List<Like>();
 
         public TestDatabaseSeed(Func<IFifthweekDbContext> databaseContextFactory)
         {
@@ -150,6 +151,8 @@
                     await connection.InsertAsync(this.creatorPercentageOverride, false);
                     await connection.InsertAsync(this.uncommittedSubscriptionPayment, false);
                     await connection.InsertAsync(this.userPaymentOrigins, false);
+                    await connection.InsertAsync(this.comments, false);
+                    await connection.InsertAsync(this.likes, false);
                 }
                 finally
                 {
@@ -505,6 +508,9 @@
                 this.posts.Add(post);
                 this.files.Add(file);
             }
+      
+            this.comments.Add(new Comment(Guid.NewGuid(), this.posts.Last().Id, null, this.users.First().Id, null, "Test comment", DateTime.UtcNow));
+            this.likes.Add(new Like(this.posts.Last().Id, null, this.users.First().Id, null, DateTime.UtcNow));
         }
 
         private IEnumerable<int> GenerageUniqueIndexes(int collectionCount, int indexCount)

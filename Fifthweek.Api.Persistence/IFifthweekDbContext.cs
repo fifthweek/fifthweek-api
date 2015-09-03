@@ -61,6 +61,10 @@
 
         IDbSet<UserPaymentOrigin> UserPaymentOrigins { get; set; }
 
+        IDbSet<Comment> Comments { get; set; }
+
+        IDbSet<Like> Likes { get; set; }
+
         Task<int> SaveChangesAsync();
 
         Task<int> SaveChangesAsync(CancellationToken cancellationToken);

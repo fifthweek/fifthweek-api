@@ -22,8 +22,9 @@
         // We don't delete files because we need garbage collection to take care of those.
         private static readonly string DeleteSql = string.Format(
             @"
-            DELETE post FROM {4} post INNER JOIN {2} channel ON post.{5} = channel.{3}
-                WHERE channel.{3} = @ChannelId;
+            DELETE c FROM {9} c INNER JOIN {4} p ON c.{10} = p.{8} WHERE p.{5} = @ChannelId;
+            DELETE l FROM {6} l INNER JOIN {4} p ON l.{7} = p.{8} WHERE p.{5} = @ChannelId;
+            DELETE FROM {4} WHERE {5} = @ChannelId;
             DELETE FROM {0} WHERE {1} = @ChannelId;
             DELETE FROM {2} WHERE {3} = @ChannelId;",
             ChannelSubscription.Table,
@@ -31,7 +32,12 @@
             Channel.Table,
             Channel.Fields.Id,
             Post.Table,
-            Post.Fields.ChannelId);
+            Post.Fields.ChannelId,
+            Like.Table,
+            Like.Fields.PostId,
+            Post.Fields.Id,
+            Comment.Table,
+            Comment.Fields.PostId);
 
         private readonly IFifthweekDbConnectionFactory connectionFactory;
         private readonly IRequestSnapshotService requestSnapshot;

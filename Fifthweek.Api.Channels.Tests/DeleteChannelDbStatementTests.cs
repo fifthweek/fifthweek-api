@@ -25,11 +25,13 @@
     [TestClass]
     public class DeleteChannelDbStatementTests : PersistenceTestsBase
     {
+        private static readonly UserId CreatorId = new UserId(Guid.NewGuid());
         private static readonly UserId UserId = new UserId(Guid.NewGuid());
         private static readonly CollectionId CollectionId = new CollectionId(Guid.NewGuid());
         private static readonly ChannelId ChannelId = new ChannelId(Guid.NewGuid());
         private static readonly PostId PostId = new PostId(Guid.NewGuid());
         private static readonly FileId FileId = new FileId(Guid.NewGuid());
+        private static readonly CommentId CommentId = CommentId.Random();
 
         private Mock<IFifthweekDbConnectionFactory> connectionFactory;
         private MockRequestSnapshotService requestSnapshot;
@@ -53,7 +55,7 @@
         [ExpectedException(typeof(ArgumentNullException))]
         public async Task ItShouldRequireChannelId()
         {
-            await this.target.ExecuteAsync(UserId, null);
+            await this.target.ExecuteAsync(CreatorId, null);
         }
 
         [TestMethod]
@@ -70,10 +72,10 @@
             {
                 this.InitializeTarget(testDatabase);
                 await this.CreateEntitiesAsync(testDatabase);
-                await this.target.ExecuteAsync(UserId, ChannelId);
+                await this.target.ExecuteAsync(CreatorId, ChannelId);
                 await testDatabase.TakeSnapshotAsync();
 
-                await this.target.ExecuteAsync(UserId, ChannelId);
+                await this.target.ExecuteAsync(CreatorId, ChannelId);
 
                 return ExpectedSideEffects.None;
             });
@@ -89,7 +91,7 @@
                 var expectedDeletions = await this.GetExpectedDeletionsAsync(testDatabase);
                 await testDatabase.TakeSnapshotAsync();
 
-                await this.target.ExecuteAsync(UserId, ChannelId);
+                await this.target.ExecuteAsync(CreatorId, ChannelId);
 
                 return new ExpectedSideEffects
                 {
@@ -111,9 +113,9 @@
 
                 this.requestSnapshot.VerifyConnectionDisposed(trackingDatabase);
 
-                await this.target.ExecuteAsync(UserId, ChannelId);
+                await this.target.ExecuteAsync(CreatorId, ChannelId);
 
-                this.requestSnapshot.VerifyCalledWith(UserId, SnapshotType.CreatorChannels);
+                this.requestSnapshot.VerifyCalledWith(CreatorId, SnapshotType.CreatorChannels);
 
                 return new ExpectedSideEffects
                 {
@@ -129,13 +131,12 @@
             {
                 this.InitializeTarget(testDatabase);
                 await this.CreateEntitiesAsync(testDatabase);
-                var expectedDeletions = await this.GetExpectedDeletionsAsync(testDatabase);
                 await testDatabase.TakeSnapshotAsync();
 
                 this.requestSnapshot.ThrowException();
 
                 await ExpectedException.AssertExceptionAsync<SnapshotException>(
-                    () => this.target.ExecuteAsync(UserId, ChannelId));
+                    () => this.target.ExecuteAsync(CreatorId, ChannelId));
 
                 return ExpectedSideEffects.TransactionAborted;
             });
@@ -145,10 +146,11 @@
         {
             using (var databaseContext = testDatabase.CreateContext())
             {
-                await databaseContext.CreateTestCollectionAsync(UserId.Value, ChannelId.Value, CollectionId.Value);
-                await databaseContext.CreateTestFileWithExistingUserAsync(UserId.Value, FileId.Value);
+                var random = new Random();
+                await databaseContext.CreateTestCollectionAsync(CreatorId.Value, ChannelId.Value, CollectionId.Value);
+                await databaseContext.CreateTestFileWithExistingUserAsync(CreatorId.Value, FileId.Value);
 
-                var post = PostTests.UniqueFileOrImage(new Random());
+                var post = PostTests.UniqueFileOrImage(random);
                 post.Id = PostId.Value;
                 post.ChannelId = ChannelId.Value;
                 post.CollectionId = CollectionId.Value;
@@ -157,7 +159,20 @@
                 post.LiveDate = new SqlDateTime(post.LiveDate).Value;
                 await databaseContext.Database.Connection.InsertAsync(post);
 
-                await databaseContext.CreateTestChannelSubscriptionWithExistingReferences(UserId.Value, ChannelId.Value);
+                await databaseContext.CreateTestUserAsync(UserId.Value);
+
+                var comment = CommentTests.Unique(random);
+                comment.Id = CommentId.Value;
+                comment.PostId = PostId.Value;
+                comment.UserId = UserId.Value;
+                await databaseContext.Database.Connection.InsertAsync(comment);
+
+                var like = LikeTests.Unique(random);
+                like.PostId = PostId.Value;
+                like.UserId = UserId.Value;
+                await databaseContext.Database.Connection.InsertAsync(like);
+                
+                await databaseContext.CreateTestChannelSubscriptionWithExistingReferences(CreatorId.Value, ChannelId.Value);
 
                 var weeklyReleaseTimes = WeeklyReleaseTimeTests.GenerateSortedWeeklyReleaseTimes(CollectionId.Value, 3);
                 await databaseContext.Database.Connection.InsertAsync(weeklyReleaseTimes);
@@ -170,8 +185,10 @@
             {
                 var channel = await databaseContext.Channels.SingleAsync(v => v.Id == ChannelId.Value);
                 var collection = await databaseContext.Collections.SingleAsync(v => v.Id == CollectionId.Value);
-                var subscription = await databaseContext.ChannelSubscriptions.SingleAsync(v => v.ChannelId == ChannelId.Value && v.UserId == UserId.Value);
+                var subscription = await databaseContext.ChannelSubscriptions.SingleAsync(v => v.ChannelId == ChannelId.Value && v.UserId == CreatorId.Value);
                 var post = await databaseContext.Posts.SingleAsync(v => v.Id == PostId.Value);
+                var comment = await databaseContext.Comments.SingleAsync(v => v.Id == CommentId.Value);
+                var like = await databaseContext.Likes.SingleAsync(v => v.UserId == UserId.Value && v.PostId == PostId.Value);
                 var weeklyReleaseTimes = await databaseContext.WeeklyReleaseTimes.Where(v => v.CollectionId == CollectionId.Value).ToListAsync();
 
                 var result = new List<IIdentityEquatable>
@@ -180,6 +197,8 @@
                     collection,
                     post,
                     subscription,
+                    comment,
+                    like,
                 };
 
                 result.AddRange(weeklyReleaseTimes);

@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Linq;
 
-//// Generated on 29/01/2015 19:45:50 (UTC)
-//// Mapped solution in 2.1s
+//// Generated on 02/09/2015 15:04:14 (UTC)
+//// Mapped solution in 30.04s
 
 namespace Fifthweek.Api.Posts.Shared
 {
@@ -104,6 +104,54 @@ namespace Fifthweek.Api.Posts.Shared
         }
     }
 }
+namespace Fifthweek.Api.Posts.Shared
+{
+    using System;
+    using Fifthweek.CodeGeneration;
+
+    [Newtonsoft.Json.JsonConverter(typeof(JsonConverter))]
+    public partial class CommentId 
+    {
+        public class JsonConverter : Newtonsoft.Json.JsonConverter
+        {
+            public override void WriteJson(Newtonsoft.Json.JsonWriter writer, object value, Newtonsoft.Json.JsonSerializer serializer)
+            {
+                var valueType = (CommentId)value;
+                serializer.Serialize(writer, valueType.Value);
+            }
+        
+            public override object ReadJson(Newtonsoft.Json.JsonReader reader, Type objectType, object existingValue, Newtonsoft.Json.JsonSerializer serializer)
+            {
+                if (objectType != typeof(CommentId))
+                {
+                    throw new ArgumentException("Expected to deserialize JSON for type " + typeof(CommentId).Name, "objectType");
+                }
+        
+                var value = serializer.Deserialize<System.Guid>(reader);
+                return new CommentId(value);
+            }
+        
+            public override bool CanConvert(Type objectType)
+            {
+                return objectType == typeof(CommentId);
+            }
+        }
+        
+        public class DapperTypeHandler : Dapper.SqlMapper.TypeHandler<CommentId>, Fifthweek.Api.Persistence.IAutoRegisteredTypeHandler<CommentId>
+        {
+            public override void SetValue(System.Data.IDbDataParameter parameter, CommentId value)
+            {
+                parameter.DbType = System.Data.DbType.Guid;
+                parameter.Value = value.Value;
+            }
+        
+            public override CommentId Parse(object value)
+            {
+                return new CommentId((System.Guid)value);
+            }
+        }
+    }
+}
 
 namespace Fifthweek.Api.Posts.Shared
 {
@@ -136,6 +184,25 @@ namespace Fifthweek.Api.Posts.Shared
     public partial class PostId 
     {
         public PostId(
+            System.Guid value)
+        {
+            if (value == null)
+            {
+                throw new ArgumentNullException("value");
+            }
+
+            this.Value = value;
+        }
+    }
+}
+namespace Fifthweek.Api.Posts.Shared
+{
+    using System;
+    using Fifthweek.CodeGeneration;
+
+    public partial class CommentId 
+    {
+        public CommentId(
             System.Guid value)
         {
             if (value == null)
@@ -303,6 +370,59 @@ namespace Fifthweek.Api.Posts.Shared
         }
         
         protected bool Equals(ValidNote other)
+        {
+            if (!object.Equals(this.Value, other.Value))
+            {
+                return false;
+            }
+        
+            return true;
+        }
+    }
+}
+namespace Fifthweek.Api.Posts.Shared
+{
+    using System;
+    using Fifthweek.CodeGeneration;
+
+    public partial class CommentId 
+    {
+        public override string ToString()
+        {
+            return string.Format("CommentId({0})", this.Value == null ? "null" : this.Value.ToString());
+        }
+        
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj))
+            {
+                return false;
+            }
+        
+            if (ReferenceEquals(this, obj))
+            {
+                return true;
+            }
+        
+            if (obj.GetType() != this.GetType())
+            {
+                return false;
+            }
+        
+            return this.Equals((CommentId)obj);
+        }
+        
+        public override int GetHashCode()
+        {
+            unchecked
+            {
+                int hashCode = 0;
+                hashCode = (hashCode * 397) ^ (this.Value != null ? this.Value.GetHashCode() : 0);
+                return hashCode;
+            }
+        }
+        
+        protected bool Equals(CommentId other)
         {
             if (!object.Equals(this.Value, other.Value))
             {

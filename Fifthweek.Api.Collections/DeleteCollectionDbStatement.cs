@@ -15,12 +15,19 @@
     {
         private static readonly string DeleteSql = string.Format(
             @"
+            DELETE c FROM {7} c INNER JOIN {0} p ON c.{8} = p.{6} WHERE p.{1} = @CollectionId;
+            DELETE l FROM {4} l INNER JOIN {0} p ON l.{5} = p.{6} WHERE p.{1} = @CollectionId;
             DELETE FROM {0} WHERE {1} = @CollectionId;
             DELETE FROM {2} WHERE {3} = @CollectionId;",
             Post.Table,
             Post.Fields.CollectionId,
             Collection.Table,
-            Collection.Fields.Id);
+            Collection.Fields.Id,
+            Like.Table,
+            Like.Fields.PostId,
+            Post.Fields.Id,
+            Comment.Table,
+            Comment.Fields.PostId);
 
         private readonly IFifthweekDbConnectionFactory connectionFactory;
 

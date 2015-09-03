@@ -89,6 +89,9 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
+    <Compile Include="Commands\CommentOnPostCommandHandlerTests.cs" />
+    <Compile Include="Commands\DeleteLikeCommandHandlerTests.cs" />
+    <Compile Include="Commands\LikePostCommandHandlerTests.cs" />
     <Compile Include="Commands\RescheduleForTimeCommandHandlerTests.cs" />
     <Compile Include="Commands\RescheduleWithQueueCommandHandlerTests.cs" />
     <Compile Include="Commands\ReviseFileCommandHandlerTests.cs" />
@@ -96,12 +99,15 @@
     <Compile Include="Commands\ReviseNoteCommandHandlerTests.cs" />
     <Compile Include="Commands\ReorderQueueCommandHandlerTests.cs" />
     <Compile Include="Commands\DeletePostCommandHandlerTests.cs" />
+    <Compile Include="CommentOnPostDbStatementTests.cs" />
     <Compile Include="Controllers\FilePostControllerTests.cs" />
     <Compile Include="Controllers\ImagePostControllerTests.cs" />
     <Compile Include="Controllers\NotePostControllerTests.cs" />
     <Compile Include="DeletePostDbStatementTests.cs" />
+    <Compile Include="GetCommentsDbStatementTests.cs" />
     <Compile Include="GetCreatorBacklogDbStatementTests.cs" />
     <Compile Include="GetNewsfeedDbStatementTests.cs" />
+    <Compile Include="LikePostDbStatementTests.cs" />
     <Compile Include="MovePostToQueueDbStatementTests.cs" />
     <Compile Include="PostOwnershipTests.cs" />
     <Compile Include="PostSecurityTests.cs" />
@@ -113,6 +119,7 @@
     <Compile Include="PostToCollectionDbSubStatementTests.cs" />
     <Compile Include="PostToCollectionDbStatementTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Queries\GetCommentsQueryHandlerTests.cs" />
     <Compile Include="Queries\GetNewsfeedQueryHandlerTests.cs" />
     <Compile Include="Queries\GetCreatorBacklogQueryHandlerTests.cs" />
     <Compile Include="PostNoteDbStatementTests.cs" />
@@ -123,6 +130,7 @@
     <Compile Include="SetPostLiveDateDbStatementTests.cs" />
     <Compile Include="TryGetUnqueuedPostCollectionDbStatementTests.cs" />
     <Compile Include="TryGetQueuedPostCollectionDbStatementTests.cs" />
+    <Compile Include="UnlikePostDbStatementTests.cs" />
     <Compile Include="ValidCommentTests.cs" />
     <Compile Include="ValidNoteTests.cs" />
   </ItemGroup>

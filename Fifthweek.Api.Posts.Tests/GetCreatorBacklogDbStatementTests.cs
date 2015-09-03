@@ -23,6 +23,8 @@
 
     using Moq;
 
+    using Comment = Fifthweek.Api.Posts.Shared.Comment;
+
     [TestClass]
     public class GetCreatorBacklogDbStatementTests : PersistenceTestsBase
     {

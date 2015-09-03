@@ -112,6 +112,7 @@
     <Compile Include="IFifthweekDbContext.cs" />
     <Compile Include="IIdentityEquatable.cs" />
     <Compile Include="IUserManager.cs" />
+    <Compile Include="Like.cs" />
     <Compile Include="Migrations\201412041523081_InitialCreate.cs" />
     <Compile Include="Migrations\201412041523081_InitialCreate.Designer.cs">
       <DependentUpon>201412041523081_InitialCreate.cs</DependentUpon>
@@ -356,6 +357,10 @@
     <Compile Include="Migrations\201508301027155_AddIndexOnEncryptedRefreshTokenId.Designer.cs">
       <DependentUpon>201508301027155_AddIndexOnEncryptedRefreshTokenId.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201509030951261_CreateCommentAndLikeTables.cs" />
+    <Compile Include="Migrations\201509030951261_CreateCommentAndLikeTables.Designer.cs">
+      <DependentUpon>201509030951261_CreateCommentAndLikeTables.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Payments\AppendOnlyLedgerRecord.cs" />
     <Compile Include="Payments\LedgerTransactionType.cs" />
@@ -366,6 +371,7 @@
     <Compile Include="Payments\LedgerAccountType.cs" />
     <Compile Include="Payments\UncommittedSubscriptionPayment.cs" />
     <Compile Include="Payments\UserPaymentOrigin.cs" />
+    <Compile Include="Comment.cs" />
     <Compile Include="Snapshots\CreatorChannelsSnapshot.cs" />
     <Compile Include="Snapshots\CreatorChannelsSnapshotItem.cs" />
     <Compile Include="Snapshots\CreatorFreeAccessUsersSnapshot.cs" />
@@ -586,6 +592,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201508301027155_AddIndexOnEncryptedRefreshTokenId.resx">
       <DependentUpon>201508301027155_AddIndexOnEncryptedRefreshTokenId.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201509030951261_CreateCommentAndLikeTables.resx">
+      <DependentUpon>201509030951261_CreateCommentAndLikeTables.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>

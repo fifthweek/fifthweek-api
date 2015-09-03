@@ -65,6 +65,30 @@
             return this.postController.PutLiveDate(postId, newLiveDate);
         }
 
+        [Route("{postId}/comments")]
+        public Task PostComment(string postId, [FromBody]CommentData comment)
+        {
+            return this.postController.PostComment(postId, comment);
+        }
+
+        [Route("{postId}/comments")]
+        public Task<CommentsResult> GetComments(string postId)
+        {
+            return this.postController.GetComments(postId);
+        }
+
+        [Route("{postId}/likes")]
+        public Task PostLike(string postId)
+        {
+            return this.postController.PostLike(postId);
+        }
+
+        [Route("{postId}/likes")]
+        public Task DeleteLike(string postId)
+        {
+            return this.postController.DeleteLike(postId);
+        }
+
         [Route("notes")]
         public Task PostNote([FromBody]NewNoteData noteData)
         {

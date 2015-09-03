@@ -38,7 +38,13 @@
         private Mock<ICommandHandler<RescheduleWithQueueCommand>> rescheduleWithQueue;
         private Mock<IQueryHandler<GetCreatorBacklogQuery, IReadOnlyList<GetCreatorBacklogQueryResult>>> getCreatorBacklog;
         private Mock<IQueryHandler<GetNewsfeedQuery, GetNewsfeedQueryResult>> getNewsfeed;
+        private Mock<ICommandHandler<CommentOnPostCommand>> postComment;
+        private Mock<IQueryHandler<GetCommentsQuery, CommentsResult>> getComments;
+        private Mock<ICommandHandler<LikePostCommand>> likePost;
+        private Mock<ICommandHandler<DeleteLikeCommand>> deleteLike;
         private Mock<IRequesterContext> requesterContext;
+        private Mock<ITimestampCreator> timestampCreator;
+        private Mock<IGuidCreator> guidCreator;
         private PostController target;
 
         [TestInitialize]
@@ -51,7 +57,13 @@
             this.rescheduleWithQueue = new Mock<ICommandHandler<RescheduleWithQueueCommand>>();
             this.getCreatorBacklog = new Mock<IQueryHandler<GetCreatorBacklogQuery, IReadOnlyList<GetCreatorBacklogQueryResult>>>();
             this.getNewsfeed = new Mock<IQueryHandler<GetNewsfeedQuery, GetNewsfeedQueryResult>>();
+            this.postComment = new Mock<ICommandHandler<CommentOnPostCommand>>();
+            this.getComments = new Mock<IQueryHandler<GetCommentsQuery, CommentsResult>>();
+            this.likePost = new Mock<ICommandHandler<LikePostCommand>>();
+            this.deleteLike = new Mock<ICommandHandler<DeleteLikeCommand>>();
             this.requesterContext = new Mock<IRequesterContext>();
+            this.timestampCreator = new Mock<ITimestampCreator>();
+            this.guidCreator = new Mock<IGuidCreator>();
             this.target = new PostController(
                 this.deletePost.Object,
                 this.reorderQueue.Object,
@@ -60,7 +72,13 @@
                 this.rescheduleWithQueue.Object,
                 this.getCreatorBacklog.Object,
                 this.getNewsfeed.Object,
-                this.requesterContext.Object);
+                this.postComment.Object,
+                this.getComments.Object,
+                this.likePost.Object,
+                this.deleteLike.Object,
+                this.requesterContext.Object,
+                this.timestampCreator.Object,
+                this.guidCreator.Object);
         }
 
         [TestMethod]
@@ -264,6 +282,109 @@
         public async Task WhenReschedulingForTime_AndNewDateIsNonUtc_ItShouldThrowBadRequestException()
         {
             await this.target.PutLiveDate(PostId.Value.EncodeGuid(), DateTime.Now);
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(BadRequestException))]
+        public async Task WhenPostingComment_AndPostIdIsNotSpecified_ItShouldThrowAnException()
+        {
+            await this.target.PostComment(null, new CommentData());
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(BadRequestException))]
+        public async Task WhenPostingComment_AndCommentDataIsNotSpecified_ItShouldThrowAnException()
+        {
+            await this.target.PostComment(PostId.Value.ToString(), null);
+        }
+
+        [TestMethod]
+        public async Task WhenPostingComment_ItShouldIssuePostCommentCommand()
+        {
+            var commentId = CommentId.Random();
+            var content = ValidComment.Parse("This is a valid comment");
+            var timestamp = DateTime.UtcNow;
+
+            this.guidCreator.Setup(v => v.CreateSqlSequential()).Returns(commentId.Value);
+            this.timestampCreator.Setup(v => v.Now()).Returns(timestamp);
+            this.requesterContext.Setup(_ => _.GetRequesterAsync()).ReturnsAsync(Requester);
+            this.postComment.Setup(v => v.HandleAsync(new CommentOnPostCommand(Requester, PostId, commentId, content, timestamp)))
+                .Returns(Task.FromResult(0))
+                .Verifiable();
+
+            await this.target.PostComment(PostId.Value.EncodeGuid(), new CommentData(content.Value));
+
+            this.postComment.Verify();
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(BadRequestException))]
+        public async Task WhenGettingComments_AndPostIdIsNotSpecified_ItShouldThrowAnException()
+        {
+            await this.target.GetComments(null);
+        }
+
+        [TestMethod]
+        public async Task WhenGettingComments_ItShouldIssueGetCommentsCommand()
+        {
+            var expectedResult = new CommentsResult(
+                new List<CommentsResult.Item>
+                {
+                    new CommentsResult.Item(CommentId.Random(), PostId.Random(), UserId.Random(), new Username("blah"), new Comment("comment"), DateTime.UtcNow),
+                });
+
+            this.requesterContext.Setup(_ => _.GetRequesterAsync()).ReturnsAsync(Requester);
+            this.getComments.Setup(v => v.HandleAsync(new GetCommentsQuery(Requester, PostId)))
+                .Returns(Task.FromResult(expectedResult))
+                .Verifiable();
+
+            var result = await this.target.GetComments(PostId.Value.EncodeGuid());
+
+            Assert.AreEqual(expectedResult, result);
+            this.getComments.Verify();
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(BadRequestException))]
+        public async Task WhenPostingLike_AndPostIdIsNotSpecified_ItShouldThrowAnException()
+        {
+            await this.target.PostLike(null);
+        }
+
+        [TestMethod]
+        public async Task WhenPostingLike_ItShouldIssuePostLikeCommand()
+        {
+            var timestamp = DateTime.UtcNow;
+
+            this.timestampCreator.Setup(v => v.Now()).Returns(timestamp);
+            this.requesterContext.Setup(_ => _.GetRequesterAsync()).ReturnsAsync(Requester);
+            this.likePost.Setup(v => v.HandleAsync(new LikePostCommand(Requester, PostId, timestamp)))
+                .Returns(Task.FromResult(0))
+                .Verifiable();
+
+            await this.target.PostLike(PostId.Value.EncodeGuid());
+
+            this.likePost.Verify();
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(BadRequestException))]
+        public async Task WhenDeletingLike_AndPostIdIsNotSpecified_ItShouldThrowAnException()
+        {
+            await this.target.DeleteLike(null);
+        }
+
+        [TestMethod]
+        public async Task WhenDeletingLike_ItShouldIssueDeleteLikeCommand()
+        {
+            this.requesterContext.Setup(_ => _.GetRequesterAsync()).ReturnsAsync(Requester);
+            this.deleteLike.Setup(v => v.HandleAsync(new DeleteLikeCommand(Requester, PostId)))
+                .Returns(Task.FromResult(0))
+                .Verifiable();
+
+            await this.target.DeleteLike(PostId.Value.EncodeGuid());
+
+            this.deleteLike.Verify();
         }
     }
 }

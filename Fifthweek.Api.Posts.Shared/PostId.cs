@@ -8,5 +8,10 @@
     public partial class PostId
     {
         public Guid Value { get; private set; }
+
+        public static PostId Random()
+        {
+            return new PostId(Guid.NewGuid());
+        }
     }
 }

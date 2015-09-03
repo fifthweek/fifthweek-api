@@ -22,9 +22,9 @@
             };
         }
 
-        public static async Task<FifthweekUser> CreateTestUserAsync(this IFifthweekDbContext databaseContext, Guid newUserId)
+        public static async Task<FifthweekUser> CreateTestUserAsync(this IFifthweekDbContext databaseContext, Guid newUserId, Random random = null)
         {
-            var random = new Random();
+            random = random ?? new Random();
             var creator = UserTests.UniqueEntity(random);
             creator.Id = newUserId;
 

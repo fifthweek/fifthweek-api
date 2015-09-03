@@ -63,7 +63,7 @@
             post.Id = newPostId;
             post.Channel = channel;
             post.ChannelId = channel.Id;
-            
+
             databaseContext.Posts.Add(post);
             return databaseContext.SaveChangesAsync();
         }

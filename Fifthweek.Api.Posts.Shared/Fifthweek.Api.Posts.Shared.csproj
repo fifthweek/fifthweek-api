@@ -53,6 +53,7 @@
       <DesignTime>True</DesignTime>
     </Compile>
     <Compile Include="Comment.cs" />
+    <Compile Include="CommentId.cs" />
     <Compile Include="IPostSecurity.cs" />
     <Compile Include="PostId.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

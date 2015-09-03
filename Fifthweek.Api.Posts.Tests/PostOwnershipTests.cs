@@ -17,18 +17,18 @@
     {
         private static readonly UserId UserId = new UserId(Guid.NewGuid());
         private static readonly PostId PostId = new PostId(Guid.NewGuid());
-        private PostOwnership target;
+        private IsPostOwnerDbStatement target;
 
         [TestMethod]
         public async Task WhenCheckingPostOwnership_ItShouldPassIfAtThePostBelongsToTheUser()
         {
             await this.DatabaseTestAsync(async testDatabase =>
             {
-                this.target = new PostOwnership(testDatabase);
+                this.target = new IsPostOwnerDbStatement(testDatabase);
                 await this.CreatePostAsync(UserId, PostId, testDatabase);
                 await testDatabase.TakeSnapshotAsync();
 
-                var result = await this.target.IsOwnerAsync(UserId, PostId);
+                var result = await this.target.ExecuteAsync(UserId, PostId);
 
                 Assert.IsTrue(result);
                 return ExpectedSideEffects.None;
@@ -40,7 +40,7 @@
         {
             await this.DatabaseTestAsync(async testDatabase =>
             {
-                this.target = new PostOwnership(testDatabase);
+                this.target = new IsPostOwnerDbStatement(testDatabase);
 
                 using (var databaseContext = testDatabase.CreateContext())
                 {
@@ -49,7 +49,7 @@
 
                 await testDatabase.TakeSnapshotAsync();
 
-                var result = await this.target.IsOwnerAsync(UserId, PostId);
+                var result = await this.target.ExecuteAsync(UserId, PostId);
 
                 Assert.IsFalse(result);
                 return ExpectedSideEffects.None;
@@ -61,11 +61,11 @@
         {
             await this.DatabaseTestAsync(async testDatabase =>
             {
-                this.target = new PostOwnership(testDatabase);
+                this.target = new IsPostOwnerDbStatement(testDatabase);
                 await this.CreatePostAsync(new UserId(Guid.NewGuid()), new PostId(Guid.NewGuid()), testDatabase);
                 await testDatabase.TakeSnapshotAsync();
 
-                var result = await this.target.IsOwnerAsync(UserId, PostId);
+                var result = await this.target.ExecuteAsync(UserId, PostId);
 
                 Assert.IsFalse(result);
                 return ExpectedSideEffects.None;
@@ -77,11 +77,11 @@
         {
             await this.DatabaseTestAsync(async testDatabase =>
             {
-                this.target = new PostOwnership(testDatabase);
+                this.target = new IsPostOwnerDbStatement(testDatabase);
                 await this.CreatePostAsync(UserId, new PostId(Guid.NewGuid()), testDatabase);
                 await testDatabase.TakeSnapshotAsync();
 
-                var result = await this.target.IsOwnerAsync(UserId, PostId);
+                var result = await this.target.ExecuteAsync(UserId, PostId);
 
                 Assert.IsFalse(result);
                 return ExpectedSideEffects.None;
@@ -93,11 +93,11 @@
         {
             await this.DatabaseTestAsync(async testDatabase =>
             {
-                this.target = new PostOwnership(testDatabase);
+                this.target = new IsPostOwnerDbStatement(testDatabase);
                 await this.CreatePostAsync(new UserId(Guid.NewGuid()), PostId, testDatabase);
                 await testDatabase.TakeSnapshotAsync();
 
-                var result = await this.target.IsOwnerAsync(UserId, PostId);
+                var result = await this.target.ExecuteAsync(UserId, PostId);
 
                 Assert.IsFalse(result);
                 return ExpectedSideEffects.None;

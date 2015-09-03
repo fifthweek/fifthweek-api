@@ -79,6 +79,12 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AutofacRegistration.cs" />
+    <Compile Include="Commands\DeleteLikeCommand.cs" />
+    <Compile Include="Commands\DeleteLikeCommandHandler.cs" />
+    <Compile Include="Commands\CommentOnPostCommand.cs" />
+    <Compile Include="Commands\CommentOnPostCommandHandler.cs" />
+    <Compile Include="Commands\LikePostCommand.cs" />
+    <Compile Include="Commands\LikePostCommandHandler.cs" />
     <Compile Include="Commands\RescheduleForTimeCommandHandler.cs" />
     <Compile Include="Commands\RescheduleForTimeCommand.cs" />
     <Compile Include="Commands\RescheduleForNowCommand.cs" />
@@ -90,6 +96,9 @@
     <Compile Include="Commands\ReviseNoteCommandHandler.cs" />
     <Compile Include="Commands\ReviseFileCommand.cs" />
     <Compile Include="Commands\ReviseImageCommand.cs" />
+    <Compile Include="CommentOnPostDbStatement.cs" />
+    <Compile Include="Controllers\CommentData.cs" />
+    <Compile Include="Controllers\CommentsResult.cs" />
     <Compile Include="Controllers\IFilePostController.cs" />
     <Compile Include="Controllers\IImagePostController.cs" />
     <Compile Include="Controllers\INotePostController.cs" />
@@ -98,14 +107,20 @@
     <Compile Include="Controllers\PostsController.cs" />
     <Compile Include="Controllers\RevisedFileData.cs" />
     <Compile Include="Controllers\RevisedImageData.cs" />
+    <Compile Include="GetCommentsDbStatement.cs" />
     <Compile Include="GetCreatorBacklogDbStatement.cs" />
     <Compile Include="GetNewsfeedDbResult.cs" />
     <Compile Include="GetNewsfeedDbStatement.cs" />
+    <Compile Include="ICommentOnPostDbStatement.cs" />
+    <Compile Include="IGetCommentsDbStatement.cs" />
     <Compile Include="IGetCreatorBacklogDbStatement.cs" />
     <Compile Include="IGetNewsfeedDbStatement.cs" />
+    <Compile Include="IIsPostSubscriberDbStatement.cs" />
+    <Compile Include="ILikePostDbStatement.cs" />
     <Compile Include="IMovePostToQueueDbStatement.cs" />
     <Compile Include="IRemoveFromQueueIfRequiredDbStatement.cs" />
     <Compile Include="ISetPostLiveDateDbStatement.cs" />
+    <Compile Include="IsPostSubscriberDbStatement.cs" />
     <Compile Include="ITryGetUnqueuedPostCollectionDbStatement.cs" />
     <Compile Include="ITryGetQueuedPostCollectionDbStatement.cs" />
     <Compile Include="IPostNoteDbStatement.cs" />
@@ -120,9 +135,11 @@
     <Compile Include="Controllers\RevisedNoteData.cs" />
     <Compile Include="DeletePostDbStatement.cs" />
     <Compile Include="IDeletePostDbStatement.cs" />
+    <Compile Include="IUnlikePostDbStatement.cs" />
+    <Compile Include="LikePostDbStatement.cs" />
     <Compile Include="MovePostToQueueDbStatement.cs" />
-    <Compile Include="PostOwnership.cs" />
-    <Compile Include="IPostOwnership.cs" />
+    <Compile Include="IsPostOwnerDbStatement.cs" />
+    <Compile Include="IIsPostOwnerDbStatement.cs" />
     <Compile Include="PostSecurity.cs" />
     <Compile Include="ClassAugmentation.cs">
       <DependentUpon>ClassAugmentation.tt</DependentUpon>
@@ -149,6 +166,8 @@
     <Compile Include="PostToCollectionDbSubStatements.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Queries\FileSourceInformation.cs" />
+    <Compile Include="Queries\GetCommentsQuery.cs" />
+    <Compile Include="Queries\GetCommentsQueryHandler.cs" />
     <Compile Include="Queries\GetCreatorBacklogQueryResult.cs" />
     <Compile Include="Queries\GetNewsfeedQuery.cs" />
     <Compile Include="Queries\GetNewsfeedQueryHandler.cs" />
@@ -165,6 +184,7 @@
     <Compile Include="SetPostLiveDateDbStatement.cs" />
     <Compile Include="TryGetUnqueuedPostCollectionDbStatement.cs" />
     <Compile Include="TryGetQueuedPostCollectionDbStatement.cs" />
+    <Compile Include="UnlikePostDbStatement.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Fifthweek.Api.Azure\Fifthweek.Api.Azure.csproj">

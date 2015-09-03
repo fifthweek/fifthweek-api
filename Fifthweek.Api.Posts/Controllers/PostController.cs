@@ -26,7 +26,13 @@
         private readonly ICommandHandler<RescheduleWithQueueCommand> rescheduleWithQueue;
         private readonly IQueryHandler<GetCreatorBacklogQuery, IReadOnlyList<GetCreatorBacklogQueryResult>> getCreatorBacklog;
         private readonly IQueryHandler<GetNewsfeedQuery, GetNewsfeedQueryResult> getNewsfeed;
+        private readonly ICommandHandler<CommentOnPostCommand> postComment;
+        private readonly IQueryHandler<GetCommentsQuery, CommentsResult> getComments;
+        private readonly ICommandHandler<LikePostCommand> postLike;
+        private readonly ICommandHandler<DeleteLikeCommand> deleteLike;
         private readonly IRequesterContext requesterContext;
+        private readonly ITimestampCreator timestampCreator;
+        private readonly IGuidCreator guidCreator;
 
         public async Task<IEnumerable<GetCreatorBacklogQueryResult>> GetCreatorBacklog(string creatorId)
         {
@@ -138,6 +144,58 @@
             var requester = await this.requesterContext.GetRequesterAsync();
 
             await this.rescheduleForTime.HandleAsync(new RescheduleForTimeCommand(requester, parsedPostId, newLiveDate));
+        }
+
+        public async Task PostComment(string postId, CommentData comment)
+        {
+            postId.AssertUrlParameterProvided("postId");
+            comment.AssertBodyProvided("comment");
+
+            var parsedPostId = new PostId(postId.DecodeGuid());
+            var parsedComment = comment.Parse();
+            var requester = await this.requesterContext.GetRequesterAsync();
+
+            var timestamp = this.timestampCreator.Now();
+            var commentId = this.guidCreator.CreateSqlSequential();
+
+            await this.postComment.HandleAsync(new CommentOnPostCommand(
+                requester, 
+                parsedPostId,
+                new CommentId(commentId),
+                parsedComment.Content,
+                timestamp));
+        }
+
+        public async Task<CommentsResult> GetComments(string postId)
+        {
+            postId.AssertUrlParameterProvided("postId");
+
+            var parsedPostId = new PostId(postId.DecodeGuid());
+            var requester = await this.requesterContext.GetRequesterAsync();
+
+            return await this.getComments.HandleAsync(new GetCommentsQuery(requester, parsedPostId));
+        }
+
+        public async Task PostLike(string postId)
+        {
+            postId.AssertUrlParameterProvided("postId");
+
+            var parsedPostId = new PostId(postId.DecodeGuid());
+            var requester = await this.requesterContext.GetRequesterAsync();
+
+            var timestamp = this.timestampCreator.Now();
+
+            await this.postLike.HandleAsync(new LikePostCommand(requester, parsedPostId, timestamp));
+        }
+
+        public async Task DeleteLike(string postId)
+        {
+            postId.AssertUrlParameterProvided("postId");
+
+            var parsedPostId = new PostId(postId.DecodeGuid());
+            var requester = await this.requesterContext.GetRequesterAsync();
+
+            await this.deleteLike.HandleAsync(new DeleteLikeCommand(requester, parsedPostId));
         }
     }
 }

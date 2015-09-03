@@ -65,6 +65,10 @@ namespace Fifthweek.Api.Persistence
 
         public IDbSet<UserPaymentOrigin> UserPaymentOrigins { get; set; }
 
+        public IDbSet<Comment> Comments { get; set; }
+
+        public IDbSet<Like> Likes { get; set; }
+
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
             // This makes sure creator percentage can never be greater than 100%!

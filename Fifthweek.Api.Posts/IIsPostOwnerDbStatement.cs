@@ -4,8 +4,8 @@
 
     using Fifthweek.Api.Identity.Shared.Membership;
 
-    public interface IPostOwnership
+    public interface IIsPostOwnerDbStatement
     {
-        Task<bool> IsOwnerAsync(UserId userId, Shared.PostId postId);
+        Task<bool> ExecuteAsync(UserId userId, Shared.PostId postId);
     }
 }

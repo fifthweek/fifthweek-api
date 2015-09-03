@@ -25,6 +25,8 @@
 
     using Moq;
 
+    using Comment = Fifthweek.Api.Posts.Shared.Comment;
+
     [TestClass]
     public class GetNewsfeedDbStatementTests : PersistenceTestsBase
     {

@@ -9,5 +9,9 @@ namespace Fifthweek.Api.Posts.Shared
         Task<bool> IsWriteAllowedAsync(UserId requester, PostId postId);
 
         Task AssertWriteAllowedAsync(UserId requester, PostId postId);
+        
+        Task<bool> IsCommentOrLikeAllowedAsync(UserId requester, PostId postId);
+
+        Task AssertCommentOrLikeAllowedAsync(UserId requester, PostId postId);
     }
 }

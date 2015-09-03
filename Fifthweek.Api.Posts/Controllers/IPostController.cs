@@ -25,5 +25,13 @@
         Task PutLiveDate(string postId, DateTime newLiveDate);
 
         Task<GetNewsfeedQueryResult> GetNewsfeed(NewsfeedFilter filterData);
+
+        Task PostComment(string postId, [FromBody]CommentData comment);
+
+        Task<CommentsResult> GetComments(string postId);
+
+        Task PostLike(string postId);
+
+        Task DeleteLike(string postId);
     }
 }
