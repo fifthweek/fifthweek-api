@@ -649,6 +649,67 @@ describe('posts stub', function() {
     expect(result).toBe(responseData);
   });
 
+  it('should post comment', function() {
+    var postId = 'value0';
+    var comment = 'value-body';
+
+    var responseData = 'response data';
+    $httpBackend.expectPOST(utilities.fixUri(fifthweekConstants.apiBaseUri + 'posts/' + encodeURIComponent(postId) + '/comments', comment)).respond(200, responseData);
+
+    var result = null;
+    target.postComment(postId, comment).then(function(response) { result = response.data; });
+
+    $httpBackend.flush();
+    $rootScope.$apply();
+
+    expect(result).toBe(responseData);
+  });
+
+  it('should get comments', function() {
+    var postId = 'value0';
+
+    var responseData = 'response data';
+    $httpBackend.expectGET(utilities.fixUri(fifthweekConstants.apiBaseUri + 'posts/' + encodeURIComponent(postId) + '/comments')).respond(200, responseData);
+
+    var result = null;
+    target.getComments(postId).then(function(response) { result = response.data; });
+
+    $httpBackend.flush();
+    $rootScope.$apply();
+
+    expect(result).toBe(responseData);
+  });
+
+  it('should post like', function() {
+    var postId = 'value0';
+
+    var responseData = 'response data';
+    $httpBackend.expectPOST(utilities.fixUri(fifthweekConstants.apiBaseUri + 'posts/' + encodeURIComponent(postId) + '/likes')).respond(200, responseData);
+
+    var result = null;
+    target.postLike(postId).then(function(response) { result = response.data; });
+
+    $httpBackend.flush();
+    $rootScope.$apply();
+
+    expect(result).toBe(responseData);
+  });
+
+  it('should delete like', function() {
+    var postId = 'value0';
+
+    var responseData = 'response data';
+    $httpBackend.expectDELETE(utilities.fixUri(fifthweekConstants.apiBaseUri + 'posts/' + encodeURIComponent(postId) + '/likes')).respond(200, responseData);
+
+    var result = null;
+    target.deleteLike(postId).then(function(response) { result = response.data; });
+
+    $httpBackend.flush();
+    $rootScope.$apply();
+
+    expect(result).toBe(responseData);
+  });
+
   it('should post note', function() {
     var noteData = 'value-body';
 

@@ -489,6 +489,49 @@ angular.module('webApp').factory('postsStub',
       });
     };
 
+    // postId = 'Base64Guid'
+    // comment = {
+    //   content: ''
+    // }
+    service.postComment = function(postId, comment) {
+      return $http.post(utilities.fixUri(apiBaseUri + 'posts/' + encodeURIComponent(postId) + '/comments'), comment).catch(function(response) {
+        return $q.reject(utilities.getHttpError(response));
+      });
+    };
+
+    // postId = 'Base64Guid'
+    // result = {
+    //   comments: [
+    //     {
+    //       id: 'Base64Guid',
+    //       postId: 'Base64Guid',
+    //       userId: 'Base64Guid',
+    //       username: '',
+    //       content: '',
+    //       creationDate: '2015-12-25T14:45:05Z'
+    //     }
+    //   ]
+    // }
+    service.getComments = function(postId) {
+      return $http.get(utilities.fixUri(apiBaseUri + 'posts/' + encodeURIComponent(postId) + '/comments')).catch(function(response) {
+        return $q.reject(utilities.getHttpError(response));
+      });
+    };
+
+    // postId = 'Base64Guid'
+    service.postLike = function(postId) {
+      return $http.post(utilities.fixUri(apiBaseUri + 'posts/' + encodeURIComponent(postId) + '/likes')).catch(function(response) {
+        return $q.reject(utilities.getHttpError(response));
+      });
+    };
+
+    // postId = 'Base64Guid'
+    service.deleteLike = function(postId) {
+      return $http.delete(utilities.fixUri(apiBaseUri + 'posts/' + encodeURIComponent(postId) + '/likes')).catch(function(response) {
+        return $q.reject(utilities.getHttpError(response));
+      });
+    };
+
     // noteData = {
     //   channelId: 'Base64Guid',
     //   note: '',
