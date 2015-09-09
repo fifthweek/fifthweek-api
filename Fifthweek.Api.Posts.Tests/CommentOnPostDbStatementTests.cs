@@ -133,7 +133,7 @@
                 post.LiveDate = new SqlDateTime(post.LiveDate).Value;
                 await databaseContext.Database.Connection.InsertAsync(post);
 
-                await databaseContext.CreateTestUserAsync(UserId.Value);
+                await databaseContext.CreateTestUserAsync(UserId.Value, random);
             }
         }
     }

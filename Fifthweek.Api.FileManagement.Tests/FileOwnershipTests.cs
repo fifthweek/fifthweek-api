@@ -44,8 +44,7 @@
 
                 using (var databaseContext = testDatabase.CreateContext())
                 {
-                    await databaseContext.Database.Connection.ExecuteAsync("DELETE FROM Posts");
-                    await databaseContext.Database.Connection.ExecuteAsync("DELETE FROM Files");
+                    await databaseContext.Database.Connection.ExecuteAsync("DELETE FROM Likes;DELETE FROM Comments;DELETE FROM Posts;DELETE FROM Files");
                 }
 
                 await testDatabase.TakeSnapshotAsync();

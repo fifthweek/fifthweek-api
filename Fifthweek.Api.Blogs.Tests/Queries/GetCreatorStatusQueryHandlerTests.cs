@@ -187,7 +187,7 @@
                 {
                     // We must delete ChannelSubscriptions first as there isn't a cascade delete setup
                     // due to multiple cascade branches.
-                    await databaseContext.Database.Connection.ExecuteAsync("DELETE FROM ChannelSubscriptions;DELETE FROM Blogs");
+                    await databaseContext.Database.Connection.ExecuteAsync("DELETE FROM Likes;DELETE FROM Comments;DELETE FROM ChannelSubscriptions;DELETE FROM Blogs");
                 }
 
                 await testDatabase.TakeSnapshotAsync();
